@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
@@ -82,6 +84,128 @@ def test_provision_data_symlinks_skips_missing_main_files(tmp_path, capsys):
     assert not (worktree / ".venv").exists()
     assert not (worktree / "node_modules").exists()
     assert not (worktree / "site" / "node_modules").exists()
+
+
+def test_provision_data_symlinks_read_only_withdraws_only_primary_database_links(tmp_path):
+    """#9421: read-only provisioning drops primary DB links, keeps other links, and a later write restores them."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    (main_repo / "data" / "vesum.db").touch()
+    (main_repo / "node_modules").mkdir()
+    other = tmp_path / "elsewhere.db"
+    other.touch()
+    delegate._provision_data_symlinks(worktree, main_repo)
+    # A dangling link to the primary's absent sources.db would create it on write.
+    (worktree / "data" / "sources.db").symlink_to(main_repo / "data" / "sources.db")
+
+    delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+
+    assert not (worktree / "data" / "vesum.db").is_symlink()
+    assert not (worktree / "data" / "sources.db").is_symlink()
+    assert (worktree / "node_modules").resolve() == (main_repo / "node_modules").resolve()
+    (worktree / "data" / "vesum.db").symlink_to(other)
+    delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+    assert (worktree / "data" / "vesum.db").resolve() == other.resolve()
+
+    (worktree / "data" / "vesum.db").unlink()
+    delegate._provision_data_symlinks(worktree, main_repo)
+    assert (worktree / "data" / "vesum.db").resolve() == (main_repo / "data" / "vesum.db").resolve()
+
+
+def test_withdraw_refuses_aliased_data_parent_and_primary_link_survives(tmp_path):
+    """Regression: a worktree ``data`` directory aliased into the primary must not unlink the primary's DB link."""
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "reused"
+    (main_repo / "store").mkdir(parents=True)
+    (main_repo / "data").mkdir()
+    real_sources = main_repo / "store" / "sources-real.db"
+    real_sources.touch()
+    primary_link = main_repo / "data" / "sources.db"
+    primary_link.symlink_to(real_sources)
+    worktree.mkdir(parents=True)
+    # The worktree's data directory aliases the primary's data directory, so
+    # worktree/data/sources.db is the primary's own link.
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._withdraw_primary_database_links(worktree, main_repo, ("data/sources.db",))
+
+    assert primary_link.is_symlink()
+    assert primary_link.resolve() == real_sources.resolve()
+
+
+def test_withdraw_refuses_aliased_data_parent_outside_worktree(tmp_path):
+    """Regression: the same alias is refused when the worktree itself sits outside the primary checkout."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    real_vesum = main_repo / "data" / "vesum-real.db"
+    real_vesum.touch()
+    primary_link = main_repo / "data" / "vesum.db"
+    primary_link.symlink_to(real_vesum)
+    worktree.mkdir()
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._withdraw_primary_database_links(worktree, main_repo, ("data/vesum.db",))
+
+    assert primary_link.is_symlink()
+    assert real_vesum.exists()
+
+
+def test_read_only_refuses_aliased_data_parent_over_ordinary_primary_files(tmp_path):
+    """Regression: an aliased worktree data dir must be refused even when the primary DBs are ordinary files.
+
+    The leaf entry is not a symlink here, so a check gated on the leaf type
+    would let withdrawal succeed while relative writes reach the primary.
+    """
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "reused"
+    (main_repo / "data").mkdir(parents=True)
+    primary_vesum = main_repo / "data" / "vesum.db"
+    primary_sources = main_repo / "data" / "sources.db"
+    primary_vesum.touch()
+    primary_sources.touch()
+    worktree.mkdir(parents=True)
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+
+    assert primary_vesum.is_file() and not primary_vesum.is_symlink()
+    assert primary_sources.is_file() and not primary_sources.is_symlink()
+
+
+def test_read_only_refuses_aliased_data_parent_outside_worktree_over_ordinary_files(tmp_path):
+    """Regression: the same refusal holds when the worktree sits outside the primary checkout."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    primary_sources = main_repo / "data" / "sources.db"
+    primary_sources.touch()
+    worktree.mkdir()
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+
+    assert primary_sources.is_file() and not primary_sources.is_symlink()
+
+
+def test_withdraw_unlinks_primary_link_through_worktree_owned_parent(tmp_path):
+    """The containment check still lets a normal worktree shed its primary database link."""
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "reused"
+    (main_repo / "data").mkdir(parents=True)
+    (main_repo / "data" / "sources.db").touch()
+    (worktree / "data").mkdir(parents=True)
+    (worktree / "data" / "sources.db").symlink_to(main_repo / "data" / "sources.db")
+
+    delegate._withdraw_primary_database_links(worktree, main_repo, ("data/sources.db",))
+
+    assert not (worktree / "data" / "sources.db").is_symlink()
+    assert (main_repo / "data" / "sources.db").exists()
 
 
 def test_provision_data_symlinks_refuses_when_worktree_is_main(tmp_path, capsys):

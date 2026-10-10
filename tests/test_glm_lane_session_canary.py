@@ -172,7 +172,7 @@ def test_bootstrap_creates_boards(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
 
 
 def test_mint_score_roundtrip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(glm_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane: _allowed_capsule())
+    monkeypatch.setattr(glm_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule())
     monkeypatch.setattr(glm_lane._gl, "_load_stream_entries", lambda *a, **k: [
         {"type": "binding_order", "body": f"Pinned binding order text {i} with enough content."}
         for i in range(1, 6)
@@ -247,7 +247,7 @@ def test_hydrate_refuses_to_continue_when_capsule_is_blocked(
     monkeypatch.setattr(
         glm_lane.shared_hydration,
         "build_hydration_capsule",
-        lambda stream, lane: {"execution_allowed": False},
+        lambda stream, lane, **_: {"execution_allowed": False},
     )
 
     assert glm_lane.main(["hydrate", "--epic", "harness"]) == 2

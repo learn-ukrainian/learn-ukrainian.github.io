@@ -16,7 +16,7 @@ def _allowed_capsule() -> dict[str, object]:
 
 def test_score_pass_hydrates_then_continues(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     monkeypatch.setattr(gemini_lane, "_with_gemini_handoffs", lambda function, args: 0)
-    monkeypatch.setattr(gemini_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane: _allowed_capsule())
+    monkeypatch.setattr(gemini_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule())
 
     assert gemini_lane.main(["score", "--epic", "harness", "--answers", "answers.json"]) == 0
     assert "hydration ready — continue" in capsys.readouterr().out
@@ -38,7 +38,7 @@ def test_hydrate_refuses_to_continue_when_capsule_is_blocked(
     monkeypatch.setattr(
         gemini_lane.shared_hydration,
         "build_hydration_capsule",
-        lambda stream, lane: {"execution_allowed": False},
+        lambda stream, lane, **_: {"execution_allowed": False},
     )
 
     assert gemini_lane.main(["hydrate", "--epic", "harness"]) == 2

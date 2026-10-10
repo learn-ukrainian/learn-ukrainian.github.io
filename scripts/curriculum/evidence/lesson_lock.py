@@ -20,6 +20,7 @@ from typing import Any
 import yaml
 
 from scripts.curriculum.validate import codes as val_codes
+from scripts.curriculum.validate.loader import active_plan_paths, load_plan, retired_plan_paths, retirement_record
 from scripts.curriculum.validate.validate import _pack_ids_in_plan, _word_ids_in_plan
 
 from . import codes, lock, pack, registry, words
@@ -117,11 +118,17 @@ def compute_lesson_lock(
     """Compute the deterministic lessons lock document for a module."""
     paths = resolve_paths(level, slug, evidence_dir=evidence_dir, plans_dir=plans_dir, repo_root=repo_root)
 
-    # 1. Load plan
+    # 1. Refuse retired disk bytes even when a caller supplies an in-memory plan.
+    if not paths["plan"].is_file():
+        retirement_record(paths["plan"].parent)
+    if paths["plan"].is_file():
+        disk_plan = load_plan(paths["plan"])
+        if plan_dict is None:
+            plan_dict = disk_plan
     if plan_dict is None:
         if not paths["plan"].is_file():
             raise FileNotFoundError(f"{val_codes.PLAN_NOT_FOUND}: plan file {paths['plan']} does not exist")
-        plan_dict = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+        plan_dict = load_plan(paths["plan"])
 
     # 2. Load pack
     if pack_dict is None:
@@ -426,15 +433,16 @@ def find_level_slugs(
 
     pl_dir = plans_dir if plans_dir is not None else repo_root / f"curriculum/l2-uk-en/lesson-plans/{level}"
     if pl_dir.is_dir():
-        for f in pl_dir.glob("*.yaml"):
+        for f in active_plan_paths(pl_dir):
             if not f.name.startswith("_") and f.is_file():
                 slugs.add(f.stem)
 
     ev_root = evidence_dir if evidence_dir is not None else repo_root / f"curriculum/l2-uk-en/evidence/{level}"
     state_dir = ev_root / "_state"
+    retired = {path.stem for path in retired_plan_paths(pl_dir)}
     if state_dir.is_dir():
         for sub in state_dir.iterdir():
-            if sub.is_dir() and (sub / "lessons.lock.yaml").is_file():
+            if sub.name not in retired and sub.is_dir() and (sub / "lessons.lock.yaml").is_file():
                 slugs.add(sub.name)
 
     return sorted(slugs)

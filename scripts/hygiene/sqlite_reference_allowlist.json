@@ -859,13 +859,11 @@
   },
   {
     "path": "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
-    "reference_count": 6,
+    "reference_count": 4,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "restores source DB from approved snapshot",
     "calls": [
-      "sqlite3.connect(uri, uri=True, timeout=30.0)",
-      "sqlite3.connect(source_uri, uri=True)",
       "sqlite3.connect(target)"
     ]
   },
@@ -887,6 +885,17 @@
     "target_db": null,
     "reason": "Existing read-only snapshot reader or dynamic component loader on the rebased main; tracked by #9662.",
     "calls": []
+  },
+  {
+    "path": "scripts/publish/recovery.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "recovery allowance DB",
+    "reason": "persists CI recovery allowance and reservations",
+    "calls": [
+      "sqlite3.connect(f'{path.as_uri()}?mode=ro', uri=True)",
+      "sqlite3.connect(path, timeout=30)"
+    ]
   },
   {
     "path": "scripts/rag/convert_phase2.py",

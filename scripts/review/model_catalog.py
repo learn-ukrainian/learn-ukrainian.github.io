@@ -109,6 +109,8 @@ CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
 CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
 CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
 CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
+# Wire pins shared with the launcher contract; its test rejects any drift.
+CURSOR_APPROVED_WIRE_PINS = frozenset({"grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"})
 # Families never pinned as formal reviewers on the Cursor endpoint (#9488):
 # Composer shares the Kimi lineage (never a reviewer), Gemini never reviews
 # code, DeepSeek is excluded, and the decision admits non-Anthropic models only.
@@ -1024,7 +1026,7 @@ def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = 
             )
 
     allowed_pins = set(cursor_pinned_models(catalog))
-    allowed_pins.update({"grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"})
+    allowed_pins.update(CURSOR_APPROVED_WIRE_PINS)
 
     if text not in allowed_pins:
         raise ModelCatalogError(

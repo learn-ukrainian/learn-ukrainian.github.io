@@ -13,6 +13,8 @@ A1_REFERENCE_CLOSED_CLASS_A1 = "closed_class_a1"
 
 # --- input and loader failures -------------------------------------------
 PLAN_NOT_FOUND = "plan_not_found"
+PLAN_RETIRED = "plan_retired"
+RETIREMENT_RECORD_INVALID = "retirement_record_invalid"
 PLAN_YAML_INVALID = "plan_yaml_invalid"
 PLAN_OUTSIDE_LESSON_PLANS = "plan_outside_lesson_plans"
 NOT_A_PLAN = "not_a_plan"
@@ -224,12 +226,29 @@ OPTIONS_FORBIDDEN = "options_forbidden"
 LEARNER_READ_REF_NOT_PRINTABLE = "learner_read_ref_not_printable"
 LEARNER_READ_WORD_NOT_IN_PRINT = "learner_read_word_not_in_print"
 
+A1_RECAP_MIGRATION_REQUIRED = "a1_recap_migration_required"
+RECAP_TASK_INVALID = "recap_task_invalid"
+RECAP_TASK_QUOTED_UKRAINIAN = "recap_task_quoted_ukrainian"
+RECAP_TASK_INVENTORY = "recap_task_inventory"
+RECAP_TASK_ORDER = "recap_task_order"
+RECAP_TASK_PRINT = "recap_task_print"
+ORIENTATION_CORE_WORDS = "orientation_core_words"
+
 DESCRIPTIONS = {
+    A1_RECAP_MIGRATION_REQUIRED: "legacy A1 recap requires retirement/migration by #10108",
+    RECAP_TASK_INVALID: "practical recap task violates its structural contract",
+    RECAP_TASK_QUOTED_UKRAINIAN: "quoted Ukrainian requires taught-form and construction review",
+    RECAP_TASK_INVENTORY: "recap uses unknown or unavailable inventory",
+    RECAP_TASK_ORDER: "recap task is duplicated or placed outside its closing step",
+    RECAP_TASK_PRINT: "recap print is undeclared, unprintable or undecodable",
+    ORIENTATION_CORE_WORDS: "orientation introduces core vocabulary",
     A1_REFERENCE_WORD_MISSING: "C29 (#9582): A1 introduced vocabulary missing from the reference; advisory until #9541 PR2",
     A1_REFERENCE_EXCEPTION_INVALID: "C29 (#9582): invalid typed reference exception; never exempts other gates",
     A1_REFERENCE_INVALID: "C29 (#9582): invalid reference input or enforcement configuration (failure)",
     A1_REFERENCE_CLOSED_CLASS_A1: "C29 (#9582): inventory-absent closed-class word has a class-specific A1 attestation (note)",
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
+    PLAN_RETIRED: "failure: this exact plan digest is explicitly retired",
+    RETIREMENT_RECORD_INVALID: "failure: malformed explicit retirement inventory",
     PLAN_YAML_INVALID: "failure: the plan file is not valid YAML",
     PLAN_OUTSIDE_LESSON_PLANS: "failure: plans live under curriculum/l2-uk-en/lesson-plans/<level>/, nowhere else",
     NOT_A_PLAN: "failure: a name beginning with _ is not a plan (§2a)",

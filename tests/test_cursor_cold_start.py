@@ -81,3 +81,39 @@ def test_cursor_cold_start_script_does_not_skip_rules() -> None:
     assert "Skips /api/rules" not in source
     assert "RULES_PATH" in source
     assert "/api/rules?format=json" in source
+
+
+@pytest.mark.parametrize(
+    ("orient", "expected"),
+    (
+        ({}, "UNKNOWN"),
+        ({"health": {}}, "UNKNOWN"),
+        ({"health": None}, "UNKNOWN"),
+        ({"health": {"monitor": None, "dependencies": None}}, "UNKNOWN monitor, dependencies"),
+        ({"health": {"monitor": True, "dependencies": None}}, "UNKNOWN dependencies"),
+        ({"health": {"monitor": True, "dependencies": True}}, "all green"),
+        ({"health": {"monitor": False, "dependencies": True}}, "FAIL monitor"),
+        ({"health": {"monitor": False, "dependencies": None}}, "FAIL monitor; UNKNOWN dependencies"),
+        ({"health": {"monitor": "healthy", "dependencies": 1}}, "UNKNOWN monitor, dependencies"),
+        ({"health": {"api": True, "tmp_usability": {"ok": True}, "backup_last_run": {"status": "ok"}}}, "all green"),
+        ({"health": {"tmp_usability": {"ok": False}, "backup_last_run": {"status": "failed"}}}, "FAIL tmp_usability, backup_last_run"),
+        ({"health": {"backup_last_run": {"status": "stale"}}}, "FAIL backup_last_run"),
+        ({"health": {"backup_last_run": {"status": "unknown"}}}, "UNKNOWN backup_last_run"),
+        ({"health": {"tmp_usability": {"ok": True, "probe_error": True}}}, "UNKNOWN tmp_usability"),
+        ({"health": {"dependencies": {}}}, "UNKNOWN dependencies"),
+    ),
+)
+def test_cursor_health_summary_requires_explicit_evidence(orient: dict, expected: str) -> None:
+    health_lines = [line for line in cursor_cold_start._lines_orient(orient) if "**health:**" in line]
+    assert health_lines == [f"- **health:** {expected}"]
+
+
+@pytest.mark.parametrize("orient", ({}, {"health": {"monitor": None}}, None, []))
+def test_cursor_cold_start_prints_unknown_health(
+    orient: dict | list | None, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr(cursor_cold_start, "_get", lambda path: orient if path == "/api/orient" else None)
+    assert cursor_cold_start.main() == 0
+    out = capsys.readouterr().out
+    assert "**health:** UNKNOWN" in out
+    assert "all green" not in out

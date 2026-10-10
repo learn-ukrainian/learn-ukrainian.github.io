@@ -1,55 +1,58 @@
 """Tests for A1/A2 immersion range bands (audit/config.py).
 
-Updated 2026-06-16 for the A2 easy-Ukrainian policy:
-- A1: every core band uses 40-55% Ukrainian-first immersion
+Approved #10105 A1 editorial bands with legacy module-position lookup:
+- A1: 0–15%, 10–20%, 15–30%, 25–40%, 35–50%, 45–60%, 55–70%
 - A2: easy Ukrainian is the default body voice; English is limited to glosses or one-line clarification
 """
 
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.config import get_a1_immersion_range, get_a2_immersion_range
+from scripts.config import compute_immersion_band
 
 
 class TestA1ImmersionRange:
     """Test get_a1_immersion_range band lookups."""
 
     def test_phonetics_band(self):
-        """M1-3: ULP S1 baseline."""
-        assert get_a1_immersion_range(1) == (40, 55)
-        assert get_a1_immersion_range(3) == (40, 55)
+        """M1-3: approved initial English scaffolding band."""
+        assert get_a1_immersion_range(1) == (0, 15)
+        assert get_a1_immersion_range(3) == (0, 15)
 
     def test_identity_band(self):
         """M4-6: stress, identity, family."""
-        assert get_a1_immersion_range(4) == (40, 55)
-        assert get_a1_immersion_range(6) == (40, 55)
+        assert get_a1_immersion_range(4) == (10, 20)
+        assert get_a1_immersion_range(6) == (10, 20)
 
     def test_grammar_band(self):
         """M7-14: gender, adjectives, numbers."""
-        assert get_a1_immersion_range(7) == (40, 55)
-        assert get_a1_immersion_range(14) == (40, 55)
+        assert get_a1_immersion_range(7) == (15, 30)
+        assert get_a1_immersion_range(14) == (15, 30)
 
     def test_sentence_building_band(self):
         """M15-24: verbs, questions, possessives."""
-        assert get_a1_immersion_range(15) == (40, 55)
-        assert get_a1_immersion_range(24) == (40, 55)
+        assert get_a1_immersion_range(15) == (25, 40)
+        assert get_a1_immersion_range(24) == (25, 40)
 
     def test_cases_band(self):
         """M25-34: accusative, locative, genitive."""
-        assert get_a1_immersion_range(25) == (40, 55)
-        assert get_a1_immersion_range(34) == (40, 55)
+        assert get_a1_immersion_range(25) == (35, 50)
+        assert get_a1_immersion_range(34) == (35, 50)
 
     def test_daily_life_band(self):
         """M35-54: tense, food, travel."""
-        assert get_a1_immersion_range(35) == (40, 55)
-        assert get_a1_immersion_range(54) == (40, 55)
+        assert get_a1_immersion_range(35) == (45, 60)
+        assert get_a1_immersion_range(54) == (45, 60)
 
     def test_independence_band(self):
         """M55+: practical skills."""
-        assert get_a1_immersion_range(55) == (40, 55)
-        assert get_a1_immersion_range(64) == (40, 55)
+        assert get_a1_immersion_range(55) == (55, 70)
+        assert get_a1_immersion_range(64) == (55, 70)
 
     def test_immersion_increases_monotonically(self):
         """Min immersion never decreases as module number increases."""
@@ -103,3 +106,19 @@ class TestA2ImmersionRange:
             current_min, _ = get_a2_immersion_range(m)
             assert current_min >= prev_min, f"M{m}: {current_min} < {prev_min}"
             prev_min = current_min
+
+
+@pytest.mark.parametrize("count,key,share", [
+    (0, "a1-m01-03", (0, 15)), (24, "a1-m01-03", (0, 15)),
+    (25, "a1-m04-06", (10, 20)), (59, "a1-m04-06", (10, 20)),
+    (60, "a1-m07-14", (15, 30)), (139, "a1-m07-14", (15, 30)),
+    (140, "a1-m15-24", (25, 40)), (241, "a1-m15-24", (25, 40)),
+    (242, "a1-m25-34", (35, 50)), (399, "a1-m25-34", (35, 50)),
+    (400, "a1-m35-54", (45, 60)), (599, "a1-m35-54", (45, 60)),
+    (600, "a1-m55+", (55, 70)),
+])
+def test_explicit_core_counts_select_approved_bands_independent_of_position(count, key, share):
+    for position in (1, 64):
+        band = compute_immersion_band("a1", position, {"cumulative_vocabulary": count})
+        assert band["key"] == key
+        assert (band["advisory_pct_min"], band["advisory_pct_max"]) == share

@@ -205,7 +205,9 @@ def test_flake_deny_holds_and_a_grant_is_reported() -> None:
         keeper={"queued": {}, "drops": {key: 2}, "requeued": {key: "2026-10-09T09:30:00Z"}},
         grants={key: {"decision": "grant"}},
     )
-    assert spent[0]["keeper"]["reason"] == "requeue-spent"
+    assert spent[0]["keeper"]["reason"] == (
+        "RECOVERY_ALLOWANCE_SPENT: first=re-enqueue (legacy) at=2026-10-09T09:30:00Z run=unknown"
+    )
     assert spent[0]["flake_grant"]["used"] is True
     assert spent[0]["flake_grant"]["at"] == "2026-10-09T09:30:00Z"
 

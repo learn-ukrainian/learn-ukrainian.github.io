@@ -14,9 +14,12 @@ import scripts.config as cfg
 
 pytestmark = pytest.mark.reads_content
 
-# Recorded on 2026-09-22
-EXPECTED_IMMERSION_POLICIES_SHA256 = "c6f88ca92d60bc7dd2d8cdca047f7c5841132a17edf3dfd7d133eb3ad3d96152"
-EXPECTED_ULP_VOCAB_KNEE_SHA256 = "d16470e56cc19064de60b8ade1dfe6569018d3ebe8d2576ad838601539d3bd0b"
+# #10105: approved R1-R12 wrapper; counterpart approval in critic-10105-design.result
+# bound to proposal sha256 8b19ff61d94aab699d0431177ec315ed2032f5c7257b52e9258e5e9b8f96832c.
+# Author: gpt-6.1-sol/high via codex dispatch; counterpart: claude-opus-5-5/high via claude dispatch.
+# Explicit R1-R12 counterpart approval accepted unchanged; design input, not implementation CF.
+EXPECTED_IMMERSION_POLICIES_SHA256 = "05cea5f7a232be696d04f05f04fabd43f07b0d4d986fb09199e6d6ce1d1b74eb"
+EXPECTED_ULP_VOCAB_KNEE_SHA256 = "d14ee93f068cf98eb76db16294b42b06a888583bf660beadd4580bd04b9a2ab5"
 
 
 def test_immersion_policies_pinned_hash() -> None:

@@ -4161,7 +4161,13 @@ def _branch_holder_activity_reason(
     try:
         from scripts.orchestration import reap_worktrees
 
-        active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+        try:
+            active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+        except reap_worktrees._ActiveTaskProbeFailure as exc:
+            _record_diagnostic(
+                candidate_task_ids[0], _exception_cause("activity probe unavailable", exc), source="branch_hand_off",
+            )
+            active_ids = None
         live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
     except Exception as exc:
         return f"activity probes unavailable ({type(exc).__name__})"
@@ -4919,6 +4925,45 @@ def _report_dispatch_admission(
         return None
     print(f"❌ {decision.refusal_line()}", file=sys.stderr)
     return _ADMISSION_REFUSED_EXIT
+
+
+def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bool:
+    """Read-only: True when an explicit ``--worktree`` path is an existing checkout (real reuse).
+
+    Resolves the path exactly as dispatch does, relative to the target repository.
+    """
+    if not worktree or worktree == "auto":
+        return False
+    try:
+        return (_normalize_worktree_path(str(worktree), repo_root=repo_root) / ".git").exists()
+    except (OSError, ValueError):
+        return False
+
+
+def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any, repo_root: Path | None = None) -> int | None:
+    """Refuse a new PR-opening implementation dispatch while too many public PRs are open.
+
+    Runs before any task-record, archive, forward or worktree side effect.
+    """
+    from scripts.orchestration import pr_freeze
+
+    worktree = getattr(args, "worktree", None)
+    if not pr_freeze.opens_new_pr(
+        mode=str(getattr(args, "mode", "") or ""),
+        repo_role=str(getattr(fleet_repo, "role", "") or ""),
+        pr=getattr(args, "pr", None),
+        cwd=getattr(args, "cwd", None),
+        review=_dispatch_is_review_typed(args),
+        reused_worktree=_is_existing_worktree(worktree, repo_root=repo_root),
+    ):
+        return None
+    decision = pr_freeze.evaluate(fleet_repo.github, branch=getattr(args, "branch", None))
+    if decision.warning:
+        print(f"⚠️  {decision.warning}", file=sys.stderr)
+    if decision.refused:
+        print(f"❌ {decision.refusal_line(fleet_repo.github)}", file=sys.stderr)
+        return _ADMISSION_REFUSED_EXIT
+    return None
 
 
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
@@ -6687,6 +6732,7 @@ def _kimi_worker_refusal(
     cwd: Path,
     review: bool,
     prompt: str = "",
+    harness: str | None = None,
 ) -> tuple[str | None, Any]:
     """The worker-side gate: ``(refusal, admitted target)``; installs the Kimi worktree boundary when it admits.
 
@@ -6732,7 +6778,7 @@ def _kimi_worker_refusal(
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
             (target,) = resolve_and_admit(
                 (agent,), model=model, mode=mode, repo_root=_REPO_ROOT,
-                trees=lambda: _kimi_worktree_trees(cwd), **scope,
+                trees=lambda: _kimi_worktree_trees(cwd), new_dispatch=True, harness=harness, **scope,
             )
         except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
             code = (
@@ -6754,7 +6800,7 @@ def _kimi_worker_refusal(
     try:
         if mode != ADMITTED_MODE or review:
             # Refused by mode or review alone: no need to read the task record (or create its directory).
-            resolve_and_admit((agent,), model=model, mode=mode, review=review)
+            resolve_and_admit((agent,), model=model, mode=mode, review=review, new_dispatch=True, harness=harness)
         # Read-only: a refused worker must leave no task directory or file behind.
         launch = _read_state_json(_state_path_no_create(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
@@ -6765,8 +6811,27 @@ def _kimi_worker_refusal(
             review=review,
             paths=owned,
             repo_root=_REPO_ROOT,
+            new_dispatch=True,
+            harness=harness,
             trees=lambda: _kimi_worktree_trees(cwd),
         )
+    except MechanicalAdmissionRefused as exc:
+        # e.g. an operator model pause that began after dispatch. The task record
+        # already exists (it was dispatched), so settle it as failed rather than
+        # leaving it "spawning"; nothing new is created when there is no record.
+        cause = _publish_cause(
+            task_id, _TypedCause("mechanical_admission_refused", diagnostic=str(exc)), source="worker"
+        )
+        record = _read_state_json(_state_path_no_create(task_id)) or {}
+        if record:
+            record.update({
+                "status": "failed", "finished_at": datetime.now(UTC).isoformat(),
+                "failure_reason": cause, "last_error": cause,
+                "returncode_reason": cause, "returncode": None, "exit_code": 1,
+                "stderr_excerpt": str(exc),
+            })
+            _write_state_atomic(_state_path_no_create(task_id), record)
+        return cause, None
     except KimiAdmissionRefused as exc:
         if not exc.read_errors:
             # A policy refusal: its text is fixed policy that the dispatch-time gate prints in full,
@@ -7866,7 +7931,15 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if reap_worktrees._task_pid_alive(state):
                 row["reason"] = "task process alive"
                 return row
-            active_ids = reap_worktrees._active_task_ids()
+            try:
+                active_ids = reap_worktrees._active_task_ids()
+            except reap_worktrees._ActiveTaskProbeFailure as exc:
+                diagnostic = _record_diagnostic(
+                    task_id, _exception_cause("activity probe unavailable", exc), source="rescue", field="reason",
+                )
+                if diagnostic:
+                    row["diagnostic"] = diagnostic
+                active_ids = None
             live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"
@@ -8416,7 +8489,41 @@ def _validate_existing_worktree(
     return True
 
 
-def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
+def _withdraw_primary_database_links(
+    worktree_path: Path, main_repo_root: Path, relative_paths: Sequence[str]
+) -> None:
+    """Remove a reused worktree's database links that resolve to the primary databases (#9421).
+
+    A read-only dispatch must carry no such link: a symlink cannot be made
+    read-only, so a write through it lands in the primary database. Links to
+    anything else stay. Never touches the main checkout itself, whose own
+    database entries are the primary.
+
+    The parent containment is checked for every database path, whatever the
+    entry type. An aliased parent (for example a worktree ``data`` directory
+    that points into the primary checkout) makes a relative write reach the
+    primary database even when the entry is an ordinary file or absent, so
+    such a dispatch fails closed instead of only when the entry is a link.
+    """
+    if worktree_path.resolve() == main_repo_root.resolve():
+        return
+    worktree = worktree_path.resolve()
+    for relative_path in relative_paths:
+        target = worktree_path / relative_path
+        if not target.parent.resolve().is_relative_to(worktree):
+            raise RuntimeError(
+                f"refusing read-only dispatch: database path {target} has a parent that resolves outside the worktree"
+            )
+        # Non-strict resolution also matches a dangling link, whose write
+        # would create the primary database.
+        if target.is_symlink() and target.resolve() == (main_repo_root / relative_path).resolve():
+            # The primary checkout contains worktrees, so containment in this
+            # worktree (not absence from the primary) is the boundary.
+            target.unlink()
+            print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
+
+
+def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_only: bool = False) -> None:
     """Symlink heavy local-only files into a delegated worktree.
 
     Worktrees omit gitignored DBs and Node dependency directories, but quality
@@ -8425,6 +8532,14 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
     directories. The primary Python environment is deliberately excluded:
     workers invoke its absolute interpreter and must not receive a local
     ``.venv`` symlink.
+
+    A read-only dispatch gets no database link (#9421). A symlink cannot be
+    made read-only, so a write through it lands in the primary database.
+    ``read_only`` withdraws a database link an earlier write-capable dispatch
+    provisioned into a reused worktree; a link to anything else is left alone.
+    A relative open then creates a worktree-local file that the read-only
+    guard flags, and the primary stays untouched. Workers read the primary
+    databases by absolute path with ``mode=ro`` or through the ``sources`` MCP.
 
     Self-link guard: if ``worktree_path`` *is* the main checkout, provisioning
     would create ``node_modules -> node_modules`` (a self-referential loop) that
@@ -8441,13 +8556,16 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         )
         return
 
+    database_links = ("data/vesum.db", "data/sources.db")
+    if read_only:
+        _withdraw_primary_database_links(worktree_path, main_repo_root, database_links)
     for relative_path in (
-        "data/vesum.db",
-        "data/sources.db",
+        *(() if read_only else database_links),
         "node_modules",
         "site/node_modules",
     ):
         source = main_repo_root / relative_path
+        target = worktree_path / relative_path
         # ``source.exists()`` follows symlinks and returns False for a looping
         # source, so a self-referential root ``node_modules`` is skipped here
         # rather than copied into the worktree.
@@ -8458,7 +8576,6 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
             )
             continue
 
-        target = worktree_path / relative_path
         if target.exists() or target.is_symlink():
             continue
 
@@ -9124,8 +9241,12 @@ def _ensure_worktree(
     detached: bool = False,
     validated_path: Path | None = None,
     review_dependencies: Sequence[tuple[str, Path]] = (),
+    read_only: bool = False,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
+
+    ``read_only`` (implied by ``detached``) provisions no database link and
+    withdraws one a reused worktree still carries (#9421).
 
     ``run_nonce`` names the dispatch run a fresh worktree's path reservation
     is recorded under (see :func:`_add_reserved_worktree`). ``validated_path``,
@@ -9232,8 +9353,9 @@ def _ensure_worktree(
         if dry_run:
             return worktree_path, worktree_branch, telemetry
         # Reused worktrees may predate this provisioning hook; the helper is
-        # idempotent and never clobbers existing files.
-        _provision_data_symlinks(worktree_path, _REPO_ROOT)
+        # idempotent and never clobbers existing files. For a read-only
+        # dispatch it withdraws the restored database links instead (#9421).
+        _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
         # Admission has already read these inputs. Preserve the current checkout
         # when it holds any dependency; reapplying sparse mode can hide those bytes.
         dependencies = _review_attempt_dependency_names(worktree_path, review_dependencies)
@@ -9354,7 +9476,7 @@ def _ensure_worktree(
         if upstream_proc.returncode != 0:
             detail = (upstream_proc.stderr or upstream_proc.stdout or "git branch failed").strip()
             raise RuntimeError(f"could not configure upstream origin/{requested_branch} for {worktree_path}: {detail}")
-    _provision_data_symlinks(worktree_path, _REPO_ROOT)
+    _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
     telemetry["sparse"] = _apply_dispatch_sparse_checkout(
         worktree_path,
         full_checkout=full_checkout,
@@ -10072,6 +10194,7 @@ def _run_worker(
         cwd=Path(cwd_str),
         review=require_review_verdict or review_id is not None,
         prompt=prompt,
+        harness=harness,
     )
     if kimi_refusal:
         from scripts.agent_runtime import kimi_admission
@@ -12014,6 +12137,11 @@ def _dispatch(
         return 2
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
+    # Open-PR freeze: refuse before any task record, archive, forward or worktree side effect.
+    freeze_rc = _check_open_pr_freeze(args, fleet_repo, target_repo_root)
+    if freeze_rc is not None:
+        return freeze_rc
+
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
     from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
@@ -13377,6 +13505,7 @@ def _dispatch(
                     sparse_include=sparse_include,
                     run_nonce=run_nonce,
                     review_dependencies=review_dependencies,
+                    read_only=args.mode == "read-only",
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
@@ -13522,6 +13651,15 @@ def _dispatch(
                 sparse_include=sparse_include,
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
+            if args.mode == "read-only":
+                # Still under the worktree lock: a link an earlier write-capable
+                # dispatch provisioned must not reach the worker (#9421).
+                try:
+                    _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                except RuntimeError as exc:
+                    discard_logs()
+                    print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
+                    return 1
 
     # A Kimi worker needs its own worktree, checked out at the commit the gate read. The
     # gate and the check above already hold this; this re-check under the worktree lock
@@ -16169,6 +16307,8 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
+            new_dispatch=True,
+            harness=getattr(args, "harness", None),
             # Every review-typed dispatch passes reviewer admission, not only verdict-gated ones (#9538).
             review_dispatch=review_dispatch,
             review_author_model=getattr(args, "review_author_model", None),
@@ -17931,7 +18071,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
             "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
-            "Mandatory for requested or substituted AGY code reviews; explicitly choose low, medium, high or critical. "
+            "Mandatory for requested or substituted AGY code reviews, including seat defaults and aliases, "
+            "even without author metadata; explicitly choose low, medium, high or critical. "
             "Example: critical for admission or launcher changes."
         ),
     )

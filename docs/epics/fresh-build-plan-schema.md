@@ -57,6 +57,24 @@ Sequence exists in exactly one place (the plan). Facts exist in exactly one plac
 is the structural answer to the Module 1 failure, where plan, derived lesson map and content each
 carried their own version of "what this module teaches".
 
+### Explicit exact-byte retirement (#10108)
+
+A level may have `_retired.yaml`, an append-only record with exactly
+`retirement_schema: 1`, `plans` and `routes`. Each plan entry has `slug`,
+`sha256` (64 lowercase hexadecimal characters) and `old_position` (positive
+integer). Each route entry has `slug` and `old_position`. Unknown or duplicate
+keys, invalid values or duplicate entries fail as `retirement_record_invalid`.
+
+Only the exact recorded plan bytes are excluded by shared `active_plan_paths`
+and refused by `load_plan` as `plan_retired`, before builders read other inputs.
+A changed replacement file is ordinary, including arc, evidence, review and
+promotion gates. Arc mismatch alone never retires or hides a plan. Whole-level
+validation names current exclusions; zero active plans exits 0 and proves no
+plan's quality. Retired plans, scope and state/receipt/evidence bytes remain
+preserved. Recorded routes generate empty retired MDX stubs outside arc order;
+intersection with the active arc fails. Landing scope requires an active plan,
+and reviewed badges require `plan_review_status` freshness, never a bare verdict.
+
 ## 2. Module plan v2
 
 Top-level fields kept from v1: `module`, `level`, `sequence`, `slug`, `version`, `title`,
@@ -317,9 +335,9 @@ placement, focus and order before the lesson writer runs. Declare `targets` for 
 or unscored presented words (empty for glyph-only work), `options` for the quiz/fill-in Cyrillic
 choice pool, and `learner_reads` for exact learner-decoded pack print (§2a). These fields describe
 an activity's permitted content; they do not prescribe items or permit `focus` to expand the pool. Give every non-recap lesson workbook
-practice that serves its teaching points. A recap is one short first-person story side by side in
-Ukrainian and English, Ukrainian-only questions about that story, and one production task (R-03;
-A1 arc D4); it has no separate workbook exercise set. Do not use `classify` in a new plan;
+practice that serves its teaching points. An A1 recap performs the approved practical plan task
+using taught inventory (#10105; A1 arc D4). A story is optional support, and early A1 uses
+English instructions instead of a story-question closure. It has no separate workbook exercise set. Do not use `classify` in a new plan;
 `group-sort` is the supported sorting type.
 
 The A1 placement table is the intersection of the activity definitions in
@@ -373,6 +391,28 @@ the analysis that matches the key. Match-up names `left_role` and
 `right_role` (`form`, `gloss`, `question`, `answer`); any side with role `form` has its word
 record, and each pair has a `why`. These are draft item fields, while the plan states the
 activity type, focus, placement, model, and evidence it will need.
+
+### 2c. A1 practical recap contract (#10105)
+
+A recap/checkpoint lesson, or an embedded closing recap, has a `task` on its last
+step (embedded: kind recap). Fields: unique `id`; action select_for_context,
+personalize, label, respond or read_and_use; nonempty English `context_en` and
+`instruction_en`; response_mode spoken, written, selection or spoken_or_written;
+nonempty array `success_criteria_en`; `learner_reads` using the existing record/word
+selector shape (empty only where no learner print is required). Reuse step.uses and
+step.evidence. No decision field: semantic judgment decides meaningful choice.
+Scripts require known evidence, inventory available before the step, exact source
+print and decodability, order/placement, and no recap introductions. Earlier teaching
+in the same lesson counts. Early A1 is activity_instruction: [en] in immersion_table.yaml;
+its recap is a practical task, not comprehension questions. Copying-only/question-only
+actions are outside the enum; disguised copying remains a semantic finding.
+Explicit a1-orientation is an English practical orientation recap without Ukrainian
+production, with overview exemplars and zero new core words. Legacy A1 closure lacks
+this contract and fails a1_recap_migration_required; #10108 owns retirement.
+A2+ retains C7/C8 and admits no A1 task field. No draft schema changes are required.
+English context, instructions and observable criteria may quote taught Ukrainian as teacher
+metalanguage, not learner print or inventory evidence; review confirms each quoted form
+and construction is taught before the step (historical D4 superseded by arc section 9).
 
 ## 3. Evidence pack
 
@@ -491,17 +531,21 @@ form for that word; a writer held to listed forms cannot write natural Ukrainian
   (R-23). This widens the dependence on the ULIF base from the cited forms to all forms of all
   admitted lemmas.
 
-**Immersion.** Thresholds are carried over unchanged (R-30). What changes is grain and key:
+**Immersion.** Fresh A1 adopts the approved editorial R-30 bands (#10105); A2+ is unchanged:
 
-- A1 stays ULP-derived from cumulative vocabulary, now evaluated at the lesson's learner position.
+- A1 uses unique cumulative core vocabulary before the lesson, excluding base/incidental inventory.
+  Existing names retain their counting semantics. Explicit a1-orientation is English orientation
+  without an advisory-share target; there is no position fallback. ULP remains a comparator.
 - A2 keeps its module-indexed ramp (`compute_immersion_band` returns the module band for A2 today);
   the arc maps each new module to the band of the old module range it replaces, so a split module
   inherits, not shifts, its band. That mapping table is part of the arc deliverable.
-- Structural minimums (`min_uk_dialogue_lines`, `min_uk_example_sentences`, `min_vocab_entries`,
+- A2+ structural minimums (`min_uk_dialogue_lines`, `min_uk_example_sentences`, `min_vocab_entries`,
   …) are **module-level today**. They need lesson-level equivalents, defined by dividing through a
   calibrated built module rather than by guess, in a new
   `compute_lesson_immersion_band(track, arc_position, lesson_n, cumulative_vocab)`. Until that is
-  calibrated, the module-level minimums are checked on the module as a whole.
+  calibrated, the module-level minimums are checked on the module as a whole. A1 fresh
+  payloads remove these fields without a replacement quota (#10105); their uncalibrated
+  marker remains. The A2+ module-to-lesson residual belongs to #10132.
 
 ## 5. What the lesson writer receives (R-26)
 

@@ -2,7 +2,7 @@
 """Generate the per-level accepted-decisions record from the accepted documents.
 
 The review manifests (docs/epics/fresh-build-review-contracts.md) hand the
-reviewer "the record of decisions the operator accepted for this level". That
+reviewer "the record of decisions accepted for this level (operator or designated approval)". That
 content lives as prose sections in several documents. This script copies those
 sections, verbatim, into curriculum/l2-uk-en/lesson-plans/<level>/_decisions.yaml
 so the record has one hashable file.
@@ -250,7 +250,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Generate curriculum/l2-uk-en/lesson-plans/<level>/_decisions.yaml: a verbatim copy of the "
-            "operator-accepted decision sections for one level (its arc doc's §2 and open-questions "
+            "accepted (operator or designated approval; the evidence line says which) decision sections for one level (its arc doc's §2 and open-questions "
             "section plus the shared plan-schema, writer-contract and build-program sections), each with its "
             "source, acceptance date and hashes.\n"
             "Use it after any of those sections changes, and with --check in CI; never edit _decisions.yaml by "

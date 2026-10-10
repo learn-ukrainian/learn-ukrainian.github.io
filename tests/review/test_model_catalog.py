@@ -104,6 +104,35 @@ def approved_review_baseline(baseline):
 REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
 GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
 GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
+def approved_cursor_trailer_baseline(baseline):
+    """#10273 AC-04 changes only the two frozen Cursor refusal trailers."""
+    launchers = deepcopy(baseline["launchers"])
+    for index, seat in ((41, "interactive session"), (46, "driver")):
+        old = f"not certified for the cursor {seat}; pin grok-4.7-high or composer-2.5.\n"
+        new = old.removesuffix(".\n") + "; never Auto, Fast or a previous generation.\n"
+        assert launchers[index]["stderr"].endswith(old)
+        launchers[index]["stderr"] = launchers[index]["stderr"].removesuffix(old) + new
+    return {**baseline, "launchers": launchers}
+
+
+
+
+def test_cursor_trailer_revision_preserves_all_other_frozen_receipts():
+    revised = approved_cursor_trailer_baseline(BASELINE)
+    assert {key: value for key, value in revised.items() if key != "launchers"} == {
+        key: value for key, value in BASELINE.items() if key != "launchers"
+    }
+    changed = [index for index, (old, new) in enumerate(zip(BASELINE["launchers"], revised["launchers"], strict=True))
+               if old != new]
+    assert changed == [41, 46]
+    for index in changed:
+        old, new = BASELINE["launchers"][index], revised["launchers"][index]
+        assert {key: value for key, value in old.items() if key != "stderr"} == {
+            key: value for key, value in new.items() if key != "stderr"
+        }
+        assert new["stderr"] == old["stderr"].removesuffix(".\n") + "; never Auto, Fast or a previous generation.\n"
+
+
 RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
 RESOURCE_OVERLAY = json.loads(gzip.decompress(RESOURCE_OVERLAY_PATH.read_bytes()))
 CODEX_OVERLAY_PATH = FIXTURE / "routing-10305.json.gz"
@@ -112,10 +141,10 @@ CODEX_OVERLAY = json.loads(gzip.decompress(CODEX_OVERLAY_PATH.read_bytes()))
 
 def approved_prior_baseline(baseline):
     """Layer every earlier approved overlay, including #10083, before #10305."""
-    return {
+    return approved_cursor_trailer_baseline(approved_launcher_canary_baseline({
         **approved_review_baseline(baseline),
         **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    }
+    }))
 
 
 def approved_codex_baseline(baseline):
@@ -128,10 +157,6 @@ def approved_codex_baseline(baseline):
         cmd[position:position] = CODEX_OVERLAY["hook_flags"]
         adapters[index]["value"]["env_overrides"].update(CODEX_OVERLAY["env_overrides"])
     return {**baseline, "adapters": adapters}
-
-
-APPROVED_BASELINE = approved_codex_baseline(approved_prior_baseline(BASELINE))
-APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
 
 
 @pytest.mark.parametrize("configuration", ["host-cli", "no-cli"])
@@ -151,7 +176,7 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
     assert expected_hooks[1]["matcher"] == "Bash"
     assert expected_hooks[0]["hooks"][0]["timeout"] == 45
     assert expected_hooks[1]["hooks"][0]["timeout"] == 5
-    command_digests = ['29631fde2a2dd39bdfe27574cc06d7a3ca800642e228548733e2e3d4c146364d', 'ceddede327247e37bde79990c315297722716edf7b2a5c16d335eb3094737396']
+    command_digests = ['29631fde2a2dd39bdfe27574cc06d7a3ca800642e228548733e2e3d4c146364d', 'c3dd6489f1e800411294c88d5b7b20e3ad9cb195f5f4326caa68a773285914f9']
     metadata = [
         {"type": "command", "timeout": 45, "statusMessage": "Running Codex tool policy"},
         {"type": "command", "timeout": 5},
@@ -202,6 +227,78 @@ def test_codex_hook_overlay_preserves_other_adapter_data(configuration):
     assert {key: value for key, value in updated.items() if key != "adapters"} == {
         key: value for key, value in original.items() if key != "adapters"
     }
+
+
+def approved_launcher_canary_baseline(baseline):
+    """Apply #10266's paragraph after surface overlays, preserving other help edits."""
+    canary = json.loads((CAPACITY_FIXTURE / "launcher-canary-10266.json").read_bytes())
+    launchers = deepcopy(baseline["launchers"])
+    for index in canary["launcher_rows"]:
+        for replacement in canary["launcher_help_replacements"]:
+            before, after = replacement["before"], replacement["after"]
+            assert launchers[index]["stdout"].count(before) == 1
+            launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, "launchers": launchers}
+
+
+# Apply literal paragraph edits last: a surface overlay such as #10291's Grok
+# help revision must neither erase this wording nor have its other lines erased.
+APPROVED_BASELINE = approved_codex_baseline(approved_prior_baseline(BASELINE))
+APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ["", "no-cli"])
+def test_launcher_canary_fixture_changes_only_driver_help_paragraph(configuration):
+    fixture_path = CAPACITY_FIXTURE / "launcher-canary-10266.json"
+    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
+        "9dca36ee148f7d1e178c2ef2084da9be612e887b0c3c39365a9e35eefed8fef4"
+    )
+    canary = json.loads(fixture_path.read_bytes())
+    assert set(canary) == {"launcher_rows", "launcher_help_replacements"}
+    assert len(canary["launcher_help_replacements"]) == 1
+    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline.json.gz").read_bytes()))
+    original = deepcopy(baseline)
+    updated = approved_launcher_canary_baseline(baseline)
+    changed = []
+    assert len(baseline["launchers"]) == len(updated["launchers"]) == 70
+    for index, (before, after) in enumerate(zip(baseline["launchers"], updated["launchers"], strict=True)):
+        if before == after:
+            continue
+        changed.append(index)
+        assert INPUTS["launchers"][index]["variant"] == "help"
+        restored = deepcopy(after)
+        for replacement in canary["launcher_help_replacements"]:
+            assert restored["stdout"].count(replacement["after"]) == 1
+            restored["stdout"] = restored["stdout"].replace(replacement["after"], replacement["before"])
+        assert restored == before
+    assert changed == canary["launcher_rows"] == [4, 9, 14, 19, 24, 29, 34, 39, 44, 49]
+    for surface in baseline.keys() - {"launchers"}:
+        assert updated[surface] == baseline[surface]
+    assert baseline == original
+
+
+def test_launcher_canary_paragraph_preserves_independent_grok_help_edits():
+    def grok_help_edits(baseline):
+        updated = deepcopy(baseline)
+        row = updated["launchers"][39]
+        # #10291 changes the usage and adds a native-driver block, outside the
+        # driver paragraph. Exercise edits on both sides of that paragraph.
+        row["stdout"] = row["stdout"].replace(
+            "Usage: ./start-grok-driver.sh [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]",
+            "Usage: ./start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]",
+        ).replace(
+            "Hermes (opt-in only):\n",
+            "Native Grok driver:\n"
+            "  Runs from the inspected checkout; positional prompts and subcommands are refused.\n\n"
+            "Hermes (opt-in only):\n",
+        )
+        assert row != baseline["launchers"][39]
+        return updated
+
+    baseline = deepcopy(REVIEW_CAPACITY_BASELINE)
+    assert approved_launcher_canary_baseline(grok_help_edits(baseline)) == grok_help_edits(
+        approved_launcher_canary_baseline(baseline),
+    )
 
 
 def test_resource_policy_fixture_changes_only_approved_fallback_rows():
@@ -344,18 +441,18 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert (semantic_changes, selection_changes) == (24, 8)
 
 
-# Literal digests bind the historical #10205 fixtures and approved issue
-# overlays for both configurations; see SPEC.md.
+# Literal digests bind the #10205 Cursor revision, #10262 AGY review-risk
+# refusals and approved overlays for both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "routing-10305.json.gz": "a740b3a64033ea9f2e945f40dbc850d5a394dd7b3bc73235fbfa5f70d23dc474",
+    "routing-10305.json.gz": "2596f911d4b8238cad24513ac666b8f4618d9c5783c6f6ff989a53c7131625c8",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
-    "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
-    "SPEC.md": "f1e49e33f396a6d2f7d01cf17d3113e59c356b7640b85c8e3442a8d56dca83cd",
-    "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
+    "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
+    "SPEC.md": "0c5067367ba78c76d700a1e4bc7cccb35be44f69795f151d3f523953504774dd",
+    "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "84c5dd2df2295b189bbced8d23026c6b263b37128da1d7fc5f560a853c12a1f4",
-    "no-cli/baseline.json.gz": "94cb4f113d95c2538172058bc48e29d47e81561675278647f036c87f3c9d6919",
+    "no-cli/SHA256SUMS": "7284c77ab0b02c2de844e407e37ff3eb55c56ed412521c98212d0d7309e406ba",
+    "no-cli/baseline.json.gz": "c9be87f384a751f5c228e20fa10a283e2d4e495959d8fd82535f85217f298d31",
     "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",

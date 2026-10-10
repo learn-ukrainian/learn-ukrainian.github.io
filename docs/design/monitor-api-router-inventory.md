@@ -5,6 +5,7 @@
 > **Status:** Live inventory — source of truth for filing per-family sub-issues
 > **Generated:** 2026-08-25 (post-#7302 step 0; includes `core_router`)
 > **Corrected:** 2026-10-03 (#8522, #9630) — seam tables re-derived from the live fixture; router counts, mount prefixes, route counts and line counts recomputed from `scripts/api/main.py` and the router modules; `batch_router` and `cluster_router` added; `tests/api/test_app_factory_doc_router_count.py` pins them
+> **Refreshed:** 2026-10-10 — combined fleet-board routes, denominator digest, file line counts, and step totals verified after combining the board and snapshot-source endpoints.
 
 This document records every router module `scripts/api/main.py` mounts via
 `create_app()` → `factory_app.include_router(...)`, the module-global roots/stores
@@ -50,14 +51,14 @@ print(sum(calls.values()), len(calls), [n for n, c in calls.items() if c > 1])
 The one-line `grep -oE` form of this count is not authoritative: it breaks on the
 multiline `reviewer_ghosts_router` call. The AST parse above is.
 
-### Total route-handler count — **278** decorator sum; **279** OpenAPI HTTP ops + **1** WebSocket
+### Total route-handler count — **289** decorator sum; **290** OpenAPI HTTP ops + **1** WebSocket
 
 Three separate denominators (do not conflate them):
 
 | Metric | Value | Source |
 | --- | ---: | --- |
-| Route-handler decorator sum | **278** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
-| OpenAPI HTTP operations | **279** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
+| Route-handler decorator sum | **289** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
+| OpenAPI HTTP operations | **290** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
 | WebSocket routes | **1** | `FROZEN_WEBSOCKET_ROUTE_COUNT`; `WS /ws/batch` on `batch_router` — absent from `app.openapi()['paths']` |
 
 Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
@@ -140,7 +141,7 @@ for var, path in sorted(ROUTER_MAP.items()):
     total += n
 print(total)
 "
-# 278
+# 289
 
 .venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
@@ -150,8 +151,8 @@ print(sum(len(v) for v in app.openapi()['paths'].values()))
 print(FROZEN_HTTP_OPERATION_COUNT)
 print(FROZEN_WEBSOCKET_ROUTE_COUNT)
 "
-# 279
-# 279
+# 290
+# 290
 # 1
 ```
 
@@ -241,29 +242,29 @@ step 1 (4) + step 2 (1) + step 3 (6) + step 4 (1) + step 5 (1) + step 6 (1)
 ## Proposed migration steps
 
 Grouped by shared store/root clusters per §5.2 point 4. Modules over ~800 lines
-get their own step (line sums here are a 2026-10-03 snapshot). `batch_router` and `core_router` are **step 13 (last)** so the catch-all
+get their own step (line sums here are a 2026-10-10 snapshot). `batch_router` and `core_router` are **step 13 (last)** so the catch-all
 `/{path:path}` dashboard static handler remains registered after all prefixed
 routers (§4.2 core-router-last ordering).
 
 | Step | Modules | Lines (sum) | Rationale |
 | --- | --- | ---: | --- |
-| **1** | `session_streams_router`, `rollover_router`, `session_router`, `rules_router` | 912 | Session-streams / handoff / rules cluster; shared `LIVE_REPO_ROOT`, session-streams DB |
-| **2** | `state_router` | 3,096 | Large; orient/authority/pipeline — see internal route groups |
+| **1** | `session_streams_router`, `rollover_router`, `session_router`, `rules_router` | 911 | Session-streams / handoff / rules cluster; shared `LIVE_REPO_ROOT`, session-streams DB |
+| **2** | `state_router` | 3,329 | Large; orient/authority/pipeline — see internal route groups |
 | **3** | `agent_router`, `agent_monitor_router`, `occupancy_router`, `observer_presence_router`, `fleet_workers_router`, `project_state_router` | 2,207 | Agent monitor DB + occupancy markers + in-memory presence + fleet project-state |
-| **4** | `fleet_router` | 2,677 | Large; fleet facade / messages / ACP — see internal route groups |
-| **5** | `comms_router` | 2,119 | Large; `MESSAGE_DB` + fleet-comms plane — see internal route groups |
-| **6** | `runtime_router` | 1,776 | Large; runtime adapters / ACP / usage telemetry |
-| **7** | `docs_router`, `artifacts_router`, `images_router` | 2,082 | Docs `EFFECTIVE_ROOTS` + curriculum artifacts + image/textbook stores |
+| **4** | `fleet_router` | 2,679 | Large; fleet facade / messages / ACP — see internal route groups |
+| **5** | `comms_router` | 2,126 | Large; `MESSAGE_DB` + fleet-comms plane — see internal route groups |
+| **6** | `runtime_router` | 1,838 | Large; runtime adapters / ACP / usage telemetry |
+| **7** | `docs_router`, `artifacts_router`, `images_router` | 2,108 | Docs `EFFECTIVE_ROOTS` + curriculum artifacts + image/textbook stores |
 | **8** | `admin_router`, `ops_router`, `git_hygiene_router` | 1,251 | Admin backup/MCP roots + retention plan dir + git hygiene |
 | **9** | `dashboard_router` | 1,061 | Large; dashboard aggregation over curriculum + comms |
 | **10** | `sources_router` (`sources_router.py`) | 170 | Sources DB (`SOURCES_DB_PATH`) + #7284 connect guard |
 | **11** | `contracts_router` (`route_contracts.py`) | 1,400 | Large; route-contract registry (1 handler, heavy logic) |
 | **12a** | `atlas_jobs_router`, `blue_router`, `build_events_router`, `coordination_router`, `cost_router` | 1,121 | Small curriculum/batch-state cluster |
-| **12b** | `consultation_router`, `decisions_router`, `delegate_router`, `discussions_router`, `gold_router` | 1,844 | Consultation queue dirs + delegate tasks + `MESSAGE_DB` discussions |
-| **12c** | `governance_router`, `issues_router`, `knowledge_router`, `reviewer_ghosts_router`, `cluster_router` | 1,107 | Governance/decisions-adjacent reads + issues/gh seam + cluster readiness probe over the control-plane stores |
-| **12d** | `site_router`, `wiki_router`, `worktrees_router`, `telemetry_router` | 1,594 | Site build + wiki `SOURCES_DB_PATH` + worktrees git + telemetry DBs |
-| **12e** | `work_router`, `epics_router`, `fleet_board_router` | 2,114 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) + fleet board v1 |
-| **13** | `batch_router`, `core_router` (`main.py` inline) | 2,112 | **Last two mounts, in this order** — batch dispatcher/active/usage routes + `WS /ws/batch` (split out of `main.py`), then health/orient/config routes + catch-all static; read config through `Depends(get_ctx)`, no dedicated store of their own |
+| **12b** | `consultation_router`, `decisions_router`, `delegate_router`, `discussions_router`, `gold_router` | 2,001 | Consultation queue dirs + delegate tasks + `MESSAGE_DB` discussions |
+| **12c** | `governance_router`, `issues_router`, `knowledge_router`, `reviewer_ghosts_router`, `cluster_router` | 1,108 | Governance/decisions-adjacent reads + issues/gh seam + cluster readiness probe over the control-plane stores |
+| **12d** | `site_router`, `wiki_router`, `worktrees_router`, `telemetry_router` | 1,603 | Site build + wiki `SOURCES_DB_PATH` + worktrees git + telemetry DBs |
+| **12e** | `work_router`, `epics_router`, `fleet_board_router` | 2,325 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) + fleet board v1 |
+| **13** | `batch_router`, `core_router` (`main.py` inline) | 2,120 | **Last two mounts, in this order** — batch dispatcher/active/usage routes + `WS /ws/batch` (split out of `main.py`), then health/orient/config routes + catch-all static; read config through `Depends(get_ctx)`, no dedicated store of their own |
 
 ---
 
@@ -284,13 +285,13 @@ full target list. The tests in `tests/api/test_router_inventory_seams.py` re-der
 | `session_streams_router.py` | `/api/session-streams` | 6 | 213 | — | `_repo_root()`, `_db_path()`, `_store()` | 0 | 1 |
 | `rollover_router.py` | `/api/rollovers` | 1 | 136 | — | — | 0 | 1 |
 | `session_router.py` | `/api/session` | 1 | 295 | — | `ORCHESTRATOR_HANDOFF_PATH`, `LEGACY_ORCHESTRATOR_HANDOFF_PATH`, `SESSION_ROUTER_PATH` | 0 | 1 |
-| `rules_router.py` | `/api/rules` | 1 | 268 | — | — | 0 | 1 |
+| `rules_router.py` | `/api/rules` | 1 | 267 | — | — | 0 | 1 |
 
 ### Step 2 — `state_router` (large)
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `state_router.py` | `/api/state` | 28 | 3,096 | `LEVELS` | `BUDGET_CONFIG_PATH`, `TASKS_DIR` | 2 | 2 |
+| `state_router.py` | `/api/state` | 28 | 3,329 | `LEVELS` | `BUDGET_CONFIG_PATH`, `TASKS_DIR` | 2 | 2 |
 
 **Internal route groups** (may split 2a/2b if a single PR exceeds review size):
 
@@ -318,7 +319,7 @@ full target list. The tests in `tests/api/test_router_inventory_seams.py` re-der
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `fleet_router.py` | `/api/fleet` | 27 | 2,677 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 0 | 4 |
+| `fleet_router.py` | `/api/fleet` | 27 | 2,679 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 0 | 4 |
 
 **Internal route groups:**
 
@@ -333,7 +334,7 @@ full target list. The tests in `tests/api/test_router_inventory_seams.py` re-der
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `comms_router.py` | `/api/comms` | 26 | 2,119 | — | `LOG_DIR`, `PID_DIR` | 1 | 5 |
+| `comms_router.py` | `/api/comms` | 26 | 2,126 | — | `LOG_DIR`, `PID_DIR` | 1 | 5 |
 
 **Internal route groups:**
 
@@ -350,7 +351,7 @@ full target list. The tests in `tests/api/test_router_inventory_seams.py` re-der
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `runtime_router.py` | `/api/runtime` | 11 | 1,776 | — | `ADAPTERS_DIR`, `REGISTRY_PATH`, `USAGE_DIR` | 0 | 6 |
+| `runtime_router.py` | `/api/runtime` | 11 | 1,838 | — | `ADAPTERS_DIR`, `REGISTRY_PATH`, `USAGE_DIR` | 0 | 6 |
 
 **Internal route groups:** agents/usage (`/agents`, `/usage`, `/recent`);
 ACP (`/acpx`, `/acp/conversations/*`); routing/transport (`/headroom`,
@@ -360,8 +361,8 @@ ACP (`/acpx`, `/acp/conversations/*`); routing/transport (`/headroom`,
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `docs_router.py` | `/artifacts`, `/files` | 2 | 449 | — | `ALLOWED_ROOTS`, `DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS` | 0 | 7 |
-| `artifacts_router.py` | `/api/artifacts` | 7 | 879 | `LEVELS` | `PLANS_ROOT` | 0 | 7 |
+| `docs_router.py` | `/artifacts`, `/files` | 2 | 456 | — | `ALLOWED_ROOTS`, `DISCOVERY_ROOTS`, `EFFECTIVE_ROOTS` | 0 | 7 |
+| `artifacts_router.py` | `/api/artifacts` | 7 | 898 | `LEVELS` | `PLANS_ROOT` | 0 | 7 |
 | `images_router.py` | `/api/images` | 9 | 754 | — | `IMAGES_DIR`, `TEXTBOOKS_DIR`, `ANNOTATIONS_FILE`, `_index`, `_pdf_pool`, `_page_cache`, `_pdf_page_count_cache` | 0 | 7 |
 
 ### Step 8 — admin / ops / git
@@ -415,7 +416,7 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `consultation_router.py` | `/api/consultation` | 7 | 523 | `LEVELS` | — | 0 | 12b |
 | `decisions_router.py` | `/api/decisions` | 6 | 194 | — | `_cache`, `_lineage_cache` | 0 | 12b |
-| `delegate_router.py` | `/api/delegate` | 3 | 640 | — | `_LAST_TASKS_DIR_STR`, `_TASK_STATE_CACHE` | 0 | 12b |
+| `delegate_router.py` | `/api/delegate` | 3 | 797 | — | `_LAST_TASKS_DIR_STR`, `_TASK_STATE_CACHE` | 0 | 12b |
 | `discussions_router.py` | `/api/discussions` | 1 | 130 | — | — | 0 | 12b |
 | `gold_router.py` | `/api/gold` | 8 | 357 | — | — | 0 | 12b |
 
@@ -426,7 +427,7 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `governance_router.py` | `/api/state/governance` | 1 | 191 | — | — | 0 | 12c |
-| `issues_router.py` | `/api/issues` | 2 | 259 | — | — | 1 | 12c |
+| `issues_router.py` | `/api/issues` | 2 | 260 | — | — | 1 | 12c |
 | `knowledge_router.py` | `/api/knowledge` | 5 | 238 | — | — | 0 | 12c |
 | `reviewer_ghosts_router.py` | `/api/state/reviewer-ghosts` | 1 | 187 | `LEVELS` | — | 0 | 12c |
 | `cluster_router.py` | `/api/cluster` | 1 | 232 | — | `_ACTIVE_STORES` (constant `StoreId` tuple; stores are probed through `ctx` and the `control_plane.storage` seam) | 0 | 12c |
@@ -446,10 +447,10 @@ global. `LEVELS` is track-id config, not a filesystem root.
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `site_router.py` | `/api/site` | 2 | 304 | — | — | 0 | 12d |
+| `site_router.py` | `/api/site` | 2 | 306 | — | — | 0 | 12d |
 | `wiki_router.py` | `/api/wiki` | 8 | 477 | `LEVELS` | — | 0 | 12d |
 | `worktrees_router.py` | `/api/worktrees` | 1 | 231 | — | — | 0 | 12d |
-| `telemetry_router.py` | (none — router defines own prefix) | 7 | 582 | — | — | 0 | 12d |
+| `telemetry_router.py` | (none — router defines own prefix) | 7 | 589 | — | — | 0 | 12d |
 
 **12d migrated (#7333):** path roots and database handles now come from
 `Depends(get_ctx)`. The 15 Path and router-local subprocess seams this row listed
@@ -461,11 +462,16 @@ The unused `wiki.sources_db.SOURCES_DB_PATH` and dense rerank defaults (4) are d
 
 ### Step 12e — work / epics
 
+The fleet-board routes include `/now`, `/epics`, `/epics/{epic}`, `/agents`,
+`/agents/{agent_id}`, `/backups`, `/downloads`, `/harness`, and
+`/harness/{agent_id}`, alongside the existing index, schema, roster, budget,
+operations, and pull-request routes.
+
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `work_router.py` | `/api/work` | 4 | 790 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
-| `epics_router.py` | `/api/epics` | 12 | 1,158 | — | — | 0 | 12e |
-| `fleet_board.router.py` | `/api/fleet/v1` | 7 | 166 | — | — | 0 | 12e |
+| `work_router.py` | `/api/work` | 4 | 830 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
+| `epics_router.py` | `/api/epics` | 12 | 1,202 | — | — | 0 | 12e |
+| `fleet_board.router.py` | `/api/fleet/v1` | 18 | 293 | — | — | 0 | 12e |
 
 **12e migrated (#7334):** stores and live repo root now come from
 `Depends(get_ctx)`. The 3 seams this row listed (`work_router._IN_FLIGHT_BUILDS`
@@ -477,7 +483,7 @@ fixture setattr, `epics_router._store` fixture setattr, and
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `batch_router.py` | (none — absolute paths) | 9 | 182 | — | `DISPATCHER_SCAN_TIMEOUT_S`, `_JSON_LOAD_ERRORS` (constants only) | 0 | 13 |
-| `main.py` (`core_router`) | (none — absolute paths) | 6 | 1,930 | `LEVELS` | — | 1 | 13 |
+| `main.py` (`core_router`) | (none — absolute paths) | 6 | 1,938 | `LEVELS` | — | 1 | 13 |
 
 **`batch_router` seams (0):** added to the inventory by #8522. It holds the nine
 batch routes that earlier revisions of this document counted under `core_router`.
@@ -514,8 +520,8 @@ beyond the config imports and module globals listed above.
 | Router registrations (`include_router` calls) | 48 |
 | Distinct router objects (46 imported modules + `core_router`) | 47 |
 | Routers mounted twice | 1 (`docs_router`) |
-| Route handlers (decorator sum, nested included) | 278 |
-| OpenAPI HTTP operations (sweep denominator) | 279 |
+| Route handlers (decorator sum, nested included) | 289 |
+| OpenAPI HTTP operations (sweep denominator) | 290 |
 | WebSocket routes (separate denominator) | 1 |
 | OPSEC fixture `setattr` targets (unique; see *OPSEC fixture seams*) | 22 |
 

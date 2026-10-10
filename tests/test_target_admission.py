@@ -17,7 +17,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.agent_runtime import kimi_admission, target_admission
-from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
+from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, REVIEW_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.target_admission import (
     AdmittedTarget,
     ReviewAdmissionRefused,
@@ -261,6 +261,29 @@ def test_a_non_kimi_request_resolves_unchanged():
     assert resolve_and_admit((), mode=BRIDGE_MODE) == ()
 
 
+@pytest.mark.parametrize("seat", ["agy", "gemini"])
+@pytest.mark.parametrize("model", [None, "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("author", [None, "gpt-6.1-sol"])
+def test_explicit_review_risk_dispatch_refuses_before_target_reads(seat, model, author):
+    """D1: omission refuses before target reads, alias resolution and route probes."""
+    def unexpected(*_args, **_kwargs):
+        pytest.fail("omitted risk reached target reads or route resolution")
+
+    with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk") as refused:
+        resolve_and_admit(
+            (seat,),
+            model=model,
+            mode="read-only",
+            review_dispatch=True,
+            review_author_model=author,
+            review_changed_paths=unexpected,
+            review_facts=unexpected,
+            review_alias_model_resolver=unexpected,
+            route=unexpected,
+        )
+    assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
+
+
 @pytest.mark.parametrize("model", [None, "gemini-3.8-flash-high"])
 @pytest.mark.parametrize("risk", [None, "", "invalid"])
 @pytest.mark.parametrize("branch_facts", [False, True])
@@ -348,21 +371,28 @@ def test_explicit_review_risk_security_floor_excludes_agy(risk, path_kind):
 
 
 @pytest.mark.parametrize(
-    "seat,model,review,profile",
+    "seat,model,entry,profile",
     [
-        ("agy", "gemini-3.8-flash-high", True, "ukrainian"),
-        ("codex", "gpt-6.1-sol", True, "code"),
-        ("claude", "claude-opus-5-5", True, "code"),
-        ("agy", "gemini-3.8-flash-high", False, "code"),
+        ("agy", "gemini-3.8-flash-high", "dispatch", "ukrainian"),
+        ("agy", "gemini-3.8-flash-high", "mode", "ukrainian"),
+        ("agy", "gemini-3.8-flash-high", "flag", "ukrainian"),
+        ("codex", "gpt-6.1-sol", "dispatch", "code"),
+        ("codex", "gpt-6.1-sol", "mode", "code"),
+        ("codex", "gpt-6.1-sol", "flag", "code"),
+        ("claude", "claude-opus-5-5", "dispatch", "code"),
+        ("claude", "claude-opus-5-5", "mode", "code"),
+        ("claude", "claude-opus-5-5", "flag", "code"),
+        ("agy", "gemini-3.8-flash-high", "none", "code"),
     ],
 )
-def test_explicit_review_risk_other_work_remains_unaffected(seat, model, review, profile):
+def test_explicit_review_risk_other_work_remains_unaffected(seat, model, entry, profile):
     """D7: omission stays valid for Ukrainian, non-AGY and ordinary work."""
     (target,) = resolve_and_admit(
         (seat,),
         model=model,
-        mode="read-only",
-        review_dispatch=review,
+        mode=REVIEW_MODE if entry == "mode" else "read-only",
+        review=entry == "flag",
+        review_dispatch=entry == "dispatch",
         review_profile=profile,
     )
     assert (target.recipient, target.model) == (seat, model)

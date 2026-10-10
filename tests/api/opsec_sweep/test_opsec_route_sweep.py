@@ -657,6 +657,19 @@ def _scan_response(
     )
 
 
+def test_pr_detail_path_value_is_int_valid_and_not_rejected(isolated_fixture: IsolatedFixture) -> None:
+    # The PR route validates ``number`` as an int >= 1; a non-integer synthetic
+    # value would fail validation with 422 before the sweep reaches the handler.
+    records = {record.key: record for record in registry.build_registry(api_main.app)}
+    record = records["GET /api/fleet/v1/prs/{number}"]
+    number = record.path_params()["number"]
+    assert number == registry._path_value("number") == "1"
+    assert number.isdigit() and int(number) >= 1
+    client = TestClient(api_main.app, raise_server_exceptions=False)
+    response = client.get(_path_for_record(record), params=dict(record.query), headers=dict(record.headers))
+    assert response.status_code != 422, f"{record.key} rejected its path value: {_response_payload(response)!r}"
+
+
 def test_route_registry_matches_openapi_and_classifies_every_operation() -> None:
     records = registry.build_registry(api_main.app)
     assert len(records) == registry.FROZEN_HTTP_OPERATION_COUNT + registry.FROZEN_WEBSOCKET_ROUTE_COUNT

@@ -3,7 +3,10 @@
 launcher_adapter_validate() { [ "$LC_HARNESS" = agy ] || { launcher_error 'Gemini supports only --harness agy.'; exit 2; }; }
 launcher_adapter_preflight() { LC_AUTH_SOURCE='agy-managed-auth'; launcher_require_binary agy 'AGY executable is unavailable.' 3 || exit $?; }
 launcher_adapter_canary() {
-  if [ "$LC_DRY_RUN" = 1 ]; then echo 'gemini adapter: would run provider canary'; fi
+  # The recall canary needs rollover answers and scoring; this hook runs no probe.
+  # shellcheck disable=SC2034 # Read by launcher_bind_drive_epic in the shared core.
+  LC_PROVIDER_CANARY_RAN=0
+  echo 'gemini adapter: provider canary: not run'
   return 0
 }
 launcher_adapter_exec() {

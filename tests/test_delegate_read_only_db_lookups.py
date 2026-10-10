@@ -230,6 +230,44 @@ def test_read_only_dispatch_detects_writes_through_provisioned_database_links(
 
 
 @pytest.mark.parametrize("name", _DATABASES)
+@pytest.mark.parametrize("provisioning", ["new-full", "reused-full", "reused-sparse"])
+def test_read_only_dispatch_worktree_has_no_database_link_and_primary_stays_untouched(
+    primary: Path, tmp_tasks_dir, name: str, provisioning: str
+) -> None:
+    """#9421 AC-01: a read-only write through a restored link is flagged and never reaches the primary."""
+    task_id = f"review-9421-ro-{provisioning}-{name.removesuffix('.db')}"
+    kwargs = {
+        "agent": "agy",
+        "task_id": task_id,
+        "raw_path": str(primary / ".worktrees" / "dispatch" / "agy" / task_id),
+        "resolved_base_sha": _git(primary, "rev-parse", "HEAD"),
+        "full_checkout": provisioning != "reused-sparse",
+    }
+    link = Path(kwargs["raw_path"]) / "data" / name
+    if provisioning.startswith("reused"):
+        # Earlier write-capable dispatches created, then reused, the worktree;
+        # the reuse restored the links that sparse checkout drops.
+        delegate._ensure_worktree(**kwargs)
+        delegate._ensure_worktree(**kwargs)
+        assert link.resolve(strict=True) == (primary / "data" / name).resolve()
+    worktree, branch, telemetry = delegate._ensure_worktree(**kwargs, read_only=True)
+    assert telemetry["reused"] == provisioning.startswith("reused")
+    assert branch is not None
+    assert not link.is_symlink() and not link.exists()
+    before = _digest(primary / "data" / name)
+
+    rc, state, output = _run_read_only_worker(worktree, task_id, _RELATIVE_OPEN, name, "write")
+
+    assert output == "opened"
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [f"data/{name}"]
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    assert link.is_file() and not link.is_symlink()
+    assert _digest(primary / "data" / name) == before
+
+
+@pytest.mark.parametrize("name", _DATABASES)
 def test_read_only_dispatch_detects_write_then_retarget_to_pre_write_copy(
     primary: Path, tmp_tasks_dir, name: str
 ) -> None:

@@ -42,10 +42,12 @@ def ci_file(tmp_path, monkeypatch):
 
 def test_current_workflow_exact_set_and_repository_root(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
-    policy = advisory.load_advisory_checks()
-    assert policy.reason is None
-    assert policy.names == frozenset({SHADOW})
+    real = advisory.load_advisory_checks()
+    assert real.reason is None
+    assert real.names == frozenset()
     assert Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml" == advisory.CI_WORKFLOW_PATH
+    policy = advisory.load_advisory_checks(Path(__file__).resolve().parent / "fixtures/ci_advisory_workflow.yml")
+    assert policy.names == frozenset({SHADOW})
     assert advisory.is_advisory(SHADOW, workflow="CI", policy=policy)
     for name in ["advisory", "ADVISORY smoke", "Lint (advisory)", SHADOW.lower(), SHADOW + " "]:
         assert not advisory.is_advisory(name, workflow="CI", policy=policy)

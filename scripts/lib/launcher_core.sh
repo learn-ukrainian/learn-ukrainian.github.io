@@ -14,8 +14,9 @@ launcher_usage() {
       driver_mode="  driver       No certified ${LC_PROVIDER} driver entrypoint is available."
       ;;
     *)
-      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs the
-               provider canary, then injects the drive-epic binding."
+      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs a
+               semantic canary where available (otherwise reports not run),
+               then injects the drive-epic binding."
       ;;
   esac
   case "$LC_PROVIDER" in
@@ -806,12 +807,12 @@ except ModelCatalogError as exc:
     print(str(exc), file=sys.stderr)
     sys.exit(4)
 ' "$LC_ROOT" "$LC_MODEL")"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
     exit 4
   fi
   LC_MODEL="$normalized"
   if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
     exit 4
   fi
 }
@@ -1318,13 +1319,16 @@ launcher_bind_drive_epic() {
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"
   else
-    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — verdict posted on the PR, merge when CI green, sealed formal CF is retired; authority mode is durable state and ACP is provider transport.'
+    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — exact-head cross-family APPROVE before opening PR, same-head CI Gate green, driver enqueue through merge queue, closeout; authority mode is durable state and ACP is provider transport.'
   fi
-  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
+  local canary_status='not run'
+  # A successful hook alone is no execution evidence; dry runs never run a probe.
+  if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
+  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then
-    printf 'launcher: would bind drive-epic after lease and provider canary\n'
+    printf 'launcher: would bind drive-epic after lease; provider canary: %s\n' "$canary_status"
   fi
 }
 
@@ -1349,6 +1353,7 @@ launcher_publication_path() {
 launcher_main() {
   LC_PROVIDER="$1"
   LC_MODE="$2"
+  LC_PROVIDER_CANARY_RAN=0
   shift 2
   # Consumed by session_supervisor_exec_successor in the sourced helper.
   # shellcheck disable=SC2034

@@ -9737,6 +9737,47 @@ def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeyp
     assert reason == "active dispatch task-id=codex-legacy"
 
 
+@pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
+@pytest.mark.parametrize("holder", ["settled", "live_pid", "live_cwd", "missing_record", "complete"])
+def test_branch_holder_monitor_outage_preserves_release_guards(monkeypatch, tmp_tasks_dir, failure, holder):
+    import urllib.request
+
+    from scripts.orchestration import reap_worktrees
+
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "legacy"
+    state = {"task_id": "legacy", "status": "done", "pid": os.getpid() if holder == "live_pid" else None}
+    if holder != "missing_record":
+        delegate._write_state_atomic(delegate._state_path("legacy"), state)
+
+    def fail(*_args, **_kwargs):
+        raise failure
+
+    monkeypatch.setattr(urllib.request, "urlopen", fail)
+    monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", lambda _path: None)
+    monkeypatch.setattr(
+        reap_worktrees, "_live_cwd_paths", lambda _repo: {occupied / "scripts"} if holder == "live_cwd" else set(),
+    )
+    reason = delegate._branch_holder_activity_reason(
+        occupied, task_id="legacy", task_state=None if holder == "missing_record" else state,
+        complete=holder == "complete",
+    )
+
+    if holder == "settled":
+        assert reason is None
+    elif holder == "live_pid":
+        assert reason == "live task PID for task-id=legacy"
+    elif holder == "live_cwd":
+        assert reason == f"live process cwd={occupied / 'scripts'}"
+    else:
+        assert reason == "active-task probe unavailable"
+    if holder not in {"complete", "missing_record"}:
+        diagnostic = (tmp_tasks_dir / "legacy.diag").read_text()
+        assert "active_task_probe_" in diagnostic
+        assert type(failure).__name__ in diagnostic
+    if holder == "missing_record":
+        assert not (tmp_tasks_dir / "legacy.json").exists()
+
+
 def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340 CF F001: state key codex_foo vs path component foo still finds owner."""
     target = tmp_path / "target"
@@ -10950,6 +10991,7 @@ def test_read_only_dispatch_auto_pins_detached_worktree(tmp_tasks_dir, monkeypat
         assert delegate.cmd_dispatch(args) == 1
         assert ensure_calls[-1]["agent"] == agent
         assert ensure_calls[-1]["detached"] is True
+        assert ensure_calls[-1]["read_only"] is True
         assert "sentinel: worktree creation reached" in capsys.readouterr().err
 
 
@@ -13441,6 +13483,36 @@ def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, 
     assert delegate.cmd_rescue(args) == 0
     assert json.loads(capsys.readouterr().out)["tasks"] == []
     assert worktree.exists()
+
+
+@pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
+@pytest.mark.parametrize("apply", [False, True])
+def test_rescue_monitor_outage_skips_without_error(tmp_path, monkeypatch, tmp_tasks_dir, capsys, failure, apply):
+    import urllib.request
+
+    from scripts.orchestration import reap_worktrees
+
+    real_probe = reap_worktrees._active_task_ids
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    original_state = state_path.read_bytes()
+    original_artifact = (worktree / "artifact.txt").read_bytes()
+
+    def fail(*_args, **_kwargs):
+        raise failure
+
+    monkeypatch.setattr(urllib.request, "urlopen", fail)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", real_probe)
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="6h", apply=apply)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["error"] == 0
+    assert report["summary"]["skipped"] == 1
+    assert report["tasks"][0]["reason"] == "activity probe unavailable"
+    diagnostic = (tmp_tasks_dir / "rescue-test.diag").read_text()
+    assert "active_task_probe_" in diagnostic
+    assert type(failure).__name__ in diagnostic
+    assert state_path.read_bytes() == original_state
+    assert (worktree / "artifact.txt").read_bytes() == original_artifact
 
 
 def test_settle_zombie_with_unpushed_commit_is_rescue_candidate(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
@@ -16636,6 +16708,68 @@ def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     assert state["worktree_path"] == str(dispatch_wt)
     assert state["worktree_reused"] is True
     assert state["worktree_branch"] is not None
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_spawn(
+    tmp_tasks_dir, tmp_path, monkeypatch, mode
+):
+    """#9421: a read-only --cwd reuse withdraws primary database links under the lock, before spawn."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    (main / ".git" / "info" / "exclude").write_text("*.db\n", encoding="utf-8")
+    (main / "data").mkdir()
+    for name in ("vesum.db", "sources.db"):
+        with contextlib.closing(sqlite3.connect(main / "data" / name)) as conn, conn:
+            conn.execute("CREATE TABLE primary_rows (value TEXT)")
+    other = tmp_path / "elsewhere.db"
+    other.touch()
+    # An earlier write-capable dispatch provisioned both links; a link to anything else must stay.
+    delegate._provision_data_symlinks(dispatch_wt, main)
+    before = {name: (main / "data" / name).read_bytes() for name in ("vesum.db", "sources.db")}
+    (dispatch_wt / "data" / "other.db").symlink_to(other)
+    at_spawn: list[list[str]] = []
+    withdrawals: list[bool] = []
+    real_withdraw = delegate._withdraw_primary_database_links
+
+    def withdraw(worktree, main_repo_root, relative_paths):
+        withdrawals.append(_worktree_lock_is_free(worktree))
+        real_withdraw(worktree, main_repo_root, relative_paths)
+
+    monkeypatch.setattr(delegate, "_withdraw_primary_database_links", withdraw)
+    real_popen = delegate.subprocess.Popen
+
+    def fake_popen(cmd, *a, **k):
+        if cmd and Path(str(cmd[0])).name == "git":
+            return real_popen(cmd, *a, **k)
+        at_spawn.append(sorted(p.name for p in (dispatch_wt / "data").iterdir() if p.is_symlink()))
+        if mode == "read-only":
+            # The worker's relative write lands in the worktree, never the primary.
+            for name in ("vesum.db", "sources.db"):
+                with contextlib.closing(sqlite3.connect(dispatch_wt / "data" / name)) as conn, conn:
+                    conn.execute("CREATE TABLE worker_write (value TEXT)")
+        for fd in k.get("pass_fds") or ():
+            os.write(fd, b"1")
+        return _GuardFakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    rc = delegate.cmd_dispatch(_write_args(task_id=f"cwd-ro-links-{mode}", mode=mode, cwd=str(dispatch_wt)))
+
+    assert rc == 0
+    assert delegate._read_state(delegate._state_path(f"cwd-ro-links-{mode}"))["worktree_reused"] is True
+    assert len(at_spawn) == 1
+    if mode == "read-only":
+        assert withdrawals == [False]
+        assert at_spawn == [["other.db"]]
+        for name in ("vesum.db", "sources.db"):
+            assert not (dispatch_wt / "data" / name).is_symlink()
+            assert (main / "data" / name).read_bytes() == before[name]
+    else:
+        assert withdrawals == []
+        assert at_spawn == [["other.db", "sources.db", "vesum.db"]]
+    assert (dispatch_wt / "data" / "other.db").resolve() == other.resolve()
 
 
 #: A --review-attempt prompt must print the ids its seat echoes (#8996); these match rev-test / att-test.

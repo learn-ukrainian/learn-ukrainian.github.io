@@ -80,6 +80,8 @@ class Pack:
     record_texts: dict[str, str] = field(default_factory=dict)
     #: EX- id -> (sentence text, the word ids of its sentence_ref).
     examples: dict[str, tuple[str, tuple[str, ...]]] = field(default_factory=dict)
+    #: Recap refs retain their section and raw fields for field admission and source attribution.
+    recap_records: dict[str, tuple[str, dict]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -122,6 +124,7 @@ def load_pack(pack_path: Path) -> Pack:
     video_uses: dict[str, str] = {}
     record_texts: dict[str, str] = {}
     examples: dict[str, tuple[str, tuple[str, ...]]] = {}
+    recap_records: dict[str, tuple[str, dict]] = {}
     for list_name in PACK_LISTS:
         records = data.get(list_name, [])
         if records is None:
@@ -155,6 +158,7 @@ def load_pack(pack_path: Path) -> Pack:
             if list_name == "videos" and isinstance(record.get("use"), str):
                 video_uses[record["id"]] = record["use"]
             if list_name in ("texts", "exercises", "examples"):
+                recap_records[record["id"]] = (list_name, record)
                 printable = [record.get(key) for key in ("quote", "text")]
                 printable += record.get("items_sample") if isinstance(record.get("items_sample"), list) else []
                 if any(isinstance(item, str) for item in printable):
@@ -173,6 +177,7 @@ def load_pack(pack_path: Path) -> Pack:
         video_uses=video_uses,
         record_texts=record_texts,
         examples=examples,
+        recap_records=recap_records,
     )
 
 
