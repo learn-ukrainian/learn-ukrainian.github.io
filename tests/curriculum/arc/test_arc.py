@@ -24,10 +24,10 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 ARC_DOC = REPO_ROOT / "docs/epics/fresh-build-a1-arc.md"
 ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 
-ROLLUP_ROW = "| 1–4 | *(see §4)* | A1.1 | Literacy | Li, W (copying, own name) | 17 |"
-POS1_ROW_FRAGMENT = "**13 letters**, primer part 1 order"
+
+POS1_ROW_FRAGMENT = "**12 letters**: А Е И І О М Н В П Р Т Я"
 POS42_ROW = "| 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |"
-POS5_ROW = "| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions | Li (`:485`) | 3 |"
+POS5_ROW = next(line for line in ARC_DOC.read_text().splitlines() if line.startswith("| 3 |"))
 STATED_TOTAL_ANCHOR = "orientation only and total 162"
 STATED_TOTAL_SENTENCE = "The lesson counts above are estimates for\norientation only and total 162."
 
@@ -57,38 +57,35 @@ def test_a1_has_55_contiguous_positions_with_unique_slugs() -> None:
 
 
 def test_literacy_positions_letters_and_lessons() -> None:
-    records = {r["position"]: r for r in _records()}
-    assert records[1]["slug"] == "sounds-letters-and-hello"
-    assert records[1]["est_lessons"] == 5
-    assert len(records[1]["letters"]) == 13
-    assert len(records[2]["letters"]) == 12
-    assert len(records[3]["letters"]) == 8
-    sets = [set(records[p]["letters"]) for p in (1, 2, 3)]
-    assert sets[0].isdisjoint(sets[1]) and sets[0].isdisjoint(sets[2]) and sets[1].isdisjoint(sets[2])
-    assert len(sets[0] | sets[1] | sets[2]) == 33
-
-
-def test_position_1_letters_exact() -> None:
-    records = {r["position"]: r for r in _records()}
-    assert records[1]["letters"] == list("АОУИМІНВЛСКПР")
-    assert records[3]["letters"][-1] == "ь"
-
-
-def test_rollup_row_drives_literacy_positions_and_is_not_emitted() -> None:
     records = _records()
-    for position in (1, 2, 3, 4):
-        record = records[position - 1]
-        assert record["phase"] == "A1.1"
-        assert record["skills"] == ["Li", "W"]
-        assert record["skills_text"] == "Li, W (copying, own name)"
+    assert records[0]["slug"] == "introduction-to-ukrainian"
+    assert records[0]["letters"] == []
+    assert [r["est_lessons"] for r in records[:7]] == [2, 5, 4, 4, 5, 3, 2]
+    letters = [letter for record in records[1:5] for letter in record["letters"]]
+    assert len(letters) == len(set(letters)) == 33
+    assert set(letters) == set("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩьЮЯ")
+
+
+def test_position_2_letters_exact() -> None:
+    records = _records()
+    assert records[1]["letters"] == list("АЕИІОМНВПРТЯ")
+    assert "ь" in records[2]["letters"]
+
+
+def test_opening_rows_own_phase_and_skills() -> None:
+    records = _records()
+    assert records[0]["skills"] == []
+    for record in records[1:7]:
+        assert {"Li", "S"} <= set(record["skills"])
+    assert records[4]["skills"] == ["Li", "S", "R", "W"]
+    assert records[-1]["skills"] == ["W", "Li", "R", "S"]
     assert all(isinstance(r["position"], int) for r in records)
-    assert not any("see §4" in r["slug"] or r["job"] == "Literacy" for r in records)
 
 
 def test_standard_line_refs_parsing() -> None:
     records = {r["position"]: r for r in _records()}
-    assert records[3]["standard_line_refs"] == [[571, 572]]
-    assert records[4]["standard_line_refs"] == [[588, 588], [571, 571]]
+    assert records[3]["standard_line_refs"] == [[485, 485]]
+    assert records[5]["standard_line_refs"] == [[571, 572]]
     assert records[34]["standard_line_refs"] == [[523, 525], [361, 361]]
     assert records[28]["standard_line_refs"] == []
 
@@ -139,14 +136,14 @@ def test_mutation_deleted_row_breaks_check(tmp_path: Path) -> None:
 
 
 def test_bolded_count_mismatch_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS1_ROW_FRAGMENT, POS1_ROW_FRAGMENT.replace("**13 letters**", "**12 letters**"))
+    mutated = _mutated_doc(tmp_path, POS1_ROW_FRAGMENT, POS1_ROW_FRAGMENT.replace("**12 letters**", "**11 letters**"))
     with pytest.raises(generate_arc.ArcGenerationError):
         generate_arc.generate_yaml(mutated)
 
 
-def test_rollup_total_mismatch_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, ROLLUP_ROW, ROLLUP_ROW.replace("| 17 |", "| 16 |"))
-    with pytest.raises(generate_arc.ArcGenerationError):
+def test_literacy_row_missing_cell_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.rsplit("|", 2)[0] + "|")
+    with pytest.raises(generate_arc.ArcGenerationError, match="cells"):
         generate_arc.generate_yaml(mutated)
 
 
@@ -169,25 +166,25 @@ def test_stated_total_sentence_removed_fails_generation(tmp_path: Path) -> None:
 
 
 def test_unknown_skills_code_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| X | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li, S, W (`:485`) | 4 |", "| X | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError):
         generate_arc.generate_yaml(mutated)
 
 
 def test_skills_trailing_comma_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| Li, | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li, S, W (`:485`) | 4 |", "| Li, | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
         generate_arc.generate_yaml(mutated)
 
 
 def test_skills_double_comma_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| Li,, W | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li, S, W (`:485`) | 4 |", "| Li,, W | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
         generate_arc.generate_yaml(mutated)
 
 
 def test_skills_duplicate_code_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li (`:485`) | 3 |", "| Li, Li | 3 |"))
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li, S, W (`:485`) | 4 |", "| Li, Li | 3 |"))
     with pytest.raises(generate_arc.ArcGenerationError, match="repeats skill code"):
         generate_arc.generate_yaml(mutated)
 
@@ -220,12 +217,44 @@ def test_loader_roundtrip() -> None:
     positions = loader.load_arc("a1")
     assert len(positions) == 55
     first = positions[0]
-    assert first.slug == "sounds-letters-and-hello"
-    assert first.letters is not None and len(first.letters) == 13
+    assert first.slug == "introduction-to-ukrainian"
+    assert first.letters == []
     assert positions[27].slug == "euphony"
     assert positions[27].skills == []
     assert positions[27].letters is None
     assert positions[44].standard_line_refs == [(489, 493)]
+
+
+def test_generated_a1_orientation_loads_all_55_positions(tmp_path: Path) -> None:
+    generated = tmp_path / "_arc.yaml"
+    generated.write_text(generate_arc.generate_yaml(ARC_DOC), encoding="utf-8")
+    positions = loader.load_arc("a1", arc_path=generated)
+    assert [p.position for p in positions] == list(range(1, 56))
+    assert [(p.position, p.band_key) for p in positions if p.band_key is not None] == [(1, "a1-orientation")]
+    assert len([p for p in positions if p.band_key is None]) == 54
+    assert sum(p.est_lessons for p in positions) == 162
+
+
+@pytest.mark.parametrize(
+    "position, band_key",
+    [(1, "a1-m01-03"), (1, "unknown"), (1, ""), (2, "a1-orientation"), (2, "a1-m01-03"), (55, "a1-orientation")],
+)
+def test_loader_rejects_invalid_a1_band_declarations(tmp_path: Path, position: int, band_key: str) -> None:
+    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
+    data["positions"][position - 1]["band_key"] = band_key
+    invalid = tmp_path / "_arc.yaml"
+    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match=re.escape("fails schemas/arc.schema.json")):
+        loader.load_arc("a1", arc_path=invalid)
+
+
+def test_loader_still_rejects_a1_immersion_bands(tmp_path: Path) -> None:
+    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
+    data["immersion_bands"] = [{"start": 1, "end": 55, "band_key": "a1-orientation"}]
+    invalid = tmp_path / "_arc.yaml"
+    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match=re.escape("fails schemas/arc.schema.json")):
+        loader.load_arc("a1", arc_path=invalid)
 
 
 def test_loader_raises_on_stale_source_sha256(tmp_path: Path) -> None:
@@ -258,7 +287,7 @@ def test_loader_raises_on_schema_invalid_yaml(tmp_path: Path) -> None:
 def test_loader_raises_on_inverted_line_ref_range(tmp_path: Path) -> None:
     """The schema cannot express start <= end with prefixItems; the loader checks it."""
     data = yaml.safe_load(ARC_YAML.read_text(encoding="utf-8"))
-    refs = data["positions"][2]["standard_line_refs"]
+    refs = data["positions"][4]["standard_line_refs"]
     assert refs == [[571, 572]]
     refs[0] = [572, 571]
     inverted = tmp_path / "_arc.yaml"
@@ -289,3 +318,11 @@ def test_loader_never_reads_plans_directory(tmp_path: Path, monkeypatch: pytest.
     monkeypatch.setattr(loader, "REPO_ROOT", root)
     with pytest.raises(FileNotFoundError):
         loader.load_arc("a1")
+
+
+def test_positions_11_to_55_retain_semantic_identity():
+    import hashlib
+    import json
+
+    later = _records()[10:]
+    assert hashlib.sha256(json.dumps(later, ensure_ascii=False, sort_keys=True).encode()).hexdigest() == 'd4ccdd35f7898ae57947ffba177277cb2d396a85280cfb48b20d492ba54d5673'

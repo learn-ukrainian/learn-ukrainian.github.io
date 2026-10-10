@@ -20,6 +20,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.curriculum.arc.loader import load_arc
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state import codes
 
@@ -250,6 +251,9 @@ def test_cli_planned_json_output(tmp_path: Path) -> None:
 
 
 def test_cli_band_json_output(tmp_path: Path) -> None:
+    orientation = load_arc("a1")[0]
+    assert (orientation.position, orientation.slug, orientation.band_key) == (
+        1, "introduction-to-ukrainian", "a1-orientation")
     plans_dir, evidence_dir = _setup_fixture(tmp_path)
     res = subprocess.run(
         [
@@ -273,9 +277,68 @@ def test_cli_band_json_output(tmp_path: Path) -> None:
     )
     assert res.returncode == 0
     payload = json.loads(res.stdout)
-    assert payload["band_key"] == "a1-m01-03"
-    assert payload["source"] == "ulp_vocab"
+    assert payload["band_key"] == "a1-orientation"
+    assert payload["source"] == "arc_table"
+    assert payload["advisory_uk_share"] is None
+    assert payload["module_structural"] == {}
     assert codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED in payload["not_checked"]
+
+
+@pytest.mark.parametrize("count,key,share", [
+    # Independent R-30 boundary expectations, docs/epics/fresh-build-requirements.md.
+    (0, "a1-m01-03", [0, 15]), (24, "a1-m01-03", [0, 15]),
+    (25, "a1-m04-06", [10, 20]), (59, "a1-m04-06", [10, 20]),
+    (60, "a1-m07-14", [15, 30]), (139, "a1-m07-14", [15, 30]),
+    (140, "a1-m15-24", [25, 40]), (241, "a1-m15-24", [25, 40]),
+    (242, "a1-m25-34", [35, 50]), (399, "a1-m25-34", [35, 50]),
+    (400, "a1-m35-54", [45, 60]), (599, "a1-m35-54", [45, 60]),
+    (600, "a1-m55+", [55, 70]), (601, "a1-m55+", [55, 70]),
+])
+def test_cli_ordinary_a1_band_boundaries(count, key, share):
+    ordinary = load_arc("a1")[1]
+    assert (ordinary.position, ordinary.slug, ordinary.band_key) == (2, "sounds-letters-and-hello", None)
+    res = subprocess.run(
+        [PYTHON, "-m", "scripts.curriculum.learner_state", "band", "a1", "2", "1",
+         "--cumulative-count", str(count), "--json"],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert res.returncode == 0, res.stderr
+    payload = json.loads(res.stdout)
+    assert (payload["band_key"], payload["source"], payload["advisory_uk_share"]) == (key, "ulp_vocab", share)
+    assert payload["module_structural"] == {}
+    assert codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED in payload["not_checked"]
+
+
+def test_cli_position_one_without_declaration_is_ordinary(tmp_path):
+    # A private fixture removes the marker, preserving the public source lock.
+    arc = yaml.safe_load(Path("curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml").read_text())
+    del arc["positions"][0]["band_key"]
+    arc_path = tmp_path / "_arc.yaml"
+    _write_yaml(arc_path, arc)
+    before = arc_path.read_bytes()
+    res = subprocess.run(
+        [PYTHON, "-m", "scripts.curriculum.learner_state", "band", "a1", "1", "1",
+         "--arc-path", str(arc_path), "--cumulative-count", "0", "--json"],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert res.returncode == 0, res.stderr
+    payload = json.loads(res.stdout)
+    assert (payload["band_key"], payload["source"], payload["advisory_uk_share"]) == (
+        "a1-m01-03", "ulp_vocab", [0, 15])
+    assert arc_path.read_bytes() == before
+
+
+def test_cli_orientation_still_requires_valid_count():
+    res = subprocess.run(
+        [PYTHON, "-m", "scripts.curriculum.learner_state", "band", "a1", "1", "1",
+         "--cumulative-count", "-1", "--json"],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert res.returncode == 1
+    payload = json.loads(res.stdout)
+    assert payload["ok"] is False
+    assert payload["code"] == codes.CUMULATIVE_CORE_COUNT_INVALID
+    assert not res.stderr
 
 
 def test_cli_failing_planned_exits_nonzero(tmp_path: Path) -> None:

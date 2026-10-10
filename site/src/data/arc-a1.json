@@ -3,158 +3,58 @@
   "positions": [
     {
       "position": 1,
-      "slug": "sounds-letters-and-hello",
-      "phase": "A1.1",
-      "title_uk": "звук, літера, привіт",
-      "title_en": "Sounds letters and hello",
-      "job": "Hear and say your first greetings; learn the difference between a sound and a letter, and between vowels and consonants; read and write the first letter group in syllables and short words",
-      "skills": [
-        "Li",
-        "W"
-      ],
-      "is_checkpoint": false,
-      "est_lessons": 5,
-      "lessons": 6,
-      "built_lessons": [],
-      "lesson_numbers": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "lesson_titles": [
-        "привіт",
-        "звук і літера",
-        "М, І, Н",
-        "В, Л, С",
-        "К, П, Р",
-        "ми писали"
-      ],
-      "scope": {
-        "letters": 13,
-        "grammar_points": 3,
-        "core_lemmas": 9
-      },
-      "state": "plan_reviewed",
-      "previous_edition_href": "/a1-v1/sounds-letters-and-hello/"
-    },
-    {
-      "position": 2,
-      "slug": "reading-ukrainian",
-      "phase": "A1.1",
-      "title_uk": "читати",
-      "title_en": "Reading ukrainian",
-      "job": "Read words, then short sentences aloud, with most of the alphabet",
-      "skills": [
-        "Li",
-        "W"
-      ],
-      "is_checkpoint": false,
-      "est_lessons": 5,
-      "lessons": 6,
-      "built_lessons": [],
-      "lesson_numbers": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "lesson_titles": [
-        "Т, Е",
-        "Д, З, Б",
-        "Г, Ґ",
-        "Ч, Й, Х",
-        "Ж, Ш",
-        "повторення"
-      ],
-      "scope": {
-        "letters": 12,
-        "grammar_points": 1,
-        "core_lemmas": 14
-      },
-      "state": "plan_reviewed",
-      "previous_edition_href": "/a1-v1/reading-ukrainian/"
-    },
-    {
-      "position": 3,
-      "slug": "special-signs",
-      "phase": "A1.1",
-      "title_uk": "літери",
-      "title_en": "Special signs",
-      "job": "Finish the alphabet; read and write words with the two-sound letters, ь, the apostrophe, дж / дз; hear hard vs soft",
-      "skills": [
-        "Li",
-        "W"
-      ],
-      "is_checkpoint": false,
-      "est_lessons": 4,
-      "lessons": 8,
-      "built_lessons": [],
-      "lesson_numbers": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8
-      ],
-      "lesson_titles": [
-        "ь",
-        "Ї, Я",
-        "Ю, Є",
-        "Ц, Щ, Ф",
-        "дж, дз",
-        "’",
-        "алфавіт",
-        "повторення"
-      ],
-      "scope": {
-        "letters": 8,
-        "grammar_points": 7,
-        "core_lemmas": 2
-      },
-      "state": "plan_reviewed",
-      "previous_edition_href": "/a1-v1/special-signs/"
-    },
-    {
-      "position": 4,
-      "slug": "stress-and-melody",
+      "slug": "introduction-to-ukrainian",
       "phase": "A1.1",
       "title_uk": null,
-      "title_en": "Stress and melody",
-      "job": "Use stress marks as a reading aid; statement vs question melody; first contact with unstressed е / и; recognise handwritten and italic letter shapes; divide words into syllables for line breaks",
-      "skills": [
-        "Li",
-        "W"
-      ],
+      "title_en": "Introduction to ukrainian",
+      "job": "Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes",
+      "skills": [],
       "is_checkpoint": false,
-      "est_lessons": 3,
+      "est_lessons": 2,
       "lessons": null,
       "built_lessons": [],
       "lesson_numbers": [],
       "lesson_titles": [],
       "scope": null,
       "state": "planned",
-      "previous_edition_href": "/a1-v1/stress-and-melody/"
+      "previous_edition_href": null
     },
     {
-      "position": 5,
+      "position": 2,
+      "slug": "sounds-letters-and-hello",
+      "phase": "A1.1",
+      "title_uk": null,
+      "title_en": "Sounds letters and hello",
+      "job": "Greet and take a first spoken turn; connect useful words with letters and supported writing",
+      "skills": [
+        "Li",
+        "S",
+        "W"
+      ],
+      "is_checkpoint": false,
+      "est_lessons": 5,
+      "lessons": null,
+      "built_lessons": [],
+      "lesson_numbers": [],
+      "lesson_titles": [],
+      "scope": null,
+      "state": "planned",
+      "previous_edition_href": "/a1-v1/sounds-letters-and-hello/"
+    },
+    {
+      "position": 3,
       "slug": "who-am-i",
       "phase": "A1.1",
       "title_uk": null,
       "title_en": "Who am i",
-      "job": "Introduce yourself and ask who someone is; common professions",
+      "job": "Introduce yourself and ask identity; common professions and origin phrases",
       "skills": [
-        "Li"
+        "Li",
+        "S",
+        "W"
       ],
       "is_checkpoint": false,
-      "est_lessons": 3,
+      "est_lessons": 4,
       "lessons": null,
       "built_lessons": [],
       "lesson_numbers": [],
@@ -164,13 +64,61 @@
       "previous_edition_href": "/a1-v1/who-am-i/"
     },
     {
-      "position": 6,
+      "position": 4,
       "slug": "my-family",
       "phase": "A1.1",
       "title_uk": null,
       "title_en": "My family",
-      "job": "Show a family photo and say who is who",
+      "job": "Introduce people in a chosen family photo or equivalent using supported possessive phrases",
       "skills": [
+        "Li",
+        "S",
+        "W"
+      ],
+      "is_checkpoint": false,
+      "est_lessons": 4,
+      "lessons": null,
+      "built_lessons": [],
+      "lesson_numbers": [],
+      "lesson_titles": [],
+      "scope": null,
+      "state": "planned",
+      "previous_edition_href": "/a1-v1/my-family/"
+    },
+    {
+      "position": 5,
+      "slug": "reading-ukrainian",
+      "phase": "A1.1",
+      "title_uk": null,
+      "title_en": "Reading ukrainian",
+      "job": "Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters",
+      "skills": [
+        "Li",
+        "S",
+        "R",
+        "W"
+      ],
+      "is_checkpoint": false,
+      "est_lessons": 5,
+      "lessons": null,
+      "built_lessons": [],
+      "lesson_numbers": [],
+      "lesson_titles": [],
+      "scope": null,
+      "state": "planned",
+      "previous_edition_href": "/a1-v1/reading-ukrainian/"
+    },
+    {
+      "position": 6,
+      "slug": "first-conversations",
+      "phase": "A1.1",
+      "title_uk": null,
+      "title_en": "First conversations",
+      "job": "Sustain a scaffolded conversation using greetings, identity, family and familiar belongings",
+      "skills": [
+        "Li",
+        "S",
+        "R",
         "W"
       ],
       "is_checkpoint": false,
@@ -181,7 +129,7 @@
       "lesson_titles": [],
       "scope": null,
       "state": "planned",
-      "previous_edition_href": "/a1-v1/my-family/"
+      "previous_edition_href": null
     },
     {
       "position": 7,
@@ -189,8 +137,10 @@
       "phase": "A1.1",
       "title_uk": null,
       "title_en": "Checkpoint first contact",
-      "job": "Self-check: read aloud, greet, introduce yourself and family",
+      "job": "Complete an integrated first-contact task with previously introduced language",
       "skills": [
+        "Li",
+        "S",
         "R",
         "W"
       ],
@@ -210,8 +160,12 @@
       "phase": "A1.2",
       "title_uk": null,
       "title_en": "Things have gender",
-      "job": "Tell the gender of a noun and pick він / вона / воно, мій / моя / моє",
-      "skills": [],
+      "job": "Identify familiar belongings using noun gender and matching pronoun and possessive forms",
+      "skills": [
+        "Li",
+        "S",
+        "R"
+      ],
       "is_checkpoint": false,
       "est_lessons": 3,
       "lessons": null,
@@ -228,8 +182,12 @@
       "phase": "A1.2",
       "title_uk": null,
       "title_en": "What is it like",
-      "job": "Describe a thing with an agreeing adjective",
-      "skills": [],
+      "job": "Describe and identify familiar objects using nominative adjective agreement",
+      "skills": [
+        "Li",
+        "S",
+        "R"
+      ],
       "is_checkpoint": false,
       "est_lessons": 3,
       "lessons": null,
@@ -246,8 +204,12 @@
       "phase": "A1.2",
       "title_uk": null,
       "title_en": "Colors",
-      "job": "Name colours; soft-group adjectives",
-      "skills": [],
+      "job": "Use colours and agreeing descriptions to distinguish objects; soft-group adjectives",
+      "skills": [
+        "Li",
+        "S",
+        "R"
+      ],
       "is_checkpoint": false,
       "est_lessons": 2,
       "lessons": null,
@@ -1127,7 +1089,8 @@
       "skills": [
         "W",
         "Li",
-        "R"
+        "R",
+        "S"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -1138,6 +1101,16 @@
       "scope": null,
       "state": "planned",
       "previous_edition_href": "/a1-v1/a1-finale/"
+    }
+  ],
+  "retired": [
+    {
+      "slug": "special-signs",
+      "old_position": 3
+    },
+    {
+      "slug": "stress-and-melody",
+      "old_position": 4
     }
   ]
 }

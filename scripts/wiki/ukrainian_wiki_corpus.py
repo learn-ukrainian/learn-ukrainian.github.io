@@ -14,20 +14,21 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from audit.checks.cross_file_integrity import extract_ukrainian_words
-from audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
-from rag.rag_batch_verify import vesum_batch_lookup
-from rag.source_query import pravopys_lookup
+# Direct execution starts with scripts/wiki/ on sys.path. Bootstrap the root
+# before importing dependencies, and qualify audit to avoid scripts/audit.py.
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
 
-from .config import PROJECT_ROOT
-from .embedding_manifest import DEFAULT_MANIFEST_DB, EmbeddingManifest, reserve_corpus_shard
-from .quality_gate import _check_citation_registry
-from .sources_db import search_style_guide
-
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
+from scripts.audit.checks.cross_file_integrity import extract_ukrainian_words
+from scripts.audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
+from scripts.rag.rag_batch_verify import vesum_batch_lookup
+from scripts.rag.source_query import pravopys_lookup
 from scripts.storage.artifacts import write_artifact
+from scripts.wiki.config import PROJECT_ROOT
+from scripts.wiki.embedding_manifest import DEFAULT_MANIFEST_DB, EmbeddingManifest, reserve_corpus_shard
+from scripts.wiki.quality_gate import _check_citation_registry
+from scripts.wiki.sources_db import search_style_guide
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_REPORT_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "ukrainian_wiki_a1_ingest_report.md"

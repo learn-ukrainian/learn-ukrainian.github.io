@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+from scripts.agent_runtime.env_sanitize import build_agent_env
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -24,6 +25,7 @@ if [ -n "${ANTHROPIC_AUTH_TOKEN:-}" ]; then printf 'auth=SET\\n'; else printf 'a
 printf 'model=%s\\n' "${ANTHROPIC_MODEL-unset}"
 printf 'effort=%s\\n' "${CLAUDE_CODE_EFFORT_LEVEL-unset}"
 printf 'transport=%s\\n' "${LEARN_UKRAINIAN_TRANSPORT-unset}"
+printf 'advisor_disabled=%s\\n' "${CLAUDE_CODE_DISABLE_ADVISOR_TOOL-unset}"
 printf 'arg=%s\\n' "$@"
 """,
         encoding="utf-8",
@@ -80,8 +82,9 @@ def test_headless_wrapper_composes_kimicc_env_without_writing_claude_config(tmp_
     home = tmp_path / "home"
     home.mkdir()
     plan = _adapter_plan(tmp_path, monkeypatch, model="k3")
-    env = _clean_kimicc_env(home)
-    env.update({**plan.env_overrides, "KIMICC_AUTH_TOKEN": "test-route-token"})
+    with monkeypatch.context() as context:
+        context.setattr(os, "environ", {**_clean_kimicc_env(home), "KIMICC_AUTH_TOKEN": "test-route-token"})
+        env = build_agent_env(provider="kimi", overrides=plan.env_overrides)
 
     result = subprocess.run(
         plan.cmd,
@@ -98,6 +101,7 @@ def test_headless_wrapper_composes_kimicc_env_without_writing_claude_config(tmp_
     assert "model=k3" in result.stdout
     assert "effort=high" in result.stdout
     assert "transport=kimicc" in result.stdout
+    assert "advisor_disabled=1" in result.stdout
     assert "arg=-p" in result.stdout
     assert "arg=--bare" in result.stdout
     assert "arg=stream-json" in result.stdout

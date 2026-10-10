@@ -79,10 +79,26 @@ CAPACITY_FIXTURE = Path(__file__).parent / "fixtures"
 
 
 def approved_review_baseline(baseline):
-    """AC-01 updates reviewer receipts only; retain all other frozen surfaces."""
+    """Apply #10016 reviewer and #10083 advisor/launcher-help revisions.
+
+    Launcher wording comes from the existing #10083 commit e1c5699496.
+    Keep the historical capture, inputs and source census byte-pinned.
+    """
     overlay = json.loads(gzip.decompress((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()))
     assert set(overlay) == {"reviewer"}
-    return {**baseline, **overlay}
+    advisor = json.loads((CAPACITY_FIXTURE / "claude-advisor-10083.json").read_bytes())
+    adapters = deepcopy(baseline["adapters"])
+    for index in advisor["adapter_rows"]:
+        env = adapters[index]["value"]["env_overrides"]
+        assert env == {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
+        env.update(advisor["env_overrides"])
+    launchers = deepcopy(baseline["launchers"])
+    for index in advisor["launcher_rows"]:
+        for replacement in advisor["launcher_help_replacements"]:
+            before, after = replacement["before"], replacement["after"]
+            assert launchers[index]["stdout"].count(before) == 1
+            launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, **overlay, "adapters": adapters, "launchers": launchers}
 
 
 REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
@@ -156,6 +172,45 @@ def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
         assert old == new, inputs
 
 
+@pytest.mark.parametrize("configuration", ["", "no-cli"])
+def test_advisor_fixture_changes_only_headless_environment_and_launcher_help(configuration):
+    assert hashlib.sha256((CAPACITY_FIXTURE / "claude-advisor-10083.json").read_bytes()).hexdigest() == (
+        "6c4f6b3a080fcc5edfab6dff6d8bec8fb8cd3527f2c36a0a0be474066a24f8e1"
+    )
+    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline.json.gz").read_bytes()))
+    original = deepcopy(baseline)
+    updated = approved_review_baseline(baseline)
+    advisor = json.loads((CAPACITY_FIXTURE / "claude-advisor-10083.json").read_bytes())
+    assert advisor["adapter_rows"] == [8, 10, 12, 14, 16, 18, 20, 22]
+    assert advisor["env_overrides"] == {"CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1"}
+    changed = []
+    for index, (before, after) in enumerate(zip(baseline["adapters"], updated["adapters"], strict=True)):
+        if before != after:
+            changed.append(index)
+            assert INPUTS["adapters"][index]["agent"].startswith("claude")
+            assert INPUTS["adapters"][index]["isolation"] is False
+            restored = deepcopy(after)
+            assert restored["value"]["env_overrides"].pop("CLAUDE_CODE_DISABLE_ADVISOR_TOOL") == "1"
+            assert restored == before
+    assert changed == advisor["adapter_rows"]
+    assert len(updated["adapters"]) == len(baseline["adapters"])
+    launcher_changes = []
+    for index, (before, after) in enumerate(zip(baseline["launchers"], updated["launchers"], strict=True)):
+        if before != after:
+            launcher_changes.append(index)
+            assert INPUTS["launchers"][index]["variant"] == "help"
+            restored = deepcopy(after)
+            for replacement in advisor["launcher_help_replacements"]:
+                assert restored["stdout"].count(replacement["after"]) == 1
+                restored["stdout"] = restored["stdout"].replace(replacement["after"], replacement["before"])
+            assert restored == before
+    assert launcher_changes == advisor["launcher_rows"] == list(range(4, 70, 5))
+    assert len(updated["launchers"]) == len(baseline["launchers"])
+    for surface in baseline.keys() - {"reviewer", "adapters", "launchers"}:
+        assert updated[surface] == baseline[surface]
+    assert baseline == original
+
+
 def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert hashlib.sha256((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()).hexdigest() == (
         "7446be4dfbedb928fa3760bdb508785cc82b95995fc09d4662a67d6a2c6b1b1a"
@@ -195,17 +250,17 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert (semantic_changes, selection_changes) == (24, 8)
 
 
-# Literal digests bind the #10205 Cursor wire pin and allowlist revision of both
-# configurations; see SPEC.md.
+# Literal digests bind the #10205 Cursor wire pin and allowlist revision and
+# the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
-    "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
-    "SPEC.md": "c0bb7c80731b46d1fee874b8a26bd8f77c141bf1d5c43abf65375e27c2685faa",
-    "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
+    "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
+    "SPEC.md": "5b324b2eb4c419873160bb5a1db5fb9dbbc633cce34464aede05ac1b660e09d7",
+    "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "84c5dd2df2295b189bbced8d23026c6b263b37128da1d7fc5f560a853c12a1f4",
-    "no-cli/baseline.json.gz": "94cb4f113d95c2538172058bc48e29d47e81561675278647f036c87f3c9d6919",
+    "no-cli/SHA256SUMS": "7284c77ab0b02c2de844e407e37ff3eb55c56ed412521c98212d0d7309e406ba",
+    "no-cli/baseline.json.gz": "c9be87f384a751f5c228e20fa10a283e2d4e495959d8fd82535f85217f298d31",
     "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",

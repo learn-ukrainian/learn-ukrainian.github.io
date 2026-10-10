@@ -253,6 +253,7 @@ def test_every_english_field_read_has_a_production_classification():
         "body_support",
         "vocabulary_and_inline_support",
         "writer_bilingual",
+        "plan_task_scaffolding",
     }
 
 
@@ -293,8 +294,12 @@ def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num
     inputs = maximal_draft(level)
     draft, plan, pack, words = inputs
     plan["arc_ref"]["position"] = module_num
+    if channel.startswith("plan."):
+        from tests.build.test_fresh_recap_contract import task
+
+        plan["lessons"][0]["steps"][-1]["task"] = task()
     probe = "EnglishChannelProbe"
-    assert plant_english_probe({"draft": draft, "pack": pack, "words": words}, channel, probe), channel
+    assert plant_english_probe({"plan": plan, "draft": draft, "pack": pack, "words": words}, channel, probe), channel
     result, expanded = check_render(inputs, level)
     assert result.passed, result.to_dict()
     tabs = re.findall(r'<TabItem label="[^"]+">(.*?)</TabItem>', html.unescape(result.artifacts["mdx"]), re.DOTALL)
@@ -319,7 +324,7 @@ def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num
     if classification == "writer_bilingual":
         assert counts["urok"] > 0
         assert not any(counts[tab] for tab in ("slovnyk", "vpravy", "resursy"))
-    elif classification == "body_support":
+    elif classification in {"body_support", "plan_task_scaffolding"}:
         assert (counts["urok"] > 0) == (level == "a1"), counts
         assert not any(counts[tab] for tab in ("slovnyk", "vpravy", "resursy"))
     else:
@@ -330,6 +335,15 @@ def test_assembler_added_english_obeys_the_page_immersion_band(level, module_num
             assert not any(counts[tab] for tab in ("urok", "vpravy", "resursy")), counts
     translations = [u for u in expanded["units"] if str(u["block"]).startswith("dialogue_translation_")]
     assert len(translations) == (len(draft["dialogue"]["translation_en"]) if level == "a1" else 0)
+
+
+def test_recap_english_channels_are_plan_fields_not_draft_echoes():
+    expected = {
+        "plan.lessons.*.steps.*.task.context_en",
+        "plan.lessons.*.steps.*.task.instruction_en",
+        "plan.lessons.*.steps.*.task.success_criteria_en.*",
+    }
+    assert {p for p, c in assemble.ENGLISH_CHANNELS.items() if c == "plan_task_scaffolding"} == expected
 
 
 @pytest.mark.parametrize("level", LEVELS)
@@ -697,6 +711,7 @@ def english_schema_paths(node, document, path=(), *, schema_path=None, schemas_d
 def test_every_english_schema_path_is_classified_in_production(level):
     paths = set()
     for root, filename in (
+        ("plan", "module-plan-v2.schema.json"),
         ("draft", f"lesson-draft-{level}-v1.schema.json"),
         ("pack", "evidence-pack-v1.schema.json"),
         ("words", "evidence-words-v1.schema.json"),

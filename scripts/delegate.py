@@ -60,6 +60,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
+        "held_work": [str] | absent,  # explicit runtime-root relative files to preserve (#10000)
+        "preserved_held_work": object | absent,  # verified runtime-held-work.v1 retrieval manifest
         "stderr_excerpt": str | null,   # the worker's raw stderr: local; never quote it in a PR or issue
         "returncode": int | null,
         "returncode_reason": str | null,
@@ -1584,6 +1586,44 @@ def _scratch_scan_roots() -> list[Path]:
         raise ScratchScanRootError(exc.reason) from None
 
 
+def _preserve_runtime_tmp_held_work(
+    lease: Path,
+    record: dict[str, Any] | None,
+    response: str | None = None,
+) -> dict[str, Any]:
+    """Publish held-work retrieval metadata before any runtime lease deletion."""
+    from scripts.fleet import runtime_held_work
+
+    if record is None:
+        return {}
+    if response is None:
+        task_id = record.get("task_id")
+        response = saved_task_response(record, _state_path_no_create(task_id) if isinstance(task_id, str) else None)
+        if response is None and (record.get("result_file") or record.get("response_chars")):
+            raise runtime_held_work.HeldWorkPreservationError()
+    try:
+        bound_root = record.get("runtime_tmp_root")
+        if bound_root and Path(bound_root).absolute() != lease.absolute():
+            raise runtime_held_work.HeldWorkPreservationError()
+        receipt = runtime_held_work.preserve(
+            lease, primary=_main_checkout_root(_REPO_ROOT), record=record, response=response or ""
+        )
+        if receipt is None:
+            return {}
+        updates = {"preserved_held_work": receipt}
+        path = _state_path_no_create(record["task_id"])
+        with task_state_lock(path):
+            current = _read_state_json(path)
+            if current is None or any(current.get(key) != record.get(key) for key in ("task_id", "run_nonce")):
+                raise runtime_held_work.HeldWorkPreservationError()
+            current.update(updates)
+            _write_record_unlocked(path, current)
+        record.update(updates)
+        return updates
+    except (OSError, ValueError, TypeError):
+        raise runtime_held_work.HeldWorkPreservationError() from None
+
+
 def _sweep_runtime_tmp_orphans(
     *,
     now: float | None = None,
@@ -1672,12 +1712,19 @@ def _sweep_runtime_tmp_orphans(
                 continue
 
             try:
+                _preserve_runtime_tmp_held_work(lease, state)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
                 _remove_runtime_tmp_lease(lease, namespace)
-            except OSError as exc:
+            except (OSError, ValueError) as exc:
                 result["errors"] += 1
                 if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
-                    error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
+                    error_details.append(
+                        (
+                            lease.name,
+                            getattr(exc, "errno", None),
+                            getattr(exc, "code", None) or str(getattr(exc, "filename", None) or lease),
+                        )
+                    )
                 continue
             result["leases_reaped"] += 1
             result["bytes_freed"] += bytes_freed
@@ -1687,7 +1734,10 @@ def _sweep_runtime_tmp_orphans(
 def _reap_runtime_tmp_lease(
     lease_root: Path | str | None,
     namespace_root: Path | str | None,
-) -> dict[str, int | str | None]:
+    *,
+    task_record: dict[str, Any] | None = None,
+    response: str | None = None,
+) -> dict[str, Any]:
     """Best-effort, fd-relative deletion of one task-scoped runtime lease.
 
     This is intentionally stricter than a generic ``rm -rf``. It only removes
@@ -1695,10 +1745,12 @@ def _reap_runtime_tmp_lease(
     ``shutil.rmtree``'s fd-based implementation so a symlink swap cannot turn
     cleanup into a deletion outside the lease. A filesystem or validation
     failure is recorded on ``tmp_reap_error`` and does not fail the worker.
+    Cited held work is copied and its retrieval manifest published before
+    deletion; preservation failure refuses deletion with a typed reason.
     ``ScratchScanRootError`` propagates: a misconfigured scan root is not
     telemetry, and this function raises it before it deletes the lease.
     """
-    result: dict[str, int | str | None] = {
+    result: dict[str, Any] = {
         "tmp_bytes_freed": 0,
         "tmp_reap_error": None,
     }
@@ -1758,6 +1810,15 @@ def _reap_runtime_tmp_lease(
         if not getattr(shutil.rmtree, "avoids_symlink_attacks", False):
             raise RuntimeError("platform rmtree lacks symlink-attack protection")
 
+        if task_record is None:
+            task_record = _runtime_tmp_state_for_lease(
+                lease.name,
+                lease,
+                legacy_stem_index=_build_runtime_tmp_legacy_stem_index()
+                if _read_runtime_tmp_task_id_marker(lease) is None
+                else None,
+            )
+        result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
         bytes_freed = _runtime_tmp_lease_bytes(lease)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
@@ -1766,7 +1827,7 @@ def _reap_runtime_tmp_lease(
     except ScratchScanRootError:
         raise
     except Exception as exc:
-        result["tmp_reap_error"] = (f"{type(exc).__name__}: {exc}")[:500]
+        result["tmp_reap_error"] = getattr(exc, "code", None) or (f"{type(exc).__name__}: {exc}")[:500]
     if worker_base_root is not None and resolved_lease is not None and not os.path.lexists(resolved_lease):
         _rebind_reaped_process_tmp(resolved_lease, worker_base_root)
     return result
@@ -4030,13 +4091,39 @@ def _worktree_is_clean(path: Path) -> bool:
 
 
 def _worktree_matches_origin_branch(path: Path, branch: str) -> bool:
-    """True when HEAD and origin/<branch> point at the same commit."""
+    """True only when HEAD equals the live, exact origin branch tip."""
     head = _resolve_sha(path, "HEAD")
-    remote = _resolve_sha(_REPO_ROOT, f"origin/{branch}")
-    if not head or not remote:
-        # origin may only be resolvable from the worktree after local fetch
-        remote = _resolve_sha(path, f"origin/{branch}")
-    return bool(head and remote and head == remote)
+    try:
+        result = _run_git_stdout(
+            path, "ls-remote", "--exit-code", "--refs", "origin", f"refs/heads/{branch}",
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    if result is None:
+        return False
+    returncode, stdout = result
+    lines = stdout.splitlines()
+    return bool(
+        head and returncode == 0 and len(lines) == 1
+        and lines[0].split("\t") == [head, f"refs/heads/{branch}"]
+    )
+
+
+def _branch_holder_active_task_ids() -> set[str] | None:
+    """Strict branch hand-off probe: missing/malformed tasks means unknown."""
+    try:
+        import urllib.request
+
+        with urllib.request.urlopen(f"{_monitor_api_base_url()}/api/delegate/active", timeout=3) as response:
+            data = json.loads(response.read().decode("utf-8"))
+        if not isinstance(data, dict) or not isinstance(data.get("tasks"), list):
+            return None
+        tasks = data["tasks"]
+        if any(not isinstance(task, dict) or not isinstance(task.get("task_id"), str) or not task["task_id"] for task in tasks):
+            return None
+        return {task["task_id"] for task in tasks}
+    except (OSError, ValueError, TimeoutError):
+        return None
 
 
 # Terminal statuses that mean a prior dispatch no longer needs the worktree
@@ -4051,6 +4138,8 @@ def _branch_holder_activity_reason(
     *,
     task_id: str | None,
     task_state: dict[str, Any] | None,
+    complete: bool = False,
+    open_files: bool = False,
 ) -> str | None:
     """Return why a branch holder cannot be released while activity is possible.
 
@@ -4072,11 +4161,17 @@ def _branch_holder_activity_reason(
     try:
         from scripts.orchestration import reap_worktrees
 
-        active_ids = reap_worktrees._active_task_ids()
+        try:
+            active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+        except reap_worktrees._ActiveTaskProbeFailure as exc:
+            _record_diagnostic(
+                candidate_task_ids[0], _exception_cause("activity probe unavailable", exc), source="branch_hand_off",
+            )
+            active_ids = None
         live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
     except Exception as exc:
         return f"activity probes unavailable ({type(exc).__name__})"
-    if task_state is None and active_ids is None:
+    if (complete or task_state is None) and active_ids is None:
         return "active-task probe unavailable"
     if live_cwds is None:
         return "process-CWD activity probe unavailable"
@@ -4104,41 +4199,144 @@ def _branch_holder_activity_reason(
         except (OSError, ValueError):
             continue
         return f"live process cwd={cwd}"
+    if open_files:
+        try:
+            open_file_reason = reap_worktrees._open_file_activity_reason(path)
+        except Exception as exc:
+            return f"open-file activity probe unavailable ({type(exc).__name__})"
+        if open_file_reason is not None:
+            return open_file_reason
     return None
 
 
 def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]:
     """Return (ok, reason) for auto-releasing a worktree holding ``branch`` (#5340).
 
-    Safe only when clean and fully pushed (HEAD == origin/<branch>). A bound
-    task must be terminal or already marked reaped; an absent legacy record is
-    allowed only after known-empty active-task and process-CWD probes prove the
-    holder is not live. Reaper reservations always win to avoid attaching a
-    branch while another cleanup owns its removal.
+    HEAD must equal the live origin branch tip. A bound terminal owner may
+    retain only regular allowlisted scratch for verified archival. A clean
+    legacy holder needs complete known-empty activity probes too. Reaper
+    reservations always win. This proof is read-only; preparation and removal
+    run under the shared attachment/removal lock.
     """
     if reaper_lifecycle.is_reap_pending(_REPO_ROOT, path):
         return False, "reaper lifecycle reservation is pending"
-    if not _worktree_is_clean(path):
-        return False, "dirty"
+    clean = _worktree_is_clean(path)
     if not _worktree_matches_origin_branch(path, branch):
-        return False, "HEAD != origin/<branch>"
+        return False, "live_remote_tip_unknown_or_mismatch"
     unparseable = _bound_task_state_unparseable_reason(path)
     if unparseable is not None:
         return False, unparseable
     task_id, task_state = _task_state_for_worktree(path)
+    # The open-file proof gates only scratch: an unavailable /proc proof must
+    # not block a clean, pushed, terminal holder.
     activity = _branch_holder_activity_reason(
         path,
         task_id=task_id,
         task_state=task_state,
+        complete=True,
+        open_files=not clean,
     )
     if activity is not None:
         return False, activity
     status = str(task_state.get("status")) if task_state and task_state.get("status") is not None else None
     if task_state is None:
+        if not clean:
+            return False, "scratch_owner_unknown"
+    elif status not in _RELEASED_TASK_STATUSES:
+        return False, f"task still active or invalid status (status={status})"
+    try:
+        from scripts.fleet.ignored_task_output import resolve_worktree_record
+        from scripts.fleet.regenerable_output import branch_holder_scratch_inventory
+
+        branch_holder_scratch_inventory(path, primary=_REPO_ROOT)
+        if not clean:
+            if worktree_claims.checked_out_branch(path) != branch:
+                return False, "holder_branch_unknown_or_changed"
+            try:
+                record_path, owner = resolve_worktree_record(path, tasks_dir(), repo_root=_REPO_ROOT, publish_cache=False)
+            except ValueError:
+                return False, "scratch_owner_ambiguous"
+            if record_path is None or owner.get("task_id") != task_id or owner.get("status") not in _RELEASED_TASK_STATUSES:
+                return False, "scratch_owner_ambiguous"
+    except Exception as exc:
+        kind = str(exc) if isinstance(exc, ValueError) and re.fullmatch(r"[a-z_]+", str(exc)) else "unknown"
+        return False, f"scratch_inventory_refused:{type(exc).__name__}:{kind}"
+    if task_state is None:
         return True, "clean+synced; task record absent; activity probes empty"
-    if status in _RELEASED_TASK_STATUSES:
-        return True, f"clean+synced; task status={status}"
-    return False, f"task still active or invalid status (status={status})"
+    return True, f"{'clean' if clean else 'archivable-scratch'}+synced; task status={status}"
+
+
+def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
+    """Archive/recheck/unlink scratch inside the common remover's held lock."""
+    ok, detail = _stale_branch_holder_releasable(path, branch)
+    if not ok:
+        return ok, detail
+    try:
+        from scripts.fleet import ignored_task_output
+        from scripts.fleet.regenerable_output import branch_holder_scratch_inventory
+        from scripts.orchestration import worktree_artifacts
+
+        inventory = branch_holder_scratch_inventory(path, primary=_REPO_ROOT)
+        scratch = [entry for entry in inventory["paths"] if entry["kind"] == "scratch"]
+        if not scratch:
+            return True, detail
+        head = _resolve_sha(path, "HEAD")
+        record_path, owner = ignored_task_output.resolve_worktree_record(
+            path, tasks_dir(), repo_root=_REPO_ROOT, publish_cache=False,
+        )
+        if record_path is None:
+            return False, "scratch_owner_unknown"
+        ok, refusal, receipt = ignored_task_output.preserve_worktree_artifacts(
+            path, primary=_REPO_ROOT, tasks_dir=tasks_dir(), task_id=owner["task_id"],
+            repo_root=_REPO_ROOT, extra_files=[entry["path"] for entry in scratch],
+        )
+        if not ok or receipt is None:
+            return False, refusal or "archive_receipt_missing"
+        archive_receipt = {
+            key: receipt[key] for key in ("manifest_path", "content_sha256", "retrieval_proof_sha256")
+        }
+        # Publish the locator even if the final recheck/removal later refuses.
+        print("Branch holder archive: " + json.dumps(archive_receipt, sort_keys=True), file=sys.stderr)
+
+        def recheck() -> None:
+            claims = worktree_claims.active_worktree_claim_refusal(path, tasks_dir=tasks_dir(), repo_root=_REPO_ROOT)
+            if claims is not None:
+                raise ValueError(claims)
+            valid, reason = _stale_branch_holder_releasable(path, branch)
+            current_path, current_owner = ignored_task_output.resolve_worktree_record(
+                path, tasks_dir(), repo_root=_REPO_ROOT, publish_cache=False,
+            )
+            if not valid:
+                raise ValueError(reason)
+            if (
+                current_path != record_path or current_owner.get("task_id") != owner.get("task_id")
+                or current_owner.get("run_nonce") != owner.get("run_nonce")
+                or _resolve_sha(path, "HEAD") != head
+                or branch_holder_scratch_inventory(path, primary=_REPO_ROOT) != inventory
+            ):
+                raise ValueError("holder_changed_before_delete")
+            ignored_task_output.verify_retrieval(_REPO_ROOT, receipt)
+
+        # Retire only receipt-covered entries, including ignored output, so
+        # the common boundary does not archive it again. Its regenerable
+        # output exemptions remain outside this explicit unlink pass.
+        archived_names = {entry["path"] for entry in receipt["paths"]}
+        archived = [entry for entry in inventory["paths"] if entry["path"] in archived_names]
+        worktree_artifacts.unlink_archived_regular_files(path, archived, recheck=recheck)
+        return True, detail + "; archive=" + json.dumps(archive_receipt, sort_keys=True)
+    except Exception as exc:
+        if isinstance(exc, worktree_artifacts.ArtifactReleaseRefusal):
+            recovery = dict(exc.receipt)
+            try:
+                recovery["receipt_recorded"] = ignored_task_output._update_bound_task_record(
+                    record_path, path, {"branch_holder_release_refusal": exc.receipt},
+                    repo_root=_REPO_ROOT, expected_record=owner,
+                )
+            except (OSError, ValueError):
+                recovery["receipt_recorded"] = False
+            return False, "scratch_release_refused:" + json.dumps(recovery, sort_keys=True)
+        kind = str(exc) if isinstance(exc, ValueError) and re.fullmatch(r"[a-z_]+", str(exc)) else "unknown"
+        return False, f"scratch_release_refused:{type(exc).__name__}:{kind}"
 
 
 _REVIEW_SERIES_RE = re.compile(r"^(?P<stem>review-.+)-r(?P<round>[1-9][0-9]*)$")
@@ -4578,7 +4776,7 @@ def _release_stale_branch_holders(
             path,
             reason=f"stale holder of {branch!r}",
             owner_task_id=None,
-            releasable=functools.partial(_stale_branch_holder_releasable, path, branch),
+            releasable=functools.partial(_prepare_branch_holder_release, path, branch),
         )
         if removal["action"] == "skipped":
             print(
@@ -7674,7 +7872,15 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if reap_worktrees._task_pid_alive(state):
                 row["reason"] = "task process alive"
                 return row
-            active_ids = reap_worktrees._active_task_ids()
+            try:
+                active_ids = reap_worktrees._active_task_ids()
+            except reap_worktrees._ActiveTaskProbeFailure as exc:
+                diagnostic = _record_diagnostic(
+                    task_id, _exception_cause("activity probe unavailable", exc), source="rescue", field="reason",
+                )
+                if diagnostic:
+                    row["diagnostic"] = diagnostic
+                active_ids = None
             live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"
@@ -9316,6 +9522,12 @@ def _augment_prompt_with_worktree(
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
         f"{sparse_note}{test_scope}{delivery_note}{db_note}\n"
+        "[held work]\n"
+        "Keep patches, handoffs and diagnostics needed after exit in this worktree's "
+        "`batch_state/reports/`, and cite each file in your final response. "
+        "Runtime scratch is deleted at exit; if held work remains there, cite its absolute "
+        "file path or `$TMPDIR/<file>` in the final response so it is preserved. "
+        "Cite regular files, not directories or symlinks; automatic preservation has a 256 MiB cap.\n\n"
         f"{prompt}"
     )
 
@@ -9994,7 +10206,7 @@ def _run_worker(
     timed_out = False
     result = None
     substitution: dict[str, Any] | None = None
-    runtime_tmp_reap: dict[str, int | str | None] | None = None
+    runtime_tmp_reap: dict[str, Any] | None = None
 
     cancelled = False
     # ONE recovery region, spanning the runtime call itself through the moment
@@ -10330,7 +10542,10 @@ def _run_worker(
                     runtime_tmp_reap = _reap_runtime_tmp_lease(
                         runtime_tmp_root,
                         runtime_tmp_namespace_root,
+                        task_record=final_state,
+                        response=response,
                     )
+                    final_state.update(runtime_tmp_reap)
 
         duration_s = time.monotonic() - start
         final_status = _classify_final_status(
@@ -17730,7 +17945,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
             "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
-            "Mandatory for requested or substituted AGY code reviews; explicitly choose low, medium, high or critical. "
+            "Mandatory for requested or substituted AGY code reviews, including seat defaults and aliases, "
+            "even without author metadata; explicitly choose low, medium, high or critical. "
             "Example: critical for admission or launcher changes."
         ),
     )

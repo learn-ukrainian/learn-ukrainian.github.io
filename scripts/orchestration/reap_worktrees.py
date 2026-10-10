@@ -35,6 +35,7 @@ from collections.abc import Iterator
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -2086,10 +2087,10 @@ def _activity_reason(
         if task_payload.get("lease_state") == "active":
             return f"active worker lease task-id={task_id}"
 
-    # Stale "running" rows with a dead worker PID must not block reaping forever
-    # (observed: multi-hour dispatch workers left status=running after exit).
-    if task_status in {"queued", "starting", "running", "needs_finalize"} and _task_pid_alive(task_payload):
-        return f"non-terminal dispatch task-id={task_id} status={task_status}"
+    # Terminal metadata can precede process exit. A live PID protects the
+    # checkout regardless of status; a dead PID alone never proves settlement.
+    if _task_pid_alive(task_payload):
+        return f"live process task-id={task_id} status={task_status}"
     if live_cwds is not None:
         worktree = info.path.resolve()
         for cwd in live_cwds:
@@ -2265,16 +2266,109 @@ def _worktree_age_hours(path: Path, now: float | None = None) -> float | None:
     return ((now or time.time()) - mtime) / 3600
 
 
+class _ActiveTaskProbeFailure(RuntimeError):
+    def __init__(self, reason: str, fallback_allowed: bool) -> None:
+        super().__init__(reason)
+        self.reason = reason
+        self.fallback_allowed = fallback_allowed
+
+
 def _active_task_ids() -> set[str] | None:
     try:
         import urllib.request
 
         with urllib.request.urlopen("http://127.0.0.1:8765/api/delegate/active", timeout=3) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-            tasks = data.get("tasks", [])
-            return {str(t.get("task_id")) for t in tasks if t.get("task_id")}
-    except Exception:
-        return None
+            if not isinstance(data, dict) or not isinstance(data.get("tasks"), list):
+                raise ValueError("activity response must contain a tasks list")
+            tasks = data["tasks"]
+            if any(not isinstance(t, dict) or not isinstance(t.get("task_id"), str) or not t["task_id"] for t in tasks):
+                raise ValueError("activity response contains an invalid task identity")
+            return {t["task_id"] for t in tasks}
+    except Exception as exc:
+        transport = isinstance(exc, TimeoutError | ConnectionError) or (
+            isinstance(exc, URLError) and not isinstance(exc, HTTPError)
+        )
+        code = "timeout" if isinstance(exc, TimeoutError) else "transport_error" if transport else "invalid_response"
+        raise _ActiveTaskProbeFailure(
+            reason=f"active-task probe unavailable [active_task_probe_{code}]: {type(exc).__name__}: {exc}",
+            fallback_allowed=transport,
+        ) from exc
+
+
+def _read_active_task_probe() -> set[str] | _ActiveTaskProbeFailure | None:
+    """Keep typed failures for the reaper; delegate callers handle them as unknown."""
+    try:
+        return _active_task_ids()
+    except _ActiveTaskProbeFailure as exc:
+        return exc
+
+
+def _resolve_activity_probe(
+    repo_root: Path,
+    info: WorktreeInfo,
+    probe: set[str] | _ActiveTaskProbeFailure | None,
+) -> tuple[set[str] | None, str | None]:
+    """Resolve a transport outage for this attributed checkout only.
+
+    Local terminal status never stands in for global Monitor availability.
+    Missing task records leave Monitor activity unknown for class-specific
+    guards. Invalid records, state or PID retain the tree; every other
+    deletion guard and the locked recheck still apply.
+    """
+    if not isinstance(probe, _ActiveTaskProbeFailure):
+        return probe, None
+    if not probe.fallback_allowed:
+        return None, probe.reason
+    task_id = _dispatch_task_id(repo_root, info)
+    if task_id and (Path(task_id).name != task_id or task_id in {".", ".."}):
+        return None, f"{probe.reason}; local_task_unattributed"
+    task_file = control_plane_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json" if task_id else None
+    try:
+        try:
+            raw_payload = task_file.read_text(encoding="utf-8") if task_file else None
+        except FileNotFoundError:
+            raw_payload = None
+        if raw_payload is None:
+            reaper_lifecycle.append_journal(
+                repo_root,
+                "activity-probe-unattributed",
+                path=str(info.path),
+                task_id=task_id,
+                reason=probe.reason,
+                source="no_local_task_record",
+            )
+            return None, None
+        payload = json.loads(raw_payload)
+        if not isinstance(payload, dict) or payload.get("task_id") != task_id:
+            return None, f"{probe.reason}; local_task_identity_mismatch"
+        recorded_path = payload.get("worktree_path") or payload.get("cwd")
+        if not isinstance(recorded_path, str) or not recorded_path:
+            return None, f"{probe.reason}; local_task_binding_missing"
+        bound_path = Path(recorded_path)
+        if not bound_path.is_absolute():
+            bound_path = control_plane_root(repo_root) / bound_path
+        if bound_path.resolve() != info.path.resolve():
+            return None, f"{probe.reason}; local_task_binding_mismatch"
+        pid = payload.get("pid")
+        if pid is not None and (type(pid) is not int or pid <= 0):
+            return None, f"{probe.reason}; local_task_pid_invalid"
+        if _task_pid_alive(payload):
+            return None, f"{probe.reason}; local_task_live_process task-id={task_id}"
+        if payload.get("status") not in _TERMINAL_DISPATCH_STATUSES:
+            return None, f"{probe.reason}; local_task_nonterminal task-id={task_id}"
+    except (OSError, ValueError, TypeError) as exc:
+        return None, f"{probe.reason}; local_task_probe_error: {type(exc).__name__}: {exc}"
+    reaper_lifecycle.append_journal(
+        repo_root,
+        "activity-probe-fallback",
+        path=str(info.path),
+        task_id=task_id,
+        reason=probe.reason,
+        source="local_task_record",
+        status=payload["status"],
+    )
+    return set(), None
 
 
 def _is_ancestor_of_origin_main(path: Path) -> bool:
@@ -2459,9 +2553,9 @@ def _detached_clean_contained_recheck(repo_root: Path, info: WorktreeInfo) -> st
     fresh = next((wt for wt in worktrees if wt.path.resolve() == info.path.resolve()), None)
     if fresh is None:
         return "detached worktree unregistered during cleanup"
-    current_active_ids = _active_task_ids()
+    current_active_ids, probe_error = _resolve_activity_probe(repo_root, fresh, _read_active_task_probe())
     if current_active_ids is None:
-        return "active-task probe unavailable during cleanup"
+        return f"{probe_error or 'active-task probe unavailable'} during cleanup"
     current_live_cwds = _live_cwd_paths(repo_root)
     if current_live_cwds is None:
         return "process-CWD activity probe unavailable during cleanup"
@@ -2754,9 +2848,9 @@ def _review_checkout_recheck(
     fresh = next((wt for wt in worktrees if wt.path.resolve() == info.path.resolve()), None)
     if fresh is None:
         return "worktree unregistered during cleanup"
-    current_active_ids = _active_task_ids()
+    current_active_ids, probe_error = _resolve_activity_probe(repo_root, fresh, _read_active_task_probe())
     if current_active_ids is None:
-        return "active-task probe unavailable during cleanup"
+        return f"{probe_error or 'active-task probe unavailable'} during cleanup"
     current_live_cwds = _live_cwd_paths(repo_root)
     if current_live_cwds is None:
         return "process-CWD activity probe unavailable during cleanup"
@@ -3581,6 +3675,7 @@ def _reap_qualified_worktree(
     preserve_then_reap: bool,
     prune_merged_branches: bool,
     require_terminal_dispatch_guards: bool,
+    fallback_probe: _ActiveTaskProbeFailure | None = None,
     eligible_backlog: int | None = None,
     now: float | None = None,
 ) -> ReapResult:
@@ -3745,6 +3840,32 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
+        if fallback_probe is not None:
+            # Re-read bound terminal state and PID under the attachment lock,
+            # including merged-PR classes that do not re-probe Monitor below.
+            current_ids, probe_error = _resolve_activity_probe(repo_root, info, fallback_probe)
+            current_cwds = _live_cwd_paths(repo_root)
+            refusal = probe_error or (
+                "process-CWD activity probe unavailable during cleanup" if current_cwds is None else None
+            )
+            if refusal is None:
+                refusal = _activity_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=current_ids,
+                    live_cwds=current_cwds,
+                    check_pending=False,
+                )
+            if refusal is not None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason=refusal,
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+
         # A settled worker's background jobs die with its worktree, never
         # after it into a deleted cwd (#8991); if they survive, it stays.
         leftover_refusal = _stop_task_background_jobs(repo_root, info.path)
@@ -3899,14 +4020,14 @@ def _reap_qualified_worktree(
                     )
 
             if require_terminal_dispatch_guards:
-                current_active_ids = _active_task_ids()
+                current_active_ids, probe_error = _resolve_activity_probe(repo_root, info, _read_active_task_probe())
                 current_live_cwds = _live_cwd_paths(repo_root)
                 if current_active_ids is None or current_live_cwds is None:
                     return ReapResult(
                         path=str(info.path),
                         branch=info.branch,
                         action="skipped",
-                        reason="terminal dispatch guards unavailable during cleanup",
+                        reason=probe_error or "terminal dispatch guards unavailable during cleanup",
                         dirty=dirty,
                         pr=_pr_dict(pr_state),
                     )
@@ -3965,14 +4086,14 @@ def _reap_qualified_worktree(
                         )
 
             if reason.startswith("dispatch HEAD ancestor of origin/main"):
-                current_active_ids = _active_task_ids()
+                current_active_ids, probe_error = _resolve_activity_probe(repo_root, info, _read_active_task_probe())
                 current_live_cwds = _live_cwd_paths(repo_root)
                 if current_active_ids is None or current_live_cwds is None:
                     return ReapResult(
                         path=str(info.path),
                         branch=info.branch,
                         action="skipped",
-                        reason="abandoned-main activity probe unavailable during cleanup",
+                        reason=probe_error or "abandoned-main activity probe unavailable during cleanup",
                         dirty=dirty,
                         pr=_pr_dict(pr_state),
                     )
@@ -4243,7 +4364,7 @@ def reap_worktrees(
     targets = _target_filter(target_paths)
     results: list[ReapResult] = []
     qualified: list[tuple[WorktreeInfo, str, bool | None, PullRequestState | None]] = []
-    active_ids = _active_task_ids()
+    active_probe = _read_active_task_probe()
     if require_activity_probe is None:
         require_activity_probe = bool(apply)
     killed_sandboxes = stop_orphaned_sandboxes(repo_root) if apply else []
@@ -4308,6 +4429,20 @@ def reap_worktrees(
                         branch=info.branch,
                         action="skipped",
                         reason=("registered worktree path is missing; run git worktree prune"),
+                        dirty=None,
+                        owner=_dispatch_owner(repo_root, info),
+                    )
+                )
+                continue
+
+            active_ids, probe_error = _resolve_activity_probe(repo_root, info, active_probe)
+            if probe_error is not None:
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=probe_error,
                         dirty=None,
                         owner=_dispatch_owner(repo_root, info),
                     )
@@ -4553,6 +4688,7 @@ def reap_worktrees(
                 require_terminal_dispatch_guards=(
                     include_terminal_dispatches and reason.startswith("settled dispatch task-id=")
                 ),
+                fallback_probe=active_probe if isinstance(active_probe, _ActiveTaskProbeFailure) else None,
                 eligible_backlog=eligible_backlog,
                 now=now,
             )

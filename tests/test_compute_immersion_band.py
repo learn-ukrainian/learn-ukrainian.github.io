@@ -26,7 +26,7 @@ def test_compute_immersion_band_flag_on_uses_cumulative_vocab_not_module_num(mon
     )
 
     assert low_vocab["key"] == "a1-m01-03"
-    assert high_vocab["key"] == "a1-m07-14"
+    assert high_vocab["key"] == "a1-m35-54"
     assert low_vocab["rule"] != high_vocab["rule"]
 
 

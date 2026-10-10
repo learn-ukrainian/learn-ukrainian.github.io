@@ -991,7 +991,8 @@ def fixture_hook(primary, monkeypatch, *, deployed=False):
     )
     path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(HOOK, path)
-    shutil.copyfile(HOOK.parent / "shell_shlex.py", path.parent / "shell_shlex.py")
+    for helper in ("shell_shlex.py", "tool_names.py"):
+        shutil.copyfile(HOOK.parent / helper, path.parent / helper)
     spec = importlib.util.spec_from_file_location("fixture_guard", HOOK)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

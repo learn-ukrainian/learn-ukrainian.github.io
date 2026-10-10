@@ -19,6 +19,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.curriculum.validate.loader import read_plan_text, retirement_record
 from scripts.verification import stress
 
 from . import catalogue, codes, lock, sources
@@ -170,6 +171,13 @@ def build_pack(
     report: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     """Build a module evidence pack from a request YAML."""
+    plans_base = (
+        Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
+    )
+    retirement_record(plans_base)
+    plan_path = plans_base / f"{slug}.yaml"
+    if plan_path.is_file():
+        read_plan_text(plan_path)
     request_path = Path(request_path)
     if not request_path.is_file():
         raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: request file not found at {request_path}")
@@ -225,9 +233,6 @@ def build_pack(
         owns_sources = True
 
     try:
-        plans_base = (
-            Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
-        )
         catalogue_report = catalogue.request_report(
             plans_base / f"{slug}.yaml", evidence_base / "_words.yaml", sources_instance
         )

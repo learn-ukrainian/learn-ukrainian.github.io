@@ -533,6 +533,7 @@ def write_plan_manifest(level: str, slug: str, *, repo_root: Path, sources_insta
     not a current provisional pass. Returns (manifest, sha256 of its bytes).
     """
     root = repo_root.resolve()
+    load_plan(_guarded(root, root / TREE / "lesson-plans" / level / f"{slug}.yaml", f"{TREE}/lesson-plans"))
     try:
         return _write_plan_manifest(level, slug, root, sources_instance)
     except PlanReviewError:

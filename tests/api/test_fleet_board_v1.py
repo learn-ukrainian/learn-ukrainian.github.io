@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -40,9 +41,14 @@ def test_index_lists_every_registered_v1_route() -> None:
     assert listed == _openapi_v1()
     assert listed == {
         ("GET", "/api/fleet/v1"),
+        ("GET", "/api/fleet/v1/budget"),
+        ("GET", "/api/fleet/v1/alerts"),
+        ("GET", "/api/fleet/v1/links"),
         ("GET", "/api/fleet/v1/prs"),
         ("GET", "/api/fleet/v1/prs/{number}"),
+        ("GET", "/api/fleet/v1/roster"),
         ("GET", "/api/fleet/v1/schema"),
+        ("GET", "/api/fleet/v1/stats"),
     }
     assert body["schema"] == "fleet.v1.index"
 
@@ -203,3 +209,53 @@ def test_configuration_status_reads_a_mapping_without_touching_the_process_env()
     assert missing.status == "not_configured"
     assert present.status == "ok"
     assert present.error is None
+
+
+@pytest.mark.parametrize(
+    ("route", "loader", "source"),
+    [
+        ("alerts", "load_alerts", "alerts"),
+        ("stats", "load_stats", "stats"),
+        ("links", "load_links", "links"),
+        ("roster", "load_roster", "roster_snapshot"),
+        ("budget", "load_budget", "routing_budget"),
+    ],
+)
+def test_merged_data_routes_fail_closed_and_match_schema(
+    monkeypatch: pytest.MonkeyPatch, route: str, loader: str, source: str
+) -> None:
+    _clear_locations(monkeypatch)
+
+    def explode(*_args, **_kwargs):
+        raise RuntimeError("synthetic-loader-failure")
+
+    monkeypatch.setattr(board_routes, loader, explode)
+    response = client.get(f"/api/fleet/v1/{route}")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["schema"] == f"fleet.v1.{route}"
+    row = next(item for item in body["sources"] if item["name"] == source)
+    assert row == {"name": source, "status": "unavailable", "age_s": None, "error": "unavailable"}
+    assert "synthetic-loader-failure" not in response.text
+    schemas = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"]
+    Draft202012Validator(schemas[body["schema"]]).validate(body)
+
+
+def test_documented_v1_routes_match_merged_index() -> None:
+    document = (Path(__file__).resolve().parents[2] / "docs/api/fleet-v1.md").read_text()
+    for method, path in _openapi_v1():
+        assert f"### `{method} {path}`" in document
+
+
+def test_merged_fleet_files_have_no_conflict_markers() -> None:
+    root = Path(__file__).resolve().parents[2]
+    for name in (
+        "docs/api/fleet-v1.md",
+        "docs/design/monitor-api-router-inventory.md",
+        "scripts/api/fleet_board/router.py",
+        "tests/api/opsec_sweep/registry.py",
+        "tests/api/test_fleet_board_v1.py",
+    ):
+        for line in (root / name).read_text().splitlines():
+            assert not line.startswith(("<<<<<<< ", ">>>>>>> "))
+            assert line != "======="

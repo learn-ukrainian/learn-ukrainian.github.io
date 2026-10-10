@@ -144,8 +144,9 @@ def mechanical_plan() -> dict:
     recap = _lesson(3, "recap", [], [], [MAMA, MANA, MAN, NONA])
     recap["steps"] = [_step("s1", "practice", "Review.", {}, {"vocabulary": [MAMA, MANA, MAN, NONA]}, ["c1"])]
     recap["steps"][0].pop("teach")
+    recap["steps"][0]["task"] = {'id': 'recap-closure', 'action': 'read_and_use', 'context_en': 'A familiar situation.', 'instruction_en': 'Use the taught model for the situation.', 'response_mode': 'spoken_or_written', 'success_criteria_en': ['Use an appropriate taught expression.'], 'learner_reads': []}
     recap["activities"] = [
-        _activity("c1", "quiz", "inline", "Review quiz. kind: comprehension; host: {kind: dialogue}.")
+        _activity("c1", "quiz", "inline", "Use a taught model for a new context.")
     ]
     # The recap's first-person story (A1 arc D4; #9487 C7): a dialogue block with one narrator.
     recap["dialogue"] = {

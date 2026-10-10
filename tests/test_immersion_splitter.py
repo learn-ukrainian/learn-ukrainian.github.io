@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from scripts.build.linear_pipeline import (
     _advisory_immersion_pct,
     _long_uk_ceiling_gate,
@@ -183,23 +181,26 @@ def test_advisory_immersion_pct_reports_a1_m15_24_policy_cap() -> None:
     )
 
     assert result["policy"] == "a1-m15-24"
-    assert result["max_pct"] == 55
+    assert result["min_pct"] == 25
+    assert result["max_pct"] == 40
     assert result["passed"] is True
 
 
 def test_my_morning_immersion_passes() -> None:
-    fixture = Path("audit/bakeoff-2026-05-05/claude/module.md")
-    if fixture.exists():
-        text = fixture.read_text(encoding="utf-8")
-    else:
-        text = """Я прокидаюся — I wake up. Мене звати Олена. English support.
-
-<DialogueBox uk="Доброго ранку, Олено." en="Good morning, Olena." />
-<DialogueBox uk="Я пишу план і читаю слова." en="I write a plan and read words." />
-
-Прокидаюся — I wake up. Пишу — I write. Читаю — I read. Short support.
-"""
-
+    """Named synthetic letter-counter fixture at the approved legacy band ceiling."""
+    letter = chr(0x0430)  # Synthetic glyph, no claim about a Ukrainian form.
+    text = "English scaffold support. " + letter + " " + letter
     result = _advisory_immersion_pct(text, PLAN)
 
+    assert result["policy"] == "a1-m15-24"
+    assert (result["min_pct"], result["max_pct"]) == (25, 40)
+    assert result["pct"] == 40.0
     assert result["min_pct"] <= result["pct"] <= result["max_pct"]
+    assert result["passed"] is True
+    # Advisory telemetry must not become a new hard gate outside either boundary.
+    outside = _advisory_immersion_pct(" ".join([letter] * 5), PLAN)
+    assert outside["pct"] == 100.0 and outside["pct"] > outside["max_pct"]
+    assert outside["passed"] is True
+    below = _advisory_immersion_pct("English scaffold only.", PLAN)
+    assert below["pct"] == 0.0 and below["pct"] < below["min_pct"]
+    assert below["passed"] is True
