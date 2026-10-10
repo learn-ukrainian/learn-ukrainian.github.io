@@ -9737,6 +9737,47 @@ def test_branch_holder_absent_task_checks_every_layout_task_id(tmp_path, monkeyp
     assert reason == "active dispatch task-id=codex-legacy"
 
 
+@pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
+@pytest.mark.parametrize("holder", ["settled", "live_pid", "live_cwd", "missing_record", "complete"])
+def test_branch_holder_monitor_outage_preserves_release_guards(monkeypatch, tmp_tasks_dir, failure, holder):
+    import urllib.request
+
+    from scripts.orchestration import reap_worktrees
+
+    occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "legacy"
+    state = {"task_id": "legacy", "status": "done", "pid": os.getpid() if holder == "live_pid" else None}
+    if holder != "missing_record":
+        delegate._write_state_atomic(delegate._state_path("legacy"), state)
+
+    def fail(*_args, **_kwargs):
+        raise failure
+
+    monkeypatch.setattr(urllib.request, "urlopen", fail)
+    monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", lambda _path: None)
+    monkeypatch.setattr(
+        reap_worktrees, "_live_cwd_paths", lambda _repo: {occupied / "scripts"} if holder == "live_cwd" else set(),
+    )
+    reason = delegate._branch_holder_activity_reason(
+        occupied, task_id="legacy", task_state=None if holder == "missing_record" else state,
+        complete=holder == "complete",
+    )
+
+    if holder == "settled":
+        assert reason is None
+    elif holder == "live_pid":
+        assert reason == "live task PID for task-id=legacy"
+    elif holder == "live_cwd":
+        assert reason == f"live process cwd={occupied / 'scripts'}"
+    else:
+        assert reason == "active-task probe unavailable"
+    if holder not in {"complete", "missing_record"}:
+        diagnostic = (tmp_tasks_dir / "legacy.diag").read_text()
+        assert "active_task_probe_" in diagnostic
+        assert type(failure).__name__ in diagnostic
+    if holder == "missing_record":
+        assert not (tmp_tasks_dir / "legacy.json").exists()
+
+
 def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path, monkeypatch, tmp_tasks_dir):
     """#5340 CF F001: state key codex_foo vs path component foo still finds owner."""
     target = tmp_path / "target"
@@ -13441,6 +13482,36 @@ def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, 
     assert delegate.cmd_rescue(args) == 0
     assert json.loads(capsys.readouterr().out)["tasks"] == []
     assert worktree.exists()
+
+
+@pytest.mark.parametrize("failure", [TimeoutError("deadline"), urllib.error.URLError("offline")])
+@pytest.mark.parametrize("apply", [False, True])
+def test_rescue_monitor_outage_skips_without_error(tmp_path, monkeypatch, tmp_tasks_dir, capsys, failure, apply):
+    import urllib.request
+
+    from scripts.orchestration import reap_worktrees
+
+    real_probe = reap_worktrees._active_task_ids
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    original_state = state_path.read_bytes()
+    original_artifact = (worktree / "artifact.txt").read_bytes()
+
+    def fail(*_args, **_kwargs):
+        raise failure
+
+    monkeypatch.setattr(urllib.request, "urlopen", fail)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", real_probe)
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="6h", apply=apply)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["error"] == 0
+    assert report["summary"]["skipped"] == 1
+    assert report["tasks"][0]["reason"] == "activity probe unavailable"
+    diagnostic = (tmp_tasks_dir / "rescue-test.diag").read_text()
+    assert "active_task_probe_" in diagnostic
+    assert type(failure).__name__ in diagnostic
+    assert state_path.read_bytes() == original_state
+    assert (worktree / "artifact.txt").read_bytes() == original_artifact
 
 
 def test_settle_zombie_with_unpushed_commit_is_rescue_candidate(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
