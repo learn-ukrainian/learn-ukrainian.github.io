@@ -30,6 +30,7 @@ import contextlib
 import fcntl
 import hashlib
 import importlib.util
+import itertools
 import json
 import os
 import re
@@ -42,7 +43,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 1
+GATE_VERSION = 2
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -50,6 +51,10 @@ RUN_BUDGET_S = 600.0
 SHADOW_BUDGET_S = 120.0
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 ADMISSION_WAIT_S = RUN_BUDGET_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
+# Each predecessor gets one complete gate allowance. The 7,400 second ceiling covers a burst of
+# ten predecessors, while bounding overload or a stuck holder. Environment overrides only shorten it.
+ADMISSION_MAX_WAIT_S = 10 * ADMISSION_WAIT_S
+MAX_QUEUE_ENTRIES = 256  # bound local queue scans even if abandoned tickets accumulate
 RUN_TOKEN_ENV = "LU_PRE_PUSH_GATE_RUN_TOKEN"
 RECEIPT_TTL_S = 3600.0
 # Registered modules exceeding the cost threshold are explicitly deferred to CI
@@ -295,7 +300,9 @@ def build_plan(update: Update, root: Path) -> Plan | None:
         )
     registry, version = load_registry(root)
     runnable, deferred = defer_to_ci(registry, root)
-    absent = tuple(dict.fromkeys(node.split("::", 1)[0] for node in runnable if not (root / node.split("::", 1)[0]).is_file()))
+    absent = tuple(
+        dict.fromkeys(node.split("::", 1)[0] for node in runnable if not (root / node.split("::", 1)[0]).is_file())
+    )
     if absent:  # only the recorded deferrals above may skip a registered invariant; an absent file may not
         raise GateOutcome(
             "registry_entries_unmaterialized",
@@ -327,6 +334,7 @@ def receipt_key(plan: Plan) -> dict[str, object]:
         "registry_version": plan.registry_version,
         "deferred_to_ci": list(plan.deferred_to_ci),
         "node_ids": list(plan.node_ids),
+        "changed_paths": list(plan.changed_paths),
     }
 
 
@@ -370,37 +378,117 @@ def record(state: Path, event: dict[str, object]) -> None:
 
 
 class Admission:
-    """One admitted gate at a time per repository, across every worktree."""
+    """One gate per repository, ordered by live local tickets across all worktrees.
+
+    A ticket's flock is its liveness proof, including after a crash; no PID inference. Publication
+    uses rename after locking, so observers cannot mistake a registering caller for a dead one.
+    The allowance grows with the most predecessors observed, never shrinks as they finish, and
+    never exceeds ``ADMISSION_MAX_WAIT_S``. Older gates without tickets still hold admission.lock.
+    """
 
     def __init__(self, state: Path, wait_s: float):
         self.state = state
         self.wait_s = wait_s
         self.waited = 0.0
+        self.queue_depth = 0
+        self.queue_position = 0
+        self.wait_limit = 0.0
         self._fd: int | None = None
+        self._ticket_fd: int | None = None
+        self._ticket: Path | None = None
+
+    def _register(self) -> None:
+        queue = self.state / "queue"
+        queue.mkdir(parents=True, exist_ok=True)
+        pending = queue / f".{uuid.uuid4().hex}.pending"
+        self._ticket = pending
+        self._ticket_fd = os.open(pending, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
+        fcntl.flock(self._ticket_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        ticket = queue / f"{time.monotonic_ns():020d}-{uuid.uuid4().hex}.ticket"
+        pending.rename(ticket)
+        self._ticket = ticket
+
+    def _live_tickets(self) -> list[Path]:
+        assert self._ticket is not None
+        tickets = list(itertools.islice(self._ticket.parent.glob("*.ticket"), MAX_QUEUE_ENTRIES + 1))
+        if len(tickets) > MAX_QUEUE_ENTRIES:
+            raise GateOutcome("validation_incomplete", "admission queue scan limit exceeded", incomplete=True)
+        live = []
+        for ticket in sorted(tickets):
+            if ticket == self._ticket:
+                live.append(ticket)
+                continue
+            try:
+                fd = os.open(ticket, os.O_RDONLY)
+            except FileNotFoundError:  # a holder finished between listing and opening
+                continue
+            try:
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    live.append(ticket)
+                else:  # no live owner: an interrupted caller left this ticket behind
+                    ticket.unlink(missing_ok=True)
+            finally:
+                os.close(fd)
+        return live
 
     def __enter__(self) -> Admission:
-        self.state.mkdir(parents=True, exist_ok=True)
-        fd = os.open(self.state / "admission.lock", os.O_CREAT | os.O_RDWR, 0o600)
         started = time.monotonic()
-        while True:
-            try:
-                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                break
-            except OSError:
+        last_report: tuple[int, int] | None = None
+        reported_at = started
+        try:
+            self.state.mkdir(parents=True, exist_ok=True)
+            self._fd = os.open(self.state / "admission.lock", os.O_CREAT | os.O_RDWR, 0o600)
+            self._register()
+            while True:
+                live = self._live_tickets()
+                position, depth = live.index(self._ticket) + 1, len(live)
+                if position == 1:
+                    try:
+                        fcntl.flock(self._fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    except BlockingIOError:  # includes an older gate with no ticket
+                        position, depth = 2, depth + 1
+                    else:
+                        self.queue_depth = max(self.queue_depth, depth)
+                        self.queue_position = self.queue_position or 1
+                        return self
+                self.queue_depth = max(self.queue_depth, depth)
+                self.queue_position = self.queue_position or position
+                self.wait_limit = max(self.wait_limit, min(ADMISSION_MAX_WAIT_S, max(1, position - 1) * self.wait_s))
                 self.waited = time.monotonic() - started
-                if self.waited >= self.wait_s:
-                    os.close(fd)
+                report = (position, depth)
+                if report != last_report or time.monotonic() - reported_at >= 30.0:
+                    print(
+                        f"PRE-PUSH GATE: waiting for admission; queue position {position}/{depth}; "
+                        f"waited {self.waited:.1f}s, limit {self.wait_limit:.0f}s "
+                        f"(hard ceiling {ADMISSION_MAX_WAIT_S:.0f}s)",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                    last_report, reported_at = report, time.monotonic()
+                if self.waited >= self.wait_limit:
                     raise GateOutcome(
                         "validation_incomplete",
-                        f"another pre-push gate held the admission lock for {self.wait_s:.0f}s (admission_timeout)",
+                        f"admission_timeout: waited {self.waited:.1f}s at queue position {position}/{depth} "
+                        f"(limit {self.wait_limit:.0f}s)",
                         incomplete=True,
-                    ) from None
-                time.sleep(0.2)
-        self.waited = time.monotonic() - started
-        self._fd = fd
-        return self
+                    )
+                time.sleep(min(0.2, self.wait_limit - self.waited))
+        except BaseException:
+            self.__exit__()
+            raise
+        finally:
+            self.waited = time.monotonic() - started
 
     def __exit__(self, *exc: object) -> None:
+        if self._ticket is not None:
+            with contextlib.suppress(OSError):
+                self._ticket.unlink(missing_ok=True)
+            self._ticket = None
+        if self._ticket_fd is not None:
+            os.close(self._ticket_fd)
+            self._ticket_fd = None
         if self._fd is not None:
             os.close(self._fd)  # closing the descriptor releases the flock
             self._fd = None
@@ -663,7 +751,7 @@ def tail(output: str, lines: int = 40) -> str:
 
 
 class Budget:
-    """One run deadline shared by every ref update of a push; it starts at the first admitted run."""
+    """Shared push execution budget, starting at admission and excluding later admission waits."""
 
     def __init__(self, seconds: float):
         self.seconds = seconds
@@ -675,12 +763,17 @@ class Budget:
             self._deadline = time.monotonic() + self.seconds
         return self._deadline
 
+    def after_admission(self, waited: float) -> float:
+        if self._deadline is not None:
+            self._deadline += waited
+        return self.deadline
+
 
 def validate(
     update: Update, root: Path, launcher: str, config: str, event: dict[str, object], budget: Budget | None = None
 ) -> None:
-    now = time.time()
     event["local_ref"] = update.local_ref
+    event.update(admission_wait_s=0.0, queue_depth=0, queue_position=0)
     plan = build_plan(update, root)
     if plan is None:
         event["outcome"] = "green"
@@ -694,14 +787,23 @@ def validate(
         deferred_to_ci=list(plan.deferred_to_ci),
     )
     state = state_dir(root)
-    if receipt_is_fresh(state, plan, now):
+    if receipt_is_fresh(state, plan, time.time()):
         event["outcome"] = "green"
         event["detail"] = "valid receipt"
         return
+    admission = Admission(state, bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S))
     try:
-        with Admission(state, bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)) as admitted:
-            event["admission_wait_s"] = round(admitted.waited, 2)
-            deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).deadline
+        with admission as admitted:
+            deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).after_admission(
+                admitted.waited
+            )
+            # A matching gate may have finished while this caller was queued. Rebuild the plan
+            # first to preserve the dirty-tree/untracked-input checks after the wait.
+            if build_plan(update, root) != plan:
+                raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for admission")
+            if receipt_is_fresh(state, plan, time.time()):
+                event.update(outcome="green", detail="valid receipt after admission")
+                return
             shadow: Shadow | None = None
             settled = False
             try:
@@ -724,6 +826,13 @@ def validate(
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
         raise GateOutcome("validation_error", f"validation I/O failed: {error}", incomplete=True) from error
+    finally:
+        event.update(
+            admission_wait_s=round(admission.waited, 2),
+            queue_depth=admission.queue_depth,
+            queue_position=admission.queue_position,
+            admission_wait_limit_s=admission.wait_limit,
+        )
 
 
 def refuse(error: GateOutcome) -> int:
