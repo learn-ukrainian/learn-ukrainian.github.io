@@ -332,12 +332,24 @@ def _syntax_argv(node: ast.Call, scope: _Scope) -> list[str] | None:
     if isinstance(argv, (str, _StringPrefix)):
         partial = isinstance(argv, _StringPrefix)
         text = argv.text if partial else argv
-        try:
+        if partial:
             # Appending a sentinel models the unknown text touching the final
             # token, including escaped/quoted whitespace. Discard that token.
-            argv = shlex.split(text + "__dynamic__")[:-1] if partial else shlex.split(text)
-        except ValueError:
-            return None
+            lexer = shlex.shlex(text + "__dynamic__", posix=True)
+            lexer.whitespace_split = True
+            lexer.commenters = ""
+            argv = []
+            try:
+                argv.extend(lexer)
+            except ValueError:
+                pass  # An open quote in the dynamic tail does not erase complete tokens.
+            else:
+                argv.pop()
+        else:
+            try:
+                argv = shlex.split(text)
+            except ValueError:
+                return None
     if not isinstance(argv, list) or not argv or not isinstance(argv[0], str):
         return None
     if Path(argv[0]).name not in {"bash", "sh"}:
@@ -578,6 +590,9 @@ def test_shlex_star_import_fails(use: str) -> None:
         "import subprocess\nsubprocess.run('bash -n ' + path)",
         "import subprocess\nsubprocess.run(f'bash -n {path}')",
         "import subprocess\nsubprocess.run(f'bash -n {path!r}')",
+        "import subprocess\nsubprocess.run(f'bash -n \"{path}\"')",
+        "import subprocess\nsubprocess.run(f\"bash -n '{path}'\")",
+        "import subprocess\nsubprocess.run('bash -n \"' + path + '\"')",
         "import subprocess\nsubprocess.run('bash ' + '-n ' + path)",
         "from subprocess import check_output as run\nargv = ['sh', '-nv', path]\nrun(args=argv)",
         "import os\nos.system('sh --noexec ' + path)",
@@ -608,6 +623,7 @@ def test_syntax_check_with_dynamic_tail_fails(source: str) -> None:
         "f'{shell} -n {path}'",
         "'bash -n' + suffix",
         "'bash -n\\\\ ' + suffix",
+        "f\"bash '-n {path}'\"",
         "f'bash -c {path} -n'",
     ],
 )
