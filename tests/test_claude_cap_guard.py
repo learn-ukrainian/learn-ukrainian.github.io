@@ -23,6 +23,7 @@ pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 @pytest.fixture(autouse=True)
 def reader_clock(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", "https://monitor.invalid")
     clock = Mock(wraps=datetime)
     clock.now.return_value = datetime(2030, 1, 1, tzinfo=UTC)
     monkeypatch.setattr(claude_weekly_used, "datetime", clock)
@@ -80,6 +81,44 @@ def test_driver_at_stop_threshold_refuses_any_model(pct: str, launch_with_usage)
         assert result.returncode == 7
         assert "No Claude launch until the weekly reset" in result.stderr
         assert "would exec" not in result.stdout
+
+
+@pytest.mark.parametrize("base", (None, "", " \t\n", "/"))
+def test_weekly_reader_without_configuration_makes_no_request(
+    base: str | None,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    if base is None:
+        monkeypatch.delenv("LU_MONITOR_LOOPBACK", raising=False)
+    else:
+        monkeypatch.setenv("LU_MONITOR_LOOPBACK", base)
+    urlopen = Mock()
+    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
+
+    claude_weekly_used.main()
+
+    urlopen.assert_not_called()
+    assert capsys.readouterr().out == "unknown\n"
+
+
+def test_weekly_reader_uses_only_configured_target(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", " https://configured.invalid/ ")
+    payload = {
+        "generated_at": "2030-01-01T00:00:00Z",
+        "agents": {"claude": {"codexbar": {"weekly_used_pct": 95}}},
+    }
+    urlopen = Mock(return_value=io.BytesIO(json.dumps(payload).encode()))
+    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
+
+    claude_weekly_used.main()
+
+    urlopen.assert_called_once_with(
+        "https://configured.invalid/api/state/routing-budget", timeout=4
+    )
+    assert capsys.readouterr().out == "95\n"
 
 
 @pytest.mark.parametrize("pct", (85, 95))

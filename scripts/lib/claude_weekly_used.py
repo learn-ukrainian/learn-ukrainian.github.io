@@ -3,7 +3,9 @@
 
 Used by the Claude cap guard in launcher_core.sh. Prints a number (for
 example 90) or "unknown" when the API is down, stale, or the field is
-missing. Always exits 0 so the shell decides the policy.
+missing. Requires LU_MONITOR_LOOPBACK from private runtime configuration;
+there is no default connection target. Always exits 0 so the shell decides
+the policy.
 """
 from __future__ import annotations
 
@@ -14,7 +16,10 @@ from datetime import UTC, datetime
 
 
 def main() -> None:
-    base = os.environ.get("LU_MONITOR_LOOPBACK", "http://127.0.0.1:8765").rstrip("/")
+    base = os.environ.get("LU_MONITOR_LOOPBACK", "").strip().rstrip("/")
+    if not base:
+        print("unknown")
+        return
     try:
         with urllib.request.urlopen(base + "/api/state/routing-budget", timeout=4) as r:
             data = json.load(r)
