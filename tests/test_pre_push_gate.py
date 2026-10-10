@@ -106,6 +106,7 @@ def repo(tmp_path: Path) -> Path:
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     launcher.chmod(0o755)
     _write(root, ".pre-commit-config.yaml", PRE_COMMIT)
+    _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
     _write(root, "tests/test_invariant.py", GREEN_TEST)
     _write(root, "tests/test_scanner.py", "def test_scan():\n    assert True\n")
@@ -955,7 +956,10 @@ def test_a_pytest_run_without_a_verdict_is_validation_incomplete(repo: Path) -> 
     assert _verdict(result)["reason"] == "pytest_error"
 
 
-def test_modules_over_the_cost_cap_are_deferred_to_ci_and_recorded(repo: Path) -> None:
+@pytest.mark.parametrize("ancestor_config", [False, True])
+def test_modules_over_the_cost_cap_are_deferred_to_ci_and_recorded(repo: Path, ancestor_config: bool) -> None:
+    if ancestor_config:
+        _write(repo.parent, "pyproject.toml", "[tool.pytest.ini_options]\n")
     # A conftest breaks the registered module without changing the module itself.
     _write(
         repo,
