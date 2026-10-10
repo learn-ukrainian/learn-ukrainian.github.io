@@ -16,7 +16,10 @@ launcher_adapter_preflight() {
   launcher_require_binary "$LC_CURSOR_BIN" 'Cursor agent executable (cursor-agent) is unavailable.' 3 || exit $?
 }
 launcher_adapter_canary() {
-  if [ "$LC_DRY_RUN" = 1 ]; then echo 'cursor adapter: would run provider canary'; fi
+  # No launcher semantic canary exists for this adapter.
+  # shellcheck disable=SC2034 # Read by launcher_bind_drive_epic in the shared core.
+  LC_PROVIDER_CANARY_RAN=0
+  echo 'cursor adapter: provider canary: not run'
   return 0
 }
 launcher_adapter_exec() {
