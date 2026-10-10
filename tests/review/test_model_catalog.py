@@ -7,6 +7,7 @@ import hashlib
 import json
 import pickle
 import runpy
+import shlex
 import shutil
 import subprocess
 import sys
@@ -507,10 +508,48 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
 
+def parser_guard_adapter_baseline(adapters, interpreter):
+    """Account for the PR's three explicit parser-interpreter invocations only.
+
+    The frozen capture remains byte-pinned. Every setting, hook target, timeout,
+    argument and other adapter field still compares exactly.
+    """
+    expected = deepcopy(adapters)
+    targets = {
+        f"<SOURCE_ROOT>/agents_extensions/shared/hooks/guard-{name}.py"
+        for name in ("admin-merge", "pr-merge", "branch-switch-in-main")
+    }
+    for row in expected:
+        cmd = row.get("value", {}).get("cmd", [])
+        if "--settings" not in cmd:
+            continue
+        index = cmd.index("--settings") + 1
+        settings = json.loads(cmd[index])
+        changed = 0
+        for group in settings["hooks"]["PreToolUse"]:
+            for hook in group["hooks"]:
+                if hook["command"] in targets:
+                    hook["command"] = interpreter + " " + hook["command"]
+                    changed += 1
+        assert changed == 3
+        cmd[index] = json.dumps(settings, separators=(",", ":"))
+    return expected
+
+
+def parser_guard_interpreter():
+    from scripts.common.repo_root import project_interpreter
+
+    source = Path(__file__).resolve().parents[2]
+    return shlex.quote(str(project_interpreter(source))).replace(str(source), "<SOURCE_ROOT>")
+
+
 def assert_frozen_surfaces(actual):
     assert actual.keys() == BASELINE.keys()
     for surface in BASELINE:
-        assert actual[surface] == APPROVED_BASELINE[surface], f"approved surface differs: {surface}"
+        expected = APPROVED_BASELINE[surface]
+        if surface == "adapters":
+            expected = parser_guard_adapter_baseline(expected, parser_guard_interpreter())
+        assert actual[surface] == expected, f"approved surface differs: {surface}"
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
 
 
@@ -544,7 +583,8 @@ def main():
 
 @pytest.mark.parametrize("surface", BASELINE)
 def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
-    actual = dict(APPROVED_BASELINE)
+    actual = deepcopy(APPROVED_BASELINE)
+    actual["adapters"] = parser_guard_adapter_baseline(actual["adapters"], parser_guard_interpreter())
     actual[surface] = {"mutated": True}
     with pytest.raises(AssertionError, match=f"approved surface differs: {surface}"):
         assert_frozen_surfaces(actual)
@@ -714,11 +754,15 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_claude_cap_baseline(approved_cursor_trailer_baseline(
+    expected_baseline = approved_claude_cap_baseline(approved_cursor_trailer_baseline(
         approved_launcher_canary_baseline({
             **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
         })
     ))
+    expected_baseline["adapters"] = parser_guard_adapter_baseline(
+        expected_baseline["adapters"], parser_guard_interpreter(),
+    )
+    assert actual == expected_baseline
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -756,3 +800,60 @@ def test_extended_capture_denominator_and_current_contract():
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])
+
+
+@pytest.mark.parametrize("configuration", ["baseline.json.gz", "no-cli/baseline.json.gz"])
+def test_parser_guard_adapter_delta_is_exact_and_preserves_frozen_inputs(configuration):
+    frozen = json.loads(gzip.decompress((FIXTURE / configuration).read_bytes()))["adapters"]
+    before = deepcopy(frozen)
+    updated = parser_guard_adapter_baseline(frozen, "fixture-python")
+    changed_rows = 0
+    for old, new in zip(frozen, updated, strict=True):
+        if old == new:
+            continue
+        changed_rows += 1
+        cmd = new["value"]["cmd"]
+        index = cmd.index("--settings") + 1
+        settings = json.loads(cmd[index])
+        changed_hooks = 0
+        for group in settings["hooks"]["PreToolUse"]:
+            for hook in group["hooks"]:
+                words = shlex.split(hook["command"])
+                if words[0] == "fixture-python":
+                    assert len(words) == 2
+                    assert Path(words[1]).name in {
+                        "guard-admin-merge.py", "guard-pr-merge.py", "guard-branch-switch-in-main.py",
+                    }
+                    hook["command"] = words[1]
+                    changed_hooks += 1
+        assert changed_hooks == 3
+        cmd[index] = json.dumps(settings, separators=(",", ":"))
+        assert old == new
+    assert changed_rows == 8
+    assert frozen == before
+
+
+@pytest.mark.parametrize("mutation", ["interpreter", "target", "arguments", "timeout", "missing-hook"])
+def test_parser_guard_adapter_comparison_rejects_additional_drift(mutation):
+    actual = deepcopy(APPROVED_BASELINE)
+    actual["adapters"] = parser_guard_adapter_baseline(actual["adapters"], parser_guard_interpreter())
+    row = next(row for row in actual["adapters"] if "--settings" in row.get("value", {}).get("cmd", []))
+    cmd = row["value"]["cmd"]
+    index = cmd.index("--settings") + 1
+    settings = json.loads(cmd[index])
+    hooks = settings["hooks"]["PreToolUse"][0]["hooks"]
+    hook = next(hook for hook in hooks if "guard-pr-merge.py" in hook["command"])
+    if mutation == "interpreter":
+        words = shlex.split(hook["command"])
+        hook["command"] = shlex.join(["foreign-python", *words[1:]])
+    elif mutation == "target":
+        hook["command"] = hook["command"].replace("guard-pr-merge.py", "foreign-guard.py")
+    elif mutation == "arguments":
+        hook["command"] += " --extra"
+    elif mutation == "timeout":
+        hook["timeout"] += 1
+    else:
+        hooks.remove(hook)
+    cmd[index] = json.dumps(settings, separators=(",", ":"))
+    with pytest.raises(AssertionError, match="approved surface differs: adapters"):
+        assert_frozen_surfaces(actual)

@@ -31,8 +31,8 @@ refuses `eval` in merge commands because its re-evaluation can change both argv 
 cannot stop an agent that sets out to evade it: `gh api -X PUT repos/{o}/{r}/pulls/{n}/merge`
 never says "gh pr merge" at all, and neither does a Python script hitting the REST API.
 Nothing matching on Bash commands can close that, so the job is to make the CARELESS path
-refuse, not the deliberate path impossible. A shell here-string (`sh <<< '<cmd>'`) is
-likewise unread — a deliberate-only shape, documented rather than papered over.
+refuse, not the deliberate path impossible. Literal shell payloads and here-documents are parsed recursively; dynamic
+payloads are refused whenever the raw command engages this guard.
 """
 
 from __future__ import annotations
@@ -41,10 +41,11 @@ import concurrent.futures
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import NamedTuple
+from urllib.parse import urlparse
 
 
 def _read_payload() -> dict | None:
@@ -59,10 +60,58 @@ def _command(payload: dict) -> str:
     return ((payload.get("tool_input") or {}).get("command") or "").strip()
 
 
-def _may_merge(command: str) -> bool:
+def _expansion_may_build_words(probe: str) -> bool:
+    """Whether an expansion could assemble the guarded words at run time.
+
+    Variables and substitutions can spell `gh`, `pr merge` or `--admin` without those
+    words appearing in the raw text (`G=gh; $G pr merge 5 --$A$B`), so such commands must
+    reach the parser. Plain data expansions (`printf %s "$FOO"`) stay on the fast path.
+    """
+    if not re.search(r"[$`]", probe):
+        return False
+    if re.search(r"\$\(|`", probe):  # command substitution yields arbitrary words
+        return True
+    if re.search(r"\beval\b|(?:^|\s)-[a-zA-Z]*c\b", probe):  # dynamic payloads are re-read
+        return True
+    # expansion as the command name, directly or behind a wrapper's own options (`timeout 5 $G$H`)
+    if re.search(
+        r"(?:^|[;&|(\n])\s*(?:(?:timeout|nice|nohup|exec|command|builtin|time|sudo|xargs|env)"
+        r"(?:\s+-\S+(?:\s+[A-Za-z]+)?|\s+[\d.]+[smhd]?|\s+\w+=\S+)*\s+)?!?\s*\$",
+        probe,
+    ):
+        return True
+    names = re.findall(r"(?:^|[\s;&|(])([A-Za-z_]\w*)=", probe)
+    return any(re.search(r"\$\{?" + re.escape(name) + r"\b", probe) for name in names)
+
+
+def _may_merge(command: str, *, include_branch: bool = True) -> bool:
     # The shell drops quotes and backslashes before executing a command.
-    probe = command.replace("\\", "").replace("'", "").replace('"', "")
-    return ("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe
+    # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
+    # This is only a conservative prefilter; the pinned AST decides execution.
+    probe = re.sub(r"\$(['\"])", r"\1", command)
+    try:
+        probe = re.sub(
+            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            probe,
+        )
+    except ValueError:
+        return True  # unreadable escape: let the full parser refuse it
+    probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
+    if _expansion_may_build_words(probe):
+        return True
+    # A dynamic program can run the literal operation without spelling `gh`.
+    # Likewise, dynamic GH operation words may expand to `pr merge`.
+    return (
+        bool(
+            include_branch
+            and "git" in re.sub(r"\$git\b", "", probe)
+            and re.search(r"\b(?:checkout|switch|branch)\b", probe)
+        )
+        or bool(re.search(r"(?:--pre(?:=|\s)|--config-env|\bmergetool\b|\bgit\s+worktree[^;\n]*\$)", probe))
+        or (("gh" in probe or "scripts.publish" in probe) and "pr" in probe and re.search(r"\bmerge\b", probe))
+        or bool(re.search(r"\bpr\s+merge\b", probe) or re.search(r"(?:^|[\s;|&(])(?:gh|/[^\s]+/gh)\s+[^\n;]*\$", probe))
+    )
 
 
 # Ordinary Bash commands must remain usable even if guard dependencies are absent.
@@ -87,20 +136,16 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import (
-        ShellPreprocessLimit,
-        skippable_heredoc_delimiters,
-        strip_skippable_heredoc_bodies,
+    from shell_bash import REPAIR, UNREADABLE, ShellParseError, invoked_start, read_commands
+except Exception as exc:
+    print(
+        f"guard dependency unavailable: shell_bash ({type(exc).__name__}); "
+        "repair: uv pip install --python <canonical-checkout>/.venv/bin/python "
+        "--require-hashes --only-binary=:all: -r requirements-hooks.txt; "
+        "npm run agents:deploy",
+        file=sys.stderr,
     )
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
-
-try:
-    from shell_redirects import scope_events
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
+    raise SystemExit(2) from None
 
 try:
     from scripts.ci.advisory_checks import is_advisory as is_advisory
@@ -122,8 +167,11 @@ try:
     from scripts.publish.merge_guard import (
         _rollup_value as _rollup_value,
     )
-except ImportError:
-    print("guard dependency unavailable: merge readiness", file=sys.stderr)
+except Exception:
+    print(
+        "guard dependency unavailable: merge readiness; repair: git restore scripts/publish/merge_guard.py; npm run agents:deploy",
+        file=sys.stderr,
+    )
     raise SystemExit(2) from None
 
 
@@ -178,357 +226,138 @@ def _flag_enabled(args: list[str], name: str) -> bool:
     return enabled
 
 
-# Redirect tokenization is shared with the two sibling target guards.
+_UNREADABLE_MARKER = UNREADABLE
+_UNPARSED = ["gh", "pr", "merge", UNREADABLE]
+_invoked_start = invoked_start
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
-    """Keep only the shared parser's unambiguous here-doc delimiters."""
-    parsed = skippable_heredoc_delimiters(line)
-    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
-
-
-def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands.
-
-    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
-    opener must not make a trailing real `gh pr merge` vanish. Only a heredoc
-    that actually closes has its body + closer dropped.
-    """
-    return strip_skippable_heredoc_bodies(command)
-
-
-def _join_line_continuations(text: str) -> str:
-    r"""Fold `\<newline>` into one logical line, as the shell does — so a
-    `\`-continued `gh pr merge` is not split across physical lines and missed.
-    Over-folding a quoted literal `\` only merges argv text."""
-    return text.replace("\\\n", "")
-
-
-def _scope_events(command: str) -> list[tuple[str, list[str]]]:
-    """Preserve the PR guard's existing event and unreadability policy."""
-    return scope_events(
-        command,
-        mark_redirect_unreadable="merge" in command.lower(),
-        unreadable_marker=_UNREADABLE_MARKER,
-        unparsed=_UNPARSED,
-        may_match=_may_merge,
-    )
+def _check_consumer(
+    argv: list[str], source: str, guarded_source: bool, *, candidate=_may_merge, eval_guarded: bool = True
+) -> None:
+    """Account for visible code by its reader, never by quotation alone."""
+    utility = Path(argv[0]).name
+    # Eval may change the cwd of a later operation, so scope this refusal
+    # to the entire submitted command rather than only eval's operands.
+    if utility == "eval" and guarded_source and eval_guarded:
+        raise ShellParseError("eval cannot establish merge argv or directory")
+    if utility in {"source", "."} and guarded_source:
+        raise ShellParseError("visible sourced payload cannot establish execution")
+    if not candidate(source):
+        return
+    if "/" in argv[0]:
+        installed = shutil.which(utility)
+        # The typed publisher must use this hook's prescribed interpreter.
+        if (not installed or Path(argv[0]).resolve() != Path(installed).resolve()) and not (
+            utility.startswith("python") and Path(argv[0]).resolve() == Path(sys.executable).resolve()
+        ):
+            raise ShellParseError("executable path is not the verified candidate reader")
+    if utility in {"echo", "printf", "cat", "grep", "rg", "jq", "sed", "head", "tail", "mktemp"}:
+        if utility == "printf":
+            operands = argv[2:] if argv[1:2] == ["--"] else argv[1:]
+            if "-v" in argv[1:] or (operands and (operands[0] == UNREADABLE or "%n" in operands[0])):
+                raise ShellParseError("printf assignment consumer cannot establish execution")
+        if utility == "rg" and any(arg.split("=", 1)[0] in {"--pre", "--pre-glob"} for arg in argv[1:]):
+            raise ShellParseError("search executor option cannot establish execution")
+        if utility == "jq" and any(
+            arg.startswith("-L") or re.search(r"\b(?:import|include)\b", arg) for arg in argv[1:]
+        ):
+            raise ShellParseError("jq loading consumer cannot establish execution")
+        if utility == "sed":
+            # Only literal print-only scripts are admitted candidate readers.
+            # Script files and other sed programs can execute or emit code.
+            args = argv[1:]
+            scripts = []
+            positional = False
+            while args:
+                arg, *args = args
+                if positional:
+                    if arg.startswith("-"):
+                        raise ShellParseError("sed option after file cannot establish data-only input")
+                    continue
+                if arg in {"-n", "--quiet", "--silent"}:
+                    continue
+                if arg in {"-e", "--expression"} and args:
+                    script, *args = args
+                    scripts.append(script)
+                    continue
+                if arg.startswith("--expression="):
+                    scripts.append(arg.partition("=")[2])
+                    continue
+                if arg == "--":
+                    if not scripts and args:
+                        script, *args = args
+                        scripts.append(script)
+                    break
+                if arg.startswith("-"):
+                    raise ShellParseError("sed option cannot establish data-only input")
+                if not scripts:
+                    scripts.append(arg)
+                positional = True
+            if not scripts or any(
+                not re.fullmatch(r"\s*(?:(?:\d+|\$|/[^/\\]*/)(?:,(?:\d+|\$|/[^/\\]*/))?)?p\s*", script)
+                for script in scripts
+            ):
+                raise ShellParseError("sed script cannot establish data-only input")
+        return
+    if utility in {"bash", "sh", "dash", "eval", "cd", "pushd", "popd", "true", "false", ":"}:
+        return  # The AST reader checks shell payloads, expansions and context.
+    if utility == "xargs":
+        return  # The reader admits only fixed echo/printf logging executables.
+    if utility == "let" and not candidate(" ".join(argv[1:])):
+        return  # let ignores a heredoc on stdin; arithmetic operands are code.
+    if re.fullmatch(r"python(?:3(?:\.\d+)?)?", utility) and argv[1:4] == ["-m", "scripts.publish", "pr-merge"]:
+        return
+    if utility == "gh":
+        if _merge_args(argv) is not None:
+            return
+        # Built-in GH read/message operands are data; aliases are executors.
+        if argv[1:2] in [["pr"], ["issue"], ["run"], ["repo"], ["api"], ["search"]] and not any(
+            arg in {"--editor", "--web"} for arg in argv[1:]
+        ):
+            return
+        raise ShellParseError("unclassified GH candidate consumer")
+    if utility == "git":
+        if any(
+            arg in {"--exec", "-x", "--extcmd", "--upload-pack", "--receive-pack", "foreach", "run"}
+            or arg.startswith(("--exec=", "--extcmd=", "--upload-pack=", "--receive-pack=", "--config-env"))
+            for arg in argv[1:]
+        ):
+            raise ShellParseError("Git executor consumer cannot establish execution")
+        git_args = argv[1:]
+        while git_args and git_args[0].startswith("-"):
+            option, *git_args = git_args
+            if option in {"-C", "-c", "--git-dir", "--work-tree", "--namespace"}:
+                git_args = git_args[1:]
+            elif option not in {"--no-pager", "--paginate", "--bare"} and not option.startswith(
+                ("--git-dir=", "--work-tree=", "--namespace=")
+            ):
+                raise ShellParseError("unclassified Git global option")
+        if git_args[:1] in [
+            ["commit"],
+            ["log"],
+            ["show"],
+            ["diff"],
+            ["status"],
+            ["grep"],
+            ["checkout"],
+            ["switch"],
+            ["branch"],
+            ["worktree"],
+            ["sparse-checkout"],
+        ]:
+            return
+        raise ShellParseError("unclassified Git candidate consumer")
+    raise ShellParseError("unknown consumer of visible merge text")
 
 
 def _segments(command: str) -> list[list[str]]:
-    """Just the argv segments of `command`, scope boundaries discarded."""
-    return [argv for kind, argv in _scope_events(command) if kind == "segment" and argv]
-
-
-def _is_env_assignment(tok: str) -> bool:
-    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
-
-
-_WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
-
-_WRAPPER_VALUE_OPTIONS = {
-    "env": frozenset({"-u", "--unset", "-C", "--chdir"}),
-    "sudo": frozenset(
-        {
-            "-u",
-            "--user",
-            "-g",
-            "--group",
-            "-r",
-            "--role",
-            "-t",
-            "--type",
-            "-C",
-            "--close-from",
-            "-c",
-            "--command-timeout",
-            "-T",
-        }
-    ),
-    "time": frozenset({"-f", "--format", "-o", "--output"}),
-    "nice": frozenset({"-n", "--adjustment"}),
-    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
-}
-
-
-def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
-    """Return the first command word after one transparent wrapper.
-
-    A missing operand for a recognised value-taking option cannot execute a
-    command, so the scan consumes to the end instead of guessing a verb.
-    """
-    value_options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
-    while i < len(seg):
-        tok = seg[i]
-        if tok == "--":
-            return i + 1
-        if not tok.startswith("-") or tok == "-":
-            return i
-        i += 1
-        if tok in value_options:
-            if i >= len(seg):
-                return len(seg)
-            i += 1
-    return i
-
-
-def _skip_command_prefix(seg: list[str], i: int) -> int:
-    """Advance past wrappers (and their flags), assignments, ``{`` and ``!``.
-
-    Thus `nice -n 10 gh pr merge` reaches `gh`, rather than stopping on the
-    wrapper option (#4878).
-    """
-    while i < len(seg):
-        tok = seg[i]
-        if tok in _WRAPPERS:
-            i = _skip_wrapper_options(tok, seg, i + 1)
-        elif tok in {"{", "!"} or _is_env_assignment(tok):
-            i += 1
-        else:
-            break
-    return i
-
-
-_SHELLS = {"bash", "sh", "zsh", "dash", "ksh", "fish", "busybox"}
-
-
-def _find_merge(seg: list[str], start: int) -> int | None:
-    """Index of the `gh pr merge` token run at or after `start`, else None."""
-    for j in range(start, len(seg) - 2):
-        if seg[j : j + 3] == ["gh", "pr", "merge"]:
-            return j
-    return None
-
-
-# xargs options that consume a value; everything else short is a switch.
-_XARGS_VALUE_OPTS = {
-    "-n",
-    "-P",
-    "-I",
-    "-i",
-    "-L",
-    "-l",
-    "-s",
-    "-d",
-    "-E",
-    "-e",
-    "-a",
-    "--max-args",
-    "--max-procs",
-    "--replace",
-    "--max-lines",
-    "--max-chars",
-    "--delimiter",
-    "--eof",
-    "--arg-file",
-}
-
-
-def _invoked_start(seg: list[str]) -> tuple[int, bool]:
-    """Index where the actually-executed command begins → (index, reached_via_xargs).
-
-    `xargs` is NOT a transparent prefix: it appends stdin items to the command it runs.
-    Its own options must be stepped over, and the command boundary respected — otherwise
-    `xargs echo gh pr merge 5` (which runs `echo`) reads as a merge, while
-    `printf '5' | xargs gh pr merge --squash` (which really does merge PR 5) hides its
-    selector on stdin.
-    """
-    i = _skip_command_prefix(seg, 0)
-    if i >= len(seg) or seg[i] != "xargs":
-        return i, False
-    i += 1
-    while i < len(seg):
-        tok = seg[i]
-        if not tok.startswith("-"):
-            break
-        if tok in _XARGS_VALUE_OPTS:
-            i += 2
-            continue
-        if "=" in tok and tok.startswith("--"):
-            i += 1
-            continue
-        i += 1
-    return _skip_command_prefix(seg, i), True
-
-
-def _strip_dollar_quote(payload: str) -> str:
-    """Drop the `$` that `$'...'` / `$"..."` leave glued to a payload after tokenizing."""
-    return payload[1:] if payload.startswith("$") else payload
-
-
-def _shell_c_payload(seg: list[str]) -> str | None:
-    """The command string of a `bash -c '<cmd>'` segment, else None.
-
-    `bash -c 'gh pr merge 5 --squash'` really does merge, but the segment starts with
-    `bash`, so a direct-command match alone never sees it. The payload is a command
-    string and must be parsed as one.
-
-    Bash's `$'...'` (ANSI-C) and `$"..."` (locale) quoting survive shlex as a literal
-    `$` glued to the front — `bash -c $'gh pr merge 5'` yields `$gh pr merge 5`, whose
-    first token is `$gh`, matching nothing. Bash runs that command for real (verified),
-    so the marker is stripped rather than left to hide the merge.
-    """
-    i, _ = _invoked_start(seg)
-    if i >= len(seg):
-        return None
-    if seg[i].rsplit("/", 1)[-1] not in _SHELLS:
-        return None
-    for j in range(i + 1, len(seg) - 1):
-        tok = seg[j]
-        # `-c`, and any short cluster CONTAINING c — `bash -cx 'cmd'` runs cmd just as
-        # `-c` does, so requiring c to be last would miss a real merge (verified:
-        # `bash -cx 'echo hi'` executes and exits 0).
-        if tok.startswith("-") and not tok.startswith("--") and "c" in tok[1:]:
-            return _strip_dollar_quote(seg[j + 1])
-        if tok == "--command":
-            return _strip_dollar_quote(seg[j + 1])
-        if tok.startswith("--command="):
-            return _strip_dollar_quote(tok.split("=", 1)[1])
-    return None
-
-
-_MAX_SHELL_DEPTH = 8
-
-# Stand-in segment for a shell payload left uninspected at the recursion cap. _judge()
-# recognizes the marker and refuses outright — the cap costs a refusal, never a free
-# pass. Bounding the work must not bound the guarantee.
-#
-# It must be matched EXPLICITLY: relying on "no PR selector → block" would be wrong,
-# because _pr_ref falls back to the CURRENT BRANCH's PR, so a green current branch would
-# silently approve the payload nobody read.
-_UNREADABLE_MARKER = "--__guard_unreadable__"
-_UNPARSED = ["gh", "pr", "merge", _UNREADABLE_MARKER]
-
-# Sentinel: a `cd` whose target the guard cannot statically read (`cd -`, `cd "$DIR"`,
-# `cd $(...)`). Distinct from None ("this segment is not a cd").
-_CD_UNREADABLE = object()
-
-
-# bash's `cd` options (`cd -LP@ /x` is one legal cluster), minus `-` which is a TARGET.
-_CD_FLAG_CHARS = set("LPe@")
-
-
-def _is_cd_flag(tok: str) -> bool:
-    return len(tok) >= 2 and tok[0] == "-" and set(tok[1:]) <= _CD_FLAG_CHARS
-
-
-def _cd_target(seg: list[str], cwd: str | None = None, cwd_unreadable: bool = False):
-    """The literal directory a `cd` segment changes into, expanded.
-
-    Returns None when the segment is not a cd; _CD_UNREADABLE when it is a cd the
-    guard cannot statically resolve (variable/substitution/`cd -`). A bare `cd` goes
-    to $HOME, as the shell does. Relative paths resolve against the current
-    shell scope's cwd, including any preceding literal cd.
-
-    Options are stepped over rather than matched literally, and `--` ends them: reading
-    `cd -- /tmp`'s target as `--` (or `cd -LP /tmp`'s as `-LP`) would resolve a path that
-    does not exist, and a wrong path is not a safe one — gh would miss there and the
-    merge would fail closed on a command that is perfectly fine.
-
-    `--` does NOT demote `-` to a plain directory name, though it reads as if it should:
-    `cd -- -` still toggles to $OLDPWD (verified against bash with a real `./-` directory
-    in place, which only `cd -- ./-` reaches). So `-` stays unreadable in both spellings.
-    """
-    i = _skip_command_prefix(seg, 0)
-    if i >= len(seg) or seg[i] != "cd":
-        return None
-    if _UNREADABLE_MARKER in seg:
-        return _CD_UNREADABLE
-    rest: list[str] = []
-    options_done = False
-    for tok in seg[i + 1 :]:
-        if not options_done:
-            if tok == "--":
-                options_done = True
-                continue
-            if _is_cd_flag(tok):
-                continue
-        rest.append(tok)
-    if not rest:
-        return os.path.expanduser("~")
-    target = rest[0]
-    if target == "-" or "$" in target or "`" in target:
-        return _CD_UNREADABLE
-    target = os.path.expanduser(target)
-    if not os.path.isabs(target):
-        if cwd_unreadable:
-            return _CD_UNREADABLE
-        target = os.path.join(cwd or os.getcwd(), target)
-    return os.path.abspath(target)
-
-
-class _JudgedSegment(NamedTuple):
-    """One argv segment, with the cwd it actually runs in already resolved."""
-
-    argv: list[str]
-    cwd: str | None
-    cwd_unreadable: bool
-
-
-def _judged_segments(
-    command: str,
-    depth: int = 0,
-    cwd: str | None = None,
-    cwd_unreadable: bool = False,
-) -> list[_JudgedSegment]:
-    """Every segment worth judging, each tagged with the cwd it runs in.
-
-    A `cd` is scoped to the shell level that runs it, so cwd is resolved HERE, during the
-    walk that knows the nesting — not by a caller reading a flattened list, which cannot
-    see where one shell ends and the next begins (#5333). Two boundaries close the leak:
-
-    * subshell `( ... )` — cwd is saved at `(` and restored at `)`.
-    * `bash -c '<payload>'` — the payload INHERITS the spawning shell's cwd (passed down),
-      but its own cds die with it (the recursion's final state is discarded).
-
-    Both leaked in both directions before: an inner `cd` was adopted by an outer merge
-    (`bash -c 'cd /inner && true' && gh pr merge 9` judged 9 in /inner), and an outer
-    merge inherited an inner one it never saw (`cd /outer && bash -c 'cd /inner &&
-    gh pr merge 1' && gh pr merge 2` judged BOTH in /inner, though 2 runs in /outer).
-    Judging a merge in the wrong repo is wrong in both directions, and the dangerous one
-    is the false ALLOW off a same-numbered green PR.
-
-    An unattributable boundary — a `)` with no `(` (a `case` arm, a stray paren) — desyncs
-    the model, so cwd is marked unreadable rather than guessed: the walk no longer knows
-    which shell it is standing in, and _judge never sees a cwd this function is unsure of.
-    """
-    out: list[_JudgedSegment] = []
-    stack: list[tuple[str | None, bool]] = []
-    for kind, argv in _scope_events(command):
-        if kind == "open":
-            stack.append((cwd, cwd_unreadable))
-            continue
-        if kind == "close":
-            if stack:
-                cwd, cwd_unreadable = stack.pop()
-            else:
-                cwd_unreadable = True
-            continue
-        if kind == "unreadable":
-            cwd_unreadable = True
-            continue
-        target = _cd_target(argv, cwd, cwd_unreadable)
-        if target is _CD_UNREADABLE:
-            cwd_unreadable = True
-        elif target is not None:
-            # A literal cd RESOLVES the cwd — including after an unreadable one, whose
-            # target no longer matters now that a readable cd has overwritten it.
-            cwd, cwd_unreadable = target, False
-        out.append(_JudgedSegment(argv, cwd, cwd_unreadable))
-        invoked, _ = _invoked_start(argv)
-        if argv[invoked : invoked + 1] == ["eval"]:
-            # eval joins and reparses its operands in this shell, potentially
-            # changing both argv and cwd. Refuse rather than guess either.
-            out.append(_JudgedSegment(list(_UNPARSED), cwd, cwd_unreadable))
-            continue
-        payload = _shell_c_payload(argv)
-        if not payload:
-            continue
-        if depth >= _MAX_SHELL_DEPTH:
-            out.append(_JudgedSegment(list(_UNPARSED), cwd, cwd_unreadable))
-            continue
-        out.extend(_judged_segments(payload, depth + 1, cwd, cwd_unreadable))
-    return out
+    try:
+        rows = [segment.argv for segment in read_commands(command, include_payloads=False)]
+        if re.search(r"\bmerge\b", command, re.I) and ("<(" in command or ">(" in command):
+            rows.append(list(_UNPARSED))
+        return rows
+    except ShellParseError:
+        return [list(_UNPARSED)] if _may_merge(command) else []
 
 
 def _merge_args(seg: list[str]) -> list[str] | None:
@@ -565,19 +394,28 @@ def _merge_args(seg: list[str]) -> list[str] | None:
             else:
                 args.append(("--match-head-commit" if key == "--match-head" else key) + "=" + value)
             j += 1
-    elif seg[i : i + 3] == ["gh", "pr", "merge"]:
-        args = seg[i + 3 :]
-    elif i > 0 and not via_xargs and any(tok != "!" for tok in seg[:i]):
-        # A known wrapper brought its own options/operands (`sudo -u bot gh pr merge`,
-        # `env -i gh pr merge`), so the command does not begin at `i`. Find it instead of
-        # letting the merge through unjudged. Only wrapper-prefixed segments are scanned,
-        # so an unwrapped `echo gh pr merge 5` is still not treated as a merge — and the
-        # scan is skipped for xargs, whose trailing tokens are DATA for another command
-        # (`xargs echo gh pr merge 5` runs echo).
-        j = _find_merge(seg, i)
-        if j is None:
-            return None
-        args = seg[j + 3 :]
+    elif seg[i : i + 1] == ["gh"]:
+        # Cobra accepts inherited repository flags before/between subcommands.
+        # Keep their values in argv order for last-value repository semantics.
+        cursor = i + 1
+        inherited = []
+        for operation in ("pr", "merge"):
+            while cursor < len(seg) and seg[cursor].startswith(("-R", "--repo")):
+                option = seg[cursor]
+                if option in {"-R", "--repo"}:
+                    if cursor + 1 >= len(seg):
+                        return [_UNREADABLE_MARKER]
+                    inherited.extend(seg[cursor : cursor + 2])
+                    cursor += 2
+                elif option.startswith(("-R", "--repo=")):
+                    inherited.append(option)
+                    cursor += 1
+                else:
+                    return [_UNREADABLE_MARKER]
+            if cursor >= len(seg) or seg[cursor] != operation:
+                return [_UNREADABLE_MARKER] if cursor < len(seg) and UNREADABLE in seg[cursor] else None
+            cursor += 1
+        args = [*inherited, *seg[cursor:]]
     else:
         return None
     if via_xargs and _pr_selector(args) is None:
@@ -661,10 +499,13 @@ def _parse_args(args: list[str]) -> tuple[list[str], list[str], dict[str, str]]:
     i = 0
     while i < len(args):
         a = args[i]
+        if a == "--":
+            positionals.extend(args[i + 1 :])
+            break
         if a.startswith("--"):
             flags.append(a)
-            name, _, value = a.partition("=")
-            if value:
+            name, separator, value = a.partition("=")
+            if separator:
                 if name in _LONG_VALUE_FLAGS:
                     values[name] = value
                 i += 1
@@ -718,6 +559,22 @@ def _pr_selector(args: list[str]) -> str | None:
     """
     _, positionals = _classify(args)
     return positionals[0] if positionals else None
+
+
+def _target_conflict(args: list[str]) -> bool:
+    """Refuse an explicit repository that disagrees with a URL selector."""
+    selector = _pr_selector(args) or ""
+    repo = _repo_option(args)
+    if not repo or not selector.startswith(("http://", "https://")):
+        return False
+    url = urlparse(selector)
+    parts = url.path.strip("/").split("/")
+    if len(parts) != 4 or parts[2] != "pull" or not parts[3].isdigit():
+        return True
+    repo_parts = repo.strip("/").split("/")
+    if len(repo_parts) == 2:
+        return repo_parts != parts[:2]
+    return repo_parts != [url.netloc, *parts[:2]]
 
 
 def _pr_ref(args: list[str], repo: str | None = None, cwd: str | None = None) -> str | None:
@@ -910,7 +767,7 @@ def _block_msg(reason: str, guidance: str) -> str:
     return f"BLOCKED by guard-pr-merge: {reason}.\n\n{guidance}\n\n{_FOOTER}"
 
 
-def _judge(args: list[str], cwd: str | None = None) -> str | None:
+def _judge(args: list[str], cwd: str | None = None, repo: str | None = None) -> str | None:
     """Block message for this `gh pr merge`, or None to allow."""
     if _UNREADABLE_MARKER in args:
         return _block_msg(
@@ -920,7 +777,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "instead would verify one PR while gh merges another. Run the merge with the PR\n"
             "named explicitly (`gh pr merge <number> ...`).",
         )
-    repo = _repo_option(args)
+    repo = _repo_option(args) or repo
     pr = _pr_ref(args, repo, cwd=cwd)
     if not pr:
         return _block_msg(
@@ -1013,26 +870,53 @@ def main() -> int:
     # ever sends MORE commands to the full parse — never fewer.
     if not _may_merge(command):
         return 0
-    # Each segment arrives carrying the cwd it runs in, so a PR number is judged in the
-    # repo the MERGE runs in, not the session's repo — `cd private-repo && gh pr merge 203`
-    # judged from the public repo resolves a DIFFERENT PR #203, wrong in BOTH directions
-    # (false block, or worse: false allow off a same-numbered green PR). Scoping that cwd
-    # to its own shell level is _judged_segments' job: it is the only reader that knows
-    # where a subshell or `bash -c` payload begins and ends.
+    # The AST reader carries each invocation's shell-scoped cwd, including
+    # subshells and literal shell payloads, so PR selectors use that repository.
     try:
-        segments = _judged_segments(command)
-    except ShellPreprocessLimit:
+        segments = read_commands(
+            command,
+            cwd=payload.get("cwd") or os.getcwd(),
+            consumer_check=lambda *args: _check_consumer(
+                *args, eval_guarded=bool(_may_merge(command, include_branch=False))
+            ),
+        )
+    except Exception as exc:
+        if (
+            isinstance(exc, ShellParseError)
+            and str(exc) in {"Bash parse error", "ambiguous heredoc delimiter", "reserved word parsed as an argument"}
+            and not _may_merge(command, include_branch=False)
+        ):
+            # A malformed unrelated branch command belongs to the branch
+            # guard; no merge candidate is present to judge or refuse here.
+            return 0
         sys.stderr.write(
             _block_msg(
-                "nested shell command could not be parsed safely",
-                "Use a simpler literal merge command so the guard can check its target PR.",
+                f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}",
+                f"Use a literal merge command. Repair parser installation: {REPAIR}",
+            )
+        )
+        return 2
+    if re.search(r"\bmerge\b", command) and ("<(" in command or ">(" in command):
+        sys.stderr.write(
+            _block_msg(
+                "process-substitution merge scope cannot be read", f"Use a literal merge command; repair: {REPAIR}"
             )
         )
         return 2
     for seg in segments:
         args = _merge_args(seg.argv)
+        if args is not None and (any(row.redirect_unknown for row in segments) or "<(" in command or ">(" in command):
+            args = [*args, UNREADABLE]
         if args is None:
             continue
+        if _target_conflict(args):
+            sys.stderr.write(_block_msg("conflicting merge repositories", "Use one explicit target."))
+            return 2
+        if UNREADABLE in args:
+            sys.stderr.write(
+                _block_msg("merge arguments cannot be read", f"Use literal arguments; repair parser: {REPAIR}")
+            )
+            return 2
         # `-R owner/repo` names the repo outright, so this merge does not depend on the cwd
         # it runs in — and an unreadable cwd has nothing left to fail closed about. Blocking
         # anyway made the escape hatch this very message advertises a no-op (#5333 r2).
@@ -1040,7 +924,7 @@ def main() -> int:
         # `gh pr view 9 --repo cli/cli --json number` -> rc=0 `{"number":9}`. Without a
         # selector gh refuses (`argument required when using the --repo flag` -> rc=1), so
         # `-R` alone cannot wave a merge through: _pr_ref reads that rc and fails closed.
-        if seg.cwd_unreadable and not _repo_option(args):
+        if seg.cwd_unreadable and not (_repo_option(args) or seg.environment_repo):
             sys.stderr.write(
                 _block_msg(
                     "this merge's working directory cannot be read (a `cd` to a variable, "
@@ -1053,7 +937,11 @@ def main() -> int:
             return 2
         # An unreadable cwd is a guess, not a location — `-R` got us here, so let gh resolve
         # from the repo name in this hook's own cwd rather than hand it a stale directory.
-        blocked = _judge(args, cwd=None if seg.cwd_unreadable else seg.cwd)
+        blocked = _judge(
+            args,
+            cwd=None if seg.cwd_unreadable else seg.cwd,
+            **({"repo": seg.environment_repo} if seg.environment_repo else {}),
+        )
         if blocked:
             sys.stderr.write(blocked)
             return 2

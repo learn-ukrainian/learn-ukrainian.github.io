@@ -92,11 +92,8 @@ def test_issue_9479_real_bash_cwd_and_argv(repos, tmp_path, redirect, verb):
     assert result.returncode == 0, result.stderr
     actual = record.read_text().splitlines()
     assert actual == [str(repos["public"]), *verb.split(), "fixture"]
-    segments = guard._segments_with_following_operator(command)
-    cd_argv, operator = segments[0]
-    assert operator == "&&"
-    assert str(guard._cd_target(cd_argv, tmp_path)) == actual[0]
-    assert ["git", *actual[1:]] in [argv for argv, _ in segments]
+    rows = guard.read_commands(command, cwd=str(tmp_path))
+    assert any(row.argv == ["git", *actual[1:]] and row.cwd == actual[0] for row in rows)
     assert guard._command_danger_reason(command, repos["other"]) is not None
 
 
@@ -198,7 +195,7 @@ def test_issue_9115_escaped_nested_backtick_switch_is_visible(repos):
 
 
 def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setattr(sys.modules["shell_bash"], "MAX_DEPTH", 2)
     monkeypatch.chdir(repos["public"])
     body = "git checkout -b feature"
     for _ in range(3):
@@ -208,7 +205,7 @@ def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
 
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
-    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+    assert ["echo", 'a " b'] in guard._segments(r'echo "a \" b" <<EOF' + "\nfixture\nEOF")
 
 
 @pytest.mark.parametrize(
@@ -221,7 +218,7 @@ def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     ],
 )
 def test_issue_9088_standard_heredoc_delimiters(opener, closer):
-    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
+    assert ["cat"] in guard._segments(f"cat {opener}\nfixture\n{closer}")
     assert _dangerous(f"cat {opener}\ngit checkout -b feature\n{closer}") is None
     assert _dangerous(f"cat {opener}\nnote\n{closer}\ngit checkout -b feature") is not None
 
@@ -238,7 +235,7 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer):
 )
 def test_issue_9088_here_strings_keep_branch_switch_visible(repos, first):
     command = f"{first}\ngit checkout -b feature\nEOF"
-    assert guard._heredoc_delimiters(first) == []
+    assert ["true"] in guard._segments(first)
     assert _dangerous(command) is not None
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
@@ -274,7 +271,8 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(repos, monkeypatch):
 )
 def test_issue_9088_exotic_heredoc_keeps_branch_switch_visible(repos, opener, closer):
     command = f"cat {opener}\ngit checkout -b x\n{closer}"
-    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    with pytest.raises(guard.ShellParseError):
+        guard.read_commands(f"cat {opener}\nfixture\n{closer}")
     assert _dangerous(command) is not None
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
@@ -297,7 +295,7 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
         timeout=30,
     )
     assert result.returncode == 2
-    assert "guard dependency unavailable: shell_shlex" in result.stderr
+    assert "guard dependency unavailable: shell_bash" in result.stderr
 
 
 def _dangerous(command: str) -> str | None:
@@ -531,7 +529,7 @@ def test_glued_operator_evasion_blocked(cmd):
         # …quoting still protects commit messages…
         'git commit -m "git branch -D notreal"',
         # …and safe ops with glued separators stay allowed.
-        "git branch -d merged-ok; echo done",
+        "git branch -d merged-ok; echo 'done'",
         # Commented-out danger is dead text.
         "echo hi # git branch -D victim",
     ],
@@ -745,7 +743,11 @@ def _assert_r3_bash_decision(repos, tmp_path, command, cwd, verb, expected_cwd):
     assert result.returncode == 0, result.stderr
     actual = record.read_text().splitlines()
     assert actual == [str(expected_cwd), *verb.split(), "fixture"]
-    assert (guard._command_danger_reason(command, cwd) is not None) == (actual[0] == str(repos["public"]))
+    reason = guard._command_danger_reason(command, cwd)
+    if "&& $(cd " in command:
+        assert reason is not None and "dynamic command name" in reason
+    else:
+        assert (reason is not None) == (actual[0] == str(repos["public"]))
 
 
 @pytest.mark.parametrize("parentheses", ["({body})", "( {body} )"])
@@ -800,7 +802,7 @@ def test_issue_9479_r2_unreadable_respects_repository(repos, tmp_path, command, 
     cwd = tmp_path / "non-repo" if location == "non_repo" else repos[location]
     cwd.mkdir(exist_ok=True)
     # An unreadable cd can change the repository even from an unprotected cwd.
-    expected_block = location == "public" or command.startswith("cd $(")
+    expected_block = location in {"public", "non_repo"} or command.startswith("cd $(")
     assert (guard._command_danger_reason(command, cwd) is not None) == expected_block
 
 
@@ -841,9 +843,9 @@ def test_issue_9479_r2_redirect_substitution_runs_before_cd(repos):
 
 def test_issue_9479_r2_operator_boundaries(repos):
     command = f"cd {repos['public']} &&(git switch -c fixture) && echo ok"
-    rows = guard._segments_with_following_operator(command)
-    assert rows[0][1] == "&&open"
-    assert rows[1][1] == "close&&"
+    rows = guard.read_commands(command, cwd=str(repos["other"]))
+    assert next(row for row in rows if row.argv[0] == "git").cwd == str(repos["public"])
+    assert rows[-1].cwd == str(repos["public"])
 
 
 @pytest.mark.parametrize("start", ["public", "public_worktree"])
@@ -989,7 +991,7 @@ def test_issue_9479_r5_case_without_cd_deliberately_overblocks_worktree(repos, t
 @pytest.mark.parametrize(
     "body",
     [
-        "echo case",
+        "echo 'case'",
         "echo ${x:-word}",
         "echo '${x:-(}'",
         'git commit -m "case x"',
@@ -1108,7 +1110,7 @@ def test_issue_9479_r6_case_anywhere_deliberately_overblocks_worktree(
 
 @pytest.mark.parametrize(
     "body",
-    ["echo case", 'git commit -m "case study"', 'grep -r "case " .', "echo ${x:-default}", "echo ${#arr[@]}"],
+    ["echo 'case'", 'git commit -m "case study"', 'grep -r "case " .', "echo ${x:-default}", "echo ${#arr[@]}"],
 )
 def test_issue_9479_r6_common_worktree_controls_allowed(repos, body):
     assert guard._command_danger_reason(body + " && git switch -c fixture", repos["public_worktree"]) is None
@@ -1118,7 +1120,11 @@ def test_issue_9479_r6_common_worktree_controls_allowed(repos, body):
 @pytest.mark.parametrize("start", ["public", "public_worktree"])
 def test_issue_9479_r6_unmodeled_without_branch_is_unaffected(repos, body, start):
     assert guard._command_danger_reason(body, repos[start]) is None
-    assert guard._command_danger_reason(body + '; echo "git switch -c literal"', repos[start]) is None
+    reason = guard._command_danger_reason(body + '; echo "git switch -c literal"', repos[start])
+    if body == "echo ${x:-(}":
+        assert reason is not None and "Bash parse error" in reason
+    else:
+        assert reason is None
 
 
 @pytest.mark.parametrize("target", ["public", "public_worktree"])
@@ -1132,7 +1138,10 @@ def test_issue_9479_r6_helper_exception_exits_two(monkeypatch, failure):
     def broken(*args, **kwargs):
         raise RuntimeError("synthetic helper failure")
 
-    monkeypatch.setattr(guard, "command_repository_unknown" if failure == "detector" else "scope_events", broken)
+    if failure == "detector":
+        monkeypatch.setattr(guard, "read_commands", broken)
+    else:
+        monkeypatch.setattr(sys.modules["shell_bash"], "Parser", broken)
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": "git switch -c fixture"}})))
     assert guard.main() == 2
 
@@ -1285,7 +1294,8 @@ def test_issue_9479_r7_real_expansions_and_later_case_stay_blocked(repos, tmp_pa
 @pytest.mark.parametrize("opener", ["<<EOF", "<<'EOF'", r"<<\EOF", "<<-EOF"])
 def test_issue_9479_r7_missing_terminator_fails_closed(repos, start, opener):
     command = f'git switch -c fixture && git commit -m "$(cat {opener}\nIt\'s fixed\nEOF trailing\n)"'
-    assert guard.command_repository_unknown(command)
+    with pytest.raises(guard.ShellParseError, match="Bash parse error"):
+        guard.read_commands(command, str(repos[start]))
     assert guard._command_danger_reason(command, repos[start]) is not None
 
 
@@ -1410,3 +1420,45 @@ def test_issue_9479_r8_unquoted_branch_expansion_executes_bash(repos, tmp_path, 
         ["git", str(repos[start]), "commit", "-m", "It's active: " if apostrophe else "active: "],
     ]
     assert (guard._command_danger_reason(command, repos[start]) is not None) == (start == "public")
+
+
+@pytest.mark.parametrize("word", ["done", "case"])
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+def test_issue_9484_reserved_arguments_are_refused_only_after_raw_gate(repos, word, start):
+    cwd = repos[start]
+    assert guard._command_danger_reason("echo " + word, cwd) is None
+    bare = f"echo {word}; git branch -d merged-ok"
+    assert guard._command_danger_reason(bare, cwd) is not None
+    with pytest.raises(guard.ShellParseError, match="reserved word parsed as an argument"):
+        guard.read_commands(bare, cwd=str(cwd))
+    quoted = f"echo '{word}'; git branch -d merged-ok"
+    assert guard._command_danger_reason(quoted, cwd) is None
+
+
+@pytest.mark.parametrize("command", ["git switch -c fixture", "gh pr checkout 5", "git branch -M fixture"])
+def test_unknown_repository_never_proves_safe(monkeypatch, repos, command):
+    monkeypatch.setattr(guard, "_git_repo_root", lambda cwd: None)
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+    assert guard._command_danger_reason("git status", repos["public"]) is None
+
+
+def test_failed_worktree_probe_cannot_allow_branch_operation(monkeypatch, repos):
+    def failure(*args, **kwargs):
+        raise FileNotFoundError("fixture git unavailable")
+    monkeypatch.setattr(guard.subprocess, "run", failure)
+    with pytest.raises(RuntimeError, match="worktree probe unavailable"):
+        guard._in_main_worktree(repos["public"])
+
+
+def test_unknown_current_branch_cannot_allow_force_rename(monkeypatch, repos):
+    monkeypatch.setattr(guard, "_checked_out_branch", lambda cwd: None)
+    assert guard._command_danger_reason("git branch -M fixture", repos["public"]) is not None
+
+
+def test_payload_directory_is_used_at_actual_hook_entry(monkeypatch, repos):
+    import io
+    import json
+    monkeypatch.setattr(guard.sys, "stdin", io.StringIO(json.dumps({
+        "cwd": str(repos["public"]), "tool_input": {"command": "git switch -c fixture"},
+    })))
+    assert guard.main() == 2

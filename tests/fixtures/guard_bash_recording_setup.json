@@ -1,0 +1,111 @@
+{
+  "schema": "guard-recording-setup.v1",
+  "bash": "/bin/bash",
+  "bash_version": "GNU bash, version 5.3.9(1)-release (x86_64-pc-linux-gnu)",
+  "argv": [
+    "/bin/bash",
+    "--noprofile",
+    "--norc",
+    "-c",
+    "<command>\nprobe_status=$?; wait; exit $probe_status"
+  ],
+  "timeout_seconds": 10,
+  "environment": {
+    "PATH": "<probe>/bin:/usr/local/bin:/usr/bin:/bin:<installed-uv-and-rg-dirs>",
+    "HOME": "<probe>/primary",
+    "P": "<probe>/primary",
+    "GH_REPO": "fixture/default",
+    "CO": "checkout",
+    "ORACLE_RECORDS": "<probe>/records",
+    "ORACLE_ALIAS": "<probe>/alias",
+    "BASH_ENV": null,
+    "CDPATH": null
+  },
+  "directories": [
+    "primary/.worktrees/wt",
+    "primary/.worktrees/wt2",
+    "primary/.config/gh",
+    "primary/.git/hooks",
+    "bin",
+    "records"
+  ],
+  "files": {
+    "primary/file": "git checkout\ngh pr merge\nx\n",
+    "primary/notes": "",
+    "primary/data.json": "{\"text\":\"git checkout\"}\n"
+  },
+  "recording_fake_git_gh": "#!/bin/bash\nname=${0##*/}\nprintf '%s\\0' \"$PWD\" \"${GH_REPO:-}\" \"$name\" \"$@\" > \"$ORACLE_RECORDS/$$-$RANDOM\"\nif [[ $name == git ]]; then\n  original=(\"$@\")\n  while [[ $1 == -C* ]]; do\n    if [[ $1 == -C ]]; then cd \"$2\" || exit; shift 2; else cd \"${1:2}\" || exit; shift; fi\n  done\n  if [[ $ORACLE_GIT_DELEGATE == 1 ]]; then\n    case \"$1\" in checkout|switch|branch) :;; *) exec /usr/bin/git \"${original[@]}\";; esac\n  fi\n  if [[ $1 == rev-parse ]]; then printf '%s\\n' \"$PWD\"; exit; fi\nelif [[ $name == gh ]]; then\n  if [[ $1 == alias && $2 == set ]]; then printf '%s\\n' \"$4\" > \"$ORACLE_ALIAS\"; exit; fi\n  if [[ $1 == mm && -f $ORACLE_ALIAS ]]; then\n    read -r -a alias_words < \"$ORACLE_ALIAS\"; shift; exec gh \"${alias_words[@]}\" \"$@\"\n  fi\nfi\n",
+  "git_setup": [
+    [
+      "/usr/bin/git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "primary"
+    ],
+    [
+      "/usr/bin/git",
+      "-C",
+      "primary",
+      "config",
+      "user.name",
+      "Fixture"
+    ],
+    [
+      "/usr/bin/git",
+      "-C",
+      "primary",
+      "config",
+      "user.email",
+      "fixture@example.invalid"
+    ],
+    [
+      "/usr/bin/git",
+      "-C",
+      "primary",
+      "add",
+      "file"
+    ],
+    [
+      "/usr/bin/git",
+      "-C",
+      "primary",
+      "commit",
+      "-qm",
+      "initial"
+    ],
+    [
+      "/usr/bin/git",
+      "-C",
+      "primary",
+      "commit",
+      "--allow-empty",
+      "-qm",
+      "second"
+    ]
+  ],
+  "limits": "No network targets. ssh uses -G (configuration only); docker uses --help. Git fetch/push use a nonexistent local remote, not a network URL. Failure to execute is descriptive and never proves unreachability.",
+  "executor_setup": "Python payloads resolve python to a local Bash launcher of the task-prescribed project interpreter. tmux uses a private socket, waits for a recorded signal, then kills only that server. ORACLE_GIT_DELEGATE follows each row git_delegate field.",
+  "executor_option_preconditions": "bisect run: add a third changed commit and start with HEAD bad/HEAD~2 good. difftool: dirty file. push: fixture remote is a local empty bare repository and branch.main.remote/merge bind main to fixture/main. submodule foreach: create a local empty-commit seed repository and add it as sub using protocol.file.allow=always. difftool.prompt=false removes interactive waiting. Clear setup records before the submitted command. systemd-run inherits only the caller bus transport variables if present; never publish their values.",
+  "git_internal_preconditions": "Second commit changes file; create a helper directory symlinking the installed Git exec-path helpers except git, which symlinks the recording fake; set GIT_EXEC_PATH to it. Read scratch .git/HEAD after execution for builtin alias expansion, even if a redirect corrupts .git/config.",
+  "normalization": "Replace the per-row temp root with <probe>; store no host addresses, identities or stderr paths.",
+  "round2_environment": {
+    "TERM": "xterm",
+    "LC_ALL": "C",
+    "PATH": "<probe>/bin:<inherited-installed-program-dirs>",
+    "ORACLE_GIT": "<probe>/bin/git",
+    "ORACLE_GH": "<probe>/bin/gh"
+  },
+  "round2_probe_preconditions": "Per command isolated directories wt/link/a/b and files; recording git/gh only. taskset permits CPUs 0-8191, chrt selects SCHED_OTHER, prlimit lowers only the probe soft/hard fd limit. watch -x is bounded by timeout 0.4. command -p uses system default PATH (not recording PATH); absence of a recorder is a limitation, never proof of safety. No network/mutation-capable real gh/git may execute: command -p probes run only with recorder paths as documented in round2_resolution.",
+  "round2_resolution": "command -p probes use ORACLE_GIT/ORACLE_GH to select an absolute recording executable, preserving -p behavior without invoking host git/gh. These dynamic command names require refusal under amendment 6. exec -a records actual argv.",
+  "round2_recording_fake_git_gh": "#!/bin/bash\nname=${0##*/}\nprintf '%s\\0' \"$(pwd -P)\" \"${GH_REPO:-}\" \"$name\" \"$@\" > \"$ORACLE_RECORDS/$$-$RANDOM\"\nif [[ $name == git ]]; then\n  original=(\"$@\")\n  while [[ $1 == -C* ]]; do\n    if [[ $1 == -C ]]; then cd -P \"$2\" || exit; shift 2; else cd -P \"${1:2}\" || exit; shift; fi\n  done\n  if [[ $ORACLE_GIT_DELEGATE == 1 ]]; then\n    case \"$1\" in checkout|switch|branch) :;; *) exec /usr/bin/git \"${original[@]}\";; esac\n  fi\n  if [[ $1 == rev-parse ]]; then printf '%s\\n' \"$(pwd -P)\"; exit; fi\nelif [[ $name == gh ]]; then\n  if [[ $1 == alias && $2 == set ]]; then printf '%s\\n' \"$4\" > \"$ORACLE_ALIAS\"; exit; fi\n  if [[ $1 == mm && -f $ORACLE_ALIAS ]]; then\n    read -r -a alias_words < \"$ORACLE_ALIAS\"; shift; exec gh \"${alias_words[@]}\" \"$@\"\n  fi\nfi\n",
+  "round2_symlinks": {
+    "primary/wt": "primary/.worktrees/wt",
+    "primary/link": "primary/.worktrees/wt",
+    "primary/primary": "primary"
+  },
+  "round2_extra_directories": [
+    "primary/a/b"
+  ]
+}

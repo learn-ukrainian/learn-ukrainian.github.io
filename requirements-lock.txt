@@ -251,3 +251,7 @@ zlib-state==0.1.12
 
 # Repository runtime dependency; install requirements from the repository root.
 ./packages/v4-runtime
+
+# Guard parser (#9484); wheel hashes: requirements-hooks.txt. Bumps require the full bash oracle.
+tree-sitter==0.26.0
+tree-sitter-bash==0.25.1
