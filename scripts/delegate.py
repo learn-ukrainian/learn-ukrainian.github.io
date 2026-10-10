@@ -8469,7 +8469,41 @@ def _validate_existing_worktree(
     return True
 
 
-def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
+def _withdraw_primary_database_links(
+    worktree_path: Path, main_repo_root: Path, relative_paths: Sequence[str]
+) -> None:
+    """Remove a reused worktree's database links that resolve to the primary databases (#9421).
+
+    A read-only dispatch must carry no such link: a symlink cannot be made
+    read-only, so a write through it lands in the primary database. Links to
+    anything else stay. Never touches the main checkout itself, whose own
+    database entries are the primary.
+
+    The parent containment is checked for every database path, whatever the
+    entry type. An aliased parent (for example a worktree ``data`` directory
+    that points into the primary checkout) makes a relative write reach the
+    primary database even when the entry is an ordinary file or absent, so
+    such a dispatch fails closed instead of only when the entry is a link.
+    """
+    if worktree_path.resolve() == main_repo_root.resolve():
+        return
+    worktree = worktree_path.resolve()
+    for relative_path in relative_paths:
+        target = worktree_path / relative_path
+        if not target.parent.resolve().is_relative_to(worktree):
+            raise RuntimeError(
+                f"refusing read-only dispatch: database path {target} has a parent that resolves outside the worktree"
+            )
+        # Non-strict resolution also matches a dangling link, whose write
+        # would create the primary database.
+        if target.is_symlink() and target.resolve() == (main_repo_root / relative_path).resolve():
+            # The primary checkout contains worktrees, so containment in this
+            # worktree (not absence from the primary) is the boundary.
+            target.unlink()
+            print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
+
+
+def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_only: bool = False) -> None:
     """Symlink heavy local-only files into a delegated worktree.
 
     Worktrees omit gitignored DBs and Node dependency directories, but quality
@@ -8478,6 +8512,14 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
     directories. The primary Python environment is deliberately excluded:
     workers invoke its absolute interpreter and must not receive a local
     ``.venv`` symlink.
+
+    A read-only dispatch gets no database link (#9421). A symlink cannot be
+    made read-only, so a write through it lands in the primary database.
+    ``read_only`` withdraws a database link an earlier write-capable dispatch
+    provisioned into a reused worktree; a link to anything else is left alone.
+    A relative open then creates a worktree-local file that the read-only
+    guard flags, and the primary stays untouched. Workers read the primary
+    databases by absolute path with ``mode=ro`` or through the ``sources`` MCP.
 
     Self-link guard: if ``worktree_path`` *is* the main checkout, provisioning
     would create ``node_modules -> node_modules`` (a self-referential loop) that
@@ -8494,13 +8536,16 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         )
         return
 
+    database_links = ("data/vesum.db", "data/sources.db")
+    if read_only:
+        _withdraw_primary_database_links(worktree_path, main_repo_root, database_links)
     for relative_path in (
-        "data/vesum.db",
-        "data/sources.db",
+        *(() if read_only else database_links),
         "node_modules",
         "site/node_modules",
     ):
         source = main_repo_root / relative_path
+        target = worktree_path / relative_path
         # ``source.exists()`` follows symlinks and returns False for a looping
         # source, so a self-referential root ``node_modules`` is skipped here
         # rather than copied into the worktree.
@@ -8511,7 +8556,6 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
             )
             continue
 
-        target = worktree_path / relative_path
         if target.exists() or target.is_symlink():
             continue
 
@@ -9177,8 +9221,12 @@ def _ensure_worktree(
     detached: bool = False,
     validated_path: Path | None = None,
     review_dependencies: Sequence[tuple[str, Path]] = (),
+    read_only: bool = False,
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
+
+    ``read_only`` (implied by ``detached``) provisions no database link and
+    withdraws one a reused worktree still carries (#9421).
 
     ``run_nonce`` names the dispatch run a fresh worktree's path reservation
     is recorded under (see :func:`_add_reserved_worktree`). ``validated_path``,
@@ -9285,8 +9333,9 @@ def _ensure_worktree(
         if dry_run:
             return worktree_path, worktree_branch, telemetry
         # Reused worktrees may predate this provisioning hook; the helper is
-        # idempotent and never clobbers existing files.
-        _provision_data_symlinks(worktree_path, _REPO_ROOT)
+        # idempotent and never clobbers existing files. For a read-only
+        # dispatch it withdraws the restored database links instead (#9421).
+        _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
         # Admission has already read these inputs. Preserve the current checkout
         # when it holds any dependency; reapplying sparse mode can hide those bytes.
         dependencies = _review_attempt_dependency_names(worktree_path, review_dependencies)
@@ -9407,7 +9456,7 @@ def _ensure_worktree(
         if upstream_proc.returncode != 0:
             detail = (upstream_proc.stderr or upstream_proc.stdout or "git branch failed").strip()
             raise RuntimeError(f"could not configure upstream origin/{requested_branch} for {worktree_path}: {detail}")
-    _provision_data_symlinks(worktree_path, _REPO_ROOT)
+    _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
     telemetry["sparse"] = _apply_dispatch_sparse_checkout(
         worktree_path,
         full_checkout=full_checkout,
@@ -13435,6 +13484,7 @@ def _dispatch(
                     sparse_include=sparse_include,
                     run_nonce=run_nonce,
                     review_dependencies=review_dependencies,
+                    read_only=args.mode == "read-only",
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
@@ -13580,6 +13630,15 @@ def _dispatch(
                 sparse_include=sparse_include,
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
+            if args.mode == "read-only":
+                # Still under the worktree lock: a link an earlier write-capable
+                # dispatch provisioned must not reach the worker (#9421).
+                try:
+                    _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                except RuntimeError as exc:
+                    discard_logs()
+                    print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
+                    return 1
 
     # A Kimi worker needs its own worktree, checked out at the commit the gate read. The
     # gate and the check above already hold this; this re-check under the worktree lock
