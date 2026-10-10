@@ -277,7 +277,7 @@ def test_deficit_signal_states():
     assert get_status(res_cool) == "cool"
 
     # 3. Near cap status
-    raw_claude["usage"]["secondary"]["usedPercent"] = 92.0
+    raw_claude["usage"]["secondary"]["usedPercent"] = 99.0
     res_near_cap = _normalize_provider_data("claude", raw_claude)
     assert get_status(res_near_cap) == "near_cap"
 
@@ -380,7 +380,8 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
     assert "weekly-pace signal" in deficit_warnings[0]
 
 
-def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
+@pytest.mark.parametrize("api_used", [90.0, 98.99, 99.0, 100.0])
+def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch, api_used):
     """Cursor burn tracks Auto monthly pool; exhausted API allotment emits advisory warning."""
     cursor_row = {
         "lane": "cursor",
@@ -390,8 +391,8 @@ def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
         "primary_remaining_pct": 64.0,
         "secondary_used_pct": 36.0,
         "secondary_remaining_pct": 64.0,
-        "tertiary_used_pct": 100.0,
-        "tertiary_remaining_pct": 0.0,
+        "tertiary_used_pct": api_used,
+        "tertiary_remaining_pct": 100.0 - api_used,
         "weekly_used_pct": None,
         "weekly_remaining_pct": None,
         "provider_windows": {
@@ -405,8 +406,8 @@ def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
             "api": {
                 "window": "monthly",
                 "label": "API",
-                "used_pct": 100.0,
-                "remaining_pct": 0.0,
+                "used_pct": api_used,
+                "remaining_pct": 100.0 - api_used,
                 "resets_at": "2026-08-01T09:58:38Z",
             },
         },
@@ -419,8 +420,8 @@ def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
                 "label": "Auto",
             },
             "tertiary": {
-                "used_pct": 100.0,
-                "remaining_pct": 0.0,
+                "used_pct": api_used,
+                "remaining_pct": 100.0 - api_used,
                 "resets_at": "2026-08-01T09:58:38Z",
                 "window_minutes": 44640,
                 "label": "API",
@@ -483,10 +484,11 @@ def test_routing_budget_cursor_burns_auto_and_warns_on_api(monkeypatch):
     assert cursor["burn_pct_7d"] == 36.0
     assert cursor["status"] == "cool"
     assert cursor["provider_windows"]["auto"]["used_pct"] == 36.0
-    assert cursor["provider_windows"]["api"]["used_pct"] == 100.0
+    assert cursor["provider_windows"]["api"]["used_pct"] == api_used
     api_warnings = [w for w in res["recommendation"]["warnings"] if "API/on-demand" in w]
-    assert api_warnings
-    assert "100% used" in api_warnings[0]
+    assert bool(api_warnings) is (api_used >= 99.0)
+    if api_warnings:
+        assert f"{api_used:.0f}% used" in api_warnings[0]
 
 
 def test_monthly_window_only_does_not_mislabel_weekly_used_pct():
@@ -2206,11 +2208,11 @@ def test_pace_is_deficit_four_routing_cases():
     assert pace_is_deficit(on_pace) is False
     assert state_router._status_from_weekly_used(41.5, on_pace) == "cool"
 
-    near_cap_pace = compute_usage_pace(92.0, _weekly_resets_after(now, 0.50), now=now)
-    assert state_router._status_from_weekly_used(92.0, near_cap_pace) == "near_cap"
+    near_cap_pace = compute_usage_pace(99.0, _weekly_resets_after(now, 0.50), now=now)
+    assert state_router._status_from_weekly_used(99.0, near_cap_pace) == "near_cap"
     assert (
         state_router._status_from_weekly_used(
-            92.0, {"delta_pct": -10.0, "will_last_to_reset": True, "expected_pct": 50.0}
+            99.0, {"delta_pct": -10.0, "will_last_to_reset": True, "expected_pct": 50.0}
         )
         == "near_cap"
     )

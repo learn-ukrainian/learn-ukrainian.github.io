@@ -88,9 +88,12 @@ CAPACITY_AVOID = "avoid"
 STALE_ADVISORY_LABEL = "UNKNOWN — stale/advisory"
 
 # Plan statuses below the cap (the producer's allowance rule, see
-# ``state_router._status_from_weekly_used``): near_cap at <= 10% remaining,
+# ``state_router._status_from_weekly_used``): near_cap at <= 1% remaining,
 # warm at <= 50% remaining when pace is unavailable, cool otherwise.
-_NEAR_CAP_REMAINING_PCT = 10.0
+SUBSCRIPTION_NEAR_CAP_USED_PCT = 99.0
+_NEAR_CAP_REMAINING_PCT = 100.0 - SUBSCRIPTION_NEAR_CAP_USED_PCT
+# Separate Codex credit-policy trigger, also used when the policy is unreadable.
+_CREDIT_NEAR_CAP_REMAINING_PCT = 10.0
 _WARM_REMAINING_PCT = 50.0
 # Probe age limit when the policy file is unreadable: the routing-budget
 # ``stale_threshold_s`` (the shipped ``credit_max_age_s`` is the same value).
@@ -277,7 +280,7 @@ def plan_window_exhausted(lane: str, info: Mapping[str, Any] | None, policy: Cre
 
     The credit-lane rule: such a lane is near_cap/AVOID unless credit relief
     applies, whichever window (weekly, 5-hour, Auto) is the tight one. Lanes
-    outside the policy keep the status-based near_cap (>= 90% weekly used).
+    outside the policy keep the status-based near_cap (>= 99% weekly used).
     An unreadable policy keeps the built-in credit lanes configured.
     """
     lane_key = lane.strip().lower()
@@ -287,7 +290,7 @@ def plan_window_exhausted(lane: str, info: Mapping[str, Any] | None, policy: Cre
         except ValueError:
             policy = None
     configured = policy.lane_models(lane_key) is not None if policy is not None else lane_key in DEFAULT_ALLOWED_MODELS
-    threshold = policy.near_cap_remaining_pct if policy is not None else _NEAR_CAP_REMAINING_PCT
+    threshold = policy.near_cap_remaining_pct if policy is not None else _CREDIT_NEAR_CAP_REMAINING_PCT
     remaining = plan_remaining_pct(info)
     return configured and remaining is not None and remaining <= threshold
 
@@ -638,7 +641,7 @@ def pace_deficit_state(
         if not isinstance(pace, dict) or status not in {"cool", "warm"} or runtime.get("headroom_blocked"):
             return result
         expected = pace_expected_pct(pace, now=current)
-        if not pace_is_visible({"expected_pct": expected}) or remaining is None or remaining <= 10:
+        if not pace_is_visible({"expected_pct": expected}) or remaining is None or remaining <= _NEAR_CAP_REMAINING_PCT:
             return result
         will_last = pace.get("will_last_to_reset", pace.get("willLastToReset"))
         if will_last is True:
@@ -647,7 +650,7 @@ def pace_deficit_state(
             return result
         if raw is not False or will_last is not False:
             return result
-    if raw is True and status in {"cool", "warm", "hot"} and remaining is not None and remaining > 10:
+    if raw is True and status in {"cool", "warm", "hot"} and remaining is not None and remaining > _NEAR_CAP_REMAINING_PCT:
         result["status"] = "hot"
     if not lane.strip():
         return {**result, "reason": result["reason"] + ": lane identity missing"}
@@ -687,7 +690,7 @@ def pace_deficit_state(
             status in {"cool", "warm", "hot"}
             and not runtime.get("headroom_blocked")
             and remaining is not None
-            and remaining > 10
+            and remaining > _NEAR_CAP_REMAINING_PCT
         ):
             result["status"] = "cool"
     return result
@@ -1140,7 +1143,7 @@ def routing_facts(
             policy = load_policy()
         except ValueError as exc:
             policy_error = str(exc)
-    near_cap_pct = policy.near_cap_remaining_pct if policy is not None else _NEAR_CAP_REMAINING_PCT
+    near_cap_pct = policy.near_cap_remaining_pct if policy is not None else _CREDIT_NEAR_CAP_REMAINING_PCT
     max_age_s = policy.credit_max_age_s if policy is not None else UNREADABLE_POLICY_MAX_AGE_S
     snapshot, _ = snapshot_freshness(snapshot_metadata)
     probe, _ = probe_freshness(data, max_age_s)
