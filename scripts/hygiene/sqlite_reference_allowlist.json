@@ -505,7 +505,7 @@
   },
   {
     "path": "scripts/ingest/usage_advice_ingest.py",
-    "reference_count": 8,
+    "reference_count": 10,
     "kind": "writer",
     "target_db": "movne.db and movaua.db (--db-movne / --db-movaua destination)",
     "reason": "persists incremental usage-advice articles and extracted contrastive pairs (#857)",

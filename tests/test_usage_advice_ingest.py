@@ -30,6 +30,8 @@ from scripts.ingest.usage_advice_ingest import (
     RateLimitOrServerError,
     SourceChoice,
     clean_movaua_title,
+    discover_movaua_manifest,
+    discover_movne_manifest,
     ensure_movaua_schema,
     ensure_movne_schema,
     export_movaua_summary_json,
@@ -42,6 +44,8 @@ from scripts.ingest.usage_advice_ingest import (
     parse_args,
     parse_retry_after,
     polite_get,
+    reextract_movaua,
+    reextract_movne,
 )
 
 
@@ -414,6 +418,211 @@ class TestUsageAdviceIngest(unittest.TestCase):
         mock_movne.side_effect = AccessDeniedError("403 Forbidden")
         code = main(["--source", "movne_pytannya", "--db-movne", ":memory:"])
         self.assertEqual(code, EXIT_HTTP_403_FORBIDDEN)
+
+    def test_user_agent_explicitly_set_on_session(self) -> None:
+        session = requests.Session()
+        self.assertIn("python-requests", session.headers.get("User-Agent", ""))
+        ingest_movne_pytannya(
+            self.conn,
+            session=session,
+            manifest=[],
+            user_agent="CustomAgent/2.0",
+        )
+        self.assertEqual(session.headers.get("User-Agent"), "CustomAgent/2.0")
+
+    def test_403_circuit_breaker_marks_error_and_skips_incremental(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        resp403 = MagicMock(spec=requests.Response)
+        resp403.status_code = 403
+        session.get.return_value = resp403
+
+        manifest = [{"issue_number": 1, "url": "https://glavcom.ua/blocked.html", "title": "Blocked"}]
+        with self.assertRaises(AccessDeniedError):
+            ingest_movne_pytannya(self.conn, session=session, manifest=manifest, delay=0, sleep_fn=lambda _: None)
+
+        row = self.conn.execute(
+            "SELECT url, error_status FROM movne_pytannya_issues WHERE url = ?",
+            ("https://glavcom.ua/blocked.html",),
+        ).fetchone()
+        self.assertIsNotNone(row)
+        self.assertEqual(row[1], "http_403")
+
+        session.get.reset_mock()
+        stats = ingest_movne_pytannya(
+            self.conn, session=session, manifest=manifest, incremental=True, delay=0, sleep_fn=lambda _: None
+        )
+        self.assertEqual(stats.fetched_new, 0)
+        self.assertEqual(session.get.call_count, 0)
+
+    def test_reextract_movne_and_movaua(self) -> None:
+        ensure_movne_schema(self.conn)
+        ensure_movaua_schema(self.conn)
+
+        movne_html = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Ірина: Як правильно казати: «на протязі» чи «протягом»?</p>
+            <p>Правильно вживати: протягом. На протязі — це на вітрі.</p>
+        </div>
+        """
+        self.conn.execute(
+            """
+            INSERT INTO movne_pytannya_issues
+            (id, url, issue_number, title, date, description, raw_html, article_text, content_sha256, fetched_at)
+            VALUES (1, 'https://glavcom.ua/issue1.html', 1, 'Випуск 1', '', '', ?, '', 'sha', '2026-01-01')
+            """,
+            (movne_html,),
+        )
+        movne_pairs = reextract_movne(self.conn)
+        self.assertEqual(movne_pairs, 1)
+        pair_row = self.conn.execute(
+            "SELECT questioned_form, verdict_form FROM movne_word_pairs WHERE issue_id = 1"
+        ).fetchone()
+        self.assertEqual(pair_row[0], "на протязі")
+        self.assertEqual(pair_row[1], "протягом")
+
+        self.conn.execute(
+            """
+            INSERT INTO movaua_articles
+            (id, url, section, title, date, image_url, image_alt, raw_html, article_text, content_sha256, fetched_at)
+            VALUES (1, 'https://ukr-mova.in.ua/paronim/1', 'пароніми', 'Ефектний і ефективний', '', '', '', '<html></html>', 'Текст про різницю', 'sha', '2026-01-01')
+            """
+        )
+        movaua_pairs = reextract_movaua(self.conn)
+        self.assertEqual(movaua_pairs, 1)
+        m_row = self.conn.execute(
+            "SELECT questioned_form, recommended_form, pair_type FROM movaua_usage_pairs WHERE article_id = 1"
+        ).fetchone()
+        self.assertEqual(m_row[0], "Ефектний / ефективний")
+        self.assertEqual(m_row[1], "Ефектний / ефективний")
+        self.assertEqual(m_row[2], "paronym")
+
+    def test_extract_movne_nested_wrapper_divs(self) -> None:
+        html = """
+        <div class="art_body_uniq">
+            <div class="q-block">
+                <h3>• 1 •</h3>
+                <div class="q-inner">
+                    <p>Марія: Як сказати «слідуючий»?</p>
+                    <p>Правильно: наступний.</p>
+                </div>
+            </div>
+        </div>
+        """
+        pairs = extract_movne_word_pairs(1, "https://glavcom.ua/nested.html", html)
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0]["reader_name"], "Марія")
+        self.assertEqual(pairs[0]["verdict_form"], "наступний")
+
+    def test_reader_name_strips_question_prefixes(self) -> None:
+        html = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Як правильно: чи можна казати «на протязі»?</p>
+            <p>Правильно казати: протягом.</p>
+            <h2>• 2 •</h2>
+            <p>Запитує Петро: чи вживається слово «вірогідний»?</p>
+            <p>Правильно казати: ймовірний.</p>
+        </div>
+        """
+        pairs = extract_movne_word_pairs(1, "https://glavcom.ua/prefix.html", html)
+        self.assertEqual(len(pairs), 2)
+        self.assertEqual(pairs[0]["reader_name"], "")
+        self.assertEqual(pairs[1]["reader_name"], "Петро")
+
+    def test_full_verdict_list_and_explanation_strip(self) -> None:
+        html = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Питання: як замінити «в кінці кінців»?</p>
+            <p>Правильно казати: зрештою, врешті-решт або кінець кінцем, бо це калька з російської.</p>
+        </div>
+        """
+        pairs = extract_movne_word_pairs(1, "https://glavcom.ua/list.html", html)
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0]["verdict_form"], "зрештою, врешті-решт або кінець кінцем")
+
+    def test_movaua_flexible_category_and_paronym_clean(self) -> None:
+        p1 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/u1", "антисуржик", "Квиток чи білет?", "Квиток", "Текст")
+        self.assertEqual(p1[0]["pair_type"], "anti_surzhyk")
+
+        p2 = extract_movaua_usage_pairs(2, "https://ukr-mova.in.ua/u2", "синоніми", "Синоніми до слова «гарний»", "Вродливий", "Текст")
+        self.assertEqual(p2[0]["pair_type"], "synonym")
+
+        p3 = extract_movaua_usage_pairs(3, "https://ukr-mova.in.ua/u3", "пароніми", "Адрес і адреса", "", "Текст")
+        self.assertEqual(p3[0]["pair_type"], "paronym")
+        self.assertNotIn("(диференціація значень)", p3[0]["recommended_form"])
+        self.assertEqual(p3[0]["recommended_form"], "Адрес / адреса")
+
+    def test_discover_movne_host_allowlist_and_true_issue(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        resp = MagicMock(spec=requests.Response)
+        resp.status_code = 200
+        resp.text = """
+        <div class="article_story_list">
+            <div class="article_title"><a href="https://glavcom.ua/specprojects/movne_pytannya/45.html">«Мовне питання». Випуск № 45</a></div>
+            <div class="article_description">Опис</div>
+            <div class="article_date">2026-05-01</div>
+        </div>
+        <div class="article_story_list">
+            <div class="article_title"><a href="https://external-ad.com/spam.html">Зовнішнє посилання</a></div>
+        </div>
+        """
+        session.get.return_value = resp
+        items = discover_movne_manifest(session, pages=["https://glavcom.ua/test.html"], delay=0, sleep_fn=lambda _: None)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]["url"], "https://glavcom.ua/specprojects/movne_pytannya/45.html")
+        self.assertEqual(items[0]["issue_number"], 45)
+
+    def test_discover_movaua_nested_sitemaps(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        r_index = MagicMock(spec=requests.Response)
+        r_index.status_code = 200
+        r_index.content = b"""<?xml version="1.0" encoding="UTF-8"?>
+        <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <sitemap><loc>https://ukr-mova.in.ua/sitemap_sub.xml</loc></sitemap>
+        </sitemapindex>"""
+
+        r_sub = MagicMock(spec=requests.Response)
+        r_sub.status_code = 200
+        r_sub.content = b"""<?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url><loc>https://ukr-mova.in.ua/antusurzhuk/item1</loc></url>
+        </urlset>"""
+
+        session.get.side_effect = [r_index, r_sub]
+        items = discover_movaua_manifest(session, sitemap_url="https://ukr-mova.in.ua/sitemap.xml", delay=0, sleep_fn=lambda _: None)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]["url"], "https://ukr-mova.in.ua/antusurzhuk/item1")
+        self.assertEqual(items[0]["section"], "antusurzhuk")
+
+    def test_movaua_date_and_image_urljoin(self) -> None:
+        manifest = [{"url": "https://ukr-mova.in.ua/item_rel", "section": "antusurzhuk"}]
+        session = MagicMock(spec=requests.Session)
+        r = MagicMock(spec=requests.Response)
+        r.status_code = 200
+        r.text = """
+        <html>
+            <title>Тест</title>
+            <time datetime="2026-03-15">15 березня 2026</time>
+            <div class="illustration"><img src="/images/rule1.png" alt="Правило" /></div>
+            <div class="article-content">Текст статті</div>
+        </html>
+        """
+        session.get.return_value = r
+        ingest_movaua(self.conn, session=session, manifest=manifest, delay=0, sleep_fn=lambda _: None)
+        row = self.conn.execute(
+            "SELECT date, image_url, image_alt FROM movaua_articles WHERE url = 'https://ukr-mova.in.ua/item_rel'"
+        ).fetchone()
+        self.assertEqual(row[0], "2026-03-15")
+        self.assertEqual(row[1], "https://ukr-mova.in.ua/images/rule1.png")
+        self.assertEqual(row[2], "Правило")
+
+    def test_cli_re_extract_mode(self) -> None:
+        args = parse_args(["--re-extract", "--source", "all"])
+        self.assertTrue(args.re_extract)
+        code = main(["--re-extract", "--source", "movne_pytannya", "--db-movne", "non_existent.db"])
+        self.assertEqual(code, 0)
 
 
 if __name__ == "__main__":

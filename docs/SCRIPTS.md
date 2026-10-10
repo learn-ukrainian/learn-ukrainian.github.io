@@ -58,6 +58,27 @@ The successful exact-floor probe recovered a tie larger than the normal page
 size in one response. API/manatee versions were `open-5.71.15` and
 `2.36.7-open-2.225.8`. See #9969 for the original snapshot/read design.
 
+## Usage advice ingest (Glavcom & mova.ua)
+
+`.venv/bin/python -m scripts.ingest.usage_advice_ingest [--source movne_pytannya|movaua|all]`
+ingests Ukrainian usage advice and word-pair distinctions from:
+1. Glavcom «Мовне питання» (archive by Olha Vasylieva) into `data/movne_pytannya.db`.
+2. Мова – ДНК нації (mova.ua / ukr-mova.in.ua) into `data/movaua.db`.
+
+Key behaviors:
+- Honest identifying User-Agent by default (`learn-ukrainian-usage-ingest/1.0 ...`) with `--user-agent` override.
+- Strict circuit-breaker stop on HTTP 403 (marks `error_status = 'http_403'` in SQLite to skip in subsequent incremental runs; zero retries).
+- Exponential backoff on HTTP 429 and 5xx, respecting standard `Retry-After` headers.
+- Incremental mode (`--incremental`, default true) querying existing SQLite tables.
+- Full fidelity: untruncated raw HTML, article text, content SHA-256 digest, and metadata.
+- Re-extraction CLI mode: `--re-extract` / `--reextract` re-runs word-pair extraction from stored raw HTML in SQLite without network traffic.
+- Optional JSON export: `--export-json-movne <path>` and `--export-json-movaua <path>`.
+
+```bash
+.venv/bin/python -m scripts.ingest.usage_advice_ingest --source all
+.venv/bin/python -m scripts.ingest.usage_advice_ingest --re-extract --source all
+```
+
 ## Reviewer bench health
 
 `.venv/bin/python -m scripts.review.bench_health [--profile code|infra] [--risk low|medium|high|critical]`

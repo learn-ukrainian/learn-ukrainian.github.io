@@ -248,6 +248,13 @@ tool returns `status: error`, `error_code: resource_catalogue_missing`.
 | `grinchenko`/`goroh_etymology` | 41 | — | Горох etymology stubs (small). |
 | `paronyms_cache` | 6 | — | Paronym pair cache. |
 
+### Usage advice & word pairs (lexicon / style grounding)
+
+| Database | Tables | Ingest module | What it is |
+| --- | --- | --- | --- |
+| `data/movne_pytannya.db` | `movne_pytannya_issues`, `movne_word_pairs` | `scripts.ingest.usage_advice_ingest` | Glavcom «Мовне питання» archive by Olha Vasylieva (~48 issues, ~200 reader Q&A word/usage pairs with rationale, preferred vs incorrect forms). |
+| `data/movaua.db` | `movaua_articles`, `movaua_usage_pairs` | `scripts.ingest.usage_advice_ingest` | Мова – ДНК нації (mova.ua / ukr-mova.in.ua, ~582 articles, structured pairs across anti-surzhyk, paronyms, orthography, stress, synonyms, idioms). |
+
 ### Private reference sources (`textbooks`)
 
 Owned books and premium notes are private references for grounding and pedagogy

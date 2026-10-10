@@ -205,3 +205,21 @@
   Live ingest, page-image census, transcriptions, adjudication and
   custody/register updates belong to later #9604
   steps. These tools and synthetic tests do not establish those acceptance criteria.
+
+- `usage_advice_ingest.py` (#857): incremental ingest and word/usage-pair extractor for Ukrainian language usage sources:
+  1. Glavcom «Мовне питання» (Olha Vasylieva column archive) into `data/movne_pytannya.db`.
+  2. Мова – ДНК нації (mova.ua / ukr-mova.in.ua, ~582 articles across anti-surzhyk, paronyms, orthography, stress, synonyms, idioms) into `data/movaua.db`.
+
+  Features:
+  - Honest identifying User-Agent by default (`learn-ukrainian-usage-ingest/1.0 ...`) with CLI `--user-agent` override.
+  - Immediate circuit-breaker stop on HTTP 403 (marks `error_status = 'http_403'` in SQLite to skip on subsequent incremental runs; zero retries).
+  - Exponential backoff on HTTP 429 and 5xx, respecting standard `Retry-After` headers.
+  - Incremental mode (`--incremental`, default true) querying existing SQLite tables.
+  - Full-fidelity retention: untruncated raw HTML, article text, content SHA-256 digest, and metadata.
+  - `--re-extract` / `--reextract` CLI flag to re-run extraction over stored SQLite `raw_html` without network requests.
+  - Summary JSON export (`--export-json-movne` / `--export-json-movaua`) for downstream lexicon review.
+
+  ```bash
+  .venv/bin/python -m scripts.ingest.usage_advice_ingest --source all
+  .venv/bin/python -m scripts.ingest.usage_advice_ingest --re-extract --source all
+  ```
