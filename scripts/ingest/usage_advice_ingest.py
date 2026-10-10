@@ -173,7 +173,11 @@ def polite_get(
             if attempt >= max_retries:
                 raise RateLimitOrServerError(f"HTTP {resp.status_code} for {url} after {max_retries} retries.")
             retry_after = parse_retry_after(resp.headers.get("Retry-After"))
-            wait_s = retry_after if retry_after is not None else delay * (retry_backoff**attempt)
+            wait_s = (
+                min(retry_after, 60.0)
+                if retry_after is not None
+                else delay * (retry_backoff**attempt)
+            )
             logger.warning(
                 "HTTP %s for %s; retrying in %.1fs (attempt %d/%d)",
                 resp.status_code,
@@ -200,10 +204,12 @@ def polite_get(
 def ensure_movne_schema(conn: sqlite3.Connection) -> None:
     """Create schema for Glavcom «Мовне питання»."""
     with conn:
+        conn.execute("PRAGMA foreign_keys = ON;")
         conn.execute("""
             CREATE TABLE IF NOT EXISTS movne_pytannya_issues (
-                issue_number INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 url TEXT NOT NULL UNIQUE,
+                issue_number INTEGER NOT NULL,
                 title TEXT NOT NULL,
                 date TEXT NOT NULL,
                 description TEXT NOT NULL,
@@ -216,6 +222,7 @@ def ensure_movne_schema(conn: sqlite3.Connection) -> None:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS movne_word_pairs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                issue_id INTEGER NOT NULL,
                 issue_number INTEGER NOT NULL,
                 question_num INTEGER NOT NULL,
                 reader_name TEXT NOT NULL,
@@ -226,10 +233,12 @@ def ensure_movne_schema(conn: sqlite3.Connection) -> None:
                 reasoning TEXT NOT NULL,
                 url TEXT NOT NULL,
                 created_at TEXT NOT NULL,
-                FOREIGN KEY (issue_number) REFERENCES movne_pytannya_issues(issue_number)
+                FOREIGN KEY (issue_id) REFERENCES movne_pytannya_issues(id) ON DELETE CASCADE
             );
         """)
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_movne_issues_url ON movne_pytannya_issues(url);")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_movne_pairs_issue ON movne_word_pairs(issue_number);")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_movne_pairs_issue_id ON movne_word_pairs(issue_id);")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_movne_pairs_questioned ON movne_word_pairs(questioned_form);")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_movne_pairs_verdict ON movne_word_pairs(verdict_form);")
 
@@ -237,6 +246,7 @@ def ensure_movne_schema(conn: sqlite3.Connection) -> None:
 def ensure_movaua_schema(conn: sqlite3.Connection) -> None:
     """Create schema for Мова – ДНК нації (mova.ua / ukr-mova.in.ua)."""
     with conn:
+        conn.execute("PRAGMA foreign_keys = ON;")
         conn.execute("""
             CREATE TABLE IF NOT EXISTS movaua_articles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -265,7 +275,7 @@ def ensure_movaua_schema(conn: sqlite3.Connection) -> None:
                 source_title TEXT NOT NULL,
                 credit TEXT NOT NULL,
                 created_at TEXT NOT NULL,
-                FOREIGN KEY (article_id) REFERENCES movaua_articles(id)
+                FOREIGN KEY (article_id) REFERENCES movaua_articles(id) ON DELETE CASCADE
             );
         """)
         conn.execute("CREATE INDEX IF NOT EXISTS idx_movaua_articles_url ON movaua_articles(url);")
@@ -333,7 +343,7 @@ def extract_movne_word_pairs(
         if quotes:
             questioned_form = ", ".join(quotes[:3])
         elif " чи " in question_body:
-            m_chi = re.search(r"([А-Яа-яЄєІіЇїҐґ'\-]+)\s+чи\s+([А-Яа-яЄєІіЇїҐґ'\-]+)", question_body)
+            m_chi = re.search(r"([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)\s+чи\s+([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)", question_body)
             if m_chi:
                 questioned_form = f"{m_chi.group(1)} чи {m_chi.group(2)}"
         if not questioned_form:
@@ -345,15 +355,25 @@ def extract_movne_word_pairs(
         verdict_type = "advice"
         verdict_form = ""
 
-        if "правильн" in first_ans.lower():
-            m_prav = re.search(
-                r"правильно(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.;,]+)",
-                first_ans,
-                flags=re.IGNORECASE,
-            )
-            if m_prav:
-                verdict_form = m_prav.group(1).strip(' «"“”»')
-                verdict_type = "preferred"
+        m_prav = re.search(
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z])правильно(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.;,\n]+)",
+            first_ans,
+            flags=re.IGNORECASE,
+        )
+        m_neprav = re.search(
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z])неправильно(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.;,\n]+)",
+            first_ans,
+            flags=re.IGNORECASE,
+        )
+
+        if m_prav:
+            verdict_form = m_prav.group(1).strip(' «"“”»')
+            verdict_type = "preferred"
+            if m_neprav and (not questioned_form or questioned_form == question_body[:60].strip()):
+                questioned_form = m_neprav.group(1).strip(' «"“”»')
+        elif m_neprav:
+            verdict_form = m_neprav.group(1).strip(' «"“”»')
+            verdict_type = "incorrect"
 
         if not verdict_form and quotes:
             for q in quotes:
@@ -373,7 +393,7 @@ def extract_movne_word_pairs(
             or "не росіянізм" in first_ans_lower
         ):
             verdict_type = "not_russianism"
-        elif "неправильно" in first_ans_lower or "не варто" in first_ans_lower:
+        elif verdict_type != "preferred" and ("неправильно" in first_ans_lower or "не варто" in first_ans_lower):
             verdict_type = "incorrect"
 
         pairs.append(
@@ -473,7 +493,7 @@ def extract_movaua_usage_pairs(
                     "article_id": article_id,
                     "url": url,
                     "category": category,
-                    "questioned_form": f"{w1} vs {w2}",
+                    "questioned_form": f"{w1} / {w2}",
                     "recommended_form": f"{w1} / {w2} (диференціація значень)",
                     "pair_type": "paronym",
                     "reasoning": article_text or clean_t,
@@ -787,36 +807,69 @@ def ingest_movne_pytannya(
         fetched_at = dt.datetime.now(dt.UTC).isoformat()
 
         with conn:
-            conn.execute(
-                """
-                INSERT OR REPLACE INTO movne_pytannya_issues
-                (issue_number, url, title, date, description, raw_html, article_text, content_sha256, fetched_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    issue_number,
-                    url,
-                    item.get("title", ""),
-                    item.get("date", ""),
-                    item.get("description", ""),
-                    html,
-                    art_text,
-                    sha,
-                    fetched_at,
-                ),
-            )
+            conn.execute("PRAGMA foreign_keys = ON;")
+            row = conn.execute("SELECT id, issue_number FROM movne_pytannya_issues WHERE url = ?", (url,)).fetchone()
+            if row:
+                issue_id, issue_num = row[0], (item.get("issue_number") or row[1])
+                conn.execute(
+                    """
+                    UPDATE movne_pytannya_issues
+                    SET issue_number = ?, title = ?, date = ?, description = ?, raw_html = ?, article_text = ?, content_sha256 = ?, fetched_at = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        issue_num,
+                        item.get("title", ""),
+                        item.get("date", ""),
+                        item.get("description", ""),
+                        html,
+                        art_text,
+                        sha,
+                        fetched_at,
+                        issue_id,
+                    ),
+                )
+            else:
+                issue_num = (
+                    item.get("issue_number")
+                    or (
+                        conn.execute("SELECT COALESCE(MAX(issue_number), 0) + 1 FROM movne_pytannya_issues").fetchone()[
+                            0
+                        ]
+                    )
+                )
+                cur = conn.execute(
+                    """
+                    INSERT INTO movne_pytannya_issues
+                    (url, issue_number, title, date, description, raw_html, article_text, content_sha256, fetched_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        url,
+                        issue_num,
+                        item.get("title", ""),
+                        item.get("date", ""),
+                        item.get("description", ""),
+                        html,
+                        art_text,
+                        sha,
+                        fetched_at,
+                    ),
+                )
+                issue_id = cur.lastrowid
 
-            pairs = extract_movne_word_pairs(issue_number, url, html, created_at=fetched_at)
-            conn.execute("DELETE FROM movne_word_pairs WHERE issue_number = ?", (issue_number,))
+            pairs = extract_movne_word_pairs(issue_num, url, html, created_at=fetched_at)
+            conn.execute("DELETE FROM movne_word_pairs WHERE issue_id = ?", (issue_id,))
             for p in pairs:
                 conn.execute(
                     """
                     INSERT INTO movne_word_pairs
-                    (issue_number, question_num, reader_name, question_raw, questioned_form,
+                    (issue_id, issue_number, question_num, reader_name, question_raw, questioned_form,
                      verdict_form, verdict_type, reasoning, url, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
+                        issue_id,
                         p["issue_number"],
                         p["question_num"],
                         p["reader_name"],
@@ -931,15 +984,28 @@ def ingest_movaua(
         fetched_at = dt.datetime.now(dt.UTC).isoformat()
 
         with conn:
-            conn.execute(
-                """
-                INSERT OR REPLACE INTO movaua_articles
-                (url, section, title, date, image_url, image_alt, raw_html, article_text, content_sha256, fetched_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (url, section, raw_title, date_str, img_url, img_alt, html, art_text, sha, fetched_at),
-            )
-            article_id = conn.execute("SELECT id FROM movaua_articles WHERE url = ?", (url,)).fetchone()[0]
+            conn.execute("PRAGMA foreign_keys = ON;")
+            row = conn.execute("SELECT id FROM movaua_articles WHERE url = ?", (url,)).fetchone()
+            if row:
+                article_id = row[0]
+                conn.execute(
+                    """
+                    UPDATE movaua_articles
+                    SET section = ?, title = ?, date = ?, image_url = ?, image_alt = ?, raw_html = ?, article_text = ?, content_sha256 = ?, fetched_at = ?
+                    WHERE id = ?
+                    """,
+                    (section, raw_title, date_str, img_url, img_alt, html, art_text, sha, fetched_at, article_id),
+                )
+            else:
+                cur = conn.execute(
+                    """
+                    INSERT INTO movaua_articles
+                    (url, section, title, date, image_url, image_alt, raw_html, article_text, content_sha256, fetched_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (url, section, raw_title, date_str, img_url, img_alt, html, art_text, sha, fetched_at),
+                )
+                article_id = cur.lastrowid
 
             pairs = extract_movaua_usage_pairs(
                 article_id,

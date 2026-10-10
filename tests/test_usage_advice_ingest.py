@@ -205,7 +205,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
         )
         self.assertEqual(len(p_paronym), 1)
         self.assertEqual(p_paronym[0]["pair_type"], "paronym")
-        self.assertEqual(p_paronym[0]["questioned_form"], "Адреса vs адрес")
+        self.assertEqual(p_paronym[0]["questioned_form"], "Адреса / адрес")
 
         # 3. Stress
         p_stress = extract_movaua_usage_pairs(
@@ -337,15 +337,15 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.conn.execute(
             """
             INSERT INTO movne_pytannya_issues
-            (issue_number, url, title, date, description, raw_html, article_text, content_sha256, fetched_at)
-            VALUES (1, 'https://example.com/1', 'Issue 1', '2026-01-01', 'Desc', '<html></html>', 'Text', 'sha1', '2026-01-01')
+            (id, url, issue_number, title, date, description, raw_html, article_text, content_sha256, fetched_at)
+            VALUES (1, 'https://example.com/1', 1, 'Issue 1', '2026-01-01', 'Desc', '<html></html>', 'Text', 'sha1', '2026-01-01')
             """
         )
         self.conn.execute(
             """
             INSERT INTO movne_word_pairs
-            (issue_number, question_num, reader_name, question_raw, questioned_form, verdict_form, verdict_type, reasoning, url, created_at)
-            VALUES (1, 1, 'Олена', 'Як сказати?', 'калька', 'норма', 'preferred', 'пояснення', 'https://example.com/1', '2026-01-01')
+            (issue_id, issue_number, question_num, reader_name, question_raw, questioned_form, verdict_form, verdict_type, reasoning, url, created_at)
+            VALUES (1, 1, 1, 'Олена', 'Як сказати?', 'калька', 'норма', 'preferred', 'пояснення', 'https://example.com/1', '2026-01-01')
             """
         )
 
@@ -363,6 +363,43 @@ class TestUsageAdviceIngest(unittest.TestCase):
             data_m = export_movaua_summary_json(self.conn, movaua_out)
             self.assertEqual(data_m["credit"], MOVAUA_CREDIT)
             self.assertTrue(movaua_out.exists())
+
+    def test_extract_movne_word_pairs_contrastive_nepravylno_first(self) -> None:
+        html = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Олександр: Чи вживається слово «слідуючий»?</p>
+            <p>Неправильно казати «слідуючий». Правильно — «наступний».</p>
+        </div>
+        """
+        pairs = extract_movne_word_pairs(1, "https://glavcom.ua/issue_contrastive.html", html)
+        self.assertEqual(len(pairs), 1)
+        p = pairs[0]
+        self.assertEqual(p["verdict_form"], "наступний")
+        self.assertEqual(p["verdict_type"], "preferred")
+        self.assertEqual(p["questioned_form"], "слідуючий")
+
+    def test_ingest_movaua_no_incremental_does_not_double_pairs(self) -> None:
+        manifest = [
+            {"url": "https://ukr-mova.in.ua/item1", "section": "antusurzhuk"},
+        ]
+        session = MagicMock(spec=requests.Session)
+        r = MagicMock(spec=requests.Response)
+        r.status_code = 200
+        r.text = "<html><title>Більшість членів чи більшість члени? | Мова – ДНК нації</title><div class='text'>Більшість членів</div></html>"
+        session.get.return_value = r
+
+        ingest_movaua(
+            self.conn, session=session, manifest=manifest, incremental=False, delay=0, sleep_fn=lambda _: None
+        )
+        pairs_count_1 = self.conn.execute("SELECT COUNT(*) FROM movaua_usage_pairs").fetchone()[0]
+
+        ingest_movaua(
+            self.conn, session=session, manifest=manifest, incremental=False, delay=0, sleep_fn=lambda _: None
+        )
+        pairs_count_2 = self.conn.execute("SELECT COUNT(*) FROM movaua_usage_pairs").fetchone()[0]
+        self.assertEqual(pairs_count_1, pairs_count_2)
+        self.assertEqual(pairs_count_1, 1)
 
     def test_cli_parse_args(self) -> None:
         args = parse_args(["--source", "movne_pytannya", "--delay", "0.5", "--limit", "10", "--no-incremental"])
