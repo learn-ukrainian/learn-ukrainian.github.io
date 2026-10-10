@@ -606,6 +606,11 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    from scripts.agent_runtime.model_pause import refusal_reason
+
+    paused = refusal_reason(candidate_dispatch_model(candidate))
+    if paused:
+        return paused
     # Custom ladders and pins cannot fabricate review authority for a
     # mechanical-only catalog model, even by supplying reviewer metadata.
     identity = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)

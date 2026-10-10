@@ -3045,3 +3045,12 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
 
 # Opt-in synthetic private tooling for tests of public publishing consumers.
 from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401
+
+
+@pytest.fixture(autouse=True)
+def _no_operator_model_pause(monkeypatch, tmp_path_factory):
+    """Tests never read the operator's live model-pause policy."""
+    if "LU_MODEL_PAUSE_FILE" not in os.environ:
+        monkeypatch.setenv(
+            "LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json")
+        )
