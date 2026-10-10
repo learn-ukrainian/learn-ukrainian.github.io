@@ -10,6 +10,7 @@ RESTART_DELAY=10
 echo "=== Dispatcher wrapper started at $(date) ==="
 echo "  Max runtime: ${MAX_HOURS}h | Restart delay: ${RESTART_DELAY}s"
 
+# The sanitizer prints API-key names only. A failure refuses to start.
 drop_unneeded_dispatcher_secrets() {
     local name names
     if ! names="$(.venv/bin/python scripts/agent_runtime/env_sanitize.py --provider dispatcher)"; then
