@@ -5,10 +5,10 @@ check green or skipped without every required job running (or, in the merge
 queue only, a recorded reuse of a green full run of the same tree).
 
 - ci.yml fires on opened/synchronize/reopened/edited, and on a direct push
-  to main. `labeled` does not start CI. An edit uses its own concurrency
-  group so it does not cancel the in-flight code run. The publication-surface
-  scan is required on every event, including that edit, a direct push, and a
-  merge-queue reuse.
+  to main. `labeled` does not start CI. An edit shares the pull request's
+  concurrency group, so it cancels an in-flight run instead of posting a
+  second CI Gate. The publication-surface scan is required on every event,
+  including that edit, a direct push, and a merge-queue reuse.
 - Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
   and fails when a required job was cancelled or skipped unexpectedly;
   GitHub treats a skipped required job as success.
@@ -342,11 +342,10 @@ def test_only_the_history_shard_checks_out_full_history() -> None:
 
 
 def test_pr_runs_share_one_group_per_pr_number() -> None:
-    # A push cancels the in-flight run for the previous SHA of the PR.
-    # A title or body edit does not share that group, so it does not cancel it.
-    groups = {_concurrency_group(_EVENTS[name]) for name in ("opened", "synchronize", "reopened")}
+    # A push or a title/body edit cancels the other in-flight run for this PR.
+    # They share one group so a later clean run cannot replace a failed scan.
+    groups = {_concurrency_group(_EVENTS[name]) for name in ("opened", "synchronize", "reopened", "edited")}
     assert groups == {"CI-pull_request-7"}
-    assert _concurrency_group(_EVENTS["edited"]) == "CI-pull_request-7-edited"
     assert _concurrency_group(_EVENTS["merge_group"]).startswith("CI-merge_group-refs/heads/gh-readonly-queue/")
 
 

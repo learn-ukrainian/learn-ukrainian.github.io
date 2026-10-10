@@ -24,7 +24,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _PR_NUMBER_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
 _EVENT_PR_NUMBER_OR_DISPATCH_GROUP = (
     "${{ github.workflow }}-${{ github.event_name }}-"
-    "${{ github.event.action == 'edited' && format('{0}-edited', github.event.pull_request.number) || github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}"
+    "${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}"
 )
 _PR_NUMBER_ONLY_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number }}"
 _EVENT_SHA_GROUP = "${{ github.workflow }}-${{ github.event_name }}-${{ github.sha }}"

@@ -31,6 +31,8 @@ import os
 import re
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -143,6 +145,58 @@ def event_surfaces(payload: dict, event_name: str) -> tuple[list[tuple[str, str]
     return [], None
 
 
+def current_pull_request(repo: str, number: str, token: str) -> dict:
+    """Return the live pull request. The caller must not print it."""
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{repo}/pulls/{number}",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "lint-public-surfaces",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError, urllib.error.URLError) as exc:
+        raise RuntimeError(type(exc).__name__) from None
+    if not isinstance(payload, dict) or "title" not in payload:
+        raise RuntimeError("unexpected-payload")
+    return payload
+
+
+def overlay_live_pull_request(payload: dict, live: dict) -> dict:
+    """Replace title, body, and branch with the live pull request. Keep the SHAs."""
+    pr = dict(payload.get("pull_request") or {})
+    head = dict(pr.get("head") if isinstance(pr.get("head"), dict) else {})
+    live_head = live.get("head") if isinstance(live.get("head"), dict) else {}
+    head["ref"] = str(live_head.get("ref") or "")
+    pr["title"] = str(live.get("title") or "")
+    pr["body"] = live.get("body") if isinstance(live.get("body"), str) else ""
+    pr["head"] = head
+    updated = dict(payload)
+    updated["pull_request"] = pr
+    return updated
+
+
+def _refresh_pull_request(payload: dict) -> dict | None:
+    """Return the payload with the current title and body, or None when that read fails."""
+    if os.environ.get("LU_PUBLICATION_LIVE") != "1":
+        return payload
+    pr = payload.get("pull_request") if isinstance(payload.get("pull_request"), dict) else {}
+    number = str(pr.get("number") or os.environ.get("PR_NUMBER") or "")
+    repo = os.environ.get("GITHUB_REPOSITORY", "")
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN") or ""
+    if not number or not repo or not token:
+        return None
+    try:
+        live = current_pull_request(repo, number, token)
+    except RuntimeError:
+        return None
+    return overlay_live_pull_request(payload, live)
+
+
 def _is_shallow_checkout() -> bool:
     result = subprocess.run(
         ["git", "rev-parse", "--is-shallow-repository"],
@@ -230,6 +284,12 @@ def main(argv: list[str] | None = None) -> int:
             print("OPSEC publication surfaces: event payload could not be read.", file=sys.stderr)
             return 1
         event_name = args.event_name or os.environ.get("GITHUB_EVENT_NAME", "")
+        if event_name == "pull_request":
+            refreshed = _refresh_pull_request(payload)
+            if refreshed is None:
+                print("OPSEC publication surfaces: current pull request text is unavailable.", file=sys.stderr)
+                return 1
+            payload = refreshed
         surfaces, commit_range = event_surfaces(payload, event_name)
         if event_name in {"workflow_dispatch", "schedule"}:
             try:

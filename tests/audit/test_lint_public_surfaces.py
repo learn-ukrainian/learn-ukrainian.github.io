@@ -122,6 +122,50 @@ def test_a_full_checkout_miss_fails(tmp_path: Path, monkeypatch) -> None:
     assert lint_public_surfaces.main(["--event-file", str(event), "--event-name", "pull_request"]) == 1
 
 
+def test_live_pull_request_replaces_a_stale_title(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("LU_PUBLICATION_LIVE", "1")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "o/r")
+    monkeypatch.setenv("GITHUB_TOKEN", "token")
+    monkeypatch.setattr(
+        lint_public_surfaces,
+        "current_pull_request",
+        lambda _repo, _number, _token: {"title": f"wip {_SECRET_PATH}", "body": "", "head": {"ref": "cursor/example"}},
+    )
+    event = tmp_path / "event.json"
+    event.write_text(
+        json.dumps(
+            {
+                "pull_request": {
+                    "number": 7,
+                    "title": "Fix the learner card",
+                    "body": "",
+                    "head": {"ref": "cursor/example", "sha": ""},
+                    "base": {"sha": ""},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert lint_public_surfaces.main(["--event-file", str(event), "--event-name", "pull_request"]) == 1
+
+
+def test_a_missed_live_read_fails_without_the_title(tmp_path: Path, monkeypatch, capsys) -> None:
+    monkeypatch.setenv("LU_PUBLICATION_LIVE", "1")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "o/r")
+    monkeypatch.setenv("GITHUB_TOKEN", "token")
+    monkeypatch.setenv("PR_NUMBER", "7")
+
+    def unavailable(_repo: str, _number: str, _token: str) -> dict:
+        raise RuntimeError("HTTPError")
+
+    monkeypatch.setattr(lint_public_surfaces, "current_pull_request", unavailable)
+    event = _pull_request_event(tmp_path, f"wip {_SECRET_PATH}")
+    assert lint_public_surfaces.main(["--event-file", str(event), "--event-name", "pull_request"]) == 1
+    captured = capsys.readouterr()
+    assert _SECRET_PATH not in captured.out
+    assert _SECRET_PATH not in captured.err
+
+
 def test_direct_push_commit_message_is_scanned(tmp_path: Path) -> None:
     completed = _run_event(
         tmp_path,
