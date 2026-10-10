@@ -50,6 +50,7 @@ except ImportError:  # pragma: no cover - script path fallback
 
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import credit_lane
+from scripts.fleet.routing_policy import projected_unused_pct
 from scripts.orchestration import dispatch_admission, task_record_store
 
 # Subscription + free seats drivers may pick for code implement. "gemini" and
@@ -351,6 +352,7 @@ def build_lane_rows(
         else:
             status = lane_status({**info, "status": facts.status})
         will_last = will_last_to_reset(info)
+        unused = projected_unused_pct(remaining_pct(info), will_last)
         cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else None
         pace_deficit = facts.uncovered is True
         # The reserve needs the owner's verified capacity (#9740), so it only ranks Codex first and
@@ -426,6 +428,7 @@ def build_lane_rows(
                 "remaining_pct": facts.plan_remaining_pct,
                 "remaining_source": facts.remaining_source,
                 "will_last": will_last,
+                "projected_unused_pct": unused,
                 "pace": pace_summary(info),
                 "in_flight": in_flight,
                 "avoid": avoid,
@@ -572,6 +575,8 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         status = str(row.get("status") or "unknown")
         rem = row.get("remaining_pct")
         rem_key = -float(rem) if isinstance(rem, (int, float)) else 0.0
+        unused = row.get("projected_unused_pct")
+        unused_key = -float(unused) if isinstance(unused, (int, float)) else 0.0
         headroom_key = _headroom_band(rem) + (1 if _write_success_demoted(row) else 0)
         in_flight = row.get("in_flight")
         flight_key = (in_flight is None, int(in_flight or 0))
@@ -595,6 +600,7 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             avoid,
             reserve_priority,
             status_rank,
+            unused_key,
             headroom_key,
             flight_key,
             lane_rank,
