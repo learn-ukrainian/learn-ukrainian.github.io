@@ -5,6 +5,7 @@ from __future__ import annotations
 import fcntl
 import json
 import subprocess
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -833,6 +834,102 @@ def test_red_merge_group_drop_with_green_branch_checks(
         lines, failed = run(again, path, monkeypatch)
         assert not failed and "reason=requeue-pending" in lines[0]
         assert mutations(again) == []
+
+
+def test_runs_preserves_timestamp_and_paginates_at_filtered_url(tmp_path, monkeypatch) -> None:
+    client = keeper.GitHub(tmp_path, "unit/public")
+    urls = []
+
+    def transport(argv, **kwargs):
+        urls.append(argv)
+        pages = [{"total_count": 2, "workflow_runs": [{"id": n}]} for n in (1, 2)]
+        return subprocess.CompletedProcess(argv, 0, json.dumps(pages), "")
+
+    monkeypatch.setattr(
+        keeper, "request_run", lambda request, **kwargs: publisher.request_run(request, runner=transport, **kwargs)
+    )
+    assert client.runs("2026-10-10T08:12:34Z") == [{"id": 1}, {"id": 2}]
+    assert "event=merge_group&created=2026-10-10T08:12:34Z.." in urls[0][4]
+    assert "--paginate" in urls[0] and "--slurp" in urls[0]
+
+
+def test_runs_splits_capped_window_without_losing_boundary_runs(tmp_path, monkeypatch) -> None:
+    client = keeper.GitHub(tmp_path, "unit/public")
+    windows = []
+
+    def read(request):
+        window = request.fields["start"], request.fields["end"]
+        windows.append(window)
+        return [{"total_count": 1001 if len(windows) == 1 else 1,
+                 "workflow_runs": [] if len(windows) == 1 else [{"id": len(windows)}]}]
+
+    monkeypatch.setattr(client, "json", read)
+    rows = client._runs_window(datetime(2026, 10, 10, tzinfo=UTC), datetime(2026, 10, 10, 0, 0, 3, tzinfo=UTC))
+    assert [row["id"] for row in rows] == [2, 3]
+    assert windows[1:] == [
+        ("2026-10-10T00:00:00Z", "2026-10-10T00:00:01Z"),
+        ("2026-10-10T00:00:02Z", "2026-10-10T00:00:03Z"),
+    ]
+
+
+@pytest.mark.parametrize("total", [2, 1001])
+def test_runs_incomplete_or_unsplittable_response_is_error(tmp_path, monkeypatch, total) -> None:
+    client = keeper.GitHub(tmp_path, "unit/public")
+    monkeypatch.setattr(client, "json", lambda request: [{"total_count": total, "workflow_runs": []}])
+    stamp = datetime(2026, 10, 10, tzinfo=UTC)
+    with pytest.raises(keeper.KeeperError, match=r"incomplete|cap exceeded"):
+        client._runs_window(stamp, stamp)
+
+
+def test_drop_lookup_error_is_not_reported_as_unknown(tmp_path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
+
+    def unavailable(since):
+        raise keeper.KeeperError("merge_group run page incomplete")
+
+    monkeypatch.setattr(fake, "runs", unavailable)
+    run(fake, path, monkeypatch)
+    comments = [body for action, body in fake.actions if action == "comment"]
+    assert "diagnosis lookup failed: merge_group run page incomplete" in comments[0]
+    assert "diagnosis unknown" not in comments[0]
+    assert f"42:{HEAD_A}" in json.loads(path.read_text())["undiagnosed"]
+
+
+def test_drop_without_matching_run_is_unknown() -> None:
+    fake = FakeGitHub()
+    fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
+    detail, jobs = keeper._drop_detail(fake, 42, HEAD_A, "2026-09-23T00:00:00Z")
+    assert "failing merge_group run unknown" in detail and jobs == []
+
+
+@pytest.mark.parametrize("log_error", [False, True])
+def test_drop_detail_keeps_run_and_jobs_with_optional_first_failed_test(tmp_path, monkeypatch, log_error) -> None:
+    client = keeper.GitHub(tmp_path, "unit/public")
+    monkeypatch.setattr(client, "timeline", lambda number: [])
+    monkeypatch.setattr(client, "runs", lambda since: [{
+        "id": 123, "event": "merge_group", "conclusion": "failure",
+        "head_branch": "gh-readonly-queue/main/pr-10256-deadbeef",
+        "created_at": "2026-10-10T01:00:00Z", "html_url": "https://github.com/example/runs/123",
+    }])
+    monkeypatch.setattr(client, "jobs", lambda run: [
+        {"id": 456, "name": "pytest (N)", "conclusion": "failure"},
+        {"name": "CI Gate", "conclusion": "failure"},
+    ])
+
+    def call(*args):
+        assert args[-3:] == ("--job", "456", "--log")
+        if log_error:
+            raise keeper.KeeperError("log expired")
+        return "2026-10-10T01:00:00Z FAILED tests/test_lint_tmp_paths.py::test_paths - AssertionError\nFAILED tests/other.py::test_other - error"
+
+    monkeypatch.setattr(client, "call", call)
+    detail, jobs = keeper._drop_detail(client, 10256, HEAD_A, "2026-10-10T00:00:00Z")
+    assert "https://github.com/example/runs/123" in detail and "pytest (N)" in detail
+    assert jobs == ["CI Gate", "pytest (N)"]
+    assert ("First FAILED test: tests/test_lint_tmp_paths.py::test_paths" in detail) is not log_error
+    assert "other.py" not in detail and "unknown" not in detail
 
 
 def test_base_changed_before_mutation_cannot_merge_directly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

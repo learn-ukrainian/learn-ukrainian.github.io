@@ -269,18 +269,37 @@ class GitHub:
         return self.paged(Request("read-timeline", repo=self.repository, number=number))
 
     def runs(self, since: str) -> list[dict[str, Any]]:
-        start = (
-            since[:10]
-            if re.fullmatch(r"\d{4}-\d{2}-\d{2}", since[:10])
-            else (datetime.now(UTC) - timedelta(days=1)).date().isoformat()
+        end = datetime.now(UTC).replace(microsecond=0)
+        try:
+            start = datetime.fromisoformat(since.replace("Z", "+00:00")).astimezone(UTC).replace(microsecond=0)
+        except ValueError:
+            start = end - timedelta(days=1)
+        return self._runs_window(start, end)
+
+    def _runs_window(self, start: datetime, end: datetime) -> list[dict[str, Any]]:
+        if start > end:
+            return []
+        pages = self.json(
+            Request(
+                "read-runs",
+                repo=self.repository,
+                start=start.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                end=end.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                paginate=True,
+                slurp=True,
+            )
         )
-        end = datetime.now(UTC).date().isoformat()
-        pages = self.json(Request("read-runs", repo=self.repository, start=start, end=end, paginate=True, slurp=True))
         if not isinstance(pages, list) or not all(
             isinstance(page, dict) and isinstance(page.get("workflow_runs"), list) for page in pages
         ):
             raise KeeperError("merge_group run pagination incomplete")
         runs = [item for page in pages for item in page["workflow_runs"]]
+        total = pages[0].get("total_count") if pages else None
+        if type(total) is int and total > 1000:
+            if start == end:
+                raise KeeperError("merge_group run cap exceeded within one second")
+            middle = start + timedelta(seconds=int((end - start).total_seconds()) // 2)
+            return self._runs_window(start, middle) + self._runs_window(middle + timedelta(seconds=1), end)
         if not all(isinstance(item, dict) for item in runs) or not pages or pages[0].get("total_count") != len(runs):
             raise KeeperError("merge_group run page incomplete")
         return runs
@@ -290,6 +309,11 @@ class GitHub:
         if not isinstance(data, dict) or not isinstance(data.get("jobs"), list) or data.get("total_count", 0) > 100:
             raise KeeperError("merge_group job page incomplete")
         return data["jobs"]
+
+    def first_failed_test(self, job_id: int) -> str:
+        log = self.call("run", "view", "-R", self.repository, "--job", str(job_id), "--log")
+        match = re.search(r"\bFAILED\s+(tests/[^\r\n]+?)(?:\s+-\s|\r?$)", log, re.M)
+        return match[1] if match else ""
 
     def issues(self, title: str) -> list[dict[str, Any]]:
         return self.paged(Request("read-issues", repo=self.repository))
@@ -637,8 +661,6 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         for item in gh.timeline(number)
         if item.get("event") == "removed_from_merge_queue" and item.get("created_at", "") >= since
     ]
-    if not events:
-        return "", []
     runs = [
         item
         for item in gh.runs(since)
@@ -648,18 +670,37 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         and extract_pr_number(str(item.get("head_branch", ""))) == number
     ]
     if not runs:
-        return " Queue removal confirmed; failing merge_group run unknown.", []
+        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), []
     run = max(runs, key=lambda item: item.get("created_at", ""))
     if not isinstance(run.get("id"), int):
-        return " Queue removal confirmed; failing merge_group run id unknown.", []
-    jobs = gh.jobs(run["id"])
+        raise KeeperError("matching merge_group run has no valid id")
+    run_detail = f" Failing merge_group: {run.get('html_url') or run['id']}"
+    try:
+        jobs = gh.jobs(run["id"])
+    except KeeperError as exc:
+        return f"{run_detail}; failing job lookup failed: {exc}.", []
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
     )
-    return (
-        f" Failing merge_group: {run.get('html_url', 'unknown')}; failing jobs: {', '.join(failed) or 'unknown'}.",
-        failed,
+    detail = f"{run_detail}; failing jobs: {', '.join(failed) or 'none reported'}."
+    job = next(
+        (
+            job
+            for job in jobs
+            if job.get("conclusion") == "failure"
+            and "pytest" in str(job.get("name", ""))
+            and type(job.get("id")) is int
+        ),
+        None,
     )
+    if job:
+        try:
+            test = gh.first_failed_test(job["id"])
+            if test:
+                detail += f" First FAILED test: {test}."
+        except KeeperError:
+            pass  # Optional log enrichment must not hide the run/job diagnosis.
+    return detail, failed
 
 
 def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[int]:
@@ -756,8 +797,8 @@ def run(
                         )
                 else:
                     detail = " Queue removal diagnosis unknown."
-            except KeeperError:
-                detail = " Queue removal diagnosis unknown."
+            except KeeperError as exc:
+                detail = f" Queue removal diagnosis lookup failed: {exc}."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
         if reason == "ready" and queued is not True and not armed:
             try:
