@@ -166,30 +166,9 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      - name: Create or update infra issue on failure
-        if: failure()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          set -euo pipefail
-          title='[infra] Pytest slow nightly failed'
-          body="$(cat <<EOF
-          ## Pytest slow nightly failure
-
-          The advisory slow lane (\`-m 'slow and not atlas_release'\`) failed.
-
-          - Run: ${RUN_URL}
-          - Owner: infra lane (\`area:infra\`)
-          - Required CI Gate is unaffected; this workflow is never a \`CI Gate\` \`needs\` dependency.
-
-          Silent red nightlies are the named rot mode — keep this issue open until green.
-          EOF
-          )"
-          existing="$(gh issue list --state open --label area:infra --search "Pytest slow nightly failed in:title" --json number,title --jq '.[0].number // empty')"
-          if [[ -n "$existing" ]]; then
-            gh issue comment "$existing" --body "$body"
-            echo "Updated issue #$existing"
-          else
-            gh issue create --title "$title" --label area:infra --body "$body"
-          fi
+      - name: Route failures to owned issues (one per failing test group)
+        if: always()
+        uses: ./.github/actions/nightly-issue
+        with:
+          status: ${{ job.status }}
+          junit: ci-artifacts/slow-junit.xml

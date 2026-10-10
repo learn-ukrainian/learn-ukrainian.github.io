@@ -1,0 +1,32 @@
+name: Nightly failure issue
+description: >-
+  Open or update one owned issue per failing scheduled workflow (or per failing test
+  group when JUnit reports are given); close it when the job is green again.
+  Requires the caller job to have issues:write and the repo checked out.
+inputs:
+  status:
+    description: Job or aggregate status (success, failure, cancelled)
+    required: true
+  junit:
+    description: Optional space-separated JUnit report paths for per-test-group issues
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Route failure to an owned issue
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        KEY: ${{ github.workflow }}
+        WORKFLOW_PATH: ${{ github.workflow_ref }}
+        STATUS: ${{ inputs.status }}
+        JUNIT: ${{ inputs.junit }}
+        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: |
+        set -euo pipefail
+        wf_path="${WORKFLOW_PATH#*/*/}"
+        wf_path="${wf_path%@*}"
+        read -r -a reports <<< "${JUNIT}"
+        python3 scripts/ci/nightly_issue.py --key "${KEY}" --status "${STATUS}" \
+          --run-url "${RUN_URL}" --workflow-path "${wf_path}" --junit "${reports[@]}"

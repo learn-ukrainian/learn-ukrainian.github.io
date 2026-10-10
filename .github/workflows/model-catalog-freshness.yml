@@ -80,3 +80,28 @@ jobs:
 
       - name: Validate fleet roster + formal-CF eligibility projections
         run: .venv/bin/python scripts/lint/lint_fleet_roster.py
+
+  nightly-issue:
+    name: Nightly failure issue
+    needs: [freshness]
+    if: ${{ always() && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/
+            scripts/ci/nightly_issue.py
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - uses: ./.github/actions/nightly-issue
+        with:
+          status: ${{ contains(needs.*.result, 'failure') && 'failure' || 'success' }}

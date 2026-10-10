@@ -1,0 +1,22 @@
+{
+  "default": "core",
+  "paths": {
+    ".github/": "infra",
+    "scripts/ci/": "infra",
+    "tests/ci/": "infra",
+    "tests/test_ci": "infra",
+    "tests/projects/": "open-model-data",
+    "tests/test_open": "open-model-data",
+    "tests/audit/": "core",
+    "tests/ingest/": "corpus",
+    "tests/etymology/": "corpus",
+    "tests/ocr/": "corpus",
+    "tests/trails/": "atlas",
+    "tests/eval/": "core",
+    "tests/benchmarks/": "core",
+    "tests/typesafe/": "core",
+    "tests/maintenance/": "infra",
+    "tests/hygiene/": "infra",
+    "atlas": "atlas"
+  }
+}

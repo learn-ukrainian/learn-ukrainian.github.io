@@ -1,0 +1,52 @@
+name: Nightly CI failure issue
+
+# Routes the latest scheduled (nightly) CI run, red or recovered, to one owned
+# issue. ci.yml jobs must run on every event and feed CI Gate, so this lives in
+# its own scheduled workflow, after the 03:30 UTC nightly CI run.
+
+on:
+  schedule:
+    - cron: '45 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nightly-issue:
+    name: Nightly failure issue
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/
+            scripts/ci/nightly_issue.py
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Route nightly CI result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          latest="$(gh run list -R "${REPO}" -w ci.yml --event schedule -L 1 --json conclusion,url)"
+          conclusion="$(jq -r '.[0].conclusion // ""' <<< "${latest}")"
+          run_url="$(jq -r '.[0].url // ""' <<< "${latest}")"
+          if [[ -z "${conclusion}" || "${conclusion}" == cancelled ]]; then
+            echo "latest nightly CI not finished or cancelled: no change"
+            exit 0
+          fi
+          status=failure
+          [[ "${conclusion}" == success ]] && status=success
+          python3 scripts/ci/nightly_issue.py --key "CI (nightly)" --status "${status}" \
+            --run-url "${run_url}" --workflow-path .github/workflows/ci.yml
