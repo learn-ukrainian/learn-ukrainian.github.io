@@ -252,6 +252,19 @@ def credential_env_names(env: Mapping[str, str], *, keep: Collection[str] = ()) 
     return [name for name in env if name.upper() not in kept and _CREDENTIAL_ENV_RE.search(name)]
 
 
+def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
+    """Environment variable names to omit for ``provider``."""
+    drop: list[str] = []
+    for var_name in env:
+        upper = var_name.upper()
+        if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY")):
+            continue
+        if _is_provider_secret(var_name, provider):
+            continue
+        drop.append(var_name)
+    return drop
+
+
 def unneeded_secret_names(env: Mapping[str, str], provider: str) -> list[str]:
     """API-key names ``provider`` must not inherit.
 
@@ -259,15 +272,7 @@ def unneeded_secret_names(env: Mapping[str, str], provider: str) -> list[str]:
     stay only when that provider's secret allowlist names them. Non-key tokens
     such as ``GH_TOKEN`` are left for the caller's identity injection.
     """
-    drop: list[str] = []
-    for name in env:
-        upper = name.upper()
-        if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY")):
-            continue
-        if _is_provider_secret(name, provider):
-            continue
-        drop.append(name)
-    return drop
+    return unneeded_env_var_names(env, provider)
 
 
 def without_unneeded_secrets(env: Mapping[str, str], provider: str) -> dict[str, str]:
@@ -654,12 +659,16 @@ def _append_push_rewrite(env: dict[str, str], target: str) -> None:
     env["GIT_TERMINAL_PROMPT"] = "0"
 
 
-def _print_unneeded_secret_names(provider: str) -> int:
-    """Print API-key names the current process should drop for ``provider``."""
-    for name in unneeded_secret_names(os.environ, provider):
-        if name.isidentifier():
-            print(name)
+def _print_unneeded_env_var_names(provider: str) -> int:
+    """Print variable names the current process should drop for ``provider``."""
+    for var_name in unneeded_env_var_names(os.environ, provider):
+        if var_name.isidentifier():
+            sys.stdout.write(f"{var_name}\n")
     return 0
+
+
+def _print_unneeded_secret_names(provider: str) -> int:
+    return _print_unneeded_env_var_names(provider)
 
 
 if __name__ == "__main__":
@@ -676,4 +685,4 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Print API-key names a child env must drop.")
     parser.add_argument("--provider", required=True)
-    raise SystemExit(_print_unneeded_secret_names(parser.parse_args().provider))
+    raise SystemExit(_print_unneeded_env_var_names(parser.parse_args().provider))
