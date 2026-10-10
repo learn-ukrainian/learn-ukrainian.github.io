@@ -7,8 +7,10 @@ Binding for every epic driver, lane worker and Cursor Cloud agent. These rules a
 
 Do not implement an issue until it carries a complete DoR block: goal, scope,
 acceptance criteria, dependencies, data and access, allowed model, verify plan. If it is
-missing or incomplete, write the DoR first and stop there; that is the task. Use pstack
-for it (`/architect`, or the Multi-phase plan playbook for multi-step work).
+missing or incomplete, write the DoR first and stop there; that is the task. On Cursor CLI
+seats, pstack may help (`/architect`, or the Multi-phase plan playbook for multi-step work);
+pstack is Cursor-only (see `docs/runbooks/cursor-driver.md`). Other driver CLIs write the DoR
+directly with existing repository tooling.
 
 ## Finish line: Definition of Done plus the done-check
 
