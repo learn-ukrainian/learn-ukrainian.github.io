@@ -933,3 +933,62 @@ def test_idle_and_throughput_preserve_keeper_readiness(tmp_path, monkeypatch: py
     approved = prs_mod.assemble_prs(_view(_pull()), prs_mod.read_mq_state(now=NOW)[1], now=NOW)
     assert approved[0]["stale_green"] is keeper_available
     assert approved[0]["minutes"] == (120 if keeper_available else None)
+
+
+def test_activity_timestamp_overflow_preserves_github_rows_and_backlog(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    overflow_record = tmp_path / "overflow.json"
+    overflow_record.write_text(json.dumps({
+        "version": 1,
+        "activity": {"42": {"commit_at": "0001-01-01T00:00:00+01:00"}},
+    }), encoding="utf-8")
+    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
+    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(overflow_record))
+    monkeypatch.setattr(prs_mod, "utc_now", lambda: NOW)
+    monkeypatch.setattr(prs_mod, "load_github_view", lambda *_args, **_kwargs: _view(
+        _pull(head_ref="codex/topic", commit_at="2026-10-07T10:00:00Z"),
+        comments={42: ()},
+    ))
+    res_prs = client.get("/api/fleet/v1/prs")
+    res_stats = client.get("/api/fleet/v1/stats")
+    assert res_prs.status_code == 200
+    assert res_stats.status_code == 200
+    prs_body = res_prs.json()
+    assert len(prs_body["data"]["prs"]) == 1
+    assert prs_body["data"]["prs"][0]["number"] == 42
+    stale_source = next(s for s in prs_body["sources"] if s["name"] == "stale_prs")
+    assert stale_source["status"] == "unavailable"
+    gh_source = next(s for s in prs_body["sources"] if s["name"] == "github")
+    assert gh_source["status"] == "ok"
+
+
+def test_failed_commit_lookup_marks_github_source_unavailable_while_preserving_rows() -> None:
+    class CommitFailure(_Client):
+        def request(self, method, endpoint, **kwargs):
+            if "/commits/" in endpoint and not endpoint.split("?", 1)[0].endswith("/check-runs"):
+                raise OSError("simulated commit lookup failure")
+            return super().request(method, endpoint, **kwargs)
+
+    broken = prs_mod._fetch_github(REPO, CommitFailure([
+        [_rest_pull(7, SHA, "cursor/topic", "main")],
+    ]))
+    assert broken.failed is True
+    assert prs_mod._github_report(broken).status == "unavailable"
+    rows = prs_mod.assemble_prs(broken, _mq(), now=NOW)
+    assert len(rows) == 1
+    assert rows[0]["number"] == 7
+    assert rows[0]["hours_idle"] is None
+    assert rows[0]["idle_24h"] is rows[0]["idle_48h"] is False
+
+
+def test_stacked_base_and_readiness_use_repository_default_branch() -> None:
+    master_rows = _rows(
+        _pull(base_ref="master"),
+        default_branch="master",
+        since={f"42:{SHA}": "2026-10-09T08:00:00Z"},
+    )
+    assert len(master_rows) == 1
+    master = master_rows[0]
+    assert master["stacked_base"] is None
+    assert master["blocker"]["kind"] == "none"
+    assert master["stale_green"] is True
+    assert master["minutes"] == 120

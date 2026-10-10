@@ -448,20 +448,20 @@ def _ci_label(state: str) -> str | None:
     return None
 
 
-def _commit_stamp(client: Any, repo: str, sha: str) -> tuple[str | None, float, bool]:
+def _commit_stamp(client: Any, repo: str, sha: str) -> tuple[str | None, float, bool, bool]:
     payload, age, stale = _optional_object(client, f"repos/{repo}/commits/{sha}")
     if not isinstance(payload, dict):
-        return None, age, stale
+        return None, age, stale, False
     commit = payload.get("commit")
     if not isinstance(commit, dict):
-        return None, age, stale
+        return None, age, stale, False
     for key in ("committer", "author"):
         person = commit.get(key)
         if isinstance(person, dict) and isinstance(person.get("date"), str):
             stamp = _stamp(person["date"])
             if stamp is not None:
-                return stamp, age, stale
-    return None, age, stale
+                return stamp, age, stale, True
+    return None, age, stale, True
 
 
 def _failing_check_names(
@@ -573,8 +573,10 @@ def _fetch_github(repo: str, client: Any) -> GithubView:
             failed = True
             continue
         if pull.head_sha not in commit_at:
-            stamp, commit_age, commit_stale = _commit_stamp(client, repo, pull.head_sha)
+            stamp, commit_age, commit_stale, commit_ok = _commit_stamp(client, repo, pull.head_sha)
             age, stale = max(age, commit_age), stale or commit_stale
+            if not commit_ok:
+                failed = True
             commit_at[pull.head_sha] = stamp
         pull = replace(pull, commit_at=commit_at[pull.head_sha])
         pulls.append(pull)
@@ -906,7 +908,7 @@ def assemble_prs(
 ) -> list[dict[str, Any]]:
     """One row per open pull request. An older-head approval does not count.
 
-    A pull request whose base is not ``main`` is stacked and is never ready.
+    A pull request whose base is not the repository default branch is stacked and is never ready.
     """
     moment = now or utc_now()
     threshold = DEFAULT_STALE_MIN if stale_min is None else stale_min
@@ -975,7 +977,7 @@ def assemble_prs(
         by_head.setdefault(pull.head_ref, item)
     for pull, item in rows:
         item["stacked_base"] = _stacked(pull, by_head, view.default_branch)
-        if pull.base_ref != "main":
+        if item["stacked_base"] is not None or (view.default_branch and pull.base_ref != view.default_branch):
             item["blocker"] = _stacked_blocker(pull, by_head, recorded.get(pull.number))
             item["ready_since"] = None
             item["stale_green"] = False

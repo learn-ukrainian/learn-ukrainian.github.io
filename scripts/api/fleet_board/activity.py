@@ -405,11 +405,11 @@ def _parse_time(value: str) -> datetime | None:
         text = text[:-1] + "+00:00"
     try:
         parsed = datetime.fromisoformat(text)
-    except ValueError:
+        if parsed.tzinfo is None:
+            return None
+        return parsed.astimezone(UTC)
+    except (ValueError, OverflowError):
         return None
-    if parsed.tzinfo is None:
-        return None
-    return parsed.astimezone(UTC)
 
 
 def _unique(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -537,7 +537,7 @@ def read_stale_state(
         payload = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique)
         snapshot = _payload(payload)
         age = _file_age(path, moment)
-    except (_Rejected, OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError):
+    except (_Rejected, OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError, OverflowError):
         return report(STALE_PR_SOURCE, "unavailable"), empty
     status = "stale" if age > STALE_PR_FRESH_S else "ok"
     return report(STALE_PR_SOURCE, status, age_s=age), snapshot
