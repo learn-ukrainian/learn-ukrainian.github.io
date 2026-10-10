@@ -169,14 +169,21 @@ State uses this precedence, stopping at the first matching condition:
    `no driver while intended running`.
 4. `idle_min` of at least 30 while `intended` is `running` gives `stuck`,
    reason `idle while intended running`.
-5. Explicit snapshot activity or fresh occupancy activity of `working` gives
-   `working`, reason `recorded working`, including when `pid_alive` is null.
-6. A present driver with `intended: running`, null `pid_alive`, and no working
-   signal gives `stuck`, reason `liveness unknown`. Workers and bots use
-   `require_liveness=False`, so this driver-only condition does not apply.
+5. A present driver with `intended: running` and unknown `pid_alive` is
+   `stuck`, reason `liveness unknown`, even with a working signal. Workers and
+   bots use `require_liveness=False`.
+6. Explicit snapshot activity or bound fresh occupancy activity of `working`
+   gives `working`, reason `recorded working`.
 7. Otherwise the state and reason are `idle`.
 
-Occupancy activity accepts only `working` and `idle`. Presence without a status,
+Occupancy activity accepts only `working` and `idle`. It requires an exact
+roster driver id and opaque `session_id` matching the canonical active lease.
+Only one fresh observer on the same opaque host, matching that lease's driver
+and holder instance, can carry its actual session identity. A lease alone does
+not imply activity. Missing, conflicting, duplicate, cross-host or invalid
+identity cannot bind. Legacy roster drivers without a session remain unbound.
+Session and holder identity are internal occupancy inputs, not public board
+metadata. Presence without a status,
 `blocked`, and unsupported aliases such as `running`, `live`, or `active` do
 not supply activity. Stale and unavailable hosts never contribute occupants to
 seat state, even when a different host is fresh. If any host is fresh, the
@@ -198,6 +205,25 @@ and may carry `bots`, `foundations`, `prs`, `alerts`, and `usage`. The
 harness object carries `agents` keyed by agent id, with optional
 `pid_alive`, `idle_min`, and `activity`. Unknown numbers in those
 records stay null and are never reported as zero.
+
+Each epic includes canonical per-driver `health`: `agent_id`, `status`,
+`measured_at`, `context_pct`, `compactions`, `stop_count`, `ask_count`, and
+`idle_min`. Only one supported exact driver id can bind; CLI or model equality
+never binds measurements. Counters remain separate and finite numbers retain
+zero and fractions. Missing fields are null, independently.
+
+Health is read from canonical `drivers` rows even when generic `agents` state
+signals are absent. Each row's `measured_at` is fresh through twice the positive
+finite top-level `interval_s`; cache TTL is not measurement freshness. Older
+rows have `status: stale`, retain attributable id/time and withhold numbers.
+Missing/invalid/future time, invalid window or ambiguous identity is `unknown`
+with withheld numbers. Cards and detail show separate stops and asks, `unknown`
+for missing numbers and `stale` for old measurements.
+
+Example fresh measurement: `{"agent_id":"codex","status":"ok",
+"measured_at":"2026-01-01T12:00:00Z","context_pct":0,"compactions":0,
+"stop_count":0,"ask_count":2,"idle_min":0}`. Generic seat-source freshness
+is evaluated separately; health never overrides liveness or seat state.
 
 The now, epic, and agent routes retain stale roster payloads with a `stale`
 source status. Unknown snapshot freshness is `unavailable` with no usable

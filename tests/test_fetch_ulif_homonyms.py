@@ -2757,6 +2757,219 @@ def test_sigterm_at_handler_install_boundary_restores_handler_and_mask(tmp_path,
     assert "Resume command:" in err
 
 
+@contextmanager
+def _background_sigterm_receiver():
+    """A thread that can take SIGTERM, started before the caller blocks that signal."""
+    ready = threading.Event()
+    go = threading.Event()
+    saw = threading.Event()
+    stop = threading.Event()
+    state: dict[str, object] = {}
+
+    def _run() -> None:
+        state["blocked"] = signal.SIGTERM in signal.pthread_sigmask(signal.SIG_BLOCK, set())
+        ready.set()
+        if not go.wait(5.0) or stop.is_set():
+            return
+        signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+        saw.set()
+        stop.wait(5.0)
+
+    thread = threading.Thread(target=_run, name="ulif-sigterm-probe", daemon=True)
+    thread.start()
+    if not ready.wait(2.0):
+        stop.set()
+        go.set()
+        thread.join(timeout=2.0)
+        raise AssertionError("SIGTERM probe thread did not start")
+    try:
+        assert state["blocked"] is False
+        yield go, saw
+    finally:
+        stop.set()
+        go.set()
+        thread.join(timeout=2.0)
+
+
+def _publish_thread_sigterm(go: threading.Event, saw: threading.Event) -> None:
+    """Deliver SIGTERM on the probe thread, then check signals before the store.
+
+    A process-directed ``os.kill`` from the masked main thread is asynchronous:
+    the other thread's trip can land after the store and hide the race. The probe
+    thread's ``pthread_kill`` of itself runs the C handler before it returns.
+    The following ``pthread_sigmask`` runs ``PyErr_CheckSignals`` before this
+    returns, which is the same check CPython makes on return from a builtin,
+    still before the caller's ``STORE``.
+    """
+    go.set()
+    assert saw.wait(2.0), "probe thread did not deliver SIGTERM"
+    signal.pthread_sigmask(signal.SIG_BLOCK, set())
+
+
+@pytest.mark.parametrize("site", ["run_fetch", "run_walk", "main_run", "main_walk"])
+@pytest.mark.parametrize(
+    "boundary",
+    ["registration", "caller_assignment"],
+    ids=["before-previous-assignment", "before-caller-assignment"],
+)
+def test_threaded_sigterm_during_registration_restores_handler(tmp_path, capsys, monkeypatch, site, boundary):
+    """SIGTERM taken by another thread during registration still restores the handler.
+
+    The main thread's mask does not cover that thread (#10393). Both opcode
+    boundaries must exit 4 with a summary and ``restored`` true.
+    """
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    fired = {"count": 0}
+    with _background_sigterm_receiver() as (go, saw):
+        if boundary == "registration":
+            real_signal = signal.signal
+
+            def signal_then_sigterm(signum, handler):
+                previous = real_signal(signum, handler)
+                if signum == signal.SIGTERM and callable(handler) and fired["count"] == 0:
+                    fired["count"] += 1
+                    _publish_thread_sigterm(go, saw)
+                return previous
+
+            monkeypatch.setattr(signal, "signal", signal_then_sigterm)
+        elif boundary == "caller_assignment":
+            real_install = mod._install_sigterm_handler
+
+            def install_then_sigterm():
+                previous = real_install()
+                fired["count"] += 1
+                _publish_thread_sigterm(go, saw)
+                return previous
+
+            monkeypatch.setattr(mod, "_install_sigterm_handler", install_then_sigterm)
+        else:
+            raise AssertionError(boundary)
+        monkeypatch.setattr(mod, "_requests_transport", lambda _user_agent: _no_network)
+
+        summary, reason = _INSTALL_BOUNDARY_EXPECTATION[site]
+        previous_handler = signal.getsignal(signal.SIGTERM)
+        previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+        assert signal.SIGTERM not in previous_mask
+        code = None
+        escaped: BaseException | None = None
+        handler_after = None
+        mask_after = None
+        pending_after: set[int] | None = None
+        try:
+            try:
+                code = _run_install_boundary_site(site, tmp_path)
+            except (KeyboardInterrupt, InterruptedByOperator) as exc:
+                escaped = exc
+            handler_after = signal.getsignal(signal.SIGTERM)
+            mask_after = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+            pending_after = set(signal.sigpending())
+        finally:
+            _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+
+    err = capsys.readouterr().err
+    assert fired["count"] == 1
+    assert escaped is None
+    assert code == EXIT_INTERRUPTED
+    assert handler_after == previous_handler, (
+        f"restored=false site={site} boundary={boundary} code={code} summary={'Stop Summary' in err}"
+    )
+    assert mask_after == previous_mask
+    assert pending_after is not None
+    assert signal.SIGTERM not in pending_after
+    assert summary in err
+    assert reason in err
+    assert "Resume command:" in err
+
+
+def test_install_sigterm_handler_reports_c_previous_handler_as_installed(monkeypatch):
+    """A C-installed previous handler is None, and installation still succeeded."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    real_signal = signal.signal
+    saved = signal.getsignal(signal.SIGTERM)
+
+    def hide_previous(signum, handler):
+        previous = real_signal(signum, handler)
+        if signum == signal.SIGTERM and callable(handler):
+            return None
+        return previous
+
+    monkeypatch.setattr(signal, "signal", hide_previous)
+    try:
+        installed = mod._install_sigterm_handler()
+        assert installed.installed is True
+        assert installed.previous is None
+    finally:
+        real_signal(signal.SIGTERM, saved)
+
+
+@pytest.mark.parametrize("command", ["run", "walk"])
+def test_main_unblocks_sigterm_when_previous_handler_is_none(tmp_path, capsys, monkeypatch, command):
+    """main unblocks after install even when the previous handler is None (#10393)."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    real_signal = signal.signal
+
+    def hide_previous(signum, handler):
+        previous = real_signal(signum, handler)
+        if signum == signal.SIGTERM and callable(handler):
+            return None
+        return previous
+
+    monkeypatch.setattr(signal, "signal", hide_previous)
+    monkeypatch.setattr(mod, "_requests_transport", lambda _user_agent: _no_network)
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    if command == "run":
+        argv = [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+            "--max-requests",
+            "0",
+        ]
+        summary = "=== ULIF Fetch Stop Summary ==="
+        reason = "Reason:               interrupted by operator"
+    else:
+        argv = [
+            "walk",
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+            "--max-requests",
+            "0",
+        ]
+        summary = "=== ULIF Walk Stop Summary ==="
+        reason = "Reason:                 interrupted by operator"
+
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+    code = None
+    escaped: BaseException | None = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = main(argv)
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+
+    assert escaped is None
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert summary in err
+    assert reason in err
+    assert "Resume command:" in err
+
+
 @pytest.mark.parametrize(
     ("child_code", "message", "timeout"),
     [

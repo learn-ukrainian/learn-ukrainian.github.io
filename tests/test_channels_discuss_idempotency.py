@@ -4,7 +4,7 @@ The authority stores channel/recipient metadata next to the message key,
 so a body-only digest made a same-brief retry on a FRESH channel fail
 with ``idempotency_key_reused_with_different_payload``. The derived key
 now binds the channel, and ``--idempotency-key`` offers an explicit
-escape hatch that replaces the old body-mutating workaround.
+escape hatch that replaces the old body-mutating retry.
 """
 
 from __future__ import annotations

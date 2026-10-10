@@ -9,6 +9,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from .snapshot import freshness
 from .sources import SourceReport, read_location, report
 from .values import (
     DOWNLOAD_ALIASES,
@@ -300,6 +301,45 @@ def load_harness(environ: Mapping[str, str] | None = None) -> Outcome:
     if drivers is None:
         return {"drivers": []}, reports
     return {"drivers": drivers}, reports
+
+
+def unknown_health() -> dict[str, Any]:
+    """No attributable current measurement. Never invent a zero."""
+    return {"agent_id": None, "status": "unknown", "measured_at": None,
+            **{key: None for key in ("context_pct", "compactions", "stop_count", "ask_count", "idle_min")}}
+
+
+def load_board_health(environ: Mapping[str, str] | None = None, *, now: datetime) -> dict[str, dict[str, Any]]:
+    """Canonical driver measurements, aged independently of generic seat signals."""
+    location = read_location("FLEET_HARNESS_SNAPSHOT", _env(environ))
+    if location is None:
+        return {}
+    try:
+        payload = _read_json_file(Path(location))
+        drivers = _drivers(payload)
+    except Exception:
+        return {}
+    interval = payload.get("interval_s") if isinstance(payload, dict) else None
+    rows: dict[str, list[dict[str, Any]]] = {}
+    for driver in drivers:
+        if driver["agent_id"] != UNLISTED:
+            rows.setdefault(driver["agent_id"], []).append(driver)
+    result = {}
+    for agent_id, matches in rows.items():
+        health = unknown_health()
+        if len(matches) == 1:
+            driver = matches[0]
+            status, age = freshness({"generated_at": driver["measured_at"], "interval_s": interval}, now)
+            health["agent_id"] = agent_id
+            if age is not None:
+                health["measured_at"] = driver["measured_at"]
+            if status in {"ok", "stale"}:
+                health["status"] = status
+            if status == "ok":
+                for key in ("context_pct", "compactions", "stop_count", "ask_count", "idle_min"):
+                    health[key] = driver[key]
+        result[agent_id] = health
+    return result
 
 
 def load_harness_driver(agent_id: str, environ: Mapping[str, str] | None = None) -> Outcome:

@@ -549,7 +549,14 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
     # #9275: agy without a Ukrainian authoring/review task family is the bounded fallback.
-    args = _dispatch_args("--language-lane", "--research-task-family", "ukrainian-authoring")
+    # The language lane admits these seats only with a known model of their family.
+    args = _dispatch_args(
+        "--language-lane",
+        "--model",
+        {"claude": "claude-opus-5-5", "codex": "gpt-6.1-sol", "agy": "gemini-3.8-flash-high"}[agent],
+        "--research-task-family",
+        "ukrainian-authoring",
+    )
     args.agent = agent
     assert delegate.cmd_dispatch(args) == 0
 

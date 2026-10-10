@@ -1432,6 +1432,13 @@ launcher_claude_cap_guard() {
     return 0
   fi
   if awk -v p="$pct" -v t="$stop" 'BEGIN{exit !(p>=t)}'; then
+    local handoff=""
+    if [ -n "$py" ] && [ -f "$LC_ROOT/scripts/fleet/routing_policy.py" ]; then
+      handoff="$("$py" -I "$LC_ROOT/scripts/fleet/routing_policy.py" --handoff 2>/dev/null || true)"
+    fi
+    if [ -n "$handoff" ]; then
+      printf 'launcher: cap-handoff %s branch=%s task=%s\n' "$handoff" "${LC_BRANCH:-}" "${LC_TASK_ID:-}" >&2
+    fi
     launcher_error "Claude weekly usage is ${pct}% (stop at ${stop}%). No Claude launch until the weekly reset; use start-codex-driver.sh (Sol) or agy."
     exit 7
   fi
