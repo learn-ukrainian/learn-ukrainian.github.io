@@ -523,6 +523,9 @@ _KIMICC_OAUTH_SESSION_LIFE_S = 840
 # Timeout bounds for synchronous subprocess invocations (#7213).
 DEFAULT_GIT_TIMEOUT_S: float = 30.0
 DEFAULT_NETWORK_GIT_TIMEOUT_S: float = 180.0
+# The auto-finalize push runs the pre-push gate (.githooks/pre_push_gate.py, #10033) before the
+# network push, so the timeout covers the gate's admission wait, run budget and shadow budget.
+AUTO_FINALIZE_PUSH_TIMEOUT_S: float = DEFAULT_NETWORK_GIT_TIMEOUT_S + 300.0 + 600.0 + 120.0
 DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 
 
@@ -7431,11 +7434,11 @@ def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
             text=True,
             check=False,
             env=_sanitized_git_env(),
-            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+            timeout=AUTO_FINALIZE_PUSH_TIMEOUT_S,
         )
     except subprocess.TimeoutExpired as exc:
         raise _TypedFailure(
-            f"git push timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s",
+            f"git push timed out after {AUTO_FINALIZE_PUSH_TIMEOUT_S}s",
             _exception_cause("auto_finalize_push_failed", exc, command=["git", "push"]),
         ) from exc
     if proc.returncode != 0:
@@ -9555,6 +9558,11 @@ def _augment_prompt_with_worktree(
             "\n[write-mode closeout]\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
+            "The push runs a pre-push gate on that exact commit (pre-commit pre-push stage, repo-wide "
+            "invariant tests, your changed tests); a refusal names the failing node ids, and "
+            "`validation_incomplete` means it did not finish: stop and report, never `--no-verify`.\n"
+            "Do not merge `origin/main` into your branch unless `git merge-tree` against a freshly fetched "
+            "main reports a conflict, or the driver orders it.\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Keep scratch git repositories and probes outside `batch_state/reports/` "
             "(use `$TMPDIR`, the managed lease, never a literal system temp path); "
