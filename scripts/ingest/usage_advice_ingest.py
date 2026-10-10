@@ -346,10 +346,9 @@ def extract_movne_word_pairs(
             continue
 
         m_marker = None
-        if el.name in ("h2", "h3", "h4"):
-            m_marker = re.search(r"•?\s*(\d+)\s*•?", txt)
-        elif el.name == "p" and len(txt) <= 20:
-            m_marker = re.match(r"^•?\s*(\d+)\s*•?$", txt)
+        if el.name in ("h2", "h3", "h4", "p"):
+            # Only match standalone numeric/bullet question markers like "• 1 •", "•1•", "№ 1", "1."
+            m_marker = re.match(r"^[•*·–—\-]?\s*(?:№\s*)?(\d+)\s*[•*·–—\-.]?$", txt)
 
         if m_marker:
             if current_q_num is not None and current_paragraphs:
@@ -405,12 +404,12 @@ def extract_movne_word_pairs(
 
         # Match verdict patterns up to end of sentence or clause, preserving list items
         m_prav = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z])правильно(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])правильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
             first_ans,
             flags=re.IGNORECASE,
         )
         m_neprav = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z])неправильно(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])неправильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
             first_ans,
             flags=re.IGNORECASE,
         )
@@ -418,8 +417,8 @@ def extract_movne_word_pairs(
         def _clean_verdict(raw: str) -> str:
             # Strip trailing explanation clauses (", бо...", ", оскільки...", etc.), but not conjunctions like ", а також"
             truncated = re.split(r",\s+(?:бо|оскільки|тому що|адже|а\s+не|якщо)\b", raw, flags=re.IGNORECASE)[0]
-            if "(" in truncated and not truncated.endswith(")"):
-                truncated = truncated.split("(", 1)[0]
+            # Strip trailing unclosed parenthesis clause, preserving balanced parentheses inside alternatives
+            truncated = re.sub(r"\s*\([^)]*$", "", truncated)
             return truncated.strip(' «"“”».;,')
 
         if m_prav:
@@ -430,14 +429,17 @@ def extract_movne_word_pairs(
             verdict_type = "incorrect"
 
         first_ans_lower = first_ans.lower()
-        if "обидві" in first_ans_lower or "обидва" in first_ans_lower or "і так, і так" in first_ans_lower:
-            verdict_type = "both_valid"
-        elif (
-            "не є суржиком" in first_ans_lower
-            or "не є росіянізмом" in first_ans_lower
-            or "не росіянізм" in first_ans_lower
-        ):
-            verdict_type = "not_russianism"
+        if not verdict_form:
+            if "обидві" in first_ans_lower or "обидва" in first_ans_lower or "і так, і так" in first_ans_lower:
+                verdict_type = "both_valid"
+                verdict_form = _clean_verdict(first_ans)
+            elif (
+                "не є суржиком" in first_ans_lower
+                or "не є росіянізмом" in first_ans_lower
+                or "не росіянізм" in first_ans_lower
+            ):
+                verdict_type = "not_russianism"
+                verdict_form = _clean_verdict(first_ans)
         elif verdict_type != "preferred" and ("неправильно" in first_ans_lower or "не варто" in first_ans_lower):
             verdict_type = "incorrect"
 
@@ -514,6 +516,15 @@ def clean_movaua_title(title: str) -> str:
     return re.sub(r"\s*\|\s*Мова\s*[-–—]?\s*ДНК\s*нації.*$", "", title, flags=re.IGNORECASE).strip()
 
 
+def _contains_token(text: str, token: str) -> bool:
+    """Check if token appears as a whole word or phrase in text, respecting Ukrainian letters."""
+    tok = token.strip().lower()
+    if not tok:
+        return False
+    pattern = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9]){re.escape(tok)}(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])"
+    return bool(re.search(pattern, text, re.IGNORECASE))
+
+
 def extract_movaua_usage_pairs(
     article_id: int,
     url: str,
@@ -535,16 +546,19 @@ def extract_movaua_usage_pairs(
     # Helper to check if body explicitly recommends one of the parts
     def _find_body_recommendation(p1: str, p2: str, text: str) -> tuple[str, str]:
         # Search for patterns like "правильно: X" or "треба казати: X"
+        # Disallow leading negation ("неправильно", "не варто", "не треба", "не слід")
         m_rec = re.search(
-            r"(?:правильно|варто|слід|треба)(?:\s+(?:писати|казати|вживати))?[:\s]+«?([^»\n.,;]+)",
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?<!не\s)(?<!не)(?:правильно|варто|слід|треба)(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?:\s+(?:писати|казати|вживати))?[:\s]+«?([^»\n.,;]+)",
             text,
             re.IGNORECASE,
         )
         if m_rec:
-            rec = m_rec.group(1).strip().lower()
-            if p1.lower() in rec:
+            rec = m_rec.group(1).strip()
+            p1_in = _contains_token(rec, p1)
+            p2_in = _contains_token(rec, p2)
+            if p1_in and not p2_in:
                 return p2, p1
-            if p2.lower() in rec:
+            if p2_in and not p1_in:
                 return p1, p2
         return f"{p1} / {p2}", ""
 
@@ -554,10 +568,12 @@ def extract_movaua_usage_pairs(
         if m:
             part1 = m.group(1).strip()
             part2 = m.group(2).strip()
-            if image_alt and (part2.lower() in image_alt.lower() or image_alt.lower() in part2.lower()):
-                q_form, r_form = part1, image_alt
-            elif image_alt and (part1.lower() in image_alt.lower() or image_alt.lower() in part1.lower()):
-                q_form, r_form = part2, image_alt
+            p1_alt = _contains_token(image_alt, part1) if image_alt else False
+            p2_alt = _contains_token(image_alt, part2) if image_alt else False
+            if p2_alt and not p1_alt:
+                q_form, r_form = part1, part2
+            elif p1_alt and not p2_alt:
+                q_form, r_form = part2, part1
             else:
                 q_form, r_form = _find_body_recommendation(part1, part2, article_text)
 
@@ -639,10 +655,12 @@ def extract_movaua_usage_pairs(
         if m:
             part1 = m.group(1).strip()
             part2 = m.group(2).strip()
-            if image_alt and (part1.lower() in image_alt.lower() or image_alt.lower() in part1.lower()):
-                q_form, r_form = part2, image_alt
-            elif image_alt and (part2.lower() in image_alt.lower() or image_alt.lower() in part2.lower()):
-                q_form, r_form = part1, image_alt
+            p1_alt = _contains_token(image_alt, part1) if image_alt else False
+            p2_alt = _contains_token(image_alt, part2) if image_alt else False
+            if p1_alt and not p2_alt:
+                q_form, r_form = part2, part1
+            elif p2_alt and not p1_alt:
+                q_form, r_form = part1, part2
             else:
                 q_form, r_form = _find_body_recommendation(part1, part2, article_text)
             pairs.append(
@@ -1008,6 +1026,32 @@ def ingest_movne_pytannya(
         if resp.status_code != 200:
             logger.warning("Issue %s (%s) returned HTTP %s", issue_number, url, resp.status_code)
             errors += 1
+            now_iso = dt.datetime.now(dt.UTC).isoformat()
+            with conn:
+                conn.execute("PRAGMA foreign_keys = ON;")
+                row = conn.execute("SELECT id FROM movne_pytannya_issues WHERE url = ?", (url,)).fetchone()
+                if row:
+                    conn.execute(
+                        "UPDATE movne_pytannya_issues SET error_status = ?, fetched_at = ? WHERE id = ?",
+                        (f"http_{resp.status_code}", now_iso, row[0]),
+                    )
+                else:
+                    conn.execute(
+                        """
+                        INSERT INTO movne_pytannya_issues
+                        (url, issue_number, title, date, description, raw_html, article_text, content_sha256, fetched_at, error_status)
+                        VALUES (?, ?, ?, ?, ?, '', '', '', ?, ?)
+                        """,
+                        (
+                            url,
+                            issue_number,
+                            item.get("title", ""),
+                            item.get("date", ""),
+                            item.get("description", ""),
+                            now_iso,
+                            f"http_{resp.status_code}",
+                        ),
+                    )
             continue
 
         html = resp.text
@@ -1249,6 +1293,24 @@ def ingest_movaua(
         if resp.status_code != 200:
             logger.warning("movaua %s returned HTTP %s", url, resp.status_code)
             errors += 1
+            now_iso = dt.datetime.now(dt.UTC).isoformat()
+            with conn:
+                conn.execute("PRAGMA foreign_keys = ON;")
+                row = conn.execute("SELECT id FROM movaua_articles WHERE url = ?", (url,)).fetchone()
+                if row:
+                    conn.execute(
+                        "UPDATE movaua_articles SET error_status = ?, fetched_at = ? WHERE id = ?",
+                        (f"http_{resp.status_code}", now_iso, row[0]),
+                    )
+                else:
+                    conn.execute(
+                        """
+                        INSERT INTO movaua_articles
+                        (url, section, title, date, image_url, image_alt, raw_html, article_text, content_sha256, fetched_at, error_status)
+                        VALUES (?, ?, ?, '', '', '', '', '', '', ?, ?)
+                        """,
+                        (url, section, item.get("title", ""), now_iso, f"http_{resp.status_code}"),
+                    )
             continue
 
         html = resp.text

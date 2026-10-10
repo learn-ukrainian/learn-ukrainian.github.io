@@ -754,6 +754,146 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(stats2.fetched_new, 1)
         self.assertEqual(session.get.call_count, 1)
 
+    def test_find_body_recommendation_negation_rejection(self) -> None:
+        # Negation ("неправильно", "не варто", "не треба", "не слід") must not match as a recommendation
+        text_neg = "Неправильно: квиток. Треба казати: білет на потяг."
+        pairs = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/test-neg", "antusurzhuk", "квиток чи білет", "", text_neg
+        )
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs[0]["recommended_form"], "білет")
+
+        # When body only contains negation, it should not pick questioned form as recommended
+        text_only_neg = "Неправильно: квиток. Не варто так писати в офіційних документах."
+        pairs_fallback = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/test-neg2", "antusurzhuk", "квиток чи білет", "", text_only_neg
+        )
+        self.assertEqual(len(pairs_fallback), 1)
+        self.assertEqual(pairs_fallback[0]["recommended_form"], "")
+        self.assertIn("квиток / білет", pairs_fallback[0]["questioned_form"])
+
+    def test_token_isolation_short_words(self) -> None:
+        # Single-letter token "в" must not match inside "вашому"
+        text = "Правильно: у вашому тексті писати так."
+        pairs = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/v-chy-u", "antusurzhuk", "в чи у", "", text)
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0]["questioned_form"], "в")
+        self.assertEqual(pairs[0]["recommended_form"], "у")
+
+    def test_glavcom_verdict_word_boundary(self) -> None:
+        # Glavcom word boundary prevents capturing trailing letters like 'ю' from 'правильною'
+        html_wrong = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Як сказати: протягом чи на протязі?</p>
+            <p>Ця форма є правильною.</p>
+        </div>
+        """
+        pairs = extract_movne_word_pairs(1, 1, html_wrong)
+        self.assertEqual(len(pairs), 1)
+        self.assertNotEqual(pairs[0]["verdict_form"], "ю")
+        self.assertFalse(pairs[0]["verdict_form"].startswith("ю"))
+
+        html_correct = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Як сказати: протягом чи на протязі?</p>
+            <p>Правильно казати: протягом. Форма «на протязі» — калька.</p>
+        </div>
+        """
+        pairs_ok = extract_movne_word_pairs(1, 1, html_correct)
+        self.assertEqual(len(pairs_ok), 1)
+        self.assertEqual(pairs_ok[0]["verdict_form"], "протягом")
+
+    def test_clean_verdict_balanced_parentheses(self) -> None:
+        # Balanced parentheses inside alternatives must be preserved, while unclosed trailing ones are stripped
+        html = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Ірина: Як правильно писати?</p>
+            <p>Правильно: зрештою (іноді), а також врешті-решт (залежно від контексту).</p>
+        </div>
+        """
+        pairs = extract_movne_word_pairs(1, 1, html)
+        self.assertEqual(len(pairs), 1)
+        self.assertIn("зрештою (іноді)", pairs[0]["verdict_form"])
+        self.assertIn("врешті-решт (залежно від контексту)", pairs[0]["verdict_form"])
+
+    def test_header_digit_not_question_boundary(self) -> None:
+        # Headers with words and digits (e.g. "Правило 2 для дат") must not split into new questions
+        html = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Сергій: Як правильно вживати слово?</p>
+            <p>Правильно: приклад.</p>
+            <h3>Правило 2 для дат</h3>
+            <p>Додаткове пояснення для правила.</p>
+        </div>
+        """
+        pairs = extract_movne_word_pairs(1, 1, html)
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0]["question_num"], 1)
+
+    def test_movaua_non_200_error_status_recording(self) -> None:
+        ensure_movaua_schema(self.conn)
+        session = MagicMock(spec=requests.Session)
+        r404 = MagicMock(spec=requests.Response)
+        r404.status_code = 404
+        session.get.return_value = r404
+
+        manifest = [{"url": "https://ukr-mova.in.ua/not-found", "section": "antusurzhuk", "title": "Missing"}]
+        stats = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=False,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats.errors, 1)
+        self.assertEqual(stats.fetched_new, 0)
+
+        row = self.conn.execute(
+            "SELECT url, error_status FROM movaua_articles WHERE url = ?",
+            ("https://ukr-mova.in.ua/not-found",),
+        ).fetchone()
+        self.assertIsNotNone(row)
+        self.assertEqual(row[1], "http_404")
+
+        # In incremental mode without retry_errors, it is skipped
+        session.get.reset_mock()
+        stats_inc = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=False,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats_inc.cached_existing, 1)
+        self.assertEqual(session.get.call_count, 0)
+
+        # With retry_errors=True, it is retried
+        r200 = MagicMock(spec=requests.Response)
+        r200.status_code = 200
+        r200.text = "<html><div class='field-item even'>Текст статті</div></html>"
+        session.get.return_value = r200
+
+        stats_retry = ingest_movaua(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=True,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats_retry.fetched_new, 1)
+        self.assertEqual(session.get.call_count, 1)
+
     def test_cli_exit_on_errors(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             test_db = str(Path(tmpdir) / "test.db")
