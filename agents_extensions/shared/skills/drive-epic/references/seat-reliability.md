@@ -42,7 +42,7 @@ broken main or CI, then epic work, then cleanup.
 
 ## Ownership
 
-The private ownership map (`docs/ownership-map.md` in the private infra repo) is the
+The private ownership map (located via your private instructions) is the
 source of truth for which lane owns which area. Every handoff names an owner from it and
 confirms receipt. An unowned item goes to the coordinator in the same turn.
 
