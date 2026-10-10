@@ -184,119 +184,59 @@ def _result_code(results: list[GuardResult]) -> int:
     return 2 if any(result.returncode for result in normalized) else 0
 
 
-_WRAPPERS = frozenset({
-    "env", "sudo", "time", "timeout", "nice", "stdbuf", "nohup",
-    "command", "exec", "xargs", "eval", "su",
-})
-_SHELLS = frozenset({"bash", "sh", "zsh", "dash", "ksh", "fish", "busybox"})
-
-
-def _has_shell_substitution(command: str) -> bool:
+def _has_unescaped_metachars(command: str) -> bool:
     single = False
     double = False
     escaped = False
     for index, char in enumerate(command):
         if escaped:
             escaped = False
-        elif char == "\\" and not single:
+            continue
+        if char == "\\" and not single:
             escaped = True
-        elif char == "'" and not double:
+            continue
+        if char == "'" and not double:
             single = not single
-        elif char == '"' and not single:
+            continue
+        if char == '"' and not single:
             double = not double
-        elif not single:
-            if char == "`":
+            continue
+        if not single:
+            if char in ";|&\n<>{}`()":
                 return True
-            if char == "$" and index + 1 < len(command):
-                nxt = command[index + 1]
-                if nxt.isalnum() or nxt in "({_$'\"":
-                    return True
+            if char == "$" and index + 1 < len(command) and not command[index + 1].isspace():
+                return True
+        if double:
+            if char in ";`()":
+                return True
+            if char == "$" and index + 1 < len(command) and not command[index + 1].isspace():
+                return True
     return False
 
 
 def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
-    """Recognize command positions, shell -c scripts, eval, and wrappers hiding gh."""
+    """Recognize command positions, shell expansions, and wrappers hiding gh.
+
+    Fail closed: returns False only if the command is a verified safe data mention.
+    """
     if not (re.search(r"\bgh\b", command) or any(Path(w).name == "gh" for w in command.split())):
         return False
     if callable(recognize_gh) and recognize_gh(command):
         return True
-    if _has_shell_substitution(command):
+    if _has_unescaped_metachars(command):
         return True
     try:
-        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n{}<>")
-        lexer.whitespace = " \t\r"
-        lexer.whitespace_split = True
-        words = list(lexer)
+        words = shlex.split(command)
     except ValueError:
         return True
-
-    for w in words:
-        if w in {"-S", "--split-string"} or w.startswith("--split-string="):
-            return True
-        if Path(w).name in {"env", "eval"}:
-            return True
-
-    expecting_command = True
-    shell = False
-    shell_script = False
-    wrapper = False
-    is_eval = False
-    redirect_target = False
-
-    for word in words:
-        if redirect_target:
-            redirect_target = False
-            continue
-        if word in {">", "<", ">>", "<<", "<<<", "<>", ">&", "<&"}:
-            redirect_target = True
-            continue
-        if word.startswith(("<", ">")):
-            continue
-        if shell_script or is_eval:
-            script_candidate = word[1:] if word.startswith("$") and len(word) > 1 and word[1] in "'\"" else word
-            if _invokes_or_ambiguous_gh(script_candidate, recognize_gh):
-                return True
-            shell_script = False
-            is_eval = False
-            expecting_command = False
-        elif word and all(char in ";|&()\n" for char in word):
-            if shell:
-                return True
-            expecting_command = True
-            shell = False
-            shell_script = False
-            wrapper = False
-            is_eval = False
-        elif shell and word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
-            shell_script = True
-        elif expecting_command:
-            clean_word = word.lstrip("$")
-            base_name = Path(clean_word).name
-            if clean_word == "gh" or base_name == "gh":
-                return True
-            if clean_word in {"{", "}", "!"}:
-                continue
-            if any(clean_word.startswith(f"{n}>") for n in range(10)):
-                continue
-            if base_name == "eval":
-                is_eval = True
-                continue
-            if "=" in word or base_name in _WRAPPERS or clean_word in {
-                "if", "then", "elif", "while", "until", "do",
-            }:
-                wrapper = base_name in _WRAPPERS or wrapper
-                continue
-            if base_name in _SHELLS:
-                shell = True
-                expecting_command = False
-            elif wrapper or word.startswith("-") or word.replace(".", "").isdigit():
-                continue
-            else:
-                expecting_command = False
-        elif shell and not word.startswith("-"):
-            if any(char in word for char in "gh"):
-                return True
-    return bool(shell)
+    if not words:
+        return True
+    cmd = Path(words[0]).name
+    if cmd in {"echo", "printf"}:
+        return False
+    return not (cmd == "git" and len(words) > 1 and words[1] in {
+        "commit", "log", "diff", "status", "show", "branch", "checkout", "add",
+    })
 
 
 def _publication_command_code(payload: str, hooks_dir: Path) -> int:

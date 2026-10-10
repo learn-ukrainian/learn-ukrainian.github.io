@@ -1268,6 +1268,14 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
     "printf '%s\\n' '{stub} issue create --body safe' | bash",
     "bash <<< '{stub} issue create --body safe'",
     "busybox sh -c '{stub} issue create --body safe'",
+    '{{{stub},issue,create,--body,safe}}',
+    'set -- {stub}; $@ issue create --body safe',
+    'set -- {stub}; "$@" issue create --body safe',
+    'cat <({stub} issue create --body safe)',
+    'cat >({stub} issue create --body safe)',
+    'find . -exec {stub} issue create --body safe \\;',
+    'flock /tmp/lock {stub} issue create --body safe',
+    '.venv/bin/python -c "import os; os.execl(\'{stub}\', \'gh\', \'issue\', \'create\', \'--body\', \'safe\')"',
 ])
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
     marker = tmp_path / 'published'
