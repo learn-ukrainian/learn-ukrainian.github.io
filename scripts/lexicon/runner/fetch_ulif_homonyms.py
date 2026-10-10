@@ -100,71 +100,127 @@ class InterruptedByOperator(KeyboardInterrupt):
     """SIGINT or SIGTERM received."""
 
 
+# How many registration guards are open on the main thread. The pthread mask is
+# per-thread, so another thread can take SIGTERM and trip this handler before
+# the saved handler is stored (#10393). The handler records that trip and
+# returns; the outermost guard raises only after the assignment it wraps.
+_sigterm_defer_depth = 0
+_sigterm_deferred = False
+_SIGTERM_UNSET = object()
+
+
+def _on_sigterm(_signum: int, _frame: Any) -> None:
+    global _sigterm_deferred
+    if _sigterm_defer_depth > 0:
+        _sigterm_deferred = True
+        return
+    raise InterruptedByOperator("SIGTERM")
+
+
+@dataclass(frozen=True)
+class _SigtermHandlerInstallation:
+    """Whether this call installed the handler, and the handler it replaced.
+
+    ``previous`` is None when the replaced handler was installed from C and
+    Python has no object for it. That is still ``installed`` true.
+    """
+
+    installed: bool
+    previous: Any
+
+
+_SIGTERM_NOT_INSTALLED = _SigtermHandlerInstallation(False, None)
+
+
 @contextlib.contextmanager
 def _sigterm_registration_guard() -> Iterator[None]:
-    """Hold SIGTERM blocked across handler registration and the caller's store.
+    """Publish the SIGTERM handler only after the caller stores the previous one.
 
-    ``signal.signal`` enables the new handler before it returns, and the
-    caller stores that return value in a later bytecode. A SIGTERM in either
-    gap used to run the new handler before the previous one was visible to
-    the restoring ``finally`` (#10374). Masking defers that signal until the
-    ``finally`` of this guard, which runs only after the assignment it wraps.
-    The saved mask is put back exactly, so a caller that already blocked
-    SIGTERM stays blocked. ``run_fetch`` and ``run_walk`` therefore do not
-    unblock an inherited mask; only ``main`` unblocks, and only after it has
-    stored the previous handler.
-    """
-    if threading.current_thread() is not threading.main_thread() or not hasattr(signal, "pthread_sigmask"):
-        yield
-        return
-    previous_mask = set(signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM}))
-    try:
-        yield
-    finally:
-        signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
-
-
-def _install_sigterm_handler() -> Any:
-    """Install the operator SIGTERM handler and return the previous one.
-
-    Does not leave the thread signal mask changed. The mask is inherited
-    across fork and exec, and ``signal.signal`` does not clear it, so a
-    blocked SIGTERM never runs the handler (#10374). Unblocking is reserved
-    for ``main`` via ``_unblock_inherited_sigterm``, and only after the caller
-    has stored this return value inside ``_sigterm_registration_guard`` and
-    armed the ``finally`` that restores it. ``run_fetch`` and ``run_walk``
-    leave a caller-blocked SIGTERM blocked.
-
-    If a signal is delivered after this mask is restored and before this
-    returns, the previous handler is restored and the exception propagates.
-    Returns None off the main thread, where ``signal.signal`` is illegal.
+    ``signal.signal`` enables the new handler before the next bytecode stores
+    its return value (#10374). Blocking SIGTERM on this thread defers a signal
+    aimed here until this guard restores the mask, which is after that store.
+    Another thread can still receive a process-directed SIGTERM and trip the
+    Python handler inside the section (#10393). ``_on_sigterm`` records that
+    trip; this guard raises only after the assignment it wraps. The saved mask
+    is put back exactly, so a caller that already blocked SIGTERM stays blocked.
+    ``run_fetch`` and ``run_walk`` do not unblock an inherited mask; only
+    ``main`` does, and only after it has stored the installation.
     """
     if threading.current_thread() is not threading.main_thread():
-        return None
+        yield
+        return
 
-    def _on_sigterm(signum: int, frame: Any) -> None:
-        raise InterruptedByOperator("SIGTERM")
+    global _sigterm_defer_depth, _sigterm_deferred
+    _sigterm_defer_depth += 1
+    previous_mask: set[int] | None = None
+    body_error: BaseException | None = None
+    try:
+        if hasattr(signal, "pthread_sigmask"):
+            previous_mask = set(signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM}))
+        try:
+            yield
+        except BaseException as exc:
+            body_error = exc
+            raise
+    finally:
+        try:
+            if previous_mask is not None:
+                signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
+        finally:
+            _sigterm_defer_depth -= 1
+            pending = _sigterm_defer_depth == 0 and _sigterm_deferred and body_error is None
+            if _sigterm_defer_depth == 0:
+                _sigterm_deferred = False
+            if pending:
+                raise InterruptedByOperator("SIGTERM")
 
-    unset = object()
-    previous: Any = unset
+
+def _install_sigterm_handler() -> _SigtermHandlerInstallation:
+    """Install the operator SIGTERM handler.
+
+    Does not leave the thread signal mask changed. The mask is inherited across
+    fork and exec, and ``signal.signal`` does not clear it, so a blocked
+    SIGTERM never runs the handler (#10374). Unblocking is reserved for
+    ``main`` via ``_unblock_inherited_sigterm``, and only after the caller has
+    stored this result inside ``_sigterm_registration_guard``. It runs whenever
+    ``installed`` is true, including when ``previous`` is None. ``run_fetch``
+    and ``run_walk`` leave a caller-blocked SIGTERM blocked.
+
+    Returns not-installed off the main thread, where ``signal.signal`` is illegal,
+    and when installation raises ``ValueError`` or ``OSError``.
+    """
+    if threading.current_thread() is not threading.main_thread():
+        return _SIGTERM_NOT_INSTALLED
+
+    previous: Any = _SIGTERM_UNSET
     try:
         with _sigterm_registration_guard(), contextlib.suppress(ValueError, OSError):
             previous = signal.signal(signal.SIGTERM, _on_sigterm)
-        return None if previous is unset else previous
+        if previous is _SIGTERM_UNSET:
+            return _SIGTERM_NOT_INSTALLED
+        return _SigtermHandlerInstallation(True, previous)
     except (KeyboardInterrupt, InterruptedByOperator):
-        if previous is not unset:
+        if previous is not _SIGTERM_UNSET and previous is not None:
             with contextlib.suppress(ValueError, OSError):
                 signal.signal(signal.SIGTERM, previous)
         raise
+
+
+def _restore_sigterm_handler(installation: _SigtermHandlerInstallation) -> None:
+    """Put back the handler this installation replaced, when Python can name it."""
+    if not installation.installed or installation.previous is None:
+        return
+    with contextlib.suppress(ValueError, OSError):
+        signal.signal(signal.SIGTERM, installation.previous)
 
 
 def _unblock_inherited_sigterm() -> None:
     """Unblock SIGTERM so a pending inherited signal reaches the handler.
 
     Only ``main`` may call this, and only from inside the ``try`` that restores
-    the handler saved by ``_install_sigterm_handler``. A pending SIGTERM is
-    delivered here, as ``InterruptedByOperator``, instead of killing the process
-    or sleeping through a blocked FIFO read (#10374).
+    the handler, after ``_install_sigterm_handler`` reports ``installed``. A
+    pending SIGTERM is delivered here, as ``InterruptedByOperator``, instead of
+    killing the process or sleeping through a blocked FIFO read (#10374).
     """
     if threading.current_thread() is not threading.main_thread():
         return
@@ -2580,10 +2636,10 @@ def run_fetch(
         emit=_emit_fetch_progress,
     )
 
-    old_sigterm = None
+    sigterm_handler = _SIGTERM_NOT_INSTALLED
     try:
         with _sigterm_registration_guard():
-            old_sigterm = _install_sigterm_handler()
+            sigterm_handler = _install_sigterm_handler()
         try:
             _ensure_private_dir(state_dir)
             lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
@@ -2928,9 +2984,7 @@ def run_fetch(
                         lock._held = False
                     break
 
-        if old_sigterm is not None:
-            with contextlib.suppress(ValueError, OSError):
-                signal.signal(signal.SIGTERM, old_sigterm)
+        _restore_sigterm_handler(sigterm_handler)
 
     return return_code
 
@@ -3959,10 +4013,10 @@ def run_walk(
         emit=_emit_walk_progress,
     )
 
-    old_sigterm = None
+    sigterm_handler = _SIGTERM_NOT_INSTALLED
     try:
         with _sigterm_registration_guard():
-            old_sigterm = _install_sigterm_handler()
+            sigterm_handler = _install_sigterm_handler()
         try:
             _ensure_private_dir(state_dir)
             lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
@@ -4562,9 +4616,7 @@ def run_walk(
                         lock._held = False
                     break
 
-        if old_sigterm is not None:
-            with contextlib.suppress(ValueError, OSError):
-                signal.signal(signal.SIGTERM, old_sigterm)
+        _restore_sigterm_handler(sigterm_handler)
 
     return return_code
 
@@ -5298,12 +5350,12 @@ Related:
             cmd_parts.extend(["--progress-interval", f"{args.progress_interval:g}"])
         resume_cmd = shlex.join(cmd_parts)
 
-        old_sigterm = None
+        sigterm_handler = _SIGTERM_NOT_INSTALLED
         try:
             try:
                 with _sigterm_registration_guard():
-                    old_sigterm = _install_sigterm_handler()
-                if old_sigterm is not None:
+                    sigterm_handler = _install_sigterm_handler()
+                if sigterm_handler.installed:
                     _unblock_inherited_sigterm()
                 spellings = _spellings_from_file(args.spellings_file)
             except (KeyboardInterrupt, InterruptedByOperator):
@@ -5351,9 +5403,7 @@ Related:
             except (KeyboardInterrupt, InterruptedByOperator):
                 return EXIT_INTERRUPTED
         finally:
-            if old_sigterm is not None:
-                with contextlib.suppress(ValueError, OSError):
-                    signal.signal(signal.SIGTERM, old_sigterm)
+            _restore_sigterm_handler(sigterm_handler)
     if args.command == "walk":
         if args.verify_ledger:
             ledger_path = args.state_dir / "ledger.sqlite"
@@ -5392,12 +5442,12 @@ Related:
             cmd_parts.extend(["--start-headword", args.start_headword])
         resume_cmd = shlex.join(cmd_parts)
 
-        old_sigterm = None
+        sigterm_handler = _SIGTERM_NOT_INSTALLED
         try:
             try:
                 with _sigterm_registration_guard():
-                    old_sigterm = _install_sigterm_handler()
-                if old_sigterm is not None:
+                    sigterm_handler = _install_sigterm_handler()
+                if sigterm_handler.installed:
                     _unblock_inherited_sigterm()
             except (KeyboardInterrupt, InterruptedByOperator):
                 _print_walk_stop_summary(
@@ -5430,9 +5480,7 @@ Related:
         except (KeyboardInterrupt, InterruptedByOperator):
             return EXIT_INTERRUPTED
         finally:
-            if old_sigterm is not None:
-                with contextlib.suppress(ValueError, OSError):
-                    signal.signal(signal.SIGTERM, old_sigterm)
+            _restore_sigterm_handler(sigterm_handler)
     if args.command == "parse":
         cache = prepare_database(args.db)
         ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
