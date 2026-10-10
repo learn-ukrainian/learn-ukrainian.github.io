@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 import urllib.request
+from datetime import UTC, datetime
 
 
 def main() -> None:
@@ -19,8 +20,13 @@ def main() -> None:
             data = json.load(r)
         claude = data["agents"]["claude"]
         bar = claude.get("codexbar") or {}
-        diagnostics = data.get("diagnostics") or {}
-        if diagnostics.get("stale") or claude.get("stale") or bar.get("stale"):
+        # Aggregate diagnostics include other providers' age. Check this
+        # response's age separately from Claude's own telemetry freshness.
+        generated_at = datetime.fromisoformat(data["generated_at"].replace("Z", "+00:00"))
+        if generated_at.tzinfo is None:
+            raise ValueError("missing timezone")
+        response_age = (datetime.now(UTC) - generated_at).total_seconds()
+        if not 0 <= response_age <= 900 or claude.get("stale") or bar.get("stale"):
             raise ValueError("stale")
         pct = bar.get("weekly_used_pct")
         if pct is None:

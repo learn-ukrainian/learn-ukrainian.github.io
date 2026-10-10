@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -18,6 +19,13 @@ from tests.rules_core_view import (
 from tests.test_launcher_contract import REPO, run_launcher
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
+
+@pytest.fixture(autouse=True)
+def reader_clock(monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = Mock(wraps=datetime)
+    clock.now.return_value = datetime(2030, 1, 1, tzinfo=UTC)
+    monkeypatch.setattr(claude_weekly_used, "datetime", clock)
 
 
 @pytest.fixture
@@ -79,7 +87,10 @@ def test_weekly_reader_ignores_environment_override(
     pct: int, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     monkeypatch.setenv("LU_CLAUDE_WEEKLY_USED_PCT_OVERRIDE", "0")
-    payload = {"agents": {"claude": {"codexbar": {"weekly_used_pct": pct}}}}
+    payload = {
+        "generated_at": "2030-01-01T00:00:00Z",
+        "agents": {"claude": {"codexbar": {"weekly_used_pct": pct}}},
+    }
     urlopen = Mock(return_value=io.BytesIO(json.dumps(payload).encode()))
     monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
 
@@ -90,16 +101,18 @@ def test_weekly_reader_ignores_environment_override(
 
 
 @pytest.mark.parametrize(
-    ("snapshot_stale", "agent_stale", "bar_stale", "expected"),
+    ("other_provider_stale", "agent_stale", "bar_stale", "expected"),
     (
-        (True, False, False, "unknown"),
+        (True, False, False, "95"),
+        (True, True, False, "unknown"),
+        (True, False, True, "unknown"),
         (False, True, False, "unknown"),
         (False, False, True, "unknown"),
         (False, False, False, "95"),
     ),
 )
-def test_weekly_reader_checks_snapshot_and_nested_freshness(
-    snapshot_stale: bool,
+def test_weekly_reader_checks_claude_freshness(
+    other_provider_stale: bool,
     agent_stale: bool,
     bar_stale: bool,
     expected: str,
@@ -107,8 +120,10 @@ def test_weekly_reader_checks_snapshot_and_nested_freshness(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     payload = {
-        "diagnostics": {"stale": snapshot_stale},
+        "generated_at": "2030-01-01T00:00:00Z",
+        "diagnostics": {"stale": other_provider_stale, "data_age_s": 1800},
         "agents": {
+            "codex": {"codexbar": {"stale": other_provider_stale}},
             "claude": {
                 "stale": agent_stale,
                 "codexbar": {"stale": bar_stale, "weekly_used_pct": 95},
@@ -122,6 +137,67 @@ def test_weekly_reader_checks_snapshot_and_nested_freshness(
 
     urlopen.assert_called_once()
     assert capsys.readouterr().out == f"{expected}\n"
+
+
+@pytest.mark.parametrize(
+    ("generated_at", "expected"),
+    (
+        ("2029-12-31T23:45:00Z", "95"),
+        ("2029-12-31T23:44:59Z", "unknown"),
+        ("2030-01-01T00:00:01Z", "unknown"),
+        ("2030-01-01T00:00:00", "unknown"),
+        ("invalid", "unknown"),
+        (None, "unknown"),
+    ),
+)
+def test_weekly_reader_rejects_untrusted_response_age(
+    generated_at: str | None,
+    expected: str,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    payload = {
+        "diagnostics": {"stale": False},
+        "agents": {"claude": {"codexbar": {"stale": False, "weekly_used_pct": 95}}},
+    }
+    if generated_at is not None:
+        payload["generated_at"] = generated_at
+    monkeypatch.setattr(
+        claude_weekly_used.urllib.request, "urlopen",
+        Mock(return_value=io.BytesIO(json.dumps(payload).encode())),
+    )
+
+    claude_weekly_used.main()
+
+    assert capsys.readouterr().out == f"{expected}\n"
+
+
+def test_fresh_claude_usage_blocks_launch_when_other_provider_is_stale(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    launch_with_usage,
+) -> None:
+    payload = {
+        "generated_at": "2030-01-01T00:00:00Z",
+        "diagnostics": {"stale": True, "data_age_s": 1800},
+        "agents": {
+            "claude": {"codexbar": {"stale": False, "weekly_used_pct": 95}},
+            "codex": {"codexbar": {"stale": True}},
+        },
+    }
+    monkeypatch.setattr(
+        claude_weekly_used.urllib.request, "urlopen",
+        Mock(return_value=io.BytesIO(json.dumps(payload).encode())),
+    )
+    claude_weekly_used.main()
+    usage = capsys.readouterr().out.strip()
+    assert usage == "95"
+
+    result = launch_with_usage(usage, "--epic", "infra")
+
+    assert result.returncode == 7
+    assert "No Claude launch until the weekly reset" in result.stderr
+    assert "would exec" not in result.stdout
 
 
 def test_weekly_reader_override_cannot_hide_request_failure(
