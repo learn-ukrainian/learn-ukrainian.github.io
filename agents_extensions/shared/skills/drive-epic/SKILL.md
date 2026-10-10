@@ -128,6 +128,10 @@ not delivery proof for the live driver.
 Seat-specific adjustments for your model and for the seats you route to:
 [model-deltas](references/model-deltas.md).
 
+Seat reliability (DoR before start, DoD plus done-check as the finish line, pstack before
+custom code, escalate after 2 tries, priority order, ownership map, long jobs, model
+budget): [seat-reliability](references/seat-reliability.md).
+
 ## Escalate — do NOT decide these solo
 
 Seek **Opus 5.5 / Sol 6.1** for review, critique and design input. Route the decisions
