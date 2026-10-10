@@ -10,6 +10,7 @@ import functools
 import ipaddress
 import itertools
 import os
+import re
 import shutil
 import socket
 import sqlite3
@@ -18,7 +19,7 @@ import sys
 import threading
 import warnings
 import weakref
-from collections.abc import Callable, Collection, Generator
+from collections.abc import Callable, Collection, Generator, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -160,6 +161,41 @@ SESSION_IDENTITY_ENV_VARS = (
 )
 
 
+# Same suffix rule as agent_runtime.env_sanitize.credential_env_names. Kept
+# here so conftest does not import agent_runtime (the rules workflow loads
+# this module with pytest and PyYAML only).
+_CREDENTIAL_ENV_RE = re.compile(
+    r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$"
+)
+# Values shorter than this are not checked in captured test output. They are
+# still removed from the environment. The check never reports the value.
+_CAPTURED_SECRET_MIN_LENGTH = 12
+
+
+def inherited_credential_names(env: Mapping[str, str], *, keep: Collection[str] = ()) -> tuple[str, ...]:
+    """Credential names present when this process started.
+
+    ``LU_TEST_*`` names are harness controls, not secrets. Names a test or
+    plugin sets after import stay in the environment.
+    """
+    kept = set(keep)
+    return tuple(
+        name
+        for name in env
+        if name not in kept and not name.startswith("LU_TEST_") and _CREDENTIAL_ENV_RE.search(name)
+    )
+
+
+# Snapshot at import, before test modules and session plugins add their own
+# tokens. Each test removes only these inherited names.
+_INHERITED_CREDENTIAL_NAMES = inherited_credential_names(os.environ, keep=SESSION_IDENTITY_ENV_VARS)
+
+# Original credential values for the in-flight test, keyed by node id. The
+# leak check compares captured output to these and never includes the value
+# in a failure. Cleared when the test protocol finishes.
+_SCRUBBED_SECRET_VALUES: dict[str, dict[str, str]] = {}
+
+
 @pytest.hookimpl(wrapper=True, tryfirst=True)
 def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> Generator[None, object, object]:
     """Run every test without the launching agent session's identity (#8778).
@@ -167,11 +203,52 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     The outermost wrapper around setup, call, and teardown, so no fixture of
     any scope sees the identity. Tests that need a variable set it themselves;
     the original environment returns after teardown.
+
+    Credential-shaped variables inherited from the launching process
+    (``*_API_KEY`` and token, secret, and password names) are removed the
+    same way. A long value that then shows up in captured output fails the
+    test without the value being repeated.
     """
+    secrets: dict[str, str] = {}
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
-        return (yield)
+        for name in _INHERITED_CREDENTIAL_NAMES:
+            value = os.environ.get(name, "")
+            if len(value) >= _CAPTURED_SECRET_MIN_LENGTH:
+                secrets[name] = value
+            patch.delenv(name, raising=False)
+        _SCRUBBED_SECRET_VALUES[item.nodeid] = secrets
+        try:
+            return (yield)
+        finally:
+            _SCRUBBED_SECRET_VALUES.pop(item.nodeid, None)
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]) -> Generator[None, object, pytest.TestReport]:
+    """Fail when captured output contains a credential stripped from the env."""
+    report = yield
+    secrets = _SCRUBBED_SECRET_VALUES.get(item.nodeid) or {}
+    if not secrets or report.outcome != "passed":
+        return report
+    chunks = [getattr(report, "capstdout", "") or "", getattr(report, "capstderr", "") or ""]
+    for title, content in getattr(report, "sections", []) or []:
+        if "stdout" in title.lower() or "stderr" in title.lower() or "captured" in title.lower():
+            chunks.append(content or "")
+    text = "\n".join(chunks)
+    leaked = [name for name, value in secrets.items() if value and value in text]
+    if not leaked:
+        return report
+    report.outcome = "failed"
+    # Name every leaked variable. Clear every captured section that still holds one.
+    report.longrepr = "captured output contained the value of scrubbed env var " + ", ".join(leaked)
+    values = [value for value in secrets.values() if value]
+    report.sections = [
+        (title, "" if any(value in (content or "") for value in values) else content)
+        for title, content in report.sections
+    ]
+    return report
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:

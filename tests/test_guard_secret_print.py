@@ -66,6 +66,11 @@ def _run(monkeypatch, command: str, *, env_override: bool = False) -> int:
         "tail .envrc",
         "grep KEY .envrc",
         "echo $GH_TOKEN",
+        "cat ~/.secrets/*",
+        "cat ~/.secrets/example.key",
+        "env | grep KEY",
+        "printenv *_KEY",
+        "printenv CURSOR_API_KEY",
     ],
 )
 def test_secret_dump_shapes_blocked(monkeypatch, capsys, cmd):
@@ -572,6 +577,9 @@ def test_bash_comment_starts_after_control_operator_in_secret_hook(operator):
     "cmd",
     [
         "env | cut -d= -f1",
+        "env | grep PATH",
+        "printenv PATH",
+        "printenv HOME",
         '[ -n "${X:-}" ] && echo SET',
         "cat README.md",
         "cat agents_extensions/shared/hooks/guard-secret-print.py",

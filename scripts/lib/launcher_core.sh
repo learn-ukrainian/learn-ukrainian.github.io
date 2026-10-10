@@ -156,6 +156,29 @@ launcher_project_python() {
   printf '%s\n' "$python"
 }
 
+# Drop API keys this seat does not need before the provider process starts.
+# A direct exec seam with no helper root, or a unit sandbox that has no
+# sanitizer file or project interpreter, leaves the environment alone.
+# When the sanitizer runs and fails, the launch refuses to start.
+launcher_drop_unneeded_secrets() {
+  local py names name sanitizer
+  sanitizer="${LC_ROOT:-}/scripts/agent_runtime/env_sanitize.py"
+  py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
+  if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
+    return 0
+  fi
+  if ! names="$("$py" "$sanitizer" --provider "$LC_PROVIDER")"; then
+    launcher_error "could not drop unneeded API keys"
+    return 1
+  fi
+  while IFS= read -r name; do
+    case "$name" in
+      ''|*[!A-Za-z0-9_]*) continue ;;
+    esac
+    unset "$name"
+  done <<< "$names"
+}
+
 launcher_require_binary() {
   local binary="$1"
   local error_message="$2"
@@ -1157,6 +1180,7 @@ launcher_forward_driver_signal() {
 launcher_driver_wait_hook() { :; }
 
 launcher_exec_command() {
+  launcher_drop_unneeded_secrets || exit 1
   # Interactive sessions retain the direct exec contract. A lease-owning
   # driver keeps this small supervisor shell alive so normal exit and
   # termination signals can atomically close the exact fenced session.

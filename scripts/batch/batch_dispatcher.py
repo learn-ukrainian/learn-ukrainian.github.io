@@ -765,6 +765,14 @@ def cmd_dispatch_one(args):
 # CLI entry point
 # ---------------------------------------------------------------------------
 
+def _drop_unneeded_dispatcher_secrets() -> None:
+    """Remove API keys the dispatcher does not pass to its children."""
+    from agent_runtime.env_sanitize import unneeded_secret_names
+
+    for name in unneeded_secret_names(os.environ, "dispatcher"):
+        os.environ.pop(name, None)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Smart Batch Dispatcher — Autonomous curriculum batch processing scheduler",
@@ -795,6 +803,7 @@ def main():
     p_one.add_argument("--dry-run", action="store_true", help="Show what would be dispatched")
 
     args = parser.parse_args()
+    _drop_unneeded_dispatcher_secrets()
 
     if args.command == "scan":
         cmd_scan(args)

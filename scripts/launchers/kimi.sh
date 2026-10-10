@@ -96,6 +96,7 @@ _kimi_forward_args_are_fresh_session() {
   return 0
 }
 launcher_adapter_exec() {
+  launcher_drop_unneeded_secrets || exit 1
   local cmd agent_file
   if [ "$LC_HARNESS" = kimi-code ]; then
     cmd=(kimi --model "$LC_MODEL")

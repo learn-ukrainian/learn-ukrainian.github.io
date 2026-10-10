@@ -12,7 +12,7 @@ import re
 import shutil
 import subprocess
 import tempfile
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from pathlib import Path
 
 _SENSITIVE_NAME_RE = re.compile(
@@ -232,6 +232,48 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         "CLAUDE_CODE_DISABLE_ADVISOR_TOOL",
     },
 }
+
+
+_CREDENTIAL_ENV_RE = re.compile(
+    r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$"
+)
+# Values shorter than this are not checked in captured test output. They are
+# still removed from the environment. The check never reports the value.
+CAPTURED_SECRET_MIN_LENGTH = 12
+
+
+def credential_env_names(env: Mapping[str, str], *, keep: Collection[str] = ()) -> list[str]:
+    """Return credential-shaped env names that tests must not inherit.
+
+    ``*_API_KEY`` and token, secret, and password names match. ``keep`` holds
+    process-control names (session identity) that share those suffixes.
+    """
+    kept = {name.upper() for name in keep}
+    return [name for name in env if name.upper() not in kept and _CREDENTIAL_ENV_RE.search(name)]
+
+
+def unneeded_secret_names(env: Mapping[str, str], provider: str) -> list[str]:
+    """API-key names ``provider`` must not inherit.
+
+    ``CURSOR_API_KEY`` stays only for a Cursor seat. Other ``*_API_KEY`` names
+    stay only when that provider's secret allowlist names them. Non-key tokens
+    such as ``GH_TOKEN`` are left for the caller's identity injection.
+    """
+    drop: list[str] = []
+    for name in env:
+        upper = name.upper()
+        if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY")):
+            continue
+        if _is_provider_secret(name, provider):
+            continue
+        drop.append(name)
+    return drop
+
+
+def without_unneeded_secrets(env: Mapping[str, str], provider: str) -> dict[str, str]:
+    """Copy ``env`` without API keys this provider does not need."""
+    dropped = set(unneeded_secret_names(env, provider))
+    return {name: value for name, value in env.items() if name not in dropped}
 
 
 def _normalized_provider(provider: str) -> str:
@@ -610,3 +652,28 @@ def _append_push_rewrite(env: dict[str, str], target: str) -> None:
         count += 1
     env["GIT_CONFIG_COUNT"] = str(count)
     env["GIT_TERMINAL_PROMPT"] = "0"
+
+
+def _print_unneeded_secret_names(provider: str) -> int:
+    """Print API-key names the current process should drop for ``provider``."""
+    for name in unneeded_secret_names(os.environ, provider):
+        if name.isidentifier():
+            print(name)
+    return 0
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+
+    # Launchers execute this file by path. Relative imports below need the
+    # scripts package on sys.path and a package context.
+    if __package__ in {None, ""}:
+        _scripts_dir = str(Path(__file__).resolve().parents[1])
+        if _scripts_dir not in sys.path:
+            sys.path.insert(0, _scripts_dir)
+        __package__ = "agent_runtime"
+
+    parser = argparse.ArgumentParser(description="Print API-key names a child env must drop.")
+    parser.add_argument("--provider", required=True)
+    raise SystemExit(_print_unneeded_secret_names(parser.parse_args().provider))

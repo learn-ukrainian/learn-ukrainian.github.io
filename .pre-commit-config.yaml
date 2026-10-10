@@ -273,6 +273,13 @@ repos:
         files: ^(scripts|tests)/.*\.py$
         stages: [pre-commit]
 
+      - id: no-secret-print-hook
+        name: no-print hook blocks seeded secret echoes
+        entry: bash scripts/pre_commit/project_python.sh agents_extensions/shared/hooks/guard-secret-print.py --self-test
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
       - id: lint-test-assertions
         name: check test assertions for stale pinned epic IDs
         entry: bash scripts/pre_commit/project_python.sh -m scripts.lint.lint_test_assertions
