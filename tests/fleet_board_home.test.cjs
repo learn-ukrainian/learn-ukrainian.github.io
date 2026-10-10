@@ -22,7 +22,7 @@ const context = {
 };
 context.globalThis = context;
 vm.createContext(context);
-vm.runInContext(js, context);
+vm.runInContext(js, context, { filename: path.join(root, "dashboards/fleet-board.js") });
 const FB = context.FleetBoard;
 
 const VOID = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"]);
@@ -652,4 +652,151 @@ test("epic workers come from the current epic when agents fail or are older", ()
   const current = FB.renderEpic(epic, cachedAgents, { ageMs: 0, agentsFailed: false });
   assert.match(current, /worker-cached/);
   assert.doesNotMatch(current, /worker-fresh/);
+});
+
+function mountedBoard() {
+  const nodes = new Map();
+  const timeouts = new Map();
+  const intervals = new Map();
+  const windowEvents = {};
+  let timerId = 0;
+  const document = { activeElement: null, events: {} };
+  function node(id) {
+    const classes = new Set();
+    return {
+      id, tagName: "DIV", dataset: {}, attrs: {}, events: {}, hidden: true,
+      innerHTML: "", textContent: "", value: "", selectionStart: 0,
+      classList: {
+        add: (name) => classes.add(name), remove: (name) => classes.delete(name),
+        toggle: (name, on) => on ? classes.add(name) : classes.delete(name),
+        contains: (name) => classes.has(name),
+      },
+      getAttribute(name) { return this.attrs[name] ?? null; },
+      setAttribute(name, value) { this.attrs[name] = value; },
+      removeAttribute(name) { delete this.attrs[name]; },
+      addEventListener(name, handler) { this.events[name] = handler; },
+      focus() { document.activeElement = this; },
+      blur() { document.activeElement = null; },
+      setSelectionRange(start) { this.selectionStart = start; },
+    };
+  }
+  ["fb-app", "fb-drawer", "fb-ago", "fb-stamp-label", "fb-stamp", "fb-stale",
+    "fb-search", "fb-theme", "fb-help", "fb-help-close", "fb-help-modal", "drawer-close",
+    "card-one", "card-two"].forEach((id) => nodes.set(id, node(id)));
+  const nav = ["home", "prs"].map((view) => {
+    const link = node(view); link.attrs["data-nav"] = view; return link;
+  });
+  document.documentElement = node("html");
+  document.getElementById = (id) => nodes.get(id) || null;
+  document.querySelector = () => nodes.get("drawer-close");
+  document.querySelectorAll = (selector) => selector === ".fb-views a" ? nav : [nodes.get("card-one"), nodes.get("card-two")];
+  document.addEventListener = (name, handler) => { document.events[name] = handler; };
+  const location = { hash: "" };
+  const requests = [];
+  let mode = "ok";
+  const window = {
+    scrollY: 7, scrollTo() {},
+    addEventListener(name, handler) { windowEvents[name] = handler; },
+    setTimeout(handler, delay) { const id = ++timerId; timeouts.set(id, { handler, delay }); return id; },
+    clearTimeout(id) { timeouts.delete(id); },
+    setInterval(handler, delay) { intervals.set(delay, handler); return ++timerId; },
+  };
+  const sandbox = {
+    URLSearchParams, document, location, window, Date,
+    history: { replaceState(a, b, hash) { location.hash = hash; } },
+    localStorage: { setItem(key, value) { sandbox.savedTheme = value; } },
+    AbortSignal: { timeout: () => ({}) },
+    async fetch(url, init) {
+      requests.push({ url, init });
+      if (mode === "throw") throw new Error("synthetic fetch failure");
+      const bodies = {
+        "/api/fleet/v1/now": nowEnvelope, "/api/fleet/v1/epics": epicsEnvelope,
+        "/api/fleet/v1/epics/cedar": { schema: "fleet.v1.epic", sources, data: cedar },
+        "/api/fleet/v1/agents": agentsEnvelope,
+      };
+      return { ok: mode !== "bad", status: mode === "bad" ? 500 : 200, async json() {
+        if (mode === "invalid-json") throw new Error("synthetic JSON failure");
+        return bodies[url] || null;
+      } };
+    },
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(js, sandbox, { filename: path.join(root, "dashboards/fleet-board.js") });
+  return {
+    nodes, location, document, nav, requests, intervals, timeouts, sandbox,
+    setMode(value) { mode = value; },
+    async settle() { await new Promise(setImmediate); },
+    async navigate(hash) { location.hash = hash; windowEvents.hashchange(); await this.settle(); },
+    key(key, target = nodes.get("fb-app")) { document.events.keydown({ key, target, preventDefault() {} }); },
+  };
+}
+
+test("mounted board refreshes, filters, preserves failure state, and recovers", async () => {
+  const board = mountedBoard();
+  const app = board.nodes.get("fb-app");
+  await board.settle();
+  assert.equal(board.location.hash, "#/home");
+  assert.match(app.innerHTML, /Cedar/);
+  assert.equal(board.nav[0].attrs["aria-current"], "page");
+  assert.ok(board.intervals.has(30000));
+  assert.ok(board.intervals.has(1000));
+  assert.ok(board.requests.every(({ url, init }) => url.startsWith("/api/fleet/v1/") && init.cache === "no-store"));
+  const filter = { getAttribute: () => "state", value: "working" };
+  app.events.change({ target: filter });
+  assert.match(board.location.hash, /state=working/);
+  assert.match(app.innerHTML, /Birch/);
+  app.events.change({ target: { getAttribute: () => null } });
+  app.events.input({ target: { id: "unrelated" } });
+  const search = board.nodes.get("fb-search");
+  search.value = "Birch"; search.focus();
+  app.events.input({ target: search });
+  board.intervals.get(1000)();
+  for (const { handler, delay } of board.timeouts.values()) if (delay === 250) handler();
+  assert.match(board.location.hash, /q=Birch/);
+  assert.match(app.innerHTML, /Birch/);
+  board.setMode("bad"); board.intervals.get(30000)(); await board.settle();
+  assert.match(app.innerHTML, /Birch/);
+  assert.equal(board.nodes.get("fb-stale").hidden, false);
+  assert.match(board.nodes.get("fb-stale").textContent, /refresh failed/i);
+  board.setMode("ok"); board.key("r"); await board.settle();
+  assert.doesNotMatch(board.nodes.get("fb-stale").textContent, /refresh failed/i);
+  await board.navigate("#/epic/cedar");
+  assert.match(app.innerHTML, /Cedar/);
+  app.events.click({ target: { closest: () => ({ getAttribute: () => "worker-cedar" }) }, preventDefault() {} });
+  assert.equal(board.nodes.get("fb-drawer").hidden, false);
+  assert.match(board.nodes.get("fb-drawer").innerHTML, /worker-cedar/);
+  board.intervals.get(30000)(); await board.settle();
+  board.nodes.get("fb-drawer").events.click({ target: { closest: () => true } });
+  assert.equal(board.nodes.get("fb-drawer").hidden, true);
+  board.nodes.get("fb-theme").events.click();
+  assert.equal(board.sandbox.savedTheme, "dark");
+  board.key("t"); assert.equal(board.sandbox.savedTheme, "light");
+  board.nodes.get("fb-help").events.click();
+  assert.equal(board.nodes.get("fb-help-modal").hidden, false);
+  board.nodes.get("fb-help-close").events.click();
+  board.key("?"); board.nodes.get("fb-help-modal").events.click({ target: board.nodes.get("fb-help-modal") });
+  assert.equal(board.nodes.get("fb-help-modal").hidden, true);
+  board.key("?"); board.key("Escape");
+  assert.equal(board.nodes.get("fb-help-modal").hidden, true);
+  board.key("j"); assert.equal(board.document.activeElement.id, "card-one");
+  board.key("j"); assert.equal(board.document.activeElement.id, "card-two");
+  board.key("k"); assert.equal(board.document.activeElement.id, "card-one");
+  board.key("/");
+  for (const { handler, delay } of board.timeouts.values()) if (delay === 50) handler();
+  assert.equal(board.document.activeElement.id, "fb-search");
+  board.key("Escape", { tagName: "INPUT", blur() { search.blur(); } });
+  assert.equal(board.document.activeElement, null);
+  board.key("g"); board.key("p"); assert.equal(board.location.hash, "#/prs");
+  await board.navigate("#/prs"); assert.match(app.innerHTML, /PR pipeline/);
+  board.key("g"); board.key("h"); assert.equal(board.location.hash, "#/home");
+});
+
+test("mounted board reports initial fetch and malformed JSON failures", async () => {
+  const board = mountedBoard();
+  await board.settle();
+  board.setMode("throw"); await board.navigate("#/epic/missing");
+  assert.match(board.nodes.get("fb-app").innerHTML, /could not be read/);
+  board.setMode("invalid-json"); board.key("r"); await board.settle();
+  assert.match(board.nodes.get("fb-app").innerHTML, /could not be read/);
+  assert.equal(board.nodes.get("fb-stale").hidden, false);
 });
