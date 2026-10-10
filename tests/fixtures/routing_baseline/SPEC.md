@@ -2,16 +2,20 @@
 
 ## Codex worker safety-hook overlay (#10305)
 
-`routing-10305.json.gz` replaces only the `adapters` surface, after the
-review-capacity, Gemini and resource-policy overlays. Its `surfaces` key holds
-the host-CLI adapter rows; `no_cli_surfaces` holds the independent no-CLI rows.
-Separate adapter surfaces preserve each configuration's existing binary
-discovery results and construction refusals.
+`routing-10305.json.gz` is a per-row insertion fixture, applied after all earlier
+approved overlays: review-capacity, Claude advisor/launcher help (#10083),
+Gemini and resource-policy. Its `adapter_rows` are exactly `[0, 2, 4, 6]` and
+its `hook_flags` are the five inserted argv tokens. It never replaces complete
+rows or surfaces. The same insertion applies independently to the host-CLI
+and no-CLI baselines, preserving their binary discovery and refusal results.
 
-Both configurations were regenerated against the #10305 implementation using
+Both configurations were freshly captured after merging main into the
+#10305 branch, preserving the implementation at `789610c93a`, using
 the byte-pinned `capture.py` through the test module's scoped `CAPTURE_RUNNER`
-cache, with `--configuration host-cli` and `--configuration no-cli`. Both
-captures change exactly four of the 112 adapter rows:
+cache, with `--configuration host-cli` (the default) and
+`--configuration no-cli`. Extracting the insertion from each changed row
+produces identical flags in both captures. Against the layered approved
+baseline, both captures change exactly four of the 112 adapter rows:
 
 | Row | Agent | Mode | Isolation |
 | --- | --- | --- | --- |
@@ -27,21 +31,31 @@ groups. The `^(Bash|Write|Edit|MultiEdit|apply_patch)$` group runs the tracked
 `scripts/agent_runtime/codex_hook_entry.sh pre-tool-use` through `bash`, with
 timeout 45 and status message `Running Codex tool policy`. The `Bash` group
 runs the tracked shared `guard-public-github-text.py`, with timeout 5. Both
-hooks have type `command`; source paths retain the capture's `<SOURCE_ROOT>`
-normalization. The trust flag admits these tracked non-managed hooks, while
+hooks have type `command`. The literal commands are
+`bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use`
+and
+`"$(git rev-parse --show-toplevel)/agents_extensions/shared/hooks/guard-public-github-text.py"`.
+These Git-rooted commands match the current adapter rather than the older
+absolute-path capture. The trust flag admits these tracked non-managed hooks, while
 the inline binding avoids dependence on deployed project-hook discovery.
 
-Removing exactly those five tokens reproduces each historical row, including
+Removing exactly those five tokens reproduces each layered approved row, including
 all metadata, mode flags, output paths and the final apps disable. Every other
-adapter row, including isolated-review refusals, is unchanged. Fresh captures
+adapter row, including isolated-review refusals, is unchanged. Claude rows
+8, 10, 12, 14, 16, 18, 20 and 22 retain #10083's
+`CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1` override unchanged. Fresh captures
 also reproduce every other approved surface, input matrix and historical
 occurrence artifact unchanged. The historical compressed baselines, capture
 driver and checksum manifests remain byte-identical.
 
 Independent literal digests in `tests/review/test_model_catalog.py` pin the
 overlay and this specification. Its scope test verifies both configurations,
-the exact changed-row denominator, complete hook values and full historical
-row equality after removing only the approved insertion. This fixture proves
+the exact changed-row denominator, complete hook values and full layered
+row equality after removing only the approved insertion. A separate mutation
+test proves unrelated adapter changes survive without mutating the input.
+The scope check rejects the stale whole-surface overlay and its obsolete
+hook commands; independent full captures verify the composed baseline.
+This fixture proves
 invocation construction; runtime hook behavior is checked separately by
 `tests/test_codex_hooks_contract.py`.
 

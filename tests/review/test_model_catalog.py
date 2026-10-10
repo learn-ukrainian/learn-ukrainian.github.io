@@ -108,20 +108,39 @@ RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
 RESOURCE_OVERLAY = json.loads(gzip.decompress(RESOURCE_OVERLAY_PATH.read_bytes()))
 CODEX_OVERLAY_PATH = FIXTURE / "routing-10305.json.gz"
 CODEX_OVERLAY = json.loads(gzip.decompress(CODEX_OVERLAY_PATH.read_bytes()))
-APPROVED_BASELINE = {
-    **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    **CODEX_OVERLAY["surfaces"],
-}
+
+
+def approved_prior_baseline(baseline):
+    """Layer every earlier approved overlay, including #10083, before #10305."""
+    return {
+        **approved_review_baseline(baseline),
+        **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+    }
+
+
+def approved_codex_baseline(baseline):
+    """Insert #10305 hook flags by row without replacing other adapter data."""
+    adapters = deepcopy(baseline["adapters"])
+    for index in CODEX_OVERLAY["adapter_rows"]:
+        cmd = adapters[index]["value"]["cmd"]
+        position = cmd.index("--disable")
+        assert cmd[position:position + 2] == ["--disable", "apps"]
+        cmd[position:position] = CODEX_OVERLAY["hook_flags"]
+    return {**baseline, "adapters": adapters}
+
+
+APPROVED_BASELINE = approved_codex_baseline(approved_prior_baseline(BASELINE))
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
 
 
-@pytest.mark.parametrize("configuration,surface_key", [("host-cli", "surfaces"), ("no-cli", "no_cli_surfaces")])
-def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuration, surface_key):
-    assert set(CODEX_OVERLAY) == {"surfaces", "no_cli_surfaces"}
-    assert set(CODEX_OVERLAY[surface_key]) == {"adapters"}
+@pytest.mark.parametrize("configuration", ["host-cli", "no-cli"])
+def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuration):
+    assert set(CODEX_OVERLAY) == {"adapter_rows", "hook_flags"}
+    assert CODEX_OVERLAY["adapter_rows"] == [0, 2, 4, 6]
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
-    before = json.loads(gzip.decompress(path.read_bytes()))["adapters"]
-    after = CODEX_OVERLAY[surface_key]["adapters"]
+    baseline = approved_prior_baseline(json.loads(gzip.decompress(path.read_bytes())))
+    before = baseline["adapters"]
+    after = approved_codex_baseline(baseline)["adapters"]
     assert len(before) == len(after) == len(INPUTS["adapters"]) == 112
     changed_rows = []
     expected_hooks = [
@@ -129,7 +148,7 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
             "matcher": "^(Bash|Write|Edit|MultiEdit|apply_patch)$",
             "hooks": [{
                 "type": "command",
-                "command": "bash <SOURCE_ROOT>/scripts/agent_runtime/codex_hook_entry.sh pre-tool-use",
+                "command": 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use',
                 "timeout": 45,
                 "statusMessage": "Running Codex tool policy",
             }],
@@ -138,7 +157,7 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
             "matcher": "Bash",
             "hooks": [{
                 "type": "command",
-                "command": "<SOURCE_ROOT>/agents_extensions/shared/hooks/guard-public-github-text.py",
+                "command": '"$(git rev-parse --show-toplevel)/agents_extensions/shared/hooks/guard-public-github-text.py"',
                 "timeout": 5,
             }],
         },
@@ -158,6 +177,23 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
         del cmd[position:position + 5]
         assert restored == old
     assert changed_rows == [0, 2, 4, 6]
+
+
+@pytest.mark.parametrize("configuration", ["host-cli", "no-cli"])
+def test_codex_hook_overlay_preserves_other_adapter_data(configuration):
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    baseline = approved_prior_baseline(json.loads(gzip.decompress(path.read_bytes())))
+    # A future disjoint overlay must survive, including metadata on Codex rows.
+    baseline["adapters"][8]["value"]["env_overrides"]["future_claude_override"] = "preserved"
+    baseline["adapters"][0]["value"]["env_overrides"]["future_codex_override"] = "preserved"
+    original = deepcopy(baseline)
+    updated = approved_codex_baseline(baseline)
+    assert baseline == original
+    assert updated["adapters"][8:] == original["adapters"][8:]
+    assert updated["adapters"][0]["value"]["env_overrides"] == original["adapters"][0]["value"]["env_overrides"]
+    assert {key: value for key, value in updated.items() if key != "adapters"} == {
+        key: value for key, value in original.items() if key != "adapters"
+    }
 
 
 def test_resource_policy_fixture_changes_only_approved_fallback_rows():
@@ -303,10 +339,10 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the historical #10205 fixtures and approved issue
 # overlays for both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "routing-10305.json.gz": "0bd794e7808037ec5b561828fe4e1ba5e10b338b2da31c4e92ec0cd57a7e606c",
+    "routing-10305.json.gz": "e6860a690a9f89e5a55f4f762f926ea4278bed0ae5f21b85e44ed9cd4781c013",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
-    "SPEC.md": "5194f8e73f93673bd63a539768492246fbe125ea13284a73666504c89fd1c4c8",
+    "SPEC.md": "d808f7cef2e75d4da021fb974c9ed3ccc4c32eed25641de742d22696237188dd",
     "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -619,10 +655,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == {
-        **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-        **CODEX_OVERLAY["no_cli_surfaces"],
-    }
+    assert actual == approved_codex_baseline(approved_prior_baseline(original))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
