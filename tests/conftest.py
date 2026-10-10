@@ -29,6 +29,11 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Before any test formats os.environ into captured output.
+from scripts.lib.redacted_environ import install_redacted_environ_repr
+
+install_redacted_environ_repr()
+
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root

@@ -7,6 +7,10 @@ import stat
 import sys
 from pathlib import Path
 
+from scripts.lib.redacted_environ import install_redacted_environ_repr
+
+install_redacted_environ_repr()
+
 # Directory and final-component symlink hops followed while identifying a venv
 # entrypoint. POSIX SYMLOOP_MAX is commonly 40; longer chains fail closed.
 _MAX_SYMLINK_HOPS = 40
