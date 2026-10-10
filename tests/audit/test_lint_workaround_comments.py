@@ -31,5 +31,6 @@ def test_cli_exits_zero_on_this_tree() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
     assert completed.returncode == 0, completed.stdout
