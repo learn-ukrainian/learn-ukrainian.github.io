@@ -2802,7 +2802,8 @@ def _strip_quoted_content(prompt: str) -> str:
     content is data for the worker to critique, not a directive to mutate the
     repository, so it must not trip the read-only gate (#7814 item 6).
     Unterminated bodies and nested-container fences remain visible to both
-    safety checks; only closed top-level fences are removed (#9672).
+    safety checks; only parser-mapped, source-closed top-level fences are
+    removed (#9672), so a container exit cannot hide a later directive.
     """
     without_fences = _without_code_fences(prompt, keep_unclosed=True)
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)

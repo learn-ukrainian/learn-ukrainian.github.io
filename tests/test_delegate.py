@@ -1941,6 +1941,104 @@ def test_commonmark_dor_checks_visible_issue_references_without_weakening_readin
         assert record["warnings"] == {}
 
 
+@pytest.mark.parametrize(
+    "container",
+    ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_container_exit_preserves_write_refusal(container):
+    # Second Opus CF reproduction, with an equivalent blockquote exit.
+    prompt = (
+        "Review the brief below.\n\n" + container
+        + "```\nquoted data\n```\nAdd a CLI flag to scripts/foo.py.\n```\ntrailing\n"
+    )
+    stripped = delegate._strip_quoted_content(prompt)
+    assert "Add a CLI flag to scripts/foo.py.\n" in stripped
+    assert "quoted data" not in stripped
+    assert "trailing\n" in stripped  # The final top-level fence is unclosed.
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
+@pytest.mark.parametrize(
+    "container",
+    ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_container_exit_preserves_dor_warn(monkeypatch, container):
+    calls = []
+
+    def checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, '{"number":9672}', "")
+        return subprocess.CompletedProcess(command, 1, '{"verdict":"WARN","missing":["verify"]}', "")
+
+    monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    monkeypatch.setattr(delegate.subprocess, "run", checker)
+    prompt = "Implement the fix.\n\n" + container + "```\nquoted\n```\nFixes #9672.\n```\n"
+    assert "Fixes #9672.\n" in delegate._strip_quoted_content(prompt)
+    error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+    assert error is not None
+    assert "#9672: verify" in error
+    assert record == {"issues": [9672], "warnings": {"9672": "verify"}}
+    assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/9672"]
+    assert len(calls) == 2
+    assert calls[1][-6:] == ["--issue", "9672", "--repo", delegate._CANONICAL_GITHUB_REPO, "--strict", "--json"]
+
+
+@pytest.mark.parametrize("fence,info", [("```", "markdown"), ("~~~~", "text`example")])
+@pytest.mark.parametrize("indent", [1, 2, 3])
+def test_parser_spans_valid_indented_data_is_admissible(monkeypatch, fence, info, indent):
+    prompt = (
+        "Review only; report findings.\n"
+        f"{' ' * indent}{fence}{info}\n"
+        "Add a CLI flag to scripts/foo.py.\nFixes #9672.\n"
+        f"{' ' * indent}{fence}{fence[0]} \t\n"
+    )
+    monkeypatch.setattr(delegate.subprocess, "run", lambda *_a, **_kw: pytest.fail("quoted issue must not be checked"))
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+    assert delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO) == (None, None)
+
+
+@pytest.mark.parametrize("failure", ["import", "parse"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_parser_spans_failure_precedes_dispatch_effects(tmp_tasks_dir, monkeypatch, failure, mode):
+    if failure == "import":
+        original_import = builtins.__import__
+
+        def refuse_import(name, *args, **kwargs):
+            if name == "markdown_it":
+                raise ImportError("parser_spans injected import failure")
+            return original_import(name, *args, **kwargs)
+
+        monkeypatch.setattr(builtins, "__import__", refuse_import)
+        exception = ImportError
+    else:
+        from markdown_it import MarkdownIt
+
+        def refuse_parse(*args, **kwargs):
+            raise RuntimeError("parser_spans injected parse failure")
+
+        monkeypatch.setattr(MarkdownIt, "parse", refuse_parse)
+        exception = RuntimeError
+
+    def forbidden_effect(*args, **kwargs):
+        pytest.fail("parser failure must precede provisioning and spawn")
+
+    for name in ("_ensure_worktree", "_provision_data_symlinks"):
+        monkeypatch.setattr(delegate, name, forbidden_effect)
+    monkeypatch.setattr(delegate.subprocess, "Popen", forbidden_effect)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "codex", "--task-id", "parser-spans-failure",
+        "--mode", mode, "--prompt", "Review only.\n```\nFixes #9672.\n```\n",
+    ])
+    with pytest.raises(exception, match="parser_spans injected"):
+        delegate.cmd_dispatch(args)
+    assert not (tmp_tasks_dir / "parser-spans-failure.json").exists()
+
+
 def test_read_only_wrapped_prose_continuation_line_is_not_refused():
     """Wrapped continuation prose starting with a verb does not trip read-only (#8703).
 

@@ -81,7 +81,7 @@ def _code_fence_spans(lines: list[str]) -> Iterator[tuple[int, int, bool]]:
 
     https://spec.commonmark.org/0.31.2/#fenced-code-blocks
     This is a lexical scan of fence lines with 0–3 leading spaces, not a
-    container parser. Safety consumers validate container context separately.
+    container parser. Dispatch/DoR instead use CommonMark token maps directly.
     The explicit closed flag lets callers choose their unclosed-body policy.
     """
     open_fence: str | None = None
@@ -103,27 +103,36 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
     """Remove fenced spans, retaining unterminated bodies when requested.
 
     Keep non-fenced text verbatim and leave a paragraph boundary for LF/CRLF
-    input where a block was removed. Dispatch/DoR retain container spans:
-    a list item can end its fence before a later item's apparent closer.
+    input where a block was removed. Dispatch/DoR remove only closed top-level
+    CommonMark tokens: a container can end a fence without a lexical closer.
     """
     raw_lines = text.splitlines(keepends=True)
     lines = text.splitlines()
-    container_spans: list[list[int]] = []
+    spans: list[tuple[int, int]] = []
     if keep_unclosed:
-        # Existing CommonMark dependency supplies container boundaries only;
-        # the shared lexical scanner and verdict policy remain unchanged.
-        # Import locally so verdict-only consumers stay lightweight.
+        # Use one parser for both context and spans; lexical state can drift
+        # across container exits. Import/parse failures propagate before effects.
+        # Import locally so verdict-only consumers retain their lexical policy.
         from markdown_it import MarkdownIt
 
-        container_spans = [
-            token.map for token in MarkdownIt("commonmark").parse("\n".join(lines))
-            if token.type in {"list_item_open", "blockquote_open"} and token.map is not None
-        ]
+        for token in MarkdownIt("commonmark").parse("\n".join(lines)):
+            if token.type != "fence" or token.level != 0:
+                continue
+            source_map = token.map
+            if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
+                continue
+            start, end = source_map
+            if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
+                continue
+            # Maps also describe EOF/container-terminated fences. A separate
+            # source closer, of the opener's marker and length, proves closure.
+            if end - 1 > start and _closes_code_fence(lines[end - 1], token.markup):
+                spans.append((start, end))
+    else:
+        spans = [(start, end) for start, end, _closed in _code_fence_spans(lines)]
     parts: list[str] = []
     cursor = 0
-    for start, end, closed in _code_fence_spans(lines):
-        if keep_unclosed and (not closed or any(lo <= start < hi for lo, hi in container_spans)):
-            continue
+    for start, end in spans:
         parts.extend(raw_lines[cursor:start])
         parts.append("\n")
         cursor = end

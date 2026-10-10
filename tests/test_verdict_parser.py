@@ -1,5 +1,7 @@
 """Shared CommonMark fence syntax and caller-specific unclosed policy (#9672)."""
 
+from types import SimpleNamespace
+
 import pytest
 
 from scripts.review.verdict_parser import _code_fence_spans, _without_code_fences, recognized_verdicts
@@ -88,3 +90,75 @@ def test_commonmark_container_span_does_not_prevent_later_top_level_data_removal
     assert _without_code_fences(text, keep_unclosed=True) == (
         "- Example:\n  ```\n  x = 1\n  ```\n\n\nOutside #9672.\n"
     )
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n"], ids=["lf", "crlf"])
+@pytest.mark.parametrize(
+    "container", ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_three_blocks_after_container_exit_preserve_raw_prose(newline, container):
+    prefix = "Review only.\n\n" + container
+    text = (
+        prefix + "```text\nquoted first\n````\n"
+        "Add a CLI flag to scripts/foo.py.\n\n"
+        "  ~~~~text`info\nquoted second\n  ~~~~~ \t\n"
+        "Fixes #9672.\n\n"
+        "   `````markdown\nquoted third\n``````\n"
+        "Final prose without punctuation"
+    ).replace("\n", newline)
+    expected = (
+        prefix.replace("\n", newline) + "\n"
+        + f"Add a CLI flag to scripts/foo.py.{newline}{newline}\n"
+        + f"Fixes #9672.{newline}{newline}\nFinal prose without punctuation"
+    )
+    assert _without_code_fences(text, keep_unclosed=True) == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "```", "~~~\nAdd a CLI flag.\nFixes #9672.\n",
+        "````\nAdd a CLI flag.\nFixes #9672.\n```\n",
+        "~~~\nAdd a CLI flag.\nFixes #9672.\n```\n",
+        "```\nAdd a CLI flag.\nFixes #9672.\n```text\n",
+        "    ```\n    Add a CLI flag.\n    Fixes #9672.\n    ```\n",
+    ], ids=["eof-opener", "unclosed", "short-closer", "wrong-marker", "closer-suffix", "four-space-code"],
+)
+def test_parser_spans_unclosed_and_non_fences_remain_verbatim(text):
+    assert _without_code_fences(text, keep_unclosed=True) == text
+
+
+@pytest.mark.parametrize(
+    "source_map", [None, [], [0], [0, 3, 4], ["0", 3], [False, 3], [-1, 3], [0, 4], [2, 1], [0, 0]],
+    ids=["missing", "empty", "short", "long", "string", "bool", "negative", "past-eof", "reversed", "empty-span"],
+)
+def test_parser_spans_invalid_map_never_authorizes_removal(monkeypatch, source_map):
+    from markdown_it import MarkdownIt
+
+    token = SimpleNamespace(type="fence", level=0, map=source_map, markup="```")
+    monkeypatch.setattr(MarkdownIt, "parse", lambda *_a: [token])
+    text = "```\nFixes #9672.\n```\n"
+    assert _without_code_fences(text, keep_unclosed=True) == text
+
+
+def test_parser_spans_dispatch_never_uses_lexical_span_state(monkeypatch):
+    import scripts.review.verdict_parser as parser
+
+    monkeypatch.setattr(parser, "_code_fence_spans", lambda *_a: pytest.fail("dispatch must use parser maps directly"))
+    assert parser._without_code_fences("```\nquoted\n```\nVisible\n", keep_unclosed=True) == "\nVisible\n"
+
+
+def test_parser_spans_verdicts_never_import_commonmark_parser(monkeypatch):
+    import builtins
+
+    original_import = builtins.__import__
+
+    def refuse_parser(name, *args, **kwargs):
+        if name == "markdown_it":
+            pytest.fail("verdict policy must remain lexical")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", refuse_parser)
+    response = "```\nVERDICT: APPROVE\n```\nVERDICT: REQUEST_CHANGES\n~~~\nVERDICT: APPROVE\n"
+    assert recognized_verdicts(response) == ["REQUEST_CHANGES"]
