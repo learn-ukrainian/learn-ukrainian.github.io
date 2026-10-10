@@ -623,3 +623,221 @@ def test_echo_of_exported_secret_still_blocked(monkeypatch):
 def test_worker_env_commands_are_blocked(monkeypatch, capsys, cmd):
     assert _run(monkeypatch, cmd) == 2
     assert "worker-env" in capsys.readouterr().err
+
+
+# Audit candidates are detector input only; the shell never executes them.
+AUDIT_NAMES = [
+    "ANTHROPIC_API_KEY",
+    "DAGGER_CLOUD_TOKEN",
+    "GH_TOKEN",
+    "GITHUB_TOKEN",
+    "OPENAI_API_KEY",
+    "ARBITRARY_API_KEY",
+    "ARBITRARY_TOKEN",
+    "ARBITRARY_SECRET",
+    "ARBITRARY_PAT",
+    "CURSOR_API_KEY",
+    "CURSOR_API_TOKEN",
+    "arbitrary_token",
+    "API_KEY",
+    "PASSWORD",
+    "SECRET",
+    "TOKEN",
+    "AWS_SECRET_ACCESS_KEY",
+]
+# (shape, expected exit for a guarded name, expected exit for other names)
+AUDIT_SHAPES = [
+    ('echo "${name}"', 2, 0),
+    ('printf "%s\\n" "${name}"', 2, 0),
+    ("python -c 'import os; print(os.environ[\"{name}\"])'", 2, 0),
+    ("node -e 'console.log(process.env.{name})'", 2, 0),
+    ("env", 2, 2),
+    ("printenv", 2, 2),
+    ("set", 2, 2),
+    ("env | grep {name}", 2, 2),
+    ("printenv {name}", 2, 0),
+    ('echo "${name}" > /dev/null', 2, 0),
+    ("env > /dev/null", 0, 0),
+    ("env > /dev/stdout", 2, 2),
+    ("env > audit-placeholder.txt; cat audit-placeholder.txt", 2, 2),
+    ("cat < .env", 2, 2),
+    ("cat <<EOF\n${name}\nEOF", 2, 0),
+    ("python - <<'PYCODE'\nimport os\nprint(os.environ[\"{name}\"])\nPYCODE", 2, 0),
+    ("cat <<'EOF'\n${name}\nEOF", 0, 0),
+    ("declare -p {name}", 2, 0),
+    ("declare -p", 2, 2),
+    ("export -p", 2, 2),
+    ("cat /proc/self/environ", 2, 2),
+    ("cat /proc/$$/environ", 2, 2),
+    ("set | grep {name}", 2, 2),
+    ("cat .env", 2, 2),
+    ("env | cut -d= -f1", 0, 0),
+    ("cat .env | jq -r '.keys, .{name}'", 2, 2),
+    ("cat .env | grep -o '.*'", 2, 2),
+    ('LEARN_UK_SECRETS_OK=1 echo "${name}"', 0, 0),
+]
+SENTINEL = "synthetic_guard_value_91b8"
+
+
+def _subprocess_guard(command):
+    return subprocess.run(
+        [sys.executable, str(HOOK_PATH)],
+        input=json.dumps({"tool_input": {"command": command}}),
+        text=True,
+        capture_output=True,
+        timeout=10,
+        env={"PATH": "/usr/bin:/bin", "PYTHONDONTWRITEBYTECODE": "1", **dict.fromkeys(AUDIT_NAMES, SENTINEL)},
+    )
+
+
+@pytest.mark.parametrize("name", AUDIT_NAMES)
+@pytest.mark.parametrize("shape,secret_exit,other_exit", AUDIT_SHAPES)
+def test_audit_shapes(name, shape, secret_exit, other_exit):
+    expected = secret_exit if guard._is_secret_var_name(name) else other_exit
+    result = _subprocess_guard(shape.replace("{name}", name))
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == expected
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env | cut -d= -f1",
+        "cat <<'EOF'\n$OPENAI_API_KEY\nEOF",
+        'git commit -m "echo $OPENAI_API_KEY; env | grep OPENAI_API_KEY"',
+        'echo "$HOME"',
+        "echo $PATH",
+        "LEARN_UK_SECRETS_OK=1 env",
+        'git commit -m "document OPENAI_API_KEY handling"',
+        "grep -c API_KEY file",
+        "env -i FOO=bar cmd",
+        "compgen -v",
+        "env > capture.txt",
+        "env | sed 's/=.*//'",
+        "env | awk -F= '{print $1}'",
+        "env | wc -l",
+        "env | cut -d= -f1 | sort | head | tail",
+        "cat .env | jq keys",
+        "cat .env | jq keys_unsorted",
+        "cat .env | jq 'to_entries|map(.key)'",
+        "cat .env | grep -o '^[^=]*'",
+        "python -c 'print(\"OPENAI_API_KEY\")'",
+        "python -c 'import os; print(os.getenv(\"HOME\"))'",
+    ],
+)
+def test_audit_false_positive_controls(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 0
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env | rg ARBITRARY_TOKEN",
+        "env | sed -n '/ARBITRARY_TOKEN/p'",
+        "env | awk '/ARBITRARY_TOKEN/'",
+        "typeset -p ARBITRARY_SECRET",
+        "typeset -p",
+        "declare -px ARBITRARY_PAT",
+        "export -p | head",
+        "env | sort",
+        "env | head",
+        "env | tail",
+        "env | tee dump | cut -d= -f1",
+        "cat /proc/1234/environ",
+        "strings /proc/self/environ",
+        "tr '\\0' '\\n' < /proc/$$/environ",
+        "xargs -0 < /proc/self/environ",
+        "python -c 'print(open(\"/proc/self/environ\").read())'",
+        "cat <<EOF\n${ARBITRARY_SECRET}\nEOF",
+        'cat <<<"$ARBITRARY_PAT"',
+        "python -c 'import os; print(os.getenv(\"ARBITRARY_TOKEN\"))'",
+        "python -c 'import os; k=\"ARBITRARY_SECRET\"; print(os.environ[k])'",
+        "perl -e 'print $ENV{ARBITRARY_TOKEN}'",
+        "ruby -e 'puts ENV[\"ARBITRARY_SECRET\"]'",
+        "node -e 'console.log(process.env[\"ARBITRARY_API_KEY\"])'",
+        "env > /dev/tty",
+        "declare -p > dump; head dump",
+        "env > dump && strings dump",
+        "cat .env | jq '.keys, .[]'",
+        "cat .env | jq 'keys, .[]'",
+        "cat .env | grep -o 'API_KEY=.*'",
+        "env | sed 's/=.*//;p'",
+        "env | awk -F= '{print $0,$1}'",
+        "cat .env | grep -ov KEY",
+    ],
+)
+def test_additional_credential_print_shapes(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "export",
+        "declare",
+        "typeset",
+        "declare -x | grep ARBITRARY_TOKEN",
+        "env > /dev/stderr",
+        "env > /dev/fd/2",
+        "env > dump; python -c 'print(open(\"dump\").read())'",
+        "env > dump; cat ./dump",
+        "env | grep -o -e '^[^=]*' -e '.*'",
+        "cat .env | grep -o --regexp='.*'",
+    ],
+)
+def test_dump_boundary_siblings(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+def test_deny_diagnostic_does_not_echo_candidate_filename():
+    result = _subprocess_guard(f"cat .env.{SENTINEL}")
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "LEARN_UK_SECRETS_OK=1 echo ok; cat <<EOF\n$ARBITRARY_TOKEN\nEOF",
+        'env > dump; bash -c "cat dump"',
+        'env > dump; echo "$(cat dump)"',
+    ],
+)
+def test_dump_boundaries_across_shell_scopes(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "LEARN_UK_SECRETS_OK=1 cat <<EOF\n$ARBITRARY_TOKEN\nEOF",
+        'LEARN_UK_SECRETS_OK=1 cat <<EOF\n$ARBITRARY_TOKEN\nEOF\necho "$HOME"',
+    ],
+)
+def test_override_on_heredoc_owner(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 0
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env -u HOME | grep ARBITRARY_TOKEN",
+        "env | tee /dev/stdout > dump",
+        "env | grep ARBITRARY_TOKEN > dump",
+        "env > dump | cut -d= -f1; cat dump",
+    ],
+)
+def test_redirect_does_not_hide_unsanitized_pipeline(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr

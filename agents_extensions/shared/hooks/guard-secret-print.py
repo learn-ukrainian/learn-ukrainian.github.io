@@ -7,7 +7,10 @@ transcript. Exit 0 (allow) otherwise.
 
 This guard is deliberately narrow. It catches high-confidence dump shapes only:
 
-  - unfiltered `env` / `printenv` / `set`
+  - environment and declaration dumps, named `printenv`, and unsafe filters
+  - inline interpreter environment access and environment pseudo-file reads
+  - expanding here-documents and here-strings
+  - redirected environment dumps displayed later in the same command
   - display commands (`cat`, `bat`, `less`, `head`, `tail`) reading known
     secret files
   - `grep` / `rg` / `ugrep` reading dotenv-style secret files without a
@@ -21,7 +24,8 @@ message from becoming false positives. External file lists (for example,
 ``xargs cat < list``) and copies whose destination is read later (for example,
 ``cp .env x; cat x``), as well as values loaded by ``source .env`` or
 ``. .env`` and printed later, are not modeled. This is defense-in-depth,
-not a sandbox.
+not a sandbox. Arbitrary programs cannot be analysed; interpreter checks cover
+only obvious inline environment access and environment pseudo-file reads.
 """
 
 from __future__ import annotations
@@ -46,13 +50,16 @@ try:
         split_quote_preserving,
         strip_skippable_heredoc_bodies,
     )
+    from shell_shlex import (
+        _quote_after as shell_quote_after,
+    )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
 SEPARATORS = {"&&", "||", ";", "&", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
-ENV_DUMP_COMMANDS = {"env", "printenv", "set"}
+ENV_DUMP_COMMANDS = {"env", "printenv", "set", "declare", "export", "typeset"}
 GREP_COMMANDS = {"grep", "rg", "ugrep"}
 SAFE_DOTENV_SUFFIXES = (".example", ".sample", ".template", ".dist")
 KNOWN_SECRET_VARS = {
@@ -179,7 +186,9 @@ def _tokenize(command: str) -> list[str]:
         return [
             part
             for token in restored
-            for part in (re.findall(r"[^\n]+|\n", token) if "\n" in token and set(token) <= set("();&|<>\n") else [token])
+            for part in (
+                re.findall(r"[^\n]+|\n", token) if "\n" in token and set(token) <= set("();&|<>\n") else [token]
+            )
         ]
     except ValueError:
         return ["__UNDECIDABLE_SECRET_COMMAND__"]
@@ -403,7 +412,7 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             i += 1
         if i >= len(seg):
             return None
-        wrapper = _strip_quotes(seg[i])
+        wrapper = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
         if wrapper in {"sudo", "time", "nohup", "exec", "builtin", "command"}:
             i += 1
             if wrapper == "command":
@@ -429,6 +438,8 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             j = i + 1
             while j < len(seg):
                 token = _strip_quotes(seg[j])
+                if _redirection_skip_count(token) or token.isdigit():
+                    return "env", seg[i + 1 :], i
                 if _is_assignment(seg[j]):
                     j += 1
                 elif token in {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"} and j + 1 < len(seg):
@@ -449,7 +460,7 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
     if i >= len(seg):
         return None
 
-    cmd = _strip_quotes(seg[i])
+    cmd = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
     if cmd == "busybox" and i + 1 < len(seg) and _strip_quotes(seg[i + 1]) == "sh":
         return "sh", seg[i + 2 :], i + 1
     return cmd, seg[i + 1 :], i
@@ -575,61 +586,207 @@ def _has_short_flag(args: list[str], flag: str) -> bool:
     return False
 
 
+def _grep_is_key_only(args: list[str]) -> bool:
+    """Accept only anchored patterns that cannot consume an equals or value."""
+    if not (_has_short_flag(args, "o") or "--only-matching" in args):
+        return False
+    if _has_short_flag(args, "v") or "--invert-match" in args:
+        return False
+    clean = [_strip_quotes(arg) for arg in args]
+    patterns = []
+    index = 0
+    while index < len(clean):
+        token = clean[index]
+        if token in {"-e", "--regexp"} and index + 1 < len(clean):
+            patterns.append(clean[index + 1])
+            index += 2
+            continue
+        if token.startswith("--regexp="):
+            patterns.append(token.split("=", 1)[1])
+        elif token.startswith("-e") and len(token) > 2:
+            patterns.append(token[2:])
+        elif token.startswith("-"):
+            if token in {"-f", "--file"} or token.startswith(("--file=", "-f")):
+                return False
+        elif not patterns:
+            patterns.append(token)
+        index += 1
+    return bool(patterns) and all(pattern in {"^[^=]*", "^[^=]+", "^[A-Za-z_][A-Za-z0-9_]*"} for pattern in patterns)
+
+
 def _is_safe_transform(seg: list[str]) -> bool:
     command = _command_at(seg)
     if command is None:
         return False
     cmd, args, _idx = command
+    clean = [_strip_quotes(arg) for arg in args]
     if cmd == "cut":
         return _cut_is_key_only(args)
     if cmd == "jq":
-        return any("keys" in _strip_quotes(arg) for arg in args)
+        programs = [arg for arg in clean if not arg.startswith("-")]
+        return len(programs) == 1 and re.sub(r"\s+", "", programs[0]) in {
+            "keys",
+            "keys_unsorted",
+            "to_entries|map(.key)",
+            "[to_entries[]|.key]",
+        }
     if cmd == "wc":
-        return True
+        return clean in [["-l"], ["--lines"]]
     if cmd in GREP_COMMANDS:
-        return _has_short_flag(args, "o") or any(_strip_quotes(arg) == "--only-matching" for arg in args)
+        return _grep_is_key_only(args)
     if cmd == "sed":
-        return any("=.*//" in _strip_quotes(arg) or "=.*$//" in _strip_quotes(arg) for arg in args)
+        return clean in [["s/=.*//"], ["s/=.*$//"], ["-e", "s/=.*//"], ["-e", "s/=.*$//"]]
     if cmd == "awk":
-        joined = " ".join(_strip_quotes(arg) for arg in args)
-        return "-F=" in joined and "$1" in joined and "$2" not in joined
+        return len(clean) == 2 and clean[0] == "-F=" and re.sub(r"\s+", "", clean[1]) == "{print$1}"
     return False
 
 
 def _has_safe_downstream(pipeline: list[list[str]], seg_index: int) -> bool:
-    return any(_is_safe_transform(seg) for seg in pipeline[seg_index + 1 :])
+    # A later transform cannot undo a value already copied by tee or xargs.
+    return len(pipeline) > seg_index + 1 and _is_safe_transform(pipeline[seg_index + 1])
 
 
-def _is_obvious_passthrough(seg: list[str]) -> bool:
-    command = _command_at(seg)
-    if command is None:
-        return False
-    cmd, _args, _idx = command
-    return cmd in {"bat", "cat", "head", "less", "more", "sort", "tail", "tee"}
+def _without_redirects(args: list[str]) -> list[str]:
+    result = []
+    index = 0
+    while index < len(args):
+        skip = _redirection_skip_count(_strip_quotes(args[index]))
+        if skip:
+            if result and result[-1].isdigit():
+                result.pop()
+            index += skip
+        else:
+            result.append(_strip_quotes(args[index]))
+            index += 1
+    return result
 
 
-def _has_obvious_passthrough_downstream(pipeline: list[list[str]], seg_index: int) -> bool:
-    return any(_is_obvious_passthrough(seg) for seg in pipeline[seg_index + 1 :])
+def _stdout_target(args: list[str]) -> str | None:
+    target = None
+    for index, token in enumerate(args[:-1]):
+        if token in {">", ">>", ">|", "&>", "&>>"}:
+            if index and args[index - 1].isdigit() and args[index - 1] != "1":
+                continue
+            target = _strip_quotes(args[index + 1])
+    return target
 
 
-def _env_dump_reason(pipeline: list[list[str]]) -> str | None:
-    command = _command_at(pipeline[0])
+def _env_source_reason(segment: list[str]) -> str | None:
+    command = _command_at(segment)
     if command is None:
         return None
-    cmd, args, _idx = command
+    cmd, raw_args, _idx = command
     if cmd not in ENV_DUMP_COMMANDS:
         return None
-    if cmd in {"printenv", "set"} and args:
+    args = _without_redirects(raw_args)
+    if cmd == "printenv":
+        names = [arg for arg in args if not arg.startswith("-")]
+        if names and not any(_is_secret_var_name(name) for name in names):
+            return None
+    elif cmd == "set" and args:
         return None
-    if cmd == "env" and any(not _is_assignment(arg) for arg in args):
-        # `env FOO=bar` with no command is still a dump; env options are
-        # uncommon in this workflow, so uncertain forms are allowed.
+    elif cmd in {"declare", "export", "typeset"}:
+        names = [arg for arg in args if not arg.startswith("-")]
+        if names and not _has_short_flag(args, "p"):
+            return None
+        if names and not any(_is_secret_var_name(name) for name in names):
+            return None
+    return f"`{cmd}` would print shell environment values"
+
+
+def _env_dump_reason(pipeline: list[list[str]], dumped_files: set[str]) -> str | None:
+    for index, segment in enumerate(pipeline):
+        reason = _env_source_reason(segment)
+        if not reason or _has_override(segment):
+            continue
+        found = _command_at(segment)
+        target = _stdout_target(found[1]) if found else None
+        if not target:
+            if _has_safe_downstream(pipeline, index):
+                continue
+            return reason
+        visible = target in {"/dev/stdout", "/dev/stderr", "/dev/tty"} or bool(
+            target and re.fullmatch(r"/(?:dev/fd|proc/(?:self|\$\$|[0-9]+)/fd)/[0-9]+", target)
+        )
+        if target and not visible:
+            if target != "/dev/null":
+                dumped_files.add(os.path.normpath(target))
+            continue
+        return reason
+    return None
+
+
+def _program_reason(cmd: str, program: str) -> str | None:
+    if _is_python_command(cmd):
+        accesses_env = bool(re.search(r"\bos\s*\.\s*(?:environ|getenv)\b", program))
+    elif cmd == "node":
+        accesses_env = bool(re.search(r"\bprocess\s*\.\s*env\b", program))
+    elif cmd == "perl":
+        accesses_env = bool(re.search(r"\$ENV\s*\{", program))
+    elif cmd == "ruby":
+        accesses_env = bool(re.search(r"\bENV\s*\[", program))
+    else:
         return None
-    if _has_safe_downstream(pipeline, 0):
+    if accesses_env and any(_is_secret_var_name(name) for name in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", program)):
+        return "inline program can expose a secret environment value"
+    if re.search(r"/proc/(?:self|\$\$|[0-9]+)/environ\b", program):
+        return "inline program can read environment values"
+    return None
+
+
+def _inline_program_reason(segment: list[str], dumped_files: set[str]) -> str | None:
+    found = _command_at(segment)
+    if not found:
         return None
-    if len(pipeline) > 1 and not _has_obvious_passthrough_downstream(pipeline, 0):
-        return None
-    return f"`{cmd}` would print the full shell environment"
+    cmd, args, _ = found
+    flag = "-c" if _is_python_command(cmd) else "-e"
+    for index, token in enumerate(args[:-1]):
+        if _strip_quotes(token) == flag:
+            program = _strip_quotes(args[index + 1])
+            reason = _program_reason(cmd, program)
+            if reason:
+                return reason
+            if _is_python_command(cmd) and re.search(r"\b(?:open|read_text|read_bytes)\s*\(", program):
+                paths = re.findall(r"[\"']([^\"']+)[\"']", program)
+                if any(os.path.normpath(path) in dumped_files for path in paths):
+                    return "inline program would display a redirected environment dump"
+    return None
+
+
+def _heredoc_reason(command: str, copied: set[str], named: dict[str, str]) -> str | None:
+    """Inspect closed here-doc bodies before the shared parser removes them."""
+    lines = _collapse_shell_line_continuations(command).split("\n")
+    index = 0
+    quote = ""
+    while index < len(lines):
+        opener = _strip_shell_comments(lines[index])
+        index += 1
+        pending = skippable_heredoc_delimiters(opener, initial_quote=quote)
+        quote = shell_quote_after(opener, quote)
+        if not pending:
+            continue
+        pipelines = _pipelines(opener)
+        segments = [segment for pipeline in pipelines for segment in pipeline]
+        owners = [segment for segment in segments for token in segment if token in {"<<", "<<-"}]
+        for body_index, (delimiter, strip_tabs, quoted) in enumerate(pending):
+            start = index
+            while index < len(lines) and (lines[index].lstrip("\t") if strip_tabs else lines[index]) != delimiter:
+                index += 1
+            body = "\n".join(lines[start:index])
+            index += 1
+            owner = owners[body_index] if body_index < len(owners) else []
+            if _has_override(owner):
+                continue
+            if not quoted and _expanded_secret_var('"' + body + '"', copied, named):
+                return "expanding here-document can expose a secret value"
+            found = _command_at(owner)
+            if found:
+                cmd, args, _ = found
+                if _is_python_command(cmd) and (not args or "-" in args or "<<" in args or "<<-" in args):
+                    reason = _program_reason(cmd, body)
+                    if reason:
+                        return reason
+    return None
 
 
 def _is_python_command(command: str) -> bool:
@@ -665,7 +822,7 @@ def _display_file_reason(pipeline: list[list[str]], seg_index: int, copied: set[
         operator = _strip_quotes(arg)
         source = args[index + 1]
         if operator == "<" and _is_known_secret_file(source) and not _has_safe_downstream(pipeline, seg_index):
-            return f"`{cmd}` would print known secret file `{_strip_quotes(source)}`"
+            return f"`{cmd}` would print a known secret file"
         if operator == "<<<":
             name = _expanded_secret_var(source, copied)
             if name and not _has_safe_downstream(pipeline, seg_index):
@@ -674,7 +831,7 @@ def _display_file_reason(pipeline: list[list[str]], seg_index: int, copied: set[
         if _is_known_secret_file(arg):
             if _has_safe_downstream(pipeline, seg_index):
                 return None
-            return f"`{cmd}` would print known secret file `{_strip_quotes(arg)}`"
+            return f"`{cmd}` would print a known secret file"
     return None
 
 
@@ -720,9 +877,7 @@ def _redirection_skip_count(token: str) -> int:
 
 
 def _grep_has_safe_flag(cmd: str, args: list[str]) -> bool:
-    if _has_short_flag(args, "o") or any(_strip_quotes(arg) == "--only-matching" for arg in args):
-        return True
-    if _has_short_flag(args, "v") or any(_strip_quotes(arg) == "--invert-match" for arg in args):
+    if _grep_is_key_only(args):
         return True
     return cmd in {"grep", "ugrep"} and (
         _has_short_flag(args, "L") or any(_strip_quotes(arg) == "--files-without-match" for arg in args)
@@ -786,7 +941,7 @@ def _grep_reason(pipeline: list[list[str]], seg_index: int) -> str | None:
         return None
     for arg in _grep_file_args(args):
         if _is_dotenv_secret_file(arg):
-            return f"`{cmd}` would print values from secret file `{_strip_quotes(arg)}`"
+            return f"`{cmd}` would print values from a secret file"
     return None
 
 
@@ -843,19 +998,35 @@ def _track_secret_copies(seg: list[str], copied: set[str], named: dict[str, str]
                 named.pop(name, None)
 
 
-def _danger_reason(pipeline: list[list[str]], copied: set[str], named: dict[str, str]) -> str | None:
+def _danger_reason(
+    pipeline: list[list[str]], copied: set[str], named: dict[str, str], dumped_files: set[str]
+) -> str | None:
     if not pipeline or _has_override(pipeline[0]):
         return None
 
-    reason = _env_dump_reason(pipeline)
+    reason = _env_dump_reason(pipeline, dumped_files)
     if reason:
         return reason
 
     for i, segment in enumerate(pipeline):
+        found = _command_at(segment)
+        if found:
+            cmd, args, _ = found
+            readers = DISPLAY_FILE_COMMANDS | GREP_COMMANDS | {"strings", "tr", "xargs", "sed", "awk"}
+            if cmd in readers or _is_python_command(cmd):
+                for arg in args:
+                    path = _strip_quotes(arg)
+                    if re.fullmatch(r"/proc/(?:self|\$\$|[0-9]+)/environ", path):
+                        return "command can read environment values"
+                    if os.path.normpath(path) in dumped_files:
+                        return "command would display a redirected environment dump"
+        reason = _inline_program_reason(segment, dumped_files)
+        if reason:
+            return reason
         for index, token in enumerate(segment[:-1]):
             source = segment[index + 1]
             if token == "<" and _is_known_secret_file(source):
-                return f"input redirection would read known secret file `{_strip_quotes(source)}`"
+                return "input redirection would read a known secret file"
             if token == "<<<" and _expanded_secret_var(source, copied, named):
                 found = _command_at(segment)
                 if found and found[0] != "read":
@@ -988,16 +1159,28 @@ def _shell_script(args: list[str]) -> list[str]:
     return []
 
 
-def _scan_command(command: str, copied: set[str], named: dict[str, str] | None = None, *, depth: int = 0) -> str | None:
+def _scan_command(
+    command: str,
+    copied: set[str],
+    named: dict[str, str] | None = None,
+    *,
+    depth: int = 0,
+    dumped_files: set[str] | None = None,
+) -> str | None:
     if depth >= 12:
         return "shell recursion limit reached while scanning for secret output"
     if named is None:
         named = {}
+    reason = _heredoc_reason(command, copied, named)
+    if reason:
+        return reason
+    if dumped_files is None:
+        dumped_files = set()
     executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
     # Scan the complete text first: shlex may expose a separator inside a
     # substitution as a top-level token, but Bash executes its whole body.
     for body in _substitution_bodies(executable):
-        reason = _scan_command(body, set(copied), dict(named), depth=depth + 1)
+        reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=set(dumped_files))
         if reason:
             return reason
     # _pipelines tokenizes and strips here-doc bodies itself. Passing the
@@ -1006,10 +1189,10 @@ def _scan_command(command: str, copied: set[str], named: dict[str, str] | None =
     for pipeline in _pipelines(command):
         for segment in pipeline:
             for body in _substitution_bodies(" ".join(segment)):
-                reason = _scan_command(body, set(copied), dict(named), depth=depth + 1)
+                reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=set(dumped_files))
                 if reason:
                     return reason
-        reason = _danger_reason(pipeline, copied, named)
+        reason = _danger_reason(pipeline, copied, named, dumped_files)
         if reason:
             return reason
         for segment in pipeline:
@@ -1023,13 +1206,19 @@ def _scan_command(command: str, copied: set[str], named: dict[str, str] | None =
                 if any(_substitution_bodies(arg) for arg in args) and _eval_secret_source(args, copied, named):
                     return "dynamic eval can reach a known secret source"
                 reason = _scan_command(
-                    " ".join(_strip_quotes(arg) for arg in args), set(copied), dict(named), depth=depth + 1
+                    " ".join(_strip_quotes(arg) for arg in args),
+                    set(copied),
+                    dict(named),
+                    depth=depth + 1,
+                    dumped_files=set(dumped_files),
                 )
                 if reason:
                     return reason
             elif cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
                 for script in _shell_script(args):
-                    reason = _scan_command(script, set(copied), dict(named), depth=depth + 1)
+                    reason = _scan_command(
+                        script, set(copied), dict(named), depth=depth + 1, dumped_files=set(dumped_files)
+                    )
                     if reason:
                         return reason
     return None
