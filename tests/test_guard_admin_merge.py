@@ -688,3 +688,35 @@ def test_admin_unknown_cd_cannot_reach_checks(monkeypatch):
         sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": 'cd "$P"; gh pr merge 5 --admin'}}))
     )
     assert guard.main() == 2
+
+
+# --- dynamic command construction (prefilter bypass) ------------------------
+# The raw-text prefilter must not accept an admin merge whose guarded words only exist
+# after expansion. Each shape is refused by the parser (fail-closed), before any gh lookup.
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "A=ad; B=min; gh pr merge 5 --$A$B",
+        "G=gh; A=ad; B=min; $G pr merge 5 --$A$B",
+        'P=pr; M=merge; G=g; H=h; eval "$G$H $P $M 5 --admin"',
+        "$(echo g)h $(echo p)r $(echo mer)ge 5 --$(echo ad)min",
+        "G=g; H=h; N=ge; timeout -s KILL 5 $G$H pr mer$N 5 --admin",
+        "G=g;H=h;P=p;R=r;N=ge;M=mer; $G$H $P$R $M$N 5 --admin",
+    ],
+)
+def test_dynamic_admin_merge_is_refused_before_lookup(monkeypatch, capsys, command):
+    monkeypatch.setattr(
+        guard, "_failing_blocking_checks", lambda *a, **k: pytest.fail("unreadable merge reached lookup")
+    )
+    assert _run(monkeypatch, command) == 2
+    assert "cannot be read" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "command",
+    ['echo "$HOME" && ls -la', "printf '%s\\n' \"$FOO\"", "timeout 600 .venv/bin/python -m pytest $X"],
+)
+def test_expansion_without_merge_words_is_not_refused_as_admin(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0

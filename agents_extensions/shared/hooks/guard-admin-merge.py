@@ -31,6 +31,30 @@ import subprocess
 import sys
 
 
+def _expansion_may_build_words(probe: str) -> bool:
+    """Whether an expansion could assemble the guarded words at run time.
+
+    Variables and substitutions can spell `gh`, `pr merge` or `--admin` without those
+    words appearing in the raw text (`G=gh; $G pr merge 5 --$A$B`), so such commands must
+    reach the parser. Plain data expansions (`printf %s "$FOO"`) stay on the fast path.
+    """
+    if not re.search(r"[$`]", probe):
+        return False
+    if re.search(r"\$\(|`", probe):  # command substitution yields arbitrary words
+        return True
+    if re.search(r"\beval\b|(?:^|\s)-[a-zA-Z]*c\b", probe):  # dynamic payloads are re-read
+        return True
+    # expansion as the command name, directly or behind a wrapper's own options (`timeout 5 $G$H`)
+    if re.search(
+        r"(?:^|[;&|(\n])\s*(?:(?:timeout|nice|nohup|exec|command|builtin|time|sudo|xargs|env)"
+        r"(?:\s+-\S+(?:\s+[A-Za-z]+)?|\s+[\d.]+[smhd]?|\s+\w+=\S+)*\s+)?!?\s*\$",
+        probe,
+    ):
+        return True
+    names = re.findall(r"(?:^|[\s;&|(])([A-Za-z_]\w*)=", probe)
+    return any(re.search(r"\$\{?" + re.escape(name) + r"\b", probe) for name in names)
+
+
 def _may_guard(command: str) -> bool:
     # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
     # This is only a conservative prefilter; the pinned AST decides execution.
@@ -44,6 +68,8 @@ def _may_guard(command: str) -> bool:
     except ValueError:
         return True  # unreadable escape: let the full parser refuse it
     probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
+    if _expansion_may_build_words(probe):
+        return True
     return bool(
         ("git" in re.sub(r"\$git\b", "", probe) and re.search(r"\b(?:checkout|switch|branch)\b", probe))
         or (("gh" in probe or re.search(r"\bpr\s+merge\b", probe)) and "--admin" in probe)

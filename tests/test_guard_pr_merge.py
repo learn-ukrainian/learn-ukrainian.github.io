@@ -2258,3 +2258,31 @@ def test_issue_9480_consecutive_cd_matches_bash(monkeypatch, tmp_path, suffix):
     )
     assert oracle.returncode == 0
     assert _judged_cwds(monkeypatch, command) == [("5", oracle.stdout.strip())]
+
+
+# --- dynamic command construction (prefilter bypass) ------------------------
+# A merge whose `gh`, `pr` or `merge` words exist only after expansion must not clear the
+# raw-text prefilter. The parser refuses it, so no PR lookup happens.
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "A=ad; B=min; gh pr merge 5 --$A$B",
+        "G=gh; $G pr merge 5",
+        'G=g; H=h; eval "$G$H pr merge 5"',
+        'P=pr; M=merge; G=g; H=h; eval "$G$H $P $M 5"',
+        'G=g; H=h; P=p; N=ge; M=mer; eval "$G$H $P $M$N 5"',
+        "G=g;H=h;P=p;R=r;N=ge;M=mer; $G$H $P$R $M$N 5",
+        "$(echo g)h $(echo p)r $(echo mer)ge 5",
+        "G=g; H=h; N=ge; timeout -s KILL 5 $G$H pr mer$N 5",
+    ],
+)
+def test_dynamic_merge_is_refused_before_lookup(monkeypatch, capsys, command):
+    monkeypatch.setattr(guard, "_pr_ref", lambda *a, **k: pytest.fail("unreadable merge reached lookup"))
+    assert _run(monkeypatch, command) == 2
+    assert "cannot be read" in capsys.readouterr().err
+
+
+def test_wrapped_command_with_expansion_argument_is_not_refused(monkeypatch):
+    assert _run(monkeypatch, "timeout 600 .venv/bin/python -m pytest $X") == 0
