@@ -5,7 +5,7 @@ Scheduled and nightly workflows call this as their last step (shared composite a
 failing workflow (or per failing test group when JUnit reports are given). A green run
 closes the issues it owns. Owners come from the path-to-lane map in
 ``.github/nightly-owners.json``. Every issue carries the ``nightly-failure`` label and a
-``lane:<name>`` label.
+``lane:<name>`` label (GitHub creates a missing label on issue creation).
 """
 
 from __future__ import annotations
@@ -13,11 +13,15 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
 
 LABEL = "nightly-failure"
 TITLE_PREFIX = "[nightly]"
@@ -27,8 +31,8 @@ Runner = Callable[[Sequence[str]], str]
 
 
 def gh(args: Sequence[str]) -> str:
-    return subprocess.run(["gh", *args], check=True, capture_output=True, text=True,
-                          timeout=60).stdout
+    return github_client.run(["gh", *args], fresh=True, check=True, capture_output=True,
+                             text=True, timeout=60).stdout
 
 
 def load_owners(path: Path) -> dict:
@@ -102,8 +106,6 @@ def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
             run(["issue", "comment", str(existing[title]), "--body", body])
             actions.append(f"comment #{existing[title]} {title}")
         else:
-            for label in (LABEL, f"lane:{lane}"):
-                run(["label", "create", label, "--force", "--description", "Nightly failure routing"])
             run(["issue", "create", "--title", title, "--label", LABEL, "--label", f"lane:{lane}",
                  "--body", body])
             actions.append(f"create {title}")
