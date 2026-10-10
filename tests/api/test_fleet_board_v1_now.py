@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ast
+import inspect
 import json
 from datetime import UTC, datetime
 
@@ -947,6 +949,18 @@ def test_delegate_health_does_not_interpret_rows(monkeypatch: pytest.MonkeyPatch
     source = activity_mod.load_delegate_health()
     assert source.status == status
     assert source.name == "delegate"
+
+
+def test_respond_has_no_unreachable_statements_after_return() -> None:
+    tree = ast.parse(inspect.getsource(router_mod.respond))
+    for node in ast.walk(tree):
+        for field in ("body", "orelse", "finalbody"):
+            statements = getattr(node, field, [])
+            if not isinstance(statements, list):
+                continue
+            for index, statement in enumerate(statements):
+                if isinstance(statement, ast.Return):
+                    assert index == len(statements) - 1, "Unreachable statement after return"
 
 
 @pytest.mark.parametrize("path,schema_id", [("epics/alpha", "fleet.v1.epic"),

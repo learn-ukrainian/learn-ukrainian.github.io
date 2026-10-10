@@ -108,9 +108,6 @@ def respond(
     try:
         chosen = _sources() if sources is None else tuple(sources)
         return envelope(name, data, chosen)
-
-
-        return envelope(name, data, _sources() if sources is None else sources)
     except Exception:
         try:
             generated_at = utc_timestamp()
