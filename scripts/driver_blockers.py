@@ -21,7 +21,8 @@ UNKNOWN_SUMMARY = "none recorded (unknown: treat every current blocker as unrepo
 USAGE_RULE = (
     "Put every owned blocker in --current with complete: true; run "
     '`.venv/bin/python -m scripts.driver_blockers delta --epic "$SESSION_EPIC" --current blockers.json`; '
-    "post each item that is not UNCHANGED; if delta fails or the baseline is unknown, post everything currently blocking; "
+    "post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with an explicit resolution marker (e.g. RESOLVED <id>) on its own line; "
+    "if delta fails or the baseline is unknown, post everything currently blocking; "
     "after the post succeeds, record with the receipt and the exact posted body using "
     '`.venv/bin/python -m scripts.driver_blockers record --epic "$SESSION_EPIC" --current blockers.json '
     "--receipt receipt.json --body-file posted.md --expect-generation N` (N is the generation from delta)."
@@ -219,6 +220,16 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
             if _timestamp(anchor["created_at"]) <= _timestamp(old["created_at"]):
                 raise ValueError("receipt created_at must be later than recorded anchor")
         posted_text = posted
+        current_ids = {it["id"] for it in observation["items"]}
+        active_pattern = (
+            re.compile(rf"(?<![A-Za-z0-9_.-])(?:{'|'.join(re.escape(cid) for cid in current_ids)})(?![A-Za-z0-9_.-])")
+            if current_ids
+            else None
+        )
+        marker_pattern = re.compile(
+            r"(?i)(?<![A-Za-z0-9_.-])(?:resolved|cleared|fixed|closed|done|unblocked)(?![A-Za-z0-9_.-])"
+        )
+        negation_pattern = re.compile(r"(?i)(?<![A-Za-z0-9_.-])(?:not|no|never)\s+$")
         for item in delta["items"]:
             if item["class"] == "UNCHANGED":
                 continue
@@ -228,7 +239,7 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
                 line for line in posted_text.splitlines() if re.search(id_pattern, line)
             ]
             if not matching_lines:
-                raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
+                raise ValueError(f"posted body omits {item['class']} item id {item_id!r} verbatim")
             if item["class"] in {"NEW", "CHANGED"}:
                 item_values = [v for k, v in item.items() if k != "class"]
                 line_matched = any(
@@ -239,15 +250,25 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
                     for line in matching_lines
                 )
                 if not line_matched:
-                    raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
+                    raise ValueError(
+                        f"posted body omits required fields for {item['class']} item {item_id!r} on the same line"
+                    )
             elif item["class"] == "RESOLVED":
-                marker_regex = r"(?i)\b(?:resolved|cleared|fixed|closed|done|unblocked)\b"
-                line_matched = any(
-                    bool(re.search(marker_regex, re.sub(id_pattern, "", line, count=1)))
-                    for line in matching_lines
-                )
+                line_matched = False
+                for line in matching_lines:
+                    if active_pattern and active_pattern.search(line):
+                        continue
+                    line_without_id = re.sub(id_pattern, " ", line)
+                    for match in marker_pattern.finditer(line_without_id):
+                        if not negation_pattern.search(line_without_id[:match.start()]):
+                            line_matched = True
+                            break
+                    if line_matched:
+                        break
                 if not line_matched:
-                    raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
+                    raise ValueError(
+                        f"posted body omits an un-negated resolution marker for RESOLVED item {item_id!r} on a non-active line"
+                    )
         updated = {
             "epic": epic,
             "generation": expect_generation + 1,
@@ -278,8 +299,9 @@ No command sends a message. Input files are bounded to 1 MiB, never clipped.
 Current: exactly {"epic":"infra","complete":true,"items":[...]}; each item has
 exactly five non-empty strings: id, state, owner, waits_on, action. Receipt:
 Fleet Comms JSON with recipient="cto", message_id, content_sha256, created_at
-(ISO-8601 with timezone). BODY is the exact UTF-8 posted body: include every
-field value of each non-UNCHANGED item and every RESOLVED id verbatim.
+(ISO-8601 with timezone). BODY is the exact UTF-8 posted body: post each
+non-UNCHANGED item with all its fields on one line, and each RESOLVED item with
+an explicit resolution marker (e.g. RESOLVED <id>) on its own line.
 Exit codes: 0 success; 1 invalid/unreadable data or rejected record (no classes
 on delta failure, previous ledger untouched); 2 invalid/missing CLI arguments.
 Related: scripts.driver_state; issue #10362, epic #7919.

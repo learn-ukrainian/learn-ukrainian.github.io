@@ -74,7 +74,7 @@ if [ -n "${GROK_AGENT:-}" ] || [ "${SESSION_HANDOFF_AGENT:-}" = "grok" ] \
   if [ -n "${SESSION_EPIC:-}" ]; then
     _grok_ctx="${_grok_ctx}
   - Continue from file handoff / fleet-comms for epic ${SESSION_EPIC}; do not re-scan curriculum state.
-  - Epic blocker delta: Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
+  - Epic blocker delta: Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with an explicit resolution marker (e.g. RESOLVED <id>) on its own line; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
   fi
   emit_context "$_grok_ctx"
   exit 0
@@ -134,12 +134,12 @@ source "$1" && launcher_selector_stream "$2"
           -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" --stream "$HYDRATION_STREAM" 2>&1) \
           || HYDRATION_RC=$?
       fi
-      DELTA_RULE="Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
+      DELTA_RULE="Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with an explicit resolution marker (e.g. RESOLVED <id>) on its own line; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
       if [ "$HYDRATION_RC" -eq 0 ]; then
         # The lane goal file is the operator-maintained state; a stream boundary
         # can lag behind it, so the goal file wins when the two disagree.
         GOAL_REL=".claude/${SESSION_EPIC}-epic/DRIVER-STATE.md"
-        DELTA_RULE="Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
+        DELTA_RULE="Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with an explicit resolution marker (e.g. RESOLVED <id>) on its own line; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
         if [ -f "$PROJECT_DIR/$GOAL_REL" ]; then
           BOUNDARY_RULE="Lane goal file: $GOAL_REL. It outranks the capsule's next_drive_boundary: where they conflict, follow the goal file and record a corrected next_action in the stream. Native Codex still owns compaction."
         else
@@ -215,7 +215,7 @@ KEY REMINDERS:
   - MEMORY: \$HOME/.claude/projects/$CLAUDE_PROJECT_KEY/memory/MEMORY.md"
 if [ -n "${SESSION_EPIC:-}" ]; then
   CONTEXT="$CONTEXT
-  - Epic blocker delta: Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
+  - Epic blocker delta: Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with an explicit resolution marker (e.g. RESOLVED <id>) on its own line; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
 fi
 
 emit_context "CONTEXT RESTORED AFTER COMPACTION:$CONTEXT"

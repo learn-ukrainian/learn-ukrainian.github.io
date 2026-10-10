@@ -347,7 +347,7 @@ def test_record_rejects_partial_substring_token_matches(ledger):
     before = ledger.read_bytes()
     # 1. "resolved" (RESOLVED) item id embedded in word "unresolved"
     body1 = b"Status is unresolved at this time"
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(ValueError, match="posted body omits RESOLVED item id 'resolved' verbatim"):
         blockers.record(
             ledger,
             EPIC,
@@ -358,7 +358,7 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         )
     # 2. "ci" (NEW) item id embedded in word "ci-repair"
     body2 = b"blocked by ci-repair task | blocked | monitor | review | get approval\nRESOLVED resolved"
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(ValueError, match="posted body omits NEW item id 'ci' verbatim"):
         blockers.record(
             ledger,
             EPIC,
@@ -369,7 +369,9 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         )
     # 3. "blocked" (state) embedded in "blocked-build" without standalone token
     body3 = b"blocked-build | monitor | review | get approval\nRESOLVED resolved"
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(
+        ValueError, match="posted body omits required fields for NEW item 'blocked-build' on the same line"
+    ):
         blockers.record(
             ledger,
             EPIC,
@@ -381,7 +383,9 @@ def test_record_rejects_partial_substring_token_matches(ledger):
     # 4. "open" embedded in "reopened"
     q_item = item("queue-lag", state="open", owner="ci", waits_on="none", action="fix")
     body4 = b"queue-lag | reopened | ci | none | fix\nRESOLVED resolved"
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(
+        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
+    ):
         blockers.record(
             ledger,
             EPIC,
@@ -392,7 +396,9 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         )
     # 5. "ci" embedded in "recipient"
     body5 = b"queue-lag | open | recipient | none | fix\nRESOLVED resolved"
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(
+        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
+    ):
         blockers.record(
             ledger,
             EPIC,
@@ -403,7 +409,9 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         )
     # 6. "fix" embedded in "prefix"
     body6 = b"queue-lag | open | ci | none | prefix\nRESOLVED resolved"
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(
+        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
+    ):
         blockers.record(
             ledger,
             EPIC,
@@ -419,7 +427,9 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         b"There are none left in the prefix queue.\n"
         b"RESOLVED resolved"
     )
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(
+        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
+    ):
         blockers.record(
             ledger,
             EPIC,
@@ -437,9 +447,12 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     seed(ledger, observation(cache, api))
     before = ledger.read_bytes()
 
-    # 1. cache-warm is RESOLVED, but appears only inside another item's field
+    # 1. cache-warm is RESOLVED, but appears only inside another item's field (no marker word)
     body_missing_marker = b"api-latency | blocked | monitor | cache-warm | repair CI"
-    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+    with pytest.raises(
+        ValueError,
+        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+    ):
         blockers.record(
             ledger,
             EPIC,
@@ -450,13 +463,77 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
         )
     assert ledger.read_bytes() == before
 
-    # 2. cache-warm accompanied by explicit same-line resolution marker
+    # 2. cache-warm appears on an active observation line containing marker words (closed / done)
+    body_active_line_marker = b"api-latency | closed | monitor | cache-warm | done"
+    with pytest.raises(
+        ValueError,
+        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+    ):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(api),
+            receipt(body_active_line_marker, key="message-3", stamp="2026-10-10T03:00:00Z"),
+            body_active_line_marker,
+            1,
+        )
+    assert ledger.read_bytes() == before
+
+    # 3. cache-warm with non-standalone marker word (closed-pr)
+    body_closed_pr = b"api-latency | blocked | monitor | cache-warm | repair CI\ncache-warm closed-pr"
+    with pytest.raises(
+        ValueError,
+        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+    ):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(api),
+            receipt(body_closed_pr, key="message-4", stamp="2026-10-10T04:00:00Z"),
+            body_closed_pr,
+            1,
+        )
+    assert ledger.read_bytes() == before
+
+    # 4. cache-warm with hyphenated negation (not-resolved)
+    body_not_resolved = b"api-latency | blocked | monitor | cache-warm | repair CI\ncache-warm not-resolved"
+    with pytest.raises(
+        ValueError,
+        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+    ):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(api),
+            receipt(body_not_resolved, key="message-5", stamp="2026-10-10T05:00:00Z"),
+            body_not_resolved,
+            1,
+        )
+    assert ledger.read_bytes() == before
+
+    # 5. cache-warm with explicit negation (is not resolved)
+    body_is_not_resolved = b"api-latency | blocked | monitor | cache-warm | repair CI\ncache-warm is not resolved"
+    with pytest.raises(
+        ValueError,
+        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+    ):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(api),
+            receipt(body_is_not_resolved, key="message-6", stamp="2026-10-10T06:00:00Z"),
+            body_is_not_resolved,
+            1,
+        )
+    assert ledger.read_bytes() == before
+
+    # 6. cache-warm accompanied by explicit same-line resolution marker
     body_with_marker = b"api-latency | blocked | monitor | cache-warm | repair CI\nRESOLVED cache-warm"
     updated = blockers.record(
         ledger,
         EPIC,
         observation(api),
-        receipt(body_with_marker, key="message-2", stamp="2026-10-10T02:00:00Z"),
+        receipt(body_with_marker, key="message-7", stamp="2026-10-10T07:00:00Z"),
         body_with_marker,
         1,
     )

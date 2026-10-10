@@ -945,7 +945,7 @@ Driver state (AUTHORITATIVE, read it FIRST; where they conflict it supersedes
 the handoffs above and any dated docs/session-state brief): $DRIVER_STATE_PATH"
   fi
   EPIC_BANNER="$EPIC_BANNER
-Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
+Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with an explicit resolution marker (e.g. RESOLVED <id>) on its own line; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
   unset EPIC_HANDOFF_PATH DRIVER_STATE_PATH
 elif [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "0" ]; then
   VALID_SELECTORS_HELP=""
