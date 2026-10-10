@@ -442,7 +442,7 @@ def test_failed_identity_and_repository_reads_are_unavailable_and_not_cached(
     assert [row["number"] for row in first_rows] == [7]
     assert first_rows[0]["ci"] == "green"
     assert first_rows[0]["cf"] == {"verdict": "unknown", "at_head": False}
-    assert first_rows[0]["stacked_base"] is None
+    assert first_rows[0]["stacked_base"] == {"number": None, "ref": "topic", "state": None, "mq": None}
     prs_mod.collect_pipeline()
     assert calls == [1, 1]
 
@@ -992,3 +992,17 @@ def test_stacked_base_and_readiness_use_repository_default_branch() -> None:
     assert master["blocker"]["kind"] == "none"
     assert master["stale_green"] is True
     assert master["minutes"] == 120
+
+
+def test_stacked_base_defaults_to_main_when_repository_default_branch_is_unavailable() -> None:
+    rows = _rows(
+        _pull(base_ref="cursor/base"),
+        default_branch=None,
+        since={f"42:{SHA}": "2026-10-09T08:00:00Z"},
+    )
+    assert len(rows) == 1
+    item = rows[0]
+    assert item["stacked_base"] == {"number": None, "ref": "cursor/base", "state": None, "mq": None}
+    assert item["blocker"]["kind"] == "stacked_base"
+    assert item["stale_green"] is False
+    assert item["minutes"] is None

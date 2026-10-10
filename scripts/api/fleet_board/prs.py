@@ -867,7 +867,8 @@ def _ready_minutes(
 
 
 def _stacked(pull: Pull, by_head: Mapping[str, dict[str, Any]], default_branch: str | None) -> dict[str, Any] | None:
-    if not default_branch or pull.base_ref == default_branch or pull.base_ref == pull.head_ref:
+    target_default = default_branch or "main"
+    if pull.base_ref == target_default or pull.base_ref == pull.head_ref:
         return None
     base = by_head.get(pull.base_ref)
     if base is None or base["number"] == pull.number:
@@ -975,9 +976,10 @@ def assemble_prs(
     by_head: dict[str, dict[str, Any]] = {}
     for pull, item in rows:
         by_head.setdefault(pull.head_ref, item)
+    target_base = view.default_branch or "main"
     for pull, item in rows:
-        item["stacked_base"] = _stacked(pull, by_head, view.default_branch)
-        if item["stacked_base"] is not None or (view.default_branch and pull.base_ref != view.default_branch):
+        item["stacked_base"] = _stacked(pull, by_head, target_base)
+        if item["stacked_base"] is not None or pull.base_ref != target_base:
             item["blocker"] = _stacked_blocker(pull, by_head, recorded.get(pull.number))
             item["ready_since"] = None
             item["stale_green"] = False
