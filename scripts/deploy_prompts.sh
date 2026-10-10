@@ -48,6 +48,9 @@ if [[ -L .grok || -L .grok/hooks ]]; then
     echo "❌ Grok deploy refused: .grok and .grok/hooks must not be symlinks; reconcile the symlink target before rerunning npm run agents:deploy." >&2
     exit 1
 fi
+# AGY customization overlay (hooks.json) -> workspace .agents/ (no --delete:
+# .agents/skills is owned by the shared skills sync).
+AGY_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/agy"
 DEPLOY_STATE_DIR="${DEPLOY_STATE_DIR:-$PROJECT_ROOT/.deploy-state}"
 AGENT_SHARED_MANIFEST="$DEPLOY_STATE_DIR/shared-to-agent.manifest"
 
@@ -446,6 +449,9 @@ fi
 if [[ -d "$GROK_EXTENSIONS" ]]; then
     diff_overlay_files "$GROK_EXTENSIONS" ".grok" "$GROK_EXTENSIONS → .grok"
 fi
+if [[ -d "$AGY_EXTENSIONS" ]]; then
+    diff_overlay_files "$AGY_EXTENSIONS" ".agents" "$AGY_EXTENSIONS → .agents"
+fi
 diff_overlay_files "gemini_extensions" ".gemini" "gemini_extensions → .gemini"
 diff_shared_skill_overlays
 diff_gemini_skill_owners
@@ -503,6 +509,9 @@ fi
 mkdir -p .agents
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
+if [[ -d "$AGY_EXTENSIONS" ]]; then
+    rsync -av "$AGY_EXTENSIONS/" .agents/
+fi
 # shellcheck disable=SC2046
 rsync -av --delete \
     $(build_excludes "$ORPHAN_PATHS_GEMINI") \

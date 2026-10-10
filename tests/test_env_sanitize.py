@@ -13,6 +13,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime.env_sanitize import build_agent_env
 
 
+@pytest.mark.parametrize("provider", ["agy", "claude", "codex", "grok", "bridge"])
+@pytest.mark.parametrize("override", [False, True])
+def test_child_environment_never_inherits_driver_state(tmp_path, monkeypatch, provider, override):
+    import agent_runtime.agent_github_identity as identity
+    import agent_runtime.env_sanitize as env_sanitize
+
+    monkeypatch.setattr(env_sanitize, "_isolated_git_env", lambda *args, **kwargs: {})
+    monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
+    state = str(tmp_path / "DRIVER-STATE.md")
+    with patch.dict(
+        "os.environ", {"PATH": "/usr/bin", "HOME": str(tmp_path), "LU_DRIVER_STATE_FILE": state}, clear=True
+    ):
+        env = build_agent_env(provider=provider, overrides={"LU_DRIVER_STATE_FILE": state} if override else {})
+    assert "LU_DRIVER_STATE_FILE" not in env
+
+
 def test_user_and_logname_pass_through() -> None:
     with patch.dict(
         "os.environ",
