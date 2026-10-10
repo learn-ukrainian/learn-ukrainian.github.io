@@ -70,6 +70,9 @@ STATE_NAME = "DRIVER-STATE.md"
 MAX_INJECT_CHARS = 6000
 MIN_WORKERS_ENV = "LU_DRIVER_MIN_WORKERS"
 MAX_CONSECUTIVE_CONTINUES = 4
+# Counter values need only a few digits. Bound storage reads, including lock
+# and failure-record validation, to keep Stop hooks responsive on corrupt files.
+MAX_COUNTER_BYTES = 4096
 COUNTER_STORAGE_ERRORS = (OSError, ValueError, InstallError)
 ESCALATION_MARKER = "CTO-ESCALATION:"
 LIVE_WORKER_STATUSES = frozenset({"spawning", "running"})
@@ -403,23 +406,29 @@ def _counter_path(state: Path, conversation_id: str) -> Path:
     return directory / f"stop-{safe}.count"
 
 
-def _write_counter_record(directory_fd: int, path: Path, content: bytes) -> None:
-    # Like driver_blockers, refuse a replaced parent while keeping I/O pinned.
+def _check_counter_parent(directory_fd: int, path: Path) -> None:
     with _counter_directory(path.parent) as current_fd:
         held, current = os.fstat(directory_fd), os.fstat(current_fd)
         if (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
             raise ValueError("continuation counter directory changed during operation")
-    read_unit(directory_fd, path.name)
+
+
+def _write_counter_record(directory_fd: int, path: Path, content: bytes) -> None:
+    _check_counter_parent(directory_fd, path)
+    read_unit(directory_fd, path.name, max_bytes=MAX_COUNTER_BYTES)
     if path.suffix == ".count":
-        read_unit(directory_fd, f"{path.name}.lock")
+        read_unit(directory_fd, f"{path.name}.lock", max_bytes=MAX_COUNTER_BYTES)
     write_unit(directory_fd, path.name, content, mode=0o600)
+    # A rename during the pinned write cannot redirect it, but can orphan it.
+    # Report that storage failure instead of granting a continuation.
+    _check_counter_parent(directory_fd, path)
 
 
 @contextlib.contextmanager
 def _counter_lock(path: Path):
     with _counter_directory(path.parent) as directory_fd:
         name = f"{path.name}.lock"
-        read_unit(directory_fd, name)
+        read_unit(directory_fd, name, max_bytes=MAX_COUNTER_BYTES)
         lock_fd = os.open(
             name,
             os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
@@ -433,6 +442,9 @@ def _counter_lock(path: Path):
                 raise ValueError("continuation counter lock is not a stable regular file")
             os.fchmod(lock_fd, 0o600)
             fcntl.flock(lock_fd, fcntl.LOCK_EX)
+            current = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+            if (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
+                raise ValueError("continuation counter lock changed during acquisition")
             yield directory_fd
         finally:
             os.close(lock_fd)
@@ -441,7 +453,7 @@ def _counter_lock(path: Path):
 def _bump_counter(state: Path, conversation_id: str) -> int:
     path = _counter_path(state, conversation_id)
     with _counter_lock(path) as directory_fd:
-        stored = read_unit(directory_fd, path.name)
+        stored = read_unit(directory_fd, path.name, max_bytes=MAX_COUNTER_BYTES)
         try:
             previous = int(stored[0].decode("utf-8").strip()) if stored is not None else 0
         except ValueError:
