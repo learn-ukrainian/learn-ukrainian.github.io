@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import stat
 import subprocess
 import sys
@@ -16,6 +17,39 @@ from scripts.common import task_store_paths
 
 REPO = Path(__file__).resolve().parents[1]
 SYNTHETIC_WORKER_TARGET = 7
+
+
+@pytest.mark.parametrize("epic", ["../../tmp/evil", "absolute", "UPPER", "bad_name", "-infra", "infra-"])
+def test_init_rejects_invalid_epic_before_creating_anything(tmp_path, epic):
+    root = tmp_path / "sandbox" / "repo"
+    root.mkdir(parents=True)
+    if epic == "absolute":
+        epic = str(tmp_path / "absolute")
+    result = subprocess.run(
+        [sys.executable, str(REPO / "scripts/driver_state.py"), "init", f"--epic={epic}"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert result.returncode != 0, result.stdout
+    assert not list(tmp_path.rglob("DRIVER-STATE.md"))
+    assert not (root / ".claude").exists()
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_init_private_new_epic_directory_preserves_existing_mode(tmp_path, monkeypatch, existing):
+    monkeypatch.setattr(driver_state, "_repo_root", lambda: tmp_path)
+    directory = tmp_path / ".claude" / "infra-epic"
+    if existing:
+        directory.mkdir(parents=True)
+        directory.chmod(0o750)
+    old_umask = os.umask(0)
+    try:
+        assert driver_state.main(["init", "--epic", "infra"]) == 0
+    finally:
+        os.umask(old_umask)
+    assert stat.S_IMODE(directory.stat().st_mode) == (0o750 if existing else 0o700)
 
 
 @pytest.fixture
@@ -79,6 +113,7 @@ def test_whoami_prints_goals_and_next(state, capsys):
     assert "epic: infra" in out
     assert "fix X" in out
     assert "open PR" in out
+    assert "blocker-policy: Put every owned blocker in --current with complete: true;" in out
 
 
 @pytest.mark.parametrize("missing", [False, True])
@@ -725,6 +760,76 @@ def test_rendered_envelope_exact_boundary(state):
     assert len(driver_state.render_injection(text, state)) == driver_state.MAX_ENVELOPE_CHARS
     with pytest.raises(ValueError, match="envelope exceeds"):
         driver_state.render_injection(text + "x", state)
+
+
+@pytest.mark.parametrize(
+    "prefix",
+    [
+        "",
+        "The CTO blocker delta policy is mentioned in prose.\n",
+        "## CTO blocker delta policy extra\n",
+        "### CTO blocker delta policy\n",
+        "```markdown\n## CTO blocker delta policy\n```\n",
+        "> ## CTO blocker delta policy\n",
+        "  ## CTO blocker delta policy\n",
+        "<!--\n## CTO blocker delta policy\n-->\n",
+        "CTO blocker delta policy\n-----------------------\n",
+    ],
+)
+def test_blocker_policy_requires_exact_real_heading(state, prefix):
+    message = driver_state.render_injection(prefix + "Current goals remain intact.", state)
+    assert message.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
+    assert "Current goals remain intact." in message
+    assert "scripts.driver_blockers delta" in message
+    assert "scripts.driver_blockers record" in message
+    assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
+
+
+def test_existing_blocker_heading_is_not_duplicated(state):
+    text = driver_state.POLICY + "\n" + driver_state.BLOCKER_POLICY
+    rendered = driver_state.render_injection(text, state)
+    assert rendered.count("## " + driver_state.BLOCKER_POLICY_TITLE) == 1
+    assert rendered.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
+    assert driver_state.render_injection(text + "\nLast goal", state).endswith("Last goal")
+
+
+def test_blocker_template_and_complete_envelope_boundary(state, monkeypatch, tmp_path):
+    monkeypatch.setattr(driver_state, "_repo_root", lambda start=None: tmp_path)
+    assert driver_state.main(["init", "--epic", "demo"]) == 0
+    text = (tmp_path / ".claude/demo-epic/DRIVER-STATE.md").read_text()
+    assert text.count(driver_state.BLOCKER_POLICY) == 1
+    assert "exact case-sensitive standalone token RESOLVED <id>" in text
+    assert "on its own non-active line (no other fields or prose)" in text
+    policies = driver_state.POLICY + "\n" + driver_state.BLOCKER_POLICY + "\n"
+    wrapper_size = len(driver_state.render_injection(policies, state))
+    exact = policies.rstrip() + "\n" + "x" * (driver_state.MAX_ENVELOPE_CHARS - wrapper_size - 1)
+    assert len(driver_state.render_injection(exact, state)) == driver_state.MAX_ENVELOPE_CHARS
+    with pytest.raises(ValueError, match="envelope exceeds"):
+        driver_state.render_injection(exact + "x", state)
+
+
+@pytest.mark.parametrize("baseline", ["absent", "present", "empty"])
+def test_whoami_blocker_summary(state, baseline, capsys):
+    from scripts import driver_blockers
+
+    ledger = state.parent / driver_blockers.LEDGER_NAME
+    if baseline == "empty":
+        ledger.write_text("")
+    elif baseline == "present":
+        body = b"No blockers"
+        receipt = {
+            "recipient": "cto",
+            "message_id": "fixture-msg",
+            "created_at": "2026-10-10T01:00:00Z",
+            "content_sha256": driver_blockers.hashlib.sha256(body).hexdigest(),
+        }
+        driver_blockers.record(ledger, "infra", {"epic": "infra", "complete": True, "items": []}, receipt, body, 0)
+    assert driver_state.cmd_whoami(state) == 0
+    output = capsys.readouterr().out
+    assert (
+        "CTO blockers: generation 1; 0 recorded blockers" if baseline == "present" else driver_blockers.UNKNOWN_SUMMARY
+    ) in output
+    assert str(state.parent) not in output
 
 
 @pytest.mark.parametrize(

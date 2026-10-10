@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.driver_blockers import USAGE_RULE, validate_epic
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 
@@ -31,6 +32,7 @@ def _utc_now() -> str:
 
 
 def _epic_dir(repo: Path, epic: str) -> Path:
+    validate_epic(epic)
     return repo / ".claude" / f"{epic}-epic"
 
 
@@ -80,6 +82,7 @@ def _cold_start_body(
 2. Mint a canary: `.venv/bin/python -m scripts.session_canary.gemini_lane mint --epic {epic} --stream {stream_id}`.
 3. Score from memory. PASS auto-hydrates; FAIL-HANDOFF writes handback and closes the exact lease.
 4. Continue only when the hydration capsule has `execution_allowed: true`.
+5. {USAGE_RULE.replace("$SESSION_EPIC", epic)}
 """
 
 
@@ -172,6 +175,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     """Write a non-authoritative cold-start board; launchers own lease acquisition."""
     repo = Path(args.repo).resolve()
     epic = args.epic.strip().lower()
+    validate_epic(epic)
     args.epic = epic
     stream_id = _stream_id(args)
     epic_path = _epic_dir(repo, epic)
@@ -290,8 +294,11 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     args.epic = args.epic.strip().lower()
     try:
+        # Hydration/protocol use routing aliases, without constructing epic paths.
+        if args.subcommand not in {"hydrate", "protocol"}:
+            validate_epic(args.epic)
         return int(args.func(args))
-    except _gl.StreamResolutionError as exc:
+    except (_gl.StreamResolutionError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 

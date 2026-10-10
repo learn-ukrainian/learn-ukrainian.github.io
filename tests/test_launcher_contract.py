@@ -141,6 +141,10 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     assert any(path.name == "SKILL.md" for path in actual)
     for relative in expected:
         assert (deployed / relative).read_bytes() == (sources / relative).read_bytes()
+    for name in ("session-setup.sh", "post-compact.sh"):
+        canonical = (checkout / "agents_extensions/shared/hooks" / name).read_bytes()
+        for destination in (".claude", ".codex", ".agent"):
+            assert (checkout / destination / "hooks" / name).read_bytes() == canonical
     assert not (checkout / ".codex/skills").exists()
 
 
@@ -539,7 +543,8 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
 
 @pytest.mark.parametrize("resolution", ["recorded", "local-bin", "missing"])
 def test_supervisory_wake_preflights_cli_before_provider_stop_and_lease_close(
-    tmp_path: Path, resolution: str,
+    tmp_path: Path,
+    resolution: str,
 ) -> None:
     """Exercise the real wait loop with a PATH change after the provider starts."""
     events = tmp_path / "events"
@@ -574,8 +579,8 @@ printf 'normal-exit\\n' >> {shlex.quote(str(events))}
     successor.chmod(0o755)
     script = f"""
 set -euo pipefail
-source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}
-source {shlex.quote(str(REPO / 'scripts/lib/session_supervisor.sh'))}
+source {shlex.quote(str(REPO / "scripts/lib/launcher_core.sh"))}
+source {shlex.quote(str(REPO / "scripts/lib/session_supervisor.sh"))}
 LC_ROOT={shlex.quote(str(tmp_path))}
 LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1
 LC_DRIVER_ORIGINAL_ARGS=()
@@ -611,8 +616,12 @@ launcher_exec_command fixture-cli
 """
     env = {**os.environ, "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{os.defpath}"}
     process = subprocess.Popen(
-        ["/bin/bash", "-c", script], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        text=True, start_new_session=True,
+        ["/bin/bash", "-c", script],
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
     )
     try:
         if resolution == "missing":
@@ -666,7 +675,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 sys.path.insert(0, {str(REPO)!r})
-sys.path.insert(0, {str(REPO / 'scripts')!r})
+sys.path.insert(0, {str(REPO / "scripts")!r})
 from scripts.ai_agent_bridge import _inbox_watch
 
 ready = Path({str(ready)!r})
@@ -707,8 +716,8 @@ with (
     successor.chmod(0o755)
     script = f"""
 set -euo pipefail
-source {shlex.quote(str(lib / 'launcher_core.sh'))}
-source {shlex.quote(str(lib / 'session_supervisor.sh'))}
+source {shlex.quote(str(lib / "launcher_core.sh"))}
+source {shlex.quote(str(lib / "session_supervisor.sh"))}
 LC_ROOT={shlex.quote(str(tmp_path))}
 LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1
 LC_DRIVER_ORIGINAL_ARGS=()
@@ -722,19 +731,30 @@ launcher_close_driver_lease() {{
 launcher_exec_command fixture-cli
 """
     env = {
-        **os.environ, "HOME": str(tmp_path / "home"),
-        "PATH": f"{cli.parent}{os.pathsep}{os.defpath}", "FLEET_COMMS_ROOT": str(plane),
+        **os.environ,
+        "HOME": str(tmp_path / "home"),
+        "PATH": f"{cli.parent}{os.pathsep}{os.defpath}",
+        "FLEET_COMMS_ROOT": str(plane),
     }
     with AuthorityService(root=plane) as service:
         did = service.publish_message(
-            sender="fixture-operator", recipients=("supervisor:epic:9999",),
-            body=json.dumps({"schema": "supervisory-wake.v1", "action": "restart",
-                             "stream_id": "epic:9999", "generation": 1}),
-            kind="supervisory-request", correlation_id="fixture-cycle", idempotency_key="restart",
+            sender="fixture-operator",
+            recipients=("supervisor:epic:9999",),
+            body=json.dumps(
+                {"schema": "supervisory-wake.v1", "action": "restart", "stream_id": "epic:9999", "generation": 1}
+            ),
+            kind="supervisory-request",
+            correlation_id="fixture-cycle",
+            idempotency_key="restart",
         ).delivery_ids[0]
         process = subprocess.Popen(
-            ["/bin/bash", "-c", script], cwd=REPO, env=env,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True,
+            ["/bin/bash", "-c", script],
+            cwd=REPO,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
         )
         try:
             deadline = time.monotonic() + 15
@@ -1042,9 +1062,22 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     adapter.chmod(0o755)
     subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30)
     subprocess.run(
-        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
-         "commit", "--allow-empty", "-q", "-m", "Initial launcher fixture"],
-        cwd=root, capture_output=True, check=True, timeout=30,
+        [
+            "git",
+            "-c",
+            "user.name=Test",
+            "-c",
+            "user.email=test@example.com",
+            "commit",
+            "--allow-empty",
+            "-q",
+            "-m",
+            "Initial launcher fixture",
+        ],
+        cwd=root,
+        capture_output=True,
+        check=True,
+        timeout=30,
     )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["PYTHONPATH"] = os.fspath(REPO)
@@ -1617,3 +1650,29 @@ def test_driver_prompt_uses_private_worker_target_without_number() -> None:
     worker_clause = prompt.rsplit("and end each turn with ", 1)[1]
     assert "privately configured worker target met" in worker_clause
     assert not any(char.isdigit() for char in worker_clause)
+
+
+def test_driver_prompt_carries_full_blocker_rule() -> None:
+    source = (REPO / "scripts/lib/launcher_core.sh").read_text()
+    assignment = next(line for line in source.splitlines() if line.startswith('  LC_DRIVER_PROMPT="'))
+    result = subprocess.run(
+        ["bash"],
+        input=assignment + '\nprintf "%s" "$LC_DRIVER_PROMPT"\n',
+        cwd=REPO,
+        env={"PATH": os.environ["PATH"], "LC_EPIC": "infra", "canary_status": "not run", "fleet_clause": "fixture"},
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    for fragment in (
+        "complete: true",
+        "scripts.driver_blockers delta --epic infra --current blockers.json",
+        "scripts.driver_blockers record --epic infra --current blockers.json",
+        "--receipt receipt.json --body-file posted.md --expect-generation N",
+        "post each item that is not UNCHANGED",
+        "exact case-sensitive standalone token RESOLVED <id>",
+        "on its own non-active line (no other fields or prose)",
+        "if delta fails or the baseline is unknown, post everything currently blocking",
+    ):
+        assert fragment in result.stdout
