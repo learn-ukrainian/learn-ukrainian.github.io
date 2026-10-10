@@ -6,6 +6,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from scripts.api.occupancy_sanitize import producer_identity
+
 from .activity import (
     derive_state,
     harness_row,
@@ -18,6 +20,7 @@ from .activity import (
     seat_id,
     text,
 )
+from .file_sources import load_board_health, unknown_health
 from .snapshot import as_timestamp, finite_number, load_snapshot, mapping, utc_now
 from .sources import SourceReport, report
 
@@ -102,7 +105,7 @@ def _seat_signals(
 def _driver(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    occupancy: Mapping[str, str],
+    occupancy: Mapping[tuple[str, str], str],
     *,
     intended: str | None,
 ) -> tuple[dict[str, Any] | None, str, str]:
@@ -123,7 +126,7 @@ def _driver(
     state, reason, pid_alive = _seat_signals(
         roster,
         harness,
-        occupancy.get(agent_id),
+        occupancy.get((agent_id, producer_identity(roster.get("session_id")))),
         intended=intended,
         seat_present=True,
         require_liveness=True,
@@ -141,7 +144,7 @@ def _driver(
 def _workers(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    occupancy: Mapping[str, str],
+    occupancy: Mapping[tuple[str, str], str],
     *,
     intended: str | None,
 ) -> list[dict[str, Any]]:
@@ -158,7 +161,7 @@ def _workers(
             state, reason, _pid = _seat_signals(
                 roster,
                 harness,
-                occupancy.get(agent_id),
+                occupancy.get((agent_id, producer_identity(roster.get("session_id")))),
                 intended=intended,
                 seat_present=True,
                 require_liveness=False,
@@ -182,7 +185,8 @@ def _workers(
 def _epic(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    occupancy: Mapping[str, str],
+    occupancy: Mapping[tuple[str, str], str],
+    health: Mapping[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any] | None:
     roster = mapping(raw)
     epic_id = seat_id(roster.get("epic"))
@@ -215,6 +219,7 @@ def _epic(
         "driver": driver,
         "task": _task(roster.get("task")),
         "workers": _workers(roster.get("workers"), harness_doc, occupancy, intended=intended),
+        "health": (health or {}).get(driver["agent_id"], unknown_health()) if driver else unknown_health(),
     }
 
 
@@ -284,7 +289,7 @@ def _agents_for_epic(epic: Mapping[str, Any]) -> list[dict[str, Any]]:
 def _bots(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    occupancy: Mapping[str, str],
+    occupancy: Mapping[tuple[str, str], str],
 ) -> list[dict[str, Any]]:
     if not isinstance(raw, list):
         return []
@@ -299,7 +304,7 @@ def _bots(
         state, reason, _pid = _seat_signals(
             roster,
             harness,
-            occupancy.get(agent_id),
+            occupancy.get((agent_id, producer_identity(roster.get("session_id")))),
             intended=intended,
             seat_present=True,
             require_liveness=False,
@@ -522,13 +527,14 @@ def load_board(environ: Mapping[str, str] | None = None) -> Board:
     # Retain stale snapshot payloads, but only fresh harness fields override seats.
     if harness_report.status != "ok":
         harness = None
+    health = load_board_health(environ, now=clock)
     document = roster or {}
     epic_rows = document.get("epics")
     epics = []
     if isinstance(epic_rows, list):
         for item in epic_rows:
             try:
-                built = _epic(item, harness, occupancy)
+                built = _epic(item, harness, occupancy, health)
             except (TypeError, ValueError, OverflowError, ArithmeticError):
                 continue
             if built is not None:

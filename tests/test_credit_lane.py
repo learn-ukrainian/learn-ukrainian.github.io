@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import delegate
 from scripts.fleet import capacity_pick, credit_lane, reset_reserve
 from scripts.fleet.reset_reserve import unavailable_reserve
+from scripts.fleet.routing_policy import projected_unused_pct
 
 NOW = datetime(2026, 10, 2, 17, 0, tzinfo=UTC)
 POLICY = credit_lane.load_policy()
@@ -975,6 +976,7 @@ def test_lanes_without_credit_policy_keep_origin_main_rows(scenario):
             continue
         row = dict(rows[lane])
         assert row.pop("credit") == {"state": "not_configured"}
+        assert row.pop("projected_unused_pct") == projected_unused_pct(row["remaining_pct"], row["will_last"])
         # #9740 additive row facts; the origin/main fields stay byte-identical.
         facts = row.pop("routing_facts")
         assert row.pop("capacity")["state"] == ("avoid" if row["avoid"] else "verified")

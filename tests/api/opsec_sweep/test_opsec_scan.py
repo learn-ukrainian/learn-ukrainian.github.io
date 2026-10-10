@@ -76,6 +76,9 @@ def test_negative_corpus_exempts_identifiers_timestamps_routes_and_durations() -
         "timeout=PT1H30M",
         "retry-after=P2DT4H",
         "version 1.2.3",
+        'href="#/home"',
+        "location.hash = '#/home';",
+        'parseRoute(location.hash || "#/home")',
     )
 
     for text in negative:
@@ -124,3 +127,17 @@ def test_host_port_scanner_ignores_css_but_keeps_bare_hostnames() -> None:
     ) == []
     findings = scan_text("width:8765", operation="GET /api/health", field_path="body")
     assert [(finding.kind, finding.token) for finding in findings] == [("host-port", "width:8765")]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "/home/fixture/repository",
+        "#/home/fixture/repository",
+        "href=\"#/home/fixture\"",
+        "#/home/../fixture",
+    ],
+)
+def test_hash_route_exemption_does_not_hide_filesystem_paths(text: str) -> None:
+    findings = scan_text(text, operation="GET /api/opsec", field_path="body.value")
+    assert [finding.kind for finding in findings] == ["filesystem-root"], text

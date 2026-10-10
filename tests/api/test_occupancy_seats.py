@@ -93,6 +93,8 @@ def test_occupancy_session_stream_driver_keeps_low_load_host_busy(
                 "agent": "claude",
                 "task_id": "infra-drive",
                 "epic": "7139",
+                "session_id": "session-occupancy",
+                "instance_id": "runtime-1",
             }
         ]
         assert host["ai_seats"] == ["claude"]
