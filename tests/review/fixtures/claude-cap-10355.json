@@ -1,0 +1,32 @@
+{
+  "launcher_help_replacements": [
+    {
+      "rows": [
+        4,
+        9
+      ],
+      "before": "  LAUNCHER_HARNESS           Default harness when --harness is omitted.\n  CLAUDE_CODE_*            Claude Code session configuration (route-shaped values are cleared).\n",
+      "after": "  LAUNCHER_HARNESS           Default harness when --harness is omitted.\n  Claude weekly cap: every Claude launch stops at 99% weekly used.\n                             Opus is always blocked: explicit Opus is refused and a\n                             defaulted Opus driver switches to claude-sonnet-5-5.\n  LU_CLAUDE_CAP_OVERRIDE=1 Bypass the 99% stop with an operator warning; Opus stays blocked.\n  LU_MONITOR_LOOPBACK      Monitor telemetry base URL. Unknown usage warns and allows launch.\n                             Forwarded model, settings and fallback-model selectors are refused.\n  CLAUDE_CODE_*            Claude Code session configuration (route-shaped values are cleared).\n"
+    },
+    {
+      "rows": [
+        4,
+        9,
+        14,
+        19,
+        24,
+        29,
+        34,
+        39,
+        44,
+        49,
+        54,
+        59,
+        64,
+        69
+      ],
+      "before": "  6  Driver memory scope unavailable or unverifiable; no unbounded override.\n\n",
+      "after": "  6  Driver memory scope unavailable or unverifiable; no unbounded override.\n  7  Claude launch refused by the weekly usage cap or the Opus block.\n\n"
+    }
+  ]
+}

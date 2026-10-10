@@ -22,11 +22,13 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.common.repo_root import project_interpreter
+from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_library_files
 from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_launcher_sources, copy_slot_registry
 from tests.rules_core_view import (
+    _build_view,
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
@@ -61,6 +63,11 @@ RETIRED = tuple(f"start-{name}.sh" for name in ("claudex",)) + tuple(
 )
 
 
+def _install_claude_usage_fixture(root: Path) -> None:
+    """Supply usage only in copied fixtures; production has no test bypass."""
+    (root / "scripts/lib/claude_weekly_used.py").write_text("print('0')\n", encoding="utf-8")
+
+
 def run_launcher(
     name: str,
     *args: str,
@@ -68,10 +75,24 @@ def run_launcher(
     dry_run: bool = True,
     root: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    if (
+        dry_run and root is None
+        and name in ("start-claude.sh", "start-claude-driver.sh")
+        and not any(arg in ("--help", "-h") for arg in args)
+    ):
+        with TemporaryDirectory(prefix="launcher-usage-", dir=ensure_scratch_root()) as temporary:
+            overrides = {("scripts", "lib", "claude_weekly_used.py"): "print('0')\n"}
+            if LAUNCH_ROOT != REPO:
+                overrides[("scripts", "lib", "rules_core.sh")] = (
+                    LAUNCH_ROOT / "scripts/lib/rules_core.sh"
+                ).read_text()
+            checkout = _build_view(Path(temporary) / "checkout", overrides)
+            return run_launcher(name, *args, env=env, dry_run=True, root=checkout)
     if not dry_run and root is None:
         with TemporaryDirectory(prefix="launcher-checkout-") as temporary:
             checkout = Path(temporary) / "checkout"
             copy_interactive_launcher_checkout(checkout)
+            _install_claude_usage_fixture(checkout)
             if "-driver.sh" in name:
                 install_scope_sandbox(checkout)
             return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
@@ -94,6 +115,7 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     """Keep the real startup deploy and assert its actual output, not a stub."""
     checkout = tmp_path / "checkout with spaces"
     copy_interactive_launcher_checkout(checkout)
+    _install_claude_usage_fixture(checkout)
     binary = tmp_path / "bin" / "claude"
     binary.parent.mkdir()
     binary.write_text("#!/bin/sh\nprintf 'provider cwd=%s\\n' \"$PWD\"\n", encoding="utf-8")
@@ -288,6 +310,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         shutil.copy2(REPO / relative, destination)
     install_scope_sandbox(root)
     install_loader_bypass(root)
+    _install_claude_usage_fixture(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -441,6 +464,7 @@ def _core_driver_exit_fixture(
         shutil.copy2(REPO / relative, destination)
     install_scope_sandbox(root)
     install_loader_bypass(root)
+    _install_claude_usage_fixture(root)
     if forward_ready is not None:
         _append_forward_ready_hook(root / "scripts/lib/launcher_core.sh", forward_ready)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
@@ -989,6 +1013,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
     copy_launcher_sources(root)
     install_scope_sandbox(root)
     install_loader_bypass(root)
+    _install_claude_usage_fixture(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True, exist_ok=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -1248,10 +1273,12 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")
     assert result.returncode == 0, result.stderr
     assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
-    # The driver pins --model/--effort first (Opus 5.5 default), then --agent.
-    assert (
-        "would exec claude --model claude-opus-5-5\\[1m\\] --effort high --agent infra-orchestrator " in result.stdout
-    )
+    # Opus is always blocked, so the defaulted Opus driver seat runs on Sonnet.
+    command = shlex.split(next(line for line in result.stdout.splitlines() if line.startswith("would exec ")))
+    assert command[:9] == [
+        "would", "exec", "claude", "--model", "claude-sonnet-5-5",
+        "--effort", "high", "--agent", "infra-orchestrator",
+    ]
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr

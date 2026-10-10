@@ -107,6 +107,18 @@ resolve to the same `claude-<lane>` handoff slot, so the stream lease still allo
 Anthropic driver per lane. The legacy `scripts/start-bio-driver.sh` runs Claude + the
 `curriculum-track-orchestrator` agent-def if you specifically want that agent.
 
+Both Claude launchers apply the weekly usage guard. Every Claude launch is
+refused at **99% weekly used or above**. **Opus is always blocked**: explicit
+Opus requests are refused and a defaulted Opus driver switches to
+`claude-sonnet-5-5`. Sonnet launches below 99%. These policy values are constants
+in code; no environment variable changes them. `LU_CLAUDE_CAP_OVERRIDE=1` bypasses
+only the 99% stop, with a warning; Opus stays blocked. Unknown, invalid or stale
+usage warns and allows a non-Opus launch. `LU_MONITOR_LOOPBACK`
+selects the telemetry base URL; proxies and redirects cannot replace that target.
+Forwarded model, settings and fallback-model selectors are refused: choose the
+startup model through the launcher `--model` or `LAUNCHER_MODEL`. Attached `-m`
+values are also refused because they can replace the admitted startup model.
+
 † **folk carve-out:** the *driver* may be Grok, but folk content **review** stays
 cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) — the
 `drive-epic` skill enforces this.

@@ -20,7 +20,13 @@ launcher_usage() {
       ;;
   esac
   case "$LC_PROVIDER" in
-    claude) provider_env='  CLAUDE_CODE_*            Claude Code session configuration (route-shaped values are cleared).' ;;
+    claude) provider_env='  Claude weekly cap: every Claude launch stops at 99% weekly used.
+                             Opus is always blocked: explicit Opus is refused and a
+                             defaulted Opus driver switches to claude-sonnet-5-5.
+  LU_CLAUDE_CAP_OVERRIDE=1 Bypass the 99% stop with an operator warning; Opus stays blocked.
+  LU_MONITOR_LOOPBACK      Monitor telemetry base URL. Unknown usage warns and allows launch.
+                             Forwarded model, settings and fallback-model selectors are refused.
+  CLAUDE_CODE_*            Claude Code session configuration (route-shaped values are cleared).' ;;
     codex) provider_env='  CODEX_CC_BASE_URL, CODEX_CC_AUTH_TOKEN
                              Approved local-proxy settings for --harness claude-code.' ;;
     gemini) provider_env='  AGY_*                    AGY-managed Gemini authentication and configuration.' ;;
@@ -97,6 +103,7 @@ EXIT CODES:
   4  Driver certification is missing or revoked.
   5  Provider transport is degraded; use the stated external-fleet disposition.
   6  Driver memory scope unavailable or unverifiable; no unbounded override.
+  7  Claude launch refused by the weekly usage cap or the Opus block.
 
 Examples:
   ./${name} --help
@@ -323,6 +330,8 @@ launcher_defaults() {
       # project settings (Sonnet 5.5) and effort to the session selection.
       if [ "$LC_MODE" = driver ]; then
         LC_MODEL="${LAUNCHER_MODEL:-claude-opus-5-5[1m]}"
+        # The cap guard may swap only a defaulted Opus seat, never an explicit one.
+        if [ -z "${LAUNCHER_MODEL:-}" ]; then LC_CLAUDE_MODEL_DEFAULTED=1; fi
       else
         LC_MODEL="${LAUNCHER_MODEL:-}"
       fi
@@ -437,10 +446,10 @@ launcher_parse() {
         ;;
       --model)
         launcher_need_value "$1" "${2:-}"
-        LC_MODEL="$2"
+        LC_MODEL="$2"; LC_CLAUDE_MODEL_DEFAULTED=0
         shift 2
         ;;
-      --model=*) LC_MODEL="${1#*=}"; shift ;;
+      --model=*) LC_MODEL="${1#*=}"; LC_CLAUDE_MODEL_DEFAULTED=0; shift ;;
       --effort)
         launcher_need_value "$1" "${2:-}"
         LC_EFFORT="$2"
@@ -1370,6 +1379,64 @@ launcher_publication_path() {
   unset LU_OPSEC_OVERRIDE
 }
 
+# Claude weekly cap guard (operator policy, constants in code): every Claude
+# launch stops at 99% weekly used; Opus is always blocked. A defaulted Opus
+# driver switches to Sonnet. The operator override bypasses only the 99% stop.
+# Unavailable telemetry warns and allows a non-Opus startup.
+launcher_claude_cap_guard() {
+  [ "$LC_PROVIDER" = claude ] || return 0
+  # Provider settings and fallback selectors can replace the admitted model.
+  # Refuse these paths, including CLI abbreviations, before checking usage.
+  # Startup models must pass through the launcher model selection.
+  local arg selector
+  for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
+    case "$arg" in
+      -max-tokens|-max-tokens=*) ;;
+      # Attached short-option values (-mopus) are selectors too.
+      -m*|--m|--m=*|--mo|--mo=*|--mod|--mod=*|--mode|--mode=*|--model|--model=*)
+        launcher_error "Claude model selectors must use the launcher --model, not forwarded provider arguments."
+        exit 2
+        ;;
+      --*)
+        selector="${arg%%=*}"
+        if [ "$selector" != -- ] && { [[ --settings == "$selector"* ]] || [[ --fallback-model == "$selector"* ]]; }; then
+          launcher_error "Claude model selectors must use the launcher --model, not forwarded settings or fallback arguments."
+          exit 2
+        fi
+        ;;
+    esac
+  done
+  # Opus is always blocked, before and independent of usage telemetry.
+  case "$LC_MODEL" in
+    *opus*)
+      if [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ] && [ "$LC_MODEL" = 'claude-opus-5-5[1m]' ]; then
+        printf 'launcher: Opus is blocked; driver default switched from Opus to claude-sonnet-5-5\n' >&2
+        LC_MODEL='claude-sonnet-5-5'
+      else
+        launcher_error "Opus is blocked by operator policy. Use --model sonnet."
+        exit 7
+      fi
+      ;;
+  esac
+  if [ "${LU_CLAUDE_CAP_OVERRIDE:-0}" = 1 ]; then
+    printf 'launcher: warning: Claude weekly 99%% stop bypassed by operator override; Opus stays blocked.\n' >&2
+    return 0
+  fi
+  local pct
+  local -r stop=99
+  local py; py="$(launcher_project_python 2>/dev/null || true)"
+  pct=unknown; [ -n "$py" ] && pct="$("$py" -I "$LC_ROOT/scripts/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
+  # Any non-negative decimal is usage; overshoot above 100% still stops.
+  if ! [[ "$pct" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v p="$pct" 'BEGIN{exit !(p>=0)}'; then
+    printf 'launcher: warning: Claude weekly usage unknown or invalid; allowing launch without a usage check.\n' >&2
+    return 0
+  fi
+  if awk -v p="$pct" -v t="$stop" 'BEGIN{exit !(p>=t)}'; then
+    launcher_error "Claude weekly usage is ${pct}% (stop at ${stop}%). No Claude launch until the weekly reset; use start-codex-driver.sh (Sol) or agy."
+    exit 7
+  fi
+}
+
 launcher_main() {
   LC_PROVIDER="$1"
   LC_MODE="$2"
@@ -1409,6 +1476,8 @@ launcher_main() {
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode
   launcher_validate_driver_certification
+  # Usage errors and certification refusals come first; then the weekly cap.
+  launcher_claude_cap_guard
   # Every admitted driver path enters before expensive preparation, import and lease.
   if [ "$LC_MODE" = driver ]; then
     if [ "$LC_DRY_RUN" = 1 ]; then

@@ -304,7 +304,7 @@ def test_missing_logger_preserves_exit_and_stderr(tmp_path: Path) -> None:
     bindir = Path(env["PATH"].split(os.pathsep, 1)[0])
     (bindir / "logger").unlink()
     # Keep the sandbox utilities available without falling back to host logger.
-    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git"):
+    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git", "awk"):
         executable = shutil.which(name)
         assert executable is not None
         (bindir / name).symlink_to(executable)
