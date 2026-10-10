@@ -263,7 +263,7 @@ routers (§4.2 core-router-last ordering).
 | **12b** | `consultation_router`, `decisions_router`, `delegate_router`, `discussions_router`, `gold_router` | 2,001 | Consultation queue dirs + delegate tasks + `MESSAGE_DB` discussions |
 | **12c** | `governance_router`, `issues_router`, `knowledge_router`, `reviewer_ghosts_router`, `cluster_router` | 1,108 | Governance/decisions-adjacent reads + issues/gh seam + cluster readiness probe over the control-plane stores |
 | **12d** | `site_router`, `wiki_router`, `worktrees_router`, `telemetry_router` | 1,603 | Site build + wiki `SOURCES_DB_PATH` + worktrees git + telemetry DBs |
-| **12e** | `work_router`, `epics_router`, `fleet_board_router` | 2,325 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) + fleet board v1 |
+| **12e** | `work_router`, `epics_router`, `fleet_board_router` | 2,334 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) + fleet board v1 |
 | **13** | `batch_router`, `core_router` (`main.py` inline) | 2,120 | **Last two mounts, in this order** — batch dispatcher/active/usage routes + `WS /ws/batch` (split out of `main.py`), then health/orient/config routes + catch-all static; read config through `Depends(get_ctx)`, no dedicated store of their own |
 
 ---
@@ -471,7 +471,7 @@ operations, and pull-request routes.
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `work_router.py` | `/api/work` | 4 | 830 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
 | `epics_router.py` | `/api/epics` | 12 | 1,202 | — | — | 0 | 12e |
-| `fleet_board.router.py` | `/api/fleet/v1` | 18 | 293 | — | — | 0 | 12e |
+| `fleet_board.router.py` | `/api/fleet/v1` | 18 | 302 | — | — | 0 | 12e |
 
 **12e migrated (#7334):** stores and live repo root now come from
 `Depends(get_ctx)`. The 3 seams this row listed (`work_router._IN_FLIGHT_BUILDS`

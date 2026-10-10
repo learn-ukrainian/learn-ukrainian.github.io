@@ -51,6 +51,30 @@ def test_redact_text_handles_env_dump_and_known_token_shapes():
     assert "normal text" in redacted
 
 
+@pytest.mark.parametrize(
+    "cursor_key",
+    ["key_" + "0" * 64, "key_" + "aB09" * 16, "crsr_" + "a0" * 20, "crsr_" + "Z9" * 32],
+)
+def test_redact_text_redacts_cursor_keys_in_worker_output(cursor_key):
+    assert redact_text(f"worker output: '{cursor_key}' rejected") == (
+        f"worker output: '{REDACTION}' rejected"
+    )
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "key_" + "0" * 63,
+        "key_" + "0" * 65,
+        "key_" + "g" * 64,
+        "crsr_" + "a" * 39,
+        "key_name crsr_status",
+    ],
+)
+def test_redact_text_preserves_non_cursor_key_shapes(text):
+    assert redact_text(text) == text
+
+
 def test_redact_text_leaves_benign_code_with_secret_named_lhs_untouched():
     # Regression for the 2026-07-12 diff-corruption burn: a secret-*named*
     # identifier on the LHS must not nuke a benign code RHS (function call, list

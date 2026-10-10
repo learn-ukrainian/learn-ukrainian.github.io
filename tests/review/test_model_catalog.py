@@ -174,11 +174,11 @@ CODEX_OVERLAY = json.loads(gzip.decompress(CODEX_OVERLAY_PATH.read_bytes()))
 
 
 def approved_prior_baseline(baseline):
-    """Layer every earlier approved overlay, including #10083, before #10305."""
-    return approved_cursor_trailer_baseline(approved_launcher_canary_baseline({
+    """Layer every earlier approved overlay, including #10083 and #10355, before #10305."""
+    return approved_claude_cap_baseline(approved_cursor_trailer_baseline(approved_launcher_canary_baseline({
         **approved_review_baseline(baseline),
         **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    }))
+    })))
 
 
 def approved_codex_baseline(baseline):
@@ -271,10 +271,55 @@ def approved_launcher_canary_baseline(baseline):
     return {**baseline, "launchers": launchers}
 
 
+def approved_claude_cap_baseline(baseline):
+    """Apply #10355's Claude weekly-cap help lines (99% stop, Opus always blocked)."""
+    cap = json.loads((CAPACITY_FIXTURE / "claude-cap-10355.json").read_bytes())
+    launchers = deepcopy(baseline["launchers"])
+    for replacement in cap["launcher_help_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            assert launchers[index]["stdout"].count(before) == 1
+            launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, "launchers": launchers}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
+# #10305 composes after #10355: the Codex insertion never replaces launcher help.
 APPROVED_BASELINE = approved_codex_baseline(approved_prior_baseline(BASELINE))
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
+    fixture_path = CAPACITY_FIXTURE / "claude-cap-10355.json"
+    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
+        "54de3ec4e4166708c3cb2a54ef62256fdf283bc85cd160661db3abe82ddc249f"
+    )
+    cap = json.loads(fixture_path.read_bytes())
+    assert set(cap) == {"launcher_help_replacements"}
+    assert [row["rows"] for row in cap["launcher_help_replacements"]] == [[4, 9], list(range(4, 70, 5))]
+    for row in cap["launcher_help_replacements"]:
+        assert row["after"].startswith(row["before"].splitlines(True)[0])
+        assert row["after"].endswith(row["before"].splitlines(True)[1])
+    text = "".join(row["after"] for row in cap["launcher_help_replacements"])
+    assert "stops at 99% weekly used" in text
+    assert "Opus is always blocked" in text
+    for retired in ("LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT", "default 90", "default 80"):
+        assert retired not in text
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = approved_cursor_trailer_baseline(approved_launcher_canary_baseline({
+        **approved_review_baseline(json.loads(gzip.decompress(path.read_bytes()))),
+        **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+    }))
+    after = approved_claude_cap_baseline(before)
+    assert {k: v for k, v in after.items() if k != "launchers"} == {k: v for k, v in before.items() if k != "launchers"}
+    changed = [i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new]
+    assert changed == list(range(4, 70, 5))
+    for index in changed:
+        assert {k: v for k, v in before["launchers"][index].items() if k != "stdout"} == {
+            k: v for k, v in after["launchers"][index].items() if k != "stdout"
+        }
 
 
 @pytest.mark.parametrize("configuration", ["", "no-cli"])
@@ -477,7 +522,7 @@ PINNED_DIGESTS = {
     "routing-10305.json.gz": "0473f73f5e50f3d851c2b023d9e7f251a61a13d884036e3e725ec090291ae7fd",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
-    "SPEC.md": "f0ad2c557525b9681b0741f0a36e0e6579286a47e60a028d3165284a2e9679b3",
+    "SPEC.md": "3a0db40914a9155f6041dd4acd7764bde550af39121cafa8795fdafc29bbb8f7",
     "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",

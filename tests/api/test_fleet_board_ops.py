@@ -48,8 +48,10 @@ def _validate(body: dict) -> None:
 
 
 def _source(body: dict) -> dict:
-    assert len(body["sources"]) == 1
-    return body["sources"][0]
+    name = body["schema"].removeprefix("fleet.v1.")
+    matching = [source for source in body["sources"] if source["name"] == name]
+    assert len(matching) == 1
+    return matching[0]
 
 
 class _Body:

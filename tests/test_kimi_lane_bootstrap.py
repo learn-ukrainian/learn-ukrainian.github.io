@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -22,6 +25,51 @@ def _infra_harness_stream_id() -> str:
 
 
 INFRA_STREAM_ID = _infra_harness_stream_id()
+
+
+@pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
+@pytest.mark.parametrize("command", ["status", "mint", "bootstrap"])
+def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, command: str) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    if epic == "/absolute":
+        epic = str(tmp_path / "absolute")
+    extra = ["--stream", "epic:999999", "--out-dir", str(tmp_path / "out")] if command == "mint" else []
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.session_canary.kimi_lane",
+            "--repo",
+            str(repo),
+            command,
+            f"--epic={epic}",
+            *extra,
+        ],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    assert proc.returncode == 2
+    assert "error: epic must be a selector" in proc.stderr
+    assert list(tmp_path.rglob("*")) == [repo]
+
+
+@pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
+def test_bootstrap_and_path_helper_reject_unsafe_epic(tmp_path: Path, epic: str) -> None:
+    with pytest.raises(ValueError, match="epic must be a selector"):
+        kimi_lane._epic_dir(tmp_path, epic)
+    with pytest.raises(ValueError, match="epic must be a selector"):
+        kimi_lane.cmd_bootstrap(argparse.Namespace(repo=tmp_path, epic=epic))
+    assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize("epic", ["x", "0", "infra", "7919", "open-model-data", "a--b"])
+def test_epic_dir_preserves_valid_epic(tmp_path: Path, epic: str) -> None:
+    assert kimi_lane._epic_dir(tmp_path, epic) == tmp_path / ".claude" / f"{epic}-epic"
+    assert not list(tmp_path.iterdir())
 
 
 def test_cold_start_body_contains_binding_rules() -> None:

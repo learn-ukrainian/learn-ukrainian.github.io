@@ -12,11 +12,67 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.env_sanitize import build_agent_env
+from agent_runtime.registry import AGENTS
 from agent_runtime.result import ParseResult
 from agent_runtime.runner import _execute_invocation_plan
 from tests.helpers.python import project_python
 
 _TEST_PYTHON = project_python()
+
+
+_CREDENTIAL_PROBE_NAMES = (
+    "CURSOR_API_KEY",
+    "OPENAI_API_KEY",
+    "CODEX_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "CLAUDE_API_KEY",
+    "GEMINI_API_KEY",
+    "GOOGLE_API_KEY",
+    "GOOGLE_GENERATIVE_AI_API_KEY",
+    "XAI_API_KEY",
+    "KIMICC_AUTH_TOKEN",
+    "MOONSHOT_API_KEY",
+    "KIMI_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "GITHUB_TOKEN",
+    "GH_TOKEN",
+    "ZZ_PROBE_API_KEY",
+    "ZZ_PROBE_TOKEN",
+    "ZZ_PROBE_SECRET",
+    "AB_PROBE_API_KEY",
+    "LU_PROBE_TOKEN",
+    "LC_PROBE_SECRET",
+)
+
+
+@pytest.mark.parametrize("provider", sorted(AGENTS))
+@pytest.mark.parametrize("override", [False, True], ids=["inherited", "override"])
+def test_registry_provider_credential_matrix(tmp_path, provider, override):
+    credentials = {name: f"sentinel-{name.lower()}" for name in _CREDENTIAL_PROBE_NAMES}
+    parent = {"PATH": "/usr/bin", "HOME": str(tmp_path)}
+    if not override:
+        parent.update(credentials)
+
+    with patch.dict("os.environ", parent, clear=True):
+        env = build_agent_env(
+            provider=provider,
+            model=AGENTS[provider]["default_model"],
+            overrides=credentials if override else {},
+        )
+
+    expected = {
+        "codex": {"OPENAI_API_KEY", "CODEX_API_KEY"},
+        "claude": {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"},
+        "gemini": {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"},
+        "cursor": {"CURSOR_API_KEY"},
+        "acpx-cursor-shadow": {"CURSOR_API_KEY"},
+        "kimi": {"KIMICC_AUTH_TOKEN", "MOONSHOT_API_KEY", "KIMI_API_KEY", "ANTHROPIC_AUTH_TOKEN"},
+    }.get(provider, set())
+    # GitHub identity is shared intentionally; Kimi seats cannot publish.
+    if provider not in {"kimi", "acpx-kimi-shadow", "acpx-kimicc-shadow"}:
+        expected.add("GH_TOKEN")
+
+    assert {name: env[name] for name in credentials if name in env} == {name: credentials[name] for name in expected}
 
 
 def test_build_agent_env_passes_only_current_provider_credentials():

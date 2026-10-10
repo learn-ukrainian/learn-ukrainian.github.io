@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.api.state_helpers import cache_get_with_age, cache_invalidate, cache_set
+from scripts.fleet.credit_lane import SUBSCRIPTION_NEAR_CAP_USED_PCT
 
 try:
     from scripts.agent_runtime.adapters.cursor import (
@@ -2473,7 +2474,7 @@ def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = 
                 "trend": "flat",
                 "delta_auto_pct": 0.0,
                 "headroom_pct": headroom,
-                "deficit": float(auto) >= 90.0,
+                "deficit": float(auto) >= SUBSCRIPTION_NEAR_CAP_USED_PCT,
                 "samples": 1,
             }
         weekly = rows[-1].get("weekly_used_pct")
@@ -2483,7 +2484,7 @@ def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = 
                 "trend": "flat",
                 "delta_auto_pct": 0.0,
                 "headroom_pct": headroom,
-                "deficit": float(weekly) >= 90.0,
+                "deficit": float(weekly) >= SUBSCRIPTION_NEAR_CAP_USED_PCT,
                 "samples": 1,
             }
         return {"trend": None, "delta_auto_pct": None, "samples": 1}
@@ -2505,7 +2506,7 @@ def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = 
         "trend": trend,
         "delta_auto_pct": round(delta, 2),
         "headroom_pct": headroom,
-        "deficit": float(cur_auto) >= 90.0,
+        "deficit": float(cur_auto) >= SUBSCRIPTION_NEAR_CAP_USED_PCT,
         "samples": len(rows),
     }
 

@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.epic_selector import validate_epic
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select
 
@@ -42,6 +43,7 @@ def _utc_now() -> str:
 
 
 def _epic_dir(repo: Path, epic: str) -> Path:
+    validate_epic(epic)
     return repo / ".claude" / f"{epic}-epic"
 
 
@@ -209,6 +211,7 @@ def _write_cold_start(
 def cmd_bootstrap(args: argparse.Namespace) -> int:
     """Open/reclaim stream lease, mint canary, write KIMI-COLD-START.md + session-lease.env."""
     repo = Path(args.repo).resolve()
+    validate_epic(args.epic)
     epic = args.epic.strip().lower()
     stream_id = (args.stream or EPIC_STREAM_DEFAULTS.get(epic) or "").strip()
     if not stream_id:
@@ -238,9 +241,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     epic_dir.mkdir(parents=True, exist_ok=True)
     store = SessionStreamStore(SessionStreamDatabase())
     conn = SessionStreamDatabase().connect()
-    row = conn.execute(
-        "SELECT * FROM stream_leases WHERE stream_id = ?", (stream_id,)
-    ).fetchone()
+    row = conn.execute("SELECT * FROM stream_leases WHERE stream_id = ?", (stream_id,)).fetchone()
 
     # Prefer the long-lived shell/kimi PID (start-kimi.sh passes $$ before exec).
     holder_pid = int(args.holder_pid) if args.holder_pid else os.getpid()
@@ -263,14 +264,8 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
         prior_agent = str(row["holder_agent"])
         prior_alive = _process_alive(prior_pid)
         if now < expires_at and prior_alive:
-            if (
-                prior_agent == _HOLDER_AGENT
-                and str(row["holder_harness"]) == _HOLDER_HARNESS
-            ):
-                lease_summary = (
-                    f"LIVE (kimi pid={prior_pid}); session={row['session_id']} "
-                    f"fence={row['fencing_token']}"
-                )
+            if prior_agent == _HOLDER_AGENT and str(row["holder_harness"]) == _HOLDER_HARNESS:
+                lease_summary = f"LIVE (kimi pid={prior_pid}); session={row['session_id']} fence={row['fencing_token']}"
                 _write_lease_env_from_row(epic_dir / "session-lease.env", row)
                 print(f"bootstrap: stream {stream_id} already held ({lease_summary})")
             else:
@@ -299,10 +294,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
                     stream_id=stream_id,
                     session_id=str(row["session_id"]),
                     candidate=holder,
-                    reason=(
-                        "kimi bootstrap reclaim: prior holder process dead "
-                        f"(expires_at={row['expires_at']})"
-                    ),
+                    reason=(f"kimi bootstrap reclaim: prior holder process dead (expires_at={row['expires_at']})"),
                 )
                 print(
                     f"bootstrap: force-closed dead-holder session {row['session_id']} "
@@ -333,11 +325,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
             )
             return 2
 
-    if (
-        not blocked
-        and lease is None
-        and not lease_summary.startswith("LIVE")
-    ):
+    if not blocked and lease is None and not lease_summary.startswith("LIVE"):
         try:
             lease = store.open_session(
                 stream_id=stream_id,
@@ -560,7 +548,13 @@ def main(argv: list[str] | None = None) -> int:
     # Ensure nested cmds that read args.repo always have it.
     if not hasattr(args, "repo") or args.repo is None:
         args.repo = ROOT
-    return int(args.func(args))
+    try:
+        if args.command != "protocol":
+            validate_epic(args.epic)
+        return int(args.func(args))
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ operation:
   purpose: Advanced Ukrainian-language and domain-prose evidence for machine-learnable content.
   source_count_policy: Coverage is judged by required topic cells and evidence quality, not by an arbitrary book count.
   foreign_language_sources: out_of_scope
+  foreign_student_pedagogy_sources: private_reference_only_not_resident_in_sources_db
 normative_hierarchy:
 - rank: 1
   authority: current_official_ukrainian_orthography
@@ -246,7 +247,9 @@ coverage_summary:
   acquisition_research: 0
   residual_gap: 0
   accepted: 0
-  acceptance_gate: A source closes a cell only after its rights, native text, Drive identities, and database identity pass.
+  acceptance_gate: >-
+    A source closes a cell only after its rights, native text, Drive
+    identities, and database identity pass.
 native_exactness_audit:
   source_count: 12
   chunk_count: 2681
@@ -338,9 +341,20 @@ sources:
     source_file: uni-ukrmova-vlasova-2023
     inserted_rows: 177
     linked_rows: 177
+    historical_inserted_rows: 177
+    historical_linked_rows: 177
+    current_resident: false
+    current_store_rows: 0
+    permitted_use: private_pedagogy_reference_only
+    allowed_lanes: []
+    boundary_disposition: excluded_from_sources_db_per_issue_10102
     canonical_db_sha256_after: 2152fbcf35753277b993dcce6380233cbca624758f280addf84f29e4120aa409
     receipt_sha256: f3656bf66c9dddad661b9010aeffccb106d229f77773a197d3f1631fe937802c
     receipt_drive_identity: university_corpus/jsonl/phase3-university-remaining-canonical-ingest-v1.json
+    provenance_note: >-
+      Historical inserted_rows reflects pre-reconciliation rehearsal ingestion.
+      Under current #10102 source boundary, Ukrainian-as-a-foreign-language textbooks
+      are private pedagogy reference only and are not resident in sources.db.
   quality_state: canary_passed_177_chunks_145_clean_32_bilingual_or_symbol_flagged
   language_profile: Ukrainian instructional text with English and some Russian glosses
   admission_state: canary_passed
@@ -478,9 +492,20 @@ sources:
     source_file: uni-ukrmova-syntax-didkivska-shvets-2020
     inserted_rows: 229
     linked_rows: 229
+    historical_inserted_rows: 229
+    historical_linked_rows: 229
+    current_resident: false
+    current_store_rows: 0
+    permitted_use: private_pedagogy_reference_only
+    allowed_lanes: []
+    boundary_disposition: excluded_from_sources_db_per_issue_10102
     canonical_db_sha256_after: 1f5123fc516701d9a55fa89c1d7a5b93a3c30a925c6df95f372f6de8e5c045e8
     receipt_sha256: a9edd5f0c46afc467558656bdac1c874c3f3ac07f40d5db7b7c82060f205306e
     receipt_drive_identity: university_corpus/jsonl/phase3-university-language-b1-canonical-ingest-v1.json
+    provenance_note: >-
+      Historical inserted_rows reflects pre-reconciliation rehearsal ingestion.
+      Under current #10102 source boundary, Ukrainian-as-a-foreign-language textbooks
+      are private pedagogy reference only and are not resident in sources.db.
   quality_state: accepted_229_chunks_56_printed_letter_spacing_findings_verified
   language_profile: Ukrainian instructional text for foreign students
   admission_state: accepted
