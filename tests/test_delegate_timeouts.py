@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -225,8 +226,7 @@ def test_release_stale_branch_holders_guard_timeout_refuses_removal(
 
     err = capsys.readouterr().err
     assert (
-        f"ℹ️  branch 'feature' held by {holder} not auto-releasable "
-        "(scratch_release_refused:TimeoutExpired:unknown)"
+        f"ℹ️  branch 'feature' held by {holder} not auto-releasable (scratch_release_refused:TimeoutExpired:unknown)"
     ) in err
     assert "failed to release stale branch holder" not in err
     assert "🌲 released stale branch holder" not in err
@@ -580,3 +580,69 @@ def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def test_auto_finalize_push_timeout_tracks_gate_budgets(tmp_path: Path) -> None:
+    import runpy
+
+    from scripts import delegate
+
+    gate_path = Path(delegate.__file__).resolve().parents[1] / ".githooks/pre_push_gate.py"
+    bounds = runpy.run_path(str(gate_path))
+    required = DEFAULT_NETWORK_GIT_TIMEOUT_S + bounds["ADMISSION_MAX_WAIT_S"] + bounds["ADMISSION_WAIT_S"]
+    calls: list[float] = []
+
+    def run(cmd, **kwargs):
+        calls.append(kwargs["timeout"])
+        return _completed(cmd)
+
+    with patch("subprocess.run", side_effect=run):
+        _push_auto_finalize_branch(tmp_path, "feature")
+
+    assert calls == [required]
+
+
+def test_delegate_import_succeeds_without_the_hook(tmp_path: Path) -> None:
+    from scripts import delegate
+
+    fixture_scripts = tmp_path / "scripts"
+    fixture_scripts.mkdir()
+    (fixture_scripts / "delegate.py").write_text(Path(delegate.__file__).read_text())
+    assert not (tmp_path / ".githooks/pre_push_gate.py").exists()
+    code = (
+        "import scripts\n"
+        f"scripts.__path__.insert(0, {str(fixture_scripts)!r})\n"
+        "import scripts.delegate\n"
+        f"assert scripts.delegate._local_repo_root == __import__('pathlib').Path({str(tmp_path)!r})\n"
+        "print('delegate import succeeded without hook')\n"
+    )
+    result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "delegate import succeeded without hook"
+
+
+def test_auto_finalize_push_fails_closed_without_the_hook(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts import delegate
+
+    monkeypatch.setattr(delegate, "_local_repo_root", tmp_path)
+    with patch("subprocess.run") as run:
+        with pytest.raises(RuntimeError, match=r"^auto_finalize_push_failed, FileNotFoundError ENOENT$"):
+            _push_auto_finalize_branch(tmp_path, "feature")
+    run.assert_not_called()
+
+
+def test_auto_finalize_push_fails_closed_with_an_unreadable_hook(tmp_path: Path) -> None:
+    with (
+        patch("scripts.delegate.runpy.run_path", side_effect=PermissionError("unreadable hook")),
+        patch("subprocess.run") as run,
+        pytest.raises(RuntimeError, match=r"^auto_finalize_push_failed, PermissionError$"),
+    ):
+        _push_auto_finalize_branch(tmp_path, "feature")
+    run.assert_not_called()
+
+
+def test_delegate_unknown_attribute_is_an_attribute_error() -> None:
+    from scripts import delegate
+
+    with pytest.raises(AttributeError, match="has no attribute 'unknown_gate_setting'"):
+        _ = delegate.unknown_gate_setting
