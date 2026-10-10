@@ -34,6 +34,7 @@ from scripts.agent_runtime.adapters.glm import (
     GlmEgressForbiddenError,
     assert_glm_egress_allowed,
 )
+from scripts.driver_blockers import validate_epic
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 
@@ -53,6 +54,7 @@ def _utc_now() -> str:
 
 
 def _epic_dir(repo: Path, epic: str) -> Path:
+    validate_epic(epic)
     return repo / ".claude" / f"{epic}-epic"
 
 
@@ -324,6 +326,7 @@ def cmd_score(args: argparse.Namespace) -> int:
 
 def cmd_bootstrap(args: argparse.Namespace) -> int:
     repo = Path(args.repo).resolve()
+    validate_epic(args.epic)
     epic = args.epic.strip().lower()
     stream_id = _stream_id(args)
 
@@ -477,8 +480,11 @@ def main(argv: list[str] | None = None) -> int:
     if not hasattr(args, "repo") or args.repo is None:
         args.repo = ROOT
     try:
+        # Hydration/protocol use routing aliases; probe has no epic paths.
+        if args.subcommand not in {"hydrate", "protocol", "probe"}:
+            validate_epic(args.epic)
         return int(args.func(args))
-    except _gl.StreamResolutionError as exc:
+    except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
