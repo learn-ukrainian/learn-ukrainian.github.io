@@ -399,6 +399,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:1",
     ),
     (
+        "scripts/ci/test_impact.py",
+        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
+        "09c3670d5fd82ff93110ddeba592fa5c9e1731adc84cd72d25ec2d5a88221ecf:1",
+    ),
+    (
         "scripts/common/github_client.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "2219963a5a1e72c8db05c5b74e488322d39619ce816c3876439418c1c4901d25:2",
