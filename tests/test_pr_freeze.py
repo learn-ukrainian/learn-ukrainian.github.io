@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -51,7 +52,7 @@ def test_fails_open_with_warning(tmp_path: Path) -> None:
 
     decision = pr_freeze.evaluate(REPO, environ={}, fetch=broken, cache_file=tmp_path / "c.json")
     assert not decision.refused
-    assert decision.warning and "network down" in decision.warning
+    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
 
 
 def test_branch_exempt_only_with_open_pr(tmp_path: Path) -> None:
@@ -70,7 +71,8 @@ def test_branch_exempt_only_with_open_pr(tmp_path: Path) -> None:
         raise RuntimeError("lookup failed")
 
     unknown = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, fetch=fetch, has_open_pr=broken, cache_file=cache)
-    assert not unknown.refused and "lookup failed" in (unknown.warning or "")
+    assert not unknown.refused
+    assert unknown.warning == "open-PR freeze check skipped: branch_pr_lookup_unavailable"
 
 
 def test_cache_reused_within_ttl(tmp_path: Path) -> None:
@@ -90,7 +92,6 @@ def test_cache_reused_within_ttl(tmp_path: Path) -> None:
         ({"cwd": "/some/worktree"}, False),
         ({"review": True}, False),
         ({"reused_worktree": True}, False),
-        ({"continuation": True}, False),
         ({"mode": "read-only"}, False),
         ({"repo_role": "private-infra"}, False),
     ],
@@ -144,7 +145,10 @@ def test_helper_allows_existing_pr_branch(monkeypatch) -> None:
     monkeypatch.setattr(pr_freeze, "branch_has_open_pr", lambda repo, branch: True)
     monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
     repo = SimpleNamespace(github=REPO, role="public-monorepo")
-    args = argparse.Namespace(mode="workspace-write", branch="codex/fix-1", pr=None, cwd=None, worktree=None)
+    args = argparse.Namespace(
+        mode="workspace-write", branch="codex/fix-1", pr=None, cwd=None, worktree=None,
+        force_new=True, task_id="retry-probe",
+    )
     assert delegate._check_open_pr_freeze(args, repo) is None
 
 
@@ -176,7 +180,77 @@ def test_force_new_without_prior_record_is_still_refused(monkeypatch, capsys, tm
 
     (tmp_path / "tasks").mkdir()
     (tmp_path / "tasks" / "fresh-id.json").write_text("{}")
+    assert delegate._check_open_pr_freeze(args, repo) == 3
+
+
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("prior_mode", ["read-only", "workspace-write"])
+def test_force_new_record_cannot_exempt_fresh_branch(monkeypatch, capsys, tmp_path, archived, prior_mode) -> None:
+    """A retained record is not evidence that the retry reuses a checkout or PR."""
+    from scripts import delegate
+
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path / "tasks")
+    task_id = "retry-probe"
+    record = delegate._archived_state_path(task_id) if archived else delegate._state_path_no_create(task_id)
+    record.parent.mkdir(parents=True)
+    record.write_text(json.dumps({"task_id": task_id, "mode": prior_mode, "status": "done", "branch": "codex/reaped"}))
+    before = record.read_bytes()
+
+    def no_side_effects(*a, **k):
+        raise AssertionError("fresh-branch retry reached a side effect while frozen")
+
+    monkeypatch.setattr(delegate, "_state_path", no_side_effects)
+    monkeypatch.setattr(delegate, "_archive_task_artifacts", no_side_effects)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "delegate.py", "dispatch", "--agent", "codex", "--task-id", task_id,
+            "--mode", "workspace-write", "--worktree", "--force-new", "--prompt", "implement a thing",
+        ],
+    )
+    assert delegate.main() == 3
+    assert "Land your own open PRs first" in capsys.readouterr().err
+    assert record.read_bytes() == before
+
+
+@pytest.mark.parametrize("failure", ["count", "branch", "client_cache"])
+def test_dispatch_warning_omits_raw_diagnostics(monkeypatch, capsys, tmp_path, failure) -> None:
+    from scripts import delegate
+
+    sentinel = "SYNTHETIC_PRIVATE_DIAGNOSTIC"
+
+    def broken(*a, **k):
+        raise OSError(sentinel)
+
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    if failure == "count":
+        monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", broken)
+    elif failure == "client_cache":
+        # Exercise the actual count-fetch path through the client boundary.
+        from scripts.common import github_client
+
+        monkeypatch.setattr(github_client, "run", broken)
+    else:
+        monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
+        monkeypatch.setattr(pr_freeze, "branch_has_open_pr", broken)
+    repo = SimpleNamespace(github=REPO, role="public-monorepo")
+    args = argparse.Namespace(
+        mode="workspace-write",
+        branch=sentinel if failure == "branch" else None,
+        pr=None,
+        cwd=None,
+        worktree="auto",
+    )
     assert delegate._check_open_pr_freeze(args, repo) is None
+    output = capsys.readouterr()
+    reason = "branch_pr_lookup_unavailable" if failure == "branch" else "open_pr_count_unavailable"
+    assert reason in output.err
+    assert sentinel not in output.err + output.out
 
 
 def test_fresh_explicit_worktree_path_is_still_refused(monkeypatch, tmp_path) -> None:

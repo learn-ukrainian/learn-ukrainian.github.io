@@ -4934,16 +4934,6 @@ def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bo
         return False
 
 
-def _has_prior_task_record(task_id: str) -> bool:
-    """Read-only: True when ``task_id`` already has a live or archived record (a real continuation)."""
-    if not task_id:
-        return False
-    try:
-        return _state_path_no_create(task_id).exists() or _archived_state_path(task_id).exists()
-    except OSError:
-        return False
-
-
 def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any, repo_root: Path | None = None) -> int | None:
     """Refuse a new PR-opening implementation dispatch while too many public PRs are open.
 
@@ -4959,7 +4949,6 @@ def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any, repo_root: 
         cwd=getattr(args, "cwd", None),
         review=_dispatch_is_review_typed(args),
         reused_worktree=_is_existing_worktree(worktree, repo_root=repo_root),
-        continuation=bool(getattr(args, "force_new", False)) and _has_prior_task_record(str(getattr(args, "task_id", "") or "")),
     ):
         return None
     decision = pr_freeze.evaluate(fleet_repo.github, branch=getattr(args, "branch", None))

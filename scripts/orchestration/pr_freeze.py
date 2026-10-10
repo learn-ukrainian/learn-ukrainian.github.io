@@ -3,8 +3,8 @@
 While the public repository has ``threshold`` or more open pull requests, a
 new write-capable dispatch that would open a new PR is refused. Work on an
 existing PR stays allowed: ``--pr``, a ``--branch`` that already has an open
-PR, a reused ``--cwd`` or explicit ``--worktree`` path, and ``--force-new``
-continuations of an existing task. Read-only work, reviews and other
+PR, or a reused ``--cwd`` or explicit ``--worktree`` path. ``--force-new``
+alone does not prove branch continuation. Read-only work, reviews and other
 repositories are unaffected. A ``--branch`` with no open PR counts as new.
 
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
@@ -135,7 +135,6 @@ def opens_new_pr(
     cwd: str | None,
     review: bool,
     reused_worktree: bool = False,
-    continuation: bool = False,
 ) -> bool:
     """True for a write-capable public dispatch that may open a new PR.
 
@@ -149,7 +148,6 @@ def opens_new_pr(
         and not cwd
         and not review
         and not reused_worktree
-        and not continuation
     )
 
 
@@ -170,12 +168,12 @@ def evaluate(
     has_open_pr = has_open_pr or branch_has_open_pr
     try:
         count = cached_open_pr_count(repo, fetch=fetch, cache_file=cache_file, ttl_s=_cache_s(env))
-    except Exception as exc:
+    except Exception:
         return FreezeDecision(
             refused=False,
             open_prs=None,
             threshold=threshold,
-            warning=f"open-PR freeze check skipped: could not count open PRs ({exc})",
+            warning="open-PR freeze check skipped: open_pr_count_unavailable",
         )
     if count < threshold:
         return FreezeDecision(refused=False, open_prs=count, threshold=threshold)
@@ -183,11 +181,11 @@ def evaluate(
         try:
             if has_open_pr(repo, branch):
                 return FreezeDecision(refused=False, open_prs=count, threshold=threshold)
-        except Exception as exc:
+        except Exception:
             return FreezeDecision(
                 refused=False,
                 open_prs=count,
                 threshold=threshold,
-                warning=f"open-PR freeze check skipped: could not look up the PR for {branch} ({exc})",
+                warning="open-PR freeze check skipped: branch_pr_lookup_unavailable",
             )
     return FreezeDecision(refused=True, open_prs=count, threshold=threshold)
