@@ -1,5 +1,23 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Claude weekly cap help (#10355)
+
+`tests/review/fixtures/claude-cap-10355.json` records the launcher help lines
+for the operator Claude cap policy: every Claude launch stops at 99% weekly
+used, Opus is always blocked (explicit Opus is refused, a defaulted Opus driver
+switches to `claude-sonnet-5-5`), and `LU_CLAUDE_CAP_OVERRIDE=1` bypasses only
+the 99% stop. Both configurations were captured with the documented
+`capture.py` command against this checkout, using the test module's scoped
+`CAPTURE_RUNNER` cache, and compared with every approved surface. Only the
+`launchers` `stdout` of the 14 `help` rows differs, identically in both
+configurations: rows 4 and 9 (Claude providers) gain the cap environment
+paragraph, and every help row gains exit code 7. The fixture is applied after
+the other overlays as exact-once literal insertions. Its digest is pinned in
+`tests/review/test_model_catalog.py`, and a scope test checks that no other row,
+field or surface changes. Historical baselines, inputs, the occurrence ledger,
+`SHA256SUMS` and `capture.py` stay byte-identical. Any other difference blocks
+regeneration.
+
 ## Explicit AGY review risk (#10262)
 
 The fresh capture changes only the refusal field in 32 dispatch rows for AGY

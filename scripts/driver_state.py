@@ -32,10 +32,9 @@ An absent or invalid target is unknown and cannot force a worker-count continuat
 ``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
 reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
-per-conversation counter caps consecutive continuations when its private storage
-is available. Exhaustion returns ``decision: allow`` with a visible gate failure and
-records its typed cause. Counter errors preserve required continuation while
-allowing clean reports and escalations to stop.
+per-conversation counter caps consecutive continuations under an exclusive lock.
+Exhaustion and counter storage errors return ``decision: allow`` with a visible
+gate failure and record their typed cause when storage permits.
 ``agy-pretool-hook`` denies the interactive
 ``ask_question`` tool for driver sessions: nobody answers it in a driver pane.
 Uses the shared project interpreter and its installed CommonMark parser.
@@ -45,6 +44,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import fcntl
 import json
 import os
 import re
@@ -61,13 +61,16 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.common.jsonl import jsonl_lines
+from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 from scripts.common.task_store_paths import tasks_dir
+from scripts.driver_blockers import LEDGER_NAME, USAGE_RULE, show_summary, validate_epic
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
 MAX_INJECT_CHARS = 6000
 MIN_WORKERS_ENV = "LU_DRIVER_MIN_WORKERS"
 MAX_CONSECUTIVE_CONTINUES = 4
+COUNTER_STORAGE_ERRORS = (OSError, ValueError, InstallError)
 ESCALATION_MARKER = "CTO-ESCALATION:"
 LIVE_WORKER_STATUSES = frozenset({"spawning", "running"})
 # AGY reports a normal end of turn as NO_TOOL_CALL (docs also show model_stop).
@@ -81,9 +84,11 @@ POLICY = f"""## {POLICY_TITLE}
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
 - End every turn with the privately configured worker target met and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
 """
+BLOCKER_POLICY_TITLE = "CTO blocker delta policy"
+BLOCKER_POLICY = f"## {BLOCKER_POLICY_TITLE}\n{USAGE_RULE}\n"
 # Preserve the former total envelope budget (state, policy and wrapper), but
 # apply it to the complete rendered message rather than truncating the state.
-MAX_ENVELOPE_CHARS = MAX_INJECT_CHARS + len(POLICY) + 600
+MAX_ENVELOPE_CHARS = MAX_INJECT_CHARS + len(POLICY) + len(BLOCKER_POLICY) + 600
 
 TEMPLATE = """# Driver state: {epic}
 
@@ -103,6 +108,7 @@ TEMPLATE = """# Driver state: {epic}
 - No secrets or deployment details in the public repo.
 
 {policy}
+{blocker_policy}
 ## Next step
 - <single next action>
 """
@@ -128,13 +134,15 @@ def _repo_root(start: Path | None = None) -> Path:
 
 def state_path(epic: str | None = None, root: Path | None = None) -> Path | None:
     """Resolve the state file: explicit epic wins, then the launcher env."""
-    if epic:
+    if epic is not None:
+        validate_epic(epic)
         return (root or _repo_root()) / ".claude" / f"{epic}-epic" / STATE_NAME
     env = os.environ.get(STATE_ENV, "").strip()
     if env:
         return Path(env)
     session_epic = os.environ.get("SESSION_EPIC", "").strip()
     if session_epic:
+        validate_epic(session_epic)
         return (root or _repo_root()) / ".claude" / f"{session_epic}-epic" / STATE_NAME
     return None
 
@@ -162,6 +170,18 @@ def _section(text: str, title: str) -> list[str]:
 def render_injection(text: str, path: Path) -> str:
     if POLICY_TITLE.lower() not in text.lower():
         text = text.rstrip() + "\n\n" + POLICY
+    tokens = MarkdownIt().parse(text)
+    lines = text.splitlines()
+    headings = {
+        tokens[index + 1].content
+        for index, token in enumerate(tokens)
+        if token.type == "heading_open"
+        and token.markup == "##"
+        and token.level == 0
+        and lines[token.map[0]].startswith("## ")
+    }
+    if BLOCKER_POLICY_TITLE not in headings:
+        text = text.rstrip() + "\n\n" + BLOCKER_POLICY
     message = (
         "PINNED DRIVER STATE (re-injected every model call; authoritative over any "
         "compacted summary). You are the driver for the epic below. Re-orient from it "
@@ -361,32 +381,87 @@ def running_workers(initiator: str) -> int | None:
     return count
 
 
+@contextlib.contextmanager
+def _counter_directory(directory: Path):
+    directory_fd = open_unit_dir(directory, create=True, directory_mode=0o700)
+    if directory_fd is None:
+        raise ValueError("continuation counter directory vanished during creation")
+    try:
+        info = os.fstat(directory_fd)
+        if info.st_uid != os.geteuid() or info.st_mode & 0o077:
+            raise PermissionError("continuation counter directory must be private and owned by the current user")
+        yield directory_fd
+    finally:
+        os.close(directory_fd)
+
+
 def _counter_path(state: Path, conversation_id: str) -> Path:
     directory = state.parent / "stop-counters"
-    directory.mkdir(mode=0o700, exist_ok=True)
-    info = directory.lstat()
-    if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid() or info.st_mode & 0o077:
-        raise PermissionError("continuation counter directory must be private and owned by the current user")
+    with _counter_directory(directory):
+        pass
     safe = re.sub(r"[^A-Za-z0-9_-]", "_", conversation_id or "unknown")[:80]
     return directory / f"stop-{safe}.count"
 
 
+def _write_counter_record(directory_fd: int, path: Path, content: bytes) -> None:
+    # Like driver_blockers, refuse a replaced parent while keeping I/O pinned.
+    with _counter_directory(path.parent) as current_fd:
+        held, current = os.fstat(directory_fd), os.fstat(current_fd)
+        if (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
+            raise ValueError("continuation counter directory changed during operation")
+    read_unit(directory_fd, path.name)
+    if path.suffix == ".count":
+        read_unit(directory_fd, f"{path.name}.lock")
+    write_unit(directory_fd, path.name, content, mode=0o600)
+
+
+@contextlib.contextmanager
+def _counter_lock(path: Path):
+    with _counter_directory(path.parent) as directory_fd:
+        name = f"{path.name}.lock"
+        read_unit(directory_fd, name)
+        lock_fd = os.open(
+            name,
+            os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
+            0o600,
+            dir_fd=directory_fd,
+        )
+        try:
+            held = os.fstat(lock_fd)
+            current = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+            if not stat.S_ISREG(held.st_mode) or (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
+                raise ValueError("continuation counter lock is not a stable regular file")
+            os.fchmod(lock_fd, 0o600)
+            fcntl.flock(lock_fd, fcntl.LOCK_EX)
+            yield directory_fd
+        finally:
+            os.close(lock_fd)
+
+
 def _bump_counter(state: Path, conversation_id: str) -> int:
     path = _counter_path(state, conversation_id)
-    try:
-        value = int(path.read_text(encoding="utf-8").strip() or "0") + 1
-    except FileNotFoundError:
-        value = 1
-    if value <= 0:
-        raise ValueError("invalid continuation counter")
-    # Once exhausted, report the failure even if counter writes are broken.
-    if value <= MAX_CONSECUTIVE_CONTINUES:
-        path.write_text(str(value), encoding="utf-8")
-    return value
+    with _counter_lock(path) as directory_fd:
+        stored = read_unit(directory_fd, path.name)
+        try:
+            previous = int(stored[0].decode("utf-8").strip()) if stored is not None else 0
+        except ValueError:
+            raise ValueError("invalid continuation counter") from None
+        if previous < 0:
+            raise ValueError("invalid continuation counter")
+        value = previous + 1
+        # Once exhausted, report the failure even if counter writes are broken.
+        if value <= MAX_CONSECUTIVE_CONTINUES:
+            _write_counter_record(directory_fd, path, str(value).encode("utf-8"))
+        return value
 
 
 def _reset_counter(state: Path, conversation_id: str) -> None:
-    _counter_path(state, conversation_id).write_text("0", encoding="utf-8")
+    # Preserve existing resets on clean reports, leading CTO escalation, excluded
+    # terminations, exhaustion and unexpected Stop errors. Attributed-progress
+    # resets require an approved interface and are outside #10297's local C4 slice.
+    path = _counter_path(state, conversation_id)
+    with _counter_lock(path) as directory_fd:
+        _write_counter_record(directory_fd, path, b"0")
 
 
 def _gate_failure(state: Path, conversation: str, code: str, reason: str, *, hook: str = "agy-stop-hook") -> dict:
@@ -402,10 +477,10 @@ def _gate_failure(state: Path, conversation: str, code: str, reason: str, *, hoo
         "reason": reason,
     }
     try:
-        _counter_path(state, conversation).with_suffix(".failure.json").write_text(
-            json.dumps(failure), encoding="utf-8"
-        )
-    except OSError:
+        path = _counter_path(state, conversation).with_suffix(".failure.json")
+        with _counter_directory(path.parent) as directory_fd:
+            _write_counter_record(directory_fd, path, json.dumps(failure).encode("utf-8"))
+    except COUNTER_STORAGE_ERRORS:
         # A storage fault must never turn a policy failure into a silent allow.
         print(json.dumps(failure), file=sys.stderr)
     if hook == "agy-hook":
@@ -421,12 +496,12 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     conversation = str(payload.get("conversationId") or "")
     reason = str(payload.get("terminationReason") or "").upper().removeprefix("EXECUTOR_TERMINATION_REASON_")
     if reason in SKIP_TERMINATION_REASONS:
-        with contextlib.suppress(OSError):
+        with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
             _reset_counter(path, conversation)
         return {"decision": "allow"}  # errors, limits and user cancels are not policy decisions
     text = last_model_text(payload.get("transcriptPath"))
     if text.strip().startswith(ESCALATION_MARKER) and _message_prose(text).startswith(ESCALATION_MARKER):
-        with contextlib.suppress(OSError):
+        with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
             _reset_counter(path, conversation)
         return {"decision": "allow"}
     reasons = []
@@ -445,12 +520,12 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
             "nothing is armed to wake you; start a background `delegate.py wait` or set a `schedule` timer, then end the turn"
         )
     if not reasons:
-        with contextlib.suppress(OSError):
+        with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
             _reset_counter(path, conversation)
         return {"decision": "allow"}
     try:
         if _bump_counter(path, conversation) > MAX_CONSECUTIVE_CONTINUES:
-            with contextlib.suppress(OSError):
+            with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
                 _reset_counter(path, conversation)
             return _gate_failure(
                 path,
@@ -458,17 +533,23 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
                 "corrective_retry_budget_exhausted",
                 "DRIVER-GATE-FAILED: corrective retry budget exhausted.",
             )
-    except (OSError, ValueError):
-        reasons.append("continuation counter unavailable")
-    return {
-        "decision": "continue",
-        "reason": (
-            "DRIVER-STATE standing decision policy: "
-            + "; ".join(reasons)
-            + f". Ask the CTO only about deletes, money, security or rule changes, via Fleet Comms, "
-            f"with a final message starting `{ESCALATION_MARKER}`."
-        ),
-    }
+    except COUNTER_STORAGE_ERRORS:
+        return _gate_failure(
+            path,
+            conversation,
+            "continuation_counter_unavailable",
+            "DRIVER-GATE-FAILED: continuation counter unavailable. " + _continuation_reason(reasons),
+        )
+    return {"decision": "continue", "reason": _continuation_reason(reasons)}
+
+
+def _continuation_reason(reasons: list[str]) -> str:
+    return (
+        "DRIVER-STATE standing decision policy: "
+        + "; ".join(reasons)
+        + f". Ask the CTO only about deletes, money, security or rule changes, via Fleet Comms, "
+        f"with a final message starting `{ESCALATION_MARKER}`."
+    )
 
 
 def cmd_agy_pretool_hook(stdin_text: str) -> dict:
@@ -497,6 +578,10 @@ def cmd_whoami(path: Path | None) -> int:
         print("state: (no LU_DRIVER_STATE_FILE / SESSION_EPIC; not a driver session)")
         return 1
     print("state: (configured)")
+    print(show_summary(path.parent / LEDGER_NAME, epic))
+    from scripts.driver_blockers import USAGE_RULE
+
+    print(f"blocker-policy: {USAGE_RULE}")
     if not path.is_file():
         print("state file missing; create it with: init --epic <epic>")
         return 1
@@ -523,22 +608,28 @@ def main(argv: list[str] | None = None) -> int:
   .venv/bin/python -m scripts.driver_state init --epic infra
   .venv/bin/python -m scripts.driver_state agy-stop-hook < hook-payload.json
 Outputs: init writes private driver state; hooks emit JSON and private failure/counter records.
-Exit codes: 0 success (hooks report failures in JSON); 1 missing state or refused overwrite.
+Exit codes: 0 success (hooks report failures in JSON); 1 invalid epic, missing state or refused overwrite.
 Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
 """,
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("whoami", help="Print epic, seat, goals and next step.")
+    sub.add_parser("whoami", help="Print epic, seat, goals, next step and CTO blocker baseline summary.")
     sub.add_parser("goals", help="Print the full pinned state file.")
     p_path = sub.add_parser("path", help="Print the state file path.")
     p_path.add_argument("--epic", help="Epic selector, for example infra (default: launcher environment).")
     p_init = sub.add_parser("init", help="Write a template state file for an epic.")
     p_init.add_argument("--epic", required=True, help="Epic selector to initialize, for example infra.")
-    p_init.add_argument("--force", action="store_true", help="Overwrite an existing file.")
+    p_init.add_argument("--force", action="store_true", help="Overwrite an existing file (default: false).")
     sub.add_parser("agy-hook", help="AGY PreInvocation hook: stdin payload -> injectSteps JSON.")
     sub.add_parser("agy-stop-hook", help="AGY Stop hook: continue when the turn ends against policy.")
     sub.add_parser("agy-pretool-hook", help="AGY PreToolUse hook: deny ask_question for drivers.")
     args = parser.parse_args(argv)
+    if getattr(args, "epic", None) is not None:
+        try:
+            validate_epic(args.epic)
+        except ValueError as exc:
+            print(f"driver_state: {exc}", file=sys.stderr)
+            return 1
 
     hooks = {"agy-hook": cmd_agy_hook, "agy-stop-hook": cmd_agy_stop_hook, "agy-pretool-hook": cmd_agy_pretool_hook}
     if args.cmd in hooks:
@@ -550,7 +641,7 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
             path = _driver_session(payload)
             if path is not None:
                 if args.cmd == "agy-stop-hook":
-                    with contextlib.suppress(OSError):
+                    with contextlib.suppress(*COUNTER_STORAGE_ERRORS):
                         _reset_counter(path, str(payload.get("conversationId") or ""))
                 result = _gate_failure(
                     path,
@@ -585,8 +676,8 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
         if path.exists() and not args.force:
             print(f"exists: {path} (use --force to overwrite)", file=sys.stderr)
             return 1
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY), encoding="utf-8")
+        path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY, blocker_policy=BLOCKER_POLICY), encoding="utf-8")
         print(path)
         return 0
     return 2

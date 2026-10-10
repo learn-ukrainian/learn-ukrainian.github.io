@@ -234,6 +234,17 @@ def test_unreadable_policy_keeps_retained_reserve(monkeypatch):
     assert not review_capacity({"remaining_pct": 11}, {"stale": False}).near_cap
 
 
+@pytest.mark.parametrize("remaining,expected_blocked", [(10, True), (11, False)])
+def test_unreadable_policy_dispatch_keeps_retained_reserve(monkeypatch, remaining, expected_blocked):
+    monkeypatch.setattr(credit_lane, "load_policy", lambda: (_ for _ in ()).throw(ValueError("unreadable")))
+    data = snapshot(remaining=remaining)
+    blocked, reason = review_capacity_action(
+        "claude", data["agents"]["claude"], data["diagnostics"], "claude-opus-5-5"
+    )
+    assert blocked is expected_blocked
+    assert reason == ("near_cap (10% remaining)" if expected_blocked else "")
+
+
 def test_capacity_free_evaluation_has_no_live_reads(monkeypatch):
     monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_: pytest.fail("resolver must stay injected"))
     result = evaluate_candidate(REVIEW_CANDIDATES["claude-opus-5-5"], replace(inputs(None), routing_snapshot=None))

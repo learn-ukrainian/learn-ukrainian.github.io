@@ -13,6 +13,14 @@ import pytest
 from scripts.session_canary import codex_lane
 
 
+@pytest.mark.parametrize("epic", ["../../tmp/evil", "/absolute/evil", "bad_name", "-infra", "infra-"])
+def test_bootstrap_rejects_unsafe_epic_before_writing(tmp_path, epic):
+    if epic == "/absolute/evil":
+        epic = str(tmp_path / "absolute" / "evil")
+    assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", f"--epic={epic}", "--stream", "epic:7919"]) != 0
+    assert not (tmp_path / ".claude").exists()
+
+
 @pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
 def test_lane_import_and_bare_hydration_do_not_import_slot_registry(provider) -> None:
     """Keep the bridge import graph outside the hook's bare-provider cold path."""
@@ -43,8 +51,12 @@ assert calls == [("epic:123", provider)]
     env = os.environ.copy()
     env.pop("PYTHONPATH", None)
     result = subprocess.run(
-        [sys.executable, "-c", code, provider], cwd=root, env=env,
-        capture_output=True, text=True, timeout=30,
+        [sys.executable, "-c", code, provider],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 0, result.stderr + result.stdout
     assert result.stdout == '{"execution_allowed": true}\nACTION: hydration ready — continue the current driver.\n'
@@ -59,7 +71,9 @@ def test_score_pass_hydrates_then_continues(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     monkeypatch.setattr(codex_lane, "_with_codex_handoffs", lambda function, args: 0)
-    monkeypatch.setattr(codex_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule())
+    monkeypatch.setattr(
+        codex_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule()
+    )
 
     assert codex_lane.main(["score", "--epic", "harness", "--answers", "answers.json"]) == 0
     assert "hydration ready — continue" in capsys.readouterr().out
@@ -160,7 +174,9 @@ def test_bootstrap_uses_dedicated_devops_stream(tmp_path: Path) -> None:
 def test_devops_alias_resolves_to_dedicated_stream(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
     for selector in ("devops", "infra.devops"):
-        assert codex_lane._stream_id(argparse.Namespace(epic=selector, stream=None)) == "epic:5703"  # allow-hardcoded-epic: devops launcher stream fixture
+        assert (
+            codex_lane._stream_id(argparse.Namespace(epic=selector, stream=None)) == "epic:5703"
+        )  # allow-hardcoded-epic: devops launcher stream fixture
 
 
 def test_bootstrap_records_exact_rollover_without_rendering_lease_credentials(
@@ -274,8 +290,28 @@ def test_hydrate_refuses_slot_when_registry_unavailable(monkeypatch, capsys, tmp
     monkeypatch.setattr(handoff_slot_registry._channels, "ASSIGNMENTS_PATH", tmp_path / "missing.yaml")
     monkeypatch.setenv("SESSION_STREAM_AGENT", f"{provider}-core")
     monkeypatch.setattr(
-        lane.shared_hydration, "build_hydration_capsule_with_retry",
+        lane.shared_hydration,
+        "build_hydration_capsule_with_retry",
         lambda *args: pytest.fail("unverified registration must not fetch or retry"),
     )
     assert lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == 2
     assert "unregistered lane identity" in capsys.readouterr().err
+
+
+def test_cold_start_blocker_delta_policy():
+    from scripts.driver_blockers import USAGE_RULE
+    from scripts.session_canary import codex_lane
+
+    body = codex_lane._cold_start_body(
+        epic="infra",
+        stream_id="epic:7919",
+        handoff_rel="handoff.md",
+        lease_summary="fixture",
+        rollover_summary="none",
+        binding_line="fixture",
+    )
+    assert USAGE_RULE.replace("$SESSION_EPIC", "infra") in body
+    assert "exact case-sensitive standalone token RESOLVED <id>" in body
+    assert "on its own non-active line (no other fields or prose)" in body
+    assert body.count("scripts.driver_blockers delta") == 1
+    assert body.count("scripts.driver_blockers record") == 1

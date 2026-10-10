@@ -186,9 +186,9 @@ NEAR_CAP_CREDIT = {
 }
 # The credit lane is the only candidate: Claude is near cap too, so the recommendation
 # picks Codex exactly when credit relief holds.
-CREDIT_ONLY_SEAT = {**NEAR_CAP_CREDIT, "claude": {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.0}}
+CREDIT_ONLY_SEAT = {**NEAR_CAP_CREDIT, "claude": {**CLAUDE, "weekly_used_pct": 99.0, "weekly_remaining_pct": 1.0}}
 # #9040 controls: Claude near cap, so the recommendation picks Codex exactly when the owner clears its hot label.
-CLAUDE_NEAR_CAP = {**CLAUDE, "weekly_used_pct": 95.0, "weekly_remaining_pct": 5.0}
+CLAUDE_NEAR_CAP = {**CLAUDE, "weekly_used_pct": 99.0, "weekly_remaining_pct": 1.0}
 # Free full resets (no credit balance). The ``_deficit`` payload runs out about 2026-10-07T12:00Z:
 # never-expiring resets outlast that and cover the deficit; one expiring a day earlier does not.
 RESETS_OUTLAST_RUNOUT = {"available_count": 2, "expires_at": [None, None], "fetched_at": FETCHED}

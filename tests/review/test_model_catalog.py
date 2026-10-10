@@ -152,9 +152,21 @@ def approved_launcher_canary_baseline(baseline):
     return {**baseline, "launchers": launchers}
 
 
+def approved_claude_cap_baseline(baseline):
+    """Apply #10355's Claude weekly-cap help lines (99% stop, Opus always blocked)."""
+    cap = json.loads((CAPACITY_FIXTURE / "claude-cap-10355.json").read_bytes())
+    launchers = deepcopy(baseline["launchers"])
+    for replacement in cap["launcher_help_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            assert launchers[index]["stdout"].count(before) == 1
+            launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, "launchers": launchers}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-APPROVED_BASELINE = approved_cursor_trailer_baseline(
+APPROVED_BASELINE = approved_claude_cap_baseline(approved_cursor_trailer_baseline(
     approved_launcher_canary_baseline({
         **approved_review_baseline({
             **BASELINE, **RESOURCE_OVERLAY["surfaces"],
@@ -162,8 +174,40 @@ APPROVED_BASELINE = approved_cursor_trailer_baseline(
         }),
         **GEMINI_OVERLAY["surfaces"],
     })
-)
+))
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
+    fixture_path = CAPACITY_FIXTURE / "claude-cap-10355.json"
+    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
+        "54de3ec4e4166708c3cb2a54ef62256fdf283bc85cd160661db3abe82ddc249f"
+    )
+    cap = json.loads(fixture_path.read_bytes())
+    assert set(cap) == {"launcher_help_replacements"}
+    assert [row["rows"] for row in cap["launcher_help_replacements"]] == [[4, 9], list(range(4, 70, 5))]
+    for row in cap["launcher_help_replacements"]:
+        assert row["after"].startswith(row["before"].splitlines(True)[0])
+        assert row["after"].endswith(row["before"].splitlines(True)[1])
+    text = "".join(row["after"] for row in cap["launcher_help_replacements"])
+    assert "stops at 99% weekly used" in text
+    assert "Opus is always blocked" in text
+    for retired in ("LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT", "default 90", "default 80"):
+        assert retired not in text
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = approved_cursor_trailer_baseline(approved_launcher_canary_baseline({
+        **approved_review_baseline(json.loads(gzip.decompress(path.read_bytes()))),
+        **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+    }))
+    after = approved_claude_cap_baseline(before)
+    assert {k: v for k, v in after.items() if k != "launchers"} == {k: v for k, v in before.items() if k != "launchers"}
+    changed = [i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new]
+    assert changed == list(range(4, 70, 5))
+    for index in changed:
+        assert {k: v for k, v in before["launchers"][index].items() if k != "stdout"} == {
+            k: v for k, v in after["launchers"][index].items() if k != "stdout"
+        }
 
 
 @pytest.mark.parametrize("configuration", ["", "no-cli"])
@@ -407,7 +451,7 @@ PINNED_DIGESTS = {
     "routing-10267.json.gz": "da57576235271cfe20fbd8934e27a42a0288d9cfe4c7349d3b9b4e4e4e9be5bf",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
-    "SPEC.md": "6cae2e9c5ecba8d6fb2fe22880f705f75a87869f8d0a856cea1f0c4f14cf9735",
+    "SPEC.md": "d058408904d3d1b4085d3160bab1dd0cb76742deb177d990adada393c92d1a2a",
     "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -720,7 +764,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_cursor_trailer_baseline(
+    assert actual == approved_claude_cap_baseline(approved_cursor_trailer_baseline(
         approved_launcher_canary_baseline({
             **approved_review_baseline({
                 **original, **RESOURCE_OVERLAY["surfaces"],
@@ -728,7 +772,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             }),
             **GEMINI_OVERLAY["surfaces"],
         })
-    )
+    ))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

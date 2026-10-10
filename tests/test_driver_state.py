@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import stat
 import subprocess
 import sys
@@ -16,6 +17,39 @@ from scripts.common import task_store_paths
 
 REPO = Path(__file__).resolve().parents[1]
 SYNTHETIC_WORKER_TARGET = 7
+
+
+@pytest.mark.parametrize("epic", ["../../tmp/evil", "absolute", "UPPER", "bad_name", "-infra", "infra-"])
+def test_init_rejects_invalid_epic_before_creating_anything(tmp_path, epic):
+    root = tmp_path / "sandbox" / "repo"
+    root.mkdir(parents=True)
+    if epic == "absolute":
+        epic = str(tmp_path / "absolute")
+    result = subprocess.run(
+        [sys.executable, str(REPO / "scripts/driver_state.py"), "init", f"--epic={epic}"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert result.returncode != 0, result.stdout
+    assert not list(tmp_path.rglob("DRIVER-STATE.md"))
+    assert not (root / ".claude").exists()
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_init_private_new_epic_directory_preserves_existing_mode(tmp_path, monkeypatch, existing):
+    monkeypatch.setattr(driver_state, "_repo_root", lambda: tmp_path)
+    directory = tmp_path / ".claude" / "infra-epic"
+    if existing:
+        directory.mkdir(parents=True)
+        directory.chmod(0o750)
+    old_umask = os.umask(0)
+    try:
+        assert driver_state.main(["init", "--epic", "infra"]) == 0
+    finally:
+        os.umask(old_umask)
+    assert stat.S_IMODE(directory.stat().st_mode) == (0o750 if existing else 0o700)
 
 
 @pytest.fixture
@@ -79,6 +113,7 @@ def test_whoami_prints_goals_and_next(state, capsys):
     assert "epic: infra" in out
     assert "fix X" in out
     assert "open PR" in out
+    assert "blocker-policy: Put every owned blocker in --current with complete: true;" in out
 
 
 @pytest.mark.parametrize("missing", [False, True])
@@ -469,21 +504,14 @@ def test_stop_refuses_unsafe_counter_directory(driver, state, monkeypatch, unsaf
         else:
             directory.chmod(0o777)
     out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "continue"
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
     assert "counter unavailable" in out["reason"]
     assert list(directory.iterdir()) == []
 
 
-@pytest.mark.parametrize(
-    "operation,ending",
-    [
-        (operation, ending)
-        for operation in ("mkdir", "lstat", "read_text", "write_text", "unlink")
-        for ending in ("question", "clean", "escalation", "cap")
-        if not (operation == "read_text" and ending in ("clean", "escalation"))
-        and not (operation == "unlink" and ending == "question")
-    ],
-)
+@pytest.mark.parametrize("operation", ["directory", "read", "write", "lock-open", "lock-acquire", "unlink"])
+@pytest.mark.parametrize("ending", ["question", "clean", "escalation", "cap"])
 def test_stop_cli_counter_io_errors_fail_closed(driver, state, monkeypatch, capsys, operation, ending):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     content = {
@@ -495,14 +523,49 @@ def test_stop_cli_counter_io_errors_fail_closed(driver, state, monkeypatch, caps
     transcript = _transcript(driver, content)
     counter = driver_state._counter_path(state, "synthetic-conversation")
     counter.write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES if ending == "cap" else 0), encoding="utf-8")
-    original = getattr(Path, operation)
+    if operation == "directory":
+        original = driver_state.open_unit_dir
 
-    def denied(path, *args, **kwargs):
-        if path in (counter, counter.parent):
-            raise PermissionError("synthetic counter storage is unwritable")
-        return original(path, *args, **kwargs)
+        def denied(path, *args, **kwargs):
+            if path == counter.parent:
+                raise PermissionError("synthetic directory storage fault")
+            return original(path, *args, **kwargs)
 
-    monkeypatch.setattr(Path, operation, denied)
+        monkeypatch.setattr(driver_state, "open_unit_dir", denied)
+    elif operation in ("read", "write"):
+        name = "read_unit" if operation == "read" else "write_unit"
+        original = getattr(driver_state, name)
+
+        def denied(fd, name, *args, **kwargs):
+            if name == counter.name:
+                raise PermissionError("synthetic counter storage fault")
+            return original(fd, name, *args, **kwargs)
+
+        monkeypatch.setattr(driver_state, name, denied)
+    elif operation == "lock-open":
+        original = os.open
+
+        def denied(name, *args, **kwargs):
+            if name == counter.name + ".lock":
+                raise PermissionError("synthetic lock storage fault")
+            return original(name, *args, **kwargs)
+
+        monkeypatch.setattr(os, "open", denied)
+    elif operation == "lock-acquire":
+
+        def denied(*args):
+            raise OSError("synthetic flock failure")
+
+        monkeypatch.setattr(driver_state.fcntl, "flock", denied)
+    else:
+        original = os.unlink
+
+        def denied(name, *args, **kwargs):
+            if name == counter.name:
+                raise PermissionError("synthetic counter cannot be unlinked")
+            return original(name, *args, **kwargs)
+
+        monkeypatch.setattr(os, "unlink", denied)
     monkeypatch.setattr(
         driver_state.sys,
         "stdin",
@@ -521,15 +584,19 @@ def test_stop_cli_counter_io_errors_fail_closed(driver, state, monkeypatch, caps
     out = json.loads(capsys.readouterr().out)
     if ending in ("clean", "escalation"):
         assert out == {"decision": "allow"}
-        return
-    if ending == "cap" and operation in ("write_text", "unlink"):
+    elif operation == "unlink" and ending == "question":
+        assert out["decision"] == "continue"
+        assert counter.read_text() == "1"
+    else:
         assert out["decision"] == "allow"
-        if operation == "unlink":
-            assert counter.read_text(encoding="utf-8") == "0"
-        return
-    assert out["decision"] == "continue"
-    assert "counter unavailable" in out["reason"]
-    assert "question" in out["reason"]
+        assert "DRIVER-GATE-FAILED" in out["reason"]
+        if ending == "cap" and operation in ("write", "unlink"):
+            assert "retry budget exhausted" in out["reason"]
+            if operation == "unlink":
+                assert counter.read_text() == "0"
+        else:
+            assert "counter unavailable" in out["reason"]
+            assert "question" in out["reason"]
 
 
 def test_stop_cap_resets_without_unlink(driver, state, monkeypatch):
@@ -555,20 +622,20 @@ def test_stop_cap_reset_write_failure_remains_visible_until_reset_succeeds(drive
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     counter = driver_state._counter_path(state, "c1")
     counter.write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES), encoding="utf-8")
-    original = Path.write_text
+    original = driver_state.write_unit
 
-    def denied(path, data, *args, **kwargs):
-        if path == counter and data == "0":
+    def denied(fd, name, data, *args, **kwargs):
+        if name == counter.name and data == b"0":
             raise PermissionError("synthetic counter reset is unwritable")
-        return original(path, data, *args, **kwargs)
+        return original(fd, name, data, *args, **kwargs)
 
-    monkeypatch.setattr(Path, "write_text", denied)
+    monkeypatch.setattr(driver_state, "write_unit", denied)
     transcript = _transcript(driver, "Which should I take?")
     for _ in range(2):
         out = _stop(driver, transcript)
         assert out["decision"] == "allow"
         assert "retry budget exhausted" in out["reason"]
-    monkeypatch.setattr(Path, "write_text", original)
+    monkeypatch.setattr(driver_state, "write_unit", original)
     assert _stop(driver, transcript)["decision"] == "allow"
     assert counter.read_text(encoding="utf-8") == "0"
     assert _stop(driver, transcript)["decision"] == "continue"
@@ -577,22 +644,24 @@ def test_stop_cap_reset_write_failure_remains_visible_until_reset_succeeds(drive
 def test_stop_counter_failure_preserves_all_policy_reasons(driver, state, monkeypatch):
     _workers(driver, "gemini-infra", 0)
     counter = driver_state._counter_path(state, "c1")
-    original = Path.write_text
+    original = driver_state.write_unit
 
-    def denied(path, *args, **kwargs):
-        if path == counter:
+    def denied(fd, name, *args, **kwargs):
+        if name == counter.name:
             raise PermissionError("synthetic counter storage is unwritable")
-        return original(path, *args, **kwargs)
+        return original(fd, name, *args, **kwargs)
 
-    monkeypatch.setattr(Path, "write_text", denied)
+    monkeypatch.setattr(driver_state, "write_unit", denied)
     out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "continue"
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
     assert "below the privately configured target" in out["reason"]
     assert "question" in out["reason"]
     assert "counter unavailable" in out["reason"]
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     out = _stop(driver, _transcript(driver, "Work verified."), fully_idle=True)
-    assert out["decision"] == "continue"
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
     assert "nothing is armed to wake you" in out["reason"]
     assert "counter unavailable" in out["reason"]
 
@@ -601,7 +670,8 @@ def test_stop_corrupt_counter_fails_closed(driver, state):
     counter = driver_state._counter_path(state, "c1")
     counter.write_text("invalid", encoding="utf-8")
     out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "continue"
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
     assert "counter unavailable" in out["reason"]
 
 
@@ -725,6 +795,76 @@ def test_rendered_envelope_exact_boundary(state):
     assert len(driver_state.render_injection(text, state)) == driver_state.MAX_ENVELOPE_CHARS
     with pytest.raises(ValueError, match="envelope exceeds"):
         driver_state.render_injection(text + "x", state)
+
+
+@pytest.mark.parametrize(
+    "prefix",
+    [
+        "",
+        "The CTO blocker delta policy is mentioned in prose.\n",
+        "## CTO blocker delta policy extra\n",
+        "### CTO blocker delta policy\n",
+        "```markdown\n## CTO blocker delta policy\n```\n",
+        "> ## CTO blocker delta policy\n",
+        "  ## CTO blocker delta policy\n",
+        "<!--\n## CTO blocker delta policy\n-->\n",
+        "CTO blocker delta policy\n-----------------------\n",
+    ],
+)
+def test_blocker_policy_requires_exact_real_heading(state, prefix):
+    message = driver_state.render_injection(prefix + "Current goals remain intact.", state)
+    assert message.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
+    assert "Current goals remain intact." in message
+    assert "scripts.driver_blockers delta" in message
+    assert "scripts.driver_blockers record" in message
+    assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
+
+
+def test_existing_blocker_heading_is_not_duplicated(state):
+    text = driver_state.POLICY + "\n" + driver_state.BLOCKER_POLICY
+    rendered = driver_state.render_injection(text, state)
+    assert rendered.count("## " + driver_state.BLOCKER_POLICY_TITLE) == 1
+    assert rendered.count(driver_state.BLOCKER_POLICY.rstrip()) == 1
+    assert driver_state.render_injection(text + "\nLast goal", state).endswith("Last goal")
+
+
+def test_blocker_template_and_complete_envelope_boundary(state, monkeypatch, tmp_path):
+    monkeypatch.setattr(driver_state, "_repo_root", lambda start=None: tmp_path)
+    assert driver_state.main(["init", "--epic", "demo"]) == 0
+    text = (tmp_path / ".claude/demo-epic/DRIVER-STATE.md").read_text()
+    assert text.count(driver_state.BLOCKER_POLICY) == 1
+    assert "exact case-sensitive standalone token RESOLVED <id>" in text
+    assert "on its own non-active line (no other fields or prose)" in text
+    policies = driver_state.POLICY + "\n" + driver_state.BLOCKER_POLICY + "\n"
+    wrapper_size = len(driver_state.render_injection(policies, state))
+    exact = policies.rstrip() + "\n" + "x" * (driver_state.MAX_ENVELOPE_CHARS - wrapper_size - 1)
+    assert len(driver_state.render_injection(exact, state)) == driver_state.MAX_ENVELOPE_CHARS
+    with pytest.raises(ValueError, match="envelope exceeds"):
+        driver_state.render_injection(exact + "x", state)
+
+
+@pytest.mark.parametrize("baseline", ["absent", "present", "empty"])
+def test_whoami_blocker_summary(state, baseline, capsys):
+    from scripts import driver_blockers
+
+    ledger = state.parent / driver_blockers.LEDGER_NAME
+    if baseline == "empty":
+        ledger.write_text("")
+    elif baseline == "present":
+        body = b"No blockers"
+        receipt = {
+            "recipient": "cto",
+            "message_id": "fixture-msg",
+            "created_at": "2026-10-10T01:00:00Z",
+            "content_sha256": driver_blockers.hashlib.sha256(body).hexdigest(),
+        }
+        driver_blockers.record(ledger, "infra", {"epic": "infra", "complete": True, "items": []}, receipt, body, 0)
+    assert driver_state.cmd_whoami(state) == 0
+    output = capsys.readouterr().out
+    assert (
+        "CTO blockers: generation 1; 0 recorded blockers" if baseline == "present" else driver_blockers.UNKNOWN_SUMMARY
+    ) in output
+    assert str(state.parent) not in output
 
 
 @pytest.mark.parametrize(
@@ -985,14 +1125,14 @@ def test_cli_hook_error_resets_counter_and_fails_visibly(driver, state, monkeypa
 
 
 def test_gate_failure_storage_fault_preserves_typed_error(driver, state, monkeypatch, capsys):
-    original = Path.write_text
+    original = driver_state.write_unit
 
-    def denied(path, *args, **kwargs):
-        if path.name.endswith(".failure.json"):
+    def denied(fd, name, *args, **kwargs):
+        if name.endswith(".failure.json"):
             raise PermissionError("synthetic failure storage fault")
-        return original(path, *args, **kwargs)
+        return original(fd, name, *args, **kwargs)
 
-    monkeypatch.setattr(Path, "write_text", denied)
+    monkeypatch.setattr(driver_state, "write_unit", denied)
     out = driver_state._gate_failure(state, "c1", "test_failure", "DRIVER-GATE-FAILED: synthetic failure.")
     assert out["decision"] == "allow"
     assert json.loads(capsys.readouterr().err)["code"] == "test_failure"
@@ -1033,3 +1173,224 @@ def test_cli_help_documents_usage_and_outputs(capsys):
     assert "Outputs:" in help_text
     assert "Exit codes:" in help_text
     assert "Related:" in help_text
+
+
+def test_real_process_counter_increments_are_not_lost(state):
+    counter = driver_state._counter_path(state, "race")
+    counter.write_text("0")
+    script = """import sys, time
+from pathlib import Path
+from scripts import driver_state as d
+# Raise only the test ceiling to measure every increment, independently of the cap.
+d.MAX_CONSECUTIVE_CONTINUES = 10000
+original_unit = d.read_unit
+def delayed_unit(fd, name):
+    result = original_unit(fd, name)
+    if name.endswith('.count'):
+        time.sleep(0.002)
+    return result
+d.read_unit = delayed_unit
+sys.stdin.read(1)
+for _ in range(30):
+    d._bump_counter(Path(sys.argv[1]), 'race')
+"""
+    processes = [
+        subprocess.Popen(
+            [sys.executable, "-c", script, str(state)],
+            cwd=REPO,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        for _ in range(4)
+    ]
+    try:
+        for process in processes:
+            process.stdin.write("x")
+            process.stdin.flush()
+        outputs = [process.communicate(timeout=20) for process in processes]
+        assert [process.returncode for process in processes] == [0] * 4, outputs
+        assert counter.read_text() == "120"
+    finally:
+        for process in processes:
+            if process.poll() is None:
+                process.kill()
+                process.communicate(timeout=20)
+
+
+@pytest.mark.parametrize("linked", ["counter", "lock", "parent"])
+def test_stop_refuses_symlinked_counter_state(driver, state, linked):
+    counter = driver_state._counter_path(state, "c1")
+    target = driver / "counter-target"
+    target.write_text("0")
+    if linked == "parent":
+        moved = state.parent.with_name("moved-epic")
+        state.parent.rename(moved)
+        state.parent.symlink_to(moved, target_is_directory=True)
+    else:
+        link = counter if linked == "counter" else counter.with_name(counter.name + ".lock")
+        link.symlink_to(target)
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert "counter unavailable" in out["reason"]
+    assert target.read_text() == "0"
+    if linked != "parent":
+        assert link.is_symlink()
+
+
+@pytest.mark.parametrize("content", [b"", b"invalid", b"-1", b"\xff"])
+def test_stop_corrupt_counter_records_typed_failure(driver, state, content):
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_bytes(content)
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert "question" in out["reason"]
+    assert counter.read_bytes() == content
+    failure = json.loads(counter.with_suffix(".failure.json").read_text())
+    assert failure["code"] == "continuation_counter_unavailable"
+    assert failure["reason"] == out["reason"]
+
+
+@pytest.mark.parametrize("fault", ["unreadable", "lock", "write"])
+def test_stop_counter_storage_fault_never_continues(driver, state, monkeypatch, fault):
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text("0")
+    operation = "read_unit" if fault == "unreadable" else "write_unit"
+    original = getattr(driver_state, operation)
+
+    def denied(fd, name, *args, **kwargs):
+        if name == counter.name and fault != "lock":
+            raise PermissionError("synthetic counter storage fault")
+        return original(fd, name, *args, **kwargs)
+
+    monkeypatch.setattr(driver_state, operation, denied)
+    original_open = os.open
+
+    def denied_lock(name, *args, **kwargs):
+        if str(name).endswith(".lock") and fault == "lock":
+            raise PermissionError("synthetic lock failure")
+        return original_open(name, *args, **kwargs)
+
+    monkeypatch.setattr(os, "open", denied_lock)
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert "question" in out["reason"]
+    failure = json.loads(counter.with_suffix(".failure.json").read_text())
+    assert failure["code"] == "continuation_counter_unavailable"
+
+
+@pytest.mark.parametrize("replacement", ["symlink", "directory"])
+def test_counter_refuses_parent_swap_before_write(state, tmp_path, monkeypatch, replacement):
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text("0")
+    moved = counter.parent.with_name("moved-counters")
+    decoy = tmp_path / "decoy-counters"
+    decoy.mkdir(mode=0o700)
+    (decoy / counter.name).write_text("0")
+    original = driver_state.read_unit
+    swapped = False
+
+    def swap(fd, name):
+        nonlocal swapped
+        result = original(fd, name)
+        if name == counter.name and not swapped:
+            swapped = True
+            counter.parent.rename(moved)
+            if replacement == "symlink":
+                counter.parent.symlink_to(decoy, target_is_directory=True)
+            else:
+                counter.parent.mkdir(mode=0o700)
+                counter.write_text("0")
+        return result
+
+    monkeypatch.setattr(driver_state, "read_unit", swap)
+    with pytest.raises(driver_state.COUNTER_STORAGE_ERRORS):
+        driver_state._bump_counter(state, "c1")
+    assert (moved / counter.name).read_text() == "0"
+    assert counter.read_text() == "0"
+    assert (decoy / counter.name).read_text() == "0"
+
+
+@pytest.mark.parametrize("entry", ["counter", "lock"])
+def test_counter_refuses_nonregular_storage(driver, state, entry):
+    counter = driver_state._counter_path(state, "c1")
+    path = counter if entry == "counter" else counter.with_name(counter.name + ".lock")
+    path.mkdir()
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert path.is_dir()
+
+
+def test_counter_atomic_replace_is_private_and_locked(state, monkeypatch):
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text("0")
+    events = []
+    real_fsync, real_replace = os.fsync, os.replace
+
+    def fsync(fd):
+        events.append("directory-fsync" if stat.S_ISDIR(os.fstat(fd).st_mode) else "file-fsync")
+        real_fsync(fd)
+
+    def replace(source, destination, *, src_dir_fd, dst_dir_fd):
+        import fcntl
+
+        assert src_dir_fd == dst_dir_fd
+        assert os.fstat(src_dir_fd).st_ino == counter.parent.stat().st_ino
+        assert Path(source).name == source
+        assert destination == counter.name
+        assert stat.S_IMODE(os.stat(source, dir_fd=src_dir_fd).st_mode) == 0o600
+        assert (counter.parent / source).read_text() == "1"
+        with counter.with_name(counter.name + ".lock").open("rb") as lock:
+            with pytest.raises(BlockingIOError):
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        events.append("replace")
+        real_replace(source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd)
+
+    monkeypatch.setattr(os, "fsync", fsync)
+    monkeypatch.setattr(os, "replace", replace)
+    old_umask = os.umask(0)
+    try:
+        assert driver_state._bump_counter(state, "c1") == 1
+    finally:
+        os.umask(old_umask)
+    assert events == ["file-fsync", "replace", "directory-fsync"]
+    assert stat.S_IMODE(counter.stat().st_mode) == 0o600
+    assert stat.S_IMODE(counter.with_name(counter.name + ".lock").stat().st_mode) == 0o600
+    assert list(counter.parent.glob(".*.tmp")) == []
+
+
+def test_counter_replace_failure_preserves_old_count(driver, state, monkeypatch):
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text("0")
+    original = os.replace
+
+    def denied(source, destination, **kwargs):
+        if destination == counter.name:
+            raise OSError("synthetic atomic replace failure")
+        return original(source, destination, **kwargs)
+
+    monkeypatch.setattr(os, "replace", denied)
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert counter.read_text() == "0"
+    assert list(counter.parent.glob(".*.tmp")) == []
+    assert json.loads(counter.with_suffix(".failure.json").read_text())["code"] == "continuation_counter_unavailable"
+
+
+def test_gate_failure_refuses_symlinked_receipt(driver, state, monkeypatch, capsys):
+    counter = driver_state._counter_path(state, "c1")
+    target = driver / "receipt-target"
+    target.write_text("untouched")
+    counter.with_suffix(".failure.json").symlink_to(target)
+    counter.write_text("invalid")
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "allow"
+    assert "DRIVER-GATE-FAILED" in out["reason"]
+    assert json.loads(capsys.readouterr().err)["code"] == "continuation_counter_unavailable"
+    assert target.read_text() == "untouched"

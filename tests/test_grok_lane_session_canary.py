@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,53 @@ from scripts.session_canary import grok_lane as gl
 from tests.helpers.python import project_python
 
 _REPO = Path(__file__).resolve().parents[1]
+
+
+@pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
+@pytest.mark.parametrize("command", ["status", "mint"])
+def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, command: str) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    if epic == "/absolute":
+        epic = str(tmp_path / "absolute")
+    extra = ["--stream", "epic:999999", "--out-dir", str(tmp_path / "out")] if command == "mint" else []
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.session_canary.grok_lane",
+            "--repo",
+            str(repo),
+            command,
+            f"--epic={epic}",
+            *extra,
+        ],
+        cwd=_REPO,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    assert proc.returncode == 2
+    assert "error: epic must be a selector" in proc.stderr
+    assert list(tmp_path.rglob("*")) == [repo]
+
+
+@pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
+def test_path_helpers_reject_unsafe_epic(tmp_path: Path, epic: str) -> None:
+    with pytest.raises(ValueError, match="epic must be a selector"):
+        gl._canary_dir(tmp_path, epic)
+    with pytest.raises(ValueError, match="epic must be a selector"):
+        gl._bound_handoff_path(tmp_path, epic)
+    assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize("epic", ["x", "0", "infra", "7919", "open-model-data", "a--b"])
+def test_path_helpers_preserve_valid_epic(tmp_path: Path, epic: str) -> None:
+    base = tmp_path / ".claude" / f"{epic}-epic"
+    assert gl._canary_dir(tmp_path, epic) == base / "canary"
+    assert gl._bound_handoff_path(tmp_path, epic) == base / "GROK-DRIVER-HANDOFF.md"
+    assert not list(tmp_path.iterdir())
 
 
 def test_build_facts_exactly_ten_from_stream_and_handoff() -> None:

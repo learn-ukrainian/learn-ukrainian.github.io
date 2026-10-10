@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import argparse
 import json
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
@@ -14,6 +17,51 @@ from scripts.agent_runtime.result import ParseResult
 from scripts.session_canary import glm_lane
 
 _REPO = Path(__file__).resolve().parents[1]
+
+
+@pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
+@pytest.mark.parametrize("command", ["status", "mint", "bootstrap"])
+def test_cli_rejects_unsafe_epic_before_writing(tmp_path: Path, epic: str, command: str) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    if epic == "/absolute":
+        epic = str(tmp_path / "absolute")
+    extra = ["--stream", "epic:999999", "--out-dir", str(tmp_path / "out")] if command == "mint" else []
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.session_canary.glm_lane",
+            "--repo",
+            str(repo),
+            command,
+            f"--epic={epic}",
+            *extra,
+        ],
+        cwd=_REPO,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    assert proc.returncode == 2
+    assert "error: epic must be a selector" in proc.stderr
+    assert list(tmp_path.rglob("*")) == [repo]
+
+
+@pytest.mark.parametrize("epic", ["../x", "/absolute", "Harness", "bad_name", "harness\n", "інфра"])
+def test_bootstrap_and_path_helper_reject_unsafe_epic(tmp_path: Path, epic: str) -> None:
+    with pytest.raises(ValueError, match="epic must be a selector"):
+        glm_lane._epic_dir(tmp_path, epic)
+    with pytest.raises(ValueError, match="epic must be a selector"):
+        glm_lane.cmd_bootstrap(argparse.Namespace(repo=tmp_path, epic=epic))
+    assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize("epic", ["x", "0", "infra", "7919", "open-model-data", "a--b"])
+def test_epic_dir_preserves_valid_epic(tmp_path: Path, epic: str) -> None:
+    assert glm_lane._epic_dir(tmp_path, epic) == tmp_path / ".claude" / f"{epic}-epic"
+    assert not list(tmp_path.iterdir())
 
 
 @pytest.fixture
@@ -114,7 +162,9 @@ def test_run_glm_probe_mocked_success(clear_ci_env: None, monkeypatch: pytest.Mo
     assert receipt["received_text"] == "GLM-CANARY-7718"
 
 
-def test_run_glm_probe_mocked_shape_mismatch(clear_ci_env: None, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_run_glm_probe_mocked_shape_mismatch(
+    clear_ci_env: None, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     monkeypatch.setattr(glm_lane.shutil, "which", lambda bin_name: "/usr/local/bin/opencode")
 
     fake_proc = MagicMock()
@@ -172,34 +222,49 @@ def test_bootstrap_creates_boards(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
 
 
 def test_mint_score_roundtrip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(glm_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule())
-    monkeypatch.setattr(glm_lane._gl, "_load_stream_entries", lambda *a, **k: [
-        {"type": "binding_order", "body": f"Pinned binding order text {i} with enough content."}
-        for i in range(1, 6)
-    ] + [
-        {"type": "negative_constraint", "body": "Do not lower quality gates."},
-        {"type": "negative_constraint", "body": "Do not bypass CI."},
-        {"type": "next_action", "body": "Dual-write handoff after each batch."},
-        {"type": "next_action", "body": "Re-score canary after auto-compact."},
-        {"type": "decision", "body": "Canary end signal is score not compact count."},
-    ])
+    monkeypatch.setattr(
+        glm_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule()
+    )
+    monkeypatch.setattr(
+        glm_lane._gl,
+        "_load_stream_entries",
+        lambda *a, **k: (
+            [
+                {"type": "binding_order", "body": f"Pinned binding order text {i} with enough content."}
+                for i in range(1, 6)
+            ]
+            + [
+                {"type": "negative_constraint", "body": "Do not lower quality gates."},
+                {"type": "negative_constraint", "body": "Do not bypass CI."},
+                {"type": "next_action", "body": "Dual-write handoff after each batch."},
+                {"type": "next_action", "body": "Re-score canary after auto-compact."},
+                {"type": "decision", "body": "Canary end signal is score not compact count."},
+            ]
+        ),
+    )
 
     canary_dir = tmp_path / "canary"
     handoff = tmp_path / "GLM-DRIVER-HANDOFF.md"
     handoff.write_text(
-        "## Next drive order\n- Keep dual-write current\n- Score canary after compact\n"
-        "## Hands-off\n- Foreign lanes\n",
+        "## Next drive order\n- Keep dual-write current\n- Score canary after compact\n## Hands-off\n- Foreign lanes\n",
         encoding="utf-8",
     )
 
-    rc_mint = glm_lane.main([
-        "--repo", str(_REPO),
-        "mint",
-        "--epic", "harness",
-        "--stream", "epic:4707",
-        "--handoff", str(handoff),
-        "--out-dir", str(canary_dir),
-    ])
+    rc_mint = glm_lane.main(
+        [
+            "--repo",
+            str(_REPO),
+            "mint",
+            "--epic",
+            "harness",
+            "--stream",
+            "epic:4707",
+            "--handoff",
+            str(handoff),
+            "--out-dir",
+            str(canary_dir),
+        ]
+    )
     assert rc_mint == 0
     probe = json.loads((canary_dir / "probe.json").read_text(encoding="utf-8"))
     anchors = probe["anchors"]
@@ -217,15 +282,23 @@ def test_mint_score_roundtrip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
         return res
 
     monkeypatch.setattr(glm_lane.subprocess, "run", fake_run)
-    rc_score = glm_lane.main([
-        "--repo", str(_REPO),
-        "score",
-        "--epic", "harness",
-        "--out-dir", str(canary_dir),
-        "--answers", str(answers_path),
-        "--context-tokens", "100000",
-        "--model", "glm-5.3",
-    ])
+    rc_score = glm_lane.main(
+        [
+            "--repo",
+            str(_REPO),
+            "score",
+            "--epic",
+            "harness",
+            "--out-dir",
+            str(canary_dir),
+            "--answers",
+            str(answers_path),
+            "--context-tokens",
+            "100000",
+            "--model",
+            "glm-5.3",
+        ]
+    )
     assert rc_score == 0
     verdict = json.loads((canary_dir / "last_verdict.json").read_text(encoding="utf-8"))
     assert verdict["verdict"] == "PASS"
@@ -254,7 +327,9 @@ def test_hydrate_refuses_to_continue_when_capsule_is_blocked(
     assert "hydration blocked" in capsys.readouterr().err
 
 
-def test_protocol_and_status_cli(capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_protocol_and_status_cli(
+    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     rc_proto = glm_lane.main(["protocol", "--epic", "harness"])
     assert rc_proto == 0
     out_proto = capsys.readouterr().out

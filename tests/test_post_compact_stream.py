@@ -18,8 +18,14 @@ ROOT = Path(__file__).resolve().parents[1]
 HOOK = Path("agents_extensions/shared/hooks/post-compact.sh")
 
 
-def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-model-data",
-              stream: str = "epic:6321", export_stream: bool = True) -> tuple[str, list[str], list[str]]:
+def _run_hook(
+    tmp_path: Path,
+    *,
+    baseline: bool = False,
+    selector: str = "open-model-data",
+    stream: str = "epic:6321",
+    export_stream: bool = True,
+) -> tuple[str, list[str], list[str]]:
     """Run real hydration; baseline reconstructs only the unfixed stream inputs."""
     repo = tmp_path / "repo"
     canary = repo / "scripts/session_canary"
@@ -29,8 +35,14 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(ROOT / 'scripts')!r})\n")
     # Replay only these explicit capsule dependencies, never scan a repo tree.
     for name in (
-        "__init__.py", "codex_lane.py", "gemini_lane.py", "glm_lane.py",
-        "grok_lane.py", "handoff_select.py", "shared_hydration.py", "diary.py",
+        "__init__.py",
+        "codex_lane.py",
+        "gemini_lane.py",
+        "glm_lane.py",
+        "grok_lane.py",
+        "handoff_select.py",
+        "shared_hydration.py",
+        "diary.py",
     ):
         source = ROOT / "scripts/session_canary" / name
         target = canary / name
@@ -44,17 +56,23 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
         source = lane.read_text()
         resolver = "    return _gl._stream_id(args)"
         assert source.count(resolver) == 1
-        lane.write_text(source.replace(resolver, (
-            "    _gl.EPIC_STREAM_DEFAULTS.pop(args.epic, None)\n"
-            "    return (getattr(args, 'stream', None) or os.environ.get('SESSION_STREAM_ID')\n"
-            "            or _gl.EPIC_STREAM_DEFAULTS.get(args.epic, f'epic:{args.epic}'))"
-        )))
+        lane.write_text(
+            source.replace(
+                resolver,
+                (
+                    "    _gl.EPIC_STREAM_DEFAULTS.pop(args.epic, None)\n"
+                    "    return (getattr(args, 'stream', None) or os.environ.get('SESSION_STREAM_ID')\n"
+                    "            or _gl.EPIC_STREAM_DEFAULTS.get(args.epic, f'epic:{args.epic}'))"
+                ),
+            )
+        )
     for directory in ("lib", "config"):
         (repo / "scripts" / directory).symlink_to(ROOT / "scripts" / directory, target_is_directory=True)
     hook = repo / HOOK
     hook.parent.mkdir(parents=True)
     (repo / "agents_extensions/shared/session_streams").symlink_to(
-        ROOT / "agents_extensions/shared/session_streams", target_is_directory=True,
+        ROOT / "agents_extensions/shared/session_streams",
+        target_is_directory=True,
     )
     shutil.copy2(ROOT / HOOK, hook)
     if baseline:
@@ -73,42 +91,67 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
         "if [ \"${1:-}\" = '-m' ]; then\n"
         f"  printf '%s\\n' \"$*\" >> {shlex.quote(str(args_log))}\n"
         "fi\n"
-        f"exec {shlex.quote(sys.executable)} \"$@\"\n"
+        f'exec {shlex.quote(sys.executable)} "$@"\n'
     )
     wrapper.chmod(0o755)
     environment = {
-        key: value for key, value in os.environ.items()
+        key: value
+        for key, value in os.environ.items()
         if not key.startswith(("SESSION_", "CODEX_", "GROK_", "GEMINI_", "LU_MONITOR_"))
         and key not in {"CLAUDE_NON_INTERACTIVE", "LEARN_UKRAINIAN_PIPELINE", "HANDOFF_ISSUE_STREAMS_YAML"}
     }
-    environment.update({
-        "CLAUDE_PROJECT_DIR": str(repo), "CODEX_CANONICAL_REPO_ROOT": str(repo),
-        "SESSION_HANDOFF_AGENT": "codex-open-model-data", "SESSION_EPIC": selector,
-        "THREAD_ROLLOVER_PYTHON": str(wrapper),
-        "SESSION_BOUNDED_RUNNER": str(ROOT / "scripts/agent_runtime/bounded_command.py"),
-        "CODEX_COMPACT_SESSION_START": "1", "PYTHONPATH": f"{repo}{os.pathsep}{ROOT}",
-        "SESSION_STREAM_SESSION_ID": "session-fixture", "SESSION_STREAM_LEASE_ID": "lease-fixture",
-        "SESSION_STREAM_GENERATION": "2", "SESSION_STREAM_FENCING_TOKEN": "7",
-        "SESSION_STREAM_AGENT": "codex", "SESSION_STREAM_HARNESS": "codex-cli",
-        "SESSION_STREAM_INSTANCE_ID": "codex-fixture", "SESSION_STREAM_PROCESS_ID": "1234",
-        "SESSION_STREAM_TASK_ID": "launcher-fixture",
-    })
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(repo),
+            "CODEX_CANONICAL_REPO_ROOT": str(repo),
+            "SESSION_HANDOFF_AGENT": "codex-open-model-data",
+            "SESSION_EPIC": selector,
+            "THREAD_ROLLOVER_PYTHON": str(wrapper),
+            "SESSION_BOUNDED_RUNNER": str(ROOT / "scripts/agent_runtime/bounded_command.py"),
+            "CODEX_COMPACT_SESSION_START": "1",
+            "PYTHONPATH": f"{repo}{os.pathsep}{ROOT}",
+            "SESSION_STREAM_SESSION_ID": "session-fixture",
+            "SESSION_STREAM_LEASE_ID": "lease-fixture",
+            "SESSION_STREAM_GENERATION": "2",
+            "SESSION_STREAM_FENCING_TOKEN": "7",
+            "SESSION_STREAM_AGENT": "codex",
+            "SESSION_STREAM_HARNESS": "codex-cli",
+            "SESSION_STREAM_INSTANCE_ID": "codex-fixture",
+            "SESSION_STREAM_PROCESS_ID": "1234",
+            "SESSION_STREAM_TASK_ID": "launcher-fixture",
+        }
+    )
     if export_stream:
         environment["SESSION_STREAM_ID"] = stream
     # The receipt is only fixture data; no lease is opened, renewed, or closed.
-    (diary.parent / "session-lease.env").write_text("\n".join(
-        f"export {key}={shlex.quote(value)}" for key, value in environment.items() if key.startswith("SESSION_STREAM_")
-    ) + "\n")
+    (diary.parent / "session-lease.env").write_text(
+        "\n".join(
+            f"export {key}={shlex.quote(value)}"
+            for key, value in environment.items()
+            if key.startswith("SESSION_STREAM_")
+        )
+        + "\n"
+    )
     snapshot = {
         "stream_id": stream,
         "lease": {
-            "stream_id": stream, "session_id": "session-fixture", "lease_id": "lease-fixture",
-            "generation": 2, "fencing_token": 7,
+            "stream_id": stream,
+            "session_id": "session-fixture",
+            "lease_id": "lease-fixture",
+            "generation": 2,
+            "fencing_token": 7,
             "holder": {
-                "agent": "codex", "harness": "codex-cli", "instance_id": "codex-fixture",
-                "task_id": "launcher-fixture", "process_id": 1234, "holder_kind": "process", "host_id": None,
+                "agent": "codex",
+                "harness": "codex-cli",
+                "instance_id": "codex-fixture",
+                "task_id": "launcher-fixture",
+                "process_id": 1234,
+                "holder_kind": "process",
+                "host_id": None,
             },
-            "state": "active", "session_state": "open", "expires_at": "2099-01-01T00:00:00Z",
+            "state": "active",
+            "session_state": "open",
+            "expires_at": "2099-01-01T00:00:00Z",
         },
         "digest": {"stream_id": stream, "limit": 1, "pinned": [], "recent": [], "high_water_entry_id": 0},
     }
@@ -131,8 +174,9 @@ def _run_hook(tmp_path: Path, *, baseline: bool = False, selector: str = "open-m
     thread.start()
     environment["LU_MONITOR_LOOPBACK"] = f"http://localhost:{server.server_port}"
     try:
-        result = subprocess.run(["bash", str(hook)], cwd=repo, env=environment,
-                                capture_output=True, text=True, timeout=10)
+        result = subprocess.run(
+            ["bash", str(hook)], cwd=repo, env=environment, capture_output=True, text=True, timeout=10
+        )
     finally:
         server.shutdown()
         server.server_close()
@@ -151,16 +195,24 @@ def test_open_model_data_hook_main_blocks_and_head_is_ready(tmp_path: Path) -> N
     head_context, head_args, head_requests = _run_hook(tmp_path / "head")
     assert "HYDRATION BLOCKED" not in head_context
     assert '"execution_allowed": true' in head_context
-    assert '"state": "ready"' in head_context
+    assert "scripts.driver_blockers delta --epic open-model-data" in head_context
+    assert "scripts.driver_blockers record --epic open-model-data" in head_context
+    assert "scripts.driver_blockers record --epic open-model-data" in head_context[:800]
+    assert "if delta fails or the baseline is unknown, post everything currently blocking" in head_context
     assert "--stream epic:6321" in head_args[0]  # allow-hardcoded-epic: #9956 pre-fix launcher lease fixture
     assert head_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: #9956 pre-fix lease fixture
     print("unfixed condition: invalid-stream-id BLOCKED; head: --stream epic:6321 READY")
 
 
-@pytest.mark.parametrize("selector,stream", [
-    ("infra", "epic:6943"), ("infra.devops", "epic:5703"),
-    ("curriculum-upgrade", "epic:7994"), ("open-model-data", "epic:6321"),
-])
+@pytest.mark.parametrize(
+    "selector,stream",
+    [
+        ("infra", "epic:6943"),
+        ("infra.devops", "epic:5703"),
+        ("curriculum-upgrade", "epic:7994"),
+        ("open-model-data", "epic:6321"),
+    ],
+)
 def test_hook_valid_launcher_lane_classes_are_ready(tmp_path, selector, stream) -> None:
     context, args, requests = _run_hook(tmp_path, selector=selector, stream=stream)
     assert "HYDRATION BLOCKED" not in context
@@ -189,3 +241,65 @@ def test_hook_unknown_selector_skips_hydration(tmp_path) -> None:
     assert "HYDRATION BLOCKED" in context
     assert "unresolved-stream-selector: unknown-lane" in context
     assert args == requests == []
+
+
+@pytest.mark.parametrize("has_state", [False, True])
+def test_codex_boundary_rule_carries_complete_blocker_rule(tmp_path: Path, has_state: bool) -> None:
+    source = (ROOT / HOOK).read_text()
+    start = source.index('        GOAL_REL="')
+    end = source.index('        CONTEXT="CODEX FLEET-DRIVER HYDRATION', start)
+    block = source[start:end]
+    if has_state:
+        state = tmp_path / ".claude/infra-epic/DRIVER-STATE.md"
+        state.parent.mkdir(parents=True)
+        state.write_text("fixture")
+    result = subprocess.run(
+        ["bash"],
+        input=block + '\nprintf "%s" "$BOUNDARY_RULE"\n',
+        env={"PATH": os.environ["PATH"], "PROJECT_DIR": str(tmp_path), "SESSION_EPIC": "infra"},
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    for fragment in (
+        "complete: true",
+        "scripts.driver_blockers delta --epic infra --current blockers.json",
+        "scripts.driver_blockers record --epic infra --current blockers.json",
+        "--receipt receipt.json --body-file posted.md --expect-generation N",
+        "post each item that is not UNCHANGED",
+        "exact case-sensitive standalone token RESOLVED <id>",
+        "on its own non-active line (no other fields or prose)",
+        "if delta fails or the baseline is unknown, post everything currently blocking",
+    ):
+        assert fragment in result.stdout
+
+
+def test_post_compact_includes_blocker_delta_rule_for_grok_and_claude() -> None:
+    hook = ROOT / HOOK
+    # 1. Grok
+    env_grok = {
+        "PATH": os.environ["PATH"],
+        "GROK_AGENT": "1",
+        "SESSION_EPIC": "infra",
+        "CLAUDE_PROJECT_DIR": str(ROOT),
+    }
+    res_grok = subprocess.run(
+        ["bash", str(hook)], cwd=ROOT, env=env_grok, capture_output=True, text=True, check=True, timeout=20
+    )
+    grok_context = json.loads(res_grok.stdout)["additionalContext"]
+    assert "Epic blocker delta: Put every owned blocker in --current with complete: true;" in grok_context
+    assert "scripts.driver_blockers record --epic infra" in grok_context
+
+    # 2. Claude
+    env_claude = {
+        "PATH": os.environ["PATH"],
+        "SESSION_EPIC": "infra",
+        "CLAUDE_PROJECT_DIR": str(ROOT),
+    }
+    res_claude = subprocess.run(
+        ["bash", str(hook)], cwd=ROOT, env=env_claude, capture_output=True, text=True, check=True, timeout=20
+    )
+    claude_context = json.loads(res_claude.stdout)["additionalContext"]
+    assert "Epic blocker delta: Put every owned blocker in --current with complete: true;" in claude_context
+    assert "scripts.driver_blockers record --epic infra" in claude_context
