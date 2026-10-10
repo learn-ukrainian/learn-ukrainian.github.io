@@ -187,12 +187,163 @@ def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) 
     assert "reason=CF-unknown" in lines[0]
 
 
-def test_queued_legacy_approval_is_report_only(tmp_path: Path) -> None:
+def _keeper_comment(fake: FakeGitHub) -> str:
+    bodies = [body for kind, body in fake.actions if kind == "comment"]
+    assert len(bodies) == 1
+    return bodies[0]
+
+
+def test_queued_with_cf_at_head_is_kept(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert mutations(fake) == []
+    assert "reason=ready" in lines[0]
+    assert not any("revoked" in line for line in lines)
+    assert json.loads(path.read_text())["queued"]["42"] == HEAD_A
+
+
+def test_queued_without_cf_at_head_is_revoked(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert mutations(fake) == ["dequeue", "comment"]
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
+    assert "reason=needs-CF" in lines[0]
+    body = _keeper_comment(fake)
+    assert body == (
+        "Merge queue keeper: #42 was not queued because needs-CF.\n\n"
+        f"<!-- mq-keeper head={HEAD_A} reason=needs-CF -->"
+    )
+    state = json.loads(path.read_text())
+    assert "42" not in state["queued"]
+    assert state["drops"][f"42:{HEAD_A}"] == 1
+    assert f"42:{HEAD_A}" not in state.get("pending_comments", {})
+    assert f"42:{HEAD_A}" not in state.get("squash_revoked", {})
+
+
+def test_queued_cf_only_at_old_head_is_revoked(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True, headRefOid=HEAD_B))
+    fake.fresh["headRefOid"] = HEAD_B
+    fake.check_rows = checks(HEAD_B)
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", head=HEAD_A)]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == ["dequeue", "comment"]
+    assert "#42 revoked: needs-CF" in lines
+    assert "reason=needs-CF" in lines[0]
+    body = _keeper_comment(fake)
+    assert f"head={HEAD_B} reason=needs-CF" in body
+    assert "was not queued because needs-CF." in body
+
+
+def test_armed_without_cf_stays_held(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(autoMergeRequest={"enabledAt": "2026-09-23T13:00:00Z"}))
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "disarm" not in mutations(fake)
+    assert "dequeue" not in mutations(fake)
+    assert any(line == "#42 held: needs-CF" for line in lines)
+
+
+@pytest.mark.parametrize("permission", [None, "absent", "deny", "grant"])
+def test_approval_after_needs_cf_removal_obeys_requeue_permission(tmp_path: Path, permission: str | None) -> None:
+    path = tmp_path / "state.json"
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+    lines, failed = keeper.run(queued, path, apply=True)
+    assert not failed and "#42 revoked: needs-CF" in lines
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+
+    approved = FakeGitHub()
+    approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    gate = None
+    if permission == "absent":
+        gate = _gate(tmp_path, {})
+    elif permission in {"deny", "grant"}:
+        gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": permission}})
+    lines, failed = keeper.run(approved, path, apply=True, requeue_gate=gate)
+    assert not failed
+    if permission == "grant":
+        assert ("enqueue", (42, HEAD_A)) in approved.actions
+        assert f"42:{HEAD_A}" in json.loads(path.read_text())["requeued"]
+        return
+    assert "enqueue" not in mutations(approved)
+    expected = "requeue-denied" if permission == "deny" else "requeue-pending"
+    assert f"reason={expected}" in lines[0]
+
+
+def test_red_ci_with_missing_cf_still_records_the_removal(tmp_path: Path) -> None:
+    path = tmp_path / "state.json"
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+    queued.check_rows = checks(conclusion="failure")
+    lines, failed = keeper.run(queued, path, apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in queued.actions
+    assert "#42 revoked: CI-red-CI Gate" in lines
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+
+    approved = FakeGitHub()
+    approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = keeper.run(approved, path, apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(approved)
+    assert "reason=requeue-pending" in lines[0]
+
+
+def test_needs_cf_comment_is_retried_after_the_pull_request_leaves_the_queue(tmp_path: Path) -> None:
+    path = tmp_path / "state.json"
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+
+    def fail_comment(number: int, body: str) -> None:
+        raise keeper.KeeperError("comment failed")
+
+    queued.comment = fail_comment  # type: ignore[method-assign]
+    lines, failed = keeper.run(queued, path, apply=True)
+    assert failed and any("FAILED" in line for line in lines)
+    assert ("dequeue", "PR_node_42") in queued.actions
+    state = json.loads(path.read_text())
+    assert state["pending_comments"][f"42:{HEAD_A}"] == "needs-CF"
+    assert state["drops"][f"42:{HEAD_A}"] == 1
+    assert "42" not in state["queued"]
+
+    again = FakeGitHub()
+    lines, failed = keeper.run(again, path, apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(again)
+    body = _keeper_comment(again)
+    assert body == (
+        "Merge queue keeper: #42 was not queued because needs-CF.\n\n"
+        f"<!-- mq-keeper head={HEAD_A} reason=needs-CF -->"
+    )
+    saved = json.loads(path.read_text())
+    assert f"42:{HEAD_A}" not in saved.get("pending_comments", {})
+    assert saved["drops"][f"42:{HEAD_A}"] == 1
+
+
+def test_queued_missing_cf_dry_run_reports_only(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=False)
+    assert not failed
+    assert mutations(fake) == []
+    assert not path.exists()
+    assert len(lines) == 1
+    assert "reason=needs-CF" in lines[0]
+    assert "queued=True" in lines[0]
+    assert "revoked" not in lines[0]
+
+
+def test_queued_legacy_approval_is_revoked(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [{"body": "VERDICT: APPROVE", "user": {"login": "driver"}}]
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
-    assert mutations(fake) == []
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
     assert "reason=needs-CF" in lines[0]
 
 
@@ -287,13 +438,14 @@ def test_queued_approval_then_unknown_marker_revokes(tmp_path: Path) -> None:
     assert ("dequeue", "PR_node_42") in fake.actions
 
 
-def test_queued_stale_recorded_approval_is_report_only(tmp_path: Path) -> None:
+def test_queued_stale_recorded_approval_is_revoked(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True, headRefOid=HEAD_B))
     fake.check_rows = checks(HEAD_B)
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
-    assert mutations(fake) == []
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
     assert "reason=needs-CF" in lines[0]
 
 
@@ -1235,3 +1387,20 @@ def test_shared_failure_still_requires_green_head_checks(tmp_path: Path, monkeyp
     _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
     gated(fake, path, monkeypatch, _gate(tmp_path, {}))
     assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize(
+    "name", ["requeued", "squash_revoked", "undiagnosed", "pending_comments", "shared_pass", "shared_requeues"]
+)
+def test_per_head_state_cleanup_preserves_only_open_prs(tmp_path: Path, name: str) -> None:
+    fake = FakeGitHub()
+    fake.queue_enabled = False
+    path = tmp_path / "state.json"
+    open_key, closed_key = f"42:{HEAD_A}", f"7:{HEAD_B}"
+    value = 1 if name == "shared_requeues" else "needs-CF" if name == "pending_comments" else "earlier"
+    path.write_text(json.dumps({"queued": {}, "drops": {}, name: {open_key: value, closed_key: value}}))
+
+    _, failed = keeper.run(fake, path, apply=True)
+
+    assert not failed
+    assert json.loads(path.read_text())[name] == {open_key: value}
