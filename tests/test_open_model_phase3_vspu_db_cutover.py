@@ -145,6 +145,46 @@ def _create_database(path: Path) -> None:
         assert connection.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone() == (0, 0, 0)
 
 
+@pytest.mark.parametrize("operation", ["evidence", "backup"])
+def test_readers_keep_special_path_readonly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, operation: str) -> None:
+    database = tmp_path / "source space ?# %.db"
+    _create_database(database)
+    before = database.read_bytes()
+    opened = []
+    original_open = cutover.open_readonly
+
+    def checked_open(path: Path, **settings):
+        connection = original_open(path, **settings)
+        try:
+            assert connection.execute("PRAGMA database_list").fetchone()[2] == str(database.resolve())
+            assert connection.execute("PRAGMA query_only").fetchone() == (1,)
+            assert connection.execute("PRAGMA busy_timeout").fetchone() == (
+                30000 if operation == "evidence" else 5000,
+            )
+            with pytest.raises(sqlite3.OperationalError, match="readonly"):
+                connection.execute("CREATE TABLE forbidden (value TEXT)")
+        except BaseException:
+            connection.close()
+            raise
+        opened.append(path)
+        return connection
+
+    monkeypatch.setattr(cutover, "open_readonly", checked_open)
+    if operation == "evidence":
+        evidence = cutover._database_evidence(database)
+        assert evidence["sha256"] == hashlib.sha256(before).hexdigest()
+        assert evidence["counts"]["textbook_rows"] == 1
+        assert evidence["integrity_check"] == "ok"
+    else:
+        target = tmp_path / "backup space ?# %.db"
+        cutover._sqlite_backup(database, target)
+        with original_open(target) as connection:
+            assert connection.execute("SELECT chunk_id FROM textbooks").fetchall() == [("existing_s0001",)]
+            assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+    assert opened == [database]
+    assert database.read_bytes() == before
+
+
 def _fixture(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

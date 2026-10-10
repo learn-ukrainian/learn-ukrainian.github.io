@@ -229,6 +229,8 @@ def resolve_and_admit(
     task_family: str | None = None,
     task_role: str | None = None,
     task_prompt: str | None = None,
+    new_dispatch: bool = False,
+    harness: str | None = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -421,8 +423,56 @@ def resolve_and_admit(
                                task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(target_model for _, target_model, _ in resolved)
+    if new_dispatch or review_dispatch:
+        # Operator pauses apply to new work only, never to messaging or to
+        # lifecycle operations on existing work.
+        # Checked against the identities actually selected, so an automatic
+        # fallback away from a paused pin (e.g. reviewer selection) proceeds.
+        selected = [
+            target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved
+        ]
+        # A new worker dispatch also answers for every model it asked for
+        # (explicit, attached or also_models); reviewer selection only for what it picked.
+        _refuse_paused(selected if review_dispatch else [*models, *selected])
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
+
+
+def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
+    """The model a seat runs when the request pins none.
+
+    A harness picks its own default (kimicc runs the first routable kimicc model);
+    otherwise the registry default applies.
+    """
+    if harness == "kimicc":
+        try:
+            from .adapters.kimicc import kimicc_default_model
+
+            return kimicc_default_model()
+        except Exception:  # no catalog: fall back to the registry default
+            pass
+    elif harness:
+        try:
+            from .adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+            fixed = (ACPX_SUPPORTED_PARTICIPANTS.get(harness) or {}).get("model")
+            if fixed:
+                return str(fixed)
+        except Exception:  # unknown harness: registry default
+            pass
+    try:
+        from .registry import AGENTS
+    except Exception:  # no registry: nothing to resolve
+        return None
+    raw = (AGENTS.get(seat) or {}).get("default_model")
+    return str(raw).strip() if isinstance(raw, str) and raw.strip() else None
+
+
+def _refuse_paused(models: Iterable[str | None]) -> None:
+    """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches."""
+    from .model_pause import refuse_paused_models
+
+    refuse_paused_models(models)
 
 
 def _refuse_non_review_models(models: Iterable[str | None]) -> None:
