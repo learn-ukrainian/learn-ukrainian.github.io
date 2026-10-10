@@ -356,7 +356,7 @@ def running_workers(initiator: str) -> int | None:
                 return None
             if task.get("status") in LIVE_WORKER_STATUSES:
                 if live.get("alive") is not True:
-                    return None
+                    continue
                 count += 1
     return count
 
@@ -496,7 +496,7 @@ def cmd_whoami(path: Path | None) -> int:
     if path is None:
         print("state: (no LU_DRIVER_STATE_FILE / SESSION_EPIC; not a driver session)")
         return 1
-    print(f"state: {path}")
+    print("state: (configured)")
     if not path.is_file():
         print("state file missing; create it with: init --epic <epic>")
         return 1

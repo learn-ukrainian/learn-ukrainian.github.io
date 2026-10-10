@@ -81,6 +81,23 @@ def test_whoami_prints_goals_and_next(state, capsys):
     assert "open PR" in out
 
 
+@pytest.mark.parametrize("missing", [False, True])
+def test_whoami_redacts_state_path(state, capsys, missing):
+    path = state.parent / "synthetic-private-state.md"
+    if not missing:
+        path.write_text(state.read_text(encoding="utf-8"), encoding="utf-8")
+    assert driver_state.cmd_whoami(path) == (1 if missing else 0)
+    out = capsys.readouterr().out
+    assert "state: (configured)" in out
+    assert str(path.parent) not in out
+    assert path.name not in out
+    if missing:
+        assert "state file missing" in out
+    else:
+        assert "fix X" in out
+        assert "open PR" in out
+
+
 def test_init_refuses_overwrite(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(driver_state, "_repo_root", lambda start=None: tmp_path)
@@ -159,6 +176,37 @@ def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mo
     assert proc.returncode == 0
     assert json.loads(proc.stdout) == ({"decision": "allow"} if mode != "agy-hook" else {})
     assert proc.stderr == ""
+
+
+@pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
+def test_hook_shell_preserves_input_bytes(state, tmp_path, monkeypatch, mode):
+    interpreter = tmp_path / "synthetic-interpreter"
+    interpreter.write_text(
+        f"#!{sys.executable}\n"
+        "import json\nimport os\nimport sys\n"
+        "if sys.argv[1] == '-m':\n"
+        "    print(json.dumps({'input_hex': sys.stdin.buffer.read().hex()}))\n"
+        "else:\n"
+        "    os.execv(sys.executable, [sys.executable, *sys.argv[1:]])\n",
+        encoding="utf-8",
+    )
+    interpreter.chmod(0o700)
+    temporary = tmp_path / "synthetic-temporary"
+    temporary.mkdir()
+    monkeypatch.setenv("TMPDIR", str(temporary))
+    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", str(interpreter))
+    payload = b'\x00{"value": "before\x00after"}\x00\r\n\n'
+    proc = subprocess.run(
+        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), mode],
+        input=payload,
+        capture_output=True,
+        cwd=tmp_path,
+        timeout=60,
+        check=True,
+    )
+    assert json.loads(proc.stdout) == {"input_hex": payload.hex()}
+    assert proc.stderr == b""
+    assert list(temporary.iterdir()) == []
 
 
 @pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
@@ -810,7 +858,7 @@ def test_clean_stop_resets_counter(driver, state):
 
 @pytest.mark.parametrize(
     "fault",
-    ["missing", "dead", "stale", "wrong-seat", "wrong-task", "unknown-status", "unavailable", "bad-json", "no-nonce"],
+    ["missing", "stale", "wrong-seat", "wrong-task", "unknown-status", "unavailable", "bad-json", "no-nonce"],
 )
 def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
@@ -822,9 +870,7 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
         if fault == "missing":
             return None
         out = original(task_id, run_nonce=run_nonce)
-        if fault == "dead":
-            out["alive"] = False
-        elif fault == "stale":
+        if fault == "stale":
             out["task"]["run_nonce"] = "old-nonce"
         elif fault == "wrong-seat":
             out["task"]["initiator"] = "other-seat"
@@ -846,6 +892,26 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     out = _stop(driver, _transcript(driver, "Work verified."))
     assert out["decision"] == "continue"
     assert "live worker count is unknown" in out["reason"]
+
+
+@pytest.mark.parametrize("all_dead", [False, True])
+def test_dead_running_workers_are_skipped(driver, monkeypatch, all_dead):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    original = delegate._fetch_monitor_task
+
+    def fetch(task_id, *, run_nonce=None):
+        out = original(task_id, run_nonce=run_nonce)
+        if all_dead or task_id == "t0":
+            out["alive"] = False
+        return out
+
+    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
+    expected = 0 if all_dead else SYNTHETIC_WORKER_TARGET - 1
+    assert driver_state.running_workers("gemini-infra") == expected
+    out = _stop(driver, _transcript(driver, "Work verified."))
+    assert out["decision"] == "continue"
+    assert "below the privately configured target" in out["reason"]
+    assert "restore worker telemetry" not in out["reason"]
 
 
 def test_live_terminal_workers_do_not_count(driver, monkeypatch):
