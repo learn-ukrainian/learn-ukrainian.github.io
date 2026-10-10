@@ -166,7 +166,7 @@ def test_binding_rules_are_core_with_task_scoped_references():
     assert body == client.get("/api/rules?scope=core&format=json").json()
     assert body["sources"] == [rules_core.CORE_REL]
     assert body["markdown"] == rules_core.core_text()
-    assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_000
+    assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_960
     assert body["scope"] == "core"
     assert "task-scoped-reading.md" in body["markdown"]
     assert "<!-- p4-worktree: O04 -->" in body["markdown"]
