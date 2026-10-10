@@ -7,6 +7,7 @@ import fcntl
 import hashlib
 import json
 import os
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -383,9 +384,7 @@ def test_record_rejects_partial_substring_token_matches(ledger):
     # 4. "open" embedded in "reopened"
     q_item = item("queue-lag", state="open", owner="ci", waits_on="none", action="fix")
     body4 = b"queue-lag | reopened | ci | none | fix\nRESOLVED resolved"
-    with pytest.raises(
-        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
-    ):
+    with pytest.raises(ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"):
         blockers.record(
             ledger,
             EPIC,
@@ -396,9 +395,7 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         )
     # 5. "ci" embedded in "recipient"
     body5 = b"queue-lag | open | recipient | none | fix\nRESOLVED resolved"
-    with pytest.raises(
-        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
-    ):
+    with pytest.raises(ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"):
         blockers.record(
             ledger,
             EPIC,
@@ -409,9 +406,7 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         )
     # 6. "fix" embedded in "prefix"
     body6 = b"queue-lag | open | ci | none | prefix\nRESOLVED resolved"
-    with pytest.raises(
-        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
-    ):
+    with pytest.raises(ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"):
         blockers.record(
             ledger,
             EPIC,
@@ -427,9 +422,7 @@ def test_record_rejects_partial_substring_token_matches(ledger):
         b"There are none left in the prefix queue.\n"
         b"RESOLVED resolved"
     )
-    with pytest.raises(
-        ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"
-    ):
+    with pytest.raises(ValueError, match="posted body omits required fields for NEW item 'queue-lag' on the same line"):
         blockers.record(
             ledger,
             EPIC,
@@ -607,13 +600,54 @@ b._atomic_write(Path(sys.argv[1]), json.loads(sys.argv[2]))
             process.wait(timeout=20)
 
 
+def test_atomic_write_private_same_directory_and_fsync_order(ledger, monkeypatch):
+    stored = seed(ledger)
+    events = []
+    real_fsync, real_replace = os.fsync, os.replace
+
+    def fsync(descriptor):
+        events.append("directory-fsync" if stat.S_ISDIR(os.fstat(descriptor).st_mode) else "file-fsync")
+        real_fsync(descriptor)
+
+    def replace(source, destination, *, src_dir_fd, dst_dir_fd):
+        assert src_dir_fd == dst_dir_fd
+        assert os.fstat(src_dir_fd).st_ino == ledger.parent.stat().st_ino
+        assert Path(source).name == source
+        assert destination == ledger.name
+        assert stat.S_IMODE(os.stat(source, dir_fd=src_dir_fd).st_mode) == 0o600
+        assert json.loads((ledger.parent / source).read_bytes()) == stored
+        events.append("replace")
+        real_replace(source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd)
+
+    monkeypatch.setattr(blockers.os, "fsync", fsync)
+    monkeypatch.setattr(blockers.os, "replace", replace)
+    blockers._atomic_write(ledger, stored)
+    assert events == ["file-fsync", "replace", "directory-fsync"]
+    assert stat.S_IMODE(ledger.stat().st_mode) == 0o600
+    assert list(ledger.parent.glob(f".{blockers.LEDGER_NAME}.*")) == []
+
+
+def test_atomic_write_collision_preserves_existing_staging_and_ledger(ledger, monkeypatch):
+    from scripts.common import safe_unit_install
+
+    stored = seed(ledger)
+    before = ledger.read_bytes()
+    monkeypatch.setattr(safe_unit_install.secrets, "token_hex", lambda count: "occupied")
+    staging = ledger.parent / f".{ledger.name}.occupied.tmp"
+    staging.write_bytes(b"another writer's staging")
+    with pytest.raises(FileExistsError):
+        blockers._atomic_write(ledger, stored)
+    assert staging.read_bytes() == b"another writer's staging"
+    assert ledger.read_bytes() == before
+
+
 def test_atomic_replace_failure_keeps_old_and_cleans_own_temp(ledger, monkeypatch):
     stored = seed(ledger)
     before = ledger.read_bytes()
     monkeypatch.setattr(
-        blockers.os, "replace", lambda *args: (_ for _ in ()).throw(OSError("synthetic rename failure"))
+        blockers.os, "replace", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("synthetic rename failure"))
     )
-    with pytest.raises(OSError):
+    with pytest.raises(OSError, match="synthetic rename failure"):
         blockers._atomic_write(ledger, stored)
     assert ledger.read_bytes() == before
     assert list(ledger.parent.glob(f".{blockers.LEDGER_NAME}.*")) == []

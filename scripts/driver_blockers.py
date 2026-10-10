@@ -9,7 +9,6 @@ import json
 import os
 import re
 import sys
-import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -170,20 +169,19 @@ def ledger_path(epic: str) -> Path:
 
 
 def _atomic_write(path: Path, data: dict) -> None:
+    from scripts.common.safe_unit_install import write_unit
+
     raw = (json.dumps(data, sort_keys=True, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     if len(raw) > MAX_INPUT_BYTES:
         raise ValueError("resulting ledger exceeds maximum byte size")
-    temporary = None
+    # Persistent staging belongs beside the ledger, not on a scratch filesystem.
+    # The shared writer exclusively creates private staging, fsyncs, and renames
+    # through this directory descriptor; record() retains the stable ledger lock.
+    directory_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
     try:
-        with tempfile.NamedTemporaryFile(mode="wb", dir=path.parent, prefix=f".{LEDGER_NAME}.", delete=False) as handle:
-            temporary = Path(handle.name)
-            handle.write(raw)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
+        write_unit(directory_fd, path.name, raw, mode=0o600)
     finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
+        os.close(directory_fd)
 
 
 def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes, expect_generation: int) -> dict:
@@ -235,9 +233,7 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
                 continue
             item_id = item["id"]
             id_pattern = rf"(?<![A-Za-z0-9_.-]){re.escape(item_id)}(?![A-Za-z0-9_.-])"
-            matching_lines = [
-                line for line in posted_text.splitlines() if re.search(id_pattern, line)
-            ]
+            matching_lines = [line for line in posted_text.splitlines() if re.search(id_pattern, line)]
             if not matching_lines:
                 raise ValueError(f"posted body omits {item['class']} item id {item_id!r} verbatim")
             if item["class"] in {"NEW", "CHANGED"}:
@@ -260,7 +256,7 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
                         continue
                     line_without_id = re.sub(id_pattern, " ", line)
                     for match in marker_pattern.finditer(line_without_id):
-                        if not negation_pattern.search(line_without_id[:match.start()]):
+                        if not negation_pattern.search(line_without_id[: match.start()]):
                             line_matched = True
                             break
                     if line_matched:
