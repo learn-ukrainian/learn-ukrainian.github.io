@@ -2,11 +2,38 @@
 
 from __future__ import annotations
 
-from dataclasses import fields
+from collections.abc import Iterable, Mapping
+
+
+class _RedactedValue(str):
+    """Preserve string payloads while hiding values in rebuilt diagnostics."""
+
+    def __repr__(self) -> str:
+        return "<redacted>"
 
 
 class RedactedEnv(dict[str, str]):
-    """Keep ordinary dict behavior while redacting values in repr and str."""
+    """Redact the mapping and values when diagnostic tools rebuild plain dicts."""
+
+    def __init__(self, values: Mapping[str, str] | Iterable[tuple[str, str]] = (), /, **kwargs: str) -> None:
+        super().__init__()
+        self.update(values, **kwargs)
+
+    def __setitem__(self, key: str, value: str) -> None:
+        super().__setitem__(key, _RedactedValue(value) if isinstance(value, str) else value)
+
+    def update(self, values: Mapping[str, str] | Iterable[tuple[str, str]] = (), /, **kwargs: str) -> None:
+        for key, value in dict(values, **kwargs).items():
+            self[key] = value
+
+    def setdefault(self, key, default=None):
+        if key not in self:
+            self[key] = default
+        return self[key]
+
+    def __ior__(self, other: Mapping[str, str] | Iterable[tuple[str, str]]) -> RedactedEnv:
+        self.update(other)
+        return self
 
     def __repr__(self) -> str:
         return f"RedactedEnv(names={sorted(self)!r})"
@@ -18,15 +45,3 @@ class RedactedEnv(dict[str, str]):
 
     def __reduce__(self):
         return type(self), (), None, None, iter(self.items())
-
-
-def env_safe_dataclass_eq(self: object, other: object) -> bool:
-    """Preserve dataclass equality without pytest's generated-equality drill-down.
-
-    Pytest recursively expands mappings for generated dataclass equality,
-    rebuilding plain dicts that bypass RedactedEnv's representation.
-    """
-    if self.__class__ is not other.__class__:
-        return NotImplemented
-    names = tuple(field.name for field in fields(self) if field.compare)
-    return tuple(getattr(self, name) for name in names) == tuple(getattr(other, name) for name in names)
