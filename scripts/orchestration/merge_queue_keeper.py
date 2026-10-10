@@ -28,6 +28,7 @@ from scripts.opsec.prepublish import (
     publication_cli,
 )
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
+from scripts.publish import recovery
 from scripts.publish.github import Request, request_run
 
 FLOOR = 500
@@ -250,8 +251,8 @@ class GitHub:
             return None
         return False
 
-    def enqueue(self, number: int, head: str) -> None:
-        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
+    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
+        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head, recovery=recovery_attempt))
 
     def dequeue(self, node_id: str) -> None:
         data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
@@ -267,19 +268,50 @@ class GitHub:
     def timeline(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-timeline", repo=self.repository, number=number))
 
+    def created_at(self, number: int) -> str:
+        """PR creation is a complete lower bound when its queue-entry event is absent."""
+        pull = self.json(Request("read-pull", repo=self.repository, number=number))
+        stamp = pull.get("created_at") if isinstance(pull, dict) else None
+        if not isinstance(stamp, str):
+            raise KeeperError("PR creation time unknown")
+        try:
+            datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ")
+        except ValueError as exc:
+            raise KeeperError("PR creation time invalid") from exc
+        return stamp
+
     def runs(self, since: str) -> list[dict[str, Any]]:
-        start = (
-            since[:10]
-            if re.fullmatch(r"\d{4}-\d{2}-\d{2}", since[:10])
-            else (datetime.now(UTC) - timedelta(days=1)).date().isoformat()
+        end = datetime.now(UTC).replace(microsecond=0)
+        try:
+            start = datetime.fromisoformat(since.replace("Z", "+00:00")).astimezone(UTC).replace(microsecond=0)
+        except ValueError:
+            start = end - timedelta(days=1)
+        return self._runs_window(start, end)
+
+    def _runs_window(self, start: datetime, end: datetime) -> list[dict[str, Any]]:
+        if start > end:
+            return []
+        pages = self.json(
+            Request(
+                "read-runs",
+                repo=self.repository,
+                start=start.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                end=end.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                paginate=True,
+                slurp=True,
+            )
         )
-        end = datetime.now(UTC).date().isoformat()
-        pages = self.json(Request("read-runs", repo=self.repository, start=start, end=end, paginate=True, slurp=True))
         if not isinstance(pages, list) or not all(
             isinstance(page, dict) and isinstance(page.get("workflow_runs"), list) for page in pages
         ):
             raise KeeperError("merge_group run pagination incomplete")
         runs = [item for page in pages for item in page["workflow_runs"]]
+        total = pages[0].get("total_count") if pages else None
+        if type(total) is int and total > 1000:
+            if start == end:
+                raise KeeperError("merge_group run cap exceeded within one second")
+            middle = start + timedelta(seconds=int((end - start).total_seconds()) // 2)
+            return self._runs_window(start, middle) + self._runs_window(middle + timedelta(seconds=1), end)
         if not all(isinstance(item, dict) for item in runs) or not pages or pages[0].get("total_count") != len(runs):
             raise KeeperError("merge_group run page incomplete")
         return runs
@@ -289,6 +321,22 @@ class GitHub:
         if not isinstance(data, dict) or not isinstance(data.get("jobs"), list) or data.get("total_count", 0) > 100:
             raise KeeperError("merge_group job page incomplete")
         return data["jobs"]
+
+    def first_failed_test(self, job_id: int) -> str:
+        """Extract only a test's relative source identifier, never log values."""
+        log = self.call("run", "view", "-R", self.repository, "--job", str(job_id), "--log")
+        for match in re.finditer(r"\bFAILED\s+(tests/[^\r\n]+?)(?:\s+-\s|\r?$)", log, re.M):
+            # Pytest parameter IDs can contain arbitrary private runtime data.
+            # Project only the source path and Python identifiers; decline any
+            # unrecognized text instead of forwarding it into a public comment.
+            identifier = match[1].partition("[")[0]
+            if re.fullmatch(
+                r"tests/(?:[A-Za-z_][A-Za-z0-9_]*/)*[A-Za-z_][A-Za-z0-9_]*\.py"
+                r"(?:::[A-Za-z_][A-Za-z0-9_]*)+",
+                identifier,
+            ):
+                return identifier
+        return ""
 
     def issues(self, title: str) -> list[dict[str, Any]]:
         return self.paged(Request("read-issues", repo=self.repository))
@@ -433,10 +481,10 @@ def _requeue_hold(
     drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
 ) -> str | None:
     """Why the gate keeps an ejected head out of the queue, or None to let it through."""
+    if drop_key in previous.get("requeued", {}):
+        return recovery.spent_reason({"action": "re-enqueue (legacy)", "at": previous["requeued"][drop_key]})
     if drop_key in previous.get("shared_pass", {}):
         return None
-    if drop_key in previous.get("requeued", {}):
-        return "requeue-spent"
     if drop_key in previous.get("undiagnosed", {}):
         return "requeue-unknown"
     if drops < 1:
@@ -456,16 +504,34 @@ def _gate_hold(
     drops: int,
     grants: dict[str, dict[str, Any]] | None,
     previous: Mapping[str, Any],
+    comments: list[dict[str, Any]],
+    login: str,
 ) -> str | None:
     """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
     drop_key = f"{number}:{head}"
+    needs_recovery = drops >= 1 or drop_key in previous.get("shared_pass", {})
+    if needs_recovery:
+        try:
+            prior = recovery.first_attempt(
+                recovery.ledger_path(gh.root), normalize_repository(gh.repository), number, head
+            )
+        except PublishBlocked as exc:
+            raise KeeperError(str(exc)) from exc
+        if prior:
+            return recovery.spent_reason(prior)
     if (
         grants is not None
         and drop_key in previous.get("squash_revoked", {})
         and gh.squash_blocked(number, head) is not False
     ):
         return "squash-text-blocked"
-    return _requeue_hold(drop_key, drops, grants, previous)
+    hold = _requeue_hold(drop_key, drops, grants, previous)
+    if hold is None and needs_recovery:
+        try:
+            recovery.evidence_from_comments(comments, number, head, authenticated_login=login)
+        except PublishBlocked as exc:
+            return str(exc)
+    return hold
 
 
 def _min_interval(environ: Mapping[str, str]) -> int:
@@ -613,34 +679,64 @@ def _comment_once(
 
 
 def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str]]:
+    timeline = gh.timeline(number)
     events = [
         item
-        for item in gh.timeline(number)
+        for item in timeline
         if item.get("event") == "removed_from_merge_queue" and item.get("created_at", "") >= since
     ]
-    if not events:
-        return "", []
+    entries = [
+        item["created_at"]
+        for item in timeline
+        if item.get("event") == "added_to_merge_queue"
+        and isinstance(item.get("created_at"), str)
+        and item["created_at"] <= since
+    ]
+    # A run starts at queue entry, often long before the keeper last saw the
+    # PR queued. When the entry is known, it also bounds failures: queue
+    # ejection can lag a failure beyond the keeper's last observation.
+    start = max(entries) if entries else gh.created_at(number)
     runs = [
         item
-        for item in gh.runs(since)
+        for item in gh.runs(start)
         if item.get("event") == "merge_group"
         and item.get("conclusion") == "failure"
-        and item.get("created_at", "") >= since
+        and (item.get("updated_at") or item.get("created_at", "")) >= (start if entries else since)
+        and item.get("created_at", "") >= start
         and extract_pr_number(str(item.get("head_branch", ""))) == number
     ]
     if not runs:
-        return " Queue removal confirmed; failing merge_group run unknown.", []
+        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), []
     run = max(runs, key=lambda item: item.get("created_at", ""))
     if not isinstance(run.get("id"), int):
-        return " Queue removal confirmed; failing merge_group run id unknown.", []
-    jobs = gh.jobs(run["id"])
+        raise KeeperError("matching merge_group run has no valid id")
+    run_detail = f" Failing merge_group: {run.get('html_url') or run['id']}"
+    try:
+        jobs = gh.jobs(run["id"])
+    except KeeperError as exc:
+        return f"{run_detail}; failing job lookup failed: {exc}.", []
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
     )
-    return (
-        f" Failing merge_group: {run.get('html_url', 'unknown')}; failing jobs: {', '.join(failed) or 'unknown'}.",
-        failed,
+    detail = f"{run_detail}; failing jobs: {', '.join(failed) or 'none reported'}."
+    job = next(
+        (
+            job
+            for job in jobs
+            if job.get("conclusion") == "failure"
+            and "pytest" in str(job.get("name", ""))
+            and type(job.get("id")) is int
+        ),
+        None,
     )
+    if job:
+        try:
+            test = gh.first_failed_test(job["id"])
+            if test:
+                detail += f" First FAILED test: {test}."
+        except KeeperError:
+            pass  # Optional log enrichment must not hide the run/job diagnosis.
+    return detail, failed
 
 
 def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[int]:
@@ -722,6 +818,9 @@ def run(
                 detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
+                    previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
+                    if dropped_head == head:
+                        drops = previous["drops"][drop_key]
                     shared_count = previous.setdefault("shared_requeues", {})
                     shared = _shared_failure(previous.get("failures"), failed_jobs, number)
                     if shared and int(shared_count.get(prior_drop_key, 0)) < SHARED_FAILURE_REQUEUE_LIMIT:
@@ -730,20 +829,16 @@ def run(
                         detail += (
                             " The same jobs also failed merge_group runs of "
                             + ", ".join(f"#{n}" for n in shared)
-                            + "; not counted against this head."
+                            + "; any re-enqueue uses this head's shared recovery allowance."
                         )
-                    else:
-                        previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
-                        if dropped_head == head:
-                            drops = previous["drops"][drop_key]
                 else:
                     detail = " Queue removal diagnosis unknown."
-            except KeeperError:
-                detail = " Queue removal diagnosis unknown."
+            except KeeperError as exc:
+                detail = f" Queue removal diagnosis lookup failed: {exc}."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
         if reason == "ready" and queued is not True and not armed:
             try:
-                reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
+                reason = _gate_hold(gh, number, head, drops, grants, previous, comments, login) or reason
             except KeeperError:
                 reason = "requeue-unknown"
         rollup = [
@@ -827,7 +922,7 @@ def run(
                     else "fresh-evidence-unknown"
                 )
                 if reason == "ready" and queued is not True and not armed:
-                    reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
+                    reason = _gate_hold(gh, number, head, drops, grants, previous, current_comments, login) or reason
             if queued is True or armed:
                 fresh = bool(
                     current
@@ -872,7 +967,10 @@ def run(
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")
             elif reason == "ready":
-                gh.enqueue(number, head)
+                if drops >= 1 or drop_key in previous.get("shared_pass", {}):
+                    gh.enqueue(number, head, recovery_attempt=True)
+                else:
+                    gh.enqueue(number, head)
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
                     if _auto_merge_armed(after_enqueue):

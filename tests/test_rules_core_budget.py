@@ -19,7 +19,8 @@ CATALOG = ROOT / "scripts/config/model_catalog.yaml"
 # 35_100 -> 35_300: #10014 / #9987 add Grok's execution limit without cutting reviewer obligations.
 # 35_300 -> 35_500: #10146 admits Gemini as an epic driver; P2 names its certified driver pins.
 # 35_500 -> 35_600: CTO decision 2026-10-09 — the security row states "never written or reviewed on Sonnet"; the router-only exception lives in model-assignment.md and the agent file.
-CORE_BYTE_BUDGET = 35_600
+# 35_600 -> 35_800: retain the approved 200-byte allowance for detached long jobs with checkpoint and log (P1 Loop).
+CORE_BYTE_BUDGET = 35_800
 PILLARS = tuple(f"P{n}" for n in range(10))
 # A launcher context-window suffix such as `[1m]` is not part of the model id; the base id is checked.
 MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s\[]*)(?:\[[^\]`\s]*\])?`")

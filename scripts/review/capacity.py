@@ -26,7 +26,7 @@ def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, obje
         policy = credit_lane.load_policy()
     except ValueError:
         # Same retained reserve as the owner's unreadable-policy fallback.
-        threshold = credit_lane._NEAR_CAP_REMAINING_PCT
+        threshold = credit_lane._CREDIT_NEAR_CAP_REMAINING_PCT
         max_age_s = credit_lane.UNREADABLE_POLICY_MAX_AGE_S
     else:
         threshold = policy.near_cap_remaining_pct

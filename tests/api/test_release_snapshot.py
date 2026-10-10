@@ -5,7 +5,6 @@ from __future__ import annotations
 import io
 import json
 import os
-import shutil
 import signal
 import socket
 import subprocess
@@ -138,28 +137,29 @@ def _read_text(url: str) -> str:
         return response.read().decode("utf-8")
 
 
-def _provision_missing_live_data_roots(repo_root: Path) -> list[Path]:
-    """Create ignored live-data directories absent from a clean worktree."""
-    created: list[Path] = []
+@pytest.fixture()
+def real_release_live_checkout(tmp_path: Path) -> tuple[Path, str]:
+    """Real code and manifest, with a bounded live-data corpus (#10315).
+
+    A shared no-checkout clone reuses local Git objects without copying the
+    entire documentation corpus. Only runtime imports and the route inputs
+    are materialized; the release still archives this worktree's actual code.
+    """
+    sha = _release_test_sha(PROJECT_ROOT)
+    repo_root = tmp_path / "live"
+    _run_git(tmp_path, "clone", "--shared", "--no-checkout", str(PROJECT_ROOT), str(repo_root))
+    _run_git(
+        repo_root,
+        "checkout",
+        sha,
+        "--",
+        "agents_extensions",
+        "curriculum/l2-uk-en/curriculum.yaml",
+        "site/src/content/docs/a1-v1/sounds-letters-and-hello.mdx",
+    )
     for relative_name in release_snapshot.LIVE_DATA_PATHS:
-        path = repo_root / relative_name
-        if not path.exists():
-            path.mkdir(parents=True)
-            created.append(path)
-    manifest_path = repo_root / "curriculum" / "l2-uk-en" / "curriculum.yaml"
-    if not manifest_path.exists():
-        manifest_path.parent.mkdir(parents=True, exist_ok=True)
-        try:
-            content = _run_git(repo_root, "show", "HEAD:curriculum/l2-uk-en/curriculum.yaml")
-            manifest_path.write_text(content, encoding="utf-8")
-        except Exception:
-            pass
-        mod_file = repo_root / "curriculum" / "l2-uk-en" / "a1" / "01-sounds-letters-and-hello.md"
-        mod_file.parent.mkdir(parents=True, exist_ok=True)
-        mod_file.write_text("# Sounds\n", encoding="utf-8")
-        if repo_root / "curriculum" not in created:
-            created.append(repo_root / "curriculum")
-    return created
+        (repo_root / relative_name).mkdir(parents=True, exist_ok=True)
+    return repo_root, sha
 
 
 def test_atomic_publish_keeps_previous_current_on_crash(tmp_path: Path) -> None:
@@ -445,89 +445,88 @@ def test_pruning_rechecks_current_release_before_each_deletion(tmp_path: Path) -
     assert shas[1] not in result.removed
 
 
-def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path) -> None:
+def test_real_release_serves_live_data_routers_with_logical_paths(
+    tmp_path: Path, real_release_live_checkout: tuple[Path, str]
+) -> None:
     """Boot a snapshot of this worktree and exercise each live-data route class."""
-    created_live_roots = _provision_missing_live_data_roots(PROJECT_ROOT)
-    try:
-        sha = _release_test_sha(PROJECT_ROOT)
-        release_dir, _ = release_snapshot.build_release(PROJECT_ROOT, sha)
-        port = _free_port()
-        log_path = tmp_path / "release-api.log"
-        environment = sanitized_git_env() | {
-            "LEARN_UK_REPO_ROOT": str(PROJECT_ROOT),
-            "GIT_DIR": _run_git(PROJECT_ROOT, "rev-parse", "--absolute-git-dir"),
-            "GIT_WORK_TREE": str(PROJECT_ROOT),
-            "PYTHONPATH": str(release_dir),
-        }
+    repo_root, sha = real_release_live_checkout
+    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+    # Write after snapshot publication to prove these routes read live data,
+    # while keeping discovery independent of the growing repository corpus.
+    doc_path = "docs/research/release-live-data.md"
+    html_path = "docs/research/release-live-data.html"
+    (repo_root / "docs" / "research").mkdir()
+    (repo_root / doc_path).write_text("# Live release data\n", encoding="utf-8")
+    (repo_root / html_path).write_text("<title>Live release data</title>\n", encoding="utf-8")
+    port = _free_port()
+    log_path = tmp_path / "release-api.log"
+    environment = sanitized_git_env() | {
+        "LEARN_UK_REPO_ROOT": str(repo_root),
+        "GIT_DIR": _run_git(repo_root, "rev-parse", "--absolute-git-dir"),
+        "GIT_WORK_TREE": str(repo_root),
+        "PYTHONPATH": str(release_dir),
+    }
 
-        with log_path.open("w", encoding="utf-8") as log_file:
-            process = subprocess.Popen(
-                [
-                    str(VENV_PYTHON),
-                    "-m",
-                    "uvicorn",
-                    "scripts.api.main:app",
-                    "--host",
-                    "127.0.0.1",
-                    "--port",
-                    str(port),
-                ],
-                cwd=release_dir,
-                env=environment,
-                stdout=log_file,
-                stderr=subprocess.STDOUT,
-            )
-            agent_url = f"http://127.0.0.1:{port}/api/agent/module/a1/people-around-me"
-            try:
-                deadline = time.monotonic() + 15
-                while True:
-                    try:
-                        agent_payload = _read_json(agent_url)
-                        if agent_payload.get("key_paths"):
-                            break
-                    except (urllib.error.URLError, TimeoutError):
-                        pass
-                    if time.monotonic() >= deadline:
-                        pytest.fail(f"release API did not become ready:\n{log_path.read_text(encoding='utf-8')}")
-                    time.sleep(0.05)
-
-                curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/state/build-status", timeout=10)
-                preparation_payload = _read_json(
-                    f"http://127.0.0.1:{port}/api/state/preparation/a1/sounds-letters-and-hello",
-                    timeout=10,
-                )
-                artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
-                docs_text = _read_text(
-                    f"http://127.0.0.1:{port}/files/docs/research/2026-06-12-atlas-synonym-sense-fix-report.md"
-                )
-            finally:
-                process.terminate()
-                process.wait(timeout=5)
-
-        key_paths = agent_payload["key_paths"]
-        assert curriculum_payload["tracks"]["a1"]["total"] >= 0
-        assert preparation_payload["track"] == "a1-v1"
-        assert preparation_payload["publication"]["source"]["path"].startswith("site/src/content/docs/a1-v1/")
-        assert "data_checkout" not in preparation_payload["authority"]
-        expected_role = (
-            "dispatch_worktree"
-            if ".worktrees/dispatch" in PROJECT_ROOT.as_posix()
-            else "linked_worktree"
-            if (PROJECT_ROOT / ".git").is_file()
-            else "live_primary"
+    with log_path.open("w", encoding="utf-8") as log_file:
+        process = subprocess.Popen(
+            [
+                str(VENV_PYTHON),
+                "-m",
+                "uvicorn",
+                "scripts.api.main:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                str(port),
+            ],
+            cwd=release_dir,
+            env=environment,
+            stdout=log_file,
+            stderr=subprocess.STDOUT,
         )
-        assert preparation_payload["authority"]["primary_checkout"]["role"] == expected_role
-        assert len(preparation_payload["authority"]["primary_checkout"]["head_sha"]) == 40
-        assert preparation_payload["authority"]["cwd_role"] == "other"
-        assert preparation_payload["authority"]["service_code"]["mode"] == "release"
-        assert key_paths["orchestration_dir"].startswith("curriculum/l2-uk-en/")
-        assert not key_paths["orchestration_dir"].startswith(str(release_dir))
-        assert artifact_payload["artifacts"]
-        assert all(not item["path"].startswith(str(release_dir)) for item in artifact_payload["artifacts"])
-        assert docs_text.startswith("# Word Atlas Synonym Sense Fix Report")
-    finally:
-        for path in reversed(created_live_roots):
-            shutil.rmtree(path)
+        agent_url = f"http://127.0.0.1:{port}/api/agent/module/a1/people-around-me"
+        try:
+            deadline = time.monotonic() + 15
+            while True:
+                try:
+                    agent_payload = _read_json(agent_url)
+                    if agent_payload.get("key_paths"):
+                        break
+                except (urllib.error.URLError, TimeoutError):
+                    pass
+                if time.monotonic() >= deadline:
+                    pytest.fail(f"release API did not become ready:\n{log_path.read_text(encoding='utf-8')}")
+                time.sleep(0.05)
+
+            curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/state/build-status", timeout=10)
+            preparation_payload = _read_json(
+                f"http://127.0.0.1:{port}/api/state/preparation/a1/sounds-letters-and-hello",
+                timeout=10,
+            )
+            # Preserve the original cold-request budget; bounding the input
+            # corpus must solve the timeout without increasing it.
+            started = time.monotonic()
+            artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
+            assert time.monotonic() - started < 10
+            docs_text = _read_text(f"http://127.0.0.1:{port}/files/{doc_path}")
+        finally:
+            process.terminate()
+            process.wait(timeout=5)
+
+    key_paths = agent_payload["key_paths"]
+    assert curriculum_payload["tracks"]["a1-v1"]["total"] > 0
+    assert preparation_payload["track"] == "a1-v1"
+    assert preparation_payload["publication"]["source"]["path"].startswith("site/src/content/docs/a1-v1/")
+    assert "data_checkout" not in preparation_payload["authority"]
+    assert preparation_payload["authority"]["primary_checkout"]["role"] == "live_primary"
+    assert len(preparation_payload["authority"]["primary_checkout"]["head_sha"]) == 40
+    assert preparation_payload["authority"]["cwd_role"] == "other"
+    assert preparation_payload["authority"]["service_code"]["mode"] == "release"
+    assert key_paths["orchestration_dir"].startswith("curriculum/l2-uk-en/")
+    assert not key_paths["orchestration_dir"].startswith(str(release_dir))
+    assert {item["path"] for item in artifact_payload["artifacts"]} == {doc_path, html_path}
+    assert all(not item["path"].startswith(str(release_dir)) for item in artifact_payload["artifacts"])
+    assert docs_text == "# Live release data\n"
 
 
 def test_trusted_join_validates_components_lexically(tmp_path: Path) -> None:

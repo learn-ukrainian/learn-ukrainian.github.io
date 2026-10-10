@@ -22,8 +22,9 @@
 # allowlist); every other lane is unaffected.
 schema_version: credit-lanes.v1
 
-# Plan remaining-% at or below which a credit balance is considered. 10.0 matches the
-# router's near_cap line (>= 90% of the plan window used).
+# Plan remaining-% at or below which a credit balance is considered for configured
+# lanes. This Codex credit-policy trigger is separate from the subscription router
+# near_cap line (>= 99% used, or <= 1% remaining).
 near_cap_remaining_pct: 10.0
 
 # Credit freshness bound; matches the plan-window freshness bound the router

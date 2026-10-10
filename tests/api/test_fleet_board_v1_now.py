@@ -28,7 +28,8 @@ SCREEN = "busy compiling output"
 def _isolated(monkeypatch: pytest.MonkeyPatch) -> None:
     for name in sources_mod.LOCATION_ENV_VARS:
         monkeypatch.delenv(name, raising=False)
-    monkeypatch.delenv("FLEET_PR_STALE_MIN", raising=False)
+    for name in ("FLEET_GITHUB_REPO", "GH_REPO", "GITHUB_REPOSITORY", "FLEET_PR_STALE_MIN"):
+        monkeypatch.delenv(name, raising=False)
     monkeypatch.setattr(view_mod, "utc_now", lambda: FROZEN)
     monkeypatch.setattr(view_mod, "load_delegate_health", lambda: report("delegate", "ok"))
     monkeypatch.setattr(view_mod, "load_occupancy_activity", lambda: (report("occupancy", "ok"), {}))
@@ -354,8 +355,15 @@ def test_board_reports_only_evaluated_sources(
 
     assert response.status_code == 200
     rows = response.json()["sources"]
-    assert [row["name"] for row in rows] == ["roster_snapshot", "harness_snapshot", "delegate", "occupancy"]
-    assert all(row["status"] == "ok" for row in rows)
+    expected_names = ["roster_snapshot", "harness_snapshot", "delegate", "occupancy"]
+    if endpoint == "now":
+        expected_names.extend(["github", "mq_state", "stale_prs"])
+    assert [row["name"] for row in rows] == expected_names
+    assert all(row["status"] == "ok" for row in rows[:4])
+    if endpoint == "now":
+        assert rows[4]["status"] == "not_configured"
+        expected_status = "unavailable" if unrelated_configured else "not_configured"
+        assert all(row["status"] == expected_status for row in rows[5:])
     assert rows[0]["age_s"] == rows[1]["age_s"] == 20
 
 
@@ -464,7 +472,13 @@ def test_board_failure_retains_endpoint_schema(monkeypatch: pytest.MonkeyPatch, 
     body = response.json()
     assert body["schema"] == "fleet.v1." + schema_name
     assert body["data"] == data
-    assert body["sources"] == [{"name": "board", "status": "unavailable", "age_s": None, "error": "unavailable"}]
+    expected = [{"name": "board", "status": "unavailable", "age_s": None, "error": "unavailable"}]
+    if path == "/now":
+        expected.extend(
+            {"name": name, "status": "not_configured", "age_s": None, "error": None}
+            for name in ("github", "mq_state", "stale_prs")
+        )
+    assert body["sources"] == expected
     assert "board-failure-private-marker" not in response.text
     document = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"][body["schema"]]
     Draft202012Validator(document).validate(body)

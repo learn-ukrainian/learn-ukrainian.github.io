@@ -58,6 +58,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.epic_selector import validate_epic
 from scripts.session_canary import handoff_select
 
 
@@ -78,9 +79,18 @@ def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
     selector = epic.strip().lower()
     try:
         result = subprocess.run(
-            ["bash", "-c", 'source "$1" && launcher_selector_stream "$2"',
-             "lane-stream", str(ROOT / "scripts/lib/handoff_identity.sh"), selector],
-            capture_output=True, text=True, timeout=1, check=False,
+            [
+                "bash",
+                "-c",
+                'source "$1" && launcher_selector_stream "$2"',
+                "lane-stream",
+                str(ROOT / "scripts/lib/handoff_identity.sh"),
+                selector,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=1,
+            check=False,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise StreamResolutionError(selector) from exc
@@ -96,7 +106,10 @@ def _stream_id(args: argparse.Namespace) -> str:
 def _epic_stream_defaults() -> dict[str, str]:
     """Compatibility export for Kimi, derived entirely from the shell SSOT."""
     result = subprocess.run(
-        ["bash", "-c", '''
+        [
+            "bash",
+            "-c",
+            """
 source "$1" || exit 1
 {
   _launcher_registry_stream_keys
@@ -106,8 +119,14 @@ source "$1" || exit 1
   stream=$(launcher_selector_stream "$selector") || exit 1
   printf '%s\t%s\n' "$selector" "$stream"
 done
-''', "lane-defaults", str(ROOT / "scripts/lib/handoff_identity.sh")],
-        capture_output=True, text=True, timeout=2, check=True,
+""",
+            "lane-defaults",
+            str(ROOT / "scripts/lib/handoff_identity.sh"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=2,
+        check=True,
     )
     return dict(line.split("\t", 1) for line in result.stdout.splitlines())
 
@@ -124,6 +143,7 @@ def __getattr__(name: str) -> dict[str, str]:
     globals()["EPIC_STREAM_DEFAULTS"] = defaults
     return defaults
 
+
 DEFAULT_PASS_RATIO = 0.8
 DEFAULT_SIM_THRESHOLD = 0.75
 N_ANCHORS = 10
@@ -139,15 +159,14 @@ def _utc_now() -> str:
 
 
 def _canary_dir(repo: Path, epic: str) -> Path:
+    validate_epic(epic)
     return repo / ".claude" / f"{epic}-epic" / "canary"
 
 
 _OWN_HANDOFF = "GROK-DRIVER-HANDOFF.md"
 
 
-def _load_ranked(
-    repo: Path, epic: str, preferred: list[str] | None = None
-) -> list[handoff_select.LoadedCandidate]:
+def _load_ranked(repo: Path, epic: str, preferred: list[str] | None = None) -> list[handoff_select.LoadedCandidate]:
     """One read per candidate, ranked. Mint and the pre-mint board share this."""
     own = [_OWN_HANDOFF] if preferred is None else [name for name in preferred if name]
     return handoff_select.load_and_rank_candidates(
@@ -207,6 +226,7 @@ def _bound_handoff_path(
     ``mint_meta.json`` is absent. Returning a recorded path does not read it;
     the caller that consumes the bytes fails closed on that read.
     """
+    validate_epic(epic)
     override = _resolve_handoff_override(repo, str(explicit) if explicit else None)
     if override is not None and not handoff_select.is_superseded_handoff(override):
         return override
@@ -312,9 +332,7 @@ def _handoff_section_counts(md: str) -> tuple[int, int]:
 def _format_anchor_shortfall(attempts: list[tuple[str, int, int, int]]) -> str:
     """Name every handoff tried and its next/hands-off bullet counts."""
     best = max((anchors for _rel, anchors, _next_n, _hands_n in attempts), default=0)
-    tried = ", ".join(
-        f"{rel} (next={next_n}, hands-off={hands_n})" for rel, _anchors, next_n, hands_n in attempts
-    )
+    tried = ", ".join(f"{rel} (next={next_n}, hands-off={hands_n})" for rel, _anchors, next_n, hands_n in attempts)
     if not tried:
         tried = "(no handoff) (next=0, hands-off=0)"
     return (
@@ -622,11 +640,7 @@ def cmd_mint(args: argparse.Namespace) -> int:
         "handoff": None if selected.path is None else handoff_rel,
         "handoff_sha256": selected.sha256,
         "stream_limit": stream_limit,
-        "candidates": [
-            handoff_select.display_repo_path(repo, item.path)
-            for item in loaded
-            if item.text is not None
-        ],
+        "candidates": [handoff_select.display_repo_path(repo, item.path) for item in loaded if item.text is not None],
         "n_anchors": len(facts),
         "pass_ratio_default": DEFAULT_PASS_RATIO,
         "policy": "operational-8/10-legacy-facts-from-stream+handoff",
@@ -780,10 +794,7 @@ def cmd_score(args: argparse.Namespace) -> int:
             payload["handoff_changed_since_mint"] = changed
             verdict_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             if changed:
-                print(
-                    "notice: handoff_changed_since_mint: true — "
-                    "material edits after mint → re-mint to refresh facts"
-                )
+                print("notice: handoff_changed_since_mint: true — material edits after mint → re-mint to refresh facts")
         canary_line = diary_mod.format_canary_score_line(
             verdict=verdict,
             score_line=score_line,
@@ -794,6 +805,7 @@ def cmd_score(args: argparse.Namespace) -> int:
         meta_path = out_dir / "mint_meta.json"
         if meta_path.is_file():
             import contextlib
+
             with contextlib.suppress(json.JSONDecodeError, OSError):
                 stream_id = json.loads(meta_path.read_text(encoding="utf-8")).get("stream_id") or stream_id
 
@@ -901,7 +913,6 @@ def _split_csv_lines(raw: str) -> list[str]:
     return parts
 
 
-
 def emit_hydrate_capsule(
     *,
     repo: Path,
@@ -951,9 +962,7 @@ def emit_hydrate_capsule(
         print("error: diary handoff missing: (no handoff)", file=sys.stderr)
         return 1, {"error": "no_handoff", "handoff": "(no handoff)"}
     elif isinstance(recorded, Path):
-        meta_path = (
-            out_dir if out_dir is not None else _canary_dir(repo, epic)
-        ) / "mint_meta.json"
+        meta_path = (out_dir if out_dir is not None else _canary_dir(repo, epic)) / "mint_meta.json"
         diary_text = handoff_select.read_consumed_handoff(recorded, meta_path=meta_path)
         handoff_path = recorded
     else:
@@ -1346,7 +1355,6 @@ def build_parser() -> argparse.ArgumentParser:
     )
     stamp.set_defaults(func=cmd_stamp)
 
-
     hydrate = sub.add_parser(
         "hydrate",
         help="Print bounded post-compact hydrate capsule (Sol Option D; score first)",
@@ -1397,8 +1405,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
+        # Validate raw path selectors before handlers strip/lower them.
+        if args.command != "protocol":
+            validate_epic(args.epic)
         return int(args.func(args))
-    except StreamResolutionError as exc:
+    except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 

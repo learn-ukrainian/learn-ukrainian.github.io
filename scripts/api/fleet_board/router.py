@@ -190,8 +190,13 @@ def _json(body: dict[str, Any], status_code: int = 200) -> JSONResponse:
 def read_now() -> JSONResponse:
     board, failed = _loaded("now", {"attention": [], "epics": []})
     if failed is not None or board is None:
-        return _json(failed or respond("now", {"attention": [], "epics": []}))
-    return _json(respond("now", {"attention": board.attention, "epics": board.epics}, board.sources))
+        body = failed or respond("now", {"attention": [], "epics": []})
+    else:
+        body = respond("now", {"attention": list(board.attention), "epics": board.epics}, board.sources)
+    pipeline = prs_api.read_now()
+    body["data"]["attention"].extend(pipeline["data"]["attention"])
+    body["sources"].extend(pipeline["sources"])
+    return _json(body)
 
 
 @router.get("/epics", name="epics", response_model=None)
@@ -242,7 +247,11 @@ def read_alerts() -> dict[str, Any]:
 
 @router.get("/stats", name="stats")
 def read_stats() -> dict[str, Any]:
-    return _publish("stats", "stats", empty_stats, load_stats)
+    body = _publish("stats", "stats", empty_stats, load_stats)
+    pipeline = prs_api.read_stats()
+    body["data"].update(pipeline["data"])
+    body["sources"].extend(pipeline["sources"])
+    return body
 
 
 @router.get("/links", name="links")

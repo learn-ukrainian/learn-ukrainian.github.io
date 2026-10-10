@@ -64,10 +64,15 @@ def test_claude_rejects_models_outside_native_profile(model: str) -> None:
 
 
 def test_certified_claude_driver_models_are_revalidated() -> None:
-    for model in ("opus", "fable", "sonnet"):
+    for model in ("fable", "sonnet"):
         result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", model)
         assert result.returncode == 0, result.stderr
         assert "would claim lease" in result.stdout
+    # Opus stays certified in the catalog but is always blocked by the cap policy.
+    opus = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "opus")
+    assert opus.returncode == 7, opus.stderr
+    assert "Opus is blocked by operator policy" in opus.stderr
+    assert "would claim lease" not in opus.stdout
     untrusted = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-haiku-5")
     assert untrusted.returncode == 4
 
@@ -116,11 +121,13 @@ def test_interactive_launcher_refuses_every_retired_catalog_id(model, suffix, vi
 OPUS_5_5_1M = "claude-opus-5-5\\[1m\\]"  # printf %q form of claude-opus-5-5[1m]
 
 
-def test_claude_driver_defaults_to_opus_5_5_at_high() -> None:
-    """Operator 2026-09-22: the Claude orchestrator seat is Opus 5.5 (1M) at high."""
+def test_claude_driver_default_opus_seat_runs_on_sonnet_at_high() -> None:
+    """The seat default stays Opus 5.5 (1M) at high; the cap policy always blocks Opus."""
     result = run_launcher("start-claude-driver.sh", "--epic", "devops")
     assert result.returncode == 0, result.stderr
-    assert f"would exec claude --model {OPUS_5_5_1M} --effort high" in result.stdout
+    assert "driver default switched from Opus to claude-sonnet-5-5" in result.stderr
+    assert "would exec claude --model claude-sonnet-5-5 --effort high" in result.stdout
+    assert OPUS_5_5_1M not in result.stdout
 
 
 @pytest.mark.parametrize("inherited", ["", "0", "1"])
@@ -169,11 +176,12 @@ def test_claude_driver_default_yields_to_launcher_env() -> None:
     assert "would exec claude --model claude-fable-5-1 --effort medium" in result.stdout
 
 
-def test_claude_opus_aliases_resolve_to_5_5() -> None:
+def test_claude_opus_aliases_resolve_and_are_blocked() -> None:
     for alias in ("opus", "opus-5-5", "opus-5.5", "claude-opus-5-5"):
         result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", alias)
-        assert result.returncode == 0, (alias, result.stderr)
-        assert "would exec claude --model claude-opus-5-5" in result.stdout
+        assert result.returncode == 7, (alias, result.stderr)
+        assert "Opus is blocked by operator policy" in result.stderr
+        assert "would exec claude" not in result.stdout
 
 
 def test_claude_interactive_does_not_inherit_driver_default() -> None:
@@ -194,7 +202,7 @@ def test_claude_interactive_does_not_inherit_driver_default() -> None:
 def test_claude_driver_accepts_effort_before_or_after_epic(argv: tuple[str, ...]) -> None:
     result = run_launcher("start-claude-driver.sh", *argv)
     assert result.returncode == 0, result.stderr
-    assert f"would exec claude --model {OPUS_5_5_1M} --effort xhigh" in result.stdout
+    assert "would exec claude --model claude-sonnet-5-5 --effort xhigh" in result.stdout
 
 
 def test_claude_driver_injects_model_and_effort_when_explicit() -> None:

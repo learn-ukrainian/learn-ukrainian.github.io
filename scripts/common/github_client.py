@@ -76,7 +76,10 @@ def _cache_directory():
     """
     override = os.environ.get("LU_GITHUB_CACHE_DIR")
     if override:
-        return Path(override)
+        path = Path(override)
+        if path.exists() and not os.access(path, os.W_OK):
+            return None
+        return path
     try:
         root = Path(__file__).resolve().parents[2]
         marker = root / ".git"
@@ -92,7 +95,13 @@ def _cache_directory():
                     return None
                 marker = (marker / content).resolve()
         if marker.name == ".git" and marker.is_dir() and (marker / "HEAD").is_file():
-            return marker.parent / "batch_state" / "github-client"
+            candidate = marker.parent / "batch_state" / "github-client"
+            if candidate.exists():
+                if not os.access(candidate, os.W_OK):
+                    return None
+            elif not os.access(marker.parent, os.W_OK):
+                return None
+            return candidate
     except (OSError, ValueError, RuntimeError):
         pass
     return None
@@ -246,21 +255,46 @@ class GitHubClient:
 
     @contextmanager
     def _db(self):
-        path = ":memory:"
-        if self.cache_dir is not None:
-            self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-            path = self.cache_dir / "cache.sqlite3"
-        db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
-        if self.cache_dir is None:
-            self._memory_db = db
-        else:
-            os.chmod(path, 0o600)
-        db.execute(
-            "CREATE TABLE IF NOT EXISTS cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))"
-        )
-        db.execute(
-            "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
-        )
+        for attempt in range(2):
+            path = ":memory:"
+            if self.cache_dir is not None:
+                try:
+                    self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+                    candidate = self.cache_dir / "cache.sqlite3"
+                    if candidate.exists() and not os.access(candidate, os.W_OK):
+                        raise OSError("cache database is read-only")
+                    path = candidate
+                except OSError:
+                    self.cache_dir = None
+                    path = ":memory:"
+            try:
+                db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
+                if self.cache_dir is None:
+                    self._memory_db = db
+                else:
+                    with suppress(OSError):
+                        os.chmod(path, 0o600)
+                db.execute(
+                    "CREATE TABLE IF NOT EXISTS cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))"
+                )
+                db.execute(
+                    "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
+                )
+                if self.cache_dir is not None:
+                    db.execute(
+                        "INSERT OR REPLACE INTO budget (scope, resource, remaining, reset) VALUES ('__probe__', '__probe__', 0, 0)"
+                    )
+                    db.execute("DELETE FROM budget WHERE scope='__probe__'")
+                break
+            except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+                if self.cache_dir is not None:
+                    if "db" in locals() and db is not self._memory_db:
+                        with suppress(Exception):
+                            db.close()
+                    self.cache_dir = None
+                    if attempt == 0:
+                        continue
+                raise
         try:
             with db:
                 yield db
@@ -411,77 +445,96 @@ class GitHubClient:
         response = self._send(method, endpoint, headers, raw, timeout)
         h = {k.lower(): v for k, v in response.headers.items()}
         reset = None
-        with self._db() as db:
-            if "x-ratelimit-remaining" in h and "x-ratelimit-reset" in h:
-                with suppress(ValueError):
-                    remaining, reset = int(h["x-ratelimit-remaining"]), int(h["x-ratelimit-reset"])
-                    _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
-            if response.status == 429 or (
-                response.status == 403
-                and (
-                    h.get("x-ratelimit-remaining") == "0"
-                    or "retry-after" in h
-                    or b"rate limit" in response.body.lower()
-                )
-            ):
-                with suppress(ValueError):
-                    reset = int(now + float(h["retry-after"])) if "retry-after" in h else reset
-                reset = reset or int(now + 60)
-                blocked_resource = (
-                    "secondary"
-                    if "retry-after" in h or h.get("x-ratelimit-remaining") != "0"
-                    else h.get("x-ratelimit-resource", resource)
-                )
-                _store_budget(db, self.scope, blocked_resource, 0, reset)
-                return deferred(reset)
-            if response.status == 304:
-                if not cached:
-                    return Result(status=304, error="github_cache_miss", headers=h)
-                # 304 is authoritative freshness; its remaining header is used,
-                # never decremented locally.
-                h = {**json.loads(cached[1]), **h}
-                db.execute(
-                    "UPDATE cache SET at=?,headers=? WHERE scope=? AND key=? AND at<=?",
-                    (now, json.dumps(h), self.scope, key, now),
-                )
-                return Result(_cached_value(cached), status=304, headers=h)
-            if 200 <= response.status < 300 and (raw_response or headers.get("Accept") == "application/octet-stream"):
-                return Result(response.body, status=response.status, headers=h)
+        for persist_attempt in range(2):
             try:
-                value = json.loads(response.body) if response.body else None
-            except ValueError:
+                with self._db() as db:
+                    if "x-ratelimit-remaining" in h and "x-ratelimit-reset" in h:
+                        with suppress(ValueError):
+                            remaining, reset = int(h["x-ratelimit-remaining"]), int(h["x-ratelimit-reset"])
+                            _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
+                    if response.status == 429 or (
+                        response.status == 403
+                        and (
+                            h.get("x-ratelimit-remaining") == "0"
+                            or "retry-after" in h
+                            or b"rate limit" in response.body.lower()
+                        )
+                    ):
+                        with suppress(ValueError):
+                            reset = int(now + float(h["retry-after"])) if "retry-after" in h else reset
+                        reset = reset or int(now + 60)
+                        blocked_resource = (
+                            "secondary"
+                            if "retry-after" in h or h.get("x-ratelimit-remaining") != "0"
+                            else h.get("x-ratelimit-resource", resource)
+                        )
+                        _store_budget(db, self.scope, blocked_resource, 0, reset)
+                        return deferred(reset)
+                    if response.status == 304:
+                        if not cached:
+                            return Result(status=304, error="github_cache_miss", headers=h)
+                        # 304 is authoritative freshness; its remaining header is used,
+                        # never decremented locally.
+                        h = {**json.loads(cached[1]), **h}
+                        db.execute(
+                            "UPDATE cache SET at=?,headers=? WHERE scope=? AND key=? AND at<=?",
+                            (now, json.dumps(h), self.scope, key, now),
+                        )
+                        return Result(_cached_value(cached), status=304, headers=h)
+                    if 200 <= response.status < 300 and (raw_response or headers.get("Accept") == "application/octet-stream"):
+                        return Result(response.body, status=response.status, headers=h)
+                    try:
+                        value = json.loads(response.body) if response.body else None
+                    except ValueError:
+                        return Result(
+                            response.body,
+                            status=response.status,
+                            error=None if 200 <= response.status < 300 else "github_http_error",
+                            headers=h,
+                        )
+                    if (
+                        graphql
+                        and isinstance(value, dict)
+                        and any(
+                            e.get("type") in {"RATE_LIMIT", "RATE_LIMITED"}
+                            for e in value.get("errors", [])
+                            if isinstance(e, dict)
+                        )
+                    ):
+                        reset = reset or int(now + 60)
+                        _store_budget(db, self.scope, resource, 0, reset)
+                        return deferred(reset)
+                    if graphql and isinstance(value, dict) and value.get("errors"):
+                        return Result(value, status=response.status, error="github_graphql_error", headers=h)
+                    if not 200 <= response.status < 300:
+                        return Result(value, status=response.status, error="github_http_error", reset_at=reset, headers=h)
+                    if resource_path == "rate_limit" and isinstance(value, dict):
+                        for name, rate in value.get("resources", {}).items():
+                            if isinstance(rate, dict) and type(rate.get("remaining")) is int and type(rate.get("reset")) is int:
+                                _store_budget(db, self.scope, name, rate["remaining"], rate["reset"])
+                    if cacheable:
+                        _store_cache(db, self.scope, key, response.body, h, now)
+                    else:
+                        # Any write can affect list/detail cache entries. Retain them
+                        # for stale status, but never treat them as fresh without GET.
+                        pass
+                break
+            except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+                if self.cache_dir is not None:
+                    self.cache_dir = None
+                    if persist_attempt == 0:
+                        continue
+                try:
+                    value = json.loads(response.body) if response.body else None
+                except ValueError:
+                    value = response.body
                 return Result(
-                    response.body,
+                    value,
                     status=response.status,
                     error=None if 200 <= response.status < 300 else "github_http_error",
+                    reset_at=reset,
                     headers=h,
                 )
-            if (
-                graphql
-                and isinstance(value, dict)
-                and any(
-                    e.get("type") in {"RATE_LIMIT", "RATE_LIMITED"}
-                    for e in value.get("errors", [])
-                    if isinstance(e, dict)
-                )
-            ):
-                reset = reset or int(now + 60)
-                _store_budget(db, self.scope, resource, 0, reset)
-                return deferred(reset)
-            if graphql and isinstance(value, dict) and value.get("errors"):
-                return Result(value, status=response.status, error="github_graphql_error", headers=h)
-            if not 200 <= response.status < 300:
-                return Result(value, status=response.status, error="github_http_error", reset_at=reset, headers=h)
-            if resource_path == "rate_limit" and isinstance(value, dict):
-                for name, rate in value.get("resources", {}).items():
-                    if isinstance(rate, dict) and type(rate.get("remaining")) is int and type(rate.get("reset")) is int:
-                        _store_budget(db, self.scope, name, rate["remaining"], rate["reset"])
-            if cacheable:
-                _store_cache(db, self.scope, key, response.body, h, now)
-            else:
-                # Any write can affect list/detail cache entries. Retain them
-                # for stale status, but never treat them as fresh without GET.
-                pass
         return Result(value, status=response.status, headers=h)
 
 
@@ -1964,7 +2017,11 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
                         row.update(body=issue["body"], labels={"nodes": [{"name": r["name"]} for r in issue["labels"]]})
                 else:
                     row = {"body": issue["body"], "subIssues": connection(number, fields.get("cursor"))}
-                value = {"data": {"repository": {"nameWithOwner": issue["repository_url"].split("/repos/", 1)[1], "issue": row}}}
+                value = {
+                    "data": {
+                        "repository": {"nameWithOwner": issue["repository_url"].split("/repos/", 1)[1], "issue": row}
+                    }
+                }
         elif operation == "merge-facts":
             groups = {}
             for slug, number in fields["batch"]:

@@ -30,6 +30,7 @@ import pytest
 
 from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
+from scripts.common.scratch import resolve_scratch_root
 from scripts.orchestration import pool_headroom, worktree_claims
 from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
 
@@ -665,9 +666,10 @@ def run(args: argparse.Namespace) -> int:
         prune_stale_worktrees(primary)
         checkout = make_test_worktree(primary)
         summary["main_sha"] = command(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
-        scratch_root = Path(tempfile.gettempdir()).resolve()
+        scratch_root = resolve_scratch_root().resolve()
         if any((parent / ".git").exists() for parent in (scratch_root, *scratch_root.parents)):
             raise DataTierError("runner scratch root must be outside any Git checkout")
+        scratch_root.mkdir(parents=True, exist_ok=True)
         snapshot_dir = Path(tempfile.mkdtemp(prefix="lu-data-tier-", dir=scratch_root))
         snapshots = snapshot_dir
         summary["missing_databases"] = snapshot_databases(primary, checkout, snapshots, only=args.only)

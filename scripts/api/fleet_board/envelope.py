@@ -489,6 +489,49 @@ _BUDGET_DATA: dict[str, Any] = {
 
 _CI_VALUE: dict[str, Any] = {"anyOf": [{"enum": ["green", "red", "pending"]}, {"type": "null"}]}
 _MQ_VALUE: dict[str, Any] = {"anyOf": [{"enum": ["queued", "not_queued", "dropped"]}, {"type": "null"}]}
+_LANE_VALUE: dict[str, Any] = {"type": ["string", "null"], "minLength": 1}
+_HOURS_VALUE: dict[str, Any] = {"type": ["number", "null"], "minimum": 0}
+
+_BLOCKER_NONE: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["kind"],
+    "properties": {"kind": {"const": "none"}},
+}
+_BLOCKER_CF: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["kind"],
+    "properties": {"kind": {"const": "cf_changes"}},
+}
+_BLOCKER_CONFLICT: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["kind"],
+    "properties": {"kind": {"const": "conflict"}},
+}
+_BLOCKER_CHECKS: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["kind", "checks"],
+    "properties": {
+        "kind": {"const": "failing_check"},
+        "checks": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    },
+}
+_BLOCKER_STACK: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["kind", "number", "state"],
+    "properties": {
+        "kind": {"const": "stacked_base"},
+        "number": {"type": ["integer", "null"], "minimum": 1},
+        "state": {"enum": ["open", "closed", "unmerged", "merged"]},
+    },
+}
+_BLOCKER: dict[str, Any] = {
+    "oneOf": [_BLOCKER_NONE, _BLOCKER_CF, _BLOCKER_CONFLICT, _BLOCKER_CHECKS, _BLOCKER_STACK]
+}
 
 _PR_ITEM: dict[str, Any] = {
     "type": "object",
@@ -510,6 +553,11 @@ _PR_ITEM: dict[str, Any] = {
         "stale_green",
         "minutes",
         "stacked_base",
+        "hours_idle",
+        "blocker",
+        "owner_lane",
+        "idle_24h",
+        "idle_48h",
     ],
     "properties": {
         "number": {"type": "integer", "minimum": 1},
@@ -557,6 +605,11 @@ _PR_ITEM: dict[str, Any] = {
         "ready_since": _TIMESTAMP_OR_NULL,
         "stale_green": {"type": "boolean"},
         "minutes": {"type": ["integer", "null"], "minimum": 0},
+        "hours_idle": _HOURS_VALUE,
+        "blocker": _BLOCKER,
+        "owner_lane": _LANE_VALUE,
+        "idle_24h": {"type": "boolean"},
+        "idle_48h": {"type": "boolean"},
         "stacked_base": {
             "anyOf": [
                 {"type": "null"},
@@ -590,6 +643,73 @@ _PR_DATA: dict[str, Any] = {
     "properties": {"pr": {"anyOf": [_PR_ITEM, {"type": "null"}]}},
 }
 
+_ATTENTION_ITEM: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["number", "repo", "title", "owner_lane", "hours_idle", "idle_24h", "idle_48h", "blocker"],
+    "properties": {
+        "number": {"type": "integer", "minimum": 1},
+        "repo": {"type": "string", "minLength": 1},
+        "title": {"type": "string"},
+        "owner_lane": _LANE_VALUE,
+        "hours_idle": {"type": "number", "minimum": 24},
+        "idle_24h": {"const": True},
+        "idle_48h": {"type": "boolean"},
+        "blocker": _BLOCKER,
+    },
+}
+
+_NOW_DATA["properties"]["attention"]["items"] = {"oneOf": [_ATTENTION, _ATTENTION_ITEM]}
+
+_DAY: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["date", "opened", "merged"],
+    "properties": {
+        "date": {"type": "string", "pattern": r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "opened": {"type": "integer", "minimum": 0},
+        "merged": {"type": "integer", "minimum": 0},
+    },
+}
+
+_STATS_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["window_days", "by_repo", "by_lane"],
+    "properties": {
+        "window_days": {"const": 14},
+        "by_repo": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["repo", "backlog", "days"],
+                "properties": {
+                    "repo": {"type": "string", "minLength": 1},
+                    "backlog": {"type": "integer", "minimum": 0},
+                    "days": {"type": "array", "minItems": 14, "maxItems": 14, "items": _DAY},
+                },
+            },
+        },
+        "by_lane": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["owner_lane", "backlog", "days"],
+                "properties": {
+                    "owner_lane": _LANE_VALUE,
+                    "backlog": {"type": "integer", "minimum": 0},
+                    "days": {"type": "array", "minItems": 14, "maxItems": 14, "items": _DAY},
+                },
+            },
+        },
+    },
+}
+
+
+_STATS_DATA["required"].append("stats")
+_STATS_DATA["properties"].update(_DATA_SCHEMAS["fleet.v1.stats"]["properties"])
 
 def endpoint_schema(schema_id: str) -> dict[str, Any]:
     """JSON Schema for one fleet board response, keyed by its ``schema`` value."""
@@ -615,4 +735,6 @@ def endpoint_schema(schema_id: str) -> dict[str, Any]:
         return _envelope_schema(schema_id, _PRS_DATA)
     if schema_id == "fleet.v1.pr":
         return _envelope_schema(schema_id, _PR_DATA)
+    if schema_id == "fleet.v1.stats":
+        return _envelope_schema(schema_id, _STATS_DATA)
     return _envelope_schema(schema_id, _DATA_SCHEMAS.get(schema_id, {"type": "object"}))

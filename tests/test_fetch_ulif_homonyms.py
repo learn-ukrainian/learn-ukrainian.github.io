@@ -10,6 +10,7 @@ import signal
 import sqlite3
 import subprocess
 import sys
+import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -38,6 +39,7 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     parse_stored,
     resolve_progress_interval,
     run_fetch,
+    run_walk,
     status_text,
 )
 from scripts.lexicon.runner.ulif_dictua_parse import parse_ulif_entry
@@ -2380,6 +2382,28 @@ def test_sigterm_during_input_reading_cli_produces_stop_summary_and_exit_interru
     assert "Resume command:" in err
 
 
+# SIGTERM sent to a child already blocked in the spellings FIFO read. Measured
+# 2026-10-10 on this host, delayed variant, after the readiness handshake:
+# idle max 0.031s (n=5); under nproc `yes >/dev/null` loops, max 0.074s (n=20,
+# load average climbed 5.5 to 13.5). Five seconds is more than 60× that exit, so a
+# loaded runner can deschedule the waiter without hiding a handler that never
+# runs. A blocked inherited mask used to sit in the read until this expired
+# (#10374); the child unblocks SIGTERM, so the bound is a real exit budget.
+_SIGTERM_REAP_SECONDS = 5.0
+
+
+def _sigterm_is_blocked() -> bool:
+    return signal.SIGTERM in signal.pthread_sigmask(signal.SIG_BLOCK, set())
+
+
+def _discard_pending_sigterm_and_restore(previous_mask: set[int], previous_handler: object) -> None:
+    """Drop a SIGTERM left pending, then restore the caller's mask and handler."""
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+    signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
+    signal.signal(signal.SIGTERM, previous_handler)
+
+
 @contextmanager
 def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float = 10.0):
     """Pair with the child's FIFO reader, keeping input blocked without payload or EOF."""
@@ -2411,8 +2435,12 @@ def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float
         os.close(writer_fd)
 
 
-@pytest.mark.parametrize("startup_delay", [0.0, 1.2], ids=["immediate", "delayed"])
-def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_delay):
+@pytest.mark.parametrize(
+    ("startup_delay", "block_inherited_sigterm"),
+    [(0.0, False), (1.2, False), (1.2, True)],
+    ids=["immediate", "delayed", "delayed-blocked-mask"],
+)
+def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_delay, block_inherited_sigterm):
     fifo_path = tmp_path / "spellings_fifo"
     os.mkfifo(fifo_path)
     command = [
@@ -2436,21 +2464,32 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
             str(startup_delay),
             *command,
         ]
-    proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
+    # signal.signal does not unblock. Block in the parent so the child inherits
+    # the mask the CI hang died on, then require the child to clear it (#10374).
+    # Restore that saved mask. An unconditional unblock would clear a SIGTERM
+    # the parent had already blocked.
+    parent_mask = None
+    if block_inherited_sigterm:
+        parent_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
     try:
-        # The CLI installs SIGTERM's handler before opening this FIFO. A writer
-        # open succeeds only once that reader exists; keep it open so read_text
-        # cannot finish and reach the network, even if the child is descheduled.
-        with _fifo_input_ready(proc, fifo_path) as writer_fd:
-            proc.send_signal(signal.SIGTERM)
-            _, err = proc.communicate(timeout=5)
-        with pytest.raises(OSError) as closed:
-            os.fstat(writer_fd)
-        assert closed.value.errno == errno.EBADF
+        proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
+        try:
+            # The CLI installs SIGTERM's handler before opening this FIFO. A writer
+            # open succeeds only once that reader exists; keep it open so read_text
+            # cannot finish and reach the network, even if the child is descheduled.
+            with _fifo_input_ready(proc, fifo_path) as writer_fd:
+                proc.send_signal(signal.SIGTERM)
+                _, err = proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
+            with pytest.raises(OSError) as closed:
+                os.fstat(writer_fd)
+            assert closed.value.errno == errno.EBADF
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+            proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
     finally:
-        if proc.poll() is None:
-            proc.kill()
-        proc.communicate(timeout=5)
+        if parent_mask is not None:
+            signal.pthread_sigmask(signal.SIG_SETMASK, parent_mask)
 
     assert proc.returncode == EXIT_INTERRUPTED
     assert "=== ULIF Fetch Stop Summary ===" in err
@@ -2459,6 +2498,263 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
     assert "Requests in run:      0" in err
     assert not (tmp_path / "state").exists()
     assert not (tmp_path / "cache.db").exists()
+
+
+def test_run_fetch_preserves_caller_blocked_sigterm(tmp_path, capsys):
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    # Queue on this thread. A process-directed SIGTERM can be taken by another
+    # thread whose mask is still open.
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+
+    def no_network(_method, _fields):
+        raise AssertionError("network")
+
+    code = None
+    escaped: BaseException | None = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = run_fetch(
+                spellings=[],
+                state_dir=tmp_path / "state",
+                db_path=tmp_path / "cache.db",
+                transport=no_network,
+                sleep=_noop_sleep,
+                scanner=lambda: False,
+            )
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        assert escaped is None
+        assert code == EXIT_OK
+        assert _sigterm_is_blocked()
+        assert signal.SIGTERM in signal.sigpending()
+        assert signal.getsignal(signal.SIGTERM) == previous_handler
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+    capsys.readouterr()
+
+
+def test_run_walk_preserves_caller_blocked_sigterm(tmp_path, capsys):
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+
+    def no_network(_method, _fields):
+        raise RuntimeError("no-network")
+
+    code = None
+    escaped: BaseException | None = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = run_walk(
+                state_dir=tmp_path / "state",
+                db_path=tmp_path / "cache.db",
+                transport=no_network,
+                sleep=_noop_sleep,
+                scanner=lambda: False,
+            )
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        assert escaped is None
+        assert _sigterm_is_blocked()
+        assert signal.SIGTERM in signal.sigpending()
+        assert signal.getsignal(signal.SIGTERM) == previous_handler
+        err = capsys.readouterr().err
+        assert "no-network" in err
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+    assert code is not None
+
+
+@pytest.mark.parametrize("command", ["run", "walk"])
+def test_pending_sigterm_at_main_install_prints_stop_summary_and_restores_handler(tmp_path, capsys, command):
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    if command == "run":
+        argv = [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+        summary = "=== ULIF Fetch Stop Summary ==="
+        reason = "Reason:               interrupted by operator"
+    else:
+        argv = [
+            "walk",
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+        summary = "=== ULIF Walk Stop Summary ==="
+        reason = "Reason:                 interrupted by operator"
+
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+    code = None
+    escaped: BaseException | None = None
+    handler_after = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = main(argv)
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        handler_after = signal.getsignal(signal.SIGTERM)
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+
+    assert escaped is None
+    assert code == EXIT_INTERRUPTED
+    assert handler_after == previous_handler
+    err = capsys.readouterr().err
+    assert summary in err
+    assert reason in err
+    assert "Resume command:" in err
+
+
+def _no_network(_method, _fields):
+    raise AssertionError("network")
+
+
+_INSTALL_BOUNDARY_EXPECTATION = {
+    "run_fetch": ("=== ULIF Fetch Stop Summary ===", "Reason:               interrupted by operator"),
+    "run_walk": ("=== ULIF Walk Stop Summary ===", "Reason:                 interrupted by operator"),
+    "main_run": ("=== ULIF Fetch Stop Summary ===", "Reason:               interrupted by operator"),
+    "main_walk": ("=== ULIF Walk Stop Summary ===", "Reason:                 interrupted by operator"),
+}
+
+
+def _run_install_boundary_site(site: str, tmp_path: Path) -> int:
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    if site == "run_fetch":
+        return run_fetch(
+            spellings=["тест"],
+            state_dir=state_dir,
+            db_path=db_path,
+            max_requests=0,
+            transport=_no_network,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+    if site == "run_walk":
+        return run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            max_requests=0,
+            transport=_no_network,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    if site == "main_run":
+        argv = [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--max-requests",
+            "0",
+        ]
+    elif site == "main_walk":
+        argv = [
+            "walk",
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--max-requests",
+            "0",
+        ]
+    else:
+        raise AssertionError(site)
+    return main(argv)
+
+
+@pytest.mark.parametrize("site", ["run_fetch", "run_walk", "main_run", "main_walk"])
+@pytest.mark.parametrize(
+    "boundary",
+    ["registration", "caller_assignment"],
+    ids=["before-previous-assignment", "before-caller-assignment"],
+)
+def test_sigterm_at_handler_install_boundary_restores_handler_and_mask(tmp_path, capsys, monkeypatch, site, boundary):
+    """Real SIGTERM at each install handoff restores the caller's handler and mask.
+
+    ``registration`` delivers after ``signal.signal`` installs the handler and
+    before that return value is stored. ``caller_assignment`` delivers after
+    ``_install_sigterm_handler`` returns and before the caller stores it.
+    """
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    fired = {"count": 0}
+    if boundary == "registration":
+        real_signal = signal.signal
+
+        def signal_then_sigterm(signum, handler):
+            previous = real_signal(signum, handler)
+            if signum == signal.SIGTERM and callable(handler) and fired["count"] == 0:
+                fired["count"] += 1
+                signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+            return previous
+
+        monkeypatch.setattr(signal, "signal", signal_then_sigterm)
+    elif boundary == "caller_assignment":
+        real_install = mod._install_sigterm_handler
+
+        def install_then_sigterm():
+            previous = real_install()
+            fired["count"] += 1
+            signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+            return previous
+
+        monkeypatch.setattr(mod, "_install_sigterm_handler", install_then_sigterm)
+    else:
+        raise AssertionError(boundary)
+    monkeypatch.setattr(mod, "_requests_transport", lambda _user_agent: _no_network)
+
+    summary, reason = _INSTALL_BOUNDARY_EXPECTATION[site]
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+    assert signal.SIGTERM not in previous_mask
+    code = None
+    escaped: BaseException | None = None
+    handler_after = None
+    mask_after = None
+    pending_after: set[int] | None = None
+    try:
+        try:
+            code = _run_install_boundary_site(site, tmp_path)
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        handler_after = signal.getsignal(signal.SIGTERM)
+        mask_after = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+        pending_after = set(signal.sigpending())
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+
+    err = capsys.readouterr().err
+    assert fired["count"] == 1
+    assert escaped is None
+    assert code == EXIT_INTERRUPTED
+    assert handler_after == previous_handler
+    assert mask_after == previous_mask
+    assert pending_after is not None
+    assert signal.SIGTERM not in pending_after
+    assert summary in err
+    assert reason in err
+    assert "Resume command:" in err
 
 
 @pytest.mark.parametrize(
@@ -2501,7 +2797,12 @@ def test_fifo_input_ready_closes_writer_on_failure(tmp_path):
     fifo_path = tmp_path / "spellings_fifo"
     os.mkfifo(fifo_path)
     proc = subprocess.Popen(
-        [sys.executable, "-c", "import os, sys, time; os.open(sys.argv[1], os.O_RDONLY); time.sleep(60)", str(fifo_path)]
+        [
+            sys.executable,
+            "-c",
+            "import os, sys, time; os.open(sys.argv[1], os.O_RDONLY); time.sleep(60)",
+            str(fifo_path),
+        ]
     )
     try:
         with pytest.raises(RuntimeError, match="consumer failed"):
@@ -2524,8 +2825,7 @@ def test_fifo_input_ready_reaps_before_writer_release_on_timeout(tmp_path, monke
         [
             sys.executable,
             "-c",
-            "from pathlib import Path; import sys; "
-            "Path(sys.argv[1]).read_text(); Path(sys.argv[2]).touch()",
+            "from pathlib import Path; import sys; Path(sys.argv[1]).read_text(); Path(sys.argv[2]).touch()",
             str(fifo_path),
             str(input_finished),
         ],

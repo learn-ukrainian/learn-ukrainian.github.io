@@ -373,7 +373,7 @@ _CREDIT_NOW = datetime(2026, 10, 2, 17, 0, tzinfo=UTC)
 
 
 def _credit_budget(
-    monkeypatch, tmp_path, *, codex_balance=62500.0, claude_used=95.0, default_batch_state=False
+    monkeypatch, tmp_path, *, codex_balance=62500.0, claude_used=99.0, default_batch_state=False
 ) -> dict:
     """routing-budget with Codex 99% used plus ``codex_balance`` credits and Claude at ``claude_used``%.
 
