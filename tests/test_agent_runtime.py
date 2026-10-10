@@ -617,10 +617,15 @@ def test_codex_adapter_discussion_readonly_sets_env(tmp_path):
 
     assert "-s" in plan.cmd
     assert "read-only" in plan.cmd
-    assert plan.env_overrides == {
-        "AB_DISCUSS_READONLY": "1",
-        "LU_CODEX_HOOK_SOURCE": str(Path(__file__).resolve().parents[1]),
-    }
+    try:
+        assert plan.env_overrides.keys() == {"AB_DISCUSS_READONLY", "LU_CODEX_HOOK_SOURCE"}
+        assert plan.env_overrides["AB_DISCUSS_READONLY"] == "1"
+        source = Path(__file__).resolve().parents[1]
+        locator = plan.env_overrides["LU_CODEX_HOOK_SOURCE"]
+        assert str(source) not in locator
+        assert Path(locator).resolve(strict=True) == source
+    finally:
+        adapter.cleanup_invocation(plan)
 
 
 def test_codex_adapter_bridge_creates_then_resumes(tmp_path):
@@ -2005,9 +2010,11 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
 
     watchdog_state = WatchdogState(start_time=base_time, last_activity=base_time)
     poll_ticks = 0
+    watchdog_started = False
 
     def fake_start_watchdog(proc, *args, **kwargs):
-        nonlocal simulated_now
+        nonlocal simulated_now, watchdog_started
+        watchdog_started = True
         simulated_now += 10.0  # Past the 5s warmup before the first check.
         if stdout_delay_ticks == 0:
             _stdout_streamer(proc, watchdog_state)
@@ -2015,9 +2022,9 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
 
     def poll_tick(_interval):
         nonlocal poll_ticks, simulated_now
-        # The time module is shared by telemetry/background threads. Their
-        # sleeps must not advance this test's simulated runner poll counter.
-        if get_ident() != caller_thread:
+        # The time module is also shared by source-attestation subprocesses
+        # and background threads; count only sleeps after watchdog startup.
+        if get_ident() != caller_thread or not watchdog_started:
             return real_sleep(_interval)
         poll_ticks += 1
         # A broken fixture must fail in bounded simulated ticks, never hang CI.

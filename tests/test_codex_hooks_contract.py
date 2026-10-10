@@ -1065,6 +1065,87 @@ def test_portable_hook_command_rewrites_tracked_words_and_refuses_foreign_paths(
         _portable_hook_command(shlex.quote(str(tmp_path / "guard.py")), REPO_ROOT)
 
 
+def test_portable_hook_runs_shared_python_guards():
+    from scripts.agent_runtime.adapters.claude import PROJECT_PYTHON_GUARDS, _worker_guard_settings
+
+    settings = json.loads(_worker_guard_settings())
+    commands = {
+        Path(shlex.split(hook['command'])[-1]).name: hook['command']
+        for group in settings['hooks']['PreToolUse'] for hook in group['hooks']
+        if Path(shlex.split(hook['command'])[-1]).name in PROJECT_PYTHON_GUARDS
+    }
+    assert commands.keys() == PROJECT_PYTHON_GUARDS
+    for name, original in commands.items():
+        command = _portable_hook_command(original, REPO_ROOT)
+        assert name in command
+        assert str(REPO_ROOT) not in command
+        result = subprocess.run(
+            ['bash', '-c', command], cwd=REPO_ROOT,
+            env={**os.environ, 'LU_CODEX_HOOK_SOURCE': str(REPO_ROOT)},
+            input='{}', text=True, capture_output=True, timeout=5,
+        )
+        assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize('defect', ['untracked', 'modified', 'option'])
+def test_portable_python_hook_rejects_invalid_entry(tmp_path, defect):
+    source, _ = _make_linked_worktree(tmp_path)
+    entry = source / 'entry.py'
+    entry.write_text('raise SystemExit(0)\n')
+    if defect != 'untracked':
+        _run(['git', 'add', 'entry.py'], cwd=source)
+        _run(['git', 'commit', '-m', 'tracked hook'], cwd=source)
+    if defect == 'modified':
+        entry.write_text('raise SystemExit(1)\n')
+    argv = [str(source / '.venv/bin/python'), str(entry)]
+    if defect == 'option':
+        argv.insert(1, '-c')
+    with pytest.raises(RuntimeError, match='unportable'):
+        _portable_hook_command(shlex.join(argv), source)
+
+
+def test_worker_source_handle_hides_location_and_is_released(tmp_path):
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt='test', mode='workspace-write', cwd=tmp_path, model=None,
+        task_id=None, session_id=None, tool_config=None,
+    )
+    locator = Path(plan.env_overrides['LU_CODEX_HOOK_SOURCE'])
+    try:
+        assert str(REPO_ROOT) not in json.dumps(plan.env_overrides)
+        assert str(PRIMARY_ROOT) not in json.dumps(plan.env_overrides)
+        assert locator.resolve(strict=True) == REPO_ROOT
+        override = next(value for value in plan.cmd if value.startswith('hooks.PreToolUse='))
+        command = tomllib.loads(override)['hooks']['PreToolUse'][0]['hooks'][0]['command']
+        assert str(REPO_ROOT) not in command
+        result = subprocess.run(
+            ['bash', '-c', command], cwd=tmp_path, env={**os.environ, **plan.env_overrides},
+            input='{}', text=True, capture_output=True, timeout=5,
+        )
+        assert result.returncode == 0, result.stderr
+        adapter.cleanup_invocation(plan)
+        assert not locator.exists()
+        result = subprocess.run(
+            ['bash', '-c', command], cwd=tmp_path, env={**os.environ, **plan.env_overrides},
+            input='{}', text=True, capture_output=True, timeout=5,
+        )
+        assert result.returncode == 2
+        adapter.cleanup_invocation(plan)
+    finally:
+        adapter.cleanup_invocation(plan)
+        plan.output_file.unlink(missing_ok=True)
+
+
+def test_worker_source_handle_unavailable_fails_closed(tmp_path, monkeypatch):
+    original = Path.is_dir
+    monkeypatch.setattr(Path, 'is_dir', lambda path: False if str(path).startswith('/proc/') else original(path))
+    with pytest.raises(RuntimeError, match='source handle unavailable'):
+        CodexAdapter().build_invocation(
+            prompt='test', mode='workspace-write', cwd=tmp_path, model=None,
+            task_id=None, session_id=None, tool_config=None,
+        )
+
+
 def test_worker_rejects_substitute_entry_in_session_checkout(tmp_path):
     primary, session = _make_linked_worktree(tmp_path)
     substitute = session / 'scripts/agent_runtime/codex_hook_entry.sh'
@@ -1089,6 +1170,7 @@ def test_worker_rejects_substitute_entry_in_session_checkout(tmp_path):
         assert not marker.exists()
         assert 'guard-primary-checkout-write' in completed.stderr
     finally:
+        CodexAdapter().cleanup_invocation(plan)
         plan.output_file.unlink(missing_ok=True)
 
 
@@ -1121,24 +1203,29 @@ def test_portable_hook_rejects_untracked_content(tmp_path, defect):
 
 
 @pytest.mark.parametrize('replacement', ['changed-content', 'symlink-escape'])
-def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement):
+@pytest.mark.parametrize('kind', ['shell', 'python'])
+def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, kind):
     source, session = _make_linked_worktree(tmp_path)
-    entry = source / 'entry.sh'
-    entry.write_text('exit 0\n')
-    _run(['git', 'add', 'entry.sh'], cwd=source)
+    entry = source / ('entry.py' if kind == 'python' else 'entry.sh')
+    entry.write_text('raise SystemExit(0)\n' if kind == 'python' else 'exit 0\n')
+    _run(['git', 'add', entry.name], cwd=source)
     _run(['git', 'commit', '-m', 'tracked hook'], cwd=source)
-    command = _portable_hook_command(f'bash {shlex.quote(str(entry))}', source)
+    interpreter = str(source / '.venv/bin/python') if kind == 'python' else 'bash'
+    command = _portable_hook_command(shlex.join([interpreter, str(entry)]), source)
     marker = tmp_path / 'replacement-ran'
-    substitute = f'printf ran > {shlex.quote(str(marker))}\nexit 0\n'
+    substitute = (
+        f'from pathlib import Path\nPath({str(marker)!r}).write_text("ran")\n'
+        if kind == 'python' else f'printf ran > {shlex.quote(str(marker))}\nexit 0\n'
+    )
     if replacement == 'changed-content':
         entry.write_text(substitute)
     else:
-        outside = tmp_path / 'outside.sh'
+        outside = tmp_path / entry.name
         outside.write_text(substitute)
         entry.unlink()
         entry.symlink_to(outside)
     # A same-relative-path substitute in the session must never be selected.
-    (session / 'entry.sh').write_text(substitute)
+    (session / entry.name).write_text(substitute)
     result = subprocess.run(
         ['bash', '-c', command], cwd=session,
         env={**os.environ, 'LU_CODEX_HOOK_SOURCE': str(source), 'GIT_WORK_TREE': str(session)},

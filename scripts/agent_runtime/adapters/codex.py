@@ -79,6 +79,7 @@ class CodexReviewConfigError(ValueError):
 
 
 _HOOK_SOURCE_ENV = "LU_CODEX_HOOK_SOURCE"
+_HOOK_SOURCE_HANDLES: dict[int, tuple[InvocationPlan, int]] = {}
 # Execute the very bytes checked, avoiding a second, raceable read of the entry.
 # -I prevents the session cwd/PYTHONPATH from supplying bootstrap imports.
 _HOOK_BOOTSTRAP = """import hashlib, os, stat, sys
@@ -113,15 +114,23 @@ exec(compile(content, str(entry), 'exec'), {'__name__': '__main__', '__file__': 
 def _portable_hook_command(command: str, root: Path) -> str:
     """Bind a tracked entry to the source checkout, never the session's Git root.
 
-    Checkout locations live only in the private launch environment. The public
-    command contains a relative entry and its tracked content digest.
+    The public command contains a relative entry and its tracked content digest.
+    The launch environment uses an opaque source-directory handle.
     """
     try:
         root = root.resolve(strict=True)
         words = shlex.split(command)
+        from scripts.common.repo_root import project_interpreter
+
+        python_entry = False
         if words and words[0] in {"bash", "/bin/bash"}:
             words.pop(0)
+        elif len(words) > 1 and words[0] == str(project_interpreter(root)):
+            python_entry = True
+            words.pop(0)
         candidate = Path(words.pop(0))
+        if python_entry and candidate.suffix != ".py":
+            raise ValueError("unsupported Python entry")
         entry = candidate.resolve(strict=True)
         if not entry.is_relative_to(root):
             raise ValueError("entry escape")
@@ -636,8 +645,6 @@ class CodexAdapter:
         cmd.append("-")  # Read prompt from stdin.
 
         env_overrides: dict[str, str] = {}
-        if not tc.get("review_isolation"):
-            env_overrides[_HOOK_SOURCE_ENV] = str(Path(__file__).resolve().parents[3])
         if _prompt_names_sources_mcp(prompt) and not _argv_can_call_sources_mcp(cmd):
             raise ValueError(
                 "CodexAdapter: this mode cannot call mcp__sources__* "
@@ -660,7 +667,18 @@ class CodexAdapter:
             # real ``$CODEX_HOME/auth.json``).
             env_overrides["CODEX_HOME"] = str(codex_home_override)
 
-        return InvocationPlan(
+        source_fd = None
+        if not tc.get("review_isolation"):
+            # Keep the source pinned without publishing its checkout location.
+            # The runner closes this parent-owned handle after the invocation.
+            source_fd = os.open(Path(__file__).resolve().parents[3], os.O_RDONLY | os.O_DIRECTORY)
+            locator = f"/proc/{os.getpid()}/fd/{source_fd}"
+            if not Path(locator).is_dir():
+                os.close(source_fd)
+                raise RuntimeError("Codex worker source handle unavailable")
+            env_overrides[_HOOK_SOURCE_ENV] = locator
+
+        plan = InvocationPlan(
             cmd=cmd,
             cwd=execution_cwd,
             stdin_payload=prompt,
@@ -669,6 +687,15 @@ class CodexAdapter:
             liveness_paths=(output_path,),
             metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
         )
+        if source_fd is not None:
+            _HOOK_SOURCE_HANDLES[id(plan)] = (plan, source_fd)
+        return plan
+
+    def cleanup_invocation(self, plan: InvocationPlan) -> None:
+        """Release only the source handle owned by this invocation."""
+        owned = _HOOK_SOURCE_HANDLES.pop(id(plan), None)
+        if owned is not None:
+            os.close(owned[1])
 
     @classmethod
     def _tool_config_flags(cls, tool_config: dict | None) -> list[str]:
