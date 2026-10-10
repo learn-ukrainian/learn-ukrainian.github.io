@@ -322,6 +322,8 @@ launcher_defaults() {
       # project settings (Sonnet 5.5) and effort to the session selection.
       if [ "$LC_MODE" = driver ]; then
         LC_MODEL="${LAUNCHER_MODEL:-claude-opus-5-5[1m]}"
+        # The cap guard may swap only a defaulted Opus seat, never an explicit one.
+        if [ -z "${LAUNCHER_MODEL:-}" ]; then LC_CLAUDE_MODEL_DEFAULTED=1; fi
       else
         LC_MODEL="${LAUNCHER_MODEL:-}"
       fi
@@ -436,10 +438,10 @@ launcher_parse() {
         ;;
       --model)
         launcher_need_value "$1" "${2:-}"
-        LC_MODEL="$2"
+        LC_MODEL="$2"; LC_CLAUDE_MODEL_DEFAULTED=0
         shift 2
         ;;
-      --model=*) LC_MODEL="${1#*=}"; shift ;;
+      --model=*) LC_MODEL="${1#*=}"; LC_CLAUDE_MODEL_DEFAULTED=0; shift ;;
       --effort)
         launcher_need_value "$1" "${2:-}"
         LC_EFFORT="$2"
@@ -1346,6 +1348,46 @@ launcher_publication_path() {
   unset LU_OPSEC_OVERRIDE
 }
 
+# Claude weekly cap guard (operator 2026-10-10). At or above
+# LU_CLAUDE_STOP_PCT (default 90) weekly used, no Claude seat launches.
+# At or above LU_CLAUDE_OPUS_MAX_PCT (default 80) a defaulted Opus driver
+# seat drops to Sonnet and an explicit Opus request is refused. Unknown usage
+# (Monitor down or stale) fails open with a warning, like other Monitor calls.
+launcher_claude_cap_guard() {
+  [ "$LC_PROVIDER" = claude ] || return 0
+  local pct stop opus_max
+  stop="${LU_CLAUDE_STOP_PCT:-90}"
+  opus_max="${LU_CLAUDE_OPUS_MAX_PCT:-80}"
+  local py; py="$(launcher_project_python 2>/dev/null || true)"
+  pct=unknown; [ -n "$py" ] && pct="$("$py" "$LC_ROOT/scripts/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
+  [ -n "$pct" ] || pct=unknown
+  if [ "$pct" != unknown ] && awk -v p="$pct" -v t="$stop" 'BEGIN{exit !(p>=t)}'; then
+    if [ "${LU_CLAUDE_CAP_OVERRIDE:-0}" = 1 ]; then
+      printf 'launcher: WARNING Claude weekly %s%% >= %s%%; LU_CLAUDE_CAP_OVERRIDE=1 set by the operator\n' "$pct" "$stop" >&2
+    else
+      launcher_error "Claude weekly usage is ${pct}% (stop at ${stop}%). No Claude launch until the weekly reset; use start-codex-driver.sh (Sol) or agy. Operator-only override: LU_CLAUDE_CAP_OVERRIDE=1."
+      exit 7
+    fi
+  fi
+  case "$LC_MODEL" in
+    *opus*) ;;
+    *) return 0 ;;
+  esac
+  if [ "$pct" = unknown ]; then
+    printf 'launcher: WARNING Claude weekly usage unknown (Monitor unreadable); cap guard not applied\n' >&2
+    return 0
+  fi
+  if awk -v p="$pct" -v t="$opus_max" 'BEGIN{exit !(p>=t)}'; then
+    if [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ] && [ "$LC_MODEL" = 'claude-opus-5-5[1m]' ]; then
+      printf 'launcher: Claude weekly %s%% (Opus allowed below %s%%); driver default switched from Opus to claude-sonnet-5-5\n' "$pct" "$opus_max" >&2
+      LC_MODEL='claude-sonnet-5-5'
+    else
+      launcher_error "Opus refused: Claude weekly usage ${pct}% (Opus allowed below ${opus_max}% only). Use --model sonnet."
+      exit 7
+    fi
+  fi
+}
+
 launcher_main() {
   LC_PROVIDER="$1"
   LC_MODE="$2"
@@ -1384,6 +1426,8 @@ launcher_main() {
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode
   launcher_validate_driver_certification
+  # Usage errors and certification refusals come first; then the weekly cap.
+  launcher_claude_cap_guard
   # Every admitted driver path enters before expensive preparation, import and lease.
   if [ "$LC_MODE" = driver ]; then
     if [ "$LC_DRY_RUN" = 1 ]; then
