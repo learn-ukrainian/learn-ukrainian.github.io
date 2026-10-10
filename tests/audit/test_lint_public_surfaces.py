@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from scripts.audit import lint_public_surfaces
 from scripts.audit.lint_public_surfaces import scan_text
 from scripts.opsec.needles import Needles
 
@@ -71,6 +72,54 @@ def test_cli_reports_the_rule_and_not_the_matched_text(tmp_path: Path) -> None:
     assert _SECRET_PATH not in completed.stdout
     assert _SECRET_PATH not in completed.stderr
     assert "example" not in completed.stdout
+
+
+def _pull_request_event(tmp_path: Path, title: str) -> Path:
+    event = tmp_path / "event.json"
+    event.write_text(
+        json.dumps(
+            {
+                "pull_request": {
+                    "title": title,
+                    "body": "",
+                    "head": {"ref": "cursor/example", "sha": "a" * 40},
+                    "base": {"sha": "b" * 40},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    return event
+
+
+def test_a_shallow_miss_does_not_fail_a_clean_pull_request(tmp_path: Path, monkeypatch) -> None:
+    def missing(_base: str, _head: str) -> str:
+        raise subprocess.CalledProcessError(128, ["git", "log"])
+
+    monkeypatch.setattr(lint_public_surfaces, "commit_message_text", missing)
+    monkeypatch.setattr(lint_public_surfaces, "_is_shallow_checkout", lambda: True)
+    event = _pull_request_event(tmp_path, "Fix the learner card")
+    assert lint_public_surfaces.main(["--event-file", str(event), "--event-name", "pull_request"]) == 0
+
+
+def test_a_shallow_miss_still_flags_a_dirty_title(tmp_path: Path, monkeypatch) -> None:
+    def missing(_base: str, _head: str) -> str:
+        raise subprocess.CalledProcessError(128, ["git", "log"])
+
+    monkeypatch.setattr(lint_public_surfaces, "commit_message_text", missing)
+    monkeypatch.setattr(lint_public_surfaces, "_is_shallow_checkout", lambda: True)
+    event = _pull_request_event(tmp_path, f"wip {_SECRET_PATH}")
+    assert lint_public_surfaces.main(["--event-file", str(event), "--event-name", "pull_request"]) == 1
+
+
+def test_a_full_checkout_miss_fails(tmp_path: Path, monkeypatch) -> None:
+    def missing(_base: str, _head: str) -> str:
+        raise subprocess.CalledProcessError(128, ["git", "log"])
+
+    monkeypatch.setattr(lint_public_surfaces, "commit_message_text", missing)
+    monkeypatch.setattr(lint_public_surfaces, "_is_shallow_checkout", lambda: False)
+    event = _pull_request_event(tmp_path, "Fix the learner card")
+    assert lint_public_surfaces.main(["--event-file", str(event), "--event-name", "pull_request"]) == 1
 
 
 def test_direct_push_commit_message_is_scanned(tmp_path: Path) -> None:

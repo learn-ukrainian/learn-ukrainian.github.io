@@ -31,6 +31,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Default depth is 1. The publication scan reads base..head, so fetch
+          # those two commits. A still-shallow miss does not fail a clean PR;
+          # the required CI Gate job scans the same range with full history.
+          fetch-depth: 1
           # The closing-reference lint and the publication-surface lint.
           sparse-checkout: |
             scripts/audit/lint_pr_closing_references.py
@@ -54,6 +58,16 @@ jobs:
           body = (event.get("pull_request") or {}).get("body") or ""
           sys.stdout.write(body)
           PY
+      - name: Fetch commits for the publication scan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
+        run: |
+          if [ -n "$BASE_SHA" ] && [ -n "$HEAD_SHA" ]; then
+            if ! git fetch --no-tags origin "$BASE_SHA" "$HEAD_SHA"; then
+              echo "publication scan will use title, body, and branch; the commit range is not in this checkout"
+            fi
+          fi
       - name: Scan pull request title, body, and branch
         run: |
           python3 scripts/audit/lint_public_surfaces.py \

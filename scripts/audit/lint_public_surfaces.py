@@ -143,6 +143,17 @@ def event_surfaces(payload: dict, event_name: str) -> tuple[list[tuple[str, str]
     return [], None
 
 
+def _is_shallow_checkout() -> bool:
+    result = subprocess.run(
+        ["git", "rev-parse", "--is-shallow-repository"],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+    )
+    return result.returncode == 0 and result.stdout.strip() == "true"
+
+
 def commit_message_text(base: str, head: str) -> str:
     """Return commit messages reachable from ``head`` and not from ``base``."""
     result = subprocess.run(
@@ -155,8 +166,37 @@ def commit_message_text(base: str, head: str) -> str:
     return result.stdout
 
 
+def read_commit_messages(base: str, head: str) -> str | None:
+    """Return the range text, or None when a shallow checkout cannot see it.
+
+    None is not a failure. A full checkout that cannot read the range raises.
+    """
+    try:
+        return commit_message_text(base, head)
+    except subprocess.CalledProcessError:
+        if _is_shallow_checkout():
+            return None
+        raise
+
+
 def render(findings: list[SurfaceFinding]) -> str:
     return "\n".join(f"{item.field} {item.rule} line={item.line}" for item in findings)
+
+
+def _apply_commit_range(surfaces: list[tuple[str, str]], base: str, head: str) -> list[tuple[str, str]] | None:
+    """Attach the git range, or keep the other surfaces when the checkout is shallow."""
+    try:
+        git_text = read_commit_messages(base, head)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        if not any(field == "commit" and text for field, text in surfaces):
+            print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+            return None
+        return surfaces
+    if git_text is None:
+        return surfaces
+    kept = [(field, text) for field, text in surfaces if field != "commit"]
+    kept.append(("commit", git_text))
+    return kept
 
 
 def _head_commit_text() -> str:
@@ -201,24 +241,16 @@ def main(argv: list[str] | None = None) -> int:
         elif commit_range is not None:
             base, head = commit_range
             if head:
-                try:
-                    git_text = commit_message_text(base, head)
-                except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-                    if not any(field == "commit" and text for field, text in surfaces):
-                        print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
-                        return 1
-                else:
-                    surfaces = [(field, text) for field, text in surfaces if field != "commit"]
-                    surfaces.append(("commit", git_text))
+                surfaces = _apply_commit_range(surfaces, base, head)
+                if surfaces is None:
+                    return 1
     else:
         if bool(args.base) != bool(args.head):
             print("OPSEC publication surfaces: pass both --base and --head, or neither.", file=sys.stderr)
             return 1
         if args.base and args.head:
-            try:
-                surfaces.append(("commit", commit_message_text(args.base, args.head)))
-            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-                print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+            surfaces = _apply_commit_range(surfaces, args.base, args.head)
+            if surfaces is None:
                 return 1
 
     findings: list[SurfaceFinding] = []
