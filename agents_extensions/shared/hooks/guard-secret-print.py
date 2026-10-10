@@ -1175,12 +1175,13 @@ def _scan_command(
     if reason:
         return reason
     if dumped_files is None:
+        # Files written by nested shells remain readable by their parent.
         dumped_files = set()
     executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
     # Scan the complete text first: shlex may expose a separator inside a
     # substitution as a top-level token, but Bash executes its whole body.
     for body in _substitution_bodies(executable):
-        reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=set(dumped_files))
+        reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
         if reason:
             return reason
     # _pipelines tokenizes and strips here-doc bodies itself. Passing the
@@ -1189,7 +1190,7 @@ def _scan_command(
     for pipeline in _pipelines(command):
         for segment in pipeline:
             for body in _substitution_bodies(" ".join(segment)):
-                reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=set(dumped_files))
+                reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
                 if reason:
                     return reason
         reason = _danger_reason(pipeline, copied, named, dumped_files)
@@ -1210,15 +1211,13 @@ def _scan_command(
                     set(copied),
                     dict(named),
                     depth=depth + 1,
-                    dumped_files=set(dumped_files),
+                    dumped_files=dumped_files,
                 )
                 if reason:
                     return reason
             elif cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
                 for script in _shell_script(args):
-                    reason = _scan_command(
-                        script, set(copied), dict(named), depth=depth + 1, dumped_files=set(dumped_files)
-                    )
+                    reason = _scan_command(script, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
                     if reason:
                         return reason
     return None

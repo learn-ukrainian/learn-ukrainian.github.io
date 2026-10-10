@@ -841,3 +841,17 @@ def test_redirect_does_not_hide_unsanitized_pipeline(command):
     result = _subprocess_guard(command)
     assert result.returncode == 2
     assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'bash -c "env > dump"; cat dump',
+        'echo "$(env > dump)"; cat dump',
+        'eval "env > dump"; cat dump',
+    ],
+)
+def test_nested_dump_remains_visible_to_outer_shell(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
