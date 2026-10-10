@@ -135,6 +135,19 @@ jobs:
           else
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
+      - name: Scan pull request title, body, branch, and commits
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title || '' }}
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref || github.event.merge_group.head_ref || '' }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || '' }}
+        run: |
+          args=()
+          if [ -n "$BASE_SHA" ] && [ -n "$HEAD_SHA" ]; then
+            args+=(--base "$BASE_SHA" --head "$HEAD_SHA")
+          fi
+          python3 scripts/audit/lint_public_surfaces.py "${args[@]}"
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
       # Same scanner pin as the queue-metadata step. Bump both together:
       # newest trufflesecurity/trufflehog release, never an older tag to clear
