@@ -537,7 +537,7 @@ def read_stale_state(
         payload = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique)
         snapshot = _payload(payload)
         age = _file_age(path, moment)
-    except (_Rejected, OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError, OverflowError):
+    except (_Rejected, OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError, OverflowError, RecursionError):
         return report(STALE_PR_SOURCE, "unavailable"), empty
     status = "stale" if age > STALE_PR_FRESH_S else "ok"
     return report(STALE_PR_SOURCE, status, age_s=age), snapshot

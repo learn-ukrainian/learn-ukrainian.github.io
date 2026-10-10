@@ -879,6 +879,29 @@ def test_missing_or_malformed_state_record_degrades(tmp_path, monkeypatch: pytes
     assert broken.json()["data"]["prs"][0]["owner_lane"] == "cursor"
     assert bad.name not in broken.text
 
+    bad.write_text('{"a":' * 10000 + '1' + '}' * 10000, encoding="utf-8")
+    nested_prs = client.get("/api/fleet/v1/prs")
+    assert nested_prs.status_code == 200
+    stale_source = next(item for item in nested_prs.json()["sources"] if item["name"] == "stale_prs")
+    assert stale_source == {"name": "stale_prs", "status": "unavailable", "age_s": None, "error": "unavailable"}
+    gh_source = next(item for item in nested_prs.json()["sources"] if item["name"] == "github")
+    assert gh_source["status"] == "ok"
+    assert len(nested_prs.json()["data"]["prs"]) == 1
+    assert nested_prs.json()["data"]["prs"][0]["hours_idle"] == 24.0
+
+    nested_now = client.get("/api/fleet/v1/now")
+    assert nested_now.status_code == 200
+    now_stale = next(item for item in nested_now.json()["sources"] if item["name"] == "stale_prs")
+    assert now_stale["status"] == "unavailable"
+    assert len(nested_now.json()["data"]["attention"]) == 1
+
+    nested_stats = client.get("/api/fleet/v1/stats")
+    assert nested_stats.status_code == 200
+    stats_stale = next(item for item in nested_stats.json()["sources"] if item["name"] == "stale_prs")
+    assert stats_stale["status"] == "unavailable"
+    assert nested_stats.json()["data"]["by_repo"][0]["backlog"] == 1
+    assert bad.name not in nested_prs.text
+
     old = NOW.timestamp() - 1000
     good = {
         "version": 1,

@@ -749,7 +749,7 @@ def read_mq_state(
             since = parsed
         watched = [path for path in (keeper_path, gate if gate.is_file() else None) if path is not None]
         ages = [_file_age(path, moment) for path in watched]
-    except (OSError, ValueError, KeeperError):
+    except (OSError, ValueError, KeeperError, RecursionError):
         return report(MQ_SOURCE, "unavailable"), empty
     # The alert file is written once, when a head becomes ready. Its age is the
     # ready time, so freshness follows the keeper and the requeue gate.
