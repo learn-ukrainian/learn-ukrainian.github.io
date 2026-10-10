@@ -21,6 +21,7 @@ Features:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import dataclasses
 import datetime as dt
 import email.utils
@@ -172,6 +173,12 @@ def polite_get(
             continue
 
         if resp.status_code == 200:
+            parsed_orig = urllib.parse.urlsplit(url)
+            if parsed_orig.netloc:
+                resp_url = getattr(resp, "url", None) or url
+                resp_netloc = urllib.parse.urlsplit(resp_url).netloc
+                if resp_netloc and resp_netloc != parsed_orig.netloc:
+                    raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {resp_url}")
             if delay > 0:
                 sleep_fn(delay)
             return resp
@@ -184,11 +191,7 @@ def polite_get(
             if attempt >= max_retries:
                 raise RateLimitOrServerError(f"HTTP {resp.status_code} for {url} after {max_retries} retries.")
             retry_after = parse_retry_after(resp.headers.get("Retry-After"))
-            wait_s = (
-                min(retry_after, 60.0)
-                if retry_after is not None
-                else delay * (retry_backoff**attempt)
-            )
+            wait_s = min(retry_after, 60.0) if retry_after is not None else delay * (retry_backoff**attempt)
             logger.warning(
                 "HTTP %s for %s; retrying in %.1fs (attempt %d/%d)",
                 resp.status_code,
@@ -377,23 +380,23 @@ def extract_movne_word_pairs(
         if ":" in q_text:
             parts = q_text.split(":", 1)
             candidate = parts[0].strip()
+            # Strip question lead-ins first (e.g. "питання від Петра" -> "Петра")
+            cleaned_candidate = re.sub(
+                r"^(?:запитує|питає|запитання\s+від|питання\s+від|допис\s+від)\s+",
+                "",
+                candidate,
+                flags=re.IGNORECASE,
+            ).strip()
             is_prefix = bool(
                 re.search(
                     r"^(?:як\s+правильно|чи\s+правильно|чи\s+можна|скажіть|підкажіть|поясніть|питання|запитання|увага|довідка)\b",
-                    candidate,
+                    cleaned_candidate,
                     re.IGNORECASE,
                 )
             )
-            if not is_prefix and len(candidate) < 80:
-                cleaned_reader = re.sub(
-                    r"^(?:запитує|питає|запитання\s+від|питання\s+від|допис\s+від)\s+",
-                    "",
-                    candidate,
-                    flags=re.IGNORECASE,
-                ).strip()
-                if not cleaned_reader.endswith("?"):
-                    reader = cleaned_reader
-                    question_body = parts[1].strip()
+            if not is_prefix and len(cleaned_candidate) < 80 and not cleaned_candidate.endswith("?"):
+                reader = cleaned_candidate
+                question_body = parts[1].strip()
 
         # Parse verdict from answer
         first_ans = ans_parts[0]
@@ -413,8 +416,8 @@ def extract_movne_word_pairs(
         )
 
         def _clean_verdict(raw: str) -> str:
-            # Strip trailing explanation clauses (", бо...", ", оскільки...", etc.)
-            truncated = re.split(r",\s+(?:бо|оскільки|тому що|адже|а|якщо)\b", raw, flags=re.IGNORECASE)[0]
+            # Strip trailing explanation clauses (", бо...", ", оскільки...", etc.), but not conjunctions like ", а також"
+            truncated = re.split(r",\s+(?:бо|оскільки|тому що|адже|а\s+не|якщо)\b", raw, flags=re.IGNORECASE)[0]
             if "(" in truncated and not truncated.endswith(")"):
                 truncated = truncated.split("(", 1)[0]
             return truncated.strip(' «"“”».;,')
@@ -529,6 +532,22 @@ def extract_movaua_usage_pairs(
 
     sec = section.lower()
 
+    # Helper to check if body explicitly recommends one of the parts
+    def _find_body_recommendation(p1: str, p2: str, text: str) -> tuple[str, str]:
+        # Search for patterns like "правильно: X" or "треба казати: X"
+        m_rec = re.search(
+            r"(?:правильно|варто|слід|треба)(?:\s+(?:писати|казати|вживати))?[:\s]+«?([^»\n.,;]+)",
+            text,
+            re.IGNORECASE,
+        )
+        if m_rec:
+            rec = m_rec.group(1).strip().lower()
+            if p1.lower() in rec:
+                return p2, p1
+            if p2.lower() in rec:
+                return p1, p2
+        return f"{p1} / {p2}", ""
+
     # 1. Anti-surzhyk
     if any(k in sec for k in ("surzh", "суржик")):
         m = re.match(r"^([^?]+?)\s+чи\s+([^?]+?)(?:\?|$)", clean_t, re.IGNORECASE)
@@ -540,7 +559,7 @@ def extract_movaua_usage_pairs(
             elif image_alt and (part1.lower() in image_alt.lower() or image_alt.lower() in part1.lower()):
                 q_form, r_form = part2, image_alt
             else:
-                q_form, r_form = part1, part2
+                q_form, r_form = _find_body_recommendation(part1, part2, article_text)
 
             pairs.append(
                 {
@@ -579,9 +598,11 @@ def extract_movaua_usage_pairs(
 
     # 2. Paronyms
     elif any(k in sec for k in ("paronim", "paronym", "паронім")):
-        m = re.match(r"^([^?.]+?)\s+і\s+([^?.]+?)(?:[.?]|$)", clean_t, re.IGNORECASE)
+        clean_t_no_note = re.sub(r"\s*\([^)]*\)\s*$", "", clean_t).strip()
+        m = re.match(r"^([^?.]+?)\s+і\s+([^?.]+?)(?:[.?]|$)", clean_t_no_note, re.IGNORECASE)
         if m:
-            w1, w2 = m.group(1).strip(), m.group(2).strip()
+            w1 = re.sub(r"\s*\([^)]*\)\s*$", "", m.group(1)).strip()
+            w2 = re.sub(r"\s*\([^)]*\)\s*$", "", m.group(2)).strip()
             pairs.append(
                 {
                     "article_id": article_id,
@@ -616,13 +637,14 @@ def extract_movaua_usage_pairs(
     elif any(k in sec for k in ("orfo", "орфограф", "правопис", "pravopys")):
         m = re.match(r"^([^?]+?)\s+чи\s+([^?]+?)(?:\?|$)", clean_t, re.IGNORECASE)
         if m:
-            part1, part2 = m.group(1).strip(), m.group(2).strip()
+            part1 = m.group(1).strip()
+            part2 = m.group(2).strip()
             if image_alt and (part1.lower() in image_alt.lower() or image_alt.lower() in part1.lower()):
                 q_form, r_form = part2, image_alt
             elif image_alt and (part2.lower() in image_alt.lower() or image_alt.lower() in part2.lower()):
                 q_form, r_form = part1, image_alt
             else:
-                q_form, r_form = part2, part1
+                q_form, r_form = _find_body_recommendation(part1, part2, article_text)
             pairs.append(
                 {
                     "article_id": article_id,
@@ -673,7 +695,7 @@ def extract_movaua_usage_pairs(
         )
 
     # 5. Synonyms
-    elif any(k in sec for k in ("synonim", "sunonim", "синонім")):
+    elif any(k in sec for k in ("synonim", "sinonim", "sunonim", "синонім")):
         m = re.search(r"«([^»]+)»", clean_t)
         word = m.group(1).strip() if m else clean_t
         pairs.append(
@@ -834,16 +856,24 @@ def discover_movaua_manifest(
         try:
             root = ET.fromstring(resp.content)
             # 1. Nested sitemap index elements
-            sitemaps = root.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}sitemap/{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
+            sitemaps = root.findall(
+                ".//{http://www.sitemaps.org/schemas/sitemap/0.9}sitemap/{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
+            )
             if not sitemaps:
                 sitemaps = root.findall(".//sitemap/loc")
             for sm in sitemaps:
                 sm_text = (sm.text or "").strip()
-                if sm_text and sm_text.startswith("http") and sm_text not in visited_sitemaps:
-                    to_visit.append(sm_text)
+                if sm_text and sm_text not in visited_sitemaps:
+                    parsed_sm = urllib.parse.urlsplit(sm_text)
+                    if parsed_sm.netloc == "ukr-mova.in.ua" and sm_text.startswith("https://"):
+                        to_visit.append(sm_text)
+                    else:
+                        logger.warning("Ignoring off-host or non-https child sitemap: %s", sm_text)
 
             # 2. URL loc elements
-            url_locs = root.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
+            url_locs = root.findall(
+                ".//{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
+            )
             if not url_locs:
                 url_locs = root.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
             if not url_locs:
@@ -882,6 +912,7 @@ def ingest_movne_pytannya(
     session: requests.Session | None = None,
     manifest: list[dict[str, Any]] | None = None,
     incremental: bool = True,
+    retry_errors: bool = False,
     limit: int | None = None,
     delay: float = 1.5,
     max_retries: int = 3,
@@ -897,14 +928,19 @@ def ingest_movne_pytannya(
     if hasattr(sess, "headers"):
         sess.headers["User-Agent"] = user_agent
 
-    items = manifest if manifest is not None else discover_movne_manifest(
-        sess, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn
+    items = (
+        manifest
+        if manifest is not None
+        else discover_movne_manifest(sess, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn)
     )
     total_manifest = len(items)
 
-    existing_rows = conn.execute(
-        "SELECT url FROM movne_pytannya_issues WHERE content_sha256 != '' OR error_status != ''"
-    ).fetchall()
+    if retry_errors:
+        existing_rows = conn.execute("SELECT url FROM movne_pytannya_issues WHERE content_sha256 != ''").fetchall()
+    else:
+        existing_rows = conn.execute(
+            "SELECT url FROM movne_pytannya_issues WHERE content_sha256 != '' OR error_status != ''"
+        ).fetchall()
     existing_urls = {r[0] for r in existing_rows}
     cached_existing = len(existing_urls)
 
@@ -952,8 +988,17 @@ def ingest_movne_pytannya(
                         (url, issue_number, title, date, description, raw_html, article_text, content_sha256, fetched_at, error_status)
                         VALUES (?, ?, ?, ?, ?, '', '', '', ?, 'http_403')
                         """,
-                        (url, issue_number, item.get("title", ""), item.get("date", ""), item.get("description", ""), now_iso),
+                        (
+                            url,
+                            issue_number,
+                            item.get("title", ""),
+                            item.get("date", ""),
+                            item.get("description", ""),
+                            now_iso,
+                        ),
                     )
+            raise
+        except RateLimitOrServerError:
             raise
         except Exception as exc:
             logger.error("Failed to fetch issue %s (%s): %s", issue_number, url, exc)
@@ -1070,12 +1115,53 @@ def ingest_movne_pytannya(
     )
 
 
+def extract_movaua_article(html: str, url: str = "") -> dict[str, str]:
+    """Parse article HTML from mova.ua into structured fields."""
+    soup = BeautifulSoup(html, "html.parser")
+    title_tag = soup.find("title")
+    raw_title = title_tag.get_text().strip() if title_tag else ""
+
+    date_str = ""
+    time_tag = soup.find("time")
+    if time_tag:
+        date_str = time_tag.get("datetime") or time_tag.get_text().strip()
+    if not date_str:
+        meta_date = soup.find("meta", property="article:published_time") or soup.find("meta", attrs={"name": "date"})
+        if meta_date:
+            date_str = meta_date.get("content", "").strip()
+    if not date_str:
+        date_div = soup.find(class_=re.compile(r"\b(?:date|created|published)\b", re.I))
+        if date_div:
+            date_str = date_div.get_text().strip()
+
+    img_url, img_alt = "", ""
+    main_img = soup.find("img", class_="img-responsive") or soup.find("div", class_="illustration")
+    if main_img:
+        img_tag = main_img if main_img.name == "img" else main_img.find("img")
+        if img_tag:
+            raw_src = img_tag.get("src", "")
+            img_url = urllib.parse.urljoin(url, raw_src) if raw_src else ""
+            img_alt = img_tag.get("alt", "").strip()
+
+    content_div = soup.find("div", class_="article-content") or soup.find("div", class_="text") or soup.body
+    art_text = content_div.get_text(separator="\n").strip() if content_div else ""
+
+    return {
+        "title": raw_title,
+        "date": date_str,
+        "image_url": img_url,
+        "image_alt": img_alt,
+        "article_text": art_text,
+    }
+
+
 def ingest_movaua(
     conn: sqlite3.Connection,
     *,
     session: requests.Session | None = None,
     manifest: list[dict[str, Any]] | None = None,
     incremental: bool = True,
+    retry_errors: bool = False,
     limit: int | None = None,
     delay: float = 1.0,
     max_retries: int = 3,
@@ -1091,14 +1177,19 @@ def ingest_movaua(
     if hasattr(sess, "headers"):
         sess.headers["User-Agent"] = user_agent
 
-    items = manifest if manifest is not None else discover_movaua_manifest(
-        sess, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn
+    items = (
+        manifest
+        if manifest is not None
+        else discover_movaua_manifest(sess, delay=delay, user_agent=user_agent, sleep_fn=sleep_fn)
     )
     total_manifest = len(items)
 
-    existing_rows = conn.execute(
-        "SELECT url FROM movaua_articles WHERE content_sha256 != '' OR error_status != ''"
-    ).fetchall()
+    if retry_errors:
+        existing_rows = conn.execute("SELECT url FROM movaua_articles WHERE content_sha256 != ''").fetchall()
+    else:
+        existing_rows = conn.execute(
+            "SELECT url FROM movaua_articles WHERE content_sha256 != '' OR error_status != ''"
+        ).fetchall()
     existing_urls = {r[0] for r in existing_rows}
     cached_existing = len(existing_urls)
 
@@ -1148,6 +1239,8 @@ def ingest_movaua(
                         (url, section, item.get("title", ""), now_iso),
                     )
             raise
+        except RateLimitOrServerError:
+            raise
         except Exception as exc:
             logger.error("Failed to fetch movaua %s: %s", url, exc)
             errors += 1
@@ -1160,36 +1253,12 @@ def ingest_movaua(
 
         html = resp.text
         sha = hashlib.sha256(html.encode("utf-8")).hexdigest()
-        soup = BeautifulSoup(html, "html.parser")
-
-        title_tag = soup.find("title")
-        raw_title = title_tag.get_text().strip() if title_tag else ""
-
-        # Extract publication date if present
-        date_str = ""
-        time_tag = soup.find("time")
-        if time_tag:
-            date_str = time_tag.get("datetime") or time_tag.get_text().strip()
-        if not date_str:
-            meta_date = soup.find("meta", property="article:published_time") or soup.find("meta", attrs={"name": "date"})
-            if meta_date:
-                date_str = meta_date.get("content", "").strip()
-        if not date_str:
-            date_div = soup.find(class_=re.compile(r"\b(?:date|created|published)\b", re.I))
-            if date_div:
-                date_str = date_div.get_text().strip()
-
-        img_url, img_alt = "", ""
-        main_img = soup.find("img", class_="img-responsive") or soup.find("div", class_="illustration")
-        if main_img:
-            img_tag = main_img if main_img.name == "img" else main_img.find("img")
-            if img_tag:
-                raw_src = img_tag.get("src", "")
-                img_url = urllib.parse.urljoin(url, raw_src) if raw_src else ""
-                img_alt = img_tag.get("alt", "").strip()
-
-        content_div = soup.find("div", class_="article-content") or soup.find("div", class_="text") or soup.body
-        art_text = content_div.get_text(separator="\n").strip() if content_div else ""
+        parsed = extract_movaua_article(html, url=url)
+        raw_title = parsed["title"]
+        date_str = parsed["date"]
+        img_url = parsed["image_url"]
+        img_alt = parsed["image_alt"]
+        art_text = parsed["article_text"]
         fetched_at = dt.datetime.now(dt.UTC).isoformat()
 
         with conn:
@@ -1305,19 +1374,40 @@ def reextract_movaua(conn: sqlite3.Connection) -> int:
     """Re-run usage pair extraction over stored raw_html for Мова – ДНК нації."""
     ensure_movaua_schema(conn)
     rows = conn.execute(
-        "SELECT id, url, section, title, image_alt, article_text, fetched_at FROM movaua_articles WHERE raw_html != '' ORDER BY id"
+        "SELECT id, url, section, title, image_alt, article_text, raw_html, fetched_at FROM movaua_articles WHERE raw_html != '' ORDER BY id"
     ).fetchall()
     total_pairs = 0
     with conn:
         for row in rows:
-            article_id, url, section, title, image_alt, article_text, fetched_at = row
+            article_id, url, section, title, image_alt, article_text, raw_html, fetched_at = row
+            parsed = extract_movaua_article(raw_html, url=url)
+            new_title = parsed["title"] or title
+            new_date = parsed["date"]
+            new_img_url = parsed["image_url"]
+            new_img_alt = parsed["image_alt"] or image_alt
+            new_article_text = parsed["article_text"] or article_text
+            conn.execute(
+                """
+                UPDATE movaua_articles
+                SET title = ?, date = ?, image_url = ?, image_alt = ?, article_text = ?
+                WHERE id = ?
+                """,
+                (
+                    new_title,
+                    new_date,
+                    new_img_url,
+                    new_img_alt,
+                    new_article_text,
+                    article_id,
+                ),
+            )
             pairs = extract_movaua_usage_pairs(
                 article_id,
                 url,
                 section,
-                title,
-                image_alt or "",
-                article_text or "",
+                new_title,
+                new_img_alt,
+                new_article_text,
                 created_at=fetched_at,
             )
             conn.execute("DELETE FROM movaua_usage_pairs WHERE article_id = ?", (article_id,))
@@ -1479,6 +1569,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Re-run word-pair / usage-advice extraction from stored raw_html without fetching from the web.",
     )
     parser.add_argument(
+        "--retry-errors",
+        dest="retry_errors",
+        action="store_true",
+        default=False,
+        help="Retry previously failed or errored URLs without refetching successes.",
+    )
+    parser.add_argument(
         "--limit",
         type=int,
         default=None,
@@ -1527,6 +1624,8 @@ def main(argv: list[str] | None = None) -> int:
     global _STOP_REQUESTED
     _STOP_REQUESTED = False
 
+    orig_sigint = signal.getsignal(signal.SIGINT)
+    orig_sigterm = signal.getsignal(signal.SIGTERM)
     signal.signal(signal.SIGINT, _sig_handler)
     signal.signal(signal.SIGTERM, _sig_handler)
 
@@ -1551,6 +1650,7 @@ def main(argv: list[str] | None = None) -> int:
                     s = ingest_movne_pytannya(
                         conn,
                         incremental=args.incremental,
+                        retry_errors=args.retry_errors,
                         limit=args.limit,
                         delay=args.delay,
                         max_retries=args.max_retries,
@@ -1585,6 +1685,7 @@ def main(argv: list[str] | None = None) -> int:
                     s = ingest_movaua(
                         conn,
                         incremental=args.incremental,
+                        retry_errors=args.retry_errors,
                         limit=args.limit,
                         delay=args.delay,
                         max_retries=args.max_retries,
@@ -1604,6 +1705,10 @@ def main(argv: list[str] | None = None) -> int:
                         export_movaua_summary_json(conn, args.export_json_movaua)
                         logger.info("Exported MovaUA summary JSON to %s", args.export_json_movaua)
 
+        if any(s.errors > 0 for s in stats_list):
+            logger.error("Ingest completed with errors recorded in one or more sources.")
+            return EXIT_HTTP_SERVER_ERROR
+
     except AccessDeniedError as exc:
         logger.error("HTTP 403 Forbidden encountered: %s", exc)
         return EXIT_HTTP_403_FORBIDDEN
@@ -1613,6 +1718,10 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         logger.exception("Unexpected error in usage advice ingest: %s", exc)
         return EXIT_PARSE_ERROR
+    finally:
+        with contextlib.suppress(Exception):
+            signal.signal(signal.SIGINT, orig_sigint)
+            signal.signal(signal.SIGTERM, orig_sigterm)
 
     return EXIT_OK
 

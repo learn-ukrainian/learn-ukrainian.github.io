@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import email.utils
 import sqlite3
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -24,6 +25,7 @@ import requests
 from scripts.ingest.usage_advice_ingest import (
     DEFAULT_USER_AGENT,
     EXIT_HTTP_403_FORBIDDEN,
+    EXIT_HTTP_SERVER_ERROR,
     MOVAUA_CREDIT,
     MOVNE_AUTHOR,
     AccessDeniedError,
@@ -523,36 +525,69 @@ class TestUsageAdviceIngest(unittest.TestCase):
             <h2>• 2 •</h2>
             <p>Запитує Петро: чи вживається слово «вірогідний»?</p>
             <p>Правильно казати: ймовірний.</p>
+            <h2>• 3 •</h2>
+            <p>Питання від Олени: як сказати «виключення»?</p>
+            <p>Правильно казати: виняток.</p>
+            <h2>• 4 •</h2>
+            <p>Запитання від Сергія: як перекласти «в основному»?</p>
+            <p>Правильно казати: переважно.</p>
         </div>
         """
         pairs = extract_movne_word_pairs(1, "https://glavcom.ua/prefix.html", html)
-        self.assertEqual(len(pairs), 2)
+        self.assertEqual(len(pairs), 4)
         self.assertEqual(pairs[0]["reader_name"], "")
         self.assertEqual(pairs[1]["reader_name"], "Петро")
+        self.assertEqual(pairs[2]["reader_name"], "Олени")
+        self.assertEqual(pairs[3]["reader_name"], "Сергія")
 
     def test_full_verdict_list_and_explanation_strip(self) -> None:
         html = """
         <div class="post_text">
             <h2>• 1 •</h2>
             <p>Питання: як замінити «в кінці кінців»?</p>
-            <p>Правильно казати: зрештою, врешті-решт або кінець кінцем, бо це калька з російської.</p>
+            <p>Правильно казати: зрештою, а також врешті-решт або кінець кінцем, а не в кінці кінців, бо це калька з російської.</p>
         </div>
         """
         pairs = extract_movne_word_pairs(1, "https://glavcom.ua/list.html", html)
         self.assertEqual(len(pairs), 1)
-        self.assertEqual(pairs[0]["verdict_form"], "зрештою, врешті-решт або кінець кінцем")
+        self.assertEqual(pairs[0]["verdict_form"], "зрештою, а також врешті-решт або кінець кінцем")
 
     def test_movaua_flexible_category_and_paronym_clean(self) -> None:
-        p1 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/u1", "антисуржик", "Квиток чи білет?", "Квиток", "Текст")
+        p1 = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/u1", "антисуржик", "Квиток чи білет?", "Квиток", "Текст"
+        )
         self.assertEqual(p1[0]["pair_type"], "anti_surzhyk")
 
-        p2 = extract_movaua_usage_pairs(2, "https://ukr-mova.in.ua/u2", "синоніми", "Синоніми до слова «гарний»", "Вродливий", "Текст")
+        p2 = extract_movaua_usage_pairs(
+            2, "https://ukr-mova.in.ua/u2", "синоніми", "Синоніми до слова «гарний»", "Вродливий", "Текст"
+        )
         self.assertEqual(p2[0]["pair_type"], "synonym")
 
-        p3 = extract_movaua_usage_pairs(3, "https://ukr-mova.in.ua/u3", "пароніми", "Адрес і адреса", "", "Текст")
+        p3 = extract_movaua_usage_pairs(
+            3, "https://ukr-mova.in.ua/u3", "пароніми", "Адрес і адреса (диференціація значень)", "", "Текст"
+        )
         self.assertEqual(p3[0]["pair_type"], "paronym")
         self.assertNotIn("(диференціація значень)", p3[0]["recommended_form"])
         self.assertEqual(p3[0]["recommended_form"], "Адрес / адреса")
+
+        p4 = extract_movaua_usage_pairs(
+            4, "https://ukr-mova.in.ua/sinonimy/u4", "sinonim", "Слова-синоніми", "Гарний", "Текст"
+        )
+        self.assertEqual(p4[0]["pair_type"], "synonym")
+
+    def test_movaua_empty_recommended_form_when_direction_unknown(self) -> None:
+        # Without caption and without recommendation phrases in body, don't invent direction
+        pairs = extract_movaua_usage_pairs(
+            1,
+            "https://ukr-mova.in.ua/antusurzhuk/ambiguous",
+            "антисуржик",
+            "Квиток чи білет?",
+            "",
+            "У цьому матеріалі розглядаються особливості вживання слів у різних стилях мовлення.",
+        )
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0]["recommended_form"], "")
+        self.assertEqual(pairs[0]["questioned_form"], "Квиток / білет")
 
     def test_discover_movne_host_allowlist_and_true_issue(self) -> None:
         session = MagicMock(spec=requests.Session)
@@ -569,7 +604,9 @@ class TestUsageAdviceIngest(unittest.TestCase):
         </div>
         """
         session.get.return_value = resp
-        items = discover_movne_manifest(session, pages=["https://glavcom.ua/test.html"], delay=0, sleep_fn=lambda _: None)
+        items = discover_movne_manifest(
+            session, pages=["https://glavcom.ua/test.html"], delay=0, sleep_fn=lambda _: None
+        )
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0]["url"], "https://glavcom.ua/specprojects/movne_pytannya/45.html")
         self.assertEqual(items[0]["issue_number"], 45)
@@ -581,6 +618,8 @@ class TestUsageAdviceIngest(unittest.TestCase):
         r_index.content = b"""<?xml version="1.0" encoding="UTF-8"?>
         <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
             <sitemap><loc>https://ukr-mova.in.ua/sitemap_sub.xml</loc></sitemap>
+            <sitemap><loc>https://malicious.com/offhost_sitemap.xml</loc></sitemap>
+            <sitemap><loc>http://ukr-mova.in.ua/insecure_sitemap.xml</loc></sitemap>
         </sitemapindex>"""
 
         r_sub = MagicMock(spec=requests.Response)
@@ -591,10 +630,14 @@ class TestUsageAdviceIngest(unittest.TestCase):
         </urlset>"""
 
         session.get.side_effect = [r_index, r_sub]
-        items = discover_movaua_manifest(session, sitemap_url="https://ukr-mova.in.ua/sitemap.xml", delay=0, sleep_fn=lambda _: None)
+        items = discover_movaua_manifest(
+            session, sitemap_url="https://ukr-mova.in.ua/sitemap.xml", delay=0, sleep_fn=lambda _: None
+        )
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0]["url"], "https://ukr-mova.in.ua/antusurzhuk/item1")
         self.assertEqual(items[0]["section"], "antusurzhuk")
+        # Ensure off-host and insecure sitemaps were not fetched
+        self.assertEqual(session.get.call_count, 2)
 
     def test_movaua_date_and_image_urljoin(self) -> None:
         manifest = [{"url": "https://ukr-mova.in.ua/item_rel", "section": "antusurzhuk"}]
@@ -618,11 +661,135 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(row[1], "https://ukr-mova.in.ua/images/rule1.png")
         self.assertEqual(row[2], "Правило")
 
+    def test_reextract_movaua_updates_article_metadata(self) -> None:
+        ensure_movaua_schema(self.conn)
+        raw_html = """
+        <html>
+            <title>Оновлений заголовок - Мова - ДНК нації</title>
+            <time datetime="2026-04-10">10 квітня 2026</time>
+            <div class="illustration"><img src="/img/new.png" alt="Нова ілюстрація" /></div>
+            <div class="article-content">Оновлений текст статті.</div>
+        </html>
+        """
+        self.conn.execute(
+            """
+            INSERT INTO movaua_articles (url, section, title, raw_html, article_text, content_sha256, fetched_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                "https://ukr-mova.in.ua/update_test",
+                "antusurzhuk",
+                "Старий заголовок",
+                raw_html,
+                "Старий текст",
+                "dummy_sha",
+                "2026-04-10T12:00:00Z",
+            ),
+        )
+        self.conn.commit()
+
+        reextract_movaua(self.conn)
+        row = self.conn.execute(
+            "SELECT title, date, image_url, image_alt, article_text FROM movaua_articles WHERE url = 'https://ukr-mova.in.ua/update_test'"
+        ).fetchone()
+        self.assertEqual(row[0], "Оновлений заголовок - Мова - ДНК нації")
+        self.assertEqual(row[1], "2026-04-10")
+        self.assertEqual(row[2], "https://ukr-mova.in.ua/img/new.png")
+        self.assertEqual(row[3], "Нова ілюстрація")
+        self.assertIn("Оновлений текст статті.", row[4])
+
+    def test_retry_errors_mode(self) -> None:
+        ensure_movne_schema(self.conn)
+        self.conn.execute(
+            """
+            INSERT INTO movne_pytannya_issues (url, issue_number, title, date, description, raw_html, article_text, content_sha256, fetched_at, error_status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                "https://glavcom.ua/err.html",
+                99,
+                "Error Issue",
+                "2026-01-01",
+                "Опис",
+                "",
+                "",
+                "",
+                "2026-01-01",
+                "500 Internal Server Error",
+            ),
+        )
+        self.conn.commit()
+
+        # In incremental mode without retry_errors, existing error row is skipped
+        manifest = [{"url": "https://glavcom.ua/err.html", "issue_number": 99, "title": "Error Issue"}]
+        session = MagicMock(spec=requests.Session)
+        stats = ingest_movne_pytannya(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=False,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats.cached_existing, 1)
+        self.assertEqual(session.get.call_count, 0)
+
+        # With retry_errors=True, error row is retried
+        resp = MagicMock(spec=requests.Response)
+        resp.status_code = 200
+        resp.text = "<html><div class='art_body_uniq'>Вміст випуску</div></html>"
+        session.get.return_value = resp
+
+        stats2 = ingest_movne_pytannya(
+            self.conn,
+            session=session,
+            manifest=manifest,
+            incremental=True,
+            retry_errors=True,
+            delay=0,
+            sleep_fn=lambda _: None,
+        )
+        self.assertEqual(stats2.cached_existing, 0)
+        self.assertEqual(stats2.fetched_new, 1)
+        self.assertEqual(session.get.call_count, 1)
+
+    def test_cli_exit_on_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_db = str(Path(tmpdir) / "test.db")
+            session_patch = MagicMock(spec=requests.Session)
+            r = MagicMock(spec=requests.Response)
+            r.status_code = 500
+            session_patch.get.return_value = r
+
+            manifest = [{"url": "https://ukr-mova.in.ua/failing", "section": "antusurzhuk"}]
+            with (
+                patch("scripts.ingest.usage_advice_ingest.discover_movaua_manifest", return_value=manifest),
+                patch("requests.Session", return_value=session_patch),
+            ):
+                code = main(
+                    [
+                        "--source",
+                        "movaua",
+                        "--db-movaua",
+                        test_db,
+                        "--limit",
+                        "1",
+                        "--delay",
+                        "0",
+                        "--max-retries",
+                        "1",
+                    ]
+                )
+                self.assertEqual(code, EXIT_HTTP_SERVER_ERROR)
+
     def test_cli_re_extract_mode(self) -> None:
         args = parse_args(["--re-extract", "--source", "all"])
         self.assertTrue(args.re_extract)
-        code = main(["--re-extract", "--source", "movne_pytannya", "--db-movne", "non_existent.db"])
-        self.assertEqual(code, 0)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            test_db = str(Path(tmpdir) / "test.db")
+            code = main(["--re-extract", "--source", "movne_pytannya", "--db-movne", test_db])
+            self.assertEqual(code, 0)
 
 
 if __name__ == "__main__":
