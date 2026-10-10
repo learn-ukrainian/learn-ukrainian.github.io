@@ -755,7 +755,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(session.get.call_count, 1)
 
     def test_find_body_recommendation_contrastive_negation(self) -> None:
-        # Contrastive negation ("не X, а Y", "Y, а не X", "«не X, а Y»") must recommend Y, not X
+        # Contrastive negation ("не X, а Y", "Y, а не X", "не «X», а «Y»", "«Y», а не «X»")
         t1 = "Правильно: не квиток, а білет."
         pairs1 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t1", "antusurzhuk", "квиток чи білет", "", t1)
         self.assertEqual(len(pairs1), 1)
@@ -774,11 +774,52 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs3[0]["questioned_form"], "квиток")
         self.assertEqual(pairs3[0]["recommended_form"], "білет")
 
-        t4 = "Правильно: не білет, а квиток."
+        # Per-word quotes: не «X», а «Y» and «Y», а не «X»
+        t4 = "Правильно: не «квиток», а «білет»."
         pairs4 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t4", "antusurzhuk", "квиток чи білет", "", t4)
         self.assertEqual(len(pairs4), 1)
-        self.assertEqual(pairs4[0]["questioned_form"], "білет")
-        self.assertEqual(pairs4[0]["recommended_form"], "квиток")
+        self.assertEqual(pairs4[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs4[0]["recommended_form"], "білет")
+
+        t5 = "Правильно: «білет», а не «квиток»."
+        pairs5 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t5", "antusurzhuk", "квиток чи білет", "", t5)
+        self.assertEqual(len(pairs5), 1)
+        self.assertEqual(pairs5[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs5[0]["recommended_form"], "білет")
+
+        # Unstated sibling: не «квиток», а «талон» (талон is recommended, not білет)
+        t6 = "Правильно: не «квиток», а «талон»."
+        pairs6 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t6", "antusurzhuk", "квиток чи білет", "", t6)
+        self.assertEqual(len(pairs6), 1)
+        self.assertEqual(pairs6[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs6[0]["recommended_form"], "талон")
+
+        # Both negated: не квиток і не білет, а талон
+        t7 = "Правильно: не квиток і не білет, а талон."
+        pairs7 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t7", "antusurzhuk", "квиток чи білет", "", t7)
+        self.assertEqual(len(pairs7), 1)
+        self.assertEqual(pairs7[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs7[0]["recommended_form"], "талон")
+
+        # Both negated without alternative: ані квиток, ані білет
+        t8 = "Для цього випадку: ані квиток, ані білет не підходять."
+        pairs8 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t8", "antusurzhuk", "квиток чи білет", "", t8)
+        self.assertEqual(len(pairs8), 1)
+        self.assertEqual(pairs8[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs8[0]["recommended_form"], "")
+
+        # Lead-in words ending in 'не': Для мене правильно, Головне правильно
+        t9 = "Для мене правильно: білет, а не квиток."
+        pairs9 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t9", "antusurzhuk", "квиток чи білет", "", t9)
+        self.assertEqual(len(pairs9), 1)
+        self.assertEqual(pairs9[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs9[0]["recommended_form"], "білет")
+
+        t10 = "Головне правильно: білет."
+        pairs10 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t10", "antusurzhuk", "квиток чи білет", "", t10)
+        self.assertEqual(len(pairs10), 1)
+        self.assertEqual(pairs10[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs10[0]["recommended_form"], "білет")
 
     def test_find_body_recommendation_negation_rejection(self) -> None:
         # Negation ("неправильно", "не варто", "не треба", "не слід") must not match as a recommendation
@@ -854,6 +895,19 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs_u[0]["questioned_form"], "в")
         self.assertEqual(pairs_u[0]["verdict_form"], "у вашому тексті")
 
+        # Quoted «в» чи «у» with no word 'правильно' but verdict using 'у' as a token
+        html_no_prav = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Олег: Як правильно писати: «в» чи «у»?</p>
+            <p>У вашому тексті вживайте прийменник у.</p>
+        </div>
+        """
+        pairs_np = extract_movne_word_pairs(1, 1, html_no_prav)
+        self.assertEqual(len(pairs_np), 1)
+        self.assertEqual(pairs_np[0]["questioned_form"], "в")
+        self.assertEqual(pairs_np[0]["verdict_form"], "у")
+
     def test_glavcom_verdict_word_boundary(self) -> None:
         # Glavcom word boundary prevents capturing trailing letters like 'ю' from 'правильною'
         html_wrong = """
@@ -868,7 +922,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertNotEqual(pairs[0]["verdict_form"], "ю")
         self.assertFalse(pairs[0]["verdict_form"].startswith("ю"))
 
-        # Spaced negation "не правильно: X" must not trigger m_prav
+        # Spaced negation "не правильно: X. Треба казати: Y." must store Y as verdict
         html_spaced_neg = """
         <div class="post_text">
             <h2>• 1 •</h2>
@@ -878,7 +932,37 @@ class TestUsageAdviceIngest(unittest.TestCase):
         """
         pairs_spaced = extract_movne_word_pairs(1, 1, html_spaced_neg)
         self.assertEqual(len(pairs_spaced), 1)
-        self.assertNotEqual(pairs_spaced[0]["verdict_form"], "на протязі")
+        self.assertEqual(pairs_spaced[0]["questioned_form"], "на протязі")
+        self.assertEqual(pairs_spaced[0]["verdict_form"], "протягом")
+        self.assertEqual(pairs_spaced[0]["verdict_type"], "preferred")
+
+        # Contrastive in Glavcom: Правильно: не «на протязі», а «протягом».
+        html_contrast = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Як казати?</p>
+            <p>Правильно: не «на протязі», а «протягом».</p>
+        </div>
+        """
+        pairs_contrast = extract_movne_word_pairs(1, 1, html_contrast)
+        self.assertEqual(len(pairs_contrast), 1)
+        self.assertEqual(pairs_contrast[0]["questioned_form"], "на протязі")
+        self.assertEqual(pairs_contrast[0]["verdict_form"], "протягом")
+        self.assertEqual(pairs_contrast[0]["verdict_type"], "preferred")
+
+        # Lead-in ending with 'не': Для мене правильно: білет, а не квиток.
+        html_mene = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: «квиток» чи «білет»?</p>
+            <p>Для мене правильно: білет, а не квиток.</p>
+        </div>
+        """
+        pairs_mene = extract_movne_word_pairs(1, 1, html_mene)
+        self.assertEqual(len(pairs_mene), 1)
+        self.assertEqual(pairs_mene[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs_mene[0]["verdict_form"], "білет")
+        self.assertEqual(pairs_mene[0]["verdict_type"], "preferred")
 
         html_correct = """
         <div class="post_text">

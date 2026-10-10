@@ -313,6 +313,80 @@ def ensure_movaua_schema(conn: sqlite3.Connection) -> None:
 # ---------------------------------------------------------------------------
 
 
+def _contains_token(text: str, token: str) -> bool:
+    """Check if token appears as a whole word or phrase in text, respecting Ukrainian letters, apostrophes, and hyphens."""
+    norm_text = re.sub(r"['’ʼ]", "'", text).lower()
+    norm_tok = re.sub(r"['’ʼ]", "'", token).strip(' «"“”».,:;!?-').lower()
+    if not norm_tok:
+        return False
+    pattern = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:{re.escape(norm_tok)})(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])"
+    return bool(re.search(pattern, norm_text, re.IGNORECASE))
+
+
+def _is_negated_token(text: str, token: str) -> bool:
+    """Check if token is directly negated in text (e.g. 'не квиток', 'а не квиток', 'і не білет')."""
+    norm_ctx = re.sub(r"['’ʼ]", "'", text).lower()
+    norm_tgt = re.sub(r"['’ʼ]", "'", token).strip(' «"“”».,:;!?-').lower()
+    if not norm_tgt:
+        return False
+    pat = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|а\s+не|і\s+не|ані|замість)\s+«?{re.escape(norm_tgt)}(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])"
+    return bool(re.search(pat, norm_ctx, re.IGNORECASE))
+
+
+def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
+    """Detect 'не X, а Y' or 'Y, а не X' contrastive recommendations.
+
+    Handles lead-ins like 'Правильно:', 'Для мене правильно:', per-word quotes
+    like 'не «X», а «Y»', and returns (questioned_form, recommended_form) or None.
+    """
+    clean = text.strip()
+    m_cue = re.search(
+        r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:правильно|варто|слід|треба|краще|вжива(?:ти|йте|ємо|ється)|казати|кажемо|писати|пиш(?:емо|іть))(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:\s+(?:писати|казати|вживати|слово|вираз|конструкцію|форму))?[:\s—–-]+(.+)$",
+        clean,
+        re.IGNORECASE,
+    )
+    if m_cue:
+        clean = m_cue.group(1).strip()
+
+    # Pattern 1: [не|ані] X, а/але [вживайте...] Y
+    m1 = re.search(
+        r"(?:(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,\n.!?]+?)»?,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^»\n.!?]+?)»?)(?:[.,;!\n]|$)",
+        clean,
+        re.IGNORECASE,
+    )
+    if m1:
+        q = m1.group(1).strip(' «"“”».,;!?-')
+        r = m1.group(2).strip(' «"“”».,;!?-')
+        if q and r:
+            return q, r
+
+    # Pattern 2a: Quoted «Y», а не/ані «X» anywhere
+    m_quoted = re.search(
+        r"«([^»\n.!?]+)»,\s*(?:а\s+не|ані)\s+«([^»\n.!?]+)»",
+        clean,
+        re.IGNORECASE,
+    )
+    if m_quoted:
+        r = m_quoted.group(1).strip(' «"“”».,;!?-')
+        q = m_quoted.group(2).strip(' «"“”».,;!?-')
+        if q and r:
+            return q, r
+
+    # Pattern 2b: Y, а не/ані X from start of clean text
+    m2 = re.search(
+        r"^(«?[^»\n.!?:]+?»?),\s*(?:а\s+не|ані)\s+«?([^»\n.!?]+?)»?(?:[.,;!\n]|$)",
+        clean,
+        re.IGNORECASE,
+    )
+    if m2:
+        r = m2.group(1).strip(' «"“”».,;!?-')
+        q = m2.group(2).strip(' «"“”».,;!?-')
+        if q and r:
+            return q, r
+
+    return None
+
+
 def extract_movne_word_pairs(
     issue_number: int,
     url: str,
@@ -402,32 +476,47 @@ def extract_movne_word_pairs(
         first_ans = ans_parts[0]
         verdict_type = "advice"
         verdict_form = ""
-
-        # Match verdict patterns up to end of sentence or clause, preserving list items
-        m_prav = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?<!не\s)(?<!не)правильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
-            first_ans,
-            flags=re.IGNORECASE,
-        )
-        m_neprav = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])неправильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
-            first_ans,
-            flags=re.IGNORECASE,
-        )
+        questioned_form = ""
 
         def _clean_verdict(raw: str) -> str:
             # Strip trailing explanation clauses (", бо...", ", оскільки...", etc.), but not conjunctions like ", а також"
             truncated = re.split(r",\s+(?:бо|оскільки|тому що|адже|а\s+не|якщо)\b", raw, flags=re.IGNORECASE)[0]
             # Strip trailing unclosed parenthesis clause, preserving balanced parentheses inside alternatives
             truncated = re.sub(r"\s*\([^)]*$", "", truncated)
-            return truncated.strip(' «"“”».;,')
+            return truncated.strip(' «"“”».;,—–-')
 
-        if m_prav:
-            verdict_form = _clean_verdict(m_prav.group(1))
+        # Check for contrastive verdict first in the entire first answer (e.g. "не «X», а «Y»" or "Y, а не X")
+        contrastive = _parse_contrastive_verdict(first_ans)
+        if contrastive:
+            q_cand, r_cand = contrastive
+            verdict_form = _clean_verdict(r_cand)
             verdict_type = "preferred"
-        elif m_neprav:
-            verdict_form = _clean_verdict(m_neprav.group(1))
-            verdict_type = "incorrect"
+            questioned_form = _clean_verdict(q_cand)
+
+        pos_cues: list[str] = []
+        neg_cues: list[str] = []
+        if not verdict_form:
+            for m in re.finditer(
+                r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:(не\s+)?(правильно|неправильно|варто|слід|треба))(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:\s+(?:писати|казати|вживати))?[:\s—–-]+([^.!\n]+)",
+                first_ans,
+                re.IGNORECASE,
+            ):
+                has_ne = bool(m.group(1))
+                cue_word = m.group(2).lower()
+                payload = _clean_verdict(m.group(3))
+                if has_ne or cue_word == "неправильно":
+                    neg_cues.append(payload)
+                else:
+                    pos_cues.append(payload)
+
+            if pos_cues:
+                verdict_form = pos_cues[0]
+                verdict_type = "preferred"
+                if neg_cues and not questioned_form:
+                    questioned_form = neg_cues[0]
+            elif neg_cues:
+                verdict_form = neg_cues[0]
+                verdict_type = "incorrect"
 
         first_ans_lower = first_ans.lower()
         if not verdict_form:
@@ -446,50 +535,76 @@ def extract_movne_word_pairs(
 
         # Determine questioned / contrastive form
         quotes = re.findall(r"[«\"“]([^»\"”]+)[»\"”]", question_body)
-        questioned_form = ""
 
-        if len(quotes) == 2:
-            q1, q2 = quotes[0].strip(), quotes[1].strip()
-            if verdict_type == "preferred" and verdict_form:
-                q1_in = _contains_token(verdict_form, q1) or _contains_token(q1, verdict_form)
-                q2_in = _contains_token(verdict_form, q2) or _contains_token(q2, verdict_form)
-                if q1_in and not q2_in:
-                    questioned_form = q2
-                elif q2_in and not q1_in:
-                    questioned_form = q1
+        if not questioned_form:
+            if len(quotes) == 2:
+                q1, q2 = quotes[0].strip(), quotes[1].strip()
+                if verdict_type == "preferred" and verdict_form:
+                    q1_in = _contains_token(verdict_form, q1) or _contains_token(q1, verdict_form)
+                    q2_in = _contains_token(verdict_form, q2) or _contains_token(q2, verdict_form)
+                    if q1_in and not q2_in:
+                        questioned_form = q2
+                    elif q2_in and not q1_in:
+                        questioned_form = q1
+                    else:
+                        questioned_form = f"{q1} чи {q2}"
+                elif not verdict_form:
+                    q1_in = _contains_token(first_ans, q1)
+                    q2_in = _contains_token(first_ans, q2)
+                    if q1_in and not q2_in:
+                        verdict_form = q1
+                        verdict_type = "preferred"
+                        questioned_form = q2
+                    elif q2_in and not q1_in:
+                        verdict_form = q2
+                        verdict_type = "preferred"
+                        questioned_form = q1
+                    else:
+                        questioned_form = f"{q1} чи {q2}"
                 else:
                     questioned_form = f"{q1} чи {q2}"
-            else:
-                questioned_form = f"{q1} чи {q2}"
-        elif len(quotes) == 1:
-            questioned_form = quotes[0].strip()
-        elif quotes:
-            questioned_form = ", ".join(quotes[:3])
-        elif " чи " in question_body:
-            m_chi = re.search(r"([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)\s+чи\s+([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)", question_body)
-            if m_chi:
-                w1, w2 = m_chi.group(1).strip(), m_chi.group(2).strip()
-                if verdict_type == "preferred" and verdict_form:
-                    w1_in = _contains_token(verdict_form, w1) or _contains_token(w1, verdict_form)
-                    w2_in = _contains_token(verdict_form, w2) or _contains_token(w2, verdict_form)
-                    if w1_in and not w2_in:
-                        questioned_form = w2
-                    elif w2_in and not w1_in:
-                        questioned_form = w1
+            elif len(quotes) == 1:
+                questioned_form = quotes[0].strip()
+            elif quotes:
+                questioned_form = ", ".join(quotes[:3])
+            elif " чи " in question_body:
+                m_chi = re.search(r"([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)\s+чи\s+([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)", question_body)
+                if m_chi:
+                    w1, w2 = m_chi.group(1).strip(), m_chi.group(2).strip()
+                    if verdict_type == "preferred" and verdict_form:
+                        w1_in = _contains_token(verdict_form, w1) or _contains_token(w1, verdict_form)
+                        w2_in = _contains_token(verdict_form, w2) or _contains_token(w2, verdict_form)
+                        if w1_in and not w2_in:
+                            questioned_form = w2
+                        elif w2_in and not w1_in:
+                            questioned_form = w1
+                        else:
+                            questioned_form = f"{w1} чи {w2}"
+                    elif not verdict_form:
+                        w1_in = _contains_token(first_ans, w1)
+                        w2_in = _contains_token(first_ans, w2)
+                        if w1_in and not w2_in:
+                            verdict_form = w1
+                            verdict_type = "preferred"
+                            questioned_form = w2
+                        elif w2_in and not w1_in:
+                            verdict_form = w2
+                            verdict_type = "preferred"
+                            questioned_form = w1
+                        else:
+                            questioned_form = f"{w1} чи {w2}"
                     else:
                         questioned_form = f"{w1} чи {w2}"
-                else:
-                    questioned_form = f"{w1} чи {w2}"
 
-        if not questioned_form and m_neprav:
-            questioned_form = _clean_verdict(m_neprav.group(1))
+        if not questioned_form and neg_cues:
+            questioned_form = neg_cues[0]
 
         if not questioned_form:
             questioned_form = question_body[:60].strip()
 
         if not verdict_form and quotes:
             for q in quotes:
-                if q in first_ans and q != questioned_form:
+                if _contains_token(first_ans, q) and q != questioned_form:
                     verdict_form = q
                     break
 
@@ -521,16 +636,6 @@ def clean_movaua_title(title: str) -> str:
     return re.sub(r"\s*\|\s*Мова\s*[-–—]?\s*ДНК\s*нації.*$", "", title, flags=re.IGNORECASE).strip()
 
 
-def _contains_token(text: str, token: str) -> bool:
-    """Check if token appears as a whole word or phrase in text, respecting Ukrainian letters, apostrophes, and hyphens."""
-    norm_text = re.sub(r"['’ʼ]", "'", text).lower()
-    norm_tok = re.sub(r"['’ʼ]", "'", token).strip(' «"“”».,:;!?-').lower()
-    if not norm_tok:
-        return False
-    pattern = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:{re.escape(norm_tok)})(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])"
-    return bool(re.search(pattern, norm_text, re.IGNORECASE))
-
-
 def extract_movaua_usage_pairs(
     article_id: int,
     url: str,
@@ -551,38 +656,94 @@ def extract_movaua_usage_pairs(
 
     # Helper to check if body explicitly recommends one of the parts
     def _find_body_recommendation(p1: str, p2: str, text: str) -> tuple[str, str]:
-        # Search for patterns like "правильно: X" or "треба казати: X"
-        # Disallow leading negation ("неправильно", "не варто", "не треба", "не слід")
-        m_rec = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?<!не\s)(?<!не)(?:правильно|варто|слід|треба)(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?:\s+(?:писати|казати|вживати))?[:\s]+«?([^»\n.!?]+)",
+        # 1. First, check if text has a contrastive recommendation:
+        # e.g. "не «квиток», а «білет»", "білет, а не квиток", "не квиток і не білет, а талон"
+        contrastive = _parse_contrastive_verdict(text)
+        if contrastive:
+            q_cand, r_cand = contrastive
+            p1_is_q = _contains_token(q_cand, p1) or _contains_token(p1, q_cand)
+            p2_is_q = _contains_token(q_cand, p2) or _contains_token(p2, q_cand)
+            p1_is_r = _contains_token(r_cand, p1) or _contains_token(p1, r_cand)
+            p2_is_r = _contains_token(r_cand, p2) or _contains_token(p2, r_cand)
+
+            if p1_is_q and p2_is_q:
+                return f"{p1} / {p2}", r_cand
+            if p1_is_q and not p2_is_q:
+                return p1, r_cand if p2_is_r else (r_cand or p2)
+            if p2_is_q and not p1_is_q:
+                return p2, r_cand if p1_is_r else (r_cand or p1)
+            if p1_is_r and not p2_is_r:
+                return p2, p1
+            if p2_is_r and not p1_is_r:
+                return p1, p2
+
+        pos_cues: list[str] = []
+        neg_cues: list[str] = []
+        for m in re.finditer(
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:(не\s+)?(правильно|неправильно|варто|слід|треба))(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:\s+(?:писати|казати|вживати))?[:\s—–-]+([^.!?\n]+)",
             text,
             re.IGNORECASE,
-        )
-        if m_rec:
-            rec = m_rec.group(1).strip()
+        ):
+            has_ne = bool(m.group(1))
+            cue_word = m.group(2).lower()
+            payload = m.group(3).strip(' «"“”».;,—–-')
+            if has_ne or cue_word == "неправильно":
+                neg_cues.append(payload)
+            else:
+                pos_cues.append(payload)
 
-            def _is_negated(target: str, context: str) -> bool:
-                norm_ctx = re.sub(r"['’ʼ]", "'", context).lower()
-                norm_tgt = re.sub(r"['’ʼ]", "'", target).strip(' «"“”».,:;!?-').lower()
-                if not norm_tgt:
-                    return False
-                pat = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|а\s+не|ані|замість)\s+«?{re.escape(norm_tgt)}(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])"
-                return bool(re.search(pat, norm_ctx, re.IGNORECASE))
+        for rec in pos_cues:
+            c = _parse_contrastive_verdict(rec)
+            if c:
+                q_c, r_c = c
+                p1_in_q = _contains_token(q_c, p1) or _contains_token(p1, q_c)
+                p2_in_q = _contains_token(q_c, p2) or _contains_token(p2, q_c)
+                if p1_in_q and p2_in_q:
+                    return f"{p1} / {p2}", r_c
+                if p1_in_q:
+                    return p1, r_c
+                if p2_in_q:
+                    return p2, r_c
 
-            p1_neg = _is_negated(p1, rec)
-            p2_neg = _is_negated(p2, rec)
+            p1_neg = _is_negated_token(rec, p1)
+            p2_neg = _is_negated_token(rec, p2)
             p1_in = _contains_token(rec, p1)
             p2_in = _contains_token(rec, p2)
 
-            if p1_neg and (p2_in or not p2_neg):
+            # Both negated: e.g. "не квиток і не білет, а талон" or "ані квиток, ані білет"
+            if p1_neg and p2_neg:
+                m_alt = re.search(r",\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^».,;!\n]+)»?", rec)
+                if m_alt:
+                    alt = m_alt.group(1).strip(' «"“”».,;!?-')
+                    return f"{p1} / {p2}", alt
+                return f"{p1} / {p2}", ""
+
+            # Only p1 negated
+            if p1_neg and not p2_neg:
+                if p2_in:
+                    return p1, p2
+                m_alt = re.search(r",\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^».,;!\n]+)»?", rec)
+                if m_alt:
+                    alt = m_alt.group(1).strip(' «"“”».,;!?-')
+                    return p1, alt
                 return p1, p2
-            if p2_neg and (p1_in or not p1_neg):
+
+            # Only p2 negated
+            if p2_neg and not p1_neg:
+                if p1_in:
+                    return p2, p1
+                m_alt = re.search(r",\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^».,;!\n]+)»?", rec)
+                if m_alt:
+                    alt = m_alt.group(1).strip(' «"“”».,;!?-')
+                    return p2, alt
                 return p2, p1
 
-            if p1_in and not p2_in and not p1_neg:
+            # Neither negated, simple positive recommendation
+            if p1_in and not p2_in:
                 return p2, p1
-            if p2_in and not p1_in and not p2_neg:
+            if p2_in and not p1_in:
                 return p1, p2
+
         return f"{p1} / {p2}", ""
 
     # 1. Anti-surzhyk
