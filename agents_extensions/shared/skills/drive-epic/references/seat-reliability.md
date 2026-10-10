@@ -17,7 +17,9 @@ directly with existing repository tooling.
 "Closed" is not done. An issue counts as finished only when every DoD item is ticked with
 evidence and it passes the done-check:
 
-- a linked PR is merged through the normal landing path;
+- if the issue needs code or doc changes, a linked PR is merged through the normal landing
+  path; a duplicate, won't-fix or investigation-only issue instead carries its evidence or
+  linked decision in an issue comment;
 - CI and the matching verify-* skill or QA run passed on the merged head, with the
   evidence in an issue comment;
 - docs are updated, or the issue says "no docs needed";
@@ -52,7 +54,7 @@ confirms receipt. An unowned item goes to the coordinator in the same turn.
 
 ## Long jobs
 
-Downloads, evals, backups and builds run detached under `systemd-run` or `tmux` so they
+Downloads, evals, backups and builds run detached under `systemd-run --user` or `tmux` so they
 survive a session restart. Never run them inside an interactive session.
 
 ## Model budget
