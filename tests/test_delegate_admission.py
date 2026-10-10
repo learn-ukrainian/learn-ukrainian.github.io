@@ -26,6 +26,77 @@ from scripts.orchestration import dispatch_admission, job_host_exec
 _GIB = 1024**3
 
 
+@pytest.mark.parametrize("task_family", ["data", "text", "word cards", "word-cards", "word_cards", "dataset", "reviews"])
+@pytest.mark.parametrize("model", ["gpt-6.1-sol", "gemini-3.8-flash-high", "claude-opus-5-5"])
+def test_ukrainian_content_model_families_pass(task_family, model):
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "codex", "--model", model, "--language-lane",
+        "--research-task-family", task_family,
+    ])
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert refusal is None
+    assert target.model == model
+
+
+@pytest.mark.parametrize("model", ["grok-4.7", "glm-5", "other-model", "unknown", ""])
+def test_ukrainian_content_unknown_or_disallowed_model_refused(model):
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "codex", "--language-lane", "--research-task-family", "data",
+    ])
+    args.model = model
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert refusal.startswith("UKRAINIAN_MODEL_REFUSED:")
+    assert target is None
+
+
+@pytest.mark.parametrize("task_family", ["data", "text", "word cards", "dataset", "reviews"])
+@pytest.mark.parametrize("language_lane", [False, None, "unknown"])
+def test_ukrainian_content_unknown_language_refused(task_family, language_lane):
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "codex", "--model", "gpt-6.1-sol", "--research-task-family", task_family,
+    ])
+    args.language_lane = language_lane
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert "language is missing or unknown" in refusal
+    assert target is None
+
+
+def test_omitted_model_on_allowed_agent_waits_for_resolution():
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "claude", "--language-lane",
+        "--research-task-family", "reviews",
+    ])
+    delegate._require_ukrainian_model_family(args, None)
+
+
+def test_omitted_model_on_disallowed_agent_refused():
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "grok", "--language-lane",
+        "--research-task-family", "data",
+    ])
+    with pytest.raises(delegate._DispatchRouteRefused, match="UKRAINIAN_MODEL_REFUSED"):
+        delegate._require_ukrainian_model_family(args, None)
+
+
+def test_ukrainian_lane_without_content_family_refuses_other_model():
+    args = delegate.build_parser().parse_args(["dispatch", "--task-id", "synthetic-language-job", "--agent", "codex", "--model", "grok-4.7", "--language-lane"])
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert refusal.startswith("UKRAINIAN_MODEL_REFUSED:")
+    assert target is None
+
+
+@pytest.mark.parametrize("model", ["grok-4.7", "glm-5", "other-model", None])
+def test_ukrainian_content_substituted_model_refused(model):
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "codex", "--model", "gpt-6.1-sol", "--language-lane", "--research-task-family", "text",
+    ])
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent="codex", trees=None, route=lambda _request: ("codex", model, "synthetic-substitution"),
+    )
+    assert refusal.startswith("UKRAINIAN_MODEL_REFUSED:")
+    assert target is None
+
+
 @pytest.fixture
 def tasks_dir(tmp_path, monkeypatch):
     tasks = tmp_path / "tasks"
