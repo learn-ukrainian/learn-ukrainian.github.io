@@ -794,7 +794,7 @@ REST_READS = {
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
     "issues": ("repos/{repo}/issues?state=open&labels=infra", {}),
-    "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "date", "end": "date"}),
+    "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "timestamp", "end": "timestamp"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),
     "deployment-statuses": ("repos/{repo}/deployments/{number}/statuses", {"number": "number"}),
 }
@@ -891,7 +891,10 @@ def read(
         if set(fields) != set(schema):
             raise gate.PublishBlocked("OPSEC: invalid read fields.")
         for key, kind in schema.items():
-            pattern = r"\d{4}-\d{2}-\d{2}" if kind == "date" else PATTERNS.get(kind)
+            pattern = (
+                r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}Z)?"
+                if kind == "timestamp" else PATTERNS.get(kind)
+            )
             if pattern and (not isinstance(fields[key], str) or not re.fullmatch(pattern, fields[key])):
                 raise gate.PublishBlocked("OPSEC: invalid read selector.")
         if operation == "code-scanning-alerts" and "ref" in fields:

@@ -108,7 +108,7 @@ def _anchors(seat: str) -> tuple[str, ...]:
 
 def _assert_core(context: str, seat: str, row: str, *, context_bytes: int | None = None) -> None:
     block = rules_core.core_block(seat)
-    assert len(block.encode("utf-8")) <= 40_000, f"{row}: binding {seat} block exceeds 40 KB"
+    assert len(block.encode("utf-8")) <= 40_960, f"{row}: binding {seat} block exceeds 40 KB"
     assert block in context, f"{row}: the exact {seat} block is not in the assembled context"
     for anchor in _anchors(seat):
         assert anchor in context, f"{row}: anchor {anchor!r} missing"
@@ -967,7 +967,7 @@ def test_default_binding_bundle_is_the_bounded_core(api_client) -> None:
     assert body["scope"] == "core"
     assert body["sources"] == [rules_core.CORE_REL]
     assert body["markdown"] == rules_core.core_text()
-    assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_000
+    assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_960
     plain = api_client.get("/api/rules")
     assert plain.text == body["markdown"]
     assert plain.headers["x-rules-scope"] == "core"

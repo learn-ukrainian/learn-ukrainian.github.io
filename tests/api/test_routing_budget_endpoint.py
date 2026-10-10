@@ -587,7 +587,7 @@ def test_recommendation_picks_coolest_when_one_near_cap(monkeypatch, tmp_path):
         monkeypatch,
         tmp_path,
         [
-            _record("claude (sonnet)", 634.8, now),
+            _record("claude (sonnet)", 683.1, now),
             _record("codex (gpt-5.5)", 300.0, now),
             _record("gemini (pro)", 300.0, now),
         ],
@@ -1000,3 +1000,30 @@ def test_records_present_do_not_override_capacity_order_with_agentic_pool(monkey
     assert recommendation["primary_agent_for_code"] == "codex"
     assert "capacity picker order" in recommendation["rationale"]
     assert "agentic pool" not in recommendation["rationale"]
+
+
+@pytest.mark.parametrize("used", [90.0, 98.99, 99.0, 100.0])
+def test_claude_weekly_near_cap_status_and_warning_boundary(monkeypatch, tmp_path, used):
+    now = datetime(2026, 7, 9, 16, 13, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [])
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda provider: {
+            "lane": provider,
+            "weekly_used_pct": used if provider == "claude" else None,
+            "weekly_remaining_pct": 100.0 - used if provider == "claude" else None,
+            "weekly_expected_pct": 99.5,
+            "weekly_pace_delta_pct": used - 99.5,
+            "will_last_to_reset": True,
+            "freshness": "fresh",
+            "age_s": 0.0,
+            "fetched_at": now.isoformat(),
+            "stale": False,
+        },
+    )
+    data = state_router.compute_routing_budget(now)
+    near_cap = used >= 99.0
+    assert data["agents"]["claude"]["status"] == ("near_cap" if near_cap else "cool")
+    warnings = data["recommendation"]["warnings"]
+    assert any("lane claude is in deficit" in warning for warning in warnings) is near_cap

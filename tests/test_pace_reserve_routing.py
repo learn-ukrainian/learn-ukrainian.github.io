@@ -28,7 +28,11 @@ from tests.api.test_routing_budget_endpoint import _record
         (68.0, 0.5, -8.0, True, "warm"),
         (20.0, None, None, None, "cool"),
         (68.0, 60.0, 8.0, False, "hot"),
-        (90.0, 98.0, -8.0, True, "near_cap"),
+        (90.0, 98.0, -8.0, True, "cool"),
+        (98.99, 99.5, -0.51, True, "cool"),
+        (98.99, 90.0, 8.99, False, "hot"),
+        (99.0, 99.5, -0.5, True, "near_cap"),
+        (100.0, 100.0, 0.0, True, "near_cap"),
     ],
 )
 def test_weekly_status_follows_visible_headroom(used, expected, delta, will_last, status):
@@ -38,7 +42,7 @@ def test_weekly_status_follows_visible_headroom(used, expected, delta, will_last
         "will_last_to_reset": will_last,
     }
     info = {
-        "status": "near_cap" if used >= 90 else "warm" if used >= 50 else "cool",
+        "status": "near_cap" if used >= 99 else "warm" if used >= 50 else "cool",
         "remaining_pct": 100 - used,
         "codexbar": pace,
     }
@@ -330,7 +334,7 @@ def test_capacity_rows_retain_reserve_evidence_for_idle_settle(reserve_case, nat
     assert codex.is_healthy_available() is covered
 
 
-@pytest.mark.parametrize("used", [90.0, 95.0])
+@pytest.mark.parametrize("used", [99.0, 100.0])
 def test_reserves_do_not_change_near_cap(reserve_case, used):
     info, _, now = reserve_case
     info = copy.deepcopy(info)

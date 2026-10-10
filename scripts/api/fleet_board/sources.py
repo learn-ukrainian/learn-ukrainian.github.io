@@ -39,6 +39,7 @@ EXTERNAL_SOURCES: tuple[ExternalSource, ...] = (
     ExternalSource("stats", "FLEET_PROMETHEUS_URL", "url"),
     ExternalSource("alerts", "FLEET_ALERTMANAGER_URL", "url"),
     ExternalSource("links", "FLEET_GRAFANA_URL", "url"),
+    ExternalSource("stale_prs", "FLEET_STALE_PR_STATE", "json_file"),
 )
 
 LOCATION_ENV_VARS: tuple[str, ...] = tuple(source.env_var for source in EXTERNAL_SOURCES)

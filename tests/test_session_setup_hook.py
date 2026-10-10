@@ -441,3 +441,36 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     assert "DEPLOY DRIFT" not in context, f"False positive drift detected! Context:\n{context}"
     assert "VENV MISSING" not in context
     assert "VENV WRONG PYTHON" not in context
+
+
+def test_driver_state_banner_carries_complete_blocker_rule(tmp_path: Path) -> None:
+    hook = (_REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh").read_text()
+    block = hook[hook.index('  DRIVER_STATE_PATH="') : hook.index("  unset EPIC_HANDOFF_PATH DRIVER_STATE_PATH")]
+    state = tmp_path / ".claude/infra-epic/DRIVER-STATE.md"
+    state.parent.mkdir(parents=True)
+    state.write_text("fixture")
+    result = subprocess.run(
+        ["bash"],
+        input=block + '\nprintf "%s" "$EPIC_BANNER"\n',
+        env={
+            "PATH": os.environ["PATH"],
+            "PROJECT_DIR": str(tmp_path),
+            "SESSION_EPIC": "infra",
+            "EPIC_BANNER": "fixture",
+        },
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    for fragment in (
+        "complete: true",
+        "scripts.driver_blockers delta --epic infra --current blockers.json",
+        "scripts.driver_blockers record --epic infra --current blockers.json",
+        "--receipt receipt.json --body-file posted.md --expect-generation N",
+        "post each item that is not UNCHANGED",
+        "exact case-sensitive standalone token RESOLVED <id>",
+        "on its own non-active line (no other fields or prose)",
+        "if delta fails or the baseline is unknown, post everything currently blocking",
+    ):
+        assert fragment in result.stdout
