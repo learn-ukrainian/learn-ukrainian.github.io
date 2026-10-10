@@ -107,14 +107,21 @@ resolve to the same `claude-<lane>` handoff slot, so the stream lease still allo
 Anthropic driver per lane. The legacy `scripts/start-bio-driver.sh` runs Claude + the
 `curriculum-track-orchestrator` agent-def if you specifically want that agent.
 
-Both Claude launchers apply the weekly usage guard. At or above
-`LU_CLAUDE_STOP_PCT` (default 90%), every Claude launch is refused.
-At or above `LU_CLAUDE_OPUS_MAX_PCT` (default 80%), a defaulted Opus driver
-switches to `claude-sonnet-5-5` and explicit Opus requests are refused.
-`LU_CLAUDE_CAP_OVERRIDE=1` bypasses both percentage thresholds with a warning.
-Unknown usage warns and skips percentage checks. Forwarded model, settings,
-and fallback-model selectors are refused even with the override: choose the
-startup model through the launcher `--model` or `LAUNCHER_MODEL`.
+Both Claude launchers apply the weekly usage guard. Every Claude launch is
+refused at **99% weekly used or above**. Until the weekly reset, explicit Opus
+requests are refused regardless of usage; a defaulted Opus driver switches to
+`claude-sonnet-5-5`. Explicit Sonnet launches below 99% with trusted fresh usage.
+These policy values are constants in code. Environment cap overrides are ignored.
+Unknown, invalid or stale usage refuses launch. Telemetry configuration comes
+only from protected operator state on inherited descriptor 9: a root-owned
+regular JSON file without group or other write permission, containing only
+`monitor_base_url`. Environment routing, proxies and redirects cannot replace
+that telemetry target. Forwarded model, settings and fallback-model selectors
+are refused: choose the startup model through the launcher `--model` or
+`LAUNCHER_MODEL`. Attached `-m` values are also refused; the guard conservatively
+rejects all `-m*` arguments because they can be parsed as attached model values.
+After the weekly reset, only an operator-authorized code change can lift the
+Opus hold; a lower usage reading or environment variable cannot lift it.
 
 † **folk carve-out:** the *driver* may be Grok, but folk content **review** stays
 cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) — the

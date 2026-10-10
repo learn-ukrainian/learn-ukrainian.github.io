@@ -19,7 +19,8 @@ launcher_usage() {
       ;;
   esac
   case "$LC_PROVIDER" in
-    claude) provider_env='  Claude weekly cap: all launches stop at 90%; Opus requires usage below 80%.
+    claude) provider_env='  Claude weekly cap: all launches stop at 99%; explicit Opus is refused until the weekly reset.
+                             Defaulted Opus switches to claude-sonnet-5-5 below 99%.
                              Unknown usage refuses launch. Cap environment overrides are ignored.
                              Telemetry configuration requires protected operator state on descriptor 9.
                              Forwarded model, settings and fallback-model selectors are refused.
@@ -1353,8 +1354,8 @@ launcher_publication_path() {
   unset LU_OPSEC_OVERRIDE
 }
 
-# Claude weekly cap guard: all launches stop at 90%; Opus requires usage
-# below 80%. Shell environment cannot change these limits or bypass the guard.
+# Claude weekly cap guard: all launches stop at 99%; Opus is blocked until
+# the weekly reset. Shell environment cannot change this policy or bypass it.
 # Telemetry comes from protected operator state; unknown usage refuses launch.
 launcher_claude_cap_guard() {
   [ "$LC_PROVIDER" = claude ] || return 0
@@ -1364,6 +1365,8 @@ launcher_claude_cap_guard() {
   local arg selector
   for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
     case "$arg" in
+      # Attached short-option values (-mopus) are selectors too. Keep -m*
+      # fail-closed: an unknown -max-tokens could be parsed as -m with a value.
       -m*|--m|--m=*|--mo|--mo=*|--mod|--mod=*|--mode|--mode=*|--model|--model=*)
         launcher_error "Claude model selectors must use the launcher --model, not forwarded provider arguments."
         exit 2
@@ -1377,7 +1380,8 @@ launcher_claude_cap_guard() {
         ;;
     esac
   done
-  local pct stop=90 opus_max=80
+  local pct
+  local -r stop=99 opus_blocked=1
   local py; py="$(launcher_project_python 2>/dev/null || true)"
   pct=unknown; [ -n "$py" ] && pct="$("$py" -I "$LC_ROOT/scripts/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
   if ! [[ "$pct" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v p="$pct" 'BEGIN{exit !(p>=0 && p<=100)}'; then
@@ -1392,12 +1396,12 @@ launcher_claude_cap_guard() {
     *opus*) ;;
     *) return 0 ;;
   esac
-  if awk -v p="$pct" -v t="$opus_max" 'BEGIN{exit !(p>=t)}'; then
+  if [ "$opus_blocked" = 1 ]; then
     if [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ] && [ "$LC_MODEL" = 'claude-opus-5-5[1m]' ]; then
-      printf 'launcher: Claude weekly %s%% (Opus allowed below %s%%); driver default switched from Opus to claude-sonnet-5-5\n' "$pct" "$opus_max" >&2
+      printf 'launcher: Claude weekly %s%%; Opus blocked until the weekly reset; driver default switched from Opus to claude-sonnet-5-5\n' "$pct" >&2
       LC_MODEL='claude-sonnet-5-5'
     else
-      launcher_error "Opus refused: Claude weekly usage ${pct}% (Opus allowed below ${opus_max}% only). Use --model sonnet."
+      launcher_error "Opus refused until the weekly reset regardless of usage (Claude weekly usage ${pct}%). Use --model sonnet."
       exit 7
     fi
   fi

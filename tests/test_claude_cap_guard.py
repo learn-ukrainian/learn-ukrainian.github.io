@@ -63,21 +63,20 @@ def _exec_line(stdout: str) -> str:
 
 
 @pytest.mark.rules_core_absent
-@pytest.mark.parametrize("pct", ("10", "50", "79.9", "80", "89.9"))
-def test_default_opus_obeys_percentage_limit(pct: str, launch_with_usage) -> None:
+@pytest.mark.parametrize("pct", ("0", "10", "50", "79.9", "80", "89.9", "90", "98", "98.999"))
+def test_default_opus_switches_below_stop(pct: str, launch_with_usage) -> None:
     result = launch_with_usage(pct, "--epic", "infra")
     assert result.returncode == 0, result.stderr
-    switched = float(pct) >= 80
-    expected = "claude-sonnet-5-5" if switched else "claude-opus-5-5[1m]"
+    expected = "claude-sonnet-5-5"
     command = shlex.split(_exec_line(result.stdout))
     assert command[command.index("--model") + 1] == expected
-    assert ("switched from Opus" in result.stderr) == switched
+    assert "switched from Opus" in result.stderr
 
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
 @pytest.mark.parametrize("model", ("opus", "claude-opus-5-5[1m]"))
-@pytest.mark.parametrize("pct", ("80", "85", "89.9"))
-def test_explicit_opus_is_refused_at_percentage_limit(name: str, model: str, pct: str, launch_with_usage) -> None:
+@pytest.mark.parametrize("pct", ("0", "10", "79.9", "80", "85", "89.9", "90", "98.999"))
+def test_explicit_opus_is_refused_regardless_of_usage(name: str, model: str, pct: str, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(pct, *args, "--model", model, name=name)
     assert result.returncode == 7
@@ -87,16 +86,17 @@ def test_explicit_opus_is_refused_at_percentage_limit(name: str, model: str, pct
 
 @pytest.mark.rules_core_absent
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
-@pytest.mark.parametrize("pct", ("10", "79.9"))
+@pytest.mark.parametrize("pct", ("0", "10", "79.9", "98.999"))
 @pytest.mark.parametrize("via_env", (False, True))
-def test_explicit_opus_launches_below_limit(name: str, pct: str, via_env: bool, launch_with_usage) -> None:
+def test_explicit_opus_cli_and_environment_are_refused(name: str, pct: str, via_env: bool, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(
         pct, *args, *(() if via_env else ("--model", "opus")), name=name,
         env={"LAUNCHER_MODEL": "opus"} if via_env else {},
     )
-    assert result.returncode == 0, result.stderr
-    assert "claude-opus-5-5" in _exec_line(result.stdout)
+    assert result.returncode == 7, result.stderr
+    assert "Opus refused until the weekly reset" in result.stderr
+    assert "would exec" not in result.stdout
     assert "switched from Opus" not in result.stderr
 
 
@@ -108,20 +108,20 @@ def test_environment_opus_is_an_explicit_request(launch_with_usage) -> None:
 
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
-@pytest.mark.parametrize("pct", ("85", "90", "99", "100"))
-@pytest.mark.parametrize("variable", ("LU_CLAUDE_CAP_OVERRIDE", "LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT"))
+@pytest.mark.parametrize("pct", ("0", "85", "90", "98.999", "99", "100"))
+@pytest.mark.parametrize("variable", ("LU_CLAUDE_CAP_OVERRIDE", "LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT", "LU_CLAUDE_OPUS_BLOCKED", "LU_CLAUDE_SONNET_STOP_PCT"))
 def test_shell_overrides_cannot_bypass_limits(name, pct, variable, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
-    value = "1" if variable == "LU_CLAUDE_CAP_OVERRIDE" else "100"
+    value = "0" if variable == "LU_CLAUDE_OPUS_BLOCKED" else "1" if variable == "LU_CLAUDE_CAP_OVERRIDE" else "100"
     result = launch_with_usage(pct, *args, "--model", "opus", name=name, env={variable: value})
     assert result.returncode == 7, result.stderr
-    assert ("Opus refused" if pct == "85" else "stop at 90%") in result.stderr
+    assert ("Opus refused" if float(pct) < 99 else "stop at 99%") in result.stderr
     assert "would exec" not in result.stdout
     assert "would claim lease" not in result.stdout
 
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
-@pytest.mark.parametrize("pct", ("90", "98", "99", "100"))
+@pytest.mark.parametrize("pct", ("99", "99.1", "100"))
 @pytest.mark.parametrize("model", ((), ("--model", "sonnet"), ("--model", "opus"), ("--model", "haiku")))
 def test_stop_threshold_refuses_every_claude_launch(name: str, pct: str, model: tuple[str, ...], launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
@@ -132,20 +132,41 @@ def test_stop_threshold_refuses_every_claude_launch(name: str, pct: str, model: 
     else:
         assert result.returncode == 7
         assert "No Claude launch until the weekly reset" in result.stderr
-        assert "stop at 90%" in result.stderr
+        assert "stop at 99%" in result.stderr
     assert "would exec" not in result.stdout
 
 
 @pytest.mark.rules_core_absent
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
 @pytest.mark.parametrize("model", ("sonnet", "claude-sonnet-5-5"))
-@pytest.mark.parametrize("pct", ("10", "80", "89.9"))
+@pytest.mark.parametrize("pct", ("0", "10", "80", "89.9", "90", "98", "98.999"))
 def test_explicit_sonnet_launches_below_stop(name: str, model: str, pct: str, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(pct, *args, "--model", model, name=name)
     assert result.returncode == 0, result.stderr
     assert "--model claude-sonnet-5-5" in _exec_line(result.stdout)
     assert "switched from Opus" not in result.stderr
+
+
+@pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
+@pytest.mark.parametrize("pct", ("98.999", "99"))
+def test_sonnet_stop_is_fixed_despite_environment(name, pct, launch_with_usage) -> None:
+    args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
+    result = launch_with_usage(
+        pct, *args, "--model", "sonnet", name=name,
+        env={
+            "LU_CLAUDE_CAP_OVERRIDE": "1", "LU_CLAUDE_OPUS_BLOCKED": "0",
+            "LU_CLAUDE_STOP_PCT": "0" if pct == "98.999" else "100",
+            "LU_CLAUDE_SONNET_STOP_PCT": "0" if pct == "98.999" else "100",
+        },
+    )
+    if pct == "98.999":
+        assert result.returncode == 0, result.stderr
+        assert "--model claude-sonnet-5-5" in _exec_line(result.stdout)
+    else:
+        assert result.returncode == 7, result.stderr
+        assert "stop at 99%" in result.stderr
+        assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize("base", (None, "", "https://untrusted.invalid"))
@@ -346,6 +367,7 @@ def test_weekly_reader_override_cannot_hide_request_failure(
     (
         ("--model", "opus"), ("--model=opus",), ("--model=",), ("--model",),
         ("-m", "opus"), ("-mopus",), ("-m=opus",), ("-m",),
+        ("-max-tokens", "100"),
         ("--m", "opus"), ("--m=opus",),
         ("--mo", "opus"), ("--mo=opus",),
         ("--mod", "opus"), ("--mod=opus",),
@@ -447,14 +469,22 @@ def test_driver_cap_documentation_matches_enforced_policy() -> None:
     comment = (REPO / "start-claude-driver.sh").read_text()
     assert "LU_CLAUDE_OPUS_BLOCKED" not in comment
     assert "default 99" not in comment
-    assert "At 80% weekly usage" in comment
-    assert "refused at 90%" in comment
+    assert "explicit Opus is refused regardless of usage" in comment
+    assert "refused at 99%" in comment
     assert "trusted usage is unavailable" in comment
     result = run_launcher("start-claude-driver.sh", "--help")
     assert result.returncode == 0
-    assert "all launches stop at 90%" in result.stdout
+    assert "all launches stop at 99%" in result.stdout
+    assert "explicit Opus is refused until the weekly reset" in result.stdout
+    assert "Defaulted Opus switches to claude-sonnet-5-5 below 99%" in result.stdout
     assert "Unknown usage refuses launch" in result.stdout
     assert "LU_CLAUDE_CAP_OVERRIDE=1" not in result.stdout
+    runbook = (REPO / "docs/runbooks/epic-orchestrator-roster.md").read_text()
+    assert "refused at **99% weekly used or above**" in runbook
+    assert "requests are refused regardless of usage" in runbook
+    assert "Environment cap overrides are ignored" in runbook
+    assert "Unknown, invalid or stale usage refuses launch" in runbook
+    assert "LU_CLAUDE_CAP_OVERRIDE=1" not in runbook
 
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
