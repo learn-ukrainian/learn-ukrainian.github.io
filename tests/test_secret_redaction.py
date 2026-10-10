@@ -154,7 +154,7 @@ export LC_DURABLE_HELPER_ROOT={shlex.quote(str(helper))}
 export CURSOR_API_KEY={shlex.quote(SYNTHETIC_KEY)}
 source {shlex.quote(str(core))}
 launcher_drop_unneeded_secrets
-if [ -n \"${{CURSOR_API_KEY:-}}\" ]; then
+if [ -n "${{CURSOR_API_KEY:-}}" ]; then
   printf 'still-set\\n'
   exit 2
 fi
