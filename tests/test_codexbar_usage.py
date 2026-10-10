@@ -26,6 +26,25 @@ from scripts.api.subscription_usage import (
     pace_is_visible,
 )
 
+
+@pytest.mark.parametrize("used_pct", [90.0, 98.99, 99.0, 100.0])
+@pytest.mark.parametrize("usage_key", ["auto_used_pct", "weekly_used_pct"])
+@pytest.mark.parametrize("samples", [1, 2])
+def test_provider_trend_deficit_uses_subscription_near_cap_boundary(used_pct, usage_key, samples):
+    history = [{usage_key: used_pct - 2.0}] if samples == 2 else []
+    history.append({usage_key: used_pct})
+
+    result = subscription_usage_mod.compute_provider_trend("cursor", history=history)
+
+    assert result == {
+        "trend": "up" if samples == 2 else "flat",
+        "delta_auto_pct": 2.0 if samples == 2 else 0.0,
+        "headroom_pct": pytest.approx(100.0 - used_pct),
+        "deficit": used_pct >= 99.0,
+        "samples": samples,
+    }
+
+
 # Real Claude usage JSON snapshot
 CLAUDE_FIXTURE = """[
   {
