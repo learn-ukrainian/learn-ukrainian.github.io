@@ -177,3 +177,20 @@ def test_force_new_without_prior_record_is_still_refused(monkeypatch, capsys, tm
     (tmp_path / "tasks").mkdir()
     (tmp_path / "tasks" / "fresh-id.json").write_text("{}")
     assert delegate._check_open_pr_freeze(args, repo) is None
+
+
+def test_fresh_explicit_worktree_path_is_still_refused(monkeypatch, tmp_path) -> None:
+    from scripts import delegate
+
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    repo = SimpleNamespace(github=REPO, role="public-monorepo")
+    fresh = tmp_path / "dispatch" / "codex" / "fresh-name"
+    args = argparse.Namespace(mode="workspace-write", branch=None, pr=None, cwd=None, worktree=str(fresh))
+    assert delegate._check_open_pr_freeze(args, repo) == 3
+    assert not fresh.exists()
+
+    fresh.mkdir(parents=True)
+    (fresh / ".git").write_text("gitdir: elsewhere\n")
+    assert delegate._check_open_pr_freeze(args, repo) is None

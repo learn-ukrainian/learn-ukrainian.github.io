@@ -4921,6 +4921,18 @@ def _report_dispatch_admission(
     return _ADMISSION_REFUSED_EXIT
 
 
+def _is_existing_worktree(worktree: Any) -> bool:
+    """Read-only: True when an explicit ``--worktree`` path is an existing checkout (real reuse)."""
+    if not worktree or worktree == "auto":
+        return False
+    raw = Path(str(worktree)).expanduser()
+    candidates = [raw] if raw.is_absolute() else [Path.cwd() / raw, _REPO_ROOT / raw]
+    try:
+        return any((c / ".git").exists() for c in candidates)
+    except OSError:
+        return False
+
+
 def _has_prior_task_record(task_id: str) -> bool:
     """Read-only: True when ``task_id`` already has a live or archived record (a real continuation)."""
     if not task_id:
@@ -4945,7 +4957,7 @@ def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any) -> int | No
         pr=getattr(args, "pr", None),
         cwd=getattr(args, "cwd", None),
         review=_dispatch_is_review_typed(args),
-        reused_worktree=bool(worktree) and worktree != "auto",
+        reused_worktree=_is_existing_worktree(worktree),
         continuation=bool(getattr(args, "force_new", False)) and _has_prior_task_record(str(getattr(args, "task_id", "") or "")),
     ):
         return None
