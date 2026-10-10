@@ -504,6 +504,17 @@
     ]
   },
   {
+    "path": "scripts/ingest/usage_advice_ingest.py",
+    "reference_count": 8,
+    "kind": "writer",
+    "target_db": "movne.db and movaua.db (--db-movne / --db-movaua destination)",
+    "reason": "persists incremental usage-advice articles and extracted contrastive pairs (#857)",
+    "calls": [
+      "sqlite3.connect(args.db_movne)",
+      "sqlite3.connect(args.db_movaua)"
+    ]
+  },
+  {
     "path": "scripts/ingest/wiktionary_etymology_ingest.py",
     "reference_count": 4,
     "kind": "writer",
