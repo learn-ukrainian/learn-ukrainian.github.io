@@ -1377,6 +1377,21 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "low",
         "keep",
     ),
+    PageContract(
+        "fleet-board.html",
+        "/fleet-board.html",
+        "Read-only fleet board home and epic detail.",
+        "GET /api/fleet/v1/now, /epics, /epics/{epic}, and /agents.",
+        (
+            "Client refreshes every 30s. Each shown payload keeps its own age. "
+            "A stale source, an unavailable roster, or a refresh older than "
+            "2 minutes warns without clearing the last values."
+        ),
+        ("humans", "operators"),
+        "Roster, pull requests, budget, and ops stay placeholders for later slices.",
+        "medium if a missing source is shown as empty instead of not installed",
+        "keep as the fleet board home slice",
+    ),
 )
 
 router = APIRouter(tags=["contracts"])

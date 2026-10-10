@@ -11,6 +11,7 @@ import json
 import math
 import os
 import re
+import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -21,6 +22,7 @@ from typing import Any
 from scripts.api.delegate_router import seat_delegate_tasks
 from scripts.api.epics_router import _response_registry_text
 from scripts.api.occupancy import occupancy_payload
+from scripts.api.occupancy_sanitize import producer_identity
 
 from .snapshot import finite_number, mapping
 from .sources import SourceReport, read_location, report
@@ -28,6 +30,48 @@ from .sources import SourceReport, read_location, report
 STATES = frozenset({"working", "idle", "stuck", "dead", "paused", "off"})
 STUCK_IDLE_MIN = 30.0
 ACTIVITY_TOKENS = frozenset({"working", "idle"})
+PUBLIC_REDACTED = "[redacted]"
+# Prose and enum tokens: letters, digits, spaces, underscores and light punctuation,
+# including Ukrainian apostrophes, quotes, guillemets and stress marks.
+# Everything else (slashes, percent signs, at signs, symbols, emoji) fails closed.
+_PUBLIC_SHAPE_RE = re.compile(
+    r"(?:[^\W_]|[ _.,:;'\"\u2019\u201c\u201d\u02bc\u00ab\u00bb\u2013\u2014()#!?\-\u0301])+"
+)
+# Word edges where an underscore separates words, so "ssh_key" and "build_box" match.
+_EDGE_L = r"(?<![^\W_])"
+_EDGE_R = r"(?![^\W_])"
+# The same punctuation the prose shape allows. A figure cannot hide behind it.
+_PUBLIC_SEP = r"[ _.,:;'\"\u2019\u201c\u201d\u02bc\u00ab\u00bb\u2013\u2014()#!?\-]*"
+_PUBLIC_UNIT = (
+    rf"(?:%|pct{_EDGE_R}|per{_PUBLIC_SEP}cent(?:ages?|iles?)?{_EDGE_R}"
+    rf"|slots?{_EDGE_R}|seats?{_EDGE_R}|tokens?{_EDGE_R}|requests?{_EDGE_R}"
+    rf"|(?:rpm|tpm|qps|rps|cps){_EDGE_R}"
+    rf"|(?:[kmgt]i?b(?:it|ps)?s?|(?:г|к|м|т)б|(?:giga|mega|kilo|tera)?{_PUBLIC_SEP}bits?"
+    rf"|(?:giga|mega|kilo|tera|гіга|мега|кіло|тера)?{_PUBLIC_SEP}байт[^\W_]*"
+    rf"|(?:giga|mega|kilo|tera)?{_PUBLIC_SEP}bytes?){_EDGE_R})"
+)
+# Capacity figures: a number with a unit, a capacity word, or a counted ratio.
+_PUBLIC_CAPACITY_RE = re.compile(
+    rf"(?i)\d[\d.,]*{_PUBLIC_SEP}{_PUBLIC_UNIT}"
+    rf"|{_EDGE_L}(?:capacity|quota|budget|headroom|ceiling|instances?|users?"
+    rf"|hard{_PUBLIC_SEP}stop|rate{_PUBLIC_SEP}limit){_EDGE_R}"
+    rf"|{_EDGE_L}\d+{_PUBLIC_SEP}of{_PUBLIC_SEP}\d+{_EDGE_R}"
+)
+# Security mechanisms: auth, keys, network controls, privilege.
+_PUBLIC_SECURITY_RE = re.compile(
+    rf"(?i){_EDGE_L}(?:2fa|mfa|otp|totp|oauth2?|saml|sso|kerberos|ldap|tls|ssl|certs?|certificates?"
+    rf"|passphrases?|passwords?|credentials?|keychain|cookies?|sudo|sshd?|authorized[_ ]keys|pubkeys?"
+    rf"|private[_ -]keys?|hmac|csrf|cors|firewalls?|iptables|ufw|selinux|apparmor|fail2ban|vpn"
+    rf"|wireguard|allow ?lists?|white ?lists?|block ?lists?|deny ?lists?|api[_ -]?keys?"
+    rf"|session[_ -]?tokens?|bearer|jwts?|rbac|admins?|secrets?|id_(?:rsa|ed25519)|root (?:access|login|shell)){_EDGE_R}"
+)
+# Match complete numbered labels, including hyphenated ones. Known technical
+# terms and numbered seat labels remain publishable; substrings never match.
+_PUBLIC_HOST_RE = re.compile(
+    rf"(?i){_EDGE_L}(?:hostname|host|server|machine|localhost|vps|nas|laptop|workstation|desktop|box|runner)s?{_EDGE_R}"
+    rf"|{_EDGE_L}(?<!-)(?!(?:gpt[4]|ipv4|utf8|base64|html5|(?:driver|worker)-\d+){_EDGE_R}(?!-))"
+    rf"[a-z]{{2,}}(?:-[a-z]+)*-?\d+{_EDGE_R}(?!-)"
+)
 
 
 def load_delegate_health() -> SourceReport:
@@ -62,7 +106,7 @@ def _observation_age(host: Mapping[str, Any]) -> float | None:
     return number
 
 
-def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
+def load_occupancy_activity() -> tuple[SourceReport, dict[tuple[str, str], str]]:
     """Working or idle per agent id. Host identity is not copied out.
 
     Only fresh hosts contribute explicit working/idle activity. With no fresh
@@ -79,7 +123,7 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
     hosts = payload.get("hosts")
     if not isinstance(hosts, dict):
         return report("occupancy", "unavailable"), {}
-    activity: dict[str, str] = {}
+    candidates: dict[tuple[str, str], list[str | None]] = {}
     saw_fresh = False
     saw_stale = False
     saw_unavailable = False
@@ -105,20 +149,19 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
         for occupant in occupants:
             if not isinstance(occupant, dict):
                 continue
-            agent = occupant.get("agent")
-            if not isinstance(agent, str) or not agent.strip():
+            agent = producer_identity(occupant.get("agent"))
+            session = producer_identity(occupant.get("session_id"))
+            instance = producer_identity(occupant.get("instance_id"))
+            if occupant.get("kind") != "observer" or not agent or not session or not instance:
                 continue
             token = _occupant_activity(occupant.get("status"))
-            if token is None:
-                continue
-            agent_id = agent.strip()
-            if activity.get(agent_id) == "working":
-                continue
-            activity[agent_id] = token
+            candidates.setdefault((agent, session), []).append(token)
     if saw_stale and not saw_fresh:
         return report("occupancy", "stale", age_s=stale_age), {}
     if saw_unavailable and not saw_fresh:
         return report("occupancy", "unavailable"), {}
+    activity = {key: tokens[0] for key, tokens in candidates.items()
+                if len(tokens) == 1 and tokens[0] is not None}
     return report("occupancy", "ok"), activity
 
 
@@ -131,17 +174,73 @@ def activity_token(value: object) -> str | None:
     return None
 
 
+# Confusable letters that would otherwise spell a denied Latin token.
+_CONFUSABLE = str.maketrans({
+    "\u0430": "a", "\u0410": "A",
+    "\u0435": "e", "\u0415": "E",
+    "\u043e": "o", "\u041e": "O",
+    "\u0440": "p", "\u0420": "P",
+    "\u0441": "c", "\u0421": "C",
+    "\u0443": "y", "\u0423": "Y",
+    "\u0445": "x", "\u0425": "X",
+    "\u0456": "i", "\u0406": "I",
+    "\u0455": "s", "\u0405": "S",
+    "\u04cf": "l",
+    "\u0412": "B",
+    "\u0391": "A", "\u03b1": "a",
+    "\u0395": "E", "\u03b5": "e",
+    "\u0399": "I", "\u03b9": "i",
+    "\u039f": "O", "\u03bf": "o",
+    "\u03a1": "P", "\u03c1": "p",
+})
+
+
+def _screen(projected: str) -> str:
+    """NFKC form with the stress mark removed. Cyrillic letters stay intact."""
+    return unicodedata.normalize("NFKC", projected.replace("\u0301", ""))
+
+
+def _fold(projected: str) -> str:
+    """Accent-stripped, confusable-folded copy used only for denial."""
+    decomposed = unicodedata.normalize("NFKD", projected)
+    stripped = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    return unicodedata.normalize("NFKC", stripped).translate(_CONFUSABLE)
+
+
+def _publishable(projected: str) -> bool:
+    if not _PUBLIC_SHAPE_RE.fullmatch(projected):
+        return False
+    screened = _screen(projected)
+    folded = _fold(projected)
+    copies = (screened, folded) if folded != screened else (screened,)
+    return not any(
+        pattern.search(copy)
+        for copy in copies
+        for pattern in (_PUBLIC_CAPACITY_RE, _PUBLIC_SECURITY_RE, _PUBLIC_HOST_RE)
+    )
+
+
 def text(value: object) -> str | None:
-    """Project one emitted string through the epic-registry public-text bound."""
+    """Project one emitted string through the publication text boundary.
+
+    The epic-registry bound runs first. Then only prose shapes pass, and no
+    capacity figure, machine name, or security-mechanism detail. Anything
+    else becomes ``[redacted]``.
+    """
     if not isinstance(value, str):
         return None
-    return _response_registry_text(value)
+    projected = _response_registry_text(value)
+    if projected is None or projected == PUBLIC_REDACTED:
+        return projected
+    if _publishable(projected):
+        return projected
+    return PUBLIC_REDACTED
 
 
 def seat_id(value: object) -> str | None:
     """An identity string. A redacted value is omitted rather than published."""
     projected = text(value)
-    if not projected or projected == "[redacted]":
+    if not projected or projected == PUBLIC_REDACTED:
         return None
     return projected
 
@@ -170,10 +269,10 @@ def derive_state(
     long_idle = idle_min is not None and idle_min >= STUCK_IDLE_MIN
     if norm == "running" and long_idle:
         return "stuck", "idle while intended running"
-    if activity == "working" or occupancy == "working":
-        return "working", "recorded working"
     if require_liveness and norm == "running" and pid_alive is None:
         return "stuck", "liveness unknown"
+    if activity == "working" or occupancy == "working":
+        return "working", "recorded working"
     return "idle", "idle"
 
 

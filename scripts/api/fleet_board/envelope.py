@@ -104,6 +104,18 @@ _WORKER: dict[str, Any] = {
     },
 }
 
+_HEALTH: dict[str, Any] = {
+    "type": "object", "additionalProperties": False,
+    "required": ["agent_id", "status", "measured_at", "context_pct", "compactions", "stop_count", "ask_count", "idle_min"],
+    "properties": {
+        "agent_id": {"type": ["string", "null"]},
+        "status": {"enum": ["ok", "stale", "unknown"]},
+        "measured_at": {"type": ["string", "null"], "pattern": TIMESTAMP_PATTERN},
+        **{key: {"type": ["number", "null"], "minimum": 0}
+           for key in ("context_pct", "compactions", "stop_count", "ask_count", "idle_min")},
+    },
+}
+
 _NOW_EPIC: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -120,6 +132,7 @@ _NOW_EPIC: dict[str, Any] = {
         "driver",
         "task",
         "workers",
+        "health",
     ],
     "properties": {
         "epic": {"type": "string", "minLength": 1},
@@ -134,6 +147,7 @@ _NOW_EPIC: dict[str, Any] = {
         "driver": _DRIVER,
         "task": _TASK,
         "workers": {"type": "array", "items": _WORKER},
+        "health": _HEALTH,
     },
 }
 

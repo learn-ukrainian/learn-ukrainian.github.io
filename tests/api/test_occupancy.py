@@ -1175,3 +1175,32 @@ def test_cloud_observer_presence_age_uses_freshness_window(
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
+
+
+@pytest.mark.parametrize("case", ["match", "unreadable", "stale", "wrong-instance", "duplicate-lease", "old-presence"])
+def test_observer_binding_requires_one_fresh_canonical_holder(case):
+    from scripts.api.occupancy import _bind_observer_sessions
+    from scripts.api.occupancy_local import OccupancyRead
+    observer = {"kind": "observer", "agent": "codex", "instance_id": "instance-one", "status": "working"}
+    lease = {"kind": "driver", "agent": "codex", "instance_id": "instance-one", "session_id": "session-one"}
+    if case == "wrong-instance":
+        lease["instance_id"] = "instance-other"
+    leases = [lease, dict(lease, session_id="session-other")] if case == "duplicate-lease" else [lease]
+    result = _bind_observer_sessions([observer], OccupancyRead(leases, case != "unreadable", 0),
+                                     fresh=case != "stale",
+                                     fresh_instances=set() if case == "old-presence" else {("codex", "instance-one")})
+    assert result[0].get("session_id") == ("session-one" if case == "match" else None)
+    assert "session_id" not in observer
+
+
+@pytest.mark.parametrize("value", [None, "", " spaced", 123, True, "path/value", "name.example"])
+def test_producer_identity_rejects_coercion_and_unsafe_tokens(value):
+    from scripts.api.occupancy_sanitize import producer_identity
+    assert producer_identity(value) is None
+
+
+def test_merge_keeps_distinct_sessions_for_the_same_label():
+    from scripts.api.occupancy import _merge_occupants
+    base = {"kind": "driver", "agent": "codex", "task_id": "sample", "epic": "7101", "instance_id": "instance-one"}
+    rows = [dict(base, session_id=session) for session in ("session-one", "session-two")]
+    assert _merge_occupants(rows) == rows

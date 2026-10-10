@@ -24,6 +24,7 @@ from agents_extensions.shared.session_streams.model import parse_timestamp
 from scripts.api import config
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
+from scripts.api.occupancy_sanitize import producer_identity
 from scripts.api.occupancy_sanitize import safe_field as _safe_field
 from scripts.api.repository_authority import preparation_data_root
 from scripts.lexicon.runner import atlas_job
@@ -153,7 +154,7 @@ def read_session_streams(
             rows = conn.execute(
                 """
                 SELECT l.stream_id, l.holder_agent, l.holder_task_id,
-                       l.heartbeat_at, l.expires_at
+                       l.heartbeat_at, l.expires_at, l.session_id, l.holder_instance_id
                 FROM stream_leases AS l
                 JOIN sessions AS s ON s.stream_id = l.stream_id
                     AND s.session_id = l.session_id
@@ -165,7 +166,6 @@ def read_session_streams(
         return OccupancyRead([], False, 0.0)
 
     occupants: list[dict[str, str | None]] = []
-    seen: set[tuple[str, str, str]] = set()
     observed_at: list[datetime] = []
     for row in rows:
         try:
@@ -181,18 +181,19 @@ def read_session_streams(
         if epic is None:
             continue
         task_id = _safe_field(row["holder_task_id"], role="task_id") or f"epic-{epic}"
+        session = producer_identity(row["session_id"])
+        instance = producer_identity(row["holder_instance_id"])
+        attested = session is not None and instance is not None and heartbeat_at <= clock
         occupant = _occupant(
             kind="driver",
             agent=row["holder_agent"],
             task_id=task_id,
             epic=epic,
+            session_id=session if attested else None,
+            instance_id=instance if attested else None,
         )
         if occupant is None:
             continue
-        key = (occupant["kind"], occupant["task_id"] or "", occupant.get("epic") or "")
-        if key in seen:
-            continue
-        seen.add(key)
         occupants.append(occupant)
     return OccupancyRead(occupants, True, _observation_age(observed_at, now=clock))
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fleet Board</title>
+<link rel="icon" href="data:,">
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem("fleet-board-theme");
+    var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute("data-theme", saved || (dark ? "dark" : "light"));
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+</script>
+<link rel="stylesheet" href="/monitor.css">
+<link rel="stylesheet" href="/fleet-board.css">
+</head>
+<body class="fb-page">
+<header class="topbar fb-top">
+  <div class="fb-bar">
+    <div class="fb-brand">
+      <h1>Fleet Board</h1>
+      <p>who is doing what, now</p>
+    </div>
+    <nav class="fb-views" aria-label="Fleet board views">
+      <a href="#/home" data-nav="home">Home</a>
+      <a href="#/prs" data-nav="prs">PRs</a>
+    </nav>
+    <div class="fb-spacer"></div>
+    <div class="fb-stamp" id="fb-stamp">
+      <span class="fb-dot" aria-hidden="true"></span>
+      <span class="fb-stamp-label" id="fb-stamp-label" hidden>Updated</span>
+      <span id="fb-ago" aria-live="polite">waiting</span>
+    </div>
+    <button type="button" id="fb-theme" class="fb-icon-btn" aria-label="Toggle colour theme" title="Toggle colour theme (t)">Theme</button>
+    <button type="button" id="fb-help" class="fb-icon-btn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
+  </div>
+  <nav class="monitor-nav" aria-label="Ops API sections">
+    <a href="/">Home</a>
+    <a href="/orient.html">Orient</a>
+    <a href="/fleet.html">Fleet</a>
+    <a href="/work.html">Work</a>
+    <a href="/artifacts/">Artifacts</a>
+    <a href="/runtime.html">Runtime</a>
+    <a href="/docs">API</a>
+  </nav>
+</header>
+
+<main id="fb-app" class="fb-main" data-read-only="true">
+  <p class="fb-empty">Loading the board…</p>
+</main>
+
+<aside id="fb-drawer" class="fb-drawer" hidden aria-label="Agent"></aside>
+
+<div id="fb-help-modal" class="fb-modal" hidden>
+  <div class="fb-modal-card" role="dialog" aria-modal="true" aria-labelledby="fb-help-title">
+    <h2 id="fb-help-title">Keyboard</h2>
+    <dl class="fb-kv">
+      <dt><kbd>g</kbd> <kbd>h</kbd></dt><dd>Home</dd>
+      <dt><kbd>g</kbd> <kbd>p</kbd></dt><dd>PR pipeline</dd>
+      <dt><kbd>/</kbd></dt><dd>Search</dd>
+      <dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>Next or previous card</dd>
+      <dt><kbd>Enter</kbd></dt><dd>Open the focused card</dd>
+      <dt><kbd>r</kbd></dt><dd>Refresh now</dd>
+      <dt><kbd>t</kbd></dt><dd>Dark or light theme</dd>
+      <dt><kbd>Esc</kbd></dt><dd>Close the panel</dd>
+    </dl>
+    <p class="fb-actions"><button type="button" id="fb-help-close">Close</button></p>
+  </div>
+</div>
+
+<script src="/fleet-board.js"></script>
+</body>
+</html>

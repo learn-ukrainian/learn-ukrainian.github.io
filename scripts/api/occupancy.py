@@ -331,6 +331,8 @@ def _merge_occupants(*groups: list[dict[str, str | None]]) -> list[dict[str, str
                 occupant["task_id"] or "",
                 "" if occupant["kind"] == "job" else (occupant.get("epic") or ""),
                 occupant.get("instance_id") or "",
+                occupant.get("session_id") or "",
+                occupant.get("agent") or "",
             )
             if key in seen:
                 continue
@@ -498,6 +500,29 @@ def _presence_age_s(host_id: str, *, snapshot: OccupancySnapshot) -> float:
     if not ages:
         return 0.0
     return _safe_age(min(ages))
+
+
+def _bind_observer_sessions(
+    observers: list[dict[str, str | None]], driver_read: OccupancyRead, *, fresh: bool,
+    fresh_instances: set[tuple[str, str]],
+) -> list[dict[str, str | None]]:
+    """Attest a presence only with one matching canonical lease on this host."""
+    if not fresh or not driver_read.readable:
+        return observers
+    bound = []
+    for observer in observers:
+        matches = [row for row in driver_read.occupants
+                   if row.get("kind") == "driver" and row.get("agent") == observer.get("agent")]
+        duplicates = [row for row in observers if row.get("agent") == observer.get("agent")
+                      and row.get("instance_id") == observer.get("instance_id")]
+        if (len(matches) == len(duplicates) == 1
+                and (observer.get("agent"), observer.get("instance_id")) in fresh_instances
+                and matches[0].get("instance_id") == observer.get("instance_id")
+                and observer.get("agent")
+                and observer.get("instance_id") and matches[0].get("session_id")):
+            observer = {**observer, "session_id": matches[0]["session_id"]}
+        bound.append(observer)
+    return bound
 
 
 def _observer_source_payload(
@@ -699,6 +724,14 @@ def _payload_from_entries(
         )
         marker_read = read_markers(host_id=opaque, now=snapshot.now)
         observer_occupants = _occupants_from_observers(opaque, snapshot=snapshot)
+        observer_occupants = _bind_observer_sessions(
+            observer_occupants, driver_read,
+            fresh=load_entry.get("status") == "fresh"
+            and _presence_age_s(opaque, snapshot=snapshot) <= PRESENCE_FRESHNESS_SECONDS,
+            fresh_instances={(row.agent, row.instance_id) for row in snapshot.live_presence
+                             if row.host_id == opaque
+                             and 0 <= snapshot.now_mono - row.updated_at_mono <= PRESENCE_FRESHNESS_SECONDS},
+        )
         groups = [atlas_occupants, driver_read.occupants, marker_read.occupants, observer_occupants]
         occupants = _merge_occupants(*groups)
         foundry_occupants = [
