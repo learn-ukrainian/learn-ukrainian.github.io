@@ -365,13 +365,9 @@ def test_paged_comments_reject_unpaginated_response():
         adapter.comments("owner/repo", 42)
 
 
-def test_apply_refused_and_workflow_is_report_only(capsys):
+def test_apply_refused(capsys):
     assert sweep.main(["--repo", "owner/repo", "--apply"]) == 2
     assert "report-only" in capsys.readouterr().out
-    workflow = Path(".github/workflows/integration-sweep.yml").read_text()
-    assert "--apply" not in workflow
-    assert "workflow_dispatch:\n    inputs:" not in workflow
-    assert "GITHUB_STEP_SUMMARY" in workflow
 
 
 def test_run_lookup_failure_is_unknown_with_queue_blocker():

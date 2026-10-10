@@ -2,7 +2,7 @@ name: 'Python CI environment'
 description: >-
   Set up uv, install requirements-lock.txt into .venv (offline-first with an
   index retry, #9061), install ./packages/v4-runtime, then verify the Atlas
-  lexicon manifest. Shared by ci.yml, ci-advisory.yml and uv-cache-warm.yml so
+  lexicon manifest. Shared by ci.yml and uv-cache-warm.yml so
   the install cannot drift between jobs (#9062).
 outputs:
   uv-cache-key:

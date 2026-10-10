@@ -296,9 +296,6 @@ NOT_REPO_WIDE = {
         "check, not a content read); data/ is not a test or script candidate, so any change "
         "already forces the full tier."
     ),
-    "tests/test_paths_filter_fail_open.py::test_workflows_only_consume_valid_action_outputs": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
-    ),
     "tests/test_site_links.py::TestMdxFiles.test_no_old_module_nn_files": (
         "Reads the site/src/content/docs content tree as a content reader; the module "
         "carries reads_content and the content lane runs it."
