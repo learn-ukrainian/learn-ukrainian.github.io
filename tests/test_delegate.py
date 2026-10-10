@@ -2431,7 +2431,9 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir, langu
         prompt="test",
         prompt_file=None,
         mode="read-only",
-        model=None,
+        # The language lane refuses a missing resolved model. This case names
+        # the same GPT model the telemetry stub records.
+        model="gpt-5.5" if language_lane else None,
         cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
@@ -10752,6 +10754,33 @@ def _patch_worker_popen(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
 
 
+# Seat defaults the Ukrainian guard accepts. Omitted models stay omitted for
+# every other dispatch; these fixtures name the seat's own model so a later
+# assertion is not hidden by UKRAINIAN_MODEL_REFUSED.
+_UKRAINIAN_FIXTURE_MODELS = {
+    "claude": "claude-opus-5-5",
+    "codex": "gpt-6.1-sol",
+    "agy": "gemini-3.8-flash-high",
+    "gemini": "gemini-3.1-pro-high",
+}
+
+
+def _ukrainian_fixture_job(base: dict) -> bool:
+    if bool(base.get("language_lane")) or base.get("review_profile") == "ukrainian":
+        return True
+    track = str(base.get("research_track") or "").strip().lower()
+    if track.startswith("l2-uk"):
+        return True
+    owned = base.get("research_owned_path") or []
+    if isinstance(owned, str):
+        owned = [owned]
+    for path in owned:
+        text = str(path).replace("\\", "/").lstrip("./")
+        if text.startswith("curriculum/") or text.startswith("scripts/curriculum/"):
+            return True
+    return False
+
+
 def _write_args(**overrides):
     """Namespace for a cmd_dispatch call, defaulting to a write-capable mode."""
     import argparse
@@ -10778,6 +10807,8 @@ def _write_args(**overrides):
     if base.get("review_attempt"):
         # These attempt fixtures render lesson-review prompts, like the content producer.
         base.setdefault("review_profile", "ukrainian")
+    if base.get("model") is None and _ukrainian_fixture_job(base):
+        base["model"] = _UKRAINIAN_FIXTURE_MODELS.get(str(base.get("agent") or "").strip().lower())
     return argparse.Namespace(**base)
 
 

@@ -146,6 +146,22 @@ def env(monkeypatch, tmp_path):
     return type("_Env", (), {"tasks": tasks, "spawned": spawned, "prompts": prompts})()
 
 
+def _language_lane_model(extra: list[str] | tuple[str, ...]) -> str | None:
+    """The AGY seat model when these flags mark a Ukrainian job, else omitted."""
+    values = list(extra)
+    if "--review-profile" in values:
+        index = values.index("--review-profile")
+        if index + 1 < len(values) and values[index + 1] == "ukrainian":
+            return "gemini-3.8-flash-high"
+    if "--research-owned-path" in values:
+        index = values.index("--research-owned-path")
+        if index + 1 < len(values):
+            text = values[index + 1].replace("\\", "/").lstrip("./")
+            if text.startswith(("curriculum/", "scripts/curriculum/")):
+                return "gemini-3.8-flash-high"
+    return None
+
+
 def _argv(*extra: str, agent: str = "codex", model: str | None = "gpt-6-luna", task_id: str | None = None) -> list[str]:
     if task_id is None:
         task_id = _worker_id()
@@ -573,7 +589,7 @@ def test_m15_read_only_gemini_flash_recon_without_envelope_is_refused(env, capsy
     ],
 )
 def test_m16_gemini_flash_with_conflicting_classification_is_refused(env, capsys, extra):
-    rc = _dispatch(_argv(*extra, agent="agy", model=None))
+    rc = _dispatch(_argv(*extra, agent="agy", model=_language_lane_model(extra)))
     err = capsys.readouterr().err
     assert rc == 2, err
     assert bounded_advisory.ENVELOPE_REQUIRED in err and "ambiguous classification" in err
@@ -667,7 +683,7 @@ def test_m17_substitution_into_gemini_flash_without_envelope_is_refused(env, cap
     ids=["authoring-family", "review-family", "ukrainian-review-profile", "family-and-profile"],
 )
 def test_m11_gemini_flash_with_ukrainian_classification_is_admitted_without_envelope(env, capsys, extra):
-    rc = _dispatch(_argv(*extra, agent="agy", model=None))
+    rc = _dispatch(_argv(*extra, agent="agy", model=_language_lane_model(extra)))
     assert rc == 0, capsys.readouterr().err
     assert len(env.spawned) == 1
     assert "advisory_envelope" not in _worker_record(env.tasks)
@@ -1768,7 +1784,7 @@ def test_b1_missing_unfinished_or_changed_advisor_evidence_refuses_at_the_worker
     ids=["bare-root", "dot-dot-slash", "site-tsx", "profile-owns-code", "profile-research-root", "climbs-out"],
 )
 def test_b2_ukrainian_exemptions_owning_code_are_refused(env, capsys, extra):
-    rc = _dispatch(_argv(*extra, agent="agy", model=None))
+    rc = _dispatch(_argv(*extra, agent="agy", model=_language_lane_model(extra)))
     err = capsys.readouterr().err
     assert rc == 2, err
     assert bounded_advisory.ENVELOPE_REQUIRED in err and "ambiguous classification" in err
