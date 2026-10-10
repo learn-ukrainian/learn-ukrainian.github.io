@@ -17,6 +17,7 @@ import copy
 import hashlib
 import inspect
 import json
+import re
 import shlex
 from collections import Counter
 from dataclasses import dataclass, field
@@ -334,7 +335,7 @@ def _syntax_argv(node: ast.Call, scope: _Scope) -> list[str] | None:
         text = argv.text if partial else argv
         if partial:
             # Appending a sentinel models the unknown text touching the final
-            # token, including escaped/quoted whitespace. Discard that token.
+            # token, including escaped/quoted whitespace. Retain its known prefix.
             lexer = shlex.shlex(text + "__dynamic__", posix=True)
             lexer.whitespace_split = True
             lexer.commenters = ""
@@ -344,7 +345,7 @@ def _syntax_argv(node: ast.Call, scope: _Scope) -> list[str] | None:
             except ValueError:
                 pass  # An open quote in the dynamic tail does not erase complete tokens.
             else:
-                argv.pop()
+                argv[-1] = _StringPrefix(argv[-1][: -len("__dynamic__")])
         else:
             try:
                 argv = shlex.split(text)
@@ -355,6 +356,12 @@ def _syntax_argv(node: ast.Call, scope: _Scope) -> list[str] | None:
     if Path(argv[0]).name not in {"bash", "sh"}:
         return None
     for index, option in enumerate(argv[1:], 1):
+        if isinstance(option, _StringPrefix):
+            # A dynamic suffix cannot hide a known -n in an alphabetic cluster.
+            # Spaces inside the token are invalid option characters, not separators.
+            if re.fullmatch(r"-[A-Za-z]*n[A-Za-z]*", option.text):
+                return [*argv[:index], option.text]
+            break
         if not isinstance(option, str) or option in {"--", "-c"} or not option.startswith("-"):
             break
         if option == "--noexec" or (not option.startswith("--") and "n" in option[1:]):
@@ -588,6 +595,13 @@ def test_shlex_star_import_fails(use: str) -> None:
         "import subprocess\nsubprocess.run(('bash', '-n', path))",
         "import subprocess\nsubprocess.run(['bash', '-n', *paths])",
         "import subprocess\nsubprocess.run('bash -n ' + path)",
+        "import subprocess\nsubprocess.run('bash -n' + suffix)",
+        "import subprocess\nsubprocess.run(f'bash -n{flags} {path}')",
+        "import subprocess\nsubprocess.run(f'bash -xn{flags} {path}')",
+        "import subprocess\nsubprocess.run(f'bash -nv{flags} {path}')",
+        "import subprocess\nsubprocess.run(['bash', '-n' + flags, path])",
+        "import subprocess\nsubprocess.run(['bash', '-xn' + flags, path])",
+        "import subprocess\nsubprocess.run(['bash', f'-nv{flags}', path])",
         "import subprocess\nsubprocess.run(f'bash -n {path}')",
         "import subprocess\nsubprocess.run(f'bash -n {path!r}')",
         "import subprocess\nsubprocess.run(f'bash -n \"{path}\"')",
@@ -621,7 +635,12 @@ def test_syntax_check_with_dynamic_tail_fails(source: str) -> None:
         "'bash -' + flag",
         "f'bash -{flag} {path}'",
         "f'{shell} -n {path}'",
-        "'bash -n' + suffix",
+        "'bash' + suffix + ' -n'",
+        "['bash' + suffix, '-n', path]",
+        "['bash', '-' + flag, path]",
+        "['bash', '-n ' + suffix, path]",
+        "['bash', '--n' + suffix, path]",
+        "['bash', '-n1' + suffix, path]",
         "'bash -n\\\\ ' + suffix",
         "f\"bash '-n {path}'\"",
         "f'bash -c {path} -n'",
