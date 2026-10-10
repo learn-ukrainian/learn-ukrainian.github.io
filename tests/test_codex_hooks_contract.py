@@ -1253,6 +1253,9 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
     'command {stub} issue create --body safe',
     'exec {stub} issue create --body safe',
     "bash -c 'PATH={stub_dir} gh issue create --body safe'",
+    "bash -c 'eval gh issue create --body safe'",
+    "bash -c '/usr/bin/env gh issue create --body safe'",
+    "bash -c $'gh issue create --body safe'",
     "env -S '{stub} issue create --body safe'",
     "eval 'PATH={stub_dir} gh issue create --body safe'",
 ])

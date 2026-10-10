@@ -208,7 +208,7 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
     assert len(expected_hooks) == 1
     assert expected_hooks[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch|write_stdin)$"
     assert expected_hooks[0]["hooks"][0]["timeout"] == 45
-    command_digests = ['29631fde2a2dd39bdfe27574cc06d7a3ca800642e228548733e2e3d4c146364d']
+    command_digests = ['5f7bf49e59d9889b405e2000291e485fba57b405c1b1e7bbcbd7a793c9c873d6']
     metadata = [
         {"type": "command", "timeout": 45, "statusMessage": "Running Codex tool policy"},
     ]
@@ -474,7 +474,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the #10205 Cursor revision, #10262 AGY review-risk
 # refusals and approved overlays for both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "routing-10305.json.gz": "34f3510fa6b01726896f4dca1adfa929354d4f5f9a1c39745a1f385394500a7d",
+    "routing-10305.json.gz": "0473f73f5e50f3d851c2b023d9e7f251a61a13d884036e3e725ec090291ae7fd",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
     "SPEC.md": "f0ad2c557525b9681b0741f0a36e0e6579286a47e60a028d3165284a2e9679b3",

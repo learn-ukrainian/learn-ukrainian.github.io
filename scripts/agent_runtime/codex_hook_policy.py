@@ -196,8 +196,73 @@ def _has_shell_substitution(command: str) -> bool:
             single = not single
         elif char == '"' and not single:
             double = not double
-        elif not single and (char == "`" or command[index:index + 2] == "$("):
+        elif not single and (char == "`" or command[index:index + 2] in {"$(", "$'", '$"'}):
             return True
+    return False
+
+
+def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
+    """Recognize command positions, shell -c scripts, eval, and wrappers hiding gh."""
+    if not (re.search(r"\bgh\b", command) or any(Path(w).name == "gh" for w in command.split())):
+        return False
+    if callable(recognize_gh) and recognize_gh(command):
+        return True
+    if _has_shell_substitution(command):
+        return True
+    try:
+        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n")
+        lexer.whitespace = " \t\r"
+        lexer.whitespace_split = True
+        words = list(lexer)
+    except ValueError:
+        return True
+
+    for w in words:
+        if w in {"/usr/bin/env", "/bin/env", "-S", "--split-string", "eval"} or w.startswith("--split-string="):
+            return True
+
+    expecting_command = True
+    shell = False
+    shell_script = False
+    wrapper = False
+    is_eval = False
+
+    for word in words:
+        if shell_script or is_eval:
+            script_candidate = word[1:] if word.startswith("$") and len(word) > 1 and word[1] in "'\"" else word
+            if _invokes_or_ambiguous_gh(script_candidate, recognize_gh):
+                return True
+            shell_script = False
+            is_eval = False
+            expecting_command = False
+        elif word and all(char in ";|&()\n" for char in word):
+            expecting_command = True
+            shell = False
+            shell_script = False
+            wrapper = False
+            is_eval = False
+        elif shell and word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
+            shell_script = True
+        elif expecting_command:
+            clean_word = word.lstrip("$")
+            if clean_word == "gh" or Path(clean_word).name == "gh":
+                return True
+            if clean_word == "eval":
+                is_eval = True
+                continue
+            if "=" in word or clean_word in {
+                "env", "command", "exec", "sudo", "time", "timeout", "xargs",
+                "/usr/bin/env", "/bin/env", "if", "then", "elif", "while", "until", "do", "!",
+            } or Path(clean_word).name == "env":
+                wrapper = clean_word in {"time", "timeout", "xargs", "env", "sudo", "/usr/bin/env", "/bin/env"} or wrapper
+                continue
+            if Path(clean_word).name in {"bash", "sh", "zsh", "dash"}:
+                shell = True
+                expecting_command = False
+            elif wrapper or word.startswith("-") or word.replace(".", "").isdigit():
+                continue
+            else:
+                expecting_command = False
     return False
 
 
@@ -224,16 +289,10 @@ def _publication_command_code(payload: str, hooks_dir: Path) -> int:
         # Reuse the shared command-position recognizer; literal gh in data
         # (a commit message, for example) is not a publishing invocation.
         recognize = runpy.run_path(str(hooks_dir / "guard-public-github-text.py"))["invokes_gh"]
-        publication = recognize(command)
     except (OSError, SyntaxError, KeyError):
         print("Codex publication guard is unavailable; blocking fail-closed.", file=sys.stderr)
         return 2
-    # The shared recognizer does not see quoted substitutions, absolute env,
-    # or env split-string arguments. Those ambiguous forms remain blocked.
-    publication = publication or _has_shell_substitution(command) or any(
-        word in {"/usr/bin/env", "/bin/env", "-S", "--split-string", "eval"}
-        or word.startswith("--split-string=") for word in words
-    )
+    publication = _invokes_or_ambiguous_gh(command, recognize)
     if not publication:
         return 0
     # Even apparently safe early calls cannot license a later PATH replacement,
