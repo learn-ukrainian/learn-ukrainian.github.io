@@ -194,6 +194,9 @@ and the source to `unavailable`.
 stop count, ask count, idle minutes, and `measured_at`. A missing
 measurement is null. Driver ids are published only through approved aliases:
 `claude`, `codex`, `cursor`, `grok-bot`, and `qa-engineer`. Every other
-string becomes `unlisted`. `GET /api/fleet/v1/harness/{agent_id}` returns
-that driver, or null when the id is absent or `unlisted`. An unknown or
-unsafe lookup id is not copied into the body.
+string becomes `unlisted`.
+
+### `GET /api/fleet/v1/harness/{agent_id}`
+
+Returns that driver, or null when the id is absent or `unlisted`. An unknown
+or unsafe lookup id is not copied into the body.

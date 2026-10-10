@@ -474,3 +474,25 @@ def test_approved_driver_aliases_are_the_only_published_driver_ids(tmp_path, mon
     listed = client.get("/api/fleet/v1/harness")
     assert [row["agent_id"] for row in listed.json()["data"]["drivers"]] == ["claude", file_sources.UNLISTED]
     assert client.get("/api/fleet/v1/harness/alpha").json()["data"]["driver"] is None
+
+
+def test_default_driver_aliases_preserve_public_harness_identity(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    approved = ["claude", "codex", "cursor", "grok-bot", "qa-engineer"]
+    monkeypatch.setattr(file_sources, "DRIVER_ALIASES", values.DRIVER_ALIASES)
+    snapshot = tmp_path / "harness.json"
+    drivers = [{"agent_id": name} for name in [*approved, "leakword"]]
+    snapshot.write_text(json.dumps({"drivers": drivers}), encoding="utf-8")
+    monkeypatch.setenv("FLEET_HARNESS_SNAPSHOT", str(snapshot))
+    listed = client.get("/api/fleet/v1/harness")
+    assert listed.status_code == 200
+    _validate(listed.json())
+    assert [row["agent_id"] for row in listed.json()["data"]["drivers"]] == [*approved, "unlisted"]
+    for name in approved:
+        named = client.get("/api/fleet/v1/harness/" + name)
+        assert named.status_code == 200
+        _validate(named.json())
+        assert named.json()["data"]["driver"]["agent_id"] == name
+        assert named.json()["data"]["driver"]["context_pct"] is None
+        assert str(tmp_path) not in named.text
+    assert "leakword" not in listed.text
+    assert str(tmp_path) not in listed.text

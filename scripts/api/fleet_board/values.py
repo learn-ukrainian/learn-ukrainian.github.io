@@ -10,6 +10,7 @@ from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from typing import Any
 
+from ..observer_presence import ALLOWED_AGENTS
 from .cache import CACHE, CACHE_TTL_S
 from .sources import SourceReport, report
 
@@ -18,13 +19,7 @@ _TOKEN = re.compile(r"[a-z0-9_-]{1,32}\Z")
 # Snapshot identifiers are published only through these approved aliases.
 # Any other identifier, however well formed, becomes UNLISTED.
 DOWNLOAD_ALIASES: Mapping[str, str] = {}
-DRIVER_ALIASES: Mapping[str, str] = {
-    "claude": "claude",
-    "codex": "codex",
-    "cursor": "cursor",
-    "grok-bot": "grok-bot",
-    "qa-engineer": "qa-engineer",
-}
+DRIVER_ALIASES: Mapping[str, str] = {name: name for name in ALLOWED_AGENTS}
 UNLISTED = "unlisted"
 
 Outcome = tuple[dict[str, Any], tuple[SourceReport, ...]]
