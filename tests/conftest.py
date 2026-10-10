@@ -29,7 +29,6 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agent_runtime.env_sanitize import CAPTURED_SECRET_MIN_LENGTH, credential_env_names
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root
@@ -177,6 +176,10 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     names) are removed the same way. A long value that then shows up in
     captured output fails the test without the value being repeated.
     """
+    # Import only when a test runs. The rules workflow loads this module
+    # with pytest and PyYAML and rejects an agent_runtime import at import time.
+    from agent_runtime.env_sanitize import CAPTURED_SECRET_MIN_LENGTH, credential_env_names
+
     secrets: dict[str, str] = {}
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
