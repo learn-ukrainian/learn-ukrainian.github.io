@@ -24,6 +24,7 @@ tests/storage/test_publish_set.py	2
 tests/storage/test_reactivation.py	1
 tests/test_ab_channel_watch.py	2
 tests/test_agent_runtime.py	1
+tests/test_api_helpers.py	2
 tests/test_backup_data_script.py	3
 tests/test_ci_attribution.py	3
 tests/test_conftest_worktree_guard.py	1

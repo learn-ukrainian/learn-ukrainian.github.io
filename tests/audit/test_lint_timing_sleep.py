@@ -18,6 +18,27 @@ def test_an_unlisted_sleep_is_drift(tmp_path: Path) -> None:
     assert drift(sleep_counts(tmp_path), {}) == ["tests/test_new.py sleeps=1 allowed=0"]
 
 
+def test_imported_sleep_name_is_counted(tmp_path: Path) -> None:
+    tests = tmp_path / "tests"
+    tests.mkdir()
+    (tests / "test_alias.py").write_text(
+        "import time as clock\nfrom time import sleep\n\ndef test_x():\n    clock.sleep(0.01)\n    sleep(0.01)\n",
+        encoding="utf-8",
+    )
+    assert sleep_counts(tmp_path) == {"tests/test_alias.py": 2}
+
+
+def test_a_removed_sleep_is_not_drift() -> None:
+    assert drift({"tests/test_old.py": 1}, {"tests/test_old.py": 3}) == []
+    assert drift({}, {"tests/test_old.py": 1}) == []
+
+
+def test_a_grown_count_is_drift() -> None:
+    assert drift({"tests/test_old.py": 3}, {"tests/test_old.py": 2}) == [
+        "tests/test_old.py sleeps=3 allowed=2"
+    ]
+
+
 def test_wait_helper_is_not_counted(tmp_path: Path) -> None:
     tests = tmp_path / "tests"
     tests.mkdir()
