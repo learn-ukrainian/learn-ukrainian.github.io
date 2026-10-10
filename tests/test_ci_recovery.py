@@ -648,7 +648,7 @@ def removal_observation():
         "graphql-errors",
         "missing-pull",
         "moved-head",
-        "null-commit",
+        "missing-commit",
         "bad-sha",
         "bad-date",
         "naive-date",
@@ -667,8 +667,8 @@ def test_unreadable_removal_data_refuses_with_typed_reason(cause):
         data["data"]["repository"]["pullRequest"] = None
     elif cause == "moved-head":
         pull["headRefOid"] = NEW_HEAD
-    elif cause == "null-commit":
-        event["beforeCommit"] = None
+    elif cause == "missing-commit":
+        del event["beforeCommit"]
     elif cause == "bad-sha":
         event["beforeCommit"]["oid"] = "unknown"
     elif cause == "bad-date":
@@ -722,7 +722,7 @@ def test_removal_history_checks_every_event(matching_head):
         "second-page-unreadable",
         "second-page-errors",
         "second-page-head-moved",
-        "second-page-null-commit",
+        "second-page-missing-commit",
         "page-cap",
     ],
 )
@@ -762,8 +762,8 @@ def test_incomplete_removal_history_refuses_without_mutation(setup, action, caus
                 data["errors"] = [{"message": "partial response"}]
             elif cause == "second-page-head-moved":
                 pull["headRefOid"] = HEAD
-            elif cause == "second-page-null-commit":
-                removals["nodes"][0]["beforeCommit"] = None
+            elif cause == "second-page-missing-commit":
+                del removals["nodes"][0]["beforeCommit"]
         return subprocess.CompletedProcess(argv, 0, json.dumps(data), "")
 
     with pytest.MonkeyPatch.context() as patches:
@@ -794,13 +794,63 @@ def test_incomplete_removal_history_refuses_without_mutation(setup, action, caus
         assert len(transport.removal_reads) == 100
 
 
-def test_verified_push_after_nullable_removal_allows_initial_enqueue(setup):
+@pytest.mark.parametrize("action", ["direct", "keeper-initial"])
+@pytest.mark.parametrize("reason", ["failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT"])
+def test_different_head_push_after_nullable_ci_removal_allows_initial_enqueue(setup, action, reason):
     root, transport = setup
     transport.removal_head, transport.proof = None, None
-    transport.pushes = [{"afterCommit": {"oid": HEAD}, "createdAt": "2026-10-09T12:00:00Z"}]
-    recover(setup, "direct")
+    transport.removal_reason = reason
+    transport.pushes = [{"afterCommit": {"oid": NEW_HEAD}, "createdAt": "2026-10-09T12:00:00Z"}]
+    recover(setup, action)
     assert len(transport.writes) == 1
     assert not pub.recovery.ledger_path(root).exists()
+
+
+@pytest.mark.parametrize(
+    "reason,pushed_head,pushed_at",
+    [
+        ("failed_checks", NEW_HEAD, "2026-10-09T10:00:00Z"),
+        ("failed_checks", NEW_HEAD, "2026-10-09T11:00:00Z"),
+        ("failed_checks", None, "2026-10-09T12:00:00Z"),
+        ("failed_checks", "invalid", "2026-10-09T12:00:00Z"),
+        ("unexpected", NEW_HEAD, "2026-10-09T12:00:00Z"),
+        (None, NEW_HEAD, "2026-10-09T12:00:00Z"),
+    ],
+)
+def test_null_removal_without_later_different_head_ci_proof_requires_recovery(reason, pushed_head, pushed_at):
+    data = removal_observation()
+    pull = data["data"]["repository"]["pullRequest"]
+    pull["removals"]["nodes"][0].update(beforeCommit=None, reason=reason)
+    pull["pushes"]["nodes"] = [{"afterCommit": {"oid": pushed_head}, "createdAt": pushed_at}]
+    assert pub.recovery.queue_removal_at_head(data, HEAD) is True
+
+
+@pytest.mark.parametrize("action", ["direct", "keeper-initial", "keeper"])
+@pytest.mark.parametrize("previous_head", [HEAD, NEW_HEAD])
+@pytest.mark.parametrize("reason", ["failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT"])
+def test_same_head_push_after_null_ci_removal_requires_and_consumes_recovery(setup, action, previous_head, reason):
+    root, transport = setup
+    transport.removal_head, transport.removal_reason, transport.proof = None, reason, None
+    transport.pushes = [
+        {
+            "beforeCommit": {"oid": previous_head},
+            "afterCommit": {"oid": HEAD},
+            "createdAt": "2026-10-09T12:00:00Z",
+        }
+    ]
+    error = keeper.KeeperError if action.startswith("keeper") else gate.PublishBlocked
+    with pytest.raises(error, match="RECOVERY_EVIDENCE_MISSING"):
+        recover(setup, action)
+    assert transport.writes == []
+    assert not pub.recovery.ledger_path(root).exists()
+    transport.proof = evidence()
+    recover(setup, action)
+    assert len(transport.writes) == 1
+    prior = pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, HEAD)
+    assert prior["action"] == "re-enqueue"
+    with pytest.raises(error, match="RECOVERY_ALLOWANCE_SPENT"):
+        recover(setup, action)
+    assert len(transport.writes) == 1
 
 
 @pytest.mark.parametrize("action", ["direct", "keeper-initial", "keeper"])
@@ -861,7 +911,7 @@ def test_empty_filtered_page_with_continuation_reads_later_removal(setup):
 
 
 @pytest.mark.parametrize("action", ["direct", "keeper-initial", "keeper"])
-@pytest.mark.parametrize("reason", ["manual", "merge_conflict"])
+@pytest.mark.parametrize("reason", ["manual", "merge_conflict", "behind", "MANUAL", "MERGE_CONFLICT", "BEHIND"])
 @pytest.mark.parametrize("removed_head", [None, HEAD, NEW_HEAD])
 @pytest.mark.parametrize("current_head", [HEAD, NEW_HEAD])
 def test_non_ci_removal_does_not_require_failure_evidence(setup, action, reason, removed_head, current_head):
@@ -877,9 +927,9 @@ def test_non_ci_removal_does_not_require_failure_evidence(setup, action, reason,
     assert not pub.recovery.ledger_path(root).exists()
 
 
-@pytest.mark.parametrize("action", ["direct", "keeper"])
+@pytest.mark.parametrize("action", ["direct", "keeper-initial", "keeper"])
 @pytest.mark.parametrize("proof", [True, False])
-@pytest.mark.parametrize("reason", ["failed_checks", "timeout"])
+@pytest.mark.parametrize("reason", ["failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT", "unexpected", None])
 def test_null_ci_removal_requires_normal_recovery_evidence(setup, action, proof, reason):
     root, transport = setup
     transport.removal_head = None
@@ -890,7 +940,7 @@ def test_null_ci_removal_requires_normal_recovery_evidence(setup, action, proof,
         assert pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, HEAD)
     else:
         transport.proof = None
-        error = keeper.KeeperError if action == "keeper" else gate.PublishBlocked
+        error = keeper.KeeperError if action.startswith("keeper") else gate.PublishBlocked
         with pytest.raises(error, match="RECOVERY_EVIDENCE_MISSING"):
             recover(setup, action)
         assert transport.writes == []

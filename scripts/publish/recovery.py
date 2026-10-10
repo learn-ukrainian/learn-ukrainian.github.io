@@ -14,8 +14,8 @@ from scripts.opsec.prepublish import PublishBlocked
 
 MARKER = re.compile(r"<!-- ci-recovery-evidence\s+(\{.*?\})\s*-->", re.S)
 SHA = re.compile(r"[0-9a-f]{40}\Z")
-NON_CI_REMOVAL_REASONS = {"manual", "merge_conflict"}
-CI_REMOVAL_REASONS = {"failed_checks", "timeout"}
+NON_CI_REMOVAL_REASONS = {"manual", "merge_conflict", "behind", "MANUAL", "MERGE_CONFLICT", "BEHIND"}
+CI_REMOVAL_REASONS = {"failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT"}
 
 
 def ledger_path(cwd: Path) -> Path:
@@ -67,11 +67,12 @@ def _legacy_attempt(path: Path, number: int, head: str) -> dict | None:
 def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
     """Check every GitHub removal, requiring complete, readable pagination.
 
-    Manual removals (including keeper holds) and merge conflicts are not CI
-    recovery. They can have a null commit and need no failed-run evidence.
-    Null CI removals conservatively require recovery at the current head unless
-    a later GitHub force-push proves they predate it. Known same-SHA failures
-    remain recovery; commit author/committer dates cannot establish push time.
+    Manual removals (including keeper holds), merge conflicts and behind-head
+    removals are not CI recovery. They can have a null commit and need no
+    failed-run evidence. Null CI removals require recovery unless a later
+    GitHub force-push ends at a different SHA. Pushes staying on or returning
+    to the same SHA cannot clear recovery. Unknown null-commit reasons also
+    require recovery; commit dates cannot establish push time.
     """
     try:
         pages = data if isinstance(data, list) else [data]
@@ -116,12 +117,17 @@ def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
                     continue
                 commit = event["beforeCommit"]
                 if commit is None:
-                    if pushed_head == head and pushed_at > removed_at:
+                    if (
+                        reason in CI_REMOVAL_REASONS
+                        and isinstance(pushed_head, str)
+                        and SHA.fullmatch(pushed_head)
+                        and pushed_head != head
+                        and pushed_at > removed_at
+                    ):
                         continue
-                    if reason in CI_REMOVAL_REASONS:
-                        at_head = True
-                        continue
-                    raise ValueError
+                    # Unknown reasons follow the conservative CI recovery path.
+                    at_head = True
+                    continue
                 removed_head = commit["oid"]
                 if not isinstance(removed_head, str) or not SHA.fullmatch(removed_head):
                     raise ValueError

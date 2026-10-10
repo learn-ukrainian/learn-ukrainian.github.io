@@ -437,21 +437,25 @@ the verdict author filter. Retain any keeper requeue grant.
 
 The publisher pages through all GitHub `RemovedFromMergeQueueEvent.beforeCommit.oid`
 values, using `pageInfo` rather than `totalCount` to establish completeness.
-Manual and `merge_conflict` removals are exempt from CI recovery, including at
+Manual, `merge_conflict` and `behind` removals are exempt from CI recovery, including at
 the current head and with a null commit; manual removals include keeper revocations.
 Other removals naming the current head make enqueue a recovery. CI removals
 (`failed_checks` or `timeout`) with a null commit count as at-head unless a later
-GitHub force-push event proves they predate the current head's push. Removals
-only at other heads permit normal initial enqueue without spending the new head's allowance.
+GitHub force-push event ends at a different SHA. A push staying on or returning
+to the same SHA does not clear a null-commit CI removal. These recognized reasons
+accept both uppercase and lowercase values. Unknown null-commit reasons require
+recovery evidence and consume the allowance rather than blocking recovery as
+unreadable data. Removals only at other heads permit normal initial enqueue
+without spending the new head's allowance.
 Commit dates and keeper-local removal history cannot establish push time.
 Before normal initial enqueue, the publisher also checks the
 durable record for a prior re-enqueue at that head; a branch-run rerun alone
 does not block initial enqueue. Returning to the same SHA never refunds a spent
 recovery allowance, even when the latest removal names another head.
 Truncated, unreadable or ambiguous GitHub removal data refuses enqueue with
-`RECOVERY_REMOVAL_UNKNOWN`; restore the complete read or establish the current head with
-a GitHub force-push event before retrying. Failed push runs on `main`, scheduled
-runs and other runs without a PR retain normal failed-job rerun behavior. Ambiguous PR or
+`RECOVERY_REMOVAL_UNKNOWN`; restore the complete read before retrying.
+Failed push runs on `main`, scheduled runs and other runs without a PR retain
+normal failed-job rerun behavior. Ambiguous PR or
 merge-group associations remain refused.
 
 A spent allowance has two ways out: a new PR head with fresh exact-head approval
