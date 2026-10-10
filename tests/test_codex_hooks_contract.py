@@ -1466,6 +1466,8 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
         r"timeout 5. PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
         r"timeout 5e0 PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
         'zsh --emulate sh -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        r'bash <(printf "%s" {stub_dir}/g\h)',
+        r'printf "%s" {stub_dir}/g\h > {stub_dir}/run.sh; bash {stub_dir}/run.sh',
     ],
 )
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
@@ -1643,6 +1645,58 @@ def test_codex_publication_pipeline_shell_blocks(monkeypatch, producer, consumer
         json.dumps({"tool_input": {"command": f"{producer} | {consumer}"}}),
         REPO_ROOT / "agents_extensions/shared/hooks",
     ) == 2
+
+
+@pytest.mark.parametrize("shell", ["bash", "sh", "zsh", "dash", "ash", "busybox sh", "env bash"])
+@pytest.mark.parametrize(
+    "shape",
+    [
+        r'{shell} <(printf "%s" g\h)',
+        r'{shell} < <(printf "%s" g\h)',
+        r'{shell} $(printf "%s" run.sh)',
+        r'printf "%s" g\h > run.sh; {shell} run.sh',
+        r'printf "%s" g\h > run.sh; {shell} -- run.sh',
+        r'printf "%s" g\h > run.sh; {shell} -e run.sh',
+        "{shell} < run.sh",
+        "< run.sh {shell}",
+        "{shell}",
+        "{shell} -c",
+        "{shell} -o",
+        "{shell} --emulate",
+        r'''{shell} -o "$(g\h)" -c 'echo synthetic' ''',
+        r'''{shell} --emulate="$(g\h)" -c 'echo synthetic' ''',
+        "{shell} --rcfile run.sh -c 'echo synthetic'",
+        "{shell} --init-file=run.sh -c 'echo synthetic'",
+    ],
+)
+def test_codex_publication_opaque_shell_input_blocks(monkeypatch, shell, shape):
+    command = shape.format(shell=shell)
+    # Neither the shared recognizer nor a correctly resolved shim may admit
+    # code supplied through an uninspectable shell input.
+    assert codex_hook_policy._invokes_or_ambiguous_gh(command, lambda _: False)
+    monkeypatch.setattr(
+        codex_hook_policy.shutil, "which",
+        lambda _: str(REPO_ROOT / "scripts/agent_runtime/shims/gh"),
+    )
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({"tool_input": {"command": command}}),
+        REPO_ROOT / "agents_extensions/shared/hooks",
+    ) == 2
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    ["-c 'echo synthetic'", "-ec 'echo synthetic'", "-o errexit -c 'echo synthetic'",
+     "-O extglob -c 'echo synthetic'", "+o errexit -c 'echo synthetic'",
+     "--emulate sh -c 'echo synthetic'", "--emulate=sh -c 'echo synthetic'"],
+)
+def test_codex_publication_inspectable_shell_input_allowed(arguments):
+    command = f"bash {arguments}"
+    assert not codex_hook_policy._invokes_or_ambiguous_gh(command, lambda _: False)
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({"tool_input": {"command": command}}),
+        REPO_ROOT / "agents_extensions/shared/hooks",
+    ) == 0
 
 
 @pytest.mark.parametrize(

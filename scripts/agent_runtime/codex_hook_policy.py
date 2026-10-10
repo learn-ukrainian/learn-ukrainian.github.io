@@ -323,6 +323,35 @@ _WRAPPERS = {
 }
 
 
+def _shell_has_opaque_input(tokens: list[str]) -> bool:
+    """Require an explicit command string before any uninspectable shell input."""
+    i = 0
+    while i < len(tokens):
+        word = tokens[i]
+        i += 1
+        if _is_ambiguous_or_gh_word(word):
+            return True
+        # Startup files also execute code, even when a command string follows.
+        if word in {"--rcfile", "--init-file"} or word.startswith(("--rcfile=", "--init-file=")):
+            return True
+        if word in {"-o", "+o", "-O", "+O", "--emulate"}:
+            if i >= len(tokens) or _is_ambiguous_or_gh_word(tokens[i]):
+                return True
+            i += 1
+            continue
+        if word.startswith("--emulate="):
+            continue
+        if word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
+            return word.endswith("c") and i >= len(tokens)
+        if (word.startswith("-") or word.startswith("+")) and word != "--":
+            continue
+        # Script operands, substitutions, redirections, and -- cannot prove
+        # what code will run. This check precedes nested scanner state changes.
+        return True
+    # With no command string the shell can execute inherited input.
+    return True
+
+
 def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
     expecting_command = True
     wrapper = False
@@ -407,7 +436,7 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 elif base in {"bash", "sh", "zsh", "dash", "ash"}:
                     # Pipeline data can become shell code, including encoded
                     # producer arguments that command-position scanning misses.
-                    if pipeline_input:
+                    if pipeline_input or _shell_has_opaque_input(tokens[i:]):
                         return True
                     expecting_command = False
                     shell_dash_c = True
