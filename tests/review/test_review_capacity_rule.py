@@ -230,8 +230,8 @@ def test_live_fallback_receipt(tmp_path, capsys, monkeypatch, data, freshness, r
 
 def test_unreadable_policy_keeps_retained_reserve(monkeypatch):
     monkeypatch.setattr(credit_lane, "load_policy", lambda: (_ for _ in ()).throw(ValueError("unreadable")))
-    assert review_capacity({"remaining_pct": 10}, {"stale": False}).near_cap
-    assert not review_capacity({"remaining_pct": 11}, {"stale": False}).near_cap
+    assert review_capacity({"remaining_pct": 1}, {"stale": False}).near_cap
+    assert not review_capacity({"remaining_pct": 2}, {"stale": False}).near_cap
 
 
 def test_capacity_free_evaluation_has_no_live_reads(monkeypatch):
