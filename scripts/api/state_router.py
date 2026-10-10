@@ -760,15 +760,20 @@ def _recommend_agent(
     Shared routing facts (#9740): a lane whose only evidence against it is a
     pace deficit read from a stale snapshot is ``UNKNOWN — stale/advisory``
     here (never ``hot``, never verified capacity); a hot label the owner
-    clears (#9040) takes the owner's status. Lanes with established
-    health are preferred; unknown health is used only when no lane has it,
-    with a warning, and is never reported as healthy. ``is_stale`` None is a
+    clears (#9040) takes the owner's status. AVOID lanes are dropped before
+    health preference. Among usable lanes, established health is preferred;
+    unknown health is used only when none has established health, with a
+    warning, and is never reported as healthy. If all lanes are AVOID, no
+    worker is recommended; the all-hot/near-cap inline contingency remains.
+    ``is_stale`` None is a
     snapshot whose staleness is missing: the owner reads it as unknown, never
     fresh.
 
     Resource ordering is owned by ``capacity_pick.build_pick_order``. Use
     tightest plan headroom and the producer's observed load, preserving None
     when load is unknown; separate pools and raw burn do not override it.
+    Monitor does not load write-success records: one-band demotions apply
+    only to picker rows explicitly supplied with those records.
     """
     # Use the picker's live inventory and shared-subscription mirror: Gemini
     # telemetry belongs to AGY, while GLM must never supply Cursor quota.
@@ -887,6 +892,12 @@ def _recommend_agent(
             f"lanes resetting soon (within {reset_imminent_hours}h): {', '.join(imminent)} — defer large batches on these if possible"
         )
 
+    avoid_by_lane = {
+        lane: lane in capacity_pick._EXCLUDED_DISPATCH_LANES
+        or capacity_pick.is_avoid_lane(agents.get(lane), lane=lane, facts=owner_facts(lane))
+        for lane in status_by_agent
+    }
+
     def select_agent(status_map, burn_map):
         # Share the picker's ordering; neither provider burn percentages nor a
         # separate Claude pool establish comparable code-worker headroom.
@@ -899,8 +910,7 @@ def _recommend_agent(
                 "remaining_pct": facts.plan_remaining_pct,
                 "in_flight": in_flight.get(lane, 0) if in_flight is not None else None,
                 "capacity": {"state": facts.capacity},
-                "avoid": lane in capacity_pick._EXCLUDED_DISPATCH_LANES
-                or capacity_pick.is_avoid_lane(agents.get(lane), lane=lane, facts=facts),
+                "avoid": avoid_by_lane[lane],
             })
         # Preserve the credit-relief fallback: unknown telemetry does not
         # establish a plan-backed alternative to a verified credit lane.
@@ -937,23 +947,24 @@ def _recommend_agent(
     # 1. Determine baseline budget-only recommendation (ignore health)
     budget_only_res = select_agent(status_by_agent, burn_by_agent)
 
-    # 2. Check health of candidate lanes: established healthy, then unknown, never unhealthy
-    candidate_lanes = list(status_by_agent.keys())
-    unhealthy_candidates = [lane for lane in candidate_lanes if health_of(lane) == credit_lane.UNHEALTHY]
+    # 2. Prefer established health only among lanes that can actually be picked.
+    candidate_lanes = [lane for lane in status_by_agent if not avoid_by_lane[lane]]
+    unhealthy_candidates = [lane for lane in status_by_agent if health_of(lane) == credit_lane.UNHEALTHY]
     unknown_candidates = [lane for lane in candidate_lanes if health_of(lane) == credit_lane.UNKNOWN]
 
     def select_among(predicate) -> dict[str, Any]:
         return select_agent(
-            {k: v for k, v in status_by_agent.items() if predicate(k)},
-            {k: v for k, v in burn_by_agent.items() if predicate(k)},
+            {k: v for k, v in status_by_agent.items() if not avoid_by_lane[k] and predicate(k)},
+            {k: v for k, v in burn_by_agent.items() if not avoid_by_lane[k] and predicate(k)},
         )
 
-    if not unhealthy_candidates and not unknown_candidates:
+    if not candidate_lanes:
+        # All rows are AVOID; shared ordering suppresses the pick.
         res = budget_only_res
-    elif len(unhealthy_candidates) == len(candidate_lanes):
-        # All unhealthy rows are AVOID; shared ordering suppresses the pick.
+        if unhealthy_candidates and len(unhealthy_candidates) == len(status_by_agent):
+            warnings.append("all lanes unhealthy — no usable recommendation")
+    elif not unhealthy_candidates and not unknown_candidates:
         res = budget_only_res
-        warnings.append("all lanes unhealthy — no usable recommendation")
     else:
         if any(is_healthy(lane) for lane in candidate_lanes):
             res = select_among(is_healthy)

@@ -88,6 +88,45 @@ def test_monitor_suppresses_avoid_only_fallback(lane):
     assert state_router._recommend_agent(agents, [], records_loaded=1, current_time=NOW)["primary_agent_for_code"] is None
 
 
+@pytest.mark.parametrize("health", [{}, {"healthy": None}])
+def test_monitor_drops_healthy_avoid_lane_before_health_preference(health):
+    agents = {
+        "claude": _lane(10, status="hot", runtime_blocked=True),
+        "codex": _lane(70, health=health),
+    }
+    rows = capacity_pick.build_lane_rows({"agents": agents}, reset_reserve={}, now=NOW)
+    picks = capacity_pick.build_pick_order(rows)
+    assert next(row for row in picks if row["lane"] == "claude")["pick"] == "AVOID"
+    assert next(row["lane"] for row in picks if row["pick"] != "AVOID") == "codex"
+
+    result = state_router._recommend_agent(agents, [], records_loaded=1, current_time=NOW)
+    assert result["primary_agent_for_code"] == "codex"
+    assert any("recommendation is not health-verified" in warning for warning in result["warnings"])
+    assert not any("preferring lanes with established health" in warning for warning in result["warnings"])
+
+
+def test_monitor_does_not_load_picker_write_success_demotions(monkeypatch):
+    """Only picker reports supplied with write-success records apply demotions."""
+    agents = {"codex": _lane(85), "claude": _lane(85)}
+    stats = capacity_pick.write_success_stats(
+        [{"agent": "codex", "mode": "danger", "status": "failed", "finished_at": NOW.isoformat()}] * 3,
+        now=NOW,
+    )
+    assert stats["codex"]["demoted"] is True
+    budget = {"agents": agents}
+    baseline = capacity_pick.build_report(budget, reset_reserve={}, now=NOW)
+    demoted = capacity_pick.build_report(budget, reset_reserve={}, now=NOW, write_success=stats)
+    assert baseline["pick_order"][0]["lane"] == "codex"
+    assert demoted["pick_order"][0]["lane"] == "claude"
+
+    def unexpected_load(*_args, **_kwargs):
+        pytest.fail("Monitor must not read picker write-success records")
+
+    monkeypatch.setattr(capacity_pick, "load_write_success_stats", unexpected_load)
+    result = state_router._recommend_agent(agents, [], records_loaded=1, current_time=NOW)
+    assert result["primary_agent_for_code"] == "codex"
+
+
 def test_monitor_picker_seeded_fuzz(monkeypatch):
     """Vary heat, headroom, load and health with retired/excluded lanes present."""
     # Parse the real, unchanged policy once; keep every routing calculation real.
