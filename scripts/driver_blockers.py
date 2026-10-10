@@ -14,6 +14,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 
 LEDGER_NAME = "CTO-BLOCKERS-LEDGER.json"

@@ -853,6 +853,22 @@ def test_ledger_path_uses_matching_launcher_state_only(ledger, monkeypatch, tmp_
 
 
 @pytest.mark.parametrize("command", [None, "delta", "record", "show"])
+def test_plain_script_cli_help(tmp_path, command):
+    environment = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    result = subprocess.run(
+        [sys.executable, str(REPO / "scripts/driver_blockers.py"), *([command] if command else []), "--help"],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "usage:" in result.stdout
+    assert "--help" in result.stdout
+
+
+@pytest.mark.parametrize("command", [None, "delta", "record", "show"])
 def test_cli_help_contract(ledger, command):
     result = run_cli(ledger, *([command] if command else []), "--help")
     assert result.returncode == 0
