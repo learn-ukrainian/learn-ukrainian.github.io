@@ -116,9 +116,15 @@
     ];
     workers.forEach((worker) => {
       if (!worker) return;
-      parts.push(worker.agent_id, worker.cli, worker.model, worker.task, worker.state);
+      parts.push(worker.agent_id, worker.cli, worker.model, worker.state);
+      if (typeof worker.task === "string") {
+        parts.push(worker.task);
+      } else if (worker.task && typeof worker.task === "object" && !Array.isArray(worker.task)) {
+        parts.push(worker.task.kind, worker.task.number, worker.task.title);
+      }
     });
-    return parts.filter((part) => part != null && part !== "").join(" ").toLowerCase();
+    return parts.filter((part) => (typeof part === "string" && part !== "") ||
+      (typeof part === "number" && Number.isFinite(part))).join(" ").toLowerCase();
   }
 
   function titleOf(epic) {

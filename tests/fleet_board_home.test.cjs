@@ -367,6 +367,26 @@ test("filters, search, and sort stay in the rendered query", () => {
   assert.equal(FB.parseRoute("#/epic/cedar?q=model-b").params.get("q"), "model-b");
 });
 
+test("worker task strings and structured fields are searchable without object coercion", () => {
+  function matches(task, query) {
+    const epic = { ...cedar, workers: [{ ...cedar.workers[0], task }] };
+    return FB.filterEpics([epic], new URLSearchParams({ q: query })).length;
+  }
+  assert.equal(matches("unique review", "unique review"), 1);
+  for (const kind of ["issue", "pr"]) {
+    const task = { kind, number: 2468, title: "Unique structured task" };
+    for (const query of [kind, "2468", "unique structured task"]) {
+      assert.equal(matches(task, query), 1);
+    }
+    assert.equal(matches(task, "[object object]"), 0);
+  }
+  for (const task of [null, undefined, true, 2468, ["hidden"], { title: { nested: "hidden" } }]) {
+    assert.equal(matches(task, "[object object]"), 0);
+    assert.equal(matches(task, "hidden"), 0);
+    assert.equal(matches(task, "worker-cedar"), 1);
+  }
+});
+
 test("unknown harness values stay unknown and a real zero stays zero", () => {
   assert.equal(FB.metricText(null, "%"), "?");
   assert.equal(FB.metricText(undefined, " m"), "?");

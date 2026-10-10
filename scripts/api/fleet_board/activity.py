@@ -38,7 +38,7 @@ _PUBLIC_CAPACITY_RE = re.compile(
     rf"(?i)\d[\d.,]*\s*(?:%|pct{_EDGE_R}|percent{_EDGE_R}|slots?{_EDGE_R}|seats?{_EDGE_R}"
     rf"|tokens?{_EDGE_R}|requests?{_EDGE_R}|(?:rpm|tpm|qps|rps|cps){_EDGE_R}"
     rf"|[kmgt]i?b{_EDGE_R}|bytes?{_EDGE_R})"
-    rf"|{_EDGE_L}(?:capacity|quota|budget|headroom|ceiling|hard[ _-]stop|rate[ _-]limit){_EDGE_R}"
+    rf"|{_EDGE_L}(?:capacity|quota|budget|headroom|ceiling|instances?|users?|hard[ _-]stop|rate[ _-]limit){_EDGE_R}"
     rf"|{_EDGE_L}\d+\s+of\s+\d+{_EDGE_R}"
 )
 # Security mechanisms: auth, keys, network controls, privilege.
@@ -47,13 +47,14 @@ _PUBLIC_SECURITY_RE = re.compile(
     rf"|passphrases?|passwords?|credentials?|keychain|cookies?|sudo|sshd?|authorized[_ ]keys|pubkeys?"
     rf"|private[_ -]keys?|hmac|csrf|cors|firewalls?|iptables|ufw|selinux|apparmor|fail2ban|vpn"
     rf"|wireguard|allow ?lists?|white ?lists?|block ?lists?|deny ?lists?|api[_ -]?keys?"
-    rf"|session[_ -]?tokens?|bearer|root (?:access|login|shell)){_EDGE_R}"
+    rf"|session[_ -]?tokens?|bearer|jwts?|rbac|admins?|secrets?|root (?:access|login|shell)){_EDGE_R}"
 )
-# Machine names: host words, or a letter run glued to a digit (buildbox7, gpu01).
-# Hyphenated agent ids such as driver-kept or worker-2 stay publishable.
+# Match complete numbered labels, including hyphenated ones. Known technical
+# terms and numbered seat labels remain publishable; substrings never match.
 _PUBLIC_HOST_RE = re.compile(
     rf"(?i){_EDGE_L}(?:hostname|host|server|machine|localhost|vps|nas|laptop|workstation|desktop|box|runner)s?{_EDGE_R}"
-    r"|[a-z]{3,}\d"
+    rf"|{_EDGE_L}(?<!-)(?!(?:gpt4|ipv4|utf8|base64|html5|(?:driver|worker)-\d+){_EDGE_R}(?!-))"
+    rf"[a-z]{{2,}}(?:-[a-z]+)*-?\d+{_EDGE_R}(?!-)"
 )
 
 

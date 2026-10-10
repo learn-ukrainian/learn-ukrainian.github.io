@@ -823,6 +823,46 @@ def test_plain_labels_stay_publishable(probe: str) -> None:
     assert activity_mod.text(probe) == probe
 
 
+@pytest.mark.parametrize("term", ["gpt4", "ipv4", "utf8", "base64", "html5"])
+@pytest.mark.parametrize("template", ["{}", "Review {} compatibility", "check_{}_format"])
+@pytest.mark.parametrize("uppercase", [False, True])
+def test_numbered_technical_terms_remain_publishable(term: str, template: str, uppercase: bool) -> None:
+    probe = template.format(term.upper() if uppercase else term)
+    assert activity_mod.text(probe) == probe
+
+
+@pytest.mark.parametrize("label", ["sample01", "sample-01", "xx-sample-01", "sample-node-01"])
+@pytest.mark.parametrize("template", ["{}", "Review {} status", "check_{}_state"])
+@pytest.mark.parametrize("uppercase", [False, True])
+def test_numbered_label_variants_fail_closed(label: str, template: str, uppercase: bool) -> None:
+    probe = template.format(label.upper() if uppercase else label)
+    assert activity_mod.text(probe) == "[redacted]"
+    assert activity_mod.seat_id(probe) is None
+
+
+@pytest.mark.parametrize("term", ["jwt", "jwts", "rbac", "admin", "admins", "secret", "secrets"])
+@pytest.mark.parametrize("template", ["{}", "Review {} status", "check_{}_state", "check-{}-state"])
+@pytest.mark.parametrize("uppercase", [False, True])
+def test_additional_security_terms_fail_closed(term: str, template: str, uppercase: bool) -> None:
+    probe = template.format(term.upper() if uppercase else term)
+    assert activity_mod.text(probe) == "[redacted]"
+    assert activity_mod.seat_id(probe) is None
+
+
+@pytest.mark.parametrize("term", ["instance", "instances", "user", "users"])
+@pytest.mark.parametrize("template", ["{}", "7 {}", "check_{}_state", "check-{}-state"])
+@pytest.mark.parametrize("uppercase", [False, True])
+def test_additional_capacity_terms_fail_closed(term: str, template: str, uppercase: bool) -> None:
+    probe = template.format(term.upper() if uppercase else term)
+    assert activity_mod.text(probe) == "[redacted]"
+    assert activity_mod.seat_id(probe) is None
+
+
+@pytest.mark.parametrize("probe", ["secretary", "administration", "userland", "instanced", "driver-2"])
+def test_added_patterns_respect_word_boundaries(probe: str) -> None:
+    assert activity_mod.text(probe) == probe
+
+
 def test_redacted_summary_drops_the_seat_identity() -> None:
     assert activity_mod.seat_id("buildbox7") is None
     assert activity_mod.seat_id("driver-kept") == "driver-kept"
