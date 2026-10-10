@@ -1,6 +1,6 @@
 name: Nightly failure issue
 description: >-
-  Open or update one owned issue per failing scheduled workflow (or per failing test
+  Open or update one owned issue per failing scheduled workflow (every workflow with a schedule calls this) (or per failing test
   group when JUnit reports are given); close it when the job is green again.
   Requires the caller job to have issues:write and the repo checked out.
 inputs:

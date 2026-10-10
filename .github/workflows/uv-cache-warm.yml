@@ -118,3 +118,34 @@ jobs:
           done
           echo "::error title=main uv cache entry missing::refs/heads/main has no Actions cache with key ${UV_CACHE_KEY}. pull_request and merge_group runs will install from PyPI again (#9095). Check the repository cache total with 'gh cache list' (10 GB limit, LRU eviction) and rerun this workflow (#9101)."
           exit 1
+
+  nightly-issue:
+    name: Nightly failure issue
+    needs: [warm, verify]
+    if: ${{ always() && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/
+            scripts/ci/nightly_issue.py
+            scripts/__init__.py
+            scripts/common/__init__.py
+            scripts/common/github_client.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - uses: ./.github/actions/nightly-issue
+        with:
+          status: ${{ contains(needs.*.result, 'failure') && 'failure' || (contains(needs.*.result, 'cancelled') && 'cancelled' || 'success') }}

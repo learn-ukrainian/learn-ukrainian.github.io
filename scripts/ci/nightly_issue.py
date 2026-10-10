@@ -75,13 +75,30 @@ def failing_test_files(junit_paths: Iterable[Path]) -> set[str]:
     return files
 
 
+_GROUP = re.compile(r"^tests/(?:[a-z0-9_]+/|test_[a-z0-9]+\*)$")
+_RUN_URL = re.compile(r"^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/actions/runs/[0-9]+$")
+_KEY = re.compile(r"^[A-Za-z0-9 ()._-]{1,80}$")
+_LANE = re.compile(r"^[a-z0-9-]{1,40}$")
+
+
+def safe_groups(files: Iterable[str]) -> set[str] | None:
+    """Closed vocabulary only: None when any failing file maps to an unexpected group.
+
+    Public issue text is built only from these validated pieces (the shared publisher's
+    private OPSEC matcher is not available on Actions runners), so free JUnit text
+    can never reach a public title or body.
+    """
+    groups = {group_for(f) for f in files}
+    return groups if all(_GROUP.match(g) for g in groups) else None
+
+
 def title_for(key: str, group: str | None) -> str:
     return f"{TITLE_PREFIX} {key}: {group} failing" if group else f"{TITLE_PREFIX} {key} failing"
 
 
 def open_issues(run: Runner, key: str) -> dict[str, int]:
-    out = run(["issue", "list", "--state", "open", "--label", LABEL, "--limit", "200",
-               "--json", "number,title"])
+    out = run(["issue", "list", "--state", "open", "--label", LABEL, "--limit", "1000",
+               "--search", f'in:title "{TITLE_PREFIX} {key}"', "--json", "number,title"])
     prefix = f"{TITLE_PREFIX} {key}"
     return {i["title"]: i["number"] for i in json.loads(out or "[]")
             if i["title"] == f"{prefix} failing" or i["title"].startswith(f"{prefix}: ")}
@@ -89,18 +106,31 @@ def open_issues(run: Runner, key: str) -> dict[str, int]:
 
 def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
            junit: Sequence[Path] = (), workflow_path: str = "") -> list[str]:
-    """Return a list of actions taken (for logs and tests)."""
+    """Return a list of actions taken (for logs and tests).
+
+    A failed run opens or comments; it never closes anything. Only a successful run
+    (positive recovery evidence) closes this workflow's issues.
+    """
+    for value, pattern in ((key, _KEY), (run_url, _RUN_URL)):
+        if not pattern.match(value):
+            raise ValueError("refusing unexpected key or run URL")
     actions: list[str] = []
     existing = open_issues(run, key)
+    if status == "success":
+        for title, number in existing.items():
+            run(["issue", "close", str(number), "--comment", f"Green again: {run_url}"])
+            actions.append(f"close #{number} {title}")
+        return actions
     wanted: dict[str, str] = {}
-    if status != "success":
-        groups = sorted({group_for(f) for f in failing_test_files(junit)})
-        if groups:
-            for group in groups:
-                wanted[title_for(key, group)] = lane_for(group.rstrip("*"), owners)
-        else:
-            wanted[title_for(key, None)] = lane_for(workflow_path or key, owners)
+    groups = safe_groups(failing_test_files(junit))
+    if groups:
+        for group in sorted(groups):
+            wanted[title_for(key, group)] = lane_for(group.rstrip("*"), owners)
+    else:
+        wanted[title_for(key, None)] = lane_for(workflow_path or key, owners)
     for title, lane in wanted.items():
+        if not _LANE.match(lane):
+            raise ValueError("refusing unexpected lane")
         body = f"Scheduled run failed: {run_url}\n\nOwner: lane `{lane}`. Closes automatically when green."
         if title in existing:
             run(["issue", "comment", str(existing[title]), "--body", body])
@@ -109,11 +139,6 @@ def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
             run(["issue", "create", "--title", title, "--label", LABEL, "--label", f"lane:{lane}",
                  "--body", body])
             actions.append(f"create {title}")
-    if status == "success" or wanted:
-        for title, number in existing.items():
-            if title not in wanted:
-                run(["issue", "close", str(number), "--comment", f"Green again: {run_url}"])
-                actions.append(f"close #{number} {title}")
     return actions
 
 
@@ -126,8 +151,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--junit", nargs="*", default=[], type=Path)
     parser.add_argument("--owners", default=OWNERS_PATH, type=Path)
     args = parser.parse_args(argv)
-    if args.status == "cancelled":
-        print("cancelled run: no issue change")
+    if args.status not in {"success", "failure"}:
+        print(f"{args.status} run: no issue change")
         return 0
     for line in report(gh, key=args.key, status=args.status, run_url=args.run_url,
                        owners=load_owners(args.owners), junit=args.junit,

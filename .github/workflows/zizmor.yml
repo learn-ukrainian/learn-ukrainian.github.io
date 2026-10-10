@@ -86,4 +86,4 @@ jobs:
           python-version-file: '.python-version'
       - uses: ./.github/actions/nightly-issue
         with:
-          status: ${{ contains(needs.*.result, 'failure') && 'failure' || 'success' }}
+          status: ${{ contains(needs.*.result, 'failure') && 'failure' || (contains(needs.*.result, 'cancelled') && 'cancelled' || 'success') }}

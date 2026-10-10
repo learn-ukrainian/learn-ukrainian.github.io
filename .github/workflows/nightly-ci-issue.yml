@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: nightly-issue-ci
+  cancel-in-progress: false
+
 jobs:
   nightly-issue:
     name: Nightly failure issue
@@ -45,7 +49,7 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          latest="$(gh run list -R "${REPO}" -w ci.yml --event schedule -L 1 --json conclusion,url)"
+          latest="$(gh run list -R "${REPO}" -w ci.yml --event schedule --status completed -L 1 --json conclusion,url)"
           conclusion="$(jq -r '.[0].conclusion // ""' <<< "${latest}")"
           run_url="$(jq -r '.[0].url // ""' <<< "${latest}")"
           if [[ -z "${conclusion}" || "${conclusion}" == cancelled ]]; then
