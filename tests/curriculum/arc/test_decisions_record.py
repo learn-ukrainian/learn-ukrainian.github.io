@@ -97,11 +97,12 @@ def test_every_level_carries_its_arc_sections_and_the_shared_ones() -> None:
     assert headings[1].startswith("## 6. Decisions on the six open questions")
     assert headings[2] == "## 8. Revision r4 (#10108)"
     assert headings[3] == "## 9. Revision r3.1: A1 practical recap (#10105)"
-    assert len(headings) == 7
+    assert headings[4] == "## 10. Revision r4.1: Staged phonetic facets (#10108)"
+    assert len(headings) == 8
     for level in ("a2", "b1", "b2"):
         record = yaml.safe_load(_committed(level).read_text(encoding="utf-8"))
         assert record["sources"][1]["heading"].startswith("## 8. Decisions on the five open questions")
-        assert [s["doc"] for s in record["sources"][2:]] == [s["doc"] for s in a1["sources"][4:]]
+        assert [s["doc"] for s in record["sources"][2:]] == [s["doc"] for s in a1["sources"][5:]]
 
 
 # ---- section boundaries on fixture documents ------------------------------------------
@@ -283,6 +284,29 @@ def test_historical_accepted_sections_and_non_a1_semantics_stay_identical():
             assert recap["accepted_evidence"]["line"] == "Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)"
             assert recap["text"].count(recap["accepted_evidence"]["line"]) == 1
             assert "a1_recap_migration_required" in recap["text"]
-            sources = sources[:2] + sources[4:]
+            staged = sources[4]
+            assert staged["heading"] == "## 10. Revision r4.1: Staged phonetic facets (#10108)"
+            assert staged["accepted"] == "2026-10-09"
+            assert staged["accepted_evidence"]["line"] == "Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
+            assert staged["text"].count(staged["accepted_evidence"]["line"]) == 1
+            assert "4bb985d44c685d207dd05b94b074732d803e4051" in staged["text"]
+            sources = sources[:2] + sources[5:]
         actual = [hashlib.sha256(json.dumps({k: v for k, v in entry.items() if k != "doc_sha256"}, ensure_ascii=False, sort_keys=True).encode()).hexdigest() for entry in sources]
         assert actual == expected, level
+
+
+def test_a1_revision_section_10_staged_facets_designated_approval() -> None:
+    a1 = yaml.safe_load(_committed("a1").read_text(encoding="utf-8"))
+    staged = a1["sources"][4]
+    assert staged["heading"] == "## 10. Revision r4.1: Staged phonetic facets (#10108)"
+    assert staged["accepted"] == "2026-10-09"
+    assert staged["accepted_evidence"]["doc"] == "docs/epics/fresh-build-a1-arc.md"
+    assert staged["accepted_evidence"]["line"] == "Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
+    text = staged["text"]
+    assert "a37b5cebc6641d0b4651639bd4470e07d60066ce434a1a4c3a2be4aff210f014" in text
+    assert "741f8082470f872592d63a57cf620b2815c0fad5cda8125740c1bc546a02acaa" in text
+    assert "4bb985d44c685d207dd05b94b074732d803e4051" in text
+    assert "hardness before [е]" in text
+    assert "д–т" in text and "з–с" in text and "г–х" in text
+    assert "б–п" in text
+    assert "ґ–к" in text and "ж–ш" in text and "дж–ч" in text and "дз–ц" in text

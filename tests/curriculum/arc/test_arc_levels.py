@@ -126,8 +126,50 @@ def test_a1_arc_gains_only_position_1_orientation_marker() -> None:
     assert declared == [(1, "a1-orientation")]
     block = text[text.index("positions:\n") :]
     assert block.count("  band_key: a1-orientation\n") == 1
-    original = block.replace("  band_key: a1-orientation\n", "", 1)
-    assert hashlib.sha256(original.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
+    # Verify exact byte preservation of all rows outside the approved staged-facet delta:
+    reverted = (
+        block.replace("  band_key: a1-orientation\n", "", 1)
+        .replace(
+            data["positions"][2]["inventory_text"],
+            "**9 letters**: Д З К Л С У Х ь Г; hard/soft contrast; recycle stress and intonation",
+        )
+        .replace(
+            data["positions"][3]["inventory_text"],
+            "**5 letters**: Б Й Ї Ю Є; apostrophe; recycle stress and intonation",
+        )
+        .replace(
+            data["positions"][4]["inventory_text"],
+            "**7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`)",
+        )
+    )
+    assert hashlib.sha256(reverted.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
+
+
+def test_a1_arc_positions_3_to_5_stage_approved_phonetic_facets() -> None:
+    data = yaml.safe_load(A1_ARC_YAML.read_text(encoding="utf-8"))
+    positions = {p["position"]: p for p in data["positions"]}
+
+    # Position 3: hardness before [е], introduces д–т, з–с, г–х
+    p3_inv = positions[3]["inventory_text"]
+    assert "hardness before [е]" in p3_inv
+    assert "д–т" in p3_inv and "з–с" in p3_inv and "г–х" in p3_inv
+    assert "introduce" in p3_inv
+    assert positions[3]["letters"] == list("ДЗКЛСУХьГ")
+
+    # Position 4: continues with б–п
+    p4_inv = positions[4]["inventory_text"]
+    assert "б–п" in p4_inv
+    assert "continue" in p4_inv
+    assert "apostrophe" in p4_inv
+    assert positions[4]["letters"] == list("БЙЇЮЄ")
+
+    # Position 5: completes ґ–к, ж–ш, дж–ч, дз–ц alongside existing дж/дз duty
+    p5_inv = positions[5]["inventory_text"]
+    assert "ґ–к" in p5_inv and "ж–ш" in p5_inv and "дж–ч" in p5_inv and "дз–ц" in p5_inv
+    assert "complete" in p5_inv
+    assert "дж and дз" in p5_inv
+    assert positions[5]["letters"] == list("ҐЖЧШЩЦФ")
+
 
 
 def test_a1_check_green_with_empty_manifest_list() -> None:

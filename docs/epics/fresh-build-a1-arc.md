@@ -121,9 +121,9 @@ pedagogy grounds the progression only and is never copied as learner text.
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `introduction-to-ukrainian` | A1.1 | Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes | Overview only; no acquired letters | — | 2 |
 | 2 | `sounds-letters-and-hello` | A1.1 | Greet and take a first spoken turn; connect useful words with letters and supported writing | **12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech | Li, S, W (supported copying) | 5 |
-| 3 | `who-am-i` | A1.1 | Introduce yourself and ask identity; common professions and origin phrases | **9 letters**: Д З К Л С У Х ь Г; hard/soft contrast; recycle stress and intonation | Li, S, W (`:485`) | 4 |
-| 4 | `my-family` | A1.1 | Introduce people in a chosen family photo or equivalent using supported possessive phrases | **5 letters**: Б Й Ї Ю Є; apostrophe; recycle stress and intonation | Li, S, W (captions) | 4 |
-| 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W | 5 |
+| 3 | `who-am-i` | A1.1 | Introduce yourself and ask identity; common professions and origin phrases | **9 letters**: Д З К Л С У Х ь Г; hard/soft contrast and hardness before [е]; introduce voiced/voiceless base-pair families д–т, з–с, г–х; recycle stress and intonation | Li, S, W (`:485`) | 4 |
+| 4 | `my-family` | A1.1 | Introduce people in a chosen family photo or equivalent using supported possessive phrases | **5 letters**: Б Й Ї Ю Є; apostrophe; continue voiced/voiceless base-pair family б–п; recycle stress and intonation | Li, S, W (captions) | 4 |
+| 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W | 5 |
 
 All 33 letters are introduced exactly once at positions 2–5. Later positions recycle
 them. Printed words follow their constituent letter introductions inside each module;
@@ -310,3 +310,38 @@ qualified independent review judges usefulness, Ukrainian processing and decisio
 Old A1 plans fail `a1_recap_migration_required`; #10108 owns disposition, without rewriting here.
 
 The tracked position-1 declaration of `a1-orientation` is supplied by the #10108 revision in §8.
+## 10. Revision r4.1: Staged phonetic facets (#10108)
+
+Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)
+
+Opus 5.5 in native Claude Code authored the staged phonetic-facet adjustment in report
+`adjudge10108-two-facets-r7.result` (SHA-256
+`a37b5cebc6641d0b4651639bd4470e07d60066ce434a1a4c3a2be4aff210f014`).
+Sol 6.1 in native Codex designated-approved it 2/2 in report
+`adjudge10108-staged-facets-r8.result` (SHA-256
+`741f8082470f872592d63a57cf620b2815c0fad5cda8125740c1bc546a02acaa`)
+on 2026-10-09, bound to commit `4bb985d44c685d207dd05b94b074732d803e4051`.
+This records current designated revision approval under the standing execution order,
+not a direct operator review of this revision and not formal implementation review.
+The original acceptance criteria remain unchanged.
+
+This revision explicitly assigns the two approved phonetic facets across positions 3–5:
+position 3 explicitly owns hardness before [е] and introduces voiced/voiceless
+base-pair families д–т, з–с, г–х; position 4 continues with б–п; position 5 completes
+ґ–к, ж–ш, дж–ч, дз–ц alongside its existing дж/дз duty. These are base-pair families,
+not an exhaustive inventory of individual sounds. Printed examples follow introduced letters
+and within-module ordering (неділя, тема, колега and діло–тіло printable at 3;
+голодний–холодний contains й available at 4 so never printed at 3). These are
+source-check candidates, not newly admitted learner vocabulary.
+
+Official Standard printed p. 16/§4.1.4 supplies coverage; approved arc supplies
+sequence; Sources textbook chunks support phonetics/pedagogy; VESUM morphology only;
+PULS vocabulary classification only. Approval cites Большакова
+(`2-klas-ukrmova-bolshakova-2019-1_s0062`) and Авраменко
+(`5-klas-ukrmova-avramenko-2022_s0078`) for pairs and soft counterparts; Захарійчук
+(`1-klas-bukvar-zaharijchuk-2025-1_s0014`, `1-klas-bukvar-zaharijchuk-2025-2_s0075`)
+for early hard/soft and contextual voicing rehearsal; Голуб
+(`5-klas-ukrmova-golub-2022_s0253`) is a contents witness, not adult-A1 sizing proof.
+Historical accepted sections 2, 6, 8 and 9 remain verbatim; the ten jobs, 33 letters,
+55 positions, 162 estimated lessons, retirement, recap, and vocabulary-selected
+immersion remain intact.

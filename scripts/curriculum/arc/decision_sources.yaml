@@ -30,6 +30,12 @@ levels:
       accepted_evidence:
         doc: docs/epics/fresh-build-a1-arc.md
         line: "Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)"
+    - doc: docs/epics/fresh-build-a1-arc.md
+      heading: "## 10. Revision r4.1: Staged phonetic facets (#10108)"
+      accepted: "2026-10-09"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-a1-arc.md
+        line: "Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
   a2:
     - doc: docs/epics/fresh-build-a2-arc.md
       heading: "## 2. Decisions"
