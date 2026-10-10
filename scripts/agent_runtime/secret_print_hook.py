@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import subprocess
 import sys
 from pathlib import Path
 
@@ -51,26 +50,25 @@ def run_guard(command: str, *, timeout: float = DEFAULT_TIMEOUT) -> tuple[bool, 
     if not math.isfinite(timeout) or not 0 < timeout <= DEFAULT_TIMEOUT:
         return False, BLOCK_PREFIX + "invalid guard deadline.\n"
     try:
-        # This resolver uses only stdlib and selects the shared interpreter in
-        # linked worktrees. Direct-file invocation needs the repository root.
+        # Direct-file invocation needs the repository root for the shared
+        # guard runner and linked-worktree interpreter resolver.
         if str(ROOT) not in sys.path:
             sys.path.insert(0, str(ROOT))
+        from scripts.agent_runtime.codex_hook_policy import run_guard as run_guard_process
         from scripts.common.repo_root import project_interpreter
 
         if not GUARD_PATH.is_file():
             return False, BLOCK_PREFIX + "shared guard unavailable.\n"
-        result = subprocess.run(
-            [str(project_interpreter(ROOT)), str(GUARD_PATH)],
-            input=json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}),
-            text=True,
-            capture_output=True,
-            timeout=timeout,
-            check=False,
+        result = run_guard_process(
+            project_interpreter(ROOT),
+            GUARD_PATH,
+            json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}),
+            timeout,
         )
-    except subprocess.TimeoutExpired:
-        return False, BLOCK_PREFIX + "shared guard deadline exceeded.\n"
     except (OSError, ValueError, UnicodeError):
         return False, BLOCK_PREFIX + "shared guard could not run.\n"
+    if result.timed_out:
+        return False, BLOCK_PREFIX + "shared guard deadline exceeded.\n"
     if result.returncode == 0 and not result.stdout and not result.stderr:
         return True, ""
     if result.returncode == 2 and not result.stdout and result.stderr.startswith(BLOCK_PREFIX):

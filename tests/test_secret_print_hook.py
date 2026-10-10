@@ -69,6 +69,7 @@ def test_native_timeout(harness, monkeypatch, capsys):
 @pytest.mark.parametrize("harness", HARNESS_NAMES)
 @pytest.mark.parametrize("failure", ["missing_guard", "launch", "crash", "stdout", "stderr"])
 def test_native_guard_failures(harness, failure, monkeypatch, capsys, tmp_path):
+    from scripts.agent_runtime import codex_hook_policy
     from scripts.agent_runtime import secret_print_hook as hook
 
     if failure == "missing_guard":
@@ -85,11 +86,43 @@ def test_native_guard_failures(harness, failure, monkeypatch, capsys, tmp_path):
                 SENTINEL if failure == "stderr" else "",
             )
 
-        monkeypatch.setattr(hook.subprocess, "run", broken_run)
+        monkeypatch.setattr(codex_hook_policy.subprocess, "run", broken_run)
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event(harness, f"env; echo {SENTINEL}"))))
     code = hook.main(["--harness", harness])
     captured = capsys.readouterr()
     assert_decision(harness, code, captured.out, captured.err, False)
+
+
+@pytest.mark.parametrize("timed_out", [False, True])
+def test_shared_runner_pins_guard_and_sanitizes_timeout(timed_out, monkeypatch):
+    from scripts.agent_runtime import codex_hook_policy
+    from scripts.agent_runtime import secret_print_hook as hook
+
+    calls = []
+    command = f'echo "{SENTINEL}"'
+
+    def guard_process(argv, **kwargs):
+        calls.append((argv, kwargs))
+        if timed_out:
+            raise subprocess.TimeoutExpired(argv, kwargs["timeout"], output=SENTINEL, stderr=SENTINEL)
+        return subprocess.CompletedProcess(argv, 0, "", "")
+
+    monkeypatch.setattr(codex_hook_policy.subprocess, "run", guard_process)
+    assert hook.run_guard(command, timeout=1.25) == (
+        (False, "BLOCKED by guard-secret-print (#M-5): shared guard deadline exceeded.\n") if timed_out else (True, "")
+    )
+    assert calls == [
+        (
+            [sys.executable, str(ROOT / "agents_extensions/shared/hooks/guard-secret-print.py")],
+            {
+                "input": json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}),
+                "text": True,
+                "capture_output": True,
+                "check": False,
+                "timeout": 1.25,
+            },
+        )
+    ]
 
 
 @pytest.mark.parametrize(
