@@ -711,9 +711,10 @@ def seat_delegate_tasks(
 ) -> dict[str, Any]:
     """Return running, spawning, and derived-dead task summaries.
 
-    The active listing omits derived zombie rows. Seat liveness needs those
-    dead rows, so this asks the same collector to include them. Returned rows
-    keep the legacy summary shape and never include repository attribution.
+    The active listing omits derived zombie rows; this includes them for
+    diagnostics. Fleet board uses this collector for source health only, since
+    task rows have no approved seat identity binding. Returned rows keep the
+    legacy summary shape and never include repository attribution.
     """
     statuses = set(ACTIVE_TASK_STATUSES)
     statuses.add("zombie")

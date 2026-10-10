@@ -1,8 +1,8 @@
-"""Seat state from snapshots plus delegate and occupancy records.
+"""Seat state from snapshots and occupancy records.
 
-Liveness is the process flag on the roster or harness snapshot, or the
-alive flag already computed by the delegate collector. Screen text is
-never an input. A missing number stays None.
+Liveness is the roster or fresh harness process flag. Delegate collection
+reports source health only: task rows have no approved seat identity binding.
+Screen text is never an input. A missing number stays None.
 """
 
 from __future__ import annotations
@@ -10,7 +10,6 @@ from __future__ import annotations
 import math
 import os
 from collections.abc import Mapping
-from dataclasses import dataclass
 from typing import Any
 
 from scripts.api.delegate_router import seat_delegate_tasks
@@ -22,68 +21,16 @@ from .sources import SourceReport, report
 
 STATES = frozenset({"working", "idle", "stuck", "dead", "paused", "off"})
 STUCK_IDLE_MIN = 30.0
-WORKING_DELEGATE_STATUSES = frozenset({"running", "spawning"})
 ACTIVITY_TOKENS = frozenset({"working", "idle"})
 
 
-@dataclass(frozen=True)
-class DelegateFact:
-    alive: bool | None
-    status: str | None
-
-
-def _delegate_dead(fact: DelegateFact | None) -> bool:
-    if fact is None:
-        return False
-    if fact.status == "zombie":
-        return True
-    return fact.alive is False and fact.status == "running"
-
-
-def _delegate_working(fact: DelegateFact | None) -> bool:
-    if fact is None or _delegate_dead(fact):
-        return False
-    return fact.alive is True and fact.status in WORKING_DELEGATE_STATUSES
-
-
-def _merge_delegate(current: DelegateFact | None, incoming: DelegateFact) -> DelegateFact:
-    if current is not None and _delegate_dead(current):
-        return current
-    if _delegate_dead(incoming):
-        return incoming
-    if current is not None and _delegate_working(current):
-        return current
-    if _delegate_working(incoming):
-        return incoming
-    return current or incoming
-
-
-def load_delegate_facts() -> tuple[SourceReport, dict[str, DelegateFact]]:
-    """Delegate rows keyed by agent id, including derived-dead seats.
-
-    The active listing drops those dead rows. A failure is ``unavailable``.
-    """
+def load_delegate_health() -> SourceReport:
+    """Report collector health without interpreting unbound task identities."""
     try:
         payload = seat_delegate_tasks()
     except Exception:
-        return report("delegate", "unavailable"), {}
-    if not isinstance(payload, dict):
-        return report("delegate", "unavailable"), {}
-    tasks = payload.get("tasks")
-    if not isinstance(tasks, list):
-        return report("delegate", "ok"), {}
-    facts: dict[str, DelegateFact] = {}
-    for task in tasks:
-        if not isinstance(task, dict):
-            continue
-        agent = task.get("agent")
-        if not isinstance(agent, str) or not agent.strip():
-            continue
-        alive = task.get("alive") if isinstance(task.get("alive"), bool) else None
-        status = task.get("status") if isinstance(task.get("status"), str) else None
-        agent_id = agent.strip()
-        facts[agent_id] = _merge_delegate(facts.get(agent_id), DelegateFact(alive, status))
-    return report("delegate", "ok"), facts
+        return report("delegate", "unavailable")
+    return report("delegate", "ok" if isinstance(payload, dict) else "unavailable")
 
 
 def _occupant_activity(status: object) -> str | None:
@@ -195,7 +142,6 @@ def derive_state(
     pid_alive: bool | None,
     idle_min: float | None,
     activity: str | None,
-    delegate: DelegateFact | None,
     occupancy: str | None,
     seat_present: bool,
     require_liveness: bool,
@@ -207,15 +153,13 @@ def derive_state(
         return "off", reason
     if norm == "paused":
         return "paused", "paused by roster"
-    if pid_alive is False or _delegate_dead(delegate):
+    if pid_alive is False:
         return "dead", "process is not alive"
     if not seat_present and norm == "running":
         return "stuck", "no driver while intended running"
     long_idle = idle_min is not None and idle_min >= STUCK_IDLE_MIN
     if norm == "running" and long_idle:
         return "stuck", "idle while intended running"
-    if _delegate_working(delegate):
-        return "working", "active task"
     if activity == "working" or occupancy == "working":
         return "working", "recorded working"
     if require_liveness and norm == "running" and pid_alive is None:

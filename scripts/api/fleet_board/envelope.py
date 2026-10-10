@@ -104,7 +104,7 @@ _WORKER: dict[str, Any] = {
     },
 }
 
-_EPIC: dict[str, Any] = {
+_NOW_EPIC: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
     "required": [
@@ -200,7 +200,7 @@ _NOW_DATA: dict[str, Any] = {
     "required": ["attention", "epics"],
     "properties": {
         "attention": {"type": "array", "items": _ATTENTION},
-        "epics": {"type": "array", "items": _EPIC},
+        "epics": {"type": "array", "items": _NOW_EPIC},
     },
 }
 
@@ -208,7 +208,7 @@ _EPICS_DATA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
     "required": ["epics"],
-    "properties": {"epics": {"type": "array", "items": _EPIC}},
+    "properties": {"epics": {"type": "array", "items": _NOW_EPIC}},
 }
 
 _AGENTS_DATA: dict[str, Any] = {
@@ -592,7 +592,7 @@ def endpoint_schema(schema_id: str) -> dict[str, Any]:
     if schema_id == "fleet.v1.epics":
         return _envelope_schema(schema_id, _EPICS_DATA)
     if schema_id == "fleet.v1.epic":
-        return _envelope_schema(schema_id, {"anyOf": [_EPIC, {"type": "null"}]})
+        return _envelope_schema(schema_id, {"anyOf": [_NOW_EPIC, {"type": "null"}]})
     if schema_id == "fleet.v1.agents":
         return _envelope_schema(schema_id, _AGENTS_DATA)
     if schema_id == "fleet.v1.agent":

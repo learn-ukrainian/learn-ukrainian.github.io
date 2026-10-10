@@ -123,5 +123,5 @@ def load_snapshot(
         return report(source_name, "unavailable"), None
     status, age_s = freshness(document, clock)
     if status == "unavailable":
-        return report(source_name, "unavailable"), document or None
+        return report(source_name, "unavailable"), None
     return report(source_name, status, age_s=age_s), document

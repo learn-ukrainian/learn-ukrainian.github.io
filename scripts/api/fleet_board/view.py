@@ -7,10 +7,9 @@ from dataclasses import dataclass
 from typing import Any
 
 from .activity import (
-    DelegateFact,
     derive_state,
     harness_row,
-    load_delegate_facts,
+    load_delegate_health,
     load_occupancy_activity,
     pr_stale_minutes,
     resolve_activity,
@@ -90,7 +89,6 @@ def _worker_task(value: object) -> str | None:
 def _seat_signals(
     roster: Mapping[str, Any],
     harness: Mapping[str, Any],
-    delegate: DelegateFact | None,
     occupancy: str | None,
     *,
     intended: str | None,
@@ -103,7 +101,6 @@ def _seat_signals(
         pid_alive=pid_alive,
         idle_min=resolve_idle_min(roster, harness),
         activity=resolve_activity(roster, harness),
-        delegate=delegate,
         occupancy=occupancy,
         seat_present=seat_present,
         require_liveness=require_liveness,
@@ -114,7 +111,6 @@ def _seat_signals(
 def _driver(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    delegates: Mapping[str, DelegateFact],
     occupancy: Mapping[str, str],
     *,
     intended: str | None,
@@ -127,7 +123,6 @@ def _driver(
             pid_alive=None,
             idle_min=None,
             activity=None,
-            delegate=None,
             occupancy=None,
             seat_present=False,
             require_liveness=True,
@@ -137,7 +132,6 @@ def _driver(
     state, reason, pid_alive = _seat_signals(
         roster,
         harness,
-        delegates.get(agent_id),
         occupancy.get(agent_id),
         intended=intended,
         seat_present=True,
@@ -156,7 +150,6 @@ def _driver(
 def _workers(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    delegates: Mapping[str, DelegateFact],
     occupancy: Mapping[str, str],
     *,
     intended: str | None,
@@ -174,7 +167,6 @@ def _workers(
             state, reason, _pid = _seat_signals(
                 roster,
                 harness,
-                delegates.get(agent_id),
                 occupancy.get(agent_id),
                 intended=intended,
                 seat_present=True,
@@ -199,7 +191,6 @@ def _workers(
 def _epic(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    delegates: Mapping[str, DelegateFact],
     occupancy: Mapping[str, str],
 ) -> dict[str, Any] | None:
     roster = mapping(raw)
@@ -210,7 +201,6 @@ def _epic(
     driver, state, reason = _driver(
         roster.get("driver"),
         harness_doc,
-        delegates,
         occupancy,
         intended=intended,
     )
@@ -233,7 +223,7 @@ def _epic(
         "since": as_timestamp(roster.get("since")),
         "driver": driver,
         "task": _task(roster.get("task")),
-        "workers": _workers(roster.get("workers"), harness_doc, delegates, occupancy, intended=intended),
+        "workers": _workers(roster.get("workers"), harness_doc, occupancy, intended=intended),
     }
 
 
@@ -303,7 +293,6 @@ def _agents_for_epic(epic: Mapping[str, Any]) -> list[dict[str, Any]]:
 def _bots(
     raw: object,
     harness_doc: dict[str, Any] | None,
-    delegates: Mapping[str, DelegateFact],
     occupancy: Mapping[str, str],
 ) -> list[dict[str, Any]]:
     if not isinstance(raw, list):
@@ -319,8 +308,7 @@ def _bots(
         state, reason, _pid = _seat_signals(
             roster,
             harness,
-            delegates.get(agent_id),
-            occupancy.get(agent_id),
+                occupancy.get(agent_id),
             intended=intended,
             seat_present=True,
             require_liveness=False,
@@ -532,21 +520,24 @@ def load_board(environ: Mapping[str, str] | None = None) -> Board:
         now=clock,
     )
     try:
-        delegate_report, delegates = load_delegate_facts()
+        delegate_report = load_delegate_health()
     except Exception:
-        delegate_report, delegates = report("delegate", "unavailable"), {}
+        delegate_report = report("delegate", "unavailable")
     try:
         occupancy_report, occupancy = load_occupancy_activity()
     except Exception:
         occupancy_report, occupancy = report("occupancy", "unavailable"), {}
 
+    # Retain stale snapshot payloads, but only fresh harness fields override seats.
+    if harness_report.status != "ok":
+        harness = None
     document = roster or {}
     epic_rows = document.get("epics")
     epics = []
     if isinstance(epic_rows, list):
         for item in epic_rows:
             try:
-                built = _epic(item, harness, delegates, occupancy)
+                built = _epic(item, harness, occupancy)
             except (TypeError, ValueError, OverflowError, ArithmeticError):
                 continue
             if built is not None:
@@ -560,7 +551,7 @@ def load_board(environ: Mapping[str, str] | None = None) -> Board:
                 continue
             seen.add(agent["agent_id"])
             agents.append(agent)
-    for agent in _bots(document.get("bots"), harness, delegates, occupancy):
+    for agent in _bots(document.get("bots"), harness, occupancy):
         if agent["agent_id"] in seen:
             continue
         seen.add(agent["agent_id"])

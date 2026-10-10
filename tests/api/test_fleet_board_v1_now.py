@@ -14,7 +14,6 @@ from scripts.api.fleet_board import activity as activity_mod
 from scripts.api.fleet_board import router as router_mod
 from scripts.api.fleet_board import sources as sources_mod
 from scripts.api.fleet_board import view as view_mod
-from scripts.api.fleet_board.activity import DelegateFact
 from scripts.api.fleet_board.sources import report
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
@@ -29,7 +28,7 @@ def _isolated(monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv(name, raising=False)
     monkeypatch.delenv("FLEET_PR_STALE_MIN", raising=False)
     monkeypatch.setattr(view_mod, "utc_now", lambda: FROZEN)
-    monkeypatch.setattr(view_mod, "load_delegate_facts", lambda: (report("delegate", "ok"), {}))
+    monkeypatch.setattr(view_mod, "load_delegate_health", lambda: report("delegate", "ok"))
     monkeypatch.setattr(view_mod, "load_occupancy_activity", lambda: (report("occupancy", "ok"), {}))
 
 
@@ -65,6 +64,7 @@ def _roster() -> dict:
                         "cli": "codex",
                         "model": "model-b",
                         "task": "alpha work",
+                        "activity": "working",
                         "pid_alive": True,
                         "since": "2026-10-09T11:10:00Z",
                     }
@@ -275,20 +275,8 @@ def _install(monkeypatch: pytest.MonkeyPatch, tmp_path, roster: dict, harness: d
         monkeypatch.setenv("FLEET_HARNESS_SNAPSHOT", str(harness_path))
 
 
-def _delegate(monkeypatch: pytest.MonkeyPatch, facts: dict[str, DelegateFact]) -> None:
-    monkeypatch.setattr(view_mod, "load_delegate_facts", lambda: (report("delegate", "ok"), facts))
-
-
 def test_fixture_snapshot_states_and_attention_order(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     _install(monkeypatch, tmp_path, _roster(), _harness())
-    _delegate(
-        monkeypatch,
-        {
-            "driver-delta": DelegateFact(True, "running"),
-            "worker-alpha": DelegateFact(True, "running"),
-        },
-    )
-
     response = client.get("/api/fleet/v1/now")
 
     assert response.status_code == 200
@@ -311,7 +299,7 @@ def test_fixture_snapshot_states_and_attention_order(monkeypatch: pytest.MonkeyP
     assert by_epic["alpha"]["layer"] == 0
     assert by_epic["alpha"]["driver"]["pid_alive"] is True
     assert by_epic["alpha"]["workers"][0]["state"] == "working"
-    assert by_epic["alpha"]["workers"][0]["state_reason"] == "active task"
+    assert by_epic["alpha"]["workers"][0]["state_reason"] == "recorded working"
     assert by_epic["beta"]["state"] == "idle"
     assert by_epic["gamma"]["state"] == "stuck"
     assert by_epic["gamma"]["state_reason"] == "idle while intended running"
@@ -466,7 +454,7 @@ def test_delegate_failure_is_unavailable_without_erasing_snapshot(monkeypatch: p
 
     _install(monkeypatch, tmp_path, _roster(), _harness())
     monkeypatch.setattr(activity_mod, "seat_delegate_tasks", explode)
-    monkeypatch.setattr(view_mod, "load_delegate_facts", activity_mod.load_delegate_facts)
+    monkeypatch.setattr(view_mod, "load_delegate_health", activity_mod.load_delegate_health)
 
     response = client.get("/api/fleet/v1/now")
 
@@ -513,7 +501,7 @@ def test_epic_lookup(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     assert missing.json()["data"] is None
 
 
-def test_delegate_zombie_is_dead_even_when_snapshot_pid_is_alive(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_unbound_delegate_zombie_cannot_override_snapshot_liveness(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     roster = {
         "generated_at": FRESH,
         "interval_s": 30,
@@ -533,12 +521,15 @@ def test_delegate_zombie_is_dead_even_when_snapshot_pid_is_alive(monkeypatch: py
         ],
     }
     _install(monkeypatch, tmp_path, roster, None)
-    _delegate(monkeypatch, {"driver-alpha": DelegateFact(False, "zombie")})
+    monkeypatch.setattr(view_mod, "load_delegate_health", activity_mod.load_delegate_health)
+    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", lambda: {"tasks": [
+        {"agent": "driver-alpha", "alive": False, "status": "zombie"}
+    ]})
 
     response = client.get("/api/fleet/v1/epics/alpha")
 
     assert response.status_code == 200
-    assert response.json()["data"]["state"] == "dead"
+    assert response.json()["data"]["state"] == "working"
     assert SCREEN not in response.text
     harness = next(item for item in response.json()["sources"] if item["name"] == "harness_snapshot")
     assert harness["status"] == "not_configured"
@@ -571,12 +562,12 @@ def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest
     monkeypatch.setattr(activity_mod, "seat_delegate_tasks", delegate_loader)
     monkeypatch.setattr(activity_mod, "occupancy_payload", occupancy_loader)
 
-    delegate_report, facts = activity_mod.load_delegate_facts()
+    delegate_report = activity_mod.load_delegate_health()
     occupancy_report, activity = activity_mod.load_occupancy_activity()
 
     assert delegate_report.status == "ok"
-    assert facts["driver-alpha"] == DelegateFact(True, "running")
-    assert "secret-task" not in repr(facts)
+    assert delegate_report.as_dict() == {"name": "delegate", "status": "ok", "age_s": None, "error": None}
+    assert "secret-task" not in repr(delegate_report)
     assert occupancy_report.status == "ok"
     assert activity == {"driver-beta": "idle"}
     assert "row-1" not in repr(activity)
@@ -773,10 +764,10 @@ def test_stale_occupancy_does_not_override_idle(monkeypatch: pytest.MonkeyPatch,
     assert "row-1" not in response.text
 
 
-def test_derived_dead_delegate_row_marks_the_seat_dead(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+def test_derived_dead_delegate_row_is_health_only(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     import scripts.api.delegate_router as delegate_router
 
-    monkeypatch.setattr(view_mod, "load_delegate_facts", activity_mod.load_delegate_facts)
+    monkeypatch.setattr(view_mod, "load_delegate_health", activity_mod.load_delegate_health)
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
     (tasks_dir / "seat-row.json").write_text(
@@ -816,17 +807,171 @@ def test_derived_dead_delegate_row_marks_the_seat_dead(monkeypatch: pytest.Monke
     _install(monkeypatch, tmp_path, roster, None)
     try:
         assert delegate_router.active_delegate_tasks()["total"] == 0
-        _report, facts = activity_mod.load_delegate_facts()
-        assert facts["driver-alpha"] == DelegateFact(False, "zombie")
+        assert delegate_router.seat_delegate_tasks()["tasks"][0]["status"] == "zombie"
+        assert activity_mod.load_delegate_health().status == "ok"
         response = client.get("/api/fleet/v1/now")
         assert response.status_code == 200
         epic = response.json()["data"]["epics"][0]
-        assert epic["state"] == "dead"
-        assert epic["state_reason"] == "process is not alive"
-        assert response.json()["data"]["attention"][0]["kind"] == "dead_driver"
+        assert epic["state"] == "working"
+        assert epic["state_reason"] == "recorded working"
+        assert response.json()["data"]["attention"] == []
+        assert next(row for row in response.json()["sources"] if row["name"] == "delegate")["status"] == "ok"
         assert "seat-row" not in response.text
         assert SCREEN not in response.text
         assert str(tasks_dir) not in response.text
     finally:
         delegate_router._TASK_STATE_CACHE.clear()
         delegate_router._LAST_TASKS_DIR_STR = ""
+
+
+@pytest.mark.parametrize("stamp,status", [("2026-10-09T06:00:00Z", "stale"), (None, "unavailable")])
+@pytest.mark.parametrize("pid,idle,activity,expected", [
+    (False, 6, "idle", "dead"),
+    (True, 45, "idle", "stuck"),
+    (True, 6, "idle", "idle"),
+])
+def test_nonfresh_harness_cannot_override_fresh_roster(
+    monkeypatch: pytest.MonkeyPatch, tmp_path, stamp, status, pid, idle, activity, expected
+) -> None:
+    roster = _roster()
+    roster["epics"] = [roster["epics"][0]]
+    roster["epics"][0]["driver"].update(pid_alive=pid, idle_min=idle, activity=activity)
+    harness = {"interval_s": 30, "agents": {
+        "driver-alpha": {"pid_alive": True, "idle_min": 0, "activity": "working", "pane_text": SCREEN}
+    }}
+    if stamp is not None:
+        harness["generated_at"] = stamp
+    _install(monkeypatch, tmp_path, roster, harness)
+    response = client.get("/api/fleet/v1/now")
+    assert response.status_code == 200
+    body = response.json()
+    epic = body["data"]["epics"][0]
+    assert epic["state"] == expected
+    assert epic["driver"]["pid_alive"] is pid
+    assert next(row for row in body["sources"] if row["name"] == "harness_snapshot")["status"] == status
+    if expected == "dead":
+        assert body["data"]["attention"][0]["kind"] == "dead_driver"
+    elif expected == "stuck":
+        assert body["data"]["attention"][0]["kind"] == "stuck_driver"
+    assert SCREEN not in response.text
+
+
+@pytest.mark.parametrize("fields,expected", [
+    ({"pid_alive": True, "idle_min": 1, "activity": "working"}, "working"),
+    ({"pid_alive": False, "idle_min": 1, "activity": "working"}, "dead"),
+    ({"pid_alive": True, "idle_min": 45, "activity": "idle"}, "stuck"),
+])
+def test_fresh_harness_still_overrides_roster(monkeypatch: pytest.MonkeyPatch, tmp_path, fields, expected) -> None:
+    roster = _roster()
+    roster["epics"] = [roster["epics"][0]]
+    roster["epics"][0]["driver"].update(pid_alive=False, idle_min=55, activity="idle")
+    _install(monkeypatch, tmp_path, roster, {
+        "generated_at": FRESH, "interval_s": 30, "agents": {"driver-alpha": fields}
+    })
+    body = client.get("/api/fleet/v1/now").json()
+    assert body["data"]["epics"][0]["state"] == expected
+    assert body["data"]["epics"][0]["driver"]["pid_alive"] is fields["pid_alive"]
+    assert next(row for row in body["sources"] if row["name"] == "harness_snapshot")["status"] == "ok"
+
+
+@pytest.mark.parametrize("invalid", [
+    {"generated_at": None}, {"generated_at": "invalid"}, {"interval_s": None},
+    {"interval_s": 0}, {"generated_at": "2026-10-09T12:00:01Z"},
+])
+def test_unknown_roster_freshness_has_no_usable_payload(monkeypatch: pytest.MonkeyPatch, tmp_path, invalid) -> None:
+    roster = _roster()
+    roster.update(invalid)
+    _install(monkeypatch, tmp_path, roster, _harness())
+    for path, empty in [("now", {"epics": [], "attention": []}), ("epics", {"epics": []}),
+                        ("agents", {"agents": []})]:
+        response = client.get(f"/api/fleet/v1/{path}")
+        assert response.status_code == 200
+        body = response.json()
+        assert body["data"] == empty
+        assert next(row for row in body["sources"] if row["name"] == "roster_snapshot") == {
+            "name": "roster_snapshot", "status": "unavailable", "age_s": None, "error": "unavailable"
+        }
+    for path in ("epics/alpha", "agents/driver-alpha"):
+        response = client.get(f"/api/fleet/v1/{path}")
+        assert response.status_code == 404
+        assert response.json()["data"] is None
+
+
+@pytest.mark.parametrize("role", ["driver", "worker", "bot"])
+@pytest.mark.parametrize("pid", [True, False, None])
+@pytest.mark.parametrize("seat_id,task", [
+    ("codex", {"agent": "codex", "task_id": "unrelated-zombie", "alive": False, "status": "zombie"}),
+    ("claude", {"agent": "claude", "task_id": "unrelated-live", "alive": True, "status": "running"}),
+    ("same-task", {"agent": "codex", "task_id": "same-task", "alive": True, "status": "running"}),
+    ("codex", {"agent": "codex", "task_id": "unknown-pid", "alive": None, "status": "running"}),
+])
+def test_delegate_identity_coincidences_do_not_change_any_role(
+    monkeypatch: pytest.MonkeyPatch, tmp_path, role, pid, seat_id, task
+) -> None:
+    monkeypatch.setattr(view_mod, "load_delegate_health", activity_mod.load_delegate_health)
+    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", lambda: {"tasks": [task]})
+    seat = {"agent_id": seat_id, "pid_alive": pid, "activity": "idle"}
+    epic = {"epic": "alpha", "intended": "running", "driver": seat, "workers": []}
+    roster = {"generated_at": FRESH, "interval_s": 30, "epics": [epic], "bots": []}
+    if role == "worker":
+        epic["driver"] = {"agent_id": "driver-alpha", "pid_alive": False}
+        epic["workers"] = [seat]
+    elif role == "bot":
+        roster["epics"] = []
+        roster["bots"] = [seat]
+    _install(monkeypatch, tmp_path, roster, None)
+    body = client.get("/api/fleet/v1/agents").json()
+    agent = next(row for row in body["data"]["agents"] if row["agent_id"] == seat_id)
+    assert agent["role"] == role
+    expected = "dead" if pid is False else "stuck" if role == "driver" and pid is None else "idle"
+    assert agent["state"] == expected
+    now = client.get("/api/fleet/v1/now").json()
+    if role == "driver":
+        assert now["data"]["epics"][0]["driver"]["pid_alive"] is pid
+        assert [row["kind"] for row in now["data"]["attention"]] == (
+            ["dead_driver"] if expected == "dead" else ["stuck_driver"] if expected == "stuck" else []
+        )
+    elif role == "worker":
+        assert now["data"]["epics"][0]["driver"]["pid_alive"] is False
+        assert now["data"]["attention"][0]["kind"] == "dead_driver"
+    else:
+        assert now["data"]["attention"] == []
+    assert next(row for row in body["sources"] if row["name"] == "delegate")["status"] == "ok"
+    assert task["task_id"] not in json.dumps(body["sources"])
+
+
+@pytest.mark.parametrize("payload,status", [(None, "unavailable"), ([], "unavailable"),
+                                            ({}, "ok"), ({"tasks": [None, {}]}, "ok")])
+def test_delegate_health_does_not_interpret_rows(monkeypatch: pytest.MonkeyPatch, payload, status) -> None:
+    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", lambda: payload)
+    source = activity_mod.load_delegate_health()
+    assert source.status == status
+    assert source.name == "delegate"
+
+
+@pytest.mark.parametrize("path,schema_id", [("epics/alpha", "fleet.v1.epic"),
+                                            ("agents/driver-alpha", "fleet.v1.agent")])
+@pytest.mark.parametrize("failure", ["missing", "board", "envelope"])
+def test_single_item_error_fallback_preserves_null(
+    monkeypatch: pytest.MonkeyPatch, path, schema_id, failure
+) -> None:
+    from scripts.api.fleet_board.envelope import endpoint_schema
+
+    def explode(*args, **kwargs):
+        raise RuntimeError("private-error-marker")
+
+    if failure == "board":
+        monkeypatch.setattr(router_mod, "load_board", explode)
+    monkeypatch.setattr(router_mod, "envelope", explode)
+    if failure == "envelope":
+        monkeypatch.setattr(router_mod, "utc_timestamp", explode)
+    response = client.get(f"/api/fleet/v1/{path}")
+    assert response.status_code == (200 if failure == "board" else 404)
+    body = response.json()
+    assert body["schema"] == schema_id
+    assert body["data"] is None
+    assert body["sources"] == [{"name": "response", "status": "unavailable", "age_s": None, "error": "unavailable"}]
+    if failure == "envelope":
+        assert body["generated_at"] == "1970-01-01T00:00:00Z"
+    Draft202012Validator(endpoint_schema(schema_id)).validate(body)
+    assert "private-error-marker" not in response.text

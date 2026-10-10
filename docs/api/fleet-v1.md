@@ -23,7 +23,7 @@ Each source row is `{name, status, age_s, error}`.
 | --- | --- |
 | `ok` | The source was read and is fresh, or a live collector returned. On the index route, `ok` means only that the variable is set. `age_s` is the age of a completed read, and null when that route did not read the location. |
 | `stale` | A read is older than its freshness window, or a refresh failed or timed out and a cached payload is being served. `age_s` is the age of that result. |
-| `unavailable` | The read or collector failed with nothing cached, freshness is unknown, or the status check failed. `error` is the token `unavailable`. |
+| `unavailable` | The read or collector failed with nothing cached, now/epic/agent snapshot freshness is unknown, or the status check failed. `error` is the token `unavailable`. |
 | `not_configured` | The variable is unset or blank. `age_s` and `error` are null. |
 
 The schema rejects a row whose status disagrees with `age_s` or `error`.
@@ -151,18 +151,16 @@ Every epic, driver, worker, and bot state is one of `working`, `idle`,
 `stuck`, `dead`, `paused`, or `off`, and every one has `state_reason`.
 
 Liveness is the boolean `pid_alive` on the roster snapshot or, when the
-harness snapshot has that field for the same agent, the harness value.
-The delegate collector's alive flag can also mark a seat dead, including
-a derived-dead row that the active listing omits. Screen text is ignored,
-so a dead process stays dead when captured text looks busy. A missing
+harness snapshot is fresh and has that field for the same agent, the harness
+value. Stale or undated harness fields cannot override roster liveness,
+activity, or idle time. Screen text is ignored, so a dead process stays dead when captured text looks busy. A missing
 `pid_alive` is null. It is not treated as false.
 
 `paused` and `off` come from the roster `intended` value (`paused`,
 `off`, or `postponed`). A live seat with `idle_min` of at least 30 while
 `intended` is `running` is `stuck`. Other working signals come from an
-explicit `activity` value of `working` or `idle`, from an active delegate
-task, or from a fresh occupancy record whose occupant status is itself
-`working` or `idle`. Those signals do not come from screen text. Presence
+explicit `activity` value of `working` or `idle`, or from a fresh
+occupancy record whose occupant status is itself `working` or `idle`. Those signals do not come from screen text. Presence
 without a status is not activity. A stale occupancy observation does not
 change seat state, and that source is `stale`.
 
@@ -179,9 +177,16 @@ harness object carries `agents` keyed by agent id, with optional
 `pid_alive`, `idle_min`, and `activity`. Unknown numbers in those
 records stay null and are never reported as zero.
 
-The now route also consults the in-process delegate and occupancy
-collectors. A collector failure sets that source to `unavailable` and
-does not change the HTTP status.
+The now, epic, and agent routes retain stale roster payloads with a `stale`
+source status. Unknown snapshot freshness is `unavailable` with no usable
+payload. A fresh harness can override roster seat fields.
+
+These routes also consult the in-process delegate and occupancy collectors.
+Delegate rows report source health only; they do not affect any driver, worker,
+or bot state, process flag, or attention item. No approved producer contract
+binds a delegate task or CLI name to a roster seat. A future binding needs its
+own approved producer identity contract. A collector failure sets that source
+to `unavailable` and does not erase usable snapshot data or change HTTP status.
 
 ### `GET /api/fleet/v1/alerts`
 

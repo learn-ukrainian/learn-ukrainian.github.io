@@ -116,7 +116,7 @@ def respond(
             generated_at = utc_timestamp()
         except Exception:
             generated_at = "1970-01-01T00:00:00Z"
-        safe_data = data if isinstance(data, dict) else {}
+        safe_data = data if data is None or isinstance(data, dict) else {}
         return {
             "schema": f"fleet.v1.{name}" if re.fullmatch(r"[a-z0-9_]+", name) else "fleet.v1.unknown",
             "generated_at": generated_at,
@@ -177,7 +177,7 @@ def read_budget(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
 _ROLES = frozenset({"driver", "worker", "bot"})
 
 
-def _loaded(name: str, data: dict[str, Any]):
+def _loaded(name: str, data: dict[str, Any] | None):
     try:
         board = load_board()
     except Exception:
