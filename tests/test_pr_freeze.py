@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import argparse
+import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -51,6 +54,25 @@ def test_fails_open_with_warning(tmp_path: Path) -> None:
     assert decision.warning and "network down" in decision.warning
 
 
+def test_branch_exempt_only_with_open_pr(tmp_path: Path) -> None:
+    fetch, _ = _fetch(30)
+    cache = tmp_path / "c.json"
+    with_pr = pr_freeze.evaluate(
+        REPO, branch="codex/fix-1", environ={}, fetch=fetch, has_open_pr=lambda r, b: True, cache_file=cache
+    )
+    assert not with_pr.refused
+    no_pr = pr_freeze.evaluate(
+        REPO, branch="codex/new", environ={}, fetch=fetch, has_open_pr=lambda r, b: False, cache_file=cache
+    )
+    assert no_pr.refused
+
+    def broken(repo, branch):
+        raise RuntimeError("lookup failed")
+
+    unknown = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, fetch=fetch, has_open_pr=broken, cache_file=cache)
+    assert not unknown.refused and "lookup failed" in (unknown.warning or "")
+
+
 def test_cache_reused_within_ttl(tmp_path: Path) -> None:
     fetch, calls = _fetch(3)
     cache = tmp_path / "c.json"
@@ -64,42 +86,63 @@ def test_cache_reused_within_ttl(tmp_path: Path) -> None:
     ("kwargs", "expected"),
     [
         ({}, True),
-        ({"branch": "codex/fix-1"}, False),
         ({"pr": 12}, False),
         ({"cwd": "/some/worktree"}, False),
         ({"review": True}, False),
+        ({"reused_worktree": True}, False),
+        ({"continuation": True}, False),
         ({"mode": "read-only"}, False),
         ({"repo_role": "private-infra"}, False),
     ],
 )
 def test_only_new_public_implementation_jobs_gated(kwargs, expected) -> None:
-    base = {
-        "mode": "workspace-write",
-        "repo_role": "public-monorepo",
-        "branch": None,
-        "pr": None,
-        "cwd": None,
-        "review": False,
-    }
+    base = {"mode": "workspace-write", "repo_role": "public-monorepo", "pr": None, "cwd": None, "review": False}
     base.update(kwargs)
     assert pr_freeze.opens_new_pr(**base) is expected
 
 
-def test_delegate_refuses_new_public_implementation(monkeypatch, capsys) -> None:
-    import argparse
-    from types import SimpleNamespace
-
+def test_dispatch_refuses_before_any_side_effect(monkeypatch, capsys, tmp_path) -> None:
+    """End-to-end: a frozen new-PR dispatch exits 3 and leaves no task record."""
     from scripts import delegate
 
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
     monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-    monkeypatch.setenv("XDG_CACHE_HOME", "/nonexistent-cache-dir-for-test")
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path / "tasks")
+
+    def no_side_effects(*a, **k):
+        raise AssertionError("side effect reached before the freeze check")
+
+    monkeypatch.setattr(delegate, "_state_path", no_side_effects)
+    monkeypatch.setattr(delegate, "_archive_task_artifacts", no_side_effects)
+    argv = [
+        "delegate.py",
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        "freeze-probe",
+        "--mode",
+        "workspace-write",
+        "--worktree",
+        "--prompt",
+        "implement a thing",
+    ]
+    monkeypatch.setattr(sys, "argv", argv)
+    rc = delegate.main()
+    err = capsys.readouterr().err
+    assert rc == 3, err
+    assert "Land your own open PRs first" in err
+    assert not (tmp_path / "tasks").exists()
+
+
+def test_helper_allows_existing_pr_branch(monkeypatch) -> None:
+    from scripts import delegate
+
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
+    monkeypatch.setattr(pr_freeze, "branch_has_open_pr", lambda repo, branch: True)
     monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
     repo = SimpleNamespace(github=REPO, role="public-monorepo")
-    args = argparse.Namespace(mode="workspace-write", branch=None, pr=None, cwd=None)
-    monkeypatch.setattr(pr_freeze, "evaluate", lambda r, **kw: pr_freeze.FreezeDecision(True, 30, 15))
-    assert delegate._check_open_pr_freeze(args, repo) == 3
-    err = capsys.readouterr().err
-    assert "Land your own open PRs first" in err
-
-    existing = argparse.Namespace(mode="workspace-write", branch="codex/fix-1", pr=None, cwd=None)
-    assert delegate._check_open_pr_freeze(existing, repo) is None
+    args = argparse.Namespace(mode="workspace-write", branch="codex/fix-1", pr=None, cwd=None, worktree=None)
+    assert delegate._check_open_pr_freeze(args, repo) is None

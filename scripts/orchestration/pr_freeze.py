@@ -1,14 +1,16 @@
 """Open-PR freeze for new implementation dispatches.
 
 While the public repository has ``threshold`` or more open pull requests, a
-new write-capable dispatch that would start a fresh branch (and so a new PR)
-is refused. Work on an existing PR (``--branch``, ``--pr`` or a reused
-``--cwd`` worktree), read-only work and other repositories are unaffected.
+new write-capable dispatch that would open a new PR is refused. Work on an
+existing PR stays allowed: ``--pr``, a ``--branch`` that already has an open
+PR, a reused ``--cwd`` or explicit ``--worktree`` path, and ``--force-new``
+continuations of an existing task. Read-only work, reviews and other
+repositories are unaffected. A ``--branch`` with no open PR counts as new.
 
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
 disables the check). The count comes from the GitHub REST search API and is
-cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). When the count
-cannot be fetched the check fails open with a warning.
+cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). When the count or
+the branch's PR cannot be fetched the check fails open with a warning.
 """
 
 from __future__ import annotations
@@ -67,22 +69,34 @@ def _cache_path(repo: str) -> Path:
     return base / "learn-ukrainian" / f"open-pr-count-{repo.replace('/', '__')}.json"
 
 
-def fetch_open_pr_count(repo: str) -> int:
-    """Open PR count for ``repo`` via the REST search endpoint."""
+def _gh_get(endpoint: str) -> Any:
     try:
         from scripts.common import github_client
     except ImportError:  # pragma: no cover - flat script path
         from common import github_client  # type: ignore
 
-    endpoint = f"search/issues?q=repo:{repo}+is:pr+is:open&per_page=1"
     proc = github_client.run(["gh", "api", endpoint], capture_output=True, text=True, timeout=20)
     if proc.returncode != 0:
         raise RuntimeError((proc.stderr or "").strip()[:200] or f"gh api rc {proc.returncode}")
-    data: Any = json.loads(proc.stdout)
+    return json.loads(proc.stdout)
+
+
+def fetch_open_pr_count(repo: str) -> int:
+    """Open PR count for ``repo`` via the REST search endpoint."""
+    data = _gh_get(f"search/issues?q=repo:{repo}+is:pr+is:open&per_page=1")
     count = data.get("total_count") if isinstance(data, dict) else None
     if not isinstance(count, int):
         raise RuntimeError("no total_count in response")
     return count
+
+
+def branch_has_open_pr(repo: str, branch: str) -> bool:
+    """True when ``branch`` is the head of an open PR in ``repo``."""
+    owner = repo.split("/", 1)[0]
+    data = _gh_get(f"repos/{repo}/pulls?state=open&per_page=1&head={owner}:{branch}")
+    if not isinstance(data, list):
+        raise RuntimeError("unexpected pulls response")
+    return bool(data)
 
 
 def cached_open_pr_count(
@@ -112,25 +126,46 @@ def cached_open_pr_count(
 
 
 def opens_new_pr(
-    *, mode: str, repo_role: str, branch: str | None, pr: int | None, cwd: str | None, review: bool
+    *,
+    mode: str,
+    repo_role: str,
+    pr: int | None,
+    cwd: str | None,
+    review: bool,
+    reused_worktree: bool = False,
+    continuation: bool = False,
 ) -> bool:
-    """True for a write-capable public dispatch that starts a fresh branch."""
+    """True for a write-capable public dispatch that may open a new PR.
+
+    ``--branch`` is not decided here: :func:`evaluate` exempts it only when the
+    branch already has an open PR.
+    """
     return (
-        mode in WRITE_MODES and repo_role == "public-monorepo" and not branch and pr is None and not cwd and not review
+        mode in WRITE_MODES
+        and repo_role == "public-monorepo"
+        and pr is None
+        and not cwd
+        and not review
+        and not reused_worktree
+        and not continuation
     )
 
 
 def evaluate(
     repo: str,
     *,
+    branch: str | None = None,
     environ: Mapping[str, str] | None = None,
-    fetch: Callable[[str], int] = fetch_open_pr_count,
+    fetch: Callable[[str], int] | None = None,
+    has_open_pr: Callable[[str, str], bool] | None = None,
     cache_file: Path | None = None,
 ) -> FreezeDecision:
     env = os.environ if environ is None else environ
     threshold = threshold_from_env(env)
     if threshold == 0:
         return FreezeDecision(refused=False, open_prs=None, threshold=0)
+    fetch = fetch or fetch_open_pr_count
+    has_open_pr = has_open_pr or branch_has_open_pr
     try:
         count = cached_open_pr_count(repo, fetch=fetch, cache_file=cache_file, ttl_s=_cache_s(env))
     except Exception as exc:
@@ -140,4 +175,17 @@ def evaluate(
             threshold=threshold,
             warning=f"open-PR freeze check skipped: could not count open PRs ({exc})",
         )
-    return FreezeDecision(refused=count >= threshold, open_prs=count, threshold=threshold)
+    if count < threshold:
+        return FreezeDecision(refused=False, open_prs=count, threshold=threshold)
+    if branch:
+        try:
+            if has_open_pr(repo, branch):
+                return FreezeDecision(refused=False, open_prs=count, threshold=threshold)
+        except Exception as exc:
+            return FreezeDecision(
+                refused=False,
+                open_prs=count,
+                threshold=threshold,
+                warning=f"open-PR freeze check skipped: could not look up the PR for {branch} ({exc})",
+            )
+    return FreezeDecision(refused=True, open_prs=count, threshold=threshold)

@@ -4922,19 +4922,24 @@ def _report_dispatch_admission(
 
 
 def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any) -> int | None:
-    """Refuse a new PR-opening implementation dispatch while too many public PRs are open."""
+    """Refuse a new PR-opening implementation dispatch while too many public PRs are open.
+
+    Runs before any task-record, archive, forward or worktree side effect.
+    """
     from scripts.orchestration import pr_freeze
 
+    worktree = getattr(args, "worktree", None)
     if not pr_freeze.opens_new_pr(
         mode=str(getattr(args, "mode", "") or ""),
         repo_role=str(getattr(fleet_repo, "role", "") or ""),
-        branch=getattr(args, "branch", None),
         pr=getattr(args, "pr", None),
         cwd=getattr(args, "cwd", None),
         review=_dispatch_is_review_typed(args),
+        reused_worktree=bool(worktree) and worktree != "auto",
+        continuation=bool(getattr(args, "force_new", False)),
     ):
         return None
-    decision = pr_freeze.evaluate(fleet_repo.github)
+    decision = pr_freeze.evaluate(fleet_repo.github, branch=getattr(args, "branch", None))
     if decision.warning:
         print(f"⚠️  {decision.warning}", file=sys.stderr)
     if decision.refused:
@@ -12036,6 +12041,11 @@ def _dispatch(
         return 2
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
+    # Open-PR freeze: refuse before any task record, archive, forward or worktree side effect.
+    freeze_rc = _check_open_pr_freeze(args, fleet_repo)
+    if freeze_rc is not None:
+        return freeze_rc
+
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
     from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
@@ -12957,10 +12967,6 @@ def _dispatch(
     admission_rc = _report_dispatch_admission(admission, force_reason=force_admission_reason)
     if admission_rc is not None:
         return admission_rc
-
-    freeze_rc = _check_open_pr_freeze(args, fleet_repo)
-    if freeze_rc is not None:
-        return freeze_rc
 
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
