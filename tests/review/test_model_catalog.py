@@ -5,6 +5,7 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import os
 import pickle
 import runpy
 import shutil
@@ -29,24 +30,57 @@ BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes(
 INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 
-# Keep the frozen capture script byte-pinned. Apply the cache only inside its
-# fresh subprocess, leaving production catalog validation unchanged.
+# Keep the frozen capture script byte-pinned. Scope caching and verified source
+# handle normalization to its fresh subprocess, leaving production unchanged.
 CAPTURE_RUNNER = """
 import runpy
 import sys
+from unittest.mock import patch
 source = sys.argv[sys.argv.index("--source-root") + 1]
 sys.path[:0] = [source, source + "/scripts", source + "/packages/v4-runtime/src"]
-cached_capture_reads = runpy.run_path(source + "/tests/review/test_model_catalog.py")["cached_capture_reads"]
+helpers = runpy.run_path(source + "/tests/review/test_model_catalog.py")
+cached_capture_reads = helpers["cached_capture_reads"]
+captured_invocation = helpers["captured_invocation"]
 sys.argv = sys.argv[1:]
 capture = runpy.run_path(sys.argv[0])
 original = capture["capture"]
+plain = capture["plain"]
+def capture_plain(value):
+    return captured_invocation(value, source, plain)
 def cached_capture(*args, **kwargs):
     # Enter only after main has installed its hermetic environment.
-    with cached_capture_reads():
+    with cached_capture_reads(), patch.dict(original.__globals__, {"plain": capture_plain}):
         return original(*args, **kwargs)
 capture["main"].__globals__["capture"] = cached_capture
 capture["main"]()
 """
+
+
+def captured_invocation(value, source, plain):
+    """Normalize only an owned Codex directory handle verified against the source.
+
+    Capture invocation data before releasing the construction-only handle.
+    Keep the frozen serializer and all other invocation fields unchanged.
+    """
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from scripts.agent_runtime.adapters.codex import _HOOK_SOURCE_HANDLES, CodexAdapter
+
+    if not isinstance(value, InvocationPlan) or "LU_CODEX_HOOK_SOURCE" not in value.env_overrides:
+        return plain(value)
+    try:
+        owned = _HOOK_SOURCE_HANDLES.get(id(value))
+        if owned is None or owned[0] is not value:
+            raise ValueError("capture source binding is not an owned handle")
+        locator = value.env_overrides["LU_CODEX_HOOK_SOURCE"]
+        if locator != f"/proc/{os.getpid()}/fd/{owned[1]}":
+            raise ValueError("capture source binding differs from its owned handle")
+        if Path(locator).resolve(strict=True) != Path(source).resolve(strict=True):
+            raise ValueError("capture source handle targets a different checkout")
+        result = plain(value)
+        result["env_overrides"]["LU_CODEX_HOOK_SOURCE"] = str(Path(source).resolve(strict=True))
+        return result
+    finally:
+        CodexAdapter().cleanup_invocation(value)
 
 
 @contextmanager
@@ -447,7 +481,7 @@ PINNED_DIGESTS = {
     "routing-10305.json.gz": "2596f911d4b8238cad24513ac666b8f4618d9c5783c6f6ff989a53c7131625c8",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
-    "SPEC.md": "0c5067367ba78c76d700a1e4bc7cccb35be44f69795f151d3f523953504774dd",
+    "SPEC.md": "a32c53a8b518d70e8e1b9497527be8b8593410495391fff188c14b78c709510b",
     "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -575,15 +609,23 @@ from scripts.review import model_catalog
 original_validator = model_catalog.validate_catalog
 original_parser = delegate.build_parser
 
+def plain(value):
+    return value
+
+original_plain = plain
+
 def capture():
     assert model_catalog.validate_catalog is not original_validator
     assert delegate.build_parser is not original_parser
+    assert plain is not original_plain
+    assert plain({"unrelated": "preserved"}) == {"unrelated": "preserved"}
     print("caches active")
 
 def main():
     capture()
     assert model_catalog.validate_catalog is original_validator
     assert delegate.build_parser is original_parser
+    assert plain is original_plain
     print("caches restored")
 ''')
     result = subprocess.run(
@@ -592,6 +634,45 @@ def main():
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == "caches active\ncaches restored\n"
+
+
+@pytest.mark.parametrize("defect", [None, "unowned", "wrong-locator", "wrong-source", "closed"])
+def test_capture_source_handle_normalization_requires_exact_owned_source(tmp_path, defect):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from scripts.agent_runtime.adapters.codex import _HOOK_SOURCE_HANDLES
+
+    source = tmp_path / "source"
+    source.mkdir()
+    fd = os.open(source, os.O_RDONLY | os.O_DIRECTORY)
+    locator = f"/proc/{os.getpid()}/fd/{fd}"
+    binding = str(source) if defect == "wrong-locator" else locator
+    plan = InvocationPlan(
+        cmd=["codex", "exec"], cwd=tmp_path, stdin_payload="fixture", output_file=None,
+        env_overrides={"LU_CODEX_HOOK_SOURCE": binding, "unrelated": "preserved"},
+    )
+    if defect != "unowned":
+        _HOOK_SOURCE_HANDLES[id(plan)] = (plan, fd)
+    expected_source = tmp_path if defect == "wrong-source" else source
+    if defect == "closed":
+        os.close(fd)
+        # Keep the registry's ownership check intact while supplying a closed locator.
+        with patch("scripts.agent_runtime.adapters.codex.os.close"):
+            with pytest.raises(FileNotFoundError):
+                captured_invocation(plan, expected_source, CAPTURE["plain"])
+    elif defect:
+        with pytest.raises(ValueError, match="capture source"):
+            captured_invocation(plan, expected_source, CAPTURE["plain"])
+    else:
+        expected = CAPTURE["plain"](plan)
+        expected["env_overrides"]["LU_CODEX_HOOK_SOURCE"] = str(source)
+        assert captured_invocation(plan, source, CAPTURE["plain"]) == expected
+    assert plan.env_overrides["LU_CODEX_HOOK_SOURCE"] == binding
+    assert id(plan) not in _HOOK_SOURCE_HANDLES
+    if defect == "unowned":
+        # The capture must not release a handle whose ownership is unproven.
+        assert Path(locator).resolve(strict=True) == source
+        os.close(fd)
+    assert not Path(locator).exists()
 
 
 @pytest.mark.parametrize("surface", BASELINE)
