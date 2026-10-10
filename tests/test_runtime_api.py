@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 import scripts.api.runtime_router as runtime_router
 from scripts.agent_runtime.acpx_discuss import AcpxDiscussionController
 from scripts.api.main import app
+from scripts.control_plane import storage
 
 client = TestClient(app, raise_server_exceptions=False)
 DASHBOARDS = Path(__file__).resolve().parents[1] / "dashboards"
@@ -300,6 +301,32 @@ def test_routing_assignments_reports_absent_or_malformed_reader(monkeypatch, tmp
     result = runtime_router.list_routing_assignments()
     assert result["availability"] == "empty"
     assert result["assignments"] == []
+
+    def unsupported_reader(**_kwargs):
+        raise storage.ControlPlaneUnsupportedComponentError("component unsupported")
+
+    monkeypatch.setattr(
+        runtime_router.importlib,
+        "import_module",
+        lambda _name: types.SimpleNamespace(list_routing_decisions=unsupported_reader),
+    )
+    unsupported = runtime_router.list_routing_assignments()
+    assert unsupported["availability"] == "unavailable"
+    assert unsupported["reason"] == "routing_decision_reader_unsupported"
+    assert unsupported["assignments"] == []
+
+    def failing_reader(**_kwargs):
+        raise storage.ControlPlaneError("control plane storage error")
+
+    monkeypatch.setattr(
+        runtime_router.importlib,
+        "import_module",
+        lambda _name: types.SimpleNamespace(list_routing_decisions=failing_reader),
+    )
+    failing = runtime_router.list_routing_assignments()
+    assert failing["availability"] == "unavailable"
+    assert failing["reason"] == "routing_decision_reader_failed"
+    assert failing["assignments"] == []
 
 
 def test_routing_assignment_serializer_accepts_authority_ledger_shape():

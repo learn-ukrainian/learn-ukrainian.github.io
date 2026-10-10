@@ -54,6 +54,7 @@ from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 from agent_runtime.usage import _iter_usage_records as _iter_usage_file_records
 from agent_runtime.usage import has_headroom
+from scripts.control_plane import storage
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.orchestration import codex_transport_health
@@ -1060,7 +1061,14 @@ def list_routing_assignments(*, limit: int = 100, ctx: MonitorContext | None = N
             "plane": plane,
             "assignments": [],
         }
-    except (OSError, sqlite3.Error, TypeError, ValueError):
+    except storage.ControlPlaneUnsupportedComponentError:
+        return {
+            "availability": "unavailable",
+            "reason": "routing_decision_reader_unsupported",
+            "plane": plane,
+            "assignments": [],
+        }
+    except (OSError, sqlite3.Error, TypeError, ValueError, storage.ControlPlaneError):
         return {
             "availability": "unavailable",
             "reason": "routing_decision_reader_failed",
