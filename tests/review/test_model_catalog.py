@@ -103,6 +103,10 @@ def approved_review_baseline(baseline):
 REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
 GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
 GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
+GROK_OVERLAY_PATH = FIXTURE / "routing-10267.json.gz"
+GROK_OVERLAY = json.loads(gzip.decompress(GROK_OVERLAY_PATH.read_bytes()))
+
+
 def approved_cursor_trailer_baseline(baseline):
     """#10273 AC-04 changes only the two frozen Cursor refusal trailers."""
     launchers = deepcopy(baseline["launchers"])
@@ -164,7 +168,11 @@ def approved_claude_cap_baseline(baseline):
 # help revision must neither erase this wording nor have its other lines erased.
 APPROVED_BASELINE = approved_claude_cap_baseline(approved_cursor_trailer_baseline(
     approved_launcher_canary_baseline({
-        **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+        **approved_review_baseline({
+            **BASELINE, **RESOURCE_OVERLAY["surfaces"],
+            **GROK_OVERLAY["configurations"]["host-cli"],
+        }),
+        **GEMINI_OVERLAY["surfaces"],
     })
 ))
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
@@ -254,6 +262,47 @@ def test_launcher_canary_paragraph_preserves_independent_grok_help_edits():
     assert approved_launcher_canary_baseline(grok_help_edits(baseline)) == grok_help_edits(
         approved_launcher_canary_baseline(baseline),
     )
+
+
+@pytest.mark.parametrize("configuration", ["host-cli", "no-cli"])
+def test_grok_fixture_changes_only_driver_binding_and_documented_help(configuration):
+    assert set(GROK_OVERLAY) == {"configurations"}
+    assert set(GROK_OVERLAY["configurations"]) == {"host-cli", "no-cli"}
+    overlay = GROK_OVERLAY["configurations"][configuration]
+    surfaces = {"adapters", "launchers"} if configuration == "host-cli" else {"launchers"}
+    assert set(overlay) == surfaces
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    expected = {surface: deepcopy(before[surface]) for surface in surfaces}
+    if configuration == "host-cli":
+        changed = []
+        for index, (inputs, row) in enumerate(zip(INPUTS["adapters"], expected["adapters"], strict=True)):
+            if inputs["agent"] in {"grok", "grok-build"} and "value" in row:
+                assert row["value"]["env_unsets"] == []
+                row["value"]["env_unsets"] = [
+                    "LU_GROK_DRIVER_SESSION_ID", "LU_GROK_PROJECT_PYTHON", "LU_GROK_SOURCE_ROOT",
+                ]
+                changed.append(index)
+        assert changed == [28, 30, 32, 34]
+    help_row = expected["launchers"][39]
+    assert help_row["stdout"].startswith("Usage: ./start-grok-driver.sh ")
+    block = (
+        "Native Grok driver:\n"
+        "  Runs from the inspected checkout; positional prompts and subcommands are refused.\n"
+        "  After --, only --debug, --fullscreen, --minimal, --no-alt-screen,\n"
+        "  --disable-web-search and --no-subagents are accepted (no values).\n"
+        "  Refuses ambient context overrides, even empty values: GROK_CONFIG,\n"
+        "  GROK_CONFIG_PATH, GROK_HOME, GROK_WORKSPACE_ROOT, GROK_FOLDER_TRUST,\n"
+        "  GROK_LEADER_SOCKET, GROK_MANAGED_CONFIG_URL, GROK_CLAUDE_HOOKS_ENABLED,\n"
+        "  GROK_CURSOR_HOOKS_ENABLED, GROK_CODEX_HOOKS_ENABLED, GROK_CAMPAIGNS,\n"
+        "  GROK_CAMPAIGNS_OVERRIDE and __GROK_HOOKS_MASK___. Unset them before launch.\n\n"
+    )
+    help_row["stdout"] = help_row["stdout"].replace(
+        "Usage: ./start-grok-driver.sh [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]",
+        "Usage: ./start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]",
+        1,
+    ).replace("Hermes (opt-in only):\n", block + "Hermes (opt-in only):\n", 1)
+    assert overlay == expected
 
 
 def test_resource_policy_fixture_changes_only_approved_fallback_rows():
@@ -399,9 +448,10 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the #10205 Cursor wire pin and allowlist revision and
 # the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
+    "routing-10267.json.gz": "da57576235271cfe20fbd8934e27a42a0288d9cfe4c7349d3b9b4e4e4e9be5bf",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
-    "SPEC.md": "958f43d7368d0552cbf1b5706df35da56cdc9408e4834e05bb0911754ae58455",
+    "SPEC.md": "d058408904d3d1b4085d3160bab1dd0cb76742deb177d990adada393c92d1a2a",
     "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -716,7 +766,11 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
     assert actual == approved_claude_cap_baseline(approved_cursor_trailer_baseline(
         approved_launcher_canary_baseline({
-            **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+            **approved_review_baseline({
+                **original, **RESOURCE_OVERLAY["surfaces"],
+                **GROK_OVERLAY["configurations"]["no-cli"],
+            }),
+            **GEMINI_OVERLAY["surfaces"],
         })
     ))
     assert len(actual["launchers"]) == 70

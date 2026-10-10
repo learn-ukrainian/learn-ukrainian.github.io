@@ -366,3 +366,32 @@ refusal with the native CLI, or the allowlist refusal without it. All other
 launchers, dispatch rows, catalog, registry, capacity, role, approval, fallback,
 holder and source-contract surfaces remain identical. Any other difference
 blocks regeneration.
+
+
+## Native Grok driver binding overlay (#10267)
+
+`routing-10267.json.gz` is an additive, independently hash-pinned overlay;
+the historical captures, input matrices, occurrence census, capture script and
+manifests retain their bytes. Reproduce both configurations with the existing
+capture runner against this branch. Compare all surfaces before extracting the
+changed surfaces into `configurations.host-cli` and `configurations.no-cli`.
+Gzip uses modification time zero and JSON uses sorted keys.
+
+The host-CLI adapter surface changes exactly four rows (28, 30, 32 and 34):
+non-isolated read-only and workspace-write invocations of `grok` and
+`grok-build`. Only `value.env_unsets` changes, from empty to the sorted list
+`LU_GROK_DRIVER_SESSION_ID`, `LU_GROK_PROJECT_PYTHON`, `LU_GROK_SOURCE_ROOT`.
+These worker processes must not inherit a driver's native process binding.
+All other adapter fields and rows, including acpx, retain their values.
+The no-CLI adapter surface is unchanged: native Grok construction refuses
+before it can produce a plan.
+
+Both configurations change only launcher row 39's stdout (Grok driver help):
+the usage line no longer advertises positional prompts, and a native driver
+section documents the approved checkout pin, flag allowlist and context
+environment refusal. The rest of that row and all other launcher rows retain
+their values. Every remaining captured surface, both input matrices and the
+occurrence bytes are unchanged relative to the existing approved overlays.
+The scope test constructs these exact differences independently of a fresh
+capture; unexplained differences still fail. This fixture is regression
+evidence, not independent implementation approval.

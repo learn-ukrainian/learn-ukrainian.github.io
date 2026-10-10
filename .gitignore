@@ -37,6 +37,7 @@ service-account*.json
 # AI assistant configs
 .gemini/settings.json
 .claude/
+.grok/
 .codex/
 # Cursor IDE local state — keep project-level mcp.json committed (parallel to .mcp.json)
 .cursor/*

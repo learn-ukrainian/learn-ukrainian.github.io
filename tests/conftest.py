@@ -141,6 +141,10 @@ SESSION_IDENTITY_ENV_VARS = (
     "LU_X_AGENT_TRAILER",
     "LU_RUNTIME_INITIATOR",
     "LU_RUNTIME_INITIATOR_SOURCE",
+    # Native Grok driver process binding; checkout/interpreter belong to that session.
+    "LU_GROK_DRIVER_SESSION_ID",
+    "LU_GROK_SOURCE_ROOT",
+    "LU_GROK_PROJECT_PYTHON",
     "LU_RUNTIME_RUN_NONCE",
     # Telemetry run/session ids (scripts/telemetry/emit.py).
     "LU_RUN_ID",
