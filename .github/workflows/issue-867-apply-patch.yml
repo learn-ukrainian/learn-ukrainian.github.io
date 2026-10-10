@@ -42,7 +42,7 @@ jobs:
           grep -q 'without_unneeded_secrets(worker_env, dispatch_agent)' scripts/delegate.py
           grep -q 'launcher_drop_unneeded_secrets || exit 1' scripts/lib/launcher_core.sh
           grep -q 'no-secret-print-hook' .pre-commit-config.yaml
-          git diff --cached --exit-code -- scripts/delegate.py
+          git diff --cached --name-only | grep -qx scripts/delegate.py
           git rm -f .github/workflows/issue-867-apply-patch.yml
           git config user.name "Cursor Agent"
           git config user.email "cursoragent@cursor.com"
