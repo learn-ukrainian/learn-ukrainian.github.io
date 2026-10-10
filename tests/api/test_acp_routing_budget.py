@@ -60,6 +60,8 @@ def test_acp_capability_failure_preserves_native_dispatch(monkeypatch, budget):
 
 
 def test_acp_recommends_compatible_lane_and_recovers_without_failure_expiry(monkeypatch, budget):
+    budget["agents"]["codex"]["remaining_pct"] = 75
+    budget["agents"]["cursor"]["remaining_pct"] = 95
     health = {lane: _health(False) for lane in budget["agents"]}
     health["codex"] = _health(True)
     monkeypatch.setattr(state_router, "probe_acp_health", lambda _cwd: deepcopy(health))

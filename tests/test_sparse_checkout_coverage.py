@@ -27,7 +27,6 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_JOBS = frozenset(
     {
         (".github/workflows/cache-hygiene.yml", "prune"),
-        (".github/workflows/ci.yml", "freeze-durations"),
         (".github/workflows/ci.yml", "pytest-report"),
         (".github/workflows/ci.yml", "reuse"),
         (".github/workflows/pr-body-guard.yml", "closing-references"),

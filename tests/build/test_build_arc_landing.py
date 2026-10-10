@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -96,13 +97,14 @@ def test_real_arc_generates_55_planned_positions_and_is_current() -> None:
     files = gen.generated_files(roots, arc)
 
     assert len(arc) == 55
-    assert len(files) == 55 + 3
+    assert len(files) == 55 + 3 + 2
     assert gen.stale_files(files) == [], "run python -m scripts.build.build_arc_landing a1 --write"
     records = json.loads(files[roots.data_json])["positions"]
     assert [r["position"] for r in records] == list(range(1, 56))
     # Positions climb the ladder as plans are reviewed and lessons built; every state is a ladder state.
     assert {r["state"] for r in records} <= {"planned", "plan_reviewed", "built", "reviewed"}
-    assert all(r["previous_edition_href"] == f"/a1-v1/{r['slug']}/" for r in records)
+    assert all(r["previous_edition_href"] in (None, f"/a1-v1/{r['slug']}/") for r in records)
+    assert all(r["state"] == "planned" and r["scope"] is None for r in records[:10])
     status = yaml.safe_load(roots.level_status.read_text(encoding="utf-8"))
     assert status["a1"]["planned"] == len(arc)
 
@@ -113,7 +115,20 @@ def test_generation_is_byte_stable(root: gen.Roots) -> None:
     assert gen.generated_files(root, arc) == gen.generated_files(root, arc)
 
 
-def test_states_climb_one_predicate_at_a_time(root: gen.Roots) -> None:
+def _stub_fresh_plan_status(monkeypatch, root):
+    """Unit-test the upper ladder independently; real freshness is tested below."""
+    from scripts.build.fresh import plan_manifest
+
+    def status(level, slug, **kwargs):
+        path = root.state / slug / "plan-review.yaml"
+        review = yaml.safe_load(path.read_text()) if path.is_file() else {}
+        return {"state": "reviewed_promoted" if review.get("verdict") == "APPROVE" else "unreviewed"}
+
+    monkeypatch.setattr(plan_manifest, "plan_review_status", status)
+
+
+def test_states_climb_one_predicate_at_a_time(root: gen.Roots, monkeypatch: pytest.MonkeyPatch) -> None:
+    _stub_fresh_plan_status(monkeypatch, root)
     arc = _arc("no-plan", "plan-unreviewed", "plan-reviewed", "built", "reviewed")
     _plan(root, "plan-unreviewed", 1)
     _review(root, "plan-unreviewed", "plan-review.yaml", "REVISE")
@@ -138,7 +153,8 @@ def test_states_climb_one_predicate_at_a_time(root: gen.Roots) -> None:
     }
 
 
-def test_a_missing_file_never_yields_a_higher_state(root: gen.Roots) -> None:
+def test_a_missing_file_never_yields_a_higher_state(root: gen.Roots, monkeypatch: pytest.MonkeyPatch) -> None:
+    _stub_fresh_plan_status(monkeypatch, root)
     arc = _arc("a", "b", "c", "d")
     # a: verdict approved but the plan file is gone.
     _review(root, "a", "plan-review.yaml")
@@ -158,7 +174,8 @@ def test_a_missing_file_never_yields_a_higher_state(root: gen.Roots) -> None:
     assert _states(root, arc) == {"a": "planned", "b": "plan_reviewed", "c": "plan_reviewed", "d": "planned"}
 
 
-def test_reviewed_state_trusts_the_file_when_no_findings_database_exists(root: gen.Roots) -> None:
+def test_reviewed_state_trusts_the_file_when_no_findings_database_exists(root: gen.Roots, monkeypatch: pytest.MonkeyPatch) -> None:
+    _stub_fresh_plan_status(monkeypatch, root)
     """CI never has a findings database (``batch_state/`` is gitignored): the committed file is trusted."""
     _plan(root, "reviewed", 1)
     _review(root, "reviewed", "plan-review.yaml")
@@ -172,6 +189,7 @@ def test_reviewed_state_fails_on_a_stale_approve_when_a_findings_database_is_pre
     root: gen.Roots, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """The reviewer's scenario (#8774 r5/r6): a saved APPROVE a later database write has superseded."""
+    _stub_fresh_plan_status(monkeypatch, root)
     from scripts.review import findings_db, fixloop
 
     _plan(root, "reviewed", 1)
@@ -198,8 +216,7 @@ def test_malformed_state_file_fails_loudly(root: gen.Roots) -> None:
     _plan(root, "alpha", 1)
     (root.state / "alpha").mkdir(parents=True)
     (root.state / "alpha" / "plan-review.yaml").write_text("verdict: [unclosed", encoding="utf-8")
-    with pytest.raises(ValueError, match="not valid YAML"):
-        gen.generated_files(root, _arc("alpha"))
+    assert _states(root, _arc("alpha")) == {"alpha": "planned"}
 
 
 def test_plan_supplies_title_lessons_and_scope(root: gen.Roots) -> None:
@@ -377,3 +394,71 @@ def test_legacy_landing_generators_skip_arc_levels(tmp_path: Path, monkeypatch: 
 def test_built_state_label_is_the_accurate_ukrainian_phrase() -> None:
     chrome = (REPO_ROOT / "site/src/lib/i18n/chrome.ts").read_text(encoding="utf-8")
     assert "'arc.state.built': 'уроки підготовлено'," in chrome
+
+
+def _retire(root, slug, routes=()):
+    path = root.plans / f"{slug}.yaml"
+    _write_yaml(root.plans / "_retired.yaml", {
+        "retirement_schema": 1,
+        "plans": [{"slug": slug, "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "old_position": 1}],
+        "routes": [{"slug": route, "old_position": 3} for route in routes],
+    })
+
+
+def test_retired_plan_has_no_scope_title_or_review_badge(root):
+    _plan(root, "alpha", 2)
+    _scope(root, "alpha")
+    _review(root, "alpha", "plan-review.yaml")
+    _lesson_built(root, "alpha", 1)
+    _retire(root, "alpha")
+    record = json.loads(gen.generated_files(root, _arc("alpha"))[root.data_json])["positions"][0]
+    assert record["state"] == "planned"
+    assert record["scope"] is record["title_uk"] is record["lessons"] is None
+    assert record["lesson_titles"] == record["built_lessons"] == []
+
+
+def test_replacement_does_not_inherit_a_bare_approve(root):
+    _plan(root, "alpha", 2)
+    _retire(root, "alpha")
+    path = root.plans / "alpha.yaml"
+    path.write_bytes(path.read_bytes() + b"\n")
+    _review(root, "alpha", "plan-review.yaml")
+    assert _states(root, _arc("alpha")) == {"alpha": "planned"}
+    # Even a syntactically complete approval with a missing pinned manifest is stale.
+    _write_yaml(root.state / "alpha/plan-review.yaml", {"verdict": "APPROVE", "manifest_sha256": "a" * 64, "attempt_id": "old"})
+    assert _states(root, _arc("alpha")) == {"alpha": "planned"}
+
+
+def test_recorded_retired_stubs_and_orphan_exclusions_are_exact(root):
+    _plan(root, "alpha", 1)
+    _retire(root, "alpha", routes=("old-route",))
+    arc = _arc("alpha")
+    files = gen.generated_files(root, arc)
+    text = files[root.docs / "old-route/index.mdx"]
+    _, frontmatter, body = text.split("---\n")
+    data = yaml.safe_load(frontmatter)
+    assert data["arc_kind"] == "retired" and "Retired" in data["title"]
+    assert "sidebar" not in data and body == ""
+    assert json.loads(files[root.data_json])["retired"] == [{"slug": "old-route", "old_position": 3}]
+    gen.write_files(files)
+    assert gen.orphan_pages(root, arc) == []
+    orphan = root.docs / "unrecorded/index.mdx"
+    orphan.parent.mkdir()
+    orphan.write_text("unrecorded")
+    assert gen.orphan_pages(root, arc) == [orphan]
+    with pytest.raises(ValueError, match="intersect"):
+        gen.generated_files(root, _arc("alpha", "old-route"))
+    with pytest.raises(ValueError, match="intersect"):
+        gen.orphan_pages(root, _arc("alpha", "old-route"))
+
+
+def test_landing_only_handles_plan_retired_as_absent(root):
+    _plan(root, "alpha", 1)
+    (root.plans / "_retired.yaml").write_text("invalid: true")
+    with pytest.raises(ValueError, match="retirement_record_invalid"):
+        gen.generated_files(root, _arc("alpha"))
+    # A malformed ordinary replacement cannot be silently treated as absent.
+    _write_yaml(root.plans / "_retired.yaml", {"retirement_schema": 1, "plans": [], "routes": []})
+    (root.plans / "alpha.yaml").write_text("plan_schema: 1\n")
+    with pytest.raises(ValueError, match="v1_plan"):
+        gen.generated_files(root, _arc("alpha"))

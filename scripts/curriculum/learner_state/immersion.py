@@ -8,7 +8,7 @@ and cumulative vocabulary count.
 - A2, B1, B2: reads ArcPosition.band_key from load_arc (source: arc_table) and looks up
   via config._find_immersion_band_by_key. A level whose arc has no band_key fails with
   arc_band_table_missing, never falling back to module numbers.
-- module_structural carries min_uk_dialogue_lines, min_uk_example_sentences, min_vocab_entries unchanged.
+- Fresh A1 has no module structural floors; A2+ carries its existing floors unchanged.
 - not_checked always contains lesson_structural_minimums_not_calibrated.
 """
 
@@ -41,7 +41,7 @@ class LessonBand:
     """Immersion band and structural targets for a lesson position."""
 
     band_key: str
-    advisory_uk_share: tuple[int, int]
+    advisory_uk_share: tuple[int, int] | None
     module_structural: dict[str, int]
     source: Literal["ulp_vocab", "arc_table"]
     not_checked: list[str]
@@ -51,7 +51,7 @@ class LessonBand:
         """Machine-readable dictionary representation."""
         result: dict[str, Any] = {
             "band_key": self.band_key,
-            "advisory_uk_share": list(self.advisory_uk_share),
+            "advisory_uk_share": list(self.advisory_uk_share) if self.advisory_uk_share is not None else None,
             "module_structural": self.module_structural,
             "source": self.source,
             "not_checked": self.not_checked,
@@ -62,15 +62,13 @@ class LessonBand:
 
     def render_text(self) -> str:
         """Human-readable text output."""
-        lines = [
-            f"Immersion band: {self.band_key}",
-            f"Advisory Ukrainian share: {self.advisory_uk_share[0]}-{self.advisory_uk_share[1]}%",
-            "Module structural minimums (uncalibrated per-lesson):",
-            f"  min_uk_dialogue_lines: {self.module_structural['min_uk_dialogue_lines']}",
-            f"  min_uk_example_sentences: {self.module_structural['min_uk_example_sentences']}",
-            f"  min_vocab_entries: {self.module_structural['min_vocab_entries']}",
-            f"Source: {self.source}",
-        ]
+        share = self.advisory_uk_share
+        lines = [f"Immersion band: {self.band_key}",
+                 f"Advisory Ukrainian share: {share[0]}-{share[1]}%" if share else "No advisory share (English orientation)"]
+        if self.module_structural:
+            lines.append("Module structural minimums (uncalibrated per-lesson):")
+            lines.extend(f"  {key}: {value}" for key, value in self.module_structural.items())
+        lines.append(f"Source: {self.source}")
         if self.waiver:
             lines.append(f"Waiver: {self.waiver}")
         if self.not_checked:
@@ -91,7 +89,7 @@ def compute_lesson_immersion_band(
 ) -> LessonBand:
     """Compute the lesson immersion band and structural minimums.
 
-    For A1, uses config.compute_immersion_band with the seven ULP knees.
+    For A1, uses config.compute_immersion_band with the seven editorial vocabulary thresholds.
     For A2, B1, B2, reads ArcPosition.band_key from load_arc and looks up via
     config._find_immersion_band_by_key. An unknown band_key or missing band_key
     fails with arc_band_table_missing, never falling back to top band or module numbers.
@@ -109,6 +107,25 @@ def compute_lesson_immersion_band(
                 codes.CUMULATIVE_CORE_COUNT_MISSING,
                 "cumulative_core_count is required for A1 immersion band computation",
             )
+        if type(cumulative_core_count) is not int or cumulative_core_count < 0:
+            raise ImmersionError(codes.CUMULATIVE_CORE_COUNT_INVALID, "A1 core count must be a nonnegative integer")
+        # Only an explicit arc declaration selects orientation; never position or count.
+        try:
+            positions = arc_loader(track) if arc_loader else load_arc(track, arc_path=arc_path, doc_path=doc_path)
+        except Exception as err:
+            raise ImmersionError(
+                codes.ARC_BAND_TABLE_MISSING,
+                f"failed loading arc for track {track!r}: {err}",
+            ) from err
+        declaration = next((p for p in positions if p.position == arc_position), None)
+        if declaration is None:
+            raise ImmersionError(
+                codes.POSITION_NOT_FOUND,
+                f"position {arc_position} not found in arc for {track}",
+            )
+        if declaration.band_key == "a1-orientation":
+            return LessonBand("a1-orientation", None, {}, "arc_table",
+                              [codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED], waiver)
         band = config.compute_immersion_band(
             "a1",
             arc_position,
@@ -163,7 +180,7 @@ def compute_lesson_immersion_band(
         source = "arc_table"
 
     advisory_uk_share = (int(band["advisory_pct_min"]), int(band["advisory_pct_max"]))
-    module_structural = {
+    module_structural = {} if track_key == "a1" else {
         "min_uk_dialogue_lines": int(band["min_uk_dialogue_lines"]),
         "min_uk_example_sentences": int(band["min_uk_example_sentences"]),
         "min_vocab_entries": int(band["min_vocab_entries"]),

@@ -36,7 +36,7 @@ import yaml
 
 from ..arc.loader import ArcPosition, ArcStaleError, load_arc
 from . import codes
-from .loader import evidence_root
+from .loader import PlanError, active_plan_paths, evidence_root
 from .report import Outcome, Report
 
 _INTRO_KINDS = ("letters", "grammar", "vocabulary")
@@ -61,9 +61,12 @@ def load_level_plans(level_dir: Path) -> LevelPlans:
     cannot know which positions it covers.
     """
     result = LevelPlans()
-    for path in sorted(level_dir.glob("*.yaml")):
-        if path.name.startswith("_"):
-            continue
+    try:
+        paths = active_plan_paths(level_dir)
+    except PlanError as error:
+        result.failures.append(Outcome(error.code, error.message))
+        return result
+    for path in paths:
         try:
             data = yaml.safe_load(path.read_text(encoding="utf-8"))
         except (OSError, yaml.YAMLError) as error:

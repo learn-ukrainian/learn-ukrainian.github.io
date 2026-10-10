@@ -56,6 +56,7 @@ from .loader import (
     load_plan,
     read_plan_text,
     resolve_plan_path,
+    retired_plan_paths,
     sha256_of,
 )
 from .mechanical import check_mechanical
@@ -104,6 +105,14 @@ def _cyrillic_allowed(path: tuple) -> bool:
     if len(rest) >= 2 and rest[0] == "steps" and rest[2:] == ("teach",):
         return True
     if len(rest) >= 2 and rest[0] == "activities" and rest[2:] == ("focus",):
+        return True
+    # English teacher metalanguage may quote taught Ukrainian; ids remain Latin.
+    if rest[0] == "steps" and rest[2:3] == ("task",):
+        if rest[3:] in (("context_en",), ("instruction_en",)):
+            return True
+        if len(rest) == 5 and rest[3] == "success_criteria_en":
+            return True
+    if len(rest) == 7 and rest[0] == "steps" and rest[2:4] == ("task", "learner_reads") and rest[5] == "words":
         return True
     if rest[0] == "activities" and (
         (len(rest) == 4 and rest[2] == "options")
@@ -1461,6 +1470,12 @@ def main(argv: list[str] | None = None) -> int:
 
     vesum_declared_unavailable = "vesum" in args.not_checked_when_unavailable
     if args.all:
+        level_dir = args.level_dir or REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{args.level}"
+        try:
+            exclusions = [path.stem for path in retired_plan_paths(level_dir)]
+        except PlanError as error:
+            print(str(error), file=sys.stderr)
+            return 1
         reports = validate_level(
             args.level,
             level_dir=args.level_dir,
@@ -1474,6 +1489,7 @@ def main(argv: list[str] | None = None) -> int:
                 "level": args.level,
                 "status": "pass",
                 "plans": [report.to_json() for report in reports],
+                "retired_exclusions": exclusions,
             }
             if any(report.failures for report in reports):
                 payload["status"] = "fail"
@@ -1481,8 +1497,10 @@ def main(argv: list[str] | None = None) -> int:
                 payload["status"] = "waived"
             print(json.dumps(payload, ensure_ascii=False, indent=2))
         else:
+            if exclusions:
+                print(f"level {args.level}: retired exclusions: {', '.join(exclusions)}")
             if not reports:
-                print(f"level {args.level}: no plans under lesson-plans/{args.level}/")
+                print(f"level {args.level}: zero active plans under lesson-plans/{args.level}/; no plan-state proof")
             for report in reports:
                 summary = report.status
                 if report.failures:

@@ -183,7 +183,7 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
 # IMMERSION POLICY
 # =============================================================================
 
-USE_ULP_IMMERSION_DERIVATION: bool = True  # A1 calibrated 2026-05-13 from ULP S1-S6 replay; A2 uses module bands.
+USE_ULP_IMMERSION_DERIVATION: bool = True  # A1 editorial core-vocabulary bands (#10105); A2 uses module bands.
 
 # One authoritative source for live immersion policy across prompt generation
 # and audit gates. A band defines:
@@ -196,10 +196,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a1-m01-03",
             "max_module": 3,
-            "min_pct": 5,
-            "max_pct": 25,
+            "min_pct": 0,
+            "max_pct": 15,
             "rule": (
-                "TARGET: 5-25% Ukrainian.\n"
+                "TARGET: 0-15% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: Ukrainian-first with brief English support.\n"
                 "- UKRAINIAN CONTENT: Letters, sounds, words, and very short phrases inline.\n"
@@ -212,10 +212,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a1-m04-06",
             "max_module": 6,
-            "min_pct": 8,
-            "max_pct": 30,
+            "min_pct": 10,
+            "max_pct": 20,
             "rule": (
-                "TARGET: 8-30% Ukrainian.\n"
+                "TARGET: 10-20% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: Ukrainian-first with brief English support.\n"
                 "- UKRAINIAN CONTENT: Words and short phrases inline: \"The word **книга** means book.\"\n"
@@ -228,10 +228,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a1-m07-14",
             "max_module": 14,
-            "min_pct": 10,
-            "max_pct": 38,
+            "min_pct": 15,
+            "max_pct": 30,
             "rule": (
-                "TARGET: 10-38% Ukrainian.\n"
+                "TARGET: 15-30% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: Ukrainian-first examples with brief English support.\n"
                 "- UKRAINIAN CONTENT: Words and short phrases bolded inline: \"The word **книга** (book) is feminine.\"\n"
@@ -244,10 +244,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a1-m15-24",
             "max_module": 24,
-            "min_pct": 15,
-            "max_pct": 24,
+            "min_pct": 25,
+            "max_pct": 40,
             "rule": (
-                "TARGET: 15-24% Ukrainian.\n"
+                "TARGET: 25-40% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: Ukrainian-first with brief English support — show the concept, then scaffold.\n"
                 "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
@@ -262,10 +262,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a1-m25-34",
             "max_module": 34,
-            "min_pct": 15,
-            "max_pct": 40,
+            "min_pct": 35,
+            "max_pct": 50,
             "rule": (
-                "TARGET: 15-40% Ukrainian.\n"
+                "TARGET: 35-50% Ukrainian.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: Ukrainian-first with brief English support — show the concept, then scaffold.\n"
                 "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
@@ -280,10 +280,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a1-m35-54",
             "max_module": 54,
-            "min_pct": 20,
-            "max_pct": 40,
+            "min_pct": 45,
+            "max_pct": 60,
             "rule": (
-                "TARGET: 20-40% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
+                "TARGET: 45-60% Ukrainian. Uncalibrated editorial advisory.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: Ukrainian-first with brief English support. Show Ukrainian before any scaffold.\n"
                 "- UKRAINIAN NARRATIVE PARAGRAPHS: REQUIRED — minimum 1 per section. "
@@ -301,10 +301,10 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "a1-m55+",
             "max_module": 10_000,
-            "min_pct": 25,
-            "max_pct": 48,
+            "min_pct": 55,
+            "max_pct": 70,
             "rule": (
-                "TARGET: 25-48% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
+                "TARGET: 55-70% Ukrainian. Uncalibrated editorial advisory.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY & EXPLANATION: Ukrainian-first with brief English support. Show Ukrainian before any scaffold.\n"
                 "- UKRAINIAN NARRATIVE PARAGRAPHS: REQUIRED — minimum 2 per section. "
@@ -622,11 +622,11 @@ def _uses_ulp_s1_band(band_key: str) -> bool:
     return band_key in _ULP_S1_IMMERSION_BAND_KEYS
 
 
-def _ulp_s1_language_roles() -> str:
+def _ulp_s1_language_roles(band: dict[str, Any]) -> str:
     return (
-        "TARGET: 40-55% Ukrainian. ULP S1 bilingual immersion.\n"
+        f"ADVISORY: {band['advisory_pct_min']}-{band['advisory_pct_max']}% Ukrainian. Uncalibrated editorial A1 bands.\n"
         "LANGUAGE ROLES:\n"
-        "- PRIMARY POSTURE: Ukrainian-first, example-first teaching with brief receding English support.\n"
+        "- PRIMARY POSTURE: English scaffolding with taught Ukrainian examples; increasing supported Ukrainian use.\n"
         "- ULP SSOT: follow docs/best-practices/ulp-presentation-pattern.md for the Ohoiko S1 rhythm. "
         "The full seven-practice contract is injected only for `letter_module: true` plans."
     )
@@ -638,7 +638,7 @@ def _structural_immersion_rule(band: dict[str, Any]) -> str:
     if old_rule.startswith("TARGET:") and "\n" in old_rule:
         language_roles = old_rule.split("\n", 1)[1]
     if _uses_ulp_s1_band(str(band["key"])):
-        language_roles = _ulp_s1_language_roles()
+        language_roles = _ulp_s1_language_roles(band)
     if str(band["key"]).startswith("a2-"):
         unsupported_run = (
             "- Keep long Ukrainian runs readable with simple frames, nearby examples, "
@@ -663,7 +663,7 @@ def _ulp_practices_rule(track: str, module_num: int) -> str:
     return ""
 
 
-def _ulp_letter_module_contract() -> str:
+def _ulp_letter_module_contract(track: str = "a1") -> str:
     return (
         "## ULP Presentation Pattern — letter_module:true full contract\n"
         "For `letter_module: true` A1/A2 plans, follow all seven Anna Ohoiko practices:\n"
@@ -671,7 +671,9 @@ def _ulp_letter_module_contract() -> str:
         "2. SIDE-BY-SIDE BILINGUAL: narratives of 3+ sentences use UK-left / EN-right aligned rendering.\n"
         "3. STRESS MARKS: keep plain Ukrainian ready for deterministic stress marking; do not transliterate.\n"
         "4. DIALOGUE UK-ONLY: Tab 1 dialogues are pure Ukrainian; support follows in `en` props or a table/paragraph.\n"
-        "5. UK-ONLY Q&A: comprehension stems and content options stay Ukrainian; English only in UI affordances.\n"
+        + ("5. COMPREHENSION: early A1 uses English-supported practical tasks as defined by "
+           "activity_instruction: [en] in immersion_table.yaml.\n" if _immersion_track_key(track) == "a1" else
+           "5. UK-ONLY Q&A: comprehension stems and content options stay Ukrainian; English only in UI affordances.\n") +
         "6. TRANSLATE TO WORKBOOK: EN→UK translation drills belong in workbook practice, never Tab 1 prose.\n"
         "7. NAMED PERSONA: use a named Ukrainian teacher/persona or characters with real Ukrainian anchors.\n"
         "Reject transliteration tables, `X sounds like Y in English`, EN-first dialogue glossing, vocab dumps, "
@@ -683,9 +685,6 @@ def _extend_immersion_band(raw_band: dict[str, Any]) -> dict[str, Any]:
     band = dict(raw_band)
     band["advisory_pct_min"] = int(band.pop("min_pct"))
     band["advisory_pct_max"] = int(band.pop("max_pct"))
-    if _uses_ulp_s1_band(str(band["key"])):
-        band["advisory_pct_min"] = 40
-        band["advisory_pct_max"] = 55
     structural = {
         **_IMMERSION_STRUCTURAL_DEFAULTS,
         **_IMMERSION_STRUCTURAL_OVERRIDES.get(str(band["key"]), {}),
@@ -701,16 +700,23 @@ IMMERSION_POLICIES = {
     for family, bands in IMMERSION_POLICIES.items()
 }
 
+IMMERSION_POLICIES["a1"] += ({
+    "key": "a1-orientation", "max_module": -1,
+    "advisory_pct_min": None, "advisory_pct_max": None,
+    "rule": "English orientation; Ukrainian overview exemplars only; adds zero core words. "
+            "English practical orientation recap, without Ukrainian production or an advisory share.",
+},)
+
 _ULP_VOCAB_KNEE_PER_BAND: dict[str, tuple[tuple[int, str], ...]] = {
-    # Calibrated 2026-05-13 from ULP S1-S6 replay. Audit: audit/ulp-calibration-2026-05-13/REPORT.html
+    # #10105 approved editorial thresholds, uncalibrated. ULP is an attributed comparator.
     "a1": (
         (0, "a1-m01-03"),
-        (140, "a1-m04-06"),
-        (242, "a1-m07-14"),
-        (573, "a1-m15-24"),
-        (593, "a1-m25-34"),
-        (621, "a1-m35-54"),
-        (647, "a1-m55+"),
+        (25, "a1-m04-06"),
+        (60, "a1-m07-14"),
+        (140, "a1-m15-24"),
+        (242, "a1-m25-34"),
+        (400, "a1-m35-54"),
+        (600, "a1-m55+"),
     ),
     # A2 intentionally uses module-number bands after the 2026-06-16 easy-Ukrainian
     # policy reset; old vocab knees kept early A2 in the bridge band too long.
@@ -781,6 +787,7 @@ def _find_immersion_band(track: str, module_num: int) -> dict[str, Any]:
     """Return the band record for a track/module pair."""
     family = _immersion_track_key(track)
     bands: Sequence[dict[str, Any]] = IMMERSION_POLICIES[family]
+    bands = tuple(band for band in bands if band["key"] != "a1-orientation")
     for band in bands:
         if module_num <= int(band["max_module"]):
             return band
@@ -802,11 +809,11 @@ def _learner_vocab_count(learner_state: dict | None) -> int:
     if not learner_state:
         return 0
     cumulative = learner_state.get("cumulative_vocabulary", [])
-    if isinstance(cumulative, int):
+    if type(cumulative) is int and cumulative >= 0:
         return cumulative
     if isinstance(cumulative, (list, tuple, set)):
         return len(cumulative)
-    return 0
+    raise ValueError("cumulative_core_count_invalid: expected a nonnegative integer or inventory collection")
 
 
 def _has_learner_vocab_signal(learner_state: dict | None) -> bool:
@@ -822,7 +829,7 @@ def compute_immersion_band(
 
     When USE_ULP_IMMERSION_DERIVATION is False, this is a thin shim around the
     static IMMERSION_POLICIES fallback. When True, A1 derives the band from
-    learner_state's cumulative_vocabulary count using calibration constants.
+    learner_state's cumulative_vocabulary count using editorial thresholds.
     A2 always follows module-number bands so Ukrainian complexity grows across
     the course instead of staying in the bridge band.
     """
@@ -834,7 +841,7 @@ def compute_immersion_band(
         return dict(_find_immersion_band(track, module_num))
 
     knees = _ULP_VOCAB_KNEE_PER_BAND.get(family, _ULP_VOCAB_KNEE_PER_BAND["default"])
-    vocab_count = _learner_vocab_count(learner_state)
+    vocab_count = _learner_vocab_count(learner_state) if family == "a1" else 0
     selected_key = knees[0][1]
     for threshold, band_key in knees:
         if vocab_count >= threshold:
@@ -903,7 +910,7 @@ def get_immersion_rule(
     if ulp_rule:
         return f"{rule}\n\n{ulp_rule}"
     if letter_module and _immersion_track_key(track) in {"a1", "a2"}:
-        return f"{rule}\n\n{_ulp_letter_module_contract()}"
+        return f"{rule}\n\n{_ulp_letter_module_contract(track)}"
     return rule
 
 

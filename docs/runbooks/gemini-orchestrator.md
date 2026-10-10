@@ -24,8 +24,10 @@
 
 `start-gemini-driver.sh --epic <lane>` launches a Gemini epic driver through
 the shared driver path (2026-10-08 approval): scope entry, rules core, deploy,
-stream lease, provider canary and drive-epic binding, the same shape as the
-other driver entrypoints. The driver defaults to `gemini-3.1-pro-high`;
+stream lease, adapter canary step and drive-epic binding, the same shape as the
+other driver entrypoints. The launcher runs a provider canary only where the
+adapter has a semantic canary; otherwise it reports `not run`, as Gemini does.
+The driver defaults to `gemini-3.1-pro-high`;
 `--model gemini-3.8-flash-high` is also certified. Any other Gemini model id
 exits with code 4 before startup, and so does a Gemini model id given to
 another provider's driver. `--epic` and `--force` are rejected by the

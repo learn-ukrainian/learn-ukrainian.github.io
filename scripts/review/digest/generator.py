@@ -356,15 +356,10 @@ def build_digest(
     if not plan_path.is_file():
         raise DigestError(codes.PLAN_MISSING, f"module plan {plan_path} not found")
 
+    from scripts.curriculum.validate.loader import load_plan
+
+    plan_doc = load_plan(plan_path)
     plan_sha256 = compute_file_sha256(plan_path)
-    try:
-        plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
-    except Exception as exc:
-        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} unreadable YAML: {exc}") from exc
-
-    if not isinstance(plan_doc, dict):
-        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} is not a YAML mapping")
-
     validate_plan_schema(plan_doc, plan_path, repo_root=root)
 
     plan_lessons_by_n: dict[int, dict[str, Any]] = {l["n"]: l for l in plan_doc["lessons"]}

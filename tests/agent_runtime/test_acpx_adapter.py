@@ -2509,10 +2509,13 @@ def test_cursor_acp_variant_refusal_writes_typed_usage_record(tmp_path, monkeypa
 
 
 def test_cursor_acp_pins_match_the_catalog_cursor_pins():
-    from scripts.review.model_catalog import cursor_pinned_models
+    from scripts.review.model_catalog import apply_cursor_model_pins, cursor_pinned_models
 
     assert cursor_pinned_models()[0] == acpx_module.CURSOR_ACP_MODEL
-    assert frozenset(cursor_pinned_models()).issubset(acpx_module.CURSOR_ACP_MODELS)
+    expected_wire_pins = frozenset({"composer-2.5[fast=false]"}) | {
+        apply_cursor_model_pins(pin) for pin in cursor_pinned_models()
+    }
+    assert expected_wire_pins == acpx_module.CURSOR_ACP_MODELS
 
 
 def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):

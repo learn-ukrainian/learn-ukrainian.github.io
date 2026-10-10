@@ -1,0 +1,22 @@
+# Minimal CI workflow with one advisory (continue-on-error) job. The real ci.yml
+# has no advisory job any more; readiness tests use this to keep covering the rule.
+name: CI
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps: []
+  shadow:
+    name: Component shadow (advisory)
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps: []
+  ci-gate:
+    name: CI Gate
+    if: always()
+    needs: [build, shadow]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          BUILD: ${{ needs.build.result }}
+        run: test "$BUILD" = success

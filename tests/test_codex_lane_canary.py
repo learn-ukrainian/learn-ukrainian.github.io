@@ -3,11 +3,52 @@
 from __future__ import annotations
 
 import argparse
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 from scripts.session_canary import codex_lane
+
+
+@pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
+def test_lane_import_and_bare_hydration_do_not_import_slot_registry(provider) -> None:
+    """Keep the bridge import graph outside the hook's bare-provider cold path."""
+    code = """
+import importlib
+import importlib.abc
+import os
+import sys
+
+class NoRegistry(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname in {"scripts.orchestration.handoff_slot_registry", "scripts.ai_agent_bridge"}:
+            raise AssertionError("unneeded cold-path import: " + fullname)
+
+sys.meta_path.insert(0, NoRegistry())
+provider = sys.argv[1]
+lane = importlib.import_module("scripts.session_canary." + provider + "_lane")
+os.environ["SESSION_STREAM_AGENT"] = provider
+calls = []
+def hydrate(stream, identity):
+    calls.append((stream, identity))
+    return {"execution_allowed": True}, 1
+lane.shared_hydration.build_hydration_capsule_with_retry = hydrate
+assert lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == 0
+assert calls == [("epic:123", provider)]
+"""
+    root = Path(__file__).resolve().parents[1]
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [sys.executable, "-c", code, provider], cwd=root, env=env,
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert result.stdout == '{"execution_allowed": true}\nACTION: hydration ready — continue the current driver.\n'
+    assert result.stderr == "hydration_attempts: 1\n"
 
 
 def _allowed_capsule() -> dict[str, object]:
@@ -18,7 +59,7 @@ def test_score_pass_hydrates_then_continues(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     monkeypatch.setattr(codex_lane, "_with_codex_handoffs", lambda function, args: 0)
-    monkeypatch.setattr(codex_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane: _allowed_capsule())
+    monkeypatch.setattr(codex_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule())
 
     assert codex_lane.main(["score", "--epic", "harness", "--answers", "answers.json"]) == 0
     assert "hydration ready — continue" in capsys.readouterr().out
@@ -40,7 +81,7 @@ def test_hydrate_refuses_to_continue_when_capsule_is_blocked(
     monkeypatch.setattr(
         codex_lane.shared_hydration,
         "build_hydration_capsule",
-        lambda stream, lane: {"execution_allowed": False},
+        lambda stream, lane, **_: {"execution_allowed": False},
     )
 
     assert codex_lane.main(["hydrate", "--epic", "harness"]) == 2
@@ -163,6 +204,7 @@ def test_hydrate_reports_retry_count_without_changing_capsule(monkeypatch, capsy
         calls.append((stream, identity))
         return capsule, 2
 
+    monkeypatch.delenv("SESSION_STREAM_AGENT", raising=False)
     monkeypatch.setattr(lane.shared_hydration, "build_hydration_capsule_with_retry", retry)
     assert lane.main(["hydrate", "--epic", "harness", "--stream", "epic:123"]) == 0
     output = capsys.readouterr()
@@ -176,10 +218,64 @@ def test_hydrate_preserves_launcher_codex_identity(monkeypatch, capsys, identity
     monkeypatch.setenv("SESSION_STREAM_AGENT", identity)
     observed = []
 
-    def retry(stream, lane):
+    def retry(stream, lane, **_):
         observed.append(lane)
         return {"execution_allowed": lane == identity}
 
     monkeypatch.setattr(codex_lane.shared_hydration, "build_hydration_capsule", retry)
     assert codex_lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == (2 if identity == "gemini" else 0)
-    assert observed == ["codex" if identity == "gemini" else identity]
+    assert observed == ([] if identity == "gemini" else [identity])
+
+
+@pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
+@pytest.mark.parametrize("registration", ["registered", "removed", "prefix", "foreign", "empty"])
+def test_hydrate_uses_exact_registered_provider_identity(monkeypatch, capsys, tmp_path, provider, registration) -> None:
+    from scripts.orchestration import handoff_slot_registry
+    from scripts.session_canary import gemini_lane, glm_lane
+
+    lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[provider]
+    # A local roster exercises GLM slots without changing live eligibility.
+    roster = tmp_path / "area_assignments.yaml"
+    roster.write_text(f"assignments:\n  core:\n    slots: [{provider}-core]\n", encoding="utf-8")
+    monkeypatch.setattr(handoff_slot_registry._channels, "ASSIGNMENTS_PATH", roster)
+    identity = {
+        "registered": f"{provider}-core",
+        "removed": f"{provider}-infra",
+        "prefix": f"{provider}-core-forged",
+        "foreign": "claude-core",
+        "empty": "",
+    }[registration]
+    monkeypatch.setenv("SESSION_STREAM_AGENT", identity)
+    calls = []
+
+    def hydrate(stream, checked_identity):
+        calls.append((stream, checked_identity))
+        return {"execution_allowed": True}, 1
+
+    monkeypatch.setattr(lane.shared_hydration, "build_hydration_capsule_with_retry", hydrate)
+    rc = lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"])
+    output = capsys.readouterr()
+    if registration == "registered":
+        assert rc == 0
+        assert calls == [("epic:123", identity)]
+    else:
+        assert rc == 2
+        assert calls == []
+        assert output.out == ""
+        assert output.err == "ACTION: hydration blocked — unregistered lane identity for this provider.\n"
+
+
+@pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
+def test_hydrate_refuses_slot_when_registry_unavailable(monkeypatch, capsys, tmp_path, provider) -> None:
+    from scripts.orchestration import handoff_slot_registry
+    from scripts.session_canary import gemini_lane, glm_lane
+
+    lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[provider]
+    monkeypatch.setattr(handoff_slot_registry._channels, "ASSIGNMENTS_PATH", tmp_path / "missing.yaml")
+    monkeypatch.setenv("SESSION_STREAM_AGENT", f"{provider}-core")
+    monkeypatch.setattr(
+        lane.shared_hydration, "build_hydration_capsule_with_retry",
+        lambda *args: pytest.fail("unverified registration must not fetch or retry"),
+    )
+    assert lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == 2
+    assert "unregistered lane identity" in capsys.readouterr().err

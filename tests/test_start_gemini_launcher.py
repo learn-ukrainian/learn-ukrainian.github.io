@@ -33,8 +33,9 @@ def test_gemini_driver_accepts_certified_models(arguments: tuple[str, ...], mode
     assert "LAUNCHER_DRY_RUN=1: would enter a verified per-driver memory-limited scope in lu-driver.slice" in lines
     assert any(line.startswith("launcher: would claim lease ") and "agent=gemini harness=agy" in line for line in lines)
     assert any("slot=gemini-infra" in line for line in lines)
-    assert "gemini adapter: would run provider canary" in lines
-    assert "launcher: would bind drive-epic after lease and provider canary" in lines
+    assert "gemini adapter: provider canary: not run" in lines
+    assert "launcher: would bind drive-epic after lease; provider canary: not run" in lines
+    assert "ran its provider canary" not in result.stdout
     exec_line = _would_exec_line(result.stdout)
     assert exec_line.startswith(f"would exec agy --model {model} -i ")
     assert _DRIVE_EPIC_NEEDLE in exec_line

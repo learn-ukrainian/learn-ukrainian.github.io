@@ -449,6 +449,35 @@ def test_dispatch_worktree_write_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "printf changed > {primary}/curriculum/tracked.md",
+        "git -C {primary} add curriculum/tracked.md",
+        "git -C {primary} restore --source=HEAD curriculum/tracked.md",
+        "touch {primary}/curriculum/new.md",
+        "touch $UNKNOWN_TARGET",
+    ],
+)
+def test_issue_10337_cursor_shell_blocks_primary_and_allows_dispatch(repo: Path, command: str):
+    """Cursor's preToolUse Shell input follows the same containment path as Bash."""
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+
+    def run(command: str):
+        return _run(dispatch, {
+            "tool_name": "Shell",
+            "cwd": str(dispatch),
+            "tool_input": {"command": command, "cwd": str(dispatch)},
+        })
+
+    result = run(command.format(primary=repo))
+    assert result.returncode == 2, result.stderr
+    assert "BLOCKED" in result.stderr
+    for allowed in ("git status", "printf changed > curriculum/tracked.md", "git add curriculum/tracked.md"):
+        result = run(allowed)
+        assert result.returncode == 0, result.stderr
+
+
 def test_dispatch_worktree_control_hook_write_allowed(repo: Path):
     payload = _write_payload(
         repo,
@@ -1513,20 +1542,41 @@ def test_issue_8785_hidden_component_glob_semantics():
 @pytest.mark.parametrize(
     "command",
     [
-        "cat /tmp/read-only",
-        "grep needle /tmp/read-only",
-        "find /tmp -maxdepth 0",
+        "cat {scratch}/read-only",
+        "grep needle {scratch}/read-only",
+        "find {scratch} -maxdepth 0",
         "git log -1",
-        "cd /tmp; tee scratch.txt",
-        "tee /tmp/scratch.txt",
-        "echo /tmp/scratch.txt | xargs tee",
-        "echo x > /tmp/out-?.txt",
+        "cd {scratch}; tee scratch.txt",
+        "tee {scratch}/scratch.txt",
+        "echo {scratch}/scratch.txt | xargs tee",
+        "echo x > {scratch}/out-?.txt",
     ],
 )
 def test_issue_8785_safe_commands_remain_allowed(repo: Path, command: str):
+    # #10343: a shared scratch.txt can be a symlink into a primary checkout.
+    # Own the directory and its leaves instead of assuming global temp state.
+    scratch = repo.parent / "scratch"
+    scratch.mkdir()
+    command = command.format(scratch=shlex.quote(str(scratch)))
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("primary_cwd", [False, True])
+@pytest.mark.parametrize("target", ["outside", "primary", "symlink"])
+def test_issue_10343_cd_then_tee_containment(repo: Path, primary_cwd: bool, target: str):
+    scratch = repo.parent / "scratch with spaces"
+    scratch.mkdir()
+    if target == "symlink":
+        (scratch / "scratch.txt").symlink_to(repo / "scratch.txt")
+    destination = repo if target == "primary" else scratch
+    cwd = repo if primary_cwd else repo / ".worktrees/dispatch/claude/task-1"
+    command = f"cd {shlex.quote(str(destination))}; tee scratch.txt"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(cwd), "tool_input": {"command": command}})
+    assert result.returncode == (0 if target == "outside" else 2), result.stderr
+    if target != "outside":
+        assert "untracked_primary_checkout" in result.stderr
 
 
 @pytest.mark.parametrize(

@@ -33,6 +33,7 @@ if __package__ in {None, ""}:
 
 from scripts.guardrails.worktree_containment import resolve_main_root
 from scripts.ingest import incremental_textbook_ingest as textbook_ingest
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import phase3_vspu_source_materialization as materialization
 from scripts.projects.open_model_data import university_source_policy
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -411,9 +412,8 @@ def _existing_corpus_fingerprint(connection: sqlite3.Connection) -> str:
 
 def _database_evidence(path: Path) -> dict[str, Any]:
     _regular_file(path, "database")
-    uri = f"file:{Path(path).resolve()}?mode=ro"
     try:
-        with sqlite3.connect(uri, uri=True, timeout=30.0) as connection:
+        with open_readonly(path, timeout=30.0) as connection:
             counts = _database_counts(connection)
             target_rows = connection.execute(
                 "SELECT COUNT(*) FROM textbooks WHERE source_file=?",
@@ -522,9 +522,8 @@ def _cleanup_sidecars(path: Path) -> None:
 
 
 def _sqlite_backup(source: Path, target: Path) -> None:
-    source_uri = f"file:{Path(source).resolve()}?mode=ro"
     try:
-        with sqlite3.connect(source_uri, uri=True) as source_connection, sqlite3.connect(target) as target_connection:
+        with open_readonly(source) as source_connection, sqlite3.connect(target) as target_connection:
             source_connection.backup(target_connection)
             target_connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
     except sqlite3.Error as exc:

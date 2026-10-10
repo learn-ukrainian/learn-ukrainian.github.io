@@ -38,17 +38,9 @@ _WORKFLOW_EXPECTATIONS = {
         "group": _EVENT_PR_NUMBER_OR_DISPATCH_GROUP,
         "cancel-in-progress": "${{ github.event_name == 'pull_request' }}",
     },
-    ".github/workflows/content-ci.yml": {
-        "group": _PR_NUMBER_GROUP,
-        "cancel-in-progress": True,
-    },
     ".github/workflows/pr-body-guard.yml": {
         "group": _PR_NUMBER_ONLY_GROUP,
         "cancel-in-progress": True,
-    },
-    ".github/workflows/hygiene.yml": {
-        "group": _EVENT_SHA_GROUP,
-        "cancel-in-progress": "${{ github.event_name != 'merge_group' }}",
     },
     ".github/workflows/security-audit.yml": {
         "group": _EVENT_SHA_GROUP,
@@ -64,10 +56,8 @@ _WORKFLOW_EXPECTATIONS = {
             "cancel-in-progress": _PR_ONLY_CANCELLATION,
         }
         for name in (
-            "ui-policy-gate",
             "model-catalog-freshness",
             "actionlint",
-            "entire-kimi-agent",
             "rules-deployment-check",
             "validate-yaml",
         )

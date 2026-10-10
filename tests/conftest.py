@@ -36,6 +36,8 @@ from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
+    "tests.helpers.github_command_boundary",
+    "tests.helpers.github_transport",
     "tests.helpers.source_db_write_guard",
     "tests.helpers.checkout_write_guard",
     "tests.helpers.checkout_write_defaults",
@@ -193,6 +195,12 @@ def _resolve_real_gh_binary() -> str | None:
 
 _REAL_GH_BINARY = _resolve_real_gh_binary()
 _LIVE_GITHUB_ALLOWED = False
+
+
+@pytest.fixture(autouse=True)
+def _disable_open_pr_freeze(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep dispatch tests off the live open-PR count; freeze tests opt back in."""
+    monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", "0")
 
 
 @pytest.fixture(autouse=True)
@@ -1891,8 +1899,23 @@ def _item_repo_rel(item: pytest.Item) -> str:
         return path.as_posix()
 
 
+# Test groups that run nightly instead of on every PR (CI review: they caught no
+# bug on a PR in the measured window). They join the ``slow`` lane, which
+# pytest-slow-nightly.yml runs; a failing group gets an owned issue. Tests that
+# CI must prove ran (``needs_artifact``) stay on PRs.
+NIGHTLY_GROUPS = ("tests/projects/", "tests/audit/", "tests/test_open")
+
+
+def _mark_nightly_groups(items: list[pytest.Item]) -> None:
+    """Mark nightly test groups ``slow`` before ``-m`` deselects."""
+    for item in items:
+        if _item_repo_rel(item).startswith(NIGHTLY_GROUPS) and item.get_closest_marker("needs_artifact") is None:
+            item.add_marker(pytest.mark.slow)
+
+
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Skip tests whose sparse-excluded tree is not in this worktree."""
+    _mark_nightly_groups(items)
     selected = rerun_node_ids(
         load_registry(),
         today=datetime.now(UTC).date(),
@@ -3043,43 +3066,10 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
 from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401
 
 
-@pytest.fixture
-def github_command_boundary(monkeypatch):
-    """Caller tests replace whole GitHub commands; HTTP tests inject transport."""
-    from scripts.common import github_client
-
-    def run(args, **kwargs):
-        kwargs.pop("fresh", None)
-        return subprocess.run(args, timeout=kwargs.pop("timeout", 30), **kwargs)
-
-    monkeypatch.setattr(github_client, "run", run)
-
-
-@pytest.fixture
-def github_transport(monkeypatch):
-    """Install one HTTP transport seam while retaining the real client and readers.
-
-    The handler receives method, endpoint, headers, body and timeout. Responses
-    exercise status, headers, caching and REST reshaping exactly as production.
-    """
-    from scripts.common import github_client
-
-    constructor = github_client.GitHubClient
-
-    def install(handler):
-        calls = []
-        install.clients = []
-
-        def transport(method, endpoint, headers, body, timeout):
-            calls.append((method, endpoint, headers, body, timeout))
-            return handler(method, endpoint, headers, body, timeout)
-
-        def client(**kwargs):
-            store = constructor(**{**kwargs, "transport": transport})
-            install.clients.append(store)
-            return store
-
-        monkeypatch.setattr(github_client, "GitHubClient", client)
-        return calls
-
-    return install
+@pytest.fixture(autouse=True)
+def _no_operator_model_pause(monkeypatch, tmp_path_factory):
+    """Tests never read the operator's live model-pause policy."""
+    if "LU_MODEL_PAUSE_FILE" not in os.environ:
+        monkeypatch.setenv(
+            "LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json")
+        )

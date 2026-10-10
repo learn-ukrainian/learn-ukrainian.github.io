@@ -14,8 +14,9 @@ launcher_usage() {
       driver_mode="  driver       No certified ${LC_PROVIDER} driver entrypoint is available."
       ;;
     *)
-      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs the
-               provider canary, then injects the drive-epic binding."
+      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs a
+               semantic canary where available (otherwise reports not run),
+               then injects the drive-epic binding."
       ;;
   esac
   case "$LC_PROVIDER" in
@@ -60,8 +61,9 @@ Options:
                              an empty model or a forwarded --model. Gemini driver
                              default: gemini-3.1-pro-high (gemini-3.8-flash-high is
                              also certified); Gemini interactive default:
-                             gemini-3.8-flash-high. Claude
-                             interactive / Grok: omit to keep last TUI/session model.
+                             gemini-3.8-flash-high. Claude interactive: omit to use
+                             project settings (Sonnet 5.5). Grok: omit to keep
+                             last TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
                              --reasoning-effort). Claude driver default: high. Otherwise
                              omit to keep last session selection. Other providers ignore.
@@ -83,7 +85,8 @@ Environment:
                              curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
                              claude-opus-5-5[1m]; Cursor: grok-4.7-high; empty
-                             for Claude interactive/Grok = last session).
+                             for Claude interactive = project settings (Sonnet 5.5);
+                             empty for Grok = last session).
   LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
                              empty for Claude interactive/Grok = last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
@@ -333,8 +336,8 @@ launcher_defaults() {
   case "$LC_PROVIDER" in
     claude)
       # Driver seats the orchestrator on Opus 5.5 with the 1M window (operator
-      # 2026-09-22); effort defaults to high below. Interactive leaves model and
-      # effort alone so Claude Code keeps the last TUI/session selection.
+      # 2026-09-22); effort defaults to high below. Interactive leaves model to
+      # project settings (Sonnet 5.5) and effort to the session selection.
       if [ "$LC_MODE" = driver ]; then
         LC_MODEL="${LAUNCHER_MODEL:-claude-opus-5-5[1m]}"
       else
@@ -821,12 +824,12 @@ except ModelCatalogError as exc:
     print(str(exc), file=sys.stderr)
     sys.exit(4)
 ' "$LC_ROOT" "$LC_MODEL")"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
     exit 4
   fi
   LC_MODEL="$normalized"
   if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
     exit 4
   fi
 }
@@ -1295,9 +1298,8 @@ launcher_forward_args_have_agent() {
 }
 
 launcher_inject_driver_agent() {
-  # Claude Code selects its system prompt from --agent. The project default
-  # (.claude/settings.json "agent") is the main orchestrator, which is the wrong
-  # prompt for every non-curriculum driver lane, so resolve the lane's
+  # Claude Code selects its system prompt and model from --agent. Routine
+  # interactive settings have no default agent, so resolve the lane's
   # driver_agent_type from scripts/config/area_assignments.yaml and inject it
   # unless the caller chose an agent explicitly.
   [ "$LC_PROVIDER" = "claude" ] || return 0
@@ -1312,7 +1314,7 @@ launcher_inject_driver_agent() {
   [ -x "$py" ] || return 0
   agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m scripts.orchestration.driver_agent_type --lane "$LC_EPIC" 2>/dev/null || true)"
   if [ -z "$agent_type" ]; then
-    printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; keeping the settings default agent\n' "$LC_EPIC" >&2
+    printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; no named agent selected; using the launcher model or project settings (Sonnet 5.5)\n' "$LC_EPIC" >&2
     return 0
   fi
   LC_FORWARD_ARGS=(--agent "$agent_type" "${LC_FORWARD_ARGS[@]}")
@@ -1334,13 +1336,16 @@ launcher_bind_drive_epic() {
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"
   else
-    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — verdict posted on the PR, merge when CI green, sealed formal CF is retired; authority mode is durable state and ACP is provider transport.'
+    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — exact-head cross-family APPROVE before opening PR, same-head CI Gate green, driver enqueue through merge queue, closeout; authority mode is durable state and ACP is provider transport.'
   fi
-  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
+  local canary_status='not run'
+  # A successful hook alone is no execution evidence; dry runs never run a probe.
+  if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
+  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then
-    printf 'launcher: would bind drive-epic after lease and provider canary\n'
+    printf 'launcher: would bind drive-epic after lease; provider canary: %s\n' "$canary_status"
   fi
 }
 
@@ -1365,6 +1370,7 @@ launcher_publication_path() {
 launcher_main() {
   LC_PROVIDER="$1"
   LC_MODE="$2"
+  LC_PROVIDER_CANARY_RAN=0
   shift 2
   # Consumed by session_supervisor_exec_successor in the sourced helper.
   # shellcheck disable=SC2034

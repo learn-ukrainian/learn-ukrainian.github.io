@@ -2460,6 +2460,13 @@ def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kin
     anchor = f"## {4 if kind == 'rereview' else 3}. Review Tools and Receipts\n\n"
     assert expected.count(anchor) == 1
     expected = expected.replace(anchor, anchor + AGY_TOOL_GUIDANCE, 1)
+    # #10105 approved R1-R12 changes only this A1 recap judgment and A1 recap wording.
+    # The frozen fixture stays untouched; compare its bytes plus the explicit contract delta.
+    expected = expected.replace(
+        "and follows ULP review shape (R-03).",
+        "and performs the approved practical plan task (R-03, #10105).",
+    )
+    expected += ("\n\n" if kind == "plan" else "\n") + "### A1 practical recap judgment (#10105)\nUnder `activities` (plan review) or `job` and `activity` (lesson review), assess every\nrecap/checkpoint/embedded closing step's approved plan task, including embedded recaps\nwhen the manifest is not marked recap. The module digest and earlier teaching steps\nprovide the taught context; declare an evidence gap if the applicable built context is absent.\nJudge usefulness, Ukrainian processing and a real contextual choice/personalization/\nrecombination. Reject disguised copying, Ukrainian bypass, wholesale model copying,\nor an untaught construction even when every lemma is available. Cite the actual task.\nEarly A1 is defined by activity_instruction: [en] in immersion_table.yaml, not position.\nRequire English context, instructions and observable criteria (they may quote the taught\nUkrainian the learner says, reads or chooses) and no story-question closure in early A1.\nQuoted Ukrainian in those English fields is teacher metalanguage, not learner print or\ninventory evidence: confirm each quoted form and construction is taught before the step.\nArc D4's story-question shape is superseded for A1 by arc section 9 (#10105). A story is optional support. Later A1 may use supported comprehension.\nOrientation requires explicit a1-orientation: English narration, Ukrainian overview\nexemplars only, no advisory share or core additions; English practical orientation recap\nrequires no Ukrainian production. A1 has no module structural minimums in fresh payloads;\nlesson_structural_minimums_not_calibrated remains. A2+ contracts are unchanged.\n"
     assert isolated.prompt.encode() == expected.encode()
     assert "search_resources" not in isolated.prompt
     assert "Full access and evidence duty" not in isolated.prompt
@@ -2468,3 +2475,21 @@ def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kin
     ).passed
     full = render(path, **{**kw, "review_access": "full"})
     assert "search_resources" in full.prompt and "Full access and evidence duty" in full.prompt
+
+
+@pytest.mark.parametrize("relative", [
+    "scripts/review/prompts/plan-review.md.j2",
+    "scripts/review/prompts/lesson-review.md.j2",
+    "scripts/review/prompts/lesson-rereview.md.j2",
+    "docs/epics/fresh-build-plan-schema.md",
+    "docs/epics/fresh-build-review-contracts.md",
+])
+def test_a1_recap_reference_resolves_to_current_practical_d4_section(relative):
+    root = Path(__file__).resolve().parents[2]
+    reference = re.search(r"arc section (\d+)", (root / relative).read_text())
+    assert reference is not None
+    arc = (root / "docs/epics/fresh-build-a1-arc.md").read_text()
+    section = re.search(rf"(?ms)^## {reference.group(1)}\. ([^\n]+)\n(.*?)(?=^## |\Z)", arc)
+    assert section is not None
+    assert "A1 practical recap (#10105)" in section.group(1)
+    assert "**D4 — A1 closes with a practical recap using taught inventory**" in section.group(2)

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from scripts.build import linear_pipeline
 from scripts.build.linear_pipeline import (
     _UK_WORD_RE,
@@ -83,8 +85,8 @@ def test_advisory_pct_always_passes() -> None:
 
     assert result["passed"] is True
     assert result["pct"] == 0.0
-    assert result["min_pct"] == 40
-    assert result["max_pct"] == 55
+    assert result["min_pct"] == 0
+    assert result["max_pct"] == 15
     assert result["policy"] == "a1-m01-03"
 
 
@@ -331,18 +333,45 @@ def test_immersion_policies_schema() -> None:
         "min_uk_tab3_activities",
     }
 
-    for bands in IMMERSION_POLICIES.values():
+    orientations = []
+    for family, bands in IMMERSION_POLICIES.items():
         for band in bands:
+            if band["key"] == "a1-orientation":
+                orientations.append(band)
+                assert family == "a1"
+                assert set(band) == {"key", "max_module", "advisory_pct_min", "advisory_pct_max", "rule"}
+                assert type(band["max_module"]) is int and band["max_module"] == -1
+                assert band["advisory_pct_min"] is None and band["advisory_pct_max"] is None
+                assert isinstance(band["rule"], str) and "adds zero core words" in band["rule"]
+                assert "without Ukrainian production or an advisory share" in band["rule"]
+                continue
             assert required_keys <= set(band)
             assert "min_pct" not in band
             assert "max_pct" not in band
-            assert isinstance(band["advisory_pct_min"], int)
-            assert isinstance(band["advisory_pct_max"], int)
+            assert type(band["advisory_pct_min"]) is int
+            assert type(band["advisory_pct_max"]) is int
             for field in min_fields:
-                assert isinstance(band[field], int)
+                assert type(band[field]) is int
             assert isinstance(band["required_components"], dict)
+    assert len(orientations) == 1
 
 
 def test_old_immersion_gate_removed() -> None:
     assert not hasattr(linear_pipeline, "_immersion_gate")
     assert hasattr(linear_pipeline, "_advisory_immersion_pct")
+
+
+@pytest.mark.parametrize("mutation", ["ordinary_missing", "orientation_pct", "orientation_structural", "orientation_bool"])
+def test_immersion_schema_exception_does_not_admit_malformed_bands(monkeypatch, mutation):
+    bands = [dict(band) for band in IMMERSION_POLICIES["a1"]]
+    if mutation == "ordinary_missing":
+        bands[0].pop("min_vocab_entries")
+    elif mutation == "orientation_pct":
+        bands[-1]["advisory_pct_min"] = 0
+    elif mutation == "orientation_structural":
+        bands[-1]["min_vocab_entries"] = 0
+    else:
+        bands[-1]["max_module"] = False
+    monkeypatch.setitem(IMMERSION_POLICIES, "a1", tuple(bands))
+    with pytest.raises(AssertionError):
+        test_immersion_policies_schema()

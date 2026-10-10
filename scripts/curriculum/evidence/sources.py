@@ -30,14 +30,16 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.curriculum.evidence import codes, config, db_identity, tags
 from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
 from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connection
 from scripts.wiki.sum20_official import live_article_predicate_for
-
-from . import codes, config, db_identity, tags
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
