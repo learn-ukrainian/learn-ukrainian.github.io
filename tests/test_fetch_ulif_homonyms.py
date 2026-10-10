@@ -2620,6 +2620,143 @@ def test_pending_sigterm_at_main_install_prints_stop_summary_and_restores_handle
     assert "Resume command:" in err
 
 
+def _no_network(_method, _fields):
+    raise AssertionError("network")
+
+
+_INSTALL_BOUNDARY_EXPECTATION = {
+    "run_fetch": ("=== ULIF Fetch Stop Summary ===", "Reason:               interrupted by operator"),
+    "run_walk": ("=== ULIF Walk Stop Summary ===", "Reason:                 interrupted by operator"),
+    "main_run": ("=== ULIF Fetch Stop Summary ===", "Reason:               interrupted by operator"),
+    "main_walk": ("=== ULIF Walk Stop Summary ===", "Reason:                 interrupted by operator"),
+}
+
+
+def _run_install_boundary_site(site: str, tmp_path: Path) -> int:
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    if site == "run_fetch":
+        return run_fetch(
+            spellings=["тест"],
+            state_dir=state_dir,
+            db_path=db_path,
+            max_requests=0,
+            transport=_no_network,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+    if site == "run_walk":
+        return run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            max_requests=0,
+            transport=_no_network,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    if site == "main_run":
+        argv = [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--max-requests",
+            "0",
+        ]
+    elif site == "main_walk":
+        argv = [
+            "walk",
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--max-requests",
+            "0",
+        ]
+    else:
+        raise AssertionError(site)
+    return main(argv)
+
+
+@pytest.mark.parametrize("site", ["run_fetch", "run_walk", "main_run", "main_walk"])
+@pytest.mark.parametrize(
+    "boundary",
+    ["registration", "caller_assignment"],
+    ids=["before-previous-assignment", "before-caller-assignment"],
+)
+def test_sigterm_at_handler_install_boundary_restores_handler_and_mask(tmp_path, capsys, monkeypatch, site, boundary):
+    """Real SIGTERM at each install handoff restores the caller's handler and mask.
+
+    ``registration`` delivers after ``signal.signal`` installs the handler and
+    before that return value is stored. ``caller_assignment`` delivers after
+    ``_install_sigterm_handler`` returns and before the caller stores it.
+    """
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    fired = {"count": 0}
+    if boundary == "registration":
+        real_signal = signal.signal
+
+        def signal_then_sigterm(signum, handler):
+            previous = real_signal(signum, handler)
+            if signum == signal.SIGTERM and callable(handler) and fired["count"] == 0:
+                fired["count"] += 1
+                signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+            return previous
+
+        monkeypatch.setattr(signal, "signal", signal_then_sigterm)
+    elif boundary == "caller_assignment":
+        real_install = mod._install_sigterm_handler
+
+        def install_then_sigterm():
+            previous = real_install()
+            fired["count"] += 1
+            signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+            return previous
+
+        monkeypatch.setattr(mod, "_install_sigterm_handler", install_then_sigterm)
+    else:
+        raise AssertionError(boundary)
+    monkeypatch.setattr(mod, "_requests_transport", lambda _user_agent: _no_network)
+
+    summary, reason = _INSTALL_BOUNDARY_EXPECTATION[site]
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+    assert signal.SIGTERM not in previous_mask
+    code = None
+    escaped: BaseException | None = None
+    handler_after = None
+    mask_after = None
+    pending_after: set[int] | None = None
+    try:
+        try:
+            code = _run_install_boundary_site(site, tmp_path)
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        handler_after = signal.getsignal(signal.SIGTERM)
+        mask_after = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+        pending_after = set(signal.sigpending())
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+
+    err = capsys.readouterr().err
+    assert fired["count"] == 1
+    assert escaped is None
+    assert code == EXIT_INTERRUPTED
+    assert handler_after == previous_handler
+    assert mask_after == previous_mask
+    assert pending_after is not None
+    assert signal.SIGTERM not in pending_after
+    assert summary in err
+    assert reason in err
+    assert "Resume command:" in err
+
+
 @pytest.mark.parametrize(
     ("child_code", "message", "timeout"),
     [
