@@ -13,10 +13,6 @@ import urllib.request
 
 
 def main() -> None:
-    override = os.environ.get("LU_CLAUDE_WEEKLY_USED_PCT_OVERRIDE")
-    if override:
-        print(override)
-        return
     base = os.environ.get("LU_MONITOR_LOOPBACK", "http://127.0.0.1:8765").rstrip("/")
     try:
         with urllib.request.urlopen(base + "/api/state/routing-budget", timeout=4) as r:

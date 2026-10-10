@@ -1355,6 +1355,15 @@ launcher_publication_path() {
 # (Monitor down or stale) fails open with a warning, like other Monitor calls.
 launcher_claude_cap_guard() {
   [ "$LC_PROVIDER" = claude ] || return 0
+  local arg
+  for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
+    case "$arg" in
+      --model|--model=*)
+        launcher_error "Claude model selectors must use the launcher --model, not forwarded provider arguments."
+        exit 2
+        ;;
+    esac
+  done
   local pct stop opus_max
   stop="${LU_CLAUDE_STOP_PCT:-90}"
   opus_max="${LU_CLAUDE_OPUS_MAX_PCT:-80}"
