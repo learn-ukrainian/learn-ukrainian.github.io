@@ -328,6 +328,9 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
     wrapper = False
     wrapper_name = None
     shell_dash_c = False
+    # Grouping and wrappers can carry pipeline input to a nested shell.
+    # Do not attempt to prove which shell in a compound command consumes it.
+    pipeline_input = any(token in {"|", "|&"} for token in tokens)
 
     i = 0
     while i < len(tokens):
@@ -376,13 +379,23 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 return True
 
             base = Path(word).name
+            # Alias replacement text becomes executable code after expansion.
+            # Refuse definitions rather than guessing how later words expand.
+            if base == "alias":
+                return True
             if base in _WRAPPERS:
                 wrapper = True
                 wrapper_name = base
                 if base == "eval":
+                    if pipeline_input:
+                        return True
                     remaining = " ".join(tokens[i:])
                     return _invokes_or_ambiguous_gh(remaining, recognize_gh)
                 elif base in {"bash", "sh", "zsh", "dash", "ash"}:
+                    # Pipeline data can become shell code, including encoded
+                    # producer arguments that command-position scanning misses.
+                    if pipeline_input:
+                        return True
                     expecting_command = False
                     shell_dash_c = True
                     continue
@@ -422,6 +435,11 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
 
         if wrapper:
             if wrapper_name == "flock":
+                if pipeline_input and (
+                    word.startswith("-c") or word.startswith("--command")
+                    or (i < len(tokens) and tokens[i].startswith(("-c", "--command")))
+                ):
+                    return True
                 if word in {"-w", "--wait", "--timeout", "-E", "--conflict-exit-code"}:
                     if i < len(tokens):
                         i += 1
@@ -498,6 +516,8 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 continue
 
             elif wrapper_name == "env":
+                if pipeline_input and word.startswith(("-S", "--split-string")):
+                    return True
                 if word in {"-u", "--unset", "-C", "--chdir"}:
                     if i < len(tokens):
                         i += 1

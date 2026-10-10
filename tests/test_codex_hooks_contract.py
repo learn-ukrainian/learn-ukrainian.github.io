@@ -390,6 +390,9 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     compact_hook = deployed_hooks / "post-compact.sh"
     shutil.copy2(SESSION_SETUP_HOOK, session_hook)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
+    canonical = tmp_path / "canonical"
+    canonical.mkdir()
+    (canonical / ".venv").symlink_to(PRIMARY_ROOT / ".venv", target_is_directory=True)
 
     environment = os.environ.copy()
     for key in tuple(environment):
@@ -403,7 +406,7 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     environment.update(
         {
             "CLAUDE_PROJECT_DIR": os.fspath(PRIMARY_ROOT),
-            "CODEX_CANONICAL_REPO_ROOT": os.fspath(PRIMARY_ROOT),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(canonical),
             "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(REPO_ROOT / "scripts/lib/profile_resolver.sh"),
             "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(REPO_ROOT / "scripts/lib/context_profiles.py"),
             "HOME": os.fspath(tmp_path / "home"),
@@ -1524,6 +1527,61 @@ def test_codex_publication_data_words_remain_allowed(command):
         )
         == 0
     )
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        r'shopt -s expand_aliases; alias x=g\h; x i"s"sue c\reate',
+        r"alias x=g'h'; x a'pi' synthetic",
+        r"alias x='g\h'; x i\ssue l\ist",
+        r"command alias x=g\h; x --version",
+        r"bash -c 'alias x=g\h; x a\pi synthetic'",
+        "alias x=synthetic; x synthetic",
+    ],
+)
+def test_codex_publication_alias_indirection_blocks(monkeypatch, command):
+    monkeypatch.setattr(
+        codex_hook_policy.shutil, "which",
+        lambda _: str(REPO_ROOT / "scripts/agent_runtime/shims/gh"),
+    )
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({"tool_input": {"command": command}}),
+        REPO_ROOT / "agents_extensions/shared/hooks",
+    ) == 2
+
+
+@pytest.mark.parametrize(
+    "consumer",
+    ["bash", "sh", "zsh", "dash", "ash", "b'a'sh", r"b\ash",
+     "env bash", "command sh", "busybox sh", "timeout 1 bash",
+     "(bash)", "{ cat; bash; }", "eval bash", "env -S 'bash'",
+     "env --split-string=bash", "flock synthetic -c bash", "flock synthetic --command=bash"],
+)
+@pytest.mark.parametrize(
+    "producer",
+    [r'echo g\h i"s"sue c\reate', r"printf 'g\150 a\160i synthetic'"],
+)
+def test_codex_publication_pipeline_shell_blocks(monkeypatch, producer, consumer):
+    monkeypatch.setattr(
+        codex_hook_policy.shutil, "which",
+        lambda _: str(REPO_ROOT / "scripts/agent_runtime/shims/gh"),
+    )
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({"tool_input": {"command": f"{producer} | {consumer}"}}),
+        REPO_ROOT / "agents_extensions/shared/hooks",
+    ) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [r'echo g\h i"s"sue c\reate', "echo synthetic | cat", "bash -c 'echo synthetic'"],
+)
+def test_codex_publication_literal_data_and_shell_commands_allowed(command):
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({"tool_input": {"command": command}}),
+        REPO_ROOT / "agents_extensions/shared/hooks",
+    ) == 0
 
 
 @pytest.mark.parametrize("defect", ["missing-source", "unavailable-source", "symlink-loop", "missing-entry"])
