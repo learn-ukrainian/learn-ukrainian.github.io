@@ -1030,14 +1030,14 @@ def _status_from_weekly_used(
 ) -> str:
     """Map allowance headroom to reset to a routing status.
 
-    ``near_cap`` stays at >= 90% used. Below that, ``hot`` requires a visible
+    ``near_cap`` starts at >= 99% used. Below that, ``hot`` requires a visible
     pace deficit outside the on-pace band with no verified covering reserve.
     Visible allowance lasting to reset or a covering reserve is ``cool`` at
     any used-percent below the cap. ``warm`` means >= 50% used with a projected
     shortfall inside the on-pace band, or with unavailable pace as a fail-safe.
     Low-use readings inside that band retain their existing ``cool`` tolerance.
     """
-    if weekly_used >= 90.0:
+    if weekly_used >= credit_lane.SUBSCRIPTION_NEAR_CAP_USED_PCT:
         return "near_cap"
     record = dict(info or {})
     record["status"] = "cool" if weekly_used < 50.0 else "warm"
@@ -1836,7 +1836,8 @@ def _compute_dispatch_routing_budget(
             cb = agents[lane].get("codexbar")
             if cb:
                 is_in_deficit = deficit["uncovered"] is True or (
-                    cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0
+                    cb.get("weekly_used_pct") is not None
+                    and cb.get("weekly_used_pct") >= credit_lane.SUBSCRIPTION_NEAR_CAP_USED_PCT
                 )
                 pace_sum = cb.get("pace_summary") or f"{cb.get('weekly_used_pct')}% used"
             else:
@@ -1883,7 +1884,7 @@ def _compute_dispatch_routing_budget(
                 lane == "cursor"
                 and cb
                 and cb.get("tertiary_used_pct") is not None
-                and float(cb["tertiary_used_pct"]) >= 90.0
+                and float(cb["tertiary_used_pct"]) >= credit_lane.SUBSCRIPTION_NEAR_CAP_USED_PCT
             ):
                 warnings.append(
                     "lane cursor API/on-demand allotment near empty "

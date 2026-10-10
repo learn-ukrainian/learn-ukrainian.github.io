@@ -1830,3 +1830,19 @@ def test_consumers_do_not_rederive_owner_decisions(path):
             if key == "healthy" and len(node.args) > 1:
                 reads.append(f"{path}:{node.lineno}: .get('healthy', default)")
     assert reads == [], "consumer re-derives an owner decision:\n" + "\n".join(reads)
+
+
+@pytest.mark.parametrize(
+    ("remaining", "status"),
+    [
+        (None, "unknown"),
+        (50.01, "cool"),
+        (50.0, "warm"),
+        (10.0, "warm"),
+        (1.01, "warm"),
+        (1.0, "near_cap"),
+        (0.0, "near_cap"),
+    ],
+)
+def test_allowance_status_subscription_near_cap_boundary(remaining, status):
+    assert credit_lane.allowance_status(remaining) == status
