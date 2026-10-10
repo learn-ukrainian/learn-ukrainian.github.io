@@ -184,9 +184,17 @@ def _result_code(results: list[GuardResult]) -> int:
     return 2 if any(result.returncode for result in normalized) else 0
 
 
+_WRAPPERS = frozenset({
+    "env", "sudo", "time", "timeout", "nice", "stdbuf", "nohup",
+    "command", "exec", "xargs", "eval", "su",
+})
+_SHELLS = frozenset({"bash", "sh", "zsh", "dash", "ksh", "fish", "busybox"})
+
+
 def _has_shell_substitution(command: str) -> bool:
-    """Find substitutions outside single quotes, respecting shell escapes."""
-    single = double = escaped = False
+    single = False
+    double = False
+    escaped = False
     for index, char in enumerate(command):
         if escaped:
             escaped = False
@@ -196,8 +204,13 @@ def _has_shell_substitution(command: str) -> bool:
             single = not single
         elif char == '"' and not single:
             double = not double
-        elif not single and (char == "`" or command[index:index + 2] in {"$(", "$'", '$"'}):
-            return True
+        elif not single:
+            if char == "`":
+                return True
+            if char == "$" and index + 1 < len(command):
+                nxt = command[index + 1]
+                if nxt.isalnum() or nxt in "({_$'\"":
+                    return True
     return False
 
 
@@ -210,7 +223,7 @@ def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
     if _has_shell_substitution(command):
         return True
     try:
-        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n")
+        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n{}<>")
         lexer.whitespace = " \t\r"
         lexer.whitespace_split = True
         words = list(lexer)
@@ -218,7 +231,9 @@ def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
         return True
 
     for w in words:
-        if w in {"/usr/bin/env", "/bin/env", "-S", "--split-string", "eval"} or w.startswith("--split-string="):
+        if w in {"-S", "--split-string"} or w.startswith("--split-string="):
+            return True
+        if Path(w).name in {"env", "eval"}:
             return True
 
     expecting_command = True
@@ -226,8 +241,17 @@ def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
     shell_script = False
     wrapper = False
     is_eval = False
+    redirect_target = False
 
     for word in words:
+        if redirect_target:
+            redirect_target = False
+            continue
+        if word in {">", "<", ">>", "<<", "<<<", "<>", ">&", "<&"}:
+            redirect_target = True
+            continue
+        if word.startswith(("<", ">")):
+            continue
         if shell_script or is_eval:
             script_candidate = word[1:] if word.startswith("$") and len(word) > 1 and word[1] in "'\"" else word
             if _invokes_or_ambiguous_gh(script_candidate, recognize_gh):
@@ -236,6 +260,8 @@ def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
             is_eval = False
             expecting_command = False
         elif word and all(char in ";|&()\n" for char in word):
+            if shell:
+                return True
             expecting_command = True
             shell = False
             shell_script = False
@@ -245,25 +271,32 @@ def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
             shell_script = True
         elif expecting_command:
             clean_word = word.lstrip("$")
-            if clean_word == "gh" or Path(clean_word).name == "gh":
+            base_name = Path(clean_word).name
+            if clean_word == "gh" or base_name == "gh":
                 return True
-            if clean_word == "eval":
+            if clean_word in {"{", "}", "!"}:
+                continue
+            if any(clean_word.startswith(f"{n}>") for n in range(10)):
+                continue
+            if base_name == "eval":
                 is_eval = True
                 continue
-            if "=" in word or clean_word in {
-                "env", "command", "exec", "sudo", "time", "timeout", "xargs",
-                "/usr/bin/env", "/bin/env", "if", "then", "elif", "while", "until", "do", "!",
-            } or Path(clean_word).name == "env":
-                wrapper = clean_word in {"time", "timeout", "xargs", "env", "sudo", "/usr/bin/env", "/bin/env"} or wrapper
+            if "=" in word or base_name in _WRAPPERS or clean_word in {
+                "if", "then", "elif", "while", "until", "do",
+            }:
+                wrapper = base_name in _WRAPPERS or wrapper
                 continue
-            if Path(clean_word).name in {"bash", "sh", "zsh", "dash"}:
+            if base_name in _SHELLS:
                 shell = True
                 expecting_command = False
             elif wrapper or word.startswith("-") or word.replace(".", "").isdigit():
                 continue
             else:
                 expecting_command = False
-    return False
+        elif shell and not word.startswith("-"):
+            if any(char in word for char in "gh"):
+                return True
+    return bool(shell)
 
 
 def _publication_command_code(payload: str, hooks_dir: Path) -> int:

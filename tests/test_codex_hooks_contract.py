@@ -1258,6 +1258,16 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
     "bash -c $'gh issue create --body safe'",
     "env -S '{stub} issue create --body safe'",
     "eval 'PATH={stub_dir} gh issue create --body safe'",
+    '>/dev/null {stub} issue create --body safe',
+    "bash -c '>/dev/null {stub} issue create --body safe'",
+    '{{ {stub} issue create --body safe; }}',
+    'nice {stub} issue create --body safe',
+    'nohup {stub} issue create --body safe',
+    'sudo {stub} issue create --body safe',
+    "bash -c 'c={stub}; $c issue create --body safe'",
+    "printf '%s\\n' '{stub} issue create --body safe' | bash",
+    "bash <<< '{stub} issue create --body safe'",
+    "busybox sh -c '{stub} issue create --body safe'",
 ])
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
     marker = tmp_path / 'published'
