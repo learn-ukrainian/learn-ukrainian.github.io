@@ -849,7 +849,7 @@ def _admit(args, monkeypatch, budget=None):
 
 @pytest.mark.parametrize("seat,model", [("agy", None), ("agy", "gemini-3.8-flash-high"), ("gemini", None)])
 @pytest.mark.parametrize("author", [None, "gpt-6.1-sol"])
-@pytest.mark.parametrize("typing", ["verdict", "profile", "pr"])
+@pytest.mark.parametrize("typing", ["verdict", "profile", "pr", "review", "type", "attempt", "author"])
 @pytest.mark.parametrize("force", [False, True])
 def test_explicit_review_risk_omission_refuses_before_budget(monkeypatch, seat, model, author, typing, force):
     """D1/D2: direct/default/alias requests refuse across dispatch entry points."""
@@ -858,6 +858,10 @@ def test_explicit_review_risk_omission_refuses_before_budget(monkeypatch, seat, 
         flags += ["--review-author-model", author]
     if typing == "profile":
         flags += ["--review-profile", "code"]
+    if typing == "attempt":
+        flags += ["--review-attempt", "attempt.yaml"]
+    if typing == "author":
+        flags += ["--review-author-model", "gpt-6.1-sol"]
     if typing == "pr":
         flags += ["--pr", "42"]
         # Isolate PR typing from GitHub transport; branch cases resolve a real local target.
@@ -866,6 +870,11 @@ def test_explicit_review_risk_omission_refuses_before_budget(monkeypatch, seat, 
     if force:
         flags += ["--force-agent"]
     args = _args(*flags, verdict=typing == "verdict")
+    # Bridge/programmatic dispatches carry these fields without CLI flags.
+    if typing == "review":
+        args.review = True
+    if typing == "type":
+        args.type = "review"
     args.model = model
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
     refusal, target = delegate._admit_dispatch_target(
@@ -875,6 +884,16 @@ def test_explicit_review_risk_omission_refuses_before_budget(monkeypatch, seat, 
     assert target is None
     assert "AGY code review requires an explicit --review-risk" in refusal
     assert all(value in refusal for value in ("low", "medium", "high", "critical"))
+
+
+def test_explicit_review_risk_help_documents_default_and_alias_requirement():
+    parser = delegate.build_parser()
+    dispatch = next(action for action in parser._actions if action.dest == "command").choices["dispatch"]
+    risk_help = next(action.help for action in dispatch._actions if action.dest == "review_risk")
+    assert "seat defaults" in risk_help
+    assert "aliases" in risk_help
+    assert "without author metadata" in risk_help
+    assert all(value in risk_help for value in ("low", "medium", "high", "critical"))
 
 
 def test_explicit_review_risk_omission_dispatch_returns_nonzero(tmp_path, monkeypatch, capsys):
@@ -1962,13 +1981,16 @@ def test_review_attempt_budget_refusal_without_substitute_names_seat_and_cause(m
     )
 
 
-def test_retired_review_attempt_refuses_before_route_and_budget_probe(monkeypatch):
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_retired_review_attempt_refuses_before_route_and_budget_probe(monkeypatch, risk):
     def fail(*_args, **_kwargs):
         pytest.fail("retired review attempt must refuse before routing or probing")
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
     with pytest.raises(ReviewAdmissionRefused) as refused:
-        resolve_and_admit(("gemini",), mode="read-only", review_dispatch=True, review_attempt=True, route=fail)
+        resolve_and_admit(
+            ("gemini",), mode="read-only", review_dispatch=True, review_attempt=True, review_risk=risk, route=fail
+        )
     assert str(refused.value) == (
         "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused: "
         "agent substitution from gemini to agy (retired CLI) is not allowed (#8517)"
