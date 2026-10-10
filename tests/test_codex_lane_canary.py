@@ -3,11 +3,52 @@
 from __future__ import annotations
 
 import argparse
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 from scripts.session_canary import codex_lane
+
+
+@pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
+def test_lane_import_and_bare_hydration_do_not_import_slot_registry(provider) -> None:
+    """Keep the bridge import graph outside the hook's bare-provider cold path."""
+    code = """
+import importlib
+import importlib.abc
+import os
+import sys
+
+class NoRegistry(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname in {"scripts.orchestration.handoff_slot_registry", "scripts.ai_agent_bridge"}:
+            raise AssertionError("unneeded cold-path import: " + fullname)
+
+sys.meta_path.insert(0, NoRegistry())
+provider = sys.argv[1]
+lane = importlib.import_module("scripts.session_canary." + provider + "_lane")
+os.environ["SESSION_STREAM_AGENT"] = provider
+calls = []
+def hydrate(stream, identity):
+    calls.append((stream, identity))
+    return {"execution_allowed": True}, 1
+lane.shared_hydration.build_hydration_capsule_with_retry = hydrate
+assert lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == 0
+assert calls == [("epic:123", provider)]
+"""
+    root = Path(__file__).resolve().parents[1]
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [sys.executable, "-c", code, provider], cwd=root, env=env,
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert result.stdout == '{"execution_allowed": true}\nACTION: hydration ready — continue the current driver.\n'
+    assert result.stderr == "hydration_attempts: 1\n"
 
 
 def _allowed_capsule() -> dict[str, object]:
@@ -221,8 +262,7 @@ def test_hydrate_uses_exact_registered_provider_identity(monkeypatch, capsys, tm
         assert rc == 2
         assert calls == []
         assert output.out == ""
-        assert "hydration blocked" in output.err
-        assert "unregistered lane identity" in output.err
+        assert output.err == "ACTION: hydration blocked — unregistered lane identity for this provider.\n"
 
 
 @pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
