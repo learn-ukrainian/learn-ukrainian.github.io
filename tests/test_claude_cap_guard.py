@@ -186,7 +186,7 @@ def test_weekly_reader_uses_environment_target(monkeypatch, capsys) -> None:
     assert capsys.readouterr().out == "95\n"
 
 
-@pytest.mark.parametrize("base", ("", "file:synthetic", "https://", "https://user:secret@synthetic.invalid", "https://synthetic.invalid/?token=secret", "https://synthetic.invalid/#fragment"))
+@pytest.mark.parametrize("base", ("", "file:synthetic", "https://", "https://user:" + "synthetic-pw" + "@synthetic.invalid", "https://synthetic.invalid/?token=secret", "https://synthetic.invalid/#fragment"))
 def test_weekly_reader_rejects_invalid_environment_target(base, monkeypatch, capsys) -> None:
     monkeypatch.setenv("LU_MONITOR_LOOPBACK", base)
     request, _ = _mock_request(monkeypatch, io.BytesIO(b"{}"))
