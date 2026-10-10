@@ -440,14 +440,14 @@ values, using `pageInfo` rather than `totalCount` to establish completeness.
 Manual, `merge_conflict` and `behind` removals are exempt from CI recovery, including at
 the current head and with a null commit; manual removals include keeper revocations.
 Other removals naming the current head make enqueue a recovery. CI removals
-(`failed_checks` or `timeout`) with a null commit count as at-head unless a later
-GitHub force-push event ends at a different SHA. A push staying on or returning
-to the same SHA does not clear a null-commit CI removal. These recognized reasons
+(`failed_checks` or `timeout`) with a null commit always count as at-head.
+Force-push history cannot clear a null-commit CI removal, including a force-push
+to another SHA followed by a fast-forward back to the current head. These recognized reasons
 accept both uppercase and lowercase values. Unknown null-commit reasons require
 recovery evidence and consume the allowance rather than blocking recovery as
 unreadable data. Removals only at other heads permit normal initial enqueue
 without spending the new head's allowance.
-Commit dates and keeper-local removal history cannot establish push time.
+Only an explicit different `beforeCommit.oid` establishes a removal at another head.
 Before normal initial enqueue, the publisher also checks the
 durable record for a prior re-enqueue at that head; a branch-run rerun alone
 does not block initial enqueue. Returning to the same SHA never refunds a spent

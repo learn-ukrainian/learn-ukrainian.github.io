@@ -794,30 +794,43 @@ def test_incomplete_removal_history_refuses_without_mutation(setup, action, caus
         assert len(transport.removal_reads) == 100
 
 
-@pytest.mark.parametrize("action", ["direct", "keeper-initial"])
-@pytest.mark.parametrize("reason", ["failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT"])
-def test_different_head_push_after_nullable_ci_removal_allows_initial_enqueue(setup, action, reason):
+@pytest.mark.parametrize("action", ["direct", "keeper-initial", "keeper"])
+@pytest.mark.parametrize("reason", ["failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT", "unexpected", None])
+def test_different_head_push_after_null_ci_removal_requires_and_consumes_recovery(setup, action, reason):
     root, transport = setup
     transport.removal_head, transport.proof = None, None
     transport.removal_reason = reason
     transport.pushes = [{"afterCommit": {"oid": NEW_HEAD}, "createdAt": "2026-10-09T12:00:00Z"}]
+    # A force-push to another SHA followed by a fast-forward back to HEAD
+    # leaves this latest force-push event pointing at the other SHA.
+    error = keeper.KeeperError if action.startswith("keeper") else gate.PublishBlocked
+    with pytest.raises(error, match="RECOVERY_EVIDENCE_MISSING"):
+        recover(setup, action)
+    assert transport.writes == []
+    assert not pub.recovery.ledger_path(root).exists()
+    transport.proof = evidence()
     recover(setup, action)
     assert len(transport.writes) == 1
-    assert not pub.recovery.ledger_path(root).exists()
+    prior = pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, HEAD)
+    assert prior["action"] == "re-enqueue"
+    with pytest.raises(error, match="RECOVERY_ALLOWANCE_SPENT"):
+        recover(setup, action)
+    assert len(transport.writes) == 1
 
 
 @pytest.mark.parametrize(
-    "reason,pushed_head,pushed_at",
+    "pushed_head,pushed_at",
     [
-        ("failed_checks", NEW_HEAD, "2026-10-09T10:00:00Z"),
-        ("failed_checks", NEW_HEAD, "2026-10-09T11:00:00Z"),
-        ("failed_checks", None, "2026-10-09T12:00:00Z"),
-        ("failed_checks", "invalid", "2026-10-09T12:00:00Z"),
-        ("unexpected", NEW_HEAD, "2026-10-09T12:00:00Z"),
-        (None, NEW_HEAD, "2026-10-09T12:00:00Z"),
+        (NEW_HEAD, "2026-10-09T10:00:00Z"),
+        (NEW_HEAD, "2026-10-09T11:00:00Z"),
+        (None, "2026-10-09T12:00:00Z"),
+        ("invalid", "2026-10-09T12:00:00Z"),
+        (NEW_HEAD, "2026-10-09T12:00:00Z"),
+        (HEAD, "2026-10-09T12:00:00Z"),
     ],
 )
-def test_null_removal_without_later_different_head_ci_proof_requires_recovery(reason, pushed_head, pushed_at):
+@pytest.mark.parametrize("reason", ["failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT", "unexpected", None])
+def test_null_ci_removal_is_at_head_regardless_of_push(reason, pushed_head, pushed_at):
     data = removal_observation()
     pull = data["data"]["repository"]["pullRequest"]
     pull["removals"]["nodes"][0].update(beforeCommit=None, reason=reason)

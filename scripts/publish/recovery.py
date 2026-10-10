@@ -15,7 +15,6 @@ from scripts.opsec.prepublish import PublishBlocked
 MARKER = re.compile(r"<!-- ci-recovery-evidence\s+(\{.*?\})\s*-->", re.S)
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 NON_CI_REMOVAL_REASONS = {"manual", "merge_conflict", "behind", "MANUAL", "MERGE_CONFLICT", "BEHIND"}
-CI_REMOVAL_REASONS = {"failed_checks", "timeout", "FAILED_CHECKS", "TIMEOUT"}
 
 
 def ledger_path(cwd: Path) -> Path:
@@ -69,10 +68,10 @@ def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
 
     Manual removals (including keeper holds), merge conflicts and behind-head
     removals are not CI recovery. They can have a null commit and need no
-    failed-run evidence. Null CI removals require recovery unless a later
-    GitHub force-push ends at a different SHA. Pushes staying on or returning
-    to the same SHA cannot clear recovery. Unknown null-commit reasons also
-    require recovery; commit dates cannot establish push time.
+    failed-run evidence. Null CI removals and unknown null-commit reasons
+    always require recovery. Force-push history cannot establish the removed
+    head or clear recovery; only an explicit different beforeCommit.oid can
+    establish that a removal was at another head.
     """
     try:
         pages = data if isinstance(data, list) else [data]
@@ -101,13 +100,11 @@ def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
             pushes = pull["pushes"]["nodes"]
             if not isinstance(pushes, list) or len(pushes) > 1:
                 raise ValueError
-            pushed_at, pushed_head = None, None
             if pushes:
                 push = pushes[0]
                 pushed_at = datetime.fromisoformat(push["createdAt"].replace("Z", "+00:00"))
                 if pushed_at.tzinfo is None:
                     raise ValueError
-                pushed_head = (push.get("afterCommit") or {}).get("oid")
             for event in nodes:
                 removed_at = datetime.fromisoformat(event["createdAt"].replace("Z", "+00:00"))
                 if removed_at.tzinfo is None:
@@ -117,15 +114,6 @@ def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
                     continue
                 commit = event["beforeCommit"]
                 if commit is None:
-                    if (
-                        reason in CI_REMOVAL_REASONS
-                        and isinstance(pushed_head, str)
-                        and SHA.fullmatch(pushed_head)
-                        and pushed_head != head
-                        and pushed_at > removed_at
-                    ):
-                        continue
-                    # Unknown reasons follow the conservative CI recovery path.
                     at_head = True
                     continue
                 removed_head = commit["oid"]
