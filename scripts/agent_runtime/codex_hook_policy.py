@@ -19,6 +19,10 @@ LOCAL_BASH_GUARDS = (
 )
 ENFORCE_VENV_TIMEOUT = 3
 PRIMARY_WRITE_GUARD = ("guard-primary-checkout-write.py", 5)
+# These guards answer by rewriting the command (``updatedInput``), which Codex
+# ignores. Running them here turns any rewrite into a block instead of letting
+# the call proceed unshimmed.
+REWRITE_BASH_GUARDS = (("guard-public-github-text.py", 5),)
 MERGE_GUARDS = (
     ("guard-admin-merge.py", 20),
     ("guard-pr-merge.py", 20),
@@ -192,7 +196,7 @@ def main() -> int:
             _emit(venv_result)
             return venv_result.returncode
 
-    local_specs = LOCAL_BASH_GUARDS if tool_name == "Bash" else ()
+    local_specs = (*LOCAL_BASH_GUARDS, *REWRITE_BASH_GUARDS) if tool_name == "Bash" else ()
     local_results = _run_specs(
         args.python_bin,
         args.hooks_dir,

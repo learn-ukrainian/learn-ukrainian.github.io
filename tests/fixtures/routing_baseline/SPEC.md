@@ -23,11 +23,9 @@ captures change exactly four of the 112 adapter rows:
 Each changed row inserts five argv tokens immediately before the existing
 `--disable apps`: `--enable`, `hooks`, `--dangerously-bypass-hook-trust`, `-c`
 and the inline `hooks.PreToolUse` TOML value. That value contains exactly two
-groups. The `^(Bash|Write|Edit|MultiEdit|apply_patch)$` group runs the tracked
-`scripts/agent_runtime/codex_hook_entry.sh pre-tool-use` through `bash`, with
-timeout 45 and status message `Running Codex tool policy`. The `Bash` group
-runs the tracked shared `guard-public-github-text.py`, with timeout 5. Both
-hooks have type `command`; source paths retain the capture's `<SOURCE_ROOT>`
+tracked command-hook groups. Their matchers, entry points, timeouts and status
+text are pinned by the scope test in `tests/review/test_model_catalog.py` and
+are not restated here. Source paths retain the capture's `<SOURCE_ROOT>`
 normalization. The trust flag admits these tracked non-managed hooks, while
 the inline binding avoids dependence on deployed project-hook discovery.
 
