@@ -1895,8 +1895,23 @@ def _item_repo_rel(item: pytest.Item) -> str:
         return path.as_posix()
 
 
+# Test groups that run nightly instead of on every PR (CI review: they caught no
+# bug on a PR in the measured window). They join the ``slow`` lane, which
+# pytest-slow-nightly.yml runs; a failing group gets an owned issue. Tests that
+# CI must prove ran (``needs_artifact``) stay on PRs.
+NIGHTLY_GROUPS = ("tests/projects/", "tests/audit/", "tests/test_open")
+
+
+def _mark_nightly_groups(items: list[pytest.Item]) -> None:
+    """Mark nightly test groups ``slow`` before ``-m`` deselects."""
+    for item in items:
+        if _item_repo_rel(item).startswith(NIGHTLY_GROUPS) and item.get_closest_marker("needs_artifact") is None:
+            item.add_marker(pytest.mark.slow)
+
+
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Skip tests whose sparse-excluded tree is not in this worktree."""
+    _mark_nightly_groups(items)
     selected = rerun_node_ids(
         load_registry(),
         today=datetime.now(UTC).date(),
