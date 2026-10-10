@@ -29,9 +29,8 @@ def _build(prompt: str, tmp_path: Path, **kwargs):
 
 
 def test_small_prompt_passes_via_stdin_with_placeholder_p_arg(tmp_path):
-    """Gemini CLI 0.40.1 yargs bug (#1730): prompts containing `-p` substrings
-    cause "Not enough arguments following: p" when passed inline. Workaround
-    is to put the prompt on stdin, with a single-space placeholder via -p."""
+    """Gemini CLI 0.40.1 (#1730): a prompt containing `-p` stays on stdin.
+    The `-p` argument is a single space."""
     prompt = "x" * 200
     plan = _build(prompt, tmp_path)
 
@@ -44,9 +43,7 @@ def test_small_prompt_passes_via_stdin_with_placeholder_p_arg(tmp_path):
 
 
 def test_large_prompt_also_passes_via_stdin(tmp_path):
-    """Same workaround for large prompts — stdin has no length limit
-    that's relevant here (well below pipe buffer concerns) and bypasses
-    the yargs argv bug uniformly."""
+    """Large prompts use the same stdin path as short prompts."""
     prompt = "x" * 200_000
     adapter = GeminiAdapter()
     plan = adapter.build_invocation(
@@ -65,12 +62,8 @@ def test_large_prompt_also_passes_via_stdin(tmp_path):
     adapter.cleanup_invocation(plan)
 
 
-def test_prompt_with_p_substrings_works_post_yargs_workaround(tmp_path):
-    """Regression test for #1730: prompts containing the literal text `-p`
-    or `--prompt` (e.g., when an earlier gemini failure stderr lands in
-    channel history seen by `ab discuss`) used to fail with
-    'Not enough arguments following: p'. Stdin workaround eliminates the
-    issue because argv contains no prompt content."""
+def test_prompt_with_p_substrings_passes_on_stdin(tmp_path):
+    """#1730: a prompt that contains `-p` or `--prompt` is the stdin payload."""
     prompt = "Use -p/--prompt for non-interactive mode. Say hi."
     plan = _build(prompt, tmp_path)
 
@@ -106,7 +99,7 @@ def test_large_prompt_api_fail_fast_does_not_create_temp_file(tmp_path, monkeypa
     assert not list(tmp_path.glob("learn-ukrainian-gemini-prompt-*"))
 
 
-def test_mcp_server_names_present_with_stdin_prompt_workaround(tmp_path):
+def test_mcp_server_names_present_with_stdin_prompt(tmp_path):
     plan = _build("hello", tmp_path, tool_config={"mcp_server_names": ["sources"]})
 
     assert "--allowed-mcp-server-names" in plan.cmd
