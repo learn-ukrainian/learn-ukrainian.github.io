@@ -46,10 +46,10 @@ GATE_VERSION = 1
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
-ADMISSION_WAIT_S = 300.0
 RUN_BUDGET_S = 600.0
 SHADOW_BUDGET_S = 120.0
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
+ADMISSION_WAIT_S = RUN_BUDGET_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
 RUN_TOKEN_ENV = "LU_PRE_PUSH_GATE_RUN_TOKEN"
 RECEIPT_TTL_S = 3600.0
 # Registered modules exceeding the cost threshold are explicitly deferred to CI

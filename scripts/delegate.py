@@ -525,7 +525,7 @@ DEFAULT_GIT_TIMEOUT_S: float = 30.0
 DEFAULT_NETWORK_GIT_TIMEOUT_S: float = 180.0
 # The auto-finalize push runs the pre-push gate (.githooks/pre_push_gate.py, #10033) before the
 # network push, so the timeout covers the gate's admission wait, run budget and shadow budget.
-AUTO_FINALIZE_PUSH_TIMEOUT_S: float = DEFAULT_NETWORK_GIT_TIMEOUT_S + 300.0 + 600.0 + 120.0
+AUTO_FINALIZE_PUSH_TIMEOUT_S: float = DEFAULT_NETWORK_GIT_TIMEOUT_S + 740.0 + 600.0 + 120.0
 DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 
 
