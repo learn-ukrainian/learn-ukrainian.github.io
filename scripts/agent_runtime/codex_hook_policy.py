@@ -318,6 +318,7 @@ _WRAPPERS = {
     "sh",
     "zsh",
     "dash",
+    "ash",
     "busybox",
 }
 
@@ -352,12 +353,23 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
             wrapper_name = None
             continue
 
+        if word.isdigit() and i < len(tokens) and (
+            tokens[i] in {"<", ">", ">>", "<&", ">&", "&>", "<>", ">|", "&>>"}
+            or tokens[i].startswith(("<", ">"))
+        ):
+            word = tokens[i]
+            i += 1
+
+        if (
+            word in {"<", ">", ">>", "<&", ">&", "&>", "<>", ">|", "&>>"}
+            or ((word.startswith("<") or word.startswith(">")) and word not in {"<(", ">("})
+        ):
+            if word not in {"2>&1", "1>&2", "<&0", "<&1", "<&2", ">&1", ">&2"} and i < len(tokens):
+                i += 1
+            continue
+
         if expecting_command:
             if re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*=", word):
-                continue
-            if word in {"<", ">", ">>", "<&", ">&", "&>", "2>&1", "1>&2"} or (
-                word.startswith(">") or word.startswith("<")
-            ):
                 continue
 
             if _is_ambiguous_or_gh_word(word):
@@ -370,12 +382,9 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 if base == "eval":
                     remaining = " ".join(tokens[i:])
                     return _invokes_or_ambiguous_gh(remaining, recognize_gh)
-                elif base in {"bash", "sh", "zsh", "dash", "busybox"}:
+                elif base in {"bash", "sh", "zsh", "dash", "ash"}:
                     expecting_command = False
                     shell_dash_c = True
-                    continue
-                elif base in {"find", "flock"}:
-                    expecting_command = False
                     continue
                 else:
                     expecting_command = False
@@ -386,7 +395,12 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 continue
 
         if shell_dash_c:
-            if (word.startswith("-") and "c" in word[1:]) or word == "<<<":
+            if word in {"-o", "+o", "-O", "+O", "--rcfile", "--init-file"}:
+                if i < len(tokens):
+                    i += 1
+                continue
+
+            if (word.startswith("-") and not word.startswith("--") and "c" in word[1:]) or word == "-c" or word == "<<<":
                 if i < len(tokens):
                     subcmd = tokens[i]
                     i += 1
@@ -394,37 +408,174 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                         return True
                 shell_dash_c = False
                 continue
-            elif not word.startswith("-"):
+
+            if (word.startswith("-") or word.startswith("+")) and word != "--":
+                continue
+
+            if word == "--":
                 shell_dash_c = False
+                continue
+
+            if _is_ambiguous_or_gh_word(word):
+                return True
+            shell_dash_c = False
 
         if wrapper:
             if wrapper_name == "flock":
-                if word.startswith("-"):
+                if word in {"-w", "--wait", "--timeout", "-E", "--conflict-exit-code"}:
+                    if i < len(tokens):
+                        i += 1
                     continue
+                if word.startswith("-") and word != "--":
+                    continue
+                if i < len(tokens) and tokens[i] in {"-c", "--command"}:
+                    i += 1
+                    if i < len(tokens):
+                        subcmd = tokens[i]
+                        i += 1
+                        if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                            return True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                else:
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+
+            elif wrapper_name == "timeout":
+                if word in {"-s", "--signal", "-k", "--kill-after"}:
+                    if i < len(tokens):
+                        i += 1
+                    continue
+                if word.startswith("-") and word != "--":
+                    continue
+                if re.match(r"^\d+(?:\.\d+)?[smhdSMHD]?$", word):
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+
+            elif wrapper_name == "sudo":
+                if word in {
+                    "-u", "--user", "-g", "--group", "-h", "--host", "-p", "--prompt",
+                    "-r", "--role", "-t", "--type", "-C", "--close-from", "-D", "--chdir",
+                    "-T", "--command-timeout",
+                }:
+                    if i < len(tokens):
+                        i += 1
+                    continue
+                if word.startswith("-") and word != "--":
+                    continue
+                if word == "--":
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                i -= 1
                 expecting_command = True
                 wrapper = False
                 wrapper_name = None
                 continue
-            elif wrapper_name in {"nice", "sudo", "nohup", "time", "timeout", "xargs", "env", "command", "exec"}:
-                if (
-                    word.startswith("-")
-                    or (wrapper_name == "env" and "=" in word)
-                    or (wrapper_name == "timeout" and (word.isdigit() or word.replace(".", "").isdigit()))
-                ):
+
+            elif wrapper_name == "nice":
+                if word in {"-n", "--adjustment"}:
+                    if i < len(tokens):
+                        i += 1
+                    continue
+                if (word.startswith("-") or word.startswith("+")) and word != "--":
+                    continue
+                if word == "--":
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                i -= 1
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
+
+            elif wrapper_name == "env":
+                if word in {"-u", "--unset", "-C", "--chdir"}:
+                    if i < len(tokens):
+                        i += 1
+                    continue
+                if word in {"-S", "--split-string"}:
+                    if i < len(tokens):
+                        subcmd = tokens[i]
+                        i += 1
+                        if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                            return True
+                    continue
+                if word.startswith("-") and word != "--":
                     continue
                 if word == "--":
                     continue
-                if _is_ambiguous_or_gh_word(word):
-                    return True
-                base = Path(word).name
-                if base in _WRAPPERS:
-                    wrapper_name = base
-                else:
-                    wrapper = False
-                    wrapper_name = None
+                if re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*=", word):
+                    continue
+                i -= 1
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
                 continue
 
-        if word in {"-exec", "-execdir"}:
+            elif wrapper_name == "exec":
+                if word == "-a":
+                    if i < len(tokens):
+                        i += 1
+                    continue
+                if word.startswith("-") and word != "--":
+                    continue
+                if word == "--":
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                i -= 1
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
+
+            elif wrapper_name == "xargs":
+                if word in {
+                    "-a", "--arg-file", "-d", "--delimiter", "-E", "-e", "--eof",
+                    "-I", "-i", "--replace", "-L", "-l", "--max-lines", "-n", "--max-args",
+                    "-P", "--max-procs", "-s", "--max-chars",
+                }:
+                    if i < len(tokens):
+                        i += 1
+                    continue
+                if word.startswith("-") and word != "--":
+                    continue
+                if word == "--":
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                i -= 1
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
+
+            elif wrapper_name in {"nohup", "time", "command", "busybox"}:
+                if word.startswith("-") and word != "--":
+                    continue
+                if word == "--":
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                i -= 1
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
+
+        if word in {"-exec", "-execdir", "-ok", "-okdir"}:
             expecting_command = True
             wrapper = False
             wrapper_name = None

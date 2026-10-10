@@ -1421,6 +1421,17 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
         "a=issue; b=create; command {stub_dir}/g? $a $b",
         "a=issue; b=create; find . -exec {stub_dir}/g? $a $b \\;",
         "bash -c 'a=issue; b=create; {stub_dir}/g? $a $b'",
+        r"sudo -u root PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"nice -n 19 PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"timeout 5s PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"env -u PATH PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"exec -a name PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"flock -w 10 /tmp/lock PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        'flock /tmp/lock -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        r">/dev/null PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        "nested >/dev/null PATH={stub_dir} g{{h..h..1}} api repos/o/r/issues -f title=t -f body=b".replace("nested ", ""),
+        'bash -o pipefail -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        'busybox sh -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
     ],
 )
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
@@ -1498,6 +1509,7 @@ def test_codex_entry_never_uses_session_selected_interpreter(tmp_path):
     "command",
     [
         "echo gh",
+        "echo $HOME",
         'git commit -m "fix gh routing"',
         "git commit -m 'fix gh $(pwd)'",
         "echo g? '$a'",
