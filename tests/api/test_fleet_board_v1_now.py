@@ -701,6 +701,59 @@ def test_capacity_figures_are_redacted(probe: str) -> None:
     assert activity_mod.text(probe) == "[redacted]"
 
 
+@pytest.mark.parametrize(
+    "probe",
+    [
+        "16-GB",
+        "16_GB",
+        "16:GB",
+        "16;GB",
+        "16 - GB",
+        "16 (GB)",
+        "16–GB",
+        "16—GB",
+        "16’GB",
+        "16. GB",
+        "7-qps",
+        "7_qps",
+        "7 - qps",
+        "12-requests",
+        "12 - requests",
+        "85-percent",
+        "85 - percent",
+        "85 per cent",
+        "85 percentage",
+        "90-pct",
+        "3-of-8",
+        "3_of_8",
+        "3 - of - 8",
+        "hard - stop",
+        "HARD - STOP",
+        "rate — limit",
+        "16 gigabytes",
+        "16 GIGABYTES",
+        "16 giga bytes",
+        "8 megabytes",
+        "16 mbps",
+        "16 gbit",
+        "16gbs",
+        "quóta",
+        "capácity",
+        "1\u03016-GB",
+        "\uff11\uff16\uff27\uff22",
+        "\uff11\uff16 GB",
+        "16 \u0413\u0411",
+        "16 \u0433\u0456\u0433\u0430\u0431\u0430\u0439\u0442",
+        "3 \u043ef 8",
+        "cap\u0430city",
+        "p\u0430ssword",
+    ],
+)
+def test_split_capacity_figures_are_redacted(probe: str) -> None:
+    assert activity_mod.text(probe) == "[redacted]"
+    assert activity_mod.seat_id(probe) is None
+
+
 @pytest.mark.parametrize("unit", ["qps", "rps", "cps"])
 @pytest.mark.parametrize("template", ["7 {unit}", "7{unit}", "7.5 {unit}", "7 {unit}_peak"])
 @pytest.mark.parametrize("uppercase", [False, True])

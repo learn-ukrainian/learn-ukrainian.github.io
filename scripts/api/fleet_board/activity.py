@@ -10,6 +10,7 @@ from __future__ import annotations
 import math
 import os
 import re
+import unicodedata
 from collections.abc import Mapping
 from typing import Any
 
@@ -34,13 +35,22 @@ _PUBLIC_SHAPE_RE = re.compile(
 # Word edges where an underscore separates words, so "ssh_key" and "build_box" match.
 _EDGE_L = r"(?<![^\W_])"
 _EDGE_R = r"(?![^\W_])"
-# Capacity figures: a number with a unit, or a capacity word.
+# The same punctuation the prose shape allows. A figure cannot hide behind it.
+_PUBLIC_SEP = r"[ _.,:;'\"\u2019\u201c\u201d\u02bc\u00ab\u00bb\u2013\u2014()#!?\-]*"
+_PUBLIC_UNIT = (
+    rf"(?:%|pct{_EDGE_R}|per{_PUBLIC_SEP}cent(?:ages?|iles?)?{_EDGE_R}"
+    rf"|slots?{_EDGE_R}|seats?{_EDGE_R}|tokens?{_EDGE_R}|requests?{_EDGE_R}"
+    rf"|(?:rpm|tpm|qps|rps|cps){_EDGE_R}"
+    rf"|(?:[kmgt]i?b(?:it|ps)?s?|(?:г|к|м|т)б|(?:giga|mega|kilo|tera)?{_PUBLIC_SEP}bits?"
+    rf"|(?:giga|mega|kilo|tera|гіга|мега|кіло|тера)?{_PUBLIC_SEP}байт[^\W_]*"
+    rf"|(?:giga|mega|kilo|tera)?{_PUBLIC_SEP}bytes?){_EDGE_R})"
+)
+# Capacity figures: a number with a unit, a capacity word, or a counted ratio.
 _PUBLIC_CAPACITY_RE = re.compile(
-    rf"(?i)\d[\d.,]*\s*(?:%|pct{_EDGE_R}|percent{_EDGE_R}|slots?{_EDGE_R}|seats?{_EDGE_R}"
-    rf"|tokens?{_EDGE_R}|requests?{_EDGE_R}|(?:rpm|tpm|qps|rps|cps){_EDGE_R}"
-    rf"|[kmgt]i?b{_EDGE_R}|bytes?{_EDGE_R})"
-    rf"|{_EDGE_L}(?:capacity|quota|budget|headroom|ceiling|instances?|users?|hard[ _-]stop|rate[ _-]limit){_EDGE_R}"
-    rf"|{_EDGE_L}\d+\s+of\s+\d+{_EDGE_R}"
+    rf"(?i)\d[\d.,]*{_PUBLIC_SEP}{_PUBLIC_UNIT}"
+    rf"|{_EDGE_L}(?:capacity|quota|budget|headroom|ceiling|instances?|users?"
+    rf"|hard{_PUBLIC_SEP}stop|rate{_PUBLIC_SEP}limit){_EDGE_R}"
+    rf"|{_EDGE_L}\d+{_PUBLIC_SEP}of{_PUBLIC_SEP}\d+{_EDGE_R}"
 )
 # Security mechanisms: auth, keys, network controls, privilege.
 _PUBLIC_SECURITY_RE = re.compile(
@@ -159,13 +169,48 @@ def activity_token(value: object) -> str | None:
     return None
 
 
+# Confusable letters that would otherwise spell a denied Latin token.
+_CONFUSABLE = str.maketrans({
+    "\u0430": "a", "\u0410": "A",
+    "\u0435": "e", "\u0415": "E",
+    "\u043e": "o", "\u041e": "O",
+    "\u0440": "p", "\u0420": "P",
+    "\u0441": "c", "\u0421": "C",
+    "\u0443": "y", "\u0423": "Y",
+    "\u0445": "x", "\u0425": "X",
+    "\u0456": "i", "\u0406": "I",
+    "\u0455": "s", "\u0405": "S",
+    "\u04cf": "l",
+    "\u0412": "B",
+    "\u0391": "A", "\u03b1": "a",
+    "\u0395": "E", "\u03b5": "e",
+    "\u0399": "I", "\u03b9": "i",
+    "\u039f": "O", "\u03bf": "o",
+    "\u03a1": "P", "\u03c1": "p",
+})
+
+
+def _screen(projected: str) -> str:
+    """NFKC form with the stress mark removed. Cyrillic letters stay intact."""
+    return unicodedata.normalize("NFKC", projected.replace("\u0301", ""))
+
+
+def _fold(projected: str) -> str:
+    """Accent-stripped, confusable-folded copy used only for denial."""
+    decomposed = unicodedata.normalize("NFKD", projected)
+    stripped = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    return unicodedata.normalize("NFKC", stripped).translate(_CONFUSABLE)
+
+
 def _publishable(projected: str) -> bool:
     if not _PUBLIC_SHAPE_RE.fullmatch(projected):
         return False
-    # Stress remains in published prose, but cannot split a denied token.
-    screened = projected.replace("\u0301", "")
+    screened = _screen(projected)
+    folded = _fold(projected)
+    copies = (screened, folded) if folded != screened else (screened,)
     return not any(
-        pattern.search(screened)
+        pattern.search(copy)
+        for copy in copies
         for pattern in (_PUBLIC_CAPACITY_RE, _PUBLIC_SECURITY_RE, _PUBLIC_HOST_RE)
     )
 
