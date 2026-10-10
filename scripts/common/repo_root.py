@@ -2,10 +2,37 @@
 
 from __future__ import annotations
 
+import importlib.util
 import os
 import stat
 import sys
 from pathlib import Path
+
+
+def _install_redacted_environ() -> None:
+    """Hide env values without importing the scripts package.
+
+    Callers load this module as ``common.repo_root`` with ``scripts/`` on
+    ``sys.path``. A package import of ``scripts`` fails on that path.
+    A partial checkout that copied this module without ``scripts/lib`` still
+    imports: the formatter is optional there.
+    """
+    name = "scripts.lib.redacted_environ"
+    module = sys.modules.get(name)
+    if module is None:
+        path = Path(__file__).resolve().parents[1] / "lib" / "redacted_environ.py"
+        if not path.is_file():
+            return
+        spec = importlib.util.spec_from_file_location(name, path)
+        if spec is None or spec.loader is None:
+            return
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
+        spec.loader.exec_module(module)
+    module.install_redacted_environ_repr()
+
+
+_install_redacted_environ()
 
 # Directory and final-component symlink hops followed while identifying a venv
 # entrypoint. POSIX SYMLOOP_MAX is commonly 40; longer chains fail closed.
