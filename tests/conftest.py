@@ -194,6 +194,12 @@ _LIVE_GITHUB_ALLOWED = False
 
 
 @pytest.fixture(autouse=True)
+def _disable_open_pr_freeze(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep dispatch tests off the live open-PR count; freeze tests opt back in."""
+    monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", "0")
+
+
+@pytest.fixture(autouse=True)
 def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool]:
     """Make fallback tests independent of the caller's cgroup (#9624).
 

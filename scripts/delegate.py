@@ -4921,6 +4921,28 @@ def _report_dispatch_admission(
     return _ADMISSION_REFUSED_EXIT
 
 
+def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any) -> int | None:
+    """Refuse a new PR-opening implementation dispatch while too many public PRs are open."""
+    from scripts.orchestration import pr_freeze
+
+    if not pr_freeze.opens_new_pr(
+        mode=str(getattr(args, "mode", "") or ""),
+        repo_role=str(getattr(fleet_repo, "role", "") or ""),
+        branch=getattr(args, "branch", None),
+        pr=getattr(args, "pr", None),
+        cwd=getattr(args, "cwd", None),
+        review=_dispatch_is_review_typed(args),
+    ):
+        return None
+    decision = pr_freeze.evaluate(fleet_repo.github)
+    if decision.warning:
+        print(f"⚠️  {decision.warning}", file=sys.stderr)
+    if decision.refused:
+        print(f"❌ {decision.refusal_line(fleet_repo.github)}", file=sys.stderr)
+        return _ADMISSION_REFUSED_EXIT
+    return None
+
+
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
     """Return the configured upstream remote for the checked-out branch.
 
@@ -12935,6 +12957,10 @@ def _dispatch(
     admission_rc = _report_dispatch_admission(admission, force_reason=force_admission_reason)
     if admission_rc is not None:
         return admission_rc
+
+    freeze_rc = _check_open_pr_freeze(args, fleet_repo)
+    if freeze_rc is not None:
+        return freeze_rc
 
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
