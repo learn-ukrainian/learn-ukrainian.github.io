@@ -2380,6 +2380,16 @@ def test_sigterm_during_input_reading_cli_produces_stop_summary_and_exit_interru
     assert "Resume command:" in err
 
 
+# SIGTERM sent to a child already blocked in the spellings FIFO read. Measured
+# 2026-10-10 on this host, delayed variant, after the readiness handshake:
+# idle max 0.031s (n=5); under nproc `yes >/dev/null` loops, max 0.074s (n=20,
+# load average climbed 5.5 to 13.5). Five seconds is more than 60× that exit, so a
+# loaded runner can deschedule the waiter without hiding a handler that never
+# runs. A blocked inherited mask used to sit in the read until this expired
+# (#10374); the child unblocks SIGTERM, so the bound is a real exit budget.
+_SIGTERM_REAP_SECONDS = 5.0
+
+
 @contextmanager
 def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float = 10.0):
     """Pair with the child's FIFO reader, keeping input blocked without payload or EOF."""
@@ -2411,8 +2421,12 @@ def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float
         os.close(writer_fd)
 
 
-@pytest.mark.parametrize("startup_delay", [0.0, 1.2], ids=["immediate", "delayed"])
-def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_delay):
+@pytest.mark.parametrize(
+    ("startup_delay", "block_inherited_sigterm"),
+    [(0.0, False), (1.2, False), (1.2, True)],
+    ids=["immediate", "delayed", "delayed-blocked-mask"],
+)
+def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_delay, block_inherited_sigterm):
     fifo_path = tmp_path / "spellings_fifo"
     os.mkfifo(fifo_path)
     command = [
@@ -2436,21 +2450,29 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
             str(startup_delay),
             *command,
         ]
-    proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
+    # signal.signal does not unblock. Block in the parent so the child inherits
+    # the mask the CI hang died on, then require the child to clear it (#10374).
+    if block_inherited_sigterm:
+        signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
     try:
-        # The CLI installs SIGTERM's handler before opening this FIFO. A writer
-        # open succeeds only once that reader exists; keep it open so read_text
-        # cannot finish and reach the network, even if the child is descheduled.
-        with _fifo_input_ready(proc, fifo_path) as writer_fd:
-            proc.send_signal(signal.SIGTERM)
-            _, err = proc.communicate(timeout=5)
-        with pytest.raises(OSError) as closed:
-            os.fstat(writer_fd)
-        assert closed.value.errno == errno.EBADF
+        proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
+        try:
+            # The CLI installs SIGTERM's handler before opening this FIFO. A writer
+            # open succeeds only once that reader exists; keep it open so read_text
+            # cannot finish and reach the network, even if the child is descheduled.
+            with _fifo_input_ready(proc, fifo_path) as writer_fd:
+                proc.send_signal(signal.SIGTERM)
+                _, err = proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
+            with pytest.raises(OSError) as closed:
+                os.fstat(writer_fd)
+            assert closed.value.errno == errno.EBADF
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+            proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
     finally:
-        if proc.poll() is None:
-            proc.kill()
-        proc.communicate(timeout=5)
+        if block_inherited_sigterm:
+            signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
 
     assert proc.returncode == EXIT_INTERRUPTED
     assert "=== ULIF Fetch Stop Summary ===" in err
@@ -2501,7 +2523,12 @@ def test_fifo_input_ready_closes_writer_on_failure(tmp_path):
     fifo_path = tmp_path / "spellings_fifo"
     os.mkfifo(fifo_path)
     proc = subprocess.Popen(
-        [sys.executable, "-c", "import os, sys, time; os.open(sys.argv[1], os.O_RDONLY); time.sleep(60)", str(fifo_path)]
+        [
+            sys.executable,
+            "-c",
+            "import os, sys, time; os.open(sys.argv[1], os.O_RDONLY); time.sleep(60)",
+            str(fifo_path),
+        ]
     )
     try:
         with pytest.raises(RuntimeError, match="consumer failed"):
@@ -2524,8 +2551,7 @@ def test_fifo_input_ready_reaps_before_writer_release_on_timeout(tmp_path, monke
         [
             sys.executable,
             "-c",
-            "from pathlib import Path; import sys; "
-            "Path(sys.argv[1]).read_text(); Path(sys.argv[2]).touch()",
+            "from pathlib import Path; import sys; Path(sys.argv[1]).read_text(); Path(sys.argv[2]).touch()",
             str(fifo_path),
             str(input_finished),
         ],

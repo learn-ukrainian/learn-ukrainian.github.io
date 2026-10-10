@@ -100,6 +100,30 @@ class InterruptedByOperator(KeyboardInterrupt):
     """SIGINT or SIGTERM received."""
 
 
+def _install_sigterm_handler() -> Any:
+    """Install the operator SIGTERM handler and return the previous one.
+
+    ``signal.signal`` does not change the thread mask, and the mask is inherited
+    across fork and exec. A blocked SIGTERM never runs the handler, so a blocking
+    read of the spellings FIFO sleeps until the caller's wait gives up (#10374).
+    The handler is installed before the signal is unblocked, so a signal that was
+    already pending is delivered to this handler rather than the default terminate
+    action. Returns None off the main thread, where ``signal.signal`` is illegal.
+    """
+    if threading.current_thread() is not threading.main_thread():
+        return None
+
+    def _on_sigterm(signum: int, frame: Any) -> None:
+        raise InterruptedByOperator("SIGTERM")
+
+    previous = None
+    with contextlib.suppress(ValueError, OSError):
+        previous = signal.signal(signal.SIGTERM, _on_sigterm)
+    if hasattr(signal, "pthread_sigmask"):
+        signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+    return previous
+
+
 def declared_user_agent() -> str:
     """The user agent already declared by the 20k DictUA client."""
     return DictUAClient(
@@ -2481,14 +2505,7 @@ def run_fetch(
     cache: sqlite3.Connection | None = None
     client: PoliteClient | None = None
 
-    old_sigterm = None
-    if threading.current_thread() is threading.main_thread():
-
-        def _on_sigterm(signum: int, frame: Any) -> None:
-            raise InterruptedByOperator("SIGTERM")
-
-        with contextlib.suppress(ValueError, OSError):
-            old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+    old_sigterm = _install_sigterm_handler()
 
     def _emit_fetch_progress() -> None:
         if ledger is None:
@@ -3856,14 +3873,7 @@ def run_walk(
     cache: sqlite3.Connection | None = None
     client: PoliteClient | None = None
 
-    old_sigterm = None
-    if threading.current_thread() is threading.main_thread():
-
-        def _on_sigterm(signum: int, frame: Any) -> None:
-            raise InterruptedByOperator("SIGTERM")
-
-        with contextlib.suppress(ValueError, OSError):
-            old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+    old_sigterm = _install_sigterm_handler()
 
     def _emit_walk_progress() -> None:
         if ledger is None:
@@ -5217,14 +5227,7 @@ Related:
             cmd_parts.extend(["--progress-interval", f"{args.progress_interval:g}"])
         resume_cmd = shlex.join(cmd_parts)
 
-        old_sigterm = None
-        if threading.current_thread() is threading.main_thread():
-
-            def _on_sigterm(signum: int, frame: Any) -> None:
-                raise InterruptedByOperator("SIGTERM")
-
-            with contextlib.suppress(ValueError, OSError):
-                old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+        old_sigterm = _install_sigterm_handler()
 
         try:
             try:
@@ -5315,14 +5318,7 @@ Related:
             cmd_parts.extend(["--start-headword", args.start_headword])
         resume_cmd = shlex.join(cmd_parts)
 
-        old_sigterm = None
-        if threading.current_thread() is threading.main_thread():
-
-            def _on_sigterm(signum: int, frame: Any) -> None:
-                raise InterruptedByOperator("SIGTERM")
-
-            with contextlib.suppress(ValueError, OSError):
-                old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+        old_sigterm = _install_sigterm_handler()
 
         try:
             code = run_walk(
