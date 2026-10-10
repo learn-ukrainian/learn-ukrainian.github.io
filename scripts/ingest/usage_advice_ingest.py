@@ -348,6 +348,8 @@ def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
     if m_cue:
         clean = m_cue.group(1).strip()
 
+    candidates: list[tuple[int, str, str]] = []
+
     # Pattern 0: Paired / multi-negation:
     #   - "ані X, ані Y, а Z" -> ("X / Y", "Z")
     #   - "ані X, ані Y [не підходять]" -> ("X / Y", "")
@@ -355,59 +357,73 @@ def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
     #   - "не X, а не Y" -> ("X / Y", "")
     #   - "не X і/та не Y, а Z" -> ("X / Y", "Z")
     #   - "не X і/та не Y" -> ("X / Y", "")
-    m_multi_neg = re.search(
-        r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,.\n!?]+?)»?\s*(?:,\s*а\s+не\s+|\s+(?:і|та|ані)\s+не\s+|,\s*ані\s+)«?([^»,.\n!?]+?)»?(?:,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^».\n!?]+)»?|(?=\s+не\b|[.,;!\n]|$))",
-        clean,
-        re.IGNORECASE,
+    pat_0 = (
+        r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,.\n!?]+?)»?\s*"
+        r"(?:,\s*а\s+не\s+|\s+(?:і|та|ані)\s+не\s+|,\s*ані\s+)«?([^»,.\n!?]+?)»?"
+        r"(?:\s*(?:—|–|-)?\s*не\s+(?:підходять|вживаються|є\s+[а-яА-ЯєіїґЄІЇҐ]+|нормативн[іа]|можна|кажуть|пишуть))?"
+        r"(?:,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^».\n!?]+)»?|(?=[.,;!\n]|$))"
     )
-    if m_multi_neg:
-        q1 = m_multi_neg.group(1).strip(' «"“”».,;!?-')
-        q2 = m_multi_neg.group(2).strip(' «"“”».,;!?-')
-        q2 = re.split(r"\s+не\s+(?:підходять|вживаються|є|можна)\b", q2, flags=re.IGNORECASE)[0].strip(' «"“”».,;!?-')
-        raw_r = m_multi_neg.group(3)
+    m0 = re.search(pat_0, clean, re.IGNORECASE)
+    if m0:
+        q1 = m0.group(1).strip(' «"“”».,;!?-')
+        q2 = m0.group(2).strip(' «"“”».,;!?-')
+        raw_r = m0.group(3)
         r = raw_r.strip(' «"“”».,;!?-') if raw_r else ""
         if r:
-            r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо)\b", r, flags=re.IGNORECASE)[0].strip(' «"“”».,;!?-')
+            r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо|а\s+не)\b", r, flags=re.IGNORECASE)[0].strip(
+                ' «"“”».,;!?-',
+            )
         if q1 and q2 and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
-            return f"{q1} / {q2}", r
+            candidates.append((m0.start(), f"{q1} / {q2}", r))
 
     # Pattern 1: [не|ані] X, а/але [вживайте...] Y
-    m1 = re.search(
-        r"(?:(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,\n.!?]+?)»?,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^»\n.!?]+?)»?)(?:[.,;!\n]|$)",
-        clean,
-        re.IGNORECASE,
-    )
+    pat_1 = r"(?:(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,\n.!?]+?)»?,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^»\n.!?]+?)»?)(?:[.,;!\n]|$)"
+    m1 = re.search(pat_1, clean, re.IGNORECASE)
     if m1:
         q = m1.group(1).strip(' «"“”».,;!?-')
         r = m1.group(2).strip(' «"“”».,;!?-')
+        if r:
+            r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо|а\s+не)\b", r, flags=re.IGNORECASE)[0].strip(
+                ' «"“”».,;!?-',
+            )
         if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
-            return q, r
+            candidates.append((m1.start(), q, r))
 
     # Pattern 2a: Quoted «Y», а не «X» anywhere
-    m_quoted = re.search(
-        r"«([^»\n.!?]+)»,\s*а\s+не\s+«([^»\n.!?]+)»",
-        clean,
-        re.IGNORECASE,
-    )
-    if m_quoted:
-        r = m_quoted.group(1).strip(' «"“”».,;!?-')
-        q = m_quoted.group(2).strip(' «"“”».,;!?-')
+    pat_2a = r"«([^»\n.!?]+)»,\s*а\s+не\s+«([^»\n.!?]+)»"
+    m2a = re.search(pat_2a, clean, re.IGNORECASE)
+    if m2a:
+        r = m2a.group(1).strip(' «"“”».,;!?-')
+        q = m2a.group(2).strip(' «"“”».,;!?-')
+        if r:
+            r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо|а\s+не)\b", r, flags=re.IGNORECASE)[0].strip(
+                ' «"“”».,;!?-',
+            )
         if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
-            return q, r
+            candidates.append((m2a.start(), q, r))
 
     # Pattern 2b: Y, а не X from start of clean text
-    m2 = re.search(
-        r"^(«?[^»\n.!?:]+?»?),\s*а\s+не\s+«?([^»\n.!?]+?)»?(?:[.,;!\n]|$)",
-        clean,
-        re.IGNORECASE,
-    )
-    if m2:
-        r = m2.group(1).strip(' «"“”».,;!?-')
-        q = m2.group(2).strip(' «"“”».,;!?-')
+    pat_2b = r"^(«?[^»\n.!?:]+?»?),\s*а\s+не\s+«?([^»\n.!?]+?)»?(?:[.,;!\n]|$)"
+    m2b = re.search(pat_2b, clean, re.IGNORECASE)
+    if m2b:
+        r = m2b.group(1).strip(' «"“”».,;!?-')
+        q = m2b.group(2).strip(' «"“”».,;!?-')
+        if r:
+            r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо|а\s+не)\b", r, flags=re.IGNORECASE)[0].strip(
+                ' «"“”».,;!?-',
+            )
         if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
-            return q, r
+            candidates.append((m2b.start(), q, r))
 
-    return None
+    if not candidates:
+        return None
+
+    # Sorting key:
+    # 1. Prefer candidates with non-empty recommendation (r != '') over empty recommendation (r == '')
+    # 2. Earliest start position in clean text
+    candidates.sort(key=lambda c: (0 if c[2] else 1, c[0]))
+    best = candidates[0]
+    return best[1], best[2]
 
 
 def extract_movne_word_pairs(

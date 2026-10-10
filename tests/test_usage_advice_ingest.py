@@ -835,6 +835,57 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs_ne_alt[0]["questioned_form"], "квиток / білет")
         self.assertEqual(pairs_ne_alt[0]["recommended_form"], "талон")
 
+        # Earlier recommendation preserved over later multi-negation:
+        t_b1 = "Правильно: білет, а не квиток і не талон."
+        pairs_b1 = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_b1", "antusurzhuk", "квиток чи білет", "", t_b1
+        )
+        self.assertEqual(len(pairs_b1), 1)
+        self.assertEqual(pairs_b1[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs_b1[0]["recommended_form"], "білет")
+
+        t_b2 = "Правильно: не квиток, а білет, бо ані талон, ані чек не підходять."
+        pairs_b2 = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_b2", "antusurzhuk", "квиток чи білет", "", t_b2
+        )
+        self.assertEqual(len(pairs_b2), 1)
+        self.assertEqual(pairs_b2[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs_b2[0]["recommended_form"], "білет")
+
+        # Negative predicate with following alternative:
+        t_b3 = "Правильно: ані квиток, ані білет не підходять, а талон."
+        pairs_b3 = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_b3", "antusurzhuk", "квиток чи білет", "", t_b3
+        )
+        self.assertEqual(len(pairs_b3), 1)
+        self.assertEqual(pairs_b3[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_b3[0]["recommended_form"], "талон")
+
+        t_b4 = "Правильно: ані квиток, ані білет — не нормативні, а талон."
+        pairs_b4 = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_b4", "antusurzhuk", "квиток чи білет", "", t_b4
+        )
+        self.assertEqual(len(pairs_b4), 1)
+        self.assertEqual(pairs_b4[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_b4[0]["recommended_form"], "талон")
+
+        # Paired negation without alternative:
+        t_b5 = "Правильно: не квиток, а не білет."
+        pairs_b5 = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_b5", "antusurzhuk", "квиток чи білет", "", t_b5
+        )
+        self.assertEqual(len(pairs_b5), 1)
+        self.assertEqual(pairs_b5[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_b5[0]["recommended_form"], "")
+
+        t_b6 = "Правильно: не квиток і не білет."
+        pairs_b6 = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_b6", "antusurzhuk", "квиток чи білет", "", t_b6
+        )
+        self.assertEqual(len(pairs_b6), 1)
+        self.assertEqual(pairs_b6[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_b6[0]["recommended_form"], "")
+
         # Lead-in words ending in 'не': Для мене правильно, Головне правильно
         t9 = "Для мене правильно: білет, а не квиток."
         pairs9 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t9", "antusurzhuk", "квиток чи білет", "", t9)
@@ -1018,6 +1069,87 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs_ani_gn[0]["questioned_form"], "квиток / білет")
         self.assertEqual(pairs_ani_gn[0]["verdict_form"], "")
         self.assertEqual(pairs_ani_gn[0]["verdict_type"], "incorrect")
+
+        # Glavcom blocker 1: Earlier recommendation preserved over later multi-negation:
+        html_b1 = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Як казати?</p>
+            <p>Правильно: білет, а не квиток і не талон.</p>
+        </div>
+        """
+        pairs_gb1 = extract_movne_word_pairs(1, 1, html_b1)
+        self.assertEqual(len(pairs_gb1), 1)
+        self.assertEqual(pairs_gb1[0]["verdict_form"], "білет")
+        self.assertEqual(pairs_gb1[0]["verdict_type"], "preferred")
+
+        # Glavcom blocker 1: Recommendation in main clause over multi-negation in бо clause:
+        html_b2 = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Як казати?</p>
+            <p>Правильно: не квиток, а білет, бо ані талон, ані чек не підходять.</p>
+        </div>
+        """
+        pairs_gb2 = extract_movne_word_pairs(1, 1, html_b2)
+        self.assertEqual(len(pairs_gb2), 1)
+        self.assertEqual(pairs_gb2[0]["verdict_form"], "білет")
+        self.assertEqual(pairs_gb2[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs_gb2[0]["verdict_type"], "preferred")
+
+        # Glavcom blocker 2: Negative predicate with following alternative:
+        html_b3 = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Як казати?</p>
+            <p>Правильно: ані квиток, ані білет не підходять, а талон.</p>
+        </div>
+        """
+        pairs_gb3 = extract_movne_word_pairs(1, 1, html_b3)
+        self.assertEqual(len(pairs_gb3), 1)
+        self.assertEqual(pairs_gb3[0]["verdict_form"], "талон")
+        self.assertEqual(pairs_gb3[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_gb3[0]["verdict_type"], "preferred")
+
+        html_b4 = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Як казати?</p>
+            <p>Правильно: ані квиток, ані білет — не нормативні, а талон.</p>
+        </div>
+        """
+        pairs_gb4 = extract_movne_word_pairs(1, 1, html_b4)
+        self.assertEqual(len(pairs_gb4), 1)
+        self.assertEqual(pairs_gb4[0]["verdict_form"], "талон")
+        self.assertEqual(pairs_gb4[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_gb4[0]["verdict_type"], "preferred")
+
+        # Glavcom paired negation without alternative:
+        html_b5 = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: «квиток» чи «білет»?</p>
+            <p>Правильно: не квиток, а не білет.</p>
+        </div>
+        """
+        pairs_gb5 = extract_movne_word_pairs(1, 1, html_b5)
+        self.assertEqual(len(pairs_gb5), 1)
+        self.assertEqual(pairs_gb5[0]["verdict_form"], "")
+        self.assertEqual(pairs_gb5[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_gb5[0]["verdict_type"], "incorrect")
+
+        html_b6 = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: «квиток» чи «білет»?</p>
+            <p>Правильно: не квиток і не білет.</p>
+        </div>
+        """
+        pairs_gb6 = extract_movne_word_pairs(1, 1, html_b6)
+        self.assertEqual(len(pairs_gb6), 1)
+        self.assertEqual(pairs_gb6[0]["verdict_form"], "")
+        self.assertEqual(pairs_gb6[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_gb6[0]["verdict_type"], "incorrect")
 
         html_correct = """
         <div class="post_text">
