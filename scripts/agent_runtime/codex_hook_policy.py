@@ -197,17 +197,28 @@ def _expand_braces(text: str, max_depth: int = 5, max_variants: int = 64) -> lis
                 continue
             any_expanded = True
             content = m.group(1)
-            prefix = s[:m.start()]
-            suffix = s[m.end():]
-            range_m = re.match(r"^([a-zA-Z0-9])\.\.([a-zA-Z0-9])$", content)
+            prefix = s[: m.start()]
+            suffix = s[m.end() :]
+            range_m = re.match(r"^([a-zA-Z0-9]+)\.\.([a-zA-Z0-9]+)(?:\.\.([+-]?[0-9]+))?$", content)
             if range_m:
-                c1, c2 = range_m.groups()
+                c1, c2, step_str = range_m.groups()
+                step = int(step_str) if step_str is not None else 1
+                if step == 0:
+                    step = 1
                 if c1.isdigit() and c2.isdigit():
-                    step = 1 if int(c1) <= int(c2) else -1
-                    items = [str(i) for i in range(int(c1), int(c2) + step, step)]
+                    n1, n2 = int(c1), int(c2)
+                    if n1 <= n2:
+                        items = [str(i) for i in range(n1, n2 + 1, abs(step))]
+                    else:
+                        items = [str(i) for i in range(n1, n2 - 1, -abs(step))]
+                elif len(c1) == 1 and len(c2) == 1:
+                    o1, o2 = ord(c1), ord(c2)
+                    if o1 <= o2:
+                        items = [chr(c) for c in range(o1, o2 + 1, abs(step))]
+                    else:
+                        items = [chr(c) for c in range(o1, o2 - 1, -abs(step))]
                 else:
-                    step = 1 if ord(c1) <= ord(c2) else -1
-                    items = [chr(c) for c in range(ord(c1), ord(c2) + step, step)]
+                    items = content.split(",")
             else:
                 items = content.split(",")
             for it in items:
@@ -217,6 +228,8 @@ def _expand_braces(text: str, max_depth: int = 5, max_variants: int = 64) -> lis
         current = next_level
         if not any_expanded:
             break
+    if any("{" in s and "}" in s for s in current):
+        return None
     return current
 
 
@@ -250,27 +263,6 @@ def _has_unescaped_metachars(command: str) -> bool:
     return False
 
 
-def _has_gh_mention_or_expansion(command: str) -> bool:
-    if re.search(r"\bgh\b", command):
-        return True
-    if re.search(r"\b(issue|pr)\s+(create|edit|close|comment|merge|ready)\b", command):
-        return True
-    variants = _expand_braces(command)
-    if variants is None:
-        return True
-    for variant in variants:
-        try:
-            words = shlex.split(variant)
-        except ValueError:
-            return True
-        for w in words:
-            if Path(w).name == "gh":
-                return True
-        if re.search(r"\bgh\b", variant):
-            return True
-    return False
-
-
 def _is_safe_data_mention(command: str) -> bool:
     if _has_unescaped_metachars(command):
         return False
@@ -283,19 +275,194 @@ def _is_safe_data_mention(command: str) -> bool:
     cmd = Path(words[0]).name
     if cmd in {"echo", "printf"}:
         return True
-    return bool(cmd == "git" and len(words) > 1 and words[1] in {
-        "commit", "log", "diff", "status", "show", "branch", "checkout", "add",
-    })
+    return bool(
+        cmd == "git"
+        and len(words) > 1
+        and words[1]
+        in {
+            "commit",
+            "log",
+            "diff",
+            "status",
+            "show",
+            "branch",
+            "checkout",
+            "add",
+        }
+    )
+
+
+def _is_ambiguous_or_gh_word(word: str) -> bool:
+    if Path(word).name == "gh":
+        return True
+    if any(c in word for c in "$`{}<>"):
+        return True
+    return bool("\\x" in word or "\\0" in word)
+
+
+_WRAPPERS = {
+    "sudo",
+    "nice",
+    "nohup",
+    "flock",
+    "time",
+    "timeout",
+    "xargs",
+    "env",
+    "command",
+    "exec",
+    "eval",
+    "bash",
+    "sh",
+    "zsh",
+    "dash",
+    "busybox",
+}
+
+
+def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
+    expecting_command = True
+    wrapper = False
+    wrapper_name = None
+    shell_dash_c = False
+
+    i = 0
+    while i < len(tokens):
+        word = tokens[i]
+        i += 1
+
+        if word in {"$(", "<(", ">("} or word == "`":
+            expecting_command = True
+            wrapper = False
+            wrapper_name = None
+            continue
+
+        if word in {";", "|", "&", "&&", "||", "|&", "\n", "(", "do", "then", "else", "elif", "{"}:
+            expecting_command = True
+            wrapper = False
+            wrapper_name = None
+            shell_dash_c = False
+            continue
+
+        if word in {")", "}"}:
+            expecting_command = False
+            wrapper = False
+            wrapper_name = None
+            continue
+
+        if expecting_command:
+            if re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*=", word):
+                continue
+            if word in {"<", ">", ">>", "<&", ">&", "&>", "2>&1", "1>&2"} or (
+                word.startswith(">") or word.startswith("<")
+            ):
+                continue
+
+            if _is_ambiguous_or_gh_word(word):
+                return True
+
+            base = Path(word).name
+            if base in _WRAPPERS:
+                wrapper = True
+                wrapper_name = base
+                if base == "eval":
+                    remaining = " ".join(tokens[i:])
+                    return _invokes_or_ambiguous_gh(remaining, recognize_gh)
+                elif base in {"bash", "sh", "zsh", "dash", "busybox"}:
+                    expecting_command = False
+                    shell_dash_c = True
+                    continue
+                elif base in {"find", "flock"}:
+                    expecting_command = False
+                    continue
+                else:
+                    expecting_command = False
+                    continue
+            else:
+                expecting_command = False
+                wrapper = False
+                continue
+
+        if shell_dash_c:
+            if (word.startswith("-") and "c" in word[1:]) or word == "<<<":
+                if i < len(tokens):
+                    subcmd = tokens[i]
+                    i += 1
+                    if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                        return True
+                shell_dash_c = False
+                continue
+            elif not word.startswith("-"):
+                shell_dash_c = False
+
+        if wrapper:
+            if wrapper_name == "flock":
+                if word.startswith("-"):
+                    continue
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
+            elif wrapper_name in {"nice", "sudo", "nohup", "time", "timeout", "xargs", "env", "command", "exec"}:
+                if (
+                    word.startswith("-")
+                    or (wrapper_name == "env" and "=" in word)
+                    or (wrapper_name == "timeout" and (word.isdigit() or word.replace(".", "").isdigit()))
+                ):
+                    continue
+                if word == "--":
+                    continue
+                if _is_ambiguous_or_gh_word(word):
+                    return True
+                base = Path(word).name
+                if base in _WRAPPERS:
+                    wrapper_name = base
+                else:
+                    wrapper = False
+                    wrapper_name = None
+                continue
+
+        if word in {"-exec", "-execdir"}:
+            expecting_command = True
+            wrapper = False
+            wrapper_name = None
+            continue
+
+    return False
 
 
 def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
     """Recognize command positions, shell expansions, and wrappers hiding gh.
 
-    Fail closed: returns False only if the command is a verified safe data mention.
+    Fail closed: returns False only if every command is a proven literal non-gh command
+    or safe data mention.
     """
-    if not _has_gh_mention_or_expansion(command):
+    if _is_safe_data_mention(command):
         return False
-    return not _is_safe_data_mention(command)
+
+    if re.search(r"\bgh\b", command):
+        return True
+    if re.search(r"\b(issue|pr)\s+(create|edit|close|comment|merge|ready)\b", command):
+        return True
+
+    variants = _expand_braces(command)
+    if variants is None:
+        return True
+
+    for variant in variants:
+        if callable(recognize_gh) and recognize_gh(variant):
+            return True
+        try:
+            lexer = shlex.shlex(variant, posix=True, punctuation_chars=";|&()\n`<>")
+            lexer.whitespace_split = True
+            tokens = list(lexer)
+        except ValueError:
+            return True
+
+        if _scan_tokens(tokens, recognize_gh):
+            return True
+
+    return False
 
 
 def _publication_command_code(payload: str, hooks_dir: Path) -> int:
@@ -357,9 +524,7 @@ def main() -> int:
         print("Codex tool payload is invalid; blocking fail-closed.", file=sys.stderr)
         return 2
     tool_input = decoded.get("tool_input", {})
-    if tool_name == "write_stdin" or (
-        tool_name == "Bash" and isinstance(tool_input, dict) and "chars" in tool_input
-    ):
+    if tool_name == "write_stdin" or (tool_name == "Bash" and isinstance(tool_input, dict) and "chars" in tool_input):
         print("Codex interactive input cannot be command guarded; blocking fail-closed.", file=sys.stderr)
         return 2
     if tool_name == "Bash":
