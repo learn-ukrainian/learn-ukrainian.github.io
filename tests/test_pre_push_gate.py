@@ -572,6 +572,10 @@ def test_empty_registry_literals_load_as_an_empty_registry(tmp_path: Path) -> No
     assert gate.load_registry(tmp_path)[0] == ()
 
 
+def test_admission_wait_covers_one_full_gate_run() -> None:
+    assert gate.ADMISSION_WAIT_S >= gate.RUN_BUDGET_S + gate.SHADOW_BUDGET_S + gate.CLEANUP_BUDGET_S
+
+
 def test_auto_finalize_push_timeout_covers_the_gate_bounds() -> None:
     from scripts import delegate
 
