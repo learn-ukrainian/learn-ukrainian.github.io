@@ -13,7 +13,7 @@ fallback='{}'
 [ "$mode" != agy-hook ] && fallback='{"decision": "allow"}'
 # Drain the hook input before any child can fail without reading it. Keep the
 # original bytes in a file because shell variables cannot preserve NULs.
-input_file=$(mktemp) || { cat >/dev/null; echo "$fallback"; exit 0; }
+input_file=$(mktemp --tmpdir="$TMPDIR" agy-in.XXXXXX) || { cat >/dev/null; echo "$fallback"; exit 0; }
 output_file=
 trap 'rm -f "$input_file"; [ -z "$output_file" ] || rm -f "$output_file"' 0
 if ! cat >"$input_file"; then
@@ -32,7 +32,7 @@ if [ ! -x "$py" ]; then
   exit 0
 fi
 # Validate output without storing its bytes in a shell variable.
-output_file=$(mktemp) || { echo "$fallback"; exit 0; }
+output_file=$(mktemp --tmpdir="$TMPDIR" agy-out.XXXXXX) || { echo "$fallback"; exit 0; }
 if (cd "$root" && "$py" -m scripts.driver_state "$mode" <"$input_file" >"$output_file" 2>/dev/null); then
   # A successful child must produce exactly one strict JSON object. Keep the
   # validator's output private too: a broken interpreter is not validation.
