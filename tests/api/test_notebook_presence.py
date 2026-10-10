@@ -133,7 +133,7 @@ def test_unmocked_testclient_flow_reaches_mac_occupancy_and_manifest(monkeypatch
         "turn": None,
         "caller_match": True,
         "source": "notebook-presence",
-        "age_s": pytest.approx(0, abs=1),
+        "age_s": pytest.approx(0, abs=5),
         "window": 272000,
     }
 

@@ -28,7 +28,8 @@ SCREEN = "busy compiling output"
 def _isolated(monkeypatch: pytest.MonkeyPatch) -> None:
     for name in sources_mod.LOCATION_ENV_VARS:
         monkeypatch.delenv(name, raising=False)
-    monkeypatch.delenv("FLEET_PR_STALE_MIN", raising=False)
+    for name in ("FLEET_GITHUB_REPO", "GH_REPO", "GITHUB_REPOSITORY", "FLEET_PR_STALE_MIN"):
+        monkeypatch.delenv(name, raising=False)
     monkeypatch.setattr(view_mod, "utc_now", lambda: FROZEN)
     monkeypatch.setattr(view_mod, "load_delegate_health", lambda: report("delegate", "ok"))
     monkeypatch.setattr(view_mod, "load_occupancy_activity", lambda: (report("occupancy", "ok"), {}))
