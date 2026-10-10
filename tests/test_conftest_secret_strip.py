@@ -3,9 +3,8 @@
 ``tests/conftest.py`` drops names ending in ``_API_KEY``, ``_TOKEN`` or
 ``_SECRET`` when it is imported, and does not put them back. A subprocess
 pytest, started with those names set and with cwd at the repo root, loads
-the real conftest and checks the result. ``LU_TEST_CREDENTIAL_STRIP`` keeps
-names published after the first strip only when its value names this process
-or an ancestor that stripped. Any other value still strips.
+the real conftest and checks the result. ``LU_TEST_CREDENTIAL_STRIP`` does
+not change that strip, whatever value it holds.
 Failure text names variables and never prints their values.
 
 AnyIO, pytest-cov, pytest-mock, pytest-rerunfailures, pytest-timeout,
@@ -15,7 +14,6 @@ conftest; none reads credential-suffix names.
 
 from __future__ import annotations
 
-import contextlib
 import os
 import subprocess
 import sys
@@ -26,13 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.conftest import (
-    _CREDENTIAL_STRIP_MARKER,
-    _is_credential_shaped_env_name,
-    _pid_is_ancestor,
-    _process_start_token,
-    _strip_ambient_credential_env,
-)
+from tests.conftest import _is_credential_shaped_env_name
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 # Gitignored, and not a norecursedirs pattern, so a child pytest can collect it
@@ -280,15 +272,39 @@ _CHILD_RUNTIME_DROPS = (
 )
 
 
-def _fresh_pytest_env() -> dict[str, str]:
-    """Child environment with no strip marker, so that child strips for itself.
+def _proc_start_token(pid: int) -> str:
+    """Clock-tick start time of ``pid``. Failures do not include the token."""
+    try:
+        raw = Path(f"/proc/{pid}/stat").read_bytes()
+    except OSError as exc:
+        raise AssertionError(f"start time unavailable for pid {pid}") from exc
+    close = raw.rfind(b")")
+    fields = raw[close + 2 :].split() if close >= 0 else []
+    if len(fields) <= 19:
+        raise AssertionError(f"start time unavailable for pid {pid}")
+    try:
+        token = fields[19].decode("ascii")
+    except UnicodeDecodeError as exc:
+        raise AssertionError(f"start time unavailable for pid {pid}") from exc
+    if not token.isdigit():
+        raise AssertionError(f"start time unavailable for pid {pid}")
+    return token
 
-    Untrusted marker values are not this case. The import probes set those
-    values and require the child to strip anyway.
+
+def _parent_process_identity() -> str:
+    """``<pid>:<starttime>`` of this process, the parent of a child probe."""
+    return f"{os.getpid()}:{_proc_start_token(os.getpid())}"
+
+
+def _fresh_pytest_env() -> dict[str, str]:
+    """Child environment whose ``LU_TEST_CREDENTIAL_STRIP`` names this parent.
+
+    A process identity used to skip the strip. The child still strips.
     """
     env = os.environ.copy()
-    for name in (*_CHILD_RUNTIME_DROPS, _CREDENTIAL_STRIP_MARKER):
+    for name in _CHILD_RUNTIME_DROPS:
         env.pop(name, None)
+    env["LU_TEST_CREDENTIAL_STRIP"] = _parent_process_identity()
     return env
 
 
@@ -501,22 +517,22 @@ def test_failing_test_does_not_restore_ambient_credentials() -> None:
 
 
 def _credential_snapshot() -> dict[str, str]:
-    """Credential-shaped names plus the strip marker, without the cursor session token.
+    """Credential-shaped names, without the cursor session token.
 
     The cursor process guard mints a new token at every session start, including
     a nested ``pytest.main``. That publication is not a restore of an ambient value.
     """
-    snapshot = {
-        name: value
-        for name, value in os.environ.items()
-        if name == _CREDENTIAL_STRIP_MARKER or _is_credential_shaped_env_name(name)
-    }
+    snapshot = {name: value for name, value in os.environ.items() if _is_credential_shaped_env_name(name)}
     snapshot.pop(_CURSOR_TOKEN, None)
     return snapshot
 
 
 def test_nested_pytest_main_leaves_the_outer_environment_unchanged() -> None:
-    """``pytest.main(["--collect-only", ...])`` must not restore or delete names."""
+    """``pytest.main(["--collect-only", ...])`` must not restore or delete names.
+
+    The nested call does not import ``tests.conftest`` again, so it neither
+    strips nor restores.
+    """
     published = "ZZ_NESTED_OUTER_API_KEY"
     assert published not in os.environ
     assert "ZZ_STRIP_PROBE_API_KEY" not in os.environ
@@ -545,44 +561,7 @@ def test_nested_pytest_main_leaves_the_outer_environment_unchanged() -> None:
     assert code == 0
     assert before == after
     assert before[published] == "published-by-outer-session"
-    marker_pid = _marker_pid(before[_CREDENTIAL_STRIP_MARKER])
-    assert marker_pid == str(os.getpid()) or _pid_is_ancestor(int(marker_pid))
     assert "ZZ_STRIP_PROBE_API_KEY" not in before
-
-
-def _marker_pid(marker: str) -> str:
-    """Pid named by a ``<pid>:<token>`` marker. The token is not returned."""
-    pid_text, sep, token = marker.partition(":")
-    if sep != ":" or not pid_text.isascii() or not pid_text.isdigit() or not token:
-        raise AssertionError("strip marker is not a process identity")
-    if str(int(pid_text)) != pid_text:
-        raise AssertionError("strip marker pid is not a canonical integer")
-    return pid_text
-
-
-def _identity_of(pid: int) -> str:
-    """Well-formed marker for a live pid. Fails if ``/proc`` cannot be read."""
-    token = _process_start_token(pid)
-    if token is None:
-        raise AssertionError(f"start time unavailable for pid {pid}")
-    return f"{pid}:{token}"
-
-
-def _sleeper() -> subprocess.Popen[str]:
-    """A live process that is a child, so it cannot be an ancestor."""
-    return subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(120)"],
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        text=True,
-    )
-
-
-def _stop_sleeper(proc: subprocess.Popen[str]) -> None:
-    with contextlib.suppress(ProcessLookupError):
-        proc.kill()
-    proc.wait(timeout=10)
 
 
 _IMPORT_REPORT = textwrap.dedent(
@@ -590,56 +569,74 @@ _IMPORT_REPORT = textwrap.dedent(
     import os
     import sys
 
+    def _start_token(pid):
+        raw = open("/proc/%s/stat" % pid, "rb").read()
+        close = raw.rfind(b")")
+        fields = raw[close + 2 :].split() if close >= 0 else []
+        if len(fields) <= 19:
+            raise SystemExit("start time unavailable")
+        return fields[19].decode("ascii")
+
+    mode = os.environ.get("ZZ_MARKER_MODE", "preset")
+    if mode == "own-bare":
+        os.environ["LU_TEST_CREDENTIAL_STRIP"] = str(os.getpid())
+    elif mode == "own-wellformed":
+        pid = os.getpid()
+        os.environ["LU_TEST_CREDENTIAL_STRIP"] = "%s:%s" % (pid, _start_token(pid))
+    elif mode == "pid1-wellformed":
+        os.environ["LU_TEST_CREDENTIAL_STRIP"] = "1:" + _start_token(1)
+
+    before = os.environ.get("LU_TEST_CREDENTIAL_STRIP")
     sys.path.insert(0, os.getcwd())
     import tests.conftest
 
+    after = os.environ.get("LU_TEST_CREDENTIAL_STRIP")
     watched = (
         "ZZ_STRIP_PROBE_API_KEY",
         "ZZ_STRIP_PROBE_TOKEN",
         "ZZ_STRIP_PROBE_SECRET",
-        "ZZ_PUBLISHED_AFTER_STRIP_API_KEY",
         "ZZ_STRIP_PROBE_PLAIN",
     )
     present = [name for name in watched if name in os.environ]
     print("present=" + ",".join(present))
-    marker = os.environ.get("LU_TEST_CREDENTIAL_STRIP", "")
-    pid_text, sep, token = marker.partition(":")
-    own = str(os.getpid())
-    well_formed = (
-        sep == ":"
-        and pid_text.isascii()
-        and pid_text.isdigit()
-        and bool(token)
-        and not any(char.isspace() for char in token)
-        and str(int(pid_text)) == pid_text
-    )
-    if well_formed and pid_text == own:
-        print("marker_kind=self")
-        print("marker_pid=" + pid_text)
-    elif well_formed:
-        print("marker_kind=pid")
-        print("marker_pid=" + pid_text)
-    else:
-        print("marker_kind=other")
-        print("marker_pid=")
+    print("marker_unchanged=" + ("yes" if before == after else "no"))
+    print("marker_present=" + ("yes" if "LU_TEST_CREDENTIAL_STRIP" in os.environ else "no"))
     """
+)
+
+
+_CREDENTIAL_STRIP_MARKER = "LU_TEST_CREDENTIAL_STRIP"
+_IMPORT_CREDENTIALS = (
+    "ZZ_STRIP_PROBE_API_KEY",
+    "ZZ_STRIP_PROBE_TOKEN",
+    "ZZ_STRIP_PROBE_SECRET",
 )
 
 
 def _probe_base_env() -> dict[str, str]:
     env = os.environ.copy()
-    for name in (*_CHILD_RUNTIME_DROPS, "PYTHONPATH", "PYTEST_ADDOPTS"):
+    for name in (*_CHILD_RUNTIME_DROPS, "PYTHONPATH", "PYTEST_ADDOPTS", _CREDENTIAL_STRIP_MARKER):
         env.pop(name, None)
     return env
 
 
-def _import_probe_env(marker: str) -> dict[str, str]:
-    """Environment whose ambient credential names must still be stripped."""
+def _import_probe_env(mode: str) -> dict[str, str]:
+    """Environment whose credential-shaped names must be stripped at import."""
     env = _probe_base_env()
-    env[_CREDENTIAL_STRIP_MARKER] = marker
+    env["ZZ_MARKER_MODE"] = mode
     env["ZZ_STRIP_PROBE_PLAIN"] = SENTINEL
-    for name in ("ZZ_STRIP_PROBE_API_KEY", "ZZ_STRIP_PROBE_TOKEN", "ZZ_STRIP_PROBE_SECRET"):
+    for name in _IMPORT_CREDENTIALS:
         env[name] = SENTINEL
+    if mode == "literal-1":
+        env[_CREDENTIAL_STRIP_MARKER] = "1"
+    elif mode == "empty":
+        env[_CREDENTIAL_STRIP_MARKER] = ""
+    elif mode == "garbage":
+        env[_CREDENTIAL_STRIP_MARKER] = "garbage"
+    elif mode == "parent-wellformed":
+        env[_CREDENTIAL_STRIP_MARKER] = _parent_process_identity()
+    else:
+        env[_CREDENTIAL_STRIP_MARKER] = "placeholder"
     return env
 
 
@@ -663,157 +660,132 @@ def _present_names(report: dict[str, str]) -> set[str]:
 
 def _assert_import_stripped(report: dict[str, str]) -> None:
     present = _present_names(report)
-    still_there = sorted({"ZZ_STRIP_PROBE_API_KEY", "ZZ_STRIP_PROBE_TOKEN", "ZZ_STRIP_PROBE_SECRET"} & present)
+    still_there = sorted(set(_IMPORT_CREDENTIALS) & present)
     assert not still_there, "credential-shaped names still set: " + ", ".join(still_there)
     assert "ZZ_STRIP_PROBE_PLAIN" in present
-    assert report.get("marker_kind") == "self"
+    assert report.get("marker_unchanged") == "yes"
+    assert report.get("marker_present") == "yes"
 
 
 @pytest.mark.parametrize(
-    "marker",
-    ["1", "", "garbage"],
-    ids=["one", "empty", "garbage"],
+    "mode",
+    [
+        "literal-1",
+        "empty",
+        "garbage",
+        "own-bare",
+        "own-wellformed",
+        "parent-wellformed",
+        "pid1-wellformed",
+    ],
 )
-def test_ambient_marker_values_still_strip(marker: str) -> None:
-    """A developer-shell marker that is not a process identity still strips at import."""
-    report = _run_import_probe(_import_probe_env(marker))
+def test_credential_strip_marker_has_no_effect(mode: str) -> None:
+    """``LU_TEST_CREDENTIAL_STRIP`` does not keep credential-shaped names.
+
+    The value may be ``1``, empty, garbage, this process's own pid, or a
+    ``<pid>:<starttime>`` for this process, its parent, or pid 1. None of
+    those values is read. The variable is left as it was.
+    """
+    report = _run_import_probe(_import_probe_env(mode))
     _assert_import_stripped(report)
 
 
-def test_numeric_pid_that_is_not_an_ancestor_still_strips() -> None:
-    """A live foreign pid, bare or with its real start time, is not trusted."""
-    proc = _sleeper()
-    try:
-        assert proc.poll() is None
-        assert proc.pid != os.getpid()
-        assert not _pid_is_ancestor(proc.pid)
-        identity = _identity_of(proc.pid)
-        for marker in (str(proc.pid), identity):
-            report = _run_import_probe(_import_probe_env(marker))
-            _assert_import_stripped(report)
-        assert proc.poll() is None
-    finally:
-        _stop_sleeper(proc)
-
-
-def test_stale_strip_marker_still_strips() -> None:
-    """A dead pid, and an ancestor pid whose start time does not match, still strip."""
-    proc = _sleeper()
-    try:
-        identity = _identity_of(proc.pid)
-    finally:
-        _stop_sleeper(proc)
-    assert not Path(f"/proc/{proc.pid}").exists()
-    report = _run_import_probe(_import_probe_env(identity))
-    _assert_import_stripped(report)
-
-    parent = _identity_of(os.getppid())
-    pid_text, _, token = parent.partition(":")
-    mismatched = f"{pid_text}:{int(token) + 1}"
-    report = _run_import_probe(_import_probe_env(mismatched))
-    _assert_import_stripped(report)
-
-
-def test_child_import_keeps_a_name_published_after_the_strip() -> None:
-    """An import whose marker names the stripping parent keeps a later publication."""
-    marker = os.environ[_CREDENTIAL_STRIP_MARKER]
-    parent_pid = _marker_pid(marker)
-    env = _probe_base_env()
-    for name in ("ZZ_STRIP_PROBE_API_KEY", "ZZ_STRIP_PROBE_TOKEN", "ZZ_STRIP_PROBE_SECRET"):
-        env.pop(name, None)
-    env[_CREDENTIAL_STRIP_MARKER] = marker
-    env["ZZ_PUBLISHED_AFTER_STRIP_API_KEY"] = "published-after-strip"
-    env["ZZ_STRIP_PROBE_PLAIN"] = SENTINEL
-    report = _run_import_probe(env)
-    present = _present_names(report)
-    assert "ZZ_PUBLISHED_AFTER_STRIP_API_KEY" in present
-    assert "ZZ_STRIP_PROBE_PLAIN" in present
-    assert report.get("marker_kind") == "pid"
-    assert report.get("marker_pid") == parent_pid
-
-
-def test_same_process_reentry_keeps_a_published_name() -> None:
-    """A second strip in this process keeps a name published after the first."""
-    published = "ZZ_SAME_PROCESS_REENTRY_API_KEY"
-    marker = os.environ[_CREDENTIAL_STRIP_MARKER]
-    os.environ[published] = "published-after-strip"
-    try:
-        _strip_ambient_credential_env()
-        assert os.environ.get(published) == "published-after-strip"
-        assert os.environ.get(_CREDENTIAL_STRIP_MARKER) == marker
-    finally:
-        os.environ.pop(published, None)
-
-
-_MARKER_PROBE = textwrap.dedent(
+# A child pytest process loads this conftest and strips again. A test that
+# needs a credential in a child session passes it through that child's own
+# conftest or monkeypatch.
+_CHILD_STRIPS_PUBLISHED = textwrap.dedent(
     """\
     import os
 
-    def test_published_name_remains():
-        marker = os.environ.get("LU_TEST_CREDENTIAL_STRIP", "")
-        pid_text, sep, token = marker.partition(":")
-        if sep != ":" or not token or pid_text != os.environ.get("ZZ_PARENT_PID", ""):
-            raise AssertionError("strip marker is not the parent identity")
-        if os.environ.get("ZZ_PUBLISHED_AFTER_STRIP_API_KEY") != "published-after-strip":
-            raise AssertionError("name published after the strip was removed")
+    def test_child_strips_inherited_credentials():
+        inherited = (
+            "ZZ_PUBLISHED_AFTER_STRIP_API_KEY",
+            "ZZ_STRIP_PROBE_API_KEY",
+            "ZZ_STRIP_PROBE_TOKEN",
+            "ZZ_STRIP_PROBE_SECRET",
+        )
+        visible = [name for name in inherited if name in os.environ]
+        if visible:
+            raise AssertionError("credential-shaped names still set: " + ", ".join(visible))
+        if os.environ.get("ZZ_STRIP_PROBE_PLAIN") != "sentinel-not-a-real-value":
+            raise AssertionError("unrelated name was stripped or changed")
     """
 )
 
 
-def test_child_with_strip_marker_keeps_a_name_published_after_the_strip() -> None:
-    """A child pytest whose marker names this stripping process does not strip again."""
-    marker = os.environ[_CREDENTIAL_STRIP_MARKER]
-    parent_pid = _marker_pid(marker)
-    assert parent_pid == str(os.getpid()) or _pid_is_ancestor(int(parent_pid))
-    assert not _is_credential_shaped_env_name(_CREDENTIAL_STRIP_MARKER)
-    with _probe_workspace("_zz_strip_marker_") as raw:
+def test_child_pytest_process_strips_published_credentials() -> None:
+    """A child pytest that loads this conftest strips names the parent published."""
+    with _probe_workspace("_zz_strip_child_") as raw:
         probe_dir = Path(raw)
-        (probe_dir / "test_marker.py").write_text(_MARKER_PROBE, encoding="utf-8")
+        (probe_dir / "test_child_strips.py").write_text(_CHILD_STRIPS_PUBLISHED, encoding="utf-8")
         env = _probe_base_env()
-        env[_CREDENTIAL_STRIP_MARKER] = marker
-        env["ZZ_PARENT_PID"] = parent_pid
+        env[_CREDENTIAL_STRIP_MARKER] = _parent_process_identity()
         env["ZZ_PUBLISHED_AFTER_STRIP_API_KEY"] = "published-after-strip"
+        env["ZZ_STRIP_PROBE_PLAIN"] = SENTINEL
+        for name in _IMPORT_CREDENTIALS:
+            env[name] = SENTINEL
         result = _run_child_pytest(probe_dir, env)
     assert result.returncode == 0, result.stdout + "\n" + result.stderr
 
+
+_XDIST_CONFTEST = textwrap.dedent(
+    """\
+    import os
+
+    def pytest_configure(config):
+        # Publish on the controller only. The worker stripped at import and
+        # receives the name through workerinput.
+        if not hasattr(config, "workerinput"):
+            os.environ["ZZ_PUBLISHED_AFTER_STRIP_API_KEY"] = "published-after-strip"
+    """
+)
 
 _XDIST_PROBE = textwrap.dedent(
     """\
     import os
     from pathlib import Path
 
-    def test_worker_keeps_published_name():
-        marker = os.environ.get("LU_TEST_CREDENTIAL_STRIP", "")
-        pid_text, sep, token = marker.partition(":")
-        if sep != ":" or not token or pid_text != os.environ.get("ZZ_PARENT_PID", ""):
-            raise AssertionError("strip marker is not the parent identity")
+    def test_worker_receives_controller_publication():
         if os.environ.get("ZZ_PUBLISHED_AFTER_STRIP_API_KEY") != "published-after-strip":
-            raise AssertionError("name published after the strip was removed")
+            raise AssertionError("suite-published name was not restored on the worker")
+        ambient = (
+            "ZZ_STRIP_PROBE_API_KEY",
+            "ZZ_STRIP_PROBE_TOKEN",
+            "ZZ_STRIP_PROBE_SECRET",
+        )
+        visible = [name for name in ambient if name in os.environ]
+        if visible:
+            raise AssertionError("ambient credential-shaped names still set: " + ", ".join(visible))
+        if os.environ.get("ZZ_STRIP_PROBE_PLAIN") != "sentinel-not-a-real-value":
+            raise AssertionError("unrelated name was stripped or changed")
         Path(os.environ["ZZ_XDIST_RESULT"]).write_text("kept", encoding="utf-8")
     """
 )
 
 
-def test_xdist_worker_keeps_a_name_published_after_the_strip() -> None:
-    """A one-worker xdist child keeps a name the controller's parent published.
+def test_xdist_worker_receives_names_published_on_the_controller() -> None:
+    """A ``-n 1`` worker receives names the controller published after its strip.
 
-    The worker is started with ``-n 1`` inside this test. The outer run does
-    not pass ``-n``.
+    The controller conftest sets the name during ``pytest_configure``, which is
+    before ``pytest_configure_node``. Ambient names in the child environment
+    are stripped at the controller import and are not copied. The outer run
+    does not pass ``-n``.
     """
-    marker = os.environ[_CREDENTIAL_STRIP_MARKER]
-    parent_pid = _marker_pid(marker)
     descriptor, result_name = tempfile.mkstemp(prefix="zz-xdist-result-")
     os.close(descriptor)
     result_path = Path(result_name)
     try:
         with _probe_workspace("_zz_strip_xdist_") as raw:
-            probe = Path(raw) / "test_xdist_worker.py"
+            probe_dir = Path(raw)
+            (probe_dir / "conftest.py").write_text(_XDIST_CONFTEST, encoding="utf-8")
+            probe = probe_dir / "test_xdist_worker.py"
             probe.write_text(_XDIST_PROBE, encoding="utf-8")
             env = _probe_base_env()
-            env[_CREDENTIAL_STRIP_MARKER] = marker
-            env["ZZ_PARENT_PID"] = parent_pid
-            env["ZZ_PUBLISHED_AFTER_STRIP_API_KEY"] = "published-after-strip"
+            env[_CREDENTIAL_STRIP_MARKER] = _parent_process_identity()
+            env["ZZ_STRIP_PROBE_PLAIN"] = SENTINEL
             env["ZZ_XDIST_RESULT"] = str(result_path)
+            for name in _IMPORT_CREDENTIALS:
+                env[name] = SENTINEL
             result = subprocess.run(
                 [
                     sys.executable,
@@ -821,7 +793,7 @@ def test_xdist_worker_keeps_a_name_published_after_the_strip() -> None:
                     "pytest",
                     str(probe),
                     "-q",
-                    "--tb=line",
+                    "--tb=short",
                     "-p",
                     "no:cacheprovider",
                     "-p",
@@ -837,10 +809,12 @@ def test_xdist_worker_keeps_a_name_published_after_the_strip() -> None:
                 env=env,
                 capture_output=True,
                 text=True,
-                timeout=90,
+                timeout=180,
                 check=False,
             )
         assert result.returncode == 0, result.stdout + "\n" + result.stderr
+        assert "published-after-strip" not in result.stdout
+        assert "published-after-strip" not in result.stderr
         assert result_path.read_text(encoding="utf-8") == "kept"
     finally:
         result_path.unlink(missing_ok=True)

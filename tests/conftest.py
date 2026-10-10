@@ -6,37 +6,30 @@ Provides reusable content snippets and module templates for testing.
 
 import os
 
-# Credential-shaped names are removed once, at import, and never put back.
-# Match the suffix only: ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY``
-# is not ``_API_KEY``. Comparison is case-insensitive. Names that merely look
-# secret stay visible: ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``.
-# This process owns its environment, so the parent shell is unchanged.
+# Credential-shaped names are removed at import, in every process that loads
+# this module, and this process never puts them back. Match the suffix only:
+# ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY`` is not ``_API_KEY``.
+# Comparison is case-insensitive. Names that merely look secret stay visible:
+# ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``. This process owns its
+# environment, so the parent shell is unchanged.
 #
-# ``LU_TEST_CREDENTIAL_STRIP`` is ``<pid>:<starttime>`` of the process that
-# stripped. ``starttime`` is field 22 of ``/proc/<pid>/stat`` (clock ticks
-# since boot), so a recycled pid no longer matches. A later import skips the
-# strip only when that pid is this process or an ancestor and the token still
-# matches the process. The walk starts at ``os.getppid`` and reads each
-# parent's ``/proc/<pid>/stat``, and it stops after
-# ``_CREDENTIAL_STRIP_ANCESTOR_LIMIT`` steps. An empty, malformed, foreign, or
-# stale marker is untrusted: this process strips and overwrites the marker.
-# Any parse or lookup error fails closed and strips. The token is also kept in
-# memory, so a nested ``pytest.main`` in this process skips. A child pytest
-# and an xdist worker skip because the stripping process is an ancestor. The
-# marker is outside the suffix contract.
+# ``LU_TEST_CREDENTIAL_STRIP`` is not read and is not written. A nested
+# ``pytest.main`` in this process does not import this module again, so it
+# neither strips nor restores. A child process that imports this module strips
+# again.
+#
+# An xdist worker is one of those processes. ``pytest_configure_node`` copies
+# the credential-shaped names still in ``os.environ`` into ``node.workerinput``
+# under ``_XDIST_PUBLISHED_CREDENTIALS_KEY``. The import strip has already
+# removed ambient names, so the copy is what this session published. The
+# worker puts that copy back in ``pytest_configure``. Values are not logged.
 #
 # Plugins that load before this conftest — AnyIO, pytest-cov, pytest-mock,
 # pytest-rerunfailures, pytest-timeout, pytest-xdist, and the repo's own
 # dispatch-cap plugin — do not read credential-suffix names, so that load
 # order does not retain one.
 _CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
-_CREDENTIAL_STRIP_MARKER = "LU_TEST_CREDENTIAL_STRIP"
-_CREDENTIAL_STRIP_ANCESTOR_LIMIT = 64
-# proc(5): after comm's closing parenthesis, index 1 is ppid (stat field 4)
-# and index 19 is starttime (stat field 22).
-_STAT_PPID = 1
-_STAT_STARTTIME = 19
-_PROCESS_STRIP_TOKEN: str | None = None
+_XDIST_PUBLISHED_CREDENTIALS_KEY = "lu_suite_published_credentials"
 
 
 def _is_credential_shaped_env_name(name: str) -> bool:
@@ -44,127 +37,19 @@ def _is_credential_shaped_env_name(name: str) -> bool:
     return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
 
 
-def _proc_stat_fields(pid: int) -> list[bytes] | None:
-    """Fields of ``/proc/<pid>/stat`` after ``comm``, or None on any error."""
-    if pid <= 0:
-        return None
-    try:
-        with open(f"/proc/{pid}/stat", "rb") as handle:
-            raw = handle.read()
-    except OSError:
-        return None
-    close = raw.rfind(b")")
-    if close < 0 or close + 2 >= len(raw):
-        return None
-    fields = raw[close + 2 :].split()
-    if len(fields) <= _STAT_STARTTIME:
-        return None
-    return fields
-
-
-def _parent_pid(pid: int) -> int | None:
-    """Parent pid from ``/proc/<pid>/stat``, or None when it cannot be read."""
-    fields = _proc_stat_fields(pid)
-    if fields is None:
-        return None
-    try:
-        parent = int(fields[_STAT_PPID])
-    except ValueError:
-        return None
-    if parent <= 0:
-        return None
-    return parent
-
-
-def _process_start_token(pid: int) -> str | None:
-    """Start-time token for ``pid``, or None when the stat file cannot be read."""
-    fields = _proc_stat_fields(pid)
-    if fields is None:
-        return None
-    try:
-        token = fields[_STAT_STARTTIME].decode("ascii")
-    except UnicodeDecodeError:
-        return None
-    if not token.isdigit():
-        return None
-    return token
-
-
-def _pid_is_ancestor(pid: int) -> bool:
-    """True when ``pid`` is a strict ancestor. Errors and a deep chain are False."""
-    if pid <= 0 or pid == os.getpid():
-        return False
-    current = os.getppid()
-    seen: set[int] = set()
-    for _ in range(_CREDENTIAL_STRIP_ANCESTOR_LIMIT):
-        if current <= 0 or current in seen:
-            return False
-        if current == pid:
-            return True
-        seen.add(current)
-        parent = _parent_pid(current)
-        if parent is None or parent == current:
-            return False
-        current = parent
-    return False
-
-
-def _parse_strip_marker(value: str) -> tuple[int, str] | None:
-    """Return ``(pid, token)`` or None when ``value`` is not ``<pid>:<token>``."""
-    pid_text, sep, token = value.partition(":")
-    if sep != ":" or not pid_text.isascii() or not pid_text.isdigit() or not token.isascii():
-        return None
-    if ":" in token or len(pid_text) > 20 or len(token) > 64 or any(char.isspace() for char in token):
-        return None
-    try:
-        pid = int(pid_text)
-    except ValueError:
-        return None
-    if pid <= 0 or str(pid) != pid_text:
-        return None
-    return pid, token
-
-
-def _strip_marker_is_trusted(value: str) -> bool:
-    """True when ``value`` names this process or a matching living ancestor."""
-    parsed = _parse_strip_marker(value)
-    if parsed is None:
-        return False
-    pid, token = parsed
-    if pid == os.getpid():
-        if _PROCESS_STRIP_TOKEN is not None and token == _PROCESS_STRIP_TOKEN:
-            return True
-        live = _process_start_token(pid)
-        return live is not None and token == live
-    if not _pid_is_ancestor(pid):
-        return False
-    live = _process_start_token(pid)
-    return live is not None and token == live
-
-
-def _install_strip_marker() -> None:
-    """Overwrite the marker with this process's identity after a strip."""
-    global _PROCESS_STRIP_TOKEN
-    token = _process_start_token(os.getpid())
-    if token is None:
-        # Descendants cannot match an in-memory nonce, so they strip.
-        token = "nonce-" + os.urandom(8).hex()
-    _PROCESS_STRIP_TOKEN = token
-    os.environ[_CREDENTIAL_STRIP_MARKER] = f"{os.getpid()}:{token}"
-
-
-def _strip_ambient_credential_env() -> None:
-    """Drop ambient credential-shaped names unless the marker names this tree."""
-    marker = os.environ.get(_CREDENTIAL_STRIP_MARKER)
-    if marker is not None and _strip_marker_is_trusted(marker):
-        return
+def _strip_credential_shaped_env() -> None:
+    """Drop credential-shaped names. This process never puts them back."""
     for name in tuple(os.environ):
         if _is_credential_shaped_env_name(name):
             del os.environ[name]
-    _install_strip_marker()
 
 
-_strip_ambient_credential_env()
+def _published_credential_env() -> dict[str, str]:
+    """Credential-shaped names currently set. The caller must not log them."""
+    return {name: os.environ[name] for name in tuple(os.environ) if _is_credential_shaped_env_name(name)}
+
+
+_strip_credential_shaped_env()
 
 import ast
 import contextlib
@@ -2193,7 +2078,36 @@ class _NeedsArtifactCollection:
         self.path.write_text("".join(f"{node_id}\n" for node_id in marked), encoding="utf-8")
 
 
+def _restore_published_credentials(config: pytest.Config) -> None:
+    """Put back the controller's suite-published names on an xdist worker.
+
+    Import already removed every credential-shaped name in this process.
+    Names that fail the suffix check are ignored. Values are not logged.
+    """
+    workerinput = getattr(config, "workerinput", None)
+    if not isinstance(workerinput, dict):
+        return
+    published = workerinput.get(_XDIST_PUBLISHED_CREDENTIALS_KEY)
+    if not isinstance(published, dict):
+        return
+    for name, value in published.items():
+        if isinstance(name, str) and isinstance(value, str) and _is_credential_shaped_env_name(name):
+            os.environ[name] = value
+
+
+@pytest.hookimpl(optionalhook=True)
+def pytest_configure_node(node: Any) -> None:
+    """Copy suite-published credential names into one xdist worker.
+
+    The hookspec argument is ``node``. Ambient names are already gone, so
+    ``os.environ`` holds only names this session published. The worker strips
+    again at import and ``pytest_configure`` puts this copy back.
+    """
+    node.workerinput[_XDIST_PUBLISHED_CREDENTIALS_KEY] = _published_credential_env()
+
+
 def pytest_configure(config: pytest.Config) -> None:
+    _restore_published_credentials(config)
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
