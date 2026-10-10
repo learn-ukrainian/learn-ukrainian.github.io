@@ -70,6 +70,7 @@ def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
     env.pop("PYTEST_ADDOPTS", None)
+    env["PYTHONPATH"] = str(REPO_ROOT / "scripts")
     env.update(extra or {})
     return env
 
@@ -91,8 +92,9 @@ def _commit(repo: Path, message: str, *paths: str) -> str:
 
 
 @pytest.fixture
-def repo(tmp_path: Path) -> Path:
+def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """A repository whose base commit is already on the remote ``main``."""
+    monkeypatch.setenv("PYTHONPATH", str(REPO_ROOT / "scripts"))
     root = tmp_path / "repo"
     remote = tmp_path / "remote.git"
     root.mkdir()
@@ -1851,7 +1853,15 @@ def test_next_pytest_stage_reaps_the_base_of_a_killed_gate(repo: Path, tmp_path:
         "plan = g['Plan']('h', 't', 'b', 'v', ('tests/test_invariant.py',), (), ())\n"
         f"g['run_pytest_stage'](plan, pathlib.Path({str(repo)!r}), 'unused', time.monotonic() + 30)\n"
     )
-    killed = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, timeout=30, check=False)
+    killed = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=tmp_path,
+        env=_env(),
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
     assert killed.returncode == -9, killed.stdout + killed.stderr
     stale = Path(marker.read_text(encoding="utf-8"))
     assert (stale / "leftover").exists()

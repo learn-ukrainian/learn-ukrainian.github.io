@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -605,6 +606,8 @@ def test_auto_finalize_push_timeout_tracks_gate_budgets(tmp_path: Path) -> None:
 def test_delegate_import_succeeds_without_the_hook(tmp_path: Path) -> None:
     from scripts import delegate
 
+    repo_root = Path(delegate.__file__).resolve().parents[1]
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join((str(repo_root), str(repo_root / "scripts")))}
     fixture_scripts = tmp_path / "scripts"
     fixture_scripts.mkdir()
     (fixture_scripts / "delegate.py").write_text(Path(delegate.__file__).read_text())
@@ -614,9 +617,12 @@ def test_delegate_import_succeeds_without_the_hook(tmp_path: Path) -> None:
         f"scripts.__path__.insert(0, {str(fixture_scripts)!r})\n"
         "import scripts.delegate\n"
         f"assert scripts.delegate._local_repo_root == __import__('pathlib').Path({str(tmp_path)!r})\n"
+        "assert not (scripts.delegate._local_repo_root / '.githooks/pre_push_gate.py').exists()\n"
         "print('delegate import succeeded without hook')\n"
     )
-    result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=30)
+    result = subprocess.run(
+        [sys.executable, "-c", code], cwd=tmp_path, env=env, capture_output=True, text=True, timeout=30
+    )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == "delegate import succeeded without hook"
 
