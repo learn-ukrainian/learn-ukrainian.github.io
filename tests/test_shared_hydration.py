@@ -31,6 +31,31 @@ def _evidence() -> dict[str, object]:
     }
 
 
+@pytest.fixture(autouse=True)
+def _half_second_budget(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Existing timing cases pin the 0.5 s floor through the supported override."""
+    monkeypatch.setenv(hydration.HYDRATION_DEADLINE_ENV, "0.5")
+
+
+def test_default_deadline_is_five_seconds_without_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(hydration.HYDRATION_DEADLINE_ENV, raising=False)
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
+    validator = Draft202012Validator(hydration.HYDRATION_CAPSULE_V1_SCHEMA, format_checker=FormatChecker())
+    assert list(validator.iter_errors(capsule)) == []
+    assert capsule["deadline_ms"] == 5000.0
+    assert capsule["state"] == "ready"
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [("2", 2.0), ("0.1", 0.5), ("99", 30.0), ("nan", 5.0), ("inf", 5.0), ("bogus", 5.0), ("", 5.0)],
+)
+def test_deadline_override_is_bounded(monkeypatch: pytest.MonkeyPatch, raw: str, expected: float) -> None:
+    monkeypatch.setenv(hydration.HYDRATION_DEADLINE_ENV, raw)
+    assert hydration.hydration_deadline_seconds() == expected
+
+
 def test_capsule_is_schema_and_format_checker_compliant(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
     capsule = hydration.build_hydration_capsule("epic:123", "gemini")
@@ -39,7 +64,7 @@ def test_capsule_is_schema_and_format_checker_compliant(monkeypatch: pytest.Monk
     assert list(validator.iter_errors(capsule)) == []
     assert capsule["schema_version"] == "1.3"
     assert capsule["deadline_ms"] == 500.0
-    assert hydration.HYDRATION_DEADLINE_SECONDS == 0.500
+    assert hydration.HYDRATION_DEADLINE_SECONDS == 5.0
     assert hydration.HYDRATION_CAPSULE_V1_SCHEMA["$id"].endswith("HydrationCapsuleV1-1.3.json")
     assert capsule["state"] == "ready"
     assert capsule["execution_allowed"] is True
@@ -153,9 +178,7 @@ def stream_fetch(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest
 
 
 @pytest.mark.parametrize("delay", [0.250, 0.750], ids=["below-budget", "above-budget"])
-def test_real_capsule_stream_fetch_budget_and_no_retry(
-    monkeypatch: pytest.MonkeyPatch, delay: float
-) -> None:
+def test_real_capsule_stream_fetch_budget_and_no_retry(monkeypatch: pytest.MonkeyPatch, delay: float) -> None:
     payload = json.dumps(_remote_stream(monkeypatch)).encode()
     fetches: list[str] = []
     original_fetch = hydration._fetch_remote_stream
@@ -209,9 +232,7 @@ def test_real_capsule_stream_fetch_budget_and_no_retry(
     "refusal",
     ["missing-lease", "launcher-stream", "digest-stream", "lane-identity", "unsafe-evidence"],
 )
-def test_non_timing_refusals_stay_blocked(
-    monkeypatch: pytest.MonkeyPatch, stream_fetch, refusal: str
-) -> None:
+def test_non_timing_refusals_stay_blocked(monkeypatch: pytest.MonkeyPatch, stream_fetch, refusal: str) -> None:
     response = _remote_stream(monkeypatch)
     lane = "gemini"
     reason = "stream-evidence-unavailable"
@@ -241,7 +262,9 @@ def test_non_timing_refusals_stay_blocked(
     assert "deadline-exceeded" not in capsule["degradation_reasons"]
 
 
-def test_remote_launcher_lease_hydrates_without_next_action_or_local_db(monkeypatch: pytest.MonkeyPatch, stream_fetch) -> None:
+def test_remote_launcher_lease_hydrates_without_next_action_or_local_db(
+    monkeypatch: pytest.MonkeyPatch, stream_fetch
+) -> None:
     response = _remote_stream(monkeypatch)
     stream_fetch(response)
 
@@ -484,9 +507,7 @@ def test_remote_transport_rejects_bad_responses_and_closes(
 
 
 @pytest.mark.parametrize("case", ["valid", "oversize", "truncated"])
-def test_remote_transport_real_loopback_connection_close(
-    monkeypatch: pytest.MonkeyPatch, case: str
-) -> None:
+def test_remote_transport_real_loopback_connection_close(monkeypatch: pytest.MonkeyPatch, case: str) -> None:
     payload = (
         b"x" * (hydration._MAX_STREAM_RESPONSE_BYTES + 1)
         if case == "oversize"
@@ -557,9 +578,7 @@ def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pyt
 
 
 @pytest.mark.parametrize("phase", ["headers", "body"])
-def test_remote_transport_real_loopback_drip_obeys_total_deadline(
-    monkeypatch: pytest.MonkeyPatch, phase: str
-) -> None:
+def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: pytest.MonkeyPatch, phase: str) -> None:
     received = threading.Event()
 
     class Handler(http.server.BaseHTTPRequestHandler):
@@ -657,12 +676,11 @@ def test_gh_queries_are_new_sessions_and_timeout_reaps(monkeypatch: pytest.Monke
     signals = []
     monkeypatch.setenv("GH_REPO", "fixture/project")
     monkeypatch.setattr(hydration.subprocess, "Popen", lambda *args, **kwargs: launched.update(kwargs) or Process())
-    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: signals.append((pid,signum)))
+    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: signals.append((pid, signum)))
     monkeypatch.setattr(hydration.time, "monotonic", lambda: 1.0)
     assert hydration.run_gh_json(["issue", "view", "5512", "--json", "title"], deadline=1.1) is None
     assert launched["start_new_session"] is True
     assert signals == [(4242, signal.SIGKILL)]
-
 
 
 @pytest.mark.parametrize(
@@ -825,7 +843,6 @@ def test_retry_does_not_repeat_degraded_allowed_capsule(monkeypatch) -> None:
         (LookupError("deadline-exceeded"), "stream-evidence-invalid"),
     ],
 )
-
 def test_evidence_failure_classifies_types_and_network_errno(error, kind) -> None:
     assert hydration._evidence_failure(error) == kind
 
