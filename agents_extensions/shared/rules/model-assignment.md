@@ -165,16 +165,52 @@ other's approval completes it; a proposal by any other agent (Gemini, Grok, Kimi
 needs both; if they disagree, the operator decides. Fable and the former Astra seat hold no advisory, approval, review or critique
 role and are not a last resort for any of them.
 
-**Claude default model: Opus 5.5 (operator directive 2026-09-22):**
+**Claude interactive default: Sonnet 5.5 with Opus 5.5 advisor (#10083):**
 
-- **Default Claude model and orchestrator seat**: **`claude-opus-5-5` (Opus 5.5)**. `start-claude-driver.sh`
+- **Routine interactive sessions**: `agents_extensions/shared/settings.json` sets
+  `model: claude-sonnet-5-5` and `advisorModel: claude-opus-5-5`. Interactive
+  `start-claude.sh` injects no model unless explicitly requested; settings and
+  resumed-session model resolution remain Claude Code's responsibility.
+  The settings do not select a default `agent`: selecting an Opus-pinned
+  orchestrator here would override the routine Sonnet default. Choose a named
+  agent explicitly for its reserved seat; stream launchers select their driver agent.
+- **Reserved repository agents**: `curriculum-orchestrator`,
+  `curriculum-track-orchestrator` and `curriculum-writer` pin
+  `model: claude-opus-5-5`, so Ukrainian writing/judgment seats never inherit
+  the routine interactive model. `infra-orchestrator` pins
+  `model: claude-sonnet-5-5`, matching its frontmatter. This infra-orchestrator
+  subagent has an approved router-only exception (CTO decision, 2026-10-09):
+  it never writes or reviews security code; it routes every security-code worker
+  and every security-code review to `claude-opus-5-5` (Opus); review independence
+  still binds: Opus-authored security code is reviewed by the resolver's
+  `--risk critical` cross-family seat, never Sonnet. Security code
+  (hooks, launchers, credentials, admission, sandbox) is never written or reviewed
+  on Sonnet. The advisor is strictly
+  for interactive Claude sessions; headless runs omit `advisorModel` and set
+  `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Subagents inherit the configured advisor
+  and apply the pairing check against their own model. Route reserved subagent
+  work to an explicitly pinned qualified seat.
+- **Subagent default stays unset**: do not set `CLAUDE_CODE_SUBAGENT_MODEL` or
+  `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`. Built-in general-purpose and Plan agents
+  are not limited to read-only search; a global Haiku override would admit
+  code-writing or judgment work below the required tier. Unpinned subagents
+  follow Claude Code's built-in defaults or inherit the session model; route
+  reserved work to an explicitly pinned qualified seat.
+- **Driver and advanced Claude seats**: **`claude-opus-5-5` (Opus 5.5)**. `start-claude-driver.sh`
   pins `claude-opus-5-5[1m]` @ `high` unless `--model` / `--effort` (or `LAUNCHER_MODEL` /
-  `LAUNCHER_EFFORT`) override it; interactive `start-claude.sh` keeps the last TUI selection. Opus 5.5
+  `LAUNCHER_EFFORT`) override it. Opus 5.5
   also takes advanced non-linguistic Claude-lane work (architecture, hard coding, deep code review).
 - **Review, critique, design input and Ukrainian work**: Opus 5.5 / Sol 6.1 (#9583).
   Orchestration alone never confers approval authority.
 - **Effort**: Opus 5.5's API default is `medium`, one level below Opus 5. Orchestrating runs at `high`;
   see `docs/best-practices/fleet-shared-doctrine.md` § Effort guidance for the full ladder.
+
+The server-side advisor supplies consultation, not designated approval or the
+independent cross-family review of record. If advisor calls stall, the documented
+fallback is `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`; it does not change any reserved
+seat's model. See Claude Code's [advisor](https://code.claude.com/docs/en/advisor),
+[model configuration](https://code.claude.com/docs/en/model-config) and
+[subagent model selection](https://code.claude.com/docs/en/sub-agents) documentation.
 
 **Claude Seat Routing: Opus 5.5 first, Sonnet practical (operator directive 2026-09-17;
 Sonnet practical seat updated 2026-09-28; orchestration and advanced non-linguistic work

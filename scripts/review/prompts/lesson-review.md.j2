@@ -89,7 +89,7 @@ The core lesson checks are evaluated and recorded in the checks object as clean 
 7. `fact`: Culture and fact. Any statement about Ukraine, its history or customs is true and sourced.
 
 {% if manifest.recap %}
-8. `recap`: The recap lesson reflects what lessons 1..N-1 actually taught, introduces nothing new, and follows ULP review shape (R-03).
+8. `recap`: The recap lesson reflects what lessons 1..N-1 actually taught, introduces nothing new, {% if manifest.level == "a1" %}and performs the approved practical plan task (R-03, #10105).{% else %}and follows ULP review shape (R-03).{% endif %}
 {% endif %}
 
 Optional checks:
@@ -295,4 +295,25 @@ Where this recap and the digest disagree, the taught lessons win and the recap i
 #### Built Lesson {{ up.n }}
 {{ up.content | fence("mdx") }}
 {% endfor %}
+{% endif %}
+{% if manifest.level == "a1" %}
+
+### A1 practical recap judgment (#10105)
+Under `activities` (plan review) or `job` and `activity` (lesson review), assess every
+recap/checkpoint/embedded closing step's approved plan task, including embedded recaps
+when the manifest is not marked recap. The module digest and earlier teaching steps
+provide the taught context; declare an evidence gap if the applicable built context is absent.
+Judge usefulness, Ukrainian processing and a real contextual choice/personalization/
+recombination. Reject disguised copying, Ukrainian bypass, wholesale model copying,
+or an untaught construction even when every lemma is available. Cite the actual task.
+Early A1 is defined by activity_instruction: [en] in immersion_table.yaml, not position.
+Require English context, instructions and observable criteria (they may quote the taught
+Ukrainian the learner says, reads or chooses) and no story-question closure in early A1.
+Quoted Ukrainian in those English fields is teacher metalanguage, not learner print or
+inventory evidence: confirm each quoted form and construction is taught before the step.
+Arc D4's story-question shape is superseded for A1 by arc section 9 (#10105). A story is optional support. Later A1 may use supported comprehension.
+Orientation requires explicit a1-orientation: English narration, Ukrainian overview
+exemplars only, no advisory share or core additions; English practical orientation recap
+requires no Ukrainian production. A1 has no module structural minimums in fresh payloads;
+lesson_structural_minimums_not_calibrated remains. A2+ contracts are unchanged.
 {% endif %}

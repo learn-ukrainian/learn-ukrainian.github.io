@@ -5,16 +5,7 @@ from scripts import config
 
 @pytest.mark.parametrize(
     ("track", "vocab_count", "expected_key"),
-    [
-        ("a1", 0, "a1-m01-03"),
-        ("a1", 139, "a1-m01-03"),
-        ("a1", 140, "a1-m04-06"),
-        ("a1", 242, "a1-m07-14"),
-        ("a1", 573, "a1-m15-24"),
-        ("a1", 593, "a1-m25-34"),
-        ("a1", 621, "a1-m35-54"),
-        ("a1", 647, "a1-m55+"),
-    ],
+    [('a1', 0, 'a1-m01-03'), ('a1', 24, 'a1-m01-03'), ('a1', 25, 'a1-m04-06'), ('a1', 59, 'a1-m04-06'), ('a1', 60, 'a1-m07-14'), ('a1', 139, 'a1-m07-14'), ('a1', 140, 'a1-m15-24'), ('a1', 241, 'a1-m15-24'), ('a1', 242, 'a1-m25-34'), ('a1', 399, 'a1-m25-34'), ('a1', 400, 'a1-m35-54'), ('a1', 599, 'a1-m35-54'), ('a1', 600, 'a1-m55+'), ('a1', 1000, 'a1-m55+')],
 )
 def test_ulp_calibrated_knees_select_expected_band(monkeypatch, track, vocab_count, expected_key):
     monkeypatch.setattr(config, "USE_ULP_IMMERSION_DERIVATION", True)
@@ -62,7 +53,7 @@ def test_ulp_derivation_falls_back_to_static_policy_without_learner_state(monkey
     band = config.compute_immersion_band("a1", 20)
 
     assert band["key"] == "a1-m15-24"
-    assert (band["advisory_pct_min"], band["advisory_pct_max"]) == (40, 55)
+    assert (band["advisory_pct_min"], band["advisory_pct_max"]) == (25, 40)
 
 
 def test_a2_derivation_keeps_easy_ukrainian_ranges(monkeypatch):
@@ -90,8 +81,8 @@ def test_a2_derivation_keeps_easy_ukrainian_ranges(monkeypatch):
     ("module_num", "vocab_count"),
     [
         (1, 0),
-        (2, 44),
-        (3, 84),
+        (2, 10),
+        (3, 24),
     ],
 )
 def test_a1_m01_m03_backward_compat_with_static_advisory_band(

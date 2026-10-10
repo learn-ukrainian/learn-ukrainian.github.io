@@ -166,6 +166,7 @@ def base_plan() -> dict:
                     {
                         "id": "s1",
                         "kind": "practice",
+                        "task": {'id': 'recap-closure', 'action': 'read_and_use', 'context_en': 'A familiar situation.', 'instruction_en': 'Use the taught model for the situation.', 'response_mode': 'spoken_or_written', 'success_criteria_en': ['Use an appropriate taught expression.'], 'learner_reads': []},
                         "uses": {"grammar": ["G-a1-001"], "vocabulary": ["W-001"]},
                         "evidence": ["T-001"],
                         "practice": ["a1"],
@@ -176,7 +177,7 @@ def base_plan() -> dict:
                         "id": "a1",
                         "type": "quiz",
                         "placement": "inline",
-                        "focus": "Review quiz. kind: comprehension; host: {kind: dialogue}.",
+                        "focus": "Apply a taught model to the context.",
                     },
                     {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Review workbook quiz."},
                 ],
@@ -418,7 +419,7 @@ def _checkpoint_lesson(n: int = 1) -> dict:
         "rationale": "Learner-position checkpoint.",
         "word_target": 5,
         "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": []}},
-        "steps": [{"id": "s1", "kind": "practice", "evidence": ["T-001"], "practice": ["a1"]}],
+        "steps": [{"id": "s1", "kind": "practice", "evidence": ["T-001"], "practice": ["a1"], "task": {'id': 'checkpoint-closure', 'action': 'select_for_context', 'context_en': 'A new familiar situation.', 'instruction_en': 'Select and use a taught model that fits the situation.', 'response_mode': 'selection', 'success_criteria_en': ['Select a model suited to the context.'], 'learner_reads': []}}],
         "activities": [
             {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Checkpoint quiz."},
             {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Checkpoint workbook quiz."},
@@ -451,7 +452,7 @@ def _teach_close_lesson(n: int, slug: str) -> dict:
                 "evidence": ["T-002"],
                 "practice": ["a1"],
             },
-            {"id": "s2", "kind": "recap", "evidence": ["T-001"], "practice": []},
+            {"id": "s2", "kind": "recap", "evidence": ["T-001"], "practice": [], "task": {'id': 'recap-closure', 'action': 'read_and_use', 'context_en': 'A familiar situation.', 'instruction_en': 'Use the taught model for the situation.', 'response_mode': 'spoken_or_written', 'success_criteria_en': ['Use an appropriate taught expression.'], 'learner_reads': []}},
         ],
         "activities": [
             {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Final quiz."},
@@ -571,7 +572,7 @@ FAILING_CASES = [
     Case(
         "closing_shape_invalid_teach_last",
         mutate=_mutate(lambda p, pk, w: p["lessons"][1].__setitem__("kind", "teach")),
-        expected=frozenset({codes.CLOSING_SHAPE_INVALID}),
+        expected=frozenset({codes.CLOSING_SHAPE_INVALID, codes.RECAP_TASK_ORDER}),
     ),
     Case(
         "closing_shape_b_three_teach_lessons",
@@ -581,7 +582,7 @@ FAILING_CASES = [
     Case(
         "closes_with_recap_not_last",
         mutate=_mutate(lambda p, pk, w: p["lessons"][0].__setitem__("closes_with_recap", True)),
-        expected=frozenset({codes.CLOSES_WITH_RECAP_NOT_LAST}),
+        expected=frozenset({codes.CLOSES_WITH_RECAP_NOT_LAST, codes.A1_RECAP_MIGRATION_REQUIRED}),
     ),
     Case(
         "teach_step_in_practice_lesson",
@@ -633,7 +634,7 @@ FAILING_CASES = [
         mutate=_mutate(
             lambda p, pk, w: p["lessons"][0]["steps"].append({"id": "s2", "kind": "recap", "evidence": ["T-002"]})
         ),
-        expected=frozenset({codes.CHECKPOINT_STEP_KIND}),
+        expected=frozenset({codes.CHECKPOINT_STEP_KIND, codes.RECAP_TASK_ORDER}),
     ),
     Case(
         "introduces_on_non_teach_step",
@@ -1249,6 +1250,12 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_validate_a1_reference import produced_a1_reference_codes
 
     produced |= produced_a1_reference_codes()
+    from tests.build.test_fresh_recap_contract import produced_recap_codes
+
+    produced |= produced_recap_codes()
+    from tests.curriculum.test_plan_retirement import produced_retirement_codes
+
+    produced |= produced_retirement_codes(tmp_path / "retirement")
     assert produced == set(codes.DESCRIPTIONS)
 
 
@@ -1328,3 +1335,35 @@ def test_cli_subprocess_clean_environment(tmp_path: Path) -> None:
     failing = run(bad.plan_path)
     assert failing.returncode == 1
     assert codes.REMOVED_V1_FIELD in failing.stdout
+
+
+@pytest.mark.parametrize("case", ["permitted", "unregistered", "oversize", "text_field", "exercise", "missing", "selector"])
+def test_plan_validator_recap_source_admission(tmp_path, case):
+    from tests.curriculum.evidence.test_publication import record
+
+    plan, pack, words = build_cyrillic_lemma()
+    closure = plan["lessons"][-1]["steps"][-1]
+    printed = record(quote=LETTER_A)
+    pack["texts"][0] = printed
+    closure["task"]["learner_reads"] = [{"ref": "T-001", "words": [LETTER_A]}]
+    if case == "unregistered":
+        printed["source"]["file"] = "unregistered"
+        printed["quote"] = "x" * 860
+    elif case == "oversize":
+        printed["quote"] = "x" * 801
+    elif case == "text_field":
+        printed["text"] = LETTER_A
+    elif case == "exercise":
+        pack["exercises"] = [{"id": "X-001", "items_sample": [LETTER_A]}]
+        closure["evidence"] = ["X-001"]
+        closure["task"]["learner_reads"] = ["X-001"]
+    elif case == "missing":
+        closure["task"]["learner_reads"] = ["T-999"]
+    elif case == "selector":
+        closure["task"]["learner_reads"][0]["words"] = ["synthetic-absent-selection"]
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    if case == "permitted":
+        assert report.ok, report.render_text()
+    else:
+        assert codes.RECAP_TASK_PRINT in report.codes(), report.render_text()

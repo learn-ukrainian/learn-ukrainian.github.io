@@ -25,6 +25,36 @@ def test_recognized_lines_preserve_tokens_and_order(reply, expected):
     assert recognized_verdicts(reply) == expected
 
 
+@pytest.mark.parametrize("token", [
+    "APPROVE", "APPROVED", "CHANGES_REQUESTED", "REQUEST_CHANGES", "BLOCKED",
+])
+@pytest.mark.parametrize("template", [
+    "VERDICT: {token}",
+    "VERDICT {token}",
+    "**VERDICT {token}**",
+    "**VERDICT** {token}",
+    "**VERDICT**: {token}",
+    "**VERDICT**: **{token}**",
+    "**VERDICT {token}** — reviewed exact head …",
+    "**VERDICT**{token}",
+])
+def test_colon_and_markdown_separators_accept_all_verdict_tokens(template, token):
+    assert recognized_verdicts(template.format(token=token)) == [token]
+
+
+@pytest.mark.parametrize("reply", [
+    "VERDICTAPPROVE", "VERDICT APPROVEX", "VERDICT UNKNOWN",
+    "VERDICT APPROVE_LATER", "VERDICT APPROVE_2", "VERDICT APPROVEé",
+    "**VERDICT** APPROVEX", "**VERDICT**APPROVE_LATER",
+    "I will report VERDICT APPROVE later", "> **VERDICT APPROVE**",
+    "`VERDICT APPROVE`", "    VERDICT APPROVE", "\tVERDICT APPROVE",
+    "```\n**VERDICT APPROVE**\n```", "~~~\nVERDICT BLOCKED\n~~~",
+    "```\nVERDICT APPROVE", "##VERDICT APPROVE", "## The VERDICT APPROVE",
+])
+def test_relaxed_separators_still_reject_examples_and_invalid_tokens(reply):
+    assert recognized_verdicts(reply) == []
+
+
 @pytest.mark.parametrize("reply", [
     "", "No verdict", "VERDICT: UNKNOWN", "VERDICT: APPROVEX",
     "VERDICT: APPROVE_LATER", "VERDICT: APPROVE_2", "VERDICT: APPROVEé",

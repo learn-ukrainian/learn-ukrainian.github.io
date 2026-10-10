@@ -107,7 +107,7 @@ unchanged.
 5. **Faithful use of evidence.** The coverage gate proves each cited id appears; the reviewer checks that a quote is used in its sense, not bent to fit.
 6. **English support.** Glosses and translations are accurate; English appears only where the immersion rule allows. Every sentence is in one language, Ukrainian or English, never a mix (operator direction 2026-09-27; writer contract §6): an English sentence may quote a Ukrainian item in a `{{uk:…}}` span only when the sentence is about that item (the form, word or construction taught, or a term introduced with its gloss); a span standing where the sentence needs the English word for the thing named is a mixed sentence even though it is marked, and a finding. Nothing is explained through Russian or "Slavic" comparison — Ukrainian on its own terms.
 7. **Culture and fact.** Any statement about Ukraine, its history or customs is true and sourced — under principle 2, exactly as for language.
-8. **The recap lesson** reflects what lessons 1…N−1 actually taught, introduces nothing, and has the ULP review shape (R-03).
+8. **The recap lesson** reflects what lessons 1…N−1 actually taught, introduces nothing, and has the practical A1 task shape (#10105), or the unchanged ULP shape at A2+.
 **May not:** re-run a deterministic gate's check (it may question the gate's logic — principle 5); rewrite content; rule on Ukrainian from its own authority; ask for less Ukrainian (R-15); demand a different step order or inventory **of the lesson** — but it **must** report a plan defect that only shows once the lesson is built (a dialogue that needs a construction the plan teaches later), as a finding with `dimension: plan_defect`; object that a summary previews later material where the plan says it does (a recorded scar of the A1 work).
 
 ## What a review returns — machine-readable, validated by an **active** validator
@@ -173,3 +173,20 @@ Question 3 he answered himself; on the others he said **"i accept the defaults"*
 
 ## Deliverables (for implementing agents, after acceptance — briefed in the build program, `docs/epics/fresh-build-build-program.md`)
 (a) the two contracts as a section of the plan-schema document; (b) `schemas/review-v1.schema.json` and the **active** validator described above; (b2) the **review receipt ledger** — harness-side recording of every `sources` call in a review attempt with the fields listed under "Receipts", built on the sources server's V4 recorder, returning receipt ids to the seat; (c) the two reviewer prompts, built only from the manifest's inputs, hashed; (d) the module-digest generator, reading the observed-state index of #8414; (e) the driver's provenance-based layer-assignment rules, the findings database, the budget ledger keyed by stable identities, and the dependency-closure computation; (f) the seeded-defect sets for lessons and for plans, their planting scripts with the deterministic-green check, the scoring manifests, the blinded adjudication step and the scoring script; (g) the settle procedure as a dispatchable task for a language lane with its four outcomes; (h) the replacement for the `content-review` skill — **operator go required**. Sibling: the lesson **writer** contract and the fixed style card, #8431.
+
+### A1 recap judgment (#10105)
+
+Review every practical plan task, including embedded closing steps under existing job/activity
+checks. Check actual taught context (earlier built lessons/digest and earlier same-lesson steps);
+missing context is an evidence gap. Reject disguised copying, Ukrainian bypass, untaught
+constructions and wholesale model copying despite valid structural inventory. Judge useful
+contextual choice, personalization or recombination, with receipts. Early means the table's
+activity_instruction role is [en]; instructions/context/criteria are English, and its closure
+is not a story-question task. Explicit orientation uses English practical orientation instead.
+Scripts do not certify semantic usefulness. The frozen held-out protocol is independent:
+25 cases (6 valid, 9 structural, 4 semantic, 6 selector); qualified Sources-backed review
+judges shuffled valid controls and semantic failures. Any false accept/reject stops landing.
+#10110 owns pilot/calibration; this implementation does not certify lessons.
+English context, instructions and observable criteria may quote taught Ukrainian as teacher
+metalanguage, not learner print or inventory evidence; review confirms each quoted form
+and construction is taught before the step (historical D4 superseded by arc section 9).

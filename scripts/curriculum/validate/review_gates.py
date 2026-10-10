@@ -197,7 +197,7 @@ otherwise at lesson end; options have no recording exemption.
   "letter"); function words and words describing records do not. A quoted Ukrainian word names its records. The
   claim fails when no record of the category is in the lesson's recycled list, inventory or step vocabulary.
 - C25: a ``practice`` step whose practice list is empty and which has no needs, hosts no dialogue and carries no
-  paradigm leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
+  paradigm or task leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
 - C26 gives every declared ``targets`` id (otherwise every W- id of a comprehension focus) exactly one outcome;
   the outcomes are a total mapping over the
   ids, so no id can pass unseen. An id the word store lacks fails. A word is held when a spelling of its record is a
@@ -215,6 +215,10 @@ otherwise at lesson end; options have no recording exemption.
 - C28 compares the W- ids of each teach text with C1's allowed set (the lesson's inventory, its steps' vocabulary,
   earlier lessons and positions' introductions and the base layer); earlier incidentals are not in it.
 """
+
+# #10105: A1 replaces the legacy C7/C8 story duties with plan-step practical
+# tasks, including embedded recaps. Early A1 comes only from the language-role
+# table. Legacy C7/C8 remain unchanged for A2+; usefulness stays model judgment.
 
 from __future__ import annotations
 
@@ -892,9 +896,121 @@ class ReviewGates(Gates):
     def _comprehension(self, lesson: dict) -> list[dict]:
         return [a for a in lesson.get("activities") or [] if _COMPREHENSION_KIND.search(a["focus"])]
 
+    def _recap_print_text(self, ref: str) -> str:
+        """Admit only the existing example/text print fields, never aggregate metadata."""
+        from scripts.curriculum.evidence import publication
+
+        section, record = self.pack.recap_records.get(ref, ("", {}))
+        field = {"texts": "quote", "examples": "text"}.get(section)
+        prefix = {"texts": "T-", "examples": "EX-"}.get(section)
+        if field is None or not ref.startswith(prefix):
+            raise ValueError("unclassified recap record kind")
+        if any(key != field and key in record for key in ("quote", "text", "items_sample")):
+            raise ValueError("unclassified recap source field")
+        text = record.get(field)
+        if not isinstance(text, str) or not text:
+            raise ValueError("recap source has no printable text")
+        if section == "texts":
+            publication.quote_attribution(record)
+        return text
+
+    def check_practical_recaps(self) -> None:
+        """A1 plan tasks: structural contract only; usefulness is independently reviewed.
+
+        Availability is measured before each step, including earlier teaching in the
+        same lesson. Early A1 is the table's English-only activity-instruction role.
+        """
+        from scripts import config as immersion_config
+        from scripts.build.fresh.immersion import get_immersion_table
+
+        from .cross import collect_introductions
+
+        if self.level != "a1":
+            return
+        orientation = any(p.position == self.plan["arc_ref"]["position"] and p.band_key == "a1-orientation"
+                          for p in self.arc or [])
+        if orientation and any(lesson["inventory"]["vocabulary"]["core"] for lesson in self.plan["lessons"]):
+            self.fail(codes.ORIENTATION_CORE_WORDS, "English orientation adds zero core words", None)
+        base, _base_reason = self._base_layer
+        earlier, _earlier_reason = self._earlier_introduced
+        available = set(base or ()) | set(earlier or ())
+        core: set[str] = set()
+        grammar: set[str] = set()
+        for pos, (_, prior, _path) in self.level_plans.by_position.items():
+            if pos < self.plan["arc_ref"]["position"]:
+                grammar |= collect_introductions(prior)["grammar"]
+                core |= {entry["evidence"] for lesson in prior["lessons"]
+                         for entry in lesson["inventory"]["vocabulary"]["core"]}
+        seen: set[str] = set()
+        for lesson in self.plan["lessons"]:
+            closing = lesson["kind"] in {"recap", "checkpoint"} or lesson.get("closes_with_recap", False)
+            tasks = [step for step in lesson["steps"] if "task" in step]
+            if closing and not tasks:
+                self.fail(codes.A1_RECAP_MIGRATION_REQUIRED,
+                          "A1 closing lesson lacks an approved practical task; disposition #10108", lesson["n"])
+            taught = set((self.taught_before or {}).get(lesson["n"], set()))
+            for index, step in enumerate(lesson["steps"]):
+                task = step.get("task")
+                if task is not None:
+                    step_id = step["id"]
+                    if not closing or index != len(lesson["steps"]) - 1 or (lesson.get("closes_with_recap") and step["kind"] != "recap"):
+                        self.fail(codes.RECAP_TASK_ORDER, "task belongs at the closing recap step", lesson["n"], step_id)
+                    if task["id"] in seen:
+                        self.fail(codes.RECAP_TASK_ORDER, "duplicate recap task id", lesson["n"], step_id)
+                    seen.add(task["id"])
+                    fields = [task["context_en"], task["instruction_en"], *task["success_criteria_en"]]
+                    if not task["id"].strip() or any(not re.search(r"[A-Za-z]", value) for value in fields):
+                        self.fail(codes.RECAP_TASK_INVALID, "context, instruction and observable criteria must be nonempty English", lesson["n"], step_id)
+                    quoted = sorted({token for value in fields for token in _ROW_TOKEN.findall(value)
+                                     if _LETTER.search(token)})
+                    if quoted:
+                        self.note(codes.RECAP_TASK_QUOTED_UKRAINIAN,
+                                  f"Quoted Ukrainian {quoted}: teacher metalanguage, not learner print or "
+                                  "inventory evidence; review must confirm each form and construction is taught "
+                                  "before this step", lesson["n"], step_id)
+                    if any((step.get("introduces") or {}).get(key) for key in ("letters", "grammar", "vocabulary")):
+                        self.fail(codes.RECAP_TASK_INVENTORY, "recap introduces no inventory", lesson["n"], step_id)
+                    uses = step.get("uses") or {}
+                    if not set(uses.get("vocabulary") or ()) <= available or not set(uses.get("vocabulary") or ()) <= self.store.records.keys():
+                        self.fail(codes.RECAP_TASK_INVENTORY, "recap word ids unavailable before this step", lesson["n"], step_id)
+                    if not set(uses.get("grammar") or ()) <= grammar:
+                        self.fail(codes.RECAP_TASK_INVENTORY, "recap grammar unavailable before this step", lesson["n"], step_id)
+                    if not step.get("evidence") or not set(step["evidence"]) <= self.pack.ids:
+                        self.fail(codes.RECAP_TASK_INVENTORY, "recap requires known evidence", lesson["n"], step_id)
+                    band = "a1-orientation" if orientation else immersion_config.compute_immersion_band(
+                        "a1", self.plan["arc_ref"]["position"], {"cumulative_vocabulary": len(core - set(base or ()))})["key"]
+                    early = get_immersion_table()[band]["roles"]["activity_instruction"] == ["en"]
+                    linked = set(step.get("practice") or [])
+                    if early and any(_COMPREHENSION_KIND.search(act["focus"]) for act in lesson.get("activities") or []
+                                     if act["id"] in linked or lesson["kind"] in {"recap", "checkpoint"}):
+                        self.fail(codes.RECAP_TASK_INVALID, "early A1 closes with a practical task, not comprehension questions", lesson["n"], step_id)
+                    for selection in task["learner_reads"]:
+                        ref = selection if isinstance(selection, str) else selection["ref"]
+                        try:
+                            text = self._recap_print_text(ref)
+                            if ref not in step.get("evidence", []):
+                                raise ValueError("recap print must be cited evidence")
+                        except ValueError as exc:
+                            self.fail(codes.RECAP_TASK_PRINT, str(exc), lesson["n"], step_id)
+                            continue
+                        text = _STRESS_MARKS.sub("", _nfc(text))
+                        words = _ROW_TOKEN.findall(text) if isinstance(selection, str) else selection["words"]
+                        if isinstance(selection, dict) and not words:
+                            self.fail(codes.RECAP_TASK_PRINT, "recap word selection must be nonempty", lesson["n"], step_id)
+                        for word in words:
+                            if not _print_holds(text, word, exact=True) or (self.taught_before is not None and not self._readable(word, taught)):
+                                self.fail(codes.RECAP_TASK_PRINT, "recap print must be source-attested and decodable before its step", lesson["n"], step_id)
+                introductions = step.get("introduces") or {}
+                available |= set(introductions.get("vocabulary") or ())
+                grammar |= set(introductions.get("grammar") or ())
+                taught |= {letter.casefold() for letter in introductions.get("letters") or ()}
+            core |= {entry["evidence"] for entry in lesson["inventory"]["vocabulary"]["core"]}
+
     # -- C7 -------------------------------------------------------------------
 
     def check_recap_story(self) -> None:
+        if self.level == "a1":
+            return
         for lesson in self.plan["lessons"]:
             if lesson["kind"] != "recap":
                 continue
@@ -933,6 +1049,8 @@ class ReviewGates(Gates):
     # -- C8 -------------------------------------------------------------------
 
     def check_recap_order(self) -> None:
+        if self.level == "a1":
+            return
         for lesson in self.plan["lessons"]:
             if lesson["kind"] != "recap":
                 continue
@@ -1796,17 +1914,18 @@ class ReviewGates(Gates):
     # -- C25 ------------------------------------------------------------------
 
     def check_practice_steps_have_content(self) -> None:
+        """C25: tasks print content, just like activities, needs, paradigms and dialogue."""
         for lesson in self.plan["lessons"]:
             dialogue_step = (lesson.get("dialogue") or {}).get("step")
             for step in lesson["steps"]:
                 if step.get("kind") != "practice" or step.get("practice") or step.get("needs"):
                     continue
-                if step.get("paradigm") or step["id"] == dialogue_step:
+                if step.get("task") or step.get("paradigm") or step["id"] == dialogue_step:
                     continue
                 self.fail(
                     codes.PRACTICE_STEP_EMPTY,
                     f"practice step {step['id']} links no activity, needs no block (quote, example, video …), hosts "
-                    "no dialogue and carries no paradigm; steps are fixed structure (plan schema §7 decision 1), so "
+                    "no dialogue and carries no paradigm or task; steps are fixed structure (plan schema §7 decision 1), so "
                     "the writer must produce an empty section; merge it into the step it prepares (#9487 C25)",
                     lesson["n"],
                     step["id"],
@@ -2218,6 +2337,7 @@ def check_review_gates(
     gates.check_incidental_decodable()
     gates.check_heard_words()
     gates.check_earlier_core_recycled()
+    gates.check_practical_recaps()
     gates.check_recap_story()
     gates.check_recap_order()
     gates.check_focus_evidence()

@@ -520,3 +520,58 @@ def test_default_host_id_resolution_matches_delegates_self_dispatch_check(
 
     unresolved_lease = {"holder_host_id": os.environ["LU_MONITOR_HOST_ID"], "holder_process_id": os.getpid()}
     assert delegate._cursor_driver_lease_is_self_dispatch(unresolved_lease) is False
+
+
+@pytest.mark.parametrize("case", [
+    "matching", "missing", "expired", "released", "session", "lease",
+    "generation", "fence", "agent", "harness", "instance", "process", "task", "host",
+])
+def test_local_capsule_cli_reconciles_environment_read_only(tmp_path, monkeypatch, capsys, case) -> None:
+    from datetime import UTC, datetime
+
+    from scripts import session_supervisor
+
+    supervisor = _supervisor(tmp_path)
+    store = supervisor.store
+    lease = store.open_session(
+        stream_id=INFRA_STREAM_ID, holder=_holder(), lineage_id="local-capsule-test",
+        ttl_seconds=300, now=datetime(2000, 1, 1, tzinfo=UTC) if case == "expired" else None,
+    )
+    supplied = replace(lease, expires_at="1999-01-01T00:00:00Z")
+    if case in {"session", "lease", "generation", "fence"}:
+        field = {"session": "session_id", "lease": "lease_id", "generation": "generation", "fence": "fencing_token"}[case]
+        supplied = replace(supplied, **{field: 9 if case in {"generation", "fence"} else "forged"})
+    elif case in {"agent", "harness", "instance", "process", "task", "host"}:
+        field = {"instance": "instance_id", "process": "process_id", "task": "task_id", "host": "host_id"}.get(case, case)
+        supplied = replace(supplied, holder=replace(supplied.holder, **{field: 9 if case == "process" else "forged"}))
+    db_path = tmp_path / "streams.sqlite3"
+    if case == "missing":
+        db_path = tmp_path / "empty.sqlite3"
+        database = SessionStreamDatabase(db_path)
+        database.connect().close()
+        store = SessionStreamStore(database)
+    elif case == "released":
+        store.close_session(lease)
+
+    with store._read_snapshot() as connection:
+        before = list(connection.iterdump())
+
+    monkeypatch.setattr(session_supervisor, "lease_from_environment", lambda: supplied)
+    def forbidden(*args, **kwargs):
+        pytest.fail("capsule must never mutate lease lifecycle")
+    for method in ("open_session", "heartbeat", "close_session", "force_close_expired_session"):
+        monkeypatch.setattr(SessionStreamStore, method, forbidden)
+
+    rc = main(["--local", "--db", str(db_path), "--repo-root", str(_REPO_ROOT),
+               "capsule", "--role", "driver", "--stream", lease.stream_id])
+    output = capsys.readouterr()
+    assert rc == (0 if case == "matching" else 4)
+    if case == "matching":
+        payload = json.loads(output.out)
+        assert payload["identity"]["lease"]["expires_at"] == lease.expires_at
+        assert lease.expires_at != supplied.expires_at
+    else:
+        assert output.out == ""
+        assert "lease" in output.err
+    with store._read_snapshot() as connection:
+        assert list(connection.iterdump()) == before

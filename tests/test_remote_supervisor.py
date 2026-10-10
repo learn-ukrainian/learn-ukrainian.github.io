@@ -865,6 +865,7 @@ def test_capsule_cli_uses_environment_lease_read_only(monkeypatch, capsys, case)
         "SESSION_STREAM_INSTANCE_ID": "client-instance",
         "SESSION_STREAM_PROCESS_ID": "1234",
         "LU_MONITOR_HOST_ID": "client-host",
+        "SESSION_STREAM_EXPIRES_AT": "2000-01-01T00:00:00Z",
     }
     for key, value in values.items():
         monkeypatch.setenv(key, value)
@@ -929,6 +930,9 @@ def test_capsule_cli_uses_environment_lease_read_only(monkeypatch, capsys, case)
         payload = json.loads(output.out)
         assert payload["identity"]["role"] == role
         assert (payload["identity"]["lease"] is None) == (role == "worker")
+        if role == "driver":
+            assert payload["identity"]["lease"]["expires_at"] == current["expires_at"]
+            assert current["expires_at"] != before.expires_at
     else:
         assert output.out == ""
         assert "LEASE LOST" in output.err

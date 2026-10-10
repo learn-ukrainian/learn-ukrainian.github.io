@@ -561,6 +561,53 @@ def test_non_gh_hook_preserves_prefix_allow_rules(command, monkeypatch, capsys):
     assert capsys.readouterr().out == ""
 
 
+def test_issue_10337_cursor_public_text_routes_publish_and_allows_read(monkeypatch, capsys):
+    spec = importlib.util.spec_from_file_location(
+        "cursor_public_text_hook", ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setenv("PATH", os.defpath)
+
+    def run(command):
+        tool_input = {"command": command, "cwd": str(ROOT)}
+        monkeypatch.setattr(sys, "stdin", __import__("io").StringIO(json.dumps({
+            "tool_name": "Shell", "cwd": str(ROOT), "tool_input": tool_input,
+        })))
+        assert module.main() == 0
+        return tool_input, capsys.readouterr().out
+
+    command = "gh issue comment 1 --body synthetic-public-text"
+    tool_input, output = run(command)
+    updated = json.loads(output)["hookSpecificOutput"]["updatedInput"]
+    assert updated["command"].startswith("export PATH=")
+    assert "scripts/agent_runtime/shims" in updated["command"]
+    assert updated["command"].endswith(command)
+    assert updated["cwd"] == tool_input["cwd"]
+    assert run("git status")[1] == ""
+
+
+@pytest.mark.parametrize("command", ["git push --dry-run", "gh pr comment 1 --body synthetic-public-text"])
+def test_issue_10337_cursor_reviewer_blocks_publish_and_allows_read(command):
+    guard = ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
+
+    def run(command):
+        return subprocess.run(
+            [sys.executable, str(guard)],
+            input=json.dumps({
+                "tool_name": "Shell", "cwd": str(ROOT),
+                "tool_input": {"command": command, "cwd": str(ROOT)},
+            }),
+            capture_output=True, text=True, timeout=30, cwd=ROOT,
+        )
+
+    result = run(command)
+    assert result.returncode == 2, result.stderr
+    assert "unavailable in read-only review" in result.stderr
+    result = run("gh pr view 1 --json number")
+    assert result.returncode == 0, result.stderr
+
+
 def test_unknown_policy_id_fails_at_load_even_without_hits(synthetic_opsec, monkeypatch, tmp_path):
     policy = tmp_path / "policy.json"
     policy.write_text(json.dumps({"class6_block_ids": ["absent-id"]}))

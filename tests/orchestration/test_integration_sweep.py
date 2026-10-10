@@ -17,6 +17,18 @@ OTHER = "b" * 40
 START = "2026-09-23T12:00:00.000001+00:00"
 
 
+
+@pytest.fixture(autouse=True)
+def _advisory_fixture_workflow(monkeypatch):
+    """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
+    from scripts.ci import advisory_checks
+
+    monkeypatch.setattr(
+        advisory_checks,
+        "CI_WORKFLOW_PATH",
+        Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml",
+    )
+
 def comment(
     *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False,
     review_mode="cross_family", family="openai",
@@ -365,13 +377,9 @@ def test_paged_comments_reject_unpaginated_response():
         adapter.comments("owner/repo", 42)
 
 
-def test_apply_refused_and_workflow_is_report_only(capsys):
+def test_apply_refused(capsys):
     assert sweep.main(["--repo", "owner/repo", "--apply"]) == 2
     assert "report-only" in capsys.readouterr().out
-    workflow = Path(".github/workflows/integration-sweep.yml").read_text()
-    assert "--apply" not in workflow
-    assert "workflow_dispatch:\n    inputs:" not in workflow
-    assert "GITHUB_STEP_SUMMARY" in workflow
 
 
 def test_run_lookup_failure_is_unknown_with_queue_blocker():

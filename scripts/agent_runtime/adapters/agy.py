@@ -96,7 +96,7 @@ import tempfile
 import unicodedata
 import urllib.parse
 import uuid
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -922,22 +922,14 @@ class AgyAdapter:
 
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
-        review_route = bool(
-            tc.get("review_profile") in {"ukrainian", "code"}
-            or review_isolation
-            or tc.get("review_attempt_boundary")
-            or tc.get("review_access")
-            or tc.get("review_id")
-            or tc.get("attempt_id")
-            or tc.get("reviewer_tools")
-            or (tc.get("strict_mcp_config") and tc.get("agy_home_override"))
-        )
+        review_route = _agy_review_route(tc)
         if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
             )
         if review_route:
+            validate_agy_read_only_paths(prompt, mode=mode, cwd=cwd, tool_config=tc)
             _write_review_permissions(tc, mode=mode, session_id=session_id, cwd=cwd)
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
@@ -1511,6 +1503,192 @@ class AgyReviewPermissionError(ValueError):
     def __init__(self, reason: str) -> None:
         self.reason = reason
         super().__init__(reason)
+
+
+def _agy_review_route(tc: Mapping[str, Any]) -> bool:
+    """Identify the routes whose native file grant is the checkout only."""
+    return bool(
+        tc.get("review_profile") in {"ukrainian", "code"}
+        or tc.get("review_isolation")
+        or tc.get("review_attempt_boundary")
+        or tc.get("review_access")
+        or tc.get("review_id")
+        or tc.get("attempt_id")
+        or tc.get("reviewer_tools")
+        or (tc.get("strict_mcp_config") and tc.get("agy_home_override"))
+    )
+
+
+# Literal POSIX paths attached to explicit read requests, including quoted
+# paths with spaces. This is requirement admission, not a permission boundary:
+# native permissions still decide undeclared/model-generated tool requests.
+# URI tokens are consumed whole so their slash components are not file paths.
+_PROMPT_PATH_TOKEN_RE = re.compile(
+    r"[a-zA-Z][a-zA-Z0-9+.-]*://[^\s`\"'<>]+"
+    r"|\[[^\]\n]*\]\((?P<link>[^)\n]+)\)"
+    r"|`(?P<code>[^`\n]+)`|\"(?P<double>[^\"\n]+)\"|'(?P<single>[^'\n]+)'"
+    r"|(?P<bare>[^\s`\"'<>]+)"
+)
+_LITERAL_FILE_PATH_RE = re.compile(
+    r"(?:~?/[^/\s][^\n]*|(?:[\w.-]+/)+[^/\n]+\.[\w-]+)(?::\d+(?::\d+)?)?"
+)
+_READ_REQUEST_RE = re.compile(
+    r"(?:^|(?<=[\n;!?])|(?<= and ))[ \t]*(?:[-*#]+[ \t]+)?"
+    r"(?:(?:please|first|then|now|only)\s+|(?:can|could)\s+you\s+(?:toolfully\s+)?|"
+    r"you\s+(?:must|may|should|need to)\s+)?"
+    r"(?P<verb>read|open|inspect|review(?![ \t]*:)|examine|load|"
+    r"view_file|view_file_outline|view_code_item|list_dir|grep_search|find_by_name)\b(?![-.])",
+    re.IGNORECASE | re.MULTILINE,
+)
+# Only an object/list directly governed by the read counts. A verb somewhere
+# earlier in the paragraph is insufficient (review metadata, code descriptions,
+# launcher invocations, etc.). Unrecognized prose is left to native permissions.
+_READ_OPERAND_PREFIX_RE = re.compile(
+    r"\s*(?:[\w#'-]+\s+)*(?:files?|paths?|directories|directory|folders?|"
+    r"evidence|briefs?|prompts?|reports?|results?|artifacts?|patch|contracts?|"
+    r"proposals?|handoff|reconciliation|implementation|rules|sources?|notes|"
+    r"output|input|record|evaluation|reviews?|findings|audit|state|scope|critique|"
+    r"packet|supplement|design|diagnosis|corrections|diff|changes|commit)\s*(?:of\s+record\s*)?"
+    r"(?:in\s+full\s*|first\s*)?(?:(?:at|in|from|under|inside)\s*)?"
+    r"|\s*(?!.*\b(?:how|that|which)\b)(?:[\w#'-]+\s+)+(?:at|in|from|under|inside)\s*"
+    r"|\s*(?:(?:the|these|this|following|only|directly|complete|full|frozen|"
+    r"authoritative|exact|primary|absolute|revised|approved|original|current|prior)\b\s*)*"
+    r"(?:(?:at|in|from|under|inside)\s*)?",
+    re.IGNORECASE,
+)
+_READ_LIST_PREFIX_RE = re.compile(r"[\s,*:-]*(?:(?:and|or)\s+)?(?:```\w*\s*)?[\s*-]*", re.IGNORECASE)
+_READ_COMMAND_RE = re.compile(r"^(?:cat|head|tail|less)\s+(?:-[\w-]+\s+)*(.+)$")
+_READ_COMMAND_LINE_RE = re.compile(r"(?m)^[ \t]*((?:cat|head|tail|less)\s+[^\n]+)$")
+_FILESYSTEM_REQUEST_RE = re.compile(r"\b(?:files?|paths?|directories|directory|folders?|disk)\b", re.IGNORECASE)
+_API_REFERENCE_RE = re.compile(
+    r"\b(?:api|routes?|endpoints?|GET|POST|PUT|PATCH|DELETE|OPTIONS)\s+(?:at\s+)?$"
+    r"|\breturns\s+[1-5]\d\d\s+(?:for|at)\s+$", re.IGNORECASE,
+)
+_FENCED_CODE_RE = re.compile(r"(?m)^[ \t]*(?P<fence>`{3,}|~{3,})[^\n]*\n(?P<body>.*?)^[ \t]*(?P=fence)[ \t]*$", re.DOTALL)
+_INTERPRETER_LINE_RE = re.compile(
+    r"(?m)^[ \t]*(?:#![^\n]*|(?:/|~/)[^\s]*?/(?:python[\d.]*|bash|sh|env)[ \t]+[^\n]*)$",
+)
+_NEGATED_READ_RE = re.compile(r"\b(?:do not|don't|never|not to|no need to)\s+$", re.IGNORECASE)
+
+
+def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
+    """Yield literal read operands, never every slash-bearing prompt token.
+
+    Recognize direct read objects, lists and command spans, rather than guessing
+    what every free-form clause means. Separators, routes, slash commands and
+    incidental process/interpreter descriptions are not file operands.
+    No dispatcher-looking marker exempts text: a task cannot hide its read by
+    copying a preamble heading. This also avoids trusting prompt block provenance.
+    """
+    # Interpreter invocations and shebangs in fenced samples describe code;
+    # they do not request opening the executable. Preserve other operands,
+    # including cat commands and bare paths in an explicit read list.
+    prompt = _FENCED_CODE_RE.sub(
+        lambda block: _READ_COMMAND_LINE_RE.sub(
+            lambda line: f"`{line[1]}`", _INTERPRETER_LINE_RE.sub("", block.group()),
+        ), prompt,
+    )
+    for span in re.split(r"\n\s*\n|(?<=[.;!?])\s+", prompt):
+        operand_end = None
+        request_end = None
+        requests = iter(_READ_REQUEST_RE.finditer(span))
+        upcoming = next(requests, None)
+        request = None
+        for token in _PROMPT_PATH_TOKEN_RE.finditer(span):
+            while upcoming is not None and upcoming.start() < token.start():
+                request = upcoming
+                upcoming = next(requests, None)
+            raw = next((part for part in token.groups() if part is not None), token.group())
+            if link := re.fullmatch(r"\[[^\]\n]*\]\(([^)\n]+)\)", raw):
+                raw = link[1]
+            command = _READ_COMMAND_RE.fullmatch(raw) if token.group("code") else None
+            # A quoted non-file object can precede another read operand;
+            # ordinary prose words cannot turn the remainder into a list.
+            if (
+                not command
+                and not _LITERAL_FILE_PATH_RE.fullmatch(raw.rstrip(".,;)]}"))
+                and not any(token.group(kind) for kind in ("code", "double", "single", "link"))
+            ):
+                continue
+            if _INTERPRETER_LINE_RE.fullmatch(raw):
+                continue
+            if request is None or _NEGATED_READ_RE.search(span[:request.start()]):
+                continue
+            # Reviewing a command example is not an instruction to read its
+            # operands. Explicit Read + command spans/lists are unambiguous.
+            if command and request.group("verb").lower() != "read":
+                continue
+            context = span[request.start():token.start()]
+            prefix = span[request.end():token.start()]
+            if request_end == request.end() and operand_end is not None:
+                continuation = span[operand_end:token.start()]
+                governed = _READ_LIST_PREFIX_RE.fullmatch(continuation) or _READ_OPERAND_PREFIX_RE.fullmatch(
+                    re.sub(r"^\s*,?\s*(?:and|or)\s+", "", continuation, flags=re.IGNORECASE),
+                )
+            else:
+                # A trailing colon/fence/bullet introduces an operand list.
+                prefix = re.sub(r"[\s:*\-]*(?:```\w*\s*)?[\s*\-]*$", "", prefix)
+                if re.match(r"\s+of\s+record\b", prefix, re.IGNORECASE):
+                    continue
+                governed = _READ_OPERAND_PREFIX_RE.fullmatch(prefix)
+            if not governed:
+                continue
+            request_end = request.end()
+            operand_end = token.end()
+            # Command spans are reads only when the command itself reads files.
+            parts = command[1].split() if command else [raw]
+            for part in parts:
+                part = part.strip("([]{},;").rstrip(".,;)]}")
+                if not _LITERAL_FILE_PATH_RE.fullmatch(part) or "://" in part:
+                    continue
+                # A slash command's namespace colon is not a line suffix.
+                if re.fullmatch(r"/[\w-]+:[a-zA-Z_][\w-]*", part):
+                    continue
+                if (
+                    part.startswith("/")
+                    and not _FILESYSTEM_REQUEST_RE.search(context)
+                    and (
+                        part.startswith("/api/")
+                        or _API_REFERENCE_RE.search(context)
+                        or (
+                            re.fullmatch(r"/[\w-]+[.,;]?", part)
+                            and re.match(r"\s+(?:slash\s+)?command\b", span[token.end():], re.IGNORECASE)
+                        )
+                    )
+                ):
+                    continue
+                yield re.sub(r":\d+(?::\d+)?$", "", part)
+
+
+def validate_agy_read_only_paths(
+    prompt: str, *, mode: str, cwd: Path, tool_config: Mapping[str, Any] | None = None
+) -> None:
+    """Refuse explicit file requirements outside the existing native grant.
+
+    Scoped reviews grant recursive read_file(cwd), not the enclosing primary
+    checkout or the caller's home. --add-dir selects a workspace; it is not a
+    permission grant. Never widen settings based on untrusted prompt text.
+    Unknown/implicit requirements remain under the native permission checks.
+    """
+    tc = tool_config or {}
+    if mode != "read-only" or not _agy_review_route(tc):
+        return
+    try:
+        root = cwd.resolve()
+        workspace = tc.get("repo_read_root") or tc.get("review_snapshot_root") or cwd
+        if Path(workspace).resolve() != root:
+            raise AgyReviewPermissionError("agy_read_only_workspace_mismatch")
+        for part in _agy_requested_file_paths(prompt):
+            if any(unicodedata.category(c) in {"Cc", "Cf", "Zl", "Zp"} for c in part):
+                raise AgyReviewPermissionError("agy_read_only_path_unverifiable")
+            path = Path(part).expanduser()
+            target = path if path.is_absolute() else root / path
+            if not target.resolve().is_relative_to(root):
+                raise AgyReviewPermissionError("agy_read_only_path_outside_workspace")
+    except AgyReviewPermissionError:
+        raise
+    except (OSError, RuntimeError, ValueError, TypeError):
+        raise AgyReviewPermissionError("agy_read_only_path_unverifiable") from None
 
 
 class AgyHeadlessPermissionDenial(NamedTuple):

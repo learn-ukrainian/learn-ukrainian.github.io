@@ -26,7 +26,7 @@ State machine (file-defined; ``planned`` is the fallback and a missing file or
     planned < plan_reviewed < built < reviewed
 
 * ``plan_reviewed`` — the plan exists and ``_state/<slug>/plan-review.yaml``
-  records ``verdict: APPROVE``;
+  has a current ``plan_review_status`` in a reviewed state;
 * ``built`` — every lesson ``1..N`` of the plan (its numbers must be exactly ``1..N``; a
   plan that breaks that is an error, never ``built``) has ``<slug>/<n>.mdx`` and
   ``_state/<slug>/lesson-<n>.gates.yaml`` with ``passed: true``;
@@ -55,7 +55,7 @@ from typing import Any
 import yaml
 
 from scripts.curriculum.arc.loader import ArcPosition, load_arc
-from scripts.curriculum.validate.loader import PlanError, check_plan_slug, load_plan
+from scripts.curriculum.validate.loader import PlanError, check_plan_slug, load_plan, retirement_record
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -141,6 +141,8 @@ def _load_module_plan(roots: Roots, slug: str) -> dict[str, Any] | None:
         plan = load_plan(plan_path)
         check_plan_slug(plan_path, slug, plan)
     except PlanError as error:
+        if error.code == "plan_retired":
+            return None
         raise ValueError(f"cannot read plan {plan_path}: {error}") from error
     numbers = _lesson_numbers(plan)
     if not numbers or numbers != list(range(1, len(numbers) + 1)):
@@ -174,11 +176,6 @@ def _built_lessons(roots: Roots, slug: str, plan: dict[str, Any]) -> list[int]:
         if page.is_file() and gates is not None and gates.get("passed") is True:
             built.append(n)
     return built
-
-
-def _approved(path: Path) -> bool:
-    doc = _read_mapping(path)
-    return doc is not None and doc.get("verdict") == "APPROVE"
 
 
 def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
@@ -220,7 +217,13 @@ def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
 
 def position_state(roots: Roots, slug: str, plan: dict[str, Any] | None, built: list[int]) -> str:
     """Highest state whose predicate holds with every lower predicate holding."""
-    if plan is None or not _approved(roots.state / slug / "plan-review.yaml"):
+    if plan is None:
+        return "planned"
+    from scripts.build.fresh.plan_manifest import plan_review_status
+
+    if plan_review_status(roots.level, slug, repo_root=roots.repo)["state"] not in {
+        "reviewed_pending_promotion", "reviewed_promoted"
+    }:
         return "planned"
     if built != _lesson_numbers(plan):
         return "plan_reviewed"
@@ -248,7 +251,7 @@ def build_record(roots: Roots, arc_position: ArcPosition) -> dict[str, Any]:
         "built_lessons": built,
         "lesson_numbers": _lesson_numbers(plan) if plan is not None else [],
         "lesson_titles": [str(lesson["title"]) for lesson in plan["lessons"]] if plan is not None else [],
-        "scope": _scope_record(roots, slug),
+        "scope": _scope_record(roots, slug) if plan is not None else None,
         "state": position_state(roots, slug, plan, built),
         "previous_edition_href": (
             f"/{PREVIOUS_EDITION_TRACK.format(level=roots.level)}/{slug}/" if previous_page.is_file() else None
@@ -261,8 +264,30 @@ def _yaml_scalar(value: str) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
-def render_json(level: str, records: list[dict[str, Any]]) -> str:
-    return json.dumps({"level": level, "positions": records}, ensure_ascii=False, indent=2) + "\n"
+def render_json(level: str, records: list[dict[str, Any]], retired: list[dict] | None = None) -> str:
+    return json.dumps({"level": level, "positions": records, "retired": retired or []}, ensure_ascii=False, indent=2) + "\n"
+
+
+def retired_routes(roots: Roots, arc: list[ArcPosition]) -> list[dict]:
+    """Only explicitly recorded retired routes; overlap with an active arc fails."""
+    routes = retirement_record(roots.plans)["routes"]
+    overlap = {position.slug for position in arc} & {entry["slug"] for entry in routes}
+    if overlap:
+        raise ValueError(f"retired routes intersect active arc: {sorted(overlap)}")
+    return routes
+
+
+def render_retired(level: str, record: dict) -> str:
+    """An empty generated MDX stub, with no position or learner prose."""
+    return (
+        "---\n"
+        f"# {GENERATED_NOTE}\n"
+        f"title: {_yaml_scalar('Retired · ' + humanise_slug(record['slug']))}\n"
+        "arc_kind: retired\n"
+        f"arc_level: {level}\n"
+        f"arc_slug: {record['slug']}\n"
+        "---\n"
+    )
 
 
 def render_landing(level: str, records: list[dict[str, Any]]) -> str:
@@ -307,13 +332,16 @@ def render_level_status(text: str, level: str, planned: int) -> str:
 def generated_files(roots: Roots, arc: list[ArcPosition]) -> dict[Path, str]:
     """Every output file (path -> exact text) for the level, in arc order."""
     records = [build_record(roots, arc_position) for arc_position in arc]
+    retired = retired_routes(roots, arc)
     files: dict[Path, str] = {
-        roots.data_json: render_json(roots.level, records),
+        roots.data_json: render_json(roots.level, records, retired),
         roots.docs / "index.mdx": render_landing(roots.level, records),
         roots.level_status: render_level_status(roots.level_status.read_text(encoding="utf-8"), roots.level, len(arc)),
     }
     for record in records:
         files[roots.docs / record["slug"] / "index.mdx"] = render_module(roots.level, record)
+    for record in retired:
+        files[roots.docs / record["slug"] / "index.mdx"] = render_retired(roots.level, record)
     return files
 
 
@@ -334,6 +362,7 @@ def orphan_pages(roots: Roots, arc: list[ArcPosition]) -> list[Path]:
     Lesson files (``<slug>/<n>.mdx``) belong to the lesson build, not this generator.
     """
     slugs = {arc_position.slug for arc_position in arc}
+    slugs.update(record["slug"] for record in retired_routes(roots, arc))
     if not roots.docs.is_dir():
         return []
     return sorted(
@@ -344,8 +373,18 @@ def orphan_pages(roots: Roots, arc: list[ArcPosition]) -> list[Path]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("level", help="level whose arc to render, e.g. a1")
+    parser = argparse.ArgumentParser(
+        description="Generate fresh arc landing data and empty module/retired stubs.\nUse after arc or plan-state changes; this does not build lessons.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.build.build_arc_landing a1 --write
+  .venv/bin/python -m scripts.build.build_arc_landing a1 --check
+Outputs: site/src/data/arc-<level>.json, generated index.mdx pages and level-status planned count.
+Exit codes: 0 current/written; 1 stale files or unrecorded orphan routes; invalid inputs fail closed.
+Related: docs/epics/fresh-build-a1-arc.md, _retired.yaml; #10108.
+""",
+    )
+    parser.add_argument("level", help="level whose arc to render, e.g. a1 (required)")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write", action="store_true", help="write the generated files")
     mode.add_argument("--check", action="store_true", help="fail when a generated file is stale")
@@ -364,7 +403,7 @@ def main(argv: list[str] | None = None) -> int:
         for path in stale:
             print(f"stale: {path.relative_to(REPO_ROOT)}", file=sys.stderr)
         for path in orphans:
-            print(f"orphan (slug not in the arc; delete it): {path.relative_to(REPO_ROOT)}", file=sys.stderr)
+            print(f"orphan (slug neither active nor explicitly retired): {path.relative_to(REPO_ROOT)}", file=sys.stderr)
         if stale:
             print(
                 f"{len(stale)} of {len(files)} generated files are stale; run "

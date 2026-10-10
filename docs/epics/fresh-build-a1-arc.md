@@ -1,6 +1,7 @@
 # Fresh lesson-based build — A1 arc (module grain)
 
-> Sub-epic #8397, child 4. Status: **draft r3** by the curriculum-upgrade driver. r1 was reviewed by
+> Sub-epic #8397, child 4. Status: **revision r4, designated approval recorded in §8 (#10108)**.
+> Historical r3 was prepared by the curriculum-upgrade driver. r1 was reviewed by
 > AGY `gemini-3.8-flash-high` (task `plan-review-8397-a1-arc-r1`): REVISE, 9 findings; the driver
 > verified findings 1 and 3 against the Standard text and folded all nine in. **r3:** operator ruled
 > the Standard is a minimum and ULP is the schedule (D0); position 45 restored on ULP evidence (D6). Requirements: [`fresh-build-requirements.md`](fresh-build-requirements.md);
@@ -80,9 +81,9 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | --- | --- | --- | --- |
 | Gender of nouns; adjective agreement (hard and soft group), nominative | system | 8–10 | §4.2.1 `:603-650` |
 | Adjective agreement in the **locative** and **accusative** (hard and soft group) | system | locative 29–30; accusative 31, 37, 40 | `:633-650`, examples `:680`, `:691` |
-| Personal pronouns 1st / 2nd person, accusative forms (мене, тебе, нас, вас) | system | 40 (first met in the chunk `мене звати` at 5) | `:656-657` |
+| Personal pronouns 1st / 2nd person, accusative forms (мене, тебе, нас, вас) | system | 40 (first met in the chunk `мене звати` at 3) | `:656-657` |
 | Personal pronouns 1st / 2nd person, dative forms (мені, тобі, нам, вам) | **forms taught as pronoun forms inside their constructions** (`мені подобається`, `мені … років`, and the "I need" chunk); no noun dative | 11, 15, 43, 54 | `:656-657`; noun dative stays A2 (mapping `:97-102`) |
-| Demonstratives, possessives, nominative | system | 6, 12 | `:659-667` |
+| Demonstratives, possessives, nominative | system | 8, 12 (chunks at 4) | `:659-667` |
 | Nominative plural (nouns, adjectives, demonstratives) | system | 13 | `:603-631` |
 | Present tense, conjugations I and II, modal + infinitive, reflexive verbs | system | 15–20 | `:703-719` |
 | Questions (question words, чи, intonation), negation | system | 19 | `:729-739` |
@@ -102,50 +103,51 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Past tense | system | 48–49 | `:713-714` |
 | Compound future (буду + infinitive) | system | 50–51 | `:715-717` — the Standard's A1 names only the compound form; the synthetic future is B1 (`:2287-2289`) and ULP S3 L98 |
 | A few perfective futures | chunk | 50–52 | `:718-719` |
-| Genitive (`у мене є`, `з України`, `без …`, quantities) | **chunk only** | 6, 34, 36, 39 | first systematic at A2; ULP uses it as a chunk from S1 L6 (`у мене є`) and L15, system at S2 L46–49 |
+| Genitive (`у мене є`, `з України`, `без …`, quantities) | **chunk only** | 4, 34, 36, 39 | first systematic at A2; ULP uses it as a chunk from S1 L6 (`у мене є`) and L15, system at S2 L46–49 |
 | Dative (`мені подобається`, `мені … років`, the "I need" chunk) | **chunk only** | 11, 15, 54 | noun dative is A2 (mapping `:97-102`); ULP S1 L14 (`подобається` + dative pronouns), system at S2 L51–53 |
 | Instrumental (`автобусом`, `з молоком`, `вітаю з …`) | **chunk only** | 32, 36, 46 | noun instrumental is A2; ULP S1 L21 (`українською`), system at S2 L61–62 |
 | Verb aspect | **first awareness only**, tied to the perfective futures and past narration — ULP introduces the imperfective / perfective idea at S1 L34 | 49–52 | system is A2 |
 | Comparison of adjectives; 3rd-person imperative; oblique forms of він / вона / воно / вони; genitive, dative, instrumental of nouns as systems | **not in A1** — ULP itself systematises these in Season 2 lessons 46–62, which map to our A2 | — | A2 |
 
-## 4. Literacy phase (positions 1–4): honest inventory
+## 4. Orientation and literacy (positions 1–5): communication first
 
-Adults move faster than the primers' one letter per lesson, but keep their progression: sound
-before letter, syllables before words, words before sentences. Greetings and first phrases are
-learned **by ear from lesson 1** (ULP starts with dialogue), so the learner speaks while still
-learning to read. Letter order follows Захарійчук, the primer that is in the corpus and citable
-page by page; the two Большакова sources in the repo disagree with each other (2018 list vs 2025
-notes), so neither is used as an authority until one is ingested.
+Position 1 is a standalone English orientation, with no acquired letters or new core
+words. Positions 2–5 connect useful spoken turns to sound, print and supported writing.
+The preparation's communication-led order replaces the old primer order; primer
+methodology still grounds sound before letter and contextual decoding. Private ULP
+pedagogy grounds the progression only and is never copied as learner text.
 
-| Pos | Slug | Job | Inventory (letters / signs) | Est. lessons |
-| --- | --- | --- | --- | --- |
-| 1 | `sounds-letters-and-hello` | Hear and say your first greetings; learn the difference between a sound and a letter, and between vowels and consonants; read and write the first letter group in syllables and short words | **13 letters**, primer part 1 order: А О У И М І Н В Л С К П Р | 5 |
-| 2 | `reading-ukrainian` | Read words, then short sentences aloud, with most of the alphabet | **12 letters**: Т Е Д З Б (end of primer part 1; ь, which the primer places before Б, is held for position 3), then Г Ґ Ч Й Х Ж Ш | 5 |
-| 3 | `special-signs` | Finish the alphabet; read and write words with the two-sound letters, ь, the apostrophe, дж / дз; hear hard vs soft | **8 letters**: Ї Я Ю Є Ц Щ Ф and ь; апостроф, дж, дз; hard / soft contrast. The alphabet in its dictionary order with the letter names; capital and small letters (`:571-572`) | 4 |
-| 4 | `stress-and-melody` | Use stress marks as a reading aid; statement vs question melody; first contact with unstressed е / и; recognise handwritten and italic letter shapes; divide words into syllables for line breaks | наголос, інтонація, склад і перенос (`:588`), писані літери (`:571`); no new letters | 3 |
+| Pos | Slug | Phase | Job | Inventory (letters / signs) | Skills duty | Est. lessons |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | `introduction-to-ukrainian` | A1.1 | Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes | Overview only; no acquired letters | — | 2 |
+| 2 | `sounds-letters-and-hello` | A1.1 | Greet and take a first spoken turn; connect useful words with letters and supported writing | **12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech | Li, S, W (supported copying) | 5 |
+| 3 | `who-am-i` | A1.1 | Introduce yourself and ask identity; common professions and origin phrases | **9 letters**: Д З К Л С У Х ь Г; hard/soft contrast; recycle stress and intonation | Li, S, W (`:485`) | 4 |
+| 4 | `my-family` | A1.1 | Introduce people in a chosen family photo or equivalent using supported possessive phrases | **5 letters**: Б Й Ї Ю Є; apostrophe; recycle stress and intonation | Li, S, W (captions) | 4 |
+| 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W | 5 |
 
-The module title and subtitle are generated from this inventory by the plan validator's `scope`
-block (schema §2 rule 5), so the v1 contradiction cannot recur.
+All 33 letters are introduced exactly once at positions 2–5. Later positions recycle
+them. Printed words follow their constituent letter introductions inside each module;
+audio-supported oral chunks may precede decoding. The module plan's evidence pack fixes
+lesson-level sequencing and pronunciation; this arc does not claim mastery or widget
+availability. Heavy handwriting is deferred; recognising handwritten letters belongs to 5.
 
-Video support, to be verified by the evidence pack, not copied: the ULP alphabet overview and the
-twelve per-letter videos in the corpus; the four ULP pronunciation trainers. v1 cites about twenty
-further URLs that are not in the corpus, and lists none for О; each is checked or dropped.
+The plan validator's generated scope sidecar must describe an active plan's actual
+inventory, never the preserved sidecar of a retired plan. Source-backed prosody recycles
+through the first ten; line-breaking ownership is recorded in §8.
 
 ## 5. The 55 positions
 
 `L` = estimated lessons including the recap (an estimate for sizing; the module plan decides).
 Skills duty = the Standard skill the module must exercise beyond its language point
-(W writing, Li listening, R real-world reading).
+(W writing, Li listening, R real-world reading, S speaking).
 
 | Pos | Slug | Phase | One-sentence job | Skills duty | L |
 | --- | --- | --- | --- | --- | --- |
-| 1–4 | *(see §4)* | A1.1 | Literacy | Li, W (copying, own name) | 17 |
-| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions | Li (`:485`) | 3 |
-| 6 | `my-family` | A1.1 | Show a family photo and say who is who | W (captions) | 3 |
-| 7 | `checkpoint-first-contact` | A1.1 | Self-check: read aloud, greet, introduce yourself and family | R, W | 2 |
-| 8 | `things-have-gender` | A1.2 | Tell the gender of a noun and pick він / вона / воно, мій / моя / моє | — | 3 |
-| 9 | `what-is-it-like` | A1.2 | Describe a thing with an agreeing adjective | — | 3 |
-| 10 | `colors` | A1.2 | Name colours; soft-group adjectives | — | 2 |
+| 6 | `first-conversations` | A1.1 | Sustain a scaffolded conversation using greetings, identity, family and familiar belongings | Li, S, R, W | 3 |
+| 7 | `checkpoint-first-contact` | A1.1 | Complete an integrated first-contact task with previously introduced language | Li, S, R, W | 2 |
+| 8 | `things-have-gender` | A1.2 | Identify familiar belongings using noun gender and matching pronoun and possessive forms | Li, S, R | 3 |
+| 9 | `what-is-it-like` | A1.2 | Describe and identify familiar objects using nominative adjective agreement | Li, S, R | 3 |
+| 10 | `colors` | A1.2 | Use colours and agreeing descriptions to distinguish objects; soft-group adjectives | Li, S, R | 2 |
 | 11 | `how-many` | A1.2 | Understand and say numbers for prices, age, phone numbers | Li (numbers by ear) | 4 |
 | 12 | `this-and-that` | A1.2 | Point at things: цей / той in three genders | — | 2 |
 | 13 | `many-things` | A1.2 | Go from one to many: nominative plural | — | 3 |
@@ -201,7 +203,7 @@ recap and checkpoint lessons are a large share of the total is a drag risk to wa
 may close with a recap *section* of its last lesson rather than a separate recap lesson, if the
 plan review agrees.
 
-**Theme coverage against the Standard's 12:** Людина 5–6 · Дім 8–9, 12 · Місто 29–33 · Побут 20, 25 ·
+**Theme coverage against the Standard's 12:** Людина 3–4 · Дім 8–9, 12 · Місто 29–33 · Побут 20, 25 ·
 Діяльність 15–18 · Дозвілля 26 · Подорожі 32–34 · Купівля 39 · Ресторан / кафе 36–38 ·
 Здоров'я 53–54 · Природне середовище 24 · Традиції / свята 46 · Дім / помешкання 45 (D6), with
 household objects already met at 9 and 12.
@@ -238,3 +240,73 @@ household objects already met at 9 and 12.
 - `curriculum/l2-uk-en/plans/a1.yaml:34-40` and `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` contradicted
   the Standard (genitive, five cases, cardinals 1–1000 as grammar); the level plan was retired on
   2026-09-30 in #9252 item 2 and remains in Git history at `fc241af5ff`. The claims are replaced by §3 here.
+
+## 8. Revision r4 (#10108)
+
+Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)
+
+Sol 6.1, the implementation author in Codex at high reasoning, confirms agreement with
+Opus 5.5's round-two design and the revised ten positions before implementation. Opus's
+design approval binds prompt SHA-256
+`bf161c91e6a484c363b25ed7b4f44757ec34364e8fbe4e1d4e47fad2b53073a6`;
+the round-two result has SHA-256
+`4fd205f682149cbd3fbee4081537082f8966f777f9c76fe6aa69688e8ff1b507`.
+This records current designated revision approval under the standing execution order,
+not a direct operator review of this revision and not formal implementation review.
+The original acceptance criteria remain unchanged.
+
+This revision supersedes D1's slug clause, D5's first-four-modules wording, §4,
+the first ten position rows of §5, and §6 item 6. Historical accepted §2 and §6
+remain verbatim, with their original acceptance dates; those dates do not accept
+this revision. The 55-position arc and 162 estimated lessons remain. Positions
+11–55 retain their semantic identities; position 55's `all` now includes speaking.
+
+Three promoted plans are explicitly retired by their exact bytes in `_retired.yaml`:
+`sounds-letters-and-hello` (old position 1), `reading-ukrainian` (2), and
+`special-signs` (3). Their scopes, state folders, receipts and evidence packs remain
+unchanged. Only matching bytes are retired; a replacement is an ordinary plan
+requiring all normal gates and fresh review. The old `special-signs` (3) and
+`stress-and-melody` (4) routes become generated retired notices, outside arc order.
+No lesson prose or replacement plan is authorized by this revision.
+
+Listening and speaking begin at position 2, with stress and intonation. Hard/soft
+contrast belongs to 3; the apostrophe to 4; дж and дз, alphabet order, letter names,
+capital/small letters and recognising handwritten letters to 5. Line breaking
+(`:588`) remains owned by the writing strand at position 20, outside the tables.
+Prosody and useful exchanges recycle through 6–10. Printed words follow the
+introduction of their constituent letters; supported oral chunks may precede decoding.
+
+Sources verification for this revision: VESUM `verify_words` attested 28/28 forms
+from the preparation inventory plus дзвоник and дзеркало. This verifies morphology,
+not unrestricted A1 vocabulary admission. Правопис 2019 §7 grounds the apostrophe.
+Stress is left to the source-backed deterministic annotator. Private pedagogy remains
+grounding-only. State Standard 2024 evaluation is independent driver evidence.
+
+Position 1 declares the `a1-orientation` band through the existing `band_key`
+mechanism supplied by #10105. Ordinary positions carry no declared band key and
+retain vocabulary-count selection. Final integration follows #10105 and #10103;
+this revision changes no band configuration or core-word store. Grammar locators
+G-a1-001 to G-a1-011 receive append-only supersession at the first replacement plan,
+owned by curriculum-upgrade; no blind refresh is authorized here.
+
+## 9. Revision r3.1: A1 practical recap (#10105)
+
+Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)
+
+Historical section 2 remains verbatim; its acceptance date does not accept this revision.
+The following replaces D4 for current A1 builds.
+
+**D4 — A1 closes with a practical recap using taught inventory** (R-03, #10105).
+Every recap/checkpoint lesson and embedded closing recap declares an approved plan-step
+`task`: action, English context/instruction, response mode, observable English criteria,
+permitted learner print, and the step's existing uses/evidence. A story is optional support,
+not a required first-person story → Ukrainian-only questions → production sequence.
+Early A1 is data-defined by `activity_instruction: [en]` in `immersion_table.yaml`;
+its closure is practical application rather than comprehension questions or copying alone.
+Inventory is available before the recap step; earlier teaching in that lesson counts.
+Recaps introduce nothing. Explicit `a1-orientation` has an English practical orientation
+recap, no Ukrainian production requirement and no new core words. Scripts check structure;
+qualified independent review judges usefulness, Ukrainian processing and decisions.
+Old A1 plans fail `a1_recap_migration_required`; #10108 owns disposition, without rewriting here.
+
+The tracked position-1 declaration of `a1-orientation` is supplied by the #10108 revision in §8.
