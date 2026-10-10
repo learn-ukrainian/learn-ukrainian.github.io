@@ -268,6 +268,18 @@ class GitHub:
     def timeline(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-timeline", repo=self.repository, number=number))
 
+    def created_at(self, number: int) -> str:
+        """PR creation is a complete lower bound when its queue-entry event is absent."""
+        pull = self.json(Request("read-pull", repo=self.repository, number=number))
+        stamp = pull.get("created_at") if isinstance(pull, dict) else None
+        if not isinstance(stamp, str):
+            raise KeeperError("PR creation time unknown")
+        try:
+            datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ")
+        except ValueError as exc:
+            raise KeeperError("PR creation time invalid") from exc
+        return stamp
+
     def runs(self, since: str) -> list[dict[str, Any]]:
         end = datetime.now(UTC).replace(microsecond=0)
         try:
@@ -311,9 +323,20 @@ class GitHub:
         return data["jobs"]
 
     def first_failed_test(self, job_id: int) -> str:
+        """Extract only a test's relative source identifier, never log values."""
         log = self.call("run", "view", "-R", self.repository, "--job", str(job_id), "--log")
-        match = re.search(r"\bFAILED\s+(tests/[^\r\n]+?)(?:\s+-\s|\r?$)", log, re.M)
-        return match[1] if match else ""
+        for match in re.finditer(r"\bFAILED\s+(tests/[^\r\n]+?)(?:\s+-\s|\r?$)", log, re.M):
+            # Pytest parameter IDs can contain arbitrary private runtime data.
+            # Project only the source path and Python identifiers; decline any
+            # unrecognized text instead of forwarding it into a public comment.
+            identifier = match[1].partition("[")[0]
+            if re.fullmatch(
+                r"tests/(?:[A-Za-z_][A-Za-z0-9_]*/)*[A-Za-z_][A-Za-z0-9_]*\.py"
+                r"(?:::[A-Za-z_][A-Za-z0-9_]*)+",
+                identifier,
+            ):
+                return identifier
+        return ""
 
     def issues(self, title: str) -> list[dict[str, Any]]:
         return self.paged(Request("read-issues", repo=self.repository))
@@ -656,17 +679,30 @@ def _comment_once(
 
 
 def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str]]:
+    timeline = gh.timeline(number)
     events = [
         item
-        for item in gh.timeline(number)
+        for item in timeline
         if item.get("event") == "removed_from_merge_queue" and item.get("created_at", "") >= since
     ]
+    entries = [
+        item["created_at"]
+        for item in timeline
+        if item.get("event") == "added_to_merge_queue"
+        and isinstance(item.get("created_at"), str)
+        and item["created_at"] <= since
+    ]
+    # A run starts at queue entry, often long before the keeper last saw the
+    # PR queued. When the entry is known, it also bounds failures: queue
+    # ejection can lag a failure beyond the keeper's last observation.
+    start = max(entries) if entries else gh.created_at(number)
     runs = [
         item
-        for item in gh.runs(since)
+        for item in gh.runs(start)
         if item.get("event") == "merge_group"
         and item.get("conclusion") == "failure"
-        and item.get("created_at", "") >= since
+        and (item.get("updated_at") or item.get("created_at", "")) >= (start if entries else since)
+        and item.get("created_at", "") >= start
         and extract_pr_number(str(item.get("head_branch", ""))) == number
     ]
     if not runs:

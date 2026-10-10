@@ -196,6 +196,9 @@ class FakeGitHub:
     def timeline(self, number: int) -> list[dict[str, Any]]:
         return self.events
 
+    def created_at(self, number: int) -> str:
+        return "2026-09-01T00:00:00Z"
+
     def runs(self, since: str) -> list[dict[str, Any]]:
         return self.run_rows
 
@@ -802,7 +805,8 @@ def test_red_merge_group_drop_with_green_branch_checks(
             "id": 123,
             "event": "merge_group",
             "conclusion": "failure",
-            "created_at": "2026-09-23T00:00:02Z",
+            "created_at": "2026-09-22T23:00:02Z",
+            "updated_at": "2026-09-23T00:00:02Z",
             "head_branch": "gh-readonly-queue/main/pr-42-deadbeef",
             "html_url": "https://github.com/example/runs/123",
         }
@@ -904,10 +908,105 @@ def test_drop_without_matching_run_is_unknown() -> None:
     assert "failing merge_group run unknown" in detail and jobs == []
 
 
+@pytest.mark.parametrize("entry_available", [False, True])
+def test_drop_finds_run_created_before_last_queue_observation(monkeypatch, entry_available) -> None:
+    fake = FakeGitHub()
+    observed = "2026-10-10T08:00:00Z"
+    entered = "2026-10-08T07:00:00Z"
+    if entry_available:
+        fake.events = [{"event": "added_to_merge_queue", "created_at": entered}]
+    fake.events.append({"event": "removed_from_merge_queue", "created_at": "2026-10-10T08:01:00Z"})
+    failed_run = {
+        "id": 123, "event": "merge_group", "conclusion": "failure",
+        "created_at": "2026-10-08T07:01:00Z",
+        "updated_at": "2026-10-10T07:59:00Z" if entry_available else "2026-10-10T08:00:30Z",
+        "head_branch": "gh-readonly-queue/main/pr-42-deadbeef",
+    }
+    # A run from an earlier queue cycle must not supply the diagnosis, nor
+    # may a current failure associated with a different PR.
+    stale = {**failed_run, "id": 124, "created_at": "2026-10-07T07:00:00Z",
+             "updated_at": "2026-10-07T07:30:00Z"}
+    unrelated = {**failed_run, "id": 125, "head_branch": "gh-readonly-queue/main/pr-43-deadbeef"}
+    windows = []
+
+    def runs(start):
+        windows.append(start)
+        return [row for row in (failed_run, stale, unrelated) if row["created_at"] >= start]
+
+    monkeypatch.setattr(fake, "runs", runs)
+    fake.job_rows = [{"name": "pytest", "conclusion": "failure"}]
+    detail, jobs = keeper._drop_detail(fake, 42, HEAD_A, observed)
+    assert windows == [entered if entry_available else fake.created_at(42)]
+    assert "Failing merge_group: 123; failing jobs: pytest" in detail
+    assert jobs == ["pytest"]
+
+
+@pytest.mark.parametrize("payload,valid", [
+    ({"created_at": "2026-10-01T00:00:00Z"}, True),
+    ({}, False), ({"created_at": "invalid"}, False), ([], False),
+])
+def test_pr_creation_lower_bound_is_validated(tmp_path, monkeypatch, payload, valid) -> None:
+    client = keeper.GitHub(tmp_path, "unit/public")
+
+    def read(request):
+        assert request.verb == "read-pull" and request.fields["number"] == 42
+        return payload
+
+    monkeypatch.setattr(client, "json", read)
+    if valid:
+        assert client.created_at(42) == payload["created_at"]
+    else:
+        with pytest.raises(keeper.KeeperError, match="PR creation time"):
+            client.created_at(42)
+
+
+@pytest.mark.parametrize("node,expected", [
+    ("tests/test_unit.py::test_case", "tests/test_unit.py::test_case"),
+    ("tests/sub/test_unit.py::TestGroup::test_case[private-runtime-value]",
+     "tests/sub/test_unit.py::TestGroup::test_case"),
+    ("tests/test_unit.py::test_case[private runtime value - more detail]",
+     "tests/test_unit.py::test_case"),
+    ("tests/../private.py::test_case", ""),
+    ("tests/test_unit.py::test_case private-runtime-value", ""),
+    ("tests/test_unit.py::test_case\x1b[31m", ""),
+])
+def test_failed_test_log_projects_only_source_identifier(tmp_path, monkeypatch, node, expected) -> None:
+    client = keeper.GitHub(tmp_path, "unit/public")
+    monkeypatch.setattr(client, "call", lambda *args: f"FAILED {node} - AssertionError: private-error-value\n")
+    assert client.first_failed_test(456) == expected
+
+
+def test_drop_comment_does_not_publish_failed_test_parameters(tmp_path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.run_rows = [{
+        "id": 123, "event": "merge_group", "conclusion": "failure",
+        "created_at": "2026-10-09T07:00:00Z", "updated_at": "2026-10-10T08:01:00Z",
+        "head_branch": "gh-readonly-queue/main/pr-42-deadbeef",
+    }]
+    fake.job_rows = [{"id": 456, "name": "pytest", "conclusion": "failure"}]
+    client = keeper.GitHub(tmp_path, "unit/public")
+    private_value = "private-runtime-value"
+    monkeypatch.setattr(client, "call", lambda *args:
+                        f"FAILED tests/test_unit.py::test_case[{private_value}] - private-error-value\n")
+    monkeypatch.setattr(fake, "first_failed_test", client.first_failed_test, raising=False)
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-10-10T08:00:00Z"}))
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed
+    comments = [body for action, body in fake.actions if action == "comment"]
+    assert len(comments) == 1
+    assert "First FAILED test: tests/test_unit.py::test_case." in comments[0]
+    assert "Failing merge_group: 123; failing jobs: pytest" in comments[0]
+    public_and_state = "\n".join([*lines, *comments, path.read_text()])
+    assert private_value not in public_and_state
+    assert "private-error-value" not in public_and_state
+
+
 @pytest.mark.parametrize("log_error", [False, True])
 def test_drop_detail_keeps_run_and_jobs_with_optional_first_failed_test(tmp_path, monkeypatch, log_error) -> None:
     client = keeper.GitHub(tmp_path, "unit/public")
     monkeypatch.setattr(client, "timeline", lambda number: [])
+    monkeypatch.setattr(client, "created_at", lambda number: "2026-10-01T00:00:00Z")
     monkeypatch.setattr(client, "runs", lambda since: [{
         "id": 123, "event": "merge_group", "conclusion": "failure",
         "head_branch": "gh-readonly-queue/main/pr-10256-deadbeef",
