@@ -151,18 +151,35 @@ Every epic, driver, worker, and bot state is one of `working`, `idle`,
 `stuck`, `dead`, `paused`, or `off`, and every one has `state_reason`.
 
 Liveness is the boolean `pid_alive` on the roster snapshot or, when the
-harness snapshot is fresh and has that field for the same agent, the harness
+harness snapshot is fresh and has a boolean for the same agent, the harness
 value. Stale or undated harness fields cannot override roster liveness,
-activity, or idle time. Screen text is ignored, so a dead process stays dead when captured text looks busy. A missing
-`pid_alive` is null. It is not treated as false.
+activity, or idle time. A missing `pid_alive` stays null; it is not false.
+Screen text never sets activity or liveness.
 
-`paused` and `off` come from the roster `intended` value (`paused`,
-`off`, or `postponed`). A live seat with `idle_min` of at least 30 while
-`intended` is `running` is `stuck`. Other working signals come from an
-explicit `activity` value of `working` or `idle`, or from a fresh
-occupancy record whose occupant status is itself `working` or `idle`. Those signals do not come from screen text. Presence
-without a status is not activity. A stale occupancy observation does not
-change seat state, and that source is `stale`.
+State uses this precedence, stopping at the first matching condition:
+
+1. Roster `intended` of `off` or `postponed` gives `off`; `paused` gives `paused`.
+2. Explicit `pid_alive: false` gives `dead`, reason `process is not alive`.
+3. A missing driver while `intended` is `running` gives `stuck`, reason
+   `no driver while intended running`.
+4. `idle_min` of at least 30 while `intended` is `running` gives `stuck`,
+   reason `idle while intended running`.
+5. Explicit snapshot activity or fresh occupancy activity of `working` gives
+   `working`, reason `recorded working`, including when `pid_alive` is null.
+6. A present driver with `intended: running`, null `pid_alive`, and no working
+   signal gives `stuck`, reason `liveness unknown`. Workers and bots use
+   `require_liveness=False`, so this driver-only condition does not apply.
+7. Otherwise the state and reason are `idle`.
+
+Occupancy activity accepts only `working` and `idle`. Presence without a status,
+`blocked`, and unsupported aliases such as `running`, `live`, or `active` do
+not supply activity. Stale and unavailable hosts never contribute occupants to
+seat state, even when a different host is fresh. If any host is fresh, the
+occupancy source is `ok`. Without a fresh host, a stale observation gives
+`stale` with the greatest known stale age; otherwise unavailable observations
+give `unavailable`, null age, and error `unavailable`. A valid empty host
+collection is `ok` with no activity. Malformed collections or unsupported host
+states supply no activity and count as unavailable observations.
 
 Emitted strings use the same public-text bound as epic registry labels.
 A string that fails that bound is replaced by a redaction token. An

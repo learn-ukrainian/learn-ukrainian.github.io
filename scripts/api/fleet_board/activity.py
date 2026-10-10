@@ -38,10 +38,8 @@ def _occupant_activity(status: object) -> str | None:
     if not isinstance(status, str):
         return None
     token = status.strip().lower()
-    if token == "idle":
-        return "idle"
-    if token in {"working", "running", "live", "active"}:
-        return "working"
+    if token in ACTIVITY_TOKENS:
+        return token
     return None
 
 
@@ -61,9 +59,10 @@ def _observation_age(host: Mapping[str, Any]) -> float | None:
 def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
     """Working or idle per agent id. Host identity is not copied out.
 
-    A missing occupant status is presence, not activity. A stale host does
-    not contribute activity. When every observation is stale, the source is
-    ``stale`` and no activity is returned.
+    Only fresh hosts contribute explicit working/idle activity. With no fresh
+    host, retained stale observations report ``stale``; otherwise failed
+    observations report ``unavailable`` with unknown age. An empty valid host
+    collection is ``ok`` with no activity.
     """
     try:
         payload = occupancy_payload()
@@ -73,13 +72,15 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
         return report("occupancy", "unavailable"), {}
     hosts = payload.get("hosts")
     if not isinstance(hosts, dict):
-        return report("occupancy", "ok"), {}
+        return report("occupancy", "unavailable"), {}
     activity: dict[str, str] = {}
     saw_fresh = False
     saw_stale = False
+    saw_unavailable = False
     stale_age: float | None = None
     for host in hosts.values():
         if not isinstance(host, dict):
+            saw_unavailable = True
             continue
         status = host.get("status")
         if status == "stale":
@@ -88,7 +89,8 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
             if age is not None and (stale_age is None or age > stale_age):
                 stale_age = age
             continue
-        if status == "unavailable":
+        if status != "fresh":
+            saw_unavailable = True
             continue
         saw_fresh = True
         occupants = host.get("occupants")
@@ -109,6 +111,8 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
             activity[agent_id] = token
     if saw_stale and not saw_fresh:
         return report("occupancy", "stale", age_s=stale_age), {}
+    if saw_unavailable and not saw_fresh:
+        return report("occupancy", "unavailable"), {}
     return report("occupancy", "ok"), activity
 
 

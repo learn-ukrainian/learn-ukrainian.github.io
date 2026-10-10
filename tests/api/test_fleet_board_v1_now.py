@@ -559,7 +559,7 @@ def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest
         }
 
     def occupancy_loader():
-        return {"hosts": {"row-1": {"occupants": [{"agent": "driver-beta", "status": "idle"}]}}}
+        return {"hosts": {"row-1": {"status": "fresh", "occupants": [{"agent": "driver-beta", "status": "idle"}]}}}
 
     monkeypatch.setattr(activity_mod, "seat_delegate_tasks", delegate_loader)
     monkeypatch.setattr(activity_mod, "occupancy_payload", occupancy_loader)
@@ -764,6 +764,158 @@ def test_stale_occupancy_does_not_override_idle(monkeypatch: pytest.MonkeyPatch,
     assert occupancy["age_s"] == 90
     assert occupancy["error"] is None
     assert "row-1" not in response.text
+
+
+@pytest.mark.parametrize(
+    "host_states,expected_status,expected_age",
+    [
+        ((), "ok", None),
+        (("fresh",), "ok", None),
+        (("stale",), "stale", 90),
+        (("unavailable",), "unavailable", None),
+        (("fresh", "fresh"), "ok", None),
+        (("stale", "stale"), "stale", 120),
+        (("unavailable", "unavailable"), "unavailable", None),
+        (("fresh", "stale"), "ok", None),
+        (("fresh", "unavailable"), "ok", None),
+        (("stale", "unavailable"), "stale", 90),
+        (("fresh", "stale", "unavailable"), "ok", None),
+    ],
+)
+def test_occupancy_host_health_matrix(
+    monkeypatch: pytest.MonkeyPatch, tmp_path, host_states, expected_status, expected_age
+) -> None:
+    from scripts.api.occupancy import _shape_host
+
+    hosts = {}
+    for index, status in enumerate(host_states):
+        # Exercise producer-shaped failures with retained occupants, not just
+        # empty failures. Nonfresh working rows must not override fresh idle.
+        occupants = (
+            [
+                {"agent": "driver-alpha", "status": "working"},
+                {"agent": "worker-alpha", "status": "idle"},
+                {"agent": "bot-check", "status": "working"},
+            ]
+            if status == "fresh"
+            else [
+                {"agent": "worker-alpha", "status": "working"},
+                {"agent": "driver-beta", "status": "working"},
+            ]
+        )
+        host_id = f"row-{index}"
+        hosts[host_id] = _shape_host(
+            host_id,
+            load_entry={"status": status, "age_seconds": 90 + index * 30},
+            occupants=occupants,
+            burn_state="unknown",
+            burn_sources={},
+        )
+    monkeypatch.setattr(activity_mod, "occupancy_payload", lambda: {"hosts": hosts})
+    monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
+    source, activity = activity_mod.load_occupancy_activity()
+    has_fresh = "fresh" in host_states
+    assert activity == (
+        {"driver-alpha": "working", "worker-alpha": "idle", "bot-check": "working"}
+        if has_fresh else {}
+    )
+    expected_source = {
+        "name": "occupancy",
+        "status": expected_status,
+        "age_s": expected_age,
+        "error": "unavailable" if expected_status == "unavailable" else None,
+    }
+    assert source.as_dict() == expected_source
+    roster = _roster()
+    roster["epics"] = roster["epics"][:2]
+    roster["epics"][0]["workers"][0]["activity"] = "idle"
+    roster["bots"] = roster["bots"][:1]
+    _install(monkeypatch, tmp_path, roster, None)
+    schema = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"]
+    expected_alpha = "working" if has_fresh else "idle"
+    for path in ("now", "epics", "epics/alpha", "agents", "agents/driver-alpha"):
+        response = client.get(f"/api/fleet/v1/{path}")
+        assert response.status_code == 200
+        body = response.json()
+        Draft202012Validator(schema[body["schema"]]).validate(body)
+        assert next(row for row in body["sources"] if row["name"] == "occupancy") == expected_source
+        if path in {"now", "epics"}:
+            alpha, beta = body["data"]["epics"]
+            assert alpha["state"] == expected_alpha
+            assert alpha["workers"][0]["state"] == "idle"
+            assert beta["state"] == "idle"
+        elif path == "agents":
+            by_id = {row["agent_id"]: row for row in body["data"]["agents"]}
+            assert by_id["driver-alpha"]["state"] == expected_alpha
+            assert by_id["worker-alpha"]["state"] == "idle"
+            assert by_id["driver-beta"]["state"] == "idle"
+            assert by_id["bot-check"]["state"] == expected_alpha
+        else:
+            assert body["data"]["state"] == expected_alpha
+        assert all(host_id not in response.text for host_id in hosts)
+
+
+@pytest.mark.parametrize("status,expected", [
+    ("working", {"driver-alpha": "working"}),
+    ("idle", {"driver-alpha": "idle"}),
+    ("running", {}), ("live", {}), ("active", {}), ("blocked", {}), (None, {}),
+])
+def test_occupancy_activity_contract_rejects_unsupported_aliases(
+    monkeypatch: pytest.MonkeyPatch, status, expected
+) -> None:
+    monkeypatch.setattr(activity_mod, "occupancy_payload", lambda: {"hosts": {
+        "row-1": {"status": "fresh", "occupants": [{"agent": "driver-alpha", "status": status}]}
+    }})
+    source, activity = activity_mod.load_occupancy_activity()
+    assert source.status == "ok"
+    assert activity == expected
+
+
+@pytest.mark.parametrize("payload", [
+    None, [], {}, {"hosts": []}, {"hosts": {"row-1": None}},
+    {"hosts": {"row-1": {"occupants": [{"agent": "driver-alpha", "status": "working"}]}}},
+    {"hosts": {"row-1": {"status": "unknown", "occupants": [{"agent": "driver-alpha", "status": "working"}]}}},
+])
+def test_invalid_occupancy_observations_are_unavailable(monkeypatch: pytest.MonkeyPatch, payload) -> None:
+    monkeypatch.setattr(activity_mod, "occupancy_payload", lambda: payload)
+    source, activity = activity_mod.load_occupancy_activity()
+    assert source.as_dict() == {
+        "name": "occupancy", "status": "unavailable", "age_s": None, "error": "unavailable"
+    }
+    assert activity == {}
+
+
+@pytest.mark.parametrize("signal", [None, "roster", "harness", "occupancy"])
+def test_unknown_pid_precedence_for_each_role(monkeypatch: pytest.MonkeyPatch, tmp_path, signal) -> None:
+    roster = _roster()
+    roster["epics"] = roster["epics"][:1]
+    roster["bots"] = roster["bots"][:1]
+    seats = [roster["epics"][0]["driver"], roster["epics"][0]["workers"][0], roster["bots"][0]]
+    for seat in seats:
+        seat.update(pid_alive=None, activity="working" if signal == "roster" else "idle", intended="running")
+    harness = None
+    if signal == "harness":
+        harness = {"generated_at": FRESH, "interval_s": 30, "agents": {
+            seat["agent_id"]: {"activity": "working"} for seat in seats
+        }}
+    if signal == "occupancy":
+        monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
+        monkeypatch.setattr(activity_mod, "occupancy_payload", lambda: {"hosts": {
+            "row-1": {"status": "fresh", "occupants": [
+                {"agent": seat["agent_id"], "status": "working"} for seat in seats
+            ]}
+        }})
+    _install(monkeypatch, tmp_path, roster, harness)
+    epic = client.get("/api/fleet/v1/epics/alpha").json()["data"]
+    assert epic["driver"]["pid_alive"] is None
+    agents = client.get("/api/fleet/v1/agents").json()["data"]["agents"]
+    assert {agent["role"] for agent in agents} == {"driver", "worker", "bot"}
+    for agent in agents:
+        expected = (
+            ("working", "recorded working") if signal else
+            ("stuck", "liveness unknown") if agent["role"] == "driver" else ("idle", "idle")
+        )
+        assert (agent["state"], agent["state_reason"]) == expected
 
 
 def test_derived_dead_delegate_row_is_health_only(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:

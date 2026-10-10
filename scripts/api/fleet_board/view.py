@@ -308,7 +308,7 @@ def _bots(
         state, reason, _pid = _seat_signals(
             roster,
             harness,
-                occupancy.get(agent_id),
+            occupancy.get(agent_id),
             intended=intended,
             seat_present=True,
             require_liveness=False,
