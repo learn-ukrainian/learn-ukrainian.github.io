@@ -34,7 +34,7 @@ from scripts.agent_runtime.adapters.glm import (
     GlmEgressForbiddenError,
     assert_glm_egress_allowed,
 )
-from scripts.driver_blockers import validate_epic
+from scripts.common.epic_selector import validate_epic
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 

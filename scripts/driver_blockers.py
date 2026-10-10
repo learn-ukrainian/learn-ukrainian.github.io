@@ -17,6 +17,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from scripts.common.epic_selector import validate_epic as validate_epic
 from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 
 LEDGER_NAME = "CTO-BLOCKERS-LEDGER.json"
@@ -128,12 +129,6 @@ def validate_ledger(data: object, epic: str) -> dict | None:
     except (ValueError, TypeError, OverflowError):
         return None
     return data
-
-
-def validate_epic(epic: str) -> None:
-    """Match handoff_identity.sh epic_name_valid: lowercase alnum, inner hyphens."""
-    if not re.fullmatch(r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", epic):
-        raise ValueError("epic must be a selector such as infra or 7919")
 
 
 @contextlib.contextmanager
