@@ -22,6 +22,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.common.repo_root import project_interpreter
+from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_library_files
@@ -79,7 +80,7 @@ def run_launcher(
         and name in ("start-claude.sh", "start-claude-driver.sh")
         and not any(arg in ("--help", "-h") for arg in args)
     ):
-        with TemporaryDirectory(prefix="launcher-usage-") as temporary:
+        with TemporaryDirectory(prefix="launcher-usage-", dir=ensure_scratch_root()) as temporary:
             overrides = {("scripts", "lib", "claude_weekly_used.py"): "print('0')\n"}
             if LAUNCH_ROOT != REPO:
                 overrides[("scripts", "lib", "rules_core.sh")] = (
