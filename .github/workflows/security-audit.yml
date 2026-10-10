@@ -121,20 +121,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ISSUE_NUMBER="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
+          10368="$(gh issue list --label dependency-advisory --state open --json number --limit 1 --jq '.[0].number // ""')"
           python -m scripts.ci.dependency_advisory_issue plan \
             --findings ci-artifacts/dependency-findings.json \
-            --issue-number "$ISSUE_NUMBER" \
+            --issue-number "$10368" \
             --body-out ci-artifacts/advisory-issue-body.md
 
       - name: Apply tracking-issue action
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ACTION: ${{ steps.plan.outputs.action }}
-          ISSUE_NUMBER: ${{ steps.plan.outputs.issue_number }}
+          10368: ${{ steps.plan.outputs.issue_number }}
         run: |
           set -euo pipefail
-          echo "advisory-issue action: $ACTION (issue: ${ISSUE_NUMBER:-none})"
+          echo "advisory-issue action: $ACTION (issue: ${10368:-none})"
           case "$ACTION" in
             create)
               gh label create dependency-advisory --force \
@@ -144,10 +144,10 @@ jobs:
                 --body-file ci-artifacts/advisory-issue-body.md
               ;;
             update)
-              gh issue edit "$ISSUE_NUMBER" --body-file ci-artifacts/advisory-issue-body.md
+              gh issue edit "$10368" --body-file ci-artifacts/advisory-issue-body.md
               ;;
             close)
-              gh issue close "$ISSUE_NUMBER" \
+              gh issue close "$10368" \
                 --comment "Scheduled dependency audit is clean: no unsuppressed findings. Closing."
               ;;
             none)
