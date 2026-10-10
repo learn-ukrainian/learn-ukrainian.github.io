@@ -1,6 +1,7 @@
 """Read requirements, rather than incidental path mentions, drive AGY admission."""
 
 import json
+import os
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -86,7 +87,7 @@ def test_sanitized_historical_review_fragments_admitted(tmp_path):
         ("Review the implementation that returns 404 for /health.", False),
         ("Use the /effort command.", False),
         ("Review the /effort command.", False),
-        ("Files under /tmp are scratch.", False),
+        (f"Files under {os.sep}tmp are scratch.", False),
         ("Review scripts/a.py:12.", False),
         ("Read https://example.org/guide.", False),
         ('Read "docs/evidence with spaces.txt".', False),
