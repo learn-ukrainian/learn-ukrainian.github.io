@@ -5,8 +5,10 @@ from __future__ import annotations
 import io
 import json
 import shlex
+import stat
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
@@ -24,7 +26,9 @@ pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 @pytest.fixture(autouse=True)
 def reader_clock(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("LU_MONITOR_LOOPBACK", "https://monitor.invalid")
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", "https://untrusted.invalid")
+    monkeypatch.setattr(claude_weekly_used.os, "fstat", lambda fd: SimpleNamespace(st_uid=0, st_mode=stat.S_IFREG | 0o600))
+    monkeypatch.setattr(claude_weekly_used.os, "pread", lambda *args: b'{"monitor_base_url":"https://configured.invalid"}')
     clock = Mock(wraps=datetime)
     clock.now.return_value = datetime(2030, 1, 1, tzinfo=UTC)
     monkeypatch.setattr(claude_weekly_used, "datetime", clock)
@@ -83,7 +87,7 @@ def test_explicit_opus_is_refused_at_percentage_limit(name: str, model: str, pct
 
 @pytest.mark.rules_core_absent
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
-@pytest.mark.parametrize("pct", ("10", "79.9", "unknown"))
+@pytest.mark.parametrize("pct", ("10", "79.9"))
 @pytest.mark.parametrize("via_env", (False, True))
 def test_explicit_opus_launches_below_limit(name: str, pct: str, via_env: bool, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
@@ -103,20 +107,17 @@ def test_environment_opus_is_an_explicit_request(launch_with_usage) -> None:
     assert "would exec" not in result.stdout
 
 
-@pytest.mark.rules_core_absent
+@pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
 @pytest.mark.parametrize("pct", ("85", "90", "99", "100"))
-@pytest.mark.parametrize("model", ((), ("--model", "opus"), ("--model", "sonnet")))
-def test_operator_override_bypasses_both_percentage_limits(pct: str, model: tuple[str, ...], launch_with_usage) -> None:
-    result = launch_with_usage(
-        pct, "--epic", "infra", *model, env={"LU_CLAUDE_CAP_OVERRIDE": "1"},
-    )
-    assert result.returncode == 0, result.stderr
-    expected = "claude-sonnet-5-5" if model == ("--model", "sonnet") else "claude-opus-5-5[1m]"
-    command = shlex.split(_exec_line(result.stdout))
-    assert command[command.index("--model") + 1] == expected
-    crossed_limit = float(pct) >= 90 or model != ("--model", "sonnet")
-    assert ("LU_CLAUDE_CAP_OVERRIDE=1 set by the operator" in result.stderr) == crossed_limit
-    assert "switched from Opus" not in result.stderr
+@pytest.mark.parametrize("variable", ("LU_CLAUDE_CAP_OVERRIDE", "LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT"))
+def test_shell_overrides_cannot_bypass_limits(name, pct, variable, launch_with_usage) -> None:
+    args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
+    value = "1" if variable == "LU_CLAUDE_CAP_OVERRIDE" else "100"
+    result = launch_with_usage(pct, *args, "--model", "opus", name=name, env={variable: value})
+    assert result.returncode == 7, result.stderr
+    assert ("Opus refused" if pct == "85" else "stop at 90%") in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would claim lease" not in result.stdout
 
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
@@ -147,78 +148,71 @@ def test_explicit_sonnet_launches_below_stop(name: str, model: str, pct: str, la
     assert "switched from Opus" not in result.stderr
 
 
-@pytest.mark.rules_core_absent
-@pytest.mark.parametrize("pct", ("94", "95"))
-@pytest.mark.parametrize("model", ((), ("--model", "sonnet")))
-def test_stop_threshold_is_shared_and_configurable(pct: str, model: tuple[str, ...], launch_with_usage) -> None:
-    result = launch_with_usage(
-        pct, "--epic", "infra", *model, env={"LU_CLAUDE_STOP_PCT": "95"},
-    )
-    if pct == "94":
-        assert result.returncode == 0, result.stderr
-        assert "--model claude-sonnet-5-5" in _exec_line(result.stdout)
-    else:
-        assert result.returncode == 7
-        assert "stop at 95%" in result.stderr
-        assert "would exec" not in result.stdout
-
-
-@pytest.mark.rules_core_absent
-@pytest.mark.parametrize("pct", ("84.9", "85", "90"))
-@pytest.mark.parametrize("model", ((), ("--model", "opus")))
-def test_opus_limit_is_configurable_without_bypassing_stop(pct: str, model: tuple[str, ...], launch_with_usage) -> None:
-    result = launch_with_usage(
-        pct, "--epic", "infra", *model, env={"LU_CLAUDE_OPUS_MAX_PCT": "85"},
-    )
-    if pct == "90":
-        assert result.returncode == 7
-        assert "No Claude launch" in result.stderr
-    elif pct == "85" and model:
-        assert result.returncode == 7
-        assert "Opus refused" in result.stderr
-    else:
-        assert result.returncode == 0, result.stderr
-        expected = "claude-sonnet-5-5" if pct == "85" else "claude-opus-5-5[1m]"
-        command = shlex.split(_exec_line(result.stdout))
-        assert command[command.index("--model") + 1] == expected
-
-
-@pytest.mark.parametrize("base", (None, "", " \t\n", "/"))
-def test_weekly_reader_without_configuration_makes_no_request(
-    base: str | None,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    if base is None:
-        monkeypatch.delenv("LU_MONITOR_LOOPBACK", raising=False)
-    else:
+@pytest.mark.parametrize("base", (None, "", "https://untrusted.invalid"))
+def test_weekly_reader_environment_cannot_supply_configuration(base, monkeypatch, capsys) -> None:
+    if base is not None:
         monkeypatch.setenv("LU_MONITOR_LOOPBACK", base)
-    urlopen = Mock()
-    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
-
+    monkeypatch.setattr(claude_weekly_used.os, "fstat", Mock(side_effect=OSError("missing")))
+    opener = Mock()
+    monkeypatch.setattr(claude_weekly_used.urllib.request, "build_opener", opener)
     claude_weekly_used.main()
-
-    urlopen.assert_not_called()
+    opener.assert_not_called()
     assert capsys.readouterr().out == "unknown\n"
 
 
-def test_weekly_reader_uses_only_configured_target(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    monkeypatch.setenv("LU_MONITOR_LOOPBACK", " https://configured.invalid/ ")
+def _mock_request(monkeypatch, response):
+    request = Mock(return_value=response) if not isinstance(response, Exception) else Mock(side_effect=response)
+    opener = Mock(open=request)
+    builder = Mock(return_value=opener)
+    monkeypatch.setattr(claude_weekly_used.urllib.request, "build_opener", builder)
+    return request, builder
+
+
+def test_weekly_reader_uses_only_protected_target(monkeypatch, capsys) -> None:
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", "https://untrusted.invalid")
+    monkeypatch.setenv("https_proxy", "https://untrusted.invalid")
     payload = {
         "generated_at": "2030-01-01T00:00:00Z",
         "agents": {"claude": {"codexbar": {"weekly_used_pct": 95}}},
     }
-    urlopen = Mock(return_value=io.BytesIO(json.dumps(payload).encode()))
-    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
-
+    request, builder = _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
     claude_weekly_used.main()
-
-    urlopen.assert_called_once_with(
-        "https://configured.invalid/api/state/routing-budget", timeout=4
-    )
+    request.assert_called_once_with("https://configured.invalid/api/state/routing-budget", timeout=4)
+    proxy_handler, redirect_handler = builder.call_args.args
+    assert proxy_handler.proxies == {}
+    assert isinstance(redirect_handler, claude_weekly_used._NoRedirect)
     assert capsys.readouterr().out == "95\n"
+
+
+@pytest.mark.parametrize("owner, mode", ((1234, stat.S_IFREG | 0o600), (0, stat.S_IFREG | 0o620), (0, stat.S_IFREG | 0o602), (0, stat.S_IFIFO | 0o600)))
+def test_weekly_reader_rejects_unprotected_operator_state(owner, mode, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(claude_weekly_used.os, "fstat", lambda fd: SimpleNamespace(st_uid=owner, st_mode=mode))
+    request, _ = _mock_request(monkeypatch, io.BytesIO(b"{}"))
+    claude_weekly_used.main()
+    request.assert_not_called()
+    assert capsys.readouterr().out == "unknown\n"
+
+
+@pytest.mark.parametrize("raw", (b"{}", b"invalid", b"[]", b'{"monitor_base_url":""}', b'{"monitor_base_url":"file:synthetic"}', b'{"monitor_base_url":true}', b" " * 65537))
+def test_weekly_reader_rejects_invalid_operator_state(raw, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(claude_weekly_used.os, "pread", lambda *args: raw)
+    request, _ = _mock_request(monkeypatch, io.BytesIO(b"{}"))
+    claude_weekly_used.main()
+    request.assert_not_called()
+    assert capsys.readouterr().out == "unknown\n"
+
+
+def test_weekly_reader_refuses_redirects() -> None:
+    with pytest.raises(ValueError, match="redirect refused"):
+        claude_weekly_used._NoRedirect().redirect_request(None, None, 302, "", {}, "https://untrusted.invalid")
+
+
+@pytest.mark.parametrize("pct", (None, True, -1, 101, "0", float("nan"), float("inf")))
+def test_weekly_reader_rejects_invalid_percentages(pct, monkeypatch, capsys) -> None:
+    payload = {"generated_at": "2030-01-01T00:00:00Z", "agents": {"claude": {"codexbar": {"weekly_used_pct": pct}}}}
+    _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
+    claude_weekly_used.main()
+    assert capsys.readouterr().out == "unknown\n"
 
 
 @pytest.mark.parametrize("pct", (85, 95))
@@ -230,8 +224,7 @@ def test_weekly_reader_ignores_environment_override(
         "generated_at": "2030-01-01T00:00:00Z",
         "agents": {"claude": {"codexbar": {"weekly_used_pct": pct}}},
     }
-    urlopen = Mock(return_value=io.BytesIO(json.dumps(payload).encode()))
-    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
+    urlopen, _ = _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
 
     claude_weekly_used.main()
 
@@ -269,8 +262,7 @@ def test_weekly_reader_checks_claude_freshness(
             }
         },
     }
-    urlopen = Mock(return_value=io.BytesIO(json.dumps(payload).encode()))
-    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
+    urlopen, _ = _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
 
     claude_weekly_used.main()
 
@@ -303,10 +295,7 @@ def test_weekly_reader_rejects_untrusted_response_age(
     }
     if generated_at is not None:
         payload["generated_at"] = generated_at
-    monkeypatch.setattr(
-        claude_weekly_used.urllib.request, "urlopen",
-        Mock(return_value=io.BytesIO(json.dumps(payload).encode())),
-    )
+    _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
 
     claude_weekly_used.main()
 
@@ -326,10 +315,7 @@ def test_fresh_claude_usage_blocks_launch_when_other_provider_is_stale(
             "codex": {"codexbar": {"stale": True}},
         },
     }
-    monkeypatch.setattr(
-        claude_weekly_used.urllib.request, "urlopen",
-        Mock(return_value=io.BytesIO(json.dumps(payload).encode())),
-    )
+    _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
     claude_weekly_used.main()
     usage = capsys.readouterr().out.strip()
     assert usage == "99"
@@ -345,8 +331,7 @@ def test_weekly_reader_override_cannot_hide_request_failure(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     monkeypatch.setenv("LU_CLAUDE_WEEKLY_USED_PCT_OVERRIDE", "0")
-    urlopen = Mock(side_effect=OSError("unavailable"))
-    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
+    urlopen, _ = _mock_request(monkeypatch, OSError("unavailable"))
 
     claude_weekly_used.main()
 
@@ -388,20 +373,16 @@ def test_driver_rejects_forwarded_selectors_before_percentage_check(
     assert "would exec" not in result.stdout
 
 
-@pytest.mark.rules_core_absent
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
+@pytest.mark.parametrize("pct", ("unknown", "", "nan", "inf", "-1", "101", "0\n95"))
 @pytest.mark.parametrize("model", ((), ("--model", "sonnet")))
-def test_unknown_usage_warns_and_skips_percentage_check(name: str, model: tuple[str, ...], launch_with_usage) -> None:
+def test_unknown_or_invalid_usage_refuses_launch(name, pct, model, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
-    result = launch_with_usage("unknown", *args, *model, name=name)
-    assert result.returncode == 0, result.stderr
-    assert result.stderr.count("WARNING Claude weekly usage unknown") == 1
-    assert "would exec" in result.stdout
-    if name == "start-claude-driver.sh":
-        expected = "claude-sonnet-5-5" if model else "claude-opus-5-5[1m]"
-        command = shlex.split(_exec_line(result.stdout))
-        assert command[command.index("--model") + 1] == expected
-        assert "switched from Opus" not in result.stderr
+    result = launch_with_usage(pct, *args, *model, name=name, env={"LU_CLAUDE_CAP_OVERRIDE": "1"})
+    assert result.returncode == 7, result.stderr
+    assert "usage unknown or invalid" in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would claim lease" not in result.stdout
 
 
 @pytest.mark.rules_core_absent
@@ -455,8 +436,56 @@ def test_claude_refuses_unvalidated_configuration_models(
 
 @pytest.mark.parametrize("variable", ("LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT"))
 @pytest.mark.parametrize("value", ("invalid", "-1", "101", "nan", "80junk"))
-def test_invalid_percentage_limits_fail_closed(variable: str, value: str, launch_with_usage) -> None:
-    result = launch_with_usage("85", "--epic", "infra", env={variable: value, "LU_CLAUDE_CAP_OVERRIDE": "1"})
-    assert result.returncode == 2, result.stderr
-    assert "percentage limits must be numbers" in result.stderr
+def test_invalid_environment_limits_cannot_change_policy(variable, value, launch_with_usage) -> None:
+    result = launch_with_usage("85", "--epic", "infra", "--model", "opus", env={variable: value})
+    assert result.returncode == 7, result.stderr
+    assert "Opus refused" in result.stderr
     assert "would exec" not in result.stdout
+
+
+def test_driver_cap_documentation_matches_enforced_policy() -> None:
+    comment = (REPO / "start-claude-driver.sh").read_text()
+    assert "LU_CLAUDE_OPUS_BLOCKED" not in comment
+    assert "default 99" not in comment
+    assert "At 80% weekly usage" in comment
+    assert "refused at 90%" in comment
+    assert "trusted usage is unavailable" in comment
+    result = run_launcher("start-claude-driver.sh", "--help")
+    assert result.returncode == 0
+    assert "all launches stop at 90%" in result.stdout
+    assert "Unknown usage refuses launch" in result.stdout
+    assert "LU_CLAUDE_CAP_OVERRIDE=1" not in result.stdout
+
+
+@pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
+@pytest.mark.parametrize("model", ("opus", "sonnet"))
+def test_real_reader_refuses_shell_controlled_configuration(name, model) -> None:
+    args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
+    result = run_launcher(
+        name, *args, "--model", model,
+        env={
+            "LU_CLAUDE_CAP_OVERRIDE": "1",
+            "LU_CLAUDE_STOP_PCT": "100",
+            "LU_CLAUDE_OPUS_MAX_PCT": "100",
+            "LU_MONITOR_LOOPBACK": "https://untrusted.invalid",
+        },
+    )
+    assert result.returncode == 7, result.stderr
+    assert "usage unknown or invalid" in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would enter" not in result.stdout
+    assert "would claim lease" not in result.stdout
+
+
+def test_operator_target_reads_fixed_descriptor_without_consuming_offset(monkeypatch) -> None:
+    metadata = SimpleNamespace(st_uid=0, st_mode=stat.S_IFREG | 0o600)
+    fstat = Mock(return_value=metadata)
+    pread = Mock(return_value=b'{"monitor_base_url":"https://configured.invalid/"}')
+    monkeypatch.setattr(claude_weekly_used.os, "fstat", fstat)
+    monkeypatch.setattr(claude_weekly_used.os, "pread", pread)
+    for _ in range(2):
+        assert claude_weekly_used._operator_target() == "https://configured.invalid"
+    assert fstat.call_count == 2
+    assert pread.call_count == 2
+    fstat.assert_called_with(9)
+    pread.assert_called_with(9, 65537, 0)

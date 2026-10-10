@@ -3,25 +3,50 @@
 
 Used by the Claude cap guard in launcher_core.sh. Prints a number (for
 example 90) or "unknown" when the API is down, stale, or the field is
-missing. Requires LU_MONITOR_LOOPBACK from private runtime configuration;
-there is no default connection target. Always exits 0 so the shell decides
-the policy.
+missing. Operator telemetry configuration is JSON on inherited descriptor 9,
+from a root-owned regular file without group or other write permission. It has
+one field, "monitor_base_url". No environment value supplies configuration.
+Always exits 0 so the shell decides the policy.
 """
 from __future__ import annotations
 
 import json
+import math
 import os
+import stat
 import urllib.request
 from datetime import UTC, datetime
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise ValueError("redirect refused")
+
+
+def _operator_target() -> str:
+    """Read the already-open operator file, never an agent-selected path."""
+    metadata = os.fstat(9)
+    if metadata.st_uid != 0 or not stat.S_ISREG(metadata.st_mode) or metadata.st_mode & 0o022:
+        raise ValueError("untrusted operator state")
+    # Read from zero without changing the inherited offset; bound configuration.
+    raw = os.pread(9, 65537, 0)
+    if len(raw) > 65536:
+        raise ValueError("oversized operator state")
+    config = json.loads(raw)
+    if set(config) != {"monitor_base_url"}:
+        raise ValueError("invalid operator state")
+    base = config["monitor_base_url"].strip().rstrip("/")
+    if not base or not base.startswith(("https://", "http://")):
+        raise ValueError("invalid telemetry target")
+    return base
+
+
 def main() -> None:
-    base = os.environ.get("LU_MONITOR_LOOPBACK", "").strip().rstrip("/")
-    if not base:
-        print("unknown")
-        return
     try:
-        with urllib.request.urlopen(base + "/api/state/routing-budget", timeout=4) as r:
+        base = _operator_target()
+        # Shell-controlled proxy settings and redirects cannot replace the target.
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
+        with opener.open(base + "/api/state/routing-budget", timeout=4) as r:
             data = json.load(r)
         claude = data["agents"]["claude"]
         bar = claude.get("codexbar") or {}
@@ -34,9 +59,9 @@ def main() -> None:
         if not -60 <= response_age <= 900 or claude.get("stale") or bar.get("stale"):
             raise ValueError("stale")
         pct = bar.get("weekly_used_pct")
-        if pct is None:
-            raise ValueError("missing")
-        print(f"{float(pct):g}")
+        if isinstance(pct, bool) or not isinstance(pct, (int, float)) or not math.isfinite(pct) or not 0 <= pct <= 100:
+            raise ValueError("invalid percentage")
+        print(f"{pct:g}")
     except Exception:  # any failure reads as unknown
         print("unknown")
 
