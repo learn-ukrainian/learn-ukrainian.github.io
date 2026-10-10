@@ -1409,6 +1409,7 @@ def test_stop_detects_parent_swap_at_pinned_write(driver, state, tmp_path, monke
 
 
 def test_stop_refuses_oversized_counter_before_read_or_parse(driver, state, monkeypatch):
+    monkeypatch.delenv(driver_state.MIN_WORKERS_ENV)
     counter = driver_state._counter_path(state, "c1")
     # The regression runs against the old module before the named bound exists.
     limit = getattr(driver_state, "MAX_COUNTER_BYTES", 4096)
@@ -1440,9 +1441,14 @@ def test_stop_refuses_oversized_counter_before_read_or_parse(driver, state, monk
     assert json.loads(counter.with_suffix(".failure.json").read_text())["code"] == "continuation_counter_unavailable"
 
 
-def test_stop_cli_refuses_oversized_counter_within_hook_timeout(driver, state):
+def test_stop_cli_refuses_oversized_counter_within_hook_timeout(driver, state, monkeypatch):
+    # The question triggers continuation without unrelated worker telemetry.
+    # Pytest's configured scripts import path is not inherited by the child.
+    monkeypatch.delenv(driver_state.MIN_WORKERS_ENV)
+    monkeypatch.delenv("PYTHONPATH", raising=False)
     counter = driver_state._counter_path(state, "c1")
-    counter.write_bytes(b"1" * (4 * 1024 * 1024))
+    content = b"1" * (4 * 1024 * 1024)
+    counter.write_bytes(content)
     transcript = _transcript(driver, "Which should I take?")
     result = subprocess.run(
         [sys.executable, "-m", "scripts.driver_state", "agy-stop-hook"],
@@ -1454,9 +1460,10 @@ def test_stop_cli_refuses_oversized_counter_within_hook_timeout(driver, state):
         check=True,
     )
     out = json.loads(result.stdout)
-    assert out["decision"] == "allow"
-    assert out["reason"].startswith("DRIVER-GATE-FAILED:")
-    assert "counter unavailable" in out["reason"]
+    assert out["decision"] == "allow", (result.stdout, result.stderr)
+    assert out["reason"].startswith("DRIVER-GATE-FAILED:"), (result.stdout, result.stderr)
+    assert "counter unavailable" in out["reason"], (result.stdout, result.stderr)
+    assert counter.read_bytes() == content
     assert json.loads(counter.with_suffix(".failure.json").read_text())["code"] == "continuation_counter_unavailable"
 
 
