@@ -126,6 +126,7 @@ def approved_codex_baseline(baseline):
         position = cmd.index("--disable")
         assert cmd[position:position + 2] == ["--disable", "apps"]
         cmd[position:position] = CODEX_OVERLAY["hook_flags"]
+        adapters[index]["value"]["env_overrides"].update(CODEX_OVERLAY["env_overrides"])
     return {**baseline, "adapters": adapters}
 
 
@@ -135,7 +136,8 @@ APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
 
 @pytest.mark.parametrize("configuration", ["host-cli", "no-cli"])
 def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuration):
-    assert set(CODEX_OVERLAY) == {"adapter_rows", "hook_flags"}
+    assert set(CODEX_OVERLAY) == {"adapter_rows", "hook_flags", "env_overrides"}
+    assert CODEX_OVERLAY["env_overrides"] == {"LU_CODEX_HOOK_SOURCE": "<SOURCE_ROOT>"}
     assert CODEX_OVERLAY["adapter_rows"] == [0, 2, 4, 6]
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
     baseline = approved_prior_baseline(json.loads(gzip.decompress(path.read_bytes())))
@@ -143,25 +145,28 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
     after = approved_codex_baseline(baseline)["adapters"]
     assert len(before) == len(after) == len(INPUTS["adapters"]) == 112
     changed_rows = []
-    expected_hooks = [
-        {
-            "matcher": "^(Bash|Write|Edit|MultiEdit|apply_patch)$",
-            "hooks": [{
-                "type": "command",
-                "command": 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use',
-                "timeout": 45,
-                "statusMessage": "Running Codex tool policy",
-            }],
-        },
-        {
-            "matcher": "Bash",
-            "hooks": [{
-                "type": "command",
-                "command": '"$(git rev-parse --show-toplevel)/agents_extensions/shared/hooks/guard-public-github-text.py"',
-                "timeout": 5,
-            }],
-        },
+    expected_hooks = tomllib.loads(CODEX_OVERLAY["hook_flags"][-1])["hooks"]["PreToolUse"]
+    assert len(expected_hooks) == 2
+    assert expected_hooks[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch)$"
+    assert expected_hooks[1]["matcher"] == "Bash"
+    assert expected_hooks[0]["hooks"][0]["timeout"] == 45
+    assert expected_hooks[1]["hooks"][0]["timeout"] == 5
+    command_digests = ['29631fde2a2dd39bdfe27574cc06d7a3ca800642e228548733e2e3d4c146364d', 'ceddede327247e37bde79990c315297722716edf7b2a5c16d335eb3094737396']
+    metadata = [
+        {"type": "command", "timeout": 45, "statusMessage": "Running Codex tool policy"},
+        {"type": "command", "timeout": 5},
     ]
+    for index, (group, relative) in enumerate(zip(expected_hooks, (
+        "scripts/agent_runtime/codex_hook_entry.sh",
+        "agents_extensions/shared/hooks/guard-public-github-text.py",
+    ), strict=True)):
+        assert len(group["hooks"]) == 1
+        command = group["hooks"][0]["command"]
+        assert group["hooks"][0] == {"command": command, **metadata[index]}
+        assert hashlib.sha256(command.encode()).hexdigest() == command_digests[index]
+        assert relative in command
+        assert "LU_CODEX_HOOK_SOURCE" in command and "git -C" in command
+        assert "<SOURCE_ROOT>" not in command
     for index, (old, new, inputs) in enumerate(zip(before, after, INPUTS["adapters"], strict=True)):
         if old == new:
             continue
@@ -175,6 +180,7 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
         assert tomllib.loads(cmd[position + 4]) == {"hooks": {"PreToolUse": expected_hooks}}
         assert cmd[position + 5:position + 7] == ["--disable", "apps"]
         del cmd[position:position + 5]
+        assert restored["value"]["env_overrides"].pop("LU_CODEX_HOOK_SOURCE") == "<SOURCE_ROOT>"
         assert restored == old
     assert changed_rows == [0, 2, 4, 6]
 
@@ -190,7 +196,9 @@ def test_codex_hook_overlay_preserves_other_adapter_data(configuration):
     updated = approved_codex_baseline(baseline)
     assert baseline == original
     assert updated["adapters"][8:] == original["adapters"][8:]
-    assert updated["adapters"][0]["value"]["env_overrides"] == original["adapters"][0]["value"]["env_overrides"]
+    assert updated["adapters"][0]["value"]["env_overrides"] == {
+        **original["adapters"][0]["value"]["env_overrides"], **CODEX_OVERLAY["env_overrides"],
+    }
     assert {key: value for key, value in updated.items() if key != "adapters"} == {
         key: value for key, value in original.items() if key != "adapters"
     }
@@ -339,10 +347,10 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the historical #10205 fixtures and approved issue
 # overlays for both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "routing-10305.json.gz": "e6860a690a9f89e5a55f4f762f926ea4278bed0ae5f21b85e44ed9cd4781c013",
+    "routing-10305.json.gz": "a740b3a64033ea9f2e945f40dbc850d5a394dd7b3bc73235fbfa5f70d23dc474",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
-    "SPEC.md": "2c4ae5f525a6bf61a0bf6d20ea5f27f43759434a4c0be302045954379c549c0e",
+    "SPEC.md": "f1e49e33f396a6d2f7d01cf17d3113e59c356b7640b85c8e3442a8d56dca83cd",
     "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",

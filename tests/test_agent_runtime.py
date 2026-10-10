@@ -617,7 +617,10 @@ def test_codex_adapter_discussion_readonly_sets_env(tmp_path):
 
     assert "-s" in plan.cmd
     assert "read-only" in plan.cmd
-    assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
+    assert plan.env_overrides == {
+        "AB_DISCUSS_READONLY": "1",
+        "LU_CODEX_HOOK_SOURCE": str(Path(__file__).resolve().parents[1]),
+    }
 
 
 def test_codex_adapter_bridge_creates_then_resumes(tmp_path):
@@ -1858,6 +1861,8 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
     raw FileNotFoundError. It must also write a usage record for
     observability.
     """
+    from unittest.mock import MagicMock
+
     from agent_runtime.errors import AgentUnavailableError
 
     # Patch Popen to raise FileNotFoundError as if the codex binary
@@ -1872,7 +1877,7 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
         ) as mock_write,
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"),
+            _agent_only_popen(MagicMock(side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"))),
         ),
         pytest.raises(AgentUnavailableError, match="Popen failed"),
     ):
@@ -1911,8 +1916,14 @@ def _agent_only_popen(agent_popen):
     or inflate ``call_count`` / ``call_args_list`` assertions (#7020).
     """
     from unittest.mock import MagicMock
+    real_popen = subprocess.Popen
 
     def _wrapper(*args, **kwargs):
+        command = args[0] if args else kwargs.get("args", ())
+        # Source hook attestation is a real, read-only Git probe, independent
+        # of the agent spawn whose lifecycle this mock exercises.
+        if command and command[0] == "/usr/bin/git":
+            return real_popen(*args, **kwargs)
         if "env" not in kwargs:
             isolation_proc = MagicMock()
             _popen_proc_for_subprocess_run(isolation_proc)

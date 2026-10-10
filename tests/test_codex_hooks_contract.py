@@ -38,7 +38,6 @@ PRIMARY_ROOT = Path(
 HOOKS_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
 PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
 ENTRY = REPO_ROOT / "scripts" / "agent_runtime" / "codex_hook_entry.sh"
-RUNNER_COMMAND = 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use'
 VENV_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "enforce-venv.sh"
 INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-agent-inbox.sh"
 SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
@@ -1156,6 +1155,7 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement):
     'gh --version | {stub} issue create --body safe',
     '(PATH={stub_dir} gh issue create --body safe)',
     'echo $({stub} issue create --body safe)',
+    'echo "$({stub} issue create --body safe)"',
     'echo `{stub} issue create --body safe`',
     'PATH={stub_dir} gh issue create --body safe',
     '{stub} issue create --body safe',
@@ -1194,3 +1194,50 @@ def test_codex_admits_single_resolved_shim_call(monkeypatch, wrapper):
         json.dumps({'tool_input': {'command': wrapper + 'gh --version'}}),
         REPO_ROOT / 'agents_extensions/shared/hooks',
     ) == 0
+
+
+def test_codex_entry_never_uses_session_selected_interpreter(tmp_path):
+    primary, session = _make_linked_worktree(tmp_path)
+    marker = tmp_path / 'foreign-interpreter-ran'
+    interpreter = primary / '.venv/bin/python'
+    interpreter.write_text(f'#!/bin/bash\nprintf ran > {shlex.quote(str(marker))}\nexit 0\n')
+    payload = {'tool_name': 'Write', 'cwd': str(session),
+               'tool_input': {'file_path': str(primary / 'README.md')}}
+    result = subprocess.run(
+        ['bash', str(ENTRY), 'pre-tool-use'], cwd=session,
+        input=json.dumps(payload), text=True, capture_output=True, timeout=2,
+    )
+    assert result.returncode == 2, result.stderr
+    assert not marker.exists()
+    assert 'guard-primary-checkout-write' in result.stderr
+
+
+@pytest.mark.parametrize('command', ['echo gh', 'git commit -m "fix gh routing"', "git commit -m 'fix gh $(pwd)'"])
+def test_codex_publication_data_words_remain_allowed(command):
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({'tool_input': {'command': command}}), REPO_ROOT / 'agents_extensions/shared/hooks',
+    ) == 0
+
+
+@pytest.mark.parametrize('defect', ['missing-source', 'unavailable-source', 'symlink-loop'])
+def test_hook_resolution_errors_block_with_exit_two(tmp_path, defect):
+    source, session = _make_linked_worktree(tmp_path)
+    entry = source / 'entry.sh'
+    entry.write_text('exit 0\n')
+    _run(['git', 'add', 'entry.sh'], cwd=source)
+    _run(['git', 'commit', '-m', 'tracked hook'], cwd=source)
+    command = _portable_hook_command(f'bash {shlex.quote(str(entry))}', source)
+    (session / 'entry.sh').write_text('exit 0\n')
+    env = {**os.environ, 'LU_CODEX_HOOK_SOURCE': str(source)}
+    if defect == 'missing-source':
+        env.pop('LU_CODEX_HOOK_SOURCE', None)
+    elif defect == 'unavailable-source':
+        env['LU_CODEX_HOOK_SOURCE'] = str(tmp_path / 'missing')
+    else:
+        entry.unlink()
+        entry.symlink_to(entry.name)
+    result = subprocess.run(
+        ['bash', '-c', command], cwd=session, env=env, input='{}',
+        text=True, capture_output=True, timeout=2,
+    )
+    assert result.returncode == 2, result.stderr

@@ -8,6 +8,7 @@ import concurrent.futures
 import json
 import os
 import re
+import runpy
 import shlex
 import shutil
 import subprocess
@@ -181,6 +182,23 @@ def _result_code(results: list[GuardResult]) -> int:
     return next((result.returncode for result in normalized if result.returncode), 0)
 
 
+def _has_shell_substitution(command: str) -> bool:
+    """Find substitutions outside single quotes, respecting shell escapes."""
+    single = double = escaped = False
+    for index, char in enumerate(command):
+        if escaped:
+            escaped = False
+        elif char == "\\" and not single:
+            escaped = True
+        elif char == "'" and not double:
+            single = not single
+        elif char == '"' and not single:
+            double = not double
+        elif not single and (char == "`" or command[index:index + 2] == "$("):
+            return True
+    return False
+
+
 def _publication_command_code(payload: str, hooks_dir: Path) -> int:
     """Admit only a literal, single gh call resolving to the tracked shim.
 
@@ -197,8 +215,23 @@ def _publication_command_code(payload: str, hooks_dir: Path) -> int:
     except ValueError:
         print("Codex publication command cannot be parsed; blocking fail-closed.", file=sys.stderr)
         return 2
-    # Also inspect quoted nested shell scripts and substitution fragments.
-    publication = any(Path(word).name == "gh" for word in words) or re.search(r"\bgh\b", command)
+    named = any(Path(word).name == "gh" for word in words) or re.search(r"\bgh\b", command)
+    if not named:
+        return 0
+    try:
+        # Reuse the shared command-position recognizer; literal gh in data
+        # (a commit message, for example) is not a publishing invocation.
+        recognize = runpy.run_path(str(hooks_dir / "guard-public-github-text.py"))["invokes_gh"]
+        publication = recognize(command)
+    except (OSError, SyntaxError, KeyError):
+        print("Codex publication guard is unavailable; blocking fail-closed.", file=sys.stderr)
+        return 2
+    # The shared recognizer does not see quoted substitutions, absolute env,
+    # or env split-string arguments. Those ambiguous forms remain blocked.
+    publication = publication or _has_shell_substitution(command) or any(
+        word in {"/usr/bin/env", "/bin/env", "-S", "--split-string"}
+        or word.startswith("--split-string=") for word in words
+    )
     if not publication:
         return 0
     # Even apparently safe early calls cannot license a later PATH replacement,

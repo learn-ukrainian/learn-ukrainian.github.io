@@ -81,19 +81,25 @@ class CodexReviewConfigError(ValueError):
 _HOOK_SOURCE_ENV = "LU_CODEX_HOOK_SOURCE"
 # Execute the very bytes checked, avoiding a second, raceable read of the entry.
 # -I prevents the session cwd/PYTHONPATH from supplying bootstrap imports.
-_HOOK_BOOTSTRAP = """import hashlib, os, sys
+_HOOK_BOOTSTRAP = """import hashlib, os, stat, sys
 from pathlib import Path
 try:
     root = Path(sys.argv[1]).resolve(strict=True)
     if root != Path(os.environ['LU_CODEX_HOOK_SOURCE']).resolve(strict=True):
         raise ValueError('source mismatch')
-    entry = (root / sys.argv[2]).resolve(strict=True)
-    if not entry.is_relative_to(root):
+    candidate = root / sys.argv[2]
+    entry = candidate.resolve(strict=True)
+    if not entry.is_relative_to(root) or entry != candidate:
         raise ValueError('entry escape')
-    content = entry.read_bytes()
+    fd = os.open(entry, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(fd, 'rb') as handle:
+        info = os.fstat(handle.fileno())
+        if not stat.S_ISREG(info.st_mode) or info.st_size > 1048576:
+            raise ValueError('entry is not a bounded regular file')
+        content = handle.read(1048577)
     if hashlib.sha256(content).hexdigest() != sys.argv[3]:
         raise ValueError('entry changed')
-except (OSError, ValueError, KeyError):
+except (OSError, ValueError, KeyError, RuntimeError):
     print('Codex worker PreToolUse entry verification failed', file=sys.stderr)
     sys.exit(2)
 args = sys.argv[4:]
@@ -115,10 +121,13 @@ def _portable_hook_command(command: str, root: Path) -> str:
         words = shlex.split(command)
         if words and words[0] in {"bash", "/bin/bash"}:
             words.pop(0)
-        entry = Path(words.pop(0)).resolve(strict=True)
+        candidate = Path(words.pop(0))
+        entry = candidate.resolve(strict=True)
         if not entry.is_relative_to(root):
             raise ValueError("entry escape")
-        relative = entry.relative_to(root).as_posix()
+        if entry != candidate or not entry.is_file():
+            raise ValueError("entry is not a regular source path")
+        relative = candidate.relative_to(root).as_posix()
         tracked = subprocess.run(
             ["/usr/bin/git", "-C", str(root), "show", f"HEAD:{relative}"],
             env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
@@ -136,6 +145,7 @@ def _portable_hook_command(command: str, root: Path) -> str:
         + shlex.quote(_HOOK_BOOTSTRAP)
         + ' "$root" '
         + " ".join(shlex.quote(word) for word in [relative, hashlib.sha256(tracked).hexdigest(), *words])
+        + " || exit 2"
     )
 
 

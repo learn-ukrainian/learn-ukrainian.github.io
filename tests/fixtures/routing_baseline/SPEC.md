@@ -5,8 +5,9 @@
 `routing-10305.json.gz` is a per-row insertion fixture, applied after all earlier
 approved overlays: review-capacity, Claude advisor/launcher help (#10083),
 Gemini and resource-policy. Its `adapter_rows` are exactly `[0, 2, 4, 6]` and
-its `hook_flags` are the five inserted argv tokens. It never replaces complete
-rows or surfaces. The same insertion applies independently to the host-CLI
+its `hook_flags` are the five inserted argv tokens. Its `env_overrides` adds
+one private source binding to those rows. It never replaces complete rows or
+surfaces. The same insertion applies independently to the host-CLI
 and no-CLI baselines, preserving their binary discovery and refusal results.
 
 Both configurations were freshly captured after merging main into the
@@ -29,12 +30,13 @@ Each changed row inserts five argv tokens immediately before the existing
 and the inline `hooks.PreToolUse` TOML value. That value contains exactly two
 tracked command-hook groups. Their matchers, entry points, timeouts and status
 text are pinned by the scope test in `tests/review/test_model_catalog.py` and
-are not restated here. The Git-rooted commands match the current adapter
-rather than the older absolute-path capture. The trust flag admits these
+are not restated here. The relative commands resolve using the private source
+binding supplied by the adapter. The trust flag admits these
 tracked non-managed hooks, while
 the inline binding avoids dependence on deployed project-hook discovery.
 
-Removing exactly those five tokens reproduces each layered approved row, including
+Removing exactly those five tokens and the source binding reproduces each layered
+approved row, including
 all metadata, mode flags, output paths and the final apps disable. Every other
 adapter row, including isolated-review refusals, is unchanged. Claude rows
 8, 10, 12, 14, 16, 18, 20 and 22 retain #10083's
@@ -46,7 +48,7 @@ driver and checksum manifests remain byte-identical.
 Independent literal digests in `tests/review/test_model_catalog.py` pin the
 overlay and this specification. Its scope test verifies both configurations,
 the exact changed-row denominator, complete hook values and full layered
-row equality after removing only the approved insertion. A separate mutation
+row equality after removing only the approved insertion and source binding. A separate mutation
 test proves unrelated adapter changes survive without mutating the input.
 The scope check rejects the stale whole-surface overlay and its obsolete
 hook commands; independent full captures verify the composed baseline.
