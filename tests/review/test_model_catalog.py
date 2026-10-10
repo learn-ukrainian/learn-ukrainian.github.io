@@ -10,6 +10,7 @@ import runpy
 import shutil
 import subprocess
 import sys
+import tomllib
 from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
@@ -89,8 +90,58 @@ GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
 GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
 RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
 RESOURCE_OVERLAY = json.loads(gzip.decompress(RESOURCE_OVERLAY_PATH.read_bytes()))
-APPROVED_BASELINE = {**REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"]}
+CODEX_OVERLAY_PATH = FIXTURE / "routing-10305.json.gz"
+CODEX_OVERLAY = json.loads(gzip.decompress(CODEX_OVERLAY_PATH.read_bytes()))
+APPROVED_BASELINE = {
+    **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+    **CODEX_OVERLAY["surfaces"],
+}
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration,surface_key", [("host-cli", "surfaces"), ("no-cli", "no_cli_surfaces")])
+def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuration, surface_key):
+    assert set(CODEX_OVERLAY) == {"surfaces", "no_cli_surfaces"}
+    assert set(CODEX_OVERLAY[surface_key]) == {"adapters"}
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))["adapters"]
+    after = CODEX_OVERLAY[surface_key]["adapters"]
+    assert len(before) == len(after) == len(INPUTS["adapters"]) == 112
+    changed_rows = []
+    expected_hooks = [
+        {
+            "matcher": "^(Bash|Write|Edit|MultiEdit|apply_patch)$",
+            "hooks": [{
+                "type": "command",
+                "command": "bash <SOURCE_ROOT>/scripts/agent_runtime/codex_hook_entry.sh pre-tool-use",
+                "timeout": 45,
+                "statusMessage": "Running Codex tool policy",
+            }],
+        },
+        {
+            "matcher": "Bash",
+            "hooks": [{
+                "type": "command",
+                "command": "<SOURCE_ROOT>/agents_extensions/shared/hooks/guard-public-github-text.py",
+                "timeout": 5,
+            }],
+        },
+    ]
+    for index, (old, new, inputs) in enumerate(zip(before, after, INPUTS["adapters"], strict=True)):
+        if old == new:
+            continue
+        changed_rows.append(index)
+        assert inputs["agent"] in {"codex", "codex-desktop"}
+        assert inputs["isolation"] is False
+        restored = deepcopy(new)
+        cmd = restored["value"]["cmd"]
+        position = cmd.index("--dangerously-bypass-hook-trust") - 2
+        assert cmd[position:position + 4] == ["--enable", "hooks", "--dangerously-bypass-hook-trust", "-c"]
+        assert tomllib.loads(cmd[position + 4]) == {"hooks": {"PreToolUse": expected_hooks}}
+        assert cmd[position + 5:position + 7] == ["--disable", "apps"]
+        del cmd[position:position + 5]
+        assert restored == old
+    assert changed_rows == [0, 2, 4, 6]
 
 
 def test_resource_policy_fixture_changes_only_approved_fallback_rows():
@@ -194,12 +245,13 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert (semantic_changes, selection_changes) == (24, 8)
 
 
-# Literal digests bind the #10205 Cursor wire pin and allowlist revision of both
-# configurations; see SPEC.md.
+# Literal digests bind the historical #10205 fixtures and approved issue
+# overlays for both configurations; see SPEC.md.
 PINNED_DIGESTS = {
+    "routing-10305.json.gz": "0bd794e7808037ec5b561828fe4e1ba5e10b338b2da31c4e92ec0cd57a7e606c",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
-    "SPEC.md": "c0bb7c80731b46d1fee874b8a26bd8f77c141bf1d5c43abf65375e27c2685faa",
+    "SPEC.md": "5194f8e73f93673bd63a539768492246fbe125ea13284a73666504c89fd1c4c8",
     "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -514,6 +566,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
     assert actual == {
         **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+        **CODEX_OVERLAY["no_cli_surfaces"],
     }
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]

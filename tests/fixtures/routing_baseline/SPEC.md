@@ -1,5 +1,50 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Codex worker safety-hook overlay (#10305)
+
+`routing-10305.json.gz` replaces only the `adapters` surface, after the
+review-capacity, Gemini and resource-policy overlays. Its `surfaces` key holds
+the host-CLI adapter rows; `no_cli_surfaces` holds the independent no-CLI rows.
+Separate adapter surfaces preserve each configuration's existing binary
+discovery results and construction refusals.
+
+Both configurations were regenerated against the #10305 implementation using
+the byte-pinned `capture.py` through the test module's scoped `CAPTURE_RUNNER`
+cache, with `--configuration host-cli` and `--configuration no-cli`. Both
+captures change exactly four of the 112 adapter rows:
+
+| Row | Agent | Mode | Isolation |
+| --- | --- | --- | --- |
+| 0 | `codex` | read-only | false |
+| 2 | `codex` | workspace-write | false |
+| 4 | `codex-desktop` | read-only | false |
+| 6 | `codex-desktop` | workspace-write | false |
+
+Each changed row inserts five argv tokens immediately before the existing
+`--disable apps`: `--enable`, `hooks`, `--dangerously-bypass-hook-trust`, `-c`
+and the inline `hooks.PreToolUse` TOML value. That value contains exactly two
+groups. The `^(Bash|Write|Edit|MultiEdit|apply_patch)$` group runs the tracked
+`scripts/agent_runtime/codex_hook_entry.sh pre-tool-use` through `bash`, with
+timeout 45 and status message `Running Codex tool policy`. The `Bash` group
+runs the tracked shared `guard-public-github-text.py`, with timeout 5. Both
+hooks have type `command`; source paths retain the capture's `<SOURCE_ROOT>`
+normalization. The trust flag admits these tracked non-managed hooks, while
+the inline binding avoids dependence on deployed project-hook discovery.
+
+Removing exactly those five tokens reproduces each historical row, including
+all metadata, mode flags, output paths and the final apps disable. Every other
+adapter row, including isolated-review refusals, is unchanged. Fresh captures
+also reproduce every other approved surface, input matrix and historical
+occurrence artifact unchanged. The historical compressed baselines, capture
+driver and checksum manifests remain byte-identical.
+
+Independent literal digests in `tests/review/test_model_catalog.py` pin the
+overlay and this specification. Its scope test verifies both configurations,
+the exact changed-row denominator, complete hook values and full historical
+row equality after removing only the approved insertion. This fixture proves
+invocation construction; runtime hook behavior is checked separately by
+`tests/test_codex_hooks_contract.py`.
+
 ## Worker resource-policy overlay (#10263)
 
 The 2026-10-09 resource-policy order is represented by the hash-pinned
