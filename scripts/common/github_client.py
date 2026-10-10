@@ -76,7 +76,10 @@ def _cache_directory():
     """
     override = os.environ.get("LU_GITHUB_CACHE_DIR")
     if override:
-        return Path(override)
+        path = Path(override)
+        if path.exists() and not os.access(path, os.W_OK):
+            return None
+        return path
     try:
         root = Path(__file__).resolve().parents[2]
         marker = root / ".git"
@@ -92,7 +95,13 @@ def _cache_directory():
                     return None
                 marker = (marker / content).resolve()
         if marker.name == ".git" and marker.is_dir() and (marker / "HEAD").is_file():
-            return marker.parent / "batch_state" / "github-client"
+            candidate = marker.parent / "batch_state" / "github-client"
+            if candidate.exists():
+                if not os.access(candidate, os.W_OK):
+                    return None
+            elif not os.access(marker.parent, os.W_OK):
+                return None
+            return candidate
     except (OSError, ValueError, RuntimeError):
         pass
     return None
@@ -248,13 +257,18 @@ class GitHubClient:
     def _db(self):
         path = ":memory:"
         if self.cache_dir is not None:
-            self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-            path = self.cache_dir / "cache.sqlite3"
+            try:
+                self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+                path = self.cache_dir / "cache.sqlite3"
+            except OSError:
+                self.cache_dir = None
+                path = ":memory:"
         db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
         if self.cache_dir is None:
             self._memory_db = db
         else:
-            os.chmod(path, 0o600)
+            with suppress(OSError):
+                os.chmod(path, 0o600)
         db.execute(
             "CREATE TABLE IF NOT EXISTS cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))"
         )
@@ -1964,7 +1978,11 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
                         row.update(body=issue["body"], labels={"nodes": [{"name": r["name"]} for r in issue["labels"]]})
                 else:
                     row = {"body": issue["body"], "subIssues": connection(number, fields.get("cursor"))}
-                value = {"data": {"repository": {"nameWithOwner": issue["repository_url"].split("/repos/", 1)[1], "issue": row}}}
+                value = {
+                    "data": {
+                        "repository": {"nameWithOwner": issue["repository_url"].split("/repos/", 1)[1], "issue": row}
+                    }
+                }
         elif operation == "merge-facts":
             groups = {}
             for slug, number in fields["batch"]:
