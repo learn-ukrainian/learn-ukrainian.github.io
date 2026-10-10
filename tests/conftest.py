@@ -11,15 +11,32 @@ import os
 # is not ``_API_KEY``. Comparison is case-insensitive. Names that merely look
 # secret stay visible: ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``.
 # This process owns its environment, so the parent shell is unchanged.
-# ``LU_TEST_CREDENTIAL_STRIP`` marks the process tree: an xdist worker, a
-# nested ``pytest.main``, or a child pytest that already has the marker must
-# not strip again, or it would discard a name the suite published after the
-# first strip. The marker is outside the suffix contract.
-# Residual: installed third-party plugins and explicit ``-p`` plugins load
-# before any conftest. The pytest plugins in this repo's venv do not read a
-# credential-shaped environment name, so that load order does not retain one.
+#
+# ``LU_TEST_CREDENTIAL_STRIP`` is ``<pid>:<starttime>`` of the process that
+# stripped. ``starttime`` is field 22 of ``/proc/<pid>/stat`` (clock ticks
+# since boot), so a recycled pid no longer matches. A later import skips the
+# strip only when that pid is this process or an ancestor and the token still
+# matches the process. The walk starts at ``os.getppid`` and reads each
+# parent's ``/proc/<pid>/stat``, and it stops after
+# ``_CREDENTIAL_STRIP_ANCESTOR_LIMIT`` steps. An empty, malformed, foreign, or
+# stale marker is untrusted: this process strips and overwrites the marker.
+# Any parse or lookup error fails closed and strips. The token is also kept in
+# memory, so a nested ``pytest.main`` in this process skips. A child pytest
+# and an xdist worker skip because the stripping process is an ancestor. The
+# marker is outside the suffix contract.
+#
+# Plugins that load before this conftest — AnyIO, pytest-cov, pytest-mock,
+# pytest-rerunfailures, pytest-timeout, pytest-xdist, and the repo's own
+# dispatch-cap plugin — do not read credential-suffix names, so that load
+# order does not retain one.
 _CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
 _CREDENTIAL_STRIP_MARKER = "LU_TEST_CREDENTIAL_STRIP"
+_CREDENTIAL_STRIP_ANCESTOR_LIMIT = 64
+# proc(5): after comm's closing parenthesis, index 1 is ppid (stat field 4)
+# and index 19 is starttime (stat field 22).
+_STAT_PPID = 1
+_STAT_STARTTIME = 19
+_PROCESS_STRIP_TOKEN: str | None = None
 
 
 def _is_credential_shaped_env_name(name: str) -> bool:
@@ -27,14 +44,124 @@ def _is_credential_shaped_env_name(name: str) -> bool:
     return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
 
 
+def _proc_stat_fields(pid: int) -> list[bytes] | None:
+    """Fields of ``/proc/<pid>/stat`` after ``comm``, or None on any error."""
+    if pid <= 0:
+        return None
+    try:
+        with open(f"/proc/{pid}/stat", "rb") as handle:
+            raw = handle.read()
+    except OSError:
+        return None
+    close = raw.rfind(b")")
+    if close < 0 or close + 2 >= len(raw):
+        return None
+    fields = raw[close + 2 :].split()
+    if len(fields) <= _STAT_STARTTIME:
+        return None
+    return fields
+
+
+def _parent_pid(pid: int) -> int | None:
+    """Parent pid from ``/proc/<pid>/stat``, or None when it cannot be read."""
+    fields = _proc_stat_fields(pid)
+    if fields is None:
+        return None
+    try:
+        parent = int(fields[_STAT_PPID])
+    except ValueError:
+        return None
+    if parent <= 0:
+        return None
+    return parent
+
+
+def _process_start_token(pid: int) -> str | None:
+    """Start-time token for ``pid``, or None when the stat file cannot be read."""
+    fields = _proc_stat_fields(pid)
+    if fields is None:
+        return None
+    try:
+        token = fields[_STAT_STARTTIME].decode("ascii")
+    except UnicodeDecodeError:
+        return None
+    if not token.isdigit():
+        return None
+    return token
+
+
+def _pid_is_ancestor(pid: int) -> bool:
+    """True when ``pid`` is a strict ancestor. Errors and a deep chain are False."""
+    if pid <= 0 or pid == os.getpid():
+        return False
+    current = os.getppid()
+    seen: set[int] = set()
+    for _ in range(_CREDENTIAL_STRIP_ANCESTOR_LIMIT):
+        if current <= 0 or current in seen:
+            return False
+        if current == pid:
+            return True
+        seen.add(current)
+        parent = _parent_pid(current)
+        if parent is None or parent == current:
+            return False
+        current = parent
+    return False
+
+
+def _parse_strip_marker(value: str) -> tuple[int, str] | None:
+    """Return ``(pid, token)`` or None when ``value`` is not ``<pid>:<token>``."""
+    pid_text, sep, token = value.partition(":")
+    if sep != ":" or not pid_text.isascii() or not pid_text.isdigit() or not token.isascii():
+        return None
+    if ":" in token or len(pid_text) > 20 or len(token) > 64 or any(char.isspace() for char in token):
+        return None
+    try:
+        pid = int(pid_text)
+    except ValueError:
+        return None
+    if pid <= 0 or str(pid) != pid_text:
+        return None
+    return pid, token
+
+
+def _strip_marker_is_trusted(value: str) -> bool:
+    """True when ``value`` names this process or a matching living ancestor."""
+    parsed = _parse_strip_marker(value)
+    if parsed is None:
+        return False
+    pid, token = parsed
+    if pid == os.getpid():
+        if _PROCESS_STRIP_TOKEN is not None and token == _PROCESS_STRIP_TOKEN:
+            return True
+        live = _process_start_token(pid)
+        return live is not None and token == live
+    if not _pid_is_ancestor(pid):
+        return False
+    live = _process_start_token(pid)
+    return live is not None and token == live
+
+
+def _install_strip_marker() -> None:
+    """Overwrite the marker with this process's identity after a strip."""
+    global _PROCESS_STRIP_TOKEN
+    token = _process_start_token(os.getpid())
+    if token is None:
+        # Descendants cannot match an in-memory nonce, so they strip.
+        token = "nonce-" + os.urandom(8).hex()
+    _PROCESS_STRIP_TOKEN = token
+    os.environ[_CREDENTIAL_STRIP_MARKER] = f"{os.getpid()}:{token}"
+
+
 def _strip_ambient_credential_env() -> None:
-    """Drop ambient credential-shaped names once per process tree."""
-    if _CREDENTIAL_STRIP_MARKER in os.environ:
+    """Drop ambient credential-shaped names unless the marker names this tree."""
+    marker = os.environ.get(_CREDENTIAL_STRIP_MARKER)
+    if marker is not None and _strip_marker_is_trusted(marker):
         return
     for name in tuple(os.environ):
         if _is_credential_shaped_env_name(name):
             del os.environ[name]
-    os.environ[_CREDENTIAL_STRIP_MARKER] = "1"
+    _install_strip_marker()
 
 
 _strip_ambient_credential_env()
