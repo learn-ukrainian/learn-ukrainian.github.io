@@ -94,6 +94,19 @@ def _manifest() -> dict:
     return json.loads(HOOKS_CONFIG.read_text(encoding="utf-8"))
 
 
+def test_grok_post_compact_reminder_uses_sol_worker_default(tmp_path: Path) -> None:
+    result = subprocess.run(
+        ["bash", str(POST_COMPACT_HOOK)], cwd=tmp_path,
+        env={**os.environ, "GROK_AGENT": "grok", "SESSION_EPIC": "", "CODEX_COMPACT_SESSION_START": ""},
+        capture_output=True, text=True, timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    context = json.loads(result.stdout)["additionalContext"]
+    assert "default eligible code worker = Sol high" in context
+    assert "explicit Luna/Flash bounded routes require a Sol advisory envelope" in context
+    assert "default bounded work = Sol advisory envelope" not in context
+
+
 def test_codex_manifest_uses_only_supported_result_event() -> None:
     hooks = _manifest()["hooks"]
 
@@ -119,7 +132,7 @@ def test_codex_project_config_leaves_root_model_user_selectable() -> None:
     assert config["agents"] == {
         "enabled": True,
         "max_concurrent_threads_per_session": 3,
-        "default_subagent_model": "gpt-6-luna",
+        "default_subagent_model": "gpt-6.1-sol",
         "default_subagent_reasoning_effort": "high",
         "interrupt_message": True,
     }
@@ -135,7 +148,7 @@ def test_codex_compaction_has_one_bounded_hydration_path() -> None:
     assert compact_group["matcher"] == "compact"
     assert "CODEX_COMPACT_SESSION_START=1" in compact_group["hooks"][0]["command"]
     assert 'post-compact.sh"' in compact_group["hooks"][0]["command"]
-    assert compact_group["hooks"][0]["timeout"] == 10
+    assert compact_group["hooks"][0]["timeout"] == 15
     assert compact_group["hooks"][0]["additionalContextLimit"] == 800
     assert "PostCompact" not in hooks
 
@@ -312,6 +325,18 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     assert '"schema_name":"HydrationCapsuleV1"' in context
     assert ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" in context
     assert "continue only from the capsule's next_drive_boundary" in context
+
+
+def test_lane_goal_file_outranks_capsule_boundary(tmp_path: Path) -> None:
+    epic_dir = tmp_path / ".claude" / "devops-epic"
+    epic_dir.mkdir(parents=True)
+    (epic_dir / "CODEX-DRIVER-HANDOFF.md").write_text("# durable driver state\n", encoding="utf-8")
+    (epic_dir / "DRIVER-STATE.md").write_text("# goal\n", encoding="utf-8")
+    context = _run_bound_codex_compact(tmp_path)
+    assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" not in context
+    assert "Lane goal file: .claude/devops-epic/DRIVER-STATE.md." in context
+    assert "outranks the capsule's next_drive_boundary" in context
+    assert "continue only from the capsule's next_drive_boundary" not in context
 
 
 def test_first_codex_driver_uses_existing_shared_handoff(
@@ -808,3 +833,17 @@ def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Pa
 
     assert completed.returncode == 0, completed.stderr
     assert not marker.exists()
+
+
+def test_compact_hydrate_bound_fits_its_retries() -> None:
+    source = (REPO_ROOT / "agents_extensions/shared/hooks/post-compact.sh").read_text(encoding="utf-8")
+    assert 'HYDRATION=$(run_bounded 6 "$BOUNDED_PYTHON"' in source
+    hooks = json.loads((REPO_ROOT / "agents_extensions/codex/hooks.json").read_text(encoding="utf-8"))
+    compact = [
+        hook
+        for group in hooks["hooks"]["SessionStart"]
+        if group.get("matcher") == "compact"
+        for hook in group["hooks"]
+    ]
+    # Selector (2 s) + stream (2 s) + hydrate (6 s) must fit inside the hook timeout.
+    assert compact and compact[0]["timeout"] > 2 + 2 + 6

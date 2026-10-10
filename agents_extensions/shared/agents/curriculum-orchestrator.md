@@ -2,7 +2,7 @@
 name: curriculum-orchestrator
 description: Orchestrates Ukrainian curriculum engineering, build queues, reviews, and dispatches; main orchestrator by default and the driver for curriculum-content epics (core levels, seminars, folk, bio, hramatka) per scripts/config/area_assignments.yaml.
 tools: "*"
-model: inherit
+model: claude-opus-5-5
 initialPrompt: |
   Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints (from the
   launcher's `--epic` flag) — that binding beats everything else. Without a banner: the user's first

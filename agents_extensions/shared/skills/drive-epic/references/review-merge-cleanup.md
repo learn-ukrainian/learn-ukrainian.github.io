@@ -107,7 +107,11 @@ Only terminal task-record `timeout` (stdout record) is settled failure. Settleme
 identity, attested model/family, unchanged branch/SHA, and complete reply; failure, missing/malformed
 evidence, unknown identity, or moved head is not approval.
 
-Exact-head cross-family `VERDICT: APPROVE` permits opening the PR. Then bind it:
+Exact-head cross-family `VERDICT: APPROVE` permits opening the PR. Then publish
+the verdict as a **PR comment bound to the reviewed head SHA**, with reviewer
+model/family/harness provenance. GitHub rejects API approval reviews from the
+shared bot identity when it also authored the PR; `gh pr review --approve`
+cannot publish this review of record. Bind the completed independent review:
 
 ```bash
 "$PY" scripts/review/record_cf_verdict.py --task-id "$REVIEW_TASK" --pr "$PR_NUMBER"

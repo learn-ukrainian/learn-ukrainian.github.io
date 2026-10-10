@@ -17,7 +17,18 @@ SCRIPT_DIR = Path(__file__).parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 
-from .checks.learner_state import check_learner_state
-from .core import audit_module
-
 __all__ = ["audit_module", "check_learner_state"]
+
+
+def __getattr__(name: str):
+    # Importing a standalone audit utility must not load curriculum checks.
+    # Keep the public callable exports available to existing audit consumers.
+    if name == "audit_module":
+        from .core import audit_module
+
+        return audit_module
+    if name == "check_learner_state":
+        from .checks.learner_state import check_learner_state
+
+        return check_learner_state
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -76,6 +76,52 @@ _SCHEMA_DATA: dict[str, Any] = {
     },
 }
 
+_NULL_S: dict[str, Any] = {"type": ["string", "null"]}
+_NULL_N: dict[str, Any] = {"type": ["number", "null"]}
+
+
+def _obj(required: list[str], properties: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": required,
+        "properties": properties,
+    }
+
+
+_ALERT = _obj(
+    ["name", "severity", "summary", "starts_at", "state"],
+    {"name": _NULL_S, "severity": _NULL_S, "summary": _NULL_S, "starts_at": _NULL_S, "state": _NULL_S},
+)
+_STAT = _obj(
+    ["name", "value", "status"],
+    {
+        "name": {"enum": ["disk_pct", "memory_pct", "drivers_live", "probe_status"]},
+        "value": _NULL_N,
+        "status": {"enum": ["ok", "unavailable"]},
+    },
+)
+_LINK = _obj(
+    ["name", "href"],
+    {"name": {"enum": ["overview", "fleet"]}, "href": {"type": "string", "minLength": 1}},
+)
+
+_DATA_SCHEMAS: dict[str, dict[str, Any]] = {
+    "fleet.v1.alerts": _obj(["alerts"], {"alerts": {"type": "array", "items": _ALERT}}),
+    "fleet.v1.stats": _obj(
+        ["stats"],
+        {
+            "stats": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": _STAT,
+            }
+        },
+    ),
+    "fleet.v1.links": _obj(["links"], {"links": {"type": "array", "items": _LINK}}),
+}
+
 
 def utc_timestamp(moment: datetime | None = None) -> str:
     """UTC timestamp with a ``Z`` suffix and whole seconds."""
@@ -115,10 +161,230 @@ def _envelope_schema(schema_id: str, data_schema: dict[str, Any]) -> dict[str, A
     }
 
 
+_NULLABLE_NUMBER: dict[str, Any] = {"type": ["number", "null"]}
+_NULLABLE_STRING: dict[str, Any] = {"type": ["string", "null"]}
+_TIMESTAMP_OR_NULL: dict[str, Any] = {
+    "anyOf": [
+        {"type": "string", "pattern": TIMESTAMP_PATTERN},
+        {"type": "null"},
+    ]
+}
+
+_FLAG: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["name", "value", "source", "checked_at"],
+    "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "value": {"enum": [True, False, "unknown"]},
+        "source": _NULLABLE_STRING,
+        "checked_at": _TIMESTAMP_OR_NULL,
+    },
+}
+
+_EPIC: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["epic", "depends_on", "restart_condition", "state", "flags"],
+    "properties": {
+        "epic": {"type": "string", "minLength": 1},
+        "depends_on": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "restart_condition": _NULLABLE_STRING,
+        "state": {
+            "anyOf": [
+                {"enum": ["working", "idle", "stuck", "dead", "paused", "off"]},
+                {"type": "null"},
+            ]
+        },
+        "flags": {"type": "array", "items": _FLAG},
+    },
+}
+
+_LAYER: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["layer", "kind", "epics"],
+    "properties": {
+        "layer": {"enum": [0, 1, None]},
+        "kind": {"enum": ["foundations", "consumers", "postponed"]},
+        "epics": {"type": "array", "items": _EPIC},
+    },
+}
+
+_ROSTER_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["layers", "foundation_status", "active_alerts"],
+    "properties": {
+        "layers": {"type": "array", "minItems": 3, "maxItems": 3, "items": _LAYER},
+        "foundation_status": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["foundation", "red", "reasons"],
+                "properties": {
+                    "foundation": {"type": "string", "minLength": 1},
+                    "red": {"type": ["boolean", "null"]},
+                    "reasons": {"type": "array", "items": {"type": "string"}},
+                },
+            },
+        },
+        "active_alerts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["name", "summary"],
+                "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "summary": _NULLABLE_STRING,
+                },
+            },
+        },
+    },
+}
+
+_BUDGET_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["subscriptions"],
+    "properties": {
+        "subscriptions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["subscription", "used_pct", "elapsed_pct", "pace", "reset_at", "recommendation"],
+                "properties": {
+                    "subscription": {"type": "string", "minLength": 1},
+                    "used_pct": _NULLABLE_NUMBER,
+                    "elapsed_pct": _NULLABLE_NUMBER,
+                    "pace": _NULLABLE_STRING,
+                    "reset_at": _TIMESTAMP_OR_NULL,
+                    "recommendation": _NULLABLE_STRING,
+                },
+            },
+        }
+    },
+}
+
+_CI_VALUE: dict[str, Any] = {"anyOf": [{"enum": ["green", "red", "pending"]}, {"type": "null"}]}
+_MQ_VALUE: dict[str, Any] = {"anyOf": [{"enum": ["queued", "not_queued", "dropped"]}, {"type": "null"}]}
+
+_PR_ITEM: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "number",
+        "repo",
+        "title",
+        "draft",
+        "head_sha",
+        "epics",
+        "ci",
+        "cf",
+        "gate",
+        "mq",
+        "keeper",
+        "flake_grant",
+        "ready_since",
+        "stale_green",
+        "minutes",
+        "stacked_base",
+    ],
+    "properties": {
+        "number": {"type": "integer", "minimum": 1},
+        "repo": {"type": "string", "minLength": 1},
+        "title": {"type": "string"},
+        "draft": {"type": "boolean"},
+        "head_sha": {"type": "string", "minLength": 1},
+        "epics": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "ci": _CI_VALUE,
+        "cf": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["verdict", "at_head"],
+            "properties": {
+                "verdict": {"type": "string", "minLength": 1},
+                "at_head": {"type": "boolean"},
+            },
+        },
+        "gate": _CI_VALUE,
+        "mq": _MQ_VALUE,
+        "keeper": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["hold", "reason"],
+            "properties": {
+                "hold": {"type": ["boolean", "null"]},
+                "reason": {"type": ["string", "null"]},
+            },
+        },
+        "flake_grant": {
+            "anyOf": [
+                {"type": "null"},
+                {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["decision", "used", "at"],
+                    "properties": {
+                        "decision": {"enum": ["grant", "deny"]},
+                        "used": {"type": "boolean"},
+                        "at": _TIMESTAMP_OR_NULL,
+                    },
+                },
+            ]
+        },
+        "ready_since": _TIMESTAMP_OR_NULL,
+        "stale_green": {"type": "boolean"},
+        "minutes": {"type": ["integer", "null"], "minimum": 0},
+        "stacked_base": {
+            "anyOf": [
+                {"type": "null"},
+                {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["number", "ref", "state", "mq"],
+                    "properties": {
+                        "number": {"type": ["integer", "null"], "minimum": 1},
+                        "ref": {"type": "string", "minLength": 1},
+                        "state": {"anyOf": [{"const": "open"}, {"type": "null"}]},
+                        "mq": _MQ_VALUE,
+                    },
+                },
+            ]
+        },
+    },
+}
+
+_PRS_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["prs"],
+    "properties": {"prs": {"type": "array", "items": _PR_ITEM}},
+}
+
+_PR_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["pr"],
+    "properties": {"pr": {"anyOf": [_PR_ITEM, {"type": "null"}]}},
+}
+
+
 def endpoint_schema(schema_id: str) -> dict[str, Any]:
     """JSON Schema for one fleet board response, keyed by its ``schema`` value."""
     if schema_id == "fleet.v1.index":
         return _envelope_schema(schema_id, _INDEX_DATA)
     if schema_id == "fleet.v1.schema":
         return _envelope_schema(schema_id, _SCHEMA_DATA)
-    return _envelope_schema(schema_id, {"type": "object"})
+    if schema_id == "fleet.v1.roster":
+        return _envelope_schema(schema_id, _ROSTER_DATA)
+    if schema_id == "fleet.v1.budget":
+        return _envelope_schema(schema_id, _BUDGET_DATA)
+    if schema_id == "fleet.v1.prs":
+        return _envelope_schema(schema_id, _PRS_DATA)
+    if schema_id == "fleet.v1.pr":
+        return _envelope_schema(schema_id, _PR_DATA)
+    return _envelope_schema(schema_id, _DATA_SCHEMAS.get(schema_id, {"type": "object"}))

@@ -58,8 +58,9 @@ Options:
                              an empty model or a forwarded --model. Gemini driver
                              default: gemini-3.1-pro-high (gemini-3.8-flash-high is
                              also certified); Gemini interactive default:
-                             gemini-3.8-flash-high. Claude
-                             interactive / Grok: omit to keep last TUI/session model.
+                             gemini-3.8-flash-high. Claude interactive: omit to use
+                             project settings (Sonnet 5.5). Grok: omit to keep
+                             last TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
                              --reasoning-effort). Claude driver default: high. Otherwise
                              omit to keep last session selection. Other providers ignore.
@@ -81,7 +82,8 @@ Environment:
                              curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
                              claude-opus-5-5[1m]; Cursor: grok-4.7-high; empty
-                             for Claude interactive/Grok = last session).
+                             for Claude interactive = project settings (Sonnet 5.5);
+                             empty for Grok = last session).
   LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
                              empty for Claude interactive/Grok = last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
@@ -317,8 +319,8 @@ launcher_defaults() {
   case "$LC_PROVIDER" in
     claude)
       # Driver seats the orchestrator on Opus 5.5 with the 1M window (operator
-      # 2026-09-22); effort defaults to high below. Interactive leaves model and
-      # effort alone so Claude Code keeps the last TUI/session selection.
+      # 2026-09-22); effort defaults to high below. Interactive leaves model to
+      # project settings (Sonnet 5.5) and effort to the session selection.
       if [ "$LC_MODE" = driver ]; then
         LC_MODEL="${LAUNCHER_MODEL:-claude-opus-5-5[1m]}"
       else
@@ -1279,9 +1281,8 @@ launcher_forward_args_have_agent() {
 }
 
 launcher_inject_driver_agent() {
-  # Claude Code selects its system prompt from --agent. The project default
-  # (.claude/settings.json "agent") is the main orchestrator, which is the wrong
-  # prompt for every non-curriculum driver lane, so resolve the lane's
+  # Claude Code selects its system prompt and model from --agent. Routine
+  # interactive settings have no default agent, so resolve the lane's
   # driver_agent_type from scripts/config/area_assignments.yaml and inject it
   # unless the caller chose an agent explicitly.
   [ "$LC_PROVIDER" = "claude" ] || return 0
@@ -1296,7 +1297,7 @@ launcher_inject_driver_agent() {
   [ -x "$py" ] || return 0
   agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m scripts.orchestration.driver_agent_type --lane "$LC_EPIC" 2>/dev/null || true)"
   if [ -z "$agent_type" ]; then
-    printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; keeping the settings default agent\n' "$LC_EPIC" >&2
+    printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; no named agent selected; using the launcher model or project settings (Sonnet 5.5)\n' "$LC_EPIC" >&2
     return 0
   fi
   LC_FORWARD_ARGS=(--agent "$agent_type" "${LC_FORWARD_ARGS[@]}")

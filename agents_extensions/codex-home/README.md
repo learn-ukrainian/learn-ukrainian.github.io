@@ -13,8 +13,10 @@ guidance, and named profiles. The regular driver uses GPT-6.1 Sol high.
 | `sol_ukrainian_content_high` | `gpt-6.1-sol` | high | workspace-write |
 | `sol_advisor_high` | `gpt-6.1-sol` | high | read-only |
 
-The default spawned agent is Luna high. Use Luna medium explicitly for routine
-scouting and high for ambiguous investigations or bounded coding. Sol high
+The default spawned agent is Sol high for eligible code work. Luna profiles
+remain available explicitly with a complete Sol advisory envelope when task
+fit and resource policy admit. Use Luna medium for routine scouting and high
+for ambiguous investigations or bounded coding. Sol high
 handles broader coding and adversarial review. `sol_advisor_high` runs at high
 as the on-demand advisor for consequential design and difficult linguistic
 judgment. Advice and designated approval come from Opus 5.5 and Sol 6.1:
