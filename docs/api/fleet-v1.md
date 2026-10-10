@@ -183,15 +183,17 @@ were not read are null.
 last progress time, and `stalled`. `stalled` is true when there has been
 no progress for more than `FLEET_DOWNLOAD_STALL_MIN` minutes (15 when
 unset), evaluated when the response is built. A missing progress time
-leaves `stalled` null. A source name is kept only when it is a plain
-identifier. An unreadable file
-sets `data.state` to `unknown` and the source to `unavailable`.
+leaves `stalled` null. Source names are published only through approved
+aliases; every other string becomes `unlisted`. No download aliases are
+configured by default. An unreadable file sets `data.state` to `unknown`
+and the source to `unavailable`.
 
 ### `GET /api/fleet/v1/harness`
 
 `FLEET_HARNESS_SNAPSHOT`. One row per driver: context percent, compactions,
 stop count, ask count, idle minutes, and `measured_at`. A missing
-measurement is null. A driver id is kept only when it is a plain
-identifier. `GET /api/fleet/v1/harness/{agent_id}` returns that driver, or
-null when the id is absent. The id is not copied into the body when it is
-absent.
+measurement is null. Driver ids are published only through approved aliases:
+`claude`, `codex`, `cursor`, `grok-bot`, and `qa-engineer`. Every other
+string becomes `unlisted`. `GET /api/fleet/v1/harness/{agent_id}` returns
+that driver, or null when the id is absent or `unlisted`. An unknown or
+unsafe lookup id is not copied into the body.

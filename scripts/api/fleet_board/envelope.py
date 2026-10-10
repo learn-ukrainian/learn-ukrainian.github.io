@@ -152,7 +152,6 @@ _DATA_SCHEMAS: dict[str, dict[str, Any]] = {
     ),
     "fleet.v1.harness": _obj(["drivers"], {"drivers": {"type": "array", "items": _DRIVER}}),
     "fleet.v1.harness_driver": _obj(["driver"], {"driver": {"anyOf": [_DRIVER, {"type": "null"}]}}),
-
     "fleet.v1.alerts": _obj(["alerts"], {"alerts": {"type": "array", "items": _ALERT}}),
     "fleet.v1.stats": _obj(
         ["stats"],
