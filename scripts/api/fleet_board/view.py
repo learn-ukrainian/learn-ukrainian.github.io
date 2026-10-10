@@ -19,7 +19,7 @@ from .activity import (
     text,
 )
 from .snapshot import as_timestamp, finite_number, load_snapshot, mapping, utc_now
-from .sources import SourceReport, collect_source_reports, report
+from .sources import SourceReport, report
 
 USAGE_NEAR_FLOOR = 80.0
 USAGE_NEAR_GAP = 20.0
@@ -42,15 +42,6 @@ class Board:
     epics: list[dict[str, Any]]
     agents: list[dict[str, Any]]
     attention: list[dict[str, Any]]
-
-
-def _overlay_sources(
-    base: tuple[SourceReport, ...],
-    replacements: Mapping[str, SourceReport],
-    extra: tuple[SourceReport, ...],
-) -> tuple[SourceReport, ...]:
-    rows = [replacements.get(item.name, item) for item in base]
-    return tuple(rows) + extra
 
 
 def _whole_number(value: object) -> int | None:
@@ -570,13 +561,6 @@ def load_board(environ: Mapping[str, str] | None = None) -> Board:
         except (TypeError, ValueError, OverflowError, ArithmeticError):
             continue
     attention = _sort_attention(attention_parts)
-    try:
-        base = collect_source_reports(environ)
-    except Exception:
-        base = (report("sources", "unavailable"),)
-    sources = _overlay_sources(
-        base,
-        {"roster_snapshot": roster_report, "harness_snapshot": harness_report},
-        (delegate_report, occupancy_report),
-    )
+    # Report only sources evaluated above, never unrelated location settings.
+    sources = (roster_report, harness_report, delegate_report, occupancy_report)
     return Board(sources=sources, epics=epics, agents=agents, attention=attention)

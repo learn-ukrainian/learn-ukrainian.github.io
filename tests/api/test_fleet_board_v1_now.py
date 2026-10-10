@@ -339,6 +339,26 @@ def test_fixture_snapshot_states_and_attention_order(monkeypatch: pytest.MonkeyP
     assert str(tmp_path) not in response.text
 
 
+@pytest.mark.parametrize("endpoint", ["now", "epics", "agents", "epics/alpha", "agents/driver-alpha"])
+@pytest.mark.parametrize("unrelated_configured", [False, True])
+def test_board_reports_only_evaluated_sources(
+    monkeypatch: pytest.MonkeyPatch, tmp_path, endpoint: str, unrelated_configured: bool,
+) -> None:
+    _install(monkeypatch, tmp_path, _roster(), _harness())
+    if unrelated_configured:
+        for source in sources_mod.EXTERNAL_SOURCES:
+            if source.name not in {"roster_snapshot", "harness_snapshot"}:
+                monkeypatch.setenv(source.env_var, "configured-but-unread")
+
+    response = client.get(f"/api/fleet/v1/{endpoint}")
+
+    assert response.status_code == 200
+    rows = response.json()["sources"]
+    assert [row["name"] for row in rows] == ["roster_snapshot", "harness_snapshot", "delegate", "occupancy"]
+    assert all(row["status"] == "ok" for row in rows)
+    assert rows[0]["age_s"] == rows[1]["age_s"] == 20
+
+
 def test_missing_snapshot_is_not_configured_and_http_200() -> None:
     response = client.get("/api/fleet/v1/now")
 
