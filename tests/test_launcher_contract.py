@@ -1248,9 +1248,9 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")
     assert result.returncode == 0, result.stderr
     assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
-    # The Opus block switches the driver default to Sonnet before --agent injection.
+    # Unknown usage preserves the driver default before agent injection.
     assert (
-        "would exec claude --model claude-sonnet-5-5 --effort high --agent infra-orchestrator " in result.stdout
+        r"would exec claude --model claude-opus-5-5\[1m\] --effort high --agent infra-orchestrator " in result.stdout
     )
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")

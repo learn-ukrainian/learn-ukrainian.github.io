@@ -59,81 +59,86 @@ def _exec_line(stdout: str) -> str:
 
 
 @pytest.mark.rules_core_absent
-@pytest.mark.parametrize("pct", ("10", "50", "90", "98"))
-def test_default_opus_switches_to_sonnet_regardless_of_usage(pct: str, launch_with_usage) -> None:
+@pytest.mark.parametrize("pct", ("10", "50", "79.9", "80", "89.9"))
+def test_default_opus_obeys_percentage_limit(pct: str, launch_with_usage) -> None:
     result = launch_with_usage(pct, "--epic", "infra")
     assert result.returncode == 0, result.stderr
-    assert "--model claude-sonnet-5-5" in _exec_line(result.stdout)
-    assert "switched from Opus" in result.stderr
+    switched = float(pct) >= 80
+    expected = "claude-sonnet-5-5" if switched else "claude-opus-5-5[1m]"
+    command = shlex.split(_exec_line(result.stdout))
+    assert command[command.index("--model") + 1] == expected
+    assert ("switched from Opus" in result.stderr) == switched
 
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
 @pytest.mark.parametrize("model", ("opus", "claude-opus-5-5[1m]"))
-@pytest.mark.parametrize("pct", ("10", "85", "90", "98", "unknown"))
-def test_explicit_opus_is_refused_regardless_of_usage(name: str, model: str, pct: str, launch_with_usage) -> None:
+@pytest.mark.parametrize("pct", ("80", "85", "89.9"))
+def test_explicit_opus_is_refused_at_percentage_limit(name: str, model: str, pct: str, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(pct, *args, "--model", model, name=name)
-    assert result.returncode == 7
-    assert "Opus refused" in result.stderr
-    assert "LU_CLAUDE_OPUS_BLOCKED=1" in result.stderr
-    assert "would exec" not in result.stdout
-
-
-def test_environment_opus_is_an_explicit_request(launch_with_usage) -> None:
-    result = launch_with_usage("10", "--epic", "infra", env={"LAUNCHER_MODEL": "opus"})
     assert result.returncode == 7
     assert "Opus refused" in result.stderr
     assert "would exec" not in result.stdout
 
 
 @pytest.mark.rules_core_absent
-@pytest.mark.parametrize("model", ((), ("--model", "opus")))
-@pytest.mark.parametrize("pct", ("10", "98", "99", "unknown"))
-def test_disabled_opus_block_still_obeys_stop_threshold(model: tuple[str, ...], pct: str, launch_with_usage) -> None:
-    result = launch_with_usage(pct, "--epic", "infra", *model, env={"LU_CLAUDE_OPUS_BLOCKED": "0"})
-    if pct == "99":
-        assert result.returncode == 7
-        assert "No Claude launch" in result.stderr
-        assert "would exec" not in result.stdout
-    else:
-        assert result.returncode == 0, result.stderr
-        command = shlex.split(_exec_line(result.stdout))
-        assert command[command.index("--model") + 1] == "claude-opus-5-5[1m]"
-        assert "switched from Opus" not in result.stderr
-
-
-@pytest.mark.parametrize("pct", ("10", "99"))
-def test_legacy_overrides_cannot_bypass_policy(pct: str, launch_with_usage) -> None:
+@pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
+@pytest.mark.parametrize("pct", ("10", "79.9", "unknown"))
+@pytest.mark.parametrize("via_env", (False, True))
+def test_explicit_opus_launches_below_limit(name: str, pct: str, via_env: bool, launch_with_usage) -> None:
+    args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(
-        pct, "--epic", "infra", "--model", "opus",
-        env={"LU_CLAUDE_CAP_OVERRIDE": "1", "LU_CLAUDE_OPUS_MAX_PCT": "100"},
+        pct, *args, *(() if via_env else ("--model", "opus")), name=name,
+        env={"LAUNCHER_MODEL": "opus"} if via_env else {},
     )
+    assert result.returncode == 0, result.stderr
+    assert "claude-opus-5-5" in _exec_line(result.stdout)
+    assert "switched from Opus" not in result.stderr
+
+
+def test_environment_opus_is_an_explicit_request(launch_with_usage) -> None:
+    result = launch_with_usage("85", "--epic", "infra", env={"LAUNCHER_MODEL": "opus"})
     assert result.returncode == 7
-    assert ("Opus refused" if pct == "10" else "No Claude launch") in result.stderr
+    assert "Opus refused" in result.stderr
     assert "would exec" not in result.stdout
 
 
+@pytest.mark.rules_core_absent
+@pytest.mark.parametrize("pct", ("85", "90", "99", "100"))
+@pytest.mark.parametrize("model", ((), ("--model", "opus"), ("--model", "sonnet")))
+def test_operator_override_bypasses_both_percentage_limits(pct: str, model: tuple[str, ...], launch_with_usage) -> None:
+    result = launch_with_usage(
+        pct, "--epic", "infra", *model, env={"LU_CLAUDE_CAP_OVERRIDE": "1"},
+    )
+    assert result.returncode == 0, result.stderr
+    expected = "claude-sonnet-5-5" if model == ("--model", "sonnet") else "claude-opus-5-5[1m]"
+    command = shlex.split(_exec_line(result.stdout))
+    assert command[command.index("--model") + 1] == expected
+    crossed_limit = float(pct) >= 90 or model != ("--model", "sonnet")
+    assert ("LU_CLAUDE_CAP_OVERRIDE=1 set by the operator" in result.stderr) == crossed_limit
+    assert "switched from Opus" not in result.stderr
+
+
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
-@pytest.mark.parametrize("pct", ("99", "100"))
+@pytest.mark.parametrize("pct", ("90", "98", "99", "100"))
 @pytest.mark.parametrize("model", ((), ("--model", "sonnet"), ("--model", "opus"), ("--model", "haiku")))
 def test_stop_threshold_refuses_every_claude_launch(name: str, pct: str, model: tuple[str, ...], launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(pct, *args, *model, name=name)
     if name == "start-claude-driver.sh" and model == ("--model", "haiku"):
-        # Certification rejects this driver model before the percentage guard.
         assert result.returncode == 4
         assert "not certified" in result.stderr
     else:
         assert result.returncode == 7
         assert "No Claude launch until the weekly reset" in result.stderr
-        assert "stop at 99%" in result.stderr
+        assert "stop at 90%" in result.stderr
     assert "would exec" not in result.stdout
 
 
 @pytest.mark.rules_core_absent
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
 @pytest.mark.parametrize("model", ("sonnet", "claude-sonnet-5-5"))
-@pytest.mark.parametrize("pct", ("90", "98", "98.9"))
+@pytest.mark.parametrize("pct", ("10", "80", "89.9"))
 def test_explicit_sonnet_launches_below_stop(name: str, model: str, pct: str, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(pct, *args, "--model", model, name=name)
@@ -147,8 +152,7 @@ def test_explicit_sonnet_launches_below_stop(name: str, model: str, pct: str, la
 @pytest.mark.parametrize("model", ((), ("--model", "sonnet")))
 def test_stop_threshold_is_shared_and_configurable(pct: str, model: tuple[str, ...], launch_with_usage) -> None:
     result = launch_with_usage(
-        pct, "--epic", "infra", *model,
-        env={"LU_CLAUDE_STOP_PCT": "95", "LU_CLAUDE_SONNET_STOP_PCT": "100"},
+        pct, "--epic", "infra", *model, env={"LU_CLAUDE_STOP_PCT": "95"},
     )
     if pct == "94":
         assert result.returncode == 0, result.stderr
@@ -157,6 +161,26 @@ def test_stop_threshold_is_shared_and_configurable(pct: str, model: tuple[str, .
         assert result.returncode == 7
         assert "stop at 95%" in result.stderr
         assert "would exec" not in result.stdout
+
+
+@pytest.mark.rules_core_absent
+@pytest.mark.parametrize("pct", ("84.9", "85", "90"))
+@pytest.mark.parametrize("model", ((), ("--model", "opus")))
+def test_opus_limit_is_configurable_without_bypassing_stop(pct: str, model: tuple[str, ...], launch_with_usage) -> None:
+    result = launch_with_usage(
+        pct, "--epic", "infra", *model, env={"LU_CLAUDE_OPUS_MAX_PCT": "85"},
+    )
+    if pct == "90":
+        assert result.returncode == 7
+        assert "No Claude launch" in result.stderr
+    elif pct == "85" and model:
+        assert result.returncode == 7
+        assert "Opus refused" in result.stderr
+    else:
+        assert result.returncode == 0, result.stderr
+        expected = "claude-sonnet-5-5" if pct == "85" else "claude-opus-5-5[1m]"
+        command = shlex.split(_exec_line(result.stdout))
+        assert command[command.index("--model") + 1] == expected
 
 
 @pytest.mark.parametrize("base", (None, "", " \t\n", "/"))
@@ -355,7 +379,7 @@ def test_claude_refuses_forwarded_model_selectors(name: str, pct: str, forwarded
 @pytest.mark.parametrize("forwarded", (("-m", "opus"), ("--mod", "opus"), ("--mod=opus",)))
 @pytest.mark.parametrize("separator", ((), ("--",)))
 @pytest.mark.parametrize("model", ((), ("--model", "sonnet")))
-def test_driver_rejects_forwarded_selectors_while_opus_blocked(
+def test_driver_rejects_forwarded_selectors_before_percentage_check(
     forwarded: tuple[str, ...], separator: tuple[str, ...], model: tuple[str, ...], launch_with_usage,
 ) -> None:
     result = launch_with_usage("85", "--epic", "infra", *model, *separator, *forwarded)
@@ -374,8 +398,10 @@ def test_unknown_usage_warns_and_skips_percentage_check(name: str, model: tuple[
     assert result.stderr.count("WARNING Claude weekly usage unknown") == 1
     assert "would exec" in result.stdout
     if name == "start-claude-driver.sh":
-        assert "--model claude-sonnet-5-5" in _exec_line(result.stdout)
-        assert ("switched from Opus" in result.stderr) == (not model)
+        expected = "claude-sonnet-5-5" if model else "claude-opus-5-5[1m]"
+        command = shlex.split(_exec_line(result.stdout))
+        assert command[command.index("--model") + 1] == expected
+        assert "switched from Opus" not in result.stderr
 
 
 @pytest.mark.rules_core_absent
@@ -386,3 +412,51 @@ def test_claude_still_forwards_other_provider_arguments(launch_with_usage) -> No
     assert "--model claude-sonnet-5-5" in command
     assert "--verbose" in command
     assert "synthetic" in command
+
+
+@pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
+@pytest.mark.parametrize("model", ((), ("--model", "sonnet")))
+@pytest.mark.parametrize("separator", ((), ("--",)))
+@pytest.mark.parametrize("override", ("0", "1"))
+@pytest.mark.parametrize(
+    "forwarded",
+    (
+        ("--settings", '{"model":"opus"}'),
+        ('--settings={"model":"opus"}',),
+        ("--settings", "synthetic-settings.json"),
+        ("--settings",), ("--settings=",),
+        ("--settings", "invalid"),
+        ("--set", '{"model":"opus"}'),
+        ('--set={"model":"opus"}',),
+        ("--fallback-model", "opus"), ("--fallback-model=opus",),
+        ("--fallback-model", "claude-opus-5-5[1m]"),
+        ("--fallback-model",), ("--fallback-model=",),
+        ("--fallback-m", "opus"), ("--fallback-m=opus",),
+    ),
+)
+def test_claude_refuses_unvalidated_configuration_models(
+    name: str, model: tuple[str, ...], separator: tuple[str, ...], override: str,
+    forwarded: tuple[str, ...], launch_with_usage,
+) -> None:
+    args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
+    result = launch_with_usage(
+        "85", *args, *model, *separator, *forwarded, name=name,
+        env={"LU_CLAUDE_CAP_OVERRIDE": override},
+    )
+    assert result.returncode == 2, result.stderr
+    if name == "start-claude.sh" and not separator:
+        assert "unknown launcher flag" in result.stderr
+    else:
+        assert "model selectors must use the launcher --model" in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would enter" not in result.stdout
+    assert "would claim lease" not in result.stdout
+
+
+@pytest.mark.parametrize("variable", ("LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT"))
+@pytest.mark.parametrize("value", ("invalid", "-1", "101", "nan", "80junk"))
+def test_invalid_percentage_limits_fail_closed(variable: str, value: str, launch_with_usage) -> None:
+    result = launch_with_usage("85", "--epic", "infra", env={variable: value, "LU_CLAUDE_CAP_OVERRIDE": "1"})
+    assert result.returncode == 2, result.stderr
+    assert "percentage limits must be numbers" in result.stderr
+    assert "would exec" not in result.stdout

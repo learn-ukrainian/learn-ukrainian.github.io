@@ -19,9 +19,11 @@ launcher_usage() {
       ;;
   esac
   case "$LC_PROVIDER" in
-    claude) provider_env='  LU_CLAUDE_OPUS_BLOCKED    Block explicit Opus and switch defaulted Opus to Sonnet (default 1).
-  LU_CLAUDE_STOP_PCT        Refuse every Claude launch at this weekly usage percent (default 99).
-                             Unknown usage warns and skips this percentage check.
+    claude) provider_env='  LU_CLAUDE_STOP_PCT        Refuse every Claude launch at this weekly usage percent (default 90).
+  LU_CLAUDE_OPUS_MAX_PCT    Switch defaulted Opus to Sonnet and refuse explicit Opus (default 80).
+  LU_CLAUDE_CAP_OVERRIDE=1  Operator override for both percentage thresholds.
+                             Unknown usage warns and skips percentage checks.
+                             Forwarded model, settings and fallback-model selectors are refused.
   CLAUDE_CODE_*            Claude Code session configuration (route-shaped values are cleared).' ;;
     codex) provider_env='  CODEX_CC_BASE_URL, CODEX_CC_AUTH_TOKEN
                              Approved local-proxy settings for --harness claude-code.' ;;
@@ -99,7 +101,7 @@ EXIT CODES:
   4  Driver certification is missing or revoked.
   5  Provider transport is degraded; use the stated external-fleet disposition.
   6  Driver memory scope unavailable or unverifiable; no unbounded override.
-  7  Claude launch refused by the Opus block or weekly usage cap.
+  7  Claude launch refused by the weekly usage cap.
 
 Examples:
   ./${name} --help
@@ -1352,46 +1354,70 @@ launcher_publication_path() {
   unset LU_OPSEC_OVERRIDE
 }
 
-# Claude weekly cap guard (operator 2026-10-10, until the weekly reset).
-# LU_CLAUDE_OPUS_BLOCKED=1 (default) refuses explicit Opus regardless of usage
-# and switches a defaulted Opus seat to claude-sonnet-5-5. At or above
-# LU_CLAUDE_STOP_PCT (default 99), every Claude launch is refused.
-# Unknown usage (Monitor down or stale) still warns and skips the percentage
-# check; the usage-independent Opus block remains in force. Legacy cap override
-# and per-model percentage limits do not bypass this policy.
+# Claude weekly cap guard (operator 2026-10-10). At or above
+# LU_CLAUDE_STOP_PCT (default 90) weekly used, no Claude seat launches.
+# At or above LU_CLAUDE_OPUS_MAX_PCT (default 80) a defaulted Opus driver
+# seat drops to Sonnet and an explicit Opus request is refused, unless the
+# operator sets LU_CLAUDE_CAP_OVERRIDE=1 to bypass both thresholds. Unknown usage
+# (Monitor down or stale) fails open with a warning, like other Monitor calls.
 launcher_claude_cap_guard() {
   [ "$LC_PROVIDER" = claude ] || return 0
-  local arg
+  # Provider settings and fallback selectors can replace the admitted model.
+  # Refuse these paths, including CLI abbreviations, even with a cap override.
+  # Startup models must pass through the launcher model selection.
+  local arg selector
   for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
     case "$arg" in
       -m*|--m|--m=*|--mo|--mo=*|--mod|--mod=*|--mode|--mode=*|--model|--model=*)
         launcher_error "Claude model selectors must use the launcher --model, not forwarded provider arguments."
         exit 2
         ;;
+      --*)
+        selector="${arg%%=*}"
+        if [ "$selector" != -- ] && { [[ --settings == "$selector"* ]] || [[ --fallback-model == "$selector"* ]]; }; then
+          launcher_error "Claude model selectors must use the launcher --model, not forwarded settings or fallback arguments."
+          exit 2
+        fi
+        ;;
     esac
   done
-  local pct stop
-  stop="${LU_CLAUDE_STOP_PCT:-99}"
+  local pct stop opus_max
+  stop="${LU_CLAUDE_STOP_PCT:-90}"
+  opus_max="${LU_CLAUDE_OPUS_MAX_PCT:-80}"
+  local threshold
+  for threshold in "$stop" "$opus_max"; do
+    if ! [[ "$threshold" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v t="$threshold" 'BEGIN{exit !(t>=0 && t<=100)}'; then
+      launcher_error "Claude percentage limits must be numbers between 0 and 100."
+      exit 2
+    fi
+  done
   local py; py="$(launcher_project_python 2>/dev/null || true)"
   pct=unknown; [ -n "$py" ] && pct="$("$py" "$LC_ROOT/scripts/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
   [ -n "$pct" ] || pct=unknown
   if [ "$pct" != unknown ] && awk -v p="$pct" -v t="$stop" 'BEGIN{exit !(p>=t)}'; then
-    launcher_error "Claude weekly usage is ${pct}% (stop at ${stop}%). No Claude launch until the weekly reset; use start-codex-driver.sh (Sol) or agy."
-    exit 7
+    if [ "${LU_CLAUDE_CAP_OVERRIDE:-0}" = 1 ]; then
+      printf 'launcher: WARNING Claude weekly %s%% >= %s%%; LU_CLAUDE_CAP_OVERRIDE=1 set by the operator\n' "$pct" "$stop" >&2
+    else
+      launcher_error "Claude weekly usage is ${pct}% (stop at ${stop}%). No Claude launch until the weekly reset; use start-codex-driver.sh (Sol) or agy. Operator-only override: LU_CLAUDE_CAP_OVERRIDE=1."
+      exit 7
+    fi
   fi
   if [ "$pct" = unknown ]; then
     printf 'launcher: WARNING Claude weekly usage unknown (Monitor unreadable); cap guard not applied\n' >&2
+    return 0
   fi
   case "$LC_MODEL" in
     *opus*) ;;
     *) return 0 ;;
   esac
-  if [ "${LU_CLAUDE_OPUS_BLOCKED:-1}" = 1 ]; then
-    if [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ]; then
-      printf 'launcher: LU_CLAUDE_OPUS_BLOCKED=1; driver default switched from Opus to claude-sonnet-5-5\n' >&2
+  if awk -v p="$pct" -v t="$opus_max" 'BEGIN{exit !(p>=t)}'; then
+    if [ "${LU_CLAUDE_CAP_OVERRIDE:-0}" = 1 ]; then
+      printf 'launcher: WARNING Claude weekly %s%% >= Opus limit %s%%; LU_CLAUDE_CAP_OVERRIDE=1 set by the operator\n' "$pct" "$opus_max" >&2
+    elif [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ] && [ "$LC_MODEL" = 'claude-opus-5-5[1m]' ]; then
+      printf 'launcher: Claude weekly %s%% (Opus allowed below %s%%); driver default switched from Opus to claude-sonnet-5-5\n' "$pct" "$opus_max" >&2
       LC_MODEL='claude-sonnet-5-5'
     else
-      launcher_error "Opus refused: LU_CLAUDE_OPUS_BLOCKED=1 until the weekly reset, regardless of usage. Use --model sonnet."
+      launcher_error "Opus refused: Claude weekly usage ${pct}% (Opus allowed below ${opus_max}% only). Use --model sonnet. Operator-only override: LU_CLAUDE_CAP_OVERRIDE=1; or adjust the Opus limit with LU_CLAUDE_OPUS_MAX_PCT=100 (the stop threshold still applies)."
       exit 7
     fi
   fi
