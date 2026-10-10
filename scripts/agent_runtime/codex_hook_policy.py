@@ -184,6 +184,42 @@ def _result_code(results: list[GuardResult]) -> int:
     return 2 if any(result.returncode for result in normalized) else 0
 
 
+def _expand_braces(text: str, max_depth: int = 5, max_variants: int = 64) -> list[str] | None:
+    pattern = re.compile(r"\{([^{}\s]+)\}")
+    current = [text]
+    for _ in range(max_depth):
+        next_level = []
+        any_expanded = False
+        for s in current:
+            m = pattern.search(s)
+            if not m:
+                next_level.append(s)
+                continue
+            any_expanded = True
+            content = m.group(1)
+            prefix = s[:m.start()]
+            suffix = s[m.end():]
+            range_m = re.match(r"^([a-zA-Z0-9])\.\.([a-zA-Z0-9])$", content)
+            if range_m:
+                c1, c2 = range_m.groups()
+                if c1.isdigit() and c2.isdigit():
+                    step = 1 if int(c1) <= int(c2) else -1
+                    items = [str(i) for i in range(int(c1), int(c2) + step, step)]
+                else:
+                    step = 1 if ord(c1) <= ord(c2) else -1
+                    items = [chr(c) for c in range(ord(c1), ord(c2) + step, step)]
+            else:
+                items = content.split(",")
+            for it in items:
+                next_level.append(prefix + it + suffix)
+                if len(next_level) > max_variants:
+                    return None
+        current = next_level
+        if not any_expanded:
+            break
+    return current
+
+
 def _has_unescaped_metachars(command: str) -> bool:
     single = False
     double = False
@@ -214,29 +250,52 @@ def _has_unescaped_metachars(command: str) -> bool:
     return False
 
 
+def _has_gh_mention_or_expansion(command: str) -> bool:
+    if re.search(r"\bgh\b", command):
+        return True
+    if re.search(r"\b(issue|pr)\s+(create|edit|close|comment|merge|ready)\b", command):
+        return True
+    variants = _expand_braces(command)
+    if variants is None:
+        return True
+    for variant in variants:
+        try:
+            words = shlex.split(variant)
+        except ValueError:
+            return True
+        for w in words:
+            if Path(w).name == "gh":
+                return True
+        if re.search(r"\bgh\b", variant):
+            return True
+    return False
+
+
+def _is_safe_data_mention(command: str) -> bool:
+    if _has_unescaped_metachars(command):
+        return False
+    try:
+        words = shlex.split(command)
+    except ValueError:
+        return False
+    if not words:
+        return False
+    cmd = Path(words[0]).name
+    if cmd in {"echo", "printf"}:
+        return True
+    return bool(cmd == "git" and len(words) > 1 and words[1] in {
+        "commit", "log", "diff", "status", "show", "branch", "checkout", "add",
+    })
+
+
 def _invokes_or_ambiguous_gh(command: str, recognize_gh: object) -> bool:
     """Recognize command positions, shell expansions, and wrappers hiding gh.
 
     Fail closed: returns False only if the command is a verified safe data mention.
     """
-    if not (re.search(r"\bgh\b", command) or any(Path(w).name == "gh" for w in command.split())):
+    if not _has_gh_mention_or_expansion(command):
         return False
-    if callable(recognize_gh) and recognize_gh(command):
-        return True
-    if _has_unescaped_metachars(command):
-        return True
-    try:
-        words = shlex.split(command)
-    except ValueError:
-        return True
-    if not words:
-        return True
-    cmd = Path(words[0]).name
-    if cmd in {"echo", "printf"}:
-        return False
-    return not (cmd == "git" and len(words) > 1 and words[1] in {
-        "commit", "log", "diff", "status", "show", "branch", "checkout", "add",
-    })
+    return not _is_safe_data_mention(command)
 
 
 def _publication_command_code(payload: str, hooks_dir: Path) -> int:
@@ -250,31 +309,28 @@ def _publication_command_code(payload: str, hooks_dir: Path) -> int:
     command = decoded.get("tool_input", {}).get("command", "")
     if not isinstance(command, str):
         return 2
+
+    try:
+        recognize = runpy.run_path(str(hooks_dir / "guard-public-github-text.py"))["invokes_gh"]
+    except (OSError, SyntaxError, KeyError):
+        print("Codex publication guard is unavailable; blocking fail-closed.", file=sys.stderr)
+        return 2
+
+    if not _invokes_or_ambiguous_gh(command, recognize):
+        return 0
+
+    safe = not any(char in command for char in ";&|()$`\n<>\\{}")
     try:
         words = shlex.split(command)
     except ValueError:
         print("Codex publication command cannot be parsed; blocking fail-closed.", file=sys.stderr)
         return 2
-    named = any(Path(word).name == "gh" for word in words) or re.search(r"\bgh\b", command)
-    if not named:
-        return 0
-    try:
-        # Reuse the shared command-position recognizer; literal gh in data
-        # (a commit message, for example) is not a publishing invocation.
-        recognize = runpy.run_path(str(hooks_dir / "guard-public-github-text.py"))["invokes_gh"]
-    except (OSError, SyntaxError, KeyError):
-        print("Codex publication guard is unavailable; blocking fail-closed.", file=sys.stderr)
-        return 2
-    publication = _invokes_or_ambiguous_gh(command, recognize)
-    if not publication:
-        return 0
-    # Even apparently safe early calls cannot license a later PATH replacement,
-    # absolute executable, env -S script, pipe, subshell, or substitution.
-    safe = not any(char in command for char in ";&|()$`\n<>\\")
+
     while words and words[0] in {"env", "/usr/bin/env", "command", "exec"}:
         words.pop(0)
         if words and words[0] == "--":
             words.pop(0)
+
     safe = safe and bool(words) and words[0] == "gh"
     shim = hooks_dir.parents[2] / "scripts/agent_runtime/shims/gh"
     resolved = shutil.which("gh")

@@ -1276,6 +1276,17 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
     'find . -exec {stub} issue create --body safe \\;',
     'flock /tmp/lock {stub} issue create --body safe',
     '.venv/bin/python -c "import os; os.execl(\'{stub}\', \'gh\', \'issue\', \'create\', \'--body\', \'safe\')"',
+    "{stub_dir}/g'h' issue create --body safe",
+    '{stub_dir}/g\\h issue create --body safe',
+    "flock /tmp/lock {stub_dir}/g'h' issue create --body safe",
+    "find . -exec {stub_dir}/g'h' issue create --body safe \\;",
+    "cat <(PATH={stub_dir} g'h' issue create --body safe)",
+    '{stub_dir}/g{{h..h}} issue create --body safe',
+    'PATH={stub_dir} g{{h..h}} issue create --body safe',
+    'find . -exec {stub_dir}/g{{h..h}} issue create --body safe \\;',
+    'flock /tmp/lock {stub_dir}/g{{h..h}} issue create --body safe',
+    'cat <({stub_dir}/g{{h..h}} issue create --body safe)',
+    'a={stub_dir}/g; b=h; "$a$b" issue create --body safe',
 ])
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
     marker = tmp_path / 'published'
