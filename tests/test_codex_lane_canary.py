@@ -13,6 +13,14 @@ import pytest
 from scripts.session_canary import codex_lane
 
 
+@pytest.mark.parametrize("epic", ["../../tmp/evil", "/absolute/evil", "bad_name", "-infra", "infra-"])
+def test_bootstrap_rejects_unsafe_epic_before_writing(tmp_path, epic):
+    if epic == "/absolute/evil":
+        epic = str(tmp_path / "absolute" / "evil")
+    assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", f"--epic={epic}", "--stream", "epic:7919"]) != 0
+    assert not (tmp_path / ".claude").exists()
+
+
 @pytest.mark.parametrize("provider", ["codex", "gemini", "glm"])
 def test_lane_import_and_bare_hydration_do_not_import_slot_registry(provider) -> None:
     """Keep the bridge import graph outside the hook's bare-provider cold path."""
@@ -303,5 +311,7 @@ def test_cold_start_blocker_delta_policy():
         binding_line="fixture",
     )
     assert USAGE_RULE.replace("$SESSION_EPIC", "infra") in body
+    assert "exact case-sensitive standalone token RESOLVED <id>" in body
+    assert "on its own non-active line (no other fields or prose)" in body
     assert body.count("scripts.driver_blockers delta") == 1
     assert body.count("scripts.driver_blockers record") == 1

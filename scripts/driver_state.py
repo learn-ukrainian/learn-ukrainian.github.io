@@ -62,7 +62,7 @@ if __package__ in (None, ""):
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
-from scripts.driver_blockers import LEDGER_NAME, USAGE_RULE, show_summary
+from scripts.driver_blockers import LEDGER_NAME, USAGE_RULE, show_summary, validate_epic
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
@@ -132,13 +132,15 @@ def _repo_root(start: Path | None = None) -> Path:
 
 def state_path(epic: str | None = None, root: Path | None = None) -> Path | None:
     """Resolve the state file: explicit epic wins, then the launcher env."""
-    if epic:
+    if epic is not None:
+        validate_epic(epic)
         return (root or _repo_root()) / ".claude" / f"{epic}-epic" / STATE_NAME
     env = os.environ.get(STATE_ENV, "").strip()
     if env:
         return Path(env)
     session_epic = os.environ.get("SESSION_EPIC", "").strip()
     if session_epic:
+        validate_epic(session_epic)
         return (root or _repo_root()) / ".claude" / f"{session_epic}-epic" / STATE_NAME
     return None
 
@@ -543,7 +545,7 @@ def main(argv: list[str] | None = None) -> int:
   .venv/bin/python -m scripts.driver_state init --epic infra
   .venv/bin/python -m scripts.driver_state agy-stop-hook < hook-payload.json
 Outputs: init writes private driver state; hooks emit JSON and private failure/counter records.
-Exit codes: 0 success (hooks report failures in JSON); 1 missing state or refused overwrite.
+Exit codes: 0 success (hooks report failures in JSON); 1 invalid epic, missing state or refused overwrite.
 Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
 """,
     )
@@ -559,6 +561,12 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
     sub.add_parser("agy-stop-hook", help="AGY Stop hook: continue when the turn ends against policy.")
     sub.add_parser("agy-pretool-hook", help="AGY PreToolUse hook: deny ask_question for drivers.")
     args = parser.parse_args(argv)
+    if getattr(args, "epic", None) is not None:
+        try:
+            validate_epic(args.epic)
+        except ValueError as exc:
+            print(f"driver_state: {exc}", file=sys.stderr)
+            return 1
 
     hooks = {"agy-hook": cmd_agy_hook, "agy-stop-hook": cmd_agy_stop_hook, "agy-pretool-hook": cmd_agy_pretool_hook}
     if args.cmd in hooks:
@@ -605,7 +613,7 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
         if path.exists() and not args.force:
             print(f"exists: {path} (use --force to overwrite)", file=sys.stderr)
             return 1
-        path.parent.mkdir(parents=True, exist_ok=True)
+        path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
         path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY, blocker_policy=BLOCKER_POLICY), encoding="utf-8")
         print(path)
         return 0

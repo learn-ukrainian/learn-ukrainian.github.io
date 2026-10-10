@@ -167,6 +167,8 @@ def init_repo(
         "scripts/guardrails/assert_primary_on_main.py",
         "scripts/guardrails/worktree_containment.py",
         "scripts/common/__init__.py",
+        "scripts/common/safe_unit_install.py",
+        "scripts/common/nofollow_walk.py",
         "scripts/common/git_context.py",
         "scripts/common/github_client.py",
         "scripts/common/repo_root.py",

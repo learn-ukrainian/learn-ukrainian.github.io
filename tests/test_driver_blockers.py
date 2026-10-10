@@ -444,7 +444,7 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     body_missing_marker = b"api-latency | blocked | monitor | cache-warm | repair CI"
     with pytest.raises(
         ValueError,
-        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+        match="posted body omits exact token RESOLVED cache-warm on its own non-active line",
     ):
         blockers.record(
             ledger,
@@ -460,7 +460,7 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     body_active_line_marker = b"api-latency | closed | monitor | cache-warm | done"
     with pytest.raises(
         ValueError,
-        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+        match="posted body omits exact token RESOLVED cache-warm on its own non-active line",
     ):
         blockers.record(
             ledger,
@@ -476,7 +476,7 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     body_closed_pr = b"api-latency | blocked | monitor | cache-warm | repair CI\ncache-warm closed-pr"
     with pytest.raises(
         ValueError,
-        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+        match="posted body omits exact token RESOLVED cache-warm on its own non-active line",
     ):
         blockers.record(
             ledger,
@@ -492,7 +492,7 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     body_not_resolved = b"api-latency | blocked | monitor | cache-warm | repair CI\ncache-warm not-resolved"
     with pytest.raises(
         ValueError,
-        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+        match="posted body omits exact token RESOLVED cache-warm on its own non-active line",
     ):
         blockers.record(
             ledger,
@@ -508,7 +508,7 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     body_is_not_resolved = b"api-latency | blocked | monitor | cache-warm | repair CI\ncache-warm is not resolved"
     with pytest.raises(
         ValueError,
-        match="posted body omits an un-negated resolution marker for RESOLVED item 'cache-warm' on a non-active line",
+        match="posted body omits exact token RESOLVED cache-warm on its own non-active line",
     ):
         blockers.record(
             ledger,
@@ -519,6 +519,20 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
             1,
         )
     assert ledger.read_bytes() == before
+
+    # The review's prose can never establish an explicit resolution.
+    for prose in (b"cache-warm is not yet resolved", b"cache-warm is not resolved. Follow-up closed"):
+        body = posted(api) + b"\n" + prose
+        with pytest.raises(ValueError, match="RESOLVED"):
+            blockers.record(
+                ledger,
+                EPIC,
+                observation(api),
+                receipt(body, key="message-7", stamp="2026-10-10T07:00:00Z"),
+                body,
+                1,
+            )
+        assert ledger.read_bytes() == before
 
     # 6. cache-warm accompanied by explicit same-line resolution marker
     body_with_marker = b"api-latency | blocked | monitor | cache-warm | repair CI\nRESOLVED cache-warm"
@@ -532,6 +546,168 @@ def test_resolved_id_requires_same_line_resolution_marker(ledger):
     )
     assert "cache-warm" not in updated["items"]
     assert updated["generation"] == 2
+
+
+@pytest.mark.parametrize(
+    "prose",
+    [
+        "cache-warm is not yet resolved",
+        "cache-warm is not resolved. Follow-up closed",
+        "cache-warm resolved",
+        "cache-warm cleared",
+        "cache-warm fixed",
+        "cache-warm closed",
+        "cache-warm done",
+        "cache-warm unblocked",
+        "resolved cache-warm",
+        "Not RESOLVED cache-warm",
+        "RESOLVED cache-warm later",
+        "RESOLVED cache-warm | blocked | monitor | review | get approval",
+    ],
+)
+def test_resolution_requires_exact_standalone_token(ledger, prose):
+    seed(ledger, observation(item("cache-warm")))
+    before = ledger.read_bytes()
+    body = prose.encode()
+    with pytest.raises(ValueError, match="RESOLVED"):
+        blockers.record(
+            ledger, EPIC, observation(), receipt(body, key="message-2", stamp="2026-10-10T02:00:00Z"), body, 1
+        )
+    assert ledger.read_bytes() == before
+
+
+def test_standalone_resolution_is_independent_of_other_item_ids(ledger):
+    active = item("RESOLVED")
+    seed(ledger, observation(active, item("cache-warm")))
+    body = b"RESOLVED cache-warm"
+    stored = blockers.record(
+        ledger, EPIC, observation(active), receipt(body, key="message-2", stamp="2026-10-10T02:00:00Z"), body, 1
+    )
+    assert stored["items"] == {"RESOLVED": blockers.fingerprint(active)}
+
+
+@pytest.mark.parametrize("linked", ["ledger", "lock", "parent"])
+def test_delta_refuses_symlinked_state(ledger, tmp_path, linked):
+    seed(ledger)
+    before = ledger.read_bytes()
+    paths = record_files(tmp_path, observation(item()), posted(item()))
+    if linked == "parent":
+        moved = ledger.parent.with_name("moved-epic")
+        ledger.parent.rename(moved)
+        ledger.parent.symlink_to(moved, target_is_directory=True)
+    else:
+        target = tmp_path / "linked-target"
+        target.write_bytes(before if linked == "ledger" else b"")
+        link = ledger if linked == "ledger" else ledger.with_name(f"{ledger.name}.lock")
+        link.unlink()
+        link.symlink_to(target)
+    result = run_cli(ledger, "delta", "--epic", EPIC, "--current", str(paths[0]))
+    assert result.returncode != 0, result.stdout
+    assert result.stdout == ""
+    assert "driver_blockers:" in result.stderr
+    assert ledger.read_bytes() == before
+
+
+@pytest.mark.parametrize("replacement", ["symlink", "directory"])
+def test_record_refuses_parent_swap_after_generation_read(ledger, tmp_path, monkeypatch, replacement):
+    from scripts.common.safe_unit_install import InstallError
+
+    seed(ledger)
+    before = ledger.read_bytes()
+    moved = ledger.parent.with_name("moved-epic")
+    decoy = tmp_path / "decoy-epic"
+    decoy.mkdir()
+    (decoy / ledger.name).write_bytes(before)
+    original = blockers.compute_delta
+
+    def swap(observed, stored=None):
+        result = original(observed, stored)
+        ledger.parent.rename(moved)
+        if replacement == "symlink":
+            ledger.parent.symlink_to(decoy, target_is_directory=True)
+        else:
+            ledger.parent.mkdir()
+            (ledger.parent / ledger.name).write_bytes(before)
+        return result
+
+    monkeypatch.setattr(blockers, "compute_delta", swap)
+    changed = item(action="repair CI")
+    body = posted(changed)
+    with pytest.raises((ValueError, OSError, InstallError)):
+        blockers.record(
+            ledger, EPIC, observation(changed), receipt(body, key="message-2", stamp="2026-10-10T02:00:00Z"), body, 1
+        )
+    assert (moved / ledger.name).read_bytes() == before
+    assert ledger.read_bytes() == before
+    assert (decoy / ledger.name).read_bytes() == before
+
+
+def test_record_creates_private_lock_even_with_permissive_umask(ledger):
+    old_umask = os.umask(0)
+    try:
+        seed(ledger)
+    finally:
+        os.umask(old_umask)
+    assert stat.S_IMODE(ledger.with_name(f"{ledger.name}.lock").stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("linked", ["ledger", "lock"])
+def test_record_refuses_symlinked_state_without_changing_target(ledger, tmp_path, linked):
+    seed(ledger)
+    before = ledger.read_bytes()
+    target = tmp_path / "target"
+    target.write_bytes(before if linked == "ledger" else b"")
+    link = ledger if linked == "ledger" else ledger.with_name(f"{ledger.name}.lock")
+    link.unlink()
+    link.symlink_to(target)
+    paths = record_files(tmp_path, observation(item(action="repair CI")), posted(item(action="repair CI")))
+    result = run_cli(ledger, *record_args(paths))
+    assert result.returncode == 1
+    assert result.stdout == ""
+    assert link.is_symlink()
+    assert target.read_bytes() == (before if linked == "ledger" else b"")
+    assert ledger.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "epic",
+    [
+        "infra",
+        "7919",
+        "a",
+        "lit-war",
+        "a--b",
+        "",
+        "../infra",
+        "/infra",
+        "UPPER",
+        "bad_name",
+        "bad.name",
+        "-infra",
+        "infra-",
+        "infra\n",
+        "інфра",
+    ],
+)
+def test_epic_validation_matches_shell_rule(epic):
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; epic_name_valid "$2"',
+            "selector-test",
+            str(REPO / "scripts/lib/handoff_identity.sh"),
+            epic,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    if result.returncode == 0:
+        blockers.validate_epic(epic)
+    else:
+        with pytest.raises(ValueError, match="selector"):
+            blockers.validate_epic(epic)
 
 
 def test_two_racing_records_have_one_winner(ledger, tmp_path):

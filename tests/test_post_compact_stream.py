@@ -268,6 +268,8 @@ def test_codex_boundary_rule_carries_complete_blocker_rule(tmp_path: Path, has_s
         "scripts.driver_blockers record --epic infra --current blockers.json",
         "--receipt receipt.json --body-file posted.md --expect-generation N",
         "post each item that is not UNCHANGED",
+        "exact case-sensitive standalone token RESOLVED <id>",
+        "on its own non-active line (no other fields or prose)",
         "if delta fails or the baseline is unknown, post everything currently blocking",
     ):
         assert fragment in result.stdout

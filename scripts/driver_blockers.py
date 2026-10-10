@@ -3,14 +3,18 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import hashlib
 import json
 import os
 import re
+import stat
 import sys
 from datetime import datetime
 from pathlib import Path
+
+from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
 
 LEDGER_NAME = "CTO-BLOCKERS-LEDGER.json"
 MAX_INPUT_BYTES = 1_048_576
@@ -20,7 +24,7 @@ UNKNOWN_SUMMARY = "none recorded (unknown: treat every current blocker as unrepo
 USAGE_RULE = (
     "Put every owned blocker in --current with complete: true; run "
     '`.venv/bin/python -m scripts.driver_blockers delta --epic "$SESSION_EPIC" --current blockers.json`; '
-    "post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with an explicit resolution marker (e.g. RESOLVED <id>) on its own line; "
+    "post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); "
     "if delta fails or the baseline is unknown, post everything currently blocking; "
     "after the post succeeds, record with the receipt and the exact posted body using "
     '`.venv/bin/python -m scripts.driver_blockers record --epic "$SESSION_EPIC" --current blockers.json '
@@ -123,10 +127,52 @@ def validate_ledger(data: object, epic: str) -> dict | None:
     return data
 
 
-def load_ledger(path: Path, epic: str) -> dict | None:
+def validate_epic(epic: str) -> None:
+    """Match handoff_identity.sh epic_name_valid: lowercase alnum, inner hyphens."""
+    if not re.fullmatch(r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", epic):
+        raise ValueError("epic must be a selector such as infra or 7919")
+
+
+@contextlib.contextmanager
+def _ledger_directory(path: Path, *, create: bool = False):
+    directory_fd = open_unit_dir(path.parent, create=create, directory_mode=0o700)
+    if create and directory_fd is None:
+        raise ValueError("ledger directory vanished during creation")
     try:
-        return validate_ledger(_read_json(path), epic)
-    except ValueError:
+        yield directory_fd
+    finally:
+        if directory_fd is not None:
+            os.close(directory_fd)
+
+
+def _check_directory(path: Path, directory_fd: int) -> None:
+    """Refuse a moved or symlinked parent; all data I/O stays on the pinned fd."""
+    with _ledger_directory(path) as current_fd:
+        if current_fd is None:
+            raise ValueError("ledger directory changed during operation")
+        held, current = os.fstat(directory_fd), os.fstat(current_fd)
+        if (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
+            raise ValueError("ledger directory changed during operation")
+
+
+def load_ledger(path: Path, epic: str, *, directory_fd: int | None = None) -> dict | None:
+    if directory_fd is None:
+        with _ledger_directory(path) as held_fd:
+            if held_fd is None:
+                return None
+            return load_ledger(path, epic, directory_fd=held_fd)
+    # Unsafe filesystem entries are errors, never an unknown silence baseline.
+    read_unit(directory_fd, f"{LEDGER_NAME}.lock")
+    unit = read_unit(directory_fd, path.name)
+    _check_directory(path, directory_fd)
+    if unit is None:
+        return None
+    try:
+        raw, _ = unit
+        if len(raw) > MAX_INPUT_BYTES:
+            return None
+        return validate_ledger(json.loads(raw, object_pairs_hook=_unique_keys), epic)
+    except (ValueError, UnicodeError, RecursionError):
         return None
 
 
@@ -155,8 +201,7 @@ def compute_delta(observation: dict, ledger: object = None) -> dict:
 
 
 def ledger_path(epic: str) -> Path:
-    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", epic):
-        raise ValueError("epic must be a selector such as infra or 7919")
+    validate_epic(epic)
     from scripts.driver_state import STATE_ENV, state_path
 
     # A driver may run from a dispatch checkout while its launcher pins state
@@ -168,20 +213,41 @@ def ledger_path(epic: str) -> Path:
     return state.parent / LEDGER_NAME
 
 
-def _atomic_write(path: Path, data: dict) -> None:
-    from scripts.common.safe_unit_install import write_unit
-
+def _atomic_write(path: Path, data: dict, *, directory_fd: int | None = None) -> None:
+    if directory_fd is None:
+        with _ledger_directory(path, create=True) as held_fd:
+            assert held_fd is not None
+            _atomic_write(path, data, directory_fd=held_fd)
+        return
     raw = (json.dumps(data, sort_keys=True, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     if len(raw) > MAX_INPUT_BYTES:
         raise ValueError("resulting ledger exceeds maximum byte size")
-    # Persistent staging belongs beside the ledger, not on a scratch filesystem.
-    # The shared writer exclusively creates private staging, fsyncs, and renames
-    # through this directory descriptor; record() retains the stable ledger lock.
-    directory_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+    _check_directory(path, directory_fd)
+    read_unit(directory_fd, path.name)
+    read_unit(directory_fd, f"{LEDGER_NAME}.lock")
+    write_unit(directory_fd, path.name, raw, mode=0o600)
+
+
+@contextlib.contextmanager
+def _ledger_lock(directory_fd: int):
+    name = f"{LEDGER_NAME}.lock"
+    read_unit(directory_fd, name)
+    lock_fd = os.open(
+        name,
+        os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
+        0o600,
+        dir_fd=directory_fd,
+    )
     try:
-        write_unit(directory_fd, path.name, raw, mode=0o600)
+        held = os.fstat(lock_fd)
+        current = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+        if not stat.S_ISREG(held.st_mode) or (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
+            raise ValueError("ledger lock is not a stable regular file")
+        os.fchmod(lock_fd, 0o600)
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        yield
     finally:
-        os.close(directory_fd)
+        os.close(lock_fd)
 
 
 def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes, expect_generation: int) -> dict:
@@ -200,13 +266,12 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
         posted = body.decode("utf-8")
     except UnicodeError as exc:
         raise ValueError("posted body must be UTF-8") from exc
-    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     # Lock a separate stable inode: locking the atomically replaced ledger
     # itself would let a second process lock the old inode and lose an update.
-    with (path.parent / f"{LEDGER_NAME}.lock").open("a+b") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        stored = load_ledger(path, epic)
-        if stored is None and path.exists():
+    with _ledger_directory(path, create=True) as directory_fd, _ledger_lock(directory_fd):
+        _check_directory(path, directory_fd)
+        stored = load_ledger(path, epic, directory_fd=directory_fd)
+        if stored is None and read_unit(directory_fd, path.name) is not None:
             raise ValueError("existing ledger is invalid; generation and anchor cannot be checked safely")
         delta = compute_delta(observation, stored)
         if delta["generation"] != expect_generation:
@@ -218,16 +283,6 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
             if _timestamp(anchor["created_at"]) <= _timestamp(old["created_at"]):
                 raise ValueError("receipt created_at must be later than recorded anchor")
         posted_text = posted
-        current_ids = {it["id"] for it in observation["items"]}
-        active_pattern = (
-            re.compile(rf"(?<![A-Za-z0-9_.-])(?:{'|'.join(re.escape(cid) for cid in current_ids)})(?![A-Za-z0-9_.-])")
-            if current_ids
-            else None
-        )
-        marker_pattern = re.compile(
-            r"(?i)(?<![A-Za-z0-9_.-])(?:resolved|cleared|fixed|closed|done|unblocked)(?![A-Za-z0-9_.-])"
-        )
-        negation_pattern = re.compile(r"(?i)(?<![A-Za-z0-9_.-])(?:not|no|never)\s+$")
         for item in delta["items"]:
             if item["class"] == "UNCHANGED":
                 continue
@@ -250,28 +305,17 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
                         f"posted body omits required fields for {item['class']} item {item_id!r} on the same line"
                     )
             elif item["class"] == "RESOLVED":
-                line_matched = False
-                for line in matching_lines:
-                    if active_pattern and active_pattern.search(line):
-                        continue
-                    line_without_id = re.sub(id_pattern, " ", line)
-                    for match in marker_pattern.finditer(line_without_id):
-                        if not negation_pattern.search(line_without_id[: match.start()]):
-                            line_matched = True
-                            break
-                    if line_matched:
-                        break
+                # An exact standalone line cannot carry an active item's fields.
+                line_matched = any(line.strip() == f"RESOLVED {item_id}" for line in matching_lines)
                 if not line_matched:
-                    raise ValueError(
-                        f"posted body omits an un-negated resolution marker for RESOLVED item {item_id!r} on a non-active line"
-                    )
+                    raise ValueError(f"posted body omits exact token RESOLVED {item_id} on its own non-active line")
         updated = {
             "epic": epic,
             "generation": expect_generation + 1,
             "anchor": anchor,
             "items": {item["id"]: fingerprint(item) for item in observation["items"]},
         }
-        _atomic_write(path, updated)
+        _atomic_write(path, updated, directory_fd=directory_fd)
     return updated
 
 
@@ -297,7 +341,8 @@ exactly five non-empty strings: id, state, owner, waits_on, action. Receipt:
 Fleet Comms JSON with recipient="cto", message_id, content_sha256, created_at
 (ISO-8601 with timezone). BODY is the exact UTF-8 posted body: post each
 non-UNCHANGED item with all its fields on one line, and each RESOLVED item with
-an explicit resolution marker (e.g. RESOLVED <id>) on its own line.
+the exact case-sensitive standalone token RESOLVED <id> on its own non-active
+line (no other fields or prose).
 Exit codes: 0 success; 1 invalid/unreadable data or rejected record (no classes
 on delta failure, previous ledger untouched); 2 invalid/missing CLI arguments.
 Related: scripts.driver_state; issue #10362, epic #7919.
@@ -363,7 +408,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 result = {"generation": updated["generation"], "recorded": True}
             print(json.dumps(result, ensure_ascii=False))
-    except (ValueError, OSError, TypeError, OverflowError) as exc:
+    except (ValueError, OSError, TypeError, OverflowError, InstallError) as exc:
         # Do not expose private absolute locations through OSError diagnostics.
         reason = str(exc) if isinstance(exc, ValueError) else "data or sidecar operation failed"
         print(f"driver_blockers: {reason}", file=sys.stderr)

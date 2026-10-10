@@ -469,6 +469,8 @@ def test_driver_state_banner_carries_complete_blocker_rule(tmp_path: Path) -> No
         "scripts.driver_blockers record --epic infra --current blockers.json",
         "--receipt receipt.json --body-file posted.md --expect-generation N",
         "post each item that is not UNCHANGED",
+        "exact case-sensitive standalone token RESOLVED <id>",
+        "on its own non-active line (no other fields or prose)",
         "if delta fails or the baseline is unknown, post everything currently blocking",
     ):
         assert fragment in result.stdout

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import stat
 import subprocess
 import sys
@@ -16,6 +17,39 @@ from scripts.common import task_store_paths
 
 REPO = Path(__file__).resolve().parents[1]
 SYNTHETIC_WORKER_TARGET = 7
+
+
+@pytest.mark.parametrize("epic", ["../../tmp/evil", "absolute", "UPPER", "bad_name", "-infra", "infra-"])
+def test_init_rejects_invalid_epic_before_creating_anything(tmp_path, epic):
+    root = tmp_path / "sandbox" / "repo"
+    root.mkdir(parents=True)
+    if epic == "absolute":
+        epic = str(tmp_path / "absolute")
+    result = subprocess.run(
+        [sys.executable, str(REPO / "scripts/driver_state.py"), "init", f"--epic={epic}"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert result.returncode != 0, result.stdout
+    assert not list(tmp_path.rglob("DRIVER-STATE.md"))
+    assert not (root / ".claude").exists()
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_init_private_new_epic_directory_preserves_existing_mode(tmp_path, monkeypatch, existing):
+    monkeypatch.setattr(driver_state, "_repo_root", lambda: tmp_path)
+    directory = tmp_path / ".claude" / "infra-epic"
+    if existing:
+        directory.mkdir(parents=True)
+        directory.chmod(0o750)
+    old_umask = os.umask(0)
+    try:
+        assert driver_state.main(["init", "--epic", "infra"]) == 0
+    finally:
+        os.umask(old_umask)
+    assert stat.S_IMODE(directory.stat().st_mode) == (0o750 if existing else 0o700)
 
 
 @pytest.fixture
@@ -764,6 +798,8 @@ def test_blocker_template_and_complete_envelope_boundary(state, monkeypatch, tmp
     assert driver_state.main(["init", "--epic", "demo"]) == 0
     text = (tmp_path / ".claude/demo-epic/DRIVER-STATE.md").read_text()
     assert text.count(driver_state.BLOCKER_POLICY) == 1
+    assert "exact case-sensitive standalone token RESOLVED <id>" in text
+    assert "on its own non-active line (no other fields or prose)" in text
     policies = driver_state.POLICY + "\n" + driver_state.BLOCKER_POLICY + "\n"
     wrapper_size = len(driver_state.render_injection(policies, state))
     exact = policies.rstrip() + "\n" + "x" * (driver_state.MAX_ENVELOPE_CHARS - wrapper_size - 1)
