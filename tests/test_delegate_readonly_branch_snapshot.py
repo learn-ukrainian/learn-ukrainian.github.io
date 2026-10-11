@@ -23,6 +23,7 @@ from tests.test_delegate import (
     _write_args,
     delegate,
 )
+from tests.test_record_cf_verdict import recorder_matcher  # noqa: F401 - shared pytest fixture
 
 pytestmark = pytest.mark.usefixtures(
     "hermetic_monitor", "_fixture_runtime_tmp_root", "_fixture_worktree_lock_dir",
@@ -78,8 +79,15 @@ def review_args(head, **overrides):
     )
 
 
-def test_dispatched_detached_review_binds_verdict_without_touching_author(review_repo, monkeypatch, tmp_path):
+@pytest.mark.usefixtures("recorder_matcher")
+@pytest.mark.parametrize("opsec_case", ["clean", "unavailable", "incompatible", "blocked"])
+def test_dispatched_detached_review_binds_verdict_without_touching_author(
+    review_repo, monkeypatch, tmp_path, synthetic_opsec, opsec_case,
+):
+    from scripts.opsec import prepublish
+    from scripts.publish import github
     from scripts.review import record_cf_verdict as recorder
+    from tests.opsec_fixtures import TOKEN, synthetic_rules
     from tests.test_record_cf_verdict import setup_record
 
     repo, head = review_repo
@@ -96,7 +104,46 @@ def test_dispatched_detached_review_binds_verdict_without_touching_author(review
                   resolved_model_source="grok-model-usage")
     path.write_text(json.dumps(record))
     path.with_suffix(".result").write_text("VERDICT: APPROVE")
+    real_json = recorder._run_json
     _, comments, calls = setup_record(monkeypatch, tmp_path, head=head, branch="feature", families={"openai"})
+    fake_json = recorder._run_json
+
+    def route(args, **kwargs):
+        if isinstance(args, github.Request) and args.verb == "issue-comment-json":
+            return real_json(args, **kwargs)
+        return fake_json(args, **kwargs)
+
+    def transport(argv, **kwargs):
+        payload = json.loads(Path(argv[argv.index("--input") + 1]).read_text())
+        posted = fake_json(github.Request("issue-comment-json", repo=record["repository"],
+                                         number=42, body=payload["body"]))
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(posted), stderr="")
+
+    monkeypatch.setattr(recorder, "_run_json", route)
+    monkeypatch.setattr(github, "_send", transport)
+
+    if opsec_case == "unavailable":
+        monkeypatch.setattr(prepublish, "private_tooling", lambda: synthetic_opsec / "absent")
+    elif opsec_case == "incompatible":
+        (synthetic_opsec / "matcher.py").write_text("# no Matcher interface\n")
+    elif opsec_case == "blocked":
+        policy = json.loads(prepublish.POLICY.read_text())
+        rules = json.loads((synthetic_opsec / "rules.json").read_text())
+        rules.update(synthetic_rules(rule=policy["class6_block_ids"][0], level=6, pattern=TOKEN))
+        (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+        path.with_suffix(".result").write_text(f"VERDICT: APPROVE\n{TOKEN}")
+
+    if opsec_case != "clean":
+        reason = "class=6" if opsec_case == "blocked" else "private matcher or rules unavailable/incompatible"
+        record_before = path.read_bytes()
+        with pytest.raises(recorder.RecordError, match=f"publish_blocked: .*{reason}"):
+            recorder.record("snapshot-review", pr_number=42, task_root=path.parent,
+                            lock_root=tmp_path / "locks")
+        assert comments == []
+        assert calls == {"posts": 0, "statuses": 0}
+        assert path.read_bytes() == record_before
+        assert author_state(repo, author) == before
+        return
 
     receipt = recorder.record("snapshot-review", pr_number=42, task_root=path.parent,
                               lock_root=tmp_path / "locks")
