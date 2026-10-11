@@ -13418,6 +13418,8 @@ def _dispatch(
             # A dry-run describes the eventual checkout without fetching the
             # base or creating a worktree. Both can spawn git subprocesses.
             try:
+                if requested_branch:
+                    _validate_branch_reuse_name(requested_branch)
                 changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
                 if changed_error:
                     raise ValueError(changed_error.removeprefix("❌ "))

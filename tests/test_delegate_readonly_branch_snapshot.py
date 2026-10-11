@@ -78,6 +78,83 @@ def review_args(head, **overrides):
     )
 
 
+@pytest.mark.parametrize("branch", ["main", "master", "unsafe..branch"])
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_snapshot_refuses_invalid_branch_before_fetch_or_success(review_repo, monkeypatch, capsys, branch, dry_run):
+    repo, head = review_repo
+    before = repo.snapshot()[:3]
+    git_commands = []
+    run = subprocess.run
+
+    def observe_git(command, *args, **kwargs):
+        if command[0] == "git":
+            git_commands.append(command)
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", observe_git)
+    args = review_args(head, dry_run=dry_run)
+    args.branch = branch
+
+    assert delegate.cmd_dispatch(args) == 1
+
+    output = capsys.readouterr()
+    diagnostic = "protected branches" if branch in {"main", "master"} else "valid git branch"
+    assert diagnostic in output.err
+    assert "planned new detached snapshot" not in output.err
+    assert output.out == ""
+    record = delegate._state_path("snapshot-review")
+    assert not record.exists() or json.loads(record.read_text())["status"] == "failed"
+    assert repo.launches == []
+    assert not any("fetch" in command[1:] for command in git_commands)
+    assert not any("worktree" in command and "add" in command for command in git_commands)
+    assert not (repo.root / ".worktrees/dispatch/grok/snapshot-review").exists()
+    assert repo.snapshot()[:3] == before
+
+
+@pytest.mark.parametrize("branch", ["main", "master", "unsafe..branch", "feature", "  feature  "])
+def test_snapshot_branch_name_validation_is_subprocess_free(review_repo, monkeypatch, branch):
+    def refuse_subprocess(*args, **kwargs):
+        pytest.fail("branch-name validation must not run subprocesses")
+
+    monkeypatch.setattr(subprocess, "run", refuse_subprocess)
+    monkeypatch.setattr(subprocess, "Popen", refuse_subprocess)
+    if branch.strip() == "feature":
+        assert delegate._validate_branch_reuse_name(branch) == "feature"
+    else:
+        with pytest.raises(ValueError):
+            delegate._validate_branch_reuse_name(branch)
+
+
+@pytest.mark.parametrize("branch", ["feature", "  feature  "])
+def test_snapshot_valid_branch_dry_run_keeps_base_unresolved(review_repo, monkeypatch, branch):
+    repo, head = review_repo
+    git_commands = []
+    run = subprocess.run
+
+    def observe_git(command, *args, **kwargs):
+        if command[0] == "git":
+            git_commands.append(command)
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", observe_git)
+    args = review_args(head, dry_run=True)
+    args.branch = branch
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    snapshot = repo.root / ".worktrees/dispatch/grok/snapshot-review"
+    record = json.loads(delegate._state_path("snapshot-review").read_text())
+    assert record["status"] == "dry_run"
+    assert record["cwd"] == record["worktree_path"] == str(snapshot)
+    assert record["worktree_base_sha"] is None
+    assert record["worktree_branch"] is None
+    assert record["worktree_reused"] is False
+    assert not snapshot.exists()
+    assert repo.launches == []
+    assert not any("fetch" in command[1:] for command in git_commands)
+    assert not any("worktree" in command and "add" in command for command in git_commands)
+
+
 @pytest.mark.parametrize("condition", ["clean", "dirty", "unattributed"])
 @pytest.mark.parametrize("explicit_path", [False, True])
 def test_direct_review_dry_run_plans_new_snapshot_without_touching_author(
