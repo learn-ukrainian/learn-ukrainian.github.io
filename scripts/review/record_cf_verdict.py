@@ -1053,6 +1053,32 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
     return "".join(lines)
 
 
+def _review_branch(task: dict[str, Any]) -> str:
+    """Resolve reviewed identity without making it a checkout or cleanup branch."""
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+    from scripts.guardrails.worktree_containment import PROTECTED_BRANCHES
+
+    branches = []
+    for field in ("review_branch", "worktree_branch"):
+        value = task.get(field)
+        if value is None:
+            continue
+        if not isinstance(value, str):
+            raise RecordError("invalid review branch identity")
+        try:
+            branch = validate_plain_branch_name(value, repo_root=".")
+        except UnsafeBranchNameError as exc:
+            raise RecordError("invalid review branch identity") from exc
+        if branch in PROTECTED_BRANCHES:
+            raise RecordError("protected review branch identity")
+        branches.append(branch)
+    if not branches:
+        raise RecordError("review was not branch-pinned; re-run with --branch <PR head ref>")
+    if len(set(branches)) != 1:
+        raise RecordError("conflicting review branch identities")
+    return branches[0]
+
+
 def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:
     if not TASK_ID.fullmatch(task_id):
         raise RecordError("invalid task id")
@@ -1068,8 +1094,7 @@ def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:
         raise RecordError("review task record malformed")
     if task.get("status") != "done":
         raise RecordError("review task is not done")
-    if not task.get("worktree_branch"):
-        raise RecordError("review was not branch-pinned; re-run with --branch <PR head ref>")
+    _review_branch(task)
     return task, reply
 
 
@@ -1163,12 +1188,14 @@ def record(
     elif red_team_prompt is not None:
         raise RecordError("red-team prompt requires review_mode=red_team")
     repository = task.get("repository")
-    branch = task["worktree_branch"]
+    branch = _review_branch(task)
     sha = task.get("worktree_base_sha")
     if not isinstance(repository, str) or "/" not in repository:
         raise RecordError("review repository unavailable")
     if not isinstance(sha, str) or not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA missing or invalid")
+    if task.get("pinned_head") is not None and task["pinned_head"] != sha:
+        raise RecordError("reviewed SHA conflicts with pinned head")
     cursor = task.get("agent") == "cursor"
     native_grok = task.get("agent") in {"grok", "grok-build"}
     reported = task.get("resolved_model") if cursor or native_grok else task.get("model")

@@ -78,6 +78,38 @@ def review_args(head, **overrides):
     )
 
 
+def test_dispatched_detached_review_binds_verdict_without_touching_author(review_repo, monkeypatch, tmp_path):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_record_cf_verdict import setup_record
+
+    repo, head = review_repo
+    author = repo.root / ".worktrees/dispatch/codex/author"
+    repo.git("worktree", "add", str(author), "feature")
+    (author / "src/app.py").write_bytes(b"dirty author\x00\xff")
+    before = author_state(repo, author)
+    assert delegate.cmd_dispatch(review_args(head)) == 0
+    path = delegate._state_path("snapshot-review")
+    record = json.loads(path.read_text())
+    assert record["worktree_branch"] is None
+    # Synthetic completion and runtime attestation; no provider is invoked.
+    record.update(status="done", resolved_model="grok-4.7-build", resolved_model_known=True,
+                  resolved_model_source="grok-model-usage")
+    path.write_text(json.dumps(record))
+    path.with_suffix(".result").write_text("VERDICT: APPROVE")
+    _, comments, calls = setup_record(monkeypatch, tmp_path, head=head, branch="feature", families={"openai"})
+
+    receipt = recorder.record("snapshot-review", pr_number=42, task_root=path.parent,
+                              lock_root=tmp_path / "locks")
+
+    assert receipt["head"] == head
+    assert receipt["comment"] == "posted"
+    assert receipt["status"] == "posted"
+    assert recorder.parse_marker(comments[0]["body"])["sha"] == head
+    assert calls == {"posts": 1, "statuses": 1}
+    assert author_state(repo, author) == before
+    assert json.loads(path.read_text())["worktree_branch"] is None
+
+
 @pytest.mark.parametrize("branch", ["main", "master", "unsafe..branch"])
 @pytest.mark.parametrize("dry_run", [False, True])
 def test_snapshot_refuses_invalid_branch_before_fetch_or_success(review_repo, monkeypatch, capsys, branch, dry_run):
@@ -149,6 +181,7 @@ def test_snapshot_valid_branch_dry_run_keeps_base_unresolved(review_repo, monkey
     assert record["worktree_base_sha"] is None
     assert record["worktree_branch"] is None
     assert record["worktree_reused"] is False
+    assert record["review_branch"] == "feature"
     assert not snapshot.exists()
     assert repo.launches == []
     assert not any("fetch" in command[1:] for command in git_commands)
@@ -332,6 +365,7 @@ def test_write_branch_continuation_reuses_the_existing_attached_tree(review_repo
     record = json.loads(delegate._state_path("write-continuation").read_text())
     assert record["worktree_path"] == record["cwd"] == str(author)
     assert record["worktree_branch"] == "feature"
+    assert record["review_branch"] is None
     assert record["worktree_reused"] is True
     assert record["worktree_base_sha"] == head
     assert author_state(repo, author) == before
