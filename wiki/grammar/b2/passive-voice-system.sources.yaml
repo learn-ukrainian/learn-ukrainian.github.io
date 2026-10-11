@@ -1,38 +1,36 @@
-# Source registry for wiki/grammar/b2/passive-voice-system.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0107
   type: textbook
   title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
   page: 81
   grade: 11
 - id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1216
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0116
   type: textbook
   title: Для позначення часу дії прийменники по — в (у) так само відрізняються
   page: 84
   grade: 11
 - id: S3
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1429
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0105
   type: textbook
   title: Синтаксична норма (p. 80)
   page: 80
   grade: 11
 - id: S4
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1217
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0137
   type: textbook
   title: § 22. Синтаксичні конструкції
   page: 97
   grade: 11
 - id: S5
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-avramenko-2024_s0055
   type: textbook
   title: МЕРЕЖЕВИЙ ЕТИКЕТ
   page: 49
   grade: 7
 - id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0692
+  file: 10-klas-ukrmova-karaman-2018_s0340
   type: textbook
   title: СПІЛКУВАННЯ (p. 191)
   page: 191

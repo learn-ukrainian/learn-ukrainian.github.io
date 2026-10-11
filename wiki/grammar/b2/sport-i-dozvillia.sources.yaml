@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/sport-i-dozvillia.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 8-klas-ukrmova-avramenko-2025_s0037
@@ -14,13 +12,13 @@ sources:
   page: 211
   grade: 8
 - id: S3
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0009
+  file: 7-klas-ukrmova-avramenko-2024_s0012
   type: textbook
   title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
   page: 11
   grade: 7
 - id: S4
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0271
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0265
   type: textbook
   title: § 43. Стилістичні особливості засобів словотвору
   page: 189

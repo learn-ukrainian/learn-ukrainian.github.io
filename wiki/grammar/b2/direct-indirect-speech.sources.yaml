@@ -1,14 +1,12 @@
-# Source registry for wiki/grammar/b2/direct-indirect-speech.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0033
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0036
   type: textbook
   title: § 4. ПРЯМА МОВА
   page: 26
   grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0049
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0051
   type: textbook
   title: Пряма й непряма мова (p. 37)
   page: 37
@@ -26,7 +24,7 @@ sources:
   page: 223
   grade: 11
 - id: S7
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0040
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0044
   type: textbook
   title: Непряма мова. Способи заміни прямої мови непрямою
   page: 31

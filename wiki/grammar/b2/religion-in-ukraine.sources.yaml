@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/religion-in-ukraine.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-istoriya-schupak-2022_s1941
+  file: 5-klas-istoriya-schupak-2022_s0184
   type: textbook
   title: § 32. На основі вашого життєвого досвіду,
   page: 184
@@ -14,19 +12,19 @@ sources:
   page: 207
   grade: 11
 - id: S3
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1061
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0476
   type: textbook
   title: Ан-225 «Мрія». Світлина
   page: 265
   grade: 11
 - id: S4
-  file: 11-klas-istoriya-ukr-gisem-2024_s0970
+  file: 11-klas-istoriya-ukr-gisem-2024_s0293
   type: textbook
   title: § 28. культурне та релігійне життя
   page: 230
   grade: 11
 - id: S5
-  file: 8-klas-istoria-ukr-schupak-2025_s4208
+  file: 8-klas-istoria-ukr-schupak-2025_s0130
   type: textbook
   title: КОЗАЦЬКА РЕВОЛЮЦІЯ середини XVII ст. РОЗДІЛ З
   page: 101
@@ -38,7 +36,7 @@ sources:
   page: 58
   grade: 8
 - id: S7
-  file: 7-klas-ukrmova-litvinova-2024_s0094
+  file: 7-klas-ukrmova-avramenko-2024_s0099
   type: textbook
   title: Сторінка 90
   page: 90

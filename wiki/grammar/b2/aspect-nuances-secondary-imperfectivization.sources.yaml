@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/aspect-nuances-secondary-imperfectivization.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 5-klas-ukrmova-avramenko-2022_s0058
@@ -20,7 +18,7 @@ sources:
   page: 56
   grade: 7
 - id: S4
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0048
+  file: 7-klas-ukrmova-avramenko-2024_s0055
   type: textbook
   title: Сторінка 49
   page: 49
@@ -32,7 +30,7 @@ sources:
   page: 101
   grade: 5
 - id: S6
-  file: 7-klas-ukrmova-litvinova-2024_s0045
+  file: 7-klas-ukrmova-avramenko-2024_s0047
   type: textbook
   title: Сторінка 41
   page: 41

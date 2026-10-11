@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/b2-impersonal-passive.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0048
+  file: 7-klas-ukrmova-avramenko-2024_s0055
   type: textbook
   title: Сторінка 49
   page: 49

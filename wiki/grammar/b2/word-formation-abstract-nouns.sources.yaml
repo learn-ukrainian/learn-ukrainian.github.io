@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/word-formation-abstract-nouns.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0271
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0265
   type: textbook
   title: § 43. Стилістичні особливості засобів словотвору
   page: 189

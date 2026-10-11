@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/pobut-shchodenne.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0487
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0342
   type: textbook
   title: § 33. українське образотворче мистецтво та архітектура
   page: 269
@@ -26,13 +24,13 @@ sources:
   page: 46
   grade: 11
 - id: S5
-  file: 7-klas-ukrmova-litvinova-2024_s0045
+  file: 7-klas-ukrmova-avramenko-2024_s0047
   type: textbook
   title: § 9. Часи діє слова
   page: 41
   grade: 7
 - id: S6
-  file: 7-klas-ukrmova-litvinova-2024_s0114
+  file: 7-klas-ukrmova-avramenko-2024_s0122
   type: textbook
   title: Розділ 3. ДІЄПРИСЛІВНИК
   page: 110
@@ -44,7 +42,7 @@ sources:
   page: 52
   grade: 2
 - id: S8
-  file: 7-klas-ukrmova-litvinova-2024_s0125
+  file: 7-klas-ukrmova-avramenko-2024_s0135
   type: textbook
   title: Вид і час дієприслівників
   page: 121

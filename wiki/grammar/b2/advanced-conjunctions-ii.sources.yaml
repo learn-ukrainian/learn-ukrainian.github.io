@@ -1,32 +1,30 @@
-# Source registry for wiki/grammar/b2/advanced-conjunctions-ii.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5184
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0196
   type: textbook
   title: Складнопiдрядне речення (p. 129)
   page: 129
   grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0113
   type: textbook
   title: Складнопiдрядне речення (p. 79)
   page: 79
   grade: 9
 - id: S5
-  file: 9-klas-ukrajinska-mova-voron-2017_s5100
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0145
   type: textbook
   title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО
   page: 99
   grade: 9
 - id: S6
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0045
   type: textbook
   title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
   page: 32
   grade: 9
 - id: S7
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0034
   type: textbook
   title: Синтаксис. Пунктуацiя
   page: 25

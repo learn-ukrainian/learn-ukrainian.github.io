@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/modern-diaspora.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 5-klas-istoriya-schupak-2022_s0171
@@ -26,7 +24,7 @@ sources:
   page: 17
   grade: 11
 - id: S5
-  file: 11-klas-istoriya-ukr-gisem-2024_s0491
+  file: 11-klas-istoriya-ukr-gisem-2024_s0364
   type: textbook
   title: § 33. Широкомасштабне вторгнення російської Федерації в україну
   page: 283

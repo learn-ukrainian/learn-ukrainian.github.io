@@ -1,14 +1,12 @@
-# Source registry for wiki/grammar/b2/advanced-conjunctions-i.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4712
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0158
   type: textbook
   title: РЕЧЕННЯ З ОДНОРІДНИМИ ЧЛЕНАМИ
   page: 149
   grade: 8
 - id: S2
-  file: 7-klas-ukrmova-litvinova-2024_s3943
+  file: 7-klas-ukrmova-avramenko-2024_s0214
   type: textbook
   title: § 32. Сполучники сурядности й підрядности
   page: 198
@@ -20,25 +18,25 @@ sources:
   page: 270
   grade: 11
 - id: S4
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5187
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0206
   type: textbook
   title: § 24. БЕЗСПОЛУЧНИКОВЕ СКЛАДНЕ РЕЧЕННЯ
   page: 136
   grade: 9
 - id: S6
-  file: 9-klas-ukrajinska-mova-voron-2017_s5082
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0062
   type: textbook
   title: Стара школа мала цілу систему покарань. Близькозвучне до назви
   page: 44
   grade: 9
 - id: S7
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  file: 7-klas-ukrmova-avramenko-2024_s0199
   type: textbook
   title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
   page: 183
   grade: 7
 - id: S8
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5174
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0097
   type: textbook
   title: Складносурядне речення (p. 69)
   page: 69

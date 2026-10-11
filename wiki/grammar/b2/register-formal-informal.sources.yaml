@@ -1,32 +1,30 @@
-# Source registry for wiki/grammar/b2/register-formal-informal.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0342
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0060
   type: textbook
   title: Практична риторика (p. 45)
   page: 45
   grade: 10
 - id: S2
-  file: 10-klas-ukrmova-zabolotnyi-2018_s0761
+  file: 10-klas-ukrmova-glazova-2018_s0060
   type: textbook
   title: Практична риторика (p. 45)
   page: 45
   grade: 10
 - id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0703
+  file: 10-klas-ukrmova-karaman-2018_s0380
   type: textbook
   title: Мовленнєве спілкування. Стилістика і культура мовлення
   page: 216
   grade: 10
 - id: S4
-  file: 5-klas-ukrmova-golub-2022_s2327
+  file: 5-klas-ukrmova-golub-2022_s0231
   type: textbook
   title: § 84. Плекай у собі допитливість
   page: 232
   grade: 5
 - id: S5
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1213
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0089
   type: textbook
   title: Риторичні фігури. Риторичне запитання, риторичне звертання
   page: 67
@@ -44,13 +42,13 @@ sources:
   page: 68
   grade: 10
 - id: S8
-  file: 6-klas-ukrmova-golub-2023_s3284
+  file: 6-klas-ukrmova-golub-2023_s0243
   type: textbook
   title: § 96. Зміст моїх емоцій
   page: 240
   grade: 6
 - id: S9
-  file: 7-klas-ukrmova-avramenko-2024_s3822
+  file: 7-klas-ukrmova-avramenko-2024_s0084
   type: textbook
   title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
   page: 76
@@ -58,39 +56,39 @@ sources:
 - id: S10
   file: anna-ohoiko-500-verbs_s7013
   type: textbook
-  title: "Verb 497: читати | почитати, прочитати"
+  title: 'Verb 497: читати | почитати, прочитати'
   author: Anna Ohoiko
 - id: S11
   file: anna-ohoiko-500-verbs_s6731
   type: textbook
-  title: "Verb 215: казати | сказати"
+  title: 'Verb 215: казати | сказати'
   author: Anna Ohoiko
 - id: S12
-  file: 7-klas-ukrmova-avramenko-2024_s3825
+  file: 7-klas-ukrmova-avramenko-2024_s0091
   type: textbook
   title: РОЗВИТОК МОВЛЕННЯ
   page: 83
   grade: 7
 - id: S13
-  file: 7-klas-ukrmova-avramenko-2024_s3826
+  file: 7-klas-ukrmova-avramenko-2024_s0094
   type: textbook
   title: § 37. Творення дієслів наказового й умовного способів
   page: 86
   grade: 7
 - id: S14
-  file: 6-klas-ukrmova-litvinova-2023_s3336
+  file: 6-klas-ukrmova-litvinova-2023_s0145
   type: textbook
   title: § 28. Кличний відмінок
   page: 140
   grade: 6
 - id: S15
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1190
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0285
   type: textbook
   title: § 59. –60. ЕТИКЕТНІ ЖАНРИ
   page: 201
   grade: 11
 - id: S16
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1234
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0265
   type: textbook
   title: § 43. Стилістичні особливості засобів словотвору
   page: 189
@@ -98,15 +96,15 @@ sources:
 - id: S17
   file: ulp-1-00-lesson-notes_s6278
   type: textbook
-  title: "Lesson 2: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns"
+  title: 'Lesson 2: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns'
   author: Ukrainian Lessons Podcast
 - id: S18
   file: how-many:p12-12
   type: ukrainian_wiki
-  title: "Педагогіка A1: How Many"
-  section_path: "Педагогіка A1: How Many > Послідовність введення"
+  title: 'Педагогіка A1: How Many'
+  section_path: 'Педагогіка A1: How Many > Послідовність введення'
 - id: S19
   file: society-and-media:p14-14-s2
   type: ukrainian_wiki
-  title: "Граматика B1: Суспільство і медіа"
-  section_path: "Граматика B1: Суспільство і медіа > Деколонізаційні застереження"
+  title: 'Граматика B1: Суспільство і медіа'
+  section_path: 'Граматика B1: Суспільство і медіа > Деколонізаційні застереження'
