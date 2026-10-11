@@ -162,6 +162,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_deploy_script_idempotency.py::test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs",
     "tests/test_deploy_script_idempotency.py::test_claude_diff_excludes_do_not_mask_shipped_source",
     "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
+    "tests/test_deploy_script_idempotency.py::test_deploy_registers_native_kimi_independent_of_prompt_diff",
     "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
     "tests/test_drive_epic_skill_core.py::test_every_reference_is_linked_from_the_core",
     "tests/test_drive_epic_skill_core.py::test_section_citations_used_by_scripts_still_resolve",

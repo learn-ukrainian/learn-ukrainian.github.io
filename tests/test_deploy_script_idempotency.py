@@ -1802,6 +1802,7 @@ def test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees(tm
     assert checked.returncode == 0, checked.stdout + checked.stderr
 
 
+@pytest.mark.repo_wide
 @pytest.mark.parametrize("scenario", ["diff", "no-diff", "dry-run", "no-kimi", "no-home", "invalid"])
 def test_deploy_registers_native_kimi_independent_of_prompt_diff(tmp_path, scenario):
     repo = _init_checkout(tmp_path)
