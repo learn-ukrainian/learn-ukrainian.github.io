@@ -123,3 +123,14 @@ def test_citation_resolution_fixture_guard() -> None:
 
         collision_chunk = WikiSourceEntry(id="S8", file="nonexistent-book_c0001", type="textbook")
         assert registry_entry_resolves_to_sources_db(collision_chunk, conn) is False
+
+        # Empty-prefix and bare-section lookups must be rejected
+        empty_prefix = WikiSourceEntry(id="S9", file="_s50263", type="textbook")
+        assert registry_entry_resolves_to_sources_db(empty_prefix, conn) is False
+
+        bare_sec = WikiSourceEntry(id="S10", file="S50263", type="textbook")
+        assert registry_entry_resolves_to_sources_db(bare_sec, conn) is False
+
+        # Same book row id collision (row 1 is _s0408, not _c0001) must be rejected
+        same_book_row = WikiSourceEntry(id="S11", file="10-klas-ukrmova-karaman-2018_c0001", type="textbook")
+        assert registry_entry_resolves_to_sources_db(same_book_row, conn) is False

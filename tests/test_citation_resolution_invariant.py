@@ -52,19 +52,17 @@ def _sources_db_has_required_tables() -> bool:
         return False
 
 
-if not _sources_db_has_required_tables():
-    pytest.skip(
+_sources_db_skip = pytest.mark.skipif(
+    not _sources_db_has_required_tables(),
+    reason=(
         "sources.db not populated in this environment (CI-normal); "
         "citation resolution invariant requires a full DB. "
-        "Run locally after ingestion to exercise this test.",
-        allow_module_level=True,
-    )
+        "Run locally after ingestion to exercise this test."
+    ),
+)
 
 
 _SOURCES_SECTION_BLOCK_RE = re.compile(r"^## Джерела.*?(?=^## |\Z)", re.MULTILINE | re.DOTALL)
-_TEXTBOOK_SECTION_RE = re.compile(r"_s(\d+)$")
-_CHUNK_ROW_RE = re.compile(r"_c(\d+)$")
-_BARE_SECTION_RE = re.compile(r"^S(\d+)$")
 _PUBLISHED_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
 
 KNOWN_DRIFT: dict[str, dict] = {
@@ -520,6 +518,7 @@ def test_seeded_fake_inline_citation_is_rejected(tmp_path: Path) -> None:
     assert issues == ["orphan inline ref S999"]
 
 
+@_sources_db_skip
 @pytest.mark.parametrize(
     "path",
     PUBLISHED_CITATION_TARGETS,

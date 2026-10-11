@@ -496,41 +496,7 @@ def registry_entry_resolves_to_sources_db(entry: object, conn: SQLiteConnection)
                 ).fetchone()
                 if row is not None:
                     return True
-            else:
-                row = conn.execute(
-                    "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                    (sec_id,),
-                ).fetchone()
-                if row is not None:
-                    return True
-
-        match = _INVARIANT_CHUNK_ROW_RE.search(file_value)
-        if match:
-            row_id = int(match.group(1))
-            prefix = file_value[: match.start()]
-            if prefix:
-                row = conn.execute(
-                    "SELECT 1 FROM textbooks WHERE id = ? AND source_file = ? LIMIT 1",
-                    (row_id, prefix),
-                ).fetchone()
-                if row is not None:
-                    return True
-            else:
-                row = conn.execute(
-                    "SELECT 1 FROM textbooks WHERE id = ? LIMIT 1",
-                    (row_id,),
-                ).fetchone()
-                if row is not None:
-                    return True
-
-        if _INVARIANT_BARE_SECTION_RE.fullmatch(file_value) and (
-            conn.execute(
-                "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                (int(file_value[1:]),),
-            ).fetchone()
-            is not None
-        ):
-            return True
+        return False
 
     if entry_type == "literary":
         match = _INVARIANT_CHUNK_ROW_RE.search(file_value)
@@ -541,13 +507,6 @@ def registry_entry_resolves_to_sources_db(entry: object, conn: SQLiteConnection)
                 row = conn.execute(
                     "SELECT 1 FROM literary_texts WHERE id = ? AND source_file = ? LIMIT 1",
                     (row_id, prefix),
-                ).fetchone()
-                if row is not None:
-                    return True
-            else:
-                row = conn.execute(
-                    "SELECT 1 FROM literary_texts WHERE id = ? LIMIT 1",
-                    (row_id,),
                 ).fetchone()
                 if row is not None:
                     return True
