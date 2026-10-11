@@ -86,7 +86,7 @@ AUTHOR = {
     "role_id": "rule_author_extractor",
     "task_id": "phase3-v2-1-rule-author-extraction",
     "provider": "google",
-    "exact_model": "gemini-3.6-flash-high",
+    "exact_model": "gemini-3.8-flash-high",
     "model_family": "gemini",
     "harness": "agy",
 }
@@ -94,7 +94,7 @@ REVIEWER = {
     "role_id": "ukrainian_source_reviewer",
     "task_id": "phase3-v2-1-ukrainian-source-review",
     "provider": "openai",
-    "exact_model": "gpt-5.6-sol",
+    "exact_model": "gpt-6.1-sol",
     "model_family": "openai",
     "harness": "codex",
 }

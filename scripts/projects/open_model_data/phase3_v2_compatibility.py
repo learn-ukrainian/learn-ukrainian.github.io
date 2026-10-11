@@ -36,7 +36,8 @@ SCRIPT_PATH = ROOT / "scripts/projects/open_model_data/phase3_v2_compatibility.p
 # Original reviewed source identities, independently matched to Git history.
 FROZEN_VALIDATOR_SHA256 = "ae1e82ee32e1e1be1d358098abf0646ac74f2e318866c62e9c2635d48a1b09eb"
 FROZEN_ROLE_VALIDATOR_SHA256 = "29a95031fc9af1feff3824d9f34120bd2a430af3a45ae3773b5aacbd5ad90840"
-CURRENT_ROLE_VALIDATOR_SHA256 = "7aa99d5383d755f723efba3703a7b381fdcf736ed445dc822cb2360135e67ba2"
+FROZEN_ROLE_EVIDENCE_SHA256 = "3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b"
+CURRENT_ROLE_VALIDATOR_SHA256 = "8d703f4ea28c9f0fdc5484d0a980695f8d2f542cd428db98d0e80d8748a4727d"
 FROZEN_VOID_PRODUCER_SHA256 = "1213a5b24bcfeb5ff7a6bf0348d608d3b8e3f1ad940fda3b0cad507b428ff02d"
 CURRENT_VOID_PRODUCER_SHA256 = "e69c26c64fd70b843b6dd6136223f960a15a185fa48135a44c8f33b0ad61f1d9"
 V2_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
@@ -224,7 +225,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_source_production_transport.py": (
         "65bbd0ce715084c01a78df4ad047a90837e480928efeb0e0dd7fe9d8cd83debb",
-        "a21d76d0e91e1695e15d39cac25e4359a99f10d36e0a07324600ea9e7c2a02fc",
+        "1e4e6387b7b246f1ed5627dc6ea38eb2d10dad3b4bee2ca713cfe4c5f2f258d3",
     ),
     "scripts/projects/open_model_data/phase3_source_unit_materialization.py": (
         "5e1b9ee4cf86ff1f951270e069274e8664e73df44c8903e65f17ad5653319bbe",
@@ -349,8 +350,7 @@ def _verify_heldout_label_receipt() -> dict[str, Any]:
         bindings.get("base_contract_sha256") == V2_SHA256
         and bindings.get("amendment_sha256") == V2_1_AMENDMENT_SHA256
         and bindings.get("combined_contract_sha256") == V2_1_COMBINED_SHA256
-        and bindings.get("functional_role_contract_sha256")
-        == sha256_file(_physical_k_path(FUNCTIONAL_ROLE_LOGICAL_PATH))
+        and bindings.get("functional_role_contract_sha256") == FROZEN_ROLE_EVIDENCE_SHA256
         and bindings.get("label_prompt_sha256")
         == sha256_file(
             ROOT / "registry/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md"

@@ -467,7 +467,7 @@ def test_resumable_run_commands_pin_gemini_and_codex(tmp_path: Path) -> None:
     first = transport.run_author(manifest_path=root / "manifest.json", invoke=author_invoke)
     second = transport.run_author(manifest_path=root / "manifest.json", invoke=author_invoke)
     assert first["completed"] == 1 and second["skipped"] == 1
-    assert "ask-agy" in commands[0] and "gemini-3.6-flash-high" in commands[0]
+    assert "ask-agy" in commands[0] and "gemini-3.8-flash-high" in commands[0]
 
     transport.prepare_review(manifest_path=root / "manifest.json")
 
@@ -502,7 +502,7 @@ def test_resumable_run_commands_pin_gemini_and_codex(tmp_path: Path) -> None:
 
     result = transport.run_review(review_manifest_path=root / "review-manifest.json", invoke=review_invoke)
     assert result["completed"] == 1
-    assert "ask-codex" in commands[-1] and "gpt-5.6-sol" in commands[-1]
+    assert "ask-codex" in commands[-1] and "gpt-6.1-sol" in commands[-1]
 
 
 def test_opencode_prelude_extracts_one_exact_trailing_response() -> None:

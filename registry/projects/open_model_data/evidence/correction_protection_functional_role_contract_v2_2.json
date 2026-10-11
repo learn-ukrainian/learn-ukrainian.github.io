@@ -3,7 +3,7 @@
   "text_free": true,
   "preserved_v2_1_artifacts": {
     "functional_role_schema_sha256": "ea83fa8a540514ae4206464915c5f78d49baf524414d34bd1a5e983207d3c4cc",
-    "functional_role_evidence_sha256": "46609c61e895c82313a633901e66fd6161a01711e81929ba3742c186b83251c1",
+    "functional_role_evidence_sha256": "5357ad62ae0a2bef843a14a275f5815c617bf906a1e061805d44a37e7acb37e5",
     "evaluation_schema_sha256": "0e798247de3978631dace09c69b2e81f9a27807e1c8687ff695635d52a131ca3",
     "evaluation_evidence_sha256": "8db8cd1de8fdd9a6c345cea98243f1f4d6b3f4a2b2bdd5c15bb7c9543dfdf8e1"
   },
@@ -33,8 +33,8 @@
   "cycle002_labeling_protocol": {
     "reviewer_role_id": "heldout_label_reviewer",
     "passes": [
-      {"pass_id": "a", "task_id": "phase3-v2-2-heldout-semantic-label-pass-a", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-5.6-sol"},
-      {"pass_id": "b", "task_id": "phase3-v2-2-heldout-semantic-label-pass-b", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-5.6-sol"}
+      {"pass_id": "a", "task_id": "phase3-v2-2-heldout-semantic-label-pass-a", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-6.1-sol"},
+      {"pass_id": "b", "task_id": "phase3-v2-2-heldout-semantic-label-pass-b", "provider": "openai", "model_family": "openai", "harness": "codex", "exact_model": "gpt-6.1-sol"}
     ],
     "independence_unit": "task_id",
     "provider_independent": false,

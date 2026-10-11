@@ -3,7 +3,7 @@
 You occupy only the Phase 3 v2.1 functional role `ukrainian_source_reviewer`.
 
 Canonical task identity: `phase3-v2-1-ukrainian-source-review`.
-Exact model/family/harness: `gpt-5.6-sol` / `openai` / `codex`.
+Exact model/family/harness: `gpt-6.1-sol` / `openai` / `codex`.
 Task family: `open-model-data-correction-factory`.
 Track: `open-model-data`.
 
