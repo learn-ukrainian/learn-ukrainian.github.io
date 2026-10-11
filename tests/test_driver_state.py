@@ -846,6 +846,8 @@ def test_blocker_policy_requires_exact_real_heading(state, prefix):
     assert "Current goals remain intact." in message
     assert "scripts.driver_blockers delta" in message
     assert "scripts.driver_blockers record" in message
+    assert "post ordinary reports to epics" in message
+    assert "--reporting-target cto only for explicit operator escalation" in message
     assert "if delta fails or the baseline is unknown, post everything currently blocking" in message
 
 
@@ -872,27 +874,34 @@ def test_blocker_template_and_complete_envelope_boundary(state, monkeypatch, tmp
         driver_state.render_injection(exact + "x", state)
 
 
-@pytest.mark.parametrize("baseline", ["absent", "present", "empty"])
+@pytest.mark.parametrize("baseline", ["absent", "present", "legacy_cto", "empty"])
 def test_whoami_blocker_summary(state, baseline, capsys):
     from scripts import driver_blockers
 
     ledger = state.parent / driver_blockers.LEDGER_NAME
     if baseline == "empty":
         ledger.write_text("")
-    elif baseline == "present":
+    elif baseline in {"present", "legacy_cto"}:
         body = b"No blockers"
         receipt = {
-            "recipient": "cto",
+            "recipient": "cto" if baseline == "legacy_cto" else "epics",
             "message_id": "fixture-msg",
             "created_at": "2026-10-10T01:00:00Z",
             "content_sha256": driver_blockers.hashlib.sha256(body).hexdigest(),
         }
-        driver_blockers.record(ledger, "infra", {"epic": "infra", "complete": True, "items": []}, receipt, body, 0)
+        options = {"reporting_target": "cto"} if baseline == "legacy_cto" else {}
+        driver_blockers.record(
+            ledger, "infra", {"epic": "infra", "complete": True, "items": []}, receipt, body, 0, **options
+        )
     assert driver_state.cmd_whoami(state) == 0
     output = capsys.readouterr().out
     assert (
-        "CTO blockers: generation 1; 0 recorded blockers" if baseline == "present" else driver_blockers.UNKNOWN_SUMMARY
+        "Blocker baseline: generation 1; 0 recorded blockers"
+        if baseline in {"present", "legacy_cto"}
+        else driver_blockers.UNKNOWN_SUMMARY
     ) in output
+    assert "post ordinary reports to epics" in output
+    assert "--reporting-target cto only for explicit operator escalation" in output
     assert str(state.parent) not in output
 
 
