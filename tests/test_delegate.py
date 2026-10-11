@@ -41,6 +41,8 @@ import delegate
 from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult, Result
 from agent_runtime.telemetry import InvocationTelemetry
+from scripts.common import task_scratch
+from scripts.common.scratch import DEFAULT_SCRATCH_ROOT
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
@@ -58,12 +60,45 @@ def isolated_dispatch_repo(tmp_path, monkeypatch):
 
 
 @pytest.fixture
+def non_git_path():
+    """Own non-repository scratch independently of pytest's basetemp ancestry."""
+    scratch = task_scratch.allocate("delegate-non-git", root=DEFAULT_SCRATCH_ROOT)
+    try:
+        path = scratch.payload_dir
+        discovery = subprocess.run(
+            ["git", "rev-parse", "--git-common-dir"],
+            cwd=path, env=delegate._sanitized_git_env(),
+            capture_output=True, text=True, timeout=10,
+        )
+        assert discovery.returncode == 128, discovery.stderr
+        assert "not a git repository" in discovery.stderr
+        yield path
+    finally:
+        scratch.remove()
+
+
+@pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
     """Redirect delegate.tasks_dir() to a tmp path so tests don't pollute
     the real batch_state/tasks/ directory."""
     tasks_dir = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return tasks_dir
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_routing_budget(monkeypatch):
+    """Supply local budget inputs without replacing routing or admission guards.
+
+    Dedicated budget cases in test_delegate_review_admission.py provide their
+    own inputs; this fixture applies only to this module's dispatch scenarios.
+    """
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
+        "agents": {seat: {"status": "cool", "remaining_pct": 60}
+                   for seat in ("claude", "codex", "cursor")},
+        "diagnostics": {"records_loaded": 5, "stale": False},
+    })
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: {})
 
 
 @pytest.fixture(autouse=True)
@@ -11605,11 +11640,10 @@ def test_cross_repo_guard_allows_explicit_cwd_from_sibling(tmp_path, monkeypatch
     )
 
 
-def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch):
+def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch, non_git_path):
     (tmp_path / "primary").mkdir()
     primary, _ = _init_repo_with_worktree(tmp_path / "primary")
-    loose = tmp_path / "not-a-repo"
-    loose.mkdir()
+    loose = non_git_path
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
 
     assert (
@@ -12325,7 +12359,9 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
 
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
-def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_dir, tmp_path, monkeypatch, target):
+def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(
+    tmp_tasks_dir, tmp_path, monkeypatch, target, non_git_path,
+):
     """#9739: a --cwd checkout of another repository skips authoring admission like --repo; the primary's own
     worktree at the same relative path (``.worktrees/dispatch/codex/task-1``) is admitted as usual."""
     primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
@@ -12333,7 +12369,7 @@ def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_d
     assert primary_wt.is_dir() and primary_wt.relative_to(primary) == sibling_wt.relative_to(sibling)
     assert delegate._is_other_repository(sibling_wt, primary)
     assert not delegate._is_other_repository(primary_wt, primary)
-    assert not delegate._is_other_repository(tmp_path, primary)  # outside git: identity unproven, never a sibling
+    assert not delegate._is_other_repository(non_git_path, primary)  # outside git: identity unproven, never a sibling
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     checkout = sibling_wt if target == "sibling" else primary_wt
