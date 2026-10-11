@@ -17,6 +17,7 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import re
 import shlex
 import shutil
 import subprocess
@@ -40,6 +41,75 @@ def _load_hook():
 
 
 guard = _load_hook()
+
+ROUND_SEVEN_DENIED = [
+    ("bun-bracket", "bun -e 'console.log(import.meta[\"env\"])'"),
+    ("php-filter-server", "php -r 'print_r(filter_input_array(INPUT_SERVER));'"),
+    ("php-filter-env", "php -r 'print_r(filter_input_array(INPUT_ENV));'"),
+    ("php-filter-var-server", "php -r 'print_r(filter_var_array(INPUT_SERVER));'"),
+    ("php-filter-var-env", "php -r 'print_r(filter_var_array(INPUT_ENV));'"),
+    ("php-filter-input-server", "php -r 'print_r(filter_input(INPUT_SERVER));'"),
+    ("php-filter-input-env", "php -r 'print_r(filter_input(INPUT_ENV));'"),
+    ("php-filter-dynamic-key", "php -r 'echo filter_input(INPUT_ENV, $name);'"),
+    ("php-filter-secret-key", "php -r 'echo filter_input(INPUT_ENV, \"ARBITRARY_TOKEN\");'"),
+    ("perl-use-env", "perl -e 'use Env; print $value'"),
+    ("perl-require-env", "perl -e 'require Env; print $value'"),
+    ("perl-tie-env", "perl -e 'tie %h, \"Env\"; print %h'"),
+    ("compatibility-getenvironment", "python -c 'print(getenvironment())'"),
+    ("shell-compgen-export", "compgen -A export"),
+]
+
+ROUND_SEVEN_ALLOWED = [
+    "python -c 'environ_x = 1; print(environ_x)'",
+    "python -c 'print(os.environ_x)'",
+    "perl -e 'use Envoy; print 1'",
+    "perl -e 'tie %h, \"Envelope\"; print 1'",
+    "php -r 'echo filter_input(INPUT_ENV, \"HOME\");'",
+    'bun -e \'console.log(import.meta["env"]["HOME"])\'',
+]
+
+
+@pytest.mark.parametrize("api,command", ROUND_SEVEN_DENIED, ids=[row[0] for row in ROUND_SEVEN_DENIED])
+def test_round_seven_inventory_denied(api, command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout
+    assert SENTINEL not in result.stderr
+
+
+@pytest.mark.parametrize("command", ROUND_SEVEN_ALLOWED)
+def test_round_seven_neighbors_allowed(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 0
+    assert SENTINEL not in result.stdout
+    assert SENTINEL not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command,code",
+    [
+        ("php -r 'echo filter_input(INPUT_ENV, \"HOME\");'", 0),
+        ("php -r 'echo filter_input(INPUT_ENV, \"ARBITRARY_TOKEN\");'", 2),
+        ("python -c 'print(os.popen(\"env\").read())'", 2),
+    ],
+)
+def test_round_seven_literal_decisions_in_process(monkeypatch, capsys, command, code):
+    monkeypatch.setenv("ARBITRARY_TOKEN", SENTINEL)
+    assert _run(monkeypatch, command) == code
+    captured = capsys.readouterr()
+    assert SENTINEL not in captured.out
+    assert SENTINEL not in captured.err
+    assert captured.out == ""
+    assert captured.err.startswith("BLOCKED by guard-secret-print") if code == 2 else captured.err == ""
+
+
+@pytest.mark.parametrize("language,api", [("php", "getenv"), ("lua", "os.getenv")])
+def test_getenv_inventory_rows_deny_without_other_rows(monkeypatch, language, api):
+    row = next(row for row in guard.ENVIRONMENT_API_INVENTORY if row[:2] == (language, api))
+    assert row[2] == "identifier"
+    monkeypatch.setattr(guard, "_ENV_IDENTIFIERS", re.compile("(?:" + row[3] + r")(?![\w$])"))
+    call = "getenv()" if language == "php" else "os.getenv()"
+    assert guard._program_reason(language, call) is not None
 
 
 @pytest.mark.parametrize("command", BENIGN_COMMANDS)

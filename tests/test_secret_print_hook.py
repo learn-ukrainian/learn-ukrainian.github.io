@@ -13,6 +13,8 @@ import pytest
 from tests.test_guard_secret_print import (
     ROUND_FIVE_KEYED,
     ROUND_FIVE_SPELLINGS,
+    ROUND_SEVEN_ALLOWED,
+    ROUND_SEVEN_DENIED,
     ROUND_SIX_INVENTORY,
     ROUND_SIX_NEIGHBORS,
 )
@@ -22,6 +24,25 @@ ROOT = Path(__file__).resolve().parents[1]
 ADAPTER = ROOT / "scripts/agent_runtime/secret_print_hook.py"
 SENTINEL = "synthetic_adapter_value_91b8"
 NATIVE_ENV = {"PATH": "/usr/bin:/bin", "ARBITRARY_TOKEN": SENTINEL, "PYTHONDONTWRITEBYTECODE": "1"}
+
+
+@pytest.mark.parametrize("harness", HARNESS_NAMES)
+@pytest.mark.parametrize(
+    "command,allowed",
+    [(command, False) for _, command in ROUND_SEVEN_DENIED] + [(command, True) for command in ROUND_SEVEN_ALLOWED],
+)
+def test_native_round_seven_inventory_and_neighbors(harness, command, allowed):
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", harness],
+        input=json.dumps(event(harness, command)),
+        text=True,
+        capture_output=True,
+        env=NATIVE_ENV,
+        timeout=10,
+    )
+    assert SENTINEL not in result.stdout
+    assert SENTINEL not in result.stderr
+    assert_decision(harness, result.returncode, result.stdout, result.stderr, allowed)
 
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)

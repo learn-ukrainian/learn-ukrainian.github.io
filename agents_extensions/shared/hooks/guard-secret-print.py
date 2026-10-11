@@ -39,15 +39,25 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # constructing those attribute names with string concatenation still can.
 # Command aliases, functions shadowing commands, external script files, computed
 # paths and interpreter aliases such as renamed binaries remain limits.
-# ENVIRONMENT_API_INVENTORY covers the documented environment mappings,
-# lookup functions, diagnostics and literal child dumpers of the listed runtimes.
+# ENVIRONMENT_API_INVENTORY covers the documented whole-environment APIs the
+# authors enumerated for each listed language as of 2026-10-11, with the limits
+# above and below. Aliasing global environment objects before reading them is a
+# known limit, for example `const p = process; p.env` and `const {env} = process`.
+# This class includes assignment destructuring, Deno/Bun destructuring and
+# getattr-style or aliased access. Literal `import {env} from "process"` has a row.
+# Generic process launchers that inherit the environment are another known
+# limit, including asyncio.create_subprocess_exec/shell, pty.spawn,
+# os.posix_spawn* and subprocess calls of arbitrary programs. Rows for dumpers
+# named literally in command text remain enforced.
 # Python/Lua getenv require a name; invalid no-name calls deny conservatively.
 # Node binding is undocumented; getBuiltinModule('os') alone does not dump the
 # environment. Both are conservative namespace denials required by this policy.
-# Go's os.Environ/syscall.Environ and os/exec are inventoried but go run reads
-# external source files and is out of scope, as are Rust execution and FFI.
-# Other identifier-free accesses are Known limits. A newly identified documented
-# standard-library whole-environment API in a listed runtime belongs in the table.
+# nt.environ, Go and Rust are out of scope, including FFI. Existing compatibility
+# denials do not imply support for those runtimes.
+# Stopping rule: a missing identifier blocks only when it is a documented
+# standard-library API of a listed language returning the whole environment or
+# a report containing it in one call, writable in command text without aliasing
+# or launching another program, and absent from the table. All else is Consider.
 # grep -c TOKEN .env and cp .env backup remain conservative denials even though
 # those operations do not print values.
 
@@ -136,7 +146,7 @@ ENVIRONMENT_API_INVENTORY = (
     # Deno: Command and legacy run can execute literal environment dumpers.
     ("deno", "Deno.Command/run dumpers", "literal", r"(?:Command|run)\("),
     # Bun: Bun.env, process.env and import.meta.env (bun.sh/docs/runtime/environment-variables).
-    ("bun", "Bun.env/import.meta.env", "identifier", r"(?i:bun(?:\.env|\[env\])|import\.meta\.env)"),
+    ("bun", "Bun.env/import.meta.env", "identifier", r"(?i:(?:bun|import\.meta)(?:\.env|\[env\]))"),
     # Bun: spawn/spawnSync and the shell $ tagged template inherit env.
     ("bun", "Bun.spawn/shell dumpers", "literal", r"spawn(?:Sync)?\(|\$`"),
     # Ruby: ENV and every ENV method such as to_h/to_a/each (docs.ruby-lang.org/en/master/ENV.html).
@@ -152,6 +162,8 @@ ENVIRONMENT_API_INVENTORY = (
     ),
     # Perl: %ENV, qualified hashes and $ENV{NAME} (perldoc.perl.org/variables/%25ENV).
     ("perl", "%ENV/$ENV", "identifier", r"(?i:%(?:main::|::)?env|\$(?:main::|::)?env)"),
+    # Perl: Env imports or ties the environment (perldoc.perl.org/Env).
+    ("perl", "Env module", "identifier", r"(?:use|require)\x00Env|tie\x00?%[^;]*,\x00?Env"),
     # Perl: system/exec/readpipe/backticks/open pipes (perldoc.perl.org/perlfunc).
     ("perl", "Perl child dumpers", "literal", r"(?:system|exec|readpipe|open)\("),
     # Perl: qx command literals (perldoc.perl.org/perlop, Quote-Like Operators).
@@ -165,8 +177,16 @@ ENVIRONMENT_API_INVENTORY = (
     ("php", "$_ENV", "identifier", r"(?i:\$_env)"),
     # PHP: $_SERVER (php.net/manual/en/reserved.variables.server.php), includes CLI env.
     ("php", "$_SERVER", "identifier", r"(?i:\$_server)"),
-    # PHP: getenv() returns the whole env; named getenv is handled by the Python row.
-    ("php", "getenv", "shared_identifier", "getenv"),
+    # PHP: getenv() returns the whole env (php.net/manual/en/function.getenv.php).
+    ("php", "getenv", "identifier", r"(?i:getenv)"),
+    # PHP: filter_input_array reads complete input mappings; related calls without
+    # literal keys deny conservatively (php.net/manual/en/function.filter-input-array.php).
+    (
+        "php",
+        "filter input environment/server",
+        "identifier",
+        r"(?i:filter_(?:input_array|var_array|input)\(INPUT_(?:SERVER|ENV))",
+    ),
     # PHP: apache_getenv is a named Apache subprocess-env lookup, never a bulk API.
     ("php", "apache_getenv", "identifier", r"(?i:apache_getenv)"),
     # PHP: phpinfo/INFO_ENVIRONMENT (php.net/manual/en/function.phpinfo.php).
@@ -178,7 +198,7 @@ ENVIRONMENT_API_INVENTORY = (
     # PHP: exec/system/passthru/shell_exec/popen/proc_open/backticks inherit env.
     ("php", "PHP child dumpers", "literal", r"(?:exec|system|passthru|shell_exec|popen|proc_open)\("),
     # Lua: os.getenv(name) only; no standard bulk accessor (lua.org/manual/5.4/manual.html).
-    ("lua", "os.getenv", "shared_identifier", "getenv"),
+    ("lua", "os.getenv", "identifier", r"(?i:os\.getenv|getenv)"),
     # Lua: os.execute/io.popen may run environment dumpers.
     ("lua", "os.execute/io.popen dumpers", "literal", r"(?:execute|popen)\("),
     # Lua: long bracket strings in child commands (lua.org/manual/5.4/manual.html#3.1).
@@ -197,8 +217,8 @@ ENVIRONMENT_API_INVENTORY = (
     ("shell", "declare -p", "command", "declare"),
     # Shell: typeset -p, synonym of declare (GNU Bash manual, Bash Builtins).
     ("shell", "typeset -p", "command", "typeset"),
-    # Shell: compgen -e enumerates names only; conservative requested inventory denial.
-    ("shell", "compgen -e", "command", "compgen"),
+    # Shell: compgen -e/-A export enumerates names only; conservative inventory denial.
+    ("shell", "compgen -e/-A export", "command", "compgen"),
     # Shell/Linux: strings or any reader of /proc/*/environ uses the sensitive-file rule.
     ("shell", "/proc/*/environ", "file", "/proc/*/environ"),
     # Rust: std::env is reserved as a language-object identifier; execution is not modeled.
@@ -935,6 +955,7 @@ _KEYED_ENV = re.compile(
     r"\$(?:main::|::)?ENV\{(?P<perl_key>\w+)\}|"
     r"\$_(?:ENV|SERVER)\[(?P<php_key>\w+)\]|"
     r"(?:getenv|apache_getenv)\((?P<php_get>\w+)\)|"
+    r"filter_input\(INPUT_(?:SERVER|ENV),\x00?(?P<php_filter>\w+)\)|"
     r"ENVIRON\[(?P<awk_key>\w+)\])(?![\w$]|\(|\.\()"
 )
 _CHILD_PROCESS_APIS = tuple(
@@ -1052,7 +1073,7 @@ def _program_reason(cmd: str, program: str) -> str | None:
         access = _KEYED_ENV.match(text, start)
         if access and access.end() not in templates:
             kind, name = next((kind, name) for kind, name in access.groupdict().items() if name is not None)
-            if kind in {"php_key", "php_get"} and cmd != "php":
+            if kind in {"php_key", "php_get", "php_filter"} and cmd != "php":
                 return "inline program lookup does not belong to this runtime"
             key_start, key_end = access.span(kind)
             literal = kind in {"js_property", "perl_key"} or name.startswith(":") or all(literals[key_start:key_end])
