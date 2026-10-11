@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/law-justice-vocabulary.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 11-klas-ukrajinska-mova-voron-2019_s1257
@@ -8,25 +6,25 @@ sources:
   page: 86
   grade: 11
 - id: S2
-  file: 5-klas-istoriya-schupak-2022_s1940
+  file: 5-klas-istoriya-schupak-2022_s0170
   type: textbook
   title: § 30. Як ви розумієте значення поняття «правила поведінки»? Чи дово
   page: 170
   grade: 5
 - id: S3
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1050
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0400
   type: textbook
   title: ДЕРЖАВОТВОРЧІ ПРОЦЕСИ В УКРАЇНІ
   page: 222
   grade: 11
 - id: S4
-  file: 6-klas-istoriia-shchupak-2023_s2566
+  file: 6-klas-istoriia-shchupak-2023_s0182
   type: textbook
   title: ЗАПИТАННЯ І ЗАВДАННЯ (p. 182)
   page: 182
   grade: 6
 - id: S5
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3406
+  file: 6-klas-ukrmova-avramenko-2023_s0237
   type: textbook
   title: Тема 10. Розвиток мовлення
   page: 226

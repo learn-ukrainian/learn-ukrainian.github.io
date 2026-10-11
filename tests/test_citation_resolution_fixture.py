@@ -116,3 +116,10 @@ def test_citation_resolution_fixture_guard() -> None:
         # Dangling textbook chunk is rejected
         dangling_tb = WikiSourceEntry(id="S6", file="10-klas-ukrmova-karaman-2018_s9999", type="textbook")
         assert registry_entry_resolves_to_sources_db(dangling_tb, conn) is False
+
+        # Cross-source collision: suffix matching another book's row/section must be rejected
+        collision_sec = WikiSourceEntry(id="S7", file="nonexistent-book_s50263", type="textbook")
+        assert registry_entry_resolves_to_sources_db(collision_sec, conn) is False
+
+        collision_chunk = WikiSourceEntry(id="S8", file="nonexistent-book_c0001", type="textbook")
+        assert registry_entry_resolves_to_sources_db(collision_chunk, conn) is False

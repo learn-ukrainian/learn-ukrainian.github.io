@@ -172,7 +172,7 @@ to `unified_dense` → `rerank_candidates` → `data/embeddings/manifest.db` + s
 - **Root Cause Diagnosis (AC-01):** In earlier textbook ingestion pipelines, sequential chunk IDs (e.g. `_s0711`) were assigned linearly. Subsequent re-chunking, bounding recalculations, and curriculum cohort updates (such as foreign-student textbook exclusion per #10102) caused sequential IDs to shift across ingestions. As a result, 93 historical B2 grammar wiki registries (`wiki/grammar/b2/*.sources.yaml`) cited obsolete chunk IDs.
 - **Stable Citation Strategy (AC-02):** Per the accepted decision in `docs/epics/fresh-build-plan-schema.md`, authentic text citations must never rely solely on transient sequential chunk IDs. Citations are anchored by **verbatim text + content hash + (source file, page)**. In `tests/test_citation_resolution_invariant.py`, `_registry_entry_resolves_to_sources_db` resolves textbook entries by `chunk_id` in `textbooks`, `section_id` in `textbook_sections`, and `id` in `textbooks`.
 - **CI-Visible Fixture Guard (AC-04):** Because `sources.db` is an uncommitted local asset not mounted in CI, `test_citation_resolution_fixture_guard` runs an in-memory SQLite fixture guard in CI verifying resolution and rejection of dangling citations without requiring a full database download. In full environments, `test_published_citations_resolve_invariant` validates all published articles.
-- **Corpus Inventory (AC-05):** Verified counts for active textbook holdings: 54,127 chunks across 168 source files, 40,151 sections.
+- **Corpus Inventory (AC-05):** Verified counts for active textbook holdings as of 2026-10-11 (issue #8403): 54,127 chunks across 209 distinct `source_file`s and 40,151 sections.
 
 ### Curated listening and reading catalogues (#9409)
 

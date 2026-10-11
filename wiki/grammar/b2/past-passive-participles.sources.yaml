@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/past-passive-participles.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0119
+  file: 7-klas-ukrmova-avramenko-2024_s0134
   type: textbook
   title: Форми на -но, -то
   page: 120
@@ -14,7 +12,7 @@ sources:
   page: 100
   grade: 7
 - id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s0094
+  file: 7-klas-ukrmova-avramenko-2024_s0099
   type: textbook
   title: § 17. Активні й пасивні дієприкметники
   page: 90
@@ -38,7 +36,7 @@ sources:
   page: 187
   grade: 10
 - id: S7
-  file: 7-klas-ukrmova-litvinova-2024_s0072
+  file: 7-klas-ukrmova-avramenko-2024_s0076
   type: textbook
   title: Безособові форми на -но, -то
   page: 68

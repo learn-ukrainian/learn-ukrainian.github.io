@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/predicate-types.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4697
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0039
   type: textbook
   title: Види словосполучень за будовою. ПРОСТІ
   page: 44
@@ -14,25 +12,25 @@ sources:
   page: 97
   grade: 11
 - id: S3
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1216
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0116
   type: textbook
   title: Для позначення часу дії прийменники по — в (у) так само відрізняються
   page: 84
   grade: 11
 - id: S4
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5157
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0016
   type: textbook
   title: Повторення вивченого (p. 13)
   page: 13
   grade: 9
 - id: S5
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5218
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0016
   type: textbook
   title: Повторення вивченого (p. 13)
   page: 13
   grade: 9
 - id: S6
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1429
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0105
   type: textbook
   title: Синтаксична норма (p. 80)
   page: 80

@@ -1,14 +1,12 @@
-# Source registry for wiki/grammar/b2/word-formation-place-object-names.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-golub-2023_s3258
+  file: 6-klas-ukrmova-golub-2023_s0092
   type: textbook
   title: § 35. Як розумно витрачати,
   page: 91
   grade: 6
 - id: S2
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2511
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0019
   type: textbook
   title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
   page: 26
@@ -20,25 +18,25 @@ sources:
   page: 92
   grade: 3
 - id: S4
-  file: 6-klas-ukrmova-golub-2023_s3263
+  file: 6-klas-ukrmova-golub-2023_s0141
   type: textbook
   title: § 53. Мова і комп’ютер
   page: 138
   grade: 6
 - id: S5
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3380
+  file: 6-klas-ukrmova-avramenko-2023_s0056
   type: textbook
   title: Словотвiр. Орфографiя
   page: 55
   grade: 6
 - id: S6
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0247
   type: textbook
   title: § 50. СТИЛІСТИЧНІ ЗАСОБИ СЛОВОТВОРУ
   page: 177
   grade: 11
 - id: S7
-  file: 6-klas-ukrmova-litvinova-2023_s3321
+  file: 6-klas-ukrmova-litvinova-2023_s0101
   type: textbook
   title: § 17. Зміни приголосних при словотворенні
   page: 96

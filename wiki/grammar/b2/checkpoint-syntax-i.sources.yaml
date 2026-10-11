@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/checkpoint-syntax-i.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 9-klas-ukrajinska-mova-voron-2017_s5136
@@ -8,7 +6,7 @@ sources:
   page: 206
   grade: 9
 - id: S2
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4696
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0037
   type: textbook
   title: СИНТАКСИС. ПУНКТУАЦІЯ
   page: 42
@@ -26,7 +24,7 @@ sources:
   page: 2
   grade: 8
 - id: S5
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4746
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0323
   type: textbook
   title: Додаток 4. СЛОВНИЧОК СИНОНІМІВ
   page: 286
