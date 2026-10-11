@@ -22,9 +22,9 @@ def valid_hook_files_for_existing_adapter_fixtures(tmp_path, monkeypatch, reques
     """Existing adapter cases now include real valid wiring in disposable homes."""
     from scripts.agent_runtime import agy_hook_config as hooks
 
-    monkeypatch.setenv("HOME", str(tmp_path / "ordinary-home"))
     if request.node.name.startswith("test_hook_gate_"):
         return
+    monkeypatch.setenv("HOME", str(tmp_path / "ordinary-home"))
     fake_root = tmp_path / "provider-fixture"
     fake_root.mkdir()
     _fake_agy(fake_root, monkeypatch, "2.0.0")
@@ -2274,7 +2274,21 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
 
     cwd = tmp_path / "worker"
     cwd.mkdir()
-    home = Path.home()
+    real_home = Path.home()
+    real_hook_paths = hooks.hook_locations(real_home, real_home)
+
+    def hook_file_state(path):
+        try:
+            metadata = path.stat()
+        except FileNotFoundError:
+            return (False, None, None)
+        return (True, metadata.st_size, metadata.st_mtime_ns)
+
+    real_hook_states = [hook_file_state(path) for path in real_hook_paths]
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setattr(Path, "home", classmethod(lambda _cls: home))
+    monkeypatch.setenv("HOME", str(home))
     scoped_home = tmp_path / "scoped" if scoped else None
     paths = hooks.hook_locations(cwd, home, scoped_home)
     for path in paths:
@@ -2322,3 +2336,4 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
             AgyAdapter().build_invocation(**kwargs)
         assert calls == []
     agy_module._agy_version.cache_clear()
+    assert [hook_file_state(path) for path in real_hook_paths] == real_hook_states
