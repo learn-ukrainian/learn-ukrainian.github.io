@@ -296,11 +296,7 @@ def test_curated_producer_actual_apply_refuses_held_manifest(tmp_path, monkeypat
     producer = importlib.import_module("scripts.lexicon." + name)
     candidates, decisions, manifest, fingerprint = producer_inputs(tmp_path)
     original, old_fingerprint = manifest.read_bytes(), fingerprint.read_bytes()
-    kwargs = {}
-    if name == "curated_ohoiko_ulp_repromote":
-        kwargs["plan_out"] = tmp_path / "plan.json"
-    else:
-        monkeypatch.setattr(producer, "DEFAULT_PLAN", tmp_path / "plan.json")
+    kwargs = {"plan_out": tmp_path / "plan.json"}
     with pytest.raises(dispositions.DispositionError, match="held inventory contribution"):
         producer.apply_plan(
             candidates=candidates, decisions=decisions, manifest=manifest, fingerprint=fingerprint, write=True, **kwargs

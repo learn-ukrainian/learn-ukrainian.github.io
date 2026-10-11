@@ -227,7 +227,7 @@
       },
       {
         "path": "scripts/lexicon/generate_vesum_aliases.py",
-        "sha256": "4cf87977a43c952e2b96629f921f49a4e93114a5d42a50c8175de301b32e3b6e"
+        "sha256": "b07517135c402f5d0307760d211c15b0c9d52f541ce0543a4c0b3e6e3e396518"
       },
       {
         "path": "scripts/lexicon/generate_vesum_form_shards.py",
