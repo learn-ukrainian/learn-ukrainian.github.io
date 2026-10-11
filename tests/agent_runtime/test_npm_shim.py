@@ -28,6 +28,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import textwrap
 from pathlib import Path
 
@@ -780,12 +781,43 @@ def test_symlinks_inside_the_same_worktree_pass(layout):
     assert _sentinels_intact(layout)
 
 
+def _elsewhere_outside_protected_trees(preferred_root: Path) -> tuple[Path, bool]:
+    """A directory whose ancestors have no outward ``node_modules`` link.
+
+    Returns the directory and whether the caller must delete it. A child of
+    ``preferred_root`` stays with pytest. A basetemp inside a dispatch worktree
+    is protected: the shim walks every ancestor and refuses ``npm ci`` there,
+    so the directory is created in the process temp dir instead.
+    """
+    ancestors = (preferred_root, *preferred_root.parents)
+    if not any(npm_guard.outward_links(ancestor) for ancestor in ancestors):
+        elsewhere = preferred_root / "elsewhere"
+        elsewhere.mkdir()
+        return elsewhere, False
+    return Path(tempfile.mkdtemp(prefix="npm-shim-elsewhere-")), True
+
+
 def test_outside_any_worktree_passes_through(layout):
-    """No ancestor has an outward link, so there is nothing to protect and the call runs."""
-    elsewhere = layout["tmp"] / "elsewhere"
-    elsewhere.mkdir()
-    proc = _run(layout, "npm", ["ci"], elsewhere, {"FAKE_NPM_EXIT": "6"})
-    _assert_passed_through(layout, proc, "npm", ["ci"], elsewhere, 6)
+    """No ancestor has an outward link, so there is nothing to protect and the call runs.
+
+    A local ``node_modules`` stops the fake's parent walk, and ``FAKE_NPM_SAFE_ROOT``
+    is this directory. ``npm ci`` may empty only that directory.
+    """
+    elsewhere, cleanup = _elsewhere_outside_protected_trees(layout["tmp"])
+    try:
+        (elsewhere / "node_modules").mkdir()
+        proc = _run(
+            layout,
+            "npm",
+            ["ci"],
+            elsewhere,
+            {"FAKE_NPM_EXIT": "6", "FAKE_NPM_SAFE_ROOT": str(elsewhere)},
+        )
+        _assert_passed_through(layout, proc, "npm", ["ci"], elsewhere, 6)
+        assert _sentinels_intact(layout)
+    finally:
+        if cleanup:
+            shutil.rmtree(elsewhere, ignore_errors=True)
 
 
 def test_primary_checkout_with_real_node_modules_passes_through(layout):
@@ -1185,7 +1217,15 @@ def test_real_npm_allowlisted_program_runs_with_the_sentinel_intact(layout, tool
 
 
 def test_missing_project_interpreter_fails_closed(layout):
-    (layout["shim_dir"].parents[2] / ".venv" / "bin" / "python").unlink()
+    """Exit 127 when the tooling checkout has no project interpreter.
+
+    The shim resolves that checkout through Git and drops every ``GIT_*``
+    variable before the lookup, so a ceiling on the temp directory cannot
+    keep the lookup there. A git root on the tooling checkout does.
+    """
+    tooling = layout["shim_dir"].parents[2]
+    (tooling / ".venv" / "bin" / "python").unlink()
+    _git(tooling, "init", "-q", "-b", "main")
     proc = _run(layout, "npm", ["ls"], layout["worktree"])
     assert proc.returncode == 127
     assert "cannot find the project interpreter" in proc.stderr
