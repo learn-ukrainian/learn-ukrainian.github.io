@@ -18,7 +18,7 @@ This decision record provides the authoritative triage and durable remediation r
 2. **Semantic Safety Scoped to Audited MCP Lookups:** Sources MCP tools (`search_esum` and `search_esum_batch` in `scripts/wiki/sources_db.py`) query **only** `esum_etymology_meta` (exact lemma matches) and `esum_etymology` (FTS5 full text search). Neither tool references or joins `esum_cognate_forms`. Lexical lookup paths used by curriculum authoring and agent pipelines are fully functional and unaffected by this issue.
 3. **Downstream Structured-Data Gap:** In contrast, downstream structured consumers that join on `esum_cognate_forms`—specifically `scripts/etymology/build_data_manifest.py`, which executes `LEFT JOIN esum_cognate_forms f ON f.entry_id = e.id`—currently match 0 rows due to the disjoint ID spaces. This results in empty structured cognate dictionaries `{}` and `null` proto-forms. While the manifest builder falls back gracefully to raw etymology text without crashing, structured programmatic access to parsed cognates from the database remains unpopulated until durable remediation.
 4. **Contract Protection:** Live host mutations are strictly prohibited. Existing Phase 3 recovery and freeze gates (`phase3_recovery_contracts.py`, `phase3_live_ingest_gate.py`, and `phase3_university_content_audit_freeze.py`) explicitly pin and verify `foreign_key_failure_count == 134836` with cryptographic hash `9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb`.
-5. **Remediation Roadmap:** Durable re-keying and cleanup is scheduled for the next major database cutover (Sources DB v5/v6 re-ingest), requiring an archive step, clean staging/truncation, validation (`PRAGMA foreign_key_check == 0`), and atomic contract updates.
+5. **Remediation Roadmap:** Durable re-keying and cleanup is scheduled for the next major database cutover (Sources DB v5/v6 re-ingest). The remediation sequence requires historical archiving, clean-table extraction in an isolated database copy (or adding `--dest-table` support to the extractor), transaction-safe table promotion, and an atomic, comprehensive update of all live-gate and freeze contract pins.
 
 ---
 
@@ -130,27 +130,32 @@ The exact failure count and cryptographic hash of the foreign-key violations are
 
 When the next scheduled major database cutover takes place:
 
-### Extraction Mechanism & Staging Requirement
-`scripts/etymology/extract_cognate_forms.py` operates via:
-```sql
-INSERT INTO esum_cognate_forms (entry_id, cognate_forms, proto_form, extracted_count, expected_count)
-VALUES (?, ?, ?, ?, ?)
-ON CONFLICT(entry_id) DO UPDATE SET ...
-```
-Because the extractor relies on `ON CONFLICT(entry_id) DO UPDATE`, executing it against an existing populated table **does not remove orphan rows**. Running the extractor directly against the current database will simply insert 36,177 rows (IDs `215,658..251,834`) while leaving all 134,836 orphan rows (IDs `62,945..215,657`) intact, leaving foreign-key violations unchanged.
+### Extractor Constraints & Isolation Requirement
+Inspection of `scripts/etymology/extract_cognate_forms.py` reveals two important constraints:
+1. **Target Table is Hardcoded:** The script creates and writes strictly to `esum_cognate_forms` (lines 181, 213). Its CLI accepts only `--db`, `--telemetry`, and `--min-coverage-pct`; it does not accept a `--dest-table` argument.
+2. **Conflict Handling Retains Pre-existing Rows:** It executes:
+   ```sql
+   INSERT INTO esum_cognate_forms (entry_id, cognate_forms, proto_form, extracted_count, expected_count)
+   VALUES (?, ?, ?, ?, ?)
+   ON CONFLICT(entry_id) DO UPDATE SET ...
+   ```
+   Executing the script against an existing populated database leaves all 134,836 orphan rows (IDs `62,945..215,657`) untouched while adding the 36,177 canonical rows (IDs `215,658..251,834`), retaining all foreign-key violations.
 
-Therefore, durable remediation must execute the following staged sequence:
+Therefore, durable remediation must be executed in an **isolated database copy** where the target table is cleanly initialized, or `--dest-table` support must be added to the extractor as an engineering prerequisite prior to cutover.
 
-### Execution Steps
-1. **Archive Legacy Forms:**
-   Prior to modification, export the existing 134,836 rows to an unconstrained archive table or backup file (e.g. `esum_cognate_forms_legacy_archive` or SQLite archive) to prevent loss of historical fine-grained extractions:
+### Step-by-Step Remediation Sequence in Isolated Database
+1. **Staging Environment Setup:**
+   Copy `data/sources.db` to an isolated workspace build path (e.g. `data/sources.db.cutover_staging`).
+2. **Preserve Legacy Archive:**
+   Export the 134,836 existing rows into an unconstrained legacy archive table so historical fine-grained extractions remain accessible:
    ```sql
    CREATE TABLE esum_cognate_forms_legacy_archive AS SELECT * FROM esum_cognate_forms;
    ```
-2. **Clean Staging Table:**
-   Create a clean staging table with the foreign-key constraint defined:
+3. **Clean Table Reset:**
+   Drop and recreate an empty `esum_cognate_forms` table in the isolated database:
    ```sql
-   CREATE TABLE esum_cognate_forms_staging (
+   DROP TABLE esum_cognate_forms;
+   CREATE TABLE esum_cognate_forms (
        entry_id INTEGER PRIMARY KEY,
        cognate_forms TEXT NOT NULL DEFAULT '{}',
        proto_form TEXT,
@@ -160,22 +165,64 @@ Therefore, durable remediation must execute the following staged sequence:
        FOREIGN KEY(entry_id) REFERENCES esum_etymology_meta(id)
    );
    ```
-3. **Regenerate from Canonical Meta:**
-   Run `scripts/etymology/extract_cognate_forms.py` targeting the staging table against the 36,177 canonical entries in `esum_etymology_meta`.
-4. **Validation & Table Swap:**
-   - Verify integrity: `PRAGMA foreign_key_check(esum_cognate_forms_staging)` must return **0 rows**.
-   - Verify count: Row count must match expected entry count (36,177).
-   - Atomically swap tables:
-     ```sql
-     DROP TABLE esum_cognate_forms;
-     ALTER TABLE esum_cognate_forms_staging RENAME TO esum_cognate_forms;
-     ```
-5. **Atomic Contract & Hash Updates:**
-   Atomically update Phase 3 recovery contracts and freeze gates in the database cutover PR:
-   - `scripts/projects/open_model_data/phase3_recovery_contracts.py`: update `"lexical_esum_cognate_forms"` count to the newly extracted count (36,177).
-   - `scripts/projects/open_model_data/phase3_live_ingest_gate.py`: update `foreign_key_failure_count_before` and `after` to `0`.
-   - `scripts/projects/open_model_data/phase3_university_content_audit_freeze.py`: update `foreign_key_failure_count` to `0` and update `foreign_key_failure_sha256` to the new hash.
-   - Run `tests/test_open_model_phase3_university_content_audit_freeze.py` to confirm all 9 checks pass.
+4. **Regeneration Run:**
+   Execute the extractor against the isolated staging copy:
+   ```bash
+   .venv/bin/python scripts/etymology/extract_cognate_forms.py \
+     --db data/sources.db.cutover_staging \
+     --telemetry data/telemetry/cognate_extraction_v5.json
+   ```
+   Because the destination table is freshly created, all 36,177 canonical entries are inserted with exact 1:1 foreign-key alignment to `esum_etymology_meta.id`.
+5. **Integrity Verification:**
+   Verify foreign-key consistency and row parity on the isolated database:
+   ```sql
+   -- Must return 0 rows:
+   PRAGMA foreign_key_check(esum_cognate_forms);
+
+   -- Must equal the count of esum_etymology_meta (36,177):
+   SELECT COUNT(*) FROM esum_cognate_forms;
+   ```
+6. **Transaction-Safe Table Swap / Promotion:**
+   When promoting changes, ensure all database operations occur within an explicit transaction boundary:
+   ```sql
+   BEGIN IMMEDIATE TRANSACTION;
+   -- Validate PRAGMA foreign_key_check returns 0 before commit
+   -- Promote validated tables or swap staged database into production
+   COMMIT;
+   -- On any validation failure: ROLLBACK;
+   ```
+
+### Comprehensive Contract & Gate Update Checklist
+Because Phase 3 gates enforce cryptographic hashes across multiple receipts and byte files, the database cutover PR must atomically update all dependent contracts and artifacts:
+
+1. **Live-Ingest Gate (`scripts/projects/open_model_data/phase3_live_ingest_gate.py`):**
+   - Update `EXPECTED_FOREIGN_KEY_HASH` (line 38) from `"9938f7cbab6cca94bfd0a360eec114fdef404a357e02b24161da0f7cf5c6d9bb"` to the sha256 hash of empty foreign key check output (`"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"`).
+   - Update `EXPECTED_LIVE_DB_SHA256` (line 37) to the new whole-database byte SHA-256 after the cutover.
+   - Update rehearsal verification checks at lines 169–172 (`foreign_key_failure_count_before == 0`, `foreign_key_failure_count_after == 0`, and rehearsal hash assertions).
+   - Update gate receipt emission at line 282 (`database.foreign_key_failure_count: 0`).
+   - Regenerate admission receipt `data/projects/open_model_data/admission/phase3_live_ingest_gate_v1.json` and update `EXPECTED_GATE_SHA256` (line 35).
+
+2. **University Content Audit Freeze (`scripts/projects/open_model_data/phase3_university_content_audit_freeze.py`):**
+   - Update database invariants in `EXPECTED_DATABASE` (lines 55–66):
+     - `foreign_key_failure_count`: Update from `134836` to `0`.
+     - `foreign_key_failure_sha256`: Update to `"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"`.
+     - `sha256`: Update to the new whole-database byte SHA-256.
+   - Update input receipt bindings in `EXPECTED_BINDINGS` (lines 41–53):
+     - Re-pin `live_ingest_gate_v1_sha256`, `live_ingest_receipt_sha256`, and backup receipt hashes to match the newly generated cutover gate receipts.
+   - Output artifact regeneration:
+     - Regenerate `registry/projects/open_model_data/admission/phase3_university_content_audit_freeze_v1.json`.
+     - Update `EXPECTED_OUTPUT_SHA256` (line 39) to match the new byte hash of the output artifact.
+   - Verify that all 9 checks in `tests/test_open_model_phase3_university_content_audit_freeze.py` pass cleanly.
+
+3. **Recovery Contracts (`scripts/projects/open_model_data/phase3_recovery_contracts.py`):**
+   - Update `"lexical_esum_cognate_forms"` count to the newly extracted canonical count (`36177`).
+
+4. **Historical Preservation & Successor Contracts:**
+   - Historical freeze evidence (the Phase 3 receipts, artifacts, and hashes recording the pre-cutover state with 134,836 count) remains archived under `registry/projects/open_model_data/admission/` or an immutable `historical/` directory.
+   - Successor contracts enforce the new zero-violation baseline without erasing or invalidating the historical audit record.
+
+5. **Decision-Only Invariant for Issue #8417:**
+   - As required by the terminal goal of issue #8417 (`decision-only`), no live database files or contract pins are modified in this issue. The existing contracts and hashes remain intact.
 
 ---
 
