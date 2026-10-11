@@ -13,6 +13,10 @@ directories: harmless commands, and in the unguarded controls a real
 Failing-before proof: every refusal test asserts the fake was never invoked and
 the sentinel survived. Without the shim (``test_unguarded_fake_npm_destroys_the_sentinel``)
 the same calls reach the fake and the sentinel is deleted.
+
+The fake itself refuses (#10417) unless ``FAKE_NPM_SAFE_ROOT`` resolves and the
+target ``node_modules`` is that directory or strictly inside it. ``FAKE_RUN_ACTION``
+may only be ``nested-ci``; any other non-empty value exits 99 and runs nothing.
 """
 
 from __future__ import annotations
@@ -24,21 +28,28 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import textwrap
 from pathlib import Path
 
 import pytest
 
 from scripts.agent_runtime import npm_guard
+from scripts.common.scratch import ensure_scratch_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SHIM_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "shims" / "npm"
 NPX_SOURCE = SHIM_SOURCE.parent / "npx"
 GUARD_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "npm_guard.py"
 SENTINEL = "sentinel.txt"
+# Ancestor -> "has an outward node_modules link". Parents repeat across tests.
+_OUTWARD_ANCESTOR: dict[Path, bool] = {}
 
 FAKE_TOOL = r"""#!/usr/bin/env bash
 # Fake npm/npx: log the call, exit early on version/help, emulate `npm ci` emptying its target.
+# After parsing, refuse unless FAKE_NPM_SAFE_ROOT resolves and target/node_modules is that
+# directory or strictly inside it on a component boundary. Nothing is deleted otherwise.
+# FAKE_RUN_ACTION=nested-ci is the only run action; any other non-empty value exits 99.
 tool="$(basename "$0")"
 printf '%s\t%s\t%s\n' "$tool" "$PWD" "$*" >> "$FAKE_NPM_LOG"
 # Like npm, the default prefix is the nearest directory holding package.json or node_modules.
@@ -58,14 +69,49 @@ for ((i = 0; i < ${#args[@]}; i++)); do
     *) [[ -z "$command" ]] && command="${args[$i]}" ;;
   esac
 done
+_fake_refuse() {
+  echo "fake-npm refused: $1" >&2
+  exit 99
+}
+# $(...) strips every trailing newline. A sentinel after realpath keeps a
+# directory whose name ends in a newline distinct from the name without it.
+_capture_canonical() {
+  local captured
+  if ! captured=$(realpath -- "$2" 2>/dev/null && printf x); then
+    return 1
+  fi
+  captured=${captured%x}
+  captured=${captured%$'\n'}
+  printf -v "$1" '%s' "$captured"
+}
+safe="${FAKE_NPM_SAFE_ROOT-}"
+if [[ -z "$safe" ]]; then
+  _fake_refuse "FAKE_NPM_SAFE_ROOT is unset or empty"
+fi
+if ! _capture_canonical root "$safe"; then
+  _fake_refuse "FAKE_NPM_SAFE_ROOT does not resolve"
+fi
+if ! _capture_canonical real "$target/node_modules"; then
+  _fake_refuse "node_modules does not resolve"
+fi
+# Component boundary: `<root>-other` must not match `<root>/*`.
+if [[ "$real" == "$root" || "$real" == "$root"/* ]]; then
+  :
+else
+  _fake_refuse "node_modules is outside FAKE_NPM_SAFE_ROOT"
+fi
 if [[ "$tool" == "npm" ]]; then
   case "$command" in
     ci | install | i | update | prune | dedupe | uninstall)
       rm -rf "$target"/node_modules/* "$target"/node_modules/.[!.]* 2>/dev/null
       ;;
     run)
-      if [[ -n "${FAKE_RUN_SCRIPT:-}" ]]; then
-        sh -c "$FAKE_RUN_SCRIPT"
+      action="${FAKE_RUN_ACTION-}"
+      if [[ -n "$action" ]]; then
+        if [[ "$action" != "nested-ci" ]]; then
+          _fake_refuse "FAKE_RUN_ACTION is not allowed"
+        fi
+        npm ci
         exit $?
       fi
       ;;
@@ -359,9 +405,60 @@ def _scratch_checkouts(tmp_path: Path, name: str = "task") -> tuple[Path, Path]:
     return primary, worktree
 
 
+def _release_ephemeral_layout(layout: dict[str, Path]) -> None:
+    """Delete a layout that was allocated outside pytest's temporary directory."""
+    ephemeral = layout.get("ephemeral_root")
+    if ephemeral is not None:
+        shutil.rmtree(ephemeral, ignore_errors=True)
+
+
+def _ancestor_has_outward_link(path: Path) -> bool:
+    cached = _OUTWARD_ANCESTOR.get(path)
+    if cached is None:
+        cached = bool(npm_guard.outward_links(path))
+        _OUTWARD_ANCESTOR[path] = cached
+    return cached
+
+
+def _root_outside_protected_ancestors(preferred_root: Path) -> tuple[Path, bool]:
+    """``(directory, delete_when_finished)``.
+
+    ``preferred_root`` is used when no ancestor has an outward ``node_modules``
+    link. A basetemp inside a dispatch worktree is protected: the shim walks
+    every ancestor, so the fixture is created outside those ancestors instead.
+    That directory comes from the managed temp lease. Production shim rules
+    are unchanged.
+    """
+    ancestors = (preferred_root, *preferred_root.parents)
+    if not any(_ancestor_has_outward_link(ancestor) for ancestor in ancestors):
+        return preferred_root, False
+    # The name TMPDIR is what the temp-path lint accepts. Call the scratch
+    # root only when TMPDIR is unset, so a bad scratch root cannot reject a
+    # usable TMPDIR.
+    TMPDIR = os.environ.get("TMPDIR")
+    if TMPDIR is None:
+        TMPDIR = os.fspath(ensure_scratch_root())
+    candidate = Path(
+        tempfile.mkdtemp(
+            prefix="npm-shim-unprotected-",
+            dir=TMPDIR,
+        )
+    )
+    candidate_ancestors = (candidate, *candidate.parents)
+    if any(_ancestor_has_outward_link(ancestor) for ancestor in candidate_ancestors):
+        shutil.rmtree(candidate, ignore_errors=True)
+        raise RuntimeError("no fixture directory outside a protected node_modules ancestor")
+    return candidate, True
+
+
 def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path]:
-    """Scratch primary + dispatch worktree with symlinked node_modules folders."""
-    tooling = tmp_path / "tooling"
+    """Scratch primary + dispatch worktree with symlinked node_modules folders.
+
+    When ``tmp_path`` sits under an outward ``node_modules`` link, the tree is
+    allocated outside that ancestor. Callers delete ``ephemeral_root`` when set.
+    """
+    root, relocated = _root_outside_protected_ancestors(tmp_path)
+    tooling = root / "tooling"
     shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
     shim_dir.mkdir(parents=True)
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
@@ -370,30 +467,35 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     (tooling / ".venv" / "bin").mkdir(parents=True)
     (tooling / ".venv" / "bin" / "python").symlink_to(sys.executable)
 
-    fake_bin = tmp_path / "fakebin"
+    fake_bin = root / "fakebin"
     fake_bin.mkdir()
     for name in ("npm", "npx"):
         fake = fake_bin / name
         fake.write_text(FAKE_TOOL, encoding="utf-8")
         fake.chmod(0o755)
 
-    primary, worktree = _scratch_checkouts(tmp_path, worktree_name)
+    primary, worktree = _scratch_checkouts(root, worktree_name)
     (worktree / "node_modules").symlink_to(primary / "node_modules")
     (worktree / "site" / "node_modules").symlink_to(primary / "site" / "node_modules")
 
-    return {
-        "tmp": tmp_path,
+    layout = {
+        "tmp": root,
         "shim_dir": shim_dir,
         "fake_bin": fake_bin,
         "primary": primary,
         "worktree": worktree,
-        "log": tmp_path / "fake-npm.log",
+        "log": root / "fake-npm.log",
     }
+    if relocated:
+        layout["ephemeral_root"] = root
+    return layout
 
 
 @pytest.fixture()
-def layout(tmp_path: Path) -> dict[str, Path]:
-    return _build_layout(tmp_path)
+def layout(tmp_path: Path, request: pytest.FixtureRequest) -> dict[str, Path]:
+    built = _build_layout(tmp_path)
+    request.addfinalizer(lambda: _release_ephemeral_layout(built))
+    return built
 
 
 def _make_real(layout: dict[str, Path]) -> None:
@@ -416,7 +518,12 @@ def _run(
 ):
     tool_path = (layout["shim_dir"] if shim else layout["fake_bin"]) / tool
     path_entries = [str(layout["shim_dir"]), str(layout["fake_bin"]), "/usr/bin", "/bin"]
-    env = {"PATH": os.pathsep.join(path_entries), "HOME": str(layout["tmp"]), "FAKE_NPM_LOG": str(layout["log"])}
+    env = {
+        "PATH": os.pathsep.join(path_entries),
+        "HOME": str(layout["tmp"]),
+        "FAKE_NPM_LOG": str(layout["log"]),
+        "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
+    }
     env.update(extra_env or {})
     return subprocess.run(
         [str(tool_path), *args], cwd=cwd, env=env, capture_output=True, text=True, check=False, timeout=60
@@ -444,6 +551,47 @@ def _assert_passed_through(layout, proc, tool: str, args: list[str], cwd: Path, 
     assert proc.returncode == exit_code, proc.stderr
     assert proc.stdout == f"fake-{tool}-stdout {' '.join(args)}\n"
     assert _fake_calls(layout) == [f"{tool}\t{cwd}\t{' '.join(args)}"]
+
+
+def _fake_prefix_override(args: list[str]) -> tuple[bool, str | None]:
+    """Mirror the fake's parser: version/help returns before the containment check.
+
+    Returns ``(reached_check, prefix directory or None)``.
+    """
+    target: str | None = None
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        if arg in {"--version", "-v", "--help", "-h"}:
+            return False, None
+        if arg in {"--prefix", "-C"}:
+            target = args[index + 1] if index + 1 < len(args) else ""
+            index += 2
+            continue
+        if arg.startswith("--prefix=") or arg.startswith("-C="):
+            target = arg.split("=", 1)[1]
+        index += 1
+    return True, target
+
+
+def _assert_unresolved_prefix_refused(layout, proc, tool: str, args: list[str], cwd: Path) -> bool:
+    """A prefix whose directory does not exist fails ``realpath`` and the fake exits 99.
+
+    The shim still passed the call through: the fake logged it and did not delete.
+    """
+    reached, target = _fake_prefix_override(args)
+    if not reached or target is None:
+        return False
+    prefix_dir = Path(target) if Path(target).is_absolute() else cwd / target
+    if prefix_dir.exists():
+        return False
+    assert proc.returncode == 99, proc.stderr
+    assert proc.stdout == ""
+    assert proc.stderr.startswith("fake-npm refused:")
+    assert "#9460" not in proc.stderr
+    assert _fake_calls(layout) == [f"{tool}\t{cwd}\t{' '.join(args)}"]
+    assert _sentinels_intact(layout)
+    return True
 
 
 # --- refusals in a worktree whose node_modules links outward -----------------
@@ -548,7 +696,7 @@ def test_dangling_outward_link_is_refused(layout):
 
 def test_run_script_calling_npm_ci_is_refused_through_path(layout):
     """A run-script's inner `npm ci` resolves through PATH, so the shim sees it."""
-    proc = _run(layout, "npm", ["run", "reinstall"], layout["worktree"], {"FAKE_RUN_SCRIPT": "npm ci"})
+    proc = _run(layout, "npm", ["run", "reinstall"], layout["worktree"], {"FAKE_RUN_ACTION": "nested-ci"})
     assert proc.returncode == 1
     assert "refused `npm ci`" in proc.stderr
     assert _fake_calls(layout) == [f"npm\t{layout['worktree']}\trun reinstall"]
@@ -564,6 +712,8 @@ def test_read_only_calls_pass_through_in_a_protected_worktree(layout, args, rela
     cwd = layout["worktree"] / relative_cwd
     early = any(flag in args for flag in ("--version", "-v", "--help", "-h"))
     proc = _run(layout, "npm", args, cwd, {"FAKE_NPM_EXIT": "7"})
+    if _assert_unresolved_prefix_refused(layout, proc, "npm", args, cwd):
+        return
     _assert_passed_through(layout, proc, "npm", args, cwd, 0 if early else 7)
     if not early:
         assert proc.stderr == "fake-npm-stderr\n"
@@ -623,6 +773,7 @@ def _assert_forwarded_unchanged(layout, tool: str, args: list[str], cwd: Path) -
             "PATH": f"{layout['shim_dir']}:{layout['fake_bin']}:/usr/bin:/bin",
             "HOME": str(layout["tmp"]),
             "FAKE_NPM_LOG": str(layout["log"]),
+            "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
         },
         input="piped\n",
         capture_output=True,
@@ -654,6 +805,8 @@ def test_any_call_passes_through_with_real_node_modules(layout, args):
     cwd = layout["worktree"]
     proc = _run(layout, "npm", args, cwd, {"FAKE_NPM_EXIT": "5"})
     early = any(flag in args for flag in ("--version", "-v", "--help", "-h"))
+    if _assert_unresolved_prefix_refused(layout, proc, "npm", args, cwd):
+        return
     _assert_passed_through(layout, proc, "npm", args, cwd, 0 if early else 5)
     if not early:
         assert proc.stderr == "fake-npm-stderr\n"
@@ -680,6 +833,92 @@ def test_npx_passes_through_with_real_node_modules(layout, tool, args):
     _assert_passed_through(layout, proc, tool, args, layout["worktree"], 3)
 
 
+def test_local_install_runs_under_a_protected_ancestor(tmp_path: Path) -> None:
+    """A basetemp inside a dispatch worktree must not protect a fixture with its own install.
+
+    The production shim still walks every ancestor. This fixture is allocated
+    outside those ancestors, so ``npm ci`` reaches the fake and the enclosing
+    shared directory keeps its sentinel.
+    """
+    enclosing = tmp_path / "enclosing-worktree"
+    shared = tmp_path / "shared-outside"
+    shared.mkdir(parents=True)
+    (shared / SENTINEL).write_text("keep\n", encoding="utf-8")
+    enclosing.mkdir()
+    (enclosing / "node_modules").symlink_to(shared)
+    (enclosing / "site").mkdir()
+    (enclosing / "site" / "node_modules").symlink_to(shared)
+    nested = enclosing / "basetemp" / "case"
+    nested.mkdir(parents=True)
+    built = _build_layout(nested)
+    try:
+        _make_real(built)
+        proc = _run(built, "npm", ["ci"], built["worktree"], {"FAKE_NPM_EXIT": "5"})
+        assert enclosing not in built["tmp"].parents, proc.stderr
+        _assert_passed_through(built, proc, "npm", ["ci"], built["worktree"], 5)
+        assert (shared / SENTINEL).is_file()
+        assert (shared / SENTINEL).read_text(encoding="utf-8") == "keep\n"
+    finally:
+        _release_ephemeral_layout(built)
+
+
+def test_set_tmpdir_does_not_call_the_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A usable TMPDIR is the fixture lease. An unusable scratch root is not called."""
+    lease = tmp_path / "lease"
+    lease.mkdir()
+    preferred = tmp_path / "preferred"
+    preferred.mkdir()
+    monkeypatch.setenv("TMPDIR", str(lease))
+
+    def refuse_scratch() -> Path:
+        raise AssertionError("ensure_scratch_root ran even though TMPDIR is set")
+
+    monkeypatch.setattr(sys.modules[__name__], "ensure_scratch_root", refuse_scratch)
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "_ancestor_has_outward_link",
+        lambda path: path == preferred,
+    )
+    created, delete = _root_outside_protected_ancestors(preferred)
+    try:
+        assert delete is True
+        assert created.is_dir()
+        assert created.parent == lease
+        assert created.name.startswith("npm-shim-unprotected-")
+    finally:
+        if delete:
+            shutil.rmtree(created, ignore_errors=True)
+
+
+def test_unset_tmpdir_calls_the_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """With TMPDIR unset, the fixture directory comes from the scratch root."""
+    lease = tmp_path / "scratch-lease"
+    lease.mkdir()
+    preferred = tmp_path / "preferred"
+    preferred.mkdir()
+    calls = {"n": 0}
+    monkeypatch.delenv("TMPDIR", raising=False)
+
+    def scratch_root() -> Path:
+        calls["n"] += 1
+        return lease
+
+    monkeypatch.setattr(sys.modules[__name__], "ensure_scratch_root", scratch_root)
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "_ancestor_has_outward_link",
+        lambda path: path == preferred,
+    )
+    created, delete = _root_outside_protected_ancestors(preferred)
+    try:
+        assert calls["n"] == 1
+        assert delete is True
+        assert created.parent == lease
+    finally:
+        if delete:
+            shutil.rmtree(created, ignore_errors=True)
+
+
 def test_symlinks_inside_the_same_worktree_pass(layout):
     """Each link stays inside the directory holding it (``site/node_modules`` inside ``site``).
 
@@ -698,12 +937,41 @@ def test_symlinks_inside_the_same_worktree_pass(layout):
     assert _sentinels_intact(layout)
 
 
-def test_outside_any_worktree_passes_through(layout):
-    """No ancestor has an outward link, so there is nothing to protect and the call runs."""
-    elsewhere = layout["tmp"] / "elsewhere"
+def _elsewhere_outside_protected_trees(preferred_root: Path) -> tuple[Path, bool]:
+    """A directory whose ancestors have no outward ``node_modules`` link.
+
+    Returns the directory and whether the caller must delete it. A child of
+    ``preferred_root`` stays with pytest when that root is already unprotected.
+    """
+    root, relocated = _root_outside_protected_ancestors(preferred_root)
+    if relocated:
+        return root, True
+    elsewhere = root / "elsewhere"
     elsewhere.mkdir()
-    proc = _run(layout, "npm", ["ci"], elsewhere, {"FAKE_NPM_EXIT": "6"})
-    _assert_passed_through(layout, proc, "npm", ["ci"], elsewhere, 6)
+    return elsewhere, False
+
+
+def test_outside_any_worktree_passes_through(layout):
+    """No ancestor has an outward link, so there is nothing to protect and the call runs.
+
+    A local ``node_modules`` stops the fake's parent walk, and ``FAKE_NPM_SAFE_ROOT``
+    is this directory. ``npm ci`` may empty only that directory.
+    """
+    elsewhere, cleanup = _elsewhere_outside_protected_trees(layout["tmp"])
+    try:
+        (elsewhere / "node_modules").mkdir()
+        proc = _run(
+            layout,
+            "npm",
+            ["ci"],
+            elsewhere,
+            {"FAKE_NPM_EXIT": "6", "FAKE_NPM_SAFE_ROOT": str(elsewhere)},
+        )
+        _assert_passed_through(layout, proc, "npm", ["ci"], elsewhere, 6)
+        assert _sentinels_intact(layout)
+    finally:
+        if cleanup:
+            shutil.rmtree(elsewhere, ignore_errors=True)
 
 
 def test_primary_checkout_with_real_node_modules_passes_through(layout):
@@ -734,6 +1002,247 @@ def test_unguarded_fake_npm_destroys_the_sentinel(layout, args):
     proc = _run(layout, "npm", args, layout["worktree"], shim=False)
     assert proc.returncode == 0
     assert not _sentinels_intact(layout)
+
+
+# --- the fake, invoked directly, refuses to delete outside its safe root -------
+
+
+def _invoke_fake(
+    script: str, tmp_path: Path, cwd: Path, args: list[str], env: dict[str, str]
+) -> subprocess.CompletedProcess[str]:
+    """Run a fake npm script by path. No shim and no real npm."""
+    bindir = tmp_path / "direct-fakebin"
+    if bindir.exists():
+        shutil.rmtree(bindir)
+    bindir.mkdir()
+    exe = bindir / "npm"
+    exe.write_text(script, encoding="utf-8")
+    exe.chmod(0o755)
+    run_env = {
+        "PATH": os.pathsep.join((str(bindir), "/usr/bin", "/bin")),
+        "HOME": str(tmp_path),
+        "FAKE_NPM_LOG": str(tmp_path / "direct-fake.log"),
+        **env,
+    }
+    return subprocess.run(
+        [str(exe), *args], cwd=cwd, env=run_env, capture_output=True, text=True, check=False, timeout=30
+    )
+
+
+def _assert_direct_refusal(proc: subprocess.CompletedProcess[str], sentinel: Path) -> None:
+    assert proc.returncode == 99, proc.stderr
+    assert proc.stdout == ""
+    assert proc.stderr.count("\n") == 1 and proc.stderr.startswith("fake-npm refused:")
+    assert sentinel.is_file() and sentinel.read_text(encoding="utf-8") == "keep\n"
+
+
+def _outward_symlink_layout(tmp_path: Path) -> dict[str, Path]:
+    """A worktree-like directory whose node_modules symlink points outside the safe root."""
+    safe = tmp_path / "sandbox"
+    work = safe / "worktree"
+    work.mkdir(parents=True)
+    (work / "package.json").write_text('{"name":"work"}\n', encoding="utf-8")
+    shared = tmp_path / "outside" / "shared"
+    shared.mkdir(parents=True)
+    sentinel = shared / "sentinel.txt"
+    sentinel.write_text("keep\n", encoding="utf-8")
+    (work / "node_modules").symlink_to(shared)
+    return {"safe": safe, "work": work, "shared": shared, "sentinel": sentinel}
+
+
+def test_fake_npm_refuses_outward_symlink(tmp_path: Path) -> None:
+    layout = _outward_symlink_layout(tmp_path)
+    proc = _invoke_fake(FAKE_TOOL, tmp_path, layout["work"], ["ci"], {"FAKE_NPM_SAFE_ROOT": str(layout["safe"])})
+    _assert_direct_refusal(proc, layout["sentinel"])
+
+
+def test_fake_npm_refuses_outward_target_whose_name_ends_in_a_newline(tmp_path: Path) -> None:
+    """``sandbox`` plus a newline is a different directory from the safe root ``sandbox``.
+
+    A capture that drops trailing newlines makes the two canonical paths equal,
+    the containment check passes, and ``npm ci`` deletes the outward sentinel.
+    """
+    safe = tmp_path / "sandbox"
+    work = safe / "work"
+    work.mkdir(parents=True)
+    (work / "package.json").write_text('{"name":"work"}\n', encoding="utf-8")
+    outside = tmp_path / "sandbox\n"
+    outside.mkdir()
+    sentinel = outside / "sentinel.txt"
+    sentinel.write_text("keep\n", encoding="utf-8")
+    (work / "node_modules").symlink_to(outside)
+    proc = _invoke_fake(FAKE_TOOL, tmp_path, work, ["ci"], {"FAKE_NPM_SAFE_ROOT": str(safe)})
+    _assert_direct_refusal(proc, sentinel)
+
+
+@pytest.mark.parametrize("mode", ["unset", "empty"])
+def test_fake_npm_refuses_without_safe_root(tmp_path: Path, mode: str) -> None:
+    layout = _outward_symlink_layout(tmp_path)
+    env = {} if mode == "unset" else {"FAKE_NPM_SAFE_ROOT": ""}
+    proc = _invoke_fake(FAKE_TOOL, tmp_path, layout["work"], ["ci"], env)
+    _assert_direct_refusal(proc, layout["sentinel"])
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        ["ci", "--prefix", "{outside}"],
+        ["ci", "--prefix={outside}"],
+        ["ci", "-C", "{outside}"],
+        ["ci", "-C={outside}"],
+    ],
+    ids=["prefix", "prefix-eq", "C", "C-eq"],
+)
+def test_fake_npm_refuses_prefix_outside(tmp_path: Path, template: list[str]) -> None:
+    safe = tmp_path / "sandbox"
+    inside = safe / "inside"
+    inside.mkdir(parents=True)
+    (inside / "package.json").write_text("{}\n", encoding="utf-8")
+    local = inside / "node_modules" / "local.txt"
+    local.parent.mkdir()
+    local.write_text("local\n", encoding="utf-8")
+    outside = tmp_path / "outside-proj"
+    sentinel = outside / "node_modules" / "sentinel.txt"
+    sentinel.parent.mkdir(parents=True)
+    sentinel.write_text("keep\n", encoding="utf-8")
+    args = [part.format(outside=str(outside)) for part in template]
+    proc = _invoke_fake(FAKE_TOOL, tmp_path, inside, args, {"FAKE_NPM_SAFE_ROOT": str(safe)})
+    _assert_direct_refusal(proc, sentinel)
+    assert local.is_file()
+
+
+@pytest.mark.parametrize(
+    ("flag", "spelling", "nested"),
+    [("--prefix", ".", False), ("--prefix", "..", True), ("-C", ".", False), ("-C", "..", True)],
+    ids=["prefix-dot", "prefix-dotdot", "C-dot", "C-dotdot"],
+)
+def test_fake_npm_refuses_relative_prefix_outside(tmp_path: Path, flag: str, spelling: str, nested: bool) -> None:
+    safe = tmp_path / "sandbox"
+    safe.mkdir()
+    outside = tmp_path / "outside-proj"
+    sentinel = outside / "node_modules" / "sentinel.txt"
+    sentinel.parent.mkdir(parents=True)
+    sentinel.write_text("keep\n", encoding="utf-8")
+    (outside / "package.json").write_text("{}\n", encoding="utf-8")
+    child = outside / "child"
+    child.mkdir()
+    proc = _invoke_fake(
+        FAKE_TOOL,
+        tmp_path,
+        child if nested else outside,
+        ["ci", flag, spelling],
+        {"FAKE_NPM_SAFE_ROOT": str(safe)},
+    )
+    _assert_direct_refusal(proc, sentinel)
+
+
+def test_fake_npm_refuses_sibling_root(tmp_path: Path) -> None:
+    safe = tmp_path / "sandbox"
+    safe.mkdir()
+    sibling = tmp_path / "sandbox-other"
+    sentinel = sibling / "node_modules" / "sentinel.txt"
+    sentinel.parent.mkdir(parents=True)
+    sentinel.write_text("keep\n", encoding="utf-8")
+    (sibling / "package.json").write_text("{}\n", encoding="utf-8")
+    proc = _invoke_fake(FAKE_TOOL, tmp_path, sibling, ["ci"], {"FAKE_NPM_SAFE_ROOT": str(safe)})
+    _assert_direct_refusal(proc, sentinel)
+
+
+def test_fake_npm_refuses_unknown_run_action(tmp_path: Path) -> None:
+    safe = tmp_path / "sandbox"
+    project = safe / "proj"
+    kept = project / "node_modules" / "keep.txt"
+    kept.parent.mkdir(parents=True)
+    kept.write_text("keep\n", encoding="utf-8")
+    (project / "package.json").write_text("{}\n", encoding="utf-8")
+    shared = tmp_path / "outside" / "shared"
+    shared.mkdir(parents=True)
+    sentinel = shared / "sentinel.txt"
+    sentinel.write_text("keep\n", encoding="utf-8")
+    proc = _invoke_fake(
+        FAKE_TOOL,
+        tmp_path,
+        project,
+        ["run", "reinstall"],
+        {
+            "FAKE_NPM_SAFE_ROOT": str(safe),
+            "FAKE_RUN_ACTION": f"rm -rf {shared}",
+            "FAKE_RUN_SCRIPT": f"rm -rf {shared}",
+        },
+    )
+    _assert_direct_refusal(proc, sentinel)
+    assert kept.is_file()
+
+
+def test_fake_npm_empties_target_inside_safe_root(tmp_path: Path) -> None:
+    safe = tmp_path / "sandbox"
+    project = safe / "proj"
+    modules = project / "node_modules"
+    modules.mkdir(parents=True)
+    (modules / "sentinel.txt").write_text("gone\n", encoding="utf-8")
+    (modules / ".hidden").write_text("gone\n", encoding="utf-8")
+    (project / "package.json").write_text("{}\n", encoding="utf-8")
+    sentinel = tmp_path / "outside" / "sentinel.txt"
+    sentinel.parent.mkdir()
+    sentinel.write_text("keep\n", encoding="utf-8")
+    proc = _invoke_fake(FAKE_TOOL, tmp_path, project, ["ci"], {"FAKE_NPM_SAFE_ROOT": str(safe)})
+    assert proc.returncode == 0, proc.stderr
+    assert modules.is_dir() and not (modules / "sentinel.txt").exists() and not (modules / ".hidden").exists()
+    assert sentinel.is_file() and sentinel.read_text(encoding="utf-8") == "keep\n"
+
+
+def test_old_fake_empties_outward_symlink_and_new_fake_refuses(tmp_path: Path) -> None:
+    """The pre-change fake deletes through the outward symlink; the current fake refuses on that same layout."""
+    old_fake = r"""#!/usr/bin/env bash
+# Fake npm/npx: log the call, exit early on version/help, emulate `npm ci` emptying its target.
+tool="$(basename "$0")"
+printf '%s\t%s\t%s\n' "$tool" "$PWD" "$*" >> "$FAKE_NPM_LOG"
+# Like npm, the default prefix is the nearest directory holding package.json or node_modules.
+target="$PWD"
+while [[ "$target" != / && ! -e "$target/package.json" && ! -e "$target/node_modules" ]]; do
+  target="$(dirname "$target")"
+done
+[[ "$target" == / ]] && target="$PWD"
+command=""
+args=("$@")
+for ((i = 0; i < ${#args[@]}; i++)); do
+  case "${args[$i]}" in
+    --version | -v | --help | -h) echo "fake-$tool-stdout $*"; exit 0 ;;
+    --prefix | -C) target="${args[$((i + 1))]}"; i=$((i + 1)) ;;
+    --prefix=* | -C=*) target="${args[$i]#*=}" ;;
+    -*) ;;
+    *) [[ -z "$command" ]] && command="${args[$i]}" ;;
+  esac
+done
+if [[ "$tool" == "npm" ]]; then
+  case "$command" in
+    ci | install | i | update | prune | dedupe | uninstall)
+      rm -rf "$target"/node_modules/* "$target"/node_modules/.[!.]* 2>/dev/null
+      ;;
+    run)
+      if [[ -n "${FAKE_RUN_SCRIPT:-}" ]]; then
+        sh -c "$FAKE_RUN_SCRIPT"
+        exit $?
+      fi
+      ;;
+  esac
+fi
+echo "fake-$tool-stdout $*"
+echo "fake-$tool-stderr" >&2
+exit "${FAKE_NPM_EXIT:-0}"
+"""
+    layout = _outward_symlink_layout(tmp_path)
+    env = {"FAKE_NPM_SAFE_ROOT": str(layout["safe"])}
+    new = _invoke_fake(FAKE_TOOL, tmp_path, layout["work"], ["ci"], env)
+    assert new.returncode == 99, new.stderr
+    assert layout["sentinel"].is_file()
+    old = _invoke_fake(old_fake, tmp_path, layout["work"], ["ci"], env)
+    print(f"NEW_FAKE rc={new.returncode} stdout={new.stdout!r} stderr={new.stderr!r}")
+    print(f"OLD_FAKE rc={old.returncode} stdout={old.stdout!r} stderr={old.stderr!r}")
+    assert old.returncode == 0, old.stderr
+    assert old.stdout == "fake-npm-stdout ci\n"
+    assert not layout["sentinel"].exists()
+    assert list(layout["shared"].iterdir()) == []
 
 
 # --- the real npm, harmless calls against scratch directories only -----------
@@ -881,7 +1390,15 @@ def test_real_npm_allowlisted_program_runs_with_the_sentinel_intact(layout, tool
 
 
 def test_missing_project_interpreter_fails_closed(layout):
-    (layout["shim_dir"].parents[2] / ".venv" / "bin" / "python").unlink()
+    """Exit 127 when the tooling checkout has no project interpreter.
+
+    The shim resolves that checkout through Git and drops every ``GIT_*``
+    variable before the lookup, so a ceiling on the temp directory cannot
+    keep the lookup there. A git root on the tooling checkout does.
+    """
+    tooling = layout["shim_dir"].parents[2]
+    (tooling / ".venv" / "bin" / "python").unlink()
+    _git(tooling, "init", "-q", "-b", "main")
     proc = _run(layout, "npm", ["ls"], layout["worktree"])
     assert proc.returncode == 127
     assert "cannot find the project interpreter" in proc.stderr
@@ -1074,12 +1591,15 @@ def test_core_worktree_redirect_does_not_hide_the_worktree_link(layout):
 @pytest.mark.parametrize("relative_cwd", [".", "site"])
 def test_worktree_root_ending_in_a_space_is_protected(tmp_path, relative_cwd):
     space_layout = _build_layout(tmp_path, "task ")
-    worktree = space_layout["worktree"]
-    assert str(worktree).endswith(" ")
-    proc = _run(space_layout, "npm", ["ci"], worktree / relative_cwd)
-    _assert_refused(space_layout, proc)
-    assert f"outside {worktree}." in proc.stderr
-    assert npm_guard.main(["npm", "ci"], cwd=worktree / relative_cwd) == 1
+    try:
+        worktree = space_layout["worktree"]
+        assert str(worktree).endswith(" ")
+        proc = _run(space_layout, "npm", ["ci"], worktree / relative_cwd)
+        _assert_refused(space_layout, proc)
+        assert f"outside {worktree}." in proc.stderr
+        assert npm_guard.main(["npm", "ci"], cwd=worktree / relative_cwd) == 1
+    finally:
+        _release_ephemeral_layout(space_layout)
 
 
 def test_logical_working_directory_through_the_link_is_protected(layout):
@@ -1110,6 +1630,7 @@ def test_unreadable_working_directory_allows_only_read_only_calls(layout):
         "PATH": f"{layout['shim_dir']}:{layout['fake_bin']}:/usr/bin:/bin",
         "HOME": str(layout["tmp"]),
         "FAKE_NPM_LOG": str(layout["log"]),
+        "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
     }
     for args, refused in ((["ci"], True), (["--version"], False)):
         gone.mkdir()
@@ -1201,6 +1722,7 @@ def test_linked_worktree_shim_uses_the_main_checkout_interpreter(layout, git_env
         "PATH": f"{linked_shims}:{layout['fake_bin']}:/usr/bin:/bin",
         "HOME": str(layout["tmp"]),
         "FAKE_NPM_LOG": str(layout["log"]),
+        "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
         **git_env,
     }
     proc = subprocess.run(
@@ -1226,6 +1748,7 @@ def test_runner_merge_guard_npm_version_runs_from_a_linked_worktree(layout, stam
             "PATH": f"{layout['fake_bin']}:/usr/bin:/bin",
             "HOME": str(layout["tmp"]),
             "FAKE_NPM_LOG": str(layout["log"]),
+            "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
         },
     )
     assert env["AGENT_GIT_SHIM_PYTHON"] == sys.executable
@@ -1250,6 +1773,7 @@ def test_runner_merge_guard_npm_version_runs_through_this_checkout(layout):
             "PATH": f"{layout['fake_bin']}:/usr/bin:/bin",
             "HOME": str(layout["tmp"]),
             "FAKE_NPM_LOG": str(layout["log"]),
+            "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
         },
     )
     npm = shutil.which("npm", path=env["PATH"])
@@ -1312,6 +1836,7 @@ def _run_path(layout: dict[str, Path], tool_path: Path, args: list[str], cwd: Pa
         "PATH": f"{layout['shim_dir']}:{layout['fake_bin']}:/usr/bin:/bin",
         "HOME": str(layout["tmp"]),
         "FAKE_NPM_LOG": str(layout["log"]),
+        "FAKE_NPM_SAFE_ROOT": str(layout["tmp"]),
         **(extra_env or {}),
     }
     return subprocess.run(
