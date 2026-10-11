@@ -196,6 +196,14 @@ colored by `registry_status`/lease presence, click opens a detail panel listing 
 with GitHub links. No mutation controls (read-only dashboard, matches `epics.html`'s existing
 footnote convention).
 
+**Membership summary preserves null-as-unknown (#10403).** Following §4.1's contract, the detail
+panel distinguishes verified zero from unverified membership: feed-wide incomplete traversal
+(`membership_complete: false` or non-empty `incomplete_nodes`) renders an explicit incomplete
+state (`Open issue membership is incomplete in the cache.`), while missing or null items/totals
+on complete responses render an explicit unknown state (`Open issue membership is unknown in the
+cache.`). Verified zero (`0 open issues in the cache.`) and nonzero counts render only when
+complete.
+
 ## 5. OPSEC sweep — binding constraint, not optional
 
 `GET /api/epics/graph/v1` is a **new route** and must enter `tests/api/opsec_sweep/registry.py`
