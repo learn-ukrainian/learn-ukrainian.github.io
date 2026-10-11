@@ -495,3 +495,41 @@ def test_unchanged_writer_leaves_files_and_callbacks_untouched(tmp_path):
     )
     assert path.read_text() == '{"entries": []}'
     assert not (tmp_path / "fingerprint.json").exists()
+
+
+def test_grow_promotion_refuses_held_candidate_with_preexisting_conformance(tmp_path, capsys):
+    from scripts.lexicon import promote_grow_candidates as grow
+
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text('{"entries": []}')
+    held_entry = copy.deepcopy(dispositions.load_dispositions().preservation["records"][1]["entry"])
+    candidates_path = tmp_path / "candidates.json"
+    candidates_path.write_text(json.dumps({"auto_merge": [held_entry], "needs_review": []}))
+    fingerprint_path = tmp_path / "fingerprint.json"
+
+    # verify_promoted_entries fails closed with disposition error
+    assert grow.verify_promoted_entries(manifest_path, [held_entry]) == 2
+    assert "disposition:" in capsys.readouterr().err
+
+    # _validate_promoted_entries_before_write raises SelfCheckError / DispositionError
+    with pytest.raises((dispositions.DispositionError, grow.SelfCheckError)):
+        grow._validate_promoted_entries_before_write(
+            {"entries": [held_entry]},
+            manifest_path,
+            [held_entry],
+            grow.verify_promoted_entries,
+        )
+
+
+def test_fill_from_content_withholds_held_built_row(tmp_path):
+    from scripts.lexicon import fill_from_content as fill
+
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text('{"entries": []}')
+    # society-and-media has held row 18: достовірний
+    result = fill.fill_manifest_from_vocab(
+        manifest_path=manifest_path,
+        track="b1",
+        write=False,
+    )
+    assert "достовірний" not in {entry.lemma for entry in result.added}

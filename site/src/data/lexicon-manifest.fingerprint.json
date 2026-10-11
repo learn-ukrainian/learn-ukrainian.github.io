@@ -207,7 +207,7 @@
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",
-        "sha256": "3d40a96cc10e947bbff616421ceeae45b6eb633f576e35ab489bac8f2782658a"
+        "sha256": "049beb5d655464a1ff53c9b6d3b6b17f78190842eb9777b23240a34b761d1c28"
       },
       {
         "path": "scripts/lexicon/fill_slovnyk_sum20_cache.py",
@@ -319,7 +319,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "21af05b7b1861cf3ccbb6d12452b144f5d0253b4582eae97441a18f5a6165319"
+        "sha256": "35c0652765a87affe06ed7730e418ea3110bdc1a6be11464d1a89a8cf6dff3c1"
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
@@ -331,7 +331,7 @@
       },
       {
         "path": "scripts/lexicon/published_record_dispositions.py",
-        "sha256": "d77b19ca09dbba34bb4d4974a59007a7c478fa1a901264013228674b5d1217b5"
+        "sha256": "c92ae5180d318f7cb17511c7364ec7e09081c668f745ee14de3558652b91ce05"
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",

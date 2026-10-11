@@ -18,10 +18,10 @@ from typing import Any
 
 import yaml
 
+from scripts.audit.model_families import normalize_family
 from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.orchestration.integration_sweep import parse_marker
-from scripts.review.review_contract import ALLOWED_DISPOSITIONS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LEDGER_PATH = Path("registry/lexicon/published-record-dispositions/10181-six.yaml")
@@ -158,7 +158,7 @@ def _validate_release_review(
             and all(
                 finding.get("outcome") == "verified"
                 and isinstance(finding.get("disposition"), str)
-                and finding.get("disposition") in (ALLOWED_DISPOSITIONS - {"stop_and_escalate"})
+                and finding.get("disposition") == "follow_up"
                 and isinstance(finding.get("disposition_rationale"), str)
                 and bool(finding["disposition_rationale"].strip())
                 for finding in findings
@@ -177,7 +177,10 @@ def _validate_release_review(
             all(isinstance(identity.get(k), str) and identity[k].strip() for k in ("model", "family", "harness")),
             "missing release native model/family/harness provenance",
         )
-    _require(author["family"] != reviewer["family"], "release self-review refused")
+    author_family = normalize_family(author["family"])
+    reviewer_family = normalize_family(reviewer["family"])
+    _require(author_family is not None and reviewer_family is not None, "unknown release model family")
+    _require(author_family != reviewer_family, "release self-review refused")
     body = body_bytes.decode("utf-8")
     marker = parse_marker(body)
     _require(
@@ -187,7 +190,7 @@ def _validate_release_review(
     _require(
         marker["sha"] == target["head_sha"]
         and marker["model"] == reviewer["model"]
-        and marker["family"] == reviewer["family"],
+        and normalize_family(marker["family"]) == reviewer_family,
         "release native head/model/family mismatch",
     )
     _require(
@@ -273,10 +276,15 @@ class Dispositions:
                         raise DispositionError("active held inventory contribution present (or retargeted)")
             else:
                 for usage in usages:
-                    if (usage.get("track"), usage.get("slug")) == (origin["track"], origin["module_slug"]):
+                    usage_slug = usage.get("slug") or usage.get("module_slug")
+                    if (usage.get("track"), usage_slug) == (origin["track"], origin["module_slug"]):
                         names = [entry.get("lemma"), *entry.get("slug_variants", [])]
                         names += [n.get("source_lemma") for n in entry.get("atlas_normalizations", [])]
                         _require(origin["lemma"] not in names, "active held built contribution present")
+                if str(entry.get("primary_source") or "").startswith("built_vocabulary"):
+                    names = [entry.get("lemma"), *entry.get("slug_variants", [])]
+                    names += [n.get("source_lemma") for n in entry.get("atlas_normalizations", [])]
+                    _require(origin["lemma"] not in names, "active held built contribution present")
             same_projection = (
                 entry.get("lemma") == row["lemma"]
                 or entry.get("url_slug") == projection["url_slug"]

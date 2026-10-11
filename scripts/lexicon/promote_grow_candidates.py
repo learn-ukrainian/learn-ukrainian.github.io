@@ -58,6 +58,7 @@ from scripts.lexicon.manifest_fingerprint import (
     build_fingerprint,
     write_fingerprint,
 )
+from scripts.lexicon.published_record_dispositions import load_dispositions
 from scripts.lexicon.source_attribution import apply_entry_attribution
 from scripts.sync.promote_module import _write_atomically
 
@@ -358,7 +359,21 @@ def verify_promoted_entries(manifest_path: Path, entries: Sequence[Mapping[str, 
     enrichment_status = check_enrichment(manifest_path=manifest_path)
     identity_violations = _promoted_entry_identity_violations(manifest_path, entries)
 
-    if not any(hazards.values()) and not violations and not enrichment_status and not identity_violations:
+    authority = load_dispositions()
+    disposition_errors: list[str] = []
+    for entry in entries:
+        try:
+            authority.guard_entry(entry)
+        except Exception as exc:
+            disposition_errors.append(f"{entry.get('lemma')}: {exc}")
+
+    if (
+        not any(hazards.values())
+        and not violations
+        and not enrichment_status
+        and not identity_violations
+        and not disposition_errors
+    ):
         print("=== PROMOTED-ENTRY SAFETY GATES: CLEAN ===")
         return 0
 
@@ -378,6 +393,9 @@ def verify_promoted_entries(manifest_path: Path, entries: Sequence[Mapping[str, 
     if identity_violations:
         for violation in identity_violations:
             print(f"  route_identity: {violation}", file=sys.stderr)
+    if disposition_errors:
+        for err in disposition_errors:
+            print(f"  disposition: {err}", file=sys.stderr)
     return 2
 
 
@@ -1165,6 +1183,7 @@ def _embed_manifest_fingerprint(manifest: dict[str, Any]) -> None:
 
 
 def _validate_before_write(manifest: dict[str, Any], manifest_path: Path, self_check: SelfCheck) -> None:
+    load_dispositions().validate_manifest(manifest)
     with tempfile.TemporaryDirectory(prefix="atlas-grow-promote-") as tmp_dir:
         temp_manifest = Path(tmp_dir) / manifest_path.name
         temp_manifest.write_bytes(_json_bytes(manifest))
@@ -1179,6 +1198,7 @@ def _validate_promoted_entries_before_write(
     entries: Sequence[Mapping[str, Any]],
     promoted_entries_check: PromotedEntriesCheck,
 ) -> None:
+    load_dispositions().validate_manifest(manifest)
     with tempfile.TemporaryDirectory(prefix="atlas-grow-promote-") as tmp_dir:
         temp_manifest = Path(tmp_dir) / manifest_path.name
         temp_manifest.write_bytes(_json_bytes(manifest))

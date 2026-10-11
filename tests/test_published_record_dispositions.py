@@ -335,6 +335,7 @@ def test_native_factory_release_preserves_receipt_findings(tmp_path, nonblocking
         "missing_id",
         "wrong_ids",
         "unverified",
+        "in_scope_blocker",
         "stop_and_escalate",
         "invalid_disposition",
         "nonstring_disposition",
@@ -371,7 +372,7 @@ def test_native_actionable_release_requires_canonical_qualification(tmp_path, fa
         receipt["reviewer_payload"]["finding_ids"] = ["F2"]
     elif fault == "unverified":
         finding["outcome"] = "quote_missing"
-    elif fault in {"stop_and_escalate", "invalid_disposition", "nonstring_disposition"}:
+    elif fault in {"in_scope_blocker", "stop_and_escalate", "invalid_disposition", "nonstring_disposition"}:
         finding["disposition"] = 1 if fault == "nonstring_disposition" else fault
     elif fault == "missing_rationale":
         finding.pop("disposition_rationale")
