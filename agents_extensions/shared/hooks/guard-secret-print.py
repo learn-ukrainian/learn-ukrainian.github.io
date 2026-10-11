@@ -33,6 +33,11 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # Nested script inputs retain literal expansion syntax rather than evaluating
 # Bash expansions, and script-word joining is conservative about adjacency.
 # Explicit override and value-free transform policies remain trusted boundaries.
+# Runtime-computed keys such as os.environ[k], import aliases such as import os
+# as o, getattr(os, "environ"), aliases, command-shadowing functions, external
+# scripts, computed paths, interpreter aliases and dynamic key assembly remain
+# unresolved by this matcher. grep -c TOKEN .env and cp .env backup remain
+# conservative denials even though those operations do not print values.
 
 from __future__ import annotations
 
@@ -68,7 +73,7 @@ DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
 ENV_DUMP_COMMANDS = {"env", "printenv", "set", "declare", "export", "typeset"}
 GREP_COMMANDS = {"grep", "rg", "ugrep"}
 SHELL_COMMANDS = {"bash", "sh", "zsh", "dash", "ksh", "eval", "source", "."}
-NON_PRINTING_COMMANDS = {"test", "[", "stat", "ls", "file", "true", "false", ":"}
+NON_PRINTING_COMMANDS = {"test", "[", "stat", "ls", "true", "false", ":"}
 SAFE_DOTENV_SUFFIXES = (".example", ".sample", ".template", ".dist")
 KNOWN_SECRET_VARS = {
     "ANTHROPIC_API_KEY",
@@ -183,10 +188,34 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(out)
 
 
+def _separate_program_flag_quotes(command: str) -> str:
+    """Give shlex's non-POSIX lexer a word boundary before attached scripts."""
+    out = []
+    quote = ""
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if char == "\\" and quote != "'":
+            out.append(command[index : index + 2])
+            index += 2
+            continue
+        if not quote and (index == 0 or command[index - 1] in " \t\n;|&("):
+            flag = re.match(r"(--(?:eval|command)=?|-(?:pe|ne|c|e|E))(?=[\"'])", command[index:])
+            if flag:
+                out.append(flag[0].rstrip("=") + " ")
+                index += flag.end()
+                continue
+        if char in {"'", '"'} and (not quote or quote == char):
+            quote = "" if quote else char
+        out.append(char)
+        index += 1
+    return "".join(out)
+
+
 def _tokenize(command: str) -> list[str]:
     try:
         executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
-        protected, parameters = _protect_parameters(executable)
+        protected, parameters = _protect_parameters(_separate_program_flag_quotes(executable))
         tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
         restored = [_restore_parameters(token, parameters) for token in tokens]
         # shlex can combine an arithmetic close and newline as one punctuation
@@ -736,20 +765,27 @@ def _env_dump_reason(
 
 
 def _program_reason(cmd: str, program: str) -> str | None:
+    literal_name = r"(?:[\"'][A-Za-z_][A-Za-z0-9_]*[\"']|:[A-Za-z_][A-Za-z0-9_]*)"
+    named_access = rf"\s*(?:\[\s*{literal_name}\s*\]|\.\s*(?:get|fetch)\s*\(\s*{literal_name}\s*[,\)])"
     if _is_python_command(cmd):
-        accesses_env = bool(re.search(r"\bos\s*\.\s*(?:environ|getenv)\b", program))
-        whole_env = bool(re.search(r"\bos\s*\.\s*environ\b(?!\s*(?:\[|\.\s*get\s*\())", program))
+        mapping = r"\bos\s*(?:\.\s*environ\b|\[\s*[\"']environ[\"']\s*\])"
     elif cmd == "node":
-        accesses_env = bool(re.search(r"\bprocess\s*\.\s*env\b", program))
-        whole_env = bool(re.search(r"\bprocess\s*\.\s*env\b(?!\s*(?:\[|\.\s*[A-Za-z_$]))", program))
+        mapping = r"\bprocess\s*(?:\.\s*env\b|\[\s*[\"']env[\"']\s*\])"
+        named_access += r"|\s*\.\s*[A-Za-z_$][A-Za-z0-9_$]*(?![A-Za-z0-9_$]|\s*\()"
     elif cmd == "perl":
+        mapping = r"%ENV\b"
         accesses_env = bool(re.search(r"\$ENV\s*\{", program))
-        whole_env = bool(re.search(r"%ENV\b", program))
     elif cmd == "ruby":
-        accesses_env = bool(re.search(r"\bENV\s*\[", program))
-        whole_env = bool(re.search(r"\bENV\s*\.\s*(?:to_h|to_a|each|inspect)\b", program))
+        mapping = r"\bENV\b"
     else:
         return None
+    matches = list(re.finditer(mapping, program))
+    accesses_env = bool(matches) or (cmd == "perl" and accesses_env)
+    whole_env = any(cmd == "perl" or not re.match(named_access, program[match.end() :]) for match in matches)
+    for match in re.finditer(r"\b(?:os\s*\.\s*)?getenv\s*\(", program):
+        accesses_env = True
+        if not re.match(rf"\s*{literal_name}\s*[,\)]", program[match.end() :]):
+            whole_env = True
     if whole_env:
         return "inline program can expose the whole environment mapping"
     if accesses_env and any(_is_secret_var_name(name) for name in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", program)):
@@ -764,10 +800,13 @@ def _inline_program_reason(segment: list[str], dumped_files: set[str]) -> str | 
     if not found:
         return None
     cmd, args, _ = found
-    flag = "-c" if _is_python_command(cmd) else "-e"
-    for index, token in enumerate(args[:-1]):
-        if _strip_quotes(token) == flag:
-            for program in _script_words(args, index + 1):
+    for index, token in enumerate(args):
+        token = _strip_quotes(token)
+        flag = re.match(r"^(--(?:eval|command)(?:=|$)|-(?:pe|ne|c|e|E))", token)
+        if flag:
+            attached = token[flag.end() :]
+            script_args = [attached, *args[index + 1 :]] if attached else args[index + 1 :]
+            for program in _script_words(script_args, 0):
                 reason = _program_reason(cmd, program)
                 if reason:
                     return reason
@@ -816,7 +855,7 @@ def _heredoc_reason(
         return None
     cmd, args, _ = found
     for index, token in enumerate(args[:-1]):
-        if token == "<<<" and cmd in SHELL_COMMANDS:
+        if token == "<<<":
             inputs = [(body, True) for body in _script_words(args, index + 1)]
         elif token in {"<<", "<<-"}:
             pending = documents.get(_strip_quotes(args[index + 1]), [])
@@ -830,10 +869,8 @@ def _heredoc_reason(
                 return "expanding here-document can expose a secret value"
             if cmd in SHELL_COMMANDS:
                 reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
-            elif _is_python_command(cmd):
-                reason = _program_reason(cmd, body)
             else:
-                reason = None
+                reason = _program_reason(cmd, body)
             if reason:
                 return reason
     return None
@@ -1067,10 +1104,16 @@ def _danger_reason(
 
 
 def _sensitive_path(path: str) -> bool:
-    return _is_known_secret_file(path) or bool(re.fullmatch(r"/proc/[^/]+/environ", _strip_quotes(path)))
+    clean = os.path.normpath(_strip_quotes(path))
+    if clean.startswith("//"):
+        clean = clean[1:]
+    return _is_known_secret_file(clean) or bool(re.fullmatch(r"/proc/[^/]+/environ", clean))
 
 
 def _non_printing_command(cmd: str, args: list[str]) -> bool:
+    if cmd == "file":
+        options = args[: args.index("--")] if "--" in args else args
+        return not (_has_short_flag(options, "f") or any(arg.split("=", 1)[0] == "--files-from" for arg in options))
     if cmd in NON_PRINTING_COMMANDS:
         return True
     return cmd == "wc" and args in [["-c"], ["--bytes"], ["-l"], ["--lines"]]
@@ -1091,6 +1134,8 @@ def _sensitive_file_reason(pipeline: list[list[str]], index: int, dumped_files: 
     if not found:
         return None
     cmd, args, _ = found
+    if cmd == "file" and not _non_printing_command(cmd, _without_redirects(args)):
+        return "file-list input could expose sensitive values as filenames"
     # Preserve the explicitly documented source-data-flow residual.
     if cmd in {"source", "."}:
         return None
@@ -1196,11 +1241,7 @@ def _script_words(args: list[str], index: int) -> list[str]:
         words = shlex.split("".join(args[index:]), posix=True)
     except ValueError:
         return [_strip_quotes(args[index])]
-    candidates = [words[0]] if words else []
-    first = _strip_quotes(args[index])
-    if first not in candidates:
-        candidates.append(first)
-    return candidates
+    return [words[0]] if words else []
 
 
 def _shell_script(args: list[str]) -> list[str]:

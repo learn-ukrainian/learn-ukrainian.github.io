@@ -866,16 +866,20 @@ def test_nested_dump_remains_visible_to_outer_shell(command):
         "env > >(wc -c; cat)",
     ],
 )
-def test_output_substitution_dump_denied(monkeypatch, command):
-    assert _run(monkeypatch, command) == 2
+def test_output_substitution_dump_denied(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
 
 
-@pytest.mark.parametrize("consumer", ["bash", "sh", "zsh", "dash", "eval", "source", "."])
+@pytest.mark.parametrize("consumer", ["bash", "sh", "zsh", "dash", "ksh", "eval", "source", "."])
 @pytest.mark.parametrize("body", ["env", "printenv", "cat .env", "echo $ARBITRARY_TOKEN"])
 @pytest.mark.parametrize("redirect", ["<<'EOF'", "<<EOF", "<<<"])
-def test_shell_standard_input_denied(monkeypatch, consumer, body, redirect):
+def test_shell_standard_input_denied(consumer, body, redirect):
     command = f"{consumer} <<< {shlex.quote(body)}" if redirect == "<<<" else f"{consumer} {redirect}\n{body}\nEOF"
-    assert _run(monkeypatch, command) == 2
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize(
@@ -887,8 +891,10 @@ def test_shell_standard_input_denied(monkeypatch, consumer, body, redirect):
         ("export X=$ARBITRARY_TOKEN; Y=$X;", "$Y"),
     ],
 )
-def test_expanding_heredoc_observes_prior_assignments(monkeypatch, prefix, body):
-    assert _run(monkeypatch, f"{prefix} cat <<EOF\n{body}\nEOF") == 2
+def test_expanding_heredoc_observes_prior_assignments(prefix, body):
+    result = _subprocess_guard(f"{prefix} cat <<EOF\n{body}\nEOF")
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize(
@@ -909,15 +915,19 @@ def test_expanding_heredoc_observes_prior_assignments(monkeypatch, prefix, body)
         "python -c 'import os; print(os.environ.get(\"ARBITRARY_''TOKEN\"))'",
     ],
 )
-def test_inline_environment_mapping_denied(monkeypatch, command):
-    assert _run(monkeypatch, command) == 2
+def test_inline_environment_mapping_denied(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("path", ["/proc/self/environ", "/proc/$$/environ", "/proc/123/environ", ".env"])
 @pytest.mark.parametrize("reader", ["base64", "xxd", "od -An -tx1", "hexdump -C", "dd if=", "cut -c1-"])
-def test_sensitive_file_operand_denied(monkeypatch, path, reader):
+def test_sensitive_file_operand_denied(path, reader):
     separator = "" if reader.endswith("=") else " "
-    assert _run(monkeypatch, reader + separator + path) == 2
+    result = _subprocess_guard(reader + separator + path)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("command", ["unknown-reader < .env", "unknown-reader < /proc/self/environ", "wc -L .env"])
@@ -1003,4 +1013,122 @@ def test_nested_input_owner_boundaries_denied(monkeypatch, command):
     ],
 )
 def test_nested_input_owner_neighbors_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "file -f .env",
+        "file --files-from=.env",
+        "file --files-from .env",
+        "file -f.env",
+        "file -bf .env",
+        "file -bf.env",
+        "env > >(file -f -)",
+        "env > >(file --files-from=-)",
+        "env > >(file -bf -)",
+        "env > >(file -f-)",
+    ],
+)
+def test_file_list_variants_denied(command):
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "consumer,program",
+    [
+        ("python", "import os; print(os.environ)"),
+        ("node", "console.log(process.env)"),
+        ("perl", "print %ENV"),
+        ("ruby", "puts ENV.to_h"),
+    ],
+)
+@pytest.mark.parametrize("redirect", ["<<<", "<<'EOF'", "<<EOF"])
+def test_interpreter_stdin_variants_denied(consumer, program, redirect):
+    command = (
+        f"{consumer} <<< {shlex.quote(program)}" if redirect == "<<<" else f"{consumer} {redirect}\n{program}\nEOF"
+    )
+    result = _subprocess_guard(command)
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+def test_shell_inline_cat_heredoc_current_behavior_denied():
+    result = _subprocess_guard("bash -c 'cat' <<'EOF'\nenv\nEOF")
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/proc/./self/environ",
+        "/proc/self//environ",
+        "/proc/self/../self/environ",
+        "//proc//self/environ",
+        "./.env",
+        "dir/../.env",
+        ".env.example/../.env",
+    ],
+)
+def test_normalized_sensitive_path_variants_denied(path):
+    result = _subprocess_guard(f"base64 {path}")
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "consumer,program",
+    [
+        ("python", 'import os; print(os["environ"])'),
+        ("python", "import os; print(os [ 'environ' ])"),
+        ("python", "import os; print(os.getenv())"),
+        ("node", 'console.log(process["env"])'),
+        ("node", "console.log(process [ 'env' ])"),
+        ("node", "console.log(process.env.valueOf())"),
+        ("node", "console.log(process.env.values())"),
+        ("ruby", "puts ENV.to_hash"),
+        ("ruby", "puts ENV.values"),
+        ("ruby", "p ENV"),
+        ("ruby", "puts ENV"),
+        ("ruby", "puts ENV.to_h"),
+        ("perl", "say %ENV"),
+    ],
+)
+@pytest.mark.parametrize("flag", ["-c", "-e", "-E", "--eval", "--command", "-pe", "-ne"])
+@pytest.mark.parametrize("attached", [False, True])
+def test_inline_mapping_flag_variants_denied(consumer, program, flag, attached):
+    separator = "" if attached else " "
+    if attached and flag.startswith("--"):
+        separator = "="
+    result = _subprocess_guard(f"{consumer} {flag}{separator}{shlex.quote(program)}")
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "ls .env.example",
+        "git diff -- .env.example",
+        "python -c 'print(1)'",
+        "python -c'print(1)'",
+        "node --eval 'console.log(1)'",
+        "file -- .env",
+        "file -- -f .env",
+        "env > >(file -)",
+        'python -c \'import os; print(os["environ"]["PATH"])\'',
+        "python -c 'import os; print(os.environ.get(\"PATH\"))'",
+        "node -e 'console.log(process[\"env\"].PATH)'",
+        'node -e \'console.log(process ["env"] ["PATH"])\'',
+        "ruby -e 'puts ENV.fetch(\"PATH\")'",
+        "ruby -e 'puts ENV.fetch( :PATH )'",
+        "ruby -e 'puts ENV[ :PATH ]'",
+        "perl -E 'say $ENV{PATH}'",
+    ],
+)
+def test_round_four_neighbors_allowed(monkeypatch, command):
     assert _run(monkeypatch, command) == 0

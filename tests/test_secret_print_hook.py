@@ -28,13 +28,18 @@ NATIVE_ENV = {"PATH": "/usr/bin:/bin", "ARBITRARY_TOKEN": SENTINEL, "PYTHONDONTW
         "base64 /proc/self/environ",
     ],
 )
-def test_native_structural_dump_denials(harness, command, monkeypatch, capsys):
-    from scripts.agent_runtime import secret_print_hook as hook
-
-    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event(harness, command))))
-    code = hook.main(["--harness", harness])
-    captured = capsys.readouterr()
-    assert_decision(harness, code, captured.out, captured.err, False)
+def test_native_structural_dump_denials(harness, command):
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", harness],
+        input=json.dumps(event(harness, command)),
+        text=True,
+        capture_output=True,
+        env=NATIVE_ENV,
+        timeout=10,
+    )
+    assert result.returncode == 2
+    assert SENTINEL not in result.stdout + result.stderr
+    assert_decision(harness, result.returncode, result.stdout, result.stderr, False)
 
 
 def event(harness, command):
