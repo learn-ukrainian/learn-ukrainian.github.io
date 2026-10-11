@@ -67,6 +67,21 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _synthetic_routing_budget(monkeypatch):
+    """Supply local budget inputs without replacing routing or admission guards.
+
+    Dedicated budget cases in test_delegate_review_admission.py provide their
+    own inputs; this fixture applies only to this module's dispatch scenarios.
+    """
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
+        "agents": {seat: {"status": "cool", "remaining_pct": 60}
+                   for seat in ("claude", "codex", "cursor")},
+        "diagnostics": {"records_loaded": 5, "stale": False},
+    })
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: {})
+
+
+@pytest.fixture(autouse=True)
 def _isolate_delegate_import_path(monkeypatch):
     """Worker setup prepends the primary scripts path; keep it within one test.
 

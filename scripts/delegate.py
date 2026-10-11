@@ -12745,9 +12745,12 @@ def _dispatch(
     if primary_read_only_cwd:
         args.cwd = None
         validated_cwd = None
-    detached_read_only = args.mode == "read-only" and not worktree_arg and not args.cwd
+    # Direct verdict reviews snapshot the admitted branch without touching its
+    # author. Ordinary continuation and attempt-owned inputs keep branch reuse.
+    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
+    detached_read_only = args.mode == "read-only" and not args.cwd and (direct_branch_review or not worktree_arg)
     if detached_read_only:
-        worktree_arg = "auto"
+        worktree_arg = worktree_arg or "auto"
 
     if not fleet_repo.default and not worktree_arg and not args.cwd:
         print(
@@ -13296,7 +13299,7 @@ def _dispatch(
                     requested_harness=requested_harness,
                     lifecycle_carrier=lifecycle_carrier,
                     worktree_path=resolved_worktree_raw,
-                    worktree_branch=requested_branch,
+                    worktree_branch=None if detached_read_only else requested_branch,
                     worktree_base=worktree_base,
                     agent_alias_note=agent_alias_note,
                     output_schema_path=output_schema_path,
@@ -13614,7 +13617,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
                     base=worktree_base,
-                    branch=requested_branch,
+                    branch=None if detached_read_only else requested_branch,
                     detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
                     full_checkout=full_checkout,
