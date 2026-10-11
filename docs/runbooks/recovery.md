@@ -317,7 +317,72 @@ unchanged, to a new sibling under the same cache:
 A failed check exits before `rmdir` or `mv`. A failed `cd` exits before either
 command and before `npm ci`.
 
-A scratch cache showed that behavior: `rmdir` removes an empty
+Quarantine requires exclusive recovery. Stop every actor that can change
+the cache and leave it stopped until the block exits: `npm` (including
+`npm ci`, which downloads the browser), any `node` process that launches
+Puppeteer, the browser those processes start (`chrome` or
+`chrome-headless-shell`), agents, and cleanup tools. The probe below and
+the probe inside the block are point-in-time checks, not a lock. A process
+that opens a cache file, or swaps a parent directory, after the probe
+returns is outside what the probe can see. Exclusive recovery is what
+covers that interval.
+
+This step needs `lsof`, coreutils `timeout`, and GNU `mv` from coreutils
+8.30 or newer. The coreutils 8.30 NEWS (2018-07-01) says `mv -n A B` no
+longer overwrites a destination created at the same moment, and that the
+fix uses `renameat2` or `renameatx_np`. That is the requirement.
+`mv --update=none-fail` is not used. Coreutils 9.5 added it, and the CI
+runner rejects it with `mv: invalid argument 'none-fail' for '--update'`.
+That message is the 9.3 and 9.4 argmatch: `--update` is `all`, `none`, or
+`older` (`src/mv.c` in those tags). An `mv` without `-n` exits non-zero
+and does not rename. The block then leaves the browser folder in place.
+
+Confirm the cache with a bounded read-only `lsof +D` probe, without name
+lookups. The same class of check is described in
+[Worktree cleanup](worktree-cleanup.md). `timeout` stops the probe after
+120 seconds. That covers an ordinary Puppeteer cache. If the cache is
+large enough that the probe reaches the limit, stop every writer and run
+it again. Exit 124 is a failed probe. Do not quarantine after it.
+
+On lsof 4.99.4 an idle directory and a directory with a held file
+descriptor both exit 1. Idle writes no file lines. A holder is listed on
+standard output. Both can warn `can't stat() … file system` (tracefs on
+this host) and `Output information may be incomplete.` That warning does
+not hide a holder. An unreadable directory, a missing directory, and an
+invalid option also exit 1, with a different diagnostic. Idle is exit
+status 1, no file lines, and no diagnostic other than that
+filesystem-stat warning. Do not pass `-w`: on this lsof it hides
+`can't opendir` for an unreadable directory, and the result then looks
+idle. Any other result is a refusal.
+
+```bash
+lsof_status=0
+lsof_probe="$(timeout 120 lsof -nP +D "${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}" 2>&1)" || lsof_status=$?
+printf 'lsof_status=%s\n' "$lsof_status"
+printf '%s\n' "$lsof_probe"
+```
+
+The block repeats the check immediately before the rename as
+`timeout 120 lsof -nP -F p +D`, prints whatever the probe wrote, and
+renames only when the status is 1, no `p<pid>` line is present, and every
+remaining line is one of those filesystem-stat warnings. A listed holder,
+a timeout, or any other diagnostic leaves the browser folder where it is.
+
+The rename is `mv -n -T`. In coreutils 9.3 and 9.4 `src/copy.c`, `mv`
+calls `renameatu` with `RENAME_NOREPLACE`. If that returns `EEXIST` and
+`-n` is set, it returns before the later replacing `renameat`. Those
+versions print `not replacing` and exit 1. NEWS 9.2 made the skip a
+failure; NEWS 9.3 added that diagnostic.
+Coreutils 9.5 made `mv -n` a silent skip that exits 0. GNU mv 9.7 on this
+host matches that later skip: one `renameat2(RENAME_NOREPLACE)`, no second
+rename, and exit 0 when the destination exists. The block therefore ignores
+`mv`'s status. It continues only when the source path is gone and the
+destination is a directory and not a symlink. Otherwise it refuses. Plain
+`mv -T` is not used. On 9.7 it follows the refused noreplace with a
+replacing `renameat` and removes an empty directory created after the name
+was chosen.
+
+A scratch cache showed the empty removal and the rename: `rmdir` removes an empty
 `chrome/linux-<buildId>` directory and leaves the cache root; a directory
 that still contains `chrome-linux64/` is moved aside and its files stay in
 the quarantine sibling; the cache root and a directory outside the cache are
@@ -470,11 +535,66 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
       printf 'Refusing to quarantine onto the cache or the browser folder.\n' >&2
       exit 1
     fi
-    if [ -e "$quarantine" ] || [ -L "$quarantine" ]; then
-      printf 'Refusing to quarantine over an existing path.\n' >&2
+    if ! command -v lsof >/dev/null 2>&1 || ! command -v timeout >/dev/null 2>&1; then
+      printf 'Refusing to quarantine without a cache holder check.\n' >&2
       exit 1
     fi
-    mv -T -- "$install_real" "$quarantine"
+    # Idle is exit 1, no p<pid> line, and no diagnostic other than a
+    # "can't stat() … file system" warning. lsof 4.99.4 uses exit 1 for an
+    # idle directory, a held file, a permission error, and a bad option.
+    # timeout 120 bounds the walk. Exit 124 and every other result refuse.
+    # The probe text is printed. This recheck is point-in-time, not a lock.
+    _probe_cache_holders() {
+      local status probe line rest holders other
+      status=0
+      holders=0
+      other=0
+      probe="$(timeout 120 lsof -nP -F p +D "$1" 2>&1)" || status=$?
+      if [ -n "$probe" ]; then
+        printf '%s\n' "$probe" >&2
+      fi
+      while IFS= read -r line; do
+        [ -n "$line" ] || continue
+        rest=${line#p}
+        if [ "$line" != "$rest" ] && [ -n "$rest" ] && [ -z "${rest//[0-9]/}" ]; then
+          holders=1
+          continue
+        fi
+        case "$line" in
+          "lsof: WARNING: can't stat() "*" file system "*)
+            ;;
+          "      Output information may be incomplete.")
+            ;;
+          *)
+            other=1
+            ;;
+        esac
+      done <<< "$probe"
+      if [ "$holders" -eq 1 ]; then
+        printf 'Refusing to quarantine the browser cache while a process holds it.\n' >&2
+        return 1
+      fi
+      if [ "$status" -eq 1 ] && [ "$other" -eq 0 ]; then
+        return 0
+      fi
+      printf 'Refusing to quarantine because the cache holder check did not show an idle cache (status %s).\n' "$status" >&2
+      return 1
+    }
+    if ! _probe_cache_holders "$cache_real"; then
+      exit 1
+    fi
+    # Status is not success: 9.2-9.4 exit 1 on a skip, and 9.5+ exit 0.
+    if ! mv -n -T -- "$install_real" "$quarantine"; then
+      true
+    fi
+    if [ -e "$install_real" ] || [ -L "$install_real" ] || [ -L "$quarantine" ] || [ ! -d "$quarantine" ]; then
+      if [ -e "$quarantine" ] || [ -L "$quarantine" ]; then
+        printf 'Refusing to quarantine over an existing path.\n' >&2
+        exit 1
+      fi
+      printf 'Refusing to quarantine; the browser folder was not renamed.\n' >&2
+      exit 1
+    fi
   fi
   npm ci
 )
