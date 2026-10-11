@@ -226,6 +226,44 @@ def _matched_review_contract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) ->
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
 
 
+def _cool_routing_budget() -> dict[str, object]:
+    """Fresh snapshot: every dispatch seat is cool and above the review near-cap threshold."""
+    agents: dict[str, object] = {}
+    for seat in ("claude", "codex", "cursor", "agy"):
+        agents[seat] = {
+            "status": "cool",
+            "remaining_pct": 60.0,
+            "burn_pct_7d": 10.0,
+            "will_last_to_reset": True,
+            "interactive": {"status": "cool", "burn_pct_7d": 10.0},
+        }
+    return {
+        "diagnostics": {"records_loaded": len(agents), "stale": False},
+        "recommendation": {"primary_agent_for_code": "claude"},
+        "agents": agents,
+    }
+
+
+def _absent_routing_budget() -> dict[str, object]:
+    """Empty ledger: the guard reports budget unknown and does not hard-substitute."""
+    return {"agents": {}, "diagnostics": {"records_loaded": 0, "stale": False}}
+
+
+@pytest.fixture(autouse=True)
+def _host_independent_routing_budget(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Review dispatches must not read the host's live budget snapshot (#10429).
+
+    A deficit lane substitutes the requested seat before the assertion under test.
+    Inject a cool snapshot, or an empty ledger when ``LU_REVIEW_MCP_BUDGET_SNAPSHOT=absent``.
+    A later patch of ``_fetch_routing_budget`` in the test body still owns that case.
+    """
+    mode = os.environ.get("LU_REVIEW_MCP_BUDGET_SNAPSHOT", "neutral").strip().lower()
+    if mode not in {"neutral", "absent"}:
+        raise AssertionError(f"LU_REVIEW_MCP_BUDGET_SNAPSHOT must be 'neutral' or 'absent', not {mode!r}")
+    payload = _absent_routing_budget if mode == "absent" else _cool_routing_budget
+    monkeypatch.setattr(delegate_cli, "_fetch_routing_budget", payload)
+
+
 @pytest.fixture
 def manifest_file(tmp_path: Path) -> Path:
     manifest = tmp_path / "manifest.yaml"
@@ -659,6 +697,8 @@ def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
     }
     if remaining_pct is not None:
         fake_budget["agents"]["claude"]["remaining_pct"] = remaining_pct
+    # Owns the snapshot over ``_host_independent_routing_budget``. remaining_pct <= 10
+    # is the proof that a real deficit still refuses substitution (#10429).
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
     monkeypatch.setattr(
         "scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: {"claude": "codex"}
