@@ -169,7 +169,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_rule_author_runner.py": (
         "e25c6859176a185ad7fc6ec0b51033400eb25eae6440e526452d567da0404a34",
-        "42a709997975d460ccc787a02e6463c00b7c8fff3b060ebe20b5a768409c48fd",
+        "0fbcad2d0566b57932b4d6819cc2f0dcd04268e982891dfb09d3aee307bd6e68",
     ),
     "scripts/projects/open_model_data/phase3_rule_author_source_rows.py": (
         "0c01cf20cc39114b7394a6e02701ef35fc8c1d64412c35328e01059db8183d3c",
@@ -221,7 +221,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_heldout_label_transport.py": (
         "a1c4fed207f4c79c682dd5ad0efed9e2d1e333f4f9650e48067ae29eaef46e8f",
-        "5f8e6bf5a60217fff6dc73ab67ec2e7d7b98e6cbb7696e7421757c82d9c3dbde",
+        "b6e8db17181034cbceda15f081ad052d18b8981b77f82ac47ee04df95e3ba2f2",
     ),
     "scripts/projects/open_model_data/phase3_source_production_transport.py": (
         "65bbd0ce715084c01a78df4ad047a90837e480928efeb0e0dd7fe9d8cd83debb",
@@ -238,6 +238,14 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     "scripts/projects/open_model_data/verify_phase3_source_universe_freeze.py": (
         "b45d83a24d71aedd36b9fc2cb11541dd5f97124046fa2b2d6ad5a920b62bc04d",
         "11a865bab60f9d49bedb3264cb0844f4f2c8aebe7d181124cedf327f93d8cb3c",
+    ),
+    "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json": (
+        "1fefacca7b85f7b48a8edd37149dc28138dc1a0ea161f6bfa2e605f8e3287afa",
+        "53fc83b2d8df14a0df248442a69ab112307cf1981c480a33727297daaa67e0b9",
+    ),
+    "data/projects/open_model_data/contracts/phase3_heldout_label_transport_bundle_v1.schema.json": (
+        "6b2da26b5d5861b0699c1410740e44aa31def2de569b87e6bd5d29e79f53bd18",
+        "b1e996a1a44c8b9926b17fc72efc9b56dadef510dc2451f3187c5eb48c254753",
     ),
 }
 
@@ -429,7 +437,7 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
         if migrated is not None:
             historical, current = migrated
             require(entry["artifact_sha256"] == historical, "v2 engine historical source identity drift")
-            require(sha256_file(ROOT / logical_path) == current, "v2 engine current source byte drift")
+            require(sha256_file(_physical_k_path(logical_path)) == current, "v2 engine current source byte drift")
         else:
             require(
                 sha256_file(_physical_k_path(logical_path)) == entry["artifact_sha256"], "v2 engine artifact hash drift"
