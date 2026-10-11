@@ -164,6 +164,8 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
     "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
     "tests/test_drive_epic_skill_core.py::test_every_reference_is_linked_from_the_core",
+    "tests/test_drive_epic_skill_core.py::test_measured_behaviors_bind_once_at_their_loop_step",
+    "tests/test_drive_epic_skill_core.py::test_reduced_packet_keeps_nine_behavior_denominator_and_owned_residuals",
     "tests/test_drive_epic_skill_core.py::test_section_citations_used_by_scripts_still_resolve",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_grok_bot_with_hard_exclusions",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_the_full_health_enum",
