@@ -35,7 +35,7 @@ SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_rule_au
 VERSION = "phase3_rule_author_runner_v1"
 PRIVATE_MODE = 0o700
 FILE_MODE = 0o600
-CANONICAL_AGY_MODEL = "gemini-3.6-flash-high"
+CANONICAL_AGY_MODEL = "gemini-3.8-flash-high"
 PUBLIC_RECEIPT_STRING_FIELDS = frozenset(
     {
         "schema_version",

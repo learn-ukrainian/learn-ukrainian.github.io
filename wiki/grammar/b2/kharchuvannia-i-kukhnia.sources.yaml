@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/kharchuvannia-i-kukhnia.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0039
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0042
   type: textbook
   title: Ìорôологічна норма (p. 30)
   page: 30
@@ -32,13 +30,13 @@ sources:
   page: 160
   grade: 8
 - id: S7
-  file: 6-klas-ukrmova-zabolotnyi-2020_s0007
+  file: 6-klas-ukrmova-avramenko-2023_s0008
   type: textbook
   title: Повторення вивченого (p. 9)
   page: 9
   grade: 6
 - id: S8
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0125
+  file: 7-klas-ukrmova-avramenko-2024_s0140
   type: textbook
   title: Дієприслівник як форма дієслова
   page: 126

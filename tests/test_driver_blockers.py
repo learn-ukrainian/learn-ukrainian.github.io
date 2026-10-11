@@ -31,7 +31,7 @@ def observation(*items, complete=True):
 
 def receipt(body, *, key="message-1", stamp="2026-10-10T01:00:00Z", **fields):
     return {
-        "recipient": "cto",
+        "recipient": "epics",
         "message_id": key,
         "created_at": stamp,
         "content_sha256": hashlib.sha256(body).hexdigest(),
@@ -46,7 +46,7 @@ def posted(*items):
 def seed(path, current=None):
     current = current or observation(item())
     body = posted(*current["items"])
-    return blockers.record(path, EPIC, current, receipt(body), body, 0)
+    return blockers.record(path, EPIC, current, receipt(body, recipient="cto"), body, 0, reporting_target="cto")
 
 
 @pytest.fixture
@@ -266,6 +266,7 @@ def test_unreadable_malformed_duplicate_json_and_oversized(ledger, tmp_path, con
     "failure",
     [
         "recipient",
+        "implicit_cto",
         "missing_id",
         "time",
         "naive_time",
@@ -288,6 +289,8 @@ def test_rejected_record_preserves_bytes_and_resurfaces(ledger, tmp_path, failur
     generation = "1"
     if failure == "recipient":
         received["recipient"] = "operator"
+    elif failure == "implicit_cto":
+        received["recipient"] = "cto"
     elif failure == "missing_id":
         received.pop("message_id")
     elif failure in {"time", "naive_time"}:
@@ -835,7 +838,7 @@ def test_show_absent_present_empty_and_private_paths(ledger):
     assert result.stdout.strip() == blockers.UNKNOWN_SUMMARY
     seed(ledger)
     result = run_cli(ledger, "show", "--epic", EPIC)
-    assert result.stdout.strip() == "CTO blockers: generation 1; 1 recorded blockers"
+    assert result.stdout.strip() == "Blocker baseline: generation 1; 1 recorded blockers"
     ledger.write_text("")
     assert run_cli(ledger, "show", "--epic", EPIC).stdout.strip() == blockers.UNKNOWN_SUMMARY
     assert str(ledger.parent) not in result.stdout
@@ -874,6 +877,9 @@ def test_cli_help_contract(ledger, command):
     assert result.returncode == 0
     for required in ("Examples:", "Outputs:", "Exit codes:", "Related:", "complete", "--expect-generation"):
         assert required in result.stdout
+    assert "default epics" in result.stdout
+    assert "--reporting-target cto" in result.stdout
+    assert "receipt never selects the expected target" in result.stdout
 
 
 def test_successful_cli_record_and_delta(ledger, tmp_path):
@@ -906,7 +912,7 @@ def test_in_process_cli_round_trip_and_failure(ledger, tmp_path, capsys):
     assert blockers.main(["delta", "--epic", EPIC, "--current", str(paths[0])]) == 0
     assert json.loads(capsys.readouterr().out)["post_required"] is False
     assert blockers.main(["show", "--epic", EPIC]) == 0
-    assert capsys.readouterr().out.strip() == "CTO blockers: generation 1; 1 recorded blockers"
+    assert capsys.readouterr().out.strip() == "Blocker baseline: generation 1; 1 recorded blockers"
     before = ledger.read_bytes()
     paths[0].write_text("bad JSON")
     assert blockers.main(["delta", "--epic", EPIC, "--current", str(paths[0])]) == 1
@@ -931,7 +937,7 @@ def test_show_summary_is_bounded_even_for_large_valid_generation(ledger):
     stored["generation"] = 10**200
     ledger.write_text(json.dumps(stored))
     summary = blockers.show_summary(ledger, EPIC)
-    assert summary == "CTO blockers: generation [large integer]; 1 recorded blockers"
+    assert summary == "Blocker baseline: generation [large integer]; 1 recorded blockers"
     assert len(summary) < 100
 
 
@@ -972,3 +978,192 @@ def test_invalid_timestamp_diagnostic_does_not_echo_receipt_data(ledger, tmp_pat
     assert private not in result.stderr
     assert "anchor created_at must be an ISO-8601 timestamp" in result.stderr
     assert not ledger.exists()
+
+
+@pytest.mark.parametrize("target", ["epics", "cto"])
+@pytest.mark.parametrize("interface", ["api", "cli"])
+def test_selected_target_advances_original_cto_history(ledger, tmp_path, capsys, target, interface):
+    stored = seed(ledger)
+    stored["generation"] = 30
+    ledger.write_text(json.dumps(stored))
+    before = ledger.read_bytes()
+    assert blockers.load_ledger(ledger, EPIC) == stored
+    assert ledger.read_bytes() == before
+    assert "recipient" not in stored["anchor"]
+    assert blockers.show_summary(ledger, EPIC) == "Blocker baseline: generation 30; 1 recorded blockers"
+    current = observation(item(action="repair CI"))
+    body = posted(*current["items"])
+    received = receipt(body, recipient=target, key="message-2", stamp="2026-10-10T02:00:00Z")
+    # Ordinary epics callers keep the existing invocation; only CTO needs selection.
+    if interface == "api":
+        options = {"reporting_target": "cto"} if target == "cto" else {}
+        blockers.record(ledger, EPIC, current, received, body, 30, **options)
+    else:
+        paths = record_files(tmp_path, current, body, received)
+        args = record_args(paths, "30")
+        if target == "cto":
+            args += ["--reporting-target", "cto"]
+        assert blockers.main(args) == 0
+        assert json.loads(capsys.readouterr().out) == {"generation": 31, "recorded": True}
+    updated = blockers.load_ledger(ledger, EPIC)
+    assert ledger.name == "CTO-BLOCKERS-LEDGER.json"
+    assert set(updated) == set(stored) == {"epic", "generation", "anchor", "items"}
+    assert set(updated["anchor"]) == set(stored["anchor"]) == {"message_id", "content_sha256", "created_at"}
+    assert updated["generation"] == 31
+    assert updated["anchor"] == {
+        "message_id": "message-2",
+        "created_at": "2026-10-10T02:00:00Z",
+        "content_sha256": hashlib.sha256(body).hexdigest(),
+    }
+    delta = blockers.compute_delta(current, updated)
+    assert delta["post_required"] is False
+    assert delta["items"][0]["class"] == "UNCHANGED"
+
+
+@pytest.mark.parametrize("target", ["epics", "cto"])
+@pytest.mark.parametrize("interface", ["api", "cli"])
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "unknown_target",
+        "wrong_recipient",
+        "hash_mismatch",
+        "incomplete_fields",
+        "invalid_resolved",
+        "stale_generation",
+        "replay",
+        "out_of_order",
+        "malformed_receipt",
+        "filesystem_substitution",
+    ],
+)
+def test_selected_targets_keep_negative_controls(ledger, tmp_path, capsys, target, interface, failure):
+    seed(ledger)
+    before = ledger.read_bytes()
+    current = observation(item(action="repair CI"))
+    body = posted(*current["items"])
+    received = receipt(body, recipient=target, key="message-2", stamp="2026-10-10T02:00:00Z")
+    generation = 1
+    if failure == "unknown_target":
+        # Matching an arbitrary receipt target cannot authorize that target.
+        target = received["recipient"] = "operator"
+    elif failure == "wrong_recipient":
+        received["recipient"] = "cto" if target == "epics" else "epics"
+    elif failure == "hash_mismatch":
+        received["content_sha256"] = "0" * 64
+    elif failure == "incomplete_fields":
+        body = b"blocked-build | blocked | monitor | review"
+        received["content_sha256"] = hashlib.sha256(body).hexdigest()
+    elif failure == "invalid_resolved":
+        current = observation()
+        body = b"blocked-build is not yet resolved"
+        received["content_sha256"] = hashlib.sha256(body).hexdigest()
+    elif failure == "stale_generation":
+        generation = 0
+    elif failure == "replay":
+        received["message_id"] = "message-1"
+    elif failure == "out_of_order":
+        received["created_at"] = "2026-10-10T00:59:00Z"
+    elif failure == "malformed_receipt":
+        received = []
+    else:
+        victim = tmp_path / "substituted-ledger"
+        ledger.rename(victim)
+        victim_before = victim.stat()
+        ledger.symlink_to(victim)
+    if interface == "api":
+        with pytest.raises((ValueError, blockers.InstallError)):
+            blockers.record(ledger, EPIC, current, received, body, generation, reporting_target=target)
+    else:
+        paths = record_files(tmp_path, current, body)
+        paths[1].write_text(json.dumps(received))
+        args = [*record_args(paths, str(generation)), "--reporting-target", target]
+        if failure == "unknown_target":
+            with pytest.raises(SystemExit) as exc:
+                blockers.main(args)
+            assert exc.value.code == 2
+        else:
+            assert blockers.main(args) == 1
+        output = capsys.readouterr()
+        assert output.out == ""
+        assert output.err
+    assert ledger.read_bytes() == before
+    if failure == "filesystem_substitution":
+        assert ledger.is_symlink()
+        assert ledger.readlink() == victim
+        assert victim.read_bytes() == before
+        assert (victim.stat().st_dev, victim.stat().st_ino) == (victim_before.st_dev, victim_before.st_ino)
+        assert json.loads(victim.read_bytes())["generation"] == 1
+
+
+@pytest.mark.parametrize("target", ["epics", "cto"])
+@pytest.mark.parametrize("interface", ["api", "cli"])
+def test_selected_target_atomically_replaces_hardlinked_ledger(ledger, tmp_path, target, interface):
+    stored = seed(ledger)
+    before = ledger.read_bytes()
+    lock = ledger.with_name(f"{ledger.name}.lock")
+    lock_before = lock.stat()
+    alias = tmp_path / "ledger-alias"
+    os.link(ledger, alias)
+    alias_before = alias.stat()
+    assert (ledger.stat().st_dev, ledger.stat().st_ino) == (alias_before.st_dev, alias_before.st_ino)
+    assert ledger.stat().st_nlink == alias_before.st_nlink == 2
+    current = observation(item(action="repair CI"))
+    body = posted(*current["items"])
+    received = receipt(body, recipient=target, key="message-2", stamp="2026-10-10T02:00:00Z")
+    if interface == "api":
+        blockers.record(ledger, EPIC, current, received, body, 1, reporting_target=target)
+    else:
+        paths = record_files(tmp_path, current, body, received)
+        result = run_cli(ledger, *record_args(paths), "--reporting-target", target)
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert json.loads(result.stdout) == {"generation": 2, "recorded": True}
+    updated = blockers.load_ledger(ledger, EPIC)
+    assert updated["generation"] == stored["generation"] + 1 == 2
+    assert updated["anchor"] == {
+        "message_id": "message-2",
+        "created_at": "2026-10-10T02:00:00Z",
+        "content_sha256": hashlib.sha256(body).hexdigest(),
+    }
+    assert updated["items"] == {
+        "blocked-build": "3130ed62b073e1dd465a02e94314a152a84f636e0674aa59aa2595e222c4e213",
+    }
+    ledger_after = ledger.stat()
+    assert ledger_after.st_ino != alias_before.st_ino
+    assert stat.S_IMODE(ledger_after.st_mode) == 0o600
+    assert alias.read_bytes() == before
+    alias_after = alias.stat()
+    assert (alias_after.st_dev, alias_after.st_ino) == (alias_before.st_dev, alias_before.st_ino)
+    assert stat.S_IMODE(alias_after.st_mode) == stat.S_IMODE(alias_before.st_mode)
+    assert json.loads(alias.read_bytes())["generation"] == 1
+    assert alias_after.st_nlink == 1
+    assert (lock.stat().st_dev, lock.stat().st_ino) == (lock_before.st_dev, lock_before.st_ino)
+
+
+@pytest.mark.parametrize("target", [None, "", "EPICS", "cto\n", [], {}])
+def test_api_refuses_invalid_target_without_creating_baseline(ledger, target):
+    body = posted(item())
+    with pytest.raises(ValueError, match="reporting target"):
+        blockers.record(ledger, EPIC, observation(item()), receipt(body), body, 0, reporting_target=target)
+    assert not ledger.exists()
+    assert not ledger.with_name(f"{ledger.name}.lock").exists()
+
+
+def test_api_default_does_not_trust_cto_receipt_to_choose_target(ledger):
+    seed(ledger)
+    before = ledger.read_bytes()
+    body = posted(item(action="repair CI"))
+    received = receipt(body, recipient="cto", key="message-2", stamp="2026-10-10T02:00:00Z")
+    with pytest.raises(ValueError, match="receipt recipient must be epics"):
+        blockers.record(ledger, EPIC, observation(item(action="repair CI")), received, body, 1)
+    assert ledger.read_bytes() == before
+
+
+@pytest.mark.parametrize("target", ["epics", "cto"])
+def test_record_refuses_non_utf8_post_for_selected_target(ledger, target):
+    seed(ledger)
+    before = ledger.read_bytes()
+    body = b"\xff"
+    with pytest.raises(ValueError, match="posted body must be UTF-8"):
+        blockers.record(ledger, EPIC, observation(item()), receipt(body, recipient=target), body, 1, reporting_target=target)
+    assert ledger.read_bytes() == before

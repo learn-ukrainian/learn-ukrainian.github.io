@@ -9216,6 +9216,12 @@ def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> 
         )
 
 
+def _refuse_existing_detached_worktree(worktree_path: Path) -> None:
+    """A detached snapshot needs an absent canonical destination, including in dry-run."""
+    if worktree_path.exists():
+        raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
+
+
 def _resolve_worktree_base_sha(
     *,
     agent: str,
@@ -9244,8 +9250,8 @@ def _resolve_worktree_base_sha(
     """
     worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
-    if detached and worktree_path.exists():
-        raise ValueError(f"detached read-only worktree already exists: {worktree_path}; refuse reuse")
+    if detached:
+        _refuse_existing_detached_worktree(worktree_path)
 
     if worktree_path.exists():
         if not worktree_path.is_dir():
@@ -9288,7 +9294,15 @@ def _resolve_worktree_base_sha(
 
     if requested_branch:
         _fetch_existing_branch(requested_branch)
-        origin_sha = _require_local_branch_is_ancestor_of_origin(requested_branch)
+        if detached:
+            # Snapshot the remote commit; the author's local history is not an attach input.
+            origin_sha = _resolve_sha(_REPO_ROOT, f"origin/{requested_branch}")
+            if origin_sha is None:
+                raise RuntimeError(
+                    f"origin/{requested_branch} was not found after fetch; --branch requires an existing remote branch"
+                )
+        else:
+            origin_sha = _require_local_branch_is_ancestor_of_origin(requested_branch)
         _refuse_if_gate_head_moved(origin_sha, pinned_head_sha)
         return pinned_head_sha or origin_sha
 
@@ -12750,9 +12764,12 @@ def _dispatch(
     if primary_read_only_cwd:
         args.cwd = None
         validated_cwd = None
-    detached_read_only = args.mode == "read-only" and not worktree_arg and not args.cwd
+    # Direct verdict reviews snapshot the admitted branch without touching its
+    # author. Ordinary continuation and attempt-owned inputs keep branch reuse.
+    direct_branch_review = bool(requested_branch) and _dispatch_is_review_typed(args) and not review_attempt
+    detached_read_only = args.mode == "read-only" and not args.cwd and (direct_branch_review or not worktree_arg)
     if detached_read_only:
-        worktree_arg = "auto"
+        worktree_arg = worktree_arg or "auto"
 
     if not fleet_repo.default and not worktree_arg and not args.cwd:
         print(
@@ -13301,7 +13318,7 @@ def _dispatch(
                     requested_harness=requested_harness,
                     lifecycle_carrier=lifecycle_carrier,
                     worktree_path=resolved_worktree_raw,
-                    worktree_branch=requested_branch,
+                    worktree_branch=None if detached_read_only else requested_branch,
                     worktree_base=worktree_base,
                     agent_alias_note=agent_alias_note,
                     output_schema_path=output_schema_path,
@@ -13405,7 +13422,20 @@ def _dispatch(
         if detached_read_only:
             # A dry-run describes the eventual checkout without fetching the
             # base or creating a worktree. Both can spawn git subprocesses.
-            dry_run_worktree = _auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)
+            try:
+                if requested_branch:
+                    _validate_branch_reuse_name(requested_branch)
+                changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
+                if changed_error:
+                    raise ValueError(changed_error.removeprefix("❌ "))
+                dry_run_worktree = _helper_worktree_path(
+                    str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)),
+                    validated_worktree,
+                )
+                _refuse_existing_detached_worktree(dry_run_worktree)
+            except (ValueError, RuntimeError) as exc:
+                print(f"❌ failed to validate detached snapshot for {task_id!r}: {exc}", file=sys.stderr)
+                return 1
         elif requested_branch:
             resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
@@ -13476,6 +13506,7 @@ def _dispatch(
                 "cwd": str(dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)),
                 "worktree_path": str(dry_run_worktree) if dry_run_worktree else None,
                 "worktree_branch": dry_run_branch,
+                "review_branch": requested_branch.strip() if detached_read_only and requested_branch else None,
                 "worktree_base_sha": dry_run_worktree_telemetry.get("base_sha"),
                 "runtime_tmp_root": str(runtime_tmp_root),
                 "output_schema_path": output_schema_path,
@@ -13510,6 +13541,8 @@ def _dispatch(
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
             dry_run_state.update(_authoring_review_state_fields(args, authoring_admission))
             dry_run_state.update(advisory_admission.state_fields())
+            if detached_read_only:
+                dry_run_state["worktree_reused"] = False
             if primary_read_only_cwd:
                 dry_run_state["read_only_primary_cwd"] = True
             dry_run_reap = _reap_runtime_tmp_lease(
@@ -13528,7 +13561,13 @@ def _dispatch(
         except BaseException:
             _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
             raise
-        if requested_branch:
+        if requested_branch and detached_read_only:
+            print(
+                f"🌲 planned new detached snapshot: path={dry_run_worktree} pinned_head={pinned_head or '?'}; "
+                "remote pin has not been fetched or validated",
+                file=sys.stderr,
+            )
+        elif requested_branch:
             print(
                 f"🌲 branch reuse validated: branch={dry_run_branch} "
                 f"path={dry_run_worktree} "
@@ -13619,7 +13658,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
                     base=worktree_base,
-                    branch=requested_branch,
+                    branch=None if detached_read_only else requested_branch,
                     detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
                     full_checkout=full_checkout,
@@ -13947,6 +13986,7 @@ def _dispatch(
             "cwd": cwd,
             "worktree_path": str(worktree_path) if worktree_path else None,
             "worktree_branch": worktree_branch,
+            "review_branch": requested_branch.strip() if detached_read_only and requested_branch else None,
             "worktree_base_sha": worktree_telemetry.get("base_sha"),
             "worktree_base": worktree_base if worktree_path else None,
             "worktree_rebased": bool(worktree_telemetry.get("rebased")),

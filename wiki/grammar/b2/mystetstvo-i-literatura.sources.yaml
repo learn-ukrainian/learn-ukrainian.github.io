@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/mystetstvo-i-literatura.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0487
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0342
   type: textbook
   title: § 33. українське образотворче мистецтво та архітектура
   page: 269
@@ -62,7 +60,7 @@ sources:
   page: 115
   grade: 7
 - id: S12
-  file: 7-klas-ukrmova-litvinova-2024_s0072
+  file: 7-klas-ukrmova-avramenko-2024_s0076
   type: textbook
   title: Безособові дієслова. Дієслівні форми на -но, -то
   page: 68

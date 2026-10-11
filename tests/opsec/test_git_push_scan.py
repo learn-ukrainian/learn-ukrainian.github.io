@@ -7,6 +7,7 @@ In-process tests call the hook's main with hand-written pre-push input.
 
 from __future__ import annotations
 
+import gc
 import hashlib
 import json
 import os
@@ -421,25 +422,63 @@ def test_continuation_unfolding_is_linear_in_the_header_size(size):
     assert work <= 8 * len(raw), f"unfolding copied {work} bytes for {len(raw)} input bytes"
 
 
-def _unfold_cpu_seconds(size, repeats=3):
-    """Best thread CPU time on plain bytes, including copies invisible to the subclass counter."""
+def _continuation_fixture(size):
+    """Commit bytes whose mergetag continues for about `size` bytes, and the fields that split must return."""
     line = b" " + b"x" * 63
     raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 64) + b"\n\nclean\n"
     expected = [(b"tree", b"0"), (b"mergetag", b"object 0" + (b"\n" + line[1:]) * (size // 64))]
+    return raw, expected
+
+
+def _unfold_cpu_seconds(size, samples=5, target=0.2):
+    """Minimum per-call thread CPU time on plain bytes.
+
+    A single call at the small size is only a few milliseconds, and the 64x bound
+    is about 30 ms of additive thread CPU above that call. Best-of-three on one
+    call therefore accepts a quadratic unfold when every short sample pays a stall
+    (a collection, a cold fault) that barely moves the multi-second large sample.
+    Each sample repeats the call until it has used `target` seconds, after one
+    warmup and with the cyclic collector off, so that stall is spread across many
+    calls. The reported value is the minimum per-call time: extra time is noise,
+    not negative. Thread CPU time does not count time spent descheduled. Copies
+    that plain bytes hide from the subclass counter still show up here.
+    """
+    raw, expected = _continuation_fixture(size)
+    git_push.split_object(raw, "commit[unit]")
     best = float("inf")
-    for _ in range(repeats):
-        started = time.thread_time()
-        fields, message = git_push.split_object(raw, "commit[unit]")
-        best = min(best, time.thread_time() - started)
+    call_cap = 100_000
+    for _ in range(samples):
+        gc.collect()
+        enabled = gc.isenabled()
+        gc.disable()
+        elapsed = 0.0
+        fields, message = None, ""
+        calls = 0
+        try:
+            started = time.thread_time()
+            while calls < call_cap:
+                fields, message = git_push.split_object(raw, "commit[unit]")
+                calls += 1
+                elapsed = time.thread_time() - started
+                if elapsed >= target:
+                    break
+        finally:
+            if enabled:
+                gc.enable()
         assert fields == expected and message == "clean\n"
+        if elapsed <= 0 or calls == 0:
+            raise AssertionError(f"unfolding CPU scaling: thread clock did not advance at size {size}")
+        best = min(best, elapsed / calls)
     return best
 
 
 def test_continuation_unfolding_has_linear_cpu_scaling():
     """A 16x input increase allows 64x CPU work; quadratic unfolding needs about 256x."""
-    # Thread CPU time excludes descheduling and other threads' work. Best-of-three
-    # reduces transient noise; a 1 ms floor avoids ratios dominated by timer overhead.
-    # Short continuation lines make repeated full-prefix copies dominate loop overhead.
+    # 128 KiB against 2 MiB is the 16x gap this 64x allowance was calibrated for.
+    # A wider gap spends the slack the real scanner needs: its CPU cost is a bit
+    # above linear because each continuation line has a fixed loop cost.
+    # Short continuation lines make repeated full-prefix copies dominate that loop.
+    # The 1 ms floor keeps a tiny small sample from turning timer noise into a ratio.
     small, large = _unfold_cpu_seconds(128 << 10), _unfold_cpu_seconds(2 << 20)
     assert large <= 64 * max(small, 0.001), f"unfolding CPU scaling: small={small:.6f}s large={large:.6f}s"
 
@@ -896,6 +935,7 @@ def test_new_merge_on_top_of_public_main_has_its_mergetag_text_scanned(push_sand
 
 def head_runner(reply, *, calls):
     """Answer the REST repository and commit reads of a typed head lookup."""
+
     def run(argv, **kwargs):
         assert argv[:4] == ["gh", "api", "--method", "GET"], argv
         calls.append((argv, kwargs, argv[-1]))
@@ -905,12 +945,17 @@ def head_runner(reply, *, calls):
         try:
             repository = json.loads(result.stdout)["data"]["repository"]
             branch = repository.get("defaultBranchRef")
-            value = {"full_name":repository.get("nameWithOwner"),"default_branch":branch.get("name") if branch else None} if argv[-1] == "repos/unit/public" else {"sha":branch["target"]["oid"]}
+            value = (
+                {"full_name": repository.get("nameWithOwner"), "default_branch": branch.get("name") if branch else None}
+                if argv[-1] == "repos/unit/public"
+                else {"sha": branch["target"]["oid"]}
+            )
             if "errors" in json.loads(result.stdout):
-                return subprocess.CompletedProcess(argv,1,'','partial response')
-            return subprocess.CompletedProcess(argv,0,json.dumps(value),'')
-        except (KeyError,TypeError,ValueError):
+                return subprocess.CompletedProcess(argv, 1, "", "partial response")
+            return subprocess.CompletedProcess(argv, 0, json.dumps(value), "")
+        except (KeyError, TypeError, ValueError):
             return result
+
     return run
 
 

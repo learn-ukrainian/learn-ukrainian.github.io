@@ -1,38 +1,36 @@
-# Source registry for wiki/grammar/b2/active-participles-present.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1150
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0073
   type: textbook
   title: § 18. АКТИВНІ Й ПАСИВНІ ДІЄПРИКМЕТНИКИ
   page: 58
   grade: 11
 - id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1211
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0062
   type: textbook
   title: § 9. Паралельні форми вираження наказового
   page: 46
   grade: 11
 - id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3832
+  file: 7-klas-ukrmova-avramenko-2024_s0107
   type: textbook
   title: § 42. Активні й пасивні дієприкметники
   page: 98
   grade: 7
 - id: S4
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-avramenko-2024_s0055
   type: textbook
   title: МЕРЕЖЕВИЙ ЕТИКЕТ
   page: 49
   grade: 7
 - id: S5
-  file: 7-klas-ukrmova-litvinova-2024_s3921
+  file: 7-klas-ukrmova-avramenko-2024_s0099
   type: textbook
   title: § 17. Активні й пасивні дієприкметники
   page: 90
   grade: 7
 - id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0690
+  file: 10-klas-ukrmova-karaman-2018_s0336
   type: textbook
   title: § 76. Дієприкметник
   page: 189

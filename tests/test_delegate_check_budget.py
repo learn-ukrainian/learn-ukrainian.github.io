@@ -460,6 +460,12 @@ def test_issue_9272_review_dry_run_never_prints_grok_substitution(ordinary_revie
 
     worktree = ordinary_review_scope / ".worktrees/dispatch/codex/budget-check-fixture"
     _git(ordinary_review_scope, "worktree", "add", "-b", "review-target", str(worktree), "HEAD")
+    reviewer_worktree = worktree.with_name("budget-check-reviewer")
+    author_head = _git(worktree, "rev-parse", "HEAD")
+    author_branch = _git(worktree, "symbolic-ref", "HEAD")
+    author_status = _git(worktree, "status", "--porcelain=v1", "--untracked-files=all")
+    author_bytes = {path.relative_to(worktree): path.read_bytes() for path in worktree.rglob("*") if path.is_file()}
+    assert reviewer_worktree != worktree and not reviewer_worktree.exists()
     real_popen = subprocess.Popen
     _patch_spawn(monkeypatch, tmp_path)
     spawned = _track_worker_spawns(monkeypatch)
@@ -490,13 +496,20 @@ def test_issue_9272_review_dry_run_never_prints_grok_substitution(ordinary_revie
         "--dry-run",
     )
     args.cwd = None
-    args.worktree = "auto"
+    args.worktree = str(reviewer_worktree)
     assert delegate.cmd_dispatch(args) == 0
     assert not spawned
     assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
     state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
     assert state["agent"] == "codex" and state["substitution"] is None
     assert state["review_author_model"] is None and state["review_risk"] is None
+    assert state["worktree_path"] == str(reviewer_worktree)
+    assert not reviewer_worktree.exists()
+    assert worktree.is_dir()
+    assert _git(worktree, "rev-parse", "HEAD") == author_head
+    assert _git(worktree, "symbolic-ref", "HEAD") == author_branch == "refs/heads/review-target"
+    assert _git(worktree, "status", "--porcelain=v1", "--untracked-files=all") == author_status
+    assert {path.relative_to(worktree): path.read_bytes() for path in worktree.rglob("*") if path.is_file()} == author_bytes
 
 
 def _hot_language_budget():

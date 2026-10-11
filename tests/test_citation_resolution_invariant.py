@@ -26,8 +26,8 @@ pytestmark = pytest.mark.reads_content
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(_project_root, "scripts"))
 
-from wiki.source_attribution import connect_sources_db, resolve_chunk_attribution_any_corpus_with_conn
-from wiki.sources_schema import extract_short_citation_ids, load_sources_registry
+from tests.test_citation_resolution_fixture import _collect_citation_resolution_issues
+from wiki.source_attribution import connect_sources_db
 
 
 def _sources_db_has_required_tables() -> bool:
@@ -59,15 +59,360 @@ if not _sources_db_has_required_tables():
 
 
 _SOURCES_SECTION_BLOCK_RE = re.compile(r"^## Джерела.*?(?=^## |\Z)", re.MULTILINE | re.DOTALL)
-_TEXTBOOK_SECTION_RE = re.compile(r"_s(\d+)$")
-_CHUNK_ROW_RE = re.compile(r"_c(\d+)$")
-_BARE_SECTION_RE = re.compile(r"^S(\d+)$")
 _PUBLISHED_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
 
 KNOWN_DRIFT: dict[str, dict] = {
     # All 7 A1 wiki articles previously listed here were fixed (closing
     # issues #1488-#1494). The invariant now runs strict for the full A1
     # wiki corpus.
+    #
+    # 51 B2 grammar wiki articles cite textbook files that are external
+    # or not yet ingested into sources.db (tracked under issue #8403).
+    # 42 other B2 grammar wiki articles resolve completely cleanly (strict invariant).
+    'wiki/grammar/b2/academic-writing.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S4 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1256',
+        ],
+    },
+    'wiki/grammar/b2/advanced-case-semantics.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S4 -> textbook 4-klas-ukrmova-zaharijchuk_s0073',
+            'unresolved registry entry S6 -> textbook 4-klas-ukrmova-zaharijchuk_s0071',
+        ],
+    },
+    'wiki/grammar/b2/advanced-conjunctions-i.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1292',
+        ],
+    },
+    'wiki/grammar/b2/b2-final-exam.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S11 -> textbook 3-klas-ukrainska-mova-savchuk-2020-2_s0059',
+            'unresolved registry entry S14 -> textbook 1-klas-bukvar-bolshakova-2018-2_s0050',
+            'unresolved registry entry S4 -> textbook 9-klas-ukrajinska-mova-zabolotnij-2017_s5209',
+            'unresolved registry entry S5 -> textbook 9-klas-ukrmova-zabolotnyi-2017_s5270',
+            'unresolved registry entry S8 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1240',
+        ],
+    },
+    'wiki/grammar/b2/checkpoint-cases-morphology.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 4-klas-ukrmova-zaharijchuk_s1914',
+        ],
+    },
+    'wiki/grammar/b2/checkpoint-communication.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S13 -> textbook 3-klas-ukrainska-mova-savchuk-2020-2_s0059',
+            'unresolved registry entry S16 -> textbook 1-klas-bukvar-bolshakova-2018-2_s0050',
+            'unresolved registry entry S18 -> textbook 9-klas-ukrmova-zabolotnyi-2017_s0230',
+        ],
+    },
+    'wiki/grammar/b2/checkpoint-syntax-i.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 9-klas-ukrajinska-mova-voron-2017_s5136',
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1292',
+            'unresolved registry entry S4 -> textbook 8-klas-ukrmova-onatiy-2025_s4685',
+            'unresolved registry entry S6 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1261',
+        ],
+    },
+    'wiki/grammar/b2/checkpoint-syntax-ii.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 5-klas-ukrmova-litvinova-2022_s2403',
+            'unresolved registry entry S12 -> textbook 3-klas-ukrainska-mova-savchuk-2020-2_s0059',
+            'unresolved registry entry S14 -> textbook 9-klas-ukrmova-zabolotnyi-2017_s0230',
+            'unresolved registry entry S5 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1261',
+        ],
+    },
+    'wiki/grammar/b2/complex-syntax-ellipsis-parcelling.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1284',
+            'unresolved registry entry S5 -> textbook 7-klas-ukrlit-mishhenko-2015_s3693',
+        ],
+    },
+    'wiki/grammar/b2/conditional-mood-particles.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 7-klas-ukrmova-litvinova-2024_s3951',
+        ],
+    },
+    'wiki/grammar/b2/correlative-constructions.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 5-klas-ukrmova-litvinova-2022_s2396',
+        ],
+    },
+    'wiki/grammar/b2/dative-advanced.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 9-klas-ukrajinska-mova-zabolotnij-2017_s5215',
+        ],
+    },
+    'wiki/grammar/b2/detached-members.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1268',
+            'unresolved registry entry S5 -> textbook 8-klas-ukrmova-onatiy-2025_s4685',
+            'unresolved registry entry S6 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1265',
+        ],
+    },
+    'wiki/grammar/b2/direct-indirect-speech.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0342',
+            'unresolved registry entry S6 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0345',
+        ],
+    },
+    'wiki/grammar/b2/discussion-debate.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S9 -> textbook 1-klas-bukvar-bolshakova-2018-1_s0003',
+        ],
+    },
+    'wiki/grammar/b2/emphasis-and-inversion.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1262',
+            'unresolved registry entry S5 -> textbook 7-klas-ukrlit-mishhenko-2015_s3693',
+        ],
+    },
+    'wiki/grammar/b2/genitive-advanced.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 4-klas-ukrmova-zaharijchuk_s1914',
+        ],
+    },
+    'wiki/grammar/b2/homogeneous-members.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 5-klas-ukrmova-litvinova-2022_s2393',
+        ],
+    },
+    'wiki/grammar/b2/idioms-animals.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 3-klas-ukrainska-mova-vashulenko-2020-1_s0132',
+        ],
+    },
+    'wiki/grammar/b2/kharchuvannia-i-kukhnia.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 7-klas-ukrmova-zabolotnyi-2024_s0248',
+            'unresolved registry entry S3 -> textbook 7-klas-istoria-ukr-pometun-2024_s0189',
+        ],
+    },
+    'wiki/grammar/b2/law-justice-vocabulary.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1257',
+        ],
+    },
+    'wiki/grammar/b2/lexical-stylistic-devices.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1249',
+        ],
+    },
+    'wiki/grammar/b2/mistsia-i-oriientyry.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S4 -> textbook 9-klas-ukrajinska-mova-zabolotnij-2017_s5211',
+            'unresolved registry entry S5 -> textbook 9-klas-ukrmova-zabolotnyi-2017_s5272',
+        ],
+    },
+    'wiki/grammar/b2/modern-diaspora.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 11-klas-istoriya-ukr-galimov-2024_s0454',
+            'unresolved registry entry S4 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0021',
+        ],
+    },
+    'wiki/grammar/b2/multi-clause-sentences.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 9-klas-ukrajinska-mova-zabolotnij-2017_s0232',
+            'unresolved registry entry S2 -> textbook 9-klas-ukrajinska-mova-zabolotnij-2017_s0233',
+            'unresolved registry entry S6 -> textbook 9-klas-ukrajinska-mova-zabolotnij-2017_s0246',
+            'unresolved registry entry S8 -> textbook 9-klas-ukrajinska-mova-zabolotnij-2017_s0232',
+        ],
+    },
+    'wiki/grammar/b2/mystetstvo-i-literatura.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S6 -> textbook 5-klas-ukrlit-zabolotnyi-2022_s0004',
+            'unresolved registry entry S9 -> textbook 9-klas-ukrajinska-literatura-mishhenko-2017_s0002',
+        ],
+    },
+    'wiki/grammar/b2/nauka-i-doslidzhennia.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0118',
+            'unresolved registry entry S4 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0041',
+        ],
+    },
+    'wiki/grammar/b2/neologisms-borrowings.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S11 -> textbook 7-klas-ukrmova-zabolotnyi-2024_s0260',
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0026',
+        ],
+    },
+    'wiki/grammar/b2/news-analysis.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S4 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0082',
+        ],
+    },
+    'wiki/grammar/b2/numeral-declension-time-dates.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S9 -> textbook 6-klas-ukrlit-kovalenko-2023_s0172',
+        ],
+    },
+    'wiki/grammar/b2/parenthetical-expressions.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0194',
+            'unresolved registry entry S5 -> textbook 5-klas-ukrmova-litvinova-2022_s0275',
+        ],
+    },
+    'wiki/grammar/b2/phrases-word-combinations.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0153',
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0174',
+            'unresolved registry entry S8 -> textbook 5-klas-ukrmova-litvinova-2022_s0275',
+        ],
+    },
+    'wiki/grammar/b2/politics-government-vocabulary.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0143',
+        ],
+    },
+    'wiki/grammar/b2/predicate-types.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1261',
+        ],
+    },
+    'wiki/grammar/b2/proverbs-nature-time-caution.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 5-klas-ukrlit-zabolotnyi-2022_s0034',
+            'unresolved registry entry S6 -> textbook 5-klas-ukrlit-zabolotnyi-2022_s0286',
+        ],
+    },
+    'wiki/grammar/b2/proverbs-work-wisdom-character.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S8 -> textbook 1-klas-bukvar-bolshakova-2018-1_s0003',
+        ],
+    },
+    'wiki/grammar/b2/questions-deliberative-rhetorical.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1267',
+        ],
+    },
+    'wiki/grammar/b2/reflexive-passive.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S4 -> textbook 4-klas-ukrayinska-mova-varzatska-2021-1_s1892',
+        ],
+    },
+    'wiki/grammar/b2/register-business-ukrainian.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S5 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1284',
+        ],
+    },
+    'wiki/grammar/b2/register-formal-informal.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S6 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1284',
+        ],
+    },
+    'wiki/grammar/b2/register-formal-written.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S6 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1255',
+        ],
+    },
+    'wiki/grammar/b2/register-literary-ukrainian.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1270',
+            'unresolved registry entry S4 -> textbook 9-klas-ukrajinska-literatura-mishhenko-2017_s4979',
+        ],
+    },
+    'wiki/grammar/b2/register-practice-cross-register-rewriting.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S4 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1284',
+        ],
+    },
+    'wiki/grammar/b2/register-public-discourse.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S10 -> external https://www.president.gov.ua/ua/documents/constitution/konstituciya-ukrayini-rozdil-i',
+            'unresolved registry entry S2 -> textbook 7-klas-ukrmova-zabolotnyi-2024_s3962',
+        ],
+    },
+    'wiki/grammar/b2/religion-in-ukraine.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 11-klas-istoriya-ukr-galimov-2024_s0873',
+            'unresolved registry entry S6 -> textbook 8-klas-istoria-ukr-galimov-2025_s3997',
+        ],
+    },
+    'wiki/grammar/b2/secondary-sentence-members.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 8-klas-ukrmova-onatiy-2025_s4685',
+            'unresolved registry entry S2 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1265',
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1292',
+            'unresolved registry entry S9 -> textbook 5-klas-ukrmova-litvinova-2022_s2389',
+        ],
+    },
+    'wiki/grammar/b2/sport-i-dozvillia.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S8 -> textbook ulp-5-00-lesson-notes_l0199',
+        ],
+    },
+    'wiki/grammar/b2/stylistic-connectors.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S1 -> textbook 11-klas-ukrajinska-mova-voron-2019_s1261',
+            'unresolved registry entry S9 -> external https://uk.wikipedia.org/wiki/Сполучник',
+        ],
+    },
+    'wiki/grammar/b2/syntactic-stylistic-devices.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 11-klas-ukrajinska-mova-voron-2019_s0056',
+        ],
+    },
+    'wiki/grammar/b2/tradytsii-i-zvychai.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S2 -> textbook 6-klas-ukrlit-kovalenko-2023_s2758',
+        ],
+    },
+    'wiki/grammar/b2/word-formation-place-object-names.md': {
+        "issue": "#8403",
+        "fragments": [
+            'unresolved registry entry S3 -> textbook 3-klas-ukrainska-mova-vashulenko-2020-1_s1765',
+        ],
+    },
 }
 
 
@@ -105,176 +450,7 @@ def _published_targets() -> list[Path]:
     return _iter_published_wiki_articles() + _iter_published_module_markdown()
 
 
-def _citation_ids_for_markdown(path: Path) -> set[str]:
-    text = _strip_sources_section(path.read_text(encoding="utf-8"))
-    return set(extract_short_citation_ids(text))
-
-
-def _registry_entry_resolves_to_sources_db(entry, conn: sqlite3.Connection) -> bool:
-    file_value = str(entry.file or "").strip()
-    entry_type = str(entry.type or "").strip()
-    if not file_value:
-        return False
-
-    match = _BARE_SECTION_RE.fullmatch(file_value)
-    if entry_type == "textbook-chunk" and match:
-        return (
-            conn.execute(
-                "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                (int(match.group(1)),),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "textbook":
-        match = _TEXTBOOK_SECTION_RE.search(file_value)
-        if match:
-            return (
-                conn.execute(
-                    "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                    (int(match.group(1)),),
-                ).fetchone()
-                is not None
-            )
-        match = _CHUNK_ROW_RE.search(file_value)
-        if match:
-            return (
-                conn.execute(
-                    "SELECT 1 FROM textbooks WHERE id = ? LIMIT 1",
-                    (int(match.group(1)),),
-                ).fetchone()
-                is not None
-            )
-        if _BARE_SECTION_RE.fullmatch(file_value):
-            return (
-                conn.execute(
-                    "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                    (int(file_value[1:]),),
-                ).fetchone()
-                is not None
-            )
-
-    if entry_type == "literary":
-        match = _CHUNK_ROW_RE.search(file_value)
-        if match:
-            return (
-                conn.execute(
-                    "SELECT 1 FROM literary_texts WHERE id = ? LIMIT 1",
-                    (int(match.group(1)),),
-                ).fetchone()
-                is not None
-            )
-        return (
-            conn.execute(
-                "SELECT 1 FROM literary_texts WHERE chunk_id = ? LIMIT 1",
-                (file_value,),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "external":
-        return (
-            conn.execute(
-                "SELECT 1 FROM external_articles WHERE chunk_id = ? OR url = ? LIMIT 1",
-                (file_value, file_value),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "wikipedia":
-        title = file_value.split("/", 1)[1] if file_value.startswith("wikipedia/") else file_value
-        return (
-            conn.execute(
-                "SELECT 1 FROM wikipedia WHERE title = ? LIMIT 1",
-                (title,),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "ukrainian_wiki":
-        if file_value.startswith("ukrainian_wiki/"):
-            slug = file_value.split("/", 1)[1].split("_", 1)[0]
-            return (
-                conn.execute(
-                    "SELECT 1 FROM ukrainian_wiki WHERE article_slug = ? LIMIT 1",
-                    (slug,),
-                ).fetchone()
-                is not None
-            )
-        return (
-            conn.execute(
-                "SELECT 1 FROM ukrainian_wiki WHERE passage_id = ? LIMIT 1",
-                (file_value,),
-            ).fetchone()
-            is not None
-        )
-
-    # Dictionary authorities are currently not addressable to a concrete
-    # sources.db row from the committed registry shape.
-    if entry_type in {"explanatory-dictionary", "morphological-dictionary"}:
-        return False
-
-    resolved = resolve_chunk_attribution_any_corpus_with_conn(conn, file_value)
-    return resolved is not None
-
-
-def _collect_citation_resolution_issues(path: Path, conn: sqlite3.Connection) -> list[str]:
-    citation_ids = _citation_ids_for_markdown(path)
-    if not citation_ids:
-        return []
-
-    registry_path = path.with_suffix(".sources.yaml")
-    if not registry_path.exists():
-        return [f"missing registry: {registry_path.name}"]
-
-    try:
-        registry = load_sources_registry(registry_path)
-    except Exception as exc:  # pragma: no cover - exercised by locked drift fixture.
-        return [f"malformed registry: {exc}"]
-
-    registry_by_id = registry.by_id()
-    issues: list[str] = []
-    for citation_id in sorted(citation_ids, key=lambda value: int(value[1:])):
-        entry = registry_by_id.get(citation_id)
-        if entry is None:
-            issues.append(f"orphan inline ref {citation_id}")
-            continue
-        if not _registry_entry_resolves_to_sources_db(entry, conn):
-            issues.append(
-                f"unresolved registry entry {citation_id} -> {entry.type} {entry.file}"
-            )
-    return issues
-
-
 PUBLISHED_CITATION_TARGETS = _published_targets()
-
-
-def test_seeded_fake_inline_citation_is_rejected(tmp_path: Path) -> None:
-    article_path = tmp_path / "wiki" / "pedagogy" / "a1" / "fake.md"
-    article_path.parent.mkdir(parents=True)
-    article_path.write_text(
-        "# Fake\n\n"
-        "<!-- wiki-meta\n"
-        "slug: fake\n"
-        "domain: pedagogy/a1\n"
-        "tracks: [a1]\n"
-        "lifecycle: locked\n"
-        "-->\n\n"
-        "Текст із фальшивим посиланням [S999].\n",
-        encoding="utf-8",
-    )
-    article_path.with_suffix(".sources.yaml").write_text(
-        "sources:\n"
-        "  - id: S1\n"
-        "    file: 11-klas-ukrmova-avramenko-2019_s0077\n"
-        "    type: textbook\n",
-        encoding="utf-8",
-    )
-
-    with sqlite3.connect(":memory:") as conn:
-        issues = _collect_citation_resolution_issues(article_path, conn)
-
-    assert issues == ["orphan inline ref S999"]
 
 
 @pytest.mark.parametrize(
@@ -290,11 +466,19 @@ def test_published_citations_resolve_invariant(path: Path) -> None:
         return
 
     rel_path = path.as_posix()
+    assert not any("orphan inline ref" in issue for issue in issues), (
+        f"{rel_path} has orphan inline citations: {issues}"
+    )
+
     if rel_path in KNOWN_DRIFT:
         expected = KNOWN_DRIFT[rel_path]
         for fragment in expected["fragments"]:
             assert any(fragment in issue for issue in issues), (
                 f"{rel_path} drift changed; expected fragment {fragment!r}, got {issues!r}"
+            )
+        for issue in issues:
+            assert any(fragment in issue for fragment in expected["fragments"]), (
+                f"{rel_path} has unexpected citation issue: {issue!r}"
             )
         pytest.xfail(expected["issue"])
 

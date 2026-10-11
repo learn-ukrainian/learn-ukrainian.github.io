@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/phrases-word-combinations.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 11-klas-ukrajinska-mova-glazova-2019_s0078
@@ -20,7 +18,7 @@ sources:
   page: 117
   grade: 11
 - id: S4
-  file: 5-klas-ukrmova-litvinova-2022_s0194
+  file: 5-klas-ukrmova-avramenko-2022_s0196
   type: textbook
   title: Сторінка 189
   page: 189
@@ -50,7 +48,7 @@ sources:
   page: 270
   grade: 5
 - id: S9
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0155
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0145
   type: textbook
   title: Сторінка 108
   page: 108

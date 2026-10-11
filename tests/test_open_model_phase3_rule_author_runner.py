@@ -63,7 +63,7 @@ def _executor(valid: bool = True):
 
 def test_prepare_and_full_capture_are_private_and_schema_valid(tmp_path: Path) -> None:
     bundle, role, private, receipt = _paths(tmp_path)
-    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     assert len(manifest["packets"]) == 2
     assert manifest["bindings"]["phase3_v2_contract_sha256"] == packets.PHASE3_V2_CONTRACT_SHA256
     assert manifest["bindings"]["phase3_v2_1_combined_contract_sha256"] == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
@@ -71,7 +71,7 @@ def test_prepare_and_full_capture_are_private_and_schema_valid(tmp_path: Path) -
     assert manifest["action_receipt"]["status"] == "prepared"
     assert set(manifest["action_receipt"]) == set(functional_roles.ACTION_RECEIPT_FIELDS)
     assert manifest["action_receipt"]["completed_at"] is None
-    result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.6-flash-high", executor=_executor())
+    result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.8-flash-high", executor=_executor())
     assert result["complete"] is True and result["no_leakage"] is True
     assert result["action_receipt"]["status"] == "completed"
     assert result["action_receipt"]["output_sha256"] != manifest["action_receipt"]["output_sha256"]
@@ -87,7 +87,7 @@ def test_prepare_and_full_capture_are_private_and_schema_valid(tmp_path: Path) -
         assert entry["attachment_sha256"] != logical_packet_sha
     assert stat.S_IMODE(receipt.stat().st_mode) == 0o600
     Draft202012Validator.check_schema(json.loads(runner.SCHEMA_PATH.read_text()))
-    assert runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")["ok"] is True
+    assert runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")["ok"] is True
 
 
 def test_prepare_rejects_packet_bundle_v2_binding_drift(tmp_path: Path) -> None:
@@ -96,7 +96,7 @@ def test_prepare_rejects_packet_bundle_v2_binding_drift(tmp_path: Path) -> None:
     value["phase3_v2_contract_sha256"] = "0" * 64
     _write(bundle, value)
     with pytest.raises(runner.RuleAuthorRunnerError, match=r"schema violation|v2 contract binding drift"):
-        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
 
 
 @pytest.mark.parametrize("field", ["phase3_v2_1_amendment_sha256", "phase3_v2_1_combined_contract_sha256"])
@@ -110,63 +110,63 @@ def test_prepare_rejects_packet_bundle_v2_1_binding_drift(tmp_path: Path, field:
             bundle_path=bundle,
             role_path=role,
             private_dir=private,
-            exact_model="gemini-3.6-flash-high",
+            exact_model="gemini-3.8-flash-high",
         )
 
 
 def test_malformed_output_is_unparsed_not_a_proposal(tmp_path: Path) -> None:
     bundle, role, private, receipt = _paths(tmp_path)
-    result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.6-flash-high", max_packets=1, executor=_executor(False))
+    result = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.8-flash-high", max_packets=1, executor=_executor(False))
     assert result["unparsed_count"] == 1 and result["proposal_count"] == 0 and result["complete"] is False
 
 
 def test_tampered_attachment_rejects_resume(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
-    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     (private / manifest["packets"][0]["attachment"]).write_text("{}", encoding="utf-8")
     os.chmod(private / manifest["packets"][0]["attachment"], 0o600)
     with pytest.raises(runner.RuleAuthorRunnerError, match="attachment hash drift"):
-        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
 
 
 def test_resume_reuses_exact_prepared_files(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
-    first = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
-    assert runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high") == first
+    first = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
+    assert runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high") == first
 
 
 def test_verify_rejects_a_prepared_only_or_partial_run(tmp_path: Path) -> None:
     bundle, role, private, receipt = _paths(tmp_path)
-    runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+    runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     with pytest.raises(runner.RuleAuthorRunnerError, match="incomplete"):
-        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     runner.run(
         bundle_path=bundle,
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         max_packets=1,
         executor=_executor(),
     )
     with pytest.raises(runner.RuleAuthorRunnerError, match="incomplete"):
-        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
 
 
 def test_permissions_symlink_and_aliases_fail_closed(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
-    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     os.chmod(private / manifest["packets"][0]["prompt"], 0o400)
     with pytest.raises(runner.RuleAuthorRunnerError, match="0600"):
-        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     os.chmod(private / manifest["packets"][0]["prompt"], 0o600)
     os.symlink(private / "manifest.json", private / "evil")
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
-        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     alias = tmp_path / "alias"
     os.symlink(private, alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
-        runner.prepare(bundle_path=bundle, role_path=role, private_dir=alias, exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=bundle, role_path=role, private_dir=alias, exact_model="gemini-3.8-flash-high")
 
 
 def test_symlinked_ancestor_canonicalizes_but_leaf_symlink_is_rejected(tmp_path: Path) -> None:
@@ -175,7 +175,7 @@ def test_symlinked_ancestor_canonicalizes_but_leaf_symlink_is_rejected(tmp_path:
     linked_parent = tmp_path / "linked"
     os.symlink(real_parent, linked_parent)
     bundle, role, private, _ = _paths(linked_parent)
-    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     assert (
         (real_parent / "private" / "manifest.json").exists()
         and manifest["author"]["task_id"] == functional_roles.ROLE_TASKS["rule_author_extractor"]
@@ -183,24 +183,24 @@ def test_symlinked_ancestor_canonicalizes_but_leaf_symlink_is_rejected(tmp_path:
     leaf_alias = linked_parent / "bundle-leaf-alias.json"
     os.symlink(bundle, leaf_alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
-        runner.prepare(bundle_path=leaf_alias, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=leaf_alias, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
 
 
 def test_role_binding_drift_rejects_resume(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
-    runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+    runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     changed = _role()
     next(item for item in changed["functional_roles"] if item["role_id"] == "rule_author_extractor")["task_id"] = "other-task"  # type: ignore[index]
     _write(role, changed)
     with pytest.raises(runner.RuleAuthorRunnerError, match=r"functional-role|schema violation"):
-        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
 
 
 def test_canary_never_claims_full_completion_then_full_union_can(tmp_path: Path) -> None:
     bundle, role, private, receipt = _paths(tmp_path)
-    canary = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.6-flash-high", max_packets=1, executor=_executor())
+    canary = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.8-flash-high", max_packets=1, executor=_executor())
     assert canary["canary"] is True and canary["complete"] is False
-    full = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.6-flash-high", executor=_executor())
+    full = runner.run(bundle_path=bundle, role_path=role, private_dir=private, receipt_path=receipt, exact_model="gemini-3.8-flash-high", executor=_executor())
     assert full["canary"] is False and full["complete"] is True and full["attempted_count"] == 2
 
 
@@ -211,7 +211,7 @@ def test_full_then_canary_rerun_preserves_completed_receipt(tmp_path: Path) -> N
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         executor=_executor(),
     )
     rerun = runner.run(
@@ -219,7 +219,7 @@ def test_full_then_canary_rerun_preserves_completed_receipt(tmp_path: Path) -> N
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         max_packets=1,
         executor=_executor(),
     )
@@ -231,7 +231,7 @@ def test_full_then_canary_rerun_preserves_completed_receipt(tmp_path: Path) -> N
 
 def test_command_is_only_the_fixed_agy_bridge_shape(tmp_path: Path) -> None:
     bundle, role, private, _ = _paths(tmp_path)
-    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+    manifest = runner.prepare(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     command = runner.command_for(manifest["packets"][0], manifest, private)
     assert command[1:4] == [str(runner.ROOT / "scripts/ai_agent_bridge/__main__.py"), "ask-agy", "-"]
     assert "--review" not in command and "--task-id" in command and "--to-model" in command and "--data" in command and "--output-path" in command
@@ -254,7 +254,7 @@ def test_cross_packet_source_is_rejected(tmp_path: Path) -> None:
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         max_packets=1,
         executor=cross_packet,
     )
@@ -268,7 +268,7 @@ def test_tampered_resume_and_unexpected_file_fail_closed(tmp_path: Path) -> None
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         max_packets=1,
         executor=_executor(),
     )
@@ -281,7 +281,7 @@ def test_tampered_resume_and_unexpected_file_fail_closed(tmp_path: Path) -> None
             role_path=role,
             private_dir=private,
             receipt_path=receipt,
-            exact_model="gemini-3.6-flash-high",
+            exact_model="gemini-3.8-flash-high",
             max_packets=1,
             executor=_executor(),
         )
@@ -294,7 +294,7 @@ def test_tampered_resume_and_unexpected_file_fail_closed(tmp_path: Path) -> None
             bundle_path=other_bundle,
             role_path=other_role,
             private_dir=other_private,
-            exact_model="gemini-3.6-flash-high",
+            exact_model="gemini-3.8-flash-high",
         )
 
 
@@ -305,7 +305,7 @@ def test_receipt_is_public_safe_and_execution_aliases_fail(tmp_path: Path) -> No
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         max_packets=1,
         executor=_executor(),
     )
@@ -336,7 +336,7 @@ def test_receipt_is_public_safe_and_execution_aliases_fail(tmp_path: Path) -> No
             role_path=second_role,
             private_dir=second_private,
             receipt_path=second_receipt,
-            exact_model="gemini-3.6-flash-high",
+            exact_model="gemini-3.8-flash-high",
             max_packets=1,
             executor=aliased_output,
         )
@@ -354,7 +354,7 @@ def test_execution_error_and_bundle_alias_fail_closed(tmp_path: Path) -> None:
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         executor=unavailable,
     )
     assert result["failed_count"] == 2 and result["unparsed_count"] == 2
@@ -365,11 +365,11 @@ def test_execution_error_and_bundle_alias_fail_closed(tmp_path: Path) -> None:
     record_path.write_text(json.dumps(record, separators=(",", ":")) + "\n", encoding="utf-8")
     os.chmod(record_path, 0o600)
     with pytest.raises(runner.RuleAuthorRunnerError, match="self-integrity"):
-        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.6-flash-high")
+        runner.verify(bundle_path=bundle, role_path=role, private_dir=private, exact_model="gemini-3.8-flash-high")
     alias = tmp_path / "bundle-alias.json"
     os.symlink(bundle, alias)
     with pytest.raises(runner.RuleAuthorRunnerError, match="symlink"):
-        runner.prepare(bundle_path=alias, role_path=role, private_dir=tmp_path / "other-private", exact_model="gemini-3.6-flash-high")
+        runner.prepare(bundle_path=alias, role_path=role, private_dir=tmp_path / "other-private", exact_model="gemini-3.8-flash-high")
 
 
 def test_timeout_expired_execution_error_is_labeled_accurately(tmp_path: Path) -> None:
@@ -384,7 +384,7 @@ def test_timeout_expired_execution_error_is_labeled_accurately(tmp_path: Path) -
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         executor=timed_out,
     )
     assert result["failed_count"] == 2 and result["unparsed_count"] == 2
@@ -411,7 +411,7 @@ def test_valid_json_before_nonzero_exit_cannot_complete_or_succeed_canary(tmp_pa
         role_path=role,
         private_dir=private,
         receipt_path=receipt,
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         executor=writes_valid_then_fails,
     )
     assert result["parsed_count"] == 2 and result["failed_count"] == 2
@@ -432,7 +432,7 @@ def test_receipt_cannot_overwrite_inputs_or_private_files(tmp_path: Path) -> Non
             role_path=role,
             private_dir=private,
             receipt_path=bundle,
-            exact_model="gemini-3.6-flash-high",
+            exact_model="gemini-3.8-flash-high",
             max_packets=1,
             executor=_executor(),
         )
@@ -442,7 +442,7 @@ def test_receipt_cannot_overwrite_inputs_or_private_files(tmp_path: Path) -> Non
             role_path=role,
             private_dir=private,
             receipt_path=private / "receipt.json",
-            exact_model="gemini-3.6-flash-high",
+            exact_model="gemini-3.8-flash-high",
             max_packets=1,
             executor=_executor(),
         )
@@ -458,7 +458,7 @@ def test_public_receipt_does_not_chmod_its_existing_parent(tmp_path: Path) -> No
         role_path=role,
         private_dir=private,
         receipt_path=destination / "receipt.json",
-        exact_model="gemini-3.6-flash-high",
+        exact_model="gemini-3.8-flash-high",
         max_packets=1,
         executor=_executor(),
     )

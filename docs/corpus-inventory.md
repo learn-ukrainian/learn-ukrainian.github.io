@@ -159,13 +159,20 @@ to `unified_dense` → `rerank_candidates` → `data/embeddings/manifest.db` + s
 | Table | Rows | MCP tool | What it is |
 | --- | ---: | --- | --- |
 | `literary_texts` / `literary_fts` | **137,723** | `search_literary` | Primary sources: chronicles, encyclopedias, authored literature, scholarly works, **folk primaries (35)**. See [breakdown](#literary_texts-breakdown). |
-| `textbooks` / `textbooks_fts` | **54,979** (168 `source_file`s) | `search_text` | 49,193 public/external school-textbook rows across grades 1–11 plus 5,786 rows from **8 private ULP/Ohoiko refs** — see [§ Private reference sources](#private-reference-sources-textbooks). |
-| `textbook_sections` | 7,250 | (internal) | Section hierarchy for textbook chunks. |
+| `textbooks` / `textbooks_fts` | **54,127** (209 `source_file`s) | `search_text` | 48,341 public/external school-textbook rows across grades 1–11 plus 5,786 rows from **8 private ULP/Ohoiko refs** (foreign-student university books excluded per #10102) — see [§ Private reference sources](#private-reference-sources-textbooks). |
+| `textbook_sections` | **40,151** | (internal) | Section hierarchy for textbook chunks. |
 | `zno_documents` | **33** | (direct SQL) | ZNO/NMT booklet metadata (2010–2025, Ukrainian language). Ingest: `scripts/ingest/zno_ingest.py`. |
 | `zno_tasks` / `zno_tasks_fts` | **1,646** | (direct SQL) | Parsed ZNO tasks from zno.osvita.ua; FTS on `stem`, `options_json`, `topic_tag`. Consumer: #4506 paronym/stress worksheets. |
 | `ukrainian_wiki` / `_fts` | 22,385 | `search_sources` | Our OWN compiled wiki pedagogy (`wiki/**`), keyed by article slug + track. |
 | `external_articles` / `external_fts` | 1,205 | `search_external` | Curated external articles + YouTube/blog transcripts (register/decolonization tagged). |
 | `wikipedia` / `_fts` | 1,029 | `query_wikipedia` | Cached Ukrainian Wikipedia articles (+ a separate negative cache). |
+
+### Textbook chunk stability & citation resolution invariant (#8403)
+
+- **Root Cause Diagnosis (AC-01):** In earlier textbook ingestion pipelines, sequential chunk IDs (e.g. `_s0711`) were assigned linearly. Subsequent re-chunking, bounding recalculations, and curriculum cohort updates (such as foreign-student textbook exclusion per #10102) caused sequential IDs to shift across ingestions. As a result, 93 historical B2 grammar wiki registries (`wiki/grammar/b2/*.sources.yaml`) cited obsolete chunk IDs.
+- **Stable Citation Strategy (AC-02):** Per the accepted decision in `docs/epics/fresh-build-plan-schema.md`, authentic text citations must never rely solely on transient sequential chunk IDs. Citations are anchored by **verbatim text + content hash + (source file, page)**. In `tests/test_citation_resolution_invariant.py`, `registry_entry_resolves_to_sources_db` resolves textbook entries by `chunk_id` in `textbooks`, `section_id` in `textbook_sections`, and `id` in `textbooks`.
+- **CI-Visible Fixture Guard (AC-04):** Because `sources.db` is an uncommitted local asset not mounted in CI, `test_citation_resolution_fixture_guard` runs an in-memory SQLite fixture guard in CI verifying resolution and rejection of dangling citations without requiring a full database download. In full environments, `test_published_citations_resolve_invariant` validates all published articles.
+- **Corpus Inventory (AC-05):** Verified counts for active textbook holdings as of 2026-10-11 (issue #8403): 54,127 chunks across 209 distinct `source_file`s and 40,151 sections.
 
 ### Curated listening and reading catalogues (#9409)
 
@@ -234,8 +241,8 @@ tool returns `status: error`, `error_code: resource_catalogue_missing`.
 | Table | Rows | MCP tool | What it is |
 | --- | ---: | --- | --- |
 | `sum11` | 127,069 | `search_definitions` | СУМ-11 explanatory dict. ⚠ partly Sovietized (~5.6% flagged; each row carries `sovietization_risk`). |
-| `esum_cognate_forms` | 134,836 | `search_esum` | ЕСУМ cognate/related forms. |
-| `esum_etymology` | 36,177 | `search_esum` | ЕСУМ etymology (vols 1–6, А–Я). |
+| `esum_cognate_forms` | 134,836 | None (no MCP consumer; see decision record) | ЕСУМ cognate/related forms (historical 134k forms preserved under frozen contract; see `docs/decisions/2026-10-11-esum-cognate-forms-foreign-key-triage.md`). |
+| `esum_etymology` / `_meta` | 36,177 | `search_esum` | ЕСУМ etymology (vols 1–6, А–Я; exact lemma + FTS5 body search). |
 | `ukrajinet` | 122,441 | `search_synonyms` | Ukrajinet WordNet synsets (⚠ largely auto-translated from English WordNet). |
 | `balla_en_uk` | 78,704 | `translate_en_uk` | Балла EN→UK translations. |
 | `grinchenko` | 67,275 | `search_grinchenko_1907` | Грінченко 1907 historical dict (pre-Soviet attestation). |

@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""Normalize one native shell event and invoke the shared no-print guard.
+
+This adapter analyses command text without executing it. It does not install
+hooks or certify native activation. OpenCode callers must reject exit 2 from
+this adapter in their tool.execute.before plugin. Arbitrary programs cannot be
+analysed by the shared detector; this is defense-in-depth, not a sandbox.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+GUARD_PATH = ROOT / "agents_extensions/shared/hooks/guard-secret-print.py"
+HARNESSES = frozenset({"claude", "codex", "grok", "kimi", "cursor", "agy", "hermes", "opencode"})
+DEFAULT_TIMEOUT = 5.0
+BLOCK_PREFIX = "BLOCKED by guard-secret-print (#M-5): "
+
+
+class HookParser(argparse.ArgumentParser):
+    """Do not echo potentially sensitive arguments on parse failure."""
+
+    def error(self, message: str) -> None:
+        raise ValueError("invalid hook options")
+
+
+def extract_command(harness: str, event: object) -> str:
+    """Extract the selected dialect; malformed or absent commands deny."""
+    if harness not in HARNESSES or not isinstance(event, dict):
+        raise ValueError("invalid native hook event")
+    if harness == "cursor":
+        command = event.get("command")
+    else:
+        tool_input = event.get("toolInput" if harness == "grok" else "tool_input")
+        if not isinstance(tool_input, dict):
+            raise ValueError("shell input unavailable")
+        command = tool_input.get("command")
+    if not isinstance(command, str) or not command.strip():
+        raise ValueError("shell command unavailable")
+    return command
+
+
+def run_guard(command: str, *, timeout: float = DEFAULT_TIMEOUT) -> tuple[bool, str]:
+    """Return allow/message; transport failures and unexpected output deny."""
+    if not math.isfinite(timeout) or not 0 < timeout <= DEFAULT_TIMEOUT:
+        return False, BLOCK_PREFIX + "invalid guard deadline.\n"
+    try:
+        # Direct-file invocation needs the repository root for the shared
+        # guard runner and linked-worktree interpreter resolver.
+        if str(ROOT) not in sys.path:
+            sys.path.insert(0, str(ROOT))
+        from scripts.agent_runtime.codex_hook_policy import run_guard as run_guard_process
+        from scripts.common.repo_root import project_interpreter
+
+        if not GUARD_PATH.is_file():
+            return False, BLOCK_PREFIX + "shared guard unavailable.\n"
+        result = run_guard_process(
+            project_interpreter(ROOT),
+            GUARD_PATH,
+            json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}),
+            timeout,
+        )
+    except (OSError, ValueError, UnicodeError):
+        return False, BLOCK_PREFIX + "shared guard could not run.\n"
+    if result.timed_out:
+        return False, BLOCK_PREFIX + "shared guard deadline exceeded.\n"
+    if result.returncode == 0 and not result.stdout and not result.stderr:
+        return True, ""
+    if result.returncode == 2 and not result.stdout and result.stderr.startswith(BLOCK_PREFIX):
+        return False, result.stderr
+    return False, BLOCK_PREFIX + "shared guard failed.\n"
+
+
+def emit_decision(harness: str, allowed: bool, message: str) -> int:
+    """Write the native decision without candidate command text."""
+    if harness in {"cursor", "agy"}:
+        key = "permission" if harness == "cursor" else "decision"
+        decision = {key: "allow" if allowed else "deny"}
+        if not allowed:
+            decision["user_message" if harness == "cursor" else "reason"] = message
+        print(json.dumps(decision))
+    if not allowed:
+        sys.stderr.write(message)
+    return 0 if allowed else 2
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = HookParser(
+        description="Check one native shell event with the shared no-print guard.\n"
+        "Use as a pre-tool hook; this command does not install harness wiring.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example:\n"
+        "  .venv/bin/python scripts/agent_runtime/secret_print_hook.py --harness cursor < event.json\n"
+        "Outputs: native decision on stdout when required; denial text on stderr. No files written.\n"
+        "Exit codes: 0 allows; 2 denies, including invalid input or guard failures.\n"
+        "Related: agents_extensions/shared/hooks/guard-secret-print.py",
+    )
+    parser.add_argument(
+        "--harness",
+        required=True,
+        help="Native input/output dialect: " + ", ".join(sorted(HARNESSES)) + " (e.g. cursor).",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_TIMEOUT,
+        help="Guard deadline in seconds, greater than 0 and at most 5 (default: 5; e.g. 1).",
+    )
+    harness = ""
+    args = sys.argv[1:] if argv is None else argv
+    # Retain the native denial format even if another option is malformed.
+    for index, token in enumerate(args):
+        if token == "--harness" and index + 1 < len(args):
+            harness = args[index + 1]
+        elif token.startswith("--harness="):
+            harness = token.split("=", 1)[1]
+    try:
+        options = parser.parse_args(args)
+        harness = options.harness
+        command = extract_command(harness, json.load(sys.stdin))
+        allowed, message = run_guard(command, timeout=options.timeout)
+    except Exception:
+        # The native boundary must deny even a dependency or adapter failure.
+        allowed, message = False, BLOCK_PREFIX + "native hook could not complete safely.\n"
+    return emit_decision(harness, allowed, message)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

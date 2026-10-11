@@ -30,6 +30,7 @@ from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.build_data_manifest import LEMMA_FIELDS, _lemma_key, _slug_for_url
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.lexicon.published_record_dispositions import load_dispositions
 from scripts.verification.vesum import verify_words
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -89,13 +90,18 @@ def fill_manifest_from_vocab(
     payload = _load_manifest(manifest_path)
     existing_keys = _manifest_lemma_keys(payload)
     modules = _vocabulary_modules(curriculum_root, track)
+    authority = load_dispositions()
 
     added: list[FillEntry] = []
     skipped: list[SkippedLemma] = []
     missing_candidates: list[str] = []
 
     for module in modules:
-        for vocab_entry in _load_vocab_entries(module.vocab_path):
+        module_dict = {"track": module.track, "slug": module.slug}
+        raw_vocab = _load_vocab_entries(module.vocab_path)
+        for index, vocab_entry in enumerate(raw_vocab):
+            if authority.withhold_built_row(module_dict, index, vocab_entry):
+                continue
             lemma = _entry_lemma(vocab_entry)
             if not lemma:
                 continue
@@ -112,6 +118,7 @@ def fill_manifest_from_vocab(
                 skipped.append(SkippedLemma(lemma, module, "VESUM did not confirm this as a lemma"))
                 continue
             manifest_entry = _manifest_entry(lemma, vocab_entry, module, exact)
+            authority.guard_entry(manifest_entry)
             added.append(FillEntry(lemma, module, manifest_entry, exact))
             existing_keys.add(key)
 
@@ -123,6 +130,7 @@ def fill_manifest_from_vocab(
             raise ValueError(f"Manifest entries must be a list: {manifest_path}")
         entries.extend(item.entry for item in added)
         entries.sort(key=lambda item: str(item.get("lemma") or ""))
+        authority.validate_manifest(payload)
         _merge_manifest_modules(payload, modules)
         _refresh_manifest_stats(payload)
         _write_atomic(

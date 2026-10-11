@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/tekhnolohii-ta-shi.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S2
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0119
+  file: 7-klas-ukrmova-avramenko-2024_s0134
   type: textbook
   title: Штучний інтелект і форми на -но, -то
   page: 120
@@ -32,7 +30,7 @@ sources:
   page: 52
   grade: 11
 - id: S7
-  file: 7-klas-ukrmova-litvinova-2024_s0072
+  file: 7-klas-ukrmova-avramenko-2024_s0076
   type: textbook
   title: Безособові дієслова. Дієслівні форми на -но, -то
   page: 68

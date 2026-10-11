@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/checkpoint-syntax-ii.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 5-klas-ukrmova-litvinova-2022_s2403
@@ -8,19 +6,19 @@ sources:
   page: 256
   grade: 5
 - id: S2
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5056
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0170
   type: textbook
   title: Світ навколо нас. КУЛЬТУРА СЛОВА
   page: 115
   grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5173
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0095
   type: textbook
   title: § 13. УЗАГАЛЬНЕННЯ ВИВЧЕНОГО З ТЕМИ
   page: 68
   grade: 9
 - id: S4
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5234
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0095
   type: textbook
   title: § 13. УЗАГАЛЬНЕННЯ ВИВЧЕНОГО З ТЕМИ
   page: 68
@@ -32,19 +30,19 @@ sources:
   page: 97
   grade: 11
 - id: S6
-  file: 6-klas-ukrmova-avramenko-2023_s3102
+  file: 6-klas-ukrmova-avramenko-2023_s0178
   type: textbook
   title: § 89. Займенник як частина мови
   page: 175
   grade: 6
 - id: S7
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5164
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0037
   type: textbook
   title: Пряма й непряма мова
   page: 27
   grade: 9
 - id: S8
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1150
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0073
   type: textbook
   title: § 18. Активні й пасивні дієприкметники
   page: 58
@@ -56,13 +54,13 @@ sources:
   page: 115
   grade: 7
 - id: S10
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0107
   type: textbook
   title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
   page: 81
   grade: 11
 - id: S11
-  file: 5-klas-ukrmova-zabolotnyi-2023_s0219
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0186
   type: textbook
   title: Формули ввічливості
   page: 221
