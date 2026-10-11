@@ -391,6 +391,7 @@ class Session:
         self.raw_shapes: dict[str, Counter] = {}
         self.result_bytes: Counter = Counter()
         self.bounds: dict[str, list[datetime]] = {}
+        self.timestamps: list[datetime] = []
         self.tokens_previous: dict[str, int] = {}
         self.token_calls = 0
         self.tool_calls = 0
@@ -458,7 +459,8 @@ class Session:
         large = size > 20_000 or call is None
         if large:
             add_number(m["raw_tool_payload"], "bytes", size)
-            add_number(m["raw_tool_payload"], "count", 1)
+            if size > 20_000:
+                add_number(m["raw_tool_payload"], "count", 1)
             self.raw_shapes.setdefault(model, Counter())[shape] += size
         if call is None:
             self.counters["unpaired"] += 1
@@ -504,9 +506,12 @@ class Session:
             self.cwd = raw_cwd
         dt = timestamp(r.get("timestamp"))
         if dt:
-            self.bounds.setdefault(self.model, []).append(dt)
             # Keep only the first and latest timestamp, not an event history.
-            self.bounds[self.model] = [self.bounds[self.model][0], dt]
+            for dates in (self.timestamps, self.bounds.setdefault(self.model, [])):
+                if len(dates) < 2:
+                    dates.append(dt)
+                else:
+                    dates[-1] = dt
         if typ not in KNOWN_RECORDS:
             self.counters["other"] += 1
         if typ == "event_msg" and p.get("type") not in KNOWN_EVENTS:
@@ -646,9 +651,9 @@ class Session:
         ):
             del self.metrics["unknown"]
         session = aggregate(list(self.metrics.values()))
-        dates = [d for pair in self.bounds.values() for d in pair]
+        dates = self.timestamps
         session["totals"]["wall_seconds"] = (
-            value((max(dates) - min(dates)).total_seconds()) if len(dates) >= 2 else unknown("field_absent")
+            value((dates[-1] - dates[0]).total_seconds()) if len(dates) == 2 else unknown("field_absent")
         )
         session["cold_start"]["bytes"] = value(self.cold_bytes) if self.has_system else unknown("field_absent")
         session["totals"]["model_calls"] = value(self.token_calls) if self.token_calls else unknown("field_absent")

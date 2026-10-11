@@ -150,7 +150,7 @@ def test_raw_payload_and_unpaired_result(tmp_path, harness):
     m = metrics(tmp_path, harness, rows)
     assert m["raw_tool_payload"] == {
         "bytes": c.value(40_006),
-        "count": c.value(3),
+        "count": c.value(2),
         "share": c.value(1.0),
         "top_shapes": [{"shape": "git-status", "bytes": 40_002}, {"shape": "other", "bytes": 4}],
     }
@@ -501,3 +501,22 @@ def test_invalid_discriminator_shapes_are_tolerated(tmp_path, harness):
     m = metrics(tmp_path, harness, rows)
     assert m["counters"]["malformed_line"] == 3
     assert m["totals"]["paired_tool_calls"] == c.value(1)
+
+
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+def test_wall_time_requires_two_endpoints_in_event_order(tmp_path, harness):
+    first = metadata(harness) | {"timestamp": "2026-10-01T00:01:00Z"}
+    rows = [first, *pair(harness, "a")]
+    m = c.parse_session(transcript(tmp_path, harness, rows), harness)["metrics"]
+    assert m["totals"]["wall_seconds"] == c.unknown("field_absent")
+    rows += [{"type": "system", "timestamp": "2026-10-01T00:00:00Z"}]
+    m = c.parse_session(transcript(tmp_path, harness, rows), harness)["metrics"]
+    assert m["totals"]["wall_seconds"] == c.value(-60)
+
+
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+def test_unpaired_small_result_adds_bytes_but_not_large_count(tmp_path, harness):
+    m = metrics(tmp_path, harness, [result(harness, "synthetic-unpaired", "four")])
+    assert m["raw_tool_payload"]["bytes"] == c.value(4)
+    assert m["raw_tool_payload"]["count"] == c.value(0)
+    assert m["raw_tool_payload"]["top_shapes"] == [{"shape": "other", "bytes": 4}]

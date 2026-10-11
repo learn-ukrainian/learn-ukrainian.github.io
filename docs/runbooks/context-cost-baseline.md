@@ -86,7 +86,9 @@ then takes eligible paired path reads in the 20-call window. Classes 3 and 5
 classify the remaining results. These assignments keep waste bytes disjoint.
 Large results still update read/poll history. The class 4 denominator contains
 all result-body bytes, including small results, unpaired results and oversized
-lines. Changed rereads are a separate diagnostic, never added to waste totals.
+lines. The class 4 count includes only results above 20,000 bytes; a small
+unpaired result adds bytes as required by the join rule, without incrementing
+that count. Changed rereads are a separate diagnostic, never added to waste totals.
 
 ## Record dependencies and limits
 
@@ -158,7 +160,8 @@ and `ambiguous_model`. Counters distinguish malformed, truncated, oversized,
 unknown, duplicate and unpaired records. Aggregates propagate unknowns rather
 than labeling a partial sum complete. Class 4 share is weighted by result bytes,
 not an average of session shares. Wall durations are summed across sessions;
-they do not describe unique elapsed host time.
+they do not describe unique elapsed host time. Wall time requires two stored
+timestamps and uses first-to-last event order, rather than sorting timestamps.
 
 Session output lists digests, per-session metrics and per-model metrics.
 Harness output aggregates each category separately and includes model groups.
