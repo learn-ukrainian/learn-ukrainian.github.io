@@ -4,12 +4,58 @@ Pytest configuration and shared fixtures for audit tests.
 Provides reusable content snippets and module templates for testing.
 """
 
+import os
+
+# Credential-shaped names are removed at import, in every process that loads
+# this module, and this process never puts them back. Match the suffix only:
+# ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY`` is not ``_API_KEY``.
+# Comparison is case-insensitive. Names that merely look secret stay visible:
+# ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``. This process owns its
+# environment, so the parent shell is unchanged.
+#
+# ``LU_TEST_CREDENTIAL_STRIP`` is not read and is not written. A nested
+# ``pytest.main`` in this process does not import this module again, so it
+# neither strips nor restores. A child process that imports this module strips
+# again.
+#
+# An xdist worker is one of those processes. ``pytest_configure_node`` copies
+# the credential-shaped names still in ``os.environ`` into ``node.workerinput``
+# under ``_XDIST_PUBLISHED_CREDENTIALS_KEY``. The import strip has already
+# removed ambient names, so the copy is what this session published. The
+# worker puts that copy back in ``pytest_configure``. Values are not logged.
+#
+# Plugins that load before this conftest — AnyIO, pytest-cov, pytest-mock,
+# pytest-rerunfailures, pytest-timeout, pytest-xdist, and the repo's own
+# dispatch-cap plugin — do not read credential-suffix names, so that load
+# order does not retain one.
+_CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
+_XDIST_PUBLISHED_CREDENTIALS_KEY = "lu_suite_published_credentials"
+
+
+def _is_credential_shaped_env_name(name: str) -> bool:
+    """True when ``name`` ends with a credential suffix, ignoring case."""
+    return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
+
+
+def _strip_credential_shaped_env() -> None:
+    """Drop credential-shaped names. This process never puts them back."""
+    for name in tuple(os.environ):
+        if _is_credential_shaped_env_name(name):
+            del os.environ[name]
+
+
+def _published_credential_env() -> dict[str, str]:
+    """Credential-shaped names currently set. The caller must not log them."""
+    return {name: os.environ[name] for name in tuple(os.environ) if _is_credential_shaped_env_name(name)}
+
+
+_strip_credential_shaped_env()
+
 import ast
 import contextlib
 import functools
 import ipaddress
 import itertools
-import os
 import shutil
 import socket
 import sqlite3
@@ -2032,7 +2078,36 @@ class _NeedsArtifactCollection:
         self.path.write_text("".join(f"{node_id}\n" for node_id in marked), encoding="utf-8")
 
 
+def _restore_published_credentials(config: pytest.Config) -> None:
+    """Put back the controller's suite-published names on an xdist worker.
+
+    Import already removed every credential-shaped name in this process.
+    Names that fail the suffix check are ignored. Values are not logged.
+    """
+    workerinput = getattr(config, "workerinput", None)
+    if not isinstance(workerinput, dict):
+        return
+    published = workerinput.get(_XDIST_PUBLISHED_CREDENTIALS_KEY)
+    if not isinstance(published, dict):
+        return
+    for name, value in published.items():
+        if isinstance(name, str) and isinstance(value, str) and _is_credential_shaped_env_name(name):
+            os.environ[name] = value
+
+
+@pytest.hookimpl(optionalhook=True)
+def pytest_configure_node(node: Any) -> None:
+    """Copy suite-published credential names into one xdist worker.
+
+    The hookspec argument is ``node``. Ambient names are already gone, so
+    ``os.environ`` holds only names this session published. The worker strips
+    again at import and ``pytest_configure`` puts this copy back.
+    """
+    node.workerinput[_XDIST_PUBLISHED_CREDENTIALS_KEY] = _published_credential_env()
+
+
 def pytest_configure(config: pytest.Config) -> None:
+    _restore_published_credentials(config)
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
@@ -3069,6 +3144,4 @@ from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic
 def _no_operator_model_pause(monkeypatch, tmp_path_factory):
     """Tests never read the operator's live model-pause policy."""
     if "LU_MODEL_PAUSE_FILE" not in os.environ:
-        monkeypatch.setenv(
-            "LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json")
-        )
+        monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json"))
