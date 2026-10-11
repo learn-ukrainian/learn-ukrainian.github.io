@@ -35,6 +35,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime import npm_guard
+from scripts.common.scratch import ensure_scratch_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SHIM_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "shims" / "npm"
@@ -425,12 +426,18 @@ def _root_outside_protected_ancestors(preferred_root: Path) -> tuple[Path, bool]
     ``preferred_root`` is used when no ancestor has an outward ``node_modules``
     link. A basetemp inside a dispatch worktree is protected: the shim walks
     every ancestor, so the fixture is created outside those ancestors instead.
-    Production shim rules are unchanged.
+    That directory comes from the managed temp lease. Production shim rules
+    are unchanged.
     """
     ancestors = (preferred_root, *preferred_root.parents)
     if not any(_ancestor_has_outward_link(ancestor) for ancestor in ancestors):
         return preferred_root, False
-    candidate = Path(tempfile.mkdtemp(prefix="npm-shim-unprotected-"))
+    candidate = Path(
+        tempfile.mkdtemp(
+            prefix="npm-shim-unprotected-",
+            dir=os.environ.get("TMPDIR", ensure_scratch_root()),
+        )
+    )
     candidate_ancestors = (candidate, *candidate.parents)
     if any(_ancestor_has_outward_link(ancestor) for ancestor in candidate_ancestors):
         shutil.rmtree(candidate, ignore_errors=True)
