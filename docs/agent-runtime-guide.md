@@ -354,6 +354,8 @@ AGY or certify wiring. The adapter checks workers and reviews before
 Neither path changes provider on refusal.
 
 The adapter captures its runtime-log path and workspace root before launch.
+It uses the plan's existing `liveness_paths` and resolved `cwd` fields, keeping
+serialized metadata unchanged.
 An ordinary caller may replace the log with one inside that captured workspace;
 attempt logs remain confined to their enforced write root. These reads reject
 traversal, symlinks, hardlinks, and non-regular files regardless of where the

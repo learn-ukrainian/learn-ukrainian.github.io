@@ -762,10 +762,9 @@ def test_agy_log_override_keeps_attempt_containment(files, attempt):
         cmd=[],
         cwd=root,
         env_overrides={agy._AGY_LOG_ENV: str(forbidden), agy._AGY_APP_DATA_ENV: str(app_data)},
+        liveness_paths=(forbidden,),
         metadata={
-            "agy_log_path": str(forbidden),
             "log_read_root": str(forbidden.parent),
-            "workspace_read_root": str(root),
             "attempt_read_root": attempt,
         },
     )
@@ -798,11 +797,50 @@ def test_agy_ordinary_log_override_keeps_safe_read_refusals(files, attack):
         cmd=[],
         cwd=root,
         env_overrides={agy._AGY_LOG_ENV: str(target)},
+        liveness_paths=(root / "original.log",),
         metadata={
-            "agy_log_path": str(root / "original.log"),
             "log_read_root": str(root),
-            "workspace_read_root": str(root),
         },
     )
     with pytest.raises(AttemptReadError, match="attempt_read_"):
+        agy._bound_conversation(plan)
+
+
+@pytest.mark.parametrize("workspace_path", ["relative", "symlink"])
+def test_agy_log_override_keeps_pre_launch_workspace(files, monkeypatch, workspace_path):
+    root, target, forbidden = files
+    home = root / "home"
+    register_agy_hooks(root, home=home)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: forbidden.parent / "original.log")
+    alias = root.parent / "alias"
+    if workspace_path == "relative":
+        monkeypatch.chdir(root.parent)
+        cwd = Path(root.name)
+    else:
+        alias.symlink_to(root, target_is_directory=True)
+        cwd = alias
+    plan = agy.AgyAdapter().build_invocation(
+        prompt="prompt",
+        mode="workspace-write",
+        cwd=cwd,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"agy_home_override": str(home)},
+    )
+    target.write_text(f"Created conversation {UUID}\n")
+    app_data = agy._agy_app_data(plan.env_overrides)
+    transcript = agy._brain_transcript_path(app_data, UUID)
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text('{"type":"PLANNER_RESPONSE","text":"answer"}\n')
+    plan.env_overrides[agy._AGY_LOG_ENV] = str(target)
+    if workspace_path == "relative":
+        monkeypatch.chdir(root)
+    else:
+        alias.unlink()
+        alias.symlink_to(root.parent, target_is_directory=True)
+    assert agy._bound_conversation(plan)[0] == UUID
+    plan.env_overrides[agy._AGY_LOG_ENV] = str(forbidden)
+    with pytest.raises(AttemptReadError, match="outside_root"):
         agy._bound_conversation(plan)

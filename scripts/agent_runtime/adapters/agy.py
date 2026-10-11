@@ -1035,7 +1035,7 @@ class AgyAdapter:
 
         return InvocationPlan(
             cmd=cmd,
-            cwd=cwd,
+            cwd=cwd.resolve(),
             stdin_payload=stdin_payload,
             output_file=None,
             env_overrides=env_overrides,
@@ -1049,8 +1049,6 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
-                "agy_log_path": str(log_path),
-                "workspace_read_root": str(cwd.resolve()),
                 "agy_permission_profile_id": (
                     "code-review-command-denial-v1"
                     if tc.get("review_profile") == "code"
@@ -2711,12 +2709,15 @@ def _log_read_root(plan: InvocationPlan) -> Path:
 
     A replaced ordinary log can live in the workspace captured before launch,
     never beneath an unrelated log's stale root. Attempt logs always stay
-    beneath the enforced write root. All reads retain the checked fd walk.
+    beneath the enforced write root. The existing liveness path and resolved
+    cwd retain both pre-launch bindings without adding serialized metadata.
+    All reads retain the checked fd walk.
     """
     log_file = plan.env_overrides.get(_AGY_LOG_ENV)
-    if plan.metadata.get("attempt_read_root") or log_file == plan.metadata.get("agy_log_path", log_file):
+    original_log = str(plan.liveness_paths[0]) if plan.liveness_paths else log_file
+    if plan.metadata.get("attempt_read_root") or log_file == original_log:
         return Path(plan.metadata.get("log_read_root", "/"))
-    return Path(plan.metadata["workspace_read_root"])
+    return plan.cwd
 
 
 def _transcript_read_location(plan: InvocationPlan) -> tuple[Path, Path]:
