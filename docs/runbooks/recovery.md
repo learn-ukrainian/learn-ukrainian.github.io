@@ -317,7 +317,32 @@ unchanged, to a new sibling under the same cache:
 A failed check exits before `rmdir` or `mv`. A failed `cd` exits before either
 command and before `npm ci`.
 
-A scratch cache showed that behavior: `rmdir` removes an empty
+Quarantine requires exclusive recovery. Stop every cache writer and leave it
+stopped until the block exits: `npm` (including `npm ci`, which downloads the
+browser), any `node` process that launches Puppeteer, and the browser those
+processes start (`chrome` or `chrome-headless-shell`). Confirm that nothing
+holds the cache with the read-only `lsof +D` probe from
+[Worktree cleanup](worktree-cleanup.md), without name lookups. Empty output
+means the cache is idle:
+
+```bash
+lsof -nP +D "${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}"
+```
+
+The block runs that same probe again immediately before the rename and refuses
+while any process holds the cache. The probe is point-in-time. Writers that
+stay stopped are what keeps a parent-directory swap after the path checks
+from redirecting the quarantine outside the cache.
+
+The rename is `mv -T --update=none-fail`. On GNU coreutils 9.7 that is one
+`renameat2(RENAME_NOREPLACE)`. An existing destination, including an empty
+directory or a symlink, stays in place; `mv` writes `not replacing` and exits
+1. `mv -n` uses the same noreplace rename and then exits 0, so a collision is
+not a visible failure. Plain `mv -T` follows a refused noreplace with a
+replacing rename, which removes an empty directory that appeared after a
+separate existence check.
+
+A scratch cache showed the empty removal and the rename: `rmdir` removes an empty
 `chrome/linux-<buildId>` directory and leaves the cache root; a directory
 that still contains `chrome-linux64/` is moved aside and its files stay in
 the quarantine sibling; the cache root and a directory outside the cache are
@@ -470,11 +495,24 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
       printf 'Refusing to quarantine onto the cache or the browser folder.\n' >&2
       exit 1
     fi
-    if [ -e "$quarantine" ] || [ -L "$quarantine" ]; then
-      printf 'Refusing to quarantine over an existing path.\n' >&2
+    if ! command -v lsof >/dev/null 2>&1; then
+      printf 'Refusing to quarantine without a cache holder check.\n' >&2
       exit 1
     fi
-    mv -T -- "$install_real" "$quarantine"
+    # Same read-only lsof +D probe as above. Exclusive recovery is the precondition.
+    holders="$(lsof -nP +D "$cache_real" 2>/dev/null || true)"
+    if [ -n "$holders" ]; then
+      printf 'Refusing to quarantine the browser cache while a process holds it.\n' >&2
+      exit 1
+    fi
+    if ! mv -T --update=none-fail -- "$install_real" "$quarantine"; then
+      if [ -e "$quarantine" ] || [ -L "$quarantine" ]; then
+        printf 'Refusing to quarantine over an existing path.\n' >&2
+        exit 1
+      fi
+      printf 'Refusing to quarantine; the browser folder was not renamed.\n' >&2
+      exit 1
+    fi
   fi
   npm ci
 )

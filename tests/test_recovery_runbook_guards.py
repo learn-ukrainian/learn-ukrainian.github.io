@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -65,15 +66,22 @@ def _run(
     install_dir: str,
     executable: str,
     home: Path,
+    path_prefix: str | None = None,
+    extra_env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    path = "/usr/bin:/bin"
+    if path_prefix:
+        path = f"{path_prefix}:{path}"
     env = {
-        "PATH": "/usr/bin:/bin",
+        "PATH": path,
         "HOME": str(home),
         "PUPPETEER_CACHE_DIR": cache,
         "RECOVERY_TEST_INSTALL_DIR": install_dir,
         "RECOVERY_TEST_EXECUTABLE": executable,
         "LC_ALL": "C",
     }
+    if extra_env:
+        env.update(extra_env)
     return subprocess.run(
         ["bash", "-c", _recovery_script()],
         check=False,
@@ -101,13 +109,17 @@ def _executable(install: Path) -> str:
 
 
 def test_recovery_block_rmdirs_before_quarantine_and_preserves_newlines() -> None:
-    """Empty ``rmdir`` is the first branch. The move is a rename, and captures keep a trailing newline."""
+    """Empty ``rmdir`` is the first branch. The move is a noreplace rename, and captures keep a trailing newline."""
     block = _puppeteer_block()
     assert "rm -rf" not in block
     assert "rm -r" not in block
     assert "printf x" in block
     assert "${captured%x}" in block
-    assert block.index("rmdir --") < block.index("mv -T --") < block.index(_NPM_CI_LINE)
+    move = "mv -T --update=none-fail --"
+    assert block.index("rmdir --") < block.index('lsof -nP +D "$cache_real"') < block.index(move)
+    assert block.index(move) < block.index(_NPM_CI_LINE)
+    assert "Refusing to quarantine the browser cache while a process holds it." in block
+    assert "Refusing to quarantine over an existing path." in block
 
 
 def test_failed_cd_exits_before_npm_in_every_install_block(tmp_path: Path) -> None:
@@ -122,7 +134,7 @@ def test_failed_cd_exits_before_npm_in_every_install_block(tmp_path: Path) -> No
     stamp = tmp_path / "npm-invoked"
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
-    trip = "#!/bin/sh\nprintf '%s\\n' \"$0 $*\" >> \"$NPM_TRIPWIRE\"\nexit 99\n"
+    trip = '#!/bin/sh\nprintf \'%s\\n\' "$0 $*" >> "$NPM_TRIPWIRE"\nexit 99\n'
     for name in ("npm", "npx", "node"):
         tool = bin_dir / name
         tool.write_text(trip, encoding="utf-8")
@@ -134,9 +146,7 @@ def test_failed_cd_exits_before_npm_in_every_install_block(tmp_path: Path) -> No
         "LC_ALL": "C",
     }
     for block in blocks:
-        proc = subprocess.run(
-            ["bash", "-c", block], check=False, capture_output=True, text=True, env=env, timeout=30
-        )
+        proc = subprocess.run(["bash", "-c", block], check=False, capture_output=True, text=True, env=env, timeout=30)
         assert proc.returncode == 1, proc.stderr
         assert not stamp.exists()
 
@@ -145,9 +155,7 @@ def test_every_fenced_bash_block_passes_bash_n() -> None:
     blocks = _blocks()
     assert len(blocks) >= 3
     for index, block in enumerate(blocks):
-        proc = subprocess.run(
-            ["bash", "-n"], input=block, text=True, capture_output=True, check=False, timeout=30
-        )
+        proc = subprocess.run(["bash", "-n"], input=block, text=True, capture_output=True, check=False, timeout=30)
         assert proc.returncode == 0, f"block {index}: {proc.stderr}"
 
 
@@ -324,3 +332,108 @@ def test_symlink_install_directory_is_not_moved(tmp_path: Path) -> None:
     assert (real / "child").read_text(encoding="utf-8") == "keep"
     assert kept.read_text(encoding="utf-8") == "sentinel"
     assert list((cache / "chrome").glob("*.quarantine.*")) == []
+
+
+def _executable_stub(directory: Path, name: str, body: str) -> Path:
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / name
+    path.write_text(body, encoding="utf-8")
+    path.chmod(0o755)
+    return path
+
+
+def test_destination_created_after_the_existence_check_is_left_intact(tmp_path: Path) -> None:
+    """An empty destination created after the absence check must not be replaced."""
+    cache = tmp_path / "cache"
+    install = cache / "chrome" / "linux-1"
+    (install / "chrome-linux64").mkdir(parents=True)
+    (install / "chrome-linux64" / "leftover").write_text("keep", encoding="utf-8")
+    kept = _sentinel(cache)
+    # The stub runs as mv, after the block's existence check, and creates the destination.
+    _executable_stub(
+        tmp_path / "bin",
+        "mv",
+        '#!/bin/bash\nset -euo pipefail\ndest="${@: -1}"\nmkdir -p -- "$dest"\nexec /usr/bin/mv "$@"\n',
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert install.is_dir(), proc.stderr
+    assert (install / "chrome-linux64" / "leftover").read_text(encoding="utf-8") == "keep"
+    created = list((cache / "chrome").glob("linux-1.quarantine.*"))
+    assert len(created) == 1
+    assert created[0].is_dir()
+    assert list(created[0].iterdir()) == []
+    assert proc.returncode != 0, proc.stderr
+    assert "Refusing to quarantine over an existing path." in proc.stderr
+    assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_ancestor_swap_before_the_move_does_not_leave_the_cache(tmp_path: Path) -> None:
+    """A parent swapped for an outside symlink after validation must not be quarantined there."""
+    cache = tmp_path / "cache"
+    install = cache / "chrome" / "linux-1"
+    (install / "chrome-linux64").mkdir(parents=True)
+    marker = install / "chrome-linux64" / "leftover"
+    marker.write_text("inside", encoding="utf-8")
+    kept = _sentinel(cache)
+    outside = tmp_path / "outside"
+    victim = outside / "linux-1" / "chrome-linux64"
+    victim.mkdir(parents=True)
+    (victim / "marker").write_text("victim", encoding="utf-8")
+    # date runs after validation and before mv. The stub swaps the ancestor, then the real date runs.
+    _executable_stub(
+        tmp_path / "bin",
+        "date",
+        "#!/bin/bash\n"
+        "set -euo pipefail\n"
+        'mv -T -- "$RECOVERY_ANCESTOR_DIR" "$RECOVERY_ANCESTOR_DIR.real"\n'
+        'ln -s "$RECOVERY_ANCESTOR_TARGET" "$RECOVERY_ANCESTOR_DIR"\n'
+        'exec /usr/bin/date "$@"\n',
+    )
+    holder = subprocess.Popen(
+        ["bash", "-c", 'exec 3<"$1"; exec sleep 60', "_", str(marker)],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    try:
+        seen = ""
+        for _ in range(50):
+            probe = subprocess.run(
+                ["lsof", "-nP", "+D", str(cache)],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            seen = probe.stdout
+            if str(holder.pid) in seen:
+                break
+            time.sleep(0.05)
+        else:
+            pytest.fail(f"holder was not visible to lsof\n{seen}")
+        proc = _run(
+            cache=str(cache),
+            install_dir=str(install),
+            executable=_executable(install),
+            home=_home(tmp_path),
+            path_prefix=str(tmp_path / "bin"),
+            extra_env={
+                "RECOVERY_ANCESTOR_DIR": str(cache / "chrome"),
+                "RECOVERY_ANCESTOR_TARGET": str(outside),
+            },
+        )
+    finally:
+        holder.kill()
+        holder.wait(timeout=5)
+    assert (victim / "marker").is_file()
+    assert (victim / "marker").read_text(encoding="utf-8") == "victim"
+    assert list(outside.glob("linux-1.quarantine.*")) == []
+    assert (cache / "chrome.real" / "linux-1" / "chrome-linux64" / "leftover").read_text(encoding="utf-8") == "inside"
+    assert proc.returncode != 0, proc.stderr
+    assert "Refusing to quarantine the browser cache while a process holds it." in proc.stderr
+    assert kept.read_text(encoding="utf-8") == "sentinel"
