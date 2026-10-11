@@ -612,7 +612,7 @@ def test_cycle002_prompt_hash_and_two_pass_contract_are_pinned() -> None:
         "phase3-v2-2-heldout-semantic-label-pass-a",
         "phase3-v2-2-heldout-semantic-label-pass-b",
     ]
-    assert all(actor["exact_model"] == "gpt-5.6-sol" for actor in transport.CYCLE002_ACTORS.values())
+    assert all(actor["exact_model"] == "gpt-6.1-sol" for actor in transport.CYCLE002_ACTORS.values())
 
 
 def test_cycle002_ua_gec_reference_evidence_is_closed_and_human_annotated() -> None:
@@ -788,7 +788,7 @@ def test_cycle002_hermetic_stages_preserve_raw_custody_and_fail_floors(
         private_dir=private,
     )
     assert observed["command"][2:6] == ["ask-codex", "-", "--from", "operator"]
-    assert observed["command"][-4:] == ["--to-model", "gpt-5.6-sol", "--new-session", "--no-timeout"]
+    assert observed["command"][-4:] == ["--to-model", "gpt-6.1-sol", "--new-session", "--no-timeout"]
     assert "--effort" not in observed["command"]
     assert b"Operational retry attempt 2" not in payloads[0]
     assert b"Operational retry attempt 2" in payloads[1]
