@@ -54,5 +54,7 @@ launcher_adapter_exec() {
   fi
   cmd+=(${rest[@]+"${rest[@]}"})
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
+  # Gate and spawn use the same deployed workspace, regardless of caller cwd.
+  cd -- "$LC_ROOT" || return 3
   launcher_exec_command "${cmd[@]}"
 }

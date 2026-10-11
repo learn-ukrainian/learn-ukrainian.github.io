@@ -328,27 +328,48 @@ overlay's `../.venv/bin/python` and `../scripts/agent_runtime/secret_print_hook.
 resolve within that checkout. Worker installation uses
 `scripts.common.repo_root.project_interpreter` to name the shared primary
 interpreter and an absolute entry-point path, so a dispatch worktree needs
-no local `.venv`. A worker with ordinary HOME also needs a valid home
+no local `.venv`. A guarded workspace suffices when ordinary HOME has no
 `.gemini/config/hooks.json`; the gate never writes the user's home.
 Scoped review homes receive the same absolute registration through the
 `review_mcp.py` and `attempt_boundary.py` provisioners, for isolated and full
 review access. Their
 `agy_review_settings` command denial stays in place.
 
-`agy_hook_config` reads each candidate workspace and effective-home hooks
-file. PASS requires one enabled guard registration per checked file, the
+`agy_hook_config` checks the spawn's workspace `.agents/hooks.json` and
+effective-HOME `.gemini/config/hooks.json`. Scoped HOME replaces ordinary
+HOME, so the ordinary-home file is not a candidate for that spawn. Every
+existing candidate that can load must contain a valid, enabled guard. An
+absent candidate cannot load and is skipped. The spawn still refuses unless
+at least one candidate exists and contains a valid guard. An existing
+unguarded or invalid file refuses even alongside a valid candidate.
+PASS requires one enabled guard registration per existing candidate, the
 `PreToolUse` event, a matcher covering `run_command`, and a command resolving
 to the executable project interpreter and this entry point. Matchers `*`
-and `""` cover all tools; other matchers are regular expressions.
+and `""` pass the local coverage check; other matchers use Python regular
+expressions. This check does not establish AGY's native matcher semantics.
+Workspace-relative commands must resolve exactly to the project interpreter
+and guard entry point. Home commands must use absolute paths. Unresolved
+commands and duplicate JSON keys refuse.
 The command timeout must be an integer of at least 10 seconds; booleans refuse.
-Missing or invalid candidates refuse. The worker installer merges a missing
-guard into a dispatch workspace without replacing unrelated named hooks;
-it never repairs an explicitly disabled registration. Installation refuses
+Invalid candidates and the absence of all guarded candidates refuse. The
+adapter installs only when the dispatch workspace candidate is absent. It
+never repairs an existing unguarded, disabled or invalid file. The explicit
+workspace provisioner merges a missing guard without replacing unrelated
+named hooks. Installation refuses
 traversal and symlink components, then publishes the merged file atomically
-through directory descriptors while preserving unrelated hook bytes.
+through directory descriptors while preserving unrelated hook bytes. A newly
+published or merged file has mode 0600; an existing guard left untouched
+retains its file mode.
 
-The launcher checks only deployed files inside `launcher_adapter_exec`,
-after extension deployment and before AGY execution. Dry runs do not spawn
+Bridge asks explicitly provision an absolute guard into their caller-owned
+scratch workspace when its hooks file is absent. Existing invalid scratch
+files remain untouched and refuse in the adapter. Attempt workspaces need
+no hooks file because their provisioned scoped home contains the guard.
+
+The launcher checks the deployed root and effective HOME inside
+`launcher_adapter_exec`, after extension deployment and before AGY execution.
+It starts AGY from that same root, including when called from another
+directory. Dry runs do not spawn
 AGY or certify wiring. The adapter checks workers and reviews before
 `agy --version` or any provider subprocess and raises a typed refusal.
 Neither path changes provider on refusal.
@@ -367,6 +388,8 @@ A startup gate cannot guarantee blocking after a hook crash or timeout.
 
 | Native behavior | Evidence state |
 | --- | --- |
+| Native matcher semantics | UNKNOWN |
+| Duplicate-key parsing | UNKNOWN |
 | Multi-file precedence among workspace, home, scoped home, app settings and plugins | UNKNOWN |
 | Missing hooks file disposition | UNKNOWN |
 | Print-mode hook loading | UNKNOWN |

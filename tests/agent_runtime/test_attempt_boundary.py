@@ -35,7 +35,6 @@ from scripts.agent_runtime.errors import AgentUnavailableError
 from scripts.agent_runtime.result import ParseResult
 from scripts.agent_runtime.review_mcp import prepare_review_attempt
 from scripts.review.isolation import ReviewIsolationError
-from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 
 def manifest_world(root: Path, kind: str) -> dict:
@@ -610,13 +609,10 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
                 "scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
             )
         if agent == "agy":
-            register_agy_hooks(boundary.workspace)
             settings = json.loads(
                 (Path(boundary.tool_config["agy_home_override"]) / ".gemini/antigravity-cli/settings.json").read_text()
             )["permissions"]
-            assert [r for r in settings["allow"] if r.startswith("read_file(")] == [
-                f"read_file({boundary.workspace})"
-            ]
+            assert [r for r in settings["allow"] if r.startswith("read_file(")] == [f"read_file({boundary.workspace})"]
             assert not any(r.startswith(("command(", "write_file(")) for r in settings["allow"])
             assert "command(*)" in settings["deny"] and "write_file(*)" in settings["deny"]
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
@@ -1022,8 +1018,6 @@ def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, 
         def build_invocation(self, **kwargs):
             attempt = kwargs["tool_config"]["review_attempt_boundary"]
             observed.append(attempt)
-            if agent == "agy":
-                register_agy_hooks(attempt.workspace)
             plan = real_adapter.build_invocation(**{**kwargs, "model": real_adapter.default_model})
             assert plan.metadata["parent_read_root"] == str(attempt.write_root)
             app_data = Path(plan.env_overrides.get("AGY_APP_DATA_DIR", attempt.write_root / "app-data"))

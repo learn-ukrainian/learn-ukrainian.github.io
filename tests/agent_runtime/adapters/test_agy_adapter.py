@@ -2268,7 +2268,10 @@ def test_issue_9301_retired_agy_model_refused_before_invocation(tmp_path, model)
 
 
 @pytest.mark.parametrize("scoped", [False, True])
-@pytest.mark.parametrize("condition", ["missing_workspace", "missing_home", "relative_home", "disabled", "pass"])
+@pytest.mark.parametrize(
+    "condition",
+    ["missing_workspace", "missing_home", "missing_both", "unguarded_workspace", "relative_home", "disabled", "pass"],
+)
 def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped, condition):
     from scripts.agent_runtime import agy_hook_config as hooks
 
@@ -2298,6 +2301,11 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
         paths[0].unlink()
     elif condition == "missing_home":
         paths[1].unlink()
+    elif condition == "missing_both":
+        for path in paths:
+            path.unlink()
+    elif condition == "unguarded_workspace":
+        paths[0].write_text("{}")
     elif condition == "relative_home":
         data = json.loads(paths[1].read_text())
         data[hooks.GUARD_NAME]["PreToolUse"][0]["hooks"][0]["command"] = (
@@ -2308,6 +2316,8 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
         data = json.loads(paths[0].read_text())
         data[hooks.GUARD_NAME]["enabled"] = False
         paths[0].write_text(json.dumps(data))
+    fake = _fake_agy(tmp_path, monkeypatch, "2.0.0")
+    monkeypatch.setenv("PATH", str(fake.parent))
     calls = []
 
     def probe(argv, **kwargs):
@@ -2325,9 +2335,9 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
         session_id=None,
         tool_config={"agy_home_override": str(scoped_home)} if scoped else None,
     )
-    if condition == "pass":
+    if condition in {"pass", "missing_workspace", "missing_home"}:
         plan = AgyAdapter().build_invocation(**kwargs)
-        assert len(calls) == 1 and calls[0][-1] == "--version"
+        assert len(calls) == 1 and calls[0] == [str(fake), "--version"]
         assert "--dangerously-skip-permissions" in plan.cmd
         if scoped:
             assert plan.env_overrides["HOME"] == str(scoped_home)

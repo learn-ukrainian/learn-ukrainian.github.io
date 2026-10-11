@@ -49,8 +49,16 @@ def hook_locations(cwd: Path, home: Path, agy_home: Path | None = None) -> tuple
 
 
 def _read_config(path: Path) -> dict:
+    def unique_members(pairs: list[tuple[str, object]]) -> dict:
+        data = {}
+        for key, value in pairs:
+            if key in data:
+                raise ValueError("duplicate_member")
+            data[key] = value
+        return data
+
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_members)
     except FileNotFoundError:
         raise AgyHookConfigError("missing_file") from None
     except (OSError, UnicodeError, ValueError):
@@ -115,13 +123,25 @@ def _check_file(path: Path, interpreter: Path, script: Path, *, absolute: bool) 
 
 
 def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) -> HookConfigResult:
-    """PASS proves registration in each candidate, never native enforcement."""
+    """Require a valid enabled guard in every existing loadable candidate.
+
+    An absent workspace or effective-HOME candidate cannot load and is skipped.
+    At least one candidate must exist and validate. Existing invalid files still
+    refuse, even alongside a valid file. Scoped HOME replaces ordinary HOME.
+    PASS proves filesystem registration only, never native enforcement.
+    """
     try:
-        if not locations:
-            raise AgyHookConfigError("missing_file")
         interpreter = project_interpreter(repo_root)
+        checked = 0
         for path in locations:
+            try:
+                path.lstat()
+            except FileNotFoundError:
+                continue
             _check_file(path, interpreter, repo_root / ENTRY_POINT, absolute=path.parent.name == "config")
+            checked += 1
+        if not checked:
+            raise AgyHookConfigError("missing_file")
     except AgyHookConfigError as exc:
         return HookConfigResult("REFUSE", exc.reason)
     except (OSError, ValueError):
@@ -145,6 +165,18 @@ def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
     dispatch = (primary / ".worktrees/dispatch").resolve(strict=True) if primary != target else primary
     if ".." in cwd.parts or primary == target or target == dispatch or not target.is_relative_to(dispatch):
         raise AgyHookConfigError("install_requires_dispatch_worktree")
+    provision_workspace_guard(cwd, repo_root=repo_root)
+
+
+def provision_workspace_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
+    """Explicitly provision a caller-created workspace, never an ordinary HOME.
+
+    The caller owns the directory and its lifecycle. Walk real directories and
+    atomically merge a missing guard, retaining unrelated bytes. Published files
+    have mode 0600. This is not an implicit repair of existing gate candidates.
+    """
+    if ".." in cwd.parts:
+        raise AgyHookConfigError("unsafe_install_path")
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
     directory_fd = os.open(cwd.absolute().anchor, flags)
     temporary = None
@@ -153,6 +185,8 @@ def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
             child_fd = os.open(component, flags, dir_fd=directory_fd)
             os.close(directory_fd)
             directory_fd = child_fd
+        if os.fstat(directory_fd).st_uid != os.geteuid():
+            raise AgyHookConfigError("unsafe_install_path")
         with suppress(FileExistsError):
             os.mkdir(".agents", dir_fd=directory_fd)
         child_fd = os.open(".agents", flags, dir_fd=directory_fd)
@@ -194,9 +228,13 @@ def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
 
 
 def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, install: bool = False) -> None:
-    """Refuse before any provider subprocess; optional install is workspace-only."""
+    """Refuse before provider subprocesses; install only absent worktree files.
+
+    Every existing candidate must validate, and at least one must contain the
+    guard. Never repair an existing invalid candidate or write ordinary HOME.
+    """
     try:
-        if install and main_checkout_root(cwd) != cwd:
+        if install and not os.path.lexists(cwd / ".agents/hooks.json") and main_checkout_root(cwd) != cwd:
             install_worktree_guard(cwd)
         result = check_hook_config(hook_locations(cwd, home, agy_home))
     except (OSError, ValueError) as exc:

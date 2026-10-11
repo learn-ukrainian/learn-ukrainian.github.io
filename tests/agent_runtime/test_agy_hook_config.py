@@ -96,11 +96,11 @@ def test_bad_registration_refuses(tmp_path, failure, reason):
 
 
 @pytest.mark.parametrize("scoped", [False, True])
-def test_all_effective_candidates_required(tmp_path, scoped):
+def test_existing_effective_candidates_required(tmp_path, scoped):
     cwd, home, scoped_home = tmp_path / "worker", tmp_path / "home", tmp_path / "scoped"
     paths = config.hook_locations(cwd, home, scoped_home if scoped else None)
     write_guard(paths[0])
-    assert config.check_hook_config(paths).reason == "missing_file"
+    assert config.check_hook_config(paths).passed
     write_guard(paths[1])
     assert config.check_hook_config(paths).passed
     data = json.loads(paths[1].read_text())
@@ -109,6 +109,109 @@ def test_all_effective_candidates_required(tmp_path, scoped):
     )
     paths[1].write_text(json.dumps(data))
     assert config.check_hook_config(paths).reason == "relative_home_command"
+
+
+@pytest.mark.parametrize("scoped", [False, True], ids=["ordinary", "scoped"])
+@pytest.mark.parametrize("workspace_state", ["absent", "valid", "invalid"])
+@pytest.mark.parametrize("home_state", ["absent", "valid", "invalid"])
+@pytest.mark.parametrize("scoped_state", ["absent", "valid", "invalid"])
+def test_candidate_existence_matrix(tmp_path, scoped, workspace_state, home_state, scoped_state):
+    cwd, home, scoped_home = tmp_path / "worker", tmp_path / "home", tmp_path / "scoped"
+    candidates = (
+        cwd / ".agents/hooks.json",
+        home / ".gemini/config/hooks.json",
+        scoped_home / ".gemini/config/hooks.json",
+    )
+    for path, state in zip(candidates, (workspace_state, home_state, scoped_state), strict=True):
+        if state != "absent":
+            write_guard(path)
+            if state == "invalid":
+                path.write_text("{}")
+    paths = config.hook_locations(cwd, home, scoped_home if scoped else None)
+    assert paths == (candidates[0], candidates[2 if scoped else 1])
+    effective_states = (workspace_state, scoped_state if scoped else home_state)
+    expected = (
+        config.HookConfigResult("REFUSE", "missing_guard")
+        if "invalid" in effective_states
+        else config.HookConfigResult("PASS", "guard_registered")
+        if "valid" in effective_states
+        else config.HookConfigResult("REFUSE", "missing_file")
+    )
+    assert config.check_hook_config(paths) == expected
+
+
+@pytest.mark.parametrize("candidate", ["workspace", "home"])
+@pytest.mark.parametrize("failure", ["disabled", "event", "matcher", "relative", "unresolved", "dangling"])
+def test_invalid_candidate_cannot_hide_behind_valid_peer(tmp_path, candidate, failure):
+    paths = config.hook_locations(tmp_path / "cwd", tmp_path / "home")
+    for path in paths:
+        write_guard(path)
+    path = paths[0 if candidate == "workspace" else 1]
+    data = json.loads(path.read_text())
+    guard = data[config.GUARD_NAME]
+    group = guard["PreToolUse"][0]
+    if failure == "disabled":
+        guard["enabled"] = False
+    elif failure == "event":
+        guard["PostToolUse"] = guard.pop("PreToolUse")
+    elif failure == "matcher":
+        group["matcher"] = "ask_question"
+    elif failure in {"relative", "unresolved"}:
+        group["hooks"][0]["command"] = (
+            "absent-python absent-guard --harness agy"
+            if failure == "relative"
+            else "/absent/python /absent/guard --harness agy"
+        )
+    else:
+        path.unlink()
+        path.symlink_to(tmp_path / "absent-hooks")
+    if failure != "dangling":
+        path.write_text(json.dumps(data))
+    assert not config.check_hook_config(paths).passed
+    with pytest.raises(config.AgyHookConfigError):
+        config.require_hook_config(tmp_path / "cwd", tmp_path / "home")
+
+
+def test_implicit_install_never_repairs_existing_unguarded_workspace(tmp_path):
+    cwd = dispatch_tree(tmp_path)
+    paths = config.hook_locations(cwd, tmp_path / "home")
+    write_guard(paths[1])
+    paths[0].parent.mkdir()
+    original = b'{"unrelated-hook": {"Stop": []}}\n'
+    paths[0].write_bytes(original)
+    with pytest.raises(config.AgyHookConfigError, match="missing_guard"):
+        config.require_hook_config(cwd, tmp_path / "home", install=True)
+    assert paths[0].read_bytes() == original
+
+
+def test_worker_provisions_absent_workspace_without_home_file(tmp_path):
+    cwd = dispatch_tree(tmp_path)
+    home = tmp_path / "home"
+    config.require_hook_config(cwd, home, install=True)
+    assert config.check_hook_config(config.hook_locations(cwd, home)).passed
+    assert not home.exists()
+
+
+@pytest.mark.parametrize("candidate", ["workspace", "home"])
+@pytest.mark.parametrize("duplicate", ["guard", "enabled", "command"])
+def test_duplicate_members_cannot_hide_disabled_or_wrong_guard(tmp_path, candidate, duplicate):
+    paths = config.hook_locations(tmp_path / "cwd", tmp_path / "home")
+    for path in paths:
+        write_guard(path)
+    path = paths[0 if candidate == "workspace" else 1]
+    guard = config.guard_registration()
+    if duplicate == "guard":
+        invalid = {**guard, "enabled": False}
+        text = f'{{"{config.GUARD_NAME}": {json.dumps(invalid)}, "{config.GUARD_NAME}": {json.dumps(guard)}}}'
+    elif duplicate == "enabled":
+        guard["enabled"] = True
+        text = json.dumps({config.GUARD_NAME: guard}).replace('"enabled": true', '"enabled": false, "enabled": true')
+    else:
+        text = json.dumps({config.GUARD_NAME: guard}).replace('"command": ', '"command": "false", "command": ')
+    path.write_text(text)
+    assert config.check_hook_config(paths) == config.HookConfigResult("REFUSE", "invalid_json")
+    with pytest.raises(config.AgyHookConfigError, match="invalid_json"):
+        config.require_hook_config(tmp_path / "cwd", tmp_path / "home")
 
 
 def dispatch_tree(tmp_path):
@@ -134,8 +237,31 @@ def test_install_twice_byte_equal_preserves_user_and_driver_hooks(tmp_path):
     result = json.loads(first)
     assert {key: value for key, value in result.items() if key != config.GUARD_NAME} == original
     assert list(result).count(config.GUARD_NAME) == 1
+    assert path.stat().st_mode & 0o777 == 0o600
     assert config.check_hook_config((path,)).passed
     assert not (cwd / ".venv").exists()
+
+
+def test_scratch_provision_refuses_foreign_workspace_without_writing(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    cwd = tmp_path / "workspace"
+    cwd.mkdir()
+    monkeypatch.setattr(config.os, "fstat", lambda fd: SimpleNamespace(st_uid=os.geteuid() + 1))
+    with pytest.raises(config.AgyHookConfigError, match="unsafe_install_path"):
+        config.provision_workspace_guard(cwd)
+    assert list(cwd.iterdir()) == []
+
+
+def test_scratch_provision_refuses_traversal_without_writing(tmp_path):
+    cwd = tmp_path / "workspace"
+    cwd.mkdir()
+    other = tmp_path / "other"
+    other.mkdir()
+    with pytest.raises(config.AgyHookConfigError, match="unsafe_install_path"):
+        config.provision_workspace_guard(cwd / "../other")
+    assert list(cwd.iterdir()) == []
+    assert list(other.iterdir()) == []
 
 
 def test_empty_worktree_installs_primary_interpreter(tmp_path):

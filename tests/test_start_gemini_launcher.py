@@ -261,7 +261,9 @@ def test_gemini_driver_preserves_interactive_and_claude_prompts() -> None:
 
 
 @pytest.mark.parametrize("scoped", [False, True])
-@pytest.mark.parametrize("condition", ["workspace_missing", "home_missing", "invalid", "pass"])
+@pytest.mark.parametrize(
+    "condition", ["workspace_missing", "home_missing", "no_guard", "invalid", "invalid_home", "pass"]
+)
 def test_gemini_exec_hook_gate_precedes_provider_spawn(tmp_path, scoped, condition):
     import json
     import os
@@ -288,37 +290,49 @@ def test_gemini_exec_hook_gate_precedes_provider_spawn(tmp_path, scoped, conditi
         locations[0].unlink()
     elif condition == "home_missing":
         locations[1].unlink()
+    elif condition == "no_guard":
+        for path in locations:
+            path.unlink()
     elif condition == "invalid":
         locations[0].write_text("{")
+    elif condition == "invalid_home":
+        locations[1].write_text("{}")
+    caller = tmp_path / "caller"
+    (caller / ".agents").mkdir(parents=True)
+    (caller / ".agents/hooks.json").write_text("{}")
     called = tmp_path / "provider-called"
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_agy = fake_bin / "agy"
+    fake_agy.write_text('#!/bin/sh\npwd > "$PROVIDER_CALLED"\nprintf "%s\\n" "$@" >> "$PROVIDER_CALLED"\n')
+    fake_agy.chmod(0o755)
     result = subprocess.run(
         [
             "bash",
             "-c",
-            'source "$1"; LC_ROOT="$2"; test_python="$3"; called="$4"; '
+            'source "$1/scripts/lib/launcher_core.sh"; source "$1/scripts/launchers/gemini.sh"; '
+            'LC_ROOT="$2"; test_python="$3"; LC_MODE=interactive; '
             'LC_DRY_RUN=0; LC_MODEL=gemini-3.8-flash-high; LC_RULES_CORE=""; '
             'LC_DRIVER_PROMPT=""; LC_FORWARD_ARGS=(); '
             'launcher_project_python() { printf "%s" "$test_python"; }; '
-            'launcher_exec_command() { printf "%s\n" "$@" > "$called"; }; '
             "launcher_adapter_exec",
             "bash",
-            str(root / "scripts/launchers/gemini.sh"),
+            str(root),
             str(workspace),
             sys.executable,
-            str(called),
         ],
-        env={**os.environ, "HOME": str(home)},
-        cwd=root,
+        env={**os.environ, "HOME": str(home), "PATH": f"{fake_bin}:/usr/bin:/bin", "PROVIDER_CALLED": str(called)},
+        cwd=caller,
         text=True,
         capture_output=True,
         timeout=15,
     )
     # The module is imported from the real source via the normal package search.
     # A launcher uses its checkout as LC_ROOT; this fixture needs that same source.
-    if condition == "pass":
+    if condition in {"pass", "workspace_missing", "home_missing"}:
         assert result.returncode == 0, result.stderr
         assert result.stdout == "PASS: guard_registered\n"
-        assert called.read_text().splitlines()[:2] == ["agy", "--model"]
+        assert called.read_text().splitlines()[:3] == [str(workspace), "--model", "gemini-3.8-flash-high"]
     else:
         assert result.returncode != 0
         assert not called.exists()

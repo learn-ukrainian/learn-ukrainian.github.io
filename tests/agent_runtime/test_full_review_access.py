@@ -285,7 +285,10 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
 
 
 @pytest.mark.parametrize("access", ["full", "isolated"])
-def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(world, tmp_path, monkeypatch, access):
+@pytest.mark.parametrize("candidate", ["provisioned_home", "unguarded_workspace", "no_guard"])
+def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
+    world, tmp_path, monkeypatch, access, candidate
+):
     from scripts.agent_runtime.adapters import agy
     from scripts.agent_runtime.review_mcp import agy_review_settings
 
@@ -295,7 +298,28 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
     boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     try:
-        register_agy_hooks(boundary.workspace)
+        workspace_hooks = boundary.workspace / ".agents/hooks.json"
+        assert not workspace_hooks.exists()
+        if candidate == "unguarded_workspace":
+            workspace_hooks.parent.mkdir()
+            workspace_hooks.write_text("{}")
+        elif candidate == "no_guard":
+            (Path(boundary.tool_config["agy_home_override"]) / ".gemini/config/hooks.json").unlink()
+        if candidate != "provisioned_home":
+            from scripts.agent_runtime.agy_hook_config import AgyHookConfigError
+
+            reason = "missing_guard" if candidate == "unguarded_workspace" else "missing_file"
+            with pytest.raises(AgyHookConfigError, match=reason):
+                AgyAdapter().build_invocation(
+                    prompt="probe",
+                    mode="read-only",
+                    cwd=boundary.workspace,
+                    model=None,
+                    task_id="probe",
+                    session_id=None,
+                    tool_config=boundary.tool_config,
+                )
+            return
         plan = AgyAdapter().build_invocation(
             prompt="probe",
             mode="read-only",
@@ -310,6 +334,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
         assert settings.stat().st_mode & 0o777 == 0o600
         assert "--sandbox" in plan.cmd
         assert "--dangerously-skip-permissions" not in plan.cmd
+        assert not workspace_hooks.exists()
     finally:
         boundary.cleanup()
 
@@ -478,8 +503,6 @@ def test_full_seat_adapter_host_write_and_process_denial(world, tmp_path, monkey
     tc.pop("allowed_tools", None)
     boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
     try:
-        if agent == "agy":
-            register_agy_hooks(boundary.workspace)
         adapter = {"claude": ClaudeAdapter, "codex": CodexAdapter, "agy": AgyAdapter}[agent]()
         monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda *a: None)
         plan = adapter.build_invocation(
