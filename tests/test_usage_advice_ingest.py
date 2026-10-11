@@ -32,6 +32,7 @@ from scripts.ingest.usage_advice_ingest import (
     AccessDeniedError,
     RateLimitOrServerError,
     SourceChoice,
+    UsageAdviceIngestError,
     clean_movaua_title,
     discover_movaua_manifest,
     discover_movne_manifest,
@@ -98,7 +99,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
             sleep_fn=sleep_calls.append,
         )
         self.assertEqual(resp.status_code, 200)
-        session.get.assert_called_once_with("https://example.com/test", timeout=20.0)
+        session.get.assert_called_once_with("https://example.com/test", timeout=20.0, allow_redirects=False)
         self.assertEqual(sleep_calls, [1.5])
 
     def test_polite_get_circuit_breaker_403(self) -> None:
@@ -155,6 +156,65 @@ class TestUsageAdviceIngest(unittest.TestCase):
             polite_get(session, "https://example.com/500", delay=0.1, max_retries=2, sleep_fn=lambda _: None)
 
         self.assertEqual(session.get.call_count, 3)  # initial + 2 retries
+
+    def test_polite_get_off_host_redirect_refused(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        r301 = MagicMock(spec=requests.Response)
+        r301.status_code = 301
+        r301.headers = {"Location": "https://malicious.example.org/evil"}
+        session.get.return_value = r301
+
+        with self.assertRaises(UsageAdviceIngestError) as ctx:
+            polite_get(session, "https://example.com/start", delay=0)
+        self.assertIn("Off-host redirect refused", str(ctx.exception))
+
+    def test_polite_get_on_host_redirect_followed(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        r301 = MagicMock(spec=requests.Response)
+        r301.status_code = 301
+        r301.headers = {"Location": "/final-page"}
+
+        r200 = MagicMock(spec=requests.Response)
+        r200.status_code = 200
+        r200.text = "<html>Final</html>"
+
+        session.get.side_effect = [r301, r200]
+        resp = polite_get(session, "https://example.com/initial", delay=0)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(session.get.call_count, 2)
+        session.get.assert_called_with("https://example.com/final-page", timeout=20.0, allow_redirects=False)
+
+    def test_polite_get_unsafe_scheme_redirect_refused(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        r301 = MagicMock(spec=requests.Response)
+        r301.status_code = 301
+        r301.headers = {"Location": "file:///etc/passwd"}
+        session.get.return_value = r301
+
+        with self.assertRaises(UsageAdviceIngestError) as ctx:
+            polite_get(session, "https://example.com/start", delay=0)
+        self.assertIn("Unsafe redirect scheme refused", str(ctx.exception))
+
+    def test_polite_get_delay_zero_has_minimum_backoff(self) -> None:
+        session = MagicMock(spec=requests.Session)
+        r500 = MagicMock(spec=requests.Response)
+        r500.status_code = 500
+        r500.headers = {}
+        r200 = MagicMock(spec=requests.Response)
+        r200.status_code = 200
+        r200.text = "ok"
+
+        session.get.side_effect = [r500, r200]
+        sleep_calls: list[float] = []
+        resp = polite_get(
+            session,
+            "https://example.com/zero-delay",
+            delay=0,
+            retry_backoff=2.0,
+            sleep_fn=sleep_calls.append,
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(sleep_calls, [1.0])
 
     def test_extract_movne_word_pairs(self) -> None:
         html = """

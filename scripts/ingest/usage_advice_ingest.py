@@ -74,6 +74,20 @@ def _sig_handler(signum: int, frame: Any) -> None:  # pragma: no cover
     _STOP_REQUESTED = True
 
 
+def interruptible_sleep(seconds: float, step: float = 0.2) -> None:
+    """Sleep in small intervals, honoring _STOP_REQUESTED immediately."""
+    global _STOP_REQUESTED
+    remaining = max(0.0, seconds)
+    while remaining > 0:
+        if _STOP_REQUESTED:
+            raise UsageAdviceIngestError("Operation interrupted by user or supervisor.")
+        chunk = min(remaining, step)
+        time.sleep(chunk)
+        remaining -= chunk
+    if _STOP_REQUESTED:
+        raise UsageAdviceIngestError("Operation interrupted by user or supervisor.")
+
+
 class UsageAdviceIngestError(Exception):
     """Base exception for usage advice ingest errors."""
 
@@ -136,13 +150,15 @@ def polite_get(
     max_retries: int = 3,
     retry_backoff: float = 2.0,
     timeout: float = 20.0,
-    sleep_fn: Callable[[float], None] = time.sleep,
+    sleep_fn: Callable[[float], None] = interruptible_sleep,
+    max_redirects: int = 5,
 ) -> requests.Response:
-    """Perform polite HTTP GET with 403 circuit breaker and 429/5xx backoff.
+    """Perform polite HTTP GET with 403 circuit breaker, 429/5xx backoff, and redirect guard.
 
     - Immediately raises AccessDeniedError on HTTP 403 (never retries).
-    - Backs off exponentially on HTTP 429 / 5xx, respecting Retry-After.
-    - Honors graceful termination signal.
+    - Backs off exponentially on HTTP 429 / 5xx, respecting Retry-After and minimum base delay.
+    - Honors graceful termination signal via interruptible sleep.
+    - Disallows automated redirects (allow_redirects=False) to prevent SSRF and validates on-host targets.
     """
     global _STOP_REQUESTED
     if _STOP_REQUESTED:
@@ -154,49 +170,72 @@ def polite_get(
     elif "User-Agent" not in req_headers and hasattr(session, "headers") and "User-Agent" in session.headers:
         req_headers["User-Agent"] = session.headers["User-Agent"]
 
+    current_url = url
+    redirect_count = 0
     attempt = 0
+    parsed_orig = urllib.parse.urlsplit(url)
+
     while True:
+        if _STOP_REQUESTED:
+            raise UsageAdviceIngestError("Operation interrupted by user or supervisor.")
+
         try:
+            kwargs: dict[str, Any] = {"timeout": timeout, "allow_redirects": False}
             if req_headers:
-                resp = session.get(url, headers=req_headers, timeout=timeout)
-            else:
-                resp = session.get(url, timeout=timeout)
+                kwargs["headers"] = req_headers
+            resp = session.get(current_url, **kwargs)
         except requests.RequestException as exc:
             if attempt >= max_retries:
                 raise RateLimitOrServerError(
-                    f"Network error requesting {url} after {max_retries} retries: {exc}"
+                    f"Network error requesting {current_url} after {max_retries} retries: {exc}"
                 ) from exc
-            wait_s = delay * (retry_backoff**attempt)
-            logger.warning("Network error on %s: %s; retrying in %.1fs", url, exc, wait_s)
+            base_delay = max(delay, 1.0)
+            wait_s = base_delay * (retry_backoff**attempt)
+            logger.warning("Network error on %s: %s; retrying in %.1fs", current_url, exc, wait_s)
             sleep_fn(wait_s)
             attempt += 1
             continue
 
+        # Handle HTTP redirects explicitly with security boundary checks
+        if resp.status_code in (301, 302, 303, 307, 308) and "Location" in resp.headers:
+            loc = resp.headers["Location"]
+            target_url = urllib.parse.urljoin(current_url, loc)
+            parsed_target = urllib.parse.urlsplit(target_url)
+            if parsed_orig.netloc and parsed_target.netloc and parsed_target.netloc != parsed_orig.netloc:
+                raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {target_url}")
+            if parsed_target.scheme not in ("http", "https"):
+                raise UsageAdviceIngestError(f"Unsafe redirect scheme refused: {target_url}")
+            redirect_count += 1
+            if redirect_count > max_redirects:
+                raise UsageAdviceIngestError(f"Too many redirects for {url} (> {max_redirects})")
+            logger.info("Following on-host redirect: %s -> %s", current_url, target_url)
+            current_url = target_url
+            continue
+
         if resp.status_code == 200:
-            parsed_orig = urllib.parse.urlsplit(url)
-            if parsed_orig.netloc:
-                raw_resp_url = getattr(resp, "url", None)
-                resp_url = raw_resp_url if isinstance(raw_resp_url, str) and raw_resp_url else url
-                resp_netloc = urllib.parse.urlsplit(resp_url).netloc
-                if resp_netloc and resp_netloc != parsed_orig.netloc:
-                    raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {resp_url}")
+            raw_resp_url = getattr(resp, "url", None)
+            resp_url = raw_resp_url if isinstance(raw_resp_url, str) and raw_resp_url else current_url
+            resp_netloc = urllib.parse.urlsplit(resp_url).netloc
+            if parsed_orig.netloc and resp_netloc and resp_netloc != parsed_orig.netloc:
+                raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {resp_url}")
             if delay > 0:
                 sleep_fn(delay)
             return resp
 
         if resp.status_code == 403:
-            logger.error("HTTP 403 Forbidden received for %s. Circuit-breaker stopping.", url)
-            raise AccessDeniedError(f"HTTP 403 Forbidden for {url}")
+            logger.error("HTTP 403 Forbidden received for %s. Circuit-breaker stopping.", current_url)
+            raise AccessDeniedError(f"HTTP 403 Forbidden for {current_url}")
 
         if resp.status_code == 429 or 500 <= resp.status_code < 600:
             if attempt >= max_retries:
-                raise RateLimitOrServerError(f"HTTP {resp.status_code} for {url} after {max_retries} retries.")
+                raise RateLimitOrServerError(f"HTTP {resp.status_code} for {current_url} after {max_retries} retries.")
             retry_after = parse_retry_after(resp.headers.get("Retry-After"))
-            wait_s = min(retry_after, 60.0) if retry_after is not None else delay * (retry_backoff**attempt)
+            base_delay = max(delay, 1.0)
+            wait_s = min(retry_after, 60.0) if retry_after is not None else base_delay * (retry_backoff**attempt)
             logger.warning(
                 "HTTP %s for %s; retrying in %.1fs (attempt %d/%d)",
                 resp.status_code,
-                url,
+                current_url,
                 wait_s,
                 attempt + 1,
                 max_retries,
@@ -1933,7 +1972,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.source in (SourceChoice.MOVNE, SourceChoice.ALL):
             args.db_movne.parent.mkdir(parents=True, exist_ok=True)
-            with sqlite3.connect(args.db_movne) as conn:
+            with contextlib.closing(sqlite3.connect(args.db_movne)) as conn:
                 if args.re_extract:
                     logger.info("Running in --re-extract mode for Movne...")
                     pairs_count = reextract_movne(conn)
@@ -1968,7 +2007,7 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.source in (SourceChoice.MOVAUA, SourceChoice.ALL):
             args.db_movaua.parent.mkdir(parents=True, exist_ok=True)
-            with sqlite3.connect(args.db_movaua) as conn:
+            with contextlib.closing(sqlite3.connect(args.db_movaua)) as conn:
                 if args.re_extract:
                     logger.info("Running in --re-extract mode for MovaUA...")
                     pairs_count = reextract_movaua(conn)
