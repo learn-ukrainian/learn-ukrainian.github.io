@@ -240,7 +240,8 @@ tool returns `status: error`, `error_code: resource_catalogue_missing`.
 
 | Table | Rows | MCP tool | What it is |
 | --- | ---: | --- | --- |
-| `esum_cognate_forms` | 134,836 | (archived / `search_esum`) | ЕСУМ cognate/related forms (historical 134k forms preserved under frozen contract; see `docs/decisions/2026-10-11-esum-cognate-forms-foreign-key-triage.md`). |
+| `sum11` | 127,069 | `search_definitions` | СУМ-11 explanatory dict. ⚠ partly Sovietized (~5.6% flagged; each row carries `sovietization_risk`). |
+| `esum_cognate_forms` | 134,836 | None (no MCP consumer; see decision record) | ЕСУМ cognate/related forms (historical 134k forms preserved under frozen contract; see `docs/decisions/2026-10-11-esum-cognate-forms-foreign-key-triage.md`). |
 | `esum_etymology` / `_meta` | 36,177 | `search_esum` | ЕСУМ etymology (vols 1–6, А–Я; exact lemma + FTS5 body search). |
 | `ukrajinet` | 122,441 | `search_synonyms` | Ukrajinet WordNet synsets (⚠ largely auto-translated from English WordNet). |
 | `balla_en_uk` | 78,704 | `translate_en_uk` | Балла EN→UK translations. |
