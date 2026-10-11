@@ -16,6 +16,7 @@ import yaml
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.attempt_boundary import prepare_attempt_boundary, verify_full_review_tree
 from scripts.review.isolation import ReviewIsolationError
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.agent_runtime.test_attempt_boundary import attempt_config as _attempt_config
 from tests.agent_runtime.test_attempt_boundary import manifest_world
 from tests.agent_runtime.test_attempt_boundary import world as boundary_world  # noqa: F401
@@ -273,6 +274,7 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
     kw = dict(prompt="review", mode="read-only", cwd=tmp_path, model=None, task_id="review", session_id=None)
     home = tmp_path / "scoped-home"
     (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    register_agy_hooks(tmp_path, home=home)
     plan = AgyAdapter().build_invocation(**kw, tool_config={"review_access": "full", "agy_home_override": str(home)})
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd
@@ -293,6 +295,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
     boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     try:
+        register_agy_hooks(boundary.workspace)
         plan = AgyAdapter().build_invocation(
             prompt="probe",
             mode="read-only",
@@ -475,6 +478,8 @@ def test_full_seat_adapter_host_write_and_process_denial(world, tmp_path, monkey
     tc.pop("allowed_tools", None)
     boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
     try:
+        if agent == "agy":
+            register_agy_hooks(boundary.workspace)
         adapter = {"claude": ClaudeAdapter, "codex": CodexAdapter, "agy": AgyAdapter}[agent]()
         monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda *a: None)
         plan = adapter.build_invocation(

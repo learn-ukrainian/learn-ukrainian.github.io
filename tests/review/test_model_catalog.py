@@ -35,12 +35,15 @@ import runpy
 import sys
 source = sys.argv[sys.argv.index("--source-root") + 1]
 sys.path[:0] = [source, source + "/scripts", source + "/packages/v4-runtime/src"]
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 cached_capture_reads = runpy.run_path(source + "/tests/review/test_model_catalog.py")["cached_capture_reads"]
 sys.argv = sys.argv[1:]
 capture = runpy.run_path(sys.argv[0])
 original = capture["capture"]
 def cached_capture(*args, **kwargs):
     # Enter only after main has installed its hermetic environment.
+    if args:
+        register_agy_hooks(args[1], home=args[1] / "home")
     with cached_capture_reads():
         return original(*args, **kwargs)
 capture["main"].__globals__["capture"] = cached_capture

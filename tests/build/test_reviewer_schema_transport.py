@@ -25,6 +25,7 @@ from scripts.agent_runtime.adapters._output_schema import load_output_schema
 from scripts.audit import llm_reviewer, qg_schema
 from scripts.build import build_module_direct as direct
 from scripts.build import linear_pipeline as linear
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.helpers.codex_exec_stream import agent_message, completed_stream
 
 pytestmark = pytest.mark.reads_content
@@ -112,6 +113,10 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
 
 
 def build_plan(adapter, cwd: Path, config: dict[str, Any], *, model=None):
+    if adapter.name == "agy":
+        home = cwd / "agy-home"
+        register_agy_hooks(cwd, home=home)
+        config = {**config, "agy_home_override": str(home)}
     return adapter.build_invocation(
         prompt="Public mechanical schema fixture.",
         mode="read-only",

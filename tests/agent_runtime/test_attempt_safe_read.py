@@ -18,6 +18,7 @@ from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.agent_runtime.result import ParseResult
 from scripts.agent_runtime.watchdog import tail_liveness_file_for_debug
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.helpers.codex_exec_stream import completed_stream
 
 SENTINEL = b"FORBIDDEN_PARENT_READ_SENTINEL"
@@ -387,6 +388,7 @@ def test_agy_saved_result_uses_plan_root_after_transcript_read(tmp_path, monkeyp
     alias.symlink_to(root, target_is_directory=True)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: root / "agy.log")
+    register_agy_hooks(tmp_path, home=alias / "home")
     plan = agy.AgyAdapter().build_invocation(
         prompt="prompt",
         mode="workspace-write",
@@ -677,6 +679,7 @@ def test_agy_resume_baseline_and_reads_under_symlinked_ancestor(tmp_path, monkey
     size = transcript.stat().st_size
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: alias / "agy.log")
+    register_agy_hooks(tmp_path, home=home)
     plan = agy.AgyAdapter().build_invocation(
         prompt="prompt",
         mode="workspace-write",
