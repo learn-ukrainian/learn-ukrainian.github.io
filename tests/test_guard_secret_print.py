@@ -1132,3 +1132,175 @@ def test_inline_mapping_flag_variants_denied(consumer, program, flag, attached):
 )
 def test_round_four_neighbors_allowed(monkeypatch, command):
     assert _run(monkeypatch, command) == 0
+
+
+# Each review spelling is a separate subprocess row; no candidate is executed.
+ROUND_FIVE_SPELLINGS = [
+    "perl -le 'say %ENV'",
+    "perl -lE 'say %ENV'",
+    "perl -we 'say %ENV'",
+    "perl -le'say %ENV'",
+    "ruby -le 'puts ENV'",
+    "ruby -we 'puts ENV'",
+    "python -uc 'import os; print(os.environ)'",
+    "python -Ic 'import os; print(os.environ)'",
+    "python3 -Bc 'import os; print(os.environ)'",
+    "python -uc'import os; print(os.environ)'",
+    "perl -nle 'say %ENV'",
+    "perl -ple 'say %ENV'",
+    "python -c 'print(os[f\"environ\"])'",
+    "python -c 'print(os[r\"environ\"])'",
+    "python -c 'print(os[u\"environ\"])'",
+    'python -c \'print(os["""environ"""])\'',
+    "node -e 'console.log(process[`env`])'",
+    "node -e 'console.log(process?.env)'",
+    "node -e 'console.log(process.env[\"valueOf\"]())'",
+    'node -e \'console.log(process["env"]["valueOf"]())\'',
+    "perl -e 'say %::ENV'",
+    "perl -e 'say %main::ENV'",
+]
+
+
+@pytest.mark.parametrize("command", ROUND_FIVE_SPELLINGS)
+def test_round_five_review_spellings_denied(command):
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize("redirect", ["<<<", "<<'EOF'", "<<EOF"])
+@pytest.mark.parametrize("command", ROUND_FIVE_SPELLINGS)
+def test_round_five_review_stdin_denied(command, redirect):
+    consumer = command.split()[0]
+    # Drop the inline option, retaining the exact script for stdin inspection.
+    program = command.split("'", 1)[1].rsplit("'", 1)[0]
+    candidate = (
+        f"{consumer} <<< {shlex.quote(program)}" if redirect == "<<<" else f"{consumer} {redirect}\n{program}\nEOF"
+    )
+    result = _subprocess_guard(candidate)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize("consumer", ["python3.12", "node", "nodejs", "perl", "ruby", "php", "lua", "deno", "bun"])
+@pytest.mark.parametrize("prefix", ["", "env ", "/usr/bin/env "])
+@pytest.mark.parametrize(
+    "program",
+    [
+        "environ",
+        "getenv()",
+        "process.env",
+        "process[env]",
+        "%ENV",
+        "%main::ENV",
+        "%::ENV",
+        "$ENV",
+        "ENV",
+        "Deno.env",
+        "Bun.env",
+        "os.environ",
+        "printenv",
+        "getenvironment",
+    ],
+)
+def test_round_five_identifiers_deny_every_interpreter(consumer, prefix, program):
+    result = _subprocess_guard(f"{prefix}{consumer} --arbitrary-flag {shlex.quote(program)} trailing-argument")
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+ROUND_FIVE_KEYED = [
+    ("python", 'print(os.environ.get("{name}"))'),
+    ("python", 'print(os.environ["{name}"])'),
+    ("python", 'print(os.getenv("{name}"))'),
+    ("node", "console.log(process.env.{name})"),
+    ("node", 'console.log(process.env["{name}"])'),
+    ("ruby", 'puts ENV["{name}"]'),
+    ("ruby", 'puts ENV.fetch("{name}")'),
+    ("perl", "say $ENV{{{name}}}"),
+]
+
+
+@pytest.mark.parametrize("consumer,program", ROUND_FIVE_KEYED)
+@pytest.mark.parametrize("name,code", [("HOME", 0), ("ARBITRARY_TOKEN", 2)])
+@pytest.mark.parametrize("input_kind", ["argv", "here-string", "quoted-heredoc", "heredoc"])
+def test_round_five_keyed_literal_policy(consumer, program, name, code, input_kind):
+    program = program.format(name=name)
+    if input_kind == "argv":
+        command = f"{consumer} --unknown {shlex.quote(program)}"
+    elif input_kind == "here-string":
+        command = f"{consumer} <<< {shlex.quote(program)}"
+    else:
+        delimiter = "'EOF'" if input_kind == "quoted-heredoc" else "EOF"
+        command = f"{consumer} <<{delimiter}\n{program}\nEOF"
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == code
+
+
+@pytest.mark.parametrize(
+    "program",
+    [
+        "print(os.environ[k])",
+        "print(os.environ.get(k))",
+        "print(os.getenv(k))",
+        'print(os.environ["HO" + "ME"])',
+        'print(os.getenv("HO" + "ME"))',
+        "console.log(process.env[k])",
+        'console.log(process.env["HOME"]())',
+        "console.log(process.env.HOME())",
+        'console.log(process.env["valueOf"]?.())',
+        "console.log(process.env.valueOf?.())",
+        "console.log(process.env.valueOf``)",
+        'console.log(process.env["valueOf"]``)',
+        'print("İ"); print(os.environ)',
+        "puts ENV[k]",
+        "puts ENV.fetch(k)",
+        "say $ENV{$k}",
+        'print(os.environ.get("HOME")); print(os.environ)',
+        'print(os.environ.get("HOME")); printenv',
+    ],
+)
+def test_round_five_nonliteral_and_additional_mentions_denied(program):
+    result = _subprocess_guard(f"python -c {shlex.quote(program)}")
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize(
+    "program,code",
+    [
+        ('print( os . environ . get ( rb"HOME" ) )', 0),
+        ('print(os.environ[b"HOME"])', 0),
+        ("console.log(process?.env[`HOME`])", 0),
+        ('print(os.en\\\nviron["HOME"])', 0),
+        ('print(os.environ["HO" "ME"])', 0),
+        ('print(os.environ[f"{k}"])', 2),
+        ('print(os.environ["{k}"])', 2),
+        ('print(os.environ.get("HOME", k))', 2),
+        ('getenv("HOME")', 2),
+        ('print("İ"); print(os.environ.get("HOME"))', 0),
+        ("envelope = environment = myenviron = 1; print(envelope)", 0),
+        ("import os as o; print(o.environ)", 2),
+        ('print(getattr(os, "environ"))', 2),
+        ('print(__import__("os").environ)', 2),
+        ('import os as o; print(o.__dict__["en" + "viron"])', 0),
+        ('print(getattr(os, "en" + "viron"))', 0),
+        ('print(getattr(__import__("os"), "en" + "viron"))', 0),
+    ],
+)
+def test_round_five_normalization_and_documented_limits(program, code):
+    result = _subprocess_guard(f"python -c {shlex.quote(program)}")
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == code
+
+
+@pytest.mark.parametrize("consumer", ["python", "ruby", "perl", "php", "nodejs", "lua", "deno", "bun"])
+@pytest.mark.parametrize("flag", ["-uc", "-Ic", "-Bc", "-nle", "-ple", "-we", "--unknown-option="])
+@pytest.mark.parametrize(
+    "program,code", [('print(os.environ.get("HOME"))', 0), ("print(os.environ)", 2), ("print(1)", 0)]
+)
+def test_round_five_glued_options_are_opaque(consumer, flag, program, code):
+    result = _subprocess_guard(f"{consumer} {flag}{shlex.quote(program)}")
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == code

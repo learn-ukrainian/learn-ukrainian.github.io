@@ -10,11 +10,44 @@ from pathlib import Path
 
 import pytest
 
+from tests.test_guard_secret_print import ROUND_FIVE_KEYED, ROUND_FIVE_SPELLINGS
+
 HARNESS_NAMES = ["claude", "codex", "grok", "kimi", "cursor", "agy", "hermes", "opencode"]
 ROOT = Path(__file__).resolve().parents[1]
 ADAPTER = ROOT / "scripts/agent_runtime/secret_print_hook.py"
 SENTINEL = "synthetic_adapter_value_91b8"
 NATIVE_ENV = {"PATH": "/usr/bin:/bin", "ARBITRARY_TOKEN": SENTINEL, "PYTHONDONTWRITEBYTECODE": "1"}
+
+
+@pytest.mark.parametrize("harness", HARNESS_NAMES)
+@pytest.mark.parametrize("command", ROUND_FIVE_SPELLINGS)
+def test_native_round_five_review_spellings(harness, command):
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", harness],
+        input=json.dumps(event(harness, command)),
+        text=True,
+        capture_output=True,
+        env=NATIVE_ENV,
+        timeout=10,
+    )
+    assert_decision(harness, result.returncode, result.stdout, result.stderr, False)
+
+
+@pytest.mark.parametrize("harness", HARNESS_NAMES)
+@pytest.mark.parametrize("consumer,program", ROUND_FIVE_KEYED)
+@pytest.mark.parametrize("name,allowed", [("HOME", True), ("ARBITRARY_TOKEN", False)])
+def test_native_round_five_literal_policy(harness, consumer, program, name, allowed):
+    import shlex
+
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", harness],
+        input=json.dumps(event(harness, f"{consumer} --unknown {shlex.quote(program.format(name=name))}")),
+        text=True,
+        capture_output=True,
+        env=NATIVE_ENV,
+        timeout=10,
+    )
+    assert_decision(harness, result.returncode, result.stdout, result.stderr, allowed)
 
 
 @pytest.mark.parametrize("harness", HARNESS_NAMES)

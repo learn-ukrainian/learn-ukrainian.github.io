@@ -33,11 +33,16 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # Nested script inputs retain literal expansion syntax rather than evaluating
 # Bash expansions, and script-word joining is conservative about adjacency.
 # Explicit override and value-free transform policies remain trusted boundaries.
-# Runtime-computed keys such as os.environ[k], import aliases such as import os
-# as o, getattr(os, "environ"), aliases, command-shadowing functions, external
-# scripts, computed paths, interpreter aliases and dynamic key assembly remain
-# unresolved by this matcher. grep -c TOKEN .env and cp .env backup remain
-# conservative denials even though those operations do not print values.
+# Interpreter identifier mentions are default-denied, including os.environ[k].
+# Import aliases (import os as o), getattr(os, "environ") and
+# __import__("os").environ do not bypass literal identifier checks; dynamically
+# constructing those attribute names with string concatenation still can.
+# Command aliases, functions shadowing commands, external script files, computed
+# paths and interpreter aliases such as renamed binaries remain limits.
+# A text guard cannot be complete. This is the last widening round for this
+# interpreter class; accesses without a listed identifier remain review limits.
+# grep -c TOKEN .env and cp .env backup remain conservative denials even though
+# those operations do not print values.
 
 from __future__ import annotations
 
@@ -200,7 +205,9 @@ def _separate_program_flag_quotes(command: str) -> str:
             index += 2
             continue
         if not quote and (index == 0 or command[index - 1] in " \t\n;|&("):
-            flag = re.match(r"(--(?:eval|command)=?|-(?:pe|ne|c|e|E))(?=[\"'])", command[index:])
+            # Options are opaque here; quote handling must not depend on the
+            # interpreter's option letters or their position in a cluster.
+            flag = re.match(r"(-{1,2}[A-Za-z][A-Za-z0-9_-]*=?)(?=[\"'])", command[index:])
             if flag:
                 out.append(flag[0].rstrip("=") + " ")
                 index += flag.end()
@@ -764,34 +771,81 @@ def _env_dump_reason(
     return None
 
 
+_PROGRAM_STRINGS = re.compile(
+    r"(?i:(?<!\w)(?:rb|br|rf|fr|f|r|u|b))?"
+    r"(?P<quote>\"\"\"|'''|\"|'|`)(?P<value>.*?)(?P=quote)",
+    re.DOTALL,
+)
+_ENV_IDENTIFIERS = re.compile(
+    r"os(?:\.environ|\[environ\]|\.getenv)|process(?:\.env|\[env\])|"
+    r"deno\.env|bun\.env|%(?:main::|::)?env|\$env|"
+    r"environ|getenvironment|getenv|printenv|env"
+)
+_KEYED_ENV = re.compile(
+    r"(?:os(?:\.environ|\[environ\])(?:\[(?P<py_index>\w+)\]|\.get\((?P<py_get>\w+)\))|"
+    r"os\.getenv\((?P<py_env>\w+)\)|"
+    r"process(?:\.env|\[env\])(?:\.(?P<js_property>[A-Za-z_$][\w$]*)|\[(?P<js_index>\w+)\])|"
+    r"ENV(?:\[(?P<rb_index>:?\w+)\]|\.fetch\((?P<rb_fetch>:?\w+)\))|"
+    r"\$ENV\{(?P<perl_key>\w+)\})(?![\w$]|\(|\.\()"
+)
+
+
+def _normalize_program(program: str) -> tuple[str, list[bool], set[int], set[int]]:
+    """Compact spelling while retaining literal keys and whitespace boundaries."""
+    program = program.replace("\\\n", "").replace("?.", ".")
+    pieces: list[tuple[str, bool, bool]] = []
+    cursor = 0
+    for match in _PROGRAM_STRINGS.finditer(program):
+        pieces.append((program[cursor : match.start()], False, False))
+        pieces.append((match["value"], True, match["quote"] == "`"))
+        cursor = match.end()
+    pieces.append((program[cursor:], False, False))
+    text: list[str] = []
+    literals: list[bool] = []
+    boundaries: set[int] = set()
+    templates: set[int] = set()
+    for piece, literal, template in pieces:
+        if template:
+            templates.add(len(text))
+        for char in piece:
+            if char.isspace():
+                boundaries.add(len(text))
+            elif char not in "\"'`":
+                text.append(char)
+                literals.append(literal)
+    return "".join(text), literals, boundaries, templates
+
+
+def _is_interpreter_command(cmd: str) -> bool:
+    return cmd.startswith("python") or cmd in {"node", "nodejs", "perl", "ruby", "php", "lua", "deno", "bun"}
+
+
 def _program_reason(cmd: str, program: str) -> str | None:
-    literal_name = r"(?:[\"'][A-Za-z_][A-Za-z0-9_]*[\"']|:[A-Za-z_][A-Za-z0-9_]*)"
-    named_access = rf"\s*(?:\[\s*{literal_name}\s*\]|\.\s*(?:get|fetch)\s*\(\s*{literal_name}\s*[,\)])"
-    if _is_python_command(cmd):
-        mapping = r"\bos\s*(?:\.\s*environ\b|\[\s*[\"']environ[\"']\s*\])"
-    elif cmd == "node":
-        mapping = r"\bprocess\s*(?:\.\s*env\b|\[\s*[\"']env[\"']\s*\])"
-        named_access += r"|\s*\.\s*[A-Za-z_$][A-Za-z0-9_$]*(?![A-Za-z0-9_$]|\s*\()"
-    elif cmd == "perl":
-        mapping = r"%ENV\b"
-        accesses_env = bool(re.search(r"\$ENV\s*\{", program))
-    elif cmd == "ruby":
-        mapping = r"\bENV\b"
-    else:
+    if not _is_interpreter_command(cmd):
         return None
-    matches = list(re.finditer(mapping, program))
-    accesses_env = bool(matches) or (cmd == "perl" and accesses_env)
-    whole_env = any(cmd == "perl" or not re.match(named_access, program[match.end() :]) for match in matches)
-    for match in re.finditer(r"\b(?:os\s*\.\s*)?getenv\s*\(", program):
-        accesses_env = True
-        if not re.match(rf"\s*{literal_name}\s*[,\)]", program[match.end() :]):
-            whole_env = True
-    if whole_env:
-        return "inline program can expose the whole environment mapping"
-    if accesses_env and any(_is_secret_var_name(name) for name in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", program)):
-        return "inline program can expose a secret environment value"
-    if re.search(r"/proc/(?:self|\$\$|[0-9]+)/environ\b", program):
-        return "inline program can read environment values"
+    text, literals, boundaries, templates = _normalize_program(program)
+    # Fold ASCII identifiers only, preserving offsets through non-ASCII text.
+    identifiers = text.translate(str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"))
+    cursor = 0
+    for mention in _ENV_IDENTIFIERS.finditer(identifiers):
+        start, end = mention.span()
+        if start < cursor:
+            continue
+        if start and start not in boundaries and (text[start - 1].isalnum() or text[start - 1] in "_$"):
+            continue
+        if end < len(text) and end not in boundaries and (text[end].isalnum() or text[end] in "_$"):
+            continue
+        access = _KEYED_ENV.match(text, start)
+        if access and access.end() not in templates:
+            kind, name = next((kind, name) for kind, name in access.groupdict().items() if name is not None)
+            key_start, key_end = access.span(kind)
+            literal = kind in {"js_property", "perl_key"} or name.startswith(":") or all(literals[key_start:key_end])
+            if literal and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name.lstrip(":")):
+                if _is_secret_var_name(name.lstrip(":")):
+                    return "inline program can expose a secret environment value"
+                cursor = access.end()
+                continue
+        return "inline program mentions an environment identifier without an allowed literal lookup"
     return None
 
 
@@ -800,20 +854,24 @@ def _inline_program_reason(segment: list[str], dumped_files: set[str]) -> str | 
     if not found:
         return None
     cmd, args, _ = found
-    for index, token in enumerate(args):
-        token = _strip_quotes(token)
-        flag = re.match(r"^(--(?:eval|command)(?:=|$)|-(?:pe|ne|c|e|E))", token)
-        if flag:
-            attached = token[flag.end() :]
-            script_args = [attached, *args[index + 1 :]] if attached else args[index + 1 :]
-            for program in _script_words(script_args, 0):
-                reason = _program_reason(cmd, program)
-                if reason:
-                    return reason
-                if _is_python_command(cmd) and re.search(r"\b(?:open|read_text|read_bytes)\s*\(", program):
-                    paths = re.findall(r"[\"']([^\"']+)[\"']", program)
-                    if any(os.path.normpath(path) in dumped_files for path in paths):
-                        return "inline program would display a redirected environment dump"
+    if not _is_interpreter_command(cmd):
+        return None
+    reason = _worker_env_reason(segment)
+    if reason:
+        return reason
+    try:
+        # Decode shell quoting across all arguments, including glued values.
+        # Do not infer which interpreter flags select program text.
+        program = " ".join(shlex.split(" ".join(args), posix=True))
+    except ValueError:
+        return "interpreter arguments could not be parsed safely"
+    reason = _program_reason(cmd, program)
+    if reason:
+        return reason
+    if _is_python_command(cmd) and re.search(r"\b(?:open|read_text|read_bytes)\s*\(", program):
+        paths = re.findall(r"[\"']([^\"']+)[\"']", program)
+        if any(os.path.normpath(path) in dumped_files for path in paths):
+            return "inline program would display a redirected environment dump"
     return None
 
 
