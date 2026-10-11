@@ -67,11 +67,13 @@ def _run(
     executable: str,
     home: Path,
     path_prefix: str | None = None,
+    path: str | None = None,
     extra_env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    path = "/usr/bin:/bin"
-    if path_prefix:
-        path = f"{path_prefix}:{path}"
+    if path is None:
+        path = "/usr/bin:/bin"
+        if path_prefix:
+            path = f"{path_prefix}:{path}"
     env = {
         "PATH": path,
         "HOME": str(home),
@@ -361,6 +363,31 @@ def _assert_install_stays(install: Path, kept: Path) -> None:
     assert kept.read_text(encoding="utf-8") == "sentinel"
 
 
+def _assert_probe_refused(
+    proc: subprocess.CompletedProcess[str],
+    install: Path,
+    kept: Path,
+    probe_text: str,
+) -> None:
+    assert proc.returncode != 0, f"expected refusal, exited {proc.returncode}: {proc.stderr}"
+    assert probe_text in proc.stderr
+    _assert_install_stays(install, kept)
+
+
+def _command_path_without_lsof(directory: Path) -> str:
+    """Tools the block needs before the probe, with lsof absent."""
+    directory.mkdir(parents=True, exist_ok=True)
+    for name in ("bash", "readlink", "stat", "find", "date", "timeout", "mv"):
+        target = Path("/usr/bin") / name
+        if not target.exists():
+            target = Path("/bin") / name
+        link = directory / name
+        if not link.exists():
+            link.symlink_to(target)
+    assert not (directory / "lsof").exists()
+    return str(directory)
+
+
 def test_destination_created_after_the_existence_check_is_left_intact(tmp_path: Path) -> None:
     """An empty destination created after the absence check must not be replaced."""
     cache = tmp_path / "cache"
@@ -588,6 +615,103 @@ exit 1
     quarantined = list((cache / "chrome").glob("linux-1.quarantine.*"))
     assert len(quarantined) == 1
     assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_lsof_exit_3_empty_output_refuses(tmp_path: Path) -> None:
+    """A status other than idle or a holder, with no output, is not an idle cache."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(tmp_path / "bin", "lsof", "#!/bin/sh\nexit 3\n")
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    _assert_probe_refused(
+        proc,
+        install,
+        kept,
+        "Refusing to quarantine because the cache holder check did not show an idle cache (status 3).",
+    )
+
+
+def test_lsof_exit_0_empty_output_refuses(tmp_path: Path) -> None:
+    """Exit 0 and no output is not idle.
+
+    lsof 4.99.4 on an empty directory exits 1, with no file lines. A probe that
+    claims success without that shape must not be read as idle.
+    """
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(tmp_path / "bin", "lsof", "#!/bin/sh\nexit 0\n")
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    _assert_probe_refused(
+        proc,
+        install,
+        kept,
+        "Refusing to quarantine because the cache holder check did not show an idle cache (status 0).",
+    )
+
+
+def test_lsof_unrecognised_warning_refuses(tmp_path: Path) -> None:
+    """Exit 1 with empty stdout and a warning outside the filesystem-stat pair refuses.
+
+    The recognised pair proceeds in test_lsof_filesystem_stat_warning_stays_idle.
+    """
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "lsof",
+        "#!/bin/sh\nprintf '%s\\n' 'lsof: WARNING: unknown filesystem probe' >&2\nexit 1\n",
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    _assert_probe_refused(proc, install, kept, "lsof: WARNING: unknown filesystem probe")
+
+
+def test_lsof_missing_from_path_refuses(tmp_path: Path) -> None:
+    """A PATH with no lsof executable takes the block's existing refusal and does not rename."""
+    cache, install, kept = _partial_install(tmp_path)
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path=_command_path_without_lsof(tmp_path / "bin"),
+    )
+    _assert_probe_refused(proc, install, kept, "Refusing to quarantine without a cache holder check.")
+
+
+def test_lsof_bad_option_usage_refuses(tmp_path: Path) -> None:
+    """A usage diagnostic with exit 1 and no p<pid> line is a failed probe, not an idle cache."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "lsof",
+        "#!/bin/sh\n"
+        "printf '%s\\n' 'lsof: illegal option character: -' ' usage: [-?abhHKlnNoOPRtUvVX] [-p s]' >&2\n"
+        "exit 1\n",
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    _assert_probe_refused(proc, install, kept, "lsof: illegal option character: -")
+    assert "usage:" in proc.stderr
 
 
 def test_lsof_error_after_ancestor_swap_does_not_rename_outside(tmp_path: Path) -> None:
