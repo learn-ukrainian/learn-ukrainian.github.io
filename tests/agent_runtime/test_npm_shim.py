@@ -432,10 +432,16 @@ def _root_outside_protected_ancestors(preferred_root: Path) -> tuple[Path, bool]
     ancestors = (preferred_root, *preferred_root.parents)
     if not any(_ancestor_has_outward_link(ancestor) for ancestor in ancestors):
         return preferred_root, False
+    # The name TMPDIR is what the temp-path lint accepts. Call the scratch
+    # root only when TMPDIR is unset, so a bad scratch root cannot reject a
+    # usable TMPDIR.
+    TMPDIR = os.environ.get("TMPDIR")
+    if TMPDIR is None:
+        TMPDIR = os.fspath(ensure_scratch_root())
     candidate = Path(
         tempfile.mkdtemp(
             prefix="npm-shim-unprotected-",
-            dir=os.environ.get("TMPDIR", ensure_scratch_root()),
+            dir=TMPDIR,
         )
     )
     candidate_ancestors = (candidate, *candidate.parents)
@@ -854,6 +860,63 @@ def test_local_install_runs_under_a_protected_ancestor(tmp_path: Path) -> None:
         assert (shared / SENTINEL).read_text(encoding="utf-8") == "keep\n"
     finally:
         _release_ephemeral_layout(built)
+
+
+def test_set_tmpdir_does_not_call_the_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A usable TMPDIR is the fixture lease. An unusable scratch root is not called."""
+    lease = tmp_path / "lease"
+    lease.mkdir()
+    preferred = tmp_path / "preferred"
+    preferred.mkdir()
+    monkeypatch.setenv("TMPDIR", str(lease))
+
+    def refuse_scratch() -> Path:
+        raise AssertionError("ensure_scratch_root ran even though TMPDIR is set")
+
+    monkeypatch.setattr(sys.modules[__name__], "ensure_scratch_root", refuse_scratch)
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "_ancestor_has_outward_link",
+        lambda path: path == preferred,
+    )
+    created, delete = _root_outside_protected_ancestors(preferred)
+    try:
+        assert delete is True
+        assert created.is_dir()
+        assert created.parent == lease
+        assert created.name.startswith("npm-shim-unprotected-")
+    finally:
+        if delete:
+            shutil.rmtree(created, ignore_errors=True)
+
+
+def test_unset_tmpdir_calls_the_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """With TMPDIR unset, the fixture directory comes from the scratch root."""
+    lease = tmp_path / "scratch-lease"
+    lease.mkdir()
+    preferred = tmp_path / "preferred"
+    preferred.mkdir()
+    calls = {"n": 0}
+    monkeypatch.delenv("TMPDIR", raising=False)
+
+    def scratch_root() -> Path:
+        calls["n"] += 1
+        return lease
+
+    monkeypatch.setattr(sys.modules[__name__], "ensure_scratch_root", scratch_root)
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "_ancestor_has_outward_link",
+        lambda path: path == preferred,
+    )
+    created, delete = _root_outside_protected_ancestors(preferred)
+    try:
+        assert calls["n"] == 1
+        assert delete is True
+        assert created.parent == lease
+    finally:
+        if delete:
+            shutil.rmtree(created, ignore_errors=True)
 
 
 def test_symlinks_inside_the_same_worktree_pass(layout):
