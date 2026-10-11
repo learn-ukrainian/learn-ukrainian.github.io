@@ -35,6 +35,7 @@ from scripts.agent_runtime.errors import AgentUnavailableError
 from scripts.agent_runtime.result import ParseResult
 from scripts.agent_runtime.review_mcp import prepare_review_attempt
 from scripts.review.isolation import ReviewIsolationError
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 
 def manifest_world(root: Path, kind: str) -> dict:
@@ -147,6 +148,37 @@ def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str, *, re
         "review_input_root": str(root),
         "review_access": review_access,
     }
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_agy_attempt_home_registers_same_guard_as_review_provisioner(world, tmp_path, access):
+    from scripts.agent_runtime.agy_hook_config import HookConfigResult, check_hook_config
+    from scripts.agent_runtime.review_mcp import _populate_agy_review_home
+
+    root, old_home = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy", review_access=access)
+    if access == "full":
+        tc["review_cwd"] = str(root)
+    boundary = AttemptBoundary(agent="agy", tool_config=tc)
+    try:
+        hooks = Path(boundary.tool_config["agy_home_override"]) / ".gemini/config/hooks.json"
+        assert check_hook_config((hooks,)) == HookConfigResult("PASS", "guard_registered")
+        comparison = tmp_path / "comparison-home"
+        comparison.mkdir(mode=0o700)
+        fd = os.open(comparison, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        try:
+            _populate_agy_review_home(
+                fd,
+                old_home / ".gemini/antigravity-cli/antigravity-oauth-token",
+                Path(boundary.tool_config["mcp_config_path"]).read_bytes(),
+                boundary.workspace,
+            )
+        finally:
+            os.close(fd)
+        assert hooks.read_bytes() == (comparison / ".gemini/config/hooks.json").read_bytes()
+        assert hooks.stat().st_mode & 0o777 == 0o600
+    finally:
+        boundary.cleanup()
 
 
 @pytest.mark.parametrize("agent", ["agy", "codex"])
@@ -578,6 +610,7 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
                 "scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
             )
         if agent == "agy":
+            register_agy_hooks(boundary.workspace)
             settings = json.loads(
                 (Path(boundary.tool_config["agy_home_override"]) / ".gemini/antigravity-cli/settings.json").read_text()
             )["permissions"]
@@ -989,6 +1022,8 @@ def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, 
         def build_invocation(self, **kwargs):
             attempt = kwargs["tool_config"]["review_attempt_boundary"]
             observed.append(attempt)
+            if agent == "agy":
+                register_agy_hooks(attempt.workspace)
             plan = real_adapter.build_invocation(**{**kwargs, "model": real_adapter.default_model})
             assert plan.metadata["parent_read_root"] == str(attempt.write_root)
             app_data = Path(plan.env_overrides.get("AGY_APP_DATA_DIR", attempt.write_root / "app-data"))

@@ -311,7 +311,9 @@ absent, empty, or non-string command text denies. Malformed JSON, non-object
 or oversized stdin, and missing, crashing or late detectors deny.
 
 The entry point normalizes command text to the shared Claude/Bash detector.
-Its detector deadline remains five seconds. AGY denials print
+Its detector deadline remains five seconds. The AGY detector child omits
+`LEARN_UK_SECRETS_OK`; other harnesses keep their existing override behavior.
+AGY denials print
 `{"decision":"deny","reason":"..."}` and exit 0; other harnesses retain exit 2.
 These repo-local outputs do not establish native blocking.
 
@@ -328,8 +330,9 @@ resolve within that checkout. Worker installation uses
 interpreter and an absolute entry-point path, so a dispatch worktree needs
 no local `.venv`. A worker with ordinary HOME also needs a valid home
 `.gemini/config/hooks.json`; the gate never writes the user's home.
-Scoped review homes receive absolute registration paths only through
-`review_mcp.py`'s existing attempt-home provisioner. Their
+Scoped review homes receive the same absolute registration through the
+`review_mcp.py` and `attempt_boundary.py` provisioners, for isolated and full
+review access. Their
 `agy_review_settings` command denial stays in place.
 
 `agy_hook_config` reads each candidate workspace and effective-home hooks
@@ -337,9 +340,12 @@ file. PASS requires one enabled guard registration per checked file, the
 `PreToolUse` event, a matcher covering `run_command`, and a command resolving
 to the executable project interpreter and this entry point. Matchers `*`
 and `""` cover all tools; other matchers are regular expressions.
+The command timeout must be an integer of at least 10 seconds; booleans refuse.
 Missing or invalid candidates refuse. The worker installer merges a missing
 guard into a dispatch workspace without replacing unrelated named hooks;
-it never repairs an explicitly disabled registration.
+it never repairs an explicitly disabled registration. Installation refuses
+traversal and symlink components, then publishes the merged file atomically
+through directory descriptors while preserving unrelated hook bytes.
 
 The launcher checks only deployed files inside `launcher_adapter_exec`,
 after extension deployment and before AGY execution. Dry runs do not spawn

@@ -23,6 +23,26 @@ HARNESS_NAMES = ["claude", "codex", "grok", "kimi", "cursor", "agy", "hermes", "
 ROOT = Path(__file__).resolve().parents[1]
 ADAPTER = ROOT / "scripts/agent_runtime/secret_print_hook.py"
 SENTINEL = "synthetic_adapter_value_91b8"
+
+
+@pytest.mark.parametrize("harness", ["agy", "codex"])
+def test_agy_child_drops_secret_override_only_for_agy(harness, monkeypatch):
+    monkeypatch.setenv("LEARN_UK_SECRETS_OK", "1")
+    monkeypatch.setenv("AGY_SYNTHETIC_TOKEN", SENTINEL)
+    payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": 'printf "%s" "$AGY_SYNTHETIC_TOKEN"'}}}
+    if harness != "agy":
+        payload = {"tool_input": {"command": 'printf "%s" "$AGY_SYNTHETIC_TOKEN"'}}
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", harness],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        timeout=10,
+    )
+    assert_decision(harness, result.returncode, result.stdout, result.stderr, harness != "agy")
+    assert SENTINEL not in result.stdout + result.stderr
+
+
 NATIVE_ENV = {"PATH": "/usr/bin:/bin", "ARBITRARY_TOKEN": SENTINEL, "PYTHONDONTWRITEBYTECODE": "1"}
 
 

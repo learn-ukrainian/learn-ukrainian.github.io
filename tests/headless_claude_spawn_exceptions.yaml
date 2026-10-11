@@ -64,6 +64,8 @@ exceptions:
   - {module: scripts/agent_runtime/runner.py, function: "_agy_git_state", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/agent_runtime/runner.py, function: "_spawn_pipe_subprocess", program: "list(cmd)", category: runtime, reason: "the shared runner launches InvocationPlan argv and env; Claude plans come only from runner-tested harnesses"}
   - {module: scripts/agent_runtime/runner.py, function: "_spawn_pty_subprocess", program: "list(cmd)", category: runtime, reason: "the shared runner launches InvocationPlan argv and env; Claude plans come only from runner-tested harnesses (this file's runtime entries)"}
+  # scripts/agent_runtime/secret_print_hook.py
+  - {module: scripts/agent_runtime/secret_print_hook.py, function: "run_guard", program: "str(project_interpreter(ROOT))", category: non-claude, reason: "runs the shared secret-print detector under the project interpreter; not Claude Code"}
   # scripts/agent_runtime/telemetry.py
   - {module: scripts/agent_runtime/telemetry.py, function: "<module>", program: "<reference>", category: non-claude, reason: "keeps a reference to the original Popen to recognise it; spawns nothing"}
   # scripts/agent_runtime/tool_config.py

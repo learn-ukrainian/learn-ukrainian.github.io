@@ -8,14 +8,18 @@ import json
 import os
 import re
 import shlex
+import uuid
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.common.repo_root import main_checkout_root, project_interpreter
+from scripts.common.safe_open import safe_open_below
 
 ROOT = Path(__file__).resolve().parents[2]
 GUARD_NAME = "shell-secret-print-guard"
 ENTRY_POINT = Path("scripts/agent_runtime/secret_print_hook.py")
+GUARD_TIMEOUT_FLOOR = 10
 
 
 @dataclass(frozen=True)
@@ -81,6 +85,9 @@ def _check_file(path: Path, interpreter: Path, script: Path, *, absolute: bool) 
     if not isinstance(hooks, list) or len(hooks) != 1 or not isinstance(hooks[0], dict):
         raise AgyHookConfigError("invalid_command")
     hook = hooks[0]
+    timeout = hook.get("timeout")
+    if type(timeout) is not int or timeout < GUARD_TIMEOUT_FLOOR:
+        raise AgyHookConfigError("invalid_timeout")
     if any(item.get("enabled", True) is not True or item.get("disabled", False) is not False for item in (group, hook)):
         raise AgyHookConfigError("disabled")
     if hook.get("type") != "command" or not isinstance(hook.get("command"), str):
@@ -133,20 +140,57 @@ def guard_registration(*, repo_root: Path = ROOT) -> dict:
 
 def install_worktree_guard(cwd: Path, *, repo_root: Path = ROOT) -> None:
     """Merge only a missing guard into a dispatch workspace; never write homes."""
-    primary = main_checkout_root(cwd)
-    if primary == cwd or not cwd.absolute().is_relative_to(primary / ".worktrees/dispatch"):
+    target = cwd.resolve(strict=True)
+    primary = main_checkout_root(target).resolve(strict=True)
+    dispatch = (primary / ".worktrees/dispatch").resolve(strict=True) if primary != target else primary
+    if ".." in cwd.parts or primary == target or target == dispatch or not target.is_relative_to(dispatch):
         raise AgyHookConfigError("install_requires_dispatch_worktree")
-    directory = cwd / ".agents"
-    path = directory / "hooks.json"
-    if directory.is_symlink() or path.is_symlink():
-        raise AgyHookConfigError("unsafe_install_path")
-    data = _read_config(path) if path.exists() else {}
-    if GUARD_NAME in data:
-        return  # Explicit disabled/invalid user wiring must refuse, not be repaired.
-    data[GUARD_NAME] = guard_registration(repo_root=repo_root)
-    directory.mkdir(exist_ok=True)
-    with path.open("x" if not path.exists() else "w", encoding="utf-8") as handle:
-        handle.write(json.dumps(data, indent=2) + "\n")
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+    directory_fd = os.open(cwd.absolute().anchor, flags)
+    temporary = None
+    try:
+        for component in cwd.absolute().parts[1:]:
+            child_fd = os.open(component, flags, dir_fd=directory_fd)
+            os.close(directory_fd)
+            directory_fd = child_fd
+        with suppress(FileExistsError):
+            os.mkdir(".agents", dir_fd=directory_fd)
+        child_fd = os.open(".agents", flags, dir_fd=directory_fd)
+        os.close(directory_fd)
+        directory_fd = child_fd
+        try:
+            fd = safe_open_below(directory_fd, "hooks.json", os.O_RDONLY)
+        except FileNotFoundError:
+            original = "{}"
+        else:
+            with os.fdopen(fd, "r", encoding="utf-8", newline="") as handle:
+                original = handle.read()
+        try:
+            data = json.loads(original)
+        except (ValueError, UnicodeError):
+            raise AgyHookConfigError("invalid_json") from None
+        if not isinstance(data, dict):
+            raise AgyHookConfigError("invalid_json")
+        if GUARD_NAME in data:
+            return  # Preserve explicitly disabled or invalid user wiring.
+        # Insert only the new member, keeping unrelated hook bytes unchanged.
+        end = original.rindex("}")
+        member = json.dumps({GUARD_NAME: guard_registration(repo_root=repo_root)}, indent=2)[1:-1]
+        payload = original[:end] + ("," if data else "") + member + original[end:]
+        temporary = f".hooks-{uuid.uuid4().hex}.tmp"
+        fd = safe_open_below(directory_fd, temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, "hooks.json", src_dir_fd=directory_fd, dst_dir_fd=directory_fd)
+    except OSError:
+        raise AgyHookConfigError("unsafe_install_path") from None
+    finally:
+        if temporary is not None:
+            with suppress(FileNotFoundError):
+                os.unlink(temporary, dir_fd=directory_fd)
+        os.close(directory_fd)
 
 
 def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, install: bool = False) -> None:

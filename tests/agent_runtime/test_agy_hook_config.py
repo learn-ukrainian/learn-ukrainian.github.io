@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import shlex
 from pathlib import Path
 
@@ -186,7 +187,98 @@ def test_overlay_keeps_existing_driver_hooks():
         assert data[name] == {event: [{"matcher": matcher, "hooks": [hook]}] if matcher else [hook]}
     guard = data[config.GUARD_NAME]["PreToolUse"][0]
     assert guard["matcher"] == "run_command"
-    assert guard["hooks"][0]["timeout"] == 10
+    assert guard["hooks"][0]["timeout"] == config.GUARD_TIMEOUT_FLOOR
+
+
+@pytest.mark.parametrize("timeout", [None, 1, 9, True, "10", 10, 30])
+def test_guard_timeout_floor(tmp_path, timeout):
+    path = tmp_path / ".agents/hooks.json"
+    data = write_guard(path)
+    hook = data[config.GUARD_NAME]["PreToolUse"][0]["hooks"][0]
+    if timeout is None:
+        hook.pop("timeout")
+    else:
+        hook["timeout"] = timeout
+    path.write_text(json.dumps(data))
+    expected = (
+        config.HookConfigResult("PASS", "guard_registered")
+        if timeout in (10, 30)
+        else config.HookConfigResult("REFUSE", "invalid_timeout")
+    )
+    assert config.check_hook_config((path,)) == expected
+
+
+def test_install_refuses_dotdot_escape_without_writing(tmp_path):
+    cwd = dispatch_tree(tmp_path)
+    primary = cwd.parents[3]
+    other = primary / "other-worktree"
+    other.mkdir()
+    (other / ".git").write_bytes((cwd / ".git").read_bytes())
+    hooks = other / ".agents/hooks.json"
+    hooks.parent.mkdir()
+    original = b'{"other-hook": {"Stop": []}}\n'
+    hooks.write_bytes(original)
+    escaped = cwd / "../../../../other-worktree"
+    assert escaped.resolve(strict=True) == other
+    with pytest.raises(config.AgyHookConfigError, match="install_requires_dispatch_worktree"):
+        config.install_worktree_guard(escaped)
+    assert hooks.read_bytes() == original
+    assert list(hooks.parent.iterdir()) == [hooks]
+
+
+@pytest.mark.parametrize("component", ["workspace", "ancestor", "agents", "hooks"])
+def test_install_refuses_each_symlink_component(tmp_path, component):
+    cwd = dispatch_tree(tmp_path)
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    original = b'{"other-hook": {"Stop": []}}\n'
+    external = elsewhere / "hooks.json"
+    external.write_bytes(original)
+    if component == "workspace":
+        alias = cwd.parent / "alias"
+        alias.symlink_to(cwd, target_is_directory=True)
+        cwd = alias
+    elif component == "ancestor":
+        alias = tmp_path / "primary-alias"
+        alias.symlink_to(cwd.parents[3], target_is_directory=True)
+        cwd = alias / cwd.relative_to(cwd.parents[3])
+    elif component == "agents":
+        (cwd / ".agents").symlink_to(elsewhere, target_is_directory=True)
+    else:
+        (cwd / ".agents").mkdir()
+        (cwd / ".agents/hooks.json").symlink_to(external)
+    with pytest.raises(config.AgyHookConfigError, match="unsafe_install_path"):
+        config.install_worktree_guard(cwd)
+    assert external.read_bytes() == original
+
+
+@pytest.mark.parametrize("interrupt", [False, True])
+def test_install_atomic_publication_preserves_unrelated_bytes(tmp_path, monkeypatch, interrupt):
+    cwd = dispatch_tree(tmp_path)
+    hooks = cwd / ".agents/hooks.json"
+    hooks.parent.mkdir()
+    original = b'{\r\n  "user-hook" : { "Stop": [{"command" : "echo user"}] }\r\n}\r\n'
+    hooks.write_bytes(original)
+    replace = os.replace
+
+    def publish(source, destination, **kwargs):
+        assert hooks.read_bytes() == original
+        assert kwargs["src_dir_fd"] == kwargs["dst_dir_fd"]
+        assert len(list(hooks.parent.iterdir())) == 2
+        if interrupt:
+            raise OSError("synthetic interruption before replace")
+        replace(source, destination, **kwargs)
+
+    monkeypatch.setattr(config.os, "replace", publish)
+    if interrupt:
+        with pytest.raises(config.AgyHookConfigError, match="unsafe_install_path"):
+            config.install_worktree_guard(cwd)
+        assert hooks.read_bytes() == original
+    else:
+        config.install_worktree_guard(cwd)
+        assert hooks.read_bytes().startswith(original[: original.rindex(b"}")])
+        assert config.check_hook_config((hooks,)).passed
+    assert list(hooks.parent.iterdir()) == [hooks]
 
 
 def test_gate_and_cli(tmp_path, capsys):
