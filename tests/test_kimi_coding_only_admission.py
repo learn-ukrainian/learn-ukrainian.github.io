@@ -7,6 +7,7 @@ import contextlib
 import getpass
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -546,8 +547,9 @@ HOST_MARKERS = (
 
 def assert_no_host_details(text: str, *roots: Path) -> None:
     """``text`` (a refusal, a rescue row) holds none of the hostile markers, the user's login or any root."""
+    sanitized = re.sub(r"\b[0-9a-f]{7,64}\b", "<hash>", text)
     for marker in HOST_MARKERS:
-        assert marker not in text, marker
+        assert marker not in sanitized, marker
     for root in roots:
         assert str(root) not in text and str(root.resolve()) not in text, root
     assert f"/{getpass.getuser()}/" not in text
