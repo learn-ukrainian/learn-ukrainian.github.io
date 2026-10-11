@@ -1081,6 +1081,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
         pairs_gb1 = extract_movne_word_pairs(1, 1, html_b1)
         self.assertEqual(len(pairs_gb1), 1)
         self.assertEqual(pairs_gb1[0]["verdict_form"], "білет")
+        self.assertEqual(pairs_gb1[0]["questioned_form"], "квиток / талон")
         self.assertEqual(pairs_gb1[0]["verdict_type"], "preferred")
 
         # Glavcom blocker 1: Recommendation in main clause over multi-negation in бо clause:

@@ -360,7 +360,7 @@ def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
     pat_0 = (
         r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,.\n!?]+?)»?\s*"
         r"(?:,\s*а\s+не\s+|\s+(?:і|та|ані)\s+не\s+|,\s*ані\s+)«?([^»,.\n!?]+?)»?"
-        r"(?:\s*(?:—|–|-)?\s*не\s+(?:підходять|вживаються|є\s+[а-яА-ЯєіїґЄІЇҐ]+|нормативн[іа]|можна|кажуть|пишуть))?"
+        r"(?:\s*(?:—|–|-)?\s*не\s+(?:підход(?:ить|ять)|вжива(?:ється|ються)|є\s+[а-яА-ЯєіїґЄІЇҐ]+|нормативн[іа]|можна|кажуть|пишуть))?"
         r"(?:,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^».\n!?]+)»?|(?=[.,;!\n]|$))"
     )
     m0 = re.search(pat_0, clean, re.IGNORECASE)
@@ -399,6 +399,9 @@ def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
             r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо|а\s+не)\b", r, flags=re.IGNORECASE)[0].strip(
                 ' «"“”».,;!?-',
             )
+        if re.search(r"\s+(?:і|та|ані)\s+не\s+", q, re.IGNORECASE):
+            parts = re.split(r"\s+(?:і|та|ані)\s+не\s+", q, flags=re.IGNORECASE)
+            q = " / ".join(p.strip(' «"“”».,;!?-') for p in parts if p.strip(' «"“”».,;!?-'))
         if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
             candidates.append((m2a.start(), q, r))
 
@@ -412,6 +415,9 @@ def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
             r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо|а\s+не)\b", r, flags=re.IGNORECASE)[0].strip(
                 ' «"“”».,;!?-',
             )
+        if re.search(r"\s+(?:і|та|ані)\s+не\s+", q, re.IGNORECASE):
+            parts = re.split(r"\s+(?:і|та|ані)\s+не\s+", q, flags=re.IGNORECASE)
+            q = " / ".join(p.strip(' «"“”».,;!?-') for p in parts if p.strip(' «"“”».,;!?-'))
         if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
             candidates.append((m2b.start(), q, r))
 
