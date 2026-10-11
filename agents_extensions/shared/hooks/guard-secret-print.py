@@ -39,8 +39,15 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # constructing those attribute names with string concatenation still can.
 # Command aliases, functions shadowing commands, external script files, computed
 # paths and interpreter aliases such as renamed binaries remain limits.
-# A text guard cannot be complete. This is the last widening round for this
-# interpreter class; accesses without a listed identifier remain review limits.
+# ENVIRONMENT_API_INVENTORY covers the documented environment mappings,
+# lookup functions, diagnostics and literal child dumpers of the listed runtimes.
+# Python/Lua getenv require a name; invalid no-name calls deny conservatively.
+# Node binding is undocumented; getBuiltinModule('os') alone does not dump the
+# environment. Both are conservative namespace denials required by this policy.
+# Go's os.Environ/syscall.Environ and os/exec are inventoried but go run reads
+# external source files and is out of scope, as are Rust execution and FFI.
+# Other identifier-free accesses are Known limits. A newly identified documented
+# standard-library whole-environment API in a listed runtime belongs in the table.
 # grep -c TOKEN .env and cp .env backup remain conservative denials even though
 # those operations do not print values.
 
@@ -75,7 +82,133 @@ except ImportError as exc:
 
 SEPARATORS = {"&&", "||", ";", "&", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
-ENV_DUMP_COMMANDS = {"env", "printenv", "set", "declare", "export", "typeset"}
+# Language, documented API family, detector kind, spelling after normalization.
+# identifier rows deny mentions except approved literal lookups; literal rows
+# reuse the shell command rules on program strings, never lowercase bare env.
+ENVIRONMENT_API_INVENTORY = (
+    # Python: os.environ, including mapping views/copies (docs.python.org/3/library/os.html).
+    ("python", "os.environ", "identifier", r"(?i:os(?:\.environ|\[environ\])|environ)"),
+    # Python: os.environb is the complete bytes mapping, not an environ prefix.
+    ("python", "os.environb", "identifier", r"(?i:os(?:\.environb|\[environb\])|environb)"),
+    # Python: os.getenv requires a name; aliases retain the getenv identifier.
+    ("python", "os.getenv", "identifier", r"(?i:os\.getenv|getenv)"),
+    # Python: os.getenvb requires a bytes name.
+    ("python", "os.getenvb", "identifier", r"(?i:os\.getenvb|getenvb)"),
+    # Python: posix.environ (docs.python.org/3/library/posix.html), inherited bytes mapping.
+    ("python", "posix.environ", "identifier", r"(?i:posix\.environ)"),
+    # Python: os.popen/system/exec*/spawn*, subprocess run/Popen/call/check_*/get*output.
+    (
+        "python",
+        "os/subprocess child dumpers",
+        "literal",
+        r"(?:popen|Popen|system|exec\w*|spawn\w*|run|call|check_call|check_output|getoutput|getstatusoutput)\(",
+    ),
+    # Node: process.env, dot/bracket access (nodejs.org/api/process.html).
+    ("node", "process.env", "identifier", r"(?i:process(?:\.env|\[env\]))"),
+    # Node: require('node:process').env/report and static import/destructuring of env.
+    (
+        "node",
+        "process module env/report",
+        "identifier",
+        r"(?:require|import)\((?:node:)?process\)(?:\.(?:env|report)|\[(?:env|report)\])",
+    ),
+    # Node: importing the complete env object transfers the mapping, so deny aliases.
+    (
+        "node",
+        "process module env imports",
+        "identifier",
+        r"(?:import|const|let|var)\x00?\{[^}]*\benv\b[^}]*\}(?:=\x00?require\((?:node:)?process\)|\x00?from\x00?(?:node:)?process)",
+    ),
+    # Node: process.report contains environmentVariables, even through a report alias.
+    ("node", "process.report", "identifier", r"(?i:process(?:\.report|\[report\]))"),
+    # Node: report.getReport includes environment values unless explicitly excluded.
+    ("node", "report.getReport", "identifier", r"(?i:getreport)"),
+    # Node: report.writeReport writes that report, possibly to a visible descriptor.
+    ("node", "report.writeReport", "identifier", r"(?i:writereport)"),
+    # Node: process.binding is an undocumented internal namespace, conservatively denied.
+    ("node", "process.binding", "identifier", r"(?i:process(?:\.binding|\[binding\]))"),
+    # Node: process.getBuiltinModule loads built-ins, conservatively denied as a namespace.
+    ("node", "process.getBuiltinModule", "identifier", r"(?i:process(?:\.getbuiltinmodule|\[getbuiltinmodule\]))"),
+    # Node: child_process exec/execFile/spawn/fork and synchronous variants inherit env.
+    ("node", "child_process dumpers", "literal", r"(?:exec|execFile|spawn|fork)(?:Sync)?\("),
+    # Deno: env.toObject/get (docs.deno.com/api/deno/~/Deno.Env).
+    ("deno", "Deno.env", "identifier", r"(?i:deno(?:\.env|\[env\]))"),
+    # Deno: Command and legacy run can execute literal environment dumpers.
+    ("deno", "Deno.Command/run dumpers", "literal", r"(?:Command|run)\("),
+    # Bun: Bun.env, process.env and import.meta.env (bun.sh/docs/runtime/environment-variables).
+    ("bun", "Bun.env/import.meta.env", "identifier", r"(?i:bun(?:\.env|\[env\])|import\.meta\.env)"),
+    # Bun: spawn/spawnSync and the shell $ tagged template inherit env.
+    ("bun", "Bun.spawn/shell dumpers", "literal", r"spawn(?:Sync)?\(|\$`"),
+    # Ruby: ENV and every ENV method such as to_h/to_a/each (docs.ruby-lang.org/en/master/ENV.html).
+    ("ruby", "ENV", "identifier", r"ENV"),
+    # Ruby: Kernel system/exec/spawn/backticks, IO.popen and Open3 capture*/popen*/pipeline*.
+    ("ruby", "Kernel/IO/Open3 dumpers", "literal", r"(?:system|exec|spawn|popen|capture\w*|popen\w*|pipeline\w*)\("),
+    # Ruby: %x command literals (docs.ruby-lang.org/en/master/syntax/literals_rdoc.html).
+    (
+        "ruby",
+        "%x command literals",
+        "command_literal",
+        r"%x\s*(?:\((?P<paren>[^)]*)\)|\{(?P<brace>[^}]*)\}|\[(?P<bracket>[^]]*)\]|<(?P<angle>[^>]*)>|(?P<delimiter>[^\w\s])(?P<value>.*?)(?P=delimiter))",
+    ),
+    # Perl: %ENV, qualified hashes and $ENV{NAME} (perldoc.perl.org/variables/%25ENV).
+    ("perl", "%ENV/$ENV", "identifier", r"(?i:%(?:main::|::)?env|\$(?:main::|::)?env)"),
+    # Perl: system/exec/readpipe/backticks/open pipes (perldoc.perl.org/perlfunc).
+    ("perl", "Perl child dumpers", "literal", r"(?:system|exec|readpipe|open)\("),
+    # Perl: qx command literals (perldoc.perl.org/perlop, Quote-Like Operators).
+    (
+        "perl",
+        "qx command literals",
+        "command_literal",
+        r"qx\s*(?:\((?P<paren>[^)]*)\)|\{(?P<brace>[^}]*)\}|\[(?P<bracket>[^]]*)\]|<(?P<angle>[^>]*)>|(?P<delimiter>[^\w\s])(?P<value>.*?)(?P=delimiter))",
+    ),
+    # PHP: $_ENV (php.net/manual/en/reserved.variables.environment.php).
+    ("php", "$_ENV", "identifier", r"(?i:\$_env)"),
+    # PHP: $_SERVER (php.net/manual/en/reserved.variables.server.php), includes CLI env.
+    ("php", "$_SERVER", "identifier", r"(?i:\$_server)"),
+    # PHP: getenv() returns the whole env; named getenv is handled by the Python row.
+    ("php", "getenv", "shared_identifier", "getenv"),
+    # PHP: apache_getenv is a named Apache subprocess-env lookup, never a bulk API.
+    ("php", "apache_getenv", "identifier", r"(?i:apache_getenv)"),
+    # PHP: phpinfo/INFO_ENVIRONMENT (php.net/manual/en/function.phpinfo.php).
+    ("php", "phpinfo", "identifier", r"(?i:phpinfo)"),
+    # PHP: get_defined_vars may include loaded superglobals in the current scope.
+    ("php", "get_defined_vars", "identifier", r"(?i:get_defined_vars)"),
+    # PHP: $GLOBALS includes superglobals (php.net/manual/en/reserved.variables.globals.php).
+    ("php", "$GLOBALS", "identifier", r"(?i:\$globals)"),
+    # PHP: exec/system/passthru/shell_exec/popen/proc_open/backticks inherit env.
+    ("php", "PHP child dumpers", "literal", r"(?:exec|system|passthru|shell_exec|popen|proc_open)\("),
+    # Lua: os.getenv(name) only; no standard bulk accessor (lua.org/manual/5.4/manual.html).
+    ("lua", "os.getenv", "shared_identifier", "getenv"),
+    # Lua: os.execute/io.popen may run environment dumpers.
+    ("lua", "os.execute/io.popen dumpers", "literal", r"(?:execute|popen)\("),
+    # Lua: long bracket strings in child commands (lua.org/manual/5.4/manual.html#3.1).
+    ("lua", "long bracket child literals", "command_literal", r"\[(?P<equals>=*)\[(?P<value>.*?)\](?P=equals)\]"),
+    # Awk: ENVIRON mapping (GNU gawk manual, Auto-set Variables).
+    ("awk", "ENVIRON", "identifier", r"ENVIRON"),
+    # Shell: printenv [NAME] (GNU coreutils manual, printenv invocation).
+    ("shell", "printenv", "command", "printenv"),
+    # Shell: env without a utility (GNU coreutils manual, env invocation).
+    ("shell", "env", "command", "env"),
+    # Shell: set without arguments (GNU Bash manual, Bourne Shell Builtins).
+    ("shell", "set", "command", "set"),
+    # Shell: export -p (GNU Bash manual, Bourne Shell Builtins).
+    ("shell", "export -p", "command", "export"),
+    # Shell: declare -p (GNU Bash manual, Bash Builtins).
+    ("shell", "declare -p", "command", "declare"),
+    # Shell: typeset -p, synonym of declare (GNU Bash manual, Bash Builtins).
+    ("shell", "typeset -p", "command", "typeset"),
+    # Shell: compgen -e enumerates names only; conservative requested inventory denial.
+    ("shell", "compgen -e", "command", "compgen"),
+    # Shell/Linux: strings or any reader of /proc/*/environ uses the sensitive-file rule.
+    ("shell", "/proc/*/environ", "file", "/proc/*/environ"),
+    # Rust: std::env is reserved as a language-object identifier; execution is not modeled.
+    ("rust", "std::env", "identifier", r"std::env"),
+    # Go: os.Environ/syscall.Environ and os/exec (pkg.go.dev/os); go run is out of scope.
+    ("go", "os.Environ/syscall.Environ/os/exec", "out_of_scope", "go run"),
+    # Compatibility: previously denied identifier aliases, including foreign runtimes.
+    ("compatibility", "getenvironment/printenv/os.env", "identifier", r"(?i:getenvironment|printenv|os\.env)"),
+)
+ENV_DUMP_COMMANDS = {spelling for _, _, kind, spelling in ENVIRONMENT_API_INVENTORY if kind == "command"}
 GREP_COMMANDS = {"grep", "rg", "ugrep"}
 SHELL_COMMANDS = {"bash", "sh", "zsh", "dash", "ksh", "eval", "source", "."}
 NON_PRINTING_COMMANDS = {"test", "[", "stat", "ls", "true", "false", ":"}
@@ -212,6 +345,11 @@ def _separate_program_flag_quotes(command: str) -> str:
                 out.append(flag[0].rstrip("=") + " ")
                 index += flag.end()
                 continue
+        if quote == char and index + 1 < len(command) and command[index + 1] == char:
+            # Adjacent fragments of the same shell quote are one word. Preserve
+            # their join before the non-POSIX lexer can invent an argv boundary.
+            index += 2
+            continue
         if char in {"'", '"'} and (not quote or quote == char):
             quote = "" if quote else char
         out.append(char)
@@ -723,7 +861,12 @@ def _env_source_reason(segment: list[str]) -> str | None:
     if cmd not in ENV_DUMP_COMMANDS:
         return None
     args = _without_redirects(raw_args)
-    if cmd == "printenv":
+    if cmd == "compgen":
+        if not _has_short_flag(args, "e") and not any(
+            args[index : index + 2] == ["-A", "export"] for index in range(len(args))
+        ):
+            return None
+    elif cmd == "printenv":
         names = [arg for arg in args if not arg.startswith("-")]
         if names and not any(_is_secret_var_name(name) for name in names):
             return None
@@ -777,16 +920,32 @@ _PROGRAM_STRINGS = re.compile(
     re.DOTALL,
 )
 _ENV_IDENTIFIERS = re.compile(
-    r"os(?:\.environ|\[environ\]|\.getenv)|process(?:\.env|\[env\])|"
-    r"deno\.env|bun\.env|%(?:main::|::)?env|\$env|"
-    r"environ|getenvironment|getenv|printenv|env"
+    "(?:"
+    + "|".join(spelling for _, _, kind, spelling in ENVIRONMENT_API_INVENTORY if kind == "identifier")
+    + r")(?![\w$])"
 )
 _KEYED_ENV = re.compile(
-    r"(?:os(?:\.environ|\[environ\])(?:\[(?P<py_index>\w+)\]|\.get\((?P<py_get>\w+)\))|"
-    r"os\.getenv\((?P<py_env>\w+)\)|"
-    r"process(?:\.env|\[env\])(?:\.(?P<js_property>[A-Za-z_$][\w$]*)|\[(?P<js_index>\w+)\])|"
+    r"(?:(?:os(?:\.environb?|\[environb?\])|posix\.environ)"
+    r"(?:\[(?P<py_index>\w+)\]|\.get\((?P<py_get>\w+)\))|"
+    r"os\.getenvb?\((?P<py_env>\w+)\)|"
+    r"(?:process|Bun|import\.meta|require\((?:node:)?process\))(?:\.env|\[env\])"
+    r"(?:\.(?P<js_property>[A-Za-z_$][\w$]*)|\[(?P<js_index>\w+)\])|"
+    r"Deno(?:\.env|\[env\])\.get\((?P<deno_key>\w+)\)|"
     r"ENV(?:\[(?P<rb_index>:?\w+)\]|\.fetch\((?P<rb_fetch>:?\w+)\))|"
-    r"\$ENV\{(?P<perl_key>\w+)\})(?![\w$]|\(|\.\()"
+    r"\$(?:main::|::)?ENV\{(?P<perl_key>\w+)\}|"
+    r"\$_(?:ENV|SERVER)\[(?P<php_key>\w+)\]|"
+    r"(?:getenv|apache_getenv)\((?P<php_get>\w+)\)|"
+    r"ENVIRON\[(?P<awk_key>\w+)\])(?![\w$]|\(|\.\()"
+)
+_CHILD_PROCESS_APIS = tuple(
+    (language, re.compile(r"(?<![\w$])(?:" + spelling + ")"))
+    for language, _, kind, spelling in ENVIRONMENT_API_INVENTORY
+    if kind == "literal"
+)
+_CHILD_COMMAND_LITERALS = tuple(
+    (language, re.compile(spelling, re.DOTALL))
+    for language, _, kind, spelling in ENVIRONMENT_API_INVENTORY
+    if kind == "command_literal"
 )
 
 
@@ -804,30 +963,85 @@ def _normalize_program(program: str) -> tuple[str, list[bool], set[int], set[int
     literals: list[bool] = []
     boundaries: set[int] = set()
     templates: set[int] = set()
+    pending_space = False
     for piece, literal, template in pieces:
         if template:
             templates.add(len(text))
         for char in piece:
             if char.isspace():
                 boundaries.add(len(text))
+                pending_space = True
             elif char not in "\"'`":
+                # Retain a barrier between distinct words, but still compact
+                # member syntax and adjacent quoted fragments such as "HO" "ME".
+                if (
+                    pending_space
+                    and text
+                    and text[-1] not in ".:[{("
+                    and (char.isalnum() or char in "_$")
+                    and not (literal and literals[-1])
+                ):
+                    text.append("\0")
+                    literals.append(False)
+                pending_space = False
                 text.append(char)
                 literals.append(literal)
     return "".join(text), literals, boundaries, templates
 
 
 def _is_interpreter_command(cmd: str) -> bool:
-    return cmd.startswith("python") or cmd in {"node", "nodejs", "perl", "ruby", "php", "lua", "deno", "bun"}
+    return cmd.startswith("python") or cmd in {
+        "node",
+        "nodejs",
+        "perl",
+        "ruby",
+        "php",
+        "lua",
+        "deno",
+        "bun",
+        "awk",
+        "gawk",
+        "mawk",
+        "nawk",
+    }
 
 
 def _program_reason(cmd: str, program: str) -> str | None:
     if not _is_interpreter_command(cmd):
         return None
     text, literals, boundaries, templates = _normalize_program(program)
-    # Fold ASCII identifiers only, preserving offsets through non-ASCII text.
-    identifiers = text.translate(str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"))
+    # Literal dumpers count in child-process calls or shell-executing backticks,
+    # not in printed text, paths or ordinary flag values. Ruby/Perl also accept
+    # unparenthesized process calls, so inspect their original word boundaries.
+    runtime = "python" if cmd.startswith("python") else "node" if cmd == "nodejs" else cmd
+    child_call = (
+        any(
+            pattern.search(text)
+            for language, pattern in _CHILD_PROCESS_APIS
+            if language == runtime or (runtime in {"bun", "deno"} and language == "node")
+        )
+        or (cmd in {"ruby", "perl"} and re.search(r"\b(?:system|exec|spawn|open|readpipe)\s+", program))
+        or (cmd == "bun" and re.search(r"\$\s*`", program))
+    )
+    for literal in _PROGRAM_STRINGS.finditer(program):
+        executes = child_call or (literal["quote"] == "`" and cmd in {"ruby", "perl", "php"})
+        if executes and any(
+            _env_source_reason(segment) for pipeline in _pipelines(literal["value"]) for segment in pipeline
+        ):
+            return "inline program contains a literal environment dumper"
+    for language, pattern in _CHILD_COMMAND_LITERALS:
+        if cmd != language or (language == "lua" and not child_call):
+            continue
+        for literal in pattern.finditer(program):
+            body = next(
+                value
+                for key, value in literal.groupdict().items()
+                if key not in {"delimiter", "equals"} and value is not None
+            )
+            if any(_env_source_reason(segment) for pipeline in _pipelines(body) for segment in pipeline):
+                return "inline program contains a literal environment dumper"
     cursor = 0
-    for mention in _ENV_IDENTIFIERS.finditer(identifiers):
+    for mention in _ENV_IDENTIFIERS.finditer(text):
         start, end = mention.span()
         if start < cursor:
             continue
@@ -838,6 +1052,8 @@ def _program_reason(cmd: str, program: str) -> str | None:
         access = _KEYED_ENV.match(text, start)
         if access and access.end() not in templates:
             kind, name = next((kind, name) for kind, name in access.groupdict().items() if name is not None)
+            if kind in {"php_key", "php_get"} and cmd != "php":
+                return "inline program lookup does not belong to this runtime"
             key_start, key_end = access.span(kind)
             literal = kind in {"js_property", "perl_key"} or name.startswith(":") or all(literals[key_start:key_end])
             if literal and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name.lstrip(":")):

@@ -1304,3 +1304,215 @@ def test_round_five_glued_options_are_opaque(consumer, flag, program, code):
     result = _subprocess_guard(f"{consumer} {flag}{shlex.quote(program)}")
     assert SENTINEL not in result.stdout + result.stderr
     assert result.returncode == code
+
+
+# Independent commands exercise the documented API families, not generated regexes.
+ROUND_SIX_INVENTORY = [
+    ("python-environ", "python -c 'import os; print(os.environ)'"),
+    ("python-environb", "python -c 'import os; print(os.environb)'"),
+    ("python-getenv", "python -c 'import os; print(os.getenv())'"),
+    ("python-getenvb", "python -c 'import os; print(os.getenvb())'"),
+    ("python-posix", "python -c 'import posix; print(posix.environ)'"),
+    ("python-child", "python -c 'import os; print(os.popen(\"env\").read())'"),
+    ("node-env", "node -e 'console.log(process.env)'"),
+    ("node-module", "node -e 'console.log(require(\"node:process\").env)'"),
+    ("node-import", "node -e 'import {env} from \"node:process\"; console.log(env)'"),
+    ("node-report", "node -e 'console.log(process.report.getReport())'"),
+    ("node-getReport", "node -e 'const {report} = require(\"node:process\"); console.log(report.getReport())'"),
+    ("node-writeReport", "node -e 'process.report.writeReport()'"),
+    ("node-binding", "node -e 'console.log(process.binding(\"os\"))'"),
+    ("node-builtin", "node -e 'console.log(process.getBuiltinModule(\"os\"))'"),
+    ("node-child", 'node -e \'console.log(require("child_process").execSync("env"))\''),
+    ("deno-env", "deno eval 'console.log(Deno.env.toObject())'"),
+    ("deno-child", "deno eval 'console.log(new Deno.Command(\"env\").outputSync())'"),
+    ("bun-env", "bun -e 'console.log(Bun.env)'"),
+    ("bun-import-meta", "bun -e 'console.log(import.meta.env)'"),
+    ("bun-child", "bun -e 'console.log(Bun.spawnSync([\"env\"]))'"),
+    ("ruby-env", "ruby -e 'puts ENV.to_h'"),
+    ("ruby-command-literal", "ruby -e 'puts %x{env}'"),
+    ("ruby-child", "ruby -e 'puts IO.popen(\"env\").read'"),
+    ("perl-env", "perl -e 'print %ENV'"),
+    ("perl-command-literal", "perl -e 'print qx/env/'"),
+    ("perl-child", "perl -e 'print `env`'"),
+    ("php-env", "php -r 'print_r($_ENV);'"),
+    ("php-server", "php -r 'print_r($_SERVER);'"),
+    ("php-getenv", "php -r 'print_r(getenv());'"),
+    ("php-apache", "php -r 'print_r(apache_getenv());'"),
+    ("php-info", "php -r 'phpinfo();'"),
+    ("php-defined", "php -r 'print_r(get_defined_vars());'"),
+    ("php-globals", "php -r 'print_r($GLOBALS);'"),
+    ("php-child", "php -r 'echo shell_exec(\"env\");'"),
+    ("lua-getenv", "lua -e 'print(os.getenv())'"),
+    ("lua-long-literal", "lua -e 'print(io.popen([=[env]=]):read())'"),
+    ("lua-child", 'lua -e \'print(io.popen("env"):read("*a"))\''),
+    ("awk-environ", "awk 'BEGIN{for(k in ENVIRON) print ENVIRON[k]}'"),
+    ("shell-printenv", "printenv"),
+    ("shell-env", "env"),
+    ("shell-set", "set"),
+    ("shell-export", "export -p"),
+    ("shell-declare", "declare -p"),
+    ("shell-typeset", "typeset -p"),
+    ("shell-compgen", "compgen -e"),
+    ("shell-proc", "strings /proc/self/environ"),
+    ("rust-std-env", "node -e 'std::env::vars()'"),
+    ("compatibility-os-env", "python -c 'print(os.env)'"),
+]
+
+
+@pytest.mark.parametrize("api,command", ROUND_SIX_INVENTORY, ids=[row[0] for row in ROUND_SIX_INVENTORY])
+def test_round_six_inventory_denied(api, command):
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout
+    assert SENTINEL not in result.stderr
+    assert result.returncode == 2
+
+
+ROUND_SIX_KEYED = [
+    ("python-environ", "python", 'print(os.environ["{name}"])'),
+    ("python-environb", "python", 'print(os.environb[b"{name}"])'),
+    ("python-getenv", "python", 'print(os.getenv("{name}"))'),
+    ("python-getenvb", "python", 'print(os.getenvb(b"{name}"))'),
+    ("python-posix", "python", 'print(posix.environ[b"{name}"])'),
+    ("node-env", "node", 'console.log(process.env["{name}"])'),
+    ("node-module", "node", 'console.log(require("node:process").env["{name}"])'),
+    ("deno-env", "deno", 'console.log(Deno.env.get("{name}"))'),
+    ("bun-env", "bun", 'console.log(Bun.env["{name}"])'),
+    ("bun-import-meta", "bun", 'console.log(import.meta.env["{name}"])'),
+    ("ruby-env", "ruby", 'puts ENV["{name}"]'),
+    ("perl-env", "perl", "say $ENV{{{name}}}"),
+    ("php-env", "php", 'echo $_ENV["{name}"];'),
+    ("php-server", "php", 'echo $_SERVER["{name}"];'),
+    ("php-getenv", "php", 'echo getenv("{name}");'),
+    ("php-apache", "php", 'echo apache_getenv("{name}");'),
+    ("lua-getenv", "lua", 'print(os.getenv("{name}"))'),
+    ("awk-environ", "awk", 'BEGIN{{print ENVIRON["{name}"]}}'),
+]
+
+
+@pytest.mark.parametrize("api,consumer,program", ROUND_SIX_KEYED, ids=[row[0] for row in ROUND_SIX_KEYED])
+@pytest.mark.parametrize("name,code", [("HOME", 0), ("ARBITRARY_TOKEN", 2)])
+@pytest.mark.parametrize("input_kind", ["argv", "heredoc"])
+def test_round_six_keyed_literal_policy(api, consumer, program, name, code, input_kind):
+    program = program.format(name=name)
+    command = (
+        f"{consumer} --unknown {shlex.quote(program)}"
+        if input_kind == "argv"
+        else f"{consumer} <<'EOF'\n{program}\nEOF"
+    )
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == code
+
+
+ROUND_SIX_NEIGHBORS = [
+    "python src/env/app.py",
+    "node app.js --env production",
+    "node scripts/env.js",
+    "deno run --allow-env main.ts",
+    "python -c 'print(1)'",
+    "python -c 'import os; print(os.environ.get(\"HOME\"))'",
+    "node -e 'console.log(1)'",
+    "ruby -e 'puts 1'",
+    "python -m venv .venv",
+    "git diff -- environment.yml",
+    "python manage.py runserver --environment prod",
+    "node -e 'let env = environment = myenviron = 1; console.log(env)'",
+    "compgen -c",
+    "printenv HOME",
+    "declare -p HOME",
+    "export -p HOME",
+    "typeset -p HOME",
+    "go run env.go",
+    "node app.js --env env",
+    "node -e 'console.log(\"env\")'",
+    "python -c 'print(\"env\")'",
+    "node -e 'console.log(`env`)'",
+    "python -c 'print(open(\"env\").read())'",
+    "lua -e 'print([[env]])'",
+]
+
+
+@pytest.mark.parametrize("command", ROUND_SIX_NEIGHBORS)
+def test_round_six_false_positive_neighbors_allowed(command):
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "python -c 'import subprocess; subprocess.run([\"env\"])'",
+        "python -c 'from subprocess import check_output; print(check_output([\"/usr/bin/env\"]))'",
+        "python -c 'print(os.system(\"env\"))'",
+        'python -c \'os.execvp("env", ["env"])\'',
+        'python -c \'os.spawnlp(0, "env", "env")\'',
+        'node -e \'require("child_process").spawn("env")\'',
+        'node -e \'require("child_process").execFileSync("/usr/bin/env")\'',
+        "bun -e 'console.log($`env`)'",
+        "ruby -e 'puts Open3.capture3(\"env\")'",
+        "ruby -e 'system \"env\"'",
+        "ruby -e 'puts `env`'",
+        "perl -e 'system \"env\"'",
+        "perl -e 'print readpipe(\"env\")'",
+        "php -r 'passthru(\"env\");'",
+        "php -r 'echo `env`;'",
+        "lua -e 'os.execute(\"env\")'",
+        "python -c 'os.popen(\"true; env\").read()'",
+        "node -e 'const {env} = require(\"node:process\"); console.log(env)'",
+        "ruby -e 'puts %x(env)'",
+        "ruby -e 'puts %x[env]'",
+        "ruby -e 'puts %x<env>'",
+        "ruby -e 'puts %x!env!'",
+        "perl -e 'print qx{env}'",
+        "perl -e 'print qx(env)'",
+        "perl -e 'print qx[env]'",
+        "perl -e 'print qx<env>'",
+        "lua -e 'os.execute([[env]])'",
+        'bun -e \'require("child_process").execSync("env")\'',
+        'deno eval \'import {execSync} from "node:child_process"; console.log(execSync("env"))\'',
+    ],
+)
+def test_round_six_child_process_api_variants_denied(command):
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize(
+    "program",
+    [
+        "os.environb.get(k)",
+        'os.getenvb(b"HO" + b"ME")',
+        "posix.environ[k]",
+        "Deno.env.get(k)",
+        "Bun.env[k]",
+        '$_ENV["HOME"]()',
+        "$_SERVER[$k]",
+        "getenv($k)",
+        "apache_getenv($k)",
+        'getenv("HOME", true)',
+        'apache_getenv("HOME", true)',
+        "ENVIRON[k]",
+    ],
+)
+def test_round_six_nonliteral_lookup_denied(program):
+    result = _subprocess_guard(f"php -r {shlex.quote(program)}")
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize(
+    "command,code",
+    [
+        ("python -c 'print(os.en''vironb)'", 2),
+        ('node -e "console.log(process.en""v)"', 2),
+        ("node -e 'console.log(process.en' 'v)'", 0),
+        ("python -c 'print(os.en' 'vironb)'", 0),
+        ("node --unknown 'ENV' 'HOME'", 2),
+    ],
+)
+def test_round_six_shell_fragment_boundaries(command, code):
+    result = _subprocess_guard(command)
+    assert SENTINEL not in result.stdout + result.stderr
+    assert result.returncode == code
