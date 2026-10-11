@@ -78,6 +78,7 @@ def test_section_citations_used_by_scripts_still_resolve() -> None:
     assert "## §7a. Post-merge cleanup is mandatory" in references
 
 
+@pytest.mark.repo_wide
 @pytest.mark.parametrize(
     ("reference", "heading", "instruction"),
     [
@@ -91,14 +92,16 @@ def test_section_citations_used_by_scripts_still_resolve() -> None:
     ],
 )
 def test_measured_behaviors_bind_once_at_their_loop_step(
-    reference: str, heading: str, instruction: str,
+    reference: str,
+    heading: str,
+    instruction: str,
 ) -> None:
     bodies = {
         path.name: " ".join(path.read_text(encoding="utf-8").split())
         for path in (CORE, *sorted((SKILL_DIR / "references").glob("*.md")))
     }
     body = (SKILL_DIR / "references" / reference).read_text(encoding="utf-8")
-    section = body[body.index(heading):].split("\n## ", 1)[0]
+    section = body[body.index(heading) :].split("\n## ", 1)[0]
     assert instruction in " ".join(section.split())
     assert " ".join(bodies.values()).count(instruction) == 1
 
@@ -108,11 +111,18 @@ def test_friction_report_and_directive_reconciliation_keep_safety_fields() -> No
     for required in (
         "After checking the lane's actual work",
         "existing owner's public issue",
-        "affected outcome", "sanitized evidence", "known or unknown cause",
-        "measured waste only when measured", "working path", "smallest correction",
-        "accountable owner", "falsifiable DoD", "Write NONE only after that check",
+        "affected outcome",
+        "sanitized evidence",
+        "known or unknown cause",
+        "measured waste only when measured",
+        "working path",
+        "smallest correction",
+        "accountable owner",
+        "falsifiable DoD",
+        "Write NONE only after that check",
         "Keep sensitive evidence in private operational evidence",
-        "Do not create a channel", "do not post one report per message",
+        "Do not create a channel",
+        "do not post one report per message",
         "an explicit operator pause requires explicit operator release",
     ):
         assert required in body, required
@@ -121,16 +131,30 @@ def test_friction_report_and_directive_reconciliation_keep_safety_fields() -> No
 def test_prompt_dispatch_and_scratch_contracts_preserve_failure_gates() -> None:
     body = " ".join((SKILL_DIR / "references/routing-and-dispatch.md").read_text().split())
     for required in (
-        "checklist verdict", "finding reconciliation", "frozen prompt SHA-256",
-        "fresh critique of that revision before dispatch", "After two FAIL rounds",
+        "checklist verdict",
+        "finding reconciliation",
+        "frozen prompt SHA-256",
+        "fresh critique of that revision before dispatch",
+        "After two FAIL rounds",
         "Keep the denominator and every valid gate",
-        "owned paths against the dispatch target", "through the §4a inbox drain",
-        "unknown queue state remain unresolved", "empty projection",
-        "managed scratch directory outside the worktree", "`$TMPDIR`",
-        "empty `git status --porcelain`", "`untracked_inputs`", "untracked or ignored",
-        "`*.py`", "`*.pth`", "`pytest.ini`", "`tox.ini`", "`setup.cfg`",
-        "`pyproject.toml`", "Tracked dirt is `dirty_tree`",
-        "an explicit operator pause", "seat's handoff signal",
+        "owned paths against the dispatch target",
+        "through the §4a inbox drain",
+        "unknown queue state remain unresolved",
+        "empty projection",
+        "managed scratch directory outside the worktree",
+        "`$TMPDIR`",
+        "empty `git status --porcelain`",
+        "`untracked_inputs`",
+        "untracked or ignored",
+        "`*.py`",
+        "`*.pth`",
+        "`pytest.ini`",
+        "`tox.ini`",
+        "`setup.cfg`",
+        "`pyproject.toml`",
+        "Tracked dirt is `dirty_tree`",
+        "an explicit operator pause",
+        "seat's handoff signal",
     ):
         assert required in body, required
 
@@ -138,7 +162,8 @@ def test_prompt_dispatch_and_scratch_contracts_preserve_failure_gates() -> None:
 def test_review_labels_and_pre_enqueue_drain_preserve_existing_execution_steps() -> None:
     body = " ".join((SKILL_DIR / "references/review-merge-cleanup.md").read_text().split())
     for required in (
-        "unverified execution behavior", "[model-deltas](model-deltas.md)",
+        "unverified execution behavior",
+        "[model-deltas](model-deltas.md)",
         "do not request an executing review solely because a path is integration code",
         "Never record an APPROVE over a pipeline `CHANGES_REQUESTED`",
         "fresh exact-head review after any content change",
@@ -150,15 +175,21 @@ def test_review_labels_and_pre_enqueue_drain_preserve_existing_execution_steps()
     assert "execution-dependent reviews to Opus 5.5 or Sol 6.1" in model_deltas
 
 
+@pytest.mark.repo_wide
 def test_reduced_packet_keeps_nine_behavior_denominator_and_owned_residuals() -> None:
     handoff = " ".join((SKILL_DIR / "references/handoff.md").read_text().split())
     residuals = handoff.split("## Scoped residuals from #10439", 1)[1].split("## Fleet-comms", 1)[0]
     for required in (
-        "denominator remains nine behaviors", "Behaviors 2-8 and the scratch half of 9",
-        "Behavior 1", "Owner: infra/harness", "`fleet-comms-coordination.md`",
-        "seat-onboarding live-delivery paragraph", "in their own change",
+        "denominator remains nine behaviors",
+        "Behaviors 2-8 and the scratch half of 9",
+        "Behavior 1",
+        "Owner: infra/harness",
+        "`fleet-comms-coordination.md`",
+        "seat-onboarding live-delivery paragraph",
+        "in their own change",
         "legacy counts stay exactly as they are",
-        "Behavior 9's executing-review-at-first-push half", "Owner: harness lane",
+        "Behavior 9's executing-review-at-first-push half",
+        "Owner: harness lane",
         "Reopen when the review-route policy names it",
     ):
         assert required in residuals, required
