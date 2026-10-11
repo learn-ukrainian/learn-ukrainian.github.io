@@ -544,16 +544,28 @@ def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> 
         ("gemini-9.9-pro-preview", "For Gemini Pro, use `--model gemini-3.1-pro-high`."),
         (
             "gemini-9.9-flash-preview",
-            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_MODEL_SLUGS) + ".",
+            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_GENERAL_MODEL_SLUGS) + ".",
         ),
         (
             "unknown-local-model",
-            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_MODEL_SLUGS) + ".",
+            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_GENERAL_MODEL_SLUGS) + ".",
         ),
     ],
 )
 def test_unknown_model_suggestion(model: str, expected: str) -> None:
     assert agy_module.unknown_model_suggestion(model) == expected
+
+
+def test_unknown_model_suggestion_preserves_general_ids_when_restricted_slugs_are_added(monkeypatch) -> None:
+    expected = (
+        "Accepted AGY model ids: `gemini-3.8-flash-high`, `gemini-3.8-flash-medium`, "
+        "`gemini-3.8-flash-low`, `gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
+    )
+    general_slugs = agy_module._AGY_GENERAL_MODEL_SLUGS
+    restricted_slugs = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
+    for slugs in (general_slugs, (*general_slugs, *restricted_slugs)):
+        monkeypatch.setattr(agy_module, "_AGY_MODEL_SLUGS", slugs)
+        assert agy_module.unknown_model_suggestion("unknown-local-model") == expected
 
 
 def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:

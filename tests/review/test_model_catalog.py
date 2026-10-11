@@ -287,7 +287,7 @@ def test_resource_policy_fallbacks_equal_approved_overlay():
 
 def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
     assert hashlib.sha256(GEMINI_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "4b16188c215c068f232d4c11ddc661c6dc67788a762c8d4b5c691aad562a2ffe"
+        "94cf67d477b22eac788c43a0306218e6017550edc2a6ac35c504da0b52185d25"
     )
     assert set(GEMINI_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
     assert set(GEMINI_OVERLAY["inputs"]) == {"roles", "reviewer"}
@@ -400,13 +400,13 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
-    "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
+    "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
     "SPEC.md": "958f43d7368d0552cbf1b5706df35da56cdc9408e4834e05bb0911754ae58455",
-    "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
+    "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "7284c77ab0b02c2de844e407e37ff3eb55c56ed412521c98212d0d7309e406ba",
-    "no-cli/baseline.json.gz": "c9be87f384a751f5c228e20fa10a283e2d4e495959d8fd82535f85217f298d31",
+    "no-cli/SHA256SUMS": "7e5b78a91bd237a012805983da7d40f854c9802eae969d0f5e4fabcc0d2afea8",
+    "no-cli/baseline.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
     "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",

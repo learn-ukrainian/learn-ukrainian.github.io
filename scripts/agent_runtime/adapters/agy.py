@@ -742,12 +742,15 @@ _AGY_PRINT_TIMEOUT = "120m"
 #
 # Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
 # Older Flash, Claude thinking and GPT-OSS selections are refused by the catalog.
-_AGY_MODEL_SLUGS: tuple[str, ...] = (
+_AGY_GENERAL_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.8-flash-high",
     "gemini-3.8-flash-medium",
     "gemini-3.8-flash-low",
     "gemini-3.1-pro-high",
     "gemini-3.1-pro-low",
+)
+_AGY_MODEL_SLUGS: tuple[str, ...] = (
+    *_AGY_GENERAL_MODEL_SLUGS,
     "claude-sonnet-5-5-high",
     "claude-opus-5-5-high",
 )
@@ -822,7 +825,7 @@ def unknown_model_suggestion(model: str) -> str:
     """Return safe guidance for an unknown AGY model identifier."""
     if "pro" in model.casefold():
         return "For Gemini Pro, use `--model gemini-3.1-pro-high`."
-    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_MODEL_SLUGS)
+    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_GENERAL_MODEL_SLUGS)
     return f"Accepted AGY model ids: {accepted_ids}."
 
 
