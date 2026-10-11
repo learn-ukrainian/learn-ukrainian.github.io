@@ -225,7 +225,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_source_production_transport.py": (
         "65bbd0ce715084c01a78df4ad047a90837e480928efeb0e0dd7fe9d8cd83debb",
-        "1e4e6387b7b246f1ed5627dc6ea38eb2d10dad3b4bee2ca713cfe4c5f2f258d3",
+        "c1787181b200634e45f0710b3445c246d5ddf3cfc4c1ddf2e6aac490f5ff92dc",
     ),
     "scripts/projects/open_model_data/phase3_source_unit_materialization.py": (
         "5e1b9ee4cf86ff1f951270e069274e8664e73df44c8903e65f17ad5653319bbe",

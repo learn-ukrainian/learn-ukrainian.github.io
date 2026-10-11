@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -503,6 +504,35 @@ def test_resumable_run_commands_pin_gemini_and_codex(tmp_path: Path) -> None:
     result = transport.run_review(review_manifest_path=root / "review-manifest.json", invoke=review_invoke)
     assert result["completed"] == 1
     assert "ask-codex" in commands[-1] and "gpt-6.1-sol" in commands[-1]
+    assert "--type" in commands[-1] and "review" in commands[-1]
+    assert "--stdout-only" not in commands[-1]
+    assert commands[-1][0] == sys.executable
+
+
+def test_production_bridge_commands_parse_without_error() -> None:
+    for cmd in [
+        [sys.executable, "scripts/ai_agent_bridge/__main__.py", "ask-codex", "--help"],
+        [sys.executable, "scripts/ai_agent_bridge/__main__.py", "ask-agy", "--help"],
+        [
+            sys.executable,
+            "scripts/ai_agent_bridge/__main__.py",
+            "ask-codex",
+            "-",
+            "--task-id",
+            "test-task",
+            "--type",
+            "review",
+            "--to-model",
+            "gpt-6.1-sol",
+            "--data",
+            "/dev/null",
+            "--no-timeout",
+            "--help",
+        ],
+    ]:
+        exit_code, _stdout, stderr = transport._subprocess_invoke(cmd, b"")
+        assert exit_code == 0, f"{cmd} failed with {stderr.decode()}"
+
 
 
 def test_opencode_prelude_extracts_one_exact_trailing_response() -> None:

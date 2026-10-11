@@ -15,6 +15,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
@@ -970,20 +971,36 @@ def _run_packets(
         if lane == "review":
             prompt_path = root / "review" / "prompts" / f"{index:05d}.md"
             _write_private(prompt_path, prompt)
-        command = [
-            ".venv/bin/python",
-            "scripts/ai_agent_bridge/__main__.py",
-            command_name,
-            "-",
-            "--task-id",
-            actor["task_id"],
-            "--to-model",
-            actor["exact_model"],
-            "--data",
-            str(packet_path),
-            "--no-timeout",
-            "--stdout-only",
-        ]
+            command = [
+                sys.executable,
+                "scripts/ai_agent_bridge/__main__.py",
+                command_name,
+                "-",
+                "--task-id",
+                actor["task_id"],
+                "--type",
+                "review",
+                "--to-model",
+                actor["exact_model"],
+                "--data",
+                str(packet_path),
+                "--no-timeout",
+            ]
+        else:
+            command = [
+                sys.executable,
+                "scripts/ai_agent_bridge/__main__.py",
+                command_name,
+                "-",
+                "--task-id",
+                actor["task_id"],
+                "--to-model",
+                actor["exact_model"],
+                "--data",
+                str(packet_path),
+                "--no-timeout",
+                "--stdout-only",
+            ]
         started_at = _now()
         exit_code, stdout, stderr = runner(command, prompt)
         completed_at = _now()
