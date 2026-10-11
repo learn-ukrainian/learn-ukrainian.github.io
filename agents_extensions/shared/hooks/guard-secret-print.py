@@ -43,8 +43,9 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # authors enumerated for each listed language as of 2026-10-11, with the limits
 # above and below. Aliasing global environment objects before reading them is a
 # known limit, for example `const p = process; p.env` and `const {env} = process`.
-# This class includes assignment destructuring, Deno/Bun destructuring and
-# getattr-style or aliased access. Literal `import {env} from "process"` has a row.
+# This class includes object aliasing and destructuring of the global environment
+# object, including assignment destructuring and Deno/Bun destructuring.
+# Literal `import {env} from "process"` has a row.
 # Generic process launchers that inherit the environment are another known
 # limit, including asyncio.create_subprocess_exec/shell, pty.spawn,
 # os.posix_spawn* and subprocess calls of arbitrary programs. Rows for dumpers
@@ -146,7 +147,7 @@ ENVIRONMENT_API_INVENTORY = (
     # Deno: Command and legacy run can execute literal environment dumpers.
     ("deno", "Deno.Command/run dumpers", "literal", r"(?:Command|run)\("),
     # Bun: Bun.env, process.env and import.meta.env (bun.sh/docs/runtime/environment-variables).
-    ("bun", "Bun.env/import.meta.env", "identifier", r"(?i:(?:bun|import\.meta)(?:\.env|\[env\]))"),
+    ("bun", "Bun.env/import.meta.env", "identifier", r"(?i:(?:bun|import\.meta)(?:\.env|\.?\[env\]))"),
     # Bun: spawn/spawnSync and the shell $ tagged template inherit env.
     ("bun", "Bun.spawn/shell dumpers", "literal", r"spawn(?:Sync)?\(|\$`"),
     # Ruby: ENV and every ENV method such as to_h/to_a/each (docs.ruby-lang.org/en/master/ENV.html).
@@ -163,7 +164,7 @@ ENVIRONMENT_API_INVENTORY = (
     # Perl: %ENV, qualified hashes and $ENV{NAME} (perldoc.perl.org/variables/%25ENV).
     ("perl", "%ENV/$ENV", "identifier", r"(?i:%(?:main::|::)?env|\$(?:main::|::)?env)"),
     # Perl: Env imports or ties the environment (perldoc.perl.org/Env).
-    ("perl", "Env module", "identifier", r"(?:use|require)\x00Env|tie\x00?%[^;]*,\x00?Env"),
+    ("perl", "Env module", "identifier", r"(?:use|require)(?:\x00|\()Env|tie\x00?\(?%[^;]*,\x00?Env"),
     # Perl: system/exec/readpipe/backticks/open pipes (perldoc.perl.org/perlfunc).
     ("perl", "Perl child dumpers", "literal", r"(?:system|exec|readpipe|open)\("),
     # Perl: qx command literals (perldoc.perl.org/perlop, Quote-Like Operators).

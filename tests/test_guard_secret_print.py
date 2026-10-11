@@ -44,6 +44,7 @@ guard = _load_hook()
 
 ROUND_SEVEN_DENIED = [
     ("bun-bracket", "bun -e 'console.log(import.meta[\"env\"])'"),
+    ("bun-optional-bracket", "bun -e 'console.log(import.meta?.[\"env\"])'"),
     ("php-filter-server", "php -r 'print_r(filter_input_array(INPUT_SERVER));'"),
     ("php-filter-env", "php -r 'print_r(filter_input_array(INPUT_ENV));'"),
     ("php-filter-var-server", "php -r 'print_r(filter_var_array(INPUT_SERVER));'"),
@@ -55,6 +56,9 @@ ROUND_SEVEN_DENIED = [
     ("perl-use-env", "perl -e 'use Env; print $value'"),
     ("perl-require-env", "perl -e 'require Env; print $value'"),
     ("perl-tie-env", "perl -e 'tie %h, \"Env\"; print %h'"),
+    ("perl-use-env-parenthesized", "perl -e 'use(Env); print $value'"),
+    ("perl-require-env-parenthesized", "perl -e 'require(Env); print $value'"),
+    ("perl-tie-env-parenthesized", "perl -e 'tie(%h, \"Env\"); print %h'"),
     ("compatibility-getenvironment", "python -c 'print(getenvironment())'"),
     ("shell-compgen-export", "compgen -A export"),
 ]
@@ -64,6 +68,8 @@ ROUND_SEVEN_ALLOWED = [
     "python -c 'print(os.environ_x)'",
     "perl -e 'use Envoy; print 1'",
     "perl -e 'tie %h, \"Envelope\"; print 1'",
+    "perl -e 'require(Envoy); print 1'",
+    "perl -e 'tie(%h, \"Envelope\"); print 1'",
     "php -r 'echo filter_input(INPUT_ENV, \"HOME\");'",
     'bun -e \'console.log(import.meta["env"]["HOME"])\'',
 ]
