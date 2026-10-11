@@ -157,7 +157,7 @@
           "required": ["path", "sha256"],
           "properties": {
             "path": {"const": "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"},
-            "sha256": {"const": "9f3113776f899759dc9d4bdde9cde8e3fd5c85f5b3e6e748bf0ac79fac28a29c"}
+            "sha256": {"const": "b022d8c58c24fcadd6c8a79655c1855c89d051cf9462d64a2bca4bab376111aa"}
           }
         },
         "p2_canonical_contracts": {

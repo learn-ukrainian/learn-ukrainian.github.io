@@ -18,7 +18,7 @@
   "bindings": {
     "schema": {
       "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-      "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+      "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
     },
     "validator": {
       "path": "scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py",
@@ -26,7 +26,7 @@
     },
     "v2_compatibility_matrix": {
       "path": "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json",
-      "sha256": "9f3113776f899759dc9d4bdde9cde8e3fd5c85f5b3e6e748bf0ac79fac28a29c"
+      "sha256": "b022d8c58c24fcadd6c8a79655c1855c89d051cf9462d64a2bca4bab376111aa"
     },
     "p2_canonical_contracts": {
       "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
@@ -1472,7 +1472,7 @@
         "v3_cell_id": "boundary.latin_script_slavic.ambiguous_noisy.scope_boundary.not_applicable",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "boundary_cell_preserved",
@@ -1489,7 +1489,7 @@
         "v3_cell_id": "boundary.mixed_identity.ambiguous_noisy.scope_boundary.abstention",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1506,7 +1506,7 @@
         "v3_cell_id": "boundary.non_slavic_cyrillic.ambiguous_noisy.scope_boundary.not_applicable",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "boundary_cell_preserved",
@@ -1523,7 +1523,7 @@
         "v3_cell_id": "boundary.other_or_unresolved_slavic_cyrillic.ambiguous_noisy.scope_boundary.abstention",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1540,7 +1540,7 @@
         "v3_cell_id": "boundary.unknown.ambiguous_noisy.scope_boundary.abstention",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1557,7 +1557,7 @@
         "v3_cell_id": "historical.church_slavonic_recension.historical_text.historical_identity.protected_historical",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1574,7 +1574,7 @@
         "v3_cell_id": "historical.middle_ukrainian.historical_text.historical_identity.protected_historical",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1591,7 +1591,7 @@
         "v3_cell_id": "historical.old_east_slavic_kyivan_rus.historical_text.historical_identity.protected_historical",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1608,7 +1608,7 @@
         "v3_cell_id": "historical.source_attested_rusyn.historical_text.historical_identity.protected_historical",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1625,7 +1625,7 @@
         "v3_cell_id": "modern.belarusian.unmarked.contact_interference.source_backed_correction",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1642,7 +1642,7 @@
         "v3_cell_id": "modern.bulgarian.unmarked.contact_interference.source_backed_correction",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1659,7 +1659,7 @@
         "v3_cell_id": "modern.macedonian.unmarked.contact_interference.source_backed_correction",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1676,7 +1676,7 @@
         "v3_cell_id": "modern.montenegrin_cyrillic.unmarked.contact_interference.source_backed_correction",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1693,7 +1693,7 @@
         "v3_cell_id": "modern.russian.unmarked.contact_interference.source_backed_correction",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1710,7 +1710,7 @@
         "v3_cell_id": "modern.serbian_cyrillic.unmarked.contact_interference.source_backed_correction",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1727,7 +1727,7 @@
         "v3_cell_id": "protection.source_attested_ukrainian_dialect_or_regional_form.dialect_or_regional_form.protected_dialect_or_regional",
         "new_binding": {
           "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
-          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+          "sha256": "50888f5daf9c14d0f3ffe1a049535d27530f0f870071514489a038a446f4892d"
         },
         "child_partition_ids": [],
         "denominator_effect": "same_parent_denominator",
@@ -1826,5 +1826,5 @@
     ],
     "p4_v1_mutation_allowed": false
   },
-  "receipt_sha256": "0bccfee950bdd4efd144142f8ef00c0cae8a1313dd6ac705a16877973a914b97"
+  "receipt_sha256": "fa147e98732f348c023f94e7c633519adefa4b949bfbde0026a4d4645dca9c61"
 }

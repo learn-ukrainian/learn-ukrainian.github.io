@@ -3,7 +3,7 @@
 
 This module prepares private packets, records already-obtained reviewer bytes,
 and assembles sealed labels.  It never calls a provider and never transports
-author packets.  The only accepted reviewer lane is OpenAI/Codex gpt-5.6-sol.
+author packets.  The only accepted reviewer lane is OpenAI/Codex gpt-6.1-sol.
 """
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ ACTOR = {
     "provider": "openai",
     "model_family": "openai",
     "harness": "codex",
-    "exact_model": "gpt-5.6-sol",
+    "exact_model": "gpt-6.1-sol",
 }
 MANIFEST_NAME = "manifest.json"
 REJECT_CODES = frozenset(
@@ -106,7 +106,7 @@ CYCLE002_ACTORS = {
         "provider": "openai",
         "model_family": "openai",
         "harness": "codex",
-        "exact_model": "gpt-5.6-sol",
+        "exact_model": "gpt-6.1-sol",
     },
     "b": {
         "role_id": "heldout_label_reviewer",
@@ -114,7 +114,7 @@ CYCLE002_ACTORS = {
         "provider": "openai",
         "model_family": "openai",
         "harness": "codex",
-        "exact_model": "gpt-5.6-sol",
+        "exact_model": "gpt-6.1-sol",
     },
 }
 
@@ -271,7 +271,7 @@ def _validate_schema(value: Mapping[str, Any], schema_path: Path, definition: st
 
 def _actor(value: Mapping[str, Any] | None = None) -> dict[str, str]:
     supplied = dict(ACTOR if value is None else value)
-    require(supplied == ACTOR, "only OpenAI/Codex gpt-5.6-sol heldout_label_reviewer is allowed")
+    require(supplied == ACTOR, "only OpenAI/Codex gpt-6.1-sol heldout_label_reviewer is allowed")
     return dict(ACTOR)
 
 
@@ -1502,7 +1502,7 @@ def run_cycle002(
         "--task-id",
         CYCLE002_ACTORS[pass_id]["task_id"],
         "--to-model",
-        "gpt-5.6-sol",
+        "gpt-6.1-sol",
         "--new-session",
         "--no-timeout",
     ]
