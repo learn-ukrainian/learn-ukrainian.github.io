@@ -260,6 +260,13 @@ def test_entropy_receipt_rejects_every_alternative_derivation(frozen: tuple[dict
         audit.validate_seed_receipt(receipt, freeze, role_contract=roles, family_id="fixture_source", population_kind="nonconverted")
 
 
+@pytest.fixture(autouse=True)
+def _isolate_git_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    for key in list(os.environ):
+        if key.startswith("GIT_"):
+            monkeypatch.delenv(key, raising=False)
+
+
 def _git_run(repo: Any, *arguments: str) -> str:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     return subprocess.run(

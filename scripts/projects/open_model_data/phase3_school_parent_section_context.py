@@ -208,13 +208,13 @@ def _regular_public(path: Path, label: str) -> None:
     """Accept only explicit safe modes for an existing public receipt.
 
     New receipts are created owner-only (0600). A normal git checkout of the
-    committed text-free receipt is 0644. Any other mode fails closed.
+    committed text-free receipt is 0644 or 0664. Any other mode fails closed.
     """
     _regular_file(path, label)
     mode = stat.S_IMODE(path.lstat().st_mode)
     require(
         mode in ACCEPTED_PUBLIC_RECEIPT_MODES,
-        f"{label} permissions must be 0600 or tracked 0644",
+        f"{label} permissions must be 0600, 0644, or 0664",
     )
 
 
