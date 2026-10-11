@@ -447,3 +447,27 @@ def test_review_provisioner_writes_absolute_guard_and_keeps_command_denial(tmp_p
     settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())
     assert settings == agy_review_settings("full")
     assert "command(*)" in settings["permissions"]["deny"]
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_review_registration_pass_does_not_certify_hook_execution(tmp_path, access):
+    from dataclasses import asdict
+
+    from scripts.agent_runtime.review_mcp import _populate_agy_review_home
+
+    home = tmp_path / "attempt-home"
+    home.mkdir(mode=0o700)
+    token = tmp_path / "synthetic-token"
+    token.write_text("synthetic")
+    fd = os.open(home, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        _populate_agy_review_home(
+            fd, token, json.dumps({"mcpServers": {"sources": {"env": {"LU_REVIEW_ACCESS": access}}}}).encode()
+        )
+    finally:
+        os.close(fd)
+
+    result = config.check_hook_config(config.hook_locations(tmp_path / "workspace", tmp_path / "home", home))
+    assert asdict(result) == {"status": "PASS", "reason": "guard_registered"}
+    settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())
+    assert settings["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]

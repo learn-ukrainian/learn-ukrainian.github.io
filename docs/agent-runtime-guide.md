@@ -332,8 +332,15 @@ no local `.venv`. A guarded workspace suffices when ordinary HOME has no
 `.gemini/config/hooks.json`; the gate never writes the user's home.
 Scoped review homes receive the same absolute registration through the
 `review_mcp.py` and `attempt_boundary.py` provisioners, for isolated and full
-review access. Their
-`agy_review_settings` command denial stays in place.
+review access. On the review route, the load-bearing control is the exact
+validated command-denial settings (`command(*)` and `write_file(*)` denied,
+checked by `_write_review_permissions` before launch), plus `--sandbox`.
+Scoped-home guard registration is defense in depth. A PASS certifies
+registration in every loadable candidate. It does not certify that the hook
+can execute inside the review OS sandbox. The probe at `69690b9667` found the
+interpreter and entry point unreadable there. The failure disposition of a
+hook that cannot start is UNKNOWN. It can only fire on `run_command`, which
+the settings deny.
 
 `agy_hook_config` checks the spawn's workspace `.agents/hooks.json` and
 effective-HOME `.gemini/config/hooks.json`. Scoped HOME replaces ordinary
@@ -402,6 +409,7 @@ A startup gate cannot guarantee blocking after a hook crash or timeout.
 | Nested-agent coverage | UNKNOWN |
 | Shell-stdin coverage | UNKNOWN |
 | Scoped-review hook loading | UNKNOWN |
+| Failure disposition when the registered hook cannot start inside the review OS sandbox | UNKNOWN |
 | Exit 0 plus deny JSON blocking a live `run_command` | UNKNOWN |
 
 AGY's envelope is specified in its

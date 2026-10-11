@@ -1,4 +1,4 @@
-"""Validate effective AGY no-print wiring without executing hook commands."""
+"""Validate AGY guard registration without executing hook commands."""
 
 from __future__ import annotations
 
@@ -128,7 +128,15 @@ def check_hook_config(locations: tuple[Path, ...], *, repo_root: Path = ROOT) ->
     An absent workspace or effective-HOME candidate cannot load and is skipped.
     At least one candidate must exist and validate. Existing invalid files still
     refuse, even alongside a valid file. Scoped HOME replaces ordinary HOME.
-    PASS proves filesystem registration only, never native enforcement.
+    PASS certifies registration in every loadable candidate, not hook execution
+    or native blocking on any route. On the review route, the load-bearing
+    control is the exact validated command-denial settings: ``command(*)`` and
+    ``write_file(*)`` denied, checked by ``_write_review_permissions`` before
+    launch, plus ``--sandbox``. Scoped-home guard registration is defense in
+    depth. PASS does not certify that the hook can execute inside the review OS
+    sandbox: the probe at 69690b9667 found its interpreter and entry point
+    unreadable there. The failure disposition of a hook that cannot start is
+    UNKNOWN. It can only fire on ``run_command``, which the settings deny.
     """
     try:
         interpreter = project_interpreter(repo_root)
