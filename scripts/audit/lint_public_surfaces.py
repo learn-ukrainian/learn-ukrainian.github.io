@@ -41,8 +41,6 @@ _ROOT = _HERE.parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from scripts.common import github_client
-
 
 def _load(name: str, path: Path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -152,6 +150,8 @@ def event_surfaces(payload: dict, event_name: str) -> tuple[list[tuple[str, str]
 
 def current_pull_request(repo: str, number: str, token: str) -> dict:
     """Return the live pull request. The caller must not print it."""
+    from scripts.common import github_client
+
     request = urllib.request.Request(
         f"https://api.github.com/repos/{repo}/pulls/{number}",
         headers={

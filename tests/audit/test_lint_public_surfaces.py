@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
 import subprocess
 import sys
 import urllib.error
@@ -13,11 +15,79 @@ import pytest
 
 from scripts.audit import lint_public_surfaces
 from scripts.audit.lint_public_surfaces import scan_text
+from scripts.common import github_client
 from scripts.opsec.needles import Needles
 
 _NEEDLES = Needles()
 _ROOT = Path(__file__).resolve().parents[2]
 _SECRET_PATH = "/home/example/repo"
+
+
+@pytest.mark.parametrize(
+    "event_text, expected_code, expected_stdout, expected_stderr",
+    [
+        (
+            json.dumps({"pull_request": {"title": "Fix the learner card", "body": "", "head": {"ref": "fix/card"}}}),
+            0,
+            "OPSEC publication surfaces clean.\n",
+            "",
+        ),
+        (
+            json.dumps({"pull_request": {"title": f"wip {_SECRET_PATH}", "body": "", "head": {"ref": "fix/card"}}}),
+            1,
+            "title host-path line=1\n",
+            "OPSEC publication surfaces blocked: 1 finding(s).\n",
+        ),
+        ("{", 1, "", "OPSEC publication surfaces: event payload could not be read.\n"),
+    ],
+    ids=["clean", "flagged", "malformed"],
+)
+def test_cli_in_the_pr_body_workflow_sparse_checkout(
+    tmp_path: Path, monkeypatch, event_text, expected_code, expected_stdout, expected_stderr
+) -> None:
+    sparse_files = {
+        "scripts/audit/lint_pr_closing_references.py",
+        "scripts/audit/lint_public_surfaces.py",
+        "scripts/audit/lint_opsec_leaks.py",
+        "scripts/opsec/__init__.py",
+        "scripts/opsec/needles.py",
+        ".python-version",
+    }
+    checkout = tmp_path / "checkout"
+    for relative in sparse_files:
+        target = checkout / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(_ROOT / relative, target)
+    assert {path.relative_to(checkout).as_posix() for path in checkout.rglob("*") if path.is_file()} == sparse_files
+    event = tmp_path / "event.json"
+    event.write_text(event_text, encoding="utf-8")
+    monkeypatch.setenv("PYTHONPATH", str(_ROOT))
+    monkeypatch.setenv("LU_PUBLICATION_LIVE", "1")
+    environment = os.environ.copy()
+    for name in ("PYTHONPATH", "PYTHONHOME", "LU_PUBLICATION_LIVE", "GITHUB_TOKEN", "GH_TOKEN"):
+        environment.pop(name, None)
+    environment["LU_OPSEC_NEEDLES_FILE"] = ""
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "scripts/audit/lint_public_surfaces.py",
+            "--event-file",
+            str(event),
+            "--event-name",
+            "pull_request",
+        ],
+        cwd=checkout,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert completed.returncode == expected_code
+    assert completed.stdout == expected_stdout
+    assert completed.stderr == expected_stderr
 
 
 def test_host_path_file_uri_private_host_and_private_ip_are_findings() -> None:
@@ -139,7 +209,7 @@ def test_current_pull_request_uses_shared_client(monkeypatch, capsys) -> None:
         assert timeout == 30
         return BytesIO(json.dumps(live).encode("utf-8"))
 
-    monkeypatch.setattr(lint_public_surfaces.github_client, "http_open", response)
+    monkeypatch.setattr(github_client, "http_open", response)
     assert lint_public_surfaces.current_pull_request("o/r", "7", "synthetic-token") == live
     captured = capsys.readouterr()
     assert captured.out == captured.err == ""
@@ -152,7 +222,7 @@ def test_current_pull_request_uses_shared_client(monkeypatch, capsys) -> None:
         urllib.error.URLError(_SECRET_PATH),
         urllib.error.HTTPError("https://api.github.com/repos/o/r/pulls/7", 403, _SECRET_PATH, {}, None),
         TimeoutError(_SECRET_PATH),
-        lint_public_surfaces.github_client.GitHubRateLimited(0),
+        github_client.GitHubRateLimited(0),
     ],
     ids=["io", "url", "http", "timeout", "rate-limit"],
 )
@@ -160,7 +230,7 @@ def test_current_pull_request_read_failure_is_not_printed(monkeypatch, capsys, e
     def unavailable(_request, *, timeout):
         raise error
 
-    monkeypatch.setattr(lint_public_surfaces.github_client, "http_open", unavailable)
+    monkeypatch.setattr(github_client, "http_open", unavailable)
     with pytest.raises(RuntimeError):
         lint_public_surfaces.current_pull_request("o/r", "7", "synthetic-token")
     captured = capsys.readouterr()
@@ -178,7 +248,7 @@ def test_current_pull_request_read_failure_is_not_printed(monkeypatch, capsys, e
     ids=["encoding", "json", "array", "missing-title"],
 )
 def test_current_pull_request_rejects_invalid_metadata(monkeypatch, capsys, raw, expected) -> None:
-    monkeypatch.setattr(lint_public_surfaces.github_client, "http_open", lambda _request, **_kwargs: BytesIO(raw))
+    monkeypatch.setattr(github_client, "http_open", lambda _request, **_kwargs: BytesIO(raw))
     with pytest.raises(RuntimeError, match=f"^{expected}$"):
         lint_public_surfaces.current_pull_request("o/r", "7", "synthetic-token")
     captured = capsys.readouterr()
@@ -191,7 +261,7 @@ def test_live_pull_request_replaces_a_stale_title(tmp_path: Path, monkeypatch, c
     monkeypatch.setenv("GITHUB_REPOSITORY", "o/r")
     monkeypatch.setenv("GITHUB_TOKEN", "token")
     monkeypatch.setattr(
-        lint_public_surfaces.github_client,
+        github_client,
         "http_open",
         lambda _request, **_kwargs: BytesIO(
             json.dumps(
@@ -233,7 +303,7 @@ def test_a_missed_live_read_fails_without_the_title(tmp_path: Path, monkeypatch,
     def unavailable(_request, *, timeout):
         raise urllib.error.URLError(_SECRET_PATH)
 
-    monkeypatch.setattr(lint_public_surfaces.github_client, "http_open", unavailable)
+    monkeypatch.setattr(github_client, "http_open", unavailable)
     event = _pull_request_event(tmp_path, f"wip {_SECRET_PATH}")
     assert lint_public_surfaces.main(["--event-file", str(event), "--event-name", "pull_request"]) == 1
     captured = capsys.readouterr()
