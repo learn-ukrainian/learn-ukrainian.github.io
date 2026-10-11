@@ -43,3 +43,30 @@ hard-coding a mode. The default and any authority change remain operator/advisor
 gated, and this observer does not perform either action.
 
 Parent: #5512 · stream #4707.
+
+## Relationship Map (/epics-map.html)
+
+`/epics-map.html` is a read-only observer that consumes `GET /api/epics/graph/v1`,
+distinct from the `/api/fleet/v1` response envelope (not a fleet-v1 route or new API).
+For design context (its historical status header does not reflect current implementation
+or deployment status), see [monitor-epics-graph-map.md](../design/monitor-epics-graph-map.md).
+
+### Membership and refresh states
+
+- **Not yet cached:** When an epic membership bucket is missing or the feed has
+  `status: "no-cache"` (audit warming or no completed cache), membership displays
+  *Not yet cached*.
+- **Incomplete membership:** When a membership bucket exists and the feed is not
+  no-cache, `membership_complete: false` or nonempty `incomplete_nodes` yields
+  explicit incomplete membership (`Open issue membership is incomplete in the cache.`).
+- **Unknown membership:** When a bucket exists and no incomplete marker applies,
+  missing or null `items` or an invalid, missing, or null `total_open` yields
+  explicit unknown membership (`Open issue membership is unknown in the cache.`).
+  These states remain distinct from *Not yet cached* rather than sharing identical text.
+- **Verified totals:** Complete usable cached membership can display verified zero
+  or nonzero totals. Incomplete or unknown membership cannot be interpreted as a zero
+  count, and issue counts must not be inferred solely from currently visible rows.
+- **Refresh and fetch recovery:** A fetch failure displays the failed-fetch banner
+  and "Update failed". A later successful load clears the error and renders refreshed
+  data. The existing Refresh button and periodic load can retry (no deployment,
+  reconfiguration, or alternate retry policy is implied).
