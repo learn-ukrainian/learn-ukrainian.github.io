@@ -94,7 +94,8 @@ before dispatch.
 
 Bind each checklist verdict and the author's finding reconciliation to the frozen
 prompt SHA-256. A FAIL blocks dispatch: revise the packet, freeze its new SHA-256,
-and obtain a fresh critique of that revision before dispatch. After two FAIL rounds
+and obtain a fresh critique of the new SHA-256 from the same critic set required
+above before dispatch. After two FAIL rounds
 on one artifact, state the stopping rule, change the approach, and record any
 approved residual with its owner and reopen condition. Keep the denominator and
 every valid gate; reducing mission scope still requires the approval below.

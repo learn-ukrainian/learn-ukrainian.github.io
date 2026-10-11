@@ -82,7 +82,7 @@ def test_section_citations_used_by_scripts_still_resolve() -> None:
 @pytest.mark.parametrize(
     ("reference", "heading", "instruction"),
     [
-        ("queue-and-capacity.md", "## §2.", "one consolidated comment per cycle"),
+        ("queue-and-capacity.md", "## §2.", "maintain one friction comment"),
         ("queue-and-capacity.md", "## §2.", "latest operator directive"),
         ("routing-and-dispatch.md", "## §3a.", "A FAIL blocks dispatch"),
         ("routing-and-dispatch.md", "## §4.", "brief's actual worktree path"),
@@ -111,6 +111,8 @@ def test_friction_report_and_directive_reconciliation_keep_safety_fields() -> No
     for required in (
         "After checking the lane's actual work",
         "existing owner's public issue",
+        "Create it on the first finding, then edit it in place each cycle",
+        "replace the fields, do not append",
         "affected outcome",
         "sanitized evidence",
         "known or unknown cause",
@@ -119,13 +121,19 @@ def test_friction_report_and_directive_reconciliation_keep_safety_fields() -> No
         "smallest correction",
         "accountable owner",
         "falsifiable DoD",
-        "Write NONE only after that check",
+        "Write NONE only after that check by editing the same comment if one already exists",
+        "never create a comment just to say NONE",
+        "Put the final state in the issue's closing comment",
         "Keep sensitive evidence in private operational evidence",
         "Do not create a channel",
         "do not post one report per message",
-        "an explicit operator pause requires explicit operator release",
+        "stop text older than the directive and in conflict with it",
+        "An explicit operator pause requires explicit operator release",
+        "a newer unrelated directive is not a release",
+        "Record superseded instructions and unresolved conflicts",
     ):
         assert required in body, required
+    assert not re.search(r"one (?:consolidated )?comment per cycle|(?<!do not )\bappend\b", body)
 
 
 def test_prompt_dispatch_and_scratch_contracts_preserve_failure_gates() -> None:
@@ -134,7 +142,7 @@ def test_prompt_dispatch_and_scratch_contracts_preserve_failure_gates() -> None:
         "checklist verdict",
         "finding reconciliation",
         "frozen prompt SHA-256",
-        "fresh critique of that revision before dispatch",
+        "fresh critique of the new SHA-256 from the same critic set required above before dispatch",
         "After two FAIL rounds",
         "Keep the denominator and every valid gate",
         "owned paths against the dispatch target",
