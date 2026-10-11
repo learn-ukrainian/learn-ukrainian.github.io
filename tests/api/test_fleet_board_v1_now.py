@@ -1580,3 +1580,558 @@ def test_canonical_health_never_guesses_driver_identity(monkeypatch, tmp_path, r
     assert health["status"] == "unknown"
     assert health["agent_id"] is None
     assert all(health[key] is None for key in ("context_pct", "compactions", "stop_count", "ask_count", "idle_min"))
+
+
+@pytest.mark.parametrize(
+    "case_id,harness,expected",
+    [
+        (
+            "HC-01-bad",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": "bad",
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-01-null",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": None,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-01-num",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": 1728475180,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-02-inherit",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "ok",
+                "measured_at": FRESH,
+                "context_pct": 10,
+                "compactions": 1,
+                "stop_count": 2,
+                "ask_count": 3,
+                "idle_min": 4,
+            },
+        ),
+        (
+            "HC-02-no-parent",
+            {
+                "interval_s": 30,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-03-valid-row",
+            {
+                "interval_s": 30,
+                "measured_at": "invalid-parent",
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "ok",
+                "measured_at": FRESH,
+                "context_pct": 10,
+                "compactions": 1,
+                "stop_count": 2,
+                "ask_count": 3,
+                "idle_min": 4,
+            },
+        ),
+        (
+            "HC-03-stale-row",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": "2026-10-09T11:50:00Z",
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "stale",
+                "measured_at": "2026-10-09T11:50:00Z",
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-03-future-row",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": "2026-10-09T12:05:00Z",
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-04-lead-space",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": " codex",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": None,
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-04-trail-space",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex ",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": None,
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-04-tab-newline",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "\tcodex\n",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": None,
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-04-mixed-case",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "Codex",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": None,
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-04-unsupported",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "other",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": None,
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-04-exact",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "ok",
+                "measured_at": FRESH,
+                "context_pct": 10,
+                "compactions": 1,
+                "stop_count": 2,
+                "ask_count": 3,
+                "idle_min": 4,
+            },
+        ),
+        (
+            "HC-05-two-exact",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    },
+                    {
+                        "agent_id": "codex",
+                        "measured_at": FRESH,
+                        "context_pct": 20,
+                        "compactions": 2,
+                        "stop_count": 3,
+                        "ask_count": 4,
+                        "idle_min": 5,
+                    },
+                ],
+            },
+            {
+                "agent_id": None,
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-05-exact-plus-alias",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    },
+                    {
+                        "agent_id": " codex ",
+                        "measured_at": FRESH,
+                        "context_pct": 99,
+                        "compactions": 9,
+                        "stop_count": 9,
+                        "ask_count": 9,
+                        "idle_min": 9,
+                    },
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "ok",
+                "measured_at": FRESH,
+                "context_pct": 10,
+                "compactions": 1,
+                "stop_count": 2,
+                "ask_count": 3,
+                "idle_min": 4,
+            },
+        ),
+        (
+            "HC-05-zero-fraction",
+            {
+                "interval_s": 30,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": FRESH,
+                        "context_pct": 0,
+                        "stop_count": 0,
+                        "ask_count": 2.5,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "ok",
+                "measured_at": FRESH,
+                "context_pct": 0,
+                "compactions": None,
+                "stop_count": 0,
+                "ask_count": 2.5,
+                "idle_min": None,
+            },
+        ),
+        (
+            "HC-05-nonpositive-interval",
+            {
+                "interval_s": 0,
+                "measured_at": FRESH,
+                "drivers": [
+                    {
+                        "agent_id": "codex",
+                        "measured_at": FRESH,
+                        "context_pct": 10,
+                        "compactions": 1,
+                        "stop_count": 2,
+                        "ask_count": 3,
+                        "idle_min": 4,
+                    }
+                ],
+            },
+            {
+                "agent_id": "codex",
+                "status": "unknown",
+                "measured_at": None,
+                "context_pct": None,
+                "compactions": None,
+                "stop_count": None,
+                "ask_count": None,
+                "idle_min": None,
+            },
+        ),
+    ],
+)
+@pytest.mark.parametrize(
+    "route,extractor,schema_name",
+    [
+        ("/api/fleet/v1/now", lambda b: b["data"]["epics"][0]["health"], "fleet.v1.now"),
+        ("/api/fleet/v1/epics", lambda b: b["data"]["epics"][0]["health"], "fleet.v1.epics"),
+        ("/api/fleet/v1/epics/alpha", lambda b: b["data"]["health"], "fleet.v1.epic"),
+    ],
+)
+def test_canonical_health_input_boundaries_matrix(
+    monkeypatch,
+    tmp_path,
+    case_id,
+    harness,
+    expected,
+    route,
+    extractor,
+    schema_name,
+) -> None:
+    from scripts.api.fleet_board.cache import CACHE
+    from scripts.api.fleet_board.envelope import endpoint_schema
+
+    CACHE.clear()
+    roster = _roster()
+    roster["epics"][0]["driver"]["agent_id"] = "codex"
+    _install(monkeypatch, tmp_path, roster, harness)
+
+    response = client.get(route)
+    assert response.status_code == 200
+    body = response.json()
+    Draft202012Validator(endpoint_schema(schema_name)).validate(body)
+    assert extractor(body) == expected

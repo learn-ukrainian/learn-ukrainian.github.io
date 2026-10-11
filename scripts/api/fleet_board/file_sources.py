@@ -246,7 +246,7 @@ def load_downloads(environ: Mapping[str, str] | None = None) -> Outcome:
     return _done("downloads", {"state": "ok", "items": items}, status, age_s=age)
 
 
-def _drivers(payload: object) -> list[dict[str, Any]]:
+def _drivers(payload: object, *, canonical: bool = False) -> list[dict[str, Any]]:
     if isinstance(payload, list):
         rows: object = payload
         measured = None
@@ -261,10 +261,14 @@ def _drivers(payload: object) -> list[dict[str, Any]]:
     for row in rows:
         if not isinstance(row, dict):
             continue
-        agent_id = _alias(row.get("agent_id"), DRIVER_ALIASES)
+        raw_id = row.get("agent_id")
+        if canonical:
+            agent_id = DRIVER_ALIASES[raw_id] if isinstance(raw_id, str) and raw_id in DRIVER_ALIASES else None
+        else:
+            agent_id = _alias(raw_id, DRIVER_ALIASES)
         if agent_id is None:
             continue
-        own = _timestamp(row.get("measured_at")) if "measured_at" in row else None
+        row_time = _timestamp(row.get("measured_at")) if "measured_at" in row else measured
         drivers.append(
             {
                 "agent_id": agent_id,
@@ -273,7 +277,7 @@ def _drivers(payload: object) -> list[dict[str, Any]]:
                 "stop_count": _optional_number(row, "stop_count"),
                 "ask_count": _optional_number(row, "ask_count"),
                 "idle_min": _optional_number(row, "idle_min"),
-                "measured_at": own or measured,
+                "measured_at": row_time,
             }
         )
     return drivers
@@ -316,7 +320,7 @@ def load_board_health(environ: Mapping[str, str] | None = None, *, now: datetime
         return {}
     try:
         payload = _read_json_file(Path(location))
-        drivers = _drivers(payload)
+        drivers = _drivers(payload, canonical=True)
     except Exception:
         return {}
     interval = payload.get("interval_s") if isinstance(payload, dict) else None
