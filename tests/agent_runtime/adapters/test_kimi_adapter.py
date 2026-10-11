@@ -19,11 +19,46 @@ from scripts.agent_runtime.adapters.kimi import (
     KimiAdapter,
 )
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness, resolve_kimicc_dispatch_model
+from scripts.agent_runtime.kimi_hook_registration import RegistrationError, config_path, ensure
 from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
 from scripts.audit.lint_agent_trailer import _TRAILER_RE
 from scripts.delegate import build_parser
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
+
+
+@pytest.fixture(autouse=True)
+def isolated_kimi_home(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path / "worker-home"))
+    monkeypatch.setenv("KIMI_CODE_HOME", str(tmp_path / "launcher-home"))
+    ensure("worker")
+
+
+def test_native_adapter_verifies_only_sanitized_worker_home(tmp_path, monkeypatch):
+    worker = config_path("worker")
+    worker.unlink()
+    ensure("launcher")
+    with pytest.raises(RegistrationError, match=r"registration_absent.*ensure --home-mode worker"):
+        _build(tmp_path, monkeypatch)
+    ensure("worker")
+    config_path("launcher").unlink()
+    plan = _build(tmp_path, monkeypatch)
+    assert "-p" in plan.cmd
+    assert plan.env_overrides == {}
+
+
+@pytest.mark.parametrize("bad", [b"[broken", b'[[hooks]]\nevent="Stop"\ncommand="true"\ntimeout="10"\n'])
+def test_native_adapter_refuses_malformed_worker_config(tmp_path, monkeypatch, bad):
+    config_path("worker").write_bytes(bad)
+    with pytest.raises(RegistrationError, match=r"KimiAdapter:.*ensure --home-mode worker"):
+        _build(tmp_path, monkeypatch)
+
+
+def test_native_adapter_refuses_stale_worker_config(tmp_path, monkeypatch):
+    path = config_path("worker")
+    path.write_bytes(path.read_bytes().replace(b'timeout = 10', b'timeout = 11'))
+    with pytest.raises(RegistrationError, match="registration_stale"):
+        _build(tmp_path, monkeypatch)
 
 
 def _build(

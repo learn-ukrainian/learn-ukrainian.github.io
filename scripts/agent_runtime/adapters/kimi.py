@@ -25,6 +25,7 @@ from scripts.review.model_catalog import kimi_model_aliases
 from ..failover import GH_AUTH_FAILURE_RE
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..kimi_admission import ADMITTED_MODE, format_refusal, refuse_kimi_execution
+from ..kimi_hook_registration import RegistrationError, verify
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
@@ -125,6 +126,13 @@ class KimiAdapter:
 
         if session_id:
             cmd.extend(["--session", session_id])
+
+        try:
+            verify("worker", {"HOME": os.environ.get("HOME", "")})
+        except RegistrationError as exc:
+            raise RegistrationError(
+                f"KimiAdapter: {exc}; run kimi_hook_registration ensure --home-mode worker"
+            ) from None
 
         for skills_dir in _resolve_kimi_skills_dirs(cwd=cwd, config=config):
             cmd.extend(["--skills-dir", skills_dir])

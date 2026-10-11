@@ -578,6 +578,26 @@ accepted `bypassPermissions` for Grok write workers (#8965). `danger` keeps
 the write-guard agent, so the fleet guards stay on that mode too.
 `test_danger_argv_matches_workspace_write` pins the shared argv.
 
+### Native Kimi no-print hook
+
+Native Kimi registers the shared guard in its home `config.toml` as a blocking
+`PreToolUse` hook with matcher `^Bash$` and a ten-second timeout. Other tools
+are unaffected. Install separately with `npm run agents:deploy` or
+`.venv/bin/python -m scripts.agent_runtime.kimi_hook_registration ensure --home-mode launcher`.
+Check with the same command using `verify` instead of `ensure`. Launcher mode
+honors `KIMI_CODE_HOME`; worker mode always uses `HOME/.kimi-code`. For native
+dispatch, run `ensure --home-mode worker` and `verify --home-mode worker`.
+Startup verifies the complete hooks schema and exact registration and refuses
+missing, stale or malformed configuration. KimiCC is unchanged. Deployment
+preserves unrelated configuration and Entire hooks; dry runs do not register.
+
+The command maps any nonzero guard exit to blocking exit 2. Native hook timeout,
+spawn failure, runner exception and an ignored hooks section after a mid-session
+edit can still allow a call. User-entered shell commands, MCP and user-defined
+tools, and a `kimi` binary started outside these repository paths are outside
+this guard. A Kimi release that changes the schema requires revalidation.
+The runtime driver owns these residuals and the native canary.
+
 ## Weak-driver trail isolation (P5)
 
 Trail drivers are never given a shell, workspace writes, GitHub mutation, or

@@ -22,6 +22,8 @@ launcher_adapter_preflight() {
       launcher_error "unknown --model '$LC_MODEL' (use k3-256k, k3, k2.7, k2.7-highspeed)."
       exit 2
     fi
+    # Refuse before the shared startup deploy could repair a stale registration.
+    if [ "$LC_DRY_RUN" != 1 ]; then _kimi_verify_hook; fi
     return
   fi
   # shellcheck source=scripts/lib/kimicc_route.sh
@@ -116,5 +118,15 @@ launcher_adapter_exec() {
   fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
+  if [ "$LC_HARNESS" = kimi-code ]; then _kimi_verify_hook; fi
   exec "${cmd[@]}"
+}
+
+_kimi_verify_hook() {
+  local py
+  py="$(launcher_project_python)" || exit 3
+  if ! "$py" "$LC_ROOT/scripts/agent_runtime/kimi_hook_registration.py" verify --home-mode launcher >/dev/null 2>&1; then
+    launcher_error 'Kimi hook registration unavailable; run kimi_hook_registration ensure --home-mode launcher or npm run agents:deploy.'
+    exit 3
+  fi
 }

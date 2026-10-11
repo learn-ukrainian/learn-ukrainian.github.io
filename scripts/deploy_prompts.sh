@@ -454,6 +454,11 @@ if [[ -d .codex/skills ]]; then
     has_changes=true
 fi
 
+# Registration is independent of prompt diffs and never runs in dry-run mode.
+if [[ "$DRY_RUN" == false && -n "${HOME:-}" ]] && command -v kimi >/dev/null 2>&1; then
+    "$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/agent_runtime/kimi_hook_registration.py" ensure --home-mode launcher
+fi
+
 if [[ "$has_changes" == false ]]; then
     echo "No changes to deploy."
     exit 0

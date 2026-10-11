@@ -26,6 +26,12 @@ from tests.helpers.python import project_python
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
+@pytest.fixture(autouse=True)
+def isolated_deploy_home(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("KIMI_CODE_HOME", str(tmp_path / "kimi-home"))
+
+
 def test_shared_conftest_imports_without_bridge_runtime() -> None:
     """The rules workflow has only pytest and PyYAML when it loads conftest.
 
@@ -173,6 +179,7 @@ _SYNTHETIC_SOURCE_DIRS = (
     "gemini_extensions/skills",
 )
 _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
+    "test_deploy_registers_native_kimi_independent_of_prompt_diff": (),
     "test_tracked_mirror_drift_is_detected_before_deploy": ("gemini_extensions/hooks/check-claude-inbox.sh",),
     "test_tracked_mirror_resolves_each_deploy_source": (
         "agents_extensions/shared/hooks/auto-audit.sh",
@@ -381,7 +388,7 @@ def _deploy_python_wrapper_script() -> str:
     return f"""#!/usr/bin/env bash
 real={real}
 case "${{1-}}" in
-  *sync_agent_mirror.py) exec "$real" "$@" ;;
+  *sync_agent_mirror.py|*kimi_hook_registration.py) exec "$real" "$@" ;;
 esac
 if ! exec 3<>"/dev/tcp/127.0.0.1/{port}"; then
   exec "$real" "$@"
@@ -426,6 +433,8 @@ def _copy_deploy_harness(target: Path) -> None:
         Path("scripts/deploy/retire_codex_skills.py"),
         Path("scripts/deploy/reap_agent_mirrors.py"),
         Path("scripts/deploy/sync_agent_mirror.py"),
+        Path("scripts/agent_runtime/kimi_hook_registration.py"),
+        Path("scripts/common/repo_root.py"),
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
@@ -1791,3 +1800,49 @@ def test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees(tm
         assert note.read_bytes() == b"Declared runtime content\n"
     checked = _run(repo, CHECK_SCRIPT)
     assert checked.returncode == 0, checked.stdout + checked.stderr
+
+
+@pytest.mark.parametrize("scenario", ["diff", "no-diff", "dry-run", "no-kimi", "no-home", "invalid"])
+def test_deploy_registers_native_kimi_independent_of_prompt_diff(tmp_path, scenario):
+    repo = _init_checkout(tmp_path)
+    # A real child executes registration; the warm lint broker is not used for it.
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    if scenario != "no-kimi":
+        binary = bin_dir / "kimi"
+        binary.write_text("#!/bin/sh\nexit 0\n")
+        binary.chmod(0o700)
+    home = tmp_path / "explicit-home"
+    launcher_home = tmp_path / "explicit-kimi-home"
+    env = {"PATH": f"{bin_dir}{os.pathsep}{os.defpath}", "KIMI_CODE_HOME": str(launcher_home)}
+    if scenario != "no-home":
+        env["HOME"] = str(home)
+    if scenario == "no-diff":
+        # Establish identical mirrors without registering, then deploy with kimi.
+        baseline_env = {"PATH": os.defpath, "HOME": str(home), "KIMI_CODE_HOME": str(launcher_home)}
+        baseline = subprocess.run(["bash", str(DEPLOY_SCRIPT)], cwd=repo, env=baseline_env,
+                                  capture_output=True, text=True, timeout=120)
+        assert baseline.returncode == 0, baseline.stdout + baseline.stderr
+        assert not (launcher_home / "config.toml").exists()
+    path = launcher_home / "config.toml"
+    if scenario == "invalid":
+        launcher_home.mkdir()
+        path.write_bytes(b'value = "private fixture"\n[broken')
+    before = path.read_bytes() if path.exists() else None
+    args = ["bash", str(DEPLOY_SCRIPT)] + (["--dry-run"] if scenario == "dry-run" else [])
+    result = subprocess.run(args, cwd=repo, env=env, capture_output=True, text=True, timeout=120)
+    assert result.returncode == (1 if scenario == "invalid" else 0), result.stdout + result.stderr
+    if scenario in {"diff", "no-diff"}:
+        assert "kimi_hook_registration: ensure ok" in result.stdout
+        verify = subprocess.run([sys.executable, str(repo / "scripts/agent_runtime/kimi_hook_registration.py"),
+                                 "verify", "--home-mode", "launcher"], cwd=repo, env=env,
+                                capture_output=True, text=True, timeout=10)
+        assert verify.returncode == 0, verify.stderr
+        assert not (home / ".kimi-code/config.toml").exists()
+        if scenario == "no-diff":
+            assert "No changes to deploy." in result.stdout
+    else:
+        assert (path.read_bytes() if path.exists() else None) == before
+        if scenario == "invalid":
+            assert "kimi_hook_registration: toml_invalid line 2" in result.stderr
+            assert "private fixture" not in result.stdout + result.stderr
