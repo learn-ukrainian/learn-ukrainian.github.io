@@ -2160,7 +2160,7 @@ entries:
     purpose: Local SQLite cache of usage advice articles and word pairs from Мова – ДНК нації (mova.ua).
     keywords: [movaua, usage advice, anti-surzhyk, word pairs]
     lifecycle: active
-    owner: infra-harness
+    owner: corpus-channels
     query:
       - {surface: sqlite, how: "read-only SQL on data/movaua.db"}
     content_searchable: false
@@ -2173,7 +2173,7 @@ entries:
     purpose: Local SQLite cache of usage advice articles and word pairs from Glavcom «Мовне питання».
     keywords: [movne pytannya, glavcom, usage advice, word pairs]
     lifecycle: active
-    owner: infra-harness
+    owner: corpus-channels
     query:
       - {surface: sqlite, how: "read-only SQL on data/movne_pytannya.db"}
     content_searchable: false
