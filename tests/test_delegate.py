@@ -28,7 +28,6 @@ import time
 import urllib.error
 from datetime import UTC, datetime
 from pathlib import Path
-from tempfile import TemporaryDirectory, gettempdir
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -42,6 +41,8 @@ import delegate
 from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult, Result
 from agent_runtime.telemetry import InvocationTelemetry
+from scripts.common import task_scratch
+from scripts.common.scratch import DEFAULT_SCRATCH_ROOT
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
@@ -61,8 +62,9 @@ def isolated_dispatch_repo(tmp_path, monkeypatch):
 @pytest.fixture
 def non_git_path():
     """Own non-repository scratch independently of pytest's basetemp ancestry."""
-    with TemporaryDirectory(prefix="delegate-non-git-", dir=gettempdir()) as scratch:
-        path = Path(scratch)
+    scratch = task_scratch.allocate("delegate-non-git", root=DEFAULT_SCRATCH_ROOT)
+    try:
+        path = scratch.payload_dir
         discovery = subprocess.run(
             ["git", "rev-parse", "--git-common-dir"],
             cwd=path, env=delegate._sanitized_git_env(),
@@ -71,6 +73,8 @@ def non_git_path():
         assert discovery.returncode == 128, discovery.stderr
         assert "not a git repository" in discovery.stderr
         yield path
+    finally:
+        scratch.remove()
 
 
 @pytest.fixture
