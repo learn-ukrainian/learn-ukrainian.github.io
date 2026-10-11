@@ -1,4 +1,4 @@
-"""Deterministic CTO-post deltas; the private sidecar is bookkeeping, not authority."""
+"""Deterministic blocker-post deltas; the private sidecar is bookkeeping, not authority."""
 
 from __future__ import annotations
 
@@ -24,10 +24,12 @@ LEDGER_NAME = "CTO-BLOCKERS-LEDGER.json"
 MAX_INPUT_BYTES = 1_048_576
 ITEM_KEYS = frozenset({"id", "state", "owner", "waits_on", "action"})
 ANCHOR_KEYS = frozenset({"message_id", "content_sha256", "created_at"})
+REPORTING_TARGETS = ("epics", "cto")
 UNKNOWN_SUMMARY = "none recorded (unknown: treat every current blocker as unreported)"
 USAGE_RULE = (
     "Put every owned blocker in --current with complete: true; run "
     '`.venv/bin/python -m scripts.driver_blockers delta --epic "$SESSION_EPIC" --current blockers.json`; '
+    "post ordinary reports to epics; select --reporting-target cto only for explicit operator escalation; "
     "post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); "
     "if delta fails or the baseline is unknown, post everything currently blocking; "
     "after the post succeeds, record with the receipt and the exact posted body using "
@@ -248,15 +250,26 @@ def _ledger_lock(directory_fd: int):
         os.close(lock_fd)
 
 
-def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes, expect_generation: int) -> dict:
-    """Bind the posted set to exact body bytes, then advance under a stable lock."""
+def record(
+    path: Path,
+    epic: str,
+    observation: dict,
+    receipt: dict,
+    body: bytes,
+    expect_generation: int,
+    *,
+    reporting_target: str = "epics",
+) -> dict:
+    """Validate the caller's target and exact posted bytes, then advance under a stable lock."""
     validate_observation(observation, epic)
     if not observation["complete"]:
         raise ValueError("record requires complete: true")
     if type(expect_generation) is not int or expect_generation < 0:
         raise ValueError("expected generation must be a non-negative integer")
-    if not isinstance(receipt, dict) or receipt.get("recipient") != "cto":
-        raise ValueError("receipt recipient must be cto")
+    if reporting_target not in REPORTING_TARGETS:
+        raise ValueError("reporting target must be epics or cto")
+    if not isinstance(receipt, dict) or receipt.get("recipient") != reporting_target:
+        raise ValueError(f"receipt recipient must be {reporting_target}")
     anchor = _anchor({key: receipt.get(key) for key in ANCHOR_KEYS})
     if hashlib.sha256(body).hexdigest() != anchor["content_sha256"]:
         raise ValueError("posted body hash does not match receipt")
@@ -324,7 +337,7 @@ def show_summary(path: Path, epic: str) -> str:
     generation = str(stored["generation"])
     if len(generation) > 32:
         generation = "[large integer]"
-    return f"CTO blockers: generation {generation}; {len(stored['items'])} recorded blockers"
+    return f"Blocker baseline: generation {generation}; {len(stored['items'])} recorded blockers"
 
 
 EPILOG = """Examples:
@@ -336,20 +349,26 @@ private CTO-BLOCKERS-LEDGER.json sidecar and its lock next to DRIVER-STATE.md.
 No command sends a message. Input files are bounded to 1 MiB, never clipped.
 Current: exactly {"epic":"infra","complete":true,"items":[...]}; each item has
 exactly five non-empty strings: id, state, owner, waits_on, action. Receipt:
-Fleet Comms JSON with recipient="cto", message_id, content_sha256, created_at
+Fleet Comms JSON with recipient matching --reporting-target (default epics),
+message_id, content_sha256, created_at
 (ISO-8601 with timezone). BODY is the exact UTF-8 posted body: post each
 non-UNCHANGED item with all its fields on one line, and each RESOLVED item with
 the exact case-sensitive standalone token RESOLVED <id> on its own non-active
 line (no other fields or prose).
+Ordinary reports go to epics. Only explicit CTO operator escalation uses
+--reporting-target cto. The receipt never selects the expected target.
+Existing CTO anchors stay readable; the original sidecar name and schema stay
+unchanged. Anchors have no recipient field, so show reports a neutral baseline.
 Exit codes: 0 success; 1 invalid/unreadable data or rejected record (no classes
 on delta failure, previous ledger untouched); 2 invalid/missing CLI arguments.
-Related: scripts.driver_state; issue #10362, epic #7919.
+Related: scripts.driver_state; docs/runbooks/fleet-blocker-reporting.md;
+issues #10362 and #10419, epic #7919.
 """
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Compare current owned blockers with the last recorded CTO post.\n"
+        description="Compare current owned blockers with the last recorded blocker post.\n"
         "Use on driver wakes before posting; never use partial or unknown data to suppress a blocker.",
         epilog=EPILOG,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -357,7 +376,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     for name, description in (
         ("delta", "Emit NEW/CHANGED/RESOLVED/UNCHANGED classes before posting."),
-        ("record", "Record a successful CTO post only after receipt/body validation."),
+        ("record", "Record a successful blocker post only after target/receipt/body validation."),
         ("show", "Show the bounded baseline summary without filesystem paths."),
     ):
         cmd = sub.add_parser(
@@ -377,9 +396,15 @@ def main(argv: list[str] | None = None) -> int:
                 "--receipt",
                 type=Path,
                 required=True,
-                help="Successful Fleet Comms CTO receipt JSON, e.g. receipt.json.",
+                help="Successful Fleet Comms receipt JSON for the selected target, e.g. receipt.json.",
             )
-            cmd.add_argument("--body-file", type=Path, required=True, help="Exact bytes posted to CTO, e.g. posted.md.")
+            cmd.add_argument("--body-file", type=Path, required=True, help="Exact bytes posted, e.g. posted.md.")
+            cmd.add_argument(
+                "--reporting-target",
+                choices=REPORTING_TARGETS,
+                default="epics",
+                help="Expected receipt recipient: epics (default); cto only for explicit operator escalation.",
+            )
             cmd.add_argument(
                 "--expect-generation",
                 type=int,
@@ -403,6 +428,7 @@ def main(argv: list[str] | None = None) -> int:
                     _read_json(args.receipt),
                     _read_bytes(args.body_file),
                     args.expect_generation,
+                    reporting_target=args.reporting_target,
                 )
                 result = {"generation": updated["generation"], "recorded": True}
             print(json.dumps(result, ensure_ascii=False))
