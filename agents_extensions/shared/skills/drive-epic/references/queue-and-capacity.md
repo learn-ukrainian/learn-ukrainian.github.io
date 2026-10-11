@@ -5,6 +5,12 @@ whether a free lane may stay idle.
 
 ## §2. Pick the next unblocked action
 
+Reconcile the latest operator directive with the issue, frozen packet, and handoff
+before choosing work. Apply it over stale stop text, meaning stop text older than
+the directive and in conflict with it. An explicit operator pause requires
+explicit operator release; a newer unrelated directive is not a release. Record
+superseded instructions and unresolved conflicts.
+
 Source of next work: your epic's stream tail / handoff, open GH issues for the epic, the
 build/review queue, the Work API projection's ranked attention list (§0), and
 `GET /api/work/v1/next?stream=<your-stream>` — cross-check against them before committing to
@@ -12,6 +18,18 @@ an action. **Step 0 of any dispatch:** `gh pr list --state all
 --search "<issue-nr>"` by issue reference (an open issue ≠ unfixed; a sibling PR may already
 carry it). If nothing genuinely fits a free lane, record the §2c `no_ready_work`
 disposition and leave it idle — never manufacture busywork (quality > utilization).
+
+### Friction report
+
+After checking the lane's actual work, maintain one friction comment on the
+existing owner's public issue. Create it on the first finding, then edit it in
+place each cycle: replace the fields, do not append. Include the affected outcome,
+sanitized evidence, known or unknown cause, measured waste only when measured,
+working path, smallest correction, accountable owner, and falsifiable DoD. Write
+NONE only after that check by editing the same comment if one already exists;
+never create a comment just to say NONE. Put the final state in the issue's closing
+comment. Keep sensitive evidence in private operational evidence. Do not create a
+channel, and do not post one report per message.
 
 ## §2-epic. Epic issue ownership cycle (binding — operator 2026-08-28)
 

@@ -13,6 +13,12 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 If the head moves after APPROVE, the CF is stale — re-run exact-head CF before any
 enqueue or re-queue.
 
+Label a source-only review static and state its unverified execution behavior.
+Keep the execution-dependent review route in [model-deltas](model-deltas.md);
+do not request an executing review solely because a path is integration code.
+Never record an APPROVE over a pipeline `CHANGES_REQUESTED`; reconcile the finding
+through the author and obtain fresh exact-head review after any content change.
+
 - **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or
   native harnesses); ACP is toolless intercomm only (state transfer / ordinary asks and
   `discuss` with 2 to 4 enabled seats; every other participant count rejects), and
@@ -143,6 +149,9 @@ The sole ordered landing and cleanup recipe is
 PR, same-head CI before enqueue, non-draft PR, no `--auto`, `--delete-branch`
 or `--admin`, confirm MERGED, then common-reaper cleanup. A moved head voids
 both gates; missing evidence never grants approval.
+
+Immediately before enqueue, run the [core inbox drain](../SKILL.md#the-loop--run-it-every-cycle)
+and reconcile its messages with the approved head and landing decision.
 
 **Merge-queue visibility after enqueue (#7814 item 13).** After `.venv/bin/python -m scripts.publish pr-merge --number <N>`, GitHub
 prints `! The merge strategy for main is set by the merge queue` while the PR stays
