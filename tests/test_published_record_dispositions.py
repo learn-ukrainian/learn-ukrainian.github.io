@@ -412,6 +412,10 @@ def test_native_actionable_release_requires_canonical_qualification(tmp_path, fa
         "harness",
         "head",
         "self_review",
+        "alias_self_review",
+        "unknown_author",
+        "unknown_reviewer",
+        "unknown_marker",
         "failed_review",
         "fork",
         "cycle",
@@ -449,6 +453,16 @@ def test_release_review_cannot_be_asserted_by_clearance(tmp_path, fault):
         receipt["target"]["head_sha"] = "b" * 40
     elif fault == "self_review":
         receipt["author"]["family"] = receipt["reviewer"]["family"]
+    elif fault == "alias_self_review":
+        receipt["author"]["family"] = "codex"
+        receipt["reviewer"]["family"] = "openai"
+    elif fault == "unknown_author":
+        receipt["author"]["family"] = "sol"
+    elif fault == "unknown_reviewer":
+        receipt["reviewer"]["family"] = "sol"
+    elif fault == "unknown_marker":
+        body = verdict_path.read_text().replace("family: anthropic", "family: sol")
+        verdict_path.write_text(body)
     elif fault == "failed_review":
         receipt["exit_code"] = 2
     elif fault == "fork":
@@ -457,11 +471,22 @@ def test_release_review_cannot_be_asserted_by_clearance(tmp_path, fault):
         hold["supersedes"] = [{"row_id": release["row_id"]}]
     elif fault == "chain":
         add_release(tmp_path, ledger, release, suffix="chain")
-    if fault in {"clearance", "model", "family", "harness", "head", "self_review", "failed_review"}:
+    if fault in {
+        "clearance",
+        "model",
+        "family",
+        "harness",
+        "head",
+        "self_review",
+        "alias_self_review",
+        "unknown_author",
+        "unknown_reviewer",
+        "failed_review",
+    }:
         receipt_path.write_text(json.dumps(receipt))
         binding["receipt_sha256"] = hashlib.sha256(receipt_path.read_bytes()).hexdigest()
         binding["receipt_json"] = receipt_path.read_text()
-    if fault == "bare_approval":
+    if fault in {"bare_approval", "unknown_marker"}:
         binding["verdict_sha256"] = hashlib.sha256(verdict_path.read_bytes()).hexdigest()
         binding["verdict_body"] = verdict_path.read_text()
     write_yaml(tmp_path / dispositions.LEDGER_PATH, ledger)

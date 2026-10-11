@@ -5,8 +5,10 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+from typing import Any
 
 import pytest
+import yaml
 
 from scripts.audit import apply_source_inventory_promotion as applier
 from scripts.audit import apply_source_inventory_provenance as overlay
@@ -511,13 +513,20 @@ def test_grow_promotion_refuses_held_candidate_with_preexisting_conformance(tmp_
     assert grow.verify_promoted_entries(manifest_path, [held_entry]) == 2
     assert "disposition:" in capsys.readouterr().err
 
-    # _validate_promoted_entries_before_write raises SelfCheckError / DispositionError
-    with pytest.raises((dispositions.DispositionError, grow.SelfCheckError)):
+    # Both write hooks call validate_manifest and refuse held entry even with permissive check callbacks
+    with pytest.raises(dispositions.DispositionError):
         grow._validate_promoted_entries_before_write(
             {"entries": [held_entry]},
             manifest_path,
             [held_entry],
-            grow.verify_promoted_entries,
+            lambda *_: 0,
+        )
+
+    with pytest.raises(dispositions.DispositionError):
+        grow._validate_before_write(
+            {"entries": [held_entry]},
+            manifest_path,
+            lambda *_: 0,
         )
 
 
@@ -526,10 +535,61 @@ def test_fill_from_content_withholds_held_built_row(tmp_path):
 
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text('{"entries": []}')
-    # society-and-media has held row 18: достовірний
+
+    # Set up temporary curriculum with b1/society-and-media containing 19 rows (index 18 is held достовірний)
+    curriculum_root = tmp_path / "curriculum"
+    module_dir = curriculum_root / "b1" / "society-and-media"
+    module_dir.mkdir(parents=True)
+    real_vocab = fill._load_vocab_entries(fill.CURRICULUM_ROOT / "b1" / "society-and-media" / "vocabulary.yaml")
+    test_vocab = real_vocab[:19]
+    (module_dir / "vocabulary.yaml").write_text(yaml.dump(test_vocab, allow_unicode=True), encoding="utf-8")
+
+    # Injected vesum_lookup that confirms достовірний as a lemma
+    def mock_vesum(words: list[str]) -> dict[str, list[dict[str, Any]]]:
+        return {w: [{"lemma": w, "pos": "adjective"}] for w in words}
+
+    # 1. With withholding active, row 18 is withheld and not added
     result = fill.fill_manifest_from_vocab(
         manifest_path=manifest_path,
+        curriculum_root=curriculum_root,
         track="b1",
         write=False,
+        vesum_lookup=mock_vesum,
     )
     assert "достовірний" not in {entry.lemma for entry in result.added}
+
+    # 2. With withholding bypassed, guard_entry raises DispositionError
+    authority = dispositions.load_dispositions()
+    entry = fill._manifest_entry(
+        "достовірний",
+        test_vocab[18],
+        fill.ModuleInfo("b1", "society-and-media", 73, module_dir / "vocabulary.yaml"),
+        {"lemma": "достовірний", "pos": "adjective"},
+    )
+    with pytest.raises(dispositions.DispositionError, match="active held built contribution present"):
+        authority.guard_entry(entry)
+
+    # 3. A changed row at index 18 raises DispositionError on changed built row
+    changed_vocab = copy.deepcopy(test_vocab)
+    changed_vocab[18]["translation"] = "tampered"
+    (module_dir / "vocabulary.yaml").write_text(yaml.dump(changed_vocab, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(dispositions.DispositionError, match="changed/moved built row at ingestion"):
+        fill.fill_manifest_from_vocab(
+            manifest_path=manifest_path,
+            curriculum_root=curriculum_root,
+            track="b1",
+            write=False,
+            vesum_lookup=mock_vesum,
+        )
+
+    # 4. A moved row (at index 0 instead of 18) raises DispositionError on moved/duplicated built origin
+    moved_vocab = [test_vocab[18]]
+    (module_dir / "vocabulary.yaml").write_text(yaml.dump(moved_vocab, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(dispositions.DispositionError, match="moved/duplicated built origin"):
+        fill.fill_manifest_from_vocab(
+            manifest_path=manifest_path,
+            curriculum_root=curriculum_root,
+            track="b1",
+            write=False,
+            vesum_lookup=mock_vesum,
+        )

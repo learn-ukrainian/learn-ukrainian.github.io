@@ -18,7 +18,7 @@ from typing import Any
 
 import yaml
 
-from scripts.audit.model_families import normalize_family
+from scripts.audit.model_families import Family, normalize_family
 from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.orchestration.integration_sweep import parse_marker
@@ -179,7 +179,14 @@ def _validate_release_review(
         )
     author_family = normalize_family(author["family"])
     reviewer_family = normalize_family(reviewer["family"])
-    _require(author_family is not None and reviewer_family is not None, "unknown release model family")
+    _require(
+        author_family is not None and author_family is not Family.UNKNOWN,
+        "unknown release model family",
+    )
+    _require(
+        reviewer_family is not None and reviewer_family is not Family.UNKNOWN,
+        "unknown release model family",
+    )
     _require(author_family != reviewer_family, "release self-review refused")
     body = body_bytes.decode("utf-8")
     marker = parse_marker(body)
@@ -187,10 +194,15 @@ def _validate_release_review(
         marker and marker.get("verdict") == "APPROVED" and marker.get("review_mode", "cross_family") == "cross_family",
         "release requires recorder cross-family APPROVED verdict",
     )
+    marker_family = normalize_family(marker.get("family"))
+    _require(
+        marker_family is not None and marker_family is not Family.UNKNOWN,
+        "unknown release marker model family",
+    )
     _require(
         marker["sha"] == target["head_sha"]
         and marker["model"] == reviewer["model"]
-        and normalize_family(marker["family"]) == reviewer_family,
+        and marker_family == reviewer_family,
         "release native head/model/family mismatch",
     )
     _require(
@@ -281,7 +293,7 @@ class Dispositions:
                         names = [entry.get("lemma"), *entry.get("slug_variants", [])]
                         names += [n.get("source_lemma") for n in entry.get("atlas_normalizations", [])]
                         _require(origin["lemma"] not in names, "active held built contribution present")
-                if str(entry.get("primary_source") or "").startswith("built_vocabulary"):
+                if str(entry.get("primary_source") or "").startswith("built_vocabulary") and not usages:
                     names = [entry.get("lemma"), *entry.get("slug_variants", [])]
                     names += [n.get("source_lemma") for n in entry.get("atlas_normalizations", [])]
                     _require(origin["lemma"] not in names, "active held built contribution present")

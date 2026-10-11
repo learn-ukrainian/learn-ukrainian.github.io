@@ -58,7 +58,7 @@ from scripts.lexicon.manifest_fingerprint import (
     build_fingerprint,
     write_fingerprint,
 )
-from scripts.lexicon.published_record_dispositions import load_dispositions
+from scripts.lexicon.published_record_dispositions import DispositionError, load_dispositions
 from scripts.lexicon.source_attribution import apply_entry_attribution
 from scripts.sync.promote_module import _write_atomically
 
@@ -364,7 +364,7 @@ def verify_promoted_entries(manifest_path: Path, entries: Sequence[Mapping[str, 
     for entry in entries:
         try:
             authority.guard_entry(entry)
-        except Exception as exc:
+        except DispositionError as exc:
             disposition_errors.append(f"{entry.get('lemma')}: {exc}")
 
     if (
