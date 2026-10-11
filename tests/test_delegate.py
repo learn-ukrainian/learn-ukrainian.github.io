@@ -28,6 +28,7 @@ import time
 import urllib.error
 from datetime import UTC, datetime
 from pathlib import Path
+from tempfile import TemporaryDirectory, gettempdir
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -55,6 +56,21 @@ def isolated_dispatch_repo(tmp_path, monkeypatch):
     from tests.helpers.dispatch_checkout import isolate_dispatch_repo
 
     return isolate_dispatch_repo(monkeypatch, tmp_path, delegate)
+
+
+@pytest.fixture
+def non_git_path():
+    """Own non-repository scratch independently of pytest's basetemp ancestry."""
+    with TemporaryDirectory(prefix="delegate-non-git-", dir=gettempdir()) as scratch:
+        path = Path(scratch)
+        discovery = subprocess.run(
+            ["git", "rev-parse", "--git-common-dir"],
+            cwd=path, env=delegate._sanitized_git_env(),
+            capture_output=True, text=True, timeout=10,
+        )
+        assert discovery.returncode == 128, discovery.stderr
+        assert "not a git repository" in discovery.stderr
+        yield path
 
 
 @pytest.fixture
@@ -11620,11 +11636,10 @@ def test_cross_repo_guard_allows_explicit_cwd_from_sibling(tmp_path, monkeypatch
     )
 
 
-def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch):
+def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch, non_git_path):
     (tmp_path / "primary").mkdir()
     primary, _ = _init_repo_with_worktree(tmp_path / "primary")
-    loose = tmp_path / "not-a-repo"
-    loose.mkdir()
+    loose = non_git_path
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
 
     assert (
@@ -12340,7 +12355,9 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
 
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
-def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_dir, tmp_path, monkeypatch, target):
+def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(
+    tmp_tasks_dir, tmp_path, monkeypatch, target, non_git_path,
+):
     """#9739: a --cwd checkout of another repository skips authoring admission like --repo; the primary's own
     worktree at the same relative path (``.worktrees/dispatch/codex/task-1``) is admitted as usual."""
     primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
@@ -12348,7 +12365,7 @@ def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_d
     assert primary_wt.is_dir() and primary_wt.relative_to(primary) == sibling_wt.relative_to(sibling)
     assert delegate._is_other_repository(sibling_wt, primary)
     assert not delegate._is_other_repository(primary_wt, primary)
-    assert not delegate._is_other_repository(tmp_path, primary)  # outside git: identity unproven, never a sibling
+    assert not delegate._is_other_repository(non_git_path, primary)  # outside git: identity unproven, never a sibling
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     checkout = sibling_wt if target == "sibling" else primary_wt
