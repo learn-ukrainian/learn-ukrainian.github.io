@@ -34,17 +34,20 @@ database.
 ## 1. Recreate the checkout and Python environment
 
 ```bash
-git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git \
-  /absolute/path/to/clean/learn-ukrainian
-cd /absolute/path/to/clean/learn-ukrainian
-git switch main
-git pull --ff-only
+(
+  set -euo pipefail
+  git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git \
+    /absolute/path/to/clean/learn-ukrainian
+  cd /absolute/path/to/clean/learn-ukrainian || exit 1
+  git switch main
+  git pull --ff-only
 
-PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.14
-pyenv local 3.12.14
-uv venv --python 3.12.14 .venv
-.venv/bin/python -m pip install --upgrade pip
-uv pip install --python .venv/bin/python -r requirements.txt -r requirements-dev.txt
+  PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.14
+  pyenv local 3.12.14
+  uv venv --python 3.12.14 .venv
+  .venv/bin/python -m pip install --upgrade pip
+  uv pip install --python .venv/bin/python -r requirements.txt -r requirements-dev.txt
+)
 ```
 
 If `pyenv install` reports that 3.12.14 already exists, retain that interpreter;
@@ -124,9 +127,52 @@ Retain the stage until application checks pass.
 The tracked agent-extension sources regenerate local ignored deployment files:
 
 ```bash
-cd /absolute/path/to/clean/learn-ukrainian
-npm ci
-npm run agents:deploy
+(
+  set -euo pipefail
+  cd /absolute/path/to/clean/learn-ukrainian || exit 1
+  nvmrc="$(tr -d '[:space:]' < .nvmrc)"
+  engines="$(node -p 'require("./package.json").engines.node')"
+  node_version="$(node --version)"
+  npm_version="$(npm --version)"
+  node_bin="$(readlink -f -- "$(command -v node)")"
+  npm_bin="$(readlink -f -- "$(command -v npm)")"
+  node_prefix="$(dirname "$(dirname "$node_bin")")"
+  case "$npm_bin/" in
+    "$node_prefix"/*) ;;
+    *)
+      printf 'npm is not the npm that ships with this Node.\n' >&2
+      exit 1
+      ;;
+  esac
+  case "$node_version" in
+    v"$nvmrc"|v"$nvmrc".*) ;;
+    *)
+      printf 'Node %s does not match .nvmrc (%s).\n' "$node_version" "$nvmrc" >&2
+      exit 1
+      ;;
+  esac
+  case "$engines" in
+    *.x)
+      major="${engines%.x}"
+      case "$node_version" in
+        v"$major".*) ;;
+        *)
+          printf 'Node %s does not satisfy engines.node (%s).\n' \
+            "$node_version" "$engines" >&2
+          exit 1
+          ;;
+      esac
+      ;;
+    *)
+      printf 'Unsupported engines.node range (%s).\n' "$engines" >&2
+      exit 1
+      ;;
+  esac
+  printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
+    "$nvmrc" "$engines" "$node_version" "$npm_version"
+  npm ci
+  npm run agents:deploy
+)
 ```
 
 Do not restore old `.agent/`, `.codex/`, lock, wake, cache, or session-state
@@ -140,12 +186,16 @@ with the account that will sign and push commits. Do not copy another person's
 identity or any credential file.
 
 ```bash
-git config user.name "Your name"
-git config user.email "your-verified-email@example.invalid"
-git config --get user.name
-git config --get user.email
-git status --short --branch
-.venv/bin/python -c "import sqlite3; print(sqlite3.sqlite_version)"
+(
+  set -euo pipefail
+  cd /absolute/path/to/clean/learn-ukrainian || exit 1
+  git config user.name "Your name"
+  git config user.email "your-verified-email@example.invalid"
+  git config --get user.name
+  git config --get user.email
+  git status --short --branch
+  .venv/bin/python -c "import sqlite3; print(sqlite3.sqlite_version)"
+)
 ```
 
 Finally run the smallest relevant test or application health check for the
@@ -187,45 +237,162 @@ Use this when the primary checkout is still present and its shared
 so every command below runs in the primary checkout only. Never run them from
 a dispatch worktree.
 
-`.nvmrc` pins Node 22 and `package.json` `engines.node` is `22.x`. Confirm
-`node` and `npm` against both before installing. `npm` must be the npm that
-ships with that Node.
+`.nvmrc` pins Node 22 and `package.json` `engines.node` is `22.x`. The block
+exits unless `node` matches `.nvmrc` and satisfies `engines.node`, and unless
+`npm` resolves inside that Node's prefix (the npm that ships with it). A
+failed `cd` exits before `npm ci`.
 
 ```bash
-cd /absolute/path/to/primary/learn-ukrainian
-nvmrc="$(tr -d '[:space:]' < .nvmrc)"
-engines="$(node -p 'require("./package.json").engines.node')"
-node_version="$(node --version)"
-npm_version="$(npm --version)"
-printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
-  "$nvmrc" "$engines" "$node_version" "$npm_version"
-case "$node_version" in
-  v"$nvmrc".*) ;;
-  *)
-    printf 'Node %s does not match .nvmrc (%s) / engines (%s).\n' \
-      "$node_version" "$nvmrc" "$engines" >&2
-    exit 1
-    ;;
-esac
-npm ci
+(
+  set -euo pipefail
+  cd /absolute/path/to/primary/learn-ukrainian || exit 1
+  nvmrc="$(tr -d '[:space:]' < .nvmrc)"
+  engines="$(node -p 'require("./package.json").engines.node')"
+  node_version="$(node --version)"
+  npm_version="$(npm --version)"
+  node_bin="$(readlink -f -- "$(command -v node)")"
+  npm_bin="$(readlink -f -- "$(command -v npm)")"
+  node_prefix="$(dirname "$(dirname "$node_bin")")"
+  case "$npm_bin/" in
+    "$node_prefix"/*) ;;
+    *)
+      printf 'npm is not the npm that ships with this Node.\n' >&2
+      exit 1
+      ;;
+  esac
+  case "$node_version" in
+    v"$nvmrc"|v"$nvmrc".*) ;;
+    *)
+      printf 'Node %s does not match .nvmrc (%s).\n' "$node_version" "$nvmrc" >&2
+      exit 1
+      ;;
+  esac
+  case "$engines" in
+    *.x)
+      major="${engines%.x}"
+      case "$node_version" in
+        v"$major".*) ;;
+        *)
+          printf 'Node %s does not satisfy engines.node (%s).\n' \
+            "$node_version" "$engines" >&2
+          exit 1
+          ;;
+      esac
+      ;;
+    *)
+      printf 'Unsupported engines.node range (%s).\n' "$engines" >&2
+      exit 1
+      ;;
+  esac
+  printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
+    "$nvmrc" "$engines" "$node_version" "$npm_version"
+  npm ci
+)
 ```
 
 `npm ci` removes `node_modules` before it reinstalls. A failed run leaves the
-directory nearly empty. Retry `npm ci` until it exits 0. Do not leave a
-partial install in place.
+directory nearly empty. Retry that block until `npm ci` exits 0. Do not leave
+a partial install in place.
 
-If puppeteer's postinstall fails because its browser cache directory exists
-but is empty, confirm the directory is empty, remove that empty directory,
-and retry `npm ci`. The default cache is `$HOME/.cache/puppeteer` unless
-`PUPPETEER_CACHE_DIR` is set. `find` checks emptiness first, and `rmdir`
-refuses a directory that still has anything in it.
+Puppeteer's postinstall fails when the per-browser installation directory
+already exists and the executable inside it is missing. The message names
+that directory and the executable, for example a folder
+`<cache>/chrome/linux-<buildId>` whose executable
+`<cache>/chrome/linux-<buildId>/chrome-linux64/chrome` is absent. That folder
+is not the cache root. The cache root stays non-empty while the installation
+directory exists, so removing an empty cache root does not clear the failure.
+
+Set `install_dir` and `executable` to the two paths from the message. The
+default cache is `$HOME/.cache/puppeteer` unless `PUPPETEER_CACHE_DIR` is set.
+The block then checks that the installation directory resolves strictly inside
+the cache and is not the cache itself, that the named executable is absent,
+and that the directory contains no entries. Only then does it `rmdir` that
+directory. It never uses `rm -rf`.
+
+A scratch cache showed that behavior: `rmdir` removes an empty
+`chrome/linux-<buildId>` directory and leaves the cache root; a directory
+that still contains `chrome-linux64/` is left in place; the cache root and a
+directory outside the cache are left in place. Selecting a missing primary
+directory exits before `npm ci`.
 
 ```bash
-cache="${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}"
-if [ -d "$cache" ] && [ -z "$(find "$cache" -mindepth 1 -print -quit)" ]; then
-  rmdir "$cache"
-fi
-npm ci
+(
+  set -euo pipefail
+  cd /absolute/path/to/primary/learn-ukrainian || exit 1
+  nvmrc="$(tr -d '[:space:]' < .nvmrc)"
+  engines="$(node -p 'require("./package.json").engines.node')"
+  node_version="$(node --version)"
+  npm_version="$(npm --version)"
+  node_bin="$(readlink -f -- "$(command -v node)")"
+  npm_bin="$(readlink -f -- "$(command -v npm)")"
+  node_prefix="$(dirname "$(dirname "$node_bin")")"
+  case "$npm_bin/" in
+    "$node_prefix"/*) ;;
+    *)
+      printf 'npm is not the npm that ships with this Node.\n' >&2
+      exit 1
+      ;;
+  esac
+  case "$node_version" in
+    v"$nvmrc"|v"$nvmrc".*) ;;
+    *)
+      printf 'Node %s does not match .nvmrc (%s).\n' "$node_version" "$nvmrc" >&2
+      exit 1
+      ;;
+  esac
+  case "$engines" in
+    *.x)
+      major="${engines%.x}"
+      case "$node_version" in
+        v"$major".*) ;;
+        *)
+          printf 'Node %s does not satisfy engines.node (%s).\n' \
+            "$node_version" "$engines" >&2
+          exit 1
+          ;;
+      esac
+      ;;
+    *)
+      printf 'Unsupported engines.node range (%s).\n' "$engines" >&2
+      exit 1
+      ;;
+  esac
+  printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
+    "$nvmrc" "$engines" "$node_version" "$npm_version"
+  cache="${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}"
+  install_dir="<browser folder from the puppeteer error>"
+  executable="<executable path from the puppeteer error>"
+  cache_real="$(readlink -f -- "$cache")"
+  install_real="$(readlink -f -- "$install_dir")"
+  if [ "$install_real" = "$cache_real" ]; then
+    printf 'Refusing to remove the browser cache root.\n' >&2
+    exit 1
+  fi
+  case "$install_real/" in
+    "$cache_real"/*) ;;
+    *)
+      printf 'Refusing to remove a browser folder outside the cache.\n' >&2
+      exit 1
+      ;;
+  esac
+  case "$executable" in
+    "$install_dir"/*) ;;
+    *)
+      printf 'Refusing to remove a browser folder whose executable is outside it.\n' >&2
+      exit 1
+      ;;
+  esac
+  if [ -e "$executable" ] || [ -L "$executable" ]; then
+    printf 'Refusing to remove a browser folder that still has its executable.\n' >&2
+    exit 1
+  fi
+  if [ -n "$(find "$install_dir" -mindepth 1 -print -quit)" ]; then
+    printf 'Refusing to remove a browser folder that is not empty.\n' >&2
+    exit 1
+  fi
+  rmdir "$install_dir"
+  npm ci
+)
 ```
 
 Confirm the restored install:
