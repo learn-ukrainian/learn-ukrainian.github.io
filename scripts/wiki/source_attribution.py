@@ -6,6 +6,7 @@ import os
 import re
 import sqlite3
 import sys
+import urllib.parse
 from pathlib import Path
 
 from .config import PROJECT_ROOT
@@ -449,8 +450,10 @@ def registry_entry_resolves_to_sources_db(entry: object, conn: SQLiteConnection)
         return False
 
     if file_value.startswith(("http://", "https://")):
-        if "wikipedia.org" in file_value:
-            title = file_value.rstrip("/").rsplit("/", 1)[-1]
+        parsed = urllib.parse.urlsplit(file_value)
+        host = (parsed.hostname or "").lower()
+        if host == "wikipedia.org" or host.endswith(".wikipedia.org"):
+            title = parsed.path.rstrip("/").rsplit("/", 1)[-1]
             return (
                 conn.execute(
                     "SELECT 1 FROM wikipedia WHERE title = ? OR url = ? LIMIT 1",
