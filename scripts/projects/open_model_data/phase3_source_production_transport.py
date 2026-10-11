@@ -26,6 +26,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.common.task_store_paths import tasks_dir
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
@@ -940,7 +941,7 @@ def _prompt_with_response_contract(prompt: bytes, schema_path: Path, lane: str, 
 
 def _resolve_packet_task_id(base_task_id: str, index: int, *, tasks_root: Path | None = None) -> str:
     """Derive a collision-free task ID per packet and attempt."""
-    root_dir = tasks_root or (ROOT / "batch_state" / "tasks")
+    root_dir = tasks_root if tasks_root is not None else tasks_dir()
     attempt = 1
     while True:
         candidate = f"{base_task_id}-p{index:05d}-a{attempt:02d}"

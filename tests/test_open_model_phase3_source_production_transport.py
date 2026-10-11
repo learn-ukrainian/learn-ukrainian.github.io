@@ -677,23 +677,39 @@ def test_review_completion_gate_verdict_and_trailing_json_extraction() -> None:
         assert json.loads(extracted.decode("utf-8")) == response
 
 
-def test_run_packets_generates_distinct_task_ids_and_handles_retries(tmp_path: Path) -> None:
+def test_run_packets_generates_distinct_task_ids_and_handles_retries(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from unittest.mock import patch
 
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir(parents=True)
+    tasks_dir_path = tmp_path / "tasks"
+    tasks_dir_path.mkdir(parents=True)
 
-    # Test _resolve_packet_task_id directly
-    id_p1_a1 = transport._resolve_packet_task_id("test-role", 1, tasks_root=tasks_dir)
+    # Test _resolve_packet_task_id directly with explicit tasks_root
+    id_p1_a1 = transport._resolve_packet_task_id("test-role", 1, tasks_root=tasks_dir_path)
     assert id_p1_a1 == "test-role-p00001-a01"
-    id_p2_a1 = transport._resolve_packet_task_id("test-role", 2, tasks_root=tasks_dir)
+    id_p2_a1 = transport._resolve_packet_task_id("test-role", 2, tasks_root=tasks_dir_path)
     assert id_p2_a1 == "test-role-p00002-a01"
     assert id_p1_a1 != id_p2_a1
 
     # Simulate attempt 1 existing in batch_state/tasks/
-    (tasks_dir / f"{id_p1_a1}.json").write_text("{}", encoding="utf-8")
-    id_p1_a2 = transport._resolve_packet_task_id("test-role", 1, tasks_root=tasks_dir)
+    (tasks_dir_path / f"{id_p1_a1}.json").write_text("{}", encoding="utf-8")
+    id_p1_a2 = transport._resolve_packet_task_id("test-role", 1, tasks_root=tasks_dir_path)
     assert id_p1_a2 == "test-role-p00001-a02"
+
+    # Regression test: default tasks_root=None resolves via shared tasks_dir() honoring LU_TASKS_DIR
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir_path))
+    id_default = transport._resolve_packet_task_id("test-role", 1)
+    assert id_default == "test-role-p00001-a02"
+
+    # Simulate attempt 2 existing; next resolve produces -a03
+    (tasks_dir_path / f"{id_p1_a2}.json").write_text("{}", encoding="utf-8")
+    id_p1_a3 = transport._resolve_packet_task_id("test-role", 1)
+    assert id_p1_a3 == "test-role-p00001-a03"
+
+    # Simulate archived attempt 3 existing; next resolve produces -a04
+    archive_dir = tasks_dir_path / "archive"
+    archive_dir.mkdir(parents=True)
+    (archive_dir / f"{id_p1_a3}.json").write_text("{}", encoding="utf-8")
+    assert transport._resolve_packet_task_id("test-role", 1) == "test-role-p00001-a04"
 
     # Test end-to-end command generation through _run_packets
     manifest = {
