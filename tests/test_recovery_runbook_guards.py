@@ -116,7 +116,10 @@ def test_recovery_block_rmdirs_before_quarantine_and_preserves_newlines() -> Non
     assert "printf x" in block
     assert "${captured%x}" in block
     move = "mv -T --update=none-fail --"
-    assert block.index("rmdir --") < block.index('lsof -nP +D "$cache_real"') < block.index(move)
+    probe = 'timeout 120 lsof -nP -F p +D "$1"'
+    assert block.index("rmdir --") < block.index(probe) < block.index(move)
+    assert block.index(probe) < block.index('_probe_cache_holders "$cache_real"') < block.index(move)
+    assert 'lsof -nP +D "$cache_real" 2>/dev/null || true' not in block
     assert block.index(move) < block.index(_NPM_CI_LINE)
     assert "Refusing to quarantine the browser cache while a process holds it." in block
     assert "Refusing to quarantine over an existing path." in block
@@ -342,6 +345,22 @@ def _executable_stub(directory: Path, name: str, body: str) -> Path:
     return path
 
 
+def _partial_install(tmp_path: Path) -> tuple[Path, Path, Path]:
+    cache = tmp_path / "cache"
+    install = cache / "chrome" / "linux-1"
+    (install / "chrome-linux64").mkdir(parents=True)
+    (install / "chrome-linux64" / "leftover").write_text("keep", encoding="utf-8")
+    kept = _sentinel(cache)
+    return cache, install, kept
+
+
+def _assert_install_stays(install: Path, kept: Path) -> None:
+    assert install.is_dir()
+    assert (install / "chrome-linux64" / "leftover").read_text(encoding="utf-8") == "keep"
+    assert list(install.parent.glob("linux-1.quarantine.*")) == []
+    assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
 def test_destination_created_after_the_existence_check_is_left_intact(tmp_path: Path) -> None:
     """An empty destination created after the absence check must not be replaced."""
     cache = tmp_path / "cache"
@@ -437,3 +456,197 @@ def test_ancestor_swap_before_the_move_does_not_leave_the_cache(tmp_path: Path) 
     assert proc.returncode != 0, proc.stderr
     assert "Refusing to quarantine the browser cache while a process holds it." in proc.stderr
     assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_lsof_error_exit_does_not_rename(tmp_path: Path) -> None:
+    """A probe that prints an error and exits 2 is not an idle cache."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "lsof",
+        "#!/bin/sh\nprintf '%s\\n' 'stub-error: probe failed' >&2\nexit 2\n",
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert "stub-error: probe failed" in proc.stderr
+    _assert_install_stays(install, kept)
+
+
+def test_lsof_idle_exit_1_with_no_output_quarantines(tmp_path: Path) -> None:
+    """Exit 1 and no output is the idle result measured for lsof with warnings suppressed."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(tmp_path / "bin", "lsof", "#!/bin/sh\nexit 1\n")
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert not install.exists()
+    quarantined = list((cache / "chrome").glob("linux-1.quarantine.*"))
+    assert len(quarantined) == 1
+    assert (quarantined[0] / "chrome-linux64" / "leftover").read_text(encoding="utf-8") == "keep"
+    assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_lsof_holder_field_refuses(tmp_path: Path) -> None:
+    """A p<pid> field is a holder even when lsof exits 0."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(tmp_path / "bin", "lsof", "#!/bin/sh\nprintf '%s\\n' 'p12345'\nexit 0\n")
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert "p12345" in proc.stderr
+    assert "Refusing to quarantine the browser cache while a process holds it." in proc.stderr
+    _assert_install_stays(install, kept)
+
+
+def test_lsof_timeout_is_not_idle(tmp_path: Path) -> None:
+    """coreutils timeout exit 124 refuses. An idle lsof behind it must not run the rename."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "timeout",
+        "#!/bin/sh\nprintf '%s\\n' 'timeout: command timed out' >&2\nexit 124\n",
+    )
+    _executable_stub(tmp_path / "bin", "lsof", "#!/bin/sh\nexit 1\n")
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert "timeout: command timed out" in proc.stderr
+    assert "status 124" in proc.stderr
+    _assert_install_stays(install, kept)
+
+
+def test_lsof_permission_diagnostic_is_not_idle(tmp_path: Path) -> None:
+    """Exit 1 with an opendir diagnostic is a failed probe, including beside the tracefs warning."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "lsof",
+        """#!/bin/sh
+printf '%s\\n' \\
+  "lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing" \\
+  "      Output information may be incomplete." \\
+  "lsof: WARNING: can't opendir(/cache): Permission denied" >&2
+exit 1
+""",
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert "Permission denied" in proc.stderr
+    _assert_install_stays(install, kept)
+
+
+def test_lsof_filesystem_stat_warning_stays_idle(tmp_path: Path) -> None:
+    """The tracefs stat warning measured on lsof 4.99.4 does not hide an empty selection."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "lsof",
+        """#!/bin/sh
+printf '%s\\n' \\
+  "lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing" \\
+  "      Output information may be incomplete." >&2
+exit 1
+""",
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "can't stat()" in proc.stderr
+    assert not install.exists()
+    quarantined = list((cache / "chrome").glob("linux-1.quarantine.*"))
+    assert len(quarantined) == 1
+    assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_lsof_error_after_ancestor_swap_does_not_rename_outside(tmp_path: Path) -> None:
+    """A failing probe must not quarantine through a parent swapped for an outside symlink."""
+    cache, install, kept = _partial_install(tmp_path)
+    outside = tmp_path / "outside"
+    victim = outside / "linux-1" / "chrome-linux64"
+    victim.mkdir(parents=True)
+    (victim / "marker").write_text("victim", encoding="utf-8")
+    bin_dir = tmp_path / "bin"
+    _executable_stub(
+        bin_dir,
+        "date",
+        "#!/bin/bash\n"
+        "set -euo pipefail\n"
+        'mv -T -- "$RECOVERY_ANCESTOR_DIR" "$RECOVERY_ANCESTOR_DIR.real"\n'
+        'ln -s "$RECOVERY_ANCESTOR_TARGET" "$RECOVERY_ANCESTOR_DIR"\n'
+        'exec /usr/bin/date "$@"\n',
+    )
+    _executable_stub(
+        bin_dir,
+        "lsof",
+        "#!/bin/sh\nprintf '%s\\n' 'stub-error: probe failed' >&2\nexit 2\n",
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(bin_dir),
+        extra_env={
+            "RECOVERY_ANCESTOR_DIR": str(cache / "chrome"),
+            "RECOVERY_ANCESTOR_TARGET": str(outside),
+        },
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert "stub-error: probe failed" in proc.stderr
+    assert (victim / "marker").read_text(encoding="utf-8") == "victim"
+    assert list(outside.glob("linux-1.quarantine.*")) == []
+    assert (cache / "chrome.real" / "linux-1" / "chrome-linux64" / "leftover").read_text(encoding="utf-8") == "keep"
+    assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_mv_that_rejects_the_update_option_leaves_the_folder(tmp_path: Path) -> None:
+    """An mv that rejects --update=none-fail fails closed through the existing error branch."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "mv",
+        "#!/bin/sh\nprintf '%s\\n' \"mv: unrecognized option '--update=none-fail'\" >&2\nexit 1\n",
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert "unrecognized option" in proc.stderr
+    assert "Refusing to quarantine; the browser folder was not renamed." in proc.stderr
+    _assert_install_stays(install, kept)
