@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-121 document families and 29 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+121 document families and 31 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -274,6 +274,8 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `data-youtube-discovery` | `data/youtube_discovery/` | current | sqlite: read the JSONL file directly |
 | `data-native-reviewer-lessons` | `data/native-reviewer-lessons/` | current | sqlite: no search tool; private files |
 | `data-telemetry` | `data/telemetry/` | current | api: GET /api/telemetry/tool-timings; GET /api/telemetry/legacy-comms-routes |
+| `data-movaua-db` | `data/movaua.db` | current | sqlite: read-only SQL on data/movaua.db |
+| `data-movne-pytannya-db` | `data/movne_pytannya.db` | current | sqlite: read-only SQL on data/movne_pytannya.db |
 
 <!-- END GENERATED: catalogue families -->
 
