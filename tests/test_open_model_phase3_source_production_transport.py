@@ -617,3 +617,120 @@ def test_prompt_contract_binds_nontextbook_candidate_classes_to_empty() -> None:
     assert b'"artifact":{"const":null}' in prompt
     assert b'"consumer_views":{"const":[]}' in prompt
     assert b'"disposition_code":{"const":"converted"}' in prompt
+
+
+def test_review_completion_gate_verdict_and_trailing_json_extraction() -> None:
+    from scripts import delegate
+
+    schema = json.loads(transport.DEFAULT_SCHEMA.read_text(encoding="utf-8"))
+    identity = {
+        "family_id": "school_textbooks",
+        "unit_id": "fixture-1",
+        "unit_sha256": "a" * 64,
+        "locator_sha256": "b" * 64,
+        "source_text_sha256": "c" * 64,
+    }
+    decision = {
+        "unit_id": identity["unit_id"],
+        "unit_sha256": identity["unit_sha256"],
+        "disposition_code": "not_rule_bearing",
+        "primary_source_role": "ordinary_narration",
+        "secondary_source_roles": [],
+        "claim_type": "attestation_only",
+        "candidate_classes": [],
+        "artifact": None,
+        "consumer_views": [],
+        "rationale": "Synthetic fixture only.",
+    }
+    response = {
+        "schema_version": "phase3_source_production_review_response_v1",
+        "packet_id": "phase3_source_review_packet:" + "d" * 64,
+        "identity_order": [identity],
+        "reviews": [{"unit_id": identity["unit_id"], "unit_sha256": identity["unit_sha256"], "outcome": "confirmed", "decision": decision}],
+        "parse_state": "parsed",
+    }
+    text = json.dumps(response)
+
+    # Bare JSON fails the completion gate because it lacks the verdict line
+    failure = delegate.first_completion_gate_failure(
+        {"mode": "read-only", "require_review_verdict": True},
+        response=text,
+        commits_ahead=None,
+        worktree=None,
+    )
+    assert failure is not None
+    assert failure.failure == "review_missing_verdict_line"
+
+    # Leading verdict line plus trailing JSON passes completion gate and extracts cleanly
+    for verdict in ("VERDICT: APPROVE", "VERDICT: REQUEST_CHANGES"):
+        full_response = f"{verdict}\n\n{text}"
+        assert (
+            delegate.first_completion_gate_failure(
+                {"mode": "read-only", "require_review_verdict": True},
+                response=full_response,
+                commits_ahead=None,
+                worktree=None,
+            )
+            is None
+        )
+        extracted = transport._trailing_json_response(full_response.encode("utf-8"), "review")
+        assert json.loads(extracted.decode("utf-8")) == response
+
+
+def test_run_packets_generates_distinct_task_ids_and_handles_retries(tmp_path: Path) -> None:
+    from unittest.mock import patch
+
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir(parents=True)
+
+    # Test _resolve_packet_task_id directly
+    id_p1_a1 = transport._resolve_packet_task_id("test-role", 1, tasks_root=tasks_dir)
+    assert id_p1_a1 == "test-role-p00001-a01"
+    id_p2_a1 = transport._resolve_packet_task_id("test-role", 2, tasks_root=tasks_dir)
+    assert id_p2_a1 == "test-role-p00002-a01"
+    assert id_p1_a1 != id_p2_a1
+
+    # Simulate attempt 1 existing in batch_state/tasks/
+    (tasks_dir / f"{id_p1_a1}.json").write_text("{}", encoding="utf-8")
+    id_p1_a2 = transport._resolve_packet_task_id("test-role", 1, tasks_root=tasks_dir)
+    assert id_p1_a2 == "test-role-p00001-a02"
+
+    # Test end-to-end command generation through _run_packets
+    manifest = {
+        "schema_version": "phase3_source_production_review_manifest_v1",
+        "review_packet_count": 2,
+        "bindings": {
+            "review_prompt_sha256": transport.sha256_file(Path("AGENTS.md")),
+            "transport_schema_sha256": transport.sha256_file(Path("pyproject.toml")),
+        },
+        "review_packets": [{"relative_path": "1.json"}, {"relative_path": "2.json"}],
+    }
+    commands = []
+
+    def mock_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, bytes]:
+        commands.append(command)
+        return 0, b"VERDICT: APPROVE\n{}", b""
+
+    with (
+        patch.object(transport, "_manifest", return_value=(manifest, tmp_path)),
+        patch.object(transport, "_packet_for", side_effect=lambda *args: {"packet_id": str(args[2]), "identity_order": []}),
+        patch.object(transport, "_prompt_with_response_contract", side_effect=lambda prompt, *args: prompt),
+        patch.object(transport, "_write_private", side_effect=lambda path, body: transport.sha256_bytes(body)),
+        patch.object(transport, "_write_private_json"),
+        patch.object(transport, "ingest_review"),
+    ):
+        transport._run_packets(
+            manifest_path=Path("unused"),
+            lane="review",
+            prompt_path=Path("AGENTS.md"),
+            schema_path=Path("pyproject.toml"),
+            start=1,
+            end=2,
+            invoke=mock_invoke,
+        )
+
+    task_ids = [cmd[cmd.index("--task-id") + 1] for cmd in commands]
+    assert len(task_ids) == 2
+    assert len(set(task_ids)) == 2
+    assert task_ids[0].endswith("-p00001-a01")
+    assert task_ids[1].endswith("-p00002-a01")

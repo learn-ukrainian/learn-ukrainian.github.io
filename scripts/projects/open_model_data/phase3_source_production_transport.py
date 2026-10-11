@@ -909,18 +909,47 @@ def _prompt_with_response_contract(prompt: bytes, schema_path: Path, lane: str, 
     root_contract = json.loads(canonical_json(response))
     root_contract["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     root_contract["$defs"] = {name: response_contract[name] for name in ("identity", "artifact", "decision")}
+    if lane == "review":
+        suffix_instructions = (
+            "Begin your response with an explicit review verdict line (`VERDICT: APPROVE` if "
+            "every item in the packet confirms the author proposal, otherwise `VERDICT: REQUEST_CHANGES`), "
+            "followed by a newline and the trailing strict JSON object governed by the root schema below. "
+            "The JSON Schema below is authoritative for the trailing JSON object shape; never wrap it in an "
+            "`reviewResponse` property. "
+            "Return every required field with exactly these names; `additionalProperties: false` "
+            "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
+            "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        )
+    else:
+        suffix_instructions = (
+            "The JSON Schema below is authoritative for output shape. Your returned JSON "
+            "object is the instance governed by this root schema; never wrap it in an "
+            f"`{response_name}` property. "
+            "Return every required field with exactly these names; `additionalProperties: false` "
+            "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
+            "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        )
     suffix = (
         f"\n\n# Exact machine-enforced {response_name} root contract\n\n"
-        "The JSON Schema below is authoritative for output shape. Your returned JSON "
-        "object is the instance governed by this root schema; never wrap it in an "
-        f"`{response_name}` property. "
-        "Return every required field with exactly these names; `additionalProperties: false` "
-        "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
-        "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        + suffix_instructions
         + canonical_json(root_contract)
         + "\n"
     )
     return prompt + suffix.encode("utf-8")
+
+
+def _resolve_packet_task_id(base_task_id: str, index: int, *, tasks_root: Path | None = None) -> str:
+    """Derive a collision-free task ID per packet and attempt."""
+    root_dir = tasks_root or (ROOT / "batch_state" / "tasks")
+    attempt = 1
+    while True:
+        candidate = f"{base_task_id}-p{index:05d}-a{attempt:02d}"
+        state_file = root_dir / f"{candidate}.json"
+        result_file = root_dir / f"{candidate}.result"
+        archive_file = root_dir / "archive" / f"{candidate}.json"
+        if not state_file.exists() and not result_file.exists() and not archive_file.exists():
+            return candidate
+        attempt += 1
 
 
 def _run_packets(
@@ -968,6 +997,7 @@ def _run_packets(
         prompt = _prompt_with_response_contract(base_prompt, schema_path, lane, packet)
         entry = (manifest["review_packets"] if lane == "review" else manifest["author_packets"])[index - 1]
         packet_path = root / entry["relative_path"]
+        task_id = _resolve_packet_task_id(actor["task_id"], index)
         if lane == "review":
             prompt_path = root / "review" / "prompts" / f"{index:05d}.md"
             _write_private(prompt_path, prompt)
@@ -977,7 +1007,7 @@ def _run_packets(
                 command_name,
                 "-",
                 "--task-id",
-                actor["task_id"],
+                task_id,
                 "--type",
                 "review",
                 "--to-model",
@@ -993,7 +1023,7 @@ def _run_packets(
                 command_name,
                 "-",
                 "--task-id",
-                actor["task_id"],
+                task_id,
                 "--to-model",
                 actor["exact_model"],
                 "--data",

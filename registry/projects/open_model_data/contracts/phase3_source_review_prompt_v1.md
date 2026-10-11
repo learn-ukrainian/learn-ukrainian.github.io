@@ -16,8 +16,11 @@ decision role.
 
 Return one review for every supplied item in exactly the supplied identity order.
 Copy all opaque identifiers and hashes byte-for-byte. Follow the packet's closed
-response contract and return one strict JSON object only, without Markdown, omitted
-rows, normalized identifiers, or extra fields.
+response contract: begin the output with an explicit review verdict line
+(`VERDICT: APPROVE` if every review confirms the author proposal, otherwise
+`VERDICT: REQUEST_CHANGES`), followed by the trailing strict JSON object matching
+the `reviewResponse` contract, without Markdown code fences, omitted rows,
+normalized identifiers, or extra fields.
 
 Confirm a proposal only when the source span and immutable locator support its source
 role, claim type, disposition, canonical identity, artifact, and consumer view. A
