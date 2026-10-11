@@ -306,9 +306,14 @@ The native shell event is
 `{"toolCall":{"name":"run_command","args":{"CommandLine":"printf AGY_SYNTHETIC_OK"}},"stepIdx":19}`.
 `secret_print_hook.py --harness agy` reads `toolCall.args.CommandLine`.
 A present `toolCall` is authoritative; `tool_input.command` is accepted only
-when `toolCall` is absent. Named unrelated tools allow. A `run_command` with
-absent, empty, or non-string command text denies. Malformed JSON, non-object
-or oversized stdin, and missing, crashing or late detectors deny.
+when `toolCall` is absent. Any tool name carrying `args.CommandLine` follows
+the same command validation and detector rules. Empty, whitespace-only or
+non-string command text denies. A non-`run_command` tool without that key
+allows; `run_command` without it denies. Registration still matches only
+`run_command`; whether native matching ever delivers another tool is UNKNOWN.
+Malformed JSON, non-object or oversized AGY stdin, and missing, crashing or
+late detectors deny. The stdin size cap applies only to AGY; other harnesses
+keep their unbounded read and existing decisions.
 
 The entry point normalizes command text to the shared Claude/Bash detector.
 Its detector deadline remains five seconds. The AGY detector child omits
@@ -380,6 +385,14 @@ directory. Dry runs do not spawn
 AGY or certify wiring. The adapter checks workers and reviews before
 `agy --version` or any provider subprocess and raises a typed refusal.
 Neither path changes provider on refusal.
+
+The spawn inventory distinguishes `gated` launcher and adapter starts,
+`management-exempt` MCP catalog operations, `probe-exempt` version and help
+checks, and `ungated-residual-10442` starts. Management operations start no
+model session or tool call: `_run_agy_mcp` permits exactly `list` and `add`,
+and the review catalog probe hardcodes `mcp list`. The UI send, ACP text agent,
+proxy backend and usage-command paths remain ungated residuals owned by
+[issue #10442](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10442).
 
 The adapter captures its runtime-log path and workspace root before launch.
 It uses the plan's existing `liveness_paths` and resolved `cwd` fields, keeping

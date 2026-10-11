@@ -351,12 +351,22 @@ def test_unexpected_adapter_failure_denies(harness, monkeypatch, capsys):
         ({**event("agy", "printf OK"), "tool_input": {"command": 'echo "$ARBITRARY_TOKEN"'}}, True),
         ({"tool_input": {"command": "printf OK"}}, True),
         ({"tool_input": {"command": 'echo "$ARBITRARY_TOKEN"'}}, False),
-        ({"toolCall": {"name": "view_file"}}, True),
+        ({"toolCall": {"name": "view_file", "args": {"path": "synthetic.txt"}}}, True),
+        (
+            {"toolCall": {"name": "view_file", "args": {}}, "tool_input": {"command": 'echo "$ARBITRARY_TOKEN"'}},
+            True,
+        ),
+        ({"toolCall": {"name": "view_file", "args": {"CommandLine": "printf OK"}}}, True),
+        ({"toolCall": {"name": "view_file", "args": {"CommandLine": 'echo "$ARBITRARY_TOKEN"'}}}, False),
+        *[
+            ({"toolCall": {"name": "view_file", "args": {"CommandLine": command}}}, False)
+            for command in (None, 3, [], {}, "", " \t\n")
+        ],
         ({"toolCall": None, "tool_input": {"command": "printf OK"}}, False),
         ({}, False),
         *[
             ({"toolCall": {"name": "run_command", "args": args}, "tool_input": {"command": "printf OK"}}, False)
-            for args in ({}, {"CommandLine": ""}, {"CommandLine": 3}, {"CommandLine": None})
+            for args in ({}, {"CommandLine": ""}, {"CommandLine": 3}, {"CommandLine": None}, {"CommandLine": " \t\n"})
         ],
     ],
 )
@@ -372,6 +382,25 @@ def test_agy_native_precedence_and_legacy(payload, allowed):
     assert_decision("agy", result.returncode, result.stdout, result.stderr, allowed)
     if not allowed:
         assert set(json.loads(result.stdout)) == {"decision", "reason"}
+        assert json.loads(result.stdout)["reason"] == result.stderr
+
+
+@pytest.mark.parametrize("harness", [name for name in HARNESS_NAMES if name != "agy"])
+def test_non_agy_oversized_metadata_keeps_base_allow(harness):
+    from scripts.agent_runtime.secret_print_hook import MAX_STDIN_BYTES
+
+    payload = {**event(harness, "printf OK"), "metadata": "x" * (MAX_STDIN_BYTES + 1)}
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", harness],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        env=NATIVE_ENV,
+        timeout=10,
+    )
+    assert result.returncode == 0
+    assert result.stdout == ('{"permission": "allow"}\n' if harness == "cursor" else "")
+    assert result.stderr == ""
 
 
 @pytest.mark.parametrize(

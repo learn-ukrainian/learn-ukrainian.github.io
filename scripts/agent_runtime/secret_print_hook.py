@@ -40,9 +40,9 @@ def extract_command(harness: str, event: object) -> str | None:
         call = event["toolCall"]
         if not isinstance(call, dict) or not isinstance(call.get("name"), str) or not call["name"]:
             raise ValueError("tool identity unavailable")
-        if call["name"] != "run_command":
-            return None  # Unrelated events allow; registration matches run_command only.
         args = call.get("args")
+        if call["name"] != "run_command" and not (isinstance(args, dict) and "CommandLine" in args):
+            return None
         command = args.get("CommandLine") if isinstance(args, dict) else None
     elif harness == "cursor":
         command = event.get("command")
@@ -146,9 +146,12 @@ def main(argv: list[str] | None = None) -> int:
     try:
         options = parser.parse_args(args)
         harness = options.harness
-        raw = sys.stdin.read(MAX_STDIN_BYTES + 1)
-        if len(raw.encode("utf-8")) > MAX_STDIN_BYTES:
-            raise ValueError("native event too large")
+        if harness == "agy":
+            raw = sys.stdin.read(MAX_STDIN_BYTES + 1)
+            if len(raw.encode("utf-8")) > MAX_STDIN_BYTES:
+                raise ValueError("native event too large")
+        else:
+            raw = sys.stdin.read()
         command = extract_command(harness, json.loads(raw))
         allowed, message = (
             (True, "") if command is None else run_guard(command, timeout=options.timeout, harness=harness)
