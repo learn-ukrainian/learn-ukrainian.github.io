@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 
@@ -224,10 +225,92 @@ def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, 
     assert result.ok is (observed != "mismatching")
     assert result.response == ("" if observed == "mismatching" else "READY")
     identity = result.substitution
+    if observed not in {"matching", "mismatching"}:
+        assert identity is None
+        return
+    assert identity is not None
     assert identity["actual_model"] == (
         slug if observed == "matching" else "gemini-3.8-flash-high" if observed == "mismatching" else None
     )
     assert identity["actual_model_known"] is (observed in {"matching", "mismatching"})
+    assert identity["substituted"] is (observed == "mismatching")
     if observed == "mismatching":
         assert result.stderr_excerpt == "agy_model_event_mismatch"
         assert result.failure_code == "provider_policy_refusal"
+
+
+@pytest.mark.parametrize(
+    "reported_model",
+    [
+        None,
+        "",
+        "gemini-3.8-flash-high",
+        "Gemini 3.8 Flash (High)",
+        "gemini-3-flash-preview",
+        "gemini-3.1-pro-high",
+        "gemini-3.7-flash-high",
+    ],
+)
+@pytest.mark.parametrize(
+    "requested_model", ["gemini-3.8-flash-high", "Gemini 3.8 Flash (High)", "gemini-3-flash-preview"]
+)
+def test_stream_model_identity_uses_resolved_slugs(
+    tmp_path: Path, reported_model: str | None, requested_model: str
+) -> None:
+    conversation_id = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
+    app_data = tmp_path / "agy-data"
+    transcript = app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    fixture = Path(__file__).resolve().parents[2] / "fixtures" / "agy" / "verify_words_transcript.jsonl"
+    transcript.write_text(fixture.read_text(encoding="utf-8"), encoding="utf-8")
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={conversation_id}, sending message\n", encoding="utf-8")
+    plan = InvocationPlan(
+        cmd=["agy", "--output-format", "stream-json", "--model", requested_model],
+        cwd=tmp_path,
+        stdin_payload="",
+        output_file=None,
+        env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
+        env_unsets=(),
+        liveness_paths=(log_file,),
+        metadata={"entire_fleet": {"requested_model": requested_model}},
+    )
+    init = {"event": "init"}
+    if reported_model is not None:
+        init["model"] = reported_model
+    stdout = "\n".join(
+        [
+            json.dumps(init),
+            json.dumps(
+                {
+                    "event": "result",
+                    "result": {
+                        "status": "SUCCESS",
+                        "conversation_id": conversation_id,
+                        "response": "READY",
+                    },
+                }
+            ),
+        ]
+    )
+
+    result = agy.AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+
+    mismatch = reported_model in {"gemini-3.1-pro-high", "gemini-3.7-flash-high"}
+    assert result.ok is not mismatch
+    assert result.response == ("" if mismatch else "READY")
+    if not reported_model:
+        assert result.substitution is None
+    else:
+        assert result.substitution == {
+            "requested_provider": "agy",
+            "requested_model": requested_model,
+            "actual_provider": "agy",
+            "actual_model": reported_model,
+            "actual_model_known": True,
+            "substituted": mismatch,
+            "source": "provider-init",
+        }
+    if mismatch:
+        assert result.failure_code == "provider_policy_refusal"
+        assert result.stderr_excerpt == "agy_model_event_mismatch"

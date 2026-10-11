@@ -5,11 +5,10 @@ The display strings `Claude Sonnet 5.5 (High)` and `Claude Opus 5.5 (High)`
 resolve to those same slugs. Bare, low, medium and unknown Claude names remain
 unsupported. Retired Claude 4.6 Thinking labels retain the retirement refusal.
 
-These pins require the existing AGY review route. That route denies
-`command(*)` and `write_file(*)` in its scoped permission settings and passes
-`--sandbox`. Non-review routes pass `--dangerously-skip-permissions`, including
-ordinary read-only dispatches, so the adapter refuses these Claude pins there
-before writing permissions or probing the CLI. The error starts with
+These pins require the existing permission-denied review route.
+The adapter refuses these Claude pins on non-review routes before writing
+permissions or probing the CLI. Ordinary read-only dispatches use non-review
+routes. The error starts with
 `agy_claude_requires_review_route`, includes the original model argument and
 says `rejected`. The delegate substitution probe recognizes this refusal and
 cannot silently replace the request with Gemini or native Claude.
@@ -17,7 +16,7 @@ cannot silently replace the request with Gemini or native Claude.
 The catalog records an AGY transport and wire id for each model. It adds no
 reviewer candidate, seat route, ladder entry or substitution rule. Existing
 role, risk and independence gates still apply. Anthropic-family models cannot
-review Anthropic-authored work, regardless of transport. Do not pass `--effort`;
+review Anthropic-authored work, regardless of transport. Do not set effort separately;
 the adapter uses the explicit high slug and leaves effort unwired.
 
 The `agy` endpoint has the `agy` accounting bucket. Models have no separate

@@ -1091,6 +1091,21 @@ class AgyAdapter:
             bound = None
             read_reason = "transcript_read_refused"
         killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
+        # Identity evidence comes only from the provider's init event.
+        model_identity: dict[str, Any] = {
+            "requested_provider": "agy",
+            "requested_model": (plan.metadata.get("entire_fleet") or {}).get("requested_model") if plan else None,
+            "actual_provider": "agy",
+            "actual_model": None,
+            "actual_model_known": False,
+            "substituted": False,
+            "source": "unattested-harness",
+        }
+        stream_result, stream_problem = (
+            _stream_result(stdout, plan=plan, model_identity=model_identity)
+            if plan and "stream-json" in plan.cmd
+            else (None, None)
+        )
         result = self._parse_response(
             stdout=stdout,
             stderr=stderr,
@@ -1098,6 +1113,8 @@ class AgyAdapter:
             output_file=output_file,
             plan=plan,
             call_start_time=call_start_time,
+            stream_result=stream_result,
+            stream_problem=stream_problem,
         )
         if denial is not None:
             attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
@@ -1142,20 +1159,6 @@ class AgyAdapter:
             )
         # The provider error owns terminal diagnostics; protocol evidence comes
         # only from our stream parser, not a model/tool-authored excerpt.
-        model_identity: dict[str, Any] = {
-            "requested_provider": "agy",
-            "requested_model": (plan.metadata.get("entire_fleet") or {}).get("requested_model") if plan else None,
-            "actual_provider": "agy",
-            "actual_model": None,
-            "actual_model_known": False,
-            "substituted": False,
-            "source": "unattested-harness",
-        }
-        stream_problem = (
-            _stream_result(stdout, plan=plan, model_identity=model_identity)[1]
-            if plan and "stream-json" in plan.cmd
-            else None
-        )
         fault = parse_agy_provider_fault(result.provider_error_text, stderr, stream_problem) if not result.ok else None
         if fault and fault.status:
             code = provider_failure_code("", fault.status)
@@ -1182,12 +1185,14 @@ class AgyAdapter:
             agy_killed_commands=killed,
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
             agy_attempt=attempt,
-            substitution=model_identity,
+            substitution=model_identity if model_identity["actual_model_known"] else None,
         )
 
     def _parse_response(
         self,
         *,
+        stream_result: dict[str, Any] | None,
+        stream_problem: str | None,
         stdout: str,
         stderr: str,
         returncode: int,
@@ -1204,7 +1209,6 @@ class AgyAdapter:
         _ = call_start_time
 
         stream_mode = plan is not None and "stream-json" in plan.cmd
-        stream_result, stream_problem = _stream_result(stdout, plan=plan) if stream_mode else (None, None)
         if stream_problem == "agy_model_event_mismatch":
             return ParseResult(
                 ok=False,
@@ -2045,14 +2049,24 @@ def _stream_result(
             provider_model = event["model"]
             if not isinstance(provider_model, str):
                 return None, "agy_model_event_mismatch"
+            try:
+                resolved_provider = AgyAdapter.resolve_model_slug(provider_model) or _normalize_model(provider_model)
+                resolved_expected = (
+                    AgyAdapter.resolve_model_slug(expected_model) or _normalize_model(expected_model)
+                    if expected_model is not None
+                    else None
+                )
+                mismatch = resolved_expected is not None and resolved_provider != resolved_expected
+            except ValueError:
+                mismatch = True
             if model_identity is not None:
                 model_identity.update(
                     actual_model=provider_model,
                     actual_model_known=bool(provider_model),
-                    substituted=bool(expected_model and provider_model != expected_model),
+                    substituted=mismatch,
                     source="provider-init",
                 )
-            if expected_model is not None and provider_model != expected_model:
+            if mismatch:
                 return None, "agy_model_event_mismatch"
         if event["event"] == "result":
             if result is not None or not isinstance(event.get("result"), dict):
