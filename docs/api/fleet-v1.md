@@ -208,12 +208,13 @@ records stay null and are never reported as zero.
 
 Each epic includes canonical per-driver `health`: `agent_id`, `status`,
 `measured_at`, `context_pct`, `compactions`, `stop_count`, `ask_count`, and
-`idle_min`. Only one supported exact driver id can bind; CLI or model equality
-never binds measurements. Counters remain separate and finite numbers retain
+`idle_min`. Only one supported exact driver id binds (no whitespace aliases); CLI
+or model equality never binds measurements. Counters remain separate and finite numbers retain
 zero and fractions. Missing fields are null, independently.
 
 Health is read from canonical `drivers` rows even when generic `agents` state
-signals are absent. Each row's `measured_at` is fresh through twice the positive
+signals are absent. An omitted row `measured_at` inherits enclosing time, but
+explicit invalid times never inherit. Freshness lasts twice the positive
 finite top-level `interval_s`; cache TTL is not measurement freshness. Older
 rows have `status: stale`, retain attributable id/time and withhold numbers.
 Missing/invalid/future time, invalid window or ambiguous identity is `unknown`
