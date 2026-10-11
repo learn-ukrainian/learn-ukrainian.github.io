@@ -304,16 +304,24 @@ directory exists, so removing an empty cache root does not clear the failure.
 
 Set `install_dir` and `executable` to the two paths from the message. The
 default cache is `$HOME/.cache/puppeteer` unless `PUPPETEER_CACHE_DIR` is set.
-The block then checks that the installation directory resolves strictly inside
-the cache and is not the cache itself, that the named executable is absent,
-and that the directory contains no entries. Only then does it `rmdir` that
-directory. It never uses `rm -rf`.
+Repeating `npm ci` alone does not clear a directory that is already there.
+
+The block resolves the cache and the installation directory with a sentinel
+after `readlink -f`, then removes that sentinel, so a trailing newline stays
+part of the path. It refuses unless that directory is a real directory
+(not a symlink), resolves strictly inside the cache, is not the cache itself,
+and the named executable is inside it and absent. An empty directory is
+removed with `rmdir`. A directory that still has entries is renamed, contents
+unchanged, to a new sibling under the same cache:
+`<name>.quarantine.<utc-stamp>.<pid>.<random>`. The block never uses `rm -rf`.
+A failed check exits before `rmdir` or `mv`. A failed `cd` exits before either
+command and before `npm ci`.
 
 A scratch cache showed that behavior: `rmdir` removes an empty
 `chrome/linux-<buildId>` directory and leaves the cache root; a directory
-that still contains `chrome-linux64/` is left in place; the cache root and a
-directory outside the cache are left in place. Selecting a missing primary
-directory exits before `npm ci`.
+that still contains `chrome-linux64/` is moved aside and its files stay in
+the quarantine sibling; the cache root and a directory outside the cache are
+left in place. Selecting a missing primary directory exits before `npm ci`.
 
 ```bash
 (
@@ -362,8 +370,28 @@ directory exits before `npm ci`.
   cache="${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}"
   install_dir="<browser folder from the puppeteer error>"
   executable="<executable path from the puppeteer error>"
-  cache_real="$(readlink -f -- "$cache")"
-  install_real="$(readlink -f -- "$install_dir")"
+  # $(...) strips every trailing newline. A sentinel keeps one that belongs to the path.
+  _capture_canonical() {
+    local captured
+    if ! captured=$(readlink -f -- "$2" 2>/dev/null && printf x); then
+      return 1
+    fi
+    captured=${captured%x}
+    captured=${captured%$'\n'}
+    printf -v "$1" '%s' "$captured"
+  }
+  if ! _capture_canonical cache_real "$cache"; then
+    printf 'Refusing to remove a browser folder whose cache does not resolve.\n' >&2
+    exit 1
+  fi
+  if ! _capture_canonical install_real "$install_dir"; then
+    printf 'Refusing to remove a browser folder that does not resolve.\n' >&2
+    exit 1
+  fi
+  if [ -z "$cache_real" ] || [ -z "$install_real" ]; then
+    printf 'Refusing to remove a browser folder whose path is empty.\n' >&2
+    exit 1
+  fi
   if [ "$install_real" = "$cache_real" ]; then
     printf 'Refusing to remove the browser cache root.\n' >&2
     exit 1
@@ -386,11 +414,68 @@ directory exits before `npm ci`.
     printf 'Refusing to remove a browser folder that still has its executable.\n' >&2
     exit 1
   fi
-  if [ -n "$(find "$install_dir" -mindepth 1 -print -quit)" ]; then
-    printf 'Refusing to remove a browser folder that is not empty.\n' >&2
+  if [ -L "$install_dir" ] || [ ! -d "$install_dir" ] || [ -L "$install_real" ] || [ ! -d "$install_real" ]; then
+    printf 'Refusing to remove a browser folder that is not a directory.\n' >&2
     exit 1
   fi
-  rmdir "$install_dir"
+  if ! named_id=$(stat -c '%d:%i' -- "$install_dir" && printf x); then
+    printf 'Refusing to remove a browser folder that cannot be identified.\n' >&2
+    exit 1
+  fi
+  named_id=${named_id%x}
+  named_id=${named_id%$'\n'}
+  if ! real_id=$(stat -c '%d:%i' -- "$install_real" && printf x); then
+    printf 'Refusing to remove a browser folder that cannot be identified.\n' >&2
+    exit 1
+  fi
+  real_id=${real_id%x}
+  real_id=${real_id%$'\n'}
+  if [ "$named_id" != "$real_id" ]; then
+    printf 'Refusing to remove a browser folder that does not match its resolved path.\n' >&2
+    exit 1
+  fi
+  if ! listed=$(find "$install_real" -mindepth 1 -print -quit && printf x); then
+    printf 'Refusing to remove a browser folder that cannot be listed.\n' >&2
+    exit 1
+  fi
+  listed=${listed%x}
+  if [ -z "$listed" ]; then
+    rmdir -- "$install_real"
+  else
+    install_parent="${install_real%/*}"
+    install_base="${install_real##*/}"
+    if [ -z "$install_parent" ] || [ -z "$install_base" ] || [ "$install_base" = "." ] || [ "$install_base" = ".." ]; then
+      printf 'Refusing to quarantine an unsafe browser folder name.\n' >&2
+      exit 1
+    fi
+    if ! stamp=$(date -u +%Y%m%dT%H%M%SZ && printf x); then
+      printf 'Refusing to quarantine without a unique name.\n' >&2
+      exit 1
+    fi
+    stamp=${stamp%x}
+    stamp=${stamp%$'\n'}
+    if [ -z "$stamp" ]; then
+      printf 'Refusing to quarantine without a unique name.\n' >&2
+      exit 1
+    fi
+    quarantine="${install_parent}/${install_base}.quarantine.${stamp}.$$.$RANDOM"
+    case "$quarantine/" in
+      "$cache_real"/*) ;;
+      *)
+        printf 'Refusing to quarantine outside the cache.\n' >&2
+        exit 1
+        ;;
+    esac
+    if [ "$quarantine" = "$cache_real" ] || [ "$quarantine" = "$install_real" ]; then
+      printf 'Refusing to quarantine onto the cache or the browser folder.\n' >&2
+      exit 1
+    fi
+    if [ -e "$quarantine" ] || [ -L "$quarantine" ]; then
+      printf 'Refusing to quarantine over an existing path.\n' >&2
+      exit 1
+    fi
+    mv -T -- "$install_real" "$quarantine"
+  fi
   npm ci
 )
 ```
