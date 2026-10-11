@@ -705,6 +705,9 @@ def _populate_agy_review_home(
         os.mkdir(parts[1], 0o700, dir_fd=gemini_fd)
         app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
         _create_file(config_parts[2], config_fd, config_bytes)
+        from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
+
+        _create_file("hooks.json", config_fd, json.dumps({GUARD_NAME: guard_registration()}).encode())
         access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS")
         _create_file(
             "settings.json", app_data_fd, json.dumps(agy_review_settings(access, checkout_root=checkout_root)).encode()

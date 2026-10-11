@@ -404,7 +404,18 @@ def test_load_adapter_kimi():
     assert adapter.supported_modes == frozenset({"workspace-write"})
 
 
-def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):
+@pytest.fixture
+def valid_agy_hook_files(tmp_path, monkeypatch):
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
+
+    home = tmp_path / "ordinary-home"
+    monkeypatch.setenv("HOME", str(home))
+    for path in hook_locations(tmp_path, home):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
+
+
+def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path, valid_agy_hook_files):
     """#4837: AGY exposes ``--sandbox`` but no ``--no-sandbox`` flag.
 
     ``--add-dir`` comes from the explicit ``repo_read_root``, NOT from cwd:
@@ -426,7 +437,7 @@ def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):
     assert plan.cmd[plan.cmd.index("--add-dir") + 1] == "/some/repo/root"
 
 
-def test_agy_bridge_repo_read_falls_back_to_cwd_without_explicit_root(tmp_path):
+def test_agy_bridge_repo_read_falls_back_to_cwd_without_explicit_root(tmp_path, valid_agy_hook_files):
     """Without ``repo_read_root``, ``--add-dir`` degrades to cwd (old shape)."""
     plan = AgyAdapter().build_invocation(
         prompt="read one file",

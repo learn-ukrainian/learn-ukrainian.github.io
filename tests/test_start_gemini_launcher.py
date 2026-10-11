@@ -91,7 +91,10 @@ def test_gemini_driver_refuses_forwarded_model_before_lifecycle(forwarded: tuple
     result = run_launcher("start-gemini-driver.sh", "--epic", "infra", "--", *forwarded, dry_run=dry_run)
     assert result.returncode == 4, result.stderr
     flag = next(arg for arg in forwarded if arg.startswith("--model"))
-    assert f"the gemini driver takes its model from the launcher --model, not from forwarded '{flag}' ({CERTIFIED})." in result.stderr
+    assert (
+        f"the gemini driver takes its model from the launcher --model, not from forwarded '{flag}' ({CERTIFIED})."
+        in result.stderr
+    )
     assert result.stdout == ""
     assert "would exec" not in result.stdout
 
@@ -255,3 +258,67 @@ def test_gemini_driver_preserves_interactive_and_claude_prompts() -> None:
     claude_exec_line = _would_exec_line(claude_driver.stdout)
     assert "After\\ context\\ compaction" not in claude_exec_line
     assert "hydration\\ permission" not in claude_exec_line
+
+
+@pytest.mark.parametrize("scoped", [False, True])
+@pytest.mark.parametrize("condition", ["workspace_missing", "home_missing", "invalid", "pass"])
+def test_gemini_exec_hook_gate_precedes_provider_spawn(tmp_path, scoped, condition):
+    import json
+    import os
+    import sys
+
+    from scripts.agent_runtime import agy_hook_config as hooks
+    from scripts.common.repo_root import main_checkout_root
+
+    root = Path(__file__).resolve().parents[1]
+    workspace = tmp_path / "worker"
+    home = tmp_path / ("scoped-home" if scoped else "ordinary-home")
+    import shutil
+
+    shutil.copytree(root / "scripts", workspace / "scripts", ignore=shutil.ignore_patterns("__pycache__"))
+    (workspace / ".git").write_text(f"gitdir: {main_checkout_root(root)}/.git/worktrees/fixture\n")
+    overlay = workspace / "agents_extensions/agy/hooks.json"
+    overlay.parent.mkdir(parents=True)
+    shutil.copy2(root / "agents_extensions/agy/hooks.json", overlay)
+    locations = hooks.hook_locations(workspace, home)
+    for path in locations:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({hooks.GUARD_NAME: hooks.guard_registration(repo_root=workspace)}))
+    if condition == "workspace_missing":
+        locations[0].unlink()
+    elif condition == "home_missing":
+        locations[1].unlink()
+    elif condition == "invalid":
+        locations[0].write_text("{")
+    called = tmp_path / "provider-called"
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; LC_ROOT="$2"; test_python="$3"; called="$4"; '
+            'LC_DRY_RUN=0; LC_MODEL=gemini-3.8-flash-high; LC_RULES_CORE=""; '
+            'LC_DRIVER_PROMPT=""; LC_FORWARD_ARGS=(); '
+            'launcher_project_python() { printf "%s" "$test_python"; }; '
+            'launcher_exec_command() { printf "%s\n" "$@" > "$called"; }; '
+            "launcher_adapter_exec",
+            "bash",
+            str(root / "scripts/launchers/gemini.sh"),
+            str(workspace),
+            sys.executable,
+            str(called),
+        ],
+        env={**os.environ, "HOME": str(home)},
+        cwd=root,
+        text=True,
+        capture_output=True,
+        timeout=15,
+    )
+    # The module is imported from the real source via the normal package search.
+    # A launcher uses its checkout as LC_ROOT; this fixture needs that same source.
+    if condition == "pass":
+        assert result.returncode == 0, result.stderr
+        assert result.stdout == "PASS: guard_registered\n"
+        assert called.read_text().splitlines()[:2] == ["agy", "--model"]
+    else:
+        assert result.returncode != 0
+        assert not called.exists()

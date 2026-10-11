@@ -300,6 +300,73 @@ retain the schema on that invocation's plan for result validation:
 | AGY | `--output-format json --json-schema <JSON>` | `structured_output` in the JSON envelope with `status=SUCCESS` |
 | Grok | `--json-schema <JSON>` with JSON output | `structuredOutput` in the final envelope with `stopReason=end_turn`, without `structuredOutputError` |
 
+### AGY shell-output guard and startup gate
+
+The native shell event is
+`{"toolCall":{"name":"run_command","args":{"CommandLine":"printf AGY_SYNTHETIC_OK"}},"stepIdx":19}`.
+`secret_print_hook.py --harness agy` reads `toolCall.args.CommandLine`.
+A present `toolCall` is authoritative; `tool_input.command` is accepted only
+when `toolCall` is absent. Named unrelated tools allow. A `run_command` with
+absent, empty, or non-string command text denies. Malformed JSON, non-object
+or oversized stdin, and missing, crashing or late detectors deny.
+
+The entry point normalizes command text to the shared Claude/Bash detector.
+Its detector deadline remains five seconds. AGY denials print
+`{"decision":"deny","reason":"..."}` and exit 0; other harnesses retain exit 2.
+These repo-local outputs do not establish native blocking.
+
+The tracked `agents_extensions/agy/hooks.json` overlay adds the named
+`shell-secret-print-guard` to `PreToolUse`, matcher `run_command`, timeout
+10 seconds. It invokes the entry point directly, separately from the
+fail-open driver wrapper. Existing driver hooks keep their behavior.
+
+Hook commands resolve from the directory containing `hooks.json`.
+After deployment in the primary checkout's workspace `.agents/`, the
+overlay's `../.venv/bin/python` and `../scripts/agent_runtime/secret_print_hook.py`
+resolve within that checkout. Worker installation uses
+`scripts.common.repo_root.project_interpreter` to name the shared primary
+interpreter and an absolute entry-point path, so a dispatch worktree needs
+no local `.venv`. A worker with ordinary HOME also needs a valid home
+`.gemini/config/hooks.json`; the gate never writes the user's home.
+Scoped review homes receive absolute registration paths only through
+`review_mcp.py`'s existing attempt-home provisioner. Their
+`agy_review_settings` command denial stays in place.
+
+`agy_hook_config` reads each candidate workspace and effective-home hooks
+file. PASS requires one enabled guard registration per checked file, the
+`PreToolUse` event, a matcher covering `run_command`, and a command resolving
+to the executable project interpreter and this entry point. Matchers `*`
+and `""` cover all tools; other matchers are regular expressions.
+Missing or invalid candidates refuse. The worker installer merges a missing
+guard into a dispatch workspace without replacing unrelated named hooks;
+it never repairs an explicitly disabled registration.
+
+The launcher checks only deployed files inside `launcher_adapter_exec`,
+after extension deployment and before AGY execution. Dry runs do not spawn
+AGY or certify wiring. The adapter checks workers and reviews before
+`agy --version` or any provider subprocess and raises a typed refusal.
+Neither path changes provider on refusal.
+
+A startup PASS proves none of the behaviors below. The post-merge driver
+owns the native probe and failure matrix, including permission skipping.
+A startup gate cannot guarantee blocking after a hook crash or timeout.
+
+| Native behavior | Evidence state |
+| --- | --- |
+| Multi-file precedence among workspace, home, scoped home, app settings and plugins | UNKNOWN |
+| Missing hooks file disposition | UNKNOWN |
+| Print-mode hook loading | UNKNOWN |
+| Interaction with `--dangerously-skip-permissions` | UNKNOWN |
+| Missing command disposition | UNKNOWN |
+| Non-zero hook exit disposition | UNKNOWN |
+| Hook timeout disposition | UNKNOWN |
+| Malformed hook output disposition | UNKNOWN |
+| Invalid hooks configuration disposition | UNKNOWN |
+| Nested-agent coverage | UNKNOWN |
+| Shell-stdin coverage | UNKNOWN |
+| Scoped-review hook loading | UNKNOWN |
+| Exit 0 plus deny JSON blocking a live `run_command` | UNKNOWN |
+
 AGY's envelope is specified in its
 [headless documentation](https://antigravity.google/docs/cli/headless/).
 Grok's native field names come from its

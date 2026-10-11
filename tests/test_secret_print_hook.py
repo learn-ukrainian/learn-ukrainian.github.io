@@ -124,7 +124,7 @@ def test_native_structural_dump_denials(harness, command):
         env=NATIVE_ENV,
         timeout=10,
     )
-    assert result.returncode == 2
+    assert result.returncode == (0 if harness == "agy" else 2)
     assert SENTINEL not in result.stdout + result.stderr
     assert_decision(harness, result.returncode, result.stdout, result.stderr, False)
 
@@ -135,13 +135,13 @@ def event(harness, command):
     if harness == "grok":
         return {"toolName": "run_terminal_command", "toolInput": {"command": command}}
     if harness == "agy":
-        return {"toolCall": {"name": "run_command"}, "tool_input": {"command": command}}
+        return {"toolCall": {"name": "run_command", "args": {"CommandLine": command}}, "stepIdx": 19}
     return {"tool_name": "Bash", "tool_input": {"command": command}}
 
 
 def assert_decision(harness, code, stdout, stderr, allowed):
     assert SENTINEL not in stdout + stderr
-    assert code == (0 if allowed else 2)
+    assert code == (0 if allowed or harness == "agy" else 2)
     if harness in {"cursor", "agy"}:
         key = "permission" if harness == "cursor" else "decision"
         assert json.loads(stdout)[key] == ("allow" if allowed else "deny")
@@ -252,7 +252,7 @@ def test_invalid_options_fail_closed(argv, monkeypatch, capsys):
     from scripts.agent_runtime import secret_print_hook as hook
 
     monkeypatch.setattr(sys, "stdin", io.StringIO("{}"))
-    assert hook.main(argv) == 2
+    assert hook.main(argv) == (0 if "agy" in argv else 2)
     assert SENTINEL not in "".join(capsys.readouterr())
 
 
@@ -279,7 +279,7 @@ def test_actual_guard_stderr_is_forwarded(harness, monkeypatch, capsys):
         timeout=10,
     )
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event(harness, command))))
-    assert hook.main(["--harness", harness]) == 2
+    assert hook.main(["--harness", harness]) == (0 if harness == "agy" else 2)
     captured = capsys.readouterr()
     assert captured.err == guard.stderr
 
@@ -320,3 +320,75 @@ def test_unexpected_adapter_failure_denies(harness, monkeypatch, capsys):
     code = hook.main(["--harness", harness])
     captured = capsys.readouterr()
     assert_decision(harness, code, captured.out, captured.err, False)
+
+
+@pytest.mark.parametrize(
+    ("payload", "allowed"),
+    [
+        (event("agy", "printf AGY_SYNTHETIC_OK"), True),
+        (event("agy", 'echo "$ARBITRARY_TOKEN"'), False),
+        ({**event("agy", 'echo "$ARBITRARY_TOKEN"'), "tool_input": {"command": "printf OK"}}, False),
+        ({**event("agy", "printf OK"), "tool_input": {"command": 'echo "$ARBITRARY_TOKEN"'}}, True),
+        ({"tool_input": {"command": "printf OK"}}, True),
+        ({"tool_input": {"command": 'echo "$ARBITRARY_TOKEN"'}}, False),
+        ({"toolCall": {"name": "view_file"}}, True),
+        ({"toolCall": None, "tool_input": {"command": "printf OK"}}, False),
+        ({}, False),
+        *[
+            ({"toolCall": {"name": "run_command", "args": args}, "tool_input": {"command": "printf OK"}}, False)
+            for args in ({}, {"CommandLine": ""}, {"CommandLine": 3}, {"CommandLine": None})
+        ],
+    ],
+)
+def test_agy_native_precedence_and_legacy(payload, allowed):
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", "agy"],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        env=NATIVE_ENV,
+        timeout=10,
+    )
+    assert_decision("agy", result.returncode, result.stdout, result.stderr, allowed)
+    if not allowed:
+        assert set(json.loads(result.stdout)) == {"decision", "reason"}
+
+
+@pytest.mark.parametrize(
+    "raw", ["{", "[]", "null", '"text"', " " * 1_048_577], ids=["malformed", "list", "null", "string", "oversized"]
+)
+def test_agy_invalid_stdin_subprocess(raw):
+    result = subprocess.run(
+        [sys.executable, str(ADAPTER), "--harness", "agy"],
+        input=raw,
+        text=True,
+        capture_output=True,
+        timeout=10,
+    )
+    assert_decision("agy", result.returncode, result.stdout, result.stderr, False)
+
+
+@pytest.mark.parametrize("failure", ["missing", "crash", "deadline"])
+def test_agy_detector_failure_real_subprocess(tmp_path, failure):
+    guard = tmp_path / "guard.py"
+    if failure != "missing":
+        guard.write_text(
+            "raise RuntimeError('synthetic crash')\n" if failure == "crash" else "import time\ntime.sleep(30)\n"
+        )
+    wrapper = tmp_path / "hook_probe.py"
+    wrapper.write_text(
+        "import sys\nfrom pathlib import Path\n"
+        f"sys.path.insert(0, {str(ROOT)!r})\n"
+        "from scripts.agent_runtime import secret_print_hook as hook\n"
+        f"hook.GUARD_PATH = Path({str(guard)!r})\n"
+        "raise SystemExit(hook.main(['--harness', 'agy']))\n"
+    )
+    result = subprocess.run(
+        [sys.executable, str(wrapper)],
+        input=json.dumps(event("agy", "printf OK")),
+        text=True,
+        capture_output=True,
+        timeout=10,
+    )
+    assert_decision("agy", result.returncode, result.stdout, result.stderr, False)
+    assert failure != "deadline" or "deadline" in result.stderr

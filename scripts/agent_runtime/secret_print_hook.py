@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 GUARD_PATH = ROOT / "agents_extensions/shared/hooks/guard-secret-print.py"
 HARNESSES = frozenset({"claude", "codex", "grok", "kimi", "cursor", "agy", "hermes", "opencode"})
 DEFAULT_TIMEOUT = 5.0
+MAX_STDIN_BYTES = 1_048_576
 BLOCK_PREFIX = "BLOCKED by guard-secret-print (#M-5): "
 
 
@@ -29,11 +30,19 @@ class HookParser(argparse.ArgumentParser):
         raise ValueError("invalid hook options")
 
 
-def extract_command(harness: str, event: object) -> str:
+def extract_command(harness: str, event: object) -> str | None:
     """Extract the selected dialect; malformed or absent commands deny."""
     if harness not in HARNESSES or not isinstance(event, dict):
         raise ValueError("invalid native hook event")
-    if harness == "cursor":
+    if harness == "agy" and "toolCall" in event:
+        call = event["toolCall"]
+        if not isinstance(call, dict) or not isinstance(call.get("name"), str) or not call["name"]:
+            raise ValueError("tool identity unavailable")
+        if call["name"] != "run_command":
+            return None  # Unrelated events allow; registration matches run_command only.
+        args = call.get("args")
+        command = args.get("CommandLine") if isinstance(args, dict) else None
+    elif harness == "cursor":
         command = event.get("command")
     else:
         tool_input = event.get("toolInput" if harness == "grok" else "tool_input")
@@ -86,7 +95,9 @@ def emit_decision(harness: str, allowed: bool, message: str) -> int:
         print(json.dumps(decision))
     if not allowed:
         sys.stderr.write(message)
-    return 0 if allowed else 2
+    # AGY exit-code blocking is UNKNOWN. The driver probe must establish
+    # whether deny JSON on exit 0 blocks a live run_command.
+    return 0 if allowed or harness == "agy" else 2
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -97,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
         epilog="Example:\n"
         "  .venv/bin/python scripts/agent_runtime/secret_print_hook.py --harness cursor < event.json\n"
         "Outputs: native decision on stdout when required; denial text on stderr. No files written.\n"
-        "Exit codes: 0 allows; 2 denies, including invalid input or guard failures.\n"
+        "Exit codes: AGY returns 0 with allow/deny JSON; others return 0 to allow, 2 to deny.\n"
         "Related: agents_extensions/shared/hooks/guard-secret-print.py",
     )
     parser.add_argument(
@@ -122,8 +133,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         options = parser.parse_args(args)
         harness = options.harness
-        command = extract_command(harness, json.load(sys.stdin))
-        allowed, message = run_guard(command, timeout=options.timeout)
+        raw = sys.stdin.read(MAX_STDIN_BYTES + 1)
+        if len(raw.encode("utf-8")) > MAX_STDIN_BYTES:
+            raise ValueError("native event too large")
+        command = extract_command(harness, json.loads(raw))
+        allowed, message = (True, "") if command is None else run_guard(command, timeout=options.timeout)
     except Exception:
         # The native boundary must deny even a dependency or adapter failure.
         allowed, message = False, BLOCK_PREFIX + "native hook could not complete safely.\n"

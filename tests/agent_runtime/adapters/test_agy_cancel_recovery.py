@@ -1006,12 +1006,19 @@ def test_agy_impl_8771_git_push_kill_not_excused_fails_incomplete(tmp_path):
     assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
 
 
-def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path, mocker):
+def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path, mocker, monkeypatch):
     import hashlib
     import json
 
     from scripts.agent_runtime.adapters import agy
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
     from scripts.delegate import _compose_dispatch_prompt
+
+    home = tmp_path / "ordinary-home"
+    monkeypatch.setenv("HOME", str(home))
+    for path in hook_locations(tmp_path, home):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
 
     mocker.patch("scripts.agent_runtime.adapters.agy.shutil.which", return_value="/fake/agy")
     mocker.patch("scripts.agent_runtime.adapters.agy._agy_version", return_value=(1, 2, 9))

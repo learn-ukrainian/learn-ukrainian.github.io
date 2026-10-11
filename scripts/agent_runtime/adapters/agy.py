@@ -100,6 +100,7 @@ from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
+from scripts.agent_runtime.agy_hook_config import require_hook_config
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
 from scripts.secret_redactor import redact_text
@@ -195,7 +196,8 @@ def parse_agy_provider_fault(*texts: str | None) -> AgyProviderFault | None:
                 found.append(AgyProviderFault(kind, match["status"], int(match["code"])))
             elif re.fullmatch(
                 r"(?:agy_stream_result_error:\s*)?The stream was interrupted\."
-                r"(?: Please continue the task you were working on\.)?", line
+                r"(?: Please continue the task you were working on\.)?",
+                line,
             ):
                 found.append(AgyProviderFault("stream_interrupted"))
             elif line == "agy_stream_output_invalid: missing terminal result":
@@ -932,6 +934,13 @@ class AgyAdapter:
             validate_agy_read_only_paths(prompt, mode=mode, cwd=cwd, tool_config=tc)
             _write_review_permissions(tc, mode=mode, session_id=session_id, cwd=cwd)
 
+        require_hook_config(
+            cwd,
+            Path.home(),
+            Path(str(tc["agy_home_override"])) if tc.get("agy_home_override") else None,
+            install=True,
+        )
+
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
         with contextlib.suppress(OSError):
@@ -1043,7 +1052,9 @@ class AgyAdapter:
                 "agy_permission_profile_id": (
                     "code-review-command-denial-v1"
                     if tc.get("review_profile") == "code"
-                    else "ukrainian-review-command-denial-v3" if review_route else None
+                    else "ukrainian-review-command-denial-v3"
+                    if review_route
+                    else None
                 ),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
@@ -1152,7 +1163,8 @@ class AgyAdapter:
         # otherwise unexplained missing result; every more specific code,
         # provider error text, denial or incomplete-run reason takes priority.
         if (
-            fault and fault.kind == "missing_terminal_result"
+            fault
+            and fault.kind == "missing_terminal_result"
             and (
                 result.provider_error_text
                 or result.failure_code not in {None, "provider_error", "result_invalid"}
@@ -1402,13 +1414,17 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
     unknown_execution = False
     side_effects: set[str] = set()
     read_only_tools = {
-        "view_file", "view_file_outline", "view_code_item", "list_dir",
-        "grep_search", "find_by_name", "read_url_content", "search_web",
+        "view_file",
+        "view_file_outline",
+        "view_code_item",
+        "list_dir",
+        "grep_search",
+        "find_by_name",
+        "read_url_content",
+        "search_web",
     }
     for position, event in enumerate(events):
-        if event.get("tool_calls") and not (
-            event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL"
-        ):
+        if event.get("tool_calls") and not (event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL"):
             side_effects.add(f"unattributed_intent:{position}")
         if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
             sources.update(
@@ -1529,9 +1545,7 @@ _PROMPT_PATH_TOKEN_RE = re.compile(
     r"|`(?P<code>[^`\n]+)`|\"(?P<double>[^\"\n]+)\"|'(?P<single>[^'\n]+)'"
     r"|(?P<bare>[^\s`\"'<>]+)"
 )
-_LITERAL_FILE_PATH_RE = re.compile(
-    r"(?:~?/[^/\s][^\n]*|(?:[\w.-]+/)+[^/\n]+\.[\w-]+)(?::\d+(?::\d+)?)?"
-)
+_LITERAL_FILE_PATH_RE = re.compile(r"(?:~?/[^/\s][^\n]*|(?:[\w.-]+/)+[^/\n]+\.[\w-]+)(?::\d+(?::\d+)?)?")
 _READ_REQUEST_RE = re.compile(
     r"(?:^|(?<=[\n;!?])|(?<= and ))[ \t]*(?:[-*#]+[ \t]+)?"
     r"(?:(?:please|first|then|now|only)\s+|(?:can|could)\s+you\s+(?:toolfully\s+)?|"
@@ -1562,9 +1576,12 @@ _READ_COMMAND_LINE_RE = re.compile(r"(?m)^[ \t]*((?:cat|head|tail|less)\s+[^\n]+
 _FILESYSTEM_REQUEST_RE = re.compile(r"\b(?:files?|paths?|directories|directory|folders?|disk)\b", re.IGNORECASE)
 _API_REFERENCE_RE = re.compile(
     r"\b(?:api|routes?|endpoints?|GET|POST|PUT|PATCH|DELETE|OPTIONS)\s+(?:at\s+)?$"
-    r"|\breturns\s+[1-5]\d\d\s+(?:for|at)\s+$", re.IGNORECASE,
+    r"|\breturns\s+[1-5]\d\d\s+(?:for|at)\s+$",
+    re.IGNORECASE,
 )
-_FENCED_CODE_RE = re.compile(r"(?m)^[ \t]*(?P<fence>`{3,}|~{3,})[^\n]*\n(?P<body>.*?)^[ \t]*(?P=fence)[ \t]*$", re.DOTALL)
+_FENCED_CODE_RE = re.compile(
+    r"(?m)^[ \t]*(?P<fence>`{3,}|~{3,})[^\n]*\n(?P<body>.*?)^[ \t]*(?P=fence)[ \t]*$", re.DOTALL
+)
 _INTERPRETER_LINE_RE = re.compile(
     r"(?m)^[ \t]*(?:#![^\n]*|(?:/|~/)[^\s]*?/(?:python[\d.]*|bash|sh|env)[ \t]+[^\n]*)$",
 )
@@ -1585,8 +1602,10 @@ def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
     # including cat commands and bare paths in an explicit read list.
     prompt = _FENCED_CODE_RE.sub(
         lambda block: _READ_COMMAND_LINE_RE.sub(
-            lambda line: f"`{line[1]}`", _INTERPRETER_LINE_RE.sub("", block.group()),
-        ), prompt,
+            lambda line: f"`{line[1]}`",
+            _INTERPRETER_LINE_RE.sub("", block.group()),
+        ),
+        prompt,
     )
     for span in re.split(r"\n\s*\n|(?<=[.;!?])\s+", prompt):
         operand_end = None
@@ -1612,16 +1631,16 @@ def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
                 continue
             if _INTERPRETER_LINE_RE.fullmatch(raw):
                 continue
-            if request is None or _NEGATED_READ_RE.search(span[:request.start()]):
+            if request is None or _NEGATED_READ_RE.search(span[: request.start()]):
                 continue
             # Reviewing a command example is not an instruction to read its
             # operands. Explicit Read + command spans/lists are unambiguous.
             if command and request.group("verb").lower() != "read":
                 continue
-            context = span[request.start():token.start()]
-            prefix = span[request.end():token.start()]
+            context = span[request.start() : token.start()]
+            prefix = span[request.end() : token.start()]
             if request_end == request.end() and operand_end is not None:
-                continuation = span[operand_end:token.start()]
+                continuation = span[operand_end : token.start()]
                 governed = _READ_LIST_PREFIX_RE.fullmatch(continuation) or _READ_OPERAND_PREFIX_RE.fullmatch(
                     re.sub(r"^\s*,?\s*(?:and|or)\s+", "", continuation, flags=re.IGNORECASE),
                 )
@@ -1652,7 +1671,7 @@ def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
                         or _API_REFERENCE_RE.search(context)
                         or (
                             re.fullmatch(r"/[\w-]+[.,;]?", part)
-                            and re.match(r"\s+(?:slash\s+)?command\b", span[token.end():], re.IGNORECASE)
+                            and re.match(r"\s+(?:slash\s+)?command\b", span[token.end() :], re.IGNORECASE)
                         )
                     )
                 ):
