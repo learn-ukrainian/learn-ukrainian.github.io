@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -75,6 +76,85 @@ def review_args(head, **overrides):
         review_author_model="gpt-6.1-sol", review_risk="medium", prompt="Review the exact branch head.",
         **overrides,
     )
+
+
+@pytest.mark.parametrize("condition", ["clean", "dirty", "unattributed"])
+@pytest.mark.parametrize("explicit_path", [False, True])
+def test_direct_review_dry_run_plans_new_snapshot_without_touching_author(
+    review_repo, monkeypatch, capsys, condition, explicit_path,
+):
+    repo, head = review_repo
+    author = repo.root / ".worktrees/dispatch/codex/author"
+    repo.git("worktree", "add", str(author), "feature")
+    (author / "ignored").mkdir()
+    (author / "ignored/output.bin").write_bytes(b"retained output\x00\xff")
+    if condition == "dirty":
+        (author / "src/app.py").write_bytes(b"staged author bytes\x00\xff")
+        repo.git("-C", str(author), "add", "src/app.py")
+        (author / "src/app.py").write_bytes(b"unstaged author bytes\x00\xfe")
+        (author / "untracked.bin").write_bytes(b"untracked author bytes\x00\xfd")
+    author_record = delegate._state_path("author")
+    if condition != "unattributed":
+        delegate._write_state_atomic(author_record, {
+            "task_id": "author", "status": "done", "mode": "workspace-write",
+            "worktree_path": str(author), "worktree_branch": "feature", "keep_worktree": True,
+            "worktree_reused": False,
+        })
+    record_before = author_record.read_bytes() if author_record.exists() else None
+    before = author_state(repo, author)
+    index = Path(repo.git("-C", str(author), "rev-parse", "--git-path", "index"))
+    index_before = index.read_bytes()
+    refs_before = repo.git("for-each-ref", "--format=%(refname) %(objectname)")
+    trees_before = repo.git("worktree", "list", "--porcelain")
+    snapshot = repo.root / ".worktrees/dispatch/grok" / (
+        "explicit-review-snapshot" if explicit_path else "snapshot-review"
+    )
+    if explicit_path:
+        snapshot.parent.mkdir(parents=True)
+    git_commands = []
+    run = subprocess.run
+
+    def observe_git(command, *args, **kwargs):
+        if command[0] == "git":
+            git_commands.append(command)
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", observe_git)
+
+    assert delegate.cmd_dispatch(review_args(
+        head, dry_run=True, worktree=str(snapshot) if explicit_path else None,
+    )) == 0
+
+    output = capsys.readouterr().err
+    assert f"planned new detached snapshot: path={snapshot} pinned_head={head}" in output
+    assert "remote pin has not been fetched or validated" in output
+    assert "branch reuse validated" not in output
+    assert "[reused]" not in output
+    record = json.loads(delegate._state_path("snapshot-review").read_text())
+    assert record["status"] == "dry_run"
+    assert record["cwd"] == record["worktree_path"] == str(snapshot)
+    assert record["pinned_head"] == head
+    assert record["worktree_branch"] is None
+    assert record["worktree_base_sha"] is None
+    assert record["worktree_reused"] is False
+    assert not snapshot.exists()
+    assert repo.launches == []
+    assert not any("fetch" in command[1:] for command in git_commands)
+    assert not any("worktree" in command and "add" in command for command in git_commands)
+    assert author_state(repo, author) == before
+    assert index.read_bytes() == index_before
+    assert repo.git("for-each-ref", "--format=%(refname) %(objectname)") == refs_before
+    assert repo.git("worktree", "list", "--porcelain") == trees_before
+    assert (author_record.read_bytes() if author_record.exists() else None) == record_before
+    assert (author / "ignored/output.bin").read_bytes() == b"retained output\x00\xff"
+    if condition == "dirty":
+        assert (author / "src/app.py").read_bytes() == b"unstaged author bytes\x00\xfe"
+        assert (author / "untracked.bin").read_bytes() == b"untracked author bytes\x00\xfd"
+        assert subprocess.run(
+            ["git", "-C", str(author), "show", ":src/app.py"], capture_output=True, check=True, timeout=30,
+        ).stdout == b"staged author bytes\x00\xff"
+    else:
+        assert (author / "src/app.py").read_bytes() == b"reviewed = True\n"
 
 
 @pytest.mark.parametrize("condition", ["clean", "dirty", "unattributed", "unoccupied"])

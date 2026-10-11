@@ -13403,7 +13403,9 @@ def _dispatch(
         if detached_read_only:
             # A dry-run describes the eventual checkout without fetching the
             # base or creating a worktree. Both can spawn git subprocesses.
-            dry_run_worktree = _auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)
+            dry_run_worktree = validated_worktree or _auto_worktree_path(
+                dispatch_agent, task_id, repo_root=target_repo_root,
+            )
         elif requested_branch:
             resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
@@ -13508,6 +13510,8 @@ def _dispatch(
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
             dry_run_state.update(_authoring_review_state_fields(args, authoring_admission))
             dry_run_state.update(advisory_admission.state_fields())
+            if detached_read_only:
+                dry_run_state["worktree_reused"] = False
             if primary_read_only_cwd:
                 dry_run_state["read_only_primary_cwd"] = True
             dry_run_reap = _reap_runtime_tmp_lease(
@@ -13526,7 +13530,13 @@ def _dispatch(
         except BaseException:
             _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
             raise
-        if requested_branch:
+        if requested_branch and detached_read_only:
+            print(
+                f"🌲 planned new detached snapshot: path={dry_run_worktree} pinned_head={pinned_head or '?'}; "
+                "remote pin has not been fetched or validated",
+                file=sys.stderr,
+            )
+        elif requested_branch:
             print(
                 f"🌲 branch reuse validated: branch={dry_run_branch} "
                 f"path={dry_run_worktree} "
