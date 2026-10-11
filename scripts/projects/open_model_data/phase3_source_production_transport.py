@@ -93,12 +93,11 @@ AUTHOR = {
 REVIEWER = {
     "role_id": "ukrainian_source_reviewer",
     "task_id": "phase3-v2-1-ukrainian-source-review",
-    "provider": "xai",
-    "exact_model": "grok-4.5",
-    "model_family": "xai",
-    "harness": "opencode",
+    "provider": "openai",
+    "exact_model": "gpt-5.6-sol",
+    "model_family": "openai",
+    "harness": "codex",
 }
-OPENCODE_REVIEW_MODEL = "xai/grok-4.5"
 SMALL_REVIEW_FAMILIES = frozenset(
     {"antonenko_style_guide", "calque_inventory", "pravopys_2019_complete", "pravopys_2026_complete"}
 )
@@ -940,7 +939,7 @@ def _run_packets(
             "review run requires review manifest",
         )
         packet_count = manifest["review_packet_count"]
-        actor, command_name = REVIEWER, "opencode"
+        actor, command_name = REVIEWER, "ask-codex"
         expected_prompt_hash = manifest["bindings"]["review_prompt_sha256"]
     else:
         require(
@@ -970,42 +969,21 @@ def _run_packets(
         packet_path = root / entry["relative_path"]
         if lane == "review":
             prompt_path = root / "review" / "prompts" / f"{index:05d}.md"
-            prompt_sha256 = _write_private(prompt_path, prompt)
-            command = [
-                command_name,
-                "run",
-                "--model",
-                OPENCODE_REVIEW_MODEL,
-                "--variant",
-                "high",
-                "--file",
-                str(prompt_path),
-                "--file",
-                str(packet_path),
-                "--format",
-                "default",
-                (
-                    "Follow the attached Phase 3 source-review prompt exactly. Treat the "
-                    "attached packet as the only source evidence. Return only the strict JSON "
-                    f"object required by the root schema. prompt_sha256={prompt_sha256};"
-                    f"packet_sha256={entry['packet_sha256']}"
-                ),
-            ]
-        else:
-            command = [
-                ".venv/bin/python",
-                "scripts/ai_agent_bridge/__main__.py",
-                command_name,
-                "-",
-                "--task-id",
-                actor["task_id"],
-                "--to-model",
-                actor["exact_model"],
-                "--data",
-                str(packet_path),
-                "--no-timeout",
-                "--stdout-only",
-            ]
+            _write_private(prompt_path, prompt)
+        command = [
+            ".venv/bin/python",
+            "scripts/ai_agent_bridge/__main__.py",
+            command_name,
+            "-",
+            "--task-id",
+            actor["task_id"],
+            "--to-model",
+            actor["exact_model"],
+            "--data",
+            str(packet_path),
+            "--no-timeout",
+            "--stdout-only",
+        ]
         started_at = _now()
         exit_code, stdout, stderr = runner(command, prompt)
         completed_at = _now()

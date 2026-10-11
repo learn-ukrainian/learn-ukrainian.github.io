@@ -433,7 +433,7 @@ def test_output_cannot_overlap_an_input(tmp_path: Path) -> None:
         transport.prepare(**kwargs)
 
 
-def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
+def test_resumable_run_commands_pin_gemini_and_codex(tmp_path: Path) -> None:
     fixture, _ = _prepare(tmp_path)
     root = fixture["private_dir"]
     assert isinstance(root, Path)
@@ -473,11 +473,7 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
 
     def review_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, bytes]:
         commands.append(command)
-        attached = [Path(command[index + 1]) for index, value in enumerate(command) if value == "--file"]
-        packet_path = next(path for path in attached if path.suffix == ".json")
-        prompt_path = next(path for path in attached if path.suffix == ".md")
-        packet = json.loads(packet_path.read_text())
-        assert prompt_path.read_bytes() == prompt
+        packet = json.loads(Path(command[command.index("--data") + 1]).read_text())
         identity = packet["identity_order"][0]
         response = {
             "schema_version": "phase3_source_production_review_response_v1",
@@ -506,9 +502,7 @@ def test_resumable_run_commands_pin_gemini_and_grok(tmp_path: Path) -> None:
 
     result = transport.run_review(review_manifest_path=root / "review-manifest.json", invoke=review_invoke)
     assert result["completed"] == 1
-    assert commands[-1][:2] == ["opencode", "run"]
-    assert "xai/grok-4.5" in commands[-1] and commands[-1][4:6] == ["--variant", "high"]
-    assert "ask-opencode" not in commands[-1]
+    assert "ask-codex" in commands[-1] and "gpt-5.6-sol" in commands[-1]
 
 
 def test_opencode_prelude_extracts_one_exact_trailing_response() -> None:
