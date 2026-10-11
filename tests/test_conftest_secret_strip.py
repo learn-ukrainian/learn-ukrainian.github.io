@@ -15,9 +15,9 @@ conftest; none reads credential-suffix names.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
-import tempfile
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,10 +27,6 @@ import pytest
 from tests.conftest import _is_credential_shaped_env_name
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-# Gitignored, and not a norecursedirs pattern, so a child pytest can collect it
-# while the checkout write guard's git status does not see it. An xdist
-# controller can observe a tests/ path before the worker deletes it.
-_PROBE_PARENT = REPO_ROOT / "tests" / "__pycache__" / "zz_strip_probes"
 SENTINEL = "sentinel-not-a-real-value"
 SET_INSIDE = "set-inside-the-test"
 _STRIPPED = (
@@ -264,12 +260,21 @@ def _note_map(text: str) -> dict[str, str]:
     return notes
 
 
+# Import probes copy the parent environment and must not look like a nested
+# pytest worker. Child pytest sessions do not use this list: they start from
+# an explicit environment instead of a filtered copy.
 _CHILD_RUNTIME_DROPS = (
     "PYTEST_CURRENT_TEST",
     "PYTEST_XDIST_WORKER",
     "PYTEST_XDIST_WORKER_COUNT",
     "PYTEST_XDIST_TESTRUNUID",
 )
+# Parent-runner names that a nested interpreter still needs. Everything else,
+# including PYTEST_* and the shard allowlist, stays out.
+_CHILD_ENV_FROM_PARENT = ("PATH", "LANG", "LC_ALL", "TMPDIR")
+_PASSED_SUMMARY = re.compile(r"\b[1-9]\d* passed\b")
+_PROBE_ROOT: Path | None = None
+_PROBE_SEQ = 0
 
 
 def _proc_start_token(pid: int) -> str:
@@ -296,81 +301,134 @@ def _parent_process_identity() -> str:
     return f"{os.getpid()}:{_proc_start_token(os.getpid())}"
 
 
-def _fresh_pytest_env() -> dict[str, str]:
-    """Child environment whose ``LU_TEST_CREDENTIAL_STRIP`` names this parent.
+@pytest.fixture(scope="session", autouse=True)
+def _managed_probe_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Session scratch for generated child suites. Pytest owns the directory."""
+    global _PROBE_ROOT
+    _PROBE_ROOT = tmp_path_factory.mktemp("zz-strip-probes")
+    return _PROBE_ROOT
 
-    A process identity used to skip the strip. The child still strips.
+
+def _new_probe_dir(prefix: str) -> Path:
+    global _PROBE_SEQ
+    if _PROBE_ROOT is None:
+        raise AssertionError("managed probe root is not ready")
+    _PROBE_SEQ += 1
+    probe = _PROBE_ROOT / f"{prefix}{_PROBE_SEQ}"
+    probe.mkdir()
+    return probe
+
+
+def _hermetic_child_env(overrides: dict[str, str], *, home: Path) -> dict[str, str]:
+    """Minimal environment for one nested pytest process.
+
+    A copied parent environment carries ``LU_PYTEST_SHARD_FILES``. The suite
+    conftest then ignores every generated file that was not on the shard list,
+    and the child exits 5 with ``no tests ran``. ``PYTEST_*`` and
+    ``PYTEST_ADDOPTS`` would also reapply the parent run. The marker naming
+    this parent is not read by the strip.
     """
-    env = os.environ.copy()
-    for name in _CHILD_RUNTIME_DROPS:
-        env.pop(name, None)
-    env["LU_TEST_CREDENTIAL_STRIP"] = _parent_process_identity()
+    env = {
+        "HOME": str(home),
+        "PYTHONPATH": os.pathsep.join((str(REPO_ROOT), str(REPO_ROOT / "scripts"))),
+    }
+    for name in _CHILD_ENV_FROM_PARENT:
+        value = os.environ.get(name)
+        if value:
+            env[name] = value
+    for name, value in overrides.items():
+        if name.startswith("PYTEST_"):
+            continue
+        env[name] = value
+    env.setdefault("LU_TEST_CREDENTIAL_STRIP", _parent_process_identity())
     return env
 
 
 def _child_env(after_path: Path, order_log: Path) -> dict[str, str]:
-    env = _fresh_pytest_env()
-    env["ZZ_STRIP_PROBE_AFTER"] = str(after_path)
-    env["ZZ_STRIP_ORDER_LOG"] = str(order_log)
+    env = {
+        "ZZ_STRIP_PROBE_AFTER": str(after_path),
+        "ZZ_STRIP_ORDER_LOG": str(order_log),
+    }
     for name in (*_STRIPPED, _PLAIN, _PLURAL, *_OUTSIDE_CONTRACT, _CURSOR_TOKEN):
         env[name] = SENTINEL
     return env
 
 
-def _run_child_pytest(probe_dir: Path, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+def _assert_child_collected(stdout: str, stderr: str) -> None:
+    """A child that collected nothing must not look like a passing session."""
+    text = stdout + "\n" + stderr
+    assert "no tests ran" not in text, text
+    assert _PASSED_SUMMARY.search(stdout), text
+
+
+def _run_child_pytest(
+    probe_dir: Path,
+    overrides: dict[str, str],
+    *,
+    workers: int = 0,
+) -> subprocess.CompletedProcess[str]:
+    """Run the generated files in a private root, loading the real suite conftest.
+
+    ``--rootdir`` is the probe directory, so discovery does not walk up to
+    ``tests/conftest.py``. ``-p tests.conftest`` loads that module anyway: the
+    import strip and the worker publish/restore hooks live there. ``-c
+    /dev/null`` keeps the repo's ``addopts`` marker expression out.
+    """
+    test_files = sorted(str(path) for path in probe_dir.glob("test_*.py"))
+    if not test_files:
+        raise AssertionError(f"child probe has no test files: {probe_dir.name}")
+    home = probe_dir / "home"
+    home.mkdir()
+    command = [
+        sys.executable,
+        "-m",
+        "pytest",
+        *test_files,
+        "-q",
+        "--tb=short",
+        "-p",
+        "no:cacheprovider",
+        "-p",
+        "tests.conftest",
+        "-c",
+        "/dev/null",
+        "--rootdir",
+        str(probe_dir),
+        "-o",
+        "addopts=",
+    ]
+    if workers:
+        command.extend(["-p", "xdist", "-n", str(workers)])
+    else:
+        command.extend(["-p", "no:xdist"])
     return subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            str(probe_dir.relative_to(REPO_ROOT)),
-            "-q",
-            "--tb=short",
-            "-p",
-            "no:cacheprovider",
-            "-o",
-            "addopts=",
-            "--rootdir",
-            str(REPO_ROOT),
-        ],
+        command,
         cwd=REPO_ROOT,
-        env=env,
+        env=_hermetic_child_env(overrides, home=home),
         capture_output=True,
         text=True,
-        timeout=120,
+        timeout=180 if workers else 120,
         check=False,
     )
 
 
-def _probe_workspace(prefix: str) -> tempfile.TemporaryDirectory[str]:
-    _PROBE_PARENT.mkdir(parents=True, exist_ok=True)
-    return tempfile.TemporaryDirectory(prefix=prefix, dir=_PROBE_PARENT)
-
-
 def _run_recorded_probe(files: dict[str, str]) -> _ChildPytest:
     """Run a child pytest after this test's own strip, so the copy has no host secret."""
-    after_descriptor, after_name = tempfile.mkstemp(prefix="zz-strip-after-")
-    os.close(after_descriptor)
-    order_descriptor, order_name = tempfile.mkstemp(prefix="zz-strip-order-")
-    os.close(order_descriptor)
-    after_path = Path(after_name)
-    order_path = Path(order_name)
-    try:
-        with _probe_workspace("_zz_strip_probe_") as raw:
-            probe_dir = Path(raw)
-            for name, source in files.items():
-                (probe_dir / name).write_text(source, encoding="utf-8")
-            result = _run_child_pytest(probe_dir, _child_env(after_path, order_path))
-        return _ChildPytest(
-            returncode=result.returncode,
-            stdout=result.stdout,
-            stderr=result.stderr,
-            notes=_note_map(order_path.read_text(encoding="utf-8")),
-            after=after_path.read_text(encoding="utf-8"),
-        )
-    finally:
-        after_path.unlink(missing_ok=True)
-        order_path.unlink(missing_ok=True)
+    probe_dir = _new_probe_dir("zz-strip-probe-")
+    after_path = probe_dir / "after.txt"
+    order_path = probe_dir / "order.txt"
+    after_path.touch()
+    order_path.touch()
+    for name, source in files.items():
+        (probe_dir / name).write_text(source, encoding="utf-8")
+    result = _run_child_pytest(probe_dir, _child_env(after_path, order_path))
+    return _ChildPytest(
+        returncode=result.returncode,
+        stdout=result.stdout,
+        stderr=result.stderr,
+        notes=_note_map(order_path.read_text(encoding="utf-8")),
+        after=after_path.read_text(encoding="utf-8"),
+    )
 
 
 _EARLY_PROBE: _ChildPytest | None = None
@@ -390,50 +448,25 @@ def _early_probe() -> _ChildPytest:
 
 
 def _require_child_ok(child: _ChildPytest) -> None:
+    _assert_child_collected(child.stdout, child.stderr)
     assert child.returncode == 0, child.stdout + "\n" + child.stderr
 
 
 def test_ambient_credential_env_is_stripped_for_every_test() -> None:
     """A real conftest session hides credential suffixes and leaves them hidden."""
-    descriptor, after_name = tempfile.mkstemp(prefix="zz-strip-after-")
-    os.close(descriptor)
-    after_path = Path(after_name)
-    try:
-        with _probe_workspace("_zz_strip_probe_") as raw:
-            probe_dir = Path(raw)
-            probe = probe_dir / "test_probe.py"
-            probe.write_text(_PROBE, encoding="utf-8")
-            (probe_dir / "conftest.py").write_text(_PROBE_CONFTEST, encoding="utf-8")
-            env = _fresh_pytest_env()
-            env["ZZ_STRIP_PROBE_AFTER"] = str(after_path)
-            for name in (*_STRIPPED, _PLAIN, _PLURAL):
-                env[name] = SENTINEL
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "pytest",
-                    str(probe.relative_to(REPO_ROOT)),
-                    "-q",
-                    "--tb=short",
-                    "-p",
-                    "no:cacheprovider",
-                    "-o",
-                    "addopts=",
-                    "--rootdir",
-                    str(REPO_ROOT),
-                ],
-                cwd=REPO_ROOT,
-                env=env,
-                capture_output=True,
-                text=True,
-                timeout=90,
-                check=False,
-            )
-            assert result.returncode == 0, result.stdout + "\n" + result.stderr
-            assert after_path.read_text(encoding="utf-8") == "absent"
-    finally:
-        after_path.unlink(missing_ok=True)
+    probe_dir = _new_probe_dir("zz-strip-probe-")
+    after_path = probe_dir / "after.txt"
+    after_path.touch()
+    probe = probe_dir / "test_probe.py"
+    probe.write_text(_PROBE, encoding="utf-8")
+    (probe_dir / "conftest.py").write_text(_PROBE_CONFTEST, encoding="utf-8")
+    overrides = {"ZZ_STRIP_PROBE_AFTER": str(after_path)}
+    for name in (*_STRIPPED, _PLAIN, _PLURAL):
+        overrides[name] = SENTINEL
+    result = _run_child_pytest(probe_dir, overrides)
+    _assert_child_collected(result.stdout, result.stderr)
+    assert result.returncode == 0, result.stdout + "\n" + result.stderr
+    assert after_path.read_text(encoding="utf-8") == "absent"
 
 
 def test_suffix_match_ignores_case_and_plural_tokens() -> None:
@@ -509,6 +542,7 @@ def test_failing_test_does_not_restore_ambient_credentials() -> None:
             "test_failure.py": _FAILURE_PROBE,
         }
     )
+    _assert_child_collected(child.stdout, child.stderr)
     assert child.returncode != 0, child.stdout + "\n" + child.stderr
     assert "intentional failure" in child.stdout
     assert child.notes["failing_test"] == "absent"
@@ -538,24 +572,23 @@ def test_nested_pytest_main_leaves_the_outer_environment_unchanged() -> None:
     assert "ZZ_STRIP_PROBE_API_KEY" not in os.environ
     os.environ[published] = "published-by-outer-session"
     try:
-        with _probe_workspace("_zz_nested_main_") as raw:
-            inner = Path(raw) / "test_inner.py"
-            inner.write_text("def test_inner():\n    pass\n", encoding="utf-8")
-            before = _credential_snapshot()
-            code = pytest.main(
-                [
-                    "--collect-only",
-                    "-q",
-                    "-p",
-                    "no:cacheprovider",
-                    "-o",
-                    "addopts=",
-                    "--rootdir",
-                    str(REPO_ROOT),
-                    str(inner),
-                ]
-            )
-            after = _credential_snapshot()
+        inner = _new_probe_dir("zz-nested-main-") / "test_inner.py"
+        inner.write_text("def test_inner():\n    pass\n", encoding="utf-8")
+        before = _credential_snapshot()
+        code = pytest.main(
+            [
+                "--collect-only",
+                "-q",
+                "-p",
+                "no:cacheprovider",
+                "-o",
+                "addopts=",
+                "--rootdir",
+                str(REPO_ROOT),
+                str(inner),
+            ]
+        )
+        after = _credential_snapshot()
     finally:
         os.environ.pop(published, None)
     assert code == 0
@@ -715,16 +748,17 @@ _CHILD_STRIPS_PUBLISHED = textwrap.dedent(
 
 def test_child_pytest_process_strips_published_credentials() -> None:
     """A child pytest that loads this conftest strips names the parent published."""
-    with _probe_workspace("_zz_strip_child_") as raw:
-        probe_dir = Path(raw)
-        (probe_dir / "test_child_strips.py").write_text(_CHILD_STRIPS_PUBLISHED, encoding="utf-8")
-        env = _probe_base_env()
-        env[_CREDENTIAL_STRIP_MARKER] = _parent_process_identity()
-        env["ZZ_PUBLISHED_AFTER_STRIP_API_KEY"] = "published-after-strip"
-        env["ZZ_STRIP_PROBE_PLAIN"] = SENTINEL
-        for name in _IMPORT_CREDENTIALS:
-            env[name] = SENTINEL
-        result = _run_child_pytest(probe_dir, env)
+    probe_dir = _new_probe_dir("zz-strip-child-")
+    (probe_dir / "test_child_strips.py").write_text(_CHILD_STRIPS_PUBLISHED, encoding="utf-8")
+    overrides = {
+        _CREDENTIAL_STRIP_MARKER: _parent_process_identity(),
+        "ZZ_PUBLISHED_AFTER_STRIP_API_KEY": "published-after-strip",
+        "ZZ_STRIP_PROBE_PLAIN": SENTINEL,
+    }
+    for name in _IMPORT_CREDENTIALS:
+        overrides[name] = SENTINEL
+    result = _run_child_pytest(probe_dir, overrides)
+    _assert_child_collected(result.stdout, result.stderr)
     assert result.returncode == 0, result.stdout + "\n" + result.stderr
 
 
@@ -771,50 +805,20 @@ def test_xdist_worker_receives_names_published_on_the_controller() -> None:
     are stripped at the controller import and are not copied. The outer run
     does not pass ``-n``.
     """
-    descriptor, result_name = tempfile.mkstemp(prefix="zz-xdist-result-")
-    os.close(descriptor)
-    result_path = Path(result_name)
-    try:
-        with _probe_workspace("_zz_strip_xdist_") as raw:
-            probe_dir = Path(raw)
-            (probe_dir / "conftest.py").write_text(_XDIST_CONFTEST, encoding="utf-8")
-            probe = probe_dir / "test_xdist_worker.py"
-            probe.write_text(_XDIST_PROBE, encoding="utf-8")
-            env = _probe_base_env()
-            env[_CREDENTIAL_STRIP_MARKER] = _parent_process_identity()
-            env["ZZ_STRIP_PROBE_PLAIN"] = SENTINEL
-            env["ZZ_XDIST_RESULT"] = str(result_path)
-            for name in _IMPORT_CREDENTIALS:
-                env[name] = SENTINEL
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "pytest",
-                    str(probe),
-                    "-q",
-                    "--tb=short",
-                    "-p",
-                    "no:cacheprovider",
-                    "-p",
-                    "xdist",
-                    "-n",
-                    "1",
-                    "-o",
-                    "addopts=",
-                    "--rootdir",
-                    str(REPO_ROOT),
-                ],
-                cwd=REPO_ROOT,
-                env=env,
-                capture_output=True,
-                text=True,
-                timeout=180,
-                check=False,
-            )
-        assert result.returncode == 0, result.stdout + "\n" + result.stderr
-        assert "published-after-strip" not in result.stdout
-        assert "published-after-strip" not in result.stderr
-        assert result_path.read_text(encoding="utf-8") == "kept"
-    finally:
-        result_path.unlink(missing_ok=True)
+    probe_dir = _new_probe_dir("zz-strip-xdist-")
+    result_path = probe_dir / "result.txt"
+    (probe_dir / "conftest.py").write_text(_XDIST_CONFTEST, encoding="utf-8")
+    (probe_dir / "test_xdist_worker.py").write_text(_XDIST_PROBE, encoding="utf-8")
+    overrides = {
+        _CREDENTIAL_STRIP_MARKER: _parent_process_identity(),
+        "ZZ_STRIP_PROBE_PLAIN": SENTINEL,
+        "ZZ_XDIST_RESULT": str(result_path),
+    }
+    for name in _IMPORT_CREDENTIALS:
+        overrides[name] = SENTINEL
+    result = _run_child_pytest(probe_dir, overrides, workers=1)
+    _assert_child_collected(result.stdout, result.stderr)
+    assert result.returncode == 0, result.stdout + "\n" + result.stderr
+    assert "published-after-strip" not in result.stdout
+    assert "published-after-strip" not in result.stderr
+    assert result_path.read_text(encoding="utf-8") == "kept"
