@@ -4778,7 +4778,7 @@ entries:
   scope: <module>
   context: expression
   id: gemini-3.6-flash-high
-  count: 1
+  count: 2
   kind: frozen_identity
   reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
 - path: scripts/projects/open_model_data/phase3_functional_roles.py
@@ -4792,14 +4792,14 @@ entries:
   scope: <module>
   context: expression
   id: gpt-5.6-sol
-  count: 3
+  count: 4
   kind: frozen_identity
   reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
 - path: scripts/projects/open_model_data/phase3_functional_roles.py
   scope: <module>
   context: expression
   id: grok-4.5
-  count: 3
+  count: 1
   kind: frozen_identity
   reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
 - path: scripts/projects/open_model_data/phase3_heldout_label_transport.py
@@ -4854,8 +4854,8 @@ entries:
 - path: scripts/projects/open_model_data/phase3_source_production_transport.py
   scope: <module>
   context: expression
-  id: grok-4.5
-  count: 2
+  id: gpt-5.6-sol
+  count: 1
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py
