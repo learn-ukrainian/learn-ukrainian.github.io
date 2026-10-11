@@ -2152,6 +2152,32 @@ entries:
       - {surface: api, how: "GET /api/telemetry/tool-timings; GET /api/telemetry/legacy-comms-routes"}
     content_searchable: false
 
+  - id: data-movaua-db
+    kind: data_store
+    store: [data/movaua.db]
+    producer: [scripts/ingest/usage_advice_ingest.py]
+    local_only: true
+    purpose: Local SQLite cache of usage advice articles and word pairs from Мова – ДНК нації (mova.ua).
+    keywords: [movaua, usage advice, anti-surzhyk, word pairs]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: sqlite, how: "read-only SQL on data/movaua.db"}
+    content_searchable: false
+
+  - id: data-movne-pytannya-db
+    kind: data_store
+    store: [data/movne_pytannya.db]
+    producer: [scripts/ingest/usage_advice_ingest.py]
+    local_only: true
+    purpose: Local SQLite cache of usage advice articles and word pairs from Glavcom «Мовне питання».
+    keywords: [movne pytannya, glavcom, usage advice, word pairs]
+    lifecycle: active
+    owner: infra-harness
+    query:
+      - {surface: sqlite, how: "read-only SQL on data/movne_pytannya.db"}
+    content_searchable: false
+
 # Store names that scripts/ code mentions but that are not stores of this
 # repository. Every other data/<name>.db|.sqlite literal in scripts/ must be
 # claimed by a data_store entry (checked by the catalogue check and CI).

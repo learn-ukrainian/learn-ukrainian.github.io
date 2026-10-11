@@ -22,6 +22,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
+from scripts.common.scratch import ensure_scratch_root
 from scripts.ingest.usage_advice_ingest import (
     DEFAULT_USER_AGENT,
     EXIT_HTTP_403_FORBIDDEN,
@@ -355,9 +356,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
             """
         )
 
-        import tempfile
-
-        with tempfile.TemporaryDirectory() as td:
+        with tempfile.TemporaryDirectory(dir=ensure_scratch_root()) as td:
             movne_out = Path(td) / "movne.json"
             data = export_movne_summary_json(self.conn, movne_out)
             self.assertEqual(data["author"], MOVNE_AUTHOR)
@@ -1263,7 +1262,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(session.get.call_count, 1)
 
     def test_cli_exit_on_errors(self) -> None:
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory(dir=ensure_scratch_root()) as tmpdir:
             test_db = str(Path(tmpdir) / "test.db")
             session_patch = MagicMock(spec=requests.Session)
             r = MagicMock(spec=requests.Response)
@@ -1294,7 +1293,7 @@ class TestUsageAdviceIngest(unittest.TestCase):
     def test_cli_re_extract_mode(self) -> None:
         args = parse_args(["--re-extract", "--source", "all"])
         self.assertTrue(args.re_extract)
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory(dir=ensure_scratch_root()) as tmpdir:
             test_db = str(Path(tmpdir) / "test.db")
             code = main(["--re-extract", "--source", "movne_pytannya", "--db-movne", test_db])
             self.assertEqual(code, 0)
