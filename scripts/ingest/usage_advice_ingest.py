@@ -201,10 +201,20 @@ def polite_get(
             loc = resp.headers["Location"]
             target_url = urllib.parse.urljoin(current_url, loc)
             parsed_target = urllib.parse.urlsplit(target_url)
-            if parsed_orig.netloc and parsed_target.netloc and parsed_target.netloc != parsed_orig.netloc:
-                raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {target_url}")
-            if parsed_target.scheme not in ("http", "https"):
+            target_scheme = (parsed_target.scheme or "").lower()
+            target_host = (parsed_target.hostname or "").lower()
+            orig_host = (parsed_orig.hostname or "").lower()
+            target_port = parsed_target.port
+            orig_port = parsed_orig.port
+
+            if target_scheme not in ("http", "https"):
                 raise UsageAdviceIngestError(f"Unsafe redirect scheme refused: {target_url}")
+            if not target_host or target_host != orig_host:
+                raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {target_url}")
+            if target_port != orig_port:
+                raise UsageAdviceIngestError(f"Off-host redirect refused (port mismatch): {url} -> {target_url}")
+            if parsed_target.username or parsed_target.password:
+                raise UsageAdviceIngestError(f"Redirect with userinfo refused: {target_url}")
             redirect_count += 1
             if redirect_count > max_redirects:
                 raise UsageAdviceIngestError(f"Too many redirects for {url} (> {max_redirects})")
@@ -215,8 +225,13 @@ def polite_get(
         if resp.status_code == 200:
             raw_resp_url = getattr(resp, "url", None)
             resp_url = raw_resp_url if isinstance(raw_resp_url, str) and raw_resp_url else current_url
-            resp_netloc = urllib.parse.urlsplit(resp_url).netloc
-            if parsed_orig.netloc and resp_netloc and resp_netloc != parsed_orig.netloc:
+            parsed_resp = urllib.parse.urlsplit(resp_url)
+            resp_scheme = (parsed_resp.scheme or "").lower()
+            resp_host = (parsed_resp.hostname or "").lower()
+            orig_host = (parsed_orig.hostname or "").lower()
+            if resp_scheme not in ("http", "https"):
+                raise UsageAdviceIngestError(f"Unsafe response scheme refused: {resp_url}")
+            if not resp_host or resp_host != orig_host or parsed_resp.port != parsed_orig.port:
                 raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {resp_url}")
             if delay > 0:
                 sleep_fn(delay)
@@ -1054,7 +1069,7 @@ def discover_movne_manifest(
     pages: list[str] | None = None,
     delay: float = 1.0,
     user_agent: str = DEFAULT_USER_AGENT,
-    sleep_fn: Callable[[float], None] = time.sleep,
+    sleep_fn: Callable[[float], None] = interruptible_sleep,
 ) -> list[dict[str, Any]]:
     """Discover all issues from Glavcom archive index pages.
 
@@ -1127,7 +1142,7 @@ def discover_movaua_manifest(
     sitemap_url: str = "https://ukr-mova.in.ua/sitemap.xml",
     delay: float = 1.0,
     user_agent: str = DEFAULT_USER_AGENT,
-    sleep_fn: Callable[[float], None] = time.sleep,
+    sleep_fn: Callable[[float], None] = interruptible_sleep,
 ) -> list[dict[str, Any]]:
     """Discover URLs from mova.ua sitemap, supporting nested sitemap indexes."""
     all_urls: set[str] = set()
@@ -1209,7 +1224,7 @@ def ingest_movne_pytannya(
     max_retries: int = 3,
     retry_backoff: float = 2.0,
     user_agent: str = DEFAULT_USER_AGENT,
-    sleep_fn: Callable[[float], None] = time.sleep,
+    sleep_fn: Callable[[float], None] = interruptible_sleep,
 ) -> IngestStats:
     """Ingest Glavcom «Мовне питання» issues and extract pairs."""
     global _STOP_REQUESTED
@@ -1291,6 +1306,13 @@ def ingest_movne_pytannya(
             raise
         except RateLimitOrServerError:
             raise
+        except UsageAdviceIngestError as exc:
+            if _STOP_REQUESTED or "interrupted" in str(exc).lower():
+                logger.info("Ingest interrupted by signal: %s", exc)
+                break
+            logger.error("Failed to fetch issue %s (%s): %s", issue_number, url, exc)
+            errors += 1
+            continue
         except Exception as exc:
             logger.error("Failed to fetch issue %s (%s): %s", issue_number, url, exc)
             errors += 1
@@ -1484,7 +1506,7 @@ def ingest_movaua(
     max_retries: int = 3,
     retry_backoff: float = 2.0,
     user_agent: str = DEFAULT_USER_AGENT,
-    sleep_fn: Callable[[float], None] = time.sleep,
+    sleep_fn: Callable[[float], None] = interruptible_sleep,
 ) -> IngestStats:
     """Ingest mova.ua articles and extract usage advice pairs."""
     global _STOP_REQUESTED
@@ -1558,6 +1580,13 @@ def ingest_movaua(
             raise
         except RateLimitOrServerError:
             raise
+        except UsageAdviceIngestError as exc:
+            if _STOP_REQUESTED or "interrupted" in str(exc).lower():
+                logger.info("Ingest interrupted by signal: %s", exc)
+                break
+            logger.error("Failed to fetch movaua %s: %s", url, exc)
+            errors += 1
+            continue
         except Exception as exc:
             logger.error("Failed to fetch movaua %s: %s", url, exc)
             errors += 1
@@ -2039,6 +2068,10 @@ def main(argv: list[str] | None = None) -> int:
                     if args.export_json_movaua:
                         export_movaua_summary_json(conn, args.export_json_movaua)
                         logger.info("Exported MovaUA summary JSON to %s", args.export_json_movaua)
+
+        if _STOP_REQUESTED or any(s.interrupted for s in stats_list):
+            logger.warning("Ingest was interrupted by user or supervisor signal.")
+            return EXIT_HTTP_SERVER_ERROR
 
         if any(s.errors > 0 for s in stats_list):
             logger.error("Ingest completed with errors recorded in one or more sources.")

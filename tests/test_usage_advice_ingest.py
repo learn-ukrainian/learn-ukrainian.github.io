@@ -167,6 +167,57 @@ class TestUsageAdviceIngest(unittest.TestCase):
         with self.assertRaises(UsageAdviceIngestError) as ctx:
             polite_get(session, "https://example.com/start", delay=0)
         self.assertIn("Off-host redirect refused", str(ctx.exception))
+        self.assertEqual(session.get.call_count, 1)
+
+    def test_polite_get_opaque_and_protocol_relative_redirect_refused(self) -> None:
+        # http:127.0.0.1 opaque location with empty netloc/hostname
+        session = MagicMock(spec=requests.Session)
+        r301 = MagicMock(spec=requests.Response)
+        r301.status_code = 301
+        r301.headers = {"Location": "http:127.0.0.1"}
+        session.get.return_value = r301
+
+        with self.assertRaises(UsageAdviceIngestError) as ctx:
+            polite_get(session, "https://example.com/start", delay=0)
+        self.assertIn("Off-host redirect refused", str(ctx.exception))
+        self.assertEqual(session.get.call_count, 1)
+
+        # //evil.example protocol-relative redirect
+        session_evil = MagicMock(spec=requests.Session)
+        r302 = MagicMock(spec=requests.Response)
+        r302.status_code = 302
+        r302.headers = {"Location": "//evil.example/payload"}
+        session_evil.get.return_value = r302
+
+        with self.assertRaises(UsageAdviceIngestError) as ctx:
+            polite_get(session_evil, "https://example.com/start", delay=0)
+        self.assertIn("Off-host redirect refused", str(ctx.exception))
+        self.assertEqual(session_evil.get.call_count, 1)
+
+    def test_polite_get_port_and_userinfo_redirect_refused(self) -> None:
+        # Port mismatch redirect
+        session_port = MagicMock(spec=requests.Session)
+        r301 = MagicMock(spec=requests.Response)
+        r301.status_code = 301
+        r301.headers = {"Location": "https://example.com:8443/changed-port"}
+        session_port.get.return_value = r301
+
+        with self.assertRaises(UsageAdviceIngestError) as ctx:
+            polite_get(session_port, "https://example.com/start", delay=0)
+        self.assertIn("port mismatch", str(ctx.exception))
+        self.assertEqual(session_port.get.call_count, 1)
+
+        # Userinfo in redirect target
+        session_user = MagicMock(spec=requests.Session)
+        r302 = MagicMock(spec=requests.Response)
+        r302.status_code = 302
+        r302.headers = {"Location": "https://user:pass@example.com/secret"}
+        session_user.get.return_value = r302
+
+        with self.assertRaises(UsageAdviceIngestError) as ctx:
+            polite_get(session_user, "https://example.com/start", delay=0)
+        self.assertIn("userinfo refused", str(ctx.exception))
+        self.assertEqual(session_user.get.call_count, 1)
 
     def test_polite_get_on_host_redirect_followed(self) -> None:
         session = MagicMock(spec=requests.Session)
@@ -1357,6 +1408,25 @@ class TestUsageAdviceIngest(unittest.TestCase):
             test_db = str(Path(tmpdir) / "test.db")
             code = main(["--re-extract", "--source", "movne_pytannya", "--db-movne", test_db])
             self.assertEqual(code, 0)
+
+    def test_cancellation_sleep_path_clean_exit(self) -> None:
+        import scripts.ingest.usage_advice_ingest as uai
+
+        old_stop = uai._STOP_REQUESTED
+        try:
+            uai._STOP_REQUESTED = True
+            manifest_movne = [{"url": "https://glavcom.ua/specprojects/movne_pytannya/1.html", "issue_number": 1}]
+            session = MagicMock(spec=requests.Session)
+            stats_movne = uai.ingest_movne_pytannya(self.conn, session=session, manifest=manifest_movne, delay=0)
+            self.assertTrue(stats_movne.interrupted)
+            self.assertEqual(stats_movne.errors, 0)
+
+            manifest_movaua = [{"url": "https://ukr-mova.in.ua/stop-article", "section": "antusurzhuk"}]
+            stats_movaua = uai.ingest_movaua(self.conn, session=session, manifest=manifest_movaua, delay=0)
+            self.assertTrue(stats_movaua.interrupted)
+            self.assertEqual(stats_movaua.errors, 0)
+        finally:
+            uai._STOP_REQUESTED = old_stop
 
 
 if __name__ == "__main__":
