@@ -213,7 +213,10 @@ def test_reminders_differing_size_and_exclusions(tmp_path, harness):
         rows += [attachment(kind, "initial"), attachment(kind, "é"), attachment(kind, "xyz")]
     rows += [attachment("hook_success", "ignored"), attachment("unknown-type", "ignored")]
     m = metrics(tmp_path, harness, rows)
-    assert amount(m, "reminder_attachments") == (20 if harness == "claude" else "unknown")
+    expected = sum(
+        len(f'{{"content":"{text}","type":"{kind}"}}'.encode()) for kind in c.REMINDERS for text in ("é", "xyz")
+    )
+    assert amount(m, "reminder_attachments") == (expected if harness == "claude" else "unknown")
     assert m["counters"]["other"] == (1 if harness == "claude" else 13)
 
 
@@ -664,3 +667,189 @@ def test_pre_model_compaction_and_empty_unidentified_read_are_not_discarded(tmp_
         "compactions": c.value(1),
     }
     assert "unknown" in parsed["models"]
+
+
+@pytest.mark.parametrize("identity", ["request", "message", "record"])
+def test_claude_content_blocks_count_usage_once_with_identity_fallback(tmp_path, identity):
+    rows = []
+    for index in range(3):
+        row = request("claude")
+        row["message"]["content"] = [{"type": "text", "text": f"synthetic-{index}"}]
+        if identity == "request":
+            row["requestId"] = "synthetic-request"
+            row["message"]["id"] = f"synthetic-message-{index}"
+        elif identity == "message":
+            row["message"]["id"] = "synthetic-message"
+        rows.append(row)
+    m = metrics(tmp_path, "claude", rows)
+    calls = 3 if identity == "record" else 1
+    assert m["totals"]["model_calls"] == c.value(calls)
+    assert m["totals"]["provider_tokens"]["input_tokens"] == c.value(10 * calls)
+    assert m["totals"]["provider_tokens"]["cache_creation_input_tokens"] == c.value(11 * calls)
+    assert m["totals"]["provider_tokens"]["cache_read_input_tokens"] == c.value(12 * calls)
+    assert m["totals"]["provider_tokens"]["output_tokens"] == c.value(13 * calls)
+    assert m["totals"]["first_call_uncached_input"] == c.value(10)
+    assert m["totals"]["first_call_cache_creation"] == c.value(11)
+    assert m["totals"]["first_call_cache_read"] == c.value(12)
+
+
+def test_claude_request_identity_controls_hook_intervals_and_first_call(tmp_path):
+    first = request("claude") | {"requestId": "synthetic-first"}
+    duplicate = request("claude", 100) | {"requestId": "synthetic-first"}
+    second = request("claude", 20) | {"requestId": "synthetic-second"}
+    first["message"]["model"] = "claude-first"
+    second["message"]["model"] = "claude-second"
+    rows = [first, attachment("hook_additional_context", "é"), duplicate, attachment("hook_additional_context", "é")]
+    rows += [second, attachment("hook_additional_context", "é")]
+    # Metadata creates the second model's bucket before the first counted request.
+    pre = {"type": "assistant", "message": {"model": "claude-second"}}
+    parsed = c.parse_session(transcript(tmp_path, "claude", [pre, *rows]), "claude")
+    m = parsed["metrics"]
+    assert m["totals"]["model_calls"] == c.value(2)
+    assert m["totals"]["provider_tokens"]["output_tokens"] == c.value(36)
+    assert m["totals"]["first_call_uncached_input"] == c.value(10)
+    assert amount(m, "per_call_reinjection") == 2
+
+
+def test_first_counted_claude_call_keeps_missing_category_unknown(tmp_path):
+    first = request("claude") | {"requestId": "synthetic-first"}
+    del first["message"]["usage"]["cache_creation_input_tokens"]
+    second = request("claude", 20) | {"requestId": "synthetic-second"}
+    second["message"]["model"] = "claude-second"
+    m = metrics(tmp_path, "claude", [first, second])
+    assert m["totals"]["first_call_uncached_input"] == c.value(10)
+    assert m["totals"]["first_call_cache_creation"] == c.unknown("field_absent")
+
+
+def codex_snapshot(last, total):
+    return {
+        "type": "event_msg",
+        "payload": {
+            "type": "token_count",
+            "info": {
+                "last_token_usage": last,
+                "total_token_usage": total,
+            },
+        },
+    }
+
+
+def test_codex_duplicate_snapshot_is_not_a_call_or_token_increment(tmp_path):
+    first = {
+        "input_tokens": 10,
+        "cached_input_tokens": 2,
+        "output_tokens": 3,
+        "reasoning_output_tokens": 1,
+        "total_tokens": 13,
+    }
+    last = {
+        "input_tokens": 20,
+        "cached_input_tokens": 4,
+        "output_tokens": 6,
+        "reasoning_output_tokens": 2,
+        "total_tokens": 26,
+    }
+    final = {
+        "input_tokens": 30,
+        "cached_input_tokens": 6,
+        "output_tokens": 9,
+        "reasoning_output_tokens": 3,
+        "total_tokens": 39,
+    }
+    rows = [
+        codex_snapshot(first, first),
+        codex_snapshot(last, dict(reversed(list(first.items())))),
+        codex_snapshot(last, final),
+    ]
+    parsed = c.parse_session(transcript(tmp_path, "codex", [metadata("codex"), *rows]), "codex")
+    m = parsed["metrics"]
+    assert m["totals"]["model_calls"] == c.value(2)
+    assert m["counters"]["token_total_mismatch"] == 0
+    for key, expected in final.items():
+        assert m["totals"]["provider_tokens"][key] == c.value(expected)
+        assert parsed["models"]["gpt-synthetic"]["totals"]["provider_tokens"][key] == c.value(expected)
+    assert m["totals"]["first_call_uncached_input"] == c.value(10)
+    assert m["totals"]["provider_tokens"]["cache_read_input_tokens"] == c.unknown("field_absent")
+
+
+def test_codex_mismatch_uses_cumulative_totals_and_model_deltas(tmp_path):
+    rows = [
+        codex_snapshot({"input_tokens": 10, "output_tokens": 2}, {"input_tokens": 11, "output_tokens": 3}),
+        {"type": "turn_context", "payload": {"model": "gpt-second"}},
+        codex_snapshot({"input_tokens": 20, "output_tokens": 4}, {"input_tokens": 35, "output_tokens": 9}),
+    ]
+    parsed = c.parse_session(transcript(tmp_path, "codex", [metadata("codex"), *rows]), "codex")
+    m = parsed["metrics"]
+    assert m["counters"]["token_total_mismatch"] == 1
+    assert m["totals"]["model_calls"] == c.value(2)
+    assert m["totals"]["provider_tokens"]["input_tokens"] == c.value(35)
+    assert m["totals"]["provider_tokens"]["output_tokens"] == c.value(9)
+    assert m["totals"]["first_call_uncached_input"] == c.value(10)
+    assert parsed["models"]["gpt-synthetic"]["totals"]["provider_tokens"]["input_tokens"] == c.value(11)
+    assert parsed["models"]["gpt-second"]["totals"]["provider_tokens"]["input_tokens"] == c.value(24)
+
+
+def test_codex_negative_delta_disables_mismatch_self_check(tmp_path):
+    rows = [codex_snapshot({"input_tokens": 90}, {"input_tokens": 100}), marker("codex")]
+    rows += [codex_snapshot({"input_tokens": 7}, {"input_tokens": 20})]
+    m = metrics(tmp_path, "codex", rows)
+    assert m["counters"]["token_total_mismatch"] == 0
+    assert m["totals"]["model_calls"] == c.value(2)
+    assert m["totals"]["provider_tokens"]["input_tokens"] == c.value(97)
+
+
+def test_reminder_bytes_use_entire_canonical_attachment_and_other_is_count_only(tmp_path):
+    rows = [
+        attachment("queued_command", "initial"),
+        {"type": "attachment", "attachment": {"type": "queued_command", "z": "é", "content": "x"}},
+        attachment("queued_command", "xyz"),
+        attachment("synthetic-other", "x" * 30_000),
+        attachment("hook_success", "ignored"),
+    ]
+    m = metrics(tmp_path, "claude", rows)
+    expected = len('{"content":"x","type":"queued_command","z":"é"}'.encode())
+    expected += len(b'{"content":"xyz","type":"queued_command"}')
+    assert m["reminder_attachments"]["bytes"] == c.value(expected)
+    assert m["counters"]["other"] == 1
+    assert amount(m, "raw_tool_payload") == 0
+
+
+def test_codex_cold_start_uses_only_explicit_pre_action_records_and_system_fields(tmp_path):
+    selected = [
+        {"type": "session_meta", "payload": {"base_instructions": {"text": "é"}}},
+        metadata("codex"),
+        {"type": "response_item", "payload": {"type": "message", "role": "developer", "content": "synthetic"}},
+    ]
+    excluded = {"type": "response_item", "payload": {"type": "message", "role": "user", "content": "synthetic"}}
+    rows = [*selected, excluded, *pair("codex", "synthetic"), *selected]
+    lines = [" " + json.dumps(r, ensure_ascii=False) + "  " for r in rows]
+    path = tmp_path / "synthetic.jsonl"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    m = c.parse_session(path, "codex")["metrics"]
+    assert m["cold_start"]["bytes"] == c.value(sum(len(line.encode()) for line in lines[:3]))
+    absent = metrics(
+        tmp_path,
+        "codex",
+        [
+            {"type": "event_msg", "payload": {"type": "task_started", "system_prompt": "synthetic"}},
+            {"type": "system", "systemPrompt": "synthetic"},
+            selected[2],
+            *pair("codex", "synthetic"),
+            selected[0],
+        ],
+    )
+    assert absent["cold_start"]["bytes"] == c.unknown("field_absent")
+
+
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+@pytest.mark.parametrize("name", ["apply_patch", "write_stdin"])
+def test_mutation_and_stdin_results_never_form_polls(tmp_path, harness, name):
+    # A misleading command field must not classify a non-command tool as a poll.
+    rows = [
+        *pair(harness, "one", "abc", name, {"cmd": "git status"}),
+        *pair(harness, "two", "abc", name, {"cmd": "git status"}),
+    ]
+    m = metrics(tmp_path, harness, rows)
+    assert m["totals"]["paired_tool_calls"] == c.value(2)
+    assert amount(m, "unchanged_polls") == 0
+    assert amount(m, "repeated_reads") == 0

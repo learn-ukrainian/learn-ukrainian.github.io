@@ -44,6 +44,15 @@ These rules supersede conflicting sentences in the frozen definitions below.
 4. Class 6: the marker types are defined per harness (Codex `compacted`; Claude `type=system` with `subtype=compact_boundary`). A session in which the marker type is defined for the harness but never occurs has `compactions: 0` and value 0. `unknown` (`no_marker`) is only for a harness with no defined marker type.
 5. Class 1 for Claude (`cold_start`): the stored system prompt is not a distinct field, so the explicit pre-action list is: every `attachment` record, every `system` record and the first `user` record, occurring before the first `tool_use`. Document the list in the docstring and the runbook; the bytes are the UTF-8 length of those raw records. Codex keeps its existing definition.
 
+## Amendment 2 (normative; supersedes conflicting sentences)
+
+1. Claude request counting (tool defect, spec premise wrong): Claude Code writes ONE API response as SEVERAL assistant records (one per content block), each carrying the same `usage`. Verified on a held-out session: 51 assistant records with `usage` but 28 distinct `requestId` (and 28 distinct `message.id`); summing records doubled output tokens (28173 vs 13584). Rule: a model call is one distinct `requestId` (fall back to `message.id`, then to the record itself when neither exists); count its `usage` and `model_calls` ONCE; first-call fields come from the first counted call.
+2. Codex token counting (tool defect): `token_count` events are repeated snapshots; a later event whose `info.total_token_usage` equals the previous event's is a duplicate and contributes nothing. Sum `last_token_usage` over non-duplicate events; the sum must equal the final cumulative `total_token_usage` when no negative delta occurred (add a self-check counter `token_total_mismatch`; report the cumulative value as authoritative on mismatch). `model_calls` = non-duplicate events.
+3. Class 8 size basis (spec gap): attachment size = UTF-8 bytes of the attachment object serialized as canonical JSON (sorted keys, no whitespace), the same basis as the result-body rule; waste per exact reminder type = sum of sizes of every occurrence after the first. Attachments of any other type (except `hook_success` and `hook_additional_context`) only increment an `other` COUNT and add no bytes.
+4. Class 1 for Codex (spec gap): the explicit pre-action list is `session_meta`, `turn_context` and `response_item` records whose payload is a `message` with role `system` or `developer`, occurring before the first `custom_tool_call` or `function_call`, measured as raw UTF-8 record bytes. A Codex session is cold-start `unknown` (`field_absent`) only when it has none of: `session_meta.payload.base_instructions.text`, `turn_context.payload.system_prompt` or `.system_instructions`, or a system-role message before the first tool call.
+5. Class 5 (spec gap): only the allowlisted NON-READ shapes (`git-status`, `git-diff`, `git-log`, `gh-pr-view`, `gh-pr-diff`, `pytest`, `curl-local-api`) form poll series; `other`, `file-read`, `file-search`, `apply_patch` and `write_stdin` never do (no argument-free key exists for them).
+6. Tests: add (1) a Claude session with three assistant records sharing one `requestId` and usage counted once (calls, each token category), (2) a Codex session with a duplicated `token_count` snapshot (sum equals the final cumulative total; `token_total_mismatch` 0), (3) class 8 bytes using canonical-JSON attachment size with an `other`-type attachment adding no bytes, (4) a Codex session with `session_meta` base instructions yielding a cold-start number and one without any system field yielding unknown, (5) two identical `apply_patch` results not forming a poll. Update the docstring and the runbook verbatim.
+
 ## Frozen definitions
 
 - Denominator: Codex `~/.codex/sessions/**/rollout-*.jsonl` and Claude `~/.claude/projects/**/*.jsonl` whose mtime is in `[run_start_utc − 7 days, run_start_utc)`, excluding paths that contain `subagents/` or a filename matching `agent-*.jsonl`, with at least 20 PAIRED tool calls (a tool call is paired when a call record and its result record join by the rule below). Grok, AGY, Gemini, Kimi and Cursor are reported `unavailable` with reason `no_documented_root`. Do not walk the home directory.
@@ -134,18 +143,23 @@ outputs, including the `function_call` sibling. A Claude `function_call` item
 has no documented join rule and is not silently treated as a Codex record.
 Reverse-order call/result pairs join; duplicate IDs count once.
 
-Claude token requests use assistant `message.usage`. Codex token requests use
-`event_msg.payload.type=token_count` and `info.last_token_usage`, otherwise
+Claude token requests use assistant `message.usage`, counted once per distinct
+`requestId`, then `message.id`, then record when neither exists. First-call fields
+come from the first counted call. Codex requests use non-duplicate
+`event_msg.payload.type=token_count` snapshots, `info.last_token_usage`, otherwise
 `info.total_token_usage` deltas. Raw `token_usage_record` events are not added
-again to those counters. A negative cumulative delta contributes the new total.
+again. A negative cumulative delta contributes the new total and disables the
+final cumulative self-check for that session. `token_total_mismatch` counts
+sessions whose category sums disagree with final cumulative usage; on mismatch,
+the report uses cumulative totals and attributes cumulative deltas to models.
 Absent request categories remain unknown, including Claude cache categories
 whose names differ from Codex `cached_input_tokens`. No token estimate is emitted.
 First-request counters belong only to totals. No waste class receives tokens.
 
 Hook payload fields are `attachment.content`, then `text`, then `stdout`;
-otherwise the attachment object excluding `type`. Claude reminder bodies use
-the same extraction. Codex class 8 remains `field_absent`; no recurring type is
-invented. Claude sessions without hooks or reminders have zero bytes.
+otherwise the attachment object excluding `type`. Claude reminders use the
+canonical JSON of the entire attachment object, including `type`. Codex class 8
+remains `field_absent`; no recurring type is invented. Claude sessions without hooks or reminders have zero bytes.
 Codex class 2 remains `field_absent`.
 
 A record is decoded one line at a time. Results become hashes and sizes before

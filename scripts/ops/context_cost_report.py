@@ -29,6 +29,14 @@ Amendment 1 (normative; supersedes conflicting frozen sentences):
 4. Class 6: the marker types are defined per harness (Codex `compacted`; Claude `type=system` with `subtype=compact_boundary`). A session in which the marker type is defined for the harness but never occurs has `compactions: 0` and value 0. `unknown` (`no_marker`) is only for a harness with no defined marker type.
 5. Class 1 for Claude (`cold_start`): the stored system prompt is not a distinct field, so the explicit pre-action list is: every `attachment` record, every `system` record and the first `user` record, occurring before the first `tool_use`. Document the list in the docstring and the runbook; the bytes are the UTF-8 length of those raw records. Codex keeps its existing definition.
 
+Amendment 2 (normative; supersedes conflicting sentences):
+1. Claude request counting (tool defect, spec premise wrong): Claude Code writes ONE API response as SEVERAL assistant records (one per content block), each carrying the same `usage`. Verified on a held-out session: 51 assistant records with `usage` but 28 distinct `requestId` (and 28 distinct `message.id`); summing records doubled output tokens (28173 vs 13584). Rule: a model call is one distinct `requestId` (fall back to `message.id`, then to the record itself when neither exists); count its `usage` and `model_calls` ONCE; first-call fields come from the first counted call.
+2. Codex token counting (tool defect): `token_count` events are repeated snapshots; a later event whose `info.total_token_usage` equals the previous event's is a duplicate and contributes nothing. Sum `last_token_usage` over non-duplicate events; the sum must equal the final cumulative `total_token_usage` when no negative delta occurred (add a self-check counter `token_total_mismatch`; report the cumulative value as authoritative on mismatch). `model_calls` = non-duplicate events.
+3. Class 8 size basis (spec gap): attachment size = UTF-8 bytes of the attachment object serialized as canonical JSON (sorted keys, no whitespace), the same basis as the result-body rule; waste per exact reminder type = sum of sizes of every occurrence after the first. Attachments of any other type (except `hook_success` and `hook_additional_context`) only increment an `other` COUNT and add no bytes.
+4. Class 1 for Codex (spec gap): the explicit pre-action list is `session_meta`, `turn_context` and `response_item` records whose payload is a `message` with role `system` or `developer`, occurring before the first `custom_tool_call` or `function_call`, measured as raw UTF-8 record bytes. A Codex session is cold-start `unknown` (`field_absent`) only when it has none of: `session_meta.payload.base_instructions.text`, `turn_context.payload.system_prompt` or `.system_instructions`, or a system-role message before the first tool call.
+5. Class 5 (spec gap): only the allowlisted NON-READ shapes (`git-status`, `git-diff`, `git-log`, `gh-pr-view`, `gh-pr-diff`, `pytest`, `curl-local-api`) form poll series; `other`, `file-read`, `file-search`, `apply_patch` and `write_stdin` never do (no argument-free key exists for them).
+6. Tests: add (1) a Claude session with three assistant records sharing one `requestId` and usage counted once (calls, each token category), (2) a Codex session with a duplicated `token_count` snapshot (sum equals the final cumulative total; `token_total_mismatch` 0), (3) class 8 bytes using canonical-JSON attachment size with an `other`-type attachment adding no bytes, (4) a Codex session with `session_meta` base instructions yielding a cold-start number and one without any system field yielding unknown, (5) two identical `apply_patch` results not forming a poll. Update the docstring and the runbook verbatim.
+
 Frozen definitions (normative except where amended above):
 - Denominator: Codex `~/.codex/sessions/**/rollout-*.jsonl` and Claude `~/.claude/projects/**/*.jsonl` whose mtime is in `[run_start_utc − 7 days, run_start_utc)`, excluding paths that contain `subagents/` or a filename matching `agent-*.jsonl`, with at least 20 PAIRED tool calls (a tool call is paired when a call record and its result record join by the rule below). Grok, AGY, Gemini, Kimi and Cursor are reported `unavailable` with reason `no_documented_root`. Do not walk the home directory.
 - Freeze: before any metric, write a mode-0600 manifest (under `batch_state/monitor-blocker-dedupe/`, never committed) that stores the full session path, harness, size, mtime, paired-tool-call count, and a 16-hex SHA-256 digest of the path; print the SHA-256 of the manifest file. `report` opens only paths listed in the manifest. If size or mtime differs from the manifest, skip that session as `stale_session`; never rescan. Stdout, the baseline JSON, error strings, tests and the runbook emit the 16-hex digest only, never the path or the raw session id.
@@ -107,6 +115,7 @@ SHAPES = (
     "curl-local-api",
     "other",
 )
+POLL_SHAPES = frozenset({"git-status", "git-diff", "git-log", "gh-pr-view", "gh-pr-diff", "pytest", "curl-local-api"})
 CLASSES = (
     "cold_start",
     "per_call_reinjection",
@@ -338,6 +347,8 @@ def call_shape(name: Any, arguments: Any, cwd: str) -> tuple[str, str | None, st
     if not isinstance(name, str):
         return "other", None, None
     name = name.rsplit(".", 1)[-1].lower()
+    if name in {"apply_patch", "write_stdin"}:
+        return "other", None, None
     if isinstance(arguments, str):
         try:
             arguments = json.loads(arguments)
@@ -411,6 +422,13 @@ class Session:
         self.bounds: dict[str, list[datetime]] = {}
         self.timestamps: list[datetime] = []
         self.tokens_previous: dict[str, int] = {}
+        self.token_snapshot: str | None = None
+        self.tokens_summed: Counter = Counter()
+        self.cumulative_by_model: dict[str, Counter] = {}
+        self.token_reset = False
+        self.claude_calls: set[str] = set()
+        if harness == "codex":
+            self.counters["token_total_mismatch"] = 0
         self.token_calls = 0
         self.tool_calls = 0
         self.compact_at: int | None = None
@@ -426,8 +444,6 @@ class Session:
         return self.metrics.setdefault(key, fresh_metrics())
 
     def usage(self, raw: dict) -> None:
-        if not raw:
-            return
         self.token_calls += 1
         t = self.bucket()["totals"]
         old = t["model_calls"]["value"]
@@ -437,6 +453,8 @@ class Session:
             n = raw.get(k)
             if isinstance(n, int) and not isinstance(n, bool) and n >= 0:
                 increments[k] = n
+                if self.harness == "codex":
+                    self.tokens_summed[k] += n
                 prior = t["provider_tokens"][k]["value"]
                 t["provider_tokens"][k] = value((0 if prior == "unknown" else prior) + n)
             elif k in TOKENS:
@@ -453,20 +471,25 @@ class Session:
     def token_event(self, info: dict) -> None:
         last = obj(info.get("last_token_usage"))
         total = obj(info.get("total_token_usage"))
-        if last:
-            self.usage(last)
-        elif total:
-            increments = {}
-            for k in CODEX_TOKENS:
-                n = total.get(k)
-                if isinstance(n, int) and not isinstance(n, bool) and n >= 0:
-                    delta = n - self.tokens_previous.get(k, 0)
-                    increments[k] = n if delta < 0 else delta
-            self.usage(increments)
+        snapshot = hashlib.sha256(body_bytes(total)).hexdigest() if total else None
+        if snapshot is not None and snapshot == self.token_snapshot:
+            return
+        self.token_snapshot = snapshot
+        increments = {}
         for k in CODEX_TOKENS:
             n = total.get(k)
             if isinstance(n, int) and not isinstance(n, bool) and n >= 0:
-                self.tokens_previous[k] = n
+                delta = n - self.tokens_previous.get(k, 0)
+                self.token_reset |= delta < 0
+                increments[k] = n if delta < 0 else delta
+        cumulative = self.cumulative_by_model.setdefault(self.model, Counter())
+        cumulative.update(increments)
+        if last:
+            self.usage(last)
+        else:
+            self.usage(increments)
+        if total:
+            self.tokens_previous = {k: total[k] for k in increments}
 
     def result(self, meta: dict, call: dict | None) -> None:
         model = call["model"] if call else meta["model"]
@@ -504,7 +527,7 @@ class Session:
                 elif hashed in seen:
                     add_number(m["repeated_reads"], "bytes", size)
             seen.add(hashed)
-        elif kind is None and shape != "other":
+        elif kind is None and shape in POLL_SHAPES:
             seen = self.polls.setdefault(shape, set())
             if not large and hashed in seen:
                 add_number(m["unchanged_polls"], "bytes", size)
@@ -567,14 +590,29 @@ class Session:
                 self.first_user_seen = True
             system = (
                 (typ == "session_meta" and isinstance(obj(p.get("base_instructions")).get("text"), str))
-                or any(isinstance(p.get(k), str) for k in ("system_prompt", "system_instructions"))
-                or (p.get("type") == "message" and p.get("role") == "system")
-                or any(isinstance(r.get(k), str) for k in ("systemPrompt", "system_prompt"))
-                or msg.get("role") == "system"
+                or (
+                    typ == "turn_context"
+                    and any(isinstance(p.get(k), str) for k in ("system_prompt", "system_instructions"))
+                )
+                or (typ == "response_item" and p.get("type") == "message" and p.get("role") == "system")
             )
             self.has_system |= system
         if self.harness == "claude" and typ == "assistant":
-            self.usage(obj(msg.get("usage")))
+            usage = obj(msg.get("usage"))
+            if usage:
+                request_id = r.get("requestId")
+                message_id = msg.get("id")
+                call_id = (
+                    digest("request:" + request_id)
+                    if isinstance(request_id, str) and request_id
+                    else digest("message:" + message_id)
+                    if isinstance(message_id, str) and message_id
+                    else None
+                )
+                if call_id is None or call_id not in self.claude_calls:
+                    if call_id is not None:
+                        self.claude_calls.add(call_id)
+                    self.usage(usage)
         if self.harness == "codex" and typ == "event_msg" and p.get("type") == "token_count":
             self.token_event(obj(p.get("info")))
         if typ == "attachment":
@@ -590,7 +628,7 @@ class Session:
                 self.hooks[hashed] = self.token_calls
             elif self.harness == "claude" and at in REMINDERS:
                 if self.reminders[at]:
-                    add_number(self.bucket()["reminder_attachments"], "bytes", len(b))
+                    add_number(self.bucket()["reminder_attachments"], "bytes", len(body_bytes(a)))
                 self.reminders[at] += 1
             elif at != "hook_success":
                 self.counters["other"] += 1
@@ -637,6 +675,18 @@ class Session:
         for result in self.results.values():
             self.result(result, None)
         self.counters["unpaired_call"] += len(self.calls)
+        mismatch = (
+            self.harness == "codex"
+            and not self.token_reset
+            and any(self.tokens_summed[k] != n for k, n in self.tokens_previous.items())
+        )
+        if mismatch:
+            self.counters["token_total_mismatch"] += 1
+            # Attribute authoritative cumulative deltas to the recorded event models.
+            for model, tokens in self.cumulative_by_model.items():
+                for k, n in tokens.items():
+                    self.bucket(model)["totals"]["provider_tokens"][k] = value(n)
+                    self.token_missing.get(model, set()).discard(k)
         # Cold records often precede model metadata; assign only for a single model.
         models = [k for k in self.metrics if k != "unknown"]
         cold_model = models[0] if len(models) == 1 else "unknown"
@@ -691,9 +741,16 @@ class Session:
             session["totals"]["provider_tokens"] = aggregate(
                 [m["totals"]["provider_tokens"] for m in used], session_coverage=False
             )
-            for k in ("first_call_uncached_input", "first_call_cache_creation", "first_call_cache_read"):
-                present = [m["totals"][k] for m in used if m["totals"][k]["value"] != "unknown"]
-                session["totals"][k] = present[0] if present else unknown("field_absent")
+        if self.first_usage is not None:
+            for dest, source in zip(
+                ("first_call_uncached_input", "first_call_cache_creation", "first_call_cache_read"),
+                TOKENS[:3],
+                strict=True,
+            ):
+                n = self.first_usage[source]
+                session["totals"][dest] = value(n) if n is not None else unknown("field_absent")
+        if mismatch:
+            session["totals"]["provider_tokens"].update({k: value(n) for k, n in self.tokens_previous.items()})
         session["counters"] = dict(self.counters)
         return {"metrics": session, "models": self.metrics}
 
