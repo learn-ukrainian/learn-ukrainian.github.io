@@ -330,3 +330,255 @@ def test_review_attempt_preserves_attached_input_and_prepares_in_that_tree(revie
     assert prepared[0]["manifest_path"] == manifest
     assert author_state(repo, target) == before
     assert len(repo.launches) == 1
+
+
+@pytest.mark.parametrize("relation", ["equal", "behind", "ahead", "divergent"])
+@pytest.mark.parametrize("explicit_path", [False, True])
+def test_snapshot_uses_remote_commit_independently_of_dirty_local_branch(review_repo, relation, explicit_path):
+    repo, head = review_repo
+    author = repo.root / ".worktrees/dispatch/codex/author"
+    if relation in {"behind", "divergent"}:
+        repo.git("branch", "-f", "feature", f"{head}~1")
+    repo.git("worktree", "add", str(author), "feature")
+    if relation in {"ahead", "divergent"}:
+        (author / "src/app.py").write_bytes(b"local-only commit\x00\xff")
+        repo.git("-C", str(author), "add", "src/app.py")
+        repo.git("-C", str(author), "commit", "-qm", f"local work\n\nX-Agent: {SOL}")
+    (author / "src/app.py").write_bytes(b"staged bytes\x00\xfe")
+    repo.git("-C", str(author), "add", "src/app.py")
+    (author / "src/app.py").write_bytes(b"unstaged bytes\x00\xfd")
+    (author / "untracked.bin").write_bytes(b"untracked\x00\xfc")
+    (author / "ignored").mkdir()
+    (author / "ignored/output.bin").write_bytes(b"ignored\x00\xfb")
+    author_record = delegate._state_path("author")
+    delegate._write_state_atomic(author_record, {
+        "task_id": "author", "status": "done", "mode": "workspace-write",
+        "worktree_path": str(author), "worktree_branch": "feature", "keep_worktree": True,
+        "worktree_reused": False,
+    })
+    before = author_state(repo, author)
+    index = Path(repo.git("-C", str(author), "rev-parse", "--git-path", "index"))
+    index_before = index.read_bytes()
+    record_before = author_record.read_bytes()
+    snapshot = repo.root / ".worktrees/dispatch/grok" / (
+        "distinct-explicit-snapshot" if explicit_path else "snapshot-review"
+    )
+    snapshot.parent.mkdir(parents=True)
+
+    assert delegate.cmd_dispatch(review_args(head, worktree=str(snapshot) if explicit_path else None)) == 0
+
+    record = json.loads(delegate._state_path("snapshot-review").read_text())
+    assert record["cwd"] == record["worktree_path"] == str(snapshot)
+    assert record["worktree_base_sha"] == record["pinned_head"] == head
+    assert record["worktree_branch"] is None
+    assert repo.git("-C", str(snapshot), "rev-parse", "HEAD") == head
+    assert repo.git("-C", str(snapshot), "symbolic-ref", "-q", "HEAD", check=False) == ""
+    assert repo.git("-C", str(snapshot), "diff", "--exit-code", head) == ""
+    assert (snapshot / "src/app.py").read_bytes() == b"reviewed = True\n"
+    assert not (snapshot / "untracked.bin").exists()
+    assert not (snapshot / "ignored").exists()
+    assert author_state(repo, author) == before
+    assert index.read_bytes() == index_before
+    assert author_record.read_bytes() == record_before
+    assert len(repo.launches) == 1
+
+
+@pytest.mark.parametrize("shape", ["empty-directory", "nonempty-directory", "file"])
+@pytest.mark.parametrize("explicit_path", [False, True])
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_snapshot_refuses_existing_destination_before_fetch_or_success(
+    review_repo, monkeypatch, capsys, shape, explicit_path, dry_run,
+):
+    repo, head = review_repo
+    snapshot = repo.root / ".worktrees/dispatch/grok" / (
+        "distinct-explicit-snapshot" if explicit_path else "snapshot-review"
+    )
+    snapshot.parent.mkdir(parents=True)
+    if shape == "file":
+        snapshot.write_bytes(b"existing destination\x00\xff")
+    else:
+        snapshot.mkdir()
+        if shape == "nonempty-directory":
+            (snapshot / "retained.bin").write_bytes(b"retained\x00\xfe")
+    retained_record = delegate._state_path("unrelated-task")
+    delegate._write_state_atomic(retained_record, {"task_id": "unrelated-task", "status": "done", "keep_worktree": True})
+    record_before = retained_record.read_bytes()
+    before = repo.snapshot()[:3]
+    files_before = {str(p): p.read_bytes() for p in snapshot.rglob("*") if p.is_file()}
+    file_before = snapshot.read_bytes() if snapshot.is_file() else None
+    git_commands = []
+    run = subprocess.run
+
+    def observe_git(command, *args, **kwargs):
+        if command[0] == "git":
+            git_commands.append(command)
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", observe_git)
+
+    assert delegate.cmd_dispatch(review_args(
+        head, dry_run=dry_run, worktree=str(snapshot) if explicit_path else None,
+    )) == 1
+
+    output = capsys.readouterr()
+    assert "detached read-only worktree already exists" in output.err
+    assert "planned new detached snapshot" not in output.err
+    assert output.out == ""
+    record = delegate._state_path("snapshot-review")
+    assert not record.exists() or json.loads(record.read_text())["status"] == "failed"
+    assert not any("fetch" in command[1:] for command in git_commands)
+    assert not any("worktree" in command and "add" in command for command in git_commands)
+    assert repo.launches == []
+    assert repo.snapshot()[:3] == before
+    assert retained_record.read_bytes() == record_before
+    assert {str(p): p.read_bytes() for p in snapshot.rglob("*") if p.is_file()} == files_before
+    assert (snapshot.read_bytes() if snapshot.is_file() else None) == file_before
+
+
+@pytest.mark.parametrize("target_exists", [False, True])
+@pytest.mark.parametrize("explicit_path", [False, True])
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_snapshot_contained_symlink_uses_canonical_destination(
+    review_repo, monkeypatch, capsys, target_exists, explicit_path, dry_run,
+):
+    repo, head = review_repo
+    anchor = repo.root / ".worktrees/dispatch/grok"
+    anchor.mkdir(parents=True)
+    target = anchor / "canonical-snapshot"
+    link = anchor / ("explicit-link" if explicit_path else "snapshot-review")
+    if target_exists:
+        target.mkdir()
+        (target / "retained.bin").write_bytes(b"retained\x00\xff")
+    link.symlink_to(target.name, target_is_directory=True)
+    git_commands = []
+    run = subprocess.run
+
+    def observe_git(command, *args, **kwargs):
+        if command[0] == "git":
+            git_commands.append(command)
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", observe_git)
+
+    assert delegate.cmd_dispatch(review_args(
+        head, dry_run=dry_run, worktree=str(link) if explicit_path else None,
+    )) == (1 if target_exists else 0)
+
+    output = capsys.readouterr().err
+    assert link.is_symlink() and link.readlink() == Path(target.name)
+    if target_exists:
+        assert "detached read-only worktree already exists" in output
+        assert "planned new detached snapshot" not in output
+        assert (target / "retained.bin").read_bytes() == b"retained\x00\xff"
+    else:
+        record = json.loads(delegate._state_path("snapshot-review").read_text())
+        assert record["worktree_path"] == record["cwd"] == str(target)
+        if dry_run:
+            assert record["status"] == "dry_run"
+            assert f"path={target} pinned_head={head}" in output
+            assert not target.exists()
+        else:
+            assert repo.git("-C", str(target), "rev-parse", "HEAD") == head
+            assert repo.git("-C", str(target), "symbolic-ref", "-q", "HEAD", check=False) == ""
+    assert len(repo.launches) == (0 if target_exists or dry_run else 1)
+    if target_exists or dry_run:
+        assert not any("fetch" in command[1:] for command in git_commands)
+        assert not any("worktree" in command and "add" in command for command in git_commands)
+
+
+def test_snapshot_accepts_remote_without_local_branch(review_repo):
+    repo, head = review_repo
+    repo.git("branch", "-D", "feature")
+
+    assert delegate.cmd_dispatch(review_args(head)) == 0
+
+    snapshot = repo.root / ".worktrees/dispatch/grok/snapshot-review"
+    assert repo.git("-C", str(snapshot), "rev-parse", "HEAD") == head
+    assert repo.git("show-ref", "--verify", "refs/heads/feature", check=False) == ""
+    assert len(repo.launches) == 1
+
+
+@pytest.mark.parametrize("failure", ["missing-remote", "fetch-failure", "unresolved-commit"])
+def test_snapshot_never_uses_cached_tracking_ref_on_remote_failure(review_repo, monkeypatch, capsys, failure):
+    repo, head = review_repo
+    assert repo.sha("origin/feature") == head
+    if failure == "missing-remote":
+        repo.git("--git-dir", str(repo.remote), "update-ref", "-d", "refs/heads/feature")
+    elif failure == "fetch-failure":
+        repo.git("config", "--unset-all", f"url.{repo.remote}.insteadOf")
+        repo.git("config", f"url.{repo.remote.parent / 'unavailable.git'}.insteadOf",
+                 "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git")
+    else:
+        resolve_sha = delegate._resolve_sha
+
+        def unresolved_origin(path, ref="HEAD"):
+            return None if ref == "origin/feature" else resolve_sha(path, ref)
+
+        monkeypatch.setattr(delegate, "_resolve_sha", unresolved_origin)
+    before = repo.snapshot()[:3]
+
+    assert delegate.cmd_dispatch(review_args(head)) == 1
+
+    output = capsys.readouterr().err
+    assert ("was not found after fetch" if failure == "unresolved-commit" else "could not fetch existing branch") in output
+    assert repo.launches == []
+    assert not (repo.root / ".worktrees/dispatch/grok/snapshot-review").exists()
+    assert repo.snapshot()[:3] == before
+    assert json.loads(delegate._state_path("snapshot-review").read_text())["status"] == "failed"
+
+
+@pytest.mark.parametrize("relation", ["ahead", "divergent"])
+def test_attached_resolver_still_refuses_local_unpublished_history(review_repo, relation):
+    repo, head = review_repo
+    repo.git("checkout", "feature")
+    if relation == "divergent":
+        repo.git("reset", "--hard", f"{head}~1")
+    repo.commit(SOL, path="src/app.py", text="local unpublished work\n")
+    repo.git("checkout", "main")
+    before = repo.snapshot()
+
+    with pytest.raises(RuntimeError, match="not an ancestor"):
+        delegate._resolve_worktree_base_sha(
+            agent="codex", task_id="attached", raw_path=str(repo.root / ".worktrees/dispatch/codex/attached"),
+            base="main", branch="feature", detached=False, pinned_head_sha=head,
+        )
+
+    assert repo.snapshot() == before
+    assert repo.launches == []
+
+
+def test_snapshot_dry_run_refuses_explicit_path_swapped_after_validation(review_repo, monkeypatch, capsys):
+    repo, head = review_repo
+    snapshot = repo.root / ".worktrees/dispatch/grok/explicit-snapshot"
+    snapshot.mkdir(parents=True)
+    outside = repo.root.parent / "outside-anchor"
+    outside.mkdir()
+    (outside / "retained.bin").write_bytes(b"retained\x00\xff")
+
+    def swap():
+        snapshot.rename(snapshot.with_name("original-destination"))
+        snapshot.symlink_to(outside, target_is_directory=True)
+
+    monkeypatch.setattr(delegate, "_warn_node_modules_integrity", swap)
+    git_commands = []
+    run = subprocess.run
+
+    def observe_git(command, *args, **kwargs):
+        if command[0] == "git":
+            git_commands.append(command)
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", observe_git)
+
+    assert delegate.cmd_dispatch(review_args(head, dry_run=True, worktree=str(snapshot))) == 1
+
+    output = capsys.readouterr()
+    assert "changed after validation" in output.err
+    assert "planned new detached snapshot" not in output.err
+    assert output.out == ""
+    assert not delegate._state_path("snapshot-review").exists()
+    assert (outside / "retained.bin").read_bytes() == b"retained\x00\xff"
+    assert len(list(outside.iterdir())) == 1
+    assert repo.launches == []
+    assert not any("fetch" in command[1:] for command in git_commands)
+    assert not any("worktree" in command and "add" in command for command in git_commands)
