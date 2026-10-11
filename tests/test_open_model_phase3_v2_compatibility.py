@@ -208,7 +208,7 @@ def test_functional_role_ledger_has_exact_tasks_directed_edges_and_fail_closed_s
     roles = {item["role_id"]: item for item in ledger["functional_roles"]}
     assert {item["task_id"] for item in roles.values()} == set(functional_roles.ROLE_TASKS.values())
     assert roles["rule_author_extractor"]["model_family"] == "gemini"
-    assert roles["ukrainian_source_reviewer"]["model_family"] == "xai"
+    assert roles["ukrainian_source_reviewer"]["model_family"] == "openai"
     assert roles["cross_family_code_infra_reviewer"]["model_family"] != "openai"
     assert functional_roles.tasks_conflict(
         ledger,

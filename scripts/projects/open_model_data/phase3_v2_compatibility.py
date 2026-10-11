@@ -36,7 +36,8 @@ SCRIPT_PATH = ROOT / "scripts/projects/open_model_data/phase3_v2_compatibility.p
 # Original reviewed source identities, independently matched to Git history.
 FROZEN_VALIDATOR_SHA256 = "ae1e82ee32e1e1be1d358098abf0646ac74f2e318866c62e9c2635d48a1b09eb"
 FROZEN_ROLE_VALIDATOR_SHA256 = "29a95031fc9af1feff3824d9f34120bd2a430af3a45ae3773b5aacbd5ad90840"
-CURRENT_ROLE_VALIDATOR_SHA256 = "dea7e919b081903d6d95492f6438fd61f4132f1b411c9d9136320c443096a724"
+FROZEN_ROLE_EVIDENCE_SHA256 = "3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b"
+CURRENT_ROLE_VALIDATOR_SHA256 = "8d703f4ea28c9f0fdc5484d0a980695f8d2f542cd428db98d0e80d8748a4727d"
 FROZEN_VOID_PRODUCER_SHA256 = "1213a5b24bcfeb5ff7a6bf0348d608d3b8e3f1ad940fda3b0cad507b428ff02d"
 CURRENT_VOID_PRODUCER_SHA256 = "e69c26c64fd70b843b6dd6136223f960a15a185fa48135a44c8f33b0ad61f1d9"
 V2_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
@@ -176,7 +177,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_source_dispositions.py": (
         "f1fe490423bc49fcfbca9902f193be78510c3b2b4a5c7cc1aec04b5c877bf903",
-        "436a6eff5627cd2f42cf70c813cdb14d7a5048d88e23c2c26fc0036fd3a7ed1b",
+        "08b7e97786480fc4ca7fbf09ee81a71822d1cf5222b3a3c62c210c7d80978539",
     ),
     "scripts/projects/open_model_data/phase3_disposition_audit.py": (
         "5b40dc718387789a6d6a16aadcab5c900a6066aa96e6bae52d79b26a7c8b6177",
@@ -196,7 +197,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_pravopys_delta.py": (
         "4ffdf9114d8a62625d192dac905b007a4124b1fe4d5e8662c790339f436a177a",
-        "5ef7a22e8a18d2922f3d81d56a70fee51a3ed62a3adcf45ef8c701ad4dc49139",
+        "3d4919320da3da8025a2ee68b0892134e166de11308192abb98ce9c8385e64da",
     ),
     "scripts/projects/open_model_data/phase3_evaluation_reproduction.py": (
         "bd743e6596448702f924b7c83bb3c95e61836780609d6f76ca9baa45feb42e5e",
@@ -224,7 +225,7 @@ MIGRATED_ENGINE_SOURCE_SHA256 = {
     ),
     "scripts/projects/open_model_data/phase3_source_production_transport.py": (
         "65bbd0ce715084c01a78df4ad047a90837e480928efeb0e0dd7fe9d8cd83debb",
-        "3fb963276f23c7bd87bad5ffe4b0ba90f573a6fe54af627955820ad64b1ab188",
+        "0b3776bb8a21d1340445bf04dcce6707ce3b1b5dd2abc91547505ac43e672c7b",
     ),
     "scripts/projects/open_model_data/phase3_source_unit_materialization.py": (
         "5e1b9ee4cf86ff1f951270e069274e8664e73df44c8903e65f17ad5653319bbe",
@@ -349,8 +350,7 @@ def _verify_heldout_label_receipt() -> dict[str, Any]:
         bindings.get("base_contract_sha256") == V2_SHA256
         and bindings.get("amendment_sha256") == V2_1_AMENDMENT_SHA256
         and bindings.get("combined_contract_sha256") == V2_1_COMBINED_SHA256
-        and bindings.get("functional_role_contract_sha256")
-        == sha256_file(_physical_k_path(FUNCTIONAL_ROLE_LOGICAL_PATH))
+        and bindings.get("functional_role_contract_sha256") == FROZEN_ROLE_EVIDENCE_SHA256
         and bindings.get("label_prompt_sha256")
         == sha256_file(
             ROOT / "registry/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md"

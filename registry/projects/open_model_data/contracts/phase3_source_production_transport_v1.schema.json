@@ -22,7 +22,7 @@
         "role_id":{"const":"rule_author_extractor"},
         "task_id":{"const":"phase3-v2-1-rule-author-extraction"},
         "provider":{"const":"google"},
-        "exact_model":{"const":"gemini-3.6-flash-high"},
+        "exact_model":{"const":"gemini-3.8-flash-high"},
         "model_family":{"const":"gemini"},
         "harness":{"const":"agy"}
       }
@@ -33,10 +33,10 @@
       "properties": {
         "role_id":{"const":"ukrainian_source_reviewer"},
         "task_id":{"const":"phase3-v2-1-ukrainian-source-review"},
-        "provider":{"const":"xai"},
-        "exact_model":{"const":"grok-4.5"},
-        "model_family":{"const":"xai"},
-        "harness":{"const":"opencode"}
+        "provider":{"const":"openai"},
+        "exact_model":{"const":"gpt-6.1-sol"},
+        "model_family":{"const":"openai"},
+        "harness":{"const":"codex"}
       }
     },
     "artifact": {
