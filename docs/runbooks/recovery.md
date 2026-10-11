@@ -179,3 +179,57 @@ or wrapper.
 After reinstalling, verify each service with its installer `status` command
 and confirm the first receipts appear at the log and receipt paths listed in
 the inventory.
+
+## Restoring the shared node_modules
+
+Use this when the primary checkout is still present and its shared
+`node_modules` install was emptied. Dispatch worktrees symlink that directory,
+so every command below runs in the primary checkout only. Never run them from
+a dispatch worktree.
+
+`.nvmrc` pins Node 22 and `package.json` `engines.node` is `22.x`. Confirm
+`node` and `npm` against both before installing. `npm` must be the npm that
+ships with that Node.
+
+```bash
+cd /absolute/path/to/primary/learn-ukrainian
+nvmrc="$(tr -d '[:space:]' < .nvmrc)"
+engines="$(node -p 'require("./package.json").engines.node')"
+node_version="$(node --version)"
+npm_version="$(npm --version)"
+printf 'nvmrc=%s engines=%s node=%s npm=%s\n' \
+  "$nvmrc" "$engines" "$node_version" "$npm_version"
+case "$node_version" in
+  v"$nvmrc".*) ;;
+  *)
+    printf 'Node %s does not match .nvmrc (%s) / engines (%s).\n' \
+      "$node_version" "$nvmrc" "$engines" >&2
+    exit 1
+    ;;
+esac
+npm ci
+```
+
+`npm ci` removes `node_modules` before it reinstalls. A failed run leaves the
+directory nearly empty. Retry `npm ci` until it exits 0. Do not leave a
+partial install in place.
+
+If puppeteer's postinstall fails because its browser cache directory exists
+but is empty, confirm the directory is empty, remove that empty directory,
+and retry `npm ci`. The default cache is `$HOME/.cache/puppeteer` unless
+`PUPPETEER_CACHE_DIR` is set. `find` checks emptiness first, and `rmdir`
+refuses a directory that still has anything in it.
+
+```bash
+cache="${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}"
+if [ -d "$cache" ] && [ -z "$(find "$cache" -mindepth 1 -print -quit)" ]; then
+  rmdir "$cache"
+fi
+npm ci
+```
+
+Confirm the restored install:
+
+```bash
+.venv/bin/python scripts/audit/check_node_modules_integrity.py
+```
