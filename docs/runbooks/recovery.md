@@ -327,10 +327,15 @@ that opens a cache file, or swaps a parent directory, after the probe
 returns is outside what the probe can see. Exclusive recovery is what
 covers that interval.
 
-This step needs `lsof`, coreutils `timeout`, and GNU coreutils `mv` 9.5 or
-newer. `mv --update=none-fail` was added in GNU coreutils 9.5. An older
-`mv` rejects the option and exits non-zero without renaming. The block's
-error branch then leaves the browser folder in place.
+This step needs `lsof`, coreutils `timeout`, and GNU `mv` from coreutils
+8.30 or newer. The coreutils 8.30 NEWS (2018-07-01) says `mv -n A B` no
+longer overwrites a destination created at the same moment, and that the
+fix uses `renameat2` or `renameatx_np`. That is the requirement.
+`mv --update=none-fail` is not used. Coreutils 9.5 added it, and the CI
+runner rejects it with `mv: invalid argument 'none-fail' for '--update'`.
+That message is the 9.3 and 9.4 argmatch: `--update` is `all`, `none`, or
+`older` (`src/mv.c` in those tags). An `mv` without `-n` exits non-zero
+and does not rename. The block then leaves the browser folder in place.
 
 Confirm the cache with a bounded read-only `lsof +D` probe, without name
 lookups. The same class of check is described in
@@ -363,13 +368,19 @@ renames only when the status is 1, no `p<pid>` line is present, and every
 remaining line is one of those filesystem-stat warnings. A listed holder,
 a timeout, or any other diagnostic leaves the browser folder where it is.
 
-The rename is `mv -T --update=none-fail`. On GNU coreutils 9.7 that is one
-`renameat2(RENAME_NOREPLACE)`. An existing destination, including an empty
-directory or a symlink, stays in place; `mv` writes `not replacing` and exits
-1. `mv -n` uses the same noreplace rename and then exits 0, so a collision is
-not a visible failure. Plain `mv -T` follows a refused noreplace with a
-replacing rename, which removes an empty directory that appeared after a
-separate existence check.
+The rename is `mv -n -T`. In coreutils 9.3 and 9.4 `src/copy.c`, `mv`
+calls `renameatu` with `RENAME_NOREPLACE`. If that returns `EEXIST` and
+`-n` is set, it returns before the later replacing `renameat`. Those
+versions print `not replacing` and exit 1. NEWS 9.2 made the skip a
+failure; NEWS 9.3 added that diagnostic.
+Coreutils 9.5 made `mv -n` a silent skip that exits 0. GNU mv 9.7 on this
+host matches that later skip: one `renameat2(RENAME_NOREPLACE)`, no second
+rename, and exit 0 when the destination exists. The block therefore ignores
+`mv`'s status. It continues only when the source path is gone and the
+destination is a directory and not a symlink. Otherwise it refuses. Plain
+`mv -T` is not used. On 9.7 it follows the refused noreplace with a
+replacing `renameat` and removes an empty directory created after the name
+was chosen.
 
 A scratch cache showed the empty removal and the rename: `rmdir` removes an empty
 `chrome/linux-<buildId>` directory and leaves the cache root; a directory
@@ -572,7 +583,11 @@ left in place. Selecting a missing primary directory exits before `npm ci`.
     if ! _probe_cache_holders "$cache_real"; then
       exit 1
     fi
-    if ! mv -T --update=none-fail -- "$install_real" "$quarantine"; then
+    # Status is not success: 9.2-9.4 exit 1 on a skip, and 9.5+ exit 0.
+    if ! mv -n -T -- "$install_real" "$quarantine"; then
+      true
+    fi
+    if [ -e "$install_real" ] || [ -L "$install_real" ] || [ -L "$quarantine" ] || [ ! -d "$quarantine" ]; then
       if [ -e "$quarantine" ] || [ -L "$quarantine" ]; then
         printf 'Refusing to quarantine over an existing path.\n' >&2
         exit 1

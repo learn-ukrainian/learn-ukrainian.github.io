@@ -72,6 +72,11 @@ def _run(
 ) -> subprocess.CompletedProcess[str]:
     if path is None:
         path = "/usr/bin:/bin"
+        # Optional directory of an mv that rejects --update=none-fail.
+        # path_prefix stays in front so a test's own stubs win.
+        shim = os.environ.get("RECOVERY_TEST_MV_SHIM")
+        if shim:
+            path = f"{shim}:{path}"
         if path_prefix:
             path = f"{path_prefix}:{path}"
     env = {
@@ -117,8 +122,10 @@ def test_recovery_block_rmdirs_before_quarantine_and_preserves_newlines() -> Non
     assert "rm -r" not in block
     assert "printf x" in block
     assert "${captured%x}" in block
-    move = "mv -T --update=none-fail --"
+    move = 'mv -n -T -- "$install_real" "$quarantine"'
     probe = 'timeout 120 lsof -nP -F p +D "$1"'
+    assert "--update=none-fail" not in block
+    assert "9.5 or newer" not in RUNBOOK.read_text(encoding="utf-8")
     assert block.index("rmdir --") < block.index(probe) < block.index(move)
     assert block.index(probe) < block.index('_probe_cache_holders "$cache_real"') < block.index(move)
     assert 'lsof -nP +D "$cache_real" 2>/dev/null || true' not in block
@@ -772,5 +779,107 @@ def test_mv_that_rejects_the_update_option_leaves_the_folder(tmp_path: Path) -> 
     )
     assert proc.returncode != 0, proc.stderr
     assert "unrecognized option" in proc.stderr
+    assert "Refusing to quarantine; the browser folder was not renamed." in proc.stderr
+    _assert_install_stays(install, kept)
+
+
+_NONE_FAIL_REJECTION = "mv: invalid argument 'none-fail' for '--update'"
+
+
+def _older_mv_shim(directory: Path, *, create_dest: bool = False) -> Path:
+    """mv that rejects the 9.5-only option and otherwise execs /usr/bin/mv.
+
+    create_dest makes the named destination exist before the real rename, which
+    is the collision the noreplace flag must not replace.
+    """
+    rejection = (
+        '  if [ "$arg" = "--update=none-fail" ]; then\n'
+        f"    printf '%s\\n' \"{_NONE_FAIL_REJECTION}\" >&2\n"
+        "    exit 1\n"
+        "  fi\n"
+    )
+    if create_dest:
+        body = (
+            "#!/bin/sh\n"
+            "dest=\n"
+            'for arg in "$@"; do\n'
+            f"{rejection}"
+            "  dest=$arg\n"
+            "done\n"
+            'mkdir -p -- "$dest"\n'
+            'exec /usr/bin/mv "$@"\n'
+        )
+    else:
+        body = f'#!/bin/sh\nfor arg in "$@"; do\n{rejection}done\nexec /usr/bin/mv "$@"\n'
+    return _executable_stub(directory, "mv", body)
+
+
+def test_older_mv_shim_quarantines_a_partial_install(tmp_path: Path) -> None:
+    """A partial install is quarantined when mv rejects --update=none-fail."""
+    cache, install, kept = _partial_install(tmp_path)
+    _older_mv_shim(tmp_path / "bin")
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert _NONE_FAIL_REJECTION not in proc.stderr
+    assert not install.exists()
+    quarantined = list((cache / "chrome").glob("linux-1.quarantine.*"))
+    assert len(quarantined) == 1
+    assert (quarantined[0] / "chrome-linux64" / "leftover").read_text(encoding="utf-8") == "keep"
+    assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_older_mv_shim_does_not_replace_an_existing_destination(tmp_path: Path) -> None:
+    """The same shim leaves a destination that appears as mv starts."""
+    cache, install, kept = _partial_install(tmp_path)
+    _older_mv_shim(tmp_path / "bin", create_dest=True)
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert _NONE_FAIL_REJECTION not in proc.stderr
+    assert "Refusing to quarantine over an existing path." in proc.stderr
+    assert install.is_dir()
+    assert (install / "chrome-linux64" / "leftover").read_text(encoding="utf-8") == "keep"
+    created = list((cache / "chrome").glob("linux-1.quarantine.*"))
+    assert len(created) == 1
+    assert created[0].is_dir()
+    assert list(created[0].iterdir()) == []
+    assert kept.read_text(encoding="utf-8") == "sentinel"
+
+
+def test_mv_that_rejects_no_clobber_leaves_the_folder(tmp_path: Path) -> None:
+    """An mv that does not implement -n fails closed and does not rename."""
+    cache, install, kept = _partial_install(tmp_path)
+    _executable_stub(
+        tmp_path / "bin",
+        "mv",
+        "#!/bin/sh\n"
+        'for arg in "$@"; do\n'
+        '  if [ "$arg" = "-n" ] || [ "$arg" = "--no-clobber" ]; then\n'
+        "    printf '%s\\n' \"mv: invalid option -- 'n'\" >&2\n"
+        "    exit 1\n"
+        "  fi\n"
+        "done\n"
+        'exec /usr/bin/mv "$@"\n',
+    )
+    proc = _run(
+        cache=str(cache),
+        install_dir=str(install),
+        executable=_executable(install),
+        home=_home(tmp_path),
+        path_prefix=str(tmp_path / "bin"),
+    )
+    assert proc.returncode != 0, proc.stderr
+    assert "invalid option" in proc.stderr
     assert "Refusing to quarantine; the browser folder was not renamed." in proc.stderr
     _assert_install_stays(install, kept)
