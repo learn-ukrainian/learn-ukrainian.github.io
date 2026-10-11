@@ -6,14 +6,88 @@ EPIC #6321 / Issue #8403 AC-04.
 from __future__ import annotations
 
 import os
+import re
 import sqlite3
 import sys
+from pathlib import Path
 
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(_project_root, "scripts"))
 
 from wiki.source_attribution import registry_entry_resolves_to_sources_db
-from wiki.sources_schema import WikiSourceEntry
+from wiki.sources_schema import (
+    WikiSourceEntry,
+    extract_short_citation_ids,
+    load_sources_registry,
+)
+
+_SOURCES_SECTION_BLOCK_RE = re.compile(r"^## Джерела.*?(?=^## |\Z)", re.MULTILINE | re.DOTALL)
+
+
+def _strip_sources_section(text: str) -> str:
+    return _SOURCES_SECTION_BLOCK_RE.sub("", text)
+
+
+def _citation_ids_for_markdown(path: Path) -> set[str]:
+    text = _strip_sources_section(path.read_text(encoding="utf-8"))
+    return set(extract_short_citation_ids(text))
+
+
+def _collect_citation_resolution_issues(path: Path, conn: sqlite3.Connection) -> list[str]:
+    citation_ids = _citation_ids_for_markdown(path)
+    if not citation_ids:
+        return []
+
+    registry_path = path.with_suffix(".sources.yaml")
+    if not registry_path.exists():
+        return [f"missing registry: {registry_path.name}"]
+
+    try:
+        registry = load_sources_registry(registry_path)
+    except Exception as exc:  # pragma: no cover - exercised by locked drift fixture.
+        return [f"malformed registry: {exc}"]
+
+    registry_by_id = registry.by_id()
+    issues: list[str] = []
+    for citation_id in sorted(citation_ids, key=lambda value: int(value[1:])):
+        entry = registry_by_id.get(citation_id)
+        if entry is None:
+            issues.append(f"orphan inline ref {citation_id}")
+            continue
+        if not registry_entry_resolves_to_sources_db(entry, conn):
+            issues.append(
+                f"unresolved registry entry {citation_id} -> {entry.type} {entry.file}"
+            )
+    return issues
+
+
+def test_seeded_fake_inline_citation_is_rejected(tmp_path: Path) -> None:
+    article_path = tmp_path / "wiki" / "pedagogy" / "a1" / "fake.md"
+    article_path.parent.mkdir(parents=True)
+    article_path.write_text(
+        "# Fake\n\n"
+        "<!-- wiki-meta\n"
+        "slug: fake\n"
+        "domain: pedagogy/a1\n"
+        "tracks: [a1]\n"
+        "lifecycle: locked\n"
+        "-->\n\n"
+        "Текст із фальшивим посиланням [S999].\n",
+        encoding="utf-8",
+    )
+    article_path.with_suffix(".sources.yaml").write_text(
+        "sources:\n"
+        "  - id: S1\n"
+        "    file: 11-klas-ukrmova-avramenko-2019_s0077\n"
+        "    type: textbook\n",
+        encoding="utf-8",
+    )
+
+    with sqlite3.connect(":memory:") as conn:
+        issues = _collect_citation_resolution_issues(article_path, conn)
+
+    assert issues == ["orphan inline ref S999"]
+
 
 
 def test_citation_resolution_fixture_guard() -> None:
