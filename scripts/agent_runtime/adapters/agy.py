@@ -594,7 +594,7 @@ def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _Transcr
         # A missing/unreadable resumed slice cannot prove that nothing ran.
         return False
     try:
-        log = safe_read_attempt_file(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
+        log = safe_read_attempt_file(Path(log_file), trusted_root=_log_read_root(plan))
     except FileNotFoundError:
         return True  # Fresh attempt failed before creating a conversation log.
     except (OSError, AttemptReadError):
@@ -1049,6 +1049,8 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
+                "agy_log_path": str(log_path),
+                "workspace_read_root": str(cwd.resolve()),
                 "agy_permission_profile_id": (
                     "code-review-command-denial-v1"
                     if tc.get("review_profile") == "code"
@@ -2667,11 +2669,7 @@ def _bound_conversation(plan: InvocationPlan | None) -> tuple[str, Path] | None:
     if plan is None:
         return None
     log_file = plan.env_overrides.get(_AGY_LOG_ENV)
-    conversation_id = (
-        _conversation_id_from_log(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
-        if log_file
-        else None
-    )
+    conversation_id = _conversation_id_from_log(Path(log_file), trusted_root=_log_read_root(plan)) if log_file else None
     if not conversation_id:
         return None
     app_data, _ = _transcript_read_location(plan)
@@ -2706,6 +2704,19 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
         return None
     events, unreadable = parsed
     return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
+
+
+def _log_read_root(plan: InvocationPlan) -> Path:
+    """Keep attempt containment and handle ordinary caller log overrides.
+
+    A replaced ordinary log can live in the workspace captured before launch,
+    never beneath an unrelated log's stale root. Attempt logs always stay
+    beneath the enforced write root. All reads retain the checked fd walk.
+    """
+    log_file = plan.env_overrides.get(_AGY_LOG_ENV)
+    if plan.metadata.get("attempt_read_root") or log_file == plan.metadata.get("agy_log_path", log_file):
+        return Path(plan.metadata.get("log_read_root", "/"))
+    return Path(plan.metadata["workspace_read_root"])
 
 
 def _transcript_read_location(plan: InvocationPlan) -> tuple[Path, Path]:

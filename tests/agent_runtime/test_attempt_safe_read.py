@@ -748,3 +748,61 @@ def test_agy_attempt_root_remains_enforced_if_plan_override_changes(files):
     assert app_data == forbidden.parent and read_root == root
     with pytest.raises(AttemptReadError, match="outside_root"):
         agy._read_transcript_events(forbidden, trusted_root=read_root)
+
+
+@pytest.mark.parametrize("attempt", [False, True])
+def test_agy_log_override_keeps_attempt_containment(files, attempt):
+    root, target, forbidden = files
+    target.write_text(f"Created conversation {UUID}\n")
+    app_data = root / "app-data"
+    transcript = agy._brain_transcript_path(app_data, UUID)
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text('{"type":"PLANNER_RESPONSE","text":"answer"}\n')
+    plan = InvocationPlan(
+        cmd=[],
+        cwd=root,
+        env_overrides={agy._AGY_LOG_ENV: str(forbidden), agy._AGY_APP_DATA_ENV: str(app_data)},
+        metadata={
+            "agy_log_path": str(forbidden),
+            "log_read_root": str(forbidden.parent),
+            "workspace_read_root": str(root),
+            "attempt_read_root": attempt,
+        },
+    )
+    assert agy._log_read_root(plan) == forbidden.parent
+    plan.env_overrides[agy._AGY_LOG_ENV] = str(target)
+    if attempt:
+        plan.metadata["log_read_root"] = str(app_data)
+        with pytest.raises(AttemptReadError, match="outside_root"):
+            agy._bound_conversation(plan)
+    else:
+        assert agy._bound_conversation(plan)[0] == UUID
+        plan.env_overrides[agy._AGY_LOG_ENV] = str(root.parent / "other-worktree" / "log")
+        with pytest.raises(AttemptReadError, match="outside_root"):
+            agy._bound_conversation(plan)
+
+
+@pytest.mark.parametrize("attack", ["symlink", "hardlink", "fifo", "dotdot"])
+def test_agy_ordinary_log_override_keeps_safe_read_refusals(files, attack):
+    root, target, forbidden = files
+    target.unlink()
+    if attack == "symlink":
+        target.symlink_to(forbidden)
+    elif attack == "hardlink":
+        os.link(forbidden, target)
+    elif attack == "fifo":
+        os.mkfifo(target)
+    else:
+        target = root / ".." / forbidden.name
+    plan = InvocationPlan(
+        cmd=[],
+        cwd=root,
+        env_overrides={agy._AGY_LOG_ENV: str(target)},
+        metadata={
+            "agy_log_path": str(root / "original.log"),
+            "log_read_root": str(root),
+            "workspace_read_root": str(root),
+        },
+    )
+    with pytest.raises(AttemptReadError, match="attempt_read_"):
+        agy._bound_conversation(plan)

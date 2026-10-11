@@ -353,6 +353,12 @@ AGY or certify wiring. The adapter checks workers and reviews before
 `agy --version` or any provider subprocess and raises a typed refusal.
 Neither path changes provider on refusal.
 
+The adapter captures its runtime-log path and workspace root before launch.
+An ordinary caller may replace the log with one inside that captured workspace;
+attempt logs remain confined to their enforced write root. These reads reject
+traversal, symlinks, hardlinks, and non-regular files regardless of where the
+workspace sits relative to a checkout or its Git directory.
+
 A startup PASS proves none of the behaviors below. The post-merge driver
 owns the native probe and failure matrix, including permission skipping.
 A startup gate cannot guarantee blocking after a hook crash or timeout.
