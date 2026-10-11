@@ -564,6 +564,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "b49d0c597a2d26febf8fad108c8cfa7e897b9305406322f86fcd21219fa5f7fd:1 f74b23c4e494751935f713cdbc649a527ce14b2f041801aeececa75529ef2430:1",
     ),
     (
+        "scripts/lexicon/dispose_published_records.py",
+        "Manifest staging transaction uses same-directory NamedTemporaryFile; tracked in #10181.",
+        "b139aedf15245de334601e449f6a0d72ec85250b2928caf8abe64cb872dc8361:1",
+    ),
+    (
         "scripts/lexicon/enrich_manifest.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "be231209161d5fc0b8edb27b369af52a2287a00f3d8e2f2e2cfa94595f16ab65:1",
