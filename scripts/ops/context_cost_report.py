@@ -2,19 +2,18 @@
 """Content-free, frozen-sample context measurement. See the baseline runbook.
 
 Record contract (fixed before metrics):
-* Cold-start pre-action types: Codex session_meta, turn_context and
-  response_item/message with role system or developer; Claude system and
-  assistant/message with role system. A distinct system field is required:
+* Cold-start pre-action types: Claude every attachment, every system and the
+  first user record before the first tool_use, measured as raw UTF-8 records.
+  Codex session_meta, turn_context and response_item/message with role system
+  or developer. A distinct system field is required for Codex:
   Codex session_meta.payload.base_instructions.text, turn_context.payload
-  .system_prompt or .system_instructions, or a system-role message; Claude
-  system.systemPrompt/system_prompt or a system-role message. No field means
-  unknown, even when pre-action records exist. Read results never qualify.
+  .system_prompt or .system_instructions, or a system-role message. No Codex
+  field means unknown, even when pre-action records exist. Read calls never qualify.
 * Compaction markers: Codex type=compacted; Claude type=system with
-  subtype=compact_boundary. No marker means unknown; never infer time gaps.
+  subtype=compact_boundary. No occurrences means zero; never infer time gaps.
 * Hook payload: attachment.content, then attachment.text, then attachment.stdout;
-  otherwise the attachment object excluding its type. Codex supports explicit
-  type=attachment with these same named types for class 2, but class 8 has no
-  documented recurring Codex type and remains unknown.
+  otherwise the attachment object excluding its type. Claude absent payloads
+  mean zero; Codex classes 2 and 8 remain unknown (field_absent).
 * Claude assistant.message.content tool_use and user.message.content
   tool_result; Codex response_item.payload custom_tool_call/function_call and
   custom_tool_call_output/function_call_output. IDs join only within a session.
@@ -23,7 +22,14 @@ Record contract (fixed before metrics):
   hashed identities, model labels and numeric metadata survive. Oversized lines
   are drained in bounded chunks. Output labels have a closed allowlist.
 
-Frozen definitions (normative, unchanged):
+Amendment 1 (normative; supersedes conflicting frozen sentences):
+1. Aggregation: a harness or model aggregate is the SUM of the known per-session values, reported together with `coverage` = `{sessions_total, sessions_known, sessions_unknown, unknown_reasons: {reason: count}}`; mark the value `lower_bound: true` when any session is unknown. Only when NO session is known is the aggregate `unknown` with the dominant reason. Per-session values stay number-or-unknown exactly as before.
+2. Class 3 / class 6 read identity: a read whose target cannot be recovered contributes nothing to class 3 or 6 and is counted in `read_identity_absent` (count and bytes); the class value stays a number and carries `partial: true` (a lower bound) when at least one such read exists. Do not set the class unknown for that reason.
+3. Class 2 (`per_call_reinjection`) and class 8: for a harness whose transcripts record hook/attachment payloads (Claude), a session with none has value 0 (not unknown). For a harness that does not record them (Codex), the class stays `unknown` (`field_absent`).
+4. Class 6: the marker types are defined per harness (Codex `compacted`; Claude `type=system` with `subtype=compact_boundary`). A session in which the marker type is defined for the harness but never occurs has `compactions: 0` and value 0. `unknown` (`no_marker`) is only for a harness with no defined marker type.
+5. Class 1 for Claude (`cold_start`): the stored system prompt is not a distinct field, so the explicit pre-action list is: every `attachment` record, every `system` record and the first `user` record, occurring before the first `tool_use`. Document the list in the docstring and the runbook; the bytes are the UTF-8 length of those raw records. Codex keeps its existing definition.
+
+Frozen definitions (normative except where amended above):
 - Denominator: Codex `~/.codex/sessions/**/rollout-*.jsonl` and Claude `~/.claude/projects/**/*.jsonl` whose mtime is in `[run_start_utc − 7 days, run_start_utc)`, excluding paths that contain `subagents/` or a filename matching `agent-*.jsonl`, with at least 20 PAIRED tool calls (a tool call is paired when a call record and its result record join by the rule below). Grok, AGY, Gemini, Kimi and Cursor are reported `unavailable` with reason `no_documented_root`. Do not walk the home directory.
 - Freeze: before any metric, write a mode-0600 manifest (under `batch_state/monitor-blocker-dedupe/`, never committed) that stores the full session path, harness, size, mtime, paired-tool-call count, and a 16-hex SHA-256 digest of the path; print the SHA-256 of the manifest file. `report` opens only paths listed in the manifest. If size or mtime differs from the manifest, skip that session as `stale_session`; never rescan. Stdout, the baseline JSON, error strings, tests and the runbook emit the 16-hex digest only, never the path or the raw session id.
 - Join rule: Claude `tool_use.id` pairs with `tool_result.tool_use_id`; Codex `call_id` on `custom_tool_call` (and `function_call`, handled as a sibling) pairs with the matching output record. An unpaired result counts toward class 4 bytes with shape `other` and toward no other class.
@@ -52,8 +58,11 @@ using that occurrence's size. Hooks deduplicate within a model-call interval,
 then count the same hash in later intervals. Poll keys are the shape only;
 unknown commands (other) cannot safely be polls. Shell compound commands and
 ambiguous read targets are other, never guessed. Relative paths normalize
-against the stored cwd; symlinks are never resolved. Unknowns propagate through
-aggregates; known partial sums are not substituted for unknown totals.
+against the stored cwd; symlinks are never resolved. Coverage counts sessions,
+not model buckets or requests. Partial read values retain lower_bound in
+aggregates, even when every session has a numeric value. Per-session model
+buckets retain the original unknown propagation. Dominant-reason ties use
+lexical order for deterministic output.
 """
 
 from __future__ import annotations
@@ -276,8 +285,15 @@ def command_shape(command: str, cwd: str) -> tuple[str, str | None, str | None]:
     head = posixpath.basename(words[0])
     if head == "git":
         args = words[1:]
+        directories = 0
         while args and args[0] in {"-C", "--git-dir", "--work-tree", "--no-pager", "--paginate"}:
-            args = args[2:] if args[0] in {"-C", "--git-dir", "--work-tree"} else args[1:]
+            if args[0] in {"-C", "--git-dir", "--work-tree"}:
+                directories += 1
+                if directories > 1 or len(args) < 2 or args[1].startswith("-"):
+                    return "other", None, None
+                args = args[2:]
+            else:
+                args = args[1:]
         if args and args[0] in {"status", "diff", "log"}:
             return "git-" + args[0], None, None
     if head == "gh" and len(words) > 2 and words[1:3] in [["pr", "view"], ["pr", "diff"]]:
@@ -352,6 +368,8 @@ def fresh_metrics() -> dict[str, Any]:
         **{c: {"bytes": value(0)} for c in CLASSES},
         "raw_tool_payload": {"bytes": value(0), "count": value(0), "share": value(0), "top_shapes": []},
         "changed_reread": {"bytes": value(0), "count": value(0)},
+        "read_identity_absent": {"bytes": value(0), "count": value(0)},
+        "post_compaction_rehydration": {"bytes": value(0), "compactions": value(0)},
         "totals": {
             "paired_tool_calls": value(0),
             "model_calls": unknown("field_absent"),
@@ -397,8 +415,8 @@ class Session:
         self.tool_calls = 0
         self.compact_at: int | None = None
         self.has_system = False
+        self.first_user_seen = False
         self.cold_bytes = 0
-        self.hook_present = False
         self.first_usage: dict | None = None
         self.token_missing: dict[str, set[str]] = {}
         self.missing_read_identity: set[str] = set()
@@ -467,6 +485,9 @@ class Session:
             return
         if call["kind"] is not None and call["identity"] is None:
             self.counters["read_identity_absent"] += 1
+            self.counters["read_identity_absent_bytes"] += size
+            add_number(m["read_identity_absent"], "count", 1)
+            add_number(m["read_identity_absent"], "bytes", size)
             self.missing_read_identity.add(model)
         add_number(m["totals"], "paired_tool_calls", 1)
         identity, kind = call["identity"], call["kind"]
@@ -524,6 +545,7 @@ class Session:
         if is_marker:
             self.compact_at = self.tool_calls
             self.pre_paths = self.paths.copy()
+            add_number(self.bucket()["post_compaction_rehydration"], "compactions", 1)
         if not self.tool_calls:
             pre = (
                 self.harness == "codex"
@@ -536,10 +558,13 @@ class Session:
                     )
                 )
             ) or (
-                self.harness == "claude" and (typ == "system" or (typ == "assistant" and msg.get("role") == "system"))
+                self.harness == "claude"
+                and (typ in {"attachment", "system"} or (typ == "user" and not self.first_user_seen))
             )
-            if pre and not is_marker:
+            if pre and (self.harness == "claude" or not is_marker):
                 self.cold_bytes += record_size if record_size is not None else len(body_bytes(r))
+            if typ == "user":
+                self.first_user_seen = True
             system = (
                 (typ == "session_meta" and isinstance(obj(p.get("base_instructions")).get("text"), str))
                 or any(isinstance(p.get(k), str) for k in ("system_prompt", "system_instructions"))
@@ -558,7 +583,6 @@ class Session:
             body = a.get("content", a.get("text", a.get("stdout", {k: v for k, v in a.items() if k != "type"})))
             b = body_bytes(body)
             if at == "hook_additional_context":
-                self.hook_present = True
                 hashed = hashlib.sha256(b).hexdigest()
                 # Attachments before the next request belong to its call interval.
                 if hashed in self.hooks and self.hooks[hashed] != self.token_calls:
@@ -618,17 +642,17 @@ class Session:
         cold_model = models[0] if len(models) == 1 else "unknown"
         for model, m in self.metrics.items():
             if model in self.missing_read_identity:
-                m["repeated_reads"]["bytes"] = unknown("field_absent")
-                if self.compact_at is not None:
-                    m["post_compaction_rehydration"]["bytes"] = unknown("field_absent")
+                for category in ("repeated_reads", "post_compaction_rehydration"):
+                    m[category]["bytes"].update(partial=True, lower_bound=True)
             m["cold_start"]["bytes"] = (
-                value(self.cold_bytes if model == cold_model else 0) if self.has_system else unknown("field_absent")
+                value(self.cold_bytes if model == cold_model else 0)
+                if self.harness == "claude" or self.has_system
+                else unknown("field_absent")
             )
-            if self.compact_at is None:
+            if self.harness not in {"codex", "claude"}:
                 m["post_compaction_rehydration"]["bytes"] = unknown("no_marker")
-            if not self.hook_present:
-                m["per_call_reinjection"]["bytes"] = unknown("field_absent")
             if self.harness == "codex":
+                m["per_call_reinjection"]["bytes"] = unknown("field_absent")
                 m["reminder_attachments"]["bytes"] = unknown("field_absent")
             for k in self.token_missing.get(model, set()):
                 m["totals"]["provider_tokens"][k] = unknown("field_absent")
@@ -647,20 +671,26 @@ class Session:
             models
             and all(unattributed[c]["bytes"]["value"] in {0, "unknown"} for c in CLASSES)
             and not self.result_bytes["unknown"]
+            and not unattributed["read_identity_absent"]["count"]["value"]
+            and not unattributed["post_compaction_rehydration"]["compactions"]["value"]
             and unattributed["totals"]["model_calls"]["value"] == "unknown"
         ):
             del self.metrics["unknown"]
-        session = aggregate(list(self.metrics.values()))
+        session = aggregate(list(self.metrics.values()), session_coverage=False)
         dates = self.timestamps
         session["totals"]["wall_seconds"] = (
             value((dates[-1] - dates[0]).total_seconds()) if len(dates) == 2 else unknown("field_absent")
         )
-        session["cold_start"]["bytes"] = value(self.cold_bytes) if self.has_system else unknown("field_absent")
+        session["cold_start"]["bytes"] = (
+            value(self.cold_bytes) if self.harness == "claude" or self.has_system else unknown("field_absent")
+        )
         session["totals"]["model_calls"] = value(self.token_calls) if self.token_calls else unknown("field_absent")
         # A metadata-only unknown bucket must not turn known request totals unknown.
         used = [m for m in self.metrics.values() if m["totals"]["model_calls"]["value"] != "unknown"]
         if used:
-            session["totals"]["provider_tokens"] = aggregate([m["totals"]["provider_tokens"] for m in used])
+            session["totals"]["provider_tokens"] = aggregate(
+                [m["totals"]["provider_tokens"] for m in used], session_coverage=False
+            )
             for k in ("first_call_uncached_input", "first_call_cache_creation", "first_call_cache_read"):
                 present = [m["totals"][k] for m in used if m["totals"][k]["value"] != "unknown"]
                 session["totals"][k] = present[0] if present else unknown("field_absent")
@@ -668,13 +698,32 @@ class Session:
         return {"metrics": session, "models": self.metrics}
 
 
-def aggregate(items: list[dict]) -> dict:
-    """Add each numeric category separately; propagate unknowns, never hide them."""
+def aggregate(items: list[dict], *, session_coverage: bool = True) -> dict:
+    """Sum known session values with coverage; keep intra-session unknowns."""
     if not items:
         return {}
     if "value" in items[0]:
-        missing = next((i for i in items if i.get("value") == "unknown"), None)
-        return missing.copy() if missing else value(sum(i["value"] for i in items))
+        known = [i for i in items if i["value"] != "unknown"]
+        reasons = Counter(i["reason"] for i in items if i["value"] == "unknown")
+        if reasons and not session_coverage:
+            return next(i.copy() for i in items if i["value"] == "unknown")
+        result = (
+            value(sum(i["value"] for i in known))
+            if known
+            else unknown(min(reasons, key=lambda reason: (-reasons[reason], reason)))
+        )
+        if session_coverage:
+            result["coverage"] = {
+                "sessions_total": len(items),
+                "sessions_known": len(known),
+                "sessions_unknown": len(items) - len(known),
+                "unknown_reasons": dict(sorted(reasons.items())),
+            }
+        if reasons or any(i.get("lower_bound") for i in known):
+            result["lower_bound"] = True
+        if any(i.get("partial") for i in known):
+            result["partial"] = True
+        return result
     out = {}
     for key in dict.fromkeys(k for i in items for k in i):
         parts = [i[key] for i in items if key in i]
@@ -685,12 +734,12 @@ def aggregate(items: list[dict]) -> dict:
                     shapes[row["shape"]] += row["bytes"]
             out[key] = [{"shape": k, "bytes": n} for k, n in shapes.most_common(5)]
         elif all(isinstance(p, dict) for p in parts):
-            out[key] = aggregate(parts)
+            out[key] = aggregate(parts, session_coverage=session_coverage)
         elif all(isinstance(p, (int, float)) for p in parts):
             out[key] = sum(parts)
     if "raw_tool_payload" in out:
         total = out["totals"].get("tool_result_bytes", value(0))["value"]
-        out["raw_tool_payload"]["share"] = value(out["raw_tool_payload"]["bytes"]["value"] / total if total else 0)
+        out["raw_tool_payload"]["share"]["value"] = out["raw_tool_payload"]["bytes"]["value"] / total if total else 0
     return out
 
 
@@ -907,9 +956,11 @@ def main(argv: list[str] | None = None) -> int:
                 cells = []
                 for c in CLASSES:
                     measure = row["metrics"][c]["bytes"]
-                    cells.append(
-                        str(measure["value"]) if measure["value"] != "unknown" else f"unknown({measure['reason']})"
-                    )
+                    cell = str(measure["value"]) if measure["value"] != "unknown" else f"unknown({measure['reason']})"
+                    coverage = measure["coverage"]
+                    flags = [f"coverage={coverage['sessions_known']}/{coverage['sessions_total']}"]
+                    flags += [f"{key}=true" for key in ("lower_bound", "partial") if measure.get(key)]
+                    cells.append(cell + "[" + ";".join(flags) + "]")
                 print(f"{harness} {row['sessions']} " + " ".join(cells))
     else:
         print(json.dumps(result, sort_keys=True, indent=2))

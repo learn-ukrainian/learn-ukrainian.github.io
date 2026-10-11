@@ -34,6 +34,16 @@ manifests, baseline JSON and host totals local and ignored.
 Never include them in a public issue or PR body. The manifest contains private
 paths; the baseline contains only digests and aggregates.
 
+## Amendment 1
+
+These rules supersede conflicting sentences in the frozen definitions below.
+
+1. Aggregation: a harness or model aggregate is the SUM of the known per-session values, reported together with `coverage` = `{sessions_total, sessions_known, sessions_unknown, unknown_reasons: {reason: count}}`; mark the value `lower_bound: true` when any session is unknown. Only when NO session is known is the aggregate `unknown` with the dominant reason. Per-session values stay number-or-unknown exactly as before.
+2. Class 3 / class 6 read identity: a read whose target cannot be recovered contributes nothing to class 3 or 6 and is counted in `read_identity_absent` (count and bytes); the class value stays a number and carries `partial: true` (a lower bound) when at least one such read exists. Do not set the class unknown for that reason.
+3. Class 2 (`per_call_reinjection`) and class 8: for a harness whose transcripts record hook/attachment payloads (Claude), a session with none has value 0 (not unknown). For a harness that does not record them (Codex), the class stays `unknown` (`field_absent`).
+4. Class 6: the marker types are defined per harness (Codex `compacted`; Claude `type=system` with `subtype=compact_boundary`). A session in which the marker type is defined for the harness but never occurs has `compactions: 0` and value 0. `unknown` (`no_marker`) is only for a harness with no defined marker type.
+5. Class 1 for Claude (`cold_start`): the stored system prompt is not a distinct field, so the explicit pre-action list is: every `attachment` record, every `system` record and the first `user` record, occurring before the first `tool_use`. Document the list in the docstring and the runbook; the bytes are the UTF-8 length of those raw records. Codex keeps its existing definition.
+
 ## Frozen definitions
 
 - Denominator: Codex `~/.codex/sessions/**/rollout-*.jsonl` and Claude `~/.claude/projects/**/*.jsonl` whose mtime is in `[run_start_utc − 7 days, run_start_utc)`, excluding paths that contain `subagents/` or a filename matching `agent-*.jsonl`, with at least 20 PAIRED tool calls (a tool call is paired when a call record and its result record join by the rule below). Grok, AGY, Gemini, Kimi and Cursor are reported `unavailable` with reason `no_documented_root`. Do not walk the home directory.
@@ -62,9 +72,9 @@ The exact output shape labels are `git-status`, `git-diff`, `git-log`,
 `curl-local-api` and `other`. They never contain arguments. Subcommands match
 exactly; compound shell commands, substitutions and ambiguous targets cannot
 be attributed to a single read and remain `other` or have no read identity.
-A paired read with a missing identity makes classes 3 and 6 unknown, rather
-than presenting an incomplete count as zero; class 6 still uses `no_marker`
-when no marker exists. The `read_identity_absent` counter records these cases.
+A paired read with a missing identity adds count and bytes to the
+`read_identity_absent` diagnostic and counters. Classes 3 and 6 retain their
+known bytes with `partial: true` and `lower_bound: true`.
 An unknown command cannot be an unchanged poll. Read tools with missing paths
 also cannot be polls. A local API `curl` is a URL read, not a poll.
 
@@ -94,7 +104,7 @@ that count. Changed rereads are a separate diagnostic, never added to waste tota
 
 | Class | Stored fields required |
 | --- | --- |
-| 1 | Explicit pre-action list and a distinct stored system field |
+| 1 | Explicit pre-action list; Codex also requires a distinct stored system field |
 | 2 | `attachment.type=hook_additional_context` and its payload; request boundary |
 | 3 | Paired tool result, recognizable read target, body hash and command shape |
 | 4 | Result body; oversized lines use their full drained byte length |
@@ -105,15 +115,16 @@ that count. Changed rereads are a separate diagnostic, never added to waste tota
 
 The module docstring fixes the pre-action list. Codex uses `session_meta`,
 `turn_context` and system/developer `response_item/message` records before the
-first tool call. Claude uses `system` and system-role assistant messages.
-A distinct system field is required, even when pre-action records exist.
+first tool call. Claude uses every `attachment`, every `system` and the first
+`user` record before the first `tool_use`.
+A distinct system field is required for Codex, even when pre-action records exist.
 Codex `session_meta.payload.base_instructions.text`, `turn_context.payload`
 `system_prompt`/`system_instructions`, or a system-role message qualifies.
-Claude `system.systemPrompt`/`system_prompt` or a system-role message qualifies.
 Reading a rules file is a read, never cold-start context.
 
 Claude compaction is exactly `type=system`, `subtype=compact_boundary`.
-Codex compaction is exactly `type=compacted`. No marker means `no_marker`.
+Codex compaction is exactly `type=compacted`. No marker occurrences means
+zero bytes and `compactions: 0`; `no_marker` requires an undefined marker type.
 Rehydration uses call order, including unpaired calls, not result order.
 No time-gap heuristic or inferred resume is used.
 
@@ -134,7 +145,8 @@ First-request counters belong only to totals. No waste class receives tokens.
 Hook payload fields are `attachment.content`, then `text`, then `stdout`;
 otherwise the attachment object excluding `type`. Claude reminder bodies use
 the same extraction. Codex class 8 remains `field_absent`; no recurring type is
-invented. A missing hook field is `field_absent` for class 2.
+invented. Claude sessions without hooks or reminders have zero bytes.
+Codex class 2 remains `field_absent`.
 
 A record is decoded one line at a time. Results become hashes and sizes before
 the next line. Metadata, pending join hashes, read history and model totals are
@@ -157,11 +169,15 @@ Numeric measures have `{"value": N}`. Unknown measures have
 The reason enum is `field_absent`, `no_marker`, `unpaired`, `stale_session`,
 `no_documented_root`, `no_eligible_session`, `io_error`, `invalid_manifest`
 and `ambiguous_model`. Counters distinguish malformed, truncated, oversized,
-unknown, duplicate and unpaired records. Aggregates propagate unknowns rather
-than labeling a partial sum complete. Class 4 share is weighted by result bytes,
+unknown, duplicate and unpaired records. Aggregate coverage counts sessions,
+not requests or model buckets. Partial read values retain `lower_bound` in
+aggregates even when all sessions have numeric values. Dominant-reason ties
+use lexical order. Class 4 share is weighted by result bytes,
 not an average of session shares. Wall durations are summed across sessions;
 they do not describe unique elapsed host time. Wall time requires two stored
 timestamps and uses first-to-last event order, rather than sorting timestamps.
+The short `--text` table prints known/total coverage and any lower-bound or
+partial flags. JSON includes the full coverage object and unknown-reason counts.
 
 Session output lists digests, per-session metrics and per-model metrics.
 Harness output aggregates each category separately and includes model groups.

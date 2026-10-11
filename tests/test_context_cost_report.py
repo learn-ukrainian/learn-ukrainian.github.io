@@ -90,7 +90,7 @@ def test_cold_start(tmp_path, harness):
     assert amount(m, "cold_start") == len(json.dumps(pre, ensure_ascii=False).encode())
     assert m["totals"]["first_call_uncached_input"] == c.value(10)
     absent = metrics(tmp_path, harness, pair(harness, "a"))
-    assert absent["cold_start"]["bytes"] == c.unknown("field_absent")
+    assert absent["cold_start"]["bytes"] == (c.value(0) if harness == "claude" else c.unknown("field_absent"))
 
 
 @pytest.mark.parametrize("harness", ["claude", "codex"])
@@ -106,7 +106,7 @@ def test_hook_reinjection_across_calls(tmp_path, harness):
         attachment("hook_success", "ignored"),
     ]
     m = metrics(tmp_path, harness, rows)
-    assert amount(m, "per_call_reinjection") == 2
+    assert amount(m, "per_call_reinjection") == (2 if harness == "claude" else "unknown")
     assert amount(m, "reminder_attachments") == (0 if harness == "claude" else "unknown")
 
 
@@ -186,7 +186,7 @@ def test_rehydration_twenty_tool_calls_and_disjointness(tmp_path, harness):
     assert amount(m, "repeated_reads") == 3
     assert amount(m, "unchanged_polls") == 54
     absent = metrics(tmp_path, harness, pair(harness, "a"))
-    assert absent["post_compaction_rehydration"]["bytes"] == c.unknown("no_marker")
+    assert absent["post_compaction_rehydration"] == {"bytes": c.value(0), "compactions": c.value(0)}
 
 
 @pytest.mark.parametrize("harness", ["claude", "codex"])
@@ -366,6 +366,10 @@ def test_error_redaction(tmp_path, capsys):
         ("git status; cat /synthetic/file", "other"),
         ("git status && gh pr view 3", "other"),
         ("git statusx", "other"),
+        ("git -C /synthetic -C child status", "other"),
+        ("git -C /synthetic --git-dir /synthetic/repo diff", "other"),
+        ("git --work-tree /synthetic -C child log", "other"),
+        ("git -C -C status", "other"),
         ("unknown secret", "other"),
     ],
 )
@@ -386,7 +390,16 @@ def test_js_wrapper_and_help(capsys):
 
 
 def test_aggregate_unknown_and_weighted_share():
-    assert c.aggregate([c.value(2), c.unknown("field_absent")]) == c.unknown("field_absent")
+    assert c.aggregate([c.value(2), c.unknown("field_absent")]) == {
+        "value": 2,
+        "lower_bound": True,
+        "coverage": {
+            "sessions_total": 2,
+            "sessions_known": 1,
+            "sessions_unknown": 1,
+            "unknown_reasons": {"field_absent": 1},
+        },
+    }
     assert c.normalize_path("x/../file/", "/synthetic") == c.normalize_path("/synthetic/file", "")
     assert c.normalize_path("/synthetic/link/file", "") != c.normalize_path("/synthetic/target/file", "")
     a, b = c.fresh_metrics(), c.fresh_metrics()
@@ -394,7 +407,10 @@ def test_aggregate_unknown_and_weighted_share():
     a["totals"]["tool_result_bytes"] = c.value(20_001)
     b["totals"]["tool_result_bytes"] = c.value(3)
     combined = c.aggregate([a, b])
-    assert combined["raw_tool_payload"]["share"] == c.value(20_001 / 20_004)
+    assert combined["raw_tool_payload"]["share"] == {
+        "value": 20_001 / 20_004,
+        "coverage": {"sessions_total": 2, "sessions_known": 2, "sessions_unknown": 0, "unknown_reasons": {}},
+    }
 
 
 def test_revisited_hash_series_and_large_read_precedence(tmp_path):
@@ -470,12 +486,36 @@ def test_read_failures_redacted_and_known_wrapper_variants(tmp_path, capsys):
     assert c.url_identity("http://[") is None
 
 
-def test_missing_read_identity_is_unknown_not_zero(tmp_path):
-    m = metrics(tmp_path, "codex", [*pair("codex", "a", "abc", "Read", {"offset": 1}), marker("codex")])
-    assert m["repeated_reads"]["bytes"] == c.unknown("field_absent")
-    assert m["post_compaction_rehydration"]["bytes"] == c.unknown("field_absent")
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+@pytest.mark.parametrize("compacted", [False, True])
+def test_missing_read_identity_preserves_partial_bytes(tmp_path, harness, compacted):
+    rows = [
+        *pair(harness, "first", "abc", "Read", {"file_path": "/synthetic/file"}),
+        *pair(harness, "repeat", "abc", "Read", {"file_path": "/synthetic/file"}),
+    ]
+    if compacted:
+        rows.append(marker(harness))
+    rows += [
+        *pair(harness, "missing", "é", "Read", {"offset": 1}),
+        *pair(harness, "last", "abc", "Read", {"file_path": "/synthetic/file"}),
+    ]
+    m = metrics(tmp_path, harness, rows)
+    assert m["repeated_reads"]["bytes"] == {"value": 3 if compacted else 6, "partial": True, "lower_bound": True}
+    assert m["post_compaction_rehydration"] == {
+        "bytes": {"value": 3 if compacted else 0, "partial": True, "lower_bound": True},
+        "compactions": c.value(1 if compacted else 0),
+    }
+    assert m["read_identity_absent"] == {"count": c.value(1), "bytes": c.value(2)}
     assert m["counters"]["read_identity_absent"] == 1
+    assert m["counters"]["read_identity_absent_bytes"] == 2
     assert amount(m, "unchanged_polls") == 0
+    combined = c.aggregate([m])["repeated_reads"]["bytes"]
+    assert combined == {
+        "value": 3 if compacted else 6,
+        "partial": True,
+        "lower_bound": True,
+        "coverage": {"sessions_total": 1, "sessions_known": 1, "sessions_unknown": 0, "unknown_reasons": {}},
+    }
     assert c.call_shape("functions.exec", 'await tools.exec_command({"cmd": "git status"})', "")[0] == "git-status"
     mixed = 'await tools.exec_command({cmd: "git status"}); await tools.some_tool({})'
     assert c.call_shape("functions.exec", mixed, "") == ("other", None, None)
@@ -520,3 +560,107 @@ def test_unpaired_small_result_adds_bytes_but_not_large_count(tmp_path, harness)
     assert m["raw_tool_payload"]["bytes"] == c.value(4)
     assert m["raw_tool_payload"]["count"] == c.value(0)
     assert m["raw_tool_payload"]["top_shapes"] == [{"shape": "other", "bytes": 4}]
+
+
+def test_mixed_sessions_have_harness_and_model_coverage(tmp_path, capsys):
+    root = tmp_path / "codex"
+    root.mkdir()
+    pre = {"type": "session_meta", "payload": {"base_instructions": {"text": "synthetic"}}}
+    for index in range(2):
+        rows = [metadata("codex")]
+        if index == 0:
+            rows += [pre, request("codex")]
+        rows += [r for i in range(20) for r in pair("codex", f"synthetic-{index}-{i}")]
+        transcript(root, "codex", rows, f"rollout-synthetic-{index}.jsonl")
+    manifest = tmp_path / "manifest.json"
+    c.freeze(manifest, roots={"codex": root}, run_start=datetime.now(UTC) + timedelta(seconds=1))
+    out = c.report(manifest)
+    harness = out["harnesses"]["codex"]
+    expected = {
+        "value": len(json.dumps(metadata("codex")).encode()) + len(json.dumps(pre).encode()),
+        "lower_bound": True,
+        "coverage": {
+            "sessions_total": 2,
+            "sessions_known": 1,
+            "sessions_unknown": 1,
+            "unknown_reasons": {"field_absent": 1},
+        },
+    }
+    assert harness["metrics"]["cold_start"]["bytes"] == expected
+    assert harness["models"]["gpt-synthetic"]["cold_start"]["bytes"] == expected
+    assert harness["metrics"]["totals"]["provider_tokens"]["input_tokens"] == expected | {"value": 10}
+    assert harness["metrics"]["totals"]["paired_tool_calls"] == {
+        "value": 40,
+        "coverage": {"sessions_total": 2, "sessions_known": 2, "sessions_unknown": 0, "unknown_reasons": {}},
+    }
+    for session in out["sessions"]:
+        assert "coverage" not in session["metrics"]["cold_start"]["bytes"]
+    assert c.main(["report", "--manifest", str(manifest), "--text"]) == 0
+    printed = capsys.readouterr().out
+    assert f"{expected['value']}[coverage=1/2;lower_bound=true]" in printed
+    assert "unknown(field_absent)[coverage=0/2;lower_bound=true]" in printed
+    assert str(root) not in printed
+
+
+def test_all_unknown_aggregate_has_dominant_reason_and_coverage():
+    assert c.aggregate([c.unknown("no_marker"), c.unknown("field_absent"), c.unknown("no_marker")]) == {
+        "value": "unknown",
+        "reason": "no_marker",
+        "lower_bound": True,
+        "coverage": {
+            "sessions_total": 3,
+            "sessions_known": 0,
+            "sessions_unknown": 3,
+            "unknown_reasons": {"field_absent": 1, "no_marker": 2},
+        },
+    }
+    assert c.aggregate([c.unknown("no_marker"), c.unknown("field_absent")])["reason"] == "field_absent"
+    assert c.aggregate([c.value(2), c.unknown("field_absent")], session_coverage=False) == c.unknown("field_absent")
+
+
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+def test_absent_hook_and_reminder_payloads_use_harness_capability(tmp_path, harness):
+    m = metrics(tmp_path, harness, pair(harness, "synthetic"))
+    expected = c.value(0) if harness == "claude" else c.unknown("field_absent")
+    assert m["per_call_reinjection"]["bytes"] == expected
+    assert m["reminder_attachments"]["bytes"] == expected
+
+
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+def test_defined_compaction_type_without_occurrences_is_zero(tmp_path, harness):
+    m = metrics(tmp_path, harness, pair(harness, "synthetic"))
+    assert m["post_compaction_rehydration"] == {"bytes": c.value(0), "compactions": c.value(0)}
+    m = metrics(tmp_path, harness, [marker(harness), *pair(harness, "synthetic"), marker(harness)])
+    assert m["post_compaction_rehydration"] == {"bytes": c.value(0), "compactions": c.value(2)}
+
+
+def test_claude_cold_start_explicit_pre_action_list_uses_raw_utf8(tmp_path):
+    selected = [
+        attachment("hook_additional_context", "é"),
+        {"type": "system", "synthetic": "é"},
+        {"type": "user", "message": {"content": "synthetic"}},
+        marker("claude"),
+    ]
+    excluded = [
+        {"type": "assistant", "message": {"role": "system", "content": "synthetic"}},
+        {"type": "user", "message": {"content": "synthetic-second"}},
+    ]
+    rows = [*selected, *excluded, *pair("claude", "synthetic"), *selected]
+    raw = ["  " + json.dumps(r, ensure_ascii=False) + " " for r in rows]
+    path = tmp_path / "synthetic.jsonl"
+    path.write_text("\n".join(raw) + "\n", encoding="utf-8")
+    parsed = c.parse_session(path, "claude")
+    expected = c.value(sum(len(line.encode("utf-8")) for line in raw[:4]))
+    assert parsed["metrics"]["cold_start"]["bytes"] == expected
+    assert parsed["models"]["claude-synthetic"]["cold_start"]["bytes"] == expected
+
+
+def test_pre_model_compaction_and_empty_unidentified_read_are_not_discarded(tmp_path):
+    rows = [marker("codex"), *pair("codex", "missing", "", "Read", {"offset": 1}), metadata("codex")]
+    parsed = c.parse_session(transcript(tmp_path, "codex", rows), "codex")
+    assert parsed["metrics"]["read_identity_absent"] == {"bytes": c.value(0), "count": c.value(1)}
+    assert parsed["metrics"]["post_compaction_rehydration"] == {
+        "bytes": {"value": 0, "partial": True, "lower_bound": True},
+        "compactions": c.value(1),
+    }
+    assert "unknown" in parsed["models"]
