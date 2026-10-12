@@ -457,7 +457,7 @@ def test_red_team_pr_only_review_head_fields_and_repository_match(monkeypatch, t
         assert calls == {"posts": 1, "statuses": 1}
 
 
-@pytest.mark.parametrize("broken", ["missing", "invalid-json", "non-object", "read-error"])
+@pytest.mark.parametrize("broken", ["missing", "invalid-json", "non-object", "read-error", "invalid-head"])
 def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_path, broken):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     prompt = red_team_task(tasks, tmp_path)
@@ -471,6 +471,8 @@ def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_pa
             return original(path)
 
         monkeypatch.setattr(Path, "iterdir", unreadable)
+    elif broken == "invalid-head":
+        write_task(tasks, task_id="broken", pr=42, status="running", pinned_head=[], worktree_base_sha=None)
     else:
         (tasks / "broken.json").write_text("{" if broken == "invalid-json" else "[]")
         if broken == "read-error":

@@ -3151,7 +3151,7 @@ def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatc
 
 
 @pytest.mark.parametrize("target_kind", ["branch", "pr"])
-@pytest.mark.parametrize("history", ["running", "done", "other-head", "red-team", "unreadable"])
+@pytest.mark.parametrize("history", ["running", "done", "other-head", "red-team", "unreadable", "invalid-head"])
 def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeypatch, target_kind, history):
     from scripts.review import record_cf_verdict as recorder
     from scripts.review.target_resolution import ReviewTarget
@@ -3171,7 +3171,7 @@ def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeyp
             tasks,
             task_id="outside-review",
             pr=42,
-            pinned_head=OTHER if history == "other-head" else SHA,
+            pinned_head=[] if history == "invalid-head" else OTHER if history == "other-head" else SHA,
             worktree_base_sha=None,
             status="done" if history == "done" else "running",
             review_mode="red_team" if history == "red-team" else "cross_family",
@@ -3198,7 +3198,7 @@ def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeyp
     if history == "running":
         assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head"
         assert target is None
-    elif history == "unreadable":
+    elif history in {"unreadable", "invalid-head"}:
         assert refusal == "RED_TEAM_REFUSED: task ledger unavailable"
         assert target is None
     else:

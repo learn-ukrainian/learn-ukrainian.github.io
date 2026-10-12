@@ -1254,8 +1254,9 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
                 and normalize_repository(task["repository"]) == normalize_repository(repository)
                 and task.get("status") in {"spawning", "running", "queued"}
                 and task.get("review_mode", "cross_family") != "red_team"
-                and any(
-                    task.get(field) == sha
+                and sha
+                in {
+                    task.get(field)
                     for field in (
                         "pinned_head",
                         "worktree_base_sha",
@@ -1264,7 +1265,7 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
                         "pr_head_sha",
                         "head_sha",
                     )
-                )
+                }
             ):
                 raise RecordError("RED_TEAM_REFUSED: outside-family review in flight for this head")
     except (OSError, ValueError, TypeError) as exc:
