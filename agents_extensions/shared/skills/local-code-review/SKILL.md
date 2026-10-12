@@ -28,16 +28,20 @@ approval review. The comment must still come from an independent cross-family
 reviewer; a shared posting identity does not establish independence. See
 `workflow.md` § Merge policy.
 
-Red-team exception (`workflow.md` § Merge policy): only when no eligible
-outside-family reviewer exists, resolve with `closeout_cli resolve-reviewer
---review-mode red_team`, dispatch a separate review task with `delegate.py
-dispatch --review-mode red_team --prompt-file <file>` whose prompt text names a
-red team, then publish with `record_cf_verdict.py --review-mode red_team
---red-team-prompt <file>`. The tools refuse a reviewer task that authored the
-branch, a missing or non-red-team prompt, a prompt changed after admission, a
-non-review dispatch, and a red-team dispatch while an eligible outside-family
-reviewer exists (the resolver then selects that reviewer instead). The verdict is labelled `review_mode=red_team`; it never replaces
-cross-family clearance when an outside-family reviewer is available.
+Red-team exception (`workflow.md` § Merge policy), for code review only: only
+when no eligible outside-family reviewer exists, resolve with `closeout_cli
+resolve-reviewer --review-mode red_team`, dispatch a separate review task with
+`delegate.py dispatch --review-mode red_team --prompt-file <file>` whose
+prompt text names a red team, then publish with `record_cf_verdict.py
+--review-mode red_team --red-team-prompt <file>`. The author's task stays
+refused and seats whose own code is under review stay excluded as usual; the
+reviewer may be the author's seat and model, but always runs as a separate
+fresh-session review task. The tools refuse a missing or non-red-team prompt,
+a prompt changed after admission, a non-review dispatch, and a red-team
+dispatch while an eligible outside-family reviewer exists (the resolver then
+selects that reviewer instead). The verdict is labelled
+`review_mode=red_team`; it never replaces cross-family clearance when an
+outside-family reviewer is available.
 
 ## Execute
 
