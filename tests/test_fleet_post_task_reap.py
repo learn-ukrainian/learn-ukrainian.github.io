@@ -120,6 +120,7 @@ def test_post_task_reap_interrupted_pushed_regenerable_work_is_removed(interrupt
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.fleet import ignored_task_output, post_task_reap
+from scripts.orchestration.task_record_store import task_record_path
 from scripts.orchestration.worktree_paths import automatic_worktree_path
 from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import half_built_prep, leave_half_built
@@ -868,10 +869,12 @@ def test_non_canonical_sanitised_leaf_is_retained(hermetic_reap):
     _assert_retained_unowned(repo_root, tasks_dir, task_id, worktree)
 
 
-def _reuse_cohort(repo_root: Path, tasks_dir: Path, *, creator_task: str, successor_task: str) -> Path:
-    """A checkout at a non-canonical leaf, created by one task and reused by another."""
+def _reuse_cohort(
+    repo_root: Path, tasks_dir: Path, *, creator_task: str, successor_task: str, leaf: str = "shared-leaf"
+) -> Path:
+    """A checkout created by one task and reused by another (default: a non-canonical leaf)."""
     branch = "codex/shared-reused"
-    worktree = _add_worktree_at(repo_root, repo_root / ".worktrees" / "dispatch" / "codex" / "shared-leaf", branch)
+    worktree = _add_worktree_at(repo_root, repo_root / ".worktrees" / "dispatch" / "codex" / leaf, branch)
     # The continuation proof needs a positive PID that provably no longer exists.
     finished = subprocess.Popen([sys.executable, "-c", "pass"])
     finished.wait()
@@ -886,7 +889,7 @@ def _reuse_cohort(repo_root: Path, tasks_dir: Path, *, creator_task: str, succes
             "run_nonce": f"nonce-{task_id}",
             "pid": finished.pid,
         }
-        (tasks_dir / f"{task_id}.json").write_text(json.dumps(state), encoding="utf-8")
+        task_record_path(tasks_dir, task_id).write_text(json.dumps(state), encoding="utf-8")
     return worktree
 
 
@@ -909,6 +912,71 @@ def test_reuse_proof_of_another_task_does_not_own_non_canonical_leaf(hermetic_re
 
     assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
     assert report["main_worktree"]["reason"] == _OWNERSHIP_MISMATCH
+    assert worktree.exists()
+
+
+_SUCCESSOR_SPELLINGS = [
+    pytest.param("codex-shared-leaf", id="agent-dash-prefix"),
+    pytest.param("codex/shared-leaf", id="agent-slash-prefix"),
+    pytest.param("codex-shared #leaf", id="sanitised-characters"),
+]
+
+
+@pytest.mark.parametrize("successor_task", _SUCCESSOR_SPELLINGS)
+def test_reused_successor_deriving_the_creators_leaf_does_not_reap_it(hermetic_reap, successor_task):
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _reuse_cohort(repo_root, tasks_dir, creator_task="codex-creator-r1", successor_task=successor_task)
+    # Different task ids, one derived leaf: the canonical match is not ownership.
+    assert automatic_worktree_path("codex", successor_task, repo_root=repo_root) == worktree
+
+    report = post_task_reap.post_task_reap(successor_task, tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
+    assert report["main_worktree"]["reason"] == _OWNERSHIP_MISMATCH
+    assert worktree.exists()
+
+
+def test_creator_of_a_canonical_leaf_still_reaps_it_with_a_settled_successor(hermetic_reap):
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _reuse_cohort(
+        repo_root, tasks_dir, creator_task="codex-canon-r1", successor_task="codex-reuser-r2", leaf="canon-r1"
+    )
+    assert automatic_worktree_path("codex", "codex-canon-r1", repo_root=repo_root) == worktree
+
+    report = post_task_reap.post_task_reap("codex-canon-r1", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "removed", report["main_worktree"]
+    assert not worktree.exists()
+
+
+def test_reused_successor_of_a_canonical_leaf_does_not_reap_the_creators_tree(hermetic_reap):
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _reuse_cohort(
+        repo_root, tasks_dir, creator_task="codex-canon-r1", successor_task="codex-reuser-r2", leaf="canon-r1"
+    )
+
+    report = post_task_reap.post_task_reap("codex-reuser-r2", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("error", [OSError("injected"), ValueError("injected")], ids=["oserror", "valueerror"])
+def test_failed_leaf_derivation_retains_instead_of_raising(hermetic_reap, monkeypatch, error):
+    repo_root, tasks_dir = hermetic_reap
+    task_id = "codex-10470-full-union-r1"
+    worktree = _add_canonical_worktree(repo_root, "codex", task_id)
+    _write_task_state(tasks_dir, task_id, "done", worktree, agent="codex")
+
+    def _raise(*_args, **_kwargs):
+        raise error
+
+    monkeypatch.setattr(post_task_reap.worktree_paths, "automatic_worktree_path", _raise)
+
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
+    assert report["main_worktree"]["reason"] == "unknown ownership: dispatch path derivation failed"
     assert worktree.exists()
 
 

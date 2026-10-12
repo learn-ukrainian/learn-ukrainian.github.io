@@ -389,30 +389,44 @@ def _reap_main_worktree(
     # Dispatch binds the checkout to ``automatic_worktree_path(agent, task_id)``,
     # which strips one agent prefix and sanitises the rest; the raw task id is
     # not the directory name (#10486). The agent directory is checked below.
-    expected_leaf = (
-        worktree_paths.automatic_worktree_path(expected_agent, task_id, repo_root=repo_root).name
-        if expected_agent
-        else None
-    )
-    reuse_matches = []
-    if len(relative.parts) == 2 and relative.parts[1] != expected_leaf:
+    try:
+        expected_leaf = (
+            worktree_paths.automatic_worktree_path(expected_agent, task_id, repo_root=repo_root).name
+            if expected_agent
+            else None
+        )
+    except (OSError, ValueError, RuntimeError):
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "unknown ownership: dispatch path derivation failed",
+            "error": None,
+        }
+    # Two task ids can derive one leaf, so a canonical match alone never proves
+    # the creator's tree is this task's. The creator proof is required when the
+    # leaf differs from the derived one, when this task reused a checkout, or
+    # when another task's record claims the same path. Any failure to prove it
+    # retains: a reused-worktree successor must never reap its creator's tree.
+    proven = False
+    if len(relative.parts) == 2 and expected_leaf is not None:
         try:
-            reuse_matches = ignored_task_output.matching_worktree_records(
+            matches = ignored_task_output.matching_worktree_records(
                 bound_path, tasks_dir, repo_root=repo_root, publish_cache=False
             )
-            _, creator = ignored_task_output.reused_worktree_creator(
-                reuse_matches, bound_path, repo_root=repo_root, tasks_dir=tasks_dir
+            collides = state.get("worktree_reused") is True or any(
+                record.get("task_id") != task_id for _, record in matches
             )
-            if creator != state or creator.get("task_id") != task_id or len(reuse_matches) < 2:
-                reuse_matches = []
+            if relative.parts[1] == expected_leaf and not collides:
+                proven = True
+            else:
+                _, creator = ignored_task_output.reused_worktree_creator(
+                    matches, bound_path, repo_root=repo_root, tasks_dir=tasks_dir
+                )
+                if creator == state and creator.get("task_id") == task_id and len(matches) >= 2:
+                    proven = True
         except (OSError, ValueError, RuntimeError):
-            reuse_matches = []
-    if (
-        len(relative.parts) != 2
-        or (relative.parts[1] != expected_leaf and not reuse_matches)
-        or not expected_agent
-        or relative.parts[0] != expected_agent
-    ):
+            proven = False
+    if len(relative.parts) != 2 or not proven or not expected_agent or relative.parts[0] != expected_agent:
         return {
             "path": str(bound_path),
             "action": "retained",
