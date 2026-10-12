@@ -123,7 +123,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
-    "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
     "tests/review/test_model_catalog.py::test_frozen_artifacts_are_pinned_independently_of_manifest",
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
@@ -197,6 +196,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
+    "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
 )
 
 # Escape hatch for a scanner the best-effort heuristic flags but that is not
