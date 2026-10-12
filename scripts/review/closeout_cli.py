@@ -492,7 +492,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             owned_paths=tuple(args.owned_path or []),
             **common,
         )
-    resolution = resolve_reviewer(inputs)
+    resolution = resolve_reviewer(inputs, review_mode=args.review_mode)
     payload = {
         "selected": asdict(resolution.selected) if resolution.selected else None,
         "routing_snapshot": snapshot_receipt,
@@ -510,6 +510,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     # Persist the durable receipt: drivers downstream expect the resolution on
     # disk, not just on stdout. Merge with any prior state; without a target,
     # code-profile resolution needs explicit owned paths.
+    if args.review_mode == "red_team":
+        payload.update(review_mode=resolution.review_mode, limitation=resolution.limitation)
     state["resolved_reviewer"] = payload
     _save_state(args.state_file, state)
     print(json.dumps(payload, indent=2))
@@ -926,6 +928,12 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     p_reviewer.set_defaults(func=_cmd_resolve_reviewer)
+    p_reviewer.add_argument(
+        "--review-mode",
+        choices=("cross_family", "red_team"),
+        default="cross_family",
+        help="Review mode (default: cross_family); red_team prefers outside-family reviewers and labels its limitation.",
+    )
 
     p_finding = sub.add_parser("finding", help="Record/adjudicate/apply/skip/report findings")
     finding_sub = p_finding.add_subparsers(dest="finding_action", required=True)

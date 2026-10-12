@@ -261,6 +261,7 @@ class CommitAttribution:
     sha: str | None
     family: str | None
     source: str
+    task_id: str | None = None
 
 
 def _author_model_family(harness: str, model: str) -> str:
@@ -282,7 +283,7 @@ def _is_catalog_model_trailer(model: str) -> bool:
         "(?:" + "|".join(re.escape(alias) for alias in aliases) + ")"
         r"(?:-(?:low|medium|high|xhigh|max))?(?:\[[^\[\]\s]+\])?"
     )
-    candidates = [model, *(model[index + 1:] for index, char in enumerate(model) if char in "/:")]
+    candidates = [model, *(model[index + 1 :] for index, char in enumerate(model) if char in "/:")]
     return any(re.fullmatch(pattern, candidate, flags=re.IGNORECASE) for candidate in candidates)
 
 
@@ -368,7 +369,8 @@ def _attribute_commit(
         # A committed author without a concrete identity is reviewable by any
         # known family (#9944). This does not grant Unknown a reviewer identity.
         family = UNKNOWN_AUTHOR_FAMILY
-    return CommitAttribution(commit_sha if isinstance(commit_sha, str) else None, family, source)
+    task_id = model if TASK_ID.fullmatch(model) and not _is_catalog_model_trailer(model) else None
+    return CommitAttribution(commit_sha if isinstance(commit_sha, str) else None, family, source, task_id)
 
 
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
@@ -443,6 +445,11 @@ class BranchReviewFacts:
     subject_seats: frozenset[str]
     subject_families: frozenset[str]
     subject_evidence: tuple[str, ...]
+
+    @property
+    def author_task_ids(self) -> frozenset[str]:
+        """Author task identities retained from the complete branch's X-Agent trailers."""
+        return frozenset(commit.task_id for commit in self.commits if commit.task_id is not None)
 
     @property
     def author_families(self) -> frozenset[str]:
@@ -948,9 +955,17 @@ def sha_lock(repository: str, sha: str, lock_root: Path):
 
 
 def build_comment(
-    *, sha: str, task_id: str, started: str, verdict: str, model: str, family: str, reply: str,
+    *,
+    sha: str,
+    task_id: str,
+    started: str,
+    verdict: str,
+    model: str,
+    family: str,
+    reply: str,
     review_mode: str = "cross_family",
-    review_profile: str = "code", sources_mcp_call_count: int | None = None,
+    review_profile: str = "code",
+    sources_mcp_call_count: int | None = None,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1163,8 +1178,13 @@ def _require_formal_reviewer(
 
 @publication_boundary(RecordError)
 def record(
-    task_id: str, *, pr_number: int | None = None, task_root: Path | None = None, lock_root: Path | None = None,
-    review_mode: str | None = None, red_team_prompt: Path | None = None,
+    task_id: str,
+    *,
+    pr_number: int | None = None,
+    task_root: Path | None = None,
+    lock_root: Path | None = None,
+    review_mode: str | None = None,
+    red_team_prompt: Path | None = None,
 ) -> dict[str, Any]:
     root = _repo_root() if task_root is None or lock_root is None else None
     task_root = task_root or root / "batch_state" / "tasks"
@@ -1248,6 +1268,8 @@ def record(
     )
     if not facts.existing_families:
         raise RecordError("PR has no attributed author commits")
+    if review_mode == "red_team" and task_id in facts.author_task_ids:
+        raise RecordError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
     if family in facts.excluded_families and review_mode != "red_team":
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
@@ -1255,7 +1277,13 @@ def record(
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
     comment = build_comment(
-        sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply,
+        sha=sha,
+        task_id=task_id,
+        started=started,
+        verdict=verdict,
+        model=model,
+        family=family,
+        reply=reply,
         review_mode=review_mode,
         review_profile="ukrainian" if ukrainian else "code",
         sources_mcp_call_count=sources_count,
@@ -1317,8 +1345,12 @@ def record(
                 raise RecordError("comment readback mismatch; publication state unknown")
             posted = True
         description = (
-            f"VERDICT: {verdict} ({family}, sources={sources_count}) {task_id}"
-            if ukrainian else f"VERDICT: {verdict} {family} {task_id}"
+            ("review_mode=red_team " if review_mode == "red_team" else "")
+            + (
+                f"VERDICT: {verdict} ({family}, sources={sources_count}) {task_id}"
+                if ukrainian
+                else f"VERDICT: {verdict} {family} {task_id}"
+            )
         )[:140]
         try:
             post_commit_status(
@@ -1346,23 +1378,31 @@ def record(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
-                    "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
+        "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
-               "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
-               "--review-mode red_team --red-team-prompt brief.md\n"
-               "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
-               "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
+        "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
+        "--review-mode red_team --red-team-prompt brief.md\n"
+        "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
+        "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
-    parser.add_argument("--review-mode", choices=("cross_family", "red_team"),
-                        help="Review mode (default: task review_mode, otherwise cross_family); red_team permits same-family")
-    parser.add_argument("--red-team-prompt", type=Path,
-                        help="Prompt file used by the completed red-team task; required for red_team, default: none")
+    parser.add_argument(
+        "--review-mode",
+        choices=("cross_family", "red_team"),
+        help="Review mode (default: task review_mode, otherwise cross_family); red_team permits same-family",
+    )
+    parser.add_argument(
+        "--red-team-prompt",
+        type=Path,
+        help="Prompt file used by the completed red-team task; required for red_team, default: none",
+    )
     args = parser.parse_args(argv)
     try:
-        result = record(args.task_id, pr_number=args.pr, review_mode=args.review_mode, red_team_prompt=args.red_team_prompt)
+        result = record(
+            args.task_id, pr_number=args.pr, review_mode=args.review_mode, red_team_prompt=args.red_team_prompt
+        )
     except (RecordError, SweepError, ValueError) as exc:
         print(f"CF verdict refused: {exc}")
         return 1

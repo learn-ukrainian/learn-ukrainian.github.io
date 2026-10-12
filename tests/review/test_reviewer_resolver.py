@@ -26,7 +26,9 @@ def test_gemini_risk_boundary(profile, risk, entrypoint):
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
 @pytest.mark.parametrize("scope", ["changed_paths", "owned_paths"])
-@pytest.mark.parametrize("path", ["scripts/review/reviewer_resolver.py", "scripts/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"])
+@pytest.mark.parametrize(
+    "path", ["scripts/review/reviewer_resolver.py", "scripts/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"]
+)
 def test_gemini_security_paths_override_declared_risk(risk, scope, path):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **{scope: (path,)})
     result = evaluate_candidate(GEMINI, inputs)
@@ -38,14 +40,21 @@ def test_gemini_security_paths_override_declared_risk(risk, scope, path):
 @pytest.mark.parametrize("formal", [True, False])
 def test_custom_roles_cannot_grant_gemini_high_risk(formal):
     forged = replace(GEMINI, model_roles=frozenset({"critical_review", "standard_review"}))
-    assert evaluate_candidate(forged, ResolverInputs(author_model="gpt-6.1-sol", risk="critical", formal_review=formal)).status == "excluded"
+    assert (
+        evaluate_candidate(
+            forged, ResolverInputs(author_model="gpt-6.1-sol", risk="critical", formal_review=formal)
+        ).status
+        == "excluded"
+    )
 
 
 def test_gemini_independence_and_unhealthy_route():
     same = evaluate_candidate(GEMINI, ResolverInputs(author_model="gemini-3.8-flash-high", risk="low"))
     assert same.status == "excluded"
     assert "same family" in same.reason
-    unhealthy = evaluate_candidate(GEMINI, ResolverInputs(author_model="gpt-6.1-sol", risk="low", routing_snapshot={"agy": "unhealthy"}))
+    unhealthy = evaluate_candidate(
+        GEMINI, ResolverInputs(author_model="gpt-6.1-sol", risk="low", routing_snapshot={"agy": "unhealthy"})
+    )
     assert unhealthy.status == "excluded"
 
 
@@ -78,7 +87,15 @@ def test_native_agy_suitability_precedes_grok_when_frontier_budgets_near_cap(ris
     assert result.selected.suitability_rank < grok.suitability_rank
 
 
-@pytest.mark.parametrize("field,value", [("participant", "codex"), ("catalog_transport", "native_codex"), ("sealed_executable", "other.py"), ("adapter_transport", "acp")])
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("participant", "codex"),
+        ("catalog_transport", "native_codex"),
+        ("sealed_executable", "other.py"),
+        ("adapter_transport", "acp"),
+    ],
+)
 def test_native_endpoint_identity_cannot_be_forged(field, value):
     forged = replace(GEMINI, **{field: value})
     result = evaluate_candidate(forged, ResolverInputs(author_model="gpt-6.1-sol", risk="low"))
@@ -86,7 +103,57 @@ def test_native_endpoint_identity_cannot_be_forged(field, value):
     assert "endpoint identity" in result.reason
 
 
-@pytest.mark.parametrize("risk,eligible", [(None, False), ("low", True), ("medium", True), ("high", False), ("critical", False)])
+@pytest.mark.parametrize(
+    "risk,eligible", [(None, False), ("low", True), ("medium", True), ("high", False), ("critical", False)]
+)
 def test_role_family_filter_uses_risk(risk, eligible):
     result = family_exclusion(family="google", route="agy", transport="agy", risk=risk)
     assert (result is None) == eligible
+
+
+@pytest.mark.parametrize("outside_available", [True, False])
+def test_red_team_prefers_outside_family_before_same_family(outside_available):
+    sol = REVIEW_CANDIDATES["openai_frontier"]
+    opus = REVIEW_CANDIDATES["claude-opus-5-5"]
+    snapshot = {"claude": "healthy" if outside_available else "unhealthy"}
+    result = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=snapshot),
+        ladder=((sol,), (opus,)),
+        review_mode="red_team",
+    )
+    assert result.selected.name == (opus.name if outside_available else sol.name)
+    assert result.review_mode == "red_team"
+    assert result.limitation == "Separate non-author red-team review; this label does not attest cross-family review."
+
+
+def test_red_team_pin_cannot_override_outside_family_preference():
+    inputs = ResolverInputs(
+        author_model="gpt-6.1-sol",
+        risk="critical",
+        pinned_candidate="openai_frontier",
+        pressure_override_reason="adversarial fixture",
+    )
+    result = resolve_reviewer(inputs, review_mode="red_team")
+    assert result.selected is None
+    assert "failed a hard eligibility gate" in result.fail_closed_reason
+
+
+@pytest.mark.parametrize(
+    "inputs",
+    [
+        ResolverInputs(author_model="unknown-author", risk="critical"),
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="critical",
+            subject_seats=frozenset({"codex"}),
+            routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"},
+        ),
+    ],
+)
+def test_red_team_keeps_identity_and_subject_gates(inputs):
+    assert resolve_reviewer(inputs, review_mode="red_team").selected is None
+
+
+def test_resolver_refuses_invalid_review_mode():
+    with pytest.raises(ValueError, match="unsupported review mode"):
+        resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol"), review_mode="invalid")

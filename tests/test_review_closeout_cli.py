@@ -1156,3 +1156,69 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert result.returncode == 1, result.stdout + result.stderr
         assert body["selected"] is None
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
+
+
+@pytest.mark.parametrize(
+    "author,risk,path,digest",
+    [
+        ("gpt-6.1-sol", "medium", "ordinary.py", "ccf92238de2377f05833394bcb18ead5f49677c7c3d53ee7c735ce2132add52d"),
+        ("claude-opus-5-5", "low", "ordinary.py", "dab3ee515343ff86e5e48e5f04fce4caff62f42b1966d3eb1d44962ea662414c"),
+        (
+            "gpt-6.1-sol",
+            "low",
+            "scripts/agent_runtime/target_admission.py",
+            "ecd4c9331f04268f98cc7ed9e71fb2c2cd045ab453183d5461e95dc63e48e0b5",
+        ),
+    ],
+)
+@pytest.mark.parametrize("mode", [(), ("--review-mode", "cross_family")])
+def test_default_resolver_output_matches_pre_10437_golden(tmp_path, author, risk, path, digest, mode):
+    import hashlib
+
+    result = _run_cli(
+        tmp_path / "state.json",
+        "resolve-reviewer",
+        "--author-model",
+        author,
+        "--risk",
+        risk,
+        "--owned-path",
+        path,
+        *mode,
+    )
+    assert result.returncode == 0, result.stderr
+    assert hashlib.sha256(result.stdout.encode()).hexdigest() == digest
+
+
+@pytest.mark.parametrize("outside_available", [True, False])
+def test_resolver_cli_threads_red_team_and_labels_limitation(tmp_path, outside_available):
+    snapshot = tmp_path / "snapshot.json"
+    snapshot.write_text(
+        json.dumps(
+            {
+                "claude": "healthy" if outside_available else "unhealthy",
+                "grok": "unhealthy",
+                "cursor": "unhealthy",
+                "agy": "unhealthy",
+            }
+        )
+    )
+    result = _run_cli(
+        tmp_path / "state.json",
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--risk",
+        "critical",
+        "--owned-path",
+        "ordinary.py",
+        "--review-mode",
+        "red_team",
+        "--routing-snapshot-file",
+        str(snapshot),
+    )
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["selected"]["family"] == ("anthropic" if outside_available else "openai")
+    assert payload["review_mode"] == "red_team"
+    assert "does not attest cross-family review" in payload["limitation"]

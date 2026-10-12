@@ -358,7 +358,9 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
     payload = {
         key: value
         for key, value in vars(args).items()
-        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
+        and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+        and not (key == "review_mode" and value == "cross_family")
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -12159,6 +12161,18 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    red_team_prompt_sha256 = None
+    if getattr(args, "review_mode", "cross_family") == "red_team":
+        try:
+            if not _dispatch_is_review_typed(args) or not getattr(args, "prompt_file", None):
+                raise ValueError("red_team requires a review dispatch with --prompt-file")
+            adversarial_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
+            if not re.search(r"\bred[-_ ]team\b", adversarial_prompt, re.IGNORECASE):
+                raise ValueError("explicit adversarial red-team wording required")
+            red_team_prompt_sha256 = hashlib.sha256(adversarial_prompt.encode("utf-8")).hexdigest()
+        except (ValueError, OSError, UnicodeError) as exc:
+            print(f"❌ RED_TEAM_REFUSED: {exc}", file=sys.stderr)
+            return 2
     if (
         str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
         and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
@@ -12965,6 +12979,9 @@ def _dispatch(
     # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+    if getattr(args, "review_mode", "cross_family") == "red_team" and source_prompt_sha256 != red_team_prompt_sha256:
+        print("❌ RED_TEAM_REFUSED: adversarial prompt changed after admission", file=sys.stderr)
+        return 2
 
     if sources_review_access is not None:
         # Recheck the launch text, including a file changed since the early read.
@@ -14028,6 +14045,9 @@ def _dispatch(
         }
         if routing.budget_diagnostics:
             initial_state["routing_facts"] = routing.budget_diagnostics
+        if getattr(args, "review_mode", "cross_family") == "red_team":
+            initial_state["review_mode"] = "red_team"
+            initial_state["review_branch_facts"] = args._red_team_branch_facts
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
@@ -14955,9 +14975,7 @@ _UKRAINIAN_AGENT_FAMILIES = {
 }
 
 
-def _require_ukrainian_model_family(
-    args: argparse.Namespace, model: str | None, *, resolved: bool = False
-) -> None:
+def _require_ukrainian_model_family(args: argparse.Namespace, model: str | None, *, resolved: bool = False) -> None:
     """Fail closed for Ukrainian content using the declared language lane.
 
     An omitted model on an allowed seat waits for resolution. A resolved
@@ -16425,7 +16443,10 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
     from scripts.review.record_cf_verdict import collect_branch_review_facts
 
     target = getattr(args, "_review_target", None)
-    if target is None or not (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)):
+    if target is None or not (
+        getattr(args, "review_mode", "cross_family") == "red_team"
+        or (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None))
+    ):
         return None
     return collect_branch_review_facts(
         repository=_resolve_dispatch_repository(_local_repo_root) or "",
@@ -16495,7 +16516,13 @@ def _admit_dispatch_target(
         from scripts.review.record_cf_verdict import BranchFactsError
 
         try:
-            return _dispatch_review_facts(args, tuple(declared))
+            facts = _dispatch_review_facts(args, tuple(declared))
+            if getattr(args, "review_mode", "cross_family") == "red_team" and facts is not None:
+                args._red_team_branch_facts = {
+                    **facts.receipt(),
+                    "author_task_ids": sorted(facts.author_task_ids),
+                }
+            return facts
         except BranchFactsError as exc:
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
 
@@ -16516,6 +16543,11 @@ def _admit_dispatch_target(
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
             review_attempt=bool(getattr(args, "review_attempt", None)),
+            review_mode=getattr(args, "review_mode", "cross_family"),
+            review_task_id=getattr(args, "task_id", None),
+            review_initial_snapshot=(
+                _fetch_routing_budget if getattr(args, "review_mode", "cross_family") == "red_team" else None
+            ),
             review_alias_model_resolver=_resolve_substitution_model,
             review_owned_paths=tuple(declared),
             review_changed_paths=(
@@ -18627,6 +18659,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="PATH",
         help="Local test log for --preflight-triage (default: <cwd>/.preflight-test.log if present).",
+    )
+    # Keep legacy argument-error output byte-identical; the option help exposes the opt-in.
+    d.usage = d.format_usage().removeprefix("usage: ").rstrip("\n")
+    d.add_argument(
+        "--review-mode",
+        choices=("cross_family", "red_team"),
+        default=argparse.SUPPRESS,
+        help="Review mode (default: cross_family); red_team requires a review and adversarial --prompt-file, with a separate task and fresh session.",
     )
     d.set_defaults(func=cmd_dispatch)
 

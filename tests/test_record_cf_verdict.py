@@ -13,7 +13,9 @@ from pathlib import Path
 
 import pytest
 
-from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
+from scripts.common import task_scratch
+from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
+from scripts.common.scratch import DEFAULT_SCRATCH_ROOT
 from scripts.review import record_cf_verdict as recorder
 
 SHA = "a" * 40
@@ -233,7 +235,9 @@ def test_same_family_refused(monkeypatch, tmp_path):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
 
 
-def red_team_task(tasks, tmp_path, *, prompt="Adversarial red-team review: find failures and missing tests.", **updates):
+def red_team_task(
+    tasks, tmp_path, *, prompt="Adversarial red-team review: find failures and missing tests.", **updates
+):
     path = tmp_path / "red-team.md"
     path.write_text(prompt, encoding="utf-8")
     write_task(tasks, review_mode="red_team", prompt_sha256=hashlib.sha256(prompt.encode()).hexdigest(), **updates)
@@ -245,8 +249,9 @@ def test_same_family_red_team_records_and_reconciles(monkeypatch, tmp_path, fami
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families)
     prompt = red_team_task(tasks, tmp_path)
     for expected in ("posted", "existing"):
-        result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
-                                 red_team_prompt=prompt)
+        result = recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
         assert result["comment"] == expected
         assert result["review_mode"] == "red_team"
     assert calls == {"posts": 1, "statuses": 2}
@@ -287,16 +292,26 @@ def test_explicit_red_team_flag_accepts_legacy_task_with_bound_prompt(monkeypatc
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
     prompt = red_team_task(tasks, tmp_path)
     write_task(tasks, prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
-    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
-                    review_mode="red_team", red_team_prompt=prompt)
+    recorder.record(
+        "review-one",
+        pr_number=42,
+        task_root=tasks,
+        lock_root=tmp_path / "locks",
+        review_mode="red_team",
+        red_team_prompt=prompt,
+    )
     assert "review_mode=red_team" in comments[0]["body"]
 
 
 def test_red_team_effective_prompt_digest_is_supported(monkeypatch, tmp_path):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
     prompt = red_team_task(tasks, tmp_path)
-    write_task(tasks, review_mode="red_team", prompt_sha256="b" * 64,
-               effective_prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    write_task(
+        tasks,
+        review_mode="red_team",
+        prompt_sha256="b" * 64,
+        effective_prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+    )
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
     assert "review_mode=red_team" in comments[0]["body"]
 
@@ -316,7 +331,9 @@ def test_red_team_prompt_does_not_implicitly_enable_mode(monkeypatch, tmp_path):
     prompt = tmp_path / "red-team.md"
     prompt.write_text("Adversarial red-team review.")
     with pytest.raises(recorder.RecordError, match="requires review_mode=red_team"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
     assert comments == []
 
 
@@ -329,8 +346,12 @@ def test_cli_forwards_explicit_red_team_arguments(monkeypatch, tmp_path, capsys)
 
     monkeypatch.setattr(recorder, "record", fake_record)
     prompt = tmp_path / "red-team.md"
-    assert recorder.main(["--task-id", "review-one", "--pr", "42", "--review-mode", "red_team",
-                          "--red-team-prompt", str(prompt)]) == 0
+    assert (
+        recorder.main(
+            ["--task-id", "review-one", "--pr", "42", "--review-mode", "red_team", "--red-team-prompt", str(prompt)]
+        )
+        == 0
+    )
     assert seen == {"task_id": "review-one", "pr_number": 42, "review_mode": "red_team", "red_team_prompt": prompt}
     assert json.loads(capsys.readouterr().out)["review_mode"] == "red_team"
 
@@ -340,8 +361,9 @@ def test_unknown_red_team_reviewer_cannot_self_certify(monkeypatch, tmp_path, mo
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"unknown"})
     prompt = red_team_task(tasks, tmp_path, model=model)
     with pytest.raises(recorder.RecordError, match=r"reviewer (model|family) unknown|reviewer not qualified"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
-                        red_team_prompt=prompt)
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
     assert comments == []
     assert calls == {"posts": 0, "statuses": 0}
 
@@ -357,8 +379,9 @@ def test_red_team_keeps_qualification_gates(monkeypatch, tmp_path, scope):
         updates = {"agent": "claude", "model": "claude-sonnet-5-5", "review_risk": "critical"}
     prompt = red_team_task(tasks, tmp_path, **updates)
     with pytest.raises(recorder.RecordError, match="not qualified"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
-                        red_team_prompt=prompt)
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
     assert comments == []
 
 
@@ -367,7 +390,9 @@ def test_rerecording_same_task_in_another_mode_refuses(monkeypatch, tmp_path):
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     prompt = red_team_task(tasks, tmp_path)
     with pytest.raises(recorder.RecordError, match="edited or conflicts"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
     assert len(comments) == 1
     assert calls == {"posts": 1, "statuses": 1}
 
@@ -865,14 +890,29 @@ def test_merge_proof_discovers_objects_without_git(real_commit_set, monkeypatch,
 
 
 @pytest.mark.parametrize("marker", [None, "not a git pointer", "gitdir: missing", "gitdir: missing\nsecond line"])
-def test_merge_proof_missing_checkout_refuses(monkeypatch, tmp_path, marker):
-    monkeypatch.chdir(tmp_path)
-    if marker is not None:
-        (tmp_path / ".git").write_text(marker)
-    with pytest.raises(OSError):
-        recorder._merge_proof_object_store()
-    entry = {"sha": SHA, "commit": {"tree": {"sha": SHA}}, "parents": [{"sha": SHA}, {"sha": OTHER}]}
-    assert not recorder._is_clean_base_merge(entry, OTHER)
+def test_merge_proof_missing_checkout_refuses(monkeypatch, marker):
+    scratch = task_scratch.allocate("verdict-missing-checkout", root=DEFAULT_SCRATCH_ROOT)
+    try:
+        # The pre-push basetemp has a repository ancestor. Prove absence independently.
+        probe = subprocess.run(
+            ["git", "rev-parse", "--git-common-dir"],
+            cwd=scratch.payload_dir,
+            env=sanitized_git_env(),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=10,
+        )
+        assert probe.returncode == 128 and "not a git repository" in probe.stderr
+        monkeypatch.chdir(scratch.payload_dir)
+        if marker is not None:
+            (scratch.payload_dir / ".git").write_text(marker)
+        with pytest.raises(OSError):
+            recorder._merge_proof_object_store()
+        entry = {"sha": SHA, "commit": {"tree": {"sha": SHA}}, "parents": [{"sha": SHA}, {"sha": OTHER}]}
+        assert not recorder._is_clean_base_merge(entry, OTHER)
+    finally:
+        scratch.remove()
 
 
 @pytest.mark.parametrize("source", ["info/grafts", "environment"])
@@ -1197,7 +1237,9 @@ def test_author_task_record_precedes_family_tokens(monkeypatch, tmp_path, harnes
         ("codex", "openai/gpt-6.1-sol", "openai"),
     ],
 )
-def test_model_trailer_preserves_effort_and_context_forms(monkeypatch, tmp_path, harness, model, expected, effort, context):
+def test_model_trailer_preserves_effort_and_context_forms(
+    monkeypatch, tmp_path, harness, model, expected, effort, context
+):
     monkeypatch.setattr(
         recorder,
         "_pages",
@@ -2032,7 +2074,12 @@ def test_native_grok_runtime_attestation_reaches_the_verdict_receipt(monkeypatch
     from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
 
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
-    parsed = GrokBuildAdapter().parse_response(stdout=json.dumps({"text": "VERDICT: APPROVE", "modelUsage": {"grok-4.7-build": {"modelCalls": 1}}}), stderr="", returncode=0, output_file=None)
+    parsed = GrokBuildAdapter().parse_response(
+        stdout=json.dumps({"text": "VERDICT: APPROVE", "modelUsage": {"grok-4.7-build": {"modelCalls": 1}}}),
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
     state = delegate._cursor_model_state(agent=agent, result=parsed, substitution=parsed.substitution)
     write_task(tasks, agent=agent, **state)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
@@ -2040,20 +2087,30 @@ def test_native_grok_runtime_attestation_reaches_the_verdict_receipt(monkeypatch
     assert "model=grok-4.7 family=xai" in comments[0]["body"]
 
 
-@pytest.mark.parametrize("updates", [
-    {}, {"resolved_model_known": False},
-    {"resolved_model_source": "cursor-stream-json"},
-    {"resolved_model_source": "pending"},
-    {"resolved_model": "grok-4.7-build-fast"},
-    {"resolved_model": "grok-4.6"},
-    {"resolved_model": "grok-4.7"},
-    {"resolved_model": "grok-4.7-build-extra"},
-])
+@pytest.mark.parametrize(
+    "updates",
+    [
+        {},
+        {"resolved_model_known": False},
+        {"resolved_model_source": "cursor-stream-json"},
+        {"resolved_model_source": "pending"},
+        {"resolved_model": "grok-4.7-build-fast"},
+        {"resolved_model": "grok-4.6"},
+        {"resolved_model": "grok-4.7"},
+        {"resolved_model": "grok-4.7-build-extra"},
+    ],
+)
 def test_native_grok_unattested_or_unadmitted_runtime_is_refused_before_publication(monkeypatch, tmp_path, updates):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path)
-    attested = {"resolved_model": "grok-4.7-build", "resolved_model_known": True, "resolved_model_source": "grok-model-usage"}
+    attested = {
+        "resolved_model": "grok-4.7-build",
+        "resolved_model_known": True,
+        "resolved_model_source": "grok-model-usage",
+    }
     write_task(tasks, agent="grok", model="grok-4.7", **({**attested, **updates} if updates else {}))
-    with pytest.raises(recorder.RecordError, match=r"native Grok reviewer model unattested|native Grok reviewer model unknown"):
+    with pytest.raises(
+        recorder.RecordError, match=r"native Grok reviewer model unattested|native Grok reviewer model unknown"
+    ):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
 
@@ -2061,7 +2118,14 @@ def test_native_grok_unattested_or_unadmitted_runtime_is_refused_before_publicat
 @pytest.mark.parametrize("families", [{"xai"}, {"xai", "moonshot"}])
 def test_attested_native_grok_refuses_xai_and_unknown_auto_authors(monkeypatch, tmp_path, families):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families=families)
-    write_task(tasks, agent="grok", model="grok-4.7", resolved_model="grok-4.7-build", resolved_model_known=True, resolved_model_source="grok-model-usage")
+    write_task(
+        tasks,
+        agent="grok",
+        model="grok-4.7",
+        resolved_model="grok-4.7-build",
+        resolved_model_known=True,
+        resolved_model_source="grok-model-usage",
+    )
     with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
@@ -2116,9 +2180,9 @@ def test_cursor_auto_task_attribution_preserves_selector(monkeypatch, tmp_path, 
 @pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped", "grok", "codex"])
 @pytest.mark.parametrize("selector", ["auto", "DEFAULT"])
 def test_non_cursor_auto_author_attribution_stays_unknown(monkeypatch, tmp_path, harness, selector):
-    monkeypatch.setattr(recorder, "_pages", lambda args: [
-        {"commit": {"message": f"work\n\nX-Agent: {harness}/{selector}"}}
-    ])
+    monkeypatch.setattr(
+        recorder, "_pages", lambda args: [{"commit": {"message": f"work\n\nX-Agent: {harness}/{selector}"}}]
+    )
     assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
 
 
@@ -2127,9 +2191,9 @@ def test_non_cursor_auto_author_attribution_stays_unknown(monkeypatch, tmp_path,
 def test_non_cursor_auto_task_record_stays_unknown(monkeypatch, tmp_path, harness, selector):
     tasks = tmp_path / "tasks"
     write_task(tasks, task_id="author-selector", agent=harness, model=selector)
-    monkeypatch.setattr(recorder, "_pages", lambda args: [
-        {"commit": {"message": f"work\n\nX-Agent: {harness}/author-selector"}}
-    ])
+    monkeypatch.setattr(
+        recorder, "_pages", lambda args: [{"commit": {"message": f"work\n\nX-Agent: {harness}/author-selector"}}]
+    )
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"unknown"}
 
 
@@ -2151,9 +2215,17 @@ def test_10016_quota_does_not_change_exact_head_verdict_qualification(monkeypatc
     from scripts.fleet import credit_lane
 
     reads = []
-    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_: reads.append(True) or {
-        "agents": {"codex": {"remaining_pct": remaining}}, "diagnostics": {"stale": False},
-    })
+    monkeypatch.setattr(
+        credit_lane,
+        "read_routing_budget",
+        lambda **_: (
+            reads.append(True)
+            or {
+                "agents": {"codex": {"remaining_pct": remaining}},
+                "diagnostics": {"stale": False},
+            }
+        ),
+    )
     facts = facts_for({"google"})
     route = recorder.structural_review_route(facts, risk="critical")
     assert route.selected is not None and route.selected.capacity.remaining_pct is None
@@ -2165,3 +2237,71 @@ def test_10016_quota_does_not_change_exact_head_verdict_qualification(monkeypatc
         with pytest.raises(recorder.RecordError, match="head moved"):
             recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert reads == []
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+@pytest.mark.parametrize(
+    "verdict,state", [("APPROVED", "success"), ("BLOCKED", "failure"), ("CHANGES_REQUESTED", "failure")]
+)
+def test_status_description_labels_red_team_and_preserves_default(monkeypatch, tmp_path, mode, verdict, state):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    kwargs = {}
+    if mode == "red_team":
+        kwargs["red_team_prompt"] = red_team_task(tasks, tmp_path)
+    write_task(
+        tasks,
+        reply=f"VERDICT: {verdict}",
+        **(
+            {
+                "review_mode": mode,
+                "prompt_sha256": hashlib.sha256(kwargs["red_team_prompt"].read_text().encode()).hexdigest(),
+            }
+            if kwargs
+            else {}
+        ),
+    )
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", **kwargs)
+    assert statuses == [
+        {
+            "repository": REPOSITORY,
+            "head_sha": SHA,
+            "state": state,
+            "context": "fleet/cross-family-review",
+            "description": ("review_mode=red_team " if mode == "red_team" else "")
+            + f"VERDICT: {verdict} openai review-one",
+        }
+    ]
+    assert ("review_mode=red_team" in comments[0]["body"]) == (mode == "red_team")
+
+
+def test_red_team_label_survives_status_description_truncation(monkeypatch, tmp_path):
+    tasks, _, _ = setup_record(monkeypatch, tmp_path)
+    task_id = "review-" + "x" * 150
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("Adversarial red-team review.")
+    write_task(
+        tasks, task_id=task_id, review_mode="red_team", prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest()
+    )
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **fields: statuses.append(fields))
+    recorder.record(task_id, pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    assert statuses[0]["description"].startswith("review_mode=red_team VERDICT: APPROVED")
+    assert len(statuses[0]["description"]) == 140
+
+
+def test_red_team_same_task_refused_before_publication(monkeypatch, tmp_path):
+    from dataclasses import replace
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    facts = replace(
+        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", "review-one"),)
+    )
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}

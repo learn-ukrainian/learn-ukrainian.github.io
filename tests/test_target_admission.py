@@ -266,6 +266,7 @@ def test_a_non_kimi_request_resolves_unchanged():
 @pytest.mark.parametrize("author", [None, "gpt-6.1-sol"])
 def test_explicit_review_risk_dispatch_refuses_before_target_reads(seat, model, author):
     """D1: omission refuses before target reads, alias resolution and route probes."""
+
     def unexpected(*_args, **_kwargs):
         pytest.fail("omitted risk reached target reads or route resolution")
 
@@ -448,9 +449,12 @@ def test_delegate_worker_argv_normalizes_the_cursor_wire_pin(model):
 
 @pytest.mark.parametrize(
     ("model", "code"),
-    [("opus", "CURSOR_CLAUDE_REFUSED"), ("haiku", "CURSOR_CLAUDE_REFUSED"),
-     ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
-     ("composer-2.5[fast=true]", "CURSOR_MODEL_NOT_APPROVED")],
+    [
+        ("opus", "CURSOR_CLAUDE_REFUSED"),
+        ("haiku", "CURSOR_CLAUDE_REFUSED"),
+        ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
+        ("composer-2.5[fast=true]", "CURSOR_MODEL_NOT_APPROVED"),
+    ],
 )
 def test_delegate_dispatch_refuses_invalid_cursor_pins(model, code, monkeypatch):
     import delegate
@@ -458,8 +462,20 @@ def test_delegate_dispatch_refuses_invalid_cursor_pins(model, code, monkeypatch)
 
     monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     args = delegate.build_parser().parse_args(
-        ["dispatch", "--agent", "cursor", "--model", model, "--mode", "read-only",
-         "--task-id", "cursor-pin-test", "--prompt", "fixture", "--dry-run"]
+        [
+            "dispatch",
+            "--agent",
+            "cursor",
+            "--model",
+            model,
+            "--mode",
+            "read-only",
+            "--task-id",
+            "cursor-pin-test",
+            "--prompt",
+            "fixture",
+            "--dry-run",
+        ]
     )
     refusal, target = delegate._admit_dispatch_target(args, agent="cursor", trees=None)
     assert target is None
@@ -542,3 +558,22 @@ def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_
         recorder._require_qualified_reviewer(
             facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
         )
+
+
+@pytest.mark.parametrize("mode", ["invalid", "red_team"])
+def test_review_mode_requires_known_mode_and_complete_task_facts(mode):
+    with pytest.raises(ReviewAdmissionRefused, match=r"unsupported review mode|requires branch author facts"):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk="critical",
+            review_mode=mode,
+        )
+
+
+def test_red_team_mode_alone_cannot_type_a_non_review_dispatch():
+    with pytest.raises(ReviewAdmissionRefused, match="requires a review dispatch"):
+        resolve_and_admit(("codex",), model="gpt-6.1-sol", mode="read-only", review_mode="red_team")

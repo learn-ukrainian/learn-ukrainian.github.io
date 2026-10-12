@@ -78,7 +78,11 @@ def mechanical_scope_digest(scope: Mapping[str, Any]) -> str:
 
 
 def mechanical_worker_scope(
-    record: Mapping[str, Any], *, mode: str, model: str | None, prompt: str,
+    record: Mapping[str, Any],
+    *,
+    mode: str,
+    model: str | None,
+    prompt: str,
 ) -> dict[str, Any]:
     """Recheck mechanical-only scope against the stdin prompt, never the source file."""
     from scripts.review.model_catalog import canonical_model_id, load_model_catalog
@@ -89,8 +93,7 @@ def mechanical_worker_scope(
     substitution = record.get("substitution") or {}
     models = (model, record.get("model"), substitution.get("requested_model"), substitution.get("actual_model"))
     if not any(
-        (identity := canonical_model_id(pin, catalog))
-        and "mechanical_only" in catalog["models"][identity]["roles"]
+        (identity := canonical_model_id(pin, catalog)) and "mechanical_only" in catalog["models"][identity]["roles"]
         for pin in models
     ):
         return {}
@@ -226,6 +229,9 @@ def resolve_and_admit(
     review_subject_seats: frozenset[str] = frozenset(),
     review_subject_families: frozenset[str] = frozenset(),
     review_facts: Any = None,
+    review_mode: str = "cross_family",
+    review_task_id: str | None = None,
+    review_initial_snapshot: Mapping[str, Any] | Callable[[], Mapping[str, Any] | None] | None = None,
     task_family: str | None = None,
     task_role: str | None = None,
     task_prompt: str | None = None,
@@ -292,11 +298,18 @@ def resolve_and_admit(
     review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
     from .mechanical_admission import refuse_mechanical_task
 
-    mechanical_scope = {key: gate[key] for key in (
-        "paths", "language_lane", "research_track", "prompt_file", "trees"
-    ) if key in gate}
-    refuse_mechanical_task(requested[1], mode=mode, task_family=task_family,
-                           task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
+    mechanical_scope = {
+        key: gate[key] for key in ("paths", "language_lane", "research_track", "prompt_file", "trees") if key in gate
+    }
+    refuse_mechanical_task(
+        requested[1],
+        mode=mode,
+        task_family=task_family,
+        task_role=task_role,
+        task_prompt=task_prompt,
+        review=review_activity,
+        **mechanical_scope,
+    )
     if review_activity:
         _refuse_non_review_models(requested[1])
     if review_dispatch:
@@ -304,6 +317,10 @@ def resolve_and_admit(
             _require_agy_code_review_risk(requested_seat, review_risk, review_profile or "code")
     # Target reads follow the original-request gates, but precede every
     # candidate evaluation, route probe and substitution.
+    if review_mode not in {"cross_family", "red_team"}:
+        raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: unsupported review mode")
+    if review_mode == "red_team" and not review_dispatch:
+        raise ReviewAdmissionRefused("RED_TEAM_REFUSED: red_team requires a review dispatch")
     if (review_profile or "code") in {"code", "infra"}:
         if callable(review_changed_paths):
             review_changed_paths = review_changed_paths()
@@ -312,6 +329,8 @@ def resolve_and_admit(
     else:
         review_changed_paths = ()
         review_facts = None
+    if review_mode == "red_team" and callable(review_initial_snapshot):
+        review_initial_snapshot = review_initial_snapshot()
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:
@@ -361,7 +380,7 @@ def resolve_and_admit(
                 risk=review_risk,
                 profile=review_profile or "code",
                 attempt=review_attempt,
-                snapshot=snapshot,
+                snapshot=snapshot if snapshot is not None else review_initial_snapshot,
                 budget_seat=budget_seat,
                 budget_model=admitted_models.get(budget_seat),
                 budget_substitute=fallbacks.get(budget_seat),
@@ -370,6 +389,8 @@ def resolve_and_admit(
                 subject_seats=review_subject_seats,
                 subject_families=review_subject_families,
                 facts=review_facts,
+                review_mode=review_mode,
+                reviewer_task_id=review_task_id,
             )
             _require_agy_code_review_risk(selected[0], review_risk, review_profile or "code")
             approved.add(selected)
@@ -419,8 +440,15 @@ def resolve_and_admit(
     )
     if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
         refuse_kimi_if_disallowed(*final, mode=mode, **gate)
-        refuse_mechanical_task(final[1], mode=mode, task_family=task_family,
-                               task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
+        refuse_mechanical_task(
+            final[1],
+            mode=mode,
+            task_family=task_family,
+            task_role=task_role,
+            task_prompt=task_prompt,
+            review=review_activity,
+            **mechanical_scope,
+        )
     if review_activity:
         _refuse_non_review_models(target_model for _, target_model, _ in resolved)
     if new_dispatch or review_dispatch:
@@ -428,9 +456,7 @@ def resolve_and_admit(
         # lifecycle operations on existing work.
         # Checked against the identities actually selected, so an automatic
         # fallback away from a paused pin (e.g. reviewer selection) proceeds.
-        selected = [
-            target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved
-        ]
+        selected = [target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved]
         # A new worker dispatch also answers for every model it asked for
         # (explicit, attached or also_models); reviewer selection only for what it picked.
         _refuse_paused(selected if review_dispatch else [*models, *selected])
@@ -510,6 +536,8 @@ def _resolve_review_target(
     subject_seats: frozenset[str] = frozenset(),
     subject_families: frozenset[str] = frozenset(),
     facts: Any = None,
+    review_mode: str = "cross_family",
+    reviewer_task_id: str | None = None,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
@@ -539,6 +567,16 @@ def _resolve_review_target(
 
     from .telemetry import _default_model_for
 
+    if review_mode not in {"cross_family", "red_team"}:
+        raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: unsupported review mode")
+    if review_mode == "red_team":
+        if profile != "code" or facts is None or not reviewer_task_id:
+            raise ReviewAdmissionRefused(
+                "RED_TEAM_REFUSED: code review requires branch author facts and reviewer task id"
+            )
+        if reviewer_task_id in facts.author_task_ids:
+            raise ReviewAdmissionRefused("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+        risk = risk or "medium"
     _require_agy_code_review_risk(seat, risk, profile)
     requested_model = model or _default_model_for(seat) or ""
     concrete = requested_model.split("[", 1)[0]
@@ -621,12 +659,12 @@ def _resolve_review_target(
         eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
         exclusion = subject_exclusion_reason(
             SimpleNamespace(name=seat, route=seat, family=family, concrete_model=concrete, transport=seat),
-            seats=subject.seats, families=subject.families, evidence=subject.evidence,
+            seats=subject.seats,
+            families=subject.families,
+            evidence=subject.evidence,
         )
         if exclusion:
-            raise ReviewAdmissionRefused(
-                f"REVIEW_ROUTE_REFUSED: {exclusion}"
-            )
+            raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {exclusion}")
     else:
         # A Cursor seat is admitted only at its exact pinned slug: the adapter
         # sends the requested string unchanged, so a bracket suffix
@@ -635,7 +673,8 @@ def _resolve_review_target(
             candidate.route == seat
             and candidate_dispatch_model(candidate)
             == (requested_model if candidate.transport == "cursor" else concrete)
-            and evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
+            and evaluate_candidate(candidate, inputs, author_family=author_family, review_mode=review_mode).status
+            == "eligible"
             for candidate in REVIEW_CANDIDATES.values()
         )
     # #9538: name the high-risk reviewer rule when it is why the request fails.
@@ -655,6 +694,16 @@ def _resolve_review_target(
     lane_info = (snapshot.get("agents") or {}).get(seat, {}) if snapshot else {}
     blocked, _ = review_capacity_action(seat, lane_info, (snapshot or {}).get("diagnostics"), requested_model)
     eligible = eligible and not blocked
+    if review_mode == "red_team" and eligible:
+        requested_cross_family = any(
+            candidate.route == seat
+            and candidate_dispatch_model(candidate)
+            == (requested_model if candidate.transport == "cursor" else concrete)
+            and evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
+            for candidate in REVIEW_CANDIDATES.values()
+        )
+        if not requested_cross_family and resolve_reviewer(inputs).selected is not None:
+            raise ReviewAdmissionRefused("RED_TEAM_REFUSED: eligible outside-family reviewer takes precedence")
     if eligible and (snapshot is None or not budget_seat or not trusted or attempt):
         return seat, model
     if not trusted:
@@ -685,6 +734,7 @@ def _resolve_review_target(
         inputs,
         ladder=ladder,
         excluded_quota_buckets=frozenset({budget_seat}) if snapshot and budget_blocked else frozenset(),
+        review_mode=review_mode,
     )
     if resolution.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
@@ -698,7 +748,7 @@ def _resolve_review_target(
             return seat, model
         # The initial admission may already have replaced a same-family request.
         # Recover that reviewer with the same snapshot and all hard gates intact.
-        retained = resolve_reviewer(inputs, ladder=ladder).selected
+        retained = resolve_reviewer(inputs, ladder=ladder, review_mode=review_mode).selected
         if retained is not None and retained.route == budget_seat:
             return retained.route, candidate_dispatch_model(REVIEW_CANDIDATES[retained.name])
     if selected is None or selected.family in forbidden:

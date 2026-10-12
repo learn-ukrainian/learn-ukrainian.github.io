@@ -123,6 +123,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
     "tests/review/test_model_catalog.py::test_frozen_artifacts_are_pinned_independently_of_manifest",
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
