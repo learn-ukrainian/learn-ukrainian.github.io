@@ -269,6 +269,31 @@ def test_foreign_endpoint_cannot_receive_credentials(tmp_path):
     assert calls == []
 
 
+def test_trailing_dot_api_host_admission_is_independent_of_scheme_case(tmp_path):
+    store, calls = client(tmp_path, [response([]), response([])])
+    endpoints = ["https://api.github.com./search/code", "HTTPS://api.github.com./search/code"]
+    for endpoint in endpoints:
+        assert store.request("GET", endpoint).value == []
+        assert gh._native_buckets(["gh", "api", endpoint]) == frozenset({"code_search", "secondary"})
+    assert [call[1] for call in calls] == endpoints
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "HTTPS://foreign.example/search/code",
+        "http://foreign.example/search/code",
+        "HTTP://foreign.example/search/code",
+        "ftp://foreign.example/search/code",
+    ],
+)
+def test_canonicalizer_preserves_admission_outside_the_host_shape_table(tmp_path, endpoint):
+    store, calls = client(tmp_path, [response([])])
+    assert store.request("GET", endpoint).value == []
+    assert gh._native_buckets(["gh", "api", endpoint]) == frozenset({"core", "secondary"})
+    assert calls[0][1] == endpoint
+
+
 def test_out_of_order_budget_does_not_restore_spent_budget(tmp_path):
     store, _ = client(tmp_path, [])
     with store._db() as db:
@@ -491,7 +516,12 @@ def test_stale_pr_files_propagate_age_and_reset(tmp_path):
 def test_parent_read_uses_rest_and_preserves_cross_repository_identity(tmp_path, monkeypatch):
     from scripts.publish import github as pub
 
-    issue = {"number": 1, "state": "open", "html_url": "https://github.com/o/r/issues/1", "repository_url": "https://api.github.com/repos/o/r"}
+    issue = {
+        "number": 1,
+        "state": "open",
+        "html_url": "https://github.com/o/r/issues/1",
+        "repository_url": "https://api.github.com/repos/o/r",
+    }
     parent = {
         "number": 7,
         "html_url": "https://github.com/other/stream/issues/7",
@@ -511,7 +541,14 @@ def test_missing_parent_is_rest_absence_not_transport_success(tmp_path, monkeypa
     store, calls = client(
         tmp_path,
         [
-            response({"number": 1, "state": "open", "html_url": "https://github.com/o/r/issues/1", "repository_url": "https://api.github.com/repos/o/r"}),
+            response(
+                {
+                    "number": 1,
+                    "state": "open",
+                    "html_url": "https://github.com/o/r/issues/1",
+                    "repository_url": "https://api.github.com/repos/o/r",
+                }
+            ),
             response({"message": "missing"}, status=404),
         ],
     )
@@ -813,14 +850,29 @@ def test_disk_cache_uses_runtime_state_of_module_git_common_root(module_reposito
     canonical, module = module_repository
     if layout != "primary":
         subprocess.run(
-            ["git", "-C", str(canonical), "-c", "user.name=fixture", "-c", "user.email=fixture@example.com",
-             "commit", "--allow-empty", "-m", "fixture"],
-            check=True, capture_output=True, timeout=30,
+            [
+                "git",
+                "-C",
+                str(canonical),
+                "-c",
+                "user.name=fixture",
+                "-c",
+                "user.email=fixture@example.com",
+                "commit",
+                "--allow-empty",
+                "-m",
+                "fixture",
+            ],
+            check=True,
+            capture_output=True,
+            timeout=30,
         )
         worktree = tmp_path / "worktree"
         subprocess.run(
             ["git", "-C", str(canonical), "worktree", "add", "--detach", str(worktree)],
-            check=True, capture_output=True, timeout=30,
+            check=True,
+            capture_output=True,
+            timeout=30,
         )
         module = worktree / module.relative_to(canonical)
         module.parent.mkdir(parents=True)
@@ -863,7 +915,9 @@ def test_cache_directory_override_wins_without_module_repository(tmp_path, monke
     assert (override / "cache.sqlite3").is_file()
 
 
-@pytest.mark.parametrize("layout", ["plain", "empty-git-dir", "invalid-gitfile", "missing-gitdir", "empty-commondir", "unreadable"])
+@pytest.mark.parametrize(
+    "layout", ["plain", "empty-git-dir", "invalid-gitfile", "missing-gitdir", "empty-commondir", "unreadable"]
+)
 def test_unresolved_module_repository_keeps_cache_and_budget_in_memory(tmp_path, monkeypatch, layout):
     monkeypatch.delenv("LU_GITHUB_CACHE_DIR")
     root = tmp_path / "plain"
@@ -1828,16 +1882,18 @@ def test_pr_view_non_404_stays_typed(tmp_path):
     assert result.returncode == 1 and json.loads(result.stdout)["status"] == 500 and calls
 
 
-
 def test_substituted_subprocess_does_not_skip_rest_or_worker_guard(tmp_path, monkeypatch):
-    store, calls = client(tmp_path, [response({"number": 1, "state": "open"})], env={"GH_REPO": "o/r", "AGENT_NO_MERGE": "1"})
+    store, calls = client(
+        tmp_path, [response({"number": 1, "state": "open"})], env={"GH_REPO": "o/r", "AGENT_NO_MERGE": "1"}
+    )
     monkeypatch.setattr(subprocess, "run", lambda *args, **kw: pytest.fail("subprocess spy is not a client seam"))
-    result = gh.run(["gh", "issue", "view", "1", "--json", "number,state"], client=store, capture_output=True, text=True)
+    result = gh.run(
+        ["gh", "issue", "view", "1", "--json", "number,state"], client=store, capture_output=True, text=True
+    )
     assert json.loads(result.stdout) == {"number": 1, "state": "OPEN"}
     denied = gh.run(["gh", "pr", "merge", "1"], client=store, capture_output=True, text=True)
     assert denied.github_result.error == "github_worker_write_forbidden"
     assert [(call[0], call[1]) for call in calls] == [("GET", "repos/o/r/issues/1")]
-
 
 
 def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
@@ -1864,9 +1920,12 @@ def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
     assert calls.read_text().splitlines() == ["call"]
     store = gh.GitHubClient(env=environment)
     with store._db() as db:
-        budgets = {resource: (remaining, reset) for resource, remaining, reset in db.execute(
-            "SELECT resource,remaining,reset FROM budget WHERE scope=?", (store.scope,)
-        )}
+        budgets = {
+            resource: (remaining, reset)
+            for resource, remaining, reset in db.execute(
+                "SELECT resource,remaining,reset FROM budget WHERE scope=?", (store.scope,)
+            )
+        }
     assert budgets["core"] == (77, 4000000000)
     assert budgets["secondary"] == (0, result.github_result.reset_at)
     deferred = publisher._run_transport(command, env=environment, capture_output=True, text=True)

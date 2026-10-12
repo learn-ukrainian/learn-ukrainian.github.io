@@ -190,6 +190,58 @@ def api(*tokens):
     return ["gh", "api", *tokens]
 
 
+ROOT_ENDPOINTS = [
+    api("--paginate", "--jq", ".x", "/"),
+    api("--paginate", "--jq", ".x", "https://api.github.com"),
+    api("--paginate", "--jq", ".x", "https://api.github.com/"),
+    api("--hostname", "ghe.example", "--paginate", "--jq", ".x", "https://ghe.example/api/v3/"),
+]
+
+
+@pytest.mark.parametrize("args", ROOT_ENDPOINTS, ids=["relative", "absolute", "absolute-slash", "enterprise"])
+def test_root_endpoint_is_determinable_core(args):
+    assert gh._native_buckets(args) == frozenset({"core", "secondary"})
+
+
+@pytest.mark.parametrize("args", ROOT_ENDPOINTS, ids=["relative", "absolute", "absolute-slash", "enterprise"])
+@pytest.mark.parametrize("bucket", ALL_BUCKETS)
+def test_root_endpoint_gates_only_core_and_secondary(tmp_path, args, bucket):
+    store, runner, translated, native = seeded(tmp_path, [bucket])
+    result = gh.run(args, client=store, runner=runner, capture_output=True)
+    assert not translated
+    if bucket in {"core", "secondary"}:
+        assert blocked(result) and not native
+    else:
+        assert result.returncode == 0 and native == [args]
+
+
+HOST_SHAPES = [
+    ("https://api.github.com./search/code", "code_search", True),
+    ("HTTPS://api.github.com./search/code", "code_search", True),
+    ("https://api.github.com:443/search/code", "code_search", True),
+    ("https://probe@api.github.com/search/code", "code_search", True),
+    ("https://API.GITHUB.COM/search/code", "code_search", True),
+    ("https://api.github.c\u043em/search/code", "core", False),
+    ("https:///search/code", "core", False),
+    ("http://api.github.com/search/code", "code_search", True),
+]
+
+
+@pytest.mark.parametrize(("endpoint", "bucket", "accepted"), HOST_SHAPES)
+def test_host_shape_admission_and_classification_agree(tmp_path, endpoint, bucket, accepted):
+    assert gh._native_buckets(api(endpoint)) == frozenset({bucket, "secondary"})
+    store, runner, translated, native = seeded(tmp_path, [])
+    result = gh.run(api(endpoint), client=store, runner=runner, capture_output=True)
+    assert not native
+    if accepted:
+        assert result.returncode == 0 and translated == [endpoint]
+        store, runner, translated, native = seeded(tmp_path / "limited", [bucket])
+        result = gh.run(api(endpoint), client=store, runner=runner, capture_output=True)
+        assert blocked(result) and not translated and not native
+    else:
+        assert result.github_result.error == "github_invalid_command" and not translated
+
+
 @pytest.fixture
 def no_jq(monkeypatch):
     """Output formatting is orthogonal to the gate; ``--jq search/code`` is not a valid jq program."""

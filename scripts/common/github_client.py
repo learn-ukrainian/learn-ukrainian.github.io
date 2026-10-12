@@ -363,7 +363,8 @@ class GitHubClient:
     ):
         method = method.upper()
         allow_stale = self.allow_stale if allow_stale is None else allow_stale
-        if endpoint.startswith("https://") and urlparse(endpoint).hostname not in _api_hosts(self.host):
+        host_class, resource_path = _canonical_endpoint(endpoint, self.host)
+        if host_class == "rejected":
             raise ValueError("GitHub endpoint host mismatch")
         raw = (
             payload
@@ -372,7 +373,6 @@ class GitHubClient:
             if payload is not None
             else None
         )
-        resource_path = _resource_path(endpoint, self.host)
         graphql = resource_path == "graphql"
         document = json.loads(raw) if graphql and isinstance(payload, bytes) else payload
         read = method == "GET" or (graphql and document and not re.search(r"\bmutation\b", document.get("query", "")))
@@ -472,7 +472,9 @@ class GitHubClient:
                             (now, json.dumps(h), self.scope, key, now),
                         )
                         return Result(_cached_value(cached), status=304, headers=h)
-                    if 200 <= response.status < 300 and (raw_response or headers.get("Accept") == "application/octet-stream"):
+                    if 200 <= response.status < 300 and (
+                        raw_response or headers.get("Accept") == "application/octet-stream"
+                    ):
                         return Result(response.body, status=response.status, headers=h)
                     try:
                         value = json.loads(response.body) if response.body else None
@@ -498,10 +500,16 @@ class GitHubClient:
                     if graphql and isinstance(value, dict) and value.get("errors"):
                         return Result(value, status=response.status, error="github_graphql_error", headers=h)
                     if not 200 <= response.status < 300:
-                        return Result(value, status=response.status, error="github_http_error", reset_at=reset, headers=h)
+                        return Result(
+                            value, status=response.status, error="github_http_error", reset_at=reset, headers=h
+                        )
                     if resource_path == "rate_limit" and isinstance(value, dict):
                         for name, rate in value.get("resources", {}).items():
-                            if isinstance(rate, dict) and type(rate.get("remaining")) is int and type(rate.get("reset")) is int:
+                            if (
+                                isinstance(rate, dict)
+                                and type(rate.get("remaining")) is int
+                                and type(rate.get("reset")) is int
+                            ):
                                 _store_budget(db, self.scope, name, rate["remaining"], rate["reset"])
                     if cacheable:
                         _store_cache(db, self.scope, key, response.body, h, now)
@@ -535,17 +543,21 @@ def _api_hosts(host):
     return {"api.github.com", "uploads.github.com", "github.com"} if host == "github.com" else {host}
 
 
-def _resource_path(endpoint, host="github.com"):
-    """Normalised REST resource path: no scheme or API host, leading slash, query or fragment.
+def _canonical_endpoint(endpoint, host="github.com"):
+    """Return host admission class and normalised path; only ``None`` is unknown.
 
-    A URL for any other host is returned untouched, so it never looks like an
-    API resource. Nothing but the whole normalised path selects a bucket.
+    Foreign URLs retain their spelling so they cannot select an API bucket.
+    Preserve the existing rejection of foreign lowercase ``https://`` URLs;
+    other foreign spellings remain native/transport concerns. API host identity
+    is independent of scheme case, userinfo, port, host case or trailing dot.
     """
+    if endpoint is None:
+        return "unknown", None
     parsed = urlsplit(endpoint)
     if parsed.scheme.lower() in {"http", "https"}:
         hostname = (parsed.hostname or "").lower().rstrip(".")
         if hostname not in _api_hosts(host):
-            return endpoint
+            return ("rejected" if endpoint.startswith("https://") else "foreign"), endpoint
         path = parsed.path.lstrip("/")
         # gh sends absolute URLs unchanged; GHES uses /api/v3/ for REST
         # and /api/graphql for GraphQL. Never strip these on public hosts.
@@ -554,8 +566,13 @@ def _resource_path(endpoint, host="github.com"):
                 path = path.removeprefix("api/v3/")
             elif path == "api/graphql":
                 path = "graphql"
-        return path
-    return re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
+        return "api", path
+    return "relative", re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
+
+
+def _resource_path(endpoint, host="github.com"):
+    """Compatibility view of the shared endpoint canonicalizer's resource path."""
+    return _canonical_endpoint(endpoint, host)[1]
 
 
 def _endpoint_bucket(resource_path):
@@ -1637,16 +1654,68 @@ def _native_buckets(args, host="github.com"):
         _, positional = _options(
             args[2:],
             valued_flags={
-                "--app", "--assignee", "--author", "--author-date", "--author-email", "--author-name",
-                "--base", "--checks", "--closed", "--commenter", "--comments", "--committer",
-                "--committer-date", "--committer-email", "--committer-name", "--created", "--extension",
-                "--filename", "--followers", "--forks", "--good-first-issues", "--hash", "--head",
-                "--help-wanted-issues", "--include-forks", "--interactions", "--involves", "--jq", "--json",
-                "--label", "--language", "--license", "--limit", "--match", "--mentions", "--merged-at",
-                "--milestone", "--number-topics", "--order", "--owner", "--parent", "--project",
-                "--reactions", "--repo", "--review", "--review-requested", "--reviewed-by", "--search-type",
-                "--size", "--sort", "--stars", "--state", "--team-mentions", "--template", "--topic",
-                "--tree", "--updated", "--visibility", "-L", "-R", "-q", "-t",
+                "--app",
+                "--assignee",
+                "--author",
+                "--author-date",
+                "--author-email",
+                "--author-name",
+                "--base",
+                "--checks",
+                "--closed",
+                "--commenter",
+                "--comments",
+                "--committer",
+                "--committer-date",
+                "--committer-email",
+                "--committer-name",
+                "--created",
+                "--extension",
+                "--filename",
+                "--followers",
+                "--forks",
+                "--good-first-issues",
+                "--hash",
+                "--head",
+                "--help-wanted-issues",
+                "--include-forks",
+                "--interactions",
+                "--involves",
+                "--jq",
+                "--json",
+                "--label",
+                "--language",
+                "--license",
+                "--limit",
+                "--match",
+                "--mentions",
+                "--merged-at",
+                "--milestone",
+                "--number-topics",
+                "--order",
+                "--owner",
+                "--parent",
+                "--project",
+                "--reactions",
+                "--repo",
+                "--review",
+                "--review-requested",
+                "--reviewed-by",
+                "--search-type",
+                "--size",
+                "--sort",
+                "--stars",
+                "--state",
+                "--team-mentions",
+                "--template",
+                "--topic",
+                "--tree",
+                "--updated",
+                "--visibility",
+                "-L",
+                "-R",
+                "-q",
+                "-t",
             },
         )
         buckets.update(
@@ -1657,12 +1726,11 @@ def _native_buckets(args, host="github.com"):
         # Exactly one positional is the endpoint. Zero, or a second one (a
         # flag this parser does not model took a value), is undeterminable.
         hostname = _opt(options, "--hostname")
-        path = (
-            _resource_path(positional[0], hostname if isinstance(hostname, str) else host)
-            if len(positional) == 1
-            else ""
+        _, path = _canonical_endpoint(
+            positional[0] if len(positional) == 1 else None,
+            hostname if isinstance(hostname, str) else host,
         )
-        buckets.update({_endpoint_bucket(path)} if path else {"core", "graphql"})
+        buckets.update({_endpoint_bucket(path)} if path is not None else {"core", "graphql"})
     else:
         buckets.update({"core", "graphql"})
     return frozenset(buckets)
