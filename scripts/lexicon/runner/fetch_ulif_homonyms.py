@@ -2083,8 +2083,13 @@ def _read_spellings_input(path: Path) -> bytes:
     before the syscall raise at the next bytecode (#10374). Missing paths and
     directories raise the errors ``Path.read_text`` raises, with the same text.
     """
-    fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+    # The open sits inside the try, so an exception at any bytecode after the
+    # descriptor is stored still closes it. A signal handled between the open
+    # syscall returning and that store is not preventable in pure Python; it
+    # leaks one descriptor only on a SIGINT or SIGTERM that stops the process.
+    fd: int | None = None
     try:
+        fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
         if stat.S_ISDIR(os.fstat(fd).st_mode):
             raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), os.fspath(path))
         poller = select.poll()
@@ -2102,7 +2107,8 @@ def _read_spellings_input(path: Path) -> bytes:
                     return b"".join(chunks)
                 chunks.append(chunk)
     finally:
-        os.close(fd)
+        if fd is not None:
+            os.close(fd)
 
 
 def _spellings_from_file(path: Path) -> list[str]:

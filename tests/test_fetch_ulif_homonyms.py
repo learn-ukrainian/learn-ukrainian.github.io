@@ -2762,6 +2762,50 @@ def test_spellings_fifo_closes_input_when_interrupted(tmp_path, monkeypatch):
     _assert_fds_closed(opened)
 
 
+@pytest.mark.parametrize(
+    ("signum", "expected"),
+    [(signal.SIGTERM, InterruptedByOperator), (signal.SIGINT, KeyboardInterrupt)],
+    ids=["sigterm", "sigint"],
+)
+def test_spellings_input_closes_fd_on_signal_right_after_open(tmp_path, monkeypatch, signum, expected):
+    """A real signal on the line right after the descriptor is stored still closes it."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    path = tmp_path / "spellings.txt"
+    path.write_bytes("Замок\n".encode())
+    opened = _record_spellings_fds(monkeypatch)
+    reader = mod._read_spellings_input.__code__
+    sent: list[int] = []
+
+    def trace_lines(frame, event, _arg):
+        # Signal once, on the first line event where the frame holds the fd.
+        if event == "line" and not sent and isinstance(frame.f_locals.get("fd"), int):
+            sent.append(frame.f_locals["fd"])
+            signal.pthread_kill(threading.get_ident(), signum)
+        return trace_lines
+
+    def trace_calls(frame, event, _arg):
+        return trace_lines if event == "call" and frame.f_code is reader else None
+
+    handler = mod._on_sigterm if signum == signal.SIGTERM else signal.default_int_handler
+    previous_handler = signal.signal(signum, handler)
+    previous_trace = sys.gettrace()
+    try:
+        sys.settrace(trace_calls)
+        try:
+            _spellings_from_file(path)
+        finally:
+            sys.settrace(previous_trace)
+        raise AssertionError("the signal did not interrupt the read")
+    except KeyboardInterrupt as exc:
+        assert type(exc) is expected
+    finally:
+        signal.signal(signum, previous_handler)
+
+    assert sent == opened
+    _assert_fds_closed(opened)
+
+
 def test_run_fetch_preserves_caller_blocked_sigterm(tmp_path, capsys):
     previous_handler = signal.getsignal(signal.SIGTERM)
     previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
