@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import hashlib
-import io
 import json
 import os
 import re
 import sqlite3
 import subprocess
-import tarfile
 import unicodedata
 import uuid
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
@@ -47,7 +45,6 @@ MAX_TTL_SECONDS = 86_400
 MAX_ROLLOVER_BUNDLE_BYTES = 4 * 1024 * 1024
 ROLLOVER_BUNDLE_SCHEMA = "rollover-bundle.v1"
 ROLLOVER_BUNDLE_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
-ROLLOVER_BUNDLE_MANIFEST_NAME = "manifest.json"
 ROLLOVER_BUNDLE_LINEAGE_ROOT = ".agent/thread-rollovers"
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 _HANDOFF_IDENTITY_SH = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
@@ -459,32 +456,6 @@ def validate_rollover_bundle_members(
             raise ValueError(f"rollover bundle member is outside its lineage and handoff paths: {name!r}")
         members.append(name)
     return tuple(members)
-
-
-def _rollover_bundle_archive_members(blob: bytes) -> list[str]:
-    """List the archive's member names; any non-regular member refuses the bundle."""
-    try:
-        with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as archive:
-            infos = archive.getmembers()
-    except (tarfile.TarError, OSError, EOFError) as exc:
-        raise ValueError("rollover bundle is not a valid tar.gz") from exc
-    names: list[str] = []
-    for info in infos:
-        if not info.isfile():
-            raise ValueError("rollover bundle contains a non-regular member")
-        if info.name != ROLLOVER_BUNDLE_MANIFEST_NAME:
-            names.append(info.name)
-    return names
-
-
-def _stream_handoff_paths(stream_id: str) -> tuple[str, ...]:
-    """Inventory handoff paths for one stream; an unreadable registry allows none."""
-    try:
-        from .inventory import epic_handoff_map
-
-        return tuple(epic_handoff_map(_REPO_ROOT).get(stream_id, ()))
-    except (OSError, ValueError):
-        return ()
 
 
 def rollover_bundle_handoff_slots(provider: str, stream_id: str) -> frozenset[str]:
@@ -2012,22 +1983,21 @@ class SessionStreamStore:
         files = manifest_value.get("files")
         if not isinstance(files, list) or not files:
             raise ValueError("rollover bundle manifest has no files")
-        agent = manifest_value["agent"]
-        handoff_candidates = rollover_bundle_handoff_candidates(_stream_handoff_paths(stream_id), agent)
-        declared = validate_rollover_bundle_members(
-            [item.get("path") if isinstance(item, Mapping) else None for item in files],
-            agent=agent,
-            lineage_id=manifest_value["lineage_id"],
-            handoff_candidates=handoff_candidates,
-        )
-        archived = validate_rollover_bundle_members(
-            _rollover_bundle_archive_members(blob),
-            agent=agent,
-            lineage_id=manifest_value["lineage_id"],
-            handoff_candidates=handoff_candidates,
-        )
-        if sorted(declared) != sorted(archived):
+        try:
+            from scripts.orchestration.thread_handoff import _bundle_secret_hits, verify_rollover_bundle
+        except ImportError as exc:
+            raise ValueError("rollover bundle validator is unavailable") from exc
+        # The importer runs this same validation; the archive's embedded
+        # manifest, bound to the supplied identity, is what gets stored.
+        embedded, members = verify_rollover_bundle(blob, repo_root=_REPO_ROOT, manifest_override=manifest_value)
+        if files != embedded["files"]:
             raise ValueError("rollover bundle manifest files do not match its archive")
+        secret_hits = _bundle_secret_hits(members)
+        if secret_hits:
+            member, rule = secret_hits[0]
+            raise ContentRejectedError(f"bundle member {member} matched {rule} rule")
+        manifest_value = embedded
+        agent = manifest_value["agent"]
         if agent not in rollover_bundle_handoff_slots(lease.holder.agent, stream_id):
             raise ValueError("rollover bundle agent is not the lease holder's handoff slot for this stream")
         current_time = now or utc_now()

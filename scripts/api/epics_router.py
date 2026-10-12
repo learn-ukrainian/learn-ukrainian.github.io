@@ -47,7 +47,6 @@ from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 from scripts.api.state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
 from scripts.orchestration import issue_stream_audit as audit
-from scripts.orchestration.thread_handoff import _bundle_extract, _bundle_secret_hits
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -1061,11 +1060,7 @@ def remote_bundle_upload(
         if not isinstance(manifest, dict):
             raise ValueError("bundle manifest must be an object")
         blob = _bundle_blob_from_body(body)
-        _, members = _bundle_extract(blob, manifest_override=manifest)
-        secret_hits = _bundle_secret_hits(members)
-        if secret_hits:
-            member, rule = secret_hits[0]
-            raise ContentRejectedError(f"bundle member {member} matched {rule} rule")
+        # The store runs the importer's full bundle validation and secret scan.
         store = _store(ctx)
         stored = store.upload_bundle(lease, manifest=manifest, blob=blob)
         return JSONResponse(

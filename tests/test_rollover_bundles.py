@@ -896,6 +896,124 @@ def test_duplicate_tar_member_is_refused(tmp_path: Path) -> None:
         th._bundle_extract(gzip.compress(raw.getvalue()))
 
 
+def _raw_bundle(entries: list[tuple[str, bytes]]) -> bytes:
+    """A gzip tar holding exactly ``entries`` in order, with no validation."""
+    raw = io.BytesIO()
+    with tarfile.open(fileobj=raw, mode="w") as archive:
+        for name, payload in entries:
+            info = tarfile.TarInfo(name)
+            info.size = len(payload)
+            archive.addfile(info, io.BytesIO(payload))
+    return gzip.compress(raw.getvalue())
+
+
+def _parity_case(case: str) -> tuple[dict, bytes]:
+    """The supplied manifest and archive for one bundle the store and the HTTP route must both refuse."""
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM)
+    (name, payload), *_ = th._bundle_extract(blob)[1].items()
+    manifest_bytes = th._bundle_json(manifest)
+    twice = {**manifest, "files": manifest["files"] * 2}
+    if case == "foreign-embedded-agent":
+        embedded, foreign_blob = _resign({**manifest, "agent": "claude-devops"}, {name: payload})
+        return {**embedded, "agent": AGENT}, foreign_blob
+    if case == "duplicate-member":
+        return twice, _raw_bundle([("manifest.json", manifest_bytes), (name, payload), (name, payload)])
+    if case == "normalized-duplicate-member":
+        return twice, _raw_bundle([("manifest.json", manifest_bytes), (name, payload), (f"./{name}", payload)])
+    if case == "checksum-mismatch":
+        return manifest, _raw_bundle([("manifest.json", manifest_bytes), (name, b"not the declared bytes\n")])
+    if case == "missing-embedded-manifest":
+        return manifest, _raw_bundle([(name, payload)])
+    if case == "duplicate-embedded-manifest":
+        return manifest, _raw_bundle(
+            [("manifest.json", manifest_bytes), ("manifest.json", manifest_bytes), (name, payload)]
+        )
+    if case == "truncated-archive":
+        return manifest, blob[: len(blob) // 2]
+    raise AssertionError(case)
+
+
+@pytest.mark.parametrize(
+    ("case", "reason"),
+    [
+        ("foreign-embedded-agent", "differs from the embedded manifest at agent"),
+        ("duplicate-member", "duplicate or non-regular member"),
+        ("normalized-duplicate-member", "duplicate or non-regular member"),
+        ("checksum-mismatch", "member fingerprint mismatch"),
+        ("missing-embedded-manifest", "has no embedded manifest"),
+        ("duplicate-embedded-manifest", "duplicate embedded manifest"),
+        ("truncated-archive", "not a valid tar.gz"),
+    ],
+)
+def test_direct_store_upload_and_http_route_refuse_the_same_bundle_for_the_same_reason(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str, reason: str
+) -> None:
+    from fastapi.testclient import TestClient
+
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from tests.epics_monitor_stub import epics_app_for_store
+
+    manifest, blob = _parity_case(case)
+    direct_root = tmp_path / "direct"
+    direct_root.mkdir()
+    store, lease = _store(direct_root)
+    for _attempt in range(2):
+        with pytest.raises(ValueError, match=reason) as direct:
+            store.upload_rollover_bundle(lease, manifest=manifest, blob=blob)
+    assert store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+    api_root = tmp_path / "api"
+    api_root.mkdir()
+    api_store = SessionStreamStore(SessionStreamDatabase(api_root / "streams.sqlite3"))
+    refused: list[BaseException] = []
+    upload = api_store.upload_rollover_bundle
+
+    def recording_upload(*args: object, **kwargs: object) -> dict:
+        try:
+            return upload(*args, **kwargs)
+        except BaseException as exc:
+            refused.append(exc)
+            raise
+
+    monkeypatch.setattr(api_store, "upload_rollover_bundle", recording_upload)
+    client = TestClient(
+        epics_app_for_store(api_store, api_root), base_url="http://127.0.0.1", client=("127.0.0.1", 8765)
+    )
+    claim = client.post(
+        f"/api/epics/v1/{REGISTERED_STREAM}/claim",
+        json={
+            "session_id": "parity-session",
+            "lease_id": "parity-lease",
+            "lineage_id": "parity-lineage",
+            "agent": "claude",
+            "harness": "claude-cli",
+            "instance_id": "parity-instance",
+            "process_id": 1234,
+            "host_id": "parity-host",
+            "ttl_seconds": 900,
+        },
+    )
+    assert claim.status_code == 200, claim.text
+    response = client.post(
+        f"/api/epics/v1/{REGISTERED_STREAM}/bundles",
+        json={**claim.json()["lease"], "manifest": manifest, "blob": base64.b64encode(blob).decode("ascii")},
+    )
+
+    assert response.status_code == 400, response.text
+    assert [(type(exc), str(exc)) for exc in refused] == [(type(direct.value), str(direct.value))]
+    assert api_store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+
+def test_direct_store_upload_refuses_a_secret_bearing_member_leaving_no_row(tmp_path: Path) -> None:
+    store, lease = _store(tmp_path)
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra={HANDOFF_PATH: b"api-key: supersecret-value\n"})
+
+    with pytest.raises(ContentRejectedError, match="credential-assignment"):
+        store.upload_rollover_bundle(lease, manifest=manifest, blob=blob)
+    assert store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+
 class _AppTransport:
     """MonitorClient-shaped adapter that sends bundle traffic to the in-process API."""
 

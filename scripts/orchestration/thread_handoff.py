@@ -778,7 +778,9 @@ def _bundle_extract(
         with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as archive:
             for info in archive.getmembers():
                 if info.name == ROLLOVER_BUNDLE_MANIFEST_NAME:
-                    if manifest is not None or not info.isfile():
+                    if manifest is not None:
+                        raise ValueError("rollover bundle has a duplicate embedded manifest")
+                    if not info.isfile():
                         raise ValueError("bundle manifest is malformed")
                     raw_manifest = archive.extractfile(info)
                     if raw_manifest is None:
@@ -795,9 +797,11 @@ def _bundle_extract(
                 if payload is None:
                     raise ValueError("bundle member is unreadable")
                 members[name] = payload.read()
-    except (tarfile.TarError, OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+    except (tarfile.TarError, OSError, EOFError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise ValueError(f"rollover bundle is not a valid tar.gz: {exc}") from exc
-    if manifest is None or manifest.get("schema") != ROLLOVER_BUNDLE_SCHEMA:
+    if manifest is None:
+        raise ValueError("rollover bundle has no embedded manifest")
+    if manifest.get("schema") != ROLLOVER_BUNDLE_SCHEMA:
         raise ValueError("rollover bundle manifest schema is invalid")
     declared_files = manifest.get("files")
     if not isinstance(declared_files, list) or not declared_files:
@@ -833,12 +837,29 @@ def _bundle_extract(
     if manifest_override is not None:
         outer = dict(manifest_override)
         if outer.get("schema") != ROLLOVER_BUNDLE_SCHEMA or outer.get("bundle_sha256") != manifest.get("bundle_sha256"):
-            raise ValueError("API manifest does not match the bundle")
+            raise ValueError("supplied manifest does not match the embedded manifest")
         for key in ("agent", "stream_id", "lineage_id", "rollover_id", "generation", "status", "prepared_at"):
             if outer.get(key) != manifest.get(key):
-                raise ValueError(f"API manifest differs from bundle at {key}")
+                raise ValueError(f"supplied manifest differs from the embedded manifest at {key}")
         manifest = {**manifest, "upload_seq": outer.get("upload_seq", manifest.get("upload_seq", 0))}
         _bundle_order(manifest)
+    return manifest, members
+
+
+def verify_rollover_bundle(
+    blob: bytes, *, repo_root: Path, manifest_override: Mapping[str, Any] | None = None
+) -> tuple[dict[str, Any], dict[str, bytes]]:
+    """The one rollover bundle validation the importer and the bundle store both run.
+
+    Extracts the archive (exactly one embedded manifest; no duplicate,
+    normalized-duplicate, non-regular or unmanifested member; every member
+    matches its declared checksum; the bundle fingerprint verifies), binds a
+    supplied manifest's identity to the embedded one, and applies the
+    reject-by-default member allowlist.  Returns the embedded manifest and the
+    members; any refusal raises ``ValueError`` before the caller writes.
+    """
+    manifest, members = _bundle_extract(blob, manifest_override=manifest_override)
+    _bundle_check_members(repo_root, manifest=manifest, members=members)
     return manifest, members
 
 
@@ -6427,7 +6448,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     try:
         if args.file is not None:
             blob = args.file.expanduser().resolve().read_bytes()
-            manifest, members = _bundle_extract(blob)
+            manifest, members = verify_rollover_bundle(blob, repo_root=repo_root)
         else:
             stream_id = str(args.from_api)
             listed = _bundle_api_list(args, stream_id=stream_id, agent=agent)
@@ -6453,7 +6474,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                 raise RolloverBundleNotFound("bundle API has no matching bundle")
             sequence = upload_seq(max(own_rows, key=upload_seq))
             manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
-            manifest, members = _bundle_extract(blob, manifest_override=manifest)
+            manifest, members = verify_rollover_bundle(blob, repo_root=repo_root, manifest_override=manifest)
 
         if manifest.get("agent") != agent:
             raise ValueError("bundle agent does not match --agent")
