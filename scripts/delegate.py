@@ -13979,6 +13979,7 @@ def _dispatch(
         worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
         initial_state = {
             "pinned_head": pinned_head,
+            "pr": pr_number,
             "review_author_model": getattr(args, "review_author_model", None),
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),

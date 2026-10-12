@@ -29,7 +29,13 @@ from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
-from scripts.opsec.prepublish import absolute_path_spans, normalize_for_scan, publication_boundary, publication_cli
+from scripts.opsec.prepublish import (
+    absolute_path_spans,
+    normalize_for_scan,
+    normalize_repository,
+    publication_boundary,
+    publication_cli,
+)
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     REJECTED,
@@ -1244,10 +1250,21 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
             )
             if (
                 review
-                and task.get("repository") == repository
+                and isinstance(task.get("repository"), str)
+                and normalize_repository(task["repository"]) == normalize_repository(repository)
                 and task.get("status") in {"spawning", "running", "queued"}
                 and task.get("review_mode", "cross_family") != "red_team"
-                and sha in {task.get("pinned_head"), task.get("worktree_base_sha")}
+                and any(
+                    task.get(field) == sha
+                    for field in (
+                        "pinned_head",
+                        "worktree_base_sha",
+                        "review_head",
+                        "review_head_sha",
+                        "pr_head_sha",
+                        "head_sha",
+                    )
+                )
             ):
                 raise RecordError("RED_TEAM_REFUSED: outside-family review in flight for this head")
     except (OSError, ValueError, TypeError) as exc:
@@ -1258,6 +1275,7 @@ def require_no_branch_outside_rejection(
     repository: str, branch: str | None, sha: str, *, pr_number: int | None = None, task_root: Path | None = None
 ) -> None:
     """Check a resolvable PR at dispatch; a branch without a PR has no marker history."""
+    require_no_outside_review_in_flight(task_root or _repo_root() / "batch_state" / "tasks", repository, sha)
     if pr_number is None:
         if not branch:
             raise RecordError("RED_TEAM_REFUSED: review branch unavailable")
@@ -1299,7 +1317,6 @@ def require_no_branch_outside_rejection(
     except SweepError as exc:
         raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable") from exc
     require_no_outside_rejection(comments, sha)
-    require_no_outside_review_in_flight(task_root or _repo_root() / "batch_state" / "tasks", repository, sha)
 
 
 def _native_grok_reviewer_identity() -> tuple[str, list[str]]:

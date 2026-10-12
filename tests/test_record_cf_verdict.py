@@ -436,6 +436,27 @@ def test_red_team_outside_review_in_flight_publication_guard(monkeypatch, tmp_pa
         assert calls == {"posts": 1, "statuses": 1}
 
 
+@pytest.mark.parametrize("repository", ["OWNER/REPO", "owner/repo", "other/repo"])
+@pytest.mark.parametrize(
+    "head_field", ["pinned_head", "worktree_base_sha", "review_head", "review_head_sha", "pr_head_sha", "head_sha"]
+)
+def test_red_team_pr_only_review_head_fields_and_repository_match(monkeypatch, tmp_path, repository, head_field):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    updates = {"worktree_base_sha": None, head_field: SHA}
+    write_task(tasks, task_id="outside-review", repository=repository, pr=42, status="running", **updates)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    if repository != "other/repo":
+        with pytest.raises(
+            recorder.RecordError, match="RED_TEAM_REFUSED: outside-family review in flight for this head"
+        ):
+            recorder.record("review-one", **kwargs)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    else:
+        assert recorder.record("review-one", **kwargs)["status"] == "posted"
+        assert calls == {"posts": 1, "statuses": 1}
+
+
 @pytest.mark.parametrize("broken", ["missing", "invalid-json", "non-object", "read-error"])
 def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_path, broken):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)

@@ -2854,7 +2854,7 @@ def test_red_team_branch_task_and_preference_gate(
     assert args._red_team_branch_facts["author_task_ids"] == [author_id]
 
 
-@pytest.mark.parametrize("mode", [None, "red_team", "prompt-moved"])
+@pytest.mark.parametrize("mode", [None, "red_team", "prompt-moved", "pr-only"])
 def test_review_dispatch_record_binds_opt_in_and_default_has_no_new_fields(tmp_path, monkeypatch, capsys, mode):
     from tests.test_delegate import (
         _init_repo_with_worktree,
@@ -2884,12 +2884,25 @@ def test_review_dispatch_record_binds_opt_in_and_default_has_no_new_fields(tmp_p
         review_author_model="claude-opus-5-5",
         review_risk="critical",
     )
-    if mode:
+    if mode in {"red_team", "prompt-moved"}:
         args.review_mode = "red_team"
     # Pin real Git endpoints without a network read; this fixture reviews no authored changes.
     from scripts.review.target_resolution import resolve_branch_target
 
     target = resolve_branch_target(reviewer, "HEAD", "main")
+    if mode == "pr-only":
+        monkeypatch.chdir(reviewer)
+        args.pr = 42
+        args.cwd = None
+        args.worktree = "auto"
+        args.require_review_verdict = False
+        args.review_author_model = None
+        args.review_risk = None
+        monkeypatch.setattr(
+            "scripts.ai_agent_bridge._agy.resolve_same_repo_pr_head", lambda *_a, **_k: ("main", target.head_sha)
+        )
+        monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: "owner/repo")
+        monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_k: target.head_sha)
 
     def review_paths(argv):
         argv._review_target = target
@@ -2910,12 +2923,25 @@ def test_review_dispatch_record_binds_opt_in_and_default_has_no_new_fields(tmp_p
     import hashlib
 
     assert record["prompt_sha256"] == hashlib.sha256(prompt.read_bytes()).hexdigest()
-    if mode:
+    if mode == "red_team":
         assert record["review_mode"] == "red_team"
         assert record["review_branch_facts"]["author_task_ids"] == []
         assert record["review_branch_facts"]["head_sha"] == target.head_sha
     else:
         assert "review_mode" not in record and "review_branch_facts" not in record
+    if mode == "pr-only":
+        from scripts.review import record_cf_verdict as recorder
+
+        assert record["pr"] == 42
+        assert record["pinned_head"] == target.head_sha
+        assert not record["review"] and not record["require_review_verdict"]
+        assert record["review_profile"] is None and record["review_author_model"] is None
+        assert record["review_risk"] is None
+        record["status"] = "running"
+        (tasks / "review-record.json").write_text(json.dumps(record))
+        monkeypatch.setattr(recorder, "_run_json", lambda *_a, **_k: [])
+        with pytest.raises(recorder.RecordError, match="outside-family review in flight for this head"):
+            recorder.require_no_branch_outside_rejection("owner/repo", "main", target.head_sha, task_root=tasks)
 
 
 @pytest.mark.parametrize("flags", [("--language-lane",), ("--research-track", "l2-uk-en")])
@@ -3122,3 +3148,59 @@ def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatc
         assert refusal is not None and target is None
     else:
         assert refusal is None and target.model == "gpt-6.1-sol"
+
+
+@pytest.mark.parametrize("target_kind", ["branch", "pr"])
+@pytest.mark.parametrize("history", ["running", "done", "other-head", "red-team", "unreadable"])
+def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeypatch, target_kind, history):
+    from scripts.review import record_cf_verdict as recorder
+    from scripts.review.target_resolution import ReviewTarget
+    from tests.test_record_cf_verdict import BRANCH, OTHER, REPOSITORY, SHA, write_task
+
+    args = _args("--branch", BRANCH, "--review-profile", "code", "--review-mode", "red_team")
+    if target_kind == "pr":
+        args.branch = None
+        args.pr = 42
+    args._review_target = ReviewTarget(target_kind, OTHER, SHA, (), 0, True, "test target")
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    if history == "unreadable":
+        (tasks / "bad.json").write_text("{")
+    else:
+        write_task(
+            tasks,
+            task_id="outside-review",
+            pr=42,
+            pinned_head=OTHER if history == "other-head" else SHA,
+            worktree_base_sha=None,
+            status="done" if history == "done" else "running",
+            review_mode="red_team" if history == "red-team" else "cross_family",
+        )
+    before = {path.name: path.read_bytes() for path in tasks.iterdir()}
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    monkeypatch.setattr(
+        target_admission,
+        "resolve_and_admit",
+        lambda *_a, **_k: (SimpleNamespace(recipient="codex", model="gpt-6.1-sol"),),
+    )
+    monkeypatch.setattr(recorder, "_run_json", lambda *_a, **_k: [])
+    monkeypatch.setattr(recorder, "_pr", lambda *_a: {"number": 42, "headRefOid": SHA, "headRefName": BRANCH})
+    monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda *_a: [])
+
+    def no_effects(*_a, **_k):
+        pytest.fail("admission performed a launch, worktree or task publication side effect")
+
+    for name in ("_write_state_atomic", "_ensure_worktree"):
+        monkeypatch.setattr(delegate, name, no_effects)
+    monkeypatch.setattr(delegate.subprocess, "Popen", no_effects)
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    if history == "running":
+        assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head"
+        assert target is None
+    elif history == "unreadable":
+        assert refusal == "RED_TEAM_REFUSED: task ledger unavailable"
+        assert target is None
+    else:
+        assert refusal is None and target.model == "gpt-6.1-sol"
+    assert {path.name: path.read_bytes() for path in tasks.iterdir()} == before
