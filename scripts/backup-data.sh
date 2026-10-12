@@ -1375,7 +1375,7 @@ write_backup_receipt() {
     --argjson archived_count "${#SQLITE_ARCHIVED_SOURCES[@]}" \
     --argjson archives "$(jq -cn '$ARGS.positional' --args "${DB_ARCHIVES_USED[@]}")" \
     '$database_inventory[0] as $databases | {
-      schema_version: (if $linux_mode then 2 else 1 end),
+      schema_version: (if $linux_mode then 3 else 1 end),
       created_at_utc: $created_at,
       host: $host,
       git_sha: $git_sha,
@@ -1850,7 +1850,11 @@ run_restore() {
   receipt_json="$(restic_repository_command dump "$manifest_id" /BACKUP-RECEIPT.json)" ||
     die "Could not read BACKUP-RECEIPT.json from snapshot $manifest_id; refusing to restore."
   receipt_schema="$(jq -er '.schema_version' <<< "$receipt_json")" || die "Snapshot receipt is invalid JSON."
-  [[ "$receipt_schema" == 1 || "$receipt_schema" == 2 ]] || die "Unsupported restored receipt schema."
+  # Schema 3 marks runs whose databases may share one lu-part-db snapshot, so
+  # a script that predates shared snapshots refuses them before restoring.
+  # Schema 2 runs also restore through the shared-snapshot-aware plan below.
+  [[ "$receipt_schema" == 1 || "$receipt_schema" == 2 || "$receipt_schema" == 3 ]] ||
+    die "Unsupported restored receipt schema."
 
   if [[ "$receipt_schema" == 1 ]]; then
     step_ids+=("$manifest_id")

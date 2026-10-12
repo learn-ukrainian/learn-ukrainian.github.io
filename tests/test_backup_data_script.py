@@ -20,6 +20,8 @@ from tests._host_path_guard import FIXTURE_HOME
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = REPO_ROOT / "scripts" / "backup-data.sh"
+# Last base before database batching; its reader accepts receipt schemas 1 and 2 only.
+PRE_BATCHING_BASE_SHA = "7e639123fc2d8270e8f9bf78ba1ae66f5bb18359"
 
 
 def _write_executable(path: Path, content: str) -> None:
@@ -476,7 +478,7 @@ def test_linux_local_restic_round_trip_stages_one_db_at_a_time(
             assert connection.execute("SELECT COUNT(*) FROM recovery_probe").fetchone() == (1,)
     assert (target / "data" / "first.db").stat().st_mode & 0o777 == 0o600
     receipt = json.loads((target / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
-    assert receipt["schema_version"] == 2
+    assert receipt["schema_version"] == 3
     assert len(receipt["linux_run"]["databases"]) == 2
 
 
@@ -1482,8 +1484,8 @@ OTHER_ID = "c" * 64
 GIB = 1024**3
 
 
-def _write_fake_run(environment: dict[str, str]) -> Path:
-    """Publish a schema-2 run (manifest, base, two databases) in the fake repository."""
+def _write_fake_run(environment: dict[str, str], schema_version: int = 2) -> Path:
+    """Publish a Linux run (manifest, base, two databases) in the fake repository."""
     snapshot = Path(environment["FAKE_SNAPSHOT_DIR"])
     databases = {"data/atlas.db": ATLAS_ID, "data/other.db": OTHER_ID}
     for relative, snapshot_id in databases.items():
@@ -1494,7 +1496,7 @@ def _write_fake_run(environment: dict[str, str]) -> Path:
     (snapshot / "by-id" / BASE_ID / "data").mkdir(parents=True)
     (snapshot / "by-id" / BASE_ID / "data" / "notes.txt").write_text("base\n", encoding="utf-8")
     receipt = {
-        "schema_version": 2,
+        "schema_version": schema_version,
         "linux_run": {
             "run_id": "run-1",
             "base_snapshot_id": BASE_ID,
@@ -1611,6 +1613,33 @@ def test_restore_margin_is_configurable(
     invalid = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
     assert invalid.returncode != 0
     assert "LU_BACKUP_RESTORE_MARGIN_PERCENT" in invalid.stderr
+
+
+def test_restore_accepts_schema_3_and_rejects_an_unknown_schema_before_writing(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_fake_run(environment, schema_version=4)
+    _fake_free_space(environment, 50 * GIB)
+    target = tmp_path / "unknown-schema"
+
+    for mode in ((), ("--execute",)):
+        for scope in ((), ("--path", "data/atlas.db")):
+            rejected = _run(environment, "restore", MANIFEST_ID, "--to", str(target), *scope, *mode)
+            assert rejected.returncode != 0, (scope, mode)
+            assert "Unsupported restored receipt schema." in rejected.stderr, (scope, mode)
+            assert _restore_ids(environment) == [], (scope, mode)
+            assert not target.exists(), (scope, mode)
+
+    shutil.rmtree(Path(environment["FAKE_SNAPSHOT_DIR"]) / "by-id")
+    _write_fake_run(environment, schema_version=3)
+    accepted = _run(environment, "restore", MANIFEST_ID, "--to", str(target), "--execute")
+
+    assert accepted.returncode == 0, accepted.stderr
+    assert _restore_ids(environment) == [MANIFEST_ID, BASE_ID, ATLAS_ID, OTHER_ID]
+    assert (target / "data" / "atlas.db").is_file()
+    assert (target / "data" / "other.db").is_file()
 
 
 def test_restore_path_restores_one_database_snapshot(
@@ -2664,10 +2693,12 @@ def _backup_invocations(environment: dict[str, str]) -> list[str]:
     return [line.strip() for line in log.splitlines() if line.startswith("backup ")]
 
 
-def _many_database_fixture(project: Path) -> tuple[dict[str, str], dict[str, str]]:
+def _many_database_fixture(project: Path, fixture_runs: int = 30) -> tuple[dict[str, str], dict[str, str]]:
     """Representative recovery tree: many small fixture databases plus live ones."""
-    databases = [project / "data" / "sources.db", project / "data" / "atlas.db"]
-    databases += [project / "batch_state" / "fixtures" / f"run-{index:02d}" / "sources.db" for index in range(30)]
+    databases = [project / "data" / "corpus.db", project / "data" / "atlas.db"]
+    databases += [
+        project / "batch_state" / "fixtures" / f"run-{index:02d}" / "corpus.db" for index in range(fixture_runs)
+    ]
     databases += [
         project / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3",
         project / ".claude" / "atlas-epic" / "state.db",
@@ -2753,16 +2784,16 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
         "--to",
         str(scoped_target),
         "--path",
-        "batch_state/fixtures/run-07/sources.db",
+        "batch_state/fixtures/run-07/corpus.db",
         "--execute",
     )
     assert scoped.returncode == 0, scoped.stderr
     assert [path.relative_to(scoped_target).as_posix() for path in scoped_target.rglob("*") if path.is_file()] == [
-        "batch_state/fixtures/run-07/sources.db"
+        "batch_state/fixtures/run-07/corpus.db"
     ]
     assert (
-        _logical_sha256(scoped_target / "batch_state/fixtures/run-07/sources.db")
-        == database_hashes["batch_state/fixtures/run-07/sources.db"]
+        _logical_sha256(scoped_target / "batch_state/fixtures/run-07/corpus.db")
+        == database_hashes["batch_state/fixtures/run-07/corpus.db"]
     )
 
 
@@ -2861,38 +2892,50 @@ def test_receipt_inventory_larger_than_one_argument_is_recorded(
     assert _log(environment).count("arg=<lu-part-db>") == 1
 
 
-def test_restore_of_historical_one_snapshot_per_database_run_is_hash_matched(
-    backup_environment: tuple[dict[str, str], Path, Path, Path],
-    tmp_path: Path,
-) -> None:
-    environment, source, _staging, _legacy = backup_environment
-    _use_local_restic(environment, tmp_path)
-    project = source.parent
-    database_hashes, file_hashes = _many_database_fixture(project)
-    restic = [
-        environment["TEST_REAL_RESTIC"],
-        "-r",
-        environment["TEST_LOCAL_RESTIC_REPOSITORY"],
-        "--password-file",
-        environment["RESTIC_PASSWORD_FILE"],
-    ]
-    tags = ["--host", "learn-ukrainian", "--tag", "learn-ukrainian-data", "--tag", "lu-run-historical"]
+def _real_restic_snapshot(
+    environment: dict[str, str],
+    run_id: str,
+    cwd: Path,
+    *arguments: str,
+    stdin: bytes | None = None,
+) -> str:
+    """Write one snapshot of run ``run_id`` with the real restic CLI; return its ID."""
+    output = subprocess.run(
+        [
+            environment["TEST_REAL_RESTIC"],
+            "-r",
+            environment["TEST_LOCAL_RESTIC_REPOSITORY"],
+            "--password-file",
+            environment["RESTIC_PASSWORD_FILE"],
+            "backup",
+            *arguments,
+            "--host",
+            "learn-ukrainian",
+            "--tag",
+            "learn-ukrainian-data",
+            "--tag",
+            f"lu-run-{run_id}",
+            "--json",
+        ],
+        input=stdin,
+        cwd=cwd,
+        check=True,
+        capture_output=True,
+        timeout=60,
+    ).stdout.decode()
+    return next(json.loads(line) for line in output.splitlines() if '"summary"' in line)["snapshot_id"]
 
-    def snapshot(*arguments: str, stdin: bytes | None = None) -> str:
-        output = subprocess.run(
-            [*restic, "backup", *arguments, *tags, "--json"],
-            input=stdin,
-            cwd=project,
-            check=True,
-            capture_output=True,
-            timeout=60,
-        ).stdout.decode()
-        return next(json.loads(line) for line in output.splitlines() if '"summary"' in line)["snapshot_id"]
 
-    # The layout every completed run used before batching: one stdin snapshot per database.
-    excludes = tmp_path / "historical-excludes"
-    excludes.write_text("".join(f"{project / relative}\n" for relative in database_hashes), encoding="utf-8")
-    base_id = snapshot(
+def _real_restic_base_snapshot(
+    environment: dict[str, str], run_id: str, project: Path, databases: list[str], tmp_path: Path
+) -> str:
+    """The file-phase snapshot of a run: every recovery root minus its databases."""
+    excludes = tmp_path / f"{run_id}-excludes"
+    excludes.write_text("".join(f"{project / relative}\n" for relative in databases), encoding="utf-8")
+    return _real_restic_snapshot(
+        environment,
+        run_id,
+        project,
         "data",
         "batch_state",
         ".agent",
@@ -2904,9 +2947,45 @@ def test_restore_of_historical_one_snapshot_per_database_run_is_hash_matched(
         "--exclude",
         str(project / "batch_state" / "pytest-of-ops"),
     )
+
+
+def _real_restic_complete_snapshot(environment: dict[str, str], run_id: str, project: Path, receipt: dict) -> str:
+    return _real_restic_snapshot(
+        environment,
+        run_id,
+        project,
+        "--stdin",
+        "--stdin-filename",
+        "BACKUP-RECEIPT.json",
+        "--tag",
+        "lu-part-complete",
+        stdin=json.dumps(receipt).encode(),
+    )
+
+
+def _restored_files(target: Path) -> list[str]:
+    return sorted(path.relative_to(target).as_posix() for path in target.rglob("*") if path.is_file())
+
+
+def test_restore_of_historical_one_snapshot_per_database_run_is_hash_matched(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    # One restic process per database for both backup and restore, so a few
+    # databases across every recovery root keep the run inside the timeout.
+    database_hashes, file_hashes = _many_database_fixture(project, fixture_runs=3)
+
+    # The layout every completed run used before batching: one stdin snapshot per database.
+    base_id = _real_restic_base_snapshot(environment, "historical", project, list(database_hashes), tmp_path)
     inventory = []
     for relative in database_hashes:
-        database_id = snapshot(
+        database_id = _real_restic_snapshot(
+            environment,
+            "historical",
+            project,
             "--stdin",
             "--stdin-filename",
             relative,
@@ -2919,14 +2998,7 @@ def test_restore_of_historical_one_snapshot_per_database_run_is_hash_matched(
         "schema_version": 2,
         "linux_run": {"run_id": "historical", "base_snapshot_id": base_id, "databases": inventory},
     }
-    snapshot(
-        "--stdin",
-        "--stdin-filename",
-        "BACKUP-RECEIPT.json",
-        "--tag",
-        "lu-part-complete",
-        stdin=json.dumps(receipt).encode(),
-    )
+    _real_restic_complete_snapshot(environment, "historical", project, receipt)
 
     target = tmp_path / "restored-historical"
     restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
@@ -2943,9 +3015,99 @@ def test_restore_of_historical_one_snapshot_per_database_run_is_hash_matched(
     assert _logical_sha256(scoped_target / "data" / "atlas.db") == database_hashes["data/atlas.db"]
 
 
+def test_schema_2_run_with_a_shared_database_snapshot_restores_scoped_and_whole(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    database_hashes, file_hashes = _many_database_fixture(project)
+
+    # The layout the batching build wrote under schema 2: every database in one
+    # lu-part-db snapshot, uploaded from a private batch tree.
+    base_id = _real_restic_base_snapshot(environment, "shared", project, list(database_hashes), tmp_path)
+    batch = tmp_path / "db-batch"
+    for relative in database_hashes:
+        (batch / relative).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(project / relative, batch / relative)
+    shared_id = _real_restic_snapshot(
+        environment, "shared", batch, "data", "batch_state", ".agent", ".claude", "--force", "--tag", "lu-part-db"
+    )
+    receipt = {
+        "schema_version": 2,
+        "linux_run": {
+            "run_id": "shared",
+            "base_snapshot_id": base_id,
+            "databases": [{"path": relative, "snapshot_id": shared_id, "mode": "644"} for relative in database_hashes],
+        },
+    }
+    _real_restic_complete_snapshot(environment, "shared", project, receipt)
+
+    scoped_target = tmp_path / "restored-shared-one"
+    scoped = _run(environment, "restore", "latest", "--to", str(scoped_target), "--path", "data/atlas.db", "--execute")
+
+    assert scoped.returncode == 0, scoped.stderr
+    assert _restored_files(scoped_target) == ["data/atlas.db"]
+    assert _logical_sha256(scoped_target / "data" / "atlas.db") == database_hashes["data/atlas.db"]
+
+    target = tmp_path / "restored-shared"
+    restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+
+    assert restored.returncode == 0, restored.stderr
+    _assert_restored(target, database_hashes, file_hashes)
+
+
+def test_pre_batching_script_refuses_a_schema_3_run_before_restoring(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    _make_database(source / "first.db", "first")
+    _make_database(source.parent / "batch_state" / "second.db", "second")
+    backed_up = _run(environment, "backup", "--execute")
+    assert backed_up.returncode == 0, backed_up.stderr
+
+    old_script = tmp_path / "pre-batching-checkout" / "scripts" / "backup-data.sh"
+    old_script.parent.mkdir(parents=True)
+    old_script.write_bytes(
+        subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "show", f"{PRE_BATCHING_BASE_SHA}:scripts/backup-data.sh"],
+            check=True,
+            capture_output=True,
+            timeout=30,
+        ).stdout
+    )
+    old_script.chmod(0o700)
+
+    for name, scope in (("whole", ()), ("scoped", ("--path", "data/first.db"))):
+        target = tmp_path / f"old-reader-{name}"
+        refused = subprocess.run(
+            ["/bin/bash", str(old_script), "restore", "latest", "--to", str(target), *scope, "--execute"],
+            check=False,
+            capture_output=True,
+            env=environment,
+            text=True,
+            timeout=30,
+        )
+        assert refused.returncode != 0, name
+        assert "Unsupported restored receipt schema" in refused.stderr, (name, refused.stderr)
+        assert not target.exists() or _restored_files(target) == [], name
+
+    # The current script restores the same run.
+    current_target = tmp_path / "current-reader"
+    restored = _run(environment, "restore", "latest", "--to", str(current_target), "--execute")
+    assert restored.returncode == 0, restored.stderr
+    assert {"data/first.db", "batch_state/second.db", "data/ordinary.txt"} <= set(_restored_files(current_target))
+
+
+@pytest.mark.parametrize("schema_version", [2, 3])
 def test_restore_plans_a_shared_database_snapshot_once_and_scopes_it_literally(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
+    schema_version: int,
 ) -> None:
     environment, _source, _staging, _legacy = backup_environment
     snapshot = Path(environment["FAKE_SNAPSHOT_DIR"])
@@ -2954,7 +3116,7 @@ def test_restore_plans_a_shared_database_snapshot_once_and_scopes_it_literally(
         _make_database(snapshot / "by-id" / ATLAS_ID / relative)
     (snapshot / "by-id" / BASE_ID / "data").mkdir(parents=True)
     receipt = {
-        "schema_version": 2,
+        "schema_version": schema_version,
         "linux_run": {
             "run_id": "run-1",
             "base_snapshot_id": BASE_ID,
