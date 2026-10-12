@@ -663,14 +663,57 @@ def test_issue_link_sends_add_sub_issue_contract(tmp_path, monkeypatch):
     }
 
 
-def test_issue_link_already_linked_to_same_parent_is_idempotent(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    ("status", "type_", "message"),
+    [
+        pytest.param(
+            200,
+            "FORBIDDEN",
+            f"Resource not accessible: duplicate sub-issues {LEAKED_TOKEN}",
+            id="forbidden-200",
+        ),
+        pytest.param(
+            403,
+            "FORBIDDEN",
+            f"Resource not accessible: duplicate sub-issues {LEAKED_TOKEN}",
+            id="forbidden-403",
+        ),
+        pytest.param(
+            200,
+            "UNPROCESSABLE",
+            "Issue may not contain duplicate sub-issues",
+            id="duplicate-refusal",
+        ),
+        pytest.param(
+            200,
+            "UNPROCESSABLE",
+            "Issue is already a sub-issue of this parent: duplicate sub-issues",
+            id="same-parent-refusal",
+        ),
+        pytest.param(
+            200,
+            "UNPROCESSABLE",
+            "Sub issue may only have one parent: duplicate sub-issues",
+            id="other-parent-refusal",
+        ),
+    ],
+)
+def test_issue_link_duplicate_fragment_never_converts_refusal_to_success(tmp_path, monkeypatch, status, type_, message):
     result, calls = _publish_link(
         tmp_path,
         monkeypatch,
-        [_graphql_error("UNPROCESSABLE", "Issue may not contain duplicate sub-issues")],
+        [response({"data": {"addSubIssue": None}, "errors": [{"type": type_, "message": message}]}, status=status)],
     )
-    assert result.returncode == 0
-    assert json.loads(result.stdout) == {"already_linked": True}
+    assert result.returncode == 1
+    detail = json.loads(result.stderr)
+    assert detail == {
+        "error": "github_graphql_error",
+        "reset_at": None,
+        "errors": [{"type": type_, "message": message.replace(LEAKED_TOKEN, "[REDACTED]")}],
+    }
+    assert json.loads(result.stdout) == detail
+    assert LEAKED_TOKEN not in result.stdout + result.stderr
+    assert "already_linked" not in result.stdout + result.stderr
     # One request: the verb never escalates to replaceParent on its own.
     assert len(calls) == 1 and b"replaceParent" not in calls[0][3]
 

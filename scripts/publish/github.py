@@ -113,8 +113,6 @@ SCHEMAS = {
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
 WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}}
-# GitHub's addSubIssue message when the child is already a sub-issue of this parent.
-ALREADY_LINKED = "duplicate sub-issues"
 
 ENUMS = {
     "workflow": set(WORKFLOWS),
@@ -643,10 +641,6 @@ def publish(
             if reservation:
                 path, number, head, action, evidence = reservation
                 recovery.consume(path, dest, number, head, action, evidence)
-        # Linking is idempotent: GitHub's duplicate error means the child is
-        # already under this parent. Only the shared client applies it, so the
-        # whole-command runner seam never receives the extra option.
-        idempotent = {"accepted_graphql_message": ALREADY_LINKED} if verb == "issue-link" and runner is None else {}
         return _send(
             argv,
             environment=environment,
@@ -658,7 +652,6 @@ def publish(
             timeout=timeout,
             stdout=stdout,
             stderr=stderr,
-            **idempotent,
         )
 
 

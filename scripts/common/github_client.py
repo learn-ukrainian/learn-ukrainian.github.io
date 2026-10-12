@@ -1673,9 +1673,6 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     limit = kwargs.pop("max_response_bytes", None)
     if limit is not None and (type(limit) is not int or limit < 0):
         raise ValueError("invalid GitHub response byte limit")
-    accepted = kwargs.pop("accepted_graphql_message", None)
-    if accepted is not None and not (isinstance(accepted, str) and accepted):
-        raise ValueError("invalid accepted GraphQL message")
     if client is not None and limit is not None:
         from copy import copy
 
@@ -1793,9 +1790,6 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
         and result.error in {"github_http_error", "github_pr_not_found"}
     ):
         return _native_command(args, client, runner, kwargs)
-    if accepted and _only_graphql_message(result, accepted):
-        # The caller declared this error to mean "already in the requested state".
-        result = Result({"already_linked": True}, status=result.status, headers=result.headers)
     return _result_process(args, result, options, kwargs, api=args[1] == "api")
 
 
@@ -2167,19 +2161,6 @@ def _graphql_errors(value):
     """Return the response's ``errors`` entries; any other shape has none."""
     errors = value.get("errors") if isinstance(value, dict) else None
     return errors if isinstance(errors, list) else []
-
-
-def _only_graphql_message(result, fragment):
-    """True when every GraphQL error is an object whose message holds ``fragment``."""
-    if result.error != "github_graphql_error":
-        return False
-    errors = _graphql_errors(result.value)
-    return bool(errors) and all(
-        isinstance(entry, dict)
-        and isinstance(entry.get("message"), str)
-        and fragment.lower() in entry["message"].lower()
-        for entry in errors
-    )
 
 
 def _graphql_error_detail(value):
