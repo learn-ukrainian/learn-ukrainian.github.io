@@ -1,0 +1,219 @@
+{
+  "schema_version": "source-completeness-ledger.v1",
+  "created_at": "2026-10-12T21:57:09Z",
+  "phase": "1. Inventory and complete source data",
+  "parent_issues": [
+    8977,
+    9401,
+    10513
+  ],
+  "database_digests": {
+    "sources.db": {
+      "path": "data/sources.db",
+      "sha256": "c1442255f0f89a545724e0cb50fc5a02f7e59b1c6774cb144dccd740562643df",
+      "size_bytes": 6278787072
+    },
+    "vesum.db": {
+      "path": "data/vesum.db",
+      "sha256": "f640772e73b02dfcaf8e219938d22d2d91c9877294291b2f7f4145b3d7b20035",
+      "size_bytes": 2021486592
+    },
+    "sum20_slovnyk_staging.db": {
+      "path": "data/sum20_slovnyk_staging.db",
+      "sha256": "32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194",
+      "size_bytes": 908087296
+    }
+  },
+  "partitions": {
+    "verified-complete": [
+      {
+        "source_id": "vesum",
+        "edition": "VESUM morphological dictionary v2",
+        "snapshot_id": "vesum@53923150073b4fc7",
+        "canonical_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+        "schema_version": "vesum-reingest-v2",
+        "marker_policy_version": "v1",
+        "hidden_markers": [
+          "bad",
+          "obsc",
+          "subst"
+        ],
+        "counts": {
+          "forms_all": 6970759,
+          "forms_view": 6632807
+        },
+        "custody": "data/vesum.db",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Full paradigm coverage for standard Ukrainian forms and lemmas."
+      },
+      {
+        "source_id": "ulif_checked",
+        "edition": "Український лінгвістичний портал (ULIF) checked harvest",
+        "snapshot_id": "ulif@ulif-dictua-v2/2026-09-22..2026-09-27",
+        "parser_version": "ulif-dictua-v2",
+        "counts": {
+          "entries": 262812
+        },
+        "custody": "data/sources.db:ulif_dictua_entries",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "All 262,788 checked entries have status='ok'. Primary lexical registry."
+      },
+      {
+        "source_id": "sum20_slovnyk_staging",
+        "edition": "СУМ-20 (Словник української мови у 20 томах) Slovnyk.me complete mirror",
+        "snapshot_id": "sum20@slovnyk_me_20261012",
+        "counts": {
+          "articles": 164838
+        },
+        "custody": "data/sum20_slovnyk_staging.db:sum20_slovnyk_articles",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Contains 164,838 articles with structured senses (senses_json), definitions, grammar, and citations. 77.3% coverage of A1-B1 taught cohort. Used as staged mirror."
+      },
+      {
+        "source_id": "puls_cefr",
+        "edition": "PULS Ukrainian CEFR vocabulary specification",
+        "snapshot_id": "puls@sources.db/puls_cefr",
+        "counts": {
+          "total_rows": 5939,
+          "by_level": {
+            "A1": 962,
+            "A2": 1386,
+            "B1": 2164,
+            "B2": 1194,
+            "C1": 233
+          }
+        },
+        "custody": "data/sources.db:puls_cefr",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Normative CEFR vocabulary ratings across A1, A2, B1, B2, C1."
+      },
+      {
+        "source_id": "frazeolohichnyi",
+        "edition": "Фразеологічний словник української мови",
+        "snapshot_id": "frazeolohichnyi@sources.db",
+        "counts": {
+          "total_rows": 24683
+        },
+        "custody": "data/sources.db:frazeolohichnyi",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Idioms and multiword expressions with definitions and citations."
+      },
+      {
+        "source_id": "grinchenko",
+        "edition": "Словарь української мови (Б. Грінченко, 1907–1909)",
+        "snapshot_id": "grinchenko@sources.db",
+        "counts": {
+          "total_rows": 67275
+        },
+        "custody": "data/sources.db:grinchenko",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Historical Ukrainian vocabulary baseline, free from Soviet-era Russification."
+      },
+      {
+        "source_id": "wiktionary",
+        "edition": "Ukrainian Wiktionary parsed extract",
+        "snapshot_id": "wiktionary@sources.db",
+        "counts": {
+          "total_rows": 50278
+        },
+        "custody": "data/sources.db:wiktionary",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Supplementary multilingual glosses, pronunciation, and cross-references."
+      },
+      {
+        "source_id": "esum_etymology",
+        "edition": "Етимологічний словник української мови (ЕСУМ, томи 1–6)",
+        "snapshot_id": "esum@sources.db",
+        "counts": {
+          "total_rows": 36177
+        },
+        "custody": "data/sources.db:esum_etymology",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Historical etymology, cognates, and Slavic root reconstructions."
+      },
+      {
+        "source_id": "pedagogical_and_literary_corpora",
+        "edition": "Ukrainian School Textbooks (Gr 1-11) & Literary Corpus",
+        "snapshot_id": "textbooks_literary@sources.db",
+        "counts": {
+          "textbook_chunks": 54127,
+          "literary_chunks": 137723
+        },
+        "custody": "data/sources.db:textbooks,literary_texts",
+        "integrity_verified": true,
+        "disposition": "verified-complete",
+        "notes": "Authentic example sentence grounding and curriculum-aligned usage context."
+      }
+    ],
+    "missing": [
+      {
+        "source_id": "sum20_official",
+        "edition": "СУМ-20 Official Portal (sum20ua.com)",
+        "snapshot_id": "sum20@sum20ua.com/crawled",
+        "counts": {
+          "articles": 100,
+          "senses": 168
+        },
+        "custody": "data/sources.db:sum20_articles",
+        "disposition": "missing",
+        "gap_reason": "crawl_blocked_cloudflare_403",
+        "notes": "Official portal enforces Cloudflare 403 blocking and 10s crawl delay (21+ days duration). Only 100 articles indexed locally. Replaced in Phase 1 by sum20_slovnyk_staging mirror."
+      }
+    ],
+    "quarantined": [
+      {
+        "source_id": "sum11",
+        "edition": "Словник української мови в 11 томах (СУМ-11, 1970–1980)",
+        "snapshot_id": "sum11@sources.db",
+        "counts": {
+          "total_rows": 127069
+        },
+        "custody": "data/sources.db:sum11",
+        "disposition": "quarantined",
+        "restriction": "Sovietization contrast and Russification detection ONLY (Rule #M-6 / #8990)",
+        "notes": "Strictly forbidden from voting, normative glosses, or lexical assertions."
+      },
+      {
+        "source_id": "ulif_legacy_unverified",
+        "edition": "ULIF legacy unverified crawl (parser 1.0)",
+        "snapshot_id": "ulif@legacy/homonym_checked=0",
+        "counts": {
+          "total_rows": 6455
+        },
+        "custody": "data/sources.db:ulif_dictua_entries",
+        "disposition": "quarantined",
+        "restriction": "Legacy parser defects (6,446 not_found, 3 ok)",
+        "notes": "Never admitted as a source for word cards."
+      }
+    ],
+    "corrupt": [],
+    "genuinely-absent": [
+      {
+        "field_gap": "modern_slang_and_neologisms",
+        "disposition": "genuinely-absent",
+        "lexical_universe_effect": "Unrecorded in academic 20th-century dictionaries",
+        "named_field": "etymology_unattested"
+      },
+      {
+        "field_gap": "uncalibrated_cefr_levels",
+        "disposition": "genuinely-absent",
+        "lexical_universe_effect": "Words outside the 5,939 PULS calibrated vocabulary set",
+        "named_field": "cefr_unresolved"
+      },
+      {
+        "field_gap": "unattested_collocations",
+        "disposition": "genuinely-absent",
+        "lexical_universe_effect": "Collocations without textbook or literary citations",
+        "named_field": "collocations_unrecorded"
+      }
+    ]
+  }
+}
