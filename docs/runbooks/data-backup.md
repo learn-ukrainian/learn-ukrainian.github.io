@@ -99,7 +99,8 @@ restic rclone path with that final directory name.
   family's snapshots (`--tag "$BACKUP_TAG"`), groups them into runs by the
   `lu-run-<id>` tag each snapshot carries, applies
   `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` to completed runs (those
-  whose receipt snapshot exists), and forgets by explicit snapshot ID only the
+  with a `lu-part-complete` snapshot; a run with only its pending
+  `lu-part-receipt` snapshot is incomplete), and forgets by explicit snapshot ID only the
   snapshots of runs outside the keep set. A retained receipt therefore never
   loses a snapshot it references, and a partial newer run can never displace
   one: runs newer than the newest completed run are always kept. `prune` runs
@@ -107,11 +108,24 @@ restic rclone path with that final directory name.
   are never selected. It is a preview unless `--execute` is supplied and is
   scheduled weekly, not on every backup.
 - Restic commits snapshots atomically. A failed upload does not replace an
-  earlier recovery point. On Linux, a final receipt snapshot marks the run
-  complete; `restore latest` selects only completed runs. Every check that can
-  fail the run (the repository check, which covers every snapshot of the run,
-  and the runner-mirror comparison) runs before that receipt snapshot is
-  written, so a run that fails a check is never selected.
+  earlier recovery point. On Linux, a run is published in two phases. The
+  receipt is first uploaded as a pending `lu-part-receipt` snapshot with a
+  fixed `--time`. Then every step that can fail runs: the repository check
+  (which covers every snapshot of the run, including the pending receipt), the
+  upload-summary checks, the runner-mirror comparison, and staging of the local
+  gate receipt. Only then are the same receipt bytes uploaded again, at the
+  same time, tagged `lu-part-complete`. That upload reuses the checked tree
+  and adds only a snapshot file, and it is the run's last repository write.
+  `restore latest` selects only completed runs, so a run that fails or is
+  killed before that upload is never selected. No snapshot is ever retagged
+  or removed by a backup (`restic tag` rewrites snapshots and deletes the
+  originals, and reports per-snapshot failures with exit 0).
+- The repository check runs before the completion upload, so it cannot see
+  that snapshot file. If the file is later damaged, restic skips it when
+  listing snapshots. `restore latest` then selects the previous completed run.
+  The damaged run can still be restored by its pending `lu-part-receipt`
+  snapshot ID. The next backup's repository check fails, as do `verify` and
+  retention, so the damage is reported rather than silently trusted.
 
 Restic documents the [rclone backend][restic-rclone], [backup dry runs][restic-backup],
 [restore dry runs][restic-restore], and [repository integrity checks][restic-check].
@@ -249,11 +263,27 @@ check. This is distinct from the in-snapshot `BACKUP-RECEIPT.json`: it binds
 each current runner-mirror `manifest.json` checksum to the completed restic
 snapshot so the pre-wipe gate works without credentials or network access. On
 Linux, the script compares the runner-mirror file list and SHA-256 hashes in
-the live-file snapshot with the live mirror before it writes the receipt
-snapshot. After that snapshot, it writes the local gate receipt only if the
-live mirror still has the same hashes. If the mirror changes in that window,
-the run stays complete and restorable, but the command exits non-zero and
-writes no gate receipt, so the pre-wipe gate stays closed.
+the live-file snapshot with the live mirror after the repository check. It
+writes the gate receipt to `RESTIC-GATE-RECEIPT.json.tmp` beside its
+destination only if the live mirror still has those hashes. Any failure up to
+this point publishes nothing and removes the staged file. After the
+completion snapshot is saved, the script renames the staged file into place.
+Nothing else that can fail runs after that snapshot.
+
+The pre-wipe gate (`_require_restic_gate_receipt` in
+`scripts/lexicon/runner/durable_mirror.py`) checks the receipt's base
+snapshot ID, its freshness, and the manifest fingerprints. It does not check
+the completion tag, and it does not need to: a gate receipt can only appear
+after the completion snapshot exists. A mirror change after staging (while
+the completion snapshot uploads) leaves a receipt for the verified manifest
+only, so the gate refuses the changed mirror.
+
+**Accepted commit-follower window.** If the process is killed after the
+completion snapshot is saved, or the final rename fails, the run is verified,
+complete and restorable, but the command exits non-zero and no gate receipt
+is written. The live-mirror wipe stays blocked until a later backup succeeds.
+A kill can also leave the staged `.tmp` file, which the gate ignores and the
+next run overwrites.
 See [the Atlas runner durability runbook](atlas-20k-runner-durability.md) for
 the required snapshot → backup → gate → wipe order.
 

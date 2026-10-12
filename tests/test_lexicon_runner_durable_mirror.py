@@ -308,3 +308,69 @@ def test_build_manifest_rejects_symlinks(tmp_path: Path) -> None:
     (source / "linkdir").symlink_to(target, target_is_directory=True)
     with pytest.raises(DurableMirrorError, match="symlink"):
         build_manifest(source)
+
+
+def test_staged_restic_receipt_is_written_only_to_the_staged_path(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror-root" / "run-20k"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    staged = mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp"
+
+    assert (
+        main(
+            [
+                "write-restic-gate-receipt",
+                "--mirror-root",
+                str(mirror.parent),
+                "--restic-snapshot-id",
+                "a" * 64,
+                "--host",
+                "teacher",
+                "--git-sha",
+                "b" * 40,
+                "--staged-receipt-path",
+                str(staged),
+            ]
+        )
+        == 0
+    )
+
+    # Until the caller renames it into place, the gate has no receipt.
+    assert staged.is_file()
+    with pytest.raises(DurableMirrorError, match="no restic gate receipt"):
+        require_durable(mirror)
+    staged.replace(mirror.parent / "RESTIC-GATE-RECEIPT.json")
+    assert require_durable(mirror)["file_count"] == 4
+
+
+@pytest.mark.parametrize("name", ["RESTIC-GATE-RECEIPT.json", "elsewhere/RESTIC-GATE-RECEIPT.json.tmp"])
+def test_staged_restic_receipt_must_be_a_temporary_file_in_the_receipt_root(tmp_path: Path, name: str) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror-root" / "run-20k"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    (mirror.parent / "elsewhere").mkdir()
+
+    with pytest.raises(DurableMirrorError, match="staged restic gate receipt"):
+        write_restic_gate_receipt(
+            mirror.parent,
+            restic_snapshot_id="a" * 64,
+            host="teacher",
+            git_sha="b" * 40,
+            staged_receipt_path=mirror.parent / name,
+        )
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
+    assert not (mirror.parent / "elsewhere" / "RESTIC-GATE-RECEIPT.json.tmp").exists()
+
+
+def test_unwritable_restic_receipt_is_a_durable_mirror_error(tmp_path: Path) -> None:
+    source = tmp_path / "work"
+    mirror = tmp_path / "mirror-root" / "run-20k"
+    _populate(source)
+    snapshot(str(source), mirror, allow_live=True)
+    (mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp").mkdir()
+
+    with pytest.raises(DurableMirrorError, match="could not write restic gate receipt"):
+        _write_current_restic_receipt(mirror)
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
