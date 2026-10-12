@@ -656,10 +656,22 @@ def _bundle_handoff_candidates(repo_root: Path, stream_id: str) -> tuple[str, ..
 
 def _bundle_handoff_candidates_for_agent(repo_root: Path, stream_id: str, agent: str) -> tuple[str, ...]:
     """Resolve the inventory lane first, then the canonical agent-slug template."""
-    candidates = list(_bundle_handoff_candidates(repo_root, stream_id))
-    if agent.startswith("claude-"):
-        candidates.append(f".claude/{agent.removeprefix('claude-')}-epic/CLAUDE-DRIVER-HANDOFF.md")
-    return tuple(dict.fromkeys(candidates))
+    from agents_extensions.shared.session_streams.store import rollover_bundle_handoff_candidates
+
+    return rollover_bundle_handoff_candidates(_bundle_handoff_candidates(repo_root, stream_id), agent)
+
+
+def _bundle_check_members(repo_root: Path, *, manifest: Mapping[str, Any], members: Mapping[str, bytes]) -> None:
+    """Refuse the whole bundle unless every member is its own lineage file or its agent's handoff path."""
+    from agents_extensions.shared.session_streams.store import validate_rollover_bundle_members
+
+    agent = normalize_agent_name(str(manifest["agent"]))
+    validate_rollover_bundle_members(
+        members,
+        agent=agent,
+        lineage_id=normalize_lineage_id(str(manifest["lineage_id"])),
+        handoff_candidates=_bundle_handoff_candidates_for_agent(repo_root, str(manifest.get("stream_id") or ""), agent),
+    )
 
 
 def _bundle_source_members(
@@ -1072,8 +1084,7 @@ def _bundle_stage_install(
     files = {_bundle_member_path(name): payload for name, payload in members.items()}
     if not any(name.startswith(lineage_prefix) for name in files):
         raise ValueError("bundle has no lineage state members")
-    if any(name.startswith(".agent/thread-rollovers/") and not name.startswith(lineage_prefix) for name in files):
-        raise ValueError("bundle contains a foreign lineage member")
+    _bundle_check_members(repo_root, manifest=manifest, members=files)
     stage = f".agent/thread-rollovers/{agent}/.{lineage_id}.import-{uuid.uuid4().hex}"
     stage_root = state_root / stage
     staged_lineage = stage_root / "lineage"
@@ -1124,7 +1135,6 @@ def _bundle_commit_install(
     staged_lineage: Path,
     staged_repo: Mapping[str, Path],
     local_lineage_exists: bool,
-    install_handoff: bool = True,
     ledger: _BundleImportLedger | None = None,
 ) -> tuple[Path | None, list[str], dict[str, Any] | None]:
     """Commit and roll back using only descriptor-relative file operations."""
@@ -1156,8 +1166,6 @@ def _bundle_commit_install(
                 backup_complete = True
             handoff_candidates = set(_bundle_handoff_candidates_for_agent(repo_root, str(manifest["stream_id"]), agent))
             for name, source in sorted(staged_repo.items()):
-                if not install_handoff and name in handoff_candidates:
-                    continue
                 old_payload = repo.read_path(name)
                 repo_backups[name] = old_payload
                 installed = tree.read_path(source.relative_to(state_root).as_posix())
@@ -1469,15 +1477,16 @@ def _bundle_api_list(
     args: argparse.Namespace,
     *,
     stream_id: str,
+    agent: str,
     limit: int = 20,
 ) -> list[dict[str, Any]]:
-    """List bundle metadata in upload-sequence order without downloading blobs."""
+    """List one agent's bundle metadata in upload-sequence order without downloading blobs."""
     if limit < 1 or limit > 100:
         raise ValueError("bundle API list limit must be between 1 and 100")
     payload = _bundle_api_request(
         args.monitor_base_url,
         method="GET",
-        path=f"/api/epics/v1/{stream_id}/bundles?{urlencode({'limit': limit})}",
+        path=f"/api/epics/v1/{stream_id}/bundles?{urlencode({'agent': agent, 'limit': limit})}",
     )
     bundles = payload.get("bundles")
     if not isinstance(bundles, list) or not all(isinstance(bundle, dict) for bundle in bundles):
@@ -6286,12 +6295,13 @@ def _bundle_import_candidate(
     members: Mapping[str, bytes],
     blob: bytes,
     force: bool,
-    install_handoff: bool,
 ) -> dict[str, Any]:
-    """Install one bundle while keeping packet and lane precedence separate."""
+    """Install one bundle: its own lineage plus its own agent's handoff paths."""
     agent = normalize_agent_name(str(manifest.get("agent") or ""))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
     stream_id = str(manifest.get("stream_id") or "")
+    # Whole-bundle refusal before any read of local state or any write.
+    _bundle_check_members(repo_root, manifest=manifest, members=members)
     _bundle_validate_lease_member(
         state_root,
         agent=agent,
@@ -6345,14 +6355,7 @@ def _bundle_import_candidate(
                 },
             }
         if local_order == remote_order and (not force or remote_order[-1] >= 1):
-            handoff_names = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
-            remote_compare = {
-                name: payload for name, payload in members.items() if install_handoff or name not in handoff_names
-            }
-            local_compare = {
-                name: payload for name, payload in local_members.items() if install_handoff or name not in handoff_names
-            }
-            if local_compare == remote_compare and local_manifest.get("generation") == manifest.get("generation"):
+            if dict(local_members) == dict(members) and local_manifest.get("generation") == manifest.get("generation"):
                 return {
                     "status": "noop",
                     "reason": "identical bundle content",
@@ -6396,7 +6399,6 @@ def _bundle_import_candidate(
         staged_lineage=staged_lineage,
         staged_repo=staged_repo,
         local_lineage_exists=local_lineage_exists,
-        install_handoff=install_handoff,
         ledger=ledger,
     )
     result = {
@@ -6409,7 +6411,6 @@ def _bundle_import_candidate(
         "archived": str(archived.relative_to(state_root)) if archived is not None else None,
         "preserved_handoffs": preserved,
         "upload_seq": manifest.get("upload_seq", 0),
-        "install_handoff": install_handoff,
     }
     if stage_cleanup_warning is not None:
         result["cleanup_warning"] = stage_cleanup_warning
@@ -6423,19 +6424,13 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except (OSError, ValueError) as exc:
         return _bundle_import_error(str(exc))
 
-    candidates: list[tuple[dict[str, Any], dict[str, bytes], bytes]] = []
     try:
         if args.file is not None:
             blob = args.file.expanduser().resolve().read_bytes()
             manifest, members = _bundle_extract(blob)
-            if manifest.get("agent") != agent:
-                raise ValueError("bundle agent does not match --agent")
-            candidates.append((manifest, members, blob))
         else:
             stream_id = str(args.from_api)
-            listed = _bundle_api_list(args, stream_id=stream_id)
-            if not listed:
-                raise RolloverBundleNotFound("bundle API has no matching bundle")
+            listed = _bundle_api_list(args, stream_id=stream_id, agent=agent)
 
             def upload_seq(row: Mapping[str, Any]) -> int:
                 try:
@@ -6451,25 +6446,24 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                     raise ValueError("bundle API list manifest is malformed")
                 return str(manifest.get("agent") or "")
 
-            own_row = next((row for row in listed if row_agent(row) == agent), None)
-            handoff_row = max(listed, key=upload_seq)
-            selected_sequences = {upload_seq(row) for row in (own_row, handoff_row) if row is not None}
-            for row in listed:
-                sequence = upload_seq(row)
-                if sequence not in selected_sequences:
-                    continue
-                manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
-                manifest, members = _bundle_extract(blob, manifest_override=manifest)
-                candidates.append((manifest, members, blob))
+            # Only this handoff slot's own bundles are candidates; another
+            # slot's bundle never installs here, whatever its upload sequence.
+            own_rows = [row for row in listed if row_agent(row) == agent]
+            if not own_rows:
+                raise RolloverBundleNotFound("bundle API has no matching bundle")
+            sequence = upload_seq(max(own_rows, key=upload_seq))
+            manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
+            manifest, members = _bundle_extract(blob, manifest_override=manifest)
 
-        for manifest, _, _ in candidates:
-            stream_id = str(manifest.get("stream_id") or "")
-            if not stream_id:
-                raise ValueError("bundle stream_id is missing")
-            if args.from_api is not None and stream_id != str(args.from_api):
-                raise ValueError("bundle stream does not match --from-api")
-            if args.stream is not None and stream_id != str(args.stream):
-                raise ValueError("bundle stream does not match --stream")
+        if manifest.get("agent") != agent:
+            raise ValueError("bundle agent does not match --agent")
+        stream_id = str(manifest.get("stream_id") or "")
+        if not stream_id:
+            raise ValueError("bundle stream_id is missing")
+        if args.from_api is not None and stream_id != str(args.from_api):
+            raise ValueError("bundle stream does not match --from-api")
+        if args.stream is not None and stream_id != str(args.stream):
+            raise ValueError("bundle stream does not match --stream")
     except RolloverBundleAPIUnavailable as exc:
         print(f"WARNING: rollover bundle import skipped (fail-open): {exc}", file=sys.stderr)
         print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, separators=(",", ":")))
@@ -6482,23 +6476,15 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except (OSError, ValueError, KeyError, TypeError) as exc:
         return _bundle_import_error(str(exc))
 
-    handoff_winner = (
-        max(candidates, key=lambda item: int(item[0].get("upload_seq", 0))) if len(candidates) > 1 else None
-    )
-    results: list[dict[str, Any]] = []
     try:
-        for candidate in candidates:
-            results.append(
-                _bundle_import_candidate(
-                    repo_root,
-                    state_root,
-                    manifest=candidate[0],
-                    members=candidate[1],
-                    blob=candidate[2],
-                    force=args.force,
-                    install_handoff=handoff_winner is None or candidate is handoff_winner,
-                )
-            )
+        result = _bundle_import_candidate(
+            repo_root,
+            state_root,
+            manifest=manifest,
+            members=members,
+            blob=blob,
+            force=args.force,
+        )
     except BundleReconcileRefused as exc:
         message = str(exc) if "leftovers:" in str(exc) else f"{exc}; leftovers: []"
         print(json.dumps({"status": "refused", "code": exc.code, "error": message, "action": "import-bundle"}))
@@ -6506,21 +6492,8 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except Exception as exc:
         return _bundle_import_error(str(exc))
 
-    if len(results) == 1:
-        result = results[0]
-    else:
-        statuses = {item["status"] for item in results}
-        aggregate_status = next((status for status in ("refused", "warning", "installed") if status in statuses), "noop")
-        result = {
-            "status": aggregate_status,
-            "agent": agent,
-            "stream_id": str(args.from_api),
-            "bundles": results,
-            "handoff_source": handoff_winner[0].get("agent") if handoff_winner is not None else None,
-            "handoff_upload_seq": handoff_winner[0].get("upload_seq", 0) if handoff_winner is not None else None,
-        }
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 2 if any(item["status"] == "refused" for item in results) else 0
+    return 2 if result["status"] == "refused" else 0
 
 
 def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> dict[str, Any]:
@@ -7321,7 +7294,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=os.environ.get("SESSION_HANDOFF_AGENT", DEFAULT_AGENT),
     )
     import_source = import_bundle.add_mutually_exclusive_group(required=True)
-    import_source.add_argument("--from-api", metavar="STREAM", help="Fetch the latest bundle for this stream.")
+    import_source.add_argument(
+        "--from-api", metavar="STREAM", help="Fetch this --agent slot's latest bundle for this stream."
+    )
     import_source.add_argument("--file", type=Path, help="Read a local/scp/rsync .tgz bundle.")
     import_bundle.add_argument("--stream", help="Expected stream id for a file import.")
     import_bundle.add_argument("--force", action="store_true", help="Archive a newer local copy before installing.")

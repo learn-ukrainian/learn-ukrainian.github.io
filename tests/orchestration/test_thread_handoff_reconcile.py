@@ -237,8 +237,9 @@ _BUNDLE_CALLS = {
         "tree.read_path", "tree.write_path", "utc_now", "utc_now().strftime",
     },
     "_bundle_stage_install": {
-        "ValueError", "_BundleImportLedger", "_BundleReconcileTree", "_bundle_member_path", "_bundle_rewrite",
-        "_bundle_text_member", "_bundle_typed_failure", "any", "files.items", "isinstance", "members.items",
+        "ValueError", "_BundleImportLedger", "_BundleReconcileTree", "_bundle_check_members", "_bundle_member_path",
+        "_bundle_rewrite", "_bundle_text_member", "_bundle_typed_failure", "any", "files.items", "isinstance",
+        "members.items",
         "name.removeprefix", "name.startswith", "normalize_agent_name", "normalize_lineage_id", "str",
         "tree.new_directory", "tree.remove_path", "tree.write_path", "uuid.uuid4",
     },
@@ -269,12 +270,11 @@ _BUNDLE_CALLS = {
         "sorted", "str", "tree.directory", "tree.release", "tree.write",
     },
     "_bundle_import_candidate": {
-        "_BundleReconcileTree", "_bundle_commit_install", "_bundle_handoff_candidates_for_agent",
+        "_BundleReconcileTree", "_bundle_check_members", "_bundle_commit_install",
         "_BundleImportLedger", "_bundle_capture_baseline", "_bundle_local_lineage_snapshot", "_bundle_order",
         "_bundle_preserve_tie", "_bundle_stage_install", "_bundle_typed_failure",
-        "_bundle_validate_lease_member", "archived.relative_to", "isoformat_z", "local_manifest.get",
-        "local_members.items", "manifest.get", "members.items", "normalize_agent_name",
-        "normalize_lineage_id", "set", "str",
+        "_bundle_validate_lease_member", "archived.relative_to", "dict", "isoformat_z", "local_manifest.get",
+        "manifest.get", "normalize_agent_name", "normalize_lineage_id", "str",
     },
 }
 # Explicit call sets for the recursively admitted local helpers. Imported
@@ -382,8 +382,11 @@ _BUNDLE_HELPER_CALLS = {
         'data.decode', 'repo_root.resolve', 'state_root.resolve', 'str', 'text.encode', 'text.replace',
     },
     '_bundle_handoff_candidates_for_agent': {
-        '_bundle_handoff_candidates', 'agent.removeprefix', 'agent.startswith', 'candidates.append',
-        'dict.fromkeys', 'list', 'tuple',
+        '_bundle_handoff_candidates', 'rollover_bundle_handoff_candidates',
+    },
+    '_bundle_check_members': {
+        '_bundle_handoff_candidates_for_agent', 'manifest.get', 'normalize_agent_name', 'normalize_lineage_id',
+        'str', 'validate_rollover_bundle_members',
     },
     '_bundle_handoff_candidates': {
         'epic_handoff_map', 'epic_handoff_map(repo_root).get', 'tuple',

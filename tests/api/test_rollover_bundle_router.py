@@ -13,10 +13,17 @@ import pytest
 from fastapi.testclient import TestClient
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.inventory import stream_anchor_id
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.orchestration import thread_handoff as th
 from tests.epics_monitor_stub import epics_app_for_store
+
+# Uploads bind the bundle agent to the lease holder's handoff slot, so they use a
+# registered stream and that stream's slot (claude on the infra stream -> claude-infra),
+# resolved from issue_streams.yaml so epic succession needs no edit.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+STREAM = stream_anchor_id("infra-harness", REPO_ROOT)
 
 
 def _client(tmp_path: Path, monkeypatch) -> TestClient:
@@ -25,16 +32,16 @@ def _client(tmp_path: Path, monkeypatch) -> TestClient:
     return TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 8765))
 
 
-def _claim(client: TestClient) -> dict:
+def _claim(client: TestClient, *, stream: str = STREAM, agent: str = "claude", suffix: str = "") -> dict:
     response = client.post(
-        "/api/epics/v1/epic:7178/claim",
+        f"/api/epics/v1/{stream}/claim",
         json={
-            "session_id": "bundle-session",
-            "lease_id": "bundle-lease",
+            "session_id": f"bundle-session{suffix}",
+            "lease_id": f"bundle-lease{suffix}",
             "lineage_id": "bundle-lineage",
-            "agent": "codex",
-            "harness": "codex-cli",
-            "instance_id": "bundle-instance",
+            "agent": agent,
+            "harness": f"{agent}-cli",
+            "instance_id": f"bundle-instance{suffix}",
             "process_id": 1234,
             "host_id": "api-host",
             "ttl_seconds": 900,
@@ -53,13 +60,15 @@ def _bundle(
     prepared_at: str = "2026-08-24T16:00:00Z",
     lineage_id: str = "bundle-lineage",
     generation: int = 3,
+    stream: str = STREAM,
+    extra: dict[str, bytes] | None = None,
 ) -> tuple[dict, bytes]:
     name = f".agent/thread-rollovers/{agent}/{lineage_id}/generation-{generation:04d}/{rollover_id}/handoff.md"
-    members = {name: body}
+    members = {name: body, **(extra or {})}
     manifest = {
         "schema": "rollover-bundle.v1",
         "agent": agent,
-        "stream_id": "epic:7178",
+        "stream_id": stream,
         "lineage_id": lineage_id,
         "rollover_id": rollover_id,
         "generation": generation,
@@ -69,18 +78,26 @@ def _bundle(
         "exported_at": "2026-08-24T16:00:00Z",
         "files": [
             {
-                "path": name,
-                "sha256": hashlib.sha256(body).hexdigest(),
-                "bytes": len(body),
-                "tokenized": True,
+                "path": path,
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "bytes": len(payload),
+                "tokenized": th._bundle_text_member(path),
             }
+            for path, payload in sorted(members.items())
         ],
-        "tokenized_members": [name],
+        "tokenized_members": sorted(path for path in members if th._bundle_text_member(path)),
         "upload_seq": 0,
         "bundle_sha256": "",
     }
     manifest["bundle_sha256"] = th._bundle_digest(members, manifest)
     return manifest, th._bundle_archive(members, manifest)
+
+
+def _post(client: TestClient, lease: dict, manifest: dict, blob: bytes, *, stream: str = STREAM):
+    return client.post(
+        f"/api/epics/v1/{stream}/bundles",
+        json={**lease, "manifest": manifest, "blob": base64.b64encode(blob).decode("ascii")},
+    )
 
 
 def test_bundle_upload_list_latest_idempotency_and_secret_refusal(tmp_path: Path, monkeypatch) -> None:
@@ -89,28 +106,28 @@ def test_bundle_upload_list_latest_idempotency_and_secret_refusal(tmp_path: Path
     manifest, blob = _bundle(rollover_id="rollover-api1", body=b"safe handoff\n")
     request = {**lease, "manifest": manifest, "blob": base64.b64encode(blob).decode("ascii")}
 
-    uploaded = client.post("/api/epics/v1/epic:7178/bundles", json=request)
+    uploaded = client.post(f"/api/epics/v1/{STREAM}/bundles", json=request)
     assert uploaded.status_code == 200, uploaded.text
     assert uploaded.json()["upload_seq"] == 1
-    replay = client.post("/api/epics/v1/epic:7178/bundles", json=request)
+    replay = client.post(f"/api/epics/v1/{STREAM}/bundles", json=request)
     assert replay.status_code == 200
     assert replay.json()["upload_seq"] == 1
 
-    listed = client.get("/api/epics/v1/epic:7178/bundles", params={"agent": "claude-infra"})
+    listed = client.get(f"/api/epics/v1/{STREAM}/bundles", params={"agent": "claude-infra"})
     assert listed.status_code == 200
     assert len(listed.json()["bundles"]) == 1
     assert "blob" not in listed.json()["bundles"][0]
 
-    latest = client.get("/api/epics/v1/epic:7178/bundles/latest", params={"agent": "claude-infra"})
+    latest = client.get(f"/api/epics/v1/{STREAM}/bundles/latest", params={"agent": "claude-infra"})
     assert latest.status_code == 200
     assert latest.json()["manifest"]["upload_seq"] == 1
     assert base64.b64decode(latest.json()["blob"]) == blob
 
-    by_sequence = client.get("/api/epics/v1/epic:7178/bundles/1")
+    by_sequence = client.get(f"/api/epics/v1/{STREAM}/bundles/1")
     assert by_sequence.status_code == 200
     assert by_sequence.json()["manifest"]["upload_seq"] == 1
     assert base64.b64decode(by_sequence.json()["blob"]) == blob
-    missing_sequence = client.get("/api/epics/v1/epic:7178/bundles/99")
+    missing_sequence = client.get(f"/api/epics/v1/{STREAM}/bundles/99")
     assert missing_sequence.status_code == 404
 
     secret_manifest, secret_blob = _bundle(
@@ -118,7 +135,7 @@ def test_bundle_upload_list_latest_idempotency_and_secret_refusal(tmp_path: Path
         body=b"api-key: secret-value\n",
     )
     secret_response = client.post(
-        "/api/epics/v1/epic:7178/bundles",
+        f"/api/epics/v1/{STREAM}/bundles",
         json={**lease, "manifest": secret_manifest, "blob": base64.b64encode(secret_blob).decode("ascii")},
     )
     assert secret_response.status_code == 400
@@ -126,7 +143,6 @@ def test_bundle_upload_list_latest_idempotency_and_secret_refusal(tmp_path: Path
 
 def test_bundle_latest_without_agent_selects_highest_order_across_agents(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
-    lease = _claim(client)
 
     own_manifest, own_blob = _bundle(
         rollover_id="rollover-grok-newer",
@@ -142,14 +158,17 @@ def test_bundle_latest_without_agent_selects_highest_order_across_agents(tmp_pat
         lineage_id="claude-lineage",
         generation=3,
     )
-    for manifest, blob in ((own_manifest, own_blob), (foreign_manifest, foreign_blob)):
-        response = client.post(
-            "/api/epics/v1/epic:7178/bundles",
-            json={**lease, "manifest": manifest, "blob": base64.b64encode(blob).decode("ascii")},
-        )
+    # Each provider publishes only its own slot, so each upload runs under its own lease.
+    for index, (holder, manifest, blob) in enumerate(
+        (("grok", own_manifest, own_blob), ("claude", foreign_manifest, foreign_blob))
+    ):
+        lease = _claim(client, agent=holder, suffix=f"-{index}")
+        response = _post(client, lease, manifest, blob)
         assert response.status_code == 200, response.text
+        released = client.post(f"/api/epics/v1/{STREAM}/release", json=lease)
+        assert released.status_code == 200, released.text
 
-    latest = client.get("/api/epics/v1/epic:7178/bundles/latest")
+    latest = client.get(f"/api/epics/v1/{STREAM}/bundles/latest")
     assert latest.status_code == 200, latest.text
     assert latest.json()["manifest"]["agent"] == "grok-infra"
     assert latest.json()["manifest"]["generation"] == 4
@@ -167,7 +186,7 @@ def test_bundle_upload_allows_status_evolution_and_rejects_same_tuple_contradict
         "manifest": pending_manifest,
         "blob": base64.b64encode(pending_blob).decode("ascii"),
     }
-    pending = client.post("/api/epics/v1/epic:7178/bundles", json=pending_request)
+    pending = client.post(f"/api/epics/v1/{STREAM}/bundles", json=pending_request)
     assert pending.status_code == 200
     assert pending.json()["upload_seq"] == 1
 
@@ -177,7 +196,7 @@ def test_bundle_upload_allows_status_evolution_and_rejects_same_tuple_contradict
         status="started",
     )
     started = client.post(
-        "/api/epics/v1/epic:7178/bundles",
+        f"/api/epics/v1/{STREAM}/bundles",
         json={
             **lease,
             "manifest": started_manifest,
@@ -192,7 +211,7 @@ def test_bundle_upload_allows_status_evolution_and_rejects_same_tuple_contradict
         body=b"different\n",
     )
     contradiction = client.post(
-        "/api/epics/v1/epic:7178/bundles",
+        f"/api/epics/v1/{STREAM}/bundles",
         json={
             **lease,
             "manifest": contradiction_manifest,
@@ -202,7 +221,7 @@ def test_bundle_upload_allows_status_evolution_and_rejects_same_tuple_contradict
     assert contradiction.status_code == 409
 
     latest = client.get(
-        "/api/epics/v1/epic:7178/bundles/latest",
+        f"/api/epics/v1/{STREAM}/bundles/latest",
         params={"agent": "claude-infra", "lineage_id": "bundle-lineage"},
     )
     assert latest.status_code == 200
@@ -335,7 +354,81 @@ def test_bundle_upload_enforces_four_mib_cap(tmp_path: Path, monkeypatch) -> Non
     client = _client(tmp_path, monkeypatch)
     lease = _claim(client)
     response = client.post(
-        "/api/epics/v1/epic:7178/bundles",
+        f"/api/epics/v1/{STREAM}/bundles",
         json={**lease, "manifest": {}, "blob": base64.b64encode(b"x" * (4 * 1024 * 1024 + 1)).decode("ascii")},
     )
     assert response.status_code == 400
+
+
+@pytest.mark.parametrize(
+    ("stream_key", "holder", "agent", "accepted"),
+    [
+        ("infra-harness", "claude", "claude-infra", True),
+        ("infra-harness", "claude", "claude-devops", False),
+        ("infra-harness", "claude", "grok-infra", False),
+        ("devops", "claude", "claude-devops", True),
+        ("devops", "claude", "claude-infra", False),
+        ("curriculum-upgrade", "claude", "claude-core", True),
+        ("curriculum-upgrade", "claude", "claude-curriculum-upgrade", False),
+    ],
+)
+def test_bundle_upload_binds_agent_to_holder_slot_for_the_stream(
+    tmp_path: Path, monkeypatch, stream_key: str, holder: str, agent: str, accepted: bool
+) -> None:
+    stream = stream_anchor_id(stream_key, REPO_ROOT)
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client, stream=stream, agent=holder)
+    manifest, blob = _bundle(rollover_id="rollover-slot", body=b"slot packet\n", agent=agent, stream=stream)
+
+    response = _post(client, lease, manifest, blob, stream=stream)
+
+    assert response.status_code == (200 if accepted else 400), response.text
+    listed = client.get(f"/api/epics/v1/{stream}/bundles")
+    assert listed.status_code == 200, listed.text
+    assert len(listed.json()["bundles"]) == (1 if accepted else 0)
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        "README.md",
+        "scripts/start-example-launcher.sh",
+        ".claude/infra-epic/notes.sh",
+        ".git/config",
+        ".claude/other-epic/CLAUDE-DRIVER-HANDOFF.md",
+        "docs/session-state/current.md",
+        ".claude/infra-epic/CLAUDE-DRIVER-HANDOFF.md.bak",
+        ".agent/thread-rollovers/claude-infra/bundle-lineage-extra/lease.json",
+    ],
+)
+def test_bundle_upload_with_member_outside_lineage_and_handoffs_leaves_no_row(
+    tmp_path: Path, monkeypatch, extra: str
+) -> None:
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)
+    manifest, blob = _bundle(rollover_id="rollover-extra", body=b"packet\n", extra={extra: b"extra\n"})
+
+    response = _post(client, lease, manifest, blob)
+
+    assert response.status_code == 400, response.text
+    listed = client.get(f"/api/epics/v1/{STREAM}/bundles")
+    assert listed.status_code == 200, listed.text
+    assert listed.json()["bundles"] == []
+
+
+def test_bundle_upload_with_every_own_handoff_candidate_is_accepted(tmp_path: Path, monkeypatch) -> None:
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)
+    candidates = th._bundle_handoff_candidates_for_agent(REPO_ROOT, STREAM, "claude-infra")
+    assert len(candidates) >= 3
+    manifest, blob = _bundle(
+        rollover_id="rollover-candidates",
+        body=b"packet\n",
+        extra={candidate: f"handoff {candidate}\n".encode() for candidate in candidates},
+    )
+
+    response = _post(client, lease, manifest, blob)
+
+    assert response.status_code == 200, response.text
+    listed = client.get(f"/api/epics/v1/{STREAM}/bundles", params={"agent": "claude-infra"})
+    assert len(listed.json()["bundles"]) == 1
