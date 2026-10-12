@@ -222,8 +222,12 @@ concurrent non-database writes can change the actual uploaded byte counts.
 
 The Linux receipt also lists each database's relative path, snapshot ID, and
 mode, the live-file snapshot ID, and an optional patch snapshot ID. Databases
-uploaded in one batch share a snapshot ID; runs made before batching have one
-snapshot per database, and both restore the same way. All parts share
+uploaded in one batch share a snapshot ID, and the Linux receipt carries
+`schema_version: 3` to mark that layout (macOS receipts stay schema 1).
+Restore any run with the current repository script. Older scripts refuse a
+schema 3 receipt before restoring anything. The current script also restores
+both schema 2 layouts: runs written by the batching build (shared database
+snapshots) and historical runs with one snapshot per database. All parts share
 one run ID, and the final receipt snapshot is tagged `lu-part-complete`.
 `restore latest` uses that completed receipt to reassemble the tree, restoring
 each database snapshot once; `--path` of one database restores only that file
