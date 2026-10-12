@@ -18,8 +18,16 @@ function readOptionalJson(root: string, relativePath: string): unknown {
   return existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : undefined;
 }
 
+let cachedStatus: LexiconRuntimeStatus | null = null;
+
+export function resetCommittedLexiconRuntimeStatusForTests(): void {
+  cachedStatus = null;
+}
+
 /** Build runtime status from committed public projections, without atlas.db. */
 export function buildCommittedLexiconRuntimeStatus(root = process.cwd()): LexiconRuntimeStatus {
+  if (cachedStatus) return cachedStatus;
+
   const searchIndex = readJson(root, "src/data/lexicon-search-index.json");
   const searchAliases = readJson(root, "src/data/lexicon-search-aliases.json");
   const practiceIndexes: Partial<Record<PracticeLevel, unknown>> = {};
@@ -27,8 +35,7 @@ export function buildCommittedLexiconRuntimeStatus(root = process.cwd()): Lexico
     practiceIndexes[level] = readOptionalJson(root, `public/lexicon/practice-index.${level}.json`);
   }
 
-  return buildLexiconRuntimeStatus({
-    manifest: readOptionalJson(root, "src/data/lexicon-manifest.json"),
+  cachedStatus = buildLexiconRuntimeStatus({
     manifestPointer: readJson(root, "src/data/lexicon-manifest.pointer.json"),
     searchIndex,
     searchAliases,
@@ -40,4 +47,5 @@ export function buildCommittedLexiconRuntimeStatus(root = process.cwd()): Lexico
     clozeSources: readJson(root, "src/data/lexicon-practice-cloze-sources.json"),
     reviewedSources: readJson(root, "src/data/lexicon-practice-reviewed-sources.json"),
   });
+  return cachedStatus;
 }
