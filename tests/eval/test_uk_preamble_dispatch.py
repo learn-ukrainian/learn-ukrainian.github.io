@@ -127,9 +127,10 @@ def _calls(state: Path) -> list[list[str]]:
         ),
     ],
 )
+@pytest.mark.parametrize("shape", ["nested", "top-level"])
 @pytest.mark.parametrize("reported_form", ["absent", "pin", "display", "backend"])
 def test_matching_agy_parse_passes_eval_identity_check(
-    tmp_path: Path, seat_key: str, pin: str, display_label: str, backend_id: str, reported_form: str
+    tmp_path: Path, seat_key: str, pin: str, display_label: str, backend_id: str, reported_form: str, shape: str
 ):
     seat = replace(SEATS[seat_key], agent="agy", model=pin)
     reported_model = {"absent": None, "pin": pin, "display": display_label, "backend": backend_id}[reported_form]
@@ -154,7 +155,7 @@ def test_matching_agy_parse_passes_eval_identity_check(
     )
     init = {"event": "init", "conversation_id": conversation_id}
     if reported_model is not None:
-        init["model"] = reported_model
+        init.update({"init": {"model": reported_model}} if shape == "nested" else {"model": reported_model})
     stdout = "\n".join(
         [
             json.dumps(init),

@@ -1186,6 +1186,14 @@ class AgyAdapter:
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
             agy_attempt=attempt,
             substitution=model_identity if not result.ok and model_identity["actual_model_known"] else None,
+            model_identity={
+                "actual_model": model_identity["actual_model"],
+                "actual_model_known": model_identity["actual_model_known"],
+                "source": model_identity["source"],
+                "substituted": model_identity["substituted"],
+            }
+            if model_identity["source"] == "provider-init"
+            else None,
         )
 
     def _parse_response(
@@ -2034,6 +2042,11 @@ def _stream_result(
     """Read exactly one terminal result from AGY's NDJSON event stream."""
     result: dict[str, Any] | None = None
     expected_model = plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None
+    try:
+        resolved_expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
+    except ValueError:
+        resolved_expected = None
+    check_identity = resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
     for line in stdout.split("\n"):
@@ -2045,29 +2058,29 @@ def _stream_result(
             return None, "agy_stream_output_invalid: malformed NDJSON event"
         if not isinstance(event, dict) or not isinstance(event.get("event"), str):
             return None, "agy_stream_output_invalid: malformed NDJSON event"
-        if event["event"] == "init" and event.get("model") not in (None, ""):
-            provider_model = event["model"]
-            if not isinstance(provider_model, str):
-                return None, "agy_model_event_mismatch"
-            try:
-                resolved_provider = AgyAdapter.resolve_model_slug(provider_model) or _normalize_model(provider_model)
-                resolved_expected = (
-                    AgyAdapter.resolve_model_slug(expected_model) or _normalize_model(expected_model)
-                    if expected_model is not None
-                    else None
-                )
-                mismatch = resolved_expected is not None and resolved_provider != resolved_expected
-            except ValueError:
-                mismatch = True
-            if model_identity is not None:
-                model_identity.update(
-                    actual_model=provider_model,
-                    actual_model_known=bool(provider_model),
-                    substituted=mismatch,
-                    source="provider-init",
-                )
-            if mismatch:
-                return None, "agy_model_event_mismatch"
+        if check_identity and event["event"] == "init":
+            config = event.get("init")
+            reported = [config.get("model")] if isinstance(config, dict) else []
+            reported.append(event.get("model"))
+            for provider_model in reported:
+                if provider_model is None or provider_model == "":
+                    continue
+                try:
+                    mismatch = (
+                        not isinstance(provider_model, str)
+                        or AgyAdapter.resolve_model_slug(provider_model) != resolved_expected
+                    )
+                except ValueError:
+                    mismatch = True
+                if model_identity is not None:
+                    model_identity.update(
+                        actual_model=provider_model[:200] if isinstance(provider_model, str) else None,
+                        actual_model_known=isinstance(provider_model, str),
+                        substituted=mismatch,
+                        source="provider-init",
+                    )
+                if mismatch:
+                    return None, "agy_model_event_mismatch"
         if event["event"] == "result":
             if result is not None or not isinstance(event.get("result"), dict):
                 return None, "agy_stream_output_invalid: duplicate or malformed terminal result"

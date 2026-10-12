@@ -16,6 +16,7 @@ from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, 
 
 SLUGS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
 LABELS = ("Claude Sonnet 5.5 (High)", "Claude Opus 5.5 (High)")
+BACKEND_IDS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
 
 
 @pytest.fixture(autouse=True)
@@ -45,6 +46,11 @@ def test_exact_slug_and_display_label_resolve(slug, label):
     adapter = agy.AgyAdapter()
     assert adapter._resolve_model_flag(slug) == slug
     assert adapter._resolve_model_flag(label) == slug
+
+
+@pytest.mark.parametrize("slug,label,backend", zip(SLUGS, LABELS, BACKEND_IDS, strict=True))
+def test_reported_forms_use_agy_slug_map(slug, label, backend):
+    assert [agy.AgyAdapter.resolve_model_slug(value) for value in (slug, label, backend)] == [slug] * 3
 
 
 @pytest.mark.parametrize(
@@ -175,9 +181,10 @@ def test_anthropic_agy_fixture_candidate_cannot_review_anthropic_author(author):
     assert "same family as author" in result.reason
 
 
+@pytest.mark.parametrize("shape", ["nested", "top-level"])
 @pytest.mark.parametrize("slug", SLUGS)
 @pytest.mark.parametrize("observed", ["matching", "mismatching", "absent", "no-init", "tool-only"])
-def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, slug, observed):
+def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, slug, observed, shape):
     plan = InvocationPlan(
         cmd=["agy", "--output-format", "stream-json", "--model", slug],
         cwd=tmp_path,
@@ -195,7 +202,8 @@ def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, 
     if observed not in {"no-init", "tool-only"}:
         init = {"event": "init"}
         if observed != "absent":
-            init["model"] = slug if observed == "matching" else "gemini-3.8-flash-high"
+            value = slug if observed == "matching" else "gemini-3.8-flash-high"
+            init.update({"init": {"model": value}} if shape == "nested" else {"model": value})
         events.append(init)
     events.extend(
         [
@@ -224,8 +232,10 @@ def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, 
     )
     assert result.ok is (observed != "mismatching")
     assert result.response == ("" if observed == "mismatching" else "READY")
-    identity = result.substitution
+    identity = result.model_identity
     if observed != "mismatching":
+        assert result.substitution is None
+    if observed not in {"matching", "mismatching"}:
         assert identity is None
         return
     assert identity is not None
@@ -254,9 +264,7 @@ def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, 
 @pytest.mark.parametrize(
     "requested_model", ["gemini-3.8-flash-high", "Gemini 3.8 Flash (High)", "gemini-3-flash-preview"]
 )
-def test_stream_model_identity_uses_resolved_slugs(
-    tmp_path: Path, reported_model: str | None, requested_model: str
-) -> None:
+def test_gemini_init_is_ignored(tmp_path: Path, reported_model: str | None, requested_model: str) -> None:
     conversation_id = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
     app_data = tmp_path / "agy-data"
     transcript = app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
@@ -296,21 +304,109 @@ def test_stream_model_identity_uses_resolved_slugs(
 
     result = agy.AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
 
-    mismatch = reported_model in {"gemini-3.1-pro-high", "gemini-3.7-flash-high"}
-    assert result.ok is not mismatch
-    assert result.response == ("" if mismatch else "READY")
-    if not mismatch:
-        assert result.substitution is None
+    no_init = stdout.split("\n", 1)[1]
+    baseline = agy.AgyAdapter().parse_response(stdout=no_init, stderr="", returncode=0, output_file=None, plan=plan)
+    assert result == baseline
+    assert result.ok is True
+    assert result.response == "READY"
+    assert result.substitution is None
+    assert result.model_identity is None
+
+
+def _identity_stream_plan(tmp_path, slug):
+    conversation_id = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
+    app_data = tmp_path / "agy-data"
+    transcript = app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    fixture = Path(__file__).resolve().parents[2] / "fixtures" / "agy" / "verify_words_transcript.jsonl"
+    transcript.write_text(fixture.read_text(encoding="utf-8"), encoding="utf-8")
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={conversation_id}, sending message\n", encoding="utf-8")
+    plan = InvocationPlan(
+        cmd=["agy", "--output-format", "stream-json", "--model", slug],
+        cwd=tmp_path,
+        env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
+        metadata={"entire_fleet": {"requested_model": slug}},
+    )
+    terminal = {
+        "event": "result",
+        "result": {
+            "status": "SUCCESS",
+            "conversation_id": conversation_id,
+            "response": "READY",
+        },
+    }
+    return plan, terminal
+
+
+@pytest.mark.parametrize("shape", ["nested", "top-level"])
+@pytest.mark.parametrize("slug,label,backend", zip(SLUGS, LABELS, BACKEND_IDS, strict=True))
+@pytest.mark.parametrize(
+    "form",
+    ["absent", "empty", "pin", "display", "backend", "different", "whitespace", "non-string", "retired", "unknown"],
+)
+def test_claude_reported_identity_fails_closed(tmp_path, slug, label, backend, form, shape):
+    plan, terminal = _identity_stream_plan(tmp_path, slug)
+    value = {
+        "absent": None,
+        "empty": "",
+        "pin": slug,
+        "display": label,
+        "backend": backend,
+        "different": "gemini-3.8-flash-high",
+        "whitespace": "   ",
+        "non-string": 7,
+        "retired": "Claude Opus 4.6 (Thinking)",
+        "unknown": "unrecognized",
+    }[form]
+    init = {"event": "init"}
+    if form != "absent":
+        init.update({"init": {"model": value}} if shape == "nested" else {"model": value})
+    parsed = agy.AgyAdapter().parse_response(
+        stdout="\n".join(map(json.dumps, [init, terminal])),
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+    mismatch = form in {"different", "whitespace", "non-string", "retired", "unknown"}
+    assert parsed.ok is not mismatch
+    assert parsed.response == ("" if mismatch else "READY")
+    if form in {"absent", "empty"}:
+        assert parsed.model_identity is None
     else:
-        assert result.substitution == {
-            "requested_provider": "agy",
-            "requested_model": requested_model,
-            "actual_provider": "agy",
-            "actual_model": reported_model,
-            "actual_model_known": True,
-            "substituted": mismatch,
+        assert parsed.model_identity == {
+            "actual_model": value if isinstance(value, str) else None,
+            "actual_model_known": isinstance(value, str),
             "source": "provider-init",
+            "substituted": mismatch,
         }
     if mismatch:
-        assert result.failure_code == "provider_policy_refusal"
-        assert result.stderr_excerpt == "agy_model_event_mismatch"
+        assert parsed.failure_code == "provider_policy_refusal"
+        assert parsed.stderr_excerpt == "agy_model_event_mismatch"
+    else:
+        assert parsed.substitution is None
+
+
+@pytest.mark.parametrize("slug", SLUGS)
+@pytest.mark.parametrize("nested_matches", [True, False])
+def test_conflicting_init_model_values_fail_closed(tmp_path, slug, nested_matches):
+    plan, terminal = _identity_stream_plan(tmp_path, slug)
+    different = "gemini-3.8-flash-high"
+    init = {
+        "event": "init",
+        "init": {"model": slug if nested_matches else different},
+        "model": different if nested_matches else slug,
+    }
+    parsed = agy.AgyAdapter().parse_response(
+        stdout="\n".join(map(json.dumps, [init, terminal])),
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+    assert parsed.ok is False
+    assert parsed.failure_code == "provider_policy_refusal"
+    assert parsed.stderr_excerpt == "agy_model_event_mismatch"
+    assert parsed.model_identity["actual_model"] == different
+    assert parsed.model_identity["substituted"] is True

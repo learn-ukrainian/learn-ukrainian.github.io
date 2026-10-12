@@ -4273,9 +4273,12 @@ def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sand
     fake_gh.chmod(0o755)
     proc = subprocess.run(
         [sys.executable, "-m", "scripts.publish", "pr-comment", "--number", "1234", "--body", "VERDICT: APPROVE"],
-        cwd=root, capture_output=True, text=True,
+        cwd=root,
+        capture_output=True,
+        text=True,
         env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(fake_gh), "PATH": os.environ.get("PATH", "")},
-        check=False, timeout=15,
+        check=False,
+        timeout=15,
     )
     assert proc.returncode == 0, proc.stderr
     sent = json.loads(calls.read_text())
@@ -4387,13 +4390,24 @@ def test_typed_publisher_secondary_rate_limit_is_one_typed_attempt(tmp_path, gh_
         "sys.exit(1)\n"
     )
     binary.chmod(0o755)
-    args = ["--head", "unit-branch", "--base", "main", "--title", "clean"] if verb == "pr-create" else ["--number", "5146"]
+    args = (
+        ["--head", "unit-branch", "--base", "main", "--title", "clean"] if verb == "pr-create" else ["--number", "5146"]
+    )
     proc = subprocess.run(
         [sys.executable, "-m", "scripts.publish", verb, *args, "--body-file", "-"],
-        input="preserved comment body\n", cwd=root, capture_output=True, text=True,
-        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(binary),
-             "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "3", "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
-             "PATH": os.environ.get("PATH", "")}, check=False, timeout=15,
+        input="preserved comment body\n",
+        cwd=root,
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(binary),
+            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "3",
+            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
     )
     assert proc.returncode == 75
     sent = [json.loads(line) for line in calls.read_text().splitlines()]
@@ -4419,8 +4433,17 @@ def test_typed_publisher_cleans_snapshots_and_child_on_sigterm(tmp_path, gh_shim
     binary.chmod(0o755)
     proc = subprocess.Popen(
         [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body", "clean"],
-        cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(binary), "PATH": os.environ.get("PATH", ""), "TMPDIR": str(temp_dir)},
+        cwd=root,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(binary),
+            "PATH": os.environ.get("PATH", ""),
+            "TMPDIR": str(temp_dir),
+        },
     )
     try:
         deadline = time.monotonic() + 15
@@ -4449,9 +4472,12 @@ def test_gh_shim_secondary_limit_with_closed_stdin_is_one_typed_attempt(tmp_path
     binary.chmod(0o755)
     proc = subprocess.run(
         ["bash", "-c", f'exec 0<&-; "{shim}" issue list'],
-        cwd=root, capture_output=True, text=True,
+        cwd=root,
+        capture_output=True,
+        text=True,
         env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(binary), "PATH": os.environ.get("PATH", "")},
-        check=False, timeout=15,
+        check=False,
+        timeout=15,
     )
     assert proc.returncode == 75
     assert attempts.read_text().splitlines() == ["called"]
@@ -4761,3 +4787,50 @@ def test_privacy_safe_acp_failure_code_is_closed_and_body_free(
         )
         == expected
     )
+
+
+@pytest.mark.parametrize("entrypoint", ["runtime", "acp_review"])
+@pytest.mark.parametrize("reported", [False, True])
+def test_agy_usage_carries_bounded_optional_model_identity(tmp_path, entrypoint, reported):
+    identity = (
+        {
+            "actual_model": "observed" * 100,
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": False,
+            "unexpected": "discarded",
+        }
+        if reported
+        else None
+    )
+    parse = ParseResult(ok=True, response="READY")
+    assert parse.model_identity is None
+    record = _build_usage_record(
+        agent="agy",
+        entrypoint=entrypoint,
+        model="model",
+        mode="read-only",
+        task_id=None,
+        cwd=tmp_path,
+        session_id=None,
+        duration_s=0.1,
+        input_chars=1,
+        output_chars=5,
+        returncode=0,
+        outcome="ok",
+        rate_limited=False,
+        stalled=False,
+        stderr_excerpt=None,
+        tokens=None,
+        model_identity=identity,
+    )
+    if reported:
+        assert record["model_identity"] == {
+            "actual_model": ("observed" * 100)[:200],
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": False,
+        }
+    else:
+        assert "model_identity" not in record
+    assert "substitution" not in record
