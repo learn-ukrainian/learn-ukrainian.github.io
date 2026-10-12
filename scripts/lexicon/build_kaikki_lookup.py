@@ -136,29 +136,26 @@ def _split_clauses(text: str) -> list[str]:
     in_straight_q = False
 
     for ch in text:
-        if ch == "(":
-            p_depth += 1
-        elif ch == ")":
-            if p_depth > 0:
-                p_depth -= 1
-        elif ch == "[":
-            b_depth += 1
-        elif ch == "]":
-            if b_depth > 0:
-                b_depth -= 1
-        elif ch == "{":
-            brace_depth += 1
-        elif ch == "}":
-            if brace_depth > 0:
-                brace_depth -= 1
-        elif ch == "“":
+        if ch == "“":
             curly_q += 1
-        elif ch == "”":
-            if curly_q > 0:
-                curly_q -= 1
+        elif ch == "”" and curly_q > 0:
+            curly_q -= 1
         elif ch == '"':
             in_straight_q = not in_straight_q
-        elif (
+        elif not in_straight_q and curly_q == 0:
+            if ch == "(":
+                p_depth += 1
+            elif ch == ")" and p_depth > 0:
+                p_depth -= 1
+            elif ch == "[":
+                b_depth += 1
+            elif ch == "]" and b_depth > 0:
+                b_depth -= 1
+            elif ch == "{":
+                brace_depth += 1
+            elif ch == "}" and brace_depth > 0:
+                brace_depth -= 1
+        if (
             ch in ",;"
             and p_depth == 0
             and b_depth == 0
@@ -216,12 +213,13 @@ def _clean_gloss(gloss: str) -> str:
     clauses = _split_clauses(g)
     if not clauses:
         return ""
-    if _is_meta_clause(clauses[0]):
-        return ""
-    kept = [c for c in clauses if not _is_meta_clause(c)]
-    if len(kept) == len(clauses):
-        return g  # nothing dropped — preserve original
-    return ", ".join(kept).strip()
+    meta_idx = next((i for i, c in enumerate(clauses) if _is_meta_clause(c)), None)
+    if meta_idx is not None:
+        kept = [c for c in clauses[:meta_idx] if c]
+        if not kept:
+            return ""
+        return ", ".join(kept).strip()
+    return g  # nothing dropped — preserve original
 
 
 def extract_glosses(entry: dict[str, Any]) -> list[str]:

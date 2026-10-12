@@ -93,6 +93,20 @@ def test_clean_gloss_preserves_nested_delimiters_in_genuine_translations() -> No
     assert _clean_gloss(
         "pimpernel (Pimpinella gen. et spp., especially burnet saxifrage (Pimpinella saxifraga))"
     ) == "pimpernel (Pimpinella gen. et spp., especially burnet saxifrage (Pimpinella saxifraga))"
+    # Quoted brackets inside straight and curly quotes do not corrupt bracket depth tracking
+    assert _clean_gloss('opening bracket "(", alternative form of X') == 'opening bracket "("'
+    assert _clean_gloss('opening bracket “)”, alternative form of X') == 'opening bracket “)”'
+
+
+def test_clean_gloss_removes_form_of_usage_tails_after_genuine_translation() -> None:
+    # Finding 2: When a meta clause follows genuine translations, the meta clause AND its
+    # attached usage tail (e.g. ", used informally") must be dropped, preserving the translations.
+    assert _clean_gloss(
+        "water, alternative form of вода (voda, “water”), used informally"
+    ) == "water"
+    assert _clean_gloss(
+        "water, aqua, alternative form of вода (voda, “water”), used informally, especially in poetry"
+    ) == "water, aqua"
 
 
 def test_extract_glosses_filters_form_entries() -> None:

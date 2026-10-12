@@ -55,7 +55,7 @@
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
-        "sha256": "defb09054925dcd44c147e842b829d1d3a3d7aa4cdcf5dcc53c26d856aec476b"
+        "sha256": "1b5d8ecc0362b643e70f88f821eeb9890065d68b47a192f08771b51763201089"
       },
       {
         "path": "scripts/lexicon/build_slovnyk_mirror.py",
