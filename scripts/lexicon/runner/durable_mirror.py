@@ -194,6 +194,7 @@ def write_restic_gate_receipt(
     git_sha: str,
     mirror_root_relative_to_data: str = "lexicon/runner-mirror",
     receipt_root: Path | None = None,
+    staged_receipt_path: Path | None = None,
 ) -> Path:
     """Record manifests covered by a completed restic snapshot, atomically.
 
@@ -202,6 +203,11 @@ def write_restic_gate_receipt(
     to restic credentials or its remote repository. ``mirror_root`` is the
     tree included in restic; when ``receipt_root`` is distinct, it must still
     have exactly the same manifest fingerprints before the receipt is written.
+
+    With ``staged_receipt_path`` the receipt is only written there, in
+    ``receipt_root``, and not renamed: the backup script renames it into place
+    after it publishes the completed run, so the gate never sees a receipt for
+    a run that is not complete.
     """
     if not restic_snapshot_id or not isinstance(restic_snapshot_id, str):
         raise DurableMirrorError("restic gate receipt requires a restic snapshot id")
@@ -230,7 +236,22 @@ def write_restic_gate_receipt(
     }
     receipt_path = receipt_root / RESTIC_GATE_RECEIPT_NAME
     temp_path = receipt_path.with_suffix(".json.tmp")
-    temp_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if staged_receipt_path is not None:
+        # A same-directory path keeps the later rename atomic.
+        if (
+            staged_receipt_path.name == RESTIC_GATE_RECEIPT_NAME
+            or staged_receipt_path.parent.resolve() != receipt_root.resolve()
+        ):
+            raise DurableMirrorError(
+                f"staged restic gate receipt must be a temporary file in {receipt_root}: {staged_receipt_path}"
+            )
+        temp_path = staged_receipt_path
+    try:
+        temp_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    except OSError as exc:
+        raise DurableMirrorError(f"could not write restic gate receipt at {temp_path}: {exc}") from exc
+    if staged_receipt_path is not None:
+        return temp_path
     temp_path.replace(receipt_path)
     return receipt_path
 
@@ -523,11 +544,15 @@ def _cmd_write_restic_gate_receipt(args: argparse.Namespace) -> int:
             git_sha=args.git_sha,
             mirror_root_relative_to_data=args.mirror_root_relative_to_data,
             receipt_root=args.receipt_root,
+            staged_receipt_path=args.staged_receipt_path,
         )
     except DurableMirrorError as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 2
-    print(f"wrote restic gate receipt: {receipt_path}")
+    if args.staged_receipt_path is not None:
+        print(f"staged restic gate receipt: {receipt_path}")
+    else:
+        print(f"wrote restic gate receipt: {receipt_path}")
     return 0
 
 
@@ -566,6 +591,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--receipt-root",
         type=Path,
         help="live mirror root where the receipt is written; must match --mirror-root",
+    )
+    receipt.add_argument(
+        "--staged-receipt-path",
+        type=Path,
+        help="write the receipt only to this temporary file in the receipt root; the caller renames it into place",
     )
     receipt.set_defaults(func=_cmd_write_restic_gate_receipt)
 

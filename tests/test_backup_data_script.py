@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import sqlite3
 import subprocess
 import time
@@ -365,8 +366,41 @@ if [[ "$part" == lu-part-db && -n "${TEST_MUTATE_FILE:-}" ]]; then
   # The file-phase snapshot is already written: the live copy now differs.
   printf 'changed during backup\n' >> "$TEST_MUTATE_FILE"
 fi
+# Fault hooks keyed by "<subcommand> <part>", for example "check " or
+# "backup lu-part-complete".
+point="${args[0]:-} $part"
+hold() {
+  touch "$TEST_HOLD_FILE"
+  while [[ ! -e "$TEST_HOLD_FILE.release" ]]; do sleep 0.05; done
+}
+[[ "$point" != "${TEST_HOLD_BEFORE:-}" ]] || hold
+if [[ "$point" == "${TEST_READONLY_SNAPSHOTS_AT:-}" ]]; then
+  chmod a-w "$TEST_LOCAL_RESTIC_REPOSITORY/snapshots"
+fi
 printf '%s %s\n' "${args[0]:-}" "$part" >> "$TEST_INVOCATION_LOG"
 export RESTIC_REPOSITORY="$TEST_LOCAL_RESTIC_REPOSITORY"
+if [[ "$point" == "${TEST_CORRUPT_SUMMARY_AT:-}" ]]; then
+  "$TEST_REAL_RESTIC" "${args[@]}" | sed -E 's/"snapshot_id":"[0-9a-f]{64}"/"snapshot_id":"not-a-snapshot-id"/'
+  exit "${PIPESTATUS[0]}"
+fi
+if [[ "$point" == "${TEST_CORRUPT_PACKS_AFTER:-}" ]]; then
+  packs="$TEST_LOCAL_RESTIC_REPOSITORY/data"
+  before="$(find "$packs" -type f | LC_ALL=C sort)"
+  status=0
+  "$TEST_REAL_RESTIC" "${args[@]}" || status=$?
+  comm -13 <(printf '%s\n' "$before") <(find "$packs" -type f | LC_ALL=C sort) |
+    while IFS= read -r pack; do
+      chmod u+w "$pack"
+      printf 'corrupted' | dd of="$pack" bs=1 seek=40 conv=notrunc status=none
+    done
+  exit "$status"
+fi
+if [[ "$point" == "${TEST_HOLD_AFTER:-}" ]]; then
+  status=0
+  "$TEST_REAL_RESTIC" "${args[@]}" || status=$?
+  hold
+  exit "$status"
+fi
 exec "$TEST_REAL_RESTIC" "${args[@]}"
 """,
     )
@@ -477,7 +511,7 @@ def test_linux_local_restic_round_trip_stages_one_db_at_a_time(
     finally:
         first_connection.close()
     assert backed_up.returncode == 0, backed_up.stderr
-    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["1", "1", "0"]
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["1", "1", "0", "0"]
     assert list(staging.iterdir()) == []
     target = tmp_path / "restored"
     restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
@@ -686,8 +720,25 @@ def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
     # The mismatch is found before the run is published as complete.
     assert "arg=<lu-part-complete>" not in _log(environment)
 
-    # A change while the completion marker uploads (after verification) must
-    # not let the live content it never verified receive a durability receipt.
+    # A change while the pending receipt uploads is still found before the run
+    # is published as complete.
+    state_path.write_bytes(original_state)
+    (mirror / "manifest.json").write_bytes(original_manifest)
+    Path(environment["FAKE_RESTIC_LOG"]).unlink()
+    shutil.rmtree(environment["FAKE_SNAPSHOT_DIR"])
+    environment["FAKE_MUTATE_ON_PART"] = "lu-part-receipt"
+    mutated_pending = _run(environment, "backup", "--execute")
+
+    assert mutated_pending.returncode != 0
+    assert "refusing to write a durability receipt" in mutated_pending.stderr
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp").exists()
+    assert "arg=<lu-part-receipt>" in _log(environment)
+    assert "arg=<lu-part-complete>" not in _log(environment)
+
+    # A change while the completion snapshot uploads comes after the last
+    # check. The run is complete, and its gate receipt binds only the verified
+    # manifest, so the gate refuses the live content it never verified.
     state_path.write_bytes(original_state)
     (mirror / "manifest.json").write_bytes(original_manifest)
     Path(environment["FAKE_RESTIC_LOG"]).unlink()
@@ -695,9 +746,12 @@ def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
     environment["FAKE_MUTATE_ON_PART"] = "lu-part-complete"
     mutated_again = _run(environment, "backup", "--execute")
 
-    assert mutated_again.returncode != 0
-    assert "refusing to write a durability receipt" in mutated_again.stderr
-    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
+    assert mutated_again.returncode == 0, mutated_again.stderr
+    receipt = json.loads((mirror.parent / "RESTIC-GATE-RECEIPT.json").read_text(encoding="utf-8"))
+    assert receipt["mirrors"]["run-20k"]["manifest_sha256"] == hashlib.sha256(original_manifest).hexdigest()
+    assert (mirror / "manifest.json").read_bytes() != original_manifest
+    with pytest.raises(DurableMirrorError, match="manifest_sha256 mismatch"):
+        require_durable(mirror)
 
 
 def test_execute_snapshots_checkpointed_wal_database_without_sidecars(
@@ -2786,13 +2840,14 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
     backed_up = _run(environment, "backup", "--execute")
 
     assert backed_up.returncode == 0, backed_up.stderr
-    # One repository run per part, not one per database: 34 databases, 3 uploads.
+    # One repository run per part, not one per database: 34 databases, 4 uploads.
     assert _backup_invocations(environment) == [
         "backup lu-part-base",
         "backup lu-part-db",
+        "backup lu-part-receipt",
         "backup lu-part-complete",
     ]
-    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["34", "0"]
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["34", "0", "0"]
     assert "SQLite databases backed up: 34 of 34 (pytest scratch skipped: 1, archived: 0)." in backed_up.stdout
     assert list(staging.iterdir()) == []
     assert {relative: _file_sha256(project / relative) for relative in database_hashes} == originals
@@ -2846,7 +2901,7 @@ def test_batch_budget_splits_database_uploads(
 
     assert backed_up.returncode == 0, backed_up.stderr
     assert _backup_invocations(environment).count("backup lu-part-db") == 2
-    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "0"]
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "0", "0"]
 
 
 @pytest.mark.parametrize("budget", ["0", "-1", "1e9", "abc", "1000000000000000000000"])
@@ -3342,3 +3397,374 @@ def test_a_failed_run_never_leaves_a_completed_run_for_restore_latest(
         assert latest.returncode == 0, latest.stderr
         assert (mirror.parent / "RESTIC-GATE-RECEIPT.json").is_file()
     assert not target.exists()
+
+
+def _fresh_runner_mirror(source: Path) -> Path:
+    """A runner mirror whose manifest the pre-wipe gate accepts as fresh."""
+    mirror = source / "lexicon" / "runner-mirror" / "run-20k"
+    mirror.mkdir(parents=True)
+    (mirror / "state.txt").write_text("state\n", encoding="utf-8")
+    (mirror / "manifest.json").write_text(
+        json.dumps(
+            {
+                "schema": "atlas-runner-mirror-manifest",
+                "schema_version": 1,
+                "generated_at": time.time(),
+                "file_count": 1,
+                "total_bytes": 6,
+                "files": [{"path": "state.txt", "bytes": 6, "sha256": hashlib.sha256(b"state\n").hexdigest()}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return mirror
+
+
+def _real_restic(environment: dict[str, str], *arguments: str) -> subprocess.CompletedProcess[str]:
+    """Run the real restic CLI against the local test repository without a cache."""
+    return subprocess.run(
+        [
+            environment["TEST_REAL_RESTIC"],
+            "-r",
+            environment["TEST_LOCAL_RESTIC_REPOSITORY"],
+            "--password-file",
+            environment["RESTIC_PASSWORD_FILE"],
+            "--no-cache",
+            *arguments,
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+
+def _repository_snapshots(environment: dict[str, str]) -> list[dict]:
+    listed = _real_restic(environment, "snapshots", "--json")
+    assert listed.returncode == 0, listed.stderr
+    return json.loads(listed.stdout)
+
+
+def _run_id(snapshot: dict) -> str:
+    return next(tag.removeprefix("lu-run-") for tag in snapshot["tags"] if tag.startswith("lu-run-"))
+
+
+def _completed_run_ids(environment: dict[str, str]) -> list[str]:
+    return sorted(
+        _run_id(snapshot) for snapshot in _repository_snapshots(environment) if "lu-part-complete" in snapshot["tags"]
+    )
+
+
+def _run_interrupted(environment: dict[str, str], signal_number: int) -> subprocess.CompletedProcess[str]:
+    """Run a backup, then signal its whole process group at TEST_HOLD_FILE."""
+    hold = Path(environment["TEST_HOLD_FILE"])
+    process = subprocess.Popen(
+        ["/bin/bash", str(SCRIPT), "backup", "--execute"],
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    )
+    try:
+        deadline = time.monotonic() + 60
+        while not hold.exists() and process.poll() is None and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert hold.exists(), process.communicate(timeout=60)
+        os.killpg(process.pid, signal_number)
+        stdout, stderr = process.communicate(timeout=60)
+    finally:
+        if process.poll() is None:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait(timeout=60)
+    return subprocess.CompletedProcess(process.args, process.returncode, stdout, stderr)
+
+
+def _restored_run_id(environment: dict[str, str], target: Path) -> str:
+    restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+    assert restored.returncode == 0, restored.stderr
+    return json.loads((target / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))["linux_run"]["run_id"]
+
+
+def test_completed_run_publishes_one_completion_snapshot_reusing_the_checked_pending_tree(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    mirror = _fresh_runner_mirror(source)
+    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    database_hashes = {
+        "data/first.db": _logical_sha256(_make_database(source / "first.db", "first")),
+        "batch_state/second.db": _logical_sha256(_make_database(source.parent / "batch_state" / "second.db", "two")),
+    }
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    invocations = Path(environment["TEST_INVOCATION_LOG"]).read_text(encoding="utf-8").splitlines()
+    assert [line for line in invocations if line.startswith("backup ")] == [
+        "backup lu-part-base",
+        "backup lu-part-db",
+        "backup lu-part-receipt",
+        "backup lu-part-complete",
+    ]
+    # The repository check follows the pending receipt; the completion upload
+    # is the last repository operation. No snapshot is ever retagged or removed.
+    assert invocations.index("check ") > invocations.index("backup lu-part-receipt")
+    assert invocations[-1] == "backup lu-part-complete"
+    assert not {line.split(" ")[0] for line in invocations} & {"tag", "forget", "prune", "rewrite"}
+
+    snapshots = _repository_snapshots(environment)
+    pending = [snapshot for snapshot in snapshots if "lu-part-receipt" in snapshot["tags"]]
+    complete = [snapshot for snapshot in snapshots if "lu-part-complete" in snapshot["tags"]]
+    assert len(pending) == len(complete) == 1
+    assert "lu-part-complete" not in pending[0]["tags"]
+    assert complete[0]["tree"] == pending[0]["tree"]
+    assert complete[0]["time"] == pending[0]["time"]
+    assert _run_id(complete[0]) == _run_id(pending[0])
+    pending_receipt = _real_restic(environment, "dump", pending[0]["id"], "/BACKUP-RECEIPT.json")
+    complete_receipt = _real_restic(environment, "dump", complete[0]["id"], "/BACKUP-RECEIPT.json")
+    assert pending_receipt.returncode == complete_receipt.returncode == 0
+    assert pending_receipt.stdout == complete_receipt.stdout
+
+    gate = json.loads((mirror.parent / "RESTIC-GATE-RECEIPT.json").read_text(encoding="utf-8"))
+    assert gate["restic_snapshot_id"] == json.loads(complete_receipt.stdout)["linux_run"]["base_snapshot_id"]
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp").exists()
+    require_durable(mirror)
+
+    target = tmp_path / "restored"
+    assert _restored_run_id(environment, target) == _run_id(complete[0])
+    for relative, expected in database_hashes.items():
+        assert _logical_sha256(target / relative) == expected, relative
+    assert (target / "data" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
+    assert (target / "BACKUP-RECEIPT.json").read_text(encoding="utf-8") == complete_receipt.stdout
+
+
+PRE_COMPLETION_FAULTS = [
+    "check-fails",
+    "pending-summary-invalid",
+    "mirror-mutated",
+    "pending-pack-corrupted",
+    "term-before-completion",
+    "gate-staging-fails",
+    "completion-upload-fails",
+    "sigkill-before-completion",
+]
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root ignores the read-only snapshot directory")
+@pytest.mark.parametrize("fault", PRE_COMPLETION_FAULTS)
+def test_a_fault_before_completion_never_publishes_the_run(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+    fault: str,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    mirror = _fresh_runner_mirror(source)
+    first_hash = _logical_sha256(_make_database(source / "first.db", "first"))
+    previous = _run(environment, "backup", "--execute")
+    assert previous.returncode == 0, previous.stderr
+    [previous_run] = _completed_run_ids(environment)
+    gate = mirror.parent / "RESTIC-GATE-RECEIPT.json"
+    previous_gate = gate.read_bytes()
+
+    _make_database(source / "second.db", "second")
+    environment["TEST_HOLD_FILE"] = str(tmp_path / "hold")
+    if fault == "check-fails":
+        environment["TEST_FAIL_CHECK"] = "always"
+    elif fault == "pending-summary-invalid":
+        environment["TEST_CORRUPT_SUMMARY_AT"] = "backup lu-part-receipt"
+    elif fault == "mirror-mutated":
+        environment["TEST_MUTATE_FILE"] = str(mirror / "state.txt")
+    elif fault == "pending-pack-corrupted":
+        environment["TEST_CORRUPT_PACKS_AFTER"] = "backup lu-part-receipt"
+    elif fault == "term-before-completion":
+        environment["TEST_HOLD_BEFORE"] = "check "
+    elif fault == "gate-staging-fails":
+        (mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp").mkdir()
+    elif fault == "completion-upload-fails":
+        environment["TEST_READONLY_SNAPSHOTS_AT"] = "backup lu-part-complete"
+    else:
+        environment["TEST_HOLD_BEFORE"] = "backup lu-part-complete"
+    snapshots_directory = Path(environment["TEST_LOCAL_RESTIC_REPOSITORY"]) / "snapshots"
+    try:
+        if fault == "term-before-completion":
+            result = _run_interrupted(environment, signal.SIGTERM)
+        elif fault == "sigkill-before-completion":
+            result = _run_interrupted(environment, signal.SIGKILL)
+        else:
+            result = _run(environment, "backup", "--execute")
+    finally:
+        snapshots_directory.chmod(0o700)
+
+    assert result.returncode != 0, result.stdout
+    assert result.returncode == {"term-before-completion": 130, "sigkill-before-completion": -9}.get(fault, 1)
+    runs = {_run_id(snapshot) for snapshot in _repository_snapshots(environment)}
+    assert len(runs) == 2, runs
+    assert _completed_run_ids(environment) == [previous_run]
+    # The failed run writes no gate receipt; the previous one is untouched.
+    assert gate.read_bytes() == previous_gate
+    staged = mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp"
+    if fault == "gate-staging-fails":
+        assert staged.is_dir()
+    elif fault != "sigkill-before-completion":
+        assert not staged.exists()
+
+    target = tmp_path / "restored"
+    assert _restored_run_id(environment, target) == previous_run
+    assert _logical_sha256(target / "data" / "first.db") == first_hash
+    assert not (target / "data" / "second.db").exists()
+    if fault == "pending-pack-corrupted":
+        assert "Repository check failed" in result.stderr
+
+
+@pytest.mark.parametrize("window", ["sigkill-after-completion", "gate-rename-fails"])
+def test_a_failure_after_completion_leaves_a_restorable_run_and_no_gate_receipt(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+    window: str,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    mirror = _fresh_runner_mirror(source)
+    database_hash = _logical_sha256(_make_database(source / "first.db", "first"))
+    gate = mirror.parent / "RESTIC-GATE-RECEIPT.json"
+
+    if window == "gate-rename-fails":
+        # A directory in the way makes the final rename fail for real.
+        gate.mkdir()
+        result = _run(environment, "backup", "--execute")
+        assert result.returncode == 1
+        assert "could not be renamed into place; the pre-wipe gate stays closed" in result.stderr
+        assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp").exists()
+    else:
+        environment["TEST_HOLD_FILE"] = str(tmp_path / "hold")
+        environment["TEST_HOLD_AFTER"] = "backup lu-part-complete"
+        result = _run_interrupted(environment, signal.SIGKILL)
+        assert result.returncode == -9
+
+    # The accepted commit-follower window: the run is complete and restorable,
+    # the exit is non-zero, and no gate receipt exists, so no wipe may proceed.
+    [completed] = _completed_run_ids(environment)
+    target = tmp_path / "restored"
+    assert _restored_run_id(environment, target) == completed
+    assert _logical_sha256(target / "data" / "first.db") == database_hash
+    assert not gate.is_file()
+    with pytest.raises(DurableMirrorError, match="no restic gate receipt"):
+        require_durable(mirror)
+
+
+def test_a_corrupted_completion_snapshot_is_skipped_by_restore_and_fails_the_next_check(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    """Corruption after the completion upload is outside what the run itself can verify."""
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    first_hash = _logical_sha256(_make_database(source / "first.db", "first"))
+    assert _run(environment, "backup", "--execute").returncode == 0
+    [previous_run] = _completed_run_ids(environment)
+    second_hash = _logical_sha256(_make_database(source / "second.db", "second"))
+    latest = _run(environment, "backup", "--execute")
+    assert latest.returncode == 0, latest.stderr
+    snapshots = _repository_snapshots(environment)
+    [latest_run] = set(_completed_run_ids(environment)) - {previous_run}
+    [marker] = [s for s in snapshots if "lu-part-complete" in s["tags"] and _run_id(s) == latest_run]
+    [pending] = [s for s in snapshots if "lu-part-receipt" in s["tags"] and _run_id(s) == latest_run]
+
+    # Damage the completion snapshot object itself: it is the only object the
+    # completion upload adds, because it reuses the checked pending tree.
+    marker_file = Path(environment["TEST_LOCAL_RESTIC_REPOSITORY"]) / "snapshots" / marker["id"]
+    marker_file.chmod(0o600)
+    with marker_file.open("r+b") as handle:
+        handle.seek(20)
+        handle.write(b"corrupted")
+
+    # restic skips the unreadable snapshot, so restore latest on a cold cache
+    # selects the previous completed run rather than the damaged one.
+    environment["RESTIC_CACHE_DIR"] = str(tmp_path / "cold-cache")
+    assert _restored_run_id(environment, tmp_path / "restored-latest") == previous_run
+    assert _real_restic(environment, "check").returncode != 0
+    # The damaged run stays recoverable through its checked pending receipt.
+    by_pending = tmp_path / "restored-by-pending"
+    restored = _run(environment, "restore", pending["id"], "--to", str(by_pending), "--execute")
+    assert restored.returncode == 0, restored.stderr
+    assert _logical_sha256(by_pending / "data" / "first.db") == first_hash
+    assert _logical_sha256(by_pending / "data" / "second.db") == second_hash
+    # The next run's repository check fails it before it can publish.
+    environment.pop("RESTIC_CACHE_DIR")
+    following = _run(environment, "backup", "--execute")
+    assert following.returncode == 1
+    assert "Repository check failed" in following.stderr
+    assert set(_completed_run_ids(environment)) == {previous_run}
+
+
+def test_schema_1_snapshot_restores_hash_matched(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    # The single-snapshot layout (macOS, and Linux before runs): the receipt
+    # sits at the root beside the recovery roots and there is no run tag.
+    tree = tmp_path / "schema-1-tree"
+    database_hash = _logical_sha256(_make_database(tree / "data" / "atlas.db", "atlas"))
+    (tree / "data" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    (tree / "BACKUP-RECEIPT.json").write_text('{"schema_version": 1}\n', encoding="utf-8")
+    subprocess.run(
+        [
+            environment["TEST_REAL_RESTIC"],
+            "-r",
+            environment["TEST_LOCAL_RESTIC_REPOSITORY"],
+            "--password-file",
+            environment["RESTIC_PASSWORD_FILE"],
+            "backup",
+            "BACKUP-RECEIPT.json",
+            "data",
+            "--host",
+            "learn-ukrainian",
+            "--tag",
+            "learn-ukrainian-data",
+        ],
+        cwd=tree,
+        check=True,
+        capture_output=True,
+        timeout=60,
+    )
+
+    target = tmp_path / "restored"
+    restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+
+    assert restored.returncode == 0, restored.stderr
+    assert _logical_sha256(target / "data" / "atlas.db") == database_hash
+    assert (target / "data" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
+
+
+def test_retention_counts_pending_only_runs_incomplete_and_pending_plus_complete_as_one_run(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots = [
+        *_run_snapshots("pending-old", "2026-09-01", parts=["base", "db", "receipt"], id_byte="1"),
+        *_run_snapshots("complete", "2026-09-02", parts=["base", "db", "receipt", "complete"], id_byte="2"),
+        *_run_snapshots("pending-new", "2026-09-03", parts=["base", "db", "receipt"], id_byte="3"),
+    ]
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention")
+
+    assert result.returncode == 0, result.stderr
+    assert "Runs kept: 2" in result.stdout
+    assert re.search(r"keep lu-run-complete time=\S+ snapshots=4\n", result.stdout), result.stdout
+    # A newer pending-only run is protected; an older one is a failed run.
+    assert re.search(r"keep lu-run-pending-new time=\S+ snapshots=3\n", result.stdout), result.stdout
+    assert re.search(r"drop lu-run-pending-old time=\S+ snapshots=3\n", result.stdout), result.stdout
+
+    only_pending = _run_snapshots("pending-only", "2026-09-04", parts=["base", "db", "receipt"], id_byte="4")
+    _write_snapshots(environment, tmp_path, only_pending)
+    refused = _run(environment, "retention")
+    assert refused.returncode != 0
+    assert "no completed run" in refused.stderr

@@ -76,7 +76,8 @@ readonly KEEP_MONTHLY=6
 # Staged-byte budget for one Linux database upload. Consistent SQLite copies
 # accumulate in a private batch that is uploaded as one lu-part-db snapshot
 # once the next database would exceed this budget (a larger database goes
-# alone), so peak staging is the larger of this budget and the largest database.
+# alone). A pending batch and the next incoming online copy coexist until the
+# flush, so peak staging is at most this budget plus the largest copy.
 readonly DB_BATCH_MAX_BYTES="${LU_BACKUP_DB_BATCH_MAX_BYTES:-1073741824}"
 
 STAGE_DIR=""
@@ -114,6 +115,11 @@ declare -A ARCHIVED_DB_STAT=()
 declare -A ARCHIVED_DB_ARCHIVE=()
 LINUX_BASE_SNAPSHOT=""
 LINUX_PATCH_SNAPSHOT=""
+# Both Linux receipt snapshots (pending, then completion) carry this time, so
+# the completion snapshot reuses the tree the repository check verified.
+RECEIPT_TIME=""
+# A gate receipt written but not yet renamed into place; removed on failure.
+STAGED_GATE_RECEIPT=""
 RUN_ID=""
 LINUX_MODE=0
 BACKUP_FAILURES=()
@@ -154,9 +160,13 @@ write_restic_gate_receipt() {
   local live_mirror_root="$SOURCE/lexicon/runner-mirror"
   local git_sha
   local project_python
+  local -a stage_arguments=()
 
-  if [[ "${2:-}" == verified-live ]]; then
+  # Linux stages the receipt beside its destination; publish_staged_gate_receipt
+  # renames it into place only after the run is published as complete.
+  if [[ "${2:-}" == stage-verified-live ]]; then
     staged_mirror_root="$live_mirror_root"
+    stage_arguments=(--staged-receipt-path "$live_mirror_root/RESTIC-GATE-RECEIPT.json.tmp")
   fi
   # The staged tree is the copy restic uploaded. Do not create unrelated data
   # paths when it has no mirror; if a live mirror appeared after staging, it is
@@ -171,6 +181,7 @@ write_restic_gate_receipt() {
 
   project_python="$(runner_mirror_python)" || exit 1
   git_sha="$(git_command -C "$PROJECT_ROOT" rev-parse HEAD)"
+  ((${#stage_arguments[@]} == 0)) || STAGED_GATE_RECEIPT="${stage_arguments[1]}"
   "$project_python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
     write-restic-gate-receipt \
     --mirror-root "$staged_mirror_root" \
@@ -178,8 +189,19 @@ write_restic_gate_receipt() {
     --restic-snapshot-id "$snapshot_id" \
     --host "$BACKUP_HOST" \
     --git-sha "$git_sha" \
-    --mirror-root-relative-to-data "lexicon/runner-mirror" ||
+    --mirror-root-relative-to-data "lexicon/runner-mirror" \
+    ${stage_arguments[@]+"${stage_arguments[@]}"} ||
     die "Could not write the runner mirror restic gate receipt after backup."
+}
+
+# Rename a staged gate receipt into place. This follows the completion
+# snapshot, so a failure here leaves a complete, restorable run, a non-zero
+# exit, and no gate receipt: the pre-wipe gate stays closed.
+publish_staged_gate_receipt() {
+  [[ -n "$STAGED_GATE_RECEIPT" ]] || return 0
+  mv -fT -- "$STAGED_GATE_RECEIPT" "${STAGED_GATE_RECEIPT%.tmp}" ||
+    die "Run $RUN_ID is complete and restorable, but its runner mirror gate receipt could not be renamed into place; the pre-wipe gate stays closed. Re-run the backup."
+  STAGED_GATE_RECEIPT=""
 }
 
 # "HASH PATH" lines for every file of the live runner mirror, in path order.
@@ -192,7 +214,7 @@ live_runner_mirror_hashes() {
 }
 
 # Prove, before the run is published, that the file-phase snapshot holds the
-# live runner mirror exactly. Its hashes are kept for the receipt step.
+# live runner mirror exactly. Its hashes are kept for the gate receipt step.
 verify_linux_runner_mirror() {
   local snapshot_id=$1 mirror="$SOURCE/lexicon/runner-mirror"
   local snapshot_files="$STAGE_DIR/mirror-snapshot-files"
@@ -220,9 +242,9 @@ verify_linux_runner_mirror() {
   done < "$snapshot_files"
 }
 
-# After the run is published, record the mirror's durability only if the live
-# mirror still holds exactly what verify_linux_runner_mirror proved.
-write_verified_linux_runner_mirror_receipt() {
+# Before the run is published, stage the mirror's gate receipt only if the
+# live mirror still holds exactly what verify_linux_runner_mirror proved.
+stage_verified_linux_runner_mirror_receipt() {
   local snapshot_id=$1 mirror="$SOURCE/lexicon/runner-mirror"
   local verified="$STAGE_DIR/mirror-verified-hashes"
   if [[ ! -f "$verified" ]]; then
@@ -233,7 +255,7 @@ write_verified_linux_runner_mirror_receipt() {
   [[ -d "$mirror" && ! -L "$mirror" ]] || die "Runner mirror root must be a real directory."
   live_runner_mirror_hashes "$mirror" | cmp -s "$verified" - ||
     die "Runner mirror content changed during backup; refusing to write a durability receipt."
-  write_restic_gate_receipt "$snapshot_id" verified-live
+  write_restic_gate_receipt "$snapshot_id" stage-verified-live
 }
 
 usage() {
@@ -357,6 +379,11 @@ cleanup() {
 
   if [[ -n "$RESTIC_EXCLUDE_FILE" && -f "$RESTIC_EXCLUDE_FILE" ]]; then
     find "$RESTIC_EXCLUDE_FILE" -maxdepth 0 -type f -delete
+  fi
+
+  # Set only while a staged gate receipt has not been renamed into place.
+  if [[ -n "$STAGED_GATE_RECEIPT" && -f "$STAGED_GATE_RECEIPT" && ! -L "$STAGED_GATE_RECEIPT" ]]; then
+    find "$STAGED_GATE_RECEIPT" -maxdepth 0 -type f -delete
   fi
 
   if [[ -n "$LOCK_FD" ]]; then
@@ -1650,9 +1677,22 @@ run_linux_backup() {
     fi
   fi
 
-  # Once the lu-part-complete snapshot exists, restore latest selects this run,
-  # so every check that can fail runs first. This repository check covers
-  # every snapshot the receipt references.
+  # Two-phase publication. Once a lu-part-complete snapshot exists, restore
+  # latest selects this run, so the receipt is first uploaded as a pending
+  # lu-part-receipt snapshot and every step that can fail runs after it.
+  if ((${#BACKUP_FAILURES[@]} == 0)); then
+    write_backup_receipt
+    RECEIPT_TIME="$(date '+%Y-%m-%d %H:%M:%S')"
+    if upload_run_receipt lu-part-receipt "$STAGE_DIR/receipt-backup.jsonl"; then
+      if ! snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/receipt-backup.jsonl" 2>&1)"; then
+        BACKUP_FAILURES+=("Receipt phase: $snapshot_id")
+      fi
+    else
+      BACKUP_FAILURES+=("Receipt phase: restic backup failed")
+    fi
+  fi
+  # This repository check covers every snapshot of the run, including the
+  # pending receipt, whose tree the completion snapshot reuses.
   info "Checking repository metadata after backup."
   restic_repository_command check || BACKUP_FAILURES+=("Repository check failed")
   if ((${#BACKUP_FAILURES[@]} > 0)); then
@@ -1661,16 +1701,28 @@ run_linux_backup() {
     return 1
   fi
   verify_linux_runner_mirror "$LINUX_BASE_SNAPSHOT"
+  stage_verified_linux_runner_mirror_receipt "$LINUX_BASE_SNAPSHOT"
 
-  write_backup_receipt
+  # The run's last repository mutation: the same receipt bytes and time, now
+  # tagged lu-part-complete. No tag is ever added to or removed from a snapshot.
+  info "Publishing completed run $RUN_ID."
+  upload_run_receipt lu-part-complete "$STAGE_DIR/complete-backup.jsonl" ||
+    die "Could not publish completed run $RUN_ID; restore latest still selects the previous completed run."
+  publish_staged_gate_receipt
+  # Informational only: the run is already published.
+  snapshot_id="$(jq -r 'select(.message_type == "summary") | .snapshot_id // empty' \
+    "$STAGE_DIR/complete-backup.jsonl" 2>/dev/null)" || snapshot_id=""
+  info "Linux backup run $RUN_ID complete; receipt snapshot ${snapshot_id:-unknown}." || true
+}
+
+# Upload the run receipt as one stdin snapshot of the given part, at
+# RECEIPT_TIME, which also becomes the stored file's mtime.
+upload_run_receipt() {
+  local part=$1 output=$2
   restic_repository_command backup --stdin --stdin-filename BACKUP-RECEIPT.json \
-    --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
-    --tag lu-part-complete --json < "$STAGED_ROOT/BACKUP-RECEIPT.json" \
-    | tee "$STAGE_DIR/complete-backup.jsonl"
-  snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/complete-backup.jsonl")"
-  # The durability receipt claims a completed run, so it follows the marker.
-  write_verified_linux_runner_mirror_receipt "$LINUX_BASE_SNAPSHOT"
-  info "Linux backup run $RUN_ID complete; receipt snapshot $snapshot_id."
+    --time "$RECEIPT_TIME" --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
+    --tag "$part" --json < "$STAGED_ROOT/BACKUP-RECEIPT.json" \
+    | tee "$output"
 }
 
 run_backup() {
