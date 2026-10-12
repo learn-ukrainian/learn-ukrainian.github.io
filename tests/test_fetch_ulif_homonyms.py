@@ -5,6 +5,7 @@ from __future__ import annotations
 import errno
 import inspect
 import os
+import select
 import shlex
 import signal
 import sqlite3
@@ -14,6 +15,7 @@ import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -31,6 +33,7 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     PoliteClient,
     SpellingLedger,
     _dedupe_register_rows,
+    _spellings_from_file,
     _write_group,
     build_a1_a2_spellings,
     declared_user_agent,
@@ -2475,7 +2478,7 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
         proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
         try:
             # The CLI installs SIGTERM's handler before opening this FIFO. A writer
-            # open succeeds only once that reader exists; keep it open so read_text
+            # open succeeds only once that reader exists; keep it open so the read
             # cannot finish and reach the network, even if the child is descheduled.
             with _fifo_input_ready(proc, fifo_path) as writer_fd:
                 proc.send_signal(signal.SIGTERM)
@@ -2498,6 +2501,685 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
     assert "Requests in run:      0" in err
     assert not (tmp_path / "state").exists()
     assert not (tmp_path / "cache.db").exists()
+
+
+# The helper thread waits until the CLI's main thread sleeps in the kernel inside
+# the spellings read, then sends SIGTERM to itself. CPython's C handler runs on
+# the helper and only sets the flag the main thread checks between bytecodes; the
+# main thread's wait is not interrupted. That is the state the race leaves when
+# SIGTERM lands after the main thread's last check and before its read blocks
+# (#10374). A blocking read never returns to that check; the poll loop does.
+_LOST_SIGTERM_CHILD = """
+import os, signal, sys, threading, time
+from scripts.lexicon.runner import fetch_ulif_homonyms as mod
+
+budget = float(sys.argv[1])
+main_tid = threading.get_native_id()
+entered = threading.Event()
+returned = threading.Event()
+
+def kernel_wait():
+    task = f"/proc/self/task/{main_tid}/"
+    with open(task + "stat") as fh:
+        state = fh.read().rsplit(")", 1)[1].split()[0]
+    with open(task + "wchan") as fh:
+        wchan = fh.read().strip()
+    # A futex wait is the GIL handoff to this thread, not the input wait.
+    if state == "S" and wchan not in ("", "0") and "futex" not in wchan:
+        return wchan
+    return None
+
+def deliver():
+    signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+    entered.wait()
+    deadline = time.monotonic() + budget
+    while (wchan := kernel_wait()) is None:
+        if time.monotonic() > deadline:
+            print("main thread never waited in the kernel", file=sys.stderr, flush=True)
+            os._exit(97)
+    print(f"lost SIGTERM sent while main waited in {wchan}", file=sys.stderr, flush=True)
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+    if not returned.wait(budget):
+        print(f"main thread still waiting {budget}s after the lost SIGTERM", file=sys.stderr, flush=True)
+        os._exit(98)
+
+threading.Thread(target=deliver, daemon=True).start()
+entered.set()
+try:
+    code = mod.main(sys.argv[2:])
+finally:
+    returned.set()
+sys.exit(code)
+"""
+
+
+@pytest.mark.skipif(not Path("/proc/self/task").is_dir(), reason="needs Linux /proc thread state")
+def test_sigterm_caught_before_the_input_wait_still_stops_the_cli(tmp_path):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    command = [
+        sys.executable,
+        "-c",
+        _LOST_SIGTERM_CHILD,
+        str(_SIGTERM_REAP_SECONDS),
+        "run",
+        "--spellings-file",
+        str(fifo_path),
+        "--state-dir",
+        str(tmp_path / "state"),
+        "--db",
+        str(tmp_path / "cache.db"),
+    ]
+    proc = subprocess.Popen(command, cwd=ROOT, stderr=subprocess.PIPE, text=True)
+    try:
+        # The child bounds its own waits; this only guards a child stuck before them.
+        _, err = proc.communicate(timeout=60)
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
+
+    assert proc.returncode == EXIT_INTERRUPTED, err
+    assert "lost SIGTERM sent while main waited in " in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Requests in run:      0" in err
+    assert not (tmp_path / "state").exists()
+    assert not (tmp_path / "cache.db").exists()
+
+
+class _RecordingPoll:
+    """A real poll object that reports when a wait returned without input."""
+
+    def __init__(self, idle: threading.Event, interrupt: bool = False):
+        self._poll = select.poll()
+        self._idle = idle
+        self._interrupt = interrupt
+
+    def register(self, fd: int, events: int) -> None:
+        self._poll.register(fd, events)
+
+    def poll(self, timeout: float) -> list[tuple[int, int]]:
+        if self._interrupt:
+            raise InterruptedByOperator("SIGTERM")
+        ready = self._poll.poll(timeout)
+        if not ready:
+            self._idle.set()
+        return ready
+
+
+def _record_spellings_polls(monkeypatch, *, interrupt: bool = False) -> threading.Event:
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    idle = threading.Event()
+    fake_select = SimpleNamespace(poll=lambda: _RecordingPoll(idle, interrupt), POLLIN=select.POLLIN)
+    monkeypatch.setattr(mod, "select", fake_select)
+    monkeypatch.setattr(mod, "SPELLINGS_INPUT_POLL_SECONDS", 0.01)
+    return idle
+
+
+def _record_spellings_fds(monkeypatch) -> list[int]:
+    opened: list[int] = []
+    real_open = os.open
+
+    def recording_open(path, flags, *args):
+        fd = real_open(path, flags, *args)
+        opened.append(fd)
+        return fd
+
+    monkeypatch.setattr(os, "open", recording_open)
+    return opened
+
+
+def _assert_fds_closed(opened: list[int]) -> None:
+    assert len(opened) == 1
+    with pytest.raises(OSError) as closed:
+        os.fstat(opened[0])
+    assert closed.value.errno == errno.EBADF
+
+
+@contextmanager
+def _fifo_writer(fifo_path: Path, payload: bytes, *, after: threading.Event | None = None):
+    """Write ``payload`` to the FIFO from a thread, then close it."""
+    failures: list[BaseException] = []
+
+    def write() -> None:
+        try:
+            if after is not None and not after.wait(10):
+                raise AssertionError("reader never waited without a writer")
+            # A blocking open waits for the reader, so no sleep is needed here.
+            with open(fifo_path, "wb") as fh:
+                fh.write(payload)
+        except BaseException as exc:
+            failures.append(exc)
+
+    thread = threading.Thread(target=write, name="spellings-fifo-writer", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        thread.join(10)
+    assert not thread.is_alive()
+    assert failures == []
+
+
+def test_spellings_fifo_waits_for_a_writer_that_connects_late(tmp_path, monkeypatch):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    idle = _record_spellings_polls(monkeypatch)
+    opened = _record_spellings_fds(monkeypatch)
+
+    # The writer connects only after a poll has returned with no writer, when a
+    # read would already return b"" without that being the end of input.
+    with _fifo_writer(fifo_path, "Замок\t1\n# коментар\n\nбудинок\n".encode(), after=idle):
+        spellings = _spellings_from_file(fifo_path)
+
+    assert spellings == ["Замок", "будинок"]
+    _assert_fds_closed(opened)
+
+
+def test_spellings_fifo_writer_closing_without_data_is_empty(tmp_path, monkeypatch):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    idle = _record_spellings_polls(monkeypatch)
+
+    with _fifo_writer(fifo_path, b"", after=idle):
+        assert _spellings_from_file(fifo_path) == []
+
+
+def test_spellings_fifo_large_input_spans_many_reads(tmp_path):
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    expected = [f"слово{i}" for i in range(60_000)]
+    payload = "".join(f"{spelling}\n" for spelling in expected).encode()
+    assert len(payload) > 10 * mod.SPELLINGS_INPUT_READ_BYTES
+
+    with _fifo_writer(fifo_path, payload):
+        assert _spellings_from_file(fifo_path) == expected
+
+
+def test_spellings_regular_file_matches_read_text_lines(tmp_path, monkeypatch):
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    path = tmp_path / "spellings.txt"
+    body = [f"слово{i}" for i in range(3 * mod.SPELLINGS_INPUT_READ_BYTES // 20)]
+    lines = "".join(f"{spelling}\tгрупа\r\n" for spelling in body)
+    path.write_bytes(f"# заголовок\r\nЗамок\rзамок\n\n  будинок  \n{lines}".encode())
+    opened = _record_spellings_fds(monkeypatch)
+
+    assert _spellings_from_file(path) == ["Замок", "замок", "будинок", *body]
+    _assert_fds_closed(opened)
+
+
+@pytest.mark.parametrize("target", ["missing", "missing-parent", "directory"])
+def test_spellings_input_errors_match_read_text(tmp_path, monkeypatch, target):
+    path = {
+        "missing": tmp_path / "missing.txt",
+        "missing-parent": tmp_path / "absent" / "spellings.txt",
+        "directory": tmp_path,
+    }[target]
+    with pytest.raises(OSError) as expected:
+        path.read_text(encoding="utf-8")
+    opened = _record_spellings_fds(monkeypatch)
+
+    with pytest.raises(OSError) as actual:
+        _spellings_from_file(path)
+
+    assert type(actual.value) is type(expected.value)
+    assert str(actual.value) == str(expected.value)
+    assert actual.value.filename == expected.value.filename
+    if target == "directory":
+        _assert_fds_closed(opened)
+    else:
+        assert opened == []
+
+
+def test_spellings_invalid_utf8_error_matches_read_text(tmp_path, monkeypatch):
+    path = tmp_path / "spellings.txt"
+    path.write_bytes(b"ok\n" * 30_000 + b"\xff\n")
+    with pytest.raises(UnicodeDecodeError) as expected:
+        path.read_text(encoding="utf-8")
+    opened = _record_spellings_fds(monkeypatch)
+
+    with pytest.raises(UnicodeDecodeError) as actual:
+        _spellings_from_file(path)
+
+    assert str(actual.value) == str(expected.value)
+    _assert_fds_closed(opened)
+
+
+def test_spellings_fifo_closes_input_when_interrupted(tmp_path, monkeypatch):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    _record_spellings_polls(monkeypatch, interrupt=True)
+    opened = _record_spellings_fds(monkeypatch)
+
+    with pytest.raises(InterruptedByOperator):
+        _spellings_from_file(fifo_path)
+
+    _assert_fds_closed(opened)
+
+
+@pytest.mark.parametrize(
+    ("signum", "expected"),
+    [(signal.SIGTERM, InterruptedByOperator), (signal.SIGINT, KeyboardInterrupt)],
+    ids=["sigterm", "sigint"],
+)
+def test_spellings_input_closes_fd_on_signal_right_after_open(tmp_path, monkeypatch, signum, expected):
+    """A real signal on the line right after the descriptor is stored still closes it."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    path = tmp_path / "spellings.txt"
+    path.write_bytes("Замок\n".encode())
+    opened = _record_spellings_fds(monkeypatch)
+    reader = mod._read_spellings_input.__code__
+    sent: list[int] = []
+
+    def trace_lines(frame, event, _arg):
+        # Signal once, on the first line event after the descriptor was opened.
+        if event == "line" and not sent and opened:
+            sent.append(opened[0])
+            signal.pthread_kill(threading.get_ident(), signum)
+        return trace_lines
+
+    def trace_calls(frame, event, _arg):
+        return trace_lines if event == "call" and frame.f_code is reader else None
+
+    handler = mod._on_sigterm if signum == signal.SIGTERM else signal.default_int_handler
+    previous_handler = signal.signal(signum, handler)
+    previous_trace = sys.gettrace()
+    try:
+        sys.settrace(trace_calls)
+        try:
+            _spellings_from_file(path)
+        finally:
+            sys.settrace(previous_trace)
+        raise AssertionError("the signal did not interrupt the read")
+    except KeyboardInterrupt as exc:
+        assert type(exc) is expected
+    finally:
+        signal.signal(signum, previous_handler)
+
+    assert sent == opened
+    _assert_fds_closed(opened)
+
+
+def _open_fds() -> set[int]:
+    return {int(name) for name in os.listdir("/proc/self/fd")}
+
+
+def _fd_is_open(fd: int) -> bool:
+    try:
+        os.fstat(fd)
+    except OSError as exc:
+        assert exc.errno == errno.EBADF
+        return False
+    return True
+
+
+def _executable_lines(code) -> set[int]:
+    # RESUME carries the def line and emits no line event.
+    return {line for _start, _end, line in code.co_lines() if line is not None and line != code.co_firstlineno}
+
+
+class _DrivenPoll:
+    """A real poll whose idle returns run the next scripted step."""
+
+    def __init__(self, steps: list):
+        self._poll = select.poll()
+        self._steps = steps
+
+    def register(self, fd: int, events: int) -> None:
+        self._poll.register(fd, events)
+
+    def poll(self, timeout: float) -> list[tuple[int, int]]:
+        ready = self._poll.poll(timeout)
+        if not ready and self._steps:
+            self._steps.pop(0)()
+        return ready
+
+
+_SPELLINGS_PAYLOAD = "Замок\t1\n# коментар\n\nбудинок\n".encode()
+
+
+@pytest.mark.skipif(not Path("/proc/self/fd").is_dir(), reason="needs Linux /proc fd table")
+def test_spellings_input_closes_fd_on_a_signal_at_every_traced_line(tmp_path, monkeypatch):
+    """A real SIGTERM or SIGINT at any line or return event never meets an open descriptor.
+
+    The descriptor checks run while the caught exception, and every frame of its
+    traceback, is still referenced: a file the exception keeps alive counts as open.
+    """
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    monkeypatch.setattr(mod, "SPELLINGS_INPUT_POLL_SECONDS", 0)
+    steps: list = []
+    monkeypatch.setattr(mod, "select", SimpleNamespace(poll=lambda: _DrivenPoll(steps), POLLIN=select.POLLIN))
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    regular_path = tmp_path / "spellings.txt"
+    regular_path.write_bytes(_SPELLINGS_PAYLOAD)
+
+    def fifo_scenario():
+        # The test keeps a writer open, so the first poll returns idle and writes
+        # the payload. Its reads end in EAGAIN; the next idle poll hangs up. The
+        # idle and EAGAIN branches both run, with no sleep and no thread.
+        keeper = os.open(fifo_path, os.O_RDWR | os.O_NONBLOCK)
+        closed: list[int] = []
+
+        def hang_up() -> None:
+            closed.append(keeper)
+            os.close(keeper)
+
+        def cleanup() -> None:
+            if not closed:
+                os.close(keeper)
+
+        return fifo_path, [lambda: os.write(keeper, _SPELLINGS_PAYLOAD), hang_up], cleanup
+
+    scenarios = {
+        "fifo": (fifo_scenario, ["Замок", "будинок"]),
+        "regular": (lambda: (regular_path, [], lambda: None), ["Замок", "будинок"]),
+        "directory": (lambda: (tmp_path, [], lambda: None), IsADirectoryError),
+    }
+    opened = _record_spellings_fds(monkeypatch)
+    # Each original handler first records whether a descriptor of the read is open.
+    open_at_delivery: list[tuple[int, bool]] = []
+
+    def note_delivery(signum: int) -> None:
+        open_at_delivery.append((signum, any(_fd_is_open(fd) for fd in opened)))
+
+    def raising_sigterm(signum, frame):
+        note_delivery(signum)
+        mod._on_sigterm(signum, frame)
+
+    def raising_sigint(signum, frame):
+        note_delivery(signum)
+        signal.default_int_handler(signum, frame)
+
+    def returning(signum, _frame):
+        note_delivery(signum)
+
+    handler_kinds = {
+        "raising": {signal.SIGTERM: raising_sigterm, signal.SIGINT: raising_sigint},
+        "returning": {signal.SIGTERM: returning, signal.SIGINT: returning},
+    }
+
+    def read(scenario, handlers, inject_at=None, signum=None):
+        """Run one read under the tracer; return its events, outcome and open descriptors."""
+        path, scripted, cleanup = scenarios[scenario][0]()
+        steps[:] = scripted
+        for each, handler in handlers.items():
+            signal.signal(each, handler)
+        events: list[tuple[object, str, int]] = []
+
+        def trace_lines(frame, event, _arg):
+            if event in ("line", "return"):
+                events.append((frame.f_code, event, frame.f_lineno))
+                if len(events) - 1 == inject_at:
+                    signal.pthread_kill(threading.get_ident(), signum)
+            return trace_lines
+
+        def trace_calls(frame, event, _arg):
+            return trace_lines if event == "call" and frame.f_code.co_filename == mod.__file__ else None
+
+        before = _open_fds()
+        opened.clear()
+        open_at_delivery.clear()
+        caught: BaseException | None = None
+        result = None
+        try:
+            previous_trace = sys.gettrace()
+            try:
+                sys.settrace(trace_calls)
+                try:
+                    result = _spellings_from_file(path)
+                finally:
+                    sys.settrace(previous_trace)
+            except BaseException as exc:
+                caught = exc
+            # ``caught`` still holds the traceback, so its frames and their files live.
+            leaked = [fd for fd in opened if _fd_is_open(fd)]
+            new_fds = _open_fds() - before
+            outcome = (type(caught), str(caught)) if caught is not None else result
+            restored = all(signal.getsignal(each) is handler for each, handler in handlers.items())
+            return events, outcome, leaked, new_fds, list(open_at_delivery), restored
+        finally:
+            del caught
+            cleanup()
+
+    # The tracer stops once an injected handler raises inside it, so a second
+    # monitoring tool, which never raises, records every line the reads reach.
+    monitoring = sys.monitoring
+    tool = next(each for each in range(6) if monitoring.get_tool(each) is None)
+    seen_lines: dict[object, set[int]] = {}
+
+    def reached(code, line):
+        if code.co_filename == mod.__file__:
+            seen_lines.setdefault(code, set()).add(line)
+
+    monitoring.use_tool_id(tool, "spellings-signal-lines")
+    monitoring.register_callback(tool, monitoring.events.LINE, reached)
+    monitoring.set_events(tool, monitoring.events.LINE)
+    previous_handlers = {each: signal.getsignal(each) for each in (signal.SIGTERM, signal.SIGINT)}
+    try:
+        baseline_codes: set[object] = set()
+        injections = 0
+        for scenario, (_setup, expected_result) in scenarios.items():
+
+            def is_normal(outcome, expected_result=expected_result):
+                if isinstance(expected_result, list):
+                    return outcome == expected_result
+                return isinstance(outcome, tuple) and outcome[0] is expected_result
+
+            for kind, handlers in handler_kinds.items():
+                events, outcome, leaked, new_fds, delivered, restored = read(scenario, handlers)
+                assert is_normal(outcome), scenario
+                assert (leaked, new_fds, delivered, restored) == ([], set(), [], True), scenario
+                baseline_codes.update(code for code, _event, _line in events)
+                for index, (code, event, line) in enumerate(events):
+                    for signum in (signal.SIGTERM, signal.SIGINT):
+                        name = signal.Signals(signum).name
+                        site = f"{scenario} {kind} {code.co_name}:{line} {event} {name}"
+                        _events, outcome, leaked, new_fds, delivered, restored = read(scenario, handlers, index, signum)
+                        assert (leaked, new_fds) == ([], set()), site
+                        assert delivered == [(signum, False)], site
+                        assert restored, site
+                        if kind == "raising":
+                            expected = InterruptedByOperator if signum == signal.SIGTERM else KeyboardInterrupt
+                            assert outcome[0] is expected, site
+                        else:
+                            assert is_normal(outcome) or outcome == (InterruptedByOperator, name), site
+                        injections += 1
+    finally:
+        for each, handler in previous_handlers.items():
+            signal.signal(each, handler)
+        monitoring.set_events(tool, monitoring.events.NO_EVENTS)
+        monitoring.register_callback(tool, monitoring.events.LINE, None)
+        monitoring.free_tool_id(tool)
+
+    # Every executable line of every function the unsignaled read ran was
+    # reached, in some read: the injection sites are every event of those reads.
+    names = {code.co_name for code in baseline_codes}
+    assert names >= {"_spellings_from_file", "_read_spellings_input", "_nonblocking_opener"}
+    for code in baseline_codes:
+        assert seen_lines[code] == _executable_lines(code), code.co_name
+    assert injections > 0
+
+
+@pytest.mark.parametrize(
+    ("signum", "expected"),
+    [(signal.SIGTERM, InterruptedByOperator), (signal.SIGINT, KeyboardInterrupt)],
+    ids=["sigterm", "sigint"],
+)
+def test_spellings_signal_during_the_wait_reaches_its_handler_after_close(tmp_path, monkeypatch, signum, expected):
+    """A signal sent while the read waits in poll runs its handler only once the input is closed."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    # An open writer that never writes: every poll waits its full timeout.
+    keeper = os.open(fifo_path, os.O_RDWR | os.O_NONBLOCK)
+    opened = _record_spellings_fds(monkeypatch)
+    waiting = threading.Event()
+
+    class WaitingPoll(_DrivenPoll):
+        def poll(self, timeout):
+            waiting.set()
+            return super().poll(timeout)
+
+    monkeypatch.setattr(mod, "select", SimpleNamespace(poll=lambda: WaitingPoll([]), POLLIN=select.POLLIN))
+    main_thread = threading.get_ident()
+
+    def send() -> None:
+        assert waiting.wait(10)
+        signal.pthread_kill(main_thread, signum)
+
+    open_in_handler: list[bool] = []
+    original = mod._on_sigterm if signum == signal.SIGTERM else signal.default_int_handler
+
+    def handler(received, frame):
+        open_in_handler.append(_fd_is_open(opened[0]))
+        original(received, frame)
+
+    previous_handler = signal.signal(signum, handler)
+    sender = threading.Thread(target=send, daemon=True)
+    try:
+        sender.start()
+        with pytest.raises(KeyboardInterrupt) as interrupted:
+            _spellings_from_file(fifo_path)
+        assert signal.getsignal(signum) is handler
+    finally:
+        sender.join(10)
+        signal.signal(signum, previous_handler)
+        os.close(keeper)
+
+    assert type(interrupted.value) is expected
+    assert open_in_handler == [False]
+    _assert_fds_closed(opened)
+
+
+_SIG_DFL_CHILD = """
+import os, select, signal, sys, threading
+from types import SimpleNamespace
+from scripts.lexicon.runner import fetch_ulif_homonyms as mod
+
+signum = int(sys.argv[1])
+opened = []
+real_open, real_kill = os.open, os.kill
+
+def recording_open(path, flags, *args):
+    fd = real_open(path, flags, *args)
+    opened.append(fd)
+    return fd
+
+def reporting_kill(pid, sig):
+    try:
+        os.fstat(opened[0])
+        state = "open"
+    except OSError:
+        state = "closed"
+    print(f"kill {pid == os.getpid()} {sig} {state} {signal.getsignal(sig) is signal.SIG_DFL}", flush=True)
+    real_kill(pid, sig)
+
+class SignallingPoll:
+    def __init__(self):
+        self._poll = select.poll()
+    def register(self, fd, events):
+        self._poll.register(fd, events)
+    def poll(self, timeout):
+        signal.pthread_kill(threading.get_ident(), signum)
+        return self._poll.poll(timeout)
+
+os.open, os.kill = recording_open, reporting_kill
+mod.select = SimpleNamespace(poll=SignallingPoll, POLLIN=select.POLLIN)
+signal.signal(signum, signal.SIG_DFL)
+mod._spellings_from_file(mod.Path(sys.argv[2]))
+print("read returned", flush=True)
+"""
+
+
+@pytest.mark.parametrize("signum", [signal.SIGTERM, signal.SIGINT], ids=["sigterm", "sigint"])
+def test_spellings_signal_with_default_action_is_redelivered_after_close(tmp_path, signum):
+    """With SIG_DFL the signal is re-sent, default action restored, after the input is closed."""
+    path = tmp_path / "spellings.txt"
+    path.write_bytes(_SPELLINGS_PAYLOAD)
+    proc = subprocess.run(
+        [sys.executable, "-c", _SIG_DFL_CHILD, str(int(signum)), str(path)],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert proc.returncode == -signum, proc.stderr
+    assert proc.stdout == f"kill True {int(signum)} closed True\n", proc.stderr
+
+
+def test_spellings_ignored_signals_stay_ignored_and_the_read_completes(tmp_path, monkeypatch):
+    """With SIG_IGN nothing is swapped, and a signal during the read neither stops nor truncates it."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    path = tmp_path / "spellings.txt"
+    path.write_bytes(_SPELLINGS_PAYLOAD)
+    seen_handlers: list[object] = []
+
+    class SignallingPoll(_DrivenPoll):
+        def poll(self, timeout):
+            seen_handlers.append(tuple(signal.getsignal(each) for each in (signal.SIGTERM, signal.SIGINT)))
+            for each in (signal.SIGTERM, signal.SIGINT):
+                signal.pthread_kill(threading.get_ident(), each)
+            return super().poll(timeout)
+
+    monkeypatch.setattr(mod, "select", SimpleNamespace(poll=lambda: SignallingPoll([]), POLLIN=select.POLLIN))
+    opened = _record_spellings_fds(monkeypatch)
+    previous = {each: signal.signal(each, signal.SIG_IGN) for each in (signal.SIGTERM, signal.SIGINT)}
+    try:
+        assert _spellings_from_file(path) == ["Замок", "будинок"]
+        after = tuple(signal.getsignal(each) for each in (signal.SIGTERM, signal.SIGINT))
+    finally:
+        for each, handler in previous.items():
+            signal.signal(each, handler)
+
+    assert seen_handlers and set(seen_handlers) == {(signal.SIG_IGN, signal.SIG_IGN)}
+    assert after == (signal.SIG_IGN, signal.SIG_IGN)
+    _assert_fds_closed(opened)
+
+
+def test_spellings_read_off_the_main_thread_swaps_no_handler(tmp_path, monkeypatch):
+    """Off the main thread no handler is swapped and the read still completes."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    path = tmp_path / "spellings.txt"
+    path.write_bytes(_SPELLINGS_PAYLOAD)
+    seen_handlers: list[object] = []
+
+    class RecordingPoll(_DrivenPoll):
+        def poll(self, timeout):
+            seen_handlers.append(tuple(signal.getsignal(each) for each in (signal.SIGTERM, signal.SIGINT)))
+            return super().poll(timeout)
+
+    monkeypatch.setattr(mod, "select", SimpleNamespace(poll=lambda: RecordingPoll([]), POLLIN=select.POLLIN))
+    opened = _record_spellings_fds(monkeypatch)
+    before = tuple(signal.getsignal(each) for each in (signal.SIGTERM, signal.SIGINT))
+    results: list[object] = []
+
+    def read() -> None:
+        try:
+            results.append(_spellings_from_file(path))
+        except BaseException as exc:
+            results.append(exc)
+
+    reader = threading.Thread(target=read, name="spellings-reader")
+    reader.start()
+    reader.join(10)
+
+    assert not reader.is_alive()
+    assert results == [["Замок", "будинок"]]
+    assert seen_handlers and set(seen_handlers) == {before}
+    assert tuple(signal.getsignal(each) for each in (signal.SIGTERM, signal.SIGINT)) == before
+    _assert_fds_closed(opened)
 
 
 def test_run_fetch_preserves_caller_blocked_sigterm(tmp_path, capsys):
