@@ -225,7 +225,7 @@ def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, 
     assert result.ok is (observed != "mismatching")
     assert result.response == ("" if observed == "mismatching" else "READY")
     identity = result.substitution
-    if observed not in {"matching", "mismatching"}:
+    if observed != "mismatching":
         assert identity is None
         return
     assert identity is not None
@@ -299,7 +299,7 @@ def test_stream_model_identity_uses_resolved_slugs(
     mismatch = reported_model in {"gemini-3.1-pro-high", "gemini-3.7-flash-high"}
     assert result.ok is not mismatch
     assert result.response == ("" if mismatch else "READY")
-    if not reported_model:
+    if not mismatch:
         assert result.substitution is None
     else:
         assert result.substitution == {

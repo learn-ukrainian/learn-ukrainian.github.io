@@ -1185,7 +1185,7 @@ class AgyAdapter:
             agy_killed_commands=killed,
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
             agy_attempt=attempt,
-            substitution=model_identity if model_identity["actual_model_known"] else None,
+            substitution=model_identity if not result.ok and model_identity["actual_model_known"] else None,
         )
 
     def _parse_response(
