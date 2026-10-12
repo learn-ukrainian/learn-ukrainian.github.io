@@ -3271,11 +3271,23 @@ def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeyp
     assert {path.name: path.read_bytes() for path in tasks.iterdir()} == before
 
 
+@pytest.fixture
+def recorder_publication(synthetic_opsec, publisher_transport, monkeypatch):
+    """Match the recorder tests' synthetic scanner and injected publication transport."""
+    from tests.opsec_fixtures import synthetic_rules
+
+    rules = synthetic_rules(rule="3-absolute-path", level=3, pattern=r"(?<![<\w:])/[A-Za-z][^\s`'\"<>),;\]}|*]*")
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    monkeypatch.setenv("GH_REPO", "unit/public")
+
+
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
 @pytest.mark.parametrize(
     "head,review_mode", [("same", "cross_family"), ("other", "cross_family"), ("same", "red_team")]
 )
-def test_review_hold_lifecycle_refuses_admission_and_publication(tmp_path, monkeypatch, mode, head, review_mode):
+def test_review_hold_lifecycle_refuses_admission_and_publication(
+    tmp_path, monkeypatch, mode, head, review_mode, recorder_publication
+):
     """Drive the real hold, prep, retirement and full-record writers, with no branch PR."""
     from scripts.review import record_cf_verdict as recorder
     from scripts.review.target_resolution import ReviewTarget
@@ -3350,7 +3362,9 @@ def test_review_hold_lifecycle_refuses_admission_and_publication(tmp_path, monke
 
 @pytest.mark.parametrize("stage", ["hold", "prep", "retired"])
 @pytest.mark.parametrize("outcome", ["failed", "cancelled"])
-def test_review_hold_failure_or_cancellation_releases_guard(tmp_path, monkeypatch, stage, outcome):
+def test_review_hold_failure_or_cancellation_releases_guard(
+    tmp_path, monkeypatch, stage, outcome, recorder_publication
+):
     from scripts.review import record_cf_verdict as recorder
     from tests.test_record_cf_verdict import REPOSITORY, SHA, red_team_task, setup_record
 

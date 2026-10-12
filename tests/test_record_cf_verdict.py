@@ -15,6 +15,7 @@ from tempfile import TemporaryDirectory
 import pytest
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
+from scripts.common.scratch import ensure_scratch_root
 from scripts.review import record_cf_verdict as recorder
 
 SHA = "a" * 40
@@ -1228,7 +1229,10 @@ def test_merge_proof_discovers_objects_without_git(real_commit_set, monkeypatch,
 
 @pytest.mark.parametrize("marker", [None, "not a git pointer", "gitdir: missing", "gitdir: missing\nsecond line"])
 def test_merge_proof_missing_checkout_refuses(monkeypatch, marker):
-    with TemporaryDirectory(prefix="verdict-missing-checkout-") as isolated:
+    # The autouse scratch override follows basetemp, which can live inside Git.
+    # This context owns its isolation and needs the fleet root outside the checkout.
+    monkeypatch.delenv("LU_SCRATCH_ROOT", raising=False)
+    with TemporaryDirectory(prefix="verdict-missing-checkout-", dir=ensure_scratch_root()) as isolated:
         checkout = Path(isolated)
         # The pre-push basetemp has a repository ancestor. Prove absence independently.
         probe = subprocess.run(
