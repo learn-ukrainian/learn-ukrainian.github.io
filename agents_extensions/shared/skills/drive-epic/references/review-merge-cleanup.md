@@ -237,7 +237,11 @@ Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, common-reaper
 exit 0 and residue-free receipts are required before the next large dispatch.
 Non-zero or SKIPPED receipts block closeout; never use `--force`. The only
 manual fallback is the one in `docs/runbooks/worktree-cleanup.md` when the
-common reaper cannot run. A squash-merge alone is not done.
+common reaper cannot run. A squash-merge alone is not done: the merging lane
+runs the common-reaper closeout for the PR's own worktrees and branches and
+needs a clean receipt before reporting it done. Any PR-scoped worktree claim is
+settled only by that reaper's guarded removal. Stream leases are launcher-owned;
+a driver never opens, resumes, claims, renews, releases or replaces one.
 
 **After a suspected secret leak:** run `scripts/audit/secret_scan_local.py tree` and `history`
 (offline); triage only through its `show-keys` and `count` subcommands (never `jq`, `cat` or

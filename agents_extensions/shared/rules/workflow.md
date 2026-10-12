@@ -274,6 +274,14 @@ the verdict is posted and the reviewer exits. Before a branch sweep, inspect
 and prove no residue. Close linked issues only with all acceptance criteria
 verified on the delivered artifact; name any residual, owner and dependency.
 
+**The merging lane owns its PR closeout.** The lane that merged the PR runs the
+command above for that PR's own worktrees and branches, and the PR is not done
+until the receipt is clean (exit 0, residue-free). Any PR-scoped worktree claim
+is settled only through the common reaper's guarded removal, never by hand.
+Cleanup does not wait for a central sweep. This is not a stream lease: launchers
+own stream leases, and no driver opens, resumes, claims, renews, releases or
+replaces one. The non-zero and `SKIPPED` stop conditions above are unchanged.
+
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a
 session's start/end sweep is **OWN-STREAM ONLY**: it may review or review-route
