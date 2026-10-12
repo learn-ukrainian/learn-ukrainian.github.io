@@ -386,13 +386,25 @@ AGY or certify wiring. The adapter checks workers and reviews before
 `agy --version` or any provider subprocess and raises a typed refusal.
 Neither path changes provider on refusal.
 
-The spawn inventory distinguishes `gated` launcher and adapter starts,
-`management-exempt` MCP catalog operations, `probe-exempt` version and help
-checks, and `ungated-residual-10442` starts. Management operations start no
-model session or tool call: `_run_agy_mcp` permits exactly `list` and `add`,
-and the review catalog probe hardcodes `mcp list`. The UI send, ACP text agent,
-proxy backend and usage-command paths remain ungated residuals owned by
-[issue #10442](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10442).
+The spawn inventory is a file-level regression tripwire, not proof that every
+start is found. Each candidate file has one row with the weakest applicable
+status: `gated`, `management-exempt`, `probe-exempt`, `ungated-residual-10442`
+or `generic-helper`. Generic process helpers receive binaries from callers;
+callers are classified by their own rows. Management operations start no model
+session or tool call: `_run_agy_mcp` permits exactly `list` and `add`, and the
+review catalog probe hardcodes `mcp list`. The tripwire misses starts whose
+binary name never appears as the token `agy` in a process-capable candidate
+file. Known non-detections include shared-runtime callers that select the
+adapter by name without a process API in their file,
+`scripts/ai_llm/fallback.py` and `scripts/batch_gemini_runner/execution.py`,
+and Python command strings with `agy` embedded after other words. The shared
+runtime callers are the residual of
+[issue #10448](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10448),
+owned by the harness lane. Per-site completeness of UI, ACP, proxy and usage
+starts remains the residual of
+[issue #10442](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10442),
+also owned by the harness lane. Those starts remain ungated. The inventory does
+not certify native enforcement.
 
 The adapter captures its runtime-log path and workspace root before launch.
 It uses the plan's existing `liveness_paths` and resolved `cwd` fields, keeping
