@@ -13,14 +13,12 @@ from pathlib import Path
 
 import pytest
 
+from tests.test_context_latest_usage import advisor_usage, incident_usage, latest_tokens, write_usage
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/statusline.sh"
-GEMINI_STATUSLINE = (
-    PROJECT_ROOT / "agents_extensions/gemini/statusline/statusline.sh"
-)
-SUBAGENT_STATUSLINE = (
-    PROJECT_ROOT / "agents_extensions/shared/statusline/subagent-statusline.sh"
-)
+GEMINI_STATUSLINE = PROJECT_ROOT / "agents_extensions/gemini/statusline/statusline.sh"
+SUBAGENT_STATUSLINE = PROJECT_ROOT / "agents_extensions/shared/statusline/subagent-statusline.sh"
 CONTEXT_MONITOR = PROJECT_ROOT / "agents_extensions/shared/hooks/context-monitor.sh"
 CODEX_HOOKS = PROJECT_ROOT / "agents_extensions/codex/hooks.json"
 
@@ -37,9 +35,7 @@ def _record(*, actual_window: int | None = 272_000) -> dict[str, object]:
         "observed_model_id": "gpt-5.6-sol",
         "observed_context_window_tokens": None,
         "actual_context_window_tokens": actual_window,
-        "actual_context_window_provenance": (
-            "declared-profile" if actual_window else "unavailable"
-        ),
+        "actual_context_window_provenance": ("declared-profile" if actual_window else "unavailable"),
         "model_mismatch": False,
         "window_mismatch": False,
         "rollover_warning_percentages": [75.0, 85.0, 92.0],
@@ -195,7 +191,7 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
-        timeout=30
+        timeout=30,
     )
 
     assert "[ctx: 130K/260K (50%)]" in completed.stdout
@@ -203,10 +199,82 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
     assert "999999" not in completed.stdout
     persisted = json.loads(record_path.read_text(encoding="utf-8"))
     assert persisted["actual_context_window_tokens"] == 260_000
-    assert persisted["actual_context_window_provenance"] == (
-        "statusline.context_window.context_window_size"
-    )
+    assert persisted["actual_context_window_provenance"] == ("statusline.context_window.context_window_size")
     assert persisted["transcript_path"] == os.fspath(transcript)
+
+
+@pytest.mark.parametrize("script", [STATUSLINE, GEMINI_STATUSLINE], ids=["shared", "gemini"])
+@pytest.mark.parametrize("source", ["transcript", "current_usage", "host_total"])
+@pytest.mark.parametrize("layout", ["source", "deployed"])
+def test_statusline_uses_current_main_usage(tmp_path: Path, script: Path, source: str, layout: str) -> None:
+    if layout == "deployed":
+        deployed = tmp_path / ".agent/statusline/statusline.sh"
+        deployed.parent.mkdir(parents=True)
+        shutil.copyfile(script, deployed)
+        library = tmp_path / ".agent/hooks/context-rollover-lib.sh"
+        library.parent.mkdir()
+        shutil.copyfile(PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-lib.sh", library)
+        script = deployed
+    transcript = tmp_path / "incident.jsonl"
+    write_usage(transcript, incident_usage())
+    window = {"context_window_size": 1_000_000}
+    if source in {"current_usage", "host_total"}:
+        window["current_usage"] = incident_usage()
+    if source == "host_total":
+        window["total_input_tokens"] = 123_456
+    payload = {
+        "transcript_path": str(transcript),
+        "workspace": {"current_dir": str(tmp_path)},
+        "context_window": window,
+    }
+    # The display rounds to K tokens. Also read the exact integer used by that
+    # renderer, without replacing any of the production script's commands.
+    completed = subprocess.run(
+        ["bash", "-c", 'source "$1"; printf "\\nCURRENT_USED=%s\\n" "$ctx_used"', "test", str(script)],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env={**os.environ, "CLAUDE_PROJECT_DIR": str(tmp_path)},
+        timeout=30,
+    )
+    used = int(completed.stdout.split("CURRENT_USED=")[-1].strip())
+    assert used == (123_456 if source == "host_total" else 589_549)
+    if source == "host_total":
+        assert "[ctx: 123K/1000K (12%)]" in completed.stdout
+    else:
+        assert used == latest_tokens(transcript)
+        assert "[ctx: 590K/1000K (58%)]" in completed.stdout
+
+
+@pytest.mark.parametrize(
+    ("tokens", "prefix"),
+    [(589_549, ""), (649_999, ""), (650_000, "HEADS UP:"), (660_000, "HEADS UP:"), (760_000, "EMERGENCY:")],
+)
+def test_context_monitor_advisor_usage_preserves_native_tiers(tmp_path: Path, tokens: int, prefix: str) -> None:
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    transcript = tmp_path / "advisor.jsonl"
+    write_usage(transcript, incident_usage() if tokens == 589_549 else advisor_usage(tokens))
+    completed = subprocess.run(
+        [str(CONTEXT_MONITOR)],
+        input=json.dumps({"session_id": "status-session", "transcript_path": str(transcript)}),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=tmp_path,
+        env=_environment(project, record_path),
+        timeout=30,
+    )
+    assert latest_tokens(transcript) == tokens
+    if not prefix:
+        assert completed.stdout == ""
+        return
+    message = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert message.startswith(prefix)
+    assert f"[~{tokens}/1000000; latest assistant input/cache usage;" in message
+    if tokens == 760_000:
+        assert "waits for the operator to restart it" in message
 
 
 def test_statusline_unknown_capacity_does_not_use_auto_compact_fallback(
@@ -230,7 +298,7 @@ def test_statusline_unknown_capacity_does_not_use_auto_compact_fallback(
         check=True,
         cwd=tmp_path,
         env=env,
-        timeout=30
+        timeout=30,
     )
 
     assert "[ctx:" not in completed.stdout
@@ -264,7 +332,7 @@ def test_subagent_statusline_reports_progress_and_tokens(tmp_path: Path) -> None
         capture_output=True,
         check=True,
         cwd=tmp_path,
-        timeout=30
+        timeout=30,
     )
 
     rows = [json.loads(line) for line in completed.stdout.splitlines()]
@@ -296,7 +364,7 @@ def test_context_monitor_uses_record_tiers_and_excludes_output_tokens(
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
-        timeout=30
+        timeout=30,
     )
 
     hook_output = json.loads(completed.stdout)
@@ -336,16 +404,14 @@ def test_context_monitor_size_fallback_handles_long_base64_portably(
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
-        timeout=30
+        timeout=30,
     )
 
     hook_output = json.loads(completed.stdout)
     message = hook_output["hookSpecificOutput"]["additionalContext"]
     assert message.startswith("EMERGENCY: Context is at")
     assert "transcript-size estimate" in message
-    assert "sed -E 's#[A-Za-z0-9+/]{800,}" not in CONTEXT_MONITOR.read_text(
-        encoding="utf-8"
-    )
+    assert "sed -E 's#[A-Za-z0-9+/]{800,}" not in CONTEXT_MONITOR.read_text(encoding="utf-8")
 
 
 def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> None:
@@ -365,7 +431,7 @@ def test_context_monitor_unknown_capacity_emits_no_warning(tmp_path: Path) -> No
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
-        timeout=30
+        timeout=30,
     )
 
     assert completed.stdout == ""
@@ -437,10 +503,7 @@ def test_context_monitor_is_silent_from_deployed_codex_path(tmp_path: Path) -> N
 def test_codex_hook_ssot_does_not_register_manual_context_monitor() -> None:
     config = json.loads(CODEX_HOOKS.read_text(encoding="utf-8"))
     commands = [
-        hook["command"]
-        for groups in config["hooks"].values()
-        for group in groups
-        for hook in group.get("hooks", [])
+        hook["command"] for groups in config["hooks"].values() for group in groups for hook in group.get("hooks", [])
     ]
 
     assert all("context-monitor.sh" not in command for command in commands)
@@ -449,13 +512,11 @@ def test_codex_hook_ssot_does_not_register_manual_context_monitor() -> None:
 @pytest.mark.parametrize("script", [STATUSLINE, GEMINI_STATUSLINE, CONTEXT_MONITOR])
 def test_context_consumer_shell_syntax(script: Path) -> None:
     completed = subprocess.run(
-        ["bash", "-n", os.fspath(script)],
-        text=True,
-        capture_output=True,
-        check=False,
-        timeout=30
+        ["bash", "-n", os.fspath(script)], text=True, capture_output=True, check=False, timeout=30
     )
     assert completed.returncode == 0, completed.stderr
+
+
 def test_statusline_reports_steps_compacts_and_handoff_warning(tmp_path: Path) -> None:
     project, record_path = _fake_project(tmp_path, _record())
     transcript = tmp_path / "transcript_test.jsonl"
@@ -485,7 +546,7 @@ def test_statusline_reports_steps_compacts_and_handoff_warning(tmp_path: Path) -
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
-        timeout=30
+        timeout=30,
     )
 
     assert "[steps: 77]" in completed.stdout
@@ -520,7 +581,7 @@ def test_statusline_prefer_handoff_over_compaction(tmp_path: Path) -> None:
         check=True,
         cwd=tmp_path,
         env=_environment(project, record_path),
-        timeout=30
+        timeout=30,
     )
 
     assert "[compacts: 1]" in completed.stdout
@@ -535,9 +596,7 @@ def test_context_monitor_announces_each_tier_once_and_rearms_after_compaction(
     compaction-scale drop (below 60% of the last announced usage) re-arms."""
     project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
     transcript = tmp_path / "monitor.jsonl"
-    payload = json.dumps(
-        {"session_id": "status-session", "transcript_path": os.fspath(transcript)}
-    )
+    payload = json.dumps({"session_id": "status-session", "transcript_path": os.fspath(transcript)})
     state_file = project / "batch_state/context_monitor/status-session.tier"
 
     def run(input_tokens: int) -> str:

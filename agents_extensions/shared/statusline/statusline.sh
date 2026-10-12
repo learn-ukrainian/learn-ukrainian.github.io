@@ -62,6 +62,12 @@ set -u
 
 command -v jq >/dev/null 2>&1 || exit 0
 
+# Deployed statuslines have sibling hooks; the Gemini source overlay shares them.
+context_lib="$(dirname "${BASH_SOURCE[0]}")/../hooks/context-rollover-lib.sh"
+[ -f "$context_lib" ] || context_lib="$(dirname "${BASH_SOURCE[0]}")/../../shared/hooks/context-rollover-lib.sh"
+# shellcheck disable=SC1090
+source "$context_lib" 2>/dev/null || exit 0
+
 input=$(</dev/stdin)
 # printf '%s' "$input" > /tmp/.statusline-input.json  # debug
 
@@ -104,13 +110,11 @@ observed_window=$(json_get '.context_window.context_window_size')
 ctx_budget="$observed_window"
 ctx_used=$(json_get '.context_window.total_input_tokens')
 if [ -z "$ctx_used" ]; then
-  ctx_used=$(json_get '
-    if (.context_window.current_usage | type) == "object" then
-      ((.context_window.current_usage.input_tokens // 0)
-       + (.context_window.current_usage.cache_read_input_tokens // 0)
-       + (.context_window.current_usage.cache_creation_input_tokens // 0))
-    else empty end')
-  [ "$ctx_used" = "0" ] && ctx_used=""
+  usage_json=$(json_get '.context_window.current_usage | select(type == "object")')
+  if [ -n "$usage_json" ]; then
+    ctx_used=$(context_latest_usage_tokens "" "$usage_json")
+    [ "$ctx_used" = "0" ] && ctx_used=""
+  fi
 fi
 
 is_positive_integer() {
@@ -185,15 +189,8 @@ ctx_pct=$(json_get '.context_window.used_percentage')
 [ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.input_tokens')
 [ -z "$ctx_used" ] && ctx_used=$(json_get '.context_window.tokens.used')
 if [ -z "$ctx_used" ] && [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
-  usage_json=$(tail -200 "$transcript_path" 2>/dev/null \
-    | jq -s '[.[] | select(.type == "assistant" and .message.usage != null)] | last | .message.usage // empty' 2>/dev/null)
-  if [ -n "$usage_json" ] && [ "$usage_json" != "null" ] && [ "$usage_json" != "empty" ]; then
-    inp=$(printf '%s' "$usage_json" | jq -r '.input_tokens // 0' 2>/dev/null)
-    cr=$(printf '%s' "$usage_json" | jq -r '.cache_read_input_tokens // 0' 2>/dev/null)
-    cc=$(printf '%s' "$usage_json" | jq -r '.cache_creation_input_tokens // 0' 2>/dev/null)
-    ctx_used=$(( ${inp:-0} + ${cr:-0} + ${cc:-0} ))
-    [ "$ctx_used" = "0" ] && ctx_used=""
-  fi
+  ctx_used=$(context_latest_usage_tokens "$transcript_path")
+  [ "$ctx_used" = "0" ] && ctx_used=""
 fi
 
 # Compute a percentage only when both values are trustworthy positive integers.
@@ -355,4 +352,3 @@ parts+=("$cwd_name")
 
 # %b interprets the ANSI escape codes embedded in coloured segments.
 printf '%b\n' "${parts[*]}"
-
