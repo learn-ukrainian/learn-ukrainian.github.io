@@ -41,8 +41,11 @@ stall or outlive the gate. `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and `LU_PRE_PUSH_
 shorten these.
 
 `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES` sets the test process ceiling as a positive integer.
-The default is 1 (single process); invalid values refuse validation, including receipt reuse.
-Parallel execution requires xdist and keeps whole files together.
+The default is 4, so callers get bounded parallel validation without an override. Serial validation
+consumed the shared run budget. A nonblank `LEARN_UKRAINIAN_DISPATCH_TASK_ID` caps the invocation
+at 2 processes, matching the existing dispatch pytest plugin. An explicit positive integer override
+is still supported; invalid values refuse validation, including receipt reuse. Parallel execution
+requires xdist and keeps whole files together with `--dist loadfile`. Without xdist, execution is serial.
 
 ## Receipts
 
@@ -60,6 +63,12 @@ The row's `stages` object contains `pre_commit` and `pytest` only when each stag
 Each entry records `elapsed_s` from a monotonic clock, `outcome` and `reason`. Stage time includes
 stage setup, command execution and cleanup; admission wait remains in `admission_wait_s`.
 An earlier successful entry survives a later failure. Receipt reuse creates no stage entries.
+
+The pytest stage records `requested_test_processes` (the configured ceiling) and
+`effective_test_processes` (the count passed to pytest after the dispatch cap or serial fallback).
+The effective count is 1 for serial execution. These fields describe the invocation; the child status
+fields below distinguish a command that starts from one that never starts. They remain in the
+measurement row on failure or timeout. Receipt reuse has no new process-count observation.
 
 Each stage also records the observed signed child `returncode`, its positive `signal` when terminated
 by a signal, and `output_tail`. The tail contains at most the last 40 lines from the final 8192 output
