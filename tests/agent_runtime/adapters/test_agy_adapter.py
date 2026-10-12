@@ -17,6 +17,28 @@ FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "agy"
 CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
 
 
+@pytest.fixture(autouse=True)
+def valid_hook_files_for_existing_adapter_fixtures(tmp_path, monkeypatch, request):
+    """Existing adapter cases now include real valid wiring in disposable homes."""
+    from scripts.agent_runtime import agy_hook_config as hooks
+
+    if request.node.name.startswith("test_hook_gate_"):
+        return
+    monkeypatch.setenv("HOME", str(tmp_path / "ordinary-home"))
+    fake_root = tmp_path / "provider-fixture"
+    fake_root.mkdir()
+    _fake_agy(fake_root, monkeypatch, "2.0.0")
+    real_require = hooks.require_hook_config
+
+    def provision(cwd, home, agy_home=None, *, install=False):
+        for path in hooks.hook_locations(cwd, home, agy_home):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps({hooks.GUARD_NAME: hooks.guard_registration()}))
+        real_require(cwd, home, agy_home, install=install)
+
+    monkeypatch.setattr(agy_module, "require_hook_config", provision)
+
+
 def _plan(
     tmp_path: Path,
     *,
@@ -1138,7 +1160,12 @@ def _fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version_output: s
     fake.parent.mkdir()
     fake.write_text(f"#!/bin/sh\nprintf '%s\\n' '{version_output}'\n", encoding="utf-8")
     fake.chmod(0o755)
-    monkeypatch.setattr(agy_module.shutil, "which", lambda name: str(fake) if name == "agy" else None)
+    original_which = agy_module.shutil.which
+    monkeypatch.setattr(
+        agy_module.shutil,
+        "which",
+        lambda name, *args, **kwargs: str(fake) if name == "agy" else original_which(name, *args, **kwargs),
+    )
     agy_module._agy_version.cache_clear()
     return fake
 
@@ -2305,3 +2332,85 @@ def test_gemini_init_preserves_full_parse_result(tmp_path: Path, pin: str, shape
     assert parsed.ok is True
     assert parsed.substitution is None
     assert parsed.model_identity is None
+
+
+@pytest.mark.parametrize("scoped", [False, True])
+@pytest.mark.parametrize(
+    "condition",
+    ["missing_workspace", "missing_home", "missing_both", "unguarded_workspace", "relative_home", "disabled", "pass"],
+)
+def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped, condition):
+    from scripts.agent_runtime import agy_hook_config as hooks
+
+    cwd = tmp_path / "worker"
+    cwd.mkdir()
+    real_home = Path.home()
+    real_hook_paths = hooks.hook_locations(real_home, real_home)
+
+    def hook_file_state(path):
+        try:
+            metadata = path.stat()
+        except FileNotFoundError:
+            return (False, None, None)
+        return (True, metadata.st_size, metadata.st_mtime_ns)
+
+    real_hook_states = [hook_file_state(path) for path in real_hook_paths]
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setattr(Path, "home", classmethod(lambda _cls: home))
+    monkeypatch.setenv("HOME", str(home))
+    scoped_home = tmp_path / "scoped" if scoped else None
+    paths = hooks.hook_locations(cwd, home, scoped_home)
+    for path in paths:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({hooks.GUARD_NAME: hooks.guard_registration()}))
+    if condition == "missing_workspace":
+        paths[0].unlink()
+    elif condition == "missing_home":
+        paths[1].unlink()
+    elif condition == "missing_both":
+        for path in paths:
+            path.unlink()
+    elif condition == "unguarded_workspace":
+        paths[0].write_text("{}")
+    elif condition == "relative_home":
+        data = json.loads(paths[1].read_text())
+        data[hooks.GUARD_NAME]["PreToolUse"][0]["hooks"][0]["command"] = (
+            "../.venv/bin/python ../scripts/agent_runtime/secret_print_hook.py --harness agy"
+        )
+        paths[1].write_text(json.dumps(data))
+    elif condition == "disabled":
+        data = json.loads(paths[0].read_text())
+        data[hooks.GUARD_NAME]["enabled"] = False
+        paths[0].write_text(json.dumps(data))
+    fake = _fake_agy(tmp_path, monkeypatch, "2.0.0")
+    monkeypatch.setenv("PATH", str(fake.parent))
+    calls = []
+
+    def probe(argv, **kwargs):
+        calls.append(argv)
+        return __import__("subprocess").CompletedProcess(argv, 0, "2.0.0", "")
+
+    monkeypatch.setattr(agy_module.subprocess, "run", probe)
+    agy_module._agy_version.cache_clear()
+    kwargs = dict(
+        prompt="synthetic",
+        mode="danger",
+        cwd=cwd,
+        model=None,
+        task_id="hook-gate",
+        session_id=None,
+        tool_config={"agy_home_override": str(scoped_home)} if scoped else None,
+    )
+    if condition in {"pass", "missing_workspace", "missing_home"}:
+        plan = AgyAdapter().build_invocation(**kwargs)
+        assert len(calls) == 1 and calls[0] == [str(fake), "--version"]
+        assert "--dangerously-skip-permissions" in plan.cmd
+        if scoped:
+            assert plan.env_overrides["HOME"] == str(scoped_home)
+    else:
+        with pytest.raises(hooks.AgyHookConfigError):
+            AgyAdapter().build_invocation(**kwargs)
+        assert calls == []
+    agy_module._agy_version.cache_clear()
+    assert [hook_file_state(path) for path in real_hook_paths] == real_hook_states

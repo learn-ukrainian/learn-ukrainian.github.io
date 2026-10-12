@@ -8,17 +8,33 @@ import subprocess
 import pytest
 
 from scripts.agent_runtime.adapters import agy
+from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
 from scripts.agent_runtime.review_mcp import agy_review_settings
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.review.receipts.ledger import review_tools
 
 
 @pytest.fixture
-def scoped(tmp_path, monkeypatch):
+def scoped(tmp_path, monkeypatch, valid_hook_files):
     home = tmp_path / "review-home"
     (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    _write_hook_files(tmp_path, valid_hook_files, home)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
+    return home
+
+
+def _write_hook_files(cwd, home, scoped_home=None):
+    for path in hook_locations(cwd, home, scoped_home):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
+
+
+@pytest.fixture(autouse=True)
+def valid_hook_files(tmp_path, monkeypatch):
+    home = tmp_path / "ordinary-home"
+    monkeypatch.setenv("HOME", str(home))
+    _write_hook_files(tmp_path, home)
     return home
 
 

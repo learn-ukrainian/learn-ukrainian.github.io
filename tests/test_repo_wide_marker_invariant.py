@@ -123,6 +123,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/agent_runtime/test_agy_spawn_inventory.py::test_every_agy_start_has_a_current_inventory_row",
     "tests/review/test_model_catalog.py::test_frozen_artifacts_are_pinned_independently_of_manifest",
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
@@ -164,6 +165,8 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
     "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
     "tests/test_drive_epic_skill_core.py::test_every_reference_is_linked_from_the_core",
+    "tests/test_drive_epic_skill_core.py::test_measured_behaviors_bind_once_at_their_loop_step",
+    "tests/test_drive_epic_skill_core.py::test_reduced_packet_keeps_nine_behavior_denominator_and_owned_residuals",
     "tests/test_drive_epic_skill_core.py::test_section_citations_used_by_scripts_still_resolve",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_grok_bot_with_hard_exclusions",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_the_full_health_enum",
@@ -194,6 +197,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
+    "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
 )
 
 # Escape hatch for a scanner the best-effort heuristic flags but that is not

@@ -32,6 +32,7 @@ import pytest
 
 from scripts.lib import rules_core
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.rules_core_view import absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO, hermes_stub_env
 
@@ -665,6 +666,10 @@ def test_worker_row_carries_the_core(
     module, cls = adapter.split(":")
     if row.startswith("kimi"):
         tool_config = admitted_tool_config(tmp_path, tool_config)
+    if row == "agy":
+        home = tmp_path / "agy-home"
+        register_agy_hooks(tmp_path, home=home)
+        tool_config = {**(tool_config or {}), "agy_home_override": str(home)}
     plan = getattr(importlib.import_module(module), cls)().build_invocation(
         prompt=prompt,
         mode=mode,

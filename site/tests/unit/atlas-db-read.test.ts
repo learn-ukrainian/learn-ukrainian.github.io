@@ -130,6 +130,12 @@ describe('Atlas DB SSG read parity', () => {
     const fixtureSlugs = Array.from(
       new Set([...requiredFixtureSlugs, ...readEntryTypeFixtures().map((row) => row.slug)]),
     );
+    const manifestLemmaSlugs = new Set(
+      manifestEntries.filter((item) => item.entry_type === 'lemma').map((item) => item.url_slug),
+    );
+    const cacheLemmaSlugs = new Set(
+      cache.entries.filter((item) => item.entry_type === 'lemma').map((item) => item.url_slug),
+    );
     let differing = 0;
 
     for (const slug of fixtureSlugs) {
@@ -145,12 +151,12 @@ describe('Atlas DB SSG read parity', () => {
       expect(dbEntry).toEqual(alignedManifestEntry);
 
       const manifestHtml = renderWordAtlasArticle(articleProps(alignedManifestEntry, {
-        lemmaEntries: manifestEntries,
+        lemmaSlugs: manifestLemmaSlugs,
         generatedAt: data.generated_at,
         manifestVersion: data.version,
       }));
       const dbHtml = renderWordAtlasArticle(articleProps(dbEntry!, {
-        lemmaEntries: cache.entries,
+        lemmaSlugs: cacheLemmaSlugs,
         generatedAt: cache.generatedAt,
         manifestVersion: cache.manifestVersion,
       }));

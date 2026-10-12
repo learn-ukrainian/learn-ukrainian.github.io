@@ -149,6 +149,37 @@ def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str, *, re
     }
 
 
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_agy_attempt_home_registers_same_guard_as_review_provisioner(world, tmp_path, access):
+    from scripts.agent_runtime.agy_hook_config import HookConfigResult, check_hook_config
+    from scripts.agent_runtime.review_mcp import _populate_agy_review_home
+
+    root, old_home = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy", review_access=access)
+    if access == "full":
+        tc["review_cwd"] = str(root)
+    boundary = AttemptBoundary(agent="agy", tool_config=tc)
+    try:
+        hooks = Path(boundary.tool_config["agy_home_override"]) / ".gemini/config/hooks.json"
+        assert check_hook_config((hooks,)) == HookConfigResult("PASS", "guard_registered")
+        comparison = tmp_path / "comparison-home"
+        comparison.mkdir(mode=0o700)
+        fd = os.open(comparison, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        try:
+            _populate_agy_review_home(
+                fd,
+                old_home / ".gemini/antigravity-cli/antigravity-oauth-token",
+                Path(boundary.tool_config["mcp_config_path"]).read_bytes(),
+                boundary.workspace,
+            )
+        finally:
+            os.close(fd)
+        assert hooks.read_bytes() == (comparison / ".gemini/config/hooks.json").read_bytes()
+        assert hooks.stat().st_mode & 0o777 == 0o600
+    finally:
+        boundary.cleanup()
+
+
 @pytest.mark.parametrize("agent", ["agy", "codex"])
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_subprocess_forbidden_read_matrix(world, tmp_path, agent, kind):
@@ -581,9 +612,7 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             settings = json.loads(
                 (Path(boundary.tool_config["agy_home_override"]) / ".gemini/antigravity-cli/settings.json").read_text()
             )["permissions"]
-            assert [r for r in settings["allow"] if r.startswith("read_file(")] == [
-                f"read_file({boundary.workspace})"
-            ]
+            assert [r for r in settings["allow"] if r.startswith("read_file(")] == [f"read_file({boundary.workspace})"]
             assert not any(r.startswith(("command(", "write_file(")) for r in settings["allow"])
             assert "command(*)" in settings["deny"] and "write_file(*)" in settings["deny"]
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")

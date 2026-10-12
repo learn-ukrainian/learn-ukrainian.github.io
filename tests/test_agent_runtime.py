@@ -404,7 +404,86 @@ def test_load_adapter_kimi():
     assert adapter.supported_modes == frozenset({"workspace-write"})
 
 
-def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):
+@pytest.fixture
+def valid_agy_hook_files(tmp_path, monkeypatch):
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
+
+    home = tmp_path / "ordinary-home"
+    monkeypatch.setenv("HOME", str(home))
+    fake = tmp_path / "bin/agy"
+    fake.parent.mkdir()
+    fake.write_text("#!/bin/sh\nprintf '2.0.0\\n'\n")
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake.parent}:/usr/bin:/bin")
+    for path in hook_locations(tmp_path, home):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
+
+
+@pytest.mark.parametrize("candidate", ["absent_home", "valid_home", "invalid_home", "invalid_workspace", "no_guard"])
+def test_agy_bridge_real_scratch_wiring(tmp_path, monkeypatch, candidate):
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, AgyHookConfigError, guard_registration
+    from scripts.ai_agent_bridge import _agy as bridge
+
+    home = tmp_path / "home"
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
+    fake = tmp_path / "bin/agy"
+    fake.parent.mkdir()
+    fake.write_text("#!/bin/sh\nprintf '2.0.0\\n'\n")
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", str(fake.parent))
+    workspace = bridge._agy_ask_scratch_cwd()
+    assert workspace == tmp_path / "scratch/learn-ukrainian-bridge-asks/agy"
+    assert not (workspace / ".git").exists()
+    hooks = workspace / ".agents/hooks.json"
+    original = hooks.read_bytes()
+    assert json.loads(original)[GUARD_NAME] == guard_registration()
+    if candidate in {"valid_home", "invalid_home"}:
+        home_hooks = home / ".gemini/config/hooks.json"
+        home_hooks.parent.mkdir(parents=True)
+        home_hooks.write_text(json.dumps({GUARD_NAME: guard_registration()}) if candidate == "valid_home" else "{}")
+    elif candidate == "invalid_workspace":
+        # Fault injection after real provision; a second call must not repair it.
+        hooks.write_text("{}")
+        assert bridge._agy_ask_scratch_cwd() == workspace
+        assert hooks.read_text() == "{}"
+    elif candidate == "no_guard":
+        hooks.unlink()
+    from agent_runtime.adapters import agy as adapter_module
+
+    adapter_module._agy_version.cache_clear()
+    calls = []
+
+    def probe(argv, **kwargs):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, 0, "2.0.0", "")
+
+    monkeypatch.setattr(adapter_module.subprocess, "run", probe)
+    kw = dict(
+        prompt="read one file",
+        mode="danger",
+        cwd=workspace,
+        model=None,
+        task_id="bridge-real-scratch",
+        session_id=None,
+        tool_config={"bridge_repo_read": True, "repo_read_root": str(tmp_path / "repo")},
+    )
+    if candidate in {"absent_home", "valid_home"}:
+        plan = AgyAdapter().build_invocation(**kw)
+        assert plan.cwd == workspace
+        assert calls == [[str(fake), "--version"]]
+        assert hooks.read_bytes() == original
+    else:
+        with pytest.raises(AgyHookConfigError):
+            AgyAdapter().build_invocation(**kw)
+        assert calls == []
+    adapter_module._agy_version.cache_clear()
+    if candidate == "absent_home":
+        assert not home.exists()
+
+
+def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path, valid_agy_hook_files):
     """#4837: AGY exposes ``--sandbox`` but no ``--no-sandbox`` flag.
 
     ``--add-dir`` comes from the explicit ``repo_read_root``, NOT from cwd:
@@ -426,7 +505,7 @@ def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):
     assert plan.cmd[plan.cmd.index("--add-dir") + 1] == "/some/repo/root"
 
 
-def test_agy_bridge_repo_read_falls_back_to_cwd_without_explicit_root(tmp_path):
+def test_agy_bridge_repo_read_falls_back_to_cwd_without_explicit_root(tmp_path, valid_agy_hook_files):
     """Without ``repo_read_root``, ``--add-dir`` degrades to cwd (old shape)."""
     plan = AgyAdapter().build_invocation(
         prompt="read one file",

@@ -13,6 +13,7 @@ from scripts.agent_runtime.adapters import agy
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.review.model_catalog import load_model_catalog
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 SLUGS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
 LABELS = ("Claude Sonnet 5.5 (High)", "Claude Opus 5.5 (High)")
@@ -111,6 +112,7 @@ def test_real_delegate_probe_refuses_without_default_substitution(model):
 def test_review_route_denies_commands_and_writes_without_effort(tmp_path, monkeypatch, model):
     home = tmp_path / "home"
     (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    register_agy_hooks(tmp_path, home=home)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
     plan = build(tmp_path, model, config={"review_profile": "code", "agy_home_override": str(home)})

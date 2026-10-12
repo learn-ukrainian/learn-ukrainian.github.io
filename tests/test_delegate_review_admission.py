@@ -23,20 +23,39 @@ from scripts.review import reviewer_resolver
 @pytest.mark.parametrize("risk", ["low", "medium"])
 def test_native_gemini_low_medium_review_retains_requested_seat(risk):
     result = target_admission._resolve_review_target(
-        "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
-        profile="code", attempt=False, snapshot=None, budget_seat="agy",
+        "agy",
+        "gemini-3.8-flash-high",
+        author_model="gpt-6.1-sol",
+        risk=risk,
+        profile="code",
+        attempt=False,
+        snapshot=None,
+        budget_seat="agy",
     )
     assert result == ("agy", "gemini-3.8-flash-high")
 
 
-@pytest.mark.parametrize("risk,path", [("high", "ordinary.py"), ("critical", "ordinary.py"),
-                                      ("low", ".github/workflows/ci.yml"),
-                                      ("medium", "scripts/review/reviewer_resolver.py")])
+@pytest.mark.parametrize(
+    "risk,path",
+    [
+        ("high", "ordinary.py"),
+        ("critical", "ordinary.py"),
+        ("low", ".github/workflows/ci.yml"),
+        ("medium", "scripts/review/reviewer_resolver.py"),
+    ],
+)
 def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
     with pytest.raises(ReviewAdmissionRefused):
         target_admission._resolve_review_target(
-            "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
-            profile="code", attempt=True, snapshot=None, budget_seat="agy", changed_paths=(path,),
+            "agy",
+            "gemini-3.8-flash-high",
+            author_model="gpt-6.1-sol",
+            risk=risk,
+            profile="code",
+            attempt=True,
+            snapshot=None,
+            budget_seat="agy",
+            changed_paths=(path,),
         )
 
 
@@ -78,14 +97,24 @@ def test_cmd_dispatch_native_agy_code_pr_review(ordinary_review_repo, tmp_path, 
     monkeypatch.chdir(ordinary_review_repo)
     monkeypatch.setattr(test_agy_review_profile, "_OWNED_PATH", "ordinary.py")
     head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ordinary_review_repo, text=True, timeout=30,
+        ["git", "rev-parse", "HEAD"],
+        cwd=ordinary_review_repo,
+        text=True,
+        timeout=30,
     ).strip()
-    payload = json.dumps({
-        "number": 42, "baseRefName": "main", "baseRefOid": head,
-        "headRefName": "ordinary-review", "headRefOid": head, "isCrossRepository": False,
-    })
+    payload = json.dumps(
+        {
+            "number": 42,
+            "baseRefName": "main",
+            "baseRefOid": head,
+            "headRefName": "ordinary-review",
+            "headRefOid": head,
+            "isCrossRepository": False,
+        }
+    )
     monkeypatch.setattr(
-        target_resolution, "_run_gh",
+        target_resolution,
+        "_run_gh",
         lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
     )
     monkeypatch.setattr(
@@ -93,16 +122,30 @@ def test_cmd_dispatch_native_agy_code_pr_review(ordinary_review_repo, tmp_path, 
         lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
     )
     argv = [
-        "dispatch", "--agent", "agy", "--model", "gemini-3.8-flash-high",
-        "--mode", "read-only", "--task-id", "native-agy-review", "--pr", "42",
-        "--require-review-verdict", "--review-profile", "code",
-        "--review-author-model", "gpt-6.1-sol", "--review-risk", risk,
-        "--owned-path", "ordinary.py",
-        "--prompt", "Review the PR.",
+        "dispatch",
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        "--mode",
+        "read-only",
+        "--task-id",
+        "native-agy-review",
+        "--pr",
+        "42",
+        "--require-review-verdict",
+        "--review-profile",
+        "code",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        risk,
+        "--owned-path",
+        "ordinary.py",
+        "--prompt",
+        "Review the PR.",
     ]
-    args = delegate.build_parser().parse_args(
-        test_agy_review_profile._with_sol_envelope(monkeypatch, tmp_path, argv)
-    )
+    args = delegate.build_parser().parse_args(test_agy_review_profile._with_sol_envelope(monkeypatch, tmp_path, argv))
     validate_effort = delegate._validate_dispatch_effort
     checks = []
 
@@ -826,8 +869,10 @@ def _args(*extra, verdict=True):
 
 def _budget(*, claude="cool", codex="near_cap", cursor="cool"):
     return {
-        "agents": {route: {"status": status, "remaining_pct": 5 if status == "near_cap" else 60}
-                   for route, status in (("claude", claude), ("codex", codex), ("cursor", cursor))},
+        "agents": {
+            route: {"status": status, "remaining_pct": 5 if status == "near_cap" else 60}
+            for route, status in (("claude", claude), ("codex", codex), ("cursor", cursor))
+        },
         "diagnostics": {"records_loaded": 5, "stale": False},
     }
 
@@ -878,7 +923,9 @@ def test_explicit_review_risk_omission_refuses_before_budget(monkeypatch, seat, 
     args.model = model
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
     refusal, target = delegate._admit_dispatch_target(
-        args, agent=args.agent, trees=None,
+        args,
+        agent=args.agent,
+        trees=None,
         route=delegate._dispatch_route(args, delegate._DispatchRouting(), language_lane=False, review_attempt=None),
     )
     assert target is None
@@ -904,8 +951,14 @@ def test_explicit_review_risk_omission_dispatch_returns_nonzero(tmp_path, monkey
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
     args = _args(
-        "--agent", "agy", "--model", "gemini-3.8-flash-high",
-        "--review-profile", "code", "--review-author-model", "gpt-6.1-sol",
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        "--review-profile",
+        "code",
+        "--review-author-model",
+        "gpt-6.1-sol",
     )
     assert delegate.cmd_dispatch(args) == 2
     assert "AGY code review requires an explicit --review-risk" in capsys.readouterr().err
@@ -932,8 +985,16 @@ def test_explicit_review_risk_budget_omission_never_selects_agy(monkeypatch, ris
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 def test_explicit_review_risk_direct_boundaries(monkeypatch, risk):
     """D3/D4: low/medium retain AGY; high/critical select another family."""
-    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high",
-                 "--review-author-model", "gpt-6.1-sol", "--review-risk", risk)
+    args = _args(
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        risk,
+    )
     (refusal, target), _ = _admit(args, monkeypatch)
     assert refusal is None
     assert (target.recipient == "agy") == (risk in {"low", "medium"})
@@ -950,8 +1011,17 @@ def test_explicit_review_risk_other_agy_exclusions(monkeypatch, risk, boundary):
     if boundary == "family":
         flags += ["--subject-family", "google"]
     author = "gemini-3.8-flash-high" if boundary == "author" else "gpt-6.1-sol"
-    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high",
-                 "--review-author-model", author, "--review-risk", risk, *flags)
+    args = _args(
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        "--review-author-model",
+        author,
+        "--review-risk",
+        risk,
+        *flags,
+    )
     budget = _budget(codex="cool")
     budget["agents"]["agy"] = {
         "status": "near_cap" if boundary == "capacity" else "cool",
@@ -964,16 +1034,32 @@ def test_explicit_review_risk_other_agy_exclusions(monkeypatch, risk, boundary):
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_explicit_review_risk_write_review_still_refuses(capsys, mode):
-    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--mode", mode,
-                 "--review-author-model", "gpt-6.1-sol", "--review-risk", "low")
+    args = _args(
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        "--mode",
+        mode,
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "low",
+    )
     assert delegate.cmd_dispatch(args) == 2
     assert "agy_review_permissions_require_read_only" in capsys.readouterr().err
 
 
 def _9959_review_args(seat, model, author, *flags):
     return _args(
-        "--agent", seat, "--model", model,
-        "--review-author-model", author, "--review-risk", "critical",
+        "--agent",
+        seat,
+        "--model",
+        model,
+        "--review-author-model",
+        author,
+        "--review-risk",
+        "critical",
         *flags,
     )
 
@@ -1010,9 +1096,14 @@ def test_9959_security_pace_deficit_retains_sole_eligible_claude(monkeypatch, ca
     if budget_trigger == "environment":
         monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
     args = _9959_review_args(
-        seat, model, "grok-4.7",
-        "--owned-path", "scripts/agent_runtime/target_admission.py",
-        "--subject-family", "openai", *flags,
+        seat,
+        model,
+        "grok-4.7",
+        "--owned-path",
+        "scripts/agent_runtime/target_admission.py",
+        "--subject-family",
+        "openai",
+        *flags,
     )
     (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal is None
@@ -1033,8 +1124,12 @@ def test_10016_security_all_reviewers_in_pace_deficit_remain_eligible(monkeypatc
             "weekly_expected_pct": 40.0,
         }
     args = _9959_review_args(
-        "claude", "claude-opus-5-5", "grok-4.7", "--check-budget",
-        "--owned-path", "scripts/agent_runtime/target_admission.py",
+        "claude",
+        "claude-opus-5-5",
+        "grok-4.7",
+        "--check-budget",
+        "--owned-path",
+        "scripts/agent_runtime/target_admission.py",
     )
     (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal is None
@@ -1172,7 +1267,9 @@ def test_9312_budget_substitute_excludes_governed_seat(monkeypatch, subject):
         *subject,
     )
     budget = _budget(claude="near_cap", codex="cool")
-    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
+    budget["agents"].update(
+        {"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}}
+    )
     (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal and "REVIEW_ROUTE_REFUSED" in refusal
     assert target is None and routing.substitution is None
@@ -1254,7 +1351,9 @@ def test_9386_ukrainian_subject_exclusion_precedes_budget(monkeypatch, subject):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("excluded seat reached budget probe"))
     args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "ukrainian", *subject)
     refusal, target = delegate._admit_dispatch_target(
-        args, agent=args.agent, trees=None,
+        args,
+        agent=args.agent,
+        trees=None,
         route=delegate._dispatch_route(args, delegate._DispatchRouting(), language_lane=True, review_attempt=None),
     )
     assert target is None and "subject exclusion" in refusal
@@ -1263,8 +1362,16 @@ def test_9386_ukrainian_subject_exclusion_precedes_budget(monkeypatch, subject):
 @pytest.mark.parametrize("other_seat", ["codex", "gemini"])
 def test_9386_ukrainian_unrelated_subject_keeps_requested_seat(monkeypatch, other_seat):
     args = _args(
-        "--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "ukrainian",
-        "--subject-seat", other_seat, "--subject-family", "anthropic",
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        "--review-profile",
+        "ukrainian",
+        "--subject-seat",
+        other_seat,
+        "--subject-family",
+        "anthropic",
     )
     (refusal, target), _ = _admit(args, monkeypatch)
     assert refusal is None and target.recipient == "agy"
@@ -1282,7 +1389,10 @@ def test_9386_subject_flags_are_not_ignored_on_non_review_readonly_dispatch(monk
 def test_9386_write_dispatch_validates_subjects_before_routing(monkeypatch, mode, flag, value):
     args = _args("--mode", mode, flag, value, verdict=False)
     refusal, target = delegate._admit_dispatch_target(
-        args, agent=args.agent, trees=None, route=lambda _request: pytest.fail("invalid subject reached routing"),
+        args,
+        agent=args.agent,
+        trees=None,
+        route=lambda _request: pytest.fail("invalid subject reached routing"),
     )
     assert target is None and "unknown subject" in refusal
 
@@ -1328,13 +1438,17 @@ def test_9386_initial_review_substitute_requires_snapshot(monkeypatch, initial_s
 def test_9386_direct_and_substituted_codex_share_review_capacity_rule(monkeypatch, requested, remaining):
     """#10016 supersedes pace/reset-reserve routing for reviews; both routes use allowance."""
     budget = _budget(claude="near_cap", codex="hot", cursor="near_cap")
-    budget["agents"]["codex"].update({
-        "remaining_pct": remaining,
-        "codexbar": {"will_last_to_reset": False, "weekly_pace_delta_pct": 12.0, "weekly_expected_pct": 40.0},
-    })
+    budget["agents"]["codex"].update(
+        {
+            "remaining_pct": remaining,
+            "codexbar": {"will_last_to_reset": False, "weekly_pace_delta_pct": 12.0, "weekly_expected_pct": 40.0},
+        }
+    )
     budget["agents"]["grok"] = {"status": "near_cap", "remaining_pct": 5}
     args = _9959_review_args(
-        requested, "gpt-6.1-sol" if requested == "codex" else "claude-opus-5-5", "grok-4.7",
+        requested,
+        "gpt-6.1-sol" if requested == "codex" else "claude-opus-5-5",
+        "grok-4.7",
     )
     (refusal, target), _ = _admit(args, monkeypatch, budget)
     if remaining == 60:
@@ -1742,7 +1856,9 @@ def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monke
     """#9538: with no permitted substitute, pace-only retention keeps an Opus seat, not Sonnet."""
     budget = _budget()
     # Keep this a sole-reviewer retention/refusal test after Grok admission.
-    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
+    budget["agents"].update(
+        {"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}}
+    )
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1838,7 +1954,9 @@ def test_review_resolver_help_and_budget_notice_state_code_profile_only(monkeypa
     help_text = " ".join(capsys.readouterr().out.split())
     assert help_text.count("Code profile only") >= 2
     assert "Mandatory for requested or substituted AGY code reviews" in help_text
-    (refusal, target), _ = _admit(_args("--review-profile", "ukrainian", "--check-budget"), monkeypatch, _budget(codex="hot"))
+    (refusal, target), _ = _admit(
+        _args("--review-profile", "ukrainian", "--check-budget"), monkeypatch, _budget(codex="hot")
+    )
     assert refusal is None and target.recipient == "codex"
     assert "code profile only" in capsys.readouterr().err
 
@@ -1885,7 +2003,9 @@ def test_review_budget_substitute_pins_resolver_model(monkeypatch):
 def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsys):
     budget = _budget()
     # Keep this a sole-reviewer retention/refusal test after Grok admission.
-    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
+    budget["agents"].update(
+        {"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}}
+    )
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1910,7 +2030,9 @@ def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsy
 def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, capsys, inputs):
     budget = _budget()
     # Keep this a sole-reviewer retention/refusal test after Grok admission.
-    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
+    budget["agents"].update(
+        {"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}}
+    )
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -2081,7 +2203,9 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
 def test_pace_exception_never_overrides_hard_capacity_or_health(monkeypatch, lane):
     budget = _budget(codex="cool")
     # Keep this a sole-reviewer retention/refusal test after Grok admission.
-    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
+    budget["agents"].update(
+        {"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}}
+    )
     budget["agents"]["claude"] = dict(
         lane,
         codexbar={
@@ -2247,8 +2371,20 @@ def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
 def test_gemini_code_review_without_verdict_flag_is_admitted(monkeypatch, risk):
-    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "code",
-                 "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, "--force-agent", verdict=False)
+    args = _args(
+        "--agent",
+        "agy",
+        "--model",
+        "gemini-3.8-flash-high",
+        "--review-profile",
+        "code",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        risk,
+        "--force-agent",
+        verdict=False,
+    )
     (refusal, target), _ = _admit(args, monkeypatch)
     assert refusal is None
     assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
@@ -2279,9 +2415,16 @@ def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_
 def test_native_grok_review_keeps_identity_after_fresh_budget_probe(monkeypatch, risk):
     reads = []
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: reads.append(True) or _budget(codex="cool"))
-    args = _args("--agent", "grok", "--model", "grok-4.7", "--review-author-model", "gpt-6.1-sol", "--review-risk", risk)
+    args = _args(
+        "--agent", "grok", "--model", "grok-4.7", "--review-author-model", "gpt-6.1-sol", "--review-risk", risk
+    )
     routing = delegate._DispatchRouting()
-    refusal, target = delegate._admit_dispatch_target(args, agent="grok", trees=None, route=delegate._dispatch_route(args, routing, language_lane=False, review_attempt=None))
+    refusal, target = delegate._admit_dispatch_target(
+        args,
+        agent="grok",
+        trees=None,
+        route=delegate._dispatch_route(args, routing, language_lane=False, review_attempt=None),
+    )
     assert refusal is None
     assert (target.recipient, target.model) == ("grok", "grok-4.7")
     assert routing.substitution is None
@@ -2344,7 +2487,9 @@ def test_trusted_review_of_an_unattributed_branch_refuses(tmp_path, monkeypatch)
 @pytest.mark.parametrize(
     "agent,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("cursor", "grok-4.7-high")]
 )
-def test_pr_pinned_review_admits_independent_routes_for_cursor_author(tmp_path, monkeypatch, trailer, author_model, agent, model):
+def test_pr_pinned_review_admits_independent_routes_for_cursor_author(
+    tmp_path, monkeypatch, trailer, author_model, agent, model
+):
     from scripts.review import target_resolution
     from tests.test_authoring_review_feasibility import mini_repo
 
@@ -2363,8 +2508,18 @@ def test_pr_pinned_review_admits_independent_routes_for_cursor_author(tmp_path, 
         ),
     )
     args = _args(
-        "--agent", agent, "--model", model, "--pr", "42", "--pinned-head", head,
-        "--review-author-model", author_model, "--review-risk", "medium",
+        "--agent",
+        agent,
+        "--model",
+        model,
+        "--pr",
+        "42",
+        "--pinned-head",
+        head,
+        "--review-author-model",
+        author_model,
+        "--review-risk",
+        "medium",
     )
     refusal, target = delegate._admit_dispatch_target(args, agent=agent, trees=None)
     cursor_author = trailer == "cursor/auto" or author_model == "cursor:auto"
@@ -2392,8 +2547,16 @@ def test_pr_pinned_review_refuses_unknown_reviewer_for_unknown_author(tmp_path, 
         ),
     )
     args = _args(
-        "--model", "unknown", "--pr", "42", "--pinned-head", head,
-        "--review-author-model", "cursor:feature", "--review-risk", "medium",
+        "--model",
+        "unknown",
+        "--pr",
+        "42",
+        "--pinned-head",
+        head,
+        "--review-author-model",
+        "cursor:feature",
+        "--review-risk",
+        "medium",
     )
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
     assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
@@ -2496,16 +2659,21 @@ def test_10016_fresh_capacity_before_every_review_without_flag(monkeypatch, bloc
         budget["agents"]["claude"]["runtime"] = {"headroom_blocked": True}
     elif blocked in {"concurrency", "circuit"}:
         budget["agents"]["claude"]["scheduler"] = {
-            "capacity_exhausted": blocked == "concurrency", "circuit_open": blocked == "circuit",
+            "capacity_exhausted": blocked == "concurrency",
+            "circuit_open": blocked == "circuit",
             "active_reserved_input_bytes": 1000,
         }
     reads = []
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: reads.append(True) or budget)
-    args = _9959_review_args("claude", "claude-opus-5-5", "gpt-6.1-sol", "--language-lane", "--owned-path", "scripts/lexicon/cards.py")
+    args = _9959_review_args(
+        "claude", "claude-opus-5-5", "gpt-6.1-sol", "--language-lane", "--owned-path", "scripts/lexicon/cards.py"
+    )
     for _ in range(2):
         routing = delegate._DispatchRouting()
         refusal, target = delegate._admit_dispatch_target(
-            args, agent=args.agent, trees=None,
+            args,
+            agent=args.agent,
+            trees=None,
             route=delegate._dispatch_route(args, routing, language_lane=True, review_attempt=None),
         )
         if blocked:
@@ -2571,3 +2739,680 @@ def test_10016_substituted_reviewer_credit_uses_admitted_model(monkeypatch):
     assert refusal is None
     assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
     assert checked_models and set(checked_models) == {"gpt-6.1-sol"}
+
+
+@pytest.mark.parametrize("mode", [(), ("--review-mode", "cross_family")])
+def test_default_dispatch_arguments_match_pre_10437_golden(mode):
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "review-fixture",
+            "--mode",
+            "read-only",
+            "--require-review-verdict",
+            "--prompt",
+            "Review the patch.",
+            *mode,
+        ]
+    )
+    if not mode:
+        assert "review_mode" not in vars(args)
+    assert delegate.dispatch_args_sha256(args) == "08971eb586c8ae16fbc1e56ec239cc1a2dd8622a6fec7bf5a25dec30e57f87bf"
+    assert delegate.advisory_args_sha256(args) == "b5b159fbcf8a7fbcbc72d1dfe7833280204a61fc939dc3ba9a34cb63fc0555f6"
+
+
+@pytest.mark.parametrize("case", ["missing-prompt", "missing-file", "wording", "not-review"])
+@pytest.mark.parametrize("force", [False, True])
+def test_red_team_invalid_prompt_refused_before_side_effects(tmp_path, monkeypatch, capsys, case, force):
+    prompt = tmp_path / "prompt.md"
+    if case != "missing-file":
+        prompt.write_text("Review the patch." if case == "wording" else "Adversarial red-team review.")
+    argv = [
+        "dispatch",
+        "--agent",
+        "codex",
+        "--model",
+        "gpt-6.1-sol",
+        "--task-id",
+        "review-fixture",
+        "--mode",
+        "read-only",
+        "--review-mode",
+        "red_team",
+    ]
+    if case != "not-review":
+        argv.append("--require-review-verdict")
+    if case != "missing-prompt":
+        argv.extend(["--prompt-file", str(prompt)])
+    if force:
+        argv.append("--force-agent")
+
+    def fail(*_args, **_kwargs):
+        pytest.fail("invalid red-team dispatch reached provider, probe or task publication")
+
+    for name in ("_fetch_routing_budget", "_write_state_atomic", "_ensure_worktree"):
+        monkeypatch.setattr(delegate, name, fail)
+    monkeypatch.setattr(delegate.subprocess, "Popen", fail)
+    assert delegate.cmd_dispatch(delegate.build_parser().parse_args(argv)) == 2
+    assert "RED_TEAM_REFUSED" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("force", [False, True])
+@pytest.mark.parametrize("author_id,archived", [("author-one", False), ("gpt-6.1-sol", False), ("gpt-6.1-sol", True)])
+@pytest.mark.parametrize("same_task,outside_available", [(True, False), (True, True), (False, True), (False, False)])
+def test_red_team_branch_task_and_preference_gate(
+    tmp_path, monkeypatch, force, author_id, archived, same_task, outside_available
+):
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    tasks = tmp_path / "tasks"
+    records = tasks / "archive" if archived else tasks
+    records.mkdir(parents=True)
+    (records / f"{author_id}.json").write_text(
+        json.dumps(
+            {
+                "repository": "learn-ukrainian/learn-ukrainian.github.io",
+                "agent": "codex",
+                "model": "gpt-6.1-sol",
+                "task_id": f"codex/{author_id.upper()}",
+            }
+        )
+    )
+    repo.commit(f"codex/{author_id}")
+    repo.publish()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    snapshot = {
+        "claude": "healthy" if outside_available else "unhealthy",
+        "grok": "unhealthy",
+        "cursor": "unhealthy",
+        "agy": "unhealthy",
+    }
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: snapshot)
+    args = _args(
+        "--branch",
+        "feature",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "critical",
+        "--review-mode",
+        "red_team",
+        "--task-id",
+        author_id if same_task else "review-one",
+        *(("--force-agent",) if force else ()),
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    if same_task:
+        assert target is None and "SELF_REVIEW_DETECTED" in refusal
+    else:
+        assert target is None and refusal == "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+    assert args._red_team_branch_facts["author_task_ids"] == [author_id]
+
+
+@pytest.mark.parametrize("mode", [None, "red_team", "prompt-moved", "pr-only"])
+def test_review_dispatch_record_binds_opt_in_and_default_has_no_new_fields(tmp_path, monkeypatch, capsys, mode):
+    from tests.test_delegate import (
+        _init_repo_with_worktree,
+        _patch_worker_popen,
+        _sanitize_git_env_for_test,
+        _write_args,
+    )
+
+    main, reviewer = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", reviewer)
+    tasks = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    _patch_worker_popen(monkeypatch)
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("Adversarial red-team review: examine the target for failures.")
+    args = _write_args(
+        agent="codex",
+        model="gpt-6.1-sol",
+        task_id="review-record",
+        mode="read-only",
+        cwd=str(reviewer),
+        prompt=None,
+        prompt_file=str(prompt),
+        require_review_verdict=True,
+        review_author_model="claude-opus-5-5",
+        review_risk="critical",
+    )
+    if mode in {"red_team", "prompt-moved"}:
+        args.review_mode = "red_team"
+    # Pin real Git endpoints without a network read; this fixture reviews no authored changes.
+    from scripts.review.target_resolution import resolve_branch_target
+
+    target = resolve_branch_target(reviewer, "HEAD", "main")
+    if mode == "pr-only":
+        monkeypatch.chdir(reviewer)
+        args.pr = 42
+        args.cwd = None
+        args.worktree = "auto"
+        args.require_review_verdict = False
+        args.review_author_model = None
+        args.review_risk = None
+        monkeypatch.setattr(
+            "scripts.ai_agent_bridge._agy.resolve_same_repo_pr_head", lambda *_a, **_k: ("main", target.head_sha)
+        )
+        monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: "owner/repo")
+        monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_k: target.head_sha)
+
+    def review_paths(argv):
+        argv._review_target = target
+        if mode == "prompt-moved":
+            prompt.write_text("Different adversarial red-team review.")
+        return ()
+
+    monkeypatch.setattr(delegate, "_dispatch_review_changed_paths", review_paths)
+    before_hash = delegate.dispatch_args_sha256(args)
+    if mode == "prompt-moved":
+        assert delegate.cmd_dispatch(args) == 2
+        assert "adversarial prompt changed after admission" in capsys.readouterr().err
+        assert not (tasks / "review-record.json").exists()
+        return
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: "owner/repo")
+    provisional_stages = []
+
+    def observe_writer(name):
+        writer = getattr(delegate, name)
+
+        def observed(*argv, **kwargs):
+            result = writer(*argv, **kwargs)
+            provisional = delegate._read_state(tasks / "review-record.json")
+            assert provisional["review"] is True
+            assert provisional["pinned_head"] == target.head_sha
+            assert provisional["repository"] == "owner/repo"
+            assert provisional["review_mode"] == ("red_team" if mode == "red_team" else "cross_family")
+            from scripts.review import record_cf_verdict as recorder
+
+            if mode == "red_team":
+                recorder.require_no_outside_review_in_flight(tasks, "owner/repo", target.head_sha)
+            else:
+                with pytest.raises(recorder.RecordError, match="outside-family review in flight for this head"):
+                    recorder.require_no_outside_review_in_flight(tasks, "owner/repo", target.head_sha)
+            provisional_stages.append(name)
+            return result
+
+        monkeypatch.setattr(delegate, name, observed)
+
+    for writer_name in ("_publish_admission_hold", "_publish_worktree_prep", "_retire_worktree_prep"):
+        observe_writer(writer_name)
+    assert delegate.cmd_dispatch(args) == 0
+    assert provisional_stages == ["_publish_admission_hold"] + (
+        ["_publish_worktree_prep", "_retire_worktree_prep"] if mode == "pr-only" else []
+    )
+    record = delegate._read_state(tasks / "review-record.json")
+    assert record["dispatch_args_sha256"] == before_hash
+    import hashlib
+
+    assert record["prompt_sha256"] == hashlib.sha256(prompt.read_bytes()).hexdigest()
+    if mode == "red_team":
+        assert record["review_mode"] == "red_team"
+        assert record["review_branch_facts"]["author_task_ids"] == []
+        assert record["review_branch_facts"]["head_sha"] == target.head_sha
+    else:
+        assert "review_mode" not in record and "review_branch_facts" not in record
+    if mode == "pr-only":
+        from scripts.review import record_cf_verdict as recorder
+
+        assert record["pr"] == 42
+        assert record["pinned_head"] == target.head_sha
+        assert not record["review"] and not record["require_review_verdict"]
+        assert record["review_profile"] is None and record["review_author_model"] is None
+        assert record["review_risk"] is None
+        record["status"] = "running"
+        (tasks / "review-record.json").write_text(json.dumps(record))
+        monkeypatch.setattr(recorder, "_run_json", lambda *_a, **_k: [])
+        with pytest.raises(recorder.RecordError, match="outside-family review in flight for this head"):
+            recorder.require_no_branch_outside_rejection("owner/repo", "main", target.head_sha, task_root=tasks)
+
+
+@pytest.mark.parametrize("flags", [("--language-lane",), ("--research-track", "l2-uk-en")])
+def test_red_team_language_lane_dispatch_refused(tmp_path, monkeypatch, flags):
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit("codex/author-one")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "claude": "unhealthy",
+            "grok": "unhealthy",
+            "cursor": "unhealthy",
+            "agy": "unhealthy",
+        },
+    )
+    args = _args(
+        "--branch",
+        "feature",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "critical",
+        "--review-profile",
+        "code",
+        "--review-mode",
+        "red_team",
+        *flags,
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert target is None
+    assert refusal == "RED_TEAM_REFUSED: Ukrainian-language reviews stay cross-family"
+
+
+def test_red_team_routing_unavailable_is_typed_refusal(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit("codex/author-one")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+
+    def unavailable():
+        raise delegate.MonitorApiUnavailable("routing probe failed")
+
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
+    args = _args("--branch", "feature", "--review-profile", "code", "--review-mode", "red_team")
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert target is None
+    assert refusal == "RED_TEAM_REFUSED: routing state unavailable"
+
+
+def test_red_team_worker_invokes_a_fresh_session(tmp_path, monkeypatch):
+    from agent_runtime import runner
+    from tests.test_delegate import _init_git_repo_for_test
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    state_path = delegate._state_path("review-session")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "review-session",
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "review_mode": "red_team",
+            "session_id": "author-session",
+        },
+    )
+    calls = []
+
+    def invoke(*_args, **kwargs):
+        calls.append(kwargs)
+        return SimpleNamespace(
+            ok=True,
+            response="VERDICT: APPROVE",
+            stderr_excerpt=None,
+            returncode=0,
+            rate_limited=False,
+            model="gpt-6.1-sol",
+            effort="high",
+            cli_version="fixture",
+        )
+
+    monkeypatch.setattr(runner, "invoke", invoke)
+    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_a, **_k: None)
+    rc = delegate._run_worker(
+        task_id="review-session",
+        agent="codex",
+        prompt="Adversarial red-team review.",
+        mode="read-only",
+        cwd_str=str(worktree),
+        model="gpt-6.1-sol",
+        hard_timeout=60,
+        effort="high",
+        require_review_verdict=True,
+    )
+    assert rc == 0 and delegate._read_state(state_path)["status"] == "done"
+    assert len(calls) == 1 and calls[0]["session_id"] is None
+
+
+def test_dispatch_review_mode_help_preserves_legacy_usage_golden():
+    import argparse
+    import hashlib
+
+    parser = delegate.build_parser()
+    subcommands = next(action for action in parser._actions if isinstance(action, argparse._SubParsersAction))
+    dispatch = subcommands.choices["dispatch"]
+    assert "--review-mode {cross_family,red_team}" in dispatch.format_help()
+    assert hashlib.sha256(dispatch.format_usage().encode()).hexdigest() == (
+        "b7a61d5f40b0ddcedcdf507fa0348d5141ca5de55c2496ba0f995aa260f73074"
+    )
+
+
+@pytest.mark.parametrize(
+    "history",
+    [
+        "same-head-rejection",
+        "same-head-blocked",
+        "other-head-rejection",
+        "red-team-rejection",
+        "no-pr",
+        "no-branch",
+        "unreadable",
+        "lookup-error",
+        "in-flight",
+        "done",
+        "other-head-in-flight",
+        "red-team-in-flight",
+        "unreadable-ledger",
+    ],
+)
+def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatch, history):
+    from scripts.review import record_cf_verdict as recorder
+    from scripts.review.target_resolution import ReviewTarget
+    from tests.test_record_cf_verdict import BRANCH, OTHER, REPOSITORY, SHA
+
+    branch_flags = () if history == "no-branch" else ("--branch", BRANCH)
+    args = _args(*branch_flags, "--review-profile", "code", "--review-mode", "red_team")
+    if history == "no-branch":
+        args.branch = None
+    args._review_target = ReviewTarget("branch", OTHER, SHA, (), 0, True, "test branch")
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    if history in {"in-flight", "done", "other-head-in-flight", "red-team-in-flight"}:
+        from tests.test_record_cf_verdict import write_task
+
+        write_task(
+            tasks,
+            task_id="outside-review",
+            review=True,
+            status="done" if history == "done" else "running",
+            worktree_base_sha=OTHER if history == "other-head-in-flight" else SHA,
+            review_mode="red_team" if history == "red-team-in-flight" else "cross_family",
+        )
+    if history == "unreadable-ledger":
+        (tasks / "bad.json").write_text("{")
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    monkeypatch.setattr(
+        target_admission,
+        "resolve_and_admit",
+        lambda *_a, **_k: (SimpleNamespace(recipient="codex", model="gpt-6.1-sol"),),
+    )
+    marker = recorder.build_comment(
+        sha=OTHER if history == "other-head-rejection" else SHA,
+        task_id="prior-review",
+        started="2026-09-23T11:00:00.000001+00:00",
+        verdict="APPROVED"
+        if history in {"in-flight", "done", "other-head-in-flight", "red-team-in-flight", "unreadable-ledger"}
+        else "BLOCKED"
+        if history == "same-head-blocked"
+        else "CHANGES_REQUESTED",
+        model="claude-opus-5-5",
+        family="anthropic",
+        reply="VERDICT: REQUEST_CHANGES",
+        review_mode="red_team" if history == "red-team-rejection" else "cross_family",
+    )
+    comments = [{"body": None if history == "unreadable" else marker}]
+
+    def lookup(*_a, **_k):
+        if history == "no-branch":
+            pytest.fail("a local review without a branch or PR must not look up PR history")
+        if history == "lookup-error":
+            raise recorder.RecordError("GitHub lookup unavailable")
+        return [] if history == "no-pr" else [{"number": 42, "headRefOid": SHA, "headRefName": BRANCH}]
+
+    monkeypatch.setattr(recorder, "_run_json", lookup)
+    monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda *_a: comments)
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    if history in {"same-head-rejection", "same-head-blocked"}:
+        assert refusal == "RED_TEAM_REFUSED: outside-family rejection exists for this head" and target is None
+    elif history == "in-flight":
+        assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head" and target is None
+    elif history == "unreadable-ledger":
+        assert refusal == "RED_TEAM_REFUSED: task ledger unavailable" and target is None
+    elif history in {"unreadable", "lookup-error"}:
+        assert refusal is not None and target is None
+    else:
+        assert refusal is None and target.model == "gpt-6.1-sol"
+
+
+@pytest.mark.parametrize("target_kind", ["branch", "pr"])
+@pytest.mark.parametrize(
+    "history",
+    [
+        "running",
+        "done",
+        "other-head",
+        "red-team",
+        "unreadable",
+        "invalid-head",
+        "prep",
+        "other-head-prep",
+        "red-team-prep",
+        "glob-error",
+    ],
+)
+def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeypatch, target_kind, history):
+    from scripts.review import record_cf_verdict as recorder
+    from scripts.review.target_resolution import ReviewTarget
+    from tests.test_record_cf_verdict import BRANCH, OTHER, REPOSITORY, SHA, write_task
+
+    args = _args("--branch", BRANCH, "--review-profile", "code", "--review-mode", "red_team")
+    if target_kind == "pr":
+        args.branch = None
+        args.pr = 42
+    args._review_target = ReviewTarget(target_kind, OTHER, SHA, (), 0, True, "test target")
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    if history == "unreadable":
+        (tasks / "bad.json").write_text("{")
+    elif history in {"prep", "other-head-prep", "red-team-prep"}:
+        (tasks / "outside-review.json").write_text(
+            json.dumps(
+                {
+                    "task_id": "outside-review",
+                    "status": "spawning",
+                    "review_mode": "red_team" if history == "red-team-prep" else "cross_family",
+                    "worktree_prep": {"base_sha": OTHER if history == "other-head-prep" else SHA},
+                }
+            )
+        )
+    else:
+        write_task(
+            tasks,
+            task_id="outside-review",
+            pr=42,
+            pinned_head=[] if history == "invalid-head" else OTHER if history == "other-head" else SHA,
+            worktree_base_sha=None,
+            status="done" if history == "done" else "running",
+            review_mode="red_team" if history == "red-team" else "cross_family",
+        )
+    before = {path.name: path.read_bytes() for path in tasks.iterdir()}
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    monkeypatch.setattr(
+        target_admission,
+        "resolve_and_admit",
+        lambda *_a, **_k: (SimpleNamespace(recipient="codex", model="gpt-6.1-sol"),),
+    )
+    monkeypatch.setattr(recorder, "_run_json", lambda *_a, **_k: [])
+    monkeypatch.setattr(recorder, "_pr", lambda *_a: {"number": 42, "headRefOid": SHA, "headRefName": BRANCH})
+    monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda *_a: [])
+    if history == "glob-error":
+        original = Path.glob
+
+        def unreadable(path, *args, **kwargs):
+            if path == tasks:
+                assert list(path.iterdir())  # Directory enumeration succeeds before glob fails.
+                raise OSError("ledger glob failed")
+            return original(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "glob", unreadable)
+
+    def no_effects(*_a, **_k):
+        pytest.fail("admission performed a launch, worktree or task publication side effect")
+
+    for name in ("_write_state_atomic", "_ensure_worktree"):
+        monkeypatch.setattr(delegate, name, no_effects)
+    monkeypatch.setattr(delegate.subprocess, "Popen", no_effects)
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    if history in {"running", "prep"}:
+        assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head"
+        assert target is None
+    elif history in {"unreadable", "invalid-head", "glob-error"}:
+        assert refusal == "RED_TEAM_REFUSED: task ledger unavailable"
+        assert target is None
+    else:
+        assert refusal is None and target.model == "gpt-6.1-sol"
+    assert {path.name: path.read_bytes() for path in tasks.iterdir()} == before
+
+
+@pytest.fixture
+def recorder_publication(synthetic_opsec, publisher_transport, monkeypatch):
+    """Match the recorder tests' synthetic scanner and injected publication transport."""
+    from tests.opsec_fixtures import synthetic_rules
+
+    rules = synthetic_rules(rule="3-absolute-path", level=3, pattern=r"(?<![<\w:])/[A-Za-z][^\s`'\"<>),;\]}|*]*")
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize(
+    "head,review_mode", [("same", "cross_family"), ("other", "cross_family"), ("same", "red_team")]
+)
+def test_review_hold_lifecycle_refuses_admission_and_publication(
+    tmp_path, monkeypatch, mode, head, review_mode, recorder_publication
+):
+    """Drive the real hold, prep, retirement and full-record writers, with no branch PR."""
+    from scripts.review import record_cf_verdict as recorder
+    from scripts.review.target_resolution import ReviewTarget
+    from tests.test_record_cf_verdict import BRANCH, OTHER, REPOSITORY, SHA, red_team_task, setup_record
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    run_json = recorder._run_json
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda argv, **kw: [] if isinstance(argv, list) and argv[:3] == ["gh", "pr", "list"] else run_json(argv, **kw),
+    )
+    monkeypatch.setattr(
+        target_admission,
+        "resolve_and_admit",
+        lambda *_a, **_k: (SimpleNamespace(recipient="codex", model="gpt-6.1-sol"),),
+    )
+    args = _args("--branch", BRANCH, "--review-profile", "code", "--review-mode", "red_team")
+    args._review_target = ReviewTarget("branch", OTHER, SHA, (), 0, True, "test target")
+    review_head = SHA if head == "same" else OTHER
+    fields = {"repository": REPOSITORY, "pinned_head": review_head, "review": True, "review_mode": review_mode}
+    prep = {
+        "path": str(tmp_path / "review-tree"),
+        "run_nonce": "outside-nonce",
+        "reserved_at": "2026-10-12T00:00:00+00:00",
+        "base_sha": review_head,
+    }
+    state_path = delegate._state_path("outside-review")
+    writers = [
+        (
+            "hold",
+            lambda: delegate._publish_admission_hold(
+                "outside-review", "outside-nonce", mode=mode, admission=None, review_fields=fields
+            ),
+        ),
+        ("prep", lambda: delegate._publish_worktree_prep("outside-review", "outside-nonce", prep)),
+        ("retired", lambda: delegate._retire_worktree_prep("outside-review", "outside-nonce")),
+        (
+            "full",
+            lambda: delegate._write_state_atomic(
+                state_path,
+                {"task_id": "outside-review", "run_nonce": "outside-nonce", "status": "spawning", "pid": 123, **fields},
+            ),
+        ),
+        (
+            "done",
+            lambda: delegate._write_state_atomic(
+                state_path,
+                {"task_id": "outside-review", "run_nonce": "outside-nonce", "status": "done", "pid": 123, **fields},
+            ),
+        ),
+    ]
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    for stage, write in writers:
+        write()
+        refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+        if head == "same" and review_mode == "cross_family" and stage != "done":
+            assert target is None
+            assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head"
+            with pytest.raises(recorder.RecordError, match="outside-family review in flight for this head"):
+                recorder.record("review-one", **kwargs)
+            assert comments == [] and calls == {"posts": 0, "statuses": 0}
+            print(f"AFTER {mode} {stage}: refused posts=0 statuses=0")
+        else:
+            assert refusal is None and target.model == "gpt-6.1-sol"
+            assert recorder.record("review-one", **kwargs)["status"] in {"posted", "existing"}
+            assert calls["posts"] == 1
+
+
+@pytest.mark.parametrize("stage", ["hold", "prep", "retired"])
+@pytest.mark.parametrize("outcome", ["failed", "cancelled"])
+def test_review_hold_failure_or_cancellation_releases_guard(
+    tmp_path, monkeypatch, stage, outcome, recorder_publication
+):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_record_cf_verdict import REPOSITORY, SHA, red_team_task, setup_record
+
+    tasks, _, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    fields = {"repository": REPOSITORY, "pinned_head": SHA, "review": True, "review_mode": "cross_family"}
+    prep = {
+        "path": str(tmp_path / "tree"),
+        "run_nonce": "failed-nonce",
+        "reserved_at": "2026-10-12T00:00:00+00:00",
+        "base_sha": SHA,
+    }
+    error = RuntimeError("fixture failed") if outcome == "failed" else KeyboardInterrupt("fixture cancelled")
+    with pytest.raises(type(error)), contextlib.ExitStack() as holds:
+        delegate._publish_admission_hold(
+            "outside-review", "failed-nonce", mode="read-only", admission=None, review_fields=fields
+        )
+        holds.callback(delegate._release_admission_hold, "outside-review", "failed-nonce")
+        if stage != "hold":
+            delegate._publish_worktree_prep("outside-review", "failed-nonce", prep)
+        if stage == "retired":
+            delegate._retire_worktree_prep("outside-review", "failed-nonce")
+        if outcome == "failed":
+            assert delegate._record_worktree_prep_failure(
+                task_id="outside-review",
+                run_nonce="failed-nonce",
+                attribution=SimpleNamespace(initiator="codex", source="test"),
+                agent="codex",
+                mode="read-only",
+                prompt="Review",
+                error=error,
+                worktree_prep=prep if stage == "prep" else None,
+            )
+        raise error
+    state = delegate._read_state(delegate._state_path("outside-review"))
+    if outcome == "failed" or stage == "prep":
+        assert state["status"] == outcome
+        assert state["finished_at"] is not None
+        if stage == "prep":
+            assert state["worktree_prep"] == prep
+    else:
+        assert state is None
+    assert (
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )["status"]
+        == "posted"
+    )
+    assert calls == {"posts": 1, "statuses": 1}

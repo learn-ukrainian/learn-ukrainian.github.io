@@ -96,6 +96,7 @@ from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
+from scripts.agent_runtime.agy_hook_config import require_hook_config
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
 from scripts.secret_redactor import redact_text
@@ -589,7 +590,7 @@ def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _Transcr
         # A missing/unreadable resumed slice cannot prove that nothing ran.
         return False
     try:
-        log = safe_read_attempt_file(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
+        log = safe_read_attempt_file(Path(log_file), trusted_root=_log_read_root(plan))
     except FileNotFoundError:
         return True  # Fresh attempt failed before creating a conversation log.
     except (OSError, AttemptReadError):
@@ -931,6 +932,13 @@ class AgyAdapter:
             validate_agy_read_only_paths(prompt, mode=mode, cwd=cwd, tool_config=tc)
             _write_review_permissions(tc, mode=mode, session_id=session_id, cwd=cwd)
 
+        require_hook_config(
+            cwd,
+            Path.home(),
+            Path(str(tc["agy_home_override"])) if tc.get("agy_home_override") else None,
+            install=True,
+        )
+
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
         with contextlib.suppress(OSError):
@@ -1025,7 +1033,7 @@ class AgyAdapter:
 
         return InvocationPlan(
             cmd=cmd,
-            cwd=cwd,
+            cwd=cwd.resolve(),
             stdin_payload=stdin_payload,
             output_file=None,
             env_overrides=env_overrides,
@@ -2725,11 +2733,7 @@ def _bound_conversation(plan: InvocationPlan | None) -> tuple[str, Path] | None:
     if plan is None:
         return None
     log_file = plan.env_overrides.get(_AGY_LOG_ENV)
-    conversation_id = (
-        _conversation_id_from_log(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
-        if log_file
-        else None
-    )
+    conversation_id = _conversation_id_from_log(Path(log_file), trusted_root=_log_read_root(plan)) if log_file else None
     if not conversation_id:
         return None
     app_data, _ = _transcript_read_location(plan)
@@ -2764,6 +2768,22 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
         return None
     events, unreadable = parsed
     return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
+
+
+def _log_read_root(plan: InvocationPlan) -> Path:
+    """Keep attempt containment and handle ordinary caller log overrides.
+
+    A replaced ordinary log can live in the workspace captured before launch,
+    never beneath an unrelated log's stale root. Attempt logs always stay
+    beneath the enforced write root. The existing liveness path and resolved
+    cwd retain both pre-launch bindings without adding serialized metadata.
+    All reads retain the checked fd walk.
+    """
+    log_file = plan.env_overrides.get(_AGY_LOG_ENV)
+    original_log = str(plan.liveness_paths[0]) if plan.liveness_paths else log_file
+    if plan.metadata.get("attempt_read_root") or log_file == original_log:
+        return Path(plan.metadata.get("log_read_root", "/"))
+    return plan.cwd
 
 
 def _transcript_read_location(plan: InvocationPlan) -> tuple[Path, Path]:

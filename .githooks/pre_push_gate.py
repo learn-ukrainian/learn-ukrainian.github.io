@@ -59,6 +59,7 @@ ADMISSION_MAX_WAIT_S = 10 * ADMISSION_WAIT_S
 MAX_QUEUE_ENTRIES = 256  # cap live tickets after reaping abandoned entries
 RUN_TOKEN_ENV = "LU_PRE_PUSH_GATE_RUN_TOKEN"
 RECEIPT_TTL_S = 3600.0
+OUTPUT_TAIL_BYTES = 8192
 # Registered modules exceeding the cost threshold are explicitly deferred to CI
 # and recorded on every run. Function entries always run.
 HEAVY_MODULE_S = 60.0
@@ -372,7 +373,7 @@ def record(state: Path, event: dict[str, object]) -> None:
         state.mkdir(parents=True, exist_ok=True)
         with (state / "measurements.jsonl").open("a", encoding="utf-8") as stream:
             stream.write(json.dumps(event, sort_keys=True) + "\n")
-    except OSError:
+    except (OSError, TypeError, ValueError):
         pass
 
 
@@ -601,7 +602,9 @@ def terminate_run(process: subprocess.Popen[str], token: str) -> bool:
     return True
 
 
-def run_bounded(command: list[str], *, cwd: Path, deadline: float, label: str) -> tuple[int, str]:
+def run_bounded(
+    command: list[str], *, cwd: Path, deadline: float, label: str, diagnostics: dict[str, object] | None = None
+) -> tuple[int, str]:
     """Run in its own process group; on budget exhaustion kill the group and report incomplete.
 
     Output goes to a file, never a pipe, so a descendant that outlives the command cannot block the
@@ -609,50 +612,77 @@ def run_bounded(command: list[str], *, cwd: Path, deadline: float, label: str) -
     """
     remaining = deadline - time.monotonic()
     if remaining <= 0:
+        if diagnostics is not None:
+            diagnostics["child_unavailable_reason"] = "budget_exhausted_before_start"
         raise GateOutcome(
             "validation_incomplete", f"{label}: time budget exhausted before start (timeout)", incomplete=True
         )
     token = uuid.uuid4().hex
     environment = {**clean_environment(), RUN_TOKEN_ENV: token}
+    if diagnostics is not None:
+        diagnostics["child_unavailable_reason"] = "output_file_unavailable"
     with tempfile.TemporaryFile() as sink:
+        process = None
         try:
-            process = subprocess.Popen(
-                command,
-                cwd=cwd,
-                env=environment,
-                stdin=subprocess.DEVNULL,
-                stdout=sink,
-                stderr=subprocess.STDOUT,
-                start_new_session=True,
-            )
-        except OSError as exc:
-            raise GateOutcome("validation_incomplete", f"{label}: cannot start ({exc})", incomplete=True) from exc
-        timed_out = False
-        try:
-            process.wait(timeout=remaining)
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            with contextlib.suppress(ProcessLookupError):
-                os.killpg(process.pid, signal.SIGKILL)
-        finally:
-            sweep_descendants(token, time.monotonic() + CLEANUP_BUDGET_S)
-        if timed_out:
+            if diagnostics is not None:
+                diagnostics["child_unavailable_reason"] = "spawn_error"
             try:
-                process.wait(timeout=CLEANUP_BUDGET_S)
+                process = subprocess.Popen(
+                    command,
+                    cwd=cwd,
+                    env=environment,
+                    stdin=subprocess.DEVNULL,
+                    stdout=sink,
+                    stderr=subprocess.STDOUT,
+                    start_new_session=True,
+                )
+            except OSError as exc:
+                raise GateOutcome("validation_incomplete", f"{label}: cannot start ({exc})", incomplete=True) from exc
+            timed_out = False
+            try:
+                process.wait(timeout=remaining)
             except subprocess.TimeoutExpired:
+                timed_out = True
+                with contextlib.suppress(ProcessLookupError):
+                    os.killpg(process.pid, signal.SIGKILL)
+            finally:
+                sweep_descendants(token, time.monotonic() + CLEANUP_BUDGET_S)
+            if timed_out:
+                try:
+                    process.wait(timeout=CLEANUP_BUDGET_S)
+                except subprocess.TimeoutExpired:
+                    raise GateOutcome(
+                        "validation_incomplete", f"{label}: could not reap the timed-out process", incomplete=True
+                    ) from None
                 raise GateOutcome(
-                    "validation_incomplete", f"{label}: could not reap the timed-out process", incomplete=True
-                ) from None
-            raise GateOutcome("validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True)
-        sink.seek(0)
-        return process.returncode, sink.read().decode("utf-8", errors="replace")
+                    "validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True
+                )
+            sink.seek(0)
+            return process.returncode, sink.read().decode("utf-8", errors="replace")
+        finally:
+            if diagnostics is not None:
+                if process is not None:
+                    code = process.returncode
+                    diagnostics.update(
+                        returncode=code,
+                        signal=-code if code is not None and code < 0 else None,
+                        child_unavailable_reason="exit_unobserved" if code is None else None,
+                    )
+                try:
+                    size = sink.seek(0, os.SEEK_END)
+                    sink.seek(max(0, size - OUTPUT_TAIL_BYTES))
+                    diagnostics["output_tail"] = tail(sink.read(OUTPUT_TAIL_BYTES).decode("utf-8", errors="replace"))
+                except OSError:
+                    diagnostics["output_unavailable_reason"] = "output_read_error"
 
 
 def failing_node_ids(output: str) -> tuple[str, ...]:
     return tuple(dict.fromkeys(FAILURE_RE.findall(output)))
 
 
-def run_pre_commit_stage(plan: Plan, root: Path, launcher: str, config: str, deadline: float) -> None:
+def run_pre_commit_stage(
+    plan: Plan, root: Path, launcher: str, config: str, deadline: float, *, diagnostics: dict[str, object] | None = None
+) -> None:
     code, output = run_bounded(
         [
             "bash",
@@ -672,6 +702,7 @@ def run_pre_commit_stage(plan: Plan, root: Path, launcher: str, config: str, dea
         cwd=root,
         deadline=deadline,
         label="pre-commit pre-push stage",
+        diagnostics=diagnostics,
     )
     if code != 0:
         hooks = tuple(dict.fromkeys(name.strip() for name in PRE_COMMIT_FAILED_RE.findall(output)))
@@ -680,7 +711,7 @@ def run_pre_commit_stage(plan: Plan, root: Path, launcher: str, config: str, dea
 
 def test_process_limit() -> int:
     """Read the configured process ceiling; invalid configuration refuses validation."""
-    value = os.environ.get(MAX_TEST_PROCESSES_ENV, "1")
+    value = os.environ.get(MAX_TEST_PROCESSES_ENV, "4")
     try:
         if re.fullmatch(r"[0-9]+", value) is None or int(value) < 1:
             raise ValueError
@@ -696,10 +727,14 @@ def parallel_options() -> list[str]:
     limit = test_process_limit()
     if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
+    if os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip():
+        limit = min(limit, 2)  # Match ci.pytest_dispatch_cap before recording the invocation.
     return ["-n", str(limit), "--dist", "loadfile"]
 
 
-def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> str:
+def run_pytest_stage(
+    plan: Plan, root: Path, launcher: str, deadline: float, *, diagnostics: dict[str, object] | None = None
+) -> str:
     # Admission serializes these directories. A killed gate leaves no live owner, so the next
     # admitted stage can reap its base without touching another pytest session's shared temp.
     state = state_dir(root)
@@ -708,6 +743,12 @@ def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> 
         reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
+    options = parallel_options()
+    if diagnostics is not None:
+        diagnostics.update(
+            requested_test_processes=test_process_limit(),
+            effective_test_processes=int(options[1]) if options else 1,
+        )
     with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
         code, output = run_bounded(
             [
@@ -723,11 +764,12 @@ def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> 
                 "no:cacheprovider",
                 "--basetemp",
                 base_temp,
-                *parallel_options(),
+                *options,
             ],
             cwd=root,
             deadline=deadline,
             label="pytest stage",
+            diagnostics=diagnostics,
         )
     failing = failing_node_ids(output)
     if code == 0:
@@ -840,6 +882,33 @@ class Budget:
         return self.deadline
 
 
+@contextlib.contextmanager
+def stage_measurement(event: dict[str, object], name: str):
+    """Observe only entered stages; preserve diagnostics when the stage raises."""
+    started = time.monotonic()
+    diagnostics: dict[str, object] = {
+        "outcome": "validation_incomplete",
+        "reason": "stage_interrupted",
+        "returncode": None,
+        "signal": None,
+        "child_unavailable_reason": "stage_did_not_start_child",
+        "output_tail": None,
+    }
+    event.setdefault("stages", {})[name] = diagnostics
+    try:
+        yield diagnostics
+    except GateOutcome as error:
+        diagnostics.update(outcome="validation_incomplete" if error.incomplete else "refused", reason=error.reason)
+        raise
+    except OSError:
+        diagnostics["reason"] = "validation_error"
+        raise
+    else:
+        diagnostics.update(outcome="green", reason=None)
+    finally:
+        diagnostics["elapsed_s"] = time.monotonic() - started
+
+
 def validate(
     update: Update, root: Path, launcher: str, config: str, event: dict[str, object], budget: Budget | None = None
 ) -> None:
@@ -879,8 +948,10 @@ def validate(
             settled = False
             try:
                 shadow = Shadow(plan, root, launcher)
-                run_pre_commit_stage(plan, root, launcher, config, deadline)
-                event["pytest"] = run_pytest_stage(plan, root, launcher, deadline)
+                with stage_measurement(event, "pre_commit") as diagnostics:
+                    run_pre_commit_stage(plan, root, launcher, config, deadline, diagnostics=diagnostics)
+                with stage_measurement(event, "pytest") as diagnostics:
+                    event["pytest"] = run_pytest_stage(plan, root, launcher, deadline, diagnostics=diagnostics)
                 try:
                     write_receipt(state, plan, time.time())
                 except OSError as error:

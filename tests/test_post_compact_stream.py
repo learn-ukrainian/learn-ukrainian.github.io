@@ -25,8 +25,13 @@ def _run_hook(
     selector: str = "open-model-data",
     stream: str = "epic:6321",
     export_stream: bool = True,
+    dispatch_task: str | None = None,
 ) -> tuple[str, list[str], list[str]]:
-    """Run real hydration; baseline reconstructs only the unfixed stream inputs."""
+    """Run real hydration; baseline reconstructs only the unfixed stream inputs.
+
+    ``dispatch_task`` sets the delegate.py worker marker; the hook then emits
+    nothing, so the raw stdout is returned instead of the parsed context.
+    """
     repo = tmp_path / "repo"
     canary = repo / "scripts/session_canary"
     canary.mkdir(parents=True)
@@ -85,9 +90,11 @@ def _run_hook(
     diary.write_text("# Driver handoff\n## Next Drive\n- Reconcile queue.\n")
 
     args_log = tmp_path / "hydrate-args"
+    calls_log = tmp_path / "interpreter-calls"
     wrapper = tmp_path / "interpreter-recorder"
     wrapper.write_text(
         "#!/bin/bash\n"
+        f"printf '%s\\n' \"$*\" >> {shlex.quote(str(calls_log))}\n"
         "if [ \"${1:-}\" = '-m' ]; then\n"
         f"  printf '%s\\n' \"$*\" >> {shlex.quote(str(args_log))}\n"
         "fi\n"
@@ -123,6 +130,8 @@ def _run_hook(
     )
     if export_stream:
         environment["SESSION_STREAM_ID"] = stream
+    if dispatch_task is not None:
+        environment["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = dispatch_task
     # The receipt is only fixture data; no lease is opened, renewed, or closed.
     (diary.parent / "session-lease.env").write_text(
         "\n".join(
@@ -182,6 +191,8 @@ def _run_hook(
         server.server_close()
         thread.join(timeout=1)
     assert result.returncode == 0, result.stderr
+    if dispatch_task is not None:
+        return result.stdout, args_log.read_text().splitlines() if args_log.exists() else [], requests
     context = json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
     return context, args_log.read_text().splitlines() if args_log.exists() else [], requests
 
@@ -303,3 +314,74 @@ def test_post_compact_includes_blocker_delta_rule_for_grok_and_claude() -> None:
     claude_context = json.loads(res_claude.stdout)["additionalContext"]
     assert "Epic blocker delta: Put every owned blocker in --current with complete: true;" in claude_context
     assert "scripts.driver_blockers record --epic infra" in claude_context
+
+
+def test_dispatched_worker_with_inherited_epic_skips_codex_hydration(tmp_path: Path) -> None:
+    # #10455: a worker dispatched from a driver shell inherits SESSION_EPIC.
+    stdout, args, requests = _run_hook(tmp_path / "worker", dispatch_task="probe-worker")
+    assert stdout == ""
+    assert args == requests == []
+    # No selector, diary or hydrate interpreter ran at all.
+    assert not (tmp_path / "worker/interpreter-calls").exists()
+    # Control: the same launcher-bound driver without the marker still hydrates.
+    context, driver_args, driver_requests = _run_hook(tmp_path / "driver")
+    assert "CODEX FLEET-DRIVER HYDRATION\n" in context
+    assert '"execution_allowed": true' in context
+    assert "--stream epic:6321" in driver_args[0]  # allow-hardcoded-epic: launcher lease fixture
+    assert driver_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: launcher lease fixture
+
+
+def test_dispatched_worker_reproduction_prints_nothing() -> None:
+    # The #10455 reproduction: bare Codex identity with a driver epic.
+    environment = {
+        "HOME": os.environ.get("HOME", str(ROOT)),
+        "PATH": os.environ["PATH"],
+        "CLAUDE_PROJECT_DIR": str(ROOT),
+        "SESSION_EPIC": "devops",
+        "SESSION_HANDOFF_AGENT": "codex",
+    }
+    worker = subprocess.run(
+        ["bash", str(ROOT / HOOK)],
+        cwd=ROOT,
+        env=environment | {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "probe-worker"},
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    assert worker.stdout == ""
+    driver = subprocess.run(
+        ["bash", str(ROOT / HOOK)],
+        cwd=ROOT,
+        env=environment,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    assert json.loads(driver.stdout)["additionalContext"].startswith("CODEX FLEET-DRIVER HYDRATION")
+
+
+@pytest.mark.parametrize("agent_env", [{"GROK_AGENT": "1"}, {}], ids=["grok", "claude"])
+def test_dispatched_worker_gets_no_driver_epic_reminder(agent_env: dict[str, str]) -> None:
+    environment = {"PATH": os.environ["PATH"], "SESSION_EPIC": "infra", "CLAUDE_PROJECT_DIR": str(ROOT)}
+    result = subprocess.run(
+        ["bash", str(ROOT / HOOK)],
+        cwd=ROOT,
+        env=environment | agent_env | {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "probe-worker"},
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    context = json.loads(result.stdout)["additionalContext"]
+    # The worker keeps its ordinary non-driver reminders, never the driver's epic duties.
+    assert "Epic blocker delta" not in context
+    assert "--epic infra" not in context
+    assert "epic infra" not in context
+    if agent_env:
+        assert "Epic=none" in context
+    else:
+        assert "KEY REMINDERS:" in context

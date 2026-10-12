@@ -30,5 +30,19 @@
         ]
       }
     ]
+  },
+  "shell-secret-print-guard": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "../.venv/bin/python ../scripts/agent_runtime/secret_print_hook.py --harness agy",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

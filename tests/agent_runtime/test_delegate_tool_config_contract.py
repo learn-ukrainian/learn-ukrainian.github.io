@@ -15,6 +15,7 @@ import pytest
 from scripts.agent_runtime.adapters.agy import AgyAdapter, _agy_version
 from scripts.agent_runtime.adapters.glm import _CI_ENV_VARS
 from scripts.agent_runtime.registry import AGENTS
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DELEGATE = _REPO_ROOT / "scripts" / "delegate.py"
@@ -213,6 +214,7 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
         # home and an admitted tool instead of the generic synthetic payload.
         tool_config["allowed_tools"] = "mcp__sources__verify_words"
         (Path(tool_config["agy_home_override"]) / ".gemini" / "antigravity-cli").mkdir(parents=True)
+        register_agy_hooks(checkout, home=Path(tool_config["agy_home_override"]))
 
     try:
         plan = adapter_cls().build_invocation(
@@ -249,6 +251,9 @@ def test_agy_stub_without_supported_version_is_still_refused(stub_body, code, tm
     (bin_dir / "agy").write_text("#!/bin/sh\n" + stub_body, encoding="utf-8")
     checkout = tmp_path / "checkout"
     checkout.mkdir()
+    home = tmp_path / "ordinary-home"
+    monkeypatch.setenv("HOME", str(home))
+    register_agy_hooks(checkout, home=home)
 
     with pytest.raises(ValueError, match=code):
         AgyAdapter().build_invocation(

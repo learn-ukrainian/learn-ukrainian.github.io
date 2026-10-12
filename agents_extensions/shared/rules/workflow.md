@@ -221,6 +221,34 @@ Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
 ejection, and re-establish the gates before re-enqueueing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
 
+**Red-team exception (operator 2026-10-11, #10437).** For code review
+only, when no independent outside-family reviewer can be obtained, a
+separate-task, fresh-session toolful red-team review may substitute for
+it, labelled honestly. It applies only after `closeout_cli
+resolve-reviewer --review-mode red_team` finds no eligible
+outside-family reviewer, including when the only eligible families are
+paused; the resolver output carries the limitation. Limits: the author's
+task stays refused, and so does every canonical concrete model that
+authored a commit on the branch, on any harness; a review is refused
+with a typed error only when no validated author model exists; unknown
+historical authors stay recorded as UNKNOWN, and `--review-author-model`
+only adds a model to compare against: it never overwrites recorded task
+evidence, and a conflict with validated evidence is refused; seats whose
+own code is under review stay excluded as usual; the reviewer always
+runs as a separate fresh-session review task, and a different model of
+the same family may serve only as same-family dissent, never as
+cross-family independence. A red-team publication or dispatch is also
+refused when a recorded verdict from a non-red-team review for the same
+exact head is CHANGES_REQUESTED or BLOCKED, or when such a review of
+that head is still in flight. Qualification, the risk floor, toolful
+execution and the exact-head binding are unchanged; the red-team prompt
+digest is bound to the review; it changes no merge-gate or keeper rule:
+a labelled red-team APPROVE clears the same checks as any recorded
+APPROVE, with its label kept on the PR comment, the commit status text
+and the task record. Label it `review_mode=red_team` in the PR comment,
+the commit status text and the task record; never call or count it
+cross-family.
+
 ### Post-merge cleanup — the single landing and cleanup recipe
 
 After the queue lands the PR, confirm `MERGED` and the actual merge SHA. Wait
@@ -245,6 +273,14 @@ the verdict is posted and the reviewer exits. Before a branch sweep, inspect
 `scripts.hygiene.branch_sweep --json` receipts; then apply only safe dispositions
 and prove no residue. Close linked issues only with all acceptance criteria
 verified on the delivered artifact; name any residual, owner and dependency.
+
+**The merging lane owns its PR closeout.** The lane that merged the PR runs the
+command above for that PR's own worktrees and branches, and the PR is not done
+until the receipt is clean (exit 0, residue-free). Any PR-scoped worktree claim
+is settled only through the common reaper's guarded removal, never by hand.
+Cleanup does not wait for a central sweep. This is not a stream lease: launchers
+own stream leases, and no driver opens, resumes, claims, renews, releases or
+replaces one. The non-zero and `SKIPPED` stop conditions above are unchanged.
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a

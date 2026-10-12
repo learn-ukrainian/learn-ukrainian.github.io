@@ -33,6 +33,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
+
 pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
@@ -6865,6 +6867,7 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
 
     from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
+    register_agy_hooks(tmp_path)
     app_data = tmp_path / "user-agy" / ".gemini" / "antigravity-cli"
     app_data.mkdir(parents=True)
     (app_data / "antigravity-oauth-token").write_text("{}\n", encoding="utf-8")
@@ -7029,6 +7032,7 @@ def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir
     lease.mkdir()
     checkout = tmp_path / "checkout"
     checkout.mkdir()
+    register_agy_hooks(checkout)
     task_id = "worker-agy-permission-home"
     record = {"task_id": task_id, "review": True, "review_profile": profile, **_agy_ukrainian_exemption("read-only")}
     record["advisory_exemption"]["review_profile"] = "ukrainian"
