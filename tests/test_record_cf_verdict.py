@@ -458,13 +458,14 @@ def test_red_team_pr_only_review_head_fields_and_repository_match(monkeypatch, t
 
 
 @pytest.mark.parametrize("status", ["spawning", "running", "queued", "done", "needs_finalize"])
+@pytest.mark.parametrize("repository_fields", [{}, {"repository": None}])
 @pytest.mark.parametrize(
     "head,mode", [(SHA, "cross_family"), (SHA.upper(), "cross_family"), (OTHER, "cross_family"), (SHA, "red_team")]
 )
-def test_red_team_worktree_prep_publication_guard(monkeypatch, tmp_path, status, head, mode):
+def test_red_team_worktree_prep_publication_guard(monkeypatch, tmp_path, status, repository_fields, head, mode):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     prompt = red_team_task(tasks, tmp_path)
-    # The provisional row has no repository, review flag or top-level head.
+    # The provisional row has no repository identity, review flag or top-level head.
     (tasks / "outside-review.json").write_text(
         json.dumps(
             {
@@ -472,6 +473,7 @@ def test_red_team_worktree_prep_publication_guard(monkeypatch, tmp_path, status,
                 "status": status,
                 "review_mode": mode,
                 "worktree_prep": {"base_sha": head},
+                **repository_fields,
             }
         )
     )

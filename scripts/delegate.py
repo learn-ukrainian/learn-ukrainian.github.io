@@ -2126,16 +2126,31 @@ def _is_own_provisional_record(state: dict[str, Any], run_nonce: str) -> bool:
 
 
 # Fields an admission hold carries into the worktree reservation record that
-# replaces it, so the reservation keeps the admitted slot (#8717).
-_ADMISSION_HOLD_FIELDS = ("mode", "admission", dispatch_admission.ADMISSION_HOLD_KEY)
+# replaces it, preserving the admitted slot and review identity (#8717, #10437).
+_ADMISSION_HOLD_FIELDS = (
+    "mode",
+    "admission",
+    dispatch_admission.ADMISSION_HOLD_KEY,
+    "repository",
+    "pinned_head",
+    "review",
+    "review_mode",
+)
 
 
-def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admission: dict[str, Any]) -> None:
-    """Publish the ``spawning`` record that holds this run's admitted write slot (#8717).
+def _publish_admission_hold(
+    task_id: str,
+    run_nonce: str,
+    *,
+    mode: str,
+    admission: dict[str, Any] | None,
+    review_fields: dict[str, Any] | None = None,
+) -> None:
+    """Hold an admitted write slot or identify a review throughout setup (#8717, #10437).
 
-    Dispatch calls this under the admission lock, before any worktree side
-    effect, so a refusal leaves nothing behind. The hold names this
-    dispatcher, so admission counts it for as long as the dispatcher lives
+    Write dispatch calls this under the admission lock, before any worktree
+    side effect. Read-only reviews use it without claiming write capacity.
+    The hold names this dispatcher, so admission counts a write slot while it lives
     (however long its worktree add takes) and heals it once the dispatcher is
     provably gone. The worktree reservation and the full task record replace
     it in place. Raises ``RuntimeError`` rather than overwrite a live record
@@ -2161,7 +2176,8 @@ def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admissio
                 "mode": mode,
                 "started_at": hold["admitted_at"],
                 "finished_at": None,
-                "admission": admission,
+                **({"admission": admission} if admission is not None else {}),
+                **(review_fields or {}),
                 dispatch_admission.ADMISSION_HOLD_KEY: hold,
             },
         )
@@ -2170,14 +2186,27 @@ def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admissio
 def _release_admission_hold(task_id: str, run_nonce: str) -> None:
     """Drop this run's admission hold when dispatch stops before publishing any other record.
 
-    A no-op once the hold was replaced by the full task record, a failure
-    record, or a worktree reservation (kept as the reaper's evidence).
+    A no-op once the hold was replaced by the full task record or a failure
+    record. An interrupted review reservation becomes terminal, keeping the
+    reaper's evidence without blocking red-team publication forever.
     """
     state_path = _state_path(task_id)
     with contextlib.suppress(OSError), task_state_lock(state_path):
         existing = _read_state_json(state_path)
         if existing is not None and _is_own_admission_hold(existing, run_nonce):
             state_path.unlink(missing_ok=True)
+        elif (
+            existing is not None
+            and existing.get("status") == "spawning"
+            and existing.get("review")
+            and _is_own_worktree_prep_record(existing, run_nonce)
+        ):
+            existing.update(
+                status="cancelled",
+                finished_at=datetime.now(UTC).isoformat(),
+                last_error=_TypedCause("dispatch_not_started"),
+            )
+            _write_record_unlocked(state_path, existing)
 
 
 def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
@@ -2236,10 +2265,11 @@ def _update_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) ->
 def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
     """Drop this run's reservation record once its ``git worktree add`` succeeded.
 
-    Dispatch publishes the full task record next; until then no record
+    A reservation without an admission hold is removed; no record then
     claims the finished worktree, exactly as before reservations existed.
     A reservation that replaced an admission hold reverts to that hold, so
     the admitted slot stays held until the full record replaces it (#8717).
+    Review identity survives in that hold after prep retirement (#10437).
     """
     state_path = _state_path(task_id)
     with contextlib.suppress(OSError), task_state_lock(state_path):
@@ -13603,6 +13633,18 @@ def _dispatch(
     # a refusal leaves none of them. The hold names this dispatcher and keeps
     # the slot until the full task record replaces it before the spawn.
     admission_record: dict[str, Any] | None = None
+    review_fields = None
+    if _dispatch_is_review_typed(args):
+        review_target = getattr(args, "_review_target", None)
+        review_fields = {
+            "repository": _resolve_dispatch_repository(target_repo_root),
+            "pinned_head": pinned_head
+            or getattr(review_target, "head_sha", None)
+            or getattr(args, "_review_admission_head", None)
+            or resolved_worktree_base_sha,
+            "review": True,
+            "review_mode": getattr(args, "review_mode", "cross_family"),
+        }
     if not admission.exempt:
         admission_refusal: str | None = None
         try:
@@ -13610,7 +13652,9 @@ def _dispatch(
                 admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
                 if admission.admitted or force_admission_reason is not None:
                     admission_record = admission.to_record(force_reason=force_admission_reason)
-                    _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=admission_record)
+                    _publish_admission_hold(
+                        task_id, run_nonce, mode=args.mode, admission=admission_record, review_fields=review_fields
+                    )
                     admission_holds.callback(_release_admission_hold, task_id, run_nonce)
                 else:
                     admission_refusal = admission.refusal_line()
@@ -13622,6 +13666,13 @@ def _dispatch(
         if admission_refusal is not None:
             print(f"❌ {admission_refusal}", file=sys.stderr)
             return _ADMISSION_REFUSED_EXIT
+    elif review_fields is not None:
+        try:
+            _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=None, review_fields=review_fields)
+        except (OSError, RuntimeError) as exc:
+            print(f"❌ could not publish the review hold for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+        admission_holds.callback(_release_admission_hold, task_id, run_nonce)
 
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch

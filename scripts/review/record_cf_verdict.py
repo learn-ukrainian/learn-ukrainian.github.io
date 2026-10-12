@@ -1264,7 +1264,7 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
                         isinstance(task.get("repository"), str)
                         and normalize_repository(task["repository"]) == normalize_repository(repository)
                     )
-                    or (prep_matches and "repository" not in task)
+                    or (prep_matches and task.get("repository") is None)
                 )
                 and task.get("status") in {"spawning", "running", "queued"}
                 and task.get("review_mode", "cross_family") != "red_team"

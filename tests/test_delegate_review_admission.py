@@ -2917,7 +2917,37 @@ def test_review_dispatch_record_binds_opt_in_and_default_has_no_new_fields(tmp_p
         assert "adversarial prompt changed after admission" in capsys.readouterr().err
         assert not (tasks / "review-record.json").exists()
         return
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: "owner/repo")
+    provisional_stages = []
+
+    def observe_writer(name):
+        writer = getattr(delegate, name)
+
+        def observed(*argv, **kwargs):
+            result = writer(*argv, **kwargs)
+            provisional = delegate._read_state(tasks / "review-record.json")
+            assert provisional["review"] is True
+            assert provisional["pinned_head"] == target.head_sha
+            assert provisional["repository"] == "owner/repo"
+            assert provisional["review_mode"] == ("red_team" if mode == "red_team" else "cross_family")
+            from scripts.review import record_cf_verdict as recorder
+
+            if mode == "red_team":
+                recorder.require_no_outside_review_in_flight(tasks, "owner/repo", target.head_sha)
+            else:
+                with pytest.raises(recorder.RecordError, match="outside-family review in flight for this head"):
+                    recorder.require_no_outside_review_in_flight(tasks, "owner/repo", target.head_sha)
+            provisional_stages.append(name)
+            return result
+
+        monkeypatch.setattr(delegate, name, observed)
+
+    for writer_name in ("_publish_admission_hold", "_publish_worktree_prep", "_retire_worktree_prep"):
+        observe_writer(writer_name)
     assert delegate.cmd_dispatch(args) == 0
+    assert provisional_stages == ["_publish_admission_hold"] + (
+        ["_publish_worktree_prep", "_retire_worktree_prep"] if mode == "pr-only" else []
+    )
     record = delegate._read_state(tasks / "review-record.json")
     assert record["dispatch_args_sha256"] == before_hash
     import hashlib
@@ -3239,3 +3269,136 @@ def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeyp
     else:
         assert refusal is None and target.model == "gpt-6.1-sol"
     assert {path.name: path.read_bytes() for path in tasks.iterdir()} == before
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize(
+    "head,review_mode", [("same", "cross_family"), ("other", "cross_family"), ("same", "red_team")]
+)
+def test_review_hold_lifecycle_refuses_admission_and_publication(tmp_path, monkeypatch, mode, head, review_mode):
+    """Drive the real hold, prep, retirement and full-record writers, with no branch PR."""
+    from scripts.review import record_cf_verdict as recorder
+    from scripts.review.target_resolution import ReviewTarget
+    from tests.test_record_cf_verdict import BRANCH, OTHER, REPOSITORY, SHA, red_team_task, setup_record
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    run_json = recorder._run_json
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda argv, **kw: [] if isinstance(argv, list) and argv[:3] == ["gh", "pr", "list"] else run_json(argv, **kw),
+    )
+    monkeypatch.setattr(
+        target_admission,
+        "resolve_and_admit",
+        lambda *_a, **_k: (SimpleNamespace(recipient="codex", model="gpt-6.1-sol"),),
+    )
+    args = _args("--branch", BRANCH, "--review-profile", "code", "--review-mode", "red_team")
+    args._review_target = ReviewTarget("branch", OTHER, SHA, (), 0, True, "test target")
+    review_head = SHA if head == "same" else OTHER
+    fields = {"repository": REPOSITORY, "pinned_head": review_head, "review": True, "review_mode": review_mode}
+    prep = {
+        "path": str(tmp_path / "review-tree"),
+        "run_nonce": "outside-nonce",
+        "reserved_at": "2026-10-12T00:00:00+00:00",
+        "base_sha": review_head,
+    }
+    state_path = delegate._state_path("outside-review")
+    writers = [
+        (
+            "hold",
+            lambda: delegate._publish_admission_hold(
+                "outside-review", "outside-nonce", mode=mode, admission=None, review_fields=fields
+            ),
+        ),
+        ("prep", lambda: delegate._publish_worktree_prep("outside-review", "outside-nonce", prep)),
+        ("retired", lambda: delegate._retire_worktree_prep("outside-review", "outside-nonce")),
+        (
+            "full",
+            lambda: delegate._write_state_atomic(
+                state_path,
+                {"task_id": "outside-review", "run_nonce": "outside-nonce", "status": "spawning", "pid": 123, **fields},
+            ),
+        ),
+        (
+            "done",
+            lambda: delegate._write_state_atomic(
+                state_path,
+                {"task_id": "outside-review", "run_nonce": "outside-nonce", "status": "done", "pid": 123, **fields},
+            ),
+        ),
+    ]
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    for stage, write in writers:
+        write()
+        refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+        if head == "same" and review_mode == "cross_family" and stage != "done":
+            assert target is None
+            assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head"
+            with pytest.raises(recorder.RecordError, match="outside-family review in flight for this head"):
+                recorder.record("review-one", **kwargs)
+            assert comments == [] and calls == {"posts": 0, "statuses": 0}
+            print(f"AFTER {mode} {stage}: refused posts=0 statuses=0")
+        else:
+            assert refusal is None and target.model == "gpt-6.1-sol"
+            assert recorder.record("review-one", **kwargs)["status"] in {"posted", "existing"}
+            assert calls["posts"] == 1
+
+
+@pytest.mark.parametrize("stage", ["hold", "prep", "retired"])
+@pytest.mark.parametrize("outcome", ["failed", "cancelled"])
+def test_review_hold_failure_or_cancellation_releases_guard(tmp_path, monkeypatch, stage, outcome):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_record_cf_verdict import REPOSITORY, SHA, red_team_task, setup_record
+
+    tasks, _, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    fields = {"repository": REPOSITORY, "pinned_head": SHA, "review": True, "review_mode": "cross_family"}
+    prep = {
+        "path": str(tmp_path / "tree"),
+        "run_nonce": "failed-nonce",
+        "reserved_at": "2026-10-12T00:00:00+00:00",
+        "base_sha": SHA,
+    }
+    error = RuntimeError("fixture failed") if outcome == "failed" else KeyboardInterrupt("fixture cancelled")
+    with pytest.raises(type(error)), contextlib.ExitStack() as holds:
+        delegate._publish_admission_hold(
+            "outside-review", "failed-nonce", mode="read-only", admission=None, review_fields=fields
+        )
+        holds.callback(delegate._release_admission_hold, "outside-review", "failed-nonce")
+        if stage != "hold":
+            delegate._publish_worktree_prep("outside-review", "failed-nonce", prep)
+        if stage == "retired":
+            delegate._retire_worktree_prep("outside-review", "failed-nonce")
+        if outcome == "failed":
+            assert delegate._record_worktree_prep_failure(
+                task_id="outside-review",
+                run_nonce="failed-nonce",
+                attribution=SimpleNamespace(initiator="codex", source="test"),
+                agent="codex",
+                mode="read-only",
+                prompt="Review",
+                error=error,
+                worktree_prep=prep if stage == "prep" else None,
+            )
+        raise error
+    state = delegate._read_state(delegate._state_path("outside-review"))
+    if outcome == "failed" or stage == "prep":
+        assert state["status"] == outcome
+        assert state["finished_at"] is not None
+        if stage == "prep":
+            assert state["worktree_prep"] == prep
+    else:
+        assert state is None
+    assert (
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )["status"]
+        == "posted"
+    )
+    assert calls == {"posts": 1, "statuses": 1}
