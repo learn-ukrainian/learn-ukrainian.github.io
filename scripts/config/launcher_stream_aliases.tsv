@@ -1,4 +1,5 @@
 # selector<TAB>stream key<TAB>launcher lane; consumed by the launcher and /api/work/v1/next.
+epics	epics	epics
 infra	infra-harness	infra
 harness	infra-harness	infra
 infra.fleet-comms	infra-harness	infra

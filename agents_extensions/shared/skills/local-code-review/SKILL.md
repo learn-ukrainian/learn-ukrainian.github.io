@@ -28,6 +28,32 @@ approval review. The comment must still come from an independent cross-family
 reviewer; a shared posting identity does not establish independence. See
 `workflow.md` § Merge policy.
 
+Red-team exception (`workflow.md` § Merge policy), for code review only:
+only when no eligible outside-family reviewer exists, resolve with
+`closeout_cli resolve-reviewer --review-mode red_team`, dispatch a
+separate review task with `delegate.py dispatch --review-mode red_team
+--prompt-file <file>` whose prompt text names a red team, then publish
+with `record_cf_verdict.py --review-mode red_team --red-team-prompt
+<file>`. The author's task stays refused, and so does every canonical
+concrete model that authored a commit on the branch, on any harness; a
+review is refused with a typed error only when no validated author model
+exists; unknown historical authors stay recorded as UNKNOWN, and
+`--review-author-model` only adds a model to compare against: it never
+overwrites recorded task evidence, and a conflict with validated
+evidence is refused; seats whose own code is under review stay excluded
+as usual; the reviewer always runs as a separate fresh-session review
+task, and a different model of the same family may serve, subject to
+qualification and the risk floor, only as same-family dissent, never as
+cross-family independence. A red-team publication or dispatch is also
+refused when a recorded verdict from a non-red-team review for the same
+exact head is CHANGES_REQUESTED or BLOCKED, or when such a review of
+that head is still in flight. The tools refuse a missing or non-red-team
+prompt, a prompt changed after admission, a non-review dispatch, and a
+red-team dispatch while an eligible outside-family reviewer exists (the
+resolver then selects that reviewer instead). The verdict is labelled
+`review_mode=red_team`; it never replaces cross-family clearance when an
+outside-family reviewer is available.
+
 ## Execute
 
 Read and follow [`local-code-review-checklist.md`](local-code-review-checklist.md)

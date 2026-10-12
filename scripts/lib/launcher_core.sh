@@ -9,6 +9,9 @@ launcher_usage() {
   if [ "$LC_MODE" = "interactive" ]; then
     name="start-${LC_PROVIDER}.sh"
   fi
+  case "${0##*/}" in
+    start-claude-cto.sh|start-codex-cto.sh) name="${0##*/}" ;;
+  esac
   case "$LC_PROVIDER" in
     kimi|glm)
       driver_mode="  driver       No certified ${LC_PROVIDER} driver entrypoint is available."
@@ -21,9 +24,10 @@ launcher_usage() {
   esac
   case "$LC_PROVIDER" in
     claude) provider_env='  Claude weekly cap: every Claude launch stops at 99% weekly used.
-                             Opus is always blocked: explicit Opus is refused and a
-                             defaulted Opus driver switches to claude-sonnet-5-5.
-  LU_CLAUDE_CAP_OVERRIDE=1 Bypass the 99% stop with an operator warning; Opus stays blocked.
+                             Opus is always blocked outside start-claude-cto.sh on epics:
+                             that wrapper permits explicit CLI --model Opus without --force.
+                             A defaulted Opus driver switches to claude-sonnet-5-5.
+  LU_CLAUDE_CAP_OVERRIDE=1 Bypass only the 99% stop with an operator warning.
   LU_MONITOR_LOOPBACK      Monitor telemetry base URL. Unknown usage warns and allows launch.
                              Forwarded model, settings and fallback-model selectors are refused.
   CLAUDE_CODE_*            Claude Code session configuration (route-shaped values are cleared).' ;;
@@ -45,6 +49,10 @@ launcher_usage() {
     glm:interactive) example_three='./start-glmcc.sh --endpoint coding' ;;
     *:driver) example_three="./${name} --epic devops"$'\n'"  ./${name} --epic infra --force" ;;
     *) example_three="./start-${LC_PROVIDER}-driver.sh --epic devops" ;;
+  esac
+  case "$name" in
+    start-claude-cto.sh) example_three='./start-claude-cto.sh --epic epics --model claude-opus-5-5 --effort high' ;;
+    start-codex-cto.sh) example_three='./start-codex-cto.sh --epic epics --effort high' ;;
   esac
   cat <<EOF
 Usage: ./${name} [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]
@@ -75,6 +83,7 @@ Options:
   --force                    Driver only. Attributed operator release of a live
                              predecessor lease, then claim. Use when the previous
                              driver did not hand off. Live drivers must not pass it.
+                             CTO wrappers reject it with exit 2.
   --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).
   --endpoint NAME            Kimi/GLM route endpoint: coding or platform.
   --isolate-config           Kimi/GLM Claude-Code config isolation (default).
@@ -128,6 +137,7 @@ EOF
     cat <<'EOF'
 
 Valid lane selectors:
+  epics
   infra | harness | infra.fleet-comms
   devops | infra.devops
   atlas | practice | atlas.practice
@@ -393,6 +403,7 @@ launcher_defaults() {
   LC_DRIVER_FORCE=0
   LC_DRIVER_LEASE_CLAIMED=0
   LC_HARNESS_EXPLICIT=0
+  LC_MODEL_CLI=0
   LC_FORWARD_ARGS=()
 }
 
@@ -446,10 +457,10 @@ launcher_parse() {
         ;;
       --model)
         launcher_need_value "$1" "${2:-}"
-        LC_MODEL="$2"; LC_CLAUDE_MODEL_DEFAULTED=0
+        LC_MODEL="$2"; LC_CLAUDE_MODEL_DEFAULTED=0; LC_MODEL_CLI=1
         shift 2
         ;;
-      --model=*) LC_MODEL="${1#*=}"; LC_CLAUDE_MODEL_DEFAULTED=0; shift ;;
+      --model=*) LC_MODEL="${1#*=}"; LC_CLAUDE_MODEL_DEFAULTED=0; LC_MODEL_CLI=1; shift ;;
       --effort)
         launcher_need_value "$1" "${2:-}"
         LC_EFFORT="$2"
@@ -495,11 +506,13 @@ launcher_parse() {
         # A driver selector consumes the first positional argument. Preserve
         # the former driver's compatibility contract by forwarding subsequent
         # provider flags, while still rejecting unknown launcher flags before
-        # a selector has been supplied.
+        # a selector has been supplied. CTO wrappers inject their selector, so
+        # they always reject unknown flags; their provider flags follow `--`.
         if [ "$LC_MODE" = "driver" ] && [ -n "$LC_EPIC" ]; then
-          LC_FORWARD_ARGS+=("$1")
-          shift
-          continue
+          case "${0##*/}" in
+            start-claude-cto.sh|start-codex-cto.sh) ;;
+            *) LC_FORWARD_ARGS+=("$1"); shift; continue ;;
+          esac
         fi
         launcher_error "unknown launcher flag '$1'; run --help."
         exit 2
@@ -1380,9 +1393,9 @@ launcher_publication_path() {
 }
 
 # Claude weekly cap guard (operator policy, constants in code): every Claude
-# launch stops at 99% weekly used; Opus is always blocked. A defaulted Opus
-# driver switches to Sonnet. The operator override bypasses only the 99% stop.
-# Unavailable telemetry warns and allows a non-Opus startup.
+# launch stops at 99% weekly used; only explicit CTO epics escalation admits Opus.
+# A defaulted Opus driver switches to Sonnet. The operator override bypasses only
+# the 99% stop. Unavailable telemetry warns and preserves model restrictions.
 launcher_claude_cap_guard() {
   [ "$LC_PROVIDER" = claude ] || return 0
   # Provider settings and fallback selectors can replace the admitted model.
@@ -1406,12 +1419,18 @@ launcher_claude_cap_guard() {
         ;;
     esac
   done
-  # Opus is always blocked, before and independent of usage telemetry.
+  # The explicit CTO epics exception never bypasses the weekly usage stop.
   case "$LC_MODEL" in
     *opus*)
       if [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ] && [ "$LC_MODEL" = 'claude-opus-5-5[1m]' ]; then
         printf 'launcher: Opus is blocked; driver default switched from Opus to claude-sonnet-5-5\n' >&2
         LC_MODEL='claude-sonnet-5-5'
+      elif [ "${0##*/}" = start-claude-cto.sh ] \
+          && [ "$LC_MODE" = driver ] \
+          && [ "$(launcher_selector_lane "$LC_EPIC")" = epics ] \
+          && [ "${LC_MODEL_CLI:-0}" = 1 ] \
+          && [ "${LC_DRIVER_FORCE:-0}" = 0 ]; then
+        :
       else
         launcher_error "Opus is blocked by operator policy. Use --model sonnet."
         exit 7
@@ -1419,7 +1438,7 @@ launcher_claude_cap_guard() {
       ;;
   esac
   if [ "${LU_CLAUDE_CAP_OVERRIDE:-0}" = 1 ]; then
-    printf 'launcher: warning: Claude weekly 99%% stop bypassed by operator override; Opus stays blocked.\n' >&2
+    printf 'launcher: warning: Claude weekly 99%% stop bypassed by operator override; model restrictions still apply.\n' >&2
     return 0
   fi
   local pct

@@ -475,5 +475,9 @@ session_supervisor_exec_successor() {
   # Replace this supervisor shell. Its successor uses the same approved public
   # entrypoint and original argv (without --force; that flag is one-shot), then
   # makes a fresh Monitor TTL/CAS claim.
-  exec "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_DRIVER_ORIGINAL_ARGS[@]}"
+  local entrypoint="start-${LC_PROVIDER}-driver.sh"
+  case "${0##*/}" in
+    start-claude-cto.sh|start-codex-cto.sh) entrypoint="${0##*/}" ;;
+  esac
+  exec "$LC_ROOT/$entrypoint" "${LC_DRIVER_ORIGINAL_ARGS[@]}"
 }

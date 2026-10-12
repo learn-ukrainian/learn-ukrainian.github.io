@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import type { APIRoute } from "astro";
-import pool from "../../data/lexicon-daily-pool.json";
 
 /**
  * Canonical Daily Word pool URL for learner fetches.
@@ -7,8 +8,20 @@ import pool from "../../data/lexicon-daily-pool.json";
  */
 export const prerender = true;
 
+let cachedDailyPoolJson: string | null = null;
+
+function getDailyPoolJson(): string {
+  if (!cachedDailyPoolJson) {
+    cachedDailyPoolJson = readFileSync(
+      resolve(process.cwd(), "src/data/lexicon-daily-pool.json"),
+      "utf8",
+    );
+  }
+  return cachedDailyPoolJson;
+}
+
 export const GET: APIRoute = () =>
-  new Response(JSON.stringify(pool), {
+  new Response(getDailyPoolJson(), {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "public, max-age=3600",

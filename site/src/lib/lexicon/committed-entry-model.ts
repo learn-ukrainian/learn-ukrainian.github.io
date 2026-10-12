@@ -10,10 +10,12 @@ const ENTRY_TYPES = [
 ] as const;
 
 type EntryType = (typeof ENTRY_TYPES)[number];
+const ENTRY_TYPES_SET = new Set<unknown>(ENTRY_TYPES);
 
 function isEntryType(value: unknown): value is EntryType {
-  return typeof value === "string" && (ENTRY_TYPES as readonly string[]).includes(value);
+  return typeof value === "string" && ENTRY_TYPES_SET.has(value);
 }
+
 
 /**
  * Derive the public Atlas aggregate from its committed runtime projections.
