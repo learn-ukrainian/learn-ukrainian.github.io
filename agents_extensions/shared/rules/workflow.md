@@ -221,6 +221,18 @@ Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
 ejection, and re-establish the gates before re-enqueueing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
 
+**Red-team exception (operator 2026-10-11, #10437).** When no independent
+outside-family reviewer can be obtained, a separate non-author toolful red-team
+review may substitute for it, labelled honestly. It applies only after
+`closeout_cli resolve-reviewer --review-mode red_team` finds no eligible
+outside-family reviewer, including when the only eligible families are paused;
+the resolver output carries the limitation. Limits: the author's task, session
+and seat stay refused; qualification, the risk floor, toolful execution and the
+exact-head binding are unchanged; the red-team prompt digest is bound to the
+review; it never changes a merge gate or the keeper. Label it
+`review_mode=red_team` in the PR comment, the commit status text and the task
+record; never call or count it cross-family.
+
 ### Post-merge cleanup — the single landing and cleanup recipe
 
 After the queue lands the PR, confirm `MERGED` and the actual merge SHA. Wait
