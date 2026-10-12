@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": "review-evidence-ledger.v1",
+  "issue": 10513,
+  "approved_reviews": {
+    "wc_0123456789ab": {
+      "card_version": "cv_aee53bee80fdde3c1dbce24c",
+      "record": "rev_cert_20261012",
+      "lane": "gemini-agy",
+      "date": "2026-10-12",
+      "approved_for": [
+        "dataset",
+        "site"
+      ],
+      "rules_version": "rules-v1",
+      "inputs": {
+        "I": {
+          "identity_registry": {
+            "content_sha256": "d19b02adb497e1807a4f0e27b1f37e79f955f1a542c0331b389858b7a946c253"
+          }
+        },
+        "O": {
+          "overlay": {
+            "content_sha256": "6058ca798ad8327afd49d8c4cd29f4393e3c03e9c9dda93bc704ac358529d84a"
+          },
+          "suppressions": {
+            "content_sha256": "1b555453b7b942728992cc8a065e4279af184d5656f7a444e14ad4ced09b0d61"
+          }
+        },
+        "R": {
+          "normaliser": {
+            "version": "norm-v1"
+          },
+          "register": {
+            "content_sha256": "c669addd257da32955d3d21a4a5a91895315e492ccdc973ea68b8d3ed015ca59"
+          },
+          "rules": {
+            "version": "rules-v1"
+          }
+        },
+        "S": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        },
+        "V": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        }
+      }
+    },
+    "wc_abetka000000": {
+      "card_version": "cv_6d78a853930ec147d2c378b0",
+      "record": "rev_cert_20261012",
+      "lane": "gemini-agy",
+      "date": "2026-10-12",
+      "approved_for": [
+        "dataset",
+        "site"
+      ],
+      "rules_version": "rules-v1",
+      "inputs": {
+        "I": {
+          "identity_registry": {
+            "content_sha256": "d19b02adb497e1807a4f0e27b1f37e79f955f1a542c0331b389858b7a946c253"
+          }
+        },
+        "O": {
+          "overlay": {
+            "content_sha256": "6058ca798ad8327afd49d8c4cd29f4393e3c03e9c9dda93bc704ac358529d84a"
+          },
+          "suppressions": {
+            "content_sha256": "1b555453b7b942728992cc8a065e4279af184d5656f7a444e14ad4ced09b0d61"
+          }
+        },
+        "R": {
+          "normaliser": {
+            "version": "norm-v1"
+          },
+          "register": {
+            "content_sha256": "c669addd257da32955d3d21a4a5a91895315e492ccdc973ea68b8d3ed015ca59"
+          },
+          "rules": {
+            "version": "rules-v1"
+          }
+        },
+        "S": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        },
+        "V": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        }
+      }
+    },
+    "wc_000000000001": {
+      "card_version": "cv_9519e28f5b261317e8667f7d",
+      "record": "rev_cert_20261012",
+      "lane": "gemini-agy",
+      "date": "2026-10-12",
+      "approved_for": [
+        "dataset",
+        "site"
+      ],
+      "rules_version": "rules-v1",
+      "inputs": {
+        "I": {
+          "identity_registry": {
+            "content_sha256": "d19b02adb497e1807a4f0e27b1f37e79f955f1a542c0331b389858b7a946c253"
+          }
+        },
+        "O": {
+          "overlay": {
+            "content_sha256": "6058ca798ad8327afd49d8c4cd29f4393e3c03e9c9dda93bc704ac358529d84a"
+          },
+          "suppressions": {
+            "content_sha256": "1b555453b7b942728992cc8a065e4279af184d5656f7a444e14ad4ced09b0d61"
+          }
+        },
+        "R": {
+          "normaliser": {
+            "version": "norm-v1"
+          },
+          "register": {
+            "content_sha256": "c669addd257da32955d3d21a4a5a91895315e492ccdc973ea68b8d3ed015ca59"
+          },
+          "rules": {
+            "version": "rules-v1"
+          }
+        },
+        "S": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        },
+        "V": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        }
+      }
+    },
+    "wc_000000000002": {
+      "card_version": "cv_90a07ad91ccdbba72f665428",
+      "record": "rev_cert_20261012",
+      "lane": "gemini-agy",
+      "date": "2026-10-12",
+      "approved_for": [
+        "dataset",
+        "site"
+      ],
+      "rules_version": "rules-v1",
+      "inputs": {
+        "I": {
+          "identity_registry": {
+            "content_sha256": "d19b02adb497e1807a4f0e27b1f37e79f955f1a542c0331b389858b7a946c253"
+          }
+        },
+        "O": {
+          "overlay": {
+            "content_sha256": "6058ca798ad8327afd49d8c4cd29f4393e3c03e9c9dda93bc704ac358529d84a"
+          },
+          "suppressions": {
+            "content_sha256": "1b555453b7b942728992cc8a065e4279af184d5656f7a444e14ad4ced09b0d61"
+          }
+        },
+        "R": {
+          "normaliser": {
+            "version": "norm-v1"
+          },
+          "register": {
+            "content_sha256": "c669addd257da32955d3d21a4a5a91895315e492ccdc973ea68b8d3ed015ca59"
+          },
+          "rules": {
+            "version": "rules-v1"
+          }
+        },
+        "S": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        },
+        "V": {
+          "vesum": {
+            "content_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680"
+          }
+        }
+      }
+    }
+  }
+}

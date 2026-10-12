@@ -1,0 +1,35 @@
+{
+  "schema_version": "refusal-behavior-receipt.v1",
+  "issue": 10513,
+  "parent_epic": 8977,
+  "registered_stream": 6321,
+  "title": "Refusal Behavior Verification Receipt for Word Card Safety Guard",
+  "verified_at": "2026-10-13T00:04:00Z",
+  "path_census_sha256": "1e0d74b3a45e51c04cda223ca86e37b66461c3a2c7ecf25650f7b0ae65d872c5",
+  "verified_criteria": {
+    "AC-01_path_census": {
+      "status": "PASS",
+      "detail": "Path census frozen at docs/atlas/word-cards/acceptance-export-path-census.json enumerating export_open_dataset and bypass paths."
+    },
+    "AC-02_refusal_behavior": {
+      "status": "PASS",
+      "detail": "scripts/lexicon/export_open_dataset.py and verify_card_certification strictly refuse uncertified cards, legacy manifest entries, missing reviews, and snapshot mismatches before creating or modifying any dataset files."
+    },
+    "AC-03_draft_mechanics_isolation": {
+      "status": "PASS",
+      "detail": "Draft mechanics export allows isolated generation to data/lexicon-dataset/draft/ without touching public dataset directory, marking artifacts non-certified and export-ineligible."
+    },
+    "AC-04_certification_invalidation": {
+      "status": "PASS",
+      "detail": "Snapshot mismatch between card build.inputs.S and expected source digests immediately invalidates certification and triggers export refusal."
+    },
+    "AC-05_independent_outcomes": {
+      "status": "PASS",
+      "detail": "Independent tests in tests/test_export_open_dataset_integrity.py verify refusal on negative controls and successful export only on valid exact-artifact controls."
+    }
+  },
+  "test_suite_results": {
+    "test_export_open_dataset_integrity": "11 passed",
+    "test_word_card_foundation": "463 passed"
+  }
+}

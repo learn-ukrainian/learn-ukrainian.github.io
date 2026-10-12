@@ -74,16 +74,67 @@ def collect_dataset(dataset_root: Path = DEFAULT_DATASET_ROOT) -> tuple[dict[str
 
     if not dataset_root.exists():
         raise OpenDatasetPublishError(f"{dataset_root} missing; run scripts/lexicon/export_open_dataset.py first")
+    if "draft" in dataset_root.parts:
+        raise OpenDatasetPublishError(
+            f"Refusing to package/publish draft dataset at {dataset_root}: "
+            "draft directories are export-ineligible (#10513)"
+        )
     missing = [path for path in REQUIRED_DATASET_FILES if not (dataset_root / path).exists()]
     if missing:
         raise OpenDatasetPublishError(f"{dataset_root} missing required files: {', '.join(missing)}")
 
     metadata = _load_metadata(dataset_root)
+    if not metadata.get("certified") or not metadata.get("export_eligible"):
+        raise OpenDatasetPublishError(
+            f"Refusing to package/publish uncertified dataset at {dataset_root}: "
+            "metadata must have certified=True and export_eligible=True (#10513)"
+        )
+
+    from scripts.atlas.word_card_certification import (
+        get_canonical_review_evidence,
+        get_canonical_source_snapshots,
+        verify_card_certification,
+    )
+    canonical_snapshots = get_canonical_source_snapshots()
+    canonical_reviews = get_canonical_review_evidence()
+
     pointer_files: list[dict[str, Any]] = []
     package_files: list[dict[str, str]] = []
     for path in sorted(p for p in dataset_root.rglob("*") if p.is_file()):
+        # Exclude draft directory or any draft artifacts from public release packages (F3)
+        if "draft" in path.parts:
+            continue
         rel_path = path.relative_to(dataset_root).as_posix()
         data = path.read_bytes()
+
+        # Validate card certification for all .jsonl shard files (F4)
+        if path.suffix == ".jsonl":
+            raw_lines = [line.strip() for line in data.split(b"\n") if line.strip()]
+            if not raw_lines:
+                raise OpenDatasetPublishError(f"Shard file {rel_path} is empty")
+            for line_no, raw_line in enumerate(raw_lines, start=1):
+                try:
+                    card = json.loads(raw_line.decode("utf-8"))
+                except Exception as exc:
+                    raise OpenDatasetPublishError(
+                        f"Shard file {rel_path}:{line_no} contains invalid JSON: {exc}"
+                    ) from exc
+                if not isinstance(card, dict):
+                    raise OpenDatasetPublishError(
+                        f"Shard file {rel_path}:{line_no} must contain a JSON object, got {type(card).__name__}"
+                    )
+                certified, reason = verify_card_certification(
+                    card,
+                    required_approval="dataset",
+                    expected_snapshots=canonical_snapshots or None,
+                    expected_reviews=canonical_reviews or None,
+                )
+                if not certified:
+                    card_id = card.get("card_id", "unknown")
+                    raise OpenDatasetPublishError(
+                        f"Refusing to package/publish shard {rel_path}:{line_no} with uncertified card {card_id}: {reason} (#10513)"
+                    )
+
         pointer_files.append(
             {
                 "path": rel_path,
@@ -103,6 +154,48 @@ def collect_dataset(dataset_root: Path = DEFAULT_DATASET_ROOT) -> tuple[dict[str
 
 
 def build_package(metadata: dict[str, Any], files: list[dict[str, str]]) -> bytes:
+    if not metadata.get("certified") or not metadata.get("export_eligible"):
+        raise OpenDatasetPublishError(
+            "Refusing to build package: metadata must have certified=True and export_eligible=True (#10513)"
+        )
+
+    from scripts.atlas.word_card_certification import (
+        get_canonical_source_snapshots,
+        verify_card_certification,
+    )
+    canonical_snapshots = get_canonical_source_snapshots()
+
+    for file_entry in files:
+        rel_path = file_entry.get("path", "")
+        if "draft" in Path(rel_path).parts:
+            raise OpenDatasetPublishError(f"Refusing to build package containing draft file: {rel_path}")
+        if rel_path.endswith(".jsonl"):
+            content = file_entry.get("content", "")
+            lines = [line.strip() for line in content.split("\n") if line.strip()]
+            if not lines:
+                raise OpenDatasetPublishError(f"Shard file {rel_path} in package is empty")
+            for line_no, line_str in enumerate(lines, start=1):
+                try:
+                    card = json.loads(line_str)
+                except Exception as exc:
+                    raise OpenDatasetPublishError(
+                        f"Shard {rel_path}:{line_no} contains invalid JSON: {exc}"
+                    ) from exc
+                if not isinstance(card, dict):
+                    raise OpenDatasetPublishError(
+                        f"Shard {rel_path}:{line_no} must contain a JSON object, got {type(card).__name__}"
+                    )
+                certified, reason = verify_card_certification(
+                    card,
+                    required_approval="dataset",
+                    expected_snapshots=canonical_snapshots or None,
+                )
+                if not certified:
+                    card_id = card.get("card_id", "unknown")
+                    raise OpenDatasetPublishError(
+                        f"Refusing to build package with uncertified card {card_id} in {rel_path}:{line_no}: {reason} (#10513)"
+                    )
+
     package = {
         "schema": "atlas-open-dataset-package",
         "schemaVersion": 1,

@@ -10,6 +10,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -195,7 +196,7 @@ def test_export_main_write_calls_export(monkeypatch: pytest.MonkeyPatch) -> None
 
     called: list[str] = []
 
-    def fake_export() -> tuple[int, int]:
+    def fake_export(*args: Any, **kwargs: Any) -> tuple[int, int]:
         called.append("export")
         return (5, 2)
 

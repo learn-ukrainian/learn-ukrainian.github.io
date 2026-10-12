@@ -1,0 +1,80 @@
+{
+  "schema_version": "acceptance-export-path-census.v1",
+  "issue": 10513,
+  "parent_epic": 8977,
+  "registered_stream": 6321,
+  "title": "Enumerated Acceptance and Export Path Census for Word Cards",
+  "census_date": "2026-10-12",
+  "frozen_paths": [
+    {
+      "path_id": "export_open_dataset",
+      "entry_point": "scripts/lexicon/export_open_dataset.py",
+      "kind": "dataset_export",
+      "target_output": "data/lexicon-dataset/dataset/*.jsonl",
+      "input_source": "lexicon-manifest.json or word card database",
+      "uncertified_bypass_risk": "Legacy exporter copies uncertified Atlas manifest entries directly into dataset shards without verification.",
+      "guard_mechanism": "Refuse export when input cards or manifest lack exact-artifact certification (quality.linguistic_review.status == 'reviewed' with 'dataset' in approved_for, verified card_version, and matching input snapshots). Allow --draft-mechanics only to isolated draft directories with explicit draft metadata.",
+      "refusal_behavior": "Immediate process exit (code 2 / UncertifiedCardRefusal) before creating or modifying any dataset files."
+    },
+    {
+      "path_id": "legacy_atlas_manifest",
+      "entry_point": "site/src/data/lexicon-manifest.json",
+      "kind": "legacy_manifest_source",
+      "target_output": "downstream card compilation / export",
+      "input_source": "historical Atlas 0 manifest",
+      "uncertified_bypass_risk": "Treating Atlas manifest rows as authoritative certified lexical facts.",
+      "guard_mechanism": "Manifest rows are classified as legacy candidate references only. They never satisfy certification requirements without explicit card compilation, source tracing, and independent review.",
+      "refusal_behavior": "Card consumers refuse manifest rows lacking exact-artifact certification."
+    },
+    {
+      "path_id": "open_dataset_publisher",
+      "entry_point": "scripts/open_dataset/publish.py",
+      "kind": "release_publication",
+      "target_output": "GitHub release asset package (atlas-open-dataset-*.tar.gz)",
+      "input_source": "data/lexicon-dataset/ or draft output",
+      "uncertified_bypass_risk": "Packaging and publishing draft or uncertified dataset exports as release assets.",
+      "guard_mechanism": "Refuses packaging and release when dataset metadata indicates certified=False or export_eligible=False.",
+      "refusal_behavior": "Immediate process exit (OpenDatasetPublishError) before building package or publishing asset."
+    },
+    {
+      "path_id": "runtime_shards_exporter",
+      "entry_point": "scripts/atlas/export_runtime_shards.py",
+      "kind": "site_publication",
+      "target_output": "site runtime lexicon shards",
+      "input_source": "atlas.db payloads",
+      "uncertified_bypass_risk": "Publishing uncertified word cards or draft assertions to public learner web routes.",
+      "guard_mechanism": "Atlas publication authority remains strictly OFF by operator order. Runtime shards exporter verifies that any word card payloads meet exact-artifact certification before shard creation.",
+      "refusal_behavior": "Refuses shard export (ExportError) if word card payloads lack exact-artifact certification."
+    },
+    {
+      "path_id": "manifest_enricher",
+      "entry_point": "scripts/lexicon/enrich_manifest.py",
+      "kind": "manifest_enrichment",
+      "target_output": "lexicon-manifest.json enriched fields",
+      "input_source": "slovnyk_cache, ulif, sum11, grac",
+      "uncertified_bypass_risk": "Enriching manifest with untagged stress or unverified relations and presenting them as certified norms.",
+      "guard_mechanism": "Enricher output is strictly uncertified draft metadata; it cannot mint card IDs or emit certified assertions.",
+      "refusal_behavior": "Downstream certification verifiers reject raw enriched manifest without independent cross-family review."
+    },
+    {
+      "path_id": "cache_and_hydration_bypass",
+      "entry_point": "data/lexicon/slovnyk_cache/ and data/lexicon/cache/",
+      "kind": "cache_hydration",
+      "target_output": "in-memory word card hydration",
+      "input_source": "raw JSON and SQLite cache entries",
+      "uncertified_bypass_risk": "Bypassing canonical card assembly by hydrating cards directly from unverified cache files.",
+      "guard_mechanism": "Cache entries are raw evidence only. Card assembly must re-validate assertions against canonical schema and identity registry.",
+      "refusal_behavior": "Direct hydration of cards from raw cache without assembly validation is prohibited."
+    },
+    {
+      "path_id": "legacy_practice_generators",
+      "entry_point": "scripts/practice/ and site exercise builders",
+      "kind": "exercise_generation",
+      "target_output": "learner practice decks",
+      "input_source": "word card definitions and collocations",
+      "uncertified_bypass_risk": "Exposing learners to uncertified meanings, calques, or Soviet-influenced definitions.",
+      "guard_mechanism": "Practice eligibility requires card quality.practice_eligibility with eligible=True and certified card status.",
+      "refusal_behavior": "Practice generator skips cards that are uncertified or lack verified practice eligibility."
+    }
+  ]
+}

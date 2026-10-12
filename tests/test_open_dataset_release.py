@@ -12,6 +12,8 @@ from scripts.open_dataset.publish import publish_open_dataset, write_pointer
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 def _write_fixture_dataset(root: Path) -> None:
+    from tests.test_export_open_dataset_integrity import _make_certified_card
+
     (root / "dataset").mkdir(parents=True)
     (root / "README.md").write_text("# Dataset\n", encoding="utf-8")
     (root / "ATTRIBUTION.md").write_text("# Attribution\n", encoding="utf-8")
@@ -22,12 +24,15 @@ def _write_fixture_dataset(root: Path) -> None:
                 "version": "0.1",
                 "generated_at": "2026-06-30T00:00:00+00:00",
                 "stats": {"lemmas_total": 2, "form_of_count": 1},
+                "certified": True,
+                "export_eligible": True,
             }
         ),
         encoding="utf-8",
     )
+    card = _make_certified_card(card_id="wc_abetka000000", lemma="абетка")
     (root / "dataset" / "А.jsonl").write_text(
-        json.dumps({"lemma": "абетка", "url_slug": "абетка"}, ensure_ascii=False) + "\n",
+        json.dumps(card, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
 

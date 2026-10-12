@@ -191,7 +191,7 @@
       },
       {
         "path": "scripts/lexicon/export_open_dataset.py",
-        "sha256": "c8df8feb2ecc506f665c49cbc3736683d912fa22708f99810e1c394d9fe27ff9"
+        "sha256": "704d243466e8bc0b52d1e6a2a29bdcd84468c4ca329b50bf05be1ea74faf221a"
       },
       {
         "path": "scripts/lexicon/extract_book_headword_inventory.py",
