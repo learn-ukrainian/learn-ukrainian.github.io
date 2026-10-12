@@ -406,7 +406,8 @@ def _reap_main_worktree(
             "error": None,
         }
     # Two task ids can derive one leaf. A derived match needs an explicit
-    # creator flag and no other claimant; missing or non-boolean flags retain.
+    # creator flag, the normal creating dispatch's inventory, and no other
+    # claimant. Old prep-failure records also wrote False, without an inventory.
     # Shared or non-canonical paths still require the existing cohort proof.
     if len(relative.parts) == 2 and not proven and expected_leaf is not None:
         try:
@@ -414,7 +415,12 @@ def _reap_main_worktree(
                 bound_path, tasks_dir, repo_root=repo_root, publish_cache=False
             )
             collides = any(record.get("task_id") != task_id for _, record in matches)
-            if relative.parts[1] == expected_leaf and state.get("worktree_reused") is False and not collides:
+            if (
+                relative.parts[1] == expected_leaf
+                and state.get("worktree_reused") is False
+                and isinstance(state.get("ignored_output_baseline"), dict)
+                and not collides
+            ):
                 proven = True
             else:
                 _, creator = ignored_task_output.reused_worktree_creator(
