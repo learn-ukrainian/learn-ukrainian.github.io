@@ -165,7 +165,9 @@ def _receipts(repo: Path) -> list[Path]:
 # ---- each push path refuses red and accepts green -------------------------------------------------------
 
 
-def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path) -> None:
+def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
 
@@ -174,6 +176,9 @@ def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path) -> None
     assert result.returncode == 0, result.stderr
     assert len(_receipts(repo)) == 1
     assert _measurements(repo)[-1]["outcome"] == "green"
+    pytest_row = _measurements(repo)[-1]["stages"]["pytest"]
+    assert pytest_row["requested_test_processes"] == 4
+    assert pytest_row["effective_test_processes"] == 2
 
 
 def test_red_changed_test_is_refused_with_its_node_id(repo: Path) -> None:
@@ -1040,13 +1045,16 @@ def test_sparse_deferrals_name_real_registry_entries() -> None:
         assert set(tree_nodes) <= set(registry)
 
 
-def test_pytest_defaults_to_a_single_process(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_pytest_defaults_to_bounded_parallelism_kept_by_file(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
-    assert gate.test_process_limit() == 1
-    assert gate.parallel_options() == []
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    assert gate.test_process_limit() == 4
+    assert gate.parallel_options() == ["-n", "4", "--dist", "loadfile"]
 
 
 def test_pytest_uses_configured_parallelism_kept_by_file(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
     monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "3")
     monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
     assert gate.parallel_options() == ["-n", "3", "--dist", "loadfile"]
@@ -1054,6 +1062,84 @@ def test_pytest_uses_configured_parallelism_kept_by_file(monkeypatch: pytest.Mon
     assert gate.parallel_options() == []
     monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "1")
     assert gate.parallel_options() == []
+
+
+@pytest.mark.parametrize("value,expected", [(None, 2), ("6", 2), ("2", 2), ("1", 1)])
+def test_pytest_preserves_dispatch_process_clamp(
+    value: str | None, expected: int, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    if value is None:
+        monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    else:
+        monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, value)
+    assert gate.test_process_limit() == (4 if value is None else int(value))
+    assert gate.parallel_options() == ([] if expected == 1 else ["-n", "2", "--dist", "loadfile"])
+
+
+@pytest.mark.parametrize(
+    "value,dispatch,xdist,requested,effective",
+    [
+        (None, "", True, 4, 4),
+        (None, "gate-test", True, 4, 2),
+        (None, "  ", True, 4, 4),
+        ("3", "", True, 3, 3),
+        ("6", "gate-test", True, 6, 2),
+        ("1", "gate-test", True, 1, 1),
+        (None, "gate-test", False, 4, 1),
+    ],
+)
+@pytest.mark.parametrize("ending", ["green", "red", "timeout"])
+def test_pytest_measurement_records_requested_and_effective_invocation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    value: str | None,
+    dispatch: str,
+    xdist: bool,
+    requested: int,
+    effective: int,
+    ending: str,
+) -> None:
+    if value is None:
+        monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    else:
+        monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, value)
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", dispatch)
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object() if xdist else None)
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    seen = []
+
+    def run(command: list[str], **kwargs: object) -> tuple[int, str]:
+        seen.append(command)
+        assert kwargs["diagnostics"]["requested_test_processes"] == requested
+        assert kwargs["diagnostics"]["effective_test_processes"] == effective
+        if ending == "timeout":
+            raise gate.GateOutcome("time_budget_exhausted", "pytest stage timed out", incomplete=True)
+        return (1, "FAILED tests/test_a.py::test_bad") if ending == "red" else (0, "1 passed in 0.1s")
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    event = {}
+    if ending == "green":
+        with gate.stage_measurement(event, "pytest") as diagnostics:
+            assert (
+                gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
+                == "1 passed in 0.1s"
+            )
+    else:
+        with pytest.raises(gate.GateOutcome):
+            with gate.stage_measurement(event, "pytest") as diagnostics:
+                gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
+    assert len(seen) == 1
+    command = seen[0]
+    if effective == 1:
+        assert "-n" not in command and "--dist" not in command
+    else:
+        assert command[-4:] == ["-n", str(effective), "--dist", "loadfile"]
+    row = event["stages"]["pytest"]
+    assert row["requested_test_processes"] == requested
+    assert row["effective_test_processes"] == effective
+    assert row["outcome"] == {"green": "green", "red": "refused", "timeout": "validation_incomplete"}[ending]
 
 
 @pytest.mark.parametrize(
