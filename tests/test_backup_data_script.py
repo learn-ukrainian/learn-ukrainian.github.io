@@ -11,6 +11,7 @@ import shutil
 import signal
 import sqlite3
 import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -3546,7 +3547,7 @@ PRE_COMPLETION_FAULTS = [
     "pending-summary-invalid",
     "mirror-mutated",
     "pending-pack-corrupted",
-    "term-before-completion",
+    "term-in-gate-staging",
     "gate-staging-fails",
     "completion-upload-fails",
     "sigkill-before-completion",
@@ -3580,8 +3581,19 @@ def test_a_fault_before_completion_never_publishes_the_run(
         environment["TEST_MUTATE_FILE"] = str(mirror / "state.txt")
     elif fault == "pending-pack-corrupted":
         environment["TEST_CORRUPT_PACKS_AFTER"] = "backup lu-part-receipt"
-    elif fault == "term-before-completion":
-        environment["TEST_HOLD_BEFORE"] = "check "
+    elif fault == "term-in-gate-staging":
+        # Hold the gate receipt writer: the last step before completion.
+        writer = tmp_path / "hold-python"
+        _write_executable(
+            writer,
+            "#!/bin/bash\n"
+            'if [[ " $* " == *" write-restic-gate-receipt "* ]]; then\n'
+            '  touch "$TEST_HOLD_FILE"\n'
+            '  while [[ ! -e "$TEST_HOLD_FILE.release" ]]; do sleep 0.05; done\n'
+            "fi\n"
+            f'exec "{sys.executable}" "$@"\n',
+        )
+        environment["LU_BACKUP_PYTHON"] = str(writer)
     elif fault == "gate-staging-fails":
         (mirror.parent / "RESTIC-GATE-RECEIPT.json.tmp").mkdir()
     elif fault == "completion-upload-fails":
@@ -3590,7 +3602,7 @@ def test_a_fault_before_completion_never_publishes_the_run(
         environment["TEST_HOLD_BEFORE"] = "backup lu-part-complete"
     snapshots_directory = Path(environment["TEST_LOCAL_RESTIC_REPOSITORY"]) / "snapshots"
     try:
-        if fault == "term-before-completion":
+        if fault == "term-in-gate-staging":
             result = _run_interrupted(environment, signal.SIGTERM)
         elif fault == "sigkill-before-completion":
             result = _run_interrupted(environment, signal.SIGKILL)
@@ -3600,7 +3612,7 @@ def test_a_fault_before_completion_never_publishes_the_run(
         snapshots_directory.chmod(0o700)
 
     assert result.returncode != 0, result.stdout
-    assert result.returncode == {"term-before-completion": 130, "sigkill-before-completion": -9}.get(fault, 1)
+    assert result.returncode == {"term-in-gate-staging": 130, "sigkill-before-completion": -9}.get(fault, 1)
     runs = {_run_id(snapshot) for snapshot in _repository_snapshots(environment)}
     assert len(runs) == 2, runs
     assert _completed_run_ids(environment) == [previous_run]
