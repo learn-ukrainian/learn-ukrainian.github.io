@@ -2076,36 +2076,119 @@ def _nonblocking_opener(path: str | os.PathLike[str], flags: int) -> int:
     return os.open(path, flags | os.O_NONBLOCK)
 
 
+_DEFERRED_SIGNALS = (signal.SIGTERM, signal.SIGINT)
+
+
+def _deliver_signal(handler: Any, signum: int) -> None:
+    """Run ``handler`` for ``signum`` as the signal itself would have.
+
+    ``SIG_DFL`` is re-delivered so the default action happens. ``SIG_IGN`` and
+    ``None`` do nothing. A Python handler gets no frame, which the ``signal``
+    module documents as a possible value.
+    """
+    if handler is signal.SIG_DFL:
+        signal.signal(signum, signal.SIG_DFL)
+        os.kill(os.getpid(), signum)
+    elif callable(handler):
+        handler(signum, None)
+
+
+class _SignalDeferral:
+    """SIGINT and SIGTERM handlers that only record while the input is open.
+
+    ``install`` saves each original handler before replacing it, so a signal
+    that raises between the two leaves nothing to restore wrongly. ``release``
+    first stops recording: from then on ``_handle`` forwards to the original.
+    It then puts the originals back and delivers the first recorded signal. A
+    signal that raises during the restore, from an original or forwarded, gets
+    every handler put back again; the descriptor is already closed. Only a
+    second signal during that repeat can leave a forwarding handler, which
+    behaves as the original. ``SIG_IGN`` and handlers installed from C, which
+    Python cannot restore, are left in place: neither runs Python code, so
+    neither can raise. Off the main thread Python cannot install handlers and
+    none can run there, so nothing is swapped.
+    """
+
+    def __init__(self) -> None:
+        self.originals: dict[int, Any] = {}
+        self.recording = True
+        self.received: int | None = None
+
+    def install(self) -> None:
+        if threading.current_thread() is threading.main_thread():
+            for signum in _DEFERRED_SIGNALS:
+                original = signal.getsignal(signum)
+                if original is not signal.SIG_IGN and original is not None:
+                    self.originals[signum] = original
+                    signal.signal(signum, self._handle)
+
+    def _handle(self, signum: int, _frame: Any) -> None:
+        if not self.recording:
+            _deliver_signal(self.originals[signum], signum)
+        elif self.received is None:
+            self.received = signum
+
+    def release(self) -> None:
+        # Recording stops inside the try: a signal raised on the try line itself
+        # would escape the except clause.
+        try:
+            self.recording = False
+            for signum, original in self.originals.items():
+                signal.signal(signum, original)
+        except BaseException:
+            for signum, original in self.originals.items():
+                signal.signal(signum, original)
+            raise
+        if self.received is not None:
+            _deliver_signal(self.originals[self.received], self.received)
+
+
+def _drain_spellings_input(handle: Any, deferral: _SignalDeferral) -> bytes | None:
+    """Read ``handle`` to end of input; None once a signal has been recorded."""
+    poller = select.poll()
+    poller.register(handle, select.POLLIN)
+    chunks: list[bytes] = []
+    while deferral.received is None:
+        if not poller.poll(SPELLINGS_INPUT_POLL_SECONDS * 1000):
+            continue
+        while deferral.received is None:
+            chunk = handle.read(SPELLINGS_INPUT_READ_BYTES)
+            if chunk is None:
+                break
+            if not chunk:
+                return b"".join(chunks)
+            chunks.append(chunk)
+    return None
+
+
 def _read_spellings_input(path: Path) -> bytes:
     """Read the whole spellings file, FIFO included, without one unbounded wait.
 
     The nonblocking open returns at once even for a FIFO with no writer yet. A
     ``read`` then returns empty before any writer has connected, so only a read
     after ``poll`` reports input or hangup counts as end of input. Each ``poll``
-    returns within ``SPELLINGS_INPUT_POLL_SECONDS``, which lets a SIGTERM caught
-    before the syscall raise at the next bytecode (#10374). ``open`` raises the
-    same errors as ``Path.read_text`` for missing paths and directories, with the
-    same text, and closes a directory's descriptor itself.
+    returns within ``SPELLINGS_INPUT_POLL_SECONDS``, so a SIGINT or SIGTERM
+    recorded before the syscall stops the read within that time (#10374).
+    ``open`` raises the same errors as ``Path.read_text`` for missing paths and
+    directories, with the same text, and closes a directory's descriptor itself.
     """
-    # The with statement is the only cleanup: an exception at any bytecode of
-    # its body closes the file (#10374). One window cannot be closed in pure
-    # CPython, as in any Python program: a signal handled inside the opener
-    # after the open syscall returns, before the file object owns the
-    # descriptor. Only a SIGINT or SIGTERM lands there, and the process exits.
-    with open(path, "rb", buffering=0, opener=_nonblocking_opener) as handle:
-        poller = select.poll()
-        poller.register(handle, select.POLLIN)
-        chunks: list[bytes] = []
-        while True:
-            if not poller.poll(SPELLINGS_INPUT_POLL_SECONDS * 1000):
-                continue
-            while True:
-                chunk = handle.read(SPELLINGS_INPUT_READ_BYTES)
-                if chunk is None:
-                    break
-                if not chunk:
-                    return b"".join(chunks)
-                chunks.append(chunk)
+    # No signal handler raises while this read owns a descriptor (#10374). In
+    # CPython a raising handler cannot be made atomic against a with statement:
+    # one handled in the opener after the open syscall returns, or on the call
+    # of __exit__, skips the close while the exception holds the file. So SIGINT
+    # and SIGTERM only record from before the open until after the with
+    # statement has closed the file, and only then reach their original handler.
+    deferral = _SignalDeferral()
+    try:
+        deferral.install()
+        with open(path, "rb", buffering=0, opener=_nonblocking_opener) as handle:
+            data = _drain_spellings_input(handle, deferral)
+    finally:
+        deferral.release()
+    if data is None:
+        # The original handler returned. A cut-short read is never the input.
+        raise InterruptedByOperator(signal.Signals(deferral.received).name)
+    return data
 
 
 def _spellings_from_file(path: Path) -> list[str]:
