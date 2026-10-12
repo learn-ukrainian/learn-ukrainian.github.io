@@ -361,6 +361,7 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
         if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
         and not (key == "review_mode" and value == "cross_family")
+        and not (key == "authoring_review_plan" and value == "cross_family")
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -381,6 +382,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
         and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
         and not (key == "review_mode" and value == "cross_family")
+        and not (key == "authoring_review_plan" and value == "cross_family")
     }
 
 

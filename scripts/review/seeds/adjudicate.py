@@ -346,6 +346,8 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
         model,
         "--review-mode",
         "cross_family",
+        "--authoring-review-plan",
+        "cross_family",
     ]
 
 
