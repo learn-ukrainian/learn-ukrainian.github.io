@@ -222,12 +222,12 @@ def test_resolver_refuses_invalid_review_mode():
             "RED_TEAM_REFUSED: reviewer model equals a branch author model",
         ),
         ("gpt-6-luna", ("gpt-6.1-sol",), None, None),
-        ("gpt-6.1-sol", (), None, "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"),
+        ("gpt-6.1-sol", (), None, "RED_TEAM_REFUSED: no validated author model; supply --review-author-model"),
         (
             "gpt-6.1-sol",
             ("gpt-6-luna", None),
             None,
-            "RED_TEAM_REFUSED: author model unknown; supply --review-author-model",
+            None,
         ),
         ("gpt-6.1-sol", (None,), "gpt-6-luna", None),
         (
@@ -246,7 +246,7 @@ def test_resolver_refuses_invalid_review_mode():
             "gpt-6.1-sol",
             ("gpt-6-luna",),
             "unlisted-model",
-            "RED_TEAM_REFUSED: author model unknown; supply --review-author-model",
+            "RED_TEAM_REFUSED: --review-author-model is not a catalog model; the flag only adds a comparison model",
         ),
     ],
 )
@@ -267,12 +267,32 @@ def test_red_team_evaluation_accepts_different_same_family_model():
     assert result.status == "eligible"
 
 
-def test_red_team_evaluation_refuses_one_unknown_author_in_complete_branch():
+def test_red_team_evaluation_accepts_unknown_history_with_known_author():
     sol = REVIEW_CANDIDATES["openai_frontier"]
     result = evaluate_candidate(
         sol,
         ResolverInputs(author_model="", author_models=("gpt-6-luna", None), author_families=frozenset({"openai"})),
         review_mode="red_team",
     )
-    assert result.status == "excluded"
-    assert result.reason == "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+    assert result.status == "eligible"
+
+
+@pytest.mark.parametrize(
+    "explicit,expected",
+    [
+        ("codex:gpt-6-luna-high", "eligible"),
+        ("claude-opus-5-5", "excluded"),
+    ],
+)
+def test_red_team_flag_conflict_with_validated_author_task(explicit, expected):
+    result = evaluate_candidate(
+        REVIEW_CANDIDATES["openai_frontier"],
+        ResolverInputs(author_model=explicit, author_models=(None, "gpt-6-luna"), author_task_models=("gpt-6-luna",)),
+        review_mode="red_team",
+    )
+    assert result.status == expected
+    if expected == "excluded":
+        assert (
+            result.reason
+            == "RED_TEAM_REFUSED: conflicting author identity; --review-author-model only adds a comparison model, never overwrites recorded task evidence"
+        )

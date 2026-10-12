@@ -32,13 +32,14 @@ from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import absolute_path_spans, normalize_for_scan, publication_boundary, publication_cli
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
+    REJECTED,
     SHA,
     TRUSTED_ASSOCIATIONS,
     GitHubAdapter,
     SweepError,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.model_catalog import (
@@ -515,6 +516,12 @@ class BranchReviewFacts:
                 for commit in self.commits
                 if commit.source != "clean-base-merge"
                 for model in (commit.author_models or (None,))
+            ),
+            author_task_models=tuple(
+                model
+                for commit in self.commits
+                if commit.sha == self.head_sha and commit.source in {"task-record", "task-record-archived"}
+                for model in commit.author_models
             ),
             review_profile=review_profile,
             risk=risk,
@@ -1210,13 +1217,45 @@ def require_no_outside_rejection(comments: Any, sha: str) -> None:
         if (
             marker["sha"] == sha
             and marker.get("review_mode", "cross_family") != "red_team"
-            and marker["verdict"] == "CHANGES_REQUESTED"
+            and marker["verdict"] in REJECTED
         ):
             raise RecordError("RED_TEAM_REFUSED: outside-family rejection exists for this head")
 
 
+def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
+    """Read the active task ledger before red-team admission or publication."""
+    try:
+        # iter_task_records treats a missing/unreadable directory as empty;
+        # establish readability first so this guard fails closed.
+        list(task_root.iterdir())
+        for path in iter_task_records(task_root, include_archive=False):
+            task = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(task, dict):
+                raise ValueError("task record is not an object")
+            review = (
+                task.get("review")
+                or task.get("pr") is not None
+                or task.get("review_attempt")
+                or task.get("require_review_verdict")
+                or task.get("review_profile")
+                or task.get("review_author_model")
+                or task.get("review_risk")
+                or task.get("type") == "review"
+            )
+            if (
+                review
+                and task.get("repository") == repository
+                and task.get("status") in {"spawning", "running", "queued"}
+                and task.get("review_mode", "cross_family") != "red_team"
+                and sha in {task.get("pinned_head"), task.get("worktree_base_sha")}
+            ):
+                raise RecordError("RED_TEAM_REFUSED: outside-family review in flight for this head")
+    except (OSError, ValueError, TypeError) as exc:
+        raise RecordError("RED_TEAM_REFUSED: task ledger unavailable") from exc
+
+
 def require_no_branch_outside_rejection(
-    repository: str, branch: str | None, sha: str, *, pr_number: int | None = None
+    repository: str, branch: str | None, sha: str, *, pr_number: int | None = None, task_root: Path | None = None
 ) -> None:
     """Check a resolvable PR at dispatch; a branch without a PR has no marker history."""
     if pr_number is None:
@@ -1260,6 +1299,7 @@ def require_no_branch_outside_rejection(
     except SweepError as exc:
         raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable") from exc
     require_no_outside_rejection(comments, sha)
+    require_no_outside_review_in_flight(task_root or _repo_root() / "batch_state" / "tasks", repository, sha)
 
 
 def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
@@ -1408,6 +1448,7 @@ def record(
             (task.get("model"), task.get("resolved_model"), model),
             author_models=facts.resolver_inputs(risk="medium").author_models,
             author_model=task.get("review_author_model"),
+            author_task_models=facts.resolver_inputs(risk="medium").author_task_models,
         )
         if refusal:
             raise RecordError(refusal)
@@ -1441,6 +1482,7 @@ def record(
             raise RecordError(f"comment lookup failed: {exc}") from exc
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
+            require_no_outside_review_in_flight(task_root, repository, sha)
         existing = None
         for item in comments:
             body = item.get("body")

@@ -602,6 +602,7 @@ def _resolve_review_target(
             (requested_model,),
             author_models=facts.resolver_inputs(risk=risk).author_models,
             author_model=author_model,
+            author_task_models=facts.resolver_inputs(risk=risk).author_task_models,
         )
         if refusal:
             raise ReviewAdmissionRefused(refusal)

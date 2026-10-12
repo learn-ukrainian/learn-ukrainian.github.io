@@ -353,7 +353,7 @@ def test_red_team_non_code_profile_refused_before_publication(monkeypatch, tmp_p
     assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
-@pytest.mark.parametrize("verdict", ["CHANGES_REQUESTED", "REQUEST_CHANGES"])
+@pytest.mark.parametrize("verdict", ["CHANGES_REQUESTED", "REQUEST_CHANGES", "BLOCKED"])
 @pytest.mark.parametrize(
     "head,prior_mode,mode",
     [
@@ -406,6 +406,115 @@ def test_red_team_unreadable_marker_history_refused(monkeypatch, tmp_path, body)
             "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
         )
     assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("status", ["spawning", "running", "queued", "done"])
+@pytest.mark.parametrize("head,mode", [(SHA, "cross_family"), (OTHER, "cross_family"), (SHA, "red_team")])
+def test_red_team_outside_review_in_flight_publication_guard(monkeypatch, tmp_path, status, head, mode):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    write_task(
+        tasks,
+        task_id="outside-review",
+        review=True,
+        agent="claude",
+        model="claude-opus-5-5",
+        status=status,
+        worktree_base_sha=head,
+        review_mode=mode,
+        started_at="2026-09-23T11:00:00.000001+00:00",
+    )
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    if status != "done" and head == SHA and mode == "cross_family":
+        with pytest.raises(
+            recorder.RecordError, match="RED_TEAM_REFUSED: outside-family review in flight for this head"
+        ):
+            recorder.record("review-one", **kwargs)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    else:
+        assert recorder.record("review-one", **kwargs)["status"] == "posted"
+        assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize("broken", ["missing", "invalid-json", "non-object", "read-error"])
+def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_path, broken):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    if broken == "missing":
+        monkeypatch.setattr(recorder, "iter_task_records", lambda *_a, **_k: iter(()))
+        original = Path.iterdir
+
+        def unreadable(path):
+            if path == tasks:
+                raise FileNotFoundError("ledger missing")
+            return original(path)
+
+        monkeypatch.setattr(Path, "iterdir", unreadable)
+    else:
+        (tasks / "broken.json").write_text("{" if broken == "invalid-json" else "[]")
+        if broken == "read-error":
+            original = Path.read_text
+
+            def unreadable(path, *args, **kwargs):
+                if path.name == "broken.json":
+                    raise OSError("ledger unreadable")
+                return original(path, *args, **kwargs)
+
+            monkeypatch.setattr(Path, "read_text", unreadable)
+    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: task ledger unavailable"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("kind", ["implementation", "other-repository"])
+def test_red_team_in_flight_unrelated_tasks_do_not_refuse(monkeypatch, tmp_path, kind):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    write_task(
+        tasks,
+        task_id="unrelated",
+        status="running",
+        review=kind != "implementation",
+        repository=REPOSITORY if kind == "implementation" else "other/repo",
+    )
+    assert (
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )["status"]
+        == "posted"
+    )
+    assert len(comments) == 1 and calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("explicit", [None, "gpt-6-luna", "gpt-6.1-sol"])
+def test_red_team_unknown_history_and_validated_current_author(monkeypatch, tmp_path, archived, explicit):
+    from dataclasses import replace
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    records = tasks / "archive" if archived else tasks
+    write_task(records, task_id="current-author", model="gpt-6-luna")
+    current = recorder._attribute_commit(
+        {"sha": SHA, "commit": {"message": "change\n\nX-Agent: codex/current-author"}},
+        repository=REPOSITORY,
+        task_root=tasks,
+        base_sha=lambda: OTHER,
+    )
+    history = recorder.CommitAttribution(OTHER, "unknown", "unresolved-author")
+    facts = replace(facts_for({"unknown", "openai"}), commits=(history, current))
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    prompt = red_team_task(tasks, tmp_path, review_author_model=explicit)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    if explicit == "gpt-6.1-sol":
+        with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: conflicting author identity"):
+            recorder.record("review-one", **kwargs)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    else:
+        assert recorder.record("review-one", **kwargs)["status"] == "posted"
+        assert facts.commits[0].family == "unknown"
+        assert calls == {"posts": 1, "statuses": 1}
 
 
 @pytest.mark.parametrize("case", ["missing", "unreadable", "ordinary", "digest_mismatch", "unbound", "mode_conflict"])
@@ -2574,7 +2683,7 @@ def test_red_team_recorded_and_resolved_model_refused_before_publication(
 
 @pytest.mark.parametrize("archived", [False, True])
 @pytest.mark.parametrize("explicit", [None, "gpt-6-luna", "gpt-6.1-sol"])
-def test_red_team_unknown_author_requires_explicit_model(monkeypatch, tmp_path, archived, explicit):
+def test_red_team_no_validated_author_requires_comparison_model(monkeypatch, tmp_path, archived, explicit):
     from dataclasses import replace
 
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
@@ -2595,7 +2704,7 @@ def test_red_team_unknown_author_requires_explicit_model(monkeypatch, tmp_path, 
         assert calls == {"posts": 1, "statuses": 1}
     else:
         reason = (
-            "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+            "RED_TEAM_REFUSED: no validated author model; supply --review-author-model"
             if explicit is None
             else "RED_TEAM_REFUSED: reviewer model equals a branch author model"
         )

@@ -16596,6 +16596,7 @@ def _admit_dispatch_target(
                     getattr(args, "branch", None),
                     review_target.head_sha,
                     pr_number=getattr(args, "pr", None),
+                    task_root=tasks_dir(),
                 )
             except RecordError as exc:
                 raise ReviewAdmissionRefused(str(exc)) from exc

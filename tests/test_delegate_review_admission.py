@@ -3040,12 +3040,18 @@ def test_dispatch_review_mode_help_preserves_legacy_usage_golden():
     "history",
     [
         "same-head-rejection",
+        "same-head-blocked",
         "other-head-rejection",
         "red-team-rejection",
         "no-pr",
         "no-branch",
         "unreadable",
         "lookup-error",
+        "in-flight",
+        "done",
+        "other-head-in-flight",
+        "red-team-in-flight",
+        "unreadable-ledger",
     ],
 )
 def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatch, history):
@@ -3058,6 +3064,22 @@ def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatc
     if history == "no-branch":
         args.branch = None
     args._review_target = ReviewTarget("branch", OTHER, SHA, (), 0, True, "test branch")
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
+    if history in {"in-flight", "done", "other-head-in-flight", "red-team-in-flight"}:
+        from tests.test_record_cf_verdict import write_task
+
+        write_task(
+            tasks,
+            task_id="outside-review",
+            review=True,
+            status="done" if history == "done" else "running",
+            worktree_base_sha=OTHER if history == "other-head-in-flight" else SHA,
+            review_mode="red_team" if history == "red-team-in-flight" else "cross_family",
+        )
+    if history == "unreadable-ledger":
+        (tasks / "bad.json").write_text("{")
     monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
     monkeypatch.setattr(
         target_admission,
@@ -3068,7 +3090,11 @@ def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatc
         sha=OTHER if history == "other-head-rejection" else SHA,
         task_id="prior-review",
         started="2026-09-23T11:00:00.000001+00:00",
-        verdict="CHANGES_REQUESTED",
+        verdict="APPROVED"
+        if history in {"in-flight", "done", "other-head-in-flight", "red-team-in-flight", "unreadable-ledger"}
+        else "BLOCKED"
+        if history == "same-head-blocked"
+        else "CHANGES_REQUESTED",
         model="claude-opus-5-5",
         family="anthropic",
         reply="VERDICT: REQUEST_CHANGES",
@@ -3086,8 +3112,12 @@ def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatc
     monkeypatch.setattr(recorder, "_run_json", lookup)
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda *_a: comments)
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
-    if history == "same-head-rejection":
+    if history in {"same-head-rejection", "same-head-blocked"}:
         assert refusal == "RED_TEAM_REFUSED: outside-family rejection exists for this head" and target is None
+    elif history == "in-flight":
+        assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head" and target is None
+    elif history == "unreadable-ledger":
+        assert refusal == "RED_TEAM_REFUSED: task ledger unavailable" and target is None
     elif history in {"unreadable", "lookup-error"}:
         assert refusal is not None and target is None
     else:

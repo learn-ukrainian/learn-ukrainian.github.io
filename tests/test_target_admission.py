@@ -742,13 +742,13 @@ def test_red_team_same_model_any_harness_refused(seat, model):
         )
 
 
-def test_red_team_unknown_author_refused_without_override():
+def test_red_team_no_validated_author_refused_without_comparison_model():
     from scripts.review.record_cf_verdict import CommitAttribution
     from tests.test_record_cf_verdict import facts_for
 
     facts = dataclasses.replace(facts_for({"openai"}), commits=(CommitAttribution(None, "openai", "task-record"),))
     with pytest.raises(
-        ReviewAdmissionRefused, match="RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+        ReviewAdmissionRefused, match="RED_TEAM_REFUSED: no validated author model; supply --review-author-model"
     ):
         resolve_and_admit(
             ("codex",),
@@ -759,6 +759,42 @@ def test_red_team_unknown_author_refused_without_override():
             review_task_id="other-task",
             review_facts=facts,
         )
+
+
+@pytest.mark.parametrize("explicit", [None, "gpt-6-luna", "claude-opus-5-5", "unlisted-model"])
+def test_red_team_admission_known_author_with_unknown_history(monkeypatch, explicit):
+    from scripts.review.record_cf_verdict import CommitAttribution
+    from tests.test_record_cf_verdict import SHA, facts_for
+
+    facts = dataclasses.replace(
+        facts_for({"unknown", "openai"}),
+        commits=(
+            CommitAttribution(None, "unknown", "unresolved-author"),
+            CommitAttribution(SHA, "openai", "task-record", task_id="current-author", author_models=("gpt-6-luna",)),
+        ),
+    )
+    options = dict(
+        model="gpt-6.1-sol",
+        mode="read-only",
+        review_dispatch=True,
+        review_mode="red_team",
+        review_task_id="other-task",
+        review_facts=facts,
+        review_author_model=explicit,
+        review_initial_snapshot=lambda: {
+            "claude": "unhealthy",
+            "grok": "unhealthy",
+            "cursor": "unhealthy",
+            "agy": "unhealthy",
+        },
+    )
+    if explicit in {"claude-opus-5-5", "unlisted-model"}:
+        reason = "conflicting author identity" if explicit == "claude-opus-5-5" else "is not a catalog model"
+        with pytest.raises(ReviewAdmissionRefused, match=reason):
+            resolve_and_admit(("codex",), **options)
+    else:
+        (target,) = resolve_and_admit(("codex",), **options)
+        assert target.recipient == "codex" and target.model == "gpt-6.1-sol"
 
 
 def test_red_team_malformed_routing_diagnostics_is_typed_refusal():

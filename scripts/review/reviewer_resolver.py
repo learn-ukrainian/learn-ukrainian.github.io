@@ -89,18 +89,25 @@ def review_task_id_comparison_keys(task_id: str, *, agent: str = "") -> frozense
 
 
 def red_team_seat_refusal(
-    reviewer_models: Iterable[object], *, author_models: Iterable[object] = (), author_model: object = None
+    reviewer_models: Iterable[object],
+    *,
+    author_models: Iterable[object] = (),
+    author_model: object = None,
+    author_task_models: Iterable[object] = (),
 ) -> str | None:
-    """Refuse an unknown author or the same concrete model on any harness."""
+    """Compare all known authors; an explicit model adds identity and never replaces evidence."""
     explicit = resolve_catalog_model_id(author_model)
     authors = {resolve_catalog_model_id(model) for model in author_models}
-    if (author_model and explicit is None) or (None in authors and explicit is None):
-        return "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+    if author_model and explicit is None:
+        return "RED_TEAM_REFUSED: --review-author-model is not a catalog model; the flag only adds a comparison model"
     authors.discard(None)
+    validated = {resolve_catalog_model_id(model) for model in author_task_models} - {None}
+    if explicit is not None and validated and explicit not in validated:
+        return "RED_TEAM_REFUSED: conflicting author identity; --review-author-model only adds a comparison model, never overwrites recorded task evidence"
     if explicit is not None:
         authors.add(explicit)
     if not authors:
-        return "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+        return "RED_TEAM_REFUSED: no validated author model; supply --review-author-model"
     if any(resolve_catalog_model_id(model) in authors for model in reviewer_models):
         return "RED_TEAM_REFUSED: reviewer model equals a branch author model"
     return None
@@ -490,6 +497,7 @@ class ResolverInputs:
     # add to it but never replace or shrink it. Empty keeps single-author mode.
     author_families: frozenset[str] = field(default_factory=frozenset)
     author_models: tuple[str | None, ...] = ()
+    author_task_models: tuple[str, ...] = ()
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -849,7 +857,10 @@ def evaluate_candidate(
     health = _health_of(candidate, normalized_snapshot)
     if review_mode == "red_team":
         refusal = red_team_seat_refusal(
-            (candidate.concrete_model,), author_models=inputs.author_models, author_model=inputs.author_model
+            (candidate.concrete_model,),
+            author_models=inputs.author_models,
+            author_model=inputs.author_model,
+            author_task_models=inputs.author_task_models,
         )
         if refusal:
             return CandidateResult(
