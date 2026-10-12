@@ -131,7 +131,10 @@ launcher_enter_driver_scope() {
     unset LC_SUPERVISORY_PREDECESSOR_GENERATION
     return 0
   fi
-  local token unit entry rc=0 child pending=""
+  local token unit entry rc=0 child pending="" entrypoint="start-${LC_PROVIDER}-driver.sh"
+  case "${0##*/}" in
+    start-claude-cto.sh|start-codex-cto.sh) entrypoint="${0##*/}" ;;
+  esac
   token="$(cat /proc/sys/kernel/random/uuid)" || { driver_scope_refuse identity-unavailable; return 6; }
   [[ "$LC_EPIC" =~ ^[A-Za-z0-9_.:-]+$ ]] || { driver_scope_refuse invalid-lane; return 6; }
   unit="lu-driver-${LC_PROVIDER}-${LC_EPIC}-${token}.scope"
@@ -156,7 +159,7 @@ launcher_enter_driver_scope() {
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
     --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
     --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
-    --entry "$unit" 219 "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_SCOPE_ORIGINAL_ARGS[@]}"
+    --entry "$unit" 219 "$LC_ROOT/$entrypoint" "${LC_SCOPE_ORIGINAL_ARGS[@]}"
   ) 0<&0 &
   child=$!
   exec 219>&-

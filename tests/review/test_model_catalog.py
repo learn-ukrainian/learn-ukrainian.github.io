@@ -106,6 +106,8 @@ def approved_review_baseline(baseline):
 REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
 GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
 GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
+
+
 def approved_cursor_trailer_baseline(baseline):
     """#10273 AC-04 changes only the two frozen Cursor refusal trailers."""
     launchers = deepcopy(baseline["launchers"])
@@ -117,15 +119,16 @@ def approved_cursor_trailer_baseline(baseline):
     return {**baseline, "launchers": launchers}
 
 
-
-
 def test_cursor_trailer_revision_preserves_all_other_frozen_receipts():
     revised = approved_cursor_trailer_baseline(BASELINE)
     assert {key: value for key, value in revised.items() if key != "launchers"} == {
         key: value for key, value in BASELINE.items() if key != "launchers"
     }
-    changed = [index for index, (old, new) in enumerate(zip(BASELINE["launchers"], revised["launchers"], strict=True))
-               if old != new]
+    changed = [
+        index
+        for index, (old, new) in enumerate(zip(BASELINE["launchers"], revised["launchers"], strict=True))
+        if old != new
+    ]
     assert changed == [41, 46]
     for index in changed:
         old, new = BASELINE["launchers"][index], revised["launchers"][index]
@@ -163,13 +166,33 @@ def approved_claude_cap_baseline(baseline):
     return {**baseline, "launchers": launchers}
 
 
+def approved_cto_wrappers_baseline(baseline):
+    """Apply #10453's CTO-wrapper help lines on top of #10355's cap wording."""
+    cto = json.loads((CAPACITY_FIXTURE / "cto-wrappers-10453.json").read_bytes())
+    launchers = deepcopy(baseline["launchers"])
+    for replacement in cto["launcher_help_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            assert launchers[index]["stdout"].count(before) == 1
+            launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, "launchers": launchers}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-APPROVED_BASELINE = approved_claude_cap_baseline(approved_cursor_trailer_baseline(
-    approved_launcher_canary_baseline({
-        **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    })
-))
+APPROVED_BASELINE = approved_cto_wrappers_baseline(
+    approved_claude_cap_baseline(
+        approved_cursor_trailer_baseline(
+            approved_launcher_canary_baseline(
+                {
+                    **REVIEW_CAPACITY_BASELINE,
+                    **GEMINI_OVERLAY["surfaces"],
+                    **RESOURCE_OVERLAY["surfaces"],
+                }
+            )
+        )
+    )
+)
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
 
 
@@ -191,15 +214,68 @@ def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
     for retired in ("LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT", "default 90", "default 80"):
         assert retired not in text
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
-    before = approved_cursor_trailer_baseline(approved_launcher_canary_baseline({
-        **approved_review_baseline(json.loads(gzip.decompress(path.read_bytes()))),
-        **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    }))
+    before = approved_cursor_trailer_baseline(
+        approved_launcher_canary_baseline(
+            {
+                **approved_review_baseline(json.loads(gzip.decompress(path.read_bytes()))),
+                **GEMINI_OVERLAY["surfaces"],
+                **RESOURCE_OVERLAY["surfaces"],
+            }
+        )
+    )
     after = approved_claude_cap_baseline(before)
     assert {k: v for k, v in after.items() if k != "launchers"} == {k: v for k, v in before.items() if k != "launchers"}
-    changed = [i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new]
+    changed = [
+        i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
+    ]
     assert changed == list(range(4, 70, 5))
     for index in changed:
+        assert {k: v for k, v in before["launchers"][index].items() if k != "stdout"} == {
+            k: v for k, v in after["launchers"][index].items() if k != "stdout"
+        }
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
+    fixture_path = CAPACITY_FIXTURE / "cto-wrappers-10453.json"
+    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
+        "b13c3c443bddb9fb81fff9e5546e95fb1f10ef067a22646f397a2faad38d9daf"
+    )
+    cto = json.loads(fixture_path.read_bytes())
+    assert set(cto) == {"launcher_help_replacements"}
+    replacements = cto["launcher_help_replacements"]
+    assert [set(row) for row in replacements] == [{"rows", "before", "after"}] * 3
+    assert [row["rows"] for row in replacements] == [list(range(4, 70, 5)), [4, 9], list(range(9, 70, 10))]
+    force, cap, lanes = replacements
+    assert force["after"].splitlines(True) == [
+        force["before"].splitlines(True)[0],
+        " " * 29 + "CTO wrappers reject it with exit 2.\n",
+        force["before"].splitlines(True)[1],
+    ]
+    assert lanes["after"] == lanes["before"].replace("Valid lane selectors:\n", "Valid lane selectors:\n  epics\n")
+    assert cap["after"].startswith(cap["before"].splitlines(True)[0])
+    assert "Opus is always blocked outside start-claude-cto.sh on epics:" in cap["after"]
+    assert "Opus stays blocked" in cap["before"] and "Opus stays blocked" not in cap["after"]
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = approved_claude_cap_baseline(
+        approved_cursor_trailer_baseline(
+            approved_launcher_canary_baseline(
+                {
+                    **approved_review_baseline(json.loads(gzip.decompress(path.read_bytes()))),
+                    **GEMINI_OVERLAY["surfaces"],
+                    **RESOURCE_OVERLAY["surfaces"],
+                }
+            )
+        )
+    )
+    after = approved_cto_wrappers_baseline(before)
+    assert {k: v for k, v in after.items() if k != "launchers"} == {k: v for k, v in before.items() if k != "launchers"}
+    changed = [
+        i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
+    ]
+    assert changed == list(range(4, 70, 5))
+    for index in changed:
+        assert INPUTS["launchers"][index]["variant"] == "help"
         assert {k: v for k, v in before["launchers"][index].items() if k != "stdout"} == {
             k: v for k, v in after["launchers"][index].items() if k != "stdout"
         }
@@ -241,14 +317,18 @@ def test_launcher_canary_paragraph_preserves_independent_grok_help_edits():
         row = updated["launchers"][39]
         # #10291 changes the usage and adds a native-driver block, outside the
         # driver paragraph. Exercise edits on both sides of that paragraph.
-        row["stdout"] = row["stdout"].replace(
-            "Usage: ./start-grok-driver.sh [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]",
-            "Usage: ./start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]",
-        ).replace(
-            "Hermes (opt-in only):\n",
-            "Native Grok driver:\n"
-            "  Runs from the inspected checkout; positional prompts and subcommands are refused.\n\n"
-            "Hermes (opt-in only):\n",
+        row["stdout"] = (
+            row["stdout"]
+            .replace(
+                "Usage: ./start-grok-driver.sh [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]",
+                "Usage: ./start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]",
+            )
+            .replace(
+                "Hermes (opt-in only):\n",
+                "Native Grok driver:\n"
+                "  Runs from the inspected checkout; positional prompts and subcommands are refused.\n\n"
+                "Hermes (opt-in only):\n",
+            )
         )
         assert row != baseline["launchers"][39]
         return updated
@@ -267,8 +347,11 @@ def test_resource_policy_fixture_changes_only_approved_fallback_rows():
         before = json.loads(gzip.decompress(path.read_bytes()))["fallbacks"]
         expected = deepcopy(before)
         expected.pop("post_2026_06_15_hard_rule")
-        removed = [row for row in expected["substitutions"]
-                   if row["currently_uses"] == "linear_pipeline.invoke_writer(writer='claude-tools')"]
+        removed = [
+            row
+            for row in expected["substitutions"]
+            if row["currently_uses"] == "linear_pipeline.invoke_writer(writer='claude-tools')"
+        ]
         assert len(removed) == 1
         expected["substitutions"].remove(removed[0])
         expected["worker_resource_policy"] = (
@@ -294,8 +377,10 @@ def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
     )
     assert set(GEMINI_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
     assert set(GEMINI_OVERLAY["inputs"]) == {"roles", "reviewer"}
+
     def key(value):
         return json.dumps(value, sort_keys=True)
+
     for surface in ("roles", "reviewer"):
         new_inputs = {key(row) for row in APPROVED_INPUTS[surface]}
         assert all(key(row) in new_inputs for row in INPUTS[surface])
@@ -441,15 +526,21 @@ def test_legacy_catalog_equals_approved_routing_baseline():
     assert expanded_legacy_view() == APPROVED_BASELINE["catalog"]
 
 
-@pytest.mark.parametrize("entrypoint,args", [
-    ("scripts/review/model_catalog.py", ["--resolve-role", "bounded_advisor"]),
-    ("scripts/lint/lint_model_catalog.py", ["--as-of", "2026-10-07"]),
-])
+@pytest.mark.parametrize(
+    "entrypoint,args",
+    [
+        ("scripts/review/model_catalog.py", ["--resolve-role", "bounded_advisor"]),
+        ("scripts/lint/lint_model_catalog.py", ["--as-of", "2026-10-07"]),
+    ],
+)
 def test_direct_catalog_callers_without_repository_pythonpath(entrypoint, args, tmp_path):
     source = Path(__file__).resolve().parents[2]
     result = subprocess.run(
         [sys.executable, "-I", str(source / entrypoint), *args],
-        cwd=tmp_path, capture_output=True, text=True, timeout=30,
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
@@ -520,7 +611,7 @@ def assert_frozen_surfaces(actual):
 def test_capture_runner_activates_and_restores_scoped_caches(tmp_path):
     source = Path(__file__).resolve().parents[2]
     capture = tmp_path / "capture.py"
-    capture.write_text('''from scripts import delegate
+    capture.write_text("""from scripts import delegate
 from scripts.review import model_catalog
 
 original_validator = model_catalog.validate_catalog
@@ -536,10 +627,13 @@ def main():
     assert model_catalog.validate_catalog is original_validator
     assert delegate.build_parser is original_parser
     print("caches restored")
-''')
+""")
     result = subprocess.run(
         [sys.executable, "-c", CAPTURE_RUNNER, str(capture), "--source-root", str(source)],
-        cwd=tmp_path, capture_output=True, text=True, timeout=30,
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == "caches active\ncaches restored\n"
@@ -634,7 +728,9 @@ def test_capture_policy_cache_is_scoped_and_restores_reader(tmp_path, monkeypatc
 
     monkeypatch.setitem(CAPTURE["capture"].__globals__, "_capture_surfaces", surfaces)
     for calls, threshold in enumerate((11.0, 12.0), start=1):
-        policy_path.write_text(policy_text.replace("near_cap_remaining_pct: 10.0", f"near_cap_remaining_pct: {threshold}"))
+        policy_path.write_text(
+            policy_text.replace("near_cap_remaining_pct: 10.0", f"near_cap_remaining_pct: {threshold}")
+        )
         if fail:
             with pytest.raises(RuntimeError, match="capture failed"):
                 CAPTURE["capture"](tmp_path, tmp_path, Path(sys.executable))
@@ -717,11 +813,19 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_claude_cap_baseline(approved_cursor_trailer_baseline(
-        approved_launcher_canary_baseline({
-            **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-        })
-    ))
+    assert actual == approved_cto_wrappers_baseline(
+        approved_claude_cap_baseline(
+            approved_cursor_trailer_baseline(
+                approved_launcher_canary_baseline(
+                    {
+                        **approved_review_baseline(original),
+                        **GEMINI_OVERLAY["surfaces"],
+                        **RESOURCE_OVERLAY["surfaces"],
+                    }
+                )
+            )
+        )
+    )
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

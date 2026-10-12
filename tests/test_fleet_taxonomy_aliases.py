@@ -46,7 +46,11 @@ def test_area_assignments_give_gemini_a_driver_slot_wherever_codex_has_one() -> 
     codex_lanes = {slot.removeprefix("codex-") for slot in slots if slot.startswith("codex-")}
     gemini_lanes = {slot.removeprefix("gemini-") for slot in slots if slot.startswith("gemini-")}
     assert codex_lanes
-    assert gemini_lanes == codex_lanes
+    assert gemini_lanes == codex_lanes - {"epics"}
+    assert assignments["assignments"]["epics"] == {
+        "driver_agent_type": "infra-orchestrator",
+        "slots": ["claude-epics", "codex-epics"],
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -413,9 +417,7 @@ def test_session_setup_hook_epic_validation_contract(
     _assert_epic_contract(context, expected_mode, expected_token, handoff_path)
 
 
-def _run_session_setup_hook(
-    tmp_path: Path, session_epic: str, driver_state: str | None = None
-) -> str:
+def _run_session_setup_hook(tmp_path: Path, session_epic: str, driver_state: str | None = None) -> str:
     """Verify SessionStart hook validates SESSION_EPIC against launcher_selector_resolve."""
     import json
 
@@ -484,9 +486,7 @@ def _run_session_setup_hook(
     return data.get("hookSpecificOutput", {}).get("additionalContext", "")
 
 
-def _assert_epic_contract(
-    context: str, expected_mode: str, expected_token: str, handoff_path: str
-) -> None:
+def _assert_epic_contract(context: str, expected_mode: str, expected_token: str, handoff_path: str) -> None:
     assert expected_token in context
 
     if expected_mode == "valid":

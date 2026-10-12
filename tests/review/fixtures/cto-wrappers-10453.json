@@ -1,0 +1,45 @@
+{
+  "launcher_help_replacements": [
+    {
+      "rows": [
+        4,
+        9,
+        14,
+        19,
+        24,
+        29,
+        34,
+        39,
+        44,
+        49,
+        54,
+        59,
+        64,
+        69
+      ],
+      "before": "                             driver did not hand off. Live drivers must not pass it.\n  --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).\n",
+      "after": "                             driver did not hand off. Live drivers must not pass it.\n                             CTO wrappers reject it with exit 2.\n  --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).\n"
+    },
+    {
+      "rows": [
+        4,
+        9
+      ],
+      "before": "  Claude weekly cap: every Claude launch stops at 99% weekly used.\n                             Opus is always blocked: explicit Opus is refused and a\n                             defaulted Opus driver switches to claude-sonnet-5-5.\n  LU_CLAUDE_CAP_OVERRIDE=1 Bypass the 99% stop with an operator warning; Opus stays blocked.\n",
+      "after": "  Claude weekly cap: every Claude launch stops at 99% weekly used.\n                             Opus is always blocked outside start-claude-cto.sh on epics:\n                             that wrapper permits explicit CLI --model Opus without --force.\n                             A defaulted Opus driver switches to claude-sonnet-5-5.\n  LU_CLAUDE_CAP_OVERRIDE=1 Bypass only the 99% stop with an operator warning.\n"
+    },
+    {
+      "rows": [
+        9,
+        19,
+        29,
+        39,
+        49,
+        59,
+        69
+      ],
+      "before": "Valid lane selectors:\n  infra | harness | infra.fleet-comms\n",
+      "after": "Valid lane selectors:\n  epics\n  infra | harness | infra.fleet-comms\n"
+    }
+  ]
+}

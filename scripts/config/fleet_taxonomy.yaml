@@ -20,6 +20,13 @@ areas:
     epics:
       - number: 6943  # successor to closed #4707
         name: "Infra & fleet reliability (hooks, dispatch, routing)"
+  epics:
+    id: epics
+    aliases:
+      - epics
+    epics:
+      - number: 10453
+        name: "Epic coordination"
   devops:
     id: devops
     aliases:

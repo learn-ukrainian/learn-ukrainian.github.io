@@ -77,6 +77,14 @@ def test_certified_claude_driver_models_are_revalidated() -> None:
     assert untrusted.returncode == 4
 
 
+def test_cto_explicit_opus_epics_uses_native_profile() -> None:
+    result = run_launcher("start-claude-cto.sh", "--epic", "epics", "--model", "opus")
+    assert result.returncode == 0, result.stderr
+    assert "credential_source=claude-cli" in result.stdout
+    assert "would exec claude --model claude-opus-5-5\\[1m\\] --effort high" in result.stdout
+    assert "slot=claude-epics" in result.stdout
+
+
 def test_explicit_retired_sonnet_driver_pin_is_refused() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-sonnet-5")
     assert result.returncode == 2
@@ -101,16 +109,16 @@ def test_full_retired_fable_id_is_refused() -> None:
     assert "would exec claude" not in retired.stdout
 
 
-@pytest.mark.parametrize("model", [
-    model_id for model_id, entry in load_model_catalog()["models"].items()
-    if entry["lifecycle"] == "retired"
-])
+@pytest.mark.parametrize(
+    "model", [model_id for model_id, entry in load_model_catalog()["models"].items() if entry["lifecycle"] == "retired"]
+)
 @pytest.mark.parametrize("suffix", ["", "[1m]"])
 @pytest.mark.parametrize("via_env", [False, True])
 def test_interactive_launcher_refuses_every_retired_catalog_id(model, suffix, via_env) -> None:
     pin = model + suffix
     result = run_launcher(
-        "start-claude.sh", *(() if via_env else ("--model", pin)),
+        "start-claude.sh",
+        *(() if via_env else ("--model", pin)),
         env={"LAUNCHER_MODEL": pin} if via_env else {},
     )
     assert result.returncode == 2
@@ -136,14 +144,21 @@ def test_claude_driver_disables_advisor_in_provider_environment(tmp_path: Path, 
     # Keep the real entrypoint, core and native adapter; only the fixture's
     # scope, lease and continuity services are fake. No provider call is made.
     shutil.copy2(REPO / "scripts/launchers/claude.sh", launcher.parent / "scripts/launchers/claude.sh")
-    shutil.copy2(REPO / "scripts/config/context_profiles.yaml", launcher.parent / "scripts/config/context_profiles.yaml")
+    shutil.copy2(
+        REPO / "scripts/config/context_profiles.yaml", launcher.parent / "scripts/config/context_profiles.yaml"
+    )
     bin_dir = _stub_claude(tmp_path)
     env = {
         "PATH": f"{bin_dir}:{os.environ['PATH']}",
         "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": inherited,
     }
     result = run_launcher(
-        "start-claude-driver.sh", "--epic", "devops", env=env, dry_run=False, root=launcher.parent,
+        "start-claude-driver.sh",
+        "--epic",
+        "devops",
+        env=env,
+        dry_run=False,
+        root=launcher.parent,
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "advisor_disabled=1" in result.stdout

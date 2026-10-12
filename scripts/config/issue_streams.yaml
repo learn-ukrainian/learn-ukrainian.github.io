@@ -14,6 +14,9 @@
 #   an audit root. Retired lanes are normally removed outright instead.
 schema_version: 1
 streams:
+  epics:
+    title: "Epic coordination"
+    epics: [10453]
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
     epics: [4387]  # umbrella (closed #4700 UX-quality + intake #4220/#4378/#5224 folded into #4387; closed #5331 removed)

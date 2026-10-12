@@ -638,13 +638,28 @@ closed if that reduced tool set changes.
 Sealed `review_isolation` drops the variable through its own environment
 allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
 that can background. Interactive launchers (`start-claude.sh`,
-`start-claude-driver.sh`, `scripts/launchers/claude.sh`) do not use the adapter
+`start-claude-driver.sh`, `start-claude-cto.sh`, `scripts/launchers/claude.sh`) do not use the adapter
 and keep background tasks. A trailing `&` or `nohup` inside a foreground Bash
 call is a different path: `worker_leftovers.py` handles it (#8991).
 `tests/agent_runtime/test_claude_no_background.py` launches a fake CLI through
 the real runner and checks both parts, for the Claude adapter and for KimiCC
 behind its wrapper. It also checks that native Kimi gets neither, and that
 every adapter which resolves the Claude binary is in its harness table.
+
+The CTO launchers `start-claude-cto.sh` and `start-codex-cto.sh` use driver mode
+and default to the registered `epics` stream, whose root epic is #10453.
+Their model defaults are `claude-sonnet-5-5` and `gpt-6.1-sol`, respectively,
+both at `high` effort. Command-line `--model` and `--effort` override
+`LAUNCHER_MODEL` and `LAUNCHER_EFFORT`. Both wrappers reject `--force` with exit 2
+and retain the driver identity, slot, occupancy, and duplicate-supervisor checks.
+They reuse `.claude/epics-epic/DRIVER-STATE.md`, the driver prompts, and `drive-epic`.
+Scope re-entry and supervisor successors return through the same CTO wrapper.
+
+Only `start-claude-cto.sh` on the resolved `epics` lane permits Opus selected by
+an explicit command-line `--model`. Environment-only Opus and Opus on other
+Claude entrypoints or lanes remain refused with exit 7. Every Claude launch
+still stops at 99% weekly usage. `LU_CLAUDE_CAP_OVERRIDE=1` bypasses only that
+usage stop and does not expand the Opus exception.
 
 ### Native Grok headless permission mapping (#7583)
 
