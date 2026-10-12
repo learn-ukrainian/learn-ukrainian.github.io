@@ -125,8 +125,8 @@ _GRAMMATICAL_TOKEN = (
 )
 _GRAMMATICAL_FORM_RE = re.compile(rf"^(?:(?:{_GRAMMATICAL_TOKEN})[\s/]*)+$", re.IGNORECASE)
 _TOKEN_SPLIT_RE = re.compile(r"[\s/]+")
-def _split_clauses(text: str) -> list[str]:
-    """Split gloss into comma/semicolon clauses outside brackets and quotes."""
+def _split_clauses(text: str, delimiters: str = ",;") -> list[str]:
+    """Split gloss into clauses outside brackets and quotes by the given delimiters."""
     clauses: list[str] = []
     current: list[str] = []
     p_depth = 0
@@ -156,7 +156,7 @@ def _split_clauses(text: str) -> list[str]:
             elif ch == "}" and brace_depth > 0:
                 brace_depth -= 1
         if (
-            ch in ",;"
+            ch in delimiters
             and p_depth == 0
             and b_depth == 0
             and brace_depth == 0
@@ -210,16 +210,30 @@ def _clean_gloss(gloss: str) -> str:
         prefix, suffix = g.split(":", 1)
         if _is_meta_clause(prefix):
             return _clean_gloss(suffix) if suffix.strip() else ""
-    clauses = _split_clauses(g)
-    if not clauses:
+
+    definitions = _split_clauses(g, delimiters=";")
+    if not definitions:
         return ""
-    meta_idx = next((i for i, c in enumerate(clauses) if _is_meta_clause(c)), None)
-    if meta_idx is not None:
-        kept = [c for c in clauses[:meta_idx] if c]
-        if not kept:
-            return ""
-        return ", ".join(kept).strip()
-    return g  # nothing dropped — preserve original
+
+    has_meta = False
+    cleaned_definitions: list[str] = []
+    for defn in definitions:
+        clauses = _split_clauses(defn, delimiters=",")
+        if not clauses:
+            continue
+        meta_idx = next((i for i, c in enumerate(clauses) if _is_meta_clause(c)), None)
+        if meta_idx is not None:
+            has_meta = True
+            kept = [c for c in clauses[:meta_idx] if c]
+            if kept:
+                cleaned_definitions.append(", ".join(kept).strip())
+        else:
+            cleaned_definitions.append(defn)
+
+    if not has_meta:
+        return g  # nothing dropped — preserve original
+
+    return "; ".join(cleaned_definitions).strip()
 
 
 def extract_glosses(entry: dict[str, Any]) -> list[str]:

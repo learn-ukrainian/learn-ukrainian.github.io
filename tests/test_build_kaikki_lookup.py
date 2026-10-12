@@ -109,6 +109,16 @@ def test_clean_gloss_removes_form_of_usage_tails_after_genuine_translation() -> 
     ) == "water, aqua"
 
 
+def test_clean_gloss_preserves_semicolon_definitions_around_meta_clauses() -> None:
+    # Distinct definitions separated by semicolons must be evaluated independently
+    # so senses following a meta clause are not lost.
+    assert _clean_gloss("water; alternative form of X; aqua") == "water; aqua"
+    assert _clean_gloss("bread; alternative form of Y, used informally; loaf") == "bread; loaf"
+    assert _clean_gloss("water, liquid; alternative form of X; aqua, moisture") == (
+        "water, liquid; aqua, moisture"
+    )
+
+
 def test_extract_glosses_filters_form_entries() -> None:
     # an inflected-form entry yields no translation glosses
     entry = {"senses": [{"glosses": ["accusative singular", "vocative singular"]}]}
