@@ -14,7 +14,8 @@ CLI:
     # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
         --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6.1-sol]
-        [--allow-merge] [--force-new]
+        [--force-new]
+    # --allow-merge is refused: workers never receive the merge grant (#10501).
 
     # Check status without blocking.
     delegate.py status my-task
@@ -7467,6 +7468,12 @@ def _x_agent_trailer(agent: str, task_id: str) -> str:
     return f"X-Agent: {agent}/{_x_agent_task_id(agent, task_id)}"
 
 
+MERGE_GRANT_REFUSED = (
+    "MERGE_GRANT_REFUSED: delegated workers never receive the merge grant (#10501); "
+    "the driver lands approved work through the merge queue"
+)
+
+
 def _build_worker_env(
     *,
     task_id: str,
@@ -7525,12 +7532,13 @@ def _build_worker_env(
         worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
     if worktree_path is not None:
         _apply_worktree_git_ceiling(worker_env, worktree_path)
+    # Every delegated payload is a worker (#10501): the merge guard is always on,
+    # whatever the dispatcher's own environment says. This closes the supported
+    # grant; a same-user worker can still edit its environment or bypass the shims.
     if allow_merge:
-        worker_env.pop("AGENT_NO_MERGE", None)
-        worker_env["AGENT_ALLOW_MERGE"] = "1"
-    else:
-        worker_env["AGENT_NO_MERGE"] = "1"
-        worker_env.pop("AGENT_ALLOW_MERGE", None)
+        raise ValueError(MERGE_GRANT_REFUSED)
+    worker_env["AGENT_NO_MERGE"] = "1"
+    worker_env.pop("AGENT_ALLOW_MERGE", None)
     return worker_env
 
 
@@ -12192,6 +12200,9 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    if getattr(args, "allow_merge", False) is not False:
+        print(f"❌ {MERGE_GRANT_REFUSED}", file=sys.stderr)
+        return 2
     red_team_prompt_sha256 = None
     if getattr(args, "review_mode", "cross_family") == "red_team":
         try:
@@ -14050,7 +14061,7 @@ def _dispatch(
             **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
             "effort": start_telemetry.effort,
             "cli_version": start_telemetry.cli_version,
-            "allow_merge": bool(getattr(args, "allow_merge", False)),
+            "allow_merge": False,
             "require_review_verdict": bool(getattr(args, "require_review_verdict", False)),
             "mode": args.mode,
             "cwd": cwd,
@@ -14298,7 +14309,6 @@ def _dispatch(
             runtime_tmp_root=runtime_tmp_root,
             runtime_tmp_namespace_root=runtime_tmp_namespace_root,
             worktree_path=worktree_path,
-            allow_merge=bool(getattr(args, "allow_merge", False)),
         )
         try:
             # Scoped when lu-dispatch.slice is really in force; plain Popen
@@ -18503,8 +18513,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--allow-merge",
         action="store_true",
         help=(
-            "Opt in to allow PR approval/merge and pushes to main inside the "
-            "delegated subprocess. Default is off: AGENT_NO_MERGE=1 is set."
+            "Refused (#10501): delegated workers never receive the merge grant; "
+            "drivers land through the merge queue. Every worker runs with AGENT_NO_MERGE=1."
         ),
     )
     d.add_argument(

@@ -1,4 +1,11 @@
-"""Guard and replenish GitHub merge queues from exact-head review and CI evidence."""
+"""Guard and replenish GitHub merge queues from exact-head review and CI evidence.
+
+Every positive path (the initial read, the fresh pre-enqueue read and the
+historical helpers) resolves review state through
+:func:`integration_sweep.lookup_verdict` with the recorder receipts of the
+review task ledger (#10501). Those receipts are same-user traceability against
+accidental or supported-path bypass, not isolated review authority.
+"""
 
 from __future__ import annotations
 
@@ -27,7 +34,16 @@ from scripts.opsec.prepublish import (
     publication_boundary,
     publication_cli,
 )
-from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
+from scripts.orchestration.integration_sweep import (
+    RecordedEvidence,
+    ReviewLedger,
+    SweepError,
+    Verdict,
+    classify_pr,
+    default_tasks_dir,
+    lookup_verdict,
+    parse_marker,
+)
 from scripts.publish import recovery
 from scripts.publish.github import Request, request_run
 
@@ -83,8 +99,19 @@ def _auto_merge_armed(row: Mapping[str, Any]) -> bool:
 
 
 class GitHub:
-    def __init__(self, root: Path, repository: str) -> None:
+    def __init__(self, root: Path, repository: str, tasks_dir: Path | None = None) -> None:
         self.root, self.repository = root, repository
+        self._tasks_dir = tasks_dir
+
+    @property
+    def tasks_dir(self) -> Path:
+        """The review task ledger holding recorder receipts (primary checkout by default)."""
+        if self._tasks_dir is None:
+            try:
+                self._tasks_dir = default_tasks_dir(self.root)
+            except SweepError as exc:
+                raise KeeperError(str(exc)) from exc
+        return self._tasks_dir
 
     @publication_boundary(KeeperError)
     def call(self, *args: str) -> str:
@@ -450,7 +477,10 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
     if hold is not False:
         return "hold" if hold else "hold-unknown"
     if verdict.state != "APPROVED":
-        return "needs-CF" if verdict.state in MISSING_CF_STATES else f"CF-{verdict.state.lower()}"
+        if verdict.state in MISSING_CF_STATES:
+            return "needs-CF"
+        # CF-unreceipted and CF-in-flight already carry their prefix.
+        return verdict.state if verdict.state.startswith("CF-") else f"CF-{verdict.state.lower()}"
     if check_state != "ok":
         return check_state
     if row.get("mergeStateStatus") in {"DIRTY", "UNKNOWN"} or not isinstance(row.get("mergeStateStatus"), str):
@@ -591,24 +621,30 @@ def _save(path: Path, data: dict[str, Any]) -> None:
     os.replace(temp, path)
 
 
-def _ever_approved(comments: list[dict[str, Any]], login: str) -> bool:
+def _ever_approved(comments: list[dict[str, Any]], login: str, evidence: RecordedEvidence | None = None) -> bool:
+    """Whether any head carries a receipted approval; ``evidence=None`` is the comment-only view."""
     heads = set()
     for row in comments:
         body = row.get("body")
         marker = parse_marker(body) if isinstance(body, str) else None
         if marker:
             heads.add(marker["sha"])
-    return any(lookup_verdict(comments, head, login).state == "APPROVED" for head in heads)
+    return any(lookup_verdict(comments, head, login, evidence=evidence).state == "APPROVED" for head in heads)
 
 
-def _recorded_approval_for_head(comments: list[dict[str, Any]], head: str, login: str) -> bool:
-    """Find a recorder-approved head even when a later marker changed the verdict."""
+def _recorded_approval_for_head(
+    comments: list[dict[str, Any]], head: str, login: str, evidence: RecordedEvidence | None = None
+) -> bool:
+    """Find a recorder-approved head even when a later marker changed the verdict.
+
+    ``evidence`` must be historical: an active review does not erase a receipted past approval.
+    """
     return any(
         isinstance(row, dict)
         and isinstance(row.get("body"), str)
         and (marker := parse_marker(row["body"])) is not None
         and marker["sha"] == head
-        and lookup_verdict([row], head, login).state == "APPROVED"
+        and lookup_verdict([row], head, login, evidence=evidence).state == "APPROVED"
         for row in comments
     )
 
@@ -777,6 +813,9 @@ def run(
     observed = datetime.now(UTC).isoformat()
     grants = _requeue_grants(requeue_gate)
     open_numbers = {str(pr.get("number")) for pr in snap["prs"]}
+    tasks_dir = gh.tasks_dir
+    # One ledger snapshot for the initial pass; each fresh pre-enqueue read takes its own.
+    ledger = ReviewLedger(tasks_dir, gh.repository)
     for pr in snap["prs"]:
         number, head, node_id = pr.get("number"), pr.get("headRefOid"), pr.get("id")
         if not isinstance(number, int) or not isinstance(head, str) or not isinstance(node_id, str):
@@ -790,15 +829,16 @@ def run(
             queued_now[key] = head
         queue_enabled = snap["queues"].get(pr.get("baseRefName"))
         comment_safe = True
+        history = ledger.evidence(number, historical=True)
         try:
             comments = gh.comments(number)
-            verdict = lookup_verdict(comments, head, login)
+            verdict = lookup_verdict(comments, head, login, evidence=ledger.evidence(number))
             check_rows = gh.checks(head)
             checks = _evaluate_checks(gh, number, head, check_rows)
         except KeeperError:
             comments, verdict, checks, check_rows = [], Verdict("unknown"), "CI-unknown", []
             comment_safe = False
-        if comment_safe and _recorded_approval_for_head(comments, head, login):
+        if comment_safe and _recorded_approval_for_head(comments, head, login, history):
             approved_before = True
         if approved_before:
             approved_now[key] = head
@@ -898,7 +938,12 @@ def run(
             else:
                 try:
                     current_comments = gh.comments(number)
-                    current_verdict = lookup_verdict(current_comments, head, login)
+                    current_verdict = lookup_verdict(
+                        current_comments,
+                        head,
+                        login,
+                        evidence=ReviewLedger(tasks_dir, gh.repository).evidence(number),
+                    )
                 except KeeperError:
                     current_comments, current_verdict = [], Verdict("unknown")
                     comment_safe = False
@@ -909,7 +954,7 @@ def run(
                     comment_safe = True
                     can_comment = True
                     verdict = current_verdict
-                    if _recorded_approval_for_head(current_comments, head, login):
+                    if _recorded_approval_for_head(current_comments, head, login, history):
                         approved_before = True
                         approved_now[key] = head
                 try:
@@ -990,7 +1035,7 @@ def run(
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
                 and reason not in QUIET_GATE_REASONS
                 and comment_safe
-                and (_ever_approved(comments, login) or dropped)
+                and (_ever_approved(comments, login, history) or dropped)
             ):
                 _comment_once(gh, number, head, reason, comments, login, detail)
             elif reason != "ready" and dropped and detail and comment_safe:
@@ -1040,9 +1085,9 @@ def run(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
+        description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.\nApproval needs the recorder receipt in the primary checkout's review task ledger;\nthat is same-user traceability, not isolated review authority (#10501).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_REQUEUE_GATE=<decision file> re-enqueues an ejected head once, only with a grant; MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_REQUEUE_GATE=<decision file> re-enqueues an ejected head once, only with a grant; MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, #10501, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")

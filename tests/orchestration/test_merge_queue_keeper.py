@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import fcntl
+import itertools
 import json
 import subprocess
+import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -13,7 +15,7 @@ import pytest
 
 from scripts.opsec import prepublish as gate
 from scripts.orchestration import merge_queue_keeper as keeper
-from scripts.orchestration.integration_sweep import Verdict
+from scripts.orchestration.integration_sweep import RECEIPT_FIELD, Verdict, build_receipt, parse_marker
 from scripts.publish import github as publisher
 from scripts.publish import recovery
 from scripts.review.record_cf_verdict import build_comment
@@ -78,11 +80,44 @@ def recovery_comment(head: str = HEAD_A) -> dict[str, Any]:
     }
 
 
+def write_receipts(tasks_dir: Path, rows: list[dict[str, Any]], *, repository: str, number: int) -> None:
+    """Bind each genuinely recorded approval the way the recorder does (#10501)."""
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    for row in rows:
+        # The recorder never binds a marker that does not parse.
+        if not row.get("_receipt") or (marker := parse_marker(row["body"])) is None:
+            continue
+        task = marker["task"]
+        record = {"task_id": task, "run_nonce": f"nonce-{task}", "status": "done"}
+        record[RECEIPT_FIELD] = build_receipt(
+            repository=repository,
+            pr=number,
+            head_sha=marker["sha"],
+            task_id=task,
+            run_nonce=record["run_nonce"],
+            model=marker["model"],
+            family=marker["family"],
+            verdict=marker["verdict"],
+            review_mode=marker.get("review_mode", "cross_family"),
+            comment_id=row["id"],
+            body=row["body"],
+        )
+        (tasks_dir / f"{task}.json").write_text(json.dumps(record))
+
+
 class FakeGitHub:
     root = Path.cwd()
     repository = "github.com/unit/public"
 
+    @property
+    def tasks_dir(self) -> Path:
+        """The review ledger, holding a receipt for every genuinely recorded approval row."""
+        path = Path(self._ledger.name)
+        write_receipts(path, self.comments_rows, repository=self.repository, number=self.row["number"])
+        return path
+
     def __init__(self, row: dict[str, Any] | None = None) -> None:
+        self._ledger = tempfile.TemporaryDirectory(prefix="keeper-ledger-")
         self.row = row or pr()
         self.fresh = dict(self.row)
         self.fresh["state"] = "OPEN"
@@ -216,8 +251,8 @@ class FakeGitHub:
 def run(
     fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, verdict: str = "APPROVED", *, apply: bool = True
 ) -> tuple[list[str], bool]:
-    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict(verdict))
-    monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: verdict == "APPROVED")
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login, **_kwargs: Verdict(verdict))
+    monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login, evidence=None: verdict == "APPROVED")
     return keeper.run(fake, path, apply=apply)
 
 
@@ -225,11 +260,24 @@ def mutations(fake: FakeGitHub) -> list[str]:
     return [kind for kind, _ in fake.actions if kind != "squash-read"]
 
 
-def recorded(verdict: str, started: str, head: str = HEAD_A, *, review_mode: str = "cross_family") -> dict[str, Any]:
+_COMMENT_IDS = itertools.count(5000)
+
+
+def recorded(
+    verdict: str,
+    started: str,
+    head: str = HEAD_A,
+    *,
+    review_mode: str = "cross_family",
+    task: str = "review",
+    receipt: bool = True,
+) -> dict[str, Any]:
+    """A recorder-published marker; ``receipt`` binds an approval in the fake ledger."""
     return {
+        "id": next(_COMMENT_IDS),
         "body": build_comment(
             sha=head,
-            task_id="review",
+            task_id=task,
             started=started,
             verdict=verdict,
             model="gpt-6.1-sol",
@@ -241,6 +289,7 @@ def recorded(verdict: str, started: str, head: str = HEAD_A, *, review_mode: str
         "author_association": "MEMBER",
         "created_at": "2026-09-23T13:00:00Z",
         "updated_at": "2026-09-23T13:00:00Z",
+        "_receipt": receipt and verdict in {"APPROVED", "APPROVE"},
     }
 
 
@@ -485,7 +534,7 @@ def test_queued_verdict_lookup_error_reports_without_revocation(
 ) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     monkeypatch.setattr(
-        keeper, "lookup_verdict", lambda *args: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
+        keeper, "lookup_verdict", lambda *args, **_kw: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
     )
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
@@ -497,7 +546,7 @@ def test_queued_red_ci_revokes_even_when_verdict_lookup_errors(tmp_path: Path, m
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.check_rows = checks(conclusion="failure")
     monkeypatch.setattr(
-        keeper, "lookup_verdict", lambda *args: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
+        keeper, "lookup_verdict", lambda *args, **_kw: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
     )
     keeper.run(fake, tmp_path / "state.json", apply=True)
     assert ("dequeue", "PR_node_42") in fake.actions
@@ -1345,8 +1394,8 @@ def _gate(tmp_path: Path, decisions: dict[str, Any] | None = None, *, raw: str |
 def gated(
     fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, gate: Path, *, apply: bool = True
 ) -> tuple[list[str], bool]:
-    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict("APPROVED"))
-    monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: True)
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login, **_kw: Verdict("APPROVED"))
+    monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login, evidence=None: True)
     return keeper.run(fake, path, apply=apply, requeue_gate=gate)
 
 
@@ -1851,3 +1900,171 @@ def test_publisher_removal_read_failure_refuses_initial_keeper_enqueue(tmp_path,
     assert failed
     assert "enqueue" not in mutations(fake)
     assert any("RECOVERY_REMOVAL_UNKNOWN" in line for line in lines)
+
+
+# --- #10501: every keeper positive path requires the recorder receipt ---
+
+
+def _ledger_record(fake: FakeGitHub, name: str, record: dict[str, Any]) -> None:
+    (Path(fake._ledger.name) / f"{name}.json").write_text(json.dumps(record))
+
+
+def _active_review(fake: FakeGitHub, head: str = HEAD_A) -> None:
+    _ledger_record(
+        fake,
+        "active-review",
+        {"task_id": "active-review", "status": "running", "repository": "unit/public", "type": "review",
+         "pinned_head": head},
+    )
+
+
+class FreshHook(FakeGitHub):
+    """Run ``hook`` once, at the fresh pre-enqueue read."""
+
+    def __init__(self, hook, row: dict[str, Any] | None = None) -> None:
+        super().__init__(row)
+        self.hook = hook
+
+    def current(self, number: int) -> dict[str, Any]:
+        if self.hook is not None:
+            hook, self.hook = self.hook, None
+            hook(self)
+        return super().current(number)
+
+
+def test_genuine_receipted_approval_and_green_ci_enqueues(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == ["enqueue"]
+    assert "reason=ready" in lines[0]
+    assert "#42 enqueued" in lines
+
+
+def test_unreceipted_approval_is_held_and_never_enqueued(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", receipt=False)]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=CF-unreceipted" in lines[0]
+    assert "#42 held: CF-unreceipted" not in lines  # Not queued: the hold is the initial reason.
+
+
+def test_queued_unreceipted_head_is_not_revoked_or_drop_counted(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", receipt=False)]
+    path = tmp_path / "state.json"
+    _lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert "dequeue" not in mutations(fake)
+    assert f"42:{HEAD_A}" not in json.loads(path.read_text())["drops"]
+
+
+def test_active_outside_review_blocks_the_initial_read(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    _active_review(fake)
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=CF-in-flight" in lines[0]
+
+
+@pytest.mark.parametrize("change", ["review-starts", "receipt-lost", "record-corrupted", "rejection-recorded"])
+def test_fresh_pre_enqueue_read_rechecks_the_receipt_ledger(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, change: str
+) -> None:
+    def hook(fake: FakeGitHub) -> None:
+        if change == "review-starts":
+            _active_review(fake)
+        elif change == "receipt-lost":
+            record = json.loads((Path(fake._ledger.name) / "review.json").read_text())
+            record.pop(keeper_receipt_field())
+            _ledger_record(fake, "review", record)
+        elif change == "record-corrupted":
+            (Path(fake._ledger.name) / "review.json").write_text("{")
+        else:
+            fake.comments_rows.append(recorded("BLOCKED", "2026-09-23T11:00:00.000001+00:00", task="reject"))
+
+    admissions: list[str] = []
+    resolve = keeper.lookup_verdict
+
+    def spy(comments, head, login, **kwargs):
+        verdict = resolve(comments, head, login, **kwargs)
+        evidence = kwargs.get("evidence")
+        if evidence is not None and not evidence.historical:
+            admissions.append(verdict.state)
+        return verdict
+
+    monkeypatch.setattr(keeper, "lookup_verdict", spy)
+    fake = FreshHook(hook)
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    expected = {
+        "review-starts": "CF-in-flight",
+        "receipt-lost": "CF-unreceipted",
+        "record-corrupted": "unknown",
+        "rejection-recorded": "BLOCKED",
+    }[change]
+    # The initial read was clean; the fresh pre-enqueue read saw the change.
+    assert admissions == ["APPROVED", expected]
+    assert "reason=ready" in lines[0]
+
+
+def keeper_receipt_field() -> str:
+    from scripts.orchestration.integration_sweep import RECEIPT_FIELD as field
+
+    return field
+
+
+@pytest.mark.parametrize("order", ["approval-first", "rejection-first"])
+def test_future_approval_never_overrides_an_earlier_rejection(tmp_path: Path, order: str) -> None:
+    approval = recorded("APPROVED", "2030-01-01T00:00:00.000001+00:00", task="approve")
+    rejection = recorded("CHANGES_REQUESTED", "2026-09-23T12:00:00.000001+00:00", task="reject")
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [approval, rejection] if order == "approval-first" else [rejection, approval]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: CF-changes_requested" in lines
+
+
+def test_malformed_review_record_is_unknown_and_never_enqueued(tmp_path: Path) -> None:
+    original = FakeGitHub.tasks_dir.fget
+
+    class Corrupt(FakeGitHub):
+        @property
+        def tasks_dir(self) -> Path:
+            path = original(self)
+            (path / "review.json").write_text("[]")
+            return path
+
+    fake = Corrupt()
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=CF-unknown" in lines[0]
+
+
+def test_historical_helpers_require_receipts_but_ignore_active_reviews() -> None:
+    from scripts.orchestration.integration_sweep import ReviewLedger
+
+    fake = FakeGitHub()
+    genuine = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", task="genuine")
+    comment_only = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", HEAD_B, task="comment-only", receipt=False)
+    fake.comments_rows = [genuine, comment_only]
+    ledger = ReviewLedger(fake.tasks_dir, fake.repository)
+    _active_review(fake)
+    history = ledger.evidence(42, historical=True)
+    assert keeper._recorded_approval_for_head(fake.comments_rows, HEAD_A, "driver", history)
+    assert not keeper._recorded_approval_for_head(fake.comments_rows, HEAD_B, "driver", history)
+    assert keeper._ever_approved(fake.comments_rows, "driver", history)
+    assert not keeper._ever_approved([comment_only], "driver", history)
+
+
+def test_keeper_ledger_location_failure_fails_the_run(tmp_path: Path) -> None:
+    gh = keeper.GitHub(tmp_path / "not-a-checkout", "unit/public")
+    with pytest.raises(keeper.KeeperError, match="task ledger location unknown"):
+        _ = gh.tasks_dir
+    assert keeper.GitHub(tmp_path, "unit/public", tasks_dir=tmp_path / "tasks").tasks_dir == tmp_path / "tasks"

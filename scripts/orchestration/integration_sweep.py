@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
-"""Read-only, exact-head PR landing report. The local keeper owns mutations (#8564)."""
+"""Read-only, exact-head PR landing report. The local keeper owns mutations (#8564).
+
+Approval needs a published marker *and* the recorder's receipt in the review
+task record (#10501). The receipt is same-user traceability evidence: it stops
+accidental and supported-path bypasses, not a same-user writer who edits task
+records or code. Isolated, unmintable review authority is separate later work.
+"""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -16,6 +23,8 @@ from typing import Any
 from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
+from scripts.opsec.prepublish import normalize_repository
+from scripts.orchestration.task_record_store import locate_task_record
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
 
@@ -35,10 +44,219 @@ VERDICT_ALIASES = {"APPROVE": "APPROVED"}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
+# The recorder's publication receipt inside the review task record (#10501).
+RECEIPT_FIELD = "cf_recording"
+RECEIPT_SCHEMA = "cf-recording.v1"
+ACTIVE_TASK_STATUSES = frozenset({"spawning", "running", "queued"})
+# Approval states that block admission without revoking a queued head.
+UNRECEIPTED = "CF-unreceipted"
+IN_FLIGHT = "CF-in-flight"
 
 
 class SweepError(RuntimeError):
     """An authoritative lookup failed; no landing decision can follow."""
+
+
+def comment_digest(body: str) -> str:
+    """SHA-256 of a published comment body, the receipt's content binding."""
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def build_receipt(
+    *,
+    repository: str,
+    pr: int,
+    head_sha: str,
+    task_id: str,
+    run_nonce: str,
+    model: str,
+    family: str,
+    verdict: str,
+    review_mode: str,
+    comment_id: int,
+    body: str,
+) -> dict[str, Any]:
+    """The ``cf_recording`` value the recorder stores after a verified comment readback."""
+    return {
+        "schema": RECEIPT_SCHEMA,
+        "repository": normalize_repository(repository),
+        "pr": pr,
+        "head_sha": head_sha,
+        "task_id": task_id,
+        "run_nonce": run_nonce,
+        "model": model,
+        "family": family,
+        "verdict": verdict,
+        "review_mode": review_mode,
+        "comment_id": comment_id,
+        "comment_sha256": comment_digest(body),
+    }
+
+
+def default_tasks_dir(repo_root: Path) -> Path:
+    """The primary checkout's task ledger, also when run from a linked worktree."""
+    try:
+        common = subprocess.run(
+            ["git", "-C", str(repo_root), "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        ).stdout.strip()
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise SweepError("task ledger location unknown") from exc
+    return Path(common).parent / "batch_state" / "tasks"
+
+
+REVIEW_HEAD_FIELDS = ("pinned_head", "worktree_base_sha", "review_head", "review_head_sha", "pr_head_sha", "head_sha")
+
+
+def active_review_heads(tasks_dir: Path, repository: str) -> tuple[frozenset[str], frozenset[str]]:
+    """Heads targeted by active non-red-team reviews, and (casefolded) by any dispatch preparing them.
+
+    Reads the hot ledger only: an archived record is terminal. An unreadable
+    directory or record raises ``OSError``/``ValueError``/``TypeError`` so
+    every caller fails closed.
+    """
+    reviewed: set[str] = set()
+    prepared: set[str] = set()
+    wanted = normalize_repository(repository)
+    # The shared iterator suppresses enumeration errors. Read locally so both
+    # an unreadable directory and a failed glob refuse this guard.
+    list(tasks_dir.iterdir())
+    for path in sorted(path for path in tasks_dir.glob("*.json") if path.is_file()):
+        task = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(task, dict):
+            raise ValueError("task record is not an object")
+        if task.get("status") not in ACTIVE_TASK_STATUSES or task.get("review_mode", "cross_family") == "red_team":
+            continue
+        owner = task.get("repository")
+        same_repository = isinstance(owner, str) and normalize_repository(owner) == wanted
+        prep = task.get("worktree_prep")
+        prep_sha = prep.get("base_sha") if isinstance(prep, dict) else None
+        # Prep rows lack review typing and repository metadata. Fail closed:
+        # even non-review dispatches preparing this head briefly block.
+        if isinstance(prep_sha, str) and SHA.fullmatch(prep_sha.casefold()) and (same_repository or owner is None):
+            prepared.add(prep_sha.casefold())
+        review = (
+            task.get("review")
+            or task.get("pr") is not None
+            or task.get("review_attempt")
+            or task.get("require_review_verdict")
+            or task.get("review_profile")
+            or task.get("review_author_model")
+            or task.get("review_risk")
+            or task.get("type") == "review"
+        )
+        if review and same_repository:
+            heads = [task.get(name) for name in REVIEW_HEAD_FIELDS]
+            if any(value is not None and not isinstance(value, str) for value in heads):
+                raise TypeError("active review head field is malformed")
+            reviewed.update(value for value in heads if value is not None)
+    return frozenset(reviewed), frozenset(prepared)
+
+
+def outside_review_in_flight(tasks_dir: Path, repository: str, sha: str) -> bool:
+    """Whether an active non-red-team review (or a dispatch preparing ``sha``) targets this head."""
+    reviewed, prepared = active_review_heads(tasks_dir, repository)
+    return sha in reviewed or sha.casefold() in prepared
+
+
+class EvidenceUnavailable(SweepError):
+    """The local review ledger could not be read; the head stays unknown."""
+
+
+@dataclass
+class ReviewLedger:
+    """One snapshot of the local review ledger for a repository (#10501).
+
+    The active-review scan runs at most once per object; build a new one for a
+    fresh read. Task records are read fresh on every lookup, hot then archive.
+    Same-user traceability only, never isolated authority.
+    """
+
+    tasks_dir: Path
+    repository: str
+    _active: tuple[frozenset[str], frozenset[str]] | None = field(default=None, repr=False)
+
+    def in_flight(self, sha: str) -> bool:
+        if self._active is None:
+            try:
+                self._active = active_review_heads(self.tasks_dir, self.repository)
+            except (OSError, ValueError, TypeError) as exc:
+                raise EvidenceUnavailable("review ledger unreadable") from exc
+        reviewed, prepared = self._active
+        return sha in reviewed or sha.casefold() in prepared
+
+    def task(self, task_id: str) -> dict[str, Any] | None:
+        """The hot or archived review task record, ``None`` when absent."""
+        try:
+            path = locate_task_record(self.tasks_dir, task_id)
+            if path is None:
+                return None
+            record = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise EvidenceUnavailable("review task record unreadable") from exc
+        if not isinstance(record, dict):
+            raise EvidenceUnavailable("review task record malformed")
+        return record
+
+    def evidence(self, number: int, *, historical: bool = False) -> RecordedEvidence:
+        return RecordedEvidence(self, number, historical)
+
+
+@dataclass(frozen=True)
+class RecordedEvidence:
+    """The ledger evidence one PR's verdict lookup consults.
+
+    ``historical`` lookups ask what was recorded, so an active review does not
+    hide an earlier receipted approval; admission lookups never set it.
+    """
+
+    ledger: ReviewLedger
+    number: int
+    historical: bool = False
+
+    def in_flight(self, sha: str) -> bool:
+        return not self.historical and self.ledger.in_flight(sha)
+
+    def receipted(self, marker: Mapping[str, Any], comment: Mapping[str, Any]) -> bool:
+        """Whether this exact comment is the recorder's verified publication for ``marker``.
+
+        A missing record or receipt is ``False``; an unreadable record or a
+        non-object receipt raises :class:`EvidenceUnavailable`.
+        """
+        record = self.ledger.task(marker["task"])
+        if record is None or record.get(RECEIPT_FIELD) is None:
+            return False
+        receipt = record[RECEIPT_FIELD]
+        if not isinstance(receipt, dict):
+            raise EvidenceUnavailable("recorder receipt malformed")
+        body, comment_id = comment.get("body"), comment.get("id")
+        repository = normalize_repository(self.ledger.repository)
+        run_nonce = record.get("run_nonce")
+        return (
+            repository != "unknown"
+            and isinstance(body, str)
+            and type(comment_id) is int
+            and isinstance(run_nonce, str)
+            and bool(run_nonce)
+            and record.get("task_id") == marker["task"]
+            and receipt
+            == build_receipt(
+                repository=repository,
+                pr=self.number,
+                head_sha=marker["sha"],
+                task_id=marker["task"],
+                run_nonce=run_nonce,
+                model=marker["model"],
+                family=marker["family"],
+                verdict=marker["verdict"],
+                review_mode=marker.get("review_mode", "cross_family"),
+                comment_id=comment_id,
+                body=body,
+            )
+        )
 
 
 @dataclass(frozen=True)
@@ -142,28 +360,67 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     return item
 
 
+def _effective_start(marker: Mapping[str, Any], comment: Mapping[str, Any]) -> datetime | None:
+    """The marker's declared start, clamped to when GitHub created its comment (#10501)."""
+    started = _timestamp(marker["started"])
+    created = _timestamp(_field(comment, "created_at", "createdAt"))
+    if started is None or created is None:
+        return None
+    return min(started, created)
+
+
+def _verdict(state: str, item: tuple[datetime, int, dict[str, Any]], untrusted: list[str]) -> Verdict:
+    start, _index, marker = item
+    return Verdict(
+        state,
+        marker["task"],
+        marker["model"],
+        marker["family"],
+        start,
+        tuple(untrusted),
+        marker.get("review_mode", "cross_family"),
+    )
+
+
 def lookup_verdict(
     comments: Sequence[Mapping[str, Any]] | None,
     sha: str,
     authenticated_login: str | None,
     *,
     complete: bool = True,
+    evidence: RecordedEvidence | None = None,
 ) -> Verdict:
-    """Resolve the latest review start for one SHA; malformed or edited evidence poisons it."""
+    """Resolve one SHA's recorded review state; the one resolver every landing decision uses.
+
+    Precedence, independent of comment order and declared timestamps: any
+    trusted same-head rejection; then malformed or edited evidence
+    (``unknown``); then, with ``evidence``, an active outside review
+    (``CF-in-flight``); then an approval whose recorder receipt matches
+    (``APPROVED``) or none does (``CF-unreceipted``). A marker's start is
+    clamped to its comment's creation time.
+
+    ``evidence=None`` is the comment-only view for displays and secondary
+    gates; queue decisions always pass :class:`RecordedEvidence`.
+    """
     if not complete or not isinstance(comments, Sequence) or isinstance(comments, (str, bytes)):
         return Verdict("unknown")
     if not SHA.fullmatch(sha) or not authenticated_login:
         return Verdict("unknown")
-    candidates: list[tuple[datetime, int, dict[str, Any]]] = []
+    approvals: list[tuple[datetime, int, dict[str, Any]]] = []
+    rejections: list[tuple[datetime, int, dict[str, Any]]] = []
+    receipted: list[tuple[datetime, int, dict[str, Any]]] = []
     untrusted: list[str] = []
     legacy = False
     other_head = False
+    poisoned = False
     for index, comment in enumerate(comments):
         if not isinstance(comment, Mapping):
-            return Verdict("unknown")
+            poisoned = True
+            continue
         body = comment.get("body")
         if not isinstance(body, str):
-            return Verdict("unknown")
+            poisoned = True
+            continue
         if MARKER_PREFIX not in body:
             if re.search(r"(?im)^\s*VERDICT:", body):
                 legacy = True
@@ -177,36 +434,54 @@ def lookup_verdict(
         if marker is None:
             trailer = _terminal_marker(body)
             if (
-                trailer is None or trailer["verdict"] != "APPROVE"
+                trailer is None
+                or trailer["verdict"] != "APPROVE"
                 or is_ukrainian_review(trailer.groupdict())
                 or "Review profile: ukrainian\n" in body.split("<details>", 1)[0]
             ):
-                return Verdict("unknown", untrusted_markers=tuple(untrusted))
+                poisoned = True
+                continue
             # An approval trailer outside the keeper format cannot hide a rejection, so it neither
             # poisons the head nor counts as approval; an edited one still poisons it (#10119).
             if trailer["sha"] == sha and _edited(comment):
-                return Verdict("unknown", untrusted_markers=tuple(untrusted))
+                poisoned = True
+                continue
             if re.search(r"(?im)^\s*VERDICT:", body):
                 legacy = True
             continue
         if marker["sha"] != sha:
             other_head = True
             continue
-        if marker["family"] in {"unknown", "unattested", "ambiguous", "conflicting"}:
-            return Verdict("unknown", untrusted_markers=tuple(untrusted))
-        if _edited(comment):
-            return Verdict("unknown", untrusted_markers=tuple(untrusted))
-        candidates.append((_timestamp(marker["started"]), index, marker))
-    if not candidates:
+        start = _effective_start(marker, comment)
+        if marker["family"] in {"unknown", "unattested", "ambiguous", "conflicting"} or _edited(comment):
+            poisoned = True
+            continue
+        if start is None:
+            poisoned = True
+            continue
+        item = (start, index, marker)
+        (rejections if marker["verdict"] in REJECTED else approvals).append(item)
+    if rejections:
+        # Every applicable same-head rejection blocks; report the latest one.
+        winner = max(rejections, key=lambda item: item[0])
+        return _verdict(winner[2]["verdict"], winner, untrusted)
+    if poisoned:
+        return Verdict("unknown", untrusted_markers=tuple(untrusted))
+    if not approvals:
         state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
         return Verdict(state, untrusted_markers=tuple(untrusted))
-    latest_start = max(item[0] for item in candidates)
-    tied = [item for item in candidates if item[0] == latest_start]
-    # At a true timestamp tie any rejection wins, irrespective of comment arrival order.
-    winner = next((item for item in tied if item[2]["verdict"] in REJECTED), tied[0])
-    marker = winner[2]
-    return Verdict(marker["verdict"], marker["task"], marker["model"], marker["family"], latest_start,
-                   tuple(untrusted), marker.get("review_mode", "cross_family"))
+    if evidence is None:
+        receipted = approvals
+    else:
+        try:
+            if evidence.in_flight(sha):
+                return Verdict(IN_FLIGHT, untrusted_markers=tuple(untrusted))
+            receipted = [item for item in approvals if evidence.receipted(item[2], comments[item[1]])]
+        except EvidenceUnavailable:
+            return Verdict("unknown", untrusted_markers=tuple(untrusted))
+    if not receipted:
+        return Verdict(UNRECEIPTED, untrusted_markers=tuple(untrusted))
+    return _verdict("APPROVED", max(receipted, key=lambda item: item[0]), untrusted)
 
 
 def _check_row_kind(row: Mapping[str, Any]) -> str:
@@ -289,6 +564,8 @@ def classify_pr(pr: Mapping[str, Any], verdict: Verdict, *, queued: bool | None,
         state = verdict.state
     elif verdict.state in REJECTED:
         state = "CF-rejected"
+    elif verdict.state != "APPROVED":
+        state = verdict.state
     elif any(item.startswith("CI red") for item in blockers):
         state = "CI-red " + ", ".join(item.removeprefix("CI red ") for item in blockers if item.startswith("CI red"))
     elif any(item.startswith("CI pending") for item in blockers):
@@ -388,9 +665,13 @@ class GitHubAdapter:
         return node["isInMergeQueue"]
 
 
-def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None) -> list[PRReport]:
+def run(
+    adapter: GitHubAdapter, repository: str, *, tasks_dir: Path, now: datetime | None = None
+) -> list[PRReport]:
+    """Classify every open PR; approval needs the recorder receipt in ``tasks_dir``."""
     observed = (now or datetime.now(UTC)).isoformat(timespec="microseconds")
     prs = adapter.list_open_prs(repository)
+    ledger = ReviewLedger(tasks_dir, repository)
     try:
         login = adapter.identity()
     except SweepError:
@@ -402,7 +683,9 @@ def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None)
             rows.append(classify_pr(pr, Verdict("unknown"), queued=None, observed_at=observed))
             continue
         try:
-            verdict = lookup_verdict(adapter.comments(repository, number), head, login)
+            verdict = lookup_verdict(
+                adapter.comments(repository, number), head, login, evidence=ledger.evidence(number)
+            )
         except SweepError:
             verdict = Verdict("unknown")
         try:
@@ -417,13 +700,15 @@ def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None)
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Report exact-head PR review, CI and queue state without mutations.\n"
-                    "Use for landing evidence; the local keeper owns queue changes.",
+        "Use for landing evidence; the local keeper owns queue changes.\n"
+        "Approval needs the recorder receipt in the review task record: same-user\n"
+        "traceability against accidental bypass, not isolated review authority (#10501).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --report\n"
-               "  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --json\n"
-               "Outputs: Read-only GitHub PR state report on stdout; no writes.\n"
-               "Exit codes: 0: report complete; 1: lookup failed; 2: retired --apply refused.\n"
-               "Related: scripts/review/record_cf_verdict.py, scripts/orchestration/merge_queue_keeper.py; #9951",
+        "  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --json\n"
+        "Outputs: Read-only GitHub PR state report on stdout; no writes.\n"
+        "Exit codes: 0: report complete; 1: lookup failed; 2: retired --apply refused.\n"
+        "Related: scripts/review/record_cf_verdict.py, scripts/orchestration/merge_queue_keeper.py; #9951, #10501",
     )
     parser.add_argument("--repo", required=True, help="GitHub owner/repository")
     parser.add_argument("--report", action="store_true", help="Print the read-only PR state report (default behavior)")
@@ -431,12 +716,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--apply", action="store_true", help="Retired and refused; landing is keeper-owned (default: false)")
     parser.add_argument("--repo-root", type=Path, default=Path.cwd(),
                         help="Checkout used for GitHub commands, e.g. . (default: current working directory)")
+    parser.add_argument(
+        "--tasks-dir",
+        type=Path,
+        help="Review task ledger holding recorder receipts (default: the primary checkout's batch_state/tasks)",
+    )
     args = parser.parse_args(argv)
     if args.apply:
         print("integration sweep refused: --apply is retired; this sweep is report-only")
         return 2
     try:
-        rows = run(GitHubAdapter(args.repo_root), args.repo)
+        tasks_dir = args.tasks_dir or default_tasks_dir(args.repo_root)
+        rows = run(GitHubAdapter(args.repo_root), args.repo, tasks_dir=tasks_dir)
     except SweepError as exc:
         print(f"integration sweep refused: {exc}")
         return 1

@@ -4336,6 +4336,124 @@ def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path, gh_shim_sandb
     assert "real-gh" not in proc.stdout
 
 
+_ENQUEUE_QUERY = "mutation($id:ID!){enqueuePullRequest(input:{pullRequestId:$id}){clientMutationId}}"
+
+
+def _recording_gh(tmp_path):
+    """A fake backend that records every invocation and the stdin it received."""
+    calls = tmp_path / "backend-calls.jsonl"
+    fake_gh = tmp_path / "real-gh"
+    fake_gh.write_text(
+        f"#!{sys.executable}\n"
+        "import json,sys\n"
+        f"with open({str(calls)!r}, 'a') as log:\n"
+        "    log.write(json.dumps({'argv': sys.argv[1:], 'stdin': sys.stdin.read()}) + '\\n')\n"
+        "print('{}')\n"
+    )
+    fake_gh.chmod(0o755)
+    return fake_gh, calls
+
+
+def _enqueue_form(tmp_path, form):
+    """Argv and stdin for one supported ``gh api`` input form naming enqueuePullRequest."""
+    raw = tmp_path / "query.graphql"
+    raw.write_text(_ENQUEUE_QUERY)
+    body = tmp_path / "body.json"
+    body.write_text(json.dumps({"query": _ENQUEUE_QUERY, "variables": {"id": "PR_1"}}))
+    escaped = tmp_path / "escaped.json"
+    escaped.write_text('{"query": "mutation{\\u0065nqueuePullRequest(input:{pullRequestId:\\"PR_1\\"}){clientMutationId}}"}')
+    upper = _ENQUEUE_QUERY.replace("enqueuePullRequest", "ENQUEUEPULLREQUEST")
+    forms = {
+        "inline-short": (["-f", f"query={_ENQUEUE_QUERY}"], None),
+        "inline-attached": ([f"-fquery={_ENQUEUE_QUERY}"], None),
+        "inline-raw-field": ([f"--raw-field=query={_ENQUEUE_QUERY}"], None),
+        "inline-typed-field": (["-F", f"query={_ENQUEUE_QUERY}"], None),
+        "inline-case-folded": (["-f", f"query={upper}"], None),
+        "field-file": (["-F", f"query=@{raw}"], None),
+        "field-file-long": (["--field", f"query=@{raw}"], None),
+        "field-file-equals": ([f"--field=query=@{raw}"], None),
+        "field-file-attached": ([f"-Fquery=@{raw}"], None),
+        "field-stdin": (["-F", "query=@-"], _ENQUEUE_QUERY),
+        "input-file": (["--input", str(body)], None),
+        "input-file-equals": ([f"--input={body}"], None),
+        "input-unicode-escape": (["--input", str(escaped)], None),
+        "input-stdin": (["--input", "-"], body.read_text()),
+        "input-unreadable": (["--input", str(tmp_path / "missing.json")], None),
+    }
+    args, stdin = forms[form]
+    return ["api", "graphql", *args], stdin
+
+
+@pytest.mark.parametrize(
+    "form",
+    [
+        "inline-short",
+        "inline-attached",
+        "inline-raw-field",
+        "inline-typed-field",
+        "inline-case-folded",
+        "field-file",
+        "field-file-long",
+        "field-file-equals",
+        "field-file-attached",
+        "field-stdin",
+        "input-file",
+        "input-file-equals",
+        "input-unicode-escape",
+        "input-stdin",
+        "input-unreadable",
+    ],
+)
+def test_gh_shim_refuses_enqueue_in_every_supported_input_form(tmp_path, gh_shim_sandbox, form):
+    """#10501: a worker's enqueue mutation never reaches the backend, whatever the input form."""
+    root, shim, _tooling = gh_shim_sandbox
+    fake_gh, calls = _recording_gh(tmp_path)
+    argv, stdin = _enqueue_form(tmp_path, form)
+    proc = subprocess.run(
+        [str(shim), *argv],
+        cwd=root,
+        input=stdin if stdin is not None else "",
+        capture_output=True,
+        text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(fake_gh), "PATH": os.environ.get("PATH", ""),
+             "TMPDIR": str(tmp_path)},
+        check=False,
+        timeout=15,
+    )
+    assert proc.returncode != 0
+    assert "cannot merge or approve PRs" in proc.stderr
+    assert not calls.exists()
+    assert not list(tmp_path.glob("agent-gh.stdin.*"))
+
+
+def test_gh_shim_still_admits_a_non_enqueue_stdin_request(tmp_path, gh_shim_sandbox):
+    """Positive control: reading stdin for the enqueue check leaves admission unchanged.
+
+    The shim rebinds the buffered bytes as the entry's stdin and removes its
+    buffer; the downstream entry itself does not forward stdin to the backend.
+    """
+    root, shim, _tooling = gh_shim_sandbox
+    fake_gh, calls = _recording_gh(tmp_path)
+    body = json.dumps({"body": "private note"})
+    proc = subprocess.run(
+        [str(shim), "api", "--method", "POST", "repos/unit/private/issues/1/comments", "--input", "-"],
+        cwd=root,
+        input=body,
+        capture_output=True,
+        text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(fake_gh), "PATH": os.environ.get("PATH", ""),
+             "TMPDIR": str(tmp_path)},
+        check=False,
+        timeout=30,
+    )
+    assert "cannot merge or approve PRs" not in proc.stderr, proc.stderr
+    assert proc.returncode == 0, proc.stderr
+    recorded = [json.loads(line) for line in calls.read_text().splitlines()]
+    assert len(recorded) == 1
+    assert recorded[0]["argv"][:6] == ["api", "--method", "POST", "repos/unit/private/issues/1/comments", "--input", "-"]
+    assert not list(tmp_path.glob("agent-gh.stdin.*"))
+
+
 def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sandbox):
     """CF comments still publish under the worker merge guard, through REST."""
     root, _shim, _tooling = gh_shim_sandbox

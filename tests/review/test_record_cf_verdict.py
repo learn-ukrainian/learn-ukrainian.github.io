@@ -31,7 +31,10 @@ def test_branch_identity_binds_supported_record(monkeypatch, tmp_path, identity)
     assert receipt["status"] == "posted"
     assert recorder.parse_marker(comments[0]["body"])["sha"] == SHA
     assert calls == {"posts": 1, "statuses": 1}
-    assert (tasks / "review-one.json").read_bytes() == before
+    # Only the recorder receipt is added; every other field is kept (#10501).
+    after = json.loads((tasks / "review-one.json").read_text())
+    assert after.pop(sweep.RECEIPT_FIELD)["comment_id"] == comments[0]["id"]
+    assert after == json.loads(before)
 
 
 @pytest.mark.parametrize("identity,reason", [
