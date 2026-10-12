@@ -43,8 +43,10 @@ LAUNCH_ROOT = REPO
 PUBLIC = (
     "start-claude.sh",
     "start-claude-driver.sh",
+    "start-claude-cto.sh",
     "start-codex.sh",
     "start-codex-driver.sh",
+    "start-codex-cto.sh",
     "start-cursor-driver.sh",
     "start-gemini.sh",
     "start-gemini-driver.sh",
@@ -76,16 +78,15 @@ def run_launcher(
     root: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
     if (
-        dry_run and root is None
-        and name in ("start-claude.sh", "start-claude-driver.sh")
+        dry_run
+        and root is None
+        and name in ("start-claude.sh", "start-claude-driver.sh", "start-claude-cto.sh")
         and not any(arg in ("--help", "-h") for arg in args)
     ):
         with TemporaryDirectory(prefix="launcher-usage-", dir=ensure_scratch_root()) as temporary:
             overrides = {("scripts", "lib", "claude_weekly_used.py"): "print('0')\n"}
             if LAUNCH_ROOT != REPO:
-                overrides[("scripts", "lib", "rules_core.sh")] = (
-                    LAUNCH_ROOT / "scripts/lib/rules_core.sh"
-                ).read_text()
+                overrides[("scripts", "lib", "rules_core.sh")] = (LAUNCH_ROOT / "scripts/lib/rules_core.sh").read_text()
             checkout = _build_view(Path(temporary) / "checkout", overrides)
             return run_launcher(name, *args, env=env, dry_run=True, root=checkout)
     if not dry_run and root is None:
@@ -1309,8 +1310,15 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     # Opus is always blocked, so the defaulted Opus driver seat runs on Sonnet.
     command = shlex.split(next(line for line in result.stdout.splitlines() if line.startswith("would exec ")))
     assert command[:9] == [
-        "would", "exec", "claude", "--model", "claude-sonnet-5-5",
-        "--effort", "high", "--agent", "infra-orchestrator",
+        "would",
+        "exec",
+        "claude",
+        "--model",
+        "claude-sonnet-5-5",
+        "--effort",
+        "high",
+        "--agent",
+        "infra-orchestrator",
     ]
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
