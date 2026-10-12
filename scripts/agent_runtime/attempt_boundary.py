@@ -344,7 +344,14 @@ class AttemptBoundary:
                 self.tool_config["codex_home_override"] = str(codex_home)
                 self.tool_config["attempt_os_sandbox"] = True
             elif agent == "agy":
-                from .review_mcp import _real_agy_token, agy_review_mcp_config_path, agy_review_settings
+                from .agy_hook_config import GUARD_NAME, guard_registration
+                from .review_mcp import (
+                    _create_file,
+                    _open_owned_dir,
+                    _real_agy_token,
+                    agy_review_mcp_config_path,
+                    agy_review_settings,
+                )
 
                 target = home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -353,6 +360,16 @@ class AttemptBoundary:
                 mcp = agy_review_mcp_config_path(home)
                 mcp.parent.mkdir(parents=True, exist_ok=True)
                 mcp.write_bytes(proxy_config.read_bytes())
+                home_fd = os.open(home, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+                gemini_fd = config_fd = None
+                try:
+                    gemini_fd = _open_owned_dir(".gemini", dir_fd=home_fd)
+                    config_fd = _open_owned_dir("config", dir_fd=gemini_fd)
+                    _create_file("hooks.json", config_fd, json.dumps({GUARD_NAME: guard_registration()}).encode())
+                finally:
+                    for descriptor in (config_fd, gemini_fd, home_fd):
+                        if descriptor is not None:
+                            os.close(descriptor)
                 settings = target.parent / "settings.json"
                 fd = os.open(settings, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
                 with os.fdopen(fd, "w") as handle:

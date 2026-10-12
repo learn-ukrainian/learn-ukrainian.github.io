@@ -9,11 +9,14 @@ import pytest
 
 from scripts import delegate
 from scripts.agent_runtime.adapters import agy
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 
 @pytest.mark.parametrize("with_core", [False, True])
 @pytest.mark.parametrize("with_worktree", [False, True])
 def test_real_composed_agy_review_prompt_admitted(tmp_path, monkeypatch, with_core, with_worktree):
+    monkeypatch.chdir(tmp_path)
+    register_agy_hooks(tmp_path, home=tmp_path / "home")
     if not with_core:
         monkeypatch.setattr(delegate.rules_core, "with_core", lambda prompt, seat: prompt)
     research = delegate._render_research_prompt_block([

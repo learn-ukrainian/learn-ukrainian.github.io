@@ -1938,12 +1938,21 @@ def _agy_tool_config(plan, **extra) -> dict:
     return {**plan.adapter_options, "review_id": "rev-agy-001", "attempt_id": "att-agy-001", **extra}
 
 
+def _write_agy_workspace_guard(cwd: Path) -> None:
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
+
+    path = cwd / ".agents" / "hooks.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
+
+
 def test_agy_launch_gate_runs_under_the_final_spawned_environment(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     cwd = tmp_path / "wt"
     cwd.mkdir()
     plan = _prepare_agy(manifest_file, tmp_path, checkout_root=cwd)
+    _write_agy_workspace_guard(cwd)
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     verify_agy_review_launch(
         config_path=plan.config_path,
@@ -1973,6 +1982,7 @@ def test_agy_launch_gate_refuses_when_the_sanitizer_would_drop_the_scoped_home(
         receipts_root=tmp_path / "receipts",
         checkout_root=tmp_path,
     )
+    _write_agy_workspace_guard(tmp_path)
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     with pytest.raises(AgyReviewMcpGateError, match=r"scoped HOME/AGY_APP_DATA_DIR.*#8617"):
         verify_agy_review_launch(
@@ -1991,6 +2001,7 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
     from scripts.agent_runtime.env_sanitize import build_agent_env
 
     real_home = tmp_path / "real-home"
@@ -2001,6 +2012,9 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     token.parent.mkdir(parents=True)
     token.write_text("{}\n", encoding="utf-8")
     plan = _prepare_agy(manifest_file, tmp_path)
+    for path in hook_locations(tmp_path, real_home):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
 
     review = AgyAdapter().build_invocation(
         prompt="review",
@@ -2041,6 +2055,7 @@ def test_env_keys_are_exactly_the_three_recording_variables() -> None:
 def test_real_agy_cli_lists_exactly_the_scoped_sources_server(manifest_file: Path, tmp_path: Path) -> None:
     """Live CLI: the gate accepts the scoped home and its table matches the strict parser."""
     plan = _prepare_agy(manifest_file, tmp_path)
+    _write_agy_workspace_guard(tmp_path)
     verify_agy_review_launch(
         config_path=plan.config_path,
         cwd=tmp_path,

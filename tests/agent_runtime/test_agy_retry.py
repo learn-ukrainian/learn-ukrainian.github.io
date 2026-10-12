@@ -10,6 +10,7 @@ import pytest
 from scripts.agent_runtime import runner
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.result import AgyAttempt, ParseResult
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 ELIGIBILITY_503 = "Eligibility check failed: UNAVAILABLE (code 503)"
 
@@ -72,6 +73,7 @@ def test_agy_recorded_file_denial_is_refused_before_probe_without_widening(tmp_p
 
     # The compensating gate preserves recursive entitled workspace reads and
     # the native profile. URLs are not misparsed as filesystem requirements.
+    register_agy_hooks(workspace, home=home)
     plan = adapter.build_invocation(
         prompt=f'Read `docs/evidence.txt`, "{workspace / "evidence with spaces.txt"}", '
         f'and `{workspace / "docs" / ".." / "evidence.txt"}`. See https://example.org/guide.',

@@ -14,6 +14,9 @@ import hashlib
 import importlib
 import json
 import os
+import shutil
+import subprocess
+import uuid
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -25,6 +28,7 @@ from scripts.agent_runtime.adapters._output_schema import load_output_schema
 from scripts.audit import llm_reviewer, qg_schema
 from scripts.build import build_module_direct as direct
 from scripts.build import linear_pipeline as linear
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 from tests.helpers.codex_exec_stream import agent_message, completed_stream
 
 pytestmark = pytest.mark.reads_content
@@ -112,6 +116,10 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
 
 
 def build_plan(adapter, cwd: Path, config: dict[str, Any], *, model=None):
+    if adapter.name == "agy":
+        home = cwd / "agy-home"
+        register_agy_hooks(cwd, home=home)
+        config = {**config, "agy_home_override": str(home)}
     return adapter.build_invocation(
         prompt="Public mechanical schema fixture.",
         mode="read-only",
@@ -184,6 +192,43 @@ def parse_terminal(adapter, plan, route: str, wire: str, *, returncode=0):
         output_file=plan.output_file,
         plan=plan,
     )
+
+
+@pytest.mark.parametrize("layout", ["gate", "dispatch"])
+def test_agy_registered_workspace_inside_primary_checkout(tmp_path, monkeypatch, layout):
+    primary = tmp_path / "primary"
+    subprocess.run(["git", "init", "-q", str(primary)], check=True, capture_output=True, timeout=30)
+    dispatch = primary / ".worktrees/dispatch/codex/worker"
+    dispatch.mkdir(parents=True)
+    workspace = primary / ".git/lu-pre-push-gate/pytest-bt/workspace" if layout == "gate" else dispatch
+    workspace.mkdir(parents=True, exist_ok=True)
+    if layout == "dispatch":
+        (workspace / ".git").write_text(f"gitdir: {primary}/.git/worktrees/worker\n")
+    _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
+
+
+def test_agy_registered_workspace_under_current_checkout(tmp_path, monkeypatch):
+    # Exercise the real checkout's dispatch ancestry regardless of basetemp.
+    workspace = ROOT / f".gate-repro-{uuid.uuid4().hex}"
+    workspace.mkdir()
+    try:
+        _assert_agy_registered_workspace_round_trip(workspace, tmp_path / "original-logs", monkeypatch)
+    finally:
+        shutil.rmtree(workspace)
+
+
+def _assert_agy_registered_workspace_round_trip(workspace, original_log_root, monkeypatch):
+    from scripts.agent_runtime.adapters import agy
+
+    original_log_root.mkdir()
+    monkeypatch.setattr(agy, "_build_log_path", lambda _: original_log_root / "runtime.log")
+    adapter = adapter_for("agy", monkeypatch)
+    plan = build_plan(adapter, workspace, qg_schema.write_reviewer_output_schema(workspace, "dimension"))
+    payload = mechanical_payload("dimension")
+    result = parse_terminal(adapter, plan, "agy", terminal_output("agy", payload))
+    assert result.ok
+    assert json.loads(result.response) == payload
+    assert result.session_id == AGY_FIXTURE_CONVERSATION
 
 
 def consume(profile: str, response):

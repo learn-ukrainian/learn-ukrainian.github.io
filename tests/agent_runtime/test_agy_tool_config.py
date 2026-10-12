@@ -1,4 +1,5 @@
 """Focused tests for agy MCP tool_config resolution."""
+
 from __future__ import annotations
 
 import json
@@ -136,9 +137,7 @@ def test_agy_missing_global_mcp_config_is_config_empty(
     tool_config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
 
     assert tool_config is None
-    assert diagnostics["config_path"] == str(
-        (app_data_dir / "mcp_config.json").resolve()
-    )
+    assert diagnostics["config_path"] == str((app_data_dir / "mcp_config.json").resolve())
     assert diagnostics["resolution_status"] == "config_empty"
     assert diagnostics["resolved_servers"] == []
     assert diagnostics["missing_server_names"] == []
@@ -291,3 +290,19 @@ def test_missing_agy_binary_fails_closed(tmp_path: Path, monkeypatch: pytest.Mon
 
     with pytest.raises(tool_config_mod.AgyMcpCatalogError, match="could not run"):
         tool_config_mod.agy_mcp_catalog()
+
+
+@pytest.mark.parametrize("args", [[], ["remove"], ["run"], ["--help"], ["list "], [None], [["list"]]])
+def test_management_exemption_refuses_other_commands(args, monkeypatch: pytest.MonkeyPatch) -> None:
+    def unexpected_spawn(*args, **kwargs):
+        pytest.fail("refused management command must not resolve or start agy")
+
+    monkeypatch.setattr(tool_config_mod, "_agy_binary", unexpected_spawn)
+    monkeypatch.setattr(tool_config_mod.subprocess, "run", unexpected_spawn)
+    with pytest.raises(tool_config_mod.AgyMcpCatalogError, match="only agy mcp list and add"):
+        tool_config_mod._run_agy_mcp(args)
+
+
+def test_management_allowlist_is_frozen_and_exact() -> None:
+    assert frozenset({"list", "add"}) == tool_config_mod._AGY_MCP_MANAGEMENT_COMMANDS
+    assert isinstance(tool_config_mod._AGY_MCP_MANAGEMENT_COMMANDS, frozenset)

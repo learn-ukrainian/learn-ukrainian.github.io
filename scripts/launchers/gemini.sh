@@ -10,6 +10,12 @@ launcher_adapter_canary() {
   return 0
 }
 launcher_adapter_exec() {
+  if [ "$LC_DRY_RUN" != 1 ]; then
+    local py
+    py="$(launcher_project_python)" || return 3
+    # Extension deployment precedes this read-only gate. No AGY probe may run first.
+    (cd "$LC_ROOT" && "$py" -m scripts.agent_runtime.agy_hook_config --cwd "$LC_ROOT") || return 3
+  fi
   local cmd=(agy --model "$LC_MODEL")
   local arg prompt_flag="" core_placed=0
   local -a rest=()
@@ -48,5 +54,7 @@ launcher_adapter_exec() {
   fi
   cmd+=(${rest[@]+"${rest[@]}"})
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
+  # Gate and spawn use the same deployed workspace, regardless of caller cwd.
+  cd -- "$LC_ROOT" || return 3
   launcher_exec_command "${cmd[@]}"
 }

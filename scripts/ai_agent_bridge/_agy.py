@@ -19,6 +19,7 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
+from scripts.agent_runtime.agy_hook_config import provision_workspace_guard
 from scripts.common import github_client
 from scripts.common.scratch import ensure_scratch_root
 
@@ -72,6 +73,10 @@ def _agy_ask_scratch_cwd() -> Path:
     """
     scratch = ensure_scratch_root() / "learn-ukrainian-bridge-asks" / "agy"
     scratch.mkdir(parents=True, exist_ok=True)
+    # Only this caller-created workspace is provisioned. Existing candidates
+    # remain untouched so the adapter refuses invalid or disabled wiring.
+    if not os.path.lexists(scratch / ".agents/hooks.json"):
+        provision_workspace_guard(scratch)
     return scratch
 
 
@@ -160,20 +165,20 @@ _CONTENT_PREFIXES = (
 )
 # build_arc_landing.py consumes these schema-supported core levels. Its
 # ARC_LANDING_LEVELS tracks landing ownership, not the accepted input levels.
-_CONTENT_ARC_PATHS = frozenset(
-    f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2")
-)
+_CONTENT_ARC_PATHS = frozenset(f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2"))
 # Track roots whose top level also carries code-imported manifests/data.
 _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
 # Data/code extensions that are never prose content anywhere under the roots.
 _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
 # Exact code-imported files inside the content roots.
-_CONTENT_CODE_PATHS = frozenset({
-    "curriculum/l2-uk-direct/manifest.yaml",
-    "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
-    "curriculum/l2-uk-en/module-mapping.json",
-    "curriculum/l2-uk-en/vocabulary.db",
-})
+_CONTENT_CODE_PATHS = frozenset(
+    {
+        "curriculum/l2-uk-direct/manifest.yaml",
+        "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+        "curriculum/l2-uk-en/module-mapping.json",
+        "curriculum/l2-uk-en/vocabulary.db",
+    }
+)
 
 
 def _is_code_load_bearing_content(path: str) -> bool:
