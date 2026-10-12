@@ -31,7 +31,11 @@ SPAWN_INVENTORY = {
         "probe-exempt",
         "Direct AGY start verifies the installed seat version.",
     ),
-    "scripts/agent_runtime/adapters/acpx.py": ("probe-exempt", "Direct provider starts probe CLI version and help."),
+    "scripts/agent_runtime/adapters/acpx.py": (
+        "ungated-residual-10442",
+        "Mixed version/help probes and AGY text-agent model-session plan construction reaching the ungated ACP "
+        "text agent; harness lane #10442.",
+    ),
     "scripts/agent_runtime/telemetry.py": ("probe-exempt", "AGY subprocess probes the CLI version."),
     "scripts/ai_agent_bridge/_ui_agy.py": (
         "ungated-residual-10442",
@@ -62,16 +66,18 @@ SPAWN_INVENTORY = {
         "Over-included harness token; starts the local command detector, not an AGY model session.",
     ),
     "scripts/ai_agent_bridge/_agy.py": (
-        "management-exempt",
-        "Over-included subprocess import for Git error handling; model sessions use the guarded shared runtime.",
+        "ungated-residual-10442",
+        "Mixed guarded shared-runtime sessions and background bridge asks that reach the ungated ACP text agent; "
+        "harness lane #10442.",
     ),
     "scripts/ai_agent_bridge/_ask_lifecycle.py": (
         "ungated-residual-10442",
         "Background bridge process can request AGY through ACP; per-site session coverage remains with harness lane #10442.",
     ),
     "scripts/ai_agent_bridge/_channels_cli.py": (
-        "management-exempt",
-        "Over-included provider metadata; direct subprocesses run Git and the configured editor.",
+        "ungated-residual-10442",
+        "Mixed Git/editor tooling and ACP discussions admitting AGY sessions through the ungated ACP text agent; "
+        "harness lane #10442.",
     ),
     "scripts/ai_agent_bridge/_cli.py": (
         "ungated-residual-10442",
