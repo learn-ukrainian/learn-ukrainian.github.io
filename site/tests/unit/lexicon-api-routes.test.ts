@@ -35,6 +35,23 @@ async function routeJson<T>(
   return (await response.json()) as T;
 }
 
+let cachedSearch: unknown[] | null = null;
+let cachedDaily: unknown[] | null = null;
+
+async function getSharedSearch(): Promise<unknown[]> {
+  if (!cachedSearch) {
+    cachedSearch = await routeJson<unknown[]>(getSearchIndex);
+  }
+  return cachedSearch;
+}
+
+async function getSharedDaily(): Promise<unknown[]> {
+  if (!cachedDaily) {
+    cachedDaily = await routeJson<unknown[]>(getDailyPool);
+  }
+  return cachedDaily;
+}
+
 async function routePaths(getStaticPaths: () => ReturnType<typeof practiceApiStaticPaths>): Promise<string[]> {
   const paths = await getStaticPaths();
   return paths.map((path) => {
@@ -45,8 +62,8 @@ async function routePaths(getStaticPaths: () => ReturnType<typeof practiceApiSta
 
 describe("lexicon static API routes", () => {
   test("emits runtime status for public Atlas, Daily Word, and Practice", async () => {
-    const search = await routeJson<unknown[]>(getSearchIndex);
-    const daily = await routeJson<unknown[]>(getDailyPool);
+    const search = await getSharedSearch();
+    const daily = await getSharedDaily();
     const status = await routeJson<{
       schema: string;
       status: string;
@@ -149,9 +166,9 @@ describe("lexicon static API routes", () => {
   });
 
   test("publishes separate article and alias search artifacts under /lexicon (with /api aliases)", async () => {
-    const search = await routeJson<unknown[]>(getSearchIndex);
+    const search = await getSharedSearch();
     const aliases = await routeJson<Array<{ a: string; s: string; h: string }>>(getSearchAliases);
-    const daily = await routeJson<unknown[]>(getDailyPool);
+    const daily = await getSharedDaily();
 
     expect(search.length).toBeGreaterThan(5000);
     expect(aliases.length).toBeGreaterThan(5000);
