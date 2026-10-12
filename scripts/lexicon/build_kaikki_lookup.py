@@ -125,7 +125,55 @@ _GRAMMATICAL_TOKEN = (
 )
 _GRAMMATICAL_FORM_RE = re.compile(rf"^(?:(?:{_GRAMMATICAL_TOKEN})[\s/]*)+$", re.IGNORECASE)
 _TOKEN_SPLIT_RE = re.compile(r"[\s/]+")
-_CLAUSE_SPLIT_RE = re.compile(r"\s*[;,]\s*")
+def _split_clauses(text: str, delimiters: str = ",;") -> list[str]:
+    """Split gloss into clauses outside brackets and quotes by the given delimiters."""
+    clauses: list[str] = []
+    current: list[str] = []
+    p_depth = 0
+    b_depth = 0
+    brace_depth = 0
+    curly_q = 0
+    in_straight_q = False
+
+    for ch in text:
+        if ch == "“":
+            curly_q += 1
+        elif ch == "”" and curly_q > 0:
+            curly_q -= 1
+        elif ch == '"':
+            in_straight_q = not in_straight_q
+        elif not in_straight_q and curly_q == 0:
+            if ch == "(":
+                p_depth += 1
+            elif ch == ")" and p_depth > 0:
+                p_depth -= 1
+            elif ch == "[":
+                b_depth += 1
+            elif ch == "]" and b_depth > 0:
+                b_depth -= 1
+            elif ch == "{":
+                brace_depth += 1
+            elif ch == "}" and brace_depth > 0:
+                brace_depth -= 1
+        if (
+            ch in delimiters
+            and p_depth == 0
+            and b_depth == 0
+            and brace_depth == 0
+            and curly_q == 0
+            and not in_straight_q
+        ):
+            part = "".join(current).strip()
+            if part:
+                clauses.append(part)
+            current = []
+            continue
+        current.append(ch)
+
+    tail = "".join(current).strip()
+    if tail:
+        clauses.append(tail)
+    return clauses
 
 
 def _is_grammatical_form(clause: str) -> bool:
@@ -162,13 +210,30 @@ def _clean_gloss(gloss: str) -> str:
         prefix, suffix = g.split(":", 1)
         if _is_meta_clause(prefix):
             return _clean_gloss(suffix) if suffix.strip() else ""
-    clauses = _CLAUSE_SPLIT_RE.split(g)
-    if len(clauses) == 1:
-        return "" if _is_meta_clause(g) else g
-    kept = [c for c in clauses if c and not _is_meta_clause(c)]
-    if len(kept) == len(clauses):
+
+    definitions = _split_clauses(g, delimiters=";")
+    if not definitions:
+        return ""
+
+    has_meta = False
+    cleaned_definitions: list[str] = []
+    for defn in definitions:
+        clauses = _split_clauses(defn, delimiters=",")
+        if not clauses:
+            continue
+        meta_idx = next((i for i, c in enumerate(clauses) if _is_meta_clause(c)), None)
+        if meta_idx is not None:
+            has_meta = True
+            kept = [c for c in clauses[:meta_idx] if c]
+            if kept:
+                cleaned_definitions.append(", ".join(kept).strip())
+        else:
+            cleaned_definitions.append(defn)
+
+    if not has_meta:
         return g  # nothing dropped — preserve original
-    return ", ".join(kept).strip()
+
+    return "; ".join(cleaned_definitions).strip()
 
 
 def extract_glosses(entry: dict[str, Any]) -> list[str]:
