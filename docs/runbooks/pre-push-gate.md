@@ -56,6 +56,24 @@ Every run appends a row to `<git-common-dir>/lu-pre-push-gate/measurements.jsonl
 ids, admission wait, duration, registry version and the shadow selection. Join with first-attempt CI outcome
 per PR head for the before/after report.
 
+The row's `stages` object contains `pre_commit` and `pytest` only when each stage is entered.
+Each entry records `elapsed_s` from a monotonic clock, `outcome` and `reason`. Stage time includes
+stage setup, command execution and cleanup; admission wait remains in `admission_wait_s`.
+An earlier successful entry survives a later failure. Receipt reuse creates no stage entries.
+
+Each stage also records the observed signed child `returncode`, its positive `signal` when terminated
+by a signal, and `output_tail`. The tail contains at most the last 40 lines from the final 8192 output
+bytes, decoded as UTF-8 with replacement. Timeout cleanup captures these fields before closing the
+output file. A child that never starts or whose exit cannot be observed has null status fields and a
+`child_unavailable_reason`, such as `budget_exhausted_before_start`, `spawn_error` or `exit_unobserved`.
+A stage that does not start a command records `stage_did_not_start_child`. An unavailable output file
+leaves `output_tail` null; a failed tail read adds `output_unavailable_reason`.
+
+These measurements are private diagnostics and may contain sensitive command output. Keep raw rows
+in ignored local state; use synthetic output for public examples and tests. Diagnostic write or
+serialization failures cannot authorize a refused or incomplete push. Stage evidence does not change
+test selection, gate outcomes, execution bounds or receipt validity.
+
 ## Merge-main rule
 
 Merge `origin/main` into a worker branch only when `git merge-tree` against a freshly fetched main SHA reports
