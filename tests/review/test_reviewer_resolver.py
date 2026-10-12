@@ -5,9 +5,31 @@ from dataclasses import replace
 import pytest
 
 from scripts.review.family_exclusions import family_exclusion
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
+from scripts.review.reviewer_resolver import (
+    REVIEW_CANDIDATES,
+    ResolverInputs,
+    evaluate_candidate,
+    normalize_review_task_id,
+    resolve_reviewer,
+)
 
 GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
+
+
+@pytest.mark.parametrize(
+    "task_id,expected",
+    [
+        ("author-one", "author-one"),
+        ("AUTHOR-ONE", "author-one"),
+        (" author-one ", "author-one"),
+        ("CODEX/Author-One", "author-one"),
+        ("codex-AUTHOR-ONE", "author-one"),
+        ("codex/Author name!", "author-name"),
+        ("...", "task"),
+    ],
+)
+def test_review_task_identity_matches_trailer_suffix(task_id, expected):
+    assert normalize_review_task_id(task_id, agent="codex") == expected
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])

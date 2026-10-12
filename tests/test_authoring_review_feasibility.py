@@ -249,6 +249,7 @@ def record_verdict(
     """Run ``record_cf_verdict.record`` for a finished review of ``feature``; return its receipt."""
     record_kwargs = review.pop("_record_kwargs", {})
     statuses = review.pop("_statuses", None)
+    task_id = review.pop("_task_id", "review")
     base, head = repo.sha("origin/main"), repo.sha("feature")
     review_root = tmp_path / "review-tasks"
     review_root.mkdir(exist_ok=True)
@@ -262,8 +263,8 @@ def record_verdict(
         "status": "done",
         **review,
     }
-    (review_root / "review.json").write_text(json.dumps(fields), encoding="utf-8")
-    (review_root / "review.result").write_text("Checked.\n\nVERDICT: APPROVE\n", encoding="utf-8")
+    (review_root / f"{task_id}.json").write_text(json.dumps(fields), encoding="utf-8")
+    (review_root / f"{task_id}.result").write_text("Checked.\n\nVERDICT: APPROVE\n", encoding="utf-8")
     # Author provenance lives with the dispatch task records.
     for source in tmp_path.joinpath("tasks").rglob("*.json"):
         target = review_root / source.relative_to(tmp_path / "tasks")
@@ -304,7 +305,7 @@ def record_verdict(
         recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs) if statuses is not None else None
     )
     monkeypatch.chdir(repo.root)
-    return recorder.record("review", pr_number=42, task_root=review_root, lock_root=tmp_path / "locks", **record_kwargs)
+    return recorder.record(task_id, pr_number=42, task_root=review_root, lock_root=tmp_path / "locks", **record_kwargs)
 
 
 GROK_RECEIPT = {
@@ -916,7 +917,9 @@ def test_history_group_9_recording_and_idempotency(repo, tasks, frozen_history, 
         record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol")
 
 
-@pytest.mark.parametrize("tamper", ["mode", "history", "header"])
+@pytest.mark.parametrize("tamper", ["mode", "history", "header", "marker-sha", "comment-sha"])
+@pytest.mark.parametrize("history_count", [1, 3])
+@pytest.mark.parametrize("task_id", ["review", "review-" + "long-task-id-" * 15])
 def test_history_group_10_unknown_real_family_never_becomes_cross_family(
     repo,
     tasks,
@@ -924,35 +927,54 @@ def test_history_group_10_unknown_real_family_never_becomes_cross_family(
     monkeypatch,
     tmp_path,
     tamper,
+    history_count,
+    task_id,
 ):
     from scripts.orchestration.integration_sweep import lookup_verdict, parse_marker
 
     # This fixture's original author uses Sol but leaves no model trailer.
     original_author_model = "gpt-6.1-sol"
-    historical = repo.commit(None, message="unknown original author")
+    historical = sorted(repo.commit(None, message=f"unknown original author {i}") for i in range(history_count))
+    history_text = ",".join(historical)
     repo.publish()
     receipt = save_history_admission(repo, tasks)
     assert receipt["reviewer"]["family"] == "openai"
     assert receipt["reviewer"]["model"] == original_author_model
-    assert receipt["reviewer"]["review_mode"] == "red_team" and receipt["unknown_history"] == [historical]
+    assert receipt["reviewer"]["review_mode"] == "red_team" and receipt["unknown_history"] == historical
     comments, statuses = [], []
-    result = recorded_history(repo, tasks, monkeypatch, tmp_path, comments=comments, _statuses=statuses)
+    result = recorded_history(
+        repo, tasks, monkeypatch, tmp_path, comments=comments, _statuses=statuses, _task_id=task_id
+    )
     assert result["status"] == "posted"
-    assert statuses[0]["description"] == f"review_mode=red_team unknown_history={historical} VERDICT: APPROVED"
+    description = statuses[0]["description"]
+    expected = f"review_mode=red_team unknown_history={history_count} VERDICT: APPROVED openai {task_id}"
+    assert description == expected[:140]
+    assert description.startswith(f"review_mode=red_team unknown_history={history_count} ")
+    assert len(description) <= 140
+    assert result["unknown_history"] == historical
     verdict = lookup_verdict(comments, repo.sha("feature"), "fleet")
-    assert verdict.review_mode == "red_team" and verdict.unknown_history == (historical,)
+    assert verdict.review_mode == "red_team" and verdict.unknown_history == tuple(historical)
     body = comments[0]["body"]
+    assert parse_marker(body)["unknown_history"] == historical
+    assert f"Unknown history: {history_text}\n" in body
+    for sha in historical:
+        assert sha in body.split("<details>", 1)[0]
+        assert sha in body.split(recorder.MARKER_PREFIX, 1)[1]
     if tamper == "mode":
         body = body.replace(" review_mode=red_team", "")
     elif tamper == "history":
-        body = body.replace(f" unknown_history={historical}", "")
+        body = body.replace(f" unknown_history={history_text}", "")
+    elif tamper == "header":
+        body = body.replace(f"Unknown history: {history_text}\n", "")
+    elif tamper == "marker-sha":
+        body = body.replace(f" unknown_history={history_text}", f" unknown_history={','.join(historical[1:])}")
     else:
-        body = body.replace(f"Unknown history: {historical}\n", "")
+        body = body.replace(f"Unknown history: {history_text}\n", f"Unknown history: {','.join(historical[1:])}\n")
     comments[0]["body"] = body
     assert parse_marker(body) is None
     assert lookup_verdict(comments, repo.sha("feature"), "fleet").state == "unknown"
     with pytest.raises(recorder.RecordError, match="unparseable marker"):
-        recorded_history(repo, tasks, monkeypatch, tmp_path, comments=comments)
+        recorded_history(repo, tasks, monkeypatch, tmp_path, comments=comments, _task_id=task_id)
 
 
 def test_head_missing_locally_refuses(repo, tasks):

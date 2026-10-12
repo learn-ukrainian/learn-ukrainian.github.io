@@ -380,6 +380,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
         and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
+        and not (key == "review_mode" and value == "cross_family")
     }
 
 

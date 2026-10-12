@@ -32,6 +32,7 @@ selection unchanged. Ambiguous path inference fails closed instead of guessing.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
 from fnmatch import fnmatchcase
@@ -57,6 +58,21 @@ from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclu
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
+
+
+def normalize_review_task_id(task_id: str, *, agent: str = "") -> str:
+    """Compare task identities using the X-Agent suffix spelling, ignoring case."""
+    value = task_id.strip()
+    if agent:
+        for prefix in (f"{agent}-", f"{agent}/"):
+            if value.casefold().startswith(prefix.casefold()):
+                value = value[len(prefix) :]
+                break
+    elif "/" in value:
+        value = value.split("/", 1)[1]
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", value).strip(".-")
+    return (safe or "task").casefold()
+
 
 # Operator 2026-09-27: "only claude, gpt and gemini should be involved in
 # ukrainian content. no other models allowed if it is about ukrainian lang.

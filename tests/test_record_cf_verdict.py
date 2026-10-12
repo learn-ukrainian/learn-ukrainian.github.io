@@ -10,12 +10,11 @@ import subprocess
 import zlib
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import pytest
 
-from scripts.common import task_scratch
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
-from scripts.common.scratch import DEFAULT_SCRATCH_ROOT
 from scripts.review import record_cf_verdict as recorder
 
 SHA = "a" * 40
@@ -288,10 +287,10 @@ def test_red_team_prompt_required_and_bound_before_publication(monkeypatch, tmp_
     assert calls == {"posts": 0, "statuses": 0}
 
 
-def test_explicit_red_team_flag_accepts_legacy_task_with_bound_prompt(monkeypatch, tmp_path):
+def test_explicit_red_team_flag_accepts_task_with_bound_mode_and_prompt(monkeypatch, tmp_path):
     tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
     prompt = red_team_task(tasks, tmp_path)
-    write_task(tasks, prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    write_task(tasks, review_mode="red_team", prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
     recorder.record(
         "review-one",
         pr_number=42,
@@ -301,6 +300,22 @@ def test_explicit_red_team_flag_accepts_legacy_task_with_bound_prompt(monkeypatc
         red_team_prompt=prompt,
     )
     assert "review_mode=red_team" in comments[0]["body"]
+
+
+def test_explicit_red_team_flag_refuses_missing_task_mode(monkeypatch, tmp_path):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    write_task(tasks, prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    with pytest.raises(recorder.RecordError, match="review mode conflicts with task"):
+        recorder.record(
+            "review-one",
+            pr_number=42,
+            task_root=tasks,
+            lock_root=tmp_path / "locks",
+            review_mode="red_team",
+            red_team_prompt=prompt,
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
 def test_red_team_effective_prompt_digest_is_supported(monkeypatch, tmp_path):
@@ -403,6 +418,7 @@ def test_rerun_same_task_reconciles_status_without_new_comment(monkeypatch, tmp_
     second = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert first["comment"] == "posted"
     assert second["comment"] == "existing"
+    assert "review_mode" not in first and "review_mode" not in second
     assert calls == {"posts": 1, "statuses": 2}
     assert len(comments) == 1
     assert comments[0]["body"].splitlines()[-1].startswith("<!-- cf-verdict v1 sha=")
@@ -891,12 +907,12 @@ def test_merge_proof_discovers_objects_without_git(real_commit_set, monkeypatch,
 
 @pytest.mark.parametrize("marker", [None, "not a git pointer", "gitdir: missing", "gitdir: missing\nsecond line"])
 def test_merge_proof_missing_checkout_refuses(monkeypatch, marker):
-    scratch = task_scratch.allocate("verdict-missing-checkout", root=DEFAULT_SCRATCH_ROOT)
-    try:
+    with TemporaryDirectory(prefix="verdict-missing-checkout-") as isolated:
+        checkout = Path(isolated)
         # The pre-push basetemp has a repository ancestor. Prove absence independently.
         probe = subprocess.run(
             ["git", "rev-parse", "--git-common-dir"],
-            cwd=scratch.payload_dir,
+            cwd=checkout,
             env=sanitized_git_env(),
             capture_output=True,
             text=True,
@@ -904,15 +920,13 @@ def test_merge_proof_missing_checkout_refuses(monkeypatch, marker):
             timeout=10,
         )
         assert probe.returncode == 128 and "not a git repository" in probe.stderr
-        monkeypatch.chdir(scratch.payload_dir)
+        monkeypatch.chdir(checkout)
         if marker is not None:
-            (scratch.payload_dir / ".git").write_text(marker)
+            (checkout / ".git").write_text(marker)
         with pytest.raises(OSError):
             recorder._merge_proof_object_store()
         entry = {"sha": SHA, "commit": {"tree": {"sha": SHA}}, "parents": [{"sha": SHA}, {"sha": OTHER}]}
         assert not recorder._is_clean_base_merge(entry, OTHER)
-    finally:
-        scratch.remove()
 
 
 @pytest.mark.parametrize("source", ["info/grafts", "environment"])
@@ -1269,6 +1283,33 @@ def test_archived_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_p
         lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
     )
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
+
+
+@pytest.mark.parametrize("storage", ["missing", "hot", "archived"])
+def test_model_named_author_task_retains_validated_record_ids(tmp_path, storage):
+    tasks = tmp_path / "tasks"
+    if storage != "missing":
+        write_task(
+            tasks / "archive" if storage == "archived" else tasks,
+            task_id="gpt-6.1-sol",
+            model="gpt-6.1-sol",
+            agent="codex",
+        )
+        path = (tasks / "archive" if storage == "archived" else tasks) / "gpt-6.1-sol.json"
+        data = json.loads(path.read_text())
+        data["task_id"] = " CODEX/Original Author! "
+        path.write_text(json.dumps(data))
+    attribution = recorder._attribute_commit(
+        {"sha": SHA, "commit": {"message": "work\n\nX-Agent: codex/gpt-6.1-sol"}},
+        repository=REPOSITORY,
+        task_root=tasks,
+        base_sha=lambda: OTHER,
+    )
+    if storage == "missing":
+        assert attribution.task_id is None and attribution.record_task_id is None
+    else:
+        assert attribution.task_id == "gpt-6.1-sol"
+        assert attribution.record_task_id == "original-author"
 
 
 @pytest.mark.parametrize("trailer", ["codex/../../package", "kimi/../invalid"])
@@ -2291,13 +2332,50 @@ def test_red_team_label_survives_status_description_truncation(monkeypatch, tmp_
     assert len(statuses[0]["description"]) == 140
 
 
-def test_red_team_same_task_refused_before_publication(monkeypatch, tmp_path):
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize(
+    "record_id", ["review-one", "REVIEW-ONE", " review-one ", "codex/review-one", "codex-REVIEW-ONE"]
+)
+def test_red_team_same_task_refused_before_publication(monkeypatch, tmp_path, archived, record_id):
     from dataclasses import replace
 
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     prompt = red_team_task(tasks, tmp_path)
+    task_path = tasks / "review-one.json"
+    data = json.loads(task_path.read_text())
+    data["task_id"] = record_id
+    task_path.write_text(json.dumps(data))
+    if archived:
+        (tasks / "archive").mkdir()
+        for suffix in ("json", "result"):
+            (tasks / f"review-one.{suffix}").rename(tasks / "archive" / f"review-one.{suffix}")
     facts = replace(
-        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", "review-one"),)
+        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", record_id),)
+    )
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("archived", [False, True])
+def test_red_team_record_own_author_id_refused_before_publication(monkeypatch, tmp_path, archived):
+    from dataclasses import replace
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    path = tasks / "review-one.json"
+    data = json.loads(path.read_text())
+    data["task_id"] = " codex/AUTHOR-ONE "
+    path.write_text(json.dumps(data))
+    if archived:
+        (tasks / "archive").mkdir()
+        for suffix in ("json", "result"):
+            (tasks / f"review-one.{suffix}").rename(tasks / "archive" / f"review-one.{suffix}")
+    facts = replace(
+        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", "author-one"),)
     )
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):

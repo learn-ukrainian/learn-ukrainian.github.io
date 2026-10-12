@@ -55,6 +55,7 @@ from scripts.review.reviewer_resolver import (
     ResolverInputs,
     ReviewerResolution,
     evaluate_candidate,
+    normalize_review_task_id,
     resolve_author_family,
     resolve_family,
     resolve_reviewer,
@@ -262,6 +263,7 @@ class CommitAttribution:
     family: str | None
     source: str
     task_id: str | None = None
+    record_task_id: str | None = None
     authorship: str | None = None
 
 
@@ -375,8 +377,16 @@ def _attribute_commit(
         # A committed author without a concrete identity is reviewable by any
         # known family (#9944). This does not grant Unknown a reviewer identity.
         family = UNKNOWN_AUTHOR_FAMILY
-    task_id = model if TASK_ID.fullmatch(model) and not _is_catalog_model_trailer(model) else None
-    return CommitAttribution(commit_sha if isinstance(commit_sha, str) else None, family, source, task_id)
+    has_record = source in {"task-record", "task-record-archived"}
+    task_id = model if has_record or (TASK_ID.fullmatch(model) and not _is_catalog_model_trailer(model)) else None
+    record_task_id = author_task.get("task_id") if has_record else None
+    return CommitAttribution(
+        commit_sha if isinstance(commit_sha, str) else None,
+        family,
+        source,
+        normalize_review_task_id(task_id, agent=harness) if task_id is not None else None,
+        normalize_review_task_id(record_task_id, agent=harness) if isinstance(record_task_id, str) else None,
+    )
 
 
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
@@ -459,7 +469,12 @@ class BranchReviewFacts:
     @property
     def author_task_ids(self) -> frozenset[str]:
         """Author task identities retained from the complete branch's X-Agent trailers."""
-        return frozenset(commit.task_id for commit in self.commits if commit.task_id is not None)
+        return frozenset(
+            normalize_review_task_id(task_id)
+            for commit in self.commits
+            for task_id in (commit.task_id, commit.record_task_id)
+            if task_id is not None
+        )
 
     @property
     def author_families(self) -> frozenset[str]:
@@ -1312,7 +1327,9 @@ def record(
     review_mode = review_mode if review_mode is not None else task.get("review_mode", "cross_family")
     if not isinstance(review_mode, str) or review_mode not in {"cross_family", "red_team"}:
         raise RecordError("unsupported review mode")
-    if task.get("review_mode", review_mode) != review_mode:
+    if task.get("review_mode", "cross_family") != review_mode:
+        if review_mode == "red_team":
+            raise RecordError("review mode conflicts with task: red_team requires stored review_mode=red_team")
         raise RecordError("review mode conflicts with task")
     if review_mode == "red_team":
         try:
@@ -1401,13 +1418,18 @@ def record(
         frozen = task.get("review_branch_facts")
         if not isinstance(frozen, dict) or frozen.get("unknown_history") != list(facts.unknown_history):
             raise RecordError("unknown history conflicts with completed review task")
-        description = f"review_mode=red_team unknown_history={','.join(facts.unknown_history)} VERDICT: {verdict}"
-        if len(description) > 140:
-            raise RecordError("unknown history exceeds commit-status description limit; cannot publish complete SHAs")
     if not facts.existing_families:
         raise RecordError("PR has no attributed author commits")
-    if review_mode == "red_team" and task_id in facts.author_task_ids:
-        raise RecordError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+    if review_mode == "red_team":
+        agent = str(task.get("agent") or "")
+        reviewer_ids = {
+            normalize_review_task_id(identity, agent=agent)
+            for identity in (task_id, task.get("task_id"))
+            if isinstance(identity, str)
+        }
+        author_ids = {normalize_review_task_id(identity, agent=agent) for identity in facts.author_task_ids}
+        if reviewer_ids & author_ids:
+            raise RecordError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
     if family in facts.excluded_families and review_mode != "red_team":
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
@@ -1485,16 +1507,13 @@ def record(
                 raise RecordError("comment readback mismatch; publication state unknown")
             posted = True
         description = (
-            description
+            f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
             if facts.unknown_history
-            else (
-                ("review_mode=red_team " if review_mode == "red_team" else "")
-                + (
-                    f"VERDICT: {verdict} ({family}, sources={sources_count}) {task_id}"
-                    if ukrainian
-                    else f"VERDICT: {verdict} {family} {task_id}"
-                )
-            )[:140]
+            else ("review_mode=red_team " if review_mode == "red_team" else "")
+        ) + (
+            f"VERDICT: {verdict} ({family}, sources={sources_count}) {task_id}"
+            if ukrainian
+            else f"VERDICT: {verdict} {family} {task_id}"
         )
         try:
             post_commit_status(
@@ -1502,7 +1521,7 @@ def record(
                 head_sha=sha,
                 state="success" if verdict == "APPROVED" else "failure",
                 context=DEFAULT_STATUS_CONTEXT,
-                description=description,
+                description=description[:140],
             )
             status = "posted"
         except Exception as exc:
@@ -1512,7 +1531,7 @@ def record(
         "head": sha,
         "task": task_id,
         "verdict": verdict,
-        "review_mode": review_mode,
+        **({"review_mode": "red_team"} if review_mode == "red_team" else {}),
         "unknown_history": list(facts.unknown_history),
         "comment": "posted" if posted else "existing",
         "status": status,

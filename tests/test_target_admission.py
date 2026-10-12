@@ -577,3 +577,100 @@ def test_review_mode_requires_known_mode_and_complete_task_facts(mode):
 def test_red_team_mode_alone_cannot_type_a_non_review_dispatch():
     with pytest.raises(ReviewAdmissionRefused, match="requires a review dispatch"):
         resolve_and_admit(("codex",), model="gpt-6.1-sol", mode="read-only", review_mode="red_team")
+
+
+@pytest.mark.parametrize(
+    "reviewer_id", ["author-one", "AUTHOR-ONE", " author-one ", "codex/author-one", "CODEX-AUTHOR-ONE", "author one"]
+)
+@pytest.mark.parametrize("author_id", ["author-one", " AUTHOR-ONE ", "codex/author-one"])
+def test_red_team_author_identity_refused_before_qualification(monkeypatch, reviewer_id, author_id):
+    from scripts.review import capacity
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_record_cf_verdict import facts_for
+
+    facts = dataclasses.replace(
+        facts_for({"openai"}), commits=(recorder.CommitAttribution(None, "openai", "task-record", author_id),)
+    )
+    monkeypatch.setattr(capacity, "review_capacity_action", _fail)
+    with pytest.raises(ReviewAdmissionRefused, match="SELF_REVIEW_DETECTED"):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk="critical",
+            review_mode="red_team",
+            review_task_id=reviewer_id,
+            review_facts=facts,
+        )
+
+
+def test_red_team_distinct_task_reaches_qualification(monkeypatch):
+    from scripts.review import capacity
+    from tests.test_record_cf_verdict import facts_for
+
+    reached = []
+
+    def qualified_capacity(*args):
+        reached.append(args)
+        raise ReviewAdmissionRefused("qualification reached")
+
+    monkeypatch.setattr(capacity, "review_capacity_action", qualified_capacity)
+    with pytest.raises(ReviewAdmissionRefused, match="qualification reached"):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk="critical",
+            review_mode="red_team",
+            review_task_id="independent-review",
+            review_facts=facts_for({"openai"}),
+        )
+    assert reached == [("codex", {}, None, "gpt-6.1-sol")]
+
+
+@pytest.mark.parametrize("archived", [False, True])
+def test_red_team_author_record_own_id_refused(tmp_path, monkeypatch, archived):
+    import json
+
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_authoring_review_feasibility import REPOSITORY, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    tasks = tmp_path / "tasks"
+    records = tasks / "archive" if archived else tasks
+    records.mkdir(parents=True)
+    (records / "author-one.json").write_text(
+        json.dumps(
+            {
+                "repository": REPOSITORY,
+                "agent": "codex",
+                "model": "gpt-6.1-sol",
+                "task_id": " CODEX/Original Author! ",
+            }
+        )
+    )
+    repo.commit("codex/author-one")
+    repo.publish()
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=repo.sha("origin/main"),
+        head_sha=repo.sha("feature"),
+        task_root=tasks,
+    )
+    with pytest.raises(ReviewAdmissionRefused, match="SELF_REVIEW_DETECTED"):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk="critical",
+            review_mode="red_team",
+            review_task_id="original-author",
+            review_facts=facts,
+        )
