@@ -23,7 +23,7 @@ av==18.1.0
 bandit==1.9.4
 beautifulsoup4==4.15.0
 blinker==1.9.0
-build==1.5.0
+build==1.6.1
 cbor==1.0.0
 certifi==2026.6.17
 cffi==2.1.1
