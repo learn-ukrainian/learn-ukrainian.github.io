@@ -4,11 +4,15 @@ import json
 import os
 import sqlite3
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
 
 from scripts.common import github_client as gh
+
+# Captured at import: tests that monkeypatch ``gh.GitHubClient`` must still build stores from the real class.
+REAL_CLIENT = gh.GitHubClient
 
 
 def response(value, *, status=200, remaining=100, reset=2000, etag='"one"'):
@@ -26,7 +30,7 @@ def client(tmp_path, script, *, now=1000, env=None):
         calls.append((method, endpoint, headers, body))
         return script[len(calls) - 1]
 
-    return gh.GitHubClient(cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}), calls
+    return REAL_CLIENT(cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}), calls
 
 
 def test_conditional_cache_survives_new_client(tmp_path):
@@ -620,6 +624,150 @@ def test_partial_graphql_error_is_not_success_or_cached(tmp_path):
         assert db.execute("SELECT count(*) FROM cache").fetchone()[0] == 0
     with pytest.raises(sqlite3.ProgrammingError, match="closed database"):
         db.execute("SELECT 1")
+
+
+# A realistic GitHub token shape; it must never reach stdout or stderr.
+LEAKED_TOKEN = "ghp_" + "a1B2c3D4e5F6g7H8i9J0k1L2m3N4"
+
+
+def _publish_link(tmp_path, monkeypatch, script, *, verb="issue-link", **fields):
+    """Run a real link verb through GitHubClient with a fake HTTP transport."""
+    from scripts.publish import github as pub
+
+    store, calls = client(Path(tempfile.mkdtemp(dir=tmp_path)), script)  # fresh budget per call
+    monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
+    monkeypatch.setattr(pub.gate, "real_gh", lambda env: "gh")
+    result = pub.publish(
+        verb, repo="o/r", parent_id="PARENT", child_id="CHILD", capture_output=True, text=True, **fields
+    )
+    return result, calls
+
+
+def _graphql_error(type_, message):
+    return response({"data": {"addSubIssue": None}, "errors": [{"type": type_, "message": message}]})
+
+
+def test_issue_link_sends_add_sub_issue_contract(tmp_path, monkeypatch):
+    result, calls = _publish_link(
+        tmp_path, monkeypatch, [response({"data": {"addSubIssue": {"issue": {"number": 1}}}})]
+    )
+    assert result.returncode == 0
+    assert json.loads(result.stdout) == {"data": {"addSubIssue": {"issue": {"number": 1}}}}
+    [(method, endpoint, headers, body)] = calls
+    assert (method, endpoint) == ("POST", "graphql")
+    # GA schema: no GraphQL-Features preview header, no replaceParent unless asked.
+    assert not any(name.lower() == "graphql-features" for name in headers)
+    assert json.loads(body) == {
+        "query": "mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,subIssueId:$c}){issue{number}}}",
+        "variables": {"p": "PARENT", "c": "CHILD"},
+    }
+
+
+def test_issue_link_already_linked_to_same_parent_is_idempotent(tmp_path, monkeypatch):
+    result, calls = _publish_link(
+        tmp_path,
+        monkeypatch,
+        [_graphql_error("UNPROCESSABLE", "Issue may not contain duplicate sub-issues")],
+    )
+    assert result.returncode == 0
+    assert json.loads(result.stdout) == {"already_linked": True}
+    # One request: the verb never escalates to replaceParent on its own.
+    assert len(calls) == 1 and b"replaceParent" not in calls[0][3]
+
+
+def test_issue_link_other_parent_needs_explicit_replace_parent(tmp_path, monkeypatch):
+    other_parent = "Sub issue may only have one parent"
+
+    # Without replace_parent the real error text is surfaced, redacted, and the command fails.
+    result, calls = _publish_link(tmp_path, monkeypatch, [_graphql_error("UNPROCESSABLE", other_parent)])
+    assert result.returncode == 1 and len(calls) == 1
+    detail = json.loads(result.stderr)
+    assert detail["error"] == "github_graphql_error"
+    assert detail["errors"] == [{"type": "UNPROCESSABLE", "message": other_parent}]
+    assert json.loads(result.stdout) == detail
+    assert b"replaceParent" not in calls[0][3]
+
+    # With replace_parent the body carries the typed boolean and the link succeeds.
+    result, calls = _publish_link(
+        tmp_path,
+        monkeypatch,
+        [response({"data": {"addSubIssue": {"issue": {"number": 1}}}})],
+        replace_parent=True,
+    )
+    assert result.returncode == 0
+    body = json.loads(calls[0][3])
+    assert body["variables"] == {"p": "PARENT", "c": "CHILD", "r": True}
+    assert "replaceParent:$r" in body["query"]
+
+
+def test_issue_link_graphql_error_redacts_token_and_survives_partial_data(tmp_path, monkeypatch):
+    payload = {
+        "data": {"addSubIssue": {"issue": {"number": 1}}},
+        "errors": [
+            {"type": "FORBIDDEN", "message": f"Resource not accessible with token {LEAKED_TOKEN}"},
+            "raw-string-entry",
+            ["nested"],
+            {"type": 7, "message": None},
+        ],
+    }
+    result, _ = _publish_link(tmp_path, monkeypatch, [response(payload)])
+    assert result.returncode == 1
+    for stream in (result.stdout, result.stderr):
+        assert LEAKED_TOKEN not in stream and "raw-string-entry" not in stream and "nested" not in stream
+    detail = json.loads(result.stderr)
+    assert detail["error"] == "github_graphql_error"
+    assert detail["errors"][0] == {"type": "FORBIDDEN", "message": "Resource not accessible with token [REDACTED]"}
+    assert detail["errors"][1:] == [{"type": None, "message": None}]
+
+
+def test_issue_link_rate_limit_and_http_error_keep_their_types(tmp_path, monkeypatch):
+    limited, _ = _publish_link(
+        tmp_path, monkeypatch, [response({"errors": [{"type": "RATE_LIMITED", "message": "slow down"}]}, remaining=0)]
+    )
+    assert limited.returncode == 75
+    assert json.loads(limited.stderr)["error"] == "github_rate_limited"
+    assert "errors" not in json.loads(limited.stderr)
+
+    http, _ = _publish_link(tmp_path, monkeypatch, [response({"message": "Not Found"}, status=404)])
+    assert http.returncode == 1
+    assert json.loads(http.stderr) == {"error": "github_http_error", "reset_at": 2000, "status": 404}
+
+
+def test_issue_link_duplicate_error_beside_another_error_still_fails(tmp_path, monkeypatch):
+    mixed = {
+        "errors": [
+            {"type": "UNPROCESSABLE", "message": "Issue may not contain duplicate sub-issues"},
+            {"type": "FORBIDDEN", "message": "Resource not accessible"},
+        ]
+    }
+    result, _ = _publish_link(tmp_path, monkeypatch, [response(mixed)])
+    assert result.returncode == 1
+    assert [e["type"] for e in json.loads(result.stderr)["errors"]] == ["UNPROCESSABLE", "FORBIDDEN"]
+
+
+def test_issue_unlink_surfaces_redacted_error_and_never_claims_already_linked(tmp_path, monkeypatch):
+    ok, calls = _publish_link(
+        tmp_path, monkeypatch, [response({"data": {"removeSubIssue": {"issue": {"number": 1}}}})], verb="issue-unlink"
+    )
+    assert ok.returncode == 0 and "removeSubIssue" in json.loads(calls[0][3])["query"]
+    # The duplicate-link message is meaningless for removal; it stays a failure.
+    failed, _ = _publish_link(
+        tmp_path,
+        monkeypatch,
+        [_graphql_error("UNPROCESSABLE", f"Issue may not contain duplicate sub-issues {LEAKED_TOKEN}")],
+        verb="issue-unlink",
+    )
+    assert failed.returncode == 1
+    assert LEAKED_TOKEN not in failed.stdout + failed.stderr
+    assert json.loads(failed.stderr)["error"] == "github_graphql_error"
+
+
+@pytest.mark.parametrize("errors", ["boom", 5, {"type": "X", "message": "y"}, [None, 3]])
+def test_issue_link_graphql_errors_of_unexpected_shape_fail_without_echo(tmp_path, monkeypatch, errors):
+    result, _ = _publish_link(tmp_path, monkeypatch, [response({"errors": errors})])
+    assert result.returncode == 1
+    assert json.loads(result.stderr) == {"error": "github_graphql_error", "reset_at": None, "errors": []}
+    assert "boom" not in result.stdout + result.stderr
 
 
 def _observe_reaped_descendant(pid, *, process=None):
