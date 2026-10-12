@@ -1475,7 +1475,7 @@ def test_stale_requires_opt_in_for_gate_readers(tmp_path, monkeypatch, entry):
 
 def test_native_fallback_honours_budget_and_never_retries(tmp_path):
     store, calls = client(tmp_path, [response([], remaining=0)])
-    store.request("GET", "repos/o/r/issues")
+    store.request("GET", "search/issues?q=x")
 
     def native(*a, **kw):
         raise AssertionError("exhausted budget reached gh")
@@ -1483,6 +1483,19 @@ def test_native_fallback_honours_budget_and_never_retries(tmp_path):
     result = gh.run(["gh", "search", "prs", "head:x"], client=store, runner=native, capture_output=True)
     assert result.returncode == 75 and result.github_result.error == "github_rate_limited"
     assert len(calls) == 1
+
+    # an exhausted core bucket is not the bucket a search command spends
+    core, core_calls = client(tmp_path / "core", [response([], remaining=0)])
+    core.request("GET", "repos/o/r/issues")
+    reached = []
+
+    def search(args, **kw):
+        reached.append(args)
+        return subprocess.CompletedProcess(args, 0, b"[]", b"")
+
+    result = gh.run(["gh", "search", "prs", "head:x"], client=core, runner=search, capture_output=True)
+    assert result.returncode == 0 and reached == [["gh", "search", "prs", "head:x"]]
+    assert len(core_calls) == 1
 
 
 def test_native_fallback_rate_limit_is_typed_and_stops_next_call(tmp_path):

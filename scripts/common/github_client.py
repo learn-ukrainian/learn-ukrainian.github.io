@@ -385,7 +385,15 @@ class GitHubClient:
         graphql = resource_path == "graphql"
         document = json.loads(raw) if graphql and isinstance(payload, bytes) else payload
         read = method == "GET" or (graphql and document and not re.search(r"\bmutation\b", document.get("query", "")))
-        resource = "graphql" if graphql else "search" if resource_path.startswith("search/") else "core"
+        resource = (
+            "graphql"
+            if graphql
+            else "code_search"
+            if resource_path == "search/code"
+            else "search"
+            if resource_path.startswith("search/")
+            else "core"
+        )
         key = hashlib.sha256(
             (
                 method
@@ -1583,10 +1591,42 @@ def _translation_options(args):
     return options, positional
 
 
+def _native_buckets(args):
+    """Rate-limit buckets a native ``gh`` argv can spend, ``secondary`` always included.
+
+    ``gh api`` is classified from its endpoint tokens, ``gh search`` from its
+    subcommand, and every other high-level command may spend ``core`` or
+    ``graphql``. An unrelated exhausted bucket must not block the command.
+    """
+    buckets = {"secondary"}
+    command = args[1] if len(args) > 1 else ""
+    if command == "search":
+        buckets.add("code_search" if args[2:3] == ["code"] else "search")
+    elif command == "api":
+        for token in args[2:]:
+            is_url = token.startswith(("http://", "https://"))
+            path = "/" + (urlparse(token).path if is_url else token.split("?", 1)[0]).lstrip("/")
+            if path == "/graphql" or path.endswith("/graphql"):
+                buckets.add("graphql")
+            marker = path.find("/search/") if is_url else 0 if path.startswith("/search/") else -1
+            if marker >= 0:
+                kind = path[marker + len("/search/") :].split("/", 1)[0]
+                buckets.add("code_search" if kind == "code" else "search")
+        if buckets == {"secondary"}:
+            buckets.add("core")
+    else:
+        buckets.update({"core", "graphql"})
+    return frozenset(buckets)
+
+
 def _native_command(args, client, runner, kwargs):
     """Fall through once using the bounded, colour-safe native transport."""
+    buckets = sorted(_native_buckets(args))
     with client._db() as db:
-        budgets = db.execute("SELECT remaining,reset FROM budget WHERE scope=?", (client.scope,)).fetchall()
+        budgets = db.execute(
+            "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (" + ",".join("?" * len(buckets)) + ")",
+            (client.scope, *buckets),
+        ).fetchall()
     reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
     if reset is not None:
         return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
