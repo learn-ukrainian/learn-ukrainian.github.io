@@ -9,10 +9,11 @@ from __future__ import annotations
 
 import os
 import subprocess
-import time
 from pathlib import Path
 
 import pytest
+
+from tests.wait_helpers import wait_for_line
 
 RUNBOOK = Path(__file__).resolve().parents[1] / "docs" / "runbooks" / "recovery.md"
 _CACHE_LINE = '  cache="${PUPPETEER_CACHE_DIR:-$HOME/.cache/puppeteer}"\n'
@@ -448,26 +449,23 @@ def test_ancestor_swap_before_the_move_does_not_leave_the_cache(tmp_path: Path) 
         'ln -s "$RECOVERY_ANCESTOR_TARGET" "$RECOVERY_ANCESTOR_DIR"\n'
         'exec /usr/bin/date "$@"\n',
     )
+    holding = tmp_path / "holder-ready"
     holder = subprocess.Popen(
-        ["bash", "-c", 'exec 3<"$1"; exec sleep 60', "_", str(marker)],
+        ["bash", "-c", 'exec 3<"$1"; echo ready >"$2"; exec sleep 60', "_", str(marker), str(holding)],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
     try:
-        seen = ""
-        for _ in range(50):
-            probe = subprocess.run(
-                ["lsof", "-nP", "+D", str(cache)],
-                check=False,
-                capture_output=True,
-                text=True,
-                timeout=10,
-            )
-            seen = probe.stdout
-            if str(holder.pid) in seen:
-                break
-            time.sleep(0.05)
-        else:
+        # The holder announces readiness only after its descriptor on the marker is open.
+        wait_for_line(holding, timeout=10.0, stop_if=lambda: holder.poll() is not None)
+        seen = subprocess.run(
+            ["lsof", "-nP", "+D", str(cache)],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        ).stdout
+        if str(holder.pid) not in seen:
             pytest.fail(f"holder was not visible to lsof\n{seen}")
         proc = _run(
             cache=str(cache),

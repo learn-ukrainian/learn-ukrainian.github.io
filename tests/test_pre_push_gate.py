@@ -19,6 +19,7 @@ from types import SimpleNamespace
 import pytest
 
 from tests.helpers.python import project_python
+from tests.wait_helpers import wait_for_line
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO_ROOT / ".githooks"
@@ -1984,7 +1985,7 @@ def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_
         "from pathlib import Path\nimport time\n"
         "def test_temp_survives(tmp_path):\n"
         "    probe = tmp_path / 'survives'\n    probe.write_text('gate')\n"
-        f"    Path({str(marker)!r}).write_text(str(probe))\n"
+        f"    Path({str(marker)!r}).write_text(str(probe) + '\\n')\n"
         f"    release = Path({str(release)!r})\n"
         "    deadline = time.monotonic() + 40\n"
         "    while not release.exists() and time.monotonic() < deadline:\n        time.sleep(0.05)\n"
@@ -2017,13 +2018,12 @@ def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_
         process.stdin.write(f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n")
         process.stdin.close()
         process.stdin = None
-        for _ in range(600):
-            if marker.exists() and marker.read_text(encoding="utf-8"):
-                break
+        try:
+            wait_for_line(marker, timeout=30.0, stop_if=lambda: process.poll() is not None)
+        except AssertionError:
             if process.poll() is not None:
                 pytest.fail(str(process.communicate()))
-            time.sleep(0.05)
-        assert marker.exists(), "gate pytest did not start"
+            pytest.fail("gate pytest did not start")
         # Expire the default-base lock, reproducing the stale-base pruning failure deterministically.
         for lock in user_root.glob("pytest-*/.lock"):
             os.utime(lock, (time.time() - 4 * 86400,) * 2)
@@ -2053,7 +2053,7 @@ def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_
         release.touch()
         stdout, stderr = process.communicate(timeout=60)
         assert process.returncode == 0, stdout + stderr
-        probe = Path(marker.read_text(encoding="utf-8"))
+        probe = Path(marker.read_text(encoding="utf-8").strip())
         assert probe.is_relative_to(gate.state_dir(repo))
         assert not probe.exists()  # the gate cleaned its private base on completion
         assert list(gate.state_dir(repo).glob("pytest-*")) == []
