@@ -2778,9 +2778,9 @@ def test_spellings_input_closes_fd_on_signal_right_after_open(tmp_path, monkeypa
     sent: list[int] = []
 
     def trace_lines(frame, event, _arg):
-        # Signal once, on the first line event where the frame holds the fd.
-        if event == "line" and not sent and isinstance(frame.f_locals.get("fd"), int):
-            sent.append(frame.f_locals["fd"])
+        # Signal once, on the first line event after the descriptor was opened.
+        if event == "line" and not sent and opened:
+            sent.append(opened[0])
             signal.pthread_kill(threading.get_ident(), signum)
         return trace_lines
 
@@ -2804,6 +2804,146 @@ def test_spellings_input_closes_fd_on_signal_right_after_open(tmp_path, monkeypa
 
     assert sent == opened
     _assert_fds_closed(opened)
+
+
+def _open_fds() -> set[int]:
+    return {int(name) for name in os.listdir("/proc/self/fd")}
+
+
+def _fd_is_open(fd: int) -> bool:
+    try:
+        os.fstat(fd)
+    except OSError as exc:
+        assert exc.errno == errno.EBADF
+        return False
+    return True
+
+
+def _executable_lines(code) -> set[int]:
+    # RESUME carries the def line and emits no line event.
+    return {line for _start, _end, line in code.co_lines() if line is not None and line != code.co_firstlineno}
+
+
+def _source_line(func, text: str) -> int:
+    lines, first = inspect.getsourcelines(func)
+    (offset,) = [index for index, line in enumerate(lines) if line.strip() == text]
+    return first + offset
+
+
+@pytest.mark.skipif(not Path("/proc/self/fd").is_dir(), reason="needs Linux /proc fd table")
+def test_spellings_input_closes_fd_on_a_signal_at_every_traced_line(tmp_path, monkeypatch):
+    """A real SIGTERM or SIGINT at every line or return event of the read leaves no descriptor open."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    monkeypatch.setattr(mod, "SPELLINGS_INPUT_POLL_SECONDS", 0)
+    opened = _record_spellings_fds(monkeypatch)
+    reader = mod._read_spellings_input
+    idle_line = _source_line(reader, "continue")
+    again_line = _source_line(reader, "break")
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    regular_path = tmp_path / "spellings.txt"
+    regular_path.write_bytes("Замок\n# коментар\n\nбудинок\n".encode())
+
+    def fifo_scenario():
+        # The test keeps a writer open, so a poll first returns idle. On the idle
+        # line it writes the payload; on the EAGAIN line it hangs up. Each branch
+        # runs once per read, in that order, with no sleep and no thread.
+        keeper = os.open(fifo_path, os.O_RDWR | os.O_NONBLOCK)
+        done: set[int] = set()
+
+        def drive(code, event, line):
+            if code is not reader.__code__ or event != "line" or line in done:
+                return
+            if line == idle_line:
+                done.add(line)
+                os.write(keeper, "Замок\t1\n# коментар\n\nбудинок\n".encode())
+            elif line == again_line:
+                done.add(line)
+                os.close(keeper)
+
+        def cleanup():
+            if again_line not in done:
+                os.close(keeper)
+
+        return fifo_path, drive, cleanup
+
+    scenarios = {
+        "fifo": (fifo_scenario, ["Замок", "будинок"]),
+        "regular": (lambda: (regular_path, lambda *_: None, lambda: None), ["Замок", "будинок"]),
+        "directory": (lambda: (tmp_path, lambda *_: None, lambda: None), IsADirectoryError),
+    }
+
+    def read(scenario, inject_at=None, signum=None):
+        """Run one read under the tracer; return its events, outcome and leaked descriptors."""
+        path, drive, cleanup = scenarios[scenario][0]()
+        events: list[tuple[object, str, int]] = []
+
+        def trace_lines(frame, event, _arg):
+            if event in ("line", "return"):
+                events.append((frame.f_code, event, frame.f_lineno))
+                drive(frame.f_code, event, frame.f_lineno)
+                if len(events) - 1 == inject_at:
+                    signal.pthread_kill(threading.get_ident(), signum)
+            return trace_lines
+
+        def trace_calls(frame, event, _arg):
+            return trace_lines if event == "call" and frame.f_code.co_filename == mod.__file__ else None
+
+        before = _open_fds()
+        opened.clear()
+        outcome: object
+        previous_trace = sys.gettrace()
+        try:
+            sys.settrace(trace_calls)
+            try:
+                outcome = _spellings_from_file(path)
+            finally:
+                sys.settrace(previous_trace)
+        except BaseException as exc:
+            outcome = type(exc)
+        finally:
+            cleanup()
+        # Checked once the exception is released. On the with statement's exit
+        # line a trace function can raise before __exit__ runs; the file object
+        # then closes its descriptor when the traceback holding it is freed.
+        leaked = [fd for fd in opened if _fd_is_open(fd)]
+        return events, outcome, leaked, _open_fds() - before
+
+    previous_handlers = {
+        signal.SIGTERM: signal.signal(signal.SIGTERM, mod._on_sigterm),
+        signal.SIGINT: signal.signal(signal.SIGINT, signal.default_int_handler),
+    }
+    try:
+        seen_lines: dict[object, set[int]] = {}
+        injections = 0
+        for scenario, (_setup, expected_outcome) in scenarios.items():
+            events, outcome, leaked, new_fds = read(scenario)
+            assert outcome == expected_outcome, scenario
+            assert (leaked, new_fds) == ([], set()), scenario
+            for code, event, line in events:
+                if event == "line":
+                    seen_lines.setdefault(code, set()).add(line)
+            for index, (code, event, line) in enumerate(events):
+                if code.co_name == "_nonblocking_opener" and event == "return":
+                    # The one documented window: the open syscall has returned
+                    # and the file object does not own the descriptor yet.
+                    continue
+                for signum, expected in [(signal.SIGTERM, InterruptedByOperator), (signal.SIGINT, KeyboardInterrupt)]:
+                    _events, outcome, leaked, new_fds = read(scenario, index, signum)
+                    site = f"{scenario} {code.co_name}:{line} {event} {signal.Signals(signum).name}"
+                    assert outcome is expected, site
+                    assert (leaked, new_fds) == ([], set()), site
+                    injections += 1
+    finally:
+        for signum, handler in previous_handlers.items():
+            signal.signal(signum, handler)
+
+    # Every executable line of every function the read ran, from its code object.
+    assert {code.co_name for code in seen_lines} >= {"_spellings_from_file", "_read_spellings_input"}
+    for code, lines in seen_lines.items():
+        assert lines == _executable_lines(code), code.co_name
+    assert injections > 0
 
 
 def test_run_fetch_preserves_caller_blocked_sigterm(tmp_path, capsys):

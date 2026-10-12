@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-import errno
 import hashlib
 import itertools
 import json
@@ -2073,6 +2072,10 @@ def prepare_database(db_path: Path) -> sqlite3.Connection:
     return conn
 
 
+def _nonblocking_opener(path: str | os.PathLike[str], flags: int) -> int:
+    return os.open(path, flags | os.O_NONBLOCK)
+
+
 def _read_spellings_input(path: Path) -> bytes:
     """Read the whole spellings file, FIFO included, without one unbounded wait.
 
@@ -2080,35 +2083,29 @@ def _read_spellings_input(path: Path) -> bytes:
     ``read`` then returns empty before any writer has connected, so only a read
     after ``poll`` reports input or hangup counts as end of input. Each ``poll``
     returns within ``SPELLINGS_INPUT_POLL_SECONDS``, which lets a SIGTERM caught
-    before the syscall raise at the next bytecode (#10374). Missing paths and
-    directories raise the errors ``Path.read_text`` raises, with the same text.
+    before the syscall raise at the next bytecode (#10374). ``open`` raises the
+    same errors as ``Path.read_text`` for missing paths and directories, with the
+    same text, and closes a directory's descriptor itself.
     """
-    # The open sits inside the try, so an exception at any bytecode after the
-    # descriptor is stored still closes it. A signal handled between the open
-    # syscall returning and that store is not preventable in pure Python; it
-    # leaks one descriptor only on a SIGINT or SIGTERM that stops the process.
-    fd: int | None = None
-    try:
-        fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
-        if stat.S_ISDIR(os.fstat(fd).st_mode):
-            raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), os.fspath(path))
+    # The with statement is the only cleanup: an exception at any bytecode of
+    # its body closes the file (#10374). One window cannot be closed in pure
+    # CPython, as in any Python program: a signal handled inside the opener
+    # after the open syscall returns, before the file object owns the
+    # descriptor. Only a SIGINT or SIGTERM lands there, and the process exits.
+    with open(path, "rb", buffering=0, opener=_nonblocking_opener) as handle:
         poller = select.poll()
-        poller.register(fd, select.POLLIN)
+        poller.register(handle, select.POLLIN)
         chunks: list[bytes] = []
         while True:
             if not poller.poll(SPELLINGS_INPUT_POLL_SECONDS * 1000):
                 continue
             while True:
-                try:
-                    chunk = os.read(fd, SPELLINGS_INPUT_READ_BYTES)
-                except BlockingIOError:
+                chunk = handle.read(SPELLINGS_INPUT_READ_BYTES)
+                if chunk is None:
                     break
                 if not chunk:
                     return b"".join(chunks)
                 chunks.append(chunk)
-    finally:
-        if fd is not None:
-            os.close(fd)
 
 
 def _spellings_from_file(path: Path) -> list[str]:
