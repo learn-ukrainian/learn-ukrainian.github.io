@@ -363,13 +363,8 @@ class GitHubClient:
     ):
         method = method.upper()
         allow_stale = self.allow_stale if allow_stale is None else allow_stale
-        if endpoint.startswith("https://"):
-            parsed = urlparse(endpoint)
-            allowed = (
-                {"api.github.com", "uploads.github.com", "github.com"} if self.host == "github.com" else {self.host}
-            )
-            if parsed.hostname not in allowed:
-                raise ValueError("GitHub endpoint host mismatch")
+        if endpoint.startswith("https://") and urlparse(endpoint).hostname not in _api_hosts(self.host):
+            raise ValueError("GitHub endpoint host mismatch")
         raw = (
             payload
             if isinstance(payload, bytes)
@@ -377,23 +372,11 @@ class GitHubClient:
             if payload is not None
             else None
         )
-        resource_path = (
-            urlparse(endpoint).path.lstrip("/")
-            if endpoint.startswith("https://")
-            else endpoint.lstrip("/").split("?", 1)[0]
-        )
+        resource_path = _resource_path(endpoint, self.host)
         graphql = resource_path == "graphql"
         document = json.loads(raw) if graphql and isinstance(payload, bytes) else payload
         read = method == "GET" or (graphql and document and not re.search(r"\bmutation\b", document.get("query", "")))
-        resource = (
-            "graphql"
-            if graphql
-            else "code_search"
-            if resource_path == "search/code"
-            else "search"
-            if resource_path.startswith("search/")
-            else "core"
-        )
+        resource = _endpoint_bucket(resource_path)
         key = hashlib.sha256(
             (
                 method
@@ -546,6 +529,34 @@ class GitHubClient:
         return Result(value, status=response.status, headers=h)
 
 
+def _api_hosts(host):
+    """Hosts whose absolute URLs are this client's own API endpoints."""
+    return {"api.github.com", "uploads.github.com", "github.com"} if host == "github.com" else {host}
+
+
+def _resource_path(endpoint, host="github.com"):
+    """Normalised REST resource path: no scheme or API host, leading slash, query or fragment.
+
+    A URL for any other host is returned untouched, so it never looks like an
+    API resource. Nothing but the whole normalised path selects a bucket.
+    """
+    if endpoint.startswith(("https://", "http://")):
+        parsed = urlparse(endpoint)
+        if parsed.hostname not in _api_hosts(host):
+            return endpoint
+        return parsed.path.lstrip("/")
+    return re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
+
+
+def _endpoint_bucket(resource_path):
+    """Rate-limit bucket of a normalised path; interior and trailing segments never select one."""
+    if resource_path == "graphql":
+        return "graphql"
+    if resource_path == "search/code":
+        return "code_search"
+    return "search" if resource_path.startswith("search/") else "core"
+
+
 def _options(args):
     options, positional = {}, []
     valued = {
@@ -587,6 +598,9 @@ def _options(args):
         "--raw-field",
         "-f",
         "--hostname",
+        "-t",
+        "--cache",
+        "--preview",
         "--title",
         "--body",
         "--body-file",
@@ -621,7 +635,7 @@ def _options(args):
             break
         if arg.startswith("-"):
             flag, eq, value = arg.partition("=")
-            value = value if eq else next(iterator) if flag in valued else True
+            value = value if eq else next(iterator, True) if flag in valued else True
             options.setdefault(flag, []).append(value)
         else:
             positional.append(arg)
@@ -1591,29 +1605,30 @@ def _translation_options(args):
     return options, positional
 
 
-def _native_buckets(args):
+def _native_buckets(args, host="github.com"):
     """Rate-limit buckets a native ``gh`` argv can spend, ``secondary`` always included.
 
-    ``gh api`` is classified from its endpoint tokens, ``gh search`` from its
-    subcommand, and every other high-level command may spend ``core`` or
-    ``graphql``. An unrelated exhausted bucket must not block the command.
+    ``gh api`` is classified from its one positional endpoint, normalised as
+    ``GitHubClient.request`` does; ``gh search`` from its subcommand. Every
+    other command, and a ``gh api`` whose endpoint cannot be determined, may
+    spend ``core`` or ``graphql``. An unrelated exhausted bucket must not block
+    the command.
     """
     buckets = {"secondary"}
     command = args[1] if len(args) > 1 else ""
     if command == "search":
         buckets.add("code_search" if args[2:3] == ["code"] else "search")
     elif command == "api":
-        for token in args[2:]:
-            is_url = token.startswith(("http://", "https://"))
-            path = "/" + (urlparse(token).path if is_url else token.split("?", 1)[0]).lstrip("/")
-            if path == "/graphql" or path.endswith("/graphql"):
-                buckets.add("graphql")
-            marker = path.find("/search/") if is_url else 0 if path.startswith("/search/") else -1
-            if marker >= 0:
-                kind = path[marker + len("/search/") :].split("/", 1)[0]
-                buckets.add("code_search" if kind == "code" else "search")
-        if buckets == {"secondary"}:
-            buckets.add("core")
+        options, positional = _options(args[2:])
+        # Exactly one positional is the endpoint. Zero, or a second one (a
+        # flag this parser does not model took a value), is undeterminable.
+        hostname = _opt(options, "--hostname")
+        path = (
+            _resource_path(positional[0], hostname if isinstance(hostname, str) else host)
+            if len(positional) == 1
+            else ""
+        )
+        buckets.update({_endpoint_bucket(path)} if path else {"core", "graphql"})
     else:
         buckets.update({"core", "graphql"})
     return frozenset(buckets)
@@ -1621,7 +1636,7 @@ def _native_buckets(args):
 
 def _native_command(args, client, runner, kwargs):
     """Fall through once using the bounded, colour-safe native transport."""
-    buckets = sorted(_native_buckets(args))
+    buckets = sorted(_native_buckets(args, client.host))
     with client._db() as db:
         budgets = db.execute(
             "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (" + ",".join("?" * len(buckets)) + ")",

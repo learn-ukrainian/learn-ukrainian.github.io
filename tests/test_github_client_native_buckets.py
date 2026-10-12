@@ -10,8 +10,8 @@ NOW = 1000
 FUTURE = 2000
 
 
-def seeded(tmp_path, exhausted):
-    """Client whose named buckets are at remaining=0 with a future reset, plus call recorders."""
+def seeded(tmp_path, exhausted, remaining=0):
+    """Client whose named buckets are at ``remaining`` with a future reset, plus call recorders."""
     translated, native = [], []
 
     def transport(method, endpoint, headers, body, timeout):
@@ -25,7 +25,7 @@ def seeded(tmp_path, exhausted):
     store = gh.GitHubClient(cache_dir=tmp_path, transport=transport, clock=lambda: NOW, env={})
     with store._db() as db:
         for name in exhausted:
-            gh._store_budget(db, store.scope, name, 0, FUTURE)
+            gh._store_budget(db, store.scope, name, remaining, FUTURE)
     return store, runner, translated, native
 
 
@@ -174,3 +174,174 @@ def test_translated_search_code_uses_code_search_bucket(tmp_path):
 )
 def test_native_buckets_over_the_denominator(args, expected):
     assert gh._native_buckets(args) == frozenset(expected | {"secondary"})
+
+
+ALL_BUCKETS = ["core", "graphql", "code_search", "search", "secondary"]
+CORE, GRAPHQL, CODE, SEARCH, UNDETERMINED = (
+    {"core"},
+    {"graphql"},
+    {"code_search"},
+    {"search"},
+    {"core", "graphql"},
+)
+
+
+def api(*tokens):
+    return ["gh", "api", *tokens]
+
+
+@pytest.fixture
+def no_jq(monkeypatch):
+    """Output formatting is orthogonal to the gate; ``--jq search/code`` is not a valid jq program."""
+    monkeypatch.setattr(gh, "_format_value", lambda value, options, *, api=False: b"[]")
+
+
+# (argv, buckets the command can spend). A flag value, a path suffix or an
+# interior segment must never select a bucket; only the whole endpoint does.
+ENDPOINT_SHAPES = [
+    # flag values that look like a search/graphql endpoint, before and after a core endpoint
+    *[
+        (api(*flag, "repos/o/r/issues"), CORE)
+        for flag in (
+            ["--jq", "search/code"],
+            ["-q", "search/code"],
+            ["--template", "search/code"],
+            ["-t", "search/code"],
+            ["-H", "X: search/code"],
+            ["--hostname", "search/code"],
+            ["-f", "q=search/code"],
+            ["--jq=search/code"],
+            ["--template=search/code"],
+            ["--jq", "graphql"],
+            ["--paginate", "--jq", "search/code"],
+            ["--paginate", "--template", "search/code"],
+        )
+    ],
+    *[
+        (api("repos/o/r/issues", *flag), CORE)
+        for flag in (
+            ["--jq", "search/code"],
+            ["-q", "search/code"],
+            ["--template", "search/code"],
+            ["-t", "search/code"],
+            ["-H", "X: search/code"],
+            ["--hostname", "search/code"],
+            ["-f", "q=search/code"],
+            ["--jq=search/code"],
+            ["--template=search/code"],
+        )
+    ],
+    (api("--jq", "search/code", "--", "repos/o/r/issues"), CORE),
+    (api("--jq=search/code", "--", "repos/o/r/issues"), CORE),
+    (api("--", "repos/o/r/issues"), CORE),
+    (api("--jq", ".x", "--", "search/code"), CODE),
+    # the flag values of a search endpoint do not turn it into anything else
+    (api("--jq", "repos/o/r/issues", "search/code"), CODE),
+    (api("-t", "graphql", "search/issues?q=x"), SEARCH),
+    (api("--cache", "1h", "graphql"), GRAPHQL),
+    # REST reads whose interior or trailing segment merely resembles an endpoint
+    (api("repos/o/graphql"), CORE),
+    (api("repos/o/r/contents/graphql"), CORE),
+    (api("https://api.github.com/repos/o/r/contents/search/code"), CORE),
+    (api("repos/o/r/contents/search/issues"), CORE),
+    (api("repos/o/r/search/code"), CORE),
+    (api("graphql/extra"), CORE),
+    (api("search"), CORE),
+    (api("search/code/"), SEARCH),
+    # real endpoints
+    (api("graphql"), GRAPHQL),
+    (api("/graphql"), GRAPHQL),
+    (api("https://api.github.com/graphql"), GRAPHQL),
+    (api("graphql", "-f", "query={viewer{login}}"), GRAPHQL),
+    (api("search/code"), CODE),
+    (api("/search/code"), CODE),
+    (api("search/code?q=x"), CODE),
+    (api("search/code#frag"), CODE),
+    (api("https://api.github.com/search/code?q=x"), CODE),
+    (api("search/issues"), SEARCH),
+    (api("search/issues?q=x"), SEARCH),
+    (api("https://api.github.com/search/issues?q=x"), SEARCH),
+    (api("search/repositories", "-f", "q=x"), SEARCH),
+    # no determinable endpoint: core and graphql, never every bucket, never a flag value
+    (api("--paginate"), UNDETERMINED),
+    (api(), UNDETERMINED),
+    (api("--jq", "search/code"), UNDETERMINED),
+    (api("repos/o/r", "--jq"), CORE),
+    (api("repos/o/r", "repos/o/s"), UNDETERMINED),
+]
+
+
+@pytest.mark.parametrize(
+    ("args", "expected"), [pytest.param(a, e, id=" ".join(a[2:]) or "no-args") for a, e in ENDPOINT_SHAPES]
+)
+def test_endpoint_classification_table(args, expected):
+    assert gh._native_buckets(args) == frozenset(expected | {"secondary"})
+
+
+@pytest.mark.parametrize("remaining", [0, gh.RESERVE])
+@pytest.mark.parametrize("bucket", ALL_BUCKETS)
+@pytest.mark.parametrize(
+    ("args", "expected"), [pytest.param(a, e, id=" ".join(a[2:]) or "no-args") for a, e in ENDPOINT_SHAPES]
+)
+def test_exhausted_bucket_gates_exactly_the_classified_shapes(no_jq, tmp_path, args, expected, bucket, remaining):
+    store, runner, translated, native = seeded(tmp_path, [bucket], remaining)
+    result = gh.run(args, client=store, runner=runner, capture_output=True)
+    if bucket == "secondary" or bucket in expected:
+        assert blocked(result) and result.github_result.reset_at == FUTURE
+        assert not translated and not native
+    else:
+        assert not blocked(result)
+        assert translated or native
+
+
+@pytest.mark.parametrize("bucket", ALL_BUCKETS)
+def test_budget_above_reserve_never_blocks(no_jq, tmp_path, bucket):
+    store, runner, translated, native = seeded(tmp_path, [bucket], gh.RESERVE + 1)
+    result = gh.run(api("--jq", "search/code", "repos/o/r/issues"), client=store, runner=runner, capture_output=True)
+    assert not blocked(result) and (translated or native)
+
+
+@pytest.mark.parametrize(
+    ("args", "host", "expected"),
+    [
+        (api("http://api.github.com/graphql"), "github.com", GRAPHQL),
+        (api("https://uploads.github.com/repos/o/r/releases/1/assets"), "github.com", CORE),
+        # an absolute URL for a host that is not the API host is never an API resource
+        (api("https://example.com/graphql"), "github.com", CORE),
+        (api("https://example.com/search/code"), "github.com", CORE),
+        (api("https://api.github.com/graphql"), "ghe.example", CORE),
+        (api("https://ghe.example/graphql"), "ghe.example", GRAPHQL),
+        (api("--hostname", "ghe.example", "https://ghe.example/search/code"), "github.com", CODE),
+        (api("--hostname", "ghe.example", "https://api.github.com/graphql"), "github.com", CORE),
+        (api("-X", "search/code", "repos/o/r"), "github.com", CORE),
+        (api("--input", "search/code", "repos/o/r"), "github.com", CORE),
+        (api("--preview", "search/code", "repos/o/r"), "github.com", CORE),
+    ],
+)
+def test_url_endpoints_honour_the_api_host(args, host, expected):
+    assert gh._native_buckets(args, host) == frozenset(expected | {"secondary"})
+
+
+@pytest.mark.parametrize(
+    ("endpoint", "bucket"),
+    [
+        ("search/code", "code_search"),
+        ("/search/code?q=x", "code_search"),
+        ("https://api.github.com/search/code?q=x", "code_search"),
+        ("search/issues?q=x", "search"),
+        ("graphql", "graphql"),
+        ("repos/o/graphql", "core"),
+        ("repos/o/r/contents/search/code", "core"),
+        ("https://api.github.com/repos/o/r/contents/graphql", "core"),
+    ],
+)
+def test_translated_request_uses_the_shared_classification(tmp_path, endpoint, bucket):
+    """GitHubClient.request and the native gate classify through one function."""
+    assert gh._endpoint_bucket(gh._resource_path(endpoint)) == bucket
+    store, _runner, translated, _native = seeded(tmp_path / "own", [bucket])
+    assert store.request("GET", endpoint).error == "github_rate_limited"
+    assert not translated
+    others = [name for name in ALL_BUCKETS if name not in {bucket, "secondary"}]
+    store, _runner, translated, _native = seeded(tmp_path / "others", others)
+    assert store.request("GET", endpoint).error is None
+    assert translated
