@@ -34,7 +34,7 @@ click==8.4.2
 cloudpickle==3.1.2
 colorama==0.4.6
 coloredlogs==15.0.1
-coverage==7.15.4
+coverage==7.16.2
 cryptography==50.0.0
 ctranslate2==4.8.2
 curl_cffi==0.15.0
