@@ -35,10 +35,14 @@ context_latest_usage_tokens() {
   # The #10471 measurement found top-level usage summed both main passes around
   # an advisor call. Only the last message iteration describes current main context.
   printf '%s' "$usage" | jq -r '
+    def tokens:
+      (if type == "number" then .
+       elif type == "string" then (tonumber? // 0)
+       else 0 end) | [., 0] | max | floor;
     (if (.iterations | type) == "array" then
-       ([.iterations[] | select(.type == "message")] | last) // .
+       ([.iterations[] | select(type == "object" and .type == "message")] | last) // .
      else . end)
-    | (.input_tokens // 0) + (.cache_read_input_tokens // 0) + (.cache_creation_input_tokens // 0)
+    | (.input_tokens | tokens) + (.cache_read_input_tokens | tokens) + (.cache_creation_input_tokens | tokens)
   ' 2>/dev/null || printf '0\n'
 }
 

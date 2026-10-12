@@ -90,6 +90,55 @@ def test_incident_uses_final_main_pass(tmp_path: Path) -> None:
     assert latest_tokens(transcript) == 589_549
 
 
+@pytest.mark.parametrize("source", ["top-level", "iteration"])
+@pytest.mark.parametrize(
+    ("fields", "expected"),
+    [
+        (("1", "2", "3"), 6),
+        (("2", "586399", "3148"), 589_549),
+        (("5", 6, 0), 11),
+        ((" 1 ", "\t2\n", "3"), 3),
+        (("invalid", 2, 3), 5),
+        ((None, "2", "3"), 5),
+        ((False, "2", {"tokens": 3}), 2),
+        ((1.9, 2.8, -10), 3),
+        (("1.9", "2.8", "-10"), 3),
+    ],
+    ids=[
+        "all-strings",
+        "incident-strings",
+        "mixed",
+        "whitespace",
+        "non-numeric",
+        "null",
+        "other-types",
+        "fraction-negative",
+        "fraction-negative-strings",
+    ],
+)
+def test_token_fields_are_nonnegative_integers(tmp_path: Path, source: str, fields: tuple, expected: int) -> None:
+    usage = dict(zip(("input_tokens", "cache_read_input_tokens", "cache_creation_input_tokens"), fields, strict=True))
+    if source == "iteration":
+        usage = {"input_tokens": 999_999, "iterations": [{"type": "message", **usage}]}
+    transcript = tmp_path / "usage.jsonl"
+    write_usage(transcript, usage)
+    assert latest_tokens(transcript) == expected
+
+
+@pytest.mark.parametrize("entry", [1, True, "message", []], ids=["number", "bool", "string", "array"])
+def test_non_object_iterations_are_ignored(tmp_path: Path, entry: object) -> None:
+    usage = {
+        "input_tokens": 999_999,
+        "iterations": [
+            entry,
+            {"type": "message", "input_tokens": 1, "cache_read_input_tokens": 2, "cache_creation_input_tokens": 3},
+        ],
+    }
+    transcript = tmp_path / "usage.jsonl"
+    write_usage(transcript, usage)
+    assert latest_tokens(transcript) == 6
+
+
 def test_advisor_last_does_not_replace_final_main_pass(tmp_path: Path) -> None:
     usage = incident_usage()
     usage["iterations"].append({"type": "advisor_message", "input_tokens": 999_999})
