@@ -5,6 +5,7 @@ from __future__ import annotations
 import errno
 import inspect
 import os
+import select
 import shlex
 import signal
 import sqlite3
@@ -14,6 +15,7 @@ import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -31,6 +33,7 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     PoliteClient,
     SpellingLedger,
     _dedupe_register_rows,
+    _spellings_from_file,
     _write_group,
     build_a1_a2_spellings,
     declared_user_agent,
@@ -2475,7 +2478,7 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
         proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
         try:
             # The CLI installs SIGTERM's handler before opening this FIFO. A writer
-            # open succeeds only once that reader exists; keep it open so read_text
+            # open succeeds only once that reader exists; keep it open so the read
             # cannot finish and reach the network, even if the child is descheduled.
             with _fifo_input_ready(proc, fifo_path) as writer_fd:
                 proc.send_signal(signal.SIGTERM)
@@ -2498,6 +2501,265 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
     assert "Requests in run:      0" in err
     assert not (tmp_path / "state").exists()
     assert not (tmp_path / "cache.db").exists()
+
+
+# The helper thread waits until the CLI's main thread sleeps in the kernel inside
+# the spellings read, then sends SIGTERM to itself. CPython's C handler runs on
+# the helper and only sets the flag the main thread checks between bytecodes; the
+# main thread's wait is not interrupted. That is the state the race leaves when
+# SIGTERM lands after the main thread's last check and before its read blocks
+# (#10374). A blocking read never returns to that check; the poll loop does.
+_LOST_SIGTERM_CHILD = """
+import os, signal, sys, threading, time
+from scripts.lexicon.runner import fetch_ulif_homonyms as mod
+
+budget = float(sys.argv[1])
+main_tid = threading.get_native_id()
+entered = threading.Event()
+returned = threading.Event()
+
+def kernel_wait():
+    task = f"/proc/self/task/{main_tid}/"
+    with open(task + "stat") as fh:
+        state = fh.read().rsplit(")", 1)[1].split()[0]
+    with open(task + "wchan") as fh:
+        wchan = fh.read().strip()
+    # A futex wait is the GIL handoff to this thread, not the input wait.
+    if state == "S" and wchan not in ("", "0") and "futex" not in wchan:
+        return wchan
+    return None
+
+def deliver():
+    signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+    entered.wait()
+    deadline = time.monotonic() + budget
+    while (wchan := kernel_wait()) is None:
+        if time.monotonic() > deadline:
+            print("main thread never waited in the kernel", file=sys.stderr, flush=True)
+            os._exit(97)
+    print(f"lost SIGTERM sent while main waited in {wchan}", file=sys.stderr, flush=True)
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+    if not returned.wait(budget):
+        print(f"main thread still waiting {budget}s after the lost SIGTERM", file=sys.stderr, flush=True)
+        os._exit(98)
+
+threading.Thread(target=deliver, daemon=True).start()
+entered.set()
+try:
+    code = mod.main(sys.argv[2:])
+finally:
+    returned.set()
+sys.exit(code)
+"""
+
+
+@pytest.mark.skipif(not Path("/proc/self/task").is_dir(), reason="needs Linux /proc thread state")
+def test_sigterm_caught_before_the_input_wait_still_stops_the_cli(tmp_path):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    command = [
+        sys.executable,
+        "-c",
+        _LOST_SIGTERM_CHILD,
+        str(_SIGTERM_REAP_SECONDS),
+        "run",
+        "--spellings-file",
+        str(fifo_path),
+        "--state-dir",
+        str(tmp_path / "state"),
+        "--db",
+        str(tmp_path / "cache.db"),
+    ]
+    proc = subprocess.Popen(command, cwd=ROOT, stderr=subprocess.PIPE, text=True)
+    try:
+        # The child bounds its own waits; this only guards a child stuck before them.
+        _, err = proc.communicate(timeout=60)
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
+
+    assert proc.returncode == EXIT_INTERRUPTED, err
+    assert "lost SIGTERM sent while main waited in " in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Requests in run:      0" in err
+    assert not (tmp_path / "state").exists()
+    assert not (tmp_path / "cache.db").exists()
+
+
+class _RecordingPoll:
+    """A real poll object that reports when a wait returned without input."""
+
+    def __init__(self, idle: threading.Event, interrupt: bool = False):
+        self._poll = select.poll()
+        self._idle = idle
+        self._interrupt = interrupt
+
+    def register(self, fd: int, events: int) -> None:
+        self._poll.register(fd, events)
+
+    def poll(self, timeout: float) -> list[tuple[int, int]]:
+        if self._interrupt:
+            raise InterruptedByOperator("SIGTERM")
+        ready = self._poll.poll(timeout)
+        if not ready:
+            self._idle.set()
+        return ready
+
+
+def _record_spellings_polls(monkeypatch, *, interrupt: bool = False) -> threading.Event:
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    idle = threading.Event()
+    fake_select = SimpleNamespace(poll=lambda: _RecordingPoll(idle, interrupt), POLLIN=select.POLLIN)
+    monkeypatch.setattr(mod, "select", fake_select)
+    monkeypatch.setattr(mod, "SPELLINGS_INPUT_POLL_SECONDS", 0.01)
+    return idle
+
+
+def _record_spellings_fds(monkeypatch) -> list[int]:
+    opened: list[int] = []
+    real_open = os.open
+
+    def recording_open(path, flags, *args):
+        fd = real_open(path, flags, *args)
+        opened.append(fd)
+        return fd
+
+    monkeypatch.setattr(os, "open", recording_open)
+    return opened
+
+
+def _assert_fds_closed(opened: list[int]) -> None:
+    assert len(opened) == 1
+    with pytest.raises(OSError) as closed:
+        os.fstat(opened[0])
+    assert closed.value.errno == errno.EBADF
+
+
+@contextmanager
+def _fifo_writer(fifo_path: Path, payload: bytes, *, after: threading.Event | None = None):
+    """Write ``payload`` to the FIFO from a thread, then close it."""
+    failures: list[BaseException] = []
+
+    def write() -> None:
+        try:
+            if after is not None and not after.wait(10):
+                raise AssertionError("reader never waited without a writer")
+            # A blocking open waits for the reader, so no sleep is needed here.
+            with open(fifo_path, "wb") as fh:
+                fh.write(payload)
+        except BaseException as exc:
+            failures.append(exc)
+
+    thread = threading.Thread(target=write, name="spellings-fifo-writer", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        thread.join(10)
+    assert not thread.is_alive()
+    assert failures == []
+
+
+def test_spellings_fifo_waits_for_a_writer_that_connects_late(tmp_path, monkeypatch):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    idle = _record_spellings_polls(monkeypatch)
+    opened = _record_spellings_fds(monkeypatch)
+
+    # The writer connects only after a poll has returned with no writer, when a
+    # read would already return b"" without that being the end of input.
+    with _fifo_writer(fifo_path, "Замок\t1\n# коментар\n\nбудинок\n".encode(), after=idle):
+        spellings = _spellings_from_file(fifo_path)
+
+    assert spellings == ["Замок", "будинок"]
+    _assert_fds_closed(opened)
+
+
+def test_spellings_fifo_writer_closing_without_data_is_empty(tmp_path, monkeypatch):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    idle = _record_spellings_polls(monkeypatch)
+
+    with _fifo_writer(fifo_path, b"", after=idle):
+        assert _spellings_from_file(fifo_path) == []
+
+
+def test_spellings_fifo_large_input_spans_many_reads(tmp_path):
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    expected = [f"слово{i}" for i in range(60_000)]
+    payload = "".join(f"{spelling}\n" for spelling in expected).encode()
+    assert len(payload) > 10 * mod.SPELLINGS_INPUT_READ_BYTES
+
+    with _fifo_writer(fifo_path, payload):
+        assert _spellings_from_file(fifo_path) == expected
+
+
+def test_spellings_regular_file_matches_read_text_lines(tmp_path, monkeypatch):
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    path = tmp_path / "spellings.txt"
+    body = [f"слово{i}" for i in range(3 * mod.SPELLINGS_INPUT_READ_BYTES // 20)]
+    lines = "".join(f"{spelling}\tгрупа\r\n" for spelling in body)
+    path.write_bytes(f"# заголовок\r\nЗамок\rзамок\n\n  будинок  \n{lines}".encode())
+    opened = _record_spellings_fds(monkeypatch)
+
+    assert _spellings_from_file(path) == ["Замок", "замок", "будинок", *body]
+    _assert_fds_closed(opened)
+
+
+@pytest.mark.parametrize("target", ["missing", "missing-parent", "directory"])
+def test_spellings_input_errors_match_read_text(tmp_path, monkeypatch, target):
+    path = {
+        "missing": tmp_path / "missing.txt",
+        "missing-parent": tmp_path / "absent" / "spellings.txt",
+        "directory": tmp_path,
+    }[target]
+    with pytest.raises(OSError) as expected:
+        path.read_text(encoding="utf-8")
+    opened = _record_spellings_fds(monkeypatch)
+
+    with pytest.raises(OSError) as actual:
+        _spellings_from_file(path)
+
+    assert type(actual.value) is type(expected.value)
+    assert str(actual.value) == str(expected.value)
+    assert actual.value.filename == expected.value.filename
+    if target == "directory":
+        _assert_fds_closed(opened)
+    else:
+        assert opened == []
+
+
+def test_spellings_invalid_utf8_error_matches_read_text(tmp_path, monkeypatch):
+    path = tmp_path / "spellings.txt"
+    path.write_bytes(b"ok\n" * 30_000 + b"\xff\n")
+    with pytest.raises(UnicodeDecodeError) as expected:
+        path.read_text(encoding="utf-8")
+    opened = _record_spellings_fds(monkeypatch)
+
+    with pytest.raises(UnicodeDecodeError) as actual:
+        _spellings_from_file(path)
+
+    assert str(actual.value) == str(expected.value)
+    _assert_fds_closed(opened)
+
+
+def test_spellings_fifo_closes_input_when_interrupted(tmp_path, monkeypatch):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    _record_spellings_polls(monkeypatch, interrupt=True)
+    opened = _record_spellings_fds(monkeypatch)
+
+    with pytest.raises(InterruptedByOperator):
+        _spellings_from_file(fifo_path)
+
+    _assert_fds_closed(opened)
 
 
 def test_run_fetch_preserves_caller_blocked_sigterm(tmp_path, capsys):

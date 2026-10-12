@@ -16,11 +16,13 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import errno
 import hashlib
 import itertools
 import json
 import math
 import os
+import select
 import shlex
 import signal
 import sqlite3
@@ -57,6 +59,12 @@ REGISTER_PAGE_SIZE = 25
 LOCK_NAME = "runner.lock"
 PROGRESS_INTERVAL_ENV = "ULIF_PROGRESS_INTERVAL_SECONDS"
 DEFAULT_PROGRESS_INTERVAL_SECONDS = 60.0
+# Longest single wait for spellings input before control returns to the
+# interpreter. CPython runs a Python signal handler only between bytecodes, so a
+# SIGTERM caught after the last check but before a blocking read waited for
+# input that might never come (#10374). This bounds that delay instead.
+SPELLINGS_INPUT_POLL_SECONDS = 0.25
+SPELLINGS_INPUT_READ_BYTES = 1 << 16
 
 EXIT_OK = 0
 EXIT_USAGE = 1
@@ -2065,9 +2073,43 @@ def prepare_database(db_path: Path) -> sqlite3.Connection:
     return conn
 
 
+def _read_spellings_input(path: Path) -> bytes:
+    """Read the whole spellings file, FIFO included, without one unbounded wait.
+
+    The nonblocking open returns at once even for a FIFO with no writer yet. A
+    ``read`` then returns empty before any writer has connected, so only a read
+    after ``poll`` reports input or hangup counts as end of input. Each ``poll``
+    returns within ``SPELLINGS_INPUT_POLL_SECONDS``, which lets a SIGTERM caught
+    before the syscall raise at the next bytecode (#10374). Missing paths and
+    directories raise the errors ``Path.read_text`` raises, with the same text.
+    """
+    fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+    try:
+        if stat.S_ISDIR(os.fstat(fd).st_mode):
+            raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), os.fspath(path))
+        poller = select.poll()
+        poller.register(fd, select.POLLIN)
+        chunks: list[bytes] = []
+        while True:
+            if not poller.poll(SPELLINGS_INPUT_POLL_SECONDS * 1000):
+                continue
+            while True:
+                try:
+                    chunk = os.read(fd, SPELLINGS_INPUT_READ_BYTES)
+                except BlockingIOError:
+                    break
+                if not chunk:
+                    return b"".join(chunks)
+                chunks.append(chunk)
+    finally:
+        os.close(fd)
+
+
 def _spellings_from_file(path: Path) -> list[str]:
     found: list[str] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    # Decoding all bytes at once matches read_text, including the error offset;
+    # splitlines breaks on the \r\n and \r that read_text would translate.
+    for line in _read_spellings_input(path).decode("utf-8").splitlines():
         text = line.split("\t", 1)[0].strip()
         if not text or text.startswith("#"):
             continue
