@@ -21,7 +21,7 @@ from contextlib import contextmanager, suppress
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode, urlparse
+from urllib.parse import quote, urlencode, urlparse, urlsplit
 
 RESERVE = 10
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
@@ -531,6 +531,7 @@ class GitHubClient:
 
 def _api_hosts(host):
     """Hosts whose absolute URLs are this client's own API endpoints."""
+    host = (urlsplit("//" + host).hostname or "").lower().rstrip(".")
     return {"api.github.com", "uploads.github.com", "github.com"} if host == "github.com" else {host}
 
 
@@ -540,11 +541,20 @@ def _resource_path(endpoint, host="github.com"):
     A URL for any other host is returned untouched, so it never looks like an
     API resource. Nothing but the whole normalised path selects a bucket.
     """
-    if endpoint.startswith(("https://", "http://")):
-        parsed = urlparse(endpoint)
-        if parsed.hostname not in _api_hosts(host):
+    parsed = urlsplit(endpoint)
+    if parsed.scheme.lower() in {"http", "https"}:
+        hostname = (parsed.hostname or "").lower().rstrip(".")
+        if hostname not in _api_hosts(host):
             return endpoint
-        return parsed.path.lstrip("/")
+        path = parsed.path.lstrip("/")
+        # gh sends absolute URLs unchanged; GHES uses /api/v3/ for REST
+        # and /api/graphql for GraphQL. Never strip these on public hosts.
+        if hostname not in _api_hosts("github.com"):
+            if path.startswith("api/v3/"):
+                path = path.removeprefix("api/v3/")
+            elif path == "api/graphql":
+                path = "graphql"
+        return path
     return re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
 
 
@@ -557,7 +567,7 @@ def _endpoint_bucket(resource_path):
     return "search" if resource_path.startswith("search/") else "core"
 
 
-def _options(args):
+def _options(args, *, valued_flags=None):
     options, positional = {}, []
     valued = {
         "--repo",
@@ -628,6 +638,8 @@ def _options(args):
         "-e",
         "-c",
     }
+    if valued_flags is not None:
+        valued = valued_flags
     iterator = iter(args)
     for arg in iterator:
         if arg == "--":
@@ -635,7 +647,10 @@ def _options(args):
             break
         if arg.startswith("-"):
             flag, eq, value = arg.partition("=")
-            value = value if eq else next(iterator, True) if flag in valued else True
+            if not eq and len(flag) > 2 and flag[:2] in valued:
+                flag, value = flag[:2], flag[2:]
+            else:
+                value = value if eq else next(iterator, True) if flag in valued else True
             options.setdefault(flag, []).append(value)
         else:
             positional.append(arg)
@@ -1617,7 +1632,26 @@ def _native_buckets(args, host="github.com"):
     buckets = {"secondary"}
     command = args[1] if len(args) > 1 else ""
     if command == "search":
-        buckets.add("code_search" if args[2:3] == ["code"] else "search")
+        # Search's valued flags include child-specific filters accepted before
+        # the subcommand. Its -w is boolean, unlike workflow commands' -w.
+        _, positional = _options(
+            args[2:],
+            valued_flags={
+                "--app", "--assignee", "--author", "--author-date", "--author-email", "--author-name",
+                "--base", "--checks", "--closed", "--commenter", "--comments", "--committer",
+                "--committer-date", "--committer-email", "--committer-name", "--created", "--extension",
+                "--filename", "--followers", "--forks", "--good-first-issues", "--hash", "--head",
+                "--help-wanted-issues", "--include-forks", "--interactions", "--involves", "--jq", "--json",
+                "--label", "--language", "--license", "--limit", "--match", "--mentions", "--merged-at",
+                "--milestone", "--number-topics", "--order", "--owner", "--parent", "--project",
+                "--reactions", "--repo", "--review", "--review-requested", "--reviewed-by", "--search-type",
+                "--size", "--sort", "--stars", "--state", "--team-mentions", "--template", "--topic",
+                "--tree", "--updated", "--visibility", "-L", "-R", "-q", "-t",
+            },
+        )
+        buckets.update(
+            {"code_search" if positional[0] == "code" else "search"} if positional else {"search", "code_search"}
+        )
     elif command == "api":
         options, positional = _options(args[2:])
         # Exactly one positional is the endpoint. Zero, or a second one (a

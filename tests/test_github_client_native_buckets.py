@@ -345,3 +345,96 @@ def test_translated_request_uses_the_shared_classification(tmp_path, endpoint, b
     store, _runner, translated, _native = seeded(tmp_path / "others", others)
     assert store.request("GET", endpoint).error is None
     assert translated
+
+
+# Absolute URLs go to native gh unchanged. Force native fall-through with
+# --paginate/--jq so these rows prove runner admission, not just path parsing.
+NORMALIZED_NATIVE_SHAPES = [
+    *[
+        (api(f"{scheme}://{authority}/{path}?q=x#fragment", "--paginate", "--jq", ".x"), expected)
+        for scheme, port in (("HTTP", 80), ("Http", 80), ("HTTPS", 443))
+        for authority in (
+            "API.GITHUB.COM",
+            f"API.GITHUB.COM:{port}",
+            "probe@API.GITHUB.COM",
+            f"probe@API.GITHUB.COM.:{port}",
+        )
+        for path, expected in (("graphql", GRAPHQL), ("search/code", CODE))
+    ],
+    *[
+        (api("--hostname", hostname, f"https://{authority}/api/graphql"), GRAPHQL)
+        for hostname in ("GHE.EXAMPLE", "GhE.Example.", "probe@GHE.EXAMPLE.:443")
+        for authority in ("ghe.example", "GHE.EXAMPLE.:443")
+    ],
+    *[
+        (api("--hostname", "ghe.example", f"https://ghe.example/{path}?q=x#fragment"), expected)
+        for path, expected in (
+            ("api/graphql", GRAPHQL),
+            ("api/v3/graphql", GRAPHQL),
+            ("api/v3/search/code", CODE),
+            ("api/v3/search/issues", SEARCH),
+            ("api/v3/repos/o/r/issues", CORE),
+            ("api/GraphQL", CORE),
+            ("api/graphql/extra", CORE),
+            ("api/search/code", CORE),
+        )
+    ],
+    *[
+        (api(endpoint, "--paginate", "--jq", ".x"), CORE)
+        for endpoint in (
+            "https://api.github.com/api/v3/search/code",
+            "https://api.github.com/api/graphql",
+            "HTTPS://API.GITHUB.COM/GraphQL",
+            "HTTPS://foreign.example/graphql",
+        )
+    ],
+    (api("--hostname", "API.GITHUB.COM", "https://api.github.com/api/v3/search/code"), CORE),
+    *[
+        (["gh", "search", *flags, "code", "x"], CODE)
+        for flags in (
+            ["--repo", "o/r"],
+            ["-R", "o/r"],
+            ["-Ro/r"],
+            ["--repo=o/r"],
+            ["--owner", "issues"],
+            ["--limit", "5"],
+            ["-L5"],
+            ["--json", "path"],
+            ["-q", ".x"],
+            ["--jq", ".x"],
+            ["-q.x"],
+            ["--template", "issues"],
+            ["--language", "go"],
+            ["--extension", "py"],
+            ["--filename", "issues"],
+            ["--match", "file"],
+            ["--size", "5"],
+            ["--web"],
+            ["-w"],
+        )
+    ],
+    (["gh", "search", "-R", "o/r", "--limit", "5", "issues", "x"], SEARCH),
+    (["gh", "search", "--language", "code", "issues", "x"], SEARCH),
+    (["gh", "search", "code", "--repo", "o/r", "x"], CODE),
+    (["gh", "search"], {"search", "code_search"}),
+    (["gh", "search", "--repo", "code"], {"search", "code_search"}),
+    (["gh", "search", "--owner", "code"], {"search", "code_search"}),
+    (["gh", "search", "--json", "code", "--"], {"search", "code_search"}),
+]
+
+
+@pytest.mark.parametrize("remaining", [0, gh.RESERVE])
+@pytest.mark.parametrize("bucket", ALL_BUCKETS)
+@pytest.mark.parametrize(
+    ("args", "expected"),
+    [pytest.param(a, e, id=" ".join(a[1:])) for a, e in NORMALIZED_NATIVE_SHAPES],
+)
+def test_normalized_native_shapes_gate_runner(no_jq, tmp_path, args, expected, bucket, remaining):
+    store, runner, translated, native = seeded(tmp_path, [bucket], remaining)
+    result = gh.run(args, client=store, runner=runner, capture_output=True)
+    assert not translated
+    if bucket == "secondary" or bucket in expected:
+        assert blocked(result) and result.github_result.reset_at == FUTURE
+        assert not native
+    else:
+        assert result.returncode == 0 and native == [args]
