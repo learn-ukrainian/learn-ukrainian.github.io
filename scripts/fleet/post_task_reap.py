@@ -28,7 +28,7 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import ignored_task_output, pr_identity
-from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
+from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims, worktree_paths
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -386,8 +386,16 @@ def _reap_main_worktree(
     except ValueError:  # guarded above; retain if the filesystem changed.
         relative = ()
     expected_agent = str(state.get("agent") or "")
+    # Dispatch binds the checkout to ``automatic_worktree_path(agent, task_id)``,
+    # which strips one agent prefix and sanitises the rest; the raw task id is
+    # not the directory name (#10486). The agent directory is checked below.
+    expected_leaf = (
+        worktree_paths.automatic_worktree_path(expected_agent, task_id, repo_root=repo_root).name
+        if expected_agent
+        else None
+    )
     reuse_matches = []
-    if len(relative.parts) == 2 and relative.parts[1] != task_id:
+    if len(relative.parts) == 2 and relative.parts[1] != expected_leaf:
         try:
             reuse_matches = ignored_task_output.matching_worktree_records(
                 bound_path, tasks_dir, repo_root=repo_root, publish_cache=False
@@ -401,7 +409,7 @@ def _reap_main_worktree(
             reuse_matches = []
     if (
         len(relative.parts) != 2
-        or (relative.parts[1] != task_id and not reuse_matches)
+        or (relative.parts[1] != expected_leaf and not reuse_matches)
         or not expected_agent
         or relative.parts[0] != expected_agent
     ):
