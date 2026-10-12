@@ -297,8 +297,14 @@ _BUNDLE_HELPER_CALLS = {
         'value.astimezone', 'value.astimezone(UTC).isoformat', 'value.astimezone(UTC).isoformat().replace',
     },
     '_bundle_validate_lease_member': {
-        'ValueError', 'int', 'isinstance', 'json.loads', 'manifest.get', 'members.get', 'payload.decode',
+        'ValueError', '_bundle_load_json', 'int', 'isinstance', 'manifest.get', 'members.get',
         'replacement.get', 'state.get', 'str', 'validate_live_lease',
+    },
+    '_bundle_load_json': {
+        'ValueError', '_bundle_require_json_value', 'json.loads', 'payload.decode',
+    },
+    '_bundle_require_json_value': {
+        'ValueError', 'json.dumps',
     },
     'validate_live_lease': {
         'LINEAGE_ID_RE.fullmatch', 'active.get', "active['thread_id'].strip", 'display.get',

@@ -1043,15 +1043,34 @@ def remote_handoff(
         return _server_error()
 
 
-@router.post("/v1/{stream_id}/bundles")
+async def _rollover_bundle_body(request: Request) -> dict[str, Any] | None:
+    """Decode bundle requests before framework JSON errors can escape the refusal path."""
+    try:
+        body = await request.json()
+    except (ValueError, UnicodeDecodeError, RecursionError):
+        return None
+    return body if isinstance(body, dict) else None
+
+
+@router.post(
+    "/v1/{stream_id}/bundles",
+    openapi_extra={
+        "requestBody": {"required": True, "content": {"application/json": {"schema": {"type": "object"}}}}
+    },
+)
 def remote_bundle_upload(
-    stream_id: str, request: Request, body: dict[str, Any], ctx: MonitorContext = Depends(get_ctx)
+    stream_id: str,
+    request: Request,
+    body: dict[str, Any] | None = Depends(_rollover_bundle_body),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
     """Upload one cross-host bundle through the same fenced loopback mutation path."""
     denied = _check_mutation_peer(request)
     if denied is not None:
         return denied
     try:
+        if body is None:
+            raise ValueError("bundle request must be an object")
         stream_id = _epic_stream(stream_id)
         lease = _lease_from_payload({**body, "stream_id": stream_id})
         if lease.stream_id != stream_id:

@@ -1113,6 +1113,132 @@ BOUND_SENTINEL = "bundle-supplied-sentinel"
 BOUND_MEMBER = f".agent/thread-rollovers/{AGENT}/lineage-store/{BOUND_SENTINEL}.md"
 
 
+def _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob, *, raw_manifest=None):
+    if entry_point == "importer":
+        target = tmp_path / "target"
+        target.mkdir()
+        (target / "kept.txt").write_text("unchanged\n", encoding="utf-8")
+        before = _tree(target)
+        bundle = tmp_path / "refused.tgz"
+        bundle.write_bytes(blob)
+        assert th.cmd_import_bundle(_import_args(target, bundle, stream=REGISTERED_STREAM)) == 2
+        refusal = json.loads(capsys.readouterr().out)
+        assert refusal["code"] == "invalid_rollover_bundle"
+        assert refusal["action"] == "import-bundle"
+        assert BOUND_SENTINEL not in refusal["error"]
+        assert _tree(target) == before
+        return
+
+    store, lease = _store(tmp_path)
+    if entry_point == "store":
+        with pytest.raises(ValueError) as refusal:
+            store.upload_rollover_bundle(lease, manifest=manifest, blob=blob)
+        assert BOUND_SENTINEL not in str(refusal.value)
+    else:
+        from dataclasses import asdict
+
+        from fastapi.testclient import TestClient
+
+        from tests.epics_monitor_stub import epics_app_for_store
+
+        client = TestClient(
+            epics_app_for_store(store, tmp_path), base_url="http://127.0.0.1", client=("127.0.0.1", 8765)
+        )
+        request_body = client.app.openapi()["paths"]["/api/epics/v1/{stream_id}/bundles"]["post"]["requestBody"]
+        assert request_body["required"] is True
+        assert request_body["content"]["application/json"]["schema"]["type"] == "object"
+        body = {**asdict(lease), **asdict(lease.holder), "blob": base64.b64encode(blob).decode("ascii")}
+        raw_body = json.dumps(body)[:-1] + ', "manifest": ' + (raw_manifest or json.dumps(manifest)) + "}"
+        response = client.post(
+            f"/api/epics/v1/{REGISTERED_STREAM}/bundles",
+            content=raw_body,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response.status_code == 400, response.text
+        assert response.json()["error"] == "request_refused"
+        assert response.json()["detail"] == "invalid rollover bundle upload request"
+    assert store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+
+@pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
+@pytest.mark.parametrize("member", ["manifest", "lease", "handoff_state"])
+@pytest.mark.parametrize(
+    "invalid", ["nested", "syntax", "encoding", "integer", "NaN", "Infinity", "-Infinity", "overflow"]
+)
+def test_bundle_json_refusal_parity(tmp_path, capsys, entry_point, member, invalid):
+    source = tmp_path / "source"
+    source.mkdir()
+    state = _seed_state(source, thread_id="source-thread")
+    manifest, blob, _hits = th._build_rollover_bundle(
+        source, source, agent=AGENT, state=state, stream_id=REGISTERED_STREAM
+    )
+    members = th._bundle_extract(blob)[1]
+    nonfinite = invalid in {"NaN", "Infinity", "-Infinity", "overflow"}
+    payload = {
+        "nested": b"[" * 30000 + b"]" * 30000,
+        "syntax": b"{",
+        "encoding": b"\xff",
+        "integer": b"1" * 5000,
+    }.get(invalid, b'{"unused": ' + ("1e999" if invalid == "overflow" else invalid).encode() + b"}")
+    if member == "manifest":
+        if nonfinite:
+            payload = th._bundle_json(manifest)[:-1] + b', "unused": ' + payload[len(b'{"unused": '):]
+        blob = _raw_bundle([(th.ROLLOVER_BUNDLE_MANIFEST_NAME, payload), *members.items()])
+    else:
+        name = (
+            th.default_state_path(AGENT, state["lineage_id"]).as_posix()
+            if member == "lease"
+            else state["replacement"]["semantic_snapshot_path"]
+        )
+        if nonfinite and member == "lease":
+            payload = members[name].rstrip()[:-1] + b', "unused": ' + payload[len(b'{"unused": '):]
+        members[name] = payload
+        manifest, blob = _resign(manifest, members)
+    _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob)
+
+
+@pytest.mark.parametrize("entry_point", ["store", "http"])
+@pytest.mark.parametrize("invalid", ["nested", "NaN", "Infinity", "-Infinity", "overflow"])
+def test_supplied_manifest_json_refusal(tmp_path, capsys, entry_point, invalid):
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM)
+    raw_value = "[" * 30000 + "]" * 30000 if invalid == "nested" else ("1e999" if invalid == "overflow" else invalid)
+    raw_manifest = json.dumps(manifest)[:-1] + ', "unused": ' + raw_value + "}"
+    if invalid == "nested":
+        value = []
+        for _ in range(30000):
+            value = [value]
+    else:
+        value = json.loads(raw_value)
+    manifest["unused"] = value
+    _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob, raw_manifest=raw_manifest)
+
+
+@pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
+@pytest.mark.parametrize(
+    "runtime_name",
+    [
+        ".native-intent.lock",
+        "nested/.native-intent.lock",
+        "remote.bundle.tgz",
+        "nested/remote.bundle.tgz",
+        "_bundle-reconcile",
+        "nested/_bundle-reconcile/receipt.json",
+    ],
+)
+def test_export_excluded_member_refusal_parity(tmp_path, capsys, entry_point, runtime_name):
+    source = tmp_path / "source"
+    source.mkdir()
+    state = _seed_state(source, thread_id="source-thread")
+    manifest, blob, _hits = th._build_rollover_bundle(
+        source, source, agent=AGENT, state=state, stream_id=REGISTERED_STREAM
+    )
+    members = th._bundle_extract(blob)[1]
+    name = f".agent/thread-rollovers/{AGENT}/{state['lineage_id']}/{runtime_name}"
+    members[name] = b"{}\n"
+    manifest, blob = _resign(manifest, members)
+    _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob)
+
+
 def _assert_bundle_refused_everywhere(tmp_path, monkeypatch, capsys, manifest, blob, reason):
     from fastapi.testclient import TestClient
 

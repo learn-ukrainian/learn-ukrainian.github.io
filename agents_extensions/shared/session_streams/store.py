@@ -452,6 +452,10 @@ def validate_rollover_bundle_members(
     members: list[str] = []
     for value in names:
         name = _rollover_bundle_member_name(value)
+        if name.startswith(lineage_prefix):
+            parts = name[len(lineage_prefix):].split("/")
+            if parts[-1] == ".native-intent.lock" or parts[-1].endswith(".bundle.tgz") or "_bundle-reconcile" in parts:
+                raise ValueError("rollover bundle member is excluded from export")
         if not (name.startswith(lineage_prefix) and len(name) > len(lineage_prefix)) and name not in handoffs:
             raise ValueError("rollover bundle member is outside its lineage and handoff paths")
         members.append(name)

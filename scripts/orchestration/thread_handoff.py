@@ -474,6 +474,23 @@ def _bundle_json(value: Any) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
+def _bundle_require_json_value(value: Any) -> None:
+    """Refuse values that cannot be represented as finite, bounded-depth JSON."""
+    try:
+        json.dumps(value, allow_nan=False)
+    except (ValueError, TypeError, RecursionError) as exc:
+        raise ValueError("bundle JSON is invalid") from exc
+
+
+def _bundle_load_json(payload: bytes) -> Any:
+    try:
+        value = json.loads(payload.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
+        raise ValueError("bundle JSON is invalid") from exc
+    _bundle_require_json_value(value)
+    return value
+
+
 def _bundle_member_path(value: str) -> str:
     if not isinstance(value, str) or not value or "\\" in value:
         raise ValueError("bundle member path is malformed")
@@ -839,7 +856,7 @@ def _bundle_extract(
                     with raw_manifest:
                         data = _bundle_read_limited(raw_manifest, min(member_limit, remaining), reason)
                     expanded_bytes += len(data)
-                    value = json.loads(data.decode("utf-8"))
+                    value = _bundle_load_json(data)
                     if not isinstance(value, dict):
                         raise ValueError("bundle manifest must be an object")
                     manifest = value
@@ -855,7 +872,7 @@ def _bundle_extract(
                 with payload:
                     members[name] = _bundle_read_limited(payload, min(member_limit, remaining), reason)
                 expanded_bytes += len(members[name])
-    except (tarfile.TarError, OSError, EOFError, zlib.error, json.JSONDecodeError, UnicodeDecodeError) as exc:
+    except (tarfile.TarError, OSError, EOFError, zlib.error, json.JSONDecodeError, UnicodeDecodeError, RecursionError) as exc:
         raise ValueError("rollover bundle is not a valid tar.gz") from exc
     if manifest is None:
         raise ValueError("rollover bundle has no embedded manifest")
@@ -893,6 +910,7 @@ def _bundle_extract(
     ):
         raise ValueError("rollover bundle fingerprint mismatch")
     if manifest_override is not None:
+        _bundle_require_json_value(manifest_override)
         outer = dict(manifest_override)
         if outer.get("schema") != ROLLOVER_BUNDLE_SCHEMA or outer.get("bundle_sha256") != manifest.get("bundle_sha256"):
             raise ValueError("supplied manifest does not match the embedded manifest")
@@ -919,6 +937,9 @@ def verify_rollover_bundle(
     """
     manifest, members = _bundle_extract(blob, manifest_override=manifest_override)
     _bundle_check_members(repo_root, manifest=manifest, members=members)
+    for name, payload in members.items():
+        if Path(name).suffix.lower() == ".json":
+            _bundle_load_json(payload)
     return manifest, members
 
 
@@ -1005,8 +1026,8 @@ def _bundle_validate_lease_member(
     if payload is None:
         raise ValueError("bundle has no lease state member")
     try:
-        state = json.loads(payload.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        state = _bundle_load_json(payload)
+    except ValueError as exc:
         raise ValueError("bundle lease state is not valid JSON") from exc
     if not isinstance(state, dict):
         raise ValueError("bundle lease state must be an object")
@@ -5868,7 +5889,11 @@ def _bundle_local_lineage_snapshot(
 
 
 def _bundle_import_error(reason: str) -> int:
-    print(json.dumps({"error": reason, "action": "import-bundle"}, separators=(",", ":")))
+    print(
+        json.dumps(
+            {"code": "invalid_rollover_bundle", "error": reason, "action": "import-bundle"}, separators=(",", ":")
+        )
+    )
     return 2
 
 
