@@ -338,6 +338,13 @@ def resolve_and_admit(
         review_facts = None
     if review_mode == "red_team" and callable(review_initial_snapshot):
         review_initial_snapshot = review_initial_snapshot()
+    if review_mode == "red_team":
+        from scripts.review.reviewer_resolver import normalize_routing_snapshot
+
+        try:
+            normalize_routing_snapshot(review_initial_snapshot)
+        except ValueError as exc:
+            raise ReviewAdmissionRefused("RED_TEAM_REFUSED: routing state unavailable") from exc
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:

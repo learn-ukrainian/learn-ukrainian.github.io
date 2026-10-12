@@ -759,3 +759,20 @@ def test_red_team_unknown_author_refused_without_override():
             review_task_id="other-task",
             review_facts=facts,
         )
+
+
+def test_red_team_malformed_routing_diagnostics_is_typed_refusal():
+    from tests.test_record_cf_verdict import facts_for
+
+    with pytest.raises(ReviewAdmissionRefused, match="RED_TEAM_REFUSED: routing state unavailable"):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_profile="code",
+            review_mode="red_team",
+            review_task_id="other-review",
+            review_facts=facts_for({"openai"}),
+            review_initial_snapshot={"diagnostics": {}},
+        )

@@ -3034,3 +3034,61 @@ def test_dispatch_review_mode_help_preserves_legacy_usage_golden():
     assert hashlib.sha256(dispatch.format_usage().encode()).hexdigest() == (
         "b7a61d5f40b0ddcedcdf507fa0348d5141ca5de55c2496ba0f995aa260f73074"
     )
+
+
+@pytest.mark.parametrize(
+    "history",
+    [
+        "same-head-rejection",
+        "other-head-rejection",
+        "red-team-rejection",
+        "no-pr",
+        "no-branch",
+        "unreadable",
+        "lookup-error",
+    ],
+)
+def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatch, history):
+    from scripts.review import record_cf_verdict as recorder
+    from scripts.review.target_resolution import ReviewTarget
+    from tests.test_record_cf_verdict import BRANCH, OTHER, REPOSITORY, SHA
+
+    branch_flags = () if history == "no-branch" else ("--branch", BRANCH)
+    args = _args(*branch_flags, "--review-profile", "code", "--review-mode", "red_team")
+    if history == "no-branch":
+        args.branch = None
+    args._review_target = ReviewTarget("branch", OTHER, SHA, (), 0, True, "test branch")
+    monkeypatch.setattr(delegate, "_resolve_dispatch_repository", lambda *_a: REPOSITORY)
+    monkeypatch.setattr(
+        target_admission,
+        "resolve_and_admit",
+        lambda *_a, **_k: (SimpleNamespace(recipient="codex", model="gpt-6.1-sol"),),
+    )
+    marker = recorder.build_comment(
+        sha=OTHER if history == "other-head-rejection" else SHA,
+        task_id="prior-review",
+        started="2026-09-23T11:00:00.000001+00:00",
+        verdict="CHANGES_REQUESTED",
+        model="claude-opus-5-5",
+        family="anthropic",
+        reply="VERDICT: REQUEST_CHANGES",
+        review_mode="red_team" if history == "red-team-rejection" else "cross_family",
+    )
+    comments = [{"body": None if history == "unreadable" else marker}]
+
+    def lookup(*_a, **_k):
+        if history == "no-branch":
+            pytest.fail("a local review without a branch or PR must not look up PR history")
+        if history == "lookup-error":
+            raise recorder.RecordError("GitHub lookup unavailable")
+        return [] if history == "no-pr" else [{"number": 42, "headRefOid": SHA, "headRefName": BRANCH}]
+
+    monkeypatch.setattr(recorder, "_run_json", lookup)
+    monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda *_a: comments)
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    if history == "same-head-rejection":
+        assert refusal == "RED_TEAM_REFUSED: outside-family rejection exists for this head" and target is None
+    elif history in {"unreadable", "lookup-error"}:
+        assert refusal is not None and target is None
+    else:
+        assert refusal is None and target.model == "gpt-6.1-sol"

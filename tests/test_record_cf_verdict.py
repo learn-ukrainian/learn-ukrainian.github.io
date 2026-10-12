@@ -262,6 +262,7 @@ def red_team_task(
         {"language_lane": True},
         {"research_task_family": "ukrainian-review"},
         {"review_profile": "ukrainian"},
+        {"research_track": "l2-uk-b1"},
     ],
 )
 def test_red_team_ukrainian_task_refused_before_publication(monkeypatch, tmp_path, scope):
@@ -339,6 +340,72 @@ def test_same_family_red_team_records_and_reconciles(monkeypatch, tmp_path, fami
     verdict = lookup_verdict(comments, SHA, "fleet")
     assert verdict.state == "APPROVED"
     assert verdict.review_mode == "red_team"
+
+
+@pytest.mark.parametrize("profile", ["infra", "unknown"])
+def test_red_team_non_code_profile_refused_before_publication(monkeypatch, tmp_path, profile):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path, review_profile=profile)
+    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: code review requires"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("verdict", ["CHANGES_REQUESTED", "REQUEST_CHANGES"])
+@pytest.mark.parametrize(
+    "head,prior_mode,mode",
+    [
+        (SHA, "cross_family", "red_team"),
+        (OTHER, "cross_family", "red_team"),
+        (SHA, "red_team", "red_team"),
+        (SHA, "cross_family", "cross_family"),
+    ],
+)
+def test_red_team_outside_rejection_publication_guard(monkeypatch, tmp_path, verdict, head, prior_mode, mode):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path) if mode == "red_team" else None
+    comments.append(
+        {
+            "body": recorder.build_comment(
+                sha=head,
+                task_id="prior-review",
+                started="2026-09-23T11:00:00.000001+00:00",
+                verdict=recorder.normalize_verdict(f"VERDICT: {verdict}"),
+                model="claude-opus-5-5",
+                family="anthropic",
+                reply=f"VERDICT: {verdict}",
+                review_mode=prior_mode,
+            )
+        }
+    )
+    if head == SHA and prior_mode == "cross_family" and mode == "red_team":
+        with pytest.raises(
+            recorder.RecordError, match="RED_TEAM_REFUSED: outside-family rejection exists for this head"
+        ):
+            recorder.record(
+                "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+            )
+        assert calls == {"posts": 0, "statuses": 0}
+    else:
+        result = recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+        assert result["verdict"] == "APPROVED"
+        assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])
+def test_red_team_unreadable_marker_history_refused(monkeypatch, tmp_path, body):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    comments.append({"body": body})
+    with pytest.raises(recorder.RecordError):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("case", ["missing", "unreadable", "ordinary", "digest_mismatch", "unbound", "mode_conflict"])
@@ -2562,3 +2629,23 @@ def test_author_task_seat_models_retain_recorded_and_resolved_identity(tmp_path,
         assert recorder.red_team_seat_refusal((reviewer,), author_models=attribution.author_models) == (
             "RED_TEAM_REFUSED: reviewer model equals a branch author model"
         )
+
+
+@pytest.mark.parametrize("history", [None, {}, [None]])
+def test_red_team_marker_data_shape_refused(history):
+    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: verdict marker data unavailable"):
+        recorder.require_no_outside_rejection(history, SHA)
+
+
+def test_red_team_raw_request_changes_marker_refused():
+    body = recorder.build_comment(
+        sha=SHA,
+        task_id="prior-review",
+        started="2026-09-23T11:00:00.000001+00:00",
+        verdict="REQUEST_CHANGES",
+        model="claude-opus-5-5",
+        family="anthropic",
+        reply="VERDICT: REQUEST_CHANGES",
+    )
+    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: outside-family rejection exists for this head"):
+        recorder.require_no_outside_rejection([{"body": body}], SHA)

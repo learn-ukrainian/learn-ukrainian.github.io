@@ -13,7 +13,7 @@ import stat
 import subprocess
 import sys
 import time
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -1190,6 +1190,78 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
+def require_no_outside_rejection(comments: Any, sha: str) -> None:
+    """A red-team review cannot supersede recorded outside-family dissent (#10437)."""
+    if not isinstance(comments, Sequence) or isinstance(comments, (str, bytes)):
+        raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable")
+    for item in comments:
+        body = item.get("body") if isinstance(item, Mapping) else None
+        if not isinstance(body, str):
+            raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable")
+        if MARKER_PREFIX not in body:
+            continue
+        # Older records may retain the reviewer's REQUEST_CHANGES spelling.
+        normalized = body.replace("verdict=REQUEST_CHANGES ", "verdict=CHANGES_REQUESTED ").replace(
+            "VERDICT: REQUEST_CHANGES\n", "VERDICT: CHANGES_REQUESTED\n"
+        )
+        marker = parse_marker(normalized)
+        if marker is None:
+            raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable")
+        if (
+            marker["sha"] == sha
+            and marker.get("review_mode", "cross_family") != "red_team"
+            and marker["verdict"] == "CHANGES_REQUESTED"
+        ):
+            raise RecordError("RED_TEAM_REFUSED: outside-family rejection exists for this head")
+
+
+def require_no_branch_outside_rejection(
+    repository: str, branch: str | None, sha: str, *, pr_number: int | None = None
+) -> None:
+    """Check a resolvable PR at dispatch; a branch without a PR has no marker history."""
+    if pr_number is None:
+        if not branch:
+            raise RecordError("RED_TEAM_REFUSED: review branch unavailable")
+        matches = _run_json(
+            [
+                "gh",
+                "pr",
+                "list",
+                "--repo",
+                repository,
+                "--state",
+                "open",
+                "--head",
+                branch,
+                "--limit",
+                "2",
+                "--json",
+                "number,headRefOid,headRefName",
+            ]
+        )
+        if not isinstance(matches, list):
+            raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable")
+        if not matches:
+            return
+        if len(matches) != 1 or not isinstance(matches[0], dict):
+            raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable")
+        pr = matches[0]
+    else:
+        pr = _pr(repository, branch, pr_number)
+    if (
+        pr.get("headRefOid") != sha
+        or (branch is not None and pr.get("headRefName") != branch)
+        or type(pr.get("number")) is not int
+        or pr["number"] < 1
+    ):
+        raise RecordError("RED_TEAM_REFUSED: PR head unavailable or moved")
+    try:
+        comments = GitHubAdapter(Path.cwd()).comments(repository, pr["number"])
+    except SweepError as exc:
+        raise RecordError("RED_TEAM_REFUSED: verdict marker data unavailable") from exc
+    require_no_outside_rejection(comments, sha)
+
+
 def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
     """Resolve the native review holder and its own runtime attestations."""
     catalog = load_model_catalog()
@@ -1245,8 +1317,10 @@ def record(
             raise RecordError("review mode conflicts with task: red_team requires stored review_mode=red_team")
         raise RecordError("review mode conflicts with task")
     if review_mode == "red_team":
-        if is_ukrainian_review(task):
+        if is_ukrainian_review(task) or str(task.get("research_track") or "").strip().casefold().startswith("l2-uk"):
             raise RecordError("RED_TEAM_REFUSED: Ukrainian-language reviews stay cross-family")
+        if str(task.get("review_profile") or "code").strip().casefold() != "code":
+            raise RecordError("RED_TEAM_REFUSED: code review requires review_profile=code")
         try:
             prompt = red_team_prompt.read_text(encoding="utf-8") if red_team_prompt is not None else ""
         except (OSError, UnicodeError) as exc:
@@ -1365,6 +1439,8 @@ def record(
             comments = adapter.comments(repository, number)
         except SweepError as exc:
             raise RecordError(f"comment lookup failed: {exc}") from exc
+        if review_mode == "red_team":
+            require_no_outside_rejection(comments, sha)
         existing = None
         for item in comments:
             body = item.get("body")

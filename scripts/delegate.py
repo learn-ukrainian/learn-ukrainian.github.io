@@ -16582,6 +16582,23 @@ def _admit_dispatch_target(
                 "MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)"
             )
         args._mechanical_admitted_scope = mechanical_task
+        review_target = getattr(args, "_review_target", None)
+        if (
+            getattr(args, "review_mode", "cross_family") == "red_team"
+            and review_target is not None
+            and (getattr(args, "branch", None) or getattr(args, "pr", None) is not None)
+        ):
+            from scripts.review.record_cf_verdict import RecordError, require_no_branch_outside_rejection
+
+            try:
+                require_no_branch_outside_rejection(
+                    _resolve_dispatch_repository(_local_repo_root) or "",
+                    getattr(args, "branch", None),
+                    review_target.head_sha,
+                    pr_number=getattr(args, "pr", None),
+                )
+            except RecordError as exc:
+                raise ReviewAdmissionRefused(str(exc)) from exc
         if target.recipient == "cursor":
             apply_cursor_model_pins(target.model)
     except MonitorApiUnavailable:

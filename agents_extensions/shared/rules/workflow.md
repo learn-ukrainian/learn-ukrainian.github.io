@@ -227,15 +227,20 @@ fresh-session toolful red-team review may substitute for it, labelled
 honestly. It applies only after `closeout_cli resolve-reviewer --review-mode
 red_team` finds no eligible outside-family reviewer, including when the only
 eligible families are paused; the resolver output carries the limitation.
-Limits: the author's task stays refused, and seats whose own code is under
-review stay excluded as usual; the reviewer may be the author's seat and
-model, but always runs as a separate fresh-session review task. Qualification,
-the risk floor, toolful execution and the exact-head binding are unchanged;
-the red-team prompt digest is bound to the review; it changes no merge-gate
-or keeper rule: a labelled red-team APPROVE clears the same checks as any
+Limits: the author's task stays refused, and so does every canonical
+concrete model that authored a commit on the branch, on any harness; a
+review whose author model is unknown is refused with a typed error unless
+`--review-author-model` supplies it; seats whose own code is under review
+stay excluded as usual; the reviewer always runs as a separate fresh-session
+review task, and a different model of the same family may serve only as
+same-family dissent, never as cross-family independence. Qualification, the
+risk floor, toolful execution and the exact-head binding are unchanged; the
+red-team prompt digest is bound to the review; it changes no merge-gate or
+keeper rule: a labelled red-team APPROVE clears the same checks as any
 recorded APPROVE, with its label kept on the PR comment, the commit status
-text and the task record. Label it `review_mode=red_team` in the PR comment, the
-commit status text and the task record; never call or count it cross-family.
+text and the task record. Label it `review_mode=red_team` in the PR comment,
+the commit status text and the task record; never call or count it
+cross-family.
 
 ### Post-merge cleanup — the single landing and cleanup recipe
 
