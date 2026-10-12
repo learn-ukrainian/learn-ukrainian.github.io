@@ -8,6 +8,8 @@ driven through ``delegate.cmd_dispatch`` with tripwires on every side effect.
 
 from __future__ import annotations
 
+import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -245,6 +247,9 @@ def record_verdict(
     monkeypatch, tmp_path, repo: MiniRepo, *, agent: str, model: str, listing=None, comments=None, **review
 ):
     """Run ``record_cf_verdict.record`` for a finished review of ``feature``; return its receipt."""
+    record_kwargs = review.pop("_record_kwargs", {})
+    statuses = review.pop("_statuses", None)
+    task_id = review.pop("_task_id", "review")
     base, head = repo.sha("origin/main"), repo.sha("feature")
     review_root = tmp_path / "review-tasks"
     review_root.mkdir(exist_ok=True)
@@ -258,8 +263,8 @@ def record_verdict(
         "status": "done",
         **review,
     }
-    (review_root / "review.json").write_text(json.dumps(fields), encoding="utf-8")
-    (review_root / "review.result").write_text("Checked.\n\nVERDICT: APPROVE\n", encoding="utf-8")
+    (review_root / f"{task_id}.json").write_text(json.dumps(fields), encoding="utf-8")
+    (review_root / f"{task_id}.result").write_text("Checked.\n\nVERDICT: APPROVE\n", encoding="utf-8")
     # Author provenance lives with the dispatch task records.
     for source in tmp_path.joinpath("tasks").rglob("*.json"):
         target = review_root / source.relative_to(tmp_path / "tasks")
@@ -277,8 +282,8 @@ def record_verdict(
                     "body": args.fields["body"],
                     "user": {"login": "fleet"},
                     "author_association": "MEMBER",
-                    "created_at": "t",
-                    "updated_at": "t",
+                    "created_at": "2026-10-05T12:01:00Z",
+                    "updated_at": "2026-10-05T12:01:00Z",
                 }
                 comments.append(item)
                 return item
@@ -296,9 +301,11 @@ def record_verdict(
     monkeypatch.setattr(recorder, "_repo_root", lambda: repo.root)
     monkeypatch.setattr(recorder.GitHubAdapter, "identity", lambda self: "fleet")
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments))
-    monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: None)
+    monkeypatch.setattr(
+        recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs) if statuses is not None else None
+    )
     monkeypatch.chdir(repo.root)
-    return recorder.record("review", pr_number=42, task_root=review_root, lock_root=tmp_path / "locks")
+    return recorder.record(task_id, pr_number=42, task_root=review_root, lock_root=tmp_path / "locks", **record_kwargs)
 
 
 GROK_RECEIPT = {
@@ -313,7 +320,9 @@ GROK_RECEIPT = {
     "agent,model,review",
     [("claude", "claude-opus-5-5", {}), ("codex", "gpt-6.1-sol", {}), ("cursor", "grok-4.7-high", GROK_RECEIPT)],
 )
-def test_auto_and_unknown_authors_preserve_review_independence(repo, tasks, monkeypatch, tmp_path, trailer, agent, model, review):
+def test_auto_and_unknown_authors_preserve_review_independence(
+    repo, tasks, monkeypatch, tmp_path, trailer, agent, model, review
+):
     task_record(tasks, "unattested", agent="cursor", resolved_model_known=False, resolved_model="unknown")
     task_record(tasks, "unrecognized", agent="codex", model="not-a-catalog-model")
     head = repo.commit(trailer)
@@ -588,6 +597,386 @@ def test_incomplete_enumeration_refuses_instead_of_truncating(repo, tasks):
             timeout_s=0,
         )
     assert refused.value.code == recorder.FACTS_TARGET_UNKNOWN
+
+
+# Frozen held-out groups for #10450. No fixture reaches a provider.
+REAL_ENSURE_WORKTREE = delegate._ensure_worktree
+
+
+def history_admission(repo, tasks, *, plan="red_team", writer=OPUS, owned="docs/a.md"):
+    agent, model = writer.split("/", 1)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            agent,
+            "--model",
+            model,
+            "--task-id",
+            "writer-1",
+            "--mode",
+            "workspace-write",
+            "--branch",
+            "feature",
+            "--owned-path",
+            owned,
+            "--authoring-review-plan",
+            plan,
+        ]
+    )
+    return delegate._authoring_review_admission(
+        args,
+        dispatch_agent=agent,
+        requested_harness=None,
+        requested_branch="feature",
+        worktree_arg="auto",
+        validated_worktree=None,
+        validated_cwd=None,
+        target_repo_root=repo.root,
+        repository=REPOSITORY,
+        default_repo=True,
+    )
+
+
+def save_history_admission(repo, tasks):
+    admission = history_admission(repo, tasks)
+    checked, refusal = delegate._authoring_recheck_under_lock(admission, readmit=lambda: None)
+    assert checked is admission and refusal is None
+    fields = delegate._authoring_review_state_fields(argparse.Namespace(), admission)
+    (tasks / "repair.json").write_text(json.dumps(fields))
+    return fields[delegate.AUTHORING_REVIEW_STATE_KEY]
+
+
+@pytest.fixture
+def frozen_history(repo, tasks, boundary, monkeypatch):
+    """Every group checks original object bytes/ancestry and the red-team rebase refusal."""
+    repo.publish()
+    rebase_admission = history_admission(repo, tasks)
+    commits = {sha: repo.git("cat-file", "commit", sha) for sha in repo.git("rev-list", "--all").split()}
+    original_commit = repo.commit
+
+    def commit(*args, **kwargs):
+        sha = original_commit(*args, **kwargs)
+        commits[sha] = repo.git("cat-file", "commit", sha)
+        return sha
+
+    monkeypatch.setattr(repo, "commit", commit)
+    yield
+    reachable = set(repo.git("rev-list", "--all").split())
+    assert commits.keys() <= reachable
+    for sha, raw in commits.items():
+        assert repo.git("cat-file", "commit", sha) == raw
+    with monkeypatch.context() as patch:
+        patch.setattr(delegate, "_git_is_ancestor", lambda *_args: True)
+        patch.setattr(delegate, "_authoring_post_rebase_recovery", lambda *_args: {})
+        refusal = delegate._authoring_rebase_result_refusal(
+            rebase_admission,
+            onto=repo.sha("origin/main"),
+            rebased=repo.sha("feature"),
+        )
+        assert refusal.code == delegate.AUTHORING_REVIEW_TARGET_MOVED
+        assert "not the planned rebase" in refusal.detail
+        patch.setattr(delegate, "_authoring_start_commit", lambda *_a: repo.sha("origin/main"))
+        patch.setattr(delegate, "_authoring_require_commit", lambda *_a, **_k: None)
+        patch.setattr(delegate, "_git_rev_count", lambda *_a: 1)
+        with pytest.raises(delegate._AuthoringReviewRefused, match="Branch not rebased"):
+            delegate._authoring_rebase_plan(rebase_admission, base="main")
+
+
+def review_history_args(*, mode="red_team"):
+    return delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--model",
+            "gpt-6.1-sol",
+            "--task-id",
+            "review",
+            "--mode",
+            "read-only",
+            "--branch",
+            "feature",
+            "--review-mode",
+            mode,
+            "--review-author-model",
+            "claude-opus-5-5",
+            "--review-risk",
+            "critical",
+            "--owned-path",
+            "docs/a.md",
+        ]
+    )
+
+
+def dispatch_history_facts():
+    args = review_history_args()
+    delegate._dispatch_review_changed_paths(args)
+    return delegate._dispatch_review_facts(args, ("docs/a.md",))
+
+
+def test_history_group_1_explicit_trailers_default_admitted(repo, tasks, frozen_history):
+    repo.commit(OPUS)
+    repo.publish()
+    admitted = history_admission(repo, tasks, plan="cross_family")
+    assert admitted.record["existing_families"] == ["anthropic"]
+    assert admitted.suspect_history == () and "review_plan" not in admitted.record
+
+
+def test_history_group_2_default_refused_before_provider(repo, tasks, boundary, capsys, frozen_history):
+    historical = repo.commit(None)
+    repo.publish()
+    result = boundary("--branch", "feature", "--owned-path", "docs/a.md")
+    receipt = assert_refused(boundary, capsys, repo, tasks, result, delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN)
+    assert "review_plan" not in receipt
+    with pytest.raises(delegate._AuthoringReviewRefused) as refusal:
+        history_admission(repo, tasks, plan="cross_family")
+    assert refusal.value.detail == (
+        f"commit {historical[:12]}: author model unknown: missing explicit X-Agent model trailer "
+        f"(head {historical[:12]})."
+    )
+
+
+def test_history_group_3_explicit_plan_receipt(repo, tasks, frozen_history):
+    historical = repo.commit(None)
+    repo.publish()
+    provisional = history_admission(repo, tasks)
+    assert "unknown_history" not in provisional.record
+    receipt = save_history_admission(repo, tasks)
+    assert receipt["review_plan"] == "red_team"
+    assert receipt["unknown_history"] == [historical]
+    assert receipt["assumed_model"] is None
+    assert receipt["reviewer"]["review_mode"] == "red_team"
+    facts = dispatch_history_facts()
+    assert facts.commits[0].authorship == "unknown_historical"
+    assert facts.existing_families == {"unknown"}
+
+
+def test_history_group_4_incoming_unknown_keeps_refusal(repo, tasks, frozen_history):
+    repo.commit(None)
+    repo.publish()
+    with pytest.raises(delegate._AuthoringReviewRefused) as refusal:
+        history_admission(repo, tasks, writer="cursor/not-a-real-model")
+    assert refusal.value.detail == (
+        f"incoming writer family unknown (cursor/not-a-real-model) (head {repo.sha('feature')[:12]})."
+    )
+    assert "unknown_history" not in refusal.value.record
+
+
+@pytest.mark.parametrize("case", ["moved", "live-checkout", "worker-lock"])
+def test_history_group_5_existing_occupancy_and_head_gates(
+    repo,
+    tasks,
+    boundary,
+    capsys,
+    monkeypatch,
+    frozen_history,
+    case,
+):
+    repo.commit(None)
+    repo.publish()
+    if case == "moved":
+        admitted = history_admission(repo, tasks)
+        repo.commit(OPUS, message="concurrent writer")
+        repo.publish()
+        _, refusal = delegate._authoring_recheck_under_lock(admitted, readmit=lambda: None)
+        assert refusal.code == delegate.AUTHORING_REVIEW_TARGET_MOVED
+        assert "unknown_history" not in refusal.record
+    elif case == "live-checkout":
+        monkeypatch.setattr(delegate, "_release_superseded_review_worktrees", lambda *_a, **_k: None)
+        monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda *_a: (False, "live"))
+        monkeypatch.setattr(delegate, "_release_stale_branch_holders", lambda **_k: None)
+        with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out"):
+            REAL_ENSURE_WORKTREE(
+                agent="claude",
+                task_id="writer-1",
+                raw_path="auto",
+                branch="feature",
+                base="main",
+                dry_run=True,
+                resolved_base_sha=repo.sha("feature"),
+            )
+    else:
+        admitted_dispatch_cleanup(monkeypatch)
+
+        @contextmanager
+        def occupied(*_a, **_k):
+            raise delegate.WorktreeLockError("worktree lock is held by live writer")
+            yield
+
+        monkeypatch.setattr(delegate, "worktree_lock", occupied)
+        with _admitted_host(monkeypatch):
+            rc, _ = boundary("--branch", "feature", "--owned-path", "docs/a.md", "--authoring-review-plan", "red_team")
+        assert rc == 1
+        assert "worktree lock is held by live writer" in capsys.readouterr().err
+    assert boundary.calls == []
+
+
+@pytest.mark.parametrize("owned", [SHARED_HOOK, CLAUDE_ADAPTER])
+def test_history_group_6_protected_gates_take_precedence(repo, tasks, frozen_history, owned):
+    repo.commit(None)
+    repo.publish()
+    # Exhaust the other critical-risk families while the incoming writer's seat is protected.
+    repo.commit(SOL, path="src/app.py")
+    repo.commit(GROK, path="docs/b.md")
+    repo.publish()
+    with pytest.raises(delegate._AuthoringReviewRefused) as refusal:
+        history_admission(repo, tasks, owned=owned)
+    assert refusal.value.code in {delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN, delegate.AUTHORING_REVIEW_NO_ROUTE}
+    assert "unknown_history" not in refusal.value.record
+
+
+@pytest.mark.parametrize("case", ["conflicting", "after-admission", "malformed", "empty-model", "invalid-model"])
+def test_history_group_7_only_frozen_zero_trailers(repo, tasks, frozen_history, case, monkeypatch, tmp_path):
+    if case == "conflicting":
+        repo.commit(f"{OPUS}\nX-Agent: {SOL}")
+        repo.publish()
+        with pytest.raises(delegate._AuthoringReviewRefused, match="missing explicit X-Agent"):
+            history_admission(repo, tasks)
+        return
+    if case in {"malformed", "empty-model", "invalid-model"}:
+        repo.commit("broken" if case == "malformed" else "claude/" if case == "empty-model" else "cursor/bad@@")
+        repo.publish()
+        with pytest.raises(delegate._AuthoringReviewRefused, match="author model unknown"):
+            history_admission(repo, tasks)
+        return
+    repo.commit(None)
+    repo.publish()
+    save_history_admission(repo, tasks)
+    repo.commit(None, message="unattributed repair")
+    repo.publish()
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent"):
+        dispatch_history_facts()
+    prompt = tmp_path / "red-team.txt"
+    prompt.write_text("Adversarial red-team review.")
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent"):
+        record_verdict(
+            monkeypatch,
+            tmp_path,
+            repo,
+            agent="codex",
+            model="gpt-6.1-sol",
+            review_mode="red_team",
+            prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+            _record_kwargs={"red_team_prompt": prompt},
+        )
+
+
+def test_history_group_8_trusted_dispatch_red_team_only(repo, tasks, frozen_history, monkeypatch):
+    historical = repo.commit(None)
+    repo.publish()
+    save_history_admission(repo, tasks)
+    args = review_history_args()
+    delegate._dispatch_review_changed_paths(args)
+    assert delegate._dispatch_review_facts(args, ("docs/a.md",)).unknown_history == (historical,)
+    args.review_mode = "cross_family"
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent"):
+        delegate._dispatch_review_facts(args, ("docs/a.md",))
+    args.review_mode = "red_team"
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {})
+    monkeypatch.setattr(recorder, "_run_json", lambda *_a, **_k: [])
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=lambda: [])
+    assert refusal is None and target is not None
+    assert args._red_team_branch_facts["unknown_history"] == [historical]
+
+
+def recorded_history(repo, tasks, monkeypatch, tmp_path, *, comments=None, **kwargs):
+    facts = dispatch_history_facts()
+    prompt = tmp_path / "red-team.txt"
+    prompt.write_text("Adversarial red-team review.")
+    return record_verdict(
+        monkeypatch,
+        tmp_path,
+        repo,
+        agent="codex",
+        model="gpt-6.1-sol",
+        comments=comments,
+        review_mode="red_team",
+        review_risk="critical",
+        review_author_model="claude-opus-5-5",
+        prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest(),
+        review_branch_facts=facts.receipt(),
+        _record_kwargs={"red_team_prompt": prompt},
+        **kwargs,
+    )
+
+
+def test_history_group_9_recording_and_idempotency(repo, tasks, frozen_history, monkeypatch, tmp_path):
+    from scripts.orchestration.integration_sweep import parse_marker
+
+    historical = repo.commit(None)
+    repo.publish()
+    save_history_admission(repo, tasks)
+    repo.commit(OPUS, message="qualified repair")
+    repo.publish()
+    comments = []
+    first = recorded_history(repo, tasks, monkeypatch, tmp_path, comments=comments)
+    second = recorded_history(repo, tasks, monkeypatch, tmp_path, comments=comments)
+    assert first["comment"] == "posted" and second["comment"] == "existing"
+    assert first["review_mode"] == "red_team" and first["unknown_history"] == [historical]
+    assert parse_marker(comments[0]["body"])["unknown_history"] == [historical]
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent"):
+        record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol")
+
+
+@pytest.mark.parametrize("tamper", ["mode", "history", "header", "marker-sha", "comment-sha"])
+@pytest.mark.parametrize("history_count", [1, 3])
+@pytest.mark.parametrize("task_id", ["review", "review-" + "long-task-id-" * 15])
+def test_history_group_10_unknown_real_family_never_becomes_cross_family(
+    repo,
+    tasks,
+    frozen_history,
+    monkeypatch,
+    tmp_path,
+    tamper,
+    history_count,
+    task_id,
+):
+    from scripts.orchestration.integration_sweep import lookup_verdict, parse_marker
+
+    # This fixture's original author uses Sol but leaves no model trailer.
+    original_author_model = "gpt-6.1-sol"
+    historical = sorted(repo.commit(None, message=f"unknown original author {i}") for i in range(history_count))
+    history_text = ",".join(historical)
+    repo.publish()
+    receipt = save_history_admission(repo, tasks)
+    assert receipt["reviewer"]["family"] == "openai"
+    assert receipt["reviewer"]["model"] == original_author_model
+    assert receipt["reviewer"]["review_mode"] == "red_team" and receipt["unknown_history"] == historical
+    comments, statuses = [], []
+    result = recorded_history(
+        repo, tasks, monkeypatch, tmp_path, comments=comments, _statuses=statuses, _task_id=task_id
+    )
+    assert result["status"] == "posted"
+    description = statuses[0]["description"]
+    expected = f"review_mode=red_team unknown_history={history_count} VERDICT: APPROVED openai {task_id}"
+    assert description == expected[:140]
+    assert description.startswith(f"review_mode=red_team unknown_history={history_count} ")
+    assert len(description) <= 140
+    assert result["unknown_history"] == historical
+    verdict = lookup_verdict(comments, repo.sha("feature"), "fleet")
+    assert verdict.review_mode == "red_team" and verdict.unknown_history == tuple(historical)
+    body = comments[0]["body"]
+    assert parse_marker(body)["unknown_history"] == historical
+    assert f"Unknown history: {history_text}\n" in body
+    for sha in historical:
+        assert sha in body.split("<details>", 1)[0]
+        assert sha in body.split(recorder.MARKER_PREFIX, 1)[1]
+    if tamper == "mode":
+        body = body.replace(" review_mode=red_team", "")
+    elif tamper == "history":
+        body = body.replace(f" unknown_history={history_text}", "")
+    elif tamper == "header":
+        body = body.replace(f"Unknown history: {history_text}\n", "")
+    elif tamper == "marker-sha":
+        body = body.replace(f" unknown_history={history_text}", f" unknown_history={','.join(historical[1:])}")
+    else:
+        body = body.replace(f"Unknown history: {history_text}\n", f"Unknown history: {','.join(historical[1:])}\n")
+    comments[0]["body"] = body
+    assert parse_marker(body) is None
+    assert lookup_verdict(comments, repo.sha("feature"), "fleet").state == "unknown"
+    with pytest.raises(recorder.RecordError, match=r"^RED_TEAM_REFUSED: verdict marker data unavailable$"):
+        recorded_history(repo, tasks, monkeypatch, tmp_path, comments=comments, _task_id=task_id)
 
 
 def test_head_missing_locally_refuses(repo, tasks):
@@ -1998,3 +2387,70 @@ def test_authorship_exclusion_requires_a_real_commit(repo, tasks, exclude):
             authorship_exclude_sha=exclude,
         )
     assert refused.value.code == recorder.FACTS_TARGET_UNKNOWN
+
+
+def test_closeout_unknown_history_preview_preserves_default_refusal(repo, tasks, tmp_path):
+    historical = repo.commit(None, message="historical conflict resolution")
+    repo.commit(SOL, message="validated current author")
+    state = tmp_path / "resolution.json"
+    from scripts.review.closeout_cli import main
+
+    assert (
+        main(
+            [
+                "--state-file",
+                str(state),
+                "target",
+                "--mode",
+                "branch",
+                "--branch",
+                "feature",
+                "--base",
+                "origin/main",
+                "--repo-root",
+                str(repo.root),
+            ]
+        )
+        == 0
+    )
+    args = [
+        "--state-file",
+        str(state),
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tasks),
+        "--risk",
+        "critical",
+    ]
+    assert main(args) == 1
+    refusal = json.loads(state.read_text())["resolved_reviewer"]
+    assert refusal["selected"] is None
+    assert (
+        f"commit {historical[:12]}: author model unknown: missing explicit X-Agent model trailer"
+        in refusal["fail_closed_reason"]
+    )
+    assert main([*args, "--review-mode", "red_team"]) == 0
+    resolved = json.loads(state.read_text())["resolved_reviewer"]
+    assert resolved["selected"]["concrete_model"] == "claude-opus-5-5"
+    assert resolved["review_mode"] == "red_team" and resolved["limitation"]
+    facts = resolved["branch_facts"]
+    assert facts["unknown_history"] == [historical]
+    assert {"anthropic", "openai", "google", "xai"} <= set(facts["excluded_families"])
+    assert not list(tasks.glob("*.json"))
+
+
+@pytest.mark.parametrize("archived", [False, True])
+def test_red_team_new_writer_adds_identity_without_overriding_current_task(repo, tasks, boundary, archived):
+    repo.commit(None)
+    task_record(tasks, "current-author", archived=archived, agent="codex", model="gpt-6.1-sol")
+    repo.commit("codex/current-author")
+    repo.publish()
+    admitted = history_admission(repo, tasks, writer=OPUS)
+    assert admitted.record["reviewer"]["model"] == "grok-4.7"
+    assert admitted.record["reviewer"]["review_mode"] == "red_team"
+    assert admitted.record["incoming_model"] == "claude-opus-5-5"
+    assert admitted.record["existing_families"] == ["openai", "unknown"]

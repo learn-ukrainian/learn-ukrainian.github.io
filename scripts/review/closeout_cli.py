@@ -452,6 +452,14 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             try:
                 raw_base = target_args.get("base")
                 exclude = authorship_exclude_sha(repo_root, base_branch=raw_base if isinstance(raw_base, str) else None)
+                # Resolution previews the explicit plan on the frozen target.
+                # Executing dispatch and publication still require the writer's
+                # admission receipt; this read-only preview creates no allowance.
+                history = (
+                    _checkout_git(repo_root, "rev-list", f"{target.base_sha}..{target.head_sha}").split()
+                    if args.review_mode == "red_team"
+                    else ()
+                )
                 facts = collect_branch_review_facts(
                     repository=args.repository or _checkout_repository(repo_root),
                     repo_root=repo_root,
@@ -462,6 +470,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
                     subject_seats=tuple(args.subject_seat or []),
                     subject_families=tuple(args.subject_family or []),
                     authorship_exclude_sha=exclude,
+                    unknown_history=history,
                 )
                 refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
             except (BranchFactsError, CloseoutStateError) as exc:

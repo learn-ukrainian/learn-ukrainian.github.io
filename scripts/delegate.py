@@ -15252,6 +15252,8 @@ class _AuthoringAdmission:
     # and the planned risk, for the rebase plan and its result (A7).
     collect: Callable[..., Any] | None = dataclasses.field(default=None, compare=False, repr=False)
     planned_risk: str | None = None
+    suspect_history: tuple[str, ...] = ()
+    history_remote_head_sha: str | None = None
 
 
 def _authoring_canonical_remote() -> str:
@@ -15563,6 +15565,9 @@ def _authoring_review_admission(
         "incoming_agent": dispatch_agent,
         "incoming_model": writer_model,
     }
+    review_plan = getattr(args, "authoring_review_plan", "cross_family")
+    if review_plan == "red_team":
+        record["review_plan"] = review_plan
     declared = _declared_owned_paths(getattr(args, "owned_path", None))
     if not declared:
         raise _AuthoringReviewRefused(
@@ -15679,7 +15684,13 @@ def _authoring_review_admission(
         except _AuthoringObservationUnknown as exc:
             raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
 
-    def collect(base_sha: str, head_sha: str, *, authorship_exclude_sha: str | None = authorship_exclude) -> Any:
+    def collect(
+        base_sha: str,
+        head_sha: str,
+        *,
+        authorship_exclude_sha: str | None = authorship_exclude,
+        unknown_history: Sequence[str] = (),
+    ) -> Any:
         """This writer's branch facts over ``base_sha..head_sha``; a fact that cannot be established refuses."""
         try:
             return collect_branch_review_facts(
@@ -15694,6 +15705,7 @@ def _authoring_review_admission(
                 subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
                 subject_families=tuple(getattr(args, "subject_family", None) or ()),
                 authorship_exclude_sha=authorship_exclude_sha,
+                unknown_history=unknown_history,
             )
         except BranchFactsError as exc:
             code = (
@@ -15703,7 +15715,36 @@ def _authoring_review_admission(
             )
             raise _AuthoringReviewRefused(code, f"{exc} (head {head_sha[:12]}).", record) from exc
 
-    facts = collect(review_base.sha, head)
+    remote_history_head = None
+    remote_history: tuple[str, ...] = ()
+    if review_plan == "red_team" and kind != "new-branch":
+        try:
+            remote_history_head = observed_branch_head or _ls_remote_branch_sha(remote, head_branch, strict=True)
+            if not remote_history_head:
+                raise _AuthoringObservationUnknown("the continuation's remote head is unavailable")
+            _authoring_require_commit(
+                remote_history_head, fetch=lambda: _fetch_existing_branch(head_branch), what="the remote branch head"
+            )
+            if not _git_is_ancestor(remote_history_head, head):
+                raise _AuthoringObservationUnknown("the remote branch head is not an ancestor of the continuation")
+            listed = _run_git_stdout(target_repo_root, "rev-list", remote_history_head)
+            if listed is None or listed[0] != 0:
+                raise _AuthoringObservationUnknown("the remote branch history is unavailable")
+            remote_history = tuple(listed[1].split())
+        except _AuthoringObservationUnknown as exc:
+            raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
+    facts = collect(review_base.sha, head, unknown_history=remote_history)
+    suspect_history = facts.unknown_history
+    # These facts can test downstream gates, but grant no historical allowance yet.
+    facts = dataclasses.replace(
+        facts,
+        commits=tuple(
+            dataclasses.replace(commit, source="suspect_historical", authorship=None)
+            if commit.source == "unknown_historical"
+            else commit
+            for commit in facts.commits
+        ),
+    )
     record.update(facts.receipt())
     if kind == "existing-worktree" and requested_branch:
         try:
@@ -15748,6 +15789,8 @@ def _authoring_review_admission(
         creation_sha=creation_sha,
         collect=collect,
         planned_risk=planned_risk,
+        suspect_history=suspect_history,
+        history_remote_head_sha=remote_history_head,
     )
     if kind == "new-branch" and not protected:
         record["applicable"] = False
@@ -15764,7 +15807,7 @@ def _authoring_require_route(facts: Any, *, planned_risk: str | None, record: di
 
     risk = str(planned_risk or AUTHORING_REVIEW_DEFAULT_RISK).strip().casefold()
     try:
-        resolution = structural_review_route(facts, risk=risk)
+        resolution = structural_review_route(facts, risk=risk, review_mode=record.get("review_plan", "cross_family"))
     except ModelCatalogError as exc:
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog unavailable ({exc}).", record
@@ -15779,6 +15822,7 @@ def _authoring_require_route(facts: Any, *, planned_risk: str | None, record: di
                     "model": resolution.selected.concrete_model,
                     "family": resolution.selected.family,
                     "route": resolution.selected.route,
+                    **({"review_mode": "red_team"} if record.get("review_plan") == "red_team" else {}),
                 }
                 if resolution.selected
                 else None
@@ -15800,6 +15844,16 @@ def _authoring_review_state_fields(args: argparse.Namespace, admission: _Authori
     """Task-record fields: the admission receipt, and explicit subjects the verdict recorder re-applies."""
     fields: dict[str, Any] = {}
     if admission is not None:
+        if admission.record.get("review_plan") == "red_team":
+            admission.record.update(
+                {
+                    "unknown_history": list(admission.suspect_history),
+                    "assumed_model": None,
+                    "history_remote_head_sha": admission.history_remote_head_sha,
+                }
+            )
+            if admission.record.get("reviewer"):
+                admission.record["reviewer"]["review_mode"] = "red_team"
         fields[AUTHORING_REVIEW_STATE_KEY] = admission.record
     for flag, key in (("subject_seat", "review_subject_seats"), ("subject_family", "review_subject_families")):
         values = getattr(args, flag, None)
@@ -15954,6 +16008,8 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
         onto = _authoring_start_commit(admission.remote, ref, _authoring_default_branch(admission.remote))
         _authoring_require_commit(onto, fetch=lambda: _fetch_base(base), what="the rebase target commit")
         behind = _git_rev_count(f"{admission.head_sha}..{onto}")
+        if behind > 0 and record.get("review_plan") == "red_team":
+            raise _AuthoringObservationUnknown("the red-team review plan is bound to the admitted history")
     except _AuthoringObservationUnknown as exc:
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
@@ -16026,7 +16082,11 @@ def _authoring_rebase_result_refusal(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc} after the rebase, so its authors are unknown; retry.", record
         )
     try:
-        actual = admission.collect(admission.review_base.sha, rebased) if on_plan else None
+        actual = (
+            admission.collect(admission.review_base.sha, rebased)
+            if on_plan and record.get("review_plan") != "red_team"
+            else None
+        )
         if actual is not None and actual.existing_families <= planned:
             _authoring_require_route(actual, planned_risk=admission.planned_risk, record=record, at=rebased)
             # Enforcement already decided from ``actual``. The receipt records that
@@ -16493,7 +16553,7 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
     eligibility. Runs after :func:`_dispatch_review_changed_paths` pinned the
     target. Returns None without a branch or PR target.
     """
-    from scripts.review.record_cf_verdict import collect_branch_review_facts
+    from scripts.review.record_cf_verdict import admitted_unknown_history, collect_branch_review_facts
 
     target = getattr(args, "_review_target", None)
     if target is None or not (
@@ -16501,8 +16561,32 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
         or (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None))
     ):
         return None
+    repository = _resolve_dispatch_repository(_local_repo_root) or ""
+    unknown_history = ()
+    if getattr(args, "review_mode", "cross_family") == "red_team":
+        branch = getattr(args, "branch", None)
+        if not branch and getattr(args, "pr", None):
+            from scripts.review.record_cf_verdict import FACTS_TARGET_UNKNOWN, BranchFactsError, RecordError, _run_json
+
+            try:
+                pr = _run_json(
+                    ["gh", "pr", "view", str(args.pr), "--repo", repository, "--json", "headRefName,headRefOid"]
+                )
+            except RecordError as exc:
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, str(exc)) from exc
+            if not isinstance(pr, dict) or pr.get("headRefOid") != target.head_sha or not pr.get("headRefName"):
+                raise BranchFactsError(FACTS_TARGET_UNKNOWN, "PR head moved or branch unavailable")
+            branch = pr["headRefName"]
+        if branch:
+            unknown_history = admitted_unknown_history(
+                repository=repository,
+                branch=branch,
+                head_sha=target.head_sha,
+                task_root=tasks_dir(),
+                repo_root=_local_repo_root,
+            )
     return collect_branch_review_facts(
-        repository=_resolve_dispatch_repository(_local_repo_root) or "",
+        repository=repository,
         repo_root=_local_repo_root,
         base_tip_sha=target.base_sha,
         head_sha=target.head_sha,
@@ -16510,6 +16594,7 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
         owned_paths=owned_paths,
         subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
         subject_families=tuple(getattr(args, "subject_family", None) or ()),
+        unknown_history=unknown_history,
     )
 
 
@@ -18742,6 +18827,16 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("cross_family", "red_team"),
         default=argparse.SUPPRESS,
         help="Review mode (default: cross_family); red_team requires a review and adversarial --prompt-file, with a separate task and fresh session.",
+    )
+    d.add_argument(
+        "--authoring-review-plan",
+        choices=("cross_family", "red_team"),
+        default=argparse.SUPPRESS,
+        help=(
+            "Planned review for a write dispatch (default: cross_family). Example: red_team permits "
+            "receipt-bound, remote historical commits with zero X-Agent trailers only after all admission gates; "
+            "later review requires --review-mode red_team. No author model is assumed."
+        ),
     )
     d.set_defaults(func=cmd_dispatch)
 
