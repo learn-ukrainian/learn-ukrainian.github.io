@@ -1214,6 +1214,56 @@ def test_supplied_manifest_json_refusal(tmp_path, capsys, entry_point, invalid):
 
 
 @pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
+@pytest.mark.parametrize("field", ["generation", "upload_seq"])
+@pytest.mark.parametrize(
+    "raw_value",
+    ["Infinity", "-Infinity", "1e999", "NaN", "1.5", "9223372036854775808", "1" * 5000],
+    ids=["positive-infinity", "negative-infinity", "exponent-overflow", "nan", "fraction", "integer-range", "integer-digits"],
+)
+def test_manifest_numeric_field_refusal(tmp_path, capsys, entry_point, field, raw_value):
+    source = tmp_path / "source"
+    source.mkdir()
+    state = _seed_state(source, thread_id="source-thread", generation=1)
+    manifest, blob, _hits = th._build_rollover_bundle(
+        source, source, agent=AGENT, state=state, stream_id=REGISTERED_STREAM
+    )
+    members = th._bundle_extract(blob)[1]
+    # Construct the large Python integer without relaxing the parser's digit cap.
+    manifest[field] = (10**5000 - 1) // 9 if len(raw_value) == 5000 else json.loads(raw_value)
+    if entry_point == "importer" and len(raw_value) != 5000:
+        manifest["bundle_sha256"] = th._bundle_digest(members, manifest)
+    remaining = {key: value for key, value in manifest.items() if key != field}
+    raw_manifest = json.dumps(remaining)[:-1] + f', "{field}": ' + raw_value + "}"
+    if entry_point == "importer":
+        blob = _raw_bundle([(th.ROLLOVER_BUNDLE_MANIFEST_NAME, raw_manifest.encode()), *members.items()])
+    _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob, raw_manifest=raw_manifest)
+
+
+@pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
+def test_embedded_manifest_duplicate_key_refusal(tmp_path, capsys, entry_point):
+    source = tmp_path / "source"
+    source.mkdir()
+    state = _seed_state(source, thread_id="source-thread")
+    manifest, blob, _hits = th._build_rollover_bundle(
+        source, source, agent=AGENT, state=state, stream_id=REGISTERED_STREAM
+    )
+    members = th._bundle_extract(blob)[1]
+    raw_manifest = b'{"agent":"' + BOUND_SENTINEL.encode() + b'",' + th._bundle_json(manifest)[1:]
+    blob = _raw_bundle([(th.ROLLOVER_BUNDLE_MANIFEST_NAME, raw_manifest), *members.items()])
+    _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob)
+
+
+@pytest.mark.parametrize("generation", [1, 2**63 - 1])
+@pytest.mark.parametrize("upload_seq", [0, 2**63 - 1])
+def test_manifest_numeric_boundaries_remain_orderable(generation, upload_seq):
+    manifest, _blob = _packet_bundle(AGENT, REGISTERED_STREAM)
+    manifest.update(generation=generation, upload_seq=upload_seq)
+    order = th._bundle_order(manifest)
+    assert order[0] == generation
+    assert order[-1] == upload_seq
+
+
+@pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
 @pytest.mark.parametrize(
     "runtime_name",
     [
@@ -1223,6 +1273,9 @@ def test_supplied_manifest_json_refusal(tmp_path, capsys, entry_point, invalid):
         "nested/remote.bundle.tgz",
         "_bundle-reconcile",
         "nested/_bundle-reconcile/receipt.json",
+        ".NATIVE-INTENT.LOCK",
+        "REMOTE.BUNDLE.TGZ",
+        "nested/_BUNDLE-RECONCILE/receipt.json",
     ],
 )
 def test_export_excluded_member_refusal_parity(tmp_path, capsys, entry_point, runtime_name):

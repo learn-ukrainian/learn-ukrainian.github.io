@@ -478,13 +478,22 @@ def _bundle_require_json_value(value: Any) -> None:
     """Refuse values that cannot be represented as finite, bounded-depth JSON."""
     try:
         json.dumps(value, allow_nan=False)
-    except (ValueError, TypeError, RecursionError) as exc:
+    except (ValueError, TypeError, OverflowError, RecursionError) as exc:
         raise ValueError("bundle JSON is invalid") from exc
+
+
+def _bundle_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError("bundle JSON has duplicate keys")
+        value[key] = item
+    return value
 
 
 def _bundle_load_json(payload: bytes) -> Any:
     try:
-        value = json.loads(payload.decode("utf-8"))
+        value = json.loads(payload.decode("utf-8"), object_pairs_hook=_bundle_json_object)
     except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         raise ValueError("bundle JSON is invalid") from exc
     _bundle_require_json_value(value)
@@ -581,7 +590,7 @@ def _bundle_replacement_status(replacement: Mapping[str, Any]) -> str:
 def _bundle_order(manifest: Mapping[str, Any]) -> tuple[int, int, datetime, str, int]:
     try:
         generation = int(manifest["generation"])
-    except (KeyError, TypeError, ValueError) as exc:
+    except (KeyError, TypeError, ValueError, OverflowError) as exc:
         raise ValueError("bundle generation is malformed") from exc
     status = _bundle_replacement_status(manifest)
     prepared_at = parse_iso_datetime(str(manifest.get("prepared_at") or ""))
@@ -590,9 +599,12 @@ def _bundle_order(manifest: Mapping[str, Any]) -> tuple[int, int, datetime, str,
     rollover_id = normalize_rollover_id(str(manifest.get("rollover_id") or ""))
     try:
         upload_seq = int(manifest.get("upload_seq", 0))
-    except (TypeError, ValueError) as exc:
+    except (TypeError, ValueError, OverflowError) as exc:
         raise ValueError("bundle upload_seq is malformed") from exc
-    if generation < 1 or upload_seq < 0:
+    if generation != manifest["generation"] or upload_seq != manifest.get("upload_seq", 0):
+        raise ValueError("bundle generation or upload_seq is not an integer")
+    # Stored generations and upload sequences must fit SQLite signed 64-bit integers.
+    if not 1 <= generation <= 2**63 - 1 or not 0 <= upload_seq <= 2**63 - 1:
         raise ValueError("bundle generation or upload_seq is out of range")
     return generation, ROLLOVER_BUNDLE_STATUS_RANK[status], prepared_at, rollover_id, upload_seq
 
@@ -810,6 +822,8 @@ def _bundle_read_limited(source: BinaryIO, limit: int, reason: str) -> bytes:
 def _bundle_extract(
     blob: bytes, *, manifest_override: Mapping[str, Any] | None = None
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
+    if manifest_override is not None:
+        _bundle_require_json_value(manifest_override)
     if len(blob) > ROLLOVER_BUNDLE_MAX_BYTES:
         raise ValueError("rollover bundle exceeds the 4 MiB cap")
     members: dict[str, bytes] = {}
@@ -910,7 +924,6 @@ def _bundle_extract(
     ):
         raise ValueError("rollover bundle fingerprint mismatch")
     if manifest_override is not None:
-        _bundle_require_json_value(manifest_override)
         outer = dict(manifest_override)
         if outer.get("schema") != ROLLOVER_BUNDLE_SCHEMA or outer.get("bundle_sha256") != manifest.get("bundle_sha256"):
             raise ValueError("supplied manifest does not match the embedded manifest")
@@ -1044,7 +1057,7 @@ def _bundle_validate_lease_member(
         raise ValueError("bundle lease identity does not match its manifest")
     try:
         generation = int(manifest["generation"])
-    except (KeyError, TypeError, ValueError) as exc:
+    except (KeyError, TypeError, ValueError, OverflowError) as exc:
         raise ValueError("bundle manifest generation is malformed") from exc
     if replacement.get("generation") != generation:
         raise ValueError("bundle lease generation does not match its manifest")
@@ -5875,7 +5888,7 @@ def _bundle_local_lineage_snapshot(
     receipt = load_state(receipt_path) if receipt_path.is_file() else {}
     try:
         upload_seq = int(receipt.get("upload_seq", 0))
-    except (TypeError, ValueError) as exc:
+    except (TypeError, ValueError, OverflowError) as exc:
         raise ValueError("local rollover bundle receipt has a malformed upload_seq") from exc
     local_manifest = _bundle_state_manifest(state, stream_id=stream_id, upload_seq=upload_seq)
     local_members = _bundle_local_members(
@@ -6540,7 +6553,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
             def upload_seq(row: Mapping[str, Any]) -> int:
                 try:
                     return int(row.get("upload_seq", (row.get("manifest") or {}).get("upload_seq", 0)))
-                except (TypeError, ValueError) as exc:
+                except (TypeError, ValueError, OverflowError) as exc:
                     raise ValueError("bundle API list upload sequence is malformed") from exc
 
             def row_agent(row: Mapping[str, Any]) -> str:
@@ -6578,7 +6591,7 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except RolloverBundleRefused as exc:
         # Semantic 4xx — not transient, must NOT fail open like unavailability.
         return _bundle_import_error(str(exc))
-    except (OSError, ValueError, KeyError, TypeError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, OverflowError) as exc:
         return _bundle_import_error(str(exc))
 
     try:

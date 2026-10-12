@@ -100,6 +100,23 @@ def _post(client: TestClient, lease: dict, manifest: dict, blob: bytes, *, strea
     )
 
 
+@pytest.mark.parametrize("error_type", [MemoryError, RuntimeError, OSError])
+def test_bundle_validator_operational_failure_remains_unavailable(tmp_path, monkeypatch, error_type):
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)
+    manifest, blob = _bundle(rollover_id="rollover-api1", body=b"safe handoff\n")
+
+    def unavailable(_manifest):
+        raise error_type("bundle-supplied-sentinel")
+
+    monkeypatch.setattr(th, "_bundle_require_json_value", unavailable)
+    response = _post(client, lease, manifest, blob)
+    assert response.status_code == 503
+    assert response.json()["detail"] == "Monitor session-stream store unavailable"
+    assert "bundle-supplied-sentinel" not in response.text
+    assert client.get(f"/api/epics/v1/{STREAM}/bundles").json()["bundles"] == []
+
+
 def test_bundle_upload_list_latest_idempotency_and_secret_refusal(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
     lease = _claim(client)

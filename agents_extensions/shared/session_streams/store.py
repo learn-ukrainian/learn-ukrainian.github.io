@@ -453,7 +453,7 @@ def validate_rollover_bundle_members(
     for value in names:
         name = _rollover_bundle_member_name(value)
         if name.startswith(lineage_prefix):
-            parts = name[len(lineage_prefix):].split("/")
+            parts = name[len(lineage_prefix):].casefold().split("/")
             if parts[-1] == ".native-intent.lock" or parts[-1].endswith(".bundle.tgz") or "_bundle-reconcile" in parts:
                 raise ValueError("rollover bundle member is excluded from export")
         if not (name.startswith(lineage_prefix) and len(name) > len(lineage_prefix)) and name not in handoffs:
@@ -1953,6 +1953,15 @@ class SessionStreamStore:
         app-thread holders must carry the same verified lifecycle receipt used
         by other immutable mutations.
         """
+        try:
+            from scripts.orchestration.thread_handoff import (
+                _bundle_require_json_value,
+                _bundle_secret_hits,
+                verify_rollover_bundle,
+            )
+        except ImportError as exc:
+            raise ValueError("rollover bundle validator is unavailable") from exc
+        _bundle_require_json_value(manifest)
         if not isinstance(manifest, Mapping):
             raise ValueError("rollover bundle manifest must be an object")
         if not isinstance(blob, bytes) or not blob:
@@ -1971,7 +1980,7 @@ class SessionStreamStore:
                 raise ValueError(f"rollover bundle {field} is malformed")
         try:
             generation = int(manifest_value["generation"])
-        except (KeyError, TypeError, ValueError) as exc:
+        except (KeyError, TypeError, ValueError, OverflowError) as exc:
             raise ValueError("rollover bundle generation is malformed") from exc
         if generation < 1:
             raise ValueError("rollover bundle generation must be positive")
@@ -1990,10 +1999,6 @@ class SessionStreamStore:
         files = manifest_value.get("files")
         if not isinstance(files, list) or not files:
             raise ValueError("rollover bundle manifest has no files")
-        try:
-            from scripts.orchestration.thread_handoff import _bundle_secret_hits, verify_rollover_bundle
-        except ImportError as exc:
-            raise ValueError("rollover bundle validator is unavailable") from exc
         # The importer runs this same validation; the archive's embedded
         # manifest, bound to the supplied identity, is what gets stored.
         embedded, members = verify_rollover_bundle(blob, repo_root=_REPO_ROOT, manifest_override=manifest_value)
