@@ -491,7 +491,7 @@ def test_public_receipt_creates_private_and_accepts_tracked_mode(tmp_path: Path)
     unsafe = tmp_path / "unsafe.json"
     unsafe.write_bytes(payload)
     os.chmod(unsafe, 0o700)
-    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="permissions must be 0600 or tracked 0644"):
+    with pytest.raises(parent_ctx.SchoolParentSectionContextError, match="permissions must be 0600, 0644, or 0664"):
         parent_ctx._regular_public(unsafe, "public receipt")
 
 
