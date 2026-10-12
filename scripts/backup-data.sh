@@ -99,6 +99,8 @@ LINUX_DB_SNAPSHOTS='[]'
 # Databases staged under DB_BATCH_ROOT and not yet uploaded (relative paths,
 # source modes, staged bytes); flush_database_batch uploads and clears them.
 DB_BATCH_ROOT=""
+# Where each online copy is made and measured before it joins the batch.
+DB_INCOMING_ROOT=""
 PENDING_DB_PATHS=()
 PENDING_DB_MODES=()
 PENDING_DB_BYTES=0
@@ -116,28 +118,9 @@ RUN_ID=""
 LINUX_MODE=0
 BACKUP_FAILURES=()
 
-write_restic_gate_receipt() {
-  local snapshot_id=$1
-  local staged_mirror_root="$STAGED_ROOT/data/lexicon/runner-mirror"
-  local live_mirror_root="$SOURCE/lexicon/runner-mirror"
-  local git_sha
-  local project_python
-  local common_dir
-  local primary_root
-
-  if [[ "${2:-}" == verified-live ]]; then
-    staged_mirror_root="$live_mirror_root"
-  fi
-  # The staged tree is the copy restic uploaded. Do not create unrelated data
-  # paths when it has no mirror; if a live mirror appeared after staging, it is
-  # not covered by this snapshot and must not receive a receipt.
-  if [[ ! -e "$staged_mirror_root" ]]; then
-    [[ ! -e "$live_mirror_root" && ! -L "$live_mirror_root" ]] ||
-      die "Runner mirror appeared after staging; refusing to claim restic durability."
-    return 0
-  fi
-  [[ ! -L "$staged_mirror_root" && -d "$staged_mirror_root" ]] ||
-    die "Staged runner mirror root must be a real directory: $staged_mirror_root"
+# The interpreter that runs the runner mirror receipt writer.
+runner_mirror_python() {
+  local project_python common_dir primary_root
 
   # Layout A: dispatch worktrees have no local .venv. Prefer an explicit
   # override, then the script checkout's .venv, then the primary checkout
@@ -162,6 +145,31 @@ write_restic_gate_receipt() {
   fi
   [[ -x "$project_python" ]] ||
     die "Runner mirror receipt writer requires the shared project interpreter (.venv/bin/python via primary checkout)"
+  printf '%s\n' "$project_python"
+}
+
+write_restic_gate_receipt() {
+  local snapshot_id=$1
+  local staged_mirror_root="$STAGED_ROOT/data/lexicon/runner-mirror"
+  local live_mirror_root="$SOURCE/lexicon/runner-mirror"
+  local git_sha
+  local project_python
+
+  if [[ "${2:-}" == verified-live ]]; then
+    staged_mirror_root="$live_mirror_root"
+  fi
+  # The staged tree is the copy restic uploaded. Do not create unrelated data
+  # paths when it has no mirror; if a live mirror appeared after staging, it is
+  # not covered by this snapshot and must not receive a receipt.
+  if [[ ! -e "$staged_mirror_root" ]]; then
+    [[ ! -e "$live_mirror_root" && ! -L "$live_mirror_root" ]] ||
+      die "Runner mirror appeared after staging; refusing to claim restic durability."
+    return 0
+  fi
+  [[ ! -L "$staged_mirror_root" && -d "$staged_mirror_root" ]] ||
+    die "Staged runner mirror root must be a real directory: $staged_mirror_root"
+
+  project_python="$(runner_mirror_python)" || exit 1
   git_sha="$(git_command -C "$PROJECT_ROOT" rev-parse HEAD)"
   "$project_python" "$REPO_ROOT/scripts/lexicon/runner/durable_mirror.py" \
     write-restic-gate-receipt \
@@ -174,13 +182,26 @@ write_restic_gate_receipt() {
     die "Could not write the runner mirror restic gate receipt after backup."
 }
 
-verify_linux_runner_mirror_and_receipt() {
+# "HASH PATH" lines for every file of the live runner mirror, in path order.
+live_runner_mirror_hashes() {
+  local mirror=$1 path
+  find "$mirror" -type f -printf '/data/lexicon/runner-mirror/%P\n' | LC_ALL=C sort |
+    while IFS= read -r path; do
+      printf '%s %s\n' "$(sha256sum < "$PROJECT_ROOT$path" | awk '{print $1}')" "$path"
+    done
+}
+
+# Prove, before the run is published, that the file-phase snapshot holds the
+# live runner mirror exactly. Its hashes are kept for the receipt step.
+verify_linux_runner_mirror() {
   local snapshot_id=$1 mirror="$SOURCE/lexicon/runner-mirror"
   local snapshot_files="$STAGE_DIR/mirror-snapshot-files"
   local live_files="$STAGE_DIR/mirror-live-files"
+  local verified="$STAGE_DIR/mirror-verified-hashes"
   local path snapshot_hash live_hash
   [[ -e "$mirror" || -L "$mirror" ]] || return 0
   [[ -d "$mirror" && ! -L "$mirror" ]] || die "Runner mirror root must be a real directory."
+  runner_mirror_python > /dev/null || exit 1
   restic_repository_command ls --json --recursive "$snapshot_id" \
     /data/lexicon/runner-mirror \
     | jq -r 'select(.struct_type == "node" and .type == "file") | .path' \
@@ -189,12 +210,29 @@ verify_linux_runner_mirror_and_receipt() {
     | LC_ALL=C sort > "$live_files"
   cmp -s "$snapshot_files" "$live_files" ||
     die "Runner mirror file set changed during backup; refusing to write a durability receipt."
+  : > "$verified"
   while IFS= read -r path; do
     snapshot_hash="$(restic_repository_command dump "$snapshot_id" "$path" | sha256sum | awk '{print $1}')"
-    live_hash="$(sha256sum "$PROJECT_ROOT${path}" | awk '{print $1}')"
+    live_hash="$(sha256sum < "$PROJECT_ROOT${path}" | awk '{print $1}')"
     [[ "$snapshot_hash" == "$live_hash" ]] ||
       die "Runner mirror content changed during backup; refusing to write a durability receipt."
+    printf '%s %s\n' "$live_hash" "$path" >> "$verified"
   done < "$snapshot_files"
+}
+
+# After the run is published, record the mirror's durability only if the live
+# mirror still holds exactly what verify_linux_runner_mirror proved.
+write_verified_linux_runner_mirror_receipt() {
+  local snapshot_id=$1 mirror="$SOURCE/lexicon/runner-mirror"
+  local verified="$STAGE_DIR/mirror-verified-hashes"
+  if [[ ! -f "$verified" ]]; then
+    [[ ! -e "$mirror" && ! -L "$mirror" ]] ||
+      die "Runner mirror appeared during backup; refusing to write a durability receipt."
+    return 0
+  fi
+  [[ -d "$mirror" && ! -L "$mirror" ]] || die "Runner mirror root must be a real directory."
+  live_runner_mirror_hashes "$mirror" | cmp -s "$verified" - ||
+    die "Runner mirror content changed during backup; refusing to write a durability receipt."
   write_restic_gate_receipt "$snapshot_id" verified-live
 }
 
@@ -1420,9 +1458,12 @@ snapshot_id_from_output() {
 
 # Stage one selected database into the pending batch: a consistent online
 # backup checked with PRAGMA integrity_check. A database that fails any step is
-# recorded as a failure and never uploaded.
+# recorded as a failure and never uploaded. The copy is made outside the batch
+# and measured first: it includes committed WAL content, so it can be larger
+# than the source's main file.
 linux_stage_database() {
-  local source_db=$1 relative=$2 staged_db check_output source_mode error staged_bytes
+  local source_db=$1 relative=$2 incoming_db staged_db check_output source_mode error staged_bytes
+  incoming_db="$DB_INCOMING_ROOT/$relative"
   staged_db="$DB_BATCH_ROOT/$relative"
   if ! error="$(check_one_db_space "$source_db" "$relative" 2>&1)"; then
     if ((${#PENDING_DB_PATHS[@]} == 0)); then
@@ -1436,37 +1477,45 @@ linux_stage_database() {
       return 1
     fi
   fi
-  if ! mkdir -p "$(dirname "$staged_db")"; then
+  if ! mkdir -p "$(dirname "$incoming_db")"; then
     BACKUP_FAILURES+=("Database $relative: could not create staging directory")
     return 1
   fi
   info "Creating consistent SQLite snapshot: $relative"
-  if ! error="$(sqlite_backup_command "$source_db" "$staged_db" 2>&1)"; then
+  if ! error="$(sqlite_backup_command "$source_db" "$incoming_db" 2>&1)"; then
     BACKUP_FAILURES+=("Database $relative: SQLite online backup failed: ${error:-unknown error}")
-    find "$staged_db" -maxdepth 0 -type f -delete
+    find "$incoming_db" -maxdepth 0 -type f -delete
     return 1
   fi
   [[ -z "$error" ]] || printf '%s\n' "$error"
   if ! source_mode="$(file_mode "$source_db")" ||
-    ! chmod "$source_mode" "$staged_db" ||
-    ! touch -r "$source_db" "$staged_db"; then
+    ! chmod "$source_mode" "$incoming_db" ||
+    ! touch -r "$source_db" "$incoming_db"; then
     BACKUP_FAILURES+=("Database $relative: could not preserve source metadata")
-    find "$staged_db" -maxdepth 0 -type f -delete
+    find "$incoming_db" -maxdepth 0 -type f -delete
     return 1
   fi
-  if ! check_output="$(sqlite3 "$(sqlite_immutable_uri "$staged_db")" 'PRAGMA integrity_check;' 2>&1)"; then
+  if ! check_output="$(sqlite3 "$(sqlite_immutable_uri "$incoming_db")" 'PRAGMA integrity_check;' 2>&1)"; then
     BACKUP_FAILURES+=("Database $relative: SQLite integrity_check failed: $check_output")
-    find "$staged_db" -maxdepth 0 -type f -delete
+    find "$incoming_db" -maxdepth 0 -type f -delete
     return 1
   fi
   if [[ "$check_output" != ok ]]; then
     BACKUP_FAILURES+=("Database $relative: SQLite integrity_check rejected staged database: $check_output")
-    find "$staged_db" -maxdepth 0 -type f -delete
+    find "$incoming_db" -maxdepth 0 -type f -delete
     return 1
   fi
-  if ! staged_bytes="$(stat -c '%s' "$staged_db")"; then
+  if ! staged_bytes="$(stat -c '%s' "$incoming_db")"; then
     BACKUP_FAILURES+=("Database $relative: could not measure staged database")
-    find "$staged_db" -maxdepth 0 -type f -delete
+    find "$incoming_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
+  if ((${#PENDING_DB_PATHS[@]} > 0 && PENDING_DB_BYTES + staged_bytes > DB_BATCH_MAX_BYTES)); then
+    flush_database_batch
+  fi
+  if ! mkdir -p "$(dirname "$staged_db")" || ! mv -- "$incoming_db" "$staged_db"; then
+    BACKUP_FAILURES+=("Database $relative: could not add the staged copy to the upload batch")
+    find "$incoming_db" "$staged_db" -maxdepth 0 -type f -delete 2>/dev/null
     return 1
   fi
   PENDING_DB_PATHS+=("$relative")
@@ -1567,13 +1616,16 @@ run_linux_backup() {
   fi
 
   DB_BATCH_ROOT="$STAGE_DIR/db-batch"
-  mkdir -m 700 "$DB_BATCH_ROOT"
+  DB_INCOMING_ROOT="$STAGE_DIR/db-incoming"
+  mkdir -m 700 "$DB_BATCH_ROOT" "$DB_INCOMING_ROOT"
   for source_db in "${SQLITE_BACKUP_SOURCES[@]}"; do
     relative=${source_db#"$PROJECT_ROOT"/}
     if [[ "$relative" == *$'\n'* || "$relative" == *$'\t'* ]]; then
       BACKUP_FAILURES+=("Database path cannot be recorded safely: $relative")
       continue
     fi
+    # Flushing early on the main file's size keeps peak staging low;
+    # linux_stage_database then charges the copy's exact size.
     source_bytes="$(stat -c '%s' "$source_db" 2>/dev/null)" || source_bytes=0
     if ((${#PENDING_DB_PATHS[@]} > 0 && PENDING_DB_BYTES + source_bytes > DB_BATCH_MAX_BYTES)); then
       flush_database_batch
@@ -1598,6 +1650,9 @@ run_linux_backup() {
     fi
   fi
 
+  # Once the lu-part-complete snapshot exists, restore latest selects this run,
+  # so every check that can fail runs first. This repository check covers
+  # every snapshot the receipt references.
   info "Checking repository metadata after backup."
   restic_repository_command check || BACKUP_FAILURES+=("Repository check failed")
   if ((${#BACKUP_FAILURES[@]} > 0)); then
@@ -1605,6 +1660,7 @@ run_linux_backup() {
     printf '  %s\n' "${BACKUP_FAILURES[@]}" >&2
     return 1
   fi
+  verify_linux_runner_mirror "$LINUX_BASE_SNAPSHOT"
 
   write_backup_receipt
   restic_repository_command backup --stdin --stdin-filename BACKUP-RECEIPT.json \
@@ -1612,8 +1668,8 @@ run_linux_backup() {
     --tag lu-part-complete --json < "$STAGED_ROOT/BACKUP-RECEIPT.json" \
     | tee "$STAGE_DIR/complete-backup.jsonl"
   snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/complete-backup.jsonl")"
-  restic_repository_command check
-  verify_linux_runner_mirror_and_receipt "$LINUX_BASE_SNAPSHOT"
+  # The durability receipt claims a completed run, so it follows the marker.
+  write_verified_linux_runner_mirror_receipt "$LINUX_BASE_SNAPSHOT"
   info "Linux backup run $RUN_ID complete; receipt snapshot $snapshot_id."
 }
 
@@ -1804,8 +1860,16 @@ validate_restore_scope() {
     die "--path must be a non-empty path relative to the run root (for example data/atlas.db)."
   [[ "/$scope/" != *"/../"* && "/$scope/" != *"/./"* && "$scope" != *//* ]] ||
     die "--path must not contain '.', '..', or empty components: $scope"
-  [[ "$scope" != *[\*\?\[\\]* && "$scope" != *$'\n'* && "$scope" != *$'\t'* ]] ||
-    die "--path must be a literal path (no glob characters): $scope"
+  [[ "$scope" != *$'\n'* && "$scope" != *$'\t'* ]] ||
+    die "--path must be a literal path (no newline or tab): $scope"
+}
+
+# Glob characters in --path are refused unless the run's receipt records that
+# exact database path; its restore then matches it literally.
+validate_restore_scope_is_literal() {
+  local scope=$1 scope_is_database=$2
+  [[ "$scope" != *[\*\?\[\\]* || "$scope_is_database" -eq 1 ]] ||
+    die "--path must be a literal path (no glob characters unless it names a recorded database): $scope"
 }
 
 run_restore() {
@@ -1864,8 +1928,11 @@ run_restore() {
     jq -e '
       .linux_run.run_id | type == "string" and length > 0
     ' <<< "$receipt_json" >/dev/null || die "Restored Linux receipt has no run ID."
+    # Tab and newline delimit the inventory read below; the writer never
+    # records a path containing them.
     jq -e '(.linux_run.databases | type == "array") and
       (.linux_run.databases | all(.[]; (.path | type == "string") and
+        (.path | test("[\t\n]") | not) and
         (.snapshot_id | type == "string") and (.mode | type == "string")))' \
       <<< "$receipt_json" >/dev/null || die "Restored Linux receipt has invalid database inventory."
     base_id="$(jq -r '.linux_run.base_snapshot_id' <<< "$receipt_json")"
@@ -1906,7 +1973,7 @@ run_restore() {
       db_ids+=("$database_id")
       db_modes+=("$database_mode")
       db_id_members[$database_id]=$((${db_id_members[$database_id]:-0} + 1))
-    done < <(jq -r '.linux_run.databases[] | [.path, .snapshot_id, .mode] | @tsv' <<< "$receipt_json")
+    done < <(jq -r '.linux_run.databases[] | [.path, .snapshot_id, .mode] | join("\t")' <<< "$receipt_json")
     for index in "${!db_paths[@]}"; do
       database_path=${db_paths[$index]}
       database_id=${db_ids[$index]}
@@ -1937,6 +2004,7 @@ run_restore() {
       step_ls_paths+=("$scope")
     fi
   fi
+  validate_restore_scope_is_literal "$scope" "$scope_is_database"
 
   # Exact size of what will be restored: whole snapshots via restic stats,
   # path-scoped file-phase reads via ls.

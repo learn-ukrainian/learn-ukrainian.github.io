@@ -38,16 +38,18 @@ restic rclone path with that final directory name.
   `.backup` command into a private staging batch and checked with
   `PRAGMA integrity_check`; a database that fails either step is never
   uploaded. The batch is uploaded as one `lu-part-db` restic snapshot and
-  cleared once the next database would push it past
+  cleared once the next database copy would push it past
   `LU_BACKUP_DB_BATCH_MAX_BYTES` (default 1 GiB; a larger database goes
-  alone), and at the end of the phase. Each restic run pays a fixed repository
+  alone), and at the end of the phase. Each copy is measured before it joins
+  the batch, because it includes committed WAL content and can be larger than
+  the source's main file. Each restic run pays a fixed repository
   open, index load, and lock cost, so one upload per database made runs with
   thousands of small databases take hours. Before each database, the script
   checks staging free space against its DB plus WAL size and a 2 GiB reserve;
   if that fails while a batch is pending, it uploads the batch and checks
-  again. No reflink or full-tree copy is required, so peak extra disk is about
-  the larger of the batch budget and the largest single database, never the
-  sum. Non-database files can
+  again. No reflink or full-tree copy is required, so peak extra disk is at
+  most about the batch budget plus one database copy, never the sum.
+  Non-database files can
   change while restic reads them; coordinate writers for application-level
   consistency and inspect recovery-critical manifests during a restore drill.
 - On Linux, `LU_BACKUP_TMPDIR` may point at the designated staging parent
@@ -106,7 +108,10 @@ restic rclone path with that final directory name.
   scheduled weekly, not on every backup.
 - Restic commits snapshots atomically. A failed upload does not replace an
   earlier recovery point. On Linux, a final receipt snapshot marks the run
-  complete; `restore latest` selects only completed runs.
+  complete; `restore latest` selects only completed runs. Every check that can
+  fail the run (the repository check, which covers every snapshot of the run,
+  and the runner-mirror comparison) runs before that receipt snapshot is
+  written, so a run that fails a check is never selected.
 
 Restic documents the [rclone backend][restic-rclone], [backup dry runs][restic-backup],
 [restore dry runs][restic-restore], and [repository integrity checks][restic-check].
@@ -231,11 +236,12 @@ snapshots) and historical runs with one snapshot per database. All parts share
 one run ID, and the final receipt snapshot is tagged `lu-part-complete`.
 `restore latest` uses that completed receipt to reassemble the tree, restoring
 each database snapshot once; `--path` of one database restores only that file
-from its snapshot. The
-remote repository itself is encrypted. The final process
-exit code belongs to the operator log: an in-snapshot file cannot truthfully
-contain the outcome of the repository check that runs after the snapshot is
-committed.
+from its snapshot. `--path` may contain glob characters (`*`, `?`, `[`, `\`)
+only when it names a database path recorded in the receipt; that file is then
+matched literally. Any other `--path` with glob characters is refused before
+anything is written. The remote repository itself is encrypted. The final
+process exit code belongs to the operator log; the in-snapshot receipt does
+not record it.
 
 When `data/lexicon/runner-mirror/` exists, a successful `backup --execute`
 also writes its local `RESTIC-GATE-RECEIPT.json` **after** the repository
@@ -243,8 +249,11 @@ check. This is distinct from the in-snapshot `BACKUP-RECEIPT.json`: it binds
 each current runner-mirror `manifest.json` checksum to the completed restic
 snapshot so the pre-wipe gate works without credentials or network access. On
 Linux, the script compares the runner-mirror file list and SHA-256 hashes in
-the live-file snapshot with the live mirror before writing that local gate
-receipt.
+the live-file snapshot with the live mirror before it writes the receipt
+snapshot. After that snapshot, it writes the local gate receipt only if the
+live mirror still has the same hashes. If the mirror changes in that window,
+the run stays complete and restorable, but the command exits non-zero and
+writes no gate receipt, so the pre-wipe gate stays closed.
 See [the Atlas runner durability runbook](atlas-20k-runner-durability.md) for
 the required snapshot → backup → gate → wipe order.
 

@@ -153,12 +153,17 @@ if [[ "${1:-}" == "backup" ]]; then
     if [[ -n "${FAKE_DB_PHASE_EXIT:-}" ]]; then
       exit "$FAKE_DB_PHASE_EXIT"
     fi
+    batch_files=0
+    batch_bytes=0
     while IFS= read -r -d '' staged; do
       staged="${staged#./}"
       mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$staged")"
       cp -p "$staged" "$FAKE_SNAPSHOT_DIR/$staged"
       printf 'db_file=<%s>\n' "$staged" >> "$FAKE_RESTIC_LOG"
+      batch_files=$((batch_files + 1))
+      batch_bytes=$((batch_bytes + $(stat -c '%s' "$staged")))
     done < <(find . -type f -print0)
+    printf 'db_batch=<%s %s>\n' "$batch_files" "$batch_bytes" >> "$FAKE_RESTIC_LOG"
   else
     if [[ -n "${FAKE_FILE_PHASE_EXIT:-}" ]]; then
       exit "$FAKE_FILE_PHASE_EXIT"
@@ -246,7 +251,8 @@ if [[ "${1:-}" == "restore" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
     fi
   fi
 fi
-if [[ "${1:-}" == "backup" && -n "${FAKE_MUTATED_LIVE_STATE_SOURCE:-}" ]]; then
+if [[ "${1:-}" == "backup" && -n "${FAKE_MUTATED_LIVE_STATE_SOURCE:-}" ]] &&
+  [[ -z "${FAKE_MUTATE_ON_PART:-}" || " $* " == *" ${FAKE_MUTATE_ON_PART} "* ]]; then
   cp "$FAKE_MUTATED_LIVE_STATE_SOURCE" "$FAKE_MUTATED_LIVE_STATE_DESTINATION"
   cp "$FAKE_MUTATED_LIVE_MANIFEST_SOURCE" "$FAKE_MUTATED_LIVE_MANIFEST_DESTINATION"
 fi
@@ -349,6 +355,16 @@ part=""
 for argument in "${args[@]}"; do
   [[ "$argument" != lu-part-* ]] || part="$argument"
 done
+if [[ "${args[0]:-}" == "check" ]]; then
+  case "${TEST_FAIL_CHECK:-}" in
+    always) exit 70 ;;
+    after-marker) ! grep -qx 'backup lu-part-complete' "$TEST_INVOCATION_LOG" || exit 70 ;;
+  esac
+fi
+if [[ "$part" == lu-part-db && -n "${TEST_MUTATE_FILE:-}" ]]; then
+  # The file-phase snapshot is already written: the live copy now differs.
+  printf 'changed during backup\n' >> "$TEST_MUTATE_FILE"
+fi
 printf '%s %s\n' "${args[0]:-}" "$part" >> "$TEST_INVOCATION_LOG"
 export RESTIC_REPOSITORY="$TEST_LOCAL_RESTIC_REPOSITORY"
 exec "$TEST_REAL_RESTIC" "${args[@]}"
@@ -593,6 +609,7 @@ def test_execute_does_not_write_restic_gate_receipt_when_check_fails(
 
     assert result.returncode != 0
     assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
+    assert "arg=<lu-part-complete>" not in _log(environment)
 
 
 def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
@@ -624,6 +641,7 @@ def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
         ),
         encoding="utf-8",
     )
+    original_manifest = (mirror / "manifest.json").read_bytes()
     mutated_state = b"runner-state-after-race"
     mutation_dir = staging.parent / "race-mutation"
     mutation_dir.mkdir()
@@ -665,6 +683,21 @@ def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
     assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
     with pytest.raises(DurableMirrorError, match="no restic gate receipt"):
         require_durable(mirror)
+    # The mismatch is found before the run is published as complete.
+    assert "arg=<lu-part-complete>" not in _log(environment)
+
+    # A change while the completion marker uploads (after verification) must
+    # not let the live content it never verified receive a durability receipt.
+    state_path.write_bytes(original_state)
+    (mirror / "manifest.json").write_bytes(original_manifest)
+    Path(environment["FAKE_RESTIC_LOG"]).unlink()
+    shutil.rmtree(environment["FAKE_SNAPSHOT_DIR"])
+    environment["FAKE_MUTATE_ON_PART"] = "lu-part-complete"
+    mutated_again = _run(environment, "backup", "--execute")
+
+    assert mutated_again.returncode != 0
+    assert "refusing to write a durability receipt" in mutated_again.stderr
+    assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
 
 
 def test_execute_snapshots_checkpointed_wal_database_without_sidecars(
@@ -2859,11 +2892,13 @@ def test_receipt_inventory_larger_than_one_argument_is_recorded(
     environment, source, _staging, _legacy = backup_environment
     project = source.parent
     deep = project / "batch_state" / "fixtures"
-    batch = Path(environment["LU_BACKUP_TMPDIR"]) / f"learn-ukrainian-backup.{os.getuid()}.stage" / "db-batch"
+    stage = Path(environment["LU_BACKUP_TMPDIR"]) / f"learn-ukrainian-backup.{os.getuid()}.stage"
     # Long paths, kept under SQLite's 512-byte pathname limit for both the
-    # source and its staged copy, make each inventory entry large so a few
-    # hundred databases pass 128 KiB.
-    remaining = 500 - max(len(str(project)), len(str(batch))) - len("/batch_state/fixtures/000.db")
+    # source and its staged copy (made under db-incoming, then moved into
+    # db-batch), make each inventory entry large so a few hundred databases
+    # pass 128 KiB.
+    staged = max(len(str(stage / "db-incoming")), len(str(stage / "db-batch")))
+    remaining = 500 - max(len(str(project)), staged) - len("/batch_state/fixtures/000.db")
     while remaining > 1:
         component = min(remaining - 1, 200)
         deep = deep / ("d" * component)
@@ -3155,3 +3190,155 @@ def test_restore_plans_a_shared_database_snapshot_once_and_scopes_it_literally(
     listings = [line for line in _log(environment).splitlines() if "arg=<ls>" in line]
     assert listings
     assert all(f"arg=<{ATLAS_ID}> arg=</batch_state/odd name $HOME.db>" in line for line in listings)
+
+
+def test_wal_backed_copies_are_charged_their_staged_size_against_the_batch_budget(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, staging, _legacy = backup_environment
+    budget = 1024 * 1024
+    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = str(budget)
+    # Most of each WAL database lives in its open -wal file, so its main file
+    # understates the online copy that joins the batch.
+    connections = []
+    try:
+        for name in ("first.db", "second.db"):
+            connection = sqlite3.connect(source / name)
+            connections.append(connection)
+            connection.execute("PRAGMA journal_mode=WAL")
+            connection.execute("PRAGMA wal_autocheckpoint=0")
+            connection.execute("CREATE TABLE recovery_probe (value BLOB NOT NULL)")
+            connection.execute("INSERT INTO recovery_probe VALUES (zeroblob(700000))")
+            connection.commit()
+            assert (source / name).stat().st_size < budget // 8
+            assert (source / f"{name}-wal").stat().st_size > budget // 2
+        # A database larger than the budget still uploads, alone. data/ is
+        # walked before batch_state/, so it follows the WAL databases.
+        large = sqlite3.connect(source.parent / "batch_state" / "large.db")
+        try:
+            large.execute("CREATE TABLE recovery_probe (value BLOB NOT NULL)")
+            large.execute("INSERT INTO recovery_probe VALUES (zeroblob(1200000))")
+            large.commit()
+        finally:
+            large.close()
+        files = [source / name for name in ("first.db", "first.db-wal", "second.db", "second.db-wal")]
+        files.append(source.parent / "batch_state" / "large.db")
+        before = {path: _file_sha256(path) for path in files}
+
+        result = _run(environment, "backup", "--execute")
+        after = {path: _file_sha256(path) for path in files}
+    finally:
+        for connection in connections:
+            connection.close()
+
+    assert result.returncode == 0, result.stderr
+    assert after == before
+    batches = [tuple(map(int, batch.split())) for batch in re.findall(r"db_batch=<(\d+ \d+)>", _log(environment))]
+    assert sorted(count for count, _bytes in batches) == [1, 1, 1], batches
+    assert all(staged <= budget or count == 1 for count, staged in batches), batches
+    assert _uploaded_databases(_log(environment)) == {"data/first.db", "data/second.db", "batch_state/large.db"}
+    snapshot = Path(environment["FAKE_SNAPSHOT_DIR"])
+    for relative, blob in (("data/first.db", 700000), ("data/second.db", 700000), ("batch_state/large.db", 1200000)):
+        with sqlite3.connect(f"file:{snapshot / relative}?mode=ro", uri=True) as connection:
+            assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+            assert connection.execute("SELECT length(value) FROM recovery_probe").fetchall() == [(blob,)]
+    assert list(staging.iterdir()) == []
+
+
+def test_database_paths_with_glob_characters_restore_scoped_and_whole(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    literal = "data/w*e?i[r]d\\x.db"
+    # What the literal path would match if it were read as a glob.
+    lookalike = "data/wZZeQirdx.db"
+    nested = "batch_state/run[1]/state*.sqlite3"
+    databases = [literal, lookalike, nested]
+    for index, relative in enumerate(databases):
+        _make_database(project / relative, f"row-{index}")
+    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    database_hashes = {relative: _logical_sha256(project / relative) for relative in databases}
+
+    backed_up = _run(environment, "backup", "--execute")
+
+    assert backed_up.returncode == 0, backed_up.stderr
+    assert _backup_invocations(environment).count("backup lu-part-db") == 1
+
+    for relative in (literal, nested):
+        scoped_target = tmp_path / f"scoped-{databases.index(relative)}"
+        scoped = _run(environment, "restore", "latest", "--to", str(scoped_target), "--path", relative, "--execute")
+        assert scoped.returncode == 0, scoped.stderr
+        assert _restored_files(scoped_target) == [relative]
+        assert _logical_sha256(scoped_target / relative) == database_hashes[relative]
+
+    target = tmp_path / "whole"
+    restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+    assert restored.returncode == 0, restored.stderr
+    for relative, expected in database_hashes.items():
+        assert _logical_sha256(target / relative) == expected, relative
+    assert (target / "data" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
+
+    # A wildcard that names no recorded database is still refused before any write.
+    for wildcard in ("data/w*", "data/*.db", "batch_state/run[1]"):
+        refused_target = tmp_path / "refused"
+        refused = _run(environment, "restore", "latest", "--to", str(refused_target), "--path", wildcard, "--execute")
+        assert refused.returncode != 0, wildcard
+        assert "--path must be a literal path" in refused.stderr, (wildcard, refused.stderr)
+        assert not refused_target.exists(), wildcard
+
+
+@pytest.mark.parametrize("failure", ["every-check", "check-after-marker", "mirror-changed"])
+def test_a_failed_run_never_leaves_a_completed_run_for_restore_latest(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+    failure: str,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    mirror = source / "lexicon" / "runner-mirror" / "run-20k"
+    mirror.mkdir(parents=True)
+    state = mirror / "state.txt"
+    state.write_text("state\n", encoding="utf-8")
+    (mirror / "manifest.json").write_text(
+        json.dumps(
+            {
+                "schema": "atlas-runner-mirror-manifest",
+                "schema_version": 1,
+                "generated_at": 1.0,
+                "file_count": 1,
+                "total_bytes": 6,
+                "files": [{"path": "state.txt", "bytes": 6, "sha256": hashlib.sha256(b"state\n").hexdigest()}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    _make_database(source / "first.db")
+    if failure == "every-check":
+        environment["TEST_FAIL_CHECK"] = "always"
+    elif failure == "check-after-marker":
+        environment["TEST_FAIL_CHECK"] = "after-marker"
+    else:
+        environment["TEST_MUTATE_FILE"] = str(state)
+
+    result = _run(environment, "backup", "--execute")
+    invocations = Path(environment["TEST_INVOCATION_LOG"]).read_text(encoding="utf-8").splitlines()
+    target = tmp_path / "restore-latest"
+    latest = _run(environment, "restore", "latest", "--to", str(target))
+
+    completed = "backup lu-part-complete" in invocations
+    # Publishing the completion marker is the run's last repository operation.
+    assert not completed or invocations[-1] == "backup lu-part-complete", invocations
+    assert completed == (result.returncode == 0), (invocations, result.stderr)
+    if failure != "check-after-marker":
+        assert result.returncode != 0
+    if result.returncode != 0:
+        assert latest.returncode != 0
+        assert "No completed Linux backup run is available" in latest.stderr
+        assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
+    else:
+        assert latest.returncode == 0, latest.stderr
+        assert (mirror.parent / "RESTIC-GATE-RECEIPT.json").is_file()
+    assert not target.exists()
