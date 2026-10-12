@@ -45,7 +45,7 @@ from scripts.orchestration.integration_sweep import (
     SweepError,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, iter_task_records
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.model_catalog import (
@@ -1231,13 +1231,22 @@ def require_no_outside_rejection(comments: Any, sha: str) -> None:
 def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
     """Read the active task ledger before red-team admission or publication."""
     try:
-        # iter_task_records treats a missing/unreadable directory as empty;
-        # establish readability first so this guard fails closed.
+        # The shared iterator suppresses enumeration errors. Read locally so
+        # both an unreadable directory and a failed glob refuse this guard.
         list(task_root.iterdir())
-        for path in iter_task_records(task_root, include_archive=False):
+        for path in sorted(path for path in task_root.glob("*.json") if path.is_file()):
             task = json.loads(path.read_text(encoding="utf-8"))
             if not isinstance(task, dict):
                 raise ValueError("task record is not an object")
+            prep = task.get("worktree_prep")
+            prep_sha = prep.get("base_sha") if isinstance(prep, dict) else None
+            prep_matches = (
+                isinstance(prep_sha, str)
+                and SHA.fullmatch(prep_sha.casefold())
+                and prep_sha.casefold() == sha.casefold()
+            )
+            # Prep rows lack review typing and repository metadata. Fail closed:
+            # even non-review dispatches preparing this head briefly block red-team.
             review = (
                 task.get("review")
                 or task.get("pr") is not None
@@ -1249,23 +1258,31 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
                 or task.get("type") == "review"
             )
             if (
-                review
-                and isinstance(task.get("repository"), str)
-                and normalize_repository(task["repository"]) == normalize_repository(repository)
+                (review or prep_matches)
+                and (
+                    (
+                        isinstance(task.get("repository"), str)
+                        and normalize_repository(task["repository"]) == normalize_repository(repository)
+                    )
+                    or (prep_matches and "repository" not in task)
+                )
                 and task.get("status") in {"spawning", "running", "queued"}
                 and task.get("review_mode", "cross_family") != "red_team"
-                and sha
-                in {
-                    task.get(field)
-                    for field in (
-                        "pinned_head",
-                        "worktree_base_sha",
-                        "review_head",
-                        "review_head_sha",
-                        "pr_head_sha",
-                        "head_sha",
-                    )
-                }
+                and (
+                    prep_matches
+                    or sha
+                    in {
+                        task.get(field)
+                        for field in (
+                            "pinned_head",
+                            "worktree_base_sha",
+                            "review_head",
+                            "review_head_sha",
+                            "pr_head_sha",
+                            "head_sha",
+                        )
+                    }
+                )
             ):
                 raise RecordError("RED_TEAM_REFUSED: outside-family review in flight for this head")
     except (OSError, ValueError, TypeError) as exc:

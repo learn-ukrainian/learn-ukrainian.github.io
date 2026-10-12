@@ -3151,7 +3151,21 @@ def test_red_team_dispatch_checks_outside_rejection_history(tmp_path, monkeypatc
 
 
 @pytest.mark.parametrize("target_kind", ["branch", "pr"])
-@pytest.mark.parametrize("history", ["running", "done", "other-head", "red-team", "unreadable", "invalid-head"])
+@pytest.mark.parametrize(
+    "history",
+    [
+        "running",
+        "done",
+        "other-head",
+        "red-team",
+        "unreadable",
+        "invalid-head",
+        "prep",
+        "other-head-prep",
+        "red-team-prep",
+        "glob-error",
+    ],
+)
 def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeypatch, target_kind, history):
     from scripts.review import record_cf_verdict as recorder
     from scripts.review.target_resolution import ReviewTarget
@@ -3166,6 +3180,17 @@ def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeyp
     tasks.mkdir()
     if history == "unreadable":
         (tasks / "bad.json").write_text("{")
+    elif history in {"prep", "other-head-prep", "red-team-prep"}:
+        (tasks / "outside-review.json").write_text(
+            json.dumps(
+                {
+                    "task_id": "outside-review",
+                    "status": "spawning",
+                    "review_mode": "red_team" if history == "red-team-prep" else "cross_family",
+                    "worktree_prep": {"base_sha": OTHER if history == "other-head-prep" else SHA},
+                }
+            )
+        )
     else:
         write_task(
             tasks,
@@ -3187,6 +3212,16 @@ def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeyp
     monkeypatch.setattr(recorder, "_run_json", lambda *_a, **_k: [])
     monkeypatch.setattr(recorder, "_pr", lambda *_a: {"number": 42, "headRefOid": SHA, "headRefName": BRANCH})
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda *_a: [])
+    if history == "glob-error":
+        original = Path.glob
+
+        def unreadable(path, *args, **kwargs):
+            if path == tasks:
+                assert list(path.iterdir())  # Directory enumeration succeeds before glob fails.
+                raise OSError("ledger glob failed")
+            return original(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "glob", unreadable)
 
     def no_effects(*_a, **_k):
         pytest.fail("admission performed a launch, worktree or task publication side effect")
@@ -3195,10 +3230,10 @@ def test_red_team_dispatch_ledger_guard_without_open_branch_pr(tmp_path, monkeyp
         monkeypatch.setattr(delegate, name, no_effects)
     monkeypatch.setattr(delegate.subprocess, "Popen", no_effects)
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
-    if history == "running":
+    if history in {"running", "prep"}:
         assert refusal == "RED_TEAM_REFUSED: outside-family review in flight for this head"
         assert target is None
-    elif history in {"unreadable", "invalid-head"}:
+    elif history in {"unreadable", "invalid-head", "glob-error"}:
         assert refusal == "RED_TEAM_REFUSED: task ledger unavailable"
         assert target is None
     else:

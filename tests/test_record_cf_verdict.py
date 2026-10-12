@@ -457,12 +457,45 @@ def test_red_team_pr_only_review_head_fields_and_repository_match(monkeypatch, t
         assert calls == {"posts": 1, "statuses": 1}
 
 
-@pytest.mark.parametrize("broken", ["missing", "invalid-json", "non-object", "read-error", "invalid-head"])
+@pytest.mark.parametrize("status", ["spawning", "running", "queued", "done", "needs_finalize"])
+@pytest.mark.parametrize(
+    "head,mode", [(SHA, "cross_family"), (SHA.upper(), "cross_family"), (OTHER, "cross_family"), (SHA, "red_team")]
+)
+def test_red_team_worktree_prep_publication_guard(monkeypatch, tmp_path, status, head, mode):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path)
+    # The provisional row has no repository, review flag or top-level head.
+    (tasks / "outside-review.json").write_text(
+        json.dumps(
+            {
+                "task_id": "outside-review",
+                "status": status,
+                "review_mode": mode,
+                "worktree_prep": {"base_sha": head},
+            }
+        )
+    )
+    before = {path.name: path.read_bytes() for path in tasks.iterdir()}
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    if status in {"spawning", "running", "queued"} and head.lower() == SHA and mode == "cross_family":
+        with pytest.raises(
+            recorder.RecordError, match="RED_TEAM_REFUSED: outside-family review in flight for this head"
+        ):
+            recorder.record("review-one", **kwargs)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+        assert {path.name: path.read_bytes() for path in tasks.iterdir()} == before
+    else:
+        assert recorder.record("review-one", **kwargs)["status"] == "posted"
+        assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize(
+    "broken", ["missing", "invalid-json", "non-object", "read-error", "invalid-head", "glob-error"]
+)
 def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_path, broken):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     prompt = red_team_task(tasks, tmp_path)
     if broken == "missing":
-        monkeypatch.setattr(recorder, "iter_task_records", lambda *_a, **_k: iter(()))
         original = Path.iterdir
 
         def unreadable(path):
@@ -471,6 +504,16 @@ def test_red_team_unreadable_task_ledger_refuses_publication(monkeypatch, tmp_pa
             return original(path)
 
         monkeypatch.setattr(Path, "iterdir", unreadable)
+    elif broken == "glob-error":
+        original = Path.glob
+
+        def unreadable(path, *args, **kwargs):
+            if path == tasks:
+                assert list(path.iterdir())  # The directory is readable; glob still fails.
+                raise OSError("ledger glob failed")
+            return original(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "glob", unreadable)
     elif broken == "invalid-head":
         write_task(tasks, task_id="broken", pr=42, status="running", pinned_head=[], worktree_base_sha=None)
     else:
