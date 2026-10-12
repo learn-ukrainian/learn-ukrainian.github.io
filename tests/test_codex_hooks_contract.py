@@ -392,8 +392,9 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
     canonical = tmp_path / "canonical"
     canonical.mkdir()
-    (canonical / ".venv").symlink_to(PRIMARY_ROOT / ".venv", target_is_directory=True)
-    shutil.copy2(REPO_ROOT / ".python-version", canonical / ".python-version")
+    _run(["git", "init", "-b", "main"], cwd=canonical)
+    _make_exact_python_checkout(canonical, delegate=Path(project_python()))
+    _run(["git", "add", ".python-version", ".venv/bin/python"], cwd=canonical)
 
     environment = os.environ.copy()
     for key in tuple(environment):
@@ -870,6 +871,7 @@ def test_bare_python_rejection_blocks_a_canonical_version_mismatch(tmp_path: Pat
 
 def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
     """Create a project interpreter that exposes only the live inbox CLI shape."""
+    _run(["git", "init", "-b", "main"], cwd=tmp_path)
     python = tmp_path / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True, exist_ok=True)
     fixtures = tmp_path / "inbox-fixtures"
