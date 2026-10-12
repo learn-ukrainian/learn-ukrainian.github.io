@@ -73,6 +73,11 @@ readonly DB_ARCHIVE_DIR="${LU_BACKUP_DB_ARCHIVE_DIR:-$PROJECT_ROOT/batch_state/b
 readonly KEEP_DAILY=7
 readonly KEEP_WEEKLY=4
 readonly KEEP_MONTHLY=6
+# Staged-byte budget for one Linux database upload. Consistent SQLite copies
+# accumulate in a private batch that is uploaded as one lu-part-db snapshot
+# once the next database would exceed this budget (a larger database goes
+# alone), so peak staging is the larger of this budget and the largest database.
+readonly DB_BATCH_MAX_BYTES="${LU_BACKUP_DB_BATCH_MAX_BYTES:-1073741824}"
 
 STAGE_DIR=""
 STAGED_ROOT=""
@@ -91,7 +96,13 @@ EPHEMERAL_HOME_EXCLUDES=()
 # aborting the whole backup; the receipt records each one.
 BROKEN_SYMLINK_EXCLUDES=()
 LINUX_DB_SNAPSHOTS='[]'
-# SQLite sources split by classify_sqlite_sources: uploaded one by one,
+# Databases staged under DB_BATCH_ROOT and not yet uploaded (relative paths,
+# source modes, staged bytes); flush_database_batch uploads and clears them.
+DB_BATCH_ROOT=""
+PENDING_DB_PATHS=()
+PENDING_DB_MODES=()
+PENDING_DB_BYTES=0
+# SQLite sources split by classify_sqlite_sources: uploaded in batches,
 # skipped as per-run test scratch, or covered by a verified archive.
 SQLITE_BACKUP_SOURCES=()
 SQLITE_TRANSIENT_SOURCES=()
@@ -235,6 +246,9 @@ Optional environment:
   LU_BACKUP_RCLONE_CONNECTIONS
                         rclone backend connection limit, 1-16 (default: 1).
                         prune always uses at least 2, which restic requires.
+  LU_BACKUP_DB_BATCH_MAX_BYTES
+                        Linux staged-byte budget per SQLite upload batch
+                        (default: 1073741824). A larger database goes alone.
 
 Examples:
   ./scripts/backup-data.sh restore latest --to /scratch/restore              # preview
@@ -1356,11 +1370,11 @@ write_backup_receipt() {
     --arg run_id "$RUN_ID" \
     --arg base_snapshot_id "$LINUX_BASE_SNAPSHOT" \
     --arg patch_snapshot_id "$LINUX_PATCH_SNAPSHOT" \
-    --argjson databases "$LINUX_DB_SNAPSHOTS" \
+    --slurpfile database_inventory <(printf '%s\n' "$LINUX_DB_SNAPSHOTS") \
     --argjson transient_count "${#SQLITE_TRANSIENT_SOURCES[@]}" \
     --argjson archived_count "${#SQLITE_ARCHIVED_SOURCES[@]}" \
     --argjson archives "$(jq -cn '$ARGS.positional' --args "${DB_ARCHIVES_USED[@]}")" \
-    '{
+    '$database_inventory[0] as $databases | {
       schema_version: (if $linux_mode then 2 else 1 end),
       created_at_utc: $created_at,
       host: $host,
@@ -1404,12 +1418,23 @@ snapshot_id_from_output() {
   printf '%s\n' "$snapshot_id"
 }
 
-linux_backup_database() {
-  local source_db=$1 relative=$2 staged_db check_output snapshot_id source_mode error
-  staged_db="$STAGED_ROOT/$relative"
+# Stage one selected database into the pending batch: a consistent online
+# backup checked with PRAGMA integrity_check. A database that fails any step is
+# recorded as a failure and never uploaded.
+linux_stage_database() {
+  local source_db=$1 relative=$2 staged_db check_output source_mode error staged_bytes
+  staged_db="$DB_BATCH_ROOT/$relative"
   if ! error="$(check_one_db_space "$source_db" "$relative" 2>&1)"; then
-    BACKUP_FAILURES+=("Database $relative: $error")
-    return 1
+    if ((${#PENDING_DB_PATHS[@]} == 0)); then
+      BACKUP_FAILURES+=("Database $relative: $error")
+      return 1
+    fi
+    # The pending batch holds staging space: upload it, then check again.
+    flush_database_batch
+    if ! error="$(check_one_db_space "$source_db" "$relative" 2>&1)"; then
+      BACKUP_FAILURES+=("Database $relative: $error")
+      return 1
+    fi
   fi
   if ! mkdir -p "$(dirname "$staged_db")"; then
     BACKUP_FAILURES+=("Database $relative: could not create staging directory")
@@ -1439,32 +1464,68 @@ linux_backup_database() {
     find "$staged_db" -maxdepth 0 -type f -delete
     return 1
   fi
-  if ! restic_repository_command backup --stdin --stdin-filename "$relative" \
-    --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
-    --tag lu-part-db --json < "$staged_db" | tee "$STAGE_DIR/db-backup.jsonl"; then
-    BACKUP_FAILURES+=("Database $relative: restic upload failed")
+  if ! staged_bytes="$(stat -c '%s' "$staged_db")"; then
+    BACKUP_FAILURES+=("Database $relative: could not measure staged database")
     find "$staged_db" -maxdepth 0 -type f -delete
     return 1
   fi
-  if ! snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/db-backup.jsonl" 2>&1)"; then
-    BACKUP_FAILURES+=("Database $relative: $snapshot_id")
-    find "$staged_db" -maxdepth 0 -type f -delete
-    return 1
+  PENDING_DB_PATHS+=("$relative")
+  PENDING_DB_MODES+=("$source_mode")
+  PENDING_DB_BYTES=$((PENDING_DB_BYTES + staged_bytes))
+}
+
+# Upload every pending staged database as one lu-part-db snapshot and record
+# each path against that snapshot ID; on failure every pending database is a
+# failure. Batching matters because each restic run pays a fixed repository
+# open, index load, and lock cost that dwarfs a small database's bytes.
+flush_database_batch() {
+  local snapshot_id relative index
+  local -a roots=() failed=()
+
+  ((${#PENDING_DB_PATHS[@]} > 0)) || return 0
+  while IFS= read -r -d '' relative; do
+    roots+=("${relative#./}")
+  done < <(cd "$DB_BATCH_ROOT" && find . -mindepth 1 -maxdepth 1 -print0)
+  info "Uploading ${#PENDING_DB_PATHS[@]} consistent SQLite snapshot(s) in one restic snapshot."
+  if ! (
+    cd "$DB_BATCH_ROOT"
+    restic_repository_command backup "${roots[@]}" --force \
+      --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
+      --tag lu-part-db --json
+  ) | tee "$STAGE_DIR/db-backup.jsonl"; then
+    failed=("restic upload failed")
+  elif ! snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/db-backup.jsonl" 2>&1)"; then
+    failed=("$snapshot_id")
+  elif ! LINUX_DB_SNAPSHOTS="$(
+    {
+      printf '%s\n' "$LINUX_DB_SNAPSHOTS"
+      for index in "${!PENDING_DB_PATHS[@]}"; do
+        printf '%s\t%s\n' "${PENDING_DB_PATHS[$index]}" "${PENDING_DB_MODES[$index]}"
+      done
+    } | jq -cRn --arg snapshot_id "$snapshot_id" \
+      '(input | fromjson) as $previous |
+        $previous + [inputs | split("\t") | {path: .[0], snapshot_id: $snapshot_id, mode: .[1]}]'
+  )"; then
+    failed=("could not record snapshot ID")
   fi
-  if ! LINUX_DB_SNAPSHOTS="$(jq -cn --argjson previous "$LINUX_DB_SNAPSHOTS" \
-    --arg path "$relative" --arg snapshot_id "$snapshot_id" --arg mode "$source_mode" \
-    '$previous + [{path: $path, snapshot_id: $snapshot_id, mode: $mode}]')"; then
-    BACKUP_FAILURES+=("Database $relative: could not record snapshot ID")
-    find "$staged_db" -maxdepth 0 -type f -delete
-    return 1
+  if ((${#failed[@]} > 0)); then
+    for relative in "${PENDING_DB_PATHS[@]}"; do
+      BACKUP_FAILURES+=("Database $relative: ${failed[0]}")
+    done
   fi
-  find "$staged_db" -maxdepth 0 -type f -delete
+  find "$DB_BATCH_ROOT" -mindepth 1 -depth -delete ||
+    die "Could not clear the private SQLite staging batch."
+  PENDING_DB_PATHS=()
+  PENDING_DB_MODES=()
+  PENDING_DB_BYTES=0
 }
 
 run_linux_backup() {
-  local relative source_db snapshot_id backup_output unreadable
+  local relative source_db source_bytes snapshot_id backup_output unreadable
   local -a live_paths=()
 
+  [[ "$DB_BATCH_MAX_BYTES" =~ ^[1-9][0-9]{0,17}$ ]] ||
+    die "LU_BACKUP_DB_BATCH_MAX_BYTES must be a positive whole number of bytes."
   LINUX_MODE=1
   RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$(printf '%04x%04x' "$RANDOM" "$RANDOM")"
   STAGE_DIR="$STAGE_PATH"
@@ -1505,14 +1566,21 @@ run_linux_backup() {
     done <<< "$unreadable"
   fi
 
+  DB_BATCH_ROOT="$STAGE_DIR/db-batch"
+  mkdir -m 700 "$DB_BATCH_ROOT"
   for source_db in "${SQLITE_BACKUP_SOURCES[@]}"; do
     relative=${source_db#"$PROJECT_ROOT"/}
     if [[ "$relative" == *$'\n'* || "$relative" == *$'\t'* ]]; then
       BACKUP_FAILURES+=("Database path cannot be recorded safely: $relative")
       continue
     fi
-    linux_backup_database "$source_db" "$relative" || true
+    source_bytes="$(stat -c '%s' "$source_db" 2>/dev/null)" || source_bytes=0
+    if ((${#PENDING_DB_PATHS[@]} > 0 && PENDING_DB_BYTES + source_bytes > DB_BATCH_MAX_BYTES)); then
+      flush_database_batch
+    fi
+    linux_stage_database "$source_db" "$relative" || true
   done
+  flush_database_batch
   # Parsed into last-run.json and the change-only alert; printed on failure too.
   info "SQLite databases backed up: $(jq -r 'length' <<< "$LINUX_DB_SNAPSHOTS") of ${#SQLITE_BACKUP_SOURCES[@]} (pytest scratch skipped: ${#SQLITE_TRANSIENT_SOURCES[@]}, archived: ${#SQLITE_ARCHIVED_SOURCES[@]})."
 
@@ -1747,9 +1815,11 @@ run_restore() {
   local scope=${4:-}
   local scope_given=${5:-0}
   local target_real receipt receipt_json receipt_schema base_id patch_id database_id database_path database_mode check_output
-  local manifest_id snapshots_json size_bytes path_info path_count path_bytes index
-  local scope_is_database=0 databases_selected=0
-  local -a whole_ids=() step_ids=() step_includes=() step_db_paths=() step_db_modes=()
+  local manifest_id snapshots_json size_bytes path_info path_count index
+  local scope_is_database=0 databases_selected=0 step_count step_bytes
+  local -a whole_ids=() step_ids=() step_includes=() step_ls_paths=()
+  local -a db_paths=() db_ids=() db_modes=() restored_db_paths=() restored_db_modes=()
+  local -A db_id_members=() db_id_planned=()
 
   validate_environment
   if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
@@ -1785,8 +1855,7 @@ run_restore() {
   if [[ "$receipt_schema" == 1 ]]; then
     step_ids+=("$manifest_id")
     step_includes+=("${scope:+/$scope}")
-    step_db_paths+=("")
-    step_db_modes+=("")
+    step_ls_paths+=("$scope")
   else
     jq -e '
       .linux_run.run_id | type == "string" and length > 0
@@ -1803,21 +1872,20 @@ run_restore() {
     if [[ -z "$scope" ]]; then
       step_ids+=("$manifest_id" "$base_id")
       step_includes+=("" "")
-      step_db_paths+=("" "")
-      step_db_modes+=("" "")
+      step_ls_paths+=("" "")
       if [[ -n "$patch_id" ]]; then
         step_ids+=("$patch_id")
         step_includes+=("")
-        step_db_paths+=("")
-        step_db_modes+=("")
+        step_ls_paths+=("")
       fi
     elif [[ "$scope" == GIT-WORKTREE.patch ]]; then
       [[ -n "$patch_id" ]] || die "This run has no GIT-WORKTREE.patch (the worktree was clean)."
       step_ids+=("$patch_id")
       step_includes+=("")
-      step_db_paths+=("")
-      step_db_modes+=("")
+      step_ls_paths+=("")
     fi
+    # Older runs hold one database per lu-part-db snapshot; newer runs share
+    # one snapshot across a batch, so count each snapshot's databases first.
     while IFS=$'\t' read -r database_path database_id database_mode; do
       [[ -n "$database_path" ]] || continue
       [[ "$database_path" != /* && "$database_path" != *'..'* ]] ||
@@ -1830,22 +1898,39 @@ run_restore() {
         die "Restored Linux receipt has invalid database snapshot ID."
       [[ "$database_mode" =~ ^[0-7]{3,4}$ ]] ||
         die "Restored Linux receipt has invalid database mode."
-      if [[ -z "$scope" || "$database_path" == "$scope" || "$database_path" == "$scope"/* ]]; then
+      db_paths+=("$database_path")
+      db_ids+=("$database_id")
+      db_modes+=("$database_mode")
+      db_id_members[$database_id]=$((${db_id_members[$database_id]:-0} + 1))
+    done < <(jq -r '.linux_run.databases[] | [.path, .snapshot_id, .mode] | @tsv' <<< "$receipt_json")
+    for index in "${!db_paths[@]}"; do
+      database_path=${db_paths[$index]}
+      database_id=${db_ids[$index]}
+      [[ -z "$scope" || "$database_path" == "$scope" || "$database_path" == "$scope"/* ]] || continue
+      restored_db_paths+=("$database_path")
+      restored_db_modes+=("${db_modes[$index]}")
+      databases_selected=$((databases_selected + 1))
+      [[ "$database_path" != "$scope" ]] || scope_is_database=1
+      if [[ -z "$scope" || "${db_id_members[$database_id]}" -eq 1 ]]; then
+        # The whole snapshot is wanted: restore it once.
+        [[ -z "${db_id_planned[$database_id]+set}" ]] || continue
+        db_id_planned[$database_id]=1
         step_ids+=("$database_id")
         step_includes+=("")
-        step_db_paths+=("$database_path")
-        step_db_modes+=("$database_mode")
-        databases_selected=$((databases_selected + 1))
-        [[ "$database_path" != "$scope" ]] || scope_is_database=1
+        step_ls_paths+=("")
+      else
+        # A scoped restore from a shared snapshot takes only this database.
+        step_ids+=("$database_id")
+        step_includes+=("/$(restic_literal_pattern "$database_path")")
+        step_ls_paths+=("$database_path")
       fi
-    done < <(jq -r '.linux_run.databases[] | [.path, .snapshot_id, .mode] | @tsv' <<< "$receipt_json")
+    done
     if [[ -n "$scope" && "$scope" != GIT-WORKTREE.patch && "$scope_is_database" -eq 0 ]]; then
       # Not a single database: the path lives in the file-phase snapshot (and
       # any databases beneath it were already selected above).
       step_ids+=("$base_id")
       step_includes+=("/$scope")
-      step_db_paths+=("")
-      step_db_modes+=("")
+      step_ls_paths+=("$scope")
     fi
   fi
 
@@ -1857,9 +1942,10 @@ run_restore() {
     if [[ -z "${step_includes[$index]}" ]]; then
       whole_ids+=("${step_ids[$index]}")
     else
-      path_info="$(snapshot_path_size "${step_ids[$index]}" "$scope")"
-      read -r path_count path_bytes <<< "$path_info"
-      size_bytes=$((size_bytes + path_bytes))
+      path_info="$(snapshot_path_size "${step_ids[$index]}" "${step_ls_paths[$index]}")"
+      read -r step_count step_bytes <<< "$path_info"
+      path_count=$((path_count + step_count))
+      size_bytes=$((size_bytes + step_bytes))
     fi
   done
   size_bytes=$((size_bytes + $(snapshots_restore_size_bytes ${whole_ids[@]+"${whole_ids[@]}"})))
@@ -1891,12 +1977,12 @@ run_restore() {
       [[ -f "$receipt" && ! -L "$receipt" ]] ||
         die "Restored snapshot has no safe BACKUP-RECEIPT.json; refusing to claim a complete restore."
     fi
-    database_path="${step_db_paths[$index]}"
-    if [[ -n "$database_path" ]]; then
-      [[ -f "$target_real/$database_path" && ! -L "$target_real/$database_path" ]] ||
-        die "Restored database is missing or unsafe: $database_path"
-      chmod "${step_db_modes[$index]}" "$target_real/$database_path"
-    fi
+  done
+  for index in "${!restored_db_paths[@]}"; do
+    database_path="${restored_db_paths[$index]}"
+    [[ -f "$target_real/$database_path" && ! -L "$target_real/$database_path" ]] ||
+      die "Restored database is missing or unsafe: $database_path"
+    chmod "${restored_db_modes[$index]}" "$target_real/$database_path"
   done
   while IFS= read -r -d '' database_path; do
     check_output="$(sqlite3 "$(sqlite_immutable_uri "$database_path")" 'PRAGMA integrity_check;')" ||

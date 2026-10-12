@@ -136,15 +136,27 @@ if [[ "${1:-}" == "cat" && -z "${RESTIC_REPOSITORY:-}" ]]; then
   exit 78
 fi
 stdin_filename=""
+database_part=0
 if [[ "${1:-}" == "backup" ]]; then
   previous=""
   for argument in "$@"; do
     [[ "$previous" == "--stdin-filename" ]] && stdin_filename="$argument"
+    [[ "$argument" == "lu-part-db" ]] && database_part=1
     previous="$argument"
   done
   if [[ -n "$stdin_filename" ]]; then
     mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$stdin_filename")"
     cat > "$FAKE_SNAPSHOT_DIR/$stdin_filename"
+  elif [[ "$database_part" == 1 ]]; then
+    if [[ -n "${FAKE_DB_PHASE_EXIT:-}" ]]; then
+      exit "$FAKE_DB_PHASE_EXIT"
+    fi
+    while IFS= read -r -d '' staged; do
+      staged="${staged#./}"
+      mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$staged")"
+      cp -p "$staged" "$FAKE_SNAPSHOT_DIR/$staged"
+      printf 'db_file=<%s>\n' "$staged" >> "$FAKE_RESTIC_LOG"
+    done < <(find . -type f -print0)
   else
     if [[ -n "${FAKE_FILE_PHASE_EXIT:-}" ]]; then
       exit "$FAKE_FILE_PHASE_EXIT"
@@ -162,15 +174,15 @@ if [[ "${1:-}" == "backup" ]]; then
     done < <(find "$FAKE_SNAPSHOT_DIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) -print0)
   fi
 fi
-if [[ "${1:-}" == "backup" && -n "${FAKE_DB_RELATIVE:-}" && "$stdin_filename" == "$FAKE_DB_RELATIVE" ]]; then
-  rows="$(sqlite3 "file:$FAKE_SNAPSHOT_DIR/$stdin_filename?mode=ro&immutable=1" \
+if [[ "${1:-}" == "backup" && -n "${FAKE_DB_RELATIVE:-}" && "$database_part" == 1 && -f "$FAKE_DB_RELATIVE" ]]; then
+  rows="$(sqlite3 "file:$FAKE_SNAPSHOT_DIR/$FAKE_DB_RELATIVE?mode=ro&immutable=1" \
     'SELECT COUNT(*) FROM recovery_probe;')"
   printf 'db_rows=<%s>\n' "$rows" >> "$FAKE_RESTIC_LOG"
 fi
 if [[ "${1:-}" == "backup" && -n "${FAKE_REQUIRED_RELATIVE:-}" && -f "$FAKE_SNAPSHOT_DIR/$FAKE_REQUIRED_RELATIVE" ]]; then
   printf 'staged_required=<%s>\n' "$FAKE_REQUIRED_RELATIVE" >> "$FAKE_RESTIC_LOG"
 fi
-if [[ "${1:-}" == "backup" && -n "${FAKE_FORBIDDEN_RELATIVES:-}" && -z "$stdin_filename" ]]; then
+if [[ "${1:-}" == "backup" && -n "${FAKE_FORBIDDEN_RELATIVES:-}" && -z "$stdin_filename" && "$database_part" == 0 ]]; then
   for forbidden in $FAKE_FORBIDDEN_RELATIVES; do
     test ! -e "$FAKE_SNAPSHOT_DIR/$forbidden"
     printf 'staged_excluded=<%s>\n' "$forbidden" >> "$FAKE_RESTIC_LOG"
@@ -307,6 +319,7 @@ def _use_local_restic(
     environment["TEST_LOCAL_RESTIC_REPOSITORY"] = str(repository)
     environment["TEST_REAL_RESTIC"] = real_restic
     environment["TEST_PEAK_LOG"] = str(tmp_path / "peak.log")
+    environment["TEST_INVOCATION_LOG"] = str(tmp_path / "restic-invocations.log")
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
     _write_executable(
         fake_bin / "restic",
@@ -323,13 +336,18 @@ while [[ "$#" -gt 0 ]]; do
 done
 if [[ "${args[0]:-}" == "backup" ]]; then
   for argument in "${args[@]}"; do
-    if [[ "$argument" == "--stdin" ]]; then
+    if [[ "$argument" == "--stdin" || "$argument" == "lu-part-db" ]]; then
       count="$(find "$LU_BACKUP_TMPDIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) | wc -l)"
       printf '%s\n' "$count" >> "$TEST_PEAK_LOG"
       break
     fi
   done
 fi
+part=""
+for argument in "${args[@]}"; do
+  [[ "$argument" != lu-part-* ]] || part="$argument"
+done
+printf '%s %s\n' "${args[0]:-}" "$part" >> "$TEST_INVOCATION_LOG"
 export RESTIC_REPOSITORY="$TEST_LOCAL_RESTIC_REPOSITORY"
 exec "$TEST_REAL_RESTIC" "${args[@]}"
 """,
@@ -399,8 +417,11 @@ printf 'testfs 8388608 0 %s 0%% /staging\n' "$available"
     result = _run(environment, "backup", "--execute")
     assert result.returncode != 0
     assert "Insufficient staging space for data/b.db" in result.stderr
-    assert counter.read_text(encoding="utf-8").strip() == "2"
+    # a.db passes; b.db fails, the pending batch (a.db) uploads, b.db fails again.
+    assert counter.read_text(encoding="utf-8").strip() == "3"
     assert _log(environment).count("arg=<lu-part-db>") == 1
+    assert "db_file=<data/a.db>" in _log(environment)
+    assert "db_file=<data/b.db>" not in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -410,6 +431,8 @@ def test_linux_local_restic_round_trip_stages_one_db_at_a_time(
 ) -> None:
     environment, source, staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
+    # A one-byte batch budget keeps every database in its own upload.
+    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = "1"
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
     _write_executable(fake_bin / "cp", "#!/bin/bash\nexit 97\n")
     (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
@@ -759,7 +782,7 @@ def test_unreadable_directory_does_not_skip_database_phase(
     assert "Backup run " in result.stderr
     assert "Unreadable paths:" in result.stderr
     assert "batch_state/unreadable-dir" in result.stderr
-    assert "arg=<--stdin-filename> arg=<data/healthy.db>" in _log(environment)
+    assert "db_file=<data/healthy.db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -775,7 +798,7 @@ def test_corrupt_database_does_not_skip_later_databases(
 
     assert result.returncode != 0
     assert "Database data/corrupt.db: SQLite online backup failed" in result.stderr
-    assert "arg=<--stdin-filename> arg=<data/healthy.db>" in _log(environment)
+    assert "db_file=<data/healthy.db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -855,7 +878,7 @@ exec "$REAL_FIND" "$@"
     assert run.returncode != 0
     assert "batch_state/already-found.txt" in run.stderr
     assert "batch_state/denied-dir" in run.stderr
-    assert "arg=<--stdin-filename> arg=<data/healthy.db>" in _log(environment)
+    assert "db_file=<data/healthy.db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -2458,11 +2481,11 @@ def _make_database(path: Path, value: str = "row") -> Path:
 
 
 def _base_backup_lines(log: str) -> list[str]:
-    return [line for line in log.splitlines() if "arg=<backup>" in line and "arg=<--stdin>" not in line]
+    return [line for line in log.splitlines() if "arg=<backup>" in line and "arg=<lu-part-base>" in line]
 
 
 def _uploaded_databases(log: str) -> set[str]:
-    return set(re.findall(r"arg=<--stdin-filename> arg=<([^>]*\.(?:db|sqlite3?))>", log))
+    return set(re.findall(r"db_file=<([^>]*\.(?:db|sqlite3?))>", log))
 
 
 def test_database_excludes_go_through_an_exclude_file_not_argv(
@@ -2621,3 +2644,352 @@ def test_unverifiable_archive_is_ignored_and_databases_are_backed_up(
     assert result.returncode == 0, result.stderr
     assert "WARNING: Ignoring SQLite archive" in result.stderr
     assert _uploaded_databases(_log(environment)) == {"batch_state/preserved/a/atlas.db"}
+
+
+def _logical_sha256(database: Path) -> str:
+    """Hash a database's logical content (schema and rows), independent of page layout."""
+    connection = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
+    try:
+        return hashlib.sha256("\n".join(connection.iterdump()).encode()).hexdigest()
+    finally:
+        connection.close()
+
+
+def _file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _backup_invocations(environment: dict[str, str]) -> list[str]:
+    log = Path(environment["TEST_INVOCATION_LOG"]).read_text(encoding="utf-8")
+    return [line.strip() for line in log.splitlines() if line.startswith("backup ")]
+
+
+def _many_database_fixture(project: Path) -> tuple[dict[str, str], dict[str, str]]:
+    """Representative recovery tree: many small fixture databases plus live ones."""
+    databases = [project / "data" / "sources.db", project / "data" / "atlas.db"]
+    databases += [project / "batch_state" / "fixtures" / f"run-{index:02d}" / "sources.db" for index in range(30)]
+    databases += [
+        project / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3",
+        project / ".claude" / "atlas-epic" / "state.db",
+    ]
+    for index, database in enumerate(databases):
+        _make_database(database, f"row-{index}")
+    with sqlite3.connect(project / "data" / "atlas.db") as connection:
+        connection.executemany(
+            "INSERT INTO recovery_probe VALUES (?)", ((f"bulk-{index:06d}" * 8,) for index in range(5000))
+        )
+    (project / "data" / "atlas.db").chmod(0o600)
+    _make_database(project / "batch_state" / "pytest-of-ops" / "pytest-1" / "scratch.db")
+    (project / "data" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    database_hashes = {database.relative_to(project).as_posix(): _logical_sha256(database) for database in databases}
+    file_hashes = {
+        relative: _file_sha256(project / relative)
+        for relative in (
+            "data/ordinary.txt",
+            "batch_state/state.txt",
+            ".agent/recovery-state.json",
+            ".claude/atlas-epic/HANDOFF.md",
+        )
+    }
+    return database_hashes, file_hashes
+
+
+def _assert_restored(target: Path, database_hashes: dict[str, str], file_hashes: dict[str, str]) -> None:
+    for relative, expected in database_hashes.items():
+        with sqlite3.connect(target / relative) as connection:
+            assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",), relative
+        assert _logical_sha256(target / relative) == expected, relative
+    for relative, expected in file_hashes.items():
+        assert _file_sha256(target / relative) == expected, relative
+    restored_databases = {
+        path.relative_to(target).as_posix()
+        for path in target.rglob("*")
+        if path.is_file() and path.suffix in {".db", ".sqlite3"}
+    }
+    assert restored_databases == set(database_hashes)
+
+
+def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    database_hashes, file_hashes = _many_database_fixture(project)
+    originals = {relative: _file_sha256(project / relative) for relative in database_hashes}
+
+    backed_up = _run(environment, "backup", "--execute")
+
+    assert backed_up.returncode == 0, backed_up.stderr
+    # One repository run per part, not one per database: 34 databases, 3 uploads.
+    assert _backup_invocations(environment) == [
+        "backup lu-part-base",
+        "backup lu-part-db",
+        "backup lu-part-complete",
+    ]
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["34", "0"]
+    assert "SQLite databases backed up: 34 of 34 (pytest scratch skipped: 1, archived: 0)." in backed_up.stdout
+    assert list(staging.iterdir()) == []
+    assert {relative: _file_sha256(project / relative) for relative in database_hashes} == originals
+
+    target = tmp_path / "restored"
+    restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+
+    assert restored.returncode == 0, restored.stderr
+    _assert_restored(target, database_hashes, file_hashes)
+    assert (target / "data" / "atlas.db").stat().st_mode & 0o777 == 0o600
+    receipt = json.loads((target / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    inventory = receipt["linux_run"]["databases"]
+    assert sorted(entry["path"] for entry in inventory) == sorted(database_hashes)
+    assert len({entry["snapshot_id"] for entry in inventory}) == 1
+    assert receipt["linux_run"]["databases_backed_up"] == 34
+
+    scoped_target = tmp_path / "restored-one"
+    scoped = _run(
+        environment,
+        "restore",
+        "latest",
+        "--to",
+        str(scoped_target),
+        "--path",
+        "batch_state/fixtures/run-07/sources.db",
+        "--execute",
+    )
+    assert scoped.returncode == 0, scoped.stderr
+    assert [path.relative_to(scoped_target).as_posix() for path in scoped_target.rglob("*") if path.is_file()] == [
+        "batch_state/fixtures/run-07/sources.db"
+    ]
+    assert (
+        _logical_sha256(scoped_target / "batch_state/fixtures/run-07/sources.db")
+        == database_hashes["batch_state/fixtures/run-07/sources.db"]
+    )
+
+
+def test_batch_budget_splits_database_uploads(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    for index in range(4):
+        _make_database(project / "batch_state" / "fixtures" / f"run-{index}" / "sources.db")
+    size = (project / "batch_state" / "fixtures" / "run-0" / "sources.db").stat().st_size
+    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = str(2 * size)
+
+    backed_up = _run(environment, "backup", "--execute")
+
+    assert backed_up.returncode == 0, backed_up.stderr
+    assert _backup_invocations(environment).count("backup lu-part-db") == 2
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "0"]
+
+
+@pytest.mark.parametrize("budget", ["0", "-1", "1e9", "abc", "1000000000000000000000"])
+def test_invalid_batch_budget_fails_before_any_upload(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    budget: str,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _make_database(source / "a.db")
+    environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = budget
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert "LU_BACKUP_DB_BATCH_MAX_BYTES must be a positive whole number of bytes." in result.stderr
+    assert "arg=<backup>" not in _log(environment)
+
+
+def test_database_batch_upload_failure_fails_every_member_and_never_completes(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, staging, _legacy = backup_environment
+    project = source.parent
+    databases = [_make_database(source / "a.db"), _make_database(project / "batch_state" / "fixtures" / "b.db")]
+    before = {database: _file_sha256(database) for database in databases}
+    environment["FAKE_DB_PHASE_EXIT"] = "1"
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert "Database data/a.db: restic upload failed" in result.stderr
+    assert "Database batch_state/fixtures/b.db: restic upload failed" in result.stderr
+    assert "SQLite databases backed up: 0 of 2" in result.stdout
+    assert "arg=<lu-part-complete>" not in _log(environment)
+    assert not (Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").exists()
+    assert list(staging.iterdir()) == []
+    assert {database: _file_sha256(database) for database in databases} == before
+
+
+def test_receipt_inventory_larger_than_one_argument_is_recorded(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    project = source.parent
+    deep = project / "batch_state" / "fixtures"
+    batch = Path(environment["LU_BACKUP_TMPDIR"]) / f"learn-ukrainian-backup.{os.getuid()}.stage" / "db-batch"
+    # Long paths, kept under SQLite's 512-byte pathname limit for both the
+    # source and its staged copy, make each inventory entry large so a few
+    # hundred databases pass 128 KiB.
+    remaining = 500 - max(len(str(project)), len(str(batch))) - len("/batch_state/fixtures/000.db")
+    while remaining > 1:
+        component = min(remaining - 1, 200)
+        deep = deep / ("d" * component)
+        remaining -= component + 1
+    entry_bytes = len(
+        json.dumps({"path": f"{deep.relative_to(project)}/000.db", "snapshot_id": "a" * 64, "mode": "644"})
+    )
+    count = 131072 // entry_bytes + 20
+    for index in range(count):
+        _make_database(deep / f"{index:03d}.db")
+
+    result = subprocess.run(
+        ["/bin/bash", str(SCRIPT), "backup", "--execute"],
+        check=False,
+        capture_output=True,
+        env=environment,
+        text=True,
+        timeout=110,
+    )
+
+    assert result.returncode == 0, result.stderr
+    receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    # The inventory exceeds the kernel's 128 KiB single-argument limit.
+    assert len(json.dumps(receipt["linux_run"]["databases"])) > 131072
+    assert receipt["linux_run"]["databases_backed_up"] == count
+    assert _log(environment).count("arg=<lu-part-db>") == 1
+
+
+def test_restore_of_historical_one_snapshot_per_database_run_is_hash_matched(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    database_hashes, file_hashes = _many_database_fixture(project)
+    restic = [
+        environment["TEST_REAL_RESTIC"],
+        "-r",
+        environment["TEST_LOCAL_RESTIC_REPOSITORY"],
+        "--password-file",
+        environment["RESTIC_PASSWORD_FILE"],
+    ]
+    tags = ["--host", "learn-ukrainian", "--tag", "learn-ukrainian-data", "--tag", "lu-run-historical"]
+
+    def snapshot(*arguments: str, stdin: bytes | None = None) -> str:
+        output = subprocess.run(
+            [*restic, "backup", *arguments, *tags, "--json"],
+            input=stdin,
+            cwd=project,
+            check=True,
+            capture_output=True,
+            timeout=60,
+        ).stdout.decode()
+        return next(json.loads(line) for line in output.splitlines() if '"summary"' in line)["snapshot_id"]
+
+    # The layout every completed run used before batching: one stdin snapshot per database.
+    excludes = tmp_path / "historical-excludes"
+    excludes.write_text("".join(f"{project / relative}\n" for relative in database_hashes), encoding="utf-8")
+    base_id = snapshot(
+        "data",
+        "batch_state",
+        ".agent",
+        ".claude/atlas-epic",
+        "--tag",
+        "lu-part-base",
+        "--exclude-file",
+        str(excludes),
+        "--exclude",
+        str(project / "batch_state" / "pytest-of-ops"),
+    )
+    inventory = []
+    for relative in database_hashes:
+        database_id = snapshot(
+            "--stdin",
+            "--stdin-filename",
+            relative,
+            "--tag",
+            "lu-part-db",
+            stdin=(project / relative).read_bytes(),
+        )
+        inventory.append({"path": relative, "snapshot_id": database_id, "mode": "644"})
+    receipt = {
+        "schema_version": 2,
+        "linux_run": {"run_id": "historical", "base_snapshot_id": base_id, "databases": inventory},
+    }
+    snapshot(
+        "--stdin",
+        "--stdin-filename",
+        "BACKUP-RECEIPT.json",
+        "--tag",
+        "lu-part-complete",
+        stdin=json.dumps(receipt).encode(),
+    )
+
+    target = tmp_path / "restored-historical"
+    restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+
+    assert restored.returncode == 0, restored.stderr
+    _assert_restored(target, database_hashes, file_hashes)
+
+    scoped_target = tmp_path / "restored-historical-one"
+    scoped = _run(environment, "restore", "latest", "--to", str(scoped_target), "--path", "data/atlas.db", "--execute")
+    assert scoped.returncode == 0, scoped.stderr
+    assert [path.relative_to(scoped_target).as_posix() for path in scoped_target.rglob("*") if path.is_file()] == [
+        "data/atlas.db"
+    ]
+    assert _logical_sha256(scoped_target / "data" / "atlas.db") == database_hashes["data/atlas.db"]
+
+
+def test_restore_plans_a_shared_database_snapshot_once_and_scopes_it_literally(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshot = Path(environment["FAKE_SNAPSHOT_DIR"])
+    databases = ["data/atlas.db", "batch_state/odd name $HOME.db"]
+    for relative in databases:
+        _make_database(snapshot / "by-id" / ATLAS_ID / relative)
+    (snapshot / "by-id" / BASE_ID / "data").mkdir(parents=True)
+    receipt = {
+        "schema_version": 2,
+        "linux_run": {
+            "run_id": "run-1",
+            "base_snapshot_id": BASE_ID,
+            "databases": [{"path": path, "snapshot_id": ATLAS_ID, "mode": "600"} for path in databases],
+        },
+    }
+    (snapshot / "BACKUP-RECEIPT.json").write_text(json.dumps(receipt), encoding="utf-8")
+    (snapshot / "by-id" / MANIFEST_ID).mkdir(parents=True)
+    shutil.copy(snapshot / "BACKUP-RECEIPT.json", snapshot / "by-id" / MANIFEST_ID)
+    _fake_free_space(environment, 50 * GIB)
+
+    whole = _run(environment, "restore", MANIFEST_ID, "--to", str(tmp_path / "whole"), "--execute")
+
+    assert whole.returncode == 0, whole.stderr
+    assert _restore_ids(environment) == [MANIFEST_ID, BASE_ID, ATLAS_ID]
+    for relative in databases:
+        assert (tmp_path / "whole" / relative).stat().st_mode & 0o777 == 0o600
+
+    Path(environment["FAKE_RESTIC_LOG"]).unlink()
+    scoped = _run(
+        environment,
+        "restore",
+        MANIFEST_ID,
+        "--to",
+        str(tmp_path / "scoped"),
+        "--path",
+        "batch_state/odd name $HOME.db",
+        "--execute",
+    )
+
+    assert scoped.returncode == 0, scoped.stderr
+    restores = [line for line in _log(environment).splitlines() if "arg=<restore>" in line]
+    assert len(restores) == 1
+    assert f"arg=<{ATLAS_ID}>" in restores[0]
+    assert "arg=<--include> arg=</batch_state/odd[ ]name[ ][$]HOME.db>" in restores[0]
+    listings = [line for line in _log(environment).splitlines() if "arg=<ls>" in line]
+    assert listings
+    assert all(f"arg=<{ATLAS_ID}> arg=</batch_state/odd name $HOME.db>" in line for line in listings)
