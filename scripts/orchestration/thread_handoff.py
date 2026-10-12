@@ -30,12 +30,13 @@ import tarfile
 import urllib.error
 import urllib.request
 import uuid
+import zlib
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import closing, contextmanager, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, BinaryIO
 from urllib.parse import urlencode, urlparse
 
 # Script-by-path execution under the shared primary interpreter can expose the
@@ -91,6 +92,16 @@ DEFAULT_STALE_HOURS = 12
 ROLLOVER_BUNDLE_SCHEMA = "rollover-bundle.v1"
 ROLLOVER_BUNDLE_MANIFEST_NAME = "manifest.json"
 ROLLOVER_BUNDLE_MAX_BYTES = 4 * 1024 * 1024
+# #10487 measurements: 280 valid test-fixture bundles peaked at 5,240 bytes
+# per member, 32,289 aggregate bytes, 86 entries and a 24,304-byte manifest.
+# 47 real infra exports peaked at 13,107 / 121,611 / 33 / 9,673 respectively.
+# Aggregate bytes and entry count include the manifest. Reuse the 4 MiB
+# transport budget for expanded content, allowing at most a quarter per file.
+# Entry/manifest caps are powers of two above the measured maxima, with headroom.
+ROLLOVER_BUNDLE_MAX_MEMBER_BYTES = 1024 * 1024
+ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES = 4 * 1024 * 1024
+ROLLOVER_BUNDLE_MAX_MEMBERS = 128
+ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES = 64 * 1024
 ROLLOVER_BUNDLE_REPO_TOKEN = "{{REPO_ROOT}}"
 ROLLOVER_BUNDLE_STATUS_RANK = {
     "superseded": 0,
@@ -468,7 +479,7 @@ def _bundle_member_path(value: str) -> str:
         raise ValueError("bundle member path is malformed")
     path = Path(value)
     if not path.parts or path.is_absolute() or ".." in path.parts or path.parts[0] == ROLLOVER_BUNDLE_MANIFEST_NAME:
-        raise ValueError(f"bundle member path is unsafe: {value!r}")
+        raise ValueError("bundle member path is unsafe")
     return path.as_posix()
 
 
@@ -546,7 +557,7 @@ def _bundle_rewrite(data: bytes, *, repo_root: Path) -> bytes:
 def _bundle_replacement_status(replacement: Mapping[str, Any]) -> str:
     status = str(replacement.get("status") or "")
     if status not in ROLLOVER_BUNDLE_STATUS_RANK:
-        raise ValueError(f"replacement status is not bundle-orderable: {status!r}")
+        raise ValueError("replacement status is not bundle-orderable")
     return status
 
 
@@ -767,16 +778,56 @@ def _build_rollover_bundle(
     return manifest, archive, _bundle_secret_hits(members)
 
 
+def _bundle_read_limited(source: BinaryIO, limit: int, reason: str) -> bytes:
+    """Read at most the remaining budget plus one byte, regardless of headers."""
+    result = io.BytesIO()
+    while True:
+        chunk = source.read(min(64 * 1024, limit - result.tell() + 1))
+        if not chunk:
+            return result.getvalue()
+        if len(chunk) > limit - result.tell():
+            raise ValueError(reason)
+        result.write(chunk)
+
+
 def _bundle_extract(
     blob: bytes, *, manifest_override: Mapping[str, Any] | None = None
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
     if len(blob) > ROLLOVER_BUNDLE_MAX_BYTES:
         raise ValueError("rollover bundle exceeds the 4 MiB cap")
     members: dict[str, bytes] = {}
+    folded_names: set[str] = set()
     manifest: dict[str, Any] | None = None
+    expanded_bytes = 0
     try:
-        with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as archive:
-            for info in archive.getmembers():
+        # Bound decompression before tarfile can allocate extension headers or
+        # enumerate members. Include padding/PAX headroom, and read through EOF
+        # so small declared sizes or tar end markers cannot hide expansion.
+        archive_limit = (
+            ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES
+            + ROLLOVER_BUNDLE_MAX_MEMBERS * 4096
+            + tarfile.RECORDSIZE
+        )
+        with gzip.GzipFile(fileobj=io.BytesIO(blob), mode="rb") as compressed:
+            raw = _bundle_read_limited(compressed, archive_limit, "rollover bundle exceeds expanded archive limit")
+        with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as archive:
+            for ordinal, info in enumerate(archive, start=1):
+                if ordinal > ROLLOVER_BUNDLE_MAX_MEMBERS:
+                    raise ValueError("rollover bundle exceeds member count limit")
+                is_manifest = info.name == ROLLOVER_BUNDLE_MANIFEST_NAME
+                member_limit = (
+                    ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES if is_manifest else ROLLOVER_BUNDLE_MAX_MEMBER_BYTES
+                )
+                reason = (
+                    "rollover bundle exceeds manifest size limit"
+                    if is_manifest
+                    else "rollover bundle exceeds expanded member limit"
+                )
+                if info.size < 0 or info.size > member_limit:
+                    raise ValueError(reason)
+                remaining = ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES - expanded_bytes
+                if info.size > remaining:
+                    raise ValueError("rollover bundle exceeds aggregate expanded limit")
                 if info.name == ROLLOVER_BUNDLE_MANIFEST_NAME:
                     if manifest is not None:
                         raise ValueError("rollover bundle has a duplicate embedded manifest")
@@ -785,20 +836,27 @@ def _bundle_extract(
                     raw_manifest = archive.extractfile(info)
                     if raw_manifest is None:
                         raise ValueError("bundle manifest is unreadable")
-                    value = json.loads(raw_manifest.read().decode("utf-8"))
+                    with raw_manifest:
+                        data = _bundle_read_limited(raw_manifest, min(member_limit, remaining), reason)
+                    expanded_bytes += len(data)
+                    value = json.loads(data.decode("utf-8"))
                     if not isinstance(value, dict):
                         raise ValueError("bundle manifest must be an object")
                     manifest = value
                     continue
                 name = _bundle_member_path(info.name)
-                if name in members or not info.isfile():
+                if name.casefold() in folded_names or not info.isfile():
                     raise ValueError("bundle contains a duplicate or non-regular member")
+                # Case-insensitive targets cannot faithfully install both names.
+                folded_names.add(name.casefold())
                 payload = archive.extractfile(info)
                 if payload is None:
                     raise ValueError("bundle member is unreadable")
-                members[name] = payload.read()
-    except (tarfile.TarError, OSError, EOFError, json.JSONDecodeError, UnicodeDecodeError) as exc:
-        raise ValueError(f"rollover bundle is not a valid tar.gz: {exc}") from exc
+                with payload:
+                    members[name] = _bundle_read_limited(payload, min(member_limit, remaining), reason)
+                expanded_bytes += len(members[name])
+    except (tarfile.TarError, OSError, EOFError, zlib.error, json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise ValueError("rollover bundle is not a valid tar.gz") from exc
     if manifest is None:
         raise ValueError("rollover bundle has no embedded manifest")
     if manifest.get("schema") != ROLLOVER_BUNDLE_SCHEMA:
@@ -818,11 +876,11 @@ def _bundle_extract(
         payload = members[name]
         tokenized = item.get("tokenized")
         if not isinstance(tokenized, bool) or tokenized != _bundle_text_member(name):
-            raise ValueError(f"rollover bundle tokenization declaration is invalid: {name}")
+            raise ValueError("rollover bundle tokenization declaration is invalid")
         if tokenized:
             declared_tokenized.add(name)
         if item.get("bytes") != len(payload) or item.get("sha256") != hashlib.sha256(payload).hexdigest():
-            raise ValueError(f"rollover bundle member fingerprint mismatch: {name}")
+            raise ValueError("rollover bundle member fingerprint mismatch")
     if declared_names != set(members):
         raise ValueError("rollover bundle tar contains an unmanifested member")
     tokenized_members = manifest.get("tokenized_members")
@@ -852,11 +910,12 @@ def verify_rollover_bundle(
     """The one rollover bundle validation the importer and the bundle store both run.
 
     Extracts the archive (exactly one embedded manifest; no duplicate,
-    normalized-duplicate, non-regular or unmanifested member; every member
+    normalized/case-folded duplicate, non-regular or unmanifested member; every member
     matches its declared checksum; the bundle fingerprint verifies), binds a
     supplied manifest's identity to the embedded one, and applies the
     reject-by-default member allowlist.  Returns the embedded manifest and the
-    members; any refusal raises ``ValueError`` before the caller writes.
+    members; compressed/expanded bytes, entry count and manifest size are
+    bounded before reads. Any refusal raises ``ValueError`` before writes.
     """
     manifest, members = _bundle_extract(blob, manifest_override=manifest_override)
     _bundle_check_members(repo_root, manifest=manifest, members=members)
@@ -957,7 +1016,7 @@ def _bundle_validate_lease_member(
         state_path=state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json",
     )
     if error:
-        raise ValueError(f"bundle lease is invalid: {error}")
+        raise ValueError("bundle lease is invalid")
     if replacement is None:
         raise ValueError("bundle lease replacement is missing")
     if state.get("lineage_id") != lineage_id or state.get("rollover_id") != manifest.get("rollover_id"):

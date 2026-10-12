@@ -428,7 +428,7 @@ def _rollover_bundle_member_name(value: object) -> str:
         raise ValueError("rollover bundle member path is malformed")
     path = PurePosixPath(value)
     if not path.parts or path.is_absolute() or ".." in path.parts:
-        raise ValueError(f"rollover bundle member path is unsafe: {value!r}")
+        raise ValueError("rollover bundle member path is unsafe")
     return path.as_posix()
 
 
@@ -453,7 +453,7 @@ def validate_rollover_bundle_members(
     for value in names:
         name = _rollover_bundle_member_name(value)
         if not (name.startswith(lineage_prefix) and len(name) > len(lineage_prefix)) and name not in handoffs:
-            raise ValueError(f"rollover bundle member is outside its lineage and handoff paths: {name!r}")
+            raise ValueError("rollover bundle member is outside its lineage and handoff paths")
         members.append(name)
     return tuple(members)
 
@@ -1976,7 +1976,10 @@ class SessionStreamStore:
         prepared_at = manifest_value.get("prepared_at")
         if not isinstance(prepared_at, str):
             raise ValueError("rollover bundle prepared_at is malformed")
-        parse_timestamp(prepared_at)
+        try:
+            parse_timestamp(prepared_at)
+        except ValueError as exc:
+            raise ValueError("rollover bundle prepared_at is malformed") from exc
         bundle_sha256 = manifest_value.get("bundle_sha256")
         if not isinstance(bundle_sha256, str) or not ROLLOVER_BUNDLE_SHA256_RE.fullmatch(bundle_sha256):
             raise ValueError("rollover bundle fingerprint is malformed")
@@ -1994,8 +1997,8 @@ class SessionStreamStore:
             raise ValueError("rollover bundle manifest files do not match its archive")
         secret_hits = _bundle_secret_hits(members)
         if secret_hits:
-            member, rule = secret_hits[0]
-            raise ContentRejectedError(f"bundle member {member} matched {rule} rule")
+            _member, rule = secret_hits[0]
+            raise ContentRejectedError(f"bundle content matched {rule} rule")
         manifest_value = embedded
         agent = manifest_value["agent"]
         if agent not in rollover_bundle_handoff_slots(lease.holder.agent, stream_id):

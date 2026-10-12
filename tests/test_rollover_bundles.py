@@ -715,7 +715,7 @@ def test_import_refuses_whole_bundle_with_member_outside_lineage_and_own_handoff
     refusal = json.loads(capsys.readouterr().out)
 
     assert "outside its lineage and handoff paths" in refusal["error"]
-    assert name in refusal["error"]
+    assert name not in refusal["error"]
     assert _tree(target) == before
 
 
@@ -1106,3 +1106,267 @@ def test_export_upload_import_round_trip_creates_only_lineage_handoff_and_receip
         assert (target / name).is_file(), name
     assert (target / receipt).is_file()
     assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == f"lane handoff source checkout: {target.resolve()}\n"
+
+
+# Names and values below are deliberately recognizable in diagnostics.
+BOUND_SENTINEL = "bundle-supplied-sentinel"
+BOUND_MEMBER = f".agent/thread-rollovers/{AGENT}/lineage-store/{BOUND_SENTINEL}.md"
+
+
+def _assert_bundle_refused_everywhere(tmp_path, monkeypatch, capsys, manifest, blob, reason):
+    from fastapi.testclient import TestClient
+
+    from tests.epics_monitor_stub import epics_app_for_store
+
+    target = tmp_path / "target"
+    target.mkdir()
+    (target / "kept.txt").write_text("unchanged\n", encoding="utf-8")
+    before = _tree(target)
+    bundle = tmp_path / "refused.tgz"
+    bundle.write_bytes(blob)
+    assert th.cmd_import_bundle(_import_args(target, bundle, stream=REGISTERED_STREAM)) == 2
+    refusal = json.loads(capsys.readouterr().out)
+    assert reason in refusal["error"]
+    assert BOUND_SENTINEL not in refusal["error"]
+    assert _tree(target) == before
+
+    direct_root = tmp_path / "direct"
+    direct_root.mkdir()
+    store, lease = _store(direct_root)
+    with pytest.raises((ValueError, ContentRejectedError)) as direct:
+        store.upload_rollover_bundle(lease, manifest=manifest, blob=blob)
+    assert ("status is invalid" if reason == "not bundle-orderable" else reason) in str(direct.value)
+    assert BOUND_SENTINEL not in str(direct.value)
+    assert store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+    api_root = tmp_path / "api"
+    api_root.mkdir()
+    api_store, api_lease = _store(api_root)
+    client = TestClient(
+        epics_app_for_store(api_store, api_root), base_url="http://127.0.0.1", client=("127.0.0.1", 8765)
+    )
+    from dataclasses import asdict
+
+    errors = []
+    upload = api_store.upload_rollover_bundle
+
+    def record_upload(*args, **kwargs):
+        try:
+            return upload(*args, **kwargs)
+        except (ValueError, ContentRejectedError) as exc:
+            errors.append(str(exc))
+            raise
+
+    monkeypatch.setattr(api_store, "upload_rollover_bundle", record_upload)
+    response = client.post(
+        f"/api/epics/v1/{REGISTERED_STREAM}/bundles",
+        json={
+            **asdict(api_lease),
+            **asdict(api_lease.holder),
+            "manifest": manifest,
+            "blob": base64.b64encode(blob).decode("ascii"),
+        },
+    )
+    assert response.status_code == 400, response.text
+    assert BOUND_SENTINEL not in response.text
+    assert errors == [str(direct.value)]
+    assert api_store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+
+@pytest.mark.parametrize("case", ["member", "aggregate", "stream", "count", "manifest", "casefold"])
+def test_expanded_bounds_refuse_without_rows_or_installation(tmp_path, monkeypatch, capsys, case):
+    extra = {BOUND_MEMBER: b"safe\n"}
+    reason = "expanded"
+    if case == "member":
+        extra[BOUND_MEMBER] = b"x" * (8 * 1024 * 1024)
+    elif case == "aggregate":
+        monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES", 4096, raising=False)
+        extra = {f"{BOUND_MEMBER}.{i}": b"x" * 1024 for i in range(8)}
+        reason = "aggregate expanded limit"
+    elif case == "count":
+        monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_MEMBERS", 4, raising=False)
+        extra = {f"{BOUND_MEMBER}.{i}": b"safe\n" for i in range(4)}
+        reason = "member count limit"
+    elif case == "manifest":
+        monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES", 512, raising=False)
+        reason = "manifest size limit"
+    elif case == "casefold":
+        extra[BOUND_MEMBER.replace(BOUND_SENTINEL, BOUND_SENTINEL.upper())] = b"other\n"
+        reason = "duplicate or non-regular member"
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra=extra)
+    if case == "stream":
+        # All tar headers declare small payloads. The gzip stream expands far
+        # beyond them, even after tar's end marker; tarfile alone ignores it.
+        blob = gzip.compress(gzip.decompress(blob) + b"\0" * (8 * 1024 * 1024))
+        reason = "expanded archive limit"
+    _assert_bundle_refused_everywhere(tmp_path, monkeypatch, capsys, manifest, blob, reason)
+
+
+@pytest.mark.parametrize("case", ["allowlist", "path", "fingerprint", "tokenization", "status", "parser", "timestamp"])
+def test_refusal_diagnostics_never_echo_bundle_strings(tmp_path, monkeypatch, capsys, case):
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra={BOUND_MEMBER: b"safe\n"})
+    members = th._bundle_extract(blob)[1]
+    reason = {
+        "allowlist": "outside its lineage",
+        "path": "path is unsafe",
+        "fingerprint": "fingerprint mismatch",
+        "tokenization": "tokenization declaration",
+        "status": "not bundle-orderable",
+        "parser": "not a valid tar.gz",
+        "timestamp": "prepared_at is malformed",
+    }[case]
+    if case == "allowlist":
+        manifest, blob = _resign(manifest, {f"{BOUND_SENTINEL}.md": b"safe\n"})
+    elif case == "path":
+        blob = _raw_bundle([("manifest.json", th._bundle_json(manifest)), (f"../{BOUND_SENTINEL}.md", b"safe\n")])
+    elif case == "fingerprint":
+        members[BOUND_MEMBER] = b"different\n"
+        blob = th._bundle_archive(members, manifest)
+    elif case == "tokenization":
+        next(item for item in manifest["files"] if item["path"] == BOUND_MEMBER)["tokenized"] = False
+        blob = th._bundle_archive(members, manifest)
+    elif case == "status":
+        manifest["status"] = BOUND_SENTINEL
+        blob = th._bundle_archive(members, manifest)
+    elif case == "timestamp":
+        manifest["prepared_at"] = BOUND_SENTINEL
+        blob = th._bundle_archive(members, manifest)
+    else:
+
+        def failed_parser(*_args, **_kwargs):
+            raise tarfile.ReadError(BOUND_SENTINEL)
+
+        monkeypatch.setattr(th.tarfile, "open", failed_parser)
+    _assert_bundle_refused_everywhere(tmp_path, monkeypatch, capsys, manifest, blob, reason)
+
+
+@pytest.mark.parametrize(
+    ("payload", "rule"), [(b"api-key: supersecret-value\n", "credential-assignment"), (b"\xff", "invalid-utf8-text")]
+)
+def test_secret_scan_refusal_never_echoes_member_name(tmp_path, monkeypatch, payload, rule):
+    store, lease = _store(tmp_path)
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra={BOUND_MEMBER: payload})
+    with pytest.raises(ContentRejectedError, match=rule) as refusal:
+        store.upload_rollover_bundle(lease, manifest=manifest, blob=blob)
+    assert BOUND_SENTINEL not in str(refusal.value)
+    assert "supersecret-value" not in str(refusal.value)
+    assert store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+    from dataclasses import asdict
+
+    from fastapi.testclient import TestClient
+
+    from tests.epics_monitor_stub import epics_app_for_store
+
+    errors = []
+    upload = store.upload_rollover_bundle
+
+    def record_upload(*args, **kwargs):
+        try:
+            return upload(*args, **kwargs)
+        except ContentRejectedError as exc:
+            errors.append(str(exc))
+            raise
+
+    monkeypatch.setattr(store, "upload_rollover_bundle", record_upload)
+    client = TestClient(epics_app_for_store(store, tmp_path), base_url="http://127.0.0.1", client=("127.0.0.1", 8765))
+    response = client.post(
+        f"/api/epics/v1/{REGISTERED_STREAM}/bundles",
+        json={
+            **asdict(lease),
+            **asdict(lease.holder),
+            "manifest": manifest,
+            "blob": base64.b64encode(blob).decode("ascii"),
+        },
+    )
+    assert response.status_code == 400
+    assert BOUND_SENTINEL not in response.text
+    assert errors == [str(refusal.value)]
+    assert store.list_rollover_bundles(REGISTERED_STREAM) == []
+
+
+def test_maximum_member_round_trips_and_next_byte_is_refused(tmp_path, monkeypatch, capsys):
+    source = tmp_path / "source"
+    source.mkdir()
+    target = tmp_path / "target"
+    target.mkdir()
+    state = _seed_state(source, thread_id="source-thread")
+    extra = source / ".agent/thread-rollovers" / AGENT / state["lineage_id"] / f"{BOUND_SENTINEL}.md"
+    limit = getattr(th, "ROLLOVER_BUNDLE_MAX_MEMBER_BYTES", 1024 * 1024)
+    extra.write_bytes(b"x" * limit)
+    bundle = tmp_path / "maximum.tgz"
+    assert th.cmd_export_bundle(_export_args(source, state, bundle, stream=REGISTERED_STREAM)) == 0
+    capsys.readouterr()
+    manifest, members = th.verify_rollover_bundle(bundle.read_bytes(), repo_root=source)
+    store, lease = _store(tmp_path)
+    stored = store.upload_rollover_bundle(lease, manifest=manifest, blob=bundle.read_bytes())
+    assert stored["blob"] == bundle.read_bytes()
+    assert th.cmd_import_bundle(_import_args(target, bundle, stream=REGISTERED_STREAM)) == 0
+    capsys.readouterr()
+    assert (target / extra.relative_to(source)).read_bytes() == b"x" * limit
+    members[extra.relative_to(source).as_posix()] += b"x"
+    _, over_limit = _resign(manifest, members)
+    with pytest.raises(ValueError, match="expanded member limit"):
+        th.verify_rollover_bundle(over_limit, repo_root=source)
+
+
+def test_member_reader_enforces_cap_when_size_header_understates_output(tmp_path, monkeypatch, capsys):
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra={BOUND_MEMBER: b"small"})
+    monkeypatch.setattr(th, "ROLLOVER_BUNDLE_MAX_MEMBER_BYTES", 16, raising=False)
+    extract = tarfile.TarFile.extractfile
+
+    def understated_member(archive, member):
+        if member.name == BOUND_MEMBER:
+            return io.BytesIO(b"x" * 17)
+        return extract(archive, member)
+
+    monkeypatch.setattr(tarfile.TarFile, "extractfile", understated_member)
+    _assert_bundle_refused_everywhere(tmp_path, monkeypatch, capsys, manifest, blob, "expanded member limit")
+
+
+@pytest.mark.parametrize("dimension", ["aggregate", "manifest", "count"])
+def test_exact_expanded_boundary_accepts_and_next_unit_refuses(monkeypatch, dimension):
+    manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM, extra={BOUND_MEMBER: b"safe\n"})
+    members = th._bundle_extract(blob)[1]
+    manifest_bytes = len(th._bundle_json(manifest))
+    constant, limit = {
+        "aggregate": ("ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES", manifest_bytes + sum(map(len, members.values()))),
+        "manifest": ("ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES", manifest_bytes),
+        "count": ("ROLLOVER_BUNDLE_MAX_MEMBERS", len(members) + 1),
+    }[dimension]
+    monkeypatch.setattr(th, constant, limit, raising=False)
+    assert th.verify_rollover_bundle(blob, repo_root=REPO_ROOT) == (manifest, members)
+    monkeypatch.setattr(th, constant, limit - 1, raising=False)
+    with pytest.raises(
+        ValueError,
+        match={
+            "aggregate": "aggregate expanded limit",
+            "manifest": "manifest size limit",
+            "count": "member count limit",
+        }[dimension],
+    ):
+        th.verify_rollover_bundle(blob, repo_root=REPO_ROOT)
+
+
+def test_imported_lease_refusal_never_echoes_bundle_strings(tmp_path):
+    state = _seed_state(tmp_path, thread_id="source-thread")
+    state["agent"] = BOUND_SENTINEL
+    lease_name = th.default_state_path(AGENT, state["lineage_id"]).as_posix()
+    with pytest.raises(ValueError, match="bundle lease is invalid") as refusal:
+        th._bundle_validate_lease_member(
+            tmp_path,
+            agent=AGENT,
+            lineage_id=state["lineage_id"],
+            manifest={},
+            members={lease_name: th._bundle_json(state)},
+        )
+    assert BOUND_SENTINEL not in str(refusal.value)
+
+
+@pytest.mark.parametrize("name", [f"../{BOUND_SENTINEL}.md", f"{BOUND_SENTINEL}.md"])
+def test_member_allowlist_refusal_never_echoes_bundle_strings(name):
+    from agents_extensions.shared.session_streams.store import validate_rollover_bundle_members
+
+    with pytest.raises(ValueError) as refusal:
+        validate_rollover_bundle_members([name], agent=AGENT, lineage_id="lineage-store", handoff_candidates=())
+    assert BOUND_SENTINEL not in str(refusal.value)
