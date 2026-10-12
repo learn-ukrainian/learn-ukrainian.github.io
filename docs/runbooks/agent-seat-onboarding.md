@@ -428,7 +428,9 @@ not permanent routing weights and do not override current CodexBar headroom.
   unsafe package/bin metadata fails before prompt delivery; ACPX must not
   fall back to per-call package execution.
 - The Claude adapter never runs its bundled Claude Code: each launch pins the
-  host `claude` real path through `CLAUDE_CODE_EXECUTABLE` and refuses before
+  host `claude` real path, runs it through the repo-owned launcher that
+  `CLAUDE_CODE_EXECUTABLE` names (it adds the headless background denies;
+  see `docs/agent-runtime-guide.md`), and refuses before
   prompt delivery when it is missing, unsafe, unparseable or below the
   per-model floor in `CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS` (#10500). The
   executable and every ancestor must not be symlinks, foreign-owned or

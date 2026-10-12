@@ -1594,6 +1594,17 @@ def _require_local_claude_acp_adapter(
 CLAUDE_CODE_EXECUTABLE_ENV = "CLAUDE_CODE_EXECUTABLE"
 # Claude Code reads this variable as the session effort; ACPX has no effort flag.
 CLAUDE_CODE_EFFORT_ENV = "CLAUDE_CODE_EFFORT_LEVEL"
+# Claude Code switches that remove CronCreate and Workflow (verified on 2.1.296);
+# defense in depth beside the launcher's deny flags.
+_CLAUDE_ACP_BACKGROUND_TOOL_ENV = {"CLAUDE_CODE_DISABLE_CRON": "1", "CLAUDE_CODE_DISABLE_WORKFLOWS": "1"}
+# The repo-owned launcher CLAUDE_CODE_EXECUTABLE names. ACPX cannot pass a tool
+# deny and --deny-all never covers tools that run without asking, so it execs
+# the pinned host binary with the headless background denies (#9690, #10500).
+# Not resolved: a symlinked launcher or parent must be seen and refused.
+_CLAUDE_ACP_LAUNCHER = Path(os.path.abspath(__file__)).parents[1] / "claude_acp_exec.sh"
+_CLAUDE_ACP_LAUNCHER_TRUST_ROOT = Path(os.path.abspath(__file__)).parents[3]
+CLAUDE_ACP_HOST_ENV = "LU_CLAUDE_ACP_HOST"
+CLAUDE_ACP_HOST_DEV_INO_ENV = "LU_CLAUDE_ACP_HOST_DEV_INO"
 _CLAUDE_CODE_PROBE_TIMEOUT_S = 10
 _CLAUDE_SESSION_ID_RE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
 _CLAUDE_TRANSCRIPT_MAX_LINES = 64
@@ -1662,25 +1673,32 @@ def _claude_code_identity(path_stat: os.stat_result) -> str:
     return f"{path_stat.st_dev}:{path_stat.st_ino}:{path_stat.st_size}:{path_stat.st_mtime_ns}"
 
 
-def _require_trusted_claude_code_path(executable: Path, *, adapter_label: str) -> os.stat_result:
-    """Check the executable and every ancestor; return the executable's stat."""
+def _require_trusted_claude_code_path(
+    executable: Path,
+    *,
+    adapter_label: str,
+    trust_root: Path | None = None,
+    subject: str = "host Claude Code",
+) -> os.stat_result:
+    """Check the executable and every ancestor up to ``trust_root``; return its stat."""
+    root = _CLAUDE_CODE_TRUST_ROOT if trust_root is None else trust_root
     try:
         executable_stat = executable.lstat()
         ancestors = []
         for parent in executable.parents:
             ancestors.append((parent, parent.lstat()))
-            if parent == _CLAUDE_CODE_TRUST_ROOT:
+            if parent == root:
                 break
     except FileNotFoundError as exc:
         raise ClaudeCodeExecutableRefusal(
-            f"{adapter_label}: host Claude Code executable {executable} vanished before launch "
+            f"{adapter_label}: {subject} {executable} vanished before launch "
             "(an auto-update may have removed it); retry the ask",
             reason="vanished",
             failure_code="acp_adapter_missing",
         ) from exc
     except OSError as exc:
         raise ClaudeCodeExecutableRefusal(
-            f"{adapter_label}: cannot inspect host Claude Code executable {executable}: {exc.strerror}",
+            f"{adapter_label}: cannot inspect {subject} {executable}: {exc.strerror}",
             reason="untrusted_path",
         ) from exc
     refusal = _claude_code_path_refusal(executable, executable_stat, expect_dir=False)
@@ -1692,10 +1710,21 @@ def _require_trusted_claude_code_path(executable: Path, *, adapter_label: str) -
         refusal = _claude_code_path_refusal(parent, parent_stat, expect_dir=True)
     if refusal is not None:
         raise ClaudeCodeExecutableRefusal(
-            f"{adapter_label}: refusing to pin host Claude Code: {refusal}",
+            f"{adapter_label}: refusing to launch {subject}: {refusal}",
             reason="untrusted_path",
         )
     return executable_stat
+
+
+def _require_claude_acp_launcher(*, adapter_label: str) -> str:
+    """Validate the tracked launcher and its parents up to the repo root."""
+    _require_trusted_claude_code_path(
+        _CLAUDE_ACP_LAUNCHER,
+        adapter_label=adapter_label,
+        trust_root=_CLAUDE_ACP_LAUNCHER_TRUST_ROOT,
+        subject="the Claude ACP launcher",
+    )
+    return str(_CLAUDE_ACP_LAUNCHER)
 
 
 def _claude_code_floor(model: str | None) -> tuple[int, int, int]:
@@ -1796,6 +1825,7 @@ def _require_host_claude_code(*, model: str | None, adapter_label: str) -> dict[
         )
     return {
         "claude_code_executable": str(executable),
+        "claude_code_dev_ino": f"{after.st_dev}:{after.st_ino}",
         "claude_code_executable_identity": _claude_code_identity(after),
         "claude_code_version": observed,
         "claude_code_version_floor": required,
@@ -1817,7 +1847,7 @@ def _claude_session_transcript_version(stdout: str) -> str | None:
     session id or transcript is not observable.
     """
     session_id = None
-    for line in stdout.splitlines():
+    for line in jsonl_lines(stdout):
         try:
             message = json.loads(line)
         except ValueError:
@@ -3059,7 +3089,10 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
         """Pin the host Claude Code and its effort for this launch (#10500).
 
         The explicit launch env wins over any inherited or caller value, in
-        ordinary and sealed-review launches alike.
+        ordinary and sealed-review launches alike. The headless background
+        denies are enforced by the launcher's ``--disallowedTools`` flag, not by
+        ACPX permissions: ``--deny-all`` never covers tools that run without
+        asking (Monitor, ScheduleWakeup).
         """
         plan = super().build_invocation(
             prompt=prompt,
@@ -3071,15 +3104,29 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
             tool_config=tool_config,
             effort=effort,
         )
-        host = _require_host_claude_code(model=plan.metadata.get("model"), adapter_label=type(self).__name__)
+        from .claude import HEADLESS_BACKGROUND_ENV
+
+        adapter_label = type(self).__name__
+        host = _require_host_claude_code(model=plan.metadata.get("model"), adapter_label=adapter_label)
+        launcher = _require_claude_acp_launcher(adapter_label=adapter_label)
+        if Path(launcher).resolve() == Path(host["claude_code_executable"]):
+            raise ClaudeCodeExecutableRefusal(
+                f"{adapter_label}: host Claude Code resolves to the ACP launcher itself",
+                reason="untrusted_path",
+            )
         return replace(
             plan,
             env_overrides={
                 **plan.env_overrides,
-                CLAUDE_CODE_EXECUTABLE_ENV: host["claude_code_executable"],
+                # One-shot exec ends with the turn: no background work or advisor (#9690, #10083).
+                **HEADLESS_BACKGROUND_ENV,
+                **_CLAUDE_ACP_BACKGROUND_TOOL_ENV,
+                CLAUDE_CODE_EXECUTABLE_ENV: launcher,
+                CLAUDE_ACP_HOST_ENV: host["claude_code_executable"],
+                CLAUDE_ACP_HOST_DEV_INO_ENV: host["claude_code_dev_ino"],
                 CLAUDE_CODE_EFFORT_ENV: self.fixed_effort,
             },
-            metadata={**plan.metadata, **host},
+            metadata={**plan.metadata, **host, "claude_code_launcher": launcher},
         )
 
     def parse_response(self, **kwargs: Any) -> ParseResult:

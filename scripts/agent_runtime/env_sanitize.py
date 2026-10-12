@@ -135,6 +135,12 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         "CLAUDE_CODE_EXECUTABLE",
         # The seat's fixed effort; ACPX has no effort flag. Never a credential.
         "CLAUDE_CODE_EFFORT_LEVEL",
+        # Headless switches, as for the claude provider (#9690, #10083).
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS",
+        "CLAUDE_CODE_DISABLE_ADVISOR_TOOL",
+        # Tool switches the seat sets because ACPX cannot pass a tool deny.
+        "CLAUDE_CODE_DISABLE_CRON",
+        "CLAUDE_CODE_DISABLE_WORKFLOWS",
     },
     "acpx-grok-shadow": {
         # acpx@0.13.0 treats this as a non-secret auth-method selector:

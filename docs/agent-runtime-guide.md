@@ -635,6 +635,19 @@ Edit and Read, and Bash has no `run_in_background` there (a capture of the
 request sent to a local fake endpoint); the explicit controls keep the route
 closed if that reduced tool set changes.
 
+The ACP Claude seat (`acpx-claude-shadow`, #10500) launches the host Claude
+Code through the repo-owned `scripts/agent_runtime/claude_acp_exec.sh`, which
+`CLAUDE_CODE_EXECUTABLE` names. The adapter validates the launcher and its
+parents up to the repo root, and the pinned host binary, before every launch.
+The launcher rechecks the binary's device and inode, then execs it with the
+deny list as one `--disallowedTools` argument; the SDK's own
+`--disallowedTools` follows and accumulates. The seat enforces the denies
+through these launcher flags, not through ACPX permissions: `--deny-all` never
+covers tools that run without asking, such as `Monitor` and `ScheduleWakeup`.
+The plan also sets `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`,
+`CLAUDE_CODE_DISABLE_ADVISOR_TOOL`, `CLAUDE_CODE_DISABLE_CRON` and
+`CLAUDE_CODE_DISABLE_WORKFLOWS`, allowlisted for this seat only.
+
 Sealed `review_isolation` drops the variable through its own environment
 allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
 that can background. Interactive launchers (`start-claude.sh`,

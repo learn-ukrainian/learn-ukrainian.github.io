@@ -281,11 +281,13 @@ def _stub_binary(
         "_require_host_claude_code",
         lambda *, model, adapter_label: {
             "claude_code_executable": "/installed/claude/versions/2.1.296",
+            "claude_code_dev_ino": "1:2",
             "claude_code_executable_identity": "1:2:3:4",
             "claude_code_version": "2.1.296",
             "claude_code_version_floor": "2.1.280" if model == "claude-opus-5-5" else "2.1.116",
         },
     )
+    monkeypatch.setattr(acpx_module, "_require_claude_acp_launcher", lambda *, adapter_label: "/repo/claude_acp_exec.sh")
     return binary
 
 
@@ -2382,7 +2384,8 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert plan.metadata["claude_acp_compatibility"] == "installed>=0.64.2<1"
         assert plan.metadata["claude_acp_launch_source"] == "installed"
         assert plan.metadata["claude_code_executable"] == "/installed/claude/versions/2.1.296"
-        assert sanitized_env["CLAUDE_CODE_EXECUTABLE"] == "/installed/claude/versions/2.1.296"
+        assert sanitized_env["CLAUDE_CODE_EXECUTABLE"] == "/repo/claude_acp_exec.sh"
+        assert sanitized_env["LU_CLAUDE_ACP_HOST"] == "/installed/claude/versions/2.1.296"
         assert sanitized_env["CLAUDE_CODE_EFFORT_LEVEL"] == "high"
     else:
         assert "CLAUDE_CODE_EXECUTABLE" not in plan.env_overrides

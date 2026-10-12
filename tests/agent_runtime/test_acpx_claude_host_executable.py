@@ -6,7 +6,9 @@ import json
 import os
 import stat
 import subprocess
+import sys
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 
 import pytest
@@ -23,10 +25,15 @@ from scripts.agent_runtime.env_sanitize import build_agent_env
 from tests.agent_runtime import test_acpx_adapter as _acpx_tests
 from tests.agent_runtime.test_acpx_adapter import _stub_binary
 
-# Reuse the suite's registered-worktree fixtures: pytest registers them under
-# their own names (``_acpx_worktree`` and the ``tmp_path`` override).
+# The suite's registered isolated worktree: ACPX refuses a primary-checkout cwd,
+# and pytest's basetemp may sit inside the primary checkout.
 _acpx_worktree = _acpx_tests._acpx_worktree
-_worktree_tmp_path = _acpx_tests.tmp_path
+
+
+@pytest.fixture
+def worktree_dir(_acpx_worktree):
+    with TemporaryDirectory(prefix="claude-host-", dir=_acpx_worktree) as directory:
+        yield Path(directory)
 
 _SESSION_ID = "0f6c2f8e-1d2b-4c3a-9e8f-7a6b5c4d3e2f"
 _REAL_GATE = acpx_module._require_host_claude_code
@@ -332,7 +339,8 @@ def _build(tmp_path, *, model="claude-opus-5-5", sealed=None):
 
 
 @pytest.mark.parametrize("sealed", [False, True])
-def test_launch_env_pins_the_host_executable_over_caller_values(tmp_path, monkeypatch, sealed):
+def test_launch_env_pins_the_host_executable_over_caller_values(worktree_dir, monkeypatch, sealed):
+    tmp_path = worktree_dir
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     sealed_config = None
@@ -347,9 +355,17 @@ def test_launch_env_pins_the_host_executable_over_caller_values(tmp_path, monkey
     monkeypatch.setenv("CLAUDE_CODE_EXECUTABLE", "/caller/bundled-claude")
     monkeypatch.setenv("CLAUDE_CODE_EFFORT_LEVEL", "low")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "fixture-secret")
+    monkeypatch.setenv("LU_CLAUDE_ACP_HOST", "/caller/claude")
     env = build_agent_env(provider="acpx-claude-shadow", model="claude-opus-5-5", overrides=plan.env_overrides)
-    assert env["CLAUDE_CODE_EXECUTABLE"] == "/installed/claude/versions/2.1.296"
+    assert env["CLAUDE_CODE_EXECUTABLE"] == "/repo/claude_acp_exec.sh"
+    assert env["LU_CLAUDE_ACP_HOST"] == "/installed/claude/versions/2.1.296"
+    assert env["LU_CLAUDE_ACP_HOST_DEV_INO"] == "1:2"
+    assert plan.metadata["claude_code_launcher"] == "/repo/claude_acp_exec.sh"
     assert env["CLAUDE_CODE_EFFORT_LEVEL"] == "high"
+    assert env["CLAUDE_CODE_DISABLE_BACKGROUND_TASKS"] == "1"
+    assert env["CLAUDE_CODE_DISABLE_ADVISOR_TOOL"] == "1"
+    assert env["CLAUDE_CODE_DISABLE_CRON"] == "1"
+    assert env["CLAUDE_CODE_DISABLE_WORKFLOWS"] == "1"
     assert "ANTHROPIC_API_KEY" not in env
     assert env["PATH"] == plan.env_overrides["PATH"]
     assert plan.metadata["claude_code_version"] == "2.1.296"
@@ -371,10 +387,12 @@ def test_other_acp_seats_never_receive_the_claude_pin(monkeypatch):
         assert "CLAUDE_CODE_EXECUTABLE" not in build_agent_env(provider=provider)
 
 
-def test_too_old_host_refuses_the_opus_launch_before_any_plan(tmp_path, host, monkeypatch):
+def test_too_old_host_refuses_the_opus_launch_before_any_plan(worktree_dir, host, monkeypatch):
+    tmp_path = worktree_dir
     _stub_binary(monkeypatch, tmp_path)
     # Keep the ACPX stubs but run the real host gate against the fake install.
     monkeypatch.setattr(acpx_module, "_require_host_claude_code", _REAL_GATE)
+    monkeypatch.setattr(acpx_module, "_require_claude_acp_launcher", lambda *, adapter_label: "/repo/launcher")
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     host.install("2.1.279 (Claude Code)", name="2.1.279")
 
@@ -534,7 +552,8 @@ def test_claude_acp_never_launches_inside_the_attempt_boundary(access):
 
 
 @pytest.mark.parametrize("key", ["review_id", "review_isolation", "review_attempt_boundary", "attempt_os_sandbox"])
-def test_claude_acp_adapter_refuses_boundary_tool_config(tmp_path, monkeypatch, key):
+def test_claude_acp_adapter_refuses_boundary_tool_config(worktree_dir, monkeypatch, key):
+    tmp_path = worktree_dir
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
     with acpx_module.active_discussion_scope(), pytest.raises(AcpxShadowRefusalError, match="unsupported tool_config"):
@@ -553,3 +572,170 @@ def test_claude_acp_adapter_refuses_boundary_tool_config(tmp_path, monkeypatch, 
                 key: True,
             },
         )
+
+
+# --- repo-owned launcher (approved design, #10500) --------------------------
+
+_LAUNCHER = Path(acpx_module.__file__).resolve().parents[1] / "claude_acp_exec.sh"
+_SDK_ARGS = [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--input-format",
+    "stream-json",
+    "--disallowedTools",
+    "AskUserQuestion",
+]
+
+
+def _dumping_claude(directory: Path) -> Path:
+    """A fake host binary that records its argv and environment."""
+    directory.mkdir(parents=True, exist_ok=True)
+    fake = directory / "claude"
+    fake.write_text(
+        f"#!{sys.executable}\n"
+        "import json, os, sys\n"
+        "json.dump({'argv': sys.argv, 'env': dict(os.environ)}, open(os.environ['LU_TEST_DUMP'], 'w'))\n",
+        encoding="utf-8",
+    )
+    fake.chmod(0o755)
+    return fake
+
+
+def _run_launcher(tmp_path: Path, *, host: str | None, identity: str | None):
+    dump = tmp_path / "dump.json"
+    env = {"PATH": "/usr/bin:/bin", "LU_TEST_DUMP": str(dump)}
+    if host is not None:
+        env["LU_CLAUDE_ACP_HOST"] = host
+    if identity is not None:
+        env["LU_CLAUDE_ACP_HOST_DEV_INO"] = identity
+    proc = subprocess.run(
+        [str(_LAUNCHER), *_SDK_ARGS], env=env, capture_output=True, text=True, timeout=30, check=False
+    )
+    return proc, dump
+
+
+def test_launcher_deny_list_equals_the_headless_background_denies():
+    from scripts.agent_runtime.adapters.claude import HEADLESS_BACKGROUND_TOOL_DENIES
+
+    text = _LAUNCHER.read_text(encoding="utf-8")
+    exec_lines = [line for line in text.splitlines() if line.startswith("exec ")]
+    assert exec_lines == ['exec "$host" --disallowedTools ' + ",".join(HEADLESS_BACKGROUND_TOOL_DENIES) + ' "$@"']
+    assert text.startswith("#!/bin/sh\n")
+    assert "eval" not in text
+
+
+def test_launcher_execs_the_pinned_binary_with_merged_denies_and_a_clean_env(tmp_path):
+    fake = _dumping_claude(tmp_path / "host")
+    fake_stat = fake.stat()
+    proc, dump = _run_launcher(tmp_path, host=str(fake), identity=f"{fake_stat.st_dev}:{fake_stat.st_ino}")
+    assert proc.returncode == 0, proc.stderr
+    record = json.loads(dump.read_text(encoding="utf-8"))
+    assert record["argv"][1:] == [
+        "--disallowedTools",
+        "Monitor,ScheduleWakeup,CronCreate,Workflow",
+        *_SDK_ARGS,
+    ]
+    assert "LU_CLAUDE_ACP_HOST" not in record["env"]
+    assert "LU_CLAUDE_ACP_HOST_DEV_INO" not in record["env"]
+
+
+@pytest.mark.parametrize(
+    ("host", "identity", "message"),
+    [
+        (None, "1:2", "missing or relative"),
+        ("relative/claude", "1:2", "missing or relative"),
+        ("HOST", None, "identity is missing"),
+        ("HOST", "0:0", "changed since its version probe"),
+    ],
+)
+def test_launcher_refuses_without_executing(tmp_path, host, identity, message):
+    fake = _dumping_claude(tmp_path / "host")
+    proc, dump = _run_launcher(tmp_path, host=str(fake) if host == "HOST" else host, identity=identity)
+    assert proc.returncode == 126
+    assert message in proc.stderr
+    assert not dump.exists()
+
+
+@pytest.fixture
+def launcher_tree(tmp_path, monkeypatch):
+    """A private copy of the tracked launcher under its own trust root."""
+    root = tmp_path / "repo"
+    scripts_dir = root / "scripts" / "agent_runtime"
+    scripts_dir.mkdir(parents=True)
+    for directory in (root, root / "scripts", scripts_dir):
+        directory.chmod(0o755)
+    launcher = scripts_dir / "claude_acp_exec.sh"
+    launcher.write_bytes(_LAUNCHER.read_bytes())
+    launcher.chmod(0o755)
+    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER", launcher)
+    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER_TRUST_ROOT", root)
+    _fake_accounts(monkeypatch, members=("caller",))
+    return SimpleNamespace(root=root, launcher=launcher)
+
+
+def _launcher_refusal() -> ClaudeCodeExecutableRefusal:
+    with pytest.raises(ClaudeCodeExecutableRefusal) as raised:
+        acpx_module._require_claude_acp_launcher(adapter_label="X")
+    return raised.value
+
+
+def test_trusted_launcher_is_accepted_with_private_group_parents(launcher_tree):
+    (launcher_tree.root / "scripts").chmod(0o775)
+    assert acpx_module._require_claude_acp_launcher(adapter_label="X") == str(launcher_tree.launcher)
+
+
+@pytest.mark.parametrize(("mode", "message"), [(0o775, "group-writable"), (0o757, "world-writable")])
+def test_group_or_world_writable_launcher_is_refused(launcher_tree, mode, message):
+    launcher_tree.launcher.chmod(mode)
+    refusal = _launcher_refusal()
+    assert refusal.reason == "untrusted_path"
+    assert message in str(refusal)
+
+
+def test_world_writable_launcher_parent_is_refused(launcher_tree):
+    (launcher_tree.root / "scripts").chmod(0o777)
+    assert "world-writable" in str(_launcher_refusal())
+
+
+def test_launcher_parent_writable_by_a_shared_group_is_refused(launcher_tree, monkeypatch):
+    (launcher_tree.root / "scripts").chmod(0o775)
+    _fake_accounts(monkeypatch, members=("caller", "other"))
+    assert "group-writable" in str(_launcher_refusal())
+
+
+def test_symlinked_launcher_is_refused(launcher_tree):
+    target = launcher_tree.launcher.with_name("real.sh")
+    launcher_tree.launcher.rename(target)
+    launcher_tree.launcher.symlink_to(target)
+    assert "is a symlink" in str(_launcher_refusal())
+
+
+def test_missing_launcher_is_refused(launcher_tree):
+    launcher_tree.launcher.unlink()
+    assert _launcher_refusal().failure_code == "acp_adapter_missing"
+
+
+def test_host_that_is_the_launcher_itself_is_refused(worktree_dir, monkeypatch):
+    _stub_binary(monkeypatch, worktree_dir)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    monkeypatch.setattr(acpx_module, "_require_claude_acp_launcher", lambda *, adapter_label: str(_LAUNCHER))
+    monkeypatch.setattr(
+        acpx_module,
+        "_require_host_claude_code",
+        lambda **_kw: {"claude_code_executable": str(_LAUNCHER), "claude_code_dev_ino": "1:2"},
+    )
+    with pytest.raises(ClaudeCodeExecutableRefusal, match="launcher itself"):
+        _build(worktree_dir)
+
+
+def test_tracked_launcher_is_executable_in_git():
+    listed = subprocess.run(
+        ["git", "ls-files", "-s", "scripts/agent_runtime/claude_acp_exec.sh"],
+        cwd=Path(acpx_module.__file__).resolve().parents[3],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=True,
+    ).stdout
+    assert listed.startswith("100755 ")
