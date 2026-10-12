@@ -65,6 +65,36 @@ def test_clean_gloss_strips_leading_qualifier_before_meta_clause() -> None:
     assert _clean_gloss("(of a person) tall") == "(of a person) tall"
 
 
+def test_clean_gloss_drops_form_of_notes_with_nested_delimiters() -> None:
+    # #8948: form-of glosses with internal commas or usage notes must be dropped whole
+    assert _clean_gloss(
+        "Alternative form of під (pid, “under”), used before awkward consonant clusters and chiefly before мно́ю (mnóju)"
+    ) == ""
+    assert _clean_gloss(
+        "Alternative form of над (nad, “above, over”), used before certain consonant clusters"
+    ) == ""
+    assert _clean_gloss(
+        "Alternative form of перед (pered, “before, in front of”), used before certain consonant clusters"
+    ) == ""
+    assert _clean_gloss(
+        "clipping of аватарка (avatarka, “avatar”), especially an Internet user's icon"
+    ) == ""
+    assert _clean_gloss("dative plural of адре́са (adrésa, “address”)") == ""
+    assert _clean_gloss("diminutive of база́р (bazár, “market, bazaar”)") == ""
+    assert _clean_gloss("alternative form of авантюрист (avantjuryst, “adventurist”)") == ""
+
+
+def test_clean_gloss_preserves_nested_delimiters_in_genuine_translations() -> None:
+    # Delimiters inside parentheses or quotes must not trigger erroneous clause splits
+    assert _clean_gloss("water, (colloquial, slang) liquid") == "water, (colloquial, slang) liquid"
+    assert _clean_gloss('"Fatherland", as a name for the country of Ukraine.') == (
+        '"Fatherland", as a name for the country of Ukraine.'
+    )
+    assert _clean_gloss(
+        "pimpernel (Pimpinella gen. et spp., especially burnet saxifrage (Pimpinella saxifraga))"
+    ) == "pimpernel (Pimpinella gen. et spp., especially burnet saxifrage (Pimpinella saxifraga))"
+
+
 def test_extract_glosses_filters_form_entries() -> None:
     # an inflected-form entry yields no translation glosses
     entry = {"senses": [{"glosses": ["accusative singular", "vocative singular"]}]}

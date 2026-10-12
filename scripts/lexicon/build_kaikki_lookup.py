@@ -125,7 +125,58 @@ _GRAMMATICAL_TOKEN = (
 )
 _GRAMMATICAL_FORM_RE = re.compile(rf"^(?:(?:{_GRAMMATICAL_TOKEN})[\s/]*)+$", re.IGNORECASE)
 _TOKEN_SPLIT_RE = re.compile(r"[\s/]+")
-_CLAUSE_SPLIT_RE = re.compile(r"\s*[;,]\s*")
+def _split_clauses(text: str) -> list[str]:
+    """Split gloss into comma/semicolon clauses outside brackets and quotes."""
+    clauses: list[str] = []
+    current: list[str] = []
+    p_depth = 0
+    b_depth = 0
+    brace_depth = 0
+    curly_q = 0
+    in_straight_q = False
+
+    for ch in text:
+        if ch == "(":
+            p_depth += 1
+        elif ch == ")":
+            if p_depth > 0:
+                p_depth -= 1
+        elif ch == "[":
+            b_depth += 1
+        elif ch == "]":
+            if b_depth > 0:
+                b_depth -= 1
+        elif ch == "{":
+            brace_depth += 1
+        elif ch == "}":
+            if brace_depth > 0:
+                brace_depth -= 1
+        elif ch == "“":
+            curly_q += 1
+        elif ch == "”":
+            if curly_q > 0:
+                curly_q -= 1
+        elif ch == '"':
+            in_straight_q = not in_straight_q
+        elif (
+            ch in ",;"
+            and p_depth == 0
+            and b_depth == 0
+            and brace_depth == 0
+            and curly_q == 0
+            and not in_straight_q
+        ):
+            part = "".join(current).strip()
+            if part:
+                clauses.append(part)
+            current = []
+            continue
+        current.append(ch)
+
+    tail = "".join(current).strip()
+    if tail:
+        clauses.append(tail)
+    return clauses
 
 
 def _is_grammatical_form(clause: str) -> bool:
@@ -162,10 +213,12 @@ def _clean_gloss(gloss: str) -> str:
         prefix, suffix = g.split(":", 1)
         if _is_meta_clause(prefix):
             return _clean_gloss(suffix) if suffix.strip() else ""
-    clauses = _CLAUSE_SPLIT_RE.split(g)
-    if len(clauses) == 1:
-        return "" if _is_meta_clause(g) else g
-    kept = [c for c in clauses if c and not _is_meta_clause(c)]
+    clauses = _split_clauses(g)
+    if not clauses:
+        return ""
+    if _is_meta_clause(clauses[0]):
+        return ""
+    kept = [c for c in clauses if not _is_meta_clause(c)]
     if len(kept) == len(clauses):
         return g  # nothing dropped — preserve original
     return ", ".join(kept).strip()
