@@ -427,6 +427,13 @@ not permanent routing weights and do not override current CodexBar headroom.
   lockfile records the exact installed release. Missing, incompatible, or
   unsafe package/bin metadata fails before prompt delivery; ACPX must not
   fall back to per-call package execution.
+- The Claude adapter never runs its bundled Claude Code: each launch pins the
+  host `claude` real path through `CLAUDE_CODE_EXECUTABLE` and refuses before
+  prompt delivery when it is missing, unsafe, unparseable or below the
+  per-model floor in `CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS` (#10500). Trade-off:
+  a version floor replaces the lockfile integrity hash, and the host binary's
+  code changes without repo review; this adds no trust boundary, because the
+  native delegate route already runs the same host binary.
 - Every invocation requires a non-empty, bounded, local `task_id`,
   `correlation_id`, and `idempotency_key`, a fixed target from the participant
   registry, and a read-only, non-primary worktree.

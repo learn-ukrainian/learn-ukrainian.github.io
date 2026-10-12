@@ -75,10 +75,12 @@ Issues: #6027, #6043, #6078, #6130, #6158.
 
 from __future__ import annotations
 
+import grp
 import hashlib
 import json
 import logging
 import os
+import pwd
 import re
 import shlex
 import stat
@@ -86,7 +88,7 @@ import subprocess
 from collections.abc import Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -180,7 +182,19 @@ AGY_ACP_MODEL = "gemini-3.8-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
 # Opus 5.5 is the Claude authority pin for advice and review; Fable holds no
 # advisory or review role (operator decision 2026-10-03, #9583).
-CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-opus-5-5"})
+CLAUDE_ACP_OPUS_MODEL = "claude-opus-5-5"
+CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, CLAUDE_ACP_OPUS_MODEL})
+# The ACP Claude seat launches the host Claude Code executable (#10500). This is
+# the single per-model floor table: a pinned executable below its model's floor
+# is refused before prompt delivery. Models without an entry use the global
+# CLAUDE_MIN_SUPPORTED_CLI_VERSION; Opus 5.5 needs Claude Code 2.1.280+.
+CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS: dict[str, tuple[int, int, int]] = {CLAUDE_ACP_OPUS_MODEL: (2, 1, 280)}
+# OPEN OPERATOR DECISION (#10500): on a native install the directories above the
+# versioned Claude Code binary are often mode 0775 under the caller's private
+# primary group. False refuses any group-writable path component; True admits
+# group write only when the group is the caller's private primary group (the
+# caller is its sole member). Only the operator's decision switches this.
+CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE = False
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
 CURSOR_ACP_MODEL = "grok-4.7"
@@ -1580,6 +1594,305 @@ def _require_local_claude_acp_adapter(
     }
 
 
+# The installed claude-agent-acp reads this variable as the SDK's
+# ``pathToClaudeCodeExecutable`` (it takes precedence over ACP session
+# ``_meta`` options), so the adapter never runs its bundled Claude Code (#10500).
+CLAUDE_CODE_EXECUTABLE_ENV = "CLAUDE_CODE_EXECUTABLE"
+# Claude Code reads this variable as the session effort; ACPX has no effort flag.
+CLAUDE_CODE_EFFORT_ENV = "CLAUDE_CODE_EFFORT_LEVEL"
+_CLAUDE_CODE_PROBE_TIMEOUT_S = 10
+_CLAUDE_SESSION_ID_RE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
+_CLAUDE_TRANSCRIPT_MAX_LINES = 64
+_CLAUDE_TRANSCRIPT_LINE_LIMIT_BYTES = 1024 * 1024
+# Ancestors are checked up to and including this directory: every one in
+# production. Tests point it at their private tree, whose system parents
+# (sticky world-writable temp roots) are outside the subject.
+_CLAUDE_CODE_TRUST_ROOT = Path("/")
+
+
+class ClaudeCodeExecutableRefusal(AcpxShadowRefusalError):
+    """The host Claude Code executable cannot be pinned for an ACP launch.
+
+    ``reason`` is one of ``missing``, ``untrusted_path``, ``vanished``,
+    ``probe_failed``, ``unparseable`` or ``too_old``; ``failure_code`` stays in
+    the runtime's closed failure-code set.
+    """
+
+    def __init__(self, message: str, *, reason: str, failure_code: str = "acp_adapter_incompatible") -> None:
+        super().__init__(message, failure_code=failure_code)
+        self.reason = reason
+
+
+def _claude_code_group_write_permitted(gid: int) -> bool:
+    """Apply the open group-write policy for the pinned Claude Code path (#10500).
+
+    Strict by default: no group-writable component is accepted. With
+    ``CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE`` the group must be the caller's
+    primary group and have no member other than the caller.
+    """
+    if not CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE or gid != os.getgid():
+        return False
+    uid = os.getuid()
+    try:
+        caller = pwd.getpwuid(uid).pw_name
+        members = set(grp.getgrgid(gid).gr_mem)
+    except KeyError:
+        return False
+    if not members <= {caller}:
+        return False
+    return all(entry.pw_uid == uid for entry in pwd.getpwall() if entry.pw_gid == gid)
+
+
+def _claude_code_path_refusal(path: Path, path_stat: os.stat_result, *, expect_dir: bool) -> str | None:
+    """Return why one component of the pinned executable path is unsafe, or None."""
+    if stat.S_ISLNK(path_stat.st_mode):
+        return f"{path} is a symlink"
+    if expect_dir and not stat.S_ISDIR(path_stat.st_mode):
+        return f"{path} is not a directory"
+    if not expect_dir and not stat.S_ISREG(path_stat.st_mode):
+        return f"{path} is not a regular file"
+    if path_stat.st_uid not in {os.getuid(), 0}:
+        return f"{path} is owned by uid {path_stat.st_uid}, neither the caller nor root"
+    mode = stat.S_IMODE(path_stat.st_mode)
+    if mode & stat.S_IWOTH:
+        return f"{path} is world-writable (mode {oct(mode)})"
+    if mode & stat.S_IWGRP and not _claude_code_group_write_permitted(path_stat.st_gid):
+        return f"{path} is group-writable (mode {oct(mode)})"
+    return None
+
+
+def _claude_code_identity(path_stat: os.stat_result) -> str:
+    return f"{path_stat.st_dev}:{path_stat.st_ino}:{path_stat.st_size}:{path_stat.st_mtime_ns}"
+
+
+def _require_trusted_claude_code_path(executable: Path, *, adapter_label: str) -> os.stat_result:
+    """Check the executable and every ancestor; return the executable's stat."""
+    try:
+        executable_stat = executable.lstat()
+        ancestors = []
+        for parent in executable.parents:
+            ancestors.append((parent, parent.lstat()))
+            if parent == _CLAUDE_CODE_TRUST_ROOT:
+                break
+    except FileNotFoundError as exc:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code executable {executable} vanished before launch "
+            "(an auto-update may have removed it); retry the ask",
+            reason="vanished",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    except OSError as exc:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: cannot inspect host Claude Code executable {executable}: {exc.strerror}",
+            reason="untrusted_path",
+        ) from exc
+    refusal = _claude_code_path_refusal(executable, executable_stat, expect_dir=False)
+    if refusal is None and not os.access(executable, os.X_OK):
+        refusal = f"{executable} is not executable"
+    for parent, parent_stat in ancestors:
+        if refusal is not None:
+            break
+        refusal = _claude_code_path_refusal(parent, parent_stat, expect_dir=True)
+    if refusal is not None:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: refusing to pin host Claude Code: {refusal}",
+            reason="untrusted_path",
+        )
+    return executable_stat
+
+
+def _claude_code_floor(model: str | None) -> tuple[int, int, int]:
+    try:
+        from scripts.review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION
+    except ImportError:  # pragma: no cover - stripped sys.path flavor
+        from review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION  # type: ignore[import-not-found, no-redef]
+    return max(CLAUDE_MIN_SUPPORTED_CLI_VERSION, CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS.get(model or "", (0, 0, 0)))
+
+
+def _probe_pinned_claude_code(executable: Path, *, adapter_label: str) -> tuple[int, int, int]:
+    """Run the pinned executable's ``--version`` with a minimal env and parse it."""
+    try:
+        from scripts.utils.claude_version import _parse_claude_semver, run_version_probe
+    except ImportError:  # pragma: no cover - stripped sys.path flavor
+        from utils.claude_version import (  # type: ignore[import-not-found, no-redef]
+            _parse_claude_semver,
+            run_version_probe,
+        )
+    try:
+        proc = run_version_probe(
+            [str(executable)],
+            timeout=_CLAUDE_CODE_PROBE_TIMEOUT_S,
+            env={"PATH": "/usr/bin:/bin", "HOME": str(Path.home())},
+            stdin=subprocess.DEVNULL,
+        )
+    except FileNotFoundError as exc:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code executable {executable} vanished during its version probe; retry the ask",
+            reason="vanished",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code version probe failed ({type(exc).__name__})",
+            reason="probe_failed",
+        ) from exc
+    if proc is None or proc.returncode != 0:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code version probe exited "
+            f"{'without running' if proc is None else proc.returncode}",
+            reason="probe_failed",
+        )
+    version = _parse_claude_semver(f"{proc.stdout or ''}\n{proc.stderr or ''}")
+    if version is None:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code at {executable} reported no parseable X.Y.Z version",
+            reason="unparseable",
+        )
+    return version
+
+
+def _require_host_claude_code(*, model: str | None, adapter_label: str) -> dict[str, str]:
+    """Resolve, check and version-gate the host Claude Code for one ACP launch.
+
+    Resolution matches the native delegate route (``claude`` on PATH, then
+    ``~/.local/bin/claude``) and happens on every launch, so an auto-update
+    between asks is picked up. The versioned real path is pinned: a later
+    symlink flip cannot change it, and a removal or replacement between this
+    probe and the child's start is reported by ``parse_response`` as a typed
+    failure.
+    """
+    from .claude import _default_claude_bin
+
+    found = _default_claude_bin()
+    if found is None:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: no host Claude Code found on PATH or at ~/.local/bin/claude; "
+            "the ACP Claude seat never runs the adapter's bundled Claude Code",
+            reason="missing",
+            failure_code="acp_adapter_missing",
+        )
+    try:
+        executable = Path(found).resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code {found} does not resolve to an existing file",
+            reason="vanished",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    before = _require_trusted_claude_code_path(executable, adapter_label=adapter_label)
+    version = _probe_pinned_claude_code(executable, adapter_label=adapter_label)
+    after = _require_trusted_claude_code_path(executable, adapter_label=adapter_label)
+    if _claude_code_identity(before) != _claude_code_identity(after):
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code {executable} changed during its version probe; retry the ask",
+            reason="vanished",
+            failure_code="acp_adapter_missing",
+        )
+    floor = _claude_code_floor(model)
+    observed = ".".join(map(str, version))
+    required = ".".join(map(str, floor))
+    if version < floor:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: host Claude Code {observed} at {executable} is older than {required}, "
+            f"the minimum for {model or 'this seat'}; run `claude update`",
+            reason="too_old",
+        )
+    return {
+        "claude_code_executable": str(executable),
+        "claude_code_executable_identity": _claude_code_identity(after),
+        "claude_code_version": observed,
+        "claude_code_version_floor": required,
+    }
+
+
+def _claude_code_identity_now(executable: str) -> str | None:
+    try:
+        return _claude_code_identity(Path(executable).lstat())
+    except OSError:
+        return None
+
+
+def _claude_session_transcript_version(stdout: str) -> str | None:
+    """Return the version Claude Code wrote into this ACP session's transcript.
+
+    The Claude Code child records its own version on each transcript entry; the
+    adapter does not forward its init message over ACP. Returns None when the
+    session id or transcript is not observable.
+    """
+    session_id = None
+    for line in stdout.splitlines():
+        try:
+            message = json.loads(line)
+        except ValueError:
+            continue
+        result = message.get("result") if isinstance(message, dict) else None
+        if isinstance(result, dict) and isinstance(result.get("sessionId"), str):
+            session_id = result["sessionId"]
+            break
+    if session_id is None or not _CLAUDE_SESSION_ID_RE.fullmatch(session_id):
+        return None
+    projects = Path.home() / ".claude" / "projects"
+    for transcript in projects.glob(f"*/{session_id}.jsonl"):
+        try:
+            with transcript.open("rb") as handle:
+                for _ in range(_CLAUDE_TRANSCRIPT_MAX_LINES):
+                    raw = handle.readline(_CLAUDE_TRANSCRIPT_LINE_LIMIT_BYTES)
+                    if not raw:
+                        break
+                    try:
+                        entry = json.loads(raw)
+                    except ValueError:
+                        continue
+                    if isinstance(entry, dict) and isinstance(entry.get("version"), str):
+                        return entry["version"]
+        except OSError:
+            continue
+    return None
+
+
+def _attest_claude_code_child(parsed: ParseResult, *, plan: InvocationPlan | None, stdout: str) -> ParseResult:
+    """Bind the parsed ACP result to the executable pinned at build time."""
+    metadata = getattr(plan, "metadata", None)
+    if not isinstance(metadata, dict) or not isinstance(metadata.get("claude_code_executable"), str):
+        return parsed
+    executable = metadata["claude_code_executable"]
+    if not parsed.ok:
+        if _claude_code_identity_now(executable) != metadata.get("claude_code_executable_identity"):
+            return replace(
+                parsed,
+                failure_code="acp_adapter_missing",
+                stderr_excerpt=(
+                    f"AcpxClaudeShadowAdapter: host Claude Code executable {executable} was removed or "
+                    "replaced between the version probe and the launch (an auto-update); retry the ask"
+                ),
+            )
+        return parsed
+    try:
+        from scripts.utils.claude_version import _parse_claude_semver
+    except ImportError:  # pragma: no cover - stripped sys.path flavor
+        from utils.claude_version import _parse_claude_semver  # type: ignore[import-not-found, no-redef]
+    # The plan metadata is the ask's adapter-owned record; the runner hands the
+    # same object to parse and capture, so the post-run attestation lands there.
+    attested = _claude_session_transcript_version(stdout)
+    if attested is None:
+        metadata["claude_code_child_attestation"] = "unavailable"
+        return parsed
+    metadata["claude_code_child_version"] = attested
+    if _parse_claude_semver(attested) != _parse_claude_semver(metadata.get("claude_code_version", "")):
+        metadata["claude_code_child_attestation"] = "mismatch"
+        return ParseResult(
+            ok=False,
+            response="",
+            failure_code="acp_adapter_incompatible",
+            stderr_excerpt=(
+                f"AcpxClaudeShadowAdapter: the Claude Code child reported {attested}, not the pinned "
+                f"{metadata.get('claude_code_version')} at {executable}; another executable served the ask"
+            ),
+        )
+    metadata["claude_code_child_attestation"] = "session-transcript"
+    return parsed
+
+
 def _confinement_prefix_argv(
     binary: str,
     cwd: Path,
@@ -2732,6 +3045,51 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
         return _require_local_claude_acp_adapter(
             acpx_binary,
             adapter_label=type(self).__name__,
+        )
+
+    def build_invocation(
+        self,
+        *,
+        prompt: str,
+        mode: str,
+        cwd: Path,
+        model: str | None,
+        task_id: str | None,
+        session_id: str | None,
+        tool_config: dict | None,
+        effort: str | None = None,
+    ) -> InvocationPlan:
+        """Pin the host Claude Code and its effort for this launch (#10500).
+
+        The explicit launch env wins over any inherited or caller value, in
+        ordinary and sealed-review launches alike.
+        """
+        plan = super().build_invocation(
+            prompt=prompt,
+            mode=mode,
+            cwd=cwd,
+            model=model,
+            task_id=task_id,
+            session_id=session_id,
+            tool_config=tool_config,
+            effort=effort,
+        )
+        host = _require_host_claude_code(model=plan.metadata.get("model"), adapter_label=type(self).__name__)
+        return replace(
+            plan,
+            env_overrides={
+                **plan.env_overrides,
+                CLAUDE_CODE_EXECUTABLE_ENV: host["claude_code_executable"],
+                CLAUDE_CODE_EFFORT_ENV: self.fixed_effort,
+            },
+            metadata={**plan.metadata, **host},
+        )
+
+    def parse_response(self, **kwargs: Any) -> ParseResult:
+        return _attest_claude_code_child(
+            super().parse_response(**kwargs),
+            plan=kwargs.get("plan"),
+            stdout=kwargs.get("stdout") or "",
         )
 
 

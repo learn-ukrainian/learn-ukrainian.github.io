@@ -275,6 +275,17 @@ def _stub_binary(
             "claude_acp_launch_source": "installed",
         },
     )
+    # Unit tests never probe a host Claude Code (#10500).
+    monkeypatch.setattr(
+        acpx_module,
+        "_require_host_claude_code",
+        lambda *, model, adapter_label: {
+            "claude_code_executable": "/installed/claude/versions/2.1.296",
+            "claude_code_executable_identity": "1:2:3:4",
+            "claude_code_version": "2.1.296",
+            "claude_code_version_floor": "2.1.280" if model == "claude-opus-5-5" else "2.1.116",
+        },
+    )
     return binary
 
 
@@ -2370,6 +2381,11 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert plan.metadata["claude_acp_adapter_version"] == "0.64.2"
         assert plan.metadata["claude_acp_compatibility"] == "installed>=0.64.2<1"
         assert plan.metadata["claude_acp_launch_source"] == "installed"
+        assert plan.metadata["claude_code_executable"] == "/installed/claude/versions/2.1.296"
+        assert sanitized_env["CLAUDE_CODE_EXECUTABLE"] == "/installed/claude/versions/2.1.296"
+        assert sanitized_env["CLAUDE_CODE_EFFORT_LEVEL"] == "high"
+    else:
+        assert "CLAUDE_CODE_EXECUTABLE" not in plan.env_overrides
 
 
 def test_cursor_acp_uses_existing_key_without_interactive_auth(tmp_path, monkeypatch):

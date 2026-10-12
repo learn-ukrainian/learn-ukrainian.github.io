@@ -129,6 +129,13 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         # bundled Codex, which can lag native dispatch's model support (#9273).
         "CODEX_PATH",
     },
+    "acpx-claude-shadow": {
+        # Adapter-resolved host Claude Code; claude-agent-acp otherwise launches
+        # its bundled Claude Code, which can lag the catalogued models (#10500).
+        "CLAUDE_CODE_EXECUTABLE",
+        # The seat's fixed effort; ACPX has no effort flag. Never a credential.
+        "CLAUDE_CODE_EFFORT_LEVEL",
+    },
     "acpx-grok-shadow": {
         # acpx@0.13.0 treats this as a non-secret auth-method selector:
         # the literal value "1" chooses Grok's agent-managed cached_token
