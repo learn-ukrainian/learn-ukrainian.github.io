@@ -17,7 +17,6 @@ OTHER = "b" * 40
 START = "2026-09-23T12:00:00.000001+00:00"
 
 
-
 @pytest.fixture(autouse=True)
 def _advisory_fixture_workflow(monkeypatch):
     """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
@@ -29,9 +28,18 @@ def _advisory_fixture_workflow(monkeypatch):
         Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml",
     )
 
+
 def comment(
-    *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False,
-    review_mode="cross_family", family="openai",
+    *,
+    sha=SHA,
+    task="review-one",
+    started=START,
+    verdict="APPROVED",
+    login="fleet",
+    association="MEMBER",
+    edited=False,
+    review_mode="cross_family",
+    family="openai",
 ):
     body = build_comment(
         sha=sha,
@@ -65,6 +73,28 @@ def test_review_mode_round_trip_and_legacy_marker(mode):
     assert sweep.classify_pr(pr(), verdict, queued=False, observed_at=START).state == "ready"
 
 
+def test_unknown_history_marker_round_trip_and_missing_fields_refuse():
+    item = comment(review_mode="red_team")
+    item["body"] = build_comment(
+        sha=SHA,
+        task_id="review-one",
+        started=START,
+        verdict="APPROVED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+        review_mode="red_team",
+        unknown_history=[OTHER],
+    )
+    assert sweep.parse_marker(item["body"])["unknown_history"] == [OTHER]
+    verdict = sweep.lookup_verdict([item], SHA, "fleet")
+    assert verdict.review_mode == "red_team" and verdict.unknown_history == (OTHER,)
+    for field in (" review_mode=red_team", f" unknown_history={OTHER}", f"Unknown history: {OTHER}\n"):
+        altered = {**item, "body": item["body"].replace(field, "")}
+        assert sweep.parse_marker(altered["body"]) is None
+        assert sweep.lookup_verdict([altered], SHA, "fleet").state == "unknown"
+
+
 @pytest.mark.parametrize("case", ["missing_mode", "wrong_heading", "wrong_label", "invalid_mode", "duplicate_mode"])
 def test_red_team_marker_tampering_is_unknown(case):
     item = comment(review_mode="red_team")
@@ -89,8 +119,10 @@ def test_red_team_keeps_trust_head_and_latest_rejection_gates():
     assert sweep.lookup_verdict([comment(review_mode="red_team", login="outsider")], SHA, "fleet").state == "needs-CF"
     assert sweep.lookup_verdict([comment(review_mode="red_team", sha=OTHER)], SHA, "fleet").state == "CF-stale"
     assert sweep.lookup_verdict([comment(review_mode="red_team", edited=True)], SHA, "fleet").state == "unknown"
-    rows = [comment(review_mode="red_team"),
-            comment(task="later", started="2026-09-23T12:00:01.000001+00:00", verdict="BLOCKED")]
+    rows = [
+        comment(review_mode="red_team"),
+        comment(task="later", started="2026-09-23T12:00:01.000001+00:00", verdict="BLOCKED"),
+    ]
     assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
 
 
@@ -348,13 +380,20 @@ def test_advisory_checks_do_not_block_readiness(name, status, conclusion):
 
 
 def test_advisory_failure_does_not_hide_other_blockers():
-    advisory = {"name": "Component shadow (advisory)", "status": "COMPLETED", "conclusion": "FAILURE", "workflowName": "CI"}
+    advisory = {
+        "name": "Component shadow (advisory)",
+        "status": "COMPLETED",
+        "conclusion": "FAILURE",
+        "workflowName": "CI",
+    }
     assert sweep._check_blockers(pr(statusCheckRollup=[advisory])) == ["CI pending CI Gate"]
     item = pr()
-    item["statusCheckRollup"].extend([
-        advisory,
-        {"name": "Build", "status": "COMPLETED", "conclusion": "FAILURE"},
-    ])
+    item["statusCheckRollup"].extend(
+        [
+            advisory,
+            {"name": "Build", "status": "COMPLETED", "conclusion": "FAILURE"},
+        ]
+    )
     report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
     assert report.state == "CI-red Build"
     assert report.blockers == ("CI red Build",)

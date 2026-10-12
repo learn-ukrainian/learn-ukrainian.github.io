@@ -25,6 +25,7 @@ MARKER = re.compile(
     r"<!-- cf-verdict v1 sha=(?P<sha>[0-9a-f]{40}) task=(?P<task>[^\s]+) "
     r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|APPROVE|CHANGES_REQUESTED|BLOCKED) "
     r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+)(?: review_mode=(?P<review_mode>red_team))?"
+    r"(?: unknown_history=(?P<unknown_history>[0-9a-f]{40}(?:,[0-9a-f]{40})*))?"
     r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))? -->\Z"
 )
 MARKER_PREFIX = "<!-- cf-verdict"
@@ -50,6 +51,7 @@ class Verdict:
     started: datetime | None = None
     untrusted_markers: tuple[str, ...] = ()
     review_mode: str = "cross_family"
+    unknown_history: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -120,6 +122,20 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
         return None
     mode = item.pop("review_mode")
+    history = item.pop("unknown_history")
+    if history is not None:
+        shas = history.split(",")
+        if (
+            mode != "red_team"
+            or shas != sorted(set(shas))
+            or f"Unknown history: {history}\n" not in prefix
+            or "Historical authorship: unknown_historical\n" not in prefix
+            or "No author model assumed.\n" not in prefix
+        ):
+            return None
+        item["unknown_history"] = shas
+    elif "Unknown history:" in prefix or "Historical authorship:" in prefix:
+        return None
     if mode is not None:
         item["review_mode"] = mode
         if not body.startswith("### Adversarial red-team review\nReview mode: red_team\n"):
@@ -177,7 +193,8 @@ def lookup_verdict(
         if marker is None:
             trailer = _terminal_marker(body)
             if (
-                trailer is None or trailer["verdict"] != "APPROVE"
+                trailer is None
+                or trailer["verdict"] != "APPROVE"
                 or is_ukrainian_review(trailer.groupdict())
                 or "Review profile: ukrainian\n" in body.split("<details>", 1)[0]
             ):
@@ -205,8 +222,16 @@ def lookup_verdict(
     # At a true timestamp tie any rejection wins, irrespective of comment arrival order.
     winner = next((item for item in tied if item[2]["verdict"] in REJECTED), tied[0])
     marker = winner[2]
-    return Verdict(marker["verdict"], marker["task"], marker["model"], marker["family"], latest_start,
-                   tuple(untrusted), marker.get("review_mode", "cross_family"))
+    return Verdict(
+        marker["verdict"],
+        marker["task"],
+        marker["model"],
+        marker["family"],
+        latest_start,
+        tuple(untrusted),
+        marker.get("review_mode", "cross_family"),
+        tuple(marker.get("unknown_history", ())),
+    )
 
 
 def _check_row_kind(row: Mapping[str, Any]) -> str:
@@ -240,9 +265,13 @@ def _check_blockers(pr: Mapping[str, Any], required: Sequence[str] = REQUIRED_CH
         name: blocking_rows
         for name, rows in named.items()
         if name != "fleet/cross-family-review"
-        if (blocking_rows := [row for row in rows if not is_advisory(
-            name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
-        )])
+        if (
+            blocking_rows := [
+                row
+                for row in rows
+                if not is_advisory(name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy)
+            ]
+        )
     }
     blockers = []
     for name in set(required) | set(grouped):
@@ -417,20 +446,26 @@ def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None)
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Report exact-head PR review, CI and queue state without mutations.\n"
-                    "Use for landing evidence; the local keeper owns queue changes.",
+        "Use for landing evidence; the local keeper owns queue changes.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --report\n"
-               "  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --json\n"
-               "Outputs: Read-only GitHub PR state report on stdout; no writes.\n"
-               "Exit codes: 0: report complete; 1: lookup failed; 2: retired --apply refused.\n"
-               "Related: scripts/review/record_cf_verdict.py, scripts/orchestration/merge_queue_keeper.py; #9951",
+        "  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --json\n"
+        "Outputs: Read-only GitHub PR state report on stdout; no writes.\n"
+        "Exit codes: 0: report complete; 1: lookup failed; 2: retired --apply refused.\n"
+        "Related: scripts/review/record_cf_verdict.py, scripts/orchestration/merge_queue_keeper.py; #9951",
     )
     parser.add_argument("--repo", required=True, help="GitHub owner/repository")
     parser.add_argument("--report", action="store_true", help="Print the read-only PR state report (default behavior)")
     parser.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
-    parser.add_argument("--apply", action="store_true", help="Retired and refused; landing is keeper-owned (default: false)")
-    parser.add_argument("--repo-root", type=Path, default=Path.cwd(),
-                        help="Checkout used for GitHub commands, e.g. . (default: current working directory)")
+    parser.add_argument(
+        "--apply", action="store_true", help="Retired and refused; landing is keeper-owned (default: false)"
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Checkout used for GitHub commands, e.g. . (default: current working directory)",
+    )
     args = parser.parse_args(argv)
     if args.apply:
         print("integration sweep refused: --apply is retired; this sweep is report-only")
