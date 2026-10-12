@@ -189,12 +189,6 @@ CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, CLAUDE_ACP_OPUS_MODEL})
 # is refused before prompt delivery. Models without an entry use the global
 # CLAUDE_MIN_SUPPORTED_CLI_VERSION; Opus 5.5 needs Claude Code 2.1.280+.
 CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS: dict[str, tuple[int, int, int]] = {CLAUDE_ACP_OPUS_MODEL: (2, 1, 280)}
-# OPEN OPERATOR DECISION (#10500): on a native install the directories above the
-# versioned Claude Code binary are often mode 0775 under the caller's private
-# primary group. False refuses any group-writable path component; True admits
-# group write only when the group is the caller's private primary group (the
-# caller is its sole member). Only the operator's decision switches this.
-CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE = False
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
 CURSOR_ACP_MODEL = "grok-4.7"
@@ -1624,13 +1618,15 @@ class ClaudeCodeExecutableRefusal(AcpxShadowRefusalError):
 
 
 def _claude_code_group_write_permitted(gid: int) -> bool:
-    """Apply the open group-write policy for the pinned Claude Code path (#10500).
+    """Whether a group-writable ancestor directory is acceptable (#10500).
 
-    Strict by default: no group-writable component is accepted. With
-    ``CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE`` the group must be the caller's
-    primary group and have no member other than the caller.
+    Operator decision: only when the group is the caller's primary group and
+    no other account belongs to it (no supplementary member in the group
+    database, no other account with it as primary group), checked live on
+    every launch. This follows the user-private-group convention that
+    Debian's OpenSSH ``StrictModes`` patch accepts.
     """
-    if not CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE or gid != os.getgid():
+    if gid != os.getgid():
         return False
     uid = os.getuid()
     try:
@@ -1656,7 +1652,8 @@ def _claude_code_path_refusal(path: Path, path_stat: os.stat_result, *, expect_d
     mode = stat.S_IMODE(path_stat.st_mode)
     if mode & stat.S_IWOTH:
         return f"{path} is world-writable (mode {oct(mode)})"
-    if mode & stat.S_IWGRP and not _claude_code_group_write_permitted(path_stat.st_gid):
+    # The executable itself is never group-writable; ancestors follow the rule.
+    if mode & stat.S_IWGRP and not (expect_dir and _claude_code_group_write_permitted(path_stat.st_gid)):
         return f"{path} is group-writable (mode {oct(mode)})"
     return None
 

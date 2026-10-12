@@ -430,7 +430,12 @@ not permanent routing weights and do not override current CodexBar headroom.
 - The Claude adapter never runs its bundled Claude Code: each launch pins the
   host `claude` real path through `CLAUDE_CODE_EXECUTABLE` and refuses before
   prompt delivery when it is missing, unsafe, unparseable or below the
-  per-model floor in `CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS` (#10500). Trade-off:
+  per-model floor in `CLAUDE_ACP_MIN_CLAUDE_CODE_VERSIONS` (#10500). The
+  executable and every ancestor must not be symlinks, foreign-owned or
+  world-writable; by operator decision, a group-writable ancestor is accepted
+  only when its group is the caller's primary group with no other member,
+  checked live on every launch (the Debian OpenSSH user-private-group
+  `StrictModes` precedent). Trade-off:
   a version floor replaces the lockfile integrity hash, and the host binary's
   code changes without repo review; this adds no trust boundary, because the
   native delegate route already runs the same host binary.

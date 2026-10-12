@@ -49,7 +49,8 @@ def host(tmp_path, monkeypatch):
     """Point host resolution at a private tree and check ancestors only inside it."""
     root = tmp_path / "local"
     monkeypatch.setattr(acpx_module, "_CLAUDE_CODE_TRUST_ROOT", tmp_path)
-    monkeypatch.setattr(acpx_module, "CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE", False)
+    # A private primary group by default, independent of the runner's accounts.
+    _fake_accounts(monkeypatch, members=("caller",))
 
     def install(version_line: str = "2.1.296 (Claude Code)", **kwargs) -> Path:
         executable = _fake_claude(root, version_line, **kwargs)
@@ -195,25 +196,16 @@ def test_executable_replaced_during_probe_is_typed_vanished(host, monkeypatch):
     assert "changed during its version probe" in str(refusal)
 
 
-# --- ownership, mode and symlink checks; open group-write policy (cond. 4) -
-
-
-def test_strict_policy_refuses_a_group_writable_ancestor(host):
-    host.install()
-    (host.root / "share" / "claude").chmod(0o775)
-    refusal = _refusal(model=None)
-    assert refusal.reason == "untrusted_path"
-    assert "group-writable" in str(refusal)
-
-
-def test_strict_policy_is_the_default():
-    assert acpx_module.CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE is False
+# --- ownership, mode and symlink checks; operator group-write rule (cond. 4)
 
 
 def _fake_accounts(monkeypatch, *, members=(), primary_users=()):
+    """Replace the account databases the live check reads; ``members`` are supplementary."""
     caller = SimpleNamespace(pw_name="caller", pw_uid=os.getuid(), pw_gid=os.getgid())
-    others = [SimpleNamespace(pw_name=name, pw_uid=os.getuid() + 1 + index, pw_gid=os.getgid())
-              for index, name in enumerate(primary_users)]
+    others = [
+        SimpleNamespace(pw_name=name, pw_uid=os.getuid() + 1 + index, pw_gid=os.getgid())
+        for index, name in enumerate(primary_users)
+    ]
     monkeypatch.setattr(
         acpx_module,
         "pwd",
@@ -222,69 +214,98 @@ def _fake_accounts(monkeypatch, *, members=(), primary_users=()):
     monkeypatch.setattr(acpx_module, "grp", SimpleNamespace(getgrgid=lambda _gid: SimpleNamespace(gr_mem=list(members))))
 
 
-def test_private_group_policy_admits_the_callers_private_primary_group(host, monkeypatch):
+def _group_writable_ancestors(host) -> None:
+    """The native-install layout: 0775 directories above a 0755 versioned binary."""
+    for directory in (host.root, host.root / "share", host.root / "share" / "claude",
+                      host.root / "share" / "claude" / "versions"):
+        directory.chmod(0o775)
+
+
+def test_private_primary_group_write_is_accepted(host):
     executable = host.install()
-    (host.root / "share" / "claude").chmod(0o775)
-    (host.root / "share" / "claude" / "versions").chmod(0o775)
-    monkeypatch.setattr(acpx_module, "CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE", True)
-    _fake_accounts(monkeypatch, members=("caller",))
+    _group_writable_ancestors(host)
     metadata = acpx_module._require_host_claude_code(model="claude-opus-5-5", adapter_label="X")
     assert metadata["claude_code_executable"] == str(executable.resolve())
 
 
 @pytest.mark.parametrize(
     ("members", "primary_users"),
-    [(("caller", "other"), ()), ((), ("other",))],
+    [(("caller", "other"), ()), (("other",), ()), ((), ("other",))],
+    ids=["supplementary-member", "only-another-member", "another-primary-user"],
 )
-def test_private_group_policy_refuses_a_shared_group(host, monkeypatch, members, primary_users):
+def test_group_write_with_another_member_is_rejected(host, monkeypatch, members, primary_users):
     host.install()
-    (host.root / "share" / "claude").chmod(0o775)
-    monkeypatch.setattr(acpx_module, "CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE", True)
+    _group_writable_ancestors(host)
     _fake_accounts(monkeypatch, members=members, primary_users=primary_users)
-    assert "group-writable" in str(_refusal(model=None))
+    refusal = _refusal(model=None)
+    assert refusal.reason == "untrusted_path"
+    assert "group-writable" in str(refusal)
 
 
-def test_private_group_policy_refuses_a_group_other_than_the_primary_one(monkeypatch):
-    monkeypatch.setattr(acpx_module, "CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE", True)
-    _fake_accounts(monkeypatch, members=("caller",))
+def test_group_write_by_a_group_other_than_the_primary_one_is_rejected():
     assert acpx_module._claude_code_group_write_permitted(os.getgid()) is True
     assert acpx_module._claude_code_group_write_permitted(os.getgid() + 1) is False
 
 
-@pytest.mark.parametrize("allow_private_group_write", [False, True])
-def test_world_writable_component_is_refused_under_either_policy(host, monkeypatch, allow_private_group_write):
+def test_group_membership_is_checked_live_on_every_launch(host, monkeypatch):
     host.install()
-    monkeypatch.setattr(acpx_module, "CLAUDE_CODE_ALLOW_PRIVATE_GROUP_WRITE", allow_private_group_write)
-    _fake_accounts(monkeypatch, members=("caller",))
-    (host.root / "share").chmod(0o757)
-    assert "world-writable" in str(_refusal(model=None))
+    _group_writable_ancestors(host)
+    assert acpx_module._require_host_claude_code(model=None, adapter_label="X")
+    _fake_accounts(monkeypatch, members=("caller", "other"))
+    assert "group-writable" in str(_refusal(model=None))
 
 
-def test_writable_executable_is_refused(host):
+def test_world_write_is_rejected(host):
+    host.install()
+    (host.root / "share").chmod(0o777)
+    refusal = _refusal(model=None)
+    assert refusal.reason == "untrusted_path"
+    assert "world-writable" in str(refusal)
+
+
+def test_group_writable_executable_is_rejected_even_in_a_private_group(host):
     executable = host.install()
     executable.chmod(0o775)
     assert "group-writable" in str(_refusal(model=None))
 
 
-def test_symlinked_ancestor_and_non_executable_file_are_refused(host, tmp_path):
+def test_symlink_is_rejected(host, tmp_path):
     executable = host.install()
     alias = tmp_path / "alias"
     alias.symlink_to(host.root / "share", target_is_directory=True)
     linked = alias / "claude" / "versions" / executable.name
-    with pytest.raises(ClaudeCodeExecutableRefusal, match="is a symlink"):
+    with pytest.raises(ClaudeCodeExecutableRefusal, match="is a symlink") as raised:
         acpx_module._require_trusted_claude_code_path(linked, adapter_label="X")
+    assert raised.value.reason == "untrusted_path"
+
+
+def test_non_executable_file_is_rejected(host):
+    executable = host.install()
     executable.chmod(0o644)
     with pytest.raises(ClaudeCodeExecutableRefusal, match="not executable"):
         acpx_module._require_trusted_claude_code_path(executable, adapter_label="X")
 
 
-def test_foreign_owner_is_refused():
-    directory = os.stat_result((stat.S_IFDIR | 0o755, 1, 1, 1, os.getuid() + 4242, os.getgid(), 0, 0, 0, 0))
+def test_foreign_owner_is_rejected(host, monkeypatch):
+    executable = host.install()
+    foreign_dir = host.root / "share" / "claude"
+    real_lstat = Path.lstat
+
+    def lstat(path):
+        result = real_lstat(path)
+        if path == foreign_dir:
+            fields = list(result)
+            fields[stat.ST_UID] = os.getuid() + 4242
+            return os.stat_result(fields)
+        return result
+
+    monkeypatch.setattr(Path, "lstat", lstat)
+    refusal = _refusal(model=None)
+    assert refusal.reason == "untrusted_path"
+    assert "neither the caller nor root" in str(refusal)
     root_owned = os.stat_result((stat.S_IFDIR | 0o755, 1, 1, 1, 0, 0, 0, 0, 0, 0))
-    assert "neither the caller nor root" in acpx_module._claude_code_path_refusal(
-        Path("/x"), directory, expect_dir=True
-    )
     assert acpx_module._claude_code_path_refusal(Path("/"), root_owned, expect_dir=True) is None
+    assert executable.exists()
 
 
 # --- launch env, sealed review and refusal before spawn (conditions 1, 2) --
