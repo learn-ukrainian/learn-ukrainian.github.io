@@ -1,4 +1,5 @@
 """Shared MCP tool_config builders for agent_runtime callers."""
+
 from __future__ import annotations
 
 import json
@@ -17,6 +18,7 @@ _DEFAULT_AGY_CONFIG_DIRS = (
     "~/.gemini/antigravity-cli",
 )
 _AGY_MCP_CLI_TIMEOUT_SECONDS = 30
+_AGY_MCP_MANAGEMENT_COMMANDS = frozenset({"list", "add"})
 _RESOLUTION_STATUSES = {"ok", "config_missing", "config_empty", "servers_not_found"}
 _CODEX_MCP_SERVER_FIELDS = frozenset(
     {
@@ -103,8 +105,7 @@ def _resolved_agy_mcp_config_path() -> Path:
         return (Path(app_data_dir).expanduser() / "mcp_config.json").resolve()
 
     candidates = [
-        (Path(config_dir).expanduser() / "mcp_config.json").resolve()
-        for config_dir in _DEFAULT_AGY_CONFIG_DIRS
+        (Path(config_dir).expanduser() / "mcp_config.json").resolve() for config_dir in _DEFAULT_AGY_CONFIG_DIRS
     ]
     for candidate in candidates:
         if candidate.exists():
@@ -173,10 +174,7 @@ def _codex_mcp_servers(
     if not requested:
         if usable_servers:
             return (
-                {
-                    name: _codex_sanitize_server_config(cfg)
-                    for name, cfg in usable_servers.items()
-                },
+                {name: _codex_sanitize_server_config(cfg) for name, cfg in usable_servers.items()},
                 diagnostics(
                     resolved_servers=list(usable_servers),
                     resolution_status="ok",
@@ -233,10 +231,7 @@ def _agy_server_is_usable(server_config: Any) -> bool:
         return False
     if server_config.get("disabled") is True:
         return False
-    return any(
-        str(server_config.get(field) or "").strip()
-        for field in ("serverUrl", "httpUrl", "url", "command")
-    )
+    return any(str(server_config.get(field) or "").strip() for field in ("serverUrl", "httpUrl", "url", "command"))
 
 
 class AgyMcpCatalogError(RuntimeError):
@@ -248,6 +243,8 @@ def _agy_binary() -> str:
 
 
 def _run_agy_mcp(args: list[str]) -> str:
+    if not args or not isinstance(args[0], str) or args[0] not in _AGY_MCP_MANAGEMENT_COMMANDS:
+        raise AgyMcpCatalogError("only agy mcp list and add are management-exempt")
     cmd = [_agy_binary(), "mcp", *args]
     try:
         completed = subprocess.run(
@@ -261,8 +258,7 @@ def _run_agy_mcp(args: list[str]) -> str:
         raise AgyMcpCatalogError(f"`agy mcp {args[0]}` could not run: {exc}") from exc
     if completed.returncode != 0:
         raise AgyMcpCatalogError(
-            f"`agy mcp {args[0]}` exited {completed.returncode}: "
-            f"{(completed.stderr or completed.stdout).strip()[:500]}"
+            f"`agy mcp {args[0]}` exited {completed.returncode}: {(completed.stderr or completed.stdout).strip()[:500]}"
         )
     return completed.stdout
 
@@ -401,9 +397,7 @@ def _agy_mcp_servers(
         )
 
     usable_server_names = [
-        server_name
-        for server_name, server_config in servers.items()
-        if _agy_server_is_usable(server_config)
+        server_name for server_name, server_config in servers.items() if _agy_server_is_usable(server_config)
     ]
     if not requested or not usable_server_names:
         return None, _basic_diagnostics(
@@ -483,11 +477,7 @@ def build_mcp_tool_config(
                 mcp_config_path=resolved_config_path,
                 requested_servers=mcp_servers,
                 resolved_servers=None,
-                resolution_status=(
-                    "config_missing"
-                    if not resolved_config_path.exists()
-                    else "config_empty"
-                ),
+                resolution_status=("config_missing" if not resolved_config_path.exists() else "config_empty"),
             )
         return (
             {

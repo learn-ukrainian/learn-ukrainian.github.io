@@ -32,7 +32,8 @@ selection unchanged. Ambiguous path inference fails closed instead of guessing.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+import re
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from fnmatch import fnmatchcase
 from typing import Literal
@@ -57,6 +58,60 @@ from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclu
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
+
+
+def normalize_review_task_id(task_id: str, *, agent: str = "") -> str:
+    """Compare task identities using the X-Agent suffix spelling, ignoring case."""
+    value = task_id.strip()
+    if agent:
+        for prefix in (f"{agent}-", f"{agent}/"):
+            if value.casefold().startswith(prefix.casefold()):
+                value = value[len(prefix) :]
+                break
+    elif "/" in value:
+        value = value.split("/", 1)[1]
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", value).strip(".-")
+    return (safe or "task").casefold()
+
+
+def review_task_id_comparison_keys(task_id: str, *, agent: str = "") -> frozenset[str]:
+    """Retain raw and harness-stripped identities across reviewer seats."""
+    from scripts.agent_runtime.agent_identity import SEAT_ALIASES
+    from scripts.agent_runtime.registry import AGENTS
+
+    value = task_id.strip().casefold()
+    spellings = {value}
+    for harness in {*AGENTS, *SEAT_ALIASES, agent} - {""}:
+        for prefix in (f"{harness.casefold()}-", f"{harness.casefold()}/"):
+            if value.startswith(prefix):
+                spellings.add(value[len(prefix) :])
+    return frozenset(re.sub(r"[^a-z0-9._-]+", "-", spelling).strip(".-") or "task" for spelling in spellings)
+
+
+def red_team_seat_refusal(
+    reviewer_models: Iterable[object],
+    *,
+    author_models: Iterable[object] = (),
+    author_model: object = None,
+    author_task_models: Iterable[object] = (),
+) -> str | None:
+    """Compare all known authors; an explicit model adds identity and never replaces evidence."""
+    explicit = resolve_catalog_model_id(author_model)
+    authors = {resolve_catalog_model_id(model) for model in author_models}
+    if author_model and explicit is None:
+        return "RED_TEAM_REFUSED: --review-author-model is not a catalog model; the flag only adds a comparison model"
+    authors.discard(None)
+    validated = {resolve_catalog_model_id(model) for model in author_task_models} - {None}
+    if explicit is not None and validated and explicit not in validated:
+        return "RED_TEAM_REFUSED: conflicting author identity; --review-author-model only adds a comparison model, never overwrites recorded task evidence"
+    if explicit is not None:
+        authors.add(explicit)
+    if not authors:
+        return "RED_TEAM_REFUSED: no validated author model; supply --review-author-model"
+    if any(resolve_catalog_model_id(model) in authors for model in reviewer_models):
+        return "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+    return None
+
 
 # Operator 2026-09-27: "only claude, gpt and gemini should be involved in
 # ukrainian content. no other models allowed if it is about ukrainian lang.
@@ -441,6 +496,8 @@ class ResolverInputs:
     # Selection excludes the whole set. ``author_model``/``author_family`` may
     # add to it but never replace or shrink it. Empty keeps single-author mode.
     author_families: frozenset[str] = field(default_factory=frozenset)
+    author_models: tuple[str | None, ...] = ()
+    author_task_models: tuple[str, ...] = ()
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -552,6 +609,12 @@ class ReviewerResolution:
     quorum_rule: str | None = None
 
 
+@dataclass(frozen=True)
+class RedTeamResolution(ReviewerResolution):
+    review_mode: str = "red_team"
+    limitation: str = "Separate non-author red-team review; this label does not attest cross-family review."
+
+
 _DUAL_FAMILY_QUORUM_RULE = (
     "unattested-harness author (harness attests no pinned model): the formal gate "
     "requires two independent exact-head PASS verdicts from distinct attested, "
@@ -650,7 +713,10 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
             return "candidate is not bound to the sealed ACP executable"
         if not native_agy and candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
             return "candidate ACP participant is not enabled by the runner-owned adapter registry"
-        if not native_agy and ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:
+        if (
+            not native_agy
+            and ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport
+        ):
             return "candidate catalog transport does not match its runner-owned ACP participant"
         if candidate.transport != candidate.catalog_transport:
             return "candidate transport does not match its ACPX catalog transport"
@@ -789,6 +855,27 @@ def evaluate_candidate(
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
+    if review_mode == "red_team":
+        refusal = red_team_seat_refusal(
+            (candidate.concrete_model,),
+            author_models=inputs.author_models,
+            author_model=inputs.author_model,
+            author_task_models=inputs.author_task_models,
+        )
+        if refusal:
+            return CandidateResult(
+                name=candidate.name,
+                concrete_model=candidate.concrete_model,
+                family=candidate.family,
+                route=candidate.route,
+                transport=candidate.transport,
+                invocation=candidate.invocation,
+                quality_tier=candidate.quality_tier,
+                requires_silence_timeout=candidate.requires_silence_timeout,
+                status="excluded",
+                reason=refusal,
+                health=health,
+            )
     snapshot = inputs.routing_snapshot
     record = _route_record(candidate, snapshot, prefer_route=True)
     diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
@@ -1118,6 +1205,7 @@ def resolve_reviewer(
     *,
     runtime_state: Mapping[str, object] | None = None,
     excluded_quota_buckets: frozenset[str] = frozenset(),
+    review_mode: str = "cross_family",
 ) -> ReviewerResolution:
     """Apply hard policy then balance the best eligible quality tier.
 
@@ -1135,6 +1223,9 @@ def resolve_reviewer(
     reviewer outside Cursor. Quorum logic remains supported as fallback for
     generic unattested harnesses.
     """
+    if review_mode not in {"cross_family", "red_team"}:
+        raise ValueError("unsupported review mode")
+    resolution_type = RedTeamResolution if review_mode == "red_team" else ReviewerResolution
     if runtime_state is not None:
         # The state owner injects a transaction-consistent snapshot. This
         # module never reads a database or service to fill it in.
@@ -1148,7 +1239,7 @@ def resolve_reviewer(
     risk = (inputs.risk or "").strip().lower()
     review_profile = (inputs.review_profile or "").strip().casefold()
     if review_profile not in VALID_REVIEW_PROFILES:
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=(),
             trace=(),
@@ -1164,7 +1255,7 @@ def resolve_reviewer(
         )
     inputs = replace(inputs, review_profile=review_profile)
     if ladder is None and risk not in VALID_RISKS:
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=(),
             trace=(),
@@ -1178,7 +1269,7 @@ def resolve_reviewer(
     if inputs.pinned_candidate:
         pinned_definition = REVIEW_CANDIDATES.get(inputs.pinned_candidate)
         if pinned_definition is None:
-            return ReviewerResolution(
+            return resolution_type(
                 selected=None,
                 advisory=(),
                 trace=(),
@@ -1198,7 +1289,7 @@ def resolve_reviewer(
     try:
         normalize_routing_snapshot(inputs.routing_snapshot)
     except ValueError as exc:
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=(),
             trace=(),
@@ -1216,7 +1307,7 @@ def resolve_reviewer(
             owned_paths=inputs.owned_paths,
         )
         if prepared.fail_closed_reason:
-            return ReviewerResolution(
+            return resolution_type(
                 selected=None,
                 advisory=(),
                 trace=(),
@@ -1235,7 +1326,7 @@ def resolve_reviewer(
 
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)
     if inputs.author_families and complete_author_families(inputs, author_family) is None:
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=(),
             trace=(),
@@ -1251,7 +1342,7 @@ def resolve_reviewer(
     # A complete author set is already concrete; the single-author fallbacks below do not apply.
     quorum_required = author_family == UNATTESTED_AUTHOR_FAMILY and not inputs.author_families
     if quorum_required and inputs.pinned_candidate:
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=(),
             trace=(),
@@ -1278,7 +1369,7 @@ def resolve_reviewer(
                 f"disagrees with the declared author_family={inputs.author_family!r} override"
             ),
         }[author_family]
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=(),
             trace=(),
@@ -1290,7 +1381,7 @@ def resolve_reviewer(
         )
 
     if inputs.pinned_candidate and not (inputs.pressure_override_reason or "").strip():
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=(),
             trace=(),
@@ -1328,7 +1419,7 @@ def resolve_reviewer(
 
     for rung_index, rung in enumerate(active_ladder):
         for candidate in rung:
-            result = evaluate_candidate(candidate, inputs, author_family=author_family)
+            result = evaluate_candidate(candidate, inputs, author_family=author_family, review_mode=review_mode)
             if result.status == "eligible":
                 eligible_quota_buckets.add(candidate.quota_bucket)
             if result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
@@ -1373,6 +1464,26 @@ def resolve_reviewer(
                 )
                 eligible_by_fit_and_tier.setdefault(fit_key, []).append((candidate, result, rung_index))
 
+    if review_mode == "red_team":
+        outside_family = {
+            candidate.name
+            for entries in eligible_by_fit_and_tier.values()
+            for candidate, _, _ in entries
+            if evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
+        }
+        if outside_family:
+            eligible_by_fit_and_tier = {
+                key: [item for item in entries if item[0].name in outside_family]
+                for key, entries in eligible_by_fit_and_tier.items()
+                if any(item[0].name in outside_family for item in entries)
+            }
+            trace = [
+                replace(row, status="excluded", reason="eligible outside-family reviewer takes precedence")
+                if row.status == "eligible" and row.name not in outside_family
+                else row
+                for row in trace
+            ]
+
     if quorum_required:
         first = _best_eligible(eligible_by_fit_and_tier)
         if first is None:
@@ -1390,7 +1501,7 @@ def resolve_reviewer(
                 else None
             )
         if quorum_failure is not None:
-            return ReviewerResolution(
+            return resolution_type(
                 selected=None,
                 advisory=tuple(advisory),
                 trace=tuple(trace),
@@ -1408,7 +1519,7 @@ def resolve_reviewer(
                     trace[i] = promoted
                     break
             quorum_results.append(promoted)
-        return ReviewerResolution(
+        return resolution_type(
             selected=None,
             advisory=tuple(advisory),
             trace=tuple(trace),
@@ -1428,7 +1539,7 @@ def resolve_reviewer(
             if item[0].name == inputs.pinned_candidate
         ]
         if not pinned:
-            return ReviewerResolution(
+            return resolution_type(
                 selected=None,
                 advisory=tuple(advisory),
                 trace=tuple(trace),
@@ -1532,7 +1643,7 @@ def resolve_reviewer(
     ):
         failure = "security-sensitive target: no eligible critical reviewer; see candidate exclusion reasons in trace"
 
-    return ReviewerResolution(
+    return resolution_type(
         selected=selected,
         advisory=tuple(advisory),
         trace=tuple(trace),

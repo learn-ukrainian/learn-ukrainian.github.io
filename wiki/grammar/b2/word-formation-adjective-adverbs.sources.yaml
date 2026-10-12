@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/word-formation-adjective-adverbs.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-zabolotnyi-2020_s0135
+  file: 6-klas-ukrmova-avramenko-2023_s0136
   type: textbook
   title: Сторінка 133
   page: 133
@@ -14,13 +12,13 @@ sources:
   page: 132
   grade: 10
 - id: S3
-  file: 6-klas-ukrmova-zabolotnyi-2020_s0157
+  file: 6-klas-ukrmova-avramenko-2023_s0157
   type: textbook
   title: Сторінка 154
   page: 154
   grade: 6
 - id: S4
-  file: 6-klas-ukrmova-zabolotnyi-2020_s0151
+  file: 6-klas-ukrmova-avramenko-2023_s0152
   type: textbook
   title: Сторінка 149
   page: 149
@@ -38,7 +36,7 @@ sources:
   page: 125
   grade: 6
 - id: S7
-  file: 6-klas-ukrmova-zabolotnyi-2020_s0056
+  file: 6-klas-ukrmova-avramenko-2023_s0058
   type: textbook
   title: Сторінка 57
   page: 57
@@ -56,7 +54,7 @@ sources:
   page: 209
   grade: 6
 - id: S10
-  file: 10-klas-ukrmova-zabolotnyi-2018_s0139
+  file: 10-klas-ukrmova-glazova-2018_s0138
   type: textbook
   title: Сторінка 100
   page: 100

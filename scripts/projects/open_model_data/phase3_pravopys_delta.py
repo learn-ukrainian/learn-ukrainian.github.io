@@ -63,7 +63,7 @@ REVIEW_ACTION_KIND = "pravopys_delta_ukrainian_review"
 AUDIT_ACTION_KIND = "pravopys_delta_audit_results"
 SOURCE_REVIEW_ACTION_KIND = "pravopys_source_freeze_ukrainian_review"
 ROLE_PROVIDERS = {
-    UKRAINIAN_REVIEWER_ROLE: "xai",
+    UKRAINIAN_REVIEWER_ROLE: "openai",
     AUDITOR_ROLE: "anthropic",
 }
 

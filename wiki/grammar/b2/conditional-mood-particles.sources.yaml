@@ -1,26 +1,24 @@
-# Source registry for wiki/grammar/b2/conditional-mood-particles.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  file: 7-klas-ukrmova-avramenko-2024_s0199
   type: textbook
   title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
   page: 183
   grade: 7
 - id: S2
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-avramenko-2024_s0055
   type: textbook
   title: МЕРЕЖЕВИЙ ЕТИКЕТ
   page: 49
   grade: 7
 - id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3949
+  file: 7-klas-ukrmova-avramenko-2024_s0241
   type: textbook
   title: § 36. Частка як службова частина мови
   page: 219
   grade: 7
 - id: S4
-  file: 7-klas-ukrmova-avramenko-2024_s3826
+  file: 7-klas-ukrmova-avramenko-2024_s0094
   type: textbook
   title: § 37. Творення дієслів наказового й умовного способів
   page: 86
@@ -32,7 +30,7 @@ sources:
   page: 228
   grade: 7
 - id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0688
+  file: 10-klas-ukrmova-karaman-2018_s0329
   type: textbook
   title: § 74. Способи дієслів
   page: 185

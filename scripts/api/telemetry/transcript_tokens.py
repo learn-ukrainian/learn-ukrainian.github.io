@@ -21,13 +21,38 @@ class TranscriptTelemetry:
     transcript_path: Path
 
 
-def usage_input_tokens(usage: dict[str, Any]) -> int:
-    """Return the statusline-compatible input-token sum for one usage block."""
+def _token_count(value: Any) -> int:
+    """Coerce one usage field to a token count; null or non-numeric counts as 0."""
+    if isinstance(value, bool):
+        return 0
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError, OverflowError):
+        return 0
+
+
+def _input_sum(usage: dict[str, Any]) -> int:
     return (
-        int(usage.get("input_tokens") or 0)
-        + int(usage.get("cache_read_input_tokens") or 0)
-        + int(usage.get("cache_creation_input_tokens") or 0)
+        _token_count(usage.get("input_tokens"))
+        + _token_count(usage.get("cache_read_input_tokens"))
+        + _token_count(usage.get("cache_creation_input_tokens"))
     )
+
+
+def usage_input_tokens(usage: dict[str, Any]) -> int:
+    """Return the statusline-compatible input-token sum for one usage block.
+
+    With the advisor tool, top-level ``usage`` aggregates every executor pass and
+    ``iterations[]`` separates main passes (``message``) from the advisor's own
+    (``advisor_message``, not session context). The latest main pass is then the
+    real context size (#10476); without such entries the top-level sum applies.
+    """
+    iterations = usage.get("iterations")
+    if isinstance(iterations, list):
+        for entry in reversed(iterations):
+            if isinstance(entry, dict) and entry.get("type") == "message":
+                return _input_sum(entry)
+    return _input_sum(usage)
 
 
 def parse_transcript_tokens(path: Path) -> TranscriptTelemetry | None:

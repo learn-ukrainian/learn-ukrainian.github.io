@@ -16,15 +16,18 @@ export function entryRecordFromParts(
   options?: {
     componentLinkTargets?: Map<string, string>;
     lemmaEntries?: LexiconEntry[];
+    lemmaSlugs?: Set<string>;
     practiceLevels?: PracticeLevel[];
   },
 ): EntryRecord {
   const targets = options?.componentLinkTargets ?? new Map<string, string>();
-  const lemmaSlugs = new Set(
-    (options?.lemmaEntries ?? [])
-      .filter((item) => item.entry_type === "lemma")
-      .map((item) => item.url_slug),
-  );
+  const lemmaSlugs =
+    options?.lemmaSlugs ??
+    new Set(
+      (options?.lemmaEntries ?? [])
+        .filter((item) => item.entry_type === "lemma")
+        .map((item) => item.url_slug),
+    );
   const componentLinks = MORPHOLOGY_SUPPRESSED.has(entry.entry_type ?? "")
     ? (entry.lemma.match(/[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu) ?? []).map((text) => {
         const targetSlug = targets.get(normalizeAtlasSearchText(text)) ?? null;

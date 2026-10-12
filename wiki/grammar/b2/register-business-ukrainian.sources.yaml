@@ -1,26 +1,24 @@
-# Source registry for b2/register-business-ukrainian.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-avramenko-2025_s4601
+  file: 8-klas-ukrmova-avramenko-2025_s0104
   type: textbook
   title: § 36. УСНИЙ ДІАЛОГ
   page: 81
   grade: 8
 - id: S2
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1188
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0274
   type: textbook
   title: § 55. –56. ДІАЛОГІЧНІ ЖАНРИ
   page: 194
   grade: 11
 - id: S3
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4734
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0293
   type: textbook
   title: ТЕМА 11. ПОВÒОÐÅÍÍß ВÈВ×ÅÍОÃО. ПРО ОФІЦІЙНО-ДІЛОВИЙ СТИЛЬ МОВЛЕННЯ
   page: 260
   grade: 8
 - id: S4
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4741
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0313
   type: textbook
   title: ТЕМА 19. ВИДИ ДІЛОВИХ ЛИСТІВ. ЛИСТ-ЗАПРОШЕННЯ, ЛИСТ-ПОВІДОМЛЕННЯ
   page: 277
@@ -32,13 +30,13 @@ sources:
   page: 224
   grade: 11
 - id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0703
+  file: 10-klas-ukrmova-karaman-2018_s0380
   type: textbook
   title: Мовленнєве спілкування. Стилістика і культура мовлення
   page: 216
   grade: 10
 - id: S7
-  file: 10-klas-ukrmova-karaman-2018_s0727
+  file: 10-klas-ukrmova-karaman-2018_s0470
   type: textbook
   title: ТЕМА 22. ЕЛЕКТРОННИЙ ЛИСТ. СМС-ПОВІДОМЛЕННЯ. Пишіть листи і надсилайте вчасно,
   page: 262
@@ -50,61 +48,61 @@ sources:
   url: https://uk.wikipedia.org/wiki/Діловодство
   domain: uk.wikipedia.org
 - id: S9
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0107
   type: textbook
   title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
   page: 81
   grade: 11
 - id: S10
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1217
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0137
   type: textbook
   title: § 22. Синтаксичні конструкції з дієслівними формами на -но, -то
   page: 97
   grade: 11
 - id: S11
-  file: 10-klas-ukrmova-glazova-2018_s0537
+  file: 10-klas-ukrmova-glazova-2018_s0184
   type: textbook
   title: § 31. Правопис суфіксів
   page: 134
   grade: 10
 - id: S12
-  file: 10-klas-ukrmova-karaman-2018_s0664
+  file: 10-klas-ukrmova-karaman-2018_s0244
   type: textbook
   title: МОРФЕМІКА І СЛОВОТВІР
   page: 136
   grade: 10
 - id: S13
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1234
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0265
   type: textbook
   title: § 43. Стилістичні особливості засобів словотвору
   page: 189
   grade: 11
 - id: S14
-  file: 6-klas-ukrmova-litvinova-2023_s3371
+  file: 6-klas-ukrmova-litvinova-2023_s0260
   type: textbook
   title: § 54. Розряди займенників за значенням та особливості відмінювання
   page: 255
   grade: 6
 - id: S15
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5025
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0030
   type: textbook
   title: Синтаксис. Пунктуація
   page: 22
   grade: 9
 - id: S16
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  file: 7-klas-ukrmova-avramenko-2024_s0199
   type: textbook
   title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
   page: 183
   grade: 7
 - id: S17
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  file: 7-klas-ukrmova-avramenko-2024_s0055
   type: textbook
   title: МЕРЕЖЕВИЙ ЕТИКЕТ
   page: 49
   grade: 7
 - id: S18
-  file: 5-klas-ukrmova-avramenko-2022_s2176
+  file: 5-klas-ukrmova-avramenko-2022_s0012
   type: textbook
   title: ТЕКСТ. РЕЧЕННЯ. СЛОВО (ПОВТОРЕННЯ)
   page: 14
@@ -112,5 +110,5 @@ sources:
 - id: S19
   file: how-many:p12-12
   type: ukrainian_wiki
-  title: "Педагогіка A1: How Many"
-  section_path: "Педагогіка A1: How Many > Послідовність введення"
+  title: 'Педагогіка A1: How Many'
+  section_path: 'Педагогіка A1: How Many > Послідовність введення'

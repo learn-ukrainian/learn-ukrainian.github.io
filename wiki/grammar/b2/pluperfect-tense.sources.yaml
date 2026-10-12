@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/pluperfect-tense.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 10-klas-ukrmova-karaman-2018_s0325
@@ -14,7 +12,7 @@ sources:
   page: 66
   grade: 7
 - id: S3
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0060
+  file: 7-klas-ukrmova-avramenko-2024_s0069
   type: textbook
   title: Час дієслова
   page: 61

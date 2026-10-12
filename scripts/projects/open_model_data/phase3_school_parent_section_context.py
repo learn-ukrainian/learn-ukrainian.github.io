@@ -61,9 +61,12 @@ CONTEXT_KIND = "school_complete_parent_section_context"
 PARENT_SECTION_SEPARATOR = "\n\n"
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
-# Git-tracked text-free receipts check out as 0644; new writes stay owner-only 0600.
+# Git-tracked text-free receipts check out as 0644 (or 0664 under group umask); new writes stay owner-only 0600.
 TRACKED_PUBLIC_FILE_MODE = 0o644
-ACCEPTED_PUBLIC_RECEIPT_MODES = frozenset({PRIVATE_FILE_MODE, TRACKED_PUBLIC_FILE_MODE})
+TRACKED_PUBLIC_GROUP_FILE_MODE = 0o664
+ACCEPTED_PUBLIC_RECEIPT_MODES = frozenset(
+    {PRIVATE_FILE_MODE, TRACKED_PUBLIC_FILE_MODE, TRACKED_PUBLIC_GROUP_FILE_MODE}
+)
 CLOUD_STORAGE_ROOT = Path.home() / "Library/CloudStorage"
 
 PINNED_SOURCE_UNITS_JSONL_SHA256 = eval_manifest.PINNED_SOURCE_UNITS_JSONL_SHA256
@@ -205,13 +208,13 @@ def _regular_public(path: Path, label: str) -> None:
     """Accept only explicit safe modes for an existing public receipt.
 
     New receipts are created owner-only (0600). A normal git checkout of the
-    committed text-free receipt is 0644. Any other mode fails closed.
+    committed text-free receipt is 0644 or 0664. Any other mode fails closed.
     """
     _regular_file(path, label)
     mode = stat.S_IMODE(path.lstat().st_mode)
     require(
         mode in ACCEPTED_PUBLIC_RECEIPT_MODES,
-        f"{label} permissions must be 0600 or tracked 0644",
+        f"{label} permissions must be 0600, 0644, or 0664",
     )
 
 

@@ -28,6 +28,9 @@ which task, and the current width are live data. Read them fresh, never from mem
 a Ukrainian word, stress or morphology fact, a gate status, a count, a worker's state)
 comes from tool output in this turn; if it does not, stop and run the tool.
 
+**Evidence hygiene.** Every timestamp in reports, issue comments, receipts, and
+handoffs comes from `date -u`, never from memory or a clock guess.
+
 ## Definition of done — check this before any status sentence
 
 A dispatch, a branch, an open PR, green CI, or "Next:" is **not** done. The driver merges
@@ -122,7 +125,7 @@ not delivery proof for the live driver.
     [review-merge-cleanup](references/review-merge-cleanup.md).
 12. **§8a Inbox drain — before handoff.**
 13. **§8 Handoff.** The file handoff stays authoritative; add the Entire dual-write and
-    fleet receipt; take every timestamp from `date -u`:
+    fleet receipt:
     [handoff](references/handoff.md).
 
 Seat-specific adjustments for your model and for the seats you route to:

@@ -1,32 +1,30 @@
-# Source registry for b2/aspect-nuances-imperative-infinitive.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1211
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0062
   type: textbook
   title: § 9. Паралельні форми вираження наказового
   page: 46
   grade: 11
 - id: S2
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1149
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0069
   type: textbook
   title: § 17. НАКАЗОВИЙ СПОСІБ ДІЄСЛОВА
   page: 54
   grade: 11
 - id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3926
+  file: 7-klas-ukrmova-avramenko-2024_s0135
   type: textbook
   title: § 21. Вид і час дієприслівників
   page: 121
   grade: 7
 - id: S4
-  file: 7-klas-ukrmova-litvinova-2024_s3910
+  file: 7-klas-ukrmova-avramenko-2024_s0037
   type: textbook
   title: § 7. Види діє слова
   page: 33
   grade: 7
 - id: S5
-  file: 7-klas-ukrmova-avramenko-2024_s3825
+  file: 7-klas-ukrmova-avramenko-2024_s0091
   type: textbook
   title: РОЗВИТОК МОВЛЕННЯ (p. 83)
   page: 83
@@ -39,7 +37,7 @@ sources:
   url: https://www.ukrainianlessons.com/episode94/
   domain: ukrainianlessons.com
 - id: S7
-  file: 8-klas-ukrmova-avramenko-2025_s4601
+  file: 8-klas-ukrmova-avramenko-2025_s0104
   type: textbook
   title: § 36. УСНИЙ ДІАЛОГ
   page: 81

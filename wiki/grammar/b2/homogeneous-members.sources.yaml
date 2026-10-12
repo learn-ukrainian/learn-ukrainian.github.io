@@ -1,8 +1,6 @@
-# Source registry for wiki/grammar/b2/homogeneous-members.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4712
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0158
   type: textbook
   title: РЕЧЕННЯ З ОДНОРІДНИМИ ЧЛЕНАМИ
   page: 149
@@ -14,31 +12,31 @@ sources:
   page: 223
   grade: 5
 - id: S3
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2523
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0144
   type: textbook
   title: ІІ. Виконайте завдання одного з варіантів
   page: 176
   grade: 5
 - id: S4
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4746
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0323
   type: textbook
   title: Додаток 4. СЛОВНИЧОК СИНОНІМІВ
   page: 286
   grade: 8
 - id: S5
-  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1903
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0109
   type: textbook
   title: 'Зразок. Класти: однина: 1-ша особа — я клад у ; 2-га осо­'
   page: 111
   grade: 4
 - id: S6
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4714
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0173
   type: textbook
   title: Рильський). 5. Цілує сонце рушники у чистій матери­
   page: 160
   grade: 8
 - id: S7
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1167
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0153
   type: textbook
   title: § 35. –36. ОДНОРІДНІ ЧЛЕНИ РЕЧЕННЯ
   page: 114

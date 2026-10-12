@@ -234,9 +234,7 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
 }
 
 
-_CREDENTIAL_ENV_RE = re.compile(
-    r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$"
-)
+_CREDENTIAL_ENV_RE = re.compile(r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$")
 # Values shorter than this are not checked in captured test output. They are
 # still removed from the environment. The check never reports the value.
 CAPTURED_SECRET_MIN_LENGTH = 12
@@ -254,12 +252,15 @@ def credential_env_names(env: Mapping[str, str], *, keep: Collection[str] = ()) 
 
 def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
     """Environment variable names to omit for ``provider``."""
+    # A dispatcher is a parent for multiple providers. Keep their recognized
+    # keys here; each worker's environment applies its own provider filter.
+    dispatcher_keys = set().union(*_PROVIDER_SECRET_ALLOWLIST.values()) if provider == "dispatcher" else set()
     drop: list[str] = []
     for var_name in env:
         upper = var_name.upper()
         if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY")):
             continue
-        if _is_provider_secret(var_name, provider):
+        if upper in dispatcher_keys or _is_provider_secret(var_name, provider):
             continue
         drop.append(var_name)
     return drop
@@ -268,8 +269,9 @@ def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
 def unneeded_secret_names(env: Mapping[str, str], provider: str) -> list[str]:
     """API-key names ``provider`` must not inherit.
 
-    ``CURSOR_API_KEY`` stays only for a Cursor seat. Other ``*_API_KEY`` names
-    stay only when that provider's secret allowlist names them. Non-key tokens
+    Provider keys stay in the dispatcher parent until each child's environment
+    is built. In a worker, ``CURSOR_API_KEY`` stays only for a Cursor seat; other
+    API keys stay only when that provider's allowlist names them. Non-key tokens
     such as ``GH_TOKEN`` are left for the caller's identity injection.
     """
     return unneeded_env_var_names(env, provider)

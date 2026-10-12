@@ -15,6 +15,79 @@ from scripts.review.language_lane import is_ukrainian_review
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
+@pytest.mark.parametrize("identity", [
+    {"worktree_branch": None, "review_branch": "codex/42", "pinned_head": SHA},
+    {},  # Legacy attached record has no review_branch field.
+    {"review_branch": "codex/42"},
+    {"review_branch": "  codex/42  "},
+])
+def test_branch_identity_binds_supported_record(monkeypatch, tmp_path, identity):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, **identity)
+    before = (tasks / "review-one.json").read_bytes()
+    receipt = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert receipt["head"] == SHA
+    assert receipt["verdict"] == "APPROVED"
+    assert receipt["status"] == "posted"
+    assert recorder.parse_marker(comments[0]["body"])["sha"] == SHA
+    assert calls == {"posts": 1, "statuses": 1}
+    assert (tasks / "review-one.json").read_bytes() == before
+
+
+@pytest.mark.parametrize("identity,reason", [
+    ({"worktree_branch": None}, "not branch-pinned"),
+    ({"review_branch": "other/branch"}, "conflicting"),
+    ({"worktree_branch": None, "review_branch": ""}, "invalid"),
+    ({"worktree_branch": None, "review_branch": 42}, "invalid"),
+    ({"worktree_branch": 42, "review_branch": "codex/42"}, "invalid"),
+    *[({"worktree_branch": None, "review_branch": branch}, "invalid")
+      for branch in ("unsafe..branch", "origin/codex/42", "refs/heads/codex/42", "bad:name")],
+    *[({"worktree_branch": None, "review_branch": branch}, "protected") for branch in ("main", "master")],
+])
+def test_bad_branch_identity_refuses_before_network(monkeypatch, tmp_path, identity, reason):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, **identity)
+
+    def unexpected_network(*args, **kwargs):
+        pytest.fail("invalid identity must refuse before network")
+
+    monkeypatch.setattr(recorder, "_run_json", unexpected_network)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", task_root=tasks, lock_root=tmp_path / "locks")
+
+
+@pytest.mark.parametrize("pr,reason", [
+    ({"branch": "other/branch"}, "branch does not match"),
+    ({"head": "b" * 40}, "head moved"),
+])
+def test_detached_review_refuses_wrong_pr_identity(monkeypatch, tmp_path, pr, reason):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, **pr)
+    write_task(tasks, worktree_branch=None, review_branch="codex/42")
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert not comments
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("updates,families,reason", [
+    ({"status": "running"}, {"google"}, "not done"),
+    ({"worktree_base_sha": None}, {"google"}, "reviewed SHA"),
+    ({"pinned_head": "b" * 40}, {"google"}, "conflicts with pinned head"),
+    ({"pinned_head": "a" * 7}, {"google"}, "conflicts with pinned head"),
+    ({"agent": "grok", "model": "grok-4.7"}, {"google"}, "unattested"),
+    ({"review_risk": "critical", "model": "claude-sonnet-5-5", "agent": "claude"},
+     {"google"}, "not qualified"),
+    ({}, {"openai"}, "equals an author family"),
+])
+def test_detached_identity_preserves_specific_review_refusals(monkeypatch, tmp_path, updates, families, reason):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families)
+    write_task(tasks, worktree_branch=None, review_branch="codex/42", **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert not comments
+    assert calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.mark.parametrize("risk", ["low", "medium"])
 @pytest.mark.parametrize("profile", ["code", "ukrainian"])
 def test_gemini_verdict_records_and_gate_accepts_exact_head(monkeypatch, tmp_path, risk, profile):

@@ -89,6 +89,13 @@ def safe_summary(value: Any) -> str | None:
     return text
 
 
+def producer_identity(value: Any) -> str | None:
+    """An exact opaque producer token, with no coercion or normalization."""
+    if not isinstance(value, str) or safe_field(value, role="task_id") != value:
+        return None
+    return value
+
+
 def occupant(
     *,
     kind: str,
@@ -97,6 +104,7 @@ def occupant(
     epic: Any = None,
     status: Any = None,
     instance_id: Any = None,
+    session_id: Any = None,
 ) -> dict[str, str | None] | None:
     if kind not in OCCUPANT_KINDS:
         return None
@@ -119,4 +127,8 @@ def occupant(
         if status_text not in OBSERVER_STATUSES:
             return None
         row["status"] = status_text
+    if session_id is not None:
+        session = producer_identity(session_id)
+        if session is not None:
+            row["session_id"] = session
     return row

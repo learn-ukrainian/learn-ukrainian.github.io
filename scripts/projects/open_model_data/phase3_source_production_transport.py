@@ -15,6 +15,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
@@ -25,6 +26,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.common.task_store_paths import tasks_dir
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
@@ -86,19 +88,18 @@ AUTHOR = {
     "role_id": "rule_author_extractor",
     "task_id": "phase3-v2-1-rule-author-extraction",
     "provider": "google",
-    "exact_model": "gemini-3.6-flash-high",
+    "exact_model": "gemini-3.8-flash-high",
     "model_family": "gemini",
     "harness": "agy",
 }
 REVIEWER = {
     "role_id": "ukrainian_source_reviewer",
     "task_id": "phase3-v2-1-ukrainian-source-review",
-    "provider": "xai",
-    "exact_model": "grok-4.5",
-    "model_family": "xai",
-    "harness": "opencode",
+    "provider": "openai",
+    "exact_model": "gpt-6.1-sol",
+    "model_family": "openai",
+    "harness": "codex",
 }
-OPENCODE_REVIEW_MODEL = "xai/grok-4.5"
 SMALL_REVIEW_FAMILIES = frozenset(
     {"antonenko_style_guide", "calque_inventory", "pravopys_2019_complete", "pravopys_2026_complete"}
 )
@@ -909,18 +910,47 @@ def _prompt_with_response_contract(prompt: bytes, schema_path: Path, lane: str, 
     root_contract = json.loads(canonical_json(response))
     root_contract["$schema"] = "https://json-schema.org/draft/2020-12/schema"
     root_contract["$defs"] = {name: response_contract[name] for name in ("identity", "artifact", "decision")}
+    if lane == "review":
+        suffix_instructions = (
+            "Begin your response with an explicit review verdict line (`VERDICT: APPROVE` if "
+            "every item in the packet confirms the author proposal, otherwise `VERDICT: REQUEST_CHANGES`), "
+            "followed by a newline and the trailing strict JSON object governed by the root schema below. "
+            "The JSON Schema below is authoritative for the trailing JSON object shape; never wrap it in an "
+            "`reviewResponse` property. "
+            "Return every required field with exactly these names; `additionalProperties: false` "
+            "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
+            "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        )
+    else:
+        suffix_instructions = (
+            "The JSON Schema below is authoritative for output shape. Your returned JSON "
+            "object is the instance governed by this root schema; never wrap it in an "
+            f"`{response_name}` property. "
+            "Return every required field with exactly these names; `additionalProperties: false` "
+            "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
+            "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        )
     suffix = (
         f"\n\n# Exact machine-enforced {response_name} root contract\n\n"
-        "The JSON Schema below is authoritative for output shape. Your returned JSON "
-        "object is the instance governed by this root schema; never wrap it in an "
-        f"`{response_name}` property. "
-        "Return every required field with exactly these names; `additionalProperties: false` "
-        "means aliases, renamed fields, wrapper omissions, and extra fields are rejected. "
-        "Copy `packet_id` and the complete `identity_order` from the attached packet.\n\n"
+        + suffix_instructions
         + canonical_json(root_contract)
         + "\n"
     )
     return prompt + suffix.encode("utf-8")
+
+
+def _resolve_packet_task_id(base_task_id: str, index: int, *, tasks_root: Path | None = None) -> str:
+    """Derive a collision-free task ID per packet and attempt."""
+    root_dir = tasks_root if tasks_root is not None else tasks_dir()
+    attempt = 1
+    while True:
+        candidate = f"{base_task_id}-p{index:05d}-a{attempt:02d}"
+        state_file = root_dir / f"{candidate}.json"
+        result_file = root_dir / f"{candidate}.result"
+        archive_file = root_dir / "archive" / f"{candidate}.json"
+        if not state_file.exists() and not result_file.exists() and not archive_file.exists():
+            return candidate
+        attempt += 1
 
 
 def _run_packets(
@@ -940,7 +970,7 @@ def _run_packets(
             "review run requires review manifest",
         )
         packet_count = manifest["review_packet_count"]
-        actor, command_name = REVIEWER, "opencode"
+        actor, command_name = REVIEWER, "ask-codex"
         expected_prompt_hash = manifest["bindings"]["review_prompt_sha256"]
     else:
         require(
@@ -968,37 +998,33 @@ def _run_packets(
         prompt = _prompt_with_response_contract(base_prompt, schema_path, lane, packet)
         entry = (manifest["review_packets"] if lane == "review" else manifest["author_packets"])[index - 1]
         packet_path = root / entry["relative_path"]
+        task_id = _resolve_packet_task_id(actor["task_id"], index)
         if lane == "review":
             prompt_path = root / "review" / "prompts" / f"{index:05d}.md"
-            prompt_sha256 = _write_private(prompt_path, prompt)
+            _write_private(prompt_path, prompt)
             command = [
-                command_name,
-                "run",
-                "--model",
-                OPENCODE_REVIEW_MODEL,
-                "--variant",
-                "high",
-                "--file",
-                str(prompt_path),
-                "--file",
-                str(packet_path),
-                "--format",
-                "default",
-                (
-                    "Follow the attached Phase 3 source-review prompt exactly. Treat the "
-                    "attached packet as the only source evidence. Return only the strict JSON "
-                    f"object required by the root schema. prompt_sha256={prompt_sha256};"
-                    f"packet_sha256={entry['packet_sha256']}"
-                ),
-            ]
-        else:
-            command = [
-                ".venv/bin/python",
+                sys.executable,
                 "scripts/ai_agent_bridge/__main__.py",
                 command_name,
                 "-",
                 "--task-id",
-                actor["task_id"],
+                task_id,
+                "--type",
+                "review",
+                "--to-model",
+                actor["exact_model"],
+                "--data",
+                str(packet_path),
+                "--no-timeout",
+            ]
+        else:
+            command = [
+                sys.executable,
+                "scripts/ai_agent_bridge/__main__.py",
+                command_name,
+                "-",
+                "--task-id",
+                task_id,
                 "--to-model",
                 actor["exact_model"],
                 "--data",

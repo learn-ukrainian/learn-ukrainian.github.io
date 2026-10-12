@@ -4,13 +4,65 @@ Pytest configuration and shared fixtures for audit tests.
 Provides reusable content snippets and module templates for testing.
 """
 
+import os
+import re
+
+# Credential-shaped names are removed at import, in every process that loads
+# this module, and this process never puts them back. Match the suffix only:
+# ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY`` is not ``_API_KEY``.
+# Comparison is case-insensitive. Names that merely look secret stay visible:
+# ``AWS_SECRET_ACCESS_KEY`` and ``*_KEY``. The broader credential rule also
+# strips passwords and APIKEY names before collection. This process owns its
+# environment, so the parent shell is unchanged.
+#
+# ``LU_TEST_CREDENTIAL_STRIP`` is not read and is not written. A nested
+# ``pytest.main`` in this process does not import this module again, so it
+# neither strips nor restores. A child process that imports this module strips
+# again.
+#
+# An xdist worker is one of those processes. ``pytest_configure_node`` copies
+# the credential-shaped names still in ``os.environ`` into ``node.workerinput``
+# under ``_XDIST_PUBLISHED_CREDENTIALS_KEY``. The import strip has already
+# removed ambient names, so the copy is what this session published. The
+# worker puts that copy back in ``pytest_configure``. Values are not logged.
+#
+# Plugins that load before this conftest — AnyIO, pytest-cov, pytest-mock,
+# pytest-rerunfailures, pytest-timeout, pytest-xdist, and the repo's own
+# dispatch-cap plugin — do not read credential-suffix names, so that load
+# order does not retain one.
+_CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
+_XDIST_PUBLISHED_CREDENTIALS_KEY = "lu_suite_published_credentials"
+_IMPORT_STRIPPED_SECRETS: dict[str, str] = {}
+_CREDENTIAL_ENV_RE = re.compile(r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$")
+
+
+def _is_credential_shaped_env_name(name: str) -> bool:
+    """True when ``name`` ends with a credential suffix, ignoring case."""
+    return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
+
+
+def _strip_credential_shaped_env() -> None:
+    """Drop credential-shaped names. This process never puts them back."""
+    for name in tuple(os.environ):
+        if _is_credential_shaped_env_name(name) or _CREDENTIAL_ENV_RE.search(name):
+            value = os.environ[name]
+            if len(value) >= 12:
+                _IMPORT_STRIPPED_SECRETS[name] = value
+            del os.environ[name]
+
+
+def _published_credential_env() -> dict[str, str]:
+    """Credential-shaped names currently set. The caller must not log them."""
+    return {name: os.environ[name] for name in tuple(os.environ) if _is_credential_shaped_env_name(name)}
+
+
+_strip_credential_shaped_env()
+
 import ast
 import contextlib
 import functools
 import ipaddress
 import itertools
-import os
-import re
 import shutil
 import socket
 import sqlite3
@@ -164,9 +216,6 @@ SESSION_IDENTITY_ENV_VARS = (
 # Same suffix rule as agent_runtime.env_sanitize.credential_env_names. Kept
 # here so conftest does not import agent_runtime (the rules workflow loads
 # this module with pytest and PyYAML only).
-_CREDENTIAL_ENV_RE = re.compile(
-    r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$"
-)
 # Values shorter than this are not checked in captured test output. They are
 # still removed from the environment. The check never reports the value.
 _CAPTURED_SECRET_MIN_LENGTH = 12
@@ -180,9 +229,7 @@ def inherited_credential_names(env: Mapping[str, str], *, keep: Collection[str] 
     """
     kept = set(keep)
     return tuple(
-        name
-        for name in env
-        if name not in kept and not name.startswith("LU_TEST_") and _CREDENTIAL_ENV_RE.search(name)
+        name for name in env if name not in kept and not name.startswith("LU_TEST_") and _CREDENTIAL_ENV_RE.search(name)
     )
 
 
@@ -225,29 +272,57 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
             _SCRUBBED_SECRET_VALUES.pop(item.nodeid, None)
 
 
-@pytest.hookimpl(wrapper=True)
-def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]) -> Generator[None, object, pytest.TestReport]:
-    """Fail when captured output contains a credential stripped from the env."""
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_makereport(
+    item: pytest.Item, call: pytest.CallInfo[None]
+) -> Generator[None, object, pytest.TestReport]:
+    """Sanitize all outcomes before terminal, JUnit, or xdist consumers."""
     report = yield
-    secrets = _SCRUBBED_SECRET_VALUES.get(item.nodeid) or {}
-    if not secrets or report.outcome != "passed":
+    return _sanitize_secret_report(report, {**_IMPORT_STRIPPED_SECRETS, **_SCRUBBED_SECRET_VALUES.get(item.nodeid, {})})
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_make_collect_report(collector: pytest.Collector) -> Generator[None, object, pytest.CollectReport]:
+    """Protect collection failures and output using the import-time snapshot."""
+    report = yield
+    return _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+
+
+def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
+    """Replace credential values while retaining the original failure cause."""
+    if not secrets:
         return report
-    chunks = [getattr(report, "capstdout", "") or "", getattr(report, "capstderr", "") or ""]
-    for title, content in getattr(report, "sections", []) or []:
-        if "stdout" in title.lower() or "stderr" in title.lower() or "captured" in title.lower():
-            chunks.append(content or "")
+    chunks = [str(report.longrepr or "")]
+    chunks.extend(title + "\n" + (content or "") for title, content in report.sections)
     text = "\n".join(chunks)
     leaked = [name for name, value in secrets.items() if value and value in text]
     if not leaked:
         return report
-    report.outcome = "failed"
-    # Name every leaked variable. Clear every captured section that still holds one.
-    report.longrepr = "captured output contained the value of scrubbed env var " + ", ".join(leaked)
-    values = [value for value in secrets.values() if value]
-    report.sections = [
-        (title, "" if any(value in (content or "") for value in values) else content)
-        for title, content in report.sections
-    ]
+    # Pytest repeats earlier phases' captured output in later reports. Redact
+    # every section, but only promote a passed report for its own phase.
+    phase = getattr(report, "when", None)
+    current_text = "\n".join(
+        [str(report.longrepr or "")]
+        + [content for title, content in report.sections if phase is None or title.endswith(" " + phase)]
+    )
+    current_leaked = [name for name, value in secrets.items() if value and value in current_text]
+    # Replace longer values first when one credential contains another.
+    values = sorted(set(secrets.values()), key=len, reverse=True)
+
+    def redact(content: str) -> str:
+        for value in values:
+            if value:
+                content = content.replace(value, "[REDACTED]")
+        return content
+
+    report.sections = [(redact(title), redact(content)) for title, content in report.sections]
+    if isinstance(report.longrepr, tuple):
+        report.longrepr = tuple(redact(part) if isinstance(part, str) else part for part in report.longrepr)
+    elif report.longrepr is not None:
+        report.longrepr = redact(str(report.longrepr))
+    if report.outcome == "passed" and current_leaked:
+        report.outcome = "failed"
+        report.longrepr = "captured output contained the value of scrubbed env var " + ", ".join(current_leaked)
     return report
 
 
@@ -2109,7 +2184,36 @@ class _NeedsArtifactCollection:
         self.path.write_text("".join(f"{node_id}\n" for node_id in marked), encoding="utf-8")
 
 
+def _restore_published_credentials(config: pytest.Config) -> None:
+    """Put back the controller's suite-published names on an xdist worker.
+
+    Import already removed every credential-shaped name in this process.
+    Names that fail the suffix check are ignored. Values are not logged.
+    """
+    workerinput = getattr(config, "workerinput", None)
+    if not isinstance(workerinput, dict):
+        return
+    published = workerinput.get(_XDIST_PUBLISHED_CREDENTIALS_KEY)
+    if not isinstance(published, dict):
+        return
+    for name, value in published.items():
+        if isinstance(name, str) and isinstance(value, str) and _is_credential_shaped_env_name(name):
+            os.environ[name] = value
+
+
+@pytest.hookimpl(optionalhook=True)
+def pytest_configure_node(node: Any) -> None:
+    """Copy suite-published credential names into one xdist worker.
+
+    The hookspec argument is ``node``. Ambient names are already gone, so
+    ``os.environ`` holds only names this session published. The worker strips
+    again at import and ``pytest_configure`` puts this copy back.
+    """
+    node.workerinput[_XDIST_PUBLISHED_CREDENTIALS_KEY] = _published_credential_env()
+
+
 def pytest_configure(config: pytest.Config) -> None:
+    _restore_published_credentials(config)
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
@@ -3146,6 +3250,4 @@ from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic
 def _no_operator_model_pause(monkeypatch, tmp_path_factory):
     """Tests never read the operator's live model-pause policy."""
     if "LU_MODEL_PAUSE_FILE" not in os.environ:
-        monkeypatch.setenv(
-            "LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json")
-        )
+        monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json"))

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -70,6 +71,91 @@ def test_load_unit_missing_and_refused(home: Path) -> None:
     (home / "units" / "subdir").mkdir()
     with pytest.raises(InstallError, match="non-regular or symlinked unit file"):
         safe.load_unit(home / "units" / "subdir")
+
+
+@pytest.mark.parametrize("limit", [0, 16])
+def test_read_unit_accepts_exact_byte_bound(home: Path, limit: int) -> None:
+    unit = home / "a.service"
+    content = b"x" * limit
+    unit.write_bytes(content)
+    unit.chmod(0o640)
+    fd = safe.open_unit_dir(home)
+    try:
+        assert safe.read_unit(fd, unit.name, max_bytes=limit) == (content, 0o640)
+    finally:
+        os.close(fd)
+
+
+@pytest.mark.parametrize("limit", [0, 16])
+def test_read_unit_refuses_one_byte_above_bound(home: Path, limit: int) -> None:
+    unit = home / "a.service"
+    unit.write_bytes(b"x" * (limit + 1))
+    fd = safe.open_unit_dir(home)
+    try:
+        with pytest.raises(InstallError, match=rf"a\.service.*{limit} bytes"):
+            safe.read_unit(fd, unit.name, max_bytes=limit)
+    finally:
+        os.close(fd)
+
+
+def test_read_unit_default_none_preserves_full_content_and_mode(home: Path) -> None:
+    unit = home / "a.service"
+    content = bytes(range(256)) * 64
+    unit.write_bytes(content)
+    unit.chmod(0o640)
+    fd = safe.open_unit_dir(home)
+    try:
+        assert safe.read_unit(fd, unit.name) == (content, 0o640)
+        assert safe.read_unit(fd, unit.name, max_bytes=None) == (content, 0o640)
+    finally:
+        os.close(fd)
+
+
+def test_read_unit_bounds_file_growth_after_inode_check(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    unit = home / "a.service"
+    unit.write_bytes(b"x" * 16)
+    original_fdopen = safe.os.fdopen
+    reads = []
+
+    class GrowingReader:
+        def __init__(self, handle):
+            self.handle = handle
+
+        def fileno(self):
+            return self.handle.fileno()
+
+        def read(self, size=-1):
+            # Grow the same inode after stat/fstat and immediately before the read.
+            with unit.open("ab") as writer:
+                writer.write(b"x" * 65536)
+            data = self.handle.read(size)
+            reads.append((size, len(data)))
+            return data
+
+    @contextmanager
+    def growing_fdopen(*args, **kwargs):
+        with original_fdopen(*args, **kwargs) as handle:
+            yield GrowingReader(handle)
+
+    monkeypatch.setattr(safe.os, "fdopen", growing_fdopen)
+    fd = safe.open_unit_dir(home)
+    try:
+        with pytest.raises(InstallError, match=r"a\.service.*16 bytes"):
+            safe.read_unit(fd, unit.name, max_bytes=16)
+    finally:
+        os.close(fd)
+    assert reads == [(17, 17)]
+
+
+def test_read_unit_refuses_negative_bound(home: Path) -> None:
+    unit = home / "a.service"
+    unit.write_bytes(b"x")
+    fd = safe.open_unit_dir(home)
+    try:
+        with pytest.raises(ValueError, match="max_bytes must be non-negative"):
+            safe.read_unit(fd, unit.name, max_bytes=-1)
+    finally:
+        os.close(fd)
 
 
 def test_write_unit_removes_its_temporary_file_on_failure(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -13,6 +13,7 @@ from typing import Any
 import yaml
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
+from ..redacted_env import RedactedEnv
 from ..routes import (
     RUNTIME_ROUTE_TOOL_CONFIG_KEY,
     forbidden_glm_error,
@@ -73,6 +74,9 @@ class HermesInvocationContext:
     config: dict[str, Any]
     env_overrides: dict[str, str]
     metadata: dict[str, Any]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "env_overrides", RedactedEnv(self.env_overrides))
 
 
 @dataclass(frozen=True)

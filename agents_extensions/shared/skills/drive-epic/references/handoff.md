@@ -14,9 +14,6 @@ file handoff current — it stays authoritative through every plane mode.
 On a Hramatka epic (#4542) drive, run `hramatka_hygiene_check` before declaring the
 handoff verified-clean (`epic-specific.md` §0c).
 
-**Evidence hygiene.** Every timestamp in a handoff comes from `date -u`, never from
-memory or a clock guess (a handoff once said "18:0xZ" at 17:55Z).
-
 **Skill source of truth is git, not deploy trees.** Edit only
 `agents_extensions/shared/skills/drive-epic/` (`SKILL.md` and `references/`). Never
 implement or "fix" process in `.claude/skills/` or other deploy-rsync targets — those
@@ -43,7 +40,7 @@ Durable sinks for the dual-write (not private deploy trees):
 
 # 2) Body-free capsule to stdout (≤5 items). Optional: --locator-id clink_… from bootstrap.
 #    Do NOT treat a tee into .claude/ as durable process storage (deploy-wiped).
-#    Optional scratch only: batch_state/ (gitignored runtime), never skills trees.
+#    For disposable scratch, follow the brief's §4 scratch contract.
 .venv/bin/python -m scripts.entire_context handoff --query "<epic keywords>"
 
 # 3) Attest consumption when locators informed the handoff
@@ -59,6 +56,19 @@ Durable sinks for the dual-write (not private deploy trees):
 ```
 
 Also attach the `driver_breadth_report` output (§3-routing item 6).
+
+## Scoped residuals from #10439
+
+The denominator remains nine behaviors. Behaviors 2-8 and the scratch half of 9
+are in scope; two residuals remain visible:
+
+- Behavior 1, the authority-plane delivery drain procedure. Owner: infra/harness.
+  Reopen when `fleet-comms-coordination.md` and the seat-onboarding live-delivery
+  paragraph name the authority drain in their own change. The existing core inbox
+  block and its legacy counts stay exactly as they are.
+- Behavior 9's executing-review-at-first-push half. Owner: harness lane. Reopen
+  when the review-route policy names it. The existing launcher/hook test step and
+  execution-dependent review route remain binding.
 
 ## Fleet-comms state — dual-aware, cutover is closed
 

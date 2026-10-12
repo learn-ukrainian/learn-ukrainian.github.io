@@ -9,6 +9,15 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -
   exit 0
 fi
 
+# A delegate.py dispatch worker inherits its dispatcher's environment, so a
+# worker launched from a driver shell carries that driver's SESSION_EPIC (#10455).
+# Driver-only replay (Codex hydration, epic blocker delta) belongs to the
+# launcher-bound driver alone; drop the inherited epic so every branch below
+# treats the worker as an ordinary non-driver session.
+if [ -n "${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]; then
+  unset SESSION_EPIC
+fi
+
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 
 # Resolve the primary checkout before choosing an interpreter, exactly as

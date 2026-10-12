@@ -226,6 +226,44 @@ def _matched_review_contract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) ->
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
 
 
+def _cool_routing_budget() -> dict[str, object]:
+    """Fresh snapshot: every dispatch seat is cool and above the review near-cap threshold."""
+    agents: dict[str, object] = {}
+    for seat in ("claude", "codex", "cursor", "agy"):
+        agents[seat] = {
+            "status": "cool",
+            "remaining_pct": 60.0,
+            "burn_pct_7d": 10.0,
+            "will_last_to_reset": True,
+            "interactive": {"status": "cool", "burn_pct_7d": 10.0},
+        }
+    return {
+        "diagnostics": {"records_loaded": len(agents), "stale": False},
+        "recommendation": {"primary_agent_for_code": "claude"},
+        "agents": agents,
+    }
+
+
+def _absent_routing_budget() -> dict[str, object]:
+    """Empty ledger: the guard reports budget unknown and does not hard-substitute."""
+    return {"agents": {}, "diagnostics": {"records_loaded": 0, "stale": False}}
+
+
+@pytest.fixture(autouse=True)
+def _host_independent_routing_budget(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Review dispatches must not read the host's live budget snapshot (#10429).
+
+    A deficit lane substitutes the requested seat before the assertion under test.
+    Inject a cool snapshot, or an empty ledger when ``LU_REVIEW_MCP_BUDGET_SNAPSHOT=absent``.
+    A later patch of ``_fetch_routing_budget`` in the test body still owns that case.
+    """
+    mode = os.environ.get("LU_REVIEW_MCP_BUDGET_SNAPSHOT", "neutral").strip().lower()
+    if mode not in {"neutral", "absent"}:
+        raise AssertionError(f"LU_REVIEW_MCP_BUDGET_SNAPSHOT must be 'neutral' or 'absent', not {mode!r}")
+    payload = _absent_routing_budget if mode == "absent" else _cool_routing_budget
+    monkeypatch.setattr(delegate_cli, "_fetch_routing_budget", payload)
+
+
 @pytest.fixture
 def manifest_file(tmp_path: Path) -> Path:
     manifest = tmp_path / "manifest.yaml"
@@ -473,6 +511,8 @@ def test_delegate_dispatch_incomplete_review_attempt_flags(
             "ukrainian",
             "--agent",
             "claude",
+            "--model",
+            "claude-opus-5-5",
             "--task-id",
             "review-task-partial",
             "--prompt",
@@ -657,6 +697,8 @@ def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
     }
     if remaining_pct is not None:
         fake_budget["agents"]["claude"]["remaining_pct"] = remaining_pct
+    # Owns the snapshot over ``_host_independent_routing_budget``. remaining_pct <= 10
+    # is the proof that a real deficit still refuses substitution (#10429).
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
     monkeypatch.setattr(
         "scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: {"claude": "codex"}
@@ -669,6 +711,8 @@ def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
             "ukrainian",
             "--agent",
             "claude",
+            "--model",
+            "claude-opus-5-5",
             "--task-id",
             "review-task-budget-sub",
             "--prompt",
@@ -752,6 +796,8 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
                 "ukrainian",
                 "--agent",
                 "claude",
+                "--model",
+                "claude-opus-5-5",
                 "--task-id",
                 task_id,
                 "--prompt",
@@ -802,6 +848,8 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
                 "ukrainian",
                 "--agent",
                 "claude",
+                "--model",
+                "claude-opus-5-5",
                 "--task-id",
                 task_id,
                 "--prompt",
@@ -1890,12 +1938,21 @@ def _agy_tool_config(plan, **extra) -> dict:
     return {**plan.adapter_options, "review_id": "rev-agy-001", "attempt_id": "att-agy-001", **extra}
 
 
+def _write_agy_workspace_guard(cwd: Path) -> None:
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration
+
+    path = cwd / ".agents" / "hooks.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
+
+
 def test_agy_launch_gate_runs_under_the_final_spawned_environment(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     cwd = tmp_path / "wt"
     cwd.mkdir()
     plan = _prepare_agy(manifest_file, tmp_path, checkout_root=cwd)
+    _write_agy_workspace_guard(cwd)
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     verify_agy_review_launch(
         config_path=plan.config_path,
@@ -1925,6 +1982,7 @@ def test_agy_launch_gate_refuses_when_the_sanitizer_would_drop_the_scoped_home(
         receipts_root=tmp_path / "receipts",
         checkout_root=tmp_path,
     )
+    _write_agy_workspace_guard(tmp_path)
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     with pytest.raises(AgyReviewMcpGateError, match=r"scoped HOME/AGY_APP_DATA_DIR.*#8617"):
         verify_agy_review_launch(
@@ -1943,6 +2001,7 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
     from scripts.agent_runtime.env_sanitize import build_agent_env
 
     real_home = tmp_path / "real-home"
@@ -1953,6 +2012,9 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     token.parent.mkdir(parents=True)
     token.write_text("{}\n", encoding="utf-8")
     plan = _prepare_agy(manifest_file, tmp_path)
+    for path in hook_locations(tmp_path, real_home):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({GUARD_NAME: guard_registration()}), encoding="utf-8")
 
     review = AgyAdapter().build_invocation(
         prompt="review",
@@ -1993,6 +2055,7 @@ def test_env_keys_are_exactly_the_three_recording_variables() -> None:
 def test_real_agy_cli_lists_exactly_the_scoped_sources_server(manifest_file: Path, tmp_path: Path) -> None:
     """Live CLI: the gate accepts the scoped home and its table matches the strict parser."""
     plan = _prepare_agy(manifest_file, tmp_path)
+    _write_agy_workspace_guard(tmp_path)
     verify_agy_review_launch(
         config_path=plan.config_path,
         cwd=tmp_path,

@@ -44,7 +44,7 @@ SOURCE_REVIEW_RECEIPT_SCHEMA_VERSION = "phase3_source_disposition_review_receipt
 PRODUCER_TASK_ID = "phase3-v2-1-disposition-ledger-production"
 ROLE_PROVIDERS = {
     "rule_author_extractor": "google",
-    "ukrainian_source_reviewer": "xai",
+    "ukrainian_source_reviewer": "openai",
 }
 DISPOSITION_CODES = frozenset(
     {

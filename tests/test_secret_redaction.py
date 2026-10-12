@@ -46,7 +46,7 @@ def test_unneeded_secret_names_drop_cursor_key_except_for_cursor() -> None:
     assert unneeded_secret_names(env, "claude") == ["CURSOR_API_KEY", "OPENAI_API_KEY"]
     assert unneeded_secret_names(env, "cursor") == ["OPENAI_API_KEY"]
     assert unneeded_secret_names(env, "codex") == ["CURSOR_API_KEY"]
-    assert unneeded_secret_names(env, "dispatcher") == ["CURSOR_API_KEY", "OPENAI_API_KEY"]
+    assert unneeded_secret_names(env, "dispatcher") == []
     kept = without_unneeded_secrets(env, "cursor")
     assert kept["CURSOR_API_KEY"] == SYNTHETIC_KEY
     assert "OPENAI_API_KEY" not in kept
@@ -86,7 +86,7 @@ def test_launchers_and_dispatcher_call_the_sanitizer() -> None:
     delegate = (REPO / "scripts/delegate.py").read_text(encoding="utf-8")
     assert "without_unneeded_secrets(worker_env, dispatch_agent)" in delegate
     dispatcher = (REPO / "scripts/batch/batch_dispatcher.py").read_text(encoding="utf-8")
-    assert "unneeded_secret_names(os.environ, \"dispatcher\")" in dispatcher
+    assert 'unneeded_secret_names(os.environ, "dispatcher")' in dispatcher
     wrapper = (REPO / "run-dispatcher.sh").read_text(encoding="utf-8")
     assert "--provider dispatcher" in wrapper
     for name in ("kimi.sh", "glm.sh"):
@@ -107,69 +107,233 @@ def test_no_print_hook_blocks_seeded_echo() -> None:
     assert SYNTHETIC_KEY not in proc.stderr
 
 
-def test_conftest_scrubs_api_keys_and_fails_when_output_contains_one() -> None:
-    import shutil
-    import uuid
+def _run_secret_probe(tmp_path: Path, source: str, *, token: str = SYNTHETIC_KEY) -> subprocess.CompletedProcess[str]:
+    """Load the real suite plugin against an isolated, synthetic child suite."""
+    sample = tmp_path / "test_sample.py"
+    sample.write_text(source, encoding="utf-8")
+    env = {name: os.environ[name] for name in ("PATH", "TMPDIR", "LANG") if name in os.environ}
+    env.update(
+        {
+            "HOME": str(tmp_path),
+            "PYTHONPATH": os.pathsep.join((str(REPO), str(REPO / "scripts"))),
+            "CURSOR_API_KEY": token,
+            "OPENAI_API_KEY": "synthetic-openai-key-0123456789",
+            "SYNTHETIC_SERVICE_PASSWORD": "synthetic-service-password-0123456789",
+            "SYNTHETIC_SERVICE_APIKEY": "synthetic-service-apikey-0123456789",
+        }
+    )
+    return subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            str(sample),
+            "-p",
+            "tests.conftest",
+            "-p",
+            "no:cacheprovider",
+            "-p",
+            "no:xdist",
+            "-c",
+            "/dev/null",
+            "--rootdir",
+            str(tmp_path),
+            "-o",
+            "addopts=",
+            "-q",
+            "--tb=long",
+            "--junitxml",
+            str(tmp_path / "report.xml"),
+        ],
+        cwd=REPO,
+        env=env,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=180,
+    )
 
-    scratch = REPO / "tests" / f"_secret_redaction_scratch_{uuid.uuid4().hex}"
-    scratch.mkdir()
-    sample = scratch / "test_sample.py"
-    secret_file = scratch / "sample.txt"
+
+def test_conftest_scrubs_api_keys_and_fails_when_output_contains_one(tmp_path: Path) -> None:
+    secret_file = tmp_path / "sample.txt"
     other_key = "synthetic-openai-key-0123456789"
     secret_file.write_text(SYNTHETIC_KEY + "\n" + other_key, encoding="utf-8")
-    sample.write_text(
-        "import os\n"
-        "from pathlib import Path\n"
+    proc = _run_secret_probe(
+        tmp_path,
+        "import os\nfrom pathlib import Path\n"
         "def test_api_key_is_absent():\n"
         "    assert 'CURSOR_API_KEY' not in os.environ\n"
         "    assert 'OPENAI_API_KEY' not in os.environ\n"
         "def test_prints_the_parent_key():\n"
         f"    print(Path({str(secret_file)!r}).read_text())\n",
-        encoding="utf-8",
     )
-    env = os.environ.copy()
-    env["CURSOR_API_KEY"] = SYNTHETIC_KEY
-    env["OPENAI_API_KEY"] = other_key
-    env["GITHUB_TOKEN"] = "synthetic-github-token-0123456789"
-    try:
-        proc = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "pytest",
-                str(sample),
-                "-p",
-                "no:cacheprovider",
-                "--override-ini",
-                "addopts=-q --tb=line",
-                "-p",
-                "no:xdist",
-            ],
-            cwd=REPO,
-            env=env,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=180,
-        )
-    finally:
-        shutil.rmtree(scratch, ignore_errors=True)
-    combined = proc.stdout + proc.stderr
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
     assert "1 passed" in combined
     assert SYNTHETIC_KEY not in combined
     assert other_key not in combined
-    assert "synthetic-github-token-0123456789" not in combined
-    assert proc.returncode != 0
+    assert proc.returncode == 1
     assert "scrubbed env var" in combined
     assert "CURSOR_API_KEY" in combined
     assert "OPENAI_API_KEY" in combined
+
+
+@pytest.mark.parametrize("phase", ["assertion", "setup", "teardown", "collection", "skip"])
+def test_conftest_redacts_unsuccessful_reports(tmp_path: Path, phase: str) -> None:
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(SYNTHETIC_KEY, encoding="utf-8")
+    prefix = (
+        "import pytest\nfrom pathlib import Path\n"
+        + f"def value():\n    return Path({str(secret_file)!r}).read_text()\n"
+    )
+    if phase == "collection":
+        source = prefix + "print(value())\nraise RuntimeError(value())\n"
+    elif phase == "assertion":
+        source = prefix + "def test_sample():\n    print(value())\n    assert value() == 'expected-safe-value'\n"
+    elif phase == "skip":
+        source = prefix + "def test_sample():\n    print(value())\n    pytest.skip(value())\n"
+    else:
+        body = (
+            "    print(value())\n    raise RuntimeError(value())\n"
+            if phase == "setup"
+            else "    yield\n    print(value())\n    raise RuntimeError(value())\n"
+        )
+        source = prefix + "@pytest.fixture(autouse=True)\ndef fixture():\n" + body + "def test_sample():\n    pass\n"
+    proc = _run_secret_probe(tmp_path, source)
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
+    assert SYNTHETIC_KEY not in combined
+    assert "[REDACTED]" in combined
+    assert proc.returncode == (0 if phase == "skip" else 2 if phase == "collection" else 1)
+    if phase != "skip":
+        assert "AssertionError" in combined if phase == "assertion" else "RuntimeError" in combined
+
+
+def test_collection_cannot_read_inherited_key(tmp_path: Path) -> None:
+    proc = _run_secret_probe(
+        tmp_path, "import os\nassert 'CURSOR_API_KEY' not in os.environ\ndef test_sample():\n    pass\n"
+    )
+    assert proc.returncode == 0
+    assert "1 passed" in proc.stdout
+
+
+def test_collection_cannot_read_inherited_password_or_apikey(tmp_path: Path) -> None:
+    proc = _run_secret_probe(
+        tmp_path,
+        "import os\n"
+        "assert 'SYNTHETIC_SERVICE_PASSWORD' not in os.environ\n"
+        "assert 'SYNTHETIC_SERVICE_APIKEY' not in os.environ\n"
+        "def test_sample():\n    pass\n",
+    )
+    assert proc.returncode == 0
+    assert "1 passed" in proc.stdout
+
+
+def test_dispatcher_wrapper_is_executable() -> None:
+    import stat
+
+    assert (REPO / "run-dispatcher.sh").stat().st_mode & stat.S_IXUSR
+
+
+@pytest.mark.parametrize(
+    "provider,key",
+    [
+        ("gemini", "GEMINI_API_KEY"),
+        ("cursor", "CURSOR_API_KEY"),
+        ("codex", "OPENAI_API_KEY"),
+    ],
+)
+def test_api_key_only_dispatch_preserves_only_child_provider_key(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    provider: str,
+    key: str,
+) -> None:
+    from scripts import delegate
+    from scripts.batch.batch_dispatcher import _drop_unneeded_dispatcher_secrets
+
+    # Prevent credential resolution from ever consulting the real host.
+    monkeypatch.setattr(delegate, "_inject_gh_token_for_agent", lambda *args: None)
+    monkeypatch.setattr(delegate, "_scrub_unusable_gh_config_dir", lambda *args: None)
+    parent = {
+        "HOME": str(tmp_path),
+        "PATH": os.defpath,
+        "GEMINI_API_KEY": "synthetic-gemini-key-0123456789",
+        "CURSOR_API_KEY": SYNTHETIC_KEY,
+        "OPENAI_API_KEY": "synthetic-openai-key-0123456789",
+        "UNRELATED_API_KEY": "synthetic-unrelated-key-0123456789",
+    }
+    with monkeypatch.context() as patch:
+        patch.setattr(os, "environ", parent.copy())
+        _drop_unneeded_dispatcher_secrets()
+        assert "UNRELATED_API_KEY" not in os.environ
+        child_env = delegate._build_worker_env(task_id="synthetic-key-dispatch", dispatch_agent=provider)
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import os,sys; sys.exit(0 if os.environ.get(sys.argv[1]) == sys.argv[2] else 1)",
+            key,
+            parent[key],
+        ],
+        env=child_env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert proc.returncode == 0
+    assert proc.stdout == proc.stderr == ""
+    assert {name for name in child_env if name.endswith("_API_KEY")} == {key}
+
+
+def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:
+    import shutil
+
+    wrapper = tmp_path / "run-dispatcher.sh"
+    shutil.copy2(REPO / "run-dispatcher.sh", wrapper)
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    helper = tmp_path / ".venv/bin/python"
+    helper.parent.mkdir(parents=True)
+    # Execute the real sanitizer, then use a synthetic dispatcher entry point.
+    helper.write_text(
+        "#!/bin/sh\n"
+        'case "$1" in\n'
+        f"scripts/agent_runtime/env_sanitize.py) shift; exec {shlex.quote(sys.executable)} "
+        f'{shlex.quote(str(REPO / "scripts/agent_runtime/env_sanitize.py"))} "$@" ;;\n'
+        f'*) exec {shlex.quote(sys.executable)} "$@" ;;\nesac\n',
+        encoding="utf-8",
+    )
+    helper.chmod(0o755)
+    (scripts / "batch_dispatcher.py").write_text(
+        "import os\n"
+        "assert os.environ.get('GEMINI_API_KEY') == 'synthetic-gemini-key-0123456789'\n"
+        "assert os.environ.get('CURSOR_API_KEY') == 'synthetic-cursor-key-0123456789'\n"
+        "assert 'UNRELATED_API_KEY' not in os.environ\n",
+        encoding="utf-8",
+    )
+    proc = subprocess.run(
+        [str(wrapper)],
+        env={
+            "PATH": os.defpath,
+            "GEMINI_API_KEY": "synthetic-gemini-key-0123456789",
+            "CURSOR_API_KEY": SYNTHETIC_KEY,
+            "UNRELATED_API_KEY": "synthetic-unrelated-key-0123456789",
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert proc.returncode == 0
+    assert "Clean exit" in proc.stdout
+    assert "synthetic-" not in proc.stdout + proc.stderr
 
 
 def test_launcher_unsets_unneeded_api_key_and_fails_closed(tmp_path: Path) -> None:
     helper = tmp_path / "primary"
     python = helper / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
-    python.write_text(f"#!/bin/sh\nexec {shlex.quote(sys.executable)} \"$@\"\n", encoding="utf-8")
+    python.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} "$@"\n', encoding="utf-8")
     python.chmod(0o755)
     core = REPO / "scripts/lib/launcher_core.sh"
     clear = f"""

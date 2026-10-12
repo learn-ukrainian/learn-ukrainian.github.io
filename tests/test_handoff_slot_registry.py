@@ -169,7 +169,7 @@ def test_launcher_providers_are_read_from_the_driver_entry_points() -> None:
 
 
 def test_alias_selector_gate_matches_content_provider_policy() -> None:
-    """Every alias works except non-approved providers in Ukrainian content areas."""
+    """Aliases follow the content restrictions and the CTO's two-provider roster."""
     lanes, gate = _gate_matrix()
     aliases = _alias_selectors()
     assert set(aliases) <= set(lanes), "an alias selector no longer resolves"
@@ -177,9 +177,11 @@ def test_alias_selector_gate_matches_content_provider_policy() -> None:
         f"{provider}-{lanes[selector]} (selector {selector}, gate exit {gate[provider][lanes[selector]]})"
         for selector in aliases
         for provider in PROVIDERS
-        if gate[provider][lanes[selector]] != (
+        if gate[provider][lanes[selector]]
+        != (
             3
-            if provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"}
+            if (provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"})
+            or (provider not in {"claude", "codex"} and lanes[selector] == "epics")
             else 0
         )
     ]
@@ -215,7 +217,8 @@ def test_every_registered_slot_is_reachable_from_a_selector_for_its_provider() -
     _, gate = _gate_matrix()
     accepted = {provider: {lane for lane, code in gate[provider].items() if code == 0} for provider in PROVIDERS}
     unreachable = [
-        slot for slot in roster
+        slot
+        for slot in roster
         if slot.split("-", 1)[0] in PROVIDERS and slot.split("-", 1)[1] not in accepted[slot.split("-", 1)[0]]
     ]
     assert not unreachable, f"launcher providers cannot reach these roster lanes: {unreachable}"

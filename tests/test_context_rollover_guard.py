@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.test_context_latest_usage import advisor_usage, write_usage
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 HOOKS = PROJECT_ROOT / "agents_extensions/shared/hooks"
 GUARD = HOOKS / "context-rollover-guard.sh"
@@ -138,6 +140,25 @@ def test_reminder_is_silent_after_a_manual_compaction_drop(tmp_path: Path) -> No
     )
 
     assert _reminder(completed) == ""
+
+
+@pytest.mark.parametrize("tokens", [400_000, 760_000])
+def test_guard_uses_final_main_pass_with_advisor_iterations(tmp_path: Path, tokens: int) -> None:
+    project, record_path = _project(tmp_path)
+    _tier_state(project, 3, 760_000)
+    transcript = tmp_path / "advisor.jsonl"
+    write_usage(transcript, advisor_usage(tokens))
+    reminder = _reminder(
+        _run(
+            project,
+            record_path,
+            {"hook_event_name": "UserPromptSubmit", "transcript_path": str(transcript)},
+        )
+    )
+    if tokens == 400_000:
+        assert reminder == ""
+    else:
+        assert "above this session's final rollover tier (~760k tokens)" in reminder
 
 
 @pytest.mark.parametrize("rollover_mode", ["continuation", None])

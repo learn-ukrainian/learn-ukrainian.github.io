@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/professional-email-basics.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 8-klas-ukrmova-avramenko-2025_s0104
@@ -26,7 +24,7 @@ sources:
   page: 228
   grade: 6
 - id: S5
-  file: 8-klas-ukrmova-zabolotnyi-2025_s0344
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0313
   type: textbook
   title: ТЕМА 19. ВИДИ ДІЛОВИХ ЛИСТІВ. ЛИСТ-ЗАПРОШЕННЯ, ЛИСТ-ПОВІДОМЛЕННЯ
   page: 277

@@ -1,5 +1,3 @@
-# Source registry for wiki/grammar/b2/proverbs-work-wisdom-character.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
   file: 5-klas-ukrlit-avramenko-2022_s0031
@@ -26,13 +24,13 @@ sources:
   page: 35
   grade: 9
 - id: S5
-  file: 6-klas-ukrmova-zabolotnyi-2020_s0018
+  file: 6-klas-ukrmova-avramenko-2023_s0017
   type: textbook
   title: Власне українські слова як окраса мови
   page: 19
   grade: 6
 - id: S6
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0092
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0098
   type: textbook
   title: Теми публічних виступів
   page: 65

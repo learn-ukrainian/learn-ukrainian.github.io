@@ -92,6 +92,14 @@ explicitly exempt. The prompt author counts as neither reviewer. Choose these ro
 permanent reviewer identity; collect explicit checklist verdicts/findings and reconcile them
 before dispatch.
 
+Bind each checklist verdict and the author's finding reconciliation to the frozen
+prompt SHA-256. A FAIL blocks dispatch: revise the packet, freeze its new SHA-256,
+and obtain a fresh critique of the new SHA-256 from the same critic set required
+above before dispatch. After two FAIL rounds
+on one artifact, state the stopping rule, change the approach, and record any
+approved residual with its owner and reopen condition. Keep the denominator and
+every valid gate; reducing mission scope still requires the approval below.
+
 Re-review after a material change to outcome, scope, denominator, role map, acceptance
 criteria, or independent evaluation. A non-goal that shrinks the actual mission needs
 operator/advisor approval. Prompt review is pre-dispatch quality control only: it never
@@ -118,6 +126,12 @@ unless `--force-agent` + NOTE. Before claiming who authored work, read the
 `batch_state/tasks/<id>.json` (2026-09-25). Never filter dispatch output down to the
 base-SHA line or drop stderr; that hides the substitution.
 
+Before launch, verify the brief's actual worktree path and owned paths against the
+dispatch target and the worktree contract. Reconcile current queue instructions
+with the brief through the §4a inbox drain. Outstanding instructions or unknown
+queue state remain unresolved; never infer clearance from a wakeup or empty
+projection, and never launch a packet superseded by a queued instruction.
+
 Dispatch with a numbered brief
 (worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
@@ -125,6 +139,13 @@ quoted raw evidence). Classify the task and pass the research flags
 (`--research-role/-task-family/-track/-owned-path`). For write dispatches also pass
 repeatable `--owned-path <path>` for the paths the worker may commit: auto-finalize commits
 only under them and commits nothing without them (#8991). Stagger same-lane spawns ~10s.
+
+Write every brief so pytest basetemp, probe copies, and report copies go to the
+managed scratch directory outside the worktree (`$TMPDIR`, the dispatch-managed
+lease). A write-capable round ends with empty `git status --porcelain`. The
+pre-push gate's `untracked_inputs` refusal covers untracked or ignored Python and
+config overlays (`*.py`, `*.pth`, `pytest.ini`, `tox.ini`, `setup.cfg`,
+`pyproject.toml`). Tracked dirt is `dirty_tree`.
 
 The brief's test step names only the test files that cover the changed files,
 including tests of code that imports a changed shared helper; never
@@ -136,6 +157,11 @@ only when the brief explicitly asks for it (a branch with no PR yet, a baseline
 capture, or diagnosis).
 
 ## §5. Settle-loop (never poll by hand)
+
+Timers, keeper nudges, and reminders are wakeups, not stop conditions. Continue
+authorized work until its terminal goal, a real blocker, an explicit operator
+pause, or the seat's handoff signal. A reminder neither settles a live task nor
+waives a gate.
 
 A dispatch returning is not a settle. Arm a wait in the same turn: `delegate.py
 wait <task-id>` where the seat has no Monitor tool; otherwise watch the task's

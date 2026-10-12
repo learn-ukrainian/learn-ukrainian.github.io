@@ -300,6 +300,143 @@ retain the schema on that invocation's plan for result validation:
 | AGY | `--output-format json --json-schema <JSON>` | `structured_output` in the JSON envelope with `status=SUCCESS` |
 | Grok | `--json-schema <JSON>` with JSON output | `structuredOutput` in the final envelope with `stopReason=end_turn`, without `structuredOutputError` |
 
+### AGY shell-output guard and startup gate
+
+The native shell event is
+`{"toolCall":{"name":"run_command","args":{"CommandLine":"printf AGY_SYNTHETIC_OK"}},"stepIdx":19}`.
+`secret_print_hook.py --harness agy` reads `toolCall.args.CommandLine`.
+A present `toolCall` is authoritative; `tool_input.command` is accepted only
+when `toolCall` is absent. Any tool name carrying `args.CommandLine` follows
+the same command validation and detector rules. Empty, whitespace-only or
+non-string command text denies. A non-`run_command` tool without that key
+allows; `run_command` without it denies. Registration still matches only
+`run_command`; whether native matching ever delivers another tool is UNKNOWN.
+Malformed JSON, non-object or oversized AGY stdin, and missing, crashing or
+late detectors deny. The stdin size cap applies only to AGY; other harnesses
+keep their unbounded read and existing decisions.
+
+The entry point normalizes command text to the shared Claude/Bash detector.
+Its detector deadline remains five seconds. The AGY detector child omits
+`LEARN_UK_SECRETS_OK`; other harnesses keep their existing override behavior.
+AGY denials print
+`{"decision":"deny","reason":"..."}` and exit 0; other harnesses retain exit 2.
+These repo-local outputs do not establish native blocking.
+
+The tracked `agents_extensions/agy/hooks.json` overlay adds the named
+`shell-secret-print-guard` to `PreToolUse`, matcher `run_command`, timeout
+10 seconds. It invokes the entry point directly, separately from the
+fail-open driver wrapper. Existing driver hooks keep their behavior.
+
+Hook commands resolve from the directory containing `hooks.json`.
+After deployment in the primary checkout's workspace `.agents/`, the
+overlay's `../.venv/bin/python` and `../scripts/agent_runtime/secret_print_hook.py`
+resolve within that checkout. Worker installation uses
+`scripts.common.repo_root.project_interpreter` to name the shared primary
+interpreter and an absolute entry-point path, so a dispatch worktree needs
+no local `.venv`. A guarded workspace suffices when ordinary HOME has no
+`.gemini/config/hooks.json`; the gate never writes the user's home.
+Scoped review homes receive the same absolute registration through the
+`review_mcp.py` and `attempt_boundary.py` provisioners, for isolated and full
+review access. On the review route, the load-bearing control is the exact
+validated command-denial settings (`command(*)` and `write_file(*)` denied,
+checked by `_write_review_permissions` before launch), plus `--sandbox`.
+Scoped-home guard registration is defense in depth. A PASS certifies
+registration in every loadable candidate. It does not certify that the hook
+can execute inside the review OS sandbox. The probe at `69690b9667` found the
+interpreter and entry point unreadable there. The failure disposition of a
+hook that cannot start is UNKNOWN. It can only fire on `run_command`, which
+the settings deny.
+
+`agy_hook_config` checks the spawn's workspace `.agents/hooks.json` and
+effective-HOME `.gemini/config/hooks.json`. Scoped HOME replaces ordinary
+HOME, so the ordinary-home file is not a candidate for that spawn. Every
+existing candidate that can load must contain a valid, enabled guard. An
+absent candidate cannot load and is skipped. The spawn still refuses unless
+at least one candidate exists and contains a valid guard. An existing
+unguarded or invalid file refuses even alongside a valid candidate.
+PASS requires one enabled guard registration per existing candidate, the
+`PreToolUse` event, a matcher covering `run_command`, and a command resolving
+to the executable project interpreter and this entry point. Matchers `*`
+and `""` pass the local coverage check; other matchers use Python regular
+expressions. This check does not establish AGY's native matcher semantics.
+Workspace-relative commands must resolve exactly to the project interpreter
+and guard entry point. Home commands must use absolute paths. Unresolved
+commands and duplicate JSON keys refuse.
+The command timeout must be an integer of at least 10 seconds; booleans refuse.
+Invalid candidates and the absence of all guarded candidates refuse. The
+adapter installs only when the dispatch workspace candidate is absent. It
+never repairs an existing unguarded, disabled or invalid file. The explicit
+workspace provisioner merges a missing guard without replacing unrelated
+named hooks. Installation refuses
+traversal and symlink components, then publishes the merged file atomically
+through directory descriptors while preserving unrelated hook bytes. A newly
+published or merged file has mode 0600; an existing guard left untouched
+retains its file mode.
+
+Bridge asks explicitly provision an absolute guard into their caller-owned
+scratch workspace when its hooks file is absent. Existing invalid scratch
+files remain untouched and refuse in the adapter. Attempt workspaces need
+no hooks file because their provisioned scoped home contains the guard.
+
+The launcher checks the deployed root and effective HOME inside
+`launcher_adapter_exec`, after extension deployment and before AGY execution.
+It starts AGY from that same root, including when called from another
+directory. Dry runs do not spawn
+AGY or certify wiring. The adapter checks workers and reviews before
+`agy --version` or any provider subprocess and raises a typed refusal.
+Neither path changes provider on refusal.
+
+The spawn inventory is a file-level regression tripwire, not proof that every
+start is found. Each candidate file has one row with the weakest applicable
+status: `gated`, `management-exempt`, `probe-exempt`, `ungated-residual-10442`
+or `generic-helper`. Generic process helpers receive binaries from callers;
+callers are classified by their own rows. Management operations start no model
+session or tool call: `_run_agy_mcp` permits exactly `list` and `add`, and the
+review catalog probe hardcodes `mcp list`. The tripwire misses starts whose
+binary name never appears as the token `agy` in a process-capable candidate
+file. Known non-detections include shared-runtime callers that select the
+adapter by name without a process API in their file,
+`scripts/ai_llm/fallback.py` and `scripts/batch_gemini_runner/execution.py`,
+and Python command strings with `agy` embedded after other words. The shared
+runtime callers are the residual of
+[issue #10448](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10448),
+owned by the harness lane. Per-site completeness of UI, ACP, proxy and usage
+starts remains the residual of
+[issue #10442](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10442),
+also owned by the harness lane. Those starts remain ungated. The inventory does
+not certify native enforcement.
+
+The adapter captures its runtime-log path and workspace root before launch.
+It uses the plan's existing `liveness_paths` and resolved `cwd` fields, keeping
+serialized metadata unchanged.
+An ordinary caller may replace the log with one inside that captured workspace;
+attempt logs remain confined to their enforced write root. These reads reject
+traversal, symlinks, hardlinks, and non-regular files regardless of where the
+workspace sits relative to a checkout or its Git directory.
+
+A startup PASS proves none of the behaviors below. The post-merge driver
+owns the native probe and failure matrix, including permission skipping.
+A startup gate cannot guarantee blocking after a hook crash or timeout.
+
+| Native behavior | Evidence state |
+| --- | --- |
+| Native matcher semantics | UNKNOWN |
+| Duplicate-key parsing | UNKNOWN |
+| Multi-file precedence among workspace, home, scoped home, app settings and plugins | UNKNOWN |
+| Missing hooks file disposition | UNKNOWN |
+| Print-mode hook loading | UNKNOWN |
+| Interaction with `--dangerously-skip-permissions` | UNKNOWN |
+| Missing command disposition | UNKNOWN |
+| Non-zero hook exit disposition | UNKNOWN |
+| Hook timeout disposition | UNKNOWN |
+| Malformed hook output disposition | UNKNOWN |
+| Invalid hooks configuration disposition | UNKNOWN |
+| Nested-agent coverage | UNKNOWN |
+| Shell-stdin coverage | UNKNOWN |
+| Scoped-review hook loading | UNKNOWN |
+| Failure disposition when the registered hook cannot start inside the review OS sandbox | UNKNOWN |
+| Exit 0 plus deny JSON blocking a live `run_command` | UNKNOWN |
+
 AGY's envelope is specified in its
 [headless documentation](https://antigravity.google/docs/cli/headless/).
 Grok's native field names come from its
@@ -501,13 +638,28 @@ closed if that reduced tool set changes.
 Sealed `review_isolation` drops the variable through its own environment
 allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
 that can background. Interactive launchers (`start-claude.sh`,
-`start-claude-driver.sh`, `scripts/launchers/claude.sh`) do not use the adapter
+`start-claude-driver.sh`, `start-claude-cto.sh`, `scripts/launchers/claude.sh`) do not use the adapter
 and keep background tasks. A trailing `&` or `nohup` inside a foreground Bash
 call is a different path: `worker_leftovers.py` handles it (#8991).
 `tests/agent_runtime/test_claude_no_background.py` launches a fake CLI through
 the real runner and checks both parts, for the Claude adapter and for KimiCC
 behind its wrapper. It also checks that native Kimi gets neither, and that
 every adapter which resolves the Claude binary is in its harness table.
+
+The CTO launchers `start-claude-cto.sh` and `start-codex-cto.sh` use driver mode
+and default to the registered `epics` stream, whose root epic is #10453.
+Their model defaults are `claude-sonnet-5-5` and `gpt-6.1-sol`, respectively,
+both at `high` effort. Command-line `--model` and `--effort` override
+`LAUNCHER_MODEL` and `LAUNCHER_EFFORT`. Both wrappers reject `--force` with exit 2
+and retain the driver identity, slot, occupancy, and duplicate-supervisor checks.
+They reuse `.claude/epics-epic/DRIVER-STATE.md`, the driver prompts, and `drive-epic`.
+Scope re-entry and supervisor successors return through the same CTO wrapper.
+
+Only `start-claude-cto.sh` on the resolved `epics` lane permits Opus selected by
+an explicit command-line `--model`. Environment-only Opus and Opus on other
+Claude entrypoints or lanes remain refused with exit 7. Every Claude launch
+still stops at 99% weekly usage. `LU_CLAUDE_CAP_OVERRIDE=1` bypasses only that
+usage stop and does not expand the Opus exception.
 
 ### Native Grok headless permission mapping (#7583)
 

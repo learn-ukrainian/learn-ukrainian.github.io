@@ -20,6 +20,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
+
 
 @pytest.fixture(autouse=True)
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
@@ -770,7 +772,12 @@ class TestModel:
         finally:
             _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
-    def test_check_model_timeout(self, capsys):
+    def test_check_model_timeout(self, capsys, tmp_path, monkeypatch):
+        home = tmp_path / "home"
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setenv("HOME", str(home))
+        register_agy_hooks(tmp_path, home=home)
+        monkeypatch.setattr("scripts.ai_agent_bridge._model._REPO_ROOT", tmp_path)
         import subprocess
 
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
@@ -782,7 +789,12 @@ class TestModel:
         assert "timed out" in capsys.readouterr().out
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
-    def test_check_model_file_not_found(self, capsys):
+    def test_check_model_file_not_found(self, capsys, tmp_path, monkeypatch):
+        home = tmp_path / "home"
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setenv("HOME", str(home))
+        register_agy_hooks(tmp_path, home=home)
+        monkeypatch.setattr("scripts.ai_agent_bridge._model._REPO_ROOT", tmp_path)
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
@@ -801,7 +813,12 @@ class TestModel:
         assert "not a recognized AGY model" in capsys.readouterr().out
         _MODEL_CACHE.pop("not-a-real-model", None)
 
-    def test_check_model_success(self):
+    def test_check_model_success(self, tmp_path, monkeypatch):
+        home = tmp_path / "home"
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setenv("HOME", str(home))
+        register_agy_hooks(tmp_path, home=home)
+        monkeypatch.setattr("scripts.ai_agent_bridge._model._REPO_ROOT", tmp_path)
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("gemini-3.8-flash-high", None)

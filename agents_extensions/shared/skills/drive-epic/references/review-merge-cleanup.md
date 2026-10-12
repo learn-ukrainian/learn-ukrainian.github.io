@@ -13,6 +13,12 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 If the head moves after APPROVE, the CF is stale — re-run exact-head CF before any
 enqueue or re-queue.
 
+Label a source-only review static and state its unverified execution behavior.
+Keep the execution-dependent review route in [model-deltas](model-deltas.md);
+do not request an executing review solely because a path is integration code.
+Never record an APPROVE over a pipeline `CHANGES_REQUESTED`; reconcile the finding
+through the author and obtain fresh exact-head review after any content change.
+
 - **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or
   native harnesses); ACP is toolless intercomm only (state transfer / ordinary asks and
   `discuss` with 2 to 4 enabled seats; every other participant count rejects), and
@@ -144,6 +150,9 @@ PR, same-head CI before enqueue, non-draft PR, no `--auto`, `--delete-branch`
 or `--admin`, confirm MERGED, then common-reaper cleanup. A moved head voids
 both gates; missing evidence never grants approval.
 
+Immediately before enqueue, run the [core inbox drain](../SKILL.md#the-loop--run-it-every-cycle)
+and reconcile its messages with the approved head and landing decision.
+
 **Merge-queue visibility after enqueue (#7814 item 13).** After `.venv/bin/python -m scripts.publish pr-merge --number <N>`, GitHub
 prints `! The merge strategy for main is set by the merge queue` while the PR stays
 `OPEN` / `CLEAN`. Do not stall or query raw GraphQL by hand — run
@@ -228,7 +237,11 @@ Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, common-reaper
 exit 0 and residue-free receipts are required before the next large dispatch.
 Non-zero or SKIPPED receipts block closeout; never use `--force`. The only
 manual fallback is the one in `docs/runbooks/worktree-cleanup.md` when the
-common reaper cannot run. A squash-merge alone is not done.
+common reaper cannot run. A squash-merge alone is not done: the merging lane
+runs the common-reaper closeout for the PR's own worktrees and branches and
+needs a clean receipt before reporting it done. Any PR-scoped worktree claim is
+settled only by that reaper's guarded removal. Stream leases are launcher-owned;
+a driver never opens, resumes, claims, renews, releases or replaces one.
 
 **After a suspected secret leak:** run `scripts/audit/secret_scan_local.py tree` and `history`
 (offline); triage only through its `show-keys` and `count` subcommands (never `jq`, `cat` or

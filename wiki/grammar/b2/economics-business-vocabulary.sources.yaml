@@ -1,44 +1,42 @@
-# Source registry for wiki/grammar/b2/economics-business-vocabulary.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-avramenko-2025_s4586
+  file: 8-klas-ukrmova-avramenko-2025_s0078
   type: textbook
   title: РОЗВИТОК МОВЛЕННЯ (p. 65)
   page: 65
   grade: 8
 - id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0673
+  file: 10-klas-ukrmova-karaman-2018_s0272
   type: textbook
   title: § 60. Прикметник як частина мови
   page: 151
   grade: 10
 - id: S3
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0349
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0135
   type: textbook
   title: Орфографічна норма (p. 89)
   page: 89
   grade: 10
 - id: S4
-  file: 10-klas-ukrmova-zabolotnyi-2018_s0768
+  file: 10-klas-ukrmova-glazova-2018_s0125
   type: textbook
   title: Орфографічна норма (p. 89)
   page: 89
   grade: 10
 - id: S5
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1065
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0522
   type: textbook
   title: CУСПІЛЬНО-ПОЛІТИЧНЕ ТА СОЦІАЛЬНО ЕКОНОМІЧНЕ СТАНОВИЩЕ УКРАЇНИ
   page: 291
   grade: 11
 - id: S6
-  file: 11-klas-istoriya-ukr-gisem-2024_s0956
+  file: 11-klas-istoriya-ukr-gisem-2024_s0261
   type: textbook
   title: § 24. Економічний розвиток України в 1992—2005 рр. 197
   page: 199
   grade: 11
 - id: S7
-  file: 11-klas-istoriya-ukr-gisem-2024_s0934
+  file: 11-klas-istoriya-ukr-gisem-2024_s0195
   type: textbook
   title: Початок політичних реформ. Поступово керів
   page: 141
@@ -56,7 +54,7 @@ sources:
   page: 23
   grade: 5
 - id: S10
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0194
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0206
   type: textbook
   title: Сторінка 142
   page: 142

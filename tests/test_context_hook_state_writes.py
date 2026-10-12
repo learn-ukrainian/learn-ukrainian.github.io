@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.test_context_latest_usage import advisor_usage, incident_usage, write_usage
+
 HOOKS = Path(__file__).resolve().parents[1] / "agents_extensions/shared/hooks"
 HELPER = HOOKS / "context-hook-state.py"
 SESSION = "state-session"
@@ -32,46 +34,89 @@ def hook_case(tmp_path):
     project = tmp_path / "project"
     project.mkdir()
     record = tmp_path / "record.json"
-    record.write_text(json.dumps({
-        "session_id": SESSION,
-        "actual_context_window_tokens": 1_000_000,
-        "actual_context_window_provenance": "declared-profile",
-        "rollover_warning_percentages": [65, 70, 75],
-        "rollover_mode": "operator_restart",
-    }))
+    record.write_text(
+        json.dumps(
+            {
+                "session_id": SESSION,
+                "actual_context_window_tokens": 1_000_000,
+                "actual_context_window_provenance": "declared-profile",
+                "rollover_warning_percentages": [65, 70, 75],
+                "rollover_mode": "operator_restart",
+            }
+        )
+    )
     transcript = tmp_path / "transcript.jsonl"
-    transcript.write_text(json.dumps({
-        "type": "assistant", "message": {"usage": {"input_tokens": 760_000}},
-    }) + "\n")
+    transcript.write_text(
+        json.dumps(
+            {
+                "type": "assistant",
+                "message": {"usage": {"input_tokens": 760_000}},
+            }
+        )
+        + "\n"
+    )
     env = os.environ.copy()
     for name in (
-        "CLAUDE_NON_INTERACTIVE", "LEARN_UK_PIPELINE", "LEARN_UKRAINIAN_PIPELINE",
-        "GEMINI_SESSION", "GROK_AGENT", "CODEX_THREAD_ID", "CODEX_SESSION_ID",
-        "SESSION_HANDOFF_AGENT", "LEARN_UKRAINIAN_DISPATCH_TASK_ID", "SESSION_EPIC",
+        "CLAUDE_NON_INTERACTIVE",
+        "LEARN_UK_PIPELINE",
+        "LEARN_UKRAINIAN_PIPELINE",
+        "GEMINI_SESSION",
+        "GROK_AGENT",
+        "CODEX_THREAD_ID",
+        "CODEX_SESSION_ID",
+        "SESSION_HANDOFF_AGENT",
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+        "SESSION_EPIC",
         "CODEX_CANONICAL_REPO_ROOT",
     ):
         env.pop(name, None)
-    env.update({
-        "CLAUDE_PROJECT_DIR": str(project),
-        "LEARN_UKRAINIAN_SESSION_RECORD": str(record),
-        "THREAD_ROLLOVER_PYTHON": sys.executable,
-    })
-    payload = json.dumps({
-        "session_id": SESSION, "transcript_path": str(transcript),
-        "hook_event_name": "UserPromptSubmit",
-    })
+    env.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(project),
+            "LEARN_UKRAINIAN_SESSION_RECORD": str(record),
+            "THREAD_ROLLOVER_PYTHON": sys.executable,
+        }
+    )
+    payload = json.dumps(
+        {
+            "session_id": SESSION,
+            "transcript_path": str(transcript),
+            "hook_event_name": "UserPromptSubmit",
+        }
+    )
     return project, env, payload
 
 
 def run_hook(case, hook="context-monitor.sh"):
     project, env, payload = case
     result = subprocess.run(
-        [str(HOOKS / hook)], input=payload, env=env, cwd=project,
-        text=True, capture_output=True, timeout=30,
+        [str(HOOKS / hook)],
+        input=payload,
+        env=env,
+        cwd=project,
+        text=True,
+        capture_output=True,
+        timeout=30,
     )
     assert result.returncode == 0, result.stderr
     assert result.stderr == ""
     return result.stdout
+
+
+def test_advisor_aggregate_does_not_write_false_emergency_state(hook_case):
+    project, _, payload = hook_case
+    transcript = Path(json.loads(payload)["transcript_path"])
+    state = project / f"batch_state/context_monitor/{SESSION}.tier"
+    write_usage(transcript, incident_usage())
+    assert run_hook(hook_case) == ""
+    assert not state.exists()
+
+    write_usage(transcript, advisor_usage(760_000))
+    announcement = json.loads(run_hook(hook_case))["hookSpecificOutput"]["additionalContext"]
+    assert announcement.startswith("EMERGENCY: Context is at 76%")
+    assert state.read_text() == "3 760000\n"
+    assert run_hook(hook_case) == ""
+    assert state.read_text() == "3 760000\n"
 
 
 @pytest.mark.parametrize("redirect", ["tier", "lock", "directory", "batch_state"])
@@ -108,11 +153,18 @@ def test_legacy_predictable_temp_name_is_never_used(hook_case, tmp_path):
     target = tmp_path / "outside"
     target.write_bytes(b"unchanged\n")
     # Cover old <name>.tmp.<pid> names for the actual hook processes.
-    processes = [subprocess.Popen(
-        [str(HOOKS / "context-monitor.sh")], stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-        env=hook_case[1], cwd=project,
-    ) for _ in range(12)]
+    processes = [
+        subprocess.Popen(
+            [str(HOOKS / "context-monitor.sh")],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=hook_case[1],
+            cwd=project,
+        )
+        for _ in range(12)
+    ]
     try:
         for process in processes:
             (state / f"{SESSION}.tier.tmp.{process.pid}").symlink_to(target)
@@ -144,13 +196,18 @@ def test_twelve_concurrent_calls_announce_each_tier_once(hook_case, tmp_path, hi
         assert shutil.which("flock", path=env["PATH"])
     transcript = Path(json.loads(payload)["transcript_path"])
     for tier, tokens, prefix in ((1, 655_000, "HEADS UP:"), (2, 705_000, "CRITICAL:"), (3, 760_000, "EMERGENCY:")):
-        transcript.write_text(json.dumps({
-            "type": "assistant", "message": {"usage": {"input_tokens": tokens}},
-        }) + "\n")
+        transcript.write_text(
+            json.dumps(
+                {
+                    "type": "assistant",
+                    "message": {"usage": {"input_tokens": tokens}},
+                }
+            )
+            + "\n"
+        )
         with ThreadPoolExecutor(max_workers=12) as pool:
             outputs = list(pool.map(lambda _: run_hook(hook_case), range(12)))
-        announcements = [json.loads(output)["hookSpecificOutput"]["additionalContext"]
-                         for output in outputs if output]
+        announcements = [json.loads(output)["hookSpecificOutput"]["additionalContext"] for output in outputs if output]
         assert len(announcements) == 1
         assert announcements[0].startswith(prefix)
         assert (project / f"batch_state/context_monitor/{SESSION}.tier").read_text() == f"{tier} {tokens}\n"
@@ -158,16 +215,25 @@ def test_twelve_concurrent_calls_announce_each_tier_once(hook_case, tmp_path, hi
 
 def test_live_holder_never_stolen_and_killed_holder_recovered(hook_case):
     project, _, _ = hook_case
-    holder = subprocess.Popen([
-        sys.executable, "-c",
-        "import importlib.util,sys; "
-        "s=importlib.util.spec_from_file_location('state',sys.argv[1]); "
-        "m=importlib.util.module_from_spec(s); s.loader.exec_module(m); "
-        "d=m.open_state_dir(sys.argv[2],create=True); "
-        "lock=m.lock_session(d,sys.argv[3]+'.lock'); "
-        "print('locked',flush=True); sys.stdin.read()",
-        str(HELPER), str(project), SESSION,
-    ], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    holder = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            "import importlib.util,sys; "
+            "s=importlib.util.spec_from_file_location('state',sys.argv[1]); "
+            "m=importlib.util.module_from_spec(s); s.loader.exec_module(m); "
+            "d=m.open_state_dir(sys.argv[2],create=True); "
+            "lock=m.lock_session(d,sys.argv[3]+'.lock'); "
+            "print('locked',flush=True); sys.stdin.read()",
+            str(HELPER),
+            str(project),
+            SESSION,
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
     try:
         assert holder.stdout.readline() == "locked\n"
         # A full hook waits only a bounded time, fails open, and cannot claim.

@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import textwrap
@@ -18,6 +19,7 @@ from types import SimpleNamespace
 import pytest
 
 from tests.helpers.python import project_python
+from tests.wait_helpers import wait_for_line
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO_ROOT / ".githooks"
@@ -70,6 +72,7 @@ def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
     env.pop("PYTEST_ADDOPTS", None)
+    env["PYTHONPATH"] = str(REPO_ROOT / "scripts")
     env.update(extra or {})
     return env
 
@@ -91,8 +94,9 @@ def _commit(repo: Path, message: str, *paths: str) -> str:
 
 
 @pytest.fixture
-def repo(tmp_path: Path) -> Path:
+def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """A repository whose base commit is already on the remote ``main``."""
+    monkeypatch.setenv("PYTHONPATH", str(REPO_ROOT / "scripts"))
     root = tmp_path / "repo"
     remote = tmp_path / "remote.git"
     root.mkdir()
@@ -106,6 +110,7 @@ def repo(tmp_path: Path) -> Path:
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     launcher.chmod(0o755)
     _write(root, ".pre-commit-config.yaml", PRE_COMMIT)
+    _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
     _write(root, "tests/test_invariant.py", GREEN_TEST)
     _write(root, "tests/test_scanner.py", "def test_scan():\n    assert True\n")
@@ -161,7 +166,9 @@ def _receipts(repo: Path) -> list[Path]:
 # ---- each push path refuses red and accepts green -------------------------------------------------------
 
 
-def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path) -> None:
+def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
 
@@ -170,6 +177,9 @@ def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path) -> None
     assert result.returncode == 0, result.stderr
     assert len(_receipts(repo)) == 1
     assert _measurements(repo)[-1]["outcome"] == "green"
+    pytest_row = _measurements(repo)[-1]["stages"]["pytest"]
+    assert pytest_row["requested_test_processes"] == 4
+    assert pytest_row["effective_test_processes"] == 2
 
 
 def test_red_changed_test_is_refused_with_its_node_id(repo: Path) -> None:
@@ -449,12 +459,15 @@ def test_abandoned_ticket_does_not_block_a_live_gate(tmp_path: Path) -> None:
 def test_queue_scan_is_bounded_and_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     queue = tmp_path / "queue"
     queue.mkdir()
-    (queue / "old.ticket").touch()
+    other, fd = _locked_ticket(tmp_path, "old")
     monkeypatch.setattr(gate, "MAX_QUEUE_ENTRIES", 1)
-    with pytest.raises(gate.GateOutcome, match="queue scan limit") as raised, gate.Admission(tmp_path, 0.0):
-        pytest.fail("oversized queue must not admit a gate")
-    assert raised.value.incomplete
-    assert list(queue.glob("*.ticket")) == [queue / "old.ticket"]
+    try:
+        with pytest.raises(gate.GateOutcome, match="queue scan limit") as raised, gate.Admission(tmp_path, 0.0):
+            pytest.fail("oversized live queue must not admit a gate")
+        assert raised.value.incomplete
+        assert list(queue.glob("*.ticket")) == [other]
+    finally:
+        os.close(fd)
 
 
 def _fake_validation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, clock: FakeClock) -> list[float]:
@@ -491,11 +504,11 @@ def _fake_validation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, clock: Fak
         deadlines.append(shadow.deadline)
         return shadow
 
-    def pre_commit(_plan, _root, _launcher, _config, deadline):
+    def pre_commit(_plan, _root, _launcher, _config, deadline, **_kwargs):
         deadlines.append(deadline)
         clock.now += 2.0
 
-    def pytest_stage(_plan, _root, _launcher, deadline):
+    def pytest_stage(_plan, _root, _launcher, deadline, **_kwargs):
         deadlines.append(deadline)
         clock.now += 3.0
         return "passed"
@@ -604,11 +617,11 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
             def abandon(self):
                 pass
         gate.Shadow = Shadow
-        def pre_commit(plan, root, launcher, config, deadline):
+        def pre_commit(plan, root, launcher, config, deadline, **kwargs):
             (root / ('pre-' + number)).write_text('ran')
             if deadline - time.monotonic() < 2.5:
                 raise gate.GateOutcome('validation_incomplete', 'waiting consumed budget', incomplete=True)
-        def pytest_stage(plan, root, launcher, deadline):
+        def pytest_stage(plan, root, launcher, deadline, **kwargs):
             time.sleep(2.0)
             if time.monotonic() >= deadline:
                 raise gate.GateOutcome('validation_incomplete', 'pytest ran out of budget', incomplete=True)
@@ -905,12 +918,10 @@ def test_admission_wait_covers_one_full_gate_run() -> None:
     assert gate.ADMISSION_WAIT_S >= gate.RUN_BUDGET_S + gate.SHADOW_BUDGET_S + gate.CLEANUP_BUDGET_S
 
 
-def test_auto_finalize_push_timeout_covers_a_single_predecessor() -> None:
+def test_auto_finalize_push_timeout_covers_the_queue_ceiling() -> None:
     from scripts import delegate
 
-    # This existing launcher guarantee covers one predecessor. Its separate outer timeout does
-    # not cover ADMISSION_MAX_WAIT_S; extending it is outside this gate's owned paths.
-    gate_worst_case = gate.ADMISSION_WAIT_S + gate.RUN_BUDGET_S + gate.SHADOW_BUDGET_S
+    gate_worst_case = gate.ADMISSION_MAX_WAIT_S + gate.ADMISSION_WAIT_S
     assert gate_worst_case + delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S <= delegate.AUTO_FINALIZE_PUSH_TIMEOUT_S
 
 
@@ -954,7 +965,10 @@ def test_a_pytest_run_without_a_verdict_is_validation_incomplete(repo: Path) -> 
     assert _verdict(result)["reason"] == "pytest_error"
 
 
-def test_modules_over_the_cost_cap_are_deferred_to_ci_and_recorded(repo: Path) -> None:
+@pytest.mark.parametrize("ancestor_config", [False, True])
+def test_modules_over_the_cost_cap_are_deferred_to_ci_and_recorded(repo: Path, ancestor_config: bool) -> None:
+    if ancestor_config:
+        _write(repo.parent, "pyproject.toml", "[tool.pytest.ini_options]\n")
     # A conftest breaks the registered module without changing the module itself.
     _write(
         repo,
@@ -1032,13 +1046,16 @@ def test_sparse_deferrals_name_real_registry_entries() -> None:
         assert set(tree_nodes) <= set(registry)
 
 
-def test_pytest_defaults_to_a_single_process(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_pytest_defaults_to_bounded_parallelism_kept_by_file(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
-    assert gate.test_process_limit() == 1
-    assert gate.parallel_options() == []
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    assert gate.test_process_limit() == 4
+    assert gate.parallel_options() == ["-n", "4", "--dist", "loadfile"]
 
 
 def test_pytest_uses_configured_parallelism_kept_by_file(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
     monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "3")
     monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
     assert gate.parallel_options() == ["-n", "3", "--dist", "loadfile"]
@@ -1046,6 +1063,84 @@ def test_pytest_uses_configured_parallelism_kept_by_file(monkeypatch: pytest.Mon
     assert gate.parallel_options() == []
     monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "1")
     assert gate.parallel_options() == []
+
+
+@pytest.mark.parametrize("value,expected", [(None, 2), ("6", 2), ("2", 2), ("1", 1)])
+def test_pytest_preserves_dispatch_process_clamp(
+    value: str | None, expected: int, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    if value is None:
+        monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    else:
+        monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, value)
+    assert gate.test_process_limit() == (4 if value is None else int(value))
+    assert gate.parallel_options() == ([] if expected == 1 else ["-n", "2", "--dist", "loadfile"])
+
+
+@pytest.mark.parametrize(
+    "value,dispatch,xdist,requested,effective",
+    [
+        (None, "", True, 4, 4),
+        (None, "gate-test", True, 4, 2),
+        (None, "  ", True, 4, 4),
+        ("3", "", True, 3, 3),
+        ("6", "gate-test", True, 6, 2),
+        ("1", "gate-test", True, 1, 1),
+        (None, "gate-test", False, 4, 1),
+    ],
+)
+@pytest.mark.parametrize("ending", ["green", "red", "timeout"])
+def test_pytest_measurement_records_requested_and_effective_invocation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    value: str | None,
+    dispatch: str,
+    xdist: bool,
+    requested: int,
+    effective: int,
+    ending: str,
+) -> None:
+    if value is None:
+        monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    else:
+        monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, value)
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", dispatch)
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object() if xdist else None)
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    seen = []
+
+    def run(command: list[str], **kwargs: object) -> tuple[int, str]:
+        seen.append(command)
+        assert kwargs["diagnostics"]["requested_test_processes"] == requested
+        assert kwargs["diagnostics"]["effective_test_processes"] == effective
+        if ending == "timeout":
+            raise gate.GateOutcome("time_budget_exhausted", "pytest stage timed out", incomplete=True)
+        return (1, "FAILED tests/test_a.py::test_bad") if ending == "red" else (0, "1 passed in 0.1s")
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    event = {}
+    if ending == "green":
+        with gate.stage_measurement(event, "pytest") as diagnostics:
+            assert (
+                gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
+                == "1 passed in 0.1s"
+            )
+    else:
+        with pytest.raises(gate.GateOutcome):
+            with gate.stage_measurement(event, "pytest") as diagnostics:
+                gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
+    assert len(seen) == 1
+    command = seen[0]
+    if effective == 1:
+        assert "-n" not in command and "--dist" not in command
+    else:
+        assert command[-4:] == ["-n", str(effective), "--dist", "loadfile"]
+    row = event["stages"]["pytest"]
+    assert row["requested_test_processes"] == requested
+    assert row["effective_test_processes"] == effective
+    assert row["outcome"] == {"green": "green", "red": "refused", "timeout": "validation_incomplete"}[ending]
 
 
 @pytest.mark.parametrize(
@@ -1262,6 +1357,229 @@ def test_command_output_and_exit_code_are_returned(tmp_path: Path) -> None:
 
     assert code == 3
     assert "out" in output and "err" in output
+
+
+@pytest.mark.parametrize("ending", ["nonzero", "signal", "timeout", "spawn-error", "no-budget"])
+def test_failed_command_measurement_keeps_output_and_observed_exit(tmp_path: Path, ending: str) -> None:
+    script = (
+        "import os, signal, time; print('synthetic output', flush=True); "
+        + {
+            "nonzero": "raise SystemExit(3)",
+            "signal": "os.kill(os.getpid(), signal.SIGTERM)",
+            "timeout": "time.sleep(60)",
+            "spawn-error": "raise SystemExit(0)",
+            "no-budget": "raise SystemExit(0)",
+        }[ending]
+    )
+    command = [sys.executable, "-c", script] if ending != "spawn-error" else [str(tmp_path / "absent")]
+    allowance = 0.0 if ending == "no-budget" else 1.0 if ending == "timeout" else 30.0
+    event = {}
+    with pytest.raises(gate.GateOutcome) as raised:
+        with gate.stage_measurement(event, "pre_commit") as diagnostics:
+            code, _ = gate.run_bounded(
+                command, cwd=tmp_path, deadline=time.monotonic() + allowance, label="synthetic", diagnostics=diagnostics
+            )
+            if code:
+                raise gate.GateOutcome("pre_commit_failed", "synthetic refusal")
+
+    row = event["stages"]["pre_commit"]
+    assert row["elapsed_s"] >= 0.0
+    if ending in {"nonzero", "signal", "timeout"}:
+        assert row["output_tail"] == "synthetic output"
+        assert row["returncode"] == {"nonzero": 3, "signal": -signal.SIGTERM, "timeout": -signal.SIGKILL}[ending]
+        assert row["signal"] == {"nonzero": None, "signal": signal.SIGTERM, "timeout": signal.SIGKILL}[ending]
+        assert row["child_unavailable_reason"] is None
+    else:
+        assert row["returncode"] is None and row["signal"] is None
+        assert (
+            row["child_unavailable_reason"]
+            == {"spawn-error": "spawn_error", "no-budget": "budget_exhausted_before_start"}[ending]
+        )
+        assert row["output_tail"] == ("" if ending == "spawn-error" else None)
+    assert row["outcome"] == ("validation_incomplete" if raised.value.incomplete else "refused")
+    assert row["reason"] == raised.value.reason
+
+
+def test_timeout_without_observed_exit_retains_output_and_null_status(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class Unreaped:
+        pid = 999999999
+        returncode = None
+
+        def __init__(self, *_args, **kwargs):
+            kwargs["stdout"].write(b"synthetic unreaped output\n")
+            kwargs["stdout"].flush()
+
+        def wait(self, timeout):
+            raise subprocess.TimeoutExpired("synthetic", timeout)
+
+    monkeypatch.setattr(gate.subprocess, "Popen", Unreaped)
+    monkeypatch.setattr(gate.os, "killpg", lambda *_args: None)
+    monkeypatch.setattr(gate, "sweep_descendants", lambda *_args: None)
+    event = {}
+    with pytest.raises(gate.GateOutcome, match="could not reap"):
+        with gate.stage_measurement(event, "pytest") as diagnostics:
+            gate.run_bounded(
+                ["synthetic"], cwd=tmp_path, deadline=time.monotonic() + 1.0, label="synthetic", diagnostics=diagnostics
+            )
+    row = event["stages"]["pytest"]
+    assert row["returncode"] is None and row["signal"] is None
+    assert row["child_unavailable_reason"] == "exit_unobserved"
+    assert row["output_tail"] == "synthetic unreaped output"
+    assert row["outcome"] == "validation_incomplete"
+
+
+def test_command_diagnostics_bound_long_lines_and_line_count(tmp_path: Path) -> None:
+    event = {}
+    with gate.stage_measurement(event, "pytest") as diagnostics:
+        code, output = gate.run_bounded(
+            [sys.executable, "-c", "print('x' * 20000); print('line\\n' * 100, end='')"],
+            cwd=tmp_path,
+            deadline=time.monotonic() + 30.0,
+            label="synthetic",
+            diagnostics=diagnostics,
+        )
+    assert code == 0 and len(output) > gate.OUTPUT_TAIL_BYTES
+    assert event["stages"]["pytest"]["output_tail"] == "\n".join(["line"] * 40)
+    event = {}
+    with gate.stage_measurement(event, "pytest") as diagnostics:
+        gate.run_bounded(
+            [sys.executable, "-c", "print('x' * 20000, end='')"],
+            cwd=tmp_path,
+            deadline=time.monotonic() + 30.0,
+            label="synthetic",
+            diagnostics=diagnostics,
+        )
+    assert event["stages"]["pytest"]["output_tail"] == "x" * gate.OUTPUT_TAIL_BYTES
+
+
+@pytest.mark.parametrize("pre_commit_code,pytest_code", [(0, 0), (0, 1), (1, 0), (0, 2)])
+def test_exact_head_row_attributes_only_entered_stages(repo: Path, pre_commit_code: int, pytest_code: int) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _write(
+        repo,
+        "scripts/pre_commit/project_python.sh",
+        textwrap.dedent(f"""\
+        if [ "$2" = "pre_commit" ]; then
+            echo 'synthetic hook'
+            exit {pre_commit_code}
+        fi
+        echo 'synthetic pytest'
+        if [ {pytest_code} = 1 ]; then echo 'FAILED tests/test_new.py::test_ok - synthetic'; fi
+        exit {pytest_code}
+        """),
+    )
+    head = _commit(repo, "synthetic stages", "tests/test_new.py", "scripts/pre_commit/project_python.sh")
+    result = _run_gate(repo)
+    row = _measurements(repo)[-1]
+    assert row["head"] == head
+    stages = row["stages"]
+    assert set(stages) == ({"pre_commit"} if pre_commit_code else {"pre_commit", "pytest"})
+    assert stages["pre_commit"]["returncode"] == pre_commit_code
+    assert stages["pre_commit"]["output_tail"] == "synthetic hook"
+    assert stages["pre_commit"]["outcome"] == ("refused" if pre_commit_code else "green")
+    if not pre_commit_code:
+        assert stages["pytest"]["returncode"] == pytest_code
+        assert stages["pytest"]["outcome"] == {0: "green", 1: "refused", 2: "validation_incomplete"}[pytest_code]
+    assert all(stage["elapsed_s"] >= 0.0 for stage in stages.values())
+    assert sum(stage["elapsed_s"] for stage in stages.values()) <= row["duration_s"] + 0.01
+    assert row["admission_wait_s"] >= 0.0
+    expected = 1 if pre_commit_code or pytest_code == 1 else 75 if pytest_code == 2 else 0
+    assert result.returncode == expected
+    assert bool(_receipts(repo)) == (expected == 0)
+    if pytest_code == 1 and not pre_commit_code:
+        assert _verdict(result)["failing"] == ["tests/test_new.py::test_ok"]
+
+
+def test_stage_timings_are_monotonic_and_separate_from_admission(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    _fake_validation(tmp_path, monkeypatch, clock)
+    event = {}
+    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event)
+    assert event["admission_wait_s"] == 500.0
+    assert event["stages"]["pre_commit"]["elapsed_s"] == 2.0
+    assert event["stages"]["pytest"]["elapsed_s"] == 3.0
+
+
+def test_pre_commit_failure_keeps_hook_verdict_and_child_diagnostics(tmp_path: Path) -> None:
+    launcher = tmp_path / "launcher.sh"
+    launcher.write_text("echo 'synthetic hook................................................Failed'\nexit 4\n")
+    event = {}
+    with pytest.raises(gate.GateOutcome) as raised:
+        with gate.stage_measurement(event, "pre_commit") as diagnostics:
+            gate.run_pre_commit_stage(
+                _plan(), tmp_path, str(launcher), "synthetic", time.monotonic() + 30.0, diagnostics=diagnostics
+            )
+    assert raised.value.reason == "pre_commit_failed"
+    assert raised.value.failing == ("synthetic hook",)
+    row = event["stages"]["pre_commit"]
+    assert row["returncode"] == 4 and row["signal"] is None
+    assert row["outcome"] == "refused" and row["output_tail"].endswith("Failed")
+
+
+def test_tail_read_failure_preserves_the_observed_nonzero_exit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_tempfile = gate.tempfile.TemporaryFile
+
+    class BrokenTail:
+        def __enter__(self):
+            self.sink = real_tempfile()
+            return self
+
+        def __exit__(self, *_args):
+            self.sink.close()
+
+        def __getattr__(self, name):
+            return getattr(self.sink, name)
+
+        def seek(self, offset, whence=os.SEEK_SET):
+            if whence == os.SEEK_END:
+                raise OSError("synthetic tail read failure")
+            return self.sink.seek(offset, whence)
+
+    monkeypatch.setattr(gate.tempfile, "TemporaryFile", BrokenTail)
+    event = {}
+    with pytest.raises(gate.GateOutcome, match="synthetic refusal"):
+        with gate.stage_measurement(event, "pytest") as diagnostics:
+            code, output = gate.run_bounded(
+                [sys.executable, "-c", "print('synthetic output'); raise SystemExit(3)"],
+                cwd=tmp_path,
+                deadline=time.monotonic() + 30.0,
+                label="synthetic",
+                diagnostics=diagnostics,
+            )
+            assert code == 3 and output == "synthetic output\n"
+            raise gate.GateOutcome("tests_failed", "synthetic refusal")
+    row = event["stages"]["pytest"]
+    assert row["returncode"] == 3 and row["signal"] is None
+    assert row["outcome"] == "refused" and row["output_tail"] is None
+    assert row["output_unavailable_reason"] == "output_read_error"
+
+
+@pytest.mark.parametrize("incomplete", [False, True])
+@pytest.mark.parametrize("failure", [TypeError, ValueError, OSError])
+def test_diagnostic_serialization_failure_never_authorizes_push(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, incomplete: bool, failure: type[Exception]
+) -> None:
+    monkeypatch.chdir(repo)
+    real_dumps = json.dumps
+
+    def broken_dumps(value, **kwargs):
+        if isinstance(value, dict) and "stages" in value:
+            raise failure("synthetic diagnostic failure")
+        return real_dumps(value, **kwargs)
+
+    def red_validate(_update, _root, _launcher, _config, event, _budget):
+        with gate.stage_measurement(event, "pre_commit"):
+            raise gate.GateOutcome("synthetic_failure", "synthetic failure", incomplete=incomplete)
+
+    monkeypatch.setattr(gate, "validate", red_validate)
+    monkeypatch.setattr(gate.json, "dumps", broken_dumps)
+    update = f"refs/heads/feature {'a' * 40} refs/heads/feature {ZERO_SHA}\n"
+    assert gate.main(["--launcher", "unused", "--config", "unused"], stdin=update) == (75 if incomplete else 1)
+    assert _receipts(repo) == []
 
 
 # ---- review round 2: absent invariants fail closed, shadow descendants are bounded ----------------------
@@ -1496,3 +1814,372 @@ def test_a_startup_io_error_is_a_typed_incomplete_outcome_and_leaks_nothing(
     monkeypatch.undo()
     with gate.Admission(state, 0.0):  # the admission lock was released, not leaked
         pass
+
+
+# ---- #10383: private pytest temps and safe queue admission ----------------------------------------------
+
+
+@pytest.mark.parametrize("ending", ["green", "red", "timeout", "startup-error"])
+def test_pytest_stage_owns_and_cleans_a_private_base_temp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
+) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    seen: list[Path] = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        assert "--basetemp" in command
+        base = Path(command[command.index("--basetemp") + 1])
+        assert base.parent == state and base.name.startswith("pytest-")
+        base.mkdir(exist_ok=True)
+        (base / "probe").touch()
+        seen.append(base)
+        if ending == "timeout":
+            raise gate.GateOutcome("time_budget_exhausted", "pytest stage timed out", incomplete=True)
+        if ending == "startup-error":
+            raise OSError("cannot start pytest")
+        return (1, "FAILED tests/test_a.py::test_bad") if ending == "red" else (0, "1 passed in 0.1s")
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    if ending == "green":
+        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
+    else:
+        with pytest.raises(OSError if ending == "startup-error" else gate.GateOutcome):
+            gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert len(seen) == 1 and not seen[0].exists()
+    assert list(state.glob("pytest-*")) == []
+
+
+def test_stale_and_dangling_tickets_are_reaped_before_the_live_cap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    queue = tmp_path / "queue"
+    queue.mkdir()
+    for number in range(5):
+        (queue / f"{number}-stale.ticket").touch()
+        (queue / f"{number}-dangling.ticket").symlink_to(tmp_path / "missing")
+    monkeypatch.setattr(gate, "MAX_QUEUE_ENTRIES", 1)
+
+    with gate.Admission(tmp_path, 0.0) as admitted:
+        assert admitted.queue_depth == 1 and admitted.queue_position == 1
+        assert list(queue.glob("*.ticket")) == [admitted._ticket]
+    assert list(queue.glob("*.ticket")) == []
+
+
+@pytest.mark.parametrize("tampering", ["missing", "symlink", "replacement", "fifo", "directory"])
+def test_an_invalid_own_ticket_is_typed_incomplete_without_a_traceback(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tampering: str
+) -> None:
+    monkeypatch.chdir(repo)
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    head = _commit(repo, "green", "tests/test_new.py")
+    original = gate.Admission._register
+
+    def register(admission: gate.Admission) -> None:
+        original(admission)
+        ticket = admission._ticket
+        assert ticket is not None
+        target = ticket.parent / "original"
+        ticket.rename(target)
+        if tampering == "symlink":
+            ticket.symlink_to(target)
+        elif tampering == "replacement":
+            ticket.touch()
+        elif tampering == "fifo":
+            os.mkfifo(ticket)
+        elif tampering == "directory":
+            ticket.mkdir()
+
+    monkeypatch.setattr(gate.Admission, "_register", register)
+    result = gate.main(
+        ["--launcher", "unused", "--config", "unused"],
+        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
+    )
+    error = capsys.readouterr().err
+
+    assert result == gate.EXIT_INCOMPLETE
+    assert _verdict(subprocess.CompletedProcess([], result, stderr=error))["reason"] == "validation_incomplete"
+    assert "Traceback" not in error
+    assert _receipts(repo) == []
+
+
+@pytest.mark.parametrize("kind", ["symlink", "directory", "fifo", "dangling-symlink"])
+def test_nonregular_predecessors_cannot_count_as_live_tickets(tmp_path: Path, kind: str) -> None:
+    queue = tmp_path / "queue"
+    queue.mkdir()
+    target = tmp_path / "target"
+    target.write_text("preserve me")
+    fd = os.open(target, os.O_RDONLY)
+    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    ticket = queue / "00000000000000000000-other.ticket"
+    if kind == "symlink":
+        ticket.symlink_to(target)
+    elif kind == "directory":
+        ticket.mkdir()
+        (ticket / "nested").mkdir()
+        (ticket / "nested" / "stale").touch()
+    elif kind == "dangling-symlink":
+        ticket.symlink_to(tmp_path / "missing")
+    else:
+        os.mkfifo(ticket)
+    try:
+        for _ in range(2):
+            with gate.Admission(tmp_path, 0.0) as admitted:
+                assert admitted.queue_depth == admitted.queue_position == 1
+                assert not os.path.lexists(ticket)
+        assert target.read_text() == "preserve me"
+    finally:
+        os.close(fd)
+
+
+def test_ticket_open_uses_nofollow(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_open = os.open
+    flags_seen: list[int] = []
+
+    def recording_open(path: object, flags: int, *args: object, **kwargs: object) -> int:
+        if str(path).endswith(".ticket"):
+            flags_seen.append(flags)
+        return real_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(gate.os, "open", recording_open)
+    with gate.Admission(tmp_path, 0.0):
+        pass
+    assert flags_seen and all(flags & os.O_NOFOLLOW for flags in flags_seen)
+
+
+def test_hard_link_to_own_locked_ticket_waits_then_is_reaped(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    original = gate.Admission._register
+    predecessor = tmp_path / "queue" / "00000000000000000000-hardlink.ticket"
+
+    def register(admission: gate.Admission) -> None:
+        original(admission)
+        os.link(admission._ticket, predecessor)
+
+    monkeypatch.setattr(gate.Admission, "_register", register)
+    with pytest.raises(gate.GateOutcome) as raised, gate.Admission(tmp_path, 0.0):
+        pytest.fail("the locked hard link must wait")
+    assert raised.value.reason == "validation_incomplete"
+    assert "admission_timeout" in raised.value.detail
+    assert predecessor.exists()
+    monkeypatch.undo()
+    with gate.Admission(tmp_path, 0.0) as admitted:
+        assert admitted.queue_depth == admitted.queue_position == 1
+        assert not predecessor.exists()
+
+
+@pytest.mark.parametrize("kind", ["file", "fifo", "symlink", "directory"])
+def test_pytest_stage_reaps_stale_nodes_without_following_links(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    stale = state / "pytest-stale"
+    if kind == "file":
+        stale.touch()
+    elif kind == "fifo":
+        os.mkfifo(stale)
+    elif kind == "symlink":
+        stale.symlink_to(outside, target_is_directory=True)
+    else:
+        stale.mkdir()
+        (stale / "nested").mkdir()
+        (stale / "nested" / "file").touch()
+        (stale / "link").symlink_to(outside, target_is_directory=True)
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
+
+    for _ in range(2):
+        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
+        assert not os.path.lexists(stale)
+        assert (outside / "preserved").read_text() == "preserve me"
+
+
+def test_pytest_stale_reap_io_error_is_typed_incomplete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    stale = tmp_path / "pytest-stale"
+    stale.mkdir()
+    (stale / "nested").mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path)
+
+    def refuse(*_args: object, **_kwargs: object) -> None:
+        raise PermissionError("cleanup denied")
+
+    refuse.avoids_symlink_attacks = True
+    monkeypatch.setattr(gate.shutil, "rmtree", refuse)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
+
+
+@pytest.mark.parametrize("area", ["pytest", "queue"])
+def test_stale_directory_swap_is_refused_without_touching_the_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, area: str
+) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    if area == "queue":
+        (tmp_path / "queue").mkdir()
+        stale = tmp_path / "queue" / "00000000000000000000-other.ticket"
+    else:
+        stale = tmp_path / "pytest-stale"
+    stale.mkdir()
+    (stale / "preserved").touch()
+    displaced = tmp_path / "displaced"
+    original = os.open
+    opened: list[int] = []
+
+    def swap(path: object, flags: int, *args: object, **kwargs: object) -> int:
+        fd = original(path, flags, *args, **kwargs)
+        if Path(path) == stale and flags & os.O_DIRECTORY:
+            opened.append(flags)
+            stale.rename(displaced)
+            stale.symlink_to(outside, target_is_directory=True)
+        return fd
+
+    monkeypatch.setattr(gate.os, "open", swap)
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path)
+    with pytest.raises(gate.GateOutcome) as raised:
+        if area == "queue":
+            with gate.Admission(tmp_path, 0.0):
+                pytest.fail("a replaced directory cannot be reaped")
+        else:
+            gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
+    assert opened and all(flags & os.O_NOFOLLOW for flags in opened)
+    assert (outside / "preserved").read_text() == "preserve me"
+    assert (displaced / "preserved").exists()
+
+
+def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_path: Path) -> None:
+    marker = tmp_path / "gate-temp.txt"
+    release = tmp_path / "release"
+    shared = tmp_path / "shared"
+    shared.mkdir()
+    # The pruner must actually delete an abandoned shared base, not merely run beside the gate.
+    import getpass
+
+    user_root = shared / f"pytest-of-{getpass.getuser()}"
+    user_root.mkdir(mode=0o700)
+    victim = user_root / "pytest-0"
+    victim.mkdir()
+    (victim / "abandoned").touch()
+    body = (
+        "from pathlib import Path\nimport time\n"
+        "def test_temp_survives(tmp_path):\n"
+        "    probe = tmp_path / 'survives'\n    probe.write_text('gate')\n"
+        f"    Path({str(marker)!r}).write_text(str(probe) + '\\n')\n"
+        f"    release = Path({str(release)!r})\n"
+        "    deadline = time.monotonic() + 40\n"
+        "    while not release.exists() and time.monotonic() < deadline:\n        time.sleep(0.05)\n"
+        "    assert release.exists(), 'pruner did not finish'\n"
+        "    assert probe.read_text() == 'gate'\n"
+    )
+    _write(repo, "tests/test_private_temp.py", body)
+    head = _commit(repo, "temp survival", "tests/test_private_temp.py")
+    pruner = tmp_path / "test_pruner.py"
+    pruner.write_text("def test_prune(tmp_path):\n    assert tmp_path.is_dir()\n", encoding="utf-8")
+    env = _env({"PYTEST_DEBUG_TEMPROOT": str(shared), "PRE_COMMIT_HOME": str(tmp_path / "pc")})
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            str(repo / ".githooks/pre_push_gate.py"),
+            "--launcher",
+            str(repo / "scripts/pre_commit/project_python.sh"),
+            "--config",
+            str(repo / ".pre-commit-config.yaml"),
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=repo,
+        env=env,
+        text=True,
+    )
+    try:
+        assert process.stdin is not None
+        process.stdin.write(f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n")
+        process.stdin.close()
+        process.stdin = None
+        try:
+            wait_for_line(marker, timeout=30.0, stop_if=lambda: process.poll() is not None)
+        except AssertionError:
+            if process.poll() is not None:
+                pytest.fail(str(process.communicate()))
+            pytest.fail("gate pytest did not start")
+        # Expire the default-base lock, reproducing the stale-base pruning failure deterministically.
+        for lock in user_root.glob("pytest-*/.lock"):
+            os.utime(lock, (time.time() - 4 * 86400,) * 2)
+        pruned = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                str(pruner),
+                "-q",
+                "-p",
+                "no:cacheprovider",
+                "-o",
+                "tmp_path_retention_count=0",
+                "-o",
+                "tmp_path_retention_policy=all",
+            ],
+            cwd=tmp_path,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert pruned.returncode == 0, pruned.stdout + pruned.stderr
+        assert not victim.exists(), "the unrelated session must prune shared state"
+        release.touch()
+        stdout, stderr = process.communicate(timeout=60)
+        assert process.returncode == 0, stdout + stderr
+        probe = Path(marker.read_text(encoding="utf-8").strip())
+        assert probe.is_relative_to(gate.state_dir(repo))
+        assert not probe.exists()  # the gate cleaned its private base on completion
+        assert list(gate.state_dir(repo).glob("pytest-*")) == []
+    finally:
+        release.touch()
+        if process.poll() is None:
+            process.kill()
+        process.communicate(timeout=60)
+
+
+def test_next_pytest_stage_reaps_the_base_of_a_killed_gate(repo: Path, tmp_path: Path) -> None:
+    marker = tmp_path / "killed-base.txt"
+    script = (
+        f"import runpy, pathlib, os, signal, time\ng = runpy.run_path({str(GATE_PATH)!r})\n"
+        "def kill(command, **kwargs):\n"
+        "    base = pathlib.Path(command[command.index('--basetemp') + 1])\n"
+        "    (base / 'leftover').touch()\n"
+        f"    pathlib.Path({str(marker)!r}).write_text(str(base))\n"
+        "    os.kill(os.getpid(), signal.SIGKILL)\n"
+        "g['run_pytest_stage'].__globals__['run_bounded'] = kill\n"
+        "plan = g['Plan']('h', 't', 'b', 'v', ('tests/test_invariant.py',), (), ())\n"
+        f"g['run_pytest_stage'](plan, pathlib.Path({str(repo)!r}), 'unused', time.monotonic() + 30)\n"
+    )
+    killed = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd=tmp_path,
+        env=_env(),
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert killed.returncode == -9, killed.stdout + killed.stderr
+    stale = Path(marker.read_text(encoding="utf-8"))
+    assert (stale / "leftover").exists()
+    plan = _plan(registry_nodes=("tests/test_invariant.py",), changed_tests=())
+    with gate.Admission(gate.state_dir(repo), 0.0):
+        result = gate.run_pytest_stage(
+            plan, repo, str(repo / "scripts/pre_commit/project_python.sh"), time.monotonic() + 30
+        )
+    assert "1 passed" in result
+    assert not stale.exists()
+    assert list(gate.state_dir(repo).glob("pytest-*")) == []

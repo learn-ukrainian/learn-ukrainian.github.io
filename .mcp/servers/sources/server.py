@@ -103,8 +103,8 @@ VERIFY_SOURCE_ATTRIBUTION_SOURCES = (
 
 COMPLETENESS_NOTES = {
     "antonenko_davydovych": (
-        "Антоненко-Давидович: 279 of ~600+ entries indexed — incomplete; "
-        "if discusses=false here, Tier 2 escalation may still find it."
+        "Антоненко-Давидович «Як ми говоримо»: 342 structured entries in style_guide; "
+        "full 169-section book text in textbooks (source_file='antonenko-davydovych-yak-my-hovorymo', searchable via search_text)."
     ),
     "sum11": (
         "СУМ-11: contrast only, verification_authority=false; "
@@ -986,14 +986,13 @@ async def list_tools() -> list[Tool]:
             name="search_style_guide",
             description=(
                 "Search Антоненко-Давидович «Як ми говоримо» style guide. "
-                "Coverage: 279 of estimated 600+ discussion items (~46% indexed). "
+                "Contains 342 structured discussion entries in style_guide table. "
+                "The full 169-section book text is also indexed in textbooks table "
+                "(source_file='antonenko-davydovych-yak-my-hovorymo', searchable via search_text). "
                 "Identifies calques, Russianisms, and unnatural Ukrainian phrasing. "
                 "HIGH PRIORITY for quality — use when unsure if a phrase is natural "
                 "Ukrainian or a Russian calque. Query in Ukrainian (e.g., 'приймати "
-                "участь', 'вірний'). **Absence of result is NOT evidence of absence "
-                "in source** — 54% of canonical entries are unindexed. For full "
-                "coverage, Tier 2 escalate to "
-                "https://www.ukrlib.com.ua/books/printit.php?tid=4002. Issue: #1663."
+                "участь', 'вірний')."
             ),
             inputSchema={
                 "type": "object",

@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import type { APIRoute } from "astro";
-import index from "../../data/lexicon-search-index.json";
 
 /**
  * Static client-side search index for Word Atlas typeahead.
@@ -14,8 +15,20 @@ import index from "../../data/lexicon-search-index.json";
  */
 export const prerender = true;
 
+let cachedSearchIndexJson: string | null = null;
+
+function getSearchIndexJson(): string {
+  if (!cachedSearchIndexJson) {
+    cachedSearchIndexJson = readFileSync(
+      resolve(process.cwd(), "src/data/lexicon-search-index.json"),
+      "utf8",
+    );
+  }
+  return cachedSearchIndexJson;
+}
+
 export const GET: APIRoute = () =>
-  new Response(JSON.stringify(index), {
+  new Response(getSearchIndexJson(), {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "public, max-age=3600",

@@ -496,3 +496,57 @@ def test_default_driver_aliases_preserve_public_harness_identity(tmp_path, monke
         assert str(tmp_path) not in named.text
     assert "leakword" not in listed.text
     assert str(tmp_path) not in listed.text
+
+
+@pytest.mark.parametrize(
+    "case_id,payload,expected",
+    [
+        (
+            "absent-row-time",
+            {"interval_s": 30, "measured_at": "2026-10-09T11:59:40Z", "drivers": [{"agent_id": "alpha", "context_pct": 10}]},
+            {"agent_id": "alpha", "measured_at": "2026-10-09T11:59:40Z", "context_pct": 10},
+        ),
+        (
+            "valid-row-time",
+            {"interval_s": 30, "measured_at": "2026-10-09T11:50:00Z", "drivers": [{"agent_id": "alpha", "measured_at": "2026-10-09T11:55:00Z", "context_pct": 20}]},
+            {"agent_id": "alpha", "measured_at": "2026-10-09T11:55:00Z", "context_pct": 20},
+        ),
+        (
+            "malformed-row-time",
+            {"interval_s": 30, "measured_at": "2026-10-09T11:59:40Z", "drivers": [{"agent_id": "alpha", "measured_at": "bad", "context_pct": 30}]},
+            {"agent_id": "alpha", "measured_at": None, "context_pct": 30},
+        ),
+        (
+            "whitespace-alias",
+            {"interval_s": 30, "measured_at": "2026-10-09T11:59:40Z", "drivers": [{"agent_id": " alpha ", "context_pct": 40}]},
+            {"agent_id": "alpha", "measured_at": "2026-10-09T11:59:40Z", "context_pct": 40},
+        ),
+    ],
+)
+def test_harness_shared_reader_preservation_and_explicit_time_boundaries(
+    tmp_path, monkeypatch: pytest.MonkeyPatch, case_id: str, payload: dict, expected: dict
+) -> None:
+    snapshot = tmp_path / "harness.json"
+    snapshot.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setenv("FLEET_HARNESS_SNAPSHOT", str(snapshot))
+
+    # Route 1: /api/fleet/v1/harness
+    res_list = client.get("/api/fleet/v1/harness")
+    assert res_list.status_code == 200
+    body_list = res_list.json()
+    _validate(body_list)
+    driver_list = body_list["data"]["drivers"][0]
+    assert driver_list["agent_id"] == expected["agent_id"]
+    assert driver_list["measured_at"] == expected["measured_at"]
+    assert driver_list["context_pct"] == expected["context_pct"]
+
+    # Route 2: /api/fleet/v1/harness/alpha
+    res_driver = client.get("/api/fleet/v1/harness/alpha")
+    assert res_driver.status_code == 200
+    body_driver = res_driver.json()
+    _validate(body_driver)
+    driver_single = body_driver["data"]["driver"]
+    assert driver_single is not None
+    assert driver_single["agent_id"] == expected["agent_id"]
+    assert driver_single["measured_at"] == expected["measured_at"]
+    assert driver_single["context_pct"] == expected["context_pct"]

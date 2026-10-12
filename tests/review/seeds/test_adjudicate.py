@@ -44,7 +44,13 @@ def _dispatch_args_hash(
     argv = ["--agent", agent, "--task-id", task_id, "--prompt-file", str(task_file), "--mode", mode]
     if model:
         argv += ["--model", model]
-    argv += ["--cwd", cwd if cwd is not None else str(delegate._REPO_ROOT), "--full-checkout"]
+    argv += [
+        "--cwd",
+        cwd if cwd is not None else str(delegate._REPO_ROOT),
+        "--full-checkout",
+        "--review-mode",
+        "cross_family",
+    ]
     if worktree_path:
         argv += ["--worktree", worktree_path]
     if output_schema:
@@ -602,12 +608,15 @@ def test_a_dispatch_with_worktree_path_set_is_refused(seeded: Case, tmp_path: Pa
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]
 
 
-@pytest.mark.parametrize("field,value", [
-    ("cwd", "primary"),
-    ("worktree_branch", "caller-branch"),
-    ("read_only_primary_cwd", False),
-    ("worktree_path", None),
-])
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("cwd", "primary"),
+        ("worktree_branch", "caller-branch"),
+        ("read_only_primary_cwd", False),
+        ("worktree_path", None),
+    ],
+)
 def test_readonly_dispatch_requires_canonical_detached_checkout(seeded: Case, field: str, value: Any) -> None:
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     path = seeded.env.tasks / f"{seeded.task_id}.json"
@@ -649,6 +658,8 @@ def test_every_non_excluded_dispatch_argument_binds_the_hash(seeded: Case) -> No
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     argv = adj.dispatch_argv(seeded.task_file, seeded.task_id, "agy", model="gemini-3.1-pro-preview")
     canonical = delegate.build_parser().parse_args(argv[2:])
+    assert canonical.review_mode == "cross_family"
+    assert "review_mode" not in delegate.DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
     dispatch_parser = _dispatch_subparser(delegate.build_parser())
     tested: list[str] = []
     for action in dispatch_parser._actions:
@@ -657,11 +668,12 @@ def test_every_non_excluded_dispatch_argument_binds_the_hash(seeded: Case) -> No
             continue
         assert hasattr(canonical, dest), f"canonical Namespace has no field {dest!r}"
         mutated = argparse.Namespace(**vars(canonical))
-        setattr(mutated, dest, _different_value(getattr(canonical, dest)))
+        setattr(mutated, dest, "red_team" if dest == "review_mode" else _different_value(getattr(canonical, dest)))
         seeded.dispatch("agy", "gemini-3.1-pro-preview", dispatch_args_sha256=delegate.dispatch_args_sha256(mutated))
         assert code_of(seeded, good) == [adj.TASK_MISMATCH], f"--{dest} did not bind dispatch_args_sha256"
         tested.append(dest)
     assert len(tested) >= 40, f"expected ~45 dispatch fields to be covered, only tested {tested}"
+    assert "review_mode" in tested
     # sanity: the canonical record itself (none of the fields mutated) is still accepted
     seeded.dispatch("agy", "gemini-3.1-pro-preview")
     assert seeded.record(good)["new"] is True

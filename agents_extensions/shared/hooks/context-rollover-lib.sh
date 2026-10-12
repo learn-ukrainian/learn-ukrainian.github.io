@@ -21,18 +21,34 @@ context_hook_state() {
 
 # Latest assistant input/cache usage from a Claude Code transcript, or 0.
 # Output tokens are not current context usage and are deliberately excluded.
+# An optional usage object lets statuslines apply the same rule to current_usage.
 context_latest_usage_tokens() {
-  local transcript="$1" usage input_tokens cache_read cache_create
-  usage=$(tail -200 "$transcript" 2>/dev/null \
-    | jq -s '[.[] | select(.type == "assistant" and (.message.usage | type) == "object")] | last | .message.usage // empty' 2>/dev/null)
+  local transcript="$1" usage="${2:-}"
+  if [ -z "$usage" ]; then
+    usage=$(tail -200 "$transcript" 2>/dev/null \
+      | jq -s '[.[] | select(.type == "assistant" and (.message.usage | type) == "object")] | last | .message.usage // empty' 2>/dev/null)
+  fi
   if [ -z "$usage" ] || [ "$usage" = "null" ]; then
     printf '0\n'
     return 0
   fi
-  input_tokens=$(printf '%s' "$usage" | jq -r '.input_tokens // 0' 2>/dev/null)
-  cache_read=$(printf '%s' "$usage" | jq -r '.cache_read_input_tokens // 0' 2>/dev/null)
-  cache_create=$(printf '%s' "$usage" | jq -r '.cache_creation_input_tokens // 0' 2>/dev/null)
-  printf '%s\n' "$(( ${input_tokens:-0} + ${cache_read:-0} + ${cache_create:-0} ))"
+  # The #10471 measurement found top-level usage summed both main passes around
+  # an advisor call. Only the last message iteration describes current main context.
+  printf '%s' "$usage" | jq -r '
+    def tokens:
+      (if type == "number" then .
+       elif type == "string" then
+         # Absolute anchors reject even a final newline: digits, optional fraction.
+         if test("\\A[0-9]+(\\.[0-9]+)?\\z") then (tonumber? // 0) else 0 end
+       else 0 end)
+      | if isnan or (isfinite | not) or . > 1000000000000000 then 0
+        else [., 0] | max | floor end;
+    (if (.iterations | type) == "array" then
+       ([.iterations[] | select(type == "object" and .type == "message")] | last) // .
+     else . end)
+    | ((.input_tokens | tokens) + (.cache_read_input_tokens | tokens) + (.cache_creation_input_tokens | tokens))
+    | floor
+  ' 2>/dev/null || printf '0\n'
 }
 
 # Canonical checkout that owns runtime state (.agent/): CODEX_CANONICAL_REPO_ROOT

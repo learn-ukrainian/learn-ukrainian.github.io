@@ -1,14 +1,12 @@
-# Source registry for wiki/grammar/b2/detached-members.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4717
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0214
   type: textbook
   title: РЕЧЕННЯ З ВІДОКРЕМЛЕНИМИ ЧЛЕНАМИ
   page: 194
   grade: 8
 - id: S2
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4718
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0220
   type: textbook
   title: Костенко). поширена прикладка стоїть після
   page: 202
@@ -20,7 +18,7 @@ sources:
   page: 146
   grade: 11
 - id: S4
-  file: 8-klas-ukrmova-avramenko-2025_s4669
+  file: 8-klas-ukrmova-avramenko-2025_s0223
   type: textbook
   title: § 77. Відокремлені додатки
   page: 164

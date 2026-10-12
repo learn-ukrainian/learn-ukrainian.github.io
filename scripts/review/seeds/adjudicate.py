@@ -344,6 +344,8 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
         str(_delegate_module()._REPO_ROOT),
         "--model",
         model,
+        "--review-mode",
+        "cross_family",
     ]
 
 

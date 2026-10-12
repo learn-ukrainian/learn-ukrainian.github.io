@@ -33,6 +33,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
+
 pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
@@ -41,6 +43,8 @@ import delegate
 from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult, Result
 from agent_runtime.telemetry import InvocationTelemetry
+from scripts.common import task_scratch
+from scripts.common.scratch import DEFAULT_SCRATCH_ROOT
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
@@ -58,12 +62,45 @@ def isolated_dispatch_repo(tmp_path, monkeypatch):
 
 
 @pytest.fixture
+def non_git_path():
+    """Own non-repository scratch independently of pytest's basetemp ancestry."""
+    scratch = task_scratch.allocate("delegate-non-git", root=DEFAULT_SCRATCH_ROOT)
+    try:
+        path = scratch.payload_dir
+        discovery = subprocess.run(
+            ["git", "rev-parse", "--git-common-dir"],
+            cwd=path, env=delegate._sanitized_git_env(),
+            capture_output=True, text=True, timeout=10,
+        )
+        assert discovery.returncode == 128, discovery.stderr
+        assert "not a git repository" in discovery.stderr
+        yield path
+    finally:
+        scratch.remove()
+
+
+@pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
     """Redirect delegate.tasks_dir() to a tmp path so tests don't pollute
     the real batch_state/tasks/ directory."""
     tasks_dir = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return tasks_dir
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_routing_budget(monkeypatch):
+    """Supply local budget inputs without replacing routing or admission guards.
+
+    Dedicated budget cases in test_delegate_review_admission.py provide their
+    own inputs; this fixture applies only to this module's dispatch scenarios.
+    """
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
+        "agents": {seat: {"status": "cool", "remaining_pct": 60}
+                   for seat in ("claude", "codex", "cursor")},
+        "diagnostics": {"records_loaded": 5, "stale": False},
+    })
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: {})
 
 
 @pytest.fixture(autouse=True)
@@ -2431,7 +2468,9 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir, langu
         prompt="test",
         prompt_file=None,
         mode="read-only",
-        model=None,
+        # The language lane refuses a missing resolved model. This case names
+        # the same GPT model the telemetry stub records.
+        model="gpt-5.5" if language_lane else None,
         cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
@@ -6828,6 +6867,7 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
 
     from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
+    register_agy_hooks(tmp_path)
     app_data = tmp_path / "user-agy" / ".gemini" / "antigravity-cli"
     app_data.mkdir(parents=True)
     (app_data / "antigravity-oauth-token").write_text("{}\n", encoding="utf-8")
@@ -6992,6 +7032,7 @@ def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir
     lease.mkdir()
     checkout = tmp_path / "checkout"
     checkout.mkdir()
+    register_agy_hooks(checkout)
     task_id = "worker-agy-permission-home"
     record = {"task_id": task_id, "review": True, "review_profile": profile, **_agy_ukrainian_exemption("read-only")}
     record["advisory_exemption"]["review_profile"] = "ukrainian"
@@ -10752,6 +10793,33 @@ def _patch_worker_popen(monkeypatch):
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
 
 
+# Seat defaults the Ukrainian guard accepts. Omitted models stay omitted for
+# every other dispatch; these fixtures name the seat's own model so a later
+# assertion is not hidden by UKRAINIAN_MODEL_REFUSED.
+_UKRAINIAN_FIXTURE_MODELS = {
+    "claude": "claude-opus-5-5",
+    "codex": "gpt-6.1-sol",
+    "agy": "gemini-3.8-flash-high",
+    "gemini": "gemini-3.1-pro-high",
+}
+
+
+def _ukrainian_fixture_job(base: dict) -> bool:
+    if bool(base.get("language_lane")) or base.get("review_profile") == "ukrainian":
+        return True
+    track = str(base.get("research_track") or "").strip().lower()
+    if track.startswith("l2-uk"):
+        return True
+    owned = base.get("research_owned_path") or []
+    if isinstance(owned, str):
+        owned = [owned]
+    for path in owned:
+        text = str(path).replace("\\", "/").lstrip("./")
+        if text.startswith("curriculum/") or text.startswith("scripts/curriculum/"):
+            return True
+    return False
+
+
 def _write_args(**overrides):
     """Namespace for a cmd_dispatch call, defaulting to a write-capable mode."""
     import argparse
@@ -10778,6 +10846,8 @@ def _write_args(**overrides):
     if base.get("review_attempt"):
         # These attempt fixtures render lesson-review prompts, like the content producer.
         base.setdefault("review_profile", "ukrainian")
+    if base.get("model") is None and _ukrainian_fixture_job(base):
+        base["model"] = _UKRAINIAN_FIXTURE_MODELS.get(str(base.get("agent") or "").strip().lower())
     return argparse.Namespace(**base)
 
 
@@ -11574,11 +11644,10 @@ def test_cross_repo_guard_allows_explicit_cwd_from_sibling(tmp_path, monkeypatch
     )
 
 
-def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch):
+def test_cross_repo_guard_allows_non_git_invocation_cwd(tmp_path, monkeypatch, non_git_path):
     (tmp_path / "primary").mkdir()
     primary, _ = _init_repo_with_worktree(tmp_path / "primary")
-    loose = tmp_path / "not-a-repo"
-    loose.mkdir()
+    loose = non_git_path
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
 
     assert (
@@ -12294,7 +12363,9 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
 
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
-def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_dir, tmp_path, monkeypatch, target):
+def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(
+    tmp_tasks_dir, tmp_path, monkeypatch, target, non_git_path,
+):
     """#9739: a --cwd checkout of another repository skips authoring admission like --repo; the primary's own
     worktree at the same relative path (``.worktrees/dispatch/codex/task-1``) is admitted as usual."""
     primary, sibling, sibling_wt = _init_sibling_pair(tmp_path)
@@ -12302,7 +12373,7 @@ def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(tmp_tasks_d
     assert primary_wt.is_dir() and primary_wt.relative_to(primary) == sibling_wt.relative_to(sibling)
     assert delegate._is_other_repository(sibling_wt, primary)
     assert not delegate._is_other_repository(primary_wt, primary)
-    assert not delegate._is_other_repository(tmp_path, primary)  # outside git: identity unproven, never a sibling
+    assert not delegate._is_other_repository(non_git_path, primary)  # outside git: identity unproven, never a sibling
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     checkout = sibling_wt if target == "sibling" else primary_wt

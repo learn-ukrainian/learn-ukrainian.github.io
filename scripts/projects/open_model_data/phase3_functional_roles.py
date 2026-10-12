@@ -36,7 +36,7 @@ BASE_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
 COMBINED_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
 V2_1_ROLE_SCHEMA_SHA256 = "ea83fa8a540514ae4206464915c5f78d49baf524414d34bd1a5e983207d3c4cc"
-V2_1_ROLE_SHA256 = "3c15d027665477087041efc5a0aa2fe32a5d5f27f3f165406a08fff81692266b"
+V2_1_ROLE_SHA256 = "5357ad62ae0a2bef843a14a275f5815c617bf906a1e061805d44a37e7acb37e5"
 V2_1_EVALUATION_SCHEMA_SHA256 = "0e798247de3978631dace09c69b2e81f9a27807e1c8687ff695635d52a131ca3"
 V2_1_EVALUATION_SHA256 = "8db8cd1de8fdd9a6c345cea98243f1f4d6b3f4a2b2bdd5c15bb7c9543dfdf8e1"
 CYCLE001_VOID_RECEIPT_SCHEMA_PATH = "data/projects/open_model_data/contracts/phase3_cycle_void_receipt_v1.schema.json"
@@ -55,7 +55,7 @@ CYCLE002_LABELING_PROTOCOL = {
             "provider": "openai",
             "model_family": "openai",
             "harness": "codex",
-            "exact_model": "gpt-5.6-sol",
+            "exact_model": "gpt-6.1-sol",
         },
         {
             "pass_id": "b",
@@ -63,7 +63,7 @@ CYCLE002_LABELING_PROTOCOL = {
             "provider": "openai",
             "model_family": "openai",
             "harness": "codex",
-            "exact_model": "gpt-5.6-sol",
+            "exact_model": "gpt-6.1-sol",
         },
     ],
     "independence_unit": "task_id",
@@ -96,13 +96,13 @@ ROLE_EXECUTION = {
         "capability_class": "contract_scope_review",
     },
     "ukrainian_source_reviewer": {
-        "exact_model": "grok-4.5",
-        "model_family": "xai",
-        "harness": "opencode",
+        "exact_model": "gpt-6.1-sol",
+        "model_family": "openai",
+        "harness": "codex",
         "capability_class": "ukrainian_decision",
     },
     "rule_author_extractor": {
-        "exact_model": "gemini-3.6-flash-high",
+        "exact_model": "gemini-3.8-flash-high",
         "model_family": "gemini",
         "harness": "agy",
         "capability_class": "ukrainian_rule_proposal",
@@ -114,7 +114,7 @@ ROLE_EXECUTION = {
         "capability_class": "heldout_custody",
     },
     "heldout_label_reviewer": {
-        "exact_model": "gpt-5.6-sol",
+        "exact_model": "gpt-6.1-sol",
         "model_family": "openai",
         "harness": "codex",
         "capability_class": "ukrainian_decision",
@@ -144,9 +144,9 @@ ROLE_EXECUTION = {
         "capability_class": "ukrainian_decision",
     },
     "textbook_nonhit_auditor": {
-        "exact_model": "grok-4.5",
-        "model_family": "xai",
-        "harness": "opencode",
+        "exact_model": "gemini-3.8-flash-high",
+        "model_family": "gemini",
+        "harness": "agy",
         "capability_class": "ukrainian_decision",
     },
 }
@@ -422,7 +422,7 @@ def verify_value(value: Mapping[str, Any]) -> dict[str, Any]:
     require(
         all(
             by_role[role]["capability_class"] == "ukrainian_decision"
-            and by_role[role]["model_family"] in {"gemini", "openai", "anthropic", "xai"}
+            and by_role[role]["model_family"] in {"gemini", "openai", "anthropic"}
             for role in (
                 "ukrainian_source_reviewer",
                 "heldout_label_reviewer",
@@ -434,7 +434,7 @@ def verify_value(value: Mapping[str, Any]) -> dict[str, Any]:
     )
     require(
         by_role["rule_author_extractor"]["capability_class"] == "ukrainian_rule_proposal"
-        and by_role["rule_author_extractor"]["model_family"] in {"gemini", "openai", "anthropic", "xai"},
+        and by_role["rule_author_extractor"]["model_family"] in {"gemini", "openai", "anthropic"},
         "rule-author task lacks a sanctioned Ukrainian-capable lane",
     )
     require(
