@@ -358,7 +358,9 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
     payload = {
         key: value
         for key, value in vars(args).items()
-        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
+        and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+        and not (key == "review_mode" and value == "cross_family")
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -378,6 +380,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
         and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
+        and not (key == "review_mode" and value == "cross_family")
     }
 
 
@@ -2123,16 +2126,31 @@ def _is_own_provisional_record(state: dict[str, Any], run_nonce: str) -> bool:
 
 
 # Fields an admission hold carries into the worktree reservation record that
-# replaces it, so the reservation keeps the admitted slot (#8717).
-_ADMISSION_HOLD_FIELDS = ("mode", "admission", dispatch_admission.ADMISSION_HOLD_KEY)
+# replaces it, preserving the admitted slot and review identity (#8717, #10437).
+_ADMISSION_HOLD_FIELDS = (
+    "mode",
+    "admission",
+    dispatch_admission.ADMISSION_HOLD_KEY,
+    "repository",
+    "pinned_head",
+    "review",
+    "review_mode",
+)
 
 
-def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admission: dict[str, Any]) -> None:
-    """Publish the ``spawning`` record that holds this run's admitted write slot (#8717).
+def _publish_admission_hold(
+    task_id: str,
+    run_nonce: str,
+    *,
+    mode: str,
+    admission: dict[str, Any] | None,
+    review_fields: dict[str, Any] | None = None,
+) -> None:
+    """Hold an admitted write slot or identify a review throughout setup (#8717, #10437).
 
-    Dispatch calls this under the admission lock, before any worktree side
-    effect, so a refusal leaves nothing behind. The hold names this
-    dispatcher, so admission counts it for as long as the dispatcher lives
+    Write dispatch calls this under the admission lock, before any worktree
+    side effect. Read-only reviews use it without claiming write capacity.
+    The hold names this dispatcher, so admission counts a write slot while it lives
     (however long its worktree add takes) and heals it once the dispatcher is
     provably gone. The worktree reservation and the full task record replace
     it in place. Raises ``RuntimeError`` rather than overwrite a live record
@@ -2158,7 +2176,8 @@ def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admissio
                 "mode": mode,
                 "started_at": hold["admitted_at"],
                 "finished_at": None,
-                "admission": admission,
+                **({"admission": admission} if admission is not None else {}),
+                **(review_fields or {}),
                 dispatch_admission.ADMISSION_HOLD_KEY: hold,
             },
         )
@@ -2167,14 +2186,27 @@ def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admissio
 def _release_admission_hold(task_id: str, run_nonce: str) -> None:
     """Drop this run's admission hold when dispatch stops before publishing any other record.
 
-    A no-op once the hold was replaced by the full task record, a failure
-    record, or a worktree reservation (kept as the reaper's evidence).
+    A no-op once the hold was replaced by the full task record or a failure
+    record. An interrupted review reservation becomes terminal, keeping the
+    reaper's evidence without blocking red-team publication forever.
     """
     state_path = _state_path(task_id)
     with contextlib.suppress(OSError), task_state_lock(state_path):
         existing = _read_state_json(state_path)
         if existing is not None and _is_own_admission_hold(existing, run_nonce):
             state_path.unlink(missing_ok=True)
+        elif (
+            existing is not None
+            and existing.get("status") == "spawning"
+            and existing.get("review")
+            and _is_own_worktree_prep_record(existing, run_nonce)
+        ):
+            existing.update(
+                status="cancelled",
+                finished_at=datetime.now(UTC).isoformat(),
+                last_error=_TypedCause("dispatch_not_started"),
+            )
+            _write_record_unlocked(state_path, existing)
 
 
 def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
@@ -2233,10 +2265,11 @@ def _update_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) ->
 def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
     """Drop this run's reservation record once its ``git worktree add`` succeeded.
 
-    Dispatch publishes the full task record next; until then no record
+    A reservation without an admission hold is removed; no record then
     claims the finished worktree, exactly as before reservations existed.
     A reservation that replaced an admission hold reverts to that hold, so
     the admitted slot stays held until the full record replaces it (#8717).
+    Review identity survives in that hold after prep retirement (#10437).
     """
     state_path = _state_path(task_id)
     with contextlib.suppress(OSError), task_state_lock(state_path):
@@ -12159,6 +12192,18 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    red_team_prompt_sha256 = None
+    if getattr(args, "review_mode", "cross_family") == "red_team":
+        try:
+            if not _dispatch_is_review_typed(args) or not getattr(args, "prompt_file", None):
+                raise ValueError("red_team requires a review dispatch with --prompt-file")
+            adversarial_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
+            if not re.search(r"\bred[-_ ]team\b", adversarial_prompt, re.IGNORECASE):
+                raise ValueError("explicit adversarial red-team wording required")
+            red_team_prompt_sha256 = hashlib.sha256(adversarial_prompt.encode("utf-8")).hexdigest()
+        except (ValueError, OSError, UnicodeError) as exc:
+            print(f"❌ RED_TEAM_REFUSED: {exc}", file=sys.stderr)
+            return 2
     if (
         str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
         and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
@@ -12965,6 +13010,9 @@ def _dispatch(
     # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+    if getattr(args, "review_mode", "cross_family") == "red_team" and source_prompt_sha256 != red_team_prompt_sha256:
+        print("❌ RED_TEAM_REFUSED: adversarial prompt changed after admission", file=sys.stderr)
+        return 2
 
     if sources_review_access is not None:
         # Recheck the launch text, including a file changed since the early read.
@@ -13585,6 +13633,18 @@ def _dispatch(
     # a refusal leaves none of them. The hold names this dispatcher and keeps
     # the slot until the full task record replaces it before the spawn.
     admission_record: dict[str, Any] | None = None
+    review_fields = None
+    if _dispatch_is_review_typed(args):
+        review_target = getattr(args, "_review_target", None)
+        review_fields = {
+            "repository": _resolve_dispatch_repository(target_repo_root),
+            "pinned_head": pinned_head
+            or getattr(review_target, "head_sha", None)
+            or getattr(args, "_review_admission_head", None)
+            or resolved_worktree_base_sha,
+            "review": True,
+            "review_mode": getattr(args, "review_mode", "cross_family"),
+        }
     if not admission.exempt:
         admission_refusal: str | None = None
         try:
@@ -13592,7 +13652,9 @@ def _dispatch(
                 admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
                 if admission.admitted or force_admission_reason is not None:
                     admission_record = admission.to_record(force_reason=force_admission_reason)
-                    _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=admission_record)
+                    _publish_admission_hold(
+                        task_id, run_nonce, mode=args.mode, admission=admission_record, review_fields=review_fields
+                    )
                     admission_holds.callback(_release_admission_hold, task_id, run_nonce)
                 else:
                     admission_refusal = admission.refusal_line()
@@ -13604,6 +13666,13 @@ def _dispatch(
         if admission_refusal is not None:
             print(f"❌ {admission_refusal}", file=sys.stderr)
             return _ADMISSION_REFUSED_EXIT
+    elif review_fields is not None:
+        try:
+            _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=None, review_fields=review_fields)
+        except (OSError, RuntimeError) as exc:
+            print(f"❌ could not publish the review hold for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+        admission_holds.callback(_release_admission_hold, task_id, run_nonce)
 
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
@@ -13961,6 +14030,7 @@ def _dispatch(
         worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
         initial_state = {
             "pinned_head": pinned_head,
+            "pr": pr_number,
             "review_author_model": getattr(args, "review_author_model", None),
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),
@@ -14028,6 +14098,9 @@ def _dispatch(
         }
         if routing.budget_diagnostics:
             initial_state["routing_facts"] = routing.budget_diagnostics
+        if getattr(args, "review_mode", "cross_family") == "red_team":
+            initial_state["review_mode"] = "red_team"
+            initial_state["review_branch_facts"] = args._red_team_branch_facts
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
@@ -14955,9 +15028,7 @@ _UKRAINIAN_AGENT_FAMILIES = {
 }
 
 
-def _require_ukrainian_model_family(
-    args: argparse.Namespace, model: str | None, *, resolved: bool = False
-) -> None:
+def _require_ukrainian_model_family(args: argparse.Namespace, model: str | None, *, resolved: bool = False) -> None:
     """Fail closed for Ukrainian content using the declared language lane.
 
     An omitted model on an allowed seat waits for resolution. A resolved
@@ -16425,7 +16496,10 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
     from scripts.review.record_cf_verdict import collect_branch_review_facts
 
     target = getattr(args, "_review_target", None)
-    if target is None or not (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)):
+    if target is None or not (
+        getattr(args, "review_mode", "cross_family") == "red_team"
+        or (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None))
+    ):
         return None
     return collect_branch_review_facts(
         repository=_resolve_dispatch_repository(_local_repo_root) or "",
@@ -16495,7 +16569,13 @@ def _admit_dispatch_target(
         from scripts.review.record_cf_verdict import BranchFactsError
 
         try:
-            return _dispatch_review_facts(args, tuple(declared))
+            facts = _dispatch_review_facts(args, tuple(declared))
+            if getattr(args, "review_mode", "cross_family") == "red_team" and facts is not None:
+                args._red_team_branch_facts = {
+                    **facts.receipt(),
+                    "author_task_ids": sorted(facts.author_task_ids),
+                }
+            return facts
         except BranchFactsError as exc:
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
 
@@ -16516,6 +16596,11 @@ def _admit_dispatch_target(
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
             review_attempt=bool(getattr(args, "review_attempt", None)),
+            review_mode=getattr(args, "review_mode", "cross_family"),
+            review_task_id=getattr(args, "task_id", None),
+            review_initial_snapshot=(
+                _fetch_routing_budget if getattr(args, "review_mode", "cross_family") == "red_team" else None
+            ),
             review_alias_model_resolver=_resolve_substitution_model,
             review_owned_paths=tuple(declared),
             review_changed_paths=(
@@ -16549,8 +16634,30 @@ def _admit_dispatch_target(
                 "MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)"
             )
         args._mechanical_admitted_scope = mechanical_task
+        review_target = getattr(args, "_review_target", None)
+        if (
+            getattr(args, "review_mode", "cross_family") == "red_team"
+            and review_target is not None
+            and (getattr(args, "branch", None) or getattr(args, "pr", None) is not None)
+        ):
+            from scripts.review.record_cf_verdict import RecordError, require_no_branch_outside_rejection
+
+            try:
+                require_no_branch_outside_rejection(
+                    _resolve_dispatch_repository(_local_repo_root) or "",
+                    getattr(args, "branch", None),
+                    review_target.head_sha,
+                    pr_number=getattr(args, "pr", None),
+                    task_root=tasks_dir(),
+                )
+            except RecordError as exc:
+                raise ReviewAdmissionRefused(str(exc)) from exc
         if target.recipient == "cursor":
             apply_cursor_model_pins(target.model)
+    except MonitorApiUnavailable:
+        if getattr(args, "review_mode", "cross_family") == "red_team":
+            return "RED_TEAM_REFUSED: routing state unavailable", None
+        raise
     except (
         KimiAdmissionRefused,
         MechanicalAdmissionRefused,
@@ -18627,6 +18734,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="PATH",
         help="Local test log for --preflight-triage (default: <cwd>/.preflight-test.log if present).",
+    )
+    # Keep legacy argument-error output byte-identical; the option help exposes the opt-in.
+    d.usage = d.format_usage().removeprefix("usage: ").rstrip("\n")
+    d.add_argument(
+        "--review-mode",
+        choices=("cross_family", "red_team"),
+        default=argparse.SUPPRESS,
+        help="Review mode (default: cross_family); red_team requires a review and adversarial --prompt-file, with a separate task and fresh session.",
     )
     d.set_defaults(func=cmd_dispatch)
 

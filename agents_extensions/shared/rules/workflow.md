@@ -221,6 +221,34 @@ Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
 ejection, and re-establish the gates before re-enqueueing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
 
+**Red-team exception (operator 2026-10-11, #10437).** For code review
+only, when no independent outside-family reviewer can be obtained, a
+separate-task, fresh-session toolful red-team review may substitute for
+it, labelled honestly. It applies only after `closeout_cli
+resolve-reviewer --review-mode red_team` finds no eligible
+outside-family reviewer, including when the only eligible families are
+paused; the resolver output carries the limitation. Limits: the author's
+task stays refused, and so does every canonical concrete model that
+authored a commit on the branch, on any harness; a review is refused
+with a typed error only when no validated author model exists; unknown
+historical authors stay recorded as UNKNOWN, and `--review-author-model`
+only adds a model to compare against: it never overwrites recorded task
+evidence, and a conflict with validated evidence is refused; seats whose
+own code is under review stay excluded as usual; the reviewer always
+runs as a separate fresh-session review task, and a different model of
+the same family may serve only as same-family dissent, never as
+cross-family independence. A red-team publication or dispatch is also
+refused when a recorded verdict from a non-red-team review for the same
+exact head is CHANGES_REQUESTED or BLOCKED, or when such a review of
+that head is still in flight. Qualification, the risk floor, toolful
+execution and the exact-head binding are unchanged; the red-team prompt
+digest is bound to the review; it changes no merge-gate or keeper rule:
+a labelled red-team APPROVE clears the same checks as any recorded
+APPROVE, with its label kept on the PR comment, the commit status text
+and the task record. Label it `review_mode=red_team` in the PR comment,
+the commit status text and the task record; never call or count it
+cross-family.
+
 ### Post-merge cleanup — the single landing and cleanup recipe
 
 After the queue lands the PR, confirm `MERGED` and the actual merge SHA. Wait
