@@ -752,6 +752,63 @@ def test_history_group_3_explicit_plan_receipt(repo, tasks, frozen_history):
     assert facts.existing_families == {"unknown"}
 
 
+@pytest.mark.parametrize(
+    "trailers,historical",
+    [
+        (["claude/claude-sonnet-5-5", "codex/gpt-6-luna", GROK], False),
+        (["codex/gpt-6-luna", GROK], False),
+        (["codex/gpt-6-luna", GROK], True),
+    ],
+)
+def test_red_team_plan_preserves_family_exhaustion(repo, tasks, boundary, capsys, trailers, historical):
+    for trailer in trailers:
+        repo.commit(trailer)
+    repo.publish()
+    with pytest.raises(delegate._AuthoringReviewRefused) as default:
+        history_admission(repo, tasks, plan="cross_family")
+    assert default.value.code == delegate.AUTHORING_REVIEW_NO_ROUTE
+    old_head = repo.sha("feature")
+    if historical:
+        repo.commit(None)
+        repo.publish()
+    expected = default.value.detail.replace(old_head[:12], repo.sha("feature")[:12])
+    with pytest.raises(delegate._AuthoringReviewRefused) as red_team:
+        history_admission(repo, tasks)
+    assert red_team.value.code == delegate.AUTHORING_REVIEW_NO_ROUTE
+    assert red_team.value.detail == expected
+    rc, before = boundary("--branch", "feature", "--owned-path", "docs/a.md", "--authoring-review-plan", "red_team")
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert err.splitlines()[0] == (
+        f"❌ {delegate.AUTHORING_REVIEW_NO_ROUTE}: {expected} Branch preserved; provider_calls=0."
+    )
+    assert boundary.calls == []
+    assert repo.snapshot() == before
+    assert not list(tasks.rglob("*"))
+
+
+def test_red_team_plan_without_suspect_history_keeps_cross_family(repo, tasks, boundary):
+    repo.commit(OPUS)
+    repo.publish()
+    admitted = history_admission(repo, tasks)
+    receipt = delegate._authoring_review_state_fields(argparse.Namespace(), admitted)[
+        delegate.AUTHORING_REVIEW_STATE_KEY
+    ]
+    assert admitted.suspect_history == ()
+    assert receipt["reviewer"] == history_admission(repo, tasks, plan="cross_family").record["reviewer"]
+    assert receipt["reviewer"].get("review_mode", "cross_family") == "cross_family"
+
+
+def test_red_team_plan_with_history_and_known_authors_keeps_qualified_route(repo, tasks, boundary):
+    historical = repo.commit(None)
+    repo.commit(OPUS)
+    repo.publish()
+    receipt = save_history_admission(repo, tasks)
+    assert receipt["unknown_history"] == [historical]
+    assert receipt["reviewer"]["family"] != "anthropic"
+    assert receipt["reviewer"]["review_mode"] == "red_team"
+
+
 def test_history_group_4_incoming_unknown_keeps_refusal(repo, tasks, frozen_history):
     repo.commit(None)
     repo.publish()

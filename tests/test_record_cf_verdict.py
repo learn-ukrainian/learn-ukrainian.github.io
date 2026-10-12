@@ -24,6 +24,32 @@ BRANCH = "codex/42"
 REPOSITORY = "owner/repo"
 
 
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("status", ["running", "done", "dry_run"])
+def test_admitted_unknown_history_requires_non_dry_run_task(tmp_path, monkeypatch, archived, status):
+    tasks = tmp_path / "tasks"
+    records = tasks / recorder.ARCHIVE_DIR_NAME if archived else tasks
+    records.mkdir(parents=True)
+    receipt = {
+        "repository": REPOSITORY,
+        "head_branch": BRANCH,
+        "head_sha": SHA,
+        "history_remote_head_sha": SHA,
+        "review_plan": "red_team",
+        "unknown_history": [OTHER],
+        "check": "structural",
+        "applicable": True,
+        "assumed_model": None,
+        "reviewer": {"review_mode": "red_team"},
+    }
+    (records / "author.json").write_text(json.dumps({"status": status, "authoring_review_admission": receipt}))
+    monkeypatch.setattr(recorder, "_facts_git", lambda *_a, **_k: f"{SHA}\n{OTHER}\n".encode())
+    allowed = recorder.admitted_unknown_history(
+        repository=REPOSITORY, branch=BRANCH, head_sha=SHA, task_root=tasks, repo_root=tmp_path
+    )
+    assert allowed == (() if status == "dry_run" else (OTHER,))
+
+
 @pytest.fixture(autouse=True)
 def recorder_matcher(synthetic_opsec):
     from tests.opsec_fixtures import synthetic_rules

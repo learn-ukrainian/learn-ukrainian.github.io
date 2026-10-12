@@ -15795,11 +15795,21 @@ def _authoring_review_admission(
     if kind == "new-branch" and not protected:
         record["applicable"] = False
         return admission
-    _authoring_require_route(facts, planned_risk=planned_risk, record=record, at=head)
+    known_commits = tuple(commit for commit in facts.commits if commit.source != "suspect_historical")
+    known_facts = dataclasses.replace(
+        facts,
+        commits=known_commits,
+        existing_families=frozenset(commit.family for commit in known_commits if commit.family is not None),
+    )
+    _authoring_require_route(known_facts, planned_risk=planned_risk, record=record, at=head)
+    if suspect_history:
+        _authoring_require_route(facts, planned_risk=planned_risk, record=record, at=head, review_mode="red_team")
     return admission
 
 
-def _authoring_require_route(facts: Any, *, planned_risk: str | None, record: dict[str, Any], at: str) -> None:
+def _authoring_require_route(
+    facts: Any, *, planned_risk: str | None, record: dict[str, Any], at: str, review_mode: str = "cross_family"
+) -> None:
     """Record the structural reviewer for ``facts``; refuse when none remains outside all authors (A2)."""
     from scripts.review.model_catalog import ModelCatalogError
     from scripts.review.record_cf_verdict import structural_review_route
@@ -15807,7 +15817,7 @@ def _authoring_require_route(facts: Any, *, planned_risk: str | None, record: di
 
     risk = str(planned_risk or AUTHORING_REVIEW_DEFAULT_RISK).strip().casefold()
     try:
-        resolution = structural_review_route(facts, risk=risk, review_mode=record.get("review_plan", "cross_family"))
+        resolution = structural_review_route(facts, risk=risk, review_mode=review_mode)
     except ModelCatalogError as exc:
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog unavailable ({exc}).", record
@@ -15822,7 +15832,7 @@ def _authoring_require_route(facts: Any, *, planned_risk: str | None, record: di
                     "model": resolution.selected.concrete_model,
                     "family": resolution.selected.family,
                     "route": resolution.selected.route,
-                    **({"review_mode": "red_team"} if record.get("review_plan") == "red_team" else {}),
+                    **({"review_mode": "red_team"} if review_mode == "red_team" else {}),
                 }
                 if resolution.selected
                 else None
@@ -15852,7 +15862,7 @@ def _authoring_review_state_fields(args: argparse.Namespace, admission: _Authori
                     "history_remote_head_sha": admission.history_remote_head_sha,
                 }
             )
-            if admission.record.get("reviewer"):
+            if admission.suspect_history and admission.record.get("reviewer"):
                 admission.record["reviewer"]["review_mode"] = "red_team"
         fields[AUTHORING_REVIEW_STATE_KEY] = admission.record
     for flag, key in (("subject_seat", "review_subject_seats"), ("subject_family", "review_subject_families")):

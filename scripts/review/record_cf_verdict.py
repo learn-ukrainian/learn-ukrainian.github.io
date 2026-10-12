@@ -995,7 +995,7 @@ def admitted_unknown_history(
             task = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
-        if not isinstance(task, dict):
+        if not isinstance(task, dict) or task.get("status") == "dry_run":
             continue
         receipt = task.get("authoring_review_admission")
         if (
