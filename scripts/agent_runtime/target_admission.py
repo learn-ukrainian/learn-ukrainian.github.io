@@ -558,6 +558,7 @@ def _resolve_review_target(
         ResolverInputs,
         candidate_dispatch_model,
         evaluate_candidate,
+        normalize_review_task_id,
         resolve_author_family,
         resolve_family,
         resolve_reviewer,
@@ -574,7 +575,9 @@ def _resolve_review_target(
             raise ReviewAdmissionRefused(
                 "RED_TEAM_REFUSED: code review requires branch author facts and reviewer task id"
             )
-        if reviewer_task_id in facts.author_task_ids:
+        reviewer_id = normalize_review_task_id(reviewer_task_id, agent=seat)
+        author_ids = {normalize_review_task_id(identity, agent=seat) for identity in facts.author_task_ids}
+        if reviewer_id in author_ids:
             raise ReviewAdmissionRefused("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
         risk = risk or "medium"
     _require_agy_code_review_risk(seat, risk, profile)

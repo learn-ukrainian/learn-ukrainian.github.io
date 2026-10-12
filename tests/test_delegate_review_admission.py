@@ -2761,6 +2761,7 @@ def test_default_dispatch_arguments_match_pre_10437_golden(mode):
     if not mode:
         assert "review_mode" not in vars(args)
     assert delegate.dispatch_args_sha256(args) == "08971eb586c8ae16fbc1e56ec239cc1a2dd8622a6fec7bf5a25dec30e57f87bf"
+    assert delegate.advisory_args_sha256(args) == "b5b159fbcf8a7fbcbc72d1dfe7833280204a61fc939dc3ba9a34cb63fc0555f6"
 
 
 @pytest.mark.parametrize("case", ["missing-prompt", "missing-file", "wording", "not-review"])
@@ -2800,23 +2801,28 @@ def test_red_team_invalid_prompt_refused_before_side_effects(tmp_path, monkeypat
 
 
 @pytest.mark.parametrize("force", [False, True])
+@pytest.mark.parametrize("author_id,archived", [("author-one", False), ("gpt-6.1-sol", False), ("gpt-6.1-sol", True)])
 @pytest.mark.parametrize("same_task,outside_available", [(True, False), (True, True), (False, True), (False, False)])
-def test_red_team_branch_task_and_preference_gate(tmp_path, monkeypatch, force, same_task, outside_available):
+def test_red_team_branch_task_and_preference_gate(
+    tmp_path, monkeypatch, force, author_id, archived, same_task, outside_available
+):
     from tests.test_authoring_review_feasibility import mini_repo
 
     repo = mini_repo(tmp_path, monkeypatch)
     tasks = tmp_path / "tasks"
-    tasks.mkdir()
-    (tasks / "author-one.json").write_text(
+    records = tasks / "archive" if archived else tasks
+    records.mkdir(parents=True)
+    (records / f"{author_id}.json").write_text(
         json.dumps(
             {
                 "repository": "learn-ukrainian/learn-ukrainian.github.io",
                 "agent": "codex",
                 "model": "gpt-6.1-sol",
+                "task_id": f"codex/{author_id.upper()}",
             }
         )
     )
-    repo.commit("codex/author-one")
+    repo.commit(f"codex/{author_id}")
     repo.publish()
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
@@ -2837,7 +2843,7 @@ def test_red_team_branch_task_and_preference_gate(tmp_path, monkeypatch, force, 
         "--review-mode",
         "red_team",
         "--task-id",
-        "author-one" if same_task else "review-one",
+        author_id if same_task else "review-one",
         *(("--force-agent",) if force else ()),
     )
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
@@ -2847,7 +2853,7 @@ def test_red_team_branch_task_and_preference_gate(tmp_path, monkeypatch, force, 
         assert target is None and "outside-family reviewer takes precedence" in refusal
     else:
         assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
-    assert args._red_team_branch_facts["author_task_ids"] == ["author-one"]
+    assert args._red_team_branch_facts["author_task_ids"] == [author_id]
 
 
 @pytest.mark.parametrize("mode", [None, "red_team", "prompt-moved"])
