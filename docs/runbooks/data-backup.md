@@ -34,12 +34,20 @@ restic rclone path with that final directory name.
 - On macOS, source and staging must be on the same volume before APFS
   copy-on-write staging; a cross-volume staging location fails closed.
 - On Linux, restic reads non-database files directly from the live recovery
-  roots. SQLite databases are backed up one at a time with SQLite's online
-  `.backup` command, checked with `PRAGMA integrity_check`, uploaded, and
-  removed from private staging before the next database. Before each database,
-  the script checks staging free space against its DB plus WAL size and a 2 GiB
-  reserve. No reflink or full-tree copy is required, so peak extra disk is
-  about the largest single database, never the sum. Non-database files can
+  roots. Each SQLite database is copied one at a time with SQLite's online
+  `.backup` command into a private staging batch and checked with
+  `PRAGMA integrity_check`; a database that fails either step is never
+  uploaded. The batch is uploaded as one `lu-part-db` restic snapshot and
+  cleared once the next database would push it past
+  `LU_BACKUP_DB_BATCH_MAX_BYTES` (default 1 GiB; a larger database goes
+  alone), and at the end of the phase. Each restic run pays a fixed repository
+  open, index load, and lock cost, so one upload per database made runs with
+  thousands of small databases take hours. Before each database, the script
+  checks staging free space against its DB plus WAL size and a 2 GiB reserve;
+  if that fails while a batch is pending, it uploads the batch and checks
+  again. No reflink or full-tree copy is required, so peak extra disk is about
+  the larger of the batch budget and the largest single database, never the
+  sum. Non-database files can
   change while restic reads them; coordinate writers for application-level
   consistency and inspect recovery-critical manifests during a restore drill.
 - On Linux, `LU_BACKUP_TMPDIR` may point at the designated staging parent
@@ -212,10 +220,14 @@ On macOS, path counts are calculated from the staged tree after exclusions.
 On Linux, they are calculated from the live source inventory after exclusions;
 concurrent non-database writes can change the actual uploaded byte counts.
 
-The Linux receipt also lists each database's relative path and snapshot ID,
-the live-file snapshot ID, and an optional patch snapshot ID. All parts share
+The Linux receipt also lists each database's relative path, snapshot ID, and
+mode, the live-file snapshot ID, and an optional patch snapshot ID. Databases
+uploaded in one batch share a snapshot ID; runs made before batching have one
+snapshot per database, and both restore the same way. All parts share
 one run ID, and the final receipt snapshot is tagged `lu-part-complete`.
-`restore latest` uses that completed receipt to reassemble the tree. The
+`restore latest` uses that completed receipt to reassemble the tree, restoring
+each database snapshot once; `--path` of one database restores only that file
+from its snapshot. The
 remote repository itself is encrypted. The final process
 exit code belongs to the operator log: an in-snapshot file cannot truthfully
 contain the outcome of the repository check that runs after the snapshot is
