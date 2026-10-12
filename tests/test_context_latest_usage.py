@@ -75,13 +75,22 @@ def write_usage(path: Path, usage: dict) -> None:
 
 def latest_tokens(path: Path) -> int:
     result = subprocess.run(
-        ["bash", "-c", 'source "$1"; context_latest_usage_tokens "$2"', "test", str(LIB), str(path)],
+        [
+            "bash",
+            "-c",
+            'source "$1"; v=$(context_latest_usage_tokens "$2"); printf "%s\\n" "$v"; [ "$v" -ge 0 ]',
+            "test",
+            str(LIB),
+            str(path),
+        ],
         check=True,
         text=True,
         capture_output=True,
         timeout=30,
     )
-    return int(result.stdout)
+    tokens = int(result.stdout)
+    assert result.stdout == f"{tokens}\n"
+    return tokens
 
 
 def test_incident_uses_final_main_pass(tmp_path: Path) -> None:
@@ -98,22 +107,44 @@ def test_incident_uses_final_main_pass(tmp_path: Path) -> None:
         (("2", "586399", "3148"), 589_549),
         (("5", 6, 0), 11),
         ((" 1 ", "\t2\n", "3"), 3),
+        (("1\n", "\n2", "3\n4"), 0),
         (("invalid", 2, 3), 5),
         ((None, "2", "3"), 5),
         ((False, "2", {"tokens": 3}), 2),
         ((1.9, 2.8, -10), 3),
         (("1.9", "2.8", "-10"), 3),
+        (("1.9", 0, 0), 1),
+        (("1e3", "0x10", "nan"), 0),
+        (("infinity", "-1", "+1"), 0),
+        ((1e17, 1e300, 12345678901234567890), 0),
+        ((float("inf"), float("-inf"), float("nan")), 0),
+        (("1e400", "9" * 400, "12345678901234567890"), 0),
+        ((999_999_999_999_999, 0, 0), 999_999_999_999_999),
+        (("999999999999999", 0, 0), 999_999_999_999_999),
+        ((1_000_000_000_000_000,) * 3, 3_000_000_000_000_000),
+        ((1_000_000_000_000_001, 2, 3), 5),
     ],
     ids=[
         "all-strings",
         "incident-strings",
         "mixed",
         "whitespace",
+        "newlines",
         "non-numeric",
         "null",
         "other-types",
         "fraction-negative",
         "fraction-negative-strings",
+        "fraction-string",
+        "exponent-hex-nan-strings",
+        "infinity-signed-strings",
+        "huge-numbers",
+        "non-finite-numbers",
+        "huge-strings",
+        "below-clamp-number",
+        "below-clamp-string",
+        "maximum-sum",
+        "above-clamp",
     ],
 )
 def test_token_fields_are_nonnegative_integers(tmp_path: Path, source: str, fields: tuple, expected: int) -> None:

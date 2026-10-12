@@ -37,12 +37,17 @@ context_latest_usage_tokens() {
   printf '%s' "$usage" | jq -r '
     def tokens:
       (if type == "number" then .
-       elif type == "string" then (tonumber? // 0)
-       else 0 end) | [., 0] | max | floor;
+       elif type == "string" then
+         # Absolute anchors reject even a final newline: digits, optional fraction.
+         if test("\\A[0-9]+(\\.[0-9]+)?\\z") then (tonumber? // 0) else 0 end
+       else 0 end)
+      | if isnan or (isfinite | not) or . > 1000000000000000 then 0
+        else [., 0] | max | floor end;
     (if (.iterations | type) == "array" then
        ([.iterations[] | select(type == "object" and .type == "message")] | last) // .
      else . end)
-    | (.input_tokens | tokens) + (.cache_read_input_tokens | tokens) + (.cache_creation_input_tokens | tokens)
+    | ((.input_tokens | tokens) + (.cache_read_input_tokens | tokens) + (.cache_creation_input_tokens | tokens))
+    | floor
   ' 2>/dev/null || printf '0\n'
 }
 
