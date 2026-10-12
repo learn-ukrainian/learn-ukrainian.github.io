@@ -480,7 +480,8 @@ def test_claude_adapter_raises_risk_and_excludes_every_claude_reviewer(repo, tas
     assert resolution.resolved_risk == "critical" and resolution.selected is None
     reasons = {entry.name: entry.reason for entry in resolution.trace}
     assert "subject exclusion" in reasons["claude-opus-5-5"]
-    assert "subject exclusion" in reasons["claude-opus-5-5-cursor-fallback"]
+    # D-129 (#10464): no Claude model reviews through Cursor, so no such trace row exists.
+    assert not any(entry.family == "anthropic" and entry.transport == "cursor" for entry in resolution.trace)
 
 
 @pytest.mark.parametrize("kind", ["earlier-commit", "rename-source", "deletion"])
