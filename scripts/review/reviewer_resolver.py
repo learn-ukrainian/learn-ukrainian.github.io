@@ -33,7 +33,7 @@ selection unchanged. Ambiguous path inference fails closed instead of guessing.
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from fnmatch import fnmatchcase
 from typing import Literal
@@ -72,6 +72,38 @@ def normalize_review_task_id(task_id: str, *, agent: str = "") -> str:
         value = value.split("/", 1)[1]
     safe = re.sub(r"[^A-Za-z0-9._-]+", "-", value).strip(".-")
     return (safe or "task").casefold()
+
+
+def review_task_id_comparison_keys(task_id: str, *, agent: str = "") -> frozenset[str]:
+    """Retain raw and harness-stripped identities across reviewer seats."""
+    from scripts.agent_runtime.agent_identity import SEAT_ALIASES
+    from scripts.agent_runtime.registry import AGENTS
+
+    value = task_id.strip().casefold()
+    spellings = {value}
+    for harness in {*AGENTS, *SEAT_ALIASES, agent} - {""}:
+        for prefix in (f"{harness.casefold()}-", f"{harness.casefold()}/"):
+            if value.startswith(prefix):
+                spellings.add(value[len(prefix) :])
+    return frozenset(re.sub(r"[^a-z0-9._-]+", "-", spelling).strip(".-") or "task" for spelling in spellings)
+
+
+def red_team_seat_refusal(
+    reviewer_models: Iterable[object], *, author_models: Iterable[object] = (), author_model: object = None
+) -> str | None:
+    """Refuse an unknown author or the same concrete model on any harness."""
+    explicit = resolve_catalog_model_id(author_model)
+    authors = {resolve_catalog_model_id(model) for model in author_models}
+    if (author_model and explicit is None) or (None in authors and explicit is None):
+        return "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+    authors.discard(None)
+    if explicit is not None:
+        authors.add(explicit)
+    if not authors:
+        return "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+    if any(resolve_catalog_model_id(model) in authors for model in reviewer_models):
+        return "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+    return None
 
 
 # Operator 2026-09-27: "only claude, gpt and gemini should be involved in
@@ -457,6 +489,7 @@ class ResolverInputs:
     # Selection excludes the whole set. ``author_model``/``author_family`` may
     # add to it but never replace or shrink it. Empty keeps single-author mode.
     author_families: frozenset[str] = field(default_factory=frozenset)
+    author_models: tuple[str | None, ...] = ()
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -814,6 +847,24 @@ def evaluate_candidate(
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
+    if review_mode == "red_team":
+        refusal = red_team_seat_refusal(
+            (candidate.concrete_model,), author_models=inputs.author_models, author_model=inputs.author_model
+        )
+        if refusal:
+            return CandidateResult(
+                name=candidate.name,
+                concrete_model=candidate.concrete_model,
+                family=candidate.family,
+                route=candidate.route,
+                transport=candidate.transport,
+                invocation=candidate.invocation,
+                quality_tier=candidate.quality_tier,
+                requires_silence_timeout=candidate.requires_silence_timeout,
+                status="excluded",
+                reason=refusal,
+                health=health,
+            )
     snapshot = inputs.routing_snapshot
     record = _route_record(candidate, snapshot, prefer_route=True)
     diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None

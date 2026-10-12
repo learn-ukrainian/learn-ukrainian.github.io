@@ -231,8 +231,10 @@ Limits: the author's task stays refused, and seats whose own code is under
 review stay excluded as usual; the reviewer may be the author's seat and
 model, but always runs as a separate fresh-session review task. Qualification,
 the risk floor, toolful execution and the exact-head binding are unchanged;
-the red-team prompt digest is bound to the review; it never changes a merge
-gate or the keeper. Label it `review_mode=red_team` in the PR comment, the
+the red-team prompt digest is bound to the review; it changes no merge-gate
+or keeper rule: a labelled red-team APPROVE clears the same checks as any
+recorded APPROVE, with its label kept on the PR comment, the commit status
+text and the task record. Label it `review_mode=red_team` in the PR comment, the
 commit status text and the task record; never call or count it cross-family.
 
 ### Post-merge cleanup — the single landing and cleanup recipe

@@ -152,7 +152,19 @@ def facts_for(families, *, changed_paths=(), subject_seats=frozenset()):
         base_tip_sha=OTHER,
         head_sha=SHA,
         merge_base_sha=OTHER,
-        commits=tuple(recorder.CommitAttribution(None, family, "trailer-model") for family in sorted(families)),
+        commits=tuple(
+            recorder.CommitAttribution(
+                None,
+                family,
+                "trailer-model",
+                author_models=(
+                    {"openai": "gpt-6-luna", "google": "gemini-3.8-flash-high", "anthropic": "claude-opus-5-5"}.get(
+                        family, "gpt-6-luna"
+                    ),
+                ),
+            )
+            for family in sorted(families)
+        ),
         existing_families=frozenset(families),
         incoming_writer=None,
         incoming_family=None,
@@ -241,6 +253,71 @@ def red_team_task(
     path.write_text(prompt, encoding="utf-8")
     write_task(tasks, review_mode="red_team", prompt_sha256=hashlib.sha256(prompt.encode()).hexdigest(), **updates)
     return path
+
+
+@pytest.mark.parametrize(
+    "scope",
+    [
+        {"review_language_lane": True},
+        {"language_lane": True},
+        {"research_task_family": "ukrainian-review"},
+        {"review_profile": "ukrainian"},
+    ],
+)
+def test_red_team_ukrainian_task_refused_before_publication(monkeypatch, tmp_path, scope):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path, sources_mcp_call_count=3, **scope)
+    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: Ukrainian-language reviews stay cross-family"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize(
+    "agent,reviewer_id,author_id",
+    [
+        ("cursor", "claude-impl-x", "impl-x"),
+        ("claude", "codex/author-one", "author-one"),
+        ("cursor", " CLAUDE-IMPL-X ", "impl-x"),
+        ("claude", "codex/gpt-6.1-sol", "gpt-6.1-sol"),
+    ],
+)
+def test_red_team_cross_seat_author_task_refused_before_publication(
+    monkeypatch, tmp_path, archived, agent, reviewer_id, author_id
+):
+    from dataclasses import replace
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    model = "Grok 4.7 256K High" if agent == "cursor" else "claude-opus-5-5"
+    prompt = red_team_task(
+        tasks,
+        tmp_path,
+        agent=agent,
+        model=model,
+        resolved_model=model,
+        resolved_model_known=True,
+        resolved_model_source="cursor-stream-json",
+    )
+    # Keep the loadable filename separate from the task's stored identity.
+    path = tasks / "review-one.json"
+    data = json.loads(path.read_text())
+    data["task_id"] = reviewer_id
+    path.write_text(json.dumps(data))
+    if archived:
+        (tasks / "archive").mkdir()
+        for suffix in ("json", "result"):
+            (tasks / f"review-one.{suffix}").rename(tasks / "archive" / f"review-one.{suffix}")
+    facts = replace(
+        facts_for({"openai"}), commits=(recorder.CommitAttribution(SHA, "openai", "task-record", author_id),)
+    )
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("families", [{"openai"}, {"google", "openai"}, {"cursor", "openai"}, {"unknown", "openai"}])
@@ -418,7 +495,7 @@ def test_rerun_same_task_reconciles_status_without_new_comment(monkeypatch, tmp_
     second = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert first["comment"] == "posted"
     assert second["comment"] == "existing"
-    assert "review_mode" not in first and "review_mode" not in second
+    assert first["review_mode"] == second["review_mode"] == "cross_family"
     assert calls == {"posts": 1, "statuses": 2}
     assert len(comments) == 1
     assert comments[0]["body"].splitlines()[-1].startswith("<!-- cf-verdict v1 sha=")
@@ -2383,3 +2460,105 @@ def test_red_team_record_own_author_id_refused_before_publication(monkeypatch, t
             "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
         )
     assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize(
+    "agent,model,resolved,author_model",
+    [
+        ("codex", "gpt-6.1-sol", None, "gpt-6.1-sol"),
+        ("claude", "gpt-6.1-sol[1m]", None, "gpt-6.1-sol"),
+        ("cursor", "gpt-6.1-sol", "Grok 4.7 256K High", "gpt-6.1-sol"),
+        ("cursor", "gpt-6.1-sol", "Grok 4.7 256K High", "grok-4.7"),
+    ],
+)
+def test_red_team_recorded_and_resolved_model_refused_before_publication(
+    monkeypatch, tmp_path, archived, agent, model, resolved, author_model
+):
+    from dataclasses import replace
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    records = tasks / "archive" if archived else tasks
+    write_task(records, task_id="author-one", agent="codex", model=f"{author_model}[1m]")
+    attribution = recorder._attribute_commit(
+        {"sha": SHA, "commit": {"message": "change\n\nX-Agent: codex/author-one"}},
+        repository=REPOSITORY,
+        task_root=tasks,
+        base_sha=lambda: OTHER,
+    )
+    assert attribution.author_models == (f"{author_model}[1m]",)
+    facts = replace(facts_for({attribution.family}), commits=(attribution,))
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    prompt = red_team_task(
+        tasks,
+        tmp_path,
+        agent=agent,
+        model=model,
+        resolved_model=resolved,
+        resolved_model_known=True,
+        resolved_model_source="cursor-stream-json",
+    )
+    with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: reviewer model equals a branch author model"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("explicit", [None, "gpt-6-luna", "gpt-6.1-sol"])
+def test_red_team_unknown_author_requires_explicit_model(monkeypatch, tmp_path, archived, explicit):
+    from dataclasses import replace
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    records = tasks / "archive" if archived else tasks
+    write_task(records, task_id="author-one", model="unlisted-model")
+    attribution = recorder._attribute_commit(
+        {"sha": SHA, "commit": {"message": "change\n\nX-Agent: codex/author-one"}},
+        repository=REPOSITORY,
+        task_root=tasks,
+        base_sha=lambda: OTHER,
+    )
+    facts = replace(facts_for({"openai"}), commits=(attribution,))
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    prompt = red_team_task(tasks, tmp_path, review_author_model=explicit)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    if explicit == "gpt-6-luna":
+        assert recorder.record("review-one", **kwargs)["status"] == "posted"
+        assert calls == {"posts": 1, "statuses": 1}
+    else:
+        reason = (
+            "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+            if explicit is None
+            else "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+        )
+        with pytest.raises(recorder.RecordError, match=reason):
+            recorder.record("review-one", **kwargs)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("recorded", ["gpt-6-luna", "Auto"])
+def test_author_task_seat_models_retain_recorded_and_resolved_identity(tmp_path, archived, recorded):
+    tasks = tmp_path / "tasks"
+    records = tasks / "archive" if archived else tasks
+    write_task(
+        records,
+        task_id="author-one",
+        agent="cursor",
+        model=recorded,
+        resolved_model="Grok 4.7 256K High",
+        resolved_model_known=True,
+    )
+    attribution = recorder._attribute_commit(
+        {"sha": SHA, "commit": {"message": "change\n\nX-Agent: cursor/author-one"}},
+        repository=REPOSITORY,
+        task_root=tasks,
+        base_sha=lambda: OTHER,
+    )
+    expected = ("gpt-6-luna", "grok-4.7") if recorded == "gpt-6-luna" else ("grok-4.7",)
+    assert attribution.author_models == expected
+    for reviewer in expected:
+        assert recorder.red_team_seat_refusal((reviewer,), author_models=attribution.author_models) == (
+            "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+        )

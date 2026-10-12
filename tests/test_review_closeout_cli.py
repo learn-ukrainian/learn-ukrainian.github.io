@@ -1207,7 +1207,7 @@ def test_resolver_cli_threads_red_team_and_labels_limitation(tmp_path, outside_a
         tmp_path / "state.json",
         "resolve-reviewer",
         "--author-model",
-        "gpt-6.1-sol",
+        "gpt-6-luna",
         "--risk",
         "critical",
         "--owned-path",

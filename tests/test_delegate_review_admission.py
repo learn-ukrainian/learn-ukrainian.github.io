@@ -2849,10 +2849,8 @@ def test_red_team_branch_task_and_preference_gate(
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
     if same_task:
         assert target is None and "SELF_REVIEW_DETECTED" in refusal
-    elif outside_available:
-        assert target is None and "outside-family reviewer takes precedence" in refusal
     else:
-        assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+        assert target is None and refusal == "RED_TEAM_REFUSED: reviewer model equals a branch author model"
     assert args._red_team_branch_facts["author_task_ids"] == [author_id]
 
 
@@ -2918,6 +2916,60 @@ def test_review_dispatch_record_binds_opt_in_and_default_has_no_new_fields(tmp_p
         assert record["review_branch_facts"]["head_sha"] == target.head_sha
     else:
         assert "review_mode" not in record and "review_branch_facts" not in record
+
+
+@pytest.mark.parametrize("flags", [("--language-lane",), ("--research-track", "l2-uk-en")])
+def test_red_team_language_lane_dispatch_refused(tmp_path, monkeypatch, flags):
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit("codex/author-one")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "claude": "unhealthy",
+            "grok": "unhealthy",
+            "cursor": "unhealthy",
+            "agy": "unhealthy",
+        },
+    )
+    args = _args(
+        "--branch",
+        "feature",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "critical",
+        "--review-profile",
+        "code",
+        "--review-mode",
+        "red_team",
+        *flags,
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert target is None
+    assert refusal == "RED_TEAM_REFUSED: Ukrainian-language reviews stay cross-family"
+
+
+def test_red_team_routing_unavailable_is_typed_refusal(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit("codex/author-one")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+
+    def unavailable():
+        raise delegate.MonitorApiUnavailable("routing probe failed")
+
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
+    args = _args("--branch", "feature", "--review-profile", "code", "--review-mode", "red_team")
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert target is None
+    assert refusal == "RED_TEAM_REFUSED: routing state unavailable"
 
 
 def test_red_team_worker_invokes_a_fresh_session(tmp_path, monkeypatch):

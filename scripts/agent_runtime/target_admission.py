@@ -321,6 +321,13 @@ def resolve_and_admit(
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: unsupported review mode")
     if review_mode == "red_team" and not review_dispatch:
         raise ReviewAdmissionRefused("RED_TEAM_REFUSED: red_team requires a review dispatch")
+    if review_mode == "red_team":
+        from scripts.review.language_lane import is_ukrainian_review
+
+        if is_ukrainian_review({**gate, "review_profile": review_profile, "task_family": task_family}) or str(
+            gate.get("research_track") or ""
+        ).strip().casefold().startswith("l2-uk"):
+            raise ReviewAdmissionRefused("RED_TEAM_REFUSED: Ukrainian-language reviews stay cross-family")
     if (review_profile or "code") in {"code", "infra"}:
         if callable(review_changed_paths):
             review_changed_paths = review_changed_paths()
@@ -558,10 +565,11 @@ def _resolve_review_target(
         ResolverInputs,
         candidate_dispatch_model,
         evaluate_candidate,
-        normalize_review_task_id,
+        red_team_seat_refusal,
         resolve_author_family,
         resolve_family,
         resolve_reviewer,
+        review_task_id_comparison_keys,
     )
     from scripts.review.security_paths import effective_review_risk
     from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
@@ -575,13 +583,21 @@ def _resolve_review_target(
             raise ReviewAdmissionRefused(
                 "RED_TEAM_REFUSED: code review requires branch author facts and reviewer task id"
             )
-        reviewer_id = normalize_review_task_id(reviewer_task_id, agent=seat)
-        author_ids = {normalize_review_task_id(identity, agent=seat) for identity in facts.author_task_ids}
-        if reviewer_id in author_ids:
+        reviewer_ids = review_task_id_comparison_keys(reviewer_task_id, agent=seat)
+        author_ids = {key for identity in facts.author_task_ids for key in review_task_id_comparison_keys(identity)}
+        if reviewer_ids & author_ids:
             raise ReviewAdmissionRefused("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
         risk = risk or "medium"
     _require_agy_code_review_risk(seat, risk, profile)
     requested_model = model or _default_model_for(seat) or ""
+    if review_mode == "red_team":
+        refusal = red_team_seat_refusal(
+            (requested_model,),
+            author_models=facts.resolver_inputs(risk=risk).author_models,
+            author_model=author_model,
+        )
+        if refusal:
+            raise ReviewAdmissionRefused(refusal)
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
     # The seat's registered pin reviews too when no model is named (#9583).

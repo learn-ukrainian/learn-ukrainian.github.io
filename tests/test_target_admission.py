@@ -606,7 +606,7 @@ def test_red_team_author_identity_refused_before_qualification(monkeypatch, revi
         )
 
 
-def test_red_team_distinct_task_reaches_qualification(monkeypatch):
+def test_red_team_different_same_family_model_keeps_qualification_floor(monkeypatch):
     from scripts.review import capacity
     from tests.test_record_cf_verdict import facts_for
 
@@ -617,19 +617,66 @@ def test_red_team_distinct_task_reaches_qualification(monkeypatch):
         raise ReviewAdmissionRefused("qualification reached")
 
     monkeypatch.setattr(capacity, "review_capacity_action", qualified_capacity)
-    with pytest.raises(ReviewAdmissionRefused, match="qualification reached"):
+    with pytest.raises(ReviewAdmissionRefused, match="holds no review, critique or approval role"):
         resolve_and_admit(
             ("codex",),
-            model="gpt-6.1-sol",
+            model="gpt-6-luna",
             mode="read-only",
             review_dispatch=True,
             review_author_model="gpt-6.1-sol",
             review_risk="critical",
             review_mode="red_team",
-            review_task_id="independent-review",
+            review_task_id="other-task",
             review_facts=facts_for({"openai"}),
         )
-    assert reached == [("codex", {}, None, "gpt-6.1-sol")]
+    assert reached == []
+
+
+@pytest.mark.parametrize(
+    "seat,reviewer_id,author_id",
+    [
+        ("cursor", "claude-impl-x", "impl-x"),
+        ("claude", "codex/author-one", "codex/author-one"),
+        ("cursor", " CLAUDE-IMPL-X ", "impl-x"),
+    ],
+)
+def test_red_team_cross_seat_author_identity_refused(monkeypatch, seat, reviewer_id, author_id):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_record_cf_verdict import facts_for
+
+    facts = dataclasses.replace(
+        facts_for({"openai"}), commits=(recorder.CommitAttribution(None, "openai", "task-record", author_id),)
+    )
+    with pytest.raises(ReviewAdmissionRefused, match="SELF_REVIEW_DETECTED"):
+        resolve_and_admit(
+            (seat,),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_mode="red_team",
+            review_task_id=reviewer_id,
+            review_facts=facts,
+        )
+
+
+@pytest.mark.parametrize("scope", [{"language_lane": True}, {"research_track": "l2-uk-en"}])
+def test_red_team_language_lane_refused(scope):
+    from tests.test_record_cf_verdict import facts_for
+
+    with pytest.raises(ReviewAdmissionRefused, match="RED_TEAM_REFUSED: Ukrainian-language reviews stay cross-family"):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_profile="code",
+            review_mode="red_team",
+            review_task_id="other-task",
+            review_facts=facts_for({"openai"}),
+            review_author_model="gpt-6.1-sol",
+            review_risk="critical",
+            **scope,
+        )
 
 
 @pytest.mark.parametrize("archived", [False, True])
@@ -672,5 +719,43 @@ def test_red_team_author_record_own_id_refused(tmp_path, monkeypatch, archived):
             review_risk="critical",
             review_mode="red_team",
             review_task_id="original-author",
+            review_facts=facts,
+        )
+
+
+@pytest.mark.parametrize(
+    "seat,model", [("codex", "gpt-6.1-sol"), ("cursor", "gpt-6.1-sol"), ("claude", "gpt-6.1-sol[1m]")]
+)
+def test_red_team_same_model_any_harness_refused(seat, model):
+    from tests.test_record_cf_verdict import facts_for
+
+    with pytest.raises(ReviewAdmissionRefused, match="RED_TEAM_REFUSED: reviewer model equals a branch author model"):
+        resolve_and_admit(
+            (seat,),
+            model=model,
+            mode="read-only",
+            review_dispatch=True,
+            review_mode="red_team",
+            review_task_id="other-task",
+            review_author_model="codex:gpt-6.1-sol-high",
+            review_facts=facts_for({"openai"}),
+        )
+
+
+def test_red_team_unknown_author_refused_without_override():
+    from scripts.review.record_cf_verdict import CommitAttribution
+    from tests.test_record_cf_verdict import facts_for
+
+    facts = dataclasses.replace(facts_for({"openai"}), commits=(CommitAttribution(None, "openai", "task-record"),))
+    with pytest.raises(
+        ReviewAdmissionRefused, match="RED_TEAM_REFUSED: author model unknown; supply --review-author-model"
+    ):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            review_mode="red_team",
+            review_task_id="other-task",
             review_facts=facts,
         )

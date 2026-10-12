@@ -10,7 +10,9 @@ from scripts.review.reviewer_resolver import (
     ResolverInputs,
     evaluate_candidate,
     normalize_review_task_id,
+    red_team_seat_refusal,
     resolve_reviewer,
+    review_task_id_comparison_keys,
 )
 
 GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
@@ -30,6 +32,28 @@ GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
 )
 def test_review_task_identity_matches_trailer_suffix(task_id, expected):
     assert normalize_review_task_id(task_id, agent="codex") == expected
+
+
+@pytest.mark.parametrize(
+    "task_id,agent,expected",
+    [
+        ("claude-impl-x", "cursor", {"claude-impl-x", "impl-x"}),
+        (" CODEX/Author-One ", "claude", {"codex-author-one", "author-one"}),
+        ("cursor/Author name!", "cursor", {"cursor-author-name", "author-name"}),
+        ("grok-hermes-author", "codex", {"grok-hermes-author", "hermes-author", "author"}),
+        ("custom/author-one", "custom", {"custom-author-one", "author-one"}),
+        ("codex/gpt-6.1-sol", "claude", {"codex-gpt-6.1-sol", "gpt-6.1-sol"}),
+        ("other-task", "claude", {"other-task"}),
+    ],
+)
+def test_review_task_comparison_keys_include_known_harnesses(task_id, agent, expected):
+    assert review_task_id_comparison_keys(task_id, agent=agent) == expected
+
+
+def test_different_task_comparison_keys_do_not_intersect():
+    assert not review_task_id_comparison_keys("other-task", agent="claude") & review_task_id_comparison_keys(
+        "codex/author-one", agent="codex"
+    )
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
@@ -139,7 +163,7 @@ def test_red_team_prefers_outside_family_before_same_family(outside_available):
     opus = REVIEW_CANDIDATES["claude-opus-5-5"]
     snapshot = {"claude": "healthy" if outside_available else "unhealthy"}
     result = resolve_reviewer(
-        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=snapshot),
+        ResolverInputs(author_model="gpt-6-luna", risk="critical", routing_snapshot=snapshot),
         ladder=((sol,), (opus,)),
         review_mode="red_team",
     )
@@ -179,3 +203,76 @@ def test_red_team_keeps_identity_and_subject_gates(inputs):
 def test_resolver_refuses_invalid_review_mode():
     with pytest.raises(ValueError, match="unsupported review mode"):
         resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol"), review_mode="invalid")
+
+
+@pytest.mark.parametrize(
+    "reviewer,authors,explicit,expected",
+    [
+        ("gpt-6.1-sol", ("gpt-6.1-sol",), None, "RED_TEAM_REFUSED: reviewer model equals a branch author model"),
+        (
+            "cursor:gpt-6.1-sol-high",
+            ("CODEX/gpt-6.1-sol[1m]",),
+            None,
+            "RED_TEAM_REFUSED: reviewer model equals a branch author model",
+        ),
+        (
+            "claude-opus-5-5[1m]",
+            ("claude-opus-5-5-high",),
+            None,
+            "RED_TEAM_REFUSED: reviewer model equals a branch author model",
+        ),
+        ("gpt-6-luna", ("gpt-6.1-sol",), None, None),
+        ("gpt-6.1-sol", (), None, "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"),
+        (
+            "gpt-6.1-sol",
+            ("gpt-6-luna", None),
+            None,
+            "RED_TEAM_REFUSED: author model unknown; supply --review-author-model",
+        ),
+        ("gpt-6.1-sol", (None,), "gpt-6-luna", None),
+        (
+            "gpt-6.1-sol",
+            ("gpt-6.1-sol",),
+            "gpt-6-luna",
+            "RED_TEAM_REFUSED: reviewer model equals a branch author model",
+        ),
+        (
+            "gpt-6.1-sol",
+            ("gpt-6-luna",),
+            "gpt-6.1-sol",
+            "RED_TEAM_REFUSED: reviewer model equals a branch author model",
+        ),
+        (
+            "gpt-6.1-sol",
+            ("gpt-6-luna",),
+            "unlisted-model",
+            "RED_TEAM_REFUSED: author model unknown; supply --review-author-model",
+        ),
+    ],
+)
+def test_red_team_seat_rule_uses_canonical_models(reviewer, authors, explicit, expected):
+    assert red_team_seat_refusal((reviewer,), author_models=authors, author_model=explicit) == expected
+
+
+def test_red_team_evaluation_refuses_same_model_before_selection():
+    sol = REVIEW_CANDIDATES["openai_frontier"]
+    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6.1-sol"), review_mode="red_team")
+    assert result.status == "excluded"
+    assert result.reason == "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+
+
+def test_red_team_evaluation_accepts_different_same_family_model():
+    sol = REVIEW_CANDIDATES["openai_frontier"]
+    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6-luna"), review_mode="red_team")
+    assert result.status == "eligible"
+
+
+def test_red_team_evaluation_refuses_one_unknown_author_in_complete_branch():
+    sol = REVIEW_CANDIDATES["openai_frontier"]
+    result = evaluate_candidate(
+        sol,
+        ResolverInputs(author_model="", author_models=("gpt-6-luna", None), author_families=frozenset({"openai"})),
+        review_mode="red_team",
+    )
+    assert result.status == "excluded"
+    assert result.reason == "RED_TEAM_REFUSED: author model unknown; supply --review-author-model"

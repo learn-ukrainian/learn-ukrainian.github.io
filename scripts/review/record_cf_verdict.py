@@ -56,9 +56,11 @@ from scripts.review.reviewer_resolver import (
     ReviewerResolution,
     evaluate_candidate,
     normalize_review_task_id,
+    red_team_seat_refusal,
     resolve_author_family,
     resolve_family,
     resolve_reviewer,
+    review_task_id_comparison_keys,
 )
 from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
@@ -264,6 +266,7 @@ class CommitAttribution:
     source: str
     task_id: str | None = None
     record_task_id: str | None = None
+    author_models: tuple[str, ...] = ()
 
 
 def _author_model_family(harness: str, model: str) -> str:
@@ -374,12 +377,31 @@ def _attribute_commit(
     has_record = source in {"task-record", "task-record-archived"}
     task_id = model if has_record or (TASK_ID.fullmatch(model) and not _is_catalog_model_trailer(model)) else None
     record_task_id = author_task.get("task_id") if has_record else None
+    model_values = (
+        (
+            author_task.get("model"),
+            author_model,
+            author_task.get("resolved_model") if author_task.get("resolved_model_known") is True else None,
+        )
+        if has_record
+        else (model,)
+        if _is_catalog_model_trailer(model)
+        else ()
+    )
+    if harness.startswith("cursor"):
+        model_values = tuple(
+            canonical_cursor_model(value) if isinstance(value, str) else value for value in model_values
+        )
+    author_models = tuple(
+        dict.fromkeys(value for value in model_values if isinstance(value, str) and resolve_catalog_model_id(value))
+    )
     return CommitAttribution(
         commit_sha if isinstance(commit_sha, str) else None,
         family,
         source,
         normalize_review_task_id(task_id, agent=harness) if task_id is not None else None,
         normalize_review_task_id(record_task_id, agent=harness) if isinstance(record_task_id, str) else None,
+        author_models,
     )
 
 
@@ -488,6 +510,12 @@ class BranchReviewFacts:
         overrides.setdefault("author_model", "")
         return ResolverInputs(
             author_families=self.author_families,
+            author_models=tuple(
+                model
+                for commit in self.commits
+                if commit.source != "clean-base-merge"
+                for model in (commit.author_models or (None,))
+            ),
             review_profile=review_profile,
             risk=risk,
             changed_paths=self.changed_paths,
@@ -938,7 +966,11 @@ def _require_qualified_reviewer(
     ]
     if not candidates:
         raise RecordError(f"reviewer not qualified: {agent}/{model} is not a catalog review candidate")
-    inputs = facts.resolver_inputs(risk=str(task.get("review_risk") or "medium"), review_profile=profile)
+    inputs = facts.resolver_inputs(
+        risk=str(task.get("review_risk") or "medium"),
+        review_profile=profile,
+        author_model=task.get("review_author_model") or "" if review_mode == "red_team" else "",
+    )
     results = [evaluate_candidate(candidate, inputs, review_mode=review_mode) for candidate in candidates]
     if not any(result.status == "eligible" for result in results):
         reasons = "; ".join(sorted({str(result.reason) for result in results}))
@@ -1213,6 +1245,8 @@ def record(
             raise RecordError("review mode conflicts with task: red_team requires stored review_mode=red_team")
         raise RecordError("review mode conflicts with task")
     if review_mode == "red_team":
+        if is_ukrainian_review(task):
+            raise RecordError("RED_TEAM_REFUSED: Ukrainian-language reviews stay cross-family")
         try:
             prompt = red_team_prompt.read_text(encoding="utf-8") if red_team_prompt is not None else ""
         except (OSError, UnicodeError) as exc:
@@ -1288,13 +1322,21 @@ def record(
     if review_mode == "red_team":
         agent = str(task.get("agent") or "")
         reviewer_ids = {
-            normalize_review_task_id(identity, agent=agent)
+            key
             for identity in (task_id, task.get("task_id"))
             if isinstance(identity, str)
+            for key in review_task_id_comparison_keys(identity, agent=agent)
         }
-        author_ids = {normalize_review_task_id(identity, agent=agent) for identity in facts.author_task_ids}
+        author_ids = {key for identity in facts.author_task_ids for key in review_task_id_comparison_keys(identity)}
         if reviewer_ids & author_ids:
             raise RecordError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
+        refusal = red_team_seat_refusal(
+            (task.get("model"), task.get("resolved_model"), model),
+            author_models=facts.resolver_inputs(risk="medium").author_models,
+            author_model=task.get("review_author_model"),
+        )
+        if refusal:
+            raise RecordError(refusal)
     if family in facts.excluded_families and review_mode != "red_team":
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
@@ -1393,7 +1435,7 @@ def record(
         "head": sha,
         "task": task_id,
         "verdict": verdict,
-        **({"review_mode": "red_team"} if review_mode == "red_team" else {}),
+        "review_mode": review_mode,
         "comment": "posted" if posted else "existing",
         "status": status,
     }

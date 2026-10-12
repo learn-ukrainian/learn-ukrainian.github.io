@@ -16584,6 +16584,10 @@ def _admit_dispatch_target(
         args._mechanical_admitted_scope = mechanical_task
         if target.recipient == "cursor":
             apply_cursor_model_pins(target.model)
+    except MonitorApiUnavailable:
+        if getattr(args, "review_mode", "cross_family") == "red_team":
+            return "RED_TEAM_REFUSED: routing state unavailable", None
+        raise
     except (
         KimiAdmissionRefused,
         MechanicalAdmissionRefused,
