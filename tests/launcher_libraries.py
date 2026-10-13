@@ -51,6 +51,12 @@ for arguments in (
         except SystemExit as exc:
             if exc.code != 0:
                 raise
+# The launcher now executes the shared credential policy rather than only
+# printing intermediate drop names. Include that real import closure too.
+if (root / "scripts/agent_runtime/env_sanitize.py").is_file():
+    sys.path[:0] = [str(root), str(root / "scripts")]
+    from agent_runtime.env_sanitize import child_credential_env
+    child_credential_env({"HOME": "synthetic-stored-login"}, "kimi")
 sources = set()
 for raw in opened:
     path = Path(raw).resolve()
@@ -77,8 +83,14 @@ def launcher_catalog_files(repo: Path) -> tuple[Path, ...]:
         check=True,
         timeout=30,
     )
-    tracked = set(subprocess.run(
-        ["git", "ls-files", "-z"], cwd=repo, capture_output=True, text=True,
-        check=True, timeout=30,
-    ).stdout.split("\0"))
+    tracked = set(
+        subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        ).stdout.split("\0")
+    )
     return tuple(Path(raw) for raw in json.loads(probe.stdout) if raw in tracked)

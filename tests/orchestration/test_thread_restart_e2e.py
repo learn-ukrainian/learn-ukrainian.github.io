@@ -24,7 +24,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
-from tests.launcher_libraries import launcher_library_files
+from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry
 from tests.project_python import project_python
 from tests.rules_core_view import install_loader_bypass
@@ -219,6 +219,7 @@ def init_repo(
             ]
         )
         sources.extend(str(path) for path in launcher_library_files(REPO_ROOT))
+        sources.extend(str(path) for path in launcher_catalog_files(REPO_ROOT))
         # Whole packages, as Git tracks them: package data (migrations, the
         # vendored public suffix list the session-stream store loads at import)
         # ships with the code, and no suffix filter can silently drop it.

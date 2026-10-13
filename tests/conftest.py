@@ -7,6 +7,7 @@ Credential redaction protects serialized reports, captured output and warnings.
 It cannot intercept direct terminal writes with ``-s``, ``--capture=no``,
 ``--capture=tee-sys``, ``-o log_cli=true`` or ``--log-cli-level=...``. Keep capture enabled and live logging disabled when running
 tests with credentials. Such sessions emit one warning, without values.
+``--noconftest`` disables credential stripping, redaction and this warning together.
 """
 
 import os
@@ -251,12 +252,14 @@ def pytest_runtest_makereport(
     item: pytest.Item, call: pytest.CallInfo[None]
 ) -> Generator[None, object, pytest.TestReport]:
     """Sanitize all outcomes before terminal, JUnit, or xdist consumers."""
+    item_property_count = len(item.user_properties)
     report = yield
     report._lu_xdist_worker = hasattr(item.config, "workerinput")
     _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
     # record_property persists on the item across phases. Store its sanitized
     # values so teardown cannot count the same disclosure a second time.
-    item.user_properties[:] = report.user_properties
+    if _IMPORT_STRIPPED_SECRETS:
+        item.user_properties[:] = report.user_properties[:item_property_count]
     return report
 
 
@@ -326,6 +329,28 @@ def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
     """Scan adjacent unescaped quotes once, including nested quoted reprs."""
     representations = [repr(value) for value in values]
     max_literal = max(map(len, representations), default=0)
+    # Eight characters cover the observed clipped credential fragments without
+    # treating short ordinary word overlaps as secrets. Only clipped literals
+    # participate; complete values are handled by exact replacement below.
+    minimum_overlap = 8
+    bodies = [rendered[1:-1] for rendered in representations]
+
+    def overlaps(prefix: str, suffix: str = "") -> bool:
+        for body in bodies:
+            # Search for the first eight prefix characters, then confirm the
+            # entire remaining head fragment. Do the converse for the tail.
+            start = prefix.find(body[:minimum_overlap]) if len(body) >= minimum_overlap else -1
+            while start != -1:
+                if start > 1 and body.startswith(prefix[start:]):
+                    return True
+                start = prefix.find(body[:minimum_overlap], start + 1)
+            end = suffix.find(body[-minimum_overlap:]) if len(body) >= minimum_overlap else -1
+            while end != -1:
+                if body.endswith(suffix[: end + minimum_overlap]):
+                    return True
+                end = suffix.find(body[-minimum_overlap:], end + 1)
+        return False
+
     quotes: dict[str, int] = {}
     spans = []
     index = 0
@@ -339,7 +364,7 @@ def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
             for quote, start in quotes.items():
                 if 12 <= index - start < max_literal and text[index - 3 : index] == "...":
                     prefix = text[start : index - 3]
-                    if any(rendered.startswith(prefix) for rendered in representations):
+                    if any(rendered.startswith(prefix) for rendered in representations) or overlaps(prefix):
                         spans.append((start, index, quote + "[REDACTED]..."))
             quotes.clear()
         elif char in "\"'":
@@ -361,7 +386,7 @@ def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
                     cut = literal.find("...")
                     while not matches and cut != -1:
                         prefix, suffix = literal[:cut], literal[cut + 3 :]
-                        matches = (
+                        matches = overlaps(prefix, suffix) or (
                             len(prefix) > 1
                             and len(suffix) > 1
                             and any(

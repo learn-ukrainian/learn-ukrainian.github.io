@@ -117,5 +117,5 @@ launcher_adapter_exec() {
   fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
-  exec env "${LC_CHILD_ENV_UNSETS[@]}" "${cmd[@]}"
+  exec "${LC_CHILD_ENV_COMMAND[@]}" "${cmd[@]}"
 }

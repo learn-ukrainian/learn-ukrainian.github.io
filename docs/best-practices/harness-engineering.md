@@ -237,3 +237,6 @@ enabled and live logging disabled when running tests with credentials. The
 [secret-print guard](../../agents_extensions/shared/hooks/guard-secret-print.py)
 checks supported shell commands before execution; it does not intercept
 pytest's direct output.
+
+`--noconftest` disables credential stripping, report redaction and the direct-output
+warning together.

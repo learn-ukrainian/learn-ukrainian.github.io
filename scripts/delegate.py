@@ -258,9 +258,6 @@ if TYPE_CHECKING:
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
-# The Gemini-family seat is intentionally absent in BOTH spellings: the
-# retired ``gemini`` alias resolves to ``agy`` before Popen (#7041), so the
-# strip has to attach to the resolved seat id ``agy`` — otherwise every
 _RUNTIME_TMP_TERMINAL_STATUSES = frozenset(
     {
         "done",

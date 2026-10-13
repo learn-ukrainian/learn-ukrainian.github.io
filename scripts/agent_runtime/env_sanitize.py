@@ -89,6 +89,18 @@ _SAFE_VALUE_NAME_ALLOWLIST = {
     "LU_X_AGENT_TRAILER",
 }
 
+# Launcher metadata whose names resemble credentials. Session fencing and
+# context capacities are decimal counters; Git author fields are identity text.
+# The dispatcher still excludes this parent context and rebuilds Git identity.
+_CHILD_COUNTER_NAMES = {
+    "SESSION_STREAM_FENCING_TOKEN",
+    "LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS",
+    "LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS",
+    "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS",
+}
+_CHILD_IDENTITY_NAMES = {"GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL"}
+
 _PROVIDER_SECRET_ALLOWLIST = {
     "gemini": {
         "GEMINI_API_KEY",
@@ -119,11 +131,9 @@ _PROVIDER_SECRET_ALLOWLIST = {
     },
 }
 
-# Existing dispatcher seats eligible for the injected GitHub identity.
-# ``--agent gemini`` dispatch would slip a parent operator ``GH_TOKEN`` /
-# ``GITHUB_TOKEN`` back in through the alias. Intended App or
-# ``LU_AGENT_GITHUB_TOKEN`` identity still reaches that CLI via
-# ``build_agent_env`` (#7020).
+# Dispatcher seats eligible for the early injected GitHub identity.
+# Gemini aliases are excluded from this intermediate stage (#7020).
+# The final CLI child resolves GitHub identity through child_credential_env.
 GITHUB_TOKEN_SEATS = {
     "bridge",
     "claude",
@@ -515,10 +525,47 @@ def _isolated_git_env(
         }
 
 
+def child_credential_env(raw: Mapping[str, str], provider: str, *, harness: str | None = None) -> dict[str, str]:
+    """Keep the seat's credentials and resolve its GitHub identity once.
+
+    Ordinary launcher context remains available for stored login and driver
+    hooks. build_agent_env further limits non-credential process context.
+    The Codex Claude Code route's derived token is scoped to that transport.
+    """
+    from .agent_github_identity import resolve_agent_github_identity
+    from .kimi_admission import is_kimi_seat
+
+    env = {}
+    for name, value in raw.items():
+        route_auth = (
+            name.upper() == "ANTHROPIC_AUTH_TOKEN"
+            and _normalized_provider(provider) == "codex"
+            and harness == "claude-code"
+        )
+        if _is_provider_secret(name, provider) or route_auth or _is_safe_value_name(name):
+            env[name] = value
+        elif _is_provider_safe_name(name, provider) and not _looks_sensitive_value(value):
+            if not name.upper().startswith("ACPX_AUTH_") or value == "1":
+                env[name] = value
+        elif (
+            (name in _CHILD_COUNTER_NAMES and value.isascii() and value.isdecimal())
+            or (name in _CHILD_IDENTITY_NAMES and not _looks_sensitive_value(value))
+            or (not _looks_sensitive_name(name) and not _looks_sensitive_value(value))
+        ):
+            env[name] = value
+
+    identity = None if is_kimi_seat(provider) else resolve_agent_github_identity(environment=raw)
+    if identity is not None and identity.token:
+        env["GH_TOKEN"] = identity.token
+        env["LU_AGENT_GITHUB_IDENTITY_SOURCE"] = identity.source or "legacy"
+    return env
+
+
 def build_agent_env(
     *,
     provider: str,
     model: str | None = None,
+    harness: str | None = None,
     overrides: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
     """Return a scrubbed env for a spawned agent CLI.
@@ -550,9 +597,11 @@ def build_agent_env(
     # Driver state belongs to the launcher session, never child/consult agents.
     raw.pop("LU_DRIVER_STATE_FILE", None)
 
+    credentials = child_credential_env(raw, provider, harness=harness)
     env: dict[str, str] = {}
-    for name, value in raw.items():
-        if _is_provider_secret(name, provider):
+    for name, value in credentials.items():
+        # Credential admission already happened in the shared child policy.
+        if _looks_sensitive_name(name) and name not in _CHILD_COUNTER_NAMES | _CHILD_IDENTITY_NAMES:
             env[name] = value
             continue
 
@@ -590,21 +639,13 @@ def build_agent_env(
 
     # Git-config isolation (#2842) — applied last so it always wins; agents
     # cannot persist a repo-bricking core.bare write into system/global config.
-    from .agent_github_identity import resolve_agent_github_identity
     from .kimi_admission import is_kimi_seat
 
     # A Kimi seat never publishes: delegate commits and pushes its work after
     # the content check (kimi_boundary). It gets no GitHub identity, no
     # credential helper, an empty gh config, and every push URL rewritten below.
     no_push = is_kimi_seat(provider)
-    identity = None if no_push else resolve_agent_github_identity(environment=raw)
-    token = identity.token if identity is not None else None
-    if identity is not None and token:
-        env["GH_TOKEN"] = token
-        env["LU_AGENT_GITHUB_IDENTITY_SOURCE"] = identity.source or "legacy"
-    else:
-        env.pop("GH_TOKEN", None)
-        env.pop("GITHUB_TOKEN", None)
+    token = credentials.get("GH_TOKEN")
     if no_push:
         for name in _PUSH_CREDENTIAL_NAMES:
             env.pop(name, None)
@@ -678,6 +719,9 @@ if __name__ == "__main__":
     # Launchers execute this file by path. Relative imports below need the
     # scripts package on sys.path and a package context.
     if __package__ in {None, ""}:
+        _repo_dir = str(Path(__file__).resolve().parents[2])
+        if _repo_dir not in sys.path:
+            sys.path.insert(0, _repo_dir)
         _scripts_dir = str(Path(__file__).resolve().parents[1])
         if _scripts_dir not in sys.path:
             sys.path.insert(0, _scripts_dir)
@@ -686,5 +730,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Print API-key names a child env must drop.")
     parser.add_argument("--provider", required=True)
     parser.add_argument("--harness", help="Effective child harness, including the Codex Claude Code route.")
+    parser.add_argument(
+        "--exec", dest="command", nargs=argparse.REMAINDER, help="Exec the CLI with the shared seat credential policy."
+    )
+    parser.add_argument("--check-helper", action="store_true", help="Check the helper before supervising a child.")
     args = parser.parse_args()
+    if args.check_helper:
+        raise SystemExit(0)
+    if args.command:
+        try:
+            child = child_credential_env(os.environ, args.provider, harness=args.harness)
+            os.execvpe(args.command[0], args.command, child)
+        except Exception as exc:
+            # Identity errors and executable diagnostics can contain secrets.
+            sys.stderr.write(f"launcher child environment refused: {type(exc).__name__}\n")
+            raise SystemExit(1) from None
     raise SystemExit(_print_unneeded_env_var_names(args.provider, harness=args.harness))

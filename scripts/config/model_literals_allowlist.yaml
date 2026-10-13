@@ -910,6 +910,13 @@ entries:
   kind: non_model_label
   reason: Existing dispatcher seat alias moved into the shared child environment policy.
 - path: scripts/agent_runtime/env_sanitize.py
+  scope: child_credential_env
+  context: expression
+  id: claude-code
+  count: 1
+  kind: non_model_label
+  reason: Existing Codex transport auth selector in the shared child policy; not a model ID.
+- path: scripts/agent_runtime/env_sanitize.py
   scope: unneeded_env_var_names
   context: expression
   id: claude-code

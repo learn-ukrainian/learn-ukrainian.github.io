@@ -573,9 +573,9 @@ def test_direct_print_modes_warn_once_without_values(tmp_path: Path, mode: tuple
     "provider,kept",
     [
         ("claude", {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"}),
-        ("codex", {"CODEX_API_KEY", "OPENAI_API_KEY", "CODEX_CC_AUTH_TOKEN"}),
+        ("codex", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
         ("kimi", {"KIMICC_AUTH_TOKEN", "MOONSHOT_API_KEY", "KIMI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
-        ("glm", {"ANTHROPIC_AUTH_TOKEN"}),
+        ("glm", set()),
         ("cursor", {"CURSOR_API_KEY"}),
     ],
 )
@@ -602,11 +602,6 @@ def test_interactive_launcher_child_uses_dispatcher_credential_policy(
         "OTHER_SECRET",
         "other_token",
     }
-    # Non-API-key names follow the dispatcher unchanged. The native Codex
-    # auth exception is tested separately through the real adapter.
-    kept |= names - {name for name in names if name.endswith("_API_KEY") or name.endswith("APIKEY")}
-    if provider == "codex":
-        kept.discard("ANTHROPIC_AUTH_TOKEN")
     probe = tmp_path / "child.py"
     probe.write_text(
         "import os, json\n"
@@ -936,20 +931,23 @@ def test_round2_redaction_exception_fails_closed(tmp_path: Path, xdist_enabled: 
     [
         ("claude", "claude-code", {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"}),
         ("codex", "codex", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
-        ("codex", "claude-code", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
+        ("codex", "claude-code", {"CODEX_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
         ("gemini", "agy", {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}),
-        ("kimi", "kimi-code", {"KIMI_API_KEY", "MOONSHOT_API_KEY"}),
         ("glm", "claude-code", set()),
         ("grok", "grok", set()),
         ("cursor", "cursor", {"CURSOR_API_KEY"}),
     ],
 )
-def test_round2_launcher_dispatcher_child_parity(
+def test_round3_real_launcher_dispatcher_child_parity(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, provider: str, harness: str, provider_keys: set[str]
 ) -> None:
     import json
+    from unittest.mock import patch
 
-    api_keys = {
+    import agent_runtime.agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env
+
+    names = {
         "ANTHROPIC_API_KEY",
         "CLAUDE_API_KEY",
         "CODEX_API_KEY",
@@ -957,78 +955,234 @@ def test_round2_launcher_dispatcher_child_parity(
         "GEMINI_API_KEY",
         "GOOGLE_API_KEY",
         "GOOGLE_GENERATIVE_AI_API_KEY",
-        "KIMI_API_KEY",
-        "MOONSHOT_API_KEY",
         "CURSOR_API_KEY",
         "XAI_API_KEY",
         "ZAI_API_KEY",
         "OTHER_APIKEY",
-    }
-    other_names = {
         "ANTHROPIC_AUTH_TOKEN",
         "CODEX_CC_AUTH_TOKEN",
         "KIMICC_AUTH_TOKEN",
         "GLMCC_AUTH_TOKEN",
         "CLAUDE_CODE_OAUTH_TOKEN",
-        "KIMI_CODE_OAUTH_CLIENT_SECRET",
+        "HF_TOKEN",
+        "NPM_TOKEN",
+        "AWS_SECRET_ACCESS_KEY",
+        "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+        "OTHER_PASSWORD",
+        "OTHER_SECRET",
         "GH_TOKEN",
         "GITHUB_TOKEN",
         "LU_AGENT_GITHUB_TOKEN",
-        "OTHER_TOKEN",
-        "OTHER_SECRET",
-        "OTHER_PASSWORD",
-        "OTHER_PASSWD",
-        "SESSION_STREAM_FENCING_TOKEN",
     }
-    names = api_keys | other_names
-    expected = (provider_keys | other_names) - {"GITHUB_TOKEN"}
-    if provider == "gemini":
-        expected -= {"GH_TOKEN"}
-    if provider == "codex" and harness != "claude-code":
-        expected -= {"ANTHROPIC_AUTH_TOKEN"}
-    parent = dict.fromkeys(names, SYNTHETIC_KEY)
-    dispatcher_child = without_unneeded_secrets(parent, provider, harness=harness)
-    assert set(dispatcher_child) == expected
-    if (provider, harness) != ("codex", "claude-code"):
-        # Exercise the dispatcher's earlier GitHub identity stage as well as
-        # its final shared filter. The Codex CC token is derived at preflight.
-        from scripts import delegate
+    parent = {
+        "PATH": os.defpath,
+        "HOME": str(tmp_path),
+        "CLAUDE_CONFIG_DIR": str(tmp_path / ".claude"),
+        **dict.fromkeys(names, SYNTHETIC_KEY),
+    }
+    parent["GH_TOKEN"] = "synthetic-parent-github-token-0123456789"
+    parent["GITHUB_TOKEN"] = "synthetic-parent-github-token-9876543210"
 
-        monkeypatch.setattr(delegate, "_resolve_github_token", lambda: SYNTHETIC_KEY)
-        actual_dispatcher = delegate._build_worker_env(
-            task_id="synthetic-round2",
-            dispatch_agent=provider,
-            base_env={"PATH": os.defpath, "HOME": str(tmp_path), **parent},
-        )
-        assert set(actual_dispatcher) & names == expected
+    # Substitute only the external identity resolver. The real sanitizer and
+    # launcher shell still decide which planted credentials reach the child.
+    def resolver(**kwargs):
+        return identity.GitHubIdentity(token=SYNTHETIC_KEY, source="test")
+
+    monkeypatch.setattr(identity, "resolve_agent_github_identity", resolver)
+    with patch.dict(os.environ, parent, clear=True):
+        kwargs = {"provider": provider}
+        if harness == "claude-code" and provider == "codex":
+            # The optional transport input is introduced by this repair.
+            import inspect
+
+            if "harness" in inspect.signature(build_agent_env).parameters:
+                kwargs["harness"] = harness
+        dispatcher = build_agent_env(**kwargs)
+    expected = provider_keys | {"GH_TOKEN"}
+    assert set(dispatcher) & names == expected
+
+    bootstrap = tmp_path / "helper.py"
+    bootstrap.write_text(
+        "import runpy, sys\n"
+        + f"sys.path[:0] = {[str(REPO), str(REPO / 'scripts')]!r}\n"
+        + "import agent_runtime.agent_github_identity as identity\n"
+        + f"identity.resolve_agent_github_identity = lambda **kwargs: identity.GitHubIdentity({SYNTHETIC_KEY!r}, 'test')\n"
+        + "sys.argv = sys.argv[1:]\nrunpy.run_path(sys.argv[0], run_name='__main__')\n"
+    )
+    helper_root = tmp_path / "helper-root"
+    interpreter = helper_root / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} {shlex.quote(str(bootstrap))} "$@"\n')
+    interpreter.chmod(0o755)
     child = tmp_path / "child.py"
-    child.write_text("import json, os\n" + f"print(json.dumps(sorted(set(os.environ) & {names!r})))\n")
-    # The shell retains all inherited names after preparing child filtering.
-    parent_check = f"import os; assert {names!r} <= set(os.environ)"
+    stored = tmp_path / ".claude" / "stored-login.json"
+    stored.parent.mkdir()
+    stored.write_text('{"authenticated": true}')
+    child.write_text(
+        "import json, os\nfrom pathlib import Path\n"
+        + f"assert os.environ['HOME'] == {str(tmp_path)!r}\n"
+        + "assert 'CLAUDE_CODE_OAUTH_TOKEN' not in os.environ\n"
+        + "assert Path(os.environ['CLAUDE_CONFIG_DIR']) == Path(os.environ['HOME']) / '.claude'\n"
+        + "assert json.loads((Path(os.environ['CLAUDE_CONFIG_DIR']) / 'stored-login.json').read_text())['authenticated']\n"
+        + f"print(json.dumps({{name: os.environ[name] for name in {names!r} if name in os.environ}}))\n"
+    )
     command = (
         f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
-        f"LC_PROVIDER={provider} LC_HARNESS={harness} LC_MODE=interactive LC_ROOT={shlex.quote(str(REPO))}\n"
-        f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
-        "launcher_drop_unneeded_secrets\n"
-        f"{shlex.quote(sys.executable)} -c {shlex.quote(parent_check)}\n"
+        f"LC_PROVIDER={provider} LC_HARNESS={harness} LC_MODE=driver LC_DRIVER_LEASE_ENABLED=0\n"
+        f"LC_ROOT={shlex.quote(str(REPO))} LC_DURABLE_HELPER_ROOT={shlex.quote(str(helper_root))}\n"
         f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
     )
-    if provider in {"glm", "kimi"}:
-        binary = tmp_path / ("kimi" if provider == "kimi" else "claude")
-        binary.write_text(f"#!/bin/sh\nexec {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n")
-        binary.chmod(0o755)
-        command = command[: command.rindex("launcher_exec_command ")] + (
-            f"source {shlex.quote(str(REPO / 'scripts/launchers' / (provider + '.sh')))}\n"
-            "LC_DRY_RUN=0 LC_MODEL=synthetic-model LEAD_MODEL=synthetic-model LC_EFFORT=''\n"
-            "LC_FORWARD_ARGS=()\nlauncher_adapter_exec\n"
-        )
-    proc = subprocess.run(
-        ["bash", "-eu", "-c", command],
-        env={"PATH": str(tmp_path) + os.pathsep + os.defpath, "HOME": str(tmp_path), **parent},
-        capture_output=True,
-        text=True,
-        timeout=30,
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0, proc.stderr
+    launcher = json.loads(proc.stdout)
+    assert launcher == {name: dispatcher[name] for name in names if name in dispatcher}
+    assert set(launcher) == expected
+
+
+@pytest.mark.parametrize("length", [40, 108, 325])
+@pytest.mark.parametrize("shape", ["bearer", "url", "list", "dict", "url-list", "url-dict"])
+@pytest.mark.parametrize("mode", [(), ("-v",), ("-l",), ("-n", "2")], ids=["default", "verbose", "locals", "xdist"])
+def test_round3_embedded_shortened_secret(tmp_path: Path, length: int, shape: str, mode: tuple[str, ...]) -> None:
+    import xml.etree.ElementTree as ET
+
+    # Alternating letter case keeps four-character leak checks distinct from
+    # unrelated numeric process IDs printed by the nested test guards.
+    token = ("aQbRcSdTeUfVgWhXiYjZkPlOmNnMoLpKqJrIsHtGuFvEwDxCyBzA" * 7)[:length]
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    expression = {
+        "bearer": "'Bearer ' + v + ' tail'",
+        "url": "'https://h/?token=' + v + '&a=1'",
+        "list": "['Bearer ' + v + ' tail']",
+        "dict": "{'header': 'Bearer ' + v + ' tail'}",
+        "url-list": "['https://h/?token=' + v + '&a=1']",
+        "url-dict": "{'url': 'https://h/?token=' + v + '&a=1'}",
+    }[shape]
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\nfrom _pytest._io.saferepr import saferepr\n"
+        "def test_sample():\n"
+        f"    v = Path({str(secret_file)!r}).read_text()\n"
+        f"    value = {expression}\n"
+        "    print(saferepr(value, maxsize=40))\n"
+        "    assert value == 'x'\n",
+        xdist_enabled=bool(mode == ("-n", "2")),
+        token=token,
+        extra_args=() if mode == ("-n", "2") else mode,
     )
+    xml = (tmp_path / "report.xml").read_text()
+    failure = ET.fromstring(xml).find(".//failure")
+    assert failure is not None
+    for output in (proc.stdout + proc.stderr, xml, failure.get("message", "")):
+        # Every four-character secret fragment must be absent, including the
+        # visible head and tail of reprlib clipping inside headers and URLs.
+        assert not any(token[i : i + 4] in output for i in range(len(token) - 3))
+    assert proc.returncode == 1, proc.stderr
+    assert "[REDACTED]" in proc.stdout
+
+
+@pytest.mark.parametrize("credentials", [False, True])
+def test_round3_wrapper_property_does_not_persist_without_credentials(tmp_path: Path, credentials: bool) -> None:
+    (tmp_path / "conftest.py").write_text(
+        "import pytest\n"
+        "@pytest.hookimpl(wrapper=True)\n"
+        "def pytest_runtest_makereport(item, call):\n"
+        "    report = yield\n"
+        "    if report.when == 'call':\n"
+        "        report.user_properties.append(('wrapper-only', 'safe'))\n"
+        "    return report\n"
+    )
+    proc = _run_secret_probe(tmp_path, "def test_sample():\n    pass\n", xdist_enabled=False, credentials=credentials)
     assert proc.returncode == 0, proc.stdout + proc.stderr
-    assert json.loads(proc.stdout) == sorted(dispatcher_child)
-    assert SYNTHETIC_KEY not in proc.stdout + proc.stderr
+    xml = (tmp_path / "report.xml").read_text()
+    assert 'name="wrapper-only"' not in xml
+
+
+@pytest.mark.parametrize("overlap", [1, 4, 7])
+def test_round3_short_ordinary_overlap_is_preserved(overlap: int) -> None:
+    from tests.conftest import _redact_shortened_secret_reprs
+
+    token = "ABCDEFGH" + "0123456789" * 4 + "ZYXWVUTS"
+    text = repr("ordinary " + token[:overlap] + "..." + token[-overlap:] + " text")
+    assert _redact_shortened_secret_reprs(text, [token]) == text
+
+
+@pytest.mark.parametrize("edge", ["head", "tail", "open-head"])
+def test_round3_embedded_overlap_at_minimum(edge: str) -> None:
+    from tests.conftest import _redact_shortened_secret_reprs
+
+    token = "ABCDEFGH" + "0123456789" * 4 + "ZYXWVUTS"
+    text = {
+        "head": "'Bearer ABCDEFGH...ordinary'",
+        "tail": "'ordinary...ZYXWVUTS&a=1'",
+        "open-head": "'Bearer ABCDEFGH...\n",
+    }[edge]
+    assert "[REDACTED]" in _redact_shortened_secret_reprs(text, [token])
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "glm", "grok", "cursor"])
+@pytest.mark.parametrize("source", ["GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN"])
+def test_round3_launcher_resolves_synthetic_github_identity(tmp_path: Path, provider: str, source: str) -> None:
+    import json
+    from unittest.mock import patch
+
+    from agent_runtime.env_sanitize import build_agent_env
+
+    parent = {"PATH": os.defpath, "HOME": str(tmp_path), source: SYNTHETIC_KEY}
+    with patch.dict(os.environ, parent, clear=True):
+        dispatcher = build_agent_env(provider=provider)
+    child = tmp_path / "child.py"
+    child.write_text(
+        "import json, os\n"
+        "print(json.dumps({name: os.environ[name] for name in ('GH_TOKEN', 'GITHUB_TOKEN', 'LU_AGENT_GITHUB_TOKEN') if name in os.environ}))\n"
+    )
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"LC_PROVIDER={provider} LC_MODE=interactive LC_ROOT={shlex.quote(str(REPO))}\n"
+        f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
+        f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
+    )
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == {"GH_TOKEN": dispatcher["GH_TOKEN"]} == {"GH_TOKEN": SYNTHETIC_KEY}
+
+
+@pytest.mark.parametrize("counter", ["1", "synthetic-not-a-counter-0123456789"])
+def test_round3_launcher_preserves_metadata_without_forwarding_worker_lease(tmp_path: Path, counter: str) -> None:
+    import json
+    from unittest.mock import patch
+
+    from agent_runtime.env_sanitize import build_agent_env
+
+    metadata = {
+        "SESSION_STREAM_FENCING_TOKEN": counter,
+        "LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS": "272000",
+        "LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS": "272000",
+        "LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS": "20000",
+        "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS": "272000",
+        "GIT_AUTHOR_NAME": "synthetic author",
+        "GIT_AUTHOR_EMAIL": "synthetic@example.com",
+    }
+    parent = {"PATH": os.defpath, "HOME": str(tmp_path), **metadata}
+    with patch.dict(os.environ, parent, clear=True):
+        dispatcher = build_agent_env(provider="claude")
+    assert "SESSION_STREAM_FENCING_TOKEN" not in dispatcher
+    assert "LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS" not in dispatcher
+    assert dispatcher["GIT_AUTHOR_NAME"] != metadata["GIT_AUTHOR_NAME"]
+    child = tmp_path / "child.py"
+    child.write_text(
+        "import json, os\n"
+        + f"print(json.dumps({{name: os.environ[name] for name in {set(metadata)!r} if name in os.environ}}))\n"
+    )
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"LC_PROVIDER=claude LC_MODE=interactive LC_ROOT={shlex.quote(str(REPO))}\n"
+        f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
+        f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
+    )
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0, proc.stderr
+    expected = dict(metadata)
+    if not counter.isdecimal():
+        expected.pop("SESSION_STREAM_FENCING_TOKEN")
+    assert json.loads(proc.stdout) == expected
