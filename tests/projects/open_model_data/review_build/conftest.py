@@ -1,13 +1,16 @@
 """Synthetic-only fixtures. Never open the project's source databases."""
 
 import json
+import os
 import sqlite3
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 
 import pytest
 import yaml
 
+from scripts.common.scratch import ensure_scratch_root
 from scripts.projects.open_model_data.review_build.attribution import Resolver, SyntheticAdapter
 from scripts.projects.open_model_data.review_build.catalog import Catalog
 from scripts.projects.open_model_data.review_build.contract import Candidate, Citation, Value, digest
@@ -15,6 +18,17 @@ from scripts.projects.open_model_data.review_build.gate import Gate
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
 
 STARTS = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima"]
+
+# Capture the managed external root before autouse scratch isolation redirects
+# the resolver beneath pytest's potentially repository-contained basetemp.
+TMPDIR = os.environ.get("TMPDIR") or ensure_scratch_root()
+
+
+@pytest.fixture
+def private_tmp_path():
+    """Give private synthetic outputs a disposable root outside pytest basetemp."""
+    with TemporaryDirectory(prefix="omd-synthetic-", dir=TMPDIR) as temporary:
+        yield Path(temporary)
 
 
 def write_db(path: Path, rows: list[dict], table: str = "units") -> None:

@@ -22,6 +22,12 @@ from scripts.projects.open_model_data.review_build.snapshot import SnapshotReade
 from tests.projects.open_model_data.review_build.conftest import run_gate, save_bundle, synthetic_components
 
 
+@pytest.fixture
+def tmp_path(private_tmp_path):
+    """Keep synthetic build fixtures outside repository-contained basetemp."""
+    return private_tmp_path
+
+
 @pytest.fixture(autouse=True)
 def synthetic_mount(monkeypatch):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")

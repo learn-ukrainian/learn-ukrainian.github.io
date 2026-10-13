@@ -8,6 +8,12 @@ from scripts.projects.open_model_data.review_build import output
 from scripts.projects.open_model_data.review_build.errors import BuildError
 
 
+@pytest.fixture
+def tmp_path(private_tmp_path):
+    """Keep synthetic output controls outside repository-contained basetemp."""
+    return private_tmp_path
+
+
 @pytest.fixture(autouse=True)
 def synthetic_mount(monkeypatch):
     # CI may run on overlay; test a declared synthetic ext4 mount, never bypass

@@ -10,6 +10,13 @@ from scripts.orchestration.dispatch_isolation import scope_cgroup, scope_unit_na
 from scripts.projects.open_model_data.evaluation import custody
 from scripts.projects.open_model_data.review_build import output
 from scripts.review.model_catalog import load_model_catalog
+from tests.projects.open_model_data.review_build.conftest import private_tmp_path as private_tmp_path
+
+
+@pytest.fixture
+def tmp_path(private_tmp_path):
+    """Keep synthetic custody fixtures outside repository-contained basetemp."""
+    return private_tmp_path
 
 
 @pytest.fixture
