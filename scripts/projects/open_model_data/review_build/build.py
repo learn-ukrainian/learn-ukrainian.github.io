@@ -1,5 +1,6 @@
 """Build/verify orchestration. Inputs and all text-bearing outputs stay host local."""
 
+import os
 import re
 from collections import Counter, defaultdict
 from copy import deepcopy
@@ -283,6 +284,10 @@ def execute(
     component_objects: dict[str, Component] | None = None,
 ) -> dict:
     """Read location-only v2 input and copy policy exclusively from component objects."""
+    require(
+        not os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").startswith("eval-steward-6321-"),
+        "steward_builder_collision",
+    )
     # An interrupted rebuild or failed re-verification cannot retain old proof.
     out.write("verification.json", canonical({"schema": "omd-review-verification.v1", "status": "unverified"}) + b"\n")
     config_bytes, request = read_request(config_path)

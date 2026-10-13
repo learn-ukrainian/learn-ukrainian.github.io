@@ -284,3 +284,62 @@ def test_output_io_errors_are_closed_codes(tmp_path, monkeypatch, operation):
                 guard.write("records.jsonl", b"SYNTHETIC new")
             else:
                 guard.read("records.jsonl")
+
+
+def test_append_keeps_prior_bytes_and_syncs_file_then_directory(tmp_path, monkeypatch):
+    with output.OutputGuard(tmp_path / "SYNTHETIC-out") as guard:
+        synced = []
+        monkeypatch.setattr(os, "fsync", lambda fd: synced.append(stat.S_ISDIR(os.fstat(fd).st_mode)))
+        guard.append("access-log.jsonl", b"SYNTHETIC first\n")
+        guard.append("access-log.jsonl", b"SYNTHETIC second\n")
+        assert guard.read("access-log.jsonl") == b"SYNTHETIC first\nSYNTHETIC second\n"
+        assert synced == [False, True, False, True]
+        assert (guard.path / "access-log.jsonl").stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize("kind", ["symlink", "hardlink", "mode", "acl", "open", "sync", "zero-write"])
+def test_append_refuses_unsafe_file_and_io_failures(tmp_path, monkeypatch, kind):
+    with output.OutputGuard(tmp_path / "SYNTHETIC-out") as guard:
+        guard.append("access-log.jsonl", b"SYNTHETIC initial\n")
+        file = guard.path / "access-log.jsonl"
+        if kind == "symlink":
+            file.unlink()
+            file.symlink_to(tmp_path / "SYNTHETIC-missing")
+        elif kind == "hardlink":
+            os.link(file, tmp_path / "SYNTHETIC-link")
+        elif kind == "mode":
+            mock_fstat_mode(monkeypatch, file, 0o640)
+        elif kind == "acl":
+            original = os.listxattr
+            info = file.stat()
+            monkeypatch.setattr(
+                os,
+                "listxattr",
+                lambda fd: ["system.posix_acl_access"] if os.fstat(fd).st_ino == info.st_ino else original(fd),
+            )
+        elif kind == "open":
+            original = os.open
+            monkeypatch.setattr(
+                os,
+                "open",
+                lambda name, *a, **kw: (
+                    (_ for _ in ()).throw(PermissionError()) if name == "access-log.jsonl" else original(name, *a, **kw)
+                ),
+            )
+        elif kind == "sync":
+            monkeypatch.setattr(os, "fsync", lambda fd: (_ for _ in ()).throw(OSError()))
+        else:
+            monkeypatch.setattr(os, "write", lambda *a: 0)
+        code = {"hardlink": "output_file_type", "mode": "output_file_mode", "acl": "output_acl"}.get(kind, "output_io")
+        with pytest.raises(BuildError, match=f"^{code}$"):
+            guard.append("access-log.jsonl", b"SYNTHETIC next\n")
+        if kind in {"hardlink", "mode", "acl", "open", "zero-write"}:
+            assert file.read_bytes() == b"SYNTHETIC initial\n"
+
+
+def test_append_retries_short_writes(tmp_path, monkeypatch):
+    original = os.write
+    with output.OutputGuard(tmp_path / "SYNTHETIC-out") as guard:
+        monkeypatch.setattr(os, "write", lambda fd, data: original(fd, data[:2]))
+        guard.append("access-log.jsonl", b"SYNTHETIC complete\n")
+        assert guard.read("access-log.jsonl") == b"SYNTHETIC complete\n"

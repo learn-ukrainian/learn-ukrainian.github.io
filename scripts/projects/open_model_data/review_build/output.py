@@ -219,3 +219,36 @@ class OutputGuard:
             return self._read(name)
         except OSError:
             raise BuildError("output_io") from None
+
+    def append(self, name: str, line: bytes) -> None:
+        """Append under the caller's lock and durably sync file and directory."""
+        fd = -1
+        file_fd = -1
+        try:
+            parts = self._parts(name)
+            fd = self._directory(parts[:-1])
+            with private_umask():
+                file_fd = os.open(
+                    parts[-1],
+                    os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW | os.O_NONBLOCK,
+                    0o600,
+                    dir_fd=fd,
+                )
+            info = os.fstat(file_fd)
+            require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, "output_file_type")
+            require(info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o600, "output_file_mode")
+            require(not any(n.startswith("system.posix_acl_") for n in os.listxattr(file_fd)), "output_acl")
+            remaining = memoryview(line)
+            while remaining:
+                written = os.write(file_fd, remaining)
+                require(written > 0, "output_io")
+                remaining = remaining[written:]
+            os.fsync(file_fd)
+            os.fsync(fd)
+        except OSError:
+            raise BuildError("output_io") from None
+        finally:
+            if file_fd >= 0:
+                os.close(file_fd)
+            if fd >= 0:
+                os.close(fd)

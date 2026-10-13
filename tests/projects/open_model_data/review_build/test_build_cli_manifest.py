@@ -511,3 +511,18 @@ def test_verify_mutations_work_on_a_single_unit_from_any_component(bundle, compo
             == "verified"
         )
         assert json.loads(guard.read("mutation-fixtures/results.json"))["swapped_citation"] == "quote_mismatch"
+
+
+@pytest.mark.parametrize("task", ["eval-steward-6321-synthetic", "eval-steward-6321-"])
+def test_steward_cannot_build_before_any_input_or_output_access(bundle, monkeypatch, task):
+    from scripts.projects.open_model_data.review_build import build
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", task)
+    monkeypatch.setattr(build, "read_request", lambda *a: pytest.fail("steward read build input"))
+
+    class NoOutput:
+        def write(self, *a):
+            pytest.fail("steward wrote build output")
+
+    with pytest.raises(BuildError, match="steward_builder_collision"):
+        build.execute(Path("SYNTHETIC-missing"), NoOutput())
