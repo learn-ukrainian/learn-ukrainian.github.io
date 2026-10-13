@@ -1669,3 +1669,61 @@ def test_round5_retains_tiny_repr_coverage(size: int) -> None:
     token = "HeadAbCd0123456789MiddleEfGh9876543210TailIjKl"
     assert _redact_secret_data(saferepr(token, maxsize=size), [token]) == "'[REDACTED]'"
     assert _redact_secret_data("'other...ordinary'", [token]) == "'other...ordinary'"
+
+
+@pytest.mark.parametrize(
+    "prefix", ["github_pat_", "sk-proj-", "sk-svcacct-", "sk-ant-api03-", "sk-ant-oat01-", "sk-ant-admin01-"]
+)
+@pytest.mark.parametrize("form", ["raw", "repr"])
+def test_round6_public_prefix_windows_preserve_body_coverage(prefix: str, form: str) -> None:
+    from tests.conftest import _redact_secret_data
+
+    token = prefix + "aQbRcSdTeUfVgWhX\\\nTailIjKl8901"
+    body = token if form == "raw" else repr(token)[1:-1]
+    for start in range(len(body) - 7):
+        text = "before " + body[start : start + 8] + " after"
+        expected = text if start + 8 <= len(prefix) else "before [REDACTED] after"
+        assert _redact_secret_data(text, [token]) == expected
+    fake = "before " + prefix + "000000 after"
+    assert _redact_secret_data(fake, [token]) == fake
+    assert _redact_secret_data(token, [token]) == "[REDACTED]"
+
+
+@pytest.mark.parametrize("prefix", ["github_pat_", "sk-ant-api03-"])
+@pytest.mark.parametrize("channel", ["print", "log"])
+@pytest.mark.parametrize("disclosure", ["public-prefix", "crossing", "body"])
+def test_round6_public_prefix_output_and_body_leaks(
+    tmp_path: Path, xdist_enabled: bool, prefix: str, channel: str, disclosure: str
+) -> None:
+    token = prefix + "aQbRcSdTeUfVgWhXiYjZkPlOmNnMoLpKqJr"
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    expression = {
+        "public-prefix": f"{prefix!r} + '000000'",
+        "crossing": f"value[{len(prefix) - 7}:{len(prefix) + 1}]",
+        "body": f"value[{len(prefix) + 5}:{len(prefix) + 13}]",
+    }[disclosure]
+    emit = "print(output)" if channel == "print" else "logging.warning('%s', output)"
+    proc = _run_secret_probe(
+        tmp_path,
+        "import logging\nfrom pathlib import Path\ndef test_sample():\n"
+        + f"    value = Path({str(secret_file)!r}).read_text()\n"
+        + f"    output = {expression}\n    {emit}\n",
+        token=token,
+        xdist_enabled=xdist_enabled,
+        extra_args=("-rP", "-o", "junit_logging=all"),
+    )
+    assert proc.returncode == (0 if disclosure == "public-prefix" else 1)
+    for output in (proc.stdout + proc.stderr, (tmp_path / "report.xml").read_text()):
+        if disclosure == "public-prefix":
+            assert prefix + "000000" in output
+            assert "captured output contained the value of scrubbed env var" not in output
+        else:
+            fragment = (
+                token[len(prefix) - 7 : len(prefix) + 1]
+                if disclosure == "crossing"
+                else token[len(prefix) + 5 : len(prefix) + 13]
+            )
+            assert fragment not in output
+            assert "[REDACTED]" in output
+            assert "captured output contained the value of scrubbed env var CURSOR_API_KEY" in output

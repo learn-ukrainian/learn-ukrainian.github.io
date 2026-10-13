@@ -415,6 +415,10 @@ _SECRET_FRAGMENT_LENGTH = 8
 # clipping markers, entropy or vendor prefixes. Shorter overlaps commonly occur
 # in ordinary words/paths; the 1..7-character controls must remain unchanged.
 # Exact values and recognized clipped reprs still cover shorter disclosures.
+# Windows wholly inside a public vendor prefix are not secret fragments.
+# Every window crossing into the credential body is still indexed, even when
+# it contains only one body character. Exact-value and clipped-repr rules stay.
+_PUBLIC_CREDENTIAL_PREFIX_RE = re.compile(r"github_pat_|sk-(?:proj-|svcacct-|ant-(?:api03-|oat01-|admin01-))")
 
 
 @functools.lru_cache(maxsize=16)
@@ -424,8 +428,12 @@ def _secret_fragment_index(values: tuple[str, ...]) -> frozenset[str]:
         body[start : start + _SECRET_FRAGMENT_LENGTH]
         for value in values
         if value
+        for prefix in [_PUBLIC_CREDENTIAL_PREFIX_RE.match(value)]
         for body in {value, repr(value)[1:-1]}
-        for start in range(len(body) - _SECRET_FRAGMENT_LENGTH + 1)
+        for start in range(
+            max(0, (prefix.end() if prefix else 0) - _SECRET_FRAGMENT_LENGTH + 1),
+            len(body) - _SECRET_FRAGMENT_LENGTH + 1,
+        )
     )
 
 
