@@ -116,6 +116,11 @@ Shared/scoped execution or unknown exclusivity skips the sweep and records
 `stale_pytest_cleanup=skipped_shared_or_unknown` in stage diagnostics. Every run still removes its
 own pytest temporary directory. Sweep failures refuse the push as incomplete.
 
+Tests that assert the exclusive sweep or inject failures into in-process serial stages pin
+`LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS=1` with `monkeypatch`. This keeps their assertions valid
+when the invoking push uses two slots. The existing shared-mode stale-sweep test still verifies
+that shared execution preserves other runs' temporary directories.
+
 Scoped executors share the existing `admission.lock`; legacy and default callers keep its exclusive
 flock. A flock-live ticket, a separate launcher flock, and verified scoped-holder proof permit sharing.
 The launcher flock is never inherited by the executor. A dead launcher therefore prevents a second

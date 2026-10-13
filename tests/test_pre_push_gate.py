@@ -188,6 +188,7 @@ def _receipts(repo: Path) -> list[Path]:
 
 
 def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
     monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")
     _write(repo, "tests/test_new.py", GREEN_TEST)
@@ -1768,6 +1769,7 @@ def test_a_misshapen_shadow_result_is_unavailable_not_a_crash(repo: Path, answer
 def test_a_failed_receipt_write_abandons_the_shadow_and_is_incomplete(
     repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
     _install_shadow(repo, "import time\ntime.sleep(60)\n")
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
@@ -1817,6 +1819,7 @@ def test_an_unencodable_selected_test_is_unavailable_not_a_crash(repo: Path) -> 
 def test_an_io_error_during_a_stage_abandons_the_shadow_and_is_incomplete(
     repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
     _install_shadow(repo, "import time\ntime.sleep(60)\n")
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
