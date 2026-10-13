@@ -845,3 +845,194 @@ def test_private_clone_switched_cohort_reaps_under_its_dispatch_root(tmp_path, m
         timeout=30,
     )
     assert missing.returncode != 0 and missing.stdout.strip() == ""
+
+
+def _init_named_repo(parent, name: str):
+    """Bare-origin checkout named so a fleet sibling can sit beside a public primary."""
+    from tests.orchestration.test_merge_closeout import git
+
+    repo = parent / name
+    remote = parent / f"{name}-origin.git"
+    git(parent, "init", "--bare", str(remote))
+    git(parent, "init", "--initial-branch=main", str(repo))
+    git(repo, "config", "user.email", "tester@example.com")
+    git(repo, "config", "user.name", "Test User")
+    (repo / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
+    (repo / "README.md").write_text("base\n", encoding="utf-8")
+    git(repo, "add", ".gitignore", "README.md")
+    git(repo, "commit", "-m", "base")
+    git(repo, "remote", "add", "origin", str(remote))
+    git(repo, "push", "-u", "origin", "main")
+    return repo
+
+
+def _split_plane_switched_cohort(tmp_path, monkeypatch, *, owning_repo_resolvable: bool):
+    """Public control plane holds the task records; a sibling clone holds the checkout.
+
+    Pull-request answers depend on which repository is queried. The public
+    repository never has this branch's merged head when the owning remote
+    resolves. When it does not, the public repository *does* report a merged
+    pull request, so guessing that repository would delete the checkout.
+    """
+    from pathlib import Path
+
+    from scripts.fleet import post_task_reap
+    from scripts.orchestration.task_record_store import task_record_path
+    from tests.orchestration.test_merge_closeout import git
+    from tests.orchestration.test_worktree_output_chokepoint import _git as git_ok
+
+    public = _init_named_repo(tmp_path, "learn-ukrainian")
+    sibling = _init_named_repo(tmp_path, "learn-ukrainian-infra-private")
+    monkeypatch.setattr(claims, "public_primary_root", lambda: public)
+    with (sibling / ".git/info/exclude").open("a", encoding="utf-8") as exclude:
+        exclude.write("ignored/\n.cache/\nbatch_state/\n")
+    tree = sibling / ".worktrees/dispatch/gemini/switched-cohort"
+    tree.parent.mkdir(parents=True)
+    git_ok(sibling, "worktree", "add", "-b", "gemini/old-gate", str(tree), "main")
+    tasks = public / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: set())
+    creator_head = git_ok(tree, "rev-parse", "HEAD")
+    git_ok(tree, "commit", "--allow-empty", "-m", "later round")
+    git_ok(tree, "checkout", "-b", "cursor/private-gate")
+    git_ok(tree, "commit", "--allow-empty", "-m", "switched")
+    merged_head = git_ok(tree, "rev-parse", "HEAD")
+    git_ok(tree, "push", "-u", "origin", "cursor/private-gate")
+    git(sibling, "merge", "--no-ff", "cursor/private-gate", "-m", "merge private PR")
+    git(sibling, "push", "origin", "main")
+    creator = {
+        "task_id": "gemini-creator",
+        "agent": "gemini",
+        "run_nonce": "creation-nonce",
+        "status": "needs_finalize",
+        "worktree_reused": False,
+        "worktree_path": str(tree),
+        "worktree_branch": "gemini/old-gate",
+        "final_branch_head_commit": creator_head,
+        "keep_worktree": False,
+        "pid": 999_999_981,
+    }
+    creator["ignored_output_baseline"] = output.creation_inventory(
+        tree, primary=sibling, task_id=creator["task_id"], run_nonce=creator["run_nonce"]
+    )
+    successors = []
+    for index, commit in enumerate((creator_head, merged_head, merged_head), start=1):
+        successors.append(
+            {
+                "task_id": f"cursor-round-{index}",
+                "agent": "cursor",
+                "run_nonce": f"round-{index}",
+                "status": "needs_finalize" if index < 3 else "done",
+                "worktree_reused": True,
+                "worktree_path": str(tree),
+                "worktree_branch": "gemini/old-gate",
+                "final_branch_head_commit": commit,
+                "keep_worktree": False,
+                "pid": 999_999_981 + index,
+            }
+        )
+    for record in (creator, *successors):
+        task_record_path(tasks, record["task_id"]).write_text(json.dumps(record), encoding="utf-8")
+
+    private_slug = "acme/private-clone"
+    public_slug = "learn-ukrainian/learn-ukrainian.github.io"
+    calls: list[list[str]] = []
+
+    def owner_repo(root):
+        resolved = Path(root).resolve()
+        if resolved == sibling.resolve():
+            return ("acme", "private-clone") if owning_repo_resolvable else None
+        if resolved == public.resolve():
+            return ("learn-ukrainian", "learn-ukrainian.github.io")
+        return None
+
+    def merged_item():
+        return {
+            "number": 878,
+            "state": "closed",
+            "merged_at": "2026-01-02T03:04:05Z",
+            "head": {"ref": "cursor/private-gate", "sha": merged_head},
+        }
+
+    def fake_run(args, **_kwargs):
+        calls.append(list(args))
+        blob = " ".join(args)
+        on_private_branch = "cursor/private-gate" in blob or "cursor%2Fprivate-gate" in blob
+        if args[1:3] == ["pr", "list"]:
+            # GraphQL has no repository flag. Qualification of an unresolvable
+            # owning remote still reaches it; a proof must not treat that as
+            # the owning repository.
+            payload = (
+                [{"number": 878, "state": "MERGED", "headRefOid": merged_head}]
+                if args[args.index("--head") + 1] == "cursor/private-gate"
+                else []
+            )
+            return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+        if "--paginate" in args:
+            owns_merged_head = private_slug in blob or (public_slug in blob and not owning_repo_resolvable)
+            payload = [[merged_item()]] if owns_merged_head and on_private_branch else []
+            return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+        if args[1:3] == ["api", "-X"] and "/pulls/" in blob:
+            if private_slug in blob or (public_slug in blob and not owning_repo_resolvable):
+                return subprocess.CompletedProcess(args, 0, json.dumps(merged_item()), "")
+            return subprocess.CompletedProcess(args, 1, "", "pull request not in this repository")
+        return subprocess.CompletedProcess(args, 1, "", "unexpected gh invocation")
+
+    monkeypatch.setattr(reap.reap_worktrees, "_github_owner_repo", owner_repo)
+    monkeypatch.setattr(reap.reap_worktrees.github_client, "run", fake_run)
+    assert reap.reap_worktrees.control_plane_root(sibling).resolve() == public.resolve()
+    return public, sibling, tree, tasks, merged_head, calls
+
+
+def test_public_task_records_reap_private_clone_at_its_merged_head(tmp_path, monkeypatch):
+    """Task records stay on the public control plane; the merged PR is the clone's."""
+    from scripts.fleet import post_task_reap
+
+    _public, sibling, tree, tasks, _merged_head, calls = _split_plane_switched_cohort(
+        tmp_path, monkeypatch, owning_repo_resolvable=True
+    )
+    report = post_task_reap.post_task_reap(
+        "gemini-creator", tasks_dir=tasks, repo_root=sibling, apply=False, include_acp_runtime=False
+    )
+    assert "outside .worktrees/dispatch/" not in report["main_worktree"]["reason"]
+    result = merge_closeout.run_merge_closeout(sibling, 878, apply=True, live_cwds=set())
+    assert result.reap_results[0]["action"] == "removed", result
+    assert not tree.exists()
+    assert any("acme/private-clone" in " ".join(call) for call in calls)
+    assert not any("learn-ukrainian.github.io" in " ".join(call) and "cursor" in " ".join(call) for call in calls)
+    missing = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", "refs/heads/cursor/private-gate"],
+        cwd=sibling,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert missing.returncode != 0 and missing.stdout.strip() == ""
+
+
+def test_unresolvable_owning_repository_skips_merged_continuation(tmp_path, monkeypatch):
+    """No owning GitHub repository means the needs_finalize claim stays and the tree is kept.
+
+    The public repository would report this head as merged. Querying it would
+    delete the checkout, so an unresolvable owner must not fall through to it.
+    """
+    from pathlib import Path
+
+    _public, sibling, tree, _tasks, _merged_head, _calls = _split_plane_switched_cohort(
+        tmp_path, monkeypatch, owning_repo_resolvable=False
+    )
+    results = reap.reap_worktrees.reap_worktrees(
+        repo_root=sibling,
+        apply=True,
+        merged_pr_only=True,
+        prune_merged_branches=True,
+        safe_only=True,
+        live_cwds=set(),
+    )
+    row = next(item for item in results if Path(item.path).resolve() == tree.resolve())
+    assert row.action == "skipped", row
+    assert "worktree claimed by active task" in row.reason
+    assert tree.exists()

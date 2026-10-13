@@ -3474,14 +3474,38 @@ def _resolve_merged_reuse_creator(
     return path, creator, False
 
 
+def _checkout_pr_repository(worktree: Path) -> Path | None:
+    """Primary checkout that owns ``worktree``'s pull requests, or None.
+
+    A linked worktree's gitdir names one primary with a directory ``.git``,
+    and that primary's ``origin`` parses to one GitHub owner/repo. Anything
+    else is unknown. Callers fail closed: they do not query the public
+    control plane, which holds task records for a sibling clone.
+    """
+    try:
+        root = primary_checkout_root(worktree)
+        if root.resolve() == worktree.resolve() or not (root / ".git").is_dir():
+            return None
+    except OSError:
+        return None
+    if _github_owner_repo(root) is None:
+        return None
+    return root
+
+
 def _switched_branch_merge_proven(
-    repo_root: Path,
+    _repo_root: Path,
     worktree: Path,
     cohort: list[tuple[Path, dict[str, Any]]],
     *,
     expected_head: str | None = None,
 ) -> bool:
     """Exact merged head of the checkout branch, with every recorded commit contained.
+
+    The pull request is read from the repository that owns ``worktree``.
+    ``_repo_root`` is the caller's task-record root and may be the public
+    control plane; it is not the pull-request repository. An owning
+    repository that cannot be resolved is not proven.
 
     A ``done`` or ``needs_finalize`` successor must have recorded that head.
     ``needs_finalize`` is the status a switched round keeps while its record
@@ -3525,7 +3549,10 @@ def _switched_branch_merge_proven(
             proving = True
     if not proving:
         return False
-    states, error = _query_pr_states(repo_root, branch)
+    pr_repo = _checkout_pr_repository(worktree)
+    if pr_repo is None:
+        return False
+    states, error = _query_pr_states(pr_repo, branch)
     if error is not None:
         return False
     pr = _best_pr(states)
