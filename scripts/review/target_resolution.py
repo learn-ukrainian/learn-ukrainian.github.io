@@ -27,6 +27,7 @@ from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration.fleet_repos import (
     FleetRepoError,
     MissingFleetCheckout,
+    canonical_repo_key,
     load_fleet_repos,
     resolve_fleet_repo,
 )
@@ -76,19 +77,39 @@ REVIEW_ROOT_MISMATCH = (
     "REVIEW_ROOT_MISMATCH: --repo-root origin does not match the catalog repository; "
     "symbolic refs and local mode are refused"
 )
+REVIEW_ROOT_UNAVAILABLE = "REVIEW_ROOT_UNAVAILABLE: --repo-root is not a checkout"
+
+
+def spells_private_repo(repo_key: str | None) -> bool:
+    """True when *repo_key* is the private catalog key, ignoring pad and case."""
+    return isinstance(repo_key, str) and repo_key.strip().casefold() == "infra-private"
 
 
 def repository_target_error(repo_key: str | None, error: Exception) -> TargetResolutionError:
     """Hide a missing private checkout or commit; keep every other refusal specific."""
-    if repo_key == "infra-private" and isinstance(error, (MissingFleetCheckout, MissingReviewCommit)):
+    if spells_private_repo(repo_key) and isinstance(error, (MissingFleetCheckout, MissingReviewCommit, OSError)):
         return TargetResolutionError(PRIVATE_REVIEW_TARGET_UNRESOLVED)
     if isinstance(error, TargetResolutionError):
         return error
+    if isinstance(error, OSError):
+        return TargetResolutionError(REVIEW_ROOT_UNAVAILABLE)
     return TargetResolutionError(str(error))
 
 
+def _directory_root(repo_root: Path) -> bool:
+    try:
+        return repo_root.is_dir()
+    except OSError:
+        return False
+
+
 def _origin_github_repo(checkout: Path) -> str | None:
-    proc = _run_git(["config", "--get", "remote.origin.url"], checkout)
+    if not _directory_root(checkout):
+        raise OSError(REVIEW_ROOT_UNAVAILABLE)
+    try:
+        proc = _run_git(["config", "--get", "remote.origin.url"], checkout)
+    except OSError:
+        raise OSError(REVIEW_ROOT_UNAVAILABLE) from None
     if proc.returncode != 0:
         return None
     text = proc.stdout.strip()
@@ -141,21 +162,29 @@ def resolve_review_repository(
         return repo_root
     try:
         catalog = load_fleet_repos()
+        canonical = canonical_repo_key(repo_key, catalog)
     except FleetRepoError as exc:
         raise repository_target_error(repo_key, exc) from exc
-    fleet_repo = catalog.get(repo_key)
-    if fleet_repo is not None:
-        origin = _origin_github_repo(repo_root)
-        if origin is not None and origin.casefold() == fleet_repo.github.casefold():
-            return repo_root
-        refs = _review_refs(mode, commit=commit, branch=branch, base=base)
-        if mode == "local" or any(_is_symbolic_review_ref(ref) for ref in refs):
-            raise TargetResolutionError(REVIEW_ROOT_MISMATCH)
+    if not _directory_root(repo_root):
+        raise repository_target_error(canonical, OSError(REVIEW_ROOT_UNAVAILABLE)) from None
+    fleet_repo = catalog[canonical]
     try:
-        resolved, checkout = resolve_fleet_repo(repo_key, primary_root=main_checkout_root(repo_root))
+        origin = _origin_github_repo(repo_root)
+    except OSError as exc:
+        raise repository_target_error(canonical, exc) from None
+    if origin is not None and origin.casefold() == fleet_repo.github.casefold():
+        return repo_root
+    refs = _review_refs(mode, commit=commit, branch=branch, base=base)
+    if mode == "local" or any(_is_symbolic_review_ref(ref) for ref in refs):
+        raise TargetResolutionError(REVIEW_ROOT_MISMATCH)
+    try:
+        resolved, checkout = resolve_fleet_repo(canonical, primary_root=main_checkout_root(repo_root))
     except FleetRepoError as exc:
-        raise repository_target_error(repo_key, exc) from exc
-    catalog_origin = _origin_github_repo(checkout)
+        raise repository_target_error(canonical, exc) from exc
+    try:
+        catalog_origin = _origin_github_repo(checkout)
+    except OSError as exc:
+        raise repository_target_error(canonical, exc) from None
     if catalog_origin is None or catalog_origin.casefold() != resolved.github.casefold():
         raise TargetResolutionError(
             f"--repo {resolved.key} checkout origin does not match catalog repository {resolved.github}"

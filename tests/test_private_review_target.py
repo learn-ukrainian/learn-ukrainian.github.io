@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import subprocess
 import sys
@@ -104,8 +105,19 @@ def _init_committed_repo(repo: Path, origin: str, filename: str) -> str:
 @pytest.fixture
 def review_repositories(tmp_path, monkeypatch):
     public = tmp_path / "public"
-    private = tmp_path / "learn-ukrainian-infra-private"
+    private = tmp_path / "private-checkout"
     catalog = load_fleet_repos()
+    patched = dict(catalog)
+    patched["infra-private"] = dataclasses.replace(catalog["infra-private"], local_name=private.name)
+    original_load = fleet_repos.load_fleet_repos
+
+    def _load(path=None):
+        if path is not None:
+            return original_load(path)
+        return patched
+
+    monkeypatch.setattr(fleet_repos, "load_fleet_repos", _load)
+    monkeypatch.setattr(target_resolution, "load_fleet_repos", _load)
     origins = {
         public: f"https://github.com/{catalog['public'].github}.git",
         private: f"https://github.com/{catalog['infra-private'].github}.git",
@@ -681,3 +693,171 @@ def test_same_repo_pr_head_pins_catalog_repository(tmp_path, monkeypatch):
     assert branch == "review"
     assert resolved == sha
     assert seen["args"][seen["args"].index("--repo") + 1] == catalog
+
+
+def test_private_fixture_label_is_neutral(review_repositories):
+    """The fixture directory is a stand-in label, not the private checkout layout."""
+    _public, private, _heads = review_repositories
+    assert private.name == "private-checkout"
+
+
+@pytest.mark.parametrize("repo_key", [" infra-private ", "INFRA-PRIVATE"])
+@pytest.mark.parametrize(
+    ("mode", "commit"),
+    [("commit", "HEAD"), ("local", None)],
+)
+def test_noncanonical_private_key_hits_root_guard(review_repositories, tmp_path, repo_key, mode, commit):
+    """Padding and case still take the symbolic-ref and local-mode guard."""
+    public, _private, heads = review_repositories
+    state = tmp_path / "guard.json"
+    args = ["target", "--mode", mode, "--repo-root", str(public), "--repo", repo_key]
+    if commit is not None:
+        args.extend(["--commit", commit])
+    proc = _run_cli(state, *args)
+    assert proc.returncode == 1, proc.stderr
+    assert json.loads(proc.stderr)["error"] == REVIEW_ROOT_MISMATCH
+    combined = proc.stdout + proc.stderr
+    assert heads[1] not in combined
+    assert str(tmp_path) not in combined
+    assert not state.exists()
+
+
+@pytest.mark.parametrize("repo_key", [" infra-private ", "INFRA-PRIVATE"])
+def test_noncanonical_private_key_missing_checkout_is_neutral(review_repositories, tmp_path, repo_key):
+    public, private, _heads = review_repositories
+    private.rename(tmp_path / "unavailable")
+    state = tmp_path / "missing.json"
+    proc = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "commit",
+        "--commit",
+        "f" * 40,
+        "--repo-root",
+        str(public),
+        "--repo",
+        repo_key,
+    )
+    assert proc.returncode == 1, proc.stderr
+    error = json.loads(proc.stderr)["error"]
+    _assert_neutral_private_refusal(error)
+    assert str(tmp_path) not in proc.stdout + proc.stderr
+    assert not state.exists()
+
+
+@pytest.mark.parametrize("repo_key", [" infra-private ", "INFRA-PRIVATE"])
+def test_dispatch_noncanonical_private_key_missing_clone_is_neutral(
+    review_repositories, tmp_path, monkeypatch, capsys, repo_key
+):
+    _public, private, heads = review_repositories
+    private.rename(tmp_path / "unavailable")
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    assert delegate.cmd_dispatch(_review_args(repo_key, heads[1])) == 2
+    captured = capsys.readouterr()
+    _assert_neutral_private_refusal(captured.err)
+    assert str(tmp_path) not in captured.out + captured.err
+    assert not (tmp_path / "tasks" / "private-review-fixture.json").exists()
+
+
+def test_empty_and_blank_repo_keys_are_the_same_refusal(tmp_path):
+    """Empty and whitespace-only keys are one decision, and neither switches checkout."""
+    catalog = load_fleet_repos()["public"].github
+    primary = tmp_path / "primary"
+    primary_head = _init_committed_repo(primary, f"https://github.com/{catalog}.git", "primary.py")
+    worktree = tmp_path / "worktree"
+    _git(primary, "worktree", "add", "-q", "-b", "review-wt", str(worktree), "HEAD")
+    (worktree / "only.py").write_text("value = 1\n", encoding="utf-8")
+    _git(worktree, "add", "only.py")
+    _git(worktree, "commit", "-qm", "worktree only")
+    worktree_head = _git(worktree, "rev-parse", "HEAD").stdout.strip()
+    assert worktree_head != primary_head
+    errors = []
+    for repo_key in ("", "   "):
+        state = tmp_path / f"empty-{len(errors)}.json"
+        proc = _run_cli(
+            state,
+            "target",
+            "--mode",
+            "commit",
+            "--commit",
+            "HEAD",
+            "--repo-root",
+            str(worktree),
+            "--repo",
+            repo_key,
+        )
+        assert proc.returncode == 1, proc.stderr
+        errors.append(json.loads(proc.stderr)["error"])
+        assert primary_head not in proc.stdout
+        assert worktree_head not in proc.stdout
+        assert str(tmp_path) not in proc.stdout + proc.stderr
+        assert not state.exists()
+    assert errors[0] == errors[1]
+    assert "unknown --repo" in errors[0]
+
+
+@pytest.mark.parametrize("repo_key", ["infra-private", " infra-private ", "INFRA-PRIVATE"])
+def test_missing_repo_root_names_private_trigger_without_path(review_repositories, tmp_path, repo_key):
+    state = tmp_path / "absent.json"
+    missing = tmp_path / "absent-root"
+    proc = _run_cli(state, "target", "--mode", "local", "--repo-root", str(missing), "--repo", repo_key)
+    assert proc.returncode == 1, proc.stderr
+    _assert_neutral_private_refusal(json.loads(proc.stderr)["error"])
+    combined = proc.stdout + proc.stderr
+    assert str(missing) not in combined
+    assert "absent-root" not in combined
+    assert "Errno" not in combined
+    assert not state.exists()
+
+
+def test_file_repo_root_names_private_trigger_without_path(review_repositories, tmp_path):
+    state = tmp_path / "file-root.json"
+    not_dir = tmp_path / "not-a-checkout"
+    not_dir.write_text("x", encoding="utf-8")
+    proc = _run_cli(
+        state, "target", "--mode", "commit", "--commit", "HEAD", "--repo-root", str(not_dir), "--repo", "infra-private"
+    )
+    assert proc.returncode == 1, proc.stderr
+    _assert_neutral_private_refusal(json.loads(proc.stderr)["error"])
+    combined = proc.stdout + proc.stderr
+    assert str(not_dir) not in combined
+    assert "not-a-checkout" not in combined
+    assert not state.exists()
+
+
+def test_public_missing_repo_root_has_no_absolute_path(review_repositories, tmp_path):
+    state = tmp_path / "public-absent.json"
+    missing = tmp_path / "absent-public-root"
+    proc = _run_cli(state, "target", "--mode", "local", "--repo-root", str(missing), "--repo", "public")
+    assert proc.returncode == 1, proc.stderr
+    error = json.loads(proc.stderr)["error"]
+    assert error == "REVIEW_ROOT_UNAVAILABLE: --repo-root is not a checkout"
+    assert "PRIVATE_REVIEW_TARGET_UNRESOLVED" not in error
+    combined = proc.stdout + proc.stderr
+    assert str(missing) not in combined
+    assert "Errno" not in combined
+    assert not state.exists()
+
+
+@pytest.mark.parametrize("repo_key", [" infra-private ", "INFRA-PRIVATE"])
+def test_repository_target_error_normalizes_private_key(repo_key):
+    if repository_target_error is None or MissingFleetCheckout is None:
+        pytest.fail("typed missing-checkout refusal is not implemented")
+    error = str(repository_target_error(repo_key, MissingFleetCheckout("at /hidden/absent-checkout")))
+    _assert_neutral_private_refusal(error)
+    assert "absent-checkout" not in error
+
+
+def test_repository_target_error_hides_unavailable_root_oserror():
+    if repository_target_error is None:
+        pytest.fail("typed missing-checkout refusal is not implemented")
+    error = str(
+        repository_target_error(
+            " infra-private ",
+            FileNotFoundError(2, "No such file or directory", "/hidden/absent-root"),
+        )
+    )
+    _assert_neutral_private_refusal(error)
+    assert "absent-root" not in error
