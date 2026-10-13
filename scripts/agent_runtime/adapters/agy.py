@@ -747,11 +747,19 @@ _AGY_GENERAL_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.8-flash-high",
     "gemini-3.8-flash-medium",
     "gemini-3.8-flash-low",
+    "gemini-4-argon-high",
+    "gemini-4-argon-medium",
+    "gemini-4-argon-low",
+)
+# Absent from `agy models` on 2026-10-13. Kept so a historical Pro id resolves
+# to the catalog retirement refusal instead of an unknown-model suggestion.
+_AGY_ABSENT_PRO_SLUGS: tuple[str, ...] = (
     "gemini-3.1-pro-high",
     "gemini-3.1-pro-low",
 )
 _AGY_MODEL_SLUGS: tuple[str, ...] = (
     *_AGY_GENERAL_MODEL_SLUGS,
+    *_AGY_ABSENT_PRO_SLUGS,
     "claude-sonnet-5-5-high",
     "claude-opus-5-5-high",
 )
@@ -762,6 +770,9 @@ _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
     "Gemini 3.8 Flash (High)",
     "Gemini 3.8 Flash (Medium)",
     "Gemini 3.8 Flash (Low)",
+    "Gemini 4 Argon (High)",
+    "Gemini 4 Argon (Medium)",
+    "Gemini 4 Argon (Low)",
     "Gemini 3.7 Flash (High)",
     "Gemini 3.7 Flash (Medium)",
     "Gemini 3.7 Flash (Low)",
@@ -825,7 +836,7 @@ _AGY_MODEL_BY_NORMALIZED: dict[str, str] = _build_agy_model_map()
 def unknown_model_suggestion(model: str) -> str:
     """Return safe guidance for an unknown AGY model identifier."""
     if "pro" in model.casefold():
-        return "For Gemini Pro, use `--model gemini-3.1-pro-high`."
+        return "No Gemini Pro selector is listed for AGY."
     accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_GENERAL_MODEL_SLUGS)
     return f"Accepted AGY model ids: {accepted_ids}."
 

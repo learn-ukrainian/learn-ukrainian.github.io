@@ -27,14 +27,11 @@ def test_resolve_compat_model_legacy_flash_maps_to_pin():
     assert resolve_compat_model("gemini", None) is None
 
 
-def test_resolve_compat_model_routes_preview_to_adapter_accepted_model():
+def test_resolve_compat_model_refuses_absent_pro_preview():
     import pytest
 
-    with pytest.raises(ValueError) as error:
+    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use gemini-3.8-flash-high"):
         resolve_compat_model("gemini", "gemini-3.1-pro-preview")
-    message = str(error.value)
-    assert "--model gemini-3.1-pro-high" in message
-    assert "--model gemini-3.1-pro-preview" not in message
 
 
 def test_resolve_compat_model_unknown_explicit_model_does_not_echo_as_fix():
@@ -44,7 +41,8 @@ def test_resolve_compat_model_unknown_explicit_model_does_not_echo_as_fix():
         resolve_compat_model("agy", "gemini-9.9-pro-preview")
     message = str(error.value)
     assert "Unknown AGY model 'gemini-9.9-pro-preview'" in message
-    assert "--model gemini-3.1-pro-high" in message
+    assert "No Gemini Pro selector is listed for AGY." in message
+    assert "--model gemini-3.1-pro-high" not in message
     assert "--model gemini-3.8-flash-high" not in message
     assert "--model gemini-9.9-pro-preview" not in message
 

@@ -661,6 +661,31 @@ models:
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
+  gemini-4-argon-high:
+    family: google
+    tier: frontier_practical
+    lifecycle: hold
+    aliases: [gemini-4-argon-medium, gemini-4-argon-low]
+    # Direct listed AGY slugs. Not a base name plus an effort suffix.
+    # Schema has no trial lifecycle or trial role id (lifecycles: active, fallback,
+    # hold, retired). hold plus the existing explicit_bakeoff_only role keeps this
+    # out of review, consult, critical, security and advisor admission.
+    roles: [explicit_bakeoff_only]
+    transports: [agy]
+    strengths: [listed_agy_selector]
+    weaknesses:
+      - supervised_trial_not_advisor_quality
+      - not_admitted_for_critical_security_or_advisor
+      - provider_listing_is_not_qualification
+    notes: >-
+      Supervised trial. `agy models` on 2026-10-13 lists gemini-4-argon-high,
+      gemini-4-argon-medium and gemini-4-argon-low as separate selectors and does
+      not list Gemini 3.1 Pro. The adapter passes each listed slug through unchanged.
+      This entry does not add a review candidate, ladder rung, critical_review,
+      security_review or advisor role. A provider listing is availability only.
+      Broader qualification stays with DevOps #9619.
+    sources:
+      - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/
   gemini-3.7-flash-high:
     family: google
     tier: frontier_practical
@@ -692,12 +717,18 @@ models:
   gemini-3.1-pro-high:
     family: google
     tier: frontier_practical
-    lifecycle: active
-    aliases: [gemini-3.1-pro-preview, gemini-3.1-pro]
+    lifecycle: retired
+    replaced_by: gemini-3.8-flash-high
+    aliases: [gemini-3.1-pro-preview, gemini-3.1-pro, gemini-3.1-pro-low]
+    # activity_roles still names architecture_support and factual_review, and this
+    # retired entry is their only holder. Admission refuses the retired id first.
     roles: [architecture_support, factual_review, multimodal_analysis]
-    transports: [agy]
+    transports: []
     strengths: [complex_reasoning, deep_single_shot, multimodal_long_context]
-    weaknesses: [higher_latency_and_cost_than_3_7_flash, not_default_agentic_workhorse, operator_2026_09_22_outperformed_by_3_8_flash_high]
+    weaknesses: [absent_from_agy_models_2026_10_13, not_an_available_selector]
+    notes: >-
+      Absent from `agy models` on 2026-10-13. Not an available AGY selector.
+      Launcher certification of this id is a separate security-owned change.
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
   gemini-3.5-flash-high:
