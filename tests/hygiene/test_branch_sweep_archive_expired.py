@@ -5,6 +5,7 @@ Scratch repositories only. These tests must never delete a ref in the real check
 
 from __future__ import annotations
 
+import errno
 import fcntl
 import hashlib
 import json
@@ -40,6 +41,9 @@ def git(repo: Path, *args: str, env: dict[str, str] | None = None) -> str:
 @pytest.fixture
 def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setenv("GIT_CONFIG_COUNT", "0")
+    scratch = tmp_path / "managed-scratch"
+    scratch.mkdir()
+    monkeypatch.setenv("TMPDIR", str(scratch))
     remote = tmp_path / "origin.git"
     subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, timeout=30)
     root = tmp_path / "checkout"
@@ -432,7 +436,7 @@ def test_contending_archives_hold_lock_through_deletion(repo: Path, monkeypatch:
     assert not list((repo / sweep.ARCHIVE_DIR).glob("*.tmp"))
 
 
-@pytest.mark.parametrize("collision", ["existing", "at-publication"])
+@pytest.mark.parametrize("collision", ["existing", "at-publication", "symlink"])
 def test_bundle_publication_never_overwrites_an_archive(
     repo: Path, monkeypatch: pytest.MonkeyPatch, collision: str
 ) -> None:
@@ -445,10 +449,14 @@ def test_bundle_publication_never_overwrites_an_archive(
     def allocate(**kwargs):
         descriptor, name = original_mkstemp(**kwargs)
         staging = Path(name)
-        destination = staging.with_name(staging.name.removeprefix(".").removesuffix(".tmp") + ".bundle")
+        destination = repo / sweep.ARCHIVE_DIR / (staging.name.removeprefix(".").removesuffix(".tmp") + ".bundle")
         existing.append(destination)
         if collision == "existing":
             destination.write_bytes(old_bytes)
+        elif collision == "symlink":
+            target = repo.parent / "existing-archive"
+            target.write_bytes(old_bytes)
+            destination.symlink_to(target)
         return descriptor, name
 
     def publish(source, destination, **kwargs):
@@ -468,6 +476,80 @@ def test_bundle_publication_never_overwrites_an_archive(
     assert receipt_rows(repo) == []
     assert list((repo / sweep.ARCHIVE_DIR).glob("*.bundle")) == existing
     assert not list((repo / sweep.ARCHIVE_DIR).glob("*.tmp"))
+    assert not list(Path(os.environ["TMPDIR"]).glob(".stale-local-*"))
+
+
+@pytest.mark.parametrize("tmpdir_state", ["set", "unset", "empty"])
+def test_bundle_stages_in_managed_scratch_and_publishes_verified_bytes(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, tmpdir_state: str
+) -> None:
+    sha = commit_unique(repo, "codex/old-local", days=8)
+    scratch = Path(os.environ["TMPDIR"])
+    if tmpdir_state != "set":
+        if tmpdir_state == "unset":
+            monkeypatch.delenv("TMPDIR")
+        else:
+            monkeypatch.setenv("TMPDIR", "")
+        monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
+    else:
+
+        def refuse_fallback():
+            raise AssertionError("configured TMPDIR must not create fallback scratch")
+
+        monkeypatch.setattr(sweep, "ensure_scratch_root", refuse_fallback)
+    original_git = sweep._git
+    staged: list[Path] = []
+
+    def capture_git(root: Path, *args: str, **kwargs: object):
+        if args[:2] == ("bundle", "create"):
+            path = Path(args[2])
+            assert path.parent == scratch
+            assert not path.is_relative_to(repo)
+            assert path.stat().st_mode & 0o777 == 0o600
+            staged.append(path)
+        return original_git(root, *args, **kwargs)
+
+    monkeypatch.setattr(sweep, "_git", capture_git)
+    found = by_name(run(repo, apply=True))
+    assert found["codex/old-local"].local_deleted
+    assert ref_sha(repo, "codex/old-local") is None
+    assert len(staged) == 1 and not staged[0].exists()
+    (row,) = receipt_rows(repo)
+    bundle = repo / str(row["bundle"])
+    assert bundle.parent == repo / sweep.ARCHIVE_DIR
+    assert bundle.stat().st_mode & 0o777 == 0o600
+    assert git(repo, "bundle", "list-heads", str(bundle)) == f"{sha} refs/heads/codex/old-local"
+    assert row["sha256"] == hashlib.sha256(bundle.read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize("failure", ["scratch-unwritable", "cross-filesystem"])
+def test_managed_staging_failure_retains_all_refs_without_receipts(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    scratch = Path(os.environ["TMPDIR"])
+    if failure == "scratch-unwritable":
+        blocked = scratch / "not-a-directory"
+        blocked.write_bytes(b"blocked\n")
+        monkeypatch.setenv("TMPDIR", str(blocked))
+        expected_error = "Not a directory"
+    else:
+
+        def refuse_link(source, destination, **kwargs):
+            assert Path(source).parent == scratch
+            assert Path(source).read_bytes().startswith(b"# v")
+            assert Path(destination).parent == repo / sweep.ARCHIVE_DIR
+            raise OSError(errno.EXDEV, "Invalid cross-device link")
+
+        monkeypatch.setattr(os, "link", refuse_link)
+        expected_error = "Invalid cross-device link"
+    found = by_name(run(repo, apply=True))
+    assert all(found[name].classification == "report-only" and not found[name].local_deleted for name in heads)
+    assert all(expected_error in found[name].reason for name in heads)
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert receipt_rows(repo) == []
+    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
+    assert not list(scratch.glob(".stale-local-*"))
 
 
 @pytest.mark.parametrize("failure", ["symlink", "directory", "flock"])

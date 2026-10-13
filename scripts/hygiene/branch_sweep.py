@@ -29,6 +29,7 @@ from pathlib import Path
 from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
 from scripts.common.jsonl import jsonl_lines
+from scripts.common.scratch import ensure_scratch_root
 from scripts.orchestration import reap_worktrees as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
@@ -1395,7 +1396,8 @@ def _write_verified_bundle(repo: Path, confirmed: list[tuple[Decision, Branch]])
     if _git(repo, "rev-parse", "--verify", "--quiet", main_ref).returncode != 0:
         raise RuntimeError("archive retained: origin/main is unavailable")
     prefix = f".stale-local-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}-"
-    descriptor, temporary_name = tempfile.mkstemp(prefix=prefix, suffix=".tmp", dir=directory)
+    TMPDIR = os.environ.get("TMPDIR") or ensure_scratch_root()
+    descriptor, temporary_name = tempfile.mkstemp(prefix=prefix, suffix=".tmp", dir=TMPDIR)
     os.close(descriptor)
     temporary = Path(temporary_name)
     filename = temporary.name.removeprefix(".").removesuffix(".tmp") + ".bundle"
@@ -1406,6 +1408,7 @@ def _write_verified_bundle(repo: Path, confirmed: list[tuple[Decision, Branch]])
         _seal_regular_file(temporary)
         _verify_bundle_heads(repo, temporary, expected)
         # link() is atomic and refuses an existing destination, even a symlink.
+        # A cross-filesystem scratch root fails closed; never copy into a live archive name.
         os.link(temporary, bundle_path, follow_symlinks=False)
         _seal_regular_file(bundle_path)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
