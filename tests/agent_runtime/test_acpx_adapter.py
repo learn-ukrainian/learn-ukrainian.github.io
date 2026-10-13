@@ -281,8 +281,8 @@ def _stub_binary(
         "_require_host_claude_code",
         lambda *, model, adapter_label: {
             "claude_code_executable": "/installed/claude/versions/2.1.296",
-            "claude_code_dev_ino": "1:2",
-            "claude_code_executable_identity": "1:2:3:4",
+            "claude_code_launch_identity": "1:2:3:4:5",
+            "claude_code_executable_identity": "1:2:3:4000000000:5000000000",
             "claude_code_version": "2.1.296",
             "claude_code_version_floor": "2.1.280" if model == "claude-opus-5-5" else "2.1.116",
         },

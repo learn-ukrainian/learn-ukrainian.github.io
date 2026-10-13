@@ -366,7 +366,7 @@ def _acpx_claude_launch(tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPat
         "_require_host_claude_code",
         lambda **_kw: {
             "claude_code_executable": str(host),
-            "claude_code_dev_ino": f"{host_stat.st_dev}:{host_stat.st_ino}",
+            "claude_code_launch_identity": acpx._claude_code_launch_identity(host_stat),
             "claude_code_version": "2.1.289",
         },
     )
@@ -426,7 +426,7 @@ def test_acp_claude_launcher_reaches_the_child_with_every_control(
     assert child["env"]["CLAUDE_CODE_DISABLE_CRON"] == "1"
     assert child["env"]["CLAUDE_CODE_DISABLE_WORKFLOWS"] == "1"
     assert "LU_CLAUDE_ACP_HOST" not in child["env"]
-    assert "LU_CLAUDE_ACP_HOST_DEV_INO" not in child["env"]
+    assert "LU_CLAUDE_ACP_HOST_IDENTITY" not in child["env"]
 
 
 # Every harness that launches Claude Code, with the modes it admits.

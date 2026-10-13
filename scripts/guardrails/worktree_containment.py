@@ -35,6 +35,8 @@ these helpers rather than re-deriving containment.
 
 from __future__ import annotations
 
+import os
+import stat
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -69,6 +71,7 @@ __all__ = [
     "primary_checkout_dirty_status",
     "registered_worktrees",
     "resolve_main_root",
+    "resolve_main_root_without_git",
 ]
 
 # A path is exactly one of these relative to the primary checkout:
@@ -234,6 +237,66 @@ def resolve_main_root(start: Path | str | None = None) -> Path:
     if root is None:
         raise NotAGitRepositoryError(f"{origin} is not inside a git repository")
     return root
+
+
+# A worktree's ``.git`` file is one short ``gitdir:`` line; anything larger is not one.
+_GIT_LINK_MAX_BYTES = 4096
+
+
+def _read_git_link(path: Path) -> str:
+    """Return the single line of a git link file, read without following a symlink."""
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    with os.fdopen(fd, "rb") as handle:
+        raw = handle.read(_GIT_LINK_MAX_BYTES + 1)
+    if len(raw) > _GIT_LINK_MAX_BYTES:
+        raise NotAGitRepositoryError(f"{path.name} is too large to be a git link")
+    lines = raw.decode("utf-8").splitlines()
+    if len(lines) != 1 or not lines[0].strip():
+        raise NotAGitRepositoryError(f"{path.name} is not a one-line git link")
+    return lines[0].strip()
+
+
+def _link_target(base: Path, value: str) -> Path:
+    """Lexical absolute path for a git link value (absolute, or relative to ``base``)."""
+    return Path(os.path.normpath(base / value))
+
+
+def resolve_main_root_without_git(checkout: Path | str) -> Path:
+    """Return the primary checkout that owns ``checkout`` without running git.
+
+    For trust anchors that must not depend on PATH, git configuration or
+    environment variables (#10500). ``checkout`` must be a checkout root: the
+    primary itself (``.git`` is a directory) or a linked worktree, whose
+    ``.git`` file must name ``<primary>/.git/worktrees/<name>`` and whose
+    gitdir must link back to it (``gitdir``) and to the shared store
+    (``commondir``), as ``git worktree add`` writes them. Symlinks are never
+    followed. Any other layout raises :class:`NotAGitRepositoryError`.
+    """
+    root = Path(os.path.normpath(Path(checkout).absolute()))
+    dotgit = root / ".git"
+    try:
+        dotgit_stat = dotgit.lstat()
+        if stat.S_ISDIR(dotgit_stat.st_mode):
+            return root
+        if not stat.S_ISREG(dotgit_stat.st_mode):
+            raise NotAGitRepositoryError(f"{root} has no .git directory or regular .git file")
+        link = _read_git_link(dotgit)
+        if not link.startswith("gitdir:"):
+            raise NotAGitRepositoryError(f"{root}/.git is not a gitdir link")
+        gitdir = _link_target(root, link.removeprefix("gitdir:").strip())
+        common = gitdir.parent.parent
+        if gitdir.parent.name != "worktrees" or common.name != ".git":
+            raise NotAGitRepositoryError(f"{root}/.git does not name <primary>/.git/worktrees/<name>")
+        if not stat.S_ISDIR(common.lstat().st_mode) or not stat.S_ISDIR(gitdir.lstat().st_mode):
+            raise NotAGitRepositoryError(f"{root}/.git names a missing or symlinked git directory")
+        back_link = _link_target(gitdir, _read_git_link(gitdir / "gitdir"))
+        if back_link != dotgit:
+            raise NotAGitRepositoryError(f"{root} is not the worktree its gitdir links back to")
+        if _link_target(gitdir, _read_git_link(gitdir / "commondir")) != common:
+            raise NotAGitRepositoryError(f"{root}/.git names a gitdir outside its shared store")
+    except (OSError, UnicodeError) as exc:
+        raise NotAGitRepositoryError(f"cannot read the git links of {root}: {type(exc).__name__}") from exc
+    return common.parent
 
 
 def _fs_main_root(start_dir: Path) -> Path | None:

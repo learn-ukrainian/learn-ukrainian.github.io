@@ -130,6 +130,75 @@ def test_git_probe_propagates_non_missing_executable_errors(
         wc.resolve_main_root(layout.main)
 
 
+def test_resolve_main_root_without_git_matches_git_and_never_spawns(
+    layout: Layout, monkeypatch: pytest.MonkeyPatch
+):
+    def no_subprocess(*_args, **_kwargs):
+        raise AssertionError("resolve_main_root_without_git ran a subprocess")
+
+    monkeypatch.setattr(wc.subprocess, "run", no_subprocess)
+    monkeypatch.setenv("GIT_DIR", str(layout.dispatch_wt / ".git"))
+    monkeypatch.setenv("PATH", str(layout.outside))
+    for checkout in (layout.main, layout.dispatch_wt, layout.flat_wt, layout.external_wt):
+        assert wc.resolve_main_root_without_git(checkout) == layout.main
+
+
+def _worktree_gitdir(worktree: Path) -> Path:
+    return Path((worktree / ".git").read_text().removeprefix("gitdir:").strip())
+
+
+@pytest.mark.parametrize(
+    "tamper",
+    [
+        "no_git",
+        "symlinked_dot_git",
+        "gitdir_outside_worktrees",
+        "relative_link_outside_worktrees",
+        "multi_line_link",
+        "oversized_link",
+        "broken_back_link",
+        "foreign_commondir",
+        "symlinked_common_dir",
+    ],
+)
+def test_resolve_main_root_without_git_refuses_unexpected_links(layout: Layout, tamper: str):
+    worktree = layout.dispatch_wt
+    gitdir = _worktree_gitdir(worktree)
+    target = worktree
+    if tamper == "no_git":
+        target = layout.outside
+    elif tamper == "symlinked_dot_git":
+        (worktree / ".git").unlink()
+        (worktree / ".git").symlink_to(layout.main / ".git")
+    elif tamper == "gitdir_outside_worktrees":
+        (worktree / ".git").write_text(f"gitdir: {layout.main / '.git'}\n")
+    elif tamper == "relative_link_outside_worktrees":
+        (worktree / ".git").write_text("gitdir: ../elsewhere\n")
+    elif tamper == "multi_line_link":
+        (worktree / ".git").write_text(f"gitdir: {gitdir}\nextra\n")
+    elif tamper == "oversized_link":
+        (worktree / ".git").write_text("gitdir: " + "x" * 5000 + "\n")
+    elif tamper == "broken_back_link":
+        (gitdir / "gitdir").write_text(f"{layout.flat_wt / '.git'}\n")
+    elif tamper == "foreign_commondir":
+        (gitdir / "commondir").write_text(f"{layout.outside}\n")
+    elif tamper == "symlinked_common_dir":
+        moved = layout.main.parent / "store"
+        (layout.main / ".git").rename(moved)
+        (layout.main / ".git").symlink_to(moved, target_is_directory=True)
+    with pytest.raises(wc.NotAGitRepositoryError):
+        wc.resolve_main_root_without_git(target)
+
+
+def test_resolve_main_root_without_git_follows_relative_worktree_links(layout: Layout):
+    """``worktree.useRelativePaths`` writes both links relative to their own files."""
+    worktree = layout.dispatch_wt
+    gitdir = _worktree_gitdir(worktree)
+    (worktree / ".git").write_text(f"gitdir: {os.path.relpath(gitdir, worktree)}\n")
+    (gitdir / "gitdir").write_text(f"{os.path.relpath(worktree / '.git', gitdir)}\n")
+    assert wc.resolve_main_root_without_git(worktree) == layout.main
+
+
 # ---------------------------------------------------------------------------
 # classify_repo_path
 # ---------------------------------------------------------------------------
