@@ -27,6 +27,7 @@ from agents_extensions.shared.session_streams.model import (
     LeaseHolder,
     SessionState,
     isoformat_z,
+    parse_timestamp,
 )
 from agents_extensions.shared.session_streams.store import (
     _EMBEDDED_HOST_EXEMPT_FILENAMES,
@@ -1667,3 +1668,9 @@ def test_atlas_dual_write_mirrors_file_without_modifying_or_deleting_it(tmp_path
             stream_id="epic:4700",
             now=NOW + timedelta(seconds=6),
         )
+
+
+def test_parse_timestamp_refuses_out_of_range_utc_conversion():
+    for value in ("9999-12-31T23:59:59-23:59", "0001-01-01T00:00:00+23:59"):
+        with pytest.raises(ValueError):
+            parse_timestamp(value)

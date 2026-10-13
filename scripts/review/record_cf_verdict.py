@@ -15,7 +15,7 @@ import sys
 import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -25,6 +25,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
+from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
@@ -274,6 +275,7 @@ class CommitAttribution:
     task_id: str | None = None
     record_task_id: str | None = None
     author_models: tuple[str, ...] = ()
+    authorship: str | None = None
 
 
 def _author_model_family(harness: str, model: str) -> str:
@@ -306,6 +308,7 @@ def _attribute_commit(
     task_root: Path,
     base_sha: Callable[[], str],
     checkout: Path | None = None,
+    unknown_history: Iterable[str] = (),
 ) -> CommitAttribution:
     """Resolve one commit's author family, retaining unresolvable authors as Unknown.
 
@@ -326,6 +329,10 @@ def _attribute_commit(
         and _is_clean_base_merge(entry, base_sha(), checkout=checkout)
     ):
         return CommitAttribution(commit_sha, None, "clean-base-merge")
+    if not trailers and not re.search(r"(?m)^X-Agent:", message) and commit_sha in unknown_history:
+        return CommitAttribution(
+            commit_sha, UNKNOWN_AUTHOR_FAMILY, "unknown_historical", authorship="unknown_historical"
+        )
     if len(trailers) != 1 or "/" not in trailers[0]:
         raise RecordError("author model unknown: missing explicit X-Agent model trailer")
     harness, model = trailers[0].split("/", 1)
@@ -486,6 +493,10 @@ class BranchReviewFacts:
     subject_evidence: tuple[str, ...]
 
     @property
+    def unknown_history(self) -> tuple[str, ...]:
+        return tuple(sorted(commit.sha for commit in self.commits if commit.source == "unknown_historical"))
+
+    @property
     def author_task_ids(self) -> frozenset[str]:
         """Author task identities retained from the complete branch's X-Agent trailers."""
         return frozenset(
@@ -504,6 +515,8 @@ class BranchReviewFacts:
     @property
     def excluded_families(self) -> frozenset[str]:
         """Every author family excluded from review, including Cursor Auto's own family."""
+        if any(commit.source in {"unknown_historical", "suspect_historical"} for commit in self.commits):
+            return self.author_families | _VALID_CONCRETE_FAMILIES
         return self.author_families
 
     @property
@@ -516,7 +529,7 @@ class BranchReviewFacts:
         overrides.setdefault("domain", review_profile)
         overrides.setdefault("author_model", "")
         return ResolverInputs(
-            author_families=self.author_families,
+            author_families=self.excluded_families,
             author_models=tuple(
                 model
                 for commit in self.commits
@@ -541,7 +554,7 @@ class BranchReviewFacts:
 
     def receipt(self) -> dict[str, Any]:
         """Privacy-safe summary for a dispatch or verdict record."""
-        return {
+        receipt = {
             "repository": self.repository,
             "base_tip_sha": self.base_tip_sha,
             "head_sha": self.head_sha,
@@ -550,10 +563,15 @@ class BranchReviewFacts:
             "incoming_writer": self.incoming_writer,
             "incoming_family": self.incoming_family,
             "author_families": sorted(self.author_families),
+            "excluded_families": sorted(self.excluded_families),
             "subject_seats": sorted(self.subject_seats),
             "subject_families": sorted(self.subject_families),
             "scope_paths": len(self.scope_paths),
         }
+        if self.unknown_history:
+            receipt["unknown_history"] = list(self.unknown_history)
+            receipt["authorship"] = "unknown_historical"
+        return receipt
 
 
 def _facts_git(
@@ -656,6 +674,7 @@ def collect_branch_review_facts(
     subject_families: Iterable[str] = (),
     timeout_s: float = BRANCH_FACTS_TIMEOUT_S,
     authorship_exclude_sha: str | None = None,
+    unknown_history: Iterable[str] = (),
 ) -> BranchReviewFacts:
     """Collect complete authorship and protected scope for ``base_tip_sha..head_sha``.
 
@@ -693,6 +712,7 @@ def collect_branch_review_facts(
     listed = _facts_git(repo_root, revisions, deadline=deadline, code=FACTS_AUTHORSHIP_UNKNOWN)
     shas = listed.decode("ascii", errors="strict").split()
     commits: list[CommitAttribution] = []
+    unknown_history = frozenset(unknown_history)
     for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
         try:
             commits.append(
@@ -704,6 +724,7 @@ def collect_branch_review_facts(
                     # proof, bound to the frozen main tip rather than a stale base.
                     base_sha=lambda: authorship_exclude_sha or base_tip_sha,
                     checkout=repo_root,
+                    unknown_history=unknown_history,
                 )
             )
         except RecordError as exc:
@@ -757,13 +778,19 @@ def collect_branch_review_facts(
     )
 
 
-def structural_review_route(facts: BranchReviewFacts, *, risk: str, review_profile: str = "code") -> ReviewerResolution:
+def structural_review_route(
+    facts: BranchReviewFacts, *, risk: str, review_profile: str = "code", review_mode: str = "cross_family"
+) -> ReviewerResolution:
     """Resolve a formal reviewer outside every author family under the live catalog floors.
 
     Structural only (A2): no routing snapshot, so health and quota never decide
     feasibility; the resolver's own health semantics stay unchanged.
     """
-    return resolve_reviewer(facts.resolver_inputs(risk=risk, review_profile=review_profile))
+    inputs = facts.resolver_inputs(risk=risk, review_profile=review_profile)
+    if review_mode == "red_team" and facts.incoming_writer:
+        # This is the declared new writer, never an assumed historical model.
+        inputs = replace(inputs, author_models=(*inputs.author_models, facts.incoming_writer))
+    return resolve_reviewer(inputs, review_mode=review_mode)
 
 
 def _canonical_base_branch_name(base_branch: str) -> str:
@@ -897,6 +924,7 @@ def pr_review_facts(
     repo_root: Path,
     subject_seats: Iterable[str] = (),
     subject_families: Iterable[str] = (),
+    unknown_history: Iterable[str] = (),
 ) -> BranchReviewFacts:
     """Facts for an open PR's frozen head, bound to GitHub's listing of its commits (A1).
 
@@ -934,12 +962,107 @@ def pr_review_facts(
         subject_seats=subject_seats,
         subject_families=subject_families,
         authorship_exclude_sha=exclude,
+        unknown_history=unknown_history,
     )
     refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
     github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
     if sorted(github_own) != sorted(commit.sha or "" for commit in facts.commits):
         raise RecordError("PR commit set differs from the local base..head enumeration; fetch and retry")
     return facts
+
+
+def admitted_unknown_history(
+    *,
+    repository: str,
+    branch: str,
+    head_sha: str,
+    task_root: Path,
+    repo_root: Path,
+) -> tuple[str, ...]:
+    """Read existing authoring receipts, never derive allowances from the review head.
+
+    Both the frozen remote head and each allowed commit must precede the
+    admission head, which must precede this review of the same branch.
+    """
+    allowed: set[str] = set()
+    deadline = time.monotonic() + BRANCH_FACTS_TIMEOUT_S
+    try:
+        paths = (*task_root.glob("*.json"), *(task_root / ARCHIVE_DIR_NAME).glob("*.json"))
+    except OSError as exc:
+        raise BranchFactsError(FACTS_AUTHORSHIP_UNKNOWN, "RED_TEAM_REFUSED: task ledger unavailable") from exc
+    for path in paths:
+        try:
+            task = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if not isinstance(task, dict) or task.get("status") == "dry_run":
+            continue
+        receipt = task.get("authoring_review_admission")
+        if (
+            not isinstance(receipt, dict)
+            or receipt.get("repository") != repository
+            or receipt.get("head_branch") != branch
+        ):
+            continue
+        if receipt.get("review_plan") != "red_team" or not receipt.get("unknown_history") or receipt.get("refusal"):
+            continue
+        history = receipt["unknown_history"]
+        admitted = receipt.get("head_sha")
+        remote = receipt.get("history_remote_head_sha")
+        reviewer = receipt.get("reviewer")
+        if (
+            receipt.get("check") != "structural"
+            or receipt.get("applicable") is not True
+            or "assumed_model" not in receipt
+            or receipt["assumed_model"] is not None
+            or not isinstance(reviewer, dict)
+            or reviewer.get("review_mode") != "red_team"
+            or not isinstance(history, list)
+            or not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in history)
+            or not isinstance(admitted, str)
+            or not SHA.fullmatch(admitted)
+            or not isinstance(remote, str)
+            or not SHA.fullmatch(remote)
+        ):
+            raise BranchFactsError(FACTS_AUTHORSHIP_UNKNOWN, "historical authorship admission receipt malformed")
+        ancestors = set(
+            _facts_git(
+                repo_root,
+                ["rev-list", head_sha],
+                deadline=deadline,
+                code=FACTS_AUTHORSHIP_UNKNOWN,
+            )
+            .decode("ascii")
+            .split()
+        )
+        if admitted not in ancestors:
+            continue
+        admitted_ancestors = set(
+            _facts_git(
+                repo_root,
+                ["rev-list", admitted],
+                deadline=deadline,
+                code=FACTS_AUTHORSHIP_UNKNOWN,
+            )
+            .decode("ascii")
+            .split()
+        )
+        remote_ancestors = set(
+            _facts_git(
+                repo_root,
+                ["rev-list", remote],
+                deadline=deadline,
+                code=FACTS_AUTHORSHIP_UNKNOWN,
+            )
+            .decode("ascii")
+            .split()
+        )
+        if remote not in admitted_ancestors or not set(history) <= remote_ancestors:
+            raise BranchFactsError(
+                FACTS_AUTHORSHIP_UNKNOWN, "historical authorship admission receipt conflicts with history"
+            )
+        allowed.update(history)
+    return tuple(sorted(allowed))
 
 
 def _task_flag_values(task: dict[str, Any], key: str) -> tuple[str, ...]:
@@ -1026,6 +1149,7 @@ def build_comment(
     review_mode: str = "cross_family",
     review_profile: str = "code",
     sources_mcp_call_count: int | None = None,
+    unknown_history: Iterable[str] = (),
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1034,17 +1158,26 @@ def build_comment(
     if MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
     mode_field = " review_mode=red_team" if review_mode == "red_team" else ""
+    history = tuple(sorted(set(unknown_history)))
+    if history and (review_mode != "red_team" or not all(SHA.fullmatch(sha) for sha in history)):
+        raise RecordError("unknown history requires red_team and full commit SHAs")
+    history_field = f" unknown_history={','.join(history)}" if history else ""
     ukrainian = is_ukrainian_review({"review_profile": review_profile})
     _require_sources_mcp_calls({"review_profile": review_profile, "sources_mcp_call_count": sources_mcp_call_count})
     profile_field = " review_profile=ukrainian" if ukrainian else ""
     sources_field = f" sources_calls={sources_mcp_call_count}" if sources_mcp_call_count is not None else ""
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
-        f"model={model} family={family}{mode_field}{profile_field}{sources_field} -->"
+        f"model={model} family={family}{mode_field}{history_field}{profile_field}{sources_field} -->"
     )
     prefix = (
         ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
         + ("Review mode: red_team\n" if review_mode == "red_team" else "")
+        + (
+            f"Historical authorship: unknown_historical\nUnknown history: {','.join(history)}\nNo author model assumed.\n"
+            if history
+            else ""
+        )
         + ("Review profile: ukrainian\n" if ukrainian else "")
         + (f"Sources MCP calls: {sources_mcp_call_count}\n" if sources_mcp_call_count is not None else "")
         + f"head: {sha}\n"
@@ -1457,6 +1590,17 @@ def record(
     number = pr.get("number")
     if not isinstance(number, int) or number < 1:
         raise RecordError("PR number unavailable")
+    unknown_history = (
+        admitted_unknown_history(
+            repository=repository,
+            branch=branch,
+            head_sha=sha,
+            task_root=task_root,
+            repo_root=root or _repo_root(),
+        )
+        if review_mode == "red_team"
+        else ()
+    )
     facts = pr_review_facts(
         repository,
         number,
@@ -1465,7 +1609,12 @@ def record(
         repo_root=root or _repo_root(),
         subject_seats=_task_flag_values(task, "review_subject_seats"),
         subject_families=_task_flag_values(task, "review_subject_families"),
+        unknown_history=unknown_history,
     )
+    if facts.unknown_history:
+        frozen = task.get("review_branch_facts")
+        if not isinstance(frozen, dict) or frozen.get("unknown_history") != list(facts.unknown_history):
+            raise RecordError("unknown history conflicts with completed review task")
     if not facts.existing_families:
         raise RecordError("PR has no attributed author commits")
     if review_mode == "red_team":
@@ -1504,6 +1653,7 @@ def record(
         review_mode=review_mode,
         review_profile="ukrainian" if ukrainian else "code",
         sources_mcp_call_count=sources_count,
+        unknown_history=facts.unknown_history,
     )
     posted = False
     with sha_lock(repository, sha, lock_root):
@@ -1540,6 +1690,7 @@ def record(
                         or marker["model"] != model
                         or marker["family"] != family
                         or marker.get("review_mode", "cross_family") != review_mode
+                        or marker.get("unknown_history", []) != list(facts.unknown_history)
                         or marker.get("review_profile", "code") != ("ukrainian" if ukrainian else "code")
                         or marker.get("sources_calls") != sources_count
                         or item.get("created_at") != item.get("updated_at")
@@ -1565,20 +1716,21 @@ def record(
                 raise RecordError("comment readback mismatch; publication state unknown")
             posted = True
         description = (
-            ("review_mode=red_team " if review_mode == "red_team" else "")
-            + (
-                f"VERDICT: {verdict} ({family}, sources={sources_count}) {task_id}"
-                if ukrainian
-                else f"VERDICT: {verdict} {family} {task_id}"
-            )
-        )[:140]
+            f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
+            if facts.unknown_history
+            else ("review_mode=red_team " if review_mode == "red_team" else "")
+        ) + (
+            f"VERDICT: {verdict} ({family}, sources={sources_count}) {task_id}"
+            if ukrainian
+            else f"VERDICT: {verdict} {family} {task_id}"
+        )
         try:
             post_commit_status(
                 repository=repository,
                 head_sha=sha,
                 state="success" if verdict == "APPROVED" else "failure",
                 context=DEFAULT_STATUS_CONTEXT,
-                description=description,
+                description=description[:140],
             )
             status = "posted"
         except Exception as exc:
@@ -1589,6 +1741,7 @@ def record(
         "task": task_id,
         "verdict": verdict,
         "review_mode": review_mode,
+        "unknown_history": list(facts.unknown_history),
         "comment": "posted" if posted else "existing",
         "status": status,
     }
