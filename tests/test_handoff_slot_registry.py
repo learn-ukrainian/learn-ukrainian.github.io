@@ -182,6 +182,7 @@ def test_alias_selector_gate_matches_content_provider_policy() -> None:
             3
             if (provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"})
             or (provider not in {"claude", "codex"} and lanes[selector] == "epics")
+            or (provider == "muse" and lanes[selector] != "devops")
             else 0
         )
     ]
@@ -402,6 +403,23 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str, curricul
     """curriculum-upgrade mints <provider>-core and its registry anchor stream, and keeps its handoff directory."""
     lanes, gate = _gate_matrix()
     assert lanes["curriculum-upgrade"] == "core"
+    if provider == "muse":
+        assert gate[provider]["core"] == 3
+        refused = _gate(provider, "curriculum-upgrade")
+        assert refused.returncode == 1
+        result = subprocess.run(
+            [str(REPO / "start-muse-driver.sh"), "--epic", "curriculum-upgrade"],
+            cwd=REPO,
+            env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        assert result.returncode == 4
+        assert "MUSE_CURRICULUM_CONTENT_FORBIDDEN" in result.stderr
+        assert "would claim" not in result.stdout
+        return
     assert gate[provider]["core"] == 0
     gate_result = _gate(provider, "curriculum-upgrade")
     assert gate_result.returncode == 0, gate_result.stderr
@@ -458,3 +476,11 @@ def test_gate_refuses_when_no_interpreter_can_verify_the_slot(tmp_path: Path) ->
     )
     assert result.returncode == 2, result.stderr
     assert "cannot verify handoff slot 'claude-infra'" in result.stderr
+
+
+def test_muse_slot_gate_accepts_only_devops() -> None:
+    lanes, gate = _gate_matrix()
+    for lane in set(lanes.values()):
+        assert gate["muse"][lane] == (0 if lane == "devops" else 3)
+    slots = _channels._load_registry_slots()
+    assert [slot for slot in slots if slot.startswith("muse-")] == ["muse-devops"]

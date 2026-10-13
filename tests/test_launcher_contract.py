@@ -50,6 +50,7 @@ PUBLIC = (
     "start-cursor-driver.sh",
     "start-gemini.sh",
     "start-gemini-driver.sh",
+    "start-muse-driver.sh",
     "start-grok.sh",
     "start-grok-driver.sh",
     "start-kimi.sh",
@@ -960,7 +961,7 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
 
 
 def test_all_driver_adapters_use_common_closure_wrapper() -> None:
-    for provider in ("claude", "codex", "gemini", "grok"):
+    for provider in ("claude", "codex", "gemini", "grok", "muse"):
         body = (REPO / "scripts" / "launchers" / f"{provider}.sh").read_text(encoding="utf-8")
         assert 'launcher_exec_command "${cmd[@]}"' in body
 

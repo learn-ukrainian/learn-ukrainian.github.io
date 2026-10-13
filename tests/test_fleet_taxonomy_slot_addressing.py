@@ -54,16 +54,16 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_43() -> None:
-    """Verify 24 infrastructure, two epics coordination, twelve Ukrainian content/data, and five core slots."""
+def test_roster_slot_count_is_44() -> None:
+    """Verify 25 infrastructure, two epics coordination, twelve Ukrainian content/data, and five core slots."""
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 43
-    assert len(set(slots)) == 43
+    assert len(slots) == 44
+    assert len(set(slots)) == 44
     assert set(data["assignments"]["core"]["slots"]) == {
         "claude-core",
         "codex-core",
