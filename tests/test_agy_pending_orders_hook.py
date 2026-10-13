@@ -13,9 +13,9 @@ import pytest
 
 from scripts import inbox_pending
 from scripts.agent_runtime import agy_hook_config
-from tests.test_inbox_pending import BODY_MARKER, MESSAGE_ID, add_authority, add_legacy
+from tests.helpers.agy_inbox_fixtures import BODY_MARKER, MESSAGE_ID, add_authority, add_legacy
 
-pytest_plugins = ("tests.test_inbox_pending",)
+pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/agy_hooks/pending_orders_inject.sh"
