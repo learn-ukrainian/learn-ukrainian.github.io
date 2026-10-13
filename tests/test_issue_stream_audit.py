@@ -5,10 +5,12 @@ from __future__ import annotations
 import itertools
 import json
 import subprocess
+import sys
 import textwrap
 import threading
 import time
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -1049,6 +1051,74 @@ def test_refresh_lock_repairs_legacy_permissions(tmp_path, monkeypatch):
     assert fd is not None
     issue_stream_audit._release_lock(fd)
     assert lock_path.stat().st_mode & 0o077 == 0
+
+
+# --------------------------------------------------------------------------- #
+# #10519 — refresh sidecars are anchored at the primary checkout, so running
+# the audit from a linked worktree never leaves task-looking output there.
+# --------------------------------------------------------------------------- #
+def _primary_with_linked_worktree(tmp_path):
+    primary = tmp_path / "primary"
+    (primary / ".git" / "worktrees" / "wt").mkdir(parents=True)
+    worktree = primary / ".worktrees" / "dispatch" / "agent" / "wt"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {primary / '.git' / 'worktrees' / 'wt'}\n", encoding="utf-8")
+    return primary, worktree
+
+
+def test_refresh_sidecars_resolve_to_primary_from_linked_worktree(tmp_path):
+    primary, worktree = _primary_with_linked_worktree(tmp_path)
+
+    state, lock = issue_stream_audit.refresh_sidecar_paths(worktree)
+
+    assert state == primary / "batch_state" / "issue_stream_audit_refresh.json"
+    assert lock == primary / "batch_state" / "issue_stream_audit_refresh.lock"
+
+
+def test_refresh_sidecars_stay_in_primary_and_release_snapshot(tmp_path):
+    primary, _worktree = _primary_with_linked_worktree(tmp_path)
+    release = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40)
+    release.mkdir(parents=True)
+
+    for root in (primary, release):
+        state, lock = issue_stream_audit.refresh_sidecar_paths(root)
+        assert state == root / "batch_state" / "issue_stream_audit_refresh.json"
+        assert lock == root / "batch_state" / "issue_stream_audit_refresh.lock"
+
+
+def test_refresh_scheduled_from_worktree_leaves_worktree_batch_state_untouched(tmp_path, monkeypatch):
+    primary, worktree = _primary_with_linked_worktree(tmp_path)
+    state, lock = issue_stream_audit.refresh_sidecar_paths(worktree)
+    monkeypatch.setattr(issue_stream_audit, "REFRESH_STATE_PATH", state)
+    monkeypatch.setattr(issue_stream_audit, "REFRESH_LOCK_PATH", lock)
+    monkeypatch.setattr(issue_stream_audit, "_spawn_worker", lambda _run_id: True)
+
+    scheduled = issue_stream_audit.schedule_refresh()
+    observed = issue_stream_audit.read_refresh_state()
+
+    assert scheduled["phase"] == "scheduled"
+    assert observed["run_id"] == scheduled["run_id"]
+    assert not (worktree / "batch_state").exists()
+    assert sorted(path.name for path in (primary / "batch_state").iterdir()) == [
+        "issue_stream_audit_refresh.json",
+        "issue_stream_audit_refresh.lock",
+    ]
+
+
+def test_module_refresh_paths_anchor_at_primary_checkout():
+    """Import the module fresh (conftest redirects the in-process constants)."""
+    code = (
+        "from scripts.common.repo_root import main_checkout_root\n"
+        "from scripts.orchestration import issue_stream_audit as m\n"
+        "root = main_checkout_root(m.ROOT)\n"
+        "assert m.REFRESH_STATE_PATH == root / 'batch_state' / 'issue_stream_audit_refresh.json', m.REFRESH_STATE_PATH\n"
+        "assert m.REFRESH_LOCK_PATH == root / 'batch_state' / 'issue_stream_audit_refresh.lock', m.REFRESH_LOCK_PATH\n"
+    )
+    repo = Path(issue_stream_audit.__file__).resolve().parents[2]
+    result = subprocess.run(
+        [sys.executable, "-c", code], cwd=repo, capture_output=True, text=True, timeout=120, check=False
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def _scheduled_state(run_id="new-run", now=100):

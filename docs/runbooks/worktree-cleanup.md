@@ -102,6 +102,19 @@ Task output placed in an excluded cache remains disposable. Real `.venv` and
 verified provisioned links are disposable. `worktree_artifacts.is_disposable_path`
 is the shared taxonomy for creation, preservation and scheduled reaping.
 
+The issue-stream audit's refresh sidecars, `batch_state/issue_stream_audit_refresh.json`
+and `batch_state/issue_stream_audit_refresh.lock`, are regenerable tool state, not
+task output (#10519). The audit now writes them under the primary checkout, but
+older runs left them in the checkout they ran from. Exactly these two root-level
+names are exempt from inventory and preservation
+(`regenerable_output.AUDIT_REFRESH_STATE_FILES`), so a clean worktree holding
+only them no longer needs a task record to be removed. The exemption needs an
+untracked regular file of at most 4 KiB with no symlink component; any other
+name (including `batch_state/issue_stream_audit.json`, nested copies and
+`.tmp` leftovers) or a larger file keeps the normal attribution and
+preservation rules. An unrelated file beside them retains the tree only when
+attribution is missing; attributed output can be preserved and the tree removed.
+
 Automatic preservation is capped at **256 MiB per worktree**, bounding disk
 duplication while accommodating text output and small reports. Above the cap,
 no partial copy is attempted and the worktree is retained for its owner's
