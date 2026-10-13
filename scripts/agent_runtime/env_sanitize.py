@@ -119,6 +119,24 @@ _PROVIDER_SECRET_ALLOWLIST = {
     },
 }
 
+# Existing dispatcher seats eligible for the injected GitHub identity.
+# ``--agent gemini`` dispatch would slip a parent operator ``GH_TOKEN`` /
+# ``GITHUB_TOKEN`` back in through the alias. Intended App or
+# ``LU_AGENT_GITHUB_TOKEN`` identity still reaches that CLI via
+# ``build_agent_env`` (#7020).
+GITHUB_TOKEN_SEATS = {
+    "bridge",
+    "claude",
+    "codex",
+    "cursor",
+    "deepseek",
+    "glm",
+    "grok",
+    "grok-build",
+    "grok-hermes",
+    "kimi",
+}
+
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "acpx-codex-shadow": {
         # Non-secret acpx@0.13.0 auth-method selector. The literal value "1"
@@ -234,37 +252,36 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
 }
 
 
-def unneeded_env_var_names(env: Mapping[str, str], provider: str, *, launcher: bool = False) -> list[str]:
-    """Names to omit; interactive launchers also remove credential suffixes."""
-    # A dispatcher is a parent for multiple providers. Keep their recognized
-    # keys here; each worker's environment applies its own provider filter.
+def unneeded_env_var_names(env: Mapping[str, str], provider: str, *, harness: str | None = None) -> list[str]:
+    """Names to omit from dispatcher and interactive CLI child environments.
+
+    Preserve the dispatcher's provider allowlists and GitHub seat policy.
+    Codex's Claude Code transport alone needs its route-derived auth token.
+    """
     dispatcher_keys = set().union(*_PROVIDER_SECRET_ALLOWLIST.values()) if provider == "dispatcher" else set()
-    # Route-derived interactive auth already exported by the existing adapters.
-    route_secrets = {"codex": {"CODEX_CC_AUTH_TOKEN"}, "glm": {"ANTHROPIC_AUTH_TOKEN"}}
-    launcher_route_keys = route_secrets.get(_normalized_provider(provider), set()) if launcher else set()
     drop: list[str] = []
     for var_name in env:
         upper = var_name.upper()
-        credential = bool(re.search(r"(?:^|_)(?:TOKEN|SECRET|PASSWORD|PASSWD)$", upper))
-        if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY") or (launcher and credential)):
+        if provider != "dispatcher" and (
+            upper == "GITHUB_TOKEN" or (upper == "GH_TOKEN" and provider.lower() not in GITHUB_TOKEN_SEATS)
+        ):
+            drop.append(var_name)
+            continue
+        if upper == "ANTHROPIC_AUTH_TOKEN" and _normalized_provider(provider) == "codex":
+            if harness != "claude-code":
+                drop.append(var_name)
+            continue
+        if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY")):
             continue
         if upper in dispatcher_keys or _is_provider_secret(var_name, provider):
             continue
-        if launcher:
-            # These names already carry the resolved interactive route, rather
-            # than an inherited key for another seat. Dispatcher policy is unchanged.
-            if upper in launcher_route_keys:
-                continue
-            # The driver lease's fencing number is process identity, not auth.
-            if upper == "SESSION_STREAM_FENCING_TOKEN":
-                continue
         drop.append(var_name)
     return drop
 
 
-def without_unneeded_secrets(env: Mapping[str, str], provider: str) -> dict[str, str]:
-    """Copy ``env`` without API keys this provider does not need."""
-    dropped = set(unneeded_env_var_names(env, provider))
+def without_unneeded_secrets(env: Mapping[str, str], provider: str, *, harness: str | None = None) -> dict[str, str]:
+    """Copy ``env`` using the shared CLI child credential policy."""
+    dropped = set(unneeded_env_var_names(env, provider, harness=harness))
     return {name: value for name, value in env.items() if name not in dropped}
 
 
@@ -646,9 +663,9 @@ def _append_push_rewrite(env: dict[str, str], target: str) -> None:
     env["GIT_TERMINAL_PROMPT"] = "0"
 
 
-def _print_unneeded_env_var_names(provider: str, *, launcher: bool = False) -> int:
-    """Print variable names the current process should drop for ``provider``."""
-    for var_name in unneeded_env_var_names(os.environ, provider, launcher=launcher):
+def _print_unneeded_env_var_names(provider: str, *, harness: str | None = None) -> int:
+    """Print variable names the CLI child should omit for ``provider``."""
+    for var_name in unneeded_env_var_names(os.environ, provider, harness=harness):
         if var_name.isidentifier():
             sys.stdout.write(f"{var_name}\n")
     return 0
@@ -668,6 +685,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Print API-key names a child env must drop.")
     parser.add_argument("--provider", required=True)
-    parser.add_argument("--launcher", action="store_true", help="Also drop other-seat tokens, secrets and passwords.")
+    parser.add_argument("--harness", help="Effective child harness, including the Codex Claude Code route.")
     args = parser.parse_args()
-    raise SystemExit(_print_unneeded_env_var_names(args.provider, launcher=args.launcher))
+    raise SystemExit(_print_unneeded_env_var_names(args.provider, harness=args.harness))

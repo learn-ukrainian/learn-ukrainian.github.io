@@ -225,3 +225,15 @@ Our project is **education** where:
 - This project: `claude_extensions/rules/goal-driven-runs.md` — our `/goal` rule, independently convergent on Symphony's "objectives over transitions" lesson.
 - This project: `docs/best-practices/agent-cooperation.md` — multi-agent deliberation protocol (bridge `discuss`, Decision Card pattern).
 - This project: `docs/best-practices/context-engineering.md` — the layer below harness engineering.
+
+## Pytest credential redaction
+
+The test harness redacts inherited credential values in captured reports,
+JUnit output and xdist transport. Direct terminal output from `-s`,
+`--capture=no`, `--capture=tee-sys`, `-o log_cli=true` or `--log-cli-level=...`
+bypasses report redaction. When inherited credentials are present, pytest
+emits one warning without credential values for these modes. Keep capture
+enabled and live logging disabled when running tests with credentials. The
+[secret-print guard](../../agents_extensions/shared/hooks/guard-secret-print.py)
+checks supported shell commands before execution; it does not intercept
+pytest's direct output.

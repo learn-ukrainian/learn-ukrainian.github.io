@@ -354,7 +354,7 @@ def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:
     assert "synthetic-" not in proc.stdout + proc.stderr
 
 
-def test_launcher_unsets_unneeded_api_key_and_fails_closed(tmp_path: Path) -> None:
+def test_launcher_preserves_parent_api_key_and_fails_closed(tmp_path: Path) -> None:
     helper = tmp_path / "primary"
     python = helper / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
@@ -369,11 +369,11 @@ export LC_DURABLE_HELPER_ROOT={shlex.quote(str(helper))}
 export CURSOR_API_KEY={shlex.quote(SYNTHETIC_KEY)}
 source {shlex.quote(str(core))}
 launcher_drop_unneeded_secrets
-if [ -n "${{CURSOR_API_KEY:-}}" ]; then
-  printf 'still-set\\n'
+if [ "${{CURSOR_API_KEY:-}}" != {shlex.quote(SYNTHETIC_KEY)} ]; then
+  printf 'parent-changed\\n'
   exit 2
 fi
-printf 'cleared\\n'
+printf 'parent-preserved\\n'
 """
     cleared = subprocess.run(
         ["bash", "-c", clear],
@@ -383,7 +383,7 @@ printf 'cleared\\n'
         timeout=30,
     )
     assert cleared.returncode == 0, cleared.stderr
-    assert cleared.stdout.strip() == "cleared"
+    assert cleared.stdout.strip() == "parent-preserved"
     assert SYNTHETIC_KEY not in cleared.stdout + cleared.stderr
 
     python.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
@@ -579,7 +579,9 @@ def test_direct_print_modes_warn_once_without_values(tmp_path: Path, mode: tuple
         ("cursor", {"CURSOR_API_KEY"}),
     ],
 )
-def test_interactive_launcher_child_drops_other_seat_credentials(tmp_path: Path, provider: str, kept: set[str]) -> None:
+def test_interactive_launcher_child_uses_dispatcher_credential_policy(
+    tmp_path: Path, provider: str, kept: set[str]
+) -> None:
     import json
 
     names = {
@@ -600,6 +602,11 @@ def test_interactive_launcher_child_drops_other_seat_credentials(tmp_path: Path,
         "OTHER_SECRET",
         "other_token",
     }
+    # Non-API-key names follow the dispatcher unchanged. The native Codex
+    # auth exception is tested separately through the real adapter.
+    kept |= names - {name for name in names if name.endswith("_API_KEY") or name.endswith("APIKEY")}
+    if provider == "codex":
+        kept.discard("ANTHROPIC_AUTH_TOKEN")
     probe = tmp_path / "child.py"
     probe.write_text(
         "import os, json\n"
@@ -656,8 +663,11 @@ def test_existing_provider_allowlist_reaches_launcher_and_dispatcher(provider: s
     assert unneeded_env_var_names(parent, "dispatcher") == []
     downstream = without_unneeded_secrets(parent, provider)
     assert all(downstream[name] == SYNTHETIC_KEY for name in keys)
-    dropped = set(unneeded_env_var_names(parent, provider, launcher=True))
-    assert all_keys - dropped == keys
+    dropped = set(unneeded_env_var_names(parent, provider))
+    assert all_keys - dropped == set(downstream)
+    assert all_keys - dropped == keys | (
+        {"KIMICC_AUTH_TOKEN", "ANTHROPIC_AUTH_TOKEN"} if provider != "codex" else {"KIMICC_AUTH_TOKEN"}
+    )
 
 
 @pytest.mark.parametrize("maxsize", [20, 30, 60, 120])
@@ -744,3 +754,281 @@ def test_xdist_redacts_parameter_ids_without_breaking_worker_routing(tmp_path: P
     assert "[REDACTED]" in combined
     assert "AssertionError" in combined
     assert "INTERNALERROR" not in combined
+
+
+@pytest.mark.parametrize("harness", ["codex", "claude-code"])
+def test_round2_codex_route_child_auth(tmp_path: Path, harness: str) -> None:
+    child = tmp_path / "child.py"
+    child.write_text(
+        "import os\n"
+        + f"assert ('ANTHROPIC_AUTH_TOKEN' in os.environ) == {harness == 'claude-code'!r}\n"
+        + "assert os.environ['ANTHROPIC_BASE_URL'] == 'http://localhost:8317'\n"
+        + "print('route-auth-ok')\n"
+    )
+    for name in ("codex", "claude"):
+        binary = tmp_path / name
+        binary.write_text(f"#!/bin/sh\nexec {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n")
+        binary.chmod(0o755)
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"source {shlex.quote(str(REPO / 'scripts/launchers/codex.sh'))}\n"
+        f"LC_PROVIDER=codex LC_HARNESS={harness} LC_MODE=interactive LC_DRY_RUN=0\n"
+        f"LC_ROOT={shlex.quote(str(REPO))} LC_SESSION_ROOT={shlex.quote(str(tmp_path))}\n"
+        f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
+        "LC_MODEL=gpt-6.1-sol LC_EFFORT=high LC_FORWARD_ARGS=()\n"
+        + (
+            f'source {shlex.quote(str(REPO / "scripts/lib/codex_cc_route.sh"))}\ncodex_cc_configure_route "$LC_MODEL"\n'
+            if harness == "claude-code"
+            else ""
+        )
+        + "launcher_adapter_exec\n"
+    )
+    env = {
+        "PATH": str(tmp_path) + os.pathsep + os.defpath,
+        "HOME": str(tmp_path),
+        "ANTHROPIC_AUTH_TOKEN": SYNTHETIC_KEY,
+        "ANTHROPIC_BASE_URL": "http://localhost:8317",
+        "CODEX_CC_BASE_URL": "http://localhost:8317",
+        "CODEX_CC_AUTH_TOKEN": SYNTHETIC_KEY,
+    }
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=env, capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert proc.stdout == "route-auth-ok\n"
+
+
+@pytest.mark.parametrize("container", ["list", "tuple", "dict", "set", "nested"])
+def test_round2_container_truncation(tmp_path: Path, xdist_enabled: bool, container: str) -> None:
+    token = "SyntheticKeyPrefix012345" + "m" * 300 + "SyntheticSuffix9876543210"
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    shapes = {
+        "list": ("[v, 'x']", "[v, 'y']"),
+        "tuple": ("(v, 'x')", "(v, 'y')"),
+        "dict": ("{'secret': v, 'safe': 'x'}", "{'secret': v, 'safe': 'y'}"),
+        "set": ("{v, 'x'}", "{v, 'y'}"),
+        "nested": ("[{'secret': (v,), 'safe': 'x'}]", "[{'secret': (v,), 'safe': 'y'}]"),
+    }
+    left, right = shapes[container]
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\nfrom _pytest._io.saferepr import saferepr\ndef test_sample():\n"
+        f"    v = Path({str(secret_file)!r}).read_text()\n"
+        f"    print(saferepr({left}, maxsize=80))\n    assert {left} == {right}\n",
+        xdist_enabled=xdist_enabled,
+        token=token,
+    )
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    terminal = proc.stdout + proc.stderr
+    xml = (tmp_path / "report.xml").read_text()
+    for output in (terminal, xml):
+        assert token[:12] not in output
+        assert token[-13:] not in output
+        assert "AssertionError" in output
+    assert "[REDACTED]" in terminal
+
+
+@pytest.mark.parametrize("kind", ["bytes", "path", "object"])
+def test_round2_property_types(tmp_path: Path, xdist_enabled: bool, kind: str) -> None:
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(SYNTHETIC_KEY)
+    expressions = {"bytes": "v.encode()", "path": "Path('safe') / v", "object": "SecretObject(v)"}
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\n"
+        "class SecretObject:\n"
+        "    def __init__(self, value):\n        self.value = value\n"
+        "    def __str__(self):\n        return self.value\n"
+        "def test_sample(record_property):\n"
+        f"    v = Path({str(secret_file)!r}).read_text()\n"
+        f"    record_property('credential', {expressions[kind]})\n"
+        "    record_property('safe-count', 7)\n",
+        xdist_enabled=xdist_enabled,
+    )
+    xml = (tmp_path / "report.xml").read_text()
+    combined = proc.stdout + proc.stderr + xml
+    assert SYNTHETIC_KEY not in combined
+    assert proc.returncode == 1, combined
+    assert "[REDACTED]" in xml
+    assert '<property name="safe-count" value="7"' in xml
+    assert "INTERNALERROR" not in combined
+
+
+@pytest.mark.parametrize("mode", [("--capture=tee-sys",), ("--log-cli-level=INFO",)])
+def test_round2_direct_output_warning(tmp_path: Path, mode: tuple[str, ...]) -> None:
+    proc = _run_secret_probe(
+        tmp_path,
+        "import logging\ndef test_sample():\n    print('safe')\n    logging.info('safe')\n",
+        xdist_enabled=False,
+        extra_args=mode,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert (proc.stdout + proc.stderr).count("credential redaction cannot protect direct terminal output") == 1
+
+
+def test_round2_redactor_single_line_bound() -> None:
+    import time
+
+    source = (
+        "from tests.conftest import _redact_secret_data\n"
+        "line = \"'\" + '.' * 200_000\n"
+        "assert _redact_secret_data(line, ['synthetic-performance-credential-0123456789']) == line\n"
+        "print('bounded-redaction-ok')\n"
+    )
+    start = time.monotonic()
+    proc = subprocess.run(
+        [sys.executable, "-c", source],
+        cwd=REPO,
+        env={name: os.environ[name] for name in ("PATH", "HOME", "TMPDIR") if name in os.environ},
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert proc.stdout == "bounded-redaction-ok\n"
+    assert time.monotonic() - start < 15
+
+
+@pytest.mark.parametrize(
+    "xdist_enabled,hook", [(False, "report"), (True, "report"), (True, "serialize"), (True, "deserialize")]
+)
+def test_round2_redaction_exception_fails_closed(tmp_path: Path, xdist_enabled: bool, hook: str) -> None:
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(SYNTHETIC_KEY)
+    # Inject a failure after collection, so the actual reporting hooks see the
+    # report, and the pytest child proves INTERNALERROR never renders locals.
+    (tmp_path / "conftest.py").write_text(
+        "import pytest\nfrom tests import conftest as shared\n"
+        "@pytest.hookimpl(wrapper=True)\n"
+        "def pytest_runtest_call(item):\n"
+        "    result = yield\n"
+        "    def broken(data, values):\n        raise RuntimeError('synthetic-redactor-failure')\n"
+        + (
+            "    shared._redact_secret_data = broken\n"
+            if hook == "report"
+            else "    shared._sanitize_secret_report = lambda report, secrets: report\n"
+            + ("    shared._redact_secret_data = broken\n" if hook == "serialize" else "")
+        )
+        + "    return result\n"
+        + (
+            "def pytest_configure(config):\n"
+            "    if not hasattr(config, 'workerinput'):\n"
+            "        def broken(data, values):\n            raise RuntimeError('synthetic-redactor-failure')\n"
+            "        shared._redact_secret_data = broken\n"
+            "        shared._sanitize_secret_report = lambda report, secrets: report\n"
+            if hook == "deserialize"
+            else ""
+        )
+    )
+    proc = _run_secret_probe(
+        tmp_path,
+        f"from pathlib import Path\ndef test_sample():\n    print(Path({str(secret_file)!r}).read_text())\n",
+        xdist_enabled=xdist_enabled,
+    )
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
+    assert SYNTHETIC_KEY not in combined
+    assert "INTERNALERROR" not in combined
+    assert proc.returncode == 1, combined
+    assert "[REDACTED] report unavailable: credential redaction failed" in combined
+
+
+@pytest.mark.parametrize(
+    "provider,harness,provider_keys",
+    [
+        ("claude", "claude-code", {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"}),
+        ("codex", "codex", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
+        ("codex", "claude-code", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
+        ("gemini", "agy", {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}),
+        ("kimi", "kimi-code", {"KIMI_API_KEY", "MOONSHOT_API_KEY"}),
+        ("glm", "claude-code", set()),
+        ("grok", "grok", set()),
+        ("cursor", "cursor", {"CURSOR_API_KEY"}),
+    ],
+)
+def test_round2_launcher_dispatcher_child_parity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, provider: str, harness: str, provider_keys: set[str]
+) -> None:
+    import json
+
+    api_keys = {
+        "ANTHROPIC_API_KEY",
+        "CLAUDE_API_KEY",
+        "CODEX_API_KEY",
+        "OPENAI_API_KEY",
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENERATIVE_AI_API_KEY",
+        "KIMI_API_KEY",
+        "MOONSHOT_API_KEY",
+        "CURSOR_API_KEY",
+        "XAI_API_KEY",
+        "ZAI_API_KEY",
+        "OTHER_APIKEY",
+    }
+    other_names = {
+        "ANTHROPIC_AUTH_TOKEN",
+        "CODEX_CC_AUTH_TOKEN",
+        "KIMICC_AUTH_TOKEN",
+        "GLMCC_AUTH_TOKEN",
+        "CLAUDE_CODE_OAUTH_TOKEN",
+        "KIMI_CODE_OAUTH_CLIENT_SECRET",
+        "GH_TOKEN",
+        "GITHUB_TOKEN",
+        "LU_AGENT_GITHUB_TOKEN",
+        "OTHER_TOKEN",
+        "OTHER_SECRET",
+        "OTHER_PASSWORD",
+        "OTHER_PASSWD",
+        "SESSION_STREAM_FENCING_TOKEN",
+    }
+    names = api_keys | other_names
+    expected = (provider_keys | other_names) - {"GITHUB_TOKEN"}
+    if provider == "gemini":
+        expected -= {"GH_TOKEN"}
+    if provider == "codex" and harness != "claude-code":
+        expected -= {"ANTHROPIC_AUTH_TOKEN"}
+    parent = dict.fromkeys(names, SYNTHETIC_KEY)
+    dispatcher_child = without_unneeded_secrets(parent, provider, harness=harness)
+    assert set(dispatcher_child) == expected
+    if (provider, harness) != ("codex", "claude-code"):
+        # Exercise the dispatcher's earlier GitHub identity stage as well as
+        # its final shared filter. The Codex CC token is derived at preflight.
+        from scripts import delegate
+
+        monkeypatch.setattr(delegate, "_resolve_github_token", lambda: SYNTHETIC_KEY)
+        actual_dispatcher = delegate._build_worker_env(
+            task_id="synthetic-round2",
+            dispatch_agent=provider,
+            base_env={"PATH": os.defpath, "HOME": str(tmp_path), **parent},
+        )
+        assert set(actual_dispatcher) & names == expected
+    child = tmp_path / "child.py"
+    child.write_text("import json, os\n" + f"print(json.dumps(sorted(set(os.environ) & {names!r})))\n")
+    # The shell retains all inherited names after preparing child filtering.
+    parent_check = f"import os; assert {names!r} <= set(os.environ)"
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"LC_PROVIDER={provider} LC_HARNESS={harness} LC_MODE=interactive LC_ROOT={shlex.quote(str(REPO))}\n"
+        f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
+        "launcher_drop_unneeded_secrets\n"
+        f"{shlex.quote(sys.executable)} -c {shlex.quote(parent_check)}\n"
+        f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
+    )
+    if provider in {"glm", "kimi"}:
+        binary = tmp_path / ("kimi" if provider == "kimi" else "claude")
+        binary.write_text(f"#!/bin/sh\nexec {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n")
+        binary.chmod(0o755)
+        command = command[: command.rindex("launcher_exec_command ")] + (
+            f"source {shlex.quote(str(REPO / 'scripts/launchers' / (provider + '.sh')))}\n"
+            "LC_DRY_RUN=0 LC_MODEL=synthetic-model LEAD_MODEL=synthetic-model LC_EFFORT=''\n"
+            "LC_FORWARD_ARGS=()\nlauncher_adapter_exec\n"
+        )
+    proc = subprocess.run(
+        ["bash", "-eu", "-c", command],
+        env={"PATH": str(tmp_path) + os.pathsep + os.defpath, "HOME": str(tmp_path), **parent},
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert json.loads(proc.stdout) == sorted(dispatcher_child)
+    assert SYNTHETIC_KEY not in proc.stdout + proc.stderr

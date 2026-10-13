@@ -166,18 +166,19 @@ launcher_project_python() {
   printf '%s\n' "$python"
 }
 
-# Drop API keys, tokens, secrets and passwords this seat does not need.
+# Prepare the dispatcher policy as env -u arguments for the CLI child only.
 # A direct exec seam with no helper root, or a unit sandbox that has no
 # sanitizer file or project interpreter, leaves the environment alone.
 # When the sanitizer runs and fails, the launch refuses to start.
 launcher_drop_unneeded_secrets() {
   local py names name sanitizer
+  LC_CHILD_ENV_UNSETS=()
   sanitizer="${LC_ROOT:-}/scripts/agent_runtime/env_sanitize.py"
   py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
   if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
     return 0
   fi
-  if ! names="$("$py" "$sanitizer" --provider "$LC_PROVIDER" --launcher)"; then
+  if ! names="$("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}")"; then
     launcher_error "could not drop unneeded API keys"
     return 1
   fi
@@ -185,7 +186,7 @@ launcher_drop_unneeded_secrets() {
     case "$name" in
       ''|*[!A-Za-z0-9_]*) continue ;;
     esac
-    unset "$name"
+    LC_CHILD_ENV_UNSETS+=(-u "$name")
   done <<< "$names"
 }
 
@@ -1200,7 +1201,7 @@ launcher_exec_command() {
   if [ "$LC_MODE" != "driver" ] \
       || [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ] \
       || [ "${LC_DRIVER_LEASE_CLAIMED:-0}" != "1" ]; then
-    exec "$@"
+    exec env "${LC_CHILD_ENV_UNSETS[@]}" "$@"
   fi
 
   local provider_rc=0
@@ -1231,7 +1232,7 @@ launcher_exec_command() {
   # forwarded INT/TERM/HUP reach the provider rather than being ignored.
   (
     trap - INT TERM HUP
-    exec "$@"
+    exec env "${LC_CHILD_ENV_UNSETS[@]}" "$@"
   ) 0<&0 &
   LC_DRIVER_CHILD_PID=$!
   launcher_driver_renew_loop "$LC_DRIVER_CHILD_PID"
