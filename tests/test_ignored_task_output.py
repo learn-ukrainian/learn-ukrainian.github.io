@@ -69,13 +69,17 @@ def test_mixed_regenerable_paths_preserve_only_output(checkout, monkeypatch):
     ["clean", "modified", "staged", "staged-restored", "untracked", "absent", "symlink", "invalid-json"],
 )
 @pytest.mark.parametrize("named", [False, True], ids=["unnamed", "named-in-report"])
-def test_lexicon_manifest_is_counted_and_preserved_as_ignored_output(checkout, monkeypatch, payload, pointer_kind, named):
+def test_lexicon_manifest_is_counted_and_preserved_as_ignored_output(
+    checkout, monkeypatch, payload, pointer_kind, named
+):
     repo, primary, _ = checkout
     name = "site/src/data/lexicon-manifest.json"
     pointer_name = "site/src/data/lexicon-manifest.pointer.json"
     manifest = artifact(checkout, name, payload)
     (repo / ".gitignore").write_text(name + "\n")
-    pointer = artifact(checkout, pointer_name, json.dumps({"json_sha256": hashlib.sha256(payload).hexdigest()}).encode())
+    pointer = artifact(
+        checkout, pointer_name, json.dumps({"json_sha256": hashlib.sha256(payload).hexdigest()}).encode()
+    )
     env = output.artifacts._safe_git_env()
 
     def git(*args):
@@ -214,7 +218,8 @@ def test_record_moved_between_listing_and_open_retries_complete_inventory(
     monkeypatch.setattr(Path, "read_bytes", race)
     monkeypatch.setattr(Path, "glob", finish_staging)
     assert output.resolve_worktree_record(repo, tasks, repo_root=primary, publish_cache=publish_cache) == (
-        destination, record
+        destination,
+        record,
     )
     assert output._identity_cache_path(tasks).exists() is publish_cache
     assert "retrying complete inventory once" in capsys.readouterr().err
@@ -515,9 +520,10 @@ def test_record_redispatched_during_copy_refuses_removal_without_updating_new_re
 )
 def test_force_new_reuse_requires_one_same_task_archived_creator(checkout, variant):
     repo, primary, tasks = checkout
+    baseline = output.creation_inventory(repo, primary=primary, task_id="output-task", run_nonce="creator-run")
     source = artifact(checkout, "ignored/report.txt", b"redispatched output")
     current = {"task_id": "output-task", "worktree_path": str(repo), "worktree_reused": True, "status": "done"}
-    creator = dict(current, worktree_reused=False, status="cancelled")
+    creator = dict(current, worktree_reused=False, status="cancelled", ignored_output_baseline=baseline)
     archive_name = "output-task.20261005T120000Z.archived.json"
     if variant == "different_task":
         creator["task_id"] = "other-task"
@@ -866,6 +872,7 @@ def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout
     from tests.orchestration.test_worktree_claims_cli import _git
 
     repo, primary, tasks = checkout
+    baseline = output.creation_inventory(repo, primary=primary, task_id="output-task", run_nonce="creator-run")
     source = artifact(checkout, "ignored/report.txt")
     _git(repo, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "commit", "-m", "branch proof")
     creator = {
@@ -874,6 +881,7 @@ def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout
         "worktree_reused": False,
         "status": "done",
         "run_nonce": "creator-run",
+        "ignored_output_baseline": baseline,
         "worktree_branch": _git(repo, "rev-parse", "--abbrev-ref", "HEAD"),
     }
     canonical = tasks / "output-task.json"
@@ -899,6 +907,7 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
     primary = _primary(tmp_path)
     tree = _linked(primary, "codex/output-task")
     (primary / ".git/info/exclude").write_text("ignored/\n.runtime/\n.pids/\n")
+    baseline = output.creation_inventory(tree, primary=primary, task_id="output-task", run_nonce="creator-run")
     source = tree / "ignored/report.txt"
     source.parent.mkdir()
     source.write_bytes(b"preserve me")
@@ -907,7 +916,13 @@ def test_normal_removal_preserves_or_proves_absence_under_existing_lock(tmp_path
         archive = primary / "batch_state/tasks/output-task.20261005T120000Z.archived.json"
         archive.write_text(
             json.dumps(
-                {"task_id": "output-task", "status": "cancelled", "worktree_path": str(tree), "worktree_reused": False}
+                {
+                    "task_id": "output-task",
+                    "status": "cancelled",
+                    "worktree_path": str(tree),
+                    "worktree_reused": False,
+                    "ignored_output_baseline": baseline,
+                }
             )
         )
     elif case == "internal_link":

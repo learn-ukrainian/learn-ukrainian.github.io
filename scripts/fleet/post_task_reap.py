@@ -28,7 +28,7 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import ignored_task_output, pr_identity
-from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
+from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims, worktree_paths
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -386,25 +386,50 @@ def _reap_main_worktree(
     except ValueError:  # guarded above; retain if the filesystem changed.
         relative = ()
     expected_agent = str(state.get("agent") or "")
-    reuse_matches = []
-    if len(relative.parts) == 2 and relative.parts[1] != task_id:
+    # Preserve the original literal-id binding, including legacy records that
+    # predate creator telemetry. Only the new derived-leaf authority needs it.
+    proven = len(relative.parts) == 2 and relative.parts[1] == task_id
+    # Dispatch binds the checkout to ``automatic_worktree_path(agent, task_id)``,
+    # which strips one agent prefix and sanitises the rest; the raw task id is
+    # not the directory name (#10486). The agent directory is checked below.
+    try:
+        expected_leaf = (
+            worktree_paths.automatic_worktree_path(expected_agent, task_id, repo_root=repo_root).name
+            if expected_agent and not proven
+            else None
+        )
+    except (OSError, ValueError, RuntimeError):
+        return {
+            "path": str(bound_path),
+            "action": "retained",
+            "reason": "unknown ownership: dispatch path derivation failed",
+            "error": None,
+        }
+    # Two task ids can derive one leaf. A derived match needs an explicit
+    # creator flag, the normal creating dispatch's inventory, and no other
+    # claimant. Old prep-failure records also wrote False, without an inventory.
+    # Shared or non-canonical paths still require the existing cohort proof.
+    if len(relative.parts) == 2 and not proven and expected_leaf is not None:
         try:
-            reuse_matches = ignored_task_output.matching_worktree_records(
+            matches = ignored_task_output.matching_worktree_records(
                 bound_path, tasks_dir, repo_root=repo_root, publish_cache=False
             )
-            _, creator = ignored_task_output.reused_worktree_creator(
-                reuse_matches, bound_path, repo_root=repo_root, tasks_dir=tasks_dir
-            )
-            if creator != state or creator.get("task_id") != task_id or len(reuse_matches) < 2:
-                reuse_matches = []
+            collides = any(record.get("task_id") != task_id for _, record in matches)
+            if (
+                relative.parts[1] == expected_leaf
+                and ignored_task_output.record_created_worktree(state)
+                and not collides
+            ):
+                proven = True
+            else:
+                _, creator = ignored_task_output.reused_worktree_creator(
+                    matches, bound_path, repo_root=repo_root, tasks_dir=tasks_dir
+                )
+                if creator == state and creator.get("task_id") == task_id and len(matches) >= 2:
+                    proven = True
         except (OSError, ValueError, RuntimeError):
-            reuse_matches = []
-    if (
-        len(relative.parts) != 2
-        or (relative.parts[1] != task_id and not reuse_matches)
-        or not expected_agent
-        or relative.parts[0] != expected_agent
-    ):
+            proven = False
+    if len(relative.parts) != 2 or not proven or not expected_agent or relative.parts[0] != expected_agent:
         return {
             "path": str(bound_path),
             "action": "retained",

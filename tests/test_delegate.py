@@ -20157,6 +20157,43 @@ def test_delivery_declaration_preserves_unicode_separators(sep):
     assert delegate._parse_delivery_declaration(response) == declaration
 
 
+@pytest.mark.parametrize("failure", ["runtime-tmp-lease", "existing-worktree-validation"])
+def test_worktree_prep_failure_records_reuse_without_claiming_creation(
+    tmp_tasks_dir, tmp_path, monkeypatch, failure
+):
+    """#10486: neither failure caller may label another task's checkout as created."""
+    main, tree = _init_repo_with_worktree(tmp_path)
+    _add_local_bare_origin(main)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_resolve_invocation_git_root", lambda _start=None: main)
+
+    def refuse(*_args, **_kwargs):
+        raise RuntimeError(f"fixture {failure} refusal")
+
+    if failure == "runtime-tmp-lease":
+        monkeypatch.setattr(delegate, "_create_runtime_tmp_lease", refuse)
+    else:
+        ensure = delegate._ensure_worktree
+
+        def refuse_existing(**kwargs):
+            with monkeypatch.context() as patcher:
+                patcher.setattr(delegate, "_refuse_review_attempt_worktree_reuse", refuse)
+                return ensure(**kwargs)
+
+        monkeypatch.setattr(delegate, "_ensure_worktree", refuse_existing)
+    task_id = "codex-task-1"
+    args = _write_args(task_id=task_id, mode="read-only", worktree=str(tree), full_checkout=True, dry_run=False)
+
+    assert delegate.cmd_dispatch(args) == 1
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert f"fixture {failure} refusal" in state["stderr_excerpt"]
+    assert state["status"] == "failed" and state["pid"] is None
+    assert state["worktree_path"] == str(tree) and tree.exists()
+    assert "ignored_output_baseline" not in state
+    assert state["worktree_reused"] is (True if failure == "runtime-tmp-lease" else None)
+
+
 def test_creation_inventory_is_captured_under_existing_lock_before_spawn(tmp_tasks_dir, tmp_path, monkeypatch):
     from scripts.fleet import ignored_task_output
 

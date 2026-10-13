@@ -11669,6 +11669,7 @@ def _record_worktree_prep_failure(
     requested_harness: str | None = None,
     lifecycle_carrier: Any = None,
     worktree_path: str | Path | None = None,
+    worktree_reused: bool | None = None,
     worktree_branch: str | None = None,
     worktree_base_sha: str | None = None,
     worktree_base: str | None = None,
@@ -11731,7 +11732,7 @@ def _record_worktree_prep_failure(
         "worktree_base_sha": worktree_base_sha,
         "worktree_base": worktree_base,
         "worktree_rebased": False,
-        "worktree_reused": False,
+        "worktree_reused": worktree_reused,
         "worktree_layout": wt_layout,
         "worktree_sparse": None,
         "worktree_local_venv": None,
@@ -13785,6 +13786,7 @@ def _dispatch(
                 requested_harness=requested_harness,
                 lifecycle_carrier=lifecycle_carrier,
                 worktree_path=failed_worktree_path,
+                worktree_reused=worktree_telemetry.get("reused"),
                 worktree_branch=(
                     None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
                 ),
@@ -13969,6 +13971,7 @@ def _dispatch(
             worktree_path=worktree_path,
             worktree_branch=worktree_branch,
             worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
+            worktree_reused=worktree_telemetry.get("reused"),
             worktree_base=worktree_base,
             agent_alias_note=agent_alias_note,
             output_schema_path=output_schema_path,
