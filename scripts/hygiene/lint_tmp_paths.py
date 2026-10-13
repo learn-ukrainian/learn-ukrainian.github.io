@@ -66,7 +66,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     (
         "scripts/agent_runtime/adapters/grok_build.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "b6a7c1fde00f37263daa88693e024719330654bdd4bce86d64f2b39cf7c51c1d:1 fdaa98fa634600e424c36c799d3ccf0160a78cf5674541f590662ce2c289489b:1",
+        "65ac4ffed6e73f13cf2e7b8f0720172cf8d1c26c59849d6fc3d0e56b1e54c165:1 7009f9f12d534bf2226eecf2d0245c59285f4016d25b49f60e30edc23d7b8791:1",
     ),
     (
         "scripts/agent_runtime/attempt_boundary.py",
