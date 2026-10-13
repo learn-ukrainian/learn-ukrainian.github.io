@@ -637,18 +637,26 @@ closed if that reduced tool set changes.
 
 The ACP Claude seat (`acpx-claude-shadow`, #10500) launches the host Claude
 Code through the repo-owned `scripts/agent_runtime/claude_acp_exec.sh`, which
-`CLAUDE_CODE_EXECUTABLE` names. The adapter loads the launcher only from the
-canonical primary checkout, which git resolves from the adapter's own checkout
-with redirect variables stripped; a worktree copy is never used. Before every
-launch it validates the launcher and each parent (owner, mode, no symlink),
-checks the launcher's SHA-256 against the adapter's pin
+`CLAUDE_CODE_EXECUTABLE` names. The adapter reads the launcher only from the
+canonical primary checkout, which the adapter's own checkout names through its
+git links (`resolve_main_root_without_git`: no git process, so PATH, git
+configuration and the environment cannot redirect it); a worktree copy is
+never used. Before every launch it validates the launcher and each parent
+(owner, mode, no symlink), reads it once without following links, checks the
+SHA-256 of those bytes against the adapter's pin
 (`_CLAUDE_ACP_LAUNCHER_CLOSURE`; the launcher is self-contained, and its bytes
-and the pin change in the same commit), and validates the pinned host binary.
-A missing, unsafe, unreadable or mismatched launcher refuses with a typed
-`ClaudeCodeExecutableRefusal` before any ACP message, with no fallback.
-The launcher rechecks the binary's device and inode, then execs it with the
-deny list as one `--disallowedTools` argument; the SDK's own
-`--disallowedTools` follows and accumulates. The seat enforces the denies
+and the pin change in the same commit), writes them to a private `0700`
+per-launch copy under the caller's cache directory, and validates the pinned
+host binary. `CLAUDE_CODE_EXECUTABLE` names that copy, so a later change to the
+checkout cannot change what runs; the runner's cleanup removes it.
+A missing, unsafe, unreadable or mismatched launcher, an unresolvable primary
+checkout or a failed copy refuses with a typed `ClaudeCodeExecutableRefusal`
+before any ACP message, with no fallback; refusal text names no absolute host
+path. The launcher rechecks the binary's device, inode, size, mtime and ctime
+(whole seconds), then execs it with the deny list as one `--disallowedTools`
+argument; the SDK's own `--disallowedTools` follows and accumulates. After the
+ask, any result, successful or not, fails when the binary's full-precision
+identity changed. The seat enforces the denies
 through these launcher flags, not through ACPX permissions: `--deny-all` never
 covers tools that run without asking, such as `Monitor` and `ScheduleWakeup`.
 The plan also sets `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`,

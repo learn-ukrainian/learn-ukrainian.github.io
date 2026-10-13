@@ -801,6 +801,12 @@ def test_a_worktree_link_without_the_back_link_is_refused(launcher_checkouts):
     assert _launcher_refusal().reason == "missing"
 
 
+def _launch_identity(path: Path) -> str:
+    """Device, inode, size and whole-second mtime and ctime, as the launcher's stat prints them."""
+    st = path.lstat()
+    return f"{st.st_dev}:{st.st_ino}:{st.st_size}:{st.st_mtime_ns // 10**9}:{st.st_ctime_ns // 10**9}"
+
+
 def _hostile_git(directory: Path, answer: Path, marker: Path) -> Path:
     """A git on PATH that records it ran and names the worktree as the shared store."""
     directory.mkdir(parents=True, exist_ok=True)
@@ -824,24 +830,26 @@ def test_environment_cwd_and_a_hostile_git_on_path_never_redirect_the_launcher(l
     }.items():
         monkeypatch.setenv(name, value)
     monkeypatch.chdir(worktree)
-    copy = _accepted_copy(launcher_checkouts)
+    returned = Path(acpx_module._require_claude_acp_launcher(adapter_label="X"))
     assert not marker.exists(), "the launcher gate ran a PATH-searched git"
-    assert not copy.is_relative_to(worktree)
+    assert not returned.is_relative_to(worktree)
+    _accepted_copy(launcher_checkouts)
     assert acpx_module._claude_acp_primary_checkout(adapter_label="X") == launcher_checkouts.primary
 
 
 def test_an_unusable_git_on_path_does_not_affect_resolution(launcher_checkouts, monkeypatch):
+    """The only git on PATH cannot execute (PermissionError); no git is needed."""
     bad = launcher_checkouts.root / "bad-bin"
     bad.mkdir()
     (bad / "git").write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     (bad / "git").chmod(0o644)
-    monkeypatch.setenv("PATH", f"{bad}{os.pathsep}/usr/bin:/bin")
+    monkeypatch.setenv("PATH", str(bad))
     _accepted_copy(launcher_checkouts)
 
 
 def test_post_hash_replacement_of_the_primary_launcher_never_executes(launcher_checkouts, tmp_path):
     """Execution is bound to the verified bytes, not to the checkout path."""
-    copy = _accepted_copy(launcher_checkouts)
+    copy = Path(acpx_module._require_claude_acp_launcher(adapter_label="X"))
     unpinned_marker = tmp_path / "unpinned-ran"
     replacement = launcher_checkouts.launcher.with_name("replacement.sh")
     replacement.write_text(f"#!/bin/sh\n: > '{unpinned_marker}'\n", encoding="utf-8")
@@ -856,19 +864,20 @@ def test_post_hash_replacement_of_the_primary_launcher_never_executes(launcher_c
             "PATH": "/usr/bin:/bin",
             "LU_TEST_DUMP": str(dump),
             "LU_CLAUDE_ACP_HOST": str(fake),
-            "LU_CLAUDE_ACP_HOST_IDENTITY": acpx_module._claude_code_launch_identity(fake.stat()),
+            "LU_CLAUDE_ACP_HOST_IDENTITY": _launch_identity(fake),
         },
         capture_output=True,
         text=True,
         timeout=30,
         check=False,
     )
+    assert not unpinned_marker.exists(), "the replaced checkout launcher executed"
     assert proc.returncode == 0, proc.stderr
-    assert not unpinned_marker.exists()
     assert json.loads(dump.read_text(encoding="utf-8"))["argv"][1:3] == [
         "--disallowedTools",
         "Monitor,ScheduleWakeup,CronCreate,Workflow",
     ]
+    assert copy.parents[2].parent == launcher_checkouts.copies
 
 
 def test_each_launch_gets_its_own_copy_and_cleanup_removes_only_it(launcher_checkouts):
@@ -1071,7 +1080,7 @@ def _edit_in_place(executable: Path) -> None:
 
 def test_launcher_refuses_a_host_edited_in_place_after_the_probe(tmp_path):
     fake = _dumping_claude(tmp_path / "host")
-    identity = acpx_module._claude_code_launch_identity(fake.stat())
+    identity = _launch_identity(fake)
     _edit_in_place(fake)
     proc, dump = _run_launcher(tmp_path, host=str(fake), identity=identity)
     assert proc.returncode == 126
@@ -1110,13 +1119,12 @@ def test_the_identity_covers_size_mtime_and_ctime(tmp_path):
     _edit_in_place(target)
     after = target.lstat()
     assert acpx_module._claude_code_identity(before) != acpx_module._claude_code_identity(after)
-    assert acpx_module._claude_code_launch_identity(after).split(":") == [
-        str(after.st_dev),
-        str(after.st_ino),
-        str(after.st_size),
-        str(int(after.st_mtime)),
-        str(int(after.st_ctime)),
-    ]
+    assert acpx_module._claude_code_launch_identity(after) == _launch_identity(target)
+    stat_cli = subprocess.run(
+        ["/usr/bin/stat", "-c", "%d:%i:%s:%Y:%Z", "--", str(target)],
+        capture_output=True, text=True, timeout=30, check=True,
+    )
+    assert stat_cli.stdout.strip() == _launch_identity(target)
 
 
 # --- no absolute host path in refusal or diagnostic text (#10500) -----------

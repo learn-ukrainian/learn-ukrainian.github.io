@@ -441,8 +441,9 @@ not permanent routing weights and do not override current CodexBar headroom.
   a version floor replaces the lockfile integrity hash, and the host binary's
   code changes without repo review; this adds no trust boundary, because the
   native delegate route already runs the same host binary.
-- The launcher is loaded only from the canonical primary checkout and must
-  match the SHA-256 the adapter pins. One-time window after the change that
+- The launcher is read only from the canonical primary checkout and must
+  match the SHA-256 the adapter pins; each launch runs a private copy of the
+  verified bytes. One-time window after the change that
   adds or edits it merges: until host maintenance pulls `main` into the
   primary checkout, keeping that tree non-group-writable, the Claude ACP seat
   refuses as `missing` (or `digest_mismatch` for an edit). Dispatch worktree
