@@ -1237,7 +1237,7 @@ def test_forged_gitdir_cannot_authorize_switched_removal(tmp_path, monkeypatch):
     _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, forged)
 
 
-def _hide_worktree_gitdir_behind_symlink(repo, tree, other_origin: str):
+def _hide_worktree_gitdir_behind_symlink(repo, tree, other_origin: str, *, absolute=False):
     """Rewrite the checkout gitdir to ``.git/jump/../worktrees/<id>``.
 
     ``jump`` is a symlink to another repository's worktree metadata. Lexical
@@ -1266,7 +1266,7 @@ def _hide_worktree_gitdir_behind_symlink(repo, tree, other_origin: str):
     (other_admin / "commondir").write_text("../..\n", encoding="utf-8")
     (other_admin / "gitdir").write_text(f"{tree / '.git'}\n", encoding="utf-8")
     (repo / ".git" / "jump").symlink_to(other / ".git" / "worktrees", target_is_directory=True)
-    relative = os.path.relpath(repo / ".git", tree)
+    relative = str(repo / ".git") if absolute else os.path.relpath(repo / ".git", tree)
     (tree / ".git").write_text(
         f"gitdir: {relative}/jump/../worktrees/{admin.name}\n",
         encoding="utf-8",
@@ -1274,7 +1274,8 @@ def _hide_worktree_gitdir_behind_symlink(repo, tree, other_origin: str):
     return other
 
 
-def test_dotdot_hidden_symlink_gitdir_cannot_authorize_switched_removal(tmp_path, monkeypatch):
+@pytest.mark.parametrize("absolute", [False, True])
+def test_dotdot_hidden_symlink_gitdir_cannot_authorize_switched_removal(tmp_path, monkeypatch, absolute):
     """A ``..`` that hides a symlink must not query primary A or write a reap receipt.
 
     Git follows ``jump`` into the other primary. The proof has to refuse before
@@ -1284,7 +1285,9 @@ def test_dotdot_hidden_symlink_gitdir_cannot_authorize_switched_removal(tmp_path
 
     repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
     git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
-    other = _hide_worktree_gitdir_behind_symlink(repo, tree, "https://github.com/other/elsewhere.git")
+    other = _hide_worktree_gitdir_behind_symlink(
+        repo, tree, "https://github.com/other/elsewhere.git", absolute=absolute
+    )
     assert git(tree, "remote", "get-url", "origin") == "https://github.com/other/elsewhere.git"
     assert git(tree, "rev-parse", "--path-format=absolute", "--git-common-dir") == str(other / ".git")
     calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
@@ -1349,3 +1352,110 @@ def test_malformed_origin_port_fails_closed_without_aborting_the_sweep(tmp_path,
         assert row.action == "skipped", row
         assert "origin owner/repo could not be determined" in row.reason
         assert tree.exists()
+
+
+def test_copied_common_directory_with_trailing_space_cannot_authorize_removal(tmp_path, monkeypatch):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    copied = repo / ".git "
+    shutil.copytree(repo / ".git", copied)
+    admin = repo / ".git/worktrees/switched-proof"
+    (admin / "commondir").write_text(f"{copied}\n", encoding="utf-8")
+    raw = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=tree,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    ).stdout
+    assert raw == os.fsencode(copied) + b"\n"
+    assert git(tree, "config", "--get", "remote.origin.url") == "https://github.com/acme/widget.git"
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
+    assert calls == []
+    assert "worktree_reap_proof" not in json.loads((tasks / "cursor-creator.json").read_text())
+
+
+def test_unregistered_copied_worktree_cannot_authorize_removal(tmp_path, monkeypatch):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    copied = tree.parent / "unregistered"
+    shutil.copytree(tree, copied)
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, copied)
+    assert calls == []
+
+
+@pytest.mark.parametrize("command", ["rev-parse", "config", "worktree"])
+@pytest.mark.parametrize("fault", ["nonzero", "unreadable", "text", "empty", "extra", "unterminated"])
+def test_git_identity_failure_refuses_before_pr_or_removal(tmp_path, monkeypatch, command, fault):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    rw = reap.reap_worktrees
+    original = rw.safe_git
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+
+    def probe(args, **kwargs):
+        if args[0] != command:
+            return original(args, **kwargs)
+        if fault == "unreadable":
+            raise OSError("identity output unavailable")
+        proc = original(args, **kwargs)
+        if fault == "nonzero":
+            return subprocess.CompletedProcess(args, 128, proc.stdout, b"refused")
+        stdout = {
+            "text": "unexpected decoded output",
+            "empty": b"",
+            "extra": proc.stdout + b"unexpected\n\n",
+            "unterminated": proc.stdout[:-1],
+        }[fault]
+        return subprocess.CompletedProcess(args, 0, stdout, b"")
+
+    monkeypatch.setattr(rw, "safe_git", probe)
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
+    assert calls == []
+
+
+@pytest.mark.parametrize("origin", [" https://github.com/acme/widget.git", "https://github.com/acme/widget.git "])
+def test_origin_whitespace_is_not_normalized(tmp_path, monkeypatch, origin):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "config", "remote.origin.url", origin)
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
+    assert calls == []
+
+
+def test_worktree_origin_override_cannot_authorize_primary_pr(tmp_path, monkeypatch):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "config", "remote.origin.url", "https://github.com/acme/widget.git")
+    git(repo, "config", "extensions.worktreeConfig", "true")
+    git(tree, "config", "--worktree", "remote.origin.url", "https://github.com/other/elsewhere.git")
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
+    assert calls == []
+
+
+def test_git_only_resolver_never_reads_pointer_files(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, _tasks, _cohort, _merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "config", "remote.origin.url", "https://github.com/acme/widget.git")
+
+    def refuse(*_args, **_kwargs):
+        pytest.fail("the identity resolver read a pointer file")
+
+    monkeypatch.setattr(Path, "read_text", refuse)
+    monkeypatch.setattr(Path, "read_bytes", refuse)
+    assert reap.reap_worktrees._checkout_pr_repository(tree) == repo

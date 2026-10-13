@@ -466,7 +466,7 @@ def _parse_github_origin(remote_url: str) -> tuple[str, str] | None:
     Owner and repository must each be one GitHub path segment, so a host that
     only contains the GitHub name cannot select some other repository.
     """
-    text = remote_url.strip()
+    text = remote_url
     if not text or any(char.isspace() for char in text) or "\\" in text:
         return None
     scp = _SCP_GITHUB_REMOTE_RE.fullmatch(text)
@@ -495,13 +495,13 @@ def _parse_github_origin(remote_url: str) -> tuple[str, str] | None:
 
 def _github_owner_repo(repo_root: Path) -> tuple[str, str] | None:
     """Parse the origin remote into an (owner, repo) pair without a network call."""
-    proc = _run(["git", "remote", "get-url", "origin"], cwd=repo_root)
-    if proc.returncode != 0:
+    raw = _configured_origin_url(repo_root)
+    if raw is None:
         return None
-    text = (proc.stdout or "").strip()
-    if not text or "\n" in text:
+    try:
+        return _parse_github_origin(raw[:-1].decode("ascii"))
+    except UnicodeError:
         return None
-    return _parse_github_origin(text)
 
 
 def _parse_rest_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
@@ -3543,8 +3543,6 @@ def _real_directory(path: Path) -> Path | None:
             return None
         if any(part in {"", ".", ".."} for part in path.parts):
             return None
-        if Path(os.path.normpath(path)) != path:
-            return None
         current = Path(path.anchor)
         for part in path.parts[1:]:
             current = current / part
@@ -3555,153 +3553,78 @@ def _real_directory(path: Path) -> Path | None:
         return None
 
 
-def _metadata_directory(path: Path) -> Path | None:
-    """Real directory named by git metadata, walking the original spelling.
-
-    A gitdir pointer may be relative. ``.`` stays put. ``..`` moves to the
-    parent only after that directory was proven not to be a symlink. A symlink
-    at any component, including one a later ``..`` would lexically cancel, is
-    unproven. Collapsing ``..`` first would hide that symlink and name a
-    different repository from the one Git opens.
-    """
+def _git_identity_output(cwd: Path, args: list[str]) -> bytes | None:
+    """Raw Git stdout, with no text decoding or whitespace/path normalization."""
     try:
-        if not path.is_absolute():
-            return None
-        current = Path(path.anchor)
-        if current.is_symlink() or not current.is_dir():
-            return None
-        for part in path.parts[1:]:
-            if part in {"", "."}:
-                continue
-            if part == "..":
-                if current == Path(path.anchor):
-                    return None
-                current = current.parent
-                continue
-            current = current / part
-            if current.is_symlink() or not current.is_dir():
-                return None
-    except OSError:
+        proc = safe_git(
+            args,
+            cwd=cwd,
+            profile="local",
+            capture_output=True,
+            text=False,
+            check=False,
+            timeout=_effective_timeout(None),
+            env=sanitized_git_env(),
+        )
+    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError):
         return None
-    return current
-
-
-def _regular_file_line(path: Path) -> str | None:
-    """The single line of a regular file, or None when the file is doubtful."""
-    try:
-        info = path.lstat()
-        if not stat.S_ISREG(info.st_mode):
-            return None
-        lines = path.read_text(encoding="utf-8").splitlines()
-    except (OSError, UnicodeError):
+    if proc.returncode != 0 or not isinstance(proc.stdout, bytes) or not proc.stdout:
         return None
-    if len(lines) != 1 or not lines[0].strip():
-        return None
-    return lines[0].strip()
+    return proc.stdout
 
 
 def _proven_linked_worktree_primary(worktree: Path) -> Path | None:
-    """Primary of a registered linked worktree, proven from git metadata.
+    """A registered dispatch checkout, identified only by Git's raw output.
 
-    The supplied path must be that checkout: a real directory, not a symlink
-    and not a traversal spelling. Its ``.git`` file must name an existing
-    ``<primary>/.git/worktrees/<id>`` directory whose ``gitdir`` file names
-    this checkout and whose ``commondir`` names that primary's ``.git``.
-    A missing registration or a symlink is unproven, including a symlink that
-    a ``..`` component would hide if the path were collapsed first. Git's own
-    common directory for this checkout must be that same ``.git``.
+    The common directory names a tentative primary. Git run in that primary
+    must list the primary first and this exact checkout once. The checkout
+    stays within that primary's cleanup root; another repository's copied
+    registration cannot claim a checkout under this repository.
     """
     checkout = _real_directory(worktree)
     if checkout is None:
         return None
-    pointer = _regular_file_line(checkout / ".git")
-    prefix = "gitdir:"
-    if pointer is None or not pointer.startswith(prefix):
+    common = _git_identity_output(checkout, ["rev-parse", "--path-format=absolute", "--git-common-dir"])
+    if common is None or not common.endswith(b"/.git\n") or common.count(b"\n") != 1:
         return None
-    raw_admin = pointer[len(prefix) :].strip()
-    if not raw_admin:
-        return None
-    admin_path = Path(raw_admin)
-    if not admin_path.is_absolute():
-        admin_path = checkout / admin_path
-    admin = _metadata_directory(admin_path)
-    if admin is None or admin.parent.name != "worktrees" or admin.parent.parent.name != ".git":
-        return None
-    recorded_raw = _regular_file_line(admin / "gitdir")
-    if recorded_raw is None:
-        return None
-    recorded = Path(recorded_raw)
-    if not recorded.is_absolute():
-        recorded = admin / recorded
-    if recorded.name != ".git":
-        return None
-    recorded_dir = _metadata_directory(recorded.parent)
-    if recorded_dir is None or recorded_dir != checkout:
-        return None
-    gitfile = recorded_dir / ".git"
     try:
-        if gitfile.is_symlink() or not gitfile.is_file():
+        primary = Path(os.fsdecode(common[: -len(b"/.git\n")]))
+        if _real_directory(primary / ".git") is None or common != os.fsencode(primary / ".git") + b"\n":
             return None
-    except OSError:
+        checkout.relative_to(primary / ".worktrees")
+    except (OSError, ValueError, UnicodeError):
         return None
-    common_raw = _regular_file_line(admin / "commondir")
-    if common_raw is None:
+    listed = _git_identity_output(primary, ["worktree", "list", "--porcelain"])
+    if listed is None or not listed.endswith(b"\n\n"):
         return None
-    common_path = Path(common_raw)
-    if not common_path.is_absolute():
-        common_path = admin / common_path
-    common = _metadata_directory(common_path)
-    expected_common = admin.parent.parent
-    if common is None or common != expected_common:
+    records = listed[:-2].split(b"\n\n")
+    pattern = (
+        rb"worktree [^\n\0]+\nHEAD (?:[0-9a-f]{40}|[0-9a-f]{64})\n"
+        rb"(?:branch refs/heads/[^\n\0]+|detached)"
+        rb"(?:\n(?:locked|prunable)(?: [^\n\0]*)?)*"
+    )
+    if any(re.fullmatch(pattern, record) is None for record in records):
         return None
-    primary = expected_common.parent
-    primary_git = primary / ".git"
-    try:
-        if primary_git.is_symlink() or not primary_git.is_dir():
-            return None
-    except OSError:
+    registrations = [record.partition(b"\n")[0] for record in records]
+    if not registrations or registrations[0] != b"worktree " + os.fsencode(primary):
         return None
-    if admin.parent != primary_git / "worktrees":
-        return None
-    reported = _git_single_line(checkout, ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"])
-    if reported is None:
-        return None
-    reported_common = _metadata_directory(Path(reported))
-    if reported_common is None or reported_common != primary_git:
+    if registrations.count(b"worktree " + os.fsencode(checkout)) != 1:
         return None
     return primary
 
 
-def _git_single_line(cwd: Path, args: list[str]) -> str | None:
-    """One line of Git stdout, or None when Git cannot be believed."""
-    try:
-        proc = _run(args, cwd=cwd)
-    except (OSError, ValueError, subprocess.SubprocessError):
+def _configured_origin_url(repo: Path) -> bytes | None:
+    """Exactly one raw origin value from Git config, including its terminator."""
+    raw = _git_identity_output(repo, ["config", "--get", "remote.origin.url"])
+    if raw is None or not raw.endswith(b"\n") or raw.count(b"\n") != 1 or b"\0" in raw:
         return None
-    if proc.returncode != 0:
-        return None
-    text = (proc.stdout or "").strip()
-    if not text or "\n" in text:
-        return None
-    return text
-
-
-def _configured_origin_url(repo: Path) -> str | None:
-    """``origin`` URL Git reports for ``repo``, or None."""
-    return _git_single_line(repo, ["git", "remote", "get-url", "origin"])
+    return raw
 
 
 def _checkout_pr_repository(worktree: Path) -> Path | None:
-    """Primary checkout that owns ``worktree``'s pull requests, or None.
+    """Git-proven primary with the checkout's identical raw origin, or None.
 
-    ``worktree`` must be a registered linked checkout proven from git
-    metadata, and that registration must be the repository Git itself reports
-    for the checkout (common directory and origin URL). That primary's
-    ``origin`` must be one HTTPS or SSH GitHub owner/repo. Anything else is
-    unknown, including a symlink, a traversal spelling, a ``.git`` pointer
-    whose registration does not exist, a pointer whose ``..`` hides a symlink,
-    and an origin whose host is not exactly ``github.com``. Callers fail
-    closed: they do not query another repository.
+    Identity failure precedes any pull-request query or removal authorization.
     """
     try:
         root = _proven_linked_worktree_primary(worktree)
@@ -3709,7 +3632,8 @@ def _checkout_pr_repository(worktree: Path) -> Path | None:
         return None
     if root is None or _github_owner_repo(root) is None:
         return None
-    if _configured_origin_url(worktree) != _configured_origin_url(root):
+    origin = _configured_origin_url(worktree)
+    if origin is None or origin != _configured_origin_url(root):
         return None
     return root
 
@@ -3735,8 +3659,7 @@ def _switched_branch_merge_proven(
     """
     from scripts.fleet import ignored_task_output
 
-    # Refuse before any git command on ``worktree``. An unproven path must
-    # not be able to follow a forged ``.git`` pointer into a deletion.
+    # Prove Git identity before querying a pull request or authorizing deletion.
     pr_repo = _checkout_pr_repository(worktree)
     if pr_repo is None:
         return False
@@ -3877,7 +3800,9 @@ def _record_merged_reuse_proof(
     )
     if alternate:
         proven_head = _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head)
-        real_pr = pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search and pr.head_sha == info.head
+        real_pr = (
+            pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search and pr.head_sha == info.head
+        )
         if not proven_head or not real_pr:
             if _retention_release_present(matches):
                 return None  # Preserve #9940's explicit receipt-release path.
