@@ -148,19 +148,21 @@ exec "$TEST_REAL_RESTIC" "${args[@]}"
 
 
 def _dangling_recovery_links(project: Path) -> dict[str, Path]:
-    """Create dangling links in each recovery-root kind; return them by label."""
-    nested = project / "batch_state" / "session" / "pytest-RC"
+    """Create dangling links in each allowlisted recovery root; return them by label."""
+    nested = project / "batch_state" / "fleet-comms" / "session" / "pytest-RC"
     nested.mkdir(parents=True)
+    dataset = project / "data" / "datasets"
+    dataset.mkdir(parents=True)
     links = {
-        "batch_state": nested / "dispatch-storescurrent",
+        "batch_state/fleet-comms": nested / "dispatch-storescurrent",
         ".agent": project / ".agent" / "stale-pointer",
         ".claude/atlas-epic": project / ".claude" / "atlas-epic" / "gone[1]*?.md",
-        "data": project / "data" / "moved-dataset",
+        "data/datasets": dataset / "moved-dataset",
     }
-    links["batch_state"].symlink_to("../../../../.worktrees/removed/stores")
+    links["batch_state/fleet-comms"].symlink_to("../../../../../.worktrees/removed/stores")
     links[".agent"].symlink_to("missing-target")
     links[".claude/atlas-epic"].symlink_to("HANDOFF-old.md")
-    links["data"].symlink_to("missing-target")
+    links["data/datasets"].symlink_to("missing-target")
     return links
 
 
@@ -302,7 +304,7 @@ def _uploaded_databases(log: str) -> set[str]:
 
 
 def _write_archive(project: Path, name: str, databases: list[Path], *, archive_bytes: int | None = None) -> Path:
-    archive_dir = project / "batch_state" / "backups" / "archives"
+    archive_dir = project / "batch_state" / "branch-archive"
     archive_dir.mkdir(parents=True, exist_ok=True)
     archive = archive_dir / name
     archive.write_bytes(b"\x28\xb5\x2f\xfd fixture archive bytes")
@@ -338,9 +340,9 @@ def _backup_invocations(environment: dict[str, str]) -> list[str]:
 
 def _many_database_fixture(project: Path, fixture_runs: int = 30) -> tuple[dict[str, str], dict[str, str]]:
     """Representative recovery tree: many small fixture databases plus live ones."""
-    databases = [project / "data" / "corpus.db", project / "data" / "atlas.db"]
+    databases = [project / "data" / "datasets" / "corpus.db", project / "data" / "atlas.db"]
     databases += [
-        project / "batch_state" / "fixtures" / f"run-{index:02d}" / "corpus.db" for index in range(fixture_runs)
+        project / "batch_state" / "open-model-data" / f"run-{index:02d}" / "corpus.db" for index in range(fixture_runs)
     ]
     databases += [
         project / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3",
@@ -353,14 +355,16 @@ def _many_database_fixture(project: Path, fixture_runs: int = 30) -> tuple[dict[
             "INSERT INTO recovery_probe VALUES (?)", ((f"bulk-{index:06d}" * 8,) for index in range(5000))
         )
     (project / "data" / "atlas.db").chmod(0o600)
-    _make_database(project / "batch_state" / "pytest-of-ops" / "pytest-1" / "scratch.db")
-    (project / "data" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    sources = project / "data" / "sources.db"
+    databases.append(sources)
+    _make_database(project / "batch_state" / "fleet-comms" / "pytest-of-ops" / "pytest-1" / "scratch.db")
+    (project / "data" / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
     database_hashes = {database.relative_to(project).as_posix(): _logical_sha256(database) for database in databases}
     file_hashes = {
         relative: _file_sha256(project / relative)
         for relative in (
-            "data/ordinary.txt",
-            "batch_state/state.txt",
+            "data/datasets/ordinary.txt",
+            "batch_state/fleet-comms/state.txt",
             ".agent/recovery-state.json",
             ".claude/atlas-epic/HANDOFF.md",
         )
@@ -436,7 +440,7 @@ def _real_restic_base_snapshot(
         "--exclude-file",
         str(excludes),
         "--exclude",
-        str(project / "batch_state" / "pytest-of-ops"),
+        str(project / "batch_state" / "fleet-comms" / "pytest-of-ops"),
     )
 
 

@@ -42,14 +42,14 @@ def test_a_fault_before_completion_never_publishes_the_run(
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
     mirror = _fresh_runner_mirror(source)
-    first_hash = _logical_sha256(_make_database(source / "first.db", "first"))
+    first_hash = _logical_sha256(_make_database(source / "datasets" / "first.db", "first"))
     previous = _run(environment, "backup", "--execute")
     assert previous.returncode == 0, previous.stderr
     [previous_run] = _completed_run_ids(environment)
     gate = mirror.parent / "RESTIC-GATE-RECEIPT.json"
     previous_gate = gate.read_bytes()
 
-    _make_database(source / "second.db", "second")
+    _make_database(source / "datasets" / "second.db", "second")
     environment["TEST_HOLD_FILE"] = str(tmp_path / "hold")
     if fault == "check-fails":
         environment["TEST_FAIL_CHECK"] = "always"
@@ -104,8 +104,8 @@ def test_a_fault_before_completion_never_publishes_the_run(
 
     target = tmp_path / "restored"
     assert _restored_run_id(environment, target) == previous_run
-    assert _logical_sha256(target / "data" / "first.db") == first_hash
-    assert not (target / "data" / "second.db").exists()
+    assert _logical_sha256(target / "data" / "datasets" / "first.db") == first_hash
+    assert not (target / "data" / "datasets" / "second.db").exists()
     if fault == "pending-pack-corrupted":
         assert "Repository check failed" in result.stderr
 

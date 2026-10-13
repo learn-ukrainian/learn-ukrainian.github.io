@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.backup_data_script._support import _write_executable
+from tests.backup_data_script._support import _make_database, _write_executable
 
 
 @pytest.fixture
@@ -27,7 +27,8 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
         source,
         project / ".claude" / "atlas-epic",
         project / ".agent",
-        project / "batch_state",
+        project / "batch_state" / "fleet-comms",
+        project / "batch_state" / "review-receipts",
         staging,
         legacy,
         tmp_path / "home",
@@ -43,10 +44,11 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
         "recover me\n",
         encoding="utf-8",
     )
-    (project / "batch_state" / "state.txt").write_text(
+    (project / "batch_state" / "fleet-comms" / "state.txt").write_text(
         "recover me too\n",
         encoding="utf-8",
     )
+    _make_database(source / "sources.db", "sources")
     (project / ".agent" / "recovery-state.json").write_text(
         '{"schema_version": 1}\n',
         encoding="utf-8",
@@ -182,7 +184,7 @@ if [[ "${1:-}" == "backup" && "$stdin_filename" == "BACKUP-RECEIPT.json" ]]; the
     status: .receipt_status,
     paths: [.paths[].path],
     agent: (.paths[] | select(.path == ".agent")),
-    data: (.paths[] | select(.path == "data"))
+    data: ([.paths[] | select(.path == "data/datasets")][0])
   }' \
     "$FAKE_SNAPSHOT_DIR/BACKUP-RECEIPT.json" >> "$FAKE_RESTIC_LOG"
 fi

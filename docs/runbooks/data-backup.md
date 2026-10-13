@@ -6,19 +6,93 @@ write through the cloud provider's desktop sync mount, overwrite the previous ba
 or restore directly over live project data. Snapshot pruning exists only as
 the operator-approved weekly `retention` command described below.
 
-Every completed backup run contains these roots, in priority order:
+The nightly reads one allowlist, `scripts/config/backup-allowlist.json`, and
+puts every kept path in one restic snapshot. `GIT-WORKTREE.patch` is added
+when tracked changes have not been committed, and `BACKUP-RECEIPT.json` is
+written during an executed backup. A path that is not in the allowlist is not
+backed up: the script does not walk it, does not stage it, and does not fail
+because it exists. Drop rows are documentation of that boundary. They are not
+exclude rules, so the kept file `data/lexicon/cache/ulif_raw.sqlite` is still
+snapshotted even though `data/lexicon/cache` is dropped.
 
-- every `.claude/*-epic/` directory, including driver plans and handoffs;
-- `.agent/`, including local agent recovery state and session-stream databases;
-- `batch_state/`;
-- `data/`, including SQLite databases, embeddings, and private inputs;
-- `GIT-WORKTREE.patch` when tracked changes have not been committed; and
-- `BACKUP-RECEIPT.json`.
+`data/lexicon/runner-mirror` is an optional keep so the existing gate receipt
+can compare that tree with the snapshot. A host with no mirror logs one line
+and continues. Do not remove it while the gate receipt still names this path.
 
-The script fails closed when `.claude/atlas-epic`, `.agent`, `batch_state`, `data`, or
-the destination configuration is missing. It also fails when a non-ignored
-untracked Git path is outside the declared recovery roots. This prevents a
-partial backup from appearing successful.
+Required paths abort the run when they are missing. Optional paths log
+`Optional backup path is absent: <path>` once and continue.
+
+| Class | Paths |
+| --- | --- |
+| Required | `.claude/*-epic` (also when the glob matches nothing), `.agent`, `batch_state/fleet-comms`, `batch_state/review-receipts`, `data/sources.db` |
+| Optional | every other KEEP row |
+
+A non-ignored untracked file inside an allowlisted tree that the selection
+does not cover still fails the run. An untracked file outside the allowlist
+does not.
+
+To add a path, edit `scripts/config/backup-allowlist.json` and the KEEP table
+below in the same change. Do not add a path by editing `scripts/backup-data.sh`.
+Set `required` only when a missing path must abort the nightly. A supervised
+run on the backup host is what shows that a nightly finishes; this page only
+records the scope.
+
+<!-- backup-allowlist-keep -->
+
+| Path | Required | Reason |
+| --- | --- | --- |
+| `.claude/*-epic` | yes | Driver plans and handoffs are the only copy of in-flight epic state. |
+| `.agent` | yes | Agent recovery state is local and is not in Git. |
+| `data/sources.db` | yes | The corpus database is the source of truth for dictionary text. |
+| `data/sum20_slovnyk_staging.db` | no | SUM-20 slovnyk staging is costly to rebuild. |
+| `data/sum20_staging.db` | no | SUM-20 staging is costly to rebuild. |
+| `data/lexicon/slovnyk_cache` | no | The slovnyk cache is costly to rebuild. |
+| `data/lexicon/source-inventory` | no | Source inventory is the lexicon intake record. |
+| `data/lexicon/side` | no | Side lexicon inputs are not regenerated from Git. |
+| `data/lexicon/intake` | no | Lexicon intake is not regenerated from Git. |
+| `data/lexicon/parked` | no | Parked lexicon inputs are not regenerated from Git. |
+| `data/lexicon/*.json` | no | Small JSON files directly under data/lexicon, not nested directories. |
+| `data/lexicon/runner-mirror` | no | The gate receipt proves this tree matches the snapshot before a wipe. |
+| `data/movaua.db` | no | The movaua corpus is costly to rebuild. |
+| `data/movne_pytannya.db` | no | The language-question corpus is costly to rebuild. |
+| `data/grac_frequency.db` | no | The GRAC frequency database is costly to rebuild. |
+| `data/atlas.db` | no | The atlas database is costly to rebuild. |
+| `data/wiki_*.db` | no | Wiki databases matched by this non-recursive glob. |
+| `data/lexicon/cache/ulif_raw.sqlite` | no | ULIF raw cache is one SQLite snapshot in the same nightly. |
+| `data/textbook_chunks` | no | Textbook chunks are costly to rebuild. |
+| `data/projects` | no | Project data is not regenerated from Git. |
+| `data/mphdict` | no | mphdict inputs are costly to rebuild. |
+| `data/native-reviewer-lessons` | no | Native-reviewer lessons are not regenerated from Git. |
+| `data/ua-gec` | no | UA-GEC inputs are costly to rebuild. |
+| `data/ubertext-freq` | no | UberText frequencies are costly to rebuild. |
+| `data/processed` | no | Processed inputs are costly to rebuild. |
+| `data/datasets` | no | Datasets are costly to rebuild. |
+| `batch_state/fleet-comms` | yes | Fleet Comms is the durable message and job store. |
+| `batch_state/review-receipts` | yes | Review receipts are the record of independent review. |
+| `batch_state/branch-archive` | no | Branch archive is the local copy of superseded branch state. |
+| `batch_state/tasks` | no | Task records and archive only; lock files and snapshot directories are excluded. |
+| `batch_state/open-model-data` | no | Open-model data stays until the data lane says it is regenerable. |
+| `batch_state/open-model-data-20261007` | no | This open-model snapshot stays until the data lane says it is regenerable. |
+
+<!-- backup-allowlist-drop -->
+
+| Path | Reason |
+| --- | --- |
+| `batch_state/codex-atlas` | Atlas worker checkouts are regenerable. |
+| `batch_state/preserved` | Preserved SQLite evidence is outside the nightly. |
+| `batch_state/devops-*` | Devops scratch is regenerable. |
+| `batch_state/briefs` | Briefs are regenerable. |
+| `batch_state/github-client` | GitHub client cache is regenerable. |
+| `batch_state/backups/archives` | Packed archives are not a nightly root. |
+| `batch_state/reports` | Reports are regenerable. |
+| `batch_state/bakeoff-*` | Bakeoff output is regenerable. |
+| `batch_state/telemetry` | Telemetry is regenerable. |
+| `batch_state/manifests` | Generated manifests are regenerable. |
+| `data/backups` | Local backup copies are not a nightly root. |
+| `data/vesum.db` | VESUM is rebuilt from its source, not recovered from this nightly. |
+| `data/vesum_shadow_v680.db` | VESUM shadow is rebuilt, not recovered from this nightly. |
+| `data/vesum.db.bak.*` | VESUM backups are outside the nightly. |
+| `data/lexicon/cache` | Lexicon cache is dropped except the allowlisted ulif_raw.sqlite file. |
 
 The old `learn-ukrainian-data` Drive folder is a read-only legacy recovery
 source. Do not use it as the new restic repository path; the script rejects a
@@ -72,22 +146,26 @@ restic rclone path with that final directory name.
   path component below the project, such as `pytest-of-<user>` or a
   `--basetemp` like `pytest-RC`) are per-run test scratch: they are neither
   uploaded nor kept in the file phase, and the receipt counts them.
-- Preserved SQLite evidence can be packed into a dated archive under
-  `batch_state/backups/archives/NAME.tar.zst` with a
+- The default archive directory `batch_state/backups/archives` is outside
+  the allowlist, so the nightly does not read it and does not warn about it.
+  Preserved SQLite evidence can still be packed into `NAME.tar.zst` with a
   `NAME.tar.zst.manifest` (`# archive_bytes:` and `# files:` headers, then one
-  `size<TAB>mtime<TAB>project-relative path` line per database). The file phase
-  uploads the archive; a listed database whose size and mtime still match is
-  excluded as a loose file. A database that changed after archiving is backed
-  up loose with a warning, and a manifest whose archive is missing or a
-  different size is ignored with a warning. Verify the archive (listing, count
-  and per-file hashes) before writing its manifest; the originals are never
-  deleted by the backup.
+  `size<TAB>mtime<TAB>project-relative path` line per database) when
+  `LU_BACKUP_DB_ARCHIVE_DIR` points at a directory inside an allowlisted tree.
+  The file phase uploads that archive; a listed database whose size and mtime
+  still match is excluded as a loose file. A database that changed after
+  archiving is backed up loose with a warning, and a manifest whose archive is
+  missing or a different size is ignored with a warning. Verify the archive
+  (listing, count and per-file hashes) before writing its manifest; the
+  originals are never deleted by the backup.
 - The backup logs `SQLite databases backed up: N of M (...)`; `last-run.json`
   records `databases_backed_up`, and the change-only failure and recovery
   alerts include it.
-- Scoped `*-home/` directories in `batch_state/` and `home/` directories in
-  `batch_state/review-receipts/` are excluded. Review homes are ephemeral and
-  may contain credential links. Absolute symlinks elsewhere still stop backup.
+- Scoped `*-home/` directories under allowlisted `batch_state/` trees, and
+  `home/` directories in `batch_state/review-receipts/`, are excluded. Review
+  homes are ephemeral and may contain credential links. Absolute or escaping
+  symlinks under an allowlisted `batch_state/` tree are skipped with a
+  warning. The same links under any other allowlisted tree stop the backup.
 - The legacy `data/textbooks` and `data/vesum` symlinks are excluded only when
   they resolve inside the old Drive backup. Other absolute or escaping
   symlinks stop the backup.
@@ -315,10 +393,11 @@ mkdir -p /absolute/path/to/recovery-parent
   --execute
 ```
 
-The restored tree contains `.claude/`, `.agent/`, `batch_state/`, `data/`, and the JSON
-receipt. `restore --execute` checks `PRAGMA integrity_check` on every restored
-database and fails if any check is not `ok`. Inspect the receipt and expected
-data before any live import:
+The restored tree contains the allowlisted paths that were present in that
+snapshot, plus the JSON receipt. It does not contain every live `batch_state/`
+or `data/` directory. `restore --execute` checks `PRAGMA integrity_check` on
+every restored database and fails if any check is not `ok`. Inspect the
+receipt and expected data before any live import:
 
 ```bash
 jq . /absolute/path/to/recovery-parent/restore-test/BACKUP-RECEIPT.json
@@ -368,6 +447,12 @@ Never point `restore --to` at `data/`, the project root, `_quarantine`, the old
 Drive backup, or another directory containing files.
 
 ## What is not backed up
+
+Anything that is not a KEEP row above is not backed up, including every DROP
+row. In particular the nightly does not walk the rest of `batch_state/` or
+`data/`. `batch_state/tasks/*.lock` files and `batch_state/tasks/*.snapshots/`
+directories are not backed up even though `batch_state/tasks` is kept.
+`batch_state/backups/last-run.json` is a scheduling record, not a backup root.
 
 - `.git/objects`: committed history belongs on the Git remote.
 - `.venv/`, `node_modules/`, and generated `site/public/atlas/`: rebuild them
