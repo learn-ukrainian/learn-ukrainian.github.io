@@ -326,3 +326,34 @@ def test_positions_11_to_55_retain_semantic_identity():
 
     later = _records()[10:]
     assert hashlib.sha256(json.dumps(later, ensure_ascii=False, sort_keys=True).encode()).hexdigest() == 'd4ccdd35f7898ae57947ffba177277cb2d396a85280cfb48b20d492ba54d5673'
+
+
+def test_positions_3_to_5_staged_phonetic_facets_and_invariants() -> None:
+    records = _records()
+    p3, p4, p5 = records[2], records[3], records[4]
+
+    # Staged phonetic facets in active section 4 inventory
+    assert "hardness before [е]" in p3["inventory_text"]
+    assert "д–т" in p3["inventory_text"] and "з–с" in p3["inventory_text"] and "г–х" in p3["inventory_text"]
+    assert "introduce voiced/voiceless base-pair families" in p3["inventory_text"]
+
+    assert "б–п" in p4["inventory_text"]
+    assert "continue voiced/voiceless base-pair family" in p4["inventory_text"]
+    assert "apostrophe" in p4["inventory_text"]
+
+    assert all(pair in p5["inventory_text"] for pair in ("ґ–к", "ж–ш", "дж–ч", "дз–ц"))
+    assert "complete voiced/voiceless base-pair families" in p5["inventory_text"]
+    assert "дж and дз" in p5["inventory_text"]
+
+    # Invariants: 10 jobs, 33 letters, 55 positions, 162 estimated lessons
+    assert len(records) == 55
+    assert sum(r["est_lessons"] for r in records) == 162
+    letters = [ch for r in records[1:5] for ch in r["letters"]]
+    assert len(letters) == 33 and len(set(letters)) == 33
+    assert set(letters) == set("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩьЮЯ")
+
+    # Positions 1-2 unchanged
+    assert records[0]["slug"] == "introduction-to-ukrainian"
+    assert records[0]["letters"] == []
+    assert records[1]["slug"] == "sounds-letters-and-hello"
+    assert records[1]["letters"] == list("АЕИІОМНВПРТЯ")

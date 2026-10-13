@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 960f07c3bc0d8c46d48a29636871ed09a1ba3eeaa6db3dcbf87036b4322870be
+  sha256: e7649ae5f811fde3e81454530c0a46f3b6dc4a192d532552ced53790209abe45
 est_lessons_total: 162
 positions:
 - position: 1
@@ -45,7 +45,7 @@ positions:
   slug: who-am-i
   est_lessons: 4
   job: Introduce yourself and ask identity; common professions and origin phrases
-  inventory_text: '**9 letters**: Д З К Л С У Х ь Г; hard/soft contrast; recycle stress and intonation'
+  inventory_text: '**9 letters**: Д З К Л С У Х ь Г; hard/soft contrast and hardness before [е]; introduce voiced/voiceless base-pair families д–т, з–с, г–х; recycle stress and intonation'
   phase: A1.1
   skills_text: Li, S, W (`:485`)
   skills:
@@ -69,7 +69,7 @@ positions:
   slug: my-family
   est_lessons: 4
   job: Introduce people in a chosen family photo or equivalent using supported possessive phrases
-  inventory_text: '**5 letters**: Б Й Ї Ю Є; apostrophe; recycle stress and intonation'
+  inventory_text: '**5 letters**: Б Й Ї Ю Є; apostrophe; continue voiced/voiceless base-pair family б–п; recycle stress and intonation'
   phase: A1.1
   skills_text: Li, S, W (captions)
   skills:
@@ -87,7 +87,7 @@ positions:
   slug: reading-ukrainian
   est_lessons: 5
   job: Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters
-  inventory_text: '**7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`)'
+  inventory_text: '**7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`)'
   phase: A1.1
   skills_text: Li, S, R, W
   skills:
