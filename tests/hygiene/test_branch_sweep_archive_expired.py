@@ -5,11 +5,14 @@ Scratch repositories only. These tests must never delete a ref in the real check
 
 from __future__ import annotations
 
+import fcntl
+import hashlib
 import json
 import os
 import shlex
 import subprocess
-import time
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -331,6 +334,168 @@ def test_apply_bundles_verifies_receipts_then_deletes_local_refs_only(repo: Path
         assert git(scratch, "rev-parse", f"refs/heads/{name}") == sha
 
 
+def test_contending_archives_hold_lock_through_deletion(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    selected = by_name(run(repo))
+    snapshot = sweep._archive_local_snapshot(repo)
+    first_bundling = threading.Event()
+    release_first = threading.Event()
+    contended = threading.Event()
+    lane = threading.local()
+    events: list[tuple[str, str]] = []
+    original_flock = fcntl.flock
+    lock_path = repo / sweep.ARCHIVE_LOCK_PATH
+
+    class FrozenDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2026, 10, 13, 12, tzinfo=UTC)
+
+    monkeypatch.setattr(sweep, "datetime", FrozenDatetime)
+
+    def flock(descriptor, operation):
+        if (
+            getattr(lane, "name", None) == "codex/beta"
+            and os.fstat(descriptor).st_ino == lock_path.stat().st_ino
+            and operation == fcntl.LOCK_EX
+        ):
+            with pytest.raises(BlockingIOError):
+                original_flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            contended.set()
+        return original_flock(descriptor, operation)
+
+    monkeypatch.setattr(fcntl, "flock", flock)
+
+    def observe(stage, function):
+        def call(*args, **kwargs):
+            descriptor = os.open(lock_path, os.O_RDWR | os.O_NOFOLLOW)
+            try:
+                with pytest.raises(BlockingIOError):
+                    original_flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            finally:
+                os.close(descriptor)
+            events.append((lane.name, stage))
+            if lane.name == "codex/alpha" and stage == "bundle":
+                first_bundling.set()
+                assert release_first.wait(30), "first archive was never released"
+            return function(*args, **kwargs)
+
+        return call
+
+    for stage, name in (
+        ("bundle", "_write_verified_bundle"),
+        ("receipts", "_write_archive_receipts"),
+        ("guards", "_archive_delete_blockers"),
+        ("delete", "_delete_archived_refs"),
+    ):
+        monkeypatch.setattr(sweep, name, observe(stage, getattr(sweep, name)))
+
+    def archive(name):
+        lane.name = name
+        return sweep._apply_archive(
+            repo,
+            [selected[name]],
+            protected=set(sweep.PROTECTED),
+            pr_lookup=lookup(),
+            issue_lookup=lambda *_: (False, "unused"),
+            evidence_cache=sweep._EvidenceCache(),
+            archive_after_days=7,
+            classification_snapshot=snapshot,
+        )
+
+    with ThreadPoolExecutor(max_workers=2) as workers:
+        first = workers.submit(archive, "codex/alpha")
+        second = None
+        try:
+            assert first_bundling.wait(30), "first archive never reached bundling"
+            second = workers.submit(archive, "codex/beta")
+            assert contended.wait(30), "second archive never contended on the held lock"
+            assert events == [("codex/alpha", "bundle")]
+            assert {name: ref_sha(repo, name) for name in heads} == heads
+        finally:
+            release_first.set()
+        results = first.result(timeout=30) + second.result(timeout=30)
+
+    assert all(item.local_deleted and not item.remote_deleted for item in results)
+    assert events == [(name, stage) for name in heads for stage in ("bundle", "receipts", "guards", "delete")]
+    rows = receipt_rows(repo)
+    assert {row["branch"]: row["sha"] for row in rows} == heads
+    assert len({row["bundle"] for row in rows}) == 2
+    for row in rows:
+        bundle = repo / str(row["bundle"])
+        assert row["sha256"] == hashlib.sha256(bundle.read_bytes()).hexdigest()
+        assert git(repo, "bundle", "list-heads", str(bundle)) == f"{row['sha']} refs/heads/{row['branch']}"
+        assert ref_sha(repo, str(row["branch"])) is None
+    assert lock_path.is_file()
+    with sweep._archive_lock(repo):
+        pass
+    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.tmp"))
+
+
+@pytest.mark.parametrize("collision", ["existing", "at-publication"])
+def test_bundle_publication_never_overwrites_an_archive(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, collision: str
+) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    original_mkstemp = sweep.tempfile.mkstemp
+    original_link = os.link
+    existing: list[Path] = []
+    old_bytes = b"previously published archive\n"
+
+    def allocate(**kwargs):
+        descriptor, name = original_mkstemp(**kwargs)
+        staging = Path(name)
+        destination = staging.with_name(staging.name.removeprefix(".").removesuffix(".tmp") + ".bundle")
+        existing.append(destination)
+        if collision == "existing":
+            destination.write_bytes(old_bytes)
+        return descriptor, name
+
+    def publish(source, destination, **kwargs):
+        assert Path(source).read_bytes().startswith(b"# v")
+        if collision == "at-publication":
+            Path(destination).write_bytes(old_bytes)
+        return original_link(source, destination, **kwargs)
+
+    monkeypatch.setattr(sweep.tempfile, "mkstemp", allocate)
+    monkeypatch.setattr(os, "link", publish)
+    found = by_name(run(repo, apply=True))
+    assert len(existing) == 1
+    assert existing[0].read_bytes() == old_bytes
+    assert all(not found[name].local_deleted and found[name].classification == "report-only" for name in heads)
+    assert all("File exists" in found[name].reason for name in heads)
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert receipt_rows(repo) == []
+    assert list((repo / sweep.ARCHIVE_DIR).glob("*.bundle")) == existing
+    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.tmp"))
+
+
+@pytest.mark.parametrize("failure", ["symlink", "directory", "flock"])
+def test_archive_lock_failure_retains_the_batch(repo: Path, monkeypatch: pytest.MonkeyPatch, failure: str) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    lock = repo / sweep.ARCHIVE_LOCK_PATH
+    lock.parent.mkdir(parents=True)
+    if failure == "symlink":
+        target = repo.parent / "unrelated-file"
+        target.write_bytes(b"keep")
+        lock.symlink_to(target)
+    elif failure == "directory":
+        lock.mkdir()
+    else:
+
+        def refuse(*_):
+            raise OSError("lock refused")
+
+        monkeypatch.setattr(fcntl, "flock", refuse)
+    found = by_name(run(repo, apply=True))
+    assert all(not found[name].local_deleted and found[name].classification == "report-only" for name in heads)
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert receipt_rows(repo) == []
+    assert not list(lock.parent.glob("*.bundle"))
+    if failure == "symlink":
+        assert target.read_bytes() == b"keep"
+
+
 def test_verify_failure_deletes_nothing(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     sha = commit_unique(repo, "codex/old-local", days=8)
     publish(repo, "codex/old-local")
@@ -613,19 +778,6 @@ def test_newer_than_closing_merge_blocks_archive_before_file_coverage(repo: Path
     assert ref_sha(repo, "codex/impl-10532") == branch_sha
 
 
-def _wait_for_free_bundle_second(repo: Path) -> None:
-    """The bundle name is the UTC second. A second apply in that second is retained."""
-    archive = repo / "batch_state" / "branch-archive"
-    deadline = time.monotonic() + 3
-    while True:
-        stamp = datetime.now(UTC).strftime("stale-local-%Y%m%dT%H%M%SZ.bundle")
-        if not (archive / stamp).exists():
-            return
-        if time.monotonic() >= deadline:
-            raise AssertionError(f"bundle name stayed in use: {stamp}")
-        time.sleep(0.05)
-
-
 def test_truncated_receipt_does_not_authorize_delete(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Finding 4: a short write is finished and re-read before any ref is deleted."""
     real_write = os.write
@@ -655,7 +807,6 @@ def test_truncated_receipt_does_not_authorize_delete(repo: Path, monkeypatch: py
         return real_write(_fd, raw[:half])
 
     monkeypatch.setattr(os, "write", short)
-    _wait_for_free_bundle_second(repo)
     shortened = by_name(run(repo, apply=True))["codex/short-receipt"]
     rows = [row for row in receipt.read_text(encoding="utf-8").split("\n") if short_sha in row]
     assert len(rows) == 1

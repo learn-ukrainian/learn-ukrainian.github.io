@@ -19,7 +19,9 @@ import shlex
 import stat
 import subprocess
 import sys
-from collections.abc import Callable
+import tempfile
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -43,6 +45,7 @@ _CLOCK_SKEW = timedelta(seconds=10)
 LEDGER_PATH = Path("batch_state") / "branch-archive" / "evidence.jsonl"
 ARCHIVE_DIR = Path("batch_state") / "branch-archive"
 RECEIPT_PATH = ARCHIVE_DIR / "stale-local-receipts.jsonl"
+ARCHIVE_LOCK_PATH = ARCHIVE_DIR / "archive.lock"
 DEFAULT_ARCHIVE_AFTER_DAYS = 7
 # A released task younger than this still names work someone may return to.
 # Archival waits. Patch-id deletion and the other dispositions do not.
@@ -1290,6 +1293,26 @@ def _retain_archive(verdict: Decision, reason: str) -> Decision:
     return replace(verdict, classification="report-only", reason=reason, local_deleted=False, remote_deleted=False)
 
 
+@contextmanager
+def _archive_lock(repo: Path) -> Iterator[None]:
+    """Serialize archive writers on one persistent control-plane lock inode."""
+    path = _controlled_file(repo, ARCHIVE_LOCK_PATH, refusal="archive lock path contains a symlink")
+    try:
+        _ensure_ledger_directory(path.parent)
+        descriptor = os.open(path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
+    except (OSError, RuntimeError) as exc:
+        raise RuntimeError(f"archive lock path unwritable: {exc}") from exc
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise RuntimeError("archive lock path is not a regular file")
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        os.fchmod(descriptor, 0o600)
+        yield
+    finally:
+        # Never unlink the lock: another opener must contend on this same inode.
+        os.close(descriptor)
+
+
 def _bundle_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
@@ -1353,9 +1376,7 @@ def _verify_bundle_heads(repo: Path, bundle: Path, expected: dict[str, str]) -> 
 
 
 def _write_verified_bundle(repo: Path, confirmed: list[tuple[Decision, Branch]]) -> tuple[Path, str]:
-    """Create one complete bundle and refuse to return it until every head is listed."""
-    filename = f"stale-local-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.bundle"
-    relative = (ARCHIVE_DIR / filename).as_posix()
+    """Verify a private bundle, then publish without replacing any existing name."""
     directory = _controlled_file(repo, ARCHIVE_DIR, refusal="archive path contains a symlink")
     try:
         _ensure_ledger_directory(directory)
@@ -1363,9 +1384,6 @@ def _write_verified_bundle(repo: Path, confirmed: list[tuple[Decision, Branch]])
         if "symlink" in str(exc):
             raise
         raise RuntimeError(f"bundle path unwritable: {exc}") from exc
-    bundle_path = _controlled_file(repo, ARCHIVE_DIR / filename, refusal="archive path contains a symlink")
-    if bundle_path.exists() or bundle_path.is_symlink():
-        raise RuntimeError("bundle path unwritable: bundle path already exists")
     expected: dict[str, str] = {}
     refs: list[str] = []
     for _verdict, branch in confirmed:
@@ -1376,19 +1394,27 @@ def _write_verified_bundle(repo: Path, confirmed: list[tuple[Decision, Branch]])
     main_ref = "refs/remotes/origin/main"
     if _git(repo, "rev-parse", "--verify", "--quiet", main_ref).returncode != 0:
         raise RuntimeError("archive retained: origin/main is unavailable")
+    prefix = f".stale-local-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}-"
+    descriptor, temporary_name = tempfile.mkstemp(prefix=prefix, suffix=".tmp", dir=directory)
+    os.close(descriptor)
+    temporary = Path(temporary_name)
+    filename = temporary.name.removeprefix(".").removesuffix(".tmp") + ".bundle"
+    bundle_path = directory / filename
+    relative = (ARCHIVE_DIR / filename).as_posix()
     try:
-        _checked(repo, "bundle", "create", str(bundle_path), *refs, "--not", main_ref)
+        _checked(repo, "bundle", "create", str(temporary), *refs, "--not", main_ref)
+        _seal_regular_file(temporary)
+        _verify_bundle_heads(repo, temporary, expected)
+        # link() is atomic and refuses an existing destination, even a symlink.
+        os.link(temporary, bundle_path, follow_symlinks=False)
         _seal_regular_file(bundle_path)
-        _verify_bundle_heads(repo, bundle_path, expected)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        if bundle_path.exists() or bundle_path.is_symlink():
-            try:
-                _unlink_unverified(bundle_path)
-            except OSError as unlink_error:
-                raise RuntimeError(f"bundle path unwritable: partial bundle remains: {unlink_error}") from exc
         if isinstance(exc, OSError):
             raise RuntimeError(f"bundle path unwritable: {exc}") from exc
         raise
+    finally:
+        # Only this run's private staging file is disposable. Published archives stay.
+        _unlink_unverified(temporary)
     return bundle_path, relative
 
 
@@ -1650,10 +1676,42 @@ def _apply_archive(
     archive_after_days: int,
     classification_snapshot: dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]],
 ) -> list[Decision]:
-    """Bundle, verify, and receipt every expired local branch, then delete those local refs."""
+    """Hold the archive lock from fresh validation through compare-and-delete."""
     selected = [item for item in decisions if item.classification == "archive-expired"]
     if not selected:
         return decisions
+    try:
+        with _archive_lock(repo):
+            return _apply_archive_locked(
+                repo,
+                decisions,
+                protected=protected,
+                pr_lookup=pr_lookup,
+                issue_lookup=issue_lookup,
+                evidence_cache=evidence_cache,
+                archive_after_days=archive_after_days,
+                classification_snapshot=classification_snapshot,
+            )
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        return [
+            _retain_archive(item, f"archive retained: {exc}") if item.classification == "archive-expired" else item
+            for item in decisions
+        ]
+
+
+def _apply_archive_locked(
+    repo: Path,
+    decisions: list[Decision],
+    *,
+    protected: set[str],
+    pr_lookup: PrLookup,
+    issue_lookup: IssueLookup,
+    evidence_cache: _EvidenceCache,
+    archive_after_days: int,
+    classification_snapshot: dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]],
+) -> list[Decision]:
+    """Bundle, verify, and receipt every expired local branch, then delete those local refs."""
+    selected = [item for item in decisions if item.classification == "archive-expired"]
     indexes = {item.branch: index for index, item in enumerate(decisions)}
     found = {item.name: item for item in _refs(repo)}
     worktrees = reaper.list_git_worktrees(repo)

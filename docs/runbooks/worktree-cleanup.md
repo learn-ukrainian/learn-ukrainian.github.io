@@ -317,7 +317,13 @@ branches as `archive-expired` after seven days by default. Apply writes one thin
 bundle under `batch_state/branch-archive/`, verifies every selected head, and
 appends durable records to `stale-local-receipts.jsonl` before deleting any local
 ref. Every existing receipt must be a valid, newline-terminated JSON object;
-a broken ledger refuses the batch. Thin bundles exclude `origin/main` history.
+a broken ledger refuses the batch. A repository-wide exclusive archive lock on
+the control-plane checkout covers fresh validation, bundling, receipts, final
+guards and ref deletion. The persistent `branch-archive/archive.lock` file is
+never unlinked. Each bundle is created and verified under a private temporary
+name, then published with an atomic hard link that refuses an existing archive
+name. Publication failure keeps every selected ref and any existing bundle.
+Thin bundles exclude `origin/main` history.
 The receipt's restore command needs those prerequisite commits present: fetch
 them from origin or restore in a clone of this repository. Remote refs and
 archive bundles are retained; bundles at least 90 days old are listed for review.
