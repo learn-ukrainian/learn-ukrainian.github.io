@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import argparse
 import base64
-import binascii
 import gzip
 import hashlib
 import http.client
@@ -30,12 +29,13 @@ import tarfile
 import urllib.error
 import urllib.request
 import uuid
+import zlib
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import closing, contextmanager, suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, BinaryIO
 from urllib.parse import urlencode, urlparse
 
 # Script-by-path execution under the shared primary interpreter can expose the
@@ -91,6 +91,16 @@ DEFAULT_STALE_HOURS = 12
 ROLLOVER_BUNDLE_SCHEMA = "rollover-bundle.v1"
 ROLLOVER_BUNDLE_MANIFEST_NAME = "manifest.json"
 ROLLOVER_BUNDLE_MAX_BYTES = 4 * 1024 * 1024
+# #10487 measurements: 280 valid test-fixture bundles peaked at 5,240 bytes
+# per member, 32,289 aggregate bytes, 86 entries and a 24,304-byte manifest.
+# 47 real infra exports peaked at 13,107 / 121,611 / 33 / 9,673 respectively.
+# Aggregate bytes and entry count include the manifest. Reuse the 4 MiB
+# transport budget for expanded content, allowing at most a quarter per file.
+# Entry/manifest caps are powers of two above the measured maxima, with headroom.
+ROLLOVER_BUNDLE_MAX_MEMBER_BYTES = 1024 * 1024
+ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES = 4 * 1024 * 1024
+ROLLOVER_BUNDLE_MAX_MEMBERS = 128
+ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES = 64 * 1024
 ROLLOVER_BUNDLE_REPO_TOKEN = "{{REPO_ROOT}}"
 ROLLOVER_BUNDLE_STATUS_RANK = {
     "superseded": 0,
@@ -345,12 +355,17 @@ def parse_iso_datetime(value: str | None) -> datetime | None:
     if not value:
         return None
     try:
-        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        with _bundle_conversion():
+            text = str(value)
+            text.encode("utf-8")
+            if "\x00" in text:
+                raise ValueError("timestamp contains NUL")
+            parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                return parsed.replace(tzinfo=UTC)
+            return parsed.astimezone(UTC)
     except (KeyError, OSError, TypeError, ValueError):
         return None
-    if parsed.tzinfo is None:
-        return parsed.replace(tzinfo=UTC)
-    return parsed.astimezone(UTC)
 
 
 def rel(path: Path, root: Path) -> str:
@@ -459,8 +474,74 @@ def http_get_json(base_url: str, path: str, timeout_s: float = 3.0) -> dict[str,
     return data if isinstance(data, dict) else {"value": data}
 
 
+@contextmanager
+def _bundle_conversion() -> Iterator[None]:
+    """Normalize data conversion failures without hiding resource or server faults."""
+    try:
+        yield
+    except (ValueError, ArithmeticError, RecursionError, UnicodeError, TypeError):
+        raise ValueError("bundle conversion is invalid") from None
+
+
 def _bundle_json(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    with _bundle_conversion():
+        return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def _bundle_require_json_value(value: Any) -> None:
+    """Refuse values that cannot be represented as finite, bounded-depth JSON."""
+    with _bundle_conversion():
+        json.dumps(value, allow_nan=False, ensure_ascii=False).encode("utf-8")
+        # Check optional timestamps before persisting data for later consumers.
+        # owner_pid_started_at is an epoch number, not an ISO timestamp.
+        timestamp_fields = {
+            "acquired_at",
+            "confirmed_at",
+            "created_at",
+            "expires_at",
+            "exported_at",
+            "generated_at",
+            "heartbeat_at",
+            "last_seen_at",
+            "prepared_at",
+            "released_at",
+            "resumed_at",
+            "retired_at",
+            "started_at",
+            "updated_at",
+        }
+        pending = [value]
+        while pending:
+            item = pending.pop()
+            if isinstance(item, dict):
+                for key, child in item.items():
+                    if (
+                        key in timestamp_fields
+                        and child is not None
+                        and (not isinstance(child, str) or parse_iso_datetime(child) is None)
+                    ):
+                        raise ValueError("bundle timestamp is invalid")
+                    if key in {"owner_pid_started_at", "context_percent"} and child is not None:
+                        float(child)
+                    pending.append(child)
+            elif isinstance(item, list):
+                pending.extend(item)
+
+
+def _bundle_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError("bundle JSON has duplicate keys")
+        value[key] = item
+    return value
+
+
+def _bundle_load_json(payload: bytes) -> Any:
+    with _bundle_conversion():
+        value = json.loads(payload.decode("utf-8"), object_pairs_hook=_bundle_json_object)
+    _bundle_require_json_value(value)
+    return value
 
 
 def _bundle_member_path(value: str) -> str:
@@ -468,7 +549,7 @@ def _bundle_member_path(value: str) -> str:
         raise ValueError("bundle member path is malformed")
     path = Path(value)
     if not path.parts or path.is_absolute() or ".." in path.parts or path.parts[0] == ROLLOVER_BUNDLE_MANIFEST_NAME:
-        raise ValueError(f"bundle member path is unsafe: {value!r}")
+        raise ValueError("bundle member path is unsafe")
     return path.as_posix()
 
 
@@ -533,10 +614,11 @@ def _bundle_text_member(name: str) -> bool:
 
 
 def _bundle_tokenize(data: bytes, *, repo_root: Path, state_root: Path) -> bytes:
-    text = data.decode("utf-8")
-    for root in (repo_root.resolve(), state_root.resolve()):
-        text = text.replace(str(root), ROLLOVER_BUNDLE_REPO_TOKEN)
-    return text.encode("utf-8")
+    with _bundle_conversion():
+        text = data.decode("utf-8")
+        for root in (repo_root.resolve(), state_root.resolve()):
+            text = text.replace(str(root), ROLLOVER_BUNDLE_REPO_TOKEN)
+        return text.encode("utf-8")
 
 
 def _bundle_rewrite(data: bytes, *, repo_root: Path) -> bytes:
@@ -546,25 +628,25 @@ def _bundle_rewrite(data: bytes, *, repo_root: Path) -> bytes:
 def _bundle_replacement_status(replacement: Mapping[str, Any]) -> str:
     status = str(replacement.get("status") or "")
     if status not in ROLLOVER_BUNDLE_STATUS_RANK:
-        raise ValueError(f"replacement status is not bundle-orderable: {status!r}")
+        raise ValueError("replacement status is not bundle-orderable")
     return status
 
 
 def _bundle_order(manifest: Mapping[str, Any]) -> tuple[int, int, datetime, str, int]:
-    try:
-        generation = int(manifest["generation"])
-    except (KeyError, TypeError, ValueError) as exc:
-        raise ValueError("bundle generation is malformed") from exc
+    with _bundle_conversion():
+        generation = int(manifest.get("generation"))
     status = _bundle_replacement_status(manifest)
-    prepared_at = parse_iso_datetime(str(manifest.get("prepared_at") or ""))
+    with _bundle_conversion():
+        prepared_at = parse_iso_datetime(str(manifest.get("prepared_at") or ""))
     if prepared_at is None:
         raise ValueError("bundle prepared_at is malformed")
     rollover_id = normalize_rollover_id(str(manifest.get("rollover_id") or ""))
-    try:
+    with _bundle_conversion():
         upload_seq = int(manifest.get("upload_seq", 0))
-    except (TypeError, ValueError) as exc:
-        raise ValueError("bundle upload_seq is malformed") from exc
-    if generation < 1 or upload_seq < 0:
+    if generation != manifest["generation"] or upload_seq != manifest.get("upload_seq", 0):
+        raise ValueError("bundle generation or upload_seq is not an integer")
+    # Stored generations and upload sequences must fit SQLite signed 64-bit integers.
+    if not 1 <= generation <= 2**63 - 1 or not 0 <= upload_seq <= 2**63 - 1:
         raise ValueError("bundle generation or upload_seq is out of range")
     return generation, ROLLOVER_BUNDLE_STATUS_RANK[status], prepared_at, rollover_id, upload_seq
 
@@ -578,13 +660,15 @@ def _bundle_state_manifest(
     agent = normalize_agent_name(str(state.get("agent") or ""))
     lineage_id = normalize_lineage_id(str(state.get("lineage_id") or replacement.get("lineage_id") or ""))
     status = _bundle_replacement_status(replacement)
-    generation = int(replacement.get("generation"))
+    with _bundle_conversion():
+        generation = int(replacement.get("generation"))
     rollover_id = normalize_rollover_id(str(replacement.get("rollover_id") or ""))
     prepared_at = str(replacement.get("prepared_at") or "")
     if parse_iso_datetime(prepared_at) is None:
         raise ValueError("rollover replacement prepared_at is malformed")
     if upload_seq is None:
-        upload_seq = int(state.get("bundle_upload_seq", 0))
+        with _bundle_conversion():
+            upload_seq = int(state.get("bundle_upload_seq", 0))
     return {
         "schema": ROLLOVER_BUNDLE_SCHEMA,
         "agent": agent,
@@ -656,10 +740,22 @@ def _bundle_handoff_candidates(repo_root: Path, stream_id: str) -> tuple[str, ..
 
 def _bundle_handoff_candidates_for_agent(repo_root: Path, stream_id: str, agent: str) -> tuple[str, ...]:
     """Resolve the inventory lane first, then the canonical agent-slug template."""
-    candidates = list(_bundle_handoff_candidates(repo_root, stream_id))
-    if agent.startswith("claude-"):
-        candidates.append(f".claude/{agent.removeprefix('claude-')}-epic/CLAUDE-DRIVER-HANDOFF.md")
-    return tuple(dict.fromkeys(candidates))
+    from agents_extensions.shared.session_streams.store import rollover_bundle_handoff_candidates
+
+    return rollover_bundle_handoff_candidates(_bundle_handoff_candidates(repo_root, stream_id), agent)
+
+
+def _bundle_check_members(repo_root: Path, *, manifest: Mapping[str, Any], members: Mapping[str, bytes]) -> None:
+    """Refuse the whole bundle unless every member is its own lineage file or its agent's handoff path."""
+    from agents_extensions.shared.session_streams.store import validate_rollover_bundle_members
+
+    agent = normalize_agent_name(str(manifest["agent"]))
+    validate_rollover_bundle_members(
+        members,
+        agent=agent,
+        lineage_id=normalize_lineage_id(str(manifest["lineage_id"])),
+        handoff_candidates=_bundle_handoff_candidates_for_agent(repo_root, str(manifest.get("stream_id") or ""), agent),
+    )
 
 
 def _bundle_source_members(
@@ -755,37 +851,90 @@ def _build_rollover_bundle(
     return manifest, archive, _bundle_secret_hits(members)
 
 
+def _bundle_read_limited(source: BinaryIO, limit: int, reason: str) -> bytes:
+    """Read at most the remaining budget plus one byte, regardless of headers."""
+    result = io.BytesIO()
+    while True:
+        chunk = source.read(min(64 * 1024, limit - result.tell() + 1))
+        if not chunk:
+            return result.getvalue()
+        if len(chunk) > limit - result.tell():
+            raise ValueError(reason)
+        result.write(chunk)
+
+
 def _bundle_extract(
     blob: bytes, *, manifest_override: Mapping[str, Any] | None = None
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
+    if manifest_override is not None:
+        _bundle_require_json_value(manifest_override)
     if len(blob) > ROLLOVER_BUNDLE_MAX_BYTES:
         raise ValueError("rollover bundle exceeds the 4 MiB cap")
     members: dict[str, bytes] = {}
+    folded_names: set[str] = set()
     manifest: dict[str, Any] | None = None
+    expanded_bytes = 0
     try:
-        with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as archive:
-            for info in archive.getmembers():
+        # Bound decompression before tarfile can allocate extension headers or
+        # enumerate members. Include padding/PAX headroom, and read through EOF
+        # so small declared sizes or tar end markers cannot hide expansion.
+        archive_limit = (
+            ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES
+            + ROLLOVER_BUNDLE_MAX_MEMBERS * 4096
+            + tarfile.RECORDSIZE
+        )
+        with gzip.GzipFile(fileobj=io.BytesIO(blob), mode="rb") as compressed:
+            raw = _bundle_read_limited(compressed, archive_limit, "rollover bundle exceeds expanded archive limit")
+        with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as archive:
+            for ordinal, info in enumerate(archive, start=1):
+                if ordinal > ROLLOVER_BUNDLE_MAX_MEMBERS:
+                    raise ValueError("rollover bundle exceeds member count limit")
+                is_manifest = info.name == ROLLOVER_BUNDLE_MANIFEST_NAME
+                member_limit = (
+                    ROLLOVER_BUNDLE_MAX_MANIFEST_BYTES if is_manifest else ROLLOVER_BUNDLE_MAX_MEMBER_BYTES
+                )
+                reason = (
+                    "rollover bundle exceeds manifest size limit"
+                    if is_manifest
+                    else "rollover bundle exceeds expanded member limit"
+                )
+                if info.size < 0 or info.size > member_limit:
+                    raise ValueError(reason)
+                remaining = ROLLOVER_BUNDLE_MAX_EXPANDED_BYTES - expanded_bytes
+                if info.size > remaining:
+                    raise ValueError("rollover bundle exceeds aggregate expanded limit")
                 if info.name == ROLLOVER_BUNDLE_MANIFEST_NAME:
-                    if manifest is not None or not info.isfile():
+                    if manifest is not None:
+                        raise ValueError("rollover bundle has a duplicate embedded manifest")
+                    if not info.isfile():
                         raise ValueError("bundle manifest is malformed")
                     raw_manifest = archive.extractfile(info)
                     if raw_manifest is None:
                         raise ValueError("bundle manifest is unreadable")
-                    value = json.loads(raw_manifest.read().decode("utf-8"))
+                    with raw_manifest:
+                        data = _bundle_read_limited(raw_manifest, min(member_limit, remaining), reason)
+                    expanded_bytes += len(data)
+                    value = _bundle_load_json(data)
                     if not isinstance(value, dict):
                         raise ValueError("bundle manifest must be an object")
                     manifest = value
                     continue
                 name = _bundle_member_path(info.name)
-                if name in members or not info.isfile():
+                if name.casefold() in folded_names or not info.isfile():
                     raise ValueError("bundle contains a duplicate or non-regular member")
+                # Case-insensitive targets cannot faithfully install both names.
+                folded_names.add(name.casefold())
                 payload = archive.extractfile(info)
                 if payload is None:
                     raise ValueError("bundle member is unreadable")
-                members[name] = payload.read()
-    except (tarfile.TarError, OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
-        raise ValueError(f"rollover bundle is not a valid tar.gz: {exc}") from exc
-    if manifest is None or manifest.get("schema") != ROLLOVER_BUNDLE_SCHEMA:
+                with payload:
+                    members[name] = _bundle_read_limited(payload, min(member_limit, remaining), reason)
+                expanded_bytes += len(members[name])
+    except (tarfile.TarError, OSError, EOFError, zlib.error, json.JSONDecodeError, UnicodeDecodeError, RecursionError) as exc:
+        raise ValueError("rollover bundle is not a valid tar.gz") from exc
+    if manifest is None:
+        raise ValueError("rollover bundle has no embedded manifest")
+    if manifest.get("schema") != ROLLOVER_BUNDLE_SCHEMA:
         raise ValueError("rollover bundle manifest schema is invalid")
     declared_files = manifest.get("files")
     if not isinstance(declared_files, list) or not declared_files:
@@ -802,15 +951,17 @@ def _bundle_extract(
         payload = members[name]
         tokenized = item.get("tokenized")
         if not isinstance(tokenized, bool) or tokenized != _bundle_text_member(name):
-            raise ValueError(f"rollover bundle tokenization declaration is invalid: {name}")
+            raise ValueError("rollover bundle tokenization declaration is invalid")
         if tokenized:
             declared_tokenized.add(name)
         if item.get("bytes") != len(payload) or item.get("sha256") != hashlib.sha256(payload).hexdigest():
-            raise ValueError(f"rollover bundle member fingerprint mismatch: {name}")
+            raise ValueError("rollover bundle member fingerprint mismatch")
     if declared_names != set(members):
         raise ValueError("rollover bundle tar contains an unmanifested member")
     tokenized_members = manifest.get("tokenized_members")
-    if not isinstance(tokenized_members, list) or set(tokenized_members) != declared_tokenized:
+    with _bundle_conversion():
+        valid_tokenized = isinstance(tokenized_members, list) and set(tokenized_members) == declared_tokenized
+    if not valid_tokenized:
         raise ValueError("rollover bundle tokenized_members does not match its file manifest")
     _bundle_order(manifest)
     expected_digest = _bundle_digest(members, manifest)
@@ -821,12 +972,33 @@ def _bundle_extract(
     if manifest_override is not None:
         outer = dict(manifest_override)
         if outer.get("schema") != ROLLOVER_BUNDLE_SCHEMA or outer.get("bundle_sha256") != manifest.get("bundle_sha256"):
-            raise ValueError("API manifest does not match the bundle")
+            raise ValueError("supplied manifest does not match the embedded manifest")
         for key in ("agent", "stream_id", "lineage_id", "rollover_id", "generation", "status", "prepared_at"):
             if outer.get(key) != manifest.get(key):
-                raise ValueError(f"API manifest differs from bundle at {key}")
+                raise ValueError(f"supplied manifest differs from the embedded manifest at {key}")
         manifest = {**manifest, "upload_seq": outer.get("upload_seq", manifest.get("upload_seq", 0))}
         _bundle_order(manifest)
+    return manifest, members
+
+
+def verify_rollover_bundle(
+    blob: bytes, *, repo_root: Path, manifest_override: Mapping[str, Any] | None = None
+) -> tuple[dict[str, Any], dict[str, bytes]]:
+    """The one rollover bundle validation the importer and the bundle store both run.
+
+    Extracts the archive (exactly one embedded manifest; no duplicate,
+    normalized/case-folded duplicate, non-regular or unmanifested member; every member
+    matches its declared checksum; the bundle fingerprint verifies), binds a
+    supplied manifest's identity to the embedded one, and applies the
+    reject-by-default member allowlist.  Returns the embedded manifest and the
+    members; compressed/expanded bytes, entry count and manifest size are
+    bounded before reads. Any refusal raises ``ValueError`` before writes.
+    """
+    manifest, members = _bundle_extract(blob, manifest_override=manifest_override)
+    _bundle_check_members(repo_root, manifest=manifest, members=members)
+    for name, payload in members.items():
+        if Path(name).suffix.lower() == ".json":
+            _bundle_load_json(payload)
     return manifest, members
 
 
@@ -913,26 +1085,25 @@ def _bundle_validate_lease_member(
     if payload is None:
         raise ValueError("bundle has no lease state member")
     try:
-        state = json.loads(payload.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        state = _bundle_load_json(payload)
+    except ValueError as exc:
         raise ValueError("bundle lease state is not valid JSON") from exc
     if not isinstance(state, dict):
         raise ValueError("bundle lease state must be an object")
-    replacement, error = validate_live_lease(
-        state,
-        agent=agent,
-        state_path=state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json",
-    )
+    with _bundle_conversion():
+        replacement, error = validate_live_lease(
+            state,
+            agent=agent,
+            state_path=state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json",
+        )
     if error:
-        raise ValueError(f"bundle lease is invalid: {error}")
+        raise ValueError("bundle lease is invalid")
     if replacement is None:
         raise ValueError("bundle lease replacement is missing")
     if state.get("lineage_id") != lineage_id or state.get("rollover_id") != manifest.get("rollover_id"):
         raise ValueError("bundle lease identity does not match its manifest")
-    try:
-        generation = int(manifest["generation"])
-    except (KeyError, TypeError, ValueError) as exc:
-        raise ValueError("bundle manifest generation is malformed") from exc
+    with _bundle_conversion():
+        generation = int(manifest.get("generation"))
     if replacement.get("generation") != generation:
         raise ValueError("bundle lease generation does not match its manifest")
     if replacement.get("prepared_at") != manifest.get("prepared_at"):
@@ -1072,8 +1243,7 @@ def _bundle_stage_install(
     files = {_bundle_member_path(name): payload for name, payload in members.items()}
     if not any(name.startswith(lineage_prefix) for name in files):
         raise ValueError("bundle has no lineage state members")
-    if any(name.startswith(".agent/thread-rollovers/") and not name.startswith(lineage_prefix) for name in files):
-        raise ValueError("bundle contains a foreign lineage member")
+    _bundle_check_members(repo_root, manifest=manifest, members=files)
     stage = f".agent/thread-rollovers/{agent}/.{lineage_id}.import-{uuid.uuid4().hex}"
     stage_root = state_root / stage
     staged_lineage = stage_root / "lineage"
@@ -1124,7 +1294,6 @@ def _bundle_commit_install(
     staged_lineage: Path,
     staged_repo: Mapping[str, Path],
     local_lineage_exists: bool,
-    install_handoff: bool = True,
     ledger: _BundleImportLedger | None = None,
 ) -> tuple[Path | None, list[str], dict[str, Any] | None]:
     """Commit and roll back using only descriptor-relative file operations."""
@@ -1156,8 +1325,6 @@ def _bundle_commit_install(
                 backup_complete = True
             handoff_candidates = set(_bundle_handoff_candidates_for_agent(repo_root, str(manifest["stream_id"]), agent))
             for name, source in sorted(staged_repo.items()):
-                if not install_handoff and name in handoff_candidates:
-                    continue
                 old_payload = repo.read_path(name)
                 repo_backups[name] = old_payload
                 installed = tree.read_path(source.relative_to(state_root).as_posix())
@@ -1469,15 +1636,16 @@ def _bundle_api_list(
     args: argparse.Namespace,
     *,
     stream_id: str,
+    agent: str,
     limit: int = 20,
 ) -> list[dict[str, Any]]:
-    """List bundle metadata in upload-sequence order without downloading blobs."""
+    """List one agent's bundle metadata in upload-sequence order without downloading blobs."""
     if limit < 1 or limit > 100:
         raise ValueError("bundle API list limit must be between 1 and 100")
     payload = _bundle_api_request(
         args.monitor_base_url,
         method="GET",
-        path=f"/api/epics/v1/{stream_id}/bundles?{urlencode({'limit': limit})}",
+        path=f"/api/epics/v1/{stream_id}/bundles?{urlencode({'agent': agent, 'limit': limit})}",
     )
     bundles = payload.get("bundles")
     if not isinstance(bundles, list) or not all(isinstance(bundle, dict) for bundle in bundles):
@@ -1503,10 +1671,8 @@ def _bundle_api_by_seq(
     encoded = payload.get("blob")
     if not isinstance(manifest, dict) or not isinstance(encoded, str):
         raise ValueError("bundle API sequence response omitted its manifest or blob")
-    try:
+    with _bundle_conversion():
         blob = base64.b64decode(encoded.encode("ascii"), validate=True)
-    except (ValueError, binascii.Error) as exc:
-        raise ValueError("bundle API sequence blob is not valid base64") from exc
     return manifest, blob
 
 
@@ -5765,7 +5931,7 @@ def _bundle_local_lineage_snapshot(
     receipt = load_state(receipt_path) if receipt_path.is_file() else {}
     try:
         upload_seq = int(receipt.get("upload_seq", 0))
-    except (TypeError, ValueError) as exc:
+    except (TypeError, ValueError, OverflowError) as exc:
         raise ValueError("local rollover bundle receipt has a malformed upload_seq") from exc
     local_manifest = _bundle_state_manifest(state, stream_id=stream_id, upload_seq=upload_seq)
     local_members = _bundle_local_members(
@@ -5779,7 +5945,11 @@ def _bundle_local_lineage_snapshot(
 
 
 def _bundle_import_error(reason: str) -> int:
-    print(json.dumps({"error": reason, "action": "import-bundle"}, separators=(",", ":")))
+    print(
+        json.dumps(
+            {"code": "invalid_rollover_bundle", "error": reason, "action": "import-bundle"}, separators=(",", ":")
+        )
+    )
     return 2
 
 
@@ -6286,12 +6456,13 @@ def _bundle_import_candidate(
     members: Mapping[str, bytes],
     blob: bytes,
     force: bool,
-    install_handoff: bool,
 ) -> dict[str, Any]:
-    """Install one bundle while keeping packet and lane precedence separate."""
+    """Install one bundle: its own lineage plus its own agent's handoff paths."""
     agent = normalize_agent_name(str(manifest.get("agent") or ""))
     lineage_id = normalize_lineage_id(str(manifest["lineage_id"]))
     stream_id = str(manifest.get("stream_id") or "")
+    # Whole-bundle refusal before any read of local state or any write.
+    _bundle_check_members(repo_root, manifest=manifest, members=members)
     _bundle_validate_lease_member(
         state_root,
         agent=agent,
@@ -6345,14 +6516,7 @@ def _bundle_import_candidate(
                 },
             }
         if local_order == remote_order and (not force or remote_order[-1] >= 1):
-            handoff_names = set(_bundle_handoff_candidates_for_agent(repo_root, stream_id, agent))
-            remote_compare = {
-                name: payload for name, payload in members.items() if install_handoff or name not in handoff_names
-            }
-            local_compare = {
-                name: payload for name, payload in local_members.items() if install_handoff or name not in handoff_names
-            }
-            if local_compare == remote_compare and local_manifest.get("generation") == manifest.get("generation"):
+            if dict(local_members) == dict(members) and local_manifest.get("generation") == manifest.get("generation"):
                 return {
                     "status": "noop",
                     "reason": "identical bundle content",
@@ -6396,7 +6560,6 @@ def _bundle_import_candidate(
         staged_lineage=staged_lineage,
         staged_repo=staged_repo,
         local_lineage_exists=local_lineage_exists,
-        install_handoff=install_handoff,
         ledger=ledger,
     )
     result = {
@@ -6409,7 +6572,6 @@ def _bundle_import_candidate(
         "archived": str(archived.relative_to(state_root)) if archived is not None else None,
         "preserved_handoffs": preserved,
         "upload_seq": manifest.get("upload_seq", 0),
-        "install_handoff": install_handoff,
     }
     if stage_cleanup_warning is not None:
         result["cleanup_warning"] = stage_cleanup_warning
@@ -6423,25 +6585,17 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except (OSError, ValueError) as exc:
         return _bundle_import_error(str(exc))
 
-    candidates: list[tuple[dict[str, Any], dict[str, bytes], bytes]] = []
     try:
         if args.file is not None:
             blob = args.file.expanduser().resolve().read_bytes()
-            manifest, members = _bundle_extract(blob)
-            if manifest.get("agent") != agent:
-                raise ValueError("bundle agent does not match --agent")
-            candidates.append((manifest, members, blob))
+            manifest, members = verify_rollover_bundle(blob, repo_root=repo_root)
         else:
             stream_id = str(args.from_api)
-            listed = _bundle_api_list(args, stream_id=stream_id)
-            if not listed:
-                raise RolloverBundleNotFound("bundle API has no matching bundle")
+            listed = _bundle_api_list(args, stream_id=stream_id, agent=agent)
 
             def upload_seq(row: Mapping[str, Any]) -> int:
-                try:
+                with _bundle_conversion():
                     return int(row.get("upload_seq", (row.get("manifest") or {}).get("upload_seq", 0)))
-                except (TypeError, ValueError) as exc:
-                    raise ValueError("bundle API list upload sequence is malformed") from exc
 
             def row_agent(row: Mapping[str, Any]) -> str:
                 if row.get("agent") is not None:
@@ -6451,25 +6605,24 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
                     raise ValueError("bundle API list manifest is malformed")
                 return str(manifest.get("agent") or "")
 
-            own_row = next((row for row in listed if row_agent(row) == agent), None)
-            handoff_row = max(listed, key=upload_seq)
-            selected_sequences = {upload_seq(row) for row in (own_row, handoff_row) if row is not None}
-            for row in listed:
-                sequence = upload_seq(row)
-                if sequence not in selected_sequences:
-                    continue
-                manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
-                manifest, members = _bundle_extract(blob, manifest_override=manifest)
-                candidates.append((manifest, members, blob))
+            # Only this handoff slot's own bundles are candidates; another
+            # slot's bundle never installs here, whatever its upload sequence.
+            own_rows = [row for row in listed if row_agent(row) == agent]
+            if not own_rows:
+                raise RolloverBundleNotFound("bundle API has no matching bundle")
+            sequence = upload_seq(max(own_rows, key=upload_seq))
+            manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
+            manifest, members = verify_rollover_bundle(blob, repo_root=repo_root, manifest_override=manifest)
 
-        for manifest, _, _ in candidates:
-            stream_id = str(manifest.get("stream_id") or "")
-            if not stream_id:
-                raise ValueError("bundle stream_id is missing")
-            if args.from_api is not None and stream_id != str(args.from_api):
-                raise ValueError("bundle stream does not match --from-api")
-            if args.stream is not None and stream_id != str(args.stream):
-                raise ValueError("bundle stream does not match --stream")
+        if manifest.get("agent") != agent:
+            raise ValueError("bundle agent does not match --agent")
+        stream_id = str(manifest.get("stream_id") or "")
+        if not stream_id:
+            raise ValueError("bundle stream_id is missing")
+        if args.from_api is not None and stream_id != str(args.from_api):
+            raise ValueError("bundle stream does not match --from-api")
+        if args.stream is not None and stream_id != str(args.stream):
+            raise ValueError("bundle stream does not match --stream")
     except RolloverBundleAPIUnavailable as exc:
         print(f"WARNING: rollover bundle import skipped (fail-open): {exc}", file=sys.stderr)
         print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, separators=(",", ":")))
@@ -6479,26 +6632,18 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except RolloverBundleRefused as exc:
         # Semantic 4xx — not transient, must NOT fail open like unavailability.
         return _bundle_import_error(str(exc))
-    except (OSError, ValueError, KeyError, TypeError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, OverflowError) as exc:
         return _bundle_import_error(str(exc))
 
-    handoff_winner = (
-        max(candidates, key=lambda item: int(item[0].get("upload_seq", 0))) if len(candidates) > 1 else None
-    )
-    results: list[dict[str, Any]] = []
     try:
-        for candidate in candidates:
-            results.append(
-                _bundle_import_candidate(
-                    repo_root,
-                    state_root,
-                    manifest=candidate[0],
-                    members=candidate[1],
-                    blob=candidate[2],
-                    force=args.force,
-                    install_handoff=handoff_winner is None or candidate is handoff_winner,
-                )
-            )
+        result = _bundle_import_candidate(
+            repo_root,
+            state_root,
+            manifest=manifest,
+            members=members,
+            blob=blob,
+            force=args.force,
+        )
     except BundleReconcileRefused as exc:
         message = str(exc) if "leftovers:" in str(exc) else f"{exc}; leftovers: []"
         print(json.dumps({"status": "refused", "code": exc.code, "error": message, "action": "import-bundle"}))
@@ -6506,21 +6651,8 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
     except Exception as exc:
         return _bundle_import_error(str(exc))
 
-    if len(results) == 1:
-        result = results[0]
-    else:
-        statuses = {item["status"] for item in results}
-        aggregate_status = next((status for status in ("refused", "warning", "installed") if status in statuses), "noop")
-        result = {
-            "status": aggregate_status,
-            "agent": agent,
-            "stream_id": str(args.from_api),
-            "bundles": results,
-            "handoff_source": handoff_winner[0].get("agent") if handoff_winner is not None else None,
-            "handoff_upload_seq": handoff_winner[0].get("upload_seq", 0) if handoff_winner is not None else None,
-        }
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 2 if any(item["status"] == "refused" for item in results) else 0
+    return 2 if result["status"] == "refused" else 0
 
 
 def rollover_identity_snapshot(state_root: Path, agent: str | None = None) -> dict[str, Any]:
@@ -7321,7 +7453,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=os.environ.get("SESSION_HANDOFF_AGENT", DEFAULT_AGENT),
     )
     import_source = import_bundle.add_mutually_exclusive_group(required=True)
-    import_source.add_argument("--from-api", metavar="STREAM", help="Fetch the latest bundle for this stream.")
+    import_source.add_argument(
+        "--from-api", metavar="STREAM", help="Fetch this --agent slot's latest bundle for this stream."
+    )
     import_source.add_argument("--file", type=Path, help="Read a local/scp/rsync .tgz bundle.")
     import_bundle.add_argument("--stream", help="Expected stream id for a file import.")
     import_bundle.add_argument("--force", action="store_true", help="Archive a newer local copy before installing.")

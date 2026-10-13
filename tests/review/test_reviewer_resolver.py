@@ -296,3 +296,107 @@ def test_red_team_flag_conflict_with_validated_author_task(explicit, expected):
             result.reason
             == "RED_TEAM_REFUSED: conflicting author identity; --review-author-model only adds a comparison model, never overwrites recorded task evidence"
         )
+
+
+# --- D-129 (#10464): reviewer seats ------------------------------------------------------------
+
+SONNET = REVIEW_CANDIDATES["claude-sonnet-5-5"]
+RISKS = ("low", "medium", "high", "critical")
+D129_AUTHORS = ("claude-opus-5-5", "gpt-6.1-sol", "grok-4.7", "claude-sonnet-5-5")
+SECURITY_PATH = "scripts/review/reviewer_resolver.py"
+FRONTIER_DOWN = {"codex": "unhealthy", "claude": "unhealthy"}
+
+
+def claude_on_cursor(row):
+    return row.family == "anthropic" and row.transport == "cursor"
+
+
+def test_no_claude_review_candidate_runs_on_cursor():
+    assert not [name for name, candidate in REVIEW_CANDIDATES.items() if claude_on_cursor(candidate)]
+    grok_cursor = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
+    assert (grok_cursor.family, grok_cursor.transport) == ("xai", "cursor")
+
+
+@pytest.mark.parametrize("author", D129_AUTHORS)
+@pytest.mark.parametrize("risk", RISKS)
+def test_no_ladder_or_trace_row_reviews_claude_through_cursor(author, risk):
+    for snapshot in (None, FRONTIER_DOWN):
+        result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, routing_snapshot=snapshot))
+        assert result.trace
+        assert not [row.name for row in result.trace if claude_on_cursor(row)]
+        assert result.selected is None or not claude_on_cursor(result.selected)
+
+
+@pytest.mark.parametrize("risk", RISKS)
+def test_explicit_claude_cursor_pin_stays_excluded(risk):
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk=risk,
+            pinned_candidate="claude-opus-5-5-cursor-fallback",
+            pressure_override_reason="D-129 boundary test",
+        )
+    )
+    assert result.selected is None
+    assert result.fail_closed_reason == "unknown explicit reviewer pin 'claude-opus-5-5-cursor-fallback'"
+
+
+@pytest.mark.parametrize("author", ("claude-opus-5-5", "gpt-6.1-sol", "grok-4.7"))
+@pytest.mark.parametrize("risk", RISKS)
+def test_sonnet_reviews_routine_code_only(author, risk):
+    result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk))
+    names = [row.name for row in result.trace]
+    assert (SONNET.name in names) == (risk in {"low", "medium"})
+    if risk in {"high", "critical"}:
+        assert result.selected is None or result.selected.name != SONNET.name
+        assert evaluate_candidate(SONNET, ResolverInputs(author_model=author, risk=risk)).status == "excluded"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("scope", ["changed_paths", "owned_paths"])
+def test_security_path_at_routine_risk_resolves_critical_without_sonnet(risk, scope):
+    routine = ResolverInputs(author_model="gpt-6.1-sol", risk=risk)
+    # Control: on its own ladder Sonnet reviews routine code.
+    assert resolve_reviewer(routine, ladder=((SONNET,),)).selected.name == SONNET.name
+    secure = replace(routine, **{scope: (SECURITY_PATH,)})
+    assert resolve_reviewer(secure, ladder=((SONNET,),)).selected is None
+    result = resolve_reviewer(secure)
+    assert result.resolved_risk == "critical"
+    assert SONNET.name not in [row.name for row in result.trace]
+    assert result.selected.name != SONNET.name
+
+
+@pytest.mark.parametrize("author", ("claude-opus-5-5", "gpt-6.1-sol", "claude-sonnet-5-5"))
+def test_critical_grok_is_eligible_but_frontier_authority_is_selected(author):
+    healthy = {"codex": "healthy", "claude": "healthy", "grok": "healthy", "cursor": "healthy"}
+    result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", routing_snapshot=healthy))
+    trace = {row.name: row for row in result.trace}
+    assert trace["grok-4.7"].status == "eligible"
+    assert result.selected.name == ("openai_frontier" if author.startswith("claude") else "claude-opus-5-5")
+    assert result.selected.family != "xai"
+    assert (result.selected.quality_tier, trace["grok-4.7"].quality_tier) == (
+        "frontier_authority",
+        "frontier_practical",
+    )
+
+
+def test_critical_grok_is_excluded_for_an_xai_author():
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical"))
+    trace = {row.name: row for row in result.trace}
+    assert trace["grok-4.7"].status == "excluded"
+    assert trace["grok-4.7-cursor-fallback"].status == "excluded"
+    assert result.selected.family != "xai"
+
+
+def test_critical_native_grok_precedes_its_cursor_fallback_when_frontier_is_ineligible():
+    native = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=FRONTIER_DOWN)
+    )
+    assert native.selected.name == "grok-4.7"
+    assert {row.name: row.status for row in native.trace}["grok-4.7-cursor-fallback"] == "eligible"
+    fallback = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol", risk="critical", routing_snapshot={**FRONTIER_DOWN, "grok": "unhealthy"}
+        )
+    )
+    assert fallback.selected.name == "grok-4.7-cursor-fallback"

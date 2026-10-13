@@ -47,7 +47,7 @@ from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 from scripts.api.state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
 from scripts.orchestration import issue_stream_audit as audit
-from scripts.orchestration.thread_handoff import _bundle_extract, _bundle_secret_hits
+from scripts.orchestration.thread_handoff import _bundle_conversion, _bundle_require_json_value
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -500,10 +500,8 @@ def _bundle_blob_from_body(body: dict[str, Any]) -> bytes:
     encoded = body.get("blob")
     if not isinstance(encoded, str) or not encoded:
         raise ValueError("bundle blob must be base64 text")
-    try:
+    with _bundle_conversion():
         blob = base64.b64decode(encoded.encode("ascii"), validate=True)
-    except (UnicodeEncodeError, binascii.Error, ValueError) as exc:
-        raise ValueError("bundle blob is not valid base64") from exc
     if not blob or len(blob) > MAX_ROLLOVER_BUNDLE_BYTES:
         raise ContentRejectedError("rollover bundle exceeds the 4 MiB cap")
     return blob
@@ -1044,15 +1042,39 @@ def remote_handoff(
         return _server_error()
 
 
-@router.post("/v1/{stream_id}/bundles")
+async def _rollover_bundle_body(request: Request) -> dict[str, Any] | None:
+    """Decode bundle requests before framework JSON errors can escape the refusal path."""
+    try:
+        with _bundle_conversion():
+            body = await request.json()
+        if isinstance(body, dict):
+            # The store validates the manifest through the same boundary used
+            # by direct uploads. Validate the HTTP envelope before building a lease.
+            _bundle_require_json_value({key: value for key, value in body.items() if key != "manifest"})
+    except ValueError:
+        return None
+    return body if isinstance(body, dict) else None
+
+
+@router.post(
+    "/v1/{stream_id}/bundles",
+    openapi_extra={
+        "requestBody": {"required": True, "content": {"application/json": {"schema": {"type": "object"}}}}
+    },
+)
 def remote_bundle_upload(
-    stream_id: str, request: Request, body: dict[str, Any], ctx: MonitorContext = Depends(get_ctx)
+    stream_id: str,
+    request: Request,
+    body: dict[str, Any] | None = Depends(_rollover_bundle_body),
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
     """Upload one cross-host bundle through the same fenced loopback mutation path."""
     denied = _check_mutation_peer(request)
     if denied is not None:
         return denied
     try:
+        if body is None:
+            raise ValueError("bundle request must be an object")
         stream_id = _epic_stream(stream_id)
         lease = _lease_from_payload({**body, "stream_id": stream_id})
         if lease.stream_id != stream_id:
@@ -1061,11 +1083,7 @@ def remote_bundle_upload(
         if not isinstance(manifest, dict):
             raise ValueError("bundle manifest must be an object")
         blob = _bundle_blob_from_body(body)
-        _, members = _bundle_extract(blob, manifest_override=manifest)
-        secret_hits = _bundle_secret_hits(members)
-        if secret_hits:
-            member, rule = secret_hits[0]
-            raise ContentRejectedError(f"bundle member {member} matched {rule} rule")
+        # The store runs the importer's full bundle validation and secret scan.
         store = _store(ctx)
         stored = store.upload_bundle(lease, manifest=manifest, blob=blob)
         return JSONResponse(

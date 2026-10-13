@@ -237,8 +237,9 @@ _BUNDLE_CALLS = {
         "tree.read_path", "tree.write_path", "utc_now", "utc_now().strftime",
     },
     "_bundle_stage_install": {
-        "ValueError", "_BundleImportLedger", "_BundleReconcileTree", "_bundle_member_path", "_bundle_rewrite",
-        "_bundle_text_member", "_bundle_typed_failure", "any", "files.items", "isinstance", "members.items",
+        "ValueError", "_BundleImportLedger", "_BundleReconcileTree", "_bundle_check_members", "_bundle_member_path",
+        "_bundle_rewrite", "_bundle_text_member", "_bundle_typed_failure", "any", "files.items", "isinstance",
+        "members.items",
         "name.removeprefix", "name.startswith", "normalize_agent_name", "normalize_lineage_id", "str",
         "tree.new_directory", "tree.remove_path", "tree.write_path", "uuid.uuid4",
     },
@@ -269,12 +270,11 @@ _BUNDLE_CALLS = {
         "sorted", "str", "tree.directory", "tree.release", "tree.write",
     },
     "_bundle_import_candidate": {
-        "_BundleReconcileTree", "_bundle_commit_install", "_bundle_handoff_candidates_for_agent",
+        "_BundleReconcileTree", "_bundle_check_members", "_bundle_commit_install",
         "_BundleImportLedger", "_bundle_capture_baseline", "_bundle_local_lineage_snapshot", "_bundle_order",
         "_bundle_preserve_tie", "_bundle_stage_install", "_bundle_typed_failure",
-        "_bundle_validate_lease_member", "archived.relative_to", "isoformat_z", "local_manifest.get",
-        "local_members.items", "manifest.get", "members.items", "normalize_agent_name",
-        "normalize_lineage_id", "set", "str",
+        "_bundle_validate_lease_member", "archived.relative_to", "dict", "isoformat_z", "local_manifest.get",
+        "manifest.get", "normalize_agent_name", "normalize_lineage_id", "str",
     },
 }
 # Explicit call sets for the recursively admitted local helpers. Imported
@@ -297,8 +297,19 @@ _BUNDLE_HELPER_CALLS = {
         'value.astimezone', 'value.astimezone(UTC).isoformat', 'value.astimezone(UTC).isoformat().replace',
     },
     '_bundle_validate_lease_member': {
-        'ValueError', 'int', 'isinstance', 'json.loads', 'manifest.get', 'members.get', 'payload.decode',
+        'ValueError', '_bundle_conversion', '_bundle_load_json', 'int', 'isinstance', 'manifest.get', 'members.get',
         'replacement.get', 'state.get', 'str', 'validate_live_lease',
+    },
+    '_bundle_load_json': {
+        '_bundle_conversion', '_bundle_require_json_value', 'json.loads', 'payload.decode',
+    },
+    '_bundle_conversion': {
+        'ValueError',
+    },
+    '_bundle_require_json_value': {
+        'ValueError', '_bundle_conversion', 'float', 'isinstance', 'item.items', 'json.dumps',
+        'json.dumps(value, allow_nan=False, ensure_ascii=False).encode', 'parse_iso_datetime',
+        'pending.append', 'pending.extend', 'pending.pop',
     },
     'validate_live_lease': {
         'LINEAGE_ID_RE.fullmatch', 'active.get', "active['thread_id'].strip", 'display.get',
@@ -343,14 +354,15 @@ _BUNDLE_HELPER_CALLS = {
         'str(repo_root.resolve()).encode',
     },
     '_bundle_json': {
-        'json.dumps', "json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode",
+        '_bundle_conversion', 'json.dumps', "json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode",
     },
     '_bundle_order': {
-        'ValueError', '_bundle_replacement_status', 'int', 'manifest.get', 'normalize_rollover_id',
+        'ValueError', '_bundle_conversion', '_bundle_replacement_status', 'int', 'manifest.get', 'normalize_rollover_id',
         'parse_iso_datetime', 'str',
     },
     'parse_iso_datetime': {
-        'datetime.fromisoformat', 'parsed.astimezone', 'parsed.replace', 'str', 'str(value).replace',
+        'ValueError', '_bundle_conversion', 'datetime.fromisoformat', 'parsed.astimezone', 'parsed.replace',
+        'str', 'text.encode', 'text.replace',
     },
     '_bundle_replacement_status': {
         'ValueError', 'replacement.get', 'str',
@@ -364,7 +376,7 @@ _BUNDLE_HELPER_CALLS = {
         'data.get', 'isinstance', 'json.loads', 'path.exists', 'path.read_text', 'type',
     },
     '_bundle_state_manifest': {
-        'ValueError', '_bundle_replacement_status', 'int', 'isinstance', 'isoformat_z', 'normalize_agent_name',
+        'ValueError', '_bundle_conversion', '_bundle_replacement_status', 'int', 'isinstance', 'isoformat_z', 'normalize_agent_name',
         'normalize_lineage_id', 'normalize_rollover_id', 'parse_iso_datetime', 'replacement.get', 'state.get',
         'str', 'utc_now',
     },
@@ -379,11 +391,14 @@ _BUNDLE_HELPER_CALLS = {
         'path.relative_to', 'sorted', 'state.get', 'str',
     },
     '_bundle_tokenize': {
-        'data.decode', 'repo_root.resolve', 'state_root.resolve', 'str', 'text.encode', 'text.replace',
+        '_bundle_conversion', 'data.decode', 'repo_root.resolve', 'state_root.resolve', 'str', 'text.encode', 'text.replace',
     },
     '_bundle_handoff_candidates_for_agent': {
-        '_bundle_handoff_candidates', 'agent.removeprefix', 'agent.startswith', 'candidates.append',
-        'dict.fromkeys', 'list', 'tuple',
+        '_bundle_handoff_candidates', 'rollover_bundle_handoff_candidates',
+    },
+    '_bundle_check_members': {
+        '_bundle_handoff_candidates_for_agent', 'manifest.get', 'normalize_agent_name', 'normalize_lineage_id',
+        'str', 'validate_rollover_bundle_members',
     },
     '_bundle_handoff_candidates': {
         'epic_handoff_map', 'epic_handoff_map(repo_root).get', 'tuple',
@@ -808,6 +823,9 @@ def test_two_failures_continue_independent_rollback_steps(newer_bundle, monkeypa
 
 
 @pytest.mark.parametrize('function,mutation', [
+    ('_bundle_conversion', "shutil.rmtree('/outside')"),
+    ('_bundle_conversion', "os.open('target', os.O_RDWR | os.O_CREAT | os.O_TRUNC)"),
+    ('_bundle_conversion', "writer = os.replace\n    writer('source', 'target')"),
     ('_bundle_commit_install', "sorted(['/outside/victim'], key=os.unlink)"),
     ('_bundle_local_lineage_snapshot', "shutil.rmtree('/outside')"),
     ('load_state', "shutil.rmtree('/outside')"),

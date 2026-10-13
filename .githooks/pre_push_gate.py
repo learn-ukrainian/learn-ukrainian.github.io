@@ -711,7 +711,7 @@ def run_pre_commit_stage(
 
 def test_process_limit() -> int:
     """Read the configured process ceiling; invalid configuration refuses validation."""
-    value = os.environ.get(MAX_TEST_PROCESSES_ENV, "1")
+    value = os.environ.get(MAX_TEST_PROCESSES_ENV, "4")
     try:
         if re.fullmatch(r"[0-9]+", value) is None or int(value) < 1:
             raise ValueError
@@ -727,6 +727,8 @@ def parallel_options() -> list[str]:
     limit = test_process_limit()
     if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
+    if os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip():
+        limit = min(limit, 2)  # Match ci.pytest_dispatch_cap before recording the invocation.
     return ["-n", str(limit), "--dist", "loadfile"]
 
 
@@ -741,6 +743,12 @@ def run_pytest_stage(
         reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
+    options = parallel_options()
+    if diagnostics is not None:
+        diagnostics.update(
+            requested_test_processes=test_process_limit(),
+            effective_test_processes=int(options[1]) if options else 1,
+        )
     with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
         code, output = run_bounded(
             [
@@ -756,7 +764,7 @@ def run_pytest_stage(
                 "no:cacheprovider",
                 "--basetemp",
                 base_temp,
-                *parallel_options(),
+                *options,
             ],
             cwd=root,
             deadline=deadline,
