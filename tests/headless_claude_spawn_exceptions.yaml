@@ -116,6 +116,7 @@ exceptions:
   # scripts/api/subscription_usage.py
   - {module: scripts/api/subscription_usage.py, function: "_load_claude_oauth_token", program: "str(security)", category: non-claude, reason: "reads a keychain item with the macOS security tool"}
   - {module: scripts/api/subscription_usage.py, function: "_probe_antigravity_native", program: "agy_bin", category: non-claude, reason: "AGY `/usage` probe"}
+  - {module: scripts/api/subscription_usage.py, function: "_probe_muse_native", program: "codexbar_bin", category: non-claude, reason: "CodexBar Muse usage probe; the Muse CLI has no quota command"}
   # scripts/audit/bakeoff_run.py
   - {module: scripts/audit/bakeoff_run.py, function: "run_command", program: "list(argv)", category: generic-runner, reason: "in-module callers run v7_build.py and audit scripts under the project interpreter"}
   # scripts/audit/code_review_benchmark.py

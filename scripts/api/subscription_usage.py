@@ -1742,15 +1742,15 @@ def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
     The Muse CLI has no quota subcommand. This does not open auth files, and it
     does not copy identity, account, or credit fields into the record.
     """
-    binary = _codexbar_bin()
-    if not binary:
+    codexbar_bin = _codexbar_bin()
+    if not codexbar_bin:
         return _normalize_provider_error(
             "muse",
             {"message": "codexbar CLI not found", "kind": "unavailable", "code": "NO_PROBE"},
         )
     try:
         completed = subprocess.run(
-            [binary, "usage", "--provider", "muse", "--json", "--no-credits"],
+            [codexbar_bin, "usage", "--provider", "muse", "--json", "--no-credits"],
             capture_output=True,
             text=True,
             timeout=max(float(timeout_s), 1.0),
