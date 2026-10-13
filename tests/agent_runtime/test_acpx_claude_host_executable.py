@@ -880,6 +880,7 @@ def test_host_that_is_the_launcher_itself_is_refused(worktree_dir, monkeypatch):
         _build(worktree_dir)
 
 
+@pytest.mark.repo_wide
 def test_tracked_launcher_is_executable_in_git():
     listed = subprocess.run(
         ["git", "ls-files", "-s", "scripts/agent_runtime/claude_acp_exec.sh"],
