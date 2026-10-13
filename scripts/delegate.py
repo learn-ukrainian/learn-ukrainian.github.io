@@ -16829,11 +16829,12 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
     """Return the adapter's refusal text, or None when this model is not refused.
 
     A successful probe is not a rejection. Any error other than the adapter's
-    model ValueError is inconclusive: keep the explicit model instead of
-    crashing dispatch. The probe must not leave the temp file ``build_invocation``
-    creates on the accepted path. Its cwd is a private temporary directory,
-    created and removed here, so an adapter that installs workspace hooks cannot
-    mutate the process checkout (#10529).
+    model ValueError is inconclusive, including a failure to create the probe
+    directory: keep the explicit model instead of crashing dispatch. The probe
+    must not leave the temp file ``build_invocation`` creates on the accepted
+    path. Its cwd is a private temporary directory, created and removed here,
+    so an adapter that installs workspace hooks cannot mutate the process
+    checkout (#10529).
     """
     from agent_runtime.registry import get_agent_entry
 
@@ -16844,9 +16845,11 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
     module_name, class_name = spec.split(":", 1)
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
-    probe_cwd = Path(tempfile.mkdtemp(prefix="delegate-model-probe-"))
+    # None until mkdtemp returns, so a failed allocation is not passed to rmtree.
+    probe_cwd: Path | None = None
     try:
         try:
+            probe_cwd = Path(tempfile.mkdtemp(prefix="delegate-model-probe-"))
             plan = adapter.build_invocation(
                 prompt="model-probe",
                 mode="read-only",
@@ -16871,7 +16874,8 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
         _discard_model_probe_output(plan)
         return None
     finally:
-        shutil.rmtree(probe_cwd, ignore_errors=True)
+        if probe_cwd is not None:
+            shutil.rmtree(probe_cwd, ignore_errors=True)
 
 
 def _registry_seat(entry: object) -> str:

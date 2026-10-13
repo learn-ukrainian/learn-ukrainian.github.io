@@ -20546,3 +20546,61 @@ def test_adapter_model_rejection_leaves_linked_worktree_cwd_unchanged(tmp_path, 
     after = _directory_snapshot(worktree)
     assert after == before
     assert not (worktree / ".agents").exists()
+
+
+def test_adapter_model_rejection_treats_probe_tempdir_failure_as_inconclusive(tmp_path, monkeypatch, capsys):
+    """A probe directory that cannot be created uses the inconclusive-probe result (#10529).
+
+    ``PermissionError(13)`` and ``OSError(28)`` from ``tempfile.mkdtemp`` must
+    return the same value as any other inconclusive probe error for the same
+    agent and model, must not raise, and must not leave a directory behind.
+    """
+    import tempfile
+    import types
+
+    from agent_runtime.registry import AGENTS
+
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
+    agent, model = "codex", "unapproved-model"
+    original_spec = AGENTS[agent]["adapter"]
+
+    class _Boom:
+        def build_invocation(self, **_kwargs):
+            raise RuntimeError("probe cannot run")
+
+    fake = types.ModuleType("probe_tempdir_boom_mod")
+    fake.Boom = _Boom
+    monkeypatch.setitem(sys.modules, "probe_tempdir_boom_mod", fake)
+    monkeypatch.setitem(AGENTS[agent], "adapter", "probe_tempdir_boom_mod:Boom")
+    inconclusive = delegate._adapter_model_rejection(agent, model)
+    baseline_err = capsys.readouterr().err
+    assert "RuntimeError" in baseline_err
+    assert not list(tmp_path.glob("delegate-model-probe-*"))
+    monkeypatch.setitem(AGENTS[agent], "adapter", original_spec)
+
+    seen: list[str] = []
+    raised: list[str] = []
+
+    def _raiser(exc: BaseException):
+        def _raise(*_args, **_kwargs):
+            seen.append(type(exc).__name__)
+            raise exc
+
+        return _raise
+
+    for exc in (PermissionError(13), OSError(28)):
+        monkeypatch.setattr(tempfile, "mkdtemp", _raiser(exc))
+        try:
+            got = delegate._adapter_model_rejection(agent, model)
+        except Exception as err:
+            raised.append(f"{type(exc).__name__} -> {type(err).__name__}: {err}")
+            assert not list(tmp_path.glob("delegate-model-probe-*"))
+            continue
+        err_text = capsys.readouterr().err
+        assert got == inconclusive
+        assert err_text == baseline_err.replace("RuntimeError", type(exc).__name__)
+        assert not list(tmp_path.glob("delegate-model-probe-*"))
+
+    assert seen == ["PermissionError", "OSError"]
+    assert raised == []
