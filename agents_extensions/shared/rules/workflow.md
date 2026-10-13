@@ -274,13 +274,29 @@ the verdict is posted and the reviewer exits. Before a branch sweep, inspect
 and prove no residue. Close linked issues only with all acceptance criteria
 verified on the delivered artifact; name any residual, owner and dependency.
 
-**The merging lane owns its PR closeout.** The lane that merged the PR runs the
-command above for that PR's own worktrees and branches, and the PR is not done
+**The author owns its PR closeout; the lane driver is the fallback.** The author
+ensures the lane-owned deterministic closeout above runs outside the target
+worktree after every worker and reviewer using it exits. The PR is not done
 until the receipt is clean (exit 0, residue-free). Any PR-scoped worktree claim
 is settled only through the common reaper's guarded removal, never by hand.
 Cleanup does not wait for a central sweep. This is not a stream lease: launchers
 own stream leases, and no driver opens, resumes, claims, renews, releases or
 replaces one. The non-zero and `SKIPPED` stop conditions above are unchanged.
+
+Branch ownership binds at the first author dispatch, before a PR exists; attach
+the PR number later. Every repair round uses a fresh worker through
+`delegate.py dispatch --branch`, with a bounded event packet containing the
+acceptance criteria, current head and diff, unresolved findings and dispositions,
+failed-job evidence and prior round outcomes. Never resume the native author
+session or include raw transcripts. The lane driver retains review judgment,
+landing and terminal disposition. Authors never review, record verdicts, enqueue
+or receive `--allow-merge`; each repaired head needs fresh exact-head review
+excluding every author family. Persist the two-round budget and escalate to the
+driver when exhausted. Slice 1 logs Harness CHANGES_REQUESTED proposals only;
+live automated repair requires phase 1 of the recorder-ledger protection to be
+merged and deployed and a separately approved live implementation. Alert on
+orphan branches; adoption requires resolved stream membership, live ownership
+and pause state. See `docs/runbooks/author-owned-pr-lifecycle.md`.
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a

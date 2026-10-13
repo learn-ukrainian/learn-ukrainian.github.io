@@ -14181,6 +14181,21 @@ def _dispatch(
             worktree_locks.close()
             print(f"❌ {refusal}", file=sys.stderr)
             return 2
+        # Bind the admitted author before spawn, including the pre-PR review loop.
+        from scripts.orchestration.author_binding import BindingError, bind_dispatch
+
+        try:
+            bind_dispatch(initial_state, lane=getattr(args, "research_track", None))
+        except (BindingError, OSError):
+            initial_state.update(
+                status="failed", failure_reason="dispatch_not_started",
+                returncode_reason="ownership binding unavailable; worker not started",
+                finished_at=datetime.now(UTC).isoformat(),
+            )
+            initial_state.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _write_state_atomic(state_path, initial_state)
+            print("❌ author binding unavailable or corrupt; worker not started", file=sys.stderr)
+            return 1
         _write_state_atomic(state_path, initial_state)
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
