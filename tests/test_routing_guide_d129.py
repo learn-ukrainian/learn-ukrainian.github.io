@@ -15,6 +15,10 @@ from pathlib import Path
 
 import pytest
 
+# Globs repository guide trees, so the module is registered in
+# tests/test_repo_wide_marker_invariant.py.
+pytestmark = pytest.mark.repo_wide
+
 ROOT = Path(__file__).resolve().parents[1]
 GUIDE = ROOT / "agents_extensions" / "shared" / "rules" / "fleet-driver-routing.md"
 
