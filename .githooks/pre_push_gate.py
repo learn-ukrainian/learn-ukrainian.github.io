@@ -1617,11 +1617,13 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     root = Path(root_text.strip())
     events: list[dict[str, object]] = []
     event_times: dict[str, list[float]] = {}
+    measurement_state: Path | None = None
     status = 0
     text = sys.stdin.read() if stdin is None else stdin
     fingerprints = attempt_fingerprints(root, arguments.launcher, arguments.config, text)
 
     def new_event() -> dict[str, object]:
+        nonlocal measurement_state
         event: dict[str, object] = {
             "gate_version": GATE_VERSION,
             "measurement_schema": MEASUREMENT_SCHEMA,
@@ -1641,7 +1643,8 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         }
         events.append(event)
         event_times[event["attempt_id"]] = [time.monotonic()]
-        event["begin_durable"] = record(state_dir(root), {**event, "phase": "BEGIN"})
+        measurement_state = state_dir(root)
+        event["begin_durable"] = record(measurement_state, {**event, "phase": "BEGIN"})
         if not event["begin_durable"]:
             raise GateOutcome(
                 "measurement_unavailable", "cannot durably begin validation; evidence is unknown", incomplete=True
@@ -1654,6 +1657,16 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             reason=error.reason,
             failing=list(error.failing),
         )
+
+    def publish_terminal(state: Path, event: dict[str, object]) -> bool:
+        event["duration_s"] = round(time.monotonic() - started, 2)
+        times = event_times[event["attempt_id"]]
+        elapsed = (times[1] if len(times) > 1 else time.monotonic()) - times[0]
+        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0))
+        event["phase"] = "TERMINAL"
+        pytest_stage = event.get("stages", {}).get("pytest", {})
+        event["effective_test_processes"] = pytest_stage.get("effective_test_processes")
+        return record(state, event)
 
     with catch_interruptions():
         try:
@@ -1688,19 +1701,12 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             mark(events[-1] if events else new_event(), error)
             status = refuse(error)
         finally:
-            with contextlib.suppress(GateOutcome):
+            try:
                 state = state_dir(root)
                 for event in events:
                     if "outcome" in event:
-                        event["duration_s"] = round(time.monotonic() - started, 2)
-                        times = event_times[event["attempt_id"]]
-                        elapsed = (times[1] if len(times) > 1 else time.monotonic()) - times[0]
-                        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0))
-                        event["phase"] = "TERMINAL"
-                        pytest_stage = event.get("stages", {}).get("pytest", {})
-                        event["effective_test_processes"] = pytest_stage.get("effective_test_processes")
                         try:
-                            if not record(state, event) and status == 0:
+                            if not publish_terminal(state, event) and status == 0:
                                 status = refuse(
                                     GateOutcome(
                                         "measurement_unavailable",
@@ -1715,7 +1721,14 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
                             mark(event, error)
                             event["measurement_unknown_reason"] = "interrupted_terminal_append"
                             status = refuse(error)
-                            record(state, event)
+                            publish_terminal(state, event)
+            except GateOutcome as error:
+                status = refuse(error)
+                for event in events:
+                    mark(event, error)
+                    event["measurement_unknown_reason"] = "interrupted_terminal_publication"
+                    if measurement_state is not None:
+                        publish_terminal(measurement_state, event)
     return status
 
 

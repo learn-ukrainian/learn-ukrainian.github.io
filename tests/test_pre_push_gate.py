@@ -3723,3 +3723,42 @@ def test_measurement_storage_failure_cannot_claim_green_or_start_without_begin(r
     assert gate.main(["--launcher", "unused", "--config", "unused"], stdin="") == 75
     assert observed == ["BEGIN", "TERMINAL"]
     assert _receipts(repo) == []
+
+
+@pytest.mark.parametrize("interruption", ["state_lookup", "row_preparation"])
+def test_terminal_publication_interrupt_refuses_with_paired_complete_measurements(repo, monkeypatch, interruption):
+    monkeypatch.chdir(repo)
+    original_state = gate.state_dir
+    original_clock = gate.time.monotonic
+    state_calls = 0
+    interrupt_next_clock = False
+
+    def state(root):
+        nonlocal state_calls, interrupt_next_clock
+        state_calls += 1
+        if state_calls == 2:
+            if interruption == "state_lookup":
+                os.kill(os.getpid(), signal.SIGTERM)
+            else:
+                interrupt_next_clock = True
+        return original_state(root)
+
+    def clock():
+        nonlocal interrupt_next_clock
+        if interrupt_next_clock:
+            interrupt_next_clock = False
+            os.kill(os.getpid(), signal.SIGTERM)
+        return original_clock()
+
+    monkeypatch.setattr(gate, "state_dir", state)
+    monkeypatch.setattr(gate.time, "monotonic", clock)
+    assert gate.main(["--launcher", "unused", "--config", "unused"], stdin="") == 75
+    rows = _raw_measurements(repo)
+    assert [row["phase"] for row in rows] == ["BEGIN", "TERMINAL"]
+    assert rows[0]["attempt_id"] == rows[1]["attempt_id"]
+    assert rows[0]["fingerprints"] == rows[1]["fingerprints"]
+    assert rows[1]["outcome"] == "validation_incomplete"
+    assert rows[1]["reason"] == "interrupted"
+    assert rows[1]["queue_wait_s"] == 0
+    assert rows[1]["execution_s"] >= 0
+    assert rows[1]["peak_memory_bytes"] is None
