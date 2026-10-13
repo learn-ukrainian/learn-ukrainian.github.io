@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import shutil
+import sqlite3
 import subprocess
 from pathlib import Path
 
@@ -19,6 +21,8 @@ from tests.backup_data_script._support import (
     _fresh_runner_mirror,
     _logical_sha256,
     _make_database,
+    _real_restic,
+    _repository_snapshots,
     _run,
     _use_local_restic,
 )
@@ -234,6 +238,184 @@ def test_task_locks_and_snapshot_directories_are_not_staged(
     assert manifest_count == helper_count
     assert manifest_seen == helper_seen
     assert manifest_staged == helper_staged
+
+
+# The 31 keep paths approved for this nightly. data/lexicon/runner-mirror is
+# the one existing addition: the gate receipt compares that tree with the
+# snapshot, and a host with no mirror logs one line and continues.
+APPROVED_KEEP_PATHS = (
+    ".claude/*-epic",
+    ".agent",
+    "data/sources.db",
+    "data/sum20_slovnyk_staging.db",
+    "data/sum20_staging.db",
+    "data/lexicon/slovnyk_cache",
+    "data/lexicon/source-inventory",
+    "data/lexicon/side",
+    "data/lexicon/intake",
+    "data/lexicon/parked",
+    "data/lexicon/*.json",
+    "data/movaua.db",
+    "data/movne_pytannya.db",
+    "data/grac_frequency.db",
+    "data/atlas.db",
+    "data/wiki_*.db",
+    "data/lexicon/cache/ulif_raw.sqlite",
+    "data/textbook_chunks",
+    "data/projects",
+    "data/mphdict",
+    "data/native-reviewer-lessons",
+    "data/ua-gec",
+    "data/ubertext-freq",
+    "data/processed",
+    "data/datasets",
+    "batch_state/fleet-comms",
+    "batch_state/review-receipts",
+    "batch_state/branch-archive",
+    "batch_state/tasks",
+    "batch_state/open-model-data",
+    "batch_state/open-model-data-20261007",
+)
+
+
+def test_wal_database_under_agent_snapshots_restores_committed_rows(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    """A WAL database under .agent/*.snapshots is a consistent snapshot, not a raw copy."""
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    database = project / ".agent" / "retained.snapshots" / "state.db"
+    database.parent.mkdir(parents=True)
+    connection = sqlite3.connect(database)
+    try:
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute("PRAGMA wal_autocheckpoint=0")
+        connection.execute("CREATE TABLE recovery_probe (value TEXT NOT NULL)")
+        connection.execute("INSERT INTO recovery_probe VALUES ('committed')")
+        connection.commit()
+        assert database.with_name("state.db-wal").stat().st_size > 0
+        # The main file alone does not hold the commit. Copying it without the WAL
+        # leaves a database whose integrity check passes and whose table is gone.
+        main_only = tmp_path / "main-only.db"
+        shutil.copy2(database, main_only)
+        with sqlite3.connect(main_only) as main_connection:
+            assert main_connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+            present = main_connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'recovery_probe'"
+            ).fetchone()
+        assert present is None
+        manifest_path = tmp_path / "selection.txt"
+        environment["LU_BACKUP_SELECTION_MANIFEST"] = str(manifest_path)
+        relative = ".agent/retained.snapshots/state.db"
+
+        backed_up = _run(environment, "backup", "--execute")
+
+        assert backed_up.returncode == 0, backed_up.stderr
+        _enumerated, seen, staged = parse_selection_manifest(manifest_path)
+        assert relative in seen
+        assert relative in staged
+        helper_seen, helper_staged, helper_count = expand_allowlist(project)
+        manifest_count, manifest_seen, manifest_staged = parse_selection_manifest(manifest_path)
+        assert manifest_count == helper_count
+        assert manifest_seen == helper_seen
+        assert manifest_staged == helper_staged
+        target = tmp_path / "restored-agent-snapshots"
+        restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+        assert restored.returncode == 0, restored.stderr
+        restored_database = target / ".agent" / "retained.snapshots" / "state.db"
+        assert not restored_database.with_name("state.db-wal").exists()
+        with sqlite3.connect(restored_database) as restored_connection:
+            assert restored_connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+            assert restored_connection.execute("SELECT value FROM recovery_probe").fetchall() == [("committed",)]
+    finally:
+        connection.close()
+
+
+def test_newline_in_task_record_does_not_inject_a_dropped_file(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    """More than 50 file roots must not split a newline in a name into another path."""
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    tasks = project / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    for index in range(51):
+        (tasks / f"job-{index:02d}.json").write_text("{}\n", encoding="utf-8")
+    selected = tasks / "rec\nbatch_state" / "preserved" / "leak.json"
+    selected.parent.mkdir(parents=True)
+    selected.write_text('{"selected": true}\n', encoding="utf-8")
+    dropped = project / "batch_state" / "preserved" / "leak.json"
+    dropped.parent.mkdir(parents=True)
+    dropped.write_text('{"leaked": true}\n', encoding="utf-8")
+    selected_relative = selected.relative_to(project).as_posix()
+    assert "\n" in selected_relative
+    assert selected_relative.split("\n", 1)[1] == "batch_state/preserved/leak.json"
+
+    backed_up = _run(environment, "backup", "--execute")
+
+    assert backed_up.returncode == 0, backed_up.stderr
+    base = next(snapshot for snapshot in _repository_snapshots(environment) if "lu-part-base" in snapshot["tags"])
+    uploaded = _real_restic(environment, "dump", base["id"], selected_relative)
+    leaked = _real_restic(environment, "dump", base["id"], "batch_state/preserved/leak.json")
+    assert uploaded.returncode == 0 and leaked.returncode != 0, (
+        f"selected exit={uploaded.returncode} stdout={uploaded.stdout!r} stderr={uploaded.stderr!r}\n"
+        f"dropped exit={leaked.returncode} stdout={leaked.stdout!r} stderr={leaked.stderr!r}"
+    )
+    assert uploaded.stdout == '{"selected": true}\n'
+    assert "leaked" not in leaked.stdout
+
+
+def test_excluded_task_snapshot_tree_is_not_walked(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    """FIFO and unreadable files inside a task snapshot directory are not visited."""
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    project = source.parent
+    excluded = project / "batch_state" / "tasks" / "archive" / "large.snapshots"
+    excluded.mkdir(parents=True)
+    os.mkfifo(excluded / "writer.pipe")
+    hidden = excluded / "secret.txt"
+    hidden.write_text("do not read\n", encoding="utf-8")
+    hidden.chmod(0)
+    (excluded / "visited.txt").write_text("walked\n", encoding="utf-8")
+    (project / "batch_state" / "tasks" / "job.json").write_text("{}\n", encoding="utf-8")
+    manifest_path = tmp_path / "selection.txt"
+    environment["LU_BACKUP_SELECTION_MANIFEST"] = str(manifest_path)
+    try:
+        result = _run(environment, "backup", "--execute")
+    finally:
+        hidden.chmod(0o600)
+
+    assert result.returncode == 0, result.stderr
+    assert "Unsupported special file type" not in result.stderr
+    assert "Unreadable paths" not in result.stderr
+    _enumerated, seen, staged = parse_selection_manifest(manifest_path)
+    prefix = "batch_state/tasks/archive/large.snapshots/"
+    assert not any(path.startswith(prefix) for path in seen)
+    assert not any(path.startswith(prefix) for path in staged)
+    assert f"{prefix}secret.txt" not in seen
+    assert f"{prefix}writer.pipe" not in seen
+    assert f"{prefix}visited.txt" not in seen
+
+
+def test_keep_paths_are_the_approved_set_plus_runner_mirror() -> None:
+    keep = load_allowlist()["keep"]
+    assert isinstance(keep, list)
+    paths = [str(entry["path"]) for entry in keep if isinstance(entry, dict)]
+    assert len(APPROVED_KEEP_PATHS) == 31
+    assert len(paths) == len(set(paths))
+    extra = [path for path in paths if path not in APPROVED_KEEP_PATHS]
+    assert extra == ["data/lexicon/runner-mirror"]
+    assert set(paths) == set(APPROVED_KEEP_PATHS) | {"data/lexicon/runner-mirror"}
+    mirror = next(entry for entry in keep if isinstance(entry, dict) and entry.get("path") == extra[0])
+    note = mirror.get("note")
+    assert isinstance(note, str) and note.strip()
 
 
 def test_runbook_tables_name_the_allowlist_paths() -> None:

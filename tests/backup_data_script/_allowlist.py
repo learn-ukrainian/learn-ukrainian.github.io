@@ -19,6 +19,9 @@ SQLITE_HEADER = b"SQLite format 3\x00"
 EPIC_LABEL = re.compile(r"^[a-z0-9-]+-epic$")
 TRANSIENT_SQLITE = re.compile(r"(^|.*/)pytest-[^/]+/")
 TASK_RECORD_SUFFIXES = (".json", ".result", ".diag", ".md", ".prompt")
+# Same list as SNAPSHOT_EXCLUDE_ROOTS in scripts/backup-data.sh. Snapshot
+# directories are excluded only under these roots.
+SNAPSHOT_EXCLUDE_ROOTS = ("batch_state/tasks",)
 
 
 def load_allowlist(path: Path = ALLOWLIST_PATH) -> dict[str, object]:
@@ -59,8 +62,11 @@ def is_transient_sqlite_path(path: Path, relative: str) -> bool:
 
 
 def _should_prune(directory: Path, name: str, project: Path) -> bool:
-    if name.endswith(".snapshots") or name == "__pycache__" or name.endswith("-home"):
+    if name == "__pycache__" or name.endswith("-home"):
         return True
+    if name.endswith(".snapshots"):
+        parent = directory.relative_to(project).as_posix()
+        return any(parent == root or parent.startswith(f"{root}/") for root in SNAPSHOT_EXCLUDE_ROOTS)
     if name != "home":
         return False
     parent = directory.relative_to(project).as_posix()

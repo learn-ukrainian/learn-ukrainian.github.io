@@ -359,7 +359,7 @@ def _many_database_fixture(tmp_path: Path, fixture_runs: int = 30) -> tuple[dict
     (tmp_path / "data" / "atlas.db").chmod(0o600)
     sources = tmp_path / "data" / "sources.db"
     databases.append(sources)
-    _make_database(tmp_path / "batch_state" / "fleet-comms" / "pytest-of-ops" / "pytest-1" / "scratch.db")
+    _make_database(tmp_path / "batch_state" / "fleet-comms" / "pytest-of-fixture" / "pytest-1" / "scratch.db")
     (tmp_path / "data" / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
     database_hashes = {database.relative_to(tmp_path).as_posix(): _logical_sha256(database) for database in databases}
     file_hashes = {
@@ -442,7 +442,7 @@ def _real_restic_base_snapshot(
         "--exclude-file",
         str(excludes),
         "--exclude",
-        str(project / "batch_state" / "fleet-comms" / "pytest-of-ops"),
+        str(project / "batch_state" / "fleet-comms" / "pytest-of-fixture"),
     )
 
 

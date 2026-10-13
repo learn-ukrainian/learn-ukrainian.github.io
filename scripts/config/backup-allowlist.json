@@ -76,14 +76,15 @@
       "kind": "glob_files",
       "required": false,
       "action": "keep",
-      "reason": "Small JSON files directly under data/lexicon, not nested directories."
+      "reason": "Every regular JSON file directly under data/lexicon. No size cutoff; nested directories are not included."
     },
     {
       "path": "data/lexicon/runner-mirror",
       "kind": "tree",
       "required": false,
       "action": "keep",
-      "reason": "The gate receipt proves this tree matches the snapshot before a wipe."
+      "reason": "The gate receipt proves this tree matches the snapshot before a wipe.",
+      "note": "Existing addition beyond the approved 31 keep paths. The gate receipt compares this tree with the snapshot. When the mirror is absent the script logs one line and continues."
     },
     {
       "path": "data/movaua.db",

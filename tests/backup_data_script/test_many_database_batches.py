@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import sqlite3
@@ -29,6 +30,21 @@ from tests.backup_data_script._support import (
     _write_archive,
     _write_executable,
 )
+
+_DEFAULT_DB_BATCH_MAX_BYTES = 1073741824
+
+
+def _run_snapshot_bound(sizes: list[int], budget: int) -> tuple[int, int]:
+    """Database batches, then total snapshots, for a clean run.
+
+    total = 1 base + ceil(databases / per_batch) + the pending and completion
+    receipts. per_batch is how many copies of the largest database fit in the
+    batch budget. The count does not grow by one snapshot per database.
+    """
+    largest = max(sizes)
+    per_batch = max(1, budget // largest)
+    batches = math.ceil(len(sizes) / per_batch)
+    return batches, 1 + batches + 2
 
 
 def test_database_excludes_go_through_an_exclude_file_not_argv(
@@ -204,13 +220,16 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
     backed_up = _run(environment, "backup", "--execute")
 
     assert backed_up.returncode == 0, backed_up.stderr
-    # One repository run per part, not one per database: 34 databases, 4 uploads.
+    sizes = [(project / relative).stat().st_size for relative in database_hashes]
+    budget = int(environment.get("LU_BACKUP_DB_BATCH_MAX_BYTES", str(_DEFAULT_DB_BATCH_MAX_BYTES)))
+    db_batches, snapshots = _run_snapshot_bound(sizes, budget)
     assert _backup_invocations(environment) == [
         "backup lu-part-base",
-        "backup lu-part-db",
+        *(["backup lu-part-db"] * db_batches),
         "backup lu-part-receipt",
         "backup lu-part-complete",
     ]
+    assert len(_backup_invocations(environment)) == snapshots
     assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["35", "0", "0"]
     assert "SQLite databases backed up: 35 of 35 (pytest scratch skipped: 1, archived: 0)." in backed_up.stdout
     assert list(staging.iterdir()) == []
@@ -264,8 +283,15 @@ def test_batch_budget_splits_database_uploads(
     backed_up = _run(environment, "backup", "--execute")
 
     assert backed_up.returncode == 0, backed_up.stderr
-    # Four fixture databases plus the required sources.db, two per batch.
-    assert _backup_invocations(environment).count("backup lu-part-db") == 3
+    sizes = [
+        (project / "batch_state" / "open-model-data" / f"run-{index}" / "sources.db").stat().st_size
+        for index in range(4)
+    ]
+    sizes.append((source / "sources.db").stat().st_size)
+    budget = int(environment["LU_BACKUP_DB_BATCH_MAX_BYTES"])
+    db_batches, snapshots = _run_snapshot_bound(sizes, budget)
+    assert _backup_invocations(environment).count("backup lu-part-db") == db_batches
+    assert len(_backup_invocations(environment)) == snapshots
     assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "1", "0", "0"]
 
 

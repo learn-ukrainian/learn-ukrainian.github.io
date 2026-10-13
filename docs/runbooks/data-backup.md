@@ -7,13 +7,21 @@ or restore directly over live project data. Snapshot pruning exists only as
 the operator-approved weekly `retention` command described below.
 
 The nightly reads one allowlist, `scripts/config/backup-allowlist.json`, and
-puts every kept path in one restic snapshot. `GIT-WORKTREE.patch` is added
-when tracked changes have not been committed, and `BACKUP-RECEIPT.json` is
-written during an executed backup. A path that is not in the allowlist is not
-backed up: the script does not walk it, does not stage it, and does not fail
-because it exists. Drop rows are documentation of that boundary. They are not
-exclude rules, so the kept file `data/lexicon/cache/ulif_raw.sqlite` is still
-snapshotted even though `data/lexicon/cache` is dropped.
+backs up every kept path in one run. On Linux a clean run writes a bounded
+number of restic snapshots that does not grow by one per database: one base
+snapshot, `ceil(N / K)` database-batch snapshots, and two receipt snapshots
+(pending, then completion). `N` is the number of databases in the run. `K` is
+how many copies of the largest database fit in
+`LU_BACKUP_DB_BATCH_MAX_BYTES` (`max(1, floor(budget / largest))`). A database
+larger than the budget is its own batch. `data/lexicon/cache/ulif_raw.sqlite`
+is one consistent SQLite snapshot inside a database batch, not its own restic
+run. A dirty worktree adds one `lu-part-patch` snapshot. `BACKUP-RECEIPT.json`
+is the receipt those final snapshots carry. A path that is not in the
+allowlist is not backed up: the script does not walk it, does not stage it,
+and does not fail because it exists. Drop rows are documentation of that
+boundary. They are not exclude rules, so the kept file
+`data/lexicon/cache/ulif_raw.sqlite` is still snapshotted even though
+`data/lexicon/cache` is dropped.
 
 `data/lexicon/runner-mirror` is an optional keep so the existing gate receipt
 can compare that tree with the snapshot. A host with no mirror logs one line
@@ -30,6 +38,11 @@ Required paths abort the run when they are missing. Optional paths log
 A non-ignored untracked file inside an allowlisted tree that the selection
 does not cover still fails the run. An untracked file outside the allowlist
 does not.
+
+`data/lexicon/*.json` selects every regular file whose name ends in `.json`
+and whose parent is `data/lexicon`. There is no size cutoff. Nested
+directories are not included. Measured read-only on 2026-10-13T15:31:18Z:
+8 files, 10675420 bytes.
 
 To add a path, edit `scripts/config/backup-allowlist.json` and the KEEP table
 below in the same change. Do not add a path by editing `scripts/backup-data.sh`.
@@ -51,7 +64,7 @@ records the scope.
 | `data/lexicon/side` | no | Side lexicon inputs are not regenerated from Git. |
 | `data/lexicon/intake` | no | Lexicon intake is not regenerated from Git. |
 | `data/lexicon/parked` | no | Parked lexicon inputs are not regenerated from Git. |
-| `data/lexicon/*.json` | no | Small JSON files directly under data/lexicon, not nested directories. |
+| `data/lexicon/*.json` | no | Every regular JSON file directly under data/lexicon. No size cutoff; nested directories are not included. |
 | `data/lexicon/runner-mirror` | no | The gate receipt proves this tree matches the snapshot before a wipe. |
 | `data/movaua.db` | no | The movaua corpus is costly to rebuild. |
 | `data/movne_pytannya.db` | no | The language-question corpus is costly to rebuild. |
@@ -118,7 +131,11 @@ restic rclone path with that final directory name.
   the batch, because it includes committed WAL content and can be larger than
   the source's main file. Each restic run pays a fixed repository
   open, index load, and lock cost, so one upload per database made runs with
-  thousands of small databases take hours. Before each database, the script
+  thousands of small databases take hours. The snapshot count for a clean run
+  is one base snapshot, plus `ceil(N / K)` database batches, plus the pending
+  receipt and the completion receipt. `K` is `max(1, floor(batch budget /
+  largest database))`. The ULIF file is one consistent SQLite snapshot inside
+  a batch. Before each database, the script
   checks staging free space against its DB plus WAL size and a 2 GiB reserve;
   if that fails while a batch is pending, it uploads the batch and checks
   again. No reflink or full-tree copy is required, so peak extra disk is at
@@ -336,32 +353,43 @@ process exit code belongs to the operator log; the in-snapshot receipt does
 not record it.
 
 When `data/lexicon/runner-mirror/` exists, a successful `backup --execute`
-also writes its local `RESTIC-GATE-RECEIPT.json` **after** the repository
+also writes its local `RESTIC-GATE-RECEIPT.json` after the repository
 check. This is distinct from the in-snapshot `BACKUP-RECEIPT.json`: it binds
 each current runner-mirror `manifest.json` checksum to the completed restic
-snapshot so the pre-wipe gate works without credentials or network access. On
-Linux, the script compares the runner-mirror file list and SHA-256 hashes in
-the live-file snapshot with the live mirror after the repository check. It
-writes the gate receipt to `RESTIC-GATE-RECEIPT.json.tmp` beside its
-destination only if the live mirror still has those hashes. Any failure up to
-this point publishes nothing and removes the staged file. After the
-completion snapshot is saved, the script renames the staged file into place.
-Nothing else that can fail runs after that snapshot.
+snapshot so the pre-wipe gate works without credentials or network access.
+
+A run is selectable if and only if its data snapshots are complete and
+verified. `restore latest` selects a run only when its `lu-part-complete`
+snapshot exists, and that snapshot is uploaded only after the repository
+check, the upload-summary checks, and the runner-mirror comparison have
+passed. The gate receipt is a separate artifact. Its absence keeps the
+pre-wipe gate closed. It does not decide whether the run is selectable.
+
+On Linux, the script compares the runner-mirror file list and SHA-256 hashes
+in the live-file snapshot with the live mirror after the repository check. It
+writes the gate receipt to `RESTIC-GATE-RECEIPT.json.tmp` in the same
+directory as its destination, and only if the live mirror still has those
+hashes. Any failure before the completion snapshot publishes nothing and
+removes the staged file. After the completion snapshot is saved, the script
+renames the staged file into place with same-directory `mv -T`, then checks
+that the destination is a readable regular file. Nothing else that can fail
+runs after that snapshot. The receipt is not renamed first: that order could
+open the pre-wipe gate for a run whose data snapshots were not finished.
 
 The pre-wipe gate (`_require_restic_gate_receipt` in
 `scripts/lexicon/runner/durable_mirror.py`) checks the receipt's base
 snapshot ID, its freshness, and the manifest fingerprints. It does not check
-the completion tag, and it does not need to: a gate receipt can only appear
-after the completion snapshot exists. A mirror change after staging (while
-the completion snapshot uploads) leaves a receipt for the verified manifest
-only, so the gate refuses the changed mirror.
+the completion tag. Selectability is the completed, verified data snapshots,
+not the gate receipt. A mirror change after staging (while the completion
+snapshot uploads) leaves a receipt for the verified manifest only, so the
+gate refuses the changed mirror.
 
 **Accepted commit-follower window.** If the process is killed after the
-completion snapshot is saved, or the final rename fails, the run is verified,
-complete and restorable, but the command exits non-zero and no gate receipt
-is written. The live-mirror wipe stays blocked until a later backup succeeds.
-A kill can also leave the staged `.tmp` file, which the gate ignores and the
-next run overwrites.
+completion snapshot is saved, or the final rename fails, the data snapshots
+are complete and verified, so the run stays selectable and restorable. The
+command exits non-zero and no gate receipt is published, so the pre-wipe gate
+stays closed until a later backup writes one. A kill can also leave the
+staged `.tmp` file, which the gate ignores and the next run overwrites.
 See [the Atlas runner durability runbook](atlas-20k-runner-durability.md) for
 the required snapshot → backup → gate → wipe order.
 

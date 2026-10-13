@@ -10,7 +10,10 @@
 # Covers the allowlist in scripts/config/backup-allowlist.json, and nothing
 # else under batch_state/ or data/. A path that is not on that list is not
 # walked. SQLite files on the list are copied with SQLite's online backup
-# into the same nightly snapshot as the other files.
+# into the same nightly run as the other files. A clean Linux run writes one
+# base snapshot, ceil(database count / databases per batch) database-batch
+# snapshots, and the two receipt snapshots. Snapshot directories are excluded
+# only under batch_state/tasks, from the same list discovery and restic use.
 #
 # Required environment:
 #   LU_BACKUP_REPOSITORY=rclone:<remote>:<path>
@@ -78,6 +81,11 @@ readonly KEEP_MONTHLY=6
 # alone). A pending batch and the next incoming online copy coexist until the
 # flush, so peak staging is at most this budget plus the largest copy.
 readonly DB_BATCH_MAX_BYTES="${LU_BACKUP_DB_BATCH_MAX_BYTES:-1073741824}"
+# Snapshot directories are excluded only under these allowlist roots.
+# Discovery walks and restic excludes are both generated from this list.
+SNAPSHOT_EXCLUDE_ROOTS=(
+  batch_state/tasks
+)
 
 STAGE_DIR=""
 STAGED_ROOT=""
@@ -204,12 +212,21 @@ write_restic_gate_receipt() {
 }
 
 # Rename a staged gate receipt into place. This follows the completion
-# snapshot, so a failure here leaves a complete, restorable run, a non-zero
-# exit, and no gate receipt: the pre-wipe gate stays closed.
+# snapshot. The run is already selectable. A failed rename leaves exit 1 and
+# no gate receipt, so the pre-wipe gate stays closed.
 publish_staged_gate_receipt() {
+  local source destination
+
   [[ -n "$STAGED_GATE_RECEIPT" ]] || return 0
-  mv -fT -- "$STAGED_GATE_RECEIPT" "${STAGED_GATE_RECEIPT%.tmp}" ||
+  source=$STAGED_GATE_RECEIPT
+  destination="${source%.tmp}"
+  # Same directory, mv -T: the rename is atomic and does not follow a
+  # directory sitting on the destination. Then require a readable regular file.
+  if [[ "$destination" == "$source" || "$(dirname -- "$source")" != "$(dirname -- "$destination")" ]] ||
+    ! mv -fT -- "$source" "$destination" ||
+    [[ ! -f "$destination" || -L "$destination" || ! -r "$destination" ]]; then
     die "Run $RUN_ID is complete and restorable, but its runner mirror gate receipt could not be renamed into place; the pre-wipe gate stays closed. Re-run the backup."
+  fi
   STAGED_GATE_RECEIPT=""
 }
 
@@ -651,6 +668,43 @@ validate_source_symlinks() {
   done
 }
 
+# Prune snapshot directories named by SNAPSHOT_EXCLUDE_ROOTS, then run find.
+find_pruning_snapshot_dirs() {
+  local root=$1
+  shift
+  local -a pruning=()
+  local snapshot_root
+
+  for snapshot_root in "${SNAPSHOT_EXCLUDE_ROOTS[@]}"; do
+    pruning+=(
+      \( -type d -name '*.snapshots' -path "$PROJECT_ROOT/$snapshot_root/*" -prune \) -o
+    )
+  done
+  find "$root" "${pruning[@]}" "$@"
+}
+
+snapshot_path_is_excluded() {
+  local relative=$1 snapshot_root
+
+  for snapshot_root in "${SNAPSHOT_EXCLUDE_ROOTS[@]}"; do
+    [[ "$relative" == "$snapshot_root"/* && "$relative" == *.snapshots/* ]] && return 0
+  done
+  return 1
+}
+
+# Every allowlist content walk prunes the same trees restic excludes:
+# task snapshot directories, bytecode, ephemeral homes, and staging.
+allowlist_find() {
+  local root=$1
+  shift
+
+  find_pruning_snapshot_dirs "$root" \
+    \( -type d \( -name '__pycache__' -o -name '*-home' \) -prune \) -o \
+    \( -type d -path "$PROJECT_ROOT/batch_state/review-receipts/*" -name home -prune \) -o \
+    \( -path "$TMP_ROOT" -prune \) -o \
+    "$@"
+}
+
 validate_tree_symlinks() {
   local tree=$1
   local label=$2
@@ -680,7 +734,7 @@ validate_tree_symlinks() {
       fi
       die "Symlink escapes $label: $relative -> $target"
     fi
-  done < <(find "$tree" -type l -print0)
+  done < <(allowlist_find "$tree" -type l -print0)
 }
 
 discover_ephemeral_homes() {
@@ -690,12 +744,12 @@ discover_ephemeral_homes() {
     [[ "$root" == batch_state || "$root" == batch_state/* ]] || continue
     while IFS= read -r -d '' home; do
       EPHEMERAL_HOME_EXCLUDES+=("$home")
-    done < <(find "$PROJECT_ROOT/$root" \( -type d -o -type l \) -name '*-home' -prune -print0)
+    done < <(find_pruning_snapshot_dirs "$PROJECT_ROOT/$root" \( -type d -o -type l \) -name '*-home' -prune -print0)
   done
   if [[ -d "$PROJECT_ROOT/batch_state/review-receipts" && ! -L "$PROJECT_ROOT/batch_state/review-receipts" ]]; then
     while IFS= read -r -d '' home; do
       EPHEMERAL_HOME_EXCLUDES+=("$home")
-    done < <(find "$PROJECT_ROOT/batch_state/review-receipts" \( -type d -o -type l \) -name home -prune -print0)
+    done < <(find_pruning_snapshot_dirs "$PROJECT_ROOT/batch_state/review-receipts" \( -type d -o -type l \) -name home -prune -print0)
   fi
 }
 
@@ -721,7 +775,7 @@ validate_tree_file_types() {
     is_ephemeral_home_path "$entry" && continue
     relative=${entry#"$tree"/}
     die "Unsupported special file type in $label: $relative"
-  done < <(find "$tree" ! -type d ! -type f ! -type l -print0)
+  done < <(allowlist_find "$tree" ! -type d ! -type f ! -type l -print0)
 }
 
 # The nightly walks only scripts/config/backup-allowlist.json keep entries.
@@ -813,8 +867,9 @@ is_backup_sidecar() {
 }
 
 # Task records are the named extensions, plus every regular file under
-# batch_state/tasks/archive. Lock files and *.snapshots directories are not
-# records; snapshot directories are not walked at all.
+# batch_state/tasks/archive. Lock files and *.snapshots directories under
+# batch_state/tasks are not records. Those snapshot directories are the only
+# ones excluded, and discovery does not walk them.
 task_record_is_staged() {
   local relative=$1
   local base=${relative##*/}
@@ -842,16 +897,13 @@ note_selected_file() {
   STAGED_CANDIDATES+=("$relative")
 }
 
-# Regular files under one allowlisted root. Do not follow symlinks, and do not
-# descend into snapshot directories, bytecode, ephemeral homes, or staging.
+# Regular files under one allowlisted root. Do not follow symlinks. Prune the
+# same trees allowlist_find prunes, including snapshot directories only under
+# SNAPSHOT_EXCLUDE_ROOTS.
 find_regular_files() {
   local root=$1
 
-  find "$root" \
-    \( -type d \( -name '*.snapshots' -o -name '__pycache__' -o -name '*-home' \) -prune \) -o \
-    \( -type d -path "$PROJECT_ROOT/batch_state/review-receipts/*" -name home -prune \) -o \
-    \( -path "$TMP_ROOT" -prune \) -o \
-    -type f -print0
+  allowlist_find "$root" -type f -print0
 }
 
 walk_tree_files() {
@@ -1081,8 +1133,9 @@ publish_selection_manifest() {
 }
 
 # Directory paths stay on argv. File paths stay on argv until there are more
-# than 50, then they move to --files-from so task records cannot overflow
-# the kernel argument limit. Extra restic arguments follow the selection.
+# than 50, then they move to a NUL-delimited --files-from-raw list so a name
+# containing a newline stays one path. restic rejects an empty name in that
+# list, and a NUL would end the name early. Extra restic arguments follow.
 backup_selected_paths() {
   local relative absolute list_file
   local -a directories=() files=() restic_args=()
@@ -1101,9 +1154,16 @@ backup_selected_paths() {
     list_file="$(mktemp "${TMP_ROOT}/learn-ukrainian-backup-files.XXXXXX")" ||
       die "Could not create the restic file list."
     FILES_FROM_FILE="$list_file"
-    printf '%s\n' "${files[@]}" > "$list_file" ||
-      die "Could not write the restic file list."
-    restic_args+=(--files-from "$list_file")
+    : > "$list_file" || die "Could not write the restic file list."
+    for relative in "${files[@]}"; do
+      # restic --files-from-raw rejects an empty name. A NUL cannot be stored
+      # in a shell variable, so every non-empty path is representable.
+      [[ -n "$relative" ]] ||
+        die "Cannot express an empty backup path in the restic file list."
+      printf '%s\0' "$relative" >> "$list_file" ||
+        die "Could not write the restic file list."
+    done
+    restic_args+=(--files-from-raw "$list_file")
   elif ((${#files[@]} > 0)); then
     restic_args+=("${files[@]}")
   fi
@@ -1344,7 +1404,7 @@ unreadable_backup_paths() {
     # Prune inaccessible directories so find can continue through other roots.
     # Capture any remaining permission errors without propagating find's status
     # into the caller's command substitution under set -e.
-    found="$(LC_ALL=C find "$root" \
+    found="$(LC_ALL=C allowlist_find "$root" \
       \( -type d \( ! -readable -o ! -executable \) -print -prune \) -o \
       \( -type f ! -readable -print \) 2>&1)" || true
     [[ -n "$found" ]] || continue
@@ -1585,7 +1645,7 @@ add_sqlite_exclude() {
 
 build_restic_excludes() {
   local root=$1
-  local relative
+  local relative snapshot_root
 
   RESTIC_EXCLUDES=(
     "$(restic_literal_pattern "$root/qdrant")"
@@ -1609,9 +1669,13 @@ build_restic_excludes() {
     '**/batch_state/review-receipts/**/home/**'
     '**/qdrant/**'
     'batch_state/tasks/**/*.lock'
-    'batch_state/tasks/**/*.snapshots'
-    'batch_state/tasks/**/*.snapshots/**'
   )
+  for snapshot_root in "${SNAPSHOT_EXCLUDE_ROOTS[@]}"; do
+    RESTIC_EXCLUDES+=(
+      "$snapshot_root/**/*.snapshots"
+      "$snapshot_root/**/*.snapshots/**"
+    )
+  done
   if ((${#LEGACY_EXCLUDES[@]} > 0)); then
     for relative in "${LEGACY_EXCLUDES[@]}"; do
       RESTIC_EXCLUDES+=("$(restic_literal_pattern "$root/$relative")")
@@ -1649,7 +1713,7 @@ tree_file_stats() {
   local total=0 count=0 file size
 
   if [[ "$(uname -s)" == Linux ]]; then
-    find "$tree" -type f -printf '%s\n' |
+    allowlist_find "$tree" -type f -printf '%s\n' |
       awk '{total += $1; count++} END {printf "%.0f %d\n", total, count}'
     return
   fi
@@ -1661,7 +1725,7 @@ tree_file_stats() {
     fi
     total=$((total + size))
     count=$((count + 1))
-  done < <(find "$tree" -type f -print0)
+  done < <(allowlist_find "$tree" -type f -print0)
   printf '%s %s\n' "$total" "$count"
 }
 
@@ -1673,18 +1737,13 @@ source_tree_stats() {
     case "$relative" in
       */qdrant/*|*/__pycache__/*|*/.DS_Store|*.db-wal|*.db-shm|*.db-journal|*.sqlite*-wal|*.sqlite*-shm|*.sqlite*-journal) continue ;;
     esac
-    if [[ "$relative" == batch_state/tasks/* ]]; then
-      case "$relative" in
-        *.lock|*.snapshots/*) continue ;;
-      esac
+    snapshot_path_is_excluded "$relative" && continue
+    if [[ "$relative" == batch_state/tasks/*.lock ]]; then
+      continue
     fi
     total=$((total + size))
     count=$((count + 1))
-  done < <(find "$tree" \
-    \( -type d \( -name '*.snapshots' -o -name '__pycache__' -o -name '*-home' \) -prune \) -o \
-    \( -type d -path "$PROJECT_ROOT/batch_state/review-receipts/*" -name home -prune \) -o \
-    \( -path "$TMP_ROOT" -prune \) -o \
-    -type f -printf '%p\0%s\0')
+  done < <(allowlist_find "$tree" -type f -printf '%p\0%s\0')
   printf '%s %s\n' "$total" "$count"
 }
 
