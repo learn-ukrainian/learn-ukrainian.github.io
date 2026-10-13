@@ -637,6 +637,72 @@ Edit and Read, and Bash has no `run_in_background` there (a capture of the
 request sent to a local fake endpoint); the explicit controls keep the route
 closed if that reduced tool set changes.
 
+The ACP Claude seat (`acpx-claude-shadow`, #10500) launches the host Claude
+Code through the repo-owned `scripts/agent_runtime/claude_acp_exec.sh`, which
+`CLAUDE_CODE_EXECUTABLE` names. The adapter reads the launcher only from the
+canonical primary checkout, which the adapter's own checkout names through its
+git links (`resolve_main_root_without_git`: no git process, so PATH, git
+configuration and the environment cannot redirect it); a worktree copy is
+never used. Before every launch it validates the launcher and each parent
+(owner, mode, no symlink), reads it once without following links, checks the
+SHA-256 of those bytes against the adapter's pin
+(`_CLAUDE_ACP_LAUNCHER_CLOSURE`; the launcher is self-contained, and its bytes
+and the pin change in the same commit), writes them to a private `0700`
+per-launch copy under the caller's cache directory, and validates the pinned
+host binary. `CLAUDE_CODE_EXECUTABLE` names that copy, so a later change to the
+checkout does not change what runs. The primary checkout is resolved from git
+metadata files that must have the structure git itself requires (a `.git`
+directory with `HEAD`, `objects` and `refs`, or a worktree link with
+consistent back-links into such a store); every path component is checked with
+`lstat`, no symlink is followed, and a FIFO or device where a metadata file
+belongs is refused without blocking.
+The copy directory in the caller's cache is checked like the
+launcher's parents and must be owned by the caller before anything in it is
+touched. Before each launch, a sweep removes copies older than two days, but only
+`0700` directories the caller owns, with the generated name, that no live
+process holds open (read from `/proc`); sweep failures are logged. The ask's
+own copy is removed when its result is parsed. If a live process still holds it
+or removal fails (permission, `ENOSPC`, `EBUSY`), the result fails with
+`acp_adapter_incompatible` and a logged `ClaudeAcpLauncherCleanupError` instead
+of leaving a silent copy; the runner's final cleanup retries.
+A missing, unsafe, unreadable or mismatched launcher, an unresolvable primary
+checkout or a failed copy refuses with a typed `ClaudeCodeExecutableRefusal`
+before any ACP message, with no fallback. Refusal text names no absolute host
+path. Host paths in the provider's output are replaced with labels before
+the 500-character excerpt is cut. The launcher rechecks the binary's device,
+inode, size, and mtime and ctime in nanoseconds with GNU `stat` (`gnustat`
+where the system `stat` is the uutils build, which rounds nanoseconds; without
+GNU `stat` every launch refuses). It then execs the binary with the deny list
+as one `--disallowedTools` argument; the SDK's own `--disallowedTools` follows
+and accumulates. After the ask, any result, successful or not, fails when the
+binary's identity changed.
+
+These checks are bound to the verified launcher bytes and catch drift,
+accidents and honest misconfiguration: an auto-update mid-ask, a stale or
+edited checkout, unsafe permissions, corrupt git metadata, and ordinary
+concurrent launches. They are not tamper resistance. A writer running as the
+same Unix user already controls the host binary, the user configuration and the
+checkout, so deliberate replacement or forgery by that writer is out of scope.
+Documented residuals (owner: infra; resolved in an isolated-authority phase,
+where launcher verification and execution run under an authority the seat's
+user cannot write):
+
+- Execution is bound to a pathname after hashing. The SDK receives the private
+  copy's path, which that writer can replace between verification and exec.
+- That writer can edit the host binary in place and restore its size and
+  mtime. The nanosecond ctime comparison catches this unless the writer can
+  also reset ctime.
+- That writer can fabricate a complete git layout (`HEAD`, `objects`, `refs`
+  and consistent links) to select a non-canonical primary checkout. The
+  launcher digest still pins the bytes that run.
+
+The seat enforces the denies
+through these launcher flags, not through ACPX permissions: `--deny-all` never
+covers tools that run without asking, such as `Monitor` and `ScheduleWakeup`.
+The plan also sets `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`,
+`CLAUDE_CODE_DISABLE_ADVISOR_TOOL`, `CLAUDE_CODE_DISABLE_CRON` and
+`CLAUDE_CODE_DISABLE_WORKFLOWS`, allowlisted for this seat only.
+
 Sealed `review_isolation` drops the variable through its own environment
 allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool
 that can background. Interactive launchers (`start-claude.sh`,

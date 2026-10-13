@@ -8,6 +8,11 @@ the real runner, so the switch must survive ``env_sanitize.build_agent_env``.
 The KimiCC harness also runs headless Claude Code (through
 ``kimicc_headless.sh``) and gets both controls; the native Kimi CLI is not
 Claude Code and gets neither.
+The ACP Claude seat (#10500) launches the host Claude Code through the
+repo-owned ``claude_acp_exec.sh``, which adds the deny list as
+``--disallowedTools``: the seat enforces it through those launcher flags, not
+through ACPX permissions, because ``--deny-all`` never covers tools that run
+without asking (Monitor, ScheduleWakeup).
 The fake reproduces the gating observed live in Claude Code 2.1.289: with the
 variable, Bash refuses ``run_in_background`` and a background subagent runs in
 the foreground; Monitor, ScheduleWakeup, CronCreate and Workflow are refused
@@ -330,11 +335,106 @@ def _kimicc_plan(tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPatch) -> 
     return plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(","), plan.env_overrides
 
 
-# Every delegate harness that launches Claude Code, with the modes it admits.
+# The SDK's own child flags; it denies AskUserQuestion when the ACP client
+# cannot render form elicitation (claude-agent-acp 0.64.2).
+_SDK_CHILD_ARGS = ["--output-format", "stream-json", "--verbose", "--disallowedTools", "AskUserQuestion"]
+
+
+def _acpx_claude_launch(tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPatch) -> dict:
+    """Build the ACP Claude plan and run its real launcher against the fake host.
+
+    The ACP seat enforces the background denies through the launcher's
+    ``--disallowedTools`` flag, not through ACPX permissions: ``--deny-all``
+    never covers tools that run without asking, such as Monitor and
+    ScheduleWakeup (#10500).
+    """
+    from scripts.agent_runtime.adapters import acpx
+
+    script = tmp_path / "fake_claude.py"
+    script.write_text(_FAKE_CLAUDE, encoding="utf-8")
+    host = tmp_path / "claude"
+    host.write_text(f'#!/bin/sh\nexec "{sys.executable}" "{script}" "$@"\n', encoding="utf-8")
+    host.chmod(0o755)
+    host_stat = host.stat()
+    monkeypatch.setenv(acpx.TRANSPORT_ENV, "active")
+    monkeypatch.setattr(acpx, "_require_non_primary_worktree", lambda *_a, **_kw: None)
+    monkeypatch.setattr(acpx, "_require_compatible_acpx_binary", lambda **_kw: ("acpx", "0.13.0"))
+    monkeypatch.setattr(acpx, "_acpx_spawn_argv", lambda binary, **_kw: [binary])
+    monkeypatch.setattr(acpx, "_require_local_claude_acp_adapter", lambda *_a, **_kw: {})
+    monkeypatch.setattr(
+        acpx,
+        "_require_host_claude_code",
+        lambda **_kw: {
+            "claude_code_executable": str(host),
+            "claude_code_launch_identity": acpx._claude_code_launch_identity(host_stat),
+            "claude_code_version": "2.1.289",
+        },
+    )
+    # Run the tracked launcher bytes; where production loads them from and their
+    # trust and digest checks are covered in test_acpx_claude_host_executable.
+    tracked_launcher = Path(acpx.__file__).resolve().parents[1] / "claude_acp_exec.sh"
+    monkeypatch.setattr(acpx, "_require_claude_acp_launcher", lambda **_kw: str(tracked_launcher))
+    with acpx.active_discussion_scope():
+        plan = acpx.AcpxClaudeShadowAdapter().build_invocation(
+            prompt="inspect",
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="t-background",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "claude",
+                "correlation_id": "c",
+                "idempotency_key": "i",
+            },
+        )
+    dump = tmp_path / "dump.json"
+    env = build_agent_env(provider="acpx-claude-shadow", model="claude-opus-5-5", overrides=plan.env_overrides)
+    env["LU_FAKE_CLAUDE_DUMP"] = str(dump)
+    launched = subprocess.run(
+        [plan.env_overrides["CLAUDE_CODE_EXECUTABLE"], *_SDK_CHILD_ARGS],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert launched.returncode == 0, launched.stderr
+    return {"host": str(host), **json.loads(dump.read_text(encoding="utf-8"))}
+
+
+def _acpx_claude_plan(tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPatch) -> tuple[list[str], dict[str, str]]:
+    """The deny set and env the real ACP launcher hands to Claude Code."""
+    child = _acpx_claude_launch(tmp_path, mode, monkeypatch)
+    argv = child["argv"]
+    return argv[argv.index("--disallowedTools") + 1].split(","), child["env"]
+
+
+def test_acp_claude_launcher_reaches_the_child_with_every_control(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Byte-exact argv, the SDK's own deny kept, and no pinned-path variables in the child."""
+    child = _acpx_claude_launch(tmp_path, "read-only", monkeypatch)
+    assert child["argv"] == [
+        "--disallowedTools",
+        ",".join(HEADLESS_BACKGROUND_TOOL_DENIES),
+        *_SDK_CHILD_ARGS,
+    ]
+    assert child["env"][SWITCH] == "1"
+    assert child["env"][ADVISOR_SWITCH] == "1"
+    assert child["env"]["CLAUDE_CODE_DISABLE_CRON"] == "1"
+    assert child["env"]["CLAUDE_CODE_DISABLE_WORKFLOWS"] == "1"
+    assert "LU_CLAUDE_ACP_HOST" not in child["env"]
+    assert "LU_CLAUDE_ACP_HOST_IDENTITY" not in child["env"]
+
+
+# Every harness that launches Claude Code, with the modes it admits.
 # test_claude_code_harness_denominator_is_complete keeps this table honest.
 _CLAUDE_CODE_HARNESSES = {
     "adapters/claude.py": (_claude_plan, ("read-only", "workspace-write", "danger")),
     "adapters/kimicc.py": (_kimicc_plan, ("workspace-write",)),
+    "adapters/acpx.py": (_acpx_claude_plan, ("read-only",)),
 }
 
 
@@ -347,7 +447,7 @@ def test_every_claude_code_harness_plan_disables_background(
 ) -> None:
     """Each harness that launches Claude Code carries the switch and denies every background tool."""
     build, _ = _CLAUDE_CODE_HARNESSES[harness]
-    args = (monkeypatch,) if build is _kimicc_plan else ()
+    args = (monkeypatch,) if build in {_kimicc_plan, _acpx_claude_plan} else ()
     denied, env_overrides = build(tmp_path, mode, *args)
     assert env_overrides[SWITCH] == "1"
     assert denied == list(HEADLESS_BACKGROUND_TOOL_DENIES)
