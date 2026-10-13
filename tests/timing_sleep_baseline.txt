@@ -7,6 +7,8 @@ tests/api/test_release_snapshot.py	2
 tests/api/test_services_ops.py	4
 tests/api/test_status_endpoint_latency.py	9
 tests/audit/test_secret_scan_local.py	1
+tests/backup_data_script/_support.py	1
+tests/backup_data_script/test_retention_and_lock.py	3
 tests/ci/test_test_env_sh.py	2
 tests/epics_monitor_stub.py	1
 tests/fleet_comms/test_pg_schema_ledger.py	1
@@ -25,7 +27,6 @@ tests/storage/test_reactivation.py	1
 tests/test_ab_channel_watch.py	2
 tests/test_agent_runtime.py	1
 tests/test_api_helpers.py	2
-tests/test_backup_data_script.py	3
 tests/test_ci_attribution.py	3
 tests/test_conftest_worktree_guard.py	1
 tests/test_coverage_misc.py	2
