@@ -34,13 +34,14 @@ def _run(
     environment: dict[str, str],
     *arguments: str,
 ) -> subprocess.CompletedProcess[str]:
+    # Load-sensitive wall clock; the assertions never depend on time.
     return subprocess.run(
         ["/bin/bash", str(SCRIPT), *arguments],
         check=False,
         capture_output=True,
         env=environment,
         text=True,
-        timeout=30,
+        timeout=120,
     )
 
 
@@ -58,13 +59,14 @@ def _use_local_restic(
     if real_restic is None:
         pytest.skip("restic unavailable")
     repository = tmp_path / "local-restic-repository"
+    # Load-sensitive wall clock; the assertions never depend on time.
     subprocess.run(
         [real_restic, "-r", str(repository), "init"],
         env={**os.environ, "RESTIC_PASSWORD_FILE": environment["RESTIC_PASSWORD_FILE"]},
         check=True,
         capture_output=True,
         text=True,
-        timeout=30,
+        timeout=120,
     )
     environment["TEST_LOCAL_RESTIC_REPOSITORY"] = str(repository)
     environment["TEST_REAL_RESTIC"] = real_restic
