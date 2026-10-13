@@ -49,10 +49,18 @@ Both waits share the original admission start time, growing allowance and hard c
 starts after global admission; waiting does not consume the shared run budget.
 
 Live tickets in either queue are locked before atomic publication. Their JSON contains exactly
-`head` (the outgoing SHA from Git's update), `branch` (its local ref), and `task_owner` (the explicit
+`head` (the outgoing SHA from Git's update), `branch` (its frozen local ref), and `task_owner` (the explicit
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID`, captured before waiting). The task label must be 1–128 ASCII
 letters, digits, underscores, dots or hyphens and start with a letter or digit. Missing or invalid
 labels become `unknown`. No other environment fields or remote identity are written.
+For native `git push -u origin HEAD`, Git can supply literal `HEAD` as the local ref. Before either
+queue wait, the gate resolves it with `git symbolic-ref --quiet HEAD` and verifies that the exact
+`refs/heads/...` ref names the outgoing SHA with `git show-ref --verify --hash`. A detached,
+unresolvable or SHA-mismatched `HEAD` records `branch: unknown`; another branch at the same SHA
+does not establish ownership. Direct refs and other literal revision expressions remain unchanged.
+The same frozen metadata passes from the head queue to the global queue even if the checkout moves.
+This observation never authorizes validation: the existing exact-SHA and input checks after both
+waits still refuse changed validation inputs.
 Ticket contents never prove liveness: flock remains the authority, including for legacy empty
 tickets and older holders with no ticket metadata.
 

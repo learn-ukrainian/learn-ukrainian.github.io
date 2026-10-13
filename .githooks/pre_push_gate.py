@@ -412,12 +412,21 @@ def reap_stale_node(path: Path) -> None:
         raise GateOutcome("validation_incomplete", f"stale node cleanup failed: {error}", incomplete=True) from None
 
 
-def ticket_identity(update: Update) -> dict[str, str]:
+def ticket_identity(update: Update, root: Path | None = None) -> dict[str, str]:
     """Allow only the frozen Git update and the explicit dispatch task label."""
+    branch = update.local_ref
+    if branch == "HEAD":
+        branch = "unknown"
+        if root is not None:
+            candidate = (git_ok("symbolic-ref", "--quiet", "HEAD", cwd=root) or "").strip()
+            if candidate.startswith("refs/heads/"):
+                sha = (git_ok("show-ref", "--verify", "--hash", candidate, cwd=root) or "").strip()
+                if sha and sha == update.local_sha:
+                    branch = candidate
     owner = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "")
     if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", owner) is None:
         owner = "unknown"
-    return {"head": update.local_sha, "branch": update.local_ref, "task_owner": owner}
+    return {"head": update.local_sha, "branch": branch, "task_owner": owner}
 
 
 def coalescing_state(state: Path, plan: Plan) -> Path:
@@ -447,10 +456,15 @@ class Admission:
     never exceeds ``ADMISSION_MAX_WAIT_S``. Older gates without tickets still hold admission.lock.
     """
 
-    def __init__(self, state: Path, wait_s: float, *, update: Update | None = None, prior: Admission | None = None):
+    def __init__(
+        self, state: Path, wait_s: float, *, update: Update | None = None,
+        prior: Admission | None = None, root: Path | None = None,
+    ):
         self.state = state
         self.wait_s = wait_s
-        self.identity = prior.identity if prior is not None else ticket_identity(update) if update is not None else None
+        self.identity = (
+            prior.identity if prior is not None else ticket_identity(update, root) if update is not None else None
+        )
         self._started = prior._started if prior is not None else None
         self.waited = 0.0
         self.queue_depth = 0
@@ -967,7 +981,7 @@ def validate(
         event["detail"] = "valid receipt"
         return
     wait_s = bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)
-    head_admission = Admission(head_state, wait_s, update=update)
+    head_admission = Admission(head_state, wait_s, update=update, root=root)
     admission = head_admission
     try:
         with contextlib.ExitStack() as locks:

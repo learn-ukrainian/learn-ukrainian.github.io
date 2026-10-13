@@ -2289,6 +2289,128 @@ def _assert_queue_released(state: Path) -> None:
             fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 
+@pytest.fixture
+def native_repo(tmp_path: Path) -> Path:
+    """A local remote and native Git hook invoking the unchanged production entry point."""
+    root = tmp_path / "native-repo"
+    root.mkdir()
+    remote = tmp_path / "native-remote.git"
+    _git(tmp_path, "init", "--bare", str(remote))
+    _git(root, "init", "-b", "main")
+    _git(root, "config", "user.email", "gate@example.invalid")
+    _git(root, "config", "user.name", "Gate Test")
+    # This fixture installs its hook only after publishing the initial base.
+    _git(root, "config", "core.hooksPath", str(root / ".git/hooks"))
+    _write(root, ".githooks/pre_push_gate.py", GATE_PATH.read_text())
+    _write(root, "scripts/pre_commit/project_python.sh",
+           f'#!/usr/bin/env bash\nexec "{sys.executable}" "$@"\n')
+    (root / "scripts/pre_commit/project_python.sh").chmod(0o755)
+    _write(root, ".pre-commit-config.yaml", PRE_COMMIT)
+    _write(root, "pytest.ini", "[pytest]\n")
+    _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
+    _write(root, "tests/test_invariant.py", GREEN_TEST)
+    _write(root, "tests/test_scanner.py", "def test_scan():\n    assert True\n")
+    _commit(root, "base", ".")
+    _git(root, "remote", "add", "origin", str(remote))
+    _git(root, "push", "origin", "main")
+    _git(root, "checkout", "-b", "feature")
+    _write(root, ".git/hooks/pre-push", f"#!{sys.executable}\n" + textwrap.dedent("""\
+        import os
+        from pathlib import Path
+        import subprocess
+        import sys
+
+        updates = sys.stdin.read()
+        Path(os.environ['NATIVE_UPDATES']).write_text(updates)
+        result = subprocess.run(
+            [sys.executable, '.githooks/pre_push_gate.py', '--launcher',
+             'scripts/pre_commit/project_python.sh', '--config', '.pre-commit-config.yaml',
+             *sys.argv[1:]], input=updates, text=True, timeout=120,
+        )
+        sys.exit(result.returncode)
+    """))
+    (root / ".git/hooks/pre-push").chmod(0o755)
+    return root
+
+
+@pytest.mark.parametrize(
+    ("source", "movement", "owner"),
+    [("HEAD", "none", "native-task_10523"),
+     ("HEAD", "same-sha", "native-task_10523"),
+     ("HEAD", "different-sha", "native-task_10523"),
+     ("detached", "none", None),
+     ("refs/heads/feature", "same-sha", "private@example.invalid"),
+     ("HEAD", "none", None),
+     ("HEAD", "none", "bad\nowner")],
+)
+def test_native_push_freezes_ticket_attribution_before_queue_waits(
+    native_repo: Path, tmp_path: Path, source: str, movement: str, owner: str | None,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    if owner is None:
+        monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    _write(native_repo, "change.txt", "outgoing\n")
+    head = _commit(native_repo, "outgoing", "change.txt")
+    if source == "detached":
+        _git(native_repo, "checkout", "--detach", head)
+    state = native_repo / ".git/lu-pre-push-gate"
+    head_state = state / "heads" / head
+    head_state.mkdir(parents=True)
+    expected = {"head": head, "branch": "unknown" if source == "detached" else "refs/heads/feature",
+                "task_owner": owner if owner == "native-task_10523" else "unknown"}
+    updates = tmp_path / "native-updates"
+    environment = {"PRE_COMMIT_HOME": str(tmp_path / "pc"), "TMPDIR": str(tmp_path),
+                   "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES": "1", "PYTHONDONTWRITEBYTECODE": "1",
+                   "NATIVE_UPDATES": str(updates), "UNRELATED_SECRET": "must-not-appear-in-ticket"}
+    if owner is not None:
+        environment["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = owner
+    processes = []
+    with (state / "admission.lock").open("w") as global_lock, (head_state / "admission.lock").open("w") as head_lock:
+        fcntl.flock(global_lock, fcntl.LOCK_EX)
+        fcntl.flock(head_lock, fcntl.LOCK_EX)
+        try:
+            refspec = "HEAD:refs/heads/feature" if source == "detached" else source
+            process = subprocess.Popen(
+                [GIT, "push", "-u", "origin", refspec], cwd=native_repo, env=_env(environment),
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            )
+            processes.append(process)
+            assert _wait_tickets(head_state, 1, processes) == [expected]
+            assert updates.read_text() == (
+                f"{'HEAD' if source == 'detached' else source} {head} refs/heads/feature {ZERO_SHA}\n"
+            )
+            if movement == "same-sha":
+                _git(native_repo, "checkout", "-b", "later", head)
+            elif movement == "different-sha":
+                _git(native_repo, "checkout", "main")
+            assert _wait_tickets(head_state, 1, processes) == [expected]
+            fcntl.flock(head_lock, fcntl.LOCK_UN)
+            if movement != "different-sha":
+                assert _wait_tickets(state, 1, processes) == [expected]
+                assert _wait_tickets(head_state, 1, processes) == [expected]
+            fcntl.flock(global_lock, fcntl.LOCK_UN)
+            stdout, stderr = process.communicate(timeout=120)
+            row = _measurements(native_repo)[-1]
+            remote = _git(native_repo, "ls-remote", "origin", "refs/heads/feature").stdout.strip()
+            if movement == "different-sha":
+                assert process.returncode != 0, (stdout, stderr)
+                assert row["reason"] == "tree_mismatch"
+                assert row["outcome"] == "refused"
+                assert "stages" not in row and _receipts(native_repo) == [] and remote == ""
+            else:
+                assert process.returncode == 0, (stdout, stderr)
+                assert row["local_ref"] == ("HEAD" if source == "detached" else source)
+                assert row["outcome"] == "green"
+                assert row["stages"]["pre_commit"]["outcome"] == "green"
+                assert row["stages"]["pytest"]["outcome"] == "green"
+                assert remote == f"{head}\trefs/heads/feature"
+        finally:
+            fcntl.flock(head_lock, fcntl.LOCK_UN)
+            fcntl.flock(global_lock, fcntl.LOCK_UN)
+            _stop_controls(processes)
+    _assert_queue_released(state)
+
+
 def test_equivalent_production_followers_never_register_global_tickets(repo: Path, tmp_path: Path) -> None:
     _write(repo, "tests/test_control.py", CONTROL_TEST)
     head = _commit(repo, "controlled checks", "tests/test_control.py")
@@ -2439,6 +2561,48 @@ def test_ticket_publication_is_atomic_and_metadata_is_allowlisted(
         assert admitted._ticket.stat().st_mode & 0o777 == 0o600
         assert observed == [identity]
     _assert_queue_released(tmp_path)
+
+
+@pytest.mark.parametrize("binding", ["matching", "mismatched", "detached", "missing", "missing-sha", "nonbranch"])
+def test_head_ticket_identity_requires_an_exact_named_binding(
+    native_repo: Path, monkeypatch: pytest.MonkeyPatch, binding: str,
+) -> None:
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "binding-control")
+    head = _git(native_repo, "rev-parse", "HEAD").stdout.strip()
+    if binding == "mismatched":
+        _write(native_repo, "different.txt", "different\n")
+        _commit(native_repo, "different head", "different.txt")
+    elif binding == "detached":
+        _git(native_repo, "checkout", "--detach", head)
+    elif binding in {"missing", "missing-sha"}:
+        _git(native_repo, "symbolic-ref", "HEAD", "refs/heads/unborn")
+        if binding == "missing-sha":
+            head = ""
+    elif binding == "nonbranch":
+        _git(native_repo, "update-ref", "refs/control/nonbranch", head)
+        _git(native_repo, "symbolic-ref", "HEAD", "refs/control/nonbranch")
+    update = gate.Update("HEAD", head, "unused", ZERO_SHA)
+    assert gate.ticket_identity(update, native_repo) == {
+        "head": head, "branch": "refs/heads/feature" if binding == "matching" else "unknown",
+        "task_owner": "binding-control",
+    }
+    if binding in {"mismatched", "missing"}:
+        with pytest.raises(gate.GateOutcome) as raised:
+            gate.build_plan(update, native_repo)
+        assert raised.value.reason == "tree_mismatch"
+
+
+@pytest.mark.parametrize("source", ["HEAD", "HEAD~1", "refs/heads/direct", "a" * 40])
+def test_ticket_without_resolved_head_never_guesses_a_branch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, source: str,
+) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setattr(gate, "git_ok", lambda *_args, **_kwargs: None)
+    update = gate.Update(source, "a" * 40, "unused", ZERO_SHA)
+    expected = {"head": "a" * 40, "branch": "unknown" if source == "HEAD" else source,
+                "task_owner": "unknown"}
+    assert gate.ticket_identity(update, tmp_path) == expected
+    assert gate.ticket_identity(update) == expected
 
 
 @pytest.mark.parametrize("field", ["head", "tree", "base", "registry_version"])
