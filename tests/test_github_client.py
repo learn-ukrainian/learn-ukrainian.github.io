@@ -300,6 +300,25 @@ def test_host_boundary_refuses_foreign_endpoints(tmp_path, endpoint):
     assert calls == []
 
 
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "search/code?q=https://x/y",
+        "/search/code?q=https://x/y",
+        "search/code#https://x/y",
+        "user?next=https://x",
+        "graphql#https://x",
+        "//graphql?x=http://y",
+        "https://api.github.com/search/code?q=https://x",
+        "HTTPS://api.github.com/user",
+    ],
+)
+def test_endpoint_scheme_position_preserves_translated_path(tmp_path, endpoint):
+    store, calls = client(tmp_path, [response([])])
+    assert store.request("GET", endpoint).value == []
+    assert [(call[0], call[1]) for call in calls] == [("GET", endpoint)]
+
+
 def test_out_of_order_budget_does_not_restore_spent_budget(tmp_path):
     store, _ = client(tmp_path, [])
     with store._db() as db:

@@ -584,13 +584,17 @@ def _canonical_endpoint(endpoint, host="github.com"):
     """
     if endpoint is None:
         return "unknown", None
+    if endpoint and (ord(endpoint[0]) <= 32 or ord(endpoint[0]) == 127):
+        return "rejected", endpoint
     # gh accepts leading slashes and bare x:y as relative endpoint paths.
-    # Handle them before urlsplit can interpret a path as an authority or scheme.
-    if endpoint.startswith("//") or "://" not in endpoint:
-        return "relative", re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
+    # Only an initial scheme selects a host; query and fragment text never do.
+    absolute = re.match(r"[A-Za-z][A-Za-z0-9+.-]*://", endpoint) is not None
+    endpoint_path = re.split(r"[?#]", endpoint, maxsplit=1)[0]
+    if not absolute:
+        return "relative", endpoint_path.lstrip("/")
     try:
-        parsed = urlsplit(endpoint)
-        hostname = canonical_host(endpoint)
+        parsed = urlsplit(endpoint_path)
+        hostname = canonical_host(endpoint_path)
         if parsed.scheme not in {"http", "https"} or hostname not in _api_hosts(host):
             return "rejected", endpoint
     except ValueError:

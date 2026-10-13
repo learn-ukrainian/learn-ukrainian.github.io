@@ -201,10 +201,22 @@ def api(*tokens):
         ("./graphql", "./graphql", "core"),
         ("user:1", "user:1", "core"),
         ("x:y", "x:y", "core"),
+        ("search/code?q=https://x/y", "search/code", "code_search"),
+        ("/search/code?q=https://x/y", "search/code", "code_search"),
+        ("search/code#https://x/y", "search/code", "code_search"),
+        ("user?next=https://x", "user", "core"),
+        ("graphql#https://x", "graphql", "graphql"),
+        ("//search/code?q=https://x/y", "search/code", "code_search"),
+        ("//graphql?x=http://y", "graphql", "graphql"),
+        ("search/code?q=x", "search/code", "code_search"),
+        ("search/code#frag", "search/code", "code_search"),
+        ("x:y?next=https://x", "x:y", "core"),
+        ("repos/o/https://x", "repos/o/https://x", "core"),
+        ("1https://x", "1https://x", "core"),
     ],
 )
 def test_relative_endpoint_spellings_never_select_a_host(tmp_path, endpoint, path, bucket):
-    """Leading slashes are paths; only :// introduces an absolute URL."""
+    """Only a scheme at the start introduces an absolute URL."""
     assert gh._canonical_endpoint(endpoint) == ("relative", path)
     assert gh._native_buckets(api(endpoint)) == frozenset({bucket, "secondary"})
     store, runner, translated, native = seeded(tmp_path, [])
@@ -217,6 +229,22 @@ def test_relative_endpoint_spellings_never_select_a_host(tmp_path, endpoint, pat
     store, runner, translated, native = seeded(tmp_path / "limited", [bucket])
     assert blocked(gh.run(args, client=store, runner=runner, capture_output=True))
     assert not translated and not native
+
+
+@pytest.mark.parametrize(
+    "endpoint,path,bucket",
+    [
+        ("https://api.github.com/search/code?q=https://x", "search/code", "code_search"),
+        ("HTTPS://api.github.com/user", "user", "core"),
+    ],
+)
+def test_absolute_scheme_position_preserves_native_admission(tmp_path, endpoint, path, bucket):
+    assert gh._canonical_endpoint(endpoint) == ("api", path)
+    assert gh._native_buckets(api(endpoint)) == frozenset({bucket, "secondary"})
+    store, runner, translated, native = seeded(tmp_path, [])
+    args = api(endpoint, "--template", "{{.}}")
+    assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
+    assert native == [args] and not translated
 
 
 @pytest.mark.parametrize("native", [False, True])
@@ -443,6 +471,14 @@ def test_url_endpoints_honour_the_api_host(args, host, expected):
         ("https://api.github.com/search/code?q=x", "code_search"),
         ("search/issues?q=x", "search"),
         ("graphql", "graphql"),
+        ("search/code?q=https://x/y", "code_search"),
+        ("/search/code?q=https://x/y", "code_search"),
+        ("search/code#https://x/y", "code_search"),
+        ("user?next=https://x", "core"),
+        ("graphql#https://x", "graphql"),
+        ("//graphql?x=http://y", "graphql"),
+        ("https://api.github.com/search/code?q=https://x", "code_search"),
+        ("HTTPS://api.github.com/user", "core"),
         ("repos/o/graphql", "core"),
         ("repos/o/r/contents/search/code", "core"),
         ("https://api.github.com/repos/o/r/contents/graphql", "core"),
@@ -565,6 +601,13 @@ def test_normalized_native_shapes_gate_runner(no_jq, tmp_path, args, expected, b
         "HTTP://foreign.example/search/code",
         "ftp://foreign.example/search/code",
         "FTP://foreign.example/search/code",
+        "ftp://evil.example/user",
+        "http://api.github.com:443/user",
+        " https://api.github.com/user",
+        "\x00https://api.github.com/user",
+        "\thttps://api.github.com/user",
+        "\nhttps://api.github.com/user",
+        "\x7fhttps://api.github.com/user",
         "https://evil.com\\@api.github.com/x",
     ],
 )
