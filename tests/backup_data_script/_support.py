@@ -338,30 +338,30 @@ def _backup_invocations(environment: dict[str, str]) -> list[str]:
     return [line.strip() for line in log.splitlines() if line.startswith("backup ")]
 
 
-def _many_database_fixture(project: Path, fixture_runs: int = 30) -> tuple[dict[str, str], dict[str, str]]:
+def _many_database_fixture(tmp_path: Path, fixture_runs: int = 30) -> tuple[dict[str, str], dict[str, str]]:
     """Representative recovery tree: many small fixture databases plus live ones."""
-    databases = [project / "data" / "datasets" / "corpus.db", project / "data" / "atlas.db"]
+    databases = [tmp_path / "data" / "datasets" / "corpus.db", tmp_path / "data" / "atlas.db"]
     databases += [
-        project / "batch_state" / "open-model-data" / f"run-{index:02d}" / "corpus.db" for index in range(fixture_runs)
+        tmp_path / "batch_state" / "open-model-data" / f"run-{index:02d}" / "corpus.db" for index in range(fixture_runs)
     ]
     databases += [
-        project / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3",
-        project / ".claude" / "atlas-epic" / "state.db",
+        tmp_path / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3",
+        tmp_path / ".claude" / "atlas-epic" / "state.db",
     ]
     for index, database in enumerate(databases):
         _make_database(database, f"row-{index}")
-    with sqlite3.connect(project / "data" / "atlas.db") as connection:
+    with sqlite3.connect(tmp_path / "data" / "atlas.db") as connection:
         connection.executemany(
             "INSERT INTO recovery_probe VALUES (?)", ((f"bulk-{index:06d}" * 8,) for index in range(5000))
         )
-    (project / "data" / "atlas.db").chmod(0o600)
-    sources = project / "data" / "sources.db"
+    (tmp_path / "data" / "atlas.db").chmod(0o600)
+    sources = tmp_path / "data" / "sources.db"
     databases.append(sources)
-    _make_database(project / "batch_state" / "fleet-comms" / "pytest-of-ops" / "pytest-1" / "scratch.db")
-    (project / "data" / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
-    database_hashes = {database.relative_to(project).as_posix(): _logical_sha256(database) for database in databases}
+    _make_database(tmp_path / "batch_state" / "fleet-comms" / "pytest-of-ops" / "pytest-1" / "scratch.db")
+    (tmp_path / "data" / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    database_hashes = {database.relative_to(tmp_path).as_posix(): _logical_sha256(database) for database in databases}
     file_hashes = {
-        relative: _file_sha256(project / relative)
+        relative: _file_sha256(tmp_path / relative)
         for relative in (
             "data/datasets/ordinary.txt",
             "batch_state/fleet-comms/state.txt",
