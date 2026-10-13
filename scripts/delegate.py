@@ -7440,6 +7440,32 @@ def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: S
     return moves
 
 
+def _adopt_continuation_checkout_branch(state: dict[str, Any], worktree: Path) -> None:
+    """Record the branch a reused continuation actually left checked out.
+
+    Dispatch stores the branch name from when the round attached. A worker that
+    creates a fresh branch in that same checkout otherwise keeps the old name,
+    so the unpushed check compares HEAD to the wrong remote and the round ends
+    ``needs_finalize`` after the new branch is already pushed. Detached HEAD
+    and a protected branch are left unchanged.
+    """
+    if state.get("worktree_reused") is not True:
+        return
+    actual = _current_branch(worktree)
+    if not isinstance(actual, str) or not actual or actual == "HEAD":
+        return
+    if actual in _load_worktree_containment().PROTECTED_BRANCHES:
+        return
+    recorded = state.get("worktree_branch")
+    normalized = recorded.strip() if isinstance(recorded, str) else ""
+    for prefix in ("refs/heads/", "origin/"):
+        if normalized.startswith(prefix):
+            normalized = normalized.removeprefix(prefix)
+    if normalized == actual:
+        return
+    state["worktree_branch"] = actual
+
+
 def _current_branch(worktree: Path) -> str | None:
     try:
         proc = subprocess.run(
@@ -11058,6 +11084,9 @@ def _run_worker(
                 run_incomplete = not ok_outcome or _worker_run_incomplete(stderr_excerpt) or leftovers_unconfirmed
                 if dirty_on_exit in (True, None):
                     needs_finalize = True
+
+                # Measure the branch the continuation left checked out (#10548).
+                _adopt_continuation_checkout_branch(final_state, Path(worktree_path))
 
                 # Catch committed-but-unpushed write dispatches (#7311):
                 # A clean tree with local commits on the dispatch branch has commits_ahead >= 1

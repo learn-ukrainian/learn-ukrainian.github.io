@@ -3378,14 +3378,182 @@ def _continuation_head_is_merged(
     )
 
 
+def _retention_release_present(matches: list[tuple[Path, dict[str, Any]]]) -> bool:
+    """True when a record carries a release receipt, or its artifact field is unreadable."""
+    for _, member in matches:
+        artifacts = member.get("preserved_artifacts")
+        if artifacts is None:
+            continue
+        if not isinstance(artifacts, dict) or artifacts.get("retention_release"):
+            return True
+    return False
+
+
+def _switched_branch_structural_cohort(
+    matches: list[tuple[Path, dict[str, Any]]],
+    worktree: Path,
+    *,
+    repo_root: Path,
+    tasks_dir: Path,
+) -> tuple[Path, dict[str, Any]] | None:
+    """One creator whose checkout moved off the recorded branch.
+
+    Later rounds may still name the dispatch-time branch, or the round that
+    switched may already name the checkout branch. A third branch name, a
+    checkout that is still on the creator's branch, retention intent, or a
+    successor that is not reused and terminal stays ambiguous.
+    """
+    from scripts.fleet import ignored_task_output
+
+    cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+    creators = [item for item in cohort if ignored_task_output.record_created_worktree(item[1])]
+    if len(creators) != 1 or len(cohort) < 2:
+        return None
+    if any(member.get("keep_worktree") for _, member in matches) or _retention_release_present(matches):
+        return None
+    branch = worktree_claims.checked_out_branch(worktree)
+    creator_branch = creators[0][1].get("worktree_branch")
+    if (
+        not isinstance(branch, str)
+        or not branch
+        or branch in {"HEAD", "main", "master"}
+        or not isinstance(creator_branch, str)
+        or not creator_branch
+        or creator_branch == branch
+    ):
+        return None
+    allowed_names = {creator_branch, branch}
+    if any(member.get("worktree_branch") not in allowed_names for _, member in cohort):
+        return None
+    try:
+        target = worktree.resolve(strict=True)
+    except (OSError, RuntimeError):
+        return None
+    allowed_status = worktree_claims.RELEASED_TASK_STATUSES | {"needs_finalize"}
+    for _, member in cohort:
+        location = member.get("worktree_path") or member.get("cwd")
+        if not isinstance(location, str):
+            return None
+        try:
+            if worktree_claims.resolve_claim_path(location, repo_root=repo_root) != target:
+                return None
+        except (OSError, RuntimeError, ValueError):
+            return None
+        if member is creators[0][1]:
+            continue
+        status = member.get("status")
+        if member.get("worktree_reused") is not True or not isinstance(status, str) or status not in allowed_status:
+            return None
+    return creators[0]
+
+
+def _resolve_merged_reuse_creator(
+    matches: list[tuple[Path, dict[str, Any]]],
+    worktree: Path,
+    *,
+    repo_root: Path,
+    tasks_dir: Path,
+) -> tuple[Path, dict[str, Any], bool]:
+    """Return ``(path, creator, alternate)``.
+
+    ``alternate`` is the switched-branch binding. The strict attributer still
+    decides every cohort whose checkout branch matches the creator's record.
+    """
+    from scripts.fleet import ignored_task_output
+
+    try:
+        path, creator = ignored_task_output.reused_worktree_creator(
+            matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+        )
+    except ValueError:
+        structural = _switched_branch_structural_cohort(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
+        if structural is None:
+            raise
+        path, creator = structural
+        return path, creator, True
+    return path, creator, False
+
+
+def _switched_branch_merge_proven(
+    repo_root: Path,
+    worktree: Path,
+    cohort: list[tuple[Path, dict[str, Any]]],
+    *,
+    expected_head: str | None = None,
+) -> bool:
+    """Exact merged head of the checkout branch, with every recorded commit contained.
+
+    A ``done`` or ``needs_finalize`` successor must have recorded that head.
+    ``needs_finalize`` is the status a switched round keeps while its record
+    still names the dispatch-time branch. Unknown git objects, a dirty tree,
+    a live or unknown process, and any commit that is not an ancestor retain.
+    """
+    from scripts.fleet import ignored_task_output
+
+    if not cohort or not all(_pid_proven_absent(member) for _, member in cohort):
+        return False
+    if _worktree_clean(worktree) is not True:
+        return False
+    branch = worktree_claims.checked_out_branch(worktree)
+    creators = [item for item in cohort if ignored_task_output.record_created_worktree(item[1])]
+    if len(creators) != 1 or not isinstance(branch, str) or not branch:
+        return False
+    creator_branch = creators[0][1].get("worktree_branch")
+    if not isinstance(creator_branch, str) or creator_branch == branch:
+        return False
+    allowed_names = {creator_branch, branch}
+    if any(member.get("worktree_branch") not in allowed_names for _, member in cohort):
+        return False
+    head_proc = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+    if head_proc.returncode != 0:
+        return False
+    head = head_proc.stdout.strip()
+    if not head or (expected_head is not None and head != expected_head):
+        return False
+    proving = False
+    for _, member in cohort:
+        if _needs_finalize_claim_identity(member) is None:
+            return False
+        commit = member.get("final_branch_head_commit")
+        if not isinstance(commit, str) or not _sha_is_ancestor(worktree, commit, head):
+            return False
+        if (
+            member.get("worktree_reused") is True
+            and member.get("status") in {"done", "needs_finalize"}
+            and commit == head
+        ):
+            proving = True
+    if not proving:
+        return False
+    states, error = _query_pr_states(repo_root, branch)
+    if error is not None:
+        return False
+    pr = _best_pr(states)
+    return bool(pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search and pr.head_sha == head)
+
+
+def _record_in_cohort(record: dict[str, Any], cohort: list[tuple[Path, dict[str, Any]]]) -> bool:
+    return any(
+        member.get("task_id") == record.get("task_id") and member.get("run_nonce") == record.get("run_nonce")
+        for _, member in cohort
+    )
+
+
+def switched_branch_member_proven(repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path) -> bool:
+    """True when ``record`` is a member of a switched-branch cohort with a merged exact head."""
+    return _merged_reuse_claim_proven_settled(repo_root, worktree, record, tasks_dir=tasks_dir) is not None
+
+
 def _merged_reuse_claim_proven_settled(
     repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
 ) -> list[tuple[Path, dict[str, Any]]] | None:
-    """Settle a keep-false creator via a done successor contained in a merged PR.
+    """Settle a keep-false creator via a successor contained in a merged PR.
 
     This is merge evidence, not retention release. Existing release receipts
     continue through their original verifier; ignored bytes still pass the
-    mandatory preservation gate before removal.
+    mandatory preservation gate before removal. A checkout that moved onto a
+    new branch is settled from that branch's merged head, including a
+    ``needs_finalize`` successor whose recorded commit is that head.
     """
     from scripts.fleet import ignored_task_output
 
@@ -3396,16 +3564,25 @@ def _merged_reuse_claim_proven_settled(
             worktree, tasks_dir, repo_root=repo_root, publish_cache=False
         )
         cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
-        _, creator = ignored_task_output.reused_worktree_creator(
-            matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
-        )
         if (
-            creator != record
-            or len(cohort) < 2
+            len(cohort) < 2
             or any(member.get("keep_worktree") for _, member in matches)
-            or any(member.get("preserved_artifacts", {}).get("retention_release") for _, member in matches)
+            or _retention_release_present(matches)
             or not all(_pid_proven_absent(member) for _, member in cohort)
+            or not _record_in_cohort(record, cohort)
         ):
+            return None
+        try:
+            _, creator, alternate = _resolve_merged_reuse_creator(
+                matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+            )
+        except ValueError:
+            return None
+        if alternate:
+            if _switched_branch_merge_proven(repo_root, worktree, cohort):
+                return matches
+            return None
+        if creator != record:
             return None
         head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
         if head.returncode != 0:
@@ -3445,15 +3622,18 @@ def _record_merged_reuse_proof(
     cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
     if len(cohort) < 2 or any(member.get("keep_worktree") for _, member in matches):
         return None
-    path, creator = ignored_task_output.reused_worktree_creator(
+    path, creator, alternate = _resolve_merged_reuse_creator(
         matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir
     )
-    if not _continuation_head_is_merged(info, pr, cohort):
-        if any(
-            isinstance(member.get("preserved_artifacts"), dict)
-            and member["preserved_artifacts"].get("retention_release")
-            for _, member in matches
-        ):
+    if alternate:
+        proven_head = _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head)
+        real_pr = pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search and pr.head_sha == info.head
+        if not proven_head or not real_pr:
+            if _retention_release_present(matches):
+                return None  # Preserve #9940's explicit receipt-release path.
+            raise ValueError("continuation requires a proven merged PR head containing the checkout")
+    elif not _continuation_head_is_merged(info, pr, cohort):
+        if _retention_release_present(matches):
             return None  # Preserve #9940's explicit receipt-release path.
         raise ValueError("continuation requires a proven merged PR head containing the checkout")
     assert pr is not None
@@ -3508,8 +3688,15 @@ def _record_merged_reuse_proof(
         head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
         if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
             raise ValueError("checkout changed before merged-head proof")
-        ignored_task_output.reused_worktree_creator(matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir)
-        if not _continuation_head_is_merged(info, pr, cohort):
+        rebound_path, rebound_creator, rebound_alternate = _resolve_merged_reuse_creator(
+            matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir
+        )
+        if rebound_path != path or rebound_creator != creator or rebound_alternate != alternate:
+            raise ValueError("continuation records changed before merged-head proof")
+        if alternate:
+            if not _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head):
+                raise ValueError("continuation ancestry changed before merged-head proof")
+        elif not _continuation_head_is_merged(info, pr, cohort):
             raise ValueError("continuation ancestry changed before merged-head proof")
         reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
     return proof
@@ -3708,20 +3895,28 @@ def _reap_qualified_worktree(
             )
             cohort = ignored_task_output._current_reuse_records(matches, task_store_paths.tasks_dir())
             if len(cohort) > 1:
-                ignored_task_output.reused_worktree_creator(
+                _creator_path, _creator, alternate = _resolve_merged_reuse_creator(
                     matches, info.path, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
                 )
                 if any(member.get("keep_worktree") for _, member in matches):
                     raise ValueError("keep_worktree intent set; retrieval and owner release required")
                 if not all(_pid_proven_absent(member) for _, member in cohort):
                     raise ValueError("continuation process absence unavailable")
-                released = any(
-                    isinstance(member.get("preserved_artifacts"), dict)
-                    and member["preserved_artifacts"].get("retention_release")
-                    for _, member in matches
-                )
-                if not released and not _continuation_head_is_merged(info, pr_state, cohort):
-                    raise ValueError("continuation requires a proven merged PR head containing the checkout")
+                if alternate:
+                    real_pr = (
+                        pr_state is not None
+                        and pr_state.state == "MERGED"
+                        and not pr_state.head_from_commit_search
+                        and pr_state.head_sha == info.head
+                    )
+                    if not real_pr or not _switched_branch_merge_proven(
+                        repo_root, info.path, cohort, expected_head=info.head
+                    ):
+                        raise ValueError("continuation requires a proven merged PR head containing the checkout")
+                else:
+                    released = _retention_release_present(matches)
+                    if not released and not _continuation_head_is_merged(info, pr_state, cohort):
+                        raise ValueError("continuation requires a proven merged PR head containing the checkout")
         except (OSError, ValueError, RuntimeError) as exc:
             return ReapResult(
                 path=str(info.path),

@@ -19485,6 +19485,72 @@ def test_run_worker_branch_continuation_finalizes_owned_changes_or_reports_failu
             assert state["auto_finalize"]["error"] == "no_owned_paths_declared"
 
 
+@pytest.mark.parametrize("pushed", [True, False])
+def test_continuation_that_switches_branch_records_the_checkout_branch(tmp_tasks_dir, tmp_path, monkeypatch, pushed):
+    """#10548: a reused checkout's new branch is the one finalize measures."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "switched-branch"
+    old_branch = "codex/original-dispatch"
+    new_branch = "cursor/fresh-gate"
+    worktree = _agy_dispatch_worktree(tmp_path, old_branch)
+    _git_out(worktree, "commit", "--allow-empty", "-m", "original dispatch")
+    _git_out(worktree, "push", "-u", "origin", old_branch)
+    _git_out(worktree, "checkout", "-b", new_branch)
+    _git_out(worktree, "commit", "--allow-empty", "-m", "switched branch")
+    if pushed:
+        _git_out(worktree, "push", "-u", "origin", new_branch)
+    head = delegate._resolve_sha(worktree)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": old_branch,
+            "worktree_base": "main",
+            "worktree_reused": True,
+            "keep_worktree": True,
+        },
+    )
+    result = Result(
+        ok=True,
+        agent="codex",
+        model="gpt-6.1-sol",
+        mode="danger",
+        response="",
+        stderr_excerpt=None,
+        duration_s=0.1,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+    )
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="continue on a new branch",
+            mode="danger",
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["worktree_branch"] == new_branch
+    assert state["final_branch_head_commit"] == head
+    assert _git_out(worktree, "status", "--porcelain") == ""
+    if pushed:
+        assert state["status"] == "done"
+        assert state["needs_finalize"] is False
+    else:
+        assert state["status"] == "needs_finalize"
+        assert state["needs_finalize"] is True
+
+
 def test_run_worker_without_owned_paths_never_auto_commits(tmp_tasks_dir, tmp_path, monkeypatch):
     """AC-03: no --owned-path means no auto-finalize commit; the task needs a human."""
     _sanitize_git_env_for_test(monkeypatch)
