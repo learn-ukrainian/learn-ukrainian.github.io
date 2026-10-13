@@ -1,5 +1,7 @@
 """Fake-transport proofs for #9898; no GitHub network is used."""
 
+import ast
+import hashlib
 import json
 import os
 import sqlite3
@@ -273,6 +275,54 @@ def test_foreign_endpoint_cannot_receive_credentials(tmp_path):
     assert calls == []
 
 
+def test_trailing_dot_api_host_admission_is_independent_of_scheme_case(tmp_path):
+    store, calls = client(tmp_path, [response([]), response([])])
+    endpoints = ["https://api.github.com./search/code", "HTTPS://api.github.com./search/code"]
+    for endpoint in endpoints:
+        assert store.request("GET", endpoint).value == []
+        assert gh._native_buckets(["gh", "api", endpoint]) == frozenset({"code_search", "secondary"})
+    assert [call[1] for call in calls] == endpoints
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "HTTPS://foreign.example/search/code",
+        "http://foreign.example/search/code",
+        "HTTP://foreign.example/search/code",
+        "ftp://foreign.example/search/code",
+        "FTP://foreign.example/search/code",
+        "https://evil.com\\@api.github.com/x",
+    ],
+)
+def test_host_boundary_refuses_foreign_endpoints(tmp_path, endpoint):
+    store, calls = client(tmp_path, [response([])])
+    with pytest.raises(ValueError, match="host mismatch"):
+        store.request("GET", endpoint)
+    with pytest.raises(ValueError, match="host mismatch"):
+        gh._native_buckets(["gh", "api", endpoint])
+    assert calls == []
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "search/code?q=https://x/y",
+        "/search/code?q=https://x/y",
+        "search/code#https://x/y",
+        "user?next=https://x",
+        "graphql#https://x",
+        "//graphql?x=http://y",
+        "https://api.github.com/search/code?q=https://x",
+        "HTTPS://api.github.com/user",
+    ],
+)
+def test_endpoint_scheme_position_preserves_translated_path(tmp_path, endpoint):
+    store, calls = client(tmp_path, [response([])])
+    assert store.request("GET", endpoint).value == []
+    assert [(call[0], call[1]) for call in calls] == [("GET", endpoint)]
+
+
 def test_out_of_order_budget_does_not_restore_spent_budget(tmp_path):
     store, _ = client(tmp_path, [])
     with store._db() as db:
@@ -495,7 +545,12 @@ def test_stale_pr_files_propagate_age_and_reset(tmp_path):
 def test_parent_read_uses_rest_and_preserves_cross_repository_identity(tmp_path, monkeypatch):
     from scripts.publish import github as pub
 
-    issue = {"number": 1, "state": "open", "html_url": "https://github.com/o/r/issues/1", "repository_url": "https://api.github.com/repos/o/r"}
+    issue = {
+        "number": 1,
+        "state": "open",
+        "html_url": "https://github.com/o/r/issues/1",
+        "repository_url": "https://api.github.com/repos/o/r",
+    }
     parent = {
         "number": 7,
         "html_url": "https://github.com/other/stream/issues/7",
@@ -515,7 +570,14 @@ def test_missing_parent_is_rest_absence_not_transport_success(tmp_path, monkeypa
     store, calls = client(
         tmp_path,
         [
-            response({"number": 1, "state": "open", "html_url": "https://github.com/o/r/issues/1", "repository_url": "https://api.github.com/repos/o/r"}),
+            response(
+                {
+                    "number": 1,
+                    "state": "open",
+                    "html_url": "https://github.com/o/r/issues/1",
+                    "repository_url": "https://api.github.com/repos/o/r",
+                }
+            ),
             response({"message": "missing"}, status=404),
         ],
     )
@@ -1004,14 +1066,29 @@ def test_disk_cache_uses_runtime_state_of_module_git_common_root(module_reposito
     canonical, module = module_repository
     if layout != "primary":
         subprocess.run(
-            ["git", "-C", str(canonical), "-c", "user.name=fixture", "-c", "user.email=fixture@example.com",
-             "commit", "--allow-empty", "-m", "fixture"],
-            check=True, capture_output=True, timeout=30,
+            [
+                "git",
+                "-C",
+                str(canonical),
+                "-c",
+                "user.name=fixture",
+                "-c",
+                "user.email=fixture@example.com",
+                "commit",
+                "--allow-empty",
+                "-m",
+                "fixture",
+            ],
+            check=True,
+            capture_output=True,
+            timeout=30,
         )
         worktree = tmp_path / "worktree"
         subprocess.run(
             ["git", "-C", str(canonical), "worktree", "add", "--detach", str(worktree)],
-            check=True, capture_output=True, timeout=30,
+            check=True,
+            capture_output=True,
+            timeout=30,
         )
         module = worktree / module.relative_to(canonical)
         module.parent.mkdir(parents=True)
@@ -1054,7 +1131,9 @@ def test_cache_directory_override_wins_without_module_repository(tmp_path, monke
     assert (override / "cache.sqlite3").is_file()
 
 
-@pytest.mark.parametrize("layout", ["plain", "empty-git-dir", "invalid-gitfile", "missing-gitdir", "empty-commondir", "unreadable"])
+@pytest.mark.parametrize(
+    "layout", ["plain", "empty-git-dir", "invalid-gitfile", "missing-gitdir", "empty-commondir", "unreadable"]
+)
 def test_unresolved_module_repository_keeps_cache_and_budget_in_memory(tmp_path, monkeypatch, layout):
     monkeypatch.delenv("LU_GITHUB_CACHE_DIR")
     root = tmp_path / "plain"
@@ -1129,6 +1208,331 @@ def test_enterprise_credentials_have_distinct_budget_scopes(tmp_path):
     second, calls = client(tmp_path, [response({})], env={"GH_HOST": "unit.invalid", "GH_ENTERPRISE_TOKEN": "two"})
     assert second.request("GET", "user").error is None
     assert len(calls) == 1 and first.scope != second.scope
+
+
+@pytest.mark.parametrize("url", ["https://api.github.com./search/code", "HTTPS://API.GITHUB.COM./search/code"])
+@pytest.mark.parametrize("bucket", ["code_search", "secondary"])
+def test_host_boundary_http_public_scope_blocks_budget(tmp_path, monkeypatch, url, bucket):
+    from urllib.request import Request
+
+    actual_client = gh.GitHubClient
+    public = actual_client(cache_dir=tmp_path, env={"GH_TOKEN": "public-fixture"}, clock=lambda: 1000)
+    with public._db() as db:
+        gh._store_budget(db, public.scope, bucket, 0, 2000)
+    captured = []
+
+    def build(**kwargs):
+        store = actual_client(**kwargs, cache_dir=tmp_path, clock=lambda: 1000)
+        captured.append(store)
+        return store
+
+    monkeypatch.setattr(gh, "GitHubClient", build)
+    with pytest.raises(gh.GitHubRateLimited):
+        gh.http_open(
+            Request(url, headers={"Authorization": "Bearer public-fixture"}),
+            opener=lambda *_args, **_kwargs: pytest.fail("exhausted public budget reached transport"),
+        )
+    assert captured[0].host == "github.com"
+    assert captured[0].scope == public.scope
+    with captured[0]._db() as db:
+        assert db.execute("SELECT scope,resource FROM budget").fetchall() == [(public.scope, bucket)]
+
+
+@pytest.mark.parametrize("host", ["github.com", "git.enterprise.example", "unit.ghe.com"])
+@pytest.mark.parametrize("entry", ["environment", "option", "native-option"])
+def test_host_boundary_host_spelling_preserves_credential_and_scope(tmp_path, host, entry):
+    environment = {"GH_TOKEN": "public-fixture", "GH_ENTERPRISE_TOKEN": "enterprise-fixture"}
+    credential = "public-fixture" if host in {"github.com", "unit.ghe.com"} else "enterprise-fixture"
+    expected_scope = hashlib.sha256((host + "\0" + credential).encode()).hexdigest()
+    commands = []
+
+    def runner(args, **kwargs):
+        commands.append((args, kwargs["env"]))
+        return subprocess.CompletedProcess(args, 0, b"[]", b"")
+
+    plain = gh.GitHubClient(cache_dir=tmp_path, env={**environment, "GH_HOST": host})
+    store = gh.GitHubClient(
+        cache_dir=tmp_path,
+        env={**environment, "GH_HOST": host.upper() + "." if entry == "environment" else "github.com"},
+        runner=runner,
+    )
+    args = ["gh", "api", "user"]
+    if entry != "environment":
+        args.extend(["--hostname", host.upper() + "."])
+    if entry == "native-option":
+        args.extend(["--paginate", "--jq", ".x"])
+    original_host, original_scope, original_env = store.host, store.scope, dict(store.env)
+    assert gh.run(args, client=store, capture_output=True).returncode == 0
+    assert (store.host, store.scope, store.env) == (original_host, original_scope, original_env)
+    assert plain.scope == expected_scope
+    command, env = commands[0]
+    assert env["GH_HOST"] == host
+    if host == "github.com" and entry == "environment":
+        assert "--hostname" not in command
+    elif "--hostname" in command:
+        assert command[command.index("--hostname") + 1] == host
+    else:
+        pytest.fail("enterprise transport omitted canonical hostname")
+    store._send("GET", "user", {}, None, 30)
+    command, env = commands[-1]
+    assert env == original_env
+    if original_host == "github.com":
+        assert "--hostname" not in command
+    else:
+        assert command[command.index("--hostname") + 1] == original_host
+    reset = int(store.clock() + 600)
+    with plain._db() as db:
+        gh._store_budget(db, expected_scope, "core", 0, reset)
+    result = gh.run(args, client=store, capture_output=True)
+    assert result.github_result.error == "github_rate_limited"
+    assert result.github_result.reset_at == reset and len(commands) == 2
+
+
+def host_parser_violations(source):
+    """AST tripwire for common parser duplication, not proof of host isolation.
+
+    It does not cover netloc, partition, regexes, getattr or _splitnetloc.
+    """
+    tree = ast.parse(source)
+    parser_names = {"urlparse", "urlsplit"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module == "urllib.parse":
+            parser_names.update(alias.asname or alias.name for alias in node.names if alias.name in parser_names)
+    violations = []
+
+    def visit(node, function=None):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            function = node.name
+        parser = isinstance(node, ast.Call) and (
+            (isinstance(node.func, ast.Name) and node.func.id in parser_names)
+            or (isinstance(node.func, ast.Attribute) and node.func.attr in {"urlparse", "urlsplit"})
+        )
+        hostname = isinstance(node, ast.Attribute) and node.attr == "hostname"
+        if (parser or hostname) and function not in {"canonical_host", "_canonical_endpoint"}:
+            violations.append((function, node.lineno))
+        for child in ast.iter_child_nodes(node):
+            visit(child, function)
+
+    visit(tree)
+    return violations
+
+
+def test_host_boundary_has_no_independent_url_parsers():
+    violations = host_parser_violations(Path(gh.__file__).read_text())
+    assert violations == [], f"use canonical_host at host entry: {violations}"
+
+
+@pytest.mark.parametrize(
+    "expression,imports",
+    [
+        ("urlsplit(value)", "from urllib.parse import urlsplit"),
+        ("parse(value)", "from urllib.parse import urlsplit as parse"),
+        ("urllib.parse.urlparse(value)", "import urllib.parse"),
+        ("parsed.hostname", ""),
+    ],
+)
+def test_host_boundary_parser_guard_detects_mutation(expression, imports):
+    source = Path(gh.__file__).read_text() + f"\n{imports}\ndef sixth_parser(value):\n    return {expression}\n"
+    assert [name for name, _line in host_parser_violations(source)] == ["sixth_parser"]
+
+
+@pytest.mark.parametrize(
+    "value,expected",
+    [
+        ("GITHUB.COM.", "github.com"),
+        ("probe@GITHUB.COM.:443", "github.com"),
+        ("https://probe@API.GITHUB.COM.:443/search/code", "api.github.com"),
+        ("HTTP://API.GITHUB.COM.:80/search/code", "api.github.com"),
+        ("GHE.EXAMPLE.:8443", "ghe.example:8443"),
+        ("https://GHE.EXAMPLE.:8443/api/v3/user", "ghe.example:8443"),
+        ("https://[::1]:8443/api/v3/user", "[::1]:8443"),
+        ("https://api.github.com/search/code?q=\u043c\u043e\u0432\u0430", "api.github.com"),
+    ],
+)
+def test_host_boundary_canonical_authority(value, expected):
+    assert gh.canonical_host(value) == expected
+    assert gh.canonical_host(expected) == expected
+
+
+def test_host_boundary_api_host_comparisons_use_shared_authority():
+    assert gh._api_hosts("GITHUB.COM.") == {"github.com", "api.github.com", "uploads.github.com"}
+    assert gh._api_hosts("probe@GHE.EXAMPLE.:443") == {"ghe.example"}
+    assert gh._canonical_endpoint("HTTPS://GHE.EXAMPLE./api/graphql", "GHE.EXAMPLE.") == ("api", "graphql")
+
+
+def test_configure_host_rebinds_shallow_copy_environment(tmp_path):
+    from copy import copy
+
+    original = gh.GitHubClient(cache_dir=tmp_path, env={"GH_HOST": "github.com", "GH_TOKEN": "public-fixture"})
+    private = copy(original)
+    private._configure_host("ghe.example")
+    assert original.host == original.env["GH_HOST"] == "github.com"
+    assert private.host == private.env["GH_HOST"] == "ghe.example"
+    assert private.env is not original.env
+    assert private.scope != original.scope
+
+
+def test_run_without_overrides_preserves_lazy_memory_budget(monkeypatch):
+    monkeypatch.setattr(gh, "_cache_directory", lambda: None)
+    calls = []
+
+    def transport(*args):
+        calls.append(args)
+        return response({}, remaining=0)
+
+    original = gh.GitHubClient(env={}, transport=transport, clock=lambda: 1000)
+    assert gh.run(["gh", "api", "user"], client=original, capture_output=True).returncode == 0
+    result = gh.run(["gh", "api", "user"], client=original, capture_output=True)
+    assert result.github_result.error == "github_rate_limited"
+    assert result.returncode == 75 and len(calls) == 1
+
+
+@pytest.mark.parametrize("overrides", [{}, {"allow_stale": True}, {"max_response_bytes": 4096}])
+@pytest.mark.parametrize("host,target", [("github.com", "git.enterprise.example"), ("ghe.example", "github.com")])
+def test_run_hostname_preserves_caller_authority(tmp_path, overrides, host, target):
+    calls = []
+    environment = {"GH_HOST": host, "GH_TOKEN": "public-fixture", "GH_ENTERPRISE_TOKEN": "enterprise-fixture"}
+
+    def runner(args, **kwargs):
+        calls.append((args, dict(kwargs["env"])))
+        return subprocess.CompletedProcess(args, 0, b"{}", b"")
+
+    original = gh.GitHubClient(cache_dir=tmp_path, env=environment, runner=runner)
+    before = (original.host, original.scope, dict(original.env))
+    result = gh.run(["gh", "api", "--hostname", target, "user"], client=original, **overrides, capture_output=True)
+    assert result.returncode == 0
+    assert calls[0][1]["GH_HOST"] == target
+    assert calls[0][0][calls[0][0].index("--hostname") + 1] == target
+    assert (original.host, original.scope, original.env) == before
+    assert original.env is not calls[0][1]
+    selected_token = "GH_TOKEN" if host == "github.com" else "GH_ENTERPRISE_TOKEN"
+    assert original.scope == hashlib.sha256((host + "\0" + original.env[selected_token]).encode()).hexdigest()
+    assert original.request("GET", "user", fresh=True).error is None
+    assert calls[-1][1] == before[2]
+    if host == "github.com":
+        assert "--hostname" not in calls[-1][0]
+    else:
+        assert calls[-1][0][calls[-1][0].index("--hostname") + 1] == host
+    assert gh.run(["gh", "api", "user", "--template", "{{.}}"], client=original, capture_output=True).returncode == 0
+    assert calls[-1][1] == before[2]
+
+
+@pytest.mark.parametrize("overrides", [{}, {"allow_stale": True}, {"max_response_bytes": 4096}])
+def test_run_hostname_cannot_poison_caller_budget_or_cache(tmp_path, overrides):
+    calls = []
+
+    def runner(args, **kwargs):
+        host = kwargs["env"]["GH_HOST"]
+        calls.append((args, host))
+        if "--include" not in args:
+            return subprocess.CompletedProcess(args, 0, json.dumps({"authority": host}).encode(), b"")
+        remaining = 100 if host == "github.com" else 5
+        raw = (
+            f'HTTP/2.0 200 OK\r\nETag: "one"\r\nX-RateLimit-Resource: core\r\n'
+            f"X-RateLimit-Remaining: {remaining}\r\nX-RateLimit-Reset: 2000\r\n\r\n" + json.dumps({"authority": host})
+        ).encode()
+        return subprocess.CompletedProcess(args, 0, raw, b"")
+
+    original = gh.GitHubClient(
+        cache_dir=tmp_path,
+        runner=runner,
+        clock=lambda: 1000,
+        env={"GH_HOST": "github.com", "GH_TOKEN": "public-fixture", "GH_ENTERPRISE_TOKEN": "enterprise-fixture"},
+    )
+    public_scope = original.scope
+
+    def public_rows():
+        with original._db() as db:
+            return tuple(
+                db.execute(f"SELECT * FROM {table} WHERE scope=? ORDER BY 2", (public_scope,)).fetchall()
+                for table in ("budget", "cache")
+            )
+
+    assert original.request("GET", "user").value == {"authority": "github.com"}
+    before = public_rows()
+    result = gh.run(
+        ["gh", "api", "--hostname", "ghe.example", "user"], client=original, **overrides, capture_output=True
+    )
+    assert result.returncode == 0
+    assert json.loads(result.stdout) == {"authority": "ghe.example"}
+    assert public_rows() == before
+    enterprise = gh.GitHubClient(
+        cache_dir=tmp_path,
+        runner=runner,
+        clock=lambda: 1000,
+        env={**original.env, "GH_HOST": "ghe.example"},
+    )
+    assert enterprise.request("GET", "user").value == {"authority": "ghe.example"}
+    assert original.request("GET", "user", fresh=True).value == {"authority": "github.com"}
+    assert public_rows() == before
+    assert calls[-1][1] == "github.com" and "--hostname" not in calls[-1][0]
+    assert gh.run(["gh", "api", "user", "--template", "{{.}}"], client=original, capture_output=True).returncode == 0
+    assert calls[-1][1] == "github.com"
+    assert public_rows() == before
+    with original._db() as db:
+        assert db.execute(
+            "SELECT remaining FROM budget WHERE scope<>? AND resource='core'", (public_scope,)
+        ).fetchall() == [(5,)]
+        assert db.execute("SELECT body FROM cache WHERE scope<>?", (public_scope,)).fetchall() == [
+            (b'{"authority": "ghe.example"}',)
+        ]
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "",
+        ".",
+        "github.com..",
+        "https:///search/code",
+        "https://evil.com\\@api.github.com/x",
+        "github.c\u043em",
+        "xn--gthub-csa.com",
+        "github.com\n",
+        "https://api.github.com:\u0664\u0664\u0663/x",
+        "github.com:invalid",
+        "github.com:65536",
+        "g%69thub.com",
+        "github.com\x00",
+        " github.com",
+    ],
+)
+def test_host_boundary_invalid_authority_is_typed(value, tmp_path):
+    with pytest.raises(gh.GitHubInvalidHost, match="invalid GitHub host"):
+        gh.canonical_host(value)
+    result = gh.run(["gh", "api", "user"], env={"GH_HOST": value}, capture_output=True)
+    assert result.github_result.error == "github_invalid_command"
+
+
+@pytest.mark.parametrize("flags", [["--hostname", "GITHUB.COM."], ["--hostname=GITHUB.COM."]])
+@pytest.mark.parametrize("bucket", ["code_search", "secondary"])
+def test_host_boundary_hostname_option_uses_public_budget(tmp_path, flags, bucket):
+    store, calls = client(tmp_path, [], env={"GH_TOKEN": "public-fixture", "GH_ENTERPRISE_TOKEN": "enterprise-fixture"})
+    with store._db() as db:
+        gh._store_budget(db, store.scope, bucket, 0, 2000)
+    result = gh.run(
+        ["gh", "api", "search/code", *flags],
+        client=store,
+        runner=lambda *_args, **_kwargs: pytest.fail("hostname spelling bypassed public budget"),
+        capture_output=True,
+    )
+    assert result.github_result.error == "github_rate_limited"
+    assert result.github_result.reset_at == 2000
+    assert calls == []
+
+
+def test_host_boundary_option_normalization_preserves_flag_values(tmp_path):
+    commands = []
+    store = gh.GitHubClient(cache_dir=tmp_path, env={})
+
+    def runner(args, **_kwargs):
+        commands.append(args)
+        return subprocess.CompletedProcess(args, 0, b"[]", b"")
+
+    args = ["gh", "api", "--template", "--hostname", "user", "--hostname", "GITHUB.COM."]
+    assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
+    assert commands == [["gh", "api", "--template", "--hostname", "user", "--hostname", "github.com"]]
+    assert args[-1] == "GITHUB.COM."
 
 
 def test_asset_hydration_cli_reports_typed_limit(monkeypatch, capsys):
@@ -1666,7 +2070,7 @@ def test_stale_requires_opt_in_for_gate_readers(tmp_path, monkeypatch, entry):
 
 def test_native_fallback_honours_budget_and_never_retries(tmp_path):
     store, calls = client(tmp_path, [response([], remaining=0)])
-    store.request("GET", "repos/o/r/issues")
+    store.request("GET", "search/issues?q=x")
 
     def native(*a, **kw):
         raise AssertionError("exhausted budget reached gh")
@@ -1674,6 +2078,19 @@ def test_native_fallback_honours_budget_and_never_retries(tmp_path):
     result = gh.run(["gh", "search", "prs", "head:x"], client=store, runner=native, capture_output=True)
     assert result.returncode == 75 and result.github_result.error == "github_rate_limited"
     assert len(calls) == 1
+
+    # an exhausted core bucket is not the bucket a search command spends
+    core, core_calls = client(tmp_path / "core", [response([], remaining=0)])
+    core.request("GET", "repos/o/r/issues")
+    reached = []
+
+    def search(args, **kw):
+        reached.append(args)
+        return subprocess.CompletedProcess(args, 0, b"[]", b"")
+
+    result = gh.run(["gh", "search", "prs", "head:x"], client=core, runner=search, capture_output=True)
+    assert result.returncode == 0 and reached == [["gh", "search", "prs", "head:x"]]
+    assert len(core_calls) == 1
 
 
 def test_native_fallback_rate_limit_is_typed_and_stops_next_call(tmp_path):
@@ -2006,16 +2423,18 @@ def test_pr_view_non_404_stays_typed(tmp_path):
     assert result.returncode == 1 and json.loads(result.stdout)["status"] == 500 and calls
 
 
-
 def test_substituted_subprocess_does_not_skip_rest_or_worker_guard(tmp_path, monkeypatch):
-    store, calls = client(tmp_path, [response({"number": 1, "state": "open"})], env={"GH_REPO": "o/r", "AGENT_NO_MERGE": "1"})
+    store, calls = client(
+        tmp_path, [response({"number": 1, "state": "open"})], env={"GH_REPO": "o/r", "AGENT_NO_MERGE": "1"}
+    )
     monkeypatch.setattr(subprocess, "run", lambda *args, **kw: pytest.fail("subprocess spy is not a client seam"))
-    result = gh.run(["gh", "issue", "view", "1", "--json", "number,state"], client=store, capture_output=True, text=True)
+    result = gh.run(
+        ["gh", "issue", "view", "1", "--json", "number,state"], client=store, capture_output=True, text=True
+    )
     assert json.loads(result.stdout) == {"number": 1, "state": "OPEN"}
     denied = gh.run(["gh", "pr", "merge", "1"], client=store, capture_output=True, text=True)
     assert denied.github_result.error == "github_worker_write_forbidden"
     assert [(call[0], call[1]) for call in calls] == [("GET", "repos/o/r/issues/1")]
-
 
 
 def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
@@ -2042,9 +2461,12 @@ def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
     assert calls.read_text().splitlines() == ["call"]
     store = gh.GitHubClient(env=environment)
     with store._db() as db:
-        budgets = {resource: (remaining, reset) for resource, remaining, reset in db.execute(
-            "SELECT resource,remaining,reset FROM budget WHERE scope=?", (store.scope,)
-        )}
+        budgets = {
+            resource: (remaining, reset)
+            for resource, remaining, reset in db.execute(
+                "SELECT resource,remaining,reset FROM budget WHERE scope=?", (store.scope,)
+            )
+        }
     assert budgets["core"] == (77, 4000000000)
     assert budgets["secondary"] == (0, result.github_result.reset_at)
     deferred = publisher._run_transport(command, env=environment, capture_output=True, text=True)
