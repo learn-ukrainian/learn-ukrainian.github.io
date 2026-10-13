@@ -24,7 +24,15 @@ from scripts.review.model_catalog import (
 )
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
-from tests.review.test_model_catalog import APPROVED_BASELINE, APPROVED_INPUTS, BASELINE, CAPTURE, FIXTURE, INPUTS
+from tests.review.test_model_catalog import (
+    APPROVED_BASELINE,
+    APPROVED_INPUTS,
+    BASELINE,
+    CAPTURE,
+    FIXTURE,
+    INPUTS,
+    approved_muse_candidate_catalog,
+)
 
 
 @pytest.fixture
@@ -36,13 +44,13 @@ def test_v1_without_extension_and_v11_with_extension_are_accepted(catalog):
     assert validate_catalog(deepcopy(BASELINE["catalog"])) == BASELINE["catalog"]
     catalog["schema_version"] = "model-catalog.v1.1"
     assert validate_catalog(catalog)["schema_version"] == "model-catalog.v1.1"
-    assert expanded_legacy_view(catalog) == APPROVED_BASELINE["catalog"]
+    assert expanded_legacy_view(catalog) == approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
 
 
 def test_expansion_is_independent_and_does_not_mutate_catalog(catalog):
     before = deepcopy(catalog)
     expanded = expanded_legacy_view(catalog)
-    assert expanded == APPROVED_BASELINE["catalog"]
+    assert expanded == approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
     expanded["models"]["gpt-6.1-sol"]["roles"].clear()
     assert catalog == before
     assert expanded_legacy_view(BASELINE["catalog"]) == BASELINE["catalog"]

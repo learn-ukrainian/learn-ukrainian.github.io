@@ -14,14 +14,16 @@ import sys
 from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import lru_cache, partial
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 import yaml
 
+from scripts.fleet import credit_lane
 from scripts.review.model_catalog import load_model_catalog
+from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
@@ -251,6 +253,278 @@ def test_muse_candidate_overlay_preserves_every_other_catalog_field():
     assert revised["models"].pop("muse-wonder-1.0") == MUSE_CANDIDATE_ENTRY
     assert revised == before
     assert APPROVED_BASELINE["catalog"] == before
+
+
+# #10511: exact additive cases, with their final input positions and frozen
+# receipt references. No seat, ladder or authority is added.
+MUSE_REVIEWER_INPUT_ADDITIONS = [
+    (94, {"author_model": "muse-wonder-1.0", "risk": "low", "review_profile": "code"}, 0),
+    (110, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "code", "author_family": "meta"}, 19),
+    (111, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "code", "subject_families": ["meta"]}, 0),
+    (282, {"author_model": "muse-wonder-1.0", "risk": "low", "review_profile": "infra"}, 185),
+    (298, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "infra", "author_family": "meta"}, 204),
+    (299, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "infra", "subject_families": ["meta"]}, 185),
+    (470, {"author_model": "muse-wonder-1.0", "risk": "medium", "review_profile": "code"}, 370),
+    (486, {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "code", "author_family": "meta"}, 389),
+    (
+        487,
+        {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "code", "subject_families": ["meta"]},
+        370,
+    ),
+    (658, {"author_model": "muse-wonder-1.0", "risk": "medium", "review_profile": "infra"}, 555),
+    (674, {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "infra", "author_family": "meta"}, 574),
+    (
+        675,
+        {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "infra", "subject_families": ["meta"]},
+        555,
+    ),
+    (846, {"author_model": "muse-wonder-1.0", "risk": "high", "review_profile": "code"}, 740),
+    (862, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "code", "author_family": "meta"}, 759),
+    (863, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "code", "subject_families": ["meta"]}, 740),
+    (1034, {"author_model": "muse-wonder-1.0", "risk": "high", "review_profile": "infra"}, 925),
+    (1050, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "infra", "author_family": "meta"}, 944),
+    (
+        1051,
+        {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "infra", "subject_families": ["meta"]},
+        925,
+    ),
+    (1222, {"author_model": "muse-wonder-1.0", "risk": "critical", "review_profile": "code"}, 1110),
+    (
+        1238,
+        {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "code", "author_family": "meta"},
+        1129,
+    ),
+    (
+        1239,
+        {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "code", "subject_families": ["meta"]},
+        1110,
+    ),
+    (1410, {"author_model": "muse-wonder-1.0", "risk": "critical", "review_profile": "infra"}, 1295),
+    (
+        1426,
+        {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "infra", "author_family": "meta"},
+        1314,
+    ),
+    (
+        1427,
+        {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "infra", "subject_families": ["meta"]},
+        1295,
+    ),
+]
+
+MUSE_APPROVAL_ROW_ADDITIONS = [
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "absent", "gpt-6.1-sol": "absent"},
+        "self_approval_counts": False,
+        "outcome": "missing_approval",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "absent", "gpt-6.1-sol": "approve"},
+        "self_approval_counts": False,
+        "outcome": "missing_approval",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "absent", "gpt-6.1-sol": "dissent"},
+        "self_approval_counts": False,
+        "outcome": "operator_disposition",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "approve", "gpt-6.1-sol": "absent"},
+        "self_approval_counts": False,
+        "outcome": "missing_approval",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "approve", "gpt-6.1-sol": "approve"},
+        "self_approval_counts": False,
+        "outcome": "approved",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "approve", "gpt-6.1-sol": "dissent"},
+        "self_approval_counts": False,
+        "outcome": "operator_disposition",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "dissent", "gpt-6.1-sol": "absent"},
+        "self_approval_counts": False,
+        "outcome": "operator_disposition",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "dissent", "gpt-6.1-sol": "approve"},
+        "self_approval_counts": False,
+        "outcome": "operator_disposition",
+    },
+    {
+        "author": "muse-wonder-1.0",
+        "required": ["claude-opus-5-5", "gpt-6.1-sol"],
+        "votes": {"claude-opus-5-5": "dissent", "gpt-6.1-sol": "dissent"},
+        "self_approval_counts": False,
+        "outcome": "operator_disposition",
+    },
+]
+
+MUSE_REGISTRY_ENTRY = {
+    "adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter",
+    "default_model": None,
+    "cost_tier": "unknown",
+    "capabilities": [],
+    "cli_available": True,
+    "resume_policy": "never",
+}
+
+MUSE_ADAPTER_INPUT_ADDITIONS = [
+    {"agent": "muse", "mode": "read-only", "isolation": False},
+    {"agent": "muse", "mode": "read-only", "isolation": True},
+    {"agent": "muse", "mode": "workspace-write", "isolation": False},
+    {"agent": "muse", "mode": "workspace-write", "isolation": True},
+]
+
+MUSE_AUTHOR_REFUSAL = "author identity unknown — cannot resolve a model family from author_model='muse-wonder-1.0'"
+MUSE_SUBJECT_REFUSAL = (
+    "unknown subject family 'meta'; expected one of anthropic, cursor, deepseek, "
+    "google, moonshot, openai, poolside, qwen, xai, zhipu"
+)
+
+
+def approved_muse_candidate_inputs(inputs):
+    """#10511 adds exactly 24 reviewer cases and four held adapter probes."""
+    revised = deepcopy(inputs)
+    for index, case, _ in MUSE_REVIEWER_INPUT_ADDITIONS:
+        revised["reviewer"].insert(index, deepcopy(case))
+    revised["adapters"] = revised["adapters"] + deepcopy(MUSE_ADAPTER_INPUT_ADDITIONS)
+    return revised
+
+
+def approved_muse_candidate_approval(approval):
+    """#10511 adds nine author-side vote rows, preserving the 387 originals."""
+    revised = deepcopy(approval)
+    revised["rows"][351:351] = deepcopy(MUSE_APPROVAL_ROW_ADDITIONS)
+    return revised
+
+
+def muse_reviewer_receipt(baseline, case, reference):
+    """Reuse a frozen equivalent receipt or apply one exact refusal string."""
+    receipt = deepcopy(baseline["reviewer"][reference])
+    if case["author_model"] == "muse-wonder-1.0":
+        receipt["value"]["fail_closed_reason"] = MUSE_AUTHOR_REFUSAL
+    elif "subject_families" in case:
+        receipt["value"]["fail_closed_reason"] = MUSE_SUBJECT_REFUSAL
+    return receipt
+
+
+def approved_muse_candidate_baseline(baseline):
+    """#10511 adds only the literal held candidate and its exact capture rows."""
+    revised = deepcopy(baseline)
+    revised["catalog"] = approved_muse_candidate_catalog(baseline["catalog"])
+    revised["registry"]["muse"] = deepcopy(MUSE_REGISTRY_ENTRY)
+    revised["approval"] = approved_muse_candidate_approval(baseline["approval"])
+    for index, case, reference in MUSE_REVIEWER_INPUT_ADDITIONS:
+        revised["reviewer"].insert(index, muse_reviewer_receipt(baseline, case, reference))
+    adapter_rows = []
+    for case in MUSE_ADAPTER_INPUT_ADDITIONS:
+        adapter_rows.append(
+            {
+                "error": "MUSE_GUARD_PARITY_UNPROVEN: "
+                + case["mode"]
+                + " has no native forbidden-action proof; shell, credential, publish, "
+                "destructive-command and filesystem guards remain unproven",
+                "exception": "MuseGuardParityRefused",
+                "exit_status": 1,
+                "stderr": "",
+                "stdout": "",
+            }
+        )
+    revised["adapters"] = revised["adapters"] + adapter_rows
+    return revised
+
+
+def test_muse_candidate_capture_overlay_is_exact():
+    assert_frozen_surfaces(approved_muse_candidate_baseline(APPROVED_BASELINE))
+
+
+def test_muse_candidate_input_overlay_preserves_all_original_cases():
+    before = deepcopy(APPROVED_INPUTS)
+    revised = approved_muse_candidate_inputs(APPROVED_INPUTS)
+    assert len(MUSE_REVIEWER_INPUT_ADDITIONS) == 24
+    assert len(revised["reviewer"]) == 1504
+    for index, case, _ in reversed(MUSE_REVIEWER_INPUT_ADDITIONS):
+        assert revised["reviewer"].pop(index) == case
+    assert revised["adapters"][-4:] == MUSE_ADAPTER_INPUT_ADDITIONS
+    del revised["adapters"][-4:]
+    assert revised == before == APPROVED_INPUTS
+
+
+def test_muse_candidate_approval_overlay_preserves_authority_and_original_rows():
+    before = deepcopy(BASELINE["approval"])
+    actual = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], load_model_catalog())
+    assert actual == approved_muse_candidate_approval(before)
+    assert len(actual["rows"]) == 396
+    assert len(before["rows"]) == 387
+    assert [row for row in actual["rows"] if row["author"] != "muse-wonder-1.0"] == before["rows"]
+    added = [row for row in actual["rows"] if row["author"] == "muse-wonder-1.0"]
+    assert added == MUSE_APPROVAL_ROW_ADDITIONS
+    assert len(added) == 9
+    assert actual["holders"] == ["claude-opus-5-5", "gpt-6.1-sol"]
+    for row in added:
+        assert set(row) == {"author", "required", "votes", "self_approval_counts", "outcome"}
+        assert row["required"] == actual["holders"]
+        assert set(row["votes"]) == set(actual["holders"])
+        assert row["self_approval_counts"] is False
+    assert BASELINE["approval"] == before
+
+
+def test_muse_candidate_capture_overlay_preserves_all_frozen_receipts():
+    before = deepcopy(APPROVED_BASELINE)
+    revised = approved_muse_candidate_baseline(before)
+    for index, case, reference in reversed(MUSE_REVIEWER_INPUT_ADDITIONS):
+        assert revised["reviewer"].pop(index) == muse_reviewer_receipt(before, case, reference)
+    assert len(revised["reviewer"]) == 1480
+    assert CAPTURE["encode"](revised["reviewer"]) == CAPTURE["encode"](before["reviewer"])
+    assert revised["registry"].pop("muse") == MUSE_REGISTRY_ENTRY
+    assert len(revised["adapters"][-4:]) == 4
+    del revised["adapters"][-4:]
+    assert revised["catalog"]["models"].pop("muse-wonder-1.0") == MUSE_CANDIDATE_ENTRY
+    del revised["approval"]["rows"][351:360]
+    assert revised == before == APPROVED_BASELINE
+
+
+@pytest.mark.parametrize("index,case,reference", MUSE_REVIEWER_INPUT_ADDITIONS)
+def test_muse_added_reviewer_case_never_selects_muse(index, case, reference, tmp_path, monkeypatch):
+    typed = deepcopy(case)
+    if "subject_families" in typed:
+        typed["subject_families"] = frozenset(typed["subject_families"])
+    monkeypatch.setattr(
+        credit_lane,
+        "routing_facts",
+        partial(credit_lane.routing_facts, now=CAPTURE["FIXED_NOW"], usage_dir=tmp_path / "usage"),
+    )
+    monkeypatch.setattr(
+        credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief, now=CAPTURE["FIXED_NOW"])
+    )
+    result = resolve_reviewer(ResolverInputs(**typed))
+    if result.selected is not None:
+        assert result.selected.route != "muse"
+        assert result.selected.concrete_model != "muse-wonder-1.0"
+    for candidate in (*result.trace, *result.advisory, *result.quorum):
+        assert candidate.route != "muse"
+        assert candidate.concrete_model != "muse-wonder-1.0"
+    actual = CAPTURE["observed"](lambda: result)
+    assert json.loads(CAPTURE["encode"](actual)) == muse_reviewer_receipt(APPROVED_BASELINE, case, reference)
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -781,14 +1055,15 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     assert_frozen_surfaces(actual)
-    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
+    assert json.loads((output / "inputs.json").read_bytes()) == approved_muse_candidate_inputs(APPROVED_INPUTS)
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
 
 def assert_frozen_surfaces(actual):
     assert actual.keys() == BASELINE.keys()
+    expected = approved_muse_candidate_baseline(APPROVED_BASELINE)
     for surface in BASELINE:
-        assert actual[surface] == APPROVED_BASELINE[surface], f"approved surface differs: {surface}"
+        assert actual[surface] == expected[surface], f"approved surface differs: {surface}"
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
 
 
@@ -825,7 +1100,7 @@ def main():
 
 @pytest.mark.parametrize("surface", BASELINE)
 def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
-    actual = dict(APPROVED_BASELINE)
+    actual = approved_muse_candidate_baseline(APPROVED_BASELINE)
     actual[surface] = {"mutated": True}
     with pytest.raises(AssertionError, match=f"approved surface differs: {surface}"):
         assert_frozen_surfaces(actual)
@@ -961,7 +1236,9 @@ def test_capture_preserves_success_and_streams(capsys):
 
 
 def test_capture_matrix_is_frozen():
-    assert CAPTURE["reviewer_inputs"](load_model_catalog()) == APPROVED_INPUTS["reviewer"]
+    assert (
+        CAPTURE["reviewer_inputs"](load_model_catalog()) == approved_muse_candidate_inputs(APPROVED_INPUTS)["reviewer"]
+    )
 
 
 def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
@@ -990,14 +1267,14 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     expected = FIXTURE / "no-cli"
-    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
+    assert json.loads((output / "inputs.json").read_bytes()) == approved_muse_candidate_inputs(APPROVED_INPUTS)
     assert (output / "occurrences.json.gz").read_bytes() == (expected / "occurrences.json.gz").read_bytes()
     for row in (output / "SHA256SUMS").read_text().splitlines():
         digest, name = row.split()
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_cto_wrappers_baseline(
+    approved = approved_cto_wrappers_baseline(
         approved_claude_cap_baseline(
             approved_cursor_trailer_baseline(
                 approved_launcher_canary_baseline(
@@ -1012,6 +1289,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             )
         )
     )
+    assert actual == approved_muse_candidate_baseline(approved)
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1045,7 +1323,7 @@ def test_extended_capture_denominator_and_current_contract():
     assert {pin for mapping in catalog["budget_substitution_models"].values() for pin in mapping} <= pins
     assert {row["review_attempt"] for row in INPUTS["dispatch"]} == {None, "frozen-review-attempt.yaml"}
     contract = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], catalog)
-    assert contract == BASELINE["approval"]
+    assert contract == approved_muse_candidate_approval(BASELINE["approval"])
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])
