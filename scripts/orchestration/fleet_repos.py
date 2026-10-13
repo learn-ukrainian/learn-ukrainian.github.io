@@ -38,6 +38,14 @@ class FleetRepoError(ValueError):
     """Unknown key, bad or unreadable catalog, or missing sibling checkout."""
 
 
+class MissingFleetCheckout(FleetRepoError):
+    """The catalog checkout is not present.
+
+    Review resolution turns this into the neutral private refusal. Other
+    catalog errors stay ``FleetRepoError`` so their text is preserved.
+    """
+
+
 def load_fleet_repos(path: Path | None = None) -> dict[str, FleetRepo]:
     cfg_path = path or _CONFIG_PATH
     try:
@@ -109,14 +117,14 @@ def resolve_fleet_repo(
     primary = primary_root.resolve()
     checkout = primary if repo.default else (primary.parent / repo.local_name).resolve()
     if require_checkout and not (checkout / ".git").exists() and not checkout.is_dir():
-        raise FleetRepoError(
+        raise MissingFleetCheckout(
             f"--repo {repo.key} expects sibling checkout at {checkout}; "
             f"clone {repo.github} next to {primary.name} first"
         )
     if require_checkout:
         git_dir = checkout / ".git"
         if not git_dir.exists():
-            raise FleetRepoError(
+            raise MissingFleetCheckout(
                 f"--repo {repo.key} path {checkout} is not a git checkout "
                 f"(clone {repo.github} as ../{repo.local_name} beside the public primary)"
             )

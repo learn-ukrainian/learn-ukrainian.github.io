@@ -16,12 +16,20 @@ branch just so a diff exists.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.common import github_client
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.repo_root import main_checkout_root
+from scripts.orchestration.fleet_repos import (
+    FleetRepoError,
+    MissingFleetCheckout,
+    load_fleet_repos,
+    resolve_fleet_repo,
+)
 
 TEST_DIR_MARKERS = ("tests/", "__tests__/", "test/")
 TEST_FILE_PREFIXES = ("test_",)
@@ -40,6 +48,119 @@ TEST_FILE_SUFFIXES = (
 
 class TargetResolutionError(RuntimeError):
     """A review target could not be resolved deterministically."""
+
+
+class MissingReviewCommit(TargetResolutionError):
+    """The review target's commit object is not in the checkout.
+
+    Raised only for that object. A wrong ``--base`` ref stays a plain
+    ``TargetResolutionError``, so rewording the missing-commit text cannot
+    drop or widen the neutral private refusal.
+    """
+
+
+# Fail closed on lookalike hosts. Same shapes as delegate's remote parser.
+_GITHUB_ORIGIN_PATTERNS = (
+    re.compile(r"^https?://(?:[^/@\s]+@)?github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+    re.compile(r"^ssh://git@github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+    re.compile(r"^git@github\.com:([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+    re.compile(r"^git://github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
+)
+_FULL_SHA = re.compile(r"^[0-9a-fA-F]{40}$")
+
+PRIVATE_REVIEW_TARGET_UNRESOLVED = (
+    "PRIVATE_REVIEW_TARGET_UNRESOLVED: --repo infra-private checkout or target unavailable; "
+    "use the private review trigger in the infra-private repository"
+)
+REVIEW_ROOT_MISMATCH = (
+    "REVIEW_ROOT_MISMATCH: --repo-root origin does not match the catalog repository; "
+    "symbolic refs and local mode are refused"
+)
+
+
+def repository_target_error(repo_key: str | None, error: Exception) -> TargetResolutionError:
+    """Hide a missing private checkout or commit; keep every other refusal specific."""
+    if repo_key == "infra-private" and isinstance(error, (MissingFleetCheckout, MissingReviewCommit)):
+        return TargetResolutionError(PRIVATE_REVIEW_TARGET_UNRESOLVED)
+    if isinstance(error, TargetResolutionError):
+        return error
+    return TargetResolutionError(str(error))
+
+
+def _origin_github_repo(checkout: Path) -> str | None:
+    proc = _run_git(["config", "--get", "remote.origin.url"], checkout)
+    if proc.returncode != 0:
+        return None
+    text = proc.stdout.strip()
+    for pattern in _GITHUB_ORIGIN_PATTERNS:
+        match = pattern.match(text)
+        if match:
+            return f"{match.group(1)}/{match.group(2)}"
+    return None
+
+
+def _is_symbolic_review_ref(ref: str | None) -> bool:
+    """True for ``HEAD`` and branch-relative ``~`` / ``^`` forms.
+
+    A full SHA and a branch name are not symbolic: those still resolve in the
+    catalog checkout when ``--repo-root`` is a different repository.
+    """
+    if ref is None or _FULL_SHA.fullmatch(ref):
+        return False
+    if ref in {"HEAD", "@"} or ref.endswith("/HEAD"):
+        return True
+    return "~" in ref or "^" in ref or "@{" in ref
+
+
+def _review_refs(mode: str | None, *, commit: str | None, branch: str | None, base: str | None) -> tuple[str, ...]:
+    if mode == "commit":
+        return (commit,) if commit else ()
+    if mode == "branch":
+        return tuple(ref for ref in (branch, base) if ref)
+    return ()
+
+
+def resolve_review_repository(
+    repo_root: Path,
+    repo_key: str | None = None,
+    *,
+    mode: str | None = None,
+    commit: str | None = None,
+    branch: str | None = None,
+    base: str | None = None,
+) -> Path:
+    """Select the catalog checkout, keeping a root whose origin already matches.
+
+    A linked worktree of the catalog repository is that repository: ``HEAD``
+    and ``--mode local`` stay there. A missing, unparsable, or different
+    origin is not that checkout. Symbolic refs and local mode are refused;
+    a full SHA, a branch name, or a PR number still resolves in the catalog
+    checkout found from ``repo_root``.
+    """
+    if repo_key is None:
+        return repo_root
+    try:
+        catalog = load_fleet_repos()
+    except FleetRepoError as exc:
+        raise repository_target_error(repo_key, exc) from exc
+    fleet_repo = catalog.get(repo_key)
+    if fleet_repo is not None:
+        origin = _origin_github_repo(repo_root)
+        if origin is not None and origin.casefold() == fleet_repo.github.casefold():
+            return repo_root
+        refs = _review_refs(mode, commit=commit, branch=branch, base=base)
+        if mode == "local" or any(_is_symbolic_review_ref(ref) for ref in refs):
+            raise TargetResolutionError(REVIEW_ROOT_MISMATCH)
+    try:
+        resolved, checkout = resolve_fleet_repo(repo_key, primary_root=main_checkout_root(repo_root))
+    except FleetRepoError as exc:
+        raise repository_target_error(repo_key, exc) from exc
+    catalog_origin = _origin_github_repo(checkout)
+    if catalog_origin is None or catalog_origin.casefold() != resolved.github.casefold():
+        raise TargetResolutionError(
+            f"--repo {resolved.key} checkout origin does not match catalog repository {resolved.github}"
+        )
+    return checkout
 
 
 @dataclass(frozen=True)
@@ -93,10 +214,15 @@ def _run_gh(args: list[str], cwd: Path, *, timeout: float = 30.0) -> subprocess.
     )
 
 
-def _rev_parse(repo_root: Path, ref: str) -> str:
-    proc = _run_git(["rev-parse", ref], repo_root)
+def _rev_parse(repo_root: Path, ref: str, *, missing_commit: bool = False) -> str:
+    # A full SHA is echoed by ``rev-parse`` even when the object is absent.
+    # ``--verify`` with the commit peel refuses that missing object here.
+    proc = _run_git(["rev-parse", "--verify", f"{ref}^{{commit}}"], repo_root)
     if proc.returncode != 0:
-        raise TargetResolutionError(f"cannot resolve ref {ref!r}: {proc.stderr.strip()}")
+        message = f"cannot resolve ref {ref!r}: {proc.stderr.strip()}"
+        if missing_commit:
+            raise MissingReviewCommit(message)
+        raise TargetResolutionError(message)
     return proc.stdout.strip()
 
 
@@ -197,7 +323,7 @@ def resolve_local_target(repo_root: Path) -> ReviewTarget:
 
 def resolve_commit_target(repo_root: Path, commit: str) -> ReviewTarget:
     """A single already-made commit, diffed against its first parent."""
-    head_sha = _rev_parse(repo_root, commit)
+    head_sha = _rev_parse(repo_root, commit, missing_commit=True)
     base_proc = _run_git(["rev-parse", f"{commit}^"], repo_root)
     if base_proc.returncode != 0:
         raise TargetResolutionError(
@@ -218,13 +344,11 @@ def resolve_commit_target(repo_root: Path, commit: str) -> ReviewTarget:
 
 def resolve_branch_target(repo_root: Path, branch: str, base: str) -> ReviewTarget:
     """A branch diffed against an explicit base ref (merge-base semantics)."""
-    head_sha = _rev_parse(repo_root, branch)
+    head_sha = _rev_parse(repo_root, branch, missing_commit=True)
     base_ref_sha = _rev_parse(repo_root, base)
     merge_base_proc = _run_git(["merge-base", base_ref_sha, head_sha], repo_root)
     if merge_base_proc.returncode != 0:
-        raise TargetResolutionError(
-            f"no merge-base between {base!r} and {branch!r}: {merge_base_proc.stderr.strip()}"
-        )
+        raise TargetResolutionError(f"no merge-base between {base!r} and {branch!r}: {merge_base_proc.stderr.strip()}")
     merge_base_sha = merge_base_proc.stdout.strip()
     changed_paths, non_test_loc = _numstat_loc(repo_root, [merge_base_sha, head_sha])
     return ReviewTarget(
@@ -245,10 +369,10 @@ def _ensure_commit_available(repo_root: Path, sha: str) -> None:
     # Read-only fetch of the missing object — never a push, never a new local branch.
     fetch = _run_git(["fetch", "origin", sha], repo_root, timeout=60.0)
     if fetch.returncode != 0:
-        raise TargetResolutionError(f"commit {sha!r} unreachable locally and fetch failed: {fetch.stderr.strip()}")
+        raise MissingReviewCommit(f"commit {sha!r} unreachable locally and fetch failed: {fetch.stderr.strip()}")
     recheck = _run_git(["cat-file", "-e", f"{sha}^{{commit}}"], repo_root)
     if recheck.returncode != 0:
-        raise TargetResolutionError(f"commit {sha!r} still unreachable after fetch")
+        raise MissingReviewCommit(f"commit {sha!r} still unreachable after fetch")
 
 
 def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
@@ -264,11 +388,16 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
     later review can exclude the default branch; the base tip stays in
     ``description`` for provenance.
     """
+    slug = _origin_github_repo(repo_root)
+    if slug is None:
+        raise TargetResolutionError("checkout origin is not a GitHub owner/name; refusing an unpinned gh pr view")
     proc = _run_gh(
         [
             "pr",
             "view",
             str(pr_number),
+            "--repo",
+            slug,
             "--json",
             "number,baseRefName,baseRefOid,headRefName,headRefOid",
         ],

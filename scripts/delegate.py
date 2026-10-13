@@ -12346,6 +12346,10 @@ def _dispatch(
         checkout_error = None
     except FleetRepoError as exc:
         checkout_error = f"❌ {exc}"
+        if _dispatch_is_review_typed(args) and fleet_repo_key == "infra-private":
+            from scripts.review.target_resolution import repository_target_error
+
+            checkout_error = f"❌ {repository_target_error(fleet_repo_key, exc)}"
     if checkout_error and not is_kimi_seat(args.agent, model=getattr(args, "model", None)):
         print(checkout_error, file=sys.stderr)
         return 2
@@ -12657,7 +12661,7 @@ def _dispatch(
     pinned_head = getattr(args, "pinned_head", None)
     if pr_number is not None:
         try:
-            pr_branch, resolved_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
+            pr_branch, resolved_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(target_repo_root))
         except GeminiChangedPathListError as exc:
             print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
             return 2
@@ -16545,7 +16549,12 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
     actual base. Attempt records supply their frozen target.changed_paths.
     """
     from scripts.review.security_paths import git_changed_paths
-    from scripts.review.target_resolution import TargetResolutionError, resolve_branch_target, resolve_pr_target
+    from scripts.review.target_resolution import (
+        TargetResolutionError,
+        resolve_branch_target,
+        resolve_pr_target,
+        resolve_review_repository,
+    )
 
     attempt = getattr(args, "review_attempt", None)
     paths: tuple[str, ...] | None = None
@@ -16567,25 +16576,39 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
     pinned = getattr(args, "pinned_head", None)
     if pinned and not (branch or pr):
         raise TargetResolutionError("--pinned-head requires --branch or --pr")
+    repo_key = getattr(args, "repo", None)
+    anchor = _REPO_ROOT if repo_key else _local_repo_root
     if pr is not None:
-        target = resolve_pr_target(_local_repo_root, int(pr))
+        resolution_mode, resolution_branch, resolution_base = "pr", None, None
+    elif branch:
+        resolution_mode = "branch"
+        resolution_branch = pinned or _origin_base_ref(branch)
+        resolution_base = _origin_base_ref(getattr(args, "base", None) or "main")
+    else:
+        resolution_mode, resolution_branch, resolution_base = None, None, None
+    repo_root = resolve_review_repository(
+        anchor,
+        repo_key,
+        mode=resolution_mode,
+        branch=resolution_branch,
+        base=resolution_base,
+    )
+    args._review_repo_root = repo_root
+    if pr is not None:
+        target = resolve_pr_target(repo_root, int(pr))
         if pinned and pinned.lower() != target.head_sha:
             raise TargetResolutionError("pinned head differs from PR head")
         args._review_admission_head = target.head_sha
     elif branch:
         if pinned and not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
             raise TargetResolutionError("pinned head must be a full commit SHA")
-        target = resolve_branch_target(
-            _local_repo_root,
-            pinned or _origin_base_ref(branch),
-            _origin_base_ref(getattr(args, "base", None) or "main"),
-        )
+        target = resolve_branch_target(repo_root, resolution_branch, resolution_base)
         args.pinned_head = target.head_sha
     elif paths is not None:
         return paths
     else:
         raise TargetResolutionError("review target required: supply --branch, --pr or a resolved --review-attempt")
-    literal = git_changed_paths(_local_repo_root, target.base_sha, target.head_sha)
+    literal = git_changed_paths(repo_root, target.base_sha, target.head_sha)
     # The frozen endpoints the complete-authorship facts are read from (#9739).
     args._review_target = target
     return tuple(dict.fromkeys((*literal, *(paths or ()))))
@@ -16607,7 +16630,8 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
         or (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None))
     ):
         return None
-    repository = _resolve_dispatch_repository(_local_repo_root) or ""
+    repo_root = getattr(args, "_review_repo_root", _local_repo_root)
+    repository = _resolve_dispatch_repository(repo_root) or ""
     unknown_history = ()
     if getattr(args, "review_mode", "cross_family") == "red_team":
         branch = getattr(args, "branch", None)
@@ -16629,11 +16653,11 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
                 branch=branch,
                 head_sha=target.head_sha,
                 task_root=tasks_dir(),
-                repo_root=_local_repo_root,
+                repo_root=repo_root,
             )
     return collect_branch_review_facts(
         repository=repository,
-        repo_root=_local_repo_root,
+        repo_root=repo_root,
         base_tip_sha=target.base_sha,
         head_sha=target.head_sha,
         task_root=tasks_dir(),
@@ -16666,7 +16690,7 @@ def _admit_dispatch_target(
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
     from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
-    from scripts.review.target_resolution import TargetResolutionError
+    from scripts.review.target_resolution import TargetResolutionError, repository_target_error
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -16694,7 +16718,8 @@ def _admit_dispatch_target(
         try:
             return _dispatch_review_changed_paths(args)
         except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
-            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+            error = repository_target_error(getattr(args, "repo", None), exc)
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {error}") from exc
 
     def collect_review_facts() -> Any:
         from scripts.review.record_cf_verdict import BranchFactsError
@@ -16775,7 +16800,7 @@ def _admit_dispatch_target(
 
             try:
                 require_no_branch_outside_rejection(
-                    _resolve_dispatch_repository(_local_repo_root) or "",
+                    _resolve_dispatch_repository(getattr(args, "_review_repo_root", _local_repo_root)) or "",
                     getattr(args, "branch", None),
                     review_target.head_sha,
                     pr_number=getattr(args, "pr", None),

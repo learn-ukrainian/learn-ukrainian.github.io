@@ -43,7 +43,9 @@ from scripts.review.target_resolution import (
     ReviewTarget,
     TargetResolutionError,
     diff_against_base,
+    repository_target_error,
     resolve_local_target,
+    resolve_review_repository,
     resolve_review_target,
     rev_parse,
 )
@@ -150,16 +152,24 @@ def _cmd_target(args: argparse.Namespace) -> int:
         )
         return 1
     try:
+        repo_root = resolve_review_repository(
+            Path(args.repo_root).resolve(),
+            args.repo,
+            mode=args.mode,
+            commit=args.commit,
+            branch=args.branch,
+            base=args.base,
+        )
         target = resolve_review_target(
             args.mode,
-            Path(args.repo_root).resolve(),
+            repo_root,
             commit=args.commit,
             branch=args.branch,
             base=args.base,
             pr_number=args.pr,
         )
-    except TargetResolutionError as exc:
-        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+    except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
+        print(json.dumps({"error": str(repository_target_error(args.repo, exc))}), file=sys.stderr)
         return 1
 
     state["target"] = asdict(target)
@@ -167,7 +177,7 @@ def _cmd_target(args: argparse.Namespace) -> int:
     # that later merges the default branch cannot exclude those authors.
     stored_base = target.base_ref_name if args.mode == "pr" else args.base
     state["target_args"] = {
-        "repo_root": str(Path(args.repo_root).resolve()),
+        "repo_root": str(repo_root),
         "mode": args.mode,
         "commit": args.commit,
         "branch": args.branch,
@@ -289,14 +299,22 @@ def _cmd_check_expansion(args: argparse.Namespace) -> int:
     head after fixes) — never re-querying ``gh pr view`` or re-deriving the
     mode from ``git status``, since either could silently drift from the
     mode the baseline was actually frozen under.
+
+    The diff runs in the repository stored with the target. ``--repo-root``
+    is only the fallback when that stored root is absent, so a worktree
+    ``HEAD`` frozen by ``target`` is the ``HEAD`` measured here.
     """
     state = _load_state(args.state_file)
     if state.get("baseline") is None:
         print(json.dumps({"error": "no frozen baseline yet — run `freeze` first"}), file=sys.stderr)
         return 1
     baseline = _baseline_from_state(state)
-    repo_root = Path(args.repo_root).resolve()
     target_args = _target_args_from_state(state)
+    stored_root = target_args.get("repo_root")
+    if isinstance(stored_root, str) and stored_root.strip():
+        repo_root = Path(stored_root)
+    else:
+        repo_root = Path(args.repo_root).resolve()
     mode = target_args.get("mode") or baseline.target.mode
 
     try:
@@ -711,7 +729,14 @@ def _build_parser() -> argparse.ArgumentParser:
     p_target.add_argument(
         "--repo-root",
         default=".",
-        help="Repository root to diff. Default: . Example: .",
+        help="Checkout to review. With --repo, a matching origin is kept. Default: . Example: .",
+    )
+    p_target.add_argument(
+        "--repo",
+        help=(
+            "Fleet repository key. A --repo-root whose origin matches that catalog "
+            "repository is kept, including a linked worktree. Example: public"
+        ),
     )
     p_target.add_argument("--commit", help="Commit SHA for --mode commit. Example: HEAD")
     p_target.add_argument("--branch", help="Branch name for --mode branch. Example: grok/impl-8946")
@@ -751,7 +776,14 @@ def _build_parser() -> argparse.ArgumentParser:
     p_freeze.set_defaults(func=_cmd_freeze)
 
     p_expansion = sub.add_parser("check-expansion", help="Check the 2x files/LOC scope-expansion breaker")
-    p_expansion.add_argument("--repo-root", default=".", help="Repository root to re-diff. Default: . Example: .")
+    p_expansion.add_argument(
+        "--repo-root",
+        default=".",
+        help=(
+            "Fallback repository root when the frozen target stored none. "
+            "The stored target repository wins. Default: . Example: ."
+        ),
+    )
     p_expansion.add_argument(
         "--current-head",
         default=None,

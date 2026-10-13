@@ -273,12 +273,19 @@ def resolve_same_repo_pr_head(pr_number: int, *, repo_root: str) -> tuple[str, s
     number = int(pr_number)
     if number < 1:
         raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
+    from scripts.review.target_resolution import _origin_github_repo
+
+    slug = _origin_github_repo(Path(repo_root))
+    if slug is None:
+        raise GeminiChangedPathListError("checkout origin is not a GitHub owner/name; refusing an unpinned gh pr view")
     raw = _run_changed_path_command(
         [
             "gh",
             "pr",
             "view",
             str(number),
+            "--repo",
+            slug,
             "--json",
             "headRefName,headRefOid,isCrossRepository",
         ],
