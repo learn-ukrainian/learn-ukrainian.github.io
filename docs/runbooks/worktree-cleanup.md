@@ -334,8 +334,12 @@ a broken ledger refuses the batch. A repository-wide exclusive archive lock on
 the control-plane checkout covers fresh validation, bundling, receipts, final
 guards and ref deletion. The persistent `branch-archive/archive.lock` file is
 never unlinked. Each bundle is created and verified under a private temporary
-name, then published with an atomic hard link that refuses an existing archive
-name. Publication failure keeps every selected ref and any existing bundle.
+name in the managed `TMPDIR` lease, or the shared scratch root when `TMPDIR` is
+unset or empty. An atomic hard link publishes it into the archive directory and
+refuses an existing name. Staging and publication must share a filesystem;
+cross-filesystem link failure keeps every selected ref and any existing bundle,
+without copying into a live archive name. Private staging is removed after the
+attempt; published bundles survive later guard or receipt failure.
 Thin bundles exclude `origin/main` history.
 The receipt's restore command needs those prerequisite commits present: fetch
 them from origin or restore in a clone of this repository. Remote refs and
@@ -347,8 +351,15 @@ durable, a fresh PR snapshot covers the whole selected batch in one GitHub
 response, followed by fresh ref, worktree and task-record snapshots compared
 with classification. Unknown or changed guards keep the entire batch. The last
 local checks before the single `git update-ref --stdin --no-deref` transaction
-explicitly refuse attached worktrees and live or recent tasks. A guard change
-after its final snapshot and before the transaction remains a residual race
+explicitly refuse occupied worktrees and live or recent tasks. Occupation covers
+every registered worktree's attached HEAD, both rebase backends' original branch,
+bisect start branch and rebase `update-refs` targets, following Git's native
+`branch_checked_out` model. Merge, cherry-pick and revert retain their attached
+branch. The reader uses Git administrative registrations even for moved, locked
+or prunable checkouts. Missing, malformed, unreadable or unbound operation
+evidence refuses deletion; it never proves that a branch is free. The same
+reader supplies classification, drift snapshots and the final transaction guard.
+A guard change after its final snapshot and before the transaction remains a residual race
 window; GitHub, task files and worktree registrations do not share a transaction
 with Git refs. Expected-SHA checks abort the whole transaction on head moves;
 `--no-deref` prevents deletion through a symbolic target. The accountable sweep

@@ -140,6 +140,133 @@ def _checked(repo: Path, *args: str) -> str:
     return result.stdout
 
 
+def _occupation_file(path: Path) -> str | None:
+    """Read optional Git administrative evidence without following links or blocking on FIFOs."""
+    try:
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+    except FileNotFoundError:
+        return None
+    try:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode) or info.st_size > 1024 * 1024:
+            raise RuntimeError("occupation evidence is not a bounded regular file")
+        with os.fdopen(descriptor, "rb", closefd=False) as stream:
+            body = stream.read(1024 * 1024 + 1)
+        if len(body) > 1024 * 1024:
+            raise RuntimeError("occupation evidence exceeds the read limit")
+        try:
+            return body.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise RuntimeError("occupation evidence is not UTF-8") from exc
+    finally:
+        os.close(descriptor)
+
+
+def _occupation_directory(path: Path) -> bool:
+    """Absence is known only when lstat reports ENOENT; unsafe directories refuse the sweep."""
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return False
+    if not stat.S_ISDIR(info.st_mode):
+        raise RuntimeError("occupation evidence directory is not a real directory")
+    return True
+
+
+def _occupied_worktrees(repo: Path) -> list[reaper.WorktreeInfo]:
+    """Include Git branch_checked_out bindings, not just the currently attached HEAD.
+
+    Git's branch.c binds HEAD, wt_status_check_rebase/bisect and the sequencer's
+    rebase update-refs list across all worktree administrative directories.
+    Merge/cherry-pick/revert keep their attached HEAD binding. Unbound or
+    unreadable operation state refuses the sweep instead of proving absence.
+    """
+    trees = reaper.list_git_worktrees(repo)
+    if not trees:
+        raise RuntimeError("occupation evidence has no registered worktrees")
+    common = Path(_checked(repo, "rev-parse", "--path-format=absolute", "--git-common-dir").rstrip("\n"))
+    if not common.is_absolute() or not _occupation_directory(common):
+        raise RuntimeError("occupation evidence has no Git common directory")
+    # Git lists the primary worktree first. Linked registrations remain readable
+    # here even when their checkouts are missing, moved, locked or prunable.
+    directories = {trees[0].path: common}
+    linked = common / "worktrees"
+    if _occupation_directory(linked):
+        for directory in linked.iterdir():
+            if not _occupation_directory(directory):
+                raise RuntimeError("occupation evidence registration disappeared")
+            pointer = _occupation_file(directory / "gitdir")
+            if not pointer or not pointer.endswith("\n") or "\n" in pointer[:-1]:
+                raise RuntimeError("occupation evidence has an invalid worktree pointer")
+            gitfile = Path(pointer[:-1])
+            if not gitfile.is_absolute():
+                gitfile = (directory / gitfile).resolve()
+            if gitfile.parent in directories:
+                raise RuntimeError("occupation evidence has an ambiguous worktree pointer")
+            directories[gitfile.parent] = directory
+    if set(directories) != {tree.path for tree in trees}:
+        raise RuntimeError("occupation evidence registrations disagree with Git")
+    occupied = list(trees)
+    for tree in trees:
+        directory = directories[tree.path]
+        head = _occupation_file(directory / "HEAD")
+        if head is None or head.rstrip("\n") != (f"ref: refs/heads/{tree.branch}" if tree.branch else tree.head):
+            raise RuntimeError("occupation evidence HEAD disagrees with Git")
+        names: set[str] = set()
+        for backend in ("rebase-apply", "rebase-merge"):
+            state = directory / backend
+            if not _occupation_directory(state):
+                continue
+            # git am occupies its attached HEAD rather than a rebase head-name.
+            applying = backend == "rebase-apply" and _occupation_file(state / "applying") is not None
+            if applying:
+                if not tree.branch:
+                    raise RuntimeError("occupation evidence has an unbound apply operation")
+            else:
+                name = _occupation_file(state / "head-name")
+                if not name or not name.startswith("refs/heads/"):
+                    raise RuntimeError("occupation evidence has an unbound rebase")
+                names.add(name.removeprefix("refs/heads/").rstrip("\n"))
+            updates = _occupation_file(state / "update-refs")
+            if updates is not None:
+                rows = updates.splitlines()
+                if (updates and not updates.endswith("\n")) or len(rows) % 3:
+                    raise RuntimeError("occupation evidence has invalid update-refs")
+                for index in range(0, len(rows), 3):
+                    if not rows[index].startswith("refs/heads/") or not all(
+                        SHA_RE.fullmatch(value) and len(value) == len(tree.head or "")
+                        for value in rows[index + 1 : index + 3]
+                    ):
+                        raise RuntimeError("occupation evidence has invalid update-refs")
+                    names.add(rows[index].removeprefix("refs/heads/"))
+        if _occupation_file(directory / "BISECT_LOG") is not None:
+            name = _occupation_file(directory / "BISECT_START")
+            if not name:
+                raise RuntimeError("occupation evidence has an unbound bisect")
+            name = name.rstrip("\n").removeprefix("refs/heads/")
+            names.add(name)
+            # wt-status get_branch abbreviates a raw object ID. Preserve that
+            # native binding too, even when a branch has the abbreviated name.
+            if SHA_RE.fullmatch(name):
+                names.add(_checked(repo, "rev-parse", "--short", name).strip())
+        for marker in ("MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD"):
+            operation = _occupation_file(directory / marker)
+            if operation is not None:
+                if not operation.splitlines() or not all(
+                    SHA_RE.fullmatch(sha) and len(sha) == len(tree.head or "") for sha in operation.splitlines()
+                ):
+                    raise RuntimeError("occupation evidence has an invalid operation head")
+                if not tree.branch and not names:
+                    raise RuntimeError("occupation evidence has an unbound operation")
+        if _occupation_directory(directory / "sequencer") and not tree.branch and not names:
+            raise RuntimeError("occupation evidence has an unbound sequencer")
+        for name in sorted(names):
+            if not _valid(name, repo):
+                raise RuntimeError("occupation evidence has an invalid branch binding")
+            occupied.append(replace(tree, branch=name))
+    return occupied
+
+
 def _refs(repo: Path) -> list[Branch]:
     # NUL separates fields; Git ref names cannot contain NUL or a line feed.
     output = _checked(
@@ -980,7 +1107,7 @@ def sweep(
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             protected = PROTECTED
             protection_error = str(exc)
-        worktrees = reaper.list_git_worktrees(repo)
+        worktrees = _occupied_worktrees(repo)
         worktree_branches = {item.branch for item in worktrees if item.branch}
         detached_heads = {item.head for item in worktrees if item.detached and item.head}
         active = _active_tasks(repo)
@@ -1014,7 +1141,7 @@ def sweep(
             if apply and verdict.classification.startswith("delete-"):
                 # Recheck all volatile guards before each destructive call. In particular,
                 # stale origin tracking refs cannot authorize deletion of a moved head.
-                current_worktrees = reaper.list_git_worktrees(repo)
+                current_worktrees = _occupied_worktrees(repo)
                 verdict = _classify(
                     repo,
                     branch,
@@ -1493,7 +1620,7 @@ def _archive_local_snapshot(
 ) -> dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]]:
     """Freeze ref, worktree registration and complete task-record state per branch."""
     refs = _refs(repo) if branches is None else branches
-    trees = reaper.list_git_worktrees(repo) if worktrees is None else worktrees
+    trees = _occupied_worktrees(repo) if worktrees is None else worktrees
     records = _task_records(repo)
     tasks: dict[str, list[str]] = {}
     for path, state in records:
@@ -1610,7 +1737,7 @@ def _archive_delete_blockers(
     """Finish every PR read, then compare a complete local snapshot with classification."""
     prs = _archive_pr_snapshot(repo, [branch.name for _, branch in confirmed], pr_lookup)
     found = {item.name: item for item in _refs(repo)}
-    worktrees = reaper.list_git_worktrees(repo)
+    worktrees = _occupied_worktrees(repo)
     worktree_branches = {item.branch for item in worktrees if item.branch}
     detached_heads = {item.head for item in worktrees if item.detached and item.head}
     active = _active_tasks(repo)
@@ -1655,7 +1782,7 @@ def _delete_archived_refs(repo: Path, pairs: list[tuple[str, str]]) -> None:
     # No network or other work follows these last local checks before the ref
     # transaction. Guard changes after these reads remain the residual window;
     # expected SHAs bound head moves, and --no-deref protects symbolic targets.
-    trees = reaper.list_git_worktrees(repo)
+    trees = _occupied_worktrees(repo)
     active = _active_tasks(repo) | _recent_released_tasks(repo)
     for name, sha in pairs:
         if any(tree.branch == name or (tree.detached and tree.head == sha) for tree in trees):
@@ -1717,7 +1844,7 @@ def _apply_archive_locked(
     selected = [item for item in decisions if item.classification == "archive-expired"]
     indexes = {item.branch: index for index, item in enumerate(decisions)}
     found = {item.name: item for item in _refs(repo)}
-    worktrees = reaper.list_git_worktrees(repo)
+    worktrees = _occupied_worktrees(repo)
     worktree_branches = {item.branch for item in worktrees if item.branch}
     detached_heads = {item.head for item in worktrees if item.detached and item.head}
     active = _active_tasks(repo)
