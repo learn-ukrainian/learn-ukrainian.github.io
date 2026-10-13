@@ -419,6 +419,21 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     assert "diff --git" not in prompt
 
 
+@pytest.mark.parametrize("ancestor", (".git", "__pycache__"))
+def test_review_path_listing_filters_only_target_relative_metadata(tmp_path, ancestor):
+    target = tmp_path / ancestor / "review-target"
+    target.mkdir(parents=True)
+    (target / "a.py").write_text("DO_NOT_EMBED", encoding="utf-8")
+    (target / "nested").mkdir()
+    (target / "nested" / "b.py").write_text("DO_NOT_EMBED", encoding="utf-8")
+    for metadata in (".git", "__pycache__"):
+        directory = target / "nested" / metadata
+        directory.mkdir()
+        (directory / "hidden").write_text("DO_NOT_EMBED", encoding="utf-8")
+
+    assert wrappers._list_review_path_names(target) == "- a.py\n- nested/b.py"
+
+
 def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch, tmp_path):
     monkeypatch.delenv("LU_RUNTIME_TMP_ROOT", raising=False)
     target = tmp_path / "target.py"

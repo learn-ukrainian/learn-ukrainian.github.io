@@ -305,9 +305,10 @@ def _list_review_path_names(target: Path, *, max_files: int = 80) -> str:
         return f"- {target.name}"
     lines: list[str] = []
     for path in sorted(p for p in target.rglob("*") if p.is_file()):
-        if ".git" in path.parts or "__pycache__" in path.parts:
+        relative_path = path.relative_to(target)
+        if ".git" in relative_path.parts or "__pycache__" in relative_path.parts:
             continue
-        lines.append(f"- {path.relative_to(target)}")
+        lines.append(f"- {relative_path}")
         if len(lines) >= max_files:
             lines.append(f"- … truncated after {max_files} paths")
             break
