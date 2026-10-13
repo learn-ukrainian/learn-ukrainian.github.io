@@ -10,6 +10,10 @@ single-turn headless mode:
     grok -p "<prompt>" --output-format streaming-messages-json [-m MODEL] [--effort LEVEL] \
          --permission-mode <mode> --cwd <dir> --no-alt-screen
 
+A prompt that starts with ``-``, an isolated review, or a prompt whose UTF-8
+size is above ``_INLINE_PROMPT_LIMIT_BYTES`` uses ``--prompt-file`` instead of
+``-p`` (#10522). The file is mode 0600 and removed when the run is cleaned up.
+
 Headless text is one assistant message per model response. Messages are joined
 with a newline so a later ``VERDICT:`` line stays a line (#10005). Chunks
 inside one message are concatenated. ``--json-schema`` keeps
@@ -228,6 +232,14 @@ _META_LIVENESS_SESSION_ID = "liveness_session_id"
 _META_LIVENESS_SNAPSHOT = "liveness_session_dir_snapshot"
 _META_REVIEWER_AGENT_FILE = "reviewer_agent_file"
 _META_WRITE_GUARD_AGENT_FILE = "write_guard_agent_file"
+_META_PROMPT_FILE = "grok_prompt_file"
+# Linux MAX_ARG_STRLEN is 131072 bytes per argv element, counting the
+# terminating NUL (kernel fs/exec.c), so a string of that length cannot be
+# exec'd. 100_000 leaves a safety margin for the other grok argv elements
+# (binary path, flags, cwd, schema). Measure UTF-8 bytes, not characters:
+# Cyrillic text crosses the kernel limit while still under 100_000 characters
+# (#10522). A prompt of exactly this many bytes stays inline.
+_INLINE_PROMPT_LIMIT_BYTES = 100_000
 
 # Claude matchers auto-expand to some Grok ids. These are the model-facing
 # ids that expansion does not cover, so a write session's guards still see
@@ -383,9 +395,7 @@ def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
     return grok_cwd_sessions_dir(grok_home, cwd) / session_id
 
 
-def _permission_cancellation(
-    envelope: dict | None, plan: InvocationPlan | None, call_start_time: float | None
-) -> bool:
+def _permission_cancellation(envelope: dict | None, plan: InvocationPlan | None, call_start_time: float | None) -> bool:
     """Classify only typed cancellation evidence for this exact native turn."""
     if envelope is None or envelope.get("stopReason") != "cancelled":
         return False
@@ -419,7 +429,9 @@ def _permission_cancellation(
             stamp = datetime.fromisoformat(terminal["ts"].replace("Z", "+00:00"))
             if stamp.tzinfo is None or stamp.timestamp() < call_start_time:
                 return False
-        return terminal.get("outcome") == "cancelled" and terminal.get("cancellation_category") == "permission_cancelled"
+        return (
+            terminal.get("outcome") == "cancelled" and terminal.get("cancellation_category") == "permission_cancelled"
+        )
     except (OSError, ValueError, TypeError, KeyError, UnicodeError, RecursionError):
         return False
 
@@ -515,9 +527,12 @@ class GrokBuildAdapter:
                 guard_agent_file = handle.name
             cmd.extend(["--agent", guard_agent_file])
         execution_cwd = trail_cwd or cwd
-        # Prompt: inline via -p for the common case; a hyphen-leading prompt
-        # would be misparsed by clap as a flag, so route those through a temp
-        # --prompt-file instead (robust for any content).
+        # Prompt: inline via -p when it fits in one argv element. A hyphen-leading
+        # prompt is a clap flag, and a prompt above _INLINE_PROMPT_LIMIT_BYTES
+        # cannot be exec'd (MAX_ARG_STRLEN, #10522). Both use a private
+        # --prompt-file, as isolated review already does.
+        prompt_path: str | None = None
+        prompt_bytes = len(prompt.encode("utf-8"))
         if review_isolation and review_write_root is not None:
             write_root = review_write_root
             out_dir = write_root / "tmp"
@@ -532,7 +547,7 @@ class GrokBuildAdapter:
                 handle.write(prompt.encode("utf-8"))
             prompt_path = str(prompt_file)
             cmd.extend(["--prompt-file", prompt_path])
-        elif prompt.startswith("-"):
+        elif prompt.startswith("-") or prompt_bytes > _INLINE_PROMPT_LIMIT_BYTES:
             if review_isolation:
                 raise ValueError("GrokBuildAdapter: isolated review prompt file requires review_write_root")
             else:
@@ -698,6 +713,8 @@ class GrokBuildAdapter:
         }
         if guard_agent_file is not None and guard_agent_key is not None:
             metadata[guard_agent_key] = guard_agent_file
+        if prompt_path is not None:
+            metadata[_META_PROMPT_FILE] = prompt_path
         liveness_paths, _discovered = self._liveness_paths_for_cwd(
             execution_cwd,
             bound_session_id=resume_session_id,
@@ -717,7 +734,7 @@ class GrokBuildAdapter:
         )
 
     def cleanup_invocation(self, plan: InvocationPlan) -> None:
-        """Remove only the guard agent definition created for this plan."""
+        """Remove the guard agent definition and prompt file created for this plan."""
         for key, suffix in (
             (_META_REVIEWER_AGENT_FILE, ".grok-reviewer-agent.md"),
             (_META_WRITE_GUARD_AGENT_FILE, ".grok-write-agent.md"),
@@ -725,6 +742,11 @@ class GrokBuildAdapter:
             path = plan.metadata.get(key)
             if isinstance(path, str) and path.endswith(suffix):
                 Path(path).unlink(missing_ok=True)
+        prompt_file = plan.metadata.get(_META_PROMPT_FILE)
+        if isinstance(prompt_file, str):
+            owned = Path(prompt_file)
+            if owned.name == "grok-prompt.txt" or owned.name.endswith(".grok-prompt.txt"):
+                owned.unlink(missing_ok=True)
 
     def parse_response(
         self,
