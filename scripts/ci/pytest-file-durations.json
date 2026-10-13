@@ -194,6 +194,7 @@
   "tests/audit/test_wiki_coverage_gate_fix_proposals.py": 1.089,
   "tests/audit/test_wiki_coverage_integration.py": 0.094,
   "tests/audit/test_wiki_coverage_normalize.py": 0.276,
+  "tests/backup_data_script/test_allowlist_scope.py": 29.488,
   "tests/backup_data_script/test_completion_faults.py": 188.51,
   "tests/backup_data_script/test_completion_publication.py": 138.07,
   "tests/backup_data_script/test_full_restore.py": 113.47,

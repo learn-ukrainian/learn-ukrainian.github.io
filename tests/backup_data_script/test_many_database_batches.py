@@ -36,8 +36,8 @@ def test_database_excludes_go_through_an_exclude_file_not_argv(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     project = source.parent
-    plain = _make_database(source / "plain.db")
-    odd = _make_database(project / "batch_state" / "odd $HOME name.sqlite3")
+    plain = _make_database(source / "datasets" / "plain.db")
+    odd = _make_database(project / "batch_state" / "fleet-comms" / "odd $HOME name.sqlite3")
 
     result = _run(environment, "backup", "--execute")
 
@@ -52,8 +52,12 @@ def test_database_excludes_go_through_an_exclude_file_not_argv(
     # $ and spaces stay literal: restic expands $VAR and trims each line.
     literal_odd = str(odd).replace("$", "[$]").replace(" ", "[ ]")
     assert f"exclude=<{literal_odd}>" in log
-    assert _uploaded_databases(log) == {"data/plain.db", "batch_state/odd $HOME name.sqlite3"}
-    assert "SQLite databases backed up: 2 of 2 (pytest scratch skipped: 0, archived: 0)." in result.stdout
+    assert _uploaded_databases(log) == {
+        "data/datasets/plain.db",
+        "batch_state/fleet-comms/odd $HOME name.sqlite3",
+        "data/sources.db",
+    }
+    assert "SQLite databases backed up: 3 of 3 (pytest scratch skipped: 0, archived: 0)." in result.stdout
     # The private exclude file is removed with the run.
     exclude_files = re.findall(r"arg=<--exclude-file> arg=<([^>]*)>", log)
     assert exclude_files and not any(Path(path).exists() for path in exclude_files)
@@ -63,7 +67,7 @@ def test_preview_also_uses_the_exclude_file(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    database = _make_database(source / "plain.db")
+    database = _make_database(source / "datasets" / "plain.db")
 
     result = _run(environment, "backup")
 
@@ -79,13 +83,15 @@ def test_pytest_scratch_databases_are_skipped_and_excluded(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     project = source.parent
-    keep = _make_database(project / "batch_state" / "tasks" / "write-ownership.sqlite3")
+    keep = _make_database(project / "batch_state" / "fleet-comms" / "write-ownership.sqlite3")
     scratch = [
-        _make_database(project / "batch_state" / "proof" / "pytest-RC2" / "stores0" / "7" / "write-ownership.sqlite3"),
-        _make_database(project / "batch_state" / "proof" / "pytest-of-user" / "pytest-3" / "t0" / "atlas.db"),
+        _make_database(
+            project / "batch_state" / "fleet-comms" / "pytest-RC2" / "stores0" / "7" / "write-ownership.sqlite3"
+        ),
+        _make_database(project / "batch_state" / "fleet-comms" / "pytest-of-user" / "pytest-3" / "t0" / "atlas.db"),
     ]
     # A name that merely mentions pytest is not a pytest base temp directory.
-    lookalike = _make_database(project / "batch_state" / "pytest-results.sqlite3")
+    lookalike = _make_database(project / "batch_state" / "fleet-comms" / "pytest-results.sqlite3")
 
     result = _run(environment, "backup", "--execute")
 
@@ -94,12 +100,13 @@ def test_pytest_scratch_databases_are_skipped_and_excluded(
     assert _uploaded_databases(log) == {
         str(keep.relative_to(project)),
         str(lookalike.relative_to(project)),
+        "data/sources.db",
     }
     for database in scratch:
         assert f"exclude=<{database}>" in log
-    assert "SQLite databases backed up: 2 of 2 (pytest scratch skipped: 2, archived: 0)." in result.stdout
+    assert "SQLite databases backed up: 3 of 3 (pytest scratch skipped: 2, archived: 0)." in result.stdout
     receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
-    assert receipt["linux_run"]["databases_backed_up"] == 2
+    assert receipt["linux_run"]["databases_backed_up"] == 3
     assert receipt["linux_run"]["transient_databases_skipped"] == 2
     assert "2 pytest scratch SQLite databases skipped" in receipt["exclusions"]
 
@@ -109,24 +116,25 @@ def test_archived_databases_are_covered_by_the_archive(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     project = source.parent
-    live = _make_database(source / "live.db")
+    live = _make_database(source / "datasets" / "live.db")
     preserved = [
-        _make_database(project / "batch_state" / "preserved" / "atlas-1" / "atlas.db"),
-        _make_database(project / "batch_state" / "codex-atlas" / "s1" / "sources.db"),
+        _make_database(project / "batch_state" / "open-model-data" / "atlas-1" / "atlas.db"),
+        _make_database(project / "batch_state" / "open-model-data-20261007" / "s1" / "corpus.db"),
     ]
     _write_archive(project, "atlas-preserved-dbs-20261007.tar.zst", preserved)
-    environment["FAKE_REQUIRED_RELATIVE"] = "batch_state/backups/archives/atlas-preserved-dbs-20261007.tar.zst"
+    environment["LU_BACKUP_DB_ARCHIVE_DIR"] = str(project / "batch_state" / "branch-archive")
+    environment["FAKE_REQUIRED_RELATIVE"] = "batch_state/branch-archive/atlas-preserved-dbs-20261007.tar.zst"
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
     log = _log(environment)
-    assert _uploaded_databases(log) == {str(live.relative_to(project))}
+    assert _uploaded_databases(log) == {str(live.relative_to(project)), "data/sources.db"}
     for database in preserved:
         assert f"exclude=<{database}>" in log
         assert database.exists()  # never deleted
-    assert "staged_required=<batch_state/backups/archives/atlas-preserved-dbs-20261007.tar.zst>" in log
-    assert "SQLite databases backed up: 1 of 1 (pytest scratch skipped: 0, archived: 2)." in result.stdout
+    assert "staged_required=<batch_state/branch-archive/atlas-preserved-dbs-20261007.tar.zst>" in log
+    assert "SQLite databases backed up: 2 of 2 (pytest scratch skipped: 0, archived: 2)." in result.stdout
     receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
     assert receipt["linux_run"]["archived_databases"] == 2
     assert receipt["linux_run"]["database_archives"] == ["atlas-preserved-dbs-20261007.tar.zst"]
@@ -138,17 +146,24 @@ def test_database_changed_after_archiving_is_backed_up_loose(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     project = source.parent
-    unchanged = _make_database(project / "batch_state" / "preserved" / "a" / "atlas.db")
-    changed = _make_database(project / "batch_state" / "preserved" / "b" / "atlas.db")
+    unchanged = _make_database(project / "batch_state" / "open-model-data" / "a" / "atlas.db")
+    changed = _make_database(project / "batch_state" / "open-model-data" / "b" / "atlas.db")
     _write_archive(project, "dbs-20261007.tar.zst", [unchanged, changed])
+    environment["LU_BACKUP_DB_ARCHIVE_DIR"] = str(project / "batch_state" / "branch-archive")
     _make_database(changed, "written after archiving")
     os.utime(changed, (time.time() + 5, time.time() + 5))
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert "changed since it was archived; backing up the live copy: batch_state/preserved/b/atlas.db" in result.stderr
-    assert _uploaded_databases(_log(environment)) == {"batch_state/preserved/b/atlas.db"}
+    assert (
+        "changed since it was archived; backing up the live copy: batch_state/open-model-data/b/atlas.db"
+        in result.stderr
+    )
+    assert _uploaded_databases(_log(environment)) == {
+        "batch_state/open-model-data/b/atlas.db",
+        "data/sources.db",
+    }
 
 
 @pytest.mark.parametrize("problem", ["size-mismatch", "missing-archive"])
@@ -158,10 +173,11 @@ def test_unverifiable_archive_is_ignored_and_databases_are_backed_up(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     project = source.parent
-    database = _make_database(project / "batch_state" / "preserved" / "a" / "atlas.db")
+    database = _make_database(project / "batch_state" / "open-model-data" / "a" / "atlas.db")
     archive = _write_archive(
         project, "dbs-20261007.tar.zst", [database], archive_bytes=1 if problem == "size-mismatch" else None
     )
+    environment["LU_BACKUP_DB_ARCHIVE_DIR"] = str(project / "batch_state" / "branch-archive")
     if problem == "missing-archive":
         archive.unlink()
 
@@ -169,7 +185,10 @@ def test_unverifiable_archive_is_ignored_and_databases_are_backed_up(
 
     assert result.returncode == 0, result.stderr
     assert "WARNING: Ignoring SQLite archive" in result.stderr
-    assert _uploaded_databases(_log(environment)) == {"batch_state/preserved/a/atlas.db"}
+    assert _uploaded_databases(_log(environment)) == {
+        "batch_state/open-model-data/a/atlas.db",
+        "data/sources.db",
+    }
 
 
 def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
@@ -192,8 +211,8 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
         "backup lu-part-receipt",
         "backup lu-part-complete",
     ]
-    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["34", "0", "0"]
-    assert "SQLite databases backed up: 34 of 34 (pytest scratch skipped: 1, archived: 0)." in backed_up.stdout
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["35", "0", "0"]
+    assert "SQLite databases backed up: 35 of 35 (pytest scratch skipped: 1, archived: 0)." in backed_up.stdout
     assert list(staging.iterdir()) == []
     assert {relative: _file_sha256(project / relative) for relative in database_hashes} == originals
 
@@ -207,7 +226,7 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
     inventory = receipt["linux_run"]["databases"]
     assert sorted(entry["path"] for entry in inventory) == sorted(database_hashes)
     assert len({entry["snapshot_id"] for entry in inventory}) == 1
-    assert receipt["linux_run"]["databases_backed_up"] == 34
+    assert receipt["linux_run"]["databases_backed_up"] == 35
 
     scoped_target = tmp_path / "restored-one"
     scoped = _run(
@@ -217,16 +236,16 @@ def test_many_databases_upload_in_one_snapshot_and_restore_hash_matched(
         "--to",
         str(scoped_target),
         "--path",
-        "batch_state/fixtures/run-07/corpus.db",
+        "batch_state/open-model-data/run-07/corpus.db",
         "--execute",
     )
     assert scoped.returncode == 0, scoped.stderr
     assert [path.relative_to(scoped_target).as_posix() for path in scoped_target.rglob("*") if path.is_file()] == [
-        "batch_state/fixtures/run-07/corpus.db"
+        "batch_state/open-model-data/run-07/corpus.db"
     ]
     assert (
-        _logical_sha256(scoped_target / "batch_state/fixtures/run-07/corpus.db")
-        == database_hashes["batch_state/fixtures/run-07/corpus.db"]
+        _logical_sha256(scoped_target / "batch_state/open-model-data/run-07/corpus.db")
+        == database_hashes["batch_state/open-model-data/run-07/corpus.db"]
     )
 
 
@@ -238,15 +257,16 @@ def test_batch_budget_splits_database_uploads(
     _use_local_restic(environment, tmp_path)
     project = source.parent
     for index in range(4):
-        _make_database(project / "batch_state" / "fixtures" / f"run-{index}" / "sources.db")
-    size = (project / "batch_state" / "fixtures" / "run-0" / "sources.db").stat().st_size
+        _make_database(project / "batch_state" / "open-model-data" / f"run-{index}" / "sources.db")
+    size = (project / "batch_state" / "open-model-data" / "run-0" / "sources.db").stat().st_size
     environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = str(2 * size)
 
     backed_up = _run(environment, "backup", "--execute")
 
     assert backed_up.returncode == 0, backed_up.stderr
-    assert _backup_invocations(environment).count("backup lu-part-db") == 2
-    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "0", "0"]
+    # Four fixture databases plus the required sources.db, two per batch.
+    assert _backup_invocations(environment).count("backup lu-part-db") == 3
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["2", "2", "1", "0", "0"]
 
 
 @pytest.mark.parametrize("budget", ["0", "-1", "1e9", "abc", "1000000000000000000000"])
@@ -270,16 +290,19 @@ def test_database_batch_upload_failure_fails_every_member_and_never_completes(
 ) -> None:
     environment, source, staging, _legacy = backup_environment
     project = source.parent
-    databases = [_make_database(source / "a.db"), _make_database(project / "batch_state" / "fixtures" / "b.db")]
+    databases = [
+        _make_database(source / "datasets" / "a.db"),
+        _make_database(project / "batch_state" / "fleet-comms" / "b.db"),
+    ]
     before = {database: _file_sha256(database) for database in databases}
     environment["FAKE_DB_PHASE_EXIT"] = "1"
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode != 0
-    assert "Database data/a.db: restic upload failed" in result.stderr
-    assert "Database batch_state/fixtures/b.db: restic upload failed" in result.stderr
-    assert "SQLite databases backed up: 0 of 2" in result.stdout
+    assert "Database data/datasets/a.db: restic upload failed" in result.stderr
+    assert "Database batch_state/fleet-comms/b.db: restic upload failed" in result.stderr
+    assert "SQLite databases backed up: 0 of 3" in result.stdout
     assert "arg=<lu-part-complete>" not in _log(environment)
     assert not (Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").exists()
     assert list(staging.iterdir()) == []
@@ -291,14 +314,14 @@ def test_receipt_inventory_larger_than_one_argument_is_recorded(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     project = source.parent
-    deep = project / "batch_state" / "fixtures"
+    deep = project / "batch_state" / "open-model-data"
     stage = Path(environment["LU_BACKUP_TMPDIR"]) / f"learn-ukrainian-backup.{os.getuid()}.stage"
     # Long paths, kept under SQLite's 512-byte pathname limit for both the
     # source and its staged copy (made under db-incoming, then moved into
     # db-batch), make each inventory entry large so a few hundred databases
     # pass 128 KiB.
     staged = max(len(str(stage / "db-incoming")), len(str(stage / "db-batch")))
-    remaining = 500 - max(len(str(project)), staged) - len("/batch_state/fixtures/000.db")
+    remaining = 500 - max(len(str(project)), staged) - len("/batch_state/open-model-data/000.db")
     while remaining > 1:
         component = min(remaining - 1, 200)
         deep = deep / ("d" * component)
@@ -323,7 +346,7 @@ def test_receipt_inventory_larger_than_one_argument_is_recorded(
     receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
     # The inventory exceeds the kernel's 128 KiB single-argument limit.
     assert len(json.dumps(receipt["linux_run"]["databases"])) > 131072
-    assert receipt["linux_run"]["databases_backed_up"] == count
+    assert receipt["linux_run"]["databases_backed_up"] == count + 1
     assert _log(environment).count("arg=<lu-part-db>") == 1
 
 
@@ -336,28 +359,29 @@ def test_wal_backed_copies_are_charged_their_staged_size_against_the_batch_budge
     # Most of each WAL database lives in its open -wal file, so its main file
     # understates the online copy that joins the batch.
     connections = []
+    (source / "datasets").mkdir()
     try:
         for name in ("first.db", "second.db"):
-            connection = sqlite3.connect(source / name)
+            connection = sqlite3.connect(source / "datasets" / name)
             connections.append(connection)
             connection.execute("PRAGMA journal_mode=WAL")
             connection.execute("PRAGMA wal_autocheckpoint=0")
             connection.execute("CREATE TABLE recovery_probe (value BLOB NOT NULL)")
             connection.execute("INSERT INTO recovery_probe VALUES (zeroblob(700000))")
             connection.commit()
-            assert (source / name).stat().st_size < budget // 8
-            assert (source / f"{name}-wal").stat().st_size > budget // 2
-        # A database larger than the budget still uploads, alone. data/ is
-        # walked before batch_state/, so it follows the WAL databases.
-        large = sqlite3.connect(source.parent / "batch_state" / "large.db")
+            assert (source / "datasets" / name).stat().st_size < budget // 8
+            assert (source / "datasets" / f"{name}-wal").stat().st_size > budget // 2
+        # A database larger than the budget still uploads, alone. data/ entries
+        # are walked before batch_state/, so it follows the WAL databases.
+        large = sqlite3.connect(source.parent / "batch_state" / "fleet-comms" / "large.db")
         try:
             large.execute("CREATE TABLE recovery_probe (value BLOB NOT NULL)")
             large.execute("INSERT INTO recovery_probe VALUES (zeroblob(1200000))")
             large.commit()
         finally:
             large.close()
-        files = [source / name for name in ("first.db", "first.db-wal", "second.db", "second.db-wal")]
-        files.append(source.parent / "batch_state" / "large.db")
+        files = [source / "datasets" / name for name in ("first.db", "first.db-wal", "second.db", "second.db-wal")]
+        files.append(source.parent / "batch_state" / "fleet-comms" / "large.db")
         before = {path: _file_sha256(path) for path in files}
 
         result = _run(environment, "backup", "--execute")
@@ -369,11 +393,22 @@ def test_wal_backed_copies_are_charged_their_staged_size_against_the_batch_budge
     assert result.returncode == 0, result.stderr
     assert after == before
     batches = [tuple(map(int, batch.split())) for batch in re.findall(r"db_batch=<(\d+ \d+)>", _log(environment))]
-    assert sorted(count for count, _bytes in batches) == [1, 1, 1], batches
+    # sources.db is small, so it shares the first WAL database's batch. The
+    # online copy, not the small main file, is what forces the next flush.
+    assert sorted(count for count, _bytes in batches) == [1, 1, 2], batches
     assert all(staged <= budget or count == 1 for count, staged in batches), batches
-    assert _uploaded_databases(_log(environment)) == {"data/first.db", "data/second.db", "batch_state/large.db"}
+    assert _uploaded_databases(_log(environment)) == {
+        "data/sources.db",
+        "data/datasets/first.db",
+        "data/datasets/second.db",
+        "batch_state/fleet-comms/large.db",
+    }
     snapshot = Path(environment["FAKE_SNAPSHOT_DIR"])
-    for relative, blob in (("data/first.db", 700000), ("data/second.db", 700000), ("batch_state/large.db", 1200000)):
+    for relative, blob in (
+        ("data/datasets/first.db", 700000),
+        ("data/datasets/second.db", 700000),
+        ("batch_state/fleet-comms/large.db", 1200000),
+    ):
         with sqlite3.connect(f"file:{snapshot / relative}?mode=ro", uri=True) as connection:
             assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
             assert connection.execute("SELECT length(value) FROM recovery_probe").fetchall() == [(blob,)]
@@ -391,7 +426,7 @@ def test_backup_fails_closed_when_required_repo_state_is_missing(
     result = _run(environment, "backup")
 
     assert result.returncode != 0
-    assert "Required recovery path is missing: .claude/atlas-epic" in result.stderr
+    assert "Required recovery path is missing: .claude/*-epic" in result.stderr
     assert "arg=<backup>" not in _log(environment)
 
 
@@ -427,18 +462,20 @@ def test_backup_fails_closed_when_agent_recovery_root_is_a_symlink(
     assert "arg=<backup>" not in _log(environment)
 
 
-def test_backup_fails_closed_for_uncovered_untracked_path(
+def test_backup_ignores_untracked_paths_outside_the_allowlist(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     (source.parent / "sole-copy.txt").write_text("not declared\n", encoding="utf-8")
+    dropped = source.parent / "batch_state" / "preserved" / "secret.txt"
+    dropped.parent.mkdir()
+    dropped.write_text("not walked\n", encoding="utf-8")
 
     result = _run(environment, "backup")
 
-    assert result.returncode != 0
-    assert "UNBACKED untracked Git path: sole-copy.txt" in result.stderr
-    assert "outside Git and declared recovery roots" in result.stderr
-    assert "arg=<backup>" not in _log(environment)
+    assert result.returncode == 0, result.stderr
+    assert "UNBACKED untracked Git path: sole-copy.txt" not in result.stderr
+    assert "preserved" not in result.stderr
 
 
 def test_refuses_legacy_mutable_backup_as_restic_repository(
@@ -461,6 +498,8 @@ def test_data_root_must_not_be_a_symlink(
     environment, source, _staging, _legacy = backup_environment
     external_data = tmp_path / "external-data"
     external_data.mkdir()
+    for child in source.iterdir():
+        child.unlink()
     source.rmdir()
     source.symlink_to(external_data)
 

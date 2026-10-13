@@ -350,12 +350,13 @@ def test_restore_path_real_restic_restores_only_the_named_file(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
-    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
-    (source / "other.txt").write_text("not this one\n", encoding="utf-8")
-    with sqlite3.connect(source / "first.db") as connection:
+    (source / "datasets").mkdir()
+    (source / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    (source / "datasets" / "other.txt").write_text("not this one\n", encoding="utf-8")
+    with sqlite3.connect(source / "datasets" / "first.db") as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
         connection.execute("INSERT INTO recovery_probe VALUES ('first')")
-    with sqlite3.connect(source / "second.db") as connection:
+    with sqlite3.connect(source / "datasets" / "second.db") as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     backed_up = _run(environment, "backup", "--execute")
     assert backed_up.returncode == 0, backed_up.stderr
@@ -368,13 +369,13 @@ def test_restore_path_real_restic_restores_only_the_named_file(
         "--to",
         str(database_target),
         "--path",
-        "data/first.db",
+        "data/datasets/first.db",
         "--execute",
     )
     assert database.returncode == 0, database.stderr
     assert sorted(
         path.relative_to(database_target).as_posix() for path in database_target.rglob("*") if path.is_file()
-    ) == ["data/first.db"]
+    ) == ["data/datasets/first.db"]
 
     file_target = tmp_path / "restored-file"
     plain = _run(
@@ -384,12 +385,12 @@ def test_restore_path_real_restic_restores_only_the_named_file(
         "--to",
         str(file_target),
         "--path",
-        "data/ordinary.txt",
+        "data/datasets/ordinary.txt",
         "--execute",
     )
     assert plain.returncode == 0, plain.stderr
     assert sorted(path.relative_to(file_target).as_posix() for path in file_target.rglob("*") if path.is_file()) == [
-        "data/ordinary.txt"
+        "data/datasets/ordinary.txt"
     ]
 
     absent_target = tmp_path / "restored-absent"
@@ -505,9 +506,10 @@ def test_pre_batching_script_refuses_a_schema_3_run_before_restoring(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
-    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
-    _make_database(source / "first.db", "first")
-    _make_database(source.parent / "batch_state" / "second.db", "second")
+    (source / "datasets").mkdir()
+    (source / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    _make_database(source / "datasets" / "first.db", "first")
+    _make_database(source.parent / "batch_state" / "fleet-comms" / "second.db", "second")
     backed_up = _run(environment, "backup", "--execute")
     assert backed_up.returncode == 0, backed_up.stderr
 
@@ -523,7 +525,7 @@ def test_pre_batching_script_refuses_a_schema_3_run_before_restoring(
     )
     old_script.chmod(0o700)
 
-    for name, scope in (("whole", ()), ("scoped", ("--path", "data/first.db"))):
+    for name, scope in (("whole", ()), ("scoped", ("--path", "data/datasets/first.db"))):
         target = tmp_path / f"old-reader-{name}"
         refused = subprocess.run(
             ["/bin/bash", str(old_script), "restore", "latest", "--to", str(target), *scope, "--execute"],
@@ -541,7 +543,9 @@ def test_pre_batching_script_refuses_a_schema_3_run_before_restoring(
     current_target = tmp_path / "current-reader"
     restored = _run(environment, "restore", "latest", "--to", str(current_target), "--execute")
     assert restored.returncode == 0, restored.stderr
-    assert {"data/first.db", "batch_state/second.db", "data/ordinary.txt"} <= set(_restored_files(current_target))
+    assert {"data/datasets/first.db", "batch_state/fleet-comms/second.db", "data/datasets/ordinary.txt"} <= set(
+        _restored_files(current_target)
+    )
 
 
 @pytest.mark.parametrize("schema_version", [2, 3])
@@ -605,14 +609,15 @@ def test_database_paths_with_glob_characters_restore_scoped_and_whole(
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
     project = source.parent
-    literal = "data/w*e?i[r]d\\x.db"
+    literal = "data/datasets/w*e?i[r]d\\x.db"
     # What the literal path would match if it were read as a glob.
-    lookalike = "data/wZZeQirdx.db"
-    nested = "batch_state/run[1]/state*.sqlite3"
+    lookalike = "data/datasets/wZZeQirdx.db"
+    nested = "batch_state/fleet-comms/run[1]/state*.sqlite3"
     databases = [literal, lookalike, nested]
     for index, relative in enumerate(databases):
         _make_database(project / relative, f"row-{index}")
-    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    (source / "datasets").mkdir(exist_ok=True)
+    (source / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
     database_hashes = {relative: _logical_sha256(project / relative) for relative in databases}
 
     backed_up = _run(environment, "backup", "--execute")
@@ -632,7 +637,7 @@ def test_database_paths_with_glob_characters_restore_scoped_and_whole(
     assert restored.returncode == 0, restored.stderr
     for relative, expected in database_hashes.items():
         assert _logical_sha256(target / relative) == expected, relative
-    assert (target / "data" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
+    assert (target / "data" / "datasets" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
 
     # A wildcard that names no recorded database is still refused before any write.
     for wildcard in ("data/w*", "data/*.db", "batch_state/run[1]"):
@@ -734,13 +739,15 @@ def test_execute_rejects_a_corrupt_database_before_upload(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    (source / "corrupt.db").write_bytes(b"SQLite format 3\0" + b"corrupt data")
+    (source / "datasets").mkdir()
+    (source / "datasets" / "corrupt.db").write_bytes(b"SQLite format 3\0" + b"corrupt data")
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode != 0
-    assert "Database data/corrupt.db: SQLite online backup failed" in result.stderr
-    assert "arg=<lu-part-db>" not in _log(environment)
+    assert "Database data/datasets/corrupt.db: SQLite online backup failed" in result.stderr
+    assert "db_file=<data/sources.db>" in _log(environment)
+    assert "db_file=<data/datasets/corrupt.db>" not in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
     assert list(staging.iterdir()) == []
 
@@ -750,7 +757,8 @@ def test_doctor_warns_about_unreadable_file(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    unreadable = source / "unreadable.txt"
+    unreadable = source / "datasets" / "unreadable.txt"
+    unreadable.parent.mkdir()
     unreadable.write_text("private\n", encoding="utf-8")
     unreadable.chmod(0)
 
@@ -769,7 +777,7 @@ def test_doctor_warns_about_unreadable_directory(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    unreadable = source.parent / "batch_state" / "unreadable-dir"
+    unreadable = source.parent / "batch_state" / "fleet-comms" / "unreadable-dir"
     unreadable.mkdir()
     (unreadable / "hidden.txt").write_text("private\n", encoding="utf-8")
     unreadable.chmod(0)
@@ -790,7 +798,8 @@ def test_execute_refuses_when_one_database_would_exceed_staging_space(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     (source / "valuable.txt").write_text("sole copy\n", encoding="utf-8")
-    database = source / "large.db"
+    database = source / "datasets" / "large.db"
+    database.parent.mkdir()
     with sqlite3.connect(database) as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
@@ -881,7 +890,8 @@ def test_symlink_policy_excludes_known_legacy_links_and_rejects_escapes(
 
     escaped_target = tmp_path / "outside-source"
     escaped_target.mkdir()
-    (source / "unexpected-link").symlink_to(escaped_target)
+    (source / "datasets").mkdir()
+    (source / "datasets" / "unexpected-link").symlink_to(escaped_target)
     rejected = _run(environment, "backup")
 
     assert rejected.returncode != 0
@@ -916,14 +926,15 @@ def test_backup_skips_dangling_non_legacy_symlink_in_source_with_warning(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    (source / "broken-link.txt").symlink_to("missing-dir/missing.txt")
+    (source / "datasets").mkdir()
+    (source / "datasets" / "broken-link.txt").symlink_to("missing-dir/missing.txt")
 
     result = _run(environment, "backup")
     assert result.returncode == 0, result.stderr
     assert (
-        "WARNING: Skipping broken symlink in backup source: broken-link.txt -> missing-dir/missing.txt" in result.stderr
+        "WARNING: Skipping broken symlink in data/datasets: broken-link.txt -> missing-dir/missing.txt" in result.stderr
     )
-    assert f"exclude=<{source}/broken-link.txt>" in _log(environment)
+    assert f"exclude=<{source}/datasets/broken-link.txt>" in _log(environment)
 
 
 def test_init_requires_execute_before_creating_repository(

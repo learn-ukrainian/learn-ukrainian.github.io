@@ -93,10 +93,13 @@ def test_completed_run_publishes_one_completion_snapshot_reusing_the_checked_pen
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
     mirror = _fresh_runner_mirror(source)
-    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    (source / "datasets").mkdir()
+    (source / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
     database_hashes = {
-        "data/first.db": _logical_sha256(_make_database(source / "first.db", "first")),
-        "batch_state/second.db": _logical_sha256(_make_database(source.parent / "batch_state" / "second.db", "two")),
+        "data/datasets/first.db": _logical_sha256(_make_database(source / "datasets" / "first.db", "first")),
+        "batch_state/fleet-comms/second.db": _logical_sha256(
+            _make_database(source.parent / "batch_state" / "fleet-comms" / "second.db", "two")
+        ),
     }
 
     result = _run(environment, "backup", "--execute")
@@ -137,7 +140,7 @@ def test_completed_run_publishes_one_completion_snapshot_reusing_the_checked_pen
     assert _restored_run_id(environment, target) == _run_id(complete[0])
     for relative, expected in database_hashes.items():
         assert _logical_sha256(target / relative) == expected, relative
-    assert (target / "data" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
+    assert (target / "data" / "datasets" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
     assert (target / "BACKUP-RECEIPT.json").read_text(encoding="utf-8") == complete_receipt.stdout
 
 
@@ -150,7 +153,7 @@ def test_a_failure_after_completion_leaves_a_restorable_run_and_no_gate_receipt(
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
     mirror = _fresh_runner_mirror(source)
-    database_hash = _logical_sha256(_make_database(source / "first.db", "first"))
+    database_hash = _logical_sha256(_make_database(source / "datasets" / "first.db", "first"))
     gate = mirror.parent / "RESTIC-GATE-RECEIPT.json"
 
     if window == "gate-rename-fails":
@@ -171,7 +174,7 @@ def test_a_failure_after_completion_leaves_a_restorable_run_and_no_gate_receipt(
     [completed] = _completed_run_ids(environment)
     target = tmp_path / "restored"
     assert _restored_run_id(environment, target) == completed
-    assert _logical_sha256(target / "data" / "first.db") == database_hash
+    assert _logical_sha256(target / "data" / "datasets" / "first.db") == database_hash
     assert not gate.is_file()
     with pytest.raises(DurableMirrorError, match="no restic gate receipt"):
         require_durable(mirror)
@@ -184,10 +187,10 @@ def test_a_corrupted_completion_snapshot_is_skipped_by_restore_and_fails_the_nex
     """Corruption after the completion upload is outside what the run itself can verify."""
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
-    first_hash = _logical_sha256(_make_database(source / "first.db", "first"))
+    first_hash = _logical_sha256(_make_database(source / "datasets" / "first.db", "first"))
     assert _run(environment, "backup", "--execute").returncode == 0
     [previous_run] = _completed_run_ids(environment)
-    second_hash = _logical_sha256(_make_database(source / "second.db", "second"))
+    second_hash = _logical_sha256(_make_database(source / "datasets" / "second.db", "second"))
     latest = _run(environment, "backup", "--execute")
     assert latest.returncode == 0, latest.stderr
     snapshots = _repository_snapshots(environment)
@@ -212,8 +215,8 @@ def test_a_corrupted_completion_snapshot_is_skipped_by_restore_and_fails_the_nex
     by_pending = tmp_path / "restored-by-pending"
     restored = _run(environment, "restore", pending["id"], "--to", str(by_pending), "--execute")
     assert restored.returncode == 0, restored.stderr
-    assert _logical_sha256(by_pending / "data" / "first.db") == first_hash
-    assert _logical_sha256(by_pending / "data" / "second.db") == second_hash
+    assert _logical_sha256(by_pending / "data" / "datasets" / "first.db") == first_hash
+    assert _logical_sha256(by_pending / "data" / "datasets" / "second.db") == second_hash
     # The next run's repository check fails it before it can publish.
     environment.pop("RESTIC_CACHE_DIR")
     following = _run(environment, "backup", "--execute")
@@ -269,11 +272,11 @@ def test_review_homes_are_excluded_but_other_absolute_links_still_fail(
         Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state" / "review-receipts" / "attempt-1" / "a1.agy-home"
     ).exists()
 
-    other = source.parent / "batch_state" / "unsafe-link"
+    other = source.parent / "batch_state" / "fleet-comms" / "unsafe-link"
     other.symlink_to(credential)
     doctor_batch_state = _run(environment, "doctor")
     assert doctor_batch_state.returncode == 0, doctor_batch_state.stderr
-    assert "WARNING: Skipping absolute symlink in batch_state: unsafe-link" in doctor_batch_state.stdout
+    assert "WARNING: Skipping absolute symlink in batch_state/fleet-comms: unsafe-link" in doctor_batch_state.stdout
 
     agent_link = source.parent / ".agent" / "unsafe-link"
     agent_link.symlink_to(credential)
@@ -287,9 +290,11 @@ def test_linux_checks_free_space_before_each_database(
     tmp_path: Path,
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    for name in ("a.db", "b.db"):
-        with sqlite3.connect(source / name) as connection:
-            connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    # sources.db is the first database. One more database is enough to prove
+    # the pending batch is uploaded and the failing database is checked again.
+    (source / "datasets").mkdir()
+    with sqlite3.connect(source / "datasets" / "a.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     counter = tmp_path / "df-count"
     environment["FAKE_DF_COUNT"] = str(counter)
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
@@ -308,12 +313,12 @@ printf 'testfs 8388608 0 %s 0%% /staging\n' "$available"
     )
     result = _run(environment, "backup", "--execute")
     assert result.returncode != 0
-    assert "Insufficient staging space for data/b.db" in result.stderr
-    # a.db passes; b.db fails, the pending batch (a.db) uploads, b.db fails again.
+    assert "Insufficient staging space for data/datasets/a.db" in result.stderr
+    # sources.db passes; a.db fails, the pending batch uploads, a.db fails again.
     assert counter.read_text(encoding="utf-8").strip() == "3"
     assert _log(environment).count("arg=<lu-part-db>") == 1
-    assert "db_file=<data/a.db>" in _log(environment)
-    assert "db_file=<data/b.db>" not in _log(environment)
+    assert "db_file=<data/sources.db>" in _log(environment)
+    assert "db_file=<data/datasets/a.db>" not in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -327,18 +332,19 @@ def test_linux_local_restic_round_trip_stages_one_db_at_a_time(
     environment["LU_BACKUP_DB_BATCH_MAX_BYTES"] = "1"
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
     _write_executable(fake_bin / "cp", "#!/bin/bash\nexit 97\n")
-    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
-    first_connection = sqlite3.connect(source / "first.db")
+    (source / "datasets").mkdir()
+    (source / "datasets" / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    first_connection = sqlite3.connect(source / "datasets" / "first.db")
     first_connection.execute("PRAGMA journal_mode=WAL")
     first_connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     first_connection.execute("INSERT INTO recovery_probe VALUES ('first')")
     first_connection.commit()
-    (source / "first.db").chmod(0o600)
-    second = source.parent / "batch_state" / "second.sqlite3"
+    (source / "datasets" / "first.db").chmod(0o600)
+    second = source.parent / "batch_state" / "fleet-comms" / "second.sqlite3"
     with sqlite3.connect(second) as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
         connection.execute("INSERT INTO recovery_probe VALUES ('second')")
-    (source / "orphan.db-journal").write_text("transient", encoding="utf-8")
+    (source / "datasets" / "orphan.db-journal").write_text("transient", encoding="utf-8")
     home = source.parent / "batch_state" / "review-receipts" / "attempt" / "a1.agy-home"
     home.mkdir(parents=True)
     (home / "token-link").symlink_to(tmp_path / "nonexistent-token")
@@ -351,32 +357,36 @@ def test_linux_local_restic_round_trip_stages_one_db_at_a_time(
     finally:
         first_connection.close()
     assert backed_up.returncode == 0, backed_up.stderr
-    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["1", "1", "0", "0"]
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["1", "1", "1", "0", "0"]
     assert list(staging.iterdir()) == []
     target = tmp_path / "restored"
     restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
     assert restored.returncode == 0, restored.stderr
-    assert (target / "data" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
-    assert not (target / "data" / "first.db-wal").exists()
-    assert not (target / "data" / "first.db-shm").exists()
-    assert not (target / "data" / "orphan.db-journal").exists()
+    assert (target / "data" / "datasets" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
+    assert not (target / "data" / "datasets" / "first.db-wal").exists()
+    assert not (target / "data" / "datasets" / "first.db-shm").exists()
+    assert not (target / "data" / "datasets" / "orphan.db-journal").exists()
     assert not (target / "batch_state" / "review-receipts" / "attempt" / "a1.agy-home").exists()
     assert not (target / "batch_state" / "review-receipts" / "attempt-2" / "b2.agy-home").exists()
-    for database in (target / "data" / "first.db", target / "batch_state" / "second.sqlite3"):
+    for database in (
+        target / "data" / "datasets" / "first.db",
+        target / "batch_state" / "fleet-comms" / "second.sqlite3",
+    ):
         with sqlite3.connect(database) as connection:
             assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
             assert connection.execute("SELECT COUNT(*) FROM recovery_probe").fetchone() == (1,)
-    assert (target / "data" / "first.db").stat().st_mode & 0o777 == 0o600
+    assert (target / "data" / "datasets" / "first.db").stat().st_mode & 0o777 == 0o600
     receipt = json.loads((target / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
     assert receipt["schema_version"] == 3
-    assert len(receipt["linux_run"]["databases"]) == 2
+    assert len(receipt["linux_run"]["databases"]) == 3
 
 
 def test_execute_stages_a_consistent_wal_database_and_cleans_up(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    database = source / "live.db"
+    database = source / "datasets" / "live.db"
+    database.parent.mkdir()
     connection = sqlite3.connect(database)
     try:
         connection.execute("PRAGMA journal_mode=WAL")
@@ -387,7 +397,7 @@ def test_execute_stages_a_consistent_wal_database_and_cleans_up(
         connection.execute("INSERT INTO recovery_probe VALUES ('latest')")
         connection.commit()
         assert database.with_name("live.db-wal").exists()
-        environment["FAKE_DB_RELATIVE"] = "data/live.db"
+        environment["FAKE_DB_RELATIVE"] = "data/datasets/live.db"
         environment["FAKE_REQUIRED_RELATIVE"] = ".claude/atlas-epic/HANDOFF.md"
 
         result = _run(environment, "backup", "--execute")
@@ -395,13 +405,13 @@ def test_execute_stages_a_consistent_wal_database_and_cleans_up(
         connection.close()
 
     assert result.returncode == 0, result.stderr
-    assert "Creating consistent SQLite snapshot: data/live.db" in result.stdout
+    assert "Creating consistent SQLite snapshot: data/datasets/live.db" in result.stdout
     assert "db_rows=<2>" in _log(environment)
     assert "staged_required=<.claude/atlas-epic/HANDOFF.md>" in _log(environment)
     assert '"status":"prepared-before-snapshot-write"' in _log(environment)
     assert '".claude/atlas-epic"' in _log(environment)
     assert '".agent"' in _log(environment)
-    assert '"batch_state"' in _log(environment)
+    assert '"batch_state/fleet-comms"' in _log(environment)
     assert list(staging.iterdir()) == []
 
 
@@ -580,7 +590,8 @@ def test_execute_snapshots_checkpointed_wal_database_without_sidecars(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    database = source / "checkpointed.db"
+    database = source / "datasets" / "checkpointed.db"
+    database.parent.mkdir()
     connection = sqlite3.connect(database)
     connection.execute("PRAGMA journal_mode=WAL")
     connection.execute("CREATE TABLE recovery_probe (value TEXT NOT NULL)")
@@ -590,7 +601,7 @@ def test_execute_snapshots_checkpointed_wal_database_without_sidecars(
     connection.close()
     assert not database.with_name("checkpointed.db-wal").exists()
     assert not database.with_name("checkpointed.db-shm").exists()
-    environment["FAKE_DB_RELATIVE"] = "data/checkpointed.db"
+    environment["FAKE_DB_RELATIVE"] = "data/datasets/checkpointed.db"
     real_sqlite3 = shutil.which("sqlite3", path=os.environ["PATH"])
     assert real_sqlite3 is not None
     environment["REAL_SQLITE3"] = real_sqlite3
@@ -619,15 +630,15 @@ def test_non_sqlite_candidate_is_backed_up_as_a_file(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    fence = source.parent / "batch_state" / "comms.sqlite3.pg-fence"
+    fence = source.parent / "batch_state" / "fleet-comms" / "comms.sqlite3.pg-fence"
     fence.write_text('{"fence": true}\n', encoding="utf-8")
-    environment["FAKE_REQUIRED_RELATIVE"] = "batch_state/comms.sqlite3.pg-fence"
+    environment["FAKE_REQUIRED_RELATIVE"] = "batch_state/fleet-comms/comms.sqlite3.pg-fence"
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert "staged_required=<batch_state/comms.sqlite3.pg-fence>" in _log(environment)
-    assert "Creating consistent SQLite snapshot: batch_state/comms.sqlite3.pg-fence" not in result.stdout
+    assert "staged_required=<batch_state/fleet-comms/comms.sqlite3.pg-fence>" in _log(environment)
+    assert "Creating consistent SQLite snapshot: batch_state/fleet-comms/comms.sqlite3.pg-fence" not in result.stdout
 
 
 @pytest.mark.skipif(os.geteuid() == 0, reason="root can read mode-000 paths")
@@ -635,10 +646,11 @@ def test_unreadable_file_does_not_skip_database_phase(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    unreadable = source.parent / "batch_state" / "unreadable.txt"
+    unreadable = source.parent / "batch_state" / "fleet-comms" / "unreadable.txt"
     unreadable.write_text("private\n", encoding="utf-8")
     unreadable.chmod(0)
-    with sqlite3.connect(source / "healthy.db") as connection:
+    (source / "datasets").mkdir(exist_ok=True)
+    with sqlite3.connect(source / "datasets" / "healthy.db") as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     environment["FAKE_FILE_PHASE_EXIT"] = "3"
 
@@ -648,7 +660,7 @@ def test_unreadable_file_does_not_skip_database_phase(
         unreadable.chmod(0o600)
 
     assert result.returncode != 0
-    assert "batch_state/unreadable.txt" in result.stderr
+    assert "batch_state/fleet-comms/unreadable.txt" in result.stderr
     assert "File phase: restic backup failed" in result.stderr
     assert "arg=<lu-part-db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
@@ -659,10 +671,11 @@ def test_unreadable_directory_does_not_skip_database_phase(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    unreadable = source.parent / "batch_state" / "unreadable-dir"
+    unreadable = source.parent / "batch_state" / "fleet-comms" / "unreadable-dir"
     unreadable.mkdir()
     (unreadable / "hidden.txt").write_text("private\n", encoding="utf-8")
-    with sqlite3.connect(source / "healthy.db") as connection:
+    (source / "datasets").mkdir(exist_ok=True)
+    with sqlite3.connect(source / "datasets" / "healthy.db") as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     unreadable.chmod(0)
 
@@ -670,15 +683,15 @@ def test_unreadable_directory_does_not_skip_database_phase(
         result = _run(environment, "backup", "--execute")
     finally:
         unreadable.chmod(0o700)
-        snapshot_copy = Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state" / unreadable.name
+        snapshot_copy = Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state" / "fleet-comms" / unreadable.name
         if snapshot_copy.exists():
             snapshot_copy.chmod(0o700)
 
     assert result.returncode != 0
     assert "Backup run " in result.stderr
     assert "Unreadable paths:" in result.stderr
-    assert "batch_state/unreadable-dir" in result.stderr
-    assert "db_file=<data/healthy.db>" in _log(environment)
+    assert "batch_state/fleet-comms/unreadable-dir" in result.stderr
+    assert "db_file=<data/datasets/healthy.db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -686,15 +699,16 @@ def test_corrupt_database_does_not_skip_later_databases(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    (source / "corrupt.db").write_bytes(b"SQLite format 3\0" + b"corrupt data")
-    with sqlite3.connect(source / "healthy.db") as connection:
+    (source / "datasets").mkdir(exist_ok=True)
+    (source / "datasets" / "corrupt.db").write_bytes(b"SQLite format 3\0" + b"corrupt data")
+    with sqlite3.connect(source / "datasets" / "healthy.db") as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode != 0
-    assert "Database data/corrupt.db: SQLite online backup failed" in result.stderr
-    assert "db_file=<data/healthy.db>" in _log(environment)
+    assert "Database data/datasets/corrupt.db: SQLite online backup failed" in result.stderr
+    assert "db_file=<data/datasets/healthy.db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -702,12 +716,13 @@ def test_find_permission_error_keeps_reported_paths_and_database_phase(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    with sqlite3.connect(source / "healthy.db") as connection:
+    (source / "datasets").mkdir(exist_ok=True)
+    with sqlite3.connect(source / "datasets" / "healthy.db") as connection:
         connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     real_find = shutil.which("find", path=os.environ["PATH"])
     assert real_find is not None
     environment["REAL_FIND"] = real_find
-    environment["FAKE_FIND_ROOT"] = str(source.parent / "batch_state")
+    environment["FAKE_FIND_ROOT"] = str(source.parent / "batch_state" / "fleet-comms")
     environment["FAKE_FILE_PHASE_EXIT"] = "3"
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
     _write_executable(
@@ -729,12 +744,12 @@ exec "$REAL_FIND" "$@"
 
     assert doctor.returncode == 0, doctor.stderr
     assert "WARNING: 2 path(s) under backup roots are unreadable" in doctor.stderr
-    assert str(source.parent / "batch_state" / "already-found.txt") in doctor.stderr
-    assert str(source.parent / "batch_state" / "denied-dir") in doctor.stderr
+    assert str(source.parent / "batch_state" / "fleet-comms" / "already-found.txt") in doctor.stderr
+    assert str(source.parent / "batch_state" / "fleet-comms" / "denied-dir") in doctor.stderr
     assert run.returncode != 0
-    assert "batch_state/already-found.txt" in run.stderr
-    assert "batch_state/denied-dir" in run.stderr
-    assert "db_file=<data/healthy.db>" in _log(environment)
+    assert "batch_state/fleet-comms/already-found.txt" in run.stderr
+    assert "batch_state/fleet-comms/denied-dir" in run.stderr
+    assert "db_file=<data/datasets/healthy.db>" in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
 
 
@@ -742,25 +757,29 @@ def test_receipt_counts_match_post_exclusion_snapshot_contents(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    (source / "qdrant").mkdir()
-    (source / "qdrant" / "retired.bin").write_bytes(b"not recoverable")
-    (source / "__pycache__").mkdir()
-    (source / "__pycache__" / "cache.pyc").write_bytes(b"not recoverable")
-    (source / "sidecar.db-wal").write_bytes(b"not recoverable")
-    (source / ".DS_Store").write_bytes(b"not recoverable")
-    (source / "keep.txt").write_bytes(b"keep\n")
-    (source / "keep-wal").write_bytes(b"keep\n")
+    datasets = source / "datasets"
+    datasets.mkdir()
+    (datasets / "qdrant").mkdir()
+    (datasets / "qdrant" / "retired.bin").write_bytes(b"not recoverable")
+    (datasets / "__pycache__").mkdir()
+    (datasets / "__pycache__" / "cache.pyc").write_bytes(b"not recoverable")
+    (datasets / "sidecar.db-wal").write_bytes(b"not recoverable")
+    (datasets / ".DS_Store").write_bytes(b"not recoverable")
+    (datasets / "keep.txt").write_bytes(b"keep\n")
+    (datasets / "keep-wal").write_bytes(b"keep\n")
     environment.update(
         {
-            "FAKE_FORBIDDEN_RELATIVES": ("data/qdrant data/__pycache__ data/sidecar.db-wal data/.DS_Store"),
-            "FAKE_REQUIRED_RELATIVE": "data/keep-wal",
+            "FAKE_FORBIDDEN_RELATIVES": (
+                "data/datasets/qdrant data/datasets/__pycache__ data/datasets/sidecar.db-wal data/datasets/.DS_Store"
+            ),
+            "FAKE_REQUIRED_RELATIVE": "data/datasets/keep-wal",
         }
     )
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert '"data":{"path":"data","files":2,"bytes":10}' in _log(environment)
+    assert '"data":{"path":"data/datasets","files":2,"bytes":10}' in _log(environment)
     assert _log(environment).count("staged_excluded=<") == 4
     assert list(staging.iterdir()) == []
 
@@ -899,18 +918,21 @@ def test_backup_skips_dangling_symlinks_in_every_recovery_root_with_warning(
     assert "Doctor checks passed." in doctor.stdout
     # doctor folds validation output into stdout; backup keeps warnings on stderr.
     doctor_output = doctor.stdout + doctor.stderr
-    assert "WARNING: Skipping broken symlink in batch_state: session/pytest-RC/dispatch-storescurrent" in doctor_output
+    assert (
+        "WARNING: Skipping broken symlink in batch_state/fleet-comms: "
+        "session/pytest-RC/dispatch-storescurrent -> ../../../../../.worktrees/removed/stores"
+    ) in doctor_output
     assert "WARNING: Skipping broken symlink in .agent: stale-pointer -> missing-target" in doctor_output
     assert "WARNING: Skipping broken symlink in .claude/atlas-epic: gone[1]*?.md -> HANDOFF-old.md" in doctor_output
-    assert "WARNING: Skipping broken symlink in backup source: moved-dataset -> missing-target" in doctor_output
+    assert "WARNING: Skipping broken symlink in data/datasets: moved-dataset -> missing-target" in doctor_output
 
     preview = _run(environment, "backup")
     assert preview.returncode == 0, preview.stderr
     assert "WARNING: Skipping broken symlink in .agent: stale-pointer -> missing-target" in preview.stderr
     log = _log(environment)
-    assert f"exclude=<{links['batch_state']}>" in log
+    assert f"exclude=<{links['batch_state/fleet-comms']}>" in log
     assert f"exclude=<{links['.agent']}>" in log
-    assert f"exclude=<{links['data']}>" in log
+    assert f"exclude=<{links['data/datasets']}>" in log
     # Glob metacharacters in a skipped link name are matched literally.
     escaped = str(links[".claude/atlas-epic"]).replace("[", "\\[").replace("]", "\\]")
     escaped = escaped.replace("*", "\\*").replace("?", "\\?")
@@ -920,10 +942,10 @@ def test_backup_skips_dangling_symlinks_in_every_recovery_root_with_warning(
     assert executed.returncode == 0, executed.stderr
     receipt = json.loads((Path(environment["FAKE_SNAPSHOT_DIR"]) / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
     assert {
-        "batch_state/session/pytest-RC/dispatch-storescurrent broken symlink skipped",
+        "batch_state/fleet-comms/session/pytest-RC/dispatch-storescurrent broken symlink skipped",
         ".agent/stale-pointer broken symlink skipped",
         ".claude/atlas-epic/gone[1]*?.md broken symlink skipped",
-        "data/moved-dataset broken symlink skipped",
+        "data/datasets/moved-dataset broken symlink skipped",
     } <= set(receipt["exclusions"])
 
 
@@ -940,20 +962,26 @@ def test_backup_without_dangling_symlinks_adds_no_broken_symlink_exclusions(
     assert not [entry for entry in receipt["exclusions"] if entry.endswith("broken symlink skipped")]
 
 
-def test_real_textbooks_directory_is_included(
+def test_directory_outside_the_allowlist_is_not_selected(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
     textbooks = source / "textbooks"
     textbooks.mkdir()
     (textbooks / "local-source.txt").write_text("preserve\n", encoding="utf-8")
-    environment["FAKE_REQUIRED_RELATIVE"] = "data/textbooks/local-source.txt"
+    chunks = source / "textbook_chunks"
+    chunks.mkdir()
+    (chunks / "local-source.txt").write_text("preserve\n", encoding="utf-8")
+    environment["FAKE_REQUIRED_RELATIVE"] = "data/textbook_chunks/local-source.txt"
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert "staged_required=<data/textbooks/local-source.txt>" in _log(environment)
-    assert str(textbooks) not in _log(environment)
+    log = _log(environment)
+    assert "staged_required=<data/textbook_chunks/local-source.txt>" in log
+    assert "arg=<data/textbook_chunks>" in log
+    assert "arg=<data/textbooks>" not in log
+    assert str(textbooks) not in log
     assert list(staging.iterdir()) == []
 
 
