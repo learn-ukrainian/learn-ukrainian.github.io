@@ -833,16 +833,16 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the #10205 Cursor wire pin and allowlist revision and
 # the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "d0563c4d424816b1fa31a32a3b441a62ce18f9996e055cf2e3e3c18555fdc9f5",
-    "SPEC.md": "254d891edc5f4a6bb9dfed68ffea3bf46f95dfb37136db127df6a2e7f3328d93",
+    "SHA256SUMS": "ca1303288ad0afa85067bc33d72a9816e52753a508c742aba48dbec8c6338352",
+    "SPEC.md": "630145f4b7f39e68be3740d138b9045dc7c908997fd84ed4de2b0cb2760d3105",
     "baseline-pre-10511.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
-    "baseline.json.gz": "7f332b139294b200e0649a4d4769ba8e49e5aaafb1588f1f794791b21e4a6c06",
+    "baseline.json.gz": "b523cb5523905cf31dc1f14c246f3b6c2b030fdf7ce14848c907a0746c276714",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
-    "no-cli/SHA256SUMS": "02d490e1e80fa3cac9eec2b9ad5fe729d50390a7997c009ba0d07c474f62821c",
+    "no-cli/SHA256SUMS": "b2cc13a64e82df9ff1dd150685cf58fbb9fa005418d1d0739872714c62b99e03",
     "no-cli/baseline-pre-10511.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
-    "no-cli/baseline.json.gz": "08d36136d8f3f0cd9423e6fa32b5af0e700e668e69cfa26b8707a4fa5dbfecc9",
+    "no-cli/baseline.json.gz": "9476632bec7ca9f675b0a5e40ce8520ee7b9d521f387859dbe3abf2495fe6580",
     "no-cli/inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
@@ -1236,7 +1236,7 @@ def test_muse_regeneration_changes_only_registered_candidate(configuration):
         for case, receipt in zip(old_inputs[surface], old[surface], strict=True):
             previous[dispatch_key(case)].append(receipt)
         additions = []
-        unchanged = diagnostics = parser = cooler = 0
+        unchanged = diagnostics = parser = 0
         for case, receipt in zip(new_inputs[surface], new[surface], strict=True):
             queue = previous[dispatch_key(case)]
             if not queue:
@@ -1248,27 +1248,21 @@ def test_muse_regeneration_changes_only_registered_candidate(configuration):
                 continue
             assert surface == "dispatch", (surface, case)
             revised = deepcopy(receipt)
-            if before.get("exception") == "SystemExit":
-                stderr = revised.pop("stderr")
-                original = deepcopy(before)
-                original_stderr = original.pop("stderr")
-                assert revised == original, case
-                assert ",muse," in stderr and ", muse," in stderr, case
-                stderr = stderr.replace(",muse,", ",").replace(", muse,", ",")
-                assert re.sub(r"\s+", " ", stderr) == re.sub(r"\s+", " ", original_stderr), case
-                parser += 1
-            else:
-                assert "Cooler seats from budget snapshot: " in revised["value"]["refusal"], case
-                assert ", muse, " in revised["value"]["refusal"], case
-                revised["value"]["refusal"] = revised["value"]["refusal"].replace(", muse, ", ", ")
-                assert revised == before, case
-                cooler += 1
+            assert before.get("exception") == "SystemExit", case
+            stderr = revised.pop("stderr")
+            original = deepcopy(before)
+            original_stderr = original.pop("stderr")
+            assert revised == original, case
+            assert ",muse," in stderr and ", muse," in stderr, case
+            stderr = stderr.replace(",muse,", ",").replace(", muse,", ",")
+            assert re.sub(r"\s+", " ", stderr) == re.sub(r"\s+", " ", original_stderr), case
+            parser += 1
             diagnostics += 1
         assert not any(previous.values()), ("removed input", surface)
         expected = {
             "adapters": (112, 4, 0),
             "capacity": (42, 0, 0),
-            "dispatch": (310, 28, 570),
+            "dispatch": (348, 28, 532),
             "launchers": (70, 0, 0),
             "reviewer": (1480, 24, 0),
             "roles": (855, 15, 0),
@@ -1288,7 +1282,12 @@ def test_muse_regeneration_changes_only_registered_candidate(configuration):
         if surface == "adapters":
             assert additions == MUSE_ADAPTER_INPUT_ADDITIONS
         if surface == "dispatch":
-            assert (parser, cooler) == (532, 38)
+            assert parser == 532
+            assert all(
+                receipt["value"]["target"] is None and "MUSE_GUARD_PARITY_UNPROVEN" in receipt["value"]["refusal"]
+                for case, receipt in zip(new_inputs[surface], new[surface], strict=True)
+                if case["agent"] == "muse" and case["model"] is not None
+            )
     for surface, child, name in (("catalog", "models", "muse-wonder-1.0"), ("registry", None, "muse")):
         revised = deepcopy(new[surface])
         target = revised[child] if child else revised

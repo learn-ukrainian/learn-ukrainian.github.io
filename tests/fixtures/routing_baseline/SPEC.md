@@ -391,7 +391,7 @@ Both configurations have exactly these differences against that outcome:
 | Catalog models | 43 | 44 | +1: held `muse-wonder-1.0`, with no routing seat |
 | Adapter inputs and receipts | 112 | 116 | +4: Muse in two modes and two isolation states, all guard refusals |
 | Dispatch inputs and receipts | 880 | 908 | +28: seven model pins, two budget states, and two review-attempt states for Muse |
-| Original dispatch diagnostics | 880 | 880 | 570 text changes: 532 argparse agent-list messages and 38 cooler-seat lists add Muse |
+| Original dispatch diagnostics | 880 | 880 | 532 argparse agent-list messages add Muse; cooler-seat hints remain identical |
 | Capacity receipts | 42 | 42 | Identical |
 | Launcher receipts | 70 | 70 | Identical |
 | Fallbacks, routing holders, source contracts | Unchanged | Unchanged | Identical |
@@ -399,8 +399,7 @@ Both configurations have exactly these differences against that outcome:
 
 The 532 argparse diagnostics also rewrap the usage line after the known-agent
 list grows. Removing only Muse from these lists restores the original text,
-with whitespace comparison confined to argparse usage wrapping. Removing Muse
-from the 38 cooler-seat lists restores exact receipt equality. No previously
+with whitespace comparison confined to argparse usage wrapping. No previously
 approved receipt changes in any way other than this known-agent list text.
 All 1,480 original reviewer receipts and all 855 original role receipts remain
 byte-equivalent. No original input disappears.
@@ -412,3 +411,10 @@ count Muse as an approver. Both execution modes still refuse with
 independent assertions exercise all 1,504 reviewer cases, all 870 role cases,
 and Ukrainian and private-repository exclusions. Any unexplained difference
 blocks regeneration. These captures do not qualify native Muse execution.
+
+Round 11 corrects only dispatch receipts in both current baselines. The 38
+cooler-seat hints drop Muse and return to the pre-Muse receipts. The 24 Muse
+rows with explicit model pins now refuse `MUSE_GUARD_PARITY_UNPROVEN` during
+admission, with no target, argv, or routing mutation. The four Muse rows without
+model pins still refuse `MUSE_MODEL_REFUSED`. Inputs, historical captures,
+occurrences, and every other surface remain unchanged.

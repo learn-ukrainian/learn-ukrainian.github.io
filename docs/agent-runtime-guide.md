@@ -284,13 +284,15 @@ rate-limit headroom checks, mode validation, cwd enforcement.
 
 Muse Wonder is a held `meta` candidate for public, non-security code authoring
 and review. It has no default model or routing role and is absent from review
-ladders and fallback tables. Private targets require an explicit seat and model
-grant at `target_admission`; Muse has none. Ukrainian lanes retain the existing
-family exclusion.
+ladders and fallback tables, including cooler-seat hints. Private targets retain
+the existing seat grants at `target_admission`; aliases resolve before the gate
+excludes the `meta` family and `muse` transport. The Muse seat cannot receive
+Ukrainian work, even under another family's model label.
 
-`--agent muse` requires an explicit candidate model. The adapter currently
-refuses both read-only and workspace-write with `MUSE_GUARD_PARITY_UNPROVEN`
-before creating files or contacting a provider. Native forbidden-action evidence
+`--agent muse` requires a nonblank explicit candidate model. Dispatch admission
+refuses every execution mode with `MUSE_GUARD_PARITY_UNPROVEN` before creating a
+worktree or task record. The adapter also refuses execution before creating
+files or contacting a provider. Native forbidden-action evidence
 is required before enabling either mode. A model's report of unavailable tools
 is insufficient. The JSONL parser records provider-observed identity and leaves
 missing usage or identity unknown. Qualification must also prove per-run

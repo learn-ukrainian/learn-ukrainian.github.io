@@ -14579,7 +14579,7 @@ def _budget_cooler_lanes(agents: dict[str, Any], *, exclude: str) -> list[str]:
         if not isinstance(info, dict):
             continue
         lane_l = str(lane).strip().lower()
-        if lane_l == exclude:
+        if lane_l == exclude or lane_l == "muse":
             continue
         deficit = credit_lane.pace_deficit_state(lane_l, info)
         status = deficit["status"] or _budget_lane_status(lane_l, info)
@@ -15051,6 +15051,8 @@ def _require_ukrainian_model_family(args: argparse.Namespace, model: str | None,
         )
     if not (content_task or _dispatch_is_language_lane(args)):
         return
+    if str(getattr(args, "agent", "") or "").strip().lower() == "muse":
+        raise _DispatchRouteRefused("UKRAINIAN_MODEL_REFUSED: the Muse seat cannot receive Ukrainian jobs")
     if model is None and not resolved:
         agent = str(getattr(args, "agent", "") or "").strip().lower()
         if _UKRAINIAN_AGENT_FAMILIES.get(agent) in _UKRAINIAN_MODEL_FAMILIES:
@@ -16637,6 +16639,7 @@ def _admit_dispatch_target(
     from scripts.agent_runtime.target_admission import (
         PrivateRepositoryAdmissionRefused,
         ReviewAdmissionRefused,
+        refuse_private_repository_target,
         resolve_and_admit,
     )
     from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
@@ -16684,11 +16687,13 @@ def _admit_dispatch_target(
         except BranchFactsError as exc:
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
 
-    if agent == "muse" and not getattr(args, "model", None):
-        return "MUSE_MODEL_REFUSED: candidate dispatch requires an explicit model", None
-
     try:
         _require_ukrainian_model_family(args, getattr(args, "model", None))
+        if agent == "muse" and not str(getattr(args, "model", None) or "").strip():
+            return "MUSE_MODEL_REFUSED: candidate dispatch requires an explicit model", None
+        if agent == "muse":
+            refuse_private_repository_target((agent,), (getattr(args, "model", None),), repo=repo_role)
+            return "MUSE_GUARD_PARITY_UNPROVEN: Muse execution remains held pending native guard proof", None
         mechanical_task = _mechanical_task_scope(args)
         (target,) = resolve_and_admit(
             (agent,),
@@ -16737,6 +16742,10 @@ def _admit_dispatch_target(
             task_prompt=getattr(args, "prompt", None),
         )
         _require_ukrainian_model_family(args, target.model, resolved=True)
+        if target.recipient == "muse":
+            if _dispatch_is_language_lane(args):
+                return "UKRAINIAN_MODEL_REFUSED: the Muse seat cannot receive Ukrainian jobs", None
+            return "MUSE_GUARD_PARITY_UNPROVEN: Muse execution remains held pending native guard proof", None
         if mechanical_task != _mechanical_task_scope(args):
             raise MechanicalAdmissionRefused(
                 "MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)"

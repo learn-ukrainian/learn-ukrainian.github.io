@@ -66,14 +66,51 @@ def test_every_generated_role_case_excludes_muse():
 
 
 @pytest.mark.parametrize(
-    "repo,language,reason",
+    "repo,language,seat,model,reason",
     [
-        ("public-monorepo", True, "UKRAINIAN_MODEL_REFUSED"),
-        ("private-infra", False, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
-        ("private-product", False, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
+        ("public-monorepo", True, "muse", MODEL, "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "muse", "gpt-6.1-sol", "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "muse", "claude-opus-5-5", "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "muse", None, "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "muse", "", "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "muse", " \t", "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "codex", MODEL, "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "claude", "meta/muse-wonder-1.0", "UKRAINIAN_MODEL_REFUSED"),
+        ("private-infra", False, "muse", MODEL, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
+        ("private-product", False, "muse", MODEL, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
+        ("public-monorepo", False, "muse", MODEL, "MUSE_GUARD_PARITY_UNPROVEN"),
     ],
 )
-def test_candidate_exclusion_at_dispatch(repo, language, reason):
-    args = argparse.Namespace(agent="muse", model=MODEL, mode="read-only", language_lane=language, task_id="muse-test")
-    refusal, target = delegate._admit_dispatch_target(args, agent="muse", trees=(), repo_role=repo)
+def test_candidate_exclusion_at_dispatch(repo, language, seat, model, reason):
+    args = argparse.Namespace(agent=seat, model=model, mode="read-only", language_lane=language, task_id="muse-test")
+    refusal, target = delegate._admit_dispatch_target(args, agent=seat, trees=(), repo_role=repo)
+    assert target is None and reason in refusal
+
+
+@pytest.mark.parametrize("model", [None, "", " ", "\t\n"])
+def test_candidate_requires_nonblank_model(model):
+    args = argparse.Namespace(agent="muse", model=model, mode="read-only", task_id="muse-test")
+    refusal, target = delegate._admit_dispatch_target(args, agent="muse", trees=(), repo_role="public-monorepo")
+    assert target is None and "MUSE_MODEL_REFUSED" in refusal
+
+
+@pytest.mark.parametrize("status", ["cool", "warm"])
+def test_budget_hint_excludes_held_seat(status):
+    assert delegate._budget_cooler_lanes(
+        {"codex": {"status": "hot"}, "muse": {"status": status}, "claude": {"status": status}}, exclude="codex"
+    ) == ["claude"]
+
+
+@pytest.mark.parametrize("language,reason", [(False, "MUSE_GUARD_PARITY_UNPROVEN"), (True, "UKRAINIAN_MODEL_REFUSED")])
+def test_resolved_muse_dispatch_remains_held(language, reason):
+    args = argparse.Namespace(
+        agent="codex", model="gpt-6.1-sol", language_lane=language, mode="read-only", task_id="muse-test"
+    )
+    refusal, target = delegate._admit_dispatch_target(
+        args,
+        agent="codex",
+        trees=(),
+        repo_role="public-monorepo",
+        route=lambda _request: ("muse", "gpt-6.1-sol", "synthetic held target"),
+    )
     assert target is None and reason in refusal
