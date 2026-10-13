@@ -183,6 +183,7 @@ def test_green_changed_test_is_accepted_and_leaves_a_receipt(repo: Path, monkeyp
     assert len(_receipts(repo)) == 1
     assert _measurements(repo)[-1]["outcome"] == "green"
     pytest_row = _measurements(repo)[-1]["stages"]["pytest"]
+    assert pytest_row["stale_pytest_cleanup"] == "exclusive_sweep"
     assert pytest_row["requested_test_processes"] == 4
     assert pytest_row["effective_test_processes"] == 2
 

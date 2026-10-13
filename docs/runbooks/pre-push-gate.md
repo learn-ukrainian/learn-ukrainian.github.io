@@ -72,8 +72,8 @@ tickets and older holders with no ticket metadata.
 A refused attempt terminates. Incomplete or interrupted callers release their queue resources;
 abandoned tickets are reaped through the existing flock checks. An explicit owner resubmission gets
 a new tail ticket. The gate never retries an attempt automatically. Stable lock files remain for
-safe rendezvous; each run releases its own tickets and private test directory. Other runs' directories,
-including directories left by a killed caller, are preserved.
+safe rendezvous; each run releases its own tickets and private test directory. Shared or scoped runs,
+and runs without proven exclusivity, preserve other runs' directories, including those left by a killed caller.
 
 `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES` sets the test process ceiling as a positive integer.
 The default is 4, so callers get bounded parallel validation without an override. Serial validation
@@ -104,7 +104,8 @@ verified cleanup. If descendants cannot be verified as settled, the executor ret
 reservations for own-unit cleanup and driver disposition; it never promotes an orphaned owner.
 
 The serial pytest stage restores the stale `pytest-*` sweep only while its run holds the exclusive
-Git-common admission lock. That lock excludes shared holders and orphaned scoped descendants.
+Git-common admission lock. That lock excludes live shared holders and any surviving scoped executor.
+A later exclusive serial run may reap directories left by a dead run.
 Shared/scoped execution or unknown exclusivity skips the sweep and records
 `stale_pytest_cleanup=skipped_shared_or_unknown` in stage diagnostics. Every run still removes its
 own pytest temporary directory. Sweep failures refuse the push as incomplete.
