@@ -126,6 +126,7 @@ def test_registry_has_known_agents():
         "grok-build",
         "grok-hermes",
         "glm",
+        "muse",
         "kimi",
         "deepseek",
         "hermes-deepseek",

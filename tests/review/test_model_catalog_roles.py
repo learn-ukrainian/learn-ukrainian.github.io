@@ -31,7 +31,6 @@ from tests.review.test_model_catalog import (
     CAPTURE,
     FIXTURE,
     INPUTS,
-    approved_muse_candidate_catalog,
 )
 
 
@@ -44,13 +43,13 @@ def test_v1_without_extension_and_v11_with_extension_are_accepted(catalog):
     assert validate_catalog(deepcopy(BASELINE["catalog"])) == BASELINE["catalog"]
     catalog["schema_version"] = "model-catalog.v1.1"
     assert validate_catalog(catalog)["schema_version"] == "model-catalog.v1.1"
-    assert expanded_legacy_view(catalog) == approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
+    assert expanded_legacy_view(catalog) == APPROVED_BASELINE["catalog"]
 
 
 def test_expansion_is_independent_and_does_not_mutate_catalog(catalog):
     before = deepcopy(catalog)
     expanded = expanded_legacy_view(catalog)
-    assert expanded == approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
+    assert expanded == APPROVED_BASELINE["catalog"]
     expanded["models"]["gpt-6.1-sol"]["roles"].clear()
     assert catalog == before
     assert expanded_legacy_view(BASELINE["catalog"]) == BASELINE["catalog"]
@@ -418,7 +417,7 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
 
 
 def test_fixture_bytes_remain_frozen():
-    raw = gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes())
+    raw = gzip.decompress((FIXTURE / "baseline-pre-10511.json.gz").read_bytes())
     assert json.loads(raw) == BASELINE
     assert INPUTS["base_sha"] == "dae3d752426d6c11c5dc82260ec07ae8164e7730"
 

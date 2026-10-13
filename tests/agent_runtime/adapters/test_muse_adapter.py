@@ -106,6 +106,18 @@ def test_unattested_identity_is_unknown():
     assert result.substitution["actual_model"] is None
 
 
+@pytest.mark.parametrize("separator", ["\x85", "\u2028", "\u2029"])
+def test_jsonl_preserves_unicode_separators_inside_response(separator):
+    response = "before" + separator + "after"
+    stream = json.dumps(
+        {"payload_type": "run.terminal.completed", "payload": {"terminal": "completed", "text": response}},
+        ensure_ascii=False,
+    )
+    result = parse(stream + "\n")
+    assert result.ok is True
+    assert result.response == response
+
+
 def test_liveness_is_stdout_only(tmp_path):
     from scripts.agent_runtime.adapters.base import InvocationPlan
 

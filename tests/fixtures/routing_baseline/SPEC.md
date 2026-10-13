@@ -366,3 +366,49 @@ refusal with the native CLI, or the allowlist refusal without it. All other
 launchers, dispatch rows, catalog, registry, capacity, role, approval, fallback,
 holder and source-contract surfaces remain identical. Any other difference
 blocks regeneration.
+
+
+## Held Muse candidate regeneration (#10511)
+
+Both configurations are regenerated against the held Muse checkout with the
+capture procedure above and the existing scoped `CAPTURE_RUNNER` cache. The
+second capture adds `--configuration no-cli`. Each current `baseline.json.gz`
+and `inputs.json` is a complete capture, compared directly without Muse
+replacement overlays. `SHA256SUMS` and independent literal digest pins bind
+both configurations. The prior raw baselines and matrices are preserved as
+`baseline-pre-10511.json.gz` and `inputs-pre-10511.json` for earlier revision
+scope tests. The previous approved outcome includes those earlier overlays.
+
+Comparison joins complete input identities and preserves repeated inputs.
+Both configurations have exactly these differences against that outcome:
+
+| Evidence | Previous | Regenerated | Difference and attribution |
+| --- | ---: | ---: | --- |
+| Reviewer inputs and receipts | 1,480 | 1,504 | +24: Muse author and Meta author/subject families across four risks and two profiles |
+| Role inputs and receipts | 855 | 870 | +15: one `excluded_families=["meta"]` context per existing role |
+| Approval rows | 387 | 396 | +9: Muse as author in the existing two-holder vote matrix |
+| Registry agents | 28 | 29 | +1: held `muse`, with no default model or capabilities |
+| Catalog models | 43 | 44 | +1: held `muse-wonder-1.0`, with no routing seat |
+| Adapter inputs and receipts | 112 | 116 | +4: Muse in two modes and two isolation states, all guard refusals |
+| Dispatch inputs and receipts | 880 | 908 | +28: seven model pins, two budget states, and two review-attempt states for Muse |
+| Original dispatch diagnostics | 880 | 880 | 570 text changes: 532 argparse agent-list messages and 38 cooler-seat lists add Muse |
+| Capacity receipts | 42 | 42 | Identical |
+| Launcher receipts | 70 | 70 | Identical |
+| Fallbacks, routing holders, source contracts | Unchanged | Unchanged | Identical |
+| Historical occurrences | 24,257 | 24,257 | Identical compressed bytes |
+
+The 532 argparse diagnostics also rewrap the usage line after the known-agent
+list grows. Removing only Muse from these lists restores the original text,
+with whitespace comparison confined to argparse usage wrapping. Removing Muse
+from the 38 cooler-seat lists restores exact receipt equality. No previously
+approved receipt changes in any way other than this known-agent list text.
+All 1,480 original reviewer receipts and all 855 original role receipts remain
+byte-equivalent. No original input disappears.
+
+Muse receives no resolver, ladder, default, reviewer, advisor, or designated
+approval role. Its nine approval rows require Opus and Sol votes and never
+count Muse as an approver. Both execution modes still refuse with
+`MUSE_GUARD_PARITY_UNPROVEN`. The scope test checks both complete captures;
+independent assertions exercise all 1,504 reviewer cases, all 870 role cases,
+and Ukrainian and private-repository exclusions. Any unexplained difference
+blocks regeneration. These captures do not qualify native Muse execution.

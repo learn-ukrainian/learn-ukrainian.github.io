@@ -8,7 +8,7 @@ import pytest
 
 from scripts import delegate
 from scripts.agent_runtime.registry import AGENTS
-from scripts.review.model_catalog import load_model_catalog
+from scripts.review.model_catalog import load_model_catalog, resolve_role
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
 MODEL = "muse-wonder-1.0"
@@ -34,7 +34,7 @@ def test_candidate_is_metadata_only():
 
 def test_full_frozen_reviewer_matrix_never_selects_muse():
     matrix = json.loads((ROOT / "tests/fixtures/routing_baseline/inputs.json").read_text())["reviewer"]
-    assert len(matrix) == 1480
+    assert len(matrix) == 1504
     for row in matrix:
         typed = dict(row)
         for key in ("required_capabilities", "subject_seats", "subject_families", "author_families"):
@@ -46,7 +46,23 @@ def test_full_frozen_reviewer_matrix_never_selects_muse():
         if result.selected is not None:
             assert result.selected.concrete_model != MODEL, row
             assert result.selected.route != "muse", row
-        assert all(candidate.concrete_model != MODEL for candidate in result.trace), row
+        for candidate in (*result.trace, *result.advisory, *result.quorum):
+            assert candidate.concrete_model != MODEL, row
+            assert candidate.route != "muse", row
+
+
+def test_every_generated_role_case_excludes_muse():
+    matrix = json.loads((ROOT / "tests/fixtures/routing_baseline/inputs.json").read_text())["roles"]
+    assert len(matrix) == 870
+    for row in matrix:
+        if row["health"] and "stale" in row["health"].values():
+            with pytest.raises(ValueError, match="unsupported health status 'stale'"):
+                resolve_role(**row)
+            continue
+        result = resolve_role(**row)
+        for candidate in result.candidates:
+            assert candidate.model_id != MODEL, row
+            assert candidate.transport != "muse", row
 
 
 @pytest.mark.parametrize(

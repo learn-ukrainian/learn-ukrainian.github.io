@@ -11,6 +11,7 @@ import runpy
 import shutil
 import subprocess
 import sys
+from collections import defaultdict, deque
 from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
@@ -27,8 +28,8 @@ from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
-BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
-INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
+BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline-pre-10511.json.gz").read_bytes()))
+INPUTS = json.loads((FIXTURE / "inputs-pre-10511.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 
 # Keep the frozen capture script byte-pinned. Apply the cache only inside its
@@ -208,22 +209,9 @@ def approved_reviewer_seats_baseline(baseline):
 
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-APPROVED_BASELINE = approved_cto_wrappers_baseline(
-    approved_claude_cap_baseline(
-        approved_cursor_trailer_baseline(
-            approved_launcher_canary_baseline(
-                approved_reviewer_seats_baseline(
-                    {
-                        **REVIEW_CAPACITY_BASELINE,
-                        **GEMINI_OVERLAY["surfaces"],
-                        **RESOURCE_OVERLAY["surfaces"],
-                    }
-                )
-            )
-        )
-    )
-)
-APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
+PREVIOUS_APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
+APPROVED_BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
+APPROVED_INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 
 
 MUSE_CANDIDATE_ENTRY = {
@@ -237,22 +225,6 @@ MUSE_CANDIDATE_ENTRY = {
     "weaknesses": ["unqualified_no_automatic_routing", "no_security", "no_ukrainian", "no_private_repository"],
     "sources": ["https://dev.meta.ai/models/muse-wonder"],
 }
-
-
-def approved_muse_candidate_catalog(catalog):
-    """#10511 adds only the held Muse model to the approved catalog."""
-    revised = deepcopy(catalog)
-    assert "muse-wonder-1.0" not in revised["models"]
-    revised["models"]["muse-wonder-1.0"] = deepcopy(MUSE_CANDIDATE_ENTRY)
-    return revised
-
-
-def test_muse_candidate_overlay_preserves_every_other_catalog_field():
-    before = deepcopy(APPROVED_BASELINE["catalog"])
-    revised = approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
-    assert revised["models"].pop("muse-wonder-1.0") == MUSE_CANDIDATE_ENTRY
-    assert revised == before
-    assert APPROVED_BASELINE["catalog"] == before
 
 
 # #10511: exact additive cases, with their final input positions and frozen
@@ -394,85 +366,11 @@ MUSE_ADAPTER_INPUT_ADDITIONS = [
     {"agent": "muse", "mode": "workspace-write", "isolation": True},
 ]
 
-MUSE_AUTHOR_REFUSAL = "author identity unknown — cannot resolve a model family from author_model='muse-wonder-1.0'"
-MUSE_SUBJECT_REFUSAL = (
-    "unknown subject family 'meta'; expected one of anthropic, cursor, deepseek, "
-    "google, moonshot, openai, poolside, qwen, xai, zhipu"
-)
 
-
-def approved_muse_candidate_inputs(inputs):
-    """#10511 adds exactly 24 reviewer cases and four held adapter probes."""
-    revised = deepcopy(inputs)
-    for index, case, _ in MUSE_REVIEWER_INPUT_ADDITIONS:
-        revised["reviewer"].insert(index, deepcopy(case))
-    revised["adapters"] = revised["adapters"] + deepcopy(MUSE_ADAPTER_INPUT_ADDITIONS)
-    return revised
-
-
-def approved_muse_candidate_approval(approval):
-    """#10511 adds nine author-side vote rows, preserving the 387 originals."""
-    revised = deepcopy(approval)
-    revised["rows"][351:351] = deepcopy(MUSE_APPROVAL_ROW_ADDITIONS)
-    return revised
-
-
-def muse_reviewer_receipt(baseline, case, reference):
-    """Reuse a frozen equivalent receipt or apply one exact refusal string."""
-    receipt = deepcopy(baseline["reviewer"][reference])
-    if case["author_model"] == "muse-wonder-1.0":
-        receipt["value"]["fail_closed_reason"] = MUSE_AUTHOR_REFUSAL
-    elif "subject_families" in case:
-        receipt["value"]["fail_closed_reason"] = MUSE_SUBJECT_REFUSAL
-    return receipt
-
-
-def approved_muse_candidate_baseline(baseline):
-    """#10511 adds only the literal held candidate and its exact capture rows."""
-    revised = deepcopy(baseline)
-    revised["catalog"] = approved_muse_candidate_catalog(baseline["catalog"])
-    revised["registry"]["muse"] = deepcopy(MUSE_REGISTRY_ENTRY)
-    revised["approval"] = approved_muse_candidate_approval(baseline["approval"])
-    for index, case, reference in MUSE_REVIEWER_INPUT_ADDITIONS:
-        revised["reviewer"].insert(index, muse_reviewer_receipt(baseline, case, reference))
-    adapter_rows = []
-    for case in MUSE_ADAPTER_INPUT_ADDITIONS:
-        adapter_rows.append(
-            {
-                "error": "MUSE_GUARD_PARITY_UNPROVEN: "
-                + case["mode"]
-                + " has no native forbidden-action proof; shell, credential, publish, "
-                "destructive-command and filesystem guards remain unproven",
-                "exception": "MuseGuardParityRefused",
-                "exit_status": 1,
-                "stderr": "",
-                "stdout": "",
-            }
-        )
-    revised["adapters"] = revised["adapters"] + adapter_rows
-    return revised
-
-
-def test_muse_candidate_capture_overlay_is_exact():
-    assert_frozen_surfaces(approved_muse_candidate_baseline(APPROVED_BASELINE))
-
-
-def test_muse_candidate_input_overlay_preserves_all_original_cases():
-    before = deepcopy(APPROVED_INPUTS)
-    revised = approved_muse_candidate_inputs(APPROVED_INPUTS)
-    assert len(MUSE_REVIEWER_INPUT_ADDITIONS) == 24
-    assert len(revised["reviewer"]) == 1504
-    for index, case, _ in reversed(MUSE_REVIEWER_INPUT_ADDITIONS):
-        assert revised["reviewer"].pop(index) == case
-    assert revised["adapters"][-4:] == MUSE_ADAPTER_INPUT_ADDITIONS
-    del revised["adapters"][-4:]
-    assert revised == before == APPROVED_INPUTS
-
-
-def test_muse_candidate_approval_overlay_preserves_authority_and_original_rows():
+def test_muse_candidate_approval_rows_grant_no_authority():
     before = deepcopy(BASELINE["approval"])
     actual = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], load_model_catalog())
-    assert actual == approved_muse_candidate_approval(before)
+    assert actual == APPROVED_BASELINE["approval"]
     assert len(actual["rows"]) == 396
     assert len(before["rows"]) == 387
     assert [row for row in actual["rows"] if row["author"] != "muse-wonder-1.0"] == before["rows"]
@@ -486,21 +384,6 @@ def test_muse_candidate_approval_overlay_preserves_authority_and_original_rows()
         assert set(row["votes"]) == set(actual["holders"])
         assert row["self_approval_counts"] is False
     assert BASELINE["approval"] == before
-
-
-def test_muse_candidate_capture_overlay_preserves_all_frozen_receipts():
-    before = deepcopy(APPROVED_BASELINE)
-    revised = approved_muse_candidate_baseline(before)
-    for index, case, reference in reversed(MUSE_REVIEWER_INPUT_ADDITIONS):
-        assert revised["reviewer"].pop(index) == muse_reviewer_receipt(before, case, reference)
-    assert len(revised["reviewer"]) == 1480
-    assert CAPTURE["encode"](revised["reviewer"]) == CAPTURE["encode"](before["reviewer"])
-    assert revised["registry"].pop("muse") == MUSE_REGISTRY_ENTRY
-    assert len(revised["adapters"][-4:]) == 4
-    del revised["adapters"][-4:]
-    assert revised["catalog"]["models"].pop("muse-wonder-1.0") == MUSE_CANDIDATE_ENTRY
-    del revised["approval"]["rows"][351:360]
-    assert revised == before == APPROVED_BASELINE
 
 
 @pytest.mark.parametrize("index,case,reference", MUSE_REVIEWER_INPUT_ADDITIONS)
@@ -524,7 +407,8 @@ def test_muse_added_reviewer_case_never_selects_muse(index, case, reference, tmp
         assert candidate.route != "muse"
         assert candidate.concrete_model != "muse-wonder-1.0"
     actual = CAPTURE["observed"](lambda: result)
-    assert json.loads(CAPTURE["encode"](actual)) == muse_reviewer_receipt(APPROVED_BASELINE, case, reference)
+    assert APPROVED_INPUTS["reviewer"][index] == case
+    assert json.loads(CAPTURE["encode"](actual)) == APPROVED_BASELINE["reviewer"][index]
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -544,7 +428,9 @@ def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
     assert "Opus is always blocked" in text
     for retired in ("LU_CLAUDE_STOP_PCT", "LU_CLAUDE_OPUS_MAX_PCT", "default 90", "default 80"):
         assert retired not in text
-    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    path = FIXTURE / (
+        "baseline-pre-10511.json.gz" if configuration == "host-cli" else "no-cli/baseline-pre-10511.json.gz"
+    )
     before = approved_cursor_trailer_baseline(
         approved_launcher_canary_baseline(
             {
@@ -587,7 +473,9 @@ def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
     assert cap["after"].startswith(cap["before"].splitlines(True)[0])
     assert "Opus is always blocked outside start-claude-cto.sh on epics:" in cap["after"]
     assert "Opus stays blocked" in cap["before"] and "Opus stays blocked" not in cap["after"]
-    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    path = FIXTURE / (
+        "baseline-pre-10511.json.gz" if configuration == "host-cli" else "no-cli/baseline-pre-10511.json.gz"
+    )
     before = approved_claude_cap_baseline(
         approved_cursor_trailer_baseline(
             approved_launcher_canary_baseline(
@@ -621,7 +509,7 @@ def test_launcher_canary_fixture_changes_only_driver_help_paragraph(configuratio
     canary = json.loads(fixture_path.read_bytes())
     assert set(canary) == {"launcher_rows", "launcher_help_replacements"}
     assert len(canary["launcher_help_replacements"]) == 1
-    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline.json.gz").read_bytes()))
+    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline-pre-10511.json.gz").read_bytes()))
     original = deepcopy(baseline)
     updated = approved_launcher_canary_baseline(baseline)
     changed = []
@@ -674,7 +562,7 @@ def test_resource_policy_fixture_changes_only_approved_fallback_rows():
     assert set(RESOURCE_OVERLAY) == {"surfaces"}
     assert set(RESOURCE_OVERLAY["surfaces"]) == {"fallbacks"}
     after = RESOURCE_OVERLAY["surfaces"]["fallbacks"]
-    for path in (FIXTURE / "baseline.json.gz", FIXTURE / "no-cli/baseline.json.gz"):
+    for path in (FIXTURE / "baseline-pre-10511.json.gz", FIXTURE / "no-cli/baseline-pre-10511.json.gz"):
         before = json.loads(gzip.decompress(path.read_bytes()))["fallbacks"]
         expected = deepcopy(before)
         expected.pop("post_2026_06_15_hard_rule")
@@ -869,7 +757,7 @@ def test_advisor_fixture_changes_only_headless_environment_and_launcher_help(con
     assert hashlib.sha256((CAPACITY_FIXTURE / "claude-advisor-10083.json").read_bytes()).hexdigest() == (
         "6c4f6b3a080fcc5edfab6dff6d8bec8fb8cd3527f2c36a0a0be474066a24f8e1"
     )
-    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline.json.gz").read_bytes()))
+    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline-pre-10511.json.gz").read_bytes()))
     original = deepcopy(baseline)
     updated = approved_review_baseline(baseline)
     advisor = json.loads((CAPACITY_FIXTURE / "claude-advisor-10083.json").read_bytes())
@@ -945,17 +833,21 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the #10205 Cursor wire pin and allowlist revision and
 # the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
-    "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "958f43d7368d0552cbf1b5706df35da56cdc9408e4834e05bb0911754ae58455",
-    "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
+    "SHA256SUMS": "d0563c4d424816b1fa31a32a3b441a62ce18f9996e055cf2e3e3c18555fdc9f5",
+    "SPEC.md": "254d891edc5f4a6bb9dfed68ffea3bf46f95dfb37136db127df6a2e7f3328d93",
+    "baseline-pre-10511.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
+    "baseline.json.gz": "7f332b139294b200e0649a4d4769ba8e49e5aaafb1588f1f794791b21e4a6c06",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
-    "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "7e5b78a91bd237a012805983da7d40f854c9802eae969d0f5e4fabcc0d2afea8",
-    "no-cli/baseline.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
-    "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
+    "inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
+    "inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
+    "no-cli/SHA256SUMS": "02d490e1e80fa3cac9eec2b9ad5fe729d50390a7997c009ba0d07c474f62821c",
+    "no-cli/baseline-pre-10511.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
+    "no-cli/baseline.json.gz": "08d36136d8f3f0cd9423e6fa32b5af0e700e668e69cfa26b8707a4fa5dbfecc9",
+    "no-cli/inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
+    "no-cli/inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
+    "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
 }
 
 
@@ -981,7 +873,7 @@ def test_frozen_hashes_and_matrix_denominator():
 
 
 def test_legacy_catalog_equals_approved_routing_baseline():
-    assert expanded_legacy_view() == approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
+    assert expanded_legacy_view() == APPROVED_BASELINE["catalog"]
 
 
 @pytest.mark.parametrize(
@@ -1055,13 +947,13 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     assert_frozen_surfaces(actual)
-    assert json.loads((output / "inputs.json").read_bytes()) == approved_muse_candidate_inputs(APPROVED_INPUTS)
+    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
 
 def assert_frozen_surfaces(actual):
     assert actual.keys() == BASELINE.keys()
-    expected = approved_muse_candidate_baseline(APPROVED_BASELINE)
+    expected = APPROVED_BASELINE
     for surface in BASELINE:
         assert actual[surface] == expected[surface], f"approved surface differs: {surface}"
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
@@ -1100,7 +992,7 @@ def main():
 
 @pytest.mark.parametrize("surface", BASELINE)
 def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
-    actual = approved_muse_candidate_baseline(APPROVED_BASELINE)
+    actual = deepcopy(APPROVED_BASELINE)
     actual[surface] = {"mutated": True}
     with pytest.raises(AssertionError, match=f"approved surface differs: {surface}"):
         assert_frozen_surfaces(actual)
@@ -1236,9 +1128,7 @@ def test_capture_preserves_success_and_streams(capsys):
 
 
 def test_capture_matrix_is_frozen():
-    assert (
-        CAPTURE["reviewer_inputs"](load_model_catalog()) == approved_muse_candidate_inputs(APPROVED_INPUTS)["reviewer"]
-    )
+    assert CAPTURE["reviewer_inputs"](load_model_catalog()) == APPROVED_INPUTS["reviewer"]
 
 
 def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
@@ -1267,29 +1157,14 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     expected = FIXTURE / "no-cli"
-    assert json.loads((output / "inputs.json").read_bytes()) == approved_muse_candidate_inputs(APPROVED_INPUTS)
+    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (expected / "occurrences.json.gz").read_bytes()
     for row in (output / "SHA256SUMS").read_text().splitlines():
         digest, name = row.split()
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    approved = approved_cto_wrappers_baseline(
-        approved_claude_cap_baseline(
-            approved_cursor_trailer_baseline(
-                approved_launcher_canary_baseline(
-                    approved_reviewer_seats_baseline(
-                        {
-                            **approved_review_baseline(original),
-                            **GEMINI_OVERLAY["surfaces"],
-                            **RESOURCE_OVERLAY["surfaces"],
-                        }
-                    )
-                )
-            )
-        )
-    )
-    assert actual == approved_muse_candidate_baseline(approved)
+    assert actual == original
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1323,7 +1198,114 @@ def test_extended_capture_denominator_and_current_contract():
     assert {pin for mapping in catalog["budget_substitution_models"].values() for pin in mapping} <= pins
     assert {row["review_attempt"] for row in INPUTS["dispatch"]} == {None, "frozen-review-attempt.yaml"}
     contract = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], catalog)
-    assert contract == approved_muse_candidate_approval(BASELINE["approval"])
+    assert contract == APPROVED_BASELINE["approval"]
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_muse_regeneration_changes_only_registered_candidate(configuration):
+    folder = FIXTURE / ("" if configuration == "host-cli" else "no-cli")
+    historical = json.loads(gzip.decompress((folder / "baseline-pre-10511.json.gz").read_bytes()))
+    old = approved_cto_wrappers_baseline(
+        approved_claude_cap_baseline(
+            approved_cursor_trailer_baseline(
+                approved_launcher_canary_baseline(
+                    approved_reviewer_seats_baseline(
+                        {
+                            **approved_review_baseline(historical),
+                            **GEMINI_OVERLAY["surfaces"],
+                            **RESOURCE_OVERLAY["surfaces"],
+                        }
+                    )
+                )
+            )
+        )
+    )
+    old_inputs = PREVIOUS_APPROVED_INPUTS
+    new = json.loads(gzip.decompress((folder / "baseline.json.gz").read_bytes()))
+    new_inputs = json.loads((folder / "inputs.json").read_bytes())
+    assert old.keys() == new.keys()
+    assert old_inputs.keys() == new_inputs.keys()
+    assert old_inputs["base_sha"] == new_inputs["base_sha"]
+    for surface in old:
+        if surface not in old_inputs or not isinstance(old[surface], list):
+            continue
+        previous = defaultdict(deque)
+        for case, receipt in zip(old_inputs[surface], old[surface], strict=True):
+            previous[dispatch_key(case)].append(receipt)
+        additions = []
+        unchanged = diagnostics = parser = cooler = 0
+        for case, receipt in zip(new_inputs[surface], new[surface], strict=True):
+            queue = previous[dispatch_key(case)]
+            if not queue:
+                additions.append(case)
+                continue
+            before = queue.popleft()
+            if receipt == before:
+                unchanged += 1
+                continue
+            assert surface == "dispatch", (surface, case)
+            revised = deepcopy(receipt)
+            if before.get("exception") == "SystemExit":
+                stderr = revised.pop("stderr")
+                original = deepcopy(before)
+                original_stderr = original.pop("stderr")
+                assert revised == original, case
+                assert ",muse," in stderr and ", muse," in stderr, case
+                stderr = stderr.replace(",muse,", ",").replace(", muse,", ",")
+                assert re.sub(r"\s+", " ", stderr) == re.sub(r"\s+", " ", original_stderr), case
+                parser += 1
+            else:
+                assert "Cooler seats from budget snapshot: " in revised["value"]["refusal"], case
+                assert ", muse, " in revised["value"]["refusal"], case
+                revised["value"]["refusal"] = revised["value"]["refusal"].replace(", muse, ", ", ")
+                assert revised == before, case
+                cooler += 1
+            diagnostics += 1
+        assert not any(previous.values()), ("removed input", surface)
+        expected = {
+            "adapters": (112, 4, 0),
+            "capacity": (42, 0, 0),
+            "dispatch": (310, 28, 570),
+            "launchers": (70, 0, 0),
+            "reviewer": (1480, 24, 0),
+            "roles": (855, 15, 0),
+        }
+        assert (unchanged, len(additions), diagnostics) == expected[surface], (
+            surface,
+            unchanged,
+            len(additions),
+            diagnostics,
+        )
+        if surface in {"adapters", "dispatch"}:
+            assert all(case["agent"] == "muse" for case in additions)
+        if surface == "roles":
+            assert all(case["context"] == {"excluded_families": ["meta"]} for case in additions)
+        if surface == "reviewer":
+            assert additions == [case for _, case, _ in MUSE_REVIEWER_INPUT_ADDITIONS]
+        if surface == "adapters":
+            assert additions == MUSE_ADAPTER_INPUT_ADDITIONS
+        if surface == "dispatch":
+            assert (parser, cooler) == (532, 38)
+    for surface, child, name in (("catalog", "models", "muse-wonder-1.0"), ("registry", None, "muse")):
+        revised = deepcopy(new[surface])
+        target = revised[child] if child else revised
+        addition = target.pop(name)
+        assert revised == old[surface], surface
+        if child:
+            assert addition == MUSE_CANDIDATE_ENTRY
+        else:
+            assert addition == MUSE_REGISTRY_ENTRY
+    approval = deepcopy(new["approval"])
+    added = [row for row in approval["rows"] if row["author"] == "muse-wonder-1.0"]
+    approval["rows"] = [row for row in approval["rows"] if row["author"] != "muse-wonder-1.0"]
+    assert approval == old["approval"]
+    assert len(added) == 9
+    for row in added:
+        assert row["required"] == ["claude-opus-5-5", "gpt-6.1-sol"]
+        assert set(row["votes"]) == set(row["required"]) and row["self_approval_counts"] is False
+    assert added == MUSE_APPROVAL_ROW_ADDITIONS
+    for surface in ("fallbacks", "routing_holders", "source_contracts"):
+        assert old[surface] == new[surface], surface

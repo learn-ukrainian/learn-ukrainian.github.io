@@ -559,6 +559,26 @@
       "agent": "agy",
       "isolation": true,
       "mode": "workspace-write"
+    },
+    {
+      "agent": "muse",
+      "isolation": false,
+      "mode": "read-only"
+    },
+    {
+      "agent": "muse",
+      "isolation": true,
+      "mode": "read-only"
+    },
+    {
+      "agent": "muse",
+      "isolation": false,
+      "mode": "workspace-write"
+    },
+    {
+      "agent": "muse",
+      "isolation": true,
+      "mode": "workspace-write"
     }
   ],
   "base_sha": "dae3d752426d6c11c5dc82260ec07ae8164e7730",
@@ -1397,30 +1417,6 @@
     {
       "agent": "codex",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "codex",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "codex",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "codex",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "codex",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -1589,30 +1585,6 @@
     {
       "agent": "codex-desktop",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "codex-desktop",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "codex-desktop",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "codex-desktop",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "codex-desktop",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -1776,30 +1748,6 @@
       "agent": "claude",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -1997,30 +1945,6 @@
     {
       "agent": "claude-desktop",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude-desktop",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude-desktop",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude-desktop",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude-desktop",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -2213,30 +2137,6 @@
     {
       "agent": "claude-infra",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude-infra",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude-infra",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude-infra",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude-infra",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -2424,30 +2324,6 @@
       "agent": "claude-monitor",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude-monitor",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude-monitor",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "claude-monitor",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "claude-monitor",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -2669,30 +2545,6 @@
     {
       "agent": "gemini",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "gemini",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "gemini",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "gemini",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "gemini",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -2885,30 +2737,6 @@
     {
       "agent": "grok",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "grok",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "grok",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "grok",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "grok",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -3072,30 +2900,6 @@
       "agent": "grok-build",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "grok-build",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "grok-build",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "grok-build",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "grok-build",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -3264,30 +3068,6 @@
       "agent": "deepseek",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "deepseek",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "deepseek",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "deepseek",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "deepseek",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -3480,30 +3260,6 @@
       "agent": "hermes-deepseek",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "hermes-deepseek",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "hermes-deepseek",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "hermes-deepseek",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "hermes-deepseek",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -3701,30 +3457,6 @@
     {
       "agent": "grok-hermes",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "grok-hermes",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "grok-hermes",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "grok-hermes",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "grok-hermes",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -3912,30 +3644,6 @@
       "agent": "qwen",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "qwen",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "qwen",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "qwen",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "qwen",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -4157,30 +3865,6 @@
     {
       "agent": "glm",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "glm",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "glm",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "glm",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "glm",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -4368,30 +4052,6 @@
       "agent": "cursor",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "cursor",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "cursor",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "cursor",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "cursor",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -4565,30 +4225,6 @@
     {
       "agent": "kimi",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "kimi",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "kimi",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "kimi",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "kimi",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -4752,30 +4388,6 @@
       "agent": "acpx-codex-shadow",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-codex-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-codex-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-codex-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-codex-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -4949,30 +4561,6 @@
     {
       "agent": "acpx-grok-shadow",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-grok-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-grok-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-grok-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-grok-shadow",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -5136,30 +4724,6 @@
       "agent": "acpx-claude-shadow",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-claude-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-claude-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-claude-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-claude-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -5328,30 +4892,6 @@
       "agent": "acpx-kimi-shadow",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-kimi-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-kimi-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-kimi-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-kimi-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -5573,30 +5113,6 @@
     {
       "agent": "acpx-kimicc-shadow",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-kimicc-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-kimicc-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-kimicc-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-kimicc-shadow",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -5765,30 +5281,6 @@
     {
       "agent": "acpx-cursor-shadow",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-cursor-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-cursor-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-cursor-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-cursor-shadow",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -5952,30 +5444,6 @@
       "agent": "acpx-pool-shadow",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-pool-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-pool-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-pool-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-pool-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -6192,30 +5660,6 @@
       "agent": "acpx-agy-shadow",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-agy-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-agy-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-agy-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-agy-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -6437,30 +5881,6 @@
     {
       "agent": "acpx-glm-shadow",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-glm-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-glm-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-glm-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-glm-shadow",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -6648,30 +6068,6 @@
       "agent": "acpx-deepseek-shadow",
       "budget_status": "near_cap",
       "model": "claude-fable-5-1",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-deepseek-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-deepseek-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-deepseek-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-deepseek-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
       "review_attempt": "frozen-review-attempt.yaml"
     },
     {
@@ -6893,30 +6289,6 @@
     {
       "agent": "acpx-gemma-shadow",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-gemma-shadow",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-gemma-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "acpx-gemma-shadow",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "acpx-gemma-shadow",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -7133,30 +6505,6 @@
     {
       "agent": "agy",
       "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "agy",
-      "budget_status": "cool",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "agy",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": null
-    },
-    {
-      "agent": "agy",
-      "budget_status": "near_cap",
-      "model": "claude-opus-5-5",
-      "review_attempt": "frozen-review-attempt.yaml"
-    },
-    {
-      "agent": "agy",
-      "budget_status": "cool",
       "model": "composer-2.5",
       "review_attempt": null
     },
@@ -7270,6 +6618,174 @@
     },
     {
       "agent": "agy",
+      "budget_status": "near_cap",
+      "model": "unregistered-model",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": null,
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": null,
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": null,
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": null,
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "claude-fable-5-1",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "claude-fable-5-1",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "claude-fable-5-1",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "claude-fable-5-1",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "composer-2.5",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "composer-2.5",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "composer-2.5",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "composer-2.5",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "gpt-6-luna",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "gpt-6-luna",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "gpt-6-luna",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "gpt-6-luna",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "gpt-6.1-sol",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "gpt-6.1-sol",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "gpt-6.1-sol",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "gpt-6.1-sol",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "grok-4.7",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "grok-4.7",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "grok-4.7",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "grok-4.7",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "unregistered-model",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
+      "budget_status": "cool",
+      "model": "unregistered-model",
+      "review_attempt": "frozen-review-attempt.yaml"
+    },
+    {
+      "agent": "muse",
+      "budget_status": "near_cap",
+      "model": "unregistered-model",
+      "review_attempt": null
+    },
+    {
+      "agent": "muse",
       "budget_status": "near_cap",
       "model": "unregistered-model",
       "review_attempt": "frozen-review-attempt.yaml"
@@ -8100,6 +7616,11 @@
       "risk": "low"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "code",
+      "risk": "low"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "low"
@@ -8184,6 +7705,20 @@
       "risk": "low",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "low"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "low",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -8380,27 +7915,6 @@
       "review_profile": "code",
       "risk": "low",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "code",
-      "risk": "low"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "code",
-      "risk": "low"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "code",
-      "risk": "low",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -8476,6 +7990,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "code",
+      "risk": "low"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "low",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "code",
+      "risk": "low"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "code",
       "risk": "low"
@@ -9317,6 +8852,11 @@
       "risk": "low"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "infra",
+      "risk": "low"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "infra",
       "risk": "low"
@@ -9401,6 +8941,20 @@
       "risk": "low",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "low"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "low",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -9597,27 +9151,6 @@
       "review_profile": "infra",
       "risk": "low",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "infra",
-      "risk": "low"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "infra",
-      "risk": "low"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "infra",
-      "risk": "low",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -9693,6 +9226,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "infra",
+      "risk": "low"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "low",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "infra",
+      "risk": "low"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "infra",
       "risk": "low"
@@ -10534,6 +10088,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "code",
+      "risk": "medium"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "medium"
@@ -10618,6 +10177,20 @@
       "risk": "medium",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "medium"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "medium",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -10814,27 +10387,6 @@
       "review_profile": "code",
       "risk": "medium",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "code",
-      "risk": "medium"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "code",
-      "risk": "medium"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "code",
-      "risk": "medium",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -10910,6 +10462,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "code",
+      "risk": "medium"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "medium",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "code",
+      "risk": "medium"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "code",
       "risk": "medium"
@@ -11751,6 +11324,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "infra",
+      "risk": "medium"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "infra",
       "risk": "medium"
@@ -11835,6 +11413,20 @@
       "risk": "medium",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "medium"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "medium",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -12031,27 +11623,6 @@
       "review_profile": "infra",
       "risk": "medium",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "infra",
-      "risk": "medium"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "infra",
-      "risk": "medium"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "infra",
-      "risk": "medium",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -12127,6 +11698,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "infra",
+      "risk": "medium"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "medium",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "infra",
+      "risk": "medium"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "infra",
       "risk": "medium"
@@ -12968,6 +12560,11 @@
       "risk": "high"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "code",
+      "risk": "high"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "high"
@@ -13052,6 +12649,20 @@
       "risk": "high",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "high"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "high",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -13248,27 +12859,6 @@
       "review_profile": "code",
       "risk": "high",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "code",
-      "risk": "high"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "code",
-      "risk": "high"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "code",
-      "risk": "high",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -13344,6 +12934,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "code",
+      "risk": "high"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "high",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "code",
+      "risk": "high"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "code",
       "risk": "high"
@@ -14185,6 +13796,11 @@
       "risk": "high"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "infra",
+      "risk": "high"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "infra",
       "risk": "high"
@@ -14269,6 +13885,20 @@
       "risk": "high",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "high"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "high",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -14465,27 +14095,6 @@
       "review_profile": "infra",
       "risk": "high",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "infra",
-      "risk": "high"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "infra",
-      "risk": "high"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "infra",
-      "risk": "high",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -14561,6 +14170,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "infra",
+      "risk": "high"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "high",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "infra",
+      "risk": "high"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "infra",
       "risk": "high"
@@ -15402,6 +15032,11 @@
       "risk": "critical"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "code",
+      "risk": "critical"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "critical"
@@ -15486,6 +15121,20 @@
       "risk": "critical",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "critical"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "critical",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -15682,27 +15331,6 @@
       "review_profile": "code",
       "risk": "critical",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "code",
-      "risk": "critical"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "code",
-      "risk": "critical"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "code",
-      "risk": "critical",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -15778,6 +15406,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "code",
+      "risk": "critical"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "code",
+      "risk": "critical",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "code",
+      "risk": "critical"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "code",
       "risk": "critical"
@@ -16619,6 +16268,11 @@
       "risk": "critical"
     },
     {
+      "author_model": "muse-wonder-1.0",
+      "review_profile": "infra",
+      "risk": "critical"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "infra",
       "risk": "critical"
@@ -16703,6 +16357,20 @@
       "risk": "critical",
       "subject_families": [
         "google"
+      ]
+    },
+    {
+      "author_family": "meta",
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "critical"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "critical",
+      "subject_families": [
+        "meta"
       ]
     },
     {
@@ -16899,27 +16567,6 @@
       "review_profile": "infra",
       "risk": "critical",
       "subject_seats": [
-        "claude-opus-5-5-cursor-fallback"
-      ]
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "review_profile": "infra",
-      "risk": "critical"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "pinned_candidate": "claude-opus-5-5-cursor-fallback",
-      "pressure_override_reason": "frozen-input",
-      "review_profile": "infra",
-      "risk": "critical"
-    },
-    {
-      "author_model": "gpt-6.1-sol",
-      "review_profile": "infra",
-      "risk": "critical",
-      "subject_seats": [
         "claude-sonnet-5-5"
       ]
     },
@@ -16995,6 +16642,27 @@
     {
       "author_model": "gpt-6.1-sol",
       "pinned_candidate": "pool-xs",
+      "pressure_override_reason": "frozen-input",
+      "review_profile": "infra",
+      "risk": "critical"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "review_profile": "infra",
+      "risk": "critical",
+      "subject_seats": [
+        "gemini-3.8-flash-high"
+      ]
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
+      "review_profile": "infra",
+      "risk": "critical"
+    },
+    {
+      "author_model": "gpt-6.1-sol",
+      "pinned_candidate": "gemini-3.8-flash-high",
       "pressure_override_reason": "frozen-input",
       "review_profile": "infra",
       "risk": "critical"
@@ -17406,6 +17074,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -17548,16 +17226,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "routine_mechanical"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -17622,6 +17290,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -17997,6 +17683,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -18139,16 +17835,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "mechanical_classification"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -18213,6 +17899,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -18588,6 +18292,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -18730,16 +18444,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "readonly_recon"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -18804,6 +18508,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -19179,6 +18901,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_advisor"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -19321,16 +19053,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "bounded_advisor"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -19395,6 +19117,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_advisor"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_advisor"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -19770,6 +19510,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "openai_frontier_coder"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -19912,16 +19662,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "openai_frontier_coder"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -19986,6 +19726,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "openai_frontier_coder"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "openai_frontier_coder"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -20361,6 +20119,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "anthropic_authority_reviewer"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -20503,16 +20271,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "anthropic_authority_reviewer"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -20577,6 +20335,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "anthropic_authority_reviewer"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "anthropic_authority_reviewer"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -20952,6 +20728,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -21094,16 +20880,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "bounded_recon"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -21168,6 +20944,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -21543,6 +21337,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_fallback"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -21685,16 +21489,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "bounded_fallback"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -21759,6 +21553,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_fallback"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "bounded_fallback"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -22134,6 +21946,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "autonomous_fallback"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -22276,16 +22098,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "autonomous_fallback"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -22350,6 +22162,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "autonomous_fallback"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "autonomous_fallback"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -22725,6 +22555,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "designated_authorities"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -22867,16 +22707,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "designated_authorities"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -22941,6 +22771,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "designated_authorities"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "designated_authorities"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -23316,6 +23164,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "legacy_reviewers"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -23458,16 +23316,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "legacy_reviewers"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -23532,6 +23380,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "legacy_reviewers"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "legacy_reviewers"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -23907,6 +23773,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_low"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -24049,16 +23925,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "code_review_low"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -24123,6 +23989,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_low"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_low"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -24498,6 +24382,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_medium"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -24640,16 +24534,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "code_review_medium"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -24714,6 +24598,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_medium"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_medium"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -25089,6 +24991,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_high"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -25231,16 +25143,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "code_review_high"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -25305,6 +25207,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_high"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_high"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",
@@ -25680,6 +25600,16 @@
     {
       "context": {
         "excluded_families": [
+          "meta"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_critical"
+    },
+    {
+      "context": {
+        "excluded_families": [
           "moonshot"
         ]
       },
@@ -25822,16 +25752,6 @@
     {
       "context": {
         "excluded_seats": [
-          "claude-opus-5-5-cursor-fallback"
-        ]
-      },
-      "health": null,
-      "purpose": "inspect",
-      "role": "code_review_critical"
-    },
-    {
-      "context": {
-        "excluded_seats": [
           "claude-sonnet-5-5"
         ]
       },
@@ -25896,6 +25816,24 @@
     {
       "context": {
         "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_critical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "gemini-3.8-flash-high"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "code_review_critical"
+    },
+    {
+      "context": {
+        "pinned_model": "gemini-3.8-flash-high"
       },
       "health": null,
       "purpose": "inspect",

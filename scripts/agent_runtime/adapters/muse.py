@@ -61,7 +61,7 @@ class MuseAdapter:
         tokens = None
         reasoning_tokens = None
         calls = []
-        for line in stdout.splitlines():
+        for line in stdout.split("\n"):
             if not line.strip():
                 continue
             try:
