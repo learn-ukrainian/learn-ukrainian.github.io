@@ -133,6 +133,10 @@ SQLITE_BACKUP_SOURCES=()
 SQLITE_TRANSIENT_SOURCES=()
 SQLITE_ARCHIVED_SOURCES=()
 DB_ARCHIVES_USED=()
+# Project-relative paths of every classified database. Explicit file arguments
+# bypass restic exclude patterns, so the base selection must omit these paths
+# instead of relying on the exclude file.
+declare -A CLASSIFIED_SQLITE_RELATIVE=()
 declare -A ARCHIVED_DB_STAT=()
 declare -A ARCHIVED_DB_ARCHIVE=()
 LINUX_BASE_SNAPSHOT=""
@@ -1226,6 +1230,10 @@ build_restic_selection_args() {
   RESTIC_SELECTION_ARGS=()
   for relative in "${BACKUP_PATHS[@]+"${BACKUP_PATHS[@]}"}"; do
     [[ "$relative" == GIT-WORKTREE.patch || "$relative" == BACKUP-RECEIPT.json ]] && continue
+    # A classified database is uploaded from its consistent online copy, or
+    # skipped. Naming the live file here would store that stale main file in
+    # the base snapshot as well; restic does not exclude an explicit path.
+    [[ -z "${CLASSIFIED_SQLITE_RELATIVE[$relative]+set}" ]] || continue
     absolute="$PROJECT_ROOT/$relative"
     if [[ -d "$absolute" && ! -L "$absolute" ]]; then
       directories+=("$relative")
@@ -1449,13 +1457,14 @@ load_db_archive_manifests() {
 
 # Split list_sqlite_sources into uploaded, transient, and archived databases.
 classify_sqlite_sources() {
-  local database relative current name
+  local database relative current name classified
   local -A used=()
 
   SQLITE_BACKUP_SOURCES=()
   SQLITE_TRANSIENT_SOURCES=()
   SQLITE_ARCHIVED_SOURCES=()
   DB_ARCHIVES_USED=()
+  CLASSIFIED_SQLITE_RELATIVE=()
   load_db_archive_manifests
   while IFS= read -r -d '' database; do
     relative=${database#"$PROJECT_ROOT"/}
@@ -1478,6 +1487,12 @@ classify_sqlite_sources() {
     fi
     SQLITE_BACKUP_SOURCES+=("$database")
   done < <(list_sqlite_sources)
+  for classified in \
+    "${SQLITE_BACKUP_SOURCES[@]+"${SQLITE_BACKUP_SOURCES[@]}"}" \
+    "${SQLITE_TRANSIENT_SOURCES[@]+"${SQLITE_TRANSIENT_SOURCES[@]}"}" \
+    "${SQLITE_ARCHIVED_SOURCES[@]+"${SQLITE_ARCHIVED_SOURCES[@]}"}"; do
+    CLASSIFIED_SQLITE_RELATIVE[${classified#"$PROJECT_ROOT"/}]=1
+  done
   info "SQLite sources: ${#SQLITE_BACKUP_SOURCES[@]} to back up, ${#SQLITE_TRANSIENT_SOURCES[@]} pytest scratch skipped, ${#SQLITE_ARCHIVED_SOURCES[@]} covered by ${#DB_ARCHIVES_USED[@]} archive(s)."
   finalize_staged_paths
   publish_selection_manifest
@@ -2466,12 +2481,12 @@ run_restore() {
   local execute=$3
   local scope=${4:-}
   local scope_given=${5:-0}
-  local target_real receipt receipt_json receipt_schema base_id patch_id database_id database_path database_mode check_output
-  local manifest_id snapshots_json size_bytes path_info path_count index
+  local target_real receipt receipt_json receipt_schema base_id patch_id database_id database_path database_mode database_target check_output
+  local manifest_id snapshots_json size_bytes path_info path_count index db_index
   local scope_is_database=0 databases_selected=0 step_count step_bytes
   local -a whole_ids=() step_ids=() step_includes=() step_ls_paths=()
   local -a db_paths=() db_ids=() db_modes=() restored_db_paths=() restored_db_modes=()
-  local -A db_id_members=() db_id_planned=()
+  local -A db_id_members=() db_id_planned=() restored_db_set=()
 
   validate_environment
   if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
@@ -2568,6 +2583,7 @@ run_restore() {
       [[ -z "$scope" || "$database_path" == "$scope" || "$database_path" == "$scope"/* ]] || continue
       restored_db_paths+=("$database_path")
       restored_db_modes+=("${db_modes[$index]}")
+      restored_db_set[$database_path]=1
       databases_selected=$((databases_selected + 1))
       [[ "$database_path" != "$scope" ]] || scope_is_database=1
       if [[ -z "$scope" || "${db_id_members[$database_id]}" -eq 1 ]]; then
@@ -2630,6 +2646,20 @@ run_restore() {
   fi
 
   for index in "${!step_ids[@]}"; do
+    # An older base snapshot can contain the same database the receipt lists
+    # in a later batch. --overwrite never would keep that stale main file and
+    # skip the consistent copy, so remove the receipt-listed path first.
+    for db_index in "${!db_paths[@]}"; do
+      [[ "${db_ids[$db_index]}" == "${step_ids[$index]}" ]] || continue
+      database_path=${db_paths[$db_index]}
+      [[ -n "${restored_db_set[$database_path]+set}" ]] || continue
+      database_target="$target_real/$database_path"
+      [[ -e "$database_target" || -L "$database_target" ]] || continue
+      [[ -f "$database_target" && ! -L "$database_target" ]] ||
+        die "Refusing to replace a non-regular restored database: $database_path"
+      rm -f -- "$database_target" ||
+        die "Could not remove the stale restored database: $database_path"
+    done
     restic_repository_command restore "${step_ids[$index]}" --target "$target_real" --overwrite never \
       ${step_includes[$index]:+--include "${step_includes[$index]}"}
     if [[ -z "$scope" && "$index" -eq 0 ]]; then
