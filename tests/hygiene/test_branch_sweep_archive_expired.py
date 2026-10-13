@@ -9,6 +9,7 @@ import json
 import os
 import shlex
 import subprocess
+import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -611,6 +612,19 @@ def test_newer_than_closing_merge_blocks_archive_before_file_coverage(repo: Path
     assert ref_sha(repo, "codex/impl-10532") == branch_sha
 
 
+def _wait_for_free_bundle_second(repo: Path) -> None:
+    """The bundle name is the UTC second. A second apply in that second is retained."""
+    archive = repo / "batch_state" / "branch-archive"
+    deadline = time.monotonic() + 3
+    while True:
+        stamp = datetime.now(UTC).strftime("stale-local-%Y%m%dT%H%M%SZ.bundle")
+        if not (archive / stamp).exists():
+            return
+        if time.monotonic() >= deadline:
+            raise AssertionError(f"bundle name stayed in use: {stamp}")
+        time.sleep(0.05)
+
+
 def test_truncated_receipt_does_not_authorize_delete(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Finding 4: a short write is finished and re-read before any ref is deleted."""
     real_write = os.write
@@ -640,9 +654,11 @@ def test_truncated_receipt_does_not_authorize_delete(repo: Path, monkeypatch: py
         return real_write(_fd, raw[:half])
 
     monkeypatch.setattr(os, "write", short)
+    _wait_for_free_bundle_second(repo)
     shortened = by_name(run(repo, apply=True))["codex/short-receipt"]
-    line = next(row for row in receipt.read_text(encoding="utf-8").splitlines() if short_sha in row)
-    assert json.loads(line)["sha"] == short_sha
+    rows = [row for row in receipt.read_text(encoding="utf-8").split("\n") if short_sha in row]
+    assert len(rows) == 1
+    assert json.loads(rows[0])["sha"] == short_sha
     assert shortened.local_deleted is True
     assert ref_sha(repo, "codex/short-receipt") is None
 

@@ -25,6 +25,7 @@ from pathlib import Path
 
 from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
+from scripts.common.jsonl import jsonl_lines
 from scripts.orchestration import reap_worktrees as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
@@ -1411,7 +1412,9 @@ def _write_archive_receipts(
     if not body.endswith(b"\n"):
         raise RuntimeError("archive receipt line is truncated")
     try:
-        parsed = [json.loads(line) for line in body.decode("utf-8").splitlines() if line]
+        # LF only. str.splitlines() also splits on U+2028 and other separators
+        # that JSON may legally contain inside a string (#9556).
+        parsed = [json.loads(line) for line in jsonl_lines(body.decode("utf-8")) if line]
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise RuntimeError("archive receipt line is not valid JSON") from exc
     if parsed != payloads:
