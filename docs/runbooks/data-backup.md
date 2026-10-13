@@ -154,6 +154,9 @@ restic rclone path with that final directory name.
   is rebuilt with SQLite's online backup command.
 - SQLite WAL/SHM/journal sidecars for selected databases,
   plus `__pycache__`, `.DS_Store`, and retired `qdrant/` data, are excluded.
+- A selected SQLite database with more than one directory entry stops the
+  backup before any snapshot is written, whatever its filename. The extra
+  name does not carry the WAL, SHM, or journal of the path SQLite opened.
 - All exclude patterns go to restic through a private `--exclude-file`, never
   as one `--exclude` flag per path, so thousands of databases cannot overflow
   the kernel argument limit. Literal paths are escaped for restic's pattern
@@ -429,9 +432,13 @@ mkdir -p /absolute/path/to/recovery-parent
 
 The restored tree contains the allowlisted paths that were present in that
 snapshot, plus the JSON receipt. It does not contain every live `batch_state/`
-or `data/` directory. `restore --execute` checks `PRAGMA integrity_check` on
-every restored database and fails if any check is not `ok`. Inspect the
-receipt and expected data before any live import:
+or `data/` directory. `restore --execute` removes any `-wal`, `-shm`, or
+`-journal` file paired with a receipt-listed database after every snapshot
+is written, including when `--path` restores a directory and the file-phase
+snapshot follows the database batch. It then checks `PRAGMA integrity_check`
+by opening each restored database read-only, so the check sees a leftover
+sidecar the same way a normal reader would, and fails if any check is not
+`ok`. Inspect the receipt and expected data before any live import:
 
 ```bash
 jq . /absolute/path/to/recovery-parent/restore-test/BACKUP-RECEIPT.json

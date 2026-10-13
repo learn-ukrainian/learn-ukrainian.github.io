@@ -10,9 +10,11 @@
 # Covers the allowlist in scripts/config/backup-allowlist.json, and nothing
 # else under batch_state/ or data/. A path that is not on that list is not
 # walked. SQLite files on the list are copied with SQLite's online backup
-# into the same nightly run as the other files. A clean Linux run writes one
-# base snapshot, ceil(database count / databases per batch) database-batch
-# snapshots, and the two receipt snapshots. Snapshot directories are excluded
+# into the same nightly run as the other files. A hard-linked SQLite file
+# stops the backup before a snapshot is written: sidecars belong to the path
+# SQLite opened, and another name would omit committed WAL rows. A clean
+# Linux run writes one base snapshot, ceil(database count / databases per
+# batch) database-batch snapshots, and the two receipt snapshots. Snapshot directories are excluded
 # only under batch_state/tasks, from the same list discovery and restic use.
 #
 # Required environment:
@@ -146,6 +148,9 @@ LINUX_PATCH_SNAPSHOT=""
 RECEIPT_TIME=""
 # A gate receipt written but not yet renamed into place; removed on failure.
 STAGED_GATE_RECEIPT=""
+# Private copy used so the restore integrity check can apply a sidecar without
+# creating -wal/-shm files beside the restored database.
+RESTORE_CHECK_DIR=""
 RUN_ID=""
 LINUX_MODE=0
 BACKUP_FAILURES=()
@@ -392,6 +397,9 @@ Safety:
   - restore --path RELATIVE_PATH restores only that file or directory of the run
     (for example data/atlas.db, read from its database snapshot via the receipt;
     other paths come from the file-phase snapshot). Same guards and preflight.
+  - a hard-linked SQLite database stops the backup before any snapshot is written.
+  - restore removes -wal, -shm, and -journal files paired with each receipt-listed
+    database after every snapshot is written, then checks integrity read-only.
   - retention applies --keep-daily 7 --keep-weekly 4 --keep-monthly 6 to the
     completed runs of this backup family's tag, then forgets by explicit
     snapshot ID only the snapshots of runs outside the keep set; other tags
@@ -500,6 +508,16 @@ cleanup() {
   if [[ -n "$STAGED_GATE_RECEIPT" && -f "$STAGED_GATE_RECEIPT" && ! -L "$STAGED_GATE_RECEIPT" ]]; then
     find "$STAGED_GATE_RECEIPT" -maxdepth 0 -type f -delete
   fi
+  if [[ -n "$RESTORE_CHECK_DIR" && -d "$RESTORE_CHECK_DIR" ]]; then
+    case "$RESTORE_CHECK_DIR" in
+      "$TMP_ROOT"/learn-ukrainian-restore-check.*)
+        find "$RESTORE_CHECK_DIR" -depth -delete
+        ;;
+      *)
+        echo "WARNING: refusing to clean unexpected integrity-check path: $RESTORE_CHECK_DIR" >&2
+        ;;
+    esac
+  fi
 
   if [[ -n "$LOCK_FD" ]]; then
     exec {LOCK_FD}>&-
@@ -575,6 +593,21 @@ filesystem_device() {
   device="$(stat -c '%d' "$path")" || return 1
   [[ "$device" =~ ^[0-9]+$ ]] || return 1
   printf '%s\n' "$device"
+}
+
+file_link_count() {
+  local path=$1
+  local links=""
+
+  if links="$(stat -c '%h' "$path" 2>/dev/null)" && [[ "$links" =~ ^[0-9]+$ ]]; then
+    printf '%s\n' "$links"
+    return 0
+  fi
+  if links="$(stat -f '%l' "$path" 2>/dev/null)" && [[ "$links" =~ ^[0-9]+$ ]]; then
+    printf '%s\n' "$links"
+    return 0
+  fi
+  return 1
 }
 
 canonical_existing_dir() {
@@ -1333,6 +1366,7 @@ validate_source() {
     validate_tree_symlinks "$PROJECT_ROOT/$relative" "$relative"
     validate_tree_file_types "$PROJECT_ROOT/$relative" "$relative"
   done
+  refuse_hardlinked_sqlite_aliases
 }
 
 acquire_lock() {
@@ -1387,6 +1421,27 @@ is_sqlite_database() {
 is_transient_sqlite_path() {
   local relative=/${1#"$PROJECT_ROOT"/}
   [[ "$relative" == */pytest-*/* ]]
+}
+
+# Sidecars are named beside the path SQLite opened, not beside every hard
+# link of the inode. Publishing the other name stores the main file and drops
+# committed WAL rows. Refuse before any snapshot is written.
+refuse_hardlinked_sqlite_aliases() {
+  local relative absolute links
+
+  for relative in "${STAGED_CANDIDATES[@]+"${STAGED_CANDIDATES[@]}"}"; do
+    absolute="$PROJECT_ROOT/$relative"
+    [[ -f "$absolute" && ! -L "$absolute" ]] || continue
+    is_ephemeral_home_path "$absolute" && continue
+    [[ "$relative" == */__pycache__/* ]] && continue
+    is_transient_sqlite_path "$absolute" && continue
+    is_sqlite_database "$absolute" || continue
+    links="$(file_link_count "$absolute")" ||
+      die "Could not read the link count of SQLite database: $relative"
+    if ((links > 1)); then
+      die "Refusing hard-linked SQLite database $relative (link count ${links}). Remove the extra name and retry; sidecars follow the path SQLite opened, so this alias would omit committed WAL rows."
+    fi
+  done
 }
 
 # Read NAME.tar.zst.manifest files from DB_ARCHIVE_DIR. Format:
@@ -1641,6 +1696,15 @@ sqlite_immutable_uri() {
   path=${path//#/%23}
   path=${path//\?/%3F}
   printf 'file:%s?mode=ro&immutable=1\n' "$path"
+}
+
+# Read-only, and still applies a WAL or journal. immutable=1 would ignore both.
+sqlite_readonly_uri() {
+  local path=$1
+  path=${path//%/%25}
+  path=${path//#/%23}
+  path=${path//\?/%3F}
+  printf 'file:%s?mode=ro\n' "$path"
 }
 
 stage_sqlite_databases() {
@@ -2475,6 +2539,62 @@ validate_restore_scope_is_literal() {
     die "--path must be a literal path (no glob characters unless it names a recorded database): $scope"
 }
 
+# A later file-phase snapshot can recreate sidecars after the consistent
+# database is written: --overwrite never keeps the new main file and still
+# adds a missing -wal, -shm, or -journal. Call this after every step as well
+# as before replacing a receipt-listed database.
+remove_restored_database_sidecars() {
+  local database_path=$1
+  local database_target=$2
+  local suffix sidecar
+
+  for suffix in -wal -shm -journal; do
+    sidecar="${database_target}${suffix}"
+    [[ -e "$sidecar" || -L "$sidecar" ]] || continue
+    if [[ -L "$sidecar" ]]; then
+      rm -f -- "$sidecar" ||
+        die "Could not remove the restored database sidecar link: ${database_path}${suffix}"
+      continue
+    fi
+    [[ -f "$sidecar" ]] ||
+      die "Refusing to remove a non-regular restored database sidecar: ${database_path}${suffix}"
+    rm -f -- "$sidecar" ||
+      die "Could not remove the stale restored database sidecar: ${database_path}${suffix}"
+  done
+}
+
+# Open a private copy so the check applies any remaining sidecar and does not
+# create -wal or -shm beside the restored file. mode=ro is the normal reader
+# view; immutable=1 would ignore those sidecars.
+integrity_check_restored_database() {
+  local database_path=$1
+  local label=$2
+  local check_output suffix
+
+  RESTORE_CHECK_DIR="$(mktemp -d "${TMP_ROOT}/learn-ukrainian-restore-check.XXXXXX")" ||
+    die "Could not create a directory for the restored database integrity check."
+  # /bin/cp, not PATH: a backup test replaces cp to prove Linux staging does not copy the tree.
+  /bin/cp -p -- "$database_path" "$RESTORE_CHECK_DIR/database" ||
+    die "Could not stage the restored database integrity check: $label"
+  for suffix in -wal -shm -journal; do
+    [[ -e "${database_path}${suffix}" || -L "${database_path}${suffix}" ]] || continue
+    [[ -f "${database_path}${suffix}" ]] ||
+      die "Restored database sidecar is not a regular file: ${label}${suffix}"
+    /bin/cp -p -- "${database_path}${suffix}" "$RESTORE_CHECK_DIR/database${suffix}" ||
+      die "Could not stage the restored database integrity check: ${label}${suffix}"
+  done
+  if ! check_output="$(
+    sqlite3 "$(sqlite_readonly_uri "$RESTORE_CHECK_DIR/database")" 'PRAGMA integrity_check;'
+  )"; then
+    die "SQLite integrity_check failed on restored database: $label"
+  fi
+  find "$RESTORE_CHECK_DIR" -depth -delete ||
+    die "Could not remove the restored database integrity check directory."
+  RESTORE_CHECK_DIR=""
+  [[ "$check_output" == ok ]] ||
+    die "SQLite integrity_check rejected restored database: ${label}: $check_output"
+}
+
 run_restore() {
   local snapshot=$1
   local target=$2
@@ -2654,6 +2774,7 @@ run_restore() {
       database_path=${db_paths[$db_index]}
       [[ -n "${restored_db_set[$database_path]+set}" ]] || continue
       database_target="$target_real/$database_path"
+      remove_restored_database_sidecars "$database_path" "$database_target"
       [[ -e "$database_target" || -L "$database_target" ]] || continue
       [[ -f "$database_target" && ! -L "$database_target" ]] ||
         die "Refusing to replace a non-regular restored database: $database_path"
@@ -2670,15 +2791,14 @@ run_restore() {
   done
   for index in "${!restored_db_paths[@]}"; do
     database_path="${restored_db_paths[$index]}"
+    # The file-phase snapshot may have been applied after this database.
+    remove_restored_database_sidecars "$database_path" "$target_real/$database_path"
     [[ -f "$target_real/$database_path" && ! -L "$target_real/$database_path" ]] ||
       die "Restored database is missing or unsafe: $database_path"
     chmod "${restored_db_modes[$index]}" "$target_real/$database_path"
   done
   while IFS= read -r -d '' database_path; do
-    check_output="$(sqlite3 "$(sqlite_immutable_uri "$database_path")" 'PRAGMA integrity_check;')" ||
-      die "SQLite integrity_check failed on restored database: ${database_path#"$target_real"/}"
-    [[ "$check_output" == ok ]] ||
-      die "SQLite integrity_check rejected restored database: ${database_path#"$target_real"/}"
+    integrity_check_restored_database "$database_path" "${database_path#"$target_real"/}"
   done < <(find "$target_real" -type f \( -name '*.db' -o -name '*.sqlite*' \) \
     ! -name '*-wal' ! -name '*-shm' ! -name '*-journal' -print0)
   info "Restore complete. Validate the staged data before any live import: $target_real"
