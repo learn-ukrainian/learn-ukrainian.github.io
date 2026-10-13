@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -115,6 +116,7 @@ def test_dispatched_detached_review_binds_verdict_without_touching_author(
 
     def transport(argv, **kwargs):
         payload = json.loads(Path(argv[argv.index("--input") + 1]).read_text())
+        assert TOKEN not in payload["body"]
         posted = fake_json(github.Request("issue-comment-json", repo=record["repository"],
                                          number=42, body=payload["body"]))
         return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(posted), stderr="")
@@ -131,17 +133,19 @@ def test_dispatched_detached_review_binds_verdict_without_touching_author(
         rules = json.loads((synthetic_opsec / "rules.json").read_text())
         rules.update(synthetic_rules(rule=policy["class6_block_ids"][0], level=6, pattern=TOKEN))
         (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
-        path.with_suffix(".result").write_text(f"VERDICT: APPROVE\n{TOKEN}")
+        path.with_suffix(".result").write_text(f"VERDICT: APPROVE\n{TOKEN}\nHarmless reviewer prose.")
 
-    if opsec_case != "clean":
-        reason = "class=6" if opsec_case == "blocked" else "private matcher or rules unavailable/incompatible"
-        record_before = path.read_bytes()
+    record_before = path.read_bytes()
+    result_before = path.with_suffix(".result").read_bytes()
+    if opsec_case in {"unavailable", "incompatible"}:
+        reason = "private matcher or rules unavailable/incompatible"
         with pytest.raises(recorder.RecordError, match=f"publish_blocked: .*{reason}"):
             recorder.record("snapshot-review", pr_number=42, task_root=path.parent,
                             lock_root=tmp_path / "locks")
         assert comments == []
         assert calls == {"posts": 0, "statuses": 0}
         assert path.read_bytes() == record_before
+        assert path.with_suffix(".result").read_bytes() == result_before
         assert author_state(repo, author) == before
         return
 
@@ -151,9 +155,25 @@ def test_dispatched_detached_review_binds_verdict_without_touching_author(
     assert receipt["head"] == head
     assert receipt["comment"] == "posted"
     assert receipt["status"] == "posted"
+    assert receipt["verdict"] == "APPROVED"
     assert recorder.parse_marker(comments[0]["body"])["sha"] == head
+    assert recorder.parse_marker(comments[0]["body"])["verdict"] == "APPROVED"
+    if opsec_case == "blocked":
+        started = datetime.fromisoformat(record["started_at"]).astimezone(UTC).isoformat(timespec="microseconds")
+        assert comments[0]["body"] == (
+            f"### Cross-family review\nhead: {head}\nReviewer family: xai\nVERDICT: APPROVED\n"
+            "Reviewer model: grok-4.7\nTask id: snapshot-review\n\nWithheld findings: unknown\n"
+            "Findings are held privately.\n\n"
+            f"<!-- cf-verdict v1 sha={head} task=snapshot-review started={started} "
+            "verdict=APPROVED model=grok-4.7 family=xai -->"
+        )
+        prepublish.check_texts(record["repository"], [comments[0]["body"]], environment={})
+        assert TOKEN not in comments[0]["body"]
+        assert "Harmless reviewer prose." not in comments[0]["body"]
     assert calls == {"posts": 1, "statuses": 1}
     assert author_state(repo, author) == before
+    assert path.read_bytes() == record_before
+    assert path.with_suffix(".result").read_bytes() == result_before
     assert json.loads(path.read_text())["worktree_branch"] is None
 
 
