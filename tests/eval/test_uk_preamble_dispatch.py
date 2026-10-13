@@ -6,11 +6,14 @@ import json
 import subprocess
 import sys
 import textwrap
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
 import scripts.delegate as delegate
+from scripts.agent_runtime.adapters.agy import AgyAdapter
+from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.eval.uk_preamble import dispatch as dispatch_module
 from scripts.eval.uk_preamble.common import SEATS, ResultsDir, read_json, sha256_text
 from scripts.eval.uk_preamble.dispatch import (
@@ -99,6 +102,90 @@ def fake(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[DelegateDispa
 
 def _calls(state: Path) -> list[list[str]]:
     return [json.loads(line) for line in (state / "calls.jsonl").read_text().splitlines()]
+
+
+@pytest.mark.parametrize(
+    "seat_key,pin,display_label,backend_id",
+    [
+        (
+            "gemini-3.8-flash-high",
+            "gemini-3.8-flash-high",
+            "Gemini 3.8 Flash (High)",
+            "gemini-3-flash-preview",
+        ),
+        (
+            "claude-opus-5-5",
+            "claude-opus-5-5-high",
+            "Claude Opus 5.5 (High)",
+            "claude-opus-5-5-high",
+        ),
+        (
+            "claude-opus-5-5",
+            "claude-sonnet-5-5-high",
+            "Claude Sonnet 5.5 (High)",
+            "claude-sonnet-5-5-high",
+        ),
+    ],
+)
+@pytest.mark.parametrize("shape", ["nested", "top-level"])
+@pytest.mark.parametrize("reported_form", ["absent", "pin", "display", "backend"])
+def test_matching_agy_parse_passes_eval_identity_check(
+    tmp_path: Path, seat_key: str, pin: str, display_label: str, backend_id: str, reported_form: str, shape: str
+):
+    seat = replace(SEATS[seat_key], agent="agy", model=pin)
+    reported_model = {"absent": None, "pin": pin, "display": display_label, "backend": backend_id}[reported_form]
+    conversation_id = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
+    app_data = tmp_path / "agy-data"
+    transcript = app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    fixture = Path(__file__).resolve().parents[1] / "fixtures" / "agy" / "verify_words_transcript.jsonl"
+    transcript.write_text(fixture.read_text(encoding="utf-8"), encoding="utf-8")
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={conversation_id}, sending message\n", encoding="utf-8")
+    prompt_digest = sha256_text("planned prompt\n")
+    plan = InvocationPlan(
+        cmd=["agy", "--output-format", "stream-json", "--model", seat.model],
+        cwd=tmp_path,
+        stdin_payload="",
+        output_file=None,
+        env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
+        env_unsets=(),
+        liveness_paths=(log_file,),
+        metadata={"entire_fleet": {"requested_model": seat.model}},
+    )
+    init = {"event": "init", "conversation_id": conversation_id}
+    if reported_model is not None:
+        init.update({"init": {"model": reported_model}} if shape == "nested" else {"model": reported_model})
+    stdout = "\n".join(
+        [
+            json.dumps(init),
+            json.dumps(
+                {
+                    "event": "result",
+                    "result": {
+                        "status": "SUCCESS",
+                        "conversation_id": conversation_id,
+                        "response": "READY",
+                    },
+                }
+            ),
+        ]
+    )
+    parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    assert parsed.ok is True
+    outcome = TaskOutcome(
+        task_id="agy-matching-model",
+        status="done",
+        agent=seat.agent,
+        model=seat.model,
+        substitution=parsed.substitution,
+        response_text=parsed.response,
+        result_sha256=sha256_text(parsed.response),
+        run_nonce="fixture",
+        prompt_sha256=prompt_digest,
+    )
+    assert outcome.identity_problem(seat, prompt_digest) is None
+    assert parsed.substitution is None
 
 
 def test_dispatch_wait_attributes_the_answer_and_its_conditions(fake):

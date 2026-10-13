@@ -22,14 +22,10 @@ Known behavioral facts (verify against the installed CLI when changing transport
   is the only binding (no fallback; see ``_transcript_path_from_plan``).
   Tool results are ``type: GENERIC`` events (agy 2026-09) or legacy
   ``MCP_TOOL`` events; both shapes are paired with planner intents.
-- Per-invocation model is ``--model "<Display Name>"`` where the display name
-  is one of the strings printed by ``agy models`` (e.g. ``Gemini 3.1 Pro
-  (High)``). The runtime slug (``gemini-3.1-pro-high``) and the display string
-  normalize to the same key (see ``_normalize_model``), so callers may pass
-  either; unrecognized/empty falls back to ``default_model``. ``--model``
-  OVERRIDES the TUI selection (empirically verified 2026-06-05). The bare slug
-  is NOT accepted by ``--model`` — agy wants the display label; mapping
-  slug→label is the whole fix.
+- Per-invocation model is an allowlisted ``--model <slug>``. Slugs and
+  display strings normalize to the same key. Missing models use the default;
+  unknown explicit names are refused. Claude 5.5 high pins require the
+  permission-denied review route and separate driver qualification (#10420).
 - ``agy plugin`` only exposes ``import gemini|claude``, ``install``,
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
   and ``import gemini`` is a no-op in a default install.
@@ -738,21 +734,28 @@ _MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
 # ABI if a future shared contract revision carries runner guard values.
 _AGY_PRINT_TIMEOUT = "120m"
 
-# Canonical ``agy --model`` values (verbatim from ``agy models`` as of
-# 2026-09-13). Callers may pass a slug (``gemini-3.8-flash-high``) or a legacy
+# Accepted ``agy --model`` values. Gemini pins were captured from ``agy models``;
+# Claude pins require separate driver qualification (#10420).
+# Callers may pass a slug (``gemini-3.8-flash-high``) or a legacy
 # display string (``Gemini 3.8 Flash (High)``); ``_normalize_model`` collapses
-# both to the same key. We always emit the slug form because ``agy models``
-# now lists slugs and headless ``--model <slug>`` is the proven path.
+# both to the same key. The adapter emits the slug form; admission does not
+# establish provider availability or qualification of the Claude pins.
 #
 # Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
 # Older Flash, Claude thinking and GPT-OSS selections are refused by the catalog.
-_AGY_MODEL_SLUGS: tuple[str, ...] = (
+_AGY_GENERAL_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.8-flash-high",
     "gemini-3.8-flash-medium",
     "gemini-3.8-flash-low",
     "gemini-3.1-pro-high",
     "gemini-3.1-pro-low",
 )
+_AGY_MODEL_SLUGS: tuple[str, ...] = (
+    *_AGY_GENERAL_MODEL_SLUGS,
+    "claude-sonnet-5-5-high",
+    "claude-opus-5-5-high",
+)
+_AGY_CLAUDE_REVIEW_SLUGS = frozenset({"claude-sonnet-5-5-high", "claude-opus-5-5-high"})
 
 # Recognize legacy display labels for active selection or retired-model refusal.
 _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
@@ -823,7 +826,7 @@ def unknown_model_suggestion(model: str) -> str:
     """Return safe guidance for an unknown AGY model identifier."""
     if "pro" in model.casefold():
         return "For Gemini Pro, use `--model gemini-3.1-pro-high`."
-    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_MODEL_SLUGS)
+    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_GENERAL_MODEL_SLUGS)
     return f"Accepted AGY model ids: {accepted_ids}."
 
 
@@ -885,20 +888,10 @@ class AgyAdapter:
     ) -> InvocationPlan:
         """Build the ``agy`` print-mode invocation.
 
-        ``model`` is mapped to ``agy --model "<Display Name>"`` via
-        :func:`_resolve_model_flag` (slug or display string both accepted). This
-        OVERRIDES the operator's TUI selection, making per-dispatch model choice
-        deterministic. An unrecognized/empty value falls back to
-        ``default_model``; if even that is unmappable the flag is omitted and agy
-        uses its TUI-selected model. ``effort`` remains a no-op (#1396).
-
-        Root cause of the #2731 saga (corrected 2026-06-05): #2731 passed the
-        bare slug ``gemini-3.1-pro-high`` to ``--model``, which agy does not
-        accept; the #2735 revert then misread the benign ``resolver.go ...
-        defaulting to CCPA`` log line as proof the display label fails too. A
-        direct probe (TUI on Pro, ``--model "Gemini 3.5 Flash (High)"``) showed
-        agy propagated Flash to the backend — the label works; only the slug
-        format was ever the problem.
+        Slugs and display strings resolve to an allowlisted ``--model`` slug.
+        Missing models use the configured default; unknown explicit models
+        fail before subprocesses. Claude pins require the permission-denied
+        review route. ``effort`` remains a no-op (#1396).
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
@@ -907,6 +900,13 @@ class AgyAdapter:
         # probes this method to refuse before spawn, and that probe must not
         # depend on a subprocess.
         resolved_model = self._resolve_model_flag(model)
+        tc = tool_config or {}
+        review_route = _agy_review_route(tc)
+        if resolved_model in _AGY_CLAUDE_REVIEW_SLUGS and not review_route:
+            raise ValueError(
+                f"agy_claude_requires_review_route: rejected {model if model is not None else self.default_model}; "
+                "Claude requires the permission-denied AGY review route"
+            )
 
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
@@ -922,9 +922,7 @@ class AgyAdapter:
                 effort,
             )
 
-        tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
-        review_route = _agy_review_route(tc)
         if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
@@ -1066,7 +1064,7 @@ class AgyAdapter:
 
     def _resolve_model_flag(self, model: str | None) -> str | None:
         """Map a runtime model slug (or display string) to the canonical
-        ``agy --model`` slug (from ``agy models``).
+        ``agy --model`` slug from the adapter allowlist.
 
         An absent model uses the configured default. An explicit unknown model
         is rejected so a request can never silently run on a different model.
@@ -1101,6 +1099,21 @@ class AgyAdapter:
             bound = None
             read_reason = "transcript_read_refused"
         killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
+        # Identity evidence comes only from the provider's init event.
+        model_identity: dict[str, Any] = {
+            "requested_provider": "agy",
+            "requested_model": (plan.metadata.get("entire_fleet") or {}).get("requested_model") if plan else None,
+            "actual_provider": "agy",
+            "actual_model": None,
+            "actual_model_known": False,
+            "substituted": False,
+            "source": "unattested-harness",
+        }
+        stream_result, stream_problem = (
+            _stream_result(stdout, plan=plan, model_identity=model_identity)
+            if plan and "stream-json" in plan.cmd
+            else (None, None)
+        )
         result = self._parse_response(
             stdout=stdout,
             stderr=stderr,
@@ -1108,6 +1121,8 @@ class AgyAdapter:
             output_file=output_file,
             plan=plan,
             call_start_time=call_start_time,
+            stream_result=stream_result,
+            stream_problem=stream_problem,
         )
         if denial is not None:
             attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
@@ -1152,7 +1167,6 @@ class AgyAdapter:
             )
         # The provider error owns terminal diagnostics; protocol evidence comes
         # only from our stream parser, not a model/tool-authored excerpt.
-        stream_problem = _stream_result(stdout)[1] if plan and "stream-json" in plan.cmd else None
         fault = parse_agy_provider_fault(result.provider_error_text, stderr, stream_problem) if not result.ok else None
         if fault and fault.status:
             code = provider_failure_code("", fault.status)
@@ -1179,11 +1193,22 @@ class AgyAdapter:
             agy_killed_commands=killed,
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
             agy_attempt=attempt,
+            substitution=model_identity if not result.ok and model_identity["actual_model_known"] else None,
+            model_identity={
+                "actual_model": model_identity["actual_model"],
+                "actual_model_known": model_identity["actual_model_known"],
+                "source": model_identity["source"],
+                "substituted": model_identity["substituted"],
+            }
+            if model_identity["source"] == "provider-init"
+            else None,
         )
 
     def _parse_response(
         self,
         *,
+        stream_result: dict[str, Any] | None,
+        stream_problem: str | None,
         stdout: str,
         stderr: str,
         returncode: int,
@@ -1200,7 +1225,14 @@ class AgyAdapter:
         _ = call_start_time
 
         stream_mode = plan is not None and "stream-json" in plan.cmd
-        stream_result, stream_problem = _stream_result(stdout) if stream_mode else (None, None)
+        if stream_problem == "agy_model_event_mismatch":
+            return ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt=stream_problem,
+                failure_code="provider_policy_refusal",
+                provider_error_text="",
+            )
         stdout_response = (
             str(stream_result.get("response") or "").strip()
             if stream_result is not None
@@ -2009,9 +2041,20 @@ def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: s
             os.close(directory)
 
 
-def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
+def _stream_result(
+    stdout: str,
+    *,
+    plan: InvocationPlan | None = None,
+    model_identity: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any] | None, str | None]:
     """Read exactly one terminal result from AGY's NDJSON event stream."""
     result: dict[str, Any] | None = None
+    expected_model = plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None
+    try:
+        resolved_expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
+    except ValueError:
+        resolved_expected = None
+    check_identity = resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
     for line in stdout.split("\n"):
@@ -2023,6 +2066,29 @@ def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
             return None, "agy_stream_output_invalid: malformed NDJSON event"
         if not isinstance(event, dict) or not isinstance(event.get("event"), str):
             return None, "agy_stream_output_invalid: malformed NDJSON event"
+        if check_identity and event["event"] == "init":
+            config = event.get("init")
+            reported = [config.get("model")] if isinstance(config, dict) else []
+            reported.append(event.get("model"))
+            for provider_model in reported:
+                if provider_model is None or provider_model == "":
+                    continue
+                try:
+                    mismatch = (
+                        not isinstance(provider_model, str)
+                        or AgyAdapter.resolve_model_slug(provider_model) != resolved_expected
+                    )
+                except ValueError:
+                    mismatch = True
+                if model_identity is not None:
+                    model_identity.update(
+                        actual_model=provider_model[:200] if isinstance(provider_model, str) else None,
+                        actual_model_known=isinstance(provider_model, str),
+                        substituted=mismatch,
+                        source="provider-init",
+                    )
+                if mismatch:
+                    return None, "agy_model_event_mismatch"
         if event["event"] == "result":
             if result is not None or not isinstance(event.get("result"), dict):
                 return None, "agy_stream_output_invalid: duplicate or malformed terminal result"

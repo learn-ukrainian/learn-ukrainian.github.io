@@ -68,7 +68,8 @@ def test_authorities_have_one_native_holder_per_family():
     assert all(row.decision_reference and row.qualification_reference is None for row in result.candidates)
 
 
-def test_wire_ids_belong_to_identity_and_transport_and_opus_is_native_only(catalog):
+def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_pins(catalog):
+    """Opus has native and AGY wire IDs; its authority seat remains native-only."""
     result = resolve_role("legacy_reviewers", purpose="launch", transport="cursor")
     native, cursor = (row for row in result.candidates if row.seat == "xai_reviewer")
     assert native.wire_id == "grok-4.7"
@@ -84,7 +85,10 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_is_native_only(catal
         ("transport_mismatch",),
     )
     assert set(catalog["seats"]["anthropic_authority"]["routes"]) == {"native"}
-    assert catalog["models"]["claude-opus-5-5"]["routing_wire_ids"] == {"native_claude": "claude-opus-5-5"}
+    assert catalog["models"]["claude-opus-5-5"]["routing_wire_ids"] == {
+        "native_claude": "claude-opus-5-5",
+        "agy": "claude-opus-5-5-high",
+    }
     assert expanded_legacy_view(catalog)["review_candidates"] == APPROVED_BASELINE["catalog"]["review_candidates"]
 
 

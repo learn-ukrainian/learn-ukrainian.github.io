@@ -106,7 +106,7 @@ from .failure_codes import RUNTIME_FAILURE_CODES
 from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
-from .result import ParseResult, Result
+from .result import AgyModelIdentity, ParseResult, Result
 from .target_admission import resolve_and_admit
 from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
 from .trail_isolation import prepare_trail_isolation
@@ -1034,6 +1034,7 @@ def _build_usage_record(
     stderr_excerpt: str | None,
     tokens: int | None,
     substitution: dict[str, Any] | None = None,
+    model_identity: AgyModelIdentity | None = None,
     failure_code: str | None = None,
     agy_killed_commands: list[str] | None = None,
     agy_attempt_count: int = 1,
@@ -1093,6 +1094,14 @@ def _build_usage_record(
     }
     if agent == "codex":
         record["model_identity"] = codex_model_identity()
+    elif agent == "agy" and isinstance(model_identity, dict):
+        actual_model = model_identity.get("actual_model")
+        record["model_identity"] = {
+            "actual_model": actual_model[:200] if isinstance(actual_model, str) else None,
+            "actual_model_known": model_identity.get("actual_model_known") is True,
+            "source": "provider-init",
+            "substituted": model_identity.get("substituted") is True,
+        }
     safe_substitution = _safe_substitution_record(substitution)
     if safe_substitution is not None:
         record["substitution"] = safe_substitution
@@ -1702,7 +1711,8 @@ def _execute_invocation_plan(
             else any(
                 re.fullmatch(
                     r"(?:agy_stream_result_error:\s*)?Eligibility check failed:\s*"
-                    r"UNAVAILABLE \(code 503\)(?::[^\n]*)?", line
+                    r"UNAVAILABLE \(code 503\)(?::[^\n]*)?",
+                    line,
                 )
                 for text in (execution.stderr_text, parse.provider_error_text or "")
                 for line in text.splitlines()
@@ -1723,9 +1733,12 @@ def _execute_invocation_plan(
             return finish(execution)
         if provider_fault and (
             not execution.process_group_exited
-            or evidence.completion_reason in {
-                "agy_background_task_canceled", "agy_background_task_unconfirmed",
-                "agy_background_task_abandoned", "agy_print_timeout_partial",
+            or evidence.completion_reason
+            in {
+                "agy_background_task_canceled",
+                "agy_background_task_unconfirmed",
+                "agy_background_task_abandoned",
+                "agy_print_timeout_partial",
                 "agy_headless_permission_denied",
             }
         ):
@@ -1793,8 +1806,11 @@ def _execute_invocation_plan(
             budget.reroute_reason = "unsafe_replay"
             return finish(execution)
         budget.retry_reason = (
-            "incomplete_cancellation" if cancellation else
-            "pre_model_eligibility_503" if eligibility else "transient_provider_fault"
+            "incomplete_cancellation"
+            if cancellation
+            else "pre_model_eligibility_503"
+            if eligibility
+            else "transient_provider_fault"
         )
         budget.retry_disposition = "retried"
         kwargs.update(plan=retry_plan, session_id=None)
@@ -2413,6 +2429,7 @@ def _raise_for_kill_reason(
             stderr_excerpt=(f"streamed_output_limit exceeded: limit={limit_bytes} observed={observed_bytes}"),
             tokens=None,
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
@@ -2445,6 +2462,7 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
@@ -2479,6 +2497,7 @@ def _raise_for_kill_reason(
             )[:500],
             tokens=None,
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
@@ -2506,6 +2525,7 @@ def _raise_for_kill_reason(
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
@@ -2559,6 +2579,7 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
@@ -2607,6 +2628,7 @@ def _raise_for_kill_reason(
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
             agy_retry_reason=getattr(parse, "agy_retry_reason", None),
@@ -3334,6 +3356,7 @@ def _invoke_with_runner_failover(
             stderr_excerpt=parse.stderr_excerpt,
             tokens=parse.tokens,
             substitution=substitution,
+            model_identity=getattr(parse, "model_identity", None),
             failure_code=parse.failure_code,
             agy_killed_commands=getattr(parse, "agy_killed_commands", None),
             agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
@@ -3709,6 +3732,7 @@ def _invoke_impl(
         stderr_excerpt=parse.stderr_excerpt,
         tokens=parse.tokens,
         substitution=substitution,
+        model_identity=getattr(parse, "model_identity", None),
         failure_code=parse.failure_code,
         agy_killed_commands=getattr(parse, "agy_killed_commands", None),
         agy_attempt_count=getattr(parse, "agy_attempt_count", 1),
