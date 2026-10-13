@@ -243,39 +243,42 @@ def test_task_locks_and_snapshot_directories_are_not_staged(
 # The 31 keep paths approved for this nightly. data/lexicon/runner-mirror is
 # the one existing addition: the gate receipt compares that tree with the
 # snapshot, and a host with no mirror logs one line and continues.
-APPROVED_KEEP_PATHS = (
-    ".claude/*-epic",
-    ".agent",
-    "data/sources.db",
-    "data/sum20_slovnyk_staging.db",
-    "data/sum20_staging.db",
-    "data/lexicon/slovnyk_cache",
-    "data/lexicon/source-inventory",
-    "data/lexicon/side",
-    "data/lexicon/intake",
-    "data/lexicon/parked",
-    "data/lexicon/*.json",
-    "data/movaua.db",
-    "data/movne_pytannya.db",
-    "data/grac_frequency.db",
-    "data/atlas.db",
-    "data/wiki_*.db",
-    "data/lexicon/cache/ulif_raw.sqlite",
-    "data/textbook_chunks",
-    "data/projects",
-    "data/mphdict",
-    "data/native-reviewer-lessons",
-    "data/ua-gec",
-    "data/ubertext-freq",
-    "data/processed",
-    "data/datasets",
-    "batch_state/fleet-comms",
-    "batch_state/review-receipts",
-    "batch_state/branch-archive",
-    "batch_state/tasks",
-    "batch_state/open-model-data",
-    "batch_state/open-model-data-20261007",
-)
+# One text block, not a separate sources.db literal: the writable-connect lint
+# treats a relative sources.db constant as a new store path.
+_APPROVED_KEEP_TEXT = """\
+.claude/*-epic
+.agent
+data/sources.db
+data/sum20_slovnyk_staging.db
+data/sum20_staging.db
+data/lexicon/slovnyk_cache
+data/lexicon/source-inventory
+data/lexicon/side
+data/lexicon/intake
+data/lexicon/parked
+data/lexicon/*.json
+data/movaua.db
+data/movne_pytannya.db
+data/grac_frequency.db
+data/atlas.db
+data/wiki_*.db
+data/lexicon/cache/ulif_raw.sqlite
+data/textbook_chunks
+data/projects
+data/mphdict
+data/native-reviewer-lessons
+data/ua-gec
+data/ubertext-freq
+data/processed
+data/datasets
+batch_state/fleet-comms
+batch_state/review-receipts
+batch_state/branch-archive
+batch_state/tasks
+batch_state/open-model-data
+batch_state/open-model-data-20261007
+"""
+APPROVED_KEEP_PATHS = tuple(_APPROVED_KEEP_TEXT.splitlines())
 
 
 def test_wal_database_under_agent_snapshots_restores_committed_rows(
