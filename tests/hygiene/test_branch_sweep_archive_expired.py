@@ -35,7 +35,8 @@ def git(repo: Path, *args: str, env: dict[str, str] | None = None) -> str:
 
 
 @pytest.fixture
-def repo(tmp_path: Path) -> Path:
+def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "0")
     remote = tmp_path / "origin.git"
     subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True, timeout=30)
     root = tmp_path / "checkout"
@@ -774,3 +775,321 @@ def test_pr_checkout_names_are_not_archived(repo: Path) -> None:
     assert found["codex/plain-old"].local_deleted is True
     assert ref_sha(repo, "codex/plain-old") is None
     assert plain
+
+
+def test_symbolic_alias_cannot_archive_protected_main(repo: Path) -> None:
+    sha = commit_at(repo, "main", {"unique.txt": "keep\n"}, "unique main", when=_when(8))
+    git(repo, "symbolic-ref", "refs/heads/codex/alias", "refs/heads/main")
+    found = by_name(run(repo, apply=True))
+    assert ref_sha(repo, "main") == sha
+    assert ref_sha(repo, "codex/alias") == sha
+    assert found["codex/alias"].local_deleted is False
+    assert "symbolic" in found["codex/alias"].reason
+    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
+
+
+def _plant_guard(repo: Path, name: str, sha: str, guard: str, states: dict[str, list[PullRequestState]]) -> None:
+    if guard in {"OPEN", "CLOSED", "MERGED"}:
+        states[name] = [PullRequestState(99, guard, sha)]
+    elif guard in {"task", "recent-task"}:
+        directory = repo / "batch_state" / "tasks"
+        directory.mkdir(parents=True, exist_ok=True)
+        payload = {"worktree_branch": name, "status": "running" if guard == "task" else "failed"}
+        (directory / "late.json").write_text(json.dumps(payload), encoding="utf-8")
+    else:
+        path = repo.parent / "late-worktree"
+        git(repo, "worktree", "add", str(path), name)
+        if guard == "prunable-worktree":
+            # Git still registers the branch after a checkout directory goes missing.
+            path.rename(repo.parent / "moved-worktree")
+
+
+@pytest.mark.parametrize("guard", ["OPEN", "CLOSED", "MERGED", "task", "recent-task", "worktree", "prunable-worktree"])
+def test_guard_on_earlier_candidate_during_last_pr_lookup_keeps_batch(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, guard: str
+) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/aa", "codex/bb", "codex/cc")}
+    states: dict[str, list[PullRequestState]] = {}
+    receipted = False
+    planted = False
+    original = sweep._write_archive_receipts
+
+    def receipt(root, confirmed, **kwargs):
+        nonlocal receipted
+        original(root, confirmed, **kwargs)
+        receipted = True
+
+    def prs(root, name):
+        nonlocal planted
+        if receipted and name == "codex/cc" and not planted:
+            _plant_guard(root, "codex/aa", heads["codex/aa"], guard, states)
+            planted = True
+        return states.get(name, []), None
+
+    monkeypatch.setattr(sweep, "_write_archive_receipts", receipt)
+    found = by_name(sweep.sweep(repo, apply=True, pr_lookup=prs, protected_lookup=lambda _: set()))
+    assert planted
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert all(not found[name].local_deleted for name in heads)
+    assert "batch kept" in found["codex/aa"].reason
+    if guard == "worktree":
+        assert git(repo.parent / "late-worktree", "rev-parse", "HEAD") == heads["codex/aa"]
+
+
+@pytest.mark.parametrize("guard", ["OPEN", "task", "worktree", "head"])
+def test_pre_bundle_guard_failure_keeps_entire_selected_batch(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, guard: str
+) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    states: dict[str, list[PullRequestState]] = {}
+    original = sweep._apply_archive
+
+    def apply(root, decisions, **kwargs):
+        if guard == "head":
+            heads["codex/alpha"] = move_head(root, "codex/alpha")
+        else:
+            _plant_guard(root, "codex/alpha", heads["codex/alpha"], guard, states)
+        return original(root, decisions, **kwargs)
+
+    monkeypatch.setattr(sweep, "_apply_archive", apply)
+    found = by_name(run(repo, apply=True, states=states))
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert all(not found[name].local_deleted for name in heads)
+    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
+    assert not (repo / sweep.RECEIPT_PATH).exists()
+    assert "batch kept" in found["codex/beta"].reason
+
+
+@pytest.mark.parametrize("body", [b"{", b"{}", b"{}\n{", b"bad\n", b"\xff\n", b"\n", b"[]\n"])
+def test_existing_broken_receipt_keeps_batch(repo: Path, body: bytes) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    path = repo / sweep.RECEIPT_PATH
+    path.parent.mkdir(parents=True)
+    path.write_bytes(body)
+    found = by_name(run(repo, apply=True))
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert all(not found[name].local_deleted for name in heads)
+    assert path.read_bytes() == body
+    assert all(sweep.RECEIPT_PATH.as_posix() in found[name].reason for name in heads)
+
+
+@pytest.mark.parametrize("body", [b"", b"{}\n", b"{}\r\n", '{"note":"a\u2028b"}\n'.encode()])
+def test_existing_complete_receipt_allows_archive(repo: Path, body: bytes) -> None:
+    commit_unique(repo, "codex/alpha", days=8)
+    path = repo / sweep.RECEIPT_PATH
+    path.parent.mkdir(parents=True)
+    path.write_bytes(body)
+    found = by_name(run(repo, apply=True))
+    assert found["codex/alpha"].local_deleted is True
+    assert ref_sha(repo, "codex/alpha") is None
+    assert path.read_bytes().startswith(body)
+
+
+def test_transaction_does_not_follow_a_last_moment_symbolic_ref(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    sha = commit_unique(repo, "codex/alias", days=8)
+    git(repo, "update-ref", "refs/heads/main", sha)
+    original = sweep._git
+
+    def intercept(root, *args, **kwargs):
+        if args[:2] == ("update-ref", "--stdin"):
+            git(root, "symbolic-ref", "refs/heads/codex/alias", "refs/heads/main")
+        return original(root, *args, **kwargs)
+
+    monkeypatch.setattr(sweep, "_git", intercept)
+    run(repo, apply=True)
+    assert ref_sha(repo, "main") == sha
+
+
+@pytest.mark.parametrize(
+    ("guard", "classification"),
+    [
+        ("symbolic", "report-only"),
+        ("OPEN", "skipped-open-PR"),
+        ("CLOSED", "report-only"),
+        ("MERGED", "delete-merged"),
+        ("task", "skipped-live-task"),
+        ("recent-task", "report-only"),
+        ("worktree", "skipped-worktree"),
+        ("prunable-worktree", "skipped-worktree"),
+        ("protected", "protected"),
+        ("rescue", "report-only"),
+        ("review", "report-only"),
+        ("unpushed", "report-only"),
+        ("pushed", "archive-expired"),
+    ],
+)
+def test_archive_guard_class_table(repo: Path, guard: str, classification: str) -> None:
+    name = {"protected": "codex/protected", "rescue": "rescue/held", "review": "codex/review-1"}.get(
+        guard, "codex/alpha"
+    )
+    sha = commit_unique(repo, name, days=8)
+    states: dict[str, list[PullRequestState]] = {}
+    if guard == "symbolic":
+        git(repo, "branch", "codex/target", sha)
+        git(repo, "symbolic-ref", f"refs/heads/{name}", "refs/heads/codex/target")
+    elif guard == "unpushed":
+        git(repo, "branch", "--set-upstream-to=origin/main", name)
+    elif guard == "pushed":
+        publish(repo, name)
+    elif guard in {"OPEN", "CLOSED", "MERGED", "task", "recent-task", "worktree", "prunable-worktree"}:
+        _plant_guard(repo, name, sha, guard, states)
+    found = by_name(
+        sweep.sweep(
+            repo,
+            pr_lookup=lookup(states),
+            protected_lookup=lambda _: {name} if guard == "protected" else set(),
+        )
+    )
+    assert found[name].classification == classification
+    assert not found[name].local_deleted
+    assert ref_sha(repo, name) == sha
+
+
+@pytest.mark.parametrize("guard", ["task", "worktree"])
+def test_last_local_check_keeps_batch(repo: Path, monkeypatch: pytest.MonkeyPatch, guard: str) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    original = sweep._delete_archived_refs
+
+    def delete(root, pairs):
+        _plant_guard(root, "codex/alpha", heads["codex/alpha"], guard, {})
+        return original(root, pairs)
+
+    monkeypatch.setattr(sweep, "_delete_archived_refs", delete)
+    found = by_name(run(repo, apply=True))
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert all(not found[name].local_deleted for name in heads)
+    assert "final delete check" in found["codex/alpha"].reason
+
+
+@pytest.mark.parametrize("change", ["task-record", "worktree-registration"])
+def test_changed_but_still_eligible_guard_snapshot_keeps_batch(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, change: str
+) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    original = sweep._write_archive_receipts
+
+    def receipt(root, confirmed, **kwargs):
+        original(root, confirmed, **kwargs)
+        if change == "task-record":
+            directory = root / "batch_state" / "tasks"
+            directory.mkdir(parents=True)
+            (directory / "old.json").write_text(
+                json.dumps({"branch": "codex/alpha", "status": "failed", "finished_at": _when(30)}),
+                encoding="utf-8",
+            )
+        else:
+            path = root.parent / "late-detached"
+            git(root, "worktree", "add", "--detach", str(path), heads["codex/alpha"])
+
+    monkeypatch.setattr(sweep, "_write_archive_receipts", receipt)
+    found = by_name(run(repo, apply=True))
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert all(not found[name].local_deleted for name in heads)
+
+
+def test_receipt_explains_thin_bundle_prerequisites(repo: Path) -> None:
+    commit_unique(repo, "codex/alpha", days=8)
+    run(repo, apply=True)
+    row = receipt_rows(repo)[0]
+    assert row["restore_prerequisites"] == (
+        "This thin bundle needs its prerequisite commits present. Fetch them from origin "
+        "or run the restore command in a clone of this repository."
+    )
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        None,
+        "page",
+        "missing",
+        "errors",
+        "blank",
+        "scalar",
+        "row",
+        "number",
+        "state",
+        "sha",
+        "transport",
+        "timeout",
+        "missing-tool",
+    ],
+)
+def test_production_pr_snapshot_reads_whole_batch_once(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, fault: str | None
+) -> None:
+    sha = git(repo, "rev-parse", "main")
+    row = {"number": 7, "state": "OPEN", "headRefOid": sha}
+    connection = {"nodes": [row], "pageInfo": {"hasNextPage": fault == "page"}}
+    payload: object = {
+        "data": {"repository": {"b0": connection, "b1": {"nodes": [], "pageInfo": {"hasNextPage": False}}}}
+    }
+    if fault == "missing":
+        payload = {"data": {"repository": {"b0": connection}}}
+    elif fault == "errors":
+        payload = {"errors": [{"message": "unavailable"}]}
+    elif fault == "scalar":
+        payload = 1
+    elif fault == "row":
+        connection["nodes"] = [None]
+    elif fault in {"number", "state", "sha"}:
+        row[{"number": "number", "state": "state", "sha": "headRefOid"}[fault]] = None
+    calls = []
+
+    def query(args, **kwargs):
+        calls.append(args)
+        assert kwargs["fresh"] is True
+        assert kwargs["cwd"] == repo
+        assert kwargs["capture_output"] is True and kwargs["text"] is True
+        assert 'headRefName:"codex/alpha"' in args[-1]
+        assert 'headRefName:"codex/beta"' in args[-1]
+        if fault == "timeout":
+            raise subprocess.TimeoutExpired(args, 30)
+        if fault == "missing-tool":
+            raise FileNotFoundError("missing test tool")
+        return subprocess.CompletedProcess(
+            args, 1 if fault == "transport" else 0, "" if fault == "blank" else json.dumps(payload), ""
+        )
+
+    monkeypatch.setattr(sweep.reaper, "_github_owner_repo", lambda _: ("example", "project"))
+    monkeypatch.setattr(sweep.github_client, "run", query)
+    found = sweep._archive_pr_snapshot(repo, ["codex/alpha", "codex/beta"], sweep.reaper._query_pr_states)
+    assert len(calls) == 1
+    if fault:
+        assert all(error == "batch PR snapshot unavailable or incomplete" for _, error in found.values())
+    else:
+        assert found == {"codex/alpha": ([PullRequestState(7, "OPEN", sha)], None), "codex/beta": ([], None)}
+
+
+@pytest.mark.parametrize("guard", ["OPEN", "task", "worktree"])
+def test_production_batch_response_precedes_local_guard_reads(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, guard: str
+) -> None:
+    heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
+    original = sweep._archive_pr_snapshot
+    queries = []
+
+    def query(args, **kwargs):
+        queries.append(args)
+        states: dict[str, list[PullRequestState]] = {}
+        _plant_guard(repo, "codex/alpha", heads["codex/alpha"], guard, states)
+        nodes = [{"number": 99, "state": "OPEN", "headRefOid": heads["codex/alpha"]}] if guard == "OPEN" else []
+        payload = {
+            "data": {
+                "repository": {
+                    "b0": {"nodes": nodes, "pageInfo": {"hasNextPage": False}},
+                    "b1": {"nodes": [], "pageInfo": {"hasNextPage": False}},
+                }
+            }
+        }
+        return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+
+    monkeypatch.setattr(sweep.reaper, "_github_owner_repo", lambda _: ("example", "project"))
+    monkeypatch.setattr(sweep.github_client, "run", query)
+    monkeypatch.setattr(
+        sweep, "_archive_pr_snapshot", lambda root, names, _: original(root, names, sweep.reaper._query_pr_states)
+    )
+    found = by_name(run(repo, apply=True))
+    assert len(queries) == 1
+    assert {name: ref_sha(repo, name) for name in heads} == heads
+    assert all(not found[name].local_deleted for name in heads)

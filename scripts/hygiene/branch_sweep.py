@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import contextvars
+import fcntl
 import hashlib
 import json
 import os
@@ -66,6 +67,7 @@ class Branch:
     local_sha: str | None = None
     remote_date: int | None = None
     local_date: int | None = None
+    local_symref: str | None = None
 
 
 @dataclass(frozen=True)
@@ -139,16 +141,16 @@ def _refs(repo: Path) -> list[Branch]:
     output = _checked(
         repo,
         "for-each-ref",
-        "--format=%(refname)%00%(objectname)%00%(committerdate:unix)",
+        "--format=%(refname)%00%(objectname)%00%(committerdate:unix)%00%(symref)",
         "refs/remotes/origin",
         "refs/heads",
     )
     by_name: dict[str, dict[str, object]] = {}
     for line in output.splitlines():
         fields = line.split("\0")
-        if len(fields) != 3:
+        if len(fields) != 4:
             raise RuntimeError("git for-each-ref returned a malformed row")
-        ref, sha, raw_date = fields
+        ref, sha, raw_date, symref = fields
         if ref.startswith("refs/remotes/origin/"):
             kind, name = "remote", ref.removeprefix("refs/remotes/origin/")
         elif ref.startswith("refs/heads/"):
@@ -160,6 +162,8 @@ def _refs(repo: Path) -> list[Branch]:
         row = by_name.setdefault(name, {"name": name})
         row[f"{kind}_sha"] = sha
         row[f"{kind}_date"] = int(raw_date) if raw_date.isdecimal() else None
+        if kind == "local":
+            row["local_symref"] = symref or None
     return [Branch(**by_name[name]) for name in sorted(by_name)]
 
 
@@ -876,6 +880,8 @@ def _classify(
         return decision("protected", "outside agent/scratch candidate namespace or protected name")
     if not _valid(name, repo):
         return decision("report-only", "invalid or unsafe branch name")
+    if branch.local_symref:
+        return decision("report-only", "symbolic local ref is never deleted or archived")
     if name in worktree_branches:
         return decision("skipped-worktree", "registered worktree uses this branch")
     if (branch.remote_sha or branch.local_sha) in detached_heads:
@@ -974,6 +980,7 @@ def sweep(
         worktree_branches = {item.branch for item in worktrees if item.branch}
         detached_heads = {item.head for item in worktrees if item.detached and item.head}
         active = _active_tasks(repo)
+        archive_snapshot = _archive_local_snapshot(repo, branches=branches, worktrees=worktrees)
         for branch in branches:
             if protection_error and _candidate(branch.name) and branch.name not in PROTECTED:
                 decisions.append(
@@ -1029,6 +1036,7 @@ def sweep(
                 issue_lookup=issues,
                 evidence_cache=evidence_cache,
                 archive_after_days=days,
+                classification_snapshot=archive_snapshot,
             )
         decisions.extend(_review_bundle_decisions(repo))
         if apply:
@@ -1117,12 +1125,25 @@ def _append_ledger_line(repo: Path, payload: dict[str, object], *, relative: Pat
     _ensure_ledger_directory(path.parent)
     descriptor = os.open(
         path,
-        os.O_APPEND | os.O_CREAT | os.O_WRONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
+        os.O_APPEND | os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC,
         0o600,
     )
     try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
         os.fchmod(descriptor, 0o600)
-        _write_all(descriptor, encoded)
+        offset = os.fstat(descriptor).st_size
+        if relative == RECEIPT_PATH:
+            _parse_archive_receipts(os.pread(descriptor, offset, 0))
+        try:
+            _write_all(descriptor, encoded)
+            if os.pread(descriptor, len(encoded), offset) != encoded:
+                raise RuntimeError("receipt append is truncated or does not match what was written")
+        except (OSError, RuntimeError):
+            # Under this writer lock, undo only our failed append. Never repair
+            # an existing broken tail or discard another writer's valid record.
+            os.ftruncate(descriptor, offset)
+            os.fsync(descriptor)
+            raise
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
@@ -1391,6 +1412,7 @@ def _write_archive_receipts(
         if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
             raise RuntimeError("archive receipt path is not a regular file")
         offset = info.st_size
+    _parse_archive_receipts(_read_from(path, 0) if offset else b"")
     payloads: list[dict[str, object]] = []
     for _verdict, branch in confirmed:
         sha = branch.local_sha
@@ -1403,22 +1425,146 @@ def _write_archive_receipts(
             "bundle": relative,
             "remote_copy": branch.remote_sha is not None,
             "restore": f"git fetch {shlex.quote(str(bundle_path))} {shlex.quote(refspec)}",
+            "restore_prerequisites": (
+                "This thin bundle needs its prerequisite commits present. Fetch them from origin "
+                "or run the restore command in a clone of this repository."
+            ),
             "sha": sha,
             "sha256": checksum,
         }
         payloads.append(payload)
         _append_ledger_line(repo, payload, relative=RECEIPT_PATH)
     body = _read_from(path, offset)
-    if not body.endswith(b"\n"):
-        raise RuntimeError("archive receipt line is truncated")
-    try:
-        # LF only. str.splitlines() also splits on U+2028 and other separators
-        # that JSON may legally contain inside a string (#9556).
-        parsed = [json.loads(line) for line in jsonl_lines(body.decode("utf-8")) if line]
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise RuntimeError("archive receipt line is not valid JSON") from exc
+    parsed = _parse_archive_receipts(body)
     if parsed != payloads:
         raise RuntimeError("archive receipt does not match what was written")
+
+
+def _parse_archive_receipts(body: bytes) -> list[dict[str, object]]:
+    """Require complete LF-terminated JSON objects, including every existing record."""
+    if not body:
+        return []
+    reason = f"invalid archive receipt ledger {RECEIPT_PATH.as_posix()}"
+    if not body.endswith(b"\n"):
+        raise RuntimeError(f"{reason}: truncated tail")
+    try:
+        parsed = [json.loads(line) for line in jsonl_lines(body.decode("utf-8"))[:-1]]
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"{reason}: record is not valid JSON") from exc
+    if any(not isinstance(row, dict) for row in parsed):
+        raise RuntimeError(f"{reason}: record is not an object")
+    return parsed
+
+
+def _archive_local_snapshot(
+    repo: Path,
+    *,
+    branches: list[Branch] | None = None,
+    worktrees: list[reaper.WorktreeInfo] | None = None,
+) -> dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]]:
+    """Freeze ref, worktree registration and complete task-record state per branch."""
+    refs = _refs(repo) if branches is None else branches
+    trees = reaper.list_git_worktrees(repo) if worktrees is None else worktrees
+    records = _task_records(repo)
+    tasks: dict[str, list[str]] = {}
+    for path, state in records:
+        finished = _task_finished_at(state, path)
+        signature = json.dumps([path.name, state, finished.isoformat() if finished else None], sort_keys=True)
+        for name in _task_branch_names(state):
+            tasks.setdefault(name, []).append(signature)
+    return {
+        branch.name: (
+            branch,
+            tuple(
+                sorted(
+                    (
+                        tree
+                        for tree in trees
+                        if tree.branch == branch.name
+                        or (tree.detached and tree.head in {branch.local_sha, branch.remote_sha} - {None})
+                    ),
+                    key=lambda tree: str(tree.path),
+                )
+            ),
+            tuple(sorted(tasks.get(branch.name, []))),
+        )
+        for branch in refs
+    }
+
+
+def _archive_pr_snapshot(
+    repo: Path, names: list[str], pr_lookup: PrLookup
+) -> dict[str, tuple[list[reaper.PullRequestState], str | None]]:
+    """Read the entire selected PR guard batch before inspecting local guards.
+
+    Production uses one GraphQL response, never N sequential branch queries.
+    Injected branch readers must agree across two complete passes. They are a
+    test/embedding seam, not a substitute for the production batch response.
+    """
+    if pr_lookup is not reaper._query_pr_states:
+        first = {name: pr_lookup(repo, name) for name in names}
+        second = {name: pr_lookup(repo, name) for name in names}
+        return {
+            name: second[name] if first[name] == second[name] else ([], "PR state changed during batch snapshot")
+            for name in names
+        }
+    slug = reaper._github_owner_repo(repo)
+    error = "batch PR snapshot unavailable or incomplete"
+    unavailable = {name: ([], error) for name in names}
+    if slug is None:
+        return unavailable
+    owner, repository = slug
+    fields = " ".join(
+        f"b{index}:pullRequests(headRefName:{json.dumps(name)},states:[OPEN,CLOSED,MERGED],first:100)"
+        "{nodes{number state headRefOid} pageInfo{hasNextPage}}"
+        for index, name in enumerate(names)
+    )
+    query = f"query{{repository(owner:{json.dumps(owner)},name:{json.dumps(repository)}){{{fields}}}}}"
+    try:
+        result = github_client.run(
+            ["gh", "api", "graphql", "-f", f"query={query}"],
+            cwd=repo,
+            timeout=30,
+            fresh=True,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=sanitized_git_env(),
+        )
+    except (OSError, subprocess.SubprocessError):
+        return unavailable
+    if result.returncode:
+        return unavailable
+    try:
+        payload = json.loads(result.stdout)
+        if not isinstance(payload, dict) or payload.get("errors"):
+            return unavailable
+        data = payload["data"]["repository"]
+        found: dict[str, tuple[list[reaper.PullRequestState], str | None]] = {}
+        for index, name in enumerate(names):
+            connection = data[f"b{index}"]
+            if connection["pageInfo"]["hasNextPage"] is not False:
+                return unavailable
+            rows = connection["nodes"]
+            if not isinstance(rows, list):
+                return unavailable
+            states: list[reaper.PullRequestState] = []
+            for row in rows:
+                number, state, sha = row["number"], row["state"], row["headRefOid"]
+                if (
+                    isinstance(number, bool)
+                    or not isinstance(number, int)
+                    or number <= 0
+                    or state not in {"OPEN", "CLOSED", "MERGED"}
+                    or not isinstance(sha, str)
+                    or not SHA_RE.fullmatch(sha)
+                ):
+                    return unavailable
+                states.append(reaper.PullRequestState(number, state, sha))
+            found[name] = (states, None)
+        return found
+    except (KeyError, TypeError, ValueError):
+        return unavailable
 
 
 def _archive_delete_blockers(
@@ -1430,14 +1576,17 @@ def _archive_delete_blockers(
     issue_lookup: IssueLookup,
     evidence_cache: _EvidenceCache,
     archive_after_days: int,
+    classification_snapshot: dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]],
 ) -> list[tuple[str, str]]:
-    """Re-check every guard immediately before delete. The first stale branch fails the batch."""
+    """Finish every PR read, then compare a complete local snapshot with classification."""
+    prs = _archive_pr_snapshot(repo, [branch.name for _, branch in confirmed], pr_lookup)
     found = {item.name: item for item in _refs(repo)}
     worktrees = reaper.list_git_worktrees(repo)
     worktree_branches = {item.branch for item in worktrees if item.branch}
     detached_heads = {item.head for item in worktrees if item.detached and item.head}
     active = _active_tasks(repo)
     recent = _recent_released_tasks(repo)
+    final_snapshot = _archive_local_snapshot(repo, branches=list(found.values()), worktrees=worktrees)
     blockers: list[tuple[str, str]] = []
     for _verdict, branch in confirmed:
         current = found.get(branch.name)
@@ -1452,7 +1601,7 @@ def _archive_delete_blockers(
             detached_heads=detached_heads,
             active_tasks=active,
             protected_branches=protected,
-            pr_lookup=pr_lookup,
+            pr_lookup=lambda _repo, name: prs[name],
             issue_lookup=issue_lookup,
             evidence_cache=evidence_cache,
             archive_after_days=archive_after_days,
@@ -1460,6 +1609,8 @@ def _archive_delete_blockers(
         )
         if fresh.classification != "archive-expired" or fresh.local_sha != archived:
             blockers.append((branch.name, f"{fresh.classification}: {fresh.reason}"))
+        elif final_snapshot.get(branch.name) != classification_snapshot.get(branch.name):
+            blockers.append((branch.name, "ref, worktree or task record changed since classification"))
     return blockers
 
 
@@ -1472,7 +1623,17 @@ def _delete_archived_refs(repo: Path, pairs: list[tuple[str, str]]) -> None:
         if not _valid(name, repo) or not SHA_RE.fullmatch(sha):
             raise RuntimeError(f"unsafe ref {name}")
         lines.append(f"delete refs/heads/{name} {sha}\n")
-    result = _git(repo, "update-ref", "--stdin", input="".join(lines))
+    # No network or other work follows these last local checks before the ref
+    # transaction. Guard changes after these reads remain the residual window;
+    # expected SHAs bound head moves, and --no-deref protects symbolic targets.
+    trees = reaper.list_git_worktrees(repo)
+    active = _active_tasks(repo) | _recent_released_tasks(repo)
+    for name, sha in pairs:
+        if any(tree.branch == name or (tree.detached and tree.head == sha) for tree in trees):
+            raise RuntimeError(f"{name}: skipped-worktree at final delete check")
+        if name in active:
+            raise RuntimeError(f"{name}: skipped-live-task or recent task at final delete check")
+    result = _git(repo, "update-ref", "--stdin", "--no-deref", input="".join(lines))
     if result.returncode != 0:
         detail = (result.stderr or result.stdout or "").strip()
         raise RuntimeError(detail or f"git update-ref exited {result.returncode}")
@@ -1487,6 +1648,7 @@ def _apply_archive(
     issue_lookup: IssueLookup,
     evidence_cache: _EvidenceCache,
     archive_after_days: int,
+    classification_snapshot: dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]],
 ) -> list[Decision]:
     """Bundle, verify, and receipt every expired local branch, then delete those local refs."""
     selected = [item for item in decisions if item.classification == "archive-expired"]
@@ -1500,11 +1662,12 @@ def _apply_archive(
     active = _active_tasks(repo)
     recent = _recent_released_tasks(repo)
     confirmed: list[tuple[Decision, Branch]] = []
+    rejected: dict[str, str] = {}
     for verdict in selected:
         index = indexes[verdict.branch]
         branch = found.get(verdict.branch)
         if branch is None or branch.local_sha is None or branch.local_sha != verdict.local_sha:
-            decisions[index] = _retain_archive(verdict, "archive retained: local head changed before bundling")
+            rejected[verdict.branch] = "local head changed before bundling"
             continue
         fresh = _classify(
             repo,
@@ -1520,11 +1683,17 @@ def _apply_archive(
             recent_tasks=recent,
         )
         if fresh.classification != "archive-expired" or fresh.local_sha != branch.local_sha:
-            decisions[index] = replace(fresh, local_deleted=False, remote_deleted=False)
+            rejected[verdict.branch] = f"{fresh.classification}: {fresh.reason}"
             continue
         decisions[index] = fresh
         confirmed.append((fresh, branch))
-    if not confirmed:
+    if rejected:
+        described = "; ".join(f"{name}: {why}" for name, why in rejected.items())
+        for verdict in selected:
+            why = rejected.get(verdict.branch, "another branch in the batch failed validation")
+            decisions[indexes[verdict.branch]] = _retain_archive(
+                verdict, f"archive retained: {why}; batch kept ({described})"
+            )
         return decisions
     confirmed.sort(key=lambda pair: pair[0].branch)
     try:
@@ -1549,6 +1718,7 @@ def _apply_archive(
         issue_lookup=issue_lookup,
         evidence_cache=evidence_cache,
         archive_after_days=archive_after_days,
+        classification_snapshot=classification_snapshot,
     )
     if blockers:
         described = "; ".join(f"{name}: {why}" for name, why in blockers)
