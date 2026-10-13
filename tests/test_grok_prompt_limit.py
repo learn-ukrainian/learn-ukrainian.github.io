@@ -9,12 +9,19 @@ from __future__ import annotations
 
 import stat
 import sys
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from agent_runtime.adapters.grok_build import GrokBuildAdapter
+from agent_runtime.adapters.grok_build import (
+    _ISOLATED_PROMPT_FILENAME,
+    _PROMPT_FILE_SUFFIX,
+    GrokBuildAdapter,
+)
 
 FAKE_GROK = "/usr/local/bin/grok"
 # Linux MAX_ARG_STRLEN. strnlen_user counts the NUL, so 131072 bytes of text
@@ -35,35 +42,44 @@ def _inline_limit() -> int:
 def _build(prompt: str, tmp_path: Path, **kw):
     mode = kw.pop("mode", "read-only")
     tool_config = kw.pop("tool_config", None)
-    with (
-        patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK),
-        patch.dict("os.environ", {"TMPDIR": str(tmp_path)}),
-    ):
-        return GrokBuildAdapter().build_invocation(
-            prompt=prompt,
-            mode=mode,
-            cwd=tmp_path,
-            model=kw.pop("model", None),
-            task_id=kw.pop("task_id", None),
-            session_id=kw.pop("session_id", None),
-            tool_config=tool_config,
-            effort=kw.pop("effort", None),
-        )
+    previous_tempdir = tempfile.tempdir
+    try:
+        with (
+            patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK),
+            patch.dict("os.environ", {"TMPDIR": str(tmp_path)}),
+        ):
+            # NamedTemporaryFile caches the first temp directory it sees.
+            # Drop that cache so this call honors the tmp_path TMPDIR.
+            tempfile.tempdir = None
+            return GrokBuildAdapter().build_invocation(
+                prompt=prompt,
+                mode=mode,
+                cwd=tmp_path,
+                model=kw.pop("model", None),
+                task_id=kw.pop("task_id", None),
+                session_id=kw.pop("session_id", None),
+                tool_config=tool_config,
+                effort=kw.pop("effort", None),
+            )
+    finally:
+        tempfile.tempdir = previous_tempdir
 
 
-def _isolated(prompt: str, tmp_path: Path):
+def _isolated(prompt: str, tmp_path: Path, **kw):
     review_root = tmp_path / "review"
     for child in ("tmp", "home", "exec"):
         (review_root / child).mkdir(parents=True)
+    extra = kw.pop("tool_config", None) or {}
     tool_config = {
         "review_isolation": True,
         "review_engine_binary": "/usr/bin/true",
+        **extra,
     }
     with patch(
         "scripts.review.isolation.validated_review_write_root",
         return_value=review_root,
     ):
-        return _build(prompt, tmp_path, mode="read-only", tool_config=tool_config), review_root
+        return _build(prompt, tmp_path, mode="read-only", tool_config=tool_config, **kw), review_root
 
 
 def _prompt_file(plan) -> Path:
@@ -176,3 +192,146 @@ def test_inline_limit_constant_is_under_the_kernel_ceiling() -> None:
     limit = _inline_limit()
     if not 0 < limit < _MAX_ARG_STRLEN:
         raise AssertionError(f"inline limit {limit} is not a margin under {_MAX_ARG_STRLEN}")
+
+
+_OVERSIZED = "x" * 100_001
+_EFFORT_ERROR = "native Grok CLI supports --effort values ['high', 'low', 'medium']; got 'invalid'"
+_SCHEMA_ERROR = "output_schema_path must be a non-empty absolute path"
+_SCHEMA_CONFIG = {
+    "output_schema_path": "relative.json",
+    "output_schema_sha256": "ab" * 32,
+}
+_GUARD_SUFFIXES = (".grok-reviewer-agent.md", ".grok-write-agent.md")
+
+
+def _prompt_files(root: Path) -> list[Path]:
+    return [
+        path
+        for path in root.rglob("*")
+        if path.is_file() and (path.name == _ISOLATED_PROMPT_FILENAME or path.name.endswith(_PROMPT_FILE_SUFFIX))
+    ]
+
+
+def _guard_files(root: Path) -> list[Path]:
+    return [path for path in root.rglob("*") if path.is_file() and path.name.endswith(_GUARD_SUFFIXES)]
+
+
+def _expect(fn, exc_type: type[BaseException], message: str) -> None:
+    try:
+        fn()
+    except exc_type as exc:
+        if str(exc) != message or exc.__cause__ is not None:
+            raise AssertionError(f"exception changed: {exc!r} cause={exc.__cause__!r}") from exc
+    else:
+        raise AssertionError(f"expected {exc_type.__name__}: {message}")
+
+
+def _assert_no_prompt_files(root: Path) -> None:
+    leaked = _prompt_files(root)
+    if leaked:
+        raise AssertionError(f"prompt files left behind: {[path.name for path in leaked]}")
+
+
+@pytest.mark.parametrize(
+    ("kind", "effort", "extra", "message"),
+    [
+        ("ordinary", "invalid", None, _EFFORT_ERROR),
+        ("isolated", "invalid", None, _EFFORT_ERROR),
+        ("ordinary", "high", _SCHEMA_CONFIG, _SCHEMA_ERROR),
+        ("isolated", "high", _SCHEMA_CONFIG, _SCHEMA_ERROR),
+        (
+            "isolated",
+            "high",
+            {"review_deny_tools": "Bash"},
+            "GrokBuildAdapter: review_deny_tools must be a list or tuple",
+        ),
+        (
+            "isolated",
+            "high",
+            {"review_deny_tools": ["NotebookEdit"]},
+            "GrokBuildAdapter: review_deny_tools contains unsupported Grok permission prefixes: ['NotebookEdit']",
+        ),
+        (
+            "isolated",
+            "high",
+            {"review_deny_tools": ["Write", "Bash"]},
+            "GrokBuildAdapter: review_deny_tools must retain fail-closed rules: ['Edit']",
+        ),
+    ],
+)
+def test_oversized_prompt_failure_leaves_no_prompt_file(
+    tmp_path: Path, kind: str, effort: str, extra, message: str
+) -> None:
+    prompt = _OVERSIZED
+
+    def invoke() -> None:
+        if kind == "ordinary":
+            _build(prompt, tmp_path, effort=effort, tool_config=extra)
+        else:
+            _isolated(prompt, tmp_path, effort=effort, tool_config=extra)
+
+    _expect(invoke, ValueError, message)
+    _assert_no_prompt_files(tmp_path)
+
+
+def test_short_prompt_invalid_effort_leaves_no_prompt_file(tmp_path: Path) -> None:
+    def invoke() -> None:
+        _build("short", tmp_path, effort="invalid")
+
+    _expect(invoke, ValueError, _EFFORT_ERROR)
+    _assert_no_prompt_files(tmp_path)
+
+
+def test_isolated_short_prompt_invalid_effort_leaves_no_prompt_file(tmp_path: Path) -> None:
+    def invoke() -> None:
+        _isolated("short", tmp_path, effort="invalid")
+
+    _expect(invoke, ValueError, _EFFORT_ERROR)
+    _assert_no_prompt_files(tmp_path)
+
+
+def test_hyphen_prompt_invalid_effort_leaves_no_prompt_file(tmp_path: Path) -> None:
+    def invoke() -> None:
+        _build("--- context: shared\nfix it", tmp_path, effort="invalid")
+
+    _expect(invoke, ValueError, _EFFORT_ERROR)
+    _assert_no_prompt_files(tmp_path)
+
+
+def test_write_mode_invalid_effort_leaves_no_guard_or_prompt_file(tmp_path: Path) -> None:
+    def invoke() -> None:
+        _build(_OVERSIZED, tmp_path, mode="workspace-write", effort="invalid")
+
+    _expect(invoke, ValueError, _EFFORT_ERROR)
+    _assert_no_prompt_files(tmp_path)
+    guards = _guard_files(tmp_path)
+    if guards:
+        raise AssertionError(f"guard files left behind: {[path.name for path in guards]}")
+
+
+def _raise_after_prompt_file(tmp_path: Path, fn) -> None:
+    with patch.object(
+        GrokBuildAdapter,
+        "_reset_per_invocation_state",
+        side_effect=RuntimeError("snapshot failed"),
+    ):
+        _expect(fn, RuntimeError, "snapshot failed")
+    _assert_no_prompt_files(tmp_path)
+    guards = _guard_files(tmp_path)
+    if guards:
+        raise AssertionError(f"guard files left behind: {[path.name for path in guards]}")
+
+
+def test_exception_after_prompt_file_creation_removes_it(tmp_path: Path) -> None:
+    _raise_after_prompt_file(tmp_path, lambda: _build(_OVERSIZED, tmp_path, effort="high"))
+
+
+def test_isolated_exception_after_prompt_file_creation_removes_it(tmp_path: Path) -> None:
+    _raise_after_prompt_file(tmp_path, lambda: _isolated(_OVERSIZED, tmp_path, effort="high"))
+
+
+def test_write_mode_exception_after_files_are_created_removes_them(tmp_path: Path) -> None:
+    _raise_after_prompt_file(
+        tmp_path,
+        lambda: _build(_OVERSIZED, tmp_path, mode="workspace-write", effort="high"),
+    )
