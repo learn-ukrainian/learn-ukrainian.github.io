@@ -3,6 +3,7 @@
 import contextlib
 import json
 import os
+import shutil
 import subprocess
 
 import pytest
@@ -1234,3 +1235,117 @@ def test_forged_gitdir_cannot_authorize_switched_removal(tmp_path, monkeypatch):
     forged.mkdir()
     (forged / ".git").write_text(f"gitdir: {repo}/.git/worktrees/does-not-exist\n", encoding="utf-8")
     _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, forged)
+
+
+def _hide_worktree_gitdir_behind_symlink(repo, tree, other_origin: str):
+    """Rewrite the checkout gitdir to ``.git/jump/../worktrees/<id>``.
+
+    ``jump`` is a symlink to another repository's worktree metadata. Lexical
+    collapse names ``repo``. Git follows ``jump`` and reports ``other_origin``.
+    """
+    from pathlib import Path
+
+    from tests.orchestration.test_merge_closeout import git
+
+    original = (tree / ".git").read_text(encoding="utf-8").strip()
+    prefix = "gitdir:"
+    assert original.startswith(prefix)
+    admin = Path(original[len(prefix) :].strip())
+    other = repo.parent / "other-primary"
+    git(repo.parent, "init", "--initial-branch=main", str(other))
+    git(other, "remote", "add", "origin", other_origin)
+    alternates = other / ".git" / "objects" / "info"
+    alternates.mkdir(parents=True, exist_ok=True)
+    (alternates / "alternates").write_text(f"{repo / '.git' / 'objects'}\n", encoding="utf-8")
+    shutil.copytree(repo / ".git" / "refs", other / ".git" / "refs", dirs_exist_ok=True)
+    packed = repo / ".git" / "packed-refs"
+    if packed.is_file():
+        shutil.copy(packed, other / ".git" / "packed-refs")
+    other_admin = other / ".git" / "worktrees" / admin.name
+    shutil.copytree(admin, other_admin)
+    (other_admin / "commondir").write_text("../..\n", encoding="utf-8")
+    (other_admin / "gitdir").write_text(f"{tree / '.git'}\n", encoding="utf-8")
+    (repo / ".git" / "jump").symlink_to(other / ".git" / "worktrees", target_is_directory=True)
+    relative = os.path.relpath(repo / ".git", tree)
+    (tree / ".git").write_text(
+        f"gitdir: {relative}/jump/../worktrees/{admin.name}\n",
+        encoding="utf-8",
+    )
+    return other
+
+
+def test_dotdot_hidden_symlink_gitdir_cannot_authorize_switched_removal(tmp_path, monkeypatch):
+    """A ``..`` that hides a symlink must not query primary A or write a reap receipt.
+
+    Git follows ``jump`` into the other primary. The proof has to refuse before
+    it asks for A's pull request.
+    """
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    other = _hide_worktree_gitdir_behind_symlink(repo, tree, "https://github.com/other/elsewhere.git")
+    assert git(tree, "remote", "get-url", "origin") == "https://github.com/other/elsewhere.git"
+    assert git(tree, "rev-parse", "--path-format=absolute", "--git-common-dir") == str(other / ".git")
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    rw = reap.reap_worktrees
+    assert rw._proven_linked_worktree_primary(tree) is None
+    assert rw._checkout_pr_repository(tree) is None
+    assert rw._switched_branch_merge_proven(repo, tree, cohort) is False
+    assert not any("acme/widget" in " ".join(call) or "other/elsewhere" in " ".join(call) for call in calls)
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, tree)
+    creator = json.loads((tasks / "cursor-creator.json").read_text(encoding="utf-8"))
+    assert "worktree_reap_proof" not in creator
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "https://github.com:abc/acme/widget.git",
+        "https://github.com:99999/acme/widget.git",
+        "https://github.com:-1/acme/widget.git",
+        "https://github.com:65536/acme/widget",
+        "https://github.com:80abc/acme/widget.git",
+        "ssh://git@github.com:notaport/acme/widget.git",
+        "https://user:token@github.com:abc/acme/widget.git",
+    ],
+)
+def test_malformed_origin_port_is_unknown(origin):
+    """A port GitHub's URL parser cannot read is an unknown origin, not an exception."""
+    assert reap.reap_worktrees._parse_github_origin(origin) is None
+
+
+def test_malformed_origin_port_fails_closed_without_aborting_the_sweep(tmp_path, monkeypatch):
+    """One checkout with a malformed origin port stays unproven; the sweep still reports the rest."""
+    from pathlib import Path
+
+    from tests.orchestration.test_merge_closeout import git, init_repo
+
+    repo = init_repo(tmp_path)
+    trees = []
+    for name in ("one", "two"):
+        tree = repo / ".worktrees" / "dispatch" / "cursor" / name
+        tree.parent.mkdir(parents=True, exist_ok=True)
+        git(repo, "worktree", "add", "-b", f"cursor/{name}", str(tree), "main")
+        trees.append(tree)
+    git(repo, "remote", "set-url", "origin", "https://github.com:abc/acme/widget.git")
+    monkeypatch.setattr(reap.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(reap.reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(
+        reap.reap_worktrees,
+        "_run_gh",
+        lambda args, **_kwargs: subprocess.CompletedProcess(args, 1, "", "gh unavailable"),
+    )
+    results = reap.reap_worktrees.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        merged_pr_only=True,
+        safe_only=True,
+        live_cwds=set(),
+    )
+    by_path = {Path(row.path).resolve(): row for row in results}
+    for tree in trees:
+        row = by_path[tree.resolve()]
+        assert row.action == "skipped", row
+        assert "origin owner/repo could not be determined" in row.reason
+        assert tree.exists()

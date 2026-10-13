@@ -474,12 +474,15 @@ def _parse_github_origin(remote_url: str) -> tuple[str, str] | None:
         return _accept_github_slug(scp.group("owner"), scp.group("repo"))
     try:
         parts = urlsplit(text)
+        if parts.scheme not in {"https", "ssh"} or parts.query or parts.fragment:
+            return None
+        # ``.port`` raises ValueError for a non-numeric or out-of-range port.
+        # That is an unknown origin, not a sweep-wide crash.
+        host = parts.hostname
+        port = parts.port
     except ValueError:
         return None
-    if parts.scheme not in {"https", "ssh"} or parts.query or parts.fragment:
-        return None
-    host = parts.hostname
-    if host is None or host.lower() != _GITHUB_HOST or parts.port is not None:
+    if host is None or host.lower() != _GITHUB_HOST or port is not None:
         return None
     if parts.scheme == "ssh" and parts.username != "git":
         return None
@@ -3553,20 +3556,28 @@ def _real_directory(path: Path) -> Path | None:
 
 
 def _metadata_directory(path: Path) -> Path | None:
-    """Real directory named by git metadata after lexical ``..`` collapse.
+    """Real directory named by git metadata, walking the original spelling.
 
-    A gitdir pointer may be relative. The collapsed path must still be a
-    real directory, and no component of that path may be a symlink.
+    A gitdir pointer may be relative. ``.`` stays put. ``..`` moves to the
+    parent only after that directory was proven not to be a symlink. A symlink
+    at any component, including one a later ``..`` would lexically cancel, is
+    unproven. Collapsing ``..`` first would hide that symlink and name a
+    different repository from the one Git opens.
     """
     try:
-        collapsed = Path(os.path.normpath(path))
-    except (OSError, ValueError):
-        return None
-    if not collapsed.is_absolute() or any(part in {"", ".", ".."} for part in collapsed.parts):
-        return None
-    current = Path(collapsed.anchor)
-    try:
-        for part in collapsed.parts[1:]:
+        if not path.is_absolute():
+            return None
+        current = Path(path.anchor)
+        if current.is_symlink() or not current.is_dir():
+            return None
+        for part in path.parts[1:]:
+            if part in {"", "."}:
+                continue
+            if part == "..":
+                if current == Path(path.anchor):
+                    return None
+                current = current.parent
+                continue
             current = current / part
             if current.is_symlink() or not current.is_dir():
                 return None
@@ -3596,7 +3607,9 @@ def _proven_linked_worktree_primary(worktree: Path) -> Path | None:
     and not a traversal spelling. Its ``.git`` file must name an existing
     ``<primary>/.git/worktrees/<id>`` directory whose ``gitdir`` file names
     this checkout and whose ``commondir`` names that primary's ``.git``.
-    A missing registration, a symlink, or a ``..`` spelling is unproven.
+    A missing registration or a symlink is unproven, including a symlink that
+    a ``..`` component would hide if the path were collapsed first. Git's own
+    common directory for this checkout must be that same ``.git``.
     """
     checkout = _real_directory(worktree)
     if checkout is None:
@@ -3620,11 +3633,16 @@ def _proven_linked_worktree_primary(worktree: Path) -> Path | None:
     recorded = Path(recorded_raw)
     if not recorded.is_absolute():
         recorded = admin / recorded
-    try:
-        recorded_norm = Path(os.path.normpath(recorded))
-    except (OSError, ValueError):
+    if recorded.name != ".git":
         return None
-    if recorded_norm != checkout / ".git":
+    recorded_dir = _metadata_directory(recorded.parent)
+    if recorded_dir is None or recorded_dir != checkout:
+        return None
+    gitfile = recorded_dir / ".git"
+    try:
+        if gitfile.is_symlink() or not gitfile.is_file():
+            return None
+    except OSError:
         return None
     common_raw = _regular_file_line(admin / "commondir")
     if common_raw is None:
@@ -3645,24 +3663,53 @@ def _proven_linked_worktree_primary(worktree: Path) -> Path | None:
         return None
     if admin.parent != primary_git / "worktrees":
         return None
+    reported = _git_single_line(checkout, ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"])
+    if reported is None:
+        return None
+    reported_common = _metadata_directory(Path(reported))
+    if reported_common is None or reported_common != primary_git:
+        return None
     return primary
+
+
+def _git_single_line(cwd: Path, args: list[str]) -> str | None:
+    """One line of Git stdout, or None when Git cannot be believed."""
+    try:
+        proc = _run(args, cwd=cwd)
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0:
+        return None
+    text = (proc.stdout or "").strip()
+    if not text or "\n" in text:
+        return None
+    return text
+
+
+def _configured_origin_url(repo: Path) -> str | None:
+    """``origin`` URL Git reports for ``repo``, or None."""
+    return _git_single_line(repo, ["git", "remote", "get-url", "origin"])
 
 
 def _checkout_pr_repository(worktree: Path) -> Path | None:
     """Primary checkout that owns ``worktree``'s pull requests, or None.
 
     ``worktree`` must be a registered linked checkout proven from git
-    metadata, and that primary's ``origin`` must be one HTTPS or SSH GitHub
-    owner/repo. Anything else is unknown, including a symlink, a traversal
-    spelling, a ``.git`` pointer whose registration does not exist, and an
-    origin whose host is not exactly ``github.com``. Callers fail closed:
-    they do not query another repository.
+    metadata, and that registration must be the repository Git itself reports
+    for the checkout (common directory and origin URL). That primary's
+    ``origin`` must be one HTTPS or SSH GitHub owner/repo. Anything else is
+    unknown, including a symlink, a traversal spelling, a ``.git`` pointer
+    whose registration does not exist, a pointer whose ``..`` hides a symlink,
+    and an origin whose host is not exactly ``github.com``. Callers fail
+    closed: they do not query another repository.
     """
     try:
         root = _proven_linked_worktree_primary(worktree)
-    except OSError:
+    except (OSError, ValueError, subprocess.SubprocessError):
         return None
     if root is None or _github_owner_repo(root) is None:
+        return None
+    if _configured_origin_url(worktree) != _configured_origin_url(root):
         return None
     return root
 
