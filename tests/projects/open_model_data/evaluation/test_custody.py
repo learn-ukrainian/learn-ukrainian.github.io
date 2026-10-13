@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
 from scripts.projects.open_model_data.evaluation import custody
 from scripts.projects.open_model_data.review_build.errors import BuildError
@@ -103,6 +104,8 @@ def test_refusals_logged_without_open(sealed, monkeypatch, case, code):
     else:
         sealed.dispatched.record["status"] = "done"
         sealed.dispatched.save()
+    if case.startswith("manifest-") or case in {"genesis", "issuer-prefix"}:
+        sealed.history.manifest(sealed.manifest)
     original = custody.OutputGuard.read
     opened = []
 
@@ -330,53 +333,25 @@ def test_seal_orphan_artifact_and_io_failure(sealed, monkeypatch):
 
 def test_manifest_reads_only_remote_main_blob(sealed, monkeypatch):
     calls = []
+    original = custody.run_git
 
     def git(args, **kwargs):
         calls.append((args, kwargs))
-        return SimpleNamespace(returncode=0, stdout=custody.canonical(sealed.manifest))
+        return original(args, **kwargs)
 
     monkeypatch.setattr(custody, "run_git", git)
     assert read(sealed, "custody_verify") is True
-    assert calls[0][0] == ["cat-file", "blob", "refs/remotes/origin/main:" + custody.MANIFEST_PATH]
+    assert calls[0][0] == ["rev-parse", "--verify", "refs/remotes/origin/main^{commit}"]
+    sha = sealed.history.git("rev-parse", "HEAD").stdout.decode().strip()
+    assert calls[1][0] == ["cat-file", "blob", sha + ":" + custody.MANIFEST_PATH]
     assert calls[0][1]["cwd"] == custody.REPOSITORY
 
 
 def test_actual_git_blob_ignores_worktree_and_unmerged_manifest(sealed, tmp_path, monkeypatch):
-    import subprocess
-
-    from scripts.orchestration.execution_safe_git import run_git
-
-    repo = tmp_path / "SYNTHETIC-repo"
-    repo.mkdir()
-
-    def git(*args):
-        return subprocess.run(
-            [
-                "git",
-                "-c",
-                "core.hooksPath=/dev/null",
-                "-c",
-                "commit.gpgSign=false",
-                "-c",
-                "user.name=Synthetic",
-                "-c",
-                "user.email=synthetic@example.invalid",
-                *args,
-            ],
-            cwd=repo,
-            check=True,
-            capture_output=True,
-            timeout=30,
-        )
-
-    git("init", "-b", "synthetic")
+    repo = sealed.history.repo
+    git = sealed.history.git
     manifest = repo / custody.MANIFEST_PATH
-    manifest.parent.mkdir(parents=True)
-    manifest.write_bytes(custody.canonical(sealed.manifest))
-    git("add", custody.MANIFEST_PATH)
-    git("commit", "-m", "Synthetic manifest fixture")
-    monkeypatch.setattr(custody, "REPOSITORY", repo)
-    monkeypatch.setattr(custody, "run_git", run_git)
+    git("update-ref", "-d", "refs/remotes/origin/main")
     with pytest.raises(custody.CustodyRefused, match="manifest_unmerged"):
         read(sealed)
     git("update-ref", "refs/remotes/origin/main", "HEAD")
@@ -397,3 +372,349 @@ def test_seal_artifact_io_failure_is_closed(sealed, monkeypatch):
     monkeypatch.setattr(custody.OutputGuard, "append", fail)
     with pytest.raises(custody.CustodyRefused, match="artifact_open"):
         custody.seal(ref, b"SYNTHETIC", custody_root=sealed.root)
+
+
+def bind_synthetic_chain(sealed, chain):
+    """Tamper only disposable evidence, including its committed event pin."""
+    for index, entry in enumerate(chain):
+        entry["seq"] = index
+        entry["prev_sha256"] = custody.digest(custody.canonical(chain[index - 1])) if index else "0" * 64
+    (sealed.root / custody.LOG).write_bytes(b"".join(custody.canonical(e) + b"\n" for e in chain))
+    sealed.entry["sealed_event_sha256"] = custody.digest(custody.canonical(chain[1]))
+    sealed.history.manifest(sealed.manifest)
+
+
+def assert_preopen_refusal(sealed, monkeypatch, code):
+    original = custody.OutputGuard.read
+
+    def spy(out, name):
+        assert not name.endswith(".sealed"), "prohibited artifact open"
+        return original(out, name)
+
+    monkeypatch.setattr(custody.OutputGuard, "read", spy)
+    with pytest.raises(custody.CustodyRefused, match=f"^{code}$"):
+        read(sealed)
+    if code != "access_log_corrupt":
+        assert [(e["event"], e.get("code")) for e in events(sealed)[-2:]] == [("attempt", None), ("refused", code)]
+
+
+@pytest.mark.parametrize("lifecycle", ["active", "hold", "retired", "removed"])
+@pytest.mark.parametrize("purpose", ["custody_verify", "final_evaluation"])
+def test_historical_issuer_survives_rotation_and_retirement(sealed, lifecycle, purpose):
+    before = events(sealed)[:2]
+    artifact = sealed.root / custody._artifact_name(sealed.ref)
+    data = yaml.safe_load(sealed.history.catalog_path.read_bytes())
+    data["seats"]["openai_frontier"]["model_id"] = "SYNTHETIC-model-b"
+    if lifecycle == "removed":
+        del data["models"]["SYNTHETIC-model-a"]
+    else:
+        data["models"]["SYNTHETIC-model-a"]["lifecycle"] = lifecycle
+        if lifecycle == "retired":
+            data["models"]["SYNTHETIC-model-a"]["transports"] = []
+            data["models"]["SYNTHETIC-model-a"].pop("routing_wire_ids")
+    sealed.history.catalog(data)
+    assert (
+        yaml.safe_load(sealed.history.catalog_path.read_bytes())["seats"]["openai_frontier"]["model_id"]
+        == "SYNTHETIC-model-b"
+    )
+    assert (
+        yaml.safe_load(sealed.history.catalog_path.read_text())["seats"]["openai_frontier"]["model_id"]
+        == "SYNTHETIC-model-b"
+    )
+    assert custody.load_model_catalog()["seats"]["openai_frontier"]["model_id"] == "SYNTHETIC-model-b"
+    sealed.dispatched.record["model"] = "SYNTHETIC-model-b"
+    sealed.dispatched.save()
+    result = read(sealed, purpose)
+    assert result is True if purpose == "custody_verify" else result.data() == sealed.payload
+    assert artifact.read_bytes() == sealed.payload
+    assert events(sealed)[:2] == before
+    assert events(sealed)[-1]["event"] == "completed"
+    assert custody.load_model_catalog()["seats"]["openai_frontier"]["model_id"] == "SYNTHETIC-model-b"
+
+
+@pytest.mark.parametrize(
+    "case,code",
+    [
+        ("legacy", "issuer_admission_missing"),
+        ("legacy-event", "issuer_admission_invalid"),
+        ("legacy-manifest", "issuer_admission_invalid"),
+        ("event-pin", "issuer_admission_invalid"),
+        ("witness-missing", "issuer_admission_unavailable"),
+        ("witness-digest", "issuer_admission_invalid"),
+        ("witness-model", "model_not_admitted"),
+        ("event-task", "issuer_invalid"),
+        ("event-run", "issuer_invalid"),
+        ("event-artifact", "issuer_invalid"),
+        ("event-length", "issuer_invalid"),
+        ("duplicate-seal", "issuer_invalid"),
+        ("manifest-pin-type", "manifest_invalid"),
+        ("manifest-extra", "manifest_invalid"),
+    ],
+)
+def test_immutable_admission_and_event_controls(sealed, monkeypatch, case, code):
+    chain = events(sealed)
+    event = chain[1]
+    if case in {"legacy", "legacy-event"}:
+        del event["issuer_admission"]
+    if case in {"legacy", "legacy-manifest"}:
+        sealed.entry.pop("sealed_event_sha256")
+    elif case == "witness-missing":
+        event["issuer_admission"]["catalog_commit"] = "e" * 40
+    elif case == "witness-digest":
+        event["issuer_admission"]["catalog_sha256"] = "0" * 64
+    elif case == "witness-model":
+        event["issuer_admission"]["model"] = "SYNTHETIC-model-b"
+    elif case.startswith("event-") and case != "event-pin":
+        key = {
+            "event-task": "task_id",
+            "event-run": "run_nonce_sha256",
+            "event-artifact": "sha256",
+            "event-length": "bytes",
+        }[case]
+        event[key] = 1 if key == "bytes" else "eval-steward-6321-wrong" if key == "task_id" else "0" * 64
+    elif case == "duplicate-seal":
+        chain.append(dict(event))
+    bind_synthetic_chain(sealed, chain)
+    if case in {"legacy", "legacy-manifest"}:
+        del sealed.entry["sealed_event_sha256"]
+    elif case == "event-pin":
+        sealed.entry["sealed_event_sha256"] = "0" * 64
+    elif case == "manifest-pin-type":
+        sealed.entry["sealed_event_sha256"] = True
+    elif case == "manifest-extra":
+        sealed.entry["extra"] = "SYNTHETIC"
+    sealed.history.manifest(sealed.manifest)
+    assert_preopen_refusal(sealed, monkeypatch, code)
+
+
+@pytest.mark.parametrize(
+    "case,code",
+    [
+        ("non-frontier", "model_not_admitted"),
+        ("retired", "model_not_admitted"),
+        ("off-main", "issuer_admission_invalid"),
+        ("substitution", "issuer_admission_invalid"),
+        ("schema", "issuer_admission_invalid"),
+        ("aliases", "issuer_admission_invalid"),
+        ("yaml", "issuer_admission_invalid"),
+        ("projection-only", None),
+    ],
+)
+def test_historical_catalog_ancestry_and_projection(sealed, monkeypatch, case, code):
+    current_raw = sealed.history.catalog_path.read_bytes()
+    data = yaml.safe_load(current_raw)
+    original_main = sealed.history.git("rev-parse", "HEAD").stdout.decode().strip()
+    if case == "non-frontier":
+        data["seats"]["openai_frontier"]["model_id"] = "SYNTHETIC-model-b"
+    elif case == "retired":
+        data["models"]["SYNTHETIC-model-a"]["lifecycle"] = "retired"
+    elif case == "schema":
+        data["schema_version"] = "unknown"
+    elif case == "aliases":
+        data["models"]["SYNTHETIC-model-a"]["aliases"] = [None]
+    elif case == "projection-only":
+        data = {k: data[k] for k in ("schema_version", "seats", "models")}
+    if case == "yaml":
+        sealed.history.catalog_path.write_bytes(b"[invalid YAML")
+        witness = sealed.history.commit()
+    else:
+        witness = sealed.history.catalog(data)
+    raw = sealed.history.catalog_path.read_bytes()
+    if case == "off-main":
+        sealed.history.git("checkout", "--detach", original_main)
+    sealed.history.catalog_path.write_bytes(current_raw)
+    chain = events(sealed)
+    chain[1]["issuer_admission"].update(catalog_commit=witness, catalog_sha256=custody.digest(raw))
+    if case == "substitution":
+        chain[1]["issuer_admission"]["catalog_sha256"] = custody.digest(b"SYNTHETIC substitute")
+    bind_synthetic_chain(sealed, chain)
+    if code:
+        assert_preopen_refusal(sealed, monkeypatch, code)
+    else:
+        assert read(sealed).data() == sealed.payload
+
+
+@pytest.mark.parametrize("case", ["missing", "extra", "type", "schema", "model", "commit", "digest"])
+def test_admission_shape_is_closed(sealed, monkeypatch, case):
+    chain = events(sealed)
+    admission = chain[1]["issuer_admission"]
+    if case == "missing":
+        del admission["catalog_commit"]
+    elif case == "extra":
+        admission["extra"] = "SYNTHETIC"
+    elif case == "type":
+        chain[1]["issuer_admission"] = []
+    else:
+        key = {"schema": "schema", "model": "model", "commit": "catalog_commit", "digest": "catalog_sha256"}[case]
+        admission[key] = "SYNTHETIC/bad" if case == "model" else None
+    bind_synthetic_chain(sealed, chain)
+    assert_preopen_refusal(sealed, monkeypatch, "access_log_corrupt")
+
+
+@pytest.mark.parametrize(
+    "case", ["duplicate-private", "duplicate-ascii", "spacing", "order", "escaping", "crlf", "bom", "blank", "partial"]
+)
+def test_noncanonical_raw_bytes_refuse_before_append(sealed, monkeypatch, case):
+    raw = (sealed.root / custody.LOG).read_bytes()
+    first, rest = raw.split(b"\n", 1)
+    if case.startswith("duplicate"):
+        injected = (
+            b'"custody_id":"'
+            + ("АБВ /SYNTHETIC/private/".encode() if case == "duplicate-private" else b"discarded")
+            + b'",'
+        )
+        first = b"{" + injected + first[1:]
+    elif case == "spacing":
+        first = first.replace(b":", b": ")
+    elif case == "order":
+        first = json.dumps(dict(reversed(list(json.loads(first).items()))), separators=(",", ":")).encode()
+    elif case == "escaping":
+        first = first.replace(b"genesis", b"gen\\u0065sis")
+    elif case == "crlf":
+        first += b"\r"
+    elif case == "bom":
+        first = b"\xef\xbb\xbf" + first
+    elif case == "blank":
+        first = b""
+    corrupt = first + b"\n" + rest
+    if case == "partial":
+        corrupt = corrupt[:-1]
+    (sealed.root / custody.LOG).write_bytes(corrupt)
+    assert_preopen_refusal(sealed, monkeypatch, "access_log_corrupt")
+    assert (sealed.root / custody.LOG).read_bytes() == corrupt
+
+
+@pytest.mark.parametrize("when", ["initial", "before-write", "after-write"])
+def test_catalog_drift_never_seals(dispatched, tmp_path, monkeypatch, when):
+    from scripts.projects.open_model_data.review_build import output
+
+    monkeypatch.setattr(output, "filesystem", lambda p: "ext4")
+    root = tmp_path / "SYNTHETIC-drift"
+    ref = custody.ArtifactRef("C1", "final", "synthetic-v1")
+    path = dispatched.history.catalog_path
+
+    def drift():
+        path.write_bytes(path.read_bytes() + b"\n# SYNTHETIC drift\n")
+
+    if when == "initial":
+        drift()
+    elif when == "before-write":
+        original = custody.recheck
+
+        def recheck(designation):
+            original(designation)
+            drift()
+
+        monkeypatch.setattr(custody, "recheck", recheck)
+    else:
+        original = custody.OutputGuard.append
+
+        def append(out, name, value):
+            original(out, name, value)
+            if name.endswith(".sealed"):
+                drift()
+
+        monkeypatch.setattr(custody.OutputGuard, "append", append)
+    with pytest.raises(custody.CustodyRefused, match=r"^issuer_admission_invalid$"):
+        custody.seal(ref, b"SYNTHETIC", custody_root=root)
+    artifact = root / custody._artifact_name(ref)
+    assert artifact.exists() == (when == "after-write")
+    if root.exists():
+        assert not any(e["event"] == "sealed" for e in events(SimpleNamespace(root=root)))
+    if when == "after-write":
+        path.write_bytes(dispatched.history.git("show", "HEAD:" + custody.CATALOG_BLOB).stdout)
+        with pytest.raises(custody.CustodyRefused, match=r"^artifact_exists$"):
+            custody.seal(ref, b"SYNTHETIC", custody_root=root)
+
+
+@pytest.mark.parametrize(
+    "case,code",
+    [
+        ("main-missing", "issuer_admission_unavailable"),
+        ("blob-missing", "issuer_admission_unavailable"),
+        ("git-io", "issuer_admission_unavailable"),
+        ("catalog-invalid", "issuer_admission_invalid"),
+        ("historical-other-seat", "model_not_admitted"),
+        ("local-io", "issuer_admission_unavailable"),
+    ],
+)
+def test_initial_witness_failure_precedes_artifact_access(dispatched, tmp_path, monkeypatch, case, code):
+    from pathlib import Path
+
+    original = custody.run_git
+    catalog = yaml.safe_load(dispatched.history.catalog_path.read_bytes())
+    catalog["seats"]["openai_frontier"]["model_id"] = "SYNTHETIC-model-b"
+
+    def git(args, **kwargs):
+        if case == "git-io":
+            raise PermissionError("SYNTHETIC")
+        if args[0] == "rev-parse" and case == "main-missing":
+            return SimpleNamespace(returncode=1, stdout=b"")
+        if args[0] == "cat-file":
+            if case == "blob-missing":
+                return SimpleNamespace(returncode=1, stdout=b"")
+            if case == "catalog-invalid":
+                return SimpleNamespace(returncode=0, stdout=b"[invalid YAML")
+            if case == "historical-other-seat":
+                return SimpleNamespace(returncode=0, stdout=yaml.safe_dump(catalog).encode())
+        return original(args, **kwargs)
+
+    monkeypatch.setattr(custody, "run_git", git)
+    if case == "local-io":
+        original_read = Path.read_bytes
+
+        def read_bytes(path):
+            if path == dispatched.history.catalog_path:
+                raise PermissionError("SYNTHETIC")
+            return original_read(path)
+
+        monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    root = tmp_path / "SYNTHETIC-initial-refusal"
+    with pytest.raises(custody.CustodyRefused, match=f"^{code}$"):
+        custody.seal(custody.ArtifactRef("C1", "final", "synthetic-v1"), b"SYNTHETIC", custody_root=root)
+    assert not root.exists()
+
+
+@pytest.mark.parametrize("case", ["missing-blob", "git-io"])
+def test_unavailable_historical_witness_refuses_without_open(sealed, monkeypatch, case):
+    if case == "missing-blob":
+        original_raw = sealed.history.catalog_path.read_bytes()
+        sealed.history.catalog_path.unlink()
+        witness = sealed.history.commit()
+        sealed.history.catalog_path.write_bytes(original_raw)
+        chain = events(sealed)
+        chain[1]["issuer_admission"]["catalog_commit"] = witness
+        bind_synthetic_chain(sealed, chain)
+    else:
+        original = custody.run_git
+
+        def git(args, **kwargs):
+            if args[0] == "merge-base":
+                raise PermissionError("SYNTHETIC")
+            return original(args, **kwargs)
+
+        monkeypatch.setattr(custody, "run_git", git)
+    assert_preopen_refusal(sealed, monkeypatch, "issuer_admission_unavailable")
+
+
+def test_historical_record_alias_uses_historical_catalog(sealed):
+    sealed.issuer["model"] = "codex:SYNTHETIC-model-a[synthetic]"
+    sealed.issuer["progress"] = "SYNTHETIC permitted metadata change"
+    sealed.issuer_path.write_text(json.dumps(sealed.issuer))
+    assert read(sealed, "custody_verify") is True
+
+
+def test_main_is_pinned_once_despite_ref_movement(sealed, monkeypatch):
+    original = custody.run_git
+    calls = []
+
+    def git(args, **kwargs):
+        result = original(args, **kwargs)
+        calls.append(args)
+        if args[0] == "rev-parse":
+            sealed.history.git("update-ref", "refs/remotes/origin/main", sealed.history.initial)
+        return result
+
+    monkeypatch.setattr(custody, "run_git", git)
+    assert read(sealed, "custody_verify") is True
+    assert sum(args[0] == "rev-parse" for args in calls) == 1

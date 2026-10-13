@@ -20,7 +20,7 @@ accepts no caller identity. It requires all six checks:
 5. The process's unified cgroup is the scope cgroup or a descendant. The
    check uses `/proc/self/cgroup`, `scope_cgroup`, and the current uid.
 6. The record's model resolves through the catalog to the active
-   `openai_frontier` seat, the designated Sol identity.
+   `openai_frontier` seat in the current fully validated catalog.
 
 `recheck(designation)` repeats these checks before returning a payload. Only
 non-identity task-record fields may change. The task-record hash is a diagnostic
@@ -38,20 +38,48 @@ do not put its value in a command transcript or a public artifact.
 `SealedPayload`. Its `repr` and `str` are redacted. Only evaluator code should
 call `.data()`. Printing the returned bytes bypasses that protection.
 
-The reader obtains schema `omd-sealed-rulers.v1` from the Git blob at
-`refs/remotes/origin/main`, through `execution_safe_git.run_git`. The reserved
+The reader pins `refs/remotes/origin/main` to one commit and obtains schema
+`omd-sealed-rulers.v1` from that commit's blob through
+`execution_safe_git.run_git`. The reserved
 lookup is `docs/projects/open-model-data/sealed-rulers.json`. This task creates
 no real manifest. Synthetic tests supply a fixture blob, including one actual
 Git repository that proves unmerged and worktree-edited files are insufficient.
-Manifest entries contain only component, final split, ruler version, SHA-256,
-byte count, issuer task id, and custody-genesis hash. A reader requires one
-matching entry, its genesis, a completed steward issuer record with the admitted
-model, and a matching `sealed` event bound to the issuer run nonce.
+Manifest entries contain component, final split, ruler version, SHA-256,
+byte count, issuer task id, custody-genesis hash, and `sealed_event_sha256`.
+The last field pins the entire canonical `sealed` event, including its artifact,
+issuer run, predecessor chain and `issuer_admission` witness. The witness has
+schema `omd-issuer-admission.v1`, canonical issuer model, catalog commit and
+SHA-256 of the exact catalog bytes.
+
+A reader requires exactly one matching sealed event, the pinned event digest,
+matching genesis and artifact metadata, and a completed steward record with the
+event's task and nonce hash. The catalog commit must be an ancestor of the pinned
+manifest commit. Historical model identity, aliases, frontier seat and active
+lifecycle are checked against that catalog blob, whose digest must match the
+witness. Today's unrelated routing schema and freshness rules do not apply
+retroactively. Worktree edits cannot substitute for either committed blob.
+
+Rotation, hold, retirement or removal of a historical issuer from the current
+catalog preserves its seal's legitimacy. It grants that issuer no current
+reader or writer role. Every current designation still uses today's fully
+validated active seat. Legacy log and manifest shapes can be parsed but refuse
+`issuer_admission_missing` before artifact access. Partial extensions, unknown
+keys and malformed evidence also fail closed. No catalog backfill, log rewrite
+or resealing is permitted. Missing historical objects refuse
+`issuer_admission_unavailable`; the driver must restore approved Git history
+through the normal worktree fetch. Invalid provenance refuses
+`issuer_admission_invalid`, historical model admission refuses
+`model_not_admitted`, and task/run/event mismatches refuse `issuer_invalid`.
 
 `seal()` exists as synthetic writer support under qualification Q2. It requires
 a live steward, creates a random genesis, refuses existing seals and orphaned
 artifact files, syncs bytes, and records the digest and issuer. It returns only
-the digest. It grants no permission to seal real data. `OutputGuard.append`
+the digest. Before artifact writing it pins the main catalog commit, fully
+validates its bytes and requires byte equality with the locally loaded catalog.
+Both existing designation rechecks remain, with catalog byte checks before
+writing and before the sealed receipt. Drift after writing withholds the receipt
+and leaves an orphan subject to `artifact_exists`, without automatic recovery.
+It grants no permission to seal real data. `OutputGuard.append`
 and the `review_build.build.execute` steward collision refusal are also covered
 only as synthetic implementation support. A steward task cannot build training
 data through that builder.
@@ -64,7 +92,11 @@ ownership, private modes, local filesystem, repository exclusion, symlinks, ACLs
 and hard links. Artifacts open only through `OutputGuard.read`.
 
 The `omd-custody-access.v1` JSONL chain uses zero-based sequence numbers and
-SHA-256 of the preceding canonical entry. The first entry holds a random custody
+SHA-256 of the preceding canonical entry. Each raw line, excluding its newline,
+must equal the parsed entry's canonical bytes before it is trusted or hashed.
+Duplicate keys, alternate spacing, order or escaping, CRLF, BOM, blank and
+partial lines refuse `access_log_corrupt` without append or artifact access.
+The first entry holds a random custody
 id. `append` uses `O_APPEND`, handles short writes, and fsyncs both file and
 directory. A durable `attempt` precedes designation validation and artifact
 access. The log contains bounded ASCII metadata, nonce hashes and closed codes;
@@ -98,7 +130,15 @@ mediated reads logged; unmediated reads unknown
 | R3: evaluator bytes can appear in agent transcripts | E9 implementer and driver | Route bytes only to evaluator code; publish only digests and counts |
 | R4: repeated final reads are visible but unrestricted | Root | Enforcing one-shot reads would require a separate policy decision |
 
-The accountable driver, `gemini-open-model-data`, owns this task's remaining
+Three nonblocking maintenance findings remain owned by the custody or builder
+implementer and accountable driver: exception/outcome classification, recovery
+after an append writes bytes but fails to sync, and build CLI side effects before
+the steward refusal. The outcome table describes the mediated path's controls;
+it does not prove universal exception classification, append-I/O recovery or
+zero CLI side effects. Append-I/O corruption is an availability/recovery risk
+separate from R1's deliberate forgery.
+
+The accountable driver, `codex-open-model-data`, owns this task's remaining
 integration. Root must run independent withheld fixtures on the exact merged
 SHA, obtain outside-family exact-head critical review, pass CI Gate, and land
 through the merge queue. Root also owns the shortened AC4 checklist correction

@@ -14,6 +14,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
 
+import yaml
+
 from scripts.common.task_store_paths import tasks_dir
 from scripts.orchestration.dispatch_isolation import scope_cgroup, scope_unit_matches
 from scripts.orchestration.execution_safe_git import run_git
@@ -21,14 +23,16 @@ from scripts.orchestration.task_record_store import locate_task_record
 from scripts.projects.open_model_data.review_build.contract import canonical, digest
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.output import OutputGuard
-from scripts.review.model_catalog import canonical_model_id, load_model_catalog
+from scripts.review.model_catalog import CATALOG_PATH, canonical_model_id, load_model_catalog, validate_catalog
 
 Purpose = Literal["custody_verify", "final_evaluation"]
 STEWARD = re.compile(r"eval-steward-6321-[a-z0-9-]+\Z")
 HEX = re.compile(r"[0-9a-f]{64}\Z")
+COMMIT = re.compile(r"[0-9a-f]{40}\Z")
 TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,63}\Z")
 # Reserved lookup only. This task neither creates nor commits a real manifest.
 MANIFEST_PATH = "docs/projects/open-model-data/sealed-rulers.json"
+CATALOG_BLOB = "scripts/config/model_catalog.yaml"
 REPOSITORY = Path(__file__).resolve().parents[4]
 LOG = "access-log.jsonl"
 LOCK = "access-log.lock"
@@ -169,12 +173,74 @@ def _artifact_name(ref: ArtifactRef) -> str:
     return digest(canonical(_ref(ref))) + ".sealed"
 
 
-def _manifest(ref: ArtifactRef) -> dict:
+def _main_commit(code: str) -> str:
+    result = run_git(
+        ["rev-parse", "--verify", "refs/remotes/origin/main^{commit}"], cwd=REPOSITORY, capture_output=True
+    )
+    _require(result.returncode == 0, code)
+    commit = result.stdout.decode("ascii").strip()
+    _require(bool(COMMIT.fullmatch(commit)), code)
+    return commit
+
+
+def _catalog_blob(commit: str) -> bytes:
+    result = run_git(["cat-file", "blob", f"{commit}:{CATALOG_BLOB}"], cwd=REPOSITORY, capture_output=True)
+    _require(result.returncode == 0, "issuer_admission_unavailable")
+    return result.stdout
+
+
+def _admission_shape(value: object) -> bool:
+    return (
+        isinstance(value, dict)
+        and set(value) == {"schema", "model", "catalog_commit", "catalog_sha256"}
+        and value["schema"] == "omd-issuer-admission.v1"
+        and isinstance(value["model"], str)
+        and bool(TOKEN.fullmatch(value["model"]))
+        and isinstance(value["catalog_commit"], str)
+        and bool(COMMIT.fullmatch(value["catalog_commit"]))
+        and isinstance(value["catalog_sha256"], str)
+        and bool(HEX.fullmatch(value["catalog_sha256"]))
+    )
+
+
+def _catalog_unchanged(raw: bytes) -> None:
+    try:
+        _require(CATALOG_PATH.read_bytes() == raw, "issuer_admission_invalid")
+    except OSError:
+        raise CustodyRefused("issuer_admission_unavailable") from None
+
+
+def _sealing_admission(designation: StewardDesignation) -> tuple[dict, bytes]:
+    try:
+        commit = _main_commit("issuer_admission_unavailable")
+        raw = _catalog_blob(commit)
+        catalog = validate_catalog(yaml.safe_load(raw))
+        model = canonical_model_id(designation.model, catalog)
+        _require(
+            model == catalog["seats"]["openai_frontier"]["model_id"]
+            and catalog["models"][model]["lifecycle"] == "active",
+            "model_not_admitted",
+        )
+        admission = {
+            "schema": "omd-issuer-admission.v1",
+            "model": model,
+            "catalog_commit": commit,
+            "catalog_sha256": digest(raw),
+        }
+        _require(_admission_shape(admission), "issuer_admission_invalid")
+        _catalog_unchanged(raw)
+        return admission, raw
+    except OSError:
+        raise CustodyRefused("issuer_admission_unavailable") from None
+    except (ValueError, TypeError, KeyError, yaml.YAMLError):
+        raise CustodyRefused("issuer_admission_invalid") from None
+
+
+def _manifest(ref: ArtifactRef) -> tuple[dict, str]:
     wanted = _ref(ref)
     try:
-        result = run_git(
-            ["cat-file", "blob", f"refs/remotes/origin/main:{MANIFEST_PATH}"], cwd=REPOSITORY, capture_output=True
-        )
+        commit = _main_commit("manifest_unmerged")
+        result = run_git(["cat-file", "blob", f"{commit}:{MANIFEST_PATH}"], cwd=REPOSITORY, capture_output=True)
         _require(result.returncode == 0, "manifest_unmerged")
         manifest = json.loads(result.stdout)
         _require(isinstance(manifest, dict) and manifest.get("schema") == "omd-sealed-rulers.v1", "manifest_invalid")
@@ -184,7 +250,15 @@ def _manifest(ref: ArtifactRef) -> dict:
         _require(len(matches) == 1, "artifact_ref")
         entry = matches[0]
         _require(
-            set(entry) == {*wanted, "sha256", "bytes", "sealed_by_task_id", "custody_genesis_sha256"}
+            set(entry)
+            in (
+                {*wanted, "sha256", "bytes", "sealed_by_task_id", "custody_genesis_sha256"},
+                {*wanted, "sha256", "bytes", "sealed_by_task_id", "custody_genesis_sha256", "sealed_event_sha256"},
+            )
+            and (
+                "sealed_event_sha256" not in entry
+                or (isinstance(entry["sealed_event_sha256"], str) and bool(HEX.fullmatch(entry["sealed_event_sha256"])))
+            )
             and isinstance(entry["sha256"], str)
             and bool(HEX.fullmatch(entry["sha256"]))
             and type(entry["bytes"]) is int
@@ -195,7 +269,7 @@ def _manifest(ref: ArtifactRef) -> dict:
             and bool(STEWARD.fullmatch(entry["sealed_by_task_id"])),
             "manifest_invalid",
         )
-        return entry
+        return entry, commit
     except (OSError, ValueError, TypeError):
         raise CustodyRefused("manifest_unmerged") from None
 
@@ -230,7 +304,11 @@ def _chain(out: OutputGuard) -> list[dict]:
     try:
         raw = out.read(LOG)
         _require(bool(raw) and raw.endswith(b"\n"), "access_log_corrupt")
-        chain = [json.loads(line) for line in raw.split(b"\n")[:-1]]
+        chain = []
+        for line in raw.split(b"\n")[:-1]:
+            entry = json.loads(line)
+            _require(line == canonical(entry) and line.isascii(), "access_log_corrupt")
+            chain.append(entry)
         previous = "0" * 64
         pending = set()
         for seq, entry in enumerate(chain):
@@ -246,6 +324,9 @@ def _chain(out: OutputGuard) -> list[dict]:
                 "open_failed": {"attempt_id", "code"},
                 "interrupted": {"attempt_id", "reconciled_by"},
             }
+            if event == "sealed" and "issuer_admission" in entry:
+                extras[event] = extras[event] | {"issuer_admission"}
+                _require(_admission_shape(entry["issuer_admission"]), "access_log_corrupt")
             _require(event in extras and set(entry) == common | extras[event], "access_log_corrupt")
             _require(
                 entry["schema"] == SCHEMA
@@ -260,7 +341,7 @@ def _chain(out: OutputGuard) -> list[dict]:
                 "access_log_corrupt",
             )
             _require((event == "genesis") == (seq == 0), "access_log_corrupt")
-            for key in extras[event] - {"ref", "bytes", "purpose"}:
+            for key in extras[event] - {"ref", "bytes", "purpose", "issuer_admission"}:
                 value = entry[key]
                 pattern = (
                     r"[a-z0-9_-]{1,160}"
@@ -327,22 +408,63 @@ def _reconcile(out: OutputGuard, chain: list[dict], current: str) -> None:
         _append(out, chain, "interrupted", attempt_id=attempt, reconciled_by=current)
 
 
-def _issuer(entry: dict, chain: list[dict], ref: ArtifactRef) -> None:
+def _issuer(entry: dict, chain: list[dict], ref: ArtifactRef, manifest_commit: str) -> None:
+    matches = [event for event in chain if event["event"] == "sealed" and event["ref"] == _ref(ref)]
+    _require(len(matches) == 1, "issuer_invalid")
+    event = matches[0]
+    _require("issuer_admission" in event or "sealed_event_sha256" in entry, "issuer_admission_missing")
+    _require(
+        "issuer_admission" in event and entry.get("sealed_event_sha256") == digest(canonical(event)),
+        "issuer_admission_invalid",
+    )
+    admission = event["issuer_admission"]
+    try:
+        result = run_git(
+            ["merge-base", "--is-ancestor", admission["catalog_commit"], manifest_commit],
+            cwd=REPOSITORY,
+            capture_output=True,
+        )
+        _require(result.returncode in {0, 1}, "issuer_admission_unavailable")
+        _require(result.returncode == 0, "issuer_admission_invalid")
+        raw = _catalog_blob(admission["catalog_commit"])
+        _require(digest(raw) == admission["catalog_sha256"], "issuer_admission_invalid")
+        catalog = yaml.safe_load(raw)
+        # Historical identity projection only: today's routing/freshness schema
+        # must not revoke a seal's immutable admission witness.
+        _require(
+            isinstance(catalog, dict) and catalog.get("schema_version") in {"model-catalog.v1", "model-catalog.v1.1"},
+            "issuer_admission_invalid",
+        )
+        models = catalog["models"]
+        _require(isinstance(models, dict), "issuer_admission_invalid")
+        for model_id, model in models.items():
+            _require(
+                isinstance(model_id, str)
+                and isinstance(model, dict)
+                and isinstance(model.get("aliases", []), list)
+                and all(isinstance(alias, str) for alias in model.get("aliases", [])),
+                "issuer_admission_invalid",
+            )
+        expected = catalog["seats"]["openai_frontier"]["model_id"]
+        _require(
+            expected == admission["model"] and models.get(expected, {}).get("lifecycle") == "active",
+            "model_not_admitted",
+        )
+    except OSError:
+        raise CustodyRefused("issuer_admission_unavailable") from None
+    except (ValueError, KeyError, TypeError, yaml.YAMLError):
+        raise CustodyRefused("issuer_admission_invalid") from None
     record, _ = _record(entry["sealed_by_task_id"], hot=False)
     _require(record.get("task_id") == entry["sealed_by_task_id"] and record.get("status") == "done", "issuer_invalid")
-    _model(record.get("model"))
+    _require(canonical_model_id(record.get("model"), catalog) == admission["model"], "model_not_admitted")
     nonce = record.get("run_nonce")
     _require(isinstance(nonce, str) and bool(nonce), "issuer_invalid")
     _require(
-        any(
-            event["event"] == "sealed"
-            and event["task_id"] == entry["sealed_by_task_id"]
-            and event["run_nonce_sha256"] == digest(nonce.encode())
-            and event["ref"] == _ref(ref)
-            and event["sha256"] == entry["sha256"]
-            and event["bytes"] == entry["bytes"]
-            for event in chain
-        ),
+        event["task_id"] == entry["sealed_by_task_id"]
+        and event["run_nonce_sha256"] == digest(nonce.encode())
+        and event["ref"] == _ref(ref)
+        and event["sha256"] == entry["sha256"]
+        and event["bytes"] == entry["bytes"],
         "issuer_invalid",
     )
 
@@ -376,9 +498,9 @@ def read_sealed(ref: ArtifactRef, purpose: Purpose, *, custody_root: Path) -> Se
         try:
             designation = resolve_designation()
             _require(isinstance(purpose, str) and purpose in {"custody_verify", "final_evaluation"}, "purpose_invalid")
-            entry = _manifest(ref)
+            entry, manifest_commit = _manifest(ref)
             _require(digest(canonical(chain[0])) == entry["custody_genesis_sha256"], "custody_genesis")
-            _issuer(entry, chain, ref)
+            _issuer(entry, chain, ref, manifest_commit)
             try:
                 payload = out.read(_artifact_name(ref))
             except (BuildError, OSError, TypeError):
@@ -412,6 +534,7 @@ def seal(ref: ArtifactRef, payload: bytes, *, custody_root: Path) -> str:
     designation = resolve_designation()
     _ref(ref)
     _require(isinstance(payload, bytes), "payload_type")
+    admission, catalog_raw = _sealing_admission(designation)
     try:
         with OutputGuard(custody_root, (REPOSITORY,)) as out, _locked(out):
             if LOG in os.listdir(out.fd):
@@ -422,11 +545,23 @@ def seal(ref: ArtifactRef, payload: bytes, *, custody_root: Path) -> str:
             _reconcile(out, chain, uuid.uuid4().hex)
             _require(not any(e["event"] == "sealed" and e["ref"] == _ref(ref) for e in chain), "already_sealed")
             recheck(designation)
+            _catalog_unchanged(catalog_raw)
             _require(_artifact_name(ref) not in os.listdir(out.fd), "artifact_exists")
             out.append(_artifact_name(ref), payload)
             recheck(designation)
+            _catalog_unchanged(catalog_raw)
             sha = digest(payload)
-            _append(out, chain, "sealed", ref=_ref(ref), sha256=sha, bytes=len(payload), **_identity())
+            _append(
+                out,
+                chain,
+                "sealed",
+                ref=_ref(ref),
+                sha256=sha,
+                bytes=len(payload),
+                task_id=designation.task_id,
+                run_nonce_sha256=digest(designation.run_nonce.encode()),
+                issuer_admission=admission,
+            )
             return sha
     except BuildError:
         raise CustodyRefused("artifact_open") from None

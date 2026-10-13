@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.projects.open_model_data.evaluation import custody
 
@@ -112,3 +113,30 @@ def test_record_read_error_is_closed(dispatched, monkeypatch):
     monkeypatch.setattr(Path, "read_bytes", lambda *a: (_ for _ in ()).throw(PermissionError("SYNTHETIC private")))
     with pytest.raises(custody.CustodyRefused, match="record_unavailable"):
         custody.resolve_designation()
+
+
+@pytest.mark.parametrize("lifecycle", ["active", "hold", "retired", "removed"])
+@pytest.mark.parametrize("purpose", ["custody_verify", "final_evaluation"])
+def test_old_issuer_has_no_current_reader_or_writer_role(sealed, monkeypatch, lifecycle, purpose):
+    data = yaml.safe_load(sealed.history.catalog_path.read_bytes())
+    data["seats"]["openai_frontier"]["model_id"] = "SYNTHETIC-model-b"
+    if lifecycle == "removed":
+        del data["models"]["SYNTHETIC-model-a"]
+    else:
+        data["models"]["SYNTHETIC-model-a"]["lifecycle"] = lifecycle
+        if lifecycle == "retired":
+            data["models"]["SYNTHETIC-model-a"]["transports"] = []
+            data["models"]["SYNTHETIC-model-a"].pop("routing_wire_ids")
+    sealed.history.catalog(data)
+    original = custody.OutputGuard.read
+
+    def spy(out, name):
+        assert not name.endswith(".sealed")
+        return original(out, name)
+
+    monkeypatch.setattr(custody.OutputGuard, "read", spy)
+    with pytest.raises(custody.CustodyRefused, match=r"^model_not_admitted$"):
+        custody.read_sealed(sealed.ref, purpose, custody_root=sealed.root)
+    with pytest.raises(custody.CustodyRefused, match=r"^model_not_admitted$"):
+        custody.seal(custody.ArtifactRef("C2", "final", "synthetic-v1"), b"SYNTHETIC", custody_root=sealed.root)
+    assert not (sealed.root / custody._artifact_name(custody.ArtifactRef("C2", "final", "synthetic-v1"))).exists()
