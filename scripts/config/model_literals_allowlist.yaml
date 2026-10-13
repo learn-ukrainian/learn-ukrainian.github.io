@@ -905,8 +905,22 @@ entries:
 - path: scripts/agent_runtime/env_sanitize.py
   scope: <module>
   context: expression
-  id: grok-hermes
+  id: grok-build
   count: 1
+  kind: non_model_label
+  reason: Existing dispatcher seat alias moved into the shared child environment policy.
+- path: scripts/agent_runtime/env_sanitize.py
+  scope: unneeded_env_var_names
+  context: expression
+  id: claude-code
+  count: 1
+  kind: non_model_label
+  reason: Harness selector for the Codex route auth exception; not a model ID.
+- path: scripts/agent_runtime/env_sanitize.py
+  scope: <module>
+  context: expression
+  id: grok-hermes
+  count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-hermes'; not a model ID.
 - path: scripts/agent_runtime/env_sanitize.py
@@ -4084,14 +4098,14 @@ entries:
   scope: <module>
   context: expression
   id: grok-build
-  count: 3
+  count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
 - path: scripts/delegate.py
   scope: <module>
   context: expression
   id: grok-hermes
-  count: 2
+  count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-hermes'; not a model ID.
 - path: scripts/delegate.py
