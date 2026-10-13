@@ -321,3 +321,21 @@ def test_glm_delegate_worker_state_lifecycle_failure(tmp_path, monkeypatch):
     assert state["returncode"] == 1
     assert state["agent"] == "glm"
     assert "CLI internal error" in (state.get("stderr_excerpt") or state.get("last_error") or "")
+
+
+def test_muse_dispatch_choice_requires_explicit_model_and_has_no_defaults():
+    import argparse
+
+    import yaml
+
+    assert 'muse' in delegate._DISPATCH_AGENT_CHOICES
+    assert registry.AGENTS['muse']['default_model'] is None
+    args = argparse.Namespace(agent='muse', model=None, mode='read-only', task_id='muse-test')
+    refusal, target = delegate._admit_dispatch_target(args, agent='muse', trees=(), repo_role='public-monorepo')
+    assert target is None and 'MUSE_MODEL_REFUSED' in refusal
+    from scripts.review.model_catalog import load_model_catalog
+    catalog = load_model_catalog()
+    for key in ('review_candidates', 'review_ladders', 'orchestrator_seats', 'execution_routing', 'roles'):
+        assert 'muse' not in repr(catalog.get(key)), key
+    fallbacks = yaml.safe_load((Path(__file__).resolve().parents[1] / 'scripts/config/agent_fallback_substitutions.yaml').read_text())
+    assert 'muse' not in repr(fallbacks)

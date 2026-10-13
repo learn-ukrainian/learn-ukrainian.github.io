@@ -349,6 +349,18 @@ execution_routing:
       independent_cross_family_review_required: true
 
 models:
+  muse-wonder-1.0:
+    family: meta
+    tier: specialist
+    lifecycle: hold
+    roles: [candidate_author, candidate_reviewer]
+    transports: [muse]
+    # Vendor markets a 1M context: https://dev.meta.ai/models/muse-wonder
+    context_window: 1000000
+    strengths: [public_code_candidate]
+    weaknesses: [unqualified_no_automatic_routing, no_security, no_ukrainian, no_private_repository]
+    sources: [https://dev.meta.ai/models/muse-wonder]
+    # Usage meter: codexbar --provider muse
   gpt-6.1-sol:
     routing_wire_ids:
       native_codex: gpt-6.1-sol

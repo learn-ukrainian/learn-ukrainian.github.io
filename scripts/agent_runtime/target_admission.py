@@ -63,6 +63,106 @@ COMPAT_TARGETS: dict[str, str] = {
 _MINTING: ContextVar[bool] = ContextVar("admitted_target_minting", default=False)
 
 
+class PrivateRepositoryAdmissionRefused(ValueError):
+    """The requested or resolved identity has no positive private-target grant."""
+
+
+# Freeze the pre-Muse inventory. Registration must never grant private access.
+PRIVATE_REPOSITORY_SEATS = frozenset({
+    'acpx-agy-shadow',
+    'acpx-claude-shadow',
+    'acpx-codex-shadow',
+    'acpx-cursor-shadow',
+    'acpx-deepseek-shadow',
+    'acpx-gemma-shadow',
+    'acpx-glm-shadow',
+    'acpx-grok-shadow',
+    'acpx-kimi-shadow',
+    'acpx-kimicc-shadow',
+    'acpx-pool-shadow',
+    'agy',
+    'claude',
+    'claude-desktop',
+    'claude-infra',
+    'claude-monitor',
+    'codex',
+    'codex-desktop',
+    'cursor',
+    'deepseek',
+    'gemini',
+    'glm',
+    'grok',
+    'grok-build',
+    'grok-hermes',
+    'hermes-deepseek',
+    'kimi',
+    'qwen',
+})
+PRIVATE_REPOSITORY_MODELS = frozenset({
+    'claude-fable-5',
+    'claude-fable-5-1',
+    'claude-haiku-5-5',
+    'claude-opus-4-8',
+    'claude-opus-4.6-thinking',
+    'claude-opus-5',
+    'claude-opus-5-5',
+    'claude-sonnet-4.6-thinking',
+    'claude-sonnet-5',
+    'claude-sonnet-5-5',
+    'composer-2.5',
+    'deepseek-v4-flash',
+    'deepseek-v4-pro',
+    'deepseek-v4.1-flash',
+    'gemini-3.1-pro-high',
+    'gemini-3.5-flash-high',
+    'gemini-3.6-flash-high',
+    'gemini-3.7-flash-high',
+    'gemini-3.8-flash-high',
+    'glm-5.2',
+    'glm-5.3',
+    'glm-5.3-flash',
+    'google-ais/gemma-4-31b-it',
+    'gpt-5.6-luna',
+    'gpt-5.6-sol',
+    'gpt-5.6-terra',
+    'gpt-6-astra',
+    'gpt-6-luna',
+    'gpt-6-sol',
+    'gpt-6.1-sol',
+    'gpt-oss-120b',
+    'grok-4.5',
+    'grok-4.6',
+    'grok-4.7',
+    'kimi-code/k3',
+    'kimi-code/k3-256k',
+    'kimi-code/kimi-for-coding',
+    'kimi-code/kimi-for-coding-highspeed',
+    'kimi-k3-max',
+    'poolside/laguna-m.1',
+    'poolside/laguna-s-2.1',
+    'poolside/laguna-xs-2.1',
+    'qwen/qwen3.6-plus',
+})
+
+
+def refuse_private_repository_target(
+    seats: Iterable[str | None], models: Iterable[str | None], *, repo: str | None,
+) -> None:
+    """Default-deny non-default repositories before resolution and before delivery."""
+    if repo is None or repo == "public-monorepo":
+        return
+    from scripts.review.model_catalog import canonical_model_id, load_model_catalog
+
+    catalog = load_model_catalog()
+    if any(seat not in PRIVATE_REPOSITORY_SEATS for seat in seats if seat) or any(
+        (canonical_model_id(model, catalog) or model) not in PRIVATE_REPOSITORY_MODELS
+        for model in models if model
+    ):
+        raise PrivateRepositoryAdmissionRefused(
+            "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED: identity lacks an explicit private-repository grant"
+        )
+
+
 class SubstituteUnavailable(Exception):
     """No enabled ACP seat substitutes for an over-quota seat; the message says why."""
 
@@ -294,6 +394,7 @@ def resolve_and_admit(
     seats, models = effective_request_targets(raw, explicit_model, *attachments)
     models.extend(item for item in also_models if item)
     requested = _gate_names(seats, models)
+    refuse_private_repository_target(*requested, repo=gate.get("repo"))
     refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
     review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
     from .mechanical_admission import refuse_mechanical_task
@@ -452,6 +553,7 @@ def resolve_and_admit(
         [*seats, *(recipient for recipient, _, _ in resolved)],
         [*models, *(target_model for _, target_model, _ in resolved)],
     )
+    refuse_private_repository_target(*final, repo=gate.get("repo"))
     if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
         refuse_kimi_if_disallowed(*final, mode=mode, **gate)
         refuse_mechanical_task(

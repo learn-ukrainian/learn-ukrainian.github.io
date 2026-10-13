@@ -307,6 +307,7 @@ _DISPATCH_AGENT_CHOICES = (
     "grok",  # canonical native CLI seat
     "grok-build",  # permanent alias → grok
     "grok-hermes",  # demoted Hermes path
+    "muse",  # explicit candidate only (#10511)
     "kimi",  # managed native kimi-code CLI seat; web, UI and backend coding only; no automatic fallback chain
     "deepseek",
     "agy",
@@ -16633,7 +16634,11 @@ def _admit_dispatch_target(
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
-    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.agent_runtime.target_admission import (
+        PrivateRepositoryAdmissionRefused,
+        ReviewAdmissionRefused,
+        resolve_and_admit,
+    )
     from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
     from scripts.review.target_resolution import TargetResolutionError
 
@@ -16678,6 +16683,9 @@ def _admit_dispatch_target(
             return facts
         except BranchFactsError as exc:
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+
+    if agent == "muse" and not getattr(args, "model", None):
+        return "MUSE_MODEL_REFUSED: candidate dispatch requires an explicit model", None
 
     try:
         _require_ukrainian_model_family(args, getattr(args, "model", None))
@@ -16762,6 +16770,7 @@ def _admit_dispatch_target(
         KimiAdmissionRefused,
         MechanicalAdmissionRefused,
         ReviewAdmissionRefused,
+        PrivateRepositoryAdmissionRefused,
         _DispatchRouteRefused,
         BudgetGuardRefuseError,
         ModelCatalogError,
@@ -18265,7 +18274,7 @@ def build_parser() -> argparse.ArgumentParser:
         # guard still catches programmatic Namespace bypass.
         help="Agent to run for the task: codex, gemini (retired CLI — permanent "
         "alias to agy, do not install gemini), claude, grok "
-        "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi "
+        "(native CLI; grok-build=alias), grok-hermes, muse, deepseek, agy, cursor, or kimi "
         "(web, UI and backend coding only: workspace-write in site UI, scripts/ and tests/; "
         "Ukrainian-language content, reviews, consults, design and rules are refused).",
     )

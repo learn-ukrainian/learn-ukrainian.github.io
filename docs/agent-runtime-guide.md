@@ -280,6 +280,23 @@ callers — the adapter's argv is fully confined and callers only ever set
 Done. The runner handles everything else: stall detection, usage logging,
 rate-limit headroom checks, mode validation, cwd enforcement.
 
+## Muse candidate
+
+Muse Wonder is a held `meta` candidate for public, non-security code authoring
+and review. It has no default model or routing role and is absent from review
+ladders and fallback tables. Private targets require an explicit seat and model
+grant at `target_admission`; Muse has none. Ukrainian lanes retain the existing
+family exclusion.
+
+`--agent muse` requires an explicit candidate model. The adapter currently
+refuses both read-only and workspace-write with `MUSE_GUARD_PARITY_UNPROVEN`
+before creating files or contacting a provider. Native forbidden-action evidence
+is required before enabling either mode. A model's report of unavailable tools
+is insufficient. The JSONL parser records provider-observed identity and leaves
+missing usage or identity unknown. Qualification must also prove per-run
+contributor mode off, private prompt-file cleanup, sandbox permissions, and
+all fleet guards. The subscription CLI is the only intended transport.
+
 ## Reviewer findings schemas
 
 Quality-gate callers use `scripts.audit.llm_reviewer.invoke_reviewer_with_schema`.

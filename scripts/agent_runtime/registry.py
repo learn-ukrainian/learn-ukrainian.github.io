@@ -38,6 +38,7 @@ class AgentEntry(TypedDict):
 
 
 AGENTS: dict[str, AgentEntry] = {
+    "muse": {"adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter", "default_model": None, "cost_tier": "unknown", "capabilities": frozenset(), "cli_available": True, "resume_policy": "never"},
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
         # Operator 2026-09-29 (#9230): GPT-6.1 Sol @ high orchestrates and
