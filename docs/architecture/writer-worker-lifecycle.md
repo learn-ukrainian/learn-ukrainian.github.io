@@ -1,8 +1,8 @@
 # Writer-worker lifecycle
 
-Normative SHA-256: `576db353d7c0a465bba29d2b06892a27580bb758da033bb7277a9509a6e0dfed`
+Normative SHA-256: `dca41dbb929094ab2b9782b3ade202e00c299fda3089916eacef3db2a7d93437`
 
-Status: round-6 proposal for designated approval. No implementation or cleanup is authorized by this document alone.
+Status: round-7 proposal, pending new-head independent review and designated approval. No implementation or cleanup is authorized by this document alone.
 Issue: [#10559](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10559).
 Parent: [#7919](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7919).
 Round-6 source revision: `556d76795c8b63273ffad305d0cf44e8c59cd7e7` from freshly fetched `origin/main`.
@@ -491,10 +491,15 @@ Trailer/provenance omission is a separate evasion boundary beside same-user even
 Today `_attribute_commit` refuses missing or malformed `X-Agent` with `author model unknown: missing explicit X-Agent model trailer`.
 Its Git-proven clean-base-merge and admitted unknown-history exceptions retain their existing qualification rules.
 The proposed classifier also refuses missing writer bindings when a validated dispatch record or retained index proves provenance.
-It cannot prove dispatch origin if a same-user writer removes accessible task records and individual index entries
-while the global stores remain readable, and substitutes a valid
-ordinary model-attributed or no-dispatch trailer. A mandatory trailer alone cannot distinguish that evasion from legitimate
-manual/orchestrator publication. No omission grants exemption while retained indexed provenance or conflicting evidence remains.
+A dispatched writer can use a valid non-task trailer form and publish from an unindexed ref without tampering with any record.
+Existing code accepts `<agent>/<catalog-model>` without a task ID and exempts `<agent>/inline` in the trailer linter.
+Publication to an unindexed remote ref need not change the local branch, so the finalizer's branch-switch blocker does not catch it.
+With no attributed task identity or indexed branch alias, the classifier can return EXEMPT no-dispatch.
+It does not compare branch/PR commits or H against ledger-recorded checkpoints, the gated SHA or the pre-removal commit inventory.
+A mandatory trailer alone cannot distinguish that evasion from legitimate manual/orchestrator publication.
+The lifecycle's unpublished-H blocked custody provides only indirect detection when the recorded branch lacks exact gated publication of H.
+Cross-copy digests, retained index entries and the operator-visible log need not show any inconsistency because nothing was tampered with.
+This residual includes accidental non-compliant publication. Proven registered dispatch provenance or conflicting evidence still refuses exemption.
 Same-user forgery and this remaining trailer/provenance-omission evasion are explicit out-of-scope residuals owned by Harness, requiring operator-only risk acceptance under OD-12
 before activation. Without acceptance this trust-boundary decision blocks activation.
 
@@ -1105,7 +1110,7 @@ For OD-04, Option B is recommended because it retains review dispatch authority 
 | OD-09 | Approve Harness keeper/verdict-recorder ownership and publisher/reservation/rejection-chain preconditions with bounded activation delta inventory and frozen exemption classification only for admissions bound to the post-activation index and lifecycle-ledger epoch; pre-activation and agent-prefixed no-dispatch PRs retain today's gates, with refusal for malformed/conflicting lifecycle evidence | Advisor pair |
 | OD-10 | Ban `keep_worktree` for new writers while preserving legacy retention until a scoped custody decision | Advisor pair |
 | OD-11 | Require evaluation fixtures from outside the implementation author's family | Advisor pair |
-| OD-12 | Accept same-user authoritative-event/receipt forgery and remaining trailer/provenance-omission evasion outside the threat model, with today's missing-trailer refusal, retained-index classification, public-copy digest, issue-entry and operator-visible log controls, as security-posture risks that block activation without operator acceptance | Operator |
+| OD-12 | Accept same-user authoritative-event/receipt forgery and omission evasion through a valid non-task trailer plus publication from an unindexed ref, requiring no tampering, as out-of-scope security-posture risks; today's missing-trailer refusal, retained-index classification, public-copy digests, issue entry and operator-visible log do not close the omission gap, for which unpublished-H blocked custody provides only indirect detection; activation remains blocked without operator acceptance | Operator |
 
 <!-- normative:end -->
 
@@ -1116,22 +1121,43 @@ that window but do not create atomicity between GitHub and the host. Failed post
 Unknown session authority, content scope, ignored artifacts, branch switches, or #10537 recovery identity block mutation.
 Owner: Infra for deletion proof, Harness for identity/admission, and the original lane for content custody.
 Expiry cannot grant discard authority. Overdue custody remains counted; ordinary admission obeys the normative slot/budget
-rules and bounded migration/prerequisite exemptions. Same-user forgery and remaining trailer/provenance-omission evasion remain proposed operator-accepted residuals under OD-12,
-owned by Harness; attribution and digest agreement do not prove actor authentication.
+rules and bounded migration/prerequisite exemptions. Same-user forgery and omission evasion through a valid non-task trailer
+plus publication from an unindexed ref remain proposed residuals under OD-12, owned by Harness and awaiting operator-only risk acceptance.
+Omission needs no tampering and has only indirect detection through unpublished-H blocked custody.
+Attribution and digest agreement do not prove actor authentication.
 No approved digest can be claimed from this author's own checks.
 Round 5 brings custody release versus finality, nonwriter admission, dispute attention, durable review state and
 activation delta capture into the normative contract for B4/R1-R3. Their implementation and approval remain with
 Harness and Infra; no authoring check proves them operational. No B1-B5 or R1-R3 item is silently deferred.
 
-The supplied exact-r5 Opus REQUEST_CHANGES blocks despite the Gemini APPROVE. The bounded r6 brief requires one
-qualified Opus exact-r6 recheck returned to the accountable driver; no Gemini rerun is required.
-Harness reconciles the exact-head/hash findings. If no new blocker of equal severity appears,
-proceed under the existing designated choices; otherwise retain the quality floor and report the blocker.
-Neither the supplied r5 reviews nor authoring checks approve r6. #10559 AC-03 still requires actual implementation issues with parent links,
+The supplied exact-r6 Opus CHANGES_REQUESTED identifies B-R6-1 at head
+`cbfc6399a544a6eb8dfc3e8e402a49618fc8a1e7` and normative digest
+`576db353d7c0a465bba29d2b06892a27580bb758da033bb7277a9509a6e0dfed`.
+This bounded r7 correction takes remedy (a), accurately describing the omission residual without changing the classifier or packets.
+The accountable driver owns serial publication, new-head independent review and decision routing.
+The prior reviews and these authoring checks do not approve r7. Material correctness or missing proof blocks;
+editorial nits remain advisory. #10559 AC-03 still requires actual implementation issues with parent links,
 strict task-card PASS, and current dispatch preflight. This brief prohibits creating them.
 Owners: accountable Harness driver and Infra. The pre-delivery disk-pressure residual remains Infra's responsibility.
 
-## Round-6 reconciliation and current source evidence
+## Round-7 reconciliation and current source evidence
+
+This revision addresses only B-R6-1 from the supplied exact-r6 Opus CHANGES_REQUESTED.
+It retains r5 B1-B5 and N1 as closed specification corrections. Advisory A1-A6 remain advisory evidence and add no scope.
+All twelve end shapes, all four implementation packets and the classifier design are unchanged.
+The trust-boundary paragraph and OD-12 now put the full omission residual to the operator for risk acceptance.
+
+| Item | Correction and changed section | Tracked source evidence | Retained acceptance |
+| --- | --- | --- | --- |
+| B-R6-1 | Remedy (a): a valid non-task trailer plus publication from an unindexed ref can evade registered-provenance classification without tampering; only unpublished-H blocked custody gives indirect detection; OD-12 still requires operator acceptance before activation | `scripts/review/record_cf_verdict.py:_attribute_commit` at 370-377 permits `trailer-model`, and at 392-393 can leave task IDs absent; `scripts/audit/lint_agent_trailer.py:_is_exempt_trailer` at 173-183 exempts `<agent>/inline`; the proposed classifier joins identities/aliases, not ledger-recorded commit SHAs/H; the finalizer's branch-switch blocker does not detect remote-ref publication without a local branch switch | Unchanged I01-AC06 and all four packets, OD-12 |
+
+Authoring validation recomputes the normative byte-range digest independently and compares the exact diff,
+all twelve end-shape rows, all four packets and the classifier against the supplied r6 head.
+These checks validate the document, not runtime behavior or independent approval.
+The worker returns a clean local commit. Root owns publication and new-head independent review.
+No implementation, new design, policy approval, migration, canary, activation or lease action is authorized by this correction.
+
+## Round-6 reconciliation and source evidence, historical
 
 This revision accepts exactly five corrections from the supplied r5 reviews. Opus's REQUEST_CHANGES is blocking
 revision input despite Gemini's APPROVE. The source revision at the top supplies current-code evidence;
@@ -1145,10 +1171,9 @@ the classifier, publisher and activation requirements remain proposed behavior. 
 | R-c nit | Packet delivery/cutover exempts continuations of frozen pre-activation lifecycles after activation, preserving null epoch | I-01/I-04's proposed immutable frozen set and index aliases distinguish a new lifecycle admission from continuation; no current producer is claimed to enforce this | I01-AC06, I04-AC08 |
 | Base recheck nit | Pre-PR publisher checks base ref name and complete reviewed commit-set equality; a moved main SHA alone cannot force unchanged-head review | `pr_review_facts` at 937-970 validates base name and exact H, collects current facts, applies authorship exclusions and compares GitHub/local commit sets; observed base SHA remains evidence | I01-AC10, unchanged-head reservation rule |
 
-The author recomputes the normative digest using the documented Python byte range and an independent Node crypto read.
-Document/cited-path, packet-ownership, Markdown, diff/trailer and four mandatory guard checks validate the artifact;
-they do not supply the held-out Opus judgment. The driver owns exact-r6 recheck and serial publication.
-This worker leaves a clean unpushed commit with disposition `needs_finalize`. No implementation, activation or lease mutation is authorized here.
+Round-6 authoring recomputed its normative digest using the documented Python byte range and an independent Node crypto read.
+Its document/cited-path, packet-ownership, Markdown, diff/trailer and four mandatory guard checks did not supply independent approval.
+The subsequent supplied Opus recheck returned CHANGES_REQUESTED with B-R6-1, addressed in the round-7 reconciliation above.
 
 ## Round-5 reconciliation and source evidence, historical
 
