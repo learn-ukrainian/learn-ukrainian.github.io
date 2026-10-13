@@ -20576,7 +20576,7 @@ def test_adapter_model_rejection_treats_probe_tempdir_failure_as_inconclusive(tm
     inconclusive = delegate._adapter_model_rejection(agent, model)
     baseline_err = capsys.readouterr().err
     assert "RuntimeError" in baseline_err
-    assert not list(tmp_path.glob("delegate-model-probe-*"))
+    assert not list(tmp_path.rglob("delegate-model-probe-*"))
     monkeypatch.setitem(AGENTS[agent], "adapter", original_spec)
 
     seen: list[str] = []
@@ -20595,12 +20595,135 @@ def test_adapter_model_rejection_treats_probe_tempdir_failure_as_inconclusive(tm
             got = delegate._adapter_model_rejection(agent, model)
         except Exception as err:
             raised.append(f"{type(exc).__name__} -> {type(err).__name__}: {err}")
-            assert not list(tmp_path.glob("delegate-model-probe-*"))
+            assert not list(tmp_path.rglob("delegate-model-probe-*"))
             continue
         err_text = capsys.readouterr().err
         assert got == inconclusive
         assert err_text == baseline_err.replace("RuntimeError", type(exc).__name__)
-        assert not list(tmp_path.glob("delegate-model-probe-*"))
+        assert not list(tmp_path.rglob("delegate-model-probe-*"))
 
     assert seen == ["PermissionError", "OSError"]
     assert raised == []
+
+
+_PROBE_CLEANUP_WARNING = "could not remove its probe directory:"
+
+
+def _install_model_probe_adapter(monkeypatch, agent: str, build) -> None:
+    """Point ``agent`` at an in-test adapter whose ``build_invocation`` is ``build``."""
+    import types
+
+    from agent_runtime.registry import AGENTS
+
+    class _Adapter:
+        def build_invocation(self, **_kwargs):
+            return build()
+
+    fake = types.ModuleType("probe_cleanup_failure_mod")
+    fake.Adapter = _Adapter
+    monkeypatch.setitem(sys.modules, "probe_cleanup_failure_mod", fake)
+    monkeypatch.setitem(AGENTS[agent], "adapter", "probe_cleanup_failure_mod:Adapter")
+
+
+def _model_probe_dirs(root: Path) -> list[Path]:
+    return list(root.rglob("delegate-model-probe-*"))
+
+
+@pytest.mark.parametrize("outcome", ["success", "runtime", "rejection", "interrupt"])
+def test_adapter_model_rejection_removes_probe_directory(tmp_path, monkeypatch, capsys, outcome):
+    """Success, adapter errors, rejection, and KeyboardInterrupt leave no probe directory (#10529).
+
+    KeyboardInterrupt still propagates after the directory is removed.
+    """
+    model = "unapproved-model"
+    refusal = f"Adapter: model={model!r} rejected"
+
+    def build():
+        if outcome == "success":
+            return object()
+        if outcome == "runtime":
+            raise RuntimeError("probe cannot run")
+        if outcome == "interrupt":
+            raise KeyboardInterrupt("probe interrupted")
+        raise ValueError(refusal)
+
+    _install_model_probe_adapter(monkeypatch, "codex", build)
+    if outcome == "interrupt":
+        with pytest.raises(KeyboardInterrupt, match=r"^probe interrupted$"):
+            delegate._adapter_model_rejection("codex", model)
+    else:
+        got = delegate._adapter_model_rejection("codex", model)
+        assert got == (refusal if outcome == "rejection" else None)
+    err = capsys.readouterr().err
+    assert _model_probe_dirs(tmp_path) == []
+    assert _PROBE_CLEANUP_WARNING not in err
+    if outcome == "runtime":
+        assert "could not verify" in err and "RuntimeError" in err
+    else:
+        assert "could not verify" not in err
+
+
+@pytest.mark.parametrize("outcome", ["success", "runtime", "rejection"])
+@pytest.mark.parametrize(
+    ("errno_num", "exc_type", "errno_name"),
+    [
+        (13, PermissionError, "EACCES"),
+        (16, OSError, "EBUSY"),
+    ],
+)
+def test_adapter_model_rejection_warns_when_probe_directory_cleanup_fails(
+    tmp_path, monkeypatch, capsys, outcome, errno_num, exc_type, errno_name
+):
+    """A failed probe-directory cleanup is one non-fatal stderr warning (#10529).
+
+    ``PermissionError(13)`` and ``OSError(16)`` from ``os.rmdir`` after a
+    successful probe, an adapter ``RuntimeError``, and a rejection ``ValueError``
+    each leave the admission result unchanged and do not propagate. The warning
+    names the failure class and errno name only.
+    """
+    assert errno.errorcode[errno_num] == errno_name
+    model = "unapproved-model"
+    refusal = f"Adapter: model={model!r} rejected"
+
+    def build():
+        if outcome == "success":
+            return object()
+        if outcome == "runtime":
+            raise RuntimeError("probe cannot run")
+        raise ValueError(refusal)
+
+    _install_model_probe_adapter(monkeypatch, "codex", build)
+    baseline = delegate._adapter_model_rejection("codex", model)
+    baseline_err = capsys.readouterr().err
+    assert _model_probe_dirs(tmp_path) == []
+    assert _PROBE_CLEANUP_WARNING not in baseline_err
+
+    real_rmdir = os.rmdir
+
+    def failing_rmdir(path, *args, **kwargs):
+        if "delegate-model-probe-" in os.fsdecode(path):
+            raise exc_type(errno_num, "raw-secret-text")
+        return real_rmdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "rmdir", failing_rmdir)
+    raised: list[str] = []
+    try:
+        got = delegate._adapter_model_rejection("codex", model)
+    except Exception as err:
+        raised.append(f"{type(err).__name__}: {err}")
+        got = None
+    err = capsys.readouterr().err
+    warnings = [line for line in err.splitlines() if _PROBE_CLEANUP_WARNING in line]
+    verify = [line for line in err.splitlines() if "could not verify" in line]
+    baseline_verify = [line for line in baseline_err.splitlines() if "could not verify" in line]
+    assert raised == []
+    assert got == baseline
+    assert warnings == [
+        f"⚠ model probe for codex could not remove its probe directory: {exc_type.__name__} {errno_name}"
+    ]
+    assert verify == baseline_verify
+    assert "/" not in warnings[0]
+    assert str(tmp_path) not in err
+    assert "delegate-model-probe-" not in err
+    assert "raw-secret-text" not in err
+    assert len(_model_probe_dirs(tmp_path)) == 1

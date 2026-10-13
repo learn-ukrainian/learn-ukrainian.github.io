@@ -16825,6 +16825,26 @@ def _discard_model_probe_output(plan: object) -> None:
         return
 
 
+def _warn_model_probe_directory_cleanup(entry: object, exc: BaseException) -> None:
+    """Stderr notice when the probe directory cannot be removed (#10529).
+
+    Same non-fatal shape as the inconclusive-probe warning. After the colon
+    the line names only the failure class and, for an ``OSError``, its errno
+    name. The path and the exception text stay off the line, and the caller
+    does not let the failure change the admission result.
+    """
+    detail = type(exc).__name__
+    number = exc.errno if isinstance(exc, OSError) else None
+    if isinstance(number, int):
+        errno_name = errno.errorcode.get(number, "")
+        if errno_name:
+            detail = f"{detail} {errno_name}"
+    print(
+        f"⚠ model probe for {_registry_seat(entry)} could not remove its probe directory: {detail}",
+        file=sys.stderr,
+    )
+
+
 def _adapter_model_rejection(agent: str, model: str) -> str | None:
     """Return the adapter's refusal text, or None when this model is not refused.
 
@@ -16834,7 +16854,8 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
     must not leave the temp file ``build_invocation`` creates on the accepted
     path. Its cwd is a private temporary directory, created and removed here,
     so an adapter that installs workspace hooks cannot mutate the process
-    checkout (#10529).
+    checkout (#10529). A failure to remove that directory is reported on
+    stderr and does not change what this function returns.
     """
     from agent_runtime.registry import get_agent_entry
 
@@ -16846,10 +16867,12 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
     # None until mkdtemp returns, so a failed allocation is not passed to rmtree.
+    # The directory is under the fleet scratch root: a private cwd, outside the
+    # process checkout, and an approved temp producer (#10529).
     probe_cwd: Path | None = None
     try:
         try:
-            probe_cwd = Path(tempfile.mkdtemp(prefix="delegate-model-probe-"))
+            probe_cwd = Path(tempfile.mkdtemp(prefix="delegate-model-probe-", dir=ensure_scratch_root()))
             plan = adapter.build_invocation(
                 prompt="model-probe",
                 mode="read-only",
@@ -16874,8 +16897,13 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
         _discard_model_probe_output(plan)
         return None
     finally:
+        # Cleanup failure is visible and non-fatal. KeyboardInterrupt still
+        # propagates: only OSError is caught (#10529).
         if probe_cwd is not None:
-            shutil.rmtree(probe_cwd, ignore_errors=True)
+            try:
+                shutil.rmtree(probe_cwd)
+            except OSError as exc:
+                _warn_model_probe_directory_cleanup(entry, exc)
 
 
 def _registry_seat(entry: object) -> str:
