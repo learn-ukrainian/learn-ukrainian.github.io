@@ -3107,7 +3107,7 @@ def test_red_team_worker_invokes_a_fresh_session(tmp_path, monkeypatch):
     assert len(calls) == 1 and calls[0]["session_id"] is None
 
 
-def test_dispatch_review_mode_help_preserves_legacy_usage_golden():
+def test_dispatch_review_mode_help_preserves_legacy_usage_golden(monkeypatch):
     import argparse
     import hashlib
 
@@ -3115,7 +3115,27 @@ def test_dispatch_review_mode_help_preserves_legacy_usage_golden():
     subcommands = next(action for action in parser._actions if isinstance(action, argparse._SubParsersAction))
     dispatch = subcommands.choices["dispatch"]
     assert "--review-mode {cross_family,red_team}" in dispatch.format_help()
-    assert hashlib.sha256(dispatch.format_usage().encode()).hexdigest() == (
+    # Regenerate the usage golden only when an agent is registered or removed.
+    # #10511 registers muse; its added choice also causes argparse to rewrap usage.
+    usage = dispatch.format_usage()
+    assert hashlib.sha256(usage.encode()).hexdigest() == (
+        "c927f420051b669f23b54724449805b32d9149c3a420c4f69e0dd80d1522a398"
+    )
+    # Rebuild before usage is frozen so only muse and whitespace may differ.
+    with monkeypatch.context() as legacy:
+        legacy.setattr(
+            delegate,
+            "_DISPATCH_AGENT_CHOICES",
+            tuple(choice for choice in delegate._DISPATCH_AGENT_CHOICES if choice != "muse"),
+        )
+        old_parser = delegate.build_parser()
+        old_subcommands = next(
+            action for action in old_parser._actions if isinstance(action, argparse._SubParsersAction)
+        )
+        old_usage = old_subcommands.choices["dispatch"].format_usage()
+    assert usage.count(",muse") == 1
+    assert usage.replace(",muse", "").split() == old_usage.split()
+    assert hashlib.sha256(old_usage.encode()).hexdigest() == (
         "b7a61d5f40b0ddcedcdf507fa0348d5141ca5de55c2496ba0f995aa260f73074"
     )
 
