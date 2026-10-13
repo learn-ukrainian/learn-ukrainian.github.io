@@ -2,6 +2,11 @@
 Pytest configuration and shared fixtures for audit tests.
 
 Provides reusable content snippets and module templates for testing.
+
+Credential redaction protects serialized reports, captured output and warnings.
+It cannot intercept direct terminal writes with ``-s`` / ``--capture=no`` or
+``-o log_cli=true``. Keep capture enabled and live logging disabled when running
+tests with credentials. Such sessions emit one warning, without values.
 """
 
 import os
@@ -32,7 +37,9 @@ import re
 # order does not retain one.
 _CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
 _XDIST_PUBLISHED_CREDENTIALS_KEY = "lu_suite_published_credentials"
+_XDIST_REDACTION_SECRETS_KEY = "lu_suite_redaction_secrets"
 _IMPORT_STRIPPED_SECRETS: dict[str, str] = {}
+_IMPORT_HAD_CREDENTIALS = False
 _CREDENTIAL_ENV_RE = re.compile(r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$")
 
 
@@ -43,8 +50,13 @@ def _is_credential_shaped_env_name(name: str) -> bool:
 
 def _strip_credential_shaped_env() -> None:
     """Drop credential-shaped names. This process never puts them back."""
+    global _IMPORT_HAD_CREDENTIALS
     for name in tuple(os.environ):
         if _is_credential_shaped_env_name(name) or _CREDENTIAL_ENV_RE.search(name):
+            # These token-suffix values identify test processes and fenced
+            # leases. Strip them as before, but do not call them credentials.
+            if name not in {"LU_TEST_CURSOR_SESSION_TOKEN", "SESSION_STREAM_FENCING_TOKEN"}:
+                _IMPORT_HAD_CREDENTIALS = True
             value = os.environ[name]
             if len(value) >= 12:
                 _IMPORT_STRIPPED_SECRETS[name] = value
@@ -79,6 +91,9 @@ from typing import Any
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
+from _pytest._io.saferepr import saferepr
+from _pytest.reports import pytest_report_from_serializable as _restore_pytest_report
+from _pytest.reports import pytest_report_to_serializable as _serialize_pytest_report
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -237,7 +252,12 @@ def pytest_runtest_makereport(
 ) -> Generator[None, object, pytest.TestReport]:
     """Sanitize all outcomes before terminal, JUnit, or xdist consumers."""
     report = yield
-    return _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    report._lu_xdist_worker = hasattr(item.config, "workerinput")
+    _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    # record_property persists on the item across phases. Store its sanitized
+    # values so teardown cannot count the same disclosure a second time.
+    item.user_properties[:] = report.user_properties
+    return report
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)
@@ -282,47 +302,89 @@ def pytest_warning_recorded(warning_message: warnings.WarningMessage) -> None:
         warning_message.line = redacted_line
 
 
-def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
-    """Replace credential values while retaining the original failure cause."""
-    if not secrets:
-        return report
-    chunks = [str(report.longrepr or "")]
-    chunks.extend(title + "\n" + (content or "") for title, content in report.sections)
-    properties = getattr(report, "user_properties", [])
-    property_text = "\n".join(str(name) + "\n" + str(value) for name, value in properties)
-    chunks.append(property_text)
-    text = "\n".join(chunks)
-    leaked = [name for name, value in secrets.items() if value and value in text]
-    if not leaked:
-        return report
-    # Pytest repeats earlier phases' captured output in later reports. Redact
-    # every section, but only promote a passed report for its own phase.
-    phase = getattr(report, "when", None)
-    current_text = "\n".join(
-        [str(report.longrepr or ""), property_text]
-        + [content for title, content in report.sections if phase is None or title.endswith(" " + phase)]
-    )
-    current_leaked = [name for name, value in secrets.items() if value and value in current_text]
-    # Replace longer values first when one credential contains another.
-    values = sorted(set(secrets.values()), key=len, reverse=True)
+_TRUNCATED_SECRET_REPR = re.compile(
+    r"(?=(?P<literal>'(?:\\.|[^\\'\n])*?\.\.\.(?:\\.|[^\\'\n])*?'"
+    r'|"(?:\\.|[^\\"\n])*?\.\.\.(?:\\.|[^\\"\n])*?"))'
+)
 
-    def redact(content: str) -> str:
+
+def _redact_secret_data(data: Any, values: Collection[str]) -> Any:
+    """Redact every serialized string, including keys and shortened reprs."""
+    if isinstance(data, str):
         for value in values:
             if value:
-                content = content.replace(value, "[REDACTED]")
-        return content
+                for rendered in sorted({value, repr(value)[1:-1]}, key=len, reverse=True):
+                    data = data.replace(rendered, "[REDACTED]")
+        # Match pytest's actual shortening algorithm, including quote choice
+        # and escapes. Lookahead also finds a repr inside surrounding quotes.
+        replacements = set()
+        for match in _TRUNCATED_SECRET_REPR.finditer(data):
+            literal = match.group("literal")
+            if any(
+                len(repr(value)) > len(literal) and saferepr(value, maxsize=len(literal)) == literal for value in values
+            ):
+                replacements.add(literal)
+        for literal in sorted(replacements, key=len, reverse=True):
+            data = data.replace(literal, literal[0] + "[REDACTED]" + literal[-1])
+        return data
+    if isinstance(data, dict):
+        return {_redact_secret_data(key, values): _redact_secret_data(value, values) for key, value in data.items()}
+    if isinstance(data, list):
+        return [_redact_secret_data(value, values) for value in data]
+    if isinstance(data, tuple):
+        return tuple(_redact_secret_data(value, values) for value in data)
+    return data
 
-    report.sections = [(redact(title), redact(content)) for title, content in report.sections]
-    if properties:
-        report.user_properties = [
-            (redact(name) if isinstance(name, str) else name,
-             redact(str(value)) if any(secret and secret in str(value) for secret in values) else value)
-            for name, value in properties
-        ]
-    if isinstance(report.longrepr, tuple):
-        report.longrepr = tuple(redact(part) if isinstance(part, str) else part for part in report.longrepr)
-    elif report.longrepr is not None:
-        report.longrepr = redact(str(report.longrepr))
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_report_to_serializable() -> Generator[None, object, Any]:
+    """Cover fields added by serialization plugins before xdist transport."""
+    data = yield
+    if _IMPORT_STRIPPED_SECRETS:
+        data = _redact_secret_data(data, sorted(set(_IMPORT_STRIPPED_SECRETS.values()), key=len, reverse=True))
+    return data
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_report_from_serializable(data: dict[str, Any]) -> Generator[None, object, Any]:
+    """Redact incoming serialized fields before any deserializer consumes them."""
+    if _IMPORT_STRIPPED_SECRETS:
+        redacted = _redact_secret_data(data, sorted(set(_IMPORT_STRIPPED_SECRETS.values()), key=len, reverse=True))
+        data.clear()
+        data.update(redacted)
+    return (yield)
+
+
+def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
+    """Round-trip all report fields through pytest's serializer before consumers."""
+    if not secrets:
+        return report
+    data = _serialize_pytest_report(report)
+    if data is None:
+        return report
+    values = sorted(set(secrets.values()), key=len, reverse=True)
+    sanitized = _redact_secret_data(data, values)
+    if sanitized == data:
+        return report
+    # Captured output repeats in later phases. Only new output and properties
+    # promote a passed report; all other fields are still redacted recursively.
+    phase = getattr(report, "when", None)
+    current = {"longrepr": data["longrepr"], "user_properties": data.get("user_properties", [])}
+    current["sections"] = [
+        (title, content) for title, content in report.sections if phase is None or title.endswith(" " + phase)
+    ]
+    current_leaked = [
+        name for name, value in secrets.items() if value and _redact_secret_data(current, [value]) != current
+    ]
+    restored = _restore_pytest_report(sanitized)
+    # xdist checks the in-memory nodeid against its collected item before
+    # sending the report. Its serialized nodeid is redacted by the hook above.
+    if getattr(report, "_lu_xdist_worker", False):
+        restored.__dict__.pop("nodeid", None)
+    # Collection results are runtime items, deliberately omitted by pytest's
+    # serializer. Keep the original items so redaction never stops collection.
+    restored.__dict__.pop("result", None)
+    report.__dict__.update(restored.__dict__)
     if report.outcome == "passed" and current_leaked:
         report.outcome = "failed"
         report.longrepr = "captured output contained the value of scrubbed env var " + ", ".join(current_leaked)
@@ -2196,6 +2258,17 @@ def _restore_published_credentials(config: pytest.Config) -> None:
     workerinput = getattr(config, "workerinput", None)
     if not isinstance(workerinput, dict):
         return
+    # Workers need the controller's import-time snapshot to sanitize before
+    # serialization. It stays in memory and is never restored into os.environ.
+    redaction_secrets = workerinput.get(_XDIST_REDACTION_SECRETS_KEY, {})
+    if isinstance(redaction_secrets, dict):
+        _IMPORT_STRIPPED_SECRETS.update(
+            {
+                name: value
+                for name, value in redaction_secrets.items()
+                if isinstance(name, str) and isinstance(value, str)
+            }
+        )
     published = workerinput.get(_XDIST_PUBLISHED_CREDENTIALS_KEY)
     if not isinstance(published, dict):
         return
@@ -2213,10 +2286,20 @@ def pytest_configure_node(node: Any) -> None:
     again at import and ``pytest_configure`` puts this copy back.
     """
     node.workerinput[_XDIST_PUBLISHED_CREDENTIALS_KEY] = _published_credential_env()
+    node.workerinput[_XDIST_REDACTION_SECRETS_KEY] = dict(_IMPORT_STRIPPED_SECRETS)
 
 
 def pytest_configure(config: pytest.Config) -> None:
     _restore_published_credentials(config)
+    if (
+        not hasattr(config, "workerinput")
+        and _IMPORT_HAD_CREDENTIALS
+        and (config.getoption("capture") == "no" or config.getini("log_cli"))
+    ):
+        sys.stderr.write(
+            "WARNING: credential redaction cannot protect direct terminal output; "
+            "keep capture enabled and log_cli disabled when credentials are present.\n"
+        )
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")

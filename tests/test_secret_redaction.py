@@ -85,7 +85,15 @@ def xdist_enabled(request: pytest.FixtureRequest) -> bool:
     return request.param
 
 
-def _run_secret_probe(tmp_path: Path, source: str, *, xdist_enabled: bool, token: str = SYNTHETIC_KEY) -> subprocess.CompletedProcess[str]:
+def _run_secret_probe(
+    tmp_path: Path,
+    source: str,
+    *,
+    xdist_enabled: bool,
+    token: str = SYNTHETIC_KEY,
+    extra_args: tuple[str, ...] = (),
+    credentials: bool = True,
+) -> subprocess.CompletedProcess[str]:
     """Load the real suite plugin against an isolated, synthetic child suite."""
     sample = tmp_path / "test_sample.py"
     sample.write_text(source, encoding="utf-8")
@@ -100,6 +108,8 @@ def _run_secret_probe(tmp_path: Path, source: str, *, xdist_enabled: bool, token
             "SYNTHETIC_SERVICE_APIKEY": "synthetic-service-apikey-0123456789",
         }
     )
+    if not credentials:
+        env = {name: value for name, value in env.items() if name in {"HOME", "PATH", "TMPDIR", "LANG", "PYTHONPATH"}}
     return subprocess.run(
         [
             sys.executable,
@@ -121,6 +131,7 @@ def _run_secret_probe(tmp_path: Path, source: str, *, xdist_enabled: bool, token
             "--tb=long",
             "--junitxml",
             str(tmp_path / "report.xml"),
+            *extra_args,
         ],
         cwd=REPO,
         env=env,
@@ -188,7 +199,8 @@ def test_conftest_redacts_unsuccessful_reports(tmp_path: Path, phase: str, xdist
 
 def test_collection_cannot_read_inherited_key(tmp_path: Path, xdist_enabled: bool) -> None:
     proc = _run_secret_probe(
-        tmp_path, "import os\nassert 'CURSOR_API_KEY' not in os.environ\ndef test_sample():\n    pass\n",
+        tmp_path,
+        "import os\nassert 'CURSOR_API_KEY' not in os.environ\ndef test_sample():\n    pass\n",
         xdist_enabled=xdist_enabled,
     )
     assert proc.returncode == 0, proc.stderr + proc.stdout
@@ -207,17 +219,22 @@ def test_conftest_redacts_junit_properties(tmp_path: Path, secret_in_name: bool,
         "def test_sample(record_property):\n"
         f"    secret = Path({str(secret_file)!r}).read_text()\n"
         "    record_property('safe-count', 7)\n"
-        + ("    record_property(secret, 'safe-value')\n" if secret_in_name
-           else "    record_property('credential', secret)\n"),
+        + (
+            "    record_property(secret, 'safe-value')\n"
+            if secret_in_name
+            else "    record_property('credential', secret)\n"
+        ),
         xdist_enabled=xdist_enabled,
     )
     assert proc.returncode == 1, proc.stderr + proc.stdout
     xml = (tmp_path / "report.xml").read_text()
     combined = proc.stdout + proc.stderr + xml
     assert SYNTHETIC_KEY not in combined
-    assert '[REDACTED]' in xml
+    assert "[REDACTED]" in xml
     assert '<property name="safe-count" value="7"' in xml
     assert "scrubbed env var CURSOR_API_KEY" in combined
+    assert "1 failed" in proc.stdout
+    assert "1 error" not in proc.stdout
 
 
 def test_collection_cannot_read_inherited_password_or_apikey(tmp_path: Path, xdist_enabled: bool) -> None:
@@ -416,7 +433,10 @@ def test_conftest_redacts_warning_summary(tmp_path: Path, xdist_enabled: bool, p
     if phase == "collection":
         source = prefix + "warn()\ndef test_sample():\n    pass\n"
     elif phase == "teardown":
-        source = prefix + "@pytest.fixture(autouse=True)\ndef fixture():\n    yield\n    warn()\ndef test_sample():\n    pass\n"
+        source = (
+            prefix
+            + "@pytest.fixture(autouse=True)\ndef fixture():\n    yield\n    warn()\ndef test_sample():\n    pass\n"
+        )
     else:
         source = prefix + "def test_sample():\n    warn()\n"
     proc = _run_secret_probe(tmp_path, source, xdist_enabled=xdist_enabled)
@@ -444,15 +464,283 @@ def test_conftest_fails_other_captured_disclosures(tmp_path: Path, xdist_enabled
 
 @pytest.mark.parametrize("secret_in_message", [False, True], ids=["source-line", "message-and-line"])
 def test_conftest_redacts_warning_source_line(
-    tmp_path: Path, xdist_enabled: bool, secret_in_message: bool,
+    tmp_path: Path,
+    xdist_enabled: bool,
+    secret_in_message: bool,
 ) -> None:
     message = "w:" + SYNTHETIC_KEY if secret_in_message else "safe-warning"
-    source = (
-        "import warnings\ndef test_sample():\n"
-        f"    warnings.warn({message!r}, UserWarning)  # {SYNTHETIC_KEY}\n"
-    )
+    source = f"import warnings\ndef test_sample():\n    warnings.warn({message!r}, UserWarning)  # {SYNTHETIC_KEY}\n"
     proc = _run_secret_probe(tmp_path, source, xdist_enabled=xdist_enabled)
     assert proc.returncode == 0, proc.stderr + proc.stdout
     xml = (tmp_path / "report.xml").read_text()
     assert SYNTHETIC_KEY not in proc.stdout + proc.stderr + xml
     assert "[REDACTED]" in proc.stdout
+
+
+@pytest.mark.parametrize("summary", ["-rA", "-rx"])
+def test_xfail_reason_is_redacted(tmp_path: Path, xdist_enabled: bool, summary: str) -> None:
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(SYNTHETIC_KEY)
+    proc = _run_secret_probe(
+        tmp_path,
+        "import pytest\nfrom pathlib import Path\n"
+        f"def test_sample():\n    pytest.xfail(Path({str(secret_file)!r}).read_text())\n",
+        xdist_enabled=xdist_enabled,
+        extra_args=(summary,),
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
+    assert SYNTHETIC_KEY not in combined
+    assert "[REDACTED]" in combined
+    assert "1 xfailed" in proc.stdout
+
+
+def test_all_serialized_report_strings_are_redacted() -> None:
+    from tests.conftest import _sanitize_secret_report
+
+    report = pytest.TestReport(
+        nodeid=SYNTHETIC_KEY,
+        location=(SYNTHETIC_KEY, 1, SYNTHETIC_KEY),
+        keywords={SYNTHETIC_KEY: 1},
+        outcome="skipped",
+        longrepr=("safe.py", 1, "safe"),
+        when="call",
+        wasxfail=SYNTHETIC_KEY,
+        extra={"nested": [SYNTHETIC_KEY, (SYNTHETIC_KEY, 7)]},
+    )
+    sanitized = _sanitize_secret_report(report, {"CURSOR_API_KEY": SYNTHETIC_KEY})
+    assert sanitized is report
+    assert report.nodeid == "[REDACTED]"
+    assert report.location == ("[REDACTED]", 1, "[REDACTED]")
+    assert report.keywords == {"[REDACTED]": 1}
+    assert report.wasxfail == "[REDACTED]"
+    assert report.extra == {"nested": ["[REDACTED]", ("[REDACTED]", 7)]}
+
+
+def test_collection_redaction_preserves_collected_items() -> None:
+    from tests.conftest import _sanitize_secret_report
+
+    items = [object()]
+    report = pytest.CollectReport(
+        nodeid="safe", outcome="passed", longrepr=None, result=items, extra={"secret": SYNTHETIC_KEY}
+    )
+    assert _sanitize_secret_report(report, {"CURSOR_API_KEY": SYNTHETIC_KEY}) is report
+    assert report.extra == {"secret": "[REDACTED]"}
+    assert report.result is items
+
+
+@pytest.mark.parametrize(
+    "token",
+    [
+        "SyntheticPrefix0123456789" + "m" * 300 + "SyntheticSuffix9876543210",
+        "SyntheticPrefix0123456789" + "\\n" * 150 + "SyntheticSuffix9876543210",
+    ],
+)
+def test_truncated_assertion_repr_is_redacted(tmp_path: Path, xdist_enabled: bool, token: str) -> None:
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    proc = _run_secret_probe(
+        tmp_path,
+        f"from pathlib import Path\ndef test_sample():\n    assert Path({str(secret_file)!r}).read_text() == 'safe'\n",
+        xdist_enabled=xdist_enabled,
+        token=token,
+    )
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
+    assert token[:12] not in combined
+    assert token[-13:] not in combined
+    assert "[REDACTED]" in combined
+    assert "AssertionError" in combined
+
+
+@pytest.mark.parametrize("mode", [("-s",), ("--capture=no",), ("-o", "log_cli=true")])
+@pytest.mark.parametrize("credentials", [True, False], ids=["credentials", "no-credentials"])
+def test_direct_print_modes_warn_once_without_values(tmp_path: Path, mode: tuple[str, ...], credentials: bool) -> None:
+    proc = _run_secret_probe(
+        tmp_path,
+        "def test_one():\n    pass\ndef test_two():\n    pass\n",
+        xdist_enabled=False,
+        extra_args=mode,
+        credentials=credentials,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    combined = proc.stdout + proc.stderr
+    assert combined.count("credential redaction cannot protect direct terminal output") == int(credentials)
+    assert SYNTHETIC_KEY not in combined
+
+
+@pytest.mark.parametrize(
+    "provider,kept",
+    [
+        ("claude", {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"}),
+        ("codex", {"CODEX_API_KEY", "OPENAI_API_KEY", "CODEX_CC_AUTH_TOKEN"}),
+        ("kimi", {"KIMICC_AUTH_TOKEN", "MOONSHOT_API_KEY", "KIMI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
+        ("glm", {"ANTHROPIC_AUTH_TOKEN"}),
+        ("cursor", {"CURSOR_API_KEY"}),
+    ],
+)
+def test_interactive_launcher_child_drops_other_seat_credentials(tmp_path: Path, provider: str, kept: set[str]) -> None:
+    import json
+
+    names = {
+        "ANTHROPIC_API_KEY",
+        "CLAUDE_API_KEY",
+        "CODEX_API_KEY",
+        "OPENAI_API_KEY",
+        "CODEX_CC_AUTH_TOKEN",
+        "KIMICC_AUTH_TOKEN",
+        "MOONSHOT_API_KEY",
+        "KIMI_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+        "CURSOR_API_KEY",
+        "HF_TOKEN",
+        "OTHER_AUTH_TOKEN",
+        "OTHER_PASSWORD",
+        "OTHER_PASSWD",
+        "OTHER_SECRET",
+        "other_token",
+    }
+    probe = tmp_path / "child.py"
+    probe.write_text(
+        "import os, json\n"
+        + f"expected = {sorted(kept)!r}\n"
+        + f"names = {sorted(names)!r}\n"
+        + "assert sorted(name for name in names if name in os.environ) == expected\n"
+        + "assert all(os.environ[name] == 'synthetic-launcher-credential-0123456789' for name in expected)\n"
+        + "print(json.dumps({'credential_names': expected}))\n"
+    )
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"LC_PROVIDER={shlex.quote(provider)} LC_MODE=interactive LC_ROOT={shlex.quote(str(REPO))}\n"
+        f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(Path(sys.executable).parents[2]))}\n"
+        f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(probe))}\n"
+    )
+    env = {
+        "PATH": os.defpath,
+        "HOME": str(tmp_path),
+        **dict.fromkeys(names, "synthetic-launcher-credential-0123456789"),
+    }
+    proc = subprocess.run(["bash", "-eu", "-c", command], env=env, capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == {"credential_names": sorted(kept)}
+    assert "synthetic-launcher-credential" not in proc.stdout + proc.stderr
+
+
+@pytest.mark.parametrize(
+    "provider,keys",
+    [
+        ("gemini", {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}),
+        ("claude", {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"}),
+        ("codex", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
+        ("kimi", {"KIMICC_AUTH_TOKEN", "MOONSHOT_API_KEY", "KIMI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
+        ("cursor", {"CURSOR_API_KEY"}),
+        ("acpx-cursor-shadow", {"CURSOR_API_KEY"}),
+    ],
+)
+def test_existing_provider_allowlist_reaches_launcher_and_dispatcher(provider: str, keys: set[str]) -> None:
+    all_keys = {
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENERATIVE_AI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "CLAUDE_API_KEY",
+        "CODEX_API_KEY",
+        "OPENAI_API_KEY",
+        "KIMICC_AUTH_TOKEN",
+        "MOONSHOT_API_KEY",
+        "KIMI_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+        "CURSOR_API_KEY",
+    }
+    parent = dict.fromkeys(all_keys, SYNTHETIC_KEY)
+    assert unneeded_env_var_names(parent, "dispatcher") == []
+    downstream = without_unneeded_secrets(parent, provider)
+    assert all(downstream[name] == SYNTHETIC_KEY for name in keys)
+    dropped = set(unneeded_env_var_names(parent, provider, launcher=True))
+    assert all_keys - dropped == keys
+
+
+@pytest.mark.parametrize("maxsize", [20, 30, 60, 120])
+def test_repr_redaction_preserves_unrelated_ellipsis(maxsize: int) -> None:
+    from _pytest._io.saferepr import saferepr
+
+    from tests.conftest import _redact_secret_data
+
+    value = "SyntheticPrefix0123456789" + "m" * 300 + "SyntheticSuffix9876543210"
+    short = saferepr(value, maxsize=maxsize)
+    assert _redact_secret_data(short, [value]) == "'[REDACTED]'"
+    neighbor = "'SyntheticPre...other-suffix'"
+    assert _redact_secret_data(neighbor, [value]) == neighbor
+    assert _redact_secret_data({"safe": [7, None, (True, "a...b")]}, [value]) == {"safe": [7, None, (True, "a...b")]}
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "Secret'Head012345" + "m" * 300 + "Tail9876543210",
+        'Secret"Head012345' + "m" * 300 + "Tail9876543210",
+        "Secret\\Head012345" + "m" * 300 + "Tail9876543210",
+        "Secret\nHead012345" + "m" * 300 + "Tail9876543210",
+        "Secret...Head012345" + "m" * 300 + "Tail...9876543210",
+    ],
+    ids=["single-quote", "double-quote", "backslash", "newline", "ellipsis"],
+)
+def test_repr_redaction_handles_escaped_credentials(value: str) -> None:
+    from _pytest._io.saferepr import saferepr
+
+    from tests.conftest import _redact_secret_data
+
+    shortened = saferepr(value, maxsize=30)
+    assert "[REDACTED]" in _redact_secret_data(shortened, [value])
+    wrapped = "outer-message: '" + shortened + "'"
+    assert "Tail9876543210" not in _redact_secret_data(wrapped, [value])
+    assert _redact_secret_data(repr(value), [value]) in {"'[REDACTED]'", '"[REDACTED]"'}
+
+
+def test_serialization_hooks_redact_plugin_fields_in_both_directions(monkeypatch: pytest.MonkeyPatch) -> None:
+    from _pytest import reports
+    from _pytest.config import PytestPluginManager
+
+    from tests import conftest
+
+    monkeypatch.setattr(conftest, "_IMPORT_STRIPPED_SECRETS", {"CURSOR_API_KEY": SYNTHETIC_KEY})
+    manager = PytestPluginManager()
+    manager.register(reports)
+    manager.register(conftest)
+
+    class ExtraFields:
+        @pytest.hookimpl(tryfirst=True)
+        def pytest_report_to_serializable(self, report):
+            data = reports.pytest_report_to_serializable(report)
+            data["plugin_extra"] = {"nested": [SYNTHETIC_KEY]}
+            return data
+
+    manager.register(ExtraFields())
+    report = pytest.TestReport(
+        nodeid="safe", location=("safe.py", 1, "safe"), keywords={}, outcome="passed", longrepr=None, when="call"
+    )
+    outgoing = manager.hook.pytest_report_to_serializable(config=None, report=report)
+    assert outgoing["plugin_extra"] == {"nested": ["[REDACTED]"]}
+    incoming = reports.pytest_report_to_serializable(report)
+    incoming["plugin_extra"] = {"nested": [SYNTHETIC_KEY]}
+    restored = manager.hook.pytest_report_from_serializable(config=None, data=incoming)
+    assert restored.plugin_extra == {"nested": ["[REDACTED]"]}
+
+
+def test_xdist_redacts_parameter_ids_without_breaking_worker_routing(tmp_path: Path) -> None:
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(SYNTHETIC_KEY)
+    proc = _run_secret_probe(
+        tmp_path,
+        "import pytest\nfrom pathlib import Path\n"
+        f"@pytest.mark.parametrize('value', [Path({str(secret_file)!r}).read_text()])\n"
+        "def test_sample(value):\n    assert value == 'safe'\n",
+        xdist_enabled=True,
+        extra_args=("-v",),
+    )
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    combined = proc.stdout + proc.stderr + (tmp_path / "report.xml").read_text()
+    assert SYNTHETIC_KEY not in combined
+    assert "[REDACTED]" in combined
+    assert "AssertionError" in combined
+    assert "INTERNALERROR" not in combined

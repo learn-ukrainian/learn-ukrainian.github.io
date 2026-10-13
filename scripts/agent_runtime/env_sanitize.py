@@ -234,18 +234,30 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
 }
 
 
-def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
-    """Environment variable names to omit for ``provider``."""
+def unneeded_env_var_names(env: Mapping[str, str], provider: str, *, launcher: bool = False) -> list[str]:
+    """Names to omit; interactive launchers also remove credential suffixes."""
     # A dispatcher is a parent for multiple providers. Keep their recognized
     # keys here; each worker's environment applies its own provider filter.
     dispatcher_keys = set().union(*_PROVIDER_SECRET_ALLOWLIST.values()) if provider == "dispatcher" else set()
+    # Route-derived interactive auth already exported by the existing adapters.
+    route_secrets = {"codex": {"CODEX_CC_AUTH_TOKEN"}, "glm": {"ANTHROPIC_AUTH_TOKEN"}}
+    launcher_route_keys = route_secrets.get(_normalized_provider(provider), set()) if launcher else set()
     drop: list[str] = []
     for var_name in env:
         upper = var_name.upper()
-        if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY")):
+        credential = bool(re.search(r"(?:^|_)(?:TOKEN|SECRET|PASSWORD|PASSWD)$", upper))
+        if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY") or (launcher and credential)):
             continue
         if upper in dispatcher_keys or _is_provider_secret(var_name, provider):
             continue
+        if launcher:
+            # These names already carry the resolved interactive route, rather
+            # than an inherited key for another seat. Dispatcher policy is unchanged.
+            if upper in launcher_route_keys:
+                continue
+            # The driver lease's fencing number is process identity, not auth.
+            if upper == "SESSION_STREAM_FENCING_TOKEN":
+                continue
         drop.append(var_name)
     return drop
 
@@ -634,9 +646,9 @@ def _append_push_rewrite(env: dict[str, str], target: str) -> None:
     env["GIT_TERMINAL_PROMPT"] = "0"
 
 
-def _print_unneeded_env_var_names(provider: str) -> int:
+def _print_unneeded_env_var_names(provider: str, *, launcher: bool = False) -> int:
     """Print variable names the current process should drop for ``provider``."""
-    for var_name in unneeded_env_var_names(os.environ, provider):
+    for var_name in unneeded_env_var_names(os.environ, provider, launcher=launcher):
         if var_name.isidentifier():
             sys.stdout.write(f"{var_name}\n")
     return 0
@@ -656,4 +668,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Print API-key names a child env must drop.")
     parser.add_argument("--provider", required=True)
-    raise SystemExit(_print_unneeded_env_var_names(parser.parse_args().provider))
+    parser.add_argument("--launcher", action="store_true", help="Also drop other-seat tokens, secrets and passwords.")
+    args = parser.parse_args()
+    raise SystemExit(_print_unneeded_env_var_names(args.provider, launcher=args.launcher))

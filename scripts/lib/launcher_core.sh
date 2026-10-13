@@ -166,7 +166,7 @@ launcher_project_python() {
   printf '%s\n' "$python"
 }
 
-# Drop API keys this seat does not need before the provider process starts.
+# Drop API keys, tokens, secrets and passwords this seat does not need.
 # A direct exec seam with no helper root, or a unit sandbox that has no
 # sanitizer file or project interpreter, leaves the environment alone.
 # When the sanitizer runs and fails, the launch refuses to start.
@@ -177,7 +177,7 @@ launcher_drop_unneeded_secrets() {
   if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
     return 0
   fi
-  if ! names="$("$py" "$sanitizer" --provider "$LC_PROVIDER")"; then
+  if ! names="$("$py" "$sanitizer" --provider "$LC_PROVIDER" --launcher)"; then
     launcher_error "could not drop unneeded API keys"
     return 1
   fi
