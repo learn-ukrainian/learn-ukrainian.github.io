@@ -1918,7 +1918,7 @@ def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
 
     A copy is held when a process has it, or anything in it, open or as its
     working directory, root or executable. Processes that exit mid-scan or
-    whose directory stat proves another owner are skipped: another account
+    whose status proves another account are skipped: another account
     cannot open the caller's ``0700`` copies. An unreadable potentially
     relevant process makes the result unknown, so no copy is provably free.
     """
@@ -1930,9 +1930,28 @@ def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
         return None
     for pid in pids:
         process = _CLAUDE_ACP_PROC_ROOT / pid
+        ownership_unknown = False
         try:
+            # Non-dumpable same-account tasks can have root-owned proc directories.
             if process.stat().st_uid != os.getuid():
-                continue
+                try:
+                    uid_lines = [
+                        line.split()[1:]
+                        for line in (process / "status").read_text(encoding="ascii").splitlines()
+                        if line.startswith("Uid:")
+                    ]
+                except OSError as exc:
+                    if exc.errno in (errno.ENOENT, errno.ESRCH):
+                        continue
+                    uid_lines = []
+                except UnicodeError:
+                    uid_lines = []
+                if len(uid_lines) == 1 and len(uid_lines[0]) == 4 and all(uid.isdecimal() for uid in uid_lines[0]):
+                    # Proven other accounts must be skipped so their unreadable fd directories do not block cleanup.
+                    if all(int(uid) != os.getuid() for uid in uid_lines[0]):
+                        continue
+                else:
+                    ownership_unknown = True
         except OSError as exc:
             if exc.errno in (errno.ENOENT, errno.ESRCH):
                 continue
@@ -1953,6 +1972,8 @@ def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
                 return None
             if target.startswith(prefix):
                 held.add(target.removeprefix(prefix).split("/", 1)[0].removesuffix(" (deleted)"))
+        if ownership_unknown:
+            return None
     return held
 
 
