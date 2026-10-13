@@ -26,6 +26,7 @@ MARKER = re.compile(
     r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|APPROVE|CHANGES_REQUESTED|BLOCKED) "
     r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+)(?: review_mode=(?P<review_mode>red_team))?"
     r"(?: unknown_history=(?P<unknown_history>[0-9a-f]{40}(?:,[0-9a-f]{40})*))?"
+    r"(?: authorship=(?P<authorship>verified_app_bot))?"
     r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))? -->\Z"
 )
 MARKER_PREFIX = "<!-- cf-verdict"
@@ -135,6 +136,14 @@ def parse_marker(body: str) -> dict[str, Any] | None:
             return None
         item["unknown_history"] = shas
     elif "Unknown history:" in prefix or "Historical authorship:" in prefix:
+        return None
+    # A verified app bot author (#10531) is stated in the readable prefix too.
+    authorship = item.pop("authorship")
+    if authorship is not None:
+        if f"Authorship: {authorship}\n" not in prefix or "No author model assumed.\n" not in prefix:
+            return None
+        item["authorship"] = authorship
+    elif "Authorship:" in prefix:
         return None
     if mode is not None:
         item["review_mode"] = mode

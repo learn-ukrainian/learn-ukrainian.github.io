@@ -367,6 +367,7 @@ def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
         ("issue", {"number": 1}),
         ("comments", {"number": 1}),
         ("checks", {"sha": "a" * 40}),
+        ("commit", {"sha": "a" * 40}),
         ("runs", {"start": "2026-01-01", "end": "2026-01-02"}),
     ],
 )
@@ -377,11 +378,19 @@ def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, mo
     assert calls[0]["argv"][2:4] == ["--method", "GET"]
 
 
+def test_single_commit_read_is_bound_to_the_exact_sha():
+    """#10531: app-bot authorship proof is read live from GitHub for one exact commit."""
+    calls = []
+    pub.read("commit", repo="unit/public", runner=spy(calls), sha="a" * 40)
+    assert calls[0]["argv"][2:5] == ["--method", "GET", f"repos/unit/public/commits/{'a' * 40}?per_page=100"]
+
+
 @pytest.mark.parametrize(
     "operation,fields",
     [
         ("comments", {"number": "1/comments?x=unit"}),
         ("checks", {"sha": "unit?x=y"}),
+        ("commit", {"sha": "unit/check-runs"}),
         ("graphql", {"query": "mutation{x}"}),
         ("subissue-batch", {"cursors": {"unit": None}, "body_roots": set()}),
         ("membership", {"number": 1, "query": "mutation{x}"}),

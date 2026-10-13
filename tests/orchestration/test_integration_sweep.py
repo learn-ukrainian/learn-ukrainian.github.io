@@ -95,6 +95,32 @@ def test_unknown_history_marker_round_trip_and_missing_fields_refuse():
         assert sweep.lookup_verdict([altered], SHA, "fleet").state == "unknown"
 
 
+def test_verified_app_bot_marker_round_trip_and_missing_fields_refuse():
+    """#10531: the bot class is stated twice and never carries an author model."""
+    item = comment()
+    item["body"] = build_comment(
+        sha=SHA,
+        task_id="review-one",
+        started=START,
+        verdict="APPROVED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+        app_bot=True,
+    )
+    marker = sweep.parse_marker(item["body"])
+    assert marker["authorship"] == "verified_app_bot" and marker["model"] == "gpt-6.1-sol"
+    assert "Authorship: verified_app_bot\nNo author model assumed.\n" in item["body"]
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "APPROVED"
+    assert "authorship" not in sweep.parse_marker(comment()["body"])
+    for field in (" authorship=verified_app_bot", "Authorship: verified_app_bot\n", "No author model assumed.\n"):
+        altered = {**item, "body": item["body"].replace(field, "")}
+        assert sweep.parse_marker(altered["body"]) is None
+        assert sweep.lookup_verdict([altered], SHA, "fleet").state == "unknown"
+    forged = item["body"].replace("authorship=verified_app_bot", "authorship=dependabot")
+    assert sweep.parse_marker(forged) is None
+
+
 @pytest.mark.parametrize("case", ["missing_mode", "wrong_heading", "wrong_label", "invalid_mode", "duplicate_mode"])
 def test_red_team_marker_tampering_is_unknown(case):
     item = comment(review_mode="red_team")
