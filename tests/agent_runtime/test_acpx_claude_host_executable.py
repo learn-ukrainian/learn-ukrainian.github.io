@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import errno
 import hashlib
 import json
 import os
@@ -285,7 +287,7 @@ def test_symlink_is_rejected(host, tmp_path):
     alias.symlink_to(host.root / "share", target_is_directory=True)
     linked = alias / "claude" / "versions" / executable.name
     with pytest.raises(ClaudeCodeExecutableRefusal, match="is a symlink") as raised:
-        acpx_module._require_trusted_claude_code_path(linked, adapter_label="X")
+        acpx_module._require_unshared_claude_code_path(linked, adapter_label="X")
     assert raised.value.reason == "untrusted_path"
 
 
@@ -293,7 +295,7 @@ def test_non_executable_file_is_rejected(host):
     executable = host.install()
     executable.chmod(0o644)
     with pytest.raises(ClaudeCodeExecutableRefusal, match="not executable"):
-        acpx_module._require_trusted_claude_code_path(executable, adapter_label="X")
+        acpx_module._require_unshared_claude_code_path(executable, adapter_label="X")
 
 
 def test_foreign_owner_is_rejected(host, monkeypatch):
@@ -802,9 +804,14 @@ def test_a_worktree_link_without_the_back_link_is_refused(launcher_checkouts):
 
 
 def _launch_identity(path: Path) -> str:
-    """Device, inode, size and whole-second mtime and ctime, as the launcher's stat prints them."""
+    """Device, inode, size and nanosecond mtime and ctime, as the launcher's GNU stat prints them."""
     st = path.lstat()
-    return f"{st.st_dev}:{st.st_ino}:{st.st_size}:{st.st_mtime_ns // 10**9}:{st.st_ctime_ns // 10**9}"
+    times = [f"{ns // 10**9}.{ns % 10**9:09d}" for ns in (st.st_mtime_ns, st.st_ctime_ns)]
+    return f"{st.st_dev}:{st.st_ino}:{st.st_size}:{times[0]}:{times[1]}"
+
+
+# The launcher's choice: GNU stat, installed as gnustat where stat is uutils.
+_GNU_STAT = "/usr/bin/gnustat" if os.access("/usr/bin/gnustat", os.X_OK) else "/usr/bin/stat"
 
 
 def _hostile_git(directory: Path, answer: Path, marker: Path) -> Path:
@@ -905,6 +912,186 @@ def test_stale_copies_are_swept_and_fresh_ones_kept(launcher_checkouts):
     assert fresh.exists()
 
 
+def _stale_entry(directory: Path, name: str = "launch-abcdefgh", *, mode: int = 0o700) -> Path:
+    """An entry older than any ask, holding one unrelated file."""
+    entry = directory / name
+    entry.mkdir(parents=True)
+    (entry / "payload").write_text("unrelated", encoding="utf-8")
+    entry.chmod(mode)
+    old = time.time() - acpx_module._CLAUDE_ACP_LAUNCHER_COPY_MAX_AGE_S - 60
+    os.utime(entry, (old, old))
+    return entry
+
+
+@contextlib.contextmanager
+def _held_open(path: Path):
+    """Another live process holds ``path`` open for the duration."""
+    with path.open("rb") as handle:
+        holder = subprocess.Popen(["sleep", "300"], stdin=handle)
+    try:
+        yield holder
+    finally:
+        holder.kill()
+        holder.wait(timeout=30)
+
+
+def test_a_symlinked_copy_base_is_refused_before_anything_in_it_is_removed(launcher_checkouts):
+    elsewhere = launcher_checkouts.root / "elsewhere"
+    elsewhere.mkdir(mode=0o700)
+    payload = _stale_entry(elsewhere)
+    launcher_checkouts.copies.symlink_to(elsewhere, target_is_directory=True)
+    refusal = _launcher_refusal()
+    assert refusal.reason == "untrusted_path"
+    assert "the directory is a symlink" in str(refusal)
+    assert (payload / "payload").exists()
+    assert [entry.name for entry in elsewhere.iterdir()] == [payload.name]
+
+
+@pytest.mark.parametrize(("mode", "message"), [(0o777, "world-writable"), (0o770, "group-writable")])
+def test_a_copy_base_others_can_write_is_refused_before_the_sweep(launcher_checkouts, monkeypatch, mode, message):
+    _fake_accounts(monkeypatch, members=("caller", "other"))
+    launcher_checkouts.copies.mkdir(mode=0o700)
+    payload = _stale_entry(launcher_checkouts.copies)
+    launcher_checkouts.copies.chmod(mode)
+    refusal = _launcher_refusal()
+    assert refusal.reason == "untrusted_path"
+    assert message in str(refusal)
+    assert [entry.name for entry in launcher_checkouts.copies.iterdir()] == [payload.name]
+
+
+def test_a_copy_base_that_is_not_a_directory_is_refused(launcher_checkouts):
+    launcher_checkouts.copies.write_text("not a directory", encoding="utf-8")
+    launcher_checkouts.copies.chmod(0o600)
+    refusal = _launcher_refusal()
+    assert refusal.reason == "untrusted_path"
+    assert "the directory is not a directory" in str(refusal)
+
+
+def test_a_copy_base_owned_by_another_account_is_refused_before_the_sweep(launcher_checkouts, monkeypatch):
+    """The caller does not own the base, so nothing in it is touched."""
+    launcher_checkouts.copies.mkdir(mode=0o700)
+    payload = _stale_entry(launcher_checkouts.copies)
+    real_uid = os.getuid()
+    monkeypatch.setattr(acpx_module.os, "getuid", lambda: real_uid + 1)
+    with pytest.raises(ClaudeCodeExecutableRefusal) as raised:
+        acpx_module._private_claude_acp_launcher_copy(
+            {acpx_module._CLAUDE_ACP_LAUNCHER_RELPATH: b"#!/bin/sh\n"}, adapter_label="X"
+        )
+    monkeypatch.undo()
+    assert raised.value.reason == "untrusted_path"
+    assert "owned by uid" in str(raised.value)
+    assert [entry.name for entry in launcher_checkouts.copies.iterdir()] == [payload.name]
+
+
+def test_the_sweep_removes_only_stale_copies_it_provably_owns(launcher_checkouts):
+    copies = launcher_checkouts.copies
+    copies.mkdir(mode=0o700)
+    owned = _stale_entry(copies, "launch-aaaaaaaa")
+    other_mode = _stale_entry(copies, "launch-bbbbbbbb", mode=0o755)
+    other_name = _stale_entry(copies, "launch-not-a-copy")
+    regular = copies / "launch-cccccccc"
+    regular.write_text("x", encoding="utf-8")
+    old = time.time() - acpx_module._CLAUDE_ACP_LAUNCHER_COPY_MAX_AGE_S - 60
+    os.utime(regular, (old, old))
+    _accepted_copy(launcher_checkouts)
+    assert not owned.exists()
+    assert other_mode.exists() and other_name.exists() and regular.exists()
+
+
+def test_the_sweep_keeps_a_stale_copy_a_live_process_holds(launcher_checkouts):
+    copy = _accepted_copy(launcher_checkouts)
+    stale = copy.parents[2]
+    old = time.time() - acpx_module._CLAUDE_ACP_LAUNCHER_COPY_MAX_AGE_S - 60
+    os.utime(stale, (old, old))
+    with _held_open(copy):
+        _accepted_copy(launcher_checkouts)
+        assert copy.exists()
+    _accepted_copy(launcher_checkouts)
+    assert not stale.exists()
+
+
+def test_cleanup_leaves_a_held_copy_and_reports_it_typed_and_logged(launcher_checkouts, caplog):
+    copy = _accepted_copy(launcher_checkouts)
+    with _held_open(copy), pytest.raises(acpx_module.ClaudeAcpLauncherCleanupError) as raised:
+        acpx_module._remove_claude_acp_launcher_copy(str(copy))
+    assert raised.value.reason == "cleanup_busy"
+    assert copy.exists()
+    assert "a live process still holds it" in caplog.text
+    _assert_path_free(str(raised.value), launcher_checkouts.root)
+    acpx_module._remove_claude_acp_launcher_copy(str(copy))
+    assert not copy.parents[2].exists()
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root removes any entry")
+def test_a_copy_that_cannot_be_removed_is_a_typed_logged_failure(launcher_checkouts, caplog):
+    copy = _accepted_copy(launcher_checkouts)
+    copy.parent.chmod(0o500)
+    try:
+        with pytest.raises(acpx_module.ClaudeAcpLauncherCleanupError) as raised:
+            acpx_module._remove_claude_acp_launcher_copy(str(copy))
+        assert copy.exists()
+    finally:
+        copy.parent.chmod(0o700)
+    assert (raised.value.reason, raised.value.failure_code) == ("cleanup_failed", "acp_adapter_incompatible")
+    assert "Permission denied" in str(raised.value)
+    assert "cannot remove private launcher copy" in caplog.text
+
+
+@pytest.mark.parametrize("code", [errno.ENOSPC, errno.EBUSY])
+def test_a_removal_error_is_a_typed_failure(launcher_checkouts, monkeypatch, code):
+    copy = _accepted_copy(launcher_checkouts)
+
+    def fail(path, *, dir_fd, onexc):
+        onexc(os.rmdir, path, OSError(code, os.strerror(code)))
+
+    monkeypatch.setattr(acpx_module.shutil, "rmtree", fail)
+    with pytest.raises(acpx_module.ClaudeAcpLauncherCleanupError) as raised:
+        acpx_module._remove_claude_acp_launcher_copy(str(copy))
+    monkeypatch.undo()
+    assert raised.value.reason == "cleanup_failed"
+    assert os.strerror(code) in str(raised.value)
+    assert copy.exists()
+
+
+def _copy_plan(copy: Path) -> InvocationPlan:
+    return InvocationPlan(
+        cmd=["acpx"],
+        cwd=copy.parent,
+        stdin_payload="ping",
+        output_file=None,
+        env_overrides={},
+        env_unsets=(),
+        liveness_paths=(),
+        metadata={"claude_code_launcher": str(copy)},
+    )
+
+
+def test_parsing_removes_the_copy_and_the_final_cleanup_is_a_no_op(launcher_checkouts):
+    copy = _accepted_copy(launcher_checkouts)
+    plan = _copy_plan(copy)
+    parsed = _parse(plan, _ok_stream())
+    assert (parsed.ok, parsed.response) == (True, "51")
+    assert not copy.parents[2].exists()
+    assert plan.metadata["claude_code_launcher_cleanup"] == "removed"
+    AcpxClaudeShadowAdapter().cleanup_invocation(plan)
+
+
+def test_a_copy_left_after_the_ask_fails_the_parsed_result(launcher_checkouts, caplog):
+    """The failure reaches the result, which the runner writes to the receipt."""
+    copy = _accepted_copy(launcher_checkouts)
+    plan = _copy_plan(copy)
+    with _held_open(copy):
+        parsed = _parse(plan, _ok_stream())
+    assert (parsed.ok, parsed.response, parsed.failure_code) == (False, "", "acp_adapter_incompatible")
+    assert "a live process still holds it" in parsed.stderr_excerpt
+    assert plan.metadata["claude_code_launcher_cleanup"] == "cleanup_busy"
+    assert "a live process still holds it" in caplog.text
+    _assert_path_free(parsed.stderr_excerpt, launcher_checkouts.root)
+    # The runner's final cleanup retries once the holder has exited.
+    AcpxClaudeShadowAdapter().cleanup_invocation(plan)
+    assert not copy.parents[2].exists()
+
+
 @pytest.mark.parametrize(("mode", "message"), [(0o777, "world-writable"), (0o775, "group-writable")])
 def test_an_unsafe_copy_base_is_refused_and_leaves_no_copy(launcher_checkouts, monkeypatch, mode, message):
     launcher_checkouts.copies.mkdir(mode=0o700)
@@ -926,7 +1113,7 @@ def test_an_unwritable_copy_base_is_a_typed_copy_failure(launcher_checkouts):
     assert (refusal.reason, refusal.failure_code) == ("copy_failed", "acp_adapter_incompatible")
 
 
-def test_trusted_launcher_is_accepted_with_private_group_parents(launcher_checkouts):
+def test_launcher_with_private_group_parents_is_accepted(launcher_checkouts):
     (launcher_checkouts.primary / "scripts").chmod(0o775)
     _accepted_copy(launcher_checkouts)
 
@@ -1121,10 +1308,37 @@ def test_the_identity_covers_size_mtime_and_ctime(tmp_path):
     assert acpx_module._claude_code_identity(before) != acpx_module._claude_code_identity(after)
     assert acpx_module._claude_code_launch_identity(after) == _launch_identity(target)
     stat_cli = subprocess.run(
-        ["/usr/bin/stat", "-c", "%d:%i:%s:%Y:%Z", "--", str(target)],
+        [_GNU_STAT, "-c", "%d:%i:%s:%.9Y:%.9Z", "--", str(target)],
         capture_output=True, text=True, timeout=30, check=True,
     )
     assert stat_cli.stdout.strip() == _launch_identity(target)
+
+
+def test_launcher_refuses_a_same_size_edit_with_restored_mtime(tmp_path):
+    """Only the nanosecond ctime records the edit; whole seconds would miss it."""
+    for attempt in range(5):
+        # Start early in a second, so the edit keeps the whole-second ctime.
+        if time.time() % 1.0 > 0.5:
+            time.sleep(1.0 - time.time() % 1.0 + 0.01)
+        fake = _dumping_claude(tmp_path / f"host-{attempt}")
+        before = fake.lstat()
+        identity = acpx_module._claude_code_launch_identity(before)
+        time.sleep(0.01)
+        original = fake.read_bytes()
+        edited = original.replace(b"import json, os, sys", b"import json,os, sys ")
+        assert len(edited) == len(original) and edited != original
+        fake.write_bytes(edited)
+        os.utime(fake, ns=(before.st_atime_ns, before.st_mtime_ns))
+        after = fake.lstat()
+        if after.st_ctime_ns // 10**9 == before.st_ctime_ns // 10**9:
+            break
+    assert (after.st_ino, after.st_size, after.st_mtime_ns) == (before.st_ino, before.st_size, before.st_mtime_ns)
+    assert after.st_ctime_ns // 10**9 == before.st_ctime_ns // 10**9, "every attempt crossed a second boundary"
+    assert after.st_ctime_ns != before.st_ctime_ns
+    proc, dump = _run_launcher(tmp_path, host=str(fake), identity=identity)
+    assert proc.returncode == 126, proc.stderr
+    assert "changed since its version probe" in proc.stderr
+    assert not dump.exists()
 
 
 # --- no absolute host path in refusal or diagnostic text (#10500) -----------
@@ -1197,6 +1411,7 @@ def test_host_refusals_and_post_run_text_name_no_absolute_host_path(host, tmp_pa
 
     executable = host.install()
     monkeypatch.setenv("HOME", str(tmp_path / "empty-home"))
+    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER_COPY_BASE", tmp_path / "copies")
     plan = _plan(executable)
     plan.metadata["claude_code_launcher"] = str(tmp_path / "copies" / "launch-x" / _LAUNCHER_REL)
     failed = AcpxClaudeShadowAdapter().parse_response(
@@ -1211,6 +1426,30 @@ def test_host_refusals_and_post_run_text_name_no_absolute_host_path(host, tmp_pa
     assert "<acp-launcher-copy>" in (failed.stderr_excerpt or "")
     _edit_in_place(executable)
     _assert_path_free(_parse(plan, _ok_stream()).stderr_excerpt, tmp_path)
+
+
+def test_paths_are_redacted_before_the_excerpt_is_bounded(host, tmp_path, monkeypatch):
+    """A path that crosses the 500-character excerpt limit leaves no prefix behind."""
+    executable = host.install()
+    monkeypatch.setenv("HOME", str(tmp_path / "empty-home"))
+    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER_COPY_BASE", tmp_path / "copies")
+    launcher = tmp_path / "copies" / "launch-abcdefgh" / _LAUNCHER_REL
+    paths = f"{launcher} {launcher.parents[2]} {executable} "
+    for pad in range(len(paths) + 1):
+        plan = _plan(executable)
+        plan.metadata["claude_code_launcher"] = str(launcher)
+        parsed = AcpxClaudeShadowAdapter().parse_response(
+            stdout=_failed_stream(),
+            stderr="e" * pad + paths * 12,
+            returncode=1,
+            output_file=None,
+            plan=plan,
+        )
+        assert parsed.ok is False
+        assert len(parsed.stderr_excerpt) <= 500
+        _assert_path_free(parsed.stderr_excerpt, tmp_path)
+        if pad == 0:
+            assert "<acp-launcher-copy>" in parsed.stderr_excerpt
 
 
 @pytest.mark.repo_wide

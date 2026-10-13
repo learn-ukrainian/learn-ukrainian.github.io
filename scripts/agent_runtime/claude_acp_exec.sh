@@ -13,6 +13,10 @@ identity=${LU_CLAUDE_ACP_HOST_IDENTITY-}
 unset LU_CLAUDE_ACP_HOST LU_CLAUDE_ACP_HOST_IDENTITY
 case $host in /*) ;; *) echo "claude_acp_exec: pinned Claude Code path is missing or relative" >&2; exit 126 ;; esac
 case $identity in *:*:*:*:*) ;; *) echo "claude_acp_exec: pinned Claude Code identity is missing" >&2; exit 126 ;; esac
-# Device, inode, size, mtime and ctime: an in-place edit after the version probe changes ctime.
-[ "$(/usr/bin/stat -c %d:%i:%s:%Y:%Z -- "$host" 2>/dev/null)" = "$identity" ] || { echo "claude_acp_exec: pinned Claude Code changed since its version probe" >&2; exit 126; }
+# Device, inode, size, and mtime and ctime in nanoseconds: an in-place edit after
+# the version probe changes ctime. Only GNU stat prints exact nanoseconds; Ubuntu
+# installs it as gnustat when stat is the uutils one, which rounds them.
+stat=/usr/bin/gnustat
+[ -x "$stat" ] || stat=/usr/bin/stat
+[ "$("$stat" -c %d:%i:%s:%.9Y:%.9Z -- "$host" 2>/dev/null)" = "$identity" ] || { echo "claude_acp_exec: pinned Claude Code changed since its version probe, or this host lacks GNU stat" >&2; exit 126; }
 exec "$host" --disallowedTools Monitor,ScheduleWakeup,CronCreate,Workflow "$@"

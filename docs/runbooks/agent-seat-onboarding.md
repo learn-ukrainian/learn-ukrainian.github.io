@@ -448,6 +448,16 @@ not permanent routing weights and do not override current CodexBar headroom.
   primary checkout, keeping that tree non-group-writable, the Claude ACP seat
   refuses as `missing` (or `digest_mismatch` for an edit). Dispatch worktree
   copies are never used, so their group-writable checkout mode does not matter.
+  The launcher compares nanosecond timestamps with GNU `stat`. On hosts whose
+  system `stat` is the uutils build (Ubuntu 26.04), GNU `stat` must stay
+  installed as `gnustat` beside it, or every launch refuses.
+- Threat model: the pin catches drift, accidents and honest misconfiguration.
+  It is not tamper resistance. Deliberate replacement or forgery by a writer
+  running as the same Unix user is out of scope, because that writer already
+  controls the host binary, the user configuration and the checkout. The
+  residuals (path-bound execution after hashing, an in-place host edit that
+  also resets ctime, a fabricated complete git layout) are owned by infra and
+  wait for an isolated-authority phase; see `docs/agent-runtime-guide.md`.
 - Every invocation requires a non-empty, bounded, local `task_id`,
   `correlation_id`, and `idempotency_key`, a fixed target from the participant
   registry, and a read-only, non-primary worktree.

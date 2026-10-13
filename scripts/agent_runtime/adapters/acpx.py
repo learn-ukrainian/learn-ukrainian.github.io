@@ -76,6 +76,7 @@ Issues: #6027, #6043, #6078, #6130, #6158.
 from __future__ import annotations
 
 import contextlib
+import errno
 import grp
 import hashlib
 import json
@@ -1610,15 +1611,18 @@ _CLAUDE_ACP_BACKGROUND_TOOL_ENV = {"CLAUDE_CODE_DISABLE_CRON": "1", "CLAUDE_CODE
 # checkout names through its git links (no git process, so PATH, git
 # configuration and the environment cannot redirect it); a dispatch worktree's
 # copy (group-writable under umask 0002) is never used. The verified bytes run
-# from a private per-launch copy, so a later change to the checkout cannot
-# change what executes.
+# from a private per-launch copy, so a later change to the checkout does not
+# change what executes. Threat model: these checks catch drift, accidents and
+# honest misconfiguration. They do not resist deliberate replacement by a
+# writer running as the same user, who already controls the host binary, the
+# user configuration and the checkout (see docs/agent-runtime-guide.md).
 _CLAUDE_ACP_LAUNCHER_ANCHOR = _REPO_ROOT
 _CLAUDE_ACP_LAUNCHER_RELPATH = PurePosixPath("scripts/agent_runtime/claude_acp_exec.sh")
 # Adapter-launcher compatibility pin: the SHA-256 of every repository file the
 # launcher runs, sources or execs. The launcher is self-contained, so the
 # closure is the launcher alone. Launcher bytes and digest change together.
 _CLAUDE_ACP_LAUNCHER_CLOSURE: Mapping[PurePosixPath, str] = {
-    _CLAUDE_ACP_LAUNCHER_RELPATH: "e6cfdb981b0551bef03a4ed43726c899476042ed0e4613b2271921d3e0d203f4",
+    _CLAUDE_ACP_LAUNCHER_RELPATH: "c56cc9ec0d87294bcbfb89b3ebb9b56a47c83678ccd052058d3c3a1d6fbd67d1",
 }
 # Closure files are short shell scripts; a larger file is refused unhashed.
 _CLAUDE_ACP_LAUNCHER_MAX_BYTES = 64 * 1024
@@ -1626,9 +1630,13 @@ _CLAUDE_ACP_LAUNCHER_MAX_BYTES = 64 * 1024
 # database rather than HOME. None selects that default; tests use their tree.
 _CLAUDE_ACP_LAUNCHER_COPY_BASE: Path | None = None
 _CLAUDE_ACP_LAUNCHER_COPY_PREFIX = "launch-"
+# ``tempfile.mkdtemp`` names: the prefix and eight characters of its alphabet.
+_CLAUDE_ACP_LAUNCHER_COPY_NAME_RE = re.compile(rf"{_CLAUDE_ACP_LAUNCHER_COPY_PREFIX}[a-z0-9_]{{8}}")
 # A copy outlives its ask only when the runner never reached cleanup; such
-# copies are swept once older than any ask can run.
+# copies are swept once older than any ask can run, unless a process holds them.
 _CLAUDE_ACP_LAUNCHER_COPY_MAX_AGE_S = 2 * 24 * 3600
+# Process table read for copy liveness (cwd, root, executable and open files).
+_CLAUDE_ACP_PROC_ROOT = Path("/proc")
 CLAUDE_ACP_HOST_ENV = "LU_CLAUDE_ACP_HOST"
 CLAUDE_ACP_HOST_IDENTITY_ENV = "LU_CLAUDE_ACP_HOST_IDENTITY"
 _CLAUDE_CODE_PROBE_TIMEOUT_S = 10
@@ -1646,14 +1654,24 @@ class ClaudeCodeExecutableRefusal(AcpxShadowRefusalError):
 
     ``reason`` is one of ``missing``, ``untrusted_path``, ``unreadable``,
     ``digest_mismatch``, ``copy_failed``, ``vanished``, ``probe_failed``,
-    ``unparseable`` or ``too_old``; ``failure_code`` stays in the runtime's
-    closed failure-code set. Messages name no absolute host path: they can
-    reach receipts, issues and PRs.
+    ``unparseable`` or ``too_old`` (and, for
+    :class:`ClaudeAcpLauncherCleanupError`, ``cleanup_busy`` or
+    ``cleanup_failed``); ``failure_code`` stays in the runtime's closed
+    failure-code set. Messages name no absolute host path: they can reach
+    receipts, issues and PRs.
     """
 
     def __init__(self, message: str, *, reason: str, failure_code: str = "acp_adapter_incompatible") -> None:
         super().__init__(message, failure_code=failure_code)
         self.reason = reason
+
+
+class ClaudeAcpLauncherCleanupError(ClaudeCodeExecutableRefusal):
+    """A private launcher copy was not removed: a live process holds it, or removal failed.
+
+    Logged when raised. ``parse_response`` turns it into a failed result, so
+    the failure reaches the result receipt instead of leaving a silent copy.
+    """
 
 
 def _claude_code_group_write_permitted(gid: int) -> bool:
@@ -1710,27 +1728,36 @@ def _claude_code_identity(path_stat: os.stat_result) -> str:
     return f"{path_stat.st_dev}:{path_stat.st_ino}:{path_stat.st_size}:{path_stat.st_mtime_ns}:{path_stat.st_ctime_ns}"
 
 
-def _claude_code_launch_identity(path_stat: os.stat_result) -> str:
-    """The identity the launcher rechecks with ``stat -c %d:%i:%s:%Y:%Z``.
+def _nanosecond_time(ns: int) -> str:
+    seconds, fraction = divmod(ns, 1_000_000_000)
+    return f"{seconds}.{fraction:09d}"
 
-    Whole seconds, because ``stat`` implementations round fractional times
-    differently; the post-run check compares the full-precision identity.
+
+def _claude_code_launch_identity(path_stat: os.stat_result) -> str:
+    """The identity the launcher rechecks with GNU ``stat -c %d:%i:%s:%.9Y:%.9Z``.
+
+    Device, inode, size and nanosecond mtime and ctime, as in the full
+    identity. Only GNU ``stat`` prints exact nanoseconds; the launcher uses it.
     """
     return (
         f"{path_stat.st_dev}:{path_stat.st_ino}:{path_stat.st_size}:"
-        f"{path_stat.st_mtime_ns // 1_000_000_000}:{path_stat.st_ctime_ns // 1_000_000_000}"
+        f"{_nanosecond_time(path_stat.st_mtime_ns)}:{_nanosecond_time(path_stat.st_ctime_ns)}"
     )
 
 
-def _require_trusted_claude_code_path(
+def _require_unshared_claude_code_path(
     executable: Path,
     *,
     adapter_label: str,
     subject: str = "host Claude Code",
     require_executable: bool = True,
+    expect_dir: bool = False,
     relative_to: Path | None = None,
 ) -> os.stat_result:
-    """Check the file and every ancestor up to the trust root; return its stat."""
+    """Check that no other account can write the path or any ancestor up to the check root; return its stat.
+
+    ``expect_dir`` checks a directory, which follows the ancestor rule.
+    """
     root = _CLAUDE_CODE_TRUST_ROOT
     try:
         executable_stat = executable.lstat()
@@ -1750,8 +1777,10 @@ def _require_trusted_claude_code_path(
             f"{adapter_label}: cannot inspect {subject}: {exc.strerror}",
             reason="untrusted_path",
         ) from exc
-    refusal = _claude_code_path_refusal("the file", executable_stat, expect_dir=False)
-    if refusal is None and require_executable and not os.access(executable, os.X_OK):
+    refusal = _claude_code_path_refusal(
+        "the directory" if expect_dir else "the file", executable_stat, expect_dir=expect_dir
+    )
+    if refusal is None and require_executable and not expect_dir and not os.access(executable, os.X_OK):
         refusal = "the file is not executable"
     for level, (parent, parent_stat) in enumerate(ancestors, start=1):
         if refusal is not None:
@@ -1824,7 +1853,7 @@ def _read_claude_acp_launcher_closure(primary: Path, *, adapter_label: str) -> d
                 reason="missing",
                 failure_code="acp_adapter_missing",
             )
-        checked = _require_trusted_claude_code_path(
+        checked = _require_unshared_claude_code_path(
             path,
             adapter_label=adapter_label,
             subject=f"the Claude ACP launcher closure file {relpath}",
@@ -1849,20 +1878,183 @@ def _claude_acp_launcher_copy_base() -> Path:
     return Path(pwd.getpwuid(os.getuid()).pw_dir) / ".cache" / "lu-claude-acp-launcher"
 
 
-def _sweep_stale_claude_acp_launcher_copies(base: Path) -> None:
+def _open_claude_acp_copy_base(base: Path, *, adapter_label: str) -> int:
+    """Check the copy base and return a directory fd anchored to the checked directory.
+
+    The base must be a real directory owned by the caller that no other
+    account can write, with every ancestor passing the same checks. It is
+    opened without following a symlink and must be the directory that was
+    checked. Nothing in the base is read or removed before this passes.
+    """
+    subject = "the private launcher copy directory"
+    checked = _require_unshared_claude_code_path(base, adapter_label=adapter_label, subject=subject, expect_dir=True)
+    if checked.st_uid != os.getuid():
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: refusing {subject}: it is owned by uid {checked.st_uid}, not the caller",
+            reason="untrusted_path",
+        )
+    fd = os.open(base, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    opened = os.fstat(fd)
+    if (opened.st_dev, opened.st_ino) != (checked.st_dev, checked.st_ino):
+        os.close(fd)
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: refusing {subject}: it changed while it was checked",
+            reason="untrusted_path",
+        )
+    return fd
+
+
+def _claude_acp_copy_owned(entry_stat: os.stat_result) -> bool:
+    """Whether a base entry is a copy directory as this adapter creates it: the caller's, mode ``0700``."""
+    return (
+        stat.S_ISDIR(entry_stat.st_mode)
+        and entry_stat.st_uid == os.getuid()
+        and stat.S_IMODE(entry_stat.st_mode) == 0o700
+    )
+
+
+def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
+    """Names of copies under ``base`` that a live process holds, or None when that is unknowable.
+
+    A copy is held when a process has it, or anything in it, open or as its
+    working directory, root or executable. Processes that exit or cannot be
+    read mid-scan are skipped; another account cannot open the caller's
+    ``0700`` copies. Without a readable process table no copy is provably free.
+    """
+    prefix = f"{base}/"
+    held: set[str] = set()
+    try:
+        pids = [entry.name for entry in os.scandir(_CLAUDE_ACP_PROC_ROOT) if entry.name.isdigit()]
+    except OSError:
+        return None
+    for pid in pids:
+        process = _CLAUDE_ACP_PROC_ROOT / pid
+        links = [process / "cwd", process / "root", process / "exe"]
+        with contextlib.suppress(OSError):
+            links.extend(process / "fd" / fd for fd in os.listdir(process / "fd"))
+        for link in links:
+            try:
+                target = os.readlink(link)
+            except OSError:
+                continue
+            if target.startswith(prefix):
+                held.add(target.removeprefix(prefix).split("/", 1)[0].removesuffix(" (deleted)"))
+    return held
+
+
+def _remove_claude_acp_copy_entry(base_fd: int, name: str) -> None:
+    """Remove one copy directory relative to the anchored base; raise the first OSError."""
+    errors: list[OSError] = []
+
+    def record(_function: object, _path: object, exc: BaseException) -> None:
+        if isinstance(exc, OSError):
+            errors.append(exc)
+
+    shutil.rmtree(name, dir_fd=base_fd, onexc=record)
+    if errors:
+        raise errors[0]
+    try:
+        os.stat(name, dir_fd=base_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return
+    raise OSError(errno.ENOTEMPTY, os.strerror(errno.ENOTEMPTY))
+
+
+def _sweep_stale_claude_acp_launcher_copies(base_fd: int, base: Path) -> None:
+    """Remove copies older than any ask that the caller provably owns and no live process holds.
+
+    Best effort: the sweep only tidies copies whose runner never reached
+    cleanup, so its failures are logged and never block a launch.
+    """
     cutoff = time.time() - _CLAUDE_ACP_LAUNCHER_COPY_MAX_AGE_S
-    with os.scandir(base) as entries:
+    stale = []
+    with os.scandir(base_fd) as entries:
         for entry in entries:
-            if (
-                entry.name.startswith(_CLAUDE_ACP_LAUNCHER_COPY_PREFIX)
-                and entry.is_dir(follow_symlinks=False)
-                and entry.stat(follow_symlinks=False).st_mtime < cutoff
-            ):
-                shutil.rmtree(entry.path, ignore_errors=True)
+            if not _CLAUDE_ACP_LAUNCHER_COPY_NAME_RE.fullmatch(entry.name):
+                continue
+            try:
+                entry_stat = entry.stat(follow_symlinks=False)
+            except OSError:
+                continue
+            if _claude_acp_copy_owned(entry_stat) and entry_stat.st_mtime < cutoff:
+                stale.append(entry.name)
+    if not stale:
+        return
+    held = _claude_acp_copies_in_use(base)
+    if held is None:
+        _logger.warning(
+            "Claude ACP launcher sweep skipped %d stale copies: the process table is unreadable", len(stale)
+        )
+        return
+    for name in stale:
+        if name in held:
+            _logger.info("Claude ACP launcher sweep kept stale copy %s: a live process holds it", name)
+            continue
+        try:
+            _remove_claude_acp_copy_entry(base_fd, name)
+        except OSError as exc:
+            _logger.warning("Claude ACP launcher sweep could not remove stale copy %s: %s", name, exc.strerror)
 
 
-def _remove_claude_acp_launcher_copy(launcher: object) -> None:
-    """Remove the per-launch copy directory holding ``launcher``; ignore any other path."""
+def _remove_claude_acp_copy_dir(name: str, *, adapter_label: str) -> None:
+    """Remove the copy directory ``name`` under the checked copy base, or raise a logged typed error."""
+    base = _claude_acp_launcher_copy_base()
+    if not os.path.lexists(base):
+        return  # no base, so no copy is left
+    try:
+        base_fd = _open_claude_acp_copy_base(base, adapter_label=adapter_label)
+    except ClaudeCodeExecutableRefusal as exc:
+        error = ClaudeAcpLauncherCleanupError(
+            f"{adapter_label}: cannot remove private launcher copy {name}: {exc}", reason="cleanup_failed"
+        )
+        _logger.error("%s", error)
+        raise error from exc
+    except OSError as exc:
+        error = ClaudeAcpLauncherCleanupError(
+            f"{adapter_label}: cannot remove private launcher copy {name}: {exc.strerror or type(exc).__name__}",
+            reason="cleanup_failed",
+        )
+        _logger.error("%s", error)
+        raise error from exc
+    try:
+        try:
+            entry_stat = os.stat(name, dir_fd=base_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            return
+        if not _claude_acp_copy_owned(entry_stat):
+            raise ClaudeAcpLauncherCleanupError(
+                f"{adapter_label}: private launcher copy {name} is not a 0700 directory the caller owns; "
+                "it was left in place",
+                reason="cleanup_failed",
+            )
+        held = _claude_acp_copies_in_use(base)
+        if held is None or name in held:
+            raise ClaudeAcpLauncherCleanupError(
+                f"{adapter_label}: private launcher copy {name} was left in place: "
+                + ("the process table is unreadable" if held is None else "a live process still holds it"),
+                reason="cleanup_busy",
+            )
+        try:
+            _remove_claude_acp_copy_entry(base_fd, name)
+        except OSError as exc:
+            raise ClaudeAcpLauncherCleanupError(
+                f"{adapter_label}: cannot remove private launcher copy {name}: {exc.strerror or type(exc).__name__}",
+                reason="cleanup_failed",
+            ) from exc
+    except ClaudeAcpLauncherCleanupError as error:
+        _logger.error("%s", error)
+        raise
+    finally:
+        os.close(base_fd)
+
+
+def _remove_claude_acp_launcher_copy(launcher: object, *, adapter_label: str = "AcpxClaudeShadowAdapter") -> None:
+    """Remove the per-launch copy directory holding ``launcher``; ignore any other path.
+
+    A copy that is already gone counts as removed. A copy held by a live
+    process, or one that cannot be removed, raises
+    :class:`ClaudeAcpLauncherCleanupError` after logging it.
+    """
     if not isinstance(launcher, str):
         return
     path = Path(launcher)
@@ -1872,19 +2064,27 @@ def _remove_claude_acp_launcher_copy(launcher: object) -> None:
     copy_dir = path.parents[depth - 1]
     if (
         path != copy_dir.joinpath(*_CLAUDE_ACP_LAUNCHER_RELPATH.parts)
+        or not _CLAUDE_ACP_LAUNCHER_COPY_NAME_RE.fullmatch(copy_dir.name)
         or copy_dir.parent != _claude_acp_launcher_copy_base()
-        or not copy_dir.name.startswith(_CLAUDE_ACP_LAUNCHER_COPY_PREFIX)
     ):
         return
-    shutil.rmtree(copy_dir, ignore_errors=True)
+    _remove_claude_acp_copy_dir(copy_dir.name, adapter_label=adapter_label)
+
+
+def _discard_partial_claude_acp_copy(copy_dir: Path | None, *, adapter_label: str) -> None:
+    """Remove a copy whose launch is already refused; a failure is logged, the refusal stands."""
+    if copy_dir is not None:
+        with contextlib.suppress(ClaudeAcpLauncherCleanupError):
+            _remove_claude_acp_copy_dir(copy_dir.name, adapter_label=adapter_label)
 
 
 def _private_claude_acp_launcher_copy(closure: Mapping[PurePosixPath, bytes], *, adapter_label: str) -> str:
     """Write the verified closure bytes to a fresh private directory; return the launcher copy.
 
     The directory is created ``0700`` with an unpredictable name and each file
-    with ``O_EXCL`` from the verified bytes, so only the caller or root could
-    change what executes, and the checkout is never read again for this launch.
+    with ``O_EXCL`` from the verified bytes, so no other account can change
+    what executes, and the checkout is never read again for this launch. The
+    copy base is checked before the stale-copy sweep touches anything in it.
     """
     base = _claude_acp_launcher_copy_base()
     copy_dir: Path | None = None
@@ -1892,7 +2092,11 @@ def _private_claude_acp_launcher_copy(closure: Mapping[PurePosixPath, bytes], *,
         for directory in (base.parent, base):
             with contextlib.suppress(FileExistsError):
                 directory.mkdir(mode=0o700)
-        _sweep_stale_claude_acp_launcher_copies(base)
+        base_fd = _open_claude_acp_copy_base(base, adapter_label=adapter_label)
+        try:
+            _sweep_stale_claude_acp_launcher_copies(base_fd, base)
+        finally:
+            os.close(base_fd)
         copy_dir = Path(tempfile.mkdtemp(prefix=_CLAUDE_ACP_LAUNCHER_COPY_PREFIX, dir=base))
         for relpath, data in closure.items():
             target = copy_dir
@@ -1909,7 +2113,7 @@ def _private_claude_acp_launcher_copy(closure: Mapping[PurePosixPath, bytes], *,
             with os.fdopen(fd, "wb") as handle:
                 handle.write(data)
         for relpath in closure:
-            _require_trusted_claude_code_path(
+            _require_unshared_claude_code_path(
                 copy_dir.joinpath(*relpath.parts),
                 adapter_label=adapter_label,
                 subject=f"the private copy of {relpath}",
@@ -1917,12 +2121,10 @@ def _private_claude_acp_launcher_copy(closure: Mapping[PurePosixPath, bytes], *,
                 relative_to=copy_dir,
             )
     except ClaudeCodeExecutableRefusal:
-        if copy_dir is not None:
-            shutil.rmtree(copy_dir, ignore_errors=True)
+        _discard_partial_claude_acp_copy(copy_dir, adapter_label=adapter_label)
         raise
     except OSError as exc:
-        if copy_dir is not None:
-            shutil.rmtree(copy_dir, ignore_errors=True)
+        _discard_partial_claude_acp_copy(copy_dir, adapter_label=adapter_label)
         raise ClaudeCodeExecutableRefusal(
             f"{adapter_label}: cannot write the private Claude ACP launcher copy: {exc.strerror or type(exc).__name__}",
             reason="copy_failed",
@@ -2019,9 +2221,9 @@ def _require_host_claude_code(*, model: str | None, adapter_label: str) -> dict[
             reason="vanished",
             failure_code="acp_adapter_missing",
         ) from exc
-    before = _require_trusted_claude_code_path(executable, adapter_label=adapter_label)
+    before = _require_unshared_claude_code_path(executable, adapter_label=adapter_label)
     version = _probe_pinned_claude_code(executable, adapter_label=adapter_label)
-    after = _require_trusted_claude_code_path(executable, adapter_label=adapter_label)
+    after = _require_unshared_claude_code_path(executable, adapter_label=adapter_label)
     if _claude_code_identity(before) != _claude_code_identity(after):
         raise ClaudeCodeExecutableRefusal(
             f"{adapter_label}: host Claude Code changed during its version probe; retry the ask",
@@ -2092,15 +2294,53 @@ def _claude_session_transcript_version(stdout: str) -> str | None:
 
 
 def _redact_claude_acp_paths(text: str | None, metadata: Mapping[str, object]) -> str | None:
-    """Replace the seat's host paths in provider text with short labels; receipts copy it."""
+    """Replace the seat's host paths in provider text with short labels; receipts copy it.
+
+    Applied to the raw streams before parsing bounds any excerpt, so a path
+    that crosses the excerpt limit cannot leave its prefix behind.
+    """
     if not text:
         return text
-    labels = {"claude_code_launcher": "<acp-launcher-copy>", "claude_code_executable": "<host-claude-code>"}
-    for key, label in labels.items():
-        value = metadata.get(key)
-        if isinstance(value, str) and value.startswith("/") and len(value) > 1:
+    paths: list[tuple[str, str]] = []
+    launcher = metadata.get("claude_code_launcher")
+    if isinstance(launcher, str):
+        paths.append((launcher, "<acp-launcher-copy>"))
+        depth = len(_CLAUDE_ACP_LAUNCHER_RELPATH.parts)
+        if len(Path(launcher).parents) > depth:
+            paths.append((str(Path(launcher).parents[depth - 1]), "<acp-launcher-copy-dir>"))
+    executable = metadata.get("claude_code_executable")
+    if isinstance(executable, str):
+        paths.append((executable, "<host-claude-code>"))
+    for value, label in paths:
+        if value.startswith("/") and len(value) > 1:
             text = text.replace(value, label)
     return text
+
+
+def _release_claude_acp_launcher_copy(parsed: ParseResult, *, plan: InvocationPlan | None) -> ParseResult:
+    """Remove the ask's launcher copy once its result is parsed; fail the result when that fails.
+
+    The runner parses after the child exits and before it writes the result
+    receipt, so a copy left behind is reported there, typed, instead of
+    disappearing into the runner's best-effort final cleanup.
+    """
+    metadata = getattr(plan, "metadata", None)
+    if not isinstance(metadata, dict) or not isinstance(metadata.get("claude_code_launcher"), str):
+        return parsed
+    try:
+        _remove_claude_acp_launcher_copy(metadata["claude_code_launcher"])
+    except ClaudeAcpLauncherCleanupError as exc:
+        metadata["claude_code_launcher_cleanup"] = exc.reason
+        excerpt = str(exc) if not parsed.stderr_excerpt else f"{exc}\n{parsed.stderr_excerpt}"
+        return replace(
+            parsed,
+            ok=False,
+            response="",
+            failure_code=parsed.failure_code if not parsed.ok and parsed.failure_code else exc.failure_code,
+            stderr_excerpt=excerpt[:500],
+        )
+    metadata["claude_code_launcher_cleanup"] = "removed"
+    return parsed
 
 
 def _attest_claude_code_child(parsed: ParseResult, *, plan: InvocationPlan | None, stdout: str) -> ParseResult:
@@ -3357,7 +3597,9 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
                     reason="untrusted_path",
                 )
         except BaseException:
-            _remove_claude_acp_launcher_copy(launcher)
+            # A copy that cannot be removed is logged; the refusal stands.
+            with contextlib.suppress(ClaudeAcpLauncherCleanupError):
+                _remove_claude_acp_launcher_copy(launcher, adapter_label=adapter_label)
             raise
         return replace(
             plan,
@@ -3375,15 +3617,31 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
         )
 
     def parse_response(self, **kwargs: Any) -> ParseResult:
-        return _attest_claude_code_child(
+        """Parse with host paths redacted from the raw streams, attest the child, then remove the copy."""
+        plan = kwargs.get("plan")
+        metadata = getattr(plan, "metadata", None)
+        if isinstance(metadata, dict):
+            for stream in ("stdout", "stderr"):
+                if isinstance(kwargs.get(stream), str):
+                    kwargs[stream] = _redact_claude_acp_paths(kwargs[stream], metadata)
+        parsed = _attest_claude_code_child(
             super().parse_response(**kwargs),
-            plan=kwargs.get("plan"),
+            plan=plan,
             stdout=kwargs.get("stdout") or "",
         )
+        return _release_claude_acp_launcher_copy(parsed, plan=plan)
 
     def cleanup_invocation(self, plan: InvocationPlan) -> None:
-        """Remove this launch's private launcher copy once the runner is done with it."""
-        _remove_claude_acp_launcher_copy(plan.metadata.get("claude_code_launcher"))
+        """Remove this launch's private launcher copy on runner paths that never parsed a result.
+
+        A no-op once ``parse_response`` removed it. A failure here is logged and
+        raised as :class:`ClaudeAcpLauncherCleanupError`; the runner's final
+        cleanup cannot replace the result, so the parse-time removal is the one
+        the receipt reports.
+        """
+        if plan.metadata.get("claude_code_launcher_cleanup") == "removed":
+            return
+        _remove_claude_acp_launcher_copy(plan.metadata.get("claude_code_launcher"), adapter_label=type(self).__name__)
 
 
 class AcpxKimiShadowAdapter(_AcpxDiscussionAdapter):
