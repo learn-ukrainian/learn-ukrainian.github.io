@@ -112,7 +112,8 @@ only them no longer needs a task record to be removed. The exemption needs an
 untracked regular file of at most 4 KiB with no symlink component; any other
 name (including `batch_state/issue_stream_audit.json`, nested copies and
 `.tmp` leftovers) or a larger file keeps the normal attribution and
-preservation rules, and an unrelated file beside them still retains the tree.
+preservation rules. An unrelated file beside them retains the tree only when
+attribution is missing; attributed output can be preserved and the tree removed.
 
 Automatic preservation is capped at **256 MiB per worktree**, bounding disk
 duplication while accommodating text output and small reports. Above the cap,

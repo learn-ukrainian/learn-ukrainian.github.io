@@ -61,6 +61,7 @@ _strip_credential_shaped_env()
 import ast
 import contextlib
 import functools
+import importlib.machinery
 import ipaddress
 import itertools
 import linecache
@@ -315,8 +316,10 @@ def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
     report.sections = [(redact(title), redact(content)) for title, content in report.sections]
     if properties:
         report.user_properties = [
-            (redact(name) if isinstance(name, str) else name,
-             redact(str(value)) if any(secret and secret in str(value) for secret in values) else value)
+            (
+                redact(name) if isinstance(name, str) else name,
+                redact(str(value)) if any(secret and secret in str(value) for secret in values) else value,
+            )
             for name, value in properties
         ]
     if isinstance(report.longrepr, tuple):
@@ -1157,6 +1160,48 @@ def _isolate_write_ownership_ledger(_write_ownership_base: Path, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
 
 
+class _RedirectRefreshSidecarLoader:
+    """Execute the real loader, then point its refresh sidecars at a temp dir."""
+
+    def __init__(self, loader, state: Path, lock: Path) -> None:
+        self._loader = loader
+        self._state = state
+        self._lock = lock
+
+    def create_module(self, spec):
+        create = getattr(self._loader, "create_module", None)
+        if create is None:
+            return None
+        return create(spec)
+
+    def exec_module(self, module) -> None:
+        self._loader.exec_module(module)
+        module.REFRESH_STATE_PATH = self._state
+        module.REFRESH_LOCK_PATH = self._lock
+
+    def __getattr__(self, name: str):
+        return getattr(self._loader, name)
+
+
+class _IssueStreamRefreshImportHook:
+    """Redirect refresh sidecars on the audit module's first import (#10519)."""
+
+    _MODULE = "scripts.orchestration.issue_stream_audit"
+
+    def __init__(self, state: Path, lock: Path) -> None:
+        self._state = state
+        self._lock = lock
+
+    def find_spec(self, fullname, path, target=None):
+        if fullname != self._MODULE:
+            return None
+        spec = importlib.machinery.PathFinder.find_spec(fullname, path, target)
+        if spec is None or spec.loader is None:
+            return None
+        spec.loader = _RedirectRefreshSidecarLoader(spec.loader, self._state, self._lock)
+        return spec
+
+
 @pytest.fixture(autouse=True)
 def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch):
     """Keep the issue-stream audit's refresh sidecars off the live checkout (#10519).
@@ -1164,15 +1209,26 @@ def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch
     The sidecars are anchored at the primary checkout, so a test run from a
     linked worktree that schedules or reads a refresh would otherwise write into
     the live primary ``batch_state/`` and take its single-flight lock. Tests that
-    assert the real anchoring compute it with ``refresh_sidecar_paths``. Only an
-    already-imported module needs patching: nothing else can hold the paths.
+    assert the real anchoring compute it with ``refresh_sidecar_paths``.
+
+    Patch an already-imported module in place, and redirect a later import —
+    including one that starts with the module absent from ``sys.modules`` — via
+    a meta-path hook. Importing the module here would load it for every test.
     """
-    module = sys.modules.get("scripts.orchestration.issue_stream_audit")
-    if module is None or not hasattr(module, "REFRESH_STATE_PATH"):
-        return
     state_dir = _write_ownership_base / f"issue-audit-refresh-{next(_WRITE_OWNERSHIP_SEQ)}"
-    monkeypatch.setattr(module, "REFRESH_STATE_PATH", state_dir / "issue_stream_audit_refresh.json")
-    monkeypatch.setattr(module, "REFRESH_LOCK_PATH", state_dir / "issue_stream_audit_refresh.lock")
+    state = state_dir / "issue_stream_audit_refresh.json"
+    lock = state_dir / "issue_stream_audit_refresh.lock"
+    module = sys.modules.get(_IssueStreamRefreshImportHook._MODULE)
+    if module is not None and hasattr(module, "REFRESH_STATE_PATH"):
+        monkeypatch.setattr(module, "REFRESH_STATE_PATH", state)
+        monkeypatch.setattr(module, "REFRESH_LOCK_PATH", lock)
+    hook = _IssueStreamRefreshImportHook(state, lock)
+    sys.meta_path.insert(0, hook)
+    try:
+        yield
+    finally:
+        with contextlib.suppress(ValueError):
+            sys.meta_path.remove(hook)
 
 
 # =============================================================================
