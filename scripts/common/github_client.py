@@ -21,10 +21,38 @@ from contextlib import contextmanager, suppress
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode, urlparse, urlsplit
+from urllib.parse import quote, urlencode, urlsplit
 
 RESERVE = 10
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
+
+
+class GitHubInvalidHost(ValueError):
+    """A host cannot safely identify a GitHub credential or budget scope."""
+
+
+def canonical_host(value: str) -> str:
+    """Canonical ASCII authority from a host or URL, without userinfo/default port.
+
+    Reject parser/browser ambiguities before parsing can discard characters.
+    Non-default ports remain part of the authority, including for GHES.
+    """
+    if not isinstance(value, str) or not value or "\\" in value or any(ord(c) <= 32 or ord(c) == 127 for c in value):
+        raise GitHubInvalidHost("invalid GitHub host")
+    try:
+        parsed = urlsplit(value if "://" in value or value.startswith("//") else "//" + value)
+        if not parsed.netloc.isascii():
+            raise ValueError
+        host = (parsed.hostname or "").lower().removesuffix(".")
+        if not host or host.endswith(".") or "%" in host or any(label.startswith("xn--") for label in host.split(".")):
+            raise ValueError
+        port = parsed.port
+    except ValueError:
+        raise GitHubInvalidHost("invalid GitHub host") from None
+    if ":" in host:
+        host = "[" + host + "]"
+    default_port = 80 if parsed.scheme == "http" else 443
+    return host if port is None or port == default_port else f"{host}:{port}"
 
 
 def colour_safe_environment(env=None):
@@ -231,7 +259,14 @@ class GitHubClient:
         if max_response_bytes is not None and (type(max_response_bytes) is not int or max_response_bytes < 0):
             raise ValueError("invalid GitHub response byte limit")
         self.max_response_bytes = max_response_bytes
-        self.host = self.env.get("GH_HOST", "github.com")
+        self._configure_host(canonical_host(self.env.get("GH_HOST", "github.com")))
+        self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
+        self._memory_db = None
+
+    def _configure_host(self, host):
+        """Select credentials and scope from an authority already canonicalised at entry."""
+        self.host = host
+        self.env["GH_HOST"] = host
         # A digest isolates credentials without storing credentials or account IDs.
         credential = (
             self.env.get("GH_TOKEN") or self.env.get("GITHUB_TOKEN")
@@ -250,8 +285,6 @@ class GitHubClient:
             except OSError:
                 credential = "unconfigured-cli"
         self.scope = hashlib.sha256((self.host + "\0" + credential).encode()).hexdigest()
-        self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
-        self._memory_db = None
 
     @contextmanager
     def _db(self):
@@ -539,35 +572,37 @@ class GitHubClient:
 
 def _api_hosts(host):
     """Hosts whose absolute URLs are this client's own API endpoints."""
-    host = (urlsplit("//" + host).hostname or "").lower().rstrip(".")
+    host = canonical_host(host)
     return {"api.github.com", "uploads.github.com", "github.com"} if host == "github.com" else {host}
 
 
 def _canonical_endpoint(endpoint, host="github.com"):
     """Return host admission class and normalised path; only ``None`` is unknown.
 
-    Foreign URLs retain their spelling so they cannot select an API bucket.
-    Preserve the existing rejection of foreign lowercase ``https://`` URLs;
-    other foreign spellings remain native/transport concerns. API host identity
-    is independent of scheme case, userinfo, port, host case or trailing dot.
+    Both transports refuse foreign or ambiguous absolute URLs. API host
+    identity uses the same boundary as credentials and budget scopes.
     """
     if endpoint is None:
         return "unknown", None
-    parsed = urlsplit(endpoint)
-    if parsed.scheme.lower() in {"http", "https"}:
-        hostname = (parsed.hostname or "").lower().rstrip(".")
-        if hostname not in _api_hosts(host):
-            return ("rejected" if endpoint.startswith("https://") else "foreign"), endpoint
-        path = parsed.path.lstrip("/")
-        # gh sends absolute URLs unchanged; GHES uses /api/v3/ for REST
-        # and /api/graphql for GraphQL. Never strip these on public hosts.
-        if hostname not in _api_hosts("github.com"):
-            if path.startswith("api/v3/"):
-                path = path.removeprefix("api/v3/")
-            elif path == "api/graphql":
-                path = "graphql"
-        return "api", path
-    return "relative", re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
+    try:
+        parsed = urlsplit(endpoint)
+        if parsed.scheme or parsed.netloc:
+            hostname = canonical_host(endpoint)
+            if parsed.scheme not in {"http", "https"} or hostname not in _api_hosts(host):
+                return "rejected", endpoint
+        else:
+            return "relative", re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
+    except ValueError:
+        return "rejected", endpoint
+    path = parsed.path.lstrip("/")
+    # gh sends absolute URLs unchanged; GHES uses /api/v3/ for REST
+    # and /api/graphql for GraphQL. Never strip these on public hosts.
+    if hostname not in _api_hosts("github.com"):
+        if path.startswith("api/v3/"):
+            path = path.removeprefix("api/v3/")
+        elif path == "api/graphql":
+            path = "graphql"
+    return "api", path
 
 
 def _resource_path(endpoint, host="github.com"):
@@ -584,7 +619,7 @@ def _endpoint_bucket(resource_path):
     return "search" if resource_path.startswith("search/") else "core"
 
 
-def _options(args, *, valued_flags=None):
+def _options(args, *, valued_flags=None, canonicalize_hosts=False):
     options, positional = {}, []
     valued = {
         "--repo",
@@ -657,17 +692,25 @@ def _options(args, *, valued_flags=None):
     }
     if valued_flags is not None:
         valued = valued_flags
-    iterator = iter(args)
-    for arg in iterator:
+    iterator = iter(enumerate(args))
+    for index, arg in iterator:
         if arg == "--":
-            positional.extend(iterator)
+            positional.extend(value for _, value in iterator)
             break
         if arg.startswith("-"):
             flag, eq, value = arg.partition("=")
             if not eq and len(flag) > 2 and flag[:2] in valued:
                 flag, value = flag[:2], flag[2:]
-            else:
-                value = value if eq else next(iterator, True) if flag in valued else True
+            elif not eq and flag in valued:
+                value_index, value = next(iterator, (None, True))
+            elif not eq:
+                value = True
+            if canonicalize_hosts and flag == "--hostname":
+                value = canonical_host(value)
+                if eq:
+                    args[index] = flag + "=" + value
+                else:
+                    args[value_index] = value
             options.setdefault(flag, []).append(value)
         else:
             positional.append(arg)
@@ -1726,10 +1769,12 @@ def _native_buckets(args, host="github.com"):
         # Exactly one positional is the endpoint. Zero, or a second one (a
         # flag this parser does not model took a value), is undeterminable.
         hostname = _opt(options, "--hostname")
-        _, path = _canonical_endpoint(
+        host_class, path = _canonical_endpoint(
             positional[0] if len(positional) == 1 else None,
             hostname if isinstance(hostname, str) else host,
         )
+        if host_class == "rejected":
+            raise ValueError("GitHub endpoint host mismatch")
         buckets.update({_endpoint_bucket(path)} if path is not None else {"core", "graphql"})
     else:
         buckets.update({"core", "graphql"})
@@ -1852,6 +1897,11 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
         and (args[2] == "merge" or any(a.split("=", 1)[0] in {"--approve", "-a"} for a in args[3:]))
     ):
         return _result_process(args, Result(error="github_worker_write_forbidden"), {}, kwargs)
+    host_args = list(args[2:])
+    host_options, _ = _options(host_args, canonicalize_hosts=True)
+    if "--hostname" in host_options:
+        client._configure_host(_opt(host_options, "--hostname"))
+        args = [*args[:2], *host_args]
     translation = _translation_options(args)
     if translation is None:
         return _native_command(args, client, runner, kwargs)
@@ -1869,9 +1919,6 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     for short, long in aliases.items():
         if short in options and long not in options:
             options[long] = options[short]
-    if "--hostname" in options:
-        client.host = _opt(options, "--hostname")
-        client.scope = hashlib.sha256((client.scope + "\0" + client.host).encode()).hexdigest()
     if args[1] == "api":
         request_headers = {}
         for raw_header in options.get("-H", []) + options.get("--header", []):
@@ -1973,14 +2020,15 @@ def http_open(request, *, timeout=30, opener=None, **kwargs):
     import urllib.error
     import urllib.request
 
-    host = urlparse(request.full_url).hostname
     client = GitHubClient(
         env={
-            "GH_HOST": "github.com" if host in {"api.github.com", "uploads.github.com"} else host or "github.com",
+            "GH_HOST": request.full_url,
             "GH_TOKEN": request.get_header("Authorization") or "http-unauthenticated",
             "GH_ENTERPRISE_TOKEN": request.get_header("Authorization") or "http-unauthenticated",
         }
     )
+    if client.host in _api_hosts("github.com"):
+        client._configure_host("github.com")
     method = request.get_method()
 
     def transport(_method, endpoint, headers, body, request_timeout):

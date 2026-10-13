@@ -10,7 +10,7 @@ NOW = 1000
 FUTURE = 2000
 
 
-def seeded(tmp_path, exhausted, remaining=0):
+def seeded(tmp_path, exhausted, remaining=0, *, host="github.com"):
     """Client whose named buckets are at ``remaining`` with a future reset, plus call recorders."""
     translated, native = [], []
 
@@ -22,7 +22,7 @@ def seeded(tmp_path, exhausted, remaining=0):
         native.append(command)
         return subprocess.CompletedProcess(command, 0, b"[]", b"")
 
-    store = gh.GitHubClient(cache_dir=tmp_path, transport=transport, clock=lambda: NOW, env={})
+    store = gh.GitHubClient(cache_dir=tmp_path, transport=transport, clock=lambda: NOW, env={"GH_HOST": host})
     with store._db() as db:
         for name in exhausted:
             gh._store_budget(db, store.scope, name, remaining, FUTURE)
@@ -206,7 +206,9 @@ def test_root_endpoint_is_determinable_core(args):
 @pytest.mark.parametrize("args", ROOT_ENDPOINTS, ids=["relative", "absolute", "absolute-slash", "enterprise"])
 @pytest.mark.parametrize("bucket", ALL_BUCKETS)
 def test_root_endpoint_gates_only_core_and_secondary(tmp_path, args, bucket):
-    store, runner, translated, native = seeded(tmp_path, [bucket])
+    options, _ = gh._options(args[2:])
+    host = gh._opt(options, "--hostname", default="github.com")
+    store, runner, translated, native = seeded(tmp_path, [bucket], host=host)
     result = gh.run(args, client=store, runner=runner, capture_output=True)
     assert not translated
     if bucket in {"core", "secondary"}:
@@ -229,7 +231,11 @@ HOST_SHAPES = [
 
 @pytest.mark.parametrize(("endpoint", "bucket", "accepted"), HOST_SHAPES)
 def test_host_shape_admission_and_classification_agree(tmp_path, endpoint, bucket, accepted):
-    assert gh._native_buckets(api(endpoint)) == frozenset({bucket, "secondary"})
+    if accepted:
+        assert gh._native_buckets(api(endpoint)) == frozenset({bucket, "secondary"})
+    else:
+        with pytest.raises(ValueError, match="host mismatch"):
+            gh._native_buckets(api(endpoint))
     store, runner, translated, native = seeded(tmp_path, [])
     result = gh.run(api(endpoint), client=store, runner=runner, capture_output=True)
     assert not native
@@ -336,7 +342,9 @@ def test_endpoint_classification_table(args, expected):
     ("args", "expected"), [pytest.param(a, e, id=" ".join(a[2:]) or "no-args") for a, e in ENDPOINT_SHAPES]
 )
 def test_exhausted_bucket_gates_exactly_the_classified_shapes(no_jq, tmp_path, args, expected, bucket, remaining):
-    store, runner, translated, native = seeded(tmp_path, [bucket], remaining)
+    options, _ = gh._options(args[2:])
+    host = gh._opt(options, "--hostname", default="github.com")
+    store, runner, translated, native = seeded(tmp_path, [bucket], remaining, host=host)
     result = gh.run(args, client=store, runner=runner, capture_output=True)
     if bucket == "secondary" or bucket in expected:
         assert blocked(result) and result.github_result.reset_at == FUTURE
@@ -359,19 +367,23 @@ def test_budget_above_reserve_never_blocks(no_jq, tmp_path, bucket):
         (api("http://api.github.com/graphql"), "github.com", GRAPHQL),
         (api("https://uploads.github.com/repos/o/r/releases/1/assets"), "github.com", CORE),
         # an absolute URL for a host that is not the API host is never an API resource
-        (api("https://example.com/graphql"), "github.com", CORE),
-        (api("https://example.com/search/code"), "github.com", CORE),
-        (api("https://api.github.com/graphql"), "ghe.example", CORE),
+        (api("https://example.com/graphql"), "github.com", None),
+        (api("https://example.com/search/code"), "github.com", None),
+        (api("https://api.github.com/graphql"), "ghe.example", None),
+        (api("--hostname", "ghe.example", "https://api.github.com/graphql"), "github.com", None),
         (api("https://ghe.example/graphql"), "ghe.example", GRAPHQL),
         (api("--hostname", "ghe.example", "https://ghe.example/search/code"), "github.com", CODE),
-        (api("--hostname", "ghe.example", "https://api.github.com/graphql"), "github.com", CORE),
         (api("-X", "search/code", "repos/o/r"), "github.com", CORE),
         (api("--input", "search/code", "repos/o/r"), "github.com", CORE),
         (api("--preview", "search/code", "repos/o/r"), "github.com", CORE),
     ],
 )
 def test_url_endpoints_honour_the_api_host(args, host, expected):
-    assert gh._native_buckets(args, host) == frozenset(expected | {"secondary"})
+    if expected is None:
+        with pytest.raises(ValueError, match="host mismatch"):
+            gh._native_buckets(args, host)
+    else:
+        assert gh._native_buckets(args, host) == frozenset(expected | {"secondary"})
 
 
 @pytest.mark.parametrize(
@@ -437,7 +449,6 @@ NORMALIZED_NATIVE_SHAPES = [
             "https://api.github.com/api/v3/search/code",
             "https://api.github.com/api/graphql",
             "HTTPS://API.GITHUB.COM/GraphQL",
-            "HTTPS://foreign.example/graphql",
         )
     ],
     (api("--hostname", "API.GITHUB.COM", "https://api.github.com/api/v3/search/code"), CORE),
@@ -482,11 +493,36 @@ NORMALIZED_NATIVE_SHAPES = [
     [pytest.param(a, e, id=" ".join(a[1:])) for a, e in NORMALIZED_NATIVE_SHAPES],
 )
 def test_normalized_native_shapes_gate_runner(no_jq, tmp_path, args, expected, bucket, remaining):
-    store, runner, translated, native = seeded(tmp_path, [bucket], remaining)
+    options, _ = gh._options(args[2:])
+    host = gh._opt(options, "--hostname", default="github.com")
+    store, runner, translated, native = seeded(tmp_path, [bucket], remaining, host=host)
     result = gh.run(args, client=store, runner=runner, capture_output=True)
     assert not translated
     if bucket == "secondary" or bucket in expected:
         assert blocked(result) and result.github_result.reset_at == FUTURE
         assert not native
     else:
-        assert result.returncode == 0 and native == [args]
+        expected_args = list(args)
+        if "--hostname" in expected_args:
+            expected_args[expected_args.index("--hostname") + 1] = gh.canonical_host(host)
+        assert result.returncode == 0 and native == [expected_args]
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "HTTPS://foreign.example/search/code",
+        "http://foreign.example/search/code",
+        "HTTP://foreign.example/search/code",
+        "ftp://foreign.example/search/code",
+        "FTP://foreign.example/search/code",
+        "https://evil.com\\@api.github.com/x",
+    ],
+)
+@pytest.mark.parametrize("native", [False, True])
+def test_host_boundary_refuses_before_either_transport(no_jq, tmp_path, endpoint, native):
+    store, runner, translated, calls = seeded(tmp_path, [])
+    args = api(endpoint, *(["--paginate", "--jq", ".x"] if native else []))
+    result = gh.run(args, client=store, runner=runner, capture_output=True)
+    assert result.github_result.error == "github_invalid_command"
+    assert not translated and not calls
