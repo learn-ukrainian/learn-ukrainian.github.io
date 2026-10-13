@@ -325,6 +325,35 @@ records the branch, tip SHA, evidence kind, evidence detail, and UTC time. It
 does not by itself claim that the deletion succeeded. While GitHub still has
 the object, `git fetch origin <tip-sha>` recovers it.
 
+`branch_sweep --archive-after-days N` also classifies expired local report-only
+branches as `archive-expired` after seven days by default. Apply writes one thin
+bundle under `batch_state/branch-archive/`, verifies every selected head, and
+appends durable records to `stale-local-receipts.jsonl` before deleting any local
+ref. Every existing receipt must be a valid, newline-terminated JSON object;
+a broken ledger refuses the batch. A repository-wide exclusive archive lock on
+the control-plane checkout covers fresh validation, bundling, receipts, final
+guards and ref deletion. The persistent `branch-archive/archive.lock` file is
+never unlinked. Each bundle is created and verified under a private temporary
+name, then published with an atomic hard link that refuses an existing archive
+name. Publication failure keeps every selected ref and any existing bundle.
+Thin bundles exclude `origin/main` history.
+The receipt's restore command needs those prerequisite commits present: fetch
+them from origin or restore in a clone of this repository. Remote refs and
+archive bundles are retained; bundles at least 90 days old are listed for review.
+
+Symbolic local refs are retained. Any selected branch failing pre-bundle
+validation keeps the entire batch without creating a bundle. After receipts are
+durable, a fresh PR snapshot covers the whole selected batch in one GitHub
+response, followed by fresh ref, worktree and task-record snapshots compared
+with classification. Unknown or changed guards keep the entire batch. The last
+local checks before the single `git update-ref --stdin --no-deref` transaction
+explicitly refuse attached worktrees and live or recent tasks. A guard change
+after its final snapshot and before the transaction remains a residual race
+window; GitHub, task files and worktree registrations do not share a transaction
+with Git refs. Expected-SHA checks abort the whole transaction on head moves;
+`--no-deref` prevents deletion through a symbolic target. The accountable sweep
+driver owns assessment of this residual window before live use.
+
 The scheduled job uses
 `git worktree remove --force` only as the final deletion step after all P0
 guards and their final TOCTOU checks have passed; this removes disposable

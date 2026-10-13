@@ -1,21 +1,35 @@
-"""List stale agent branches and delete only those with verifiable safe heads."""
+"""List stale agent branches and delete only those with verifiable safe heads.
+
+Expired local report-only branches are archived from this same command: one thin
+bundle (history already on origin/main stays out), a receipt line that is re-read
+before use, then one compare-and-delete of those local refs. Remote refs and old
+bundles stay.
+"""
 
 from __future__ import annotations
 
 import argparse
+import contextvars
+import fcntl
+import hashlib
 import json
 import os
 import re
+import shlex
 import stat
 import subprocess
 import sys
-from collections.abc import Callable
-from dataclasses import asdict, dataclass, field
+import tempfile
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
+from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
+from scripts.common.jsonl import jsonl_lines
+from scripts.common.scratch import ensure_scratch_root
 from scripts.orchestration import reap_worktrees as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
@@ -30,9 +44,21 @@ _SQUASH_SUBJECT_RE = re.compile(r"\(#(\d+)\)\s*$")
 _HTTP_STATUS_RE = re.compile(r"HTTP/\d+(?:\.\d+)?\s+(\d+)")
 _CLOCK_SKEW = timedelta(seconds=10)
 LEDGER_PATH = Path("batch_state") / "branch-archive" / "evidence.jsonl"
-_MERGED_PR_ABSENT = (
-    "merged-pr evidence refused: branch tip is absent from origin; recovery needs the tip on GitHub"
+ARCHIVE_DIR = Path("batch_state") / "branch-archive"
+RECEIPT_PATH = ARCHIVE_DIR / "stale-local-receipts.jsonl"
+ARCHIVE_LOCK_PATH = ARCHIVE_DIR / "archive.lock"
+DEFAULT_ARCHIVE_AFTER_DAYS = 7
+# A released task younger than this still names work someone may return to.
+# Archival waits. Patch-id deletion and the other dispositions do not.
+RECENT_RELEASED_TASK_DAYS = DEFAULT_ARCHIVE_AFTER_DAYS
+BUNDLE_REVIEW_DAYS = 90
+# main() keeps sweep(repo, apply=...) so wrappers of that signature keep working.
+# The CLI threshold is installed for that call; an explicit argument still wins.
+_ARCHIVE_AFTER_DAYS: contextvars.ContextVar[int | None] = contextvars.ContextVar(
+    "branch_sweep_archive_after_days",
+    default=None,
 )
+_MERGED_PR_ABSENT = "merged-pr evidence refused: branch tip is absent from origin; recovery needs the tip on GitHub"
 _MERGED_PR_MISMATCH = "merged-pr evidence refused: remote tip does not equal the local tip"
 _MERGED_PR_NEWER = "merged-pr evidence refused: a branch commit is newer than the closing merge"
 PrLookup = Callable[[Path, str], tuple[list[reaper.PullRequestState], str | None]]
@@ -45,6 +71,7 @@ class Branch:
     local_sha: str | None = None
     remote_date: int | None = None
     local_date: int | None = None
+    local_symref: str | None = None
 
 
 @dataclass(frozen=True)
@@ -88,11 +115,17 @@ class SweepError(RuntimeError):
         self.decisions = decisions
 
 
-def _git(repo: Path, *args: str, timeout: int = 30) -> subprocess.CompletedProcess[str]:
+def _git(
+    repo: Path,
+    *args: str,
+    timeout: int = 30,
+    input: str | None = None,
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", *args],
         cwd=repo,
         env=sanitized_git_env(),
+        input=input,
         capture_output=True,
         text=True,
         check=False,
@@ -112,16 +145,16 @@ def _refs(repo: Path) -> list[Branch]:
     output = _checked(
         repo,
         "for-each-ref",
-        "--format=%(refname)%00%(objectname)%00%(committerdate:unix)",
+        "--format=%(refname)%00%(objectname)%00%(committerdate:unix)%00%(symref)",
         "refs/remotes/origin",
         "refs/heads",
     )
     by_name: dict[str, dict[str, object]] = {}
     for line in output.splitlines():
         fields = line.split("\0")
-        if len(fields) != 3:
+        if len(fields) != 4:
             raise RuntimeError("git for-each-ref returned a malformed row")
-        ref, sha, raw_date = fields
+        ref, sha, raw_date, symref = fields
         if ref.startswith("refs/remotes/origin/"):
             kind, name = "remote", ref.removeprefix("refs/remotes/origin/")
         elif ref.startswith("refs/heads/"):
@@ -133,6 +166,8 @@ def _refs(repo: Path) -> list[Branch]:
         row = by_name.setdefault(name, {"name": name})
         row[f"{kind}_sha"] = sha
         row[f"{kind}_date"] = int(raw_date) if raw_date.isdecimal() else None
+        if kind == "local":
+            row["local_symref"] = symref or None
     return [Branch(**by_name[name]) for name in sorted(by_name)]
 
 
@@ -150,9 +185,9 @@ def _valid(name: str, repo: Path) -> bool:
         return False
 
 
-def _active_tasks(repo: Path) -> set[str]:
+def _task_records(repo: Path) -> list[tuple[Path, dict[str, object]]]:
     task_dir = reaper.control_plane_root(repo) / "batch_state" / "tasks"
-    active: set[str] = set()
+    records: list[tuple[Path, dict[str, object]]] = []
     for path in task_dir.glob("*.json"):
         try:
             state = json.loads(path.read_text(encoding="utf-8"))
@@ -160,20 +195,76 @@ def _active_tasks(repo: Path) -> set[str]:
             raise RuntimeError(f"cannot inspect task state {path.name}: {exc}") from exc
         if not isinstance(state, dict):
             raise RuntimeError(f"cannot inspect task state {path.name}: not an object")
+        records.append((path, state))
+    return records
+
+
+def _task_branch_names(state: dict[str, object]) -> set[str]:
+    names: set[str] = set()
+    for key in ("worktree_branch", "branch"):
+        value = state.get(key)
+        if isinstance(value, str):
+            names.add(value)
+    prep = state.get("worktree_prep")
+    if isinstance(prep, dict) and isinstance(prep.get("branch"), str):
+        names.add(prep["branch"])
+    agent, task_id = state.get("agent"), state.get("task_id")
+    if isinstance(agent, str) and isinstance(task_id, str):
+        names.add(f"{agent}/{task_id}")
+    return names
+
+
+def _parse_task_time(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value:
+        return None
+    text = value[:-1] + "+00:00" if value.endswith("Z") else value
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.astimezone(UTC)
+
+
+def _task_finished_at(state: dict[str, object], path: Path) -> datetime | None:
+    for key in ("finished_at", "updated_at"):
+        parsed = _parse_task_time(state.get(key))
+        if parsed is not None:
+            return parsed
+    try:
+        return datetime.fromtimestamp(path.stat().st_mtime, UTC)
+    except OSError:
+        return None
+
+
+def _active_tasks(repo: Path) -> set[str]:
+    active: set[str] = set()
+    for _path, state in _task_records(repo):
         status = state.get("status")
         if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
             continue
-        for key in ("worktree_branch", "branch"):
-            value = state.get(key)
-            if isinstance(value, str):
-                active.add(value)
-        prep = state.get("worktree_prep")
-        if isinstance(prep, dict) and isinstance(prep.get("branch"), str):
-            active.add(prep["branch"])
-        agent, task_id = state.get("agent"), state.get("task_id")
-        if isinstance(agent, str) and isinstance(task_id, str):
-            active.add(f"{agent}/{task_id}")
+        active.update(_task_branch_names(state))
     return active
+
+
+def _recent_released_tasks(repo: Path, *, now: datetime | None = None) -> set[str]:
+    """Branches named by a released task that finished inside the recent window.
+
+    An unreadable finish time protects the branch. This set blocks archival only.
+    """
+    moment = now or datetime.now(UTC)
+    window = timedelta(days=RECENT_RELEASED_TASK_DAYS)
+    recent: set[str] = set()
+    for path, state in _task_records(repo):
+        status = state.get("status")
+        if not isinstance(status, str) or status not in RELEASED_TASK_STATUSES:
+            continue
+        finished = _task_finished_at(state, path)
+        if finished is not None and moment - finished >= window:
+            continue
+        recent.update(_task_branch_names(state))
+    return recent
 
 
 def _origin_head(repo: Path, branch: str) -> str | None:
@@ -376,14 +467,7 @@ def _timeline_repository(item: dict[str, object]) -> str | None:
     owner_field = repository.get("owner")
     login = owner_field.get("login") if isinstance(owner_field, dict) else None
     name = repository.get("name")
-    if (
-        isinstance(login, str)
-        and isinstance(name, str)
-        and login
-        and name
-        and "/" not in login
-        and "/" not in name
-    ):
+    if isinstance(login, str) and isinstance(name, str) and login and name and "/" not in login and "/" not in name:
         return f"{login}/{name}"
     return None
 
@@ -619,6 +703,12 @@ def _try_evidence(
             )
             return decided("report-only", reason)
         merge = merges[0]
+        # Newer commits exclude the branch before any other refusal can be archived.
+        branch_dates = _committer_timestamps(repo, f"{base}..{tip}")
+        if not branch_dates:
+            return decided("report-only", "merged-pr evidence refused: branch committer dates are unreadable")
+        if any(stamp > _merge_committer_timestamp(repo, merge) for stamp in branch_dates):
+            return decided("report-only", _MERGED_PR_NEWER)
         branch_files = _changed_files(repo, "diff", "--name-only", "--no-renames", f"{base}...{tip}")
         if not branch_files:
             return decided("report-only", "branch changes no files")
@@ -633,23 +723,125 @@ def _try_evidence(
             "--first-parent",
             merge,
         )
-    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        return decided("report-only", f"evidence check failed: {exc}")
-    if not branch_files <= pull_files:
-        return decided("report-only", "merged PR files do not cover every branch file")
-    try:
-        # A later commit can change a covered file after the merge and still pass the file check.
-        branch_dates = _committer_timestamps(repo, f"{base}..{tip}")
-        if not branch_dates:
-            return decided("report-only", "merged-pr evidence refused: branch committer dates are unreadable")
-        if any(stamp > _merge_committer_timestamp(repo, merge) for stamp in branch_dates):
-            return decided("report-only", _MERGED_PR_NEWER)
+        if not branch_files <= pull_files:
+            return decided("report-only", "merged PR files do not cover every branch file")
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         return decided("report-only", f"evidence check failed: {exc}")
     return decided(
         "delete-evidence",
         f"issue #{issue} closed by merged pull request #{closure.closing_pr} at {merge[:12]}; branch files covered",
         evidence_kind="merged-pr",
+    )
+
+
+def current_archive_after_days() -> int:
+    """Return the threshold ``main`` installed for this call, or the 7-day default."""
+    value = _ARCHIVE_AFTER_DAYS.get()
+    return DEFAULT_ARCHIVE_AFTER_DAYS if value is None else value
+
+
+def _archive_reason_settled(reason: str) -> bool:
+    """True when report-only means unique local commits, not an unread probe.
+
+    A branch whose commits are newer than the closing merge stays report-only at
+    any age. That check runs before these reasons are chosen. A rescue ref is
+    never archived from its protective refusal.
+    """
+    if reason in {
+        "no PR and unique commits",
+        _MERGED_PR_ABSENT,
+        "merged PR files do not cover every branch file",
+        "branch changes no files",
+    }:
+        return True
+    if reason.startswith("issue #") and reason.endswith("has no closing merged pull request"):
+        return True
+    return reason.startswith("closing pull request #") and (
+        reason.endswith("merge commit is not on origin/main")
+        or reason.endswith("has more than one merge commit on origin/main")
+    )
+
+
+def _pr_checkout_name(name: str) -> bool:
+    """True for a local checkout whose name is not the pull request's head branch.
+
+    ``gh`` lookup by this exact name never sees ``pr-*`` or ``<agent>/review-*``.
+    The same names are excluded in scheduled worktree cleanup.
+    """
+    if name.startswith("pr-"):
+        return True
+    return name.rsplit("/", 1)[-1].startswith("review-")
+
+
+def _upstream_unpushed(repo: Path, name: str) -> str | None:
+    """Refusal when ``name`` has commits its configured upstream does not.
+
+    ``None`` means there is no upstream, or the upstream already contains the tip.
+    Any other upstream failure stays report-only.
+    """
+    shown = _git(repo, "rev-parse", "--abbrev-ref", f"{name}@{{upstream}}")
+    if shown.returncode != 0:
+        detail = (shown.stderr or shown.stdout or "").strip()
+        if "no upstream configured" in detail:
+            return None
+        return f"upstream check failed: {detail or shown.returncode}"
+    upstream = shown.stdout.strip()
+    if not upstream or upstream.endswith("@{upstream}"):
+        return None
+    ahead = _git(repo, "rev-list", "--count", f"{upstream}..{name}")
+    if ahead.returncode != 0:
+        detail = (ahead.stderr or ahead.stdout or "").strip()
+        return f"upstream check failed: {detail or ahead.returncode}"
+    count = ahead.stdout.strip()
+    if not count.isdecimal():
+        return "upstream check failed: unreadable ahead count"
+    if count != "0":
+        return f"branch has unpushed commits on upstream {upstream}"
+    return None
+
+
+def _consider_archive(
+    verdict: Decision,
+    branch: Branch,
+    *,
+    repo: Path,
+    prs: list[reaper.PullRequestState],
+    archive_after_days: int,
+    recent_tasks: set[str],
+) -> Decision:
+    """Promote a settled local report-only branch once it is old enough to archive."""
+    if archive_after_days < 0 or verdict.classification != "report-only" or prs:
+        return verdict
+    if branch.local_sha is None or verdict.local_sha != branch.local_sha:
+        return verdict
+    if verdict.age_days is None or verdict.age_days < archive_after_days:
+        return verdict
+    if _rescue(branch.name):
+        return verdict
+    if _pr_checkout_name(branch.name):
+        return replace(
+            verdict,
+            reason="local pr-* or review-* checkout is not archived; the name is not the pull request head",
+        )
+    if branch.name in recent_tasks:
+        return replace(
+            verdict,
+            reason=(
+                f"a released task that finished within the last {RECENT_RELEASED_TASK_DAYS} days names this branch"
+            ),
+        )
+    unpushed = _upstream_unpushed(repo, branch.name)
+    if unpushed is not None:
+        return replace(verdict, reason=unpushed)
+    if not _archive_reason_settled(verdict.reason):
+        return verdict
+    return replace(
+        verdict,
+        classification="archive-expired",
+        reason=(
+            f"{verdict.reason}; local ref is at least {archive_after_days} days old "
+            "with no pull request, worktree, or live task"
+        ),
     )
 
 
@@ -664,6 +856,8 @@ def _classify(
     pr_lookup: PrLookup,
     issue_lookup: IssueLookup | None = None,
     evidence_cache: _EvidenceCache | None = None,
+    archive_after_days: int | None = None,
+    recent_tasks: set[str] | None = None,
 ) -> Decision:
     name = branch.name
 
@@ -685,10 +879,13 @@ def _classify(
             evidence_detail=evidence_detail,
         )
 
+    days = current_archive_after_days() if archive_after_days is None else archive_after_days
     if name in protected_branches or not _candidate(name):
         return decision("protected", "outside agent/scratch candidate namespace or protected name")
     if not _valid(name, repo):
         return decision("report-only", "invalid or unsafe branch name")
+    if branch.local_symref:
+        return decision("report-only", "symbolic local ref is never deleted or archived")
     if name in worktree_branches:
         return decision("skipped-worktree", "registered worktree uses this branch")
     if (branch.remote_sha or branch.local_sha) in detached_heads:
@@ -730,6 +927,7 @@ def _classify(
         )
     if ancestor.returncode != 1:
         return decision("report-only", "ancestry check failed")
+    recent = _recent_released_tasks(repo) if recent_tasks is None else recent_tasks
     evidence = _try_evidence(
         repo,
         branch,
@@ -738,10 +936,24 @@ def _classify(
         cache=evidence_cache if evidence_cache is not None else _EvidenceCache(),
     )
     if evidence is not None:
-        return evidence
+        return _consider_archive(
+            evidence,
+            branch,
+            repo=repo,
+            prs=prs,
+            archive_after_days=days,
+            recent_tasks=recent,
+        )
     if prs:
         return decision("report-only", "closed/merged PR head does not match branch tip; unique commits")
-    return decision("report-only", "no PR and unique commits")
+    return _consider_archive(
+        decision("report-only", "no PR and unique commits"),
+        branch,
+        repo=repo,
+        prs=prs,
+        archive_after_days=days,
+        recent_tasks=recent,
+    )
 
 
 def sweep(
@@ -751,12 +963,17 @@ def sweep(
     pr_lookup: PrLookup = reaper._query_pr_states,
     protected_lookup: Callable[[Path], set[str]] = remote_protected_branches,
     issue_lookup: IssueLookup | None = None,
+    archive_after_days: int | None = None,
 ) -> list[Decision]:
     decisions: list[Decision] = []
     evidence_cache = _EvidenceCache()
     issues = issue_lookup or _query_issue_closure
+    days = current_archive_after_days() if archive_after_days is None else archive_after_days
+    if days < 0:
+        raise RuntimeError("--archive-after-days must be zero or greater")
     try:
         branches = _refs(repo)
+        recent = _recent_released_tasks(repo)
         try:
             protected = PROTECTED | protected_lookup(repo)
             protection_error = None
@@ -767,6 +984,7 @@ def sweep(
         worktree_branches = {item.branch for item in worktrees if item.branch}
         detached_heads = {item.head for item in worktrees if item.detached and item.head}
         active = _active_tasks(repo)
+        archive_snapshot = _archive_local_snapshot(repo, branches=branches, worktrees=worktrees)
         for branch in branches:
             if protection_error and _candidate(branch.name) and branch.name not in PROTECTED:
                 decisions.append(
@@ -790,6 +1008,8 @@ def sweep(
                 pr_lookup=pr_lookup,
                 issue_lookup=issues,
                 evidence_cache=evidence_cache,
+                archive_after_days=days,
+                recent_tasks=recent,
             )
             if apply and verdict.classification.startswith("delete-"):
                 # Recheck all volatile guards before each destructive call. In particular,
@@ -805,10 +1025,24 @@ def sweep(
                     pr_lookup=pr_lookup,
                     issue_lookup=issues,
                     evidence_cache=evidence_cache,
+                    archive_after_days=days,
+                    recent_tasks=_recent_released_tasks(repo),
                 )
                 if verdict.classification.startswith("delete-"):
                     verdict = _apply(repo, branch, verdict)
             decisions.append(verdict)
+        if apply:
+            decisions = _apply_archive(
+                repo,
+                decisions,
+                protected=protected,
+                pr_lookup=pr_lookup,
+                issue_lookup=issues,
+                evidence_cache=evidence_cache,
+                archive_after_days=days,
+                classification_snapshot=archive_snapshot,
+            )
+        decisions.extend(_review_bundle_decisions(repo))
         if apply:
             _checked(repo, "fetch", "--prune", "origin")
     except Exception as exc:
@@ -816,13 +1050,18 @@ def sweep(
     return decisions
 
 
-def _ledger_file(repo: Path) -> Path:
+def _controlled_file(repo: Path, relative: Path, *, refusal: str) -> Path:
+    """Join ``relative`` under the control plane. A symlink at any part is refused."""
     path = reaper.control_plane_root(repo).resolve()
-    for part in LEDGER_PATH.parts:
+    for part in relative.parts:
         path = path / part
         if path.is_symlink():
-            raise RuntimeError("evidence ledger path contains a symlink")
+            raise RuntimeError(refusal)
     return path
+
+
+def _ledger_file(repo: Path) -> Path:
+    return _controlled_file(repo, LEDGER_PATH, refusal="evidence ledger path contains a symlink")
 
 
 def _ensure_ledger_directory(directory: Path) -> None:
@@ -854,19 +1093,61 @@ def _ensure_ledger_directory(directory: Path) -> None:
                 raise RuntimeError("evidence ledger directory is not a directory") from None
 
 
-def _append_ledger_line(repo: Path, payload: dict[str, object]) -> None:
+def _write_all(descriptor: int, payload: bytes) -> None:
+    """Write every byte. A short ``os.write`` is retried, never treated as done."""
+    view = memoryview(payload)
+    while len(view):
+        written = os.write(descriptor, view)
+        if written <= 0:
+            raise RuntimeError("receipt write made no progress")
+        view = view[written:]
+
+
+def _read_from(path: Path, offset: int) -> bytes:
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        if offset:
+            os.lseek(descriptor, offset, os.SEEK_SET)
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        return b"".join(chunks)
+    finally:
+        os.close(descriptor)
+
+
+def _append_ledger_line(repo: Path, payload: dict[str, object], *, relative: Path | None = None) -> None:
     """Append one JSON line and flush it. The ledger is owner-only and is not a symlink."""
     encoded = (json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n").encode()
-    path = _ledger_file(repo)
+    if relative is None:
+        path = _ledger_file(repo)
+    else:
+        path = _controlled_file(repo, relative, refusal="archive path contains a symlink")
     _ensure_ledger_directory(path.parent)
     descriptor = os.open(
         path,
-        os.O_APPEND | os.O_CREAT | os.O_WRONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
+        os.O_APPEND | os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC,
         0o600,
     )
     try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
         os.fchmod(descriptor, 0o600)
-        os.write(descriptor, encoded)
+        offset = os.fstat(descriptor).st_size
+        if relative == RECEIPT_PATH:
+            _parse_archive_receipts(os.pread(descriptor, offset, 0))
+        try:
+            _write_all(descriptor, encoded)
+            if os.pread(descriptor, len(encoded), offset) != encoded:
+                raise RuntimeError("receipt append is truncated or does not match what was written")
+        except (OSError, RuntimeError):
+            # Under this writer lock, undo only our failed append. Never repair
+            # an existing broken tail or discard another writer's valid record.
+            os.ftruncate(descriptor, offset)
+            os.fsync(descriptor)
+            raise
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
@@ -1009,28 +1290,613 @@ def _apply(repo: Path, branch: Branch, verdict: Decision) -> Decision:
     return finish(verdict, None)
 
 
+def _retain_archive(verdict: Decision, reason: str) -> Decision:
+    return replace(verdict, classification="report-only", reason=reason, local_deleted=False, remote_deleted=False)
+
+
+@contextmanager
+def _archive_lock(repo: Path) -> Iterator[None]:
+    """Serialize archive writers on one persistent control-plane lock inode."""
+    path = _controlled_file(repo, ARCHIVE_LOCK_PATH, refusal="archive lock path contains a symlink")
+    try:
+        _ensure_ledger_directory(path.parent)
+        descriptor = os.open(path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
+    except (OSError, RuntimeError) as exc:
+        raise RuntimeError(f"archive lock path unwritable: {exc}") from exc
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise RuntimeError("archive lock path is not a regular file")
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        os.fchmod(descriptor, 0o600)
+        yield
+    finally:
+        # Never unlink the lock: another opener must contend on this same inode.
+        os.close(descriptor)
+
+
+def _bundle_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            digest.update(chunk)
+    finally:
+        os.close(descriptor)
+    return digest.hexdigest()
+
+
+def _seal_regular_file(path: Path) -> None:
+    """Force owner-only mode and flush the file and its directory. Symlinks are refused."""
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        os.fchmod(descriptor, 0o600)
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+
+
+def _unlink_unverified(path: Path) -> None:
+    info = os.lstat(path)
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+        raise RuntimeError("refusing to remove a non-file bundle path")
+    os.unlink(path)
+
+
+def _verify_bundle_heads(repo: Path, bundle: Path, expected: dict[str, str]) -> None:
+    info = os.lstat(bundle)
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+        raise RuntimeError("bundle is missing")
+    verified = _git(repo, "bundle", "verify", str(bundle))
+    if verified.returncode != 0:
+        detail = (verified.stderr or verified.stdout).strip()
+        raise RuntimeError(f"bundle verify failed: {detail}")
+    listed = _git(repo, "bundle", "list-heads", str(bundle))
+    if listed.returncode != 0:
+        detail = (listed.stderr or listed.stdout).strip()
+        raise RuntimeError(f"bundle list-heads failed: {detail}")
+    found: dict[str, str] = {}
+    for line in listed.stdout.splitlines():
+        parts = line.split()
+        if len(parts) != 2 or not parts[1].startswith("refs/heads/"):
+            continue
+        name = parts[1].removeprefix("refs/heads/")
+        if not SHA_RE.fullmatch(parts[0]):
+            raise RuntimeError("bundle listed an invalid SHA")
+        found[name] = parts[0]
+    missing = [name for name, sha in expected.items() if found.get(name) != sha]
+    if missing:
+        raise RuntimeError("bundle is missing a head: " + ", ".join(missing))
+
+
+def _write_verified_bundle(repo: Path, confirmed: list[tuple[Decision, Branch]]) -> tuple[Path, str]:
+    """Verify a private bundle, then publish without replacing any existing name."""
+    directory = _controlled_file(repo, ARCHIVE_DIR, refusal="archive path contains a symlink")
+    try:
+        _ensure_ledger_directory(directory)
+    except RuntimeError as exc:
+        if "symlink" in str(exc):
+            raise
+        raise RuntimeError(f"bundle path unwritable: {exc}") from exc
+    expected: dict[str, str] = {}
+    refs: list[str] = []
+    for _verdict, branch in confirmed:
+        if not _valid(branch.name, repo) or branch.local_sha is None:
+            raise RuntimeError(f"archive retained: unsafe branch name {branch.name}")
+        refs.append(f"refs/heads/{branch.name}")
+        expected[branch.name] = branch.local_sha
+    main_ref = "refs/remotes/origin/main"
+    if _git(repo, "rev-parse", "--verify", "--quiet", main_ref).returncode != 0:
+        raise RuntimeError("archive retained: origin/main is unavailable")
+    prefix = f".stale-local-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}-"
+    TMPDIR = os.environ.get("TMPDIR") or ensure_scratch_root()
+    descriptor, temporary_name = tempfile.mkstemp(prefix=prefix, suffix=".tmp", dir=TMPDIR)
+    os.close(descriptor)
+    temporary = Path(temporary_name)
+    filename = temporary.name.removeprefix(".").removesuffix(".tmp") + ".bundle"
+    bundle_path = directory / filename
+    relative = (ARCHIVE_DIR / filename).as_posix()
+    try:
+        _checked(repo, "bundle", "create", str(temporary), *refs, "--not", main_ref)
+        _seal_regular_file(temporary)
+        _verify_bundle_heads(repo, temporary, expected)
+        # link() is atomic and refuses an existing destination, even a symlink.
+        # A cross-filesystem scratch root fails closed; never copy into a live archive name.
+        os.link(temporary, bundle_path, follow_symlinks=False)
+        _seal_regular_file(bundle_path)
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        if isinstance(exc, OSError):
+            raise RuntimeError(f"bundle path unwritable: {exc}") from exc
+        raise
+    finally:
+        # Only this run's private staging file is disposable. Published archives stay.
+        _unlink_unverified(temporary)
+    return bundle_path, relative
+
+
+def _write_archive_receipts(
+    repo: Path,
+    confirmed: list[tuple[Decision, Branch]],
+    *,
+    bundle_path: Path,
+    relative: str,
+) -> None:
+    """Append one receipt per branch, then re-read those lines before any delete."""
+    checksum = _bundle_sha256(bundle_path)
+    stamped = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    path = _controlled_file(repo, RECEIPT_PATH, refusal="archive path contains a symlink")
+    _ensure_ledger_directory(path.parent)
+    try:
+        info = os.lstat(path)
+    except FileNotFoundError:
+        offset = 0
+    else:
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+            raise RuntimeError("archive receipt path is not a regular file")
+        offset = info.st_size
+    _parse_archive_receipts(_read_from(path, 0) if offset else b"")
+    payloads: list[dict[str, object]] = []
+    for _verdict, branch in confirmed:
+        sha = branch.local_sha
+        if sha is None:
+            raise RuntimeError("archive receipt requires a local SHA")
+        refspec = f"refs/heads/{branch.name}:refs/heads/{branch.name}"
+        payload: dict[str, object] = {
+            "at": stamped,
+            "branch": branch.name,
+            "bundle": relative,
+            "remote_copy": branch.remote_sha is not None,
+            "restore": f"git fetch {shlex.quote(str(bundle_path))} {shlex.quote(refspec)}",
+            "restore_prerequisites": (
+                "This thin bundle needs its prerequisite commits present. Fetch them from origin "
+                "or run the restore command in a clone of this repository."
+            ),
+            "sha": sha,
+            "sha256": checksum,
+        }
+        payloads.append(payload)
+        _append_ledger_line(repo, payload, relative=RECEIPT_PATH)
+    body = _read_from(path, offset)
+    parsed = _parse_archive_receipts(body)
+    if parsed != payloads:
+        raise RuntimeError("archive receipt does not match what was written")
+
+
+def _parse_archive_receipts(body: bytes) -> list[dict[str, object]]:
+    """Require complete LF-terminated JSON objects, including every existing record."""
+    if not body:
+        return []
+    reason = f"invalid archive receipt ledger {RECEIPT_PATH.as_posix()}"
+    if not body.endswith(b"\n"):
+        raise RuntimeError(f"{reason}: truncated tail")
+    try:
+        parsed = [json.loads(line) for line in jsonl_lines(body.decode("utf-8"))[:-1]]
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"{reason}: record is not valid JSON") from exc
+    if any(not isinstance(row, dict) for row in parsed):
+        raise RuntimeError(f"{reason}: record is not an object")
+    return parsed
+
+
+def _archive_local_snapshot(
+    repo: Path,
+    *,
+    branches: list[Branch] | None = None,
+    worktrees: list[reaper.WorktreeInfo] | None = None,
+) -> dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]]:
+    """Freeze ref, worktree registration and complete task-record state per branch."""
+    refs = _refs(repo) if branches is None else branches
+    trees = reaper.list_git_worktrees(repo) if worktrees is None else worktrees
+    records = _task_records(repo)
+    tasks: dict[str, list[str]] = {}
+    for path, state in records:
+        finished = _task_finished_at(state, path)
+        signature = json.dumps([path.name, state, finished.isoformat() if finished else None], sort_keys=True)
+        for name in _task_branch_names(state):
+            tasks.setdefault(name, []).append(signature)
+    return {
+        branch.name: (
+            branch,
+            tuple(
+                sorted(
+                    (
+                        tree
+                        for tree in trees
+                        if tree.branch == branch.name
+                        or (tree.detached and tree.head in {branch.local_sha, branch.remote_sha} - {None})
+                    ),
+                    key=lambda tree: str(tree.path),
+                )
+            ),
+            tuple(sorted(tasks.get(branch.name, []))),
+        )
+        for branch in refs
+    }
+
+
+def _archive_pr_snapshot(
+    repo: Path, names: list[str], pr_lookup: PrLookup
+) -> dict[str, tuple[list[reaper.PullRequestState], str | None]]:
+    """Read the entire selected PR guard batch before inspecting local guards.
+
+    Production uses one GraphQL response, never N sequential branch queries.
+    Injected branch readers must agree across two complete passes. They are a
+    test/embedding seam, not a substitute for the production batch response.
+    """
+    if pr_lookup is not reaper._query_pr_states:
+        first = {name: pr_lookup(repo, name) for name in names}
+        second = {name: pr_lookup(repo, name) for name in names}
+        return {
+            name: second[name] if first[name] == second[name] else ([], "PR state changed during batch snapshot")
+            for name in names
+        }
+    slug = reaper._github_owner_repo(repo)
+    error = "batch PR snapshot unavailable or incomplete"
+    unavailable = {name: ([], error) for name in names}
+    if slug is None:
+        return unavailable
+    owner, repository = slug
+    fields = " ".join(
+        f"b{index}:pullRequests(headRefName:{json.dumps(name)},states:[OPEN,CLOSED,MERGED],first:100)"
+        "{nodes{number state headRefOid} pageInfo{hasNextPage}}"
+        for index, name in enumerate(names)
+    )
+    query = f"query{{repository(owner:{json.dumps(owner)},name:{json.dumps(repository)}){{{fields}}}}}"
+    try:
+        result = github_client.run(
+            ["gh", "api", "graphql", "-f", f"query={query}"],
+            cwd=repo,
+            timeout=30,
+            fresh=True,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=sanitized_git_env(),
+        )
+    except (OSError, subprocess.SubprocessError):
+        return unavailable
+    if result.returncode:
+        return unavailable
+    try:
+        payload = json.loads(result.stdout)
+        if not isinstance(payload, dict) or payload.get("errors"):
+            return unavailable
+        data = payload["data"]["repository"]
+        found: dict[str, tuple[list[reaper.PullRequestState], str | None]] = {}
+        for index, name in enumerate(names):
+            connection = data[f"b{index}"]
+            if connection["pageInfo"]["hasNextPage"] is not False:
+                return unavailable
+            rows = connection["nodes"]
+            if not isinstance(rows, list):
+                return unavailable
+            states: list[reaper.PullRequestState] = []
+            for row in rows:
+                number, state, sha = row["number"], row["state"], row["headRefOid"]
+                if (
+                    isinstance(number, bool)
+                    or not isinstance(number, int)
+                    or number <= 0
+                    or state not in {"OPEN", "CLOSED", "MERGED"}
+                    or not isinstance(sha, str)
+                    or not SHA_RE.fullmatch(sha)
+                ):
+                    return unavailable
+                states.append(reaper.PullRequestState(number, state, sha))
+            found[name] = (states, None)
+        return found
+    except (KeyError, TypeError, ValueError):
+        return unavailable
+
+
+def _archive_delete_blockers(
+    repo: Path,
+    confirmed: list[tuple[Decision, Branch]],
+    *,
+    protected: set[str],
+    pr_lookup: PrLookup,
+    issue_lookup: IssueLookup,
+    evidence_cache: _EvidenceCache,
+    archive_after_days: int,
+    classification_snapshot: dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]],
+) -> list[tuple[str, str]]:
+    """Finish every PR read, then compare a complete local snapshot with classification."""
+    prs = _archive_pr_snapshot(repo, [branch.name for _, branch in confirmed], pr_lookup)
+    found = {item.name: item for item in _refs(repo)}
+    worktrees = reaper.list_git_worktrees(repo)
+    worktree_branches = {item.branch for item in worktrees if item.branch}
+    detached_heads = {item.head for item in worktrees if item.detached and item.head}
+    active = _active_tasks(repo)
+    recent = _recent_released_tasks(repo)
+    final_snapshot = _archive_local_snapshot(repo, branches=list(found.values()), worktrees=worktrees)
+    blockers: list[tuple[str, str]] = []
+    for _verdict, branch in confirmed:
+        current = found.get(branch.name)
+        archived = branch.local_sha
+        if current is None or archived is None or current.local_sha != archived:
+            blockers.append((branch.name, "local head is not the archived SHA"))
+            continue
+        fresh = _classify(
+            repo,
+            current,
+            worktree_branches=worktree_branches,
+            detached_heads=detached_heads,
+            active_tasks=active,
+            protected_branches=protected,
+            pr_lookup=lambda _repo, name: prs[name],
+            issue_lookup=issue_lookup,
+            evidence_cache=evidence_cache,
+            archive_after_days=archive_after_days,
+            recent_tasks=recent,
+        )
+        if fresh.classification != "archive-expired" or fresh.local_sha != archived:
+            blockers.append((branch.name, f"{fresh.classification}: {fresh.reason}"))
+        elif final_snapshot.get(branch.name) != classification_snapshot.get(branch.name):
+            blockers.append((branch.name, "ref, worktree or task record changed since classification"))
+    return blockers
+
+
+def _delete_archived_refs(repo: Path, pairs: list[tuple[str, str]]) -> None:
+    """Delete every ref in one transaction, each only if it still has the archived SHA."""
+    if not pairs:
+        return
+    lines: list[str] = []
+    for name, sha in pairs:
+        if not _valid(name, repo) or not SHA_RE.fullmatch(sha):
+            raise RuntimeError(f"unsafe ref {name}")
+        lines.append(f"delete refs/heads/{name} {sha}\n")
+    # No network or other work follows these last local checks before the ref
+    # transaction. Guard changes after these reads remain the residual window;
+    # expected SHAs bound head moves, and --no-deref protects symbolic targets.
+    trees = reaper.list_git_worktrees(repo)
+    active = _active_tasks(repo) | _recent_released_tasks(repo)
+    for name, sha in pairs:
+        if any(tree.branch == name or (tree.detached and tree.head == sha) for tree in trees):
+            raise RuntimeError(f"{name}: skipped-worktree at final delete check")
+        if name in active:
+            raise RuntimeError(f"{name}: skipped-live-task or recent task at final delete check")
+    result = _git(repo, "update-ref", "--stdin", "--no-deref", input="".join(lines))
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout or "").strip()
+        raise RuntimeError(detail or f"git update-ref exited {result.returncode}")
+
+
+def _apply_archive(
+    repo: Path,
+    decisions: list[Decision],
+    *,
+    protected: set[str],
+    pr_lookup: PrLookup,
+    issue_lookup: IssueLookup,
+    evidence_cache: _EvidenceCache,
+    archive_after_days: int,
+    classification_snapshot: dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]],
+) -> list[Decision]:
+    """Hold the archive lock from fresh validation through compare-and-delete."""
+    selected = [item for item in decisions if item.classification == "archive-expired"]
+    if not selected:
+        return decisions
+    try:
+        with _archive_lock(repo):
+            return _apply_archive_locked(
+                repo,
+                decisions,
+                protected=protected,
+                pr_lookup=pr_lookup,
+                issue_lookup=issue_lookup,
+                evidence_cache=evidence_cache,
+                archive_after_days=archive_after_days,
+                classification_snapshot=classification_snapshot,
+            )
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        return [
+            _retain_archive(item, f"archive retained: {exc}") if item.classification == "archive-expired" else item
+            for item in decisions
+        ]
+
+
+def _apply_archive_locked(
+    repo: Path,
+    decisions: list[Decision],
+    *,
+    protected: set[str],
+    pr_lookup: PrLookup,
+    issue_lookup: IssueLookup,
+    evidence_cache: _EvidenceCache,
+    archive_after_days: int,
+    classification_snapshot: dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]],
+) -> list[Decision]:
+    """Bundle, verify, and receipt every expired local branch, then delete those local refs."""
+    selected = [item for item in decisions if item.classification == "archive-expired"]
+    indexes = {item.branch: index for index, item in enumerate(decisions)}
+    found = {item.name: item for item in _refs(repo)}
+    worktrees = reaper.list_git_worktrees(repo)
+    worktree_branches = {item.branch for item in worktrees if item.branch}
+    detached_heads = {item.head for item in worktrees if item.detached and item.head}
+    active = _active_tasks(repo)
+    recent = _recent_released_tasks(repo)
+    confirmed: list[tuple[Decision, Branch]] = []
+    rejected: dict[str, str] = {}
+    for verdict in selected:
+        index = indexes[verdict.branch]
+        branch = found.get(verdict.branch)
+        if branch is None or branch.local_sha is None or branch.local_sha != verdict.local_sha:
+            rejected[verdict.branch] = "local head changed before bundling"
+            continue
+        fresh = _classify(
+            repo,
+            branch,
+            worktree_branches=worktree_branches,
+            detached_heads=detached_heads,
+            active_tasks=active,
+            protected_branches=protected,
+            pr_lookup=pr_lookup,
+            issue_lookup=issue_lookup,
+            evidence_cache=evidence_cache,
+            archive_after_days=archive_after_days,
+            recent_tasks=recent,
+        )
+        if fresh.classification != "archive-expired" or fresh.local_sha != branch.local_sha:
+            rejected[verdict.branch] = f"{fresh.classification}: {fresh.reason}"
+            continue
+        decisions[index] = fresh
+        confirmed.append((fresh, branch))
+    if rejected:
+        described = "; ".join(f"{name}: {why}" for name, why in rejected.items())
+        for verdict in selected:
+            why = rejected.get(verdict.branch, "another branch in the batch failed validation")
+            decisions[indexes[verdict.branch]] = _retain_archive(
+                verdict, f"archive retained: {why}; batch kept ({described})"
+            )
+        return decisions
+    confirmed.sort(key=lambda pair: pair[0].branch)
+    try:
+        bundle_path, relative = _write_verified_bundle(repo, confirmed)
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        reason = str(exc) if str(exc).startswith("archive retained:") else f"archive retained: {exc}"
+        for verdict, _branch in confirmed:
+            decisions[indexes[verdict.branch]] = _retain_archive(verdict, reason)
+        return decisions
+    try:
+        _write_archive_receipts(repo, confirmed, bundle_path=bundle_path, relative=relative)
+    except (OSError, RuntimeError) as exc:
+        reason = f"archive retained: receipt failed before deletion: {exc}"
+        for verdict, _branch in confirmed:
+            decisions[indexes[verdict.branch]] = _retain_archive(verdict, reason)
+        return decisions
+    blockers = _archive_delete_blockers(
+        repo,
+        confirmed,
+        protected=protected,
+        pr_lookup=pr_lookup,
+        issue_lookup=issue_lookup,
+        evidence_cache=evidence_cache,
+        archive_after_days=archive_after_days,
+        classification_snapshot=classification_snapshot,
+    )
+    if blockers:
+        described = "; ".join(f"{name}: {why}" for name, why in blockers)
+        by_branch = dict(blockers)
+        for verdict, branch in confirmed:
+            why = by_branch.get(branch.name, "another branch in the batch failed validation")
+            decisions[indexes[verdict.branch]] = _retain_archive(
+                verdict,
+                f"archive retained: {why}; batch kept ({described})",
+            )
+        return decisions
+    try:
+        pairs: list[tuple[str, str]] = []
+        for _verdict, branch in confirmed:
+            sha = branch.local_sha
+            if sha is None:
+                raise RuntimeError(f"{branch.name} has no archived SHA")
+            pairs.append((branch.name, sha))
+        _delete_archived_refs(repo, pairs)
+    except (OSError, RuntimeError) as exc:
+        reason = f"archive retained: compare-and-delete failed: {exc}"
+        for verdict, _branch in confirmed:
+            decisions[indexes[verdict.branch]] = _retain_archive(verdict, reason)
+        return decisions
+    for verdict, _branch in confirmed:
+        decisions[indexes[verdict.branch]] = replace(verdict, local_deleted=True, remote_deleted=False)
+    return decisions
+
+
+def _review_bundle_decisions(repo: Path) -> list[Decision]:
+    """List archive bundles at least 90 days old. Never delete them."""
+    try:
+        directory = _controlled_file(repo, ARCHIVE_DIR, refusal="archive path contains a symlink")
+    except RuntimeError:
+        return []
+    if not directory.exists():
+        return []
+    info = os.lstat(directory)
+    if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode):
+        return []
+    now = datetime.now(UTC).timestamp()
+    listed: list[Decision] = []
+    for path in sorted(directory.iterdir(), key=lambda item: item.name):
+        try:
+            child = os.lstat(path)
+        except OSError:
+            continue
+        if stat.S_ISLNK(child.st_mode) or not stat.S_ISREG(child.st_mode) or path.suffix != ".bundle":
+            continue
+        age_days = max(0, int(now - child.st_mtime) // 86400)
+        if age_days < BUNDLE_REVIEW_DAYS:
+            continue
+        listed.append(
+            Decision(
+                (ARCHIVE_DIR / path.name).as_posix(),
+                "review-bundle",
+                "bundle older than 90 days; listed for review; not deleted",
+                None,
+                None,
+                age_days,
+            )
+        )
+    return listed
+
+
+def _archive_after_days_arg(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("archive-after-days must be an integer") from exc
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("archive-after-days must be zero or greater")
+    return parsed
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "List stale agent and scratch branches, including landed work proven by patch-id or a merged pull request.\n"
-            "Use after dispatch cleanup. Dry run is the default; --apply deletes only branches the sweep has proved safe."
+            "Use after dispatch cleanup. Dry run is the default; --apply deletes proved-safe branches and archives\n"
+            "expired local report-only branches. Do not use it to delete remote branches or archive bundles."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.hygiene.branch_sweep --json\n"
             "  .venv/bin/python -m scripts.hygiene.branch_sweep --apply --json\n"
+            "  .venv/bin/python -m scripts.hygiene.branch_sweep --archive-after-days 14 --json\n"
             "Outputs: stdout decisions. --apply appends batch_state/branch-archive/evidence.jsonl on the\n"
             "control-plane checkout before deleting qualifying remote and local refs, then appends an outcome\n"
             "line (remote_deleted, local_deleted, error) and prunes tracking refs.\n"
-            "Exit codes: 0 = sweep succeeded; 1 = repository or probe failure.\n"
-            "Related: issue #9129; issue #9909; docs/runbooks/worktree-cleanup.md; drive-epic §7a."
+            "Local report-only branches with no pull request, worktree, or live task, whose age in whole days\n"
+            "is at least N (default: 7), are archive-expired. --apply writes one bundle under\n"
+            "batch_state/branch-archive/, runs git bundle verify, checks every head, appends one receipt line\n"
+            "per branch to stale-local-receipts.jsonl. The bundle excludes history already on origin/main.\n"
+            "The receipt is re-read, every guard is checked again, and one compare-and-delete then removes\n"
+            "only those local refs. Any failure keeps the whole batch. Remote refs stay.\n"
+            "Bundles at least 90 days old are listed as review-bundle and are never deleted.\n"
+            "Exit codes: 0 = sweep succeeded; 1 = repository or probe failure; 2 = invalid arguments.\n"
+            "Related: issue #9129; issue #9909; issue #10532; docs/runbooks/worktree-cleanup.md; drive-epic §7a."
         ),
     )
     parser.add_argument(
         "--apply",
         action="store_true",
         help="Delete proved-safe branches and append an evidence receipt; default is a dry run that deletes nothing.",
+    )
+    parser.add_argument(
+        "--archive-after-days",
+        type=_archive_after_days_arg,
+        default=DEFAULT_ARCHIVE_AFTER_DAYS,
+        metavar="N",
+        help=(
+            "Whole days at or above which a local report-only branch with no pull request, worktree, or live "
+            "task is archived (default: 7). Example: --archive-after-days 14. Dry-run lists those branches; "
+            "--apply writes one verified bundle and receipt, then deletes only the local ref."
+        ),
     )
     parser.add_argument("--json", action="store_true", help="Print JSON decisions; default is one readable line each.")
     return parser
@@ -1042,32 +1908,47 @@ def _format_decision(item: Decision) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    token = _ARCHIVE_AFTER_DAYS.set(args.archive_after_days)
     try:
-        repo = reaper.resolve_repo_root()
-        decisions = sweep(repo, apply=args.apply)
-    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        try:
+            repo = reaper.resolve_repo_root()
+            decisions = sweep(repo, apply=args.apply)
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            if args.json:
+                print(
+                    json.dumps(
+                        {
+                            "ok": False,
+                            "error": str(exc),
+                            "archive_after_days": args.archive_after_days,
+                            "decisions": [asdict(d) for d in exc.decisions] if isinstance(exc, SweepError) else [],
+                        }
+                    )
+                )
+            else:
+                if isinstance(exc, SweepError):
+                    for item in exc.decisions:
+                        print(_format_decision(item))
+                print(f"branch_sweep: {exc}", file=sys.stderr)
+            return 1
         if args.json:
             print(
                 json.dumps(
                     {
-                        "ok": False,
-                        "error": str(exc),
-                        "decisions": [asdict(d) for d in exc.decisions] if isinstance(exc, SweepError) else [],
-                    }
+                        "ok": True,
+                        "apply": args.apply,
+                        "archive_after_days": args.archive_after_days,
+                        "decisions": [asdict(d) for d in decisions],
+                    },
+                    indent=2,
                 )
             )
         else:
-            if isinstance(exc, SweepError):
-                for item in exc.decisions:
-                    print(_format_decision(item))
-            print(f"branch_sweep: {exc}", file=sys.stderr)
-        return 1
-    if args.json:
-        print(json.dumps({"ok": True, "apply": args.apply, "decisions": [asdict(d) for d in decisions]}, indent=2))
-    else:
-        for item in decisions:
-            print(_format_decision(item))
-    return 0
+            for item in decisions:
+                print(_format_decision(item))
+        return 0
+    finally:
+        _ARCHIVE_AFTER_DAYS.reset(token)
 
 
 if __name__ == "__main__":
