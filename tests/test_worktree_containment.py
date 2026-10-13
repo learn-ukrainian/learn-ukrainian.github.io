@@ -12,6 +12,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+import threading
 from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
@@ -167,7 +168,7 @@ def _worktree_gitdir(worktree: Path) -> Path:
 
 
 @pytest.mark.parametrize(
-    "tamper",
+    "defect",
     [
         "no_git",
         "symlinked_dot_git",
@@ -178,35 +179,98 @@ def _worktree_gitdir(worktree: Path) -> Path:
         "broken_back_link",
         "foreign_commondir",
         "symlinked_common_dir",
+        "symlinked_worktrees_dir",
+        "empty_dot_git_dir",
+        "primary_without_head",
+        "primary_with_malformed_head",
+        "primary_without_objects",
+        "worktree_gitdir_without_head",
+        "fabricated_store",
+        "nul_byte_link",
     ],
 )
-def test_resolve_main_root_without_git_refuses_unexpected_links(layout: Layout, tamper: str):
+def test_resolve_main_root_without_git_refuses_unexpected_links(layout: Layout, defect: str):
     worktree = layout.dispatch_wt
     gitdir = _worktree_gitdir(worktree)
     target = worktree
-    if tamper == "no_git":
+    if defect == "no_git":
         target = layout.outside
-    elif tamper == "symlinked_dot_git":
+    elif defect == "symlinked_worktrees_dir":
+        # An intermediate component of the derived gitdir path, not only its ends.
+        moved = layout.main.parent / "moved-worktrees"
+        (layout.main / ".git" / "worktrees").rename(moved)
+        (layout.main / ".git" / "worktrees").symlink_to(moved, target_is_directory=True)
+    elif defect == "empty_dot_git_dir":
+        (layout.outside / ".git").mkdir()
+        target = layout.outside
+    elif defect == "primary_without_head":
+        (layout.main / ".git" / "HEAD").unlink()
+        target = layout.main
+    elif defect == "primary_with_malformed_head":
+        (layout.main / ".git" / "HEAD").write_text("not a ref\n")
+    elif defect == "primary_without_objects":
+        shutil.rmtree(layout.main / ".git" / "objects")
+    elif defect == "worktree_gitdir_without_head":
+        (gitdir / "HEAD").unlink()
+    elif defect == "fabricated_store":
+        # Mutually consistent links into a store that is not a repository.
+        store = layout.outside / "fake" / ".git" / "worktrees" / "wt"
+        store.mkdir(parents=True)
+        target = layout.outside / "wt"
+        target.mkdir()
+        (target / ".git").write_text(f"gitdir: {store}\n")
+        (store / "gitdir").write_text(f"{target / '.git'}\n")
+        (store / "commondir").write_text("../..\n")
+        (store / "HEAD").write_text("ref: refs/heads/main\n")
+    elif defect == "nul_byte_link":
+        (worktree / ".git").write_text(f"gitdir: {gitdir}\x00x\n")
+    elif defect == "symlinked_dot_git":
         (worktree / ".git").unlink()
         (worktree / ".git").symlink_to(layout.main / ".git")
-    elif tamper == "gitdir_outside_worktrees":
+    elif defect == "gitdir_outside_worktrees":
         (worktree / ".git").write_text(f"gitdir: {layout.main / '.git'}\n")
-    elif tamper == "relative_link_outside_worktrees":
+    elif defect == "relative_link_outside_worktrees":
         (worktree / ".git").write_text("gitdir: ../elsewhere\n")
-    elif tamper == "multi_line_link":
+    elif defect == "multi_line_link":
         (worktree / ".git").write_text(f"gitdir: {gitdir}\nextra\n")
-    elif tamper == "oversized_link":
+    elif defect == "oversized_link":
         (worktree / ".git").write_text("gitdir: " + "x" * 5000 + "\n")
-    elif tamper == "broken_back_link":
+    elif defect == "broken_back_link":
         (gitdir / "gitdir").write_text(f"{layout.flat_wt / '.git'}\n")
-    elif tamper == "foreign_commondir":
+    elif defect == "foreign_commondir":
         (gitdir / "commondir").write_text(f"{layout.outside}\n")
-    elif tamper == "symlinked_common_dir":
+    elif defect == "symlinked_common_dir":
         moved = layout.main.parent / "store"
         (layout.main / ".git").rename(moved)
         (layout.main / ".git").symlink_to(moved, target_is_directory=True)
     with pytest.raises(wc.NotAGitRepositoryError):
         wc.resolve_main_root_without_git(target)
+
+
+@pytest.mark.parametrize("link", [".git", "gitdir", "commondir", "HEAD"])
+def test_resolve_main_root_without_git_refuses_a_fifo_link_without_blocking(layout: Layout, link: str):
+    worktree = layout.dispatch_wt
+    gitdir = _worktree_gitdir(worktree)
+    fifo = worktree / ".git" if link == ".git" else gitdir / link
+    fifo.unlink()
+    os.mkfifo(fifo)
+    outcome: dict[str, BaseException] = {}
+
+    def resolve() -> None:
+        try:
+            wc.resolve_main_root_without_git(worktree)
+        except BaseException as exc:  # recorded for the assertion below
+            outcome["raised"] = exc
+
+    thread = threading.Thread(target=resolve, daemon=True)
+    thread.start()
+    thread.join(timeout=10)
+    if thread.is_alive():
+        # Give the blocked reader a writer so the thread can end, then fail.
+        os.close(os.open(fifo, os.O_WRONLY | os.O_NONBLOCK))
+        thread.join(timeout=10)
+        pytest.fail(f"resolution blocked on a FIFO {link}")
+    assert isinstance(outcome.get("raised"), wc.NotAGitRepositoryError)
 
 
 def test_resolve_main_root_without_git_follows_relative_worktree_links(layout: Layout):
