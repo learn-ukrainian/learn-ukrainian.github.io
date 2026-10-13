@@ -1,7 +1,79 @@
 import subprocess
 
+import pytest
+
 from scripts.audit import lint_opsec_leaks as opsec_linter
 from scripts.audit.lint_opsec_leaks import check_content
+
+
+@pytest.fixture
+def pushed_range(monkeypatch, tmp_path):
+    def git(*args):
+        return subprocess.check_output(["git", *args], cwd=tmp_path, text=True, timeout=30).strip()
+
+    git("init", "--initial-branch=main")
+    git("config", "user.email", "ci@example.invalid")
+    git("config", "user.name", "ci")
+    path = tmp_path / "docs/push-scan.md"
+    path.parent.mkdir()
+    path.write_text("clean base\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "base")
+    base = git("rev-parse", "HEAD")
+    monkeypatch.setattr(opsec_linter, "REPO_ROOT", tmp_path)
+    return git, path, base
+
+
+@pytest.mark.parametrize("ending", ["reverted", "deleted"])
+def test_push_range_refuses_sensitive_value_removed_before_head(pushed_range, monkeypatch, capsys, ending):
+    git, path, base = pushed_range
+    marker = "-----BEGIN " + "PRIVATE KEY-----"
+    path.write_text(marker + "\n", encoding="utf-8")
+    git("commit", "-am", "introduce synthetic sentinel")
+    if ending == "deleted":
+        path.unlink()
+    else:
+        path.write_text("clean base\n", encoding="utf-8")
+    git("commit", "-am", "remove synthetic sentinel")
+    monkeypatch.setenv("PRE_COMMIT_FROM_REF", base)
+    monkeypatch.setenv("PRE_COMMIT_TO_REF", git("rev-parse", "HEAD"))
+
+    assert opsec_linter.main([]) == 1
+    output = capsys.readouterr()
+    assert marker not in output.out + output.err
+    assert "Private Key Header" in output.out
+
+
+def test_clean_multi_commit_push_range_passes(pushed_range, monkeypatch):
+    git, path, base = pushed_range
+    for content in ("first clean version\n", "clean base\n"):
+        path.write_text(content, encoding="utf-8")
+        git("commit", "-am", "clean change")
+    monkeypatch.setenv("PRE_COMMIT_FROM_REF", base)
+    monkeypatch.setenv("PRE_COMMIT_TO_REF", git("rev-parse", "HEAD"))
+
+    assert opsec_linter.main([]) == 0
+
+
+def test_commit_range_fails_closed_when_selected_blob_is_unreadable(pushed_range, monkeypatch, capsys):
+    git, path, base = pushed_range
+    path.write_text("clean change\n", encoding="utf-8")
+    git("commit", "-am", "change")
+    monkeypatch.setattr(opsec_linter, "get_git_content", lambda path, rev: None)
+
+    assert opsec_linter.main(["--commit-range", f"{base}..HEAD"]) == 1
+    assert "unreadable selected blob" in capsys.readouterr().err
+
+
+def test_commit_range_named_staged_reads_committed_blobs(pushed_range):
+    git, path, base = pushed_range
+    path.write_text("-----BEGIN " + "PRIVATE KEY-----\n", encoding="utf-8")
+    git("commit", "-am", "introduce synthetic sentinel")
+    git("branch", "staged-publication")
+    path.write_text("clean base\n", encoding="utf-8")
+    git("add", str(path.relative_to(path.parents[1])))
+
+    assert opsec_linter.main(["--commit-range", f"{base}..staged-publication"]) == 1
 
 
 def test_f002_pkcs8_unqualified_private_key_detected():
@@ -217,17 +289,8 @@ def test_commit_range_mode_keeps_union_of_touched_public_paths(monkeypatch, tmp_
     head = git("rev-parse", "HEAD")
 
     monkeypatch.setattr(opsec_linter, "REPO_ROOT", tmp_path)
-    scanned_paths: list[str] = []
-
-    def get_content(path: str, rev: str) -> str:
-        scanned_paths.append(path)
-        assert rev == head
-        return "clean content"
-
-    monkeypatch.setattr(opsec_linter, "get_git_content", get_content)
-
-    assert opsec_linter.main(["--commit-range", f"{base}..{head}", "--public-identifiers"]) == 0
-    assert scanned_paths == ["site/src/data/changed.json"]
+    # Read real historical blobs: retaining the path union alone is insufficient.
+    assert opsec_linter.main(["--commit-range", f"{base}..{head}", "--public-identifiers"]) == 1
 
 
 def test_private_tracker_citation_detected_in_public_docs():

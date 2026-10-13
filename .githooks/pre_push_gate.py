@@ -46,7 +46,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 3
+GATE_VERSION = 4
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -1148,6 +1148,31 @@ def run_pre_commit_stage(
     if code != 0:
         hooks = tuple(dict.fromkeys(name.strip() for name in PRE_COMMIT_FAILED_RE.findall(output)))
         raise GateOutcome("pre_commit_failed", tail(output), failing=hooks)
+    # pre-commit's net-diff filename selection may skip OPSEC entirely when
+    # intermediate changes cancel out. Always inspect the outgoing history.
+    code, output = run_bounded(
+        ["bash", launcher, "scripts/audit/lint_opsec_leaks.py", "--commit-range", f"{plan.base}..{plan.head}"],
+        cwd=root,
+        deadline=deadline,
+        label="per-commit OPSEC scan",
+        diagnostics=diagnostics,
+    )
+    if code != 0:
+        raise GateOutcome("pre_commit_failed", tail(output), failing=("lint-opsec-leaks",))
+    # Select the existing hook explicitly at its installed stage so its exact
+    # learner-surface filter and scanner remain the source of truth.
+    code, output = run_bounded(
+        [
+            "bash", launcher, "-m", "pre_commit", "run", "check-no-internal-ids",
+            "--hook-stage", "pre-commit", "-c", config, "--from-ref", plan.base, "--to-ref", plan.head,
+        ],
+        cwd=root,
+        deadline=deadline,
+        label="learner-surface internal-ID scan",
+        diagnostics=diagnostics,
+    )
+    if code != 0:
+        raise GateOutcome("pre_commit_failed", tail(output), failing=("check-no-internal-ids",))
 
 
 def test_process_limit() -> int:
@@ -1628,10 +1653,18 @@ def attempt_fingerprints(root: Path, launcher: str, config: str, text: str) -> d
 
 
 def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(
+        description=__doc__.splitlines()[0] + "\nInvoked by the tracked pre-push hook, with Git ref updates on stdin.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example:\n  pre_push_gate.py --launcher scripts/pre_commit/project_python.sh "
+        "--config .pre-commit-config.yaml < ref-updates.txt\n"
+        "Outputs: private gate receipts and measurements; refusal diagnostics on stderr.\n"
+        "Exit codes: 0 green; 1 refused; 75 validation incomplete.\n"
+        "Related: docs/runbooks/pre-push-gate.md.",
+    )
     parser.add_argument("--launcher", required=True, help="project_python.sh path")
     parser.add_argument("--config", required=True, help=".pre-commit-config.yaml path")
-    parser.add_argument("remote", nargs="*")
+    parser.add_argument("remote", nargs="*", help="Git-supplied remote arguments; default: none")
     arguments = parser.parse_args(argv)
 
     started = time.monotonic()

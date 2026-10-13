@@ -11,6 +11,12 @@ tracked changes:
 
 1. `pre-commit run --hook-stage pre-push --from-ref <base> --to-ref <head>` over the outgoing range.
    `<base>` is the remote tip when it is an ancestor, else the merge-base with `origin/main`.
+   The same bounded stage then always runs `lint_opsec_leaks.py --commit-range <base>..<head>`.
+   It reads each commit's version of its touched files, including values later reverted or files
+   later deleted. Missing selected blobs refuse the push; diagnostics omit matched values.
+   It also runs the existing `check-no-internal-ids` hook explicitly with `--hook-stage pre-commit`
+   and the same `--from-ref`/`--to-ref` pair. This preserves that hook's exact learner-surface
+   file filter and detection rules while enforcing it during the push gate.
 2. The invariant registry: `KNOWN_REPO_WIDE_MODULES` and `KNOWN_REPO_WIDE_FUNCTIONS` in
    `tests/test_repo_wide_marker_invariant.py`, read by AST and deduplicated (a function id is dropped
    when its whole file is selected). Its version is a digest of the gate version and the ids.

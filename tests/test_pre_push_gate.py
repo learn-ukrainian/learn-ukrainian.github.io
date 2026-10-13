@@ -18,6 +18,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
 from tests.helpers.python import project_python
 from tests.wait_helpers import wait_for_line
@@ -55,6 +56,21 @@ PRE_COMMIT = textwrap.dedent(
 )
 GREEN_TEST = "def test_ok():\n    assert True\n"
 RED_TEST = "def test_broken():\n    assert False\n"
+
+
+def _install_surface_scanners(root: Path) -> None:
+    """Use the maintained scanners and the actual learner-surface hook filter."""
+    audit = root / "scripts/audit"
+    audit.mkdir(parents=True, exist_ok=True)
+    for name in ("lint_opsec_leaks.py", "check_no_internal_ids.py"):
+        shutil.copyfile(REPO_ROOT / "scripts/audit" / name, audit / name)
+    actual = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text())
+    internal_hook = next(
+        hook for repo in actual["repos"] for hook in repo.get("hooks", []) if hook["id"] == "check-no-internal-ids"
+    )
+    config = yaml.safe_load(PRE_COMMIT)
+    config["repos"][0]["hooks"].append(internal_hook)
+    _write(root, ".pre-commit-config.yaml", yaml.safe_dump(config))
 
 
 def _load_gate():
@@ -110,7 +126,7 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     launcher.parent.mkdir(parents=True)
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     launcher.chmod(0o755)
-    _write(root, ".pre-commit-config.yaml", PRE_COMMIT)
+    _install_surface_scanners(root)
     _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
     _write(root, "tests/test_invariant.py", GREEN_TEST)
@@ -330,6 +346,65 @@ def _plan(**overrides):
     }
     values.update(overrides)
     return gate.Plan(**values)
+
+
+@pytest.fixture
+def surface_repo(tmp_path: Path) -> Path:
+    """A real commit range without the unrelated remote-push fixture setup."""
+    root = tmp_path / "surface-repo"
+    root.mkdir()
+    _git(root, "init", "-b", "main")
+    _git(root, "config", "user.email", "gate@example.invalid")
+    _git(root, "config", "user.name", "Gate Test")
+    _install_surface_scanners(root)
+    _write(root, "scripts/pre_commit/project_python.sh", f'#!/usr/bin/env bash\nexec "{sys.executable}" "$@"\n')
+    _write(root, "docs/push-scan.md", "clean base\n")
+    _commit(root, "base", ".")
+    return root
+
+
+@pytest.mark.parametrize("sensitive", [False, True])
+def test_push_stage_scans_intermediate_commits_even_with_empty_net_diff(surface_repo: Path, sensitive: bool) -> None:
+    base = _git(surface_repo, "rev-parse", "HEAD").stdout.strip()
+    marker = "-----BEGIN " + "PRIVATE KEY-----"
+    _write(surface_repo, "docs/push-scan.md", marker if sensitive else "clean change\n")
+    _commit(surface_repo, "first change", "docs/push-scan.md")
+    _write(surface_repo, "docs/push-scan.md", "clean base\n")
+    head = _commit(surface_repo, "revert", "docs/push-scan.md")
+    assert _git(surface_repo, "diff", "--name-only", f"{base}..{head}").stdout == ""
+    plan = _plan(base=base, head=head)
+    arguments = (plan, surface_repo, str(surface_repo / "scripts/pre_commit/project_python.sh"),
+                 str(surface_repo / ".pre-commit-config.yaml"), time.monotonic() + 60)
+    if sensitive:
+        with pytest.raises(gate.GateOutcome) as raised:
+            gate.run_pre_commit_stage(*arguments)
+        assert raised.value.failing == ("lint-opsec-leaks",)
+        assert marker not in raised.value.detail
+        assert "Private Key Header" in raised.value.detail
+    else:
+        gate.run_pre_commit_stage(*arguments)
+
+
+@pytest.mark.parametrize("path,refused", [
+    ("site/src/content/docs/a1/topic.mdx", True),
+    ("site/src/content/readings/topic.mdx", True),
+    ("curriculum/l2-uk-en/folk/topic/module.md", True),
+    ("docs/author-notes.md", False),
+])
+def test_push_stage_enforces_existing_internal_id_learner_filter(surface_repo: Path, path: str, refused: bool) -> None:
+    base = _git(surface_repo, "rev-parse", "HEAD").stdout.strip()
+    _write(surface_repo, path, "Source section S4433 leaked.\n")
+    head = _commit(surface_repo, "learner surface", path)
+    arguments = (_plan(base=base, head=head), surface_repo,
+                 str(surface_repo / "scripts/pre_commit/project_python.sh"),
+                 str(surface_repo / ".pre-commit-config.yaml"), time.monotonic() + 60)
+    if refused:
+        with pytest.raises(gate.GateOutcome) as raised:
+            gate.run_pre_commit_stage(*arguments)
+        assert raised.value.failing == ("check-no-internal-ids",)
+        assert "internal source section id leaked" in raised.value.detail
+    else:
+        gate.run_pre_commit_stage(*arguments)
 
 
 @pytest.mark.parametrize(
@@ -1472,6 +1547,7 @@ def test_exact_head_row_attributes_only_entered_stages(repo: Path, pre_commit_co
         repo,
         "scripts/pre_commit/project_python.sh",
         textwrap.dedent(f"""\
+        if [ "$1" = "scripts/audit/lint_opsec_leaks.py" ]; then exit 0; fi
         if [ "$2" = "pre_commit" ]; then
             echo 'synthetic hook'
             exit {pre_commit_code}
@@ -2285,7 +2361,10 @@ def _wait_tickets(state: Path, count: int, processes: list[subprocess.Popen]) ->
         paths = list((state / "queue").glob("*.ticket"))
         if len(paths) == count:
             return [json.loads(path.read_text()) for path in paths]
-        assert all(process.poll() is None for process in processes), "gate exited before publishing its ticket"
+        exited = [process for process in processes if process.poll() is not None]
+        assert not exited, "gate exited before publishing its ticket: " + "\n".join(
+            process.stderr.read() for process in exited
+        )
         time.sleep(0.01)
     pytest.fail(f"expected {count} tickets, observed {len(paths)}")
 
@@ -2442,7 +2521,7 @@ def native_repo(tmp_path: Path) -> Path:
     _write(root, ".githooks/pre_push_gate.py", GATE_PATH.read_text())
     _write(root, "scripts/pre_commit/project_python.sh", f'#!/usr/bin/env bash\nexec "{sys.executable}" "$@"\n')
     (root / "scripts/pre_commit/project_python.sh").chmod(0o755)
-    _write(root, ".pre-commit-config.yaml", PRE_COMMIT)
+    _install_surface_scanners(root)
     _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
     _write(root, "tests/test_invariant.py", GREEN_TEST)
