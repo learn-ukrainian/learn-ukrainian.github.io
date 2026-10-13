@@ -8,12 +8,13 @@ import hashlib
 import json
 import os
 import re
+import secrets
+import shutil
 import stat
 import subprocess
 import sys
 import time
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 
 import pytest
@@ -37,8 +38,13 @@ _acpx_worktree = _acpx_tests._acpx_worktree
 
 @pytest.fixture
 def worktree_dir(_acpx_worktree):
-    with TemporaryDirectory(prefix="claude-host-", dir=_acpx_worktree) as directory:
-        yield Path(directory)
+    directory = _acpx_worktree / f"claude-host-{secrets.token_hex(16)}"
+    directory.mkdir(mode=0o700)
+    try:
+        yield directory
+    finally:
+        shutil.rmtree(directory)
+
 
 _SESSION_ID = "0f6c2f8e-1d2b-4c3a-9e8f-7a6b5c4d3e2f"
 _REAL_GATE = acpx_module._require_host_claude_code
@@ -223,13 +229,19 @@ def _fake_accounts(monkeypatch, *, members=(), primary_users=()):
         "pwd",
         SimpleNamespace(getpwuid=lambda _uid: caller, getpwall=lambda: [caller, *others]),
     )
-    monkeypatch.setattr(acpx_module, "grp", SimpleNamespace(getgrgid=lambda _gid: SimpleNamespace(gr_mem=list(members))))
+    monkeypatch.setattr(
+        acpx_module, "grp", SimpleNamespace(getgrgid=lambda _gid: SimpleNamespace(gr_mem=list(members)))
+    )
 
 
 def _group_writable_ancestors(host) -> None:
     """The native-install layout: 0775 directories above a 0755 versioned binary."""
-    for directory in (host.root, host.root / "share", host.root / "share" / "claude",
-                      host.root / "share" / "claude" / "versions"):
+    for directory in (
+        host.root,
+        host.root / "share",
+        host.root / "share" / "claude",
+        host.root / "share" / "claude" / "versions",
+    ):
         directory.chmod(0o775)
 
 
@@ -671,9 +683,23 @@ def _git(cwd: Path, *args: str) -> None:
 
     env = {**sanitized_git_env(), "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
     subprocess.run(
-        ["git", "-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid",
-         "-c", "commit.gpgsign=false", "-c", f"core.hooksPath={os.devnull}", *args],
-        cwd=cwd, env=env, check=True, capture_output=True, timeout=30,
+        [
+            "git",
+            "-c",
+            "user.name=fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "-c",
+            "commit.gpgsign=false",
+            "-c",
+            f"core.hooksPath={os.devnull}",
+            *args,
+        ],
+        cwd=cwd,
+        env=env,
+        check=True,
+        capture_output=True,
+        timeout=30,
     )
 
 
@@ -906,6 +932,42 @@ def test_each_launch_gets_its_own_copy_and_cleanup_removes_only_it(launcher_chec
     acpx_module._remove_claude_acp_launcher_copy("/repo/claude_acp_exec.sh")
     acpx_module._remove_claude_acp_launcher_copy(None)
     assert launcher_checkouts.launcher.exists()
+
+
+@pytest.mark.parametrize("collisions", [1, 10])
+def test_copy_directory_uses_verified_base_fd_and_bounds_collision_retries(launcher_checkouts, monkeypatch, collisions):
+    base = launcher_checkouts.copies
+    base.mkdir(mode=0o700)
+    existing = base / "launch-00000000"
+    existing.mkdir(mode=0o700)
+    sentinel = existing / "payload"
+    sentinel.write_text("keep", encoding="utf-8")
+    names = iter(["00000000"] * collisions + ["11111111"])
+    monkeypatch.setattr(secrets, "token_hex", lambda _size: next(names))
+    real_mkdir = os.mkdir
+    attempts = []
+    base_stat = base.stat()
+
+    def mkdir(path, mode=0o777, *, dir_fd=None):
+        if dir_fd is not None:
+            held = os.fstat(dir_fd)
+            assert (held.st_dev, held.st_ino) == (base_stat.st_dev, base_stat.st_ino)
+            attempts.append((path, mode))
+        return real_mkdir(path, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(os, "mkdir", mkdir)
+    if collisions == 1:
+        copy = _accepted_copy(launcher_checkouts)
+        assert copy.parents[2].name == "launch-11111111"
+        AcpxClaudeShadowAdapter().cleanup_invocation(SimpleNamespace(metadata={"claude_code_launcher": str(copy)}))
+        assert not copy.parents[2].exists()
+        assert attempts == [("launch-00000000", 0o700), ("launch-11111111", 0o700)]
+    else:
+        refusal = _launcher_refusal()
+        assert (refusal.reason, refusal.failure_code) == ("copy_failed", "acp_adapter_incompatible")
+        assert attempts == [("launch-00000000", 0o700)] * 10
+    assert sentinel.read_text(encoding="utf-8") == "keep"
+    assert sorted(path.name for path in base.iterdir()) == ["launch-00000000"]
 
 
 def test_stale_copies_are_swept_and_fresh_ones_kept(launcher_checkouts):
@@ -1470,7 +1532,10 @@ def test_the_identity_covers_size_mtime_and_ctime(tmp_path):
     assert acpx_module._claude_code_launch_identity(after) == _launch_identity(target)
     stat_cli = subprocess.run(
         [_GNU_STAT, "-c", "%d:%i:%s:%.9Y:%.9Z", "--", str(target)],
-        capture_output=True, text=True, timeout=30, check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=True,
     )
     assert stat_cli.stdout.strip() == _launch_identity(target)
 

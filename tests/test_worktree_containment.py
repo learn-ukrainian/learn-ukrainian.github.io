@@ -19,6 +19,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as wc
 
 
@@ -37,18 +38,21 @@ def _clean_env() -> dict[str, str]:
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", "-C", str(repo), *args],
-        check=True, capture_output=True, text=True, env=_clean_env(),
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_clean_env(),
         timeout=30,
     )
 
 
 @dataclass(frozen=True)
 class Layout:
-    main: Path              # primary checkout root
-    dispatch_wt: Path       # .worktrees/dispatch/claude/task-1 (registered)
-    flat_wt: Path           # .worktrees/legacy (registered, non-dispatch)
-    external_wt: Path       # <tmp>/external-wt (registered, outside .worktrees)
-    outside: Path           # <tmp>/outside (plain dir, not a repo)
+    main: Path  # primary checkout root
+    dispatch_wt: Path  # .worktrees/dispatch/claude/task-1 (registered)
+    flat_wt: Path  # .worktrees/legacy (registered, non-dispatch)
+    external_wt: Path  # <tmp>/external-wt (registered, outside .worktrees)
+    outside: Path  # <tmp>/outside (plain dir, not a repo)
 
 
 @pytest.fixture
@@ -57,7 +61,10 @@ def layout(tmp_path: Path) -> Layout:
     main.mkdir()
     subprocess.run(
         ["git", "init", "-q", "-b", "main", str(main)],
-        check=True, capture_output=True, text=True, env=_clean_env(),
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_clean_env(),
         timeout=30,
     )
     _git(main, "config", "user.email", "test@example.com")
@@ -96,6 +103,7 @@ def layout(tmp_path: Path) -> Layout:
 # resolve_main_root — same primary root from anywhere
 # ---------------------------------------------------------------------------
 
+
 def test_resolve_main_root_is_stable_from_every_vantage(layout: Layout):
     assert wc.resolve_main_root(layout.main) == layout.main
     assert wc.resolve_main_root(layout.main / "pkg") == layout.main
@@ -113,9 +121,11 @@ def outside_any_repo() -> Iterator[Path]:
     directory, so ``tmp_path`` (and ``layout.outside``) may itself lie inside a
     repository there; this directory is checked to lie outside one.
     """
-    directory = wc.canonicalize(tempfile.mkdtemp(prefix="wc-outside-"))
+    directory = wc.canonicalize(
+        tempfile.mkdtemp(prefix="wc-outside-", dir=os.environ.get("TMPDIR", ensure_scratch_root()))
+    )
     try:
-        assert wc._resolve_main_root_or_none(directory) is None, "the system temp directory is inside a git repository"
+        assert wc._resolve_main_root_or_none(directory) is None, "the scratch directory is inside a git repository"
         yield directory
     finally:
         shutil.rmtree(directory, ignore_errors=True)
@@ -138,9 +148,7 @@ def test_resolve_main_root_uses_filesystem_fallback_when_git_cannot_execute(
     assert wc.resolve_main_root(layout.dispatch_wt) == layout.main
 
 
-def test_git_probe_propagates_non_missing_executable_errors(
-    layout: Layout, monkeypatch: pytest.MonkeyPatch
-):
+def test_git_probe_propagates_non_missing_executable_errors(layout: Layout, monkeypatch: pytest.MonkeyPatch):
     def forbidden_git(*_args, **_kwargs):
         raise PermissionError("git execution forbidden")
 
@@ -150,9 +158,7 @@ def test_git_probe_propagates_non_missing_executable_errors(
         wc.resolve_main_root(layout.main)
 
 
-def test_resolve_main_root_without_git_matches_git_and_never_spawns(
-    layout: Layout, monkeypatch: pytest.MonkeyPatch
-):
+def test_resolve_main_root_without_git_matches_git_and_never_spawns(layout: Layout, monkeypatch: pytest.MonkeyPatch):
     def no_subprocess(*_args, **_kwargs):
         raise AssertionError("resolve_main_root_without_git ran a subprocess")
 
@@ -301,6 +307,7 @@ def test_resolve_main_root_without_git_follows_relative_worktree_links(layout: L
 # classify_repo_path
 # ---------------------------------------------------------------------------
 
+
 def test_tracked_file_in_primary_checkout_is_protected(layout: Layout):
     tracked = layout.main / "tracked.txt"
     assert wc.classify_repo_path(tracked, cwd=layout.main) == "primary_checkout"
@@ -369,6 +376,7 @@ def test_outside_repo_path(layout: Layout):
 # canonicalization: symlink + ".." escapes
 # ---------------------------------------------------------------------------
 
+
 def test_symlink_escape_is_classified_by_real_target(layout: Layout, tmp_path: Path):
     outside_target = tmp_path / "escape_target"
     outside_target.mkdir()
@@ -403,6 +411,7 @@ def test_dotdot_staying_inside_resolves_to_primary_checkout(layout: Layout):
 # missing-path parent resolution
 # ---------------------------------------------------------------------------
 
+
 def test_missing_path_under_untracked_dir_is_blocked(layout: Layout):
     # Parent dir does not exist yet; must still classify + decide.
     missing = layout.main / "newpkg" / "deeply" / "new_module.py"
@@ -426,6 +435,7 @@ def test_missing_path_under_ignored_dir_is_allowed(layout: Layout):
 # is_primary_checkout / branch helpers
 # ---------------------------------------------------------------------------
 
+
 def test_is_primary_checkout_matrix(layout: Layout, outside_any_repo: Path):
     assert wc.is_primary_checkout(layout.main) is True
     assert wc.is_primary_checkout(layout.main / "pkg") is True
@@ -445,6 +455,7 @@ def test_branch_helpers(layout: Layout):
 # ---------------------------------------------------------------------------
 # read-only invocation must not mutate anything
 # ---------------------------------------------------------------------------
+
 
 def test_read_only_operations_do_not_dirty_the_checkout(layout: Layout):
     before = _git(layout.main, "status", "--porcelain").stdout

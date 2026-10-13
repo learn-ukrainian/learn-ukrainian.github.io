@@ -84,11 +84,11 @@ import logging
 import os
 import pwd
 import re
+import secrets
 import shlex
 import shutil
 import stat
 import subprocess
-import tempfile
 import time
 from collections.abc import Mapping
 from contextlib import contextmanager
@@ -1495,6 +1495,7 @@ def _require_local_claude_acp_adapter(
             f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} is missing",
             failure_code="acp_adapter_missing",
         ) from exc
+
     def _check_artifact(
         name: str,
         artifact_path: Path,
@@ -1529,7 +1530,14 @@ def _require_local_claude_acp_adapter(
         )
 
     _check_artifact("package directory", package_root, package_stat, expected_dir=True)
-    _check_artifact("manifest", manifest_path, manifest_stat, expected_dir=False, size_limit=_CLAUDE_ACP_MANIFEST_LIMIT_BYTES, actual_size=len(manifest_bytes))
+    _check_artifact(
+        "manifest",
+        manifest_path,
+        manifest_stat,
+        expected_dir=False,
+        size_limit=_CLAUDE_ACP_MANIFEST_LIMIT_BYTES,
+        actual_size=len(manifest_bytes),
+    )
 
     try:
         manifest = json.loads(manifest_bytes)
@@ -1630,7 +1638,7 @@ _CLAUDE_ACP_LAUNCHER_MAX_BYTES = 64 * 1024
 # database rather than HOME. None selects that default; tests use their tree.
 _CLAUDE_ACP_LAUNCHER_COPY_BASE: Path | None = None
 _CLAUDE_ACP_LAUNCHER_COPY_PREFIX = "launch-"
-# ``tempfile.mkdtemp`` names: the prefix and eight characters of its alphabet.
+# Eight-character suffix accepts new hex names and older tempfile names.
 _CLAUDE_ACP_LAUNCHER_COPY_NAME_RE = re.compile(rf"{_CLAUDE_ACP_LAUNCHER_COPY_PREFIX}[a-z0-9_]{{8}}")
 # A copy outlives its ask only when the runner never reached cleanup; such
 # copies are swept once older than any ask can run, unless a process holds them.
@@ -2130,9 +2138,18 @@ def _private_claude_acp_launcher_copy(closure: Mapping[PurePosixPath, bytes], *,
         base_fd = _open_claude_acp_copy_base(base, adapter_label=adapter_label)
         try:
             _sweep_stale_claude_acp_launcher_copies(base_fd, base)
+            for _ in range(10):
+                name = _CLAUDE_ACP_LAUNCHER_COPY_PREFIX + secrets.token_hex(4)
+                try:
+                    os.mkdir(name, 0o700, dir_fd=base_fd)
+                except FileExistsError:
+                    continue
+                copy_dir = base / name
+                break
+            else:
+                raise FileExistsError("cannot allocate a unique private launcher copy directory")
         finally:
             os.close(base_fd)
-        copy_dir = Path(tempfile.mkdtemp(prefix=_CLAUDE_ACP_LAUNCHER_COPY_PREFIX, dir=base))
         for relpath, data in closure.items():
             target = copy_dir
             for part in relpath.parts[:-1]:
