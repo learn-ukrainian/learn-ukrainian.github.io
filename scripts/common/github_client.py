@@ -266,7 +266,7 @@ class GitHubClient:
     def _configure_host(self, host):
         """Select credentials and scope from an authority already canonicalised at entry."""
         self.host = host
-        self.env["GH_HOST"] = host
+        self.env = {**self.env, "GH_HOST": host}
         # A digest isolates credentials without storing credentials or account IDs.
         credential = (
             self.env.get("GH_TOKEN") or self.env.get("GITHUB_TOKEN")
@@ -584,14 +584,15 @@ def _canonical_endpoint(endpoint, host="github.com"):
     """
     if endpoint is None:
         return "unknown", None
+    # gh accepts leading slashes and bare x:y as relative endpoint paths.
+    # Handle them before urlsplit can interpret a path as an authority or scheme.
+    if endpoint.startswith("//") or "://" not in endpoint:
+        return "relative", re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
     try:
         parsed = urlsplit(endpoint)
-        if parsed.scheme or parsed.netloc:
-            hostname = canonical_host(endpoint)
-            if parsed.scheme not in {"http", "https"} or hostname not in _api_hosts(host):
-                return "rejected", endpoint
-        else:
-            return "relative", re.split(r"[?#]", endpoint.lstrip("/"), maxsplit=1)[0]
+        hostname = canonical_host(endpoint)
+        if parsed.scheme not in {"http", "https"} or hostname not in _api_hosts(host):
+            return "rejected", endpoint
     except ValueError:
         return "rejected", endpoint
     path = parsed.path.lstrip("/")
@@ -1875,20 +1876,21 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     limit = kwargs.pop("max_response_bytes", None)
     if limit is not None and (type(limit) is not int or limit < 0):
         raise ValueError("invalid GitHub response byte limit")
-    if client is not None and limit is not None:
+    host_args = list(args[2:])
+    host_options, _ = _options(host_args, canonicalize_hosts=True)
+    if client is not None and (limit is not None or allow_stale or "--hostname" in host_options):
         from copy import copy
 
+        # Per-call host and read options must never retarget the caller's client.
         client = copy(client)
-        client.max_response_bytes = (
-            min(client.max_response_bytes, limit) if client.max_response_bytes is not None else limit
-        )
-    client = client or GitHubClient(
-        env=kwargs.get("env"), cwd=kwargs.get("cwd"), runner=runner, max_response_bytes=limit
-    )
+        client.env = dict(client.env)
+        if limit is not None:
+            client.max_response_bytes = (
+                min(client.max_response_bytes, limit) if client.max_response_bytes is not None else limit
+            )
+    if client is None:
+        client = GitHubClient(env=kwargs.get("env"), cwd=kwargs.get("cwd"), runner=runner, max_response_bytes=limit)
     if allow_stale:
-        from copy import copy
-
-        client = copy(client)
         client.allow_stale = True
     timeout = kwargs.get("timeout") or 30
     if (
@@ -1897,8 +1899,6 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
         and (args[2] == "merge" or any(a.split("=", 1)[0] in {"--approve", "-a"} for a in args[3:]))
     ):
         return _result_process(args, Result(error="github_worker_write_forbidden"), {}, kwargs)
-    host_args = list(args[2:])
-    host_options, _ = _options(host_args, canonicalize_hosts=True)
     if "--hostname" in host_options:
         client._configure_host(_opt(host_options, "--hostname"))
         args = [*args[:2], *host_args]

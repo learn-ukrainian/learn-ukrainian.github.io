@@ -1051,9 +1051,10 @@ def test_host_boundary_host_spelling_preserves_credential_and_scope(tmp_path, ho
         args.extend(["--hostname", host.upper() + "."])
     if entry == "native-option":
         args.extend(["--paginate", "--jq", ".x"])
+    original_host, original_scope, original_env = store.host, store.scope, dict(store.env)
     assert gh.run(args, client=store, capture_output=True).returncode == 0
-    assert store.host == host
-    assert store.scope == plain.scope == expected_scope
+    assert (store.host, store.scope, store.env) == (original_host, original_scope, original_env)
+    assert plain.scope == expected_scope
     command, env = commands[0]
     assert env["GH_HOST"] == host
     if host == "github.com" and entry == "environment":
@@ -1063,14 +1064,25 @@ def test_host_boundary_host_spelling_preserves_credential_and_scope(tmp_path, ho
     else:
         pytest.fail("enterprise transport omitted canonical hostname")
     store._send("GET", "user", {}, None, 30)
-    command, _ = commands[-1]
-    if host == "github.com":
+    command, env = commands[-1]
+    assert env == original_env
+    if original_host == "github.com":
         assert "--hostname" not in command
     else:
-        assert command[command.index("--hostname") + 1] == host
+        assert command[command.index("--hostname") + 1] == original_host
+    reset = int(store.clock() + 600)
+    with plain._db() as db:
+        gh._store_budget(db, expected_scope, "core", 0, reset)
+    result = gh.run(args, client=store, capture_output=True)
+    assert result.github_result.error == "github_rate_limited"
+    assert result.github_result.reset_at == reset and len(commands) == 2
 
 
 def host_parser_violations(source):
+    """AST tripwire for common parser duplication, not proof of host isolation.
+
+    It does not cover netloc, partition, regexes, getattr or _splitnetloc.
+    """
     tree = ast.parse(source)
     parser_names = {"urlparse", "urlsplit"}
     for node in ast.walk(tree):
@@ -1136,6 +1148,124 @@ def test_host_boundary_api_host_comparisons_use_shared_authority():
     assert gh._api_hosts("GITHUB.COM.") == {"github.com", "api.github.com", "uploads.github.com"}
     assert gh._api_hosts("probe@GHE.EXAMPLE.:443") == {"ghe.example"}
     assert gh._canonical_endpoint("HTTPS://GHE.EXAMPLE./api/graphql", "GHE.EXAMPLE.") == ("api", "graphql")
+
+
+def test_configure_host_rebinds_shallow_copy_environment(tmp_path):
+    from copy import copy
+
+    original = gh.GitHubClient(cache_dir=tmp_path, env={"GH_HOST": "github.com", "GH_TOKEN": "public-fixture"})
+    private = copy(original)
+    private._configure_host("ghe.example")
+    assert original.host == original.env["GH_HOST"] == "github.com"
+    assert private.host == private.env["GH_HOST"] == "ghe.example"
+    assert private.env is not original.env
+    assert private.scope != original.scope
+
+
+def test_run_without_overrides_preserves_lazy_memory_budget(monkeypatch):
+    monkeypatch.setattr(gh, "_cache_directory", lambda: None)
+    calls = []
+
+    def transport(*args):
+        calls.append(args)
+        return response({}, remaining=0)
+
+    original = gh.GitHubClient(env={}, transport=transport, clock=lambda: 1000)
+    assert gh.run(["gh", "api", "user"], client=original, capture_output=True).returncode == 0
+    result = gh.run(["gh", "api", "user"], client=original, capture_output=True)
+    assert result.github_result.error == "github_rate_limited"
+    assert result.returncode == 75 and len(calls) == 1
+
+
+@pytest.mark.parametrize("overrides", [{}, {"allow_stale": True}, {"max_response_bytes": 4096}])
+@pytest.mark.parametrize("host,target", [("github.com", "git.enterprise.example"), ("ghe.example", "github.com")])
+def test_run_hostname_preserves_caller_authority(tmp_path, overrides, host, target):
+    calls = []
+    environment = {"GH_HOST": host, "GH_TOKEN": "public-fixture", "GH_ENTERPRISE_TOKEN": "enterprise-fixture"}
+
+    def runner(args, **kwargs):
+        calls.append((args, dict(kwargs["env"])))
+        return subprocess.CompletedProcess(args, 0, b"{}", b"")
+
+    original = gh.GitHubClient(cache_dir=tmp_path, env=environment, runner=runner)
+    before = (original.host, original.scope, dict(original.env))
+    result = gh.run(["gh", "api", "--hostname", target, "user"], client=original, **overrides, capture_output=True)
+    assert result.returncode == 0
+    assert calls[0][1]["GH_HOST"] == target
+    assert calls[0][0][calls[0][0].index("--hostname") + 1] == target
+    assert (original.host, original.scope, original.env) == before
+    assert original.env is not calls[0][1]
+    selected_token = "GH_TOKEN" if host == "github.com" else "GH_ENTERPRISE_TOKEN"
+    assert original.scope == hashlib.sha256((host + "\0" + original.env[selected_token]).encode()).hexdigest()
+    assert original.request("GET", "user", fresh=True).error is None
+    assert calls[-1][1] == before[2]
+    if host == "github.com":
+        assert "--hostname" not in calls[-1][0]
+    else:
+        assert calls[-1][0][calls[-1][0].index("--hostname") + 1] == host
+    assert gh.run(["gh", "api", "user", "--template", "{{.}}"], client=original, capture_output=True).returncode == 0
+    assert calls[-1][1] == before[2]
+
+
+@pytest.mark.parametrize("overrides", [{}, {"allow_stale": True}, {"max_response_bytes": 4096}])
+def test_run_hostname_cannot_poison_caller_budget_or_cache(tmp_path, overrides):
+    calls = []
+
+    def runner(args, **kwargs):
+        host = kwargs["env"]["GH_HOST"]
+        calls.append((args, host))
+        if "--include" not in args:
+            return subprocess.CompletedProcess(args, 0, json.dumps({"authority": host}).encode(), b"")
+        remaining = 100 if host == "github.com" else 5
+        raw = (
+            f'HTTP/2.0 200 OK\r\nETag: "one"\r\nX-RateLimit-Resource: core\r\n'
+            f"X-RateLimit-Remaining: {remaining}\r\nX-RateLimit-Reset: 2000\r\n\r\n" + json.dumps({"authority": host})
+        ).encode()
+        return subprocess.CompletedProcess(args, 0, raw, b"")
+
+    original = gh.GitHubClient(
+        cache_dir=tmp_path,
+        runner=runner,
+        clock=lambda: 1000,
+        env={"GH_HOST": "github.com", "GH_TOKEN": "public-fixture", "GH_ENTERPRISE_TOKEN": "enterprise-fixture"},
+    )
+    public_scope = original.scope
+
+    def public_rows():
+        with original._db() as db:
+            return tuple(
+                db.execute(f"SELECT * FROM {table} WHERE scope=? ORDER BY 2", (public_scope,)).fetchall()
+                for table in ("budget", "cache")
+            )
+
+    assert original.request("GET", "user").value == {"authority": "github.com"}
+    before = public_rows()
+    result = gh.run(
+        ["gh", "api", "--hostname", "ghe.example", "user"], client=original, **overrides, capture_output=True
+    )
+    assert result.returncode == 0
+    assert json.loads(result.stdout) == {"authority": "ghe.example"}
+    assert public_rows() == before
+    enterprise = gh.GitHubClient(
+        cache_dir=tmp_path,
+        runner=runner,
+        clock=lambda: 1000,
+        env={**original.env, "GH_HOST": "ghe.example"},
+    )
+    assert enterprise.request("GET", "user").value == {"authority": "ghe.example"}
+    assert original.request("GET", "user", fresh=True).value == {"authority": "github.com"}
+    assert public_rows() == before
+    assert calls[-1][1] == "github.com" and "--hostname" not in calls[-1][0]
+    assert gh.run(["gh", "api", "user", "--template", "{{.}}"], client=original, capture_output=True).returncode == 0
+    assert calls[-1][1] == "github.com"
+    assert public_rows() == before
+    with original._db() as db:
+        assert db.execute(
+            "SELECT remaining FROM budget WHERE scope<>? AND resource='core'", (public_scope,)
+        ).fetchall() == [(5,)]
+        assert db.execute("SELECT body FROM cache WHERE scope<>?", (public_scope,)).fetchall() == [
+            (b'{"authority": "ghe.example"}',)
+        ]
 
 
 @pytest.mark.parametrize(

@@ -190,6 +190,55 @@ def api(*tokens):
     return ["gh", "api", *tokens]
 
 
+@pytest.mark.parametrize(
+    "endpoint,path,bucket",
+    [
+        ("//graphql", "graphql", "graphql"),
+        ("//search/code", "search/code", "code_search"),
+        ("///graphql", "graphql", "graphql"),
+        ("//", "", "core"),
+        ("//github.com/x", "github.com/x", "core"),
+        ("./graphql", "./graphql", "core"),
+        ("user:1", "user:1", "core"),
+        ("x:y", "x:y", "core"),
+    ],
+)
+def test_relative_endpoint_spellings_never_select_a_host(tmp_path, endpoint, path, bucket):
+    """Leading slashes are paths; only :// introduces an absolute URL."""
+    assert gh._canonical_endpoint(endpoint) == ("relative", path)
+    assert gh._native_buckets(api(endpoint)) == frozenset({bucket, "secondary"})
+    store, runner, translated, native = seeded(tmp_path, [])
+    assert gh.run(api(endpoint), client=store, runner=runner, capture_output=True).returncode == 0
+    assert translated == [endpoint] and not native
+    store, runner, translated, native = seeded(tmp_path / "native", [])
+    args = api(endpoint, "--template", "{{.}}")
+    assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
+    assert native == [args] and not translated
+    store, runner, translated, native = seeded(tmp_path / "limited", [bucket])
+    assert blocked(gh.run(args, client=store, runner=runner, capture_output=True))
+    assert not translated and not native
+
+
+@pytest.mark.parametrize("native", [False, True])
+@pytest.mark.parametrize(
+    "host,endpoint",
+    [
+        ("github.com", "http://api.github.com:443/user"),
+        ("ghe.example:8443", "https://ghe.example:9443/api/v3/user"),
+    ],
+)
+def test_absolute_endpoint_port_mismatch_is_refused(tmp_path, native, host, endpoint):
+    """HTTP port 443 is non-default; a GHES URL must match the selected authority's port."""
+    assert gh._canonical_endpoint(endpoint, host)[0] == "rejected"
+    args = api("--hostname", host, endpoint, *(["--paginate"] if native else []))
+    with pytest.raises(ValueError, match="host mismatch"):
+        gh._native_buckets(args)
+    store, runner, translated, calls = seeded(tmp_path, [], host=host)
+    result = gh.run(args, client=store, runner=runner, capture_output=True)
+    assert result.github_result.error == "github_invalid_command"
+    assert not translated and not calls
+
+
 ROOT_ENDPOINTS = [
     api("--paginate", "--jq", ".x", "/"),
     api("--paginate", "--jq", ".x", "https://api.github.com"),
