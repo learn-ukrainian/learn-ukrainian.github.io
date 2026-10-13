@@ -16,7 +16,18 @@ usual usage windows when the provider includes `subs_usage`:
 A live CodexBar Muse probe on 2026-10-13 returned null primary and weekly
 percentages. Null is unknown. It is not 0% used and it is not unlimited.
 A reported `usedPercent` of 0 is a real empty window and stays 100% remaining.
-Identity, account, and credit fields are dropped and are not part of this contract.
+Identity, account, credit fields, and provider free text are dropped. The source
+is the fixed label `codexbar_muse`. Windows contain only bounded percentages,
+positive integer durations, and validated reset timestamps normalized to UTC.
+Provider reset descriptions and labels are never published.
+
+An explicitly named provider must be `muse`. In a multi-provider response, an
+explicit Muse record takes precedence over any unlabelled record; other
+providers cannot supply Muse quota. When `usage.updatedAt` is present, it must
+be a valid timestamp younger than the configured cache TTL and no later than
+the observation time. Its age is checked before caching and again before public
+projection. Refreshing an old payload does not make its headroom fresh. A payload
+without that field uses the existing local probe observation time.
 
 ## Where Muse appears
 
@@ -50,6 +61,13 @@ Render null as the word `unknown`. Publish a number only when `freshness` is
 | `status` | `healthy` only for a fresh numeric window; otherwise `unknown` |
 | `error_kind` / `error_code` | `unsupported` / `NO_QUOTA` when the probe returned no percentage; `rate_limit` / `429` when limited; `fetch_error` / `BAD_JSON` when the payload is malformed |
 
+Error kinds use a fixed vocabulary. Codes are integers from 1 through 599 or
+fixed diagnostic names. Unrecognized diagnostics become `provider` /
+`PROVIDER_ERROR`; provider text is never forwarded. An expired or future Muse
+observation uses `fetch_error` / `STALE_DATA`, and an explicitly mismatched
+provider uses `fetch_error` / `PROVIDER_MISMATCH`. Invalid explicit observation
+timestamps use `fetch_error` / `BAD_JSON`.
+
 On the provider record, the same windows are `primary_remaining_pct`,
 `weekly_remaining_pct`, `windows.primary`, `windows.secondary`, and
 `weekly_resets_at`. A missing window is omitted from headroom. It is not
@@ -82,10 +100,20 @@ Each bucket maps `remaining_fraction` to used and remaining percent, and
 `reset_time` to that window's reset. A finite fraction of `1` is a measured
 full window (0% used, 100% remaining). A fraction of `0` is a measured empty
 window. Neither one means unlimited. A missing, null, or non-finite fraction
-stays unknown. The reset is still shown when that timestamp parsed and the
+stays unknown. Values outside `[0, 1]` also stay unknown. Muse percentages must
+lie in `[0, 100]`; out-of-range percentages are not clamped into measurements.
+The reset is still shown when that timestamp parsed and the
 observation is fresh. A missing bucket is omitted. One group's window is never
 copied into the other group, and a 5-hour reading is never copied into the
 weekly window. Credit groups are not read.
+
+Public labels are fixed: `Gemini Models`, `Claude and GPT models`, and
+`Quota group` for an unrecognized group. Duplicate groups retain separate keys.
+Only the documented 5-hour and weekly window aliases are accepted; arbitrary
+window names are omitted. A failed or rate-limited envelope, even with a zero
+CLI exit status and numeric groups, records a failure and publishes no quota.
+An explicit provider must identify AGY, Antigravity, or Gemini. A mismatch
+records `fetch_error` / `PROVIDER_MISMATCH`.
 
 The lane has no single `remaining_pct`. The groups are not one quota, so the
 headline remaining stays unknown. `status` is `healthy` only when `freshness`

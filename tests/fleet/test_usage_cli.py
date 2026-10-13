@@ -639,6 +639,409 @@ _MUSE_KNOWN_PAYLOAD = {
 _MUSE_NULL_PAYLOAD = {"provider": "muse", "usage": {"primary": None, "secondary": None}}
 
 
+@pytest.mark.parametrize(
+    ("payload", "status", "remaining", "kind", "code", "window"),
+    [
+        (
+            {
+                "provider": "muse",
+                "source": "PRIVATE_SOURCE",
+                "usage": {
+                    "primary": {
+                        "usedPercent": 20,
+                        "windowMinutes": "PRIVATE_MINUTES",
+                        "resetsAt": "PRIVATE_RESET",
+                        "resetDescription": "PRIVATE_DESCRIPTION",
+                        "label": "PRIVATE_LABEL",
+                    }
+                },
+            },
+            "healthy",
+            80.0,
+            None,
+            None,
+            {
+                "used_pct": 20.0,
+                "remaining_pct": 80.0,
+                "resets_at": None,
+                "window_minutes": None,
+                "reset_description": None,
+            },
+        ),
+        (
+            {"provider": "muse", "error": {"kind": "PRIVATE_KIND", "code": "PRIVATE_CODE"}},
+            "unknown",
+            None,
+            "provider",
+            "PROVIDER_ERROR",
+            None,
+        ),
+        (
+            {"provider": "muse", "usage": {"updatedAt": "2000-01-01T00:00:00Z", "primary": {"usedPercent": 20}}},
+            "unknown",
+            None,
+            "fetch_error",
+            "STALE_DATA",
+            None,
+        ),
+        (
+            {"provider": "muse", "usage": {"updatedAt": "PRIVATE_TIME", "primary": {"usedPercent": 20}}},
+            "unknown",
+            None,
+            "fetch_error",
+            "BAD_JSON",
+            None,
+        ),
+        (
+            [{"provider": "codex", "usage": {"primary": {"usedPercent": 7}}}, _MUSE_NULL_PAYLOAD],
+            "unknown",
+            None,
+            "unsupported",
+            "NO_QUOTA",
+            None,
+        ),
+        (
+            {"provider": "PRIVATE_PROVIDER", "usage": {"primary": {"usedPercent": 7}}},
+            "unknown",
+            None,
+            "fetch_error",
+            "PROVIDER_MISMATCH",
+            None,
+        ),
+        (
+            {"provider": "muse", "usage": {"primary": {"usedPercent": -1}}},
+            "unknown",
+            None,
+            "unsupported",
+            "NO_QUOTA",
+            None,
+        ),
+        (
+            {"provider": "muse", "usage": {"primary": {"usedPercent": 101}}},
+            "unknown",
+            None,
+            "unsupported",
+            "NO_QUOTA",
+            None,
+        ),
+        (
+            {"provider": "muse", "usage": {"primary": {"usedPercent": 0}}},
+            "healthy",
+            100.0,
+            None,
+            None,
+            {
+                "used_pct": 0.0,
+                "remaining_pct": 100.0,
+                "resets_at": None,
+                "window_minutes": None,
+                "reset_description": None,
+            },
+        ),
+        (
+            {"provider": "muse", "usage": {"primary": {"usedPercent": 100}}},
+            "healthy",
+            0.0,
+            None,
+            None,
+            {
+                "used_pct": 100.0,
+                "remaining_pct": 0.0,
+                "resets_at": None,
+                "window_minutes": None,
+                "reset_description": None,
+            },
+        ),
+    ],
+    ids=[
+        "private-metadata",
+        "private-error",
+        "stale",
+        "invalid-time",
+        "wrong-list-provider",
+        "wrong-provider",
+        "negative",
+        "over-full",
+        "zero",
+        "full",
+    ],
+)
+def test_muse_boundary_reaches_literal_json_and_human_output(
+    monkeypatch,
+    capsys,
+    payload,
+    status,
+    remaining,
+    kind,
+    code,
+    window,
+):
+    from scripts.api import subscription_usage as su
+
+    record = su._muse_record_from_codexbar_payload(payload)
+    record.update(freshness="fresh", age_s=0.0)
+    monkeypatch.setattr(su, "get_provider_usage_data", lambda *args, **kwargs: record)
+    monkeypatch.setattr(su, "get_agy_quota_observation", lambda: {})
+    monkeypatch.setattr(
+        usage,
+        "read_budget",
+        lambda **kwargs: {
+            **usage._attach_status_observations({"agents": {}, "api_accounts": {}, "source": "fixture"}),
+            "agents": {"muse": usage._attach_status_observations({})["agents"]["muse"]},
+        },
+    )
+    empty = {
+        "used_pct": None,
+        "remaining_pct": None,
+        "resets_at": None,
+        "window_minutes": None,
+        "reset_description": None,
+    }
+    expected = {
+        "lane": "muse",
+        "status": status,
+        "remaining_pct": remaining,
+        "headroom_pct": remaining,
+        "resets_at": None,
+        "freshness": "fresh",
+        "age_s": 0.0,
+        "error_kind": kind,
+        "error_code": code,
+        "failure_kind": kind,
+        "last_failure_code": code,
+        "auth_error": None,
+        "codexbar": {
+            "freshness": "fresh",
+            "age_s": 0.0,
+            "headroom_pct": remaining,
+            "weekly_resets_at": None,
+            "windows": {"primary": window or empty, "secondary": empty, "tertiary": empty},
+            "error_kind": kind,
+            "failure_kind": kind,
+            "last_failure_code": code,
+            "primary_remaining_pct": remaining,
+            "weekly_remaining_pct": None,
+        },
+    }
+    assert usage.main(["json"]) == 0
+    json_text = capsys.readouterr().out
+    assert json.loads(json_text) == {"agents": {"muse": expected}, "api_accounts": {}, "source": "fixture"}
+    assert usage.main(["show"]) == 0
+    human = capsys.readouterr().out
+    rem_text = "unknown" if remaining is None else f"{remaining:.1f}"
+    quota_text = "unknown" if remaining is None else f"{remaining:.1f}%"
+    fail_text = "-" if kind is None else f"{kind}/{code}"
+    lines = [
+        "source: fixture",
+        "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
+        "lane | status | remaining% | freshness | age_s | fail",
+        f"muse | {status} | {rem_text} | fresh | 0.0 | {fail_text}",
+        f"  quota: remaining={quota_text} headroom={quota_text} resets=unknown",
+    ]
+    if window is not None:
+        lines.append(f"  primary (window): used={window['used_pct']:.1f}% rem={remaining:.1f}% resets=unknown")
+    lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
+    if remaining is None:
+        lines.extend(
+            [
+                "",
+                "WARN: no usable subscription allotment rows — mix-max is blind. "
+                "Run: usage doctor && usage show --fresh; check fail= codes above.",
+            ]
+        )
+    assert human == "\n".join(lines) + "\n"
+    assert "PRIVATE_" not in json_text + human
+
+
+@pytest.mark.parametrize(
+    ("envelope", "fraction", "status", "freshness", "kind", "code", "windows", "line"),
+    [
+        (
+            {},
+            0.8,
+            "healthy",
+            "fresh",
+            None,
+            None,
+            [{"window": "5h", "used_pct": 20.0, "remaining_pct": 80.0, "resets_at": None, "window_minutes": 300}],
+            "  Gemini Models (5h): used=20.0% rem=80.0% resets=unknown",
+        ),
+        (
+            {"status": "error", "error": {"code": 429, "message": "PRIVATE_ERROR"}},
+            0.8,
+            "unknown",
+            "unavailable",
+            "rate_limit",
+            429,
+            [],
+            None,
+        ),
+        (
+            {"error": {"kind": "PRIVATE_KIND", "code": "PRIVATE_CODE"}},
+            0.8,
+            "unknown",
+            "unavailable",
+            "provider",
+            "PROVIDER_ERROR",
+            [],
+            None,
+        ),
+        ({"provider": "PRIVATE_PROVIDER"}, 0.8, "unknown", "unavailable", "fetch_error", "PROVIDER_MISMATCH", [], None),
+        (
+            {},
+            1.1,
+            "unknown",
+            "fresh",
+            "unsupported",
+            "NO_QUOTA",
+            [{"window": "5h", "used_pct": None, "remaining_pct": None, "resets_at": None, "window_minutes": 300}],
+            "  Gemini Models (5h): used=unknown rem=unknown resets=unknown",
+        ),
+        (
+            {},
+            -0.1,
+            "unknown",
+            "fresh",
+            "unsupported",
+            "NO_QUOTA",
+            [{"window": "5h", "used_pct": None, "remaining_pct": None, "resets_at": None, "window_minutes": 300}],
+            "  Gemini Models (5h): used=unknown rem=unknown resets=unknown",
+        ),
+        (
+            {},
+            0,
+            "healthy",
+            "fresh",
+            None,
+            None,
+            [{"window": "5h", "used_pct": 100.0, "remaining_pct": 0.0, "resets_at": None, "window_minutes": 300}],
+            "  Gemini Models (5h): used=100.0% rem=0.0% resets=unknown",
+        ),
+        (
+            {},
+            1,
+            "healthy",
+            "fresh",
+            None,
+            None,
+            [{"window": "5h", "used_pct": 0.0, "remaining_pct": 100.0, "resets_at": None, "window_minutes": 300}],
+            "  Gemini Models (5h): used=0.0% rem=100.0% resets=unknown",
+        ),
+    ],
+    ids=["private-metadata", "rate-limit", "private-error", "wrong-provider", "over-full", "negative", "zero", "full"],
+)
+def test_agy_boundary_reaches_literal_json_and_human_output(
+    monkeypatch,
+    capsys,
+    envelope,
+    fraction,
+    status,
+    freshness,
+    kind,
+    code,
+    windows,
+    line,
+):
+    import subprocess
+
+    from scripts.api import subscription_usage as su
+
+    payload = {
+        **envelope,
+        "command": {
+            "data": {
+                "groups": [
+                    {
+                        "name": "Gemini PRIVATE_LABEL",
+                        "buckets": [
+                            {"window": "5h", "remaining_fraction": fraction, "reset_time": "PRIVATE_RESET"},
+                            {"window": "PRIVATE_WINDOW", "remaining_fraction": 0.9},
+                        ],
+                        "account": "PRIVATE_ACCOUNT",
+                        "credits": 987654,
+                    }
+                ]
+            }
+        },
+    }
+    monkeypatch.setattr(su, "_agy_cli_bin", lambda: "/fixture/agy")
+    monkeypatch.setattr(
+        su.subprocess,
+        "run",
+        lambda argv, **kwargs: subprocess.CompletedProcess(
+            argv,
+            0,
+            stdout=json.dumps(payload),
+            stderr="PRIVATE_STDERR",
+        ),
+    )
+    su._probe_antigravity_native(timeout_s=5)
+    observation = su.get_agy_quota_observation()
+    observation["age_s"] = 0.0 if freshness == "fresh" else None
+    monkeypatch.setattr(su, "get_agy_quota_observation", lambda: observation)
+    monkeypatch.setattr(su, "get_provider_usage_data", lambda *args, **kwargs: {})
+
+    def budget(**kwargs):
+        attached = usage._attach_status_observations({"agents": {}, "api_accounts": {}, "source": "fixture"})
+        attached["agents"].pop("muse")
+        return attached
+
+    monkeypatch.setattr(usage, "read_budget", budget)
+    groups = [] if not windows else [{"key": "gemini_models", "label": "Gemini Models", "windows": windows}]
+    age = 0.0 if freshness == "fresh" else None
+    expected = {
+        "lane": "agy",
+        "status": status,
+        "remaining_pct": None,
+        "headroom_pct": None,
+        "resets_at": None,
+        "freshness": freshness,
+        "age_s": age,
+        "error_kind": kind,
+        "error_code": code,
+        "failure_kind": kind,
+        "last_failure_code": code,
+        "auth_error": None,
+        "quota_groups": groups,
+        "codexbar": {
+            "freshness": freshness,
+            "age_s": age,
+            "quota_groups": groups,
+            "error_kind": kind,
+            "error_code": code,
+            "failure_kind": kind,
+            "last_failure_code": code,
+            "source": "agy_cli_usage",
+        },
+    }
+    assert usage.main(["json"]) == 0
+    json_text = capsys.readouterr().out
+    assert json.loads(json_text) == {"source": "fixture", "agents": {"agy": expected}, "api_accounts": {}}
+    assert usage.main(["show"]) == 0
+    human = capsys.readouterr().out
+    fail = "-" if kind is None else f"{kind}/{code}"
+    lines = [
+        "source: fixture",
+        "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
+        "lane | status | remaining% | freshness | age_s | fail",
+        f"agy | {status} | unknown | {freshness} | {'unknown' if age is None else '0.0'} | {fail}",
+    ]
+    if line:
+        lines.append(line)
+    lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
+    if status == "unknown":
+        lines.extend(
+            [
+                "",
+                "WARN: no usable subscription allotment rows — mix-max is blind. "
+                "Run: usage doctor && usage show --fresh; check fail= codes above.",
+            ]
+        )
+    assert human == "\n".join(lines) + "\n"
+    assert "PRIVATE_" not in json_text + human
+    assert "987654" not in json_text + human
+
+
 def _clear_muse_observation() -> None:
     from scripts.api import subscription_usage
     from scripts.api.state_helpers import cache_invalidate
