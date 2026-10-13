@@ -1,6 +1,9 @@
 """Native ``gh`` fall-through gates only on the buckets the command can spend (#10497); no network."""
 
+import json
 import subprocess
+from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -618,3 +621,102 @@ def test_host_boundary_refuses_before_either_transport(no_jq, tmp_path, endpoint
     result = gh.run(args, client=store, runner=runner, capture_output=True)
     assert result.github_result.error == "github_invalid_command"
     assert not translated and not calls
+
+
+# Frozen from the exact parent blob, never imported or executed during tests.
+# Each position's bit mask records admission for codepoints in the given order.
+PARENT_ADMISSION = json.loads((Path(__file__).parent / "fixtures/github_endpoint_parent_admission.json").read_text())
+SWEEP_ROWS = PARENT_ADMISSION["rows"]
+SWEEP_CODEPOINTS = [*range(0x21), 0x7F]
+
+
+def test_endpoint_sweep_denominator():
+    assert PARENT_ADMISSION["parent_sha"] == "4b4696291a613436725ad1e1c5aa5249f4bb3da5"
+    assert PARENT_ADMISSION["codepoints"] == SWEEP_CODEPOINTS
+    assert len(SWEEP_ROWS) == 13
+    assert sum(len(row["endpoint"]) + 1 for row in SWEEP_ROWS) == 311
+    for row in SWEEP_ROWS:
+        assert len(row["admission_masks"]) == len(row["endpoint"]) + 1
+        assert len(row["space_outcomes"]) == len(row["endpoint"]) + 1
+
+
+@pytest.mark.parametrize("row", SWEEP_ROWS, ids=[row["name"] for row in SWEEP_ROWS])
+@pytest.mark.parametrize("codepoint", SWEEP_CODEPOINTS, ids=lambda value: f"byte-{value:02x}")
+def test_endpoint_byte_insertion_sweep(monkeypatch, tmp_path, row, codepoint):
+    """Every offset, including discarded query/fragment text, gets checked."""
+    store = gh.GitHubClient(cache_dir=tmp_path, env={"GH_CONFIG_DIR": str(tmp_path)}, clock=lambda: NOW)
+    send = Mock(return_value=gh.Response(200, {}, b"[]"))
+    runner = Mock(return_value=subprocess.CompletedProcess([], 0, b"[]", b""))
+    monkeypatch.setattr(store, "_send", send)
+    endpoint = row["endpoint"]
+    bit = SWEEP_CODEPOINTS.index(codepoint)
+    for position in range(len(endpoint) + 1):
+        mutated = endpoint[:position] + chr(codepoint) + endpoint[position:]
+        host_class, path = gh._canonical_endpoint(mutated)
+        parent_admitted = bool(int(row["admission_masks"][position], 16) & (1 << bit))
+        # No historical exception is needed for this swept denominator.
+        assert host_class == "rejected" or parent_admitted, (row["name"], codepoint, position)
+        if codepoint != 0x20:
+            assert (host_class, path) == ("rejected", mutated)
+            with pytest.raises(ValueError, match="host mismatch"):
+                store.request("GET", mutated)
+            for flags in ([], ["--paginate"]):
+                result = gh.run(api(mutated, *flags), client=store, runner=runner, capture_output=True)
+                assert result.github_result.error == "github_invalid_command"
+            send.assert_not_called()
+            runner.assert_not_called()
+        elif "?" in endpoint and position > endpoint.index("?"):
+            # Query spaces retain the parent's admission and path. Existing
+            # code_search bucket normalization is independent of query spaces.
+            parent_class, parent_path = row["space_outcomes"][position]
+            assert parent_class == "admitted"
+            assert host_class in {"api", "relative"} and path == parent_path
+            assert (host_class, path) == gh._canonical_endpoint(endpoint)
+            assert store.request("GET", mutated).value == []
+            assert send.call_args.args[1] == mutated
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        pytest.param("h\thttps://evil.example/user", id="tab-inside-scheme-token"),
+        pytest.param("https:\t//evil.example/user", id="tab-before-foreign-authority"),
+        pytest.param("https:\n//evil.example/user", id="newline-before-foreign-authority"),
+        pytest.param("http:\t//api.github.com:443/user", id="tab-before-nondefault-port"),
+    ],
+)
+def test_shifted_control_regressions(monkeypatch, tmp_path, endpoint):
+    store = gh.GitHubClient(cache_dir=tmp_path, env={"GH_CONFIG_DIR": str(tmp_path)})
+    send, runner = Mock(), Mock()
+    monkeypatch.setattr(store, "_send", send)
+    assert gh._canonical_endpoint(endpoint) == ("rejected", endpoint)
+    with pytest.raises(ValueError, match="host mismatch"):
+        store.request("GET", endpoint)
+    for flags in ([], ["--paginate"]):
+        result = gh.run(api(endpoint, *flags), client=store, runner=runner, capture_output=True)
+        assert result.github_result.error == "github_invalid_command"
+    send.assert_not_called()
+    runner.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "endpoint,expected,bucket",
+    [
+        ("https://api.github.com/search/code?q=https://x", ("api", "search/code"), "code_search"),
+        ("HTTPS://api.github.com/user", ("api", "user"), "core"),
+        ("//host/x?u=http://y", ("relative", "host/x"), "core"),
+        ("x:y", ("relative", "x:y"), "core"),
+        ("javascript:alert(1)", ("relative", "javascript:alert(1)"), "core"),
+        ("user:1", ("relative", "user:1"), "core"),
+        ("javascript://evil.example", ("rejected", "javascript://evil.example"), None),
+        ("", ("relative", ""), "core"),
+        (" user", ("rejected", " user"), None),
+        ("user ", ("relative", "user "), "core"),
+        ("https://api.github.com/user ", ("rejected", "https://api.github.com/user "), None),
+        ("https://api.github.com/user?q=a b ", ("api", "user"), "core"),
+    ],
+)
+def test_control_fix_preserves_endpoint_and_space_contract(endpoint, expected, bucket):
+    assert gh._canonical_endpoint(endpoint) == expected
+    if bucket is not None:
+        assert gh._endpoint_bucket(expected[1]) == bucket

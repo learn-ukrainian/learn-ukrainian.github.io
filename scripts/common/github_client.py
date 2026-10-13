@@ -584,7 +584,9 @@ def _canonical_endpoint(endpoint, host="github.com"):
     """
     if endpoint is None:
         return "unknown", None
-    if endpoint and (ord(endpoint[0]) <= 32 or ord(endpoint[0]) == 127):
+    # Reject controls before splitting queries/fragments or URL parsing can discard them.
+    # Keep the existing leading-space refusal; query-value spaces remain valid.
+    if any(ord(char) < 32 or ord(char) == 127 for char in endpoint) or endpoint.startswith(" "):
         return "rejected", endpoint
     # gh accepts leading slashes and bare x:y as relative endpoint paths.
     # Only an initial scheme selects a host; query and fragment text never do.
