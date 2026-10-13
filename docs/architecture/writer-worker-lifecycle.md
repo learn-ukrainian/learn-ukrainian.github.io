@@ -1,11 +1,12 @@
 # Writer-worker lifecycle
 
-Normative SHA-256: `fafa61ce0ede0344937e8522dfb966a058e411c36a8ce7982e9217e0a0df668d`
+Normative SHA-256: `576db353d7c0a465bba29d2b06892a27580bb758da033bb7277a9509a6e0dfed`
 
-Status: round-5 proposal for designated approval. No implementation or cleanup is authorized by this document alone.
+Status: round-6 proposal for designated approval. No implementation or cleanup is authorized by this document alone.
 Issue: [#10559](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10559).
 Parent: [#7919](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7919).
-Round-5 source revision: `78098ad5c632878feba755f234cfaa7951a4b6f4` from the dispatch base.
+Round-6 source revision: `556d76795c8b63273ffad305d0cf44e8c59cd7e7` from freshly fetched `origin/main`.
+Imported exact-r5 artifact: `276b53a4fa9f1e3114bb9def2bb1083815964804`, preserving both original commits' authorship.
 Historical appendices retain their original source revisions.
 
 The digest covers the exact UTF-8 bytes between the two normative markers, excluding the markers themselves.
@@ -375,13 +376,13 @@ I-01 extends `record_cf_verdict.record` with an explicit branch/head-scoped pre-
 and mutually exclusive with `--pr`. Inputs bind repository,
 lifecycle, branch, exact H, frozen review base/commit set, reservation and completed review task. It uses
 `collect_branch_review_facts` and the same model/family qualification, author exclusion, `SELF_REVIEW_DETECTED`,
-reply/artifact validation and rejection checks as PR mode. It verifies live remote H and the frozen base/range;
-it does not call `_pr` or require a PR number to derive author facts. Unknown author/task provenance refuses approval.
+reply/artifact validation and rejection checks as PR mode. It verifies live remote H, the base ref name and complete commit set;
+it does not call `_pr` or require a PR number to derive author facts. UNKNOWN or MALFORMED writer provenance refuses approval.
 The recorder durably appends `REQUEST_CHANGES`, `CHANGES_REQUESTED` or `BLOCKED` and findings without any PR.
 APPROVE becomes a local effective receipt only after all required driver dispositions and chain bindings validate.
 A qualified candidate APPROVE with pending dispositions is durably recorded as an ineffective assessment; replay after
 disposition revalidates the same review task/H and appends the effective receipt, without a new review reservation.
-The receipt binds repository/lifecycle/branch/H/base, reservation nonce, review task/model/family/harness, verdict,
+The receipt binds repository/lifecycle/branch/H, base ref name and observed base SHA, frozen commit set, reservation nonce, review task/model/family/harness, verdict,
 brief/resolver/artifact digests, rejection-chain digest and disposition digests. Its PR binding is initially null.
 The ledger and immutable receipt survive removal. Existing PR mode continues to revalidate exact PR author facts.
 
@@ -390,8 +391,12 @@ including direct CLI, typed requests, shim routing, supervisor finalization and 
 it requires and read-backs the durable effective local APPROVE receipt, verifies its exact live remote H and
 all reservation/chain/disposition bindings, and refuses UNKNOWN, missing, stale, conflicting or ineffective evidence.
 Caller-supplied approval text is insufficient. Exempt pre-activation/non-writer PRs retain existing gates.
-On creation it records the PR identity, rechecks its branch/H/base and PR commit set against the frozen review facts,
-then invokes the recorder's idempotent PR projection to post and verify the existing `<!-- cf-verdict v1 -->` marker
+On creation it records the PR identity, rechecks its branch/H and base ref name against the frozen review facts,
+and requires complete PR/local commit-set equality with the reviewed set, using `pr_review_facts`' enumeration and exclusions.
+The observed base SHA is evidence, not an equality precondition. A moved `main` SHA alone cannot invalidate unchanged-H approval
+when the base ref name and complete reviewed commit set remain equal. A changed ref name, commit set or H refuses projection;
+an unchanged head cannot obtain another review merely because `main` moved.
+After those checks it invokes the recorder's idempotent PR projection to post and verify the existing `<!-- cf-verdict v1 -->` marker
 and normal review status. It links that read-back to the local receipt without changing its original reviewed target.
 A timeout or failed read-back stores `publication_unconfirmed`, PR identity if known and next-action owner.
 Replay looks up the same branch/H creation operation and reconciles the existing PR/comment; it cannot duplicate
@@ -410,11 +415,29 @@ also recorded in the lifecycle ledger. The index retains historical aliases afte
 Default dispatch branches have `<agent>/<normalized-task>` shape from `scripts/delegate.py:_derive_worktree_branch`.
 A matching prefix, indexed writer branch or writer dispatch provenance triggers classification, not the new precondition by itself.
 
+Registered dispatch provenance means a validated hot/archive dispatch task record attributed to a branch commit,
+or an actual/historical branch alias or attributed task identity matching a retained admission-index entry.
+The classifier collects the complete branch facts with `collect_branch_review_facts` before PR creation and
+`pr_review_facts` once a PR exists. Both use `scripts/review/record_cf_verdict.py:_attribute_commit`.
+Only `source: task-record` or `task-record-archived` proves record-backed attribution, after repository and harness checks.
+It joins the normalized `task_id` and `record_task_id` to the complete hot/archive/index lookup and validates the
+dispatch identity, mode and any lifecycle/epoch binding. An indexed identity/alias remains registered if its task record is MISSING.
+
+An ordinary mandatory `X-Agent` trailer is author attribution, not proof of registered dispatch.
+`_attribute_commit` permits `trailer-model`, `single-family-harness` and `unresolved-author` when no task record exists.
+Its `task_id` and `BranchReviewFacts.author_task_ids` can contain an unregistered slug.
+Neither that slug, a `TASK_ID` pattern match, a model/family token nor a branch prefix proves registration.
+For each commit the classifier first validates attribution, then looks up any attributed identities and branch aliases.
+If complete consistent lookup finds no registered dispatch, ordinary model-attributed or no-dispatch trailers remain
+eligible for EXEMPT no-dispatch. Manual/orchestrator publication retains today's author qualification and review gates.
+This distinction grants no exemption on failed attribution, unreadable/incomplete lookup, or invalid/conflicting records.
+
 Before verified activation, the new consumers retain existing gates with the new precondition disabled;
 not-yet-created epoch/index records cannot block I-02 through I-04 delivery. They read I-01's proposed durable admission-index activation control before classification. I-01 initializes it
 as DISABLED before installing consumers; the approved cutover atomically changes it to ACTIVATED with the epoch.
 ACTIVATED is irreversible in this contract; restart or missing epoch cannot reset it. UNKNOWN control refuses activation-dependent mutations. Once activated, missing
-epoch/index records are UNKNOWN and refuse; a missing record cannot imply disabled activation or undo it.
+global epoch/index stores are UNKNOWN and refuse; a missing store cannot imply disabled activation or undo it.
+Individual entries after complete lookup use MISSING as defined below.
 
 The activation-epoch record freezes repository, epoch ID/time, initial/delta inventory digests, pre-activation
 open PR numbers and admitted non-final task/lifecycle IDs, including reaped PUSHED and legacy needs_finalize records.
@@ -437,16 +460,18 @@ Evaluate the remaining rows from top to bottom and use the first established cla
 | PR number or attributed task/lifecycle identity is in the frozen pre-activation set | EXEMPT, retain existing exact-head review/publication/CI gates even after a later fix commit |
 | Readable uniquely attributed task record proves `mode: read-only` and no conflicting writer binding | EXEMPT, retain existing gates |
 | Post-activation admission has one matching task/index/ledger epoch for actual branch and H | GOVERNED, require reservation, effective local verdict, rejection chain and driver dispositions |
-| X-Agent task provenance outside the frozen set, not proven read-only, has a MISSING task record, index entry or writer lifecycle binding | MALFORMED, refuse; renamed/explicit branches cannot evade the gate |
+| Proven registered dispatch provenance outside the frozen set, not proven read-only, has a MISSING task record, index entry or writer lifecycle binding | MALFORMED, refuse; renamed/explicit branches and omitted trailers cannot erase retained index provenance |
 | Readable writer record or indexed writer alias outside the frozen set lacks a consistent post-activation binding | MALFORMED, refuse; no timestamp heuristic grants exemption |
-| No X-Agent provenance and complete hot/archive/index lookup finds no dispatch | EXEMPT no-dispatch, including an agent-prefixed branch; retain existing gates |
+| Valid ordinary author attribution and complete consistent hot/archive/index lookup finds no registered dispatch | EXEMPT no-dispatch, including model-attributed or mandatory no-dispatch X-Agent trailers and an agent-prefixed branch; retain existing gates |
 | No preceding row can be established with complete consistent evidence | UNKNOWN, refuse |
 
 `classify_writer_pr` is consumed by the publisher before PR creation using branch/H, by the verdict recorder,
 and by the keeper using PR identity/H. A prefix triggers complete lookup, never exemption or governance by itself.
 Migration cannot retroactively change activation scope. This proposed classifier is not a current keeper capability.
 I01-AC06 covers all rows, frozen I-02 through I-04/reaped tasks after successor commits, missing-versus-unreadable
-records, renamed/explicit branches and unchanged no-dispatch/read-only fixtures. OD-09 binds this exact scope.
+records, renamed/explicit branches and unchanged no-dispatch/read-only fixtures. Include explicit model trailers,
+manual/orchestrator slugs with no dispatch record, indexed branches with a MISSING record, malformed trailers and
+conflicting/unreadable records. OD-09 binds this exact scope.
 
 ## Abandonment and deletion authority
 
@@ -462,7 +487,15 @@ another process running as the same OS user. `scripts/fleet_comms/message_plane.
 `sender`; shared lifecycle-ledger and Fleet-store access is not isolated from writer processes.
 This proposal adds no writer sandbox denial, driver-held secret or cryptographic identity check.
 A same-user writer can forge a consistent authoritative event, assignment and ledger receipt, not just local JSON.
-Same-user forgery is an explicit out-of-scope residual owned by Harness, requiring operator-only risk acceptance under OD-12
+Trailer/provenance omission is a separate evasion boundary beside same-user event/receipt forgery.
+Today `_attribute_commit` refuses missing or malformed `X-Agent` with `author model unknown: missing explicit X-Agent model trailer`.
+Its Git-proven clean-base-merge and admitted unknown-history exceptions retain their existing qualification rules.
+The proposed classifier also refuses missing writer bindings when a validated dispatch record or retained index proves provenance.
+It cannot prove dispatch origin if a same-user writer removes accessible task records and individual index entries
+while the global stores remain readable, and substitutes a valid
+ordinary model-attributed or no-dispatch trailer. A mandatory trailer alone cannot distinguish that evasion from legitimate
+manual/orchestrator publication. No omission grants exemption while retained indexed provenance or conflicting evidence remains.
+Same-user forgery and this remaining trailer/provenance-omission evasion are explicit out-of-scope residuals owned by Harness, requiring operator-only risk acceptance under OD-12
 before activation. Without acceptance this trust-boundary decision blocks activation.
 
 Compensating controls are public-copy digest match, stable issue entry and an operator-visible decision log projected
@@ -784,7 +817,9 @@ unknown ownership or unmapped debt stops activation with producers disabled. No 
 
 The cutover receipt binds the initial/delta digests, capture boundaries, complete frozen PR/task sets, membership
 reconciliation and epoch/index/ledger digests. No admission crosses that boundary unclassified. An admitted writer
-before the boundary is in the frozen set; an admission after it binds the published epoch in both records.
+before the boundary is in the frozen set. A new lifecycle admitted after it binds the published epoch in both records.
+A post-activation continuation of a frozen pre-activation lifecycle keeps its null epoch and exemption across fix heads,
+task continuations and historical branch aliases; continuation cannot retroactively acquire the new epoch.
 Publication is atomic/read-back verified under the existing lock. Crash or mismatched copies leaves activation disabled
 until idempotent reconciliation proves the same boundary and immutable epoch. Landing I-01 alone never sets the epoch
 or enables its new writer precondition. This defines proposed activation behavior, not permission to activate here.
@@ -1070,7 +1105,7 @@ For OD-04, Option B is recommended because it retains review dispatch authority 
 | OD-09 | Approve Harness keeper/verdict-recorder ownership and publisher/reservation/rejection-chain preconditions with bounded activation delta inventory and frozen exemption classification only for admissions bound to the post-activation index and lifecycle-ledger epoch; pre-activation and agent-prefixed no-dispatch PRs retain today's gates, with refusal for malformed/conflicting lifecycle evidence | Advisor pair |
 | OD-10 | Ban `keep_worktree` for new writers while preserving legacy retention until a scoped custody decision | Advisor pair |
 | OD-11 | Require evaluation fixtures from outside the implementation author's family | Advisor pair |
-| OD-12 | Accept same-user authoritative-event forgery outside the threat model, with public-copy digest, issue-entry and operator-visible log controls, as a security-posture risk that blocks activation without operator acceptance | Operator |
+| OD-12 | Accept same-user authoritative-event/receipt forgery and remaining trailer/provenance-omission evasion outside the threat model, with today's missing-trailer refusal, retained-index classification, public-copy digest, issue-entry and operator-visible log controls, as security-posture risks that block activation without operator acceptance | Operator |
 
 <!-- normative:end -->
 
@@ -1081,23 +1116,43 @@ that window but do not create atomicity between GitHub and the host. Failed post
 Unknown session authority, content scope, ignored artifacts, branch switches, or #10537 recovery identity block mutation.
 Owner: Infra for deletion proof, Harness for identity/admission, and the original lane for content custody.
 Expiry cannot grant discard authority. Overdue custody remains counted; ordinary admission obeys the normative slot/budget
-rules and bounded migration/prerequisite exemptions. Same-user forgery remains a proposed operator-accepted residual under OD-12,
+rules and bounded migration/prerequisite exemptions. Same-user forgery and remaining trailer/provenance-omission evasion remain proposed operator-accepted residuals under OD-12,
 owned by Harness; attribution and digest agreement do not prove actor authentication.
 No approved digest can be claimed from this author's own checks.
 Round 5 brings custody release versus finality, nonwriter admission, dispute attention, durable review state and
 activation delta capture into the normative contract for B4/R1-R3. Their implementation and approval remain with
 Harness and Infra; no authoring check proves them operational. No B1-B5 or R1-R3 item is silently deferred.
 
-Issue #10559 AC-02 still requires the same Opus critic via AGY and an independent Gemini 4 recheck on exact r5,
-both returned to CTO. Harness reconciles the exact-head/hash findings. If no new blocker of equal severity appears,
-proceed per CTO; otherwise retain the quality floor and report the blocker. The supplied round-4 REQUEST_CHANGES is revision input,
-not approval of the revision. #10559 AC-03 still requires actual implementation issues with parent links,
+The supplied exact-r5 Opus REQUEST_CHANGES blocks despite the Gemini APPROVE. The bounded r6 brief requires one
+qualified Opus exact-r6 recheck returned to the accountable driver; no Gemini rerun is required.
+Harness reconciles the exact-head/hash findings. If no new blocker of equal severity appears,
+proceed under the existing designated choices; otherwise retain the quality floor and report the blocker.
+Neither the supplied r5 reviews nor authoring checks approve r6. #10559 AC-03 still requires actual implementation issues with parent links,
 strict task-card PASS, and current dispatch preflight. This brief prohibits creating them.
 Owners: accountable Harness driver and Infra. The pre-delivery disk-pressure residual remains Infra's responsibility.
 
-## Round-5 reconciliation and current source evidence
+## Round-6 reconciliation and current source evidence
 
-All eight round-4 critic items are accepted as specification corrections. The source revision at the top is the
+This revision accepts exactly five corrections from the supplied r5 reviews. Opus's REQUEST_CHANGES is blocking
+revision input despite Gemini's APPROVE. The source revision at the top supplies current-code evidence;
+the classifier, publisher and activation requirements remain proposed behavior. B1-B5 and the other r5 requirements remain intact.
+
+| Item | Correction and changed section | Current source evidence | Retained acceptance |
+| --- | --- | --- | --- |
+| N1 | Writer-PR classifier distinguishes proven registered dispatch/index provenance from ordinary mandatory or model-attributed trailers; valid manual/orchestrator no-dispatch publication retains existing gates; genuine UNKNOWN/MALFORMED refuses | `scripts/review/record_cf_verdict.py:_attribute_commit` at 304 validates hot/archive records and uses trailer/model or harness fallback without a record; `BranchReviewFacts.author_task_ids` at 500 retains even unregistered slugs; `collect_branch_review_facts` at 663 and `pr_review_facts` at 918 provide complete attribution/enumeration | I01-AC06, OD-09 |
+| R-b | Abandonment trust boundary and OD-12 explicitly name trailer/provenance omission beside same-user event/receipt forgery, today's refusal and the remaining valid-trailer evasion boundary | `_attribute_commit` at 336-337 refuses missing/malformed trailers; at 343-387 record-backed attribution precedes no-record fallback; retained admission-index enforcement is proposed, not live proof | I01-AC02/06, I03-AC04, OD-12 |
+| R-a nit | Writer-PR classifier says missing global epoch/index stores are UNKNOWN; individual records after complete lookup are MISSING | `_attribute_commit` at 343-387 distinguishes an existing hot/archive task record from no-record fallback; the proposed activation control and classifier table supply the store/entry distinction | I01-AC06, I04-AC08 |
+| R-c nit | Packet delivery/cutover exempts continuations of frozen pre-activation lifecycles after activation, preserving null epoch | I-01/I-04's proposed immutable frozen set and index aliases distinguish a new lifecycle admission from continuation; no current producer is claimed to enforce this | I01-AC06, I04-AC08 |
+| Base recheck nit | Pre-PR publisher checks base ref name and complete reviewed commit-set equality; a moved main SHA alone cannot force unchanged-head review | `pr_review_facts` at 937-970 validates base name and exact H, collects current facts, applies authorship exclusions and compares GitHub/local commit sets; observed base SHA remains evidence | I01-AC10, unchanged-head reservation rule |
+
+The author recomputes the normative digest using the documented Python byte range and an independent Node crypto read.
+Document/cited-path, packet-ownership, Markdown, diff/trailer and four mandatory guard checks validate the artifact;
+they do not supply the held-out Opus judgment. The driver owns exact-r6 recheck and serial publication.
+This worker leaves a clean unpushed commit with disposition `needs_finalize`. No implementation, activation or lease mutation is authorized here.
+
+## Round-5 reconciliation and source evidence, historical
+
+All eight round-4 critic items are accepted as specification corrections. The round-5 source revision `78098ad5c632878feba755f234cfaa7951a4b6f4` is the
 current-code evidence baseline, not a claim that these proposed gates already operate. The full supplied report
 returned `VERDICT: REQUEST_CHANGES`; its B1-B5/R1-R3 findings are the only scope of this revision.
 The r4 artifact was cherry-picked from `10bdf2ef1c62a430f6a85fb6a34e03d07a12e586`, preserving its author and trailer.
