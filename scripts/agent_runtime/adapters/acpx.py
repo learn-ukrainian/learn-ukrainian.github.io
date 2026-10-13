@@ -2095,7 +2095,7 @@ def _redact_claude_acp_paths(text: str | None, metadata: Mapping[str, object]) -
     """Replace the seat's host paths in provider text with short labels; receipts copy it."""
     if not text:
         return text
-    labels = {"claude_code_launcher": "<claude-acp-launcher>", "claude_code_executable": "<host-claude-code>"}
+    labels = {"claude_code_launcher": "<acp-launcher-copy>", "claude_code_executable": "<host-claude-code>"}
     for key, label in labels.items():
         value = metadata.get(key)
         if isinstance(value, str) and value.startswith("/") and len(value) > 1:

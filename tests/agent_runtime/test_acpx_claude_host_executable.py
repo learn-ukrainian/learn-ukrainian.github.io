@@ -1208,7 +1208,7 @@ def test_host_refusals_and_post_run_text_name_no_absolute_host_path(host, tmp_pa
     )
     assert failed.ok is False
     _assert_path_free(failed.stderr_excerpt or "", tmp_path)
-    assert "<claude-acp-launcher>" in (failed.stderr_excerpt or "")
+    assert "<acp-launcher-copy>" in (failed.stderr_excerpt or "")
     _edit_in_place(executable)
     _assert_path_free(_parse(plan, _ok_stream()).stderr_excerpt, tmp_path)
 
