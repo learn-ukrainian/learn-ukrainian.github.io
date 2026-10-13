@@ -3229,6 +3229,8 @@ def test_actual_missing_user_bus_runs_each_serial_check_once(repo, ending, monke
         "scripts/pre_commit/project_python.sh",
         textwrap.dedent(f"""\
         #!/bin/bash
+        if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then echo opsec >> scans; exec "{sys.executable}" "$@"; fi
+        if [ "$4" = check-no-internal-ids ]; then echo internal-ids >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$2" = pre_commit ]; then echo pre >> checks; exit 0; fi
         if [ "$2" = scripts.ci.pre_push_shadow ]; then echo shadow >> checks; echo '{{"selected_tests":[]}}'; exit 0; fi
         echo pytest >> checks
@@ -3256,6 +3258,7 @@ def test_actual_missing_user_bus_runs_each_serial_check_once(repo, ending, monke
     )
     assert code == dict(green=0, red=1, incomplete=75)[ending]
     assert sorted((repo / "checks").read_text().splitlines()) == ["pre", "pytest", "shadow"]
+    assert (repo / "scans").read_text().splitlines() == ["opsec", "internal-ids"]
     row = _measurements(repo)[-1]
     assert row["scope"]["status"] == "serial"
     assert row["scope"]["reason"].startswith("scope_setup_")
@@ -3566,6 +3569,8 @@ def test_injected_scope_executes_full_stages_once_and_reads_peak_before_exit(
         "scripts/pre_commit/project_python.sh",
         textwrap.dedent(f'''\
         #!/bin/bash
+        if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then echo opsec >> scans; exec "{sys.executable}" "$@"; fi
+        if [ "$4" = check-no-internal-ids ]; then echo internal-ids >> scans; exec "{sys.executable}" "$@"; fi
         if [ "$2" = pre_commit ]; then echo pre >> checks; exit 0; fi
         if [ "$2" = scripts.ci.pre_push_shadow ]; then echo shadow >> checks; echo '{{"selected_tests":[]}}'; exit 0; fi
         echo pytest >> checks
@@ -3617,6 +3622,7 @@ os.kill(pid,signal.SIGKILL)
     )
     assert code == dict(green=0, red=1, incomplete=75, missing_peak=0, resource_breach=75, unsettled=75)[ending]
     assert sorted((repo / "checks").read_text().splitlines()) == ["pre", "pytest", "shadow"]
+    assert (repo / "scans").read_text().splitlines() == ["opsec", "internal-ids"]
     row = _measurements(repo)[-1]
     assert row["scope"]["status"] == "supported"
     assert row["peak_memory_bytes"] == (
