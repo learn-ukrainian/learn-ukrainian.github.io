@@ -1,11 +1,12 @@
 # Writer-worker lifecycle
 
-Normative SHA-256: `5d19cf956eff22829e3c1590ae121be0ec56cf08bb29fbdfebf69eb9db4bbe3c`
+Normative SHA-256: `fafa61ce0ede0344937e8522dfb966a058e411c36a8ce7982e9217e0a0df668d`
 
-Status: round-4 proposal for designated approval. No implementation or cleanup is authorized by this document alone.
+Status: round-5 proposal for designated approval. No implementation or cleanup is authorized by this document alone.
 Issue: [#10559](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10559).
 Parent: [#7919](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7919).
-Source revision: `4b4696291a613436725ad1e1c5aa5249f4bb3da5`.
+Round-5 source revision: `78098ad5c632878feba755f234cfaa7951a4b6f4` from the dispatch base.
+Historical appendices retain their original source revisions.
 
 The digest covers the exact UTF-8 bytes between the two normative markers, excluding the markers themselves.
 It includes the newline immediately after the opening marker and the newline immediately before the closing marker.
@@ -29,14 +30,16 @@ PY
 ## Outcome and scope
 
 Every dispatched writer has one outcome, one issue, one branch, and one canonical worktree.
-A writer lifecycle ends only as MERGED, PUSHED, or ABANDONED, with verified cleanup.
+Each settled writer handback is MERGED, PUSHED, or ABANDONED, with verified cleanup.
+PUSHED keeps the lifecycle active until later MERGED or ABANDONED finality.
 A process exit, timeout, rejected gate, or failed provider invocation is an attempt result, never a lifecycle disposition.
 There is no local-only end state. New writer records cannot emit `needs_finalize`.
 All active consumers distinguish lifecycle custody from attempt results. Historical evidence may retain the old literal as migration input.
 Read-only and review tasks use the separate replacement contract below; they cannot claim a writer disposition.
 
 The writer commits, passes the pre-push gate, pushes, requests independent cross-family review,
-fixes findings in the same worktree, obtains exact-head approval, opens the PR, records the verdict, and waits for CI.
+fixes findings in the same worktree, obtains a durable pre-PR exact-head approval receipt, opens the PR,
+publishes and verifies the PR verdict projection, and waits for CI. Material findings require driver handback as defined below.
 The writer never merges, enqueues, arms auto-merge, or approves its own work.
 The review-request actor in that flow depends on the designated choice of Option A or Option B below.
 The merge-queue keeper enqueues only with current exact-head review and green required CI.
@@ -54,7 +57,8 @@ Crash-rescue identity remains owned by #10537. Bulk corpus and other non-task pa
 
 ## Dispositions and receipts
 
-The final disposition is exactly one of the following.
+Each verified worker handback has exactly one of the following dispositions. Only MERGED and ABANDONED are lifecycle-final.
+PUSHED releases local worktree custody while the lifecycle remains active for review, CI and landing.
 
 | State | Required end shape | Transition owner | Required evidence | Receipt |
 | --- | --- | --- | --- | --- |
@@ -82,14 +86,23 @@ Required writer fields are:
 - Legacy inventory receipt/digest, immutable `legacy_clock_started_at`, cohort budget/membership, separate legacy counts,
   and any admission exemption's driver grant, dependency, owned paths and finite execution budget.
 - Gate receipt path/digest, command outcome, gated SHA, remote branch, observed remote SHA, and observation time.
+- Exact-head pre-removal local-readiness observation path/digest, commit/trailer inventory, publication and removal linkage.
+- Original directory baseline plus ordered recreation-generation receipts binding predecessor removal, new inode and baseline digest.
+- Canonical durable review-state path/digest, pre-PR verdict receipt and its later PR-publication binding.
 - Review request reservation, resolver receipt/digest, fixed brief digest, driver retry decision if any, review task,
   verdict receipt/digest, reviewer provenance, reviewed SHA, PR identity, required CI receipts, and merge proof when applicable.
-- Terminal `disposition`, issue abandonment record when applicable, deletion authority, and common-reaper receipt path/digest.
+- Handback `disposition`, issue abandonment record when applicable, deletion authority, and common-reaper receipt path/digest.
 - Append-only lifecycle rejection chain across all heads, stable finding IDs, successor brief carry-forward digest,
   and driver disposition receipts for every prior material finding; changing task, branch or PR cannot reset the chain.
 - Cleanup observations for registered tree, directory, local refs, and remote refs, with UTC timestamps and typed unknowns.
 
-Terminal receipts have no unknown required field. Receipt writes use atomic replacement and immutable attempt history.
+Disposition receipts have no unknown required field. The existing
+`agents_extensions/shared/schemas/task-lifecycle.v1.schema.json` gains an optional typed `writer` property
+with `schema: writer-lifecycle.v1` and the fields above. Its absence preserves non-writer ledger validation.
+Writer-aware readers require that property for governed writers; they cannot accept a free-form task-record status as evidence.
+I-01 owns this schema and validator/closeout compatibility; I-04 owns the canonical contract documentation.
+This extension preserves the existing product `current_state` and `terminal_goal`; worker PUSHED never maps to product MERGED.
+Receipt writes use atomic replacement and immutable attempt history.
 A removal receipt binds lifecycle, creator, every current claimant, run nonces, branch, head, proof digests,
 removal action, post-removal Git registration and filesystem checks, remaining refs, and timestamp.
 A `skipped`, `retained`, timeout, or error result never proves removal.
@@ -114,7 +127,7 @@ Blocked custody never satisfies handback or completion.
 | D-08 | Worker crash with dirty files only, bounded continuation cannot publish | (c) ABANDONED | Driver records which content is discarded and why | Dirty-content manifest digest, tracked/untracked/ignored inventory, attribution, issue record, ABANDONED receipt |
 | D-09 | Reused tree whose work is pushed, neither merged nor abandoned | (b) PUSHED | Driver settles the whole reuse cohort; reaper removes the canonical tree | Creator and all claimant identities, actual branch/head, gated remote head, cohort release proof, PUSHED receipt |
 | D-10 | Abandoned by lane decision | (c) ABANDONED | Driver records the decision; reaper deletes only the described task scope | Read-back issue record, full content and ref inventory, absence proof, ABANDONED receipt |
-| D-11 | PR closed unmerged by an external actor, without a lane cancellation | (b) PUSHED | Driver decides the next action; operator closure forbids automatic restore/replacement and needs operator direction before reopening; any authorized replacement PR still requires approval | Closed-PR observation and closer, live remote H, recorded driver decision, actionable reservation/review binding and next-action owner, removal receipt; closure alone is not abandon authority |
+| D-11 | PR closed unmerged by an external actor, without a lane cancellation | (b) PUSHED after authorized actionable recovery; otherwise blocked pending D-10 decision | Driver records authorized recovery or attributed abandonment; operator closure forbids automatic restore/replacement and needs operator direction before reopening | Closed-PR observation and closer or explicit UNKNOWN, live remote H, recorded driver decision, actionable review/next owner and removal receipt for PUSHED; D-10 requires its own abandonment and residual evidence |
 | D-12 | Local branch ref remains after its remote branch was deleted, with no merge proof | (c) ABANDONED | Driver authorizes exact local-ref/content abandonment; reaper removes it after identity and process checks | Live remote-absence proof, exact local head and content manifest, attributed decision and matching issue copy, all-ref absence receipt |
 
 For D-04, REQUEST_CHANGES is not approval. No new PR opens until the current head has APPROVE.
@@ -123,11 +136,18 @@ For D-05 through D-08, successful continuation changes the shape to D-01, D-02, 
 The table does not authorize abandonment merely because a deadline or retry counter expired.
 The lane driver must make and record that decision. If the driver cannot safely decide, the blocked deadline and escalation apply.
 D-09 does not override D-03 or D-10. Reuse is a cleanup obligation, never a fourth disposition.
-D-11 becomes D-10 only on an attributed lane cancellation. If its remote is absent, reconcile as D-12.
-D-11 retains the existing same-head reservation and verdict. Replacement PR creation does not authorize another review.
-The driver records the closer and decision. Unknown closure authority blocks restoration. After operator closure,
-the driver seeks direction or records an authorized cancellation, and never automatically restores the PR.
-Until then the remote head and custody owner remain visible; a closed, inactive PR alone cannot prove actionable PUSHED handback.
+D-11 becomes D-10 only on a new attributed driver abandonment decision, never on the close event alone.
+If its remote is absent, reconcile as D-12. D-11 retains the existing same-head reservation and verdict.
+Replacement PR creation does not authorize another review. Unknown closure authority blocks restoration.
+After operator closure the driver seeks operator direction before reopening or replacing the PR.
+If reopening is declined, will not be pursued, or the closer remains UNKNOWN at triage, the driver may instead
+record `writer-abandon.v1` with `reason_code: lane_cancelled`, the closure observation and explicit cancellation reason.
+That decision must bind all content/refs, include non-empty `residual_issue` and `residual_owner` for unmet ACs,
+and satisfy the same event attribution, public read-back and unique-content guards as D-10. Unknown closer is recorded,
+not invented. Cancelling this lifecycle does not override an operator instruction to preserve its content.
+While a decision is pending, keep the lifecycle blocked with its existing clock, owner and protected refs, even if the tree
+was already removed under an earlier PUSHED receipt. A closed inactive PR alone cannot prove a new actionable PUSHED handback.
+An attributed abandonment followed by verified task-only cleanup is the defined exit when restoration is unavailable.
 D-12 with actual MERGED evidence is D-03. Proven authorized republication changes D-12 to a PUSHED shape.
 
 ## Bounded blocked custody
@@ -139,8 +159,10 @@ Unknown/conflicting stream membership refuses ordinary admission; changing drive
 For new lifecycles, the proposed maximum blocked interval is **24 hours**, frozen at first entry.
 The proposed ordinary per-lane limit is **one blocked writer lifecycle**, including escalated and overdue custody.
 The new-lifecycle clock begins at the first failed disposition or continuation prerequisite, not the driver's next visit.
-Retries, restarts, reason changes and driver changes cannot reset it. Verified disposition ends the clock.
-Ordinary review/CI waiting after verified PUSHED tree removal does not consume this slot.
+Retries, restarts, reason changes and driver changes cannot reset it. Verified MERGED/ABANDONED ends the clock;
+PUSHED clears undisputed local-custody blocking, subject to the material-dispute exception below.
+Ordinary undisputed review/CI waiting after verified PUSHED tree removal does not consume this slot.
+The material-finding dispute exception below keeps its attention clock/slot until adjudication or abandonment.
 These limits and the exceptions below await designated approval under OD-02.
 
 Legacy debt uses a separate clock and admission budget. Its clock starts at the first authorized migration inventory
@@ -162,7 +184,8 @@ I-04 migration code must land before debt-based admission refusal switches on. I
 activation; authorized recovery prerequisites remain dispatchable afterwards.
 
 The existing Fleet plane/attention board and status output expose per lane `blocked_writer_count`, `overdue_writer_count`,
-`legacy_blocked_writer_count`, `legacy_overdue_writer_count`, cohort budget/remaining allowance, oldest blocked age,
+`legacy_blocked_writer_count`, `legacy_overdue_writer_count`, `blocked_nonwriter_count`, `overdue_nonwriter_count`,
+cohort budget/remaining allowance, oldest blocked age,
 deadline, next event and accountable driver. Missing fields or unavailable counts are UNKNOWN, never zero.
 The driver quotes these live counts each cycle and before handback. The automated requirement is that status output
 contains the count fields with explicit zero or UNKNOWN; it does not claim to test the driver's spoken quotation.
@@ -177,6 +200,22 @@ or driver-attributed abandonment under OD-03. The driver cannot extend clocks, a
 Expiry authorizes neither deletion nor publication of rejected work. Unsafe-to-dispose custody stays overdue and cannot
 claim compliance/completion. Ordinary admission remains refused on a full slot or unknown/exceeded budget;
 bounded migration/prerequisite exemptions remain available. I01-AC05/I04-AC07 test these rules without relaxing guards.
+
+`blocked_nonwriter_count` counts unfinished read-only/review custody separately, including overdue records.
+A non-zero or UNKNOWN count refuses ordinary new read-only/review dispatches in that lane. It does not by itself
+consume the blocked-writer slot or refuse ordinary writers; the writer slot and legacy-budget rules still apply.
+A read-only/review prerequisite needed to dispose a named blocked lifecycle may use the same bounded driver grant
+and debt-only exemption described above. No unrestricted review exception or duplicate healthy review is allowed.
+The board also exposes `overdue_nonwriter_count`; all count fields are explicit zero or UNKNOWN, never omitted.
+
+A material-finding dispute sets phase `awaiting_operator_adjudication`, with finding IDs, rejection digest, current H,
+operator decision awaited, driver owner and escalation receipt on the existing attention board. It blocks APPROVE,
+PR creation and enqueue. Dispute attention persists even after a PUSHED tree release. Tree release ends only its
+local-custody clock; the unresolved dispute keeps its original `blocked_since` and `blocked_deadline` and consumes
+the one blocked-writer admission slot until attributed operator adjudication resolves it or verified abandonment ends it.
+Ordinary undisputed review/CI waiting remains exempt from that slot. Entering a dispute starts the clock once;
+restarts, successor heads and awaiting an operator response never pause or reset it. Deadline escalation does not
+authorize retiering, approval, discard or extension. These admission/attention details remain part of proposed OD-02.
 
 ## Exact pushed proof and tree recreation
 
@@ -196,10 +235,26 @@ PUSHED requires all of the following at the final candidate head H:
    Committed, tracked, untracked, and ignored task content is accounted for.
 4. The worker has exited, every write/review-input claim is released, and process/open-file probes establish absence.
    Review runs against a separate remote snapshot, or completes its local-input claim before removal.
-5. The reaper revalidates local identity under the existing worktree lock and checks fresh remote evidence before deletion.
+5. Before any removal, the supervisor appends a durable `writer-pushed-local.v1` observation to the canonical lifecycle
+   ledger while the registered tree still exists. It uses `task_lifecycle.observe_local_git` at H to capture lifecycle/attempt,
+   actual branch, worktree registration/path, creator/generation, complete commits and X-Agent trailers, changed paths,
+   and local cleanliness/content-accounting results. It binds H, the immutable gated-publication digest and observation digest.
+   This is preparation for PUSHED, not a premature disposition. Receipt write/read-back failure refuses removal.
+   Each successor H' requires its own observation; the receipt at H cannot establish H' readiness.
+6. The reaper revalidates local identity under the existing worktree lock and checks fresh remote evidence before deletion.
    A concurrently moved branch blocks removal. The receipt records the observed remote version and recheck result.
-6. The reaper removes only the local tree through the shared guarded remover and verifies registration and directory absence.
+7. The reaper removes only the local tree through the shared guarded remover and verifies registration and directory absence.
    It checks again that the remote branch is H. Failure leaves an explicit repair obligation, never a false PUSHED receipt.
+
+After removal, I-01 updates `task_lifecycle._latest_premerge_local`, `_local_readiness` and `evaluate` to accept
+the durable local observation only when its lifecycle, branch and exact current reviewed head match, its gated publication
+and successful removal receipts verify, and fresh remote observations still agree. A missing tree alone remains a blocker.
+An old head, missing commit/trailer inventory, altered digest, incomplete removal or contradictory current facts refuses.
+Pre-removal facts establish local implementation readiness only; current GitHub facts still decide PR identity, review, CI
+and merge. The stale H observation cannot substitute for H' even if it is the latest receipt with `worktree_present: true`.
+I-01 updates `task_closeout.GhGitHubAdapter.observe`, `cmd_reconcile` and mutation preconditions to consume that
+same head-bound readiness path for reconcile, AC sync, enqueue checks and issue close. No mutation becomes authorized
+by merely accepting local readiness. Lost callback recovery must durably capture/read back this observation before reaping.
 
 There is no preserve-then-reap step, local backup branch, rescue ref, or archive copy in this writer path.
 Durable task artifacts needed for continuation must be committed to the permitted branch or recorded in an already-authorized
@@ -233,6 +288,21 @@ It refuses another checkout of the branch, a path collision, moved remote head, 
 It never uses `--base origin/main` to replace the continuation branch.
 A changed default branch does not silently rebase the writer. Deliberate synchronization follows existing exact-head rules.
 
+Same-path recreation preserves exactly one original `worktree_reused: false` creator. Each new attempt is
+`worktree_reused: true`. Under the existing lock and before worker spawn, I-02 calls the proposed I-03
+`ignored_task_output.refresh_recreation_baseline` API with lifecycle/creator, current attempt, branch/H,
+predecessor removal digest and new directory identity. It refreshes only after proving predecessor removal,
+same lifecycle/branch/remote H, and newly created directory identity.
+I-03 appends a recreation-generation receipt with original creator/run nonce, predecessor removal digest, current attempt
+nonce, new `[st_dev, st_ino]`, and the newly captured `ignored-baseline.v1` inventory/digest. The original baseline stays
+historical. The current cohort's effective baseline references this generation; it never adds a second creator.
+`ignored_task_output.reused_worktree_creator` still requires the single original creator. `_classified_inventory` selects
+the verified current generation rather than trusting an old inode or relabelling arbitrary ignored content as disposable.
+An unexpected inode change on an existing tree, missing predecessor removal, ambiguous creator, stale generation or
+unknown inventory refuses spawn/removal. A crash before baseline publication leaves held custody; bounded replay may
+complete that same generation after revalidation, without inventing another creator or overwriting history.
+I-01 owns the checkpoint reference, I-02 owns the caller, and I-03 owns capture/classification and shared claim integration.
+
 ## Review request authority and rejection history
 
 The new reservation/rejection-chain publication and keeper preconditions in this section apply only to post-activation
@@ -246,6 +316,14 @@ Option B keeps the lane driver as request actor on the writer's behalf and uses 
 Option B is recommended because it keeps review dispatch authority with the driver and grants no dispatch capability to the writer.
 The issue's proposed writer-request flow is Option A, not implicit approval of that transfer.
 Under either option, review judgment and finding disposition remain undelegated driver responsibilities.
+
+For every writer review the supervisor chooses one durable state file at the primary canonical task-store root,
+`batch_state/writer-review/<lifecycle_id>/<head>/closeout.json`, using the lifecycle digest component as a safe path segment.
+It records the canonical path in the ledger and passes it explicitly as global `closeout_cli --state-file` before
+`resolve-reviewer` and all target/finding/proof operations. This is the proposed writer default, not today's CLI behavior,
+which requires `--state-file`. A writer-worktree `.agent/` or relative cwd fallback is refused for this flow.
+Resolver/verdict/behavior receipts and continuation briefs must survive PUSHED removal; the ledger binds immutable
+receipt digests, not just mutable state-file contents. Shared-store writes use existing locks and atomic replacement.
 
 The actor runs `closeout_cli resolve-reviewer` with the exact author identity, profile, risk, and owned paths.
 It may execute **only the returned reviewer invocation**, with no alternate model, harness, effort, or weakened constraints.
@@ -267,6 +345,18 @@ A head with REQUEST_CHANGES, CHANGES_REQUESTED, or BLOCKED additionally requires
 The decision names the findings, why another review of unchanged content is justified, resolver receipt,
 one allowed successor request, and the prior receipt digest. The writer has no policy authority to supply or edit that decision; same-user forgery remains the operator-only OD-12 residual.
 
+The writer may fix H to H' in-session and attach claimed remediation evidence to the successor request.
+It may not adjudicate, skip, re-tier or clear a prior material finding. The reviewer supplies an exact-head assessment;
+only the lane driver records its attributed disposition after inspecting H' and that assessment.
+If any prior material finding needs disposition, the bounded writer round hands back its gated H' as D-04 PUSHED
+with `next_action: driver_finding_disposition`, unresolved finding IDs and a durable request/assessment pointer.
+The writer does not wait indefinitely for driver intervention or attempt PR creation within that round.
+The driver may mechanically request the reserved successor review under the approved option, record dispositions
+and then finalize the local APPROVE receipt. A reviewer's candidate APPROVE awaiting those dispositions is stored
+as an assessment with `approval_effective: false`, not published as APPROVE or consumed as permission.
+Negative verdicts are recorded immediately. Once dispositions and the exact-head verdict validate, a subsequent
+bounded continuation or the driver's mechanical publisher may open the PR; neither acquires review-judgment authority.
+
 All negative history is lifecycle-scoped across heads and remains effective until a qualified successor has a toolful,
 exact-head verdict and the driver records a disposition receipt for every prior material finding. Each receipt binds
 finding ID, original rejection digest, current H, resolution evidence and driver identity/sequence under OD-03.
@@ -279,33 +369,84 @@ without a driver disposition must be refused by APPROVE publication and the keep
 Negative verdicts and findings are always recorded in the lifecycle chain; this approval gate cannot suppress rejection evidence.
 I01-AC04 and I01-AC06 include negative tests at admission, verdict publication, and keeper consumption.
 
+### Pre-PR verdict recording and publisher gate
+
+I-01 extends `record_cf_verdict.record` with an explicit branch/head-scoped pre-PR mode, exposed as `--pre-pr`
+and mutually exclusive with `--pr`. Inputs bind repository,
+lifecycle, branch, exact H, frozen review base/commit set, reservation and completed review task. It uses
+`collect_branch_review_facts` and the same model/family qualification, author exclusion, `SELF_REVIEW_DETECTED`,
+reply/artifact validation and rejection checks as PR mode. It verifies live remote H and the frozen base/range;
+it does not call `_pr` or require a PR number to derive author facts. Unknown author/task provenance refuses approval.
+The recorder durably appends `REQUEST_CHANGES`, `CHANGES_REQUESTED` or `BLOCKED` and findings without any PR.
+APPROVE becomes a local effective receipt only after all required driver dispositions and chain bindings validate.
+A qualified candidate APPROVE with pending dispositions is durably recorded as an ineffective assessment; replay after
+disposition revalidates the same review task/H and appends the effective receipt, without a new review reservation.
+The receipt binds repository/lifecycle/branch/H/base, reservation nonce, review task/model/family/harness, verdict,
+brief/resolver/artifact digests, rejection-chain digest and disposition digests. Its PR binding is initially null.
+The ledger and immutable receipt survive removal. Existing PR mode continues to revalidate exact PR author facts.
+
+`scripts/publish/github.py:publish` enforces the classified post-activation writer precondition for every `pr-create`,
+including direct CLI, typed requests, shim routing, supervisor finalization and `--draft`. Before any GitHub write
+it requires and read-backs the durable effective local APPROVE receipt, verifies its exact live remote H and
+all reservation/chain/disposition bindings, and refuses UNKNOWN, missing, stale, conflicting or ineffective evidence.
+Caller-supplied approval text is insufficient. Exempt pre-activation/non-writer PRs retain existing gates.
+On creation it records the PR identity, rechecks its branch/H/base and PR commit set against the frozen review facts,
+then invokes the recorder's idempotent PR projection to post and verify the existing `<!-- cf-verdict v1 -->` marker
+and normal review status. It links that read-back to the local receipt without changing its original reviewed target.
+A timeout or failed read-back stores `publication_unconfirmed`, PR identity if known and next-action owner.
+Replay looks up the same branch/H creation operation and reconciles the existing PR/comment; it cannot duplicate
+the PR, fabricate publication, enqueue, or request another review. A moved head refuses approval projection.
+The keeper still requires the exact-head GitHub verdict and CI plus the local governed-writer chain.
+The pre-PR local receipt breaks the creation/recording dependency without weakening the before-PR review gate.
+
 ### Writer-PR classifier and keeper scope
 
 I-01 adds `classify_writer_pr` in `scripts/orchestration/task_lifecycle.py`, consumed by the verdict recorder and keeper.
-Inputs are repository, PR head branch and exact H, complete hot/archive dispatch admission index/lifecycle bindings,
-the activation-epoch record, registered dispatch-agent prefixes and complete PR author-task/`X-Agent` provenance.
+Inputs are repository, branch and exact H, PR number when available, complete hot/archive dispatch admission index/lifecycle bindings,
+the activation-epoch record, registered dispatch-agent prefixes and complete branch/PR author-task/`X-Agent` provenance.
 Admission records every post-activation writer branch in that ledger index, including explicit `--branch` overrides and
 legacy switches, before publication. Each entry binds admission time, lifecycle identity and the exact activation epoch
 also recorded in the lifecycle ledger. The index retains historical aliases after tree removal, task archival and replacement PR creation.
 Default dispatch branches have `<agent>/<normalized-task>` shape from `scripts/delegate.py:_derive_worktree_branch`.
 A matching prefix, indexed writer branch or writer dispatch provenance triggers classification, not the new precondition by itself.
 
-The new writer precondition applies only to a lifecycle admitted at or after the explicit activation epoch, with a matching
-admission-index entry and lifecycle-ledger epoch. A governed writer requires exactly one valid lifecycle binding for the
-actual branch and H, plus reservation, rejection chain and dispositions. Missing required evidence for that governed
-lifecycle, malformed evidence or conflicting evidence refuses enqueue. Post-activation writer provenance with a missing
-index entry or binding is malformed evidence, not an exemption; renamed or explicit branches cannot evade the precondition.
-Unreadable required classification sources yield UNKNOWN and refuse enqueue; a complete lookup finding no dispatch is not UNKNOWN.
-Pre-activation open writer PRs, including I-02 through I-04 and PRs whose trees were already reaped, keep today's gates.
-Agent-prefixed PRs with no dispatch and proven non-writer/read-only PRs also keep today's gates.
-Absence of a lifecycle binding, reservation or rejection chain alone cannot refuse those exempt PRs.
-For those PRs the classifier/keeper adds a refusal only when lifecycle evidence is malformed or conflicting;
-exact-head APPROVE and green required CI remain necessary under existing gates. Migration cannot retroactively change the activation scope.
-This is proposed behavior, not a current keeper capability.
+Before verified activation, the new consumers retain existing gates with the new precondition disabled;
+not-yet-created epoch/index records cannot block I-02 through I-04 delivery. They read I-01's proposed durable admission-index activation control before classification. I-01 initializes it
+as DISABLED before installing consumers; the approved cutover atomically changes it to ACTIVATED with the epoch.
+ACTIVATED is irreversible in this contract; restart or missing epoch cannot reset it. UNKNOWN control refuses activation-dependent mutations. Once activated, missing
+epoch/index records are UNKNOWN and refuse; a missing record cannot imply disabled activation or undo it.
 
-The writer precondition's activation scope and Harness keeper/recorder ownership need OD-09 approval.
-I01-AC06 covers post-activation default, explicit and renamed branches, missing required binding/index/provenance,
-pre-activation open PRs with reaped trees, agent-prefixed PRs without dispatch and unchanged non-writer/read-only fixtures.
+The activation-epoch record freezes repository, epoch ID/time, initial/delta inventory digests, pre-activation
+open PR numbers and admitted non-final task/lifecycle IDs, including reaped PUSHED and legacy needs_finalize records.
+I-02 through I-04 admissions before activation enter that frozen set; their later fix commits do not remove exemption.
+A frozen PR/task identity remains pre-activation across head changes. The index retains historical branch aliases.
+No record can acquire a post-activation epoch by migration or by changing its branch, task or PR.
+
+Classification uses fresh complete hot/archive lookups, not a hot-directory-only scan. ENOENT for an individual
+record is MISSING only after complete lookup proves no matching historical record. Permission/I/O failure, malformed
+JSON/schema, unreadable directories or incomplete enumeration is UNKNOWN, not absence. Required epoch/index reads
+must succeed before exemptions can be asserted. Existing malformed or conflicting lifecycle evidence is refused,
+even for an otherwise exempt PR; an absent optional lifecycle binding alone does not invalidate an exemption.
+After activation, these preliminary refusals take precedence over the classification table.
+Evaluate the remaining rows from top to bottom and use the first established classification.
+
+| Evidence after complete lookup | Classification and effect |
+| --- | --- |
+| Epoch, index, ledger or task lookup unreadable/incomplete or parse failure | UNKNOWN, refuse new writer publication/verdict approval and enqueue; record the source failure |
+| Conflicting identity/epoch/index/ledger, or a readable invalid binding | MALFORMED, refuse; absence is not an invalid optional binding |
+| PR number or attributed task/lifecycle identity is in the frozen pre-activation set | EXEMPT, retain existing exact-head review/publication/CI gates even after a later fix commit |
+| Readable uniquely attributed task record proves `mode: read-only` and no conflicting writer binding | EXEMPT, retain existing gates |
+| Post-activation admission has one matching task/index/ledger epoch for actual branch and H | GOVERNED, require reservation, effective local verdict, rejection chain and driver dispositions |
+| X-Agent task provenance outside the frozen set, not proven read-only, has a MISSING task record, index entry or writer lifecycle binding | MALFORMED, refuse; renamed/explicit branches cannot evade the gate |
+| Readable writer record or indexed writer alias outside the frozen set lacks a consistent post-activation binding | MALFORMED, refuse; no timestamp heuristic grants exemption |
+| No X-Agent provenance and complete hot/archive/index lookup finds no dispatch | EXEMPT no-dispatch, including an agent-prefixed branch; retain existing gates |
+| No preceding row can be established with complete consistent evidence | UNKNOWN, refuse |
+
+`classify_writer_pr` is consumed by the publisher before PR creation using branch/H, by the verdict recorder,
+and by the keeper using PR identity/H. A prefix triggers complete lookup, never exemption or governance by itself.
+Migration cannot retroactively change activation scope. This proposed classifier is not a current keeper capability.
+I01-AC06 covers all rows, frozen I-02 through I-04/reaped tasks after successor commits, missing-versus-unreadable
+records, renamed/explicit branches and unchanged no-dispatch/read-only fixtures. OD-09 binds this exact scope.
 
 ## Abandonment and deletion authority
 
@@ -463,6 +604,36 @@ A reaper failure preserves the existing tree in place only as an active repair o
 It does not create a backup, terminal handback, or unowned retained outcome.
 Issue #10537 supplies crash-rescue identity when that separate path is required. Its failure grants no alternate deletion authority.
 
+## Custody release, lifecycle finality and branch protection
+
+Attempt settlement, local worktree custody release and lifecycle finality are separate predicates.
+New writer records remain `status: custody_held` until verified removal; a PUSHED handback projects
+`status: writer_pushed`, `custody_released: true`, `lifecycle_final: false`. Continuation returns to
+`custody_held` before recreating/spawning. Only complete MERGED/ABANDONED cleanup sets `lifecycle_final: true`
+and a compatible final top-level status. Prior attempt results stay historical.
+The compatible consumers distinguish custody-release eligibility from archive/final eligibility; a generic
+`RELEASED_TASK_STATUSES` membership must never prove writer finality or branch discard authority.
+`writer_pushed` may release a proven absent tree claim, but is not an archivable/final lifecycle status.
+
+I-01 changes `stale_task_records.keep_hot_reason` and both selection/apply phases of `archive_terminal` to keep
+every non-final writer record and its receipt sidecars hot, even when the tree is absent and age is zero.
+I-03 changes `batch_state_retention._eligible` to exclude those same records/sidecars and binds archival eligibility
+to verified MERGED/ABANDONED cleanup. Missing/unreadable/invalid finality evidence keeps records hot and refuses pruning.
+The durable admission index and history are never pruned while referenced by an active lifecycle or frozen epoch.
+
+I-03 changes `branch_sweep._active_tasks` to protect every non-final writer's current and historical task branch refs
+from the index/ledger, regardless of top-level attempt status, absent tree, age or lack of an OPEN PR.
+`scheduled_worktree_cleanup.cleanup_stale_origin_branches`,
+`cleanup_gone_local_branches` and `cleanup_untracked_local_branches` apply the same protection before selection
+and again immediately before deleting any local/remote ref. `_stale_ref_delete_reason` cannot override it with
+main ancestry, a durable closed-PR head or another remote copy. UNKNOWN protection evidence refuses deletion.
+The existing OPEN-PR protection remains. Scoped common-reaper MERGED cleanup requires verified landing;
+scoped ABANDONED cleanup requires the exact attributed decision and public read-back. These authorized cleanup
+transitions may remove their bound refs before finality is set; generic sweepers cannot infer that authority.
+A whole-lifecycle abandon decision allows only its scoped cleanup
+while finality is pending, never a generic sweeper bypass. Interrupted cleanup stays hot until all absences verify.
+Thus D-02/D-04 before PR creation and D-11 after external closure retain branch refs until MERGED/ABANDONED.
+
 ## Read-only and review completion replacement
 
 All new task records, writer or non-writer, persist top-level `status: custody_held` while local custody is unresolved.
@@ -474,12 +645,14 @@ validated lifecycle custody-release proof; process status or a missing ledger ca
 New read-only/review attempts replace `needs_finalize` with `status: custody_held`, typed `attempt_result` and reason
 `completion_unconfirmed` for background jobs, unknown probes, missing report/verdict, finalize exceptions or interrupted completion.
 The record carries `report_confirmed: false`, `custody_released: false`, an owner and next action.
-Only verified custody disposition permits a compatible released top-level status. Historical attempt statuses stay in history.
+Only verified custody disposition permits a compatible released top-level status, including `writer_pushed` above.
+Custody release alone never permits writer archival or branch deletion. Historical attempt statuses stay in history.
 Only a complete durable report or qualified review verdict plus absence proof can produce `done` and release custody.
 A negative verdict can be a successfully delivered review, but never code approval.
 A failed request keeps its review reservation; it does not authorize a new same-head review.
-The supervisor applies the same blocked deadline/count to unfinished local custody, with a separate
-`blocked_nonwriter_count` on the board. It never maps these tasks to PUSHED or ABANDONED just to clear the board.
+The supervisor applies the same blocked deadline/count to unfinished local custody, with separate
+`blocked_nonwriter_count` and `overdue_nonwriter_count` on the board and the bounded-admission rule above.
+It never maps these tasks to PUSHED or ABANDONED just to clear the board.
 Clean read-only removal still uses the common reaper and verified claim/process absence.
 Task-specific Atlas result evidence uses `completion_unconfirmed` with its own owner and manifest,
 without claiming writer publication or releasing unfinished jobs. I01-AC08 tests these consumers.
@@ -598,8 +771,23 @@ exit-path/status-release proof passes. I-04 development does not depend on activ
 After those gates and creation of the operator-authorized migration inventory/cohort budget, activation is a separate
 approved step. The operator authorizes that step, including OD-12 risk acceptance; the accountable Harness driver sets
 one immutable activation-epoch ID and UTC start time in the lifecycle ledger and admission index before enabling new
-producers, writer publication/keeper preconditions and debt-based admission refusal. Every subsequent writer admission
-binds that epoch in both records. Landing I-01 alone never sets the epoch or enables its new writer precondition.
+producers, writer publication/keeper preconditions and debt-based admission refusal.
+
+Immediately before epoch publication, I-04 captures a bounded delta from its initial inventory through the cutover
+boundary under the existing admission lock, with I-01 coordinating admission serialization and settling any in-flight
+pre-activation admissions into the captured set before publishing the boundary. The approved activation
+card freezes maximum delta records, capture duration and any additional legacy cohort allowance. It includes new
+hot/archive admissions, changed non-final records, reaped PUSHED tasks and pre-activation open PR identities.
+Initial members keep their original inventory-start clock; newly admitted debt joins a separately authorized delta
+cohort with its first inventory timestamp, without resetting existing clocks. Excess allowance, incomplete lookup,
+unknown ownership or unmapped debt stops activation with producers disabled. No automatic grant expands the cohort.
+
+The cutover receipt binds the initial/delta digests, capture boundaries, complete frozen PR/task sets, membership
+reconciliation and epoch/index/ledger digests. No admission crosses that boundary unclassified. An admitted writer
+before the boundary is in the frozen set; an admission after it binds the published epoch in both records.
+Publication is atomic/read-back verified under the existing lock. Crash or mismatched copies leaves activation disabled
+until idempotent reconciliation proves the same boundary and immutable epoch. Landing I-01 alone never sets the epoch
+or enables its new writer precondition. This defines proposed activation behavior, not permission to activate here.
 The operator separately authorizes canary execution.
 Live migration remains separately scoped. Authorized migration/prerequisite dispatches retain the debt-refusal exemption.
 
@@ -617,6 +805,8 @@ Owned source and template paths:
 - `scripts/orchestration/task_record_store.py`
 - `scripts/orchestration/dispatch_settle.py`
 - `scripts/orchestration/task_lifecycle.py`
+- `agents_extensions/shared/schemas/task-lifecycle.v1.schema.json`
+- `scripts/orchestration/task_closeout.py`
 - `scripts/orchestration/stale_task_records.py`
 - `scripts/orchestration/orchestrator_control.py`
 - `scripts/orchestration/dead_worker_state.py`
@@ -638,6 +828,7 @@ Owned source and template paths:
 - `scripts/orchestration/merge_queue_keeper.py`
 - `scripts/review/record_cf_verdict.py`
 - `scripts/review/closeout_cli.py`
+- `scripts/publish/github.py`
 - `docs/templates/writer-review-request.v1.md`, new fixed brief template.
 
 Owned test paths:
@@ -654,6 +845,7 @@ Owned test paths:
 - `tests/test_delegate_ownership_dispatch.py`
 - `tests/orchestration/test_task_record_store.py`
 - `tests/orchestration/test_task_lifecycle.py`
+- `tests/orchestration/test_task_closeout.py`
 - `tests/orchestration/test_task_lifecycle_carriers.py`
 - `tests/orchestration/test_stale_task_records.py`
 - `tests/orchestration/test_orchestrator_control.py`
@@ -672,6 +864,11 @@ Owned test paths:
 - `tests/test_record_cf_verdict.py`
 - `tests/review/test_record_cf_verdict.py`
 - `tests/test_review_closeout_cli.py`
+- `tests/test_typed_github_publisher.py`
+- `tests/test_publish_r5_regressions.py`
+- `tests/test_publish_diagnostics.py`
+- `tests/test_publish_hostname.py`
+- `tests/publish/test_pr_merge_squash_scan.py`
 - `tests/ai_agent_bridge/test_acp_execution.py`
 - `tests/api/test_atlas_jobs_router.py`
 - `tests/hygiene/test_tmp_sweep_scratch.py`
@@ -694,13 +891,18 @@ Owned test paths:
 | I01-AC02 | Terminal disposition requires exact receipts and survives atomic-write interruption; attribution, public-copy and operator-log checks enforce the OD-12 assurance boundary without claiming same-user authentication | Same file and `tests/orchestration/test_task_lifecycle.py`, missing/mismatched/stale receipt, wrong-session and assurance-field cases; forged-event boundary in I03-AC04 |
 | I01-AC03 | Actual branch/head, wait/status, hot/archive, settlement, attention, and all enumerated status consumers remain fail-closed across mixed schemas | `tests/test_writer_lifecycle_consumers.py` covers the source manifest; existing consumer tests above |
 | I01-AC04 | Only the resolver-returned invocation and fixed brief can request review; writer merge/enqueue/self-review remain refused and PR creation requires exact-head APPROVE | `tests/test_delegate_review_admission.py` and `tests/test_writer_lifecycle.py`, altered invocation/model/template and `SELF_REVIEW_DETECTED` negative cases |
-| I01-AC05 | First new blocker freezes a 24-hour deadline without reset; one ordinary blocked writer refuses ordinary outcomes; status output contains all four explicit new/legacy blocked/overdue count fields; bounded migration/prerequisite grants exempt only debt refusal; deadline breaches escalate | `tests/test_writer_lifecycle_consumers.py`, literal status-field/zero/UNKNOWN assertions; clock before/at deadline and after restart; full-slot exemption and unrelated-outcome refusal; missing escalation stays visible; no expiry-triggered deletion |
+| I01-AC05 | First new blocker freezes a 24-hour deadline without reset; one ordinary blocked writer refuses ordinary outcomes; status output contains all six explicit writer/legacy/nonwriter blocked/overdue count fields; bounded migration/prerequisite grants exempt only debt refusal; deadline breaches escalate | `tests/test_writer_lifecycle_consumers.py`, literal status-field/zero/UNKNOWN assertions; clock before/at deadline and after restart; full-slot exemption and unrelated-outcome refusal; missing escalation stays visible; no expiry-triggered deletion |
 | I01-AC06 | Same-head duplicates and cross-head review shopping fail across task/harness/restart; successor briefs carry unresolved lifecycle findings; publication/keeper require driver dispositions only for post-activation admissions bound to the index and ledger epoch; malformed/conflicting lifecycle evidence refuses; pre-activation and no-dispatch gates are unchanged | `tests/test_delegate_review_admission.py`, `tests/test_record_cf_verdict.py`, `tests/orchestration/test_integration_sweep.py`, and `tests/orchestration/test_merge_queue_keeper.py`: REJECT at H, trivial H', APPROVE at H' without disposition refuses; missing/tampered chain/brief refuses; post-activation default/explicit/renamed writer branch missing binding refuses; a pre-activation open writer PR with exact-head APPROVE and green CI still enqueues after I-01 lands; include I-02 through I-04, an already-reaped tree and agent-prefixed no-dispatch PR; premature activation and conflicting/malformed epoch/index evidence refuse; non-writer/read-only fixtures preserve gates |
 | I01-AC07 | Supervisor exit after gated publication invokes the common reaper and proves absence for new and reused trees, even with a failed attempt result; crash between push and cleanup retries the same receipt | `tests/test_writer_lifecycle.py`, real Git OPEN-PR fixture and process-exit/receipt integration; no fake reaper return as behavior proof |
 | I01-AC08 | Read-only/review/Atlas unconfirmed completion uses top-level `custody_held` plus separate typed attempt failure; complete report/verdict plus absence is required for `done`; failed review cannot reset reservation | `tests/test_writer_lifecycle_consumers.py`, `tests/test_delegate_review_rounds.py`, and `tests/test_atlas_job_protocol.py`, missing report/verdict, background and unknown probe cases |
 | I01-AC09 | Every status-keyed release/finality/archive/reaper consumer is enumerated and tested; none releases a custody-held tree for any attempt result; `custody_held` belongs to no released/final set | `tests/test_writer_lifecycle_consumers.py` enumerates status comparisons/sets across repository Python/shell/YAML consumers in an explicit consumer-to-test ledger, failing on an unclassified release site; failed/timeout/crashed/cancelled/refusal/background cases and old-reader unknown-status retention; I-03 real claim/removal tests prove no custody-held release |
+| I01-AC10 | Before any PR exists, negative verdicts append to the durable chain; effective APPROVE requires the reserved exact-head review and driver dispositions; all publisher pr-create routes and drafts enforce that receipt, then reconcile the same PR/marker after timeout | `tests/test_record_cf_verdict.py`, `tests/review/test_record_cf_verdict.py`, `tests/test_typed_github_publisher.py` and `tests/test_publish_r5_regressions.py`, no-PR REQUEST_CHANGES/APPROVE, missing/ineffective receipt, moved H, altered branch facts, direct CLI/shim/typed/supervisor draft attempts and interrupted publication without a duplicate PR |
+| I01-AC11 | Material-finding remediation is a writer claim; candidate approval stays ineffective until driver disposition; D-04 handback survives tree removal and the next continuation cannot approve itself | `tests/test_writer_lifecycle.py`, `tests/test_review_closeout_cli.py` and recorder tests, H to H' fixture, writer adjudication refusal and driver-attested transition |
+| I01-AC12 | Schema validates writer/non-writer ledgers; pre-removal local readiness is durable at each H/H' and closeout consumes only the exact current head after removal | `tests/orchestration/test_task_lifecycle.py`, `tests/orchestration/test_task_closeout.py` and supervisor tests, real Git reaped-tree reconcile/AC-sync/review/CI fixtures; H evidence for H', absent/tampered observation and interrupted write all refuse |
+| I01-AC13 | Writer resolver/closeout state uses the canonical durable path; nonwriter debt gates ordinary nonwriter dispatches, bounded prerequisites remain possible, and disputes preserve clocks/counts after PUSHED | `tests/test_review_closeout_cli.py`, `tests/test_delegate_review_admission.py` and `tests/test_writer_lifecycle_consumers.py`, state survives real removal, relative/worktree path refusal, zero/nonzero/UNKNOWN admission, prerequisite bounds and dispute deadline across restart/head/tree changes |
 
 Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/test_writer_lifecycle.py tests/test_writer_lifecycle_consumers.py tests/test_delegate.py tests/test_dispatch_settle.py tests/test_delegate_review_admission.py tests/test_record_cf_verdict.py tests/orchestration/test_integration_sweep.py tests/orchestration/test_merge_queue_keeper.py`.
+Also verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/orchestration/test_task_lifecycle.py tests/orchestration/test_task_closeout.py tests/review/test_record_cf_verdict.py tests/test_review_closeout_cli.py tests/test_typed_github_publisher.py tests/test_publish_r5_regressions.py tests/test_publish_diagnostics.py tests/test_publish_hostname.py tests/publish/test_pr_merge_squash_scan.py`.
 The card names the remaining owned test paths and any read-only importer tests explicitly in additional bounded commands.
 Stop on a missing receipt accepted as terminal, review shopping, inconsistent discard attribution, or invisible overdue custody.
 Residual owner: Harness.
@@ -733,6 +935,7 @@ Owned test paths:
 | I02-AC02 | Soft checkpoint and hard-kill recovery preserve branch, dirty digest, budget, and nonce lineage; absent legacy limits snapshot the named defaults, three attempts, and 21600-second cumulative cap | Same file, deterministic watchdog fixtures for D-06/D-07/D-08 and final 600-second allowance inside the hard cap |
 | I02-AC03 | Native resume accepts only the bound session/tree/lifecycle; stateless routes use the explicit checkpoint; other adapters and bridge restrictions remain unchanged | Same file and the enumerated Codex/Claude adapter tests, cross-task and reviewer-session refusal |
 | I02-AC04 | Moved remote, live writer, path collision, exhausted budget, incomplete gate, unauthorized branch switch, and unsupported limits refuse continuation | Same file, negative cases with literal error assertions and no second checkout |
+| I02-AC05 | Recreation invokes the I-03 baseline-generation API under the existing lock before spawn, keeping one creator and referencing the new inode/generation | `tests/test_writer_continuation.py` and read-only I-03 ignored-output tests, real remove/recreate at the same path, interrupted refresh and unexpected inode refusal |
 
 Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/test_writer_continuation.py tests/agent_runtime/test_runner_failover.py tests/agent_runtime/test_codex_adapter.py tests/agent_runtime/adapters/test_claude_adapter.py`.
 Stop on another created path for one outcome or cross-task native resume. Residual owner: Harness.
@@ -753,6 +956,8 @@ Owned source paths:
 - `scripts/orchestration/merge_closeout.py`
 - `scripts/orchestration/reaper_lifecycle.py`
 - `scripts/orchestration/scheduled_worktree_cleanup.py`
+- `scripts/hygiene/branch_sweep.py`
+- `scripts/maintenance/batch_state_retention.py`
 
 Owned test paths:
 
@@ -763,6 +968,9 @@ Owned test paths:
 - `tests/test_worktree_claims_lock_identity.py`
 - `tests/test_fleet_post_task_reap.py`
 - `tests/fleet/test_ignored_task_output.py`
+- `tests/test_ignored_task_output.py`
+- `tests/maintenance/test_batch_state_retention.py`
+- `tests/hygiene/test_branch_sweep_evidence.py`
 - `tests/orchestration/test_merge_closeout.py`
 - `tests/orchestration/test_scheduled_worktree_cleanup.py`
 - `tests/orchestration/task_family/test_executor.py`
@@ -779,8 +987,12 @@ Owned test paths:
 | I03-AC05 | Delta discard removes only exact commits after H and dirty task content, settles PUSHED at H, and preserves the remote branch, PR, and review; interrupted replay converges | New disposition tests, approved remote H plus gate-failed L; moved H/L, non-descendant L, unlisted content, digest drift, and unauthorized decision all refuse |
 | I03-AC06 | Scheduled recovery calls the same writer receipt rule after exit, including OPEN PRs and reused cohorts; remote-branch deletion remains forbidden while OPEN; non-writer guards stay intact | `tests/orchestration/test_scheduled_worktree_cleanup.py` and new disposition tests, lost supervisor callback, interrupted receipt, and OPEN-PR branch-preservation cases |
 | I03-AC07 | Claim/removal functions cannot release a custody-held tree on attempt status; release-site enumeration is complete and old-reader `custody_held` stays claimed | `tests/orchestration/test_worktree_claims_cli.py`, `tests/orchestration/test_reap_worktrees.py` and new disposition tests consume the I01-AC09 ledger, exercising each listed release path with held custody and every released attempt result |
+| I03-AC08 | PUSHED releases only tree custody; non-final records/sidecars stay hot and branch refs stay protected before PR creation and after external closure, regardless of age or attempt status | `tests/test_branch_sweep.py`, `tests/hygiene/test_branch_sweep_evidence.py`, `tests/maintenance/test_batch_state_retention.py`, `tests/orchestration/test_scheduled_worktree_cleanup.py` and read-only `tests/orchestration/test_stale_task_records.py`, D-02/D-04/D-11 with absent tree, min-age zero, closed-PR durable head/main ancestry, UNKNOWN finality and selection/apply races; only verified final cleanup permits archival |
+| I03-AC09 | New-inode recreation refreshes the effective ignored baseline by an append-only generation receipt without adding a creator or discarding unknown files | `tests/fleet/test_ignored_task_output.py`, `tests/test_ignored_task_output.py`, `tests/orchestration/test_worktree_claims_cli.py` and disposition tests, same-path new-inode baseline, stale/missing/ambiguous generation refusal and unchanged non-writer behavior |
+| I03-AC10 | D-11 with no authorized actionable recovery stays blocked/protected until an attributed abandonment and residual entry permits D-10 cleanup | New disposition tests, unknown/external/operator closer, declined reopening, missing decision/public copy/residual owner and explicit preservation refusal; authorized decision preserves unmet issue ACs |
 
 Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/orchestration/test_writer_disposition_reap.py tests/test_continuation_worktree_reap.py tests/orchestration/test_reap_worktrees.py tests/orchestration/test_worktree_claims_cli.py tests/test_fleet_post_task_reap.py tests/orchestration/test_merge_closeout.py tests/orchestration/test_scheduled_worktree_cleanup.py`.
+Also verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/test_branch_sweep.py tests/hygiene/test_branch_sweep_evidence.py tests/maintenance/test_batch_state_retention.py tests/fleet/test_ignored_task_output.py tests/test_ignored_task_output.py tests/orchestration/test_stale_task_records.py`.
 Stop on silent unique-content loss, missing/inconsistent discard evidence, or weakened non-writer guards. The same-user forgery residual requires operator-only OD-12 acceptance. Residual owners: Infra and Harness.
 
 ### I-04 Infra: bounded migration and canonical instruction rollout
@@ -815,6 +1027,7 @@ Code must land before activation. Live execution additionally requires operator-
 | I04-AC05 | Retired/unavailable writers receive a recorded eligible substitution with fresh independence/capacity checks, or bounded escalation; no silently changed author identity | Migration tests, retired route and no eligible replacement negative cases |
 | I04-AC06 | Three-shape canary observes real semantic and removal outcomes within six invocations/43200 seconds; bulk refuses missing canary, frozen aggregate allowance, or health/headroom proof | Migration tests, budget/canary refusal; separate authorized live canary receipts and held-out evaluator output before bulk |
 | I04-AC07 | Legacy clock starts at authorized inventory, debt counts separately under operator-approved cohort budget, and authorized migration/prerequisite dispatches remain admissible when ordinary outcomes are refused; I-04 lands before refusal activation; disk-pressure residual stays visible | Migration tests and board projections with synthetic hundred-item historic cohort: no retroactive overdue burst, no restart reset, separate counts, one cohort escalation at deadline, missing/exceeded budget refusal, bounded exception/unrelated-outcome refusal, and activation-before-I-04 rejection; fresh disk proof before closeout |
+| I04-AC08 | Activation delta capture is bounded, classifies every late pre-activation admission, preserves old clocks and freezes PR/task exemptions before enabling producers | Migration tests plus read-only I-01 admission/classifier tests, a writer admitted between initial inventory and epoch including late needs_finalize, fix commit after activation, archive/reaped task, capture/epoch crash and excess/UNKNOWN delta; no gap, duplicate cohort or silently reset clock |
 
 Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/orchestration/test_writer_lifecycle_migration.py` and `npx --no-install markdownlint-cli2 docs/runbooks/worktree-cleanup.md`.
 A scoped live migration proves the inventoried denominator and zero unresolved receipts before closeout.
@@ -846,15 +1059,15 @@ For OD-04, Option B is recommended because it retains review dispatch authority 
 
 | ID | Decision awaiting approval | Approver |
 | --- | --- | --- |
-| OD-01 | Adopt lifecycle receipts and top-level `custody_held`, separating attempt results from custody release with all compatible consumers validated before activation | Advisor pair |
-| OD-02 | Adopt the defined registered-stream lane, 24-hour new/inventory-start legacy clocks, one ordinary blocked-writer slot, separate operator-budgeted legacy debt, bounded migration/prerequisite exemptions and cohort escalation after I-04 lands | Advisor pair |
+| OD-01 | Adopt lifecycle receipts, top-level `custody_held`/`writer_pushed`, exact-head durable local readiness and schema/closeout compatibility, separating attempt settlement, tree release and finality before activation | Advisor pair |
+| OD-02 | Adopt the defined registered-stream lane, 24-hour new/inventory-start legacy clocks, one ordinary blocked-writer slot, separate operator-budgeted legacy debt, bounded migration/prerequisite exemptions, nonwriter admission refusal and dispute attention/clocks, and cohort escalation after I-04 lands | Advisor pair |
 | OD-03 | Reserve discard, retry and finding-disposition policy authority to the attributed lane driver and permit scoped delta discard; same-user forgery risk acceptance is separate under OD-12 | Advisor pair |
-| OD-04 | Name Option A writer-requested review or Option B driver-requested review on the writer's behalf, allow mechanical verdict recording without judgment authority, and adopt one review per head with driver-only timeout replacement and lifecycle-scoped finding disposition; approval naming neither option is invalid | Advisor pair |
+| OD-04 | Name Option A writer-requested review or Option B driver-requested review on the writer's behalf, allow durable pre-PR/PR mechanical verdict recording without judgment authority and require material-finding driver handback, and adopt one review per head with driver-only timeout replacement and lifecycle-scoped finding disposition; approval naming neither option is invalid | Advisor pair |
 | OD-05 | Approve writer-specific PUSHED tree removal while a PR is OPEN, including reused cohorts, and automatic supervisor/scheduled recovery without preservation; retain OPEN-PR remote-branch protection | Advisor pair |
-| OD-06 | Approve same-path recreation across settled rounds, the continuation command, and narrowly scoped delegate-native session resume; no new outcome or transcript discovery | Advisor pair |
+| OD-06 | Approve same-path recreation with a verified baseline generation and one original creator across settled rounds, the continuation command, and narrowly scoped delegate-native session resume; no new outcome or transcript discovery | Advisor pair |
 | OD-07 | Approve three-attempt/21600-second default cumulative execution and the final 600-second allowance inside each attempt; retain the named existing per-attempt defaults | Advisor pair |
 | OD-08 | Approve cohort tracking issues, retired-route substitutions and the three-lifecycle/six-invocation/43200-second canary, keeping actual live cohort, debt/execution budgets and deletion grants separately operator-authorized | Advisor pair |
-| OD-09 | Approve Harness keeper/verdict-recorder ownership and writer reservation/rejection-chain preconditions only for admissions bound to the post-activation index and lifecycle-ledger epoch; pre-activation and agent-prefixed no-dispatch PRs retain today's gates, with refusal for malformed/conflicting lifecycle evidence | Advisor pair |
+| OD-09 | Approve Harness keeper/verdict-recorder ownership and publisher/reservation/rejection-chain preconditions with bounded activation delta inventory and frozen exemption classification only for admissions bound to the post-activation index and lifecycle-ledger epoch; pre-activation and agent-prefixed no-dispatch PRs retain today's gates, with refusal for malformed/conflicting lifecycle evidence | Advisor pair |
 | OD-10 | Ban `keep_worktree` for new writers while preserving legacy retention until a scoped custody decision | Advisor pair |
 | OD-11 | Require evaluation fixtures from outside the implementation author's family | Advisor pair |
 | OD-12 | Accept same-user authoritative-event forgery outside the threat model, with public-copy digest, issue-entry and operator-visible log controls, as a security-posture risk that blocks activation without operator acceptance | Operator |
@@ -871,17 +1084,48 @@ Expiry cannot grant discard authority. Overdue custody remains counted; ordinary
 rules and bounded migration/prerequisite exemptions. Same-user forgery remains a proposed operator-accepted residual under OD-12,
 owned by Harness; attribution and digest agreement do not prove actor authentication.
 No approved digest can be claimed from this author's own checks.
-The round-3 critic's lesser residuals remain outside this round's stopping rule: Harness owns attempt-settled versus
-custody-release status sets, non-writer blocked-count admission semantics and the unlisted dispute-escalation decision;
-Infra owns old-producer records created between migration inventory and activation. This round does not resolve or reopen them.
+Round 5 brings custody release versus finality, nonwriter admission, dispute attention, durable review state and
+activation delta capture into the normative contract for B4/R1-R3. Their implementation and approval remain with
+Harness and Infra; no authoring check proves them operational. No B1-B5 or R1-R3 item is silently deferred.
 
-Issue #10559 AC-02 still requires an independent Opus critic verdict on this round's exact normative hash,
-with findings reconciled by the accountable Harness driver. The supplied round-3 REQUEST_CHANGES is the input to this revision,
+Issue #10559 AC-02 still requires the same Opus critic via AGY and an independent Gemini 4 recheck on exact r5,
+both returned to CTO. Harness reconciles the exact-head/hash findings. If no new blocker of equal severity appears,
+proceed per CTO; otherwise retain the quality floor and report the blocker. The supplied round-4 REQUEST_CHANGES is revision input,
 not approval of the revision. #10559 AC-03 still requires actual implementation issues with parent links,
 strict task-card PASS, and current dispatch preflight. This brief prohibits creating them.
 Owners: accountable Harness driver and Infra. The pre-delivery disk-pressure residual remains Infra's responsibility.
 
-## Critic-item traceability
+## Round-5 reconciliation and current source evidence
+
+All eight round-4 critic items are accepted as specification corrections. The source revision at the top is the
+current-code evidence baseline, not a claim that these proposed gates already operate. The full supplied report
+returned `VERDICT: REQUEST_CHANGES`; its B1-B5/R1-R3 findings are the only scope of this revision.
+The r4 artifact was cherry-picked from `10bdf2ef1c62a430f6a85fb6a34e03d07a12e586`, preserving its author and trailer.
+
+| Item | Correction and changed section | Current file/function evidence | Packet acceptance |
+| --- | --- | --- | --- |
+| B1 | Pre-PR verdict recording and publisher gate; I-01 manifest includes the publisher | `scripts/publish/github.py:publish` at line 403 scans/sends pr-create without the pr-merge readiness guard; `scripts/review/record_cf_verdict.py:_pr` at 1309 and `record` at 1507 require an open PR; `collect_branch_review_facts` at 663 provides the branch fact collector | I01-AC04/06/10 |
+| B2 | Review request authority and rejection history distinguishes remediation claims, driver disposition and ineffective candidate approval; D-04 handback precedes approval publication | `scripts/review/closeout_cli.py:_cmd_finding` at 536 persists adjudication; `scripts/delegate.py:_create_auto_finalize_pr` at 7589 is a writer publication caller; neither establishes the proposed driver-only disposition handback | I01-AC11 |
+| B3 | Dispositions/schema; Exact pushed proof and tree recreation; durable H/H' local readiness before reaping and inode-generation refresh | `scripts/orchestration/task_lifecycle.py:validate_lifecycle` at 746 uses the closed schema; `_latest_premerge_local` at 1380, `_local_readiness` at 1395 and `evaluate` at 1450 consume prior local facts; `scripts/orchestration/task_closeout.py:GhGitHubAdapter.observe` at 457 gathers them; `scripts/fleet/ignored_task_output.py:reused_worktree_creator` at 283 and `_classified_inventory` at 460 require one creator and matching baseline inode | I01-AC12, I02-AC05, I03-AC09 |
+| B4 | Custody release, lifecycle finality and branch protection; explicit hot-record/ref guards and I-03 manifests | `scripts/orchestration/stale_task_records.py:keep_hot_reason` at 1065 and `archive_terminal` at 1292 depend on path/status; `scripts/maintenance/batch_state_retention.py:_eligible` at 370 checks released status/age; `scripts/hygiene/branch_sweep.py:_active_tasks` at 153 skips released tasks; `scripts/orchestration/scheduled_worktree_cleanup.py:_stale_ref_delete_reason` at 312 accepts durable CLOSED heads; cleanup passes at 490/629/781 need lifecycle protection | I01-AC03/09, I03-AC08 |
+| B5 | Writer-PR classifier and keeper scope freezes exemptions and distinguishes MISSING from UNKNOWN; End shapes D-11 has an attributed D-10 exit with residual owner | `scripts/orchestration/merge_queue_keeper.py:run` inspects PR comments/checks at 766-825; `scripts/review/record_cf_verdict.py:pr_review_facts` at 918 and `record` at 1507 resolve exact-head author/task facts; no current classifier proves the proposed exemption boundary | I01-AC06, I03-AC10, I04-AC03/08 |
+| R1 | Review request authority and rejection history pins the durable canonical writer state file explicitly | `scripts/review/closeout_cli.py:_build_parser` requires global --state-file at 689-697; resolver output merges into that file, with a worktree-relative example in the epilog | I01-AC13 |
+| R2 | Packet ownership and delivery order captures bounded activation delta and freezes all pre-activation PR/task identities before enabling producers | `scripts/orchestration/task_record_store.py` is the existing shared task store; `scripts/delegate.py` admits tasks; activation/delta capture is a proposed I-04 helper plus I-01 admission integration, not an existing producer capability | I04-AC08, I01-AC06 |
+| R3 | Bounded blocked custody defines nonwriter admission and dispute attention/clocks; Read-only and review completion replacement retains separate counts | `scripts/orchestration/worktree_claims.py:RELEASED_TASK_STATUSES` at 65 classifies attempt outcomes; `scripts/work/attention.py` is the existing attention consumer owned by I-01; neither proves the proposed debt/dispute policy | I01-AC05/13 |
+
+Source evidence was read with bounded `sed` ranges and `rg -n` definition checks in the assigned worktree.
+Existing source/schema/test paths and exclusive packet ownership are checked by the held authoring verifier.
+Each implementation verification command names tests explicitly and uses at most two workers. Paths marked new
+are implementation additions; their future behavior tests were not executed during this document revision.
+Markdown lint, the existing normative digest recipe, an independent Node crypto computation, diff checks and the
+four required static guards validate this artifact. They cannot establish implementation readiness or critic approval.
+Ruff is inapplicable to the one-document change. Historical verification below is not this turn's evidence.
+No Entire locator informed this revision; bounded intake returned an empty result set with no omitted results.
+The committed artifact remains unpushed for the driver's serial publication lane, with disposition `needs_finalize`.
+The CTO owns the ordered Opus-via-AGY and independent Gemini 4 exact-r5 critiques; Harness owns reconciliation
+and publication, Infra owns implementation/migration residuals. No PR, activation, lease change or cleanup is performed here.
+
+## Historical critic-item traceability, rounds 2 through 4
 
 | Item | Resolving section and acceptance criterion |
 | --- | --- |
