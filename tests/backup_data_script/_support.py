@@ -112,6 +112,10 @@ fi
 # Fault hooks keyed by "<subcommand> <part>", for example "check " or
 # "backup lu-part-complete".
 point="${args[0]:-} $part"
+if [[ -n "${TEST_MIRROR_MUTATION_AT:-}" && "$point" == "$TEST_MIRROR_MUTATION_AT" ]]; then
+  # The named part has not run yet, so earlier snapshots stay as uploaded.
+  bash -c "$TEST_MIRROR_MUTATION_CMD"
+fi
 hold() {
   touch "$TEST_HOLD_FILE"
   while [[ ! -e "$TEST_HOLD_FILE.release" ]]; do sleep 0.05; done

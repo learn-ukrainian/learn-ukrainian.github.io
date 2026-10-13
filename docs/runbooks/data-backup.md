@@ -365,9 +365,15 @@ check, the upload-summary checks, and the runner-mirror comparison have
 passed. The gate receipt is a separate artifact. Its absence keeps the
 pre-wipe gate closed. It does not decide whether the run is selectable.
 
-On Linux, the script compares the runner-mirror file list and SHA-256 hashes
-in the live-file snapshot with the live mirror after the repository check. It
-writes the gate receipt to `RESTIC-GATE-RECEIPT.json.tmp` in the same
+On Linux, the script compares the runner-mirror file list with the live
+mirror and its manifest after the repository check. The compared snapshots are
+the base snapshot plus every database batch that holds files in that tree: a
+SQLite file in the mirror is uploaded in a database batch, not the base
+snapshot. Ordinary files are compared by SHA-256. A SQLite file is compared by
+`sqlite3 .dump`, because the online backup is not byte-identical to the live
+file. A missing, extra, or changed file still fails the run. An absent mirror
+logs one line and the run continues. The script writes the gate receipt to
+`RESTIC-GATE-RECEIPT.json.tmp` in the same
 directory as its destination, and only if the live mirror still has those
 hashes. Any failure before the completion snapshot publishes nothing and
 removes the staged file. After the completion snapshot is saved, the script

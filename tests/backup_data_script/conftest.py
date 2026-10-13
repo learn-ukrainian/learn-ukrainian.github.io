@@ -108,6 +108,12 @@ fi
         printf 'exclude=<%s>\n' "$pattern"
       done < "$argument"
     fi
+    if [[ "$previous" == "--files-from-raw" ]]; then
+      while IFS= read -r -d '' listed || [[ -n "$listed" ]]; do
+        [[ -n "$listed" ]] || continue
+        printf 'files_from=%s\n' "$(printf '%s' "$listed" | base64 -w0)"
+      done < "$argument"
+    fi
     previous="$argument"
   done
 } >> "$FAKE_RESTIC_LOG"

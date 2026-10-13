@@ -108,12 +108,17 @@ STAGED_RELATIVE_PATHS=()
 ALLOWLIST_TREE_ROOTS=()
 ALLOWLIST_FILE_ROOTS=()
 FILES_FROM_FILE=""
+# Built in the current shell before any pipeline so the EXIT trap can see it.
+RESTIC_SELECTION_ARGS=()
+RESTIC_SELECTION_READY=0
 EPHEMERAL_HOME_EXCLUDES=()
 # Absolute paths of broken (dangling) symlinks found in the recovery roots.
 # They are skipped with a warning and excluded from the snapshot instead of
 # aborting the whole backup; the receipt records each one.
 BROKEN_SYMLINK_EXCLUDES=()
-LINUX_DB_SNAPSHOTS='[]'
+# JSON array of {path, snapshot_id, mode}. A file, never a shell argument:
+# the array grows with every database in the run.
+DB_INVENTORY_FILE=""
 # Databases staged under DB_BATCH_ROOT and not yet uploaded (relative paths,
 # source modes, staged bytes); flush_database_batch uploads and clears them.
 DB_BATCH_ROOT=""
@@ -239,31 +244,106 @@ live_runner_mirror_hashes() {
     done
 }
 
-# Prove, before the run is published, that the file-phase snapshot holds the
-# live runner mirror exactly. Its hashes are kept for the gate receipt step.
+# Record every runner-mirror file in one snapshot. The same path in two
+# snapshots is not one file set.
+add_snapshot_mirror_files() {
+  local snapshot_id=$1
+  local -n file_sources=$2
+  local path part_files="$STAGE_DIR/mirror-part-files"
+
+  restic_repository_command ls --json --recursive "$snapshot_id" \
+    /data/lexicon/runner-mirror \
+    | jq -r 'select(.struct_type == "node" and .type == "file") | .path' \
+    | LC_ALL=C sort -u > "$part_files" ||
+    die "Runner mirror file set changed during backup; refusing to write a durability receipt."
+  while IFS= read -r path; do
+    [[ -n "$path" ]] || continue
+    if [[ -n "${file_sources[$path]+set}" && "${file_sources[$path]}" != "$snapshot_id" ]]; then
+      die "Runner mirror file set changed during backup; refusing to write a durability receipt."
+    fi
+    file_sources["$path"]="$snapshot_id"
+  done < "$part_files"
+}
+
+# Live byte hash when the snapshot matches the live file. SQLite online backup
+# rewrites pages, so a database matches on sqlite3 .dump instead of raw bytes.
+# Prints the live file's raw hash. Must not be called from a command
+# substitution that needs die(): a mismatch returns 1.
+mirror_snapshot_matches_live() {
+  local snapshot_id=$1 path=$2
+  local live="$PROJECT_ROOT$path"
+  local dumped="$STAGE_DIR/mirror-dumped-file"
+  local snapshot_hash live_hash snapshot_logical live_logical
+
+  restic_repository_command dump "$snapshot_id" "$path" > "$dumped" || return 1
+  snapshot_hash="$(sha256sum "$dumped" | awk '{print $1}')" || return 1
+  live_hash="$(sha256sum "$live" | awk '{print $1}')" || return 1
+  if [[ "$snapshot_hash" == "$live_hash" ]]; then
+    printf '%s\n' "$live_hash"
+    return 0
+  fi
+  is_sqlite_database "$live" || return 1
+  is_sqlite_database "$dumped" || return 1
+  snapshot_logical="$(sqlite3 "$dumped" .dump | sha256sum | awk '{print $1}')" || return 1
+  live_logical="$(sqlite3 "$live" .dump | sha256sum | awk '{print $1}')" || return 1
+  [[ "$snapshot_logical" == "$live_logical" ]] || return 1
+  printf '%s\n' "$live_hash"
+}
+
+# Prove, before the run is published, that the base snapshot plus the database
+# batches that hold this tree match the live mirror and its manifest. Hashes
+# are kept for the gate receipt step. An absent mirror returns without a receipt.
 verify_linux_runner_mirror() {
   local snapshot_id=$1 mirror="$SOURCE/lexicon/runner-mirror"
   local snapshot_files="$STAGE_DIR/mirror-snapshot-files"
   local live_files="$STAGE_DIR/mirror-live-files"
   local verified="$STAGE_DIR/mirror-verified-hashes"
-  local path snapshot_hash live_hash
+  local db_snapshots="$STAGE_DIR/mirror-db-snapshots"
+  local path live_hash db_snapshot manifest manifest_dir relative_root rel expected
+  local -A mirror_source=()
+
   [[ -e "$mirror" || -L "$mirror" ]] || return 0
   [[ -d "$mirror" && ! -L "$mirror" ]] || die "Runner mirror root must be a real directory."
   runner_mirror_python > /dev/null || exit 1
-  restic_repository_command ls --json --recursive "$snapshot_id" \
-    /data/lexicon/runner-mirror \
-    | jq -r 'select(.struct_type == "node" and .type == "file") | .path' \
-    | LC_ALL=C sort > "$snapshot_files"
+  add_snapshot_mirror_files "$snapshot_id" mirror_source
+  if [[ -n "$DB_INVENTORY_FILE" && -f "$DB_INVENTORY_FILE" ]]; then
+    jq -r --arg prefix "data/lexicon/runner-mirror/" \
+      '[.[] | select(.path | startswith($prefix)) | .snapshot_id] | unique | .[]' \
+      "$DB_INVENTORY_FILE" > "$db_snapshots" ||
+      die "Runner mirror file set changed during backup; refusing to write a durability receipt."
+    while IFS= read -r db_snapshot; do
+      [[ -n "$db_snapshot" ]] || continue
+      [[ "$db_snapshot" =~ ^[0-9a-f]{64}$ ]] ||
+        die "Runner mirror file set changed during backup; refusing to write a durability receipt."
+      add_snapshot_mirror_files "$db_snapshot" mirror_source
+    done < "$db_snapshots"
+  fi
+  : > "$snapshot_files"
+  if ((${#mirror_source[@]} > 0)); then
+    for path in "${!mirror_source[@]}"; do
+      printf '%s\n' "$path"
+    done | LC_ALL=C sort > "$snapshot_files"
+  fi
   find "$mirror" -type f -printf '/data/lexicon/runner-mirror/%P\n' \
     | LC_ALL=C sort > "$live_files"
   cmp -s "$snapshot_files" "$live_files" ||
     die "Runner mirror file set changed during backup; refusing to write a durability receipt."
+  while IFS= read -r -d '' manifest; do
+    manifest_dir="$(dirname -- "$manifest")"
+    relative_root="${manifest_dir#"$SOURCE"/}"
+    while IFS= read -r rel || [[ -n "$rel" ]]; do
+      [[ -n "$rel" ]] || continue
+      expected="/data/${relative_root}/${rel}"
+      grep -Fxq -e "$expected" "$snapshot_files" ||
+        die "Runner mirror file set changed during backup; refusing to write a durability receipt."
+    done < <(jq -r '.files[]?.path // empty' "$manifest")
+  done < <(find "$mirror" -type f -name manifest.json -print0)
   : > "$verified"
   while IFS= read -r path; do
-    snapshot_hash="$(restic_repository_command dump "$snapshot_id" "$path" | sha256sum | awk '{print $1}')"
-    live_hash="$(sha256sum < "$PROJECT_ROOT${path}" | awk '{print $1}')"
-    [[ "$snapshot_hash" == "$live_hash" ]] ||
+    [[ -n "$path" ]] || continue
+    if ! live_hash="$(mirror_snapshot_matches_live "${mirror_source[$path]}" "$path")"; then
       die "Runner mirror content changed during backup; refusing to write a durability receipt."
+    fi
     printf '%s %s\n' "$live_hash" "$path" >> "$verified"
   done < "$snapshot_files"
 }
@@ -1135,11 +1215,15 @@ publish_selection_manifest() {
 # Directory paths stay on argv. File paths stay on argv until there are more
 # than 50, then they move to a NUL-delimited --files-from-raw list so a name
 # containing a newline stays one path. restic rejects an empty name in that
-# list, and a NUL would end the name early. Extra restic arguments follow.
-backup_selected_paths() {
+# list, and a NUL would end the name early. The list is created here, in the
+# current shell: a later pipeline must not create it, or the EXIT trap never
+# learns the path. When the stage directory already exists the list lives
+# inside it, which that trap deletes even if this assignment is lost.
+build_restic_selection_args() {
   local relative absolute list_file
-  local -a directories=() files=() restic_args=()
+  local -a directories=() files=()
 
+  RESTIC_SELECTION_ARGS=()
   for relative in "${BACKUP_PATHS[@]+"${BACKUP_PATHS[@]}"}"; do
     [[ "$relative" == GIT-WORKTREE.patch || "$relative" == BACKUP-RECEIPT.json ]] && continue
     absolute="$PROJECT_ROOT/$relative"
@@ -1149,12 +1233,16 @@ backup_selected_paths() {
       files+=("$relative")
     fi
   done
-  restic_args=("${directories[@]+"${directories[@]}"}")
+  RESTIC_SELECTION_ARGS=("${directories[@]+"${directories[@]}"}")
   if ((${#files[@]} > 50)); then
-    list_file="$(mktemp "${TMP_ROOT}/learn-ukrainian-backup-files.XXXXXX")" ||
-      die "Could not create the restic file list."
+    if [[ -n "$STAGE_DIR" && -d "$STAGE_DIR" && ! -L "$STAGE_DIR" ]]; then
+      list_file="$STAGE_DIR/restic-files-from"
+      : > "$list_file" || die "Could not write the restic file list."
+    else
+      list_file="$(mktemp "${TMP_ROOT}/learn-ukrainian-backup-files.XXXXXX")" ||
+        die "Could not create the restic file list."
+    fi
     FILES_FROM_FILE="$list_file"
-    : > "$list_file" || die "Could not write the restic file list."
     for relative in "${files[@]}"; do
       # restic --files-from-raw rejects an empty name. A NUL cannot be stored
       # in a shell variable, so every non-empty path is representable.
@@ -1163,13 +1251,21 @@ backup_selected_paths() {
       printf '%s\0' "$relative" >> "$list_file" ||
         die "Could not write the restic file list."
     done
-    restic_args+=(--files-from-raw "$list_file")
+    RESTIC_SELECTION_ARGS+=(--files-from-raw "$list_file")
   elif ((${#files[@]} > 0)); then
-    restic_args+=("${files[@]}")
+    RESTIC_SELECTION_ARGS+=("${files[@]}")
   fi
+  RESTIC_SELECTION_READY=1
+}
+
+# Extra restic arguments follow. Call build_restic_selection_args in this
+# shell first when the backup command is on the left of a pipeline.
+backup_selected_paths() {
+  [[ "$RESTIC_SELECTION_READY" -eq 1 ]] || build_restic_selection_args
   (
     cd "$PROJECT_ROOT" || die "Could not enter the project root."
-    restic_repository_command backup "${restic_args[@]}" "$@"
+    restic_repository_command backup \
+      "${RESTIC_SELECTION_ARGS[@]+"${RESTIC_SELECTION_ARGS[@]}"}" "$@"
   )
 }
 path_has_backup_coverage() {
@@ -1787,10 +1883,22 @@ create_worktree_patch() {
   fi
 }
 
+append_json_string() {
+  local file=$1 entry=$2
+  jq -cn --arg entry "$entry" '$entry' >> "$file"
+}
+
+# Path, exclusion, archive, and database inventories are files. jq loads them
+# with --slurpfile. A --arg or --argjson value that grows with the number of
+# selected paths, databases, or files can exceed the kernel's per-argument
+# limit. Scalar flags stay on argv: one path, one count, one snapshot id, and
+# the bounded known-missing list.
 write_backup_receipt() {
   local inventory_file="$STAGE_DIR/path-inventory.jsonl"
+  local exclusions_file="$STAGE_DIR/exclusions.jsonl"
+  local archives_file="$STAGE_DIR/database-archives.jsonl"
   local relative bytes files git_sha git_dirty untracked_count
-  local inventory_json known_missing created_at exclusions_json
+  local known_missing created_at
 
   : > "$inventory_file"
   for relative in "${BACKUP_PATHS[@]}"; do
@@ -1806,8 +1914,6 @@ write_backup_receipt() {
       '{path: $path, files: $files, bytes: $bytes}' \
       >> "$inventory_file"
   done
-  inventory_json="$(jq -s '.' "$inventory_file")"
-  find "$inventory_file" -maxdepth 0 -type f -delete
 
   git_sha="$(git_command -C "$PROJECT_ROOT" rev-parse HEAD)"
   git_dirty=false
@@ -1822,44 +1928,37 @@ write_backup_receipt() {
     known_missing='[".claude/atlas-epic/plans/curated-seed"]'
   fi
   created_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-  exclusions_json='["data/qdrant", "SQLite WAL/SHM/journal sidecars", "batch_state scoped review homes", "__pycache__", ".DS_Store"]'
+  : > "$exclusions_file"
+  append_json_string "$exclusions_file" "data/qdrant"
+  append_json_string "$exclusions_file" "SQLite WAL/SHM/journal sidecars"
+  append_json_string "$exclusions_file" "batch_state scoped review homes"
+  append_json_string "$exclusions_file" "__pycache__"
+  append_json_string "$exclusions_file" ".DS_Store"
   if ((${#LEGACY_EXCLUDES[@]} > 0)); then
     for relative in "${LEGACY_EXCLUDES[@]}"; do
-      exclusions_json="$(
-        jq -cn \
-          --argjson current "$exclusions_json" \
-          --arg path "data/$relative legacy symlink" \
-          '$current + [$path]'
-      )"
+      append_json_string "$exclusions_file" "data/$relative legacy symlink"
     done
   fi
   if ((${#SQLITE_TRANSIENT_SOURCES[@]} > 0)); then
-    exclusions_json="$(
-      jq -cn \
-        --argjson current "$exclusions_json" \
-        --arg entry "${#SQLITE_TRANSIENT_SOURCES[@]} pytest scratch SQLite databases skipped" \
-        '$current + [$entry]'
-    )"
+    append_json_string "$exclusions_file" \
+      "${#SQLITE_TRANSIENT_SOURCES[@]} pytest scratch SQLite databases skipped"
   fi
+  : > "$archives_file"
   if ((${#DB_ARCHIVES_USED[@]} > 0)); then
     for relative in "${DB_ARCHIVES_USED[@]}"; do
-      exclusions_json="$(
-        jq -cn \
-          --argjson current "$exclusions_json" \
-          --arg entry "loose SQLite databases covered by archive $relative" \
-          '$current + [$entry]'
-      )"
+      append_json_string "$exclusions_file" "loose SQLite databases covered by archive $relative"
+      append_json_string "$archives_file" "$relative"
     done
   fi
   if ((${#BROKEN_SYMLINK_EXCLUDES[@]} > 0)); then
     for relative in "${BROKEN_SYMLINK_EXCLUDES[@]}"; do
-      exclusions_json="$(
-        jq -cn \
-          --argjson current "$exclusions_json" \
-          --arg path "${relative#"$PROJECT_ROOT"/} broken symlink skipped" \
-          '$current + [$path]'
-      )"
+      append_json_string "$exclusions_file" "${relative#"$PROJECT_ROOT"/} broken symlink skipped"
     done
+  fi
+  if [[ -z "$DB_INVENTORY_FILE" || ! -f "$DB_INVENTORY_FILE" ]]; then
+    DB_INVENTORY_FILE="$STAGE_DIR/database-inventory.json"
+    printf '%s\n' '[]' > "$DB_INVENTORY_FILE" ||
+      die "Could not create the database inventory."
   fi
 
   jq -n \
@@ -1869,17 +1968,17 @@ write_backup_receipt() {
     --arg tag "$BACKUP_TAG" \
     --argjson git_dirty "$git_dirty" \
     --argjson untracked_count "$untracked_count" \
-    --argjson paths "$inventory_json" \
+    --slurpfile paths "$inventory_file" \
     --argjson known_missing "$known_missing" \
-    --argjson exclusions "$exclusions_json" \
+    --slurpfile exclusions "$exclusions_file" \
     --argjson linux_mode "$([[ "$LINUX_MODE" -eq 1 ]] && echo true || echo false)" \
     --arg run_id "$RUN_ID" \
     --arg base_snapshot_id "$LINUX_BASE_SNAPSHOT" \
     --arg patch_snapshot_id "$LINUX_PATCH_SNAPSHOT" \
-    --slurpfile database_inventory <(printf '%s\n' "$LINUX_DB_SNAPSHOTS") \
+    --slurpfile database_inventory "$DB_INVENTORY_FILE" \
     --argjson transient_count "${#SQLITE_TRANSIENT_SOURCES[@]}" \
     --argjson archived_count "${#SQLITE_ARCHIVED_SOURCES[@]}" \
-    --argjson archives "$(jq -cn '$ARGS.positional' --args "${DB_ARCHIVES_USED[@]}")" \
+    --slurpfile archives "$archives_file" \
     '$database_inventory[0] as $databases | {
       schema_version: (if $linux_mode then 3 else 1 end),
       created_at_utc: $created_at,
@@ -2013,16 +2112,16 @@ flush_database_batch() {
     failed=("restic upload failed")
   elif ! snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/db-backup.jsonl" 2>&1)"; then
     failed=("$snapshot_id")
-  elif ! LINUX_DB_SNAPSHOTS="$(
-    {
-      printf '%s\n' "$LINUX_DB_SNAPSHOTS"
+  elif ! jq -cRn --arg snapshot_id "$snapshot_id" --slurpfile previous "$DB_INVENTORY_FILE" \
+    '$previous[0] + [inputs | select(length > 0) | split("\t") | {path: .[0], snapshot_id: $snapshot_id, mode: .[1]}]' \
+    > "$STAGE_DIR/database-inventory.json.new" \
+    < <(
       for index in "${!PENDING_DB_PATHS[@]}"; do
         printf '%s\t%s\n' "${PENDING_DB_PATHS[$index]}" "${PENDING_DB_MODES[$index]}"
       done
-    } | jq -cRn --arg snapshot_id "$snapshot_id" \
-      '(input | fromjson) as $previous |
-        $previous + [inputs | split("\t") | {path: .[0], snapshot_id: $snapshot_id, mode: .[1]}]'
-  )"; then
+    ); then
+    failed=("could not record snapshot ID")
+  elif ! mv -f -- "$STAGE_DIR/database-inventory.json.new" "$DB_INVENTORY_FILE"; then
     failed=("could not record snapshot ID")
   fi
   if ((${#failed[@]} > 0)); then
@@ -2048,6 +2147,9 @@ run_linux_backup() {
   [[ ! -L "$STAGE_DIR" ]] || die "Refusing symlink at the private staging path: $STAGE_DIR"
   [[ ! -e "$STAGE_DIR" ]] || die "Stale staging path exists; inspect it before retrying: $STAGE_DIR"
   mkdir -m 700 "$STAGE_DIR"
+  DB_INVENTORY_FILE="$STAGE_DIR/database-inventory.json"
+  printf '%s\n' '[]' > "$DB_INVENTORY_FILE" ||
+    die "Could not create the database inventory."
   STAGED_ROOT="$STAGE_DIR/project-state"
   mkdir -m 700 "$STAGED_ROOT"
   create_worktree_patch
@@ -2058,6 +2160,8 @@ run_linux_backup() {
   write_restic_exclude_file
   info "Streaming non-database recovery files from the live tree."
   backup_output="$STAGE_DIR/base-backup.jsonl"
+  # Parent shell: the file list must exist before this pipeline forks.
+  build_restic_selection_args
   if backup_selected_paths \
     --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
     --tag lu-part-base --json --exclude-file "$RESTIC_EXCLUDE_FILE" \
@@ -2096,7 +2200,7 @@ run_linux_backup() {
   done
   flush_database_batch
   # Parsed into last-run.json and the change-only alert; printed on failure too.
-  info "SQLite databases backed up: $(jq -r 'length' <<< "$LINUX_DB_SNAPSHOTS") of ${#SQLITE_BACKUP_SOURCES[@]} (pytest scratch skipped: ${#SQLITE_TRANSIENT_SOURCES[@]}, archived: ${#SQLITE_ARCHIVED_SOURCES[@]})."
+  info "SQLite databases backed up: $(jq -r 'length' "$DB_INVENTORY_FILE") of ${#SQLITE_BACKUP_SOURCES[@]} (pytest scratch skipped: ${#SQLITE_TRANSIENT_SOURCES[@]}, archived: ${#SQLITE_ARCHIVED_SOURCES[@]})."
 
   if [[ -f "$STAGED_ROOT/GIT-WORKTREE.patch" ]]; then
     if restic_repository_command backup --stdin --stdin-filename GIT-WORKTREE.patch \
