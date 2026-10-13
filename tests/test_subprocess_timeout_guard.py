@@ -17,14 +17,17 @@ different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 
 from __future__ import annotations
 
+import ast
 import os
 import re
 import subprocess
+import sys
 import textwrap
 from pathlib import Path
 
 import pytest
 
+import scripts.ci.subprocess_timeout_guard as timeout_guard
 from scripts.ci.subprocess_timeout_guard import (
     ALLOWLIST_KEY_PARTS,
     SHAPE_HASH_HEX_LEN,
@@ -44,7 +47,6 @@ from scripts.ci.subprocess_timeout_guard import (
     timeout_less_calls_from_source,
     validate_allowlist_entry,
 )
-from tests.project_python import project_python
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
@@ -56,6 +58,150 @@ _ALLOWLIST_PATH = _SCRIPTS_ROOT / "ci" / "subprocess_timeout_allowlist.txt"
 # Documented per-test budget (must stay aligned with pyproject + ci.yml).
 _EXPECTED_PYTEST_TIMEOUT_SECONDS = 120
 _EXPECTED_TIMEOUT_METHOD = "thread"
+
+
+@pytest.mark.parametrize(
+    ("source", "callee"),
+    [
+        ('import subprocess as sp\nsp.run(["probe"])\n', "run"),
+        ('import os, subprocess as sp\nsp.check_call(["probe"])\n', "check_call"),
+        ('import os, \\\n    subprocess as sp\nsp.call(["probe"])\n', "call"),
+        ('from subprocess import (\n    check_output as launch,\n)\nlaunch(["probe"])\n', "check_output"),
+        ('from subprocess \\\n    import run as launch\nlaunch(["probe"])\n', "run"),
+        ('import subprocess; subprocess.run(["probe"])\n', "run"),
+        ('if True: import subprocess as sp\nsp.run(["probe"])\n', "run"),
+        ('import ｓｕｂｐｒｏｃｅｓｓ as sp\nsp.ｒｕｎ(["probe"])\n', "run"),
+        ('from ｓｕｂｐｒｏｃｅｓｓ import ｃｈｅｃｋ＿ｃａｌｌ as launch\nlaunch(["probe"])\n', "check_call"),
+        ("import subprocess as sp\nvalue = f\"{sp.run(['probe'])}\"\n", "run"),
+    ],
+)
+def test_prefilter_preserves_real_calls(source: str, callee: str, tmp_path: Path) -> None:
+    expected = timeout_guard.timeout_less_calls_from_tree(ast.parse(source))
+    assert len(expected) == 1
+    assert expected[0].name == f"subprocess.{callee}"
+    assert expected[0].qualname == "<module>"
+    assert timeout_less_calls_from_source(source) == expected
+    path = tmp_path / "probe.py"
+    path.write_text(source, encoding="utf-8")
+    assert timeout_less_calls(path) == expected
+    bounded = source.replace('["probe"]', '["probe"], timeout=30').replace("['probe']", "['probe'], timeout=30")
+    path.write_text(bounded, encoding="utf-8")
+    assert timeout_less_calls_from_source(bounded) == []
+    assert timeout_less_calls(path) == []
+
+
+@pytest.mark.parametrize("directory", ["scripts", "tests"])
+def test_prefilter_matches_full_ast_on_tracked_corpus(directory: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "--", f"{directory}/*.py"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    ).stdout
+    paths = [_REPO_ROOT / name for name in tracked.split("\0") if name]
+    assert paths
+    parsed: list[Path] = []
+    original_parse = timeout_guard.parse_test_source
+
+    def track_parse(path: Path) -> ast.Module:
+        parsed.append(path)
+        return original_parse(path)
+
+    monkeypatch.setattr(timeout_guard, "parse_test_source", track_parse)
+    for path in paths:
+        source = path.read_text(encoding="utf-8")
+        expected = timeout_guard.timeout_less_calls_from_tree(ast.parse(source, filename=str(path)))
+        assert timeout_less_calls(path) == expected, path.relative_to(_REPO_ROOT)
+    assert len(parsed) < len(paths), "The filter must avoid parsing irrelevant files"
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        'value = "unrelated"\n',
+        'import subprocess\nsubprocess.Popen(["probe"])\n',
+        'source = """import subprocess\nsubprocess.run(["probe"])\n"""\n',
+        '# import subprocess\n# subprocess.run(["probe"])\n',
+    ],
+)
+def test_prefilter_skips_irrelevant_ast(source: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "probe.py"
+    path.write_text(source, encoding="utf-8")
+
+    def unexpected_parse(*args: object, **kwargs: object) -> ast.Module:
+        pytest.fail("Irrelevant source must not be AST-parsed")
+
+    monkeypatch.setattr(timeout_guard, "parse_test_source", unexpected_parse)
+    monkeypatch.setattr(timeout_guard.ast, "parse", unexpected_parse)
+    assert timeout_less_calls_from_source(source) == []
+    assert timeout_less_calls(path) == []
+
+
+def test_prefilter_preserves_cache_refresh_and_reuse(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "probe.py"
+    source = 'import subprocess\nsubprocess.run(["probe"])\n'
+    path.write_text(source, encoding="utf-8")
+    expected = timeout_less_calls_from_source(source)
+    assert timeout_less_calls(path) == expected
+    original_read = Path.read_text
+    reads: list[Path] = []
+
+    def track_read(self: Path, *args: object, **kwargs: object) -> str:
+        reads.append(self)
+        return original_read(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", track_read)
+    assert timeout_less_calls(path) == expected
+    assert reads == []
+    replacement = tmp_path / "replacement.py"
+    replacement.write_text('import subprocess\nsubprocess.run(["probe"], timeout=30)\n', encoding="utf-8")
+    replacement.replace(path)
+    assert timeout_less_calls(path) == []
+    assert reads == [path.resolve()]
+
+
+def test_prefilter_propagates_read_and_candidate_syntax_errors(tmp_path: Path) -> None:
+    path = tmp_path / "probe.py"
+    with pytest.raises(FileNotFoundError):
+        timeout_less_calls(path)
+    path.write_bytes(b"\xff")
+    with pytest.raises(UnicodeDecodeError):
+        timeout_less_calls(path)
+    source = "import subprocess\nsubprocess.run(\n"
+    path.write_text(source, encoding="utf-8")
+    with pytest.raises(SyntaxError):
+        timeout_less_calls(path)
+    with pytest.raises(SyntaxError):
+        timeout_less_calls_from_source(source)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "import subprocess\nsubprocess.Popen(\n",
+        "import subprocess\nif:\n    pass\n",
+        'source = """\nimport subprocess\nsubprocess.run([])\n"""\nif:\n    pass\n',
+        'import subprocess\n"unterminated run\n',
+        'import subprocess\n"""unterminated run\n',
+    ],
+)
+def test_prefilter_retains_rejected_source_syntax_errors(source: str, tmp_path: Path) -> None:
+    path = tmp_path / "probe.py"
+    path.write_text(source, encoding="utf-8")
+    with pytest.raises(SyntaxError):
+        timeout_less_calls_from_source(source)
+    with pytest.raises(SyntaxError):
+        timeout_less_calls(path)
+
+
+def test_prefilter_compilation_scope_error_is_not_a_syntax_error(tmp_path: Path) -> None:
+    source = "import subprocess\nreturn\n"
+    path = tmp_path / "probe.py"
+    path.write_text(source, encoding="utf-8")
+    assert timeout_less_calls_from_source(source) == []
+    assert timeout_less_calls(path) == []
 
 
 def test_pytest_timeout_budget_is_documented_in_pyproject() -> None:
@@ -260,7 +406,7 @@ def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) ->
 
     completed = subprocess.run(
         [
-            str(project_python()),
+            sys.executable,
             "-m",
             "pytest",
             str(hang_test),

@@ -10,8 +10,11 @@ from __future__ import annotations
 import argparse
 import ast
 import hashlib
+import io
 import re
 import sys
+import tokenize
+import unicodedata
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -23,6 +26,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
 SHAPE_HASH_HEX_LEN = 16
 ALLOWLIST_KEY_PARTS = 4
+_SUBPROCESS_NAME_RE = re.compile(r"\bsubprocess\b")
+_BOUNDED_NAME_RE = re.compile(rf"\b(?:{'|'.join(sorted(BOUNDED_FUNCS))})\b")
 _SUBPROCESS_IMPORT_RE = re.compile(r"(?m)^\s*(?:import subprocess|from subprocess import)\b")
 _SHAPE_RE = re.compile(rf"^[0-9a-f]{{{SHAPE_HASH_HEX_LEN}}}$")
 
@@ -172,15 +177,51 @@ def timeout_less_calls_from_tree(tree: ast.AST) -> list[TimeoutLessCall]:
     return visitor.hits
 
 
+def _may_have_bounded_call(src: str) -> bool:
+    """Reject only sources missing identifiers required by the AST detector.
+
+    Python normalizes identifiers to NFKC. Search normalized text, but parse
+    the original source so line numbers and call-shape hashes stay intact.
+    Import layout and aliases deliberately do not constrain this filter.
+    """
+    normalized = unicodedata.normalize("NFKC", src)
+    if not _SUBPROCESS_NAME_RE.search(normalized):
+        return False
+    if _BOUNDED_NAME_RE.search(normalized):
+        has_module = has_function = False
+        try:
+            for token in tokenize.generate_tokens(io.StringIO(src).readline):
+                if token.type == tokenize.NAME:
+                    name = unicodedata.normalize("NFKC", token.string)
+                    has_module |= name == "subprocess"
+                    has_function |= name in BOUNDED_FUNCS
+                    if has_module and has_function:
+                        return True
+                elif token.type == tokenize.ERRORTOKEN:
+                    return True
+        except (tokenize.TokenError, SyntaxError):
+            return True
+
+    # Keep syntax errors from import-shaped files that the old filter parsed.
+    # Compilation avoids materializing a Python AST for a rejected source;
+    # on failure, let ast.parse distinguish syntax from compilation-only errors.
+    if _SUBPROCESS_IMPORT_RE.search(src):
+        try:
+            compile(src, "<prefilter>", "exec")
+        except SyntaxError:
+            return True
+    return False
+
+
 def timeout_less_calls_from_source(src: str, *, filename: str = "<mem>") -> list[TimeoutLessCall]:
-    if "subprocess" not in src or not _SUBPROCESS_IMPORT_RE.search(src):
+    if not _may_have_bounded_call(src):
         return []
     return timeout_less_calls_from_tree(ast.parse(src, filename=filename))
 
 
 def timeout_less_calls(path: Path) -> list[TimeoutLessCall]:
     src = read_test_source(path)
-    if "subprocess" not in src or not _SUBPROCESS_IMPORT_RE.search(src):
+    if not _may_have_bounded_call(src):
         return []
     return timeout_less_calls_from_tree(parse_test_source(path))
 
