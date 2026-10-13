@@ -148,12 +148,22 @@ def test_json_uses_monitor_and_preserves_payload(monkeypatch, capsys, budget):
 
     monkeypatch.setenv("DELEGATE_MONITOR_API", "http://fixture.invalid:8765/")
     monkeypatch.setattr(usage.urllib.request, "urlopen", http)
-    from scripts.api import state_router
+    from scripts.api import state_router, subscription_usage
+    from scripts.api.state_helpers import cache_invalidate
 
+    cache_invalidate("codexbar_usage:muse")
+    subscription_usage._last_good_data.pop("muse", None)
+    subscription_usage._last_failure_data.pop("muse", None)
     monkeypatch.setattr(state_router, "compute_routing_budget", lambda **kw: pytest.fail("cold process read"))
     assert usage.main(["json"]) == 0
     result = json.loads(capsys.readouterr().out)
+    muse = result["agents"].pop("muse")
     assert result == {**budget, "source": "monitor-api"}
+    assert muse["status"] == "unknown"
+    assert muse["remaining_pct"] is None
+    assert muse["headroom_pct"] is None
+    assert muse["resets_at"] is None
+    assert muse["freshness"] == "unavailable"
     assert urls == ["http://fixture.invalid:8765/api/state/routing-budget?transport=dispatch"]
 
 
@@ -599,3 +609,165 @@ def test_show_names_the_published_credit_state(budget, credit, suffix):
     if credit is not None:
         codex["credit"] = credit
     assert f"  credits: balance=62500.0{suffix}\n" in usage.format_human(budget) + "\n"
+
+
+_MUSE_KNOWN_PAYLOAD = {
+    "provider": "muse",
+    "source": "oauth",
+    "usage": {
+        "primary": {"usedPercent": 10, "windowMinutes": 300, "resetsAt": "2026-10-13T18:00:00Z"},
+        "secondary": {"usedPercent": 30, "windowMinutes": 10080, "resetsAt": "2026-10-20T00:00:00Z"},
+    },
+}
+_MUSE_NULL_PAYLOAD = {"provider": "muse", "usage": {"primary": None, "secondary": None}}
+
+
+def _clear_muse_observation() -> None:
+    from scripts.api import subscription_usage
+    from scripts.api.state_helpers import cache_invalidate
+
+    cache_invalidate("codexbar_usage:muse")
+    subscription_usage._last_good_data.pop("muse", None)
+    subscription_usage._last_failure_data.pop("muse", None)
+
+
+def test_usage_cli_shows_muse_known_window(monkeypatch, capsys):
+    from scripts.api import state_router, subscription_usage
+
+    _clear_muse_observation()
+
+    def fetch(provider, *, timeout_s=None):
+        if provider == "muse":
+            return subscription_usage._muse_record_from_codexbar_payload(_MUSE_KNOWN_PAYLOAD)
+        return subscription_usage._normalize_provider_error(
+            provider,
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        )
+
+    monkeypatch.setattr(subscription_usage, "fetch_provider_usage", fetch)
+    monkeypatch.setattr(subscription_usage, "refresh_api_account_data", lambda providers: {})
+    monkeypatch.setattr(
+        subscription_usage,
+        "_refresh_cursor_usage_live",
+        lambda: subscription_usage._normalize_provider_error(
+            "cursor",
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        ),
+    )
+    monkeypatch.setattr(
+        state_router,
+        "compute_routing_budget",
+        lambda **kwargs: {
+            "agents": {
+                "cursor": {
+                    "status": "cool",
+                    "freshness": "fresh",
+                    "remaining_pct": 64.0,
+                    "provider_windows": {
+                        "auto": {
+                            "label": "Cursor Models (Auto)",
+                            "window": "monthly",
+                            "used_pct": 36.0,
+                            "remaining_pct": 64.0,
+                            "resets_at": "2026-10-01T00:00:00Z",
+                        }
+                    },
+                },
+                "grok": {
+                    "status": "cool",
+                    "freshness": "fresh",
+                    "remaining_pct": 80.0,
+                    "codexbar": {
+                        "freshness": "fresh",
+                        "windows": {
+                            "secondary": {
+                                "used_pct": 20.0,
+                                "remaining_pct": 80.0,
+                                "resets_at": "2026-10-18T00:00:00Z",
+                                "window_minutes": 10080,
+                            }
+                        },
+                    },
+                },
+            },
+            "api_accounts": {},
+        },
+    )
+    assert usage.main(["show", "--fresh"]) == 0
+    text = capsys.readouterr().out
+    assert "muse | healthy | 70.0 | fresh |" in text
+    assert "quota: remaining=70.0% headroom=70.0% resets=2026-10-20T00:00:00Z" in text
+    assert "primary (5h): used=10.0% rem=90.0% resets=2026-10-13T18:00:00Z" in text
+    assert "secondary (weekly): used=30.0% rem=70.0% resets=2026-10-20T00:00:00Z" in text
+    assert "Cursor Models (Auto) (monthly): used=36.0% rem=64.0%" in text
+    assert "secondary (weekly): used=20.0% rem=80.0% resets=2026-10-18T00:00:00Z" in text
+
+
+def test_usage_cli_shows_muse_unsupported_as_unknown(monkeypatch, capsys):
+    from scripts.api import state_router, subscription_usage
+
+    _clear_muse_observation()
+
+    def fetch(provider, *, timeout_s=None):
+        if provider == "muse":
+            return subscription_usage._muse_record_from_codexbar_payload(_MUSE_NULL_PAYLOAD)
+        return subscription_usage._normalize_provider_error(
+            provider,
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        )
+
+    monkeypatch.setattr(subscription_usage, "fetch_provider_usage", fetch)
+    monkeypatch.setattr(subscription_usage, "refresh_api_account_data", lambda providers: {})
+    monkeypatch.setattr(
+        subscription_usage,
+        "_refresh_cursor_usage_live",
+        lambda: subscription_usage._normalize_provider_error(
+            "cursor",
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        ),
+    )
+    monkeypatch.setattr(
+        state_router,
+        "compute_routing_budget",
+        lambda **kwargs: {"agents": {}, "api_accounts": {}},
+    )
+    assert usage.main(["show", "--fresh"]) == 0
+    text = capsys.readouterr().out
+    assert "muse | unknown | unknown | unavailable | unknown | unsupported/NO_QUOTA" in text
+    assert "quota: remaining=unknown headroom=unknown resets=unknown" in text
+    assert "70.0" not in text
+    assert "100.0" not in text
+
+
+def test_usage_cli_stale_and_rate_limit_muse_hide_headroom():
+    from scripts.api import subscription_usage
+
+    known = subscription_usage._muse_record_from_codexbar_payload(_MUSE_KNOWN_PAYLOAD)
+    known["freshness"] = "stale_last_good"
+    known["age_s"] = 800
+    stale = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {"muse": subscription_usage.project_muse_for_status(known)},
+            "api_accounts": {},
+        }
+    )
+    assert "muse | unknown | unknown | stale_last_good | 800 | -" in stale
+    assert "quota: remaining=unknown headroom=unknown resets=unknown" in stale
+    assert "70.0" not in stale
+
+    limited = dict(known)
+    limited["freshness"] = "fresh"
+    limited["age_s"] = 1
+    limited["error_kind"] = "rate_limit"
+    limited["error_code"] = 429
+    text = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {"muse": subscription_usage.project_muse_for_status(limited)},
+            "api_accounts": {},
+        }
+    )
+    assert "muse | unknown | unknown | fresh | 1 | rate_limit/429" in text
+    assert "quota: remaining=unknown headroom=unknown resets=unknown" in text
+    assert "70.0" not in text

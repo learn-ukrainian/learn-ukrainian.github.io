@@ -2489,3 +2489,282 @@ def test_deepseek_prefers_secrets_dir_over_secret_alias(monkeypatch, tmp_path):
         monkeypatch.delenv(env, raising=False)
     monkeypatch.setattr(su, "_load_opencode_provider_key", lambda _p: None)
     assert su._load_deepseek_api_key() == "NEW_KEY"
+
+
+_MUSE_EMAIL = "secret-email-do-not-leak@example.com"
+_MUSE_KNOWN = {
+    "provider": "muse",
+    "source": "oauth",
+    "usage": {
+        "primary": {"usedPercent": 10, "windowMinutes": 300, "resetsAt": "2026-10-13T18:00:00Z"},
+        "secondary": {"usedPercent": 30, "windowMinutes": 10080, "resetsAt": "2026-10-20T00:00:00Z"},
+        "accountEmail": _MUSE_EMAIL,
+    },
+    "credits": {"remaining": 999},
+    "identity": {"accountEmail": _MUSE_EMAIL},
+}
+_MUSE_NULL = {
+    "provider": "muse",
+    "source": "oauth",
+    "usage": {
+        "primary": None,
+        "secondary": {"usedPercent": None, "windowMinutes": 10080, "resetsAt": None},
+    },
+}
+
+
+def _assert_muse_has_no_account_material(record: dict) -> None:
+    blob = json.dumps(record)
+    assert _MUSE_EMAIL not in blob
+    assert "999" not in blob
+
+
+def test_muse_known_windows_publish_remaining_headroom_and_reset():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(_MUSE_KNOWN)
+    _assert_muse_has_no_account_material(record)
+    assert record["status"] == "healthy"
+    assert record["primary_used_pct"] == 10.0
+    assert record["primary_remaining_pct"] == 90.0
+    assert record["weekly_used_pct"] == 30.0
+    assert record["weekly_remaining_pct"] == 70.0
+    assert record["headroom_pct"] == 70.0
+    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
+    assert record["windows"]["primary"]["resets_at"] == "2026-10-13T18:00:00Z"
+    assert record["windows"]["secondary"]["remaining_pct"] == 70.0
+
+
+def test_muse_null_percentages_are_unknown_not_unlimited():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(_MUSE_NULL)
+    assert record["status"] == "unknown"
+    assert record["error_kind"] == "unsupported"
+    assert record["error_code"] == "NO_QUOTA"
+    assert record["primary_used_pct"] is None
+    assert record["primary_remaining_pct"] is None
+    assert record["weekly_used_pct"] is None
+    assert record["weekly_remaining_pct"] is None
+    assert record["headroom_pct"] is None
+    assert record["primary_used_pct"] != 0
+    assert record["weekly_remaining_pct"] != 100
+
+
+def test_muse_empty_payload_is_unsupported():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload({})
+    assert record["status"] == "unknown"
+    assert record["error_kind"] == "unsupported"
+    assert record["headroom_pct"] is None
+    assert record["weekly_resets_at"] is None
+
+
+def test_muse_omitted_idle_session_keeps_weekly_without_inventing_session():
+    """Meta can omit the 5-hour window while weekly usage is present."""
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            "provider": "muse",
+            "usage": {
+                "primary": None,
+                "secondary": {
+                    "usedPercent": 30,
+                    "windowMinutes": 10080,
+                    "resetsAt": "2026-10-20T00:00:00Z",
+                },
+            },
+        }
+    )
+    assert record["status"] == "healthy"
+    assert record["primary_remaining_pct"] is None
+    assert record["weekly_remaining_pct"] == 70.0
+    assert record["headroom_pct"] == 70.0
+    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
+
+
+def test_muse_zero_used_is_a_real_remaining_reading():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            "provider": "muse",
+            "usage": {
+                "primary": {"usedPercent": 0, "windowMinutes": 300, "resetsAt": "2026-10-13T18:00:00Z"},
+                "secondary": None,
+            },
+        }
+    )
+    assert record["status"] == "healthy"
+    assert record["primary_used_pct"] == 0.0
+    assert record["primary_remaining_pct"] == 100.0
+    assert record["headroom_pct"] == 100.0
+    assert record["weekly_remaining_pct"] is None
+
+
+def test_muse_malformed_payload_is_fetch_error():
+    for payload in ("nope", ["nope"], {"usage": "nope"}):
+        record = subscription_usage_mod._muse_record_from_codexbar_payload(payload)
+        assert record["status"] == "unavailable"
+        assert record["error_kind"] == "fetch_error"
+        assert record["error_code"] == "BAD_JSON"
+        assert record["primary_remaining_pct"] is None
+        assert record["weekly_remaining_pct"] is None
+        assert record.get("headroom_pct") is None
+
+
+def test_muse_provider_error_drops_message_text():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {"provider": "muse", "error": {"kind": "provider", "code": 1, "message": _MUSE_EMAIL}}
+    )
+    _assert_muse_has_no_account_material(record)
+    assert record["status"] == "unavailable"
+    assert record["error_kind"] == "provider"
+    assert record["error_code"] == 1
+    assert record["auth_error"] == "Muse usage probe failed"
+    assert record["weekly_remaining_pct"] is None
+
+
+def test_muse_rate_limit_payload_stays_non_numeric():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        [{"provider": "muse", "error": {"kind": "provider", "code": 429, "message": "slow down"}}]
+    )
+    assert record["error_kind"] == "rate_limit"
+    assert record["error_code"] == 429
+    assert record["status"] == "unavailable"
+    assert record["primary_remaining_pct"] is None
+    assert record["weekly_remaining_pct"] is None
+    projected = subscription_usage_mod.project_muse_for_status(
+        {**_muse_known_with_freshness(), "error_kind": "rate_limit", "error_code": 429, "freshness": "fresh"}
+    )
+    assert projected["headroom_pct"] is None
+    assert projected["remaining_pct"] is None
+    assert projected["resets_at"] is None
+    assert projected["status"] == "unknown"
+
+
+def _muse_known_with_freshness() -> dict:
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(_MUSE_KNOWN)
+    record["freshness"] = "fresh"
+    record["age_s"] = 0
+    return record
+
+
+def test_muse_stale_projection_hides_numeric_headroom():
+    record = _muse_known_with_freshness()
+    record["freshness"] = "stale_last_good"
+    record["age_s"] = 800
+    projected = subscription_usage_mod.project_muse_for_status(record)
+    assert projected["freshness"] == "stale_last_good"
+    assert projected["status"] == "unknown"
+    assert projected["remaining_pct"] is None
+    assert projected["headroom_pct"] is None
+    assert projected["resets_at"] is None
+    assert projected["codexbar"]["windows"]["secondary"]["remaining_pct"] is None
+
+
+def test_muse_fresh_projection_keeps_binding_headroom():
+    projected = subscription_usage_mod.project_muse_for_status(_muse_known_with_freshness())
+    assert projected == {
+        "lane": "muse",
+        "status": "healthy",
+        "remaining_pct": 70.0,
+        "headroom_pct": 70.0,
+        "resets_at": "2026-10-20T00:00:00Z",
+        "freshness": "fresh",
+        "age_s": 0,
+        "error_kind": None,
+        "error_code": None,
+        "failure_kind": None,
+        "last_failure_code": None,
+        "auth_error": None,
+        "codexbar": {
+            "freshness": "fresh",
+            "age_s": 0,
+            "headroom_pct": 70.0,
+            "weekly_resets_at": "2026-10-20T00:00:00Z",
+            "windows": projected["codexbar"]["windows"],
+            "error_kind": None,
+            "failure_kind": None,
+            "last_failure_code": None,
+            "primary_remaining_pct": 90.0,
+            "weekly_remaining_pct": 70.0,
+        },
+    }
+    assert projected["codexbar"]["windows"]["primary"]["remaining_pct"] == 90.0
+    assert projected["codexbar"]["windows"]["secondary"]["remaining_pct"] == 70.0
+
+
+def test_muse_probe_invokes_supported_codexbar_interface(monkeypatch):
+    import subprocess
+
+    captured: dict = {}
+
+    def fake_run(argv, **kwargs):
+        captured["argv"] = argv
+        captured["kwargs"] = kwargs
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps([_MUSE_KNOWN]), stderr=_MUSE_EMAIL)
+
+    monkeypatch.setattr(
+        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar" if name == "codexbar" else None
+    )
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
+    record = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
+    assert captured["argv"] == [
+        "/usr/bin/codexbar",
+        "usage",
+        "--provider",
+        "muse",
+        "--json",
+        "--no-credits",
+    ]
+    assert captured["kwargs"]["stdin"] is subprocess.DEVNULL
+    assert record["headroom_pct"] == 70.0
+    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
+    _assert_muse_has_no_account_material(record)
+
+
+def test_muse_probe_timeout_and_malformed_stdout_stay_unknown(monkeypatch):
+    import subprocess
+
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar")
+
+    def timeout_run(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, kwargs.get("timeout"))
+
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", timeout_run)
+    timed_out = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=1)
+    assert timed_out["error_kind"] == "timeout"
+    assert timed_out["status"] == "unavailable"
+    assert timed_out["weekly_remaining_pct"] is None
+
+    def bad_json(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 0, stdout="not-json", stderr="")
+
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", bad_json)
+    malformed = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=1)
+    assert malformed["error_kind"] == "fetch_error"
+    assert malformed["error_code"] == "BAD_JSON"
+    assert malformed["primary_remaining_pct"] is None
+
+
+def test_muse_shares_existing_scheduler_at_most_every_15_minutes(monkeypatch):
+    monkeypatch.delenv("CODEXBAR_REFRESH_INTERVAL_S", raising=False)
+    assert "muse" in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
+    assert "muse" in subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR
+    assert "muse" in subscription_usage_mod._NATIVE_PROBES
+    assert "muse" not in state_router.SUBSCRIPTION_LANES
+    interval = subscription_usage_mod._codexbar_refresh_interval_s()
+    assert interval == 720.0
+    assert interval <= 15 * 60
+    status = subscription_usage_mod.scheduler_status()
+    assert status["refresh_interval_s"] == 720.0
+    assert status["refresh_interval_s"] <= 15 * 60
+    assert "muse" in status["providers"]
+
+    captured: dict = {}
+
+    def fake_refresh(providers, *, timeout_s=None):
+        captured["providers"] = tuple(providers)
+        return {}
+
+    monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
+    subscription_usage_mod._run_all_refreshes()
+    assert "muse" in captured["providers"]
+    assert captured["providers"] == tuple(subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)
+    assert "cursor" not in captured["providers"]

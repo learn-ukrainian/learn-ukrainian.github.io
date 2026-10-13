@@ -34,7 +34,7 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
                 isinstance(budget.get(k), dict) for k in ("agents", "api_accounts")
             ):
                 raise ValueError("invalid routing-budget payload")
-            return {**budget, "source": "monitor-api"}
+            return _attach_muse_observation({**budget, "source": "monitor-api"})
         except (OSError, urllib.error.URLError, ValueError, json.JSONDecodeError):
             print("Monitor snapshot unavailable; running blocking native probes.", file=sys.stderr)
     from scripts.api.state_router import compute_routing_budget
@@ -51,7 +51,16 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
         subscription.result()
         prepaid.result()
     budget = compute_routing_budget(transport=transport)
-    return {**budget, "source": "in-process-fresh"}
+    return _attach_muse_observation({**budget, "source": "in-process-fresh"})
+
+
+def _attach_muse_observation(budget: dict[str, Any]) -> dict[str, Any]:
+    """Add the Muse provider row without starting another refresh loop."""
+    from scripts.api.subscription_usage import get_provider_usage_data, project_muse_for_status
+
+    agents = dict(budget.get("agents") or {})
+    agents["muse"] = project_muse_for_status(get_provider_usage_data("muse", kick_refresh=False))
+    return {**budget, "agents": agents}
 
 
 def _observation(info: dict[str, Any]) -> tuple[str, Any]:
@@ -290,7 +299,15 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
                 lines.append(pace)
         return lines
 
-    # Generic primary/secondary/tertiary windows (Kimi 5h+weekly, Codex, Grok…).
+    if lane == "muse":
+        lines.append(
+            "  quota: "
+            f"remaining={_pct(info.get('remaining_pct'))} "
+            f"headroom={_pct(info.get('headroom_pct'))} "
+            f"resets={_resets_text(info.get('resets_at'))}"
+        )
+
+    # Generic primary/secondary/tertiary windows (Kimi 5h+weekly, Codex, Grok, Muse).
     windows = native.get("windows") if isinstance(native.get("windows"), dict) else None
     if isinstance(windows, dict):
         for name, block in windows.items():
