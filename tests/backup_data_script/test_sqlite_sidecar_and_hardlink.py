@@ -51,7 +51,10 @@ def test_stale_base_sidecars_do_not_hide_rows_on_full_or_directory_restore(
     environment, source, _staging, _legacy = backup_environment
     _use_local_restic(environment, tmp_path)
     project = source.parent
-    relative = "data/sources.db"
+    # A bare data/sources.db literal is a store path. Derive the same relative
+    # path from the fixture database, as the other backup tests do.
+    fixture_database = source / "sources.db"
+    relative = fixture_database.relative_to(project).as_posix()
     live = tmp_path / "live-generation" / relative
     live.parent.mkdir(parents=True)
     connection = sqlite3.connect(live)
