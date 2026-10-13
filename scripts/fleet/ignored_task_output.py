@@ -1,4 +1,11 @@
-"""Preserve ignored task output before automatic worktree removal (#9645)."""
+"""Preserve ignored task output before automatic worktree removal (#9645).
+
+Creation evidence requires ``worktree_reused is False`` and a dictionary-valued
+``ignored_output_baseline`` captured by dispatch before worker spawn. Cohort
+attribution also requires one such creator and the common checkout/branch proof.
+A path or canonical-leaf match, the flag alone, or a prep-failure record without
+the creation inventory never proves creation, including in historical cohorts.
+"""
 
 from __future__ import annotations
 

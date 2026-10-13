@@ -306,6 +306,9 @@ def boundary_tree(tmp_path, monkeypatch):
         "worktree_path": str(tree),
         "keep_worktree": False,
     }
+    record["ignored_output_baseline"] = ignored_task_output.creation_inventory(
+        tree, primary=repo, task_id=record["task_id"], run_nonce=record["run_nonce"]
+    )
     (tasks / "boundary.json").write_text(json.dumps(record))
     return repo, tree, tasks, record
 

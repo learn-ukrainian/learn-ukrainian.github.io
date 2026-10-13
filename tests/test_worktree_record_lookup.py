@@ -109,6 +109,23 @@ def store(tmp_path):
 
 def save(tasks, name, record):
     path = tasks / name
+    if isinstance(record, dict) and record.get("worktree_reused") is False and "ignored_output_baseline" not in record:
+        # These matcher-only fixtures have no Git metadata or ignored output.
+        # Copy creation_inventory's writer shape for the creator records.
+        tree = Path(record.get("worktree_path") or record["cwd"])
+        if not tree.is_absolute():
+            tree = tasks.parent / tree
+        status = tree.stat()
+        record = dict(
+            record,
+            ignored_output_baseline={
+                "schema": "ignored-baseline.v1",
+                "task_id": record.get("task_id", path.stem),
+                "run_nonce": record.get("run_nonce", "creation-nonce"),
+                "directory_identity": [status.st_dev, status.st_ino],
+                "paths": [],
+            },
+        )
     path.write_text(json.dumps(record))
     return path
 
