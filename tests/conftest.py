@@ -63,6 +63,7 @@ import contextlib
 import functools
 import ipaddress
 import itertools
+import linecache
 import shutil
 import socket
 import sqlite3
@@ -213,36 +214,6 @@ SESSION_IDENTITY_ENV_VARS = (
 )
 
 
-# Same suffix rule as agent_runtime.env_sanitize.credential_env_names. Kept
-# here so conftest does not import agent_runtime (the rules workflow loads
-# this module with pytest and PyYAML only).
-# Values shorter than this are not checked in captured test output. They are
-# still removed from the environment. The check never reports the value.
-_CAPTURED_SECRET_MIN_LENGTH = 12
-
-
-def inherited_credential_names(env: Mapping[str, str], *, keep: Collection[str] = ()) -> tuple[str, ...]:
-    """Credential names present when this process started.
-
-    ``LU_TEST_*`` names are harness controls, not secrets. Names a test or
-    plugin sets after import stay in the environment.
-    """
-    kept = set(keep)
-    return tuple(
-        name for name in env if name not in kept and not name.startswith("LU_TEST_") and _CREDENTIAL_ENV_RE.search(name)
-    )
-
-
-# Snapshot at import, before test modules and session plugins add their own
-# tokens. Each test removes only these inherited names.
-_INHERITED_CREDENTIAL_NAMES = inherited_credential_names(os.environ, keep=SESSION_IDENTITY_ENV_VARS)
-
-# Original credential values for the in-flight test, keyed by node id. The
-# leak check compares captured output to these and never includes the value
-# in a failure. Cleared when the test protocol finishes.
-_SCRUBBED_SECRET_VALUES: dict[str, dict[str, str]] = {}
-
-
 @pytest.hookimpl(wrapper=True, tryfirst=True)
 def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> Generator[None, object, object]:
     """Run every test without the launching agent session's identity (#8778).
@@ -251,25 +222,13 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     any scope sees the identity. Tests that need a variable set it themselves;
     the original environment returns after teardown.
 
-    Credential-shaped variables inherited from the launching process
-    (``*_API_KEY`` and token, secret, and password names) are removed the
-    same way. A long value that then shows up in captured output fails the
-    test without the value being repeated.
+    Inherited credentials were already removed at import, before collection.
+    Variables published later by the suite remain available to its tests.
     """
-    secrets: dict[str, str] = {}
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
-        for name in _INHERITED_CREDENTIAL_NAMES:
-            value = os.environ.get(name, "")
-            if len(value) >= _CAPTURED_SECRET_MIN_LENGTH:
-                secrets[name] = value
-            patch.delenv(name, raising=False)
-        _SCRUBBED_SECRET_VALUES[item.nodeid] = secrets
-        try:
-            return (yield)
-        finally:
-            _SCRUBBED_SECRET_VALUES.pop(item.nodeid, None)
+        return (yield)
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)
@@ -278,7 +237,7 @@ def pytest_runtest_makereport(
 ) -> Generator[None, object, pytest.TestReport]:
     """Sanitize all outcomes before terminal, JUnit, or xdist consumers."""
     report = yield
-    return _sanitize_secret_report(report, {**_IMPORT_STRIPPED_SECRETS, **_SCRUBBED_SECRET_VALUES.get(item.nodeid, {})})
+    return _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)
@@ -286,6 +245,41 @@ def pytest_make_collect_report(collector: pytest.Collector) -> Generator[None, o
     """Protect collection failures and output using the import-time snapshot."""
     report = yield
     return _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_logreport(report: pytest.TestReport) -> Generator[None, object, object]:
+    """Redact worker reports before controller terminal and JUnit consumers."""
+    _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    return (yield)
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_collectreport(report: pytest.CollectReport) -> Generator[None, object, object]:
+    """Redact xdist collection reports before controller consumers."""
+    _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    return (yield)
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_warning_recorded(warning_message: warnings.WarningMessage) -> None:
+    """Redact before warning consumers. Historic hooks cannot use wrappers."""
+    if not _IMPORT_STRIPPED_SECRETS:
+        return
+    message = str(warning_message.message)
+    line = warning_message.line
+    if line is None:
+        line = linecache.getline(warning_message.filename, warning_message.lineno)
+    redacted_line = line
+    for value in sorted(set(_IMPORT_STRIPPED_SECRETS.values()), key=len, reverse=True):
+        message = message.replace(value, "[REDACTED]")
+        redacted_line = redacted_line.replace(value, "[REDACTED]")
+    if message != str(warning_message.message):
+        # Preserve the separately stored warning category without invoking
+        # a custom warning constructor that may require extra arguments.
+        warning_message.message = message
+    if redacted_line != line:
+        warning_message.line = redacted_line
 
 
 def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:

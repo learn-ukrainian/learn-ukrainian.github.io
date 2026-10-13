@@ -12,7 +12,7 @@ import re
 import shutil
 import subprocess
 import tempfile
-from collections.abc import Collection, Mapping
+from collections.abc import Mapping
 from pathlib import Path
 
 _SENSITIVE_NAME_RE = re.compile(
@@ -234,22 +234,6 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
 }
 
 
-_CREDENTIAL_ENV_RE = re.compile(r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$")
-# Values shorter than this are not checked in captured test output. They are
-# still removed from the environment. The check never reports the value.
-CAPTURED_SECRET_MIN_LENGTH = 12
-
-
-def credential_env_names(env: Mapping[str, str], *, keep: Collection[str] = ()) -> list[str]:
-    """Return credential-shaped env names that tests must not inherit.
-
-    ``*_API_KEY`` and token, secret, and password names match. ``keep`` holds
-    process-control names (session identity) that share those suffixes.
-    """
-    kept = {name.upper() for name in keep}
-    return [name for name in env if name.upper() not in kept and _CREDENTIAL_ENV_RE.search(name)]
-
-
 def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
     """Environment variable names to omit for ``provider``."""
     # A dispatcher is a parent for multiple providers. Keep their recognized
@@ -266,20 +250,9 @@ def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
     return drop
 
 
-def unneeded_secret_names(env: Mapping[str, str], provider: str) -> list[str]:
-    """API-key names ``provider`` must not inherit.
-
-    Provider keys stay in the dispatcher parent until each child's environment
-    is built. In a worker, ``CURSOR_API_KEY`` stays only for a Cursor seat; other
-    API keys stay only when that provider's allowlist names them. Non-key tokens
-    such as ``GH_TOKEN`` are left for the caller's identity injection.
-    """
-    return unneeded_env_var_names(env, provider)
-
-
 def without_unneeded_secrets(env: Mapping[str, str], provider: str) -> dict[str, str]:
     """Copy ``env`` without API keys this provider does not need."""
-    dropped = set(unneeded_secret_names(env, provider))
+    dropped = set(unneeded_env_var_names(env, provider))
     return {name: value for name, value in env.items() if name not in dropped}
 
 
@@ -667,10 +640,6 @@ def _print_unneeded_env_var_names(provider: str) -> int:
         if var_name.isidentifier():
             sys.stdout.write(f"{var_name}\n")
     return 0
-
-
-def _print_unneeded_secret_names(provider: str) -> int:
-    return _print_unneeded_env_var_names(provider)
 
 
 if __name__ == "__main__":

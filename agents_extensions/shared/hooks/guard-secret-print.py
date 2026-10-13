@@ -738,16 +738,19 @@ def _is_dotenv_secret_file(path: str) -> bool:
 
 
 def _is_secrets_directory(path: str) -> bool:
-    """True for ``~/.secrets`` and anything read from that directory."""
+    """True for the singular or plural secret directory and its contents."""
     clean = _strip_quotes(path).replace("\\", "/").lower()
     if not clean or clean == "-":
         return False
     folded = clean.replace("${home}", "~").replace("$home", "~")
-    if folded in {"~/.secrets", "~/.secrets/", "~/.secrets/*"}:
-        return True
-    if folded.startswith("~/.secrets/") or folded.startswith("~/.secrets*"):
-        return True
-    return "/.secrets/" in folded or folded.endswith("/.secrets") or folded.endswith("/.secrets/*")
+    for directory in (".secret", ".secrets"):
+        if folded in {f"~/{directory}", f"~/{directory}/", f"~/{directory}/*"}:
+            return True
+        if folded.startswith(f"~/{directory}/") or folded.startswith(f"~/{directory}*"):
+            return True
+        if f"/{directory}/" in folded or folded.endswith(f"/{directory}") or folded.endswith(f"/{directory}/*"):
+            return True
+    return False
 
 
 def _is_known_secret_file(path: str) -> bool:
