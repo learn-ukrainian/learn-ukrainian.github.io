@@ -36,6 +36,7 @@ import os
 import re
 import shutil
 import signal
+import socket
 import stat
 import subprocess
 import sys
@@ -49,6 +50,10 @@ GATE_VERSION = 3
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
+MAX_CONCURRENT_RUNS_ENV = "LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS"
+MEASUREMENT_SCHEMA = "pre-push-measurement.v1"
+SCOPE_MEMORY_MAX = 6 * 1024**3
+CGROUP_ROOT = Path("/sys/fs/cgroup")
 RUN_BUDGET_S = 600.0
 SHADOW_BUDGET_S = 120.0
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
@@ -367,14 +372,54 @@ def write_receipt(state: Path, plan: Plan, now: float) -> None:
     temporary.replace(path)
 
 
-def record(state: Path, event: dict[str, object]) -> None:
-    """Append one measurement row (AC-05); a write failure never changes the verdict."""
+def record(state: Path, event: dict[str, object]) -> bool:
+    """Serialize complete rows and fsync both the journal and its directory."""
     try:
+        row = (json.dumps(event, sort_keys=True) + "\n").encode("utf-8")
         state.mkdir(parents=True, exist_ok=True)
-        with (state / "measurements.jsonl").open("a", encoding="utf-8") as stream:
-            stream.write(json.dumps(event, sort_keys=True) + "\n")
-    except (OSError, TypeError, ValueError):
-        pass
+        fd = os.open(
+            state / "measurements.jsonl", os.O_CREAT | os.O_WRONLY | os.O_APPEND | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600
+        )
+        original_handlers = {}
+        pending_signals = []
+
+        def defer_signal(number, frame):
+            pending_signals.append((number, frame))
+
+        try:
+            if not stat.S_ISREG(os.fstat(fd).st_mode):
+                raise OSError("measurement journal is not a regular file")
+            fcntl.flock(fd, fcntl.LOCK_EX)
+            original_handlers = {number: signal.getsignal(number) for number in (signal.SIGINT, signal.SIGTERM)}
+            for number in original_handlers:
+                signal.signal(number, defer_signal)
+            view = memoryview(row)
+            while view:
+                written = os.write(fd, view)
+                if written == 0:
+                    raise OSError("measurement write made no progress")
+                view = view[written:]
+            os.fsync(fd)
+            directory = os.open(state, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+            try:
+                os.fsync(directory)
+            finally:
+                os.close(directory)
+        finally:
+            os.close(fd)
+            for number, handler in original_handlers.items():
+                signal.signal(number, handler)
+            if pending_signals:
+                number, frame = pending_signals[0]
+                handler = original_handlers[number]
+                if callable(handler):
+                    handler(number, frame)
+                elif handler == signal.SIG_DFL:
+                    os.kill(os.getpid(), number)
+        return True
+    except (OSError, TypeError, ValueError, UnicodeError):
+        print("PRE-PUSH GATE: measurement_unavailable; durable evidence is unknown", file=sys.stderr)
+        return False
 
 
 # ---- bounded execution ----------------------------------------------------
@@ -447,8 +492,277 @@ def coalescing_state(state: Path, plan: Plan) -> Path:
     return path
 
 
+def concurrent_run_limit() -> int:
+    """Only the explicitly supported experiment grants a second reservation."""
+    value = os.environ.get(MAX_CONCURRENT_RUNS_ENV, "1")
+    if value not in ("1", "2"):
+        raise GateOutcome("invalid_configuration", f"{MAX_CONCURRENT_RUNS_ENV} must be 1 or 2", incomplete=True)
+    return int(value)
+
+
+def admission_resources() -> dict[str, object]:
+    """Unknown host observations cannot qualify parallel admission."""
+    result: dict[str, object] = {"load_1m": None, "mem_available_bytes": None, "qualified": False}
+    try:
+        load = os.getloadavg()[0]
+        memory = re.search(r"^MemAvailable:\s+([0-9]+) kB$", Path("/proc/meminfo").read_text(), re.MULTILINE)
+        if memory is not None and 0 <= load < float("inf"):
+            available = int(memory[1]) * 1024
+            result.update(load_1m=load, mem_available_bytes=available, qualified=load < 12 and available >= 8 * 1024**3)
+    except (OSError, ValueError, OverflowError):
+        pass
+    return result
+
+
+def scope_cgroup(relative: str) -> Path:
+    """Accept a canonical cgroup-v2 path, never caller-controlled traversal."""
+    path = Path(relative)
+    if not path.is_absolute() or ".." in path.parts or relative != path.as_posix() or relative == "/":
+        raise ValueError("invalid cgroup path")
+    return CGROUP_ROOT / relative.lstrip("/")
+
+
+def scope_supported(relative: str, unit: str) -> bool:
+    try:
+        group = scope_cgroup(relative)
+        return (
+            group.name == unit
+            and int((group / "memory.max").read_text()) == SCOPE_MEMORY_MAX
+            and int((group / "memory.peak").read_text()) >= 0
+            and "populated 1" in (group / "cgroup.events").read_text().splitlines()
+        )
+    except (OSError, ValueError, TypeError):
+        return False
+
+
+def scoped_holder(ticket: Path) -> bool:
+    """Ticket text alone is insufficient: require a flock-live scope proof and live cgroup."""
+    try:
+        launcher = os.open(ticket.with_suffix(".launcher.lock"), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            if not stat.S_ISREG(os.fstat(launcher).st_mode):
+                return False
+            try:
+                fcntl.flock(launcher, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                pass
+            else:
+                return False  # Orphaned scoped work retains its reservation but cannot permit sharing.
+        finally:
+            os.close(launcher)
+        fd = os.open(ticket, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                proof_fd = os.open(ticket.with_suffix(".scope.json"), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                try:
+                    if not stat.S_ISREG(os.fstat(proof_fd).st_mode):
+                        return False
+                    proof = json.loads(os.read(proof_fd, 65536))
+                finally:
+                    os.close(proof_fd)
+                return (
+                    proof.get("mode") == "optin_scope"
+                    and proof.get("max_concurrent_runs") == 2
+                    and type(proof.get("effective_workers")) is int
+                    and 1 <= proof["effective_workers"] <= 4
+                    and proof.get("ticket_inode") == os.fstat(fd).st_ino
+                    and scope_supported(proof["cgroup"], proof["unit"])
+                )
+            return False
+        finally:
+            os.close(fd)
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return False
+
+
+def sharing_lock_inventory(fd: int, expected_mode: str) -> bool:
+    """Require the expected kernel flock and no earlier ticketless blocked caller.
+
+    This is inode-backed lock evidence, not a PID liveness inference. Missing, partial or
+    incompatible kernel evidence keeps exclusive admission.
+    """
+    try:
+        info = os.fstat(fd)
+        target = (os.major(info.st_dev), os.minor(info.st_dev), info.st_ino)
+        with Path("/proc/locks").open("rb") as stream:
+            data = stream.read(2 * 1024**2 + 1)
+        if len(data) > 2 * 1024**2:
+            return False
+        modes = []
+        for line in data.decode("ascii").splitlines():
+            fields = line.split()
+            waiting = "->" in fields
+            fields = [field for field in fields if field != "->"]
+            if len(fields) != 8:
+                return False
+            major, minor, inode = fields[5].split(":")
+            if (int(major, 16), int(minor, 16), int(inode)) != target:
+                continue
+            if waiting or fields[1:3] != ["FLOCK", "ADVISORY"] or fields[6:] != ["0", "EOF"]:
+                return False
+            modes.append(fields[3])
+        return modes == [expected_mode]
+    except (OSError, ValueError, UnicodeError):
+        return False
+
+
+class ResourceScope:
+    """Gate-owned scoped stage execution, retaining inherited reservations until cleanup.
+
+    The scoped executor is idle until its real cgroup and inherited descriptors are verified.
+    Setup failure therefore precedes every check. It remains the lock owner if its launcher dies.
+    """
+
+    def __init__(self, root: Path, launcher: str, head_admission: Admission):
+        self.root = root
+        self.launcher = launcher
+        self.head_admission = head_admission
+        self.unit = f"lu-pre-push-{uuid.uuid4().hex}.scope"
+        self.process: subprocess.Popen | None = None
+        self.channel: socket.socket | None = None
+        self.stream = None
+        self.group: str | None = None
+        self.reason: str | None = None
+        self.resources: dict[str, object] = {}
+        self.setup_s = 0.0
+        self.completed = False
+        self.admission: Admission | None = None
+
+    def start(self, admission: Admission) -> bool:
+        started = time.monotonic()
+        self.admission = admission
+        parent, child = socket.socketpair()
+        self.channel = parent
+        parent.settimeout(5.0)
+        self.stream = parent.makefile("rwb", buffering=0)
+        descriptors = [admission._fd, admission._ticket_fd, self.head_admission._fd, self.head_admission._ticket_fd]
+        try:
+            self.process = subprocess.Popen(
+                [
+                    "systemd-run",
+                    "--user",
+                    "--scope",
+                    "--quiet",
+                    "--unit",
+                    self.unit,
+                    "--property=MemoryMax=6G",
+                    "--property=MemoryAccounting=yes",
+                    "--description=Protected push validation",
+                    "bash",
+                    self.launcher,
+                    str(Path(__file__).resolve()),
+                    "--scope-child",
+                    str(child.fileno()),
+                    self.unit,
+                    *(str(fd) for fd in descriptors),
+                ],
+                cwd=self.root,
+                env=clean_environment(),
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                pass_fds=(child.fileno(), *descriptors),
+                start_new_session=True,
+            )
+            child.close()
+            ready = json.loads(self.stream.readline(65536))
+            self.group = ready.get("cgroup")
+            if ready.get("ready") is not True or not scope_supported(self.group, self.unit):
+                self.reason = "scope_support_unknown"
+                self.close()
+                return False
+            proof = {
+                "mode": "optin_scope",
+                "max_concurrent_runs": 2,
+                "unit": self.unit,
+                "cgroup": self.group,
+                "effective_workers": int(parallel_options()[1]) if parallel_options() else 1,
+                "ticket_inode": os.fstat(admission._ticket_fd).st_ino,
+            }
+            path = admission._ticket.with_suffix(".scope.json")
+            temporary = path.with_suffix(".tmp")
+            temporary.write_text(json.dumps(proof), encoding="utf-8")
+            temporary.replace(path)
+            return True
+        except (OSError, ValueError, TypeError, AttributeError) as error:
+            self.reason = f"scope_setup_{type(error).__name__}"
+            self.close()
+            return False
+        finally:
+            child.close()
+            self.setup_s = time.monotonic() - started
+
+    def execute(self, plan: Plan, config: str, deadline: float, event: dict[str, object]) -> None:
+        assert self.stream is not None and self.channel is not None
+        self.channel.settimeout(max(0.01, deadline - time.monotonic()) + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S)
+        packet = {
+            "plan": {name: value for name, value in vars(plan).items() if name != "node_ids"},
+            "root": str(self.root),
+            "launcher": self.launcher,
+            "config": config,
+            "deadline": deadline,
+        }
+        try:
+            self.channel.sendall((json.dumps(packet) + "\n").encode())
+            result = json.loads(self.stream.readline(16 * 1024 * 1024))
+            event.update(result["event"])
+            self.completed = result["settled"]
+            if result["error"] is not None:
+                raise GateOutcome(**result["error"])
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            raise GateOutcome(
+                "validation_incomplete", "scoped executor did not return a complete verdict", incomplete=True
+            ) from error
+        finally:
+            self.close()
+
+    def close(self) -> None:
+        """Release only this scope, and only after its children have gone."""
+        if self.admission is not None:
+            self.admission.withdraw_sharing()
+        if self.stream is not None:
+            self.stream.close()
+            self.stream = None
+        if self.channel is not None:
+            self.channel.close()
+            self.channel = None
+        if self.process is None:
+            return
+        deadline = time.monotonic() + CLEANUP_BUDGET_S
+        try:
+            if not self.completed and (self.process.poll() is None or self.group is not None):
+                subprocess.run(
+                    ["systemctl", "--user", "kill", "--signal=SIGKILL", "--kill-whom=all", self.unit],
+                    capture_output=True,
+                    timeout=max(0.01, deadline - time.monotonic()),
+                    check=False,
+                    env=clean_environment(),
+                )
+            self.process.wait(timeout=max(0.01, deadline - time.monotonic()))
+            if self.group is not None:
+                group = scope_cgroup(self.group)
+                while True:
+                    try:
+                        populated = "populated 1" in (group / "cgroup.events").read_text().splitlines()
+                    except FileNotFoundError:
+                        populated = False
+                    if not populated:
+                        break
+                    if time.monotonic() >= deadline:
+                        raise OSError("scope still contains descendants")
+                    time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
+        except (OSError, subprocess.SubprocessError, ValueError) as error:
+            raise GateOutcome(
+                "validation_incomplete", "own scope cleanup is unverified; stop", incomplete=True
+            ) from error
+        finally:
+            self.process = None
+
+
 class Admission:
-    """One gate per repository, ordered by live local tickets across all worktrees.
+    """FIFO reservations across worktrees; the scoped experiment can share two.
 
     A ticket's flock is its liveness proof, including after a crash; no PID inference. Publication
     uses rename after locking, so observers cannot mistake a registering caller for a dead one.
@@ -457,8 +771,15 @@ class Admission:
     """
 
     def __init__(
-        self, state: Path, wait_s: float, *, update: Update | None = None,
-        prior: Admission | None = None, root: Path | None = None, global_state: Path | None = None,
+        self,
+        state: Path,
+        wait_s: float,
+        *,
+        update: Update | None = None,
+        prior: Admission | None = None,
+        root: Path | None = None,
+        global_state: Path | None = None,
+        scope: ResourceScope | None = None,
     ):
         self.state = state
         self.global_state = global_state
@@ -474,6 +795,57 @@ class Admission:
         self._fd: int | None = None
         self._ticket_fd: int | None = None
         self._ticket: Path | None = None
+        self._launcher_fd: int | None = None
+        self._exclusive = False
+        self.scope = scope
+
+    def withdraw_sharing(self) -> None:
+        if self._launcher_fd is not None:
+            os.close(self._launcher_fd)
+            self._launcher_fd = None
+
+    def _parallel_slot(self, position: int) -> bool:
+        if self.scope is None or position > 2:
+            return False
+        mutex = os.open(self.state / "sharing.lock", os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+        try:
+            try:
+                fcntl.flock(mutex, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return False
+            # Recheck under the shared-mode transition lock. A serial waiter always blocks followers.
+            live = self._live_tickets()
+            position = live.index(self._ticket) + 1
+            if position > 2 or (position == 2 and not scoped_holder(live[0])):
+                return False
+            self.scope.resources = admission_resources()
+            if not self.scope.resources["qualified"]:
+                self.scope.reason = "resources_unqualified_or_unknown"
+                self.scope = None
+                return False
+            try:
+                if position == 1:
+                    fcntl.flock(self._fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                if not sharing_lock_inventory(self._fd, "WRITE" if position == 1 else "READ"):
+                    self.scope.reason = "kernel_lock_inventory_unknown_or_blocked"
+                    self.scope = None
+                    if position == 1:
+                        fcntl.flock(self._fd, fcntl.LOCK_UN)
+                    return False
+                fcntl.flock(self._fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return False
+            self._launcher_fd = os.open(
+                self._ticket.with_suffix(".launcher.lock"), os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600
+            )
+            fcntl.flock(self._launcher_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            if self.scope.start(self):
+                return True
+            self.scope = None
+            fcntl.flock(self._fd, fcntl.LOCK_UN)
+            return False
+        finally:
+            os.close(mutex)
 
     def _register(self) -> None:
         queue = self.state / "queue"
@@ -557,21 +929,28 @@ class Admission:
                         "validation_incomplete", "own admission ticket is missing", incomplete=True
                     ) from None
                 if position == 1:
+                    if self._parallel_slot(position):
+                        self.queue_depth = max(self.queue_depth, depth)
+                        self.queue_position = self.queue_position or position
+                        return self
                     try:
                         fcntl.flock(self._fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     except BlockingIOError:  # includes an older gate with no ticket
                         position, depth = 2, depth + 1
                     else:
+                        self._exclusive = True
                         self.queue_depth = max(self.queue_depth, depth)
                         self.queue_position = self.queue_position or 1
                         return self
+                elif self._parallel_slot(position):
+                    self.queue_depth = max(self.queue_depth, depth)
+                    self.queue_position = self.queue_position or position
+                    return self
                 self.queue_depth = max(self.queue_depth, depth)
                 self.queue_position = self.queue_position or position
                 global_depth = len(self._live_tickets(self.global_state / "queue")) if self.global_state else 0
                 allowance = max(1, position - 1 + global_depth) * self.wait_s
-                self.wait_limit = max(
-                    self.wait_limit, min(ADMISSION_MAX_WAIT_S, stage_started - started + allowance)
-                )
+                self.wait_limit = max(self.wait_limit, min(ADMISSION_MAX_WAIT_S, stage_started - started + allowance))
                 self.waited = time.monotonic() - started
                 report = (position, depth)
                 if report != last_report or time.monotonic() - reported_at >= 30.0:
@@ -598,8 +977,14 @@ class Admission:
             self.waited = time.monotonic() - started
 
     def __exit__(self, *exc: object) -> None:
+        self._exclusive = False
+        self.withdraw_sharing()
+        if self.scope is not None:
+            self.scope.close()
         if self._ticket is not None:
             with contextlib.suppress(OSError):
+                self._ticket.with_suffix(".scope.json").unlink(missing_ok=True)
+                self._ticket.with_suffix(".launcher.lock").unlink(missing_ok=True)
                 self._ticket.unlink(missing_ok=True)
             self._ticket = None
         if self._ticket_fd is not None:
@@ -698,6 +1083,9 @@ def run_bounded(
                 timed_out = True
                 with contextlib.suppress(ProcessLookupError):
                     os.killpg(process.pid, signal.SIGKILL)
+            except BaseException:
+                terminate_run(process, token)
+                raise
             finally:
                 sweep_descendants(token, time.monotonic() + CLEANUP_BUDGET_S)
             if timed_out:
@@ -786,14 +1174,29 @@ def parallel_options() -> list[str]:
 
 
 def run_pytest_stage(
-    plan: Plan, root: Path, launcher: str, deadline: float, *, diagnostics: dict[str, object] | None = None
+    plan: Plan,
+    root: Path,
+    launcher: str,
+    deadline: float,
+    *,
+    diagnostics: dict[str, object] | None = None,
+    admission: Admission | None = None,
 ) -> str:
-    # Admission serializes these directories. A killed gate leaves no live owner, so the next
-    # admitted stage can reap its base without touching another pytest session's shared temp.
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
-    for stale in state.glob("pytest-*"):
-        reap_stale_node(stale)
+    # Only the actual exclusive global holder can prove that no other gate owns these bases.
+    exclusive = (
+        admission is not None
+        and admission._exclusive
+        and admission._fd is not None
+        and admission.scope is None
+        and admission.state == state
+    )
+    if diagnostics is not None:
+        diagnostics["stale_pytest_cleanup"] = "exclusive_sweep" if exclusive else "skipped_shared_or_unknown"
+    if exclusive:
+        for stale in state.glob("pytest-*"):
+            reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
     options = parallel_options()
@@ -962,6 +1365,43 @@ def stage_measurement(event: dict[str, object], name: str):
         diagnostics["elapsed_s"] = time.monotonic() - started
 
 
+def execute_stages(
+    plan: Plan,
+    root: Path,
+    launcher: str,
+    config: str,
+    deadline: float,
+    event: dict[str, object],
+    *,
+    persist_receipt: bool = True,
+    admission: Admission | None = None,
+) -> None:
+    state = state_dir(root)
+    shadow: Shadow | None = None
+    settled = False
+    try:
+        shadow = Shadow(plan, root, launcher)
+        with stage_measurement(event, "pre_commit") as diagnostics:
+            run_pre_commit_stage(plan, root, launcher, config, deadline, diagnostics=diagnostics)
+        with stage_measurement(event, "pytest") as diagnostics:
+            event["pytest"] = run_pytest_stage(
+                plan, root, launcher, deadline, diagnostics=diagnostics, admission=admission
+            )
+        if persist_receipt:
+            try:
+                write_receipt(state, plan, time.time())
+            except OSError as error:
+                raise GateOutcome(
+                    "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
+                ) from error
+        event["shadow"] = shadow.finish()
+        settled = True
+        event["outcome"] = "green"
+    finally:
+        if not settled and shadow is not None:  # whatever escapes, the shadow must not outlive the hook
+            shadow.abandon()
+
+
 def validate(
     update: Update, root: Path, launcher: str, config: str, event: dict[str, object], budget: Budget | None = None
 ) -> None:
@@ -982,6 +1422,7 @@ def validate(
     state = state_dir(root)
     head_state = coalescing_state(state, plan)
     frozen_key = receipt_key(plan)
+    event["validation_fingerprint"] = hashlib.sha256(json.dumps(frozen_key, sort_keys=True).encode()).hexdigest()
     if receipt_is_fresh(state, plan, time.time()):
         event["outcome"] = "green"
         event["detail"] = "valid receipt"
@@ -989,6 +1430,7 @@ def validate(
     wait_s = bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)
     head_admission = Admission(head_state, wait_s, update=update, root=root, global_state=state)
     admission = head_admission
+    scope = None
     try:
         with contextlib.ExitStack() as locks:
             locks.enter_context(head_admission)
@@ -1002,11 +1444,22 @@ def validate(
                 if budget is not None and budget._deadline is not None:
                     budget.after_admission(head_admission.waited)
                 return
-            admission = Admission(state, wait_s, update=update, prior=head_admission)
+            options = parallel_options()
+            effective = int(options[1]) if options else 1
+            if concurrent_run_limit() == 2 and effective <= 4:
+                scope = ResourceScope(root, launcher, head_admission)
+            scope_kwargs = {"scope": scope} if scope is not None else {}
+            admission = Admission(state, wait_s, update=update, prior=head_admission, **scope_kwargs)
             admitted = locks.enter_context(admission)
             deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).after_admission(
                 admitted.waited
             )
+            resources = scope.resources if getattr(admitted, "scope", None) is not None else admission_resources()
+            event["resources_at_admission"] = resources
+            event["scope"] = {
+                "status": "supported" if getattr(admitted, "scope", None) is not None else "serial",
+                "reason": scope.reason if scope is not None else "default_or_worker_bound",
+            }
             # A matching gate may have finished while this caller was queued. Rebuild the plan
             # first to preserve the dirty-tree/untracked-input checks after the wait.
             refreshed = build_plan(update, root)
@@ -1015,26 +1468,19 @@ def validate(
             if receipt_is_fresh(state, plan, time.time()):
                 event.update(outcome="green", detail="valid receipt after admission")
                 return
-            shadow: Shadow | None = None
-            settled = False
-            try:
-                shadow = Shadow(plan, root, launcher)
-                with stage_measurement(event, "pre_commit") as diagnostics:
-                    run_pre_commit_stage(plan, root, launcher, config, deadline, diagnostics=diagnostics)
-                with stage_measurement(event, "pytest") as diagnostics:
-                    event["pytest"] = run_pytest_stage(plan, root, launcher, deadline, diagnostics=diagnostics)
+            active_scope = getattr(admitted, "scope", None)
+            if active_scope is not None:
+                event["scope"] = {"status": "supported", "unit": active_scope.unit}
+                event["peak_memory_unknown_reason"] = "scope_result_unavailable"
+                active_scope.execute(plan, config, deadline, event)
                 try:
                     write_receipt(state, plan, time.time())
                 except OSError as error:
                     raise GateOutcome(
-                        "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
+                        "receipt_unwritable", "cannot persist the green receipt", incomplete=True
                     ) from error
-                event["shadow"] = shadow.finish()
-                settled = True
-                event["outcome"] = "green"
-            finally:
-                if not settled and shadow is not None:  # whatever escapes, the shadow must not outlive the hook
-                    shadow.abandon()
+            else:
+                execute_stages(plan, root, launcher, config, deadline, event, admission=admitted)
     except GateOutcome:
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
@@ -1046,6 +1492,8 @@ def validate(
             queue_depth=admission.queue_depth if admission is not head_admission else 0,
             queue_position=admission.queue_position if admission is not head_admission else 0,
             admission_wait_limit_s=admission.wait_limit,
+            scope_setup_s=scope.setup_s if scope is not None else 0.0,
+            queue_wait_s=max(0.0, admission.waited - (scope.setup_s if scope is not None else 0.0)),
         )
 
 
@@ -1072,6 +1520,113 @@ def refuse(error: GateOutcome) -> int:
     return EXIT_INCOMPLETE if error.incomplete else EXIT_REFUSED
 
 
+@contextlib.contextmanager
+def catch_interruptions():
+    def interrupted(signum: int, _frame: object) -> None:
+        raise GateOutcome("interrupted", f"received signal {signum}", incomplete=True)
+
+    original = {number: signal.signal(number, interrupted) for number in (signal.SIGINT, signal.SIGTERM)}
+    try:
+        yield
+    finally:
+        for number, handler in original.items():
+            signal.signal(number, handler)
+
+
+def scope_child(arguments: list[str]) -> int:
+    """Run the unchanged stages in the verified scope, with the parent's inherited flocks."""
+    channel = socket.socket(fileno=int(arguments[0]))
+    unit = arguments[1]
+    for value in arguments[2:]:
+        os.fstat(int(value))  # Missing inherited reservations prohibit readiness and validation.
+    with channel, channel.makefile("rwb", buffering=0) as stream, catch_interruptions():
+        group = next(
+            (line[3:] for line in Path("/proc/self/cgroup").read_text().splitlines() if line.startswith("0::")), ""
+        )
+        ready = scope_supported(group, unit)
+        channel.sendall((json.dumps({"ready": ready, "cgroup": group}) + "\n").encode())
+        if not ready:
+            return EXIT_INCOMPLETE
+        # EOF when the launcher dies before dispatch releases the idle scope without any check.
+        text = stream.readline(16 * 1024 * 1024)
+        if not text:
+            return EXIT_INCOMPLETE
+        packet = json.loads(text)
+        event: dict[str, object] = {}
+        error = None
+        try:
+            execute_stages(
+                Plan(**packet["plan"]),
+                Path(packet["root"]),
+                packet["launcher"],
+                packet["config"],
+                packet["deadline"],
+                event,
+                persist_receipt=False,
+            )
+        except GateOutcome as caught:
+            error = {
+                "reason": caught.reason,
+                "detail": caught.detail,
+                "failing": caught.failing,
+                "incomplete": caught.incomplete,
+            }
+        except OSError:
+            error = {"reason": "validation_error", "detail": "scoped validation I/O failed", "incomplete": True}
+        # Keep the inherited reservations until every scoped descendant has exited. If cleanup
+        # cannot be verified, retain the executor for the caller's own-unit kill and driver disposition.
+        settled = False
+        try:
+            group_path = scope_cgroup(group)
+            members = {int(pid) for path in group_path.rglob("cgroup.procs") for pid in path.read_text().splitlines()}
+            settled = members == {os.getpid()}
+        except (OSError, ValueError):
+            pass
+        if not settled:
+            error = {
+                "reason": "scope_cleanup_unverified",
+                "detail": "own scoped descendants are not settled",
+                "incomplete": True,
+            }
+        # Read before this executor exits and systemd can garbage-collect its cgroup.
+        try:
+            peak = int((scope_cgroup(group) / "memory.peak").read_text())
+            if peak < 0:
+                raise ValueError
+            event.update(peak_memory_bytes=peak, peak_memory_unknown_reason=None)
+            if peak > SCOPE_MEMORY_MAX:
+                error = {
+                    "reason": "resource_bound_exceeded",
+                    "detail": "scope peak exceeded its approved memory limit",
+                    "incomplete": True,
+                }
+        except (OSError, ValueError):
+            event.update(peak_memory_bytes=None, peak_memory_unknown_reason="cgroup_peak_unavailable")
+        with contextlib.suppress(BrokenPipeError):
+            channel.sendall((json.dumps({"event": event, "error": error, "settled": settled}) + "\n").encode())
+        if not settled:
+            while True:
+                signal.pause()  # Retain the existing reservation, never promote an orphaned owner.
+        return 0 if error is None else EXIT_INCOMPLETE
+
+
+def attempt_fingerprints(root: Path, launcher: str, config: str, text: str) -> dict[str, str | None]:
+    inputs = {
+        "source": Path(__file__),
+        "registry": root / REGISTRY_FILE,
+        "selector": root / "scripts/ci/pre_push_shadow.py",
+        "launcher": Path(launcher),
+        "config": Path(config),
+    }
+    result: dict[str, str | None] = {"input": hashlib.sha256(text.encode()).hexdigest()}
+    for name, path in inputs.items():
+        try:
+            result[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+        except OSError:
+            result[name] = None
+    return result
+
+
 def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--launcher", required=True, help="project_python.sh path")
@@ -1085,11 +1640,39 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         return refuse(GateOutcome("tree_mismatch", "cannot resolve the worktree root", incomplete=True))
     root = Path(root_text.strip())
     events: list[dict[str, object]] = []
+    event_times: dict[str, list[float]] = {}
+    measurement_state: Path | None = None
     status = 0
+    text = sys.stdin.read() if stdin is None else stdin
+    fingerprints = attempt_fingerprints(root, arguments.launcher, arguments.config, text)
 
     def new_event() -> dict[str, object]:
-        event: dict[str, object] = {"gate_version": GATE_VERSION, "at": time.time()}
+        nonlocal measurement_state
+        event: dict[str, object] = {
+            "gate_version": GATE_VERSION,
+            "measurement_schema": MEASUREMENT_SCHEMA,
+            "at": time.time(),
+            "attempt_id": uuid.uuid4().hex,
+            "fingerprints": fingerprints,
+            "requested_test_processes": None,
+            "effective_test_processes": None,
+            "peak_memory_bytes": None,
+            "peak_memory_unknown_reason": "no_supported_scope",
+            "admission_wait_s": 0.0,
+            "queue_wait_s": 0.0,
+            "scope_setup_s": 0.0,
+            "resources_at_admission": None,
+            "begin_durable": False,
+            "task_owner": ticket_identity(Update("unknown", "unknown", "unknown", ZERO_SHA))["task_owner"],
+        }
         events.append(event)
+        event_times[event["attempt_id"]] = [time.monotonic()]
+        measurement_state = state_dir(root)
+        event["begin_durable"] = record(measurement_state, {**event, "phase": "BEGIN"})
+        if not event["begin_durable"]:
+            raise GateOutcome(
+                "measurement_unavailable", "cannot durably begin validation; evidence is unknown", incomplete=True
+            )
         return event
 
     def mark(event: dict[str, object], error: GateOutcome) -> None:
@@ -1099,36 +1682,79 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             failing=list(error.failing),
         )
 
-    try:
-        test_process_limit()  # refuse invalid configuration even when a receipt would skip testing
-        updates = [
-            u
-            for u in parse_updates(sys.stdin.read() if stdin is None else stdin)
-            if u.local_sha != ZERO_SHA and not u.remote_ref.startswith("refs/tags/")
-        ]
-        if len({u.local_sha for u in updates}) > 1:
-            raise GateOutcome("tree_mismatch", "one push carries several different commits; push them one at a time")
-        budget = Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))
-        for update in updates:  # equal commits can still have different outgoing ranges: validate each
+    def publish_terminal(state: Path, event: dict[str, object]) -> bool:
+        event["duration_s"] = round(time.monotonic() - started, 2)
+        times = event_times[event["attempt_id"]]
+        elapsed = (times[1] if len(times) > 1 else time.monotonic()) - times[0]
+        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0))
+        event["phase"] = "TERMINAL"
+        pytest_stage = event.get("stages", {}).get("pytest", {})
+        event["effective_test_processes"] = pytest_stage.get("effective_test_processes")
+        return record(state, event)
+
+    with catch_interruptions():
+        try:
             event = new_event()
+            event["requested_test_processes"] = test_process_limit()
+            concurrent_run_limit()
+            updates = [
+                u for u in parse_updates(text) if u.local_sha != ZERO_SHA and not u.remote_ref.startswith("refs/tags/")
+            ]
+            if len({u.local_sha for u in updates}) > 1:
+                raise GateOutcome(
+                    "tree_mismatch", "one push carries several different commits; push them one at a time"
+                )
+            budget = Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))
+            for index, update in enumerate(
+                updates
+            ):  # equal commits can still have different outgoing ranges: validate each
+                if index:
+                    event = new_event()
+                    event["requested_test_processes"] = test_process_limit()
+                try:
+                    with catch_interruptions():
+                        validate(update, root, arguments.launcher, arguments.config, event, budget)
+                except GateOutcome as error:
+                    mark(event, error)
+                    raise
+                finally:
+                    event_times[event["attempt_id"]].append(time.monotonic())
+            if not updates:
+                event.update(outcome="green", detail="no branch updates")
+        except GateOutcome as error:
+            mark(events[-1] if events else new_event(), error)
+            status = refuse(error)
+        finally:
             try:
-                validate(update, root, arguments.launcher, arguments.config, event, budget)
+                state = state_dir(root)
+                for event in events:
+                    if "outcome" in event:
+                        try:
+                            if not publish_terminal(state, event) and status == 0:
+                                status = refuse(
+                                    GateOutcome(
+                                        "measurement_unavailable",
+                                        "cannot durably finish validation; evidence is unknown",
+                                        incomplete=True,
+                                    )
+                                )
+                        except GateOutcome as error:
+                            # A signal deferred through fsync may follow a committed terminal row.
+                            # Preserve it and append the interruption, so the attempt is never a
+                            # valid green benchmark sample even at this publication boundary.
+                            mark(event, error)
+                            event["measurement_unknown_reason"] = "interrupted_terminal_append"
+                            status = refuse(error)
+                            publish_terminal(state, event)
             except GateOutcome as error:
-                mark(event, error)
-                raise
-    except GateOutcome as error:
-        if not events:
-            mark(new_event(), error)
-        status = refuse(error)
-    finally:
-        with contextlib.suppress(GateOutcome):
-            state = state_dir(root)
-            for event in events:
-                if "outcome" in event:
-                    event["duration_s"] = round(time.monotonic() - started, 2)
-                    record(state, event)
+                status = refuse(error)
+                for event in events:
+                    mark(event, error)
+                    event["measurement_unknown_reason"] = "interrupted_terminal_publication"
+                    if measurement_state is not None:
+                        publish_terminal(measurement_state, event)
     return status
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(scope_child(sys.argv[2:]) if sys.argv[1:2] == ["--scope-child"] else main())

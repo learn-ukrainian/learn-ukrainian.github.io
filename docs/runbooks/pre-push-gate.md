@@ -33,7 +33,7 @@ The last stderr line before the bypass hint is machine-readable: `{"pre_push_gat
 
 ## Bounds
 
-One admitted gate per repository at a time (lock under the Git common dir). The admission wait and one run
+Admission defaults to one gate per repository (lock under the Git common dir). The admission wait and one run
 budget are shared by every ref update of the push; their limits are the constants in `.githooks/pre_push_gate.py`.
 Each update is validated with its own base. Command output goes to a file, and after every command the gate
 kills any descendant that inherited its run token within a short cleanup bound, so a detached child cannot
@@ -72,7 +72,8 @@ tickets and older holders with no ticket metadata.
 A refused attempt terminates. Incomplete or interrupted callers release their queue resources;
 abandoned tickets are reaped through the existing flock checks. An explicit owner resubmission gets
 a new tail ticket. The gate never retries an attempt automatically. Stable lock files remain for
-safe rendezvous; tickets and private test directories are released. Global concurrency remains one.
+safe rendezvous; each run releases its own tickets and private test directory. Shared or scoped runs,
+and runs without proven exclusivity, preserve other runs' directories, including those left by a killed caller.
 
 `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES` sets the test process ceiling as a positive integer.
 The default is 4, so callers get bounded parallel validation without an override. Serial validation
@@ -80,6 +81,44 @@ consumed the shared run budget. A nonblank `LEARN_UKRAINIAN_DISPATCH_TASK_ID` ca
 at 2 processes, matching the existing dispatch pytest plugin. An explicit positive integer override
 is still supported; invalid values refuse validation, including receipt reuse. Parallel execution
 requires xdist and keeps whole files together with `--dist loadfile`. Without xdist, execution is serial.
+
+## Experimental concurrent admission (#10555)
+
+`LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS` accepts exactly `1` or `2`. Unset means `1`.
+Other values produce `invalid_configuration`, including when a receipt could be reused.
+The experiment is opt-in and does not enable a permanent rollout.
+
+The second reservation requires fresh admission observations: `load_1m < 12` and
+`mem_available_bytes >= 8589934592`. Missing, nonnumeric, or inadequate observations retain serial
+admission. The concurrent mode also requires an effective per-run test process count at most 4.
+It preserves the configured count and the ordinary dispatch clamp described above.
+
+The gate starts its own `systemd-run --user --scope` executor with `MemoryMax=6G` and verifies the
+actual cgroup-v2 memory limit and peak interface before starting any check. The executor inherits
+the head and global flock descriptors. These reservations remain held if the launching gate exits
+while scoped validation continues. Every blocking stage and the shadow run execute inside that scope.
+No check runs during scope setup. A missing user bus or refused setup falls back to the complete
+serial path. Failure after checks start is incomplete, with no repeated stage or automatic retry.
+Cleanup addresses only the run's generated unit and descendants. Scoped receipt publication follows
+verified cleanup. If descendants cannot be verified as settled, the executor retains its inherited
+reservations for own-unit cleanup and driver disposition; it never promotes an orphaned owner.
+
+The serial pytest stage restores the stale `pytest-*` sweep only while its run holds the exclusive
+Git-common admission lock. That lock excludes live shared holders and any surviving scoped executor.
+A later exclusive serial run may reap directories left by a dead run.
+Shared/scoped execution or unknown exclusivity skips the sweep and records
+`stale_pytest_cleanup=skipped_shared_or_unknown` in stage diagnostics. Every run still removes its
+own pytest temporary directory. Sweep failures refuse the push as incomplete.
+
+Scoped executors share the existing `admission.lock`; legacy and default callers keep its exclusive
+flock. A flock-live ticket, a separate launcher flock, and verified scoped-holder proof permit sharing.
+The launcher flock is never inherited by the executor. A dead launcher therefore prevents a second
+reservation while its scoped work retains the head and global locks. Empty, legacy, default,
+unscoped, or unknown predecessors prevent a second reservation. The queue remains FIFO: a serial
+waiter cannot be skipped. The gate checks the kernel lock inventory for an earlier ticketless
+exclusive waiter before sharing. Missing or incompatible inode-backed lock evidence retains exclusive
+admission. The separate `sharing.lock` serializes scoped admission transitions under
+the same Git-common authority. It adds no stream lease or external coordination service.
 
 ## Receipts
 
@@ -91,15 +130,40 @@ immutable identity cannot authorize reuse.
 
 ## Measurement (AC-05)
 
-Each typed outcome appends a row to `<git-common-dir>/lu-pre-push-gate/measurements.jsonl`: outcome, reason, failing
+Each attempt appends a durable `BEGIN` row before validation and a `TERMINAL` row for its typed outcome to `<git-common-dir>/lu-pre-push-gate/measurements.jsonl`: outcome, reason, failing
 ids, admission wait, duration, registry version and the shadow selection. Join with first-attempt CI outcome
 per PR head for the before/after report.
 `admission_wait_s` includes both waits; `coalescing_wait_s` records the head queue wait separately.
 `queue_depth` and `queue_position` describe the global queue only. A follower that reuses a receipt
 before global admission records zero for both, with detail `valid receipt after coalescing`.
-An interruption before a typed outcome can leave no final row; absence is never proof of green.
+Both rows carry a generated `attempt_id`, `measurement_schema` independent of the validation receipt
+version, and SHA-256 fingerprints of the source, registry, selector, launcher, configuration, and stdin.
+Missing fingerprint inputs are null, never inferred. The terminal row adds the complete validation-plan
+fingerprint when available. Attribution uses the attempt identity and immutable inputs; a missing task
+owner remains `unknown` and does not set a dispatch marker.
+
+Catchable SIGINT and SIGTERM produce incomplete terminal rows after cleanup. SIGKILL or a crash can
+leave an unpaired BEGIN. That attempt stays incomplete/unknown in the denominator; absence never
+proves green. Appends hold an exclusive journal flock through complete writes and file/directory
+fsync. Catchable signals are deferred through each complete durable append. A signal at terminal
+publication can follow an already committed terminal row; a final incomplete row preserves the
+interruption with `measurement_unknown_reason: interrupted_terminal_append`. Multiple terminal rows
+for one attempt invalidate comparison evidence and never count as a green sample. A failed write emits `measurement_unavailable`; durability is unknown and the attempt cannot
+supply accepted comparison evidence. Failure to persist BEGIN refuses validation before any check.
+Failure to persist a green terminal observation returns incomplete; existing negative validation
+verdicts remain negative. These storage failures never invent a durable observation.
 
 The row's `stages` object contains `pre_commit` and `pytest` only when each stage is entered.
+`queue_wait_s` excludes the run's `scope_setup_s` from total admission time. `execution_s` records
+attempt time excluding admission; the existing `duration_s` remains the total push observation.
+`resources_at_admission` contains fresh admission observations or explicit nulls.
+The top-level requested/effective test process fields remain null when no count was observed.
+`peak_memory_bytes` comes from the scope's `memory.peak`, read by the scoped executor before it exits.
+It covers the scope and its descendants, never a point sample. Serial runs and failed peak reads
+record null and `peak_memory_unknown_reason`. Unknown measurements do not establish resource bounds,
+valid comparison evidence, or a throughput improvement. Supported-bus production-entry evidence
+and independent held-out review remain necessary; injected scope tests do not certify the runtime.
+
 Each entry records `elapsed_s` from a monotonic clock, `outcome` and `reason`. Stage time includes
 stage setup, command execution and cleanup; admission wait remains in `admission_wait_s`.
 An earlier successful entry survives a later failure. Receipt reuse creates no stage entries.
