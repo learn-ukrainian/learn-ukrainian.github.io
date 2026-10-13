@@ -19485,6 +19485,72 @@ def test_run_worker_branch_continuation_finalizes_owned_changes_or_reports_failu
             assert state["auto_finalize"]["error"] == "no_owned_paths_declared"
 
 
+@pytest.mark.parametrize("pushed", [True, False])
+def test_continuation_that_switches_branch_records_the_checkout_branch(tmp_tasks_dir, tmp_path, monkeypatch, pushed):
+    """#10548: a reused checkout's new branch is the one finalize measures."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "switched-branch"
+    old_branch = "codex/original-dispatch"
+    new_branch = "cursor/fresh-gate"
+    worktree = _agy_dispatch_worktree(tmp_path, old_branch)
+    _git_out(worktree, "commit", "--allow-empty", "-m", "original dispatch")
+    _git_out(worktree, "push", "-u", "origin", old_branch)
+    _git_out(worktree, "checkout", "-b", new_branch)
+    _git_out(worktree, "commit", "--allow-empty", "-m", "switched branch")
+    if pushed:
+        _git_out(worktree, "push", "-u", "origin", new_branch)
+    head = delegate._resolve_sha(worktree)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": old_branch,
+            "worktree_base": "main",
+            "worktree_reused": True,
+            "keep_worktree": True,
+        },
+    )
+    result = Result(
+        ok=True,
+        agent="codex",
+        model="gpt-6.1-sol",
+        mode="danger",
+        response="",
+        stderr_excerpt=None,
+        duration_s=0.1,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+    )
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="continue on a new branch",
+            mode="danger",
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["worktree_branch"] == new_branch
+    assert state["final_branch_head_commit"] == head
+    assert _git_out(worktree, "status", "--porcelain") == ""
+    if pushed:
+        assert state["status"] == "done"
+        assert state["needs_finalize"] is False
+    else:
+        assert state["status"] == "needs_finalize"
+        assert state["needs_finalize"] is True
+
+
 def test_run_worker_without_owned_paths_never_auto_commits(tmp_tasks_dir, tmp_path, monkeypatch):
     """AC-03: no --owned-path means no auto-finalize commit; the task needs a human."""
     _sanitize_git_env_for_test(monkeypatch)
@@ -20498,3 +20564,232 @@ def test_advisory_round_start_lookup_errors_are_recorded_as_unmeasured(
     assert state[key] == {"measured": False, "error": detail}
     assert detail in state["stderr_excerpt"]
     assert "private lookup detail" not in str(state)
+
+
+def _linked_dispatch_worktree(tmp_path: Path) -> Path:
+    """A directory the AGY installer treats as a dispatch worktree (#10529).
+
+    ``install_worktree_guard`` writes only when the cwd is a linked worktree
+    under ``<primary>/.worktrees/dispatch``. A bare temporary directory does
+    not reproduce the checkout mutation.
+    """
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "probe" / "cwd"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {primary}/.git/worktrees/probe\n", encoding="utf-8")
+    return worktree
+
+
+def _directory_snapshot(root: Path) -> tuple[tuple[str, str, bytes], ...]:
+    rows: list[tuple[str, str, bytes]] = []
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        base = Path(dirpath)
+        for name in dirnames:
+            path = base / name
+            rel = path.relative_to(root).as_posix()
+            payload = os.readlink(path).encode() if path.is_symlink() else b""
+            rows.append((rel, "symlink" if path.is_symlink() else "dir", payload))
+        for name in filenames:
+            path = base / name
+            rel = path.relative_to(root).as_posix()
+            if path.is_symlink():
+                rows.append((rel, "symlink", os.readlink(path).encode()))
+            else:
+                rows.append((rel, "file", path.read_bytes()))
+    return tuple(sorted(rows))
+
+
+def test_adapter_model_rejection_leaves_linked_worktree_cwd_unchanged(tmp_path, monkeypatch):
+    """The model probe must not install hooks or any other file into the process cwd (#10529)."""
+    from agent_runtime.registry import AGENTS
+
+    worktree = _linked_dispatch_worktree(tmp_path)
+    monkeypatch.chdir(worktree)
+    before = _directory_snapshot(worktree)
+    for agent, entry in AGENTS.items():
+        model = entry.get("default_model") or "model-probe"
+        delegate._adapter_model_rejection(agent, str(model))
+    after = _directory_snapshot(worktree)
+    assert after == before
+    assert not (worktree / ".agents").exists()
+
+
+def test_adapter_model_rejection_treats_probe_tempdir_failure_as_inconclusive(tmp_path, monkeypatch, capsys):
+    """A probe directory that cannot be created uses the inconclusive-probe result (#10529).
+
+    ``PermissionError(13)`` and ``OSError(28)`` from ``tempfile.mkdtemp`` must
+    return the same value as any other inconclusive probe error for the same
+    agent and model, must not raise, and must not leave a directory behind.
+    """
+    import tempfile
+    import types
+
+    from agent_runtime.registry import AGENTS
+
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
+    agent, model = "codex", "unapproved-model"
+    original_spec = AGENTS[agent]["adapter"]
+
+    class _Boom:
+        def build_invocation(self, **_kwargs):
+            raise RuntimeError("probe cannot run")
+
+    fake = types.ModuleType("probe_tempdir_boom_mod")
+    fake.Boom = _Boom
+    monkeypatch.setitem(sys.modules, "probe_tempdir_boom_mod", fake)
+    monkeypatch.setitem(AGENTS[agent], "adapter", "probe_tempdir_boom_mod:Boom")
+    inconclusive = delegate._adapter_model_rejection(agent, model)
+    baseline_err = capsys.readouterr().err
+    assert "RuntimeError" in baseline_err
+    assert not list(tmp_path.rglob("delegate-model-probe-*"))
+    monkeypatch.setitem(AGENTS[agent], "adapter", original_spec)
+
+    seen: list[str] = []
+    raised: list[str] = []
+
+    def _raiser(exc: BaseException):
+        def _raise(*_args, **_kwargs):
+            seen.append(type(exc).__name__)
+            raise exc
+
+        return _raise
+
+    for exc in (PermissionError(13), OSError(28)):
+        monkeypatch.setattr(tempfile, "mkdtemp", _raiser(exc))
+        try:
+            got = delegate._adapter_model_rejection(agent, model)
+        except Exception as err:
+            raised.append(f"{type(exc).__name__} -> {type(err).__name__}: {err}")
+            assert not list(tmp_path.rglob("delegate-model-probe-*"))
+            continue
+        err_text = capsys.readouterr().err
+        assert got == inconclusive
+        assert err_text == baseline_err.replace("RuntimeError", type(exc).__name__)
+        assert not list(tmp_path.rglob("delegate-model-probe-*"))
+
+    assert seen == ["PermissionError", "OSError"]
+    assert raised == []
+
+
+_PROBE_CLEANUP_WARNING = "could not remove its probe directory:"
+
+
+def _install_model_probe_adapter(monkeypatch, agent: str, build) -> None:
+    """Point ``agent`` at an in-test adapter whose ``build_invocation`` is ``build``."""
+    import types
+
+    from agent_runtime.registry import AGENTS
+
+    class _Adapter:
+        def build_invocation(self, **_kwargs):
+            return build()
+
+    fake = types.ModuleType("probe_cleanup_failure_mod")
+    fake.Adapter = _Adapter
+    monkeypatch.setitem(sys.modules, "probe_cleanup_failure_mod", fake)
+    monkeypatch.setitem(AGENTS[agent], "adapter", "probe_cleanup_failure_mod:Adapter")
+
+
+def _model_probe_dirs(root: Path) -> list[Path]:
+    return list(root.rglob("delegate-model-probe-*"))
+
+
+@pytest.mark.parametrize("outcome", ["success", "runtime", "rejection", "interrupt"])
+def test_adapter_model_rejection_removes_probe_directory(tmp_path, monkeypatch, capsys, outcome):
+    """Success, adapter errors, rejection, and KeyboardInterrupt leave no probe directory (#10529).
+
+    KeyboardInterrupt still propagates after the directory is removed.
+    """
+    model = "unapproved-model"
+    refusal = f"Adapter: model={model!r} rejected"
+
+    def build():
+        if outcome == "success":
+            return object()
+        if outcome == "runtime":
+            raise RuntimeError("probe cannot run")
+        if outcome == "interrupt":
+            raise KeyboardInterrupt("probe interrupted")
+        raise ValueError(refusal)
+
+    _install_model_probe_adapter(monkeypatch, "codex", build)
+    if outcome == "interrupt":
+        with pytest.raises(KeyboardInterrupt, match=r"^probe interrupted$"):
+            delegate._adapter_model_rejection("codex", model)
+    else:
+        got = delegate._adapter_model_rejection("codex", model)
+        assert got == (refusal if outcome == "rejection" else None)
+    err = capsys.readouterr().err
+    assert _model_probe_dirs(tmp_path) == []
+    assert _PROBE_CLEANUP_WARNING not in err
+    if outcome == "runtime":
+        assert "could not verify" in err and "RuntimeError" in err
+    else:
+        assert "could not verify" not in err
+
+
+@pytest.mark.parametrize("outcome", ["success", "runtime", "rejection"])
+@pytest.mark.parametrize(
+    ("errno_num", "exc_type", "errno_name"),
+    [
+        (13, PermissionError, "EACCES"),
+        (16, OSError, "EBUSY"),
+    ],
+)
+def test_adapter_model_rejection_warns_when_probe_directory_cleanup_fails(
+    tmp_path, monkeypatch, capsys, outcome, errno_num, exc_type, errno_name
+):
+    """A failed probe-directory cleanup is one non-fatal stderr warning (#10529).
+
+    ``PermissionError(13)`` and ``OSError(16)`` from ``os.rmdir`` after a
+    successful probe, an adapter ``RuntimeError``, and a rejection ``ValueError``
+    each leave the admission result unchanged and do not propagate. The warning
+    names the failure class and errno name only.
+    """
+    assert errno.errorcode[errno_num] == errno_name
+    model = "unapproved-model"
+    refusal = f"Adapter: model={model!r} rejected"
+
+    def build():
+        if outcome == "success":
+            return object()
+        if outcome == "runtime":
+            raise RuntimeError("probe cannot run")
+        raise ValueError(refusal)
+
+    _install_model_probe_adapter(monkeypatch, "codex", build)
+    baseline = delegate._adapter_model_rejection("codex", model)
+    baseline_err = capsys.readouterr().err
+    assert _model_probe_dirs(tmp_path) == []
+    assert _PROBE_CLEANUP_WARNING not in baseline_err
+
+    real_rmdir = os.rmdir
+
+    def failing_rmdir(path, *args, **kwargs):
+        if "delegate-model-probe-" in os.fsdecode(path):
+            raise exc_type(errno_num, "raw-secret-text")
+        return real_rmdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "rmdir", failing_rmdir)
+    raised: list[str] = []
+    try:
+        got = delegate._adapter_model_rejection("codex", model)
+    except Exception as err:
+        raised.append(f"{type(err).__name__}: {err}")
+        got = None
+    err = capsys.readouterr().err
+    warnings = [line for line in err.splitlines() if _PROBE_CLEANUP_WARNING in line]
+    verify = [line for line in err.splitlines() if "could not verify" in line]
+    baseline_verify = [line for line in baseline_err.splitlines() if "could not verify" in line]
+    assert raised == []
+    assert got == baseline
+    assert warnings == [
+        f"⚠ model probe for codex could not remove its probe directory: {exc_type.__name__} {errno_name}"
+    ]
+    assert verify == baseline_verify
+    assert "/" not in warnings[0]
+    assert str(tmp_path) not in err
+    assert "delegate-model-probe-" not in err
+    assert "raw-secret-text" not in err
+    assert len(_model_probe_dirs(tmp_path)) == 1

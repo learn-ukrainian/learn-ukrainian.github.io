@@ -3,6 +3,7 @@
 import contextlib
 import json
 import os
+import subprocess
 
 import pytest
 
@@ -606,3 +607,241 @@ def test_failed_preparation_without_no_checkout_proof_stays_ambiguous(cohort, cr
     assert report["main_worktree"]["action"] in {"skipped", "retained"}, report
     assert tree.exists() and source.read_bytes() == b"current output"
     assert json.loads((tasks / "failed-validation.json").read_text()) == record
+
+
+def _switched_branch_cohort(cohort, monkeypatch, *, head_status="needs_finalize"):
+    """Creator of one family, three later rounds of another, checkout on a new branch.
+
+    Records keep the dispatch-time branch name. The last round's recorded head
+    is the clean checkout, which equals the merged PR head.
+    """
+    from tests.orchestration.test_merge_closeout import git, patch_gh
+
+    repo, tree, tasks, creator, successor, source = cohort
+    dispatch_branch = "codex/boundary"
+    fresh_branch = "cursor/fresh-gate"
+    creator_head = _git(tree, "rev-parse", "HEAD")
+    creator.update(
+        agent="gemini",
+        status="needs_finalize",
+        keep_worktree=False,
+        worktree_branch=dispatch_branch,
+        final_branch_head_commit=creator_head,
+        pid=999_999_991,
+        run_nonce="creation-nonce",
+    )
+    _git(tree, "commit", "--allow-empty", "-m", "round one")
+    round_one = _git(tree, "rev-parse", "HEAD")
+    _git(tree, "commit", "--allow-empty", "-m", "round two")
+    round_two = _git(tree, "rev-parse", "HEAD")
+    _git(tree, "checkout", "-b", fresh_branch)
+    _git(tree, "commit", "--allow-empty", "-m", "round three switched branch")
+    merged_head = _git(tree, "rev-parse", "HEAD")
+    _git(tree, "push", "-u", "origin", fresh_branch)
+    git(repo, "merge", "--no-ff", fresh_branch, "-m", "merge switched PR")
+    git(repo, "push", "origin", "main")
+
+    def round_record(task_id, nonce, status, commit, pid, branch=dispatch_branch):
+        return dict(
+            successor,
+            task_id=task_id,
+            agent="cursor",
+            run_nonce=nonce,
+            status=status,
+            worktree_reused=True,
+            keep_worktree=False,
+            worktree_branch=branch,
+            final_branch_head_commit=commit,
+            pid=pid,
+        )
+
+    rounds = [
+        round_record("round-one", "round-one", "needs_finalize", round_one, 999_999_992),
+        round_record("round-two", "round-two", "needs_finalize", round_two, 999_999_993),
+        round_record("round-three", "round-three", head_status, merged_head, 999_999_994),
+        round_record("round-failed", "round-failed", "failed", round_one, 999_999_995),
+    ]
+    (tasks / "successor.json").unlink()
+    for record in (creator, *rounds):
+        save(tasks, record)
+    patch_gh(
+        monkeypatch,
+        pr_number=10548,
+        state="MERGED",
+        head_ref_name=fresh_branch,
+        head_sha=merged_head,
+        branch_prs={fresh_branch: [{"number": 10548, "state": "MERGED", "headRefOid": merged_head}]},
+    )
+    return repo, tree, tasks, creator, rounds, source, fresh_branch, merged_head
+
+
+@pytest.mark.parametrize("head_status", ["needs_finalize", "done"])
+def test_switched_branch_cohort_is_reaped_with_branch_deleted(cohort, monkeypatch, head_status):
+    repo, tree, tasks, creator, _rounds, source, fresh_branch, merged_head = _switched_branch_cohort(
+        cohort, monkeypatch, head_status=head_status
+    )
+    source.unlink()
+    result = merge_closeout.run_merge_closeout(repo, 10548, apply=True, live_cwds=set())
+    row = result.reap_results[0]
+    assert row["action"] == "removed", result
+    assert not tree.exists()
+    proof = json.loads((tasks / "boundary.json").read_text())["worktree_reap_proof"]
+    assert proof["schema"] == "merged-reuse-reap.v1"
+    assert proof["owner"] == creator["task_id"]
+    assert proof["head_sha"] == merged_head
+    assert proof["pr_head_sha"] == merged_head and proof["head_relation"] == "exact"
+    assert proof["pr_number"] == 10548
+    assert proof == row["preserved_artifacts"]["merged_head_proof"]
+    missing = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"refs/heads/{fresh_branch}"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert missing.returncode != 0 and missing.stdout.strip() == ""
+
+
+@pytest.mark.parametrize(
+    "failure",
+    ["unpushed", "dirty", "live_pid", "unknown_pid", "unmerged", "not_contained", "unknown_object", "retention"],
+)
+def test_switched_branch_cohort_uncertainty_retains_checkout(cohort, monkeypatch, failure):
+    repo, tree, tasks, creator, rounds, source, fresh_branch, merged_head = _switched_branch_cohort(cohort, monkeypatch)
+    rw = reap.reap_worktrees
+    if failure == "unpushed":
+        _git(tree, "commit", "--allow-empty", "-m", "unpushed continuation")
+    elif failure == "dirty":
+        (tree / "unique-work.txt").write_text("unique bytes\n")
+    elif failure == "live_pid":
+        rounds[-2]["pid"] = os.getpid()
+        save(tasks, rounds[-2])
+    elif failure == "unknown_pid":
+
+        def unknown(*_args):
+            raise PermissionError("process probe denied")
+
+        monkeypatch.setattr(rw.os, "kill", unknown)
+    elif failure == "unmerged":
+        monkeypatch.setattr(
+            rw, "_query_pr_states", lambda *_args: ([rw.PullRequestState(10548, "OPEN", merged_head)], None)
+        )
+    elif failure == "not_contained":
+        side = repo / "side.txt"
+        side.write_text("side\n")
+        from tests.orchestration.test_merge_closeout import git
+
+        git(repo, "add", "side.txt")
+        git(repo, "commit", "-m", "side commit not on the PR")
+        rounds[0]["final_branch_head_commit"] = _git(repo, "rev-parse", "HEAD")
+        save(tasks, rounds[0])
+    elif failure == "unknown_object":
+        rounds[0]["final_branch_head_commit"] = "f" * 40
+        save(tasks, rounds[0])
+    else:
+        creator["keep_worktree"] = True
+        save(tasks, creator)
+    before = {path: path.read_bytes() for path in tasks.glob("*.json")}
+    result = merge_closeout.run_merge_closeout(repo, 10548, apply=True, live_cwds=set())
+    row = result.reap_results[0]
+    assert row["action"] == "skipped", result
+    assert tree.exists() and source.read_bytes() == b"current output"
+    local = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"refs/heads/{fresh_branch}"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert local.returncode == 0
+    if failure != "unpushed":
+        assert local.stdout.strip() == merged_head
+    if failure != "retention":
+        assert {path: path.read_bytes() for path in before} == before
+
+
+def test_private_clone_switched_cohort_reaps_under_its_dispatch_root(tmp_path, monkeypatch):
+    """A private clone's worktree is under that clone's dispatch root, not the public one."""
+    from scripts.fleet import post_task_reap
+    from scripts.orchestration.task_record_store import task_record_path
+    from tests.orchestration.test_merge_closeout import git, init_repo, patch_gh
+    from tests.orchestration.test_worktree_output_chokepoint import _git as git_ok
+
+    repo = init_repo(tmp_path)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.cache/\nbatch_state/\n")
+    tree = repo / ".worktrees/dispatch/gemini/switched-cohort"
+    tree.parent.mkdir(parents=True)
+    git_ok(repo, "worktree", "add", "-b", "gemini/old-gate", str(tree), "main")
+    tasks = repo / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: set())
+    creator_head = git_ok(tree, "rev-parse", "HEAD")
+    git_ok(tree, "commit", "--allow-empty", "-m", "later round")
+    git_ok(tree, "checkout", "-b", "cursor/private-gate")
+    git_ok(tree, "commit", "--allow-empty", "-m", "switched")
+    merged_head = git_ok(tree, "rev-parse", "HEAD")
+    git_ok(tree, "push", "-u", "origin", "cursor/private-gate")
+    git(repo, "merge", "--no-ff", "cursor/private-gate", "-m", "merge private PR")
+    git(repo, "push", "origin", "main")
+    creator = {
+        "task_id": "gemini-creator",
+        "agent": "gemini",
+        "run_nonce": "creation-nonce",
+        "status": "needs_finalize",
+        "worktree_reused": False,
+        "worktree_path": str(tree),
+        "worktree_branch": "gemini/old-gate",
+        "final_branch_head_commit": creator_head,
+        "keep_worktree": False,
+        "pid": 999_999_981,
+    }
+    creator["ignored_output_baseline"] = output.creation_inventory(
+        tree, primary=repo, task_id=creator["task_id"], run_nonce=creator["run_nonce"]
+    )
+    successors = []
+    for index, commit in enumerate((creator_head, merged_head, merged_head), start=1):
+        successors.append(
+            {
+                "task_id": f"cursor-round-{index}",
+                "agent": "cursor",
+                "run_nonce": f"round-{index}",
+                "status": "needs_finalize" if index < 3 else "done",
+                "worktree_reused": True,
+                "worktree_path": str(tree),
+                "worktree_branch": "gemini/old-gate",
+                "final_branch_head_commit": commit,
+                "keep_worktree": False,
+                "pid": 999_999_981 + index,
+            }
+        )
+    for record in (creator, *successors):
+        task_record_path(tasks, record["task_id"]).write_text(json.dumps(record))
+    patch_gh(
+        monkeypatch,
+        pr_number=878,
+        state="MERGED",
+        head_ref_name="cursor/private-gate",
+        head_sha=merged_head,
+        branch_prs={"cursor/private-gate": [{"number": 878, "state": "MERGED", "headRefOid": merged_head}]},
+    )
+    report = post_task_reap.post_task_reap(
+        "gemini-creator", tasks_dir=tasks, repo_root=repo, apply=False, include_acp_runtime=False
+    )
+    assert "outside .worktrees/dispatch/" not in report["main_worktree"]["reason"]
+    result = merge_closeout.run_merge_closeout(repo, 878, apply=True, live_cwds=set())
+    assert result.reap_results[0]["action"] == "removed", result
+    assert not tree.exists()
+    missing = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", "refs/heads/cursor/private-gate"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert missing.returncode != 0 and missing.stdout.strip() == ""

@@ -773,10 +773,10 @@ if __name__ == "__main__":
         try:
             # Match the exec path's import closure before the shell claims a
             # lease. Import errors must not expose their exception diagnostics.
-            from importlib import import_module
+            from . import agent_github_identity, kimi_admission
 
-            import_module(f"{__package__}.agent_github_identity")
-            import_module(f"{__package__}.kimi_admission")
+            # Resolve the same members as the child policy without minting.
+            _ = agent_github_identity.resolve_agent_github_identity, kimi_admission.is_kimi_seat
 
             if args.check_helper:
                 raise SystemExit(0)
