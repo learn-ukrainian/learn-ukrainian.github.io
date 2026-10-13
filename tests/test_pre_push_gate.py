@@ -2289,6 +2289,108 @@ def _assert_queue_released(state: Path) -> None:
             fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 
+def _start_global_load(state: Path, control: Path, ticket_count: int = 2) -> subprocess.Popen:
+    """Hold an admission lock and optional tickets in a separate process."""
+    control.mkdir()
+    os.mkfifo(control / "release")
+    program = textwrap.dedent("""\
+        import contextlib, fcntl, sys
+        from pathlib import Path
+
+        state, control = map(Path, sys.argv[1:3])
+        ticket_count = int(sys.argv[3])
+        (state / 'queue').mkdir(parents=True, exist_ok=True)
+        with contextlib.ExitStack() as locks:
+            for path in [state / 'admission.lock',
+                         *[state / 'queue' / f'{index:020d}-load.ticket' for index in range(ticket_count)]]:
+                held = locks.enter_context(path.open('w'))
+                fcntl.flock(held, fcntl.LOCK_EX)
+                held.write('{}')
+                held.flush()
+            (control / 'entered').write_text('entered\\n')
+            with (control / 'release').open() as release:
+                assert release.read() == 'green'
+        for ticket in (state / 'queue').glob('*-load.ticket'):
+            ticket.unlink()
+    """)
+    process = subprocess.Popen(
+        [sys.executable, "-c", program, str(state), str(control), str(ticket_count)],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )
+    assert wait_for_line(control / "entered", stop_if=lambda: process.poll() is not None) == "entered"
+    return process
+
+
+def test_production_head_follower_reuses_green_under_global_queue_load(repo: Path, tmp_path: Path) -> None:
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    head = _commit(repo, "controlled checks", "tests/test_control.py")
+    state = gate.state_dir(repo)
+    controls = [tmp_path / name for name in ("load", "leader", "follower")]
+    processes = []
+    try:
+        processes.append(_start_global_load(state, controls[0]))
+        processes.append(_start_controlled_gate(repo, controls[1], LU_PRE_PUSH_GATE_ADMISSION_WAIT_S="4"))
+        _wait_tickets(state, 3, processes)
+        processes.append(_start_controlled_gate(repo, controls[2], LU_PRE_PUSH_GATE_ADMISSION_WAIT_S="4"))
+        _wait_tickets(state / "heads" / head, 2, processes)
+        # Keep the synchronized load beyond one shortened allowance. The leader has
+        # two real predecessors, so its valid global allowance is eight seconds.
+        time.sleep(4.5)
+        _finish_controlled(processes[0], controls[0])
+        stdout, stderr = _finish_controlled(processes[1], controls[1])
+        assert processes[1].returncode == 0, stdout + stderr
+        stdout, stderr = processes[2].communicate(timeout=30)
+        assert processes[2].returncode == 0, stdout + stderr
+        assert not (controls[2] / "entered").exists(), "identical follower must reuse green proof"
+    finally:
+        _stop_controls(processes)
+    rows = _measurements(repo)
+    assert len(rows) == 2
+    leader, follower = rows
+    assert leader["queue_position"] == 3
+    assert set(leader["stages"]) == {"pre_commit", "pytest"}
+    assert re.fullmatch(r"3 passed in \d+(?:\.\d+)?s", leader["pytest"])
+    assert follower["detail"] == "valid receipt after coalescing"
+    assert follower["coalescing_wait_s"] > 4
+    assert follower["admission_wait_limit_s"] == 16
+    assert "stages" not in follower and follower["queue_depth"] == 0
+    assert len(_receipts(repo)) == 1
+    _assert_queue_released(state)
+
+
+def test_production_non_green_head_holder_keeps_later_global_allowance(repo: Path, tmp_path: Path) -> None:
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    head = _commit(repo, "controlled checks", "tests/test_control.py")
+    state = gate.state_dir(repo)
+    controls = [tmp_path / name for name in ("head-load", "global-load", "validator")]
+    processes = []
+    try:
+        # Legacy head holders publish no receipt; the caller must validate itself.
+        processes.append(_start_global_load(state / "heads" / head, controls[0]))
+        processes.append(_start_global_load(state, controls[1], ticket_count=0))
+        processes.append(_start_controlled_gate(repo, controls[2], LU_PRE_PUSH_GATE_ADMISSION_WAIT_S="6"))
+        _wait_tickets(state / "heads" / head, 3, processes)
+        time.sleep(8)
+        _finish_controlled(processes[0], controls[0])
+        _wait_tickets(state, 1, processes[1:])
+        time.sleep(5)
+        assert _receipts(repo) == [], "head holders without green proof must not authorize reuse"
+        _finish_controlled(processes[1], controls[1])
+        stdout, stderr = _finish_controlled(processes[2], controls[2])
+        assert processes[2].returncode == 0, stdout + stderr
+    finally:
+        _stop_controls(processes)
+    rows = _measurements(repo)
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["coalescing_wait_s"] >= 8 and row["admission_wait_s"] > 12
+    assert row["admission_wait_limit_s"] >= row["coalescing_wait_s"] + 6 - 0.02
+    assert row["queue_position"] == 2 and set(row["stages"]) == {"pre_commit", "pytest"}
+    assert re.fullmatch(r"3 passed in \d+(?:\.\d+)?s", row["pytest"])
+    assert "detail" not in row and len(_receipts(repo)) == 1
+    _assert_queue_released(state)
+
+
 @pytest.fixture
 def native_repo(tmp_path: Path) -> Path:
     """A local remote and native Git hook invoking the unchanged production entry point."""
@@ -2726,6 +2828,94 @@ def test_coalescing_and_global_wait_share_the_original_hard_ceiling(
             finally:
                 other.unlink()
                 os.close(fd)
+    _assert_queue_released(tmp_path)
+
+
+def test_global_allowance_after_failed_head_holder_starts_at_the_transition(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
+    head_state = tmp_path / "head"
+    holder = gate.Admission(head_state, 1)
+    holder.__enter__()
+    clock.on_sleep = lambda: holder.__exit__() if clock.now >= 0.8 else None
+    with gate.Admission(head_state, 1) as grouped:
+        assert grouped.waited == pytest.approx(0.8)
+        assert grouped.wait_limit == 1
+        # The head holder failed without publishing proof. A different global
+        # holder arrived meanwhile, so this caller now needs its own full wait.
+        with gate.Admission(tmp_path, 1) as global_holder:
+            clock.on_sleep = lambda: global_holder.__exit__() if clock.now >= 1.6 else None
+            with gate.Admission(tmp_path, 1, prior=grouped) as admitted:
+                assert admitted.waited >= 1.6
+                assert admitted.wait_limit == pytest.approx(1.8)
+                assert admitted._started == grouped._started
+    assert list((tmp_path / "receipts").glob("*.json")) == []
+    _assert_queue_released(tmp_path)
+
+
+@pytest.mark.parametrize("kind", ["live", "stale", "symlink", "directory", "fifo", "dangling"])
+def test_head_allowance_counts_only_flock_live_regular_global_tickets(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
+    queue = tmp_path / "queue"
+    queue.mkdir()
+    ticket = queue / "00000000000000000000-global.ticket"
+    target = tmp_path / "preserve"
+    target.write_text("preserve me")
+    fd = os.open(target, os.O_RDONLY)
+    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    if kind == "live":
+        ticket.touch()  # a legacy empty ticket is still live when locked
+        os.close(fd)
+        fd = os.open(ticket, os.O_RDONLY)
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    elif kind == "stale":
+        ticket.write_text('{"head": "forged"}')
+    elif kind in {"symlink", "dangling"}:
+        ticket.symlink_to(target if kind == "symlink" else tmp_path / "missing")
+    elif kind == "directory":
+        ticket.mkdir()
+    else:
+        os.mkfifo(ticket)
+    head_state = tmp_path / "head"
+    holder = gate.Admission(head_state, 1)
+    holder.__enter__()
+    clock.on_sleep = lambda: holder.__exit__() if clock.now >= 1.2 else None
+    follower = gate.Admission(head_state, 1, global_state=tmp_path)
+    try:
+        if kind == "live":
+            with follower:
+                assert follower.waited >= 1.2
+                assert follower.wait_limit == 2
+                assert ticket.exists()
+        else:
+            with pytest.raises(gate.GateOutcome, match="admission_timeout"), follower:
+                pytest.fail("non-live global tickets must not grow the allowance")
+            assert follower.waited == follower.wait_limit == 1
+            assert not os.path.lexists(ticket)
+        assert target.read_text() == "preserve me"
+    finally:
+        holder.__exit__()
+        os.close(fd)
+        ticket.unlink(missing_ok=True)
+    _assert_queue_released(tmp_path)
+
+
+def test_head_allowance_global_depth_still_respects_total_hard_ceiling(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
+    monkeypatch.setattr(gate, "ADMISSION_MAX_WAIT_S", 1.5)
+    with gate.Admission(tmp_path, 1), gate.Admission(tmp_path / "head", 1):
+        follower = gate.Admission(tmp_path / "head", 1, global_state=tmp_path)
+        with pytest.raises(gate.GateOutcome, match="admission_timeout"), follower:
+            pytest.fail("live global depth cannot raise the hard ceiling")
+        assert follower.waited == follower.wait_limit == 1.5
     _assert_queue_released(tmp_path)
 
 

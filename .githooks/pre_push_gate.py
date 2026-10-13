@@ -458,9 +458,10 @@ class Admission:
 
     def __init__(
         self, state: Path, wait_s: float, *, update: Update | None = None,
-        prior: Admission | None = None, root: Path | None = None,
+        prior: Admission | None = None, root: Path | None = None, global_state: Path | None = None,
     ):
         self.state = state
+        self.global_state = global_state
         self.wait_s = wait_s
         self.identity = (
             prior.identity if prior is not None else ticket_identity(update, root) if update is not None else None
@@ -489,10 +490,10 @@ class Admission:
         pending.rename(ticket)
         self._ticket = ticket
 
-    def _live_tickets(self) -> list[Path]:
+    def _live_tickets(self, queue: Path | None = None) -> list[Path]:
         assert self._ticket is not None
         live = []
-        for ticket in sorted(self._ticket.parent.glob("*.ticket")):
+        for ticket in sorted((queue if queue is not None else self._ticket.parent).glob("*.ticket")):
             try:
                 fd = os.open(ticket, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
             except FileNotFoundError:  # a holder finished between listing and opening
@@ -538,7 +539,8 @@ class Admission:
         return live
 
     def __enter__(self) -> Admission:
-        started = time.monotonic() if self._started is None else self._started
+        stage_started = time.monotonic()
+        started = stage_started if self._started is None else self._started
         self._started = started
         last_report: tuple[int, int] | None = None
         reported_at = started
@@ -565,7 +567,11 @@ class Admission:
                         return self
                 self.queue_depth = max(self.queue_depth, depth)
                 self.queue_position = self.queue_position or position
-                self.wait_limit = max(self.wait_limit, min(ADMISSION_MAX_WAIT_S, max(1, position - 1) * self.wait_s))
+                global_depth = len(self._live_tickets(self.global_state / "queue")) if self.global_state else 0
+                allowance = max(1, position - 1 + global_depth) * self.wait_s
+                self.wait_limit = max(
+                    self.wait_limit, min(ADMISSION_MAX_WAIT_S, stage_started - started + allowance)
+                )
                 self.waited = time.monotonic() - started
                 report = (position, depth)
                 if report != last_report or time.monotonic() - reported_at >= 30.0:
@@ -981,7 +987,7 @@ def validate(
         event["detail"] = "valid receipt"
         return
     wait_s = bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)
-    head_admission = Admission(head_state, wait_s, update=update, root=root)
+    head_admission = Admission(head_state, wait_s, update=update, root=root, global_state=state)
     admission = head_admission
     try:
         with contextlib.ExitStack() as locks:

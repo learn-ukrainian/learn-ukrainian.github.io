@@ -45,8 +45,13 @@ Before joining the global queue, a caller joins a FIFO queue for its immutable o
 Followers wait outside the global queue, rebuild their inputs after waiting, and reuse only a fresh
 green receipt matching the complete existing receipt key. The head groups serialization; different
 bases, registry versions, selected nodes or other key fields still require their own checks.
-Both waits share the original admission start time, growing allowance and hard ceiling. Execution
-starts after global admission; waiting does not consume the shared run budget.
+Both waits share the original admission start time and hard ceiling. While blocked, a head follower's
+allowance grows with its head predecessors plus the flock-live global queue depth, so it accounts
+for the holder's global wait and validation. Stale or unsafe global tickets do not grow this allowance.
+The allowance never shrinks as tickets leave. If no reusable green receipt exists after coalescing,
+the global queue's position-based allowance starts at that transition; elapsed coalescing time still
+counts toward the original total hard ceiling. Execution starts after global admission; waiting does
+not consume the shared run budget.
 
 Live tickets in either queue are locked before atomic publication. Their JSON contains exactly
 `head` (the outgoing SHA from Git's update), `branch` (its frozen local ref), and `task_owner` (the explicit
