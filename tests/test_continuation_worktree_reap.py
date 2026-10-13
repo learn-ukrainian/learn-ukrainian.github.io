@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import subprocess
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
@@ -1002,7 +1003,19 @@ def test_public_task_records_reap_private_clone_at_its_merged_head(tmp_path, mon
     assert result.reap_results[0]["action"] == "removed", result
     assert not tree.exists()
     assert any("acme/private-clone" in " ".join(call) for call in calls)
-    assert not any("learn-ukrainian.github.io" in " ".join(call) and "cursor" in " ".join(call) for call in calls)
+    assert not any(
+        any(
+            arg == "learn-ukrainian/learn-ukrainian.github.io"
+            or urlsplit(arg).path.split("/")[:3] == ["repos", "learn-ukrainian", "learn-ukrainian.github.io"]
+            for arg in call
+        )
+        and any(
+            arg == "cursor/private-gate"
+            or parse_qs(urlsplit(arg).query).get("head") == ["learn-ukrainian:cursor/private-gate"]
+            for arg in call
+        )
+        for call in calls
+    )
     missing = subprocess.run(
         ["git", "rev-parse", "--verify", "--quiet", "refs/heads/cursor/private-gate"],
         cwd=sibling,
