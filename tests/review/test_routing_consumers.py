@@ -98,7 +98,8 @@ def test_one_holder_edit_moves_all_consumer_references(seat, new_id):
         assert cursor_pinned_models(result)[0] == new_id
         assert result["review_scheduler"]["endpoints"]["cursor"]["models"] == [new_id]
     if seat == "anthropic_authority":
-        assert result["budget_substitution_models"]["cursor"][old_id] == new_id + "-high"
+        # D-129 (#10464): no Claude model reviews through Cursor, so Opus has no Cursor substitution row.
+        assert not {old_id, new_id} & set(result["budget_substitution_models"]["cursor"])
     if seat == "bounded_worker":
         assert bounded_execution_policy(result).bounded_worker_model_id == new_id
     if seat == "google_bounded":
