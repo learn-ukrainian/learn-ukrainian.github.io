@@ -1,4 +1,4 @@
-"""Every dispatch adapter must accept the tool_config keys delegate.py adds.
+"""Dispatch adapters accept delegate tool_config keys or their explicit hold.
 
 The key list is parsed from ``_run_worker`` so a new read-only or review
 assignment fails this contract until the adapters accept it.
@@ -14,12 +14,14 @@ import pytest
 
 from scripts.agent_runtime.adapters.agy import AgyAdapter, _agy_version
 from scripts.agent_runtime.adapters.glm import _CI_ENV_VARS
+from scripts.agent_runtime.adapters.muse import MuseAdapter, MuseGuardParityRefused
 from scripts.agent_runtime.registry import AGENTS
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DELEGATE = _REPO_ROOT / "scripts" / "delegate.py"
 _GATE_NAMES = frozenset({"review_id", "attempt_id", "strict_mcp_config", "mcp_config_path"})
+_HELD_ADAPTERS = frozenset({MuseAdapter})
 
 
 def delegate_read_only_and_review_tool_config_keys() -> frozenset[str]:
@@ -215,6 +217,25 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
         tool_config["allowed_tools"] = "mcp__sources__verify_words"
         (Path(tool_config["agy_home_override"]) / ".gemini" / "antigravity-cli").mkdir(parents=True)
         register_agy_hooks(checkout, home=Path(tool_config["agy_home_override"]))
+
+    if adapter_cls in _HELD_ADAPTERS:
+        # muse.py:40-44 refuses before reading tool_config. The payload still
+        # comes from the same parsed delegate keys; key acceptance is unproven.
+        plan = None
+        with pytest.raises(MuseGuardParityRefused) as refused:
+            plan = adapter_cls().build_invocation(
+                prompt="read-only contract",
+                mode="read-only",
+                cwd=checkout,
+                model=None,
+                task_id="tool-config-contract",
+                session_id=None,
+                tool_config=tool_config,
+            )
+        assert type(refused.value) is MuseGuardParityRefused
+        assert refused.value.code == "MUSE_GUARD_PARITY_UNPROVEN"
+        assert plan is None
+        return
 
     try:
         plan = adapter_cls().build_invocation(
