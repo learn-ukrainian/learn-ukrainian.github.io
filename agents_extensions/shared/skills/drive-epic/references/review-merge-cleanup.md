@@ -19,6 +19,17 @@ do not request an executing review solely because a path is integration code.
 Never record an APPROVE over a pipeline `CHANGES_REQUESTED`; reconcile the finding
 through the author and obtain fresh exact-head review after any content change.
 
+**Record every completed verdict, rejections first.** The merge-queue keeper sees only
+verdicts recorded on the PR, so a completed review task that nobody recorded does not
+exist for it. As soon as a review task for a PR head ends (formal or executing, any
+reviewer, `APPROVE` or `REQUEST_CHANGES`), record it with
+`python -m scripts.review.record_cf_verdict --task-id <task> --pr <N>` before any other
+action on that PR. Before enqueue, list every `cf-verdict` marker at the head
+(`gh pr view <N> --json comments`) and confirm no unanswered rejection stands; a
+rejection is answered only by a new head plus a fresh exact-head review. Check the queue
+state (`scripts/gh_merge_queue_status.py <N> --line`) after enqueue, not the enqueue exit
+code. Incident: `docs/bug-autopsies/2026-10-13-unrecorded-same-head-rejection.md`.
+
 - **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or
   native harnesses); ACP is toolless intercomm only (state transfer / ordinary asks and
   `discuss` with 2 to 4 enabled seats; every other participant count rejects), and
