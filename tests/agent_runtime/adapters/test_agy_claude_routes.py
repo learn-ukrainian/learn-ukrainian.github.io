@@ -131,10 +131,11 @@ def test_catalog_adds_only_agy_identity_transport():
         model_id = slug.removesuffix("-high")
         spec = catalog["models"][model_id]
         assert spec["family"] == "anthropic"
-        assert spec["transports"] == ["native_claude", "cursor", "agy"]
+        assert spec["transports"] == (
+            ["native_claude", "agy"] if model_id == "claude-opus-5-5" else ["native_claude", "cursor", "agy"]
+        )
         expected = {"native_claude": model_id, "agy": slug}
         if model_id == "claude-opus-5-5":
-            expected["cursor"] = slug
             assert spec["roles"] == [
                 "orchestration",
                 "architecture",

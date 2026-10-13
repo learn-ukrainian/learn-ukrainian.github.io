@@ -42,7 +42,8 @@ policy:
       approved model (orchestrator_seats.cursor).
     - >-
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
-      Claude Opus 5.5 may use native Claude or an explicitly verified Cursor slug.
+      Claude Opus 5.5 reviews and drives through native Claude only; no Claude model
+      reviews through Cursor (operator decision D-129, #10464).
       Grok is native CLI ONLY at grok-4.7 for every seat
       (interactive, orchestrator, ask, dispatch), with the Cursor transport fallback.
       Operator decision 2026-10-05 (#9769): native Grok and the Cursor seat pinned to
@@ -148,8 +149,8 @@ review_scheduler:
       - bounded_investigation
   automatic_near_cap_assignments: false
   # Operator decisions 2026-10-02 (#9538), 2026-10-05 (#9769): a listed risk is
-  # performed only by these models, on any catalogued transport (Opus 5.5
-  # natively or through Cursor). This is an eligibility gate: ladders, explicit
+  # performed only by these models, on any catalogued review route (Opus 5.5
+  # natively; no Claude model through Cursor, #10464). This is an eligibility gate: ladders, explicit
   # pins, custom ladders and delegate review admission all apply it.
   risk_reviewer_models:
     high: [{role: openai_frontier_coder}, {role: anthropic_authority_reviewer}, {role: legacy_reviewers, seat: xai_reviewer}]
@@ -514,7 +515,6 @@ models:
   claude-opus-5-5:
     routing_wire_ids:
       native_claude: claude-opus-5-5
-      cursor: claude-opus-5-5-high
       # The endpoint bucket is agy; models have no separate bucket field.
       # No Claude/GPT pool is claimed here.
       agy: claude-opus-5-5-high
@@ -522,7 +522,7 @@ models:
     tier: frontier_authority
     lifecycle: active
     roles: [orchestration, architecture, agentic_coding, critical_review, security_review, ukrainian_review]
-    transports: [native_claude, cursor, agy]
+    transports: [native_claude, agy]
     strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
     notes: >-
@@ -1102,7 +1102,6 @@ review_candidates:
   grok-4.7-cursor-fallback: {role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: candidate}
   glm-5.3: {role: legacy_reviewers, seat: local_reviewer, route_name: native, field: candidate}
   claude-opus-5-5: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: candidate}
-  claude-opus-5-5-cursor-fallback: {role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: candidate}
   claude-sonnet-5-5: {role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: candidate}
   composer-2.5: {role: legacy_reviewers, seat: cursor_coder, route_name: native, field: candidate}
   pool: {role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: candidate}
@@ -1268,14 +1267,16 @@ review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
   # Operator decision 2026-10-05 (#9769): Opus, native Grok, then Cursor Grok.
   # Both Grok transports require runtime attestation and exclude xAI authors.
+  # No Claude model reviews through Cursor (D-129, #10464).
   # Composer and Pool lack critical_review; critical lists them to record exclusion.
   # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
+  # Grok reviews security code statically: CI is its execution proof and the
+  # review requests no execution (core.md P2; D-129, #10464).
   critical:
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
-    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
@@ -1286,13 +1287,11 @@ review_ladders:
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
-    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: legacy_label}]
   medium: &practical_first_code_review
     - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
-    - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
@@ -1316,7 +1315,6 @@ budget_substitution_models:
     gpt-6.1-sol: {role: openai_frontier_coder}
     gpt-6-luna: {role: bounded_recon}
   cursor:
-    claude-opus-5-5: {role: anthropic_authority_reviewer, transport: cursor, field: wire_id}
     # Read-only cursor-agent --list-models verified 2026-09-30:
     # claude-fable-5-1-thinking-high - Claude Fable 5.1 1M Thinking (NO ZDR)
     claude-fable-5-1: claude-fable-5-1-thinking-high
@@ -1429,17 +1427,6 @@ seats:
         - code_review
         - isolation
         - sealed_evidence
-      cursor_fallback:
-        legacy_name: claude-opus-5-5-cursor-fallback
-        effort: high
-        route: cursor
-        transport: cursor
-        invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model {wire_id}
-        review_profiles:
-        - code
-        - infra
-        capabilities:
-        - code_review
   anthropic_practical:
     model_id: claude-sonnet-5-5
     bindings:
@@ -1597,7 +1584,6 @@ roles:
     - anthropic_authority/native
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
-    - anthropic_authority/cursor_fallback
     - anthropic_practical/native
     - volume_reviewer/native
     - light_reviewer/native
@@ -1610,7 +1596,6 @@ roles:
     - anthropic_authority/native
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
-    - anthropic_authority/cursor_fallback
     - anthropic_practical/native
     - volume_reviewer/native
     - light_reviewer/native
@@ -1623,7 +1608,6 @@ roles:
     - anthropic_authority/native
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
-    - anthropic_authority/cursor_fallback
     cardinality: many
     risk: high
   code_review_critical:
@@ -1632,7 +1616,6 @@ roles:
     - anthropic_authority/native
     - xai_reviewer/native
     - xai_reviewer/cursor_fallback
-    - anthropic_authority/cursor_fallback
     cardinality: many
     risk: critical
     required_model_roles:

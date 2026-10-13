@@ -245,17 +245,24 @@ def test_auto_author_excludes_cursor_transport_candidates():
             assert entry.status == "excluded", (entry.name, entry.family, entry.status)
 
 
+# Every Cursor-transport reviewer; no Claude model reviews through Cursor (D-129, #10464).
+CURSOR_TRANSPORT_REVIEWERS = ("composer-2.5", "grok-4.7-cursor-fallback")
+
+
 def test_cursor_as_reviewer_excluded_against_xai_and_moonshot_authors():
+    assert {name for name, cand in REVIEW_CANDIDATES.items() if cand.transport == "cursor"} == set(
+        CURSOR_TRANSPORT_REVIEWERS
+    )
     # Moonshot-family author: Cursor-transport candidates must be excluded
     kimi_inputs = ResolverInputs(author_model="kimi-code/k3")
-    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-opus-5-5-cursor-fallback"):
+    for cand_name in CURSOR_TRANSPORT_REVIEWERS:
         cand = REVIEW_CANDIDATES[cand_name]
         res = evaluate_candidate(cand, kimi_inputs)
         assert res.status == "excluded", (cand_name, res.status)
 
     # xAI-family author: Cursor-transport candidates must be excluded
     grok_inputs = ResolverInputs(author_model="grok-4.6")
-    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-opus-5-5-cursor-fallback"):
+    for cand_name in CURSOR_TRANSPORT_REVIEWERS:
         cand = REVIEW_CANDIDATES[cand_name]
         res = evaluate_candidate(cand, grok_inputs)
         assert res.status == "excluded", (cand_name, res.status)
@@ -790,7 +797,7 @@ def test_required_capabilities_and_isolation_fail_closed():
     assert "capabilities" in missing.reason
 
     isolation = evaluate_candidate(
-        REVIEW_CANDIDATES["claude-opus-5-5-cursor-fallback"],
+        REVIEW_CANDIDATES["grok-4.7-cursor-fallback"],
         ResolverInputs(author_model="codex", isolation_required=True, formal_review=False),
         author_family="openai",
     )
@@ -1213,21 +1220,22 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
 def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
     ladder = REVIEW_LADDERS[risk]
-    assert [rung[0].name for rung in ladder[:5]] == [
+    # No Claude model reviews through Cursor (D-129, #10464): Grok's Cursor route is the last frontier rung.
+    assert [rung[0].name for rung in ladder[:4]] == [
         "openai_frontier",
         "claude-opus-5-5",
         "grok-4.7",
         "grok-4.7-cursor-fallback",
-        "claude-opus-5-5-cursor-fallback",
     ]
     if risk == "critical":
-        assert [rung[0].name for rung in ladder[5:]] == ["composer-2.5", "pool", "pool-xs"]
+        assert [rung[0].name for rung in ladder[4:]] == ["composer-2.5", "pool", "pool-xs"]
     elif risk == "high":
+        assert len(ladder) == 4
         assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
     else:
-        assert ladder[5][0].name == "claude-sonnet-5-5"
-        assert ladder[7][0].name == "gemini-3.8-flash-high"
-        assert ladder[8][0].name == "pool"
+        assert ladder[4][0].name == "claude-sonnet-5-5"
+        assert ladder[6][0].name == "gemini-3.8-flash-high"
+        assert ladder[7][0].name == "pool"
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1505,10 +1513,15 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
             subject_seats=frozenset({"cursor"}),
         )
     )
+    # Grok has a native and a Cursor route; no Claude model reviews through Cursor (D-129, #10464).
+    # The cursor seat pins Grok, so native Grok falls to the subject family, never to the cursor seat.
     native = next(entry for entry in resolution.trace if entry.name == "claude-opus-5-5")
-    fallback = next(entry for entry in resolution.trace if entry.name == "claude-opus-5-5-cursor-fallback")
+    grok_native = next(entry for entry in resolution.trace if entry.name == "grok-4.7")
+    fallback = next(entry for entry in resolution.trace if entry.name == "grok-4.7-cursor-fallback")
     composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
     assert "subject exclusion" not in (native.reason or "")
+    assert "subject seat cursor" not in grok_native.reason
+    assert "subject family xai" in grok_native.reason
     assert fallback.status == "excluded"
     assert "subject seat cursor" in fallback.reason
     assert composer.status == "excluded"
@@ -1642,7 +1655,6 @@ _AUTHORITY_DOWN = {
     "agy": "unhealthy",
     "codex": "unhealthy",
     "claude": "unhealthy",
-    "claude-opus-5-5-cursor-fallback": "unhealthy",
 }
 
 
@@ -1766,7 +1778,6 @@ _SOL_OPUS_GROK = {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
 _HIGH_SEATS = {
     "openai_frontier",
     "claude-opus-5-5",
-    "claude-opus-5-5-cursor-fallback",
     "grok-4.7",
     "grok-4.7-cursor-fallback",
 }
@@ -1801,11 +1812,10 @@ def test_high_risk_resolves_to_sol_opus_or_grok(key):
     if expected is None:
         assert resolution.selected is None
         assert resolution.fail_closed_reason is None
-        # The reason is stated per seat: Sol is down, both Opus transports share the author's family.
+        # The reason is stated per seat: Sol is down, Opus shares the author's family.
         reasons = {entry.name: entry.reason for entry in resolution.trace}
         assert reasons["openai_frontier"] == "lane health is unhealthy — route is operationally unavailable"
-        for name in ("claude-opus-5-5", "claude-opus-5-5-cursor-fallback"):
-            assert "same family as author" in reasons[name]
+        assert "same family as author" in reasons["claude-opus-5-5"]
         return
     assert resolution.selected is not None
     assert resolution.selected.concrete_model == expected

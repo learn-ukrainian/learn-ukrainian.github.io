@@ -1767,7 +1767,8 @@ def test_budget_sub_unmapped_model_falls_back_to_catalog_default(monkeypatch, tm
     assert state["substitution"]["model_resolution"] == "catalog-default"
 
 
-def test_budget_sub_maps_opus_to_cursor_invocation_slug(monkeypatch, tmp_path, capsys):
+def test_budget_sub_never_maps_opus_to_a_cursor_claude_slug(monkeypatch, tmp_path, capsys):
+    """D-129 (#10464): Opus has no Cursor row, so it takes the unmapped catalog default."""
     import scripts.agent_runtime.adapters.claude as claude_module
 
     monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
@@ -1775,13 +1776,16 @@ def test_budget_sub_maps_opus_to_cursor_invocation_slug(monkeypatch, tmp_path, c
 
     rc = delegate.cmd_dispatch(_codex_dispatch("--model", "claude-opus-5-5"))
 
-    assert rc == 2
+    assert rc == 0
     err = capsys.readouterr().err
-    assert "--model claude-opus-5-5-high (mapped from claude-opus-5-5)" in err
-    assert "CURSOR_CLAUDE_REFUSED" in err
-    assert "native Claude CLI" in err
-    assert not any("_worker" in command for command in commands)
-    assert not (tmp_path / "tasks" / "probe-8855.json").exists()
+    assert "--model grok-4.7 (catalog default; claude-opus-5-5 has no mapping)" in err
+    assert "claude-opus-5-5-high" not in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--model") + 1] == "grok-4.7-high"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["substitution"]["requested_model"] == "claude-opus-5-5"
+    assert state["substitution"]["actual_model"] == "grok-4.7"
+    assert state["substitution"]["model_resolution"] == "catalog-default"
 
 
 def test_budget_sub_refuses_unmapped_model_the_substitute_rejects(monkeypatch, tmp_path, capsys):

@@ -60,8 +60,9 @@ unclear work pin `grok-4.7-high` or `composer-2.5`; a review runs the approved c
 resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
-pool has headroom. A review of a Grok author must use an Other Models slug, not a Grok
-slug. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
+pool has headroom. A review of a Grok author runs the reviewer resolver's non-xAI pick
+(native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
+through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
@@ -94,7 +95,7 @@ stampede one hot lane.
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
-| **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-5-high`. Draws the API pool. |
+| **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review of a Grok author goes to the `resolve-reviewer` non-xAI pick instead. |
 | **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | complex / long-context coding only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `--model k3` @ high/max — not routine queue |
@@ -152,19 +153,18 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | Composer 2.5 Fast | $3 | $0.50 | $15 | do not send |
 | Grok 4.6, Grok 4.5 | $2 | $0.50 | $6 | do not send |
 
-**Other Models pool.** Included on Pro, Pro Plus, and Ultra, then on-demand at the same API price. Start does not include this pool. Use this pool when the reviewer must be outside xAI.
+**Other Models pool.** Included on Pro, Pro Plus, and Ultra, then on-demand at the same API price. Start does not include this pool. It serves non-review third-party work only: no Claude model reviews through Cursor (D-129, #10464), so a reviewer who must be outside xAI comes from the reviewer resolver, not from this pool. The Claude rows below are price facts about the pool.
 
 | Model | Input | Cache write | Cache read | Output | Slug |
 | --- | --- | --- | --- | --- | --- |
-| Claude Sonnet 5.5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-5-high` |
-| Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` |
-| Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` |
+| Claude Sonnet 5.5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-5-high` — not a review route (D-129) |
+| Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` — not a review route (D-129) |
+| Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` — not a review route (D-129) |
 | Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |
 
 Cursor's catalog has no GPT-6 slug; GPT-6.1 Sol and GPT-6 Luna run on the native Codex CLI.
-Claude Opus 5.5 hard coding uses the native Claude CLI where applicable, or Cursor's
-supported `claude-opus-5-5-high` slug. `claude-fable-5-thinking-high` is Fable 5,
-not 5.1.
+Claude Opus 5.5 hard coding uses the native Claude CLI; the model catalog carries no Opus
+Cursor transport (D-129, #10464). `claude-fable-5-thinking-high` is Fable 5, not 5.1.
 
 Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468** / stream **#6943**.
 
