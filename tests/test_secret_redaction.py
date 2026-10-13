@@ -1528,6 +1528,7 @@ def test_round4_real_launcher_kept_dropped_table(
     expected = kept | (set() if provider == "kimi" else {"GH_TOKEN"})
     if mode == "driver":
         expected |= app_keys
+        expected |= {"GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN"}
         # This is ordinary launcher context even for routes that do not use it.
         expected.add("ANTHROPIC_BASE_URL")
     else:
@@ -1537,3 +1538,134 @@ def test_round4_real_launcher_kept_dropped_table(
     record_property(
         "credential_table", json.dumps({"provider": provider, "harness": harness, "mode": mode, **observed})
     )
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "glm", "grok", "cursor", "kimi"])
+@pytest.mark.parametrize("has_token", [True, False], ids=["parent-token", "no-parent-token"])
+def test_round5_driver_github_passthrough(tmp_path: Path, provider: str, has_token: bool) -> None:
+    parent = {
+        "GITHUB_TOKEN": "synthetic-alternate-github-0123456789",
+        "GH_ENTERPRISE_TOKEN": "synthetic-enterprise-github-0123456789",
+        "GITHUB_ENTERPRISE_TOKEN": "synthetic-alternate-enterprise-0123456789",
+        "LU_AGENT_GITHUB_TOKEN": "synthetic-application-token-0123456789",
+        "LU_AGENT_GITHUB_APP_ID": "123",
+        "LU_AGENT_GITHUB_APP_INSTALLATION_ID": "456",
+        "LU_AGENT_GITHUB_APP_PRIVATE_KEY": "synthetic-signing-key-0123456789",
+        "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE": str(tmp_path / "synthetic-key-file"),
+    }
+    if has_token:
+        parent["GH_TOKEN"] = "synthetic-parent-token-0123456789\nbytes-'\\"
+    proc = _round4_launcher_probe(
+        tmp_path,
+        "import os\n"
+        + f"expected = {parent!r}\n"
+        + "assert all(os.environ[name].encode() == value.encode() for name, value in expected.items())\n"
+        + f"assert ('GH_TOKEN' in os.environ) == {has_token!r}\n"
+        + "assert 'LU_AGENT_GITHUB_IDENTITY_SOURCE' not in os.environ\nprint('identity-unchanged')\n",
+        provider=provider,
+        environment=parent,
+        bootstrap_code=(
+            "import agent_runtime.agent_github_identity as identity\n"
+            "def forbidden(**kwargs):\n    raise AssertionError('driver attempted identity resolution or mint')\n"
+            "identity.resolve_agent_github_identity = forbidden\nidentity.mint_installation_token = forbidden\n"
+        ),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "identity-unchanged\n"
+
+
+@pytest.mark.parametrize("name", ["PATH", "HOME", "PWD"])
+@pytest.mark.parametrize("mode", ["driver", "interactive"])
+def test_round5_launcher_preserves_process_paths(tmp_path: Path, name: str, mode: str) -> None:
+    value = str(tmp_path / "task-ghp_syntheticpath")
+    Path(value).mkdir()
+    proc = _round4_launcher_probe(
+        tmp_path,
+        "import os\n" + f"assert os.environ[{name!r}] == {value!r}\nprint('path-unchanged')\n",
+        # Shells maintain PWD themselves; use an actual directory for that case.
+        setup=f"cd {shlex.quote(value)}\n" if name == "PWD" else f"export {name}={shlex.quote(value)}\n",
+        mode=mode,
+        bootstrap_code=(
+            "import agent_runtime.agent_github_identity as identity\n"
+            "identity.resolve_agent_github_identity = lambda **kwargs: None\n"
+        ),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "path-unchanged\n"
+
+
+@pytest.mark.parametrize("name", ["PATH", "HOME", "PWD"])
+def test_round5_dispatcher_keeps_path_value_filter(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
+    from agent_runtime import agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env
+
+    monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
+    assert name not in build_agent_env(provider="claude", overrides={name: "synthetic/task-ghp_path"})
+
+
+@pytest.mark.parametrize("length", [40, 108, 325])
+@pytest.mark.parametrize("shape", ["plain", "url"])
+@pytest.mark.parametrize("xdist_enabled", [False, True], ids=["single", "xdist"])
+def test_round5_assertion_suffix_fragments(tmp_path: Path, length: int, shape: str, xdist_enabled: bool) -> None:
+    token = ("aQbRcSdTeUfVgWhXiYjZkPlOmNnMoLpKqJrIsHtGuFvEwDxCyBzA" * 7)[:length]
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    expression = "v" if shape == "plain" else "'https://host.invalid/?token=' + v"
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\ndef test_sample():\n"
+        + f"    v = Path({str(secret_file)!r}).read_text()\n    value = {expression}\n"
+        + "    assert value + 'actual' == value + 'expected'\n",
+        token=token,
+        xdist_enabled=xdist_enabled,
+    )
+    assert proc.returncode == 1
+    for output in (proc.stdout + proc.stderr, (tmp_path / "report.xml").read_text()):
+        assert "[REDACTED]" in output
+        assert not any(token[index : index + 8] in output for index in range(len(token) - 7))
+
+
+@pytest.mark.parametrize("form", ["raw", "repr"])
+def test_round5_quote_independent_fragments(form: str) -> None:
+    from tests.conftest import _redact_secret_data
+
+    token = "HeadAbCd0123\\\nMiddleEfGh4567TailIjKl8901"
+    body = token if form == "raw" else repr(token)[1:-1]
+    # Every eight-character window, including interior and escaped fragments,
+    # must be covered without quotes, ellipsis, or an assignment key.
+    for start in range(len(body) - 7):
+        assert _redact_secret_data("before " + body[start : start + 8] + " after", [token]) == "before [REDACTED] after"
+    assert _redact_secret_data("before " + body[3:25] + " after", [token]) == "before [REDACTED] after"
+
+
+def test_round5_fragment_threshold_preserves_ordinary_text() -> None:
+    from tests.conftest import _redact_secret_data
+
+    token = "ABCDEFGH0123456789ZYXWVUTS"
+    ordinary = "ordinary ABCDEFG / YXWVUTS; a...b; pytest assertion explanation and https://host.invalid/path"
+    assert _redact_secret_data(ordinary, [token]) == ordinary
+    assert _redact_secret_data("prefixABCDEFGHsuffix", [token]) == "prefix[REDACTED]suffix"
+    assert _redact_secret_data("ABCDEFGH0123456789ZYXWVUTS", [token]) == "[REDACTED]"
+    for length in range(1, 8):
+        for start in range(len(token) - length + 1):
+            text = "before " + token[start : start + length] + " after"
+            assert _redact_secret_data(text, [token]) == text
+
+
+def test_round5_fragment_spans_merge_without_losing_safe_neighbors() -> None:
+    from tests.conftest import _redact_secret_data
+
+    secrets = ["HeadAbCd0123456789", "TailEfGh9876543210"]
+    text = "safe: HeadAbCd012345TailEfGh / 9876543210 safe"
+    assert _redact_secret_data(text, secrets) == "safe: [REDACTED] / [REDACTED] safe"
+
+
+@pytest.mark.parametrize("size", range(5, 20))
+def test_round5_retains_tiny_repr_coverage(size: int) -> None:
+    from _pytest._io.saferepr import saferepr
+
+    from tests.conftest import _redact_secret_data
+
+    token = "HeadAbCd0123456789MiddleEfGh9876543210TailIjKl"
+    assert _redact_secret_data(saferepr(token, maxsize=size), [token]) == "'[REDACTED]'"
+    assert _redact_secret_data("'other...ordinary'", [token]) == "'other...ordinary'"

@@ -101,7 +101,12 @@ _CHILD_COUNTER_NAMES = {
     "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS",
 }
 _CHILD_IDENTITY_NAMES = {"GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL"}
-_DRIVER_APP_IDENTITY_NAMES = {
+_DRIVER_GITHUB_IDENTITY_NAMES = {
+    "GH_TOKEN",
+    "GITHUB_TOKEN",
+    "GH_ENTERPRISE_TOKEN",
+    "GITHUB_ENTERPRISE_TOKEN",
+    "LU_AGENT_GITHUB_TOKEN",
     "LU_AGENT_GITHUB_APP_ID",
     "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
     "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
@@ -535,13 +540,13 @@ def _isolated_git_env(
 def child_credential_env(
     raw: Mapping[str, str], provider: str, *, harness: str | None = None, driver_launcher: bool = False
 ) -> dict[str, str]:
-    """Keep the seat's credentials and resolve its GitHub identity once.
+    """Keep the seat's credentials; resolve GitHub identity only for workers.
 
     Ordinary launcher context remains available for stored login and driver
     hooks. build_agent_env further limits non-credential process context.
     Codex and GLM's derived Claude Code tokens are scoped to that transport.
-    Only driver launchers retain App signing material for later worker minting;
-    dispatched workers use the default policy and receive no signing key.
+    Driver launchers preserve raw GitHub variables without resolving or minting.
+    Dispatched workers resolve identity as before and receive no signing key.
     """
     from .agent_github_identity import resolve_agent_github_identity
     from .kimi_admission import is_kimi_seat
@@ -557,12 +562,15 @@ def child_credential_env(
             and value.isascii()
             and value.isdecimal()
         )
-        driver_identity = driver_launcher and name in _DRIVER_APP_IDENTITY_NAMES
+        driver_identity = driver_launcher and name in _DRIVER_GITHUB_IDENTITY_NAMES
         if (
             _is_provider_secret(name, provider)
             or route_auth
             or route_counter
             or driver_identity
+            # Launcher paths can contain token-shaped task names. The dispatcher
+            # applies its existing value filter again in build_agent_env.
+            or name in {"PATH", "HOME", "PWD"}
             or _is_safe_value_name(name)
         ):
             env[name] = value
@@ -576,7 +584,7 @@ def child_credential_env(
         ):
             env[name] = value
 
-    identity = None if is_kimi_seat(provider) else resolve_agent_github_identity(environment=raw)
+    identity = None if driver_launcher or is_kimi_seat(provider) else resolve_agent_github_identity(environment=raw)
     if identity is not None and identity.token:
         env["GH_TOKEN"] = identity.token
         env["LU_AGENT_GITHUB_IDENTITY_SOURCE"] = identity.source or "legacy"
@@ -757,7 +765,7 @@ if __name__ == "__main__":
     parser.add_argument("--provider", required=True)
     parser.add_argument("--harness", help="Effective child harness, including the Codex Claude Code route.")
     parser.add_argument(
-        "--driver-launcher", action="store_true", help="Keep App signing material for a driver that dispatches workers."
+        "--driver-launcher", action="store_true", help="Preserve the driver's raw GitHub identity without resolution."
     )
     parser.add_argument(
         "--exec", dest="command", nargs=argparse.REMAINDER, help="Exec the CLI with the shared seat credential policy."

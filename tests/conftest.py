@@ -326,8 +326,8 @@ def _redaction_failure_data(data: Any) -> dict[str, Any]:
     return _serialize_pytest_report(report)
 
 
-def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
-    """Scan adjacent unescaped quotes once, including nested quoted reprs."""
+def _redact_clipped_secret_literals(text: str, values: Collection[str]) -> str:
+    """Remove whole clipped literals, including sides shorter than eight chars."""
     representations = [repr(value) for value in values]
     max_literal = max(map(len, representations), default=0)
     # Eight characters cover the observed clipped credential fragments without
@@ -406,6 +406,101 @@ def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
             chunks.extend((text[end:start], replacement))
             end = stop
     chunks.append(text[end:])
+    return "".join(chunks)
+
+
+_SECRET_FRAGMENT_LENGTH = 8
+# Eight consecutive known-secret characters cover the assertion-diff leaks at
+# lengths 40, 108 and 325, including URL interiors, without relying on quoting,
+# clipping markers, entropy or vendor prefixes. Shorter overlaps commonly occur
+# in ordinary words/paths; the 1..7-character controls must remain unchanged.
+# Exact values and recognized clipped reprs still cover shorter disclosures.
+
+
+@functools.lru_cache(maxsize=16)
+def _secret_fragment_index(values: tuple[str, ...]) -> frozenset[str]:
+    """Index raw and escaped secret windows once for recursive report fields."""
+    return frozenset(
+        body[start : start + _SECRET_FRAGMENT_LENGTH]
+        for value in values
+        if value
+        for body in {value, repr(value)[1:-1]}
+        for start in range(len(body) - _SECRET_FRAGMENT_LENGTH + 1)
+    )
+
+
+def _secret_fragment_spans(text: str, fragments: frozenset[str]) -> list[tuple[int, int]]:
+    """Merge overlapping/adjacent indexed windows into maximal secret runs."""
+    spans = []
+    for index in range(len(text) - _SECRET_FRAGMENT_LENGTH + 1):
+        if text[index : index + _SECRET_FRAGMENT_LENGTH] not in fragments:
+            continue
+        stop = index + _SECRET_FRAGMENT_LENGTH
+        if spans and index <= spans[-1][1]:
+            spans[-1] = (spans[-1][0], stop)
+        else:
+            spans.append((index, stop))
+    return spans
+
+
+@functools.lru_cache(maxsize=16)
+def _short_secret_repr_pattern(values: tuple[str, ...]) -> re.Pattern[str] | None:
+    """Keep exact tiny SafeRepr coverage when neither side has eight chars."""
+    literals = {
+        rendered
+        for value in values
+        for size in range(5, 2 * _SECRET_FRAGMENT_LENGTH + 4)
+        if len(repr(value)) > size
+        for rendered in (saferepr(value, maxsize=size), SafeRepr(size).repr1(value, 1))
+    }
+    return (
+        re.compile("|".join(re.escape(value) for value in sorted(literals, key=len, reverse=True)))
+        if literals
+        else None
+    )
+
+
+def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
+    """Redact every known-secret run of at least eight chars anywhere in text."""
+    known = tuple(sorted(set(values)))
+    if "..." in text and (pattern := _short_secret_repr_pattern(known)) is not None:
+        text = pattern.sub(lambda match: match[0][0] + "[REDACTED]" + match[0][-1], text)
+    fragments = _secret_fragment_index(known)
+    if not fragments:
+        return text
+    spans = _secret_fragment_spans(text, fragments)
+    if not spans:
+        return text
+    # Repr normalization also removes very short visible sides. Bound that
+    # work to matched neighborhoods: a clipped literal is shorter than the
+    # longest full repr. Ordinary quoted text needs only the linear gram scan.
+    clipped = "..." in text and ("'" in text or '"' in text)
+    if clipped:
+        padding = max(len(repr(value)) for value in values)
+        windows = []
+        for start, stop in spans:
+            start, stop = max(0, start - padding), min(len(text), stop + padding)
+            if windows and start <= windows[-1][1]:
+                windows[-1] = (windows[-1][0], stop)
+            else:
+                windows.append((start, stop))
+    else:
+        windows = spans
+    chunks = []
+    cursor = 0
+    for start, stop in windows:
+        chunks.append(text[cursor:start])
+        if clipped:
+            region = _redact_clipped_secret_literals(text[start:stop], values)
+            position = 0
+            for left, right in _secret_fragment_spans(region, fragments):
+                chunks.extend((region[position:left], "[REDACTED]"))
+                position = right
+            chunks.append(region[position:])
+        else:
+            chunks.append("[REDACTED]")
+        cursor = stop
+    chunks.append(text[cursor:])
     return "".join(chunks)
 
 
