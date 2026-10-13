@@ -637,8 +637,15 @@ closed if that reduced tool set changes.
 
 The ACP Claude seat (`acpx-claude-shadow`, #10500) launches the host Claude
 Code through the repo-owned `scripts/agent_runtime/claude_acp_exec.sh`, which
-`CLAUDE_CODE_EXECUTABLE` names. The adapter validates the launcher and its
-parents up to the repo root, and the pinned host binary, before every launch.
+`CLAUDE_CODE_EXECUTABLE` names. The adapter loads the launcher only from the
+canonical primary checkout, which git resolves from the adapter's own checkout
+with redirect variables stripped; a worktree copy is never used. Before every
+launch it validates the launcher and each parent (owner, mode, no symlink),
+checks the launcher's SHA-256 against the adapter's pin
+(`_CLAUDE_ACP_LAUNCHER_CLOSURE`; the launcher is self-contained, and its bytes
+and the pin change in the same commit), and validates the pinned host binary.
+A missing, unsafe, unreadable or mismatched launcher refuses with a typed
+`ClaudeCodeExecutableRefusal` before any ACP message, with no fallback.
 The launcher rechecks the binary's device and inode, then execs it with the
 deny list as one `--disallowedTools` argument; the SDK's own
 `--disallowedTools` follows and accumulates. The seat enforces the denies

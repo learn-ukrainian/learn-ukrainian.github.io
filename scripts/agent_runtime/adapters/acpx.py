@@ -1600,9 +1600,17 @@ _CLAUDE_ACP_BACKGROUND_TOOL_ENV = {"CLAUDE_CODE_DISABLE_CRON": "1", "CLAUDE_CODE
 # The repo-owned launcher CLAUDE_CODE_EXECUTABLE names. ACPX cannot pass a tool
 # deny and --deny-all never covers tools that run without asking, so it execs
 # the pinned host binary with the headless background denies (#9690, #10500).
-# Not resolved: a symlinked launcher or parent must be seen and refused.
-_CLAUDE_ACP_LAUNCHER = Path(os.path.abspath(__file__)).parents[1] / "claude_acp_exec.sh"
-_CLAUDE_ACP_LAUNCHER_TRUST_ROOT = Path(os.path.abspath(__file__)).parents[3]
+# It is loaded only from the canonical primary checkout, which git resolves
+# from this module's own checkout with redirect variables stripped; a dispatch
+# worktree's copy (group-writable under umask 0002) is never used.
+_CLAUDE_ACP_LAUNCHER_ANCHOR = _REPO_ROOT
+_CLAUDE_ACP_LAUNCHER_RELPATH = PurePosixPath("scripts/agent_runtime/claude_acp_exec.sh")
+# Adapter-launcher compatibility pin: the SHA-256 of every repository file the
+# launcher runs, sources or execs. The launcher is self-contained, so the
+# closure is the launcher alone. Launcher bytes and digest change together.
+_CLAUDE_ACP_LAUNCHER_CLOSURE: Mapping[PurePosixPath, str] = {
+    _CLAUDE_ACP_LAUNCHER_RELPATH: "250bf390b24ac15dcef4940626192788a7f859640ec677d0a31199475e7213a9",
+}
 CLAUDE_ACP_HOST_ENV = "LU_CLAUDE_ACP_HOST"
 CLAUDE_ACP_HOST_DEV_INO_ENV = "LU_CLAUDE_ACP_HOST_DEV_INO"
 _CLAUDE_CODE_PROBE_TIMEOUT_S = 10
@@ -1618,9 +1626,9 @@ _CLAUDE_CODE_TRUST_ROOT = Path("/")
 class ClaudeCodeExecutableRefusal(AcpxShadowRefusalError):
     """The host Claude Code executable cannot be pinned for an ACP launch.
 
-    ``reason`` is one of ``missing``, ``untrusted_path``, ``vanished``,
-    ``probe_failed``, ``unparseable`` or ``too_old``; ``failure_code`` stays in
-    the runtime's closed failure-code set.
+    ``reason`` is one of ``missing``, ``untrusted_path``, ``unreadable``,
+    ``digest_mismatch``, ``vanished``, ``probe_failed``, ``unparseable`` or
+    ``too_old``; ``failure_code`` stays in the runtime's closed failure-code set.
     """
 
     def __init__(self, message: str, *, reason: str, failure_code: str = "acp_adapter_incompatible") -> None:
@@ -1677,11 +1685,11 @@ def _require_trusted_claude_code_path(
     executable: Path,
     *,
     adapter_label: str,
-    trust_root: Path | None = None,
     subject: str = "host Claude Code",
+    require_executable: bool = True,
 ) -> os.stat_result:
-    """Check the executable and every ancestor up to ``trust_root``; return its stat."""
-    root = _CLAUDE_CODE_TRUST_ROOT if trust_root is None else trust_root
+    """Check the file and every ancestor up to the trust root; return its stat."""
+    root = _CLAUDE_CODE_TRUST_ROOT
     try:
         executable_stat = executable.lstat()
         ancestors = []
@@ -1702,7 +1710,7 @@ def _require_trusted_claude_code_path(
             reason="untrusted_path",
         ) from exc
     refusal = _claude_code_path_refusal(executable, executable_stat, expect_dir=False)
-    if refusal is None and not os.access(executable, os.X_OK):
+    if refusal is None and require_executable and not os.access(executable, os.X_OK):
         refusal = f"{executable} is not executable"
     for parent, parent_stat in ancestors:
         if refusal is not None:
@@ -1716,15 +1724,63 @@ def _require_trusted_claude_code_path(
     return executable_stat
 
 
+def _claude_acp_launcher_digest(path: Path, checked: os.stat_result, *, adapter_label: str) -> str:
+    """Return the SHA-256 of the file checked at ``path``, read without following links."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+        with os.fdopen(fd, "rb") as handle:
+            opened = os.fstat(handle.fileno())
+            if (opened.st_dev, opened.st_ino) != (checked.st_dev, checked.st_ino):
+                raise ClaudeCodeExecutableRefusal(
+                    f"{adapter_label}: the Claude ACP launcher file {path} changed while it was checked",
+                    reason="untrusted_path",
+                )
+            return hashlib.file_digest(handle, "sha256").hexdigest()
+    except OSError as exc:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: cannot read the Claude ACP launcher file {path}: {exc.strerror}",
+            reason="unreadable",
+        ) from exc
+
+
 def _require_claude_acp_launcher(*, adapter_label: str) -> str:
-    """Validate the tracked launcher and its parents up to the repo root."""
-    _require_trusted_claude_code_path(
-        _CLAUDE_ACP_LAUNCHER,
-        adapter_label=adapter_label,
-        trust_root=_CLAUDE_ACP_LAUNCHER_TRUST_ROOT,
-        subject="the Claude ACP launcher",
-    )
-    return str(_CLAUDE_ACP_LAUNCHER)
+    """Return the canonical primary checkout's launcher after checking its pinned closure.
+
+    Every closure file must exist, pass the ownership, mode and no-symlink
+    checks up to the trust root, and match its pinned SHA-256. Any failure
+    refuses before an ACP message is sent; no other copy is ever tried.
+    """
+    try:
+        primary = resolve_main_root(_CLAUDE_ACP_LAUNCHER_ANCHOR)
+    except NotAGitRepositoryError as exc:
+        raise ClaudeCodeExecutableRefusal(
+            f"{adapter_label}: cannot resolve the canonical primary checkout that holds the Claude ACP launcher",
+            reason="missing",
+            failure_code="acp_adapter_missing",
+        ) from exc
+    for relpath, expected in _CLAUDE_ACP_LAUNCHER_CLOSURE.items():
+        path = primary.joinpath(*relpath.parts)
+        if not os.path.lexists(path):
+            raise ClaudeCodeExecutableRefusal(
+                f"{adapter_label}: the canonical primary checkout {primary} has no {relpath}; "
+                "pull main there and keep it non-group-writable",
+                reason="missing",
+                failure_code="acp_adapter_missing",
+            )
+        checked = _require_trusted_claude_code_path(
+            path,
+            adapter_label=adapter_label,
+            subject="the Claude ACP launcher",
+            require_executable=relpath == _CLAUDE_ACP_LAUNCHER_RELPATH,
+        )
+        observed = _claude_acp_launcher_digest(path, checked, adapter_label=adapter_label)
+        if observed != expected:
+            raise ClaudeCodeExecutableRefusal(
+                f"{adapter_label}: {relpath} in the canonical primary checkout has SHA-256 {observed}, "
+                f"not the adapter's pinned {expected}; the primary checkout and this adapter are out of step",
+                reason="digest_mismatch",
+            )
+    return str(primary.joinpath(*_CLAUDE_ACP_LAUNCHER_RELPATH.parts))
 
 
 def _claude_code_floor(model: str | None) -> tuple[int, int, int]:
@@ -3107,8 +3163,8 @@ class AcpxClaudeShadowAdapter(_AcpxDiscussionAdapter):
         from .claude import HEADLESS_BACKGROUND_ENV
 
         adapter_label = type(self).__name__
-        host = _require_host_claude_code(model=plan.metadata.get("model"), adapter_label=adapter_label)
         launcher = _require_claude_acp_launcher(adapter_label=adapter_label)
+        host = _require_host_claude_code(model=plan.metadata.get("model"), adapter_label=adapter_label)
         if Path(launcher).resolve() == Path(host["claude_code_executable"]):
             raise ClaudeCodeExecutableRefusal(
                 f"{adapter_label}: host Claude Code resolves to the ACP launcher itself",

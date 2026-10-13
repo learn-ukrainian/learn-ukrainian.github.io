@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import stat
@@ -657,21 +658,51 @@ def test_launcher_refuses_without_executing(tmp_path, host, identity, message):
     assert not dump.exists()
 
 
+_LAUNCHER_REL = Path("scripts/agent_runtime/claude_acp_exec.sh")
+_REAL_LAUNCHER_GATE = acpx_module._require_claude_acp_launcher
+
+
+def _git(cwd: Path, *args: str) -> None:
+    from scripts.common.git_context import sanitized_git_env
+
+    env = {**sanitized_git_env(), "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
+    subprocess.run(
+        ["git", "-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid",
+         "-c", "commit.gpgsign=false", "-c", f"core.hooksPath={os.devnull}", *args],
+        cwd=cwd, env=env, check=True, capture_output=True, timeout=30,
+    )
+
+
 @pytest.fixture
-def launcher_tree(tmp_path, monkeypatch):
-    """A private copy of the tracked launcher under its own trust root."""
-    root = tmp_path / "repo"
-    scripts_dir = root / "scripts" / "agent_runtime"
-    scripts_dir.mkdir(parents=True)
-    for directory in (root, root / "scripts", scripts_dir):
-        directory.chmod(0o755)
-    launcher = scripts_dir / "claude_acp_exec.sh"
-    launcher.write_bytes(_LAUNCHER.read_bytes())
-    launcher.chmod(0o755)
-    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER", launcher)
-    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER_TRUST_ROOT", root)
+def launcher_checkouts(tmp_path, monkeypatch):
+    """A primary checkout and its dispatch worktree, each with a mode-clean launcher copy.
+
+    The adapter anchor is the worktree, as for an ordinary ask whose adapter code
+    runs from the caller's worktree; git resolves the primary from it.
+    """
+    root = tmp_path.resolve()
+    primary = root / "primary"
+    primary.mkdir()
+    _git(primary, "init", "-q", "-b", "main")
+    (primary / _LAUNCHER_REL).parent.mkdir(parents=True)
+    (primary / _LAUNCHER_REL).write_bytes(_LAUNCHER.read_bytes())
+    _git(primary, "add", "scripts")
+    _git(primary, "commit", "-q", "-m", "fixture")
+    worktree = primary / ".worktrees" / "dispatch" / "agent" / "task"
+    _git(primary, "worktree", "add", "-q", "-b", "task", str(worktree))
+    for checkout in (primary, worktree):
+        for directory in (checkout, checkout / "scripts", checkout / "scripts" / "agent_runtime"):
+            directory.chmod(0o755)
+        (checkout / _LAUNCHER_REL).chmod(0o755)
+    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER_ANCHOR", worktree)
+    monkeypatch.setattr(acpx_module, "_CLAUDE_CODE_TRUST_ROOT", root)
     _fake_accounts(monkeypatch, members=("caller",))
-    return SimpleNamespace(root=root, launcher=launcher)
+    return SimpleNamespace(
+        primary=primary,
+        worktree=worktree,
+        launcher=primary / _LAUNCHER_REL,
+        worktree_launcher=worktree / _LAUNCHER_REL,
+    )
 
 
 def _launcher_refusal() -> ClaudeCodeExecutableRefusal:
@@ -680,40 +711,160 @@ def _launcher_refusal() -> ClaudeCodeExecutableRefusal:
     return raised.value
 
 
-def test_trusted_launcher_is_accepted_with_private_group_parents(launcher_tree):
-    (launcher_tree.root / "scripts").chmod(0o775)
-    assert acpx_module._require_claude_acp_launcher(adapter_label="X") == str(launcher_tree.launcher)
+def test_the_pin_is_the_digest_of_the_tracked_self_contained_launcher():
+    """Launcher bytes and the adapter's pinned digest change in the same commit."""
+    closure = acpx_module._CLAUDE_ACP_LAUNCHER_CLOSURE
+    assert list(closure) == [acpx_module._CLAUDE_ACP_LAUNCHER_RELPATH]
+    assert Path(*acpx_module._CLAUDE_ACP_LAUNCHER_RELPATH.parts) == _LAUNCHER_REL
+    assert closure[acpx_module._CLAUDE_ACP_LAUNCHER_RELPATH] == hashlib.sha256(_LAUNCHER.read_bytes()).hexdigest()
+    # Self-contained: it sources no file and execs only the pinned host binary.
+    lines = [line.strip() for line in _LAUNCHER.read_text(encoding="utf-8").splitlines()]
+    assert not [line for line in lines if line.startswith((". ", "source "))]
+    assert [line for line in lines if line.startswith("exec ")] == [
+        'exec "$host" --disallowedTools Monitor,ScheduleWakeup,CronCreate,Workflow "$@"'
+    ]
+
+
+def test_launcher_loads_from_the_primary_checkout_not_the_callers_worktree(launcher_checkouts):
+    worktree_copy = launcher_checkouts.worktree_launcher
+    assert worktree_copy.read_bytes() == launcher_checkouts.launcher.read_bytes()
+    assert stat.S_IMODE(worktree_copy.stat().st_mode) == 0o755
+    assert acpx_module._require_claude_acp_launcher(adapter_label="X") == str(launcher_checkouts.launcher)
+
+
+def test_a_clean_worktree_copy_never_stands_in_for_a_missing_primary_launcher(launcher_checkouts):
+    launcher_checkouts.launcher.unlink()
+    refusal = _launcher_refusal()
+    assert (refusal.reason, refusal.failure_code) == ("missing", "acp_adapter_missing")
+    assert "pull main there" in str(refusal)
+
+
+def test_an_unresolvable_primary_checkout_is_missing(launcher_checkouts, monkeypatch):
+    def unresolvable(_start):
+        raise acpx_module.NotAGitRepositoryError("fixture")
+
+    monkeypatch.setattr(acpx_module, "resolve_main_root", unresolvable)
+    refusal = _launcher_refusal()
+    assert (refusal.reason, refusal.failure_code) == ("missing", "acp_adapter_missing")
+
+
+def test_environment_and_cwd_never_redirect_the_launcher(launcher_checkouts, monkeypatch):
+    worktree = launcher_checkouts.worktree
+    worktree_git_dir = (worktree / ".git").read_text(encoding="utf-8").removeprefix("gitdir:").strip()
+    for name, value in {
+        "GIT_DIR": worktree_git_dir,
+        "GIT_WORK_TREE": str(worktree),
+        "GIT_COMMON_DIR": worktree_git_dir,
+        "CLAUDE_CODE_EXECUTABLE": str(launcher_checkouts.worktree_launcher),
+        "PATH": f"{launcher_checkouts.worktree_launcher.parent}{os.pathsep}/usr/bin:/bin",
+    }.items():
+        monkeypatch.setenv(name, value)
+    monkeypatch.chdir(worktree)
+    assert acpx_module._require_claude_acp_launcher(adapter_label="X") == str(launcher_checkouts.launcher)
+
+
+def test_trusted_launcher_is_accepted_with_private_group_parents(launcher_checkouts):
+    (launcher_checkouts.primary / "scripts").chmod(0o775)
+    assert acpx_module._require_claude_acp_launcher(adapter_label="X") == str(launcher_checkouts.launcher)
 
 
 @pytest.mark.parametrize(("mode", "message"), [(0o775, "group-writable"), (0o757, "world-writable")])
-def test_group_or_world_writable_launcher_is_refused(launcher_tree, mode, message):
-    launcher_tree.launcher.chmod(mode)
+def test_group_or_world_writable_launcher_is_refused(launcher_checkouts, mode, message):
+    launcher_checkouts.launcher.chmod(mode)
     refusal = _launcher_refusal()
     assert refusal.reason == "untrusted_path"
     assert message in str(refusal)
 
 
-def test_world_writable_launcher_parent_is_refused(launcher_tree):
-    (launcher_tree.root / "scripts").chmod(0o777)
+def test_world_writable_launcher_parent_is_refused(launcher_checkouts):
+    (launcher_checkouts.primary / "scripts").chmod(0o777)
     assert "world-writable" in str(_launcher_refusal())
 
 
-def test_launcher_parent_writable_by_a_shared_group_is_refused(launcher_tree, monkeypatch):
-    (launcher_tree.root / "scripts").chmod(0o775)
+def test_launcher_parent_writable_by_a_shared_group_is_refused(launcher_checkouts, monkeypatch):
+    (launcher_checkouts.primary / "scripts").chmod(0o775)
     _fake_accounts(monkeypatch, members=("caller", "other"))
     assert "group-writable" in str(_launcher_refusal())
 
 
-def test_symlinked_launcher_is_refused(launcher_tree):
-    target = launcher_tree.launcher.with_name("real.sh")
-    launcher_tree.launcher.rename(target)
-    launcher_tree.launcher.symlink_to(target)
-    assert "is a symlink" in str(_launcher_refusal())
+def test_symlinked_launcher_is_refused(launcher_checkouts):
+    launcher = launcher_checkouts.launcher
+    target = launcher.with_name("real.sh")
+    launcher.rename(target)
+    launcher.symlink_to(target)
+    refusal = _launcher_refusal()
+    assert refusal.reason == "untrusted_path"
+    assert "is a symlink" in str(refusal)
 
 
-def test_missing_launcher_is_refused(launcher_tree):
-    launcher_tree.launcher.unlink()
-    assert _launcher_refusal().failure_code == "acp_adapter_missing"
+def test_symlinked_launcher_parent_is_refused(launcher_checkouts):
+    """A symlink below the primary root is seen, never resolved past."""
+    scripts = launcher_checkouts.primary / "scripts"
+    real = launcher_checkouts.primary / "real-scripts"
+    scripts.rename(real)
+    scripts.symlink_to(real, target_is_directory=True)
+    refusal = _launcher_refusal()
+    assert refusal.reason == "untrusted_path"
+    assert f"{scripts} is a symlink" in str(refusal)
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads any file")
+def test_unreadable_launcher_is_refused(launcher_checkouts):
+    launcher_checkouts.launcher.chmod(0o311)
+    refusal = _launcher_refusal()
+    assert (refusal.reason, refusal.failure_code) == ("unreadable", "acp_adapter_incompatible")
+
+
+def test_one_edited_launcher_byte_is_a_digest_mismatch(launcher_checkouts):
+    launcher = launcher_checkouts.launcher
+    data = bytearray(launcher.read_bytes())
+    data[-2] ^= 0x01
+    launcher.write_bytes(bytes(data))
+    refusal = _launcher_refusal()
+    assert (refusal.reason, refusal.failure_code) == ("digest_mismatch", "acp_adapter_incompatible")
+    assert acpx_module._CLAUDE_ACP_LAUNCHER_CLOSURE[acpx_module._CLAUDE_ACP_LAUNCHER_RELPATH] in str(refusal)
+
+
+def test_every_closure_member_is_pinned(launcher_checkouts, monkeypatch):
+    """A file the launcher would source is pinned like the launcher itself."""
+    member_rel = acpx_module.PurePosixPath("scripts/agent_runtime/claude_acp_lib.sh")
+    member = launcher_checkouts.primary / member_rel
+    member.write_bytes(b"deny=Monitor\n")
+    member.chmod(0o644)
+    monkeypatch.setattr(
+        acpx_module,
+        "_CLAUDE_ACP_LAUNCHER_CLOSURE",
+        {**acpx_module._CLAUDE_ACP_LAUNCHER_CLOSURE, member_rel: hashlib.sha256(member.read_bytes()).hexdigest()},
+    )
+    assert acpx_module._require_claude_acp_launcher(adapter_label="X") == str(launcher_checkouts.launcher)
+
+    member.write_bytes(b"deny=\n")
+    refusal = _launcher_refusal()
+    assert refusal.reason == "digest_mismatch"
+    assert str(member_rel) in str(refusal)
+
+    member.unlink()
+    assert _launcher_refusal().reason == "missing"
+
+
+def test_launcher_refusal_precedes_the_host_probe_and_any_acp_message(launcher_checkouts, worktree_dir, monkeypatch):
+    """No plan exists, so the runner never spawns ACPX or sends an ACP message."""
+    _stub_binary(monkeypatch, worktree_dir)
+    marker = worktree_dir / "acpx-ran"
+    (worktree_dir / "fake-acpx-bin").write_text(f"#!/bin/sh\n: > '{marker}'\n", encoding="utf-8")
+    monkeypatch.setattr(acpx_module, "_require_claude_acp_launcher", _REAL_LAUNCHER_GATE)
+
+    def no_host_probe(**_kwargs):
+        raise AssertionError("the host Claude Code was probed before the launcher gate refused")
+
+    monkeypatch.setattr(acpx_module, "_require_host_claude_code", no_host_probe)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    launcher_checkouts.launcher.unlink()
+
+    with pytest.raises(ClaudeCodeExecutableRefusal) as raised:
+        _build(worktree_dir)
+    assert raised.value.reason == "missing"
+    assert not marker.exists()
 
 
 def test_host_that_is_the_launcher_itself_is_refused(worktree_dir, monkeypatch):
