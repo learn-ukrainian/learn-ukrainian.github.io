@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import fcntl
 import importlib.util
 import json
@@ -482,8 +483,9 @@ def _fake_validation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, clock: Fak
         queue_position = 2
         wait_limit = gate.ADMISSION_WAIT_S
 
-        def __init__(self, *_args: object):
-            pass
+        def __init__(self, state, _wait_s, **_kwargs):
+            self.waited = 500.0 if state == tmp_path else 0.0
+            self._started = clock.now
 
         def __enter__(self):
             clock.now += self.waited
@@ -605,7 +607,7 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
         spec.loader.exec_module(gate)
         root = Path(sys.argv[2])
         number = sys.argv[3]
-        plan = gate.Plan(number * 40, 't' * 40, 'b' * 40, 'v-test', ('tests/test_ok.py',), (), ())
+        plan = gate.Plan(number * 40, 'a' * 40, 'b' * 40, 'v-test', ('tests/test_ok.py',), (), ())
         gate.git_ok = lambda *args, **kwargs: str(root)
         gate.build_plan = lambda *args: plan
         gate.state_dir = lambda *args: root / 'state'
@@ -2183,3 +2185,455 @@ def test_next_pytest_stage_reaps_the_base_of_a_killed_gate(repo: Path, tmp_path:
     assert "1 passed" in result
     assert not stale.exists()
     assert list(gate.state_dir(repo).glob("pytest-*")) == []
+
+# ---- #10523: exact-plan coalescing before global admission ---------------------------------------------
+
+CONTROL_TEST = textwrap.dedent(
+    """\
+    import os
+    from pathlib import Path
+
+    def test_control():
+        control = Path(os.environ['GATE_TEST_CONTROL'])
+        (control / 'entered').write_text('entered\\n')
+        with (control / 'release').open() as release:
+            assert release.read() == 'green'
+    """
+)
+
+
+def _start_controlled_gate(
+    repo: Path, control: Path, *, base: str = ZERO_SHA, registry_change: str | None = None, **environment: str
+):
+    control.mkdir()
+    os.mkfifo(control / "release")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    command = [sys.executable, str(repo / ".githooks/pre_push_gate.py")]
+    if registry_change is not None:
+        # Synthetic registry authority, with real build_plan, stages and production main.
+        # Separate version and selected-node controls detect either missing key dimension.
+        program = textwrap.dedent("""\
+            import importlib.util, sys
+            spec = importlib.util.spec_from_file_location('gate', sys.argv.pop(1))
+            gate = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = gate
+            spec.loader.exec_module(gate)
+            change = sys.argv.pop(1)
+            original = gate.load_registry
+            def registry(root):
+                nodes, version = original(root)
+                if change == 'registry':
+                    return nodes, version + '-control'
+                return (*nodes, 'tests/test_red.py'), version
+            gate.load_registry = registry
+            sys.exit(gate.main())
+        """)
+        command = [sys.executable, "-c", program, str(repo / ".githooks/pre_push_gate.py"), registry_change]
+    process = subprocess.Popen(
+        [*command, "--launcher",
+         str(repo / "scripts/pre_commit/project_python.sh"), "--config", str(repo / ".pre-commit-config.yaml")],
+        cwd=repo, env=_env({"PRE_COMMIT_HOME": str(repo.parent / "pre-commit-cache"),
+                           "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES": "1",
+                           "GATE_TEST_CONTROL": str(control), **environment}),
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )
+    local_ref = _git(repo, "symbolic-ref", "HEAD").stdout.strip()
+    process.stdin.write(f"{local_ref} {head} refs/heads/feature {base}\n")
+    process.stdin.close()
+    process.stdin = None
+    return process
+
+
+def _wait_tickets(state: Path, count: int, processes: list[subprocess.Popen]) -> list[dict]:
+    """Wait for complete atomic publications, not for an assumed scheduler delay."""
+    deadline = time.monotonic() + 30
+    while time.monotonic() < deadline:
+        paths = list((state / "queue").glob("*.ticket"))
+        if len(paths) == count:
+            return [json.loads(path.read_text()) for path in paths]
+        assert all(process.poll() is None for process in processes), "gate exited before publishing its ticket"
+        time.sleep(0.01)
+    pytest.fail(f"expected {count} tickets, observed {len(paths)}")
+
+
+def _finish_controlled(process: subprocess.Popen, control: Path, result: str = "green") -> tuple[str, str]:
+    assert wait_for_line(control / "entered", stop_if=lambda: process.poll() is not None) == "entered"
+    # Nonblocking open proves the validator is already waiting on the FIFO. Retry only the
+    # synchronization probe; never restart a validation attempt.
+    deadline = time.monotonic() + 30
+    while True:
+        try:
+            fd = os.open(control / "release", os.O_WRONLY | os.O_NONBLOCK)
+            break
+        except OSError as error:
+            assert error.errno == errno.ENXIO and time.monotonic() < deadline
+            time.sleep(0.01)
+    with os.fdopen(fd, "w") as release:
+        release.write(result)
+    return process.communicate(timeout=60)
+
+
+def _stop_controls(processes: list[subprocess.Popen]) -> None:
+    for process in processes:
+        if process.poll() is None:
+            process.send_signal(signal.SIGINT)
+        process.communicate(timeout=20)
+
+
+def _assert_queue_released(state: Path) -> None:
+    assert list(state.rglob("*.ticket")) == []
+    assert list(state.rglob("*.pending")) == []
+    assert list(state.glob("pytest-*")) == []
+    for lock in state.rglob("admission.lock"):
+        with lock.open() as held:
+            fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+
+def test_equivalent_production_followers_never_register_global_tickets(repo: Path, tmp_path: Path) -> None:
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    head = _commit(repo, "controlled checks", "tests/test_control.py")
+    state = gate.state_dir(repo)
+    controls = [tmp_path / f"control-{n}" for n in range(3)]
+    processes = []
+    try:
+        processes.append(_start_controlled_gate(repo, controls[0], LEARN_UKRAINIAN_DISPATCH_TASK_ID="leader"))
+        wait_for_line(controls[0] / "entered", stop_if=lambda: processes[0].poll() is not None)
+        for n in (1, 2):
+            processes.append(_start_controlled_gate(repo, controls[n], LEARN_UKRAINIAN_DISPATCH_TASK_ID=f"follower-{n}"))
+            _wait_tickets(state / "heads" / head, n + 1, processes)
+        assert _wait_tickets(state, 1, processes) == [
+            {"head": head, "branch": "refs/heads/feature", "task_owner": "leader"}
+        ]
+        stdout, stderr = _finish_controlled(processes[0], controls[0])
+        assert processes[0].returncode == 0, stdout + stderr
+        for process, control in zip(processes[1:], controls[1:], strict=True):
+            stdout, stderr = process.communicate(timeout=60)
+            assert process.returncode == 0, stdout + stderr
+            assert not (control / "entered").exists(), "follower reran checks instead of reusing exact green proof"
+    finally:
+        _stop_controls(processes)
+    rows = _measurements(repo)
+    assert len(rows) == 3
+    assert sum("stages" in row for row in rows) == 1
+    followers = [row for row in rows if row.get("detail") == "valid receipt after coalescing"]
+    assert len(followers) == 2 and all(row["queue_depth"] == 0 for row in followers)
+    _assert_queue_released(state)
+
+
+def test_same_head_different_base_production_follower_runs_the_missing_check(repo: Path, tmp_path: Path) -> None:
+    _write(repo, "tests/test_red.py", RED_TEST)
+    narrow_base = _commit(repo, "wide range must check red", "tests/test_red.py")
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    head = _commit(repo, "narrow range is green", "tests/test_control.py")
+    state = gate.state_dir(repo)
+    controls = [tmp_path / "narrow", tmp_path / "wide"]
+    processes = []
+    try:
+        processes.append(_start_controlled_gate(repo, controls[0], base=narrow_base))
+        wait_for_line(controls[0] / "entered", stop_if=lambda: processes[0].poll() is not None)
+        processes.append(_start_controlled_gate(repo, controls[1]))
+        _wait_tickets(state / "heads" / head, 2, processes)
+        assert len(_wait_tickets(state, 1, processes)) == 1
+        _finish_controlled(processes[0], controls[0])
+        assert processes[0].returncode == 0
+        stdout, stderr = _finish_controlled(processes[1], controls[1])
+        assert processes[1].returncode == gate.EXIT_REFUSED, stdout + stderr
+        assert "tests/test_red.py::test_broken" in _verdict(subprocess.CompletedProcess([], 1, stderr=stderr))["failing"]
+    finally:
+        _stop_controls(processes)
+    assert [row["outcome"] for row in _measurements(repo)] == ["green", "refused"]
+    _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("ending", ["refused", "incomplete", "interrupted"])
+def test_non_green_production_leader_releases_and_follower_checks_once(
+    repo: Path, tmp_path: Path, ending: str
+) -> None:
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    head = _commit(repo, "controlled checks", "tests/test_control.py")
+    state = gate.state_dir(repo)
+    controls = [tmp_path / "leader", tmp_path / "follower"]
+    processes = []
+    try:
+        options = {"LU_PRE_PUSH_GATE_RUN_BUDGET_S": "8"} if ending == "incomplete" else {}
+        processes.append(_start_controlled_gate(repo, controls[0], **options))
+        wait_for_line(controls[0] / "entered", stop_if=lambda: processes[0].poll() is not None)
+        processes.append(_start_controlled_gate(repo, controls[1]))
+        _wait_tickets(state / "heads" / head, 2, processes)
+        if ending == "refused":
+            _finish_controlled(processes[0], controls[0], "red")
+            assert processes[0].returncode == gate.EXIT_REFUSED
+        else:
+            if ending == "interrupted":
+                processes[0].send_signal(signal.SIGINT)
+            processes[0].communicate(timeout=30)
+            assert processes[0].returncode == (gate.EXIT_INCOMPLETE if ending == "incomplete" else -signal.SIGINT)
+        assert _receipts(repo) == []
+        stdout, stderr = _finish_controlled(processes[1], controls[1])
+        assert processes[1].returncode == 0, stdout + stderr
+    finally:
+        _stop_controls(processes)
+    rows = _measurements(repo)
+    # Existing measurement publication omits a process interrupted before a typed outcome.
+    assert len(rows) == (1 if ending == "interrupted" else 2)
+    assert sum(row.get("outcome") == "green" for row in rows) == 1
+    assert all("stages" in row for row in rows), "non-green leader cannot authorize reuse"
+    _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("change", ["tracked", "untracked"])
+def test_production_follower_rechecks_inputs_before_reusing_leader_receipt(
+    repo: Path, tmp_path: Path, change: str
+) -> None:
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    head = _commit(repo, "controlled checks", "tests/test_control.py")
+    state = gate.state_dir(repo)
+    controls = [tmp_path / "leader", tmp_path / "follower"]
+    processes = []
+    try:
+        processes.append(_start_controlled_gate(repo, controls[0]))
+        wait_for_line(controls[0] / "entered", stop_if=lambda: processes[0].poll() is not None)
+        processes.append(_start_controlled_gate(repo, controls[1]))
+        _wait_tickets(state / "heads" / head, 2, processes)
+        if change == "tracked":
+            _write(repo, "tests/test_control.py", RED_TEST)
+        else:
+            _write(repo, "conftest.py", "# an untracked overlay\n")
+        _finish_controlled(processes[0], controls[0])
+        stdout, stderr = processes[1].communicate(timeout=30)
+        assert processes[1].returncode == gate.EXIT_REFUSED, stdout + stderr
+        verdict = _verdict(subprocess.CompletedProcess([], 1, stderr=stderr))
+        assert verdict["reason"] == ("dirty_tree" if change == "tracked" else "untracked_inputs")
+        assert not (controls[1] / "entered").exists()
+    finally:
+        _stop_controls(processes)
+    _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("owner", [None, "", "safe-task_10523", "private@example.invalid", "bad\nowner", "x" * 129])
+def test_ticket_publication_is_atomic_and_metadata_is_allowlisted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owner: str | None
+) -> None:
+    if owner is None:
+        monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    else:
+        monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", owner)
+    monkeypatch.setenv("UNRELATED_SECRET", "never-publish-this")
+    update = gate.Update("refs/heads/frozen", "a" * 40, "unused-remote", "b" * 40)
+    original = Path.rename
+    observed = []
+
+    def rename(source: Path, target: Path):
+        if source.suffix == ".pending":
+            assert list(source.parent.glob("*.ticket")) == []
+            observed.append(json.loads(source.read_text()))
+            with source.open() as held, pytest.raises(BlockingIOError):
+                fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return original(source, target)
+
+    monkeypatch.setattr(Path, "rename", rename)
+    with gate.Admission(tmp_path, 0, update=update) as admitted:
+        identity = json.loads(admitted._ticket.read_text())
+        assert identity == {"head": "a" * 40, "branch": "refs/heads/frozen",
+                            "task_owner": owner if owner == "safe-task_10523" else "unknown"}
+        assert admitted._ticket.stat().st_mode & 0o777 == 0o600
+        assert observed == [identity]
+    _assert_queue_released(tmp_path)
+
+
+@pytest.mark.parametrize("field", ["head", "tree", "base", "registry_version"])
+def test_missing_immutable_identity_cannot_reuse_even_a_matching_green_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, field: str
+) -> None:
+    plan = _plan(**{field: ""})
+    gate.write_receipt(tmp_path, plan, time.time())
+    monkeypatch.setattr(gate, "build_plan", lambda *_args: plan)
+    monkeypatch.setattr(gate, "state_dir", lambda *_args: tmp_path)
+    with pytest.raises(gate.GateOutcome, match="immutable validation identity"):
+        gate.validate(gate.Update("refs/heads/feature", plan.head, "unused", ZERO_SHA), tmp_path, "unused", "unused", {})
+    assert not (tmp_path / "queue").exists()
+
+
+@pytest.mark.parametrize("area", ["heads", "head"])
+def test_unsafe_coalescing_directory_never_reuses_green(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, area: str
+) -> None:
+    plan = _plan()
+    gate.write_receipt(tmp_path, plan, time.time())
+    outside = tmp_path / "preserve"
+    outside.mkdir()
+    if area == "heads":
+        (tmp_path / "heads").symlink_to(outside, target_is_directory=True)
+    else:
+        (tmp_path / "heads").mkdir()
+        (tmp_path / "heads" / plan.head).symlink_to(outside, target_is_directory=True)
+    monkeypatch.setattr(gate, "build_plan", lambda *_args: plan)
+    monkeypatch.setattr(gate, "state_dir", lambda *_args: tmp_path)
+    with pytest.raises(gate.GateOutcome, match="coalescing directory is unsafe"):
+        gate.validate(gate.Update("refs/heads/feature", plan.head, "unused", ZERO_SHA), tmp_path, "unused", "unused", {})
+    assert list(outside.iterdir()) == []
+
+
+@pytest.mark.parametrize("change", ["registry", "selection"])
+def test_same_head_production_registry_or_selection_difference_cannot_coalesce(
+    repo: Path, tmp_path: Path, change: str
+) -> None:
+    _write(repo, "tests/test_red.py", RED_TEST)
+    base = _commit(repo, "negative selection control", "tests/test_red.py")
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    head = _commit(repo, "controlled checks", "tests/test_control.py")
+    state = gate.state_dir(repo)
+    controls = [tmp_path / "original", tmp_path / "changed"]
+    processes = []
+    try:
+        processes.append(_start_controlled_gate(repo, controls[0], base=base))
+        wait_for_line(controls[0] / "entered", stop_if=lambda: processes[0].poll() is not None)
+        processes.append(_start_controlled_gate(repo, controls[1], base=base, registry_change=change))
+        _wait_tickets(state / "heads" / head, 2, processes)
+        _finish_controlled(processes[0], controls[0])
+        assert processes[0].returncode == 0
+        stdout, stderr = _finish_controlled(processes[1], controls[1])
+        assert processes[1].returncode == (0 if change == "registry" else gate.EXIT_REFUSED), stdout + stderr
+        if change == "selection":
+            assert "tests/test_red.py::test_broken" in _verdict(subprocess.CompletedProcess([], 1, stderr=stderr))["failing"]
+    finally:
+        _stop_controls(processes)
+    rows = _measurements(repo)
+    assert len(rows) == 2 and all("stages" in row for row in rows)
+    _assert_queue_released(state)
+
+
+def test_explicit_production_resubmission_joins_global_tail_after_incomplete(repo: Path, tmp_path: Path) -> None:
+    _write(repo, "tests/test_control.py", CONTROL_TEST)
+    _commit(repo, "controlled checks", "tests/test_control.py")
+    other = tmp_path / "other-worktree"
+    _git(repo, "worktree", "add", "-b", "other", str(other), "HEAD")
+    _write(other, "notes.txt", "different outgoing head\n")
+    _commit(other, "other head", "notes.txt")
+    state = gate.state_dir(repo)
+    state.mkdir(parents=True)
+    processes = []
+    controls = [tmp_path / name for name in ("incomplete", "older", "resubmission")]
+    try:
+        with (state / "admission.lock").open("w") as legacy:
+            fcntl.flock(legacy, fcntl.LOCK_EX)
+            processes.append(_start_controlled_gate(repo, controls[0], LU_PRE_PUSH_GATE_ADMISSION_WAIT_S="0"))
+            stdout, stderr = processes[0].communicate(timeout=30)
+            assert processes[0].returncode == gate.EXIT_INCOMPLETE, stdout + stderr
+            assert _verdict(subprocess.CompletedProcess([], 75, stderr=stderr))["reason"] == "validation_incomplete"
+            assert list(state.rglob("*.ticket")) == []
+            processes.append(_start_controlled_gate(other, controls[1], LEARN_UKRAINIAN_DISPATCH_TASK_ID="older"))
+            _wait_tickets(state, 1, processes[1:])
+            processes.append(_start_controlled_gate(repo, controls[2], LEARN_UKRAINIAN_DISPATCH_TASK_ID="resubmission"))
+            _wait_tickets(state, 2, processes[1:])
+            identities = [json.loads(path.read_text()) for path in sorted((state / "queue").glob("*.ticket"))]
+            assert [identity["task_owner"] for identity in identities] == ["older", "resubmission"]
+        wait_for_line(controls[1] / "entered", stop_if=lambda: processes[1].poll() is not None)
+        assert not (controls[2] / "entered").exists(), "resubmission bypassed the existing queue predecessor"
+        _finish_controlled(processes[1], controls[1])
+        _finish_controlled(processes[2], controls[2])
+        assert processes[1].returncode == processes[2].returncode == 0
+    finally:
+        _stop_controls(processes)
+    rows = _measurements(repo)
+    assert [row["outcome"] for row in rows] == ["validation_incomplete", "green", "green"]
+    _assert_queue_released(state)
+
+
+def test_coalescing_and_global_wait_share_the_original_hard_ceiling(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
+    monkeypatch.setattr(gate, "ADMISSION_MAX_WAIT_S", 1.5)
+    head_state = tmp_path / "head"
+    holder = gate.Admission(head_state, 1)
+    holder.__enter__()
+    clock.on_sleep = lambda: holder.__exit__() if clock.now >= 1 else None
+    with gate.Admission(head_state, 1) as grouped:
+        assert grouped.waited >= 1
+        with gate.Admission(tmp_path, 1):
+            other, fd = _locked_ticket(tmp_path, "00000000000000000000-other")
+            try:
+                admission = gate.Admission(tmp_path, 1, prior=grouped)
+                with pytest.raises(gate.GateOutcome, match="admission_timeout"), admission:
+                    pytest.fail("both waits must share a clock and hard ceiling")
+                assert admission.waited == 1.5
+            finally:
+                other.unlink()
+                os.close(fd)
+    _assert_queue_released(tmp_path)
+
+
+def test_owner_is_frozen_before_any_wait_and_preserved_on_global_ticket(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "original-task")
+    update = gate.Update("refs/heads/original", "a" * 40, "unused", ZERO_SHA)
+    with gate.Admission(tmp_path / "head", 1, update=update) as grouped:
+        monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "later-task")
+        with gate.Admission(tmp_path, 1, update=update, prior=grouped) as admitted:
+            assert json.loads(admitted._ticket.read_text()) == {
+                "head": "a" * 40, "branch": "refs/heads/original", "task_owner": "original-task"
+            }
+    _assert_queue_released(tmp_path)
+
+
+def test_coalescing_receipt_reuse_preserves_remaining_multi_ref_execution_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
+    monkeypatch.setattr(gate, "build_plan", lambda *_args: _plan())
+    monkeypatch.setattr(gate, "state_dir", lambda *_args: tmp_path)
+    budget = gate.Budget(10)
+    assert budget.after_admission(0) == 10
+    clock.now = 2  # the earlier ref already consumed two seconds of execution
+    head_state = gate.coalescing_state(tmp_path, _plan())
+    holder = gate.Admission(head_state, gate.ADMISSION_WAIT_S)
+    holder.__enter__()
+    def finish_holder():
+        gate.write_receipt(tmp_path, _plan(), clock.time())
+        holder.__exit__()
+
+    clock.on_sleep = finish_holder
+    event = {}
+    try:
+        gate.validate(gate.Update("refs/heads/feature", "a" * 40, "unused", ZERO_SHA), tmp_path,
+                      "unused", "unused", event, budget)
+    finally:
+        holder.__exit__()
+    assert event["detail"] == "valid receipt after coalescing" and event["queue_depth"] == 0
+    assert budget.deadline - clock.now == pytest.approx(8)
+    assert event["admission_wait_s"] == 0.2
+    _assert_queue_released(tmp_path)
+
+
+def test_metadata_publication_error_removes_partial_ticket_and_releases_lock(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fail_publication(_identity, stream, **_kwargs):
+        stream.write('{"head":')
+        raise OSError("synthetic metadata publication error")
+
+    monkeypatch.setattr(gate.json, "dump", fail_publication)
+    with pytest.raises(OSError, match="synthetic metadata publication error"):
+        with gate.Admission(tmp_path, 1, update=gate.Update("refs/heads/feature", "a" * 40, "unused", ZERO_SHA)):
+            pytest.fail("partial metadata must never become a live ticket")
+    _assert_queue_released(tmp_path)
+
+
+def test_unsafe_lock_path_cannot_authorize_validation(repo: Path) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    head = _commit(repo, "green", "tests/test_new.py")
+    state = gate.state_dir(repo)
+    head_state = state / "heads" / head
+    head_state.mkdir(parents=True)
+    target = repo.parent / "preserve-lock-target"
+    target.write_text("preserve me")
+    (head_state / "admission.lock").symlink_to(target)
+    result = _run_gate(repo)
+    assert result.returncode == gate.EXIT_INCOMPLETE
+    assert _verdict(result)["reason"] == "validation_error"
+    assert _receipts(repo) == [] and target.read_text() == "preserve me"
+    assert list(state.rglob("*.ticket")) == []

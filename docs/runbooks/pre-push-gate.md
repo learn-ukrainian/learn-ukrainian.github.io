@@ -40,6 +40,27 @@ kills any descendant that inherited its run token within a short cleanup bound, 
 stall or outlive the gate. `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and `LU_PRE_PUSH_GATE_RUN_BUDGET_S` can only
 shorten these.
 
+Before joining the global queue, a caller joins a FIFO queue for its immutable outgoing head under
+`<git-common-dir>/lu-pre-push-gate/heads/<head>/`. Only that head's holder registers a global ticket.
+Followers wait outside the global queue, rebuild their inputs after waiting, and reuse only a fresh
+green receipt matching the complete existing receipt key. The head groups serialization; different
+bases, registry versions, selected nodes or other key fields still require their own checks.
+Both waits share the original admission start time, growing allowance and hard ceiling. Execution
+starts after global admission; waiting does not consume the shared run budget.
+
+Live tickets in either queue are locked before atomic publication. Their JSON contains exactly
+`head` (the outgoing SHA from Git's update), `branch` (its local ref), and `task_owner` (the explicit
+`LEARN_UKRAINIAN_DISPATCH_TASK_ID`, captured before waiting). The task label must be 1–128 ASCII
+letters, digits, underscores, dots or hyphens and start with a letter or digit. Missing or invalid
+labels become `unknown`. No other environment fields or remote identity are written.
+Ticket contents never prove liveness: flock remains the authority, including for legacy empty
+tickets and older holders with no ticket metadata.
+
+A refused attempt terminates. Incomplete or interrupted callers release their queue resources;
+abandoned tickets are reaped through the existing flock checks. An explicit owner resubmission gets
+a new tail ticket. The gate never retries an attempt automatically. Stable lock files remain for
+safe rendezvous; tickets and private test directories are released. Global concurrency remains one.
+
 `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES` sets the test process ceiling as a positive integer.
 The default is 4, so callers get bounded parallel validation without an override. Serial validation
 consumed the shared run budget. A nonblank `LEARN_UKRAINIAN_DISPATCH_TASK_ID` caps the invocation
@@ -52,12 +73,18 @@ requires xdist and keeps whole files together with `--dist loadfile`. Without xd
 `<git-common-dir>/lu-pre-push-gate/receipts/<head>-<base>.json` lets a retry of the same commit skip the run. It is
 bound to the commit, tree, base, registry version, selected ids and gate version, expires after one hour, and
 is ignored when any of them differ or the tree is dirty.
+Rebuilding the plan also rejects untracked validation inputs after either wait. A missing or unsafe
+immutable identity cannot authorize reuse.
 
 ## Measurement (AC-05)
 
-Every run appends a row to `<git-common-dir>/lu-pre-push-gate/measurements.jsonl`: outcome, reason, failing
+Each typed outcome appends a row to `<git-common-dir>/lu-pre-push-gate/measurements.jsonl`: outcome, reason, failing
 ids, admission wait, duration, registry version and the shadow selection. Join with first-attempt CI outcome
 per PR head for the before/after report.
+`admission_wait_s` includes both waits; `coalescing_wait_s` records the head queue wait separately.
+`queue_depth` and `queue_position` describe the global queue only. A follower that reuses a receipt
+before global admission records zero for both, with detail `valid receipt after coalescing`.
+An interruption before a typed outcome can leave no final row; absence is never proof of green.
 
 The row's `stages` object contains `pre_commit` and `pytest` only when each stage is entered.
 Each entry records `elapsed_s` from a monotonic clock, `outcome` and `reason`. Stage time includes
