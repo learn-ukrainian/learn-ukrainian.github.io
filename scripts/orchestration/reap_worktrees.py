@@ -36,7 +36,7 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -428,7 +428,66 @@ def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
 # an absence -- callers read "no open PR" as permission to delete.
 _PR_STATES = frozenset({"OPEN", "MERGED", "CLOSED"})
 
-_GH_REMOTE_RE = re.compile(r"github\.com[:/](?P<owner>[^/]+)/(?P<repo>[^/]+?)(?:\.git)?/?$")
+_GITHUB_HOST = "github.com"
+# SCP-style SSH. The host is the whole token between ``git@`` and ``:``;
+# ``notgithub.com`` and ``prefix.github.com`` do not match.
+_SCP_GITHUB_REMOTE_RE = re.compile(
+    r"^git@github\.com:(?P<owner>[^/\s]+)/(?P<repo>[^/\s]+)$",
+    re.IGNORECASE,
+)
+
+
+def _github_owner_ok(owner: str) -> bool:
+    """GitHub login: 1–39 alphanumerics or single hyphens, not at either end."""
+    if not re.fullmatch(r"[A-Za-z0-9-]{1,39}", owner):
+        return False
+    return not owner.startswith("-") and not owner.endswith("-") and "--" not in owner
+
+
+def _github_repo_ok(repo: str) -> bool:
+    """One repository segment. A transport ``.git`` suffix is removed by the caller."""
+    if not repo or repo.endswith(".git") or repo.startswith(".") or repo.endswith(".") or ".." in repo:
+        return False
+    return re.fullmatch(r"[A-Za-z0-9._-]{1,100}", repo) is not None
+
+
+def _accept_github_slug(owner: str, repo: str) -> tuple[str, str] | None:
+    if repo.endswith(".git"):
+        repo = repo[: -len(".git")]
+    if not _github_owner_ok(owner) or not _github_repo_ok(repo):
+        return None
+    return owner, repo
+
+
+def _parse_github_origin(remote_url: str) -> tuple[str, str] | None:
+    """Owner and repository for an HTTPS or SSH GitHub origin, else None.
+
+    The host must be exactly ``github.com``. A ``.git`` suffix is optional.
+    Owner and repository must each be one GitHub path segment, so a host that
+    only contains the GitHub name cannot select some other repository.
+    """
+    text = remote_url.strip()
+    if not text or any(char.isspace() for char in text) or "\\" in text:
+        return None
+    scp = _SCP_GITHUB_REMOTE_RE.fullmatch(text)
+    if scp is not None:
+        return _accept_github_slug(scp.group("owner"), scp.group("repo"))
+    try:
+        parts = urlsplit(text)
+    except ValueError:
+        return None
+    if parts.scheme not in {"https", "ssh"} or parts.query or parts.fragment:
+        return None
+    host = parts.hostname
+    if host is None or host.lower() != _GITHUB_HOST or parts.port is not None:
+        return None
+    if parts.scheme == "ssh" and parts.username != "git":
+        return None
+    path = parts.path[:-1] if parts.path.endswith("/") else parts.path
+    segments = path.split("/")
+    if len(segments) != 3 or not segments[1] or not segments[2]:
+        return None
+    return _accept_github_slug(segments[1], segments[2])
 
 
 def _github_owner_repo(repo_root: Path) -> tuple[str, str] | None:
@@ -436,10 +495,10 @@ def _github_owner_repo(repo_root: Path) -> tuple[str, str] | None:
     proc = _run(["git", "remote", "get-url", "origin"], cwd=repo_root)
     if proc.returncode != 0:
         return None
-    match = _GH_REMOTE_RE.search((proc.stdout or "").strip())
-    if match is None:
+    text = (proc.stdout or "").strip()
+    if not text or "\n" in text:
         return None
-    return match.group("owner"), match.group("repo")
+    return _parse_github_origin(text)
 
 
 def _parse_rest_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
@@ -3474,21 +3533,136 @@ def _resolve_merged_reuse_creator(
     return path, creator, False
 
 
-def _checkout_pr_repository(worktree: Path) -> Path | None:
-    """Primary checkout that owns ``worktree``'s pull requests, or None.
+def _real_directory(path: Path) -> Path | None:
+    """Absolute directory with no symlink and no ``.`` or ``..`` component."""
+    try:
+        if not path.is_absolute():
+            return None
+        if any(part in {"", ".", ".."} for part in path.parts):
+            return None
+        if Path(os.path.normpath(path)) != path:
+            return None
+        current = Path(path.anchor)
+        for part in path.parts[1:]:
+            current = current / part
+            if current.is_symlink() or not current.is_dir():
+                return None
+        return current
+    except OSError:
+        return None
 
-    A linked worktree's gitdir names one primary with a directory ``.git``,
-    and that primary's ``origin`` parses to one GitHub owner/repo. Anything
-    else is unknown. Callers fail closed: they do not query the public
-    control plane, which holds task records for a sibling clone.
+
+def _metadata_directory(path: Path) -> Path | None:
+    """Real directory named by git metadata after lexical ``..`` collapse.
+
+    A gitdir pointer may be relative. The collapsed path must still be a
+    real directory, and no component of that path may be a symlink.
     """
     try:
-        root = primary_checkout_root(worktree)
-        if root.resolve() == worktree.resolve() or not (root / ".git").is_dir():
+        collapsed = Path(os.path.normpath(path))
+    except (OSError, ValueError):
+        return None
+    if not collapsed.is_absolute() or any(part in {"", ".", ".."} for part in collapsed.parts):
+        return None
+    current = Path(collapsed.anchor)
+    try:
+        for part in collapsed.parts[1:]:
+            current = current / part
+            if current.is_symlink() or not current.is_dir():
+                return None
+    except OSError:
+        return None
+    return current
+
+
+def _regular_file_line(path: Path) -> str | None:
+    """The single line of a regular file, or None when the file is doubtful."""
+    try:
+        info = path.lstat()
+        if not stat.S_ISREG(info.st_mode):
+            return None
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeError):
+        return None
+    if len(lines) != 1 or not lines[0].strip():
+        return None
+    return lines[0].strip()
+
+
+def _proven_linked_worktree_primary(worktree: Path) -> Path | None:
+    """Primary of a registered linked worktree, proven from git metadata.
+
+    The supplied path must be that checkout: a real directory, not a symlink
+    and not a traversal spelling. Its ``.git`` file must name an existing
+    ``<primary>/.git/worktrees/<id>`` directory whose ``gitdir`` file names
+    this checkout and whose ``commondir`` names that primary's ``.git``.
+    A missing registration, a symlink, or a ``..`` spelling is unproven.
+    """
+    checkout = _real_directory(worktree)
+    if checkout is None:
+        return None
+    pointer = _regular_file_line(checkout / ".git")
+    prefix = "gitdir:"
+    if pointer is None or not pointer.startswith(prefix):
+        return None
+    raw_admin = pointer[len(prefix) :].strip()
+    if not raw_admin:
+        return None
+    admin_path = Path(raw_admin)
+    if not admin_path.is_absolute():
+        admin_path = checkout / admin_path
+    admin = _metadata_directory(admin_path)
+    if admin is None or admin.parent.name != "worktrees" or admin.parent.parent.name != ".git":
+        return None
+    recorded_raw = _regular_file_line(admin / "gitdir")
+    if recorded_raw is None:
+        return None
+    recorded = Path(recorded_raw)
+    if not recorded.is_absolute():
+        recorded = admin / recorded
+    try:
+        recorded_norm = Path(os.path.normpath(recorded))
+    except (OSError, ValueError):
+        return None
+    if recorded_norm != checkout / ".git":
+        return None
+    common_raw = _regular_file_line(admin / "commondir")
+    if common_raw is None:
+        return None
+    common_path = Path(common_raw)
+    if not common_path.is_absolute():
+        common_path = admin / common_path
+    common = _metadata_directory(common_path)
+    expected_common = admin.parent.parent
+    if common is None or common != expected_common:
+        return None
+    primary = expected_common.parent
+    primary_git = primary / ".git"
+    try:
+        if primary_git.is_symlink() or not primary_git.is_dir():
             return None
     except OSError:
         return None
-    if _github_owner_repo(root) is None:
+    if admin.parent != primary_git / "worktrees":
+        return None
+    return primary
+
+
+def _checkout_pr_repository(worktree: Path) -> Path | None:
+    """Primary checkout that owns ``worktree``'s pull requests, or None.
+
+    ``worktree`` must be a registered linked checkout proven from git
+    metadata, and that primary's ``origin`` must be one HTTPS or SSH GitHub
+    owner/repo. Anything else is unknown, including a symlink, a traversal
+    spelling, a ``.git`` pointer whose registration does not exist, and an
+    origin whose host is not exactly ``github.com``. Callers fail closed:
+    they do not query another repository.
+    """
+    try:
+        root = _proven_linked_worktree_primary(worktree)
+    except OSError:
+        return None
+    if root is None or _github_owner_repo(root) is None:
         return None
     return root
 
@@ -3514,6 +3688,11 @@ def _switched_branch_merge_proven(
     """
     from scripts.fleet import ignored_task_output
 
+    # Refuse before any git command on ``worktree``. An unproven path must
+    # not be able to follow a forged ``.git`` pointer into a deletion.
+    pr_repo = _checkout_pr_repository(worktree)
+    if pr_repo is None:
+        return False
     if not cohort or not all(_pid_proven_absent(member) for _, member in cohort):
         return False
     if _worktree_clean(worktree) is not True:
@@ -3548,9 +3727,6 @@ def _switched_branch_merge_proven(
         ):
             proving = True
     if not proving:
-        return False
-    pr_repo = _checkout_pr_repository(worktree)
-    if pr_repo is None:
         return False
     states, error = _query_pr_states(pr_repo, branch)
     if error is not None:

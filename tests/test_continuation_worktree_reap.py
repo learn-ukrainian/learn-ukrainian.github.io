@@ -1036,3 +1036,201 @@ def test_unresolvable_owning_repository_skips_merged_continuation(tmp_path, monk
     assert row.action == "skipped", row
     assert "worktree claimed by active task" in row.reason
     assert tree.exists()
+
+
+def _real_switched_checkout(tmp_path, monkeypatch):
+    """Switched cohort on a real linked worktree. The origin parser is not mocked."""
+    from tests.orchestration.test_merge_closeout import git, init_repo
+
+    repo = init_repo(tmp_path)
+    tree = repo / ".worktrees/dispatch/cursor/switched-proof"
+    tree.parent.mkdir(parents=True)
+    git(repo, "worktree", "add", "-b", "cursor/old-gate", str(tree), "main")
+    tasks = repo / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(reap.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(reap.reap_worktrees, "_active_task_ids", lambda: set())
+    creator_head = git(tree, "rev-parse", "HEAD")
+    git(tree, "commit", "--allow-empty", "-m", "later round")
+    middle = git(tree, "rev-parse", "HEAD")
+    git(tree, "checkout", "-b", "cursor/fresh-gate")
+    git(tree, "commit", "--allow-empty", "-m", "switched")
+    merged_head = git(tree, "rev-parse", "HEAD")
+    git(tree, "push", "-u", "origin", "cursor/fresh-gate")
+    git(repo, "merge", "--no-ff", "cursor/fresh-gate", "-m", "merge switched PR")
+    git(repo, "push", "origin", "main")
+    creator = {
+        "task_id": "cursor-creator",
+        "agent": "cursor",
+        "run_nonce": "creation-nonce",
+        "status": "needs_finalize",
+        "worktree_reused": False,
+        "worktree_path": str(tree),
+        "worktree_branch": "cursor/old-gate",
+        "final_branch_head_commit": creator_head,
+        "keep_worktree": False,
+        "pid": 999_999_981,
+    }
+    creator["ignored_output_baseline"] = output.creation_inventory(
+        tree, primary=repo, task_id=creator["task_id"], run_nonce=creator["run_nonce"]
+    )
+    successors = [
+        {
+            "task_id": "cursor-round-1",
+            "agent": "cursor",
+            "run_nonce": "round-1",
+            "status": "needs_finalize",
+            "worktree_reused": True,
+            "worktree_path": str(tree),
+            "worktree_branch": "cursor/old-gate",
+            "final_branch_head_commit": middle,
+            "keep_worktree": False,
+            "pid": 999_999_982,
+        },
+        {
+            "task_id": "cursor-round-2",
+            "agent": "cursor",
+            "run_nonce": "round-2",
+            "status": "done",
+            "worktree_reused": True,
+            "worktree_path": str(tree),
+            "worktree_branch": "cursor/old-gate",
+            "final_branch_head_commit": merged_head,
+            "keep_worktree": False,
+            "pid": 999_999_983,
+        },
+    ]
+    for record in (creator, *successors):
+        save(tasks, record)
+    cohort = [(tasks / f"{record['task_id']}.json", record) for record in (creator, *successors)]
+    return repo, tree, tasks, cohort, merged_head
+
+
+def _merged_gh(monkeypatch, *, head: str, branch: str) -> list[list[str]]:
+    """Answer every gh read as the merged head. Does not replace the origin parser."""
+    calls: list[list[str]] = []
+    page = {
+        "number": 10548,
+        "state": "closed",
+        "merged_at": "2026-01-02T03:04:05Z",
+        "head": {"ref": branch, "sha": head},
+    }
+    listed = [{"number": 10548, "state": "MERGED", "headRefOid": head}]
+
+    def fake_run_gh(args, **_kwargs):
+        calls.append(list(args))
+        if "--paginate" in args:
+            return subprocess.CompletedProcess(args, 0, json.dumps([[page]]), "")
+        if args[1:3] == ["api", "-X"]:
+            return subprocess.CompletedProcess(args, 0, json.dumps(page), "")
+        if args[1:3] == ["pr", "list"]:
+            return subprocess.CompletedProcess(args, 0, json.dumps(listed), "")
+        if args[1:3] == ["pr", "view"]:
+            payload = {"number": 10548, "state": "MERGED", "headRefName": branch, "headRefOid": head}
+            return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+        if args[1:3] == ["search", "prs"]:
+            return subprocess.CompletedProcess(args, 0, "[]", "")
+        return subprocess.CompletedProcess(args, 1, "", "unexpected gh invocation")
+
+    monkeypatch.setattr(reap.reap_worktrees, "_run_gh", fake_run_gh)
+    return calls
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "https://notgithub.com/unrelated/repo.git",
+        "https://notgithub.com/unrelated/repo",
+        "git@notgithub.com:unrelated/repo.git",
+        "git@notgithub.com:unrelated/repo",
+        "ssh://git@notgithub.com/unrelated/repo.git",
+        "ssh://git@notgithub.com/unrelated/repo",
+        "https://prefix.github.com/unrelated/repo.git",
+        "https://github.com/bad owner/repo.git",
+        "https://github.com/-bad/repo.git",
+        "https://github.com/unrelated/repo?.git",
+    ],
+)
+def test_real_origin_parser_refuses_non_github_host_and_illegal_slug(tmp_path, origin):
+    """The configured origin is read from git. A lookalike host or a bad slug is not a repository."""
+    from tests.orchestration.test_merge_closeout import git, init_repo
+
+    repo = init_repo(tmp_path)
+    git(repo, "remote", "set-url", "origin", origin)
+    assert reap.reap_worktrees._github_owner_repo(repo) is None
+
+
+def test_lookalike_github_host_does_not_prove_or_reap_switched_checkout(tmp_path, monkeypatch):
+    """A host that only contains the GitHub name must not query that embedded owner/repo or delete."""
+    from pathlib import Path
+
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, _tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://notgithub.com/unrelated/repo.git")
+    calls = _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    proven = reap.reap_worktrees._switched_branch_merge_proven(repo, tree, cohort)
+    assert proven is False
+    assert not any("unrelated/repo" in " ".join(call) for call in calls)
+    results = reap.reap_worktrees.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        merged_pr_only=True,
+        prune_merged_branches=True,
+        safe_only=True,
+        live_cwds=set(),
+    )
+    row = next(item for item in results if Path(item.path).resolve() == tree.resolve())
+    assert row.action == "skipped", row
+    assert "worktree claimed by active task" in row.reason
+    assert tree.exists()
+    assert not any("unrelated/repo" in " ".join(call) for call in calls)
+
+
+def _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, doubtful):
+    """An unproven path must not resolve a repository or authorize removal."""
+    rw = reap.reap_worktrees
+    assert rw._checkout_pr_repository(doubtful) is None
+    assert rw._switched_branch_merge_proven(repo, doubtful, cohort) is False
+    info = rw.WorktreeInfo(doubtful, "cursor/fresh-gate", merged_head, detached=False)
+    pr = rw.PullRequestState(10548, "MERGED", merged_head)
+    try:
+        authorized = rw._record_merged_reuse_proof(repo, info, pr, tasks_dir=tasks)
+    except ValueError:
+        authorized = None
+    assert authorized is None
+    assert tree.exists() and doubtful.exists()
+
+
+def test_symlinked_checkout_cannot_authorize_switched_removal(tmp_path, monkeypatch):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    link = tmp_path / "linked-checkout"
+    link.symlink_to(tree, target_is_directory=True)
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, link)
+
+
+def test_traversal_checkout_cannot_authorize_switched_removal(tmp_path, monkeypatch):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    traversal = tree.parent / tree.name / ".." / tree.name
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, traversal)
+
+
+def test_forged_gitdir_cannot_authorize_switched_removal(tmp_path, monkeypatch):
+    from tests.orchestration.test_merge_closeout import git
+
+    repo, tree, tasks, cohort, merged_head = _real_switched_checkout(tmp_path, monkeypatch)
+    git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    _merged_gh(monkeypatch, head=merged_head, branch="cursor/fresh-gate")
+    forged = tmp_path / "forged-checkout"
+    forged.mkdir()
+    (forged / ".git").write_text(f"gitdir: {repo}/.git/worktrees/does-not-exist\n", encoding="utf-8")
+    _assert_unproven_path_cannot_authorize_removal(repo, tree, tasks, cohort, merged_head, forged)
