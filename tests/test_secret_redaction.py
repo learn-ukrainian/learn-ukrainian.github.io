@@ -674,7 +674,8 @@ def test_repr_redaction_preserves_unrelated_ellipsis(maxsize: int) -> None:
     value = "SyntheticPrefix0123456789" + "m" * 300 + "SyntheticSuffix9876543210"
     short = saferepr(value, maxsize=maxsize)
     assert _redact_secret_data(short, [value]) == "'[REDACTED]'"
-    neighbor = "'SyntheticPre...other-suffix'"
+    assert _redact_secret_data("'SyntheticPre...other-suffix'", [value]) == "'[REDACTED]'"
+    neighbor = "'DifferentPre...other-suffix'"
     assert _redact_secret_data(neighbor, [value]) == neighbor
     assert _redact_secret_data({"safe": [7, None, (True, "a...b")]}, [value]) == {"safe": [7, None, (True, "a...b")]}
 
@@ -933,7 +934,7 @@ def test_round2_redaction_exception_fails_closed(tmp_path: Path, xdist_enabled: 
         ("codex", "codex", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
         ("codex", "claude-code", {"CODEX_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
         ("gemini", "agy", {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}),
-        ("glm", "claude-code", set()),
+        ("glm", "claude-code", {"ANTHROPIC_AUTH_TOKEN"}),
         ("grok", "grok", set()),
         ("cursor", "cursor", {"CURSOR_API_KEY"}),
     ],
@@ -990,14 +991,7 @@ def test_round3_real_launcher_dispatcher_child_parity(
 
     monkeypatch.setattr(identity, "resolve_agent_github_identity", resolver)
     with patch.dict(os.environ, parent, clear=True):
-        kwargs = {"provider": provider}
-        if harness == "claude-code" and provider == "codex":
-            # The optional transport input is introduced by this repair.
-            import inspect
-
-            if "harness" in inspect.signature(build_agent_env).parameters:
-                kwargs["harness"] = harness
-        dispatcher = build_agent_env(**kwargs)
+        dispatcher = build_agent_env(provider=provider, harness=harness)
     expected = provider_keys | {"GH_TOKEN"}
     assert set(dispatcher) & names == expected
 
@@ -1028,7 +1022,7 @@ def test_round3_real_launcher_dispatcher_child_parity(
     )
     command = (
         f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
-        f"LC_PROVIDER={provider} LC_HARNESS={harness} LC_MODE=driver LC_DRIVER_LEASE_ENABLED=0\n"
+        f"LC_PROVIDER={provider} LC_HARNESS={harness} LC_MODE=interactive LC_DRIVER_LEASE_ENABLED=0\n"
         f"LC_ROOT={shlex.quote(str(REPO))} LC_DURABLE_HELPER_ROOT={shlex.quote(str(helper_root))}\n"
         f"launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(child))}\n"
     )
@@ -1186,3 +1180,360 @@ def test_round3_launcher_preserves_metadata_without_forwarding_worker_lease(tmp_
     if not counter.isdecimal():
         expected.pop("SESSION_STREAM_FENCING_TOKEN")
     assert json.loads(proc.stdout) == expected
+
+
+@pytest.mark.parametrize("length", [40, 108, 325])
+@pytest.mark.parametrize("shape", ["leading", "list", "dict", "trailing", "interior"])
+@pytest.mark.parametrize("mode", [(), ("-v",), ("-l",), ("-n", "2")], ids=["default", "verbose", "locals", "xdist"])
+def test_round4_leading_secret_with_trailer(tmp_path: Path, length: int, shape: str, mode: tuple[str, ...]) -> None:
+    import xml.etree.ElementTree as ET
+
+    token = ("aQbRcSdTeUfVgWhXiYjZkPlOmNnMoLpKqJrIsHtGuFvEwDxCyBzA" * 7)[:length]
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(token)
+    expression = {
+        "leading": "v + ':x-oauth-basic-trailer'",
+        "list": "[v + ':x-oauth-basic-trailer']",
+        "dict": "{'credential': v + ':x-oauth-basic-trailer'}",
+        "trailing": "'prefix:' + v",
+        "interior": "'prefix:' + v + ':trailer'",
+    }[shape]
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\nfrom _pytest._io.saferepr import saferepr\n"
+        "def test_sample():\n"
+        f"    v = Path({str(secret_file)!r}).read_text()\n"
+        f"    value = {expression}\n"
+        "    print(saferepr(value, maxsize=40))\n"
+        "    assert value == 'expected-safe-value'\n",
+        xdist_enabled=mode == ("-n", "2"),
+        token=token,
+        extra_args=() if mode == ("-n", "2") else mode,
+    )
+    assert proc.returncode == 1
+    xml = (tmp_path / "report.xml").read_text()
+    failure = ET.fromstring(xml).find(".//failure")
+    assert failure is not None
+    outputs = (proc.stdout + proc.stderr, xml, failure.get("message", ""), failure.text or "")
+    for output in outputs:
+        assert "[REDACTED]" in output
+        assert not any(token[index : index + 8] in output for index in range(len(token) - 7))
+
+
+def _round4_launcher_probe(
+    tmp_path: Path,
+    source: str,
+    *,
+    provider: str = "claude",
+    harness: str = "claude-code",
+    mode: str = "driver",
+    environment: dict[str, str] | None = None,
+    setup: str = "",
+    bootstrap_code: str = "",
+    forwarded: tuple[str, ...] = (),
+    adapter: bool = False,
+) -> subprocess.CompletedProcess[str]:
+    """Run the real launcher and helper with only synthetic identity minting."""
+    bootstrap = tmp_path / "bootstrap.py"
+    bootstrap.write_text(
+        "import runpy, sys\n"
+        + f"sys.path[:0] = {[str(REPO), str(REPO / 'scripts')]!r}\n"
+        + bootstrap_code
+        + "sys.argv = sys.argv[1:]\nrunpy.run_path(sys.argv[0], run_name='__main__')\n"
+    )
+    helper_root = tmp_path / "helper-root"
+    interpreter = helper_root / ".venv/bin/python"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} {shlex.quote(str(bootstrap))} "$@"\n')
+    interpreter.chmod(0o755)
+    child = tmp_path / "child.py"
+    child.write_text(source)
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"LC_PROVIDER={provider} LC_HARNESS={harness} LC_MODE={mode} LC_DRIVER_LEASE_ENABLED=0\n"
+        f"LC_ROOT={shlex.quote(str(REPO))} LC_SESSION_ROOT={shlex.quote(str(REPO))}\n"
+        f"LC_DURABLE_HELPER_ROOT={shlex.quote(str(helper_root))}\n" + setup
+    )
+    if adapter:
+        # The real adapter builds argv, configures its real route and execs a
+        # synthetic Claude binary. No model session or host config is used.
+        binary = tmp_path / "bin/claude"
+        binary.parent.mkdir()
+        binary.write_text(f'#!/bin/sh\nexec {shlex.quote(sys.executable)} {shlex.quote(str(child))} "$@"\n')
+        binary.chmod(0o755)
+        command += (
+            f"source {shlex.quote(str(REPO / f'scripts/launchers/{provider}.sh'))}\n"
+            "launcher_adapter_validate\nlauncher_adapter_preflight\nlauncher_adapter_exec\n"
+        )
+    else:
+        command += "launcher_exec_command " + shlex.join((sys.executable, str(child), *forwarded)) + "\n"
+    parent = {"PATH": os.defpath, "HOME": str(tmp_path), **(environment or {})}
+    if adapter:
+        parent["PATH"] = str(binary.parent) + os.pathsep + os.defpath
+    return subprocess.run(["bash", "-eu", "-c", command], env=parent, capture_output=True, text=True, timeout=60)
+
+
+@pytest.mark.parametrize("provider", ["glm", "kimi"])
+def test_round4_real_claude_route_exports_reach_child(tmp_path: Path, provider: str) -> None:
+    import json
+
+    proc = _round4_launcher_probe(
+        tmp_path,
+        "import json, os\n"
+        "assert os.environ['ANTHROPIC_AUTH_TOKEN'] == 'synthetic-route-auth-0123456789'\n"
+        "assert os.environ['ANTHROPIC_BASE_URL'].startswith('https://')\n"
+        "assert os.environ['CLAUDE_CODE_MAX_CONTEXT_TOKENS'].isascii()\n"
+        "assert int(os.environ['CLAUDE_CODE_MAX_CONTEXT_TOKENS']) > 0\n"
+        "assert 'OPENAI_API_KEY' not in os.environ\n"
+        "assert 'ZAI_API_KEY' not in os.environ\n"
+        "assert 'OTHER_PASSWORD' not in os.environ\n"
+        "print(json.dumps(sorted(name for name in ('ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_BASE_URL', 'CLAUDE_CODE_MAX_CONTEXT_TOKENS') if name in os.environ)))\n",
+        provider=provider,
+        adapter=True,
+        environment={
+            "GLMCC_AUTH_TOKEN" if provider == "glm" else "KIMICC_AUTH_TOKEN": "synthetic-route-auth-0123456789",
+            "OPENAI_API_KEY": SYNTHETIC_KEY,
+            "OTHER_PASSWORD": SYNTHETIC_KEY,
+            "GLMCC_ROUTE_PYTHON": sys.executable,
+            "KIMICC_ROUTE_PYTHON": sys.executable,
+        },
+        setup=(
+            f"LC_MODEL={'glm' if provider == 'glm' else 'k3'} LC_ENDPOINT=platform LC_ISOLATE_CONFIG=1 LC_DRY_RUN=0\n"
+            "LC_RULES_CORE='' LC_EFFORT='' LC_FORWARD_ARGS=()\n"
+        ),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout.splitlines()[-1]) == [
+        "ANTHROPIC_AUTH_TOKEN",
+        "ANTHROPIC_BASE_URL",
+        "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
+    ]
+
+
+@pytest.mark.parametrize("key_source", ["inline", "file"])
+@pytest.mark.parametrize("mode", ["driver", "interactive"])
+def test_round4_driver_app_identity_and_worker_key_boundary(tmp_path: Path, key_source: str, mode: str) -> None:
+    import json
+
+    key_file = tmp_path / "app-key.txt"
+    key_file.write_text("synthetic-app-signing-key")
+    key_file.chmod(0o600)
+    parent = {
+        "LU_AGENT_GITHUB_APP_ID": "123",
+        "LU_AGENT_GITHUB_APP_INSTALLATION_ID": "456",
+        "LU_AGENT_GITHUB_APP_PRIVATE_KEY" if key_source == "inline" else "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE": (
+            "synthetic-app-signing-key" if key_source == "inline" else str(key_file)
+        ),
+        "OPENAI_API_KEY": SYNTHETIC_KEY,
+        "OTHER_PASSWORD": SYNTHETIC_KEY,
+        "OTHER_AUTH_TOKEN": SYNTHETIC_KEY,
+        "HF_TOKEN": SYNTHETIC_KEY,
+    }
+    proc = _round4_launcher_probe(
+        tmp_path,
+        "import json, os, sys\n"
+        + f"sys.path[:0] = {[str(REPO), str(REPO / 'scripts')]!r}\n"
+        + "import agent_runtime.agent_github_identity as identity\n"
+        "identity.mint_installation_token = lambda **kwargs: 'synthetic-minted-token'\n"
+        "from agent_runtime.env_sanitize import build_agent_env\n"
+        "assert all(name not in os.environ for name in ('OPENAI_API_KEY', 'OTHER_PASSWORD', 'OTHER_AUTH_TOKEN', 'HF_TOKEN'))\n"
+        + (
+            "assert identity.resolve_agent_github_identity().source == 'app'\n"
+            "worker = build_agent_env(provider='claude')\n"
+            if mode == "driver"
+            else "worker = dict(os.environ)\n"
+        )
+        + "assert 'LU_AGENT_GITHUB_APP_PRIVATE_KEY' not in worker\n"
+        "assert 'LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE' not in worker\n"
+        "try:\n    identity.resolve_agent_github_identity(environment=worker)\n"
+        "except identity.GitHubIdentityError as exc:\n    assert 'incomplete' in str(exc)\n"
+        "else:\n    raise AssertionError('worker could mint an App token')\n"
+        "print(json.dumps({'driver_can_resolve': " + str(mode == "driver") + ", 'worker_has_key': False}))\n",
+        mode=mode,
+        environment=parent,
+        bootstrap_code=(
+            "import agent_runtime.agent_github_identity as identity\n"
+            "identity.mint_installation_token = lambda **kwargs: 'synthetic-minted-token'\n"
+        ),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == {"driver_can_resolve": mode == "driver", "worker_has_key": False}
+
+
+@pytest.mark.parametrize("forwarded", [("--", "literal"), ("first", "--", "--provider", "glm", "--harness=other")])
+def test_round4_launcher_forwards_literal_argument_separator(tmp_path: Path, forwarded: tuple[str, ...]) -> None:
+    import json
+
+    proc = _round4_launcher_probe(tmp_path, "import json, sys\nprint(json.dumps(sys.argv[1:]))\n", forwarded=forwarded)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == list(forwarded)
+
+
+def test_round4_exec_restores_signal_defaults(tmp_path: Path) -> None:
+    import signal
+
+    if not Path("/proc/self/status").is_file():
+        pytest.skip("Linux signal mask proof requires procfs")
+    proc = _round4_launcher_probe(tmp_path, "", setup="launcher_exec_command cat /proc/self/status\n")
+    assert proc.returncode == 0, proc.stderr
+    ignored = int(next(line.split()[1] for line in proc.stdout.splitlines() if line.startswith("SigIgn:")), 16)
+    for number in (signal.SIGPIPE, signal.SIGXFSZ):
+        assert not ignored & (1 << (number - 1))
+
+
+def test_round4_check_helper_refuses_broken_identity_import(tmp_path: Path) -> None:
+    marker = tmp_path / "provider-started"
+    proc = _round4_launcher_probe(
+        tmp_path,
+        f"from pathlib import Path\nPath({str(marker)!r}).touch()\n",
+        bootstrap_code=(
+            "import importlib.abc\n"
+            "class BrokenIdentity(importlib.abc.MetaPathFinder):\n"
+            "    def find_spec(self, fullname, path, target=None):\n"
+            "        if fullname.endswith('.agent_github_identity'):\n"
+            "            raise ModuleNotFoundError('synthetic-sensitive-import-diagnostic')\n"
+            "sys.meta_path.insert(0, BrokenIdentity())\n"
+        ),
+        setup=(
+            "launcher_drop_unneeded_secrets || exit 1\n"
+            # A lease claim may only happen after this preflight succeeds.
+            f"touch {shlex.quote(str(marker))}\n"
+        ),
+    )
+    assert proc.returncode == 1
+    assert not marker.exists()
+    assert "could not drop unneeded API keys" in proc.stderr
+    assert "synthetic-sensitive-import-diagnostic" not in proc.stderr
+
+
+def test_round4_exec_exception_describes_model_session_boundary() -> None:
+    import yaml
+
+    registry = yaml.safe_load((REPO / "tests/headless_claude_spawn_exceptions.yaml").read_text())
+    entries = registry["exceptions"]
+    entry = next(
+        item
+        for item in entries
+        if item["module"] == "scripts/agent_runtime/env_sanitize.py" and item["program"] == "args.command[0]"
+    )
+    assert "operator-forwarded" in entry["reason"]
+    assert "no worker-controlled value" in entry["reason"]
+    assert "runs no model prompt" not in entry["reason"]
+
+
+@pytest.mark.parametrize(
+    "provider,harness,kept",
+    [
+        ("claude", "claude-code", {"ANTHROPIC_API_KEY", "CLAUDE_API_KEY"}),
+        ("codex", "codex", {"CODEX_API_KEY", "OPENAI_API_KEY"}),
+        ("codex", "claude-code", {"CODEX_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
+        ("gemini", "agy", {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}),
+        ("glm", "claude-code", {"ANTHROPIC_AUTH_TOKEN", "CLAUDE_CODE_MAX_CONTEXT_TOKENS", "ANTHROPIC_BASE_URL"}),
+        ("grok", "grok", set()),
+        ("cursor", "cursor", {"CURSOR_API_KEY"}),
+        ("kimi", "kimi-code", {"KIMICC_AUTH_TOKEN", "MOONSHOT_API_KEY", "KIMI_API_KEY", "ANTHROPIC_AUTH_TOKEN"}),
+        (
+            "kimi",
+            "claude-code",
+            {
+                "KIMICC_AUTH_TOKEN",
+                "MOONSHOT_API_KEY",
+                "KIMI_API_KEY",
+                "ANTHROPIC_AUTH_TOKEN",
+                "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
+                "ANTHROPIC_BASE_URL",
+            },
+        ),
+    ],
+)
+@pytest.mark.parametrize("mode", ["driver", "interactive"], ids=["driver", "worker"])
+def test_round4_real_launcher_kept_dropped_table(
+    tmp_path: Path, provider: str, harness: str, kept: set[str], mode: str, record_property
+) -> None:
+    import json
+
+    app_keys = {
+        "LU_AGENT_GITHUB_APP_ID",
+        "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+        "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+        "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+    }
+    names = app_keys | {
+        "ANTHROPIC_API_KEY",
+        "CLAUDE_API_KEY",
+        "CODEX_API_KEY",
+        "OPENAI_API_KEY",
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENERATIVE_AI_API_KEY",
+        "CURSOR_API_KEY",
+        "KIMICC_AUTH_TOKEN",
+        "MOONSHOT_API_KEY",
+        "KIMI_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+        "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
+        "ANTHROPIC_BASE_URL",
+        "XAI_API_KEY",
+        "ZAI_API_KEY",
+        "GLMCC_AUTH_TOKEN",
+        "CODEX_CC_AUTH_TOKEN",
+        "CLAUDE_CODE_OAUTH_TOKEN",
+        "HF_TOKEN",
+        "NPM_TOKEN",
+        "AWS_SECRET_ACCESS_KEY",
+        "OTHER_PASSWORD",
+        "OTHER_SECRET",
+        "OTHER_AUTH_TOKEN",
+        "OTHER_APIKEY",
+        "GH_TOKEN",
+        "GITHUB_TOKEN",
+        "LU_AGENT_GITHUB_TOKEN",
+    }
+    parent = dict.fromkeys(names, SYNTHETIC_KEY)
+    parent.update(
+        {
+            "LU_AGENT_GITHUB_APP_ID": "123",
+            "LU_AGENT_GITHUB_APP_INSTALLATION_ID": "456",
+            "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "200000",
+            "ANTHROPIC_BASE_URL": "https://route.invalid",
+        }
+    )
+    # Use the same source environment for both policies. Only the identity's
+    # external resolution is substituted, never either credential filter.
+    proc = _round4_launcher_probe(
+        tmp_path,
+        "import json, os, sys\n"
+        + f"sys.path[:0] = {[str(REPO), str(REPO / 'scripts')]!r}\n"
+        + "import agent_runtime.agent_github_identity as identity\n"
+        "identity.resolve_agent_github_identity = lambda **kwargs: identity.GitHubIdentity('synthetic-resolved-token', 'test')\n"
+        "from agent_runtime.env_sanitize import build_agent_env\n"
+        + f"names = {sorted(names)!r}\n"
+        + (
+            f"child = build_agent_env(provider={provider!r}, harness={harness!r})\n"
+            if mode == "interactive"
+            else "child = os.environ\n"
+        )
+        + "print(json.dumps({'kept': sorted(set(child) & set(names)), 'dropped': sorted(set(names) - set(child))}))\n",
+        provider=provider,
+        harness=harness,
+        mode=mode,
+        environment=parent,
+        bootstrap_code=(
+            "import agent_runtime.agent_github_identity as identity\n"
+            "identity.resolve_agent_github_identity = lambda **kwargs: identity.GitHubIdentity('synthetic-resolved-token', 'test')\n"
+        ),
+    )
+    assert proc.returncode == 0, proc.stderr
+    observed = json.loads(proc.stdout)
+    expected = kept | (set() if provider == "kimi" else {"GH_TOKEN"})
+    if mode == "driver":
+        expected |= app_keys
+        # This is ordinary launcher context even for routes that do not use it.
+        expected.add("ANTHROPIC_BASE_URL")
+    else:
+        expected |= {"LU_AGENT_GITHUB_APP_ID", "LU_AGENT_GITHUB_APP_INSTALLATION_ID"}
+    assert set(observed["kept"]) == expected
+    assert set(observed["dropped"]) == names - expected
+    record_property(
+        "credential_table", json.dumps({"provider": provider, "harness": harness, "mode": mode, **observed})
+    )

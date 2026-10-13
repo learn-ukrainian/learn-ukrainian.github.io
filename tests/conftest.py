@@ -341,7 +341,7 @@ def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
             # entire remaining head fragment. Do the converse for the tail.
             start = prefix.find(body[:minimum_overlap]) if len(body) >= minimum_overlap else -1
             while start != -1:
-                if start > 1 and body.startswith(prefix[start:]):
+                if body.startswith(prefix[start:]):
                     return True
                 start = prefix.find(body[:minimum_overlap], start + 1)
             end = suffix.find(body[-minimum_overlap:]) if len(body) >= minimum_overlap else -1

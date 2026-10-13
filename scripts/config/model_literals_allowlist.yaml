@@ -913,9 +913,16 @@ entries:
   scope: child_credential_env
   context: expression
   id: claude-code
+  count: 2
+  kind: non_model_label
+  reason: Claude Code transport selectors for route auth and context capacity in the shared child policy; not model IDs.
+- path: scripts/agent_runtime/env_sanitize.py
+  scope: build_agent_env
+  context: expression
+  id: claude-code
   count: 1
   kind: non_model_label
-  reason: Existing Codex transport auth selector in the shared child policy; not a model ID.
+  reason: Claude Code transport selector for the route base URL in dispatched workers; not a model ID.
 - path: scripts/agent_runtime/env_sanitize.py
   scope: unneeded_env_var_names
   context: expression

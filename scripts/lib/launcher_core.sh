@@ -181,6 +181,9 @@ launcher_drop_unneeded_secrets() {
     return 1
   fi
   LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --exec)
+  if [ "${LC_MODE:-}" = driver ]; then
+    LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --driver-launcher --exec)
+  fi
 }
 
 launcher_require_binary() {

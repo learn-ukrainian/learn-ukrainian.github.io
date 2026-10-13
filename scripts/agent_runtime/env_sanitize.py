@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import signal
 import subprocess
 import tempfile
 from collections.abc import Mapping
@@ -100,6 +101,12 @@ _CHILD_COUNTER_NAMES = {
     "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS",
 }
 _CHILD_IDENTITY_NAMES = {"GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL"}
+_DRIVER_APP_IDENTITY_NAMES = {
+    "LU_AGENT_GITHUB_APP_ID",
+    "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+    "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+    "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+}
 
 _PROVIDER_SECRET_ALLOWLIST = {
     "gemini": {
@@ -525,24 +532,39 @@ def _isolated_git_env(
         }
 
 
-def child_credential_env(raw: Mapping[str, str], provider: str, *, harness: str | None = None) -> dict[str, str]:
+def child_credential_env(
+    raw: Mapping[str, str], provider: str, *, harness: str | None = None, driver_launcher: bool = False
+) -> dict[str, str]:
     """Keep the seat's credentials and resolve its GitHub identity once.
 
     Ordinary launcher context remains available for stored login and driver
     hooks. build_agent_env further limits non-credential process context.
-    The Codex Claude Code route's derived token is scoped to that transport.
+    Codex and GLM's derived Claude Code tokens are scoped to that transport.
+    Only driver launchers retain App signing material for later worker minting;
+    dispatched workers use the default policy and receive no signing key.
     """
     from .agent_github_identity import resolve_agent_github_identity
     from .kimi_admission import is_kimi_seat
 
     env = {}
+    seat = _normalized_provider(provider)
     for name, value in raw.items():
-        route_auth = (
-            name.upper() == "ANTHROPIC_AUTH_TOKEN"
-            and _normalized_provider(provider) == "codex"
+        route_auth = name.upper() == "ANTHROPIC_AUTH_TOKEN" and seat in {"codex", "glm"} and harness == "claude-code"
+        route_counter = (
+            name == "CLAUDE_CODE_MAX_CONTEXT_TOKENS"
+            and seat in {"glm", "kimi"}
             and harness == "claude-code"
+            and value.isascii()
+            and value.isdecimal()
         )
-        if _is_provider_secret(name, provider) or route_auth or _is_safe_value_name(name):
+        driver_identity = driver_launcher and name in _DRIVER_APP_IDENTITY_NAMES
+        if (
+            _is_provider_secret(name, provider)
+            or route_auth
+            or route_counter
+            or driver_identity
+            or _is_safe_value_name(name)
+        ):
             env[name] = value
         elif _is_provider_safe_name(name, provider) and not _looks_sensitive_value(value):
             if not name.upper().startswith("ACPX_AUTH_") or value == "1":
@@ -610,7 +632,11 @@ def build_agent_env(
             continue
         if _looks_sensitive_value(value):
             continue
-        if _is_provider_safe_name(name, provider):
+        if _is_provider_safe_name(name, provider) or (
+            name == "ANTHROPIC_BASE_URL"
+            and _normalized_provider(provider) in {"glm", "kimi"}
+            and harness == "claude-code"
+        ):
             if name.upper().startswith("ACPX_AUTH_") and value != "1":
                 continue
             env[name] = value
@@ -731,15 +757,36 @@ if __name__ == "__main__":
     parser.add_argument("--provider", required=True)
     parser.add_argument("--harness", help="Effective child harness, including the Codex Claude Code route.")
     parser.add_argument(
+        "--driver-launcher", action="store_true", help="Keep App signing material for a driver that dispatches workers."
+    )
+    parser.add_argument(
         "--exec", dest="command", nargs=argparse.REMAINDER, help="Exec the CLI with the shared seat credential policy."
     )
     parser.add_argument("--check-helper", action="store_true", help="Check the helper before supervising a child.")
-    args = parser.parse_args()
-    if args.check_helper:
-        raise SystemExit(0)
-    if args.command:
+    # Parse only our options. argparse's REMAINDER still interprets a later
+    # literal --; the provider owns every argument after this boundary.
+    arguments = sys.argv[1:]
+    boundary = next((index for index, value in enumerate(arguments) if value in {"--exec", "--"}), len(arguments))
+    args = parser.parse_args(arguments[:boundary])
+    args.command = arguments[boundary + 1 :] if boundary < len(arguments) else None
+    if args.check_helper or args.command:
         try:
-            child = child_credential_env(os.environ, args.provider, harness=args.harness)
+            # Match the exec path's import closure before the shell claims a
+            # lease. Import errors must not expose their exception diagnostics.
+            from importlib import import_module
+
+            import_module(f"{__package__}.agent_github_identity")
+            import_module(f"{__package__}.kimi_admission")
+
+            if args.check_helper:
+                raise SystemExit(0)
+            child = child_credential_env(
+                os.environ, args.provider, harness=args.harness, driver_launcher=args.driver_launcher
+            )
+            # exec preserves ignored signals; undo Python's startup defaults.
+            for signal_name in ("SIGPIPE", "SIGXFSZ"):
+                if (signal_number := getattr(signal, signal_name, None)) is not None:
+                    signal.signal(signal_number, signal.SIG_DFL)
             os.execvpe(args.command[0], args.command, child)
         except Exception as exc:
             # Identity errors and executable diagnostics can contain secrets.
