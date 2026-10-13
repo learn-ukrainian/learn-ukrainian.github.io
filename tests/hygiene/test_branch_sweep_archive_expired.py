@@ -83,10 +83,10 @@ def publish(repo: Path, name: str) -> None:
 
 
 def lookup(states: dict[str, list[PullRequestState]] | None = None, error: str | None = None):
-    states = states or {}
+    found = {} if states is None else states
 
     def prs(_repo: Path, name: str) -> tuple[list[PullRequestState], str | None]:
-        return states.get(name, []), error
+        return found.get(name, []), error
 
     return prs
 
@@ -98,6 +98,7 @@ def run(
     days: int | None = None,
     states: dict[str, list[PullRequestState]] | None = None,
     error: str | None = None,
+    issues: sweep.IssueLookup | None = None,
 ) -> list[sweep.Decision]:
     kwargs: dict[str, object] = {
         "apply": apply,
@@ -106,7 +107,61 @@ def run(
     }
     if days is not None:
         kwargs["archive_after_days"] = days
+    if issues is not None:
+        kwargs["issue_lookup"] = issues
     return sweep.sweep(repo, **kwargs)  # type: ignore[arg-type]
+
+
+def ref_sha(repo: Path, name: str) -> str | None:
+    result = subprocess.run(
+        ["git", "rev-parse", "--verify", f"refs/heads/{name}"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip()
+
+
+def move_head(repo: Path, name: str) -> str:
+    parent = git(repo, "rev-parse", name)
+    tree = git(repo, "rev-parse", f"{name}^{{tree}}")
+    sha = git(repo, "commit-tree", tree, "-p", parent, "-m", f"move {name}")
+    git(repo, "update-ref", f"refs/heads/{name}", sha)
+    return sha
+
+
+def commit_at(repo: Path, branch: str, files: dict[str, str], message: str, *, when: str) -> str:
+    """Commit ``files`` on ``branch`` at ``when`` without checking the branch out."""
+    index = repo / ".git" / f"archive-index-{branch.replace('/', '-')}"
+    index.unlink(missing_ok=True)
+    env = os.environ.copy()
+    env["GIT_INDEX_FILE"] = str(index)
+    env["GIT_AUTHOR_DATE"] = when
+    env["GIT_COMMITTER_DATE"] = when
+    git(repo, "read-tree", branch, env=env)
+    for name, content in files.items():
+        path = repo / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+        git(repo, "add", "--", name, env=env)
+    tree = git(repo, "write-tree", env=env)
+    parent = git(repo, "rev-parse", branch)
+    sha = git(repo, "commit-tree", tree, "-p", parent, "-m", message, env=env)
+    git(repo, "update-ref", f"refs/heads/{branch}", sha)
+    index.unlink(missing_ok=True)
+    return sha
+
+
+def _payload_bytes(data: object) -> bytes:
+    if isinstance(data, bytes):
+        return data
+    if isinstance(data, memoryview):
+        return data.tobytes()
+    return bytes(data)
 
 
 def by_name(decisions: list[sweep.Decision]) -> dict[str, sweep.Decision]:
@@ -182,7 +237,6 @@ def test_apply_bundles_verifies_receipts_then_deletes_local_refs_only(repo: Path
 
     events: list[str] = []
     original_git = sweep._git
-    original_prune = sweep.reaper._prune_branch
     pushes: list[tuple[str, ...]] = []
 
     def capture_git(root: Path, *args: str, **kwargs: object):
@@ -190,41 +244,49 @@ def test_apply_bundles_verifies_receipts_then_deletes_local_refs_only(repo: Path
             pushes.append(args)
         if args[:2] == ("bundle", "create"):
             events.append("create")
+            assert "--not" in args
+            assert "refs/remotes/origin/main" in args
         elif args[:2] == ("bundle", "verify"):
             events.append("verify")
         elif args[:2] == ("bundle", "list-heads"):
             events.append("list-heads")
+        elif args[:2] == ("update-ref", "--stdin"):
+            text = (repo / "batch_state" / "branch-archive" / "stale-local-receipts.jsonl").read_text(encoding="utf-8")
+            script = str(kwargs.get("input") or "")
+            assert "delete refs/heads/codex/old-local" in script
+            assert "codex/old-local" in text
+            assert "verify" in events and "list-heads" in events
+            events.append("delete")
         return original_git(root, *args, **kwargs)
 
-    def capture_prune(root: Path, branch: str | None, force: bool = False, expected_head: str | None = None, **kwargs):
-        events.append(f"delete:{branch}")
-        text = (repo / "batch_state" / "branch-archive" / "stale-local-receipts.jsonl").read_text(encoding="utf-8")
-        assert branch is not None and branch in text
-        assert "verify" in events and "list-heads" in events
-        return original_prune(root, branch, force=force, expected_head=expected_head, **kwargs)
+    def forbid_prune(*_args: object, **_kwargs: object) -> str:
+        raise AssertionError("archive delete used git branch -D")
 
     monkeypatch = pytest.MonkeyPatch()
     monkeypatch.setattr(sweep, "_git", capture_git)
-    monkeypatch.setattr(sweep.reaper, "_prune_branch", capture_prune)
+    monkeypatch.setattr(sweep.reaper, "_prune_branch", forbid_prune)
     try:
         decisions = run(repo, apply=True)
     finally:
         monkeypatch.undo()
 
     found = by_name(decisions)
-    archived = ("codex/old-local", "codex/old-remote", "codex/impl-9539", "rescue/old-task")
+    archived = ("codex/old-local", "codex/old-remote", "codex/impl-9539")
     for name in archived:
         assert found[name].classification == "archive-expired"
         assert found[name].local_deleted is True
         assert found[name].remote_deleted is False
         with pytest.raises(AssertionError):
             local_ref(repo, name)
+    assert found["rescue/old-task"].classification == "report-only"
+    assert found["rescue/old-task"].local_deleted is False
+    assert local_ref(repo, "rescue/old-task") == rescue_sha
     assert found["kimi/young"].classification == "report-only"
     assert local_ref(repo, "kimi/young") == young_sha
     assert remote_sha(repo, "codex/old-remote") == remote_sha_value
     assert not any("codex/old-remote" in " ".join(push) for push in pushes)
     assert events.index("create") < events.index("verify") < events.index("list-heads")
-    assert events.index("list-heads") < events.index("delete:codex/old-local")
+    assert events.index("list-heads") < events.index("delete")
 
     rows = receipt_rows(repo)
     by_branch = {str(row["branch"]): row for row in rows}
@@ -233,7 +295,6 @@ def test_apply_bundles_verifies_receipts_then_deletes_local_refs_only(repo: Path
         "codex/old-local": (local_sha, False),
         "codex/old-remote": (remote_sha_value, True),
         "codex/impl-9539": (issue_sha, False),
-        "rescue/old-task": (rescue_sha, False),
     }
     bundles = {(repo / str(row["bundle"])).resolve() for row in rows}
     assert len(bundles) == 1
@@ -249,7 +310,13 @@ def test_apply_bundles_verifies_receipts_then_deletes_local_refs_only(repo: Path
         assert f"refs/heads/{name}" in listed
         assert sha in listed
         scratch = repo.parent / f"restore-{name.replace('/', '-')}"
-        subprocess.run(["git", "init", "-b", "main", str(scratch)], check=True, capture_output=True, timeout=30)
+        origin = git(repo, "remote", "get-url", "origin")
+        subprocess.run(
+            ["git", "clone", "--quiet", origin, str(scratch)],
+            check=True,
+            capture_output=True,
+            timeout=60,
+        )
         restored = subprocess.run(
             shlex.split(str(row["restore"])),
             cwd=scratch,
@@ -448,3 +515,246 @@ def test_cli_passes_archive_after_days(
     with pytest.raises(SystemExit) as caught:
         sweep.main(["--archive-after-days", "-1"])
     assert caught.value.code == 2
+
+
+def test_moved_head_and_peer_stay_when_compare_and_delete_fails(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Findings 1 and 6: one compare-and-delete, or the whole batch stays."""
+    first = commit_unique(repo, "codex/first", days=8)
+    commit_unique(repo, "codex/second", days=8)
+    moved: dict[str, str | None] = {"sha": None}
+    original_run = sweep.reaper._run
+    original_git = sweep._git
+
+    def intercept_run(args, *, cwd, timeout=None, env_overrides=None):
+        result = original_run(args, cwd=cwd, timeout=timeout, env_overrides=env_overrides)
+        if (
+            list(args[:3]) == ["git", "rev-parse", "--verify"]
+            and args[-1] == "refs/heads/codex/second"
+            and moved["sha"] is None
+        ):
+            moved["sha"] = move_head(repo, "codex/second")
+        return result
+
+    def intercept_git(root: Path, *args: str, **kwargs: object):
+        if args[:2] == ("update-ref", "--stdin") and moved["sha"] is None:
+            moved["sha"] = move_head(repo, "codex/second")
+        return original_git(root, *args, **kwargs)
+
+    monkeypatch.setattr(sweep.reaper, "_run", intercept_run)
+    monkeypatch.setattr(sweep, "_git", intercept_git)
+    found = by_name(run(repo, apply=True))
+    assert moved["sha"] is not None
+    assert ref_sha(repo, "codex/first") == first
+    assert ref_sha(repo, "codex/second") == moved["sha"]
+    assert found["codex/first"].local_deleted is False
+    assert found["codex/second"].local_deleted is False
+    assert found["codex/first"].remote_deleted is False
+    assert found["codex/second"].remote_deleted is False
+
+
+def test_pr_and_task_guards_are_reread_immediately_before_delete(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Finding 2: a task or pull request that appears after the receipt blocks the batch."""
+    task_sha = commit_unique(repo, "codex/late-task", days=8)
+    pr_sha = commit_unique(repo, "codex/late-pr", days=8)
+    states: dict[str, list[PullRequestState]] = {}
+    original = sweep._write_archive_receipts
+
+    def plant(root: Path, confirmed, **kwargs: object):
+        original(root, confirmed, **kwargs)
+        task_dir = root / "batch_state" / "tasks"
+        task_dir.mkdir(parents=True, exist_ok=True)
+        (task_dir / "late.json").write_text(
+            json.dumps({"status": "running", "worktree_branch": "codex/late-task"}),
+            encoding="utf-8",
+        )
+        states["codex/late-pr"] = [PullRequestState(9, "OPEN", pr_sha)]
+
+    monkeypatch.setattr(sweep, "_write_archive_receipts", plant)
+    found = by_name(run(repo, apply=True, states=states))
+    assert ref_sha(repo, "codex/late-task") == task_sha
+    assert ref_sha(repo, "codex/late-pr") == pr_sha
+    assert found["codex/late-task"].local_deleted is False
+    assert found["codex/late-pr"].local_deleted is False
+    assert list((repo / "batch_state" / "branch-archive").glob("*.bundle"))
+    assert "skipped-live-task" in found["codex/late-task"].reason
+    assert "open PR" in found["codex/late-pr"].reason
+
+
+def test_newer_than_closing_merge_blocks_archive_before_file_coverage(repo: Path) -> None:
+    """Finding 3: a commit newer than the closing merge is not archived for another reason."""
+    git(repo, "branch", "codex/impl-10532", "main")
+    branch_sha = commit_at(
+        repo,
+        "codex/impl-10532",
+        {"covered.txt": "branch\n", "extra.txt": "only-on-branch\n"},
+        "later unique work",
+        when=_when(8),
+    )
+    commit_at(
+        repo,
+        "main",
+        {"covered.txt": "landed\n"},
+        "land part (#4444)",
+        when=_when(20),
+    )
+    publish(repo, "main")
+    publish(repo, "codex/impl-10532")
+
+    def issues(_repo: Path, number: int) -> tuple[sweep.IssueClosure | None, str | None]:
+        assert number == 10532
+        return sweep.IssueClosure(4444), None
+
+    item = by_name(run(repo, apply=True, issues=issues))["codex/impl-10532"]
+    assert item.classification == "report-only"
+    assert item.local_deleted is False
+    assert "newer than the closing merge" in item.reason
+    assert ref_sha(repo, "codex/impl-10532") == branch_sha
+
+
+def test_truncated_receipt_does_not_authorize_delete(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Finding 4: a short write is finished and re-read before any ref is deleted."""
+    real_write = os.write
+    lie_sha = commit_unique(repo, "codex/lie-receipt", days=8)
+
+    def lie(_fd: int, data: object) -> int:
+        raw = _payload_bytes(data)
+        if not raw.startswith(b"{"):
+            return real_write(_fd, data)  # type: ignore[arg-type]
+        real_write(_fd, raw[:1])
+        return len(raw)
+
+    monkeypatch.setattr(os, "write", lie)
+    lied = by_name(run(repo, apply=True))["codex/lie-receipt"]
+    receipt = repo / "batch_state" / "branch-archive" / "stale-local-receipts.jsonl"
+    assert lied.local_deleted is False
+    assert ref_sha(repo, "codex/lie-receipt") == lie_sha
+    assert lie_sha not in receipt.read_text(encoding="utf-8")
+
+    short_sha = commit_unique(repo, "codex/short-receipt", days=8)
+
+    def short(_fd: int, data: object) -> int:
+        raw = _payload_bytes(data)
+        if not raw.startswith(b"{"):
+            return real_write(_fd, data)  # type: ignore[arg-type]
+        half = max(1, len(raw) // 2)
+        return real_write(_fd, raw[:half])
+
+    monkeypatch.setattr(os, "write", short)
+    shortened = by_name(run(repo, apply=True))["codex/short-receipt"]
+    line = next(row for row in receipt.read_text(encoding="utf-8").splitlines() if short_sha in row)
+    assert json.loads(line)["sha"] == short_sha
+    assert shortened.local_deleted is True
+    assert ref_sha(repo, "codex/short-receipt") is None
+
+
+def test_rescue_upstream_and_recent_tasks_are_not_archived(repo: Path) -> None:
+    """Finding 5: rescue refs, unpushed upstreams, and recent released tasks stay."""
+    rescue = commit_unique(repo, "rescue/held-patch", days=8)
+    unpushed = commit_unique(repo, "codex/unpushed", days=8)
+    git(repo, "branch", "--set-upstream-to=origin/main", "codex/unpushed")
+    recent = commit_unique(repo, "codex/just-failed", days=8)
+    old = commit_unique(repo, "codex/long-failed", days=8)
+    task_dir = repo / "batch_state" / "tasks"
+    task_dir.mkdir(parents=True)
+    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    long_ago = (datetime.now(UTC) - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    (task_dir / "just-failed.json").write_text(
+        json.dumps({"status": "failed", "worktree_branch": "codex/just-failed", "finished_at": now}),
+        encoding="utf-8",
+    )
+    (task_dir / "long-failed.json").write_text(
+        json.dumps({"status": "failed", "worktree_branch": "codex/long-failed", "finished_at": long_ago}),
+        encoding="utf-8",
+    )
+
+    found = by_name(run(repo, apply=True))
+    assert found["rescue/held-patch"].classification == "report-only"
+    assert found["rescue/held-patch"].local_deleted is False
+    assert "rescue" in found["rescue/held-patch"].reason
+    assert ref_sha(repo, "rescue/held-patch") == rescue
+    assert found["codex/unpushed"].classification == "report-only"
+    assert found["codex/unpushed"].local_deleted is False
+    assert "unpushed" in found["codex/unpushed"].reason
+    assert ref_sha(repo, "codex/unpushed") == unpushed
+    assert found["codex/just-failed"].classification == "report-only"
+    assert found["codex/just-failed"].local_deleted is False
+    assert ref_sha(repo, "codex/just-failed") == recent
+    assert found["codex/long-failed"].classification == "archive-expired"
+    assert found["codex/long-failed"].local_deleted is True
+    assert ref_sha(repo, "codex/long-failed") is None
+    assert old not in {ref_sha(repo, "codex/long-failed")}
+
+
+def test_archive_bundle_is_thin_and_restores_into_a_clone(repo: Path) -> None:
+    """Finding 7: the bundle excludes origin/main and restores only after a clone."""
+    (repo / "weight.bin").write_bytes(os.urandom(256 * 1024))
+    git(repo, "add", "weight.bin")
+    git(repo, "commit", "-m", "weight on main")
+    git(repo, "push", "origin", "main")
+    sha = commit_unique(repo, "codex/thin-me", days=8)
+    full = repo.parent / "full-history.bundle"
+    git(repo, "bundle", "create", str(full), "refs/heads/codex/thin-me")
+    item = by_name(run(repo, apply=True))["codex/thin-me"]
+    assert item.local_deleted is True
+    row = next(entry for entry in receipt_rows(repo) if entry["branch"] == "codex/thin-me")
+    bundle = repo / str(row["bundle"])
+    thin_size = bundle.stat().st_size
+    full_size = full.stat().st_size
+    assert thin_size < full_size, f"thin={thin_size} full={full_size}"
+    assert thin_size < 100_000, thin_size
+    assert full_size > 200_000, full_size
+    verified = subprocess.run(
+        ["git", "bundle", "verify", str(bundle)],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert verified.returncode == 0, verified.stderr
+    assert "requires" in (verified.stdout + verified.stderr).lower()
+
+    origin = git(repo, "remote", "get-url", "origin")
+    clone = repo.parent / "thin-clone"
+    subprocess.run(["git", "clone", "--quiet", origin, str(clone)], check=True, capture_output=True, timeout=60)
+    restored = subprocess.run(
+        shlex.split(str(row["restore"])),
+        cwd=clone,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert restored.returncode == 0, restored.stderr
+    assert git(clone, "rev-parse", "refs/heads/codex/thin-me") == sha
+
+    empty = repo.parent / "thin-empty"
+    subprocess.run(["git", "init", "-q", "-b", "main", str(empty)], check=True, capture_output=True, timeout=30)
+    refused = subprocess.run(
+        shlex.split(str(row["restore"])),
+        cwd=empty,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert refused.returncode != 0
+
+
+def test_pr_checkout_names_are_not_archived(repo: Path) -> None:
+    """Finding 8: pr-* and review-* local checkouts are not archive-expired."""
+    pr_sha = commit_unique(repo, "pr-4242", days=30)
+    review_sha = commit_unique(repo, "claude/review-4242", days=30)
+    plain = commit_unique(repo, "codex/plain-old", days=30)
+    found = by_name(run(repo, apply=True))
+    assert found["pr-4242"].classification == "report-only"
+    assert found["pr-4242"].local_deleted is False
+    assert ref_sha(repo, "pr-4242") == pr_sha
+    assert "pull request" not in found["pr-4242"].reason.lower() or "not archived" in found["pr-4242"].reason
+    assert found["claude/review-4242"].classification == "report-only"
+    assert found["claude/review-4242"].local_deleted is False
+    assert ref_sha(repo, "claude/review-4242") == review_sha
+    assert found["codex/plain-old"].classification == "archive-expired"
+    assert found["codex/plain-old"].local_deleted is True
+    assert ref_sha(repo, "codex/plain-old") is None
+    assert plain
