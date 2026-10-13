@@ -10,9 +10,26 @@ RESTART_DELAY=10
 echo "=== Dispatcher wrapper started at $(date) ==="
 echo "  Max runtime: ${MAX_HOURS}h | Restart delay: ${RESTART_DELAY}s"
 
+# Keep recognized downstream provider keys until each child's env is built.
+# The sanitizer prints only unknown API-key names. Failure refuses to start.
+drop_unneeded_dispatcher_secrets() {
+    local name names
+    if ! names="$(.venv/bin/python scripts/agent_runtime/env_sanitize.py --provider dispatcher)"; then
+        echo "dispatcher secret sanitizer failed; refusing to start" >&2
+        return 1
+    fi
+    while IFS= read -r name; do
+        case "$name" in
+            ''|*[!A-Za-z0-9_]*) continue ;;
+        esac
+        unset "$name"
+    done <<< "$names"
+}
+
 while true; do
     # Clean stale locks before each run
     rm -f batch_state/locks/*.lock 2>/dev/null
+    drop_unneeded_dispatcher_secrets || exit 1
 
     echo ""
     echo "=== Starting dispatcher at $(date) ==="

@@ -5,12 +5,14 @@ Provides reusable content snippets and module templates for testing.
 """
 
 import os
+import re
 
 # Credential-shaped names are removed at import, in every process that loads
 # this module, and this process never puts them back. Match the suffix only:
 # ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY`` is not ``_API_KEY``.
 # Comparison is case-insensitive. Names that merely look secret stay visible:
-# ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``. This process owns its
+# ``AWS_SECRET_ACCESS_KEY`` and ``*_KEY``. The broader credential rule also
+# strips passwords and APIKEY names before collection. This process owns its
 # environment, so the parent shell is unchanged.
 #
 # ``LU_TEST_CREDENTIAL_STRIP`` is not read and is not written. A nested
@@ -30,6 +32,8 @@ import os
 # order does not retain one.
 _CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
 _XDIST_PUBLISHED_CREDENTIALS_KEY = "lu_suite_published_credentials"
+_IMPORT_STRIPPED_SECRETS: dict[str, str] = {}
+_CREDENTIAL_ENV_RE = re.compile(r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$")
 
 
 def _is_credential_shaped_env_name(name: str) -> bool:
@@ -40,7 +44,10 @@ def _is_credential_shaped_env_name(name: str) -> bool:
 def _strip_credential_shaped_env() -> None:
     """Drop credential-shaped names. This process never puts them back."""
     for name in tuple(os.environ):
-        if _is_credential_shaped_env_name(name):
+        if _is_credential_shaped_env_name(name) or _CREDENTIAL_ENV_RE.search(name):
+            value = os.environ[name]
+            if len(value) >= 12:
+                _IMPORT_STRIPPED_SECRETS[name] = value
             del os.environ[name]
 
 
@@ -56,6 +63,7 @@ import contextlib
 import functools
 import ipaddress
 import itertools
+import linecache
 import shutil
 import socket
 import sqlite3
@@ -64,7 +72,7 @@ import sys
 import threading
 import warnings
 import weakref
-from collections.abc import Callable, Collection, Generator
+from collections.abc import Callable, Collection, Generator, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -213,11 +221,112 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     The outermost wrapper around setup, call, and teardown, so no fixture of
     any scope sees the identity. Tests that need a variable set it themselves;
     the original environment returns after teardown.
+
+    Inherited credentials were already removed at import, before collection.
+    Variables published later by the suite remain available to its tests.
     """
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
         return (yield)
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_makereport(
+    item: pytest.Item, call: pytest.CallInfo[None]
+) -> Generator[None, object, pytest.TestReport]:
+    """Sanitize all outcomes before terminal, JUnit, or xdist consumers."""
+    report = yield
+    return _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_make_collect_report(collector: pytest.Collector) -> Generator[None, object, pytest.CollectReport]:
+    """Protect collection failures and output using the import-time snapshot."""
+    report = yield
+    return _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_logreport(report: pytest.TestReport) -> Generator[None, object, object]:
+    """Redact worker reports before controller terminal and JUnit consumers."""
+    _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    return (yield)
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_collectreport(report: pytest.CollectReport) -> Generator[None, object, object]:
+    """Redact xdist collection reports before controller consumers."""
+    _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    return (yield)
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_warning_recorded(warning_message: warnings.WarningMessage) -> None:
+    """Redact before warning consumers. Historic hooks cannot use wrappers."""
+    if not _IMPORT_STRIPPED_SECRETS:
+        return
+    message = str(warning_message.message)
+    line = warning_message.line
+    if line is None:
+        line = linecache.getline(warning_message.filename, warning_message.lineno)
+    redacted_line = line
+    for value in sorted(set(_IMPORT_STRIPPED_SECRETS.values()), key=len, reverse=True):
+        message = message.replace(value, "[REDACTED]")
+        redacted_line = redacted_line.replace(value, "[REDACTED]")
+    if message != str(warning_message.message):
+        # Preserve the separately stored warning category without invoking
+        # a custom warning constructor that may require extra arguments.
+        warning_message.message = message
+    if redacted_line != line:
+        warning_message.line = redacted_line
+
+
+def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
+    """Replace credential values while retaining the original failure cause."""
+    if not secrets:
+        return report
+    chunks = [str(report.longrepr or "")]
+    chunks.extend(title + "\n" + (content or "") for title, content in report.sections)
+    properties = getattr(report, "user_properties", [])
+    property_text = "\n".join(str(name) + "\n" + str(value) for name, value in properties)
+    chunks.append(property_text)
+    text = "\n".join(chunks)
+    leaked = [name for name, value in secrets.items() if value and value in text]
+    if not leaked:
+        return report
+    # Pytest repeats earlier phases' captured output in later reports. Redact
+    # every section, but only promote a passed report for its own phase.
+    phase = getattr(report, "when", None)
+    current_text = "\n".join(
+        [str(report.longrepr or ""), property_text]
+        + [content for title, content in report.sections if phase is None or title.endswith(" " + phase)]
+    )
+    current_leaked = [name for name, value in secrets.items() if value and value in current_text]
+    # Replace longer values first when one credential contains another.
+    values = sorted(set(secrets.values()), key=len, reverse=True)
+
+    def redact(content: str) -> str:
+        for value in values:
+            if value:
+                content = content.replace(value, "[REDACTED]")
+        return content
+
+    report.sections = [(redact(title), redact(content)) for title, content in report.sections]
+    if properties:
+        report.user_properties = [
+            (redact(name) if isinstance(name, str) else name,
+             redact(str(value)) if any(secret and secret in str(value) for secret in values) else value)
+            for name, value in properties
+        ]
+    if isinstance(report.longrepr, tuple):
+        report.longrepr = tuple(redact(part) if isinstance(part, str) else part for part in report.longrepr)
+    elif report.longrepr is not None:
+        report.longrepr = redact(str(report.longrepr))
+    if report.outcome == "passed" and current_leaked:
+        report.outcome = "failed"
+        report.longrepr = "captured output contained the value of scrubbed env var " + ", ".join(current_leaked)
+    return report
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
