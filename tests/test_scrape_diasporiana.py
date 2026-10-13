@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "rag"))
 
 import scrape_diasporiana as sd
 
-fitz = pytest.importorskip("pymupdf")
+fitz = pytest.importorskip("fitz")
 Image = pytest.importorskip("PIL.Image")
 ImageDraw = pytest.importorskip("PIL.ImageDraw")
 ImageFont = pytest.importorskip("PIL.ImageFont")
@@ -175,10 +175,9 @@ class TestDiasporianaOcrFallback:
 class TestDiasporianaRateLimiter:
     def test_rate_limiter_waits_between_requests(self) -> None:
         pacer = sd.RequestPacer()
-        with (
-            patch("scrape_diasporiana.random.uniform", return_value=2.4),
-            patch("scrape_diasporiana.time.sleep") as sleep_mock,
-        ):
+        with patch("scrape_diasporiana.random.uniform", return_value=2.4), patch(
+            "scrape_diasporiana.time.sleep"
+        ) as sleep_mock:
             pacer.wait()
             sleep_mock.assert_not_called()
             pacer.wait()
