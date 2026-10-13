@@ -1157,6 +1157,24 @@ def _isolate_write_ownership_ledger(_write_ownership_base: Path, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
 
 
+@pytest.fixture(autouse=True)
+def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch):
+    """Keep the issue-stream audit's refresh sidecars off the live checkout (#10519).
+
+    The sidecars are anchored at the primary checkout, so a test run from a
+    linked worktree that schedules or reads a refresh would otherwise write into
+    the live primary ``batch_state/`` and take its single-flight lock. Tests that
+    assert the real anchoring compute it with ``refresh_sidecar_paths``. Only an
+    already-imported module needs patching: nothing else can hold the paths.
+    """
+    module = sys.modules.get("scripts.orchestration.issue_stream_audit")
+    if module is None or not hasattr(module, "REFRESH_STATE_PATH"):
+        return
+    state_dir = _write_ownership_base / f"issue-audit-refresh-{next(_WRITE_OWNERSHIP_SEQ)}"
+    monkeypatch.setattr(module, "REFRESH_STATE_PATH", state_dir / "issue_stream_audit_refresh.json")
+    monkeypatch.setattr(module, "REFRESH_LOCK_PATH", state_dir / "issue_stream_audit_refresh.lock")
+
+
 # =============================================================================
 # DISPATCH TASK STORE ISOLATION (#8654)
 # =============================================================================

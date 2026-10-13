@@ -239,3 +239,80 @@ def test_common_reaper_removes_only_regenerable_build_output(hermetic_reap, monk
         assert row["action"] == "removed" and not tree.exists(), report
         assert not row.get("preserved_artifacts")
     assert not (repo / "batch_state/preserved").exists()
+
+
+# --- #10519: issue-stream audit refresh sidecars -----------------------------
+AUDIT_STATE_FILES = sorted(patterns.AUDIT_REFRESH_STATE_FILES)
+
+
+def ignore_batch_state(repo):
+    (repo / ".gitignore").write_text("batch_state/\n")
+
+
+def test_audit_refresh_state_names_are_exactly_the_two_sidecars():
+    assert AUDIT_STATE_FILES == [
+        "batch_state/issue_stream_audit_refresh.json",
+        "batch_state/issue_stream_audit_refresh.lock",
+    ]
+
+
+@pytest.mark.parametrize("name", AUDIT_STATE_FILES)
+def test_audit_refresh_state_is_regenerable_and_not_inventoried(checkout, monkeypatch, name):
+    repo, primary, _ = checkout
+    ignore_batch_state(repo)
+    fixtures.artifact(checkout, name, b'{"schema_version": 1}' if name.endswith(".json") else b"")
+    monkeypatch.setattr(output.artifacts, "_fingerprint", lambda *_args, **_kwargs: pytest.fail("state bytes read"))
+    assert patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
+    assert output._ignored_output_files(repo, primary, {}) == []
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "batch_state/issue_stream_audit.json",
+        "batch_state/issue_stream_audit_refresh.json.bak",
+        "batch_state/.issue_stream_audit_refresh.abc123.tmp",
+        "batch_state/sub/issue_stream_audit_refresh.json",
+        "nested/batch_state/issue_stream_audit_refresh.json",
+        "issue_stream_audit_refresh.json",
+    ],
+)
+def test_other_names_near_the_audit_sidecars_still_block(checkout, name):
+    repo, primary, _ = checkout
+    (repo / ".gitignore").write_text("batch_state/\nnested/\nissue_stream_audit_refresh.json\n")
+    fixtures.artifact(checkout, name, b"unique output")
+    assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
+    assert output._ignored_output_files(repo, primary, {}) == [name]
+
+
+def test_oversized_file_under_an_audit_sidecar_name_is_preserved(checkout):
+    repo, primary, _ = checkout
+    ignore_batch_state(repo)
+    name = AUDIT_STATE_FILES[0]
+    fixtures.artifact(checkout, name, b"x" * (patterns.AUDIT_REFRESH_STATE_MAX_BYTES + 1))
+    assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
+    assert output._ignored_output_files(repo, primary, {}) == [name]
+
+
+@pytest.mark.parametrize("name", AUDIT_STATE_FILES)
+def test_tracked_or_symlinked_audit_sidecar_is_never_regenerable(checkout, name):
+    repo, primary, _ = checkout
+    ignore_batch_state(repo)
+    assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked={name})
+    outside = repo.parent / "outside-state"
+    outside.write_bytes(b"only copy")
+    link = repo / name
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(outside)
+    assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
+    assert name in output._ignored_output_files(repo, primary, {})
+    assert outside.read_bytes() == b"only copy"
+
+
+def test_unrelated_file_beside_audit_sidecars_preserves_only_that_file(checkout):
+    repo, primary, _ = checkout
+    (repo / ".gitignore").write_text("batch_state/\n.cache/\n")
+    for name in AUDIT_STATE_FILES:
+        fixtures.artifact(checkout, name, b"{}")
+    fixtures.artifact(checkout, ".cache/answer.txt", b"task output")
+    assert output._ignored_output_files(repo, primary, {}) == [".cache/answer.txt"]

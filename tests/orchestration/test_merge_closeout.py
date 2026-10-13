@@ -968,3 +968,57 @@ def test_apply_keeps_same_tree_divergent_commit(
     assert git(repo, "rev-parse", "--verify", "codex/feature")
     assert any("not deletion proof" in entry["reason"] for entry in result.reap_results)
     assert result.ok is False
+
+
+def _merged_worktree_with_audit_sidecars(tmp_path, monkeypatch, branch: str, pr_number: int, *, extra=None):
+    """A merged, clean, unattributed checkout holding the audit's refresh sidecars (#10519)."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, branch)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("batch_state/\n.cache/\n")
+    state = worktree / "batch_state/issue_stream_audit_refresh.json"
+    state.parent.mkdir()
+    state.write_text('{"schema_version": 1, "phase": "idle"}', encoding="utf-8")
+    (worktree / "batch_state/issue_stream_audit_refresh.lock").write_bytes(b"")
+    if extra is not None:
+        source = worktree / extra
+        source.parent.mkdir(parents=True)
+        source.write_bytes(b"unrelated task output")
+    head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", branch)
+    patch_gh(
+        monkeypatch,
+        pr_number=pr_number,
+        state="MERGED",
+        head_ref_name=branch,
+        head_sha=head,
+        branch_prs={branch: [{"number": pr_number, "state": "MERGED", "headRefOid": head}]},
+    )
+    return repo, worktree
+
+
+def test_merge_closeout_reaps_unattributed_worktree_holding_only_audit_sidecars(tmp_path, monkeypatch):
+    repo, worktree = _merged_worktree_with_audit_sidecars(tmp_path, monkeypatch, "codex/audit-state", 10519)
+
+    result = mc.run_merge_closeout(repo, 10519, apply=True, live_cwds=set())
+
+    assert [entry["action"] for entry in result.reap_results] == ["removed"], result.reap_results
+    assert not worktree.exists()
+    assert not result.reap_results[0].get("preserved_artifacts")
+    assert result.errors == [] and result.ok is True
+    assert not (repo / "batch_state/preserved").exists()
+
+
+def test_merge_closeout_keeps_unattributed_worktree_when_unrelated_file_sits_beside_sidecars(tmp_path, monkeypatch):
+    repo, worktree = _merged_worktree_with_audit_sidecars(
+        tmp_path, monkeypatch, "codex/audit-state-output", 10520, extra=".cache/transcriptions/page.txt"
+    )
+
+    result = mc.run_merge_closeout(repo, 10520, apply=True, live_cwds=set())
+
+    assert not result.ok and worktree.exists()
+    assert result.reap_results[0]["action"] == "skipped"
+    assert "missing canonical task attribution" in result.reap_results[0]["reason"]
+    receipt = result.reap_results[0]["preserved_artifacts"]
+    assert [entry["path"] for entry in receipt["paths"]] == [".cache/transcriptions/page.txt"]
+    assert (worktree / "batch_state/issue_stream_audit_refresh.json").exists()
