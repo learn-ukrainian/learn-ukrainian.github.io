@@ -51,6 +51,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.api.config import LIVE_REPO_ROOT
+from scripts.common.repo_root import main_checkout_root
 from scripts.opsec.prepublish import publication_cli
 from scripts.publish.github import Request, request_run
 
@@ -89,6 +90,11 @@ MembershipResolver = Callable[[int, int], bool]
 #   REFRESH_STATE_PATH — JSON state machine (phase, outcome, cooldown, …)
 #   REFRESH_LOCK_PATH  — cross-process ``flock`` advisory lock
 #
+# Both describe the one live audit, so they are anchored at the PRIMARY
+# checkout (``main_checkout_root``), never the invoking linked worktree: a
+# worktree-relative sidecar made every checkout the audit ran from look like it
+# held unattributed task output, which the common reaper then retained (#10519).
+#
 # The scheduler takes the lock, atomically writes ``scheduled`` with a fresh
 # opaque ``run_id``, spawns the worker, and releases. The worker acquires and
 # HOLDS the lock for the entire audit, verifies ``run_id``, writes ``running``,
@@ -97,8 +103,23 @@ MembershipResolver = Callable[[int, int], bool]
 # ``running`` state observed with a free lock is reconciled to
 # ``failed/worker_lost`` after a short deterministic grace.
 # --------------------------------------------------------------------------- #
-REFRESH_STATE_PATH = ROOT / "batch_state" / "issue_stream_audit_refresh.json"
-REFRESH_LOCK_PATH = ROOT / "batch_state" / "issue_stream_audit_refresh.lock"
+
+
+def refresh_sidecar_paths(root: Path) -> tuple[Path, Path]:
+    """Return ``(state, lock)`` paths for the refresh sidecars of ``root``.
+
+    A linked worktree resolves to its primary checkout; a primary checkout or an
+    immutable release snapshot (whose ``batch_state`` is a live-data link)
+    resolves to itself.
+    """
+    batch_state = main_checkout_root(root) / "batch_state"
+    return (
+        batch_state / "issue_stream_audit_refresh.json",
+        batch_state / "issue_stream_audit_refresh.lock",
+    )
+
+
+REFRESH_STATE_PATH, REFRESH_LOCK_PATH = refresh_sidecar_paths(ROOT)
 
 # Grace for the spawn→acquire race: the scheduler writes ``scheduled``, spawns
 # the worker, and releases the lock. The worker subprocess then acquires it.

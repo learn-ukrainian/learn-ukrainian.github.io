@@ -198,13 +198,6 @@ entries:
 - path: scripts/agent_runtime/adapters/agy.py
   scope: <module>
   context: docstring
-  id: gemini-3.1-pro-high
-  count: 1
-  kind: documentation
-  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
-- path: scripts/agent_runtime/adapters/agy.py
-  scope: <module>
-  context: docstring
   id: gemini-3.8-flash-high
   count: 1
   kind: documentation
@@ -216,6 +209,20 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'gemini-cli'; not a model ID.
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: claude-opus-5-5-high
+  count: 2
+  kind: adapter_identity
+  reason: 'Concrete AGY wire pin in the accepted model slugs and Claude review slug set; #10420 added the permission-denied review route with separate driver qualification.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: claude-sonnet-5-5-high
+  count: 2
+  kind: adapter_identity
+  reason: 'Concrete AGY wire pin in the accepted model slugs and Claude review slug set; #10420 added the permission-denied review route with separate driver qualification.'
 - path: scripts/agent_runtime/adapters/agy.py
   scope: <module>
   context: expression
@@ -307,13 +314,6 @@ entries:
   count: 1
   kind: migration_debt
   reason: 'Existing identity in AgyAdapter; #9302 consumer migration owned by infra.'
-- path: scripts/agent_runtime/adapters/agy.py
-  scope: AgyAdapter.build_invocation
-  context: docstring
-  id: gemini-3.1-pro-high
-  count: 1
-  kind: documentation
-  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
 - path: scripts/agent_runtime/adapters/agy.py
   scope: _build_agy_model_map
   context: expression
@@ -657,13 +657,6 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
-- path: scripts/agent_runtime/adapters/grok_build.py
-  scope: GrokBuildAdapter.build_invocation
-  context: expression
-  id: grok-prompt.txt
-  count: 1
-  kind: non_model_label
-  reason: Existing harness, task, artifact or descriptive label 'grok-prompt.txt'; not a model ID.
 - path: scripts/agent_runtime/adapters/grok_build.py
   scope: GrokBuildAdapter.parse_response
   context: expression
@@ -4612,13 +4605,6 @@ entries:
   count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'claude-infra'; not a model ID.
-- path: scripts/orchestration/thread_handoff.py
-  scope: _bundle_handoff_candidates_for_agent
-  context: expression
-  id: CLAUDE-DRIVER-HANDOFF.md
-  count: 1
-  kind: non_model_label
-  reason: Existing harness, task, artifact or descriptive label 'CLAUDE-DRIVER-HANDOFF.md'; not a model ID.
 - path: scripts/orchestration/thread_handoff.py
   scope: cmd_detect
   context: expression

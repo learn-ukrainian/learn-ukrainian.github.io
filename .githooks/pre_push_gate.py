@@ -412,6 +412,41 @@ def reap_stale_node(path: Path) -> None:
         raise GateOutcome("validation_incomplete", f"stale node cleanup failed: {error}", incomplete=True) from None
 
 
+def ticket_identity(update: Update, root: Path | None = None) -> dict[str, str]:
+    """Allow only the frozen Git update and the explicit dispatch task label."""
+    branch = update.local_ref
+    if branch == "HEAD":
+        branch = "unknown"
+        if root is not None:
+            candidate = (git_ok("symbolic-ref", "--quiet", "HEAD", cwd=root) or "").strip()
+            if candidate.startswith("refs/heads/"):
+                sha = (git_ok("show-ref", "--verify", "--hash", candidate, cwd=root) or "").strip()
+                if sha and sha == update.local_sha:
+                    branch = candidate
+    owner = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "")
+    if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", owner) is None:
+        owner = "unknown"
+    return {"head": update.local_sha, "branch": branch, "task_owner": owner}
+
+
+def coalescing_state(state: Path, plan: Plan) -> Path:
+    """The head groups serialization only; the existing full key still decides reuse."""
+    if any(re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (plan.head, plan.tree, plan.base)):
+        raise GateOutcome("validation_incomplete", "immutable validation identity is unavailable", incomplete=True)
+    if not plan.registry_version or any(not node for node in plan.node_ids):
+        raise GateOutcome("validation_incomplete", "immutable validation identity is unavailable", incomplete=True)
+    heads = state / "heads"
+    path = heads / plan.head
+    try:
+        for directory in (heads, path):
+            directory.mkdir(parents=True, exist_ok=True)
+            if not stat.S_ISDIR(directory.lstat().st_mode):
+                raise GateOutcome("validation_incomplete", "coalescing directory is unsafe", incomplete=True)
+    except OSError as error:
+        raise GateOutcome("validation_incomplete", "coalescing directory is unavailable", incomplete=True) from error
+    return path
+
+
 class Admission:
     """One gate per repository, ordered by live local tickets across all worktrees.
 
@@ -421,13 +456,21 @@ class Admission:
     never exceeds ``ADMISSION_MAX_WAIT_S``. Older gates without tickets still hold admission.lock.
     """
 
-    def __init__(self, state: Path, wait_s: float):
+    def __init__(
+        self, state: Path, wait_s: float, *, update: Update | None = None,
+        prior: Admission | None = None, root: Path | None = None, global_state: Path | None = None,
+    ):
         self.state = state
+        self.global_state = global_state
         self.wait_s = wait_s
+        self.identity = (
+            prior.identity if prior is not None else ticket_identity(update, root) if update is not None else None
+        )
+        self._started = prior._started if prior is not None else None
         self.waited = 0.0
         self.queue_depth = 0
         self.queue_position = 0
-        self.wait_limit = 0.0
+        self.wait_limit = prior.wait_limit if prior is not None else 0.0
         self._fd: int | None = None
         self._ticket_fd: int | None = None
         self._ticket: Path | None = None
@@ -439,14 +482,18 @@ class Admission:
         self._ticket = pending
         self._ticket_fd = os.open(pending, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
         fcntl.flock(self._ticket_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        if self.identity is not None:
+            with os.fdopen(os.dup(self._ticket_fd), "w", encoding="utf-8") as stream:
+                json.dump(self.identity, stream, sort_keys=True)
+                stream.write("\n")
         ticket = queue / f"{time.monotonic_ns():020d}-{uuid.uuid4().hex}.ticket"
         pending.rename(ticket)
         self._ticket = ticket
 
-    def _live_tickets(self) -> list[Path]:
+    def _live_tickets(self, queue: Path | None = None) -> list[Path]:
         assert self._ticket is not None
         live = []
-        for ticket in sorted(self._ticket.parent.glob("*.ticket")):
+        for ticket in sorted((queue if queue is not None else self._ticket.parent).glob("*.ticket")):
             try:
                 fd = os.open(ticket, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
             except FileNotFoundError:  # a holder finished between listing and opening
@@ -492,12 +539,14 @@ class Admission:
         return live
 
     def __enter__(self) -> Admission:
-        started = time.monotonic()
+        stage_started = time.monotonic()
+        started = stage_started if self._started is None else self._started
+        self._started = started
         last_report: tuple[int, int] | None = None
         reported_at = started
         try:
             self.state.mkdir(parents=True, exist_ok=True)
-            self._fd = os.open(self.state / "admission.lock", os.O_CREAT | os.O_RDWR, 0o600)
+            self._fd = os.open(self.state / "admission.lock", os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
             self._register()
             while True:
                 live = self._live_tickets()
@@ -518,7 +567,11 @@ class Admission:
                         return self
                 self.queue_depth = max(self.queue_depth, depth)
                 self.queue_position = self.queue_position or position
-                self.wait_limit = max(self.wait_limit, min(ADMISSION_MAX_WAIT_S, max(1, position - 1) * self.wait_s))
+                global_depth = len(self._live_tickets(self.global_state / "queue")) if self.global_state else 0
+                allowance = max(1, position - 1 + global_depth) * self.wait_s
+                self.wait_limit = max(
+                    self.wait_limit, min(ADMISSION_MAX_WAIT_S, stage_started - started + allowance)
+                )
                 self.waited = time.monotonic() - started
                 report = (position, depth)
                 if report != last_report or time.monotonic() - reported_at >= 30.0:
@@ -927,19 +980,37 @@ def validate(
         deferred_to_ci=list(plan.deferred_to_ci),
     )
     state = state_dir(root)
+    head_state = coalescing_state(state, plan)
+    frozen_key = receipt_key(plan)
     if receipt_is_fresh(state, plan, time.time()):
         event["outcome"] = "green"
         event["detail"] = "valid receipt"
         return
-    admission = Admission(state, bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S))
+    wait_s = bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)
+    head_admission = Admission(head_state, wait_s, update=update, root=root, global_state=state)
+    admission = head_admission
     try:
-        with admission as admitted:
+        with contextlib.ExitStack() as locks:
+            locks.enter_context(head_admission)
+            # Followers have no global ticket. A head is only a serialization group,
+            # so rebuild inputs and compare the entire frozen key before receipt reuse.
+            refreshed = build_plan(update, root)
+            if refreshed is None or receipt_key(refreshed) != frozen_key:
+                raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for coalescing")
+            if receipt_is_fresh(state, plan, time.time()):
+                event.update(outcome="green", detail="valid receipt after coalescing")
+                if budget is not None and budget._deadline is not None:
+                    budget.after_admission(head_admission.waited)
+                return
+            admission = Admission(state, wait_s, update=update, prior=head_admission)
+            admitted = locks.enter_context(admission)
             deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).after_admission(
                 admitted.waited
             )
             # A matching gate may have finished while this caller was queued. Rebuild the plan
             # first to preserve the dirty-tree/untracked-input checks after the wait.
-            if build_plan(update, root) != plan:
+            refreshed = build_plan(update, root)
+            if refreshed is None or receipt_key(refreshed) != frozen_key:
                 raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for admission")
             if receipt_is_fresh(state, plan, time.time()):
                 event.update(outcome="green", detail="valid receipt after admission")
@@ -971,8 +1042,9 @@ def validate(
     finally:
         event.update(
             admission_wait_s=round(admission.waited, 2),
-            queue_depth=admission.queue_depth,
-            queue_position=admission.queue_position,
+            coalescing_wait_s=round(head_admission.waited, 2),
+            queue_depth=admission.queue_depth if admission is not head_admission else 0,
+            queue_position=admission.queue_position if admission is not head_admission else 0,
             admission_wait_limit_s=admission.wait_limit,
         )
 

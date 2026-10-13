@@ -1,4 +1,11 @@
-"""Preserve ignored task output before automatic worktree removal (#9645)."""
+"""Preserve ignored task output before automatic worktree removal (#9645).
+
+Creation evidence requires ``worktree_reused is False`` and a dictionary-valued
+``ignored_output_baseline`` captured by dispatch before worker spawn. Cohort
+attribution also requires one such creator and the common checkout/branch proof.
+A path or canonical-leaf match, the flag alone, or a prep-failure record without
+the creation inventory never proves creation, including in historical cohorts.
+"""
 
 from __future__ import annotations
 
@@ -145,7 +152,7 @@ def _current_reuse_records(
         for path, record in matches
         if isinstance(record.get("task_id"), str) and path == task_record_path(tasks_dir, record["task_id"])
     }
-    has_creator = any(record.get("worktree_reused") is False for _, record in current.values())
+    has_creator = any(record_created_worktree(record) for _, record in current.values())
     result = []
     for path, record in matches:
         identity, nonce = record.get("task_id"), record.get("run_nonce")
@@ -268,6 +275,11 @@ def _matching_worktree_records_once(
     return matches
 
 
+def record_created_worktree(record: Mapping[str, Any]) -> bool:
+    """Require both the explicit creation flag and dispatch's creation inventory."""
+    return record.get("worktree_reused") is False and isinstance(record.get("ignored_output_baseline"), dict)
+
+
 def reused_worktree_creator(
     matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, repo_root: Path, tasks_dir: Path
 ) -> tuple[Path, dict[str, Any]]:
@@ -276,7 +288,7 @@ def reused_worktree_creator(
 
     retained = any(record.get("keep_worktree") for _, record in matches)
     matches = _current_reuse_records(matches, tasks_dir)
-    creators = [match for match in matches if match[1].get("worktree_reused") is False]
+    creators = [match for match in matches if record_created_worktree(match[1])]
     branch = checked_out_branch(worktree)
     if branch is None and not retained and len(creators) == 1:
         # None also means a failed probe. Only a positive detached HEAD result
@@ -325,7 +337,7 @@ def resolve_worktree_record(
             return reused_worktree_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
         # Finished references alone are not ownership. Without one creator,
         # output retains unknown attribution; empty trees remain removable.
-        creators = [match for match in matches if match[1].get("worktree_reused") is False]
+        creators = [match for match in matches if record_created_worktree(match[1])]
         if len(creators) == 1 and is_superseded_record(creators[0][0]):
             identity = creators[0][1].get("task_id")
             if isinstance(identity, str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity):
@@ -451,9 +463,8 @@ def _classified_inventory(
     baseline = record.get("ignored_output_baseline")
     status = worktree.stat()
     trusted = (
-        isinstance(baseline, dict)
+        record_created_worktree(record)
         and baseline.get("schema") == "ignored-baseline.v1"
-        and record.get("worktree_reused") is False
         and baseline.get("task_id") == record.get("task_id")
         and bool(record.get("run_nonce"))
         and baseline.get("run_nonce") == record.get("run_nonce")
@@ -701,12 +712,29 @@ def preserve_worktree_artifacts(
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
-        record_path, record = resolve_worktree_record(
-            worktree,
-            tasks_dir,
-            repo_root=repo_root,
-            publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
-        )
+        try:
+            record_path, record = resolve_worktree_record(
+                worktree,
+                tasks_dir,
+                repo_root=repo_root,
+                publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
+            )
+        except ValueError:
+            # A continuation that switched branch still names the dispatch-time
+            # branch, so strict attribution refuses. Preservation may use that
+            # creator only after the merged-head proof; resolve itself stays strict
+            # so branch-holder release and retention release do not (#10548).
+            from scripts.orchestration.reap_worktrees import (
+                _switched_branch_merge_proven,
+                _switched_branch_structural_cohort,
+            )
+
+            matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+            structural = _switched_branch_structural_cohort(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
+            cohort = _current_reuse_records(matches, tasks_dir)
+            if structural is None or not _switched_branch_merge_proven(repo_root, worktree, cohort):
+                raise
+            record_path, record = structural
         members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         kept = any(member.get("keep_worktree") for _, member in members)
 
@@ -786,10 +814,7 @@ def preserve_worktree_artifacts(
             )
             metadata["next_condition"] = "owner repairs failed retrieval and verifies all bytes"
             metadata["retrieval_proof_sha256"] = verify_retrieval(primary, metadata)
-            if (
-                files != output_files()
-                or _content_digest(worktree, files) != digest
-            ):
+            if files != output_files() or _content_digest(worktree, files) != digest:
                 raise ValueError("ignored output changed during preservation")
             for proof in list(absent):
                 _record_absence(worktree, proof["path"], absent)

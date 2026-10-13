@@ -172,6 +172,19 @@ SITE_BUILD_OUTPUT_PATTERNS = (
     r"site/public/audio/pronunciation/manifest\.json",
 )
 _SITE_BUILD_OUTPUT = re.compile("(?:" + "|".join(SITE_BUILD_OUTPUT_PATTERNS) + ")")
+
+# #10519: the issue-stream audit's refresh sidecars (scripts/orchestration/
+# issue_stream_audit.py REFRESH_STATE_PATH / REFRESH_LOCK_PATH) are runtime
+# state that the next audit run rewrites. Older audit runs wrote them into the
+# invoking checkout; exactly these two root-level names are regenerable. The
+# size bound keeps unrelated output that merely reuses a name from vanishing.
+AUDIT_REFRESH_STATE_FILES = frozenset(
+    {
+        "batch_state/issue_stream_audit_refresh.json",
+        "batch_state/issue_stream_audit_refresh.lock",
+    }
+)
+AUDIT_REFRESH_STATE_MAX_BYTES = 4096
 _DATABASE_SUFFIXES = frozenset(
     extension + sidecar
     for extension in (".db", ".sqlite", ".sqlite3", ".db3", ".duckdb", ".mdb")
@@ -196,7 +209,12 @@ def is_regenerable_ignored_path(path: str, *, worktree: Path, tracked: set[str])
         "src",
         "data",
     )
-    if not site_tree and not (REGENERABLE_CACHE_DIRECTORIES | {DEPENDENCY_DIRECTORY}) & set(relative.parts):
+    audit_state = relative.as_posix() in AUDIT_REFRESH_STATE_FILES
+    if (
+        not site_tree
+        and not audit_state
+        and not (REGENERABLE_CACHE_DIRECTORIES | {DEPENDENCY_DIRECTORY}) & set(relative.parts)
+    ):
         return False
     current = worktree
     for index, part in enumerate(relative.parts):
@@ -217,6 +235,8 @@ def is_regenerable_ignored_path(path: str, *, worktree: Path, tracked: set[str])
             return True
     # Directories must still be inventoried: a descendant can be a symlink,
     # a tracked file, a database, or unlisted output. Never exempt a subtree.
+    if audit_state:
+        return stat.S_ISREG(status.st_mode) and status.st_size <= AUDIT_REFRESH_STATE_MAX_BYTES
     return (
         stat.S_ISREG(status.st_mode)
         and not _DATABASE_SUFFIXES.intersection(suffix.casefold() for suffix in relative.suffixes)

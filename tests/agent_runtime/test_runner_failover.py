@@ -923,3 +923,138 @@ def test_codex_stream_outcome_decides_cooldown_and_rotation(tmp_path, monkeypatc
         assert records[0]["failure_code"] == parse.failure_code
         assert store.is_cooling(primary, agent_name="failover-test") is False
         assert RUNNER_FAILOVER_MARKER not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "pin,label,backend",
+    [
+        ("claude-sonnet-5-5-high", "Claude Sonnet 5.5 (High)", "claude-sonnet-5-5-high"),
+        ("claude-opus-5-5-high", "Claude Opus 5.5 (High)", "claude-opus-5-5-high"),
+    ],
+)
+@pytest.mark.parametrize("form", ["absent", "pin", "display", "backend", "different", "whitespace"])
+@pytest.mark.parametrize("path", ["ordinary", "failover"])
+def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, pin, label, backend, form, path):
+    import json
+    from dataclasses import replace
+
+    from agent_runtime.adapters.agy import AgyAdapter
+    from agent_runtime.failover import FailoverChain, FailoverRoute
+    from scripts.eval.uk_preamble.common import SEATS, sha256_text
+    from scripts.eval.uk_preamble.dispatch import TaskOutcome
+
+    conversation_id = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
+    app_data = tmp_path / "agy-data"
+    transcript = app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    fixture = Path(__file__).resolve().parents[1] / "fixtures" / "agy" / "verify_words_transcript.jsonl"
+    transcript.write_text(fixture.read_text(encoding="utf-8"), encoding="utf-8")
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={conversation_id}, sending message\n", encoding="utf-8")
+    plan = InvocationPlan(
+        cmd=["agy", "--output-format", "stream-json", "--model", pin],
+        cwd=tmp_path,
+        env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
+        metadata={"entire_fleet": {"requested_model": pin}},
+    )
+    value = {
+        "absent": None,
+        "pin": pin,
+        "display": label,
+        "backend": backend,
+        "different": "gemini-3.8-flash-high",
+        "whitespace": "   ",
+    }[form]
+    init = {"event": "init", "init": {}}
+    if form != "absent":
+        init["init"]["model"] = value
+    stdout = "\n".join(
+        map(
+            json.dumps,
+            [
+                init,
+                {
+                    "event": "result",
+                    "result": {
+                        "status": "SUCCESS",
+                        "conversation_id": conversation_id,
+                        "response": "READY",
+                    },
+                },
+            ],
+        )
+    )
+    adapter = AgyAdapter()
+    monkeypatch.setattr(adapter, "build_invocation", lambda **kwargs: plan)
+    monkeypatch.setattr(runner_mod, "_load_adapter", lambda *args: adapter)
+    monkeypatch.setattr(runner_mod, "has_headroom", lambda *args: (True, ""))
+    monkeypatch.setattr(
+        runner_mod,
+        "_resolve_plan_telemetry",
+        lambda **kwargs: SimpleNamespace(
+            model=pin,
+            effort="high",
+            cli_version="fixture",
+        ),
+    )
+    route = FailoverRoute(provider="agy", model=pin)
+    chain = FailoverChain(agent_name="agy", routes=(route,), cooldown_ttl_s=600)
+    monkeypatch.setattr(
+        runner_mod, "load_failover_chain", lambda *args, **kwargs: chain if path == "failover" else None
+    )
+    monkeypatch.setenv(FAILOVER_COOLDOWN_DB_ENV, str(tmp_path / "cooldowns.sqlite3"))
+    records = []
+    monkeypatch.setattr(runner_mod, "write_record", records.append)
+    parses = []
+
+    def execute(**kwargs):
+        parsed = adapter.parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=kwargs["plan"])
+        parses.append(parsed)
+        return runner_mod._ExecutionOutcome(
+            parse=parsed,
+            duration_s=0.01,
+            returncode=0,
+            kill_reason=None,
+            stdout_text=stdout,
+            stderr_text="",
+            liveness_paths=(),
+        )
+
+    monkeypatch.setattr(runner_mod, "_execute_invocation_plan", execute)
+    result = runner_mod.invoke("agy", "planned prompt\n", model=pin, mode="read-only", cwd=tmp_path)
+    assert len(parses) == 1
+    mismatch = form in {"different", "whitespace"}
+    assert result.ok is not mismatch
+    assert result.failure_code == ("provider_policy_refusal" if mismatch else None)
+    expected_identity = (
+        None
+        if form == "absent"
+        else {
+            "actual_model": value,
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": mismatch,
+        }
+    )
+    assert result.model_identity == expected_identity
+    assert parses[0].model_identity == expected_identity
+    if expected_identity is None:
+        assert "model_identity" not in records[-1]
+    else:
+        assert records[-1]["model_identity"] == expected_identity
+    assert result.usage_record == records[-1]
+    assert bool(result.substitution and result.substitution["substituted"]) is mismatch
+    seat = replace(SEATS["claude-opus-5-5"], agent="agy", model=pin)
+    digest = sha256_text("planned prompt\n")
+    outcome = TaskOutcome(
+        task_id="fixture",
+        status="done",
+        agent=result.agent,
+        model=result.model,
+        substitution=result.substitution,
+        response_text=result.response,
+        result_sha256=sha256_text(result.response),
+        run_nonce="fixture",
+        prompt_sha256=digest,
+    )
+    assert (outcome.identity_problem(seat, digest) is None) is not mismatch

@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import json
 import pickle
+import re
 import runpy
 import shutil
 import subprocess
@@ -178,22 +179,49 @@ def approved_cto_wrappers_baseline(baseline):
     return {**baseline, "launchers": launchers}
 
 
+SEATS_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10464.json.gz"
+SEATS_OVERLAY = json.loads(gzip.decompress(SEATS_OVERLAY_PATH.read_bytes()))
+GEMINI_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+def dispatch_key(row):
+    return json.dumps(row, sort_keys=True)
+
+
+def approved_reviewer_seats_baseline(baseline):
+    """Apply #10464 (D-129): no Claude model reviews through Cursor.
+
+    The overlay replaces the catalog, role, routing-holder and reviewer surfaces.
+    The dispatch matrix is built from budget substitution pins, so deleting the
+    Cursor claude-opus-5-5 row only drops that pin's rows; kept rows stay as captured.
+    """
+    kept = {dispatch_key(row) for row in SEATS_OVERLAY["inputs"]["dispatch"]}
+    dispatch = [
+        receipt
+        for row, receipt in zip(INPUTS["dispatch"], baseline["dispatch"], strict=True)
+        if dispatch_key(row) in kept
+    ]
+    return {**baseline, **SEATS_OVERLAY["surfaces"], "dispatch": dispatch}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
 APPROVED_BASELINE = approved_cto_wrappers_baseline(
     approved_claude_cap_baseline(
         approved_cursor_trailer_baseline(
             approved_launcher_canary_baseline(
-                {
-                    **REVIEW_CAPACITY_BASELINE,
-                    **GEMINI_OVERLAY["surfaces"],
-                    **RESOURCE_OVERLAY["surfaces"],
-                }
+                approved_reviewer_seats_baseline(
+                    {
+                        **REVIEW_CAPACITY_BASELINE,
+                        **GEMINI_OVERLAY["surfaces"],
+                        **RESOURCE_OVERLAY["surfaces"],
+                    }
+                )
             )
         )
     )
 )
-APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -373,7 +401,7 @@ def test_resource_policy_fallbacks_equal_approved_overlay():
 
 def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
     assert hashlib.sha256(GEMINI_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "4b16188c215c068f232d4c11ddc661c6dc67788a762c8d4b5c691aad562a2ffe"
+        "94cf67d477b22eac788c43a0306218e6017550edc2a6ac35c504da0b52185d25"
     )
     assert set(GEMINI_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
     assert set(GEMINI_OVERLAY["inputs"]) == {"roles", "reviewer"}
@@ -382,9 +410,10 @@ def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
         return json.dumps(value, sort_keys=True)
 
     for surface in ("roles", "reviewer"):
-        new_inputs = {key(row) for row in APPROVED_INPUTS[surface]}
+        new_inputs = {key(row) for row in GEMINI_INPUTS[surface]}
         assert all(key(row) in new_inputs for row in INPUTS[surface])
-    receipts = dict(zip(map(key, APPROVED_INPUTS["reviewer"]), APPROVED_BASELINE["reviewer"], strict=True))
+    gemini_receipts = GEMINI_OVERLAY["surfaces"]["reviewer"]
+    receipts = dict(zip(map(key, GEMINI_INPUTS["reviewer"]), gemini_receipts, strict=True))
     for inputs, before in zip(INPUTS["reviewer"], REVIEW_CAPACITY_BASELINE["reviewer"], strict=True):
         after = receipts[key(inputs)]
         if before == after:
@@ -404,6 +433,132 @@ def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
             for field in ("selected", "fail_closed_reason", "substitution_note"):
                 receipt["value"].pop(field, None)
         assert old == new, inputs
+
+
+def test_reviewer_seats_fixture_only_removes_claude_cursor_review_rows():
+    """#10464 (D-129): the overlay drops every Opus-on-Cursor row and changes nothing else."""
+    assert hashlib.sha256(SEATS_OVERLAY_PATH.read_bytes()).hexdigest() == (
+        "b11f33cdad1152f6a99c8bdba56395b9670213bccd786c3a91e143b4b5e5fc40"
+    )
+    assert set(SEATS_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
+    assert set(SEATS_OVERLAY["inputs"]) == {"dispatch", "roles", "reviewer"}
+    route = "claude-opus-5-5-cursor-fallback"
+
+    def key(value):
+        return json.dumps(value, sort_keys=True)
+
+    def claude_on_cursor(row):
+        return isinstance(row, dict) and row.get("family") == "anthropic" and row.get("transport") == "cursor"
+
+    # Inputs: an order-preserving removal of only the rows naming the removed route or pin.
+    for surface in ("dispatch", "roles", "reviewer"):
+        before, after = GEMINI_INPUTS[surface], SEATS_OVERLAY["inputs"][surface]
+        kept = {key(row) for row in after}
+        assert [row for row in before if key(row) in kept] == after
+        removed = [row for row in before if key(row) not in kept]
+        assert removed
+        for row in removed:
+            assert row["model"] == "claude-opus-5-5" if surface == "dispatch" else route in key(row)
+    assert all(row["model"] != "claude-opus-5-5" for row in SEATS_OVERLAY["inputs"]["dispatch"])
+    assert [len(SEATS_OVERLAY["inputs"][name]) for name in ("dispatch", "roles", "reviewer")] == [880, 855, 1480]
+
+    # Reviewer receipts: only the removed trace row differs; no selection moves.
+    previous = dict(zip(map(key, GEMINI_INPUTS["reviewer"]), GEMINI_OVERLAY["surfaces"]["reviewer"], strict=True))
+    for inputs, after in zip(SEATS_OVERLAY["inputs"]["reviewer"], SEATS_OVERLAY["surfaces"]["reviewer"], strict=True):
+        before = deepcopy(previous[key(inputs)])
+        if isinstance(before.get("value"), dict) and "trace" in before["value"]:
+            before["value"]["trace"] = [row for row in before["value"]["trace"] if row["name"] != route]
+            assert not any(claude_on_cursor(row) for row in after["value"]["trace"])
+        assert before == after, inputs
+
+    # Role receipts: only the Opus Cursor candidate disappears.
+    previous = dict(zip(map(key, GEMINI_INPUTS["roles"]), GEMINI_OVERLAY["surfaces"]["roles"], strict=True))
+    for inputs, after in zip(SEATS_OVERLAY["inputs"]["roles"], SEATS_OVERLAY["surfaces"]["roles"], strict=True):
+        before = deepcopy(previous[key(inputs)])
+        if isinstance(before.get("value"), dict) and "candidates" in before["value"]:
+            before["value"]["candidates"] = [row for row in before["value"]["candidates"] if not claude_on_cursor(row)]
+        assert before == after, inputs
+
+    # Routing holders: only the anthropic_authority Cursor route disappears.
+    before = deepcopy(GEMINI_OVERLAY["surfaces"]["routing_holders"])
+    for holders in before["roles"].values():
+        holders[:] = [h for h in holders if (h["seat"], h["route_name"]) != ("anthropic_authority", "cursor_fallback")]
+    del before["seats"]["anthropic_authority"]["wire_ids"]["cursor_fallback"]
+    assert before == SEATS_OVERLAY["surfaces"]["routing_holders"]
+
+    catalog = json.dumps(SEATS_OVERLAY["surfaces"]["catalog"])
+    assert route not in catalog and "claude-opus-5-5-high" not in catalog
+    assert "grok-4.7-cursor-fallback" in catalog
+
+
+CLAUDE_MODEL = re.compile(r"\bclaude-(?:opus|sonnet|fable|haiku)-[0-9a-z.-]+")
+
+
+def test_catalog_authorizes_no_claude_review_through_cursor():
+    """#10464 AC-01/AC-02: no Claude review seat on Cursor; Sonnet reviews routine code only."""
+    catalog = load_model_catalog()
+    candidates = catalog["review_candidates"]
+    family = {name: catalog["models"][row["model_id"]]["family"] for name, row in candidates.items()}
+    assert not [
+        name for name, row in candidates.items() if family[name] == "anthropic" and row["transport"] == "cursor"
+    ]
+    ladders = catalog["review_ladders"]
+    for risk in ("critical", "high", "medium", "low"):
+        for rung in ladders[risk]:
+            for name in rung:
+                assert not (family[name] == "anthropic" and candidates[name]["transport"] == "cursor"), (risk, name)
+        on_ladder = {name for rung in ladders[risk] for name in rung}
+        assert ("claude-sonnet-5-5" in on_ladder) == (risk in {"medium", "low"}), risk
+        assert {"claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback"} <= on_ladder, risk
+    for risk in ("low", "medium", "high", "critical"):
+        routes = catalog["roles"][f"code_review_{risk}"]["routes"]
+        assert "anthropic_authority/cursor_fallback" not in routes
+        assert "xai_reviewer/cursor_fallback" in routes
+    assert set(catalog["seats"]["anthropic_authority"]["routes"]) == {"native"}
+    assert set(catalog["seats"]["xai_reviewer"]["routes"]) == {"native", "cursor_fallback"}
+    assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["transport_fallback_for"] == "grok-4.7"
+    opus = catalog["models"]["claude-opus-5-5"]
+    assert (opus["routing_wire_ids"], opus["transports"]) == (
+        {"native_claude": "claude-opus-5-5", "agy": "claude-opus-5-5-high"},
+        ["native_claude", "agy"],
+    )
+    cursor = catalog["budget_substitution_models"]["cursor"]
+    assert "claude-opus-5-5" not in cursor
+    assert cursor["claude-fable-5-1"] == "claude-fable-5-1-thinking-high"
+    for kept in ("claude-fable-5-1", "claude-sonnet-5-5"):
+        assert "cursor" in catalog["models"][kept]["transports"], kept
+
+
+def test_catalog_text_records_d129_and_grok_static_review():
+    """#10464 AC-01/AC-03: retired Cursor sentences are gone; the critical ladder names CI as Grok's proof."""
+    text = (Path(__file__).resolve().parents[2] / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8")
+    assert "explicitly verified Cursor slug" not in text
+    assert "natively or through Cursor" not in text
+    lines = text[text.index("\nreview_ladders:\n") :].splitlines()
+    critical = lines.index("  critical:")
+    comment = " ".join(line.strip(" #") for line in lines[1:critical] if line.lstrip().startswith("#"))
+    assert "CI is its execution proof" in comment
+    assert "requests no execution" in comment
+
+
+def test_rules_carry_no_claude_cursor_review_pin():
+    """#10464 AC-03/AC-04: no Claude model is a Cursor review pin; Grok's static review stays CI-backed."""
+    rules = Path(__file__).resolve().parents[2] / "agents_extensions/shared/rules"
+    assignment = (rules / "model-assignment.md").read_text(encoding="utf-8")
+    core = (rules / "core.md").read_text(encoding="utf-8")
+    for name, text in (("model-assignment.md", assignment), ("core.md", core)):
+        # A Claude id with a -high suffix is a Cursor wire slug; native Claude ids carry none.
+        assert not [model for model in CLAUDE_MODEL.findall(text) if model.endswith("-high")], name
+        for line in text.splitlines():
+            if "cursor" in line.lower():
+                assert not [model for model in CLAUDE_MODEL.findall(line) if f"--model {model}" in line], (name, line)
+        assert "Other Models slug" not in text, name
+        assert "Other Models pool" not in text, name
+    # Cursor-authored work still needs a reviewer outside {xAI, Moonshot}.
+    assert "Require a **single** cross-family reviewer from outside {xAI, Moonshot}" in assignment
+    assert "**Cursor-as-reviewer:** Eligible only against authors outside {xAI, Moonshot}." in assignment
+    assert "through native CLI and Cursor with runtime model attestation" in core
+    assert "Grok briefs: diff/CI evidence, no execution requests." in core
 
 
 @pytest.mark.parametrize("configuration", ["", "no-cli"])
@@ -488,13 +643,13 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
-    "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
+    "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
     "SPEC.md": "958f43d7368d0552cbf1b5706df35da56cdc9408e4834e05bb0911754ae58455",
-    "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
+    "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "7284c77ab0b02c2de844e407e37ff3eb55c56ed412521c98212d0d7309e406ba",
-    "no-cli/baseline.json.gz": "c9be87f384a751f5c228e20fa10a283e2d4e495959d8fd82535f85217f298d31",
+    "no-cli/SHA256SUMS": "7e5b78a91bd237a012805983da7d40f854c9802eae969d0f5e4fabcc0d2afea8",
+    "no-cli/baseline.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
     "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
@@ -817,11 +972,13 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         approved_claude_cap_baseline(
             approved_cursor_trailer_baseline(
                 approved_launcher_canary_baseline(
-                    {
-                        **approved_review_baseline(original),
-                        **GEMINI_OVERLAY["surfaces"],
-                        **RESOURCE_OVERLAY["surfaces"],
-                    }
+                    approved_reviewer_seats_baseline(
+                        {
+                            **approved_review_baseline(original),
+                            **GEMINI_OVERLAY["surfaces"],
+                            **RESOURCE_OVERLAY["surfaces"],
+                        }
+                    )
                 )
             )
         )

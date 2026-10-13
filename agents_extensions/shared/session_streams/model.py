@@ -231,10 +231,16 @@ def isoformat_z(value: datetime) -> str:
 
 
 def parse_timestamp(value: str) -> datetime:
-    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    if parsed.tzinfo is None:
-        raise ValueError("stored timestamps must include a timezone")
-    return parsed.astimezone(UTC)
+    try:
+        if not isinstance(value, str) or "\x00" in value:
+            raise ValueError("timestamp is malformed")
+        value.encode("utf-8")
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            raise ValueError("stored timestamps must include a timezone")
+        return parsed.astimezone(UTC)
+    except (ValueError, ArithmeticError, RecursionError, UnicodeError, TypeError):
+        raise ValueError("timestamp is malformed") from None
 
 
 def canonical_json(value: Any) -> str:

@@ -17,9 +17,18 @@ Issue: #1184
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, TypedDict
 
 from scripts.fleet_comms.contracts import ResponseEnvelope
+
+
+class AgyModelIdentity(TypedDict):
+    """Bounded provider observation, separate from route substitution."""
+
+    actual_model: str | None
+    actual_model_known: bool
+    source: str
+    substituted: bool
 
 
 @dataclass(frozen=True)
@@ -135,6 +144,8 @@ class ParseResult:
             Hermes adapters populate this with requested_provider/model and
             actual_provider/model so silent provider/model substitution cannot
             disappear between parse, usage telemetry, and delegate state.
+        model_identity: Optional bounded AGY provider observation for the
+            restricted Claude pins. Matching identity is not a substitution.
         failure_code: Optional closed, body-free failure classification. ACP
             adapters use this to preserve diagnostics while privacy-limited
             usage records discard raw stderr and provider text. Codex sets it
@@ -173,6 +184,8 @@ class ParseResult:
     agy_retry_reason: str | None = None
     agy_attempt: AgyAttempt | None = None
     agy_telemetry: AgyTelemetry | None = None
+
+    model_identity: AgyModelIdentity | None = None
 
 
 @dataclass(frozen=True)
@@ -246,7 +259,7 @@ class Result:
     transport_metadata: dict[str, str] | None = None
     transport_outcome: str | None = None
     # Optional provenance; absent historical records imply no provider observation.
-    model_identity: dict[str, str | None] | None = None
+    model_identity: dict[str, str | bool | None] | None = None
     # The adapter's closed, body-free failure classification (ParseResult.failure_code),
     # e.g. ``provider_policy_refusal``; None on success or when unclassified.
     failure_code: str | None = None

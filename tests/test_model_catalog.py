@@ -628,17 +628,19 @@ def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
 
 
 def test_high_ladder_admits_sol_opus_and_grok():
-    """#9769: high-risk review admits both Grok transports alongside Opus and Sol."""
+    """#9769: high-risk review admits both Grok transports alongside Opus and Sol.
+
+    D-129 (#10464): Opus reviews natively only; no Claude model reviews through Cursor.
+    """
     ladders = load_model_catalog()["review_ladders"]
     assert ladders["high"] == [
         ["openai_frontier"],
         ["claude-opus-5-5"],
         ["grok-4.7"],
         ["grok-4.7-cursor-fallback"],
-        ["claude-opus-5-5-cursor-fallback"],
     ]
     assert ladders["medium"] == ladders["low"]
-    assert ladders["medium"][:5] == ladders["high"]
+    assert ladders["medium"][:4] == ladders["high"]
     assert len(ladders["medium"]) > len(ladders["high"])
 
 
@@ -1011,7 +1013,7 @@ def test_critical_ladder_anthropic_authority_is_opus_without_fable():
     catalog = load_model_catalog()
     flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
     assert flat[:4] == ["openai_frontier", "claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback"]
-    assert flat[4:] == ["claude-opus-5-5-cursor-fallback", "composer-2.5", "pool", "pool-xs"]
+    assert flat[4:] == ["composer-2.5", "pool", "pool-xs"]
     # #9583: Fable is no longer a critical last resort.
     assert not any(name.startswith("claude-fable-") for name in flat)
     assert "claude-opus-5" not in flat
@@ -1241,11 +1243,12 @@ def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, exp
 
 
 def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
-    """#8855: GPT-6 stays native Codex; the Opus cursor slug is the review-candidate invocation."""
+    """#8855: GPT-6 stays native Codex. D-129 (#10464): Opus has no Cursor substitution row."""
     catalog = load_model_catalog()
     table = catalog["budget_substitution_models"]
     assert "gpt-6.1-sol" not in table["cursor"]
-    assert table["cursor"]["claude-opus-5-5"] == "claude-opus-5-5-high"
+    assert "claude-opus-5-5" not in table["cursor"]
+    assert table["cursor"]["claude-fable-5-1"] == "claude-fable-5-1-thinking-high"
     assert table["codex"]["gpt-6.1-sol"] == "gpt-6.1-sol"
     broken = deepcopy(catalog)
     broken["budget_substitution_models"]["cursor"]["gpt-6.1-sol"] = "gpt-6.1-sol"

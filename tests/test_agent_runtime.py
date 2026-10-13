@@ -4866,3 +4866,50 @@ def test_privacy_safe_acp_failure_code_is_closed_and_body_free(
         )
         == expected
     )
+
+
+@pytest.mark.parametrize("entrypoint", ["runtime", "acp_review"])
+@pytest.mark.parametrize("reported", [False, True])
+def test_agy_usage_carries_bounded_optional_model_identity(tmp_path, entrypoint, reported):
+    identity = (
+        {
+            "actual_model": "observed" * 100,
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": False,
+            "unexpected": "discarded",
+        }
+        if reported
+        else None
+    )
+    parse = ParseResult(ok=True, response="READY")
+    assert parse.model_identity is None
+    record = _build_usage_record(
+        agent="agy",
+        entrypoint=entrypoint,
+        model="model",
+        mode="read-only",
+        task_id=None,
+        cwd=tmp_path,
+        session_id=None,
+        duration_s=0.1,
+        input_chars=1,
+        output_chars=5,
+        returncode=0,
+        outcome="ok",
+        rate_limited=False,
+        stalled=False,
+        stderr_excerpt=None,
+        tokens=None,
+        model_identity=identity,
+    )
+    if reported:
+        assert record["model_identity"] == {
+            "actual_model": ("observed" * 100)[:200],
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": False,
+        }
+    else:
+        assert "model_identity" not in record
+    assert "substitution" not in record

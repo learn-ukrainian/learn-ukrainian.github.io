@@ -88,6 +88,8 @@ interactive launcher, this stateless `--bare` route does not install an
 
 Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
+Claude AGY review pins and driver qualification:
+[`docs/runbooks/agy-claude-routes.md`](runbooks/agy-claude-routes.md).
 
 ## ACPX structured transport (runtime boundary)
 

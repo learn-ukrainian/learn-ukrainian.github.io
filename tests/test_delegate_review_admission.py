@@ -2741,7 +2741,15 @@ def test_10016_substituted_reviewer_credit_uses_admitted_model(monkeypatch):
     assert checked_models and set(checked_models) == {"gpt-6.1-sol"}
 
 
-@pytest.mark.parametrize("mode", [(), ("--review-mode", "cross_family")])
+@pytest.mark.parametrize(
+    "mode",
+    [
+        (),
+        ("--review-mode", "cross_family"),
+        ("--authoring-review-plan", "cross_family"),
+        ("--review-mode", "cross_family", "--authoring-review-plan", "cross_family"),
+    ],
+)
 def test_default_dispatch_arguments_match_pre_10437_golden(mode):
     args = delegate.build_parser().parse_args(
         [
@@ -2762,6 +2770,26 @@ def test_default_dispatch_arguments_match_pre_10437_golden(mode):
         assert "review_mode" not in vars(args)
     assert delegate.dispatch_args_sha256(args) == "08971eb586c8ae16fbc1e56ec239cc1a2dd8622a6fec7bf5a25dec30e57f87bf"
     assert delegate.advisory_args_sha256(args) == "b5b159fbcf8a7fbcbc72d1dfe7833280204a61fc939dc3ba9a34cb63fc0555f6"
+
+
+@pytest.mark.parametrize("builder", [delegate.dispatch_args_sha256, delegate.advisory_args_payload])
+def test_authoring_review_plan_default_matches_absent_and_red_team_binds(builder, tmp_path):
+    from scripts.review.seeds import adjudicate
+
+    argv = adjudicate.dispatch_argv(tmp_path / "review.task.md", "review-fixture", "codex", model="gpt-6.1-sol")[2:]
+    parser = delegate.build_parser()
+    canonical = parser.parse_args(argv)
+    assert canonical.authoring_review_plan == "cross_family"
+    assert "authoring_review_plan" not in delegate.DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
+    assert argv[-2:] == ["--authoring-review-plan", "cross_family"]
+    absent = parser.parse_args(argv[:-2])
+    assert "authoring_review_plan" not in vars(absent)
+    red_team = parser.parse_args([*argv[:-2], "--authoring-review-plan", "red_team"])
+
+    assert builder(absent) == builder(canonical)
+    assert builder(red_team) != builder(canonical)
+    assert "authoring_review_plan" not in delegate.advisory_args_payload(canonical)
+    assert delegate.advisory_args_payload(red_team)["authoring_review_plan"] == "red_team"
 
 
 @pytest.mark.parametrize("case", ["missing-prompt", "missing-file", "wording", "not-review"])

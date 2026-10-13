@@ -10,6 +10,13 @@ single-turn headless mode:
     grok -p "<prompt>" --output-format streaming-messages-json [-m MODEL] [--effort LEVEL] \
          --permission-mode <mode> --cwd <dir> --no-alt-screen
 
+A prompt that starts with ``-``, an isolated review, or a prompt whose UTF-8
+size is above ``_INLINE_PROMPT_LIMIT_BYTES`` uses ``--prompt-file`` instead of
+``-p`` (#10522). The file is mode 0600. ``cleanup_invocation`` removes it
+after a successful build. If construction raises after the prompt file or the
+guard-agent file is created, that file is removed and the original exception
+propagates.
+
 Headless text is one assistant message per model response. Messages are joined
 with a newline so a later ``VERDICT:`` line stays a line (#10005). Chunks
 inside one message are concatenated. ``--json-schema`` keeps
@@ -66,6 +73,7 @@ The grok CLI is Claude-Code-shaped, so this mirrors ``claude.py`` closely.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
 import os
@@ -228,6 +236,19 @@ _META_LIVENESS_SESSION_ID = "liveness_session_id"
 _META_LIVENESS_SNAPSHOT = "liveness_session_dir_snapshot"
 _META_REVIEWER_AGENT_FILE = "reviewer_agent_file"
 _META_WRITE_GUARD_AGENT_FILE = "write_guard_agent_file"
+_META_PROMPT_FILE = "grok_prompt_file"
+# Private prompt-file suffix. The only copy of this label carries a leading
+# dot: NamedTemporaryFile needs it, and the bare basename is read as a model
+# literal (#10522). Isolated review uses the same basename without the dot.
+_PROMPT_FILE_SUFFIX = ".grok-prompt.txt"
+_ISOLATED_PROMPT_FILENAME = _PROMPT_FILE_SUFFIX.removeprefix(".")
+# Linux MAX_ARG_STRLEN is 131072 bytes per argv element, counting the
+# terminating NUL (kernel fs/exec.c), so a string of that length cannot be
+# exec'd. 100_000 leaves a safety margin for the other grok argv elements
+# (binary path, flags, cwd, schema). Measure UTF-8 bytes, not characters:
+# Cyrillic text crosses the kernel limit while still under 100_000 characters
+# (#10522). A prompt of exactly this many bytes stays inline.
+_INLINE_PROMPT_LIMIT_BYTES = 100_000
 
 # Claude matchers auto-expand to some Grok ids. These are the model-facing
 # ids that expansion does not cover, so a write session's guards still see
@@ -351,6 +372,47 @@ def validate_grok_effort(effort: str | None) -> str | None:
     return effort
 
 
+def _review_isolation_deny_rules(tool_config: dict) -> tuple[str, ...]:
+    """Validate isolated-review ``review_deny_tools`` and return the deny rules."""
+    configured = tool_config.get("review_deny_tools")
+    if configured is None:
+        return _MCP_REVIEW_DENY_RULES
+    if not isinstance(configured, (list, tuple)):
+        raise ValueError("GrokBuildAdapter: review_deny_tools must be a list or tuple")
+    deny_rules = tuple(configured)
+    invalid_rules = [
+        rule for rule in deny_rules if not isinstance(rule, str) or rule not in _GROK_PERMISSION_RULE_PREFIXES
+    ]
+    if invalid_rules:
+        raise ValueError(
+            f"GrokBuildAdapter: review_deny_tools contains unsupported Grok permission prefixes: {invalid_rules!r}"
+        )
+    missing_rules = set(_MCP_REVIEW_DENY_RULES) - set(deny_rules)
+    if missing_rules:
+        raise ValueError(
+            f"GrokBuildAdapter: review_deny_tools must retain fail-closed rules: {sorted(missing_rules)!r}"
+        )
+    return deny_rules
+
+
+@contextlib.contextmanager
+def _unlink_owned_files_on_error():
+    """Yield paths to unlink if the caller raises.
+
+    One list covers the guard-agent file and the prompt file. Success keeps
+    them for ``cleanup_invocation``. An unlink error does not replace the
+    original exception.
+    """
+    owned: list[str] = []
+    try:
+        yield owned
+    except BaseException:
+        for path in owned:
+            with contextlib.suppress(OSError):
+                Path(path).unlink(missing_ok=True)
+        raise
+
+
 def resolve_grok_home(*, env: dict[str, str] | None = None) -> Path:
     """Return the active Grok home (``GROK_HOME`` or ``~/.grok``)."""
     if env is not None and env.get("GROK_HOME"):
@@ -383,9 +445,7 @@ def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
     return grok_cwd_sessions_dir(grok_home, cwd) / session_id
 
 
-def _permission_cancellation(
-    envelope: dict | None, plan: InvocationPlan | None, call_start_time: float | None
-) -> bool:
+def _permission_cancellation(envelope: dict | None, plan: InvocationPlan | None, call_start_time: float | None) -> bool:
     """Classify only typed cancellation evidence for this exact native turn."""
     if envelope is None or envelope.get("stopReason") != "cancelled":
         return False
@@ -419,7 +479,9 @@ def _permission_cancellation(
             stamp = datetime.fromisoformat(terminal["ts"].replace("Z", "+00:00"))
             if stamp.tzinfo is None or stamp.timestamp() < call_start_time:
                 return False
-        return terminal.get("outcome") == "cancelled" and terminal.get("cancellation_category") == "permission_cancelled"
+        return (
+            terminal.get("outcome") == "cancelled" and terminal.get("cancellation_category") == "permission_cancelled"
+        )
     except (OSError, ValueError, TypeError, KeyError, UnicodeError, RecursionError):
         return False
 
@@ -509,215 +571,208 @@ class GrokBuildAdapter:
             guard_definition = _write_guard_agent_definition()
             guard_agent_suffix = ".grok-write-agent.md"
             guard_agent_key = _META_WRITE_GUARD_AGENT_FILE
-        if guard_definition is not None and guard_agent_suffix is not None:
-            with tempfile.NamedTemporaryFile("w", suffix=guard_agent_suffix, delete=False, encoding="utf-8") as handle:
-                handle.write(guard_definition)
-                guard_agent_file = handle.name
-            cmd.extend(["--agent", guard_agent_file])
-        execution_cwd = trail_cwd or cwd
-        # Prompt: inline via -p for the common case; a hyphen-leading prompt
-        # would be misparsed by clap as a flag, so route those through a temp
-        # --prompt-file instead (robust for any content).
-        if review_isolation and review_write_root is not None:
-            write_root = review_write_root
-            out_dir = write_root / "tmp"
-            execution_cwd = write_root / "exec"
-            prompt_file = out_dir / "grok-prompt.txt"
-            fd = os.open(
-                prompt_file,
-                os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
-                0o600,
-            )
-            with os.fdopen(fd, "wb") as handle:
-                handle.write(prompt.encode("utf-8"))
-            prompt_path = str(prompt_file)
-            cmd.extend(["--prompt-file", prompt_path])
-        elif prompt.startswith("-"):
-            if review_isolation:
-                raise ValueError("GrokBuildAdapter: isolated review prompt file requires review_write_root")
-            else:
-                with tempfile.NamedTemporaryFile(
-                    "w", suffix=".grok-prompt.txt", delete=False, encoding="utf-8"
-                ) as handle:
-                    handle.write(prompt)
-                    prompt_path = handle.name
-            cmd.extend(["--prompt-file", prompt_path])
-        else:
-            cmd.extend(["-p", prompt])
-
+        # #10522: schema, deny rules, and effort are checked before any temp
+        # file exists. Anything raised after a file is recorded still deletes
+        # the guard-agent file and the prompt file, then re-raises.
         output_schema = load_output_schema(tc)
-        # #10005: --output-format json concatenates assistant messages with no
-        # separator, so a later VERDICT line is glued onto the previous sentence.
-        # streaming-messages-json emits one assistant frame per model response.
-        # --json-schema implies json and the verdict is structuredOutput.
-        output_format = "json" if output_schema is not None else "streaming-messages-json"
-        cmd.extend(["--output-format", output_format, "--no-alt-screen"])
-        if output_schema is not None:
-            cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
-        # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
-        # read tools can run. Reviewers deny Bash unconditionally and expose only
-        # tracked-file read tools through a closed tool set and all-tool guard.
-        # Prefix-only Bash denies are not a closed allowlist under `auto`.
-        # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
-        # under bypassPermissions with MCP deny rules.
-        # Review isolation (#5285): expose only built-in read tools. The
-        # parent-owned OS sandbox limits them to the sealed view; explicit deny
-        # rules remove shell/write/nested execution even though headless tool
-        # calls require an execution-capable permission mode.
-        if trail_isolation:
-            permission_mode = "default"
-        elif review_isolation:
-            permission_mode = str(tc.get("permission_mode") or "bypassPermissions")
-        elif reviewer_tools:
-            permission_mode = _REVIEWER_PERMISSION_MODE
-        else:
-            permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
-        cmd.extend(["--permission-mode", permission_mode])
-        cmd.extend(["--cwd", str(execution_cwd)])
-        if reviewer_tools:
-            cmd.extend(["--no-subagents", "--disable-web-search"])
-            for rule in _REVIEWER_ALLOW_RULES:
-                cmd.extend(["--allow", rule])
-            for rule in ("MCPTool", "WebFetch", "WebSearch"):
-                cmd.extend(["--deny", rule])
-        if (mcp_read_only or mode in _UNATTENDED_WRITE_MODES) and not review_isolation and not trail_isolation:
-            cmd.append("--always-approve")
-        if mcp_read_only and not review_isolation:
-            cmd.append("--no-plan")
-            cmd.append("--disable-web-search")
-            for rule in _MCP_REVIEW_DENY_RULES:
-                cmd.extend(["--deny", rule])
-        elif mode == "read-only" and not trail_isolation and not review_isolation:
-            for rule in _READ_ONLY_DENY_RULES:
-                cmd.extend(["--deny", rule])
-        if trail_isolation:
-            cmd.extend(
-                [
-                    "--no-plan",
-                    "--no-memory",
-                    "--no-subagents",
-                    "--disable-web-search",
-                    "--verbatim",
-                ]
-            )
-            for rule in GROK_TRAIL_DENY_TOOLS:
-                cmd.extend(["--deny", rule])
-            for rule in GROK_TRAIL_TOOLS:
-                cmd.extend(["--allow", rule])
-        elif review_isolation:
-            cmd.extend(
-                [
-                    "--always-approve",
-                    "--no-plan",
-                    "--no-memory",
-                    "--no-subagents",
-                    "--disable-web-search",
-                    "--verbatim",
-                ]
-            )
-            configured_deny_rules = tc.get("review_deny_tools")
-            if configured_deny_rules is None:
-                deny_rules = _MCP_REVIEW_DENY_RULES
-            elif not isinstance(configured_deny_rules, (list, tuple)):
-                raise ValueError("GrokBuildAdapter: review_deny_tools must be a list or tuple")
-            else:
-                deny_rules = tuple(configured_deny_rules)
-                invalid_rules = [
-                    rule
-                    for rule in deny_rules
-                    if not isinstance(rule, str) or rule not in _GROK_PERMISSION_RULE_PREFIXES
-                ]
-                if invalid_rules:
-                    raise ValueError(
-                        "GrokBuildAdapter: review_deny_tools contains unsupported Grok permission prefixes: "
-                        f"{invalid_rules!r}"
-                    )
-                missing_rules = set(_MCP_REVIEW_DENY_RULES) - set(deny_rules)
-                if missing_rules:
-                    raise ValueError(
-                        f"GrokBuildAdapter: review_deny_tools must retain fail-closed rules: {sorted(missing_rules)!r}"
-                    )
-            for rule in deny_rules:
-                cmd.extend(["--deny", rule])
-
+        review_deny_rules = _review_isolation_deny_rules(tc) if review_isolation else ()
         effective_effort = validate_grok_effort(effort or self.default_effort)
-        cmd.extend(["-m", requested_model])
-        if effective_effort:
-            # The native Grok CLI accepts only low|medium|high.
-            cmd.extend(["--effort", effective_effort])
-
-        disallowed = tc.get("disallowed_tools")
-        if mode == "read-only" and not trail_isolation:
-            # search_replace is Grok's native editor tool ID, not a valid
-            # --deny prefix. Remove it explicitly in every read-only path.
-            if disallowed:
-                disallowed_values = [value.strip() for value in str(disallowed).split(",") if value.strip()]
-                if "search_replace" not in disallowed_values:
-                    disallowed_values.append("search_replace")
-                disallowed = ",".join(disallowed_values)
+        with _unlink_owned_files_on_error() as owned_temp_files:
+            if guard_definition is not None and guard_agent_suffix is not None:
+                with tempfile.NamedTemporaryFile(
+                    "w", suffix=guard_agent_suffix, delete=False, encoding="utf-8"
+                ) as handle:
+                    owned_temp_files.append(handle.name)
+                    handle.write(guard_definition)
+                    guard_agent_file = handle.name
+                cmd.extend(["--agent", guard_agent_file])
+            execution_cwd = trail_cwd or cwd
+            # Prompt: inline via -p when it fits in one argv element. A hyphen-leading
+            # prompt is a clap flag, and a prompt above _INLINE_PROMPT_LIMIT_BYTES
+            # cannot be exec'd (MAX_ARG_STRLEN, #10522). Both use a private
+            # --prompt-file, as isolated review already does.
+            prompt_path: str | None = None
+            prompt_bytes = len(prompt.encode("utf-8"))
+            if review_isolation and review_write_root is not None:
+                write_root = review_write_root
+                out_dir = write_root / "tmp"
+                execution_cwd = write_root / "exec"
+                prompt_file = out_dir / _ISOLATED_PROMPT_FILENAME
+                fd = os.open(
+                    prompt_file,
+                    os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+                    0o600,
+                )
+                owned_temp_files.append(str(prompt_file))
+                with os.fdopen(fd, "wb") as handle:
+                    handle.write(prompt.encode("utf-8"))
+                prompt_path = str(prompt_file)
+                cmd.extend(["--prompt-file", prompt_path])
+            elif prompt.startswith("-") or prompt_bytes > _INLINE_PROMPT_LIMIT_BYTES:
+                if review_isolation:
+                    raise ValueError("GrokBuildAdapter: isolated review prompt file requires review_write_root")
+                else:
+                    with tempfile.NamedTemporaryFile(
+                        "w", suffix=_PROMPT_FILE_SUFFIX, delete=False, encoding="utf-8"
+                    ) as handle:
+                        owned_temp_files.append(handle.name)
+                        handle.write(prompt)
+                        prompt_path = handle.name
+                cmd.extend(["--prompt-file", prompt_path])
             else:
-                disallowed = "search_replace"
-        if disallowed:
-            cmd.extend(["--disallowed-tools", str(disallowed)])
-        allowed = tc.get("allowed_tools")
-        if reviewer_tools:
-            allowed = ",".join(GROK_REVIEWER_TOOLS)
-        if allowed:
-            cmd.extend(["--tools", str(allowed)])
+                cmd.extend(["-p", prompt])
 
-        # Resume only if the caller explicitly opts in (delegate dispatch never
-        # should — resume_policy=never — to avoid cross-worktree contamination).
-        resume_session_id = session_id if session_id and tc.get("resume") else None
-        if resume_session_id:
-            cmd.extend(["--resume", resume_session_id])
+            # #10005: --output-format json concatenates assistant messages with no
+            # separator, so a later VERDICT line is glued onto the previous sentence.
+            # streaming-messages-json emits one assistant frame per model response.
+            # --json-schema implies json and the verdict is structuredOutput.
+            output_format = "json" if output_schema is not None else "streaming-messages-json"
+            cmd.extend(["--output-format", output_format, "--no-alt-screen"])
+            if output_schema is not None:
+                cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
+            # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
+            # read tools can run. Reviewers deny Bash unconditionally and expose only
+            # tracked-file read tools through a closed tool set and all-tool guard.
+            # Prefix-only Bash denies are not a closed allowlist under `auto`.
+            # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
+            # under bypassPermissions with MCP deny rules.
+            # Review isolation (#5285): expose only built-in read tools. The
+            # parent-owned OS sandbox limits them to the sealed view; explicit deny
+            # rules remove shell/write/nested execution even though headless tool
+            # calls require an execution-capable permission mode.
+            if trail_isolation:
+                permission_mode = "default"
+            elif review_isolation:
+                permission_mode = str(tc.get("permission_mode") or "bypassPermissions")
+            elif reviewer_tools:
+                permission_mode = _REVIEWER_PERMISSION_MODE
+            else:
+                permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
+            cmd.extend(["--permission-mode", permission_mode])
+            cmd.extend(["--cwd", str(execution_cwd)])
+            if reviewer_tools:
+                cmd.extend(["--no-subagents", "--disable-web-search"])
+                for rule in _REVIEWER_ALLOW_RULES:
+                    cmd.extend(["--allow", rule])
+                for rule in ("MCPTool", "WebFetch", "WebSearch"):
+                    cmd.extend(["--deny", rule])
+            if (mcp_read_only or mode in _UNATTENDED_WRITE_MODES) and not review_isolation and not trail_isolation:
+                cmd.append("--always-approve")
+            if mcp_read_only and not review_isolation:
+                cmd.append("--no-plan")
+                cmd.append("--disable-web-search")
+                for rule in _MCP_REVIEW_DENY_RULES:
+                    cmd.extend(["--deny", rule])
+            elif mode == "read-only" and not trail_isolation and not review_isolation:
+                for rule in _READ_ONLY_DENY_RULES:
+                    cmd.extend(["--deny", rule])
+            if trail_isolation:
+                cmd.extend(
+                    [
+                        "--no-plan",
+                        "--no-memory",
+                        "--no-subagents",
+                        "--disable-web-search",
+                        "--verbatim",
+                    ]
+                )
+                for rule in GROK_TRAIL_DENY_TOOLS:
+                    cmd.extend(["--deny", rule])
+                for rule in GROK_TRAIL_TOOLS:
+                    cmd.extend(["--allow", rule])
+            elif review_isolation:
+                cmd.extend(
+                    [
+                        "--always-approve",
+                        "--no-plan",
+                        "--no-memory",
+                        "--no-subagents",
+                        "--disable-web-search",
+                        "--verbatim",
+                    ]
+                )
+                for rule in review_deny_rules:
+                    cmd.extend(["--deny", rule])
 
-        _logger.debug(
-            "grok invocation: task=%s mode=%s permission=%s model=%s effort=%s",
-            task_id,
-            mode,
-            permission_mode,
-            requested_model,
-            effective_effort,
-        )
+            cmd.extend(["-m", requested_model])
+            if effective_effort:
+                # The native Grok CLI accepts only low|medium|high.
+                cmd.extend(["--effort", effective_effort])
 
-        snapshot = self._reset_per_invocation_state(
-            cwd=execution_cwd,
-            env_overrides={},
-        )
-        metadata: dict[str, object] = {
-            **schema_metadata(output_schema),
-            "entire_fleet": {
-                "requested_model": requested_model,
-                "actual_model": requested_model,
-            },
-            _META_RESUME_SESSION_ID: resume_session_id,
-            # Plan-owned snapshot so a plan-only / split-instance poller can
-            # exclude pre-existing same-cwd peers without adapter instance
-            # state (#6935).
-            _META_LIVENESS_SNAPSHOT: sorted(path.name for path in snapshot),
-        }
-        if guard_agent_file is not None and guard_agent_key is not None:
-            metadata[guard_agent_key] = guard_agent_file
-        liveness_paths, _discovered = self._liveness_paths_for_cwd(
-            execution_cwd,
-            bound_session_id=resume_session_id,
-            snapshot=snapshot,
-            env_overrides={},
-        )
+            disallowed = tc.get("disallowed_tools")
+            if mode == "read-only" and not trail_isolation:
+                # search_replace is Grok's native editor tool ID, not a valid
+                # --deny prefix. Remove it explicitly in every read-only path.
+                if disallowed:
+                    disallowed_values = [value.strip() for value in str(disallowed).split(",") if value.strip()]
+                    if "search_replace" not in disallowed_values:
+                        disallowed_values.append("search_replace")
+                    disallowed = ",".join(disallowed_values)
+                else:
+                    disallowed = "search_replace"
+            if disallowed:
+                cmd.extend(["--disallowed-tools", str(disallowed)])
+            allowed = tc.get("allowed_tools")
+            if reviewer_tools:
+                allowed = ",".join(GROK_REVIEWER_TOOLS)
+            if allowed:
+                cmd.extend(["--tools", str(allowed)])
 
-        return InvocationPlan(
-            cmd=cmd,
-            cwd=execution_cwd,
-            stdin_payload="",
-            output_file=None,
-            env_overrides={"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_tools else {},
-            liveness_paths=liveness_paths,
-            metadata=metadata,
-            host_harness="grok",
-        )
+            # Resume only if the caller explicitly opts in (delegate dispatch never
+            # should — resume_policy=never — to avoid cross-worktree contamination).
+            resume_session_id = session_id if session_id and tc.get("resume") else None
+            if resume_session_id:
+                cmd.extend(["--resume", resume_session_id])
+
+            _logger.debug(
+                "grok invocation: task=%s mode=%s permission=%s model=%s effort=%s",
+                task_id,
+                mode,
+                permission_mode,
+                requested_model,
+                effective_effort,
+            )
+
+            snapshot = self._reset_per_invocation_state(
+                cwd=execution_cwd,
+                env_overrides={},
+            )
+            metadata: dict[str, object] = {
+                **schema_metadata(output_schema),
+                "entire_fleet": {
+                    "requested_model": requested_model,
+                    "actual_model": requested_model,
+                },
+                _META_RESUME_SESSION_ID: resume_session_id,
+                # Plan-owned snapshot so a plan-only / split-instance poller can
+                # exclude pre-existing same-cwd peers without adapter instance
+                # state (#6935).
+                _META_LIVENESS_SNAPSHOT: sorted(path.name for path in snapshot),
+            }
+            if guard_agent_file is not None and guard_agent_key is not None:
+                metadata[guard_agent_key] = guard_agent_file
+            if prompt_path is not None:
+                metadata[_META_PROMPT_FILE] = prompt_path
+            liveness_paths, _discovered = self._liveness_paths_for_cwd(
+                execution_cwd,
+                bound_session_id=resume_session_id,
+                snapshot=snapshot,
+                env_overrides={},
+            )
+
+            return InvocationPlan(
+                cmd=cmd,
+                cwd=execution_cwd,
+                stdin_payload="",
+                output_file=None,
+                env_overrides={"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_tools else {},
+                liveness_paths=liveness_paths,
+                metadata=metadata,
+                host_harness="grok",
+            )
 
     def cleanup_invocation(self, plan: InvocationPlan) -> None:
-        """Remove only the guard agent definition created for this plan."""
+        """Remove the guard agent definition and prompt file created for this plan."""
         for key, suffix in (
             (_META_REVIEWER_AGENT_FILE, ".grok-reviewer-agent.md"),
             (_META_WRITE_GUARD_AGENT_FILE, ".grok-write-agent.md"),
@@ -725,6 +780,11 @@ class GrokBuildAdapter:
             path = plan.metadata.get(key)
             if isinstance(path, str) and path.endswith(suffix):
                 Path(path).unlink(missing_ok=True)
+        prompt_file = plan.metadata.get(_META_PROMPT_FILE)
+        if isinstance(prompt_file, str):
+            owned = Path(prompt_file)
+            if owned.name == _ISOLATED_PROMPT_FILENAME or owned.name.endswith(_PROMPT_FILE_SUFFIX):
+                owned.unlink(missing_ok=True)
 
     def parse_response(
         self,

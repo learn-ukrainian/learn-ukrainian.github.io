@@ -569,16 +569,28 @@ def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> 
         ("gemini-9.9-pro-preview", "For Gemini Pro, use `--model gemini-3.1-pro-high`."),
         (
             "gemini-9.9-flash-preview",
-            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_MODEL_SLUGS) + ".",
+            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_GENERAL_MODEL_SLUGS) + ".",
         ),
         (
             "unknown-local-model",
-            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_MODEL_SLUGS) + ".",
+            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_GENERAL_MODEL_SLUGS) + ".",
         ),
     ],
 )
 def test_unknown_model_suggestion(model: str, expected: str) -> None:
     assert agy_module.unknown_model_suggestion(model) == expected
+
+
+def test_unknown_model_suggestion_preserves_general_ids_when_restricted_slugs_are_added(monkeypatch) -> None:
+    expected = (
+        "Accepted AGY model ids: `gemini-3.8-flash-high`, `gemini-3.8-flash-medium`, "
+        "`gemini-3.8-flash-low`, `gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
+    )
+    general_slugs = agy_module._AGY_GENERAL_MODEL_SLUGS
+    restricted_slugs = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
+    for slugs in (general_slugs, (*general_slugs, *restricted_slugs)):
+        monkeypatch.setattr(agy_module, "_AGY_MODEL_SLUGS", slugs)
+        assert agy_module.unknown_model_suggestion("unknown-local-model") == expected
 
 
 def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
@@ -2265,6 +2277,61 @@ def test_issue_9301_retired_agy_model_refused_before_invocation(tmp_path, model)
         _build(tmp_path, model=model)
     with pytest.raises(ValueError, match=r"is retired in the model catalog.*use"):
         AgyAdapter.resolve_model_slug(model)
+
+
+@pytest.mark.parametrize(
+    "pin",
+    [
+        "gemini-3.8-flash-high",
+        "gemini-3.8-flash-medium",
+        "gemini-3.8-flash-low",
+        "gemini-3.1-pro-high",
+        "gemini-3.1-pro-low",
+    ],
+)
+@pytest.mark.parametrize("shape", ["nested", "top-level"])
+@pytest.mark.parametrize("form", ["display", "backend", "different", "whitespace", "non-dict", "non-string"])
+def test_gemini_init_preserves_full_parse_result(tmp_path: Path, pin: str, shape: str, form: str) -> None:
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"Print mode: conversation={CONVERSATION_ID}, sending message\n", encoding="utf-8")
+    _write_transcript(app_data)
+    plan = _plan(
+        tmp_path, log_file=log_file, app_data=app_data, cmd=["agy", "--output-format", "stream-json", "--model", pin]
+    )
+    terminal = json.dumps(
+        {
+            "event": "result",
+            "result": {
+                "conversation_id": CONVERSATION_ID,
+                "status": "SUCCESS",
+                "response": "READY",
+                "usage": {"total_tokens": 27},
+            },
+        }
+    )
+    backend = "gemini-3.1-pro-preview" if "pro" in pin else "gemini-3-flash-preview"
+    value = {
+        "display": "Gemini 3.8 Flash (High)",
+        "backend": backend,
+        "different": "claude-opus-5-5-high",
+        "whitespace": "   ",
+        "non-string": 7,
+        "non-dict": None,
+    }[form]
+    init = {"event": "init"}
+    if form == "non-dict":
+        init["init"] = ["unexpected"]
+    else:
+        init.update({"init": {"model": value}} if shape == "nested" else {"model": value})
+    baseline = AgyAdapter().parse_response(stdout=terminal, stderr="", returncode=0, output_file=None, plan=plan)
+    parsed = AgyAdapter().parse_response(
+        stdout=json.dumps(init) + "\n" + terminal, stderr="", returncode=0, output_file=None, plan=plan
+    )
+    assert parsed == baseline
+    assert parsed.ok is True
+    assert parsed.substitution is None
+    assert parsed.model_identity is None
 
 
 @pytest.mark.parametrize("scoped", [False, True])
