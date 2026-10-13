@@ -70,8 +70,8 @@ Options:
                              Cursor default (driver and interactive): grok-4.7-high;
                              it also accepts composer-2.5, never Auto, a Fast variant,
                              an empty model or a forwarded --model. Gemini driver
-                             default: gemini-3.1-pro-high (gemini-3.8-flash-high is
-                             also certified); Gemini interactive default:
+                             default: gemini-4-argon-high (gemini-3.1-pro-high and
+                             gemini-3.8-flash-high are also certified); interactive:
                              gemini-3.8-flash-high. Claude interactive: omit to use
                              project settings (Sonnet 5.5). Grok: omit to keep
                              last TUI/session model.
@@ -375,10 +375,10 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
-      # The driver defaults to 3.1 Pro (2026-10-08 approval); interactive
-      # sessions keep the 3.8 Flash default.
+      # The driver defaults to the installed direct AGY Argon high pin (#10568).
+      # Interactive sessions keep the 3.8 Flash default.
       if [ "$LC_MODE" = driver ]; then
-        LC_MODEL="${LAUNCHER_MODEL:-gemini-3.1-pro-high}"
+        LC_MODEL="${LAUNCHER_MODEL:-gemini-4-argon-high}"
       else
         LC_MODEL="${LAUNCHER_MODEL:-gemini-3.8-flash-high}"
       fi
@@ -743,12 +743,12 @@ launcher_validate_mode() {
   LC_EPIC="$(launcher_session_epic "$LC_EPIC")"
 }
 
-# Gemini drives epics only through start-gemini-driver.sh on the two certified
-# AGY pins (2026-10-08 approval). Any other Gemini model id, and a Gemini model
-# id on another provider's driver, is refused before scope entry or startup.
+# Gemini drives epics only through start-gemini-driver.sh on certified AGY pins
+# (Gemini-driver approval and #10568). Any other Gemini model id, and a Gemini
+# model id on another provider's driver, is refused before scope entry or startup.
 # A provider --model forwarded after `--` would put a second, uncertified model
 # on the agy exec line, so the Gemini driver refuses it as well.
-LC_GEMINI_DRIVER_MODELS='gemini-3.1-pro-high, gemini-3.8-flash-high'
+LC_GEMINI_DRIVER_MODELS='gemini-4-argon-high, gemini-3.1-pro-high, gemini-3.8-flash-high'
 
 launcher_refuse_uncertified_gemini_driver() {
   local arg
@@ -764,7 +764,7 @@ launcher_refuse_uncertified_gemini_driver() {
     done
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high)
+    gemini:gemini-4-argon-high|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high)
       return 0
       ;;
     gemini:*)
@@ -807,7 +807,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-4-argon-high|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high|grok:grok-4.7)
       return 0
       ;;
     *)

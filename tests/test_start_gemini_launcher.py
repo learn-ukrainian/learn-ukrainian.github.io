@@ -2,31 +2,37 @@
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from pathlib import Path
 
 import pytest
 
-from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
+from tests.rules_core_view import (
+    _build_view,
+    rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
+)
 from tests.test_launcher_contract import run_launcher
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
-CERTIFIED = "certified: gemini-3.1-pro-high, gemini-3.8-flash-high"
+CERTIFIED = "certified: gemini-4-argon-high, gemini-3.1-pro-high, gemini-3.8-flash-high"
 
 
 @pytest.mark.rules_core_absent
 @pytest.mark.parametrize(
     ("arguments", "model"),
     (
-        ((), "gemini-3.1-pro-high"),
+        ((), "gemini-4-argon-high"),
+        (("--model", "gemini-4-argon-high"), "gemini-4-argon-high"),
+        (("--model=gemini-4-argon-high",), "gemini-4-argon-high"),
         (("--model", "gemini-3.1-pro-high"), "gemini-3.1-pro-high"),
         (("--model", "gemini-3.8-flash-high"), "gemini-3.8-flash-high"),
     ),
 )
 def test_gemini_driver_accepts_certified_models(arguments: tuple[str, ...], model: str) -> None:
-    """The Gemini driver enters the shared driver path on both certified pins (dry run, no lease)."""
+    """Certified pins enter the shared driver path in dry run without a lease."""
     result = run_launcher("start-gemini-driver.sh", "--epic", "infra", *arguments)
     assert result.returncode == 0, result.stderr
     lines = result.stdout.splitlines()
@@ -42,10 +48,11 @@ def test_gemini_driver_accepts_certified_models(arguments: tuple[str, ...], mode
     assert _AGY_SKIP_PERMISSIONS not in exec_line
 
 
-def test_gemini_driver_default_respects_launcher_model() -> None:
-    result = run_launcher("start-gemini-driver.sh", "--epic", "infra", env={"LAUNCHER_MODEL": "gemini-3.8-flash-high"})
+@pytest.mark.parametrize("model", ("gemini-4-argon-high", "gemini-3.8-flash-high"))
+def test_gemini_driver_default_respects_launcher_model(model: str) -> None:
+    result = run_launcher("start-gemini-driver.sh", "--epic", "infra", env={"LAUNCHER_MODEL": model})
     assert result.returncode == 0, result.stderr
-    assert _would_exec_line(result.stdout).startswith("would exec agy --model gemini-3.8-flash-high ")
+    assert _would_exec_line(result.stdout).startswith(f"would exec agy --model {model} ")
 
 
 def test_gemini_driver_help_is_usable() -> None:
@@ -53,7 +60,66 @@ def test_gemini_driver_help_is_usable() -> None:
     assert result.returncode == 0, result.stderr
     assert "Usage: ./start-gemini-driver.sh" in result.stdout
     assert "Gemini driver" in result.stdout
+    assert "default: gemini-4-argon-high" in result.stdout
     assert "gemini-3.1-pro-high" in result.stdout
+    assert "gemini-3.8-flash-high" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    ((), ("--model", "gemini-4-argon-high"), ("--model=gemini-4-argon-high",)),
+)
+def test_argon_monitor_dry_run_pins_argv_without_claim_or_provider(arguments: tuple[str, ...], tmp_path: Path) -> None:
+    """Real startup and adapter code may print plans but cannot enter mutation seams."""
+    sentinel = tmp_path / "side-effect-called"
+    refusal = 'printf "called\\n" >> "$TEST_SIDE_EFFECT_CALLED"; exit 97\n'
+    root = _build_view(
+        tmp_path / "view",
+        {
+            ("scripts", "lib", "driver_scope.sh"): refusal,
+            ("scripts", "lib", "session_supervisor.sh"): refusal,
+            ("scripts", "lib", "deploy_extensions.sh"): refusal,
+        },
+    )
+    binary = tmp_path / "bin" / "agy"
+    binary.parent.mkdir()
+    binary.write_text("#!/bin/sh\n" + refusal)
+    binary.chmod(0o755)
+    argv_path = tmp_path / "argv"
+    driver_state = root / ".claude/monitor-epic/DRIVER-STATE.md"
+    state_before = driver_state.read_bytes() if driver_state.exists() else None
+    result = run_launcher(
+        "start-gemini-driver.sh",
+        "--epic",
+        "monitor",
+        *arguments,
+        "--",
+        "--sandbox",
+        "read-only",
+        root=root,
+        env={
+            "PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+            "LAUNCHER_MODEL": "",
+            "LAUNCHER_HARNESS": "agy",
+            "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path),
+            "TEST_SIDE_EFFECT_CALLED": str(sentinel),
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    argv = argv_path.read_bytes().decode().split("\0")
+    assert argv[-1] == ""
+    assert argv[:-1][:4] == ["agy", "--model", "gemini-4-argon-high", "-i"]
+    assert len(argv[:-1]) == 7
+    assert argv[4].startswith("<rules-core ")
+    assert _DRIVE_EPIC_NEEDLE in argv[4]
+    assert argv[5:-1] == ["--sandbox", "read-only"]
+    assert argv.count("--model") == 1
+    assert _AGY_SKIP_PERMISSIONS not in argv
+    assert "agent=gemini harness=agy" in result.stdout
+    assert "session epic=monitor slot=gemini-monitor " in result.stdout
+    assert "provider canary: not run" in result.stdout
+    assert not sentinel.exists(), "dry run must never execute scope, deploy, lease or provider"
+    assert (driver_state.read_bytes() if driver_state.exists() else None) == state_before
 
 
 @pytest.mark.parametrize("dry_run", (True, False))
@@ -61,6 +127,10 @@ def test_gemini_driver_help_is_usable() -> None:
     "model",
     (
         "gemini-unknown",
+        "gemini-4-argon",
+        "gemini-4-argon-low",
+        "gemini-4-argon-medium",
+        "gemini:gemini-4-argon-high",
         "gemini-3.8-flash-medium",
         "gemini-3.8-flash",
         "gemini-3.1-pro",
@@ -83,6 +153,9 @@ def test_gemini_driver_refuses_other_gemini_models_before_lifecycle(model: str, 
         ("--model=gemini-unknown",),
         ("--model", "gemini-3.8-flash-high"),
         ("--model=gemini-3.1-pro-high",),
+        ("--model", "gemini-4-argon-high"),
+        ("--model=gemini-4-argon-high",),
+        ("--sandbox", "read-only", "--model=gemini-4-argon-medium"),
         ("--sandbox", "read-only", "--model", "k3-256k"),
     ),
 )
@@ -107,6 +180,11 @@ def test_gemini_driver_refuses_forwarded_model_before_lifecycle(forwarded: tuple
         ("gemini", ("--epic", "devops", "--", "--model", "gemini-unknown"), "not from forwarded '--model'"),
         ("gemini", ("--epic", "devops", "--", "--model=glm-5"), "not from forwarded '--model=glm-5'"),
         ("codex", ("--governor", "AUTO", "--model", "gemini-3.8-flash-high"), "is a Gemini model"),
+        ("codex", ("--governor", "AUTO", "--model", "gemini-4-argon-high"), "is a Gemini model"),
+        ("claude", ("--epic", "monitor", "--model", "gemini-4-argon-high"), "is a Gemini model"),
+        ("claude", ("--epic", "monitor", "--model", "gemini:gemini-4-argon-high"), "is a Gemini model"),
+        ("grok", ("--epic", "monitor", "--model", "gemini-4-argon-high"), "is a Gemini model"),
+        ("cursor", ("--epic", "monitor", "--model", "gemini-4-argon-high"), "is a Gemini model"),
         ("claude", ("--epic", "devops", "--model", "gemini-3.1-pro-high"), "is a Gemini model"),
         ("claude", ("--epic", "devops", "--model", "gemini:gemini-3.1-pro-high"), "is a Gemini model"),
         ("grok", ("--epic", "devops", "--model", "gemini-3.8-flash-high"), "is a Gemini model"),
