@@ -2068,3 +2068,71 @@ def test_keeper_ledger_location_failure_fails_the_run(tmp_path: Path) -> None:
     with pytest.raises(keeper.KeeperError, match="task ledger location unknown"):
         _ = gh.tasks_dir
     assert keeper.GitHub(tmp_path, "unit/public", tasks_dir=tmp_path / "tasks").tasks_dir == tmp_path / "tasks"
+
+
+# RE-07: the keeper uses the same completed-task veto as the sweep.
+def unpublished_review(fake: FakeGitHub, token: str | None, *, head=HEAD_A, archive=False, **updates) -> None:
+    directory = Path(fake._ledger.name) / "archive" if archive else Path(fake._ledger.name)
+    directory.mkdir(parents=True, exist_ok=True)
+    record = {"task_id": "unpublished", "status": "done", "review": True,
+              "repository": fake.repository, "pinned_head": head, **updates}
+    (directory / "unpublished.json").write_text(json.dumps(record))
+    if token is not None:
+        (directory / "unpublished.result").write_text("VERDICT: " + token)
+
+
+@pytest.mark.parametrize("token,state", [("REQUEST_CHANGES", "CHANGES_REQUESTED"), ("BLOCKED", "BLOCKED")])
+@pytest.mark.parametrize("order", ["approval-first", "rejection-first"])
+@pytest.mark.parametrize("queued", [False, True])
+@pytest.mark.parametrize("archive", [False, True])
+def test_keeper_unpublished_rejection_beats_later_recorded_approval(tmp_path, token, state, order, queued, archive):
+    fake = FakeGitHub(pr(isInMergeQueue=queued))
+    fake.comments_rows = [recorded("APPROVED", "2030-01-01T00:00:00.000001+00:00")]
+    if order == "approval-first":
+        _ = fake.tasks_dir
+    unpublished_review(fake, token, archive=archive)
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=CF-" + state.lower() in lines[0]
+    assert ("dequeue" in mutations(fake)) == queued
+
+
+@pytest.mark.parametrize("token,state", [("REQUEST_CHANGES", "CHANGES_REQUESTED"), ("BLOCKED", "BLOCKED"),
+                                        (None, "unknown"), ("APPROVE\nVERDICT: BLOCKED", "unknown")])
+def test_fresh_pre_enqueue_read_consults_unpublished_completed_tasks(tmp_path, monkeypatch, token, state):
+    fake = FreshHook(lambda current: unpublished_review(current, token))
+    admissions = []
+    original = keeper.lookup_verdict
+
+    def spy(comments, head, login, **kwargs):
+        verdict = original(comments, head, login, **kwargs)
+        if kwargs.get("evidence") is not None and not kwargs["evidence"].historical:
+            admissions.append(verdict.state)
+        return verdict
+
+    monkeypatch.setattr(keeper, "lookup_verdict", spy)
+    _, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert admissions == ["APPROVED", state]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize("updates", [{"head": HEAD_B}, {"repository": "unit/other"}])
+def test_keeper_other_target_rejection_does_not_block_positive_control(tmp_path, updates):
+    fake = FakeGitHub()
+    unpublished_review(fake, "REQUEST_CHANGES", **updates)
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == ["enqueue"]
+    assert "reason=ready" in lines[0]
+
+
+def test_keeper_historical_positive_paths_obey_unpublished_rejections():
+    from scripts.orchestration.integration_sweep import ReviewLedger
+
+    fake = FakeGitHub()
+    history = ReviewLedger(fake.tasks_dir, fake.repository).evidence(42, historical=True)
+    unpublished_review(fake, "BLOCKED")
+    assert not keeper._recorded_approval_for_head(fake.comments_rows, HEAD_A, "driver", history)
+    assert not keeper._ever_approved(fake.comments_rows, "driver", history)

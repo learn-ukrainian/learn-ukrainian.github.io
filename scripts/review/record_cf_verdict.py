@@ -47,6 +47,7 @@ from scripts.orchestration.integration_sweep import (
     build_receipt,
     outside_review_in_flight,
     parse_marker,
+    reply_verdict,
 )
 from scripts.orchestration.task_record_store import (
     ARCHIVE_DIR_NAME,
@@ -80,15 +81,7 @@ from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError
-from scripts.review.verdict_parser import recognized_verdicts
 
-NORMALIZED = {
-    "APPROVE": "APPROVED",
-    "APPROVED": "APPROVED",
-    "REQUEST_CHANGES": "CHANGES_REQUESTED",
-    "CHANGES_REQUESTED": "CHANGES_REQUESTED",
-    "BLOCKED": "BLOCKED",
-}
 TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\Z")
 MAX_COMMENT_BYTES = 65_000
 # Kimi CLI task records can identify the harness without naming its model;
@@ -109,10 +102,10 @@ class RecordError(RuntimeError):
 
 
 def normalize_verdict(reply: str) -> str:
-    tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
-    if len(tokens) != 1:
+    verdict = reply_verdict(reply)
+    if verdict is None:
         raise RecordError("review reply has missing or ambiguous VERDICT token")
-    return tokens.pop()
+    return verdict
 
 
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:

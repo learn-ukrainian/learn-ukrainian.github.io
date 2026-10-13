@@ -645,6 +645,7 @@ def test_preparing_dispatch_blocks_and_unrelated_activity_does_not(tasks):
     active(tasks, "red-team", pinned_head=SHA, review_mode="red_team")
     active(tasks, "other-repo", pinned_head=SHA, repository="owner/else")
     active(tasks, "finished", pinned_head=SHA, status="done")
+    (tasks / "finished.result").write_text("VERDICT: APPROVE")
     assert lookup([item], tasks).state == "APPROVED"
     (tasks / "prep.json").write_text(json.dumps({"status": "spawning", "worktree_prep": {"base_sha": SHA.upper()}}))
     assert lookup([item], tasks).state == sweep.IN_FLIGHT
@@ -747,3 +748,181 @@ def test_unreadable_comment_body_is_unknown_but_never_hides_a_rejection(tasks):
     assert lookup([item, broken], tasks).state == "unknown"
     assert lookup([broken, published(comment_id=2, task="reject", verdict="BLOCKED")], tasks).state == "BLOCKED"
     assert lookup(["not-a-comment", item], tasks).state == "unknown"
+
+
+# RE-07: completed task verdicts veto even when no comment was published.
+def completed_review(tasks, task_id, reply, *, sha=SHA, repository=REPO, archive=False, **updates):
+    directory = tasks / "archive" if archive else tasks
+    directory.mkdir(parents=True, exist_ok=True)
+    record = {"task_id": task_id, "status": "done", "review": True,
+              "repository": repository, "pinned_head": sha, **updates}
+    path = directory / f"{task_id}.json"
+    path.write_text(json.dumps(record))
+    if reply is not None:
+        path.with_suffix(".result").write_text(reply)
+    return path
+
+
+@pytest.mark.parametrize("token,expected", [("REQUEST_CHANGES", "CHANGES_REQUESTED"), ("BLOCKED", "BLOCKED")])
+@pytest.mark.parametrize("order", ["approval-first", "rejection-first"])
+@pytest.mark.parametrize("archive", [False, True])
+def test_sweep_unpublished_completed_rejection_beats_recorded_approval(tasks, token, expected, order, archive):
+    item = published(task="later-approval", started=FUTURE)
+
+    def approve():
+        bind(tasks, item)
+        record = json.loads((tasks / "later-approval.json").read_text())
+        completed_review(tasks, "later-approval", "VERDICT: APPROVE",
+                         **{key: value for key, value in record.items() if key != "task_id"})
+
+    def reject():
+        # The #10502 shapes: a formal review and an executing review with no review typing.
+        completed_review(tasks, "formal", f"VERDICT: {token}", archive=archive, review=False,
+                         require_review_verdict=True, review_profile="code", worktree_base_sha=SHA)
+        completed_review(tasks, "exec", f"VERDICT: {token}", archive=archive, review=False, mode="read-only")
+
+    for action in ([approve, reject] if order == "approval-first" else [reject, approve]):
+        action()
+
+    class Adapter:
+        def list_open_prs(self, repository):
+            return [pr()]
+
+        def identity(self):
+            return "fleet"
+
+        def comments(self, repository, number):
+            return [item]  # The rejection exists only in the ledger.
+
+        def queue_membership(self, repository, row):
+            return False
+
+    assert lookup([item], tasks).state == expected
+    report = sweep.run(Adapter(), REPO, tasks_dir=tasks)[0]
+    assert report.state == "CF-rejected"
+    assert report.blockers == (expected,)
+
+
+@pytest.mark.parametrize("updates", [{"sha": OTHER}, {"repository": "owner/else"}, {"status": "running"},
+                                      {"status": "failed"}])
+def test_completed_rejections_only_veto_their_exact_target(tasks, updates):
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "unpublished", "VERDICT: BLOCKED", **updates)
+    expected = sweep.IN_FLIGHT if updates.get("status") == "running" else "APPROVED"
+    assert lookup([item], tasks).state == expected
+
+
+def test_undeclared_task_vetoes_only_when_its_reply_states_a_verdict(tasks):
+    """The #10502 executing review carried no review typing; its reply still rejected the head."""
+    item = published()
+    bind(tasks, item)
+    for name, reply in (("implement", "Pushed the fix."), ("no-reply", None), ("approver", "VERDICT: APPROVE")):
+        completed_review(tasks, name, reply, review=False, mode="read-only")
+    assert lookup([item], tasks).state == "APPROVED"
+    completed_review(tasks, "exec", "VERDICT: REQUEST_CHANGES", review=False, mode="read-only")
+    verdict = lookup([item], tasks)
+    assert (verdict.state, verdict.task) == ("CHANGES_REQUESTED", "exec")
+
+
+@pytest.mark.parametrize("updates", [{"repository": None}, {"worktree_base_sha": OTHER}])
+def test_undeclared_unscoped_task_with_a_verdict_is_unknown(tasks, updates):
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "exec", "VERDICT: APPROVE", review=False, **updates)
+    assert lookup([item], tasks).state == "unknown"
+
+
+def test_ledger_scan_runs_once_per_snapshot(tasks):
+    completed_review(tasks, "unpublished", "VERDICT: BLOCKED")
+    ledger = sweep.ReviewLedger(tasks, REPO)
+    assert ledger.completed_verdict(SHA).state == "BLOCKED"
+    (tasks / "unpublished.result").write_text("VERDICT: APPROVE")
+    assert ledger.completed_verdict(SHA).state == "BLOCKED"
+    assert ledger.completed_verdict(OTHER) is None
+    assert sweep.ReviewLedger(tasks, REPO).completed_verdict(SHA) is None
+
+
+def test_reply_verdict_is_the_recorder_normalization():
+    assert sweep.reply_verdict("VERDICT: REQUEST_CHANGES") == "CHANGES_REQUESTED"
+    assert sweep.reply_verdict("VERDICT: APPROVE\n**VERDICT: APPROVED**") == "APPROVED"
+    assert sweep.reply_verdict("```\nVERDICT: BLOCKED\n```\nVERDICT: APPROVE") == "APPROVED"
+    assert sweep.reply_verdict("VERDICT: APPROVE\nVERDICT: BLOCKED") is None
+    assert sweep.reply_verdict("no verdict") is None
+
+
+@pytest.mark.parametrize("reply", [None, "No verdict", "VERDICT: APPROVE\nVERDICT: BLOCKED"])
+@pytest.mark.parametrize("archive", [False, True])
+def test_completed_review_missing_or_ambiguous_reply_is_unknown(tasks, reply, archive):
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "unpublished", reply, archive=archive)
+    assert lookup([item], tasks).state == "unknown"
+
+
+@pytest.mark.parametrize("updates", [{"repository": None}, {"repository": "unknown"},
+                                      {"worktree_base_sha": OTHER}, {"head_sha": [SHA]}])
+def test_completed_review_ambiguous_target_never_approves(tasks, updates):
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "unpublished", "VERDICT: APPROVE", **updates)
+    assert lookup([item], tasks).state == "unknown"
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+def test_unpublished_approval_never_grants_clearance(tasks, mode):
+    completed_review(tasks, "unpublished", "VERDICT: APPROVE", review_mode=mode)
+    assert lookup([], tasks).state == "needs-CF"
+    item = published(review_mode=mode)
+    assert lookup([item], tasks).state == sweep.UNRECEIPTED
+
+
+@pytest.mark.parametrize("archive", [False, True])
+def test_unreadable_completed_reply_never_approves(tasks, monkeypatch, archive):
+    item = published()
+    bind(tasks, item)
+    path = completed_review(tasks, "unpublished", "VERDICT: APPROVE", archive=archive)
+    original = Path.read_text
+
+    def unreadable(self, *args, **kwargs):
+        if self == path.with_suffix(".result"):
+            raise PermissionError("reply inaccessible")
+        return original(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", unreadable)
+    assert lookup([item], tasks).state == "unknown"
+
+
+@pytest.mark.parametrize("corruption", ["{", "[]"])
+def test_unscopable_completed_record_is_unknown_but_known_rejection_wins(tasks, corruption):
+    item = published()
+    bind(tasks, item)
+    (tasks / "broken.json").write_text(corruption)
+    assert lookup([item], tasks).state == "unknown"
+    completed_review(tasks, "unpublished", "VERDICT: REQUEST_CHANGES")
+    assert lookup([item], tasks).state == "CHANGES_REQUESTED"
+
+
+@pytest.mark.parametrize("failure", ["enumeration", "stat"])
+def test_unreadable_completed_archive_never_approves(tasks, monkeypatch, failure):
+    item = published()
+    bind(tasks, item)
+    archive = tasks / "archive"
+    archive.mkdir()
+    original = Path.iterdir if failure == "enumeration" else Path.stat
+
+    def unavailable(self, *args, **kwargs):
+        if self == archive:
+            raise PermissionError("archive inaccessible")
+        return original(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "iterdir" if failure == "enumeration" else "stat", unavailable)
+    assert lookup([item], tasks).state == "unknown"
+
+
+def test_hot_and_archived_runs_of_same_task_both_veto(tasks):
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "reused", "VERDICT: BLOCKED", archive=True)
+    completed_review(tasks, "reused", "VERDICT: APPROVE")
+    assert lookup([item], tasks).state == "BLOCKED"

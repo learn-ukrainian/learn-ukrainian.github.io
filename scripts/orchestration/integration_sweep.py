@@ -24,9 +24,10 @@ from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.opsec.prepublish import normalize_repository
-from scripts.orchestration.task_record_store import locate_task_record
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, locate_task_record
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
+from scripts.review.verdict_parser import recognized_verdicts
 
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -42,6 +43,14 @@ TRUSTED_ASSOCIATIONS = frozenset({"OWNER", "MEMBER", "COLLABORATOR"})
 REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
 # The recorder normalizes APPROVE to APPROVED, but older trailers carry the reviewer's raw token (#10119).
 VERDICT_ALIASES = {"APPROVE": "APPROVED"}
+# The one normalization of a reviewer reply's VERDICT tokens, shared by the recorder and the ledger veto.
+REPLY_VERDICTS = {
+    "APPROVE": "APPROVED",
+    "APPROVED": "APPROVED",
+    "REQUEST_CHANGES": "CHANGES_REQUESTED",
+    "CHANGES_REQUESTED": "CHANGES_REQUESTED",
+    "BLOCKED": "BLOCKED",
+}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
@@ -94,6 +103,12 @@ def build_receipt(
     }
 
 
+def reply_verdict(reply: str) -> str | None:
+    """A review reply's single normalized verdict; ``None`` when missing or ambiguous."""
+    tokens = {REPLY_VERDICTS[token.upper()] for token in recognized_verdicts(reply)}
+    return tokens.pop() if len(tokens) == 1 else None
+
+
 def default_tasks_dir(repo_root: Path) -> Path:
     """The primary checkout's task ledger, also when run from a linked worktree."""
     try:
@@ -110,6 +125,20 @@ def default_tasks_dir(repo_root: Path) -> Path:
 
 
 REVIEW_HEAD_FIELDS = ("pinned_head", "worktree_base_sha", "review_head", "review_head_sha", "pr_head_sha", "head_sha")
+
+
+def is_review_task(task: Mapping[str, Any]) -> bool:
+    """Whether a task record declares itself a review."""
+    return bool(
+        task.get("review")
+        or task.get("pr") is not None
+        or task.get("review_attempt")
+        or task.get("require_review_verdict")
+        or task.get("review_profile")
+        or task.get("review_author_model")
+        or task.get("review_risk")
+        or task.get("type") == "review"
+    )
 
 
 def active_review_heads(tasks_dir: Path, repository: str) -> tuple[frozenset[str], frozenset[str]]:
@@ -139,17 +168,7 @@ def active_review_heads(tasks_dir: Path, repository: str) -> tuple[frozenset[str
         # even non-review dispatches preparing this head briefly block.
         if isinstance(prep_sha, str) and SHA.fullmatch(prep_sha.casefold()) and (same_repository or owner is None):
             prepared.add(prep_sha.casefold())
-        review = (
-            task.get("review")
-            or task.get("pr") is not None
-            or task.get("review_attempt")
-            or task.get("require_review_verdict")
-            or task.get("review_profile")
-            or task.get("review_author_model")
-            or task.get("review_risk")
-            or task.get("type") == "review"
-        )
-        if review and same_repository:
+        if is_review_task(task) and same_repository:
             heads = [task.get(name) for name in REVIEW_HEAD_FIELDS]
             if any(value is not None and not isinstance(value, str) for value in heads):
                 raise TypeError("active review head field is malformed")
@@ -167,18 +186,37 @@ class EvidenceUnavailable(SweepError):
     """The local review ledger could not be read; the head stays unknown."""
 
 
+@dataclass(frozen=True)
+class CompletedTask:
+    """One completed task pinned to a head; ``scoped`` when bound to exactly that head and repository."""
+
+    path: Path
+    task_id: str
+    declared: bool
+    scoped: bool
+
+
+@dataclass(frozen=True)
+class CompletedIndex:
+    broken: bool
+    candidates: Mapping[str, Sequence[CompletedTask]]
+
+
 @dataclass
 class ReviewLedger:
     """One snapshot of the local review ledger for a repository (#10501).
 
-    The active-review scan runs at most once per object; build a new one for a
-    fresh read. Task records are read fresh on every lookup, hot then archive.
-    Same-user traceability only, never isolated authority.
+    The active-review and completed-review scans run at most once per object;
+    build a new one for a fresh read. Receipt lookups read their task record
+    fresh, hot then archive. Same-user traceability only, never isolated
+    authority.
     """
 
     tasks_dir: Path
     repository: str
     _active: tuple[frozenset[str], frozenset[str]] | None = field(default=None, repr=False)
+    _completed: CompletedIndex | None = field(default=None, repr=False)
+    _verdicts: dict[str, Verdict | None] = field(default_factory=dict, repr=False)
 
     def in_flight(self, sha: str) -> bool:
         if self._active is None:
@@ -188,6 +226,98 @@ class ReviewLedger:
                 raise EvidenceUnavailable("review ledger unreadable") from exc
         reviewed, prepared = self._active
         return sha in reviewed or sha.casefold() in prepared
+
+    def _completed_reviews(self) -> CompletedIndex:
+        """Index completed tasks by their pinned head, hot then archive, once per snapshot.
+
+        A broken index (unreadable directory or record, malformed declared
+        review head) leaves every head unknown.
+        """
+        if self._completed is not None:
+            return self._completed
+        wanted = normalize_repository(self.repository)
+        broken = wanted == "unknown"
+        candidates: dict[str, list[CompletedTask]] = {}
+        directories = [self.tasks_dir]
+        archive = self.tasks_dir / ARCHIVE_DIR_NAME
+        try:
+            archive.stat()
+        except FileNotFoundError:
+            pass
+        except OSError:
+            broken = True
+        else:
+            directories.append(archive)
+        for directory in directories:
+            try:
+                paths = sorted(path for path in directory.iterdir() if path.suffix == ".json")
+            except OSError:
+                broken = True
+                continue
+            for path in paths:
+                try:
+                    task = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    broken = True
+                    continue
+                if not isinstance(task, dict):
+                    broken = True
+                    continue
+                owner = task.get("repository")
+                if task.get("status") != "done" or (
+                    isinstance(owner, str) and normalize_repository(owner) not in {wanted, "unknown"}
+                ):
+                    continue
+                declared = is_review_task(task)
+                values = [task.get(name) for name in REVIEW_HEAD_FIELDS if task.get(name) is not None]
+                heads = {value for value in values if isinstance(value, str) and SHA.fullmatch(value)}
+                if declared and any(not isinstance(value, str) or not SHA.fullmatch(value) for value in values):
+                    broken = True
+                    continue
+                scoped = len(heads) == 1 and isinstance(owner, str) and normalize_repository(owner) == wanted
+                task_id = task.get("task_id") if isinstance(task.get("task_id"), str) else path.stem
+                for head in heads:
+                    candidates.setdefault(head, []).append(CompletedTask(path, task_id, declared, scoped))
+        self._completed = CompletedIndex(broken, candidates)
+        return self._completed
+
+    def completed_verdict(self, sha: str) -> Verdict | None:
+        """The veto from every completed exact-head review, published or not (RE-07).
+
+        Reads each completed task pinned to ``sha`` and its ``.result`` reply,
+        including archived runs and tasks that never declared review typing but
+        replied with a verdict. These verdicts veto admission and never grant
+        approval: a known rejection wins; an unreadable, missing, ambiguous or
+        unscoped verdict is ``unknown``; otherwise ``None``.
+        """
+        if sha in self._verdicts:
+            return self._verdicts[sha]
+        index = self._completed_reviews()
+        rejected: list[Verdict] = []
+        unknown = index.broken
+        for item in index.candidates.get(sha, ()):
+            try:
+                reply = item.path.with_suffix(".result").read_text(encoding="utf-8")
+            except FileNotFoundError:
+                unknown = unknown or item.declared
+                continue
+            except (OSError, ValueError):
+                unknown = True
+                continue
+            if not item.declared and not recognized_verdicts(reply):
+                continue
+            verdict = reply_verdict(reply)
+            if verdict is None or not item.scoped:
+                unknown = True
+            elif verdict in REJECTED:
+                rejected.append(Verdict(verdict, task=item.task_id))
+        result: Verdict | None = None
+        if rejected:
+            result = next((item for item in rejected if item.state == "BLOCKED"), rejected[0])
+        elif unknown:
+            result = Verdict("unknown")
+        self._verdicts[sha] = result
+        return result
 
     def task(self, task_id: str) -> dict[str, Any] | None:
         """The hot or archived review task record, ``None`` when absent."""
@@ -410,7 +540,8 @@ def lookup_verdict(
     """Resolve one SHA's recorded review state; the one resolver every landing decision uses.
 
     Precedence, independent of comment order and declared timestamps: any
-    trusted same-head rejection; then malformed or edited evidence
+    trusted same-head rejection, including unpublished completed task verdicts;
+    then malformed or edited evidence
     (``unknown``); then, with ``evidence``, an active outside review
     (``CF-in-flight``); then an approval whose recorder receipt matches
     (``APPROVED``) or none does (``CF-unreceipted``). A marker's start is
@@ -482,6 +613,11 @@ def lookup_verdict(
         # Every applicable same-head rejection blocks; report the latest one.
         winner = max(rejections, key=lambda item: item[0])
         return _verdict(winner[2]["verdict"], winner, untrusted)
+    if evidence is not None:
+        completed = evidence.ledger.completed_verdict(sha)
+        if completed is not None and completed.state in REJECTED:
+            return completed
+        poisoned = poisoned or completed is not None
     if poisoned:
         return Verdict("unknown", untrusted_markers=tuple(untrusted))
     if not approvals:
@@ -686,9 +822,7 @@ class GitHubAdapter:
         return node["isInMergeQueue"]
 
 
-def run(
-    adapter: GitHubAdapter, repository: str, *, tasks_dir: Path, now: datetime | None = None
-) -> list[PRReport]:
+def run(adapter: GitHubAdapter, repository: str, *, tasks_dir: Path, now: datetime | None = None) -> list[PRReport]:
     """Classify every open PR; approval needs the recorder receipt in ``tasks_dir``."""
     observed = (now or datetime.now(UTC)).isoformat(timespec="microseconds")
     prs = adapter.list_open_prs(repository)
@@ -734,9 +868,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--repo", required=True, help="GitHub owner/repository")
     parser.add_argument("--report", action="store_true", help="Print the read-only PR state report (default behavior)")
     parser.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
-    parser.add_argument("--apply", action="store_true", help="Retired and refused; landing is keeper-owned (default: false)")
-    parser.add_argument("--repo-root", type=Path, default=Path.cwd(),
-                        help="Checkout used for GitHub commands, e.g. . (default: current working directory)")
+    parser.add_argument(
+        "--apply", action="store_true", help="Retired and refused; landing is keeper-owned (default: false)"
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Checkout used for GitHub commands, e.g. . (default: current working directory)",
+    )
     parser.add_argument(
         "--tasks-dir",
         type=Path,
