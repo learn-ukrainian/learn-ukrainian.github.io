@@ -167,6 +167,21 @@ def _worktree_gitdir(worktree: Path) -> Path:
     return Path((worktree / ".git").read_text().removeprefix("gitdir:").strip())
 
 
+@pytest.mark.parametrize("head", ["primary", "worktree", "clean"])
+def test_resolve_main_root_without_git_rejects_nul_in_head(layout: Layout, head: str):
+    if head != "clean":
+        gitdir = layout.main / ".git" if head == "primary" else _worktree_gitdir(layout.dispatch_wt)
+        (gitdir / "HEAD").write_bytes(b"ref: refs/heads/main\x00corruption\n")
+        with pytest.raises(wc.NotAGitRepositoryError):
+            wc.resolve_main_root_without_git(layout.dispatch_wt)
+        if head == "primary":
+            with pytest.raises(wc.NotAGitRepositoryError):
+                wc.resolve_main_root_without_git(layout.main)
+    else:
+        assert wc.resolve_main_root_without_git(layout.main) == layout.main
+        assert wc.resolve_main_root_without_git(layout.dispatch_wt) == layout.main
+
+
 @pytest.mark.parametrize(
     "defect",
     [

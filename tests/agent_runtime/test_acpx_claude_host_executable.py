@@ -700,6 +700,11 @@ def launcher_checkouts(tmp_path, monkeypatch):
         (checkout / _LAUNCHER_REL).chmod(0o755)
     root.chmod(0o700)
     copies = root / "copies"
+    # Unrelated unreadable host processes must not decide these copy lifecycle tests.
+    proc = root / "proc"
+    proc.mkdir()
+    (proc / str(os.getpid())).symlink_to(Path("/proc") / str(os.getpid()), target_is_directory=True)
+    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_PROC_ROOT", proc)
     monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER_ANCHOR", worktree)
     monkeypatch.setattr(acpx_module, "_CLAUDE_CODE_TRUST_ROOT", root)
     monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_LAUNCHER_COPY_BASE", copies)
@@ -709,6 +714,7 @@ def launcher_checkouts(tmp_path, monkeypatch):
         primary=primary,
         worktree=worktree,
         copies=copies,
+        proc=proc,
         launcher=primary / _LAUNCHER_REL,
         worktree_launcher=worktree / _LAUNCHER_REL,
     )
@@ -924,15 +930,18 @@ def _stale_entry(directory: Path, name: str = "launch-abcdefgh", *, mode: int = 
 
 
 @contextlib.contextmanager
-def _held_open(path: Path):
+def _held_open(path: Path, proc_root: Path):
     """Another live process holds ``path`` open for the duration."""
     with path.open("rb") as handle:
         holder = subprocess.Popen(["sleep", "300"], stdin=handle)
+    process = proc_root / str(holder.pid)
+    process.symlink_to(Path("/proc") / str(holder.pid), target_is_directory=True)
     try:
         yield holder
     finally:
         holder.kill()
         holder.wait(timeout=30)
+        process.unlink()
 
 
 def test_a_symlinked_copy_base_is_refused_before_anything_in_it_is_removed(launcher_checkouts):
@@ -1003,7 +1012,7 @@ def test_the_sweep_keeps_a_stale_copy_a_live_process_holds(launcher_checkouts):
     stale = copy.parents[2]
     old = time.time() - acpx_module._CLAUDE_ACP_LAUNCHER_COPY_MAX_AGE_S - 60
     os.utime(stale, (old, old))
-    with _held_open(copy):
+    with _held_open(copy, launcher_checkouts.proc):
         _accepted_copy(launcher_checkouts)
         assert copy.exists()
     _accepted_copy(launcher_checkouts)
@@ -1012,7 +1021,7 @@ def test_the_sweep_keeps_a_stale_copy_a_live_process_holds(launcher_checkouts):
 
 def test_cleanup_leaves_a_held_copy_and_reports_it_typed_and_logged(launcher_checkouts, caplog):
     copy = _accepted_copy(launcher_checkouts)
-    with _held_open(copy), pytest.raises(acpx_module.ClaudeAcpLauncherCleanupError) as raised:
+    with _held_open(copy, launcher_checkouts.proc), pytest.raises(acpx_module.ClaudeAcpLauncherCleanupError) as raised:
         acpx_module._remove_claude_acp_launcher_copy(str(copy))
     assert raised.value.reason == "cleanup_busy"
     assert copy.exists()
@@ -1080,7 +1089,7 @@ def test_a_copy_left_after_the_ask_fails_the_parsed_result(launcher_checkouts, c
     """The failure reaches the result, which the runner writes to the receipt."""
     copy = _accepted_copy(launcher_checkouts)
     plan = _copy_plan(copy)
-    with _held_open(copy):
+    with _held_open(copy, launcher_checkouts.proc):
         parsed = _parse(plan, _ok_stream())
     assert (parsed.ok, parsed.response, parsed.failure_code) == (False, "", "acp_adapter_incompatible")
     assert "a live process still holds it" in parsed.stderr_excerpt
@@ -1090,6 +1099,66 @@ def test_a_copy_left_after_the_ask_fails_the_parsed_result(launcher_checkouts, c
     # The runner's final cleanup retries once the holder has exited.
     AcpxClaudeShadowAdapter().cleanup_invocation(plan)
     assert not copy.parents[2].exists()
+
+
+@pytest.mark.parametrize(
+    "visibility",
+    ["held", "fd_denied", "link_denied", "owner_denied", "foreign", "exited_enoent", "exited_esrch", "free"],
+)
+def test_cleanup_refuses_unknown_holders_and_reports_the_failure(launcher_checkouts, monkeypatch, caplog, visibility):
+    copy = _accepted_copy(launcher_checkouts)
+    plan = _copy_plan(copy)
+    proc = launcher_checkouts.root / "synthetic-proc"
+    process = proc / "123"
+    fds = process / "fd"
+    fds.mkdir(parents=True)
+    for name in ("cwd", "root", "exe"):
+        (process / name).symlink_to(launcher_checkouts.root)
+    if visibility not in {"free", "exited_enoent", "exited_esrch"}:
+        (fds / "0").symlink_to(copy)
+    monkeypatch.setattr(acpx_module, "_CLAUDE_ACP_PROC_ROOT", proc)
+    real_listdir, real_readlink, real_stat = os.listdir, os.readlink, Path.stat
+
+    def listdir(path):
+        if path == fds:
+            if visibility in {"fd_denied", "foreign"}:
+                raise PermissionError(errno.EACCES, "Permission denied")
+            if visibility in {"exited_enoent", "exited_esrch"}:
+                code = errno.ENOENT if visibility == "exited_enoent" else errno.ESRCH
+                raise OSError(code, os.strerror(code))
+        return real_listdir(path)
+
+    def readlink(path, *args, **kwargs):
+        if path == fds / "0" and visibility == "link_denied":
+            raise PermissionError(errno.EACCES, "Permission denied")
+        return real_readlink(path, *args, **kwargs)
+
+    def process_stat(path, *args, **kwargs):
+        if path == process:
+            if visibility == "owner_denied":
+                raise PermissionError(errno.EACCES, "Permission denied")
+            if visibility == "foreign":
+                return SimpleNamespace(st_uid=os.getuid() + 1)
+        return real_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(acpx_module.os, "listdir", listdir)
+    monkeypatch.setattr(acpx_module.os, "readlink", readlink)
+    monkeypatch.setattr(Path, "stat", process_stat)
+    parsed = _parse(plan, _ok_stream())
+    if visibility in {"held", "fd_denied", "link_denied", "owner_denied"}:
+        message = "a live process still holds it" if visibility == "held" else "the process table is unreadable"
+        assert (parsed.ok, parsed.response, parsed.failure_code) == (False, "", "acp_adapter_incompatible")
+        assert plan.metadata["claude_code_launcher_cleanup"] == "cleanup_busy"
+        assert message in parsed.stderr_excerpt
+        assert message in caplog.text
+        with pytest.raises(acpx_module.ClaudeAcpLauncherCleanupError) as raised:
+            AcpxClaudeShadowAdapter().cleanup_invocation(plan)
+        assert raised.value.reason == "cleanup_busy"
+        assert copy.exists()
+    else:
+        assert (parsed.ok, parsed.response) == (True, "51")
+        assert plan.metadata["claude_code_launcher_cleanup"] == "removed"
+        assert not copy.parents[2].exists()
 
 
 @pytest.mark.parametrize(("mode", "message"), [(0o777, "world-writable"), (0o775, "group-writable")])

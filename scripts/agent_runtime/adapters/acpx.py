@@ -1917,9 +1917,10 @@ def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
     """Names of copies under ``base`` that a live process holds, or None when that is unknowable.
 
     A copy is held when a process has it, or anything in it, open or as its
-    working directory, root or executable. Processes that exit or cannot be
-    read mid-scan are skipped; another account cannot open the caller's
-    ``0700`` copies. Without a readable process table no copy is provably free.
+    working directory, root or executable. Processes that exit mid-scan or
+    whose directory stat proves another owner are skipped: another account
+    cannot open the caller's ``0700`` copies. An unreadable potentially
+    relevant process makes the result unknown, so no copy is provably free.
     """
     prefix = f"{base}/"
     held: set[str] = set()
@@ -1929,14 +1930,27 @@ def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
         return None
     for pid in pids:
         process = _CLAUDE_ACP_PROC_ROOT / pid
+        try:
+            if process.stat().st_uid != os.getuid():
+                continue
+        except OSError as exc:
+            if exc.errno in (errno.ENOENT, errno.ESRCH):
+                continue
+            return None
         links = [process / "cwd", process / "root", process / "exe"]
-        with contextlib.suppress(OSError):
+        try:
             links.extend(process / "fd" / fd for fd in os.listdir(process / "fd"))
+        except OSError as exc:
+            if exc.errno in (errno.ENOENT, errno.ESRCH):
+                continue
+            return None
         for link in links:
             try:
                 target = os.readlink(link)
-            except OSError:
-                continue
+            except OSError as exc:
+                if exc.errno in (errno.ENOENT, errno.ESRCH):
+                    continue
+                return None
             if target.startswith(prefix):
                 held.add(target.removeprefix(prefix).split("/", 1)[0].removesuffix(" (deleted)"))
     return held

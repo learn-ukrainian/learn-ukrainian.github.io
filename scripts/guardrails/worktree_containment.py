@@ -265,6 +265,8 @@ def _read_git_link(path: Path) -> str:
         raw = handle.read(_GIT_LINK_MAX_BYTES + 1)
     if len(raw) > _GIT_LINK_MAX_BYTES:
         raise NotAGitRepositoryError(f"{path.name} is too large to be a git link")
+    if b"\x00" in raw:
+        raise NotAGitRepositoryError(f"{path.name} contains a NUL byte")
     lines = raw.decode("utf-8").splitlines()
     if len(lines) != 1 or not lines[0].strip():
         raise NotAGitRepositoryError(f"{path.name} is not a one-line git link")
