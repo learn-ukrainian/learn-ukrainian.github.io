@@ -16831,7 +16831,9 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
     A successful probe is not a rejection. Any error other than the adapter's
     model ValueError is inconclusive: keep the explicit model instead of
     crashing dispatch. The probe must not leave the temp file ``build_invocation``
-    creates on the accepted path.
+    creates on the accepted path. Its cwd is a private temporary directory,
+    created and removed here, so an adapter that installs workspace hooks cannot
+    mutate the process checkout (#10529).
     """
     from agent_runtime.registry import get_agent_entry
 
@@ -16842,30 +16844,34 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
     module_name, class_name = spec.split(":", 1)
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
+    probe_cwd = Path(tempfile.mkdtemp(prefix="delegate-model-probe-"))
     try:
-        plan = adapter.build_invocation(
-            prompt="model-probe",
-            mode="read-only",
-            cwd=Path("."),
-            model=model,
-            task_id=None,
-            session_id=None,
-            tool_config=None,
-        )
-    except ValueError as exc:
-        text = str(exc)
-        if model in text and ("rejected" in text or "unsupported" in text.lower()):
-            return text
+        try:
+            plan = adapter.build_invocation(
+                prompt="model-probe",
+                mode="read-only",
+                cwd=probe_cwd,
+                model=model,
+                task_id=None,
+                session_id=None,
+                tool_config=None,
+            )
+        except ValueError as exc:
+            text = str(exc)
+            if model in text and ("rejected" in text or "unsupported" in text.lower()):
+                return text
+            return None
+        except Exception as exc:
+            print(
+                f"⚠ model probe for {_registry_seat(entry)} could not verify {_catalog_model_label(model)}: "
+                f"{type(exc).__name__}",
+                file=sys.stderr,
+            )
+            return None
+        _discard_model_probe_output(plan)
         return None
-    except Exception as exc:
-        print(
-            f"⚠ model probe for {_registry_seat(entry)} could not verify {_catalog_model_label(model)}: "
-            f"{type(exc).__name__}",
-            file=sys.stderr,
-        )
-        return None
-    _discard_model_probe_output(plan)
-    return None
+    finally:
+        shutil.rmtree(probe_cwd, ignore_errors=True)
 
 
 def _registry_seat(entry: object) -> str:

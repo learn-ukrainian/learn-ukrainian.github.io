@@ -20498,3 +20498,51 @@ def test_advisory_round_start_lookup_errors_are_recorded_as_unmeasured(
     assert state[key] == {"measured": False, "error": detail}
     assert detail in state["stderr_excerpt"]
     assert "private lookup detail" not in str(state)
+
+
+def _linked_dispatch_worktree(tmp_path: Path) -> Path:
+    """A directory the AGY installer treats as a dispatch worktree (#10529).
+
+    ``install_worktree_guard`` writes only when the cwd is a linked worktree
+    under ``<primary>/.worktrees/dispatch``. A bare temporary directory does
+    not reproduce the checkout mutation.
+    """
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "probe" / "cwd"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {primary}/.git/worktrees/probe\n", encoding="utf-8")
+    return worktree
+
+
+def _directory_snapshot(root: Path) -> tuple[tuple[str, str, bytes], ...]:
+    rows: list[tuple[str, str, bytes]] = []
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        base = Path(dirpath)
+        for name in dirnames:
+            path = base / name
+            rel = path.relative_to(root).as_posix()
+            payload = os.readlink(path).encode() if path.is_symlink() else b""
+            rows.append((rel, "symlink" if path.is_symlink() else "dir", payload))
+        for name in filenames:
+            path = base / name
+            rel = path.relative_to(root).as_posix()
+            if path.is_symlink():
+                rows.append((rel, "symlink", os.readlink(path).encode()))
+            else:
+                rows.append((rel, "file", path.read_bytes()))
+    return tuple(sorted(rows))
+
+
+def test_adapter_model_rejection_leaves_linked_worktree_cwd_unchanged(tmp_path, monkeypatch):
+    """The model probe must not install hooks or any other file into the process cwd (#10529)."""
+    from agent_runtime.registry import AGENTS
+
+    worktree = _linked_dispatch_worktree(tmp_path)
+    monkeypatch.chdir(worktree)
+    before = _directory_snapshot(worktree)
+    for agent, entry in AGENTS.items():
+        model = entry.get("default_model") or "model-probe"
+        delegate._adapter_model_rejection(agent, str(model))
+    after = _directory_snapshot(worktree)
+    assert after == before
+    assert not (worktree / ".agents").exists()
