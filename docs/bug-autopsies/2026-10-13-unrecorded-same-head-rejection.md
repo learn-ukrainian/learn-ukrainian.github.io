@@ -1,16 +1,16 @@
 # Bug autopsy: a merged PR carried two completed same-head rejections that were never recorded (2026-10-13)
 
 ## What merged
-PR 10502 (#10464, reviewer seats match the reviewer-seat decision: no Claude review through Cursor) merged at 2026-10-13 00:31:22Z as 51a69e70e2 at head 25d2221f28. Two completed exact-head review results for that head had ended REQUEST_CHANGES at about 00:12Z and were not recorded on the PR:
+PR 10502 (#10464, reviewer seats match the reviewer-seat decision: no Claude review through Cursor) merged at 2026-10-13 00:31:22Z as 51a69e70e2 at head 25d2221f28. Two completed exact-head review results for that head, both pinned to 25d2221f28, ended REQUEST_CHANGES and were not recorded on the PR. The formal review finished at 00:02:25Z and the executing supplement at 00:10:09Z:
 - formal review `cf-10464d-25d2221f-formal` (gpt-6.1-sol): `docs/best-practices/fleet-role-scorecard.md` still offered a Cursor slug for Opus; the regression check `tests/test_routing_guide_d129.py` missed wrapped instructions and the `--agent=cursor` form and rejected valid guidance.
 - executing supplement `cf-10464d-25d2221f-exec` (claude-opus-5-5): the same scorecard row.
-The merge queue acted on a later recorded APPROVE of the same head from the automatic notifier review (`cf-10502-25d2221f-sol`, 00:05Z).
+The merge queue acted on a recorded APPROVE of the same head from the automatic notifier review (`cf-10502-25d2221f-sol`, recorded at 00:05:07Z). That approval sits between the two completions: the formal rejection had already finished, and the exec rejection finished after the approval was recorded.
 
 ## Impact
 Documentation and regression-check quality only: resolver and catalog behaviour were not affected. The independence rule was breached in process terms: an approval stood over unrecorded same-head rejections. Fix-forward is a follow-up PR from round `impl-10464-r4-scorecard-and-check`; issue #10464 stays open until it merges.
 
 ## Why the keeper could not see them
-The merge-queue keeper decides from verdict comments recorded on the PR by the recorder (`record_cf_verdict`). A completed review task is a record in the task ledger (`batch_state/tasks/<id>.json` and `.result`); until a driver runs the recorder, it is invisible to the keeper. The driver of this lane recorded approvals as they arrived but not the two rejections, and its own earlier status report (21:57Z) had the same gap in the other direction (it listed only approvals at a head that also had an unanswered rejection). Nothing on the PR or in the queue forced the two sources to agree.
+The merge-queue keeper decides from verdict comments recorded on the PR by the recorder (`record_cf_verdict`). A completed review task is a record in the task ledger (`batch_state/tasks/<id>.json` and `.result`); until a driver runs the recorder, it is invisible to the keeper. The formal rejection finished at 00:02:25Z, before the approval was recorded at 00:05:07Z, so it already existed in the task ledger when that approval was recorded. The exec rejection finished at 00:10:09Z, after the approval was recorded. The driver of this lane recorded the approval and not either rejection, and its own earlier status report (21:57Z) had the same gap in the other direction (it listed only approvals at a head that also had an unanswered rejection). Nothing on the PR or in the queue forced the two sources to agree.
 
 ## Contributing causes
 - Several independent review tasks at one head (the notifier's automatic review plus two driver-armed reviews) with no single place that lists every completed verdict for that head.

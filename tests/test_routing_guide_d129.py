@@ -3,9 +3,10 @@
 No Claude model reviews through Cursor. The catalog keeps Opus on the native
 Claude CLI; these guides must not offer that review on a Cursor route. A unit
 is one markdown table row, or one paragraph of consecutive non-blank lines
-joined. The Claude model has to be the model of that ``--agent cursor``
-invocation: a Grok ``--model grok-4.7-high`` review line stays valid when the
-same paragraph also names Opus or another ``claude-`` id.
+joined. Each ``--agent cursor`` invocation is judged on the text from that
+invocation to the next one, or the end of the unit. A Grok
+``--model grok-4.7-high`` pin keeps that invocation valid, including when the
+same paragraph names Opus. It does not clear a later unpinned Cursor invocation.
 """
 
 from __future__ import annotations
@@ -47,6 +48,9 @@ _NOT_REVIEW_ROUTE = "not a review route (D-129)"
 _WRAPPED_REVIEW = "For a formal review, use\n`--agent cursor --model claude-sonnet-5-5-high`"
 _EQUALS_FORM = "For a formal review, pass `--agent=cursor --model claude-opus-5-5`."
 _EQUALS_NAMED_MODEL = "For a formal review, pass `--agent=cursor` with `claude-sonnet-5-5-high`."
+_MIXED_COMMAND = (
+    "For a formal review, use `--agent cursor --model grok-4.7-high` or `--agent=cursor` with `claude-sonnet-5-5-high`."
+)
 _TABLE_SLUG = (
     "| **Claude Opus 5.5** | deep code review and hard advisory judgment "
     "| Anthropic / native Claude or verified Cursor slug |"
@@ -60,7 +64,7 @@ _GROK_BESIDE_OPUS = (
     "Route execution-dependent reviews to Opus 5.5."
 )
 
-POSITIVE_EXAMPLES = (_WRAPPED_REVIEW, _EQUALS_FORM, _EQUALS_NAMED_MODEL, _TABLE_SLUG)
+POSITIVE_EXAMPLES = (_WRAPPED_REVIEW, _EQUALS_FORM, _EQUALS_NAMED_MODEL, _MIXED_COMMAND, _TABLE_SLUG)
 NEGATIVE_EXAMPLES = (_GROK_REVIEW, _RESOLVER_PICK, _PROHIBITION, _GROK_BESIDE_OPUS)
 
 
@@ -97,19 +101,29 @@ def _cursor_model_is_claude(model: str) -> bool:
     return bool(_CLAUDE_MODEL_TOKEN.search(token) or _OPUS_OR_SONNET_TOKEN.search(token))
 
 
+def _cursor_invocation_spans(unit: str) -> list[str]:
+    """Text from each Cursor-agent invocation to the next one, or the end of the unit."""
+    matches = list(_CURSOR_AGENT.finditer(unit))
+    spans: list[str] = []
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(unit)
+        spans.append(unit[match.start() : end])
+    return spans
+
+
 def _command_offers_claude_review(unit: str) -> bool:
     if not _REVIEW_OR_ADVISOR.search(unit):
         return False
-    for sentence in re.split(r"(?<=[.!?])\s+", unit):
-        if not _CURSOR_AGENT.search(sentence):
+    for span in _cursor_invocation_spans(unit):
+        pinned = _MODEL_AFTER_CURSOR.match(span)
+        model = pinned.group("model") if pinned is not None else None
+        if model is not None:
+            # The pin belongs to this invocation only. A non-Claude pin does not
+            # clear a later unpinned Cursor invocation in the same unit.
+            if _cursor_model_is_claude(model):
+                return True
             continue
-        models = [item.group("model") for item in _MODEL_AFTER_CURSOR.finditer(sentence) if item.group("model")]
-        if any(_cursor_model_is_claude(model) for model in models):
-            return True
-        # A named non-Claude model is the Grok pin, not an offer of Opus or Sonnet.
-        if models:
-            continue
-        if _OPUS_OR_SONNET_WORD.search(sentence) or _CLAUDE_MODEL.search(sentence):
+        if _OPUS_OR_SONNET_WORD.search(span) or _CLAUDE_MODEL.search(span):
             return True
     return False
 
