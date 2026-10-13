@@ -497,7 +497,7 @@ class GitHubClient:
                         and isinstance(value, dict)
                         and any(
                             e.get("type") in {"RATE_LIMIT", "RATE_LIMITED"}
-                            for e in value.get("errors", [])
+                            for e in _graphql_errors(value)
                             if isinstance(e, dict)
                         )
                     ):
@@ -2157,11 +2157,33 @@ def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
     return _result_process(["github", operation], result, {}, kwargs)
 
 
+def _graphql_errors(value):
+    """Return the response's ``errors`` entries; any other shape has none."""
+    errors = value.get("errors") if isinstance(value, dict) else None
+    return errors if isinstance(errors, list) else []
+
+
+def _graphql_error_detail(value):
+    """Redacted ``type`` and ``message`` of each object error; other entries are dropped."""
+    from scripts.opsec.prepublish import CREDENTIAL_TOKEN_PATTERN
+
+    def text(field):
+        return CREDENTIAL_TOKEN_PATTERN.sub("[REDACTED]", field)[:500] if isinstance(field, str) else None
+
+    return [
+        {"type": text(entry.get("type")), "message": text(entry.get("message"))}
+        for entry in _graphql_errors(value)
+        if isinstance(entry, dict)
+    ]
+
+
 def _result_process(args, result, options, kwargs, *, api=True):
     if result.error:
         detail = {"error": result.error, "reset_at": result.reset_at}
         if result.error == "github_http_error":
             detail["status"] = result.status
+        elif result.error == "github_graphql_error":
+            detail["errors"] = _graphql_error_detail(result.value)
         output = json.dumps(detail).encode()
         error = output
         code = 75 if result.error == "github_rate_limited" else 1

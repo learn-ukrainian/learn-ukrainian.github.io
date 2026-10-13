@@ -24,6 +24,32 @@ BRANCH = "codex/42"
 REPOSITORY = "owner/repo"
 
 
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("status", ["running", "done", "dry_run"])
+def test_admitted_unknown_history_requires_non_dry_run_task(tmp_path, monkeypatch, archived, status):
+    tasks = tmp_path / "tasks"
+    records = tasks / recorder.ARCHIVE_DIR_NAME if archived else tasks
+    records.mkdir(parents=True)
+    receipt = {
+        "repository": REPOSITORY,
+        "head_branch": BRANCH,
+        "head_sha": SHA,
+        "history_remote_head_sha": SHA,
+        "review_plan": "red_team",
+        "unknown_history": [OTHER],
+        "check": "structural",
+        "applicable": True,
+        "assumed_model": None,
+        "reviewer": {"review_mode": "red_team"},
+    }
+    (records / "author.json").write_text(json.dumps({"status": status, "authoring_review_admission": receipt}))
+    monkeypatch.setattr(recorder, "_facts_git", lambda *_a, **_k: f"{SHA}\n{OTHER}\n".encode())
+    allowed = recorder.admitted_unknown_history(
+        repository=REPOSITORY, branch=BRANCH, head_sha=SHA, task_root=tasks, repo_root=tmp_path
+    )
+    assert allowed == (() if status == "dry_run" else (OTHER,))
+
+
 @pytest.fixture(autouse=True)
 def recorder_matcher(synthetic_opsec):
     from tests.opsec_fixtures import synthetic_rules
@@ -3034,3 +3060,58 @@ def test_existing_comment_without_an_integer_id_is_not_reconciled(monkeypatch):
 def test_receipt_for_a_vanished_record_is_refused(tmp_path):
     with pytest.raises(recorder.RecordError, match="receipt not recorded: task record not found"):
         recorder.persist_receipt(tmp_path / "tasks", "review-one", "nonce-review-one", {"schema": "cf-recording.v1"})
+
+
+@pytest.mark.parametrize("case", ["clean_update_merge", "conflict_resolution"])
+@pytest.mark.parametrize("archived", [False, True])
+@pytest.mark.parametrize("model", ["gpt-6.1-sol", "claude-opus-5-5", None, "unlisted-model"])
+def test_merge_author_model_is_bound_to_named_task(real_commit_set, tmp_path, case, archived, model):
+    git, entries, _, base = real_commit_set(case)
+    git("commit", "--amend", "-m", "merge repair\n\nX-Agent: codex/merge-repair")
+    head = git("rev-parse", "HEAD").stdout.strip()
+    entry = {
+        "sha": head,
+        "commit": {"message": git("show", "-s", "--format=%B", head).stdout},
+        "parents": entries[-1]["parents"],
+    }
+    tasks = tmp_path / "tasks"
+    records = tasks / "archive" if archived else tasks
+    write_task(records, task_id="merge-repair", agent="codex", model=model)
+    attributed = recorder._attribute_commit(entry, repository=REPOSITORY, task_root=tasks, base_sha=lambda: base)
+    assert attributed.source == ("task-record-archived" if archived else "task-record")
+    assert attributed.task_id == "merge-repair"
+    assert attributed.author_models == ((model,) if model in {"gpt-6.1-sol", "claude-opus-5-5"} else ())
+    assert attributed.family == {"gpt-6.1-sol": "openai", "claude-opus-5-5": "anthropic"}.get(model, "unknown")
+
+
+def test_unknown_history_excludes_all_possible_author_families():
+    from dataclasses import replace
+
+    from scripts.review.reviewer_resolver import resolve_reviewer
+
+    facts = replace(
+        facts_for({"unknown", "openai"}),
+        commits=(
+            recorder.CommitAttribution(OTHER, "unknown", "unknown_historical", authorship="unknown_historical"),
+            recorder.CommitAttribution(SHA, "openai", "task-record", author_models=("gpt-6-luna",)),
+        ),
+    )
+    assert {
+        "anthropic",
+        "openai",
+        "google",
+        "xai",
+        "cursor",
+        "moonshot",
+        "poolside",
+        "unknown",
+    } <= facts.excluded_families
+    assert facts.receipt()["excluded_families"] == sorted(facts.excluded_families)
+    default = resolve_reviewer(facts.resolver_inputs(risk="critical"))
+    assert default.selected is None
+    assert default.trace and all(row.status not in {"eligible", "selected"} for row in default.trace)
+    red_team = resolve_reviewer(facts.resolver_inputs(risk="critical"), review_mode="red_team")
+    assert red_team.selected is not None
+    assert red_team.review_mode == "red_team"
+    assert red_team.limitation
+    assert red_team.selected.concrete_model != "gpt-6-luna"

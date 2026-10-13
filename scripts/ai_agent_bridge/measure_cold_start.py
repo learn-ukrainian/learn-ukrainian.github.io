@@ -30,11 +30,13 @@ from urllib.parse import quote
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 try:
+    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
     from scripts.lib.context_profiles import resolve_profile
 except ModuleNotFoundError as exc:
     if __package__ or exc.name != "scripts":
         raise
     sys.path.insert(0, os.fspath(PROJECT_ROOT))
+    from scripts.api.telemetry.transcript_tokens import usage_input_tokens
     from scripts.lib.context_profiles import resolve_profile
 
 BASELINE_DOC = PROJECT_ROOT / "docs/monitor-api/cold-start-baseline.md"
@@ -177,12 +179,8 @@ def build_source_specs(
         SourceSpec(
             name="orientation",
             kind="endpoint",
-            provenance=(
-                "monitor-api:lean-orient" if compact else "monitor-api:full-orient"
-            ),
-            locator=(
-                f"{base}/api/orient?{orient_query}session={encoded_session}"
-            ),
+            provenance=("monitor-api:lean-orient" if compact else "monitor-api:full-orient"),
+            locator=(f"{base}/api/orient?{orient_query}session={encoded_session}"),
         ),
         SourceSpec(
             name="active-delegates",
@@ -207,9 +205,7 @@ def build_source_specs(
     if names != REQUIRED_STARTUP_SOURCE_NAMES:
         missing = sorted(REQUIRED_STARTUP_SOURCE_NAMES - names)
         extra = sorted(names - REQUIRED_STARTUP_SOURCE_NAMES)
-        raise ValueError(
-            f"cold-start source contract drift: missing={missing}, extra={extra}"
-        )
+        raise ValueError(f"cold-start source contract drift: missing={missing}, extra={extra}")
     return specs
 
 
@@ -324,7 +320,12 @@ def count_payload_tokens(
 
 
 def observe_first_turn(path: Path) -> TranscriptObservation:
-    """Read the first assistant input/cache usage from a Claude transcript."""
+    """Read the first assistant input/cache usage from a Claude transcript.
+
+    The count is the corrected context size (``usage_input_tokens``): with the
+    advisor tool the top-level usage aggregates executor passes, so the last
+    main ``message`` iteration is used instead (#10480).
+    """
     try:
         with path.open(encoding="utf-8") as handle:
             for line in handle:
@@ -338,14 +339,7 @@ def observe_first_turn(path: Path) -> TranscriptObservation:
                 usage = message.get("usage") if isinstance(message, dict) else None
                 if not isinstance(usage, dict):
                     continue
-                tokens = sum(
-                    int(usage.get(field) or 0)
-                    for field in (
-                        "input_tokens",
-                        "cache_read_input_tokens",
-                        "cache_creation_input_tokens",
-                    )
-                )
+                tokens = usage_input_tokens(usage)
                 if tokens > 0:
                     return TranscriptObservation(
                         path=os.fspath(path),
@@ -442,9 +436,7 @@ def measure(
         observed_first_turn_tokens=observed_tokens,
         gate_input_tokens=gate_tokens,
         budget_percent=(round(gate_tokens * 100.0 / budget, 2) if budget else None),
-        context_window_percent=(
-            round(gate_tokens * 100.0 / window, 2) if window else None
-        ),
+        context_window_percent=(round(gate_tokens * 100.0 / window, 2) if window else None),
         complete=complete,
         within_budget=within_budget,
         sources=source_results,
@@ -489,8 +481,7 @@ def _append_markdown(measurement: ColdStartMeasurement) -> None:
     header = ""
     if not BASELINE_DOC.exists():
         header = (
-            "# Monitor API Cold-Start Baseline\n\n"
-            "Profile-aware repository-controlled startup measurements.\n\n---\n\n"
+            "# Monitor API Cold-Start Baseline\n\nProfile-aware repository-controlled startup measurements.\n\n---\n\n"
         )
     with BASELINE_DOC.open("a", encoding="utf-8") as handle:
         if header:
@@ -525,12 +516,8 @@ def main() -> int:
         or os.environ.get("LEARN_UKRAINIAN_OBSERVED_MODEL_ID")
         or os.environ.get("LEARN_UKRAINIAN_MAIN_MODEL_ID")
     )
-    delegated_model = args.subagent_model or os.environ.get(
-        "CLAUDE_CODE_SUBAGENT_MODEL"
-    )
-    token_count_url = args.token_count_url or os.environ.get(
-        "LEARN_UKRAINIAN_TOKEN_COUNT_URL"
-    )
+    delegated_model = args.subagent_model or os.environ.get("CLAUDE_CODE_SUBAGENT_MODEL")
+    token_count_url = args.token_count_url or os.environ.get("LEARN_UKRAINIAN_TOKEN_COUNT_URL")
     measurement = measure(
         args.label or "ad-hoc",
         profile_id=profile_id,
