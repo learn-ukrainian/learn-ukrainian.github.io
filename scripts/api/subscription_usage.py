@@ -1393,6 +1393,196 @@ def _used_pct_from_remaining_fraction(remaining: Any) -> float | None:
     return max(0.0, min(100.0, 100.0 - frac * 100.0))
 
 
+# Public AGY quota view. The Gemini routing lane keeps its own record; this
+# observation is the same `/usage` payload with each subscription group left
+# intact. A later probe error must not keep painting the previous percentages.
+_AGY_QUOTA_LOCK = threading.Lock()
+_agy_quota_parsed: tuple[float, dict[str, Any]] | None = None
+_agy_quota_failure: tuple[float, dict[str, Any]] | None = None
+_AGY_WINDOW_SPECS: tuple[tuple[str, tuple[str, ...], int], ...] = (
+    ("5h", ("5h", "five_hour", "session"), 300),
+    ("weekly", ("weekly",), WEEKLY_WINDOW_MINUTES),
+)
+
+
+def _reset_agy_quota_observation_for_tests() -> None:
+    global _agy_quota_parsed, _agy_quota_failure
+    with _AGY_QUOTA_LOCK:
+        _agy_quota_parsed = None
+        _agy_quota_failure = None
+
+
+def _agy_group_key(name: str) -> str:
+    """Stable group id. Unsafe names never become the id."""
+    lowered = name.lower()
+    if "gemini" in lowered:
+        return "gemini_models"
+    if "claude" in lowered or "gpt" in lowered:
+        return "claude_gpt"
+    if any(token in name for token in ("@", "/", "\\")):
+        return "group"
+    slug = "".join(ch if ch.isalnum() else "_" for ch in lowered).strip("_")
+    return (slug or "group")[:40]
+
+
+def _agy_group_label(name: str, key: str) -> str:
+    text = " ".join(name.split())
+    if not text or any(token in text for token in ("@", "/", "\\")) or len(text) > 80:
+        return key.replace("_", " ")
+    return text
+
+
+def _agy_reset_or_none(value: Any) -> str | int | float | None:
+    if isinstance(value, str):
+        return value if _parse_resets_at_any(value) is not None else None
+    if isinstance(value, (int, float)) and not isinstance(value, bool) and _parse_resets_at_any(value) is not None:
+        return value
+    return None
+
+
+def _agy_window_from_bucket(bucket: dict[str, Any]) -> dict[str, Any] | None:
+    """One bucket. A missing fraction stays unknown and is not filled from another window."""
+    raw_window = str(bucket.get("window") or "").strip().lower()
+    if not raw_window:
+        return None
+    canonical = raw_window
+    minutes: int | None = None
+    for name, aliases, window_minutes in _AGY_WINDOW_SPECS:
+        if raw_window in aliases:
+            canonical = name
+            minutes = window_minutes
+            break
+    used = _used_pct_from_remaining_fraction(bucket.get("remaining_fraction"))
+    remaining = None if used is None else max(0.0, min(100.0, 100.0 - used))
+    return {
+        "window": canonical,
+        "used_pct": used,
+        "remaining_pct": remaining,
+        "resets_at": _agy_reset_or_none(bucket.get("reset_time")),
+        "window_minutes": minutes,
+    }
+
+
+def _agy_quota_groups_from_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """Map `agy /usage` groups onto separate quota rows.
+
+    Gemini Models and Claude/GPT stay distinct. Credit groups are not quota.
+    The first bucket for a window wins; a later bucket does not overwrite it.
+    """
+    command = payload.get("command") if isinstance(payload.get("command"), dict) else {}
+    data = command.get("data") if isinstance(command.get("data"), dict) else {}
+    raw_groups = data.get("groups") if isinstance(data.get("groups"), list) else []
+    groups: list[dict[str, Any]] = []
+    seen_keys: dict[str, int] = {}
+    for raw in raw_groups:
+        if not isinstance(raw, dict):
+            continue
+        raw_name = str(raw.get("name") or "")
+        if "credit" in raw_name.lower():
+            continue
+        base = _agy_group_key(raw_name)
+        seen_keys[base] = seen_keys.get(base, 0) + 1
+        key = base if seen_keys[base] == 1 else f"{base}_{seen_keys[base]}"
+        windows: list[dict[str, Any]] = []
+        seen_windows: set[str] = set()
+        buckets = raw.get("buckets") if isinstance(raw.get("buckets"), list) else []
+        for bucket in buckets:
+            if not isinstance(bucket, dict):
+                continue
+            parsed = _agy_window_from_bucket(bucket)
+            if parsed is None or parsed["window"] in seen_windows:
+                continue
+            seen_windows.add(str(parsed["window"]))
+            windows.append(parsed)
+        groups.append({"key": key, "label": _agy_group_label(raw_name, key), "windows": windows})
+    return groups
+
+
+def _note_agy_quota_parsed(groups: list[dict[str, Any]]) -> None:
+    global _agy_quota_parsed, _agy_quota_failure
+    with _AGY_QUOTA_LOCK:
+        _agy_quota_parsed = (time.monotonic(), {"quota_groups": groups})
+        _agy_quota_failure = None
+
+
+def _note_agy_quota_failure(kind: Any, code: Any) -> None:
+    global _agy_quota_failure
+    with _AGY_QUOTA_LOCK:
+        _agy_quota_failure = (
+            time.monotonic(),
+            {"error_kind": kind or "unavailable", "error_code": code},
+        )
+
+
+def _agy_finish_unparsed(record: dict[str, Any]) -> dict[str, Any]:
+    """A probe that never returned usage JSON. Do not keep the previous percentages."""
+    kind = record.get("error_kind")
+    code = record.get("error_code")
+    if code in {429, "429"} or kind in {"rate_limit", "ratelimit"}:
+        kind = "rate_limit"
+    _note_agy_quota_failure(kind, code)
+    return record
+
+
+def _copy_agy_groups(groups: Any) -> list[dict[str, Any]]:
+    if not isinstance(groups, list):
+        return []
+    copied: list[dict[str, Any]] = []
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        windows = [dict(window) for window in group.get("windows") or [] if isinstance(window, dict)]
+        copied.append({**group, "windows": windows})
+    return copied
+
+
+def get_agy_quota_observation() -> dict[str, Any]:
+    """Latest AGY `/usage` groups, with the same fresh/stale/unavailable contract as other probes.
+
+    A newer error or an expired snapshot does not count as a fresh quota reading.
+    """
+    now = time.monotonic()
+    ttl = _codexbar_cache_ttl_s()
+    with _AGY_QUOTA_LOCK:
+        parsed = _agy_quota_parsed
+        failure = _agy_quota_failure
+    failure_newer = failure is not None and (parsed is None or failure[0] >= parsed[0])
+    if parsed is not None and not failure_newer:
+        age = now - parsed[0]
+        groups = _copy_agy_groups(parsed[1].get("quota_groups"))
+        freshness = "fresh" if age < ttl else "stale_last_good"
+        return {
+            "quota_groups": groups,
+            "freshness": freshness,
+            "age_s": age,
+            "error_kind": None,
+            "error_code": None,
+        }
+    if parsed is not None and failure is not None:
+        return {
+            "quota_groups": _copy_agy_groups(parsed[1].get("quota_groups")),
+            "freshness": "stale_last_good",
+            "age_s": now - parsed[0],
+            "error_kind": failure[1].get("error_kind"),
+            "error_code": failure[1].get("error_code"),
+        }
+    if failure is not None:
+        return {
+            "quota_groups": [],
+            "freshness": "unavailable",
+            "age_s": None,
+            "error_kind": failure[1].get("error_kind"),
+            "error_code": failure[1].get("error_code"),
+        }
+    return {
+        "quota_groups": [],
+        "freshness": "unavailable",
+        "age_s": None,
+        "error_kind": "unavailable",
+        "error_code": None,
+    }
+
+
 def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
     """Gemini/AGY lane uses AGY CLI ``/usage`` — not Google Cloud quota APIs.
 
@@ -1402,13 +1592,15 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
     """
     agy_bin = _agy_cli_bin()
     if not agy_bin:
-        return _normalize_provider_error(
-            "gemini",
-            {
-                "message": "agy CLI not found (install AGY; do not probe Google quota APIs)",
-                "kind": "need_login",
-                "code": "NEED_LOGIN",
-            },
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {
+                    "message": "agy CLI not found (install AGY; do not probe Google quota APIs)",
+                    "kind": "need_login",
+                    "code": "NEED_LOGIN",
+                },
+            )
         )
     try:
         completed = subprocess.run(
@@ -1419,38 +1611,51 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
             check=False,
         )
     except subprocess.TimeoutExpired:
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage timed out", "kind": "fetch_error", "code": "TIMEOUT"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage timed out", "kind": "fetch_error", "code": "TIMEOUT"},
+            )
         )
     except OSError:
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+            )
         )
     if completed.returncode != 0:
         # Never forward raw stdout/stderr into auth_error (routing-budget JSON);
         # CLI diagnostics can contain credentials or private content.
-        return _normalize_provider_error(
-            "gemini",
-            {
-                "message": f"agy /usage failed (exit {completed.returncode})",
-                "kind": "provider",
-                "code": completed.returncode,
-            },
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {
+                    "message": f"agy /usage failed (exit {completed.returncode})",
+                    "kind": "provider",
+                    "code": completed.returncode,
+                },
+            )
         )
     try:
         payload = json.loads(completed.stdout or "")
     except json.JSONDecodeError:
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+            )
         )
     if not isinstance(payload, dict):
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage JSON root is not an object", "kind": "fetch_error", "code": "BAD_JSON"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage JSON root is not an object", "kind": "fetch_error", "code": "BAD_JSON"},
+            )
         )
+    # Public groups come from this same payload. Routing below still requires a
+    # Gemini Models window; a sibling Claude/GPT group is not discarded here.
+    _note_agy_quota_parsed(_agy_quota_groups_from_payload(payload))
     command = payload.get("command") if isinstance(payload.get("command"), dict) else {}
     data = command.get("data") if isinstance(command.get("data"), dict) else {}
     groups = data.get("groups") if isinstance(data.get("groups"), list) else []
@@ -1865,6 +2070,124 @@ def project_muse_for_status(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _agy_public_groups(
+    groups: Any,
+    *,
+    publish_numbers: bool,
+    publish_resets: bool,
+) -> list[dict[str, Any]]:
+    published: list[dict[str, Any]] = []
+    if not isinstance(groups, list):
+        return published
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        key = group.get("key")
+        if not isinstance(key, str) or not key:
+            continue
+        label = group.get("label")
+        if not isinstance(label, str) or not label:
+            label = key
+        windows: list[dict[str, Any]] = []
+        for window in group.get("windows") or []:
+            if not isinstance(window, dict):
+                continue
+            name = window.get("window")
+            if not isinstance(name, str) or not name:
+                continue
+            used = _coerce_float(window.get("used_pct")) if publish_numbers else None
+            remaining = _coerce_float(window.get("remaining_pct")) if publish_numbers else None
+            resets = window.get("resets_at") if publish_resets else None
+            if resets is not None and _parse_resets_at_any(resets) is None:
+                resets = None
+            minutes = window.get("window_minutes")
+            windows.append(
+                {
+                    "window": name,
+                    "used_pct": used,
+                    "remaining_pct": remaining,
+                    "resets_at": resets,
+                    "window_minutes": minutes if isinstance(minutes, int) else None,
+                }
+            )
+        published.append({"key": key, "label": label, "windows": windows})
+    return published
+
+
+def _agy_any_numeric_window(groups: Any) -> bool:
+    if not isinstance(groups, list):
+        return False
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        for window in group.get("windows") or []:
+            if isinstance(window, dict) and _coerce_float(window.get("remaining_pct")) is not None:
+                return True
+    return False
+
+
+_AGY_BLOCKING_KINDS = frozenset({"rate_limit", "provider", "fetch_error", "timeout", "unavailable", "need_login"})
+
+
+def project_agy_for_status(record: dict[str, Any]) -> dict[str, Any]:
+    """Public AGY row. Quota groups are not one interchangeable remaining percent.
+
+    A fresh parsed payload publishes each finite ``remaining_fraction`` and that
+    bucket's own reset. A bucket with no fraction stays unknown and keeps its
+    reset. Stale, malformed, error, and rate-limited observations drop numbers
+    and resets so an older window cannot stand in for the current one.
+    """
+    if not isinstance(record, dict):
+        record = {}
+    freshness = str(record.get("freshness") or "unavailable")
+    kind = record.get("error_kind") or record.get("failure_kind")
+    code = record.get("error_code")
+    if code is None:
+        code = record.get("last_failure_code")
+    blocking = freshness != "fresh" or kind in _AGY_BLOCKING_KINDS or code in {429, "429"}
+    groups_in = record.get("quota_groups")
+    any_numeric = _agy_any_numeric_window(groups_in)
+    if blocking:
+        status = "unknown"
+        groups = _agy_public_groups(groups_in, publish_numbers=False, publish_resets=False)
+    elif any_numeric:
+        status = "healthy"
+        kind = None
+        code = None
+        groups = _agy_public_groups(groups_in, publish_numbers=True, publish_resets=True)
+    else:
+        status = "unknown"
+        kind = kind or "unsupported"
+        if code is None:
+            code = "NO_QUOTA"
+        groups = _agy_public_groups(groups_in, publish_numbers=True, publish_resets=True)
+    return {
+        "lane": "agy",
+        "status": status,
+        "remaining_pct": None,
+        "headroom_pct": None,
+        "resets_at": None,
+        "freshness": freshness,
+        "age_s": record.get("age_s"),
+        "error_kind": kind,
+        "error_code": code,
+        "failure_kind": record.get("failure_kind") or kind,
+        "last_failure_code": code,
+        "auth_error": None,
+        "quota_groups": groups,
+        "codexbar": {
+            "freshness": freshness,
+            "age_s": record.get("age_s"),
+            "quota_groups": groups,
+            "error_kind": kind,
+            "error_code": code,
+            "failure_kind": record.get("failure_kind") or kind,
+            "last_failure_code": code,
+            "source": "agy_cli_usage",
+        },
+    }
+
+
 _NATIVE_PROBES = {
     "claude": _probe_claude_native,
     "codex": _probe_codex_native,
@@ -1897,6 +2220,8 @@ def fetch_provider_usage(provider: str, *, timeout_s: float | None = None) -> di
     try:
         return probe(timeout_s=timeout_s)
     except Exception as exc:
+        if provider in {"gemini", "antigravity"}:
+            _note_agy_quota_failure("fetch_error", "FETCH_ERROR")
         return _normalize_provider_error(
             provider,
             {"message": f"Native probe failed: {exc}", "kind": "fetch_error", "code": "FETCH_ERROR"},

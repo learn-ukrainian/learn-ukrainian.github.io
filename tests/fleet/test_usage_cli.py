@@ -14,6 +14,16 @@ from scripts.fleet import usage
 from tests.helpers.restore_import_state import restore_import_state
 
 
+@pytest.fixture(autouse=True)
+def _isolate_agy_quota_observation():
+    """AGY quota state is process-global; keep one test's probe off the next."""
+    from scripts.api import subscription_usage
+
+    subscription_usage._reset_agy_quota_observation_for_tests()
+    yield
+    subscription_usage._reset_agy_quota_observation_for_tests()
+
+
 @pytest.fixture
 def budget():
     return {
@@ -158,12 +168,19 @@ def test_json_uses_monitor_and_preserves_payload(monkeypatch, capsys, budget):
     assert usage.main(["json"]) == 0
     result = json.loads(capsys.readouterr().out)
     muse = result["agents"].pop("muse")
+    agy = result["agents"].pop("agy")
     assert result == {**budget, "source": "monitor-api"}
     assert muse["status"] == "unknown"
     assert muse["remaining_pct"] is None
     assert muse["headroom_pct"] is None
     assert muse["resets_at"] is None
     assert muse["freshness"] == "unavailable"
+    assert agy["status"] == "unknown"
+    assert agy["remaining_pct"] is None
+    assert agy["headroom_pct"] is None
+    assert agy["freshness"] == "unavailable"
+    assert agy["error_kind"] == "unavailable"
+    assert agy["quota_groups"] == []
     assert urls == ["http://fixture.invalid:8765/api/state/routing-budget?transport=dispatch"]
 
 
@@ -771,3 +788,234 @@ def test_usage_cli_stale_and_rate_limit_muse_hide_headroom():
     assert "muse | unknown | unknown | fresh | 1 | rate_limit/429" in text
     assert "quota: remaining=unknown headroom=unknown resets=unknown" in text
     assert "70.0" not in text
+
+
+def _agy_split_payload() -> dict:
+    return {
+        "command": {
+            "data": {
+                "groups": [
+                    {
+                        "name": "Gemini Models",
+                        "buckets": [
+                            {
+                                "window": "5h",
+                                "remaining_fraction": 0.5,
+                                "reset_time": "2026-10-13T18:00:00Z",
+                            }
+                        ],
+                    },
+                    {
+                        "name": "Claude and GPT models",
+                        "buckets": [
+                            {
+                                "window": "weekly",
+                                "remaining_fraction": 0.25,
+                                "reset_time": "2026-10-20T00:00:00Z",
+                            }
+                        ],
+                    },
+                ]
+            }
+        }
+    }
+
+
+def test_usage_cli_shows_agy_groups_beside_muse_cursor_and_grok(monkeypatch, capsys):
+    import subprocess
+
+    from scripts.api import state_router, subscription_usage
+
+    _clear_muse_observation()
+    subscription_usage._reset_agy_quota_observation_for_tests()
+    monkeypatch.setattr(subscription_usage, "_agy_cli_bin", lambda: "/usr/bin/agy")
+
+    def fake_run(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(_agy_split_payload()), stderr="")
+
+    monkeypatch.setattr(subscription_usage.subprocess, "run", fake_run)
+    probe = subscription_usage._probe_antigravity_native
+
+    def fetch(provider, *, timeout_s=None):
+        if provider in {"gemini", "antigravity"}:
+            return probe(timeout_s=1)
+        if provider == "muse":
+            return subscription_usage._muse_record_from_codexbar_payload(_MUSE_KNOWN_PAYLOAD)
+        return subscription_usage._normalize_provider_error(
+            provider,
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        )
+
+    monkeypatch.setattr(subscription_usage, "fetch_provider_usage", fetch)
+    monkeypatch.setattr(subscription_usage, "refresh_api_account_data", lambda providers: {})
+    monkeypatch.setattr(
+        subscription_usage,
+        "_refresh_cursor_usage_live",
+        lambda: subscription_usage._normalize_provider_error(
+            "cursor",
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        ),
+    )
+    monkeypatch.setattr(
+        state_router,
+        "compute_routing_budget",
+        lambda **kwargs: {
+            "agents": {
+                "cursor": {
+                    "status": "cool",
+                    "freshness": "fresh",
+                    "remaining_pct": 64.0,
+                    "provider_windows": {
+                        "auto": {
+                            "label": "Cursor Models (Auto)",
+                            "window": "monthly",
+                            "used_pct": 36.0,
+                            "remaining_pct": 64.0,
+                            "resets_at": "2026-10-01T00:00:00Z",
+                        }
+                    },
+                },
+                "grok": {
+                    "status": "cool",
+                    "freshness": "fresh",
+                    "remaining_pct": 80.0,
+                    "codexbar": {
+                        "freshness": "fresh",
+                        "windows": {
+                            "secondary": {
+                                "used_pct": 20.0,
+                                "remaining_pct": 80.0,
+                                "resets_at": "2026-10-18T00:00:00Z",
+                                "window_minutes": 10080,
+                            }
+                        },
+                    },
+                },
+            },
+            "api_accounts": {},
+        },
+    )
+    assert usage.main(["show", "--fresh"]) == 0
+    text = capsys.readouterr().out
+    assert "agy | healthy | unknown | fresh |" in text
+    assert "Gemini Models (5h): used=50.0% rem=50.0% resets=2026-10-13T18:00:00Z" in text
+    assert "Claude and GPT models (weekly): used=75.0% rem=25.0% resets=2026-10-20T00:00:00Z" in text
+    assert "Gemini Models (weekly)" not in text
+    assert "Claude and GPT models (5h)" not in text
+    assert "muse | healthy | 70.0 | fresh |" in text
+    assert "Cursor Models (Auto) (monthly): used=36.0% rem=64.0%" in text
+    assert "secondary (weekly): used=20.0% rem=80.0% resets=2026-10-18T00:00:00Z" in text
+
+
+def test_usage_cli_shows_agy_missing_fraction_as_unknown(monkeypatch, capsys):
+    import subprocess
+
+    from scripts.api import state_router, subscription_usage
+
+    _clear_muse_observation()
+    subscription_usage._reset_agy_quota_observation_for_tests()
+    monkeypatch.setattr(subscription_usage, "_agy_cli_bin", lambda: "/usr/bin/agy")
+    payload = {
+        "command": {
+            "data": {
+                "groups": [
+                    {
+                        "name": "Gemini Models",
+                        "buckets": [
+                            {
+                                "window": "weekly",
+                                "remaining_fraction": None,
+                                "reset_time": "2026-10-20T00:00:00Z",
+                            }
+                        ],
+                    }
+                ]
+            }
+        }
+    }
+
+    def fake_run(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(subscription_usage.subprocess, "run", fake_run)
+    probe = subscription_usage._probe_antigravity_native
+
+    def fetch(provider, *, timeout_s=None):
+        if provider in {"gemini", "antigravity"}:
+            return probe(timeout_s=1)
+        return subscription_usage._normalize_provider_error(
+            provider,
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        )
+
+    monkeypatch.setattr(subscription_usage, "fetch_provider_usage", fetch)
+    monkeypatch.setattr(subscription_usage, "refresh_api_account_data", lambda providers: {})
+    monkeypatch.setattr(
+        subscription_usage,
+        "_refresh_cursor_usage_live",
+        lambda: subscription_usage._normalize_provider_error(
+            "cursor",
+            {"message": "skipped", "kind": "unavailable", "code": "SKIP"},
+        ),
+    )
+    monkeypatch.setattr(
+        state_router,
+        "compute_routing_budget",
+        lambda **kwargs: {"agents": {}, "api_accounts": {}},
+    )
+    assert usage.main(["show", "--fresh"]) == 0
+    text = capsys.readouterr().out
+    assert "agy | unknown | unknown | fresh |" in text
+    assert "unsupported/NO_QUOTA" in text
+    assert "Gemini Models (weekly): used=unknown rem=unknown resets=2026-10-20T00:00:00Z" in text
+    assert "100.0" not in text
+    assert "50.0" not in text
+
+
+def test_usage_cli_stale_and_rate_limit_agy_hide_headroom():
+    from scripts.api import subscription_usage
+
+    groups = subscription_usage._agy_quota_groups_from_payload(_agy_split_payload())
+    stale = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {
+                "agy": subscription_usage.project_agy_for_status(
+                    {
+                        "quota_groups": groups,
+                        "freshness": "stale_last_good",
+                        "age_s": 800,
+                        "error_kind": None,
+                        "error_code": None,
+                    }
+                )
+            },
+            "api_accounts": {},
+        }
+    )
+    assert "agy | unknown | unknown | stale_last_good | 800 | -" in stale
+    assert "used=unknown rem=unknown resets=unknown" in stale
+    assert "50.0" not in stale
+    assert "25.0" not in stale
+    assert "75.0" not in stale
+
+    limited = usage.format_human(
+        {
+            "source": "fixture",
+            "agents": {
+                "agy": subscription_usage.project_agy_for_status(
+                    {
+                        "quota_groups": groups,
+                        "freshness": "fresh",
+                        "age_s": 1,
+                        "error_kind": "rate_limit",
+                        "error_code": 429,
+                    }
+                )
+            },
+            "api_accounts": {},
+        }
+    )
+    assert "agy | unknown | unknown | fresh | 1 | rate_limit/429" in limited
+    assert "50.0" not in limited
+    assert "2026-10-13" not in limited

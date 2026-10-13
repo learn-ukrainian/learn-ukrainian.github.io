@@ -2768,3 +2768,258 @@ def test_muse_shares_existing_scheduler_at_most_every_15_minutes(monkeypatch):
     assert "muse" in captured["providers"]
     assert captured["providers"] == tuple(subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)
     assert "cursor" not in captured["providers"]
+
+
+_AGY_EMAIL = "secret-email-do-not-leak@example.com"
+_AGY_FIXTURE = Path(__file__).parent / "fixtures" / "usage_9270" / "agy.json"
+
+
+def _agy_usage_payload(*groups: dict) -> dict:
+    return {"command": {"data": {"groups": list(groups)}}}
+
+
+def _probe_agy_stdout(monkeypatch, stdout: str, *, returncode: int = 0, reset: bool = True) -> dict:
+    import subprocess
+
+    if reset:
+        subscription_usage_mod._reset_agy_quota_observation_for_tests()
+    monkeypatch.setattr(subscription_usage_mod, "_agy_cli_bin", lambda: "/usr/bin/agy")
+    captured: dict = {}
+
+    def fake_run(argv, **kwargs):
+        captured["argv"] = list(argv)
+        return subprocess.CompletedProcess(argv, returncode, stdout=stdout, stderr=_AGY_EMAIL)
+
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
+    record = subscription_usage_mod._probe_antigravity_native(timeout_s=5)
+    record["_captured_argv"] = captured.get("argv")
+    return record
+
+
+def _agy_window(projected: dict, group_key: str, window: str) -> dict | None:
+    for group in projected["quota_groups"]:
+        if group["key"] != group_key:
+            continue
+        for item in group["windows"]:
+            if item["window"] == window:
+                return item
+    return None
+
+
+def test_agy_fixture_publishes_separate_quota_groups(monkeypatch):
+    payload = json.loads(_AGY_FIXTURE.read_text(encoding="utf-8"))
+    payload["account_id"] = _AGY_EMAIL
+    payload["command"]["data"]["balance"] = 999
+    record = _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    assert record["_captured_argv"] == [
+        "/usr/bin/agy",
+        "--prompt",
+        "/usage",
+        "--output-format",
+        "json",
+    ]
+    assert record["status"] == "healthy"
+    assert record["weekly_used_pct"] == pytest.approx(0.15184879302978516)
+    assert record["claude_gpt_windows"]["five_hour"]["used_pct"] == 0
+    assert "quota_groups" not in record
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    blob = json.dumps(projected)
+    assert _AGY_EMAIL not in blob
+    assert "999" not in blob
+    assert projected["status"] == "healthy"
+    assert projected["remaining_pct"] is None
+    assert projected["headroom_pct"] is None
+    assert projected["freshness"] == "fresh"
+    assert projected["codexbar"]["source"] == "agy_cli_usage"
+    gemini_weekly = _agy_window(projected, "gemini_models", "weekly")
+    claude_weekly = _agy_window(projected, "claude_gpt", "weekly")
+    assert gemini_weekly is not None and claude_weekly is not None
+    assert gemini_weekly["used_pct"] == pytest.approx(0.15184879302978516)
+    assert gemini_weekly["remaining_pct"] == pytest.approx(99.84815120697021)
+    assert gemini_weekly["resets_at"] == "2026-10-07T02:23:27Z"
+    assert claude_weekly["used_pct"] == 0.0
+    assert claude_weekly["remaining_pct"] == 100.0
+    assert claude_weekly["resets_at"] == "2026-10-07T07:33:22Z"
+    assert gemini_weekly["remaining_pct"] != claude_weekly["remaining_pct"]
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] == 100.0
+    assert _agy_window(projected, "claude_gpt", "5h")["resets_at"] == "2026-09-30T12:33:22Z"
+
+
+def test_agy_groups_do_not_copy_a_window_into_its_sibling(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [
+                {"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"},
+            ],
+        },
+        {
+            "name": "Claude and GPT models",
+            "buckets": [
+                {"window": "weekly", "remaining_fraction": 0.25, "reset_time": "2026-10-20T00:00:00Z"},
+            ],
+        },
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "healthy"
+    assert projected["remaining_pct"] is None
+    gemini = next(group for group in projected["quota_groups"] if group["key"] == "gemini_models")
+    claude = next(group for group in projected["quota_groups"] if group["key"] == "claude_gpt")
+    assert [item["window"] for item in gemini["windows"]] == ["5h"]
+    assert [item["window"] for item in claude["windows"]] == ["weekly"]
+    assert gemini["windows"][0]["remaining_pct"] == 50.0
+    assert gemini["windows"][0]["resets_at"] == "2026-10-13T18:00:00Z"
+    assert claude["windows"][0]["remaining_pct"] == 25.0
+    assert claude["windows"][0]["resets_at"] == "2026-10-20T00:00:00Z"
+
+
+def test_agy_missing_fraction_keeps_reset_and_is_unknown(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [
+                {"window": "weekly", "remaining_fraction": None, "reset_time": "2026-10-20T00:00:00Z"},
+            ],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    window = _agy_window(projected, "gemini_models", "weekly")
+    assert projected["status"] == "unknown"
+    assert projected["error_kind"] == "unsupported"
+    assert projected["error_code"] == "NO_QUOTA"
+    assert projected["freshness"] == "fresh"
+    assert window is not None
+    assert window["used_pct"] is None
+    assert window["remaining_pct"] is None
+    assert window["resets_at"] == "2026-10-20T00:00:00Z"
+    assert window["remaining_pct"] != 100
+
+
+def test_agy_measured_empty_and_full_windows_are_not_unlimited(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [
+                {"window": "5h", "remaining_fraction": 0, "reset_time": "2026-10-13T18:00:00Z"},
+                {"window": "weekly", "remaining_fraction": 1, "reset_time": "2026-10-20T00:00:00Z"},
+            ],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "healthy"
+    assert _agy_window(projected, "gemini_models", "5h")["used_pct"] == 100.0
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] == 0.0
+    assert _agy_window(projected, "gemini_models", "weekly")["used_pct"] == 0.0
+    assert _agy_window(projected, "gemini_models", "weekly")["remaining_pct"] == 100.0
+
+
+def test_agy_claude_group_survives_when_gemini_group_is_absent(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Claude and GPT models",
+            "buckets": [
+                {"window": "5h", "remaining_fraction": 0.8, "reset_time": "2026-10-13T18:00:00Z"},
+            ],
+        }
+    )
+    record = _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    assert record["error_code"] == "NEED_LOGIN"
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "healthy"
+    assert [group["key"] for group in projected["quota_groups"]] == ["claude_gpt"]
+    assert _agy_window(projected, "claude_gpt", "5h")["remaining_pct"] == 80.0
+    assert _agy_window(projected, "gemini_models", "5h") is None
+
+
+def test_agy_duplicate_group_keys_stay_distinct(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Claude models",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.9, "reset_time": "2026-10-20T00:00:00Z"}],
+        },
+        {
+            "name": "GPT models",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.1, "reset_time": "2026-10-21T00:00:00Z"}],
+        },
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    keys = [group["key"] for group in projected["quota_groups"]]
+    assert keys == ["claude_gpt", "claude_gpt_2"]
+    assert _agy_window(projected, "claude_gpt", "weekly")["remaining_pct"] == 90.0
+    assert _agy_window(projected, "claude_gpt_2", "weekly")["remaining_pct"] == 10.0
+
+
+def test_agy_credit_group_and_account_label_are_dropped(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Credits",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.5, "reset_time": "2026-10-20T00:00:00Z"}],
+        },
+        {
+            "name": _AGY_EMAIL,
+            "buckets": [{"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"}],
+        },
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    blob = json.dumps(projected)
+    assert _AGY_EMAIL not in blob
+    assert "Credits" not in blob
+    assert projected["status"] == "healthy"
+    assert [group["key"] for group in projected["quota_groups"]] == ["group"]
+    assert _agy_window(projected, "group", "5h")["remaining_pct"] == 50.0
+
+
+def test_agy_malformed_and_rate_limit_drop_numeric_headroom(monkeypatch):
+    malformed = _probe_agy_stdout(monkeypatch, "not-json")
+    assert malformed["error_code"] == "BAD_JSON"
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "unknown"
+    assert projected["freshness"] == "unavailable"
+    assert projected["error_kind"] == "fetch_error"
+    assert projected["error_code"] == "BAD_JSON"
+    assert projected["quota_groups"] == []
+    assert _AGY_EMAIL not in json.dumps(projected)
+
+    known = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.5, "reset_time": "2026-10-20T00:00:00Z"}],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(known))
+    fresh = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert fresh["status"] == "healthy"
+    limited = _probe_agy_stdout(monkeypatch, "", returncode=429, reset=False)
+    assert limited["status"] == "unavailable"
+    hidden = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert hidden["status"] == "unknown"
+    assert hidden["error_kind"] == "rate_limit"
+    assert hidden["error_code"] == 429
+    assert hidden["freshness"] == "stale_last_good"
+    assert _agy_window(hidden, "gemini_models", "weekly")["remaining_pct"] is None
+    assert _agy_window(hidden, "gemini_models", "weekly")["resets_at"] is None
+    assert "50.0" not in json.dumps(hidden)
+
+
+def test_agy_stale_observation_hides_quota(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [{"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"}],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    with subscription_usage_mod._AGY_QUOTA_LOCK:
+        snapshot = subscription_usage_mod._agy_quota_parsed[1]
+        subscription_usage_mod._agy_quota_parsed = (time.monotonic() - 10_000, snapshot)
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["freshness"] == "stale_last_good"
+    assert projected["status"] == "unknown"
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] is None
+    assert _agy_window(projected, "gemini_models", "5h")["resets_at"] is None
+    assert "50.0" not in json.dumps(projected)
