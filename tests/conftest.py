@@ -294,6 +294,9 @@ def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
         return report
     chunks = [str(report.longrepr or "")]
     chunks.extend(title + "\n" + (content or "") for title, content in report.sections)
+    properties = getattr(report, "user_properties", [])
+    property_text = "\n".join(str(name) + "\n" + str(value) for name, value in properties)
+    chunks.append(property_text)
     text = "\n".join(chunks)
     leaked = [name for name, value in secrets.items() if value and value in text]
     if not leaked:
@@ -302,7 +305,7 @@ def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
     # every section, but only promote a passed report for its own phase.
     phase = getattr(report, "when", None)
     current_text = "\n".join(
-        [str(report.longrepr or "")]
+        [str(report.longrepr or ""), property_text]
         + [content for title, content in report.sections if phase is None or title.endswith(" " + phase)]
     )
     current_leaked = [name for name, value in secrets.items() if value and value in current_text]
@@ -316,6 +319,12 @@ def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
         return content
 
     report.sections = [(redact(title), redact(content)) for title, content in report.sections]
+    if properties:
+        report.user_properties = [
+            (redact(name) if isinstance(name, str) else name,
+             redact(str(value)) if any(secret and secret in str(value) for secret in values) else value)
+            for name, value in properties
+        ]
     if isinstance(report.longrepr, tuple):
         report.longrepr = tuple(redact(part) if isinstance(part, str) else part for part in report.longrepr)
     elif report.longrepr is not None:

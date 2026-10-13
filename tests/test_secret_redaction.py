@@ -215,6 +215,28 @@ def test_collection_cannot_read_inherited_key(tmp_path: Path) -> None:
     assert "1 passed" in proc.stdout
 
 
+@pytest.mark.parametrize("secret_in_name", [False, True], ids=["value", "name"])
+def test_conftest_redacts_junit_properties(tmp_path: Path, secret_in_name: bool) -> None:
+    secret_file = tmp_path / "sample.txt"
+    secret_file.write_text(SYNTHETIC_KEY, encoding="utf-8")
+    proc = _run_secret_probe(
+        tmp_path,
+        "from pathlib import Path\n"
+        "def test_sample(record_property):\n"
+        f"    secret = Path({str(secret_file)!r}).read_text()\n"
+        "    record_property('safe-count', 7)\n"
+        + ("    record_property(secret, 'safe-value')\n" if secret_in_name
+           else "    record_property('credential', secret)\n"),
+    )
+    xml = (tmp_path / "report.xml").read_text()
+    combined = proc.stdout + proc.stderr + xml
+    assert SYNTHETIC_KEY not in combined
+    assert '[REDACTED]' in xml
+    assert '<property name="safe-count" value="7"' in xml
+    assert proc.returncode == 1
+    assert "scrubbed env var CURSOR_API_KEY" in combined
+
+
 def test_collection_cannot_read_inherited_password_or_apikey(tmp_path: Path) -> None:
     proc = _run_secret_probe(
         tmp_path,
