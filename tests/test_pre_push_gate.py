@@ -1862,6 +1862,7 @@ def test_an_io_error_during_a_stage_abandons_the_shadow_and_is_incomplete(
 def test_a_startup_io_error_is_a_typed_incomplete_outcome_and_leaks_nothing(
     repo: Path, monkeypatch: pytest.MonkeyPatch, failing_step: str
 ) -> None:
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
     monkeypatch.chdir(repo)
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
@@ -2714,7 +2715,10 @@ def test_same_head_different_base_production_follower_runs_the_missing_check(rep
 
 
 @pytest.mark.parametrize("ending", ["refused", "incomplete", "interrupted"])
-def test_non_green_production_leader_releases_and_follower_checks_once(repo: Path, tmp_path: Path, ending: str) -> None:
+def test_non_green_production_leader_releases_and_follower_checks_once(
+    repo: Path, tmp_path: Path, ending: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
     _write(repo, "tests/test_control.py", CONTROL_TEST)
     head = _commit(repo, "controlled checks", "tests/test_control.py")
     state = gate.state_dir(repo)
