@@ -1582,6 +1582,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
         "hermes_qwen.py": "qwen",
         "kimi.py": "kimi",
         "kimicc.py": "kimi",
+        "muse.py": "muse",
     }
     adapter_dir = repo / "scripts/agent_runtime/adapters"
     found = sorted(path.name for path in adapter_dir.glob("*.py"))
@@ -1617,6 +1618,22 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
 
     for seats in adapter_subject_index().values():
         assert seats <= KNOWN_SUBJECT_SEATS
+
+
+@pytest.mark.parametrize(
+    "name,model,route,expected",
+    [
+        ("synthetic", "synthetic", "MUSE", True),
+        ("MUSE-candidate", "synthetic", "synthetic", True),
+        ("synthetic", "MUSE-wonder-1.0", "synthetic", True),
+        ("synthetic", "synthetic", "synthetic", False),
+    ],
+)
+def test_muse_subject_matcher_uses_route_name_or_concrete_model(name, model, route, expected):
+    from scripts.review.subject_seat import candidate_matches_subject_seat
+
+    candidate = replace(OPENAI_FRONTIER, name=name, concrete_model=model, route=route)
+    assert candidate_matches_subject_seat(candidate, "muse") is expected
 
 
 _AUTHOR_MODELS = {

@@ -125,6 +125,12 @@ def _matches_glm(candidate: _SeatCandidate) -> bool:
     return candidate.route.casefold() == "glm" or name.startswith("glm") or model.startswith("glm")
 
 
+def _matches_muse(candidate: _SeatCandidate) -> bool:
+    name = candidate.name.casefold()
+    model = candidate.concrete_model.casefold()
+    return candidate.route.casefold() == "muse" or name.startswith("muse") or model.startswith("muse")
+
+
 def _matches_qwen(candidate: _SeatCandidate) -> bool:
     name = candidate.name.casefold()
     model = candidate.concrete_model.casefold()
@@ -166,6 +172,7 @@ _MATCHERS: dict[str, Callable[[_SeatCandidate], bool]] = {
     "glm": _matches_glm,
     "grok": _matches_grok,
     "kimi": _matches_kimi,
+    "muse": _matches_muse,
     "pool": _matches_pool,
     "qwen": _matches_qwen,
 }

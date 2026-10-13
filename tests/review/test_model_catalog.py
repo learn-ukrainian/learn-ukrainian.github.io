@@ -224,6 +224,35 @@ APPROVED_BASELINE = approved_cto_wrappers_baseline(
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
 
 
+MUSE_CANDIDATE_ENTRY = {
+    "family": "meta",
+    "tier": "specialist",
+    "lifecycle": "hold",
+    "roles": ["candidate_author", "candidate_reviewer"],
+    "transports": ["muse"],
+    "context_window": 1000000,
+    "strengths": ["public_code_candidate"],
+    "weaknesses": ["unqualified_no_automatic_routing", "no_security", "no_ukrainian", "no_private_repository"],
+    "sources": ["https://dev.meta.ai/models/muse-wonder"],
+}
+
+
+def approved_muse_candidate_catalog(catalog):
+    """#10511 adds only the held Muse model to the approved catalog."""
+    revised = deepcopy(catalog)
+    assert "muse-wonder-1.0" not in revised["models"]
+    revised["models"]["muse-wonder-1.0"] = deepcopy(MUSE_CANDIDATE_ENTRY)
+    return revised
+
+
+def test_muse_candidate_overlay_preserves_every_other_catalog_field():
+    before = deepcopy(APPROVED_BASELINE["catalog"])
+    revised = approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
+    assert revised["models"].pop("muse-wonder-1.0") == MUSE_CANDIDATE_ENTRY
+    assert revised == before
+    assert APPROVED_BASELINE["catalog"] == before
+
+
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
     fixture_path = CAPACITY_FIXTURE / "claude-cap-10355.json"
@@ -678,7 +707,7 @@ def test_frozen_hashes_and_matrix_denominator():
 
 
 def test_legacy_catalog_equals_approved_routing_baseline():
-    assert expanded_legacy_view() == APPROVED_BASELINE["catalog"]
+    assert expanded_legacy_view() == approved_muse_candidate_catalog(APPROVED_BASELINE["catalog"])
 
 
 @pytest.mark.parametrize(
