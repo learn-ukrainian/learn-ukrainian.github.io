@@ -417,8 +417,7 @@ def _reap_main_worktree(
             collides = any(record.get("task_id") != task_id for _, record in matches)
             if (
                 relative.parts[1] == expected_leaf
-                and state.get("worktree_reused") is False
-                and isinstance(state.get("ignored_output_baseline"), dict)
+                and ignored_task_output.record_created_worktree(state)
                 and not collides
             ):
                 proven = True

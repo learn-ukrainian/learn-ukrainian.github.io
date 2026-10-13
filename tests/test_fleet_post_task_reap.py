@@ -321,7 +321,10 @@ def test_no_task_state(hermetic_reap):
     assert "no task state" in report["main_worktree"]["reason"]
 
 
-@pytest.mark.parametrize("contents", ["regenerable_only", "mixed", "oversized_output", "symlink", "unpublished_manifest", "oversized_manifest"])
+@pytest.mark.parametrize(
+    "contents",
+    ["regenerable_only", "mixed", "oversized_output", "symlink", "unpublished_manifest", "oversized_manifest"],
+)
 def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, tmp_path, contents):
     repo, tasks = hermetic_reap
     (repo / "site").mkdir()
@@ -333,7 +336,9 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
     pointer = repo / "site/src/data/lexicon-manifest.pointer.json"
     pointer.parent.mkdir(parents=True)
     pointer.write_text(json.dumps({"json_sha256": hashlib.sha256(b"x" * 64).hexdigest()}))
-    _run(["git", "add", "site/package-lock.json", ".gitignore", "site/src/data/lexicon-manifest.pointer.json"], cwd=repo)
+    _run(
+        ["git", "add", "site/package-lock.json", ".gitignore", "site/src/data/lexicon-manifest.pointer.json"], cwd=repo
+    )
     _run(["git", "commit", "-m", "fixture lock and ignored patterns"], cwd=repo)
     _run(["git", "push", "origin", "main"], cwd=repo)
     task_id = "regenerable-9828"
@@ -903,6 +908,33 @@ def test_canonical_creator_flag_without_creation_inventory_is_retained(hermetic_
     assert tree.exists()
 
 
+@pytest.mark.parametrize("creator_record", ["absent", "archived"])
+def test_prep_failure_with_settled_reuser_does_not_reap_creator_tree(hermetic_reap, monkeypatch, creator_record):
+    repo, tasks = hermetic_reap
+    task_id = "codex-shared-leaf"
+    tree = _reuse_cohort(repo, tasks, creator_task="codex-creator-r1", successor_task="codex-reuser-r2")
+    creator_path = task_record_path(tasks, "codex-creator-r1")
+    if creator_record == "absent":
+        creator_path.unlink()
+    else:
+        archive = archived_task_record_path(tasks, "codex-creator-r1")
+        archive.parent.mkdir(parents=True, exist_ok=True)
+        creator_path.rename(archive)
+    _write_task_state(tasks, task_id, "failed", tree, agent="codex", worktree_reused=False)
+    path = task_record_path(tasks, task_id)
+    state = json.loads(path.read_text())
+    state.update(pid=None, run_nonce="prep-failure-run", worktree_branch="codex/shared-reused")
+    assert "ignored_output_baseline" not in state
+    path.write_text(json.dumps(state))
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", lambda *_args: ([], None))
+
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
+    assert report["main_worktree"]["reason"] == _OWNERSHIP_MISMATCH
+    assert tree.exists()
+
+
 def _assert_retained_unowned(repo_root: Path, tasks_dir: Path, task_id: str, worktree: Path, agent: str = "codex"):
     _write_task_state(tasks_dir, task_id, "done", worktree, agent=agent)
 
@@ -978,6 +1010,10 @@ def _reuse_cohort(
             "run_nonce": f"nonce-{task_id}",
             "pid": finished.pid,
         }
+        if not reused:
+            state["ignored_output_baseline"] = post_task_reap.ignored_task_output.creation_inventory(
+                worktree, primary=repo_root, task_id=task_id, run_nonce=state["run_nonce"]
+            )
         task_record_path(tasks_dir, task_id).write_text(json.dumps(state), encoding="utf-8")
     return worktree
 
