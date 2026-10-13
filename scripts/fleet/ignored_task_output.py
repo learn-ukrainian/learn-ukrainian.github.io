@@ -712,12 +712,29 @@ def preserve_worktree_artifacts(
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
-        record_path, record = resolve_worktree_record(
-            worktree,
-            tasks_dir,
-            repo_root=repo_root,
-            publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
-        )
+        try:
+            record_path, record = resolve_worktree_record(
+                worktree,
+                tasks_dir,
+                repo_root=repo_root,
+                publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
+            )
+        except ValueError:
+            # A continuation that switched branch still names the dispatch-time
+            # branch, so strict attribution refuses. Preservation may use that
+            # creator only after the merged-head proof; resolve itself stays strict
+            # so branch-holder release and retention release do not (#10548).
+            from scripts.orchestration.reap_worktrees import (
+                _switched_branch_merge_proven,
+                _switched_branch_structural_cohort,
+            )
+
+            matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+            structural = _switched_branch_structural_cohort(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
+            cohort = _current_reuse_records(matches, tasks_dir)
+            if structural is None or not _switched_branch_merge_proven(repo_root, worktree, cohort):
+                raise
+            record_path, record = structural
         members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         kept = any(member.get("keep_worktree") for _, member in members)
 
