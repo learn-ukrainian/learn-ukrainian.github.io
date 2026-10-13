@@ -658,13 +658,6 @@ entries:
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
 - path: scripts/agent_runtime/adapters/grok_build.py
-  scope: GrokBuildAdapter.build_invocation
-  context: expression
-  id: grok-prompt.txt
-  count: 1
-  kind: non_model_label
-  reason: Existing harness, task, artifact or descriptive label 'grok-prompt.txt'; not a model ID.
-- path: scripts/agent_runtime/adapters/grok_build.py
   scope: GrokBuildAdapter.parse_response
   context: expression
   id: grok-model-usage

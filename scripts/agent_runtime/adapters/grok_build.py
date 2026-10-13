@@ -233,6 +233,11 @@ _META_LIVENESS_SNAPSHOT = "liveness_session_dir_snapshot"
 _META_REVIEWER_AGENT_FILE = "reviewer_agent_file"
 _META_WRITE_GUARD_AGENT_FILE = "write_guard_agent_file"
 _META_PROMPT_FILE = "grok_prompt_file"
+# Private prompt-file suffix. The only copy of this label carries a leading
+# dot: NamedTemporaryFile needs it, and the bare basename is read as a model
+# literal (#10522). Isolated review uses the same basename without the dot.
+_PROMPT_FILE_SUFFIX = ".grok-prompt.txt"
+_ISOLATED_PROMPT_FILENAME = _PROMPT_FILE_SUFFIX.removeprefix(".")
 # Linux MAX_ARG_STRLEN is 131072 bytes per argv element, counting the
 # terminating NUL (kernel fs/exec.c), so a string of that length cannot be
 # exec'd. 100_000 leaves a safety margin for the other grok argv elements
@@ -537,7 +542,7 @@ class GrokBuildAdapter:
             write_root = review_write_root
             out_dir = write_root / "tmp"
             execution_cwd = write_root / "exec"
-            prompt_file = out_dir / "grok-prompt.txt"
+            prompt_file = out_dir / _ISOLATED_PROMPT_FILENAME
             fd = os.open(
                 prompt_file,
                 os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
@@ -552,7 +557,7 @@ class GrokBuildAdapter:
                 raise ValueError("GrokBuildAdapter: isolated review prompt file requires review_write_root")
             else:
                 with tempfile.NamedTemporaryFile(
-                    "w", suffix=".grok-prompt.txt", delete=False, encoding="utf-8"
+                    "w", suffix=_PROMPT_FILE_SUFFIX, delete=False, encoding="utf-8"
                 ) as handle:
                     handle.write(prompt)
                     prompt_path = handle.name
@@ -745,7 +750,7 @@ class GrokBuildAdapter:
         prompt_file = plan.metadata.get(_META_PROMPT_FILE)
         if isinstance(prompt_file, str):
             owned = Path(prompt_file)
-            if owned.name == "grok-prompt.txt" or owned.name.endswith(".grok-prompt.txt"):
+            if owned.name == _ISOLATED_PROMPT_FILENAME or owned.name.endswith(_PROMPT_FILE_SUFFIX):
                 owned.unlink(missing_ok=True)
 
     def parse_response(
