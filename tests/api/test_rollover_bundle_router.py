@@ -51,6 +51,22 @@ def _claim(client: TestClient, *, stream: str = STREAM, agent: str = "claude", s
     return response.json()["lease"]
 
 
+@pytest.mark.parametrize("field", ["heartbeat_at", "expires_at", "created_at", "updated_at"])
+def test_bundle_upload_request_timestamp_conversion_refusal(tmp_path, monkeypatch, field):
+    client = _client(tmp_path, monkeypatch)
+    lease = _claim(client)
+    manifest, blob = _bundle(rollover_id="rollover-timestamp", body=b"packet\n")
+    lease[field] = "9999-12-31T23:59:59-23:59"
+    response = _post(client, lease, manifest, blob)
+    assert response.status_code == 400
+    assert response.json() == {
+        "schema": "remote-epic-lifecycle.v1",
+        "error": "request_refused",
+        "detail": "invalid rollover bundle upload request",
+    }
+    assert client.get(f"/api/epics/v1/{STREAM}/bundles").json()["bundles"] == []
+
+
 def _bundle(
     *,
     rollover_id: str,

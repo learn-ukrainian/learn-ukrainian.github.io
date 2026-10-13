@@ -1955,6 +1955,7 @@ class SessionStreamStore:
         """
         try:
             from scripts.orchestration.thread_handoff import (
+                _bundle_conversion,
                 _bundle_require_json_value,
                 _bundle_secret_hits,
                 verify_rollover_bundle,
@@ -1978,21 +1979,19 @@ class SessionStreamStore:
             value = manifest_value.get(field)
             if not isinstance(value, str) or not value or not self._identity_is_safe(value):
                 raise ValueError(f"rollover bundle {field} is malformed")
-        try:
-            generation = int(manifest_value["generation"])
-        except (KeyError, TypeError, ValueError, OverflowError) as exc:
-            raise ValueError("rollover bundle generation is malformed") from exc
+        with _bundle_conversion():
+            generation = int(manifest_value.get("generation"))
         if generation < 1:
             raise ValueError("rollover bundle generation must be positive")
-        if manifest_value.get("status") not in {"pending_start", "resumed", "started", "confirmed", "superseded"}:
+        with _bundle_conversion():
+            valid_status = manifest_value.get("status") in {"pending_start", "resumed", "started", "confirmed", "superseded"}
+        if not valid_status:
             raise ValueError("rollover bundle status is invalid")
         prepared_at = manifest_value.get("prepared_at")
         if not isinstance(prepared_at, str):
             raise ValueError("rollover bundle prepared_at is malformed")
-        try:
+        with _bundle_conversion():
             parse_timestamp(prepared_at)
-        except ValueError as exc:
-            raise ValueError("rollover bundle prepared_at is malformed") from exc
         bundle_sha256 = manifest_value.get("bundle_sha256")
         if not isinstance(bundle_sha256, str) or not ROLLOVER_BUNDLE_SHA256_RE.fullmatch(bundle_sha256):
             raise ValueError("rollover bundle fingerprint is malformed")

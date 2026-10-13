@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import argparse
 import base64
-import binascii
 import gzip
 import hashlib
 import http.client
@@ -356,12 +355,17 @@ def parse_iso_datetime(value: str | None) -> datetime | None:
     if not value:
         return None
     try:
-        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        with _bundle_conversion():
+            text = str(value)
+            text.encode("utf-8")
+            if "\x00" in text:
+                raise ValueError("timestamp contains NUL")
+            parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                return parsed.replace(tzinfo=UTC)
+            return parsed.astimezone(UTC)
     except (KeyError, OSError, TypeError, ValueError):
         return None
-    if parsed.tzinfo is None:
-        return parsed.replace(tzinfo=UTC)
-    return parsed.astimezone(UTC)
 
 
 def rel(path: Path, root: Path) -> str:
@@ -470,16 +474,58 @@ def http_get_json(base_url: str, path: str, timeout_s: float = 3.0) -> dict[str,
     return data if isinstance(data, dict) else {"value": data}
 
 
+@contextmanager
+def _bundle_conversion() -> Iterator[None]:
+    """Normalize data conversion failures without hiding resource or server faults."""
+    try:
+        yield
+    except (ValueError, ArithmeticError, RecursionError, UnicodeError, TypeError):
+        raise ValueError("bundle conversion is invalid") from None
+
+
 def _bundle_json(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    with _bundle_conversion():
+        return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
 def _bundle_require_json_value(value: Any) -> None:
     """Refuse values that cannot be represented as finite, bounded-depth JSON."""
-    try:
-        json.dumps(value, allow_nan=False)
-    except (ValueError, TypeError, OverflowError, RecursionError) as exc:
-        raise ValueError("bundle JSON is invalid") from exc
+    with _bundle_conversion():
+        json.dumps(value, allow_nan=False, ensure_ascii=False).encode("utf-8")
+        # Check optional timestamps before persisting data for later consumers.
+        # owner_pid_started_at is an epoch number, not an ISO timestamp.
+        timestamp_fields = {
+            "acquired_at",
+            "confirmed_at",
+            "created_at",
+            "expires_at",
+            "exported_at",
+            "generated_at",
+            "heartbeat_at",
+            "last_seen_at",
+            "prepared_at",
+            "released_at",
+            "resumed_at",
+            "retired_at",
+            "started_at",
+            "updated_at",
+        }
+        pending = [value]
+        while pending:
+            item = pending.pop()
+            if isinstance(item, dict):
+                for key, child in item.items():
+                    if (
+                        key in timestamp_fields
+                        and child is not None
+                        and (not isinstance(child, str) or parse_iso_datetime(child) is None)
+                    ):
+                        raise ValueError("bundle timestamp is invalid")
+                    if key in {"owner_pid_started_at", "context_percent"} and child is not None:
+                        float(child)
+                    pending.append(child)
+            elif isinstance(item, list):
+                pending.extend(item)
 
 
 def _bundle_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -492,10 +538,8 @@ def _bundle_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 
 def _bundle_load_json(payload: bytes) -> Any:
-    try:
+    with _bundle_conversion():
         value = json.loads(payload.decode("utf-8"), object_pairs_hook=_bundle_json_object)
-    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
-        raise ValueError("bundle JSON is invalid") from exc
     _bundle_require_json_value(value)
     return value
 
@@ -570,10 +614,11 @@ def _bundle_text_member(name: str) -> bool:
 
 
 def _bundle_tokenize(data: bytes, *, repo_root: Path, state_root: Path) -> bytes:
-    text = data.decode("utf-8")
-    for root in (repo_root.resolve(), state_root.resolve()):
-        text = text.replace(str(root), ROLLOVER_BUNDLE_REPO_TOKEN)
-    return text.encode("utf-8")
+    with _bundle_conversion():
+        text = data.decode("utf-8")
+        for root in (repo_root.resolve(), state_root.resolve()):
+            text = text.replace(str(root), ROLLOVER_BUNDLE_REPO_TOKEN)
+        return text.encode("utf-8")
 
 
 def _bundle_rewrite(data: bytes, *, repo_root: Path) -> bytes:
@@ -588,19 +633,16 @@ def _bundle_replacement_status(replacement: Mapping[str, Any]) -> str:
 
 
 def _bundle_order(manifest: Mapping[str, Any]) -> tuple[int, int, datetime, str, int]:
-    try:
-        generation = int(manifest["generation"])
-    except (KeyError, TypeError, ValueError, OverflowError) as exc:
-        raise ValueError("bundle generation is malformed") from exc
+    with _bundle_conversion():
+        generation = int(manifest.get("generation"))
     status = _bundle_replacement_status(manifest)
-    prepared_at = parse_iso_datetime(str(manifest.get("prepared_at") or ""))
+    with _bundle_conversion():
+        prepared_at = parse_iso_datetime(str(manifest.get("prepared_at") or ""))
     if prepared_at is None:
         raise ValueError("bundle prepared_at is malformed")
     rollover_id = normalize_rollover_id(str(manifest.get("rollover_id") or ""))
-    try:
+    with _bundle_conversion():
         upload_seq = int(manifest.get("upload_seq", 0))
-    except (TypeError, ValueError, OverflowError) as exc:
-        raise ValueError("bundle upload_seq is malformed") from exc
     if generation != manifest["generation"] or upload_seq != manifest.get("upload_seq", 0):
         raise ValueError("bundle generation or upload_seq is not an integer")
     # Stored generations and upload sequences must fit SQLite signed 64-bit integers.
@@ -618,13 +660,15 @@ def _bundle_state_manifest(
     agent = normalize_agent_name(str(state.get("agent") or ""))
     lineage_id = normalize_lineage_id(str(state.get("lineage_id") or replacement.get("lineage_id") or ""))
     status = _bundle_replacement_status(replacement)
-    generation = int(replacement.get("generation"))
+    with _bundle_conversion():
+        generation = int(replacement.get("generation"))
     rollover_id = normalize_rollover_id(str(replacement.get("rollover_id") or ""))
     prepared_at = str(replacement.get("prepared_at") or "")
     if parse_iso_datetime(prepared_at) is None:
         raise ValueError("rollover replacement prepared_at is malformed")
     if upload_seq is None:
-        upload_seq = int(state.get("bundle_upload_seq", 0))
+        with _bundle_conversion():
+            upload_seq = int(state.get("bundle_upload_seq", 0))
     return {
         "schema": ROLLOVER_BUNDLE_SCHEMA,
         "agent": agent,
@@ -915,7 +959,9 @@ def _bundle_extract(
     if declared_names != set(members):
         raise ValueError("rollover bundle tar contains an unmanifested member")
     tokenized_members = manifest.get("tokenized_members")
-    if not isinstance(tokenized_members, list) or set(tokenized_members) != declared_tokenized:
+    with _bundle_conversion():
+        valid_tokenized = isinstance(tokenized_members, list) and set(tokenized_members) == declared_tokenized
+    if not valid_tokenized:
         raise ValueError("rollover bundle tokenized_members does not match its file manifest")
     _bundle_order(manifest)
     expected_digest = _bundle_digest(members, manifest)
@@ -1044,21 +1090,20 @@ def _bundle_validate_lease_member(
         raise ValueError("bundle lease state is not valid JSON") from exc
     if not isinstance(state, dict):
         raise ValueError("bundle lease state must be an object")
-    replacement, error = validate_live_lease(
-        state,
-        agent=agent,
-        state_path=state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json",
-    )
+    with _bundle_conversion():
+        replacement, error = validate_live_lease(
+            state,
+            agent=agent,
+            state_path=state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json",
+        )
     if error:
         raise ValueError("bundle lease is invalid")
     if replacement is None:
         raise ValueError("bundle lease replacement is missing")
     if state.get("lineage_id") != lineage_id or state.get("rollover_id") != manifest.get("rollover_id"):
         raise ValueError("bundle lease identity does not match its manifest")
-    try:
-        generation = int(manifest["generation"])
-    except (KeyError, TypeError, ValueError, OverflowError) as exc:
-        raise ValueError("bundle manifest generation is malformed") from exc
+    with _bundle_conversion():
+        generation = int(manifest.get("generation"))
     if replacement.get("generation") != generation:
         raise ValueError("bundle lease generation does not match its manifest")
     if replacement.get("prepared_at") != manifest.get("prepared_at"):
@@ -1626,10 +1671,8 @@ def _bundle_api_by_seq(
     encoded = payload.get("blob")
     if not isinstance(manifest, dict) or not isinstance(encoded, str):
         raise ValueError("bundle API sequence response omitted its manifest or blob")
-    try:
+    with _bundle_conversion():
         blob = base64.b64decode(encoded.encode("ascii"), validate=True)
-    except (ValueError, binascii.Error) as exc:
-        raise ValueError("bundle API sequence blob is not valid base64") from exc
     return manifest, blob
 
 
@@ -6551,10 +6594,8 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
             listed = _bundle_api_list(args, stream_id=stream_id, agent=agent)
 
             def upload_seq(row: Mapping[str, Any]) -> int:
-                try:
+                with _bundle_conversion():
                     return int(row.get("upload_seq", (row.get("manifest") or {}).get("upload_seq", 0)))
-                except (TypeError, ValueError, OverflowError) as exc:
-                    raise ValueError("bundle API list upload sequence is malformed") from exc
 
             def row_agent(row: Mapping[str, Any]) -> str:
                 if row.get("agent") is not None:

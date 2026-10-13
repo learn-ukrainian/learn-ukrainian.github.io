@@ -25,6 +25,11 @@ from tests.project_python import project_python
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
+def test_parse_iso_datetime_refuses_out_of_range_utc_conversion():
+    for value in ("9999-12-31T23:59:59-23:59", "0001-01-01T00:00:00+23:59"):
+        assert th.parse_iso_datetime(value) is None
+
+
 def sample_snapshot(tmp_path: Path) -> dict:
     return {
         "generated_at": "2026-05-30T08:00:00Z",

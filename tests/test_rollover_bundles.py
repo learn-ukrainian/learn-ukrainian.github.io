@@ -10,6 +10,7 @@ import json
 import shutil
 import tarfile
 from datetime import UTC, datetime
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urlsplit
@@ -1112,6 +1113,182 @@ def test_export_upload_import_round_trip_creates_only_lineage_handoff_and_receip
 BOUND_SENTINEL = "bundle-supplied-sentinel"
 BOUND_MEMBER = f".agent/thread-rollovers/{AGENT}/lineage-store/{BOUND_SENTINEL}.md"
 
+HOSTILE_TIMESTAMPS = (
+    "9999-12-31T23:59:59-23:59",
+    "0001-01-01T00:00:00+23:59",
+    "2026-08-24T16:00:00+24:00",
+    "0000-01-01T00:00:00Z",
+    "10000-01-01T00:00:00Z",
+    "2026-08-24T16:00:60Z",
+    "2026-08-24\ud80016:00:00Z",
+    "2026-08-24\x0016:00:00Z",
+)
+TIMESTAMP_FIELDS = (
+    ("manifest", "prepared_at"),
+    ("manifest", "exported_at"),
+    ("lease", "created_at"),
+    ("lease", "updated_at"),
+    ("lease", "expires_at"),
+    ("lease", "acquired_at"),
+    ("lease", "heartbeat_at"),
+    ("lease", "active.started_at"),
+    ("lease", "active.last_seen_at"),
+    ("lease", "replacement.prepared_at"),
+    ("lease", "replacement.updated_at"),
+    ("lease", "replacement.confirmed_at"),
+)
+
+
+@pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
+@pytest.mark.parametrize("member,field", TIMESTAMP_FIELDS)
+def test_bundle_timestamp_conversion_refusal(tmp_path, capsys, entry_point, member, field):
+    # Exercise every malformed shape in each field so each test also reproduces
+    # the UTC range escape, rather than only rechecking previously refused syntax.
+    for index, timestamp in enumerate(HOSTILE_TIMESTAMPS):
+        case = tmp_path / str(index)
+        case.mkdir()
+        source = case / "source"
+        source.mkdir()
+        state = _seed_state(source, thread_id="source-thread")
+        manifest, blob, _hits = th._build_rollover_bundle(
+            source, source, agent=AGENT, state=state, stream_id=REGISTERED_STREAM
+        )
+        members = th._bundle_extract(blob)[1]
+        if member == "manifest":
+            manifest[field] = timestamp
+        else:
+            name = th.default_state_path(AGENT, state["lineage_id"]).as_posix()
+            value = json.loads(members[name])
+            parent = value
+            parts = field.split(".")
+            for part in parts[:-1]:
+                parent = parent[part]
+            parent[parts[-1]] = timestamp
+            members[name] = json.dumps(value, ensure_ascii=True).encode()
+        if member != "manifest" or "\ud800" not in timestamp:
+            manifest, _ = _resign(manifest, members)
+        # Serialize with escaped Unicode independently of production converters.
+        # An invalid timestamp must be refused before its digest is consulted.
+        blob = _raw_bundle(
+            [
+                (th.ROLLOVER_BUNDLE_MANIFEST_NAME, json.dumps(manifest, ensure_ascii=True).encode()),
+                *members.items(),
+            ]
+        )
+        _assert_bundle_refused_at_entry_point(case, capsys, entry_point, manifest, blob)
+        with pytest.raises(ValueError, match=r"^bundle conversion is invalid$"):
+            th._bundle_load_json(json.dumps({"prepared_at": timestamp}).encode())
+
+
+@pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
+@pytest.mark.parametrize("member", ["manifest", "lease", "handoff_state"])
+def test_bundle_unicode_conversion_refusal(tmp_path, capsys, entry_point, member):
+    source = tmp_path / "source"
+    source.mkdir()
+    state = _seed_state(source, thread_id="source-thread")
+    manifest, blob, _hits = th._build_rollover_bundle(
+        source, source, agent=AGENT, state=state, stream_id=REGISTERED_STREAM
+    )
+    members = th._bundle_extract(blob)[1]
+    if member == "manifest":
+        manifest["unused"] = "\ud800"
+    else:
+        name = (
+            th.default_state_path(AGENT, state["lineage_id"]).as_posix()
+            if member == "lease"
+            else state["replacement"]["semantic_snapshot_path"]
+        )
+        value = json.loads(members.get(name, b"{}"))
+        value["unused"] = "\ud800"
+        members[name] = json.dumps(value).encode()
+        manifest, _ = _resign(manifest, members)
+    blob = _raw_bundle([(th.ROLLOVER_BUNDLE_MANIFEST_NAME, json.dumps(manifest).encode()), *members.items()])
+    _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob)
+    with pytest.raises(ValueError, match=r"^bundle conversion is invalid$"):
+        th._bundle_load_json(b'{"unused": "\\ud800"}')
+
+
+@pytest.mark.parametrize(
+    "member,field",
+    [
+        ("manifest", "generation"),
+        ("manifest", "upload_seq"),
+        ("manifest", "files.0.bytes"),
+        ("manifest", "prepared_at"),
+        ("manifest", "exported_at"),
+        ("lease", "schema_version"),
+        ("lease", "active.generation"),
+        ("lease", "replacement.generation"),
+        ("lease", "bundle_upload_seq"),
+        ("lease", "owner_pid"),
+        ("lease", "owner_pid_started_at"),
+        ("lease", "last_handoff.context_percent"),
+        ("lease", "created_at"),
+        ("lease", "updated_at"),
+        ("lease", "expires_at"),
+        ("lease", "active.started_at"),
+        ("lease", "active.last_seen_at"),
+        ("lease", "replacement.prepared_at"),
+    ],
+)
+def test_bundle_converted_field_sweep(member, field):
+    # Every converted field goes through the JSON boundary, including optional
+    # lease data used by later consumers. A lone surrogate is not UTF-8 data.
+    value = "\ud800"
+    for part in reversed(field.split(".")):
+        value = [value] if part == "0" else {part: value}
+    with pytest.raises(ValueError, match=r"^bundle conversion is invalid$"):
+        th._bundle_load_json(json.dumps({member: value}).encode())
+
+
+@pytest.mark.parametrize(
+    "error_type", [ValueError, OverflowError, RecursionError, UnicodeError, ArithmeticError, TypeError]
+)
+def test_bundle_conversion_errors_are_one_sanitized_refusal(error_type):
+    with pytest.raises(ValueError, match=r"^bundle conversion is invalid$") as refusal:
+        with th._bundle_conversion():
+            raise error_type(BOUND_SENTINEL)
+    assert refusal.value.__suppress_context__
+
+
+@pytest.mark.parametrize("error_type", [MemoryError, RuntimeError, OSError])
+def test_bundle_conversion_server_errors_propagate(error_type):
+    with pytest.raises(error_type, match=BOUND_SENTINEL):
+        with th._bundle_conversion():
+            raise error_type(BOUND_SENTINEL)
+
+
+@pytest.mark.parametrize("conversion", [
+    lambda: int(float("inf")),
+    lambda: float("invalid"),
+    lambda: Decimal("invalid"),
+    lambda: base64.b64decode(b"!", validate=True),
+    lambda: bytes.fromhex("invalid"),
+    lambda: json.loads("1" * 5000),
+    lambda: "\ud800".encode("utf-8"),
+    lambda: datetime.fromisoformat("9999-12-31T23:59:59-23:59").astimezone(UTC),
+], ids=["int", "float", "decimal", "base64", "hex", "json-number", "unicode", "utc"])
+def test_bundle_actual_stdlib_conversion_refusal(conversion):
+    with pytest.raises(ValueError, match=r"^bundle conversion is invalid$"):
+        with th._bundle_conversion():
+            conversion()
+
+
+@pytest.mark.parametrize("entry_point", ["importer", "store", "http"])
+def test_bundle_collection_conversion_refusal(tmp_path, capsys, entry_point):
+    for index, (field, value) in enumerate([
+        ("status", []), ("status", {}), ("tokenized_members", [{}]),
+    ]):
+        case = tmp_path / str(index)
+        case.mkdir()
+        manifest, blob = _packet_bundle(AGENT, REGISTERED_STREAM)
+        members = th._bundle_extract(blob)[1]
+        manifest[field] = value
+        blob = th._bundle_archive(members, manifest)
+        _assert_bundle_refused_at_entry_point(case, capsys, entry_point, manifest, blob)
+        with pytest.raises(ValueError):
+            th.verify_rollover_bundle(blob, repo_root=REPO_ROOT)
+
 
 def _assert_bundle_refused_at_entry_point(tmp_path, capsys, entry_point, manifest, blob, *, raw_manifest=None):
     if entry_point == "importer":
@@ -1392,7 +1569,7 @@ def test_refusal_diagnostics_never_echo_bundle_strings(tmp_path, monkeypatch, ca
         "tokenization": "tokenization declaration",
         "status": "not bundle-orderable",
         "parser": "not a valid tar.gz",
-        "timestamp": "prepared_at is malformed",
+        "timestamp": "bundle conversion is invalid",
     }[case]
     if case == "allowlist":
         manifest, blob = _resign(manifest, {f"{BOUND_SENTINEL}.md": b"safe\n"})

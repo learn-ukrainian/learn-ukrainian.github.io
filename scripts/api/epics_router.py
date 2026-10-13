@@ -47,6 +47,7 @@ from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 from scripts.api.state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
 from scripts.orchestration import issue_stream_audit as audit
+from scripts.orchestration.thread_handoff import _bundle_conversion, _bundle_require_json_value
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -499,10 +500,8 @@ def _bundle_blob_from_body(body: dict[str, Any]) -> bytes:
     encoded = body.get("blob")
     if not isinstance(encoded, str) or not encoded:
         raise ValueError("bundle blob must be base64 text")
-    try:
+    with _bundle_conversion():
         blob = base64.b64decode(encoded.encode("ascii"), validate=True)
-    except (UnicodeEncodeError, binascii.Error, ValueError) as exc:
-        raise ValueError("bundle blob is not valid base64") from exc
     if not blob or len(blob) > MAX_ROLLOVER_BUNDLE_BYTES:
         raise ContentRejectedError("rollover bundle exceeds the 4 MiB cap")
     return blob
@@ -1046,8 +1045,13 @@ def remote_handoff(
 async def _rollover_bundle_body(request: Request) -> dict[str, Any] | None:
     """Decode bundle requests before framework JSON errors can escape the refusal path."""
     try:
-        body = await request.json()
-    except (ValueError, UnicodeDecodeError, RecursionError):
+        with _bundle_conversion():
+            body = await request.json()
+        if isinstance(body, dict):
+            # The store validates the manifest through the same boundary used
+            # by direct uploads. Validate the HTTP envelope before building a lease.
+            _bundle_require_json_value({key: value for key, value in body.items() if key != "manifest"})
+    except ValueError:
         return None
     return body if isinstance(body, dict) else None
 
