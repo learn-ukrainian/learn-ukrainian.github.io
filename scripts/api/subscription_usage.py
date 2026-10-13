@@ -1414,6 +1414,8 @@ def _public_quota_error(kind: Any, code: Any) -> tuple[str | None, str | int | N
         and kind in {"provider", "fetch_error", "timeout", "unavailable", "need_login", "unsupported"}
         else "provider"
     )
+    if code is None or code == "":
+        return public_kind, None
     if isinstance(code, int) and not isinstance(code, bool) and 1 <= code <= 599:
         return public_kind, code
     if isinstance(code, str) and code in {
@@ -1421,6 +1423,7 @@ def _public_quota_error(kind: Any, code: Any) -> tuple[str | None, str | int | N
         "BAD_JSON",
         "TIMEOUT",
         "SPAWN_ERROR",
+        "FETCH_ERROR",
         "NO_PROBE",
         "EMPTY",
         "NEED_LOGIN",
@@ -1701,7 +1704,7 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
             error = error if isinstance(error, dict) else {}
             kind, code = _public_quota_error(
                 "rate_limit" if status in ("RATE_LIMITED", "rate_limited") else error.get("kind") or "provider",
-                error.get("code"),
+                error.get("code") or "PROVIDER_ERROR",
             )
             return _agy_finish_unparsed(
                 _normalize_provider_error("gemini", {"kind": kind, "code": code, "message": "AGY usage probe failed"})
@@ -1948,7 +1951,7 @@ def _muse_record_from_codexbar_payload(payload: Any) -> dict[str, Any]:
     error = body.get("error")
     if error:
         error = error if isinstance(error, dict) else {}
-        kind, code = _public_quota_error(error.get("kind") or "provider", error.get("code"))
+        kind, code = _public_quota_error(error.get("kind") or "provider", error.get("code") or "PROVIDER_ERROR")
         message = "Muse usage probe was rate-limited" if kind == "rate_limit" else "Muse usage probe failed"
         return _normalize_provider_error("muse", {"message": message, "kind": kind, "code": code})
     usage = body.get("usage")

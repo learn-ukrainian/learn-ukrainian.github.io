@@ -676,6 +676,8 @@ _MUSE_NULL_PAYLOAD = {"provider": "muse", "usage": {"primary": None, "secondary"
             "PROVIDER_ERROR",
             None,
         ),
+        ({"provider": "muse", "error": "PRIVATE_ERROR"}, "unknown", None, "provider", "PROVIDER_ERROR", None),
+        ({"provider": "muse", "error": {"kind": "provider"}}, "unknown", None, "provider", "PROVIDER_ERROR", None),
         (
             {"provider": "muse", "usage": {"updatedAt": "2000-01-01T00:00:00Z", "primary": {"usedPercent": 20}}},
             "unknown",
@@ -756,6 +758,8 @@ _MUSE_NULL_PAYLOAD = {"provider": "muse", "usage": {"primary": None, "secondary"
     ids=[
         "private-metadata",
         "private-error",
+        "uncoded-private-error",
+        "uncoded-provider-error",
         "stale",
         "invalid-time",
         "wrong-list-provider",
@@ -887,6 +891,8 @@ def test_muse_boundary_reaches_literal_json_and_human_output(
             None,
         ),
         ({"provider": "PRIVATE_PROVIDER"}, 0.8, "unknown", "unavailable", "fetch_error", "PROVIDER_MISMATCH", [], None),
+        ({"status": "PRIVATE_STATUS"}, 0.8, "unknown", "unavailable", "provider", "PROVIDER_ERROR", [], None),
+        ({"error": "PRIVATE_ERROR"}, 0.8, "unknown", "unavailable", "provider", "PROVIDER_ERROR", [], None),
         (
             {},
             1.1,
@@ -928,7 +934,18 @@ def test_muse_boundary_reaches_literal_json_and_human_output(
             "  Gemini Models (5h): used=0.0% rem=100.0% resets=unknown",
         ),
     ],
-    ids=["private-metadata", "rate-limit", "private-error", "wrong-provider", "over-full", "negative", "zero", "full"],
+    ids=[
+        "private-metadata",
+        "rate-limit",
+        "private-error",
+        "wrong-provider",
+        "uncoded-failure-status",
+        "uncoded-private-error",
+        "over-full",
+        "negative",
+        "zero",
+        "full",
+    ],
 )
 def test_agy_boundary_reaches_literal_json_and_human_output(
     monkeypatch,
@@ -1049,6 +1066,112 @@ def _clear_muse_observation() -> None:
     cache_invalidate("codexbar_usage:muse")
     subscription_usage._last_good_data.pop("muse", None)
     subscription_usage._last_failure_data.pop("muse", None)
+
+
+@pytest.mark.parametrize("lane", ["muse", "agy"])
+@pytest.mark.parametrize("command", ["show", "json"])
+@pytest.mark.parametrize("attempt_failed_fetch", [False, True], ids=["cold", "failed-fetch"])
+def test_usage_cli_cold_and_failed_fetch_diagnostics(monkeypatch, capsys, lane, command, attempt_failed_fetch):
+    from scripts.api import subscription_usage as su
+
+    _clear_muse_observation()
+    calls = []
+
+    def failed_probe(*, timeout_s):
+        calls.append(timeout_s)
+        raise RuntimeError("PRIVATE_PROVIDER_TEXT account@example.com credits=987654")
+
+    def unexpected_fetch(*args, **kwargs):
+        pytest.fail("Displaying cached observations must not attempt a provider fetch")
+
+    if attempt_failed_fetch:
+        provider = "muse" if lane == "muse" else "gemini"
+        monkeypatch.setitem(su._NATIVE_PROBES, provider, failed_probe)
+        su.refresh_provider_usage_data([provider], timeout_s=1)
+    monkeypatch.setattr(su, "fetch_provider_usage", unexpected_fetch)
+    monkeypatch.setattr(su, "trigger_background_refresh", unexpected_fetch)
+
+    def budget(**kwargs):
+        attached = usage._attach_status_observations({"agents": {}, "api_accounts": {}, "source": "fixture"})
+        attached["agents"].pop("agy" if lane == "muse" else "muse")
+        return attached
+
+    monkeypatch.setattr(usage, "read_budget", budget)
+    kind = "fetch_error" if attempt_failed_fetch else "unavailable"
+    code = "FETCH_ERROR" if attempt_failed_fetch else None
+    expected = {
+        "lane": lane,
+        "status": "unknown",
+        "remaining_pct": None,
+        "headroom_pct": None,
+        "resets_at": None,
+        "freshness": "unavailable",
+        "age_s": None,
+        "error_kind": kind,
+        "error_code": code,
+        "failure_kind": kind,
+        "last_failure_code": code,
+        "auth_error": None,
+        "codexbar": {
+            "freshness": "unavailable",
+            "age_s": None,
+            "error_kind": kind,
+            "failure_kind": kind,
+            "last_failure_code": code,
+        },
+    }
+    if lane == "muse":
+        expected["codexbar"].update(
+            {
+                "headroom_pct": None,
+                "weekly_resets_at": None,
+                "primary_remaining_pct": None,
+                "weekly_remaining_pct": None,
+                "windows": {
+                    name: {
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                        "window_minutes": None,
+                        "reset_description": None,
+                    }
+                    for name in ("primary", "secondary", "tertiary")
+                },
+            }
+        )
+    else:
+        expected["quota_groups"] = []
+        expected["codexbar"].update({"error_code": code, "quota_groups": [], "source": "agy_cli_usage"})
+
+    assert usage.main([command]) == 0
+    output = capsys.readouterr().out
+    if command == "json":
+        assert json.loads(output) == {"source": "fixture", "agents": {lane: expected}, "api_accounts": {}}
+    else:
+        diagnostic = "fetch_error/FETCH_ERROR" if attempt_failed_fetch else "unavailable"
+        lines = [
+            "source: fixture",
+            "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
+            "lane | status | remaining% | freshness | age_s | fail",
+            f"{lane} | unknown | unknown | unavailable | unknown | {diagnostic}",
+        ]
+        if lane == "muse":
+            lines.append("  quota: remaining=unknown headroom=unknown resets=unknown")
+        lines.extend(
+            [
+                "",
+                "Prepaid (USD; key cap remaining is not account balance)",
+                "",
+                "WARN: no usable subscription allotment rows — mix-max is blind. "
+                "Run: usage doctor && usage show --fresh; check fail= codes above.",
+            ]
+        )
+        assert output == "\n".join(lines) + "\n"
+    assert calls == ([1] if attempt_failed_fetch else [])
+    assert "PRIVATE_PROVIDER_TEXT" not in output
+    assert "account@example.com" not in output
+    assert "987654" not in output
+    _clear_muse_observation()
 
 
 def test_usage_cli_shows_muse_known_window(monkeypatch, capsys):

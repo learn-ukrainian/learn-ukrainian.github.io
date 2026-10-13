@@ -3044,6 +3044,11 @@ def test_agy_fraction_rejects_out_of_range_values(value):
     ("kind", "code", "expected"),
     [
         (None, None, (None, None)),
+        ("unavailable", None, ("unavailable", None)),
+        ("unavailable", "", ("unavailable", None)),
+        ("fetch_error", None, ("fetch_error", None)),
+        ("fetch_error", "FETCH_ERROR", ("fetch_error", "FETCH_ERROR")),
+        ("PRIVATE_KIND", None, ("provider", None)),
         ("PRIVATE_KIND", "PRIVATE_CODE", ("provider", "PROVIDER_ERROR")),
         ({"private": "PRIVATE_KIND"}, {"private": "PRIVATE_CODE"}, ("provider", "PROVIDER_ERROR")),
         ("provider", 600, ("provider", "PROVIDER_ERROR")),
