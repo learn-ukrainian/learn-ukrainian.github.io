@@ -302,6 +302,35 @@ retain the schema on that invocation's plan for result validation:
 | AGY | `--output-format json --json-schema <JSON>` | `structured_output` in the JSON envelope with `status=SUCCESS` |
 | Grok | `--json-schema <JSON>` with JSON output | `structuredOutput` in the final envelope with `stopReason=end_turn`, without `structuredOutputError` |
 
+### AGY pending supervisory orders
+
+The `pending-orders-announce` overlay runs
+`scripts/agy_hooks/pending_orders_inject.sh` on every `PreInvocation`,
+independently of `driver-state-pin`. It uses the launcher's
+`SESSION_HANDOFF_AGENT` registered slot, including worker slots, and injects
+`{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: ..."}]}` before
+the next model call. It never falls back to the `claude` inbox.
+
+`scripts.inbox_pending` opens the configured legacy broker and Fleet Comms
+authority SQLite stores read-only. It counts unacknowledged, non-live-consumed
+legacy messages and queued or running authority deliveries without durable
+consumption or an expired deadline. Output contains counts, at most five full
+message IDs, a truncation flag, per-store counts and `probe: ok|unknown`.
+No body is selected, and no delivery is claimed, consumed or acknowledged.
+
+A proven empty inbox returns `{}`. Pending orders are re-announced on replay
+until acknowledged or consumed. The injected line is at most 200 characters;
+it includes as many full IDs as fit, marks truncation, and names the inbox and
+live-consumption commands. Missing or unreadable stores, invalid hook JSON,
+an invalid or missing slot, and interpreter failures inject `PENDING ORDERS:
+unknown` with exit 0. Hook input and output are never written to temporary files.
+
+Deploy the canonical overlay with `npm run agents:deploy`, which copies
+`agents_extensions/agy/hooks.json` into the workspace `.agents/hooks.json`
+alongside the shared agent configuration. Local synthetic tests prove the
+read-only announcement contract; issue #10558 requires a separate live AGY
+proof of the next-call timing before certification.
+
 ### AGY shell-output guard and startup gate
 
 The native shell event is

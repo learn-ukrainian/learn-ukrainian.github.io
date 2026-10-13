@@ -299,7 +299,16 @@ def test_install_does_not_reenable_guard(tmp_path):
 
 def test_overlay_keeps_existing_driver_hooks():
     data = json.loads((ROOT / "agents_extensions/agy/hooks.json").read_text())
-    assert len(data) == 4
+    assert len(data) == 5
+    assert data["pending-orders-announce"] == {
+        "PreInvocation": [
+            {
+                "type": "command",
+                "command": "sh ../scripts/agy_hooks/pending_orders_inject.sh",
+                "timeout": 10,
+            }
+        ]
+    }
     for name, event, matcher, action, timeout in [
         ("driver-state-pin", "PreInvocation", None, "agy-hook", 10),
         ("driver-keep-driving", "Stop", None, "agy-stop-hook", 20),
