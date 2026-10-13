@@ -780,8 +780,8 @@ def test_status_failure_keeps_comment_and_reports_partial(monkeypatch, tmp_path)
     assert len(comments) == 1
 
 
-def test_override_for_flagged_comment_still_posts_clean_status(monkeypatch, tmp_path, synthetic_opsec):
-    """Both publications pass the real gate; the override covers only the flagged comment (#9678)."""
+def test_flagged_comment_withholds_prose_despite_override(monkeypatch, tmp_path, synthetic_opsec):
+    """Both publications pass the gate without granting the recorder an override."""
     from scripts.fleet_comms import review_publisher
     from scripts.opsec import prepublish as gate
     from tests.opsec_fixtures import TOKEN, synthetic_rules
@@ -814,9 +814,9 @@ def test_override_for_flagged_comment_still_posts_clean_status(monkeypatch, tmp_
     )
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert result["comment"] == "posted" and result["status"] == "posted"
-    assert len(sent) == 2 and TOKEN in comments[0]["body"]
-    (row,) = [json.loads(line) for line in (tmp_path / "batch_state/opsec/overrides.jsonl").read_text().splitlines()]
-    assert row["rule_ids"] == ["synthetic-rule"] and row["destination"] == "github.com/" + REPOSITORY
+    assert len(sent) == 2 and TOKEN not in comments[0]["body"]
+    assert "Withheld findings: unknown\nFindings are held privately." in comments[0]["body"]
+    assert not (tmp_path / "batch_state/opsec/overrides.jsonl").exists()
 
 
 def test_concurrent_recorders_for_same_sha_serialize(monkeypatch, tmp_path):
@@ -1975,27 +1975,26 @@ def test_record_fixture_dry_run_through_publication_scanner(
     monkeypatch.setattr(recorder, "_run_json", route)
     monkeypatch.setattr(github, "_send", transport)
     if refused:
-        with pytest.raises(recorder.RecordError) as error:
-            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-        diagnostic = str(error.value)
-        assert "publish_blocked" in diagnostic and "class=" in diagnostic
-        assert reply not in diagnostic
-        assert (
-            "/outside" not in diagnostic and "/checkout" not in diagnostic and "SENTINEL-HOST-TOKEN" not in diagnostic
-        )
-        assert calls == {"posts": 0, "statuses": 0}
+        receipt = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert receipt["comment"] == "posted" and receipt["status"] == "posted"
+        body = comments[0]["body"]
+        assert "Withheld findings: unknown\nFindings are held privately." in body
+        assert reply not in body and "<details>" not in body
+        assert "/outside" not in body and str(root) not in body and "SENTINEL-HOST-TOKEN" not in body
+        assert recorder.parse_marker(body)["sha"] == SHA
+        assert calls == {"posts": 1, "statuses": 1}
         record = recorder.record
         monkeypatch.setattr(
             recorder,
             "record",
             lambda task_id, **kwargs: record(task_id, task_root=tasks, lock_root=tmp_path / "locks", **kwargs),
         )
-        assert recorder.main(["--task-id", "review-one", "--pr", "42"]) == 1
+        assert recorder.main(["--task-id", "review-one", "--pr", "42"]) == 0
         output = capsys.readouterr()
-        assert "class=" in output.out
+        assert json.loads(output.out)["comment"] == "existing"
         assert "/checkout" not in output.out + output.err
         assert "/outside" not in output.out + output.err and "SENTINEL-HOST-TOKEN" not in output.out + output.err
-        assert calls == {"posts": 0, "statuses": 0}
+        assert calls == {"posts": 1, "statuses": 2}
     else:
         receipt = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
         assert receipt["comment"] == "posted" and receipt["status"] == "posted"

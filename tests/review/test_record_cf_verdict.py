@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -13,6 +15,248 @@ from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.language_lane import is_ukrainian_review
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
+
+
+@pytest.fixture
+def scanned_recorder(monkeypatch, tmp_path):
+    """Exercise the supported publisher; fake only GitHub reads and transport."""
+    from scripts.opsec import prepublish as gate
+    from scripts.publish import github
+    from tests.test_opsec_prepublish import real_tooling
+
+    tooling = real_tooling()
+    monkeypatch.setattr(gate, "private_tooling", lambda: tooling)
+    real_json = recorder._run_json
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    bookkeeping = recorder._run_json
+    sent = []
+
+    def route(args, **kwargs):
+        if isinstance(args, github.Request) and args.verb == "issue-comment-json":
+            return real_json(args, **kwargs)
+        return bookkeeping(args, **kwargs)
+
+    def transport(argv, **kwargs):
+        body = json.loads(Path(argv[argv.index("--input") + 1]).read_text())["body"]
+        sent.append(body)
+        posted = bookkeeping(github.Request("issue-comment-json", repo="owner/repo", number=42, body=body))
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(posted), stderr="")
+
+    monkeypatch.setattr(recorder, "_run_json", route)
+    monkeypatch.setattr(github, "_send", transport)
+    return tasks, comments, calls, sent, tooling
+
+
+@pytest.mark.parametrize("detail,rule", [
+    ("2001:db8::42 SYNTHETIC-DETAIL", "2-ipv6"),
+    ("credential stored SYNTHETIC-DETAIL", "5-credential-context"),
+])
+@pytest.mark.parametrize("verdict", ["APPROVED", "CHANGES_REQUESTED", "BLOCKED"])
+def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail, rule, verdict):
+    from scripts.opsec import prepublish as gate
+
+    tasks, comments, calls, sent, tooling = scanned_recorder
+    reply = f"VERDICT: {verdict}\n{detail}\nHarmless reviewer sentence.\n- A prose bullet."
+    write_task(tasks, reply=reply)
+    before = {suffix: (tasks / f"review-one.{suffix}").read_bytes() for suffix in ("json", "result")}
+    with pytest.raises(gate.PublishBlocked, match=f"rule={rule}"):
+        gate.check_texts("github.com/owner/repo", [reply], tooling=tooling, environment={})
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    body = comments[0]["body"]
+    assert body == (
+        f"### Cross-family review\nhead: {SHA}\nReviewer family: openai\nVERDICT: {verdict}\n"
+        "Reviewer model: gpt-6.1-sol\nTask id: review-one\n\nWithheld findings: unknown\n"
+        "Findings are held privately.\n\n"
+        f"<!-- cf-verdict v1 sha={SHA} task=review-one started=2026-09-23T12:00:00.000001+00:00 "
+        f"verdict={verdict} model=gpt-6.1-sol family=openai -->"
+    )
+    assert sent == [body]
+    assert detail not in body and "SYNTHETIC-DETAIL" not in body
+    gate.check_texts("github.com/owner/repo", [body], tooling=tooling, environment={})
+    assert result["verdict"] == verdict
+    assert sweep.parse_marker(body)["sha"] == SHA
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == verdict
+    assert keeper._recorded_approval_for_head(comments, SHA, "fleet") == (verdict == "APPROVED")
+    assert not keeper._recorded_approval_for_head(comments, "b" * 40, "fleet")
+    second = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert second["comment"] == "existing" and sent == [body]
+    assert calls == {"posts": 1, "statuses": 2}
+    assert before == {suffix: (tasks / f"review-one.{suffix}").read_bytes() for suffix in before}
+
+
+def test_clean_publication_bytes_unchanged(scanned_recorder, tmp_path):
+    tasks, comments, calls, sent, _ = scanned_recorder
+    reply = "VERDICT: APPROVE\nOrdinary reviewer text.\n\n  Preserve spacing.\n"
+    write_task(tasks, reply=reply)
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    expected = (
+        f"### Cross-family review\nhead: {SHA}\nReviewer family: openai\nVERDICT: APPROVED\n"
+        "Reviewer model: gpt-6.1-sol\nTask id: review-one\n\n"
+        "<details><summary>Reviewer's reply</summary>\n\n"
+        + reply + "\n\n</details>\n\n"
+        f"<!-- cf-verdict v1 sha={SHA} task=review-one started=2026-09-23T12:00:00.000001+00:00 "
+        "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
+    )
+    assert comments[0]["body"].encode() == expected.encode()
+    assert sent == [expected] and calls == {"posts": 1, "statuses": 1}
+
+
+def test_skeleton_scanner_rejection_has_no_write(scanned_recorder, tmp_path, monkeypatch, synthetic_opsec):
+    from scripts.opsec import prepublish as gate
+    from tests.opsec_fixtures import synthetic_rules
+
+    tasks, comments, calls, sent, _ = scanned_recorder
+    rules = synthetic_rules(rule="5-credential-context", level=5, pattern="credential stored")
+    rules["1"] = {"patterns": [{"id": "synthetic-skeleton-refusal", "regex": "Findings are held privately"}]}
+    rules["3"] = {"patterns": [{"id": "3-absolute-path", "regex": r"(?!)"}]}
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    monkeypatch.setattr(gate, "private_tooling", lambda: synthetic_opsec)
+    write_task(tasks, reply="VERDICT: APPROVE\ncredential stored SYNTHETIC-DETAIL")
+    with pytest.raises(recorder.RecordError, match="synthetic-skeleton-refusal"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("failure", ["scanner_unavailable", "lookup_failed"])
+def test_unrelated_failure_never_uses_skeleton(scanned_recorder, tmp_path, monkeypatch, failure):
+    from scripts.opsec import prepublish as gate
+
+    tasks, comments, calls, sent, _ = scanned_recorder
+    scans = []
+
+    def refuse(destination, texts, **kwargs):
+        scans.extend(texts)
+        if failure == "scanner_unavailable":
+            raise gate.PublishBlocked("OPSEC: checker unavailable; write refused.")
+        raise recorder.RecordError("GitHub lookup or publication unavailable")
+
+    monkeypatch.setattr(recorder, "check_texts", refuse)
+    with pytest.raises(recorder.RecordError, match="unavailable"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert len(scans) == 1 and "Withheld findings:" not in scans[0]
+    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def structured_review(count):
+    return {
+        "schema_version": "code-review-findings.v1",
+        "overall": {
+            "correctness": "incorrect" if count else "correct",
+            "explanation": "credential stored SYNTHETIC-DETAIL",
+            "confidence": 0.9,
+        },
+        "findings": [{
+            "id": f"F{number}", "title": "Synthetic finding", "body": "Synthetic finding body.",
+            "priority": "P2", "confidence": 0.9, "category": "correctness",
+            "location": {"path": "scripts/example.py", "start_line": number, "end_line": number,
+                         "claim_type": "present"},
+            "verbatim": "value = shared_state", "why_wrong": "The state is not reset.",
+            "smallest_fix": "Rebuild the state for every call.", "sources": ["none"],
+        } for number in range(1, count + 1)],
+    }
+
+
+@pytest.mark.parametrize("count", [0, 1, 3])
+def test_validated_structured_count_in_skeleton(scanned_recorder, tmp_path, count):
+    tasks, comments, calls, sent, _ = scanned_recorder
+    reply = json.dumps(structured_review(count))
+    write_task(tasks, reply=reply)
+    before = (tasks / "review-one.result").read_bytes()
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    expected = "CHANGES_REQUESTED" if count else "APPROVED"
+    assert result["verdict"] == sweep.lookup_verdict(comments, SHA, "fleet").state == expected
+    assert f"Withheld findings: {count}\n" in comments[0]["body"]
+    assert "SYNTHETIC-DETAIL" not in comments[0]["body"]
+    assert "Synthetic finding" not in comments[0]["body"]
+    assert (tasks / "review-one.result").read_bytes() == before
+    assert sent == [comments[0]["body"]] and calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize("update", [
+    {"findings": "not a list"}, {"findings": [None]}, {"verdict": "APPROVED"},
+    {"verdict": "INVALID"}, {"overall": {}},
+])
+def test_invalid_structured_verdict_or_count_refuses(scanned_recorder, tmp_path, update):
+    tasks, comments, calls, sent, _ = scanned_recorder
+    payload = structured_review(1)
+    payload.update(update)
+    write_task(tasks, reply=json.dumps(payload))
+    with pytest.raises(recorder.RecordError, match="structured review verdict or findings invalid"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("payload,expected", [
+    ({"schema_version": "code-review-findings.v1", "overall": {
+        "correctness": "correct", "explanation": "", "confidence": 0.9}, "findings": []}, "BLOCKED"),
+    ("VERDICT: APPROVE\n- prose item\n- another prose item", "APPROVED"),
+])
+def test_unavailable_structured_count_is_unknown(payload, expected):
+    reply = json.dumps(payload) if isinstance(payload, dict) else payload
+    assert recorder._review_verdict_and_count(reply) == (expected, "unknown")
+
+
+@pytest.mark.parametrize("metadata", [
+    {"review_mode": "red_team", "unknown_history": ["b" * 40]},
+    {"review_profile": "ukrainian", "sources_mcp_call_count": 3},
+])
+def test_skeleton_preserves_complete_marker_metadata(metadata):
+    body = recorder.build_comment(
+        sha=SHA, task_id="review-one", started="2026-09-23T12:00:00.000001+00:00",
+        verdict="APPROVED", model="gpt-6.1-sol", family="openai", reply="",
+        withheld_findings=2, **metadata,
+    )
+    marker = sweep.parse_marker(body)
+    assert marker["sha"] == SHA and marker["verdict"] == "APPROVED"
+    for name, value in metadata.items():
+        assert marker["sources_calls" if name == "sources_mcp_call_count" else name] == value
+
+
+def test_transport_failure_after_scan_never_retries_skeleton(scanned_recorder, tmp_path, monkeypatch):
+    from scripts.publish import github
+
+    tasks, comments, calls, sent, _ = scanned_recorder
+    attempts = []
+
+    def fail(argv, **kwargs):
+        attempts.append(argv)
+        raise OSError("synthetic transport failure")
+
+    monkeypatch.setattr(github, "_send", fail)
+    with pytest.raises(recorder.RecordError, match="publication unavailable"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert len(attempts) == 1
+    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def test_real_rule_rejecting_skeleton_metadata_has_no_write(scanned_recorder, tmp_path):
+    tasks, comments, calls, sent, _ = scanned_recorder
+    write_task(tasks, task_id="credential-permission", reply="VERDICT: APPROVE\nOrdinary review text.")
+    with pytest.raises(recorder.RecordError, match="rule=5-credential-context"):
+        recorder.record("credential-permission", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def test_head_movement_before_skeleton_write_refuses(scanned_recorder, tmp_path, monkeypatch):
+    tasks, comments, calls, sent, _ = scanned_recorder
+    write_task(tasks, reply="VERDICT: APPROVE\ncredential stored SYNTHETIC-DETAIL")
+    heads = iter([SHA, "b" * 40])
+    monkeypatch.setattr(recorder, "_pr", lambda *args: {
+        "number": 42, "headRefName": "codex/42", "headRefOid": next(heads),
+    })
+    with pytest.raises(recorder.RecordError, match="PR head moved before publication"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def test_edited_skeleton_cannot_reconcile(scanned_recorder, tmp_path):
+    tasks, comments, calls, sent, _ = scanned_recorder
+    write_task(tasks, reply="VERDICT: APPROVE\ncredential stored SYNTHETIC-DETAIL")
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    comments[0]["updated_at"] = "2026-09-23T14:00:00Z"
+    with pytest.raises(recorder.RecordError, match="existing verdict marker was edited or conflicts"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert sent == [comments[0]["body"]] and calls == {"posts": 1, "statuses": 1}
 
 
 @pytest.mark.parametrize("identity", [

@@ -19,7 +19,7 @@ from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any
+from typing import Any, Literal
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -28,10 +28,17 @@ from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
-from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
+from scripts.fleet_comms.review_publication import (
+    DEFAULT_STATUS_CONTEXT,
+    REVIEW_SCHEMA_VERSION,
+    ReviewPublicationError,
+    resolve_verdict_and_evidence,
+)
 from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import (
+    PublishBlocked,
     absolute_path_spans,
+    check_texts,
     normalize_for_scan,
     normalize_repository,
     publication_boundary,
@@ -107,6 +114,21 @@ def normalize_verdict(reply: str) -> str:
     if len(tokens) != 1:
         raise RecordError("review reply has missing or ambiguous VERDICT token")
     return tokens.pop()
+
+
+def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]]:
+    """Use canonical validated findings; prose supplies no reliable count."""
+    try:
+        payload = json.loads(reply)
+    except ValueError:
+        payload = None
+    if isinstance(payload, dict) and payload.get("schema_version") == REVIEW_SCHEMA_VERSION:
+        try:
+            verdict, evidence = resolve_verdict_and_evidence(payload)
+        except ReviewPublicationError:
+            raise RecordError("structured review verdict or findings invalid") from None
+        return verdict, len(evidence.findings) if evidence is not None else "unknown"
+    return normalize_verdict(reply), "unknown"
 
 
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
@@ -1150,6 +1172,7 @@ def build_comment(
     review_profile: str = "code",
     sources_mcp_call_count: int | None = None,
     unknown_history: Iterable[str] = (),
+    withheld_findings: int | Literal["unknown"] | None = None,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1185,8 +1208,15 @@ def build_comment(
         f"VERDICT: {verdict}\n"
         f"Reviewer model: {model}\n"
         f"Task id: {task_id}\n\n"
-        "<details><summary>Reviewer's reply</summary>\n\n"
     )
+    if withheld_findings is not None:
+        return (
+            prefix
+            + f"Withheld findings: {withheld_findings}\n"
+            + "Findings are held privately.\n\n"
+            + marker
+        )
+    prefix += "<details><summary>Reviewer's reply</summary>\n\n"
     suffix = f"\n\n</details>\n\n{marker}"
     available = MAX_COMMENT_BYTES - len((prefix + suffix).encode())
     if available < 0:
@@ -1572,7 +1602,7 @@ def record(
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
     _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
-    verdict = normalize_verdict(reply)
+    verdict, finding_count = _review_verdict_and_count(reply)
     _require_sources_mcp_calls(task)
     ukrainian = is_ukrainian_review(task)
     sources_count = task.get("sources_mcp_call_count")
@@ -1642,7 +1672,7 @@ def record(
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
-    comment = build_comment(
+    comment_fields = dict(
         sha=sha,
         task_id=task_id,
         started=started,
@@ -1655,6 +1685,17 @@ def record(
         sources_mcp_call_count=sources_count,
         unknown_history=facts.unknown_history,
     )
+    comment = build_comment(**comment_fields)
+    destination = normalize_repository(repository)
+    try:
+        check_texts(destination, [comment], environment={})
+    except PublishBlocked as exc:
+        # Only a finding in this body permits a projection. Scanner availability
+        # and publication failures retain their existing refusal behavior.
+        if exc.indices != frozenset({0}):
+            raise
+        comment = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=finding_count)
+        check_texts(destination, [comment], environment={})
     posted = False
     with sha_lock(repository, sha, lock_root):
         # The PR may move while an earlier recorder owns the lock.
