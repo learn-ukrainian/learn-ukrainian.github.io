@@ -1979,7 +1979,7 @@ def test_hard_link_to_own_locked_ticket_waits_then_is_reaped(tmp_path: Path, mon
 
 
 @pytest.mark.parametrize("kind", ["file", "fifo", "symlink", "directory"])
-def test_pytest_stage_preserves_other_bases_without_following_links(
+def test_pytest_stage_reaps_stale_nodes_without_following_links(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
 ) -> None:
     state = tmp_path / "state"
@@ -2003,15 +2003,17 @@ def test_pytest_stage_preserves_other_bases_without_following_links(
     monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
 
     for _ in range(2):
-        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
-        assert os.path.lexists(stale)
-        assert list(state.glob("pytest-*")) == [stale]
+        with gate.Admission(state, 0) as admission:
+            assert (
+                gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, admission=admission)
+                == "1 passed in 0.1s"
+            )
+        assert not os.path.lexists(stale)
+        assert list(state.glob("pytest-*")) == []
         assert (outside / "preserved").read_text() == "preserve me"
 
 
-def test_own_pytest_cleanup_io_error_cannot_authorize_validation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_pytest_stale_reap_io_error_is_typed_incomplete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     stale = tmp_path / "pytest-stale"
     stale.mkdir()
     (stale / "nested").mkdir()
@@ -2022,8 +2024,9 @@ def test_own_pytest_cleanup_io_error_cannot_authorize_validation(
 
     refuse.avoids_symlink_attacks = True
     monkeypatch.setattr(gate.shutil, "rmtree", refuse)
-    with pytest.raises(PermissionError, match="cleanup denied"):
-        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    with gate.Admission(tmp_path, 0) as admission, pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, admission=admission)
+    assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
     assert (stale / "nested").is_dir()
 
 
@@ -2163,7 +2166,7 @@ def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_
         process.communicate(timeout=60)
 
 
-def test_next_pytest_stage_preserves_the_base_of_a_killed_gate(repo: Path, tmp_path: Path) -> None:
+def test_next_pytest_stage_reaps_the_base_of_a_killed_gate(repo: Path, tmp_path: Path) -> None:
     marker = tmp_path / "killed-base.txt"
     script = (
         f"import runpy, pathlib, os, signal, time\ng = runpy.run_path({str(GATE_PATH)!r})\n"
@@ -2189,13 +2192,17 @@ def test_next_pytest_stage_preserves_the_base_of_a_killed_gate(repo: Path, tmp_p
     stale = Path(marker.read_text(encoding="utf-8"))
     assert (stale / "leftover").exists()
     plan = _plan(registry_nodes=("tests/test_invariant.py",), changed_tests=())
-    with gate.Admission(gate.state_dir(repo), 0.0):
+    with gate.Admission(gate.state_dir(repo), 0.0) as admission:
         result = gate.run_pytest_stage(
-            plan, repo, str(repo / "scripts/pre_commit/project_python.sh"), time.monotonic() + 30
+            plan,
+            repo,
+            str(repo / "scripts/pre_commit/project_python.sh"),
+            time.monotonic() + 30,
+            admission=admission,
         )
     assert "1 passed" in result
-    assert (stale / "leftover").exists()
-    assert list(gate.state_dir(repo).glob("pytest-*")) == [stale]
+    assert not stale.exists()
+    assert list(gate.state_dir(repo).glob("pytest-*")) == []
 
 
 # ---- #10523: exact-plan coalescing before global admission ---------------------------------------------
@@ -3246,6 +3253,47 @@ def test_two_scoped_holders_exclude_third_and_serial_legacy(qualified_cgroups, t
         finally:
             os.close(fd)
     _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("mode", ["shared", "missing", "released", "head_only"])
+def test_pytest_stale_sweep_requires_live_exclusive_global_admission(qualified_cgroups, tmp_path, monkeypatch, mode):
+    state = tmp_path / "state"
+    state.mkdir()
+    stale = state / "pytest-other"
+    stale.mkdir()
+    (stale / "preserved").write_text("other run")
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
+    admission = None
+    if mode == "shared":
+        admission = gate.Admission(state, 0, scope=InjectedScope(qualified_cgroups))
+    elif mode == "released":
+        admission = gate.Admission(state, 0)
+    elif mode == "head_only":
+        admission = gate.Admission(state / "heads" / "other", 0)
+    diagnostics = {}
+    try:
+        if admission is not None:
+            admission.__enter__()
+            if mode == "released":
+                admission.__exit__()
+        assert (
+            gate.run_pytest_stage(
+                _plan(),
+                tmp_path,
+                "launcher",
+                time.monotonic() + 30,
+                admission=admission,
+                diagnostics=diagnostics,
+            )
+            == "1 passed in 0.1s"
+        )
+        assert (stale / "preserved").read_text() == "other run"
+        assert list(state.glob("pytest-*")) == [stale]
+        assert diagnostics["stale_pytest_cleanup"] == "skipped_shared_or_unknown"
+    finally:
+        if admission is not None:
+            admission.__exit__()
 
 
 def test_a_serial_waiter_cannot_be_skipped_by_a_scoped_follower(qualified_cgroups, tmp_path):

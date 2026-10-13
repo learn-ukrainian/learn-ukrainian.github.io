@@ -796,6 +796,7 @@ class Admission:
         self._ticket_fd: int | None = None
         self._ticket: Path | None = None
         self._launcher_fd: int | None = None
+        self._exclusive = False
         self.scope = scope
 
     def withdraw_sharing(self) -> None:
@@ -937,6 +938,7 @@ class Admission:
                     except BlockingIOError:  # includes an older gate with no ticket
                         position, depth = 2, depth + 1
                     else:
+                        self._exclusive = True
                         self.queue_depth = max(self.queue_depth, depth)
                         self.queue_position = self.queue_position or 1
                         return self
@@ -975,6 +977,7 @@ class Admission:
             self.waited = time.monotonic() - started
 
     def __exit__(self, *exc: object) -> None:
+        self._exclusive = False
         self.withdraw_sharing()
         if self.scope is not None:
             self.scope.close()
@@ -1171,11 +1174,29 @@ def parallel_options() -> list[str]:
 
 
 def run_pytest_stage(
-    plan: Plan, root: Path, launcher: str, deadline: float, *, diagnostics: dict[str, object] | None = None
+    plan: Plan,
+    root: Path,
+    launcher: str,
+    deadline: float,
+    *,
+    diagnostics: dict[str, object] | None = None,
+    admission: Admission | None = None,
 ) -> str:
-    # A concurrent or orphaned gate may still own any other base. Only remove our own directory.
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
+    # Only the actual exclusive global holder can prove that no other gate owns these bases.
+    exclusive = (
+        admission is not None
+        and admission._exclusive
+        and admission._fd is not None
+        and admission.scope is None
+        and admission.state == state
+    )
+    if diagnostics is not None:
+        diagnostics["stale_pytest_cleanup"] = "exclusive_sweep" if exclusive else "skipped_shared_or_unknown"
+    if exclusive:
+        for stale in state.glob("pytest-*"):
+            reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
     options = parallel_options()
@@ -1353,6 +1374,7 @@ def execute_stages(
     event: dict[str, object],
     *,
     persist_receipt: bool = True,
+    admission: Admission | None = None,
 ) -> None:
     state = state_dir(root)
     shadow: Shadow | None = None
@@ -1362,7 +1384,9 @@ def execute_stages(
         with stage_measurement(event, "pre_commit") as diagnostics:
             run_pre_commit_stage(plan, root, launcher, config, deadline, diagnostics=diagnostics)
         with stage_measurement(event, "pytest") as diagnostics:
-            event["pytest"] = run_pytest_stage(plan, root, launcher, deadline, diagnostics=diagnostics)
+            event["pytest"] = run_pytest_stage(
+                plan, root, launcher, deadline, diagnostics=diagnostics, admission=admission
+            )
         if persist_receipt:
             try:
                 write_receipt(state, plan, time.time())
@@ -1456,7 +1480,7 @@ def validate(
                         "receipt_unwritable", "cannot persist the green receipt", incomplete=True
                     ) from error
             else:
-                execute_stages(plan, root, launcher, config, deadline, event)
+                execute_stages(plan, root, launcher, config, deadline, event, admission=admitted)
     except GateOutcome:
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created

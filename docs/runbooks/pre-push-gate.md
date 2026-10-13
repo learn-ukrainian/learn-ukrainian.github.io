@@ -103,6 +103,12 @@ Cleanup addresses only the run's generated unit and descendants. Scoped receipt 
 verified cleanup. If descendants cannot be verified as settled, the executor retains its inherited
 reservations for own-unit cleanup and driver disposition; it never promotes an orphaned owner.
 
+The serial pytest stage restores the stale `pytest-*` sweep only while its run holds the exclusive
+Git-common admission lock. That lock excludes shared holders and orphaned scoped descendants.
+Shared/scoped execution or unknown exclusivity skips the sweep and records
+`stale_pytest_cleanup=skipped_shared_or_unknown` in stage diagnostics. Every run still removes its
+own pytest temporary directory. Sweep failures refuse the push as incomplete.
+
 Scoped executors share the existing `admission.lock`; legacy and default callers keep its exclusive
 flock. A flock-live ticket, a separate launcher flock, and verified scoped-holder proof permit sharing.
 The launcher flock is never inherited by the executor. A dead launcher therefore prevents a second
