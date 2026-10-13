@@ -20,7 +20,8 @@ CATALOG = ROOT / "scripts/config/model_catalog.yaml"
 # 35_300 -> 35_500: #10146 admits Gemini as an epic driver; P2 names its certified driver pins.
 # 35_500 -> 35_600: CTO decision 2026-10-09 — the security row states "never written or reviewed on Sonnet"; the router-only exception lives in model-assignment.md and the agent file.
 # 35_600 -> 35_800: retain the approved 200-byte allowance for detached long jobs with checkpoint and log (P1 Loop).
-CORE_BYTE_BUDGET = 35_800
+# 35_800 -> 36_200: CTO order cto-local-precheck, 2026-10-13 — the approved allowance for the local pre-push check (P0-P9 Unconditional invariants).
+CORE_BYTE_BUDGET = 36_200
 PILLARS = tuple(f"P{n}" for n in range(10))
 # A launcher context-window suffix such as `[1m]` is not part of the model id; the base id is checked.
 MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s\[]*)(?:\[[^\]`\s]*\])?`")
