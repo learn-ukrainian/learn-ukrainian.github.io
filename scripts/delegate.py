@@ -185,7 +185,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Callable, Collection, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -6361,6 +6361,7 @@ class _TypedCause:
     path: str | None = None
     count: int | None = None
     diagnostic: str = dataclasses.field(default="", compare=False, repr=False)
+    missing: tuple[str, ...] = ()
 
     def public(self) -> str:
         parts = [self.code if self.code in public_causes() else UNCLASSIFIED_CAUSE]
@@ -6566,6 +6567,7 @@ def _diagnostic_line(source: str, field: str, cause: _TypedCause) -> bytes:
             "field": field[:64],
             "code": cause.code[:64],
             "public": cause.public(),
+            **({"missing": list(cause.missing)} if cause.missing else {}),
             **({"path": path} if path else {}),
             "diagnostic": text,
         }
@@ -7844,21 +7846,45 @@ def _rescue_canonical_push_url() -> str:
     return CANONICAL_ORIGIN
 
 
-def _rescue_execution_context(repo: _RescueRepo) -> SafeGitContext:
-    from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity
+@contextlib.contextmanager
+def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
+    from scripts.agent_runtime.agent_github_identity import (
+        RescueIdentityError,
+        resolve_agent_github_identity,
+        revoke_installation_token,
+    )
 
-    identity = resolve_agent_github_identity(
-        bash_secrets_path=_BASH_SECRETS_PATH,
-        repository="learn-ukrainian/learn-ukrainian.github.io",
-    )
+    alternative = "Publish through the normal pre-push push from the worktree."
+    try:
+        identity = resolve_agent_github_identity(
+            repository="learn-ukrainian/learn-ukrainian.github.io",
+            rescue=True,
+        )
+    except RescueIdentityError as exc:
+        raise _RescueFailure(
+            f"Rescue identity unavailable ({', '.join(exc.missing)}). {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=exc.missing),
+        ) from None
     if not identity.token:
-        raise _RescueFailure("driver identity unavailable", _TypedCause("rescue_identity_unavailable"))
-    return SafeGitContext(
-        objects=repo.git_dir / "objects",
-        origin=_rescue_canonical_push_url(),
-        token=identity.token,
-        temp_root=Path(tempfile.gettempdir()),
-    )
+        raise _RescueFailure(
+            f"Rescue identity unavailable. {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=("agent-token:missing",)),
+        )
+    try:
+        with SafeGitContext(
+            objects=repo.git_dir / "objects",
+            origin=_rescue_canonical_push_url(),
+            token=identity.token,
+            temp_root=Path(tempfile.gettempdir()),
+        ) as context:
+            yield context
+    finally:
+        if identity.source == "app":
+            try:
+                revoke_installation_token(identity.token)
+            except Exception:
+                # Cleanup must not replace the push result or expose response text.
+                print("WARNING: rescue App token revocation failed", file=sys.stderr)
 
 
 def _rescue_repo(worktree: Path) -> _RescueRepo:
@@ -8097,6 +8123,8 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
         )
         reason = cause.public()
         row.update(action="error", reason=reason, failure_code=reason.split(", ")[0])
+        if cause.code == "rescue_identity_unavailable":
+            row.update(missing=list(cause.missing), message=cause.diagnostic)
         diagnostic = _record_diagnostic(task_id, cause, source="rescue", field="reason")
         if diagnostic:
             row["diagnostic"] = diagnostic
