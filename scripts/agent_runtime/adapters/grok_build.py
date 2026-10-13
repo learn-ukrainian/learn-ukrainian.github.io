@@ -233,7 +233,7 @@ _META_WRITE_GUARD_AGENT_FILE = "write_guard_agent_file"
 # ids that expansion does not cover, so a write session's guards still see
 # the shell and file tools the model actually calls.
 _WRITE_MATCHER_ALIASES: dict[str, tuple[str, ...]] = {
-    "Bash": ("run_terminal_command", "run_terminal_cmd"),
+    "Bash": ("run_terminal_command", "run_terminal_cmd", "monitor"),
     "Write|Edit|MultiEdit": ("write", "search_replace", "hashline_edit"),
 }
 
@@ -243,6 +243,17 @@ def _grok_matcher(matcher: str, *, native_aliases: bool) -> str:
     if not extras:
         return matcher
     return "|".join((matcher, *extras))
+
+
+def _fleet_guard_groups(*, publish_guard: bool, native_aliases: bool) -> list[dict]:
+    """Select the shared fleet guards and translate their native matchers."""
+    from .claude import _worker_guard_settings
+
+    groups = json.loads(_worker_guard_settings(publish_guard=publish_guard))["hooks"]["PreToolUse"]
+    return [
+        {**group, "matcher": _grok_matcher(str(group["matcher"]), native_aliases=native_aliases)}
+        for group in groups
+    ]
 
 
 def _guard_agent_definition(
@@ -261,13 +272,11 @@ def _guard_agent_definition(
     payload consumed by the existing guards. ``promptMode`` stays at its
     default (extend), so the body is appended to the base system prompt.
     """
-    from .claude import _worker_guard_settings
-
     source_root = Path(__file__).resolve().parents[3]
     wrapper = source_root / "scripts/agent_runtime/grok_hook_bridge.py"
     if not wrapper.is_file():
         raise RuntimeError(f"Grok hook bridge unavailable: {wrapper}")
-    groups = json.loads(_worker_guard_settings(publish_guard=publish_guard))["hooks"]["PreToolUse"]
+    groups = _fleet_guard_groups(publish_guard=publish_guard, native_aliases=native_aliases)
     lines = [
         "---",
         f"name: {name}",
@@ -276,7 +285,7 @@ def _guard_agent_definition(
         "  PreToolUse:",
     ]
     for group in groups:
-        matcher = _grok_matcher(str(group["matcher"]), native_aliases=native_aliases)
+        matcher = group["matcher"]
         lines.extend([f"    - matcher: {json.dumps(matcher)}", "      hooks:"])
         for hook in group["hooks"]:
             command = f"{shlex.quote(str(wrapper))} {shlex.quote(hook['command'])}"
@@ -711,6 +720,18 @@ class GrokBuildAdapter:
             stdin_payload="",
             output_file=None,
             env_overrides={"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_tools else {},
+            # Native subagents inherit the driver's binding; fleet dispatches
+            # are separate workers/reviewers and must never inherit it.
+            env_unsets=tuple(
+                sorted(
+                    {
+                        "LU_GROK_DRIVER_SESSION_ID",
+                        "LU_GROK_SOURCE_ROOT",
+                        "LU_GROK_PROJECT_PYTHON",
+                        *(key for key in os.environ if key.startswith("LU_GROK_")),
+                    }
+                )
+            ),
             liveness_paths=liveness_paths,
             metadata=metadata,
             host_harness="grok",

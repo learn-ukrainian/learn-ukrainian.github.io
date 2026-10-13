@@ -2137,6 +2137,35 @@ def test_grok_sealed_review_selects_hash_pinned_tool_profile(tmp_path, monkeypat
     assert "`max_bytes=16000`" in profile
 
 
+@pytest.mark.parametrize("sealed_review", [False, True])
+def test_grok_acpx_scrubs_driver_binding(tmp_path, monkeypatch, sealed_review):
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    _stub_binary(monkeypatch, tmp_path)
+    _stub_grok(monkeypatch, tmp_path)
+    bindings = ("LU_GROK_DRIVER_SESSION_ID", "LU_GROK_SOURCE_ROOT", "LU_GROK_PROJECT_PYTHON", "LU_GROK_FUTURE_BINDING")
+    for key in bindings:
+        monkeypatch.setenv(key, "fixture-driver-binding")
+    monkeypatch.setenv("LANG", "C.UTF-8")
+    config = {
+        "acpx_discussion": True, "target_agent": "grok",
+        "correlation_id": "corr-1", "idempotency_key": "idem-1",
+    }
+    if sealed_review:
+        config["sealed_review_mcp_config"] = str(tmp_path / "sealed-config.json")
+        monkeypatch.setattr(acpx_module, "_validate_sealed_review_mcp_config", lambda raw, **kwargs: str(raw))
+    with acpx_module.active_discussion_scope():
+        plan = _build_grok(AcpxGrokShadowAdapter(), cwd=tmp_path, tool_config=config)
+    assert set(bindings).issubset(plan.env_unsets)
+    assert set(acpx_module._GROK_XAI_API_KEY_ENV_UNSETS).issubset(plan.env_unsets)
+    assert "LANG" not in plan.env_unsets
+    env = build_agent_env(provider="acpx-grok-shadow", overrides=plan.env_overrides)
+    for key in plan.env_unsets:
+        env.pop(key, None)
+    assert not any(key.startswith("LU_GROK_") for key in env)
+    assert env["LANG"] == "C.UTF-8"
+    assert env[acpx_module.GROK_AUTH_CACHED_TOKEN_ENV] == "1"
+
+
 def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)

@@ -930,6 +930,20 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'Claude-shaped'; not a model ID.
+- path: scripts/agent_runtime/grok_hook_bridge.py
+  scope: _driver_main
+  context: expression
+  id: grok-tui
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'grok-tui'; not a model ID.
+- path: scripts/agent_runtime/grok_hook_bridge.py
+  scope: main
+  context: expression
+  id: grok-session-canary.md
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'grok-session-canary.md'; not a model ID.
 - path: scripts/agent_runtime/kimi_admission.py
   scope: <module>
   context: docstring

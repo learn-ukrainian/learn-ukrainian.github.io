@@ -53,6 +53,7 @@ exceptions:
   # scripts/agent_runtime/env_sanitize.py
   - {module: scripts/agent_runtime/env_sanitize.py, function: "_isolated_git_env", program: "git", category: non-claude, reason: "runs git"}
   # scripts/agent_runtime/grok_hook_bridge.py
+  - {module: scripts/agent_runtime/grok_hook_bridge.py, function: "_driver_main", program: "argv", category: non-claude, reason: "runs only tracked fleet guard hooks admitted by guard_argv with the pinned project interpreter; no Claude process or provider argv, so the headless Claude wrapper does not apply"}
   - {module: scripts/agent_runtime/grok_hook_bridge.py, function: "main", program: "argv", category: non-claude, reason: "runs a pinned guard hook (guard_argv) for Grok; never a Claude CLI"}
   # scripts/agent_runtime/kimi_admission.py
   - {module: scripts/agent_runtime/kimi_admission.py, function: "CommitTree._git", program: "git", category: non-claude, reason: "runs git"}

@@ -165,6 +165,95 @@ The launcher owns lease open/close for Grok. The cold-start prompt explicitly te
 | INTERIM / CLAUDE / CODEX driver handoff | Dual-write **diary** board |
 | Canary probe | Rot measurement only (not the board) |
 
+## Native driver safety hooks
+
+`npm run agents:deploy` overlays `agents_extensions/grok/hooks/driver.json`
+onto `.grok/hooks/driver.json`, compares that file on subsequent deployment,
+and preserves unrelated `.grok` configuration. The two native `PreToolUse`
+matcher groups reuse the write-worker guard selection and native tool aliases,
+without reviewer restrictions or a Stop hook. The bridge supplies the shared
+guards with `tool_name` and `tool_input`, rejects malformed event envelopes and
+truncated inputs, rejects missing shell commands and non-object inputs,
+and retains the publishing guard's input rewrite.
+
+`start-grok-driver.sh` binds a fresh native session UUID with `--session-id`
+and forces `--no-leader`, keeping hook binding in the launcher process tree.
+The binding activates guards for every conversation and native subagent in
+that launcher process tree, including `/new`, `/resume` and `/fork`; the event
+session ID does not select enforcement. The launcher identity must still be
+`grok` / `grok-tui`. Interactive launches clear the three driver binding
+variables. Native Grok fleet workers/reviewers and acpx Grok discussions/sealed
+reviews scrub all inherited `LU_GROK_*` variables through their invocation
+plans. Commands resolve the
+shared project interpreter and this launcher's tracked guard sources. Native
+aliases are anchored so `todo_write` does not trigger file-write guards.
+
+Native driver forwarded arguments (after `--`) are denied by default. The
+allowlist, checked against the installed `grok --help`, contains only these
+exact, valueless flags:
+
+| Flags | Rationale |
+| --- | --- |
+| `--debug` | Enables diagnostic logging without selecting a project or session. |
+| `--fullscreen`, `--minimal`, `--no-alt-screen` | Changes terminal presentation only. |
+| `--disable-web-search`, `--no-subagents` | Removes tool capabilities without changing their execution site. |
+
+Value spellings, positional prompts, subcommands, unknown flags and every
+other option are refused with the option name and reason, without echoing values
+or positional text into diagnostics. In particular,
+`--cwd`, `-w`/`--worktree`, `--worktree-ref`/`--ref`, session/replay options,
+agent definitions and leader options cannot redirect a session after its
+project passed preflight. Model and effort remain launcher options before the
+separator. Interactive forwarding is unchanged.
+
+Native driver usage is `start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]`;
+there is no positional prompt. The launcher changes to its own checkout before
+the final exec (and in dry-run), refusing if it cannot enter that directory.
+Invocation from an unrelated directory or a linked worktree therefore keeps
+the session in the checkout whose hooks were inspected.
+
+Before deployment or inspection, native drivers refuse these environment
+overrides, including explicitly empty values:
+
+| Variables | Context affected |
+| --- | --- |
+| `GROK_CONFIG`, `GROK_CONFIG_PATH` | Inline or file config overlays. |
+| `GROK_HOME`, `GROK_WORKSPACE_ROOT` | Config home or workspace root. |
+| `GROK_FOLDER_TRUST`, `GROK_LEADER_SOCKET` | Folder trust or leader selection. |
+| `GROK_MANAGED_CONFIG_URL` | Managed config source. |
+| `GROK_CLAUDE_HOOKS_ENABLED`, `GROK_CURSOR_HOOKS_ENABLED`, `GROK_CODEX_HOOKS_ENABLED` | Compatibility hook sources. |
+| `GROK_CAMPAIGNS`, `GROK_CAMPAIGNS_OVERRIDE` | Remote config patches. |
+| `__GROK_HOOKS_MASK___` | Reserved internal hook marker, conservatively refused. |
+
+This refusal keeps ambient overrides from selecting a different hook context
+for the running session. Diagnostics name only the variable, never its value;
+unset the named variable before retrying. The list was checked against the
+installed client's help, embedded configuration documentation and hook symbols. Interactive
+launches retain their environment behavior.
+
+Before launching a native driver, the launcher deploys agent extensions,
+refuses a failed deployment, then requires `projectRoot` from
+`grok inspect --json` to be an absolute path resolving to the launcher's source
+checkout, `projectTrusted: true`, both discovered `pre_tool_use` matchers from the
+project profile, and byte equality between the deployed profile and its source.
+It refuses launch with the missing condition and remedy; it never grants
+folder trust. Deployment refuses symlinked `.grok` or `.grok/hooks` targets.
+A missing executable project interpreter or any driver bridge exception denies
+with exit 2. Shell inputs require a command and all guarded inputs require an
+object; tool `workdir` takes precedence over the session `cwd`.
+
+Worker and reviewer profiles retain their existing behavior except for two
+explicit bridge changes: truncated inputs now deny, and native envelopes with
+only `hookEventName` are accepted alongside the legacy event-name field.
+
+Discovery can be verified with `grok inspect --json` in an isolated deployed
+checkout. Residual: live firing in a real launcher-bound driver session has
+not yet been observed. The accountable driver owns that observation before
+claiming runtime certification; stop if the installed client cannot execute
+project hooks, and do not patch the client.
+Residual: native `apply_patch` and `features.write_file` are not covered by
+the current matcher groups; the accountable driver owns that coverage gap.
+
 ## Related
 
 - `scripts/session_canary/diary.py` — stamp / handback / hydrate capsule helpers

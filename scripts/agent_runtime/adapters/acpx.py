@@ -3114,7 +3114,19 @@ class AcpxGrokShadowAdapter:
                 {GROK_AUTH_CACHED_TOKEN_ENV: "1"},
                 adapter_label="AcpxGrokShadowAdapter",
             ),
-            env_unsets=_GROK_XAI_API_KEY_ENV_UNSETS,
+            # Discussions and sealed reviews are separate from the driver's
+            # native process tree; never inherit its hook binding.
+            env_unsets=tuple(
+                sorted(
+                    {
+                        *_GROK_XAI_API_KEY_ENV_UNSETS,
+                        "LU_GROK_DRIVER_SESSION_ID",
+                        "LU_GROK_SOURCE_ROOT",
+                        "LU_GROK_PROJECT_PYTHON",
+                        *(key for key in os.environ if key.startswith("LU_GROK_")),
+                    }
+                )
+            ),
             liveness_paths=(),
             metadata=metadata,
         )

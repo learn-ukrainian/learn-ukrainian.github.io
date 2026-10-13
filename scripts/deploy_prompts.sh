@@ -42,6 +42,12 @@ source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
 CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
+GROK_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/grok"
+# Refuse Grok overlays before diffing or syncing through an unsafe target.
+if [[ -L .grok || -L .grok/hooks ]]; then
+    echo "❌ Grok deploy refused: .grok and .grok/hooks must not be symlinks; reconcile the symlink target before rerunning npm run agents:deploy." >&2
+    exit 1
+fi
 # AGY customization overlay (hooks.json) -> workspace .agents/ (no --delete:
 # .agents/skills is owned by the shared skills sync).
 AGY_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/agy"
@@ -440,6 +446,9 @@ diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     diff_overlay_files "$CODEX_EXTENSIONS" ".codex" "$CODEX_EXTENSIONS → .codex"
 fi
+if [[ -d "$GROK_EXTENSIONS" ]]; then
+    diff_overlay_files "$GROK_EXTENSIONS" ".grok" "$GROK_EXTENSIONS → .grok"
+fi
 if [[ -d "$AGY_EXTENSIONS" ]]; then
     diff_overlay_files "$AGY_EXTENSIONS" ".agents" "$AGY_EXTENSIONS → .agents"
 fi
@@ -482,6 +491,14 @@ write_shared_agent_manifest
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     rsync -av "$CODEX_EXTENSIONS/" .codex/
+fi
+# Grok is a narrow overlay: unrelated configuration and runtime files survive.
+if [[ -d "$GROK_EXTENSIONS" ]]; then
+    if [[ -L .grok || -L .grok/hooks ]]; then
+        echo "❌ Grok deploy refused: .grok and .grok/hooks must not be symlinks; reconcile the symlink target before rerunning npm run agents:deploy." >&2
+        exit 1
+    fi
+    rsync -av "$GROK_EXTENSIONS/" .grok/
 fi
 # shellcheck disable=SC2046
 # rsync needs the destination's parent dir to exist before it can create
