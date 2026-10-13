@@ -9,7 +9,10 @@ faking ``.git`` files, because the module deliberately relies on git plumbing
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
+import tempfile
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -101,9 +104,25 @@ def test_resolve_main_root_is_stable_from_every_vantage(layout: Layout):
     assert wc.resolve_main_root(layout.external_wt) == layout.main
 
 
-def test_resolve_main_root_raises_outside_repo(layout: Layout):
+@pytest.fixture
+def outside_any_repo() -> Iterator[Path]:
+    """A directory outside every git repository, independent of pytest's basetemp.
+
+    The protected-push gate puts basetemp under the primary checkout's ``.git``
+    directory, so ``tmp_path`` (and ``layout.outside``) may itself lie inside a
+    repository there; this directory is checked to lie outside one.
+    """
+    directory = wc.canonicalize(tempfile.mkdtemp(prefix="wc-outside-"))
+    try:
+        assert wc._resolve_main_root_or_none(directory) is None, "the system temp directory is inside a git repository"
+        yield directory
+    finally:
+        shutil.rmtree(directory, ignore_errors=True)
+
+
+def test_resolve_main_root_raises_outside_repo(layout: Layout, outside_any_repo: Path):
     with pytest.raises(wc.NotAGitRepositoryError):
-        wc.resolve_main_root(layout.outside)
+        wc.resolve_main_root(outside_any_repo)
 
 
 def test_resolve_main_root_uses_filesystem_fallback_when_git_cannot_execute(
@@ -328,12 +347,12 @@ def test_missing_path_under_ignored_dir_is_allowed(layout: Layout):
 # is_primary_checkout / branch helpers
 # ---------------------------------------------------------------------------
 
-def test_is_primary_checkout_matrix(layout: Layout):
+def test_is_primary_checkout_matrix(layout: Layout, outside_any_repo: Path):
     assert wc.is_primary_checkout(layout.main) is True
     assert wc.is_primary_checkout(layout.main / "pkg") is True
     assert wc.is_primary_checkout(layout.dispatch_wt) is False
     assert wc.is_primary_checkout(layout.external_wt) is False
-    assert wc.is_primary_checkout(layout.outside) is False
+    assert wc.is_primary_checkout(outside_any_repo) is False
 
 
 def test_branch_helpers(layout: Layout):
