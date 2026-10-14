@@ -793,6 +793,8 @@ def test_a_second_gate_waits_for_admission_then_reports_validation_incomplete(re
     assert result.returncode == gate.EXIT_INCOMPLETE
     assert "admission_timeout" in result.stderr
     row = _measurements(repo)[-1]
+    assert row["detail"].startswith("admission_timeout:")
+    assert result.stderr.rstrip("\n").endswith(row["detail"])
     assert row["queue_depth"] == 2 and row["queue_position"] == 2
     assert row["admission_wait_s"] >= 1.0
     assert _receipts(repo) == []
