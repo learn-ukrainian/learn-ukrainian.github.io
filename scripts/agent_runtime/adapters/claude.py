@@ -198,9 +198,13 @@ Construction (probed on Claude Code 2.1.300 with fixtures only):
   policy, so policy delivered between verification and launch stops the
   exec. The guard runs at every spawn of a plan, and every rebuild (retry,
   failover, resume) re-verifies and re-binds. The
-  window left is between that last digest and the CLI reading its files
-  (process exec and CLI start-up); exploiting it needs write access to the
-  same user's files, which the threat model excludes. A token refresh inside
+  window left is between the guard's last check and the CLI reading its files
+  (process exec and CLI start-up). A write by a process of the same user can
+  land inside it, which the threat model excludes; so can an administrative
+  policy deployment that installs machine policy in that moment, which needs
+  no access to the user's files and which no launch-side check can close: that
+  run starts under the new machine policy, and every later launch and
+  dispatch on the host refuses. A token refresh inside
   the verification-to-launch window (by another run of the same account, or
   by the status probe for a token close to expiry) changes the credential
   record and refuses the launch (fail-closed). The
@@ -213,7 +217,10 @@ Construction (probed on Claude Code 2.1.300 with fixtures only):
 A token that expires mid-run is the CLI's own refresh path; if that fails the
 run fails. Nothing retries it as another account: the runner's failover
 re-sends the same ``tool_config`` (label included) and has no Claude chain.
-A sealed attempt selects its account at its own boundary.
+A sealed attempt selects its account at its own boundary. The label always
+comes from the task record: the fleet-wide default-account file is read once
+at dispatch, never here. A launch that passed every check above is noted as
+the run's value-free receipt, which the worker writes to the task record.
 
 Liveness paths:
 - Returns the most recently active project directory under the run's
@@ -1209,9 +1216,16 @@ def _verified_labelled_launch(
     and the host to have no machine policy; return ``cmd`` behind the launch
     guard, which recomputes the digest in the spawned process and execs the
     CLI only on a match with still no machine policy. See the module
-    docstring for what the remaining window covers.
+    docstring for what the remaining window covers. Only a launch that passed
+    every check is noted as the run's value-free receipt
+    (``attempt_boundary.claude_account_auth_receipt``).
     """
-    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, refuse_claude_machine_policy
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_AUTH_SUBSCRIPTION_LOGIN,
+        ClaudeAccountRefused,
+        note_claude_account_verified,
+        refuse_claude_machine_policy,
+    )
     from scripts.common.repo_root import project_interpreter
 
     login_dir = str(account.config_dir)
@@ -1231,6 +1245,7 @@ def _verified_labelled_launch(
     if digest() != verified or claude_login_credential_fingerprint(login_dir) != account.credential:
         raise ClaudeAccountRefused("claude_account_settings_changed")
     refuse_claude_machine_policy()
+    note_claude_account_verified(account.label, CLAUDE_AUTH_SUBSCRIPTION_LOGIN)
     return [str(project_interpreter()), "-I", "-c", _LAUNCH_GUARD_CODE, str(_CODE_ROOT), verified, "--", *cmd]
 
 

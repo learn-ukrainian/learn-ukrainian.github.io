@@ -65,6 +65,26 @@ CLAUDE_ACCOUNT_LABELS = ("a", "b")
 ENV_CLAUDE_ACCOUNTS_FILE = "LU_CLAUDE_ACCOUNTS_FILE"
 CLAUDE_ACCOUNTS_FILE_NAME = "claude_accounts.json"
 CLAUDE_ACCOUNTS_SCHEMA_VERSION = 1
+# The fleet-wide default label for a claude dispatch without --claude-account
+# (#10619): one token in a per-user file, read once at dispatch, never by a worker.
+ENV_CLAUDE_DEFAULT_ACCOUNT_FILE = "LU_CLAUDE_DEFAULT_ACCOUNT_FILE"
+CLAUDE_DEFAULT_ACCOUNT_FILE_NAME = "claude-default-account"
+_CLAUDE_DEFAULT_ACCOUNT_MAX_BYTES = 64
+# Task-record fields: where the dispatch label came from, and the worker's
+# value-free authentication receipt.
+CLAUDE_ACCOUNT_SOURCE_KEY = "claude_account_source"
+CLAUDE_ACCOUNT_AUTH_KEY = "claude_account_auth"
+# ``record``: a re-dispatch of the same task id keeps its earlier record's label.
+CLAUDE_ACCOUNT_SOURCES = ("explicit", "default-file", "builtin", "record")
+# Authentication method classes a receipt may name. The default label runs on
+# the host's own login and is not probed; a non-default label is verified by
+# the Claude adapter's auth-status check (ordinary run) or by the sealed
+# attempt boundary's identity check of the bound credential.
+CLAUDE_AUTH_HOST_LOGIN = "host_login"
+CLAUDE_AUTH_SUBSCRIPTION_LOGIN = "subscription_login"
+CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN = "bound_account_token"
+CLAUDE_AUTH_UNVERIFIED = "unverified"
+_CLAUDE_VERIFIED_AUTH_METHODS = frozenset({CLAUDE_AUTH_SUBSCRIPTION_LOGIN, CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN})
 _CLAUDE_AMBIENT_AUTH_ENV = (
     "ANTHROPIC_API_KEY",
     "ANTHROPIC_AUTH_TOKEN",
@@ -172,10 +192,11 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_profile_store_present",
         "claude_account_machine_policy_present",
         "claude_account_machine_policy_unavailable",
+        "claude_account_record_conflict",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
         *(
             f"claude_account_{kind}_{failure}"
-            for kind in ("binding", "config", "settings")
+            for kind in ("binding", "config", "settings", "default_file")
             for failure in _PRIVATE_FILE_FAILURES
         ),
     }
@@ -215,16 +236,26 @@ def resolve_claude_account_label(raw: object) -> str:
     raise ClaudeAccountRefused("claude_account_unknown")
 
 
-def claude_accounts_file(environ: Mapping[str, str] | None = None) -> Path | None:
-    """``LU_CLAUDE_ACCOUNTS_FILE`` if set (empty means none), else the user config file."""
+def _user_config_file(environ: Mapping[str, str] | None, override: str, name: str) -> Path | None:
+    """``override`` if set (empty means none), else ``name`` in the user's learn-ukrainian config directory."""
     env = os.environ if environ is None else environ
-    if ENV_CLAUDE_ACCOUNTS_FILE in env:
-        value = env[ENV_CLAUDE_ACCOUNTS_FILE]
+    if override in env:
+        value = env[override]
         return Path(value) if value else None
     base = env.get("XDG_CONFIG_HOME")
     if not base or not Path(base).is_absolute():
         base = str(Path.home() / ".config")
-    return Path(base) / "learn-ukrainian" / CLAUDE_ACCOUNTS_FILE_NAME
+    return Path(base) / "learn-ukrainian" / name
+
+
+def claude_accounts_file(environ: Mapping[str, str] | None = None) -> Path | None:
+    """``LU_CLAUDE_ACCOUNTS_FILE`` if set (empty means none), else the user config file."""
+    return _user_config_file(environ, ENV_CLAUDE_ACCOUNTS_FILE, CLAUDE_ACCOUNTS_FILE_NAME)
+
+
+def claude_default_account_file(environ: Mapping[str, str] | None = None) -> Path | None:
+    """``LU_CLAUDE_DEFAULT_ACCOUNT_FILE`` if set (empty means none), else the user config file."""
+    return _user_config_file(environ, ENV_CLAUDE_DEFAULT_ACCOUNT_FILE, CLAUDE_DEFAULT_ACCOUNT_FILE_NAME)
 
 
 def _unique_json_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
@@ -236,15 +267,14 @@ def _unique_json_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
     return result
 
 
-def _read_private_json(
+def _read_private_bytes(
     path: Path, *, limit: int, code: str, dir_fd: int | None = None, forbidden_mode: int = 0o077
-) -> Any:
+) -> bytes | None:
     """Owner-only regular file, read without following links; ``None`` when absent.
 
     ``forbidden_mode`` names the permission bits the file must not carry
     (default: any group or other access). Every failure is
-    ``ClaudeAccountRefused`` with ``code`` and a fixed suffix; a file holding
-    JSON ``null`` is invalid, never taken for an absent one.
+    ``ClaudeAccountRefused`` with ``code`` and a fixed suffix.
     """
     try:
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
@@ -263,6 +293,19 @@ def _read_private_json(
         os.close(fd)
     if len(raw) > limit:
         raise ClaudeAccountRefused(f"{code}_oversized")
+    return raw
+
+
+def _read_private_json(
+    path: Path, *, limit: int, code: str, dir_fd: int | None = None, forbidden_mode: int = 0o077
+) -> Any:
+    """``_read_private_bytes`` parsed as JSON with unique keys; ``None`` when absent.
+
+    A file holding JSON ``null`` is invalid, never taken for an absent one.
+    """
+    raw = _read_private_bytes(path, limit=limit, code=code, dir_fd=dir_fd, forbidden_mode=forbidden_mode)
+    if raw is None:
+        return None
     try:
         # A decode or duplicate-key error is a ValueError; its text is never kept.
         data = json.loads(raw, object_pairs_hook=_unique_json_keys)
@@ -271,6 +314,100 @@ def _read_private_json(
     if data is None:
         raise ClaudeAccountRefused(f"{code}_invalid")
     return data
+
+
+def read_claude_default_account(environ: Mapping[str, str] | None = None) -> str | None:
+    """The fleet-wide default label, or ``None`` when its file is absent, disabled or empty.
+
+    The file holds one label, ``a`` or ``b``, optionally surrounded by spaces,
+    tabs or line breaks. It must be a regular file of at most 64 bytes, owned
+    by this user and not writable by group or others (readable is fine).
+    Anything else is refused, value-free: neither content nor location is
+    reported. Only dispatch reads it; a worker uses its task record's label.
+    """
+    path = claude_default_account_file(environ)
+    raw = (
+        None
+        if path is None
+        else _read_private_bytes(
+            path, limit=_CLAUDE_DEFAULT_ACCOUNT_MAX_BYTES, code="claude_account_default_file", forbidden_mode=0o022
+        )
+    )
+    token = (raw or b"").strip(b" \t\r\n")
+    if not token:
+        return None
+    if token not in {label.encode() for label in CLAUDE_ACCOUNT_LABELS}:
+        raise ClaudeAccountRefused("claude_account_default_file_invalid")
+    return token.decode()
+
+
+def resolve_dispatch_claude_account(explicit: object, *, environ: Mapping[str, str] | None = None) -> tuple[str, str]:
+    """A claude dispatch's label and source: the flag, else the default file, else the built-in default.
+
+    An explicit label always wins, and the file is then not read. Every
+    source goes through the same admission (``verify_claude_account``) next.
+    """
+    if explicit is not None:
+        return resolve_claude_account_label(explicit), "explicit"
+    label = read_claude_default_account(environ)
+    return (DEFAULT_CLAUDE_ACCOUNT, "builtin") if label is None else (label, "default-file")
+
+
+# Labels whose authentication this process verified since its last reset
+# (label -> method class): the source of a worker's receipt (#10619).
+_verified_claude_auth: dict[str, str] = {}
+_verified_claude_auth_lock = threading.Lock()
+
+
+def _claude_auth_receipts() -> tuple[dict[str, str], threading.Lock]:
+    """The one registry, also when this file is loaded under the ``agent_runtime`` name.
+
+    The delegate worker imports ``scripts.agent_runtime``; the runner it calls
+    loads the same files as ``agent_runtime``, a second module object.
+    """
+    from scripts.agent_runtime import attempt_boundary as canonical
+
+    return canonical._verified_claude_auth, canonical._verified_claude_auth_lock
+
+
+def note_claude_account_verified(label: str, method: str) -> None:
+    """Record that this process verified ``label``'s authentication by ``method``."""
+    if label not in CLAUDE_ACCOUNT_LABELS or label == DEFAULT_CLAUDE_ACCOUNT:
+        raise AssertionError("receipt for an unverifiable Claude account label")
+    if method not in _CLAUDE_VERIFIED_AUTH_METHODS:
+        raise AssertionError("unregistered Claude authentication method")
+    receipts, lock = _claude_auth_receipts()
+    with lock:
+        receipts[label] = method
+
+
+def reset_claude_account_receipts() -> None:
+    """Forget every verification; a worker resets before its run."""
+    receipts, lock = _claude_auth_receipts()
+    with lock:
+        receipts.clear()
+
+
+def claude_account_auth_receipt(label: str, *, source: object) -> dict[str, object]:
+    """A run's value-free authentication receipt for its task record.
+
+    It names the label, the label's source, the method class and whether this
+    process verified it since the last reset; never a token, identity or path.
+    The default label runs on the host's own login, which is not probed.
+    """
+    label = resolve_claude_account_label(label)
+    method, verified = CLAUDE_AUTH_HOST_LOGIN, False
+    if label != DEFAULT_CLAUDE_ACCOUNT:
+        receipts, lock = _claude_auth_receipts()
+        with lock:
+            seen = receipts.get(label)
+        method, verified = (seen, True) if seen else (CLAUDE_AUTH_UNVERIFIED, False)
+    return {
+        "label": label,
+        "source": source if isinstance(source, str) and source in CLAUDE_ACCOUNT_SOURCES else None,
+        "method": method,
+        "verified": verified,
+    }
 
 
 def load_claude_account_binding(label: str, *, environ: Mapping[str, str] | None = None) -> ClaudeAccountBinding:
@@ -658,6 +795,7 @@ def linux_claude_auth(account: str | None = None) -> dict[str, str]:
         label = resolve_claude_account_label(account)
         if label != DEFAULT_CLAUDE_ACCOUNT:
             _, token = _validated_claude_selection(label)
+            note_claude_account_verified(label, CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN)
             return {"CLAUDE_CODE_OAUTH_TOKEN": token}
     except ClaudeAccountRefused as exc:
         raise ReviewIsolationError(exc.code) from None

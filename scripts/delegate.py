@@ -10471,8 +10471,12 @@ def _run_worker(
         return 1
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
     from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_AUTH_KEY,
         CLAUDE_ACCOUNT_KEY,
+        CLAUDE_ACCOUNT_SOURCE_KEY,
         ClaudeAccountRefused,
+        claude_account_auth_receipt,
+        reset_claude_account_receipts,
         resolve_claude_account_label,
     )
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
@@ -10598,6 +10602,7 @@ def _run_worker(
     # handoff, or the typed code that refused it there.
     advisory_prompt_sha256: str | None = None
     advisory_handoff_refusal: str | None = None
+    claude_account: str | None = None
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     leftovers_scan: worker_leftovers.ExitScan | None = None
@@ -10630,7 +10635,10 @@ def _run_worker(
                 # The label the task record carries. The Claude adapter (or a
                 # sealed attempt's boundary) authenticates as that account and
                 # verifies its binding again at use; an unknown label is refused.
-                tool_config[CLAUDE_ACCOUNT_KEY] = resolve_claude_account_label(state[CLAUDE_ACCOUNT_KEY])
+                # Only this run's verification may reach its receipt.
+                claude_account = resolve_claude_account_label(state[CLAUDE_ACCOUNT_KEY])
+                tool_config[CLAUDE_ACCOUNT_KEY] = claude_account
+                reset_claude_account_receipts()
             if agent in {"agy", "gemini"} and (
                 _dispatch_is_review_typed(argparse.Namespace(**state))
                 or require_review_verdict
@@ -10948,6 +10956,11 @@ def _run_worker(
             final_state["failure_reason"] = advisory_handoff_refusal
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
+        if claude_account is not None:
+            # Value-free: label, its source, method class and whether it was verified (#10619).
+            final_state[CLAUDE_ACCOUNT_AUTH_KEY] = claude_account_auth_receipt(
+                claude_account, source=state.get(CLAUDE_ACCOUNT_SOURCE_KEY)
+            )
 
         # A headless worker that ended its turn while its own background jobs
         # still run has not finished (#8991): record them before anything
@@ -12249,53 +12262,86 @@ def _refuse_review_scratch_in_worktree() -> None:
         )
 
 
-def _dispatch_claude_account_refusal(args: argparse.Namespace) -> str | None:
-    """The typed code refusing ``--claude-account``, or ``None``; checked before any side effect.
+def _recorded_claude_account(args: argparse.Namespace) -> str | None:
+    """The label a ``--force-new`` re-run inherits from its task id's earlier record, if that record has one.
 
-    A non-default label is admitted only for a claude dispatch. An ordinary
-    worker runs with the bound account's login directory; a formal review
-    attempt's sealed boundary selects that account's credential. The binding
-    and credential sources are verified here and again where the worker
-    authenticates.
+    Read without creating anything: the hot record, else the archived one.
+    """
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+
+    task_id = getattr(args, "task_id", None)
+    if not getattr(args, "force_new", False) or not task_id:
+        return None
+    path = task_record_store.locate_task_record(tasks_dir(), task_id)
+    record = _read_state_json(path) if path is not None else None
+    if record is None or CLAUDE_ACCOUNT_KEY not in record:
+        return None
+    return resolve_claude_account_label(record[CLAUDE_ACCOUNT_KEY])
+
+
+def _resolve_dispatch_claude_account(args: argparse.Namespace) -> tuple[str, str] | None:
+    """A claude dispatch's account label and its source, resolved once before any side effect (#10619).
+
+    ``None`` for another seat, which takes no label and never reads the
+    default-account file. Otherwise the label is, in order: a ``--force-new``
+    re-run's recorded label (a conflicting ``--claude-account`` is refused),
+    ``--claude-account``, the default-account file, then the built-in default.
+    A non-default label from any source has its binding and credential
+    sources verified here and again where the worker authenticates: an
+    ordinary worker runs with the bound account's login directory, a formal
+    review attempt's sealed boundary selects that account's credential.
+    Raises ``ClaudeAccountRefused``.
     """
     from scripts.agent_runtime.attempt_boundary import (
         DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
         resolve_claude_account_label,
+        resolve_dispatch_claude_account,
         verify_claude_account,
     )
 
-    try:
-        label = resolve_claude_account_label(getattr(args, "claude_account", None))
-        if label == DEFAULT_CLAUDE_ACCOUNT:
-            return None
-        if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
-            return "claude_account_seat_unsupported"
-        verify_claude_account(label)
-    except ClaudeAccountRefused as exc:
-        return exc.code
-    return None
+    explicit = getattr(args, "claude_account", None)
+    if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
+        if resolve_claude_account_label(explicit) != DEFAULT_CLAUDE_ACCOUNT:
+            raise ClaudeAccountRefused("claude_account_seat_unsupported")
+        return None
+    recorded = _recorded_claude_account(args)
+    if recorded is None:
+        label, source = resolve_dispatch_claude_account(explicit)
+    elif explicit is None:
+        label, source = recorded, "record"
+    elif resolve_claude_account_label(explicit) == recorded:
+        label, source = recorded, "explicit"
+    else:
+        raise ClaudeAccountRefused("claude_account_record_conflict")
+    verify_claude_account(label)
+    return label, source
 
 
-def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, Any]:
-    """A claude task record's account label, resolved once; the worker reads it back from the record.
+def _claude_account_state(
+    args: argparse.Namespace, claude_account: tuple[str, str] | None, dispatch_agent: str
+) -> dict[str, Any]:
+    """A claude task record's account label and its source; the worker reads the label back from the record.
 
-    An ordinary worker on a non-default label loads none of its login
-    directory's user settings (hooks, permission rules, MCP servers, plugins);
-    the record says so in ``claude_account_user_scope_omitted`` (#10619).
+    ``claude_account`` is what dispatch resolved before any side effect
+    (``_resolve_dispatch_claude_account``). An ordinary worker on a
+    non-default label, from any source, loads none of its login directory's
+    user settings (hooks, permission rules, MCP servers, plugins); the record
+    says so in ``claude_account_user_scope_omitted`` (#10619).
     """
     if dispatch_agent != "claude":
         return {}
     from scripts.agent_runtime.attempt_boundary import (
         CLAUDE_ACCOUNT_KEY,
+        CLAUDE_ACCOUNT_SOURCE_KEY,
         DEFAULT_CLAUDE_ACCOUNT,
-        resolve_claude_account_label,
     )
 
-    label = resolve_claude_account_label(getattr(args, "claude_account", None))
-    if label == DEFAULT_CLAUDE_ACCOUNT or getattr(args, "review_attempt", None):
-        return {CLAUDE_ACCOUNT_KEY: label}
-    return {CLAUDE_ACCOUNT_KEY: label, "claude_account_user_scope_omitted": True}
+    label, source = claude_account or (DEFAULT_CLAUDE_ACCOUNT, "builtin")
+    state: dict[str, Any] = {CLAUDE_ACCOUNT_KEY: label, CLAUDE_ACCOUNT_SOURCE_KEY: source}
+    if label != DEFAULT_CLAUDE_ACCOUNT and not getattr(args, "review_attempt", None):
+        state["claude_account_user_scope_omitted"] = True
+    return state
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -12343,9 +12389,12 @@ def _dispatch(
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
 
-    claude_account_refusal = _dispatch_claude_account_refusal(args)
-    if claude_account_refusal:
-        print(f"❌ CLAUDE_ACCOUNT_REFUSED: {claude_account_refusal}", file=sys.stderr)
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    try:
+        claude_account = _resolve_dispatch_claude_account(args)
+    except ClaudeAccountRefused as exc:
+        print(f"❌ CLAUDE_ACCOUNT_REFUSED: {exc.code}", file=sys.stderr)
         return 2
 
     # Diagnose the required profile before route admission defaults to code
@@ -13719,7 +13768,7 @@ def _dispatch(
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
-            dry_run_state.update(_claude_account_state(args, dispatch_agent))
+            dry_run_state.update(_claude_account_state(args, claude_account, dispatch_agent))
             if not admission.exempt:
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
@@ -14246,7 +14295,7 @@ def _dispatch(
         initial_state.update(_authoring_review_state_fields(args, authoring_admission))
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
-        initial_state.update(_claude_account_state(args, dispatch_agent))
+        initial_state.update(_claude_account_state(args, claude_account, dispatch_agent))
         if lifecycle_carrier is not None:
             initial_state["task_lifecycle"] = lifecycle_carrier
         if review_plan is not None:
@@ -18452,6 +18501,10 @@ def build_parser() -> argparse.ArgumentParser:
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
             "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "Claude account (#10619):\n"
+            "  A claude dispatch runs as --claude-account, else the label in the default-account file read once at\n"
+            "  dispatch (see --claude-account), else a. The task record keeps the label and its source\n"
+            "  (claude_account_source); the worker adds a value-free claude_account_auth receipt.\n\n"
             "Related:\n"
             "  scripts/orchestration/dispatch_admission.py; docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md; #8645\n"
         ),
@@ -18552,7 +18605,14 @@ def build_parser() -> argparse.ArgumentParser:
             "credential source, and a formal review attempt's sealed boundary selects the account. An "
             "unknown label, a missing binding or a conflicting credential source (a Claude token or API key "
             "variable, or another config directory) is refused (CLAUDE_ACCOUNT_REFUSED) before any worktree "
-            "or task record is created, and checked again before the worker starts Claude."
+            "or task record is created, and checked again before the worker starts Claude. Without this flag "
+            "a claude dispatch takes the label in the default-account file learn-ukrainian/claude-default-account "
+            "in the user config directory ($XDG_CONFIG_HOME, else ~/.config), or the path in "
+            "LU_CLAUDE_DEFAULT_ACCOUNT_FILE (empty means none), else a; a label from the file passes every "
+            "check above exactly as this flag would. The file is read once, at dispatch: the worker and a "
+            "--force-new re-run of the task id keep the recorded label, and a --claude-account that "
+            "contradicts it is refused. A present but invalid file (not one label, over 64 bytes, a link or "
+            "non-regular file, not owned by you, or group- or world-writable) is refused the same way."
         ),
     )
     d.add_argument(

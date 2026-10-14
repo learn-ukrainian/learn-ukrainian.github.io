@@ -1592,3 +1592,142 @@ def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, 
     assert result.stderr_excerpt == "attempt_read_unsafe_path"
     assert sentinel not in repr(result)
     assert observed and not observed[0].workspace.exists()
+
+
+# The fleet-wide default account file (#10619 PR1c): read once at dispatch, fail closed.
+def _default_file(tmp_path: Path, monkeypatch, content: bytes, *, mode: int = 0o600) -> Path:
+    path = tmp_path / "operator-config" / "claude-default-account"
+    path.parent.mkdir(exist_ok=True)
+    path.write_bytes(content)
+    path.chmod(mode)
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
+    return path
+
+
+@pytest.mark.parametrize(
+    "content,label",
+    [(b"b", "b"), (b"b\n", "b"), (b"  a\r\n", "a"), (b"\tb \n\n", "b"), (b"", None), (b" \n", None)],
+)
+def test_default_account_file_names_one_label_or_none(tmp_path, monkeypatch, content, label):
+    from scripts.agent_runtime.attempt_boundary import read_claude_default_account
+
+    _default_file(tmp_path, monkeypatch, content)
+    assert read_claude_default_account() == label
+
+
+def test_default_account_file_may_be_readable_by_others(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import read_claude_default_account
+
+    _default_file(tmp_path, monkeypatch, b"b\n", mode=0o644)
+    assert read_claude_default_account() == "b"
+
+
+def test_default_account_file_lives_in_the_user_config_directory(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import claude_default_account_file, read_claude_default_account
+
+    monkeypatch.delenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", raising=False)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    expected = tmp_path / "xdg" / "learn-ukrainian" / "claude-default-account"
+    assert claude_default_account_file() == expected
+    assert read_claude_default_account() is None  # absent
+    monkeypatch.setenv("XDG_CONFIG_HOME", "relative")
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    assert claude_default_account_file() == tmp_path / "home" / ".config" / "learn-ukrainian" / "claude-default-account"
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
+    assert claude_default_account_file() is None
+
+
+def test_dispatch_resolution_prefers_explicit_then_file_then_builtin(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_dispatch_claude_account
+
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(tmp_path / "absent"))
+    assert resolve_dispatch_claude_account(None) == ("a", "builtin")
+    path = _default_file(tmp_path, monkeypatch, b"b\n")
+    assert resolve_dispatch_claude_account(None) == ("b", "default-file")
+    assert resolve_dispatch_claude_account("a") == ("a", "explicit")
+    path.write_bytes(b"c")
+    assert resolve_dispatch_claude_account("b") == ("b", "explicit")  # the file is not read
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        resolve_dispatch_claude_account(None)
+    assert refused.value.code == "claude_account_default_file_invalid"
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        resolve_dispatch_claude_account("c")
+    assert refused.value.code == "claude_account_unknown"
+
+
+def test_default_file_refusal_names_no_value_or_location(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, read_claude_default_account
+
+    path = _default_file(tmp_path, monkeypatch, b"fixture-secretish-content\n")
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        read_claude_default_account()
+    rendered = (
+        repr(refused.value) + str(refused.value) + repr(refused.value.__cause__) + repr(refused.value.__context__)
+    )
+    assert "fixture-secretish" not in rendered
+    assert str(path) not in rendered
+
+
+def test_new_default_file_and_record_codes_are_registered():
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES
+
+    assert {
+        "claude_account_record_conflict",
+        *(
+            f"claude_account_default_file_{failure}"
+            for failure in ("unavailable", "not_private", "oversized", "invalid")
+        ),
+    } <= CLAUDE_ACCOUNT_REFUSAL_CODES
+
+
+def test_sealed_attempt_selection_records_a_verified_receipt(two_accounts):
+    """The sealed boundary's verified selection of the bound credential is this run's receipt."""
+    from scripts.agent_runtime.attempt_boundary import (
+        claude_account_auth_receipt,
+        linux_claude_auth,
+        reset_claude_account_receipts,
+    )
+
+    reset_claude_account_receipts()
+    assert claude_account_auth_receipt("b", source="explicit")["verified"] is False
+    linux_claude_auth("b")
+    assert claude_account_auth_receipt("b", source="explicit") == {
+        "label": "b",
+        "source": "explicit",
+        "method": "bound_account_token",
+        "verified": True,
+    }
+    reset_claude_account_receipts()
+    assert claude_account_auth_receipt("b", source="explicit")["verified"] is False
+
+
+def test_receipt_is_shared_by_both_import_names_of_the_binding_module():
+    """The worker imports ``scripts.agent_runtime``; the runner loads the same files as ``agent_runtime``."""
+    import agent_runtime.attempt_boundary as short_name
+    import scripts.agent_runtime.attempt_boundary as canonical
+
+    canonical.reset_claude_account_receipts()
+    short_name.note_claude_account_verified("b", "subscription_login")
+    assert canonical.claude_account_auth_receipt("b", source="default-file")["verified"] is True
+    short_name.reset_claude_account_receipts()
+    assert canonical.claude_account_auth_receipt("b", source="default-file")["verified"] is False
+
+
+def test_receipt_carries_only_fixed_vocabulary():
+    from scripts.agent_runtime.attempt_boundary import (
+        claude_account_auth_receipt,
+        note_claude_account_verified,
+        reset_claude_account_receipts,
+    )
+
+    reset_claude_account_receipts()
+    with pytest.raises(AssertionError):
+        note_claude_account_verified("b", "fixture-token-value")
+    with pytest.raises(AssertionError):
+        note_claude_account_verified("a", "subscription_login")
+    assert claude_account_auth_receipt("a", source="not-a-source") == {
+        "label": "a",
+        "source": None,
+        "method": "host_login",
+        "verified": False,
+    }

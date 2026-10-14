@@ -6884,12 +6884,21 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
-def _claude_review_worker(task_id: str, tmp_path: Path, **overrides) -> tuple[int, MagicMock]:
-    """Run the worker on its task record, as a formal review attempt unless overridden."""
+def _claude_review_worker(task_id: str, tmp_path: Path, *, on_invoke=None, **overrides) -> tuple[int, MagicMock]:
+    """Run the worker on its task record, as a formal review attempt unless overridden.
+
+    ``on_invoke`` runs inside the mocked provider call, where the adapter would verify the login.
+    """
     mock_result = MagicMock(
         ok=True, response="done", stderr_excerpt=None, returncode=0, rate_limited=False,
         model="fixture", effort="unknown", cli_version="fixture", failure_code=None, substitution=None,
     )
+
+    def invoke(*_args, **_kwargs):
+        if on_invoke is not None:
+            on_invoke()
+        return mock_result
+
     review = {
         "review_id": "rev-test",
         "attempt_id": "att-test",
@@ -6900,7 +6909,7 @@ def _claude_review_worker(task_id: str, tmp_path: Path, **overrides) -> tuple[in
         "review_access": "isolated",
     }
     review.update(overrides)
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+    with patch("agent_runtime.runner.invoke", side_effect=invoke) as mock_invoke:
         rc = delegate._run_worker(
             task_id=task_id, agent="claude", prompt="review", mode="read-only", cwd_str=str(tmp_path),
             model=None, hard_timeout=60, **review,
@@ -7016,7 +7025,7 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
          "--dry-run", "--claude-account", "b"],
     )
 
-    assert delegate._dispatch_claude_account_refusal(args) is None
+    assert _claude_account_refusal(args) is None
     assert delegate.cmd_dispatch(args) == 0
     state = delegate._read_state(delegate._state_path(task_id))
     assert state["claude_account"] == "b"
@@ -7024,6 +7033,17 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
     assert state["claude_account_user_scope_omitted"] is True
     assert str(selected) not in json.dumps(state)
     assert calls == [token, token]
+
+
+def _claude_account_refusal(args: argparse.Namespace) -> str | None:
+    """The typed code dispatch would refuse this Claude account with, or ``None``."""
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    try:
+        delegate._resolve_dispatch_claude_account(args)
+    except ClaudeAccountRefused as exc:
+        return exc.code
+    return None
 
 
 def _claude_account_args(*extra: str) -> argparse.Namespace:
@@ -7132,7 +7152,7 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
     spawn = MagicMock(side_effect=AssertionError("spawned"))
     monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
     args = _claude_account_args("--agent", "claude", "--claude-account", "b", *attempt)
-    assert delegate._dispatch_claude_account_refusal(args) == code
+    assert _claude_account_refusal(args) == code
     assert delegate.cmd_dispatch(args) == 2
     assert capsys.readouterr().err == f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n"
     assert not tmp_tasks_dir.exists()
@@ -7154,6 +7174,501 @@ def test_omitted_claude_account_leaves_dispatch_hashes_unchanged():
     labelled = _claude_account_args("--agent", "claude", "--claude-account", "b")
     assert delegate.dispatch_args_sha256(labelled) != delegate.dispatch_args_sha256(args)
     assert delegate.advisory_args_sha256(labelled) != delegate.advisory_args_sha256(args)
+
+
+# The fleet-wide default account file (#10619 PR1c). Every fixture path below is temporary.
+def _default_account_file(tmp_path: Path, monkeypatch, content: bytes | None = None, *, mode: int = 0o600) -> Path:
+    path = tmp_path / "operator-config" / "claude-default-account"
+    path.parent.mkdir(exist_ok=True)
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
+    if content is not None:
+        path.write_bytes(content)
+        path.chmod(mode)
+    return path
+
+
+def _bind_claude_account_b(tmp_path: Path, monkeypatch, *, bound: bool = True) -> str:
+    """Account b's verified login directory and private binding, or (``bound=False``) no binding at all."""
+    from tests.agent_runtime.test_attempt_boundary import (
+        BOUND_ACCOUNT_UUID,
+        CLAUDE_AMBIENT_AUTH,
+        DEFAULT_ACCOUNT_UUID,
+        _credentials,
+        _mock_selected_account_runtime,
+        _oauth_account,
+        _private_json,
+    )
+
+    identities, _calls = _mock_selected_account_runtime(tmp_path, monkeypatch)
+    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    home, selected = tmp_path / "home", tmp_path / "selected"
+    selected.mkdir(mode=0o700)
+    token = "fixture-bound-" + "b" * 30
+    identities[token] = BOUND_ACCOUNT_UUID
+    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
+    _credentials(selected / ".credentials.json", token)
+    binding = tmp_path / "binding.json"
+    if bound:
+        _private_json(
+            binding,
+            {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
+        )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    return str(selected)
+
+
+def _dry_run_claude_dispatch(tmp_path: Path, monkeypatch, task_id: str, *extra: str) -> int:
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
+         "--dry-run", *extra],
+    )
+    return delegate.cmd_dispatch(args)
+
+
+def _forbid_dispatch_side_effects(monkeypatch) -> MagicMock:
+    for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans",
+                 "_archive_task_artifacts"):
+        monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
+    spawn = MagicMock(side_effect=AssertionError("spawned"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
+    return spawn
+
+
+def test_default_file_b_records_and_launches_b(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-01: with the default file naming b and no flag, the task is recorded and launched as b."""
+    selected = _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    task_id = "claude-default-file-b"
+
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id) == 0
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["claude_account"], state["claude_account_source"]) == ("b", "default-file")
+    # Like an explicit b, its login directory's user scope does not load; the record says so.
+    assert state["claude_account_user_scope_omitted"] is True
+    assert selected not in json.dumps(state)
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"]["claude_account"] == "b"
+
+
+@pytest.mark.parametrize("content", [None, b"", b" \n", b"\t\r\n"], ids=["missing", "empty", "blank", "whitespace"])
+def test_missing_or_empty_default_file_keeps_the_builtin_default(tmp_tasks_dir, tmp_path, monkeypatch, content):
+    """AC-01: a missing or empty file is today's default a, with the same arguments hash."""
+    _default_account_file(tmp_path, monkeypatch, content)
+    task_id = "claude-default-file-absent"
+
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id) == 0
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["claude_account"], state["claude_account_source"]) == ("a", "builtin")
+
+
+def test_default_file_disabled_by_an_empty_override_is_the_builtin_default(tmp_tasks_dir, tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, "claude-default-file-disabled") == 0
+    state = delegate._read_state(delegate._state_path("claude-default-file-disabled"))
+    assert (state["claude_account"], state["claude_account_source"]) == ("a", "builtin")
+
+
+def test_explicit_default_label_overrides_a_default_file_naming_b(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-01: --claude-account a wins over a file naming b; b's (absent) binding is never consulted."""
+    _bind_claude_account_b(tmp_path, monkeypatch, bound=False)
+    _default_account_file(tmp_path, monkeypatch, b"b")
+
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, "claude-explicit-a", "--claude-account", "a") == 0
+
+    state = delegate._read_state(delegate._state_path("claude-explicit-a"))
+    assert (state["claude_account"], state["claude_account_source"]) == ("a", "explicit")
+
+
+def test_explicit_label_b_overrides_a_default_file_naming_a(tmp_tasks_dir, tmp_path, monkeypatch):
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"a\n")
+
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, "claude-explicit-b", "--claude-account", "b") == 0
+
+    state = delegate._read_state(delegate._state_path("claude-explicit-b"))
+    assert (state["claude_account"], state["claude_account_source"]) == ("b", "explicit")
+
+
+def test_explicit_label_is_not_blocked_by_an_invalid_default_file(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The explicit flag always wins: the file is not read at all."""
+    _default_account_file(tmp_path, monkeypatch, b"c")
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, "claude-explicit-over-invalid", "--claude-account", "a") == 0
+
+
+def _invalid_default_file(tmp_path: Path, monkeypatch, case: str) -> None:
+    path = _default_account_file(tmp_path, monkeypatch)
+    if case == "unknown_label":
+        path.write_bytes(b"c\n")
+    elif case == "upper_case_label":
+        path.write_bytes(b"B\n")
+    elif case == "multiple_tokens":
+        path.write_bytes(b"a b\n")
+    elif case == "two_lines":
+        path.write_bytes(b"b\na\n")
+    elif case == "binary":
+        path.write_bytes(b"b\x00\n")
+    elif case == "non_ascii":
+        path.write_bytes(b"\xef\xbb\xbfb\n")
+    elif case == "oversized":
+        path.write_bytes(b"b" + b" " * 64)
+    elif case == "symlink":
+        target = path.with_name("target")
+        target.write_bytes(b"b\n")
+        target.chmod(0o600)
+        path.symlink_to(target)
+    elif case == "directory":
+        path.mkdir()
+    elif case == "fifo":
+        os.mkfifo(path, 0o600)
+    elif case in ("group_writable", "world_writable"):
+        path.write_bytes(b"b\n")
+    elif case == "foreign_owner":
+        path.write_bytes(b"b\n")
+        real_getuid = os.getuid
+        monkeypatch.setattr(os, "getuid", lambda: real_getuid() + 1)
+    else:
+        raise AssertionError(case)
+    if path.is_file() and not path.is_symlink():
+        path.chmod({"group_writable": 0o620, "world_writable": 0o602}.get(case, 0o600))
+
+
+INVALID_DEFAULT_FILES = [
+    ("unknown_label", "claude_account_default_file_invalid"),
+    ("upper_case_label", "claude_account_default_file_invalid"),
+    ("multiple_tokens", "claude_account_default_file_invalid"),
+    ("two_lines", "claude_account_default_file_invalid"),
+    ("binary", "claude_account_default_file_invalid"),
+    ("non_ascii", "claude_account_default_file_invalid"),
+    ("oversized", "claude_account_default_file_oversized"),
+    ("symlink", "claude_account_default_file_unavailable"),
+    ("directory", "claude_account_default_file_not_private"),
+    ("fifo", "claude_account_default_file_not_private"),
+    ("group_writable", "claude_account_default_file_not_private"),
+    ("world_writable", "claude_account_default_file_not_private"),
+    ("foreign_owner", "claude_account_default_file_not_private"),
+]
+
+
+@pytest.mark.parametrize("case,code", INVALID_DEFAULT_FILES)
+def test_invalid_default_file_is_refused_before_any_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code
+):
+    """AC-01: a present but unsafe or invalid default file refuses the dispatch, value-free, before any effect."""
+    _invalid_default_file(tmp_path, monkeypatch, case)
+    spawn = _forbid_dispatch_side_effects(monkeypatch)
+
+    assert delegate.cmd_dispatch(_claude_account_args("--agent", "claude")) == 2
+
+    err = capsys.readouterr().err
+    assert err == f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n"
+    assert not tmp_tasks_dir.exists()
+    spawn.assert_not_called()
+
+
+def test_default_file_naming_an_unbound_label_is_refused_before_any_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """A default of b is admitted exactly like an explicit b: no binding, no dispatch."""
+    _bind_claude_account_b(tmp_path, monkeypatch, bound=False)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    _forbid_dispatch_side_effects(monkeypatch)
+
+    assert delegate.cmd_dispatch(_claude_account_args("--agent", "claude")) == 2
+
+    assert capsys.readouterr().err == "❌ CLAUDE_ACCOUNT_REFUSED: claude_account_binding_missing\n"
+    assert not tmp_tasks_dir.exists()
+
+
+def test_default_file_does_not_apply_to_another_seat(tmp_path, monkeypatch):
+    """Only a claude dispatch reads the default file; an invalid one never blocks another seat."""
+    _invalid_default_file(tmp_path, monkeypatch, "unknown_label")
+    assert _claude_account_refusal(_claude_account_args("--agent", "codex")) is None
+
+
+def test_a_claude_route_for_another_seats_request_records_the_builtin_default(monkeypatch, tmp_path):
+    """A request naming another seat takes no label (an explicit one is refused), so a route to claude runs as a."""
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    args = _claude_account_args("--agent", "codex")
+
+    assert delegate._resolve_dispatch_claude_account(args) is None
+    assert delegate._claude_account_state(args, None, "claude") == {
+        "claude_account": "a",
+        "claude_account_source": "builtin",
+    }
+
+
+def _break_claude_account_b(tmp_path: Path, monkeypatch, selected: Path, case: str) -> None:
+    """Give an otherwise admitted account b one condition ending A refuses (#10619)."""
+    from scripts.agent_runtime import env_sanitize
+    from tests.agent_runtime.test_attempt_boundary import (
+        BOUND_ACCOUNT_UUID,
+        MACHINE_POLICY,
+        PROFILE_ORGANIZATIONS,
+        _credentials,
+        _oauth_account,
+        _private_json,
+    )
+
+    if case == "machine_policy_present":
+        MACHINE_POLICY["policy_helper"]()
+    elif case == "machine_policy_unavailable":
+        root = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR
+        root.mkdir()
+        original = os.scandir
+
+        def denied(path=".", *args, **kwargs):
+            if isinstance(path, str | os.PathLike) and Path(path) == root:
+                raise PermissionError(13, "fixture-private-detail")
+            return original(path, *args, **kwargs)
+
+        monkeypatch.setattr(os, "scandir", denied)
+    elif case == "wsl":
+        monkeypatch.setenv("WSL_DISTRO_NAME", "fixture")
+    elif case == "organisational_plan":
+        organization = {**PROFILE_ORGANIZATIONS[BOUND_ACCOUNT_UUID], "organization_type": "claude_team"}
+        monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
+    elif case == "stale_plan_metadata":
+        _credentials(selected / ".credentials.json", "fixture-bound-" + "b" * 30, plan="team")
+    elif case == "policy_cache":
+        _private_json(selected / "policy-limits.json", {})
+    elif case == "profile_store":
+        monkeypatch.setenv("ANTHROPIC_CONFIG_DIR", str(tmp_path / "profiles"))
+        (tmp_path / "profiles").mkdir()
+        (tmp_path / "profiles" / "active_config").write_text("fixture\n", encoding="utf-8")
+    elif case == "global_config_env":
+        _private_json(
+            selected / ".claude.json",
+            {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID), "env": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"}},
+        )
+    else:
+        raise AssertionError(case)
+
+
+# Every ending-A refusal of a labelled login, and its code.
+ACCOUNT_B_REFUSALS = {
+    "machine_policy_present": "claude_account_machine_policy_present",
+    "machine_policy_unavailable": "claude_account_machine_policy_unavailable",
+    "wsl": "claude_account_platform_unsupported",
+    "organisational_plan": "claude_account_plan_unsupported",
+    "stale_plan_metadata": "claude_account_plan_unverified",
+    "policy_cache": "claude_account_policy_cache_present",
+    "profile_store": "claude_account_profile_store_present",
+    "global_config_env": "claude_account_config_credential_source",
+}
+
+
+@pytest.mark.parametrize("source", ["explicit", "default-file"])
+@pytest.mark.parametrize("case", sorted(ACCOUNT_B_REFUSALS))
+def test_default_file_b_meets_every_refusal_of_an_explicit_b(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, source
+):
+    """A b from the default file is refused exactly where --claude-account b is, before any side effect."""
+    selected = _bind_claude_account_b(tmp_path, monkeypatch)
+    if source == "default-file":
+        _default_account_file(tmp_path, monkeypatch, b"b\n")
+    args = _claude_account_args("--agent", "claude", *(["--claude-account", "b"] if source == "explicit" else []))
+    assert delegate._resolve_dispatch_claude_account(args) == ("b", source)  # positive control
+    _break_claude_account_b(tmp_path, monkeypatch, Path(selected), case)
+    spawn = _forbid_dispatch_side_effects(monkeypatch)
+
+    assert delegate.cmd_dispatch(args) == 2
+
+    err = capsys.readouterr().err
+    assert err == f"❌ CLAUDE_ACCOUNT_REFUSED: {ACCOUNT_B_REFUSALS[case]}\n"
+    assert "fixture" not in err and selected not in err
+    assert not tmp_tasks_dir.exists()
+    spawn.assert_not_called()
+
+
+def test_worker_refuses_a_default_file_label_when_machine_policy_appears_after_dispatch(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    """The worker re-checks a default-file b through the Claude adapter, as it does an explicit b."""
+    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from tests.agent_runtime.test_attempt_boundary import MACHINE_POLICY
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    task_id = "claude-default-file-policy-after-dispatch"
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id) == 0
+    MACHINE_POLICY["managed_memory"]()
+
+    def adapter_builds_the_plan(*_args, **kwargs):
+        ClaudeAdapter().build_invocation(
+            prompt="fixture", mode="read-only", cwd=tmp_path, model=None, task_id=None, session_id=None,
+            tool_config=kwargs["tool_config"],
+        )
+        pytest.fail("the labelled plan was built on a host with machine policy")
+
+    with patch("agent_runtime.runner.invoke", side_effect=adapter_builds_the_plan):
+        rc = delegate._run_worker(
+            task_id=task_id, agent="claude", prompt="fixture", mode="read-only", cwd_str=str(tmp_path),
+            model=None, hard_timeout=60,
+        )
+
+    assert rc == 1
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["last_error"] == "claude_account_machine_policy_present"
+    assert state["claude_account_auth"] == {
+        "label": "b",
+        "source": "default-file",
+        "method": "unverified",
+        "verified": False,
+    }
+
+
+def _terminal_claude_record(task_id: str, label: str, source: str) -> Path:
+    path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        path,
+        {"task_id": task_id, "agent": "claude", "status": "done", "initiator": "codex",
+         "claude_account": label, "claude_account_source": source},
+    )
+    return path
+
+
+def test_worker_keeps_the_recorded_label_after_the_default_file_changes(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-01 (pins existing stickiness): the worker reads its label from the record, never from the file."""
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n").write_bytes(b"c\n")  # changed, and now invalid
+    task_id = "claude-worker-sticky"
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, "claude_account": "b", "claude_account_source": "default-file"}
+    )
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"]["claude_account"] == "b"
+
+
+def test_force_new_reuse_keeps_the_recorded_label_after_the_default_file_changes(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-01: re-running a task id keeps the label its record carries, not the file's current default."""
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"a\n")
+    task_id = "claude-force-new-sticky"
+    _terminal_claude_record(task_id, "b", "default-file")
+
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id, "--force-new") == 0
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["claude_account"], state["claude_account_source"]) == ("b", "record")
+
+
+def test_force_new_reuse_keeps_an_archived_records_label(tmp_tasks_dir, tmp_path, monkeypatch):
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"a\n")
+    task_id = "claude-force-new-archived"
+    hot = _terminal_claude_record(task_id, "b", "explicit")
+    archived = delegate._archived_state_path(task_id)
+    archived.parent.mkdir(parents=True, exist_ok=True)
+    hot.rename(archived)
+
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id, "--force-new") == 0
+
+    assert delegate._read_state(delegate._state_path(task_id))["claude_account"] == "b"
+
+
+@pytest.mark.parametrize("recorded,explicit", [("b", "a"), ("a", "b")])
+def test_force_new_reuse_rejects_a_conflicting_explicit_label(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, recorded, explicit
+):
+    """AC-01: an explicit label that contradicts the task's record is refused before the record is archived."""
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, explicit.encode())
+    task_id = "claude-account-refused"
+    record = _terminal_claude_record(task_id, recorded, "explicit")
+    before = record.read_bytes()
+    spawn = _forbid_dispatch_side_effects(monkeypatch)
+
+    args = _claude_account_args("--agent", "claude", "--claude-account", explicit, "--force-new")
+    assert delegate.cmd_dispatch(args) == 2
+
+    assert capsys.readouterr().err == "❌ CLAUDE_ACCOUNT_REFUSED: claude_account_record_conflict\n"
+    assert record.read_bytes() == before
+    spawn.assert_not_called()
+
+
+def test_force_new_reuse_accepts_a_matching_explicit_label(tmp_tasks_dir, tmp_path, monkeypatch):
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"a\n")
+    task_id = "claude-force-new-matching"
+    _terminal_claude_record(task_id, "b", "default-file")
+
+    assert _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id, "--force-new", "--claude-account", "b") == 0
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["claude_account"], state["claude_account_source"]) == ("b", "explicit")
+
+
+def _note_verified(label: str, method: str):
+    from scripts.agent_runtime.attempt_boundary import note_claude_account_verified
+
+    return lambda: note_claude_account_verified(label, method)
+
+
+def test_worker_records_a_verified_value_free_auth_receipt(tmp_tasks_dir, tmp_path):
+    """AC-01: the record carries label, source, method class and verification, and no value."""
+    task_id = "claude-receipt-verified"
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, "claude_account": "b", "claude_account_source": "default-file"}
+    )
+
+    rc, _ = _claude_review_worker(
+        task_id, tmp_path, review_id=None, attempt_id=None, on_invoke=_note_verified("b", "subscription_login")
+    )
+
+    assert rc == 0
+    receipt = delegate._read_state(delegate._state_path(task_id))["claude_account_auth"]
+    assert receipt == {"label": "b", "source": "default-file", "method": "subscription_login", "verified": True}
+
+
+def test_worker_receipt_is_unverified_without_this_runs_verification(tmp_tasks_dir, tmp_path):
+    """A verification left over from an earlier run in the same process is never reported for this one."""
+    task_id = "claude-receipt-unverified"
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, "claude_account": "b", "claude_account_source": "explicit"}
+    )
+    _note_verified("b", "subscription_login")()
+
+    rc, _ = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
+
+    assert rc == 0
+    receipt = delegate._read_state(delegate._state_path(task_id))["claude_account_auth"]
+    assert receipt == {"label": "b", "source": "explicit", "method": "unverified", "verified": False}
+
+
+def test_worker_receipt_for_the_default_label_names_the_host_login(tmp_tasks_dir, tmp_path):
+    task_id = "claude-receipt-default"
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, "claude_account": "a", "claude_account_source": "builtin"}
+    )
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"]["claude_account"] == "a"
+    receipt = delegate._read_state(delegate._state_path(task_id))["claude_account_auth"]
+    assert receipt == {"label": "a", "source": "builtin", "method": "host_login", "verified": False}
+
+
+def test_worker_receipt_of_a_pre_source_record_has_no_source(tmp_tasks_dir, tmp_path):
+    task_id = "claude-receipt-legacy"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id, "claude_account": "a"})
+
+    rc, _ = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
+
+    assert rc == 0
+    receipt = delegate._read_state(delegate._state_path(task_id))["claude_account_auth"]
+    assert receipt == {"label": "a", "source": None, "method": "host_login", "verified": False}
 
 
 def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(
