@@ -1321,6 +1321,116 @@ def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
+# ===========================================================================
+# #10633: ANSI-C ``$'...'`` decoding must match Bash's byte semantics, not
+# Python ``unicode_escape``. The octal-wrap spelling bypassed the guard end to
+# end on main (``$'\457…'`` ALLOWED, exit 0) because ``unicode_escape`` read
+# ``\457`` as U+012F instead of Bash's byte 0x2F (``/``), so the absolute
+# primary path was misread as relative and escaped containment.
+# ===========================================================================
+
+
+@pytest.mark.parametrize(
+    "body, expected",
+    [
+        # Octal is one byte, value mod 256 (the bug: unicode_escape gave U+012F).
+        (r"\457", "/"),
+        (r"\057", "/"),
+        (r"\0571", "/1"),  # only 3 octal digits consumed.
+        (r"\1011", "A1"),
+        (r"\777", "\xff"),  # 0o777 & 0xFF == 0xFF.
+        (r"\400", "\x00"),  # 0o400 & 0xFF == 0 -> NUL sentinel (fails closed).
+        (r"\000", "\x00"),
+        # ``\xHH`` is likewise one byte; a bare ``\x`` stays literal.
+        (r"\x2f", "/"),
+        (r"\x2F7", "/7"),  # only 2 hex digits consumed.
+        (r"\x", "\\x"),
+        (r"\xg", "\\xg"),
+        (r"\x0", "\x00"),
+        # Unicode scalars: a sub-0x80 value is the same ASCII byte everywhere.
+        (r"\u002f", "/"),
+        (r"\U0000002f", "/"),
+        (r"\u", "\\u"),
+        (r"\u00e9", "\u00e9"),
+        (r"\u007f", "\x7f"),
+        # C escapes and control escapes (never ``/``; ``\c@`` is NUL).
+        (r"\a\b\f\n\r\t\v", "\a\b\f\n\r\t\v"),
+        (r"\e\E", "\x1b\x1b"),
+        (r"\?", "?"),
+        (r"\q", "\\q"),  # unknown escape keeps the backslash.
+        (r"\\", "\\"),
+        (r"\cA", "\x01"),
+        (r"\c?", "\x7f"),
+        (r"\c@", "\x00"),
+        (r"\c[", "\x1b"),
+        # Mixed with literals.
+        (r"home\457etc", "home/etc"),
+        (r"\164racked.md", "tracked.md"),
+        ("abc", "abc"),
+    ],
+)
+def test_issue_10633_decode_ansi_c_span_matches_bash(body: str, expected: str):
+    # Expected values were pinned against real GNU Bash 5.3 via
+    # ``printf %s $'<body>'`` (bytes <0x80 compared exactly; a produced NUL and
+    # any unmodelable construct collapse to the NUL sentinel that the path
+    # classifier already refuses on a write target).
+    assert hook._decode_ansi_c_span(body) == expected
+
+
+def _octal_abs(path: Path) -> str:
+    """Spell an absolute path with its leading ``/`` as an ANSI-C octal wrap.
+
+    ``$'\\457'`` is byte 0x2F (``/``) in Bash: octal 0457 == 303, 303 % 256 == 47.
+    Python ``unicode_escape`` wrongly produced U+012F, the #10633 bypass. The
+    first path component never begins with an octal digit here, so ``\\457``
+    consumes exactly three digits.
+    """
+    return "$'\\457" + str(path)[1:] + "'"
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        # Redirect form (the issue's evidence spelling) plus non-redirect writers
+        # the guard classifies (tee, cp). Pre-fix each was exit 0 (ALLOWED).
+        "echo x > {octal}",
+        "echo x | tee {octal}",
+        "cp /etc/hostname {octal}",
+    ],
+)
+def test_issue_10633_octal_wrap_absolute_primary_write_blocked(repo: Path, command: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    octal = _octal_abs(repo / "curriculum/tracked.md")
+    result = _bash(repo, command.format(octal=octal), cwd=dispatch)
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
+def test_issue_10633_nul_spelling_stays_blocked(repo: Path):
+    # The NUL spelling already fails closed (embedded NUL -> undecidable target);
+    # that judgement must stay exit 2 after the octal fix.
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"echo x > $'{repo}/curriculum/tracked.md\\0junk'"
+    result = _bash(repo, command, cwd=dispatch)
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        # A benign ANSI-C spelling of a target in the dispatch worktree or a
+        # scratch path must still be judged on its true Bash path (allowed).
+        "tee $'\\164racked.md'",  # -> tracked.md, relative to the dispatch cwd.
+        "echo x > $'\\x73cratch.txt'",  # -> scratch.txt, relative to the dispatch cwd.
+        "echo x > $'\\457tmp/scratch-10633.txt'",  # -> /tmp/scratch-10633.txt (outside repo).
+    ],
+)
+def test_issue_10633_benign_ansi_c_spelling_judged_on_true_path(repo: Path, command: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, command, cwd=dispatch)
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize(
     "command, reason",
     [

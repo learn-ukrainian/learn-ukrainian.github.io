@@ -132,7 +132,6 @@ for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 
 from __future__ import annotations
 
-import codecs
 import fnmatch
 import json
 import os
@@ -412,6 +411,96 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(collapsed)
 
 
+# ANSI-C ``$'...'`` single-char escapes (Bash manual §3.1.2.4). Every mapped
+# byte is below 0x80, so it is the same in any locale.
+_ANSI_C_SIMPLE = {
+    "a": "\a", "b": "\b", "e": "\x1b", "E": "\x1b", "f": "\f",
+    "n": "\n", "r": "\r", "t": "\t", "v": "\v", "\\": "\\",
+    "'": "'", '"': '"', "?": "?",
+}
+_OCTAL_DIGITS = frozenset("01234567")
+_HEX_DIGITS = frozenset("0123456789abcdefABCDEF")
+
+
+def _decode_ansi_c_span(body: str) -> str:
+    """Decode one ``$'...'`` body the way Bash expands it, for path classification.
+
+    Bash ANSI-C quoting is a C-string escape grammar, **not** Python's
+    ``unicode_escape`` (issue #10633): an octal escape ``\\nnn`` is the single
+    8-bit byte whose value is ``nnn`` *mod 256* (so ``$'\\457'`` is ``/``, byte
+    0x2F — not U+012F), and ``\\xHH`` is likewise one byte. Modelling these with
+    ``unicode_escape`` turns an absolute path into a relative one and lets a
+    primary-checkout write escape containment.
+
+    A produced NUL byte ends the word's useful content in Bash. This guard does
+    not truncate: it emits the literal NUL and lets the downstream path
+    classifier treat the word as an undecidable write target — it already fails
+    closed on an embedded NUL in a target while leaving a NUL elsewhere inert, so
+    the pre-#10633 NUL judgement is preserved exactly. Any construct this decoder
+    cannot model exactly (a Unicode scalar beyond U+10FFFF, an ambiguous control
+    escape) is collapsed to the same NUL sentinel, so it can never be admitted on
+    its undecoded text and never falls back to ``unicode_escape``.
+    """
+    out: list[str] = []
+    i = 0
+    n = len(body)
+    while i < n:
+        char = body[i]
+        if char != "\\" or i + 1 >= n:
+            out.append(char)
+            i += 1
+            continue
+        esc = body[i + 1]
+        if esc in _ANSI_C_SIMPLE:
+            out.append(_ANSI_C_SIMPLE[esc])
+            i += 2
+        elif esc in _OCTAL_DIGITS:
+            end = i + 1
+            while end < n and end < i + 4 and body[end] in _OCTAL_DIGITS:
+                end += 1
+            out.append(chr(int(body[i + 1 : end], 8) & 0xFF))
+            i = end
+        elif esc == "x":
+            end = i + 2
+            while end < n and end < i + 4 and body[end] in _HEX_DIGITS:
+                end += 1
+            # ``\x`` with no hex digit is a literal backslash-x in Bash.
+            out.append("\\x" if end == i + 2 else chr(int(body[i + 2 : end], 16) & 0xFF))
+            i = end
+        elif esc in ("u", "U"):
+            width = 4 if esc == "u" else 8
+            end = i + 2
+            while end < n and end < i + 2 + width and body[end] in _HEX_DIGITS:
+                end += 1
+            if end == i + 2:  # ``\u`` / ``\U`` with no hex digit is literal.
+                out.append("\\" + esc)
+            else:
+                code = int(body[i + 2 : end], 16)
+                try:
+                    # A Unicode scalar; for path purposes a sub-0x80 value is the
+                    # same single ASCII byte in every locale (backslash-u-002f is a slash).
+                    out.append(chr(code) if code else "\x00")
+                except ValueError:
+                    out.append("\x00")  # beyond U+10FFFF: fail closed.
+            i = end
+        elif esc == "c":
+            # ``\cX`` is a C0 control byte (0x00-0x1F) or 0x7F — it can never be
+            # ``/``. The backslash sub-form and a trailing ``\c`` are ambiguous,
+            # so fail closed on them with the NUL sentinel.
+            if i + 2 >= n or body[i + 2] == "\\":
+                out.append("\x00")
+                i += 2
+            else:
+                target = body[i + 2]
+                out.append("\x7f" if target == "?" else chr(ord(target) & 0x1F))
+                i += 3
+        else:
+            # Any other escaped char keeps the backslash literal (``\q`` -> ``\q``).
+            out.append("\\" + esc)
+            i += 2
+    return "".join(out)
+
+
 def _decode_ansi_c_quotes(command: str) -> str:
     """Decode executable Bash ANSI-C words before token and path expansion."""
     out: list[str] = []
@@ -433,10 +522,7 @@ def _decode_ansi_c_quotes(command: str) -> str:
                 else:
                     end += 1
             if end < len(command):
-                try:
-                    value = codecs.decode(command[i + 2 : end], "unicode_escape")
-                except UnicodeError:
-                    value = command[i + 2 : end]
+                value = _decode_ansi_c_span(command[i + 2 : end])
                 out.append(shlex.quote(value))
                 i = end + 1
                 continue
