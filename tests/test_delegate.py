@@ -6884,6 +6884,198 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
+def _claude_review_worker(task_id: str, tmp_path: Path, **overrides) -> tuple[int, MagicMock]:
+    """Run the worker on its task record, as a formal review attempt unless overridden."""
+    mock_result = MagicMock(
+        ok=True, response="done", stderr_excerpt=None, returncode=0, rate_limited=False,
+        model="fixture", effort="unknown", cli_version="fixture", failure_code=None, substitution=None,
+    )
+    review = {
+        "review_id": "rev-test",
+        "attempt_id": "att-test",
+        "mcp_config_path": str(tmp_path / "review.mcp.json"),
+        "strict_mcp_config": True,
+        "review_manifest": str(tmp_path / "manifest.yaml"),
+        "review_input_root": str(tmp_path),
+        "review_access": "isolated",
+    }
+    review.update(overrides)
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id, agent="claude", prompt="review", mode="read-only", cwd_str=str(tmp_path),
+            model=None, hard_timeout=60, **review,
+        )
+    return rc, mock_invoke
+
+
+def test_worker_carries_the_task_records_claude_account_to_the_attempt(tmp_tasks_dir, tmp_path):
+    """AC-03: the label survives the worker's re-read of the task record and reaches the attempt boundary."""
+    task_id = "worker-claude-account-b"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": "b"})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path)
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"]["claude_account"] == "b"
+    assert delegate._read_state(state_path)["claude_account"] == "b"
+
+
+def test_worker_without_a_recorded_account_passes_no_label(tmp_tasks_dir, tmp_path):
+    task_id = "worker-claude-account-legacy"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path)
+
+    assert rc == 0
+    assert "claude_account" not in mock_invoke.call_args.kwargs["tool_config"]
+
+
+@pytest.mark.parametrize(
+    "label,review,code",
+    [
+        ("b", {"review_id": None, "attempt_id": None}, "claude_account_route_unsealed"),
+        ("c", {}, "claude_account_unknown"),
+    ],
+)
+def test_worker_refuses_a_recorded_account_it_cannot_honour(tmp_tasks_dir, tmp_path, label, review, code):
+    """A record naming another account outside the sealed attempt would run as the default one."""
+    task_id = f"worker-claude-account-{code}"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": label})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path, **review)
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(state_path)
+    assert state["status"] == "failed"
+    assert state["last_error"] == code
+    assert state["stderr_excerpt"] == f"CLAUDE_ACCOUNT_REFUSED: {code}"
+
+
+def test_dispatch_records_the_default_claude_account(tmp_tasks_dir, tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
+    for task_id, extra in (("claude-account-omitted", []), ("claude-account-explicit", ["--claude-account", "a"])):
+        args = delegate.build_parser().parse_args(
+            ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
+             "--dry-run", *extra],
+        )
+        assert delegate.cmd_dispatch(args) == 0
+        assert delegate._read_state(delegate._state_path(task_id))["claude_account"] == "a"
+
+
+def _claude_account_args(*extra: str) -> argparse.Namespace:
+    return delegate.build_parser().parse_args(
+        ["dispatch", "--task-id", "claude-account-refused", "--prompt", "test", "--initiator", "codex", *extra]
+    )
+
+
+@pytest.mark.parametrize(
+    "extra,code",
+    [
+        (["--agent", "claude", "--claude-account", "c"], "claude_account_unknown"),
+        (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
+        (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
+        (["--agent", "claude", "--claude-account", "b"], "claude_account_route_unsealed"),
+        (
+            ["--agent", "claude", "--claude-account", "b", "--review-attempt", "manifest.yaml",
+             "--review-id", "rev", "--attempt-id", "att"],
+            "claude_account_ambient_conflict",
+        ),
+    ],
+)
+def test_dispatch_refuses_claude_account_before_any_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, extra, code
+):
+    """AC-01: base code rejects the flag as an unknown argument; the label is now refused by typed code first."""
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "fixture-ambient-" + "e" * 30)
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(tmp_path / "absent.json"))
+    for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
+        monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", MagicMock(side_effect=AssertionError("spawned")))
+
+    assert delegate.cmd_dispatch(_claude_account_args(*extra)) == 2
+
+    err = capsys.readouterr().err
+    assert f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n" in err
+    assert "fixture-ambient" not in err
+    # Observed without calling _state_path(), which itself creates the task directory.
+    assert not tmp_tasks_dir.exists()
+
+
+@pytest.mark.parametrize(
+    "case,code", [("missing", "claude_account_credentials_missing"), ("expired", "claude_account_credentials_expired")]
+)
+def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code):
+    from tests.agent_runtime.test_attempt_boundary import (
+        BOUND_ACCOUNT_UUID,
+        CLAUDE_AMBIENT_AUTH,
+        DEFAULT_ACCOUNT_UUID,
+        _mock_selected_account_runtime,
+        _private_json,
+    )
+
+    _mock_selected_account_runtime(tmp_path, monkeypatch)
+    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    home, selected = tmp_path / "home", tmp_path / "selected"
+    selected.mkdir(mode=0o700)
+    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    binding = tmp_path / "binding.json"
+    _private_json(
+        binding,
+        {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
+    )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    if case == "expired":
+        _private_json(
+            selected / ".credentials.json",
+            {"claudeAiOauth": {"accessToken": "fixture-expired-" + "e" * 30, "expiresAt": 1}},
+        )
+    for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
+        monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
+    spawn = MagicMock(side_effect=AssertionError("spawned"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
+    args = _claude_account_args(
+        "--agent",
+        "claude",
+        "--claude-account",
+        "b",
+        "--review-attempt",
+        "manifest.yaml",
+        "--review-id",
+        "rev",
+        "--attempt-id",
+        "att",
+    )
+    assert delegate._dispatch_claude_account_refusal(args) == code
+    assert delegate.cmd_dispatch(args) == 2
+    assert capsys.readouterr().err == f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n"
+    assert not tmp_tasks_dir.exists()
+    spawn.assert_not_called()
+
+
+def test_explicit_default_claude_account_matches_omitted_hashes():
+    omitted = _claude_account_args("--agent", "claude")
+    explicit = _claude_account_args("--agent", "claude", "--claude-account", "a")
+    assert delegate.dispatch_args_sha256(explicit) == delegate.dispatch_args_sha256(omitted)
+    assert delegate.advisory_args_sha256(explicit) == delegate.advisory_args_sha256(omitted)
+
+
+def test_omitted_claude_account_leaves_dispatch_hashes_unchanged():
+    args = _claude_account_args("--agent", "claude")
+    legacy = argparse.Namespace(**{k: v for k, v in vars(args).items() if k != "claude_account"})
+    assert delegate.dispatch_args_sha256(args) == delegate.dispatch_args_sha256(legacy)
+    assert delegate.advisory_args_sha256(args) == delegate.advisory_args_sha256(legacy)
+    labelled = _claude_account_args("--agent", "claude", "--claude-account", "b")
+    assert delegate.dispatch_args_sha256(labelled) != delegate.dispatch_args_sha256(args)
+    assert delegate.advisory_args_sha256(labelled) != delegate.advisory_args_sha256(args)
+
+
 def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys
 ):

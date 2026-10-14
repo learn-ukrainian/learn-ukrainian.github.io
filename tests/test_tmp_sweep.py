@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import shutil
 import socket
 import subprocess
+import tempfile
 import time
 from pathlib import Path
 from types import SimpleNamespace
@@ -13,11 +16,296 @@ import pytest
 from scripts.hygiene import tmp_sweep as sweep
 from scripts.hygiene.retention_engine import reap_attributed_temp
 
+# Literal containment expectations: task, process, bidirectional protection.
+RELATIONSHIPS = [
+    ("equal", True, True, True),
+    ("deep_descendant", True, True, True),
+    ("immediate_parent", True, False, True),
+    ("distant_ancestor", False, False, True),
+    ("sibling", False, False, False),
+    ("prefix_lookalike", False, False, False),
+    ("empty", False, False, False),
+    ("mixed", True, True, True),
+]
+
+
+def relationship_references(path, relationship):
+    """Construct lexical inputs, independently of the containment predicates."""
+    return {
+        "equal": [path],
+        "deep_descendant": [path.joinpath(*(["nested"] * 32), "held")],
+        "immediate_parent": [path.parent],
+        "distant_ancestor": [path.parent.parent],
+        "sibling": [path.with_name("sibling")],
+        "prefix_lookalike": [path.with_name(path.name + "-lookalike") / "held"],
+        "empty": [],
+        "mixed": [path.with_name("sibling"), path / "nested" / "held"],
+    }[relationship]
+
+
+@pytest.mark.parametrize("relationship,task,process,bidirectional", RELATIONSHIPS)
+def test_task_reference_relationships(tmp_path, relationship, task, process, bidirectional):
+    path = tmp_path / "root" / "entry"
+    assert sweep.task_referenced(path, frozenset(relationship_references(path, relationship))) is task
+
+
+@pytest.mark.parametrize(
+    "path,reference,expected",
+    [
+        ("root/entry", "root/entry/../sibling", True),
+        ("root/entry", "root/./entry/held", True),
+        ("root/entry", "root/other/../entry", False),
+        ("root/entry", "/root/entry/held", False),
+        ("/root/entry", "root/entry/held", False),
+        (".", "relative/held", True),
+        (".", "/absolute/held", False),
+        ("/", "relative/held", False),
+        ("/", "/absolute/held", True),
+        ("//", "/absolute/held", False),
+        ("/", "//absolute/held", False),
+    ],
+)
+def test_task_reference_preserves_lexical_paths(path, reference, expected):
+    assert sweep.task_referenced(Path(path), frozenset({Path(reference)})) is expected
+
+
+@pytest.fixture
+def classification_input(tmp_path):
+    path = tmp_path / "root" / "impl-8755-probe"
+    path.mkdir(parents=True)
+    (path / "payload").write_bytes(b"fixture payload")
+    for node in (path, path / "payload"):
+        os.utime(node, (1_600_000_000, 1_600_000_000))
+    info = path.stat()
+    now = max(info.st_ctime, (path / "payload").stat().st_ctime) + 3 * 86400
+    record = {"status": "done", "finished_at": "2020-01-01T00:00:00Z", "record_sha256": "frozen-record"}
+    return path, dict(
+        tasks=sweep.TaskInventory({"impl-8755": record}, frozenset(), True),
+        references=[],
+        process_complete=True,
+        worktrees=set(),
+        managed=set(),
+        now=now,
+        min_age_s=86400,
+    )
+
+
+def expected_classification_row(path, inputs, reason, *, early=False, live_pids=()):
+    """Expected public fields from fixture stat facts and literal decisions."""
+    info = path.stat()
+    row = {
+        "name": path.name,
+        "decision": "would_reap" if reason in {"dead_attributed_task", "unattributed_scratch"} else "preserve",
+        "bytes": None,
+        "task": None,
+        "live_pids": [],
+        "identity": [info.st_dev, info.st_ino, info.st_uid],
+        "kind": "directory",
+    }
+    if not early:
+        facts = [node.stat() for node in [path, *path.iterdir()]]
+        newest = max(info.st_mtime for info in facts)
+        row.update(
+            bytes=sum(info.st_blocks * 512 for info in facts),
+            newest_mtime=newest,
+            newest_change=max(max(info.st_ctime, info.st_mtime) for info in facts),
+            age_hours=round(max(0, inputs["now"] - newest) / 3600, 2),
+            live_pids=list(live_pids),
+        )
+        if inputs["tasks"].records:
+            row.update(task="impl-8755", task_record=inputs["tasks"].records["impl-8755"])
+    return row | {"reason": reason}
+
+
+def assert_classification_row(path, inputs, reason, *, early=False, live_pids=()):
+    expected = expected_classification_row(path, inputs, reason, early=early, live_pids=live_pids)
+    row = sweep.classify_path(path, **inputs)
+    assert row == expected
+    proof = {key: value for key, value in expected.items() if key != "age_hours"}
+    expected_digest = hashlib.sha256(json.dumps(proof, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert sweep.proof_digest(row) == expected_digest
+
+
+@pytest.mark.parametrize("mode", ["attributed", "scratch"])
+@pytest.mark.parametrize("source", ["task", "process", "managed", "worktree"])
+@pytest.mark.parametrize("relationship,task,process,bidirectional", RELATIONSHIPS)
+def test_classification_containment_rows_and_proofs(
+    classification_input, mode, source, relationship, task, process, bidirectional
+):
+    path, inputs = classification_input
+    if mode == "scratch":
+        inputs.update(tasks=sweep.TaskInventory({}, frozenset(), True), scratch=sweep.ScratchPolicy())
+    refs = relationship_references(path, relationship)
+    live_pids = []
+    protected = {"task": task, "process": process, "managed": bidirectional, "worktree": bidirectional}[source]
+    if source == "task":
+        inputs["tasks"] = sweep.TaskInventory(inputs["tasks"].records, frozenset(refs), True)
+    elif source == "process":
+        # Duplicate holders and multiple references must still report sorted unique PIDs.
+        inputs["references"] = [(pid, ref) for pid in (9, 3, 9) for ref in refs]
+        live_pids = [3, 9] if protected else []
+    else:
+        inputs["managed" if source == "managed" else "worktrees"] = set(refs)
+    reasons = {"task": "task_reference", "process": "live_process", "managed": "managed_scratch",
+               "worktree": "registered_worktree"}
+    reason = reasons[source] if protected else "dead_attributed_task" if mode == "attributed" else "unattributed_scratch"
+    assert_classification_row(path, inputs, reason, early=source == "managed" and protected, live_pids=live_pids)
+
+
+@pytest.mark.parametrize("mode", ["attributed", "scratch"])
+@pytest.mark.parametrize(
+    "case,reason",
+    [
+        ("process_unknown", "liveness_unknown"),
+        ("task_unknown", "task_inventory_unknown"),
+        ("malformed_task", "task_not_settled"),
+        ("completion_unknown", "task_completion_unknown"),
+        ("known_holder_unknown_probe", "live_process"),
+        ("task_before_unknown_probe", "task_reference"),
+        ("managed_before_registration", "managed_scratch"),
+        ("registration_before_holder", "git_registration_unknown"),
+        ("worktree_before_holder", "registered_worktree"),
+        ("foreign_before_holder", "foreign_owner"),
+        ("tree_before_holder", "git_metadata"),
+        ("holder_before_task", "live_process"),
+        ("young_before_task_unknown", "too_young"),
+        ("unsettled_before_age", "task_not_settled"),
+    ],
+)
+def test_classification_refusal_precedence(classification_input, monkeypatch, mode, case, reason):
+    path, inputs = classification_input
+    records = inputs["tasks"].records
+    if mode == "scratch":
+        records = {}
+        inputs.update(tasks=sweep.TaskInventory(records, frozenset(), True), scratch=sweep.ScratchPolicy())
+    if case in {"process_unknown", "known_holder_unknown_probe", "task_before_unknown_probe"}:
+        inputs["process_complete"] = False
+    if case in {"task_unknown", "young_before_task_unknown"}:
+        inputs["tasks"] = sweep.TaskInventory(records, frozenset(), False)
+    if case in {"malformed_task", "completion_unknown", "unsettled_before_age"}:
+        record = {"status": None if case != "completion_unknown" else "done", "finished_at": None,
+                  "record_sha256": None}
+        inputs["tasks"] = sweep.TaskInventory({"impl-8755": record}, frozenset(), case != "malformed_task")
+    if case in {"known_holder_unknown_probe", "registration_before_holder", "worktree_before_holder",
+                "foreign_before_holder", "tree_before_holder", "holder_before_task"}:
+        inputs["references"] = [(9, path / "payload"), (3, path), (9, path)]
+    if case in {"holder_before_task", "task_before_unknown_probe"}:
+        inputs["tasks"] = sweep.TaskInventory(records, frozenset({path / "nested" / "held"}), False)
+    if case in {"managed_before_registration", "registration_before_holder"}:
+        inputs["worktrees"] = None
+    if case == "managed_before_registration":
+        inputs["managed"] = {path / "managed"}
+    if case == "worktree_before_holder":
+        inputs["worktrees"] = {path.parent}
+    if case == "foreign_before_holder":
+        monkeypatch.setattr(sweep.os, "geteuid", lambda: path.stat().st_uid + 1)
+    if case == "tree_before_holder":
+        (path / ".git").write_text("fixture metadata")
+    if case in {"young_before_task_unknown", "unsettled_before_age"}:
+        inputs["now"] = path.stat().st_mtime
+    assert_classification_row(
+        path, inputs, reason, early=case == "managed_before_registration",
+        live_pids=[3, 9] if inputs["references"] else [],
+    )
+
+
+@pytest.mark.parametrize("depth", [8, 128])
+def test_nested_reference_cost_does_not_construct_parent_sequences(classification_input, monkeypatch, depth):
+    path, inputs = classification_input
+    refs = frozenset(path.joinpath(*(["nested"] * depth), str(index)) for index in range(32))
+    inputs.update(
+        tasks=sweep.TaskInventory(inputs["tasks"].records, refs, True),
+        references=[(9, ref) for ref in refs],
+        managed={path.with_name("sibling").joinpath(*(["nested"] * depth))},
+        worktrees={path.with_name("other").joinpath(*(["nested"] * depth))},
+    )
+    original = Path.parents
+    constructions = 0
+
+    def counted_parents(self):
+        nonlocal constructions
+        constructions += 1
+        return original.__get__(self)
+
+    with monkeypatch.context() as counter:
+        counter.setattr(Path, "parents", property(counted_parents))
+        assert sweep.task_referenced(path, refs) is True
+        row = sweep.classify_path(path, **inputs)
+    assert (row["decision"], row["reason"], row["live_pids"]) == ("preserve", "live_process", [9])
+    assert constructions == 0
+
+
+@pytest.mark.parametrize("mode", ["attributed", "scratch"])
+@pytest.mark.parametrize("source", ["managed", "worktree", "task"])
+@pytest.mark.parametrize("relationship", ["immediate_parent", "deep_descendant"])
+def test_fresh_apply_reloads_containment_protection(inventory, monkeypatch, mode, source, relationship):
+    path = inventory.make()
+    kwargs = {}
+    if mode == "scratch":
+        (inventory.tasks / "impl-8755.json").unlink()
+        kwargs["scratch"] = sweep.ScratchPolicy()
+        # Fixture ctime is current; move only the sweep clock beyond both age gates.
+        monkeypatch.setattr(sweep, "time", SimpleNamespace(time=lambda: path.stat().st_ctime + 3 * 86400))
+    [reference] = relationship_references(path, relationship)
+    calls = 0
+
+    def changed_roots(*_args):
+        nonlocal calls
+        calls += 1
+        # Managed roots are also read once to validate the synthetic scan root.
+        initial_calls = 2 if source == "managed" else 1
+        return set() if calls <= initial_calls else {reference}
+
+    if source == "managed":
+        monkeypatch.setattr(sweep, "protected_roots", changed_roots)
+    elif source == "worktree":
+        monkeypatch.setattr(sweep, "registered_worktrees", changed_roots)
+    else:
+        def changed_tasks():
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                (inventory.tasks / "running.json").write_text(json.dumps({
+                    "task_id": "running", "status": "running", "cwd": str(reference),
+                }))
+            return [], True
+
+        monkeypatch.setattr(sweep, "process_snapshot", changed_tasks)
+    row = inventory.run(apply=True, **kwargs)["rows"][0]
+    assert (row["decision"], row["reason"]) == ("preserve", "proof_changed")
+    assert (path / "payload").read_bytes() == b"x" * 8192
+    assert not list(inventory.root.glob(sweep.QUARANTINE_PREFIX + "*"))
+
+
+@pytest.mark.parametrize("consumer", ["post_rename", "purge"])
+@pytest.mark.parametrize("location", ["original", "quarantined"])
+@pytest.mark.parametrize("relationship", ["immediate_parent", "deep_descendant"])
+def test_shared_task_predicate_at_retention_boundaries(inventory, consumer, location, relationship):
+    original = inventory.make()
+    row = inventory.run()["rows"][0]
+    before = sweep.tree_fingerprint(original)
+    quarantined = inventory.root / "holding" / original.name
+    quarantined.parent.mkdir()
+    original.rename(quarantined)
+    [reference] = relationship_references(original if location == "original" else quarantined, relationship)
+    (inventory.tasks / "running.json").write_text(json.dumps({
+        "task_id": "running", "status": "running", "cwd": str(reference),
+    }))
+    if consumer == "post_rename":
+        reason = sweep.quarantined_problem(quarantined, original, row, before, inventory.tasks)
+        assert reason == "quarantine_task_reference"
+    else:
+        entry = SimpleNamespace(original=original, location=quarantined)
+        assert sweep.purge_problem(entry, inventory.tasks) == "purge_task_reference"
+    assert (quarantined / "payload").read_bytes() == b"x" * 8192
+    assert not original.exists()
+
 
 @pytest.fixture
 def inventory(tmp_path, tmp_path_factory, monkeypatch):
-    root = tmp_path / "system-temp"
-    root.mkdir()
+    # The pre-push gate runs pytest with a basetemp outside /tmp. The sweep
+    # only accepts a real system temp, so the fixture root cannot be tmp_path.
+    root = Path(tempfile.mkdtemp(prefix="impl-8755-temp-", dir="/tmp"))
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     # Never the user's real ledger (#9887).
@@ -40,7 +328,10 @@ def inventory(tmp_path, tmp_path_factory, monkeypatch):
     def run(**kwargs):
         return sweep.sweep(temp_root=root, task_root=tasks, repo_root=tmp_path, **kwargs)
 
-    return SimpleNamespace(root=root, tasks=tasks, make=make, run=run)
+    try:
+        yield SimpleNamespace(root=root, tasks=tasks, make=make, run=run)
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def test_dead_task_dry_run_and_common_reap(inventory):

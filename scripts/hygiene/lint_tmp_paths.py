@@ -505,7 +505,10 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     ),
     (
         "scripts/fleet/terminal_abandon.py",
-        "Same-directory manifest staging for validator checks before atomic os.replace publication (#10594).",
+        "Same-directory manifest (#10594) and detached-bundle (#10624) staging for batch_state validation "
+        "before atomic os.replace; managed scratch helpers allocate outside the preservation parent. "
+        "Exclusive tempfile creation and finally cleanup retain existing digest-copy ownership.",
+        "0ddad365c9229769042f13a23429552a3b8592420d75a5981d2b7aff6f52aedc:1 "
         "f13f80d80757a114fe3aa614b3a23b5a2a00a66cca06151dffd8cef5be4100f9:1",
     ),
     (
@@ -2092,6 +2095,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/test_storage_resolver.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "e0e3e8c0d93b60603885ef0d35cc84f49eb744bbd706988abc36a5b6db065ce6:1",
+    ),
+    (
+        "tests/test_tmp_sweep.py",
+        "Fixture root for the sweep real system-temp check. The gate basetemp is outside that area.",
+        "5150e8a0d2f65deedffe982faa95b6606b9dbf89065d58cac9c08135a74390c8:1 640017e1d15c10f0783936ffd50a2818e0226ee00623f5888d954184a13f6007:1",
     ),
     (
         "tests/test_v4_sources_transport_credential_namespace.py",
