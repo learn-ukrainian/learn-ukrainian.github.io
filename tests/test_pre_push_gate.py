@@ -10,6 +10,7 @@ import os
 import re
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import textwrap
@@ -2051,12 +2052,13 @@ def test_pytest_stage_owns_and_cleans_a_private_base_temp(
     state = tmp_path / "state"
     state.mkdir()
     monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    temp_parent = gate.pytest_temp_parent(state)
     seen: list[Path] = []
 
     def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
         assert "--basetemp" in command
         base = Path(command[command.index("--basetemp") + 1])
-        assert base.parent == state and base.name.startswith("pytest-")
+        assert base.parent == temp_parent and base.name.startswith("pytest-")
         base.mkdir(exist_ok=True)
         (base / "probe").touch()
         seen.append(base)
@@ -2078,7 +2080,7 @@ def test_pytest_stage_owns_and_cleans_a_private_base_temp(
     # Each run owns a distinct base; a refused first run never starts the second.
     assert len(seen) == (2 if ending == "green" else 1) and len(set(seen)) == len(seen)
     assert not any(base.exists() for base in seen)
-    assert list(state.glob("pytest-*")) == []
+    assert list(state.glob("pytest-*")) == list(temp_parent.glob("pytest-*")) == []
 
 
 def test_stale_and_dangling_tickets_are_reaped_before_the_live_cap(
@@ -2376,9 +2378,10 @@ def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_
         stdout, stderr = process.communicate(timeout=60)
         assert process.returncode == 0, stdout + stderr
         probe = Path(marker.read_text(encoding="utf-8").strip())
-        assert probe.is_relative_to(gate.state_dir(repo))
+        temp_parent = gate.pytest_temp_parent(gate.state_dir(repo))
+        assert probe.is_relative_to(temp_parent)
         assert not probe.exists()  # the gate cleaned its private base on completion
-        assert list(gate.state_dir(repo).glob("pytest-*")) == []
+        assert list(gate.state_dir(repo).glob("pytest-*")) == list(temp_parent.glob("pytest-*")) == []
     finally:
         release.touch()
         if process.poll() is None:
@@ -2421,8 +2424,200 @@ def test_next_pytest_stage_reaps_the_base_of_a_killed_gate(repo: Path, tmp_path:
             admission=admission,
         )
     assert "1 passed" in result
+    assert stale.parent == gate.pytest_temp_parent(gate.state_dir(repo))
     assert not stale.exists()
-    assert list(gate.state_dir(repo).glob("pytest-*")) == []
+    assert list(gate.state_dir(repo).glob("pytest-*")) == list(stale.parent.glob("pytest-*")) == []
+
+
+# ---- #10654: pytest base temps outside every Git checkout and Git directory -----------------------------
+
+OUTSIDE_GIT_TEST = textwrap.dedent(
+    """\
+    def test_tmp_path_is_outside_every_git_checkout(tmp_path):
+        # The data-tier runner's own guard (scripts/ci/data_tier.py) refuses scratch below any checkout.
+        assert not any((parent / ".git").exists() for parent in (tmp_path, *tmp_path.parents))
+    """
+)
+
+
+def _outside_git(path: Path) -> bool:
+    """No ancestor is a checkout (``.git``) or a Git directory (``HEAD``, ``objects``, ``refs``)."""
+    return not any(
+        (directory / ".git").exists() or all((directory / name).exists() for name in ("HEAD", "objects", "refs"))
+        for directory in (path, *path.parents)
+    )
+
+
+def test_pytest_base_temp_is_private_and_outside_every_git_tree(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    state = gate.state_dir(repo)
+    seen: list[Path] = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        base = Path(command[command.index("--basetemp") + 1])
+        seen.append(base)
+        assert _outside_git(base)
+        for tree in (repo, repo / ".git", state):
+            assert not base.resolve().is_relative_to(tree.resolve())
+        # The base, its repository directory and the per-user directory are all private to this user.
+        for directory in (base, base.parent, base.parent.parent):
+            info = directory.lstat()
+            assert stat.S_ISDIR(info.st_mode) and info.st_uid == os.geteuid()
+            assert stat.S_IMODE(info.st_mode) == 0o700
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    assert (
+        gate.run_pytest_stage(_plan(), repo, "launcher", time.monotonic() + 30) == "1 passed in 0.1s; 1 passed in 0.1s"
+    )
+    assert len(seen) == 2 and not any(base.exists() for base in seen)
+
+
+def test_gate_runs_tests_that_require_a_temp_tree_outside_git(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
+    _write(repo, "tests/test_outside_git.py", OUTSIDE_GIT_TEST)
+    _commit(repo, "outside git", "tests/test_outside_git.py")
+
+    result = _run_gate(repo)
+
+    assert result.returncode == 0, result.stderr
+    assert len(_receipts(repo)) == 1
+    # Only the base temp moved: admission, receipts and measurements stay under the Git common dir.
+    state = gate.state_dir(repo)
+    assert (state / "admission.lock").is_file() and (state / "measurements.jsonl").is_file()
+    assert list(state.glob("pytest-*")) == list(gate.pytest_temp_parent(state).glob("pytest-*")) == []
+
+
+@pytest.mark.parametrize("location", ["checkout", "git-dir", "bare-repo", "uncreatable", "fallback-in-checkout"])
+def test_pytest_stage_refuses_without_a_safe_base_temp_location(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, location: str
+) -> None:
+    blocker = tmp_path / "blocker"
+    blocker.write_text("a file, not a directory")
+    if location == "fallback-in-checkout":
+        # An uncreatable default falls back to the system temp, which here is the checkout itself.
+        monkeypatch.delenv(gate.SCRATCH_ROOT_ENV, raising=False)
+        monkeypatch.setattr(gate, "DEFAULT_SCRATCH_ROOT", blocker / "lu")
+        monkeypatch.setattr(gate.tempfile, "tempdir", str(repo))
+        target = repo / gate.FALLBACK_SCRATCH_DIRNAME
+    else:
+        target = {
+            "checkout": repo / "scratch",
+            "git-dir": gate.state_dir(repo) / "scratch",
+            "bare-repo": tmp_path / "remote.git" / "scratch",
+            "uncreatable": blocker / "scratch",
+        }[location]
+        monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(target))
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: pytest.fail("pytest must not start"))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), repo, "launcher", time.monotonic() + 30)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    assert gate.SCRATCH_ROOT_ENV in raised.value.detail and str(tmp_path) not in raised.value.detail
+    assert not target.exists()
+
+
+@pytest.mark.parametrize("tampering", ["symlink", "group-readable", "file"])
+def test_pytest_stage_refuses_a_base_temp_directory_that_is_not_private(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tampering: str
+) -> None:
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(scratch))
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    user = scratch / f"pre-push-gate-{os.geteuid()}"
+    if tampering == "symlink":
+        user.symlink_to(outside, target_is_directory=True)
+    elif tampering == "group-readable":
+        user.mkdir()
+        user.chmod(0o750)
+    else:
+        user.write_text("not a directory")
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: pytest.fail("pytest must not start"))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    assert [path.name for path in outside.iterdir()] == ["preserved"]
+
+
+@pytest.mark.parametrize("default_usable", [True, False])
+def test_pytest_temp_parent_follows_the_fleet_scratch_convention(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, default_usable: bool
+) -> None:
+    from scripts.common import scratch
+
+    assert gate.SCRATCH_ROOT_ENV == scratch.SCRATCH_ROOT_ENV_VAR
+    assert gate.DEFAULT_SCRATCH_ROOT == scratch.DEFAULT_SCRATCH_ROOT
+    assert gate.FALLBACK_SCRATCH_DIRNAME == scratch.FALLBACK_SCRATCH_DIRNAME
+    monkeypatch.delenv(gate.SCRATCH_ROOT_ENV, raising=False)
+    blocker = tmp_path / "blocker"
+    blocker.write_text("a file, not a directory")
+    default = tmp_path / "default" / "lu" if default_usable else blocker / "lu"
+    monkeypatch.setattr(gate, "DEFAULT_SCRATCH_ROOT", default)
+    system_temp = tmp_path / "system-temp"
+    system_temp.mkdir()
+    monkeypatch.setattr(gate.tempfile, "tempdir", str(system_temp))
+    states = [tmp_path / "state", tmp_path / "other-state"]
+    for state in states:
+        state.mkdir()
+
+    parents = [gate.pytest_temp_parent(state) for state in states]
+
+    root = default if default_usable else system_temp / gate.FALLBACK_SCRATCH_DIRNAME
+    assert parents[0].parent == parents[1].parent == root / f"pre-push-gate-{os.geteuid()}"
+    assert parents[0] != parents[1]  # one namespace per Git common dir
+    assert parents[0] == gate.pytest_temp_parent(states[0])  # stable across runs, so crashes can be reaped
+
+
+def test_exclusive_sweep_is_bounded_to_this_repositorys_own_entries(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    other_state = tmp_path / "other-state"
+    other_state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
+    monkeypatch.setattr(gate, "STALE_PYTEST_SWEEP_LIMIT", 3)
+    parent = gate.pytest_temp_parent(state)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    (parent / "pytest-link").symlink_to(outside, target_is_directory=True)
+    for number in range(4):
+        (parent / f"pytest-stale-{number}" / "nested").mkdir(parents=True)
+    (parent / "keep-me").mkdir()
+    neighbour = gate.pytest_temp_parent(other_state) / "pytest-neighbour"  # another repository's base
+    neighbour.mkdir()
+
+    remaining = []
+    for _ in range(2):
+        with gate.Admission(state, 0) as admission:
+            assert (
+                gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, admission=admission)
+                == "1 passed in 0.1s; 1 passed in 0.1s"
+            )
+        remaining.append(sorted(path.name for path in parent.iterdir()))
+
+    # Each exclusive run reaps at most the limit, in name order, so a backlog drains over later runs.
+    assert remaining == [["keep-me", "pytest-stale-2", "pytest-stale-3"], ["keep-me"]]
+    assert [path.name for path in outside.iterdir()] == ["preserved"]
+    assert neighbour.is_dir()
+
+
+def test_moving_the_base_temp_keeps_admission_budget_and_process_caps(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert (gate.RUN_BUDGET_S, gate.SHADOW_BUDGET_S, gate.CLEANUP_BUDGET_S) == (600.0, 120.0, 10.0)
+    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (740.0, 7400.0, 256)
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
+    assert (gate.test_process_limit(), gate.concurrent_run_limit()) == (4, 1)
 
 
 # ---- #10523: exact-plan coalescing before global admission ---------------------------------------------
@@ -2539,7 +2734,7 @@ def _stop_controls(processes: list[subprocess.Popen]) -> None:
 def _assert_queue_released(state: Path) -> None:
     assert list(state.rglob("*.ticket")) == []
     assert list(state.rglob("*.pending")) == []
-    assert list(state.glob("pytest-*")) == []
+    assert list(state.glob("pytest-*")) == list(gate.pytest_temp_parent(state).glob("pytest-*")) == []
     for lock in state.rglob("admission.lock"):
         with lock.open() as held:
             fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -3491,6 +3686,9 @@ def test_pytest_stale_sweep_requires_live_exclusive_global_admission(qualified_c
     stale = state / "pytest-other"
     stale.mkdir()
     (stale / "preserved").write_text("other run")
+    current = gate.pytest_temp_parent(state) / "pytest-current"
+    current.mkdir()
+    (current / "preserved").write_text("other run")
     monkeypatch.setattr(gate, "state_dir", lambda _root: state)
     monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
     admission = None
@@ -3517,8 +3715,9 @@ def test_pytest_stale_sweep_requires_live_exclusive_global_admission(qualified_c
             )
             == "1 passed in 0.1s; 1 passed in 0.1s"
         )
-        assert (stale / "preserved").read_text() == "other run"
+        assert (stale / "preserved").read_text() == (current / "preserved").read_text() == "other run"
         assert list(state.glob("pytest-*")) == [stale]
+        assert list(current.parent.glob("pytest-*")) == [current]
         assert diagnostics["stale_pytest_cleanup"] == "skipped_shared_or_unknown"
     finally:
         if admission is not None:

@@ -33,7 +33,7 @@ Stages 2 and 3 run as one pytest process. Importer-closure selection
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
-| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 
@@ -96,6 +96,16 @@ base temp. The first refusal ends the stage, and a green stage and receipt requi
 pass. One invocation collecting no tests is accepted only when the other ran tests. The receipt keeps
 the single plan node list, which covers both invocations.
 
+Base temps live outside every Git checkout and Git directory (#10654), as they do in CI, so tests
+that require a scratch tree outside any checkout behave the same in the gate. The root follows the
+fleet scratch convention of `scripts/common/scratch.py`: `LU_SCRATCH_ROOT` when set, else the
+disk-backed default, else `<system temp>/lu-scratch` when the default cannot be created. Below it,
+`pre-push-gate-<uid>/` holds one directory per Git common dir; both are created with mode 0700 and
+must be real directories owned by the user with no group or other access. A root inside a Git
+checkout or Git directory, an uncreatable root, or a directory that is not private refuses the push
+as `pytest_temp_unavailable`; the gate never falls back into the Git directory. Admission, queue,
+receipt and measurement files stay under `<git-common-dir>/lu-pre-push-gate/`.
+
 ## Experimental concurrent admission (#10555)
 
 `LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS` accepts exactly `1` or `2`. Unset means `1`.
@@ -119,7 +129,10 @@ reservations for own-unit cleanup and driver disposition; it never promotes an o
 
 The serial pytest stage restores the stale `pytest-*` sweep only while its run holds the exclusive
 Git-common admission lock. That lock excludes live shared holders and any surviving scoped executor.
-A later exclusive serial run may reap directories left by a dead run.
+A later exclusive serial run may reap directories left by a dead run. The sweep covers only this
+repository's base temp directory and, for bases left by gates that predate #10654, the gate state
+directory. It removes at most 64 entries per directory per run, never following links; a larger
+backlog drains over later exclusive runs.
 Shared/scoped execution or unknown exclusivity skips the sweep and records
 `stale_pytest_cleanup=skipped_shared_or_unknown` in stage diagnostics. Every run still removes its
 own pytest temporary directory. Sweep failures refuse the push as incomplete.

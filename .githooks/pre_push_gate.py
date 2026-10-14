@@ -98,6 +98,12 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
 )
+# Pytest base temps live outside every Git checkout and Git directory (#10654), under the fleet scratch
+# root of scripts/common/scratch.py. The hook imports no project code, so it restates that convention.
+SCRATCH_ROOT_ENV = "LU_SCRATCH_ROOT"
+DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
+FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
+STALE_PYTEST_SWEEP_LIMIT = 64  # per directory and run; a larger backlog drains over later exclusive runs
 
 
 class GateOutcome(Exception):
@@ -1212,6 +1218,118 @@ def pytest_invocations(plan: Plan) -> tuple[tuple[tuple[str, ...], str], ...]:
     return tuple((nodes, dist) for nodes, dist in ((distributed, "worksteal"), (grouped, "loadfile")) if nodes)
 
 
+def inside_git_tree(path: Path) -> bool:
+    """Whether ``path`` or an ancestor is a Git checkout or a Git directory, as Git discovery finds them.
+
+    A checkout has a ``.git`` entry (directory or gitfile). A Git directory, bare or not, holds
+    ``HEAD``, ``objects`` and ``refs``. An ancestor that cannot be inspected counts as inside.
+    """
+
+    def present(entry: Path) -> bool:
+        try:
+            entry.lstat()
+        except (FileNotFoundError, NotADirectoryError):
+            return False
+        return True
+
+    try:
+        return any(
+            present(directory / ".git") or all(present(directory / name) for name in ("HEAD", "objects", "refs"))
+            for directory in (path, *path.parents)
+        )
+    except OSError:
+        return True
+
+
+def private_directory(path: Path) -> None:
+    """Create ``path`` with mode 0700 if missing; require a real directory owned by this user, closed to others."""
+    try:
+        path.mkdir(mode=0o700, exist_ok=True)
+        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        try:
+            info = os.fstat(fd)
+        finally:
+            os.close(fd)
+    except OSError as error:
+        raise GateOutcome(
+            "pytest_temp_unavailable",
+            f"cannot create a private pytest base temp directory ({errno.errorcode.get(error.errno, 'error')}); "
+            f"set {SCRATCH_ROOT_ENV} to a writable directory outside every Git checkout",
+            incomplete=True,
+        ) from None
+    if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
+        raise GateOutcome(
+            "pytest_temp_unavailable",
+            "the pytest base temp directory is not private to this user (owner or mode); remove it and push again",
+            incomplete=True,
+        )
+
+
+def pytest_temp_parent(state: Path) -> Path:
+    """Return this repository's private parent for pytest base temps, outside every Git tree (#10654).
+
+    The root follows the fleet scratch convention: ``LU_SCRATCH_ROOT`` when set (strictly), else
+    ``/var/tmp/lu``, else ``<system temp>/lu-scratch`` when the default cannot be created. Below it a
+    per-user 0700 directory holds one 0700 directory per Git common dir, so a sweep proven by this
+    repository's exclusive admission reaches neither another repository's nor another user's base temps.
+    An unsafe or uncreatable location refuses the push as incomplete; it never falls back into Git.
+    """
+
+    def unsafe() -> GateOutcome:
+        return GateOutcome(
+            "pytest_temp_unavailable",
+            f"the pytest base temp root is inside a Git checkout or Git directory; set {SCRATCH_ROOT_ENV} "
+            "to a directory outside every Git checkout",
+            incomplete=True,
+        )
+
+    override = os.environ.get(SCRATCH_ROOT_ENV, "").strip()
+    candidates = (
+        [Path(override)] if override else [DEFAULT_SCRATCH_ROOT, Path(tempfile.gettempdir()) / FALLBACK_SCRATCH_DIRNAME]
+    )
+    scratch, failure = None, "error"
+    for candidate in candidates:
+        try:
+            resolved = candidate.resolve()
+            if inside_git_tree(resolved):
+                raise unsafe()
+            resolved.mkdir(parents=True, exist_ok=True)
+        except (OSError, RuntimeError) as error:  # RuntimeError: a symlink loop before Python 3.13
+            failure = errno.errorcode.get(getattr(error, "errno", None), "error")
+            continue
+        scratch = resolved
+        break
+    if scratch is None:
+        raise GateOutcome(
+            "pytest_temp_unavailable",
+            f"cannot create the pytest base temp root ({failure}); "
+            f"set {SCRATCH_ROOT_ENV} to a writable directory outside every Git checkout",
+            incomplete=True,
+        )
+    user = scratch / f"pre-push-gate-{os.geteuid()}"
+    parent = user / hashlib.sha256(os.fsencode(state.resolve())).hexdigest()[:32]
+    for directory in (user, parent):
+        private_directory(directory)
+    if inside_git_tree(parent):
+        raise unsafe()
+    return parent
+
+
+def reap_stale_pytest_temps(directory: Path) -> None:
+    """Reap at most ``STALE_PYTEST_SWEEP_LIMIT`` leftover ``pytest-*`` entries, never following links."""
+    try:
+        with os.scandir(directory) as entries:
+            names = sorted(entry.name for entry in entries if entry.name.startswith("pytest-"))
+    except FileNotFoundError:
+        return
+    except OSError as error:
+        raise GateOutcome(
+            "validation_incomplete", f"stale pytest temp listing failed: {error}", incomplete=True
+        ) from None
+    for name in names[:STALE_PYTEST_SWEEP_LIMIT]:
+        reap_stale_node(directory / name)
+
+
 def run_pytest_stage(
     plan: Plan,
     root: Path,
@@ -1223,6 +1341,7 @@ def run_pytest_stage(
 ) -> str:
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
+    temp_parent = pytest_temp_parent(state)
     # Only the actual exclusive global holder can prove that no other gate owns these bases.
     exclusive = (
         admission is not None
@@ -1234,8 +1353,9 @@ def run_pytest_stage(
     if diagnostics is not None:
         diagnostics["stale_pytest_cleanup"] = "exclusive_sweep" if exclusive else "skipped_shared_or_unknown"
     if exclusive:
-        for stale in state.glob("pytest-*"):
-            reap_stale_node(stale)
+        # The state directory still holds bases left by gates that predate #10654.
+        for directory in (temp_parent, state):
+            reap_stale_pytest_temps(directory)
     if not plan.node_ids:
         return "no tests selected"
     invocations = pytest_invocations(plan)
@@ -1249,7 +1369,7 @@ def run_pytest_stage(
     # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
     summaries = []
     for nodes, dist in invocations:
-        with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
+        with tempfile.TemporaryDirectory(prefix="pytest-", dir=temp_parent) as base_temp:
             code, output = run_bounded(
                 [
                     "bash",
