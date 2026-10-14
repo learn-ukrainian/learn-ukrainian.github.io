@@ -250,7 +250,12 @@ from scripts.orchestration.dead_worker_state import (
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
-from scripts.review.verdict_parser import _without_code_fences, recognized_verdicts
+from scripts.review.verdict_parser import (
+    ACCEPTED_VERDICT_TOKENS,
+    _without_code_fences,
+    recognized_verdicts,
+    unsupported_verdict_tokens,
+)
 from scripts.secret_redactor import redact_text
 
 if TYPE_CHECKING:
@@ -2752,6 +2757,7 @@ _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
 _AUTO_FINALIZE_NOTHING_OWNED_REASON = "no_changes_under_owned_paths"
 _AUTO_FINALIZE_NO_OWNED_PATHS_REASON = "no_owned_paths_declared"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
+_REVIEW_UNSUPPORTED_VERDICT_REASON = "review_unsupported_verdict_token"
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2982,7 +2988,7 @@ def parse_review_verdict(response: str) -> str | None:
 
 
 def _review_verdict_failure_reason(response: str) -> str | None:
-    """Return the failure reason when a review-typed reply has no verdict line.
+    """Distinguish missing verdicts from safe unsupported own verdict tokens.
 
     Applies only to dispatches that opt in via ``--require-review-verdict``
     (the ask-* review wrapper); ordinary asks and implement dispatches never
@@ -2994,6 +3000,8 @@ def _review_verdict_failure_reason(response: str) -> str | None:
     """
     if parse_review_verdict(response) is not None:
         return None
+    if unsupported_verdict_tokens(response):
+        return _REVIEW_UNSUPPORTED_VERDICT_REASON
     return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
 
 
@@ -6281,6 +6289,7 @@ def public_causes() -> frozenset[str]:
         _NO_DELIVERABLE_INVALID_DECLARATION_REASON,
         _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON,
         _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON,
+        _REVIEW_UNSUPPORTED_VERDICT_REASON,
         _AUTO_FINALIZE_NOTHING_OWNED_REASON,
         _AUTO_FINALIZE_NO_OWNED_PATHS_REASON,
         COMPLETION_GATE_RESPONSE_UNAVAILABLE,
@@ -7274,6 +7283,10 @@ def run_completion_gate(
         return CompletionGateResult(gate, reason, reason or "", status=_NO_DELIVERABLE_STATUS)
     if gate == COMPLETION_GATE_REVIEW_VERDICT:
         reason = _review_verdict_failure_reason(response or "")
+        if reason == _REVIEW_UNSUPPORTED_VERDICT_REASON:
+            token = unsupported_verdict_tokens(response or "")[-1]
+            detail = f"{reason}: unsupported token {token!r}; accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
+            return CompletionGateResult(gate, reason, detail)
         return CompletionGateResult(gate, reason, reason or "")
     if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
         advisory = _advisory_completion_gate(record, worktree)
@@ -11252,7 +11265,7 @@ def _run_worker(
                 final_state["review_verdict_failure"] = gate_result.failure
                 final_status = "failed"
                 ok_outcome = False
-                stderr_excerpt = gate_result.failure
+                stderr_excerpt = gate_result.detail
                 failure_cause = gate_result.failure
             else:
                 final_state["failure_reason"] = gate_result.failure

@@ -8,6 +8,14 @@ from __future__ import annotations
 import re
 from collections.abc import Iterator
 
+ACCEPTED_VERDICT_TOKENS = (
+    "APPROVE",
+    "APPROVED",
+    "CHANGES_REQUESTED",
+    "REQUEST_CHANGES",
+    "BLOCKED",
+)
+
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
 # APPROVED / CHANGES_REQUESTED / BLOCKED by
@@ -63,11 +71,19 @@ def _commonmark_keepends(text: str) -> list[str]:
     return lines
 
 
+_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
 _REVIEW_VERDICT_LINE_RE = re.compile(
     r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
     r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",
+    re.IGNORECASE,
+)
+# Diagnostics echo only bounded ASCII identifier tokens, never paths, URLs or
+# arbitrary verdict-line text. Trailing underscores may be Markdown emphasis.
+_UNSUPPORTED_VERDICT_LINE_RE = re.compile(
+    _VERDICT_LINE_PREFIX + r"(?a:([A-Za-z][A-Za-z0-9]*(?:[_-]+[A-Za-z0-9]+)*))"
+    r"(?=$|[*_`]*(?:\s|[.,;:!?][*_`]*(?:\s|$)|$))",
     re.IGNORECASE,
 )
 # A CommonMark fence line: at most three leading spaces, then three or more
@@ -180,3 +196,19 @@ def recognized_verdicts(response: str) -> list[str]:
         if match:
             verdicts.append(match.group(1).upper())
     return verdicts
+
+
+def unsupported_verdict_tokens(response: str) -> list[str]:
+    """Return safe unsupported own tokens verbatim, for diagnostics only.
+
+    Recognized lines keep their existing boundary policy; this reader never
+    admits a review or changes a consumer's recognized-token precedence.
+    """
+    tokens: list[str] = []
+    for line in _without_code_fences(response, keep_unclosed=False).splitlines():
+        if _REVIEW_VERDICT_LINE_RE.match(line):
+            continue
+        match = _UNSUPPORTED_VERDICT_LINE_RE.match(line)
+        if match and len(match.group(1)) <= 64:
+            tokens.append(match.group(1))
+    return tokens
