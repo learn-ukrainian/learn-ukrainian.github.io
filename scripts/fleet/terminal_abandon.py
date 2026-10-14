@@ -94,33 +94,11 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
     lease does. A local PID never proves a remote lease expired, so Monitor is the
     sole authority and any unavailable or malformed answer refuses. Read only.
     """
-    from agents_extensions.shared.session_streams.model import parse_timestamp
-    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError
+    from scripts.session_supervisor.remote import RemoteEpicClient
 
     if lease.stream_id != stream:
         raise Refusal("CROSS_STREAM", "caller's stream custody is not the creator's canonical stream")
-    try:
-        response = RemoteEpicClient().stream(stream, digest_limit=1)
-    except RemoteSupervisorError:
-        raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody probe unavailable") from None
-    current = response.get("lease")
-    expected = RemoteEpicClient._lease_payload(lease)
-    if (
-        response.get("stream_id") != stream
-        or not isinstance(current, dict)
-        or current.get("state") != "active"
-        or current.get("session_state") not in ("open", "rolling")
-        # Canonical JSON keeps int, bool and null distinct.
-        or json.dumps({key: current.get(key) for key in expected}, sort_keys=True)
-        != json.dumps(expected, sort_keys=True)
-    ):
-        raise Refusal("STALE_AUTHORITY", "caller's lease is not the stream's current active custody")
-    try:
-        expired = datetime.now(UTC) >= parse_timestamp(current["expires_at"])
-    except (KeyError, TypeError, ValueError):
-        raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody expiry unavailable") from None
-    if expired:
-        raise Refusal("STALE_AUTHORITY", "caller's stream custody has expired")
+    verify_current_custody(RemoteEpicClient._lease_payload(lease))
     return {
         "stream_id": stream,
         "session_id": lease.session_id,
@@ -133,6 +111,39 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
             "instance_id": lease.holder.instance_id,
         },
     }
+
+
+def verify_current_custody(expected: dict[str, Any]) -> None:
+    """Revalidate writer or receipt custody against Monitor without acquiring a lease."""
+    from agents_extensions.shared.session_streams.model import parse_timestamp
+    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError
+
+    stream = expected["stream_id"]
+    try:
+        response = RemoteEpicClient().stream(stream, digest_limit=1)
+    except RemoteSupervisorError:
+        raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody probe unavailable") from None
+    current = response.get("lease")
+    observed = {key: current.get(key) for key in expected} if isinstance(current, dict) else {}
+    # Receipts retain only the holder identity. Writer envelopes also bind the
+    # process fields, so compare every holder field present in the expected proof.
+    if isinstance(observed.get("holder"), dict) and isinstance(expected.get("holder"), dict):
+        observed["holder"] = {key: observed["holder"].get(key) for key in expected["holder"]}
+    if (
+        response.get("stream_id") != stream
+        or not isinstance(current, dict)
+        or current.get("state") != "active"
+        or current.get("session_state") not in ("open", "rolling")
+        # Canonical JSON keeps int, bool and null distinct.
+        or json.dumps(observed, sort_keys=True) != json.dumps(expected, sort_keys=True)
+    ):
+        raise Refusal("STALE_AUTHORITY", "caller's lease is not the stream's current active custody")
+    try:
+        expired = datetime.now(UTC) >= parse_timestamp(current["expires_at"])
+    except (KeyError, TypeError, ValueError):
+        raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody expiry unavailable") from None
+    if expired:
+        raise Refusal("STALE_AUTHORITY", "caller's stream custody has expired")
 
 
 def _succession_map() -> tuple[dict[str, str], str]:
@@ -303,6 +314,8 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
             proposed = [(p, candidate if p == creator_path else r) for p, r in matches]
             try:
                 output.terminal_abandon_creator(proposed, tree, primary=primary, tasks_dir=tasks)
+            except output.SuccessionRefusal as exc:
+                raise Refusal(exc.code, str(exc)) from None
             except (OSError, ValueError, RuntimeError):
                 raise Refusal(
                     "PRESERVATION_INVALID", "bundle hashes, identity, base or Git patches failed the existing validator"
@@ -333,6 +346,8 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
             receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
             try:
                 output.terminal_abandon_creator(proposed, tree, primary=primary, tasks_dir=tasks)
+            except output.SuccessionRefusal as exc:
+                raise Refusal(exc.code, str(exc)) from None
             except (OSError, ValueError, RuntimeError):
                 raise Refusal("PRESERVATION_INVALID", "checkout or preservation changed before publication") from None
             receipt["preservation"]["path"] = destination.relative_to(primary).as_posix()

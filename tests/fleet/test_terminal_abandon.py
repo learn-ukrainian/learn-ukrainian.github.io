@@ -365,7 +365,7 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
     repo, tree, _, _, _, _, head = fixture
     assert invoke(fixture) == 0
     assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
-    assert monitor["calls"] == 2  # admission, then again immediately before publication
+    assert monitor["calls"] == 4  # admission, two reader validations, final writer recheck
     record, receipt, manifest = _recorded(fixture)
     # The creator's identity and nonce are kept; succession is appended, not substituted.
     assert record["initiator"] == "claude-monitor"
@@ -635,6 +635,97 @@ def test_successor_record_is_revalidated_at_removal(succession, monkeypatch, tmp
     )
     assert row.action not in {"removed", "preserved_then_removed"}, row
     assert tree.exists()
+
+
+def _refused_removal(fixture, reason):
+    repo, tree, *_ = fixture
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
+        )
+        if r.path == str(tree)
+    )
+    assert row.action not in {"removed", "preserved_then_removed"}, row
+    assert reason in row.reason, row
+    assert tree.exists()
+
+
+@pytest.mark.parametrize(
+    "drift,code",
+    [
+        ("released", "STALE_AUTHORITY"),
+        ("expired", "STALE_AUTHORITY"),
+        ("session_id", "STALE_AUTHORITY"),
+        ("generation", "STALE_AUTHORITY"),
+        ("fencing_token", "STALE_AUTHORITY"),
+        ("unavailable", "AUTHORITY_UNKNOWN"),
+    ],
+)
+def test_successor_current_custody_rechecked_at_removal(succession, capsys, drift, code):
+    from scripts.session_supervisor.remote import RemoteSupervisorError
+
+    fixture, monitor = succession
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    calls = monitor["calls"]
+    lease = monitor["streams"][MONITOR]
+    if drift == "released":
+        lease["state"] = "released"
+    elif drift == "expired":
+        lease["expires_at"] = "2000-01-01T00:00:00Z"
+    elif drift == "unavailable":
+        monitor["error"] = RemoteSupervisorError("unavailable")
+    elif drift == "session_id":
+        lease[drift] = "replacement-session"
+    else:
+        lease[drift] += 1
+    _refused_removal(fixture, code)
+    assert monitor["calls"] > calls
+
+
+def test_successor_mapping_bytes_rechecked_at_removal(succession, monkeypatch, tmp_path, capsys):
+    fixture, _ = succession
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    changed = tmp_path / "map.yaml"
+    changed.write_bytes(output.SUCCESSION_MAP.read_bytes() + b"\n# mapping revision\n")
+    monkeypatch.setattr(output, "SUCCESSION_MAP", changed)
+    assert output.succession_streams()[0]["claude-monitor"] == MONITOR
+    _refused_removal(fixture, "MAPPING_CHANGED")
+
+
+def test_successor_current_output_rechecked_at_removal(succession, capsys):
+    fixture, _ = succession
+    repo, tree, *_ = fixture
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    before = _preserved_files(repo)
+    (tree / "untracked.txt").write_bytes(b"changed after publication")
+    _refused_removal(fixture, "OUTPUT_CHANGED")
+    assert (tree / "untracked.txt").read_bytes() == b"changed after publication"
+    assert _preserved_files(repo) == before
+
+
+def test_script_writer_preserves_reader_custody_refusal(succession):
+    import runpy
+
+    from scripts.fleet import terminal_abandon
+
+    fixture, monitor = succession
+    _, _, _, creator, _, bundle, head = fixture
+    writer = runpy.run_path(terminal_abandon.__file__)
+
+    def release_on_reader_probe(call):
+        if call == 2:
+            monitor["streams"][MONITOR]["state"] = "released"
+
+    monitor["on_call"] = release_on_reader_probe
+    with pytest.raises(writer["Refusal"]) as refused:
+        writer["record_abandon"](
+            task_id=creator["task_id"], head=head, reason="superseded implementation", bundle=bundle
+        )
+    assert refused.value.code == "STALE_AUTHORITY"
 
 
 def test_creator_path_never_consults_custody_or_copies_output(writer_fixture, monkeypatch, capsys):

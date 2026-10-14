@@ -52,6 +52,14 @@ _IDENTITY_KEYS = (
 _IDENTITY_CACHE_SCHEMA = "worktree-record-identities.v1"
 
 
+class SuccessionRefusal(ValueError):
+    """Keep custody's typed refusal across script and module writer imports."""
+
+    def __init__(self, code: str, reason: str):
+        super().__init__(f"terminal-abandon succession {code}: {reason}")
+        self.code = code
+
+
 def _identity_cache_path(tasks_dir: Path) -> Path:
     # Not *.json: the cache must never become part of the task inventory.
     return tasks_dir / ".worktree-record-identities.cache"
@@ -427,9 +435,8 @@ def _verify_succession(
 ) -> None:
     """Prove a successor's receipt still binds this exact task, tree, head and map entry (#10617).
 
-    The writer proved the caller's current stream lease. Removal rechecks every
-    binding that can drift without the caller: the map entry, checkout identity,
-    branch, preservation digest and retrievable untracked/ignored output.
+    Removal rechecks live custody, exact map bytes, checkout identity, branch,
+    preservation digest and current untracked/ignored output under its locks.
     """
     from scripts.orchestration.worktree_claims import checked_out_branch
 
@@ -439,7 +446,7 @@ def _verify_succession(
         tree = worktree.resolve(strict=True).relative_to(primary.resolve(strict=True)).as_posix()
     except (OSError, ValueError, RuntimeError):
         raise ValueError("terminal-abandon succession tree binding invalid") from None
-    mapping, _ = succession_streams()
+    mapping, mapping_digest = succession_streams()
     initiator = creator.get("initiator")
     branch = checked_out_branch(worktree)
     if (
@@ -463,6 +470,14 @@ def _verify_succession(
         or not isinstance(succession.get("caller_initiator"), str)
     ):
         raise ValueError("terminal-abandon succession receipt invalid")
+    if mapping_digest != succession["mapping_sha256"]:
+        raise ValueError("terminal-abandon succession MAPPING_CHANGED: reviewed mapping bytes changed")
+    from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
+
+    try:
+        verify_current_custody(authority)
+    except Refusal as exc:
+        raise SuccessionRefusal(exc.code, str(exc)) from None
     located = manifest.get("output")
     if not isinstance(located, dict) or located.get("schema") != "terminal-abandon-output.v1":
         raise ValueError("terminal-abandon succession output preservation missing")
@@ -471,6 +486,12 @@ def _verify_succession(
     except (OSError, ValueError, KeyError, TypeError, RuntimeError):
         # Never echo filesystem detail into the receipt.
         raise ValueError("terminal-abandon succession output preservation not retrievable") from None
+    try:
+        verify_abandon_output(worktree, primary=primary, record=creator, locator=located)
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+        raise ValueError(
+            "terminal-abandon succession OUTPUT_CHANGED: current output differs from authorized snapshot"
+        ) from None
 
 
 def _abandon_candidates(worktree: Path, *, absent: list[dict[str, str]]) -> list[str]:
