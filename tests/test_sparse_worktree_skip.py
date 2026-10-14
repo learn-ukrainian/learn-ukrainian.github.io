@@ -180,7 +180,7 @@ def test_sparse_marker_skips_only_the_marked_test() -> None:
 
 @pytest.mark.needs_sparse_tree("data/lexicon")
 def test_sparse_marker_example() -> None:
-    """Declared reader; collection skips it when data/lexicon is absent."""
+    """Declared reader; it skips when data/lexicon is absent."""
 
 
 def test_sparse_on_does_not_skip_when_tree_is_present() -> None:
@@ -200,6 +200,50 @@ def test_force_env_makes_trees_read_as_absent(monkeypatch: pytest.MonkeyPatch) -
     # A tree that is never sparse-excluded and always present stays present.
     monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "")
     assert not sparse_trees.tree_absent("tests")
+
+
+class _Item:
+    def __init__(self, rel: str, name: str) -> None:
+        self.path = _conftest()._REPO_ROOT / rel
+        self.name = name
+        self.nodeid = f"{rel}::{name}"
+        self.markers: list[str] = []
+
+    def get_closest_marker(self, name: str) -> None:
+        return None
+
+    def add_marker(self, marker: pytest.MarkDecorator) -> None:
+        self.markers.append(marker.name)
+
+
+def test_sparse_skip_is_decided_at_run_time_not_collection(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Collection analyzes no module; only a test that runs is checked (#10498)."""
+    monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "data/projects")
+    conftest = _conftest()
+    reader = _Item("tests/projects/open_model_data/test_mine.py", "test_mine")
+    unrelated = _Item("tests/api/test_unrelated.py", "test_unrelated")
+
+    def analyzed(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("collection ran the sparse-tree analysis")
+
+    with monkeypatch.context() as collecting:
+        collecting.setattr(conftest, "sparse_missing_tree_skip_reason", analyzed)
+        conftest.pytest_collection_modifyitems(None, [reader, unrelated])
+    assert "skip" not in reader.markers + unrelated.markers
+
+    with pytest.raises(pytest.skip.Exception, match="--sparse-include data/projects") as skipped:
+        conftest.pytest_runtest_setup(reader)
+    assert skipped.value._use_item_location
+    assert conftest.pytest_runtest_setup(unrelated) is None
+
+
+def test_item_paths_resolve_once_per_module() -> None:
+    conftest = _conftest()
+    conftest._repo_rel.cache_clear()
+    items = [_Item("tests/api/test_unrelated.py", name) for name in ("test_a", "test_b", "test_c")]
+    assert [conftest._item_repo_rel(item) for item in items] == ["tests/api/test_unrelated.py"] * 3
+    info = conftest._repo_rel.cache_info()
+    assert (info.misses, info.hits) == (1, 2)
 
 
 def test_force_env_feeds_the_conftest_skip_predicate(monkeypatch: pytest.MonkeyPatch) -> None:
