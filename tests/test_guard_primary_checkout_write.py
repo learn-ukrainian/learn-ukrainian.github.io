@@ -28,6 +28,8 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
+from collections.abc import Iterator
 from contextlib import chdir, redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
@@ -411,6 +413,30 @@ def repo(tmp_path: Path, repo_template: Path) -> Path:
     return _materialize_repo(repo_template, tmp_path / "main")
 
 
+@pytest.fixture
+def outside_dir() -> Iterator[Path]:
+    """Scratch outside every Git checkout, whatever pytest's ``--basetemp`` is.
+
+    The pre-push gate puts ``--basetemp`` inside the primary checkout's Git
+    directory, so ``tmp_path`` there resolves into that protected primary.
+    """
+    base = Path(tempfile.gettempdir()).resolve()
+    probe = subprocess.run(
+        ["git", "-C", str(base), "rev-parse", "--git-dir"],
+        capture_output=True,
+        text=True,
+        env=_clean_env(),
+        check=False,
+        timeout=10,
+    )
+    assert probe.returncode != 0, f"temp dir {base} is inside a Git repository: {probe.stdout.strip()}"
+    path = Path(tempfile.mkdtemp(prefix="guard-outside-", dir=base))
+    try:
+        yield path
+    finally:
+        shutil.rmtree(path)
+
+
 def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
     # Drive the actual hook entry point with the same stdin, cwd, and env as
     # the subprocess cases below. No parsed decision or Git state is cached.
@@ -558,7 +584,7 @@ def test_issue_8896_quoted_substitution_recursion_limit_blocks(repo: Path):
     assert result.returncode == 2, result.stderr
 
 
-def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, tmp_path: Path):
+def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, outside_dir: Path):
     # Only the payload cwd is outside Git; the hook never executes the command.
     outside = Path("/tmp")
     for command in (
@@ -575,13 +601,13 @@ def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, tmp
     assert result.returncode == 2, result.stderr
     result = _run(
         repo,
-        {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": f"touch {tmp_path}/harmless"}},
+        {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": f"touch {outside_dir}/harmless"}},
     )
     assert result.returncode == 0, result.stderr
 
 
-def test_issue_8896_review_round_three_outside_cwd_expanded_targets(repo: Path, tmp_path: Path):
-    outside = tmp_path / "outside"
+def test_issue_8896_review_round_three_outside_cwd_expanded_targets(repo: Path, outside_dir: Path):
+    outside = outside_dir / "outside"
     outside.mkdir()
     for command, home, expected in (
         (f"touch ~/{repo.name}/new-file", repo.parent, 2),
@@ -1822,10 +1848,10 @@ def test_issue_8785_hidden_component_glob_semantics():
         "echo x > {scratch}/out-?.txt",
     ],
 )
-def test_issue_8785_safe_commands_remain_allowed(repo: Path, command: str):
+def test_issue_8785_safe_commands_remain_allowed(repo: Path, outside_dir: Path, command: str):
     # #10343: a shared scratch.txt can be a symlink into a primary checkout.
     # Own the directory and its leaves instead of assuming global temp state.
-    scratch = repo.parent / "scratch"
+    scratch = outside_dir / "scratch"
     scratch.mkdir()
     command = command.format(scratch=shlex.quote(str(scratch)))
     worktree = repo / ".worktrees/dispatch/claude/task-1"
@@ -1835,8 +1861,8 @@ def test_issue_8785_safe_commands_remain_allowed(repo: Path, command: str):
 
 @pytest.mark.parametrize("primary_cwd", [False, True])
 @pytest.mark.parametrize("target", ["outside", "primary", "symlink"])
-def test_issue_10343_cd_then_tee_containment(repo: Path, primary_cwd: bool, target: str):
-    scratch = repo.parent / "scratch with spaces"
+def test_issue_10343_cd_then_tee_containment(repo: Path, outside_dir: Path, primary_cwd: bool, target: str):
+    scratch = outside_dir / "scratch with spaces"
     scratch.mkdir()
     if target == "symlink":
         (scratch / "scratch.txt").symlink_to(repo / "scratch.txt")
