@@ -3582,6 +3582,8 @@ def test_actual_missing_user_bus_runs_each_serial_check_once(repo, ending, monke
     _commit(repo, "serial fallback control", "scripts/pre_commit/project_python.sh")
     monkeypatch.chdir(repo)
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
+    # The scope is attempted only for at most 4 effective workers; a pushing caller's override must not decide.
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     monkeypatch.setenv("DBUS_SESSION_BUS_ADDRESS", "unix:path=/nonexistent-gate-test-bus")
     monkeypatch.setenv("XDG_RUNTIME_DIR", str(repo.parent / "absent-runtime"))
     monkeypatch.setattr(
@@ -3955,6 +3957,8 @@ os.kill(pid,signal.SIGKILL)
     monkeypatch.setattr(gate.ResourceScope, "execute", execute)
     monkeypatch.chdir(repo)
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
+    # The scope is attempted only for at most 4 effective workers; a pushing caller's override must not decide.
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     code = gate.main(
         [

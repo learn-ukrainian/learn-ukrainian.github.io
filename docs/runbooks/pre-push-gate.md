@@ -142,7 +142,9 @@ Tests that assert the exclusive sweep or inject failures into in-process serial 
 when the invoking push uses two slots. Startup I/O fault injection and the non-green leader/follower
 test also pin serial admission, where interrupting the leader ends its validation stages before
 the follower checks for a reusable receipt. The existing shared-mode stale-sweep test still verifies
-that shared execution preserves other runs' temporary directories.
+that shared execution preserves other runs' temporary directories. Tests that expect the scope to be
+attempted also clear `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES`, so a pushing caller's larger process
+override cannot make the run ineligible for the scope.
 
 Scoped executors share the existing `admission.lock`; legacy and default callers keep its exclusive
 flock. A flock-live ticket, a separate launcher flock, and verified scoped-holder proof permit sharing.
