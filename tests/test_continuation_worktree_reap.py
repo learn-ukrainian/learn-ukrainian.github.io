@@ -1970,3 +1970,107 @@ def test_10303_dirty_abandon_keeps_stale_index_lock_guard(abandon_cohort, monkey
     assert lock.read_bytes() == b"preserved stale lock"
     assert (tree / "README.md").read_bytes() == b"dirty unique bytes"
     assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.fixture
+def merged_equivalent_cohort(same_branch_pending_cohort, monkeypatch):
+    repo, tree, tasks, creator, successor, source = same_branch_pending_cohort
+    (tree / "equivalent.txt").write_text("the delivered patch\n")
+    _git(tree, "add", "equivalent.txt")
+    _git(tree, "commit", "-m", "local patch")
+    head = _git(tree, "rev-parse", "HEAD")
+    (repo / "independent.txt").write_text("independent main work\n")
+    _git(repo, "add", "independent.txt")
+    _git(repo, "commit", "-m", "independent work")
+    _git(repo, "cherry-pick", head)
+    merged = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    for member in (creator, successor):
+        member["final_branch_head_commit"] = head
+        member["worktree_branch"] = "codex/earlier-round"
+        save(tasks, member)
+    rw = reap.reap_worktrees
+    monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(10593, "MERGED", merged)], None))
+    return repo, tree, tasks, creator, successor, source, merged
+
+
+@pytest.mark.parametrize("apply", [False, True])
+def test_10593_merged_equivalent_ambiguous_cohort(merged_equivalent_cohort, apply):
+    repo, tree, tasks, creator, _, source, merged = merged_equivalent_cohort
+    rw = reap.reap_worktrees
+    assert _git(tree, "cherry", merged, "HEAD").startswith("- ")
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set(), include_terminal_dispatches=True)
+        if r.path == str(tree)
+    )
+    assert row.action == ("removed" if apply else "would_remove"), (row.reason, row.error)
+    if apply:
+        assert not tree.exists()
+        receipt = row.preserved_artifacts
+        assert receipt["merged_head_proof"]["head_relation"] == "patch-equivalent"
+        assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+        assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+        assert json.loads((tasks / "boundary.json").read_text())["status"] == creator["status"]
+    else:
+        assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("failure", ["distinct_patch", "dirty", "live", "keep", "commit_search", "merge_commit"])
+def test_10593_merged_equivalent_refuses_unproven(merged_equivalent_cohort, monkeypatch, failure):
+    repo, tree, tasks, _, successor, source, merged = merged_equivalent_cohort
+    rw = reap.reap_worktrees
+    if failure in {"distinct_patch", "dirty"}:
+        (tree / "unpublished.txt").write_text("unique unpublished bytes\n")
+        if failure == "distinct_patch":
+            _git(tree, "add", "unpublished.txt")
+            _git(tree, "commit", "-m", "unique patch")
+    elif failure == "live":
+        successor["pid"] = os.getpid()
+        save(tasks, successor)
+    elif failure == "keep":
+        successor["keep_worktree"] = True
+        save(tasks, successor)
+    elif failure == "merge_commit":
+        _git(tree, "merge", "--no-ff", "main", "-m", "local merge")
+    else:
+        monkeypatch.setattr(
+            rw,
+            "_query_pr_states",
+            lambda *_: ([rw.PullRequestState(10593, "MERGED", merged, head_from_commit_search=True)], None),
+        )
+        monkeypatch.setattr(rw, "_query_pr_by_number", lambda *_: ([], "head unavailable"))
+    row = next(
+        r
+        for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), include_terminal_dispatches=True)
+        if r.path == str(tree)
+    )
+    assert row.action == "skipped", row
+    assert tree.exists() and source.read_bytes() == b"current output"
+
+
+@pytest.mark.parametrize("mismatched_hash", [False, True])
+def test_10593_recorded_abandon_manual_mode_preserves_or_refuses(abandon_cohort, mismatched_hash):
+    repo, tree, tasks, creator, _, source = abandon_cohort
+    if mismatched_hash:
+        creator["worktree_abandon"]["preservation"]["sha256"] = "0" * 64
+        save(tasks, creator)
+    rw = reap.reap_worktrees
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo, apply=True, live_cwds=set(), merged_pr_only=False, preserve_then_reap=True
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == ("skipped" if mismatched_hash else "removed"), row.reason
+    if mismatched_hash:
+        assert "terminal-abandon" in row.reason
+        assert tree.exists() and source.read_bytes() == b"current output"
+    else:
+        assert not tree.exists()
+        receipt = row.preserved_artifacts
+        assert receipt["abandon_proof"] == creator["worktree_abandon"]
+        assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+        assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"

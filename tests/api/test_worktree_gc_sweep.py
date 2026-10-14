@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import os
 import threading
+import time
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -48,7 +51,10 @@ def _patch_orient_sources(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
-def setup_teardown(monkeypatch: pytest.MonkeyPatch):
+def setup_teardown(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    context = api_main.resolve_context(None)
+    context = replace(context, roots=replace(context.roots, batch_state_dir=tmp_path))
+    monkeypatch.setattr(api_main, "resolve_context", lambda ctx=None: context)
     # Reset global GC variables
     api_main._last_gc_sweep_summary = None
     api_main._gc_sweep_thread = None
@@ -56,12 +62,14 @@ def setup_teardown(monkeypatch: pytest.MonkeyPatch):
 
     # Force ONLY the GC sweep thread to run synchronously in tests
     original_start = threading.Thread.start
+
     def fake_start(self):
         target = getattr(self, "_target", None)
         if target and getattr(target, "__name__", None) == "_run_worktree_gc_sweep":
             self._target(*self._args, **self._kwargs)
         else:
             original_start(self)
+
     monkeypatch.setattr(threading.Thread, "start", fake_start)
 
     yield
@@ -126,7 +134,7 @@ def test_gc_sweep_respects_ttl(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         api_main,
         "reap_worktrees",
-        lambda **kwargs: [ReapResult(path="/wt/1", branch="b1", action="removed", reason="m", dirty=False)]
+        lambda **kwargs: [ReapResult(path="/wt/1", branch="b1", action="removed", reason="m", dirty=False)],
     )
     monkeypatch.setattr(api_main, "primary_checkout_root", lambda path: Path("/dummy"))
 
@@ -137,12 +145,56 @@ def test_gc_sweep_respects_ttl(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         api_main,
         "reap_worktrees",
-        lambda **kwargs: [ReapResult(path=f"/wt/{i}", branch=f"b{i}", action="removed", reason="m", dirty=False) for i in range(5)]
+        lambda **kwargs: [
+            ReapResult(path=f"/wt/{i}", branch=f"b{i}", action="removed", reason="m", dirty=False) for i in range(5)
+        ],
     )
     response2 = client.get("/api/orient")
     assert response2.json()["runtime"]["worktree_gc"]["removed"] == 1
 
-    # Invalidate sweep cache, now it should run and update
+    # Expire persistent state as well as the process cache, then run again
     state_helpers.cache_invalidate("worktree_gc_sweep")
+    stamp = api_main.resolve_context(None).roots.batch_state_dir / "worktree-gc-sweep.last-run"
+    if stamp.exists():
+        os.utime(stamp, (time.time() - 3601, time.time() - 3601))
     response3 = client.get("/api/orient?fresh=true")
     assert response3.json()["runtime"]["worktree_gc"]["removed"] == 5
+
+
+def test_10593_gc_sweep_restart_honours_persisted_ttl(monkeypatch):
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC_INTERVAL_MIN", "60")
+    calls = []
+    monkeypatch.setattr(api_main, "reap_worktrees", lambda **kwargs: calls.append(kwargs) or [])
+    api_main._maybe_run_worktree_gc_sweep()
+    assert len(calls) == 1
+    state_helpers.cache_invalidate("worktree_gc_sweep")
+    api_main._gc_sweep_thread = None
+    api_main._last_gc_sweep_summary = None
+    api_main._maybe_run_worktree_gc_sweep()
+    assert len(calls) == 1
+    stamp = api_main.resolve_context(None).roots.batch_state_dir / "worktree-gc-sweep.last-run"
+    assert stamp.is_file()
+    old = time.time() - 3601
+    os.utime(stamp, (old, old))
+    api_main._maybe_run_worktree_gc_sweep()
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize("operation", ["stat", "touch"])
+def test_gc_sweep_persistence_error_does_not_reap(monkeypatch, operation):
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
+    calls = []
+    monkeypatch.setattr(api_main, "reap_worktrees", lambda **kwargs: calls.append(kwargs) or [])
+    stamp = api_main.resolve_context(None).roots.batch_state_dir / "worktree-gc-sweep.last-run"
+    original = getattr(Path, operation)
+
+    def refused(path, *args, **kwargs):
+        if path == stamp:
+            raise PermissionError("fixture state unavailable")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, operation, refused)
+    api_main._maybe_run_worktree_gc_sweep()
+    assert calls == []
+    assert api_main._gc_sweep_thread is None

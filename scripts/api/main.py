@@ -919,14 +919,27 @@ def _maybe_run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
     if cache_get("worktree_gc_sweep", ttl=interval_s) is not None:
         return
 
-    # Set cache to prevent concurrent triggering
-    cache_set("worktree_gc_sweep", True)
-
     resolved_ctx = resolve_context(ctx)
     global _gc_sweep_thread
     with _gc_sweep_lock:
         if _gc_sweep_thread is not None and _gc_sweep_thread.is_alive():
             return
+        stamp = resolved_ctx.roots.batch_state_dir / "worktree-gc-sweep.last-run"
+        try:
+            if time.time() - stamp.stat().st_mtime < interval_s:
+                return
+        except FileNotFoundError:
+            pass
+        except OSError as exc:
+            logger.warning("worktree GC sweep timestamp unavailable: %s", exc)
+            return
+        try:
+            stamp.parent.mkdir(parents=True, exist_ok=True)
+            stamp.touch()
+        except OSError as exc:
+            logger.warning("worktree GC sweep timestamp could not be persisted: %s", exc)
+            return
+        cache_set("worktree_gc_sweep", True)
         _gc_sweep_thread = threading.Thread(target=_run_worktree_gc_sweep, args=(resolved_ctx,), daemon=True)
         _gc_sweep_thread.start()
 

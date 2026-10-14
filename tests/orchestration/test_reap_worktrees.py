@@ -2906,12 +2906,16 @@ def test_merged_pr_same_tree_divergent_commit_is_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """An identical tree at a commit the merged PR does not contain stays."""
+    """An identical tree with patch-distinct history is not deletion proof."""
     repo = init_repo(tmp_path)
     branch = "codex/occupancy-fresh"
     worktree = add_worktree(repo, branch)
     git(worktree, "push", "-u", "origin", branch)
     git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
+    (worktree / "README.md").write_text("patch-distinct work\n")
+    git(worktree, "add", "README.md")
+    git(worktree, "commit", "-m", "unmerged change")
+    git(worktree, "revert", "--no-edit", "HEAD")
     tree = git(worktree, "rev-parse", "HEAD^{tree}")
     parent = git(repo, "rev-parse", "main")
     pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
@@ -8058,3 +8062,38 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
         entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
         assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
         assert state["preserved_artifacts"]["count"] == 2
+
+
+def test_10593_reaper_lock_waits_and_names_holder(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.15, raising=False)
+    holder = rw._ReapLock(repo)
+    with holder:
+        inode = holder.path.stat().st_ino
+        start = time.monotonic()
+        with pytest.raises(RuntimeError, match=rf"holder pid={os.getpid()}"):
+            with rw._ReapLock(repo):
+                pytest.fail("contending lock was acquired")
+        elapsed = time.monotonic() - start
+        assert 0.12 <= elapsed < 2
+        assert holder.path.stat().st_ino == inode
+        assert holder.handle is not None and not holder.handle.closed
+    with rw._ReapLock(repo):
+        assert holder.path.stat().st_ino == inode
+
+
+def test_10593_reaper_lock_acquires_after_release(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 1.0, raising=False)
+    holder = rw._ReapLock(repo)
+    holder.__enter__()
+    timer = threading.Timer(0.1, holder.__exit__, args=(None, None, None))
+    timer.start()
+    try:
+        with rw._ReapLock(repo):
+            timer.join(timeout=1)
+            assert holder.handle.closed
+    finally:
+        timer.join()
+        if not holder.handle.closed:
+            holder.__exit__(None, None, None)
