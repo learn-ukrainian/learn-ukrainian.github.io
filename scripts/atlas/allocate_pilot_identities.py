@@ -8,10 +8,14 @@ import argparse
 import json
 import secrets
 import subprocess
+import sys
 import unicodedata
 from collections import Counter
 from contextlib import ExitStack
 from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.atlas import word_card_foundation as foundation
 from scripts.storage.topology import resolve_store
