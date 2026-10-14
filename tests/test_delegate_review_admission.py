@@ -61,6 +61,7 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
 
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
+    from scripts.orchestration.fleet_repos import load_fleet_repos
     from tests.test_ask_review_admission_floor import _git
 
     repo = tmp_path_factory.mktemp("ordinary-review")
@@ -71,6 +72,8 @@ def ordinary_review_repo(tmp_path_factory):
     (repo / "ordinary.py").write_text("value = 1\n")
     _git(repo, "add", ".")
     _git(repo, "commit", "-qm", "base")
+    # Same-repository PR admission reads this origin before gh pr view.
+    _git(repo, "remote", "add", "origin", f"https://github.com/{load_fleet_repos()['public'].github}.git")
     _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
     # No authored commits past the base: a trusted review's complete authorship
     # (#9739) is then exactly its declared --review-author-model, the identity
@@ -3119,7 +3122,7 @@ def test_dispatch_review_mode_help_preserves_legacy_usage_golden(monkeypatch):
     # #10511 registers muse; its added choice also causes argparse to rewrap usage.
     usage = dispatch.format_usage()
     assert hashlib.sha256(usage.encode()).hexdigest() == (
-        "c927f420051b669f23b54724449805b32d9149c3a420c4f69e0dd80d1522a398"
+        "3714631ce6363cc701431dd3824698ccbe3ac929a3ccb9a4ae8124ae07d5dba5"
     )
     # Rebuild before usage is frozen so only muse and whitespace may differ.
     with monkeypatch.context() as legacy:
@@ -3135,8 +3138,9 @@ def test_dispatch_review_mode_help_preserves_legacy_usage_golden(monkeypatch):
         old_usage = old_subcommands.choices["dispatch"].format_usage()
     assert usage.count(",muse") == 1
     assert usage.replace(",muse", "").split() == old_usage.split()
+    # Without muse, usage is byte-equal to main's #10619 golden.
     assert hashlib.sha256(old_usage.encode()).hexdigest() == (
-        "b7a61d5f40b0ddcedcdf507fa0348d5141ca5de55c2496ba0f995aa260f73074"
+        "8632e66974cd969a5b1a7f6b727fab15931126810b77052e97142eb8e2916f2b"
     )
 
 
@@ -3464,3 +3468,101 @@ def test_review_hold_failure_or_cancellation_releases_guard(
         == "posted"
     )
     assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize(
+    "trailers,expected",
+    [
+        ((None,), ("claude", "claude-opus-5-5")),
+        ((None, "codex/gpt-6.1-sol"), ("claude", "claude-opus-5-5")),
+        (("claude/claude-opus-5-5", None), ("grok", "grok-4.7")),
+        (("codex/gpt-6.1-sol", "claude/claude-opus-5-5", None), ("grok", "grok-4.7")),
+    ],
+    ids=["bot", "bot-sol", "opus-bot", "sol-opus-bot"],
+)
+def test_verified_bot_review_substitution_without_author_model(tmp_path, monkeypatch, trailers, expected):
+    """Admission reads real branch history and excludes every actual author family (#10531 B1)."""
+    from tests.test_authoring_review_feasibility import github_commit, mini_repo, serve_github_commits
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    commits = {}
+    for index, trailer in enumerate(trailers):
+        head = repo.commit(trailer, message=f"change {index}")
+        if trailer is None:
+            commits[head] = github_commit(head)
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    requested = serve_github_commits(monkeypatch, commits)
+    args = _args("--branch", "feature", "--review-risk", "critical", "--check-budget")
+    budget = _budget()
+    budget["agents"]["grok"] = {"status": "cool", "remaining_pct": 80}
+    (refusal, target), _routing = _admit(args, monkeypatch, budget)
+    assert args.review_author_model is None
+    assert refusal is None and (target.recipient, target.model) == expected
+    assert requested and set(requested) == set(commits)
+
+
+@pytest.mark.parametrize(
+    "trailers,proof",
+    [
+        ((None,), "human"),
+        ((None,), "unreachable"),
+        ((None, None), "mixed-human"),
+        ((None, "malformed"), "bot"),
+        (("codex/gpt-6.1-sol", "claude/claude-opus-5-5", "grok/grok-4.7"), "bot"),
+    ],
+    ids=["human", "unknown", "bot-human", "bot-malformed-agent", "all-reviewer-families-authored"],
+)
+def test_model_free_review_keeps_authorship_and_family_refusals(tmp_path, monkeypatch, trailers, proof):
+    from tests.test_authoring_review_feasibility import github_commit, human_commit, mini_repo, serve_github_commits
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    commits = {}
+    for index, trailer in enumerate(trailers):
+        head = repo.commit(trailer, message=f"change {index}")
+        if trailer is None:
+            commits[head] = human_commit(head) if proof == "human" or index == 1 else github_commit(head)
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    serve_github_commits(monkeypatch, None if proof == "unreachable" else commits)
+    args = _args("--branch", "feature", "--review-risk", "critical", "--check-budget")
+    (refusal, target), _routing = _admit(args, monkeypatch)
+    assert target is None and refusal.startswith(("REVIEW_TARGET_UNRESOLVED", "REVIEW_ROUTE_REFUSED"))
+
+
+@pytest.mark.parametrize("metadata", ["intact", "moved", "missing-branch", "malformed", "unavailable"])
+def test_review_facts_pr_lookup_is_bound_to_the_frozen_head(tmp_path, monkeypatch, metadata):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    head = repo.commit("codex/gpt-6.1-sol")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    args = _args("--pr", "42", "--review-mode", "red_team")
+    args.branch = None
+    args._review_target = SimpleNamespace(base_sha=repo.sha("origin/main"), head_sha=head)
+
+    def read_pr(argv):
+        assert argv[-2:] == ["--json", "headRefName,headRefOid"]
+        if metadata == "unavailable":
+            raise recorder.RecordError("GitHub unavailable")
+        if metadata == "malformed":
+            return None
+        return {
+            "headRefName": None if metadata == "missing-branch" else "feature",
+            "headRefOid": "b" * 40 if metadata == "moved" else head,
+        }
+
+    monkeypatch.setattr(recorder, "_run_json", read_pr)
+    if metadata == "intact":
+        facts = delegate._dispatch_review_facts(args, ())
+        assert facts.head_sha == head and facts.existing_families == {"openai"}
+        assert facts.resolver_inputs(risk="critical").author_models == ("gpt-6.1-sol",)
+    else:
+        with pytest.raises(recorder.BranchFactsError) as refused:
+            delegate._dispatch_review_facts(args, ())
+        assert refused.value.code == recorder.FACTS_TARGET_UNKNOWN

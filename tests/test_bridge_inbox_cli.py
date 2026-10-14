@@ -12,7 +12,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from scripts.ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db, _messaging
+from scripts.ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db, _inbox_watch, _messaging
 
 
 def test_post_preflight_warns_for_large_body():
@@ -1086,12 +1086,93 @@ def test_required_core_slots_keep_dedicated_recipients():
 
 
 def test_resolve_recipient_alias_maps_empty_roster_phantoms_to_provider():
-    # monitor still carries `slots: []` in area_assignments.yaml;
-    # already-minted SESSION_HANDOFF_AGENT names must drain via the provider.
+    # Already-minted monitor identities must still drain via the provider.
     assert _channels.resolve_recipient_alias("grok-monitor") == "grok"
     assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
     assert _channels.resolve_recipient_alias("kimi-monitor") == "kimi"
     assert _channels.resolve_recipient_alias("cursor-monitor") == "cursor"
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
+def test_mixed_monitor_roster_preserves_legacy_inbox_consumers(provider, monkeypatch, isolate_db, capsys):
+    alias = f"{provider}-monitor"
+    assert "muse-monitor" in _channels._load_registry_slots()
+    assert _channels.resolve_recipient_alias(alias) == provider
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", alias)
+    assert _cli._detect_caller_identity_from_env() == provider
+    parser = _cli._build_parser()
+    assert parser.parse_args(["inbox", "--for", alias]).for_llm == provider
+    assert parser.parse_args(["ack-all", alias]).agent == provider
+    assert parser.parse_args(["send", "hi", "--to", alias]).to_llm == provider
+    assert parser.parse_args(["inbox", "show", alias]).agent == provider
+    assert parser.parse_args(["inbox", "run", alias, "--once"]).agent == provider
+
+    if provider == "kimi":
+        from agent_runtime.kimi_admission import KimiAdmissionRefused
+
+        for recipient in (provider, alias):
+            with pytest.raises(KimiAdmissionRefused):
+                _messaging.send_message("refused new message", to_llm=recipient, quiet=True)
+        # Historical Kimi rows remain readable, but cannot be newly sent or live-acked.
+        with sqlite3.connect(isolate_db) as conn:
+            conn.execute(
+                "INSERT INTO messages (from_llm, to_llm, content, timestamp, message_type) VALUES (?, ?, ?, ?, ?)",
+                ("claude", "kimi", "legacy monitor proof", datetime.now(UTC).isoformat(), "response"),
+            )
+    else:
+        sender = "codex" if provider == "claude" else "claude"
+        _messaging.send_message("legacy monitor proof", from_llm=sender, to_llm=provider, quiet=True)
+    _messaging.send_message("dedicated muse control", from_llm="claude", to_llm="muse-monitor", quiet=True)
+    capsys.readouterr()
+    assert _inbox_watch.canonical_slot(alias) == provider
+    conn = _inbox_watch.open_readonly_db(isolate_db)
+    try:
+        events = _inbox_watch.poll_once(conn, alias, last_seen=0)
+        assert [event.message_id for event in events] == [1]
+        assert [event.message_id for event in _inbox_watch.poll_once(conn, "muse-monitor", last_seen=0)] == [2]
+    finally:
+        conn.close()
+    _messaging.check_inbox(alias)
+    inbox = capsys.readouterr().out
+    assert f"Inbox for {provider}: 1 unread" in inbox
+    assert "legacy monitor proof" in inbox and "dedicated muse control" not in inbox
+    _messaging.acknowledge_all(alias, consumed_by_live_driver=True)
+    acknowledgment = capsys.readouterr().out
+    if provider == "kimi":
+        assert "No unread messages to acknowledge for kimi" in acknowledgment
+        expected = [("kimi", 0, 0), ("muse-monitor", 0, 0)]
+    else:
+        assert "Acknowledged 1 messages" in acknowledgment
+        expected = [(provider, 1, 1), ("muse-monitor", 0, 0)]
+    with sqlite3.connect(isolate_db) as conn:
+        assert (
+            conn.execute("SELECT to_llm, acknowledged, consumed_by_live_driver FROM messages ORDER BY id").fetchall()
+            == expected
+        )
+
+
+@pytest.mark.parametrize(
+    ("registry", "alias", "expected"),
+    [
+        ("assignments: {monitor: {slots: [muse-monitor]}}", "muse-monitor", "muse-monitor"),
+        ("assignments: {monitor: {slots: [muse-monitor, codex-monitor]}}", "codex-monitor", "codex-monitor"),
+        ("assignments: {monitor: {slots: [muse-monitor]}}", "nosuch-monitor", "nosuch-monitor"),
+        ("assignments: {monitor: {slots: [muse-monitor]}}", "agy-monitor", "agy-monitor"),
+        ("assignments: {monitor: {slots: [muse-monitor]}}", "codex-monitr", "codex-monitr"),
+        ("assignments: {other: {slots: [muse-other]}}", "codex-other", "codex-other"),
+        ("assignments: {other: {slots: []}}", "codex-other", "codex"),
+        ("assignments: {other: {slots: []}}", "codex-monitor", "codex-monitor"),
+        ("assignments: {monitor: {slots: broken}}", "codex-monitor", "codex-monitor"),
+        ("assignments: {monitor: {slots: [null]}}", "codex-monitor", "codex-monitor"),
+        ("assignments: [", "codex-monitor", "codex-monitor"),
+        (None, "codex-monitor", "codex-monitor"),
+    ],
+)
+def test_mixed_monitor_alias_boundaries(tmp_path, registry, alias, expected):
+    assignments = tmp_path / "assignments.yaml"
+    if registry is not None:
+        assignments.write_text(registry, encoding="utf-8")
+    assert _channels.resolve_recipient_alias(alias, assignments_path=assignments) == expected
 
 
 def test_resolve_recipient_alias_keeps_registered_and_static_identities():

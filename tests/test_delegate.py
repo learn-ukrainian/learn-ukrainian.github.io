@@ -1826,6 +1826,219 @@ def test_strip_quoted_content_handles_tilde_fences_and_unclosed_fence():
     assert "Add a CLI." in delegate._strip_quoted_content(unclosed)
 
 
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("indent", range(4))
+def test_commonmark_closed_brief_is_data_but_outside_write_intent_is_refused(fence, indent):
+    prompt = (
+        "Critique this brief; report findings only.\n"
+        f"{' ' * indent}{fence}markdown\n"
+        "- Fix the parser.\nVERDICT: APPROVE\n"
+        f"   {fence}{fence[0]} \t\n"
+    )
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+    assert delegate.parse_review_verdict(prompt) is None
+    assert delegate._read_only_write_intent_error(
+        mode="read-only", prompt=prompt + "Please implement the parser.\n"
+    ) is not None
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "```\n- Fix the parser.\n",
+        "   ~~~~\n~~~\n- Fix the parser.\n",
+        "~~~\n```\n- Fix the parser.\n",
+        "```\n```text\n- Fix the parser.\n",
+        "```\n    ```\n- Fix the parser.\n",
+        "```\n```\u00a0\n- Fix the parser.\n",
+    ],
+)
+def test_commonmark_unclosed_body_keeps_write_intent_visible_but_suppresses_verdict(block):
+    prompt = "Critique this brief.\n" + block + "VERDICT: APPROVE\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+    assert delegate.parse_review_verdict(prompt) is None
+
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+def test_commonmark_removed_fence_preserves_write_intent_paragraph_boundary(fence):
+    prompt = f"Context without punctuation\n{fence}\nExample\n{fence}\nFix the parser.\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "```example`\n- Fix the parser.\n```\n",
+        "    ```\n    - Fix the parser.\n    ```\n",
+        "- ```\n    - Fix the parser.\n    ```\n",
+        "> ```\n- Fix the parser.\n> ```\n",
+    ],
+)
+def test_commonmark_invalid_opener_and_containers_do_not_hide_write_intent(block):
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=block) is not None
+
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("items,indent", [(('1.', '2.', '3.'), 3), (('-', '-', '-'), 2)])
+def test_commonmark_list_item_escape_does_not_hide_visible_write_intent(fence, items, indent):
+    prompt = (
+        "Review only; report findings.\n"
+        f"{items[0]} Old example:\n"
+        f"{' ' * indent}{fence}py\n"
+        f"{' ' * indent}x = 1\n"
+        f"{items[1]} Fix the parser.\n"
+        f"{items[2]} New example:\n"
+        f"{' ' * indent}{fence}\n"
+    )
+    assert "Fix the parser." in delegate._strip_quoted_content(prompt)
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+
+@pytest.mark.parametrize(
+    "block,quoted_issue_visible",
+    [
+        (f"{' ' * indent}{fence}markdown\nExample #8886\n   {fence}{fence[0]} \t\n", False)
+        for fence in ("```", "~~~") for indent in range(4)
+    ] + [
+        ("~~~\nExample #8886\n", True),
+        ("````\n```\nExample #8886\n", True),
+        ("```\n~~~\nExample #8886\n", True),
+        ("~~~\n~~~text\nExample #8886\n", True),
+        ("```info`\nExample #8886\n```\n", True),
+        ("    ~~~\n    Example #8886\n    ~~~\n", True),
+        ("- ~~~\n    Example #8886\n    ~~~\n", True),
+        ("1. Old example:\n   ```py\n   x = 1\n2. Fix fixture issue #8886 too.\n3. New example:\n   ```\n", True),
+        ("- Old example:\n  ~~~py\n  x = 1\n- Fix fixture issue #8886 too.\n- New example:\n  ~~~\n", True),
+        ("- Old example:\n\n  ```py\n  x = 1\nFix fixture issue #8886 too.\n  ```\n", True),
+    ],
+)
+def test_commonmark_dor_checks_visible_issue_references_without_weakening_readiness(
+    monkeypatch, block, quoted_issue_visible
+):
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, json.dumps({"number": int(command[-1].rsplit("/", 1)[-1])}), "")
+        number = command[command.index("--issue") + 1]
+        verdict = {"verdict": "WARN", "missing": ["verify"]} if number == "8886" else {"verdict": "PASS", "missing": []}
+        return subprocess.CompletedProcess(command, int(number == "8886"), json.dumps(verdict), "")
+
+    monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    prompt = "Task #9672.\n" + block
+    error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+    expected = [8886, 9672] if quoted_issue_visible else [9672]
+    assert record["issues"] == expected
+    assert [int(command[command.index("--issue") + 1]) for command in calls if "--issue" in command] == expected
+    assert len([command for command in calls if command[:2] == ["gh", "api"]]) == len(expected)
+    if quoted_issue_visible:
+        assert "#8886: verify" in error
+        assert record["warnings"] == {"8886": "verify"}
+    else:
+        assert error is None
+        assert record["warnings"] == {}
+
+
+@pytest.mark.parametrize(
+    "container",
+    ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_container_exit_preserves_write_refusal(container):
+    # Second Opus CF reproduction, with an equivalent blockquote exit.
+    prompt = (
+        "Review the brief below.\n\n" + container
+        + "```\nquoted data\n```\nAdd a CLI flag to scripts/foo.py.\n```\ntrailing\n"
+    )
+    stripped = delegate._strip_quoted_content(prompt)
+    assert "Add a CLI flag to scripts/foo.py.\n" in stripped
+    assert "quoted data" not in stripped
+    assert "trailing\n" in stripped  # The final top-level fence is unclosed.
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
+@pytest.mark.parametrize(
+    "container",
+    ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_container_exit_preserves_dor_warn(monkeypatch, container):
+    calls = []
+
+    def checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, '{"number":9672}', "")
+        return subprocess.CompletedProcess(command, 1, '{"verdict":"WARN","missing":["verify"]}', "")
+
+    monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    monkeypatch.setattr(delegate.subprocess, "run", checker)
+    prompt = "Implement the fix.\n\n" + container + "```\nquoted\n```\nFixes #9672.\n```\n"
+    assert "Fixes #9672.\n" in delegate._strip_quoted_content(prompt)
+    error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+    assert error is not None
+    assert "#9672: verify" in error
+    assert record == {"issues": [9672], "warnings": {"9672": "verify"}}
+    assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/9672"]
+    assert len(calls) == 2
+    assert calls[1][-6:] == ["--issue", "9672", "--repo", delegate._CANONICAL_GITHUB_REPO, "--strict", "--json"]
+
+
+@pytest.mark.parametrize("fence,info", [("```", "markdown"), ("~~~~", "text`example")])
+@pytest.mark.parametrize("indent", [1, 2, 3])
+def test_parser_spans_valid_indented_data_is_admissible(monkeypatch, fence, info, indent):
+    prompt = (
+        "Review only; report findings.\n"
+        f"{' ' * indent}{fence}{info}\n"
+        "Add a CLI flag to scripts/foo.py.\nFixes #9672.\n"
+        f"{' ' * indent}{fence}{fence[0]} \t\n"
+    )
+    monkeypatch.setattr(delegate.subprocess, "run", lambda *_a, **_kw: pytest.fail("quoted issue must not be checked"))
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+    assert delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO) == (None, None)
+
+
+@pytest.mark.parametrize("failure", ["import", "parse"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_parser_spans_failure_precedes_dispatch_effects(tmp_tasks_dir, monkeypatch, failure, mode):
+    if failure == "import":
+        original_import = builtins.__import__
+
+        def refuse_import(name, *args, **kwargs):
+            if name == "markdown_it":
+                raise ImportError("parser_spans injected import failure")
+            return original_import(name, *args, **kwargs)
+
+        monkeypatch.setattr(builtins, "__import__", refuse_import)
+        exception = ImportError
+    else:
+        from markdown_it import MarkdownIt
+
+        def refuse_parse(*args, **kwargs):
+            raise RuntimeError("parser_spans injected parse failure")
+
+        monkeypatch.setattr(MarkdownIt, "parse", refuse_parse)
+        exception = RuntimeError
+
+    def forbidden_effect(*args, **kwargs):
+        pytest.fail("parser failure must precede provisioning and spawn")
+
+    for name in ("_ensure_worktree", "_provision_data_symlinks"):
+        monkeypatch.setattr(delegate, name, forbidden_effect)
+    monkeypatch.setattr(delegate.subprocess, "Popen", forbidden_effect)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "codex", "--task-id", "parser-spans-failure",
+        "--mode", mode, "--prompt", "Review only.\n```\nFixes #9672.\n```\n",
+    ])
+    with pytest.raises(exception, match="parser_spans injected"):
+        delegate.cmd_dispatch(args)
+    assert not (tmp_tasks_dir / "parser-spans-failure.json").exists()
+
+
 def test_read_only_wrapped_prose_continuation_line_is_not_refused():
     """Wrapped continuation prose starting with a verb does not trip read-only (#8703).
 
@@ -3874,6 +4087,210 @@ def test_run_worker_review_without_verdict_fails_with_reason(
     assert state["failure_reason"] == "review_missing_verdict_line"
     assert state["review_verdict_failure"] == "review_missing_verdict_line"
     assert state["last_error"] == state["failure_reason"]
+
+
+@pytest.mark.parametrize(
+    "token,expected",
+    [
+        (
+            "ghp_SYNTHETIC10598TOKENabcdefghij",
+            "review_unsupported_verdict_token: unsupported token '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "CHANGES",
+            "review_unsupported_verdict_token: unsupported token 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+    ],
+    ids=["sensitive", "benign"],
+)
+def test_review_verdict_gate_redacts_unsupported_diagnostic(token, expected):
+    result = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=f"VERDICT: {token}",
+        commits_ahead=None,
+        worktree=None,
+    )
+    assert result.failure == "review_unsupported_verdict_token"
+    assert result.status == "failed"
+    assert result.detail == expected
+    if token.startswith("ghp_"):
+        assert token not in result.detail
+
+
+@pytest.mark.parametrize(
+    "token,diagnostic_token",
+    [
+        ("CHANGES", "CHANGES"),
+        ("REVISE", "REVISE"),
+        ("changes", "changes"),
+        ("APPROVEX", "APPROVEX"),
+        ("APPROVE_2", "APPROVE_2"),
+        ("ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]"),
+    ],
+)
+def test_run_worker_review_verdict_unsupported_diagnostic_persists(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
+    token,
+    diagnostic_token,
+):
+    response = f"Findings.\n## **VERDICT**: **{token}**\n"
+    task_id = "review-unsupported-verdict"
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id=task_id,
+        mode="read-only",
+        response=response,
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+    )
+    persisted = json.loads(delegate._state_path(task_id).read_text())
+    assert rc == 1 and persisted["status"] == "failed"
+    for field in ("failure_reason", "review_verdict_failure", "last_error"):
+        assert state[field] == persisted[field] == "review_unsupported_verdict_token"
+    diagnostic = (
+        f"review_unsupported_verdict_token: unsupported token {diagnostic_token!r}; "
+        "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
+    )
+    assert persisted["stderr_excerpt"] == diagnostic
+    stderr = capsys.readouterr().err
+    assert diagnostic in stderr
+    if token.startswith("ghp_"):
+        assert token not in persisted["stderr_excerpt"]
+        assert token not in stderr
+    assert Path(persisted["result_file"]).read_text() == response
+    assert delegate.saved_task_response(persisted, delegate._state_path(task_id)) == response
+
+
+@pytest.mark.parametrize(
+    "reply,token",
+    [
+        ("VERDICT: CHANGES", "CHANGES"),
+        ("**Verdict**: **changes**", "changes"),
+        ("__VERDICT__: __REVISE__", "REVISE"),
+        ("   ###### VERDICT: NEEDS_WORK", "NEEDS_WORK"),
+        ("VERDICT: `CHANGES`", "CHANGES"),
+        ("VERDICT: APPROVEX", "APPROVEX"),
+        ("VERDICT: APPROVE_LATER", "APPROVE_LATER"),
+        ("VERDICT: APPROVE_2", "APPROVE_2"),
+        ("VERDICT: CHANGES. Explain below.", "CHANGES"),
+        ("**VERDICT: CHANGES.** Explain below.", "CHANGES"),
+        ("*VERDICT: CHANGES.* Findings follow.", "CHANGES"),
+        ("**Verdict**:\u00a0**CHANGES**", "CHANGES"),
+        ("VERDICT: CHANGES\u00a0— findings follow", "CHANGES"),
+        ("VERDICT: CHANGES\nVERDICT: REVISE", "REVISE"),
+        ("```VERDICT: example``` is inline code\nVERDICT: CHANGES", "CHANGES"),
+        ("  ~~~text\nVERDICT: UNKNOWN\n   ~~~~ \t\nVERDICT: CHANGES", "CHANGES"),
+    ],
+)
+def test_review_verdict_unsupported_tokens_use_shared_markdown_scanner(reply, token):
+    from scripts.review.verdict_parser import unsupported_verdict_tokens
+
+    result = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=reply, commits_ahead=None, worktree=None,
+    )
+    assert delegate.parse_review_verdict(reply) is None
+    assert unsupported_verdict_tokens(reply)[-1] == token
+    assert result.failure == "review_unsupported_verdict_token"
+    assert f"unsupported token {token!r}" in result.detail
+    assert "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED" in result.detail
+
+
+@pytest.mark.parametrize("reply", [
+    "", "No verdict", "VERDICT:", "> VERDICT: CHANGES", "`VERDICT: CHANGES`",
+    "I will report VERDICT: CHANGES later", "    VERDICT: CHANGES", "\tVERDICT: CHANGES",
+    "##VERDICT: CHANGES", "####### VERDICT: CHANGES", "## The VERDICT: CHANGES",
+    "```\nVERDICT: CHANGES\n```", "~~~\nVERDICT: CHANGES\n~~~",
+    "```text\n~~~\nVERDICT: CHANGES\n```", "~~~\n```\nVERDICT: CHANGES\n~~~",
+    "````\n```\nVERDICT: CHANGES\n````", "```\n```python\nVERDICT: CHANGES\n```",
+    "```\nVERDICT: CHANGES", "VERDICT: APPROVEé", "VERDICT: https://example.invalid",
+    "VERDICT: /private/file", "VERDICT: changes@example.invalid", "VERDICT: " + "X" * 65,
+    "VERDICT: REKISE",
+])
+def test_review_verdict_examples_and_unsafe_text_keep_safe_missing_rejection(reply):
+    result = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=reply, commits_ahead=None, worktree=None,
+    )
+    assert result.failure == result.detail == "review_missing_verdict_line"
+
+
+@pytest.mark.parametrize("token", ["APPROVE", "APPROVED", "CHANGES_REQUESTED", "REQUEST_CHANGES", "BLOCKED"])
+@pytest.mark.parametrize("reply", [
+    "VERDICT: CHANGES\nVERDICT: {token}",
+    "VERDICT: {token}\nVERDICT: CHANGES",
+    "VERDICT: APPROVE\nVERDICT: CHANGES\nVERDICT: {token}\nVERDICT: REVISE",
+    "VERDICT: __{token}__ (findings follow)",
+])
+def test_review_verdict_recognized_tokens_keep_precedence_over_unsupported(token, reply):
+    from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
+
+    reply = reply.format(token=token)
+    assert recognized_verdicts(reply)[-1] == delegate.parse_review_verdict(reply) == token
+    assert delegate._review_verdict_failure_reason(reply) is None
+    assert unsupported_verdict_tokens(f"VERDICT: {token}") == []
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r", "\r\n"], ids=["lf", "cr", "crlf"])
+@pytest.mark.parametrize(
+    "body,expected",
+    [
+        ("```\nVERDICT: CHANGES\n```\nVERDICT: REVISE", ["REVISE"]),
+        ("~~~\nVERDICT: CHANGES\n~~~~ \t\nVERDICT: REVISE", ["REVISE"]),
+        ("````\nVERDICT: CHANGES\n```\nVERDICT: REVISE", []),
+        ("```\nVERDICT: CHANGES\n~~~\nVERDICT: REVISE", []),
+        ("- Example:\n  ```\n  example\n- Outside:\nVERDICT: CHANGES\n  ```", []),
+        ("> VERDICT: CHANGES\n    VERDICT: REVISE", []),
+    ],
+)
+def test_integrated_unsupported_verdicts_keep_main_fence_policy(newline, body, expected):
+    from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
+
+    response = body.replace("\n", newline)
+    assert unsupported_verdict_tokens(response) == expected
+    # Both readers share frozen main's lexical verdict policy, including
+    # conservative suppression across a container exit and unclosed fences.
+    supported_response = response.replace("CHANGES", "APPROVE").replace("REVISE", "BLOCKED")
+    assert recognized_verdicts(supported_response) == (["BLOCKED"] if expected else [])
+    result = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=response,
+        commits_ahead=None,
+        worktree=None,
+    )
+    if expected:
+        assert result.failure == "review_unsupported_verdict_token"
+        assert result.detail == (
+            "review_unsupported_verdict_token: unsupported token 'REVISE'; "
+            "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
+        )
+    else:
+        assert result.failure == result.detail == "review_missing_verdict_line"
+
+
+@pytest.mark.parametrize("separator", ["\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"])
+def test_integrated_verdict_diagnostic_preserves_main_line_maps(separator):
+    from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
+
+    response = f"Context{separator}```\nVERDICT: CHANGES"
+    # A non-CommonMark separator does not create a fence opener. Match the
+    # current main reader, which removes fences before splitting verdict lines.
+    assert recognized_verdicts(response.replace("CHANGES", "APPROVE")) == ["APPROVE"]
+    assert unsupported_verdict_tokens(response) == ["CHANGES"]
+    assert delegate._review_verdict_failure_reason(response) == "review_unsupported_verdict_token"
+
+
+def test_non_review_verdict_unsupported_reply_is_unaffected(tmp_tasks_dir, tmp_path, monkeypatch):
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="ordinary-unsupported-token", mode="read-only", response="VERDICT: CHANGES",
+        commits_ahead=None, tmp_path=tmp_path, monkeypatch=monkeypatch, require_review_verdict=False,
+    )
+    assert rc == 0 and state["status"] == "done"
+    assert state.get("review_verdict_failure") is None
 
 
 def test_review_verdict_failure_survives_appended_snapshot_error(tmp_tasks_dir):
@@ -6465,6 +6882,198 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
         "review_cwd": str(tmp_path),
         "allowed_tools": ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
     }
+
+
+def _claude_review_worker(task_id: str, tmp_path: Path, **overrides) -> tuple[int, MagicMock]:
+    """Run the worker on its task record, as a formal review attempt unless overridden."""
+    mock_result = MagicMock(
+        ok=True, response="done", stderr_excerpt=None, returncode=0, rate_limited=False,
+        model="fixture", effort="unknown", cli_version="fixture", failure_code=None, substitution=None,
+    )
+    review = {
+        "review_id": "rev-test",
+        "attempt_id": "att-test",
+        "mcp_config_path": str(tmp_path / "review.mcp.json"),
+        "strict_mcp_config": True,
+        "review_manifest": str(tmp_path / "manifest.yaml"),
+        "review_input_root": str(tmp_path),
+        "review_access": "isolated",
+    }
+    review.update(overrides)
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id, agent="claude", prompt="review", mode="read-only", cwd_str=str(tmp_path),
+            model=None, hard_timeout=60, **review,
+        )
+    return rc, mock_invoke
+
+
+def test_worker_carries_the_task_records_claude_account_to_the_attempt(tmp_tasks_dir, tmp_path):
+    """AC-03: the label survives the worker's re-read of the task record and reaches the attempt boundary."""
+    task_id = "worker-claude-account-b"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": "b"})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path)
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"]["claude_account"] == "b"
+    assert delegate._read_state(state_path)["claude_account"] == "b"
+
+
+def test_worker_without_a_recorded_account_passes_no_label(tmp_tasks_dir, tmp_path):
+    task_id = "worker-claude-account-legacy"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path)
+
+    assert rc == 0
+    assert "claude_account" not in mock_invoke.call_args.kwargs["tool_config"]
+
+
+@pytest.mark.parametrize(
+    "label,review,code",
+    [
+        ("b", {"review_id": None, "attempt_id": None}, "claude_account_route_unsealed"),
+        ("c", {}, "claude_account_unknown"),
+    ],
+)
+def test_worker_refuses_a_recorded_account_it_cannot_honour(tmp_tasks_dir, tmp_path, label, review, code):
+    """A record naming another account outside the sealed attempt would run as the default one."""
+    task_id = f"worker-claude-account-{code}"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": label})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path, **review)
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(state_path)
+    assert state["status"] == "failed"
+    assert state["last_error"] == code
+    assert state["stderr_excerpt"] == f"CLAUDE_ACCOUNT_REFUSED: {code}"
+
+
+def test_dispatch_records_the_default_claude_account(tmp_tasks_dir, tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
+    for task_id, extra in (("claude-account-omitted", []), ("claude-account-explicit", ["--claude-account", "a"])):
+        args = delegate.build_parser().parse_args(
+            ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
+             "--dry-run", *extra],
+        )
+        assert delegate.cmd_dispatch(args) == 0
+        assert delegate._read_state(delegate._state_path(task_id))["claude_account"] == "a"
+
+
+def _claude_account_args(*extra: str) -> argparse.Namespace:
+    return delegate.build_parser().parse_args(
+        ["dispatch", "--task-id", "claude-account-refused", "--prompt", "test", "--initiator", "codex", *extra]
+    )
+
+
+@pytest.mark.parametrize(
+    "extra,code",
+    [
+        (["--agent", "claude", "--claude-account", "c"], "claude_account_unknown"),
+        (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
+        (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
+        (["--agent", "claude", "--claude-account", "b"], "claude_account_route_unsealed"),
+        (
+            ["--agent", "claude", "--claude-account", "b", "--review-attempt", "manifest.yaml",
+             "--review-id", "rev", "--attempt-id", "att"],
+            "claude_account_ambient_conflict",
+        ),
+    ],
+)
+def test_dispatch_refuses_claude_account_before_any_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, extra, code
+):
+    """AC-01: base code rejects the flag as an unknown argument; the label is now refused by typed code first."""
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "fixture-ambient-" + "e" * 30)
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(tmp_path / "absent.json"))
+    for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
+        monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", MagicMock(side_effect=AssertionError("spawned")))
+
+    assert delegate.cmd_dispatch(_claude_account_args(*extra)) == 2
+
+    err = capsys.readouterr().err
+    assert f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n" in err
+    assert "fixture-ambient" not in err
+    # Observed without calling _state_path(), which itself creates the task directory.
+    assert not tmp_tasks_dir.exists()
+
+
+@pytest.mark.parametrize(
+    "case,code", [("missing", "claude_account_credentials_missing"), ("expired", "claude_account_credentials_expired")]
+)
+def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code):
+    from tests.agent_runtime.test_attempt_boundary import (
+        BOUND_ACCOUNT_UUID,
+        CLAUDE_AMBIENT_AUTH,
+        DEFAULT_ACCOUNT_UUID,
+        _mock_selected_account_runtime,
+        _private_json,
+    )
+
+    _mock_selected_account_runtime(tmp_path, monkeypatch)
+    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    home, selected = tmp_path / "home", tmp_path / "selected"
+    selected.mkdir(mode=0o700)
+    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    binding = tmp_path / "binding.json"
+    _private_json(
+        binding,
+        {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
+    )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    if case == "expired":
+        _private_json(
+            selected / ".credentials.json",
+            {"claudeAiOauth": {"accessToken": "fixture-expired-" + "e" * 30, "expiresAt": 1}},
+        )
+    for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
+        monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
+    spawn = MagicMock(side_effect=AssertionError("spawned"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
+    args = _claude_account_args(
+        "--agent",
+        "claude",
+        "--claude-account",
+        "b",
+        "--review-attempt",
+        "manifest.yaml",
+        "--review-id",
+        "rev",
+        "--attempt-id",
+        "att",
+    )
+    assert delegate._dispatch_claude_account_refusal(args) == code
+    assert delegate.cmd_dispatch(args) == 2
+    assert capsys.readouterr().err == f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n"
+    assert not tmp_tasks_dir.exists()
+    spawn.assert_not_called()
+
+
+def test_explicit_default_claude_account_matches_omitted_hashes():
+    omitted = _claude_account_args("--agent", "claude")
+    explicit = _claude_account_args("--agent", "claude", "--claude-account", "a")
+    assert delegate.dispatch_args_sha256(explicit) == delegate.dispatch_args_sha256(omitted)
+    assert delegate.advisory_args_sha256(explicit) == delegate.advisory_args_sha256(omitted)
+
+
+def test_omitted_claude_account_leaves_dispatch_hashes_unchanged():
+    args = _claude_account_args("--agent", "claude")
+    legacy = argparse.Namespace(**{k: v for k, v in vars(args).items() if k != "claude_account"})
+    assert delegate.dispatch_args_sha256(args) == delegate.dispatch_args_sha256(legacy)
+    assert delegate.advisory_args_sha256(args) == delegate.advisory_args_sha256(legacy)
+    labelled = _claude_account_args("--agent", "claude", "--claude-account", "b")
+    assert delegate.dispatch_args_sha256(labelled) != delegate.dispatch_args_sha256(args)
+    assert delegate.advisory_args_sha256(labelled) != delegate.advisory_args_sha256(args)
 
 
 def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(
@@ -19485,6 +20094,72 @@ def test_run_worker_branch_continuation_finalizes_owned_changes_or_reports_failu
             assert state["auto_finalize"]["error"] == "no_owned_paths_declared"
 
 
+@pytest.mark.parametrize("pushed", [True, False])
+def test_continuation_that_switches_branch_records_the_checkout_branch(tmp_tasks_dir, tmp_path, monkeypatch, pushed):
+    """#10548: a reused checkout's new branch is the one finalize measures."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "switched-branch"
+    old_branch = "codex/original-dispatch"
+    new_branch = "cursor/fresh-gate"
+    worktree = _agy_dispatch_worktree(tmp_path, old_branch)
+    _git_out(worktree, "commit", "--allow-empty", "-m", "original dispatch")
+    _git_out(worktree, "push", "-u", "origin", old_branch)
+    _git_out(worktree, "checkout", "-b", new_branch)
+    _git_out(worktree, "commit", "--allow-empty", "-m", "switched branch")
+    if pushed:
+        _git_out(worktree, "push", "-u", "origin", new_branch)
+    head = delegate._resolve_sha(worktree)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": old_branch,
+            "worktree_base": "main",
+            "worktree_reused": True,
+            "keep_worktree": True,
+        },
+    )
+    result = Result(
+        ok=True,
+        agent="codex",
+        model="gpt-6.1-sol",
+        mode="danger",
+        response="",
+        stderr_excerpt=None,
+        duration_s=0.1,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+    )
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="continue on a new branch",
+            mode="danger",
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["worktree_branch"] == new_branch
+    assert state["final_branch_head_commit"] == head
+    assert _git_out(worktree, "status", "--porcelain") == ""
+    if pushed:
+        assert state["status"] == "done"
+        assert state["needs_finalize"] is False
+    else:
+        assert state["status"] == "needs_finalize"
+        assert state["needs_finalize"] is True
+
+
 def test_run_worker_without_owned_paths_never_auto_commits(tmp_tasks_dir, tmp_path, monkeypatch):
     """AC-03: no --owned-path means no auto-finalize commit; the task needs a human."""
     _sanitize_git_env_for_test(monkeypatch)
@@ -20498,3 +21173,232 @@ def test_advisory_round_start_lookup_errors_are_recorded_as_unmeasured(
     assert state[key] == {"measured": False, "error": detail}
     assert detail in state["stderr_excerpt"]
     assert "private lookup detail" not in str(state)
+
+
+def _linked_dispatch_worktree(tmp_path: Path) -> Path:
+    """A directory the AGY installer treats as a dispatch worktree (#10529).
+
+    ``install_worktree_guard`` writes only when the cwd is a linked worktree
+    under ``<primary>/.worktrees/dispatch``. A bare temporary directory does
+    not reproduce the checkout mutation.
+    """
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "probe" / "cwd"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {primary}/.git/worktrees/probe\n", encoding="utf-8")
+    return worktree
+
+
+def _directory_snapshot(root: Path) -> tuple[tuple[str, str, bytes], ...]:
+    rows: list[tuple[str, str, bytes]] = []
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        base = Path(dirpath)
+        for name in dirnames:
+            path = base / name
+            rel = path.relative_to(root).as_posix()
+            payload = os.readlink(path).encode() if path.is_symlink() else b""
+            rows.append((rel, "symlink" if path.is_symlink() else "dir", payload))
+        for name in filenames:
+            path = base / name
+            rel = path.relative_to(root).as_posix()
+            if path.is_symlink():
+                rows.append((rel, "symlink", os.readlink(path).encode()))
+            else:
+                rows.append((rel, "file", path.read_bytes()))
+    return tuple(sorted(rows))
+
+
+def test_adapter_model_rejection_leaves_linked_worktree_cwd_unchanged(tmp_path, monkeypatch):
+    """The model probe must not install hooks or any other file into the process cwd (#10529)."""
+    from agent_runtime.registry import AGENTS
+
+    worktree = _linked_dispatch_worktree(tmp_path)
+    monkeypatch.chdir(worktree)
+    before = _directory_snapshot(worktree)
+    for agent, entry in AGENTS.items():
+        model = entry.get("default_model") or "model-probe"
+        delegate._adapter_model_rejection(agent, str(model))
+    after = _directory_snapshot(worktree)
+    assert after == before
+    assert not (worktree / ".agents").exists()
+
+
+def test_adapter_model_rejection_treats_probe_tempdir_failure_as_inconclusive(tmp_path, monkeypatch, capsys):
+    """A probe directory that cannot be created uses the inconclusive-probe result (#10529).
+
+    ``PermissionError(13)`` and ``OSError(28)`` from ``tempfile.mkdtemp`` must
+    return the same value as any other inconclusive probe error for the same
+    agent and model, must not raise, and must not leave a directory behind.
+    """
+    import tempfile
+    import types
+
+    from agent_runtime.registry import AGENTS
+
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
+    agent, model = "codex", "unapproved-model"
+    original_spec = AGENTS[agent]["adapter"]
+
+    class _Boom:
+        def build_invocation(self, **_kwargs):
+            raise RuntimeError("probe cannot run")
+
+    fake = types.ModuleType("probe_tempdir_boom_mod")
+    fake.Boom = _Boom
+    monkeypatch.setitem(sys.modules, "probe_tempdir_boom_mod", fake)
+    monkeypatch.setitem(AGENTS[agent], "adapter", "probe_tempdir_boom_mod:Boom")
+    inconclusive = delegate._adapter_model_rejection(agent, model)
+    baseline_err = capsys.readouterr().err
+    assert "RuntimeError" in baseline_err
+    assert not list(tmp_path.rglob("delegate-model-probe-*"))
+    monkeypatch.setitem(AGENTS[agent], "adapter", original_spec)
+
+    seen: list[str] = []
+    raised: list[str] = []
+
+    def _raiser(exc: BaseException):
+        def _raise(*_args, **_kwargs):
+            seen.append(type(exc).__name__)
+            raise exc
+
+        return _raise
+
+    for exc in (PermissionError(13), OSError(28)):
+        monkeypatch.setattr(tempfile, "mkdtemp", _raiser(exc))
+        try:
+            got = delegate._adapter_model_rejection(agent, model)
+        except Exception as err:
+            raised.append(f"{type(exc).__name__} -> {type(err).__name__}: {err}")
+            assert not list(tmp_path.rglob("delegate-model-probe-*"))
+            continue
+        err_text = capsys.readouterr().err
+        assert got == inconclusive
+        assert err_text == baseline_err.replace("RuntimeError", type(exc).__name__)
+        assert not list(tmp_path.rglob("delegate-model-probe-*"))
+
+    assert seen == ["PermissionError", "OSError"]
+    assert raised == []
+
+
+_PROBE_CLEANUP_WARNING = "could not remove its probe directory:"
+
+
+def _install_model_probe_adapter(monkeypatch, agent: str, build) -> None:
+    """Point ``agent`` at an in-test adapter whose ``build_invocation`` is ``build``."""
+    import types
+
+    from agent_runtime.registry import AGENTS
+
+    class _Adapter:
+        def build_invocation(self, **_kwargs):
+            return build()
+
+    fake = types.ModuleType("probe_cleanup_failure_mod")
+    fake.Adapter = _Adapter
+    monkeypatch.setitem(sys.modules, "probe_cleanup_failure_mod", fake)
+    monkeypatch.setitem(AGENTS[agent], "adapter", "probe_cleanup_failure_mod:Adapter")
+
+
+def _model_probe_dirs(root: Path) -> list[Path]:
+    return list(root.rglob("delegate-model-probe-*"))
+
+
+@pytest.mark.parametrize("outcome", ["success", "runtime", "rejection", "interrupt"])
+def test_adapter_model_rejection_removes_probe_directory(tmp_path, monkeypatch, capsys, outcome):
+    """Success, adapter errors, rejection, and KeyboardInterrupt leave no probe directory (#10529).
+
+    KeyboardInterrupt still propagates after the directory is removed.
+    """
+    model = "unapproved-model"
+    refusal = f"Adapter: model={model!r} rejected"
+
+    def build():
+        if outcome == "success":
+            return object()
+        if outcome == "runtime":
+            raise RuntimeError("probe cannot run")
+        if outcome == "interrupt":
+            raise KeyboardInterrupt("probe interrupted")
+        raise ValueError(refusal)
+
+    _install_model_probe_adapter(monkeypatch, "codex", build)
+    if outcome == "interrupt":
+        with pytest.raises(KeyboardInterrupt, match=r"^probe interrupted$"):
+            delegate._adapter_model_rejection("codex", model)
+    else:
+        got = delegate._adapter_model_rejection("codex", model)
+        assert got == (refusal if outcome == "rejection" else None)
+    err = capsys.readouterr().err
+    assert _model_probe_dirs(tmp_path) == []
+    assert _PROBE_CLEANUP_WARNING not in err
+    if outcome == "runtime":
+        assert "could not verify" in err and "RuntimeError" in err
+    else:
+        assert "could not verify" not in err
+
+
+@pytest.mark.parametrize("outcome", ["success", "runtime", "rejection"])
+@pytest.mark.parametrize(
+    ("errno_num", "exc_type", "errno_name"),
+    [
+        (13, PermissionError, "EACCES"),
+        (16, OSError, "EBUSY"),
+    ],
+)
+def test_adapter_model_rejection_warns_when_probe_directory_cleanup_fails(
+    tmp_path, monkeypatch, capsys, outcome, errno_num, exc_type, errno_name
+):
+    """A failed probe-directory cleanup is one non-fatal stderr warning (#10529).
+
+    ``PermissionError(13)`` and ``OSError(16)`` from ``os.rmdir`` after a
+    successful probe, an adapter ``RuntimeError``, and a rejection ``ValueError``
+    each leave the admission result unchanged and do not propagate. The warning
+    names the failure class and errno name only.
+    """
+    assert errno.errorcode[errno_num] == errno_name
+    model = "unapproved-model"
+    refusal = f"Adapter: model={model!r} rejected"
+
+    def build():
+        if outcome == "success":
+            return object()
+        if outcome == "runtime":
+            raise RuntimeError("probe cannot run")
+        raise ValueError(refusal)
+
+    _install_model_probe_adapter(monkeypatch, "codex", build)
+    baseline = delegate._adapter_model_rejection("codex", model)
+    baseline_err = capsys.readouterr().err
+    assert _model_probe_dirs(tmp_path) == []
+    assert _PROBE_CLEANUP_WARNING not in baseline_err
+
+    real_rmdir = os.rmdir
+
+    def failing_rmdir(path, *args, **kwargs):
+        if "delegate-model-probe-" in os.fsdecode(path):
+            raise exc_type(errno_num, "raw-secret-text")
+        return real_rmdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "rmdir", failing_rmdir)
+    raised: list[str] = []
+    try:
+        got = delegate._adapter_model_rejection("codex", model)
+    except Exception as err:
+        raised.append(f"{type(err).__name__}: {err}")
+        got = None
+    err = capsys.readouterr().err
+    warnings = [line for line in err.splitlines() if _PROBE_CLEANUP_WARNING in line]
+    verify = [line for line in err.splitlines() if "could not verify" in line]
+    baseline_verify = [line for line in baseline_err.splitlines() if "could not verify" in line]
+    assert raised == []
+    assert got == baseline
+    assert warnings == [
+        f"⚠ model probe for codex could not remove its probe directory: {exc_type.__name__} {errno_name}"
+    ]
+    assert verify == baseline_verify
+    assert "/" not in warnings[0]
+    assert str(tmp_path) not in err
+    assert "delegate-model-probe-" not in err
+    assert "raw-secret-text" not in err
+    assert len(_model_probe_dirs(tmp_path)) == 1

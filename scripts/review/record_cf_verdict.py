@@ -17,9 +17,10 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
+from functools import partial
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any
+from typing import Any, Literal
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -28,10 +29,18 @@ from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
-from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
+from scripts.common.jsonl import jsonl_lines
+from scripts.fleet_comms.review_publication import (
+    DEFAULT_STATUS_CONTEXT,
+    REVIEW_SCHEMA_VERSION,
+    ReviewPublicationError,
+    resolve_verdict_and_evidence,
+)
 from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import (
+    PublishBlocked,
     absolute_path_spans,
+    check_texts,
     normalize_for_scan,
     normalize_repository,
     publication_boundary,
@@ -48,6 +57,7 @@ from scripts.orchestration.integration_sweep import (
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
+from scripts.review.app_bot_authorship import VERIFIED_APP_BOT, listing_app_bot_login, verified_app_bot_login
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.model_catalog import (
     REVIEW_ACTIVITY,
@@ -109,6 +119,21 @@ def normalize_verdict(reply: str) -> str:
     return tokens.pop()
 
 
+def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]]:
+    """Use canonical validated findings; prose supplies no reliable count."""
+    try:
+        payload = json.loads(reply)
+    except ValueError:
+        payload = None
+    if isinstance(payload, dict) and payload.get("schema_version") == REVIEW_SCHEMA_VERSION:
+        try:
+            verdict, evidence = resolve_verdict_and_evidence(payload)
+        except ReviewPublicationError:
+            raise RecordError("structured review verdict or findings invalid") from None
+        return verdict, len(evidence.findings) if evidence is not None else "unknown"
+    return normalize_verdict(reply), "unknown"
+
+
 def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
     """Refuse Ukrainian verdicts without positive runtime Sources evidence (#10074)."""
     if not is_ukrainian_review(task):
@@ -142,6 +167,19 @@ def _pages(args: list[str]) -> list[dict[str, Any]]:
     if not all(isinstance(item, dict) for item in items):
         raise RecordError("paginated GitHub data malformed")
     return items
+
+
+def live_app_bot_login(repository: str, sha: str) -> str | None:
+    """The allowlisted app bot GitHub reports as ``sha``'s author, read live for that SHA (#10531).
+
+    Every lookup failure or disagreement returns None, which keeps the commit's
+    authorship unknown and refused.
+    """
+    try:
+        commit = _run_json(Request("read-commit", repo=repository, sha=sha))
+    except RecordError:
+        return None
+    return verified_app_bot_login(commit, sha, repository)
 
 
 def _hot_or_archived(task_root: Path, name: str) -> Path:
@@ -309,12 +347,17 @@ def _attribute_commit(
     base_sha: Callable[[], str],
     checkout: Path | None = None,
     unknown_history: Iterable[str] = (),
+    app_bot_login: Callable[[str], str | None] | None = None,
 ) -> CommitAttribution:
     """Resolve one commit's author family, retaining unresolvable authors as Unknown.
 
     ``entry`` has the GitHub commit-listing shape (``sha``, ``commit.message``,
     ``commit.tree.sha``, ``parents``). ``base_sha`` is called only when an
-    untrailered commit needs the clean-merge proof.
+    untrailered commit needs the clean-merge proof. ``app_bot_login`` is called
+    only for an untrailered commit that is neither a clean base merge nor
+    admitted unknown history; a login is GitHub's live proof that an
+    allowlisted app bot authored it (#10531), recorded as ``verified_app_bot``
+    without any model.
     """
     commit_sha = entry.get("sha")
     message = (entry.get("commit") or {}).get("message")
@@ -333,6 +376,15 @@ def _attribute_commit(
         return CommitAttribution(
             commit_sha, UNKNOWN_AUTHOR_FAMILY, "unknown_historical", authorship="unknown_historical"
         )
+    if (
+        not trailers
+        and not re.search(r"(?m)^X-Agent:", message)
+        and app_bot_login is not None
+        and isinstance(commit_sha, str)
+        and SHA.fullmatch(commit_sha)
+        and app_bot_login(commit_sha) is not None
+    ):
+        return CommitAttribution(commit_sha, VERIFIED_APP_BOT, VERIFIED_APP_BOT, authorship=VERIFIED_APP_BOT)
     if len(trailers) != 1 or "/" not in trailers[0]:
         raise RecordError("author model unknown: missing explicit X-Agent model trailer")
     harness, model = trailers[0].split("/", 1)
@@ -442,7 +494,13 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
 
     families = set()
     for entry in commits:
-        family = _attribute_commit(entry, repository=repository, task_root=task_root, base_sha=base_sha).family
+        family = _attribute_commit(
+            entry,
+            repository=repository,
+            task_root=task_root,
+            base_sha=base_sha,
+            app_bot_login=listing_app_bot_login(commits, repository),
+        ).family
         if family is not None:
             families.add(family)
     if not families:
@@ -497,6 +555,11 @@ class BranchReviewFacts:
         return tuple(sorted(commit.sha for commit in self.commits if commit.source == "unknown_historical"))
 
     @property
+    def app_bot_commits(self) -> tuple[str, ...]:
+        """Commits GitHub proved were authored by an allowlisted app bot (#10531)."""
+        return tuple(sorted(commit.sha for commit in self.commits if commit.source == VERIFIED_APP_BOT))
+
+    @property
     def author_task_ids(self) -> frozenset[str]:
         """Author task identities retained from the complete branch's X-Agent trailers."""
         return frozenset(
@@ -533,7 +596,8 @@ class BranchReviewFacts:
             author_models=tuple(
                 model
                 for commit in self.commits
-                if commit.source != "clean-base-merge"
+                # A clean merge authors nothing; a verified app bot has no model.
+                if commit.source not in {"clean-base-merge", VERIFIED_APP_BOT}
                 for model in (commit.author_models or (None,))
             ),
             author_task_models=tuple(
@@ -571,6 +635,8 @@ class BranchReviewFacts:
         if self.unknown_history:
             receipt["unknown_history"] = list(self.unknown_history)
             receipt["authorship"] = "unknown_historical"
+        if self.app_bot_commits:
+            receipt["app_bot_commits"] = list(self.app_bot_commits)
         return receipt
 
 
@@ -627,7 +693,8 @@ def _read_commit_entries(repo_root: Path, shas: list[str], *, deadline: float) -
             body = data[newline + 1 : newline + 1 + size].decode("utf-8")
             position = newline + 1 + size + 1
             headers, _, message = body.partition("\n\n")
-            lines = headers.splitlines()
+            # Object headers end at LF; NEL/LS/PS are free text in author names.
+            lines = jsonl_lines(headers)
             trees = [line[5:] for line in lines if line.startswith("tree ")]
             parents = [line[7:] for line in lines if line.startswith("parent ")]
             entries.append(
@@ -675,12 +742,14 @@ def collect_branch_review_facts(
     timeout_s: float = BRANCH_FACTS_TIMEOUT_S,
     authorship_exclude_sha: str | None = None,
     unknown_history: Iterable[str] = (),
+    app_bot_login: Callable[[str], str | None] | None = None,
 ) -> BranchReviewFacts:
     """Collect complete authorship and protected scope for ``base_tip_sha..head_sha``.
 
     Commit membership is ``git rev-list <base>..<head>`` (A1), attributed by the
     recorder's own per-commit rules (trailer, hot or archived task record,
-    Cursor attestation, single-family harness, Git-proven clean base merge).
+    Cursor attestation, single-family harness, Git-proven clean base merge,
+    GitHub-proven app bot).
     ``incoming_agent``/``incoming_model`` name the writer about to be
     dispatched, after any substitution. Scope is the literal diff against the
     merge-base (both rename sides and deletions) plus ``owned_paths``, with the
@@ -688,7 +757,9 @@ def collect_branch_review_facts(
     passes ``head_sha == base_tip_sha``. Admission may exclude commits reachable
     from a frozen main/rebase tip with ``authorship_exclude_sha`` (#9988); this
     never narrows the diff or protected scope against the original base.
-    Reads only; never fetches. Raises
+    Reads only; never fetches Git objects. An untrailered commit that no other
+    rule attributes is checked with ``app_bot_login`` (default: a live GitHub
+    read of that SHA, :func:`live_app_bot_login`). Raises
     ``BranchFactsError`` (``code`` = authorship, scope or target unknown).
     """
     deadline = time.monotonic() + timeout_s
@@ -713,6 +784,7 @@ def collect_branch_review_facts(
     shas = listed.decode("ascii", errors="strict").split()
     commits: list[CommitAttribution] = []
     unknown_history = frozenset(unknown_history)
+    app_bot_login = app_bot_login or partial(live_app_bot_login, repository)
     for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
         try:
             commits.append(
@@ -725,6 +797,7 @@ def collect_branch_review_facts(
                     base_sha=lambda: authorship_exclude_sha or base_tip_sha,
                     checkout=repo_root,
                     unknown_history=unknown_history,
+                    app_bot_login=app_bot_login,
                 )
             )
         except RecordError as exc:
@@ -963,6 +1036,8 @@ def pr_review_facts(
         subject_families=subject_families,
         authorship_exclude_sha=exclude,
         unknown_history=unknown_history,
+        # GitHub's live listing of this PR carries each commit's author proof.
+        app_bot_login=listing_app_bot_login(listed, repository),
     )
     refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
     github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
@@ -1150,6 +1225,8 @@ def build_comment(
     review_profile: str = "code",
     sources_mcp_call_count: int | None = None,
     unknown_history: Iterable[str] = (),
+    withheld_findings: int | Literal["unknown"] | None = None,
+    app_bot: bool = False,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1162,13 +1239,14 @@ def build_comment(
     if history and (review_mode != "red_team" or not all(SHA.fullmatch(sha) for sha in history)):
         raise RecordError("unknown history requires red_team and full commit SHAs")
     history_field = f" unknown_history={','.join(history)}" if history else ""
+    authorship_field = f" authorship={VERIFIED_APP_BOT}" if app_bot else ""
     ukrainian = is_ukrainian_review({"review_profile": review_profile})
     _require_sources_mcp_calls({"review_profile": review_profile, "sources_mcp_call_count": sources_mcp_call_count})
     profile_field = " review_profile=ukrainian" if ukrainian else ""
     sources_field = f" sources_calls={sources_mcp_call_count}" if sources_mcp_call_count is not None else ""
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
-        f"model={model} family={family}{mode_field}{history_field}{profile_field}{sources_field} -->"
+        f"model={model} family={family}{mode_field}{history_field}{authorship_field}{profile_field}{sources_field} -->"
     )
     prefix = (
         ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
@@ -1178,6 +1256,7 @@ def build_comment(
             if history
             else ""
         )
+        + (f"Authorship: {VERIFIED_APP_BOT}\n" + ("" if history else "No author model assumed.\n") if app_bot else "")
         + ("Review profile: ukrainian\n" if ukrainian else "")
         + (f"Sources MCP calls: {sources_mcp_call_count}\n" if sources_mcp_call_count is not None else "")
         + f"head: {sha}\n"
@@ -1185,8 +1264,15 @@ def build_comment(
         f"VERDICT: {verdict}\n"
         f"Reviewer model: {model}\n"
         f"Task id: {task_id}\n\n"
-        "<details><summary>Reviewer's reply</summary>\n\n"
     )
+    if withheld_findings is not None:
+        return (
+            prefix
+            + f"Withheld findings: {withheld_findings}\n"
+            + "Findings are held privately.\n\n"
+            + marker
+        )
+    prefix += "<details><summary>Reviewer's reply</summary>\n\n"
     suffix = f"\n\n</details>\n\n{marker}"
     available = MAX_COMMENT_BYTES - len((prefix + suffix).encode())
     if available < 0:
@@ -1572,7 +1658,7 @@ def record(
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         raise RecordError("reviewer family unknown")
     _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
-    verdict = normalize_verdict(reply)
+    verdict, finding_count = _review_verdict_and_count(reply)
     _require_sources_mcp_calls(task)
     ukrainian = is_ukrainian_review(task)
     sources_count = task.get("sources_mcp_call_count")
@@ -1642,7 +1728,7 @@ def record(
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
-    comment = build_comment(
+    comment_fields = dict(
         sha=sha,
         task_id=task_id,
         started=started,
@@ -1654,7 +1740,19 @@ def record(
         review_profile="ukrainian" if ukrainian else "code",
         sources_mcp_call_count=sources_count,
         unknown_history=facts.unknown_history,
+        app_bot=bool(facts.app_bot_commits),
     )
+    comment = build_comment(**comment_fields)
+    destination = normalize_repository(repository)
+    try:
+        check_texts(destination, [comment], environment={})
+    except PublishBlocked as exc:
+        # Only a finding in this body permits a projection. Scanner availability
+        # and publication failures retain their existing refusal behavior.
+        if exc.indices != frozenset({0}):
+            raise
+        comment = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=finding_count)
+        check_texts(destination, [comment], environment={})
     posted = False
     with sha_lock(repository, sha, lock_root):
         # The PR may move while an earlier recorder owns the lock.
@@ -1691,6 +1789,7 @@ def record(
                         or marker["family"] != family
                         or marker.get("review_mode", "cross_family") != review_mode
                         or marker.get("unknown_history", []) != list(facts.unknown_history)
+                        or marker.get("authorship") != (VERIFIED_APP_BOT if facts.app_bot_commits else None)
                         or marker.get("review_profile", "code") != ("ukrainian" if ukrainian else "code")
                         or marker.get("sources_calls") != sources_count
                         or item.get("created_at") != item.get("updated_at")
@@ -1735,7 +1834,7 @@ def record(
             status = "posted"
         except Exception as exc:
             status = f"failed: {exc}"
-    return {
+    result = {
         "pr": number,
         "head": sha,
         "task": task_id,
@@ -1745,6 +1844,9 @@ def record(
         "comment": "posted" if posted else "existing",
         "status": status,
     }
+    if facts.app_bot_commits:
+        result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
+    return result
 
 
 @publication_cli(RecordError)

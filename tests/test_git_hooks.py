@@ -86,6 +86,12 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         repo / "scripts/pre_commit/project_python.sh",
         f'#!/usr/bin/env bash\nset -euo pipefail\nexec "{_project_python()}" "$@"\n',
     )
+    # The gate always runs this scanner from the repo being pushed. The fixture
+    # has no secrets; the real scanner is covered by the opsec and gate tests.
+    _write_executable(
+        repo / "scripts/audit/lint_opsec_leaks.py",
+        "import sys\nraise SystemExit(0)\n",
+    )
     _write_executable(
         repo / "scripts/guardrails/primary_post_checkout_heal.sh",
         '#!/usr/bin/env bash\nprintf "primary-heal\\n" >> "$HOOK_LOG"\n',
@@ -113,6 +119,12 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         "        language: system\n"
         "        pass_filenames: false\n"
         "        stages: [commit-msg]\n"
+        "      - id: check-no-internal-ids\n"
+        "        name: fixture internal ids\n"
+        "        entry: bash -c 'exit 0'\n"
+        "        language: system\n"
+        "        pass_filenames: false\n"
+        "        stages: [pre-commit]\n"
         "      - id: fixture-pre-push\n"
         "        name: fixture pre-push\n"
         '        entry: bash -c \'printf "pre-push:%s\\\\n" "$*" >> "$HOOK_LOG"\' --\n'

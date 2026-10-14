@@ -52,6 +52,7 @@ exceptions:
   - {module: scripts/agent_runtime/attempt_boundary.py, function: "verify_full_review_tree", program: "git", category: non-claude, reason: "runs git"}
   # scripts/agent_runtime/env_sanitize.py
   - {module: scripts/agent_runtime/env_sanitize.py, function: "_isolated_git_env", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/agent_runtime/env_sanitize.py, function: "<module>", program: "args.command[0]", category: generic-runner, reason: "final exec of the already-selected driver binary under child_credential_env; exec'd provider CLIs are model sessions; argv is launcher-built plus operator-forwarded arguments and no worker-controlled value reaches it; covered by tests/test_secret_redaction.py::test_interactive_launcher_child_uses_dispatcher_credential_policy and tests/test_secret_redaction.py::test_round3_real_launcher_dispatcher_child_parity"}
   # scripts/agent_runtime/grok_hook_bridge.py
   - {module: scripts/agent_runtime/grok_hook_bridge.py, function: "main", program: "argv", category: non-claude, reason: "runs a pinned guard hook (guard_argv) for Grok; never a Claude CLI"}
   # scripts/agent_runtime/kimi_admission.py
@@ -116,6 +117,7 @@ exceptions:
   # scripts/api/subscription_usage.py
   - {module: scripts/api/subscription_usage.py, function: "_load_claude_oauth_token", program: "str(security)", category: non-claude, reason: "reads a keychain item with the macOS security tool"}
   - {module: scripts/api/subscription_usage.py, function: "_probe_antigravity_native", program: "agy_bin", category: non-claude, reason: "AGY `/usage` probe"}
+  - {module: scripts/api/subscription_usage.py, function: "_probe_muse_native", program: "codexbar_bin", category: non-claude, reason: "CodexBar Muse usage probe; the Muse CLI has no quota command"}
   # scripts/audit/bakeoff_run.py
   - {module: scripts/audit/bakeoff_run.py, function: "run_command", program: "list(argv)", category: generic-runner, reason: "in-module callers run v7_build.py and audit scripts under the project interpreter"}
   # scripts/audit/code_review_benchmark.py

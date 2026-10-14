@@ -66,7 +66,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     (
         "scripts/agent_runtime/adapters/grok_build.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "b6a7c1fde00f37263daa88693e024719330654bdd4bce86d64f2b39cf7c51c1d:1 fdaa98fa634600e424c36c799d3ccf0160a78cf5674541f590662ce2c289489b:1",
+        "65ac4ffed6e73f13cf2e7b8f0720172cf8d1c26c59849d6fc3d0e56b1e54c165:1 7009f9f12d534bf2226eecf2d0245c59285f4016d25b49f60e30edc23d7b8791:1",
     ),
     (
         "scripts/agent_runtime/attempt_boundary.py",
@@ -502,6 +502,14 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/fleet/sibling_git.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "026eadbac42cb1f329a6c3801ab70634ae52edf4f5b1eb648fd000e5e47713de:1 aee6946c6a992d9451a6b5c5a42cd42c4c5a25a3f3b50ddfd147690b58b09e62:1",
+    ),
+    (
+        "scripts/fleet/terminal_abandon.py",
+        "Same-directory manifest (#10594) and detached-bundle (#10624) staging for batch_state validation "
+        "before atomic os.replace; managed scratch helpers allocate outside the preservation parent. "
+        "Exclusive tempfile creation and finally cleanup retain existing digest-copy ownership.",
+        "0ddad365c9229769042f13a23429552a3b8592420d75a5981d2b7aff6f52aedc:1 "
+        "f13f80d80757a114fe3aa614b3a23b5a2a00a66cca06151dffd8cef5be4100f9:1",
     ),
     (
         "scripts/fleet_comms/artifacts.py",
@@ -1754,7 +1762,7 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "15716cdf792289dfc44f56910d3fcb8d28b2c3e95b807c5106734a014511b500:1 19f3a543f4f0486d6ac3a31bec6a2a38b0f5e35baf12821a43b30bb8d854fb7e:1 34492587ed174aef0b19cb5e6922d2bd49289f9425e20eb0589035cc9e8ecd5c:1 4bb5ccd420379eaed73312bc81c4fd4606d036bd92029af3904a9bd7c88bc977:1 511acda571b82ad925b842d4c398de6c1bc4bbd73675beb6bf53a52771a65291:1 764cc45cd712603dcdf845c1d4b81372f1183e6b551dff1d4b077babed2403e9:2 86232b85e1881e7d84a60ab5166412ff79e2be82bb90161a32629f1edefcc733:1 8e7ac9f8aa37e299488d5ed0d5ba7dd882e1581e767bb7f27e86daaf6e07be41:2 c1b78efe7c80607993af2e5503c4ab2f4f428b8d84136954654b374c69d0cfdb:3 e2e6c1a4a55873b91ca0ff95b4dad4511982d562665c20cfe48d35eb7c3d632e:2 e6bd73273c1e7dba99c601d9844f9ad3f83a104a2d237353fcb7397bd14d2484:1 e706ff371a4aa11b55583bde6279b16d3931109fe6b117f5ff21e7d1181048ca:1 e8544ce2512fe5954d4e4a2fe74f5d02318743c6d451be2966fbd6ec4eda83c1:1",
     ),
     (
-        "tests/test_backup_data_script.py",
+        "tests/backup_data_script/test_full_restore.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "94b9e57a5011f479c24850ea0f748e0392ae7ee5194c79a163306ea3c994f419:1 fd63bacc44f78412e47dd0e3f7e21993bdb757e75cdc3e9276645351dfa20196:1",
     ),
@@ -2087,6 +2095,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/test_storage_resolver.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "e0e3e8c0d93b60603885ef0d35cc84f49eb744bbd706988abc36a5b6db065ce6:1",
+    ),
+    (
+        "tests/test_tmp_sweep.py",
+        "Fixture root for the sweep real system-temp check. The gate basetemp is outside that area.",
+        "5150e8a0d2f65deedffe982faa95b6606b9dbf89065d58cac9c08135a74390c8:1 640017e1d15c10f0783936ffd50a2818e0226ee00623f5888d954184a13f6007:1",
     ),
     (
         "tests/test_v4_sources_transport_credential_namespace.py",

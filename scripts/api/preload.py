@@ -73,7 +73,9 @@ PRELOAD_MODULES = [
 # Heavy or optional dependencies (try/except ImportError, record skipped)
 OPTIONAL_MODULES = [
     "pymupdf",
-    "fitz",
+    # Not the deprecated `fitz` alias: its import calls pymupdf.message_warning,
+    # which writes to the stream captured when pymupdf was imported. A closed
+    # pytest capture stream then raises ValueError and aborts API startup.
     "rag.poc_pair_page",
     "rag.query",
     # Bridge modules use the canonical `scripts.` identity only (#6812):

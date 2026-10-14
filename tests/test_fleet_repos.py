@@ -44,6 +44,34 @@ def test_resolve_hramatka_sibling(tmp_path: Path):
     assert checkout == sibling.resolve()
 
 
+def test_padded_and_uppercase_keys_resolve_to_the_catalog_key(tmp_path: Path):
+    primary = tmp_path / "learn-ukrainian"
+    sibling = tmp_path / "hramatka"
+    primary.mkdir()
+    sibling.mkdir()
+    (primary / ".git").mkdir()
+    (sibling / ".git").mkdir()
+    for spelling in ("  hramatka  ", "HRAMATKA", "Hramatka"):
+        repo, checkout = resolve_fleet_repo(spelling, primary_root=primary)
+        assert repo.key == "hramatka"
+        assert checkout == sibling.resolve()
+        assert str(tmp_path) not in repo.key
+
+
+def test_empty_repo_key_is_not_the_default(tmp_path: Path):
+    primary = tmp_path / "learn-ukrainian"
+    primary.mkdir()
+    (primary / ".git").mkdir()
+    messages = []
+    for spelling in ("", "   "):
+        with pytest.raises(FleetRepoError) as caught:
+            resolve_fleet_repo(spelling, primary_root=primary)
+        messages.append(str(caught.value))
+        assert str(primary) not in messages[-1]
+    assert messages[0] == messages[1]
+    assert "unknown --repo" in messages[0]
+
+
 def test_resolve_unknown_key_fails(tmp_path: Path):
     primary = tmp_path / "learn-ukrainian"
     primary.mkdir()

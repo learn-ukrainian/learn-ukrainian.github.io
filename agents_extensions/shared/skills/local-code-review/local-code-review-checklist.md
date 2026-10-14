@@ -46,6 +46,14 @@ or PR, because there is no SHA to point at. If the user asked you to review
 a commit or a PR, resolve that mode explicitly — do not read "nothing
 uncommitted right now" as "already reviewed."
 
+`--repo <fleet-key>` selects a catalog repository. When `--repo-root` is a
+checkout whose `origin` matches that repository (owner/name,
+case-insensitive), that checkout is kept, including a linked worktree, so
+`HEAD` is the worktree's `HEAD`. A missing, unparsable, or different origin
+is not kept: `HEAD`, branch-relative `~`/`^` forms, and `--mode local` are
+refused. A full SHA, a branch name, or a PR number still resolves in the
+catalog checkout. `gh pr view` is pinned to that checkout's `owner/name`.
+
 This step never pushes. `pr` mode may `git fetch` the two SHAs it needs
 (read-only) if they aren't already reachable locally — fetching to obtain a
 target is fine; pushing a branch just so a diff exists is not, and this CLI
@@ -254,7 +262,10 @@ For `mode=commit`/`branch`/`pr`, fixes land as **commits**, not working-tree
 changes — a clean tree after committing a fix proves nothing. Pass the
 reviewed head explicitly (typically `HEAD` right after committing the fix)
 so the breaker re-diffs the frozen `base_sha` against the real post-fix
-state instead of silently seeing "nothing changed":
+state instead of silently seeing "nothing changed". The diff runs in the
+repository stored by `target`; `--repo-root` is only the fallback when that
+stored root is absent. After `target --repo public --repo-root .` from a
+linked worktree, this command measures that worktree's `HEAD`:
 
 ```bash
 .venv/bin/python -m scripts.review.closeout_cli --state-file "$STATE_FILE" \

@@ -126,6 +126,8 @@ _ORDER_PROBE = textwrap.dedent(
             handle.write(phase + "=" + flag + "\\n")
 
     _note("import")
+    with Path(os.environ["ZZ_STRIP_ORDER_LOG"]).open("a", encoding="utf-8") as handle:
+        handle.write("password_at_import=" + ("yes" if "ZZ_STRIP_PROBE_PASSWORD" in os.environ else "no") + "\\n")
     os.environ["ZZ_IMPORT_PUBLISHED_API_KEY"] = "published-at-import"
 
     import pytest
@@ -524,12 +526,13 @@ def test_module_fixture_published_credential_remains_visible() -> None:
 
 
 def test_names_outside_the_suffix_contract_stay_visible() -> None:
-    """``_PASSWORD``, a bare ``_KEY``, and ``AWS_SECRET_ACCESS_KEY`` are not stripped."""
+    """Keep unrelated names while passwords are absent before collection."""
     child = _early_probe()
     _require_child_ok(child)
     assert child.notes["plain"] == "yes"
     assert child.notes["plural"] == "yes"
-    assert child.notes["password"] == "yes"
+    assert child.notes["password_at_import"] == "no"
+    assert child.notes["password"] == "no"
     assert child.notes["bare_key"] == "yes"
     assert child.notes["aws_secret_access_key"] == "yes"
 

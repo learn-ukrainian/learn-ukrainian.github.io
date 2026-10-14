@@ -21,10 +21,38 @@ from contextlib import contextmanager, suppress
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode, urlparse
+from urllib.parse import quote, urlencode, urlsplit
 
 RESERVE = 10
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
+
+
+class GitHubInvalidHost(ValueError):
+    """A host cannot safely identify a GitHub credential or budget scope."""
+
+
+def canonical_host(value: str) -> str:
+    """Canonical ASCII authority from a host or URL, without userinfo/default port.
+
+    Reject parser/browser ambiguities before parsing can discard characters.
+    Non-default ports remain part of the authority, including for GHES.
+    """
+    if not isinstance(value, str) or not value or "\\" in value or any(ord(c) <= 32 or ord(c) == 127 for c in value):
+        raise GitHubInvalidHost("invalid GitHub host")
+    try:
+        parsed = urlsplit(value if "://" in value or value.startswith("//") else "//" + value)
+        if not parsed.netloc.isascii():
+            raise ValueError
+        host = (parsed.hostname or "").lower().removesuffix(".")
+        if not host or host.endswith(".") or "%" in host or any(label.startswith("xn--") for label in host.split(".")):
+            raise ValueError
+        port = parsed.port
+    except ValueError:
+        raise GitHubInvalidHost("invalid GitHub host") from None
+    if ":" in host:
+        host = "[" + host + "]"
+    default_port = 80 if parsed.scheme == "http" else 443
+    return host if port is None or port == default_port else f"{host}:{port}"
 
 
 def colour_safe_environment(env=None):
@@ -231,7 +259,14 @@ class GitHubClient:
         if max_response_bytes is not None and (type(max_response_bytes) is not int or max_response_bytes < 0):
             raise ValueError("invalid GitHub response byte limit")
         self.max_response_bytes = max_response_bytes
-        self.host = self.env.get("GH_HOST", "github.com")
+        self._configure_host(canonical_host(self.env.get("GH_HOST", "github.com")))
+        self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
+        self._memory_db = None
+
+    def _configure_host(self, host):
+        """Select credentials and scope from an authority already canonicalised at entry."""
+        self.host = host
+        self.env = {**self.env, "GH_HOST": host}
         # A digest isolates credentials without storing credentials or account IDs.
         credential = (
             self.env.get("GH_TOKEN") or self.env.get("GITHUB_TOKEN")
@@ -250,8 +285,6 @@ class GitHubClient:
             except OSError:
                 credential = "unconfigured-cli"
         self.scope = hashlib.sha256((self.host + "\0" + credential).encode()).hexdigest()
-        self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
-        self._memory_db = None
 
     @contextmanager
     def _db(self):
@@ -363,13 +396,9 @@ class GitHubClient:
     ):
         method = method.upper()
         allow_stale = self.allow_stale if allow_stale is None else allow_stale
-        if endpoint.startswith("https://"):
-            parsed = urlparse(endpoint)
-            allowed = (
-                {"api.github.com", "uploads.github.com", "github.com"} if self.host == "github.com" else {self.host}
-            )
-            if parsed.hostname not in allowed:
-                raise ValueError("GitHub endpoint host mismatch")
+        host_class, resource_path = _canonical_endpoint(endpoint, self.host)
+        if host_class == "rejected":
+            raise ValueError("GitHub endpoint host mismatch")
         raw = (
             payload
             if isinstance(payload, bytes)
@@ -377,15 +406,10 @@ class GitHubClient:
             if payload is not None
             else None
         )
-        resource_path = (
-            urlparse(endpoint).path.lstrip("/")
-            if endpoint.startswith("https://")
-            else endpoint.lstrip("/").split("?", 1)[0]
-        )
         graphql = resource_path == "graphql"
         document = json.loads(raw) if graphql and isinstance(payload, bytes) else payload
         read = method == "GET" or (graphql and document and not re.search(r"\bmutation\b", document.get("query", "")))
-        resource = "graphql" if graphql else "search" if resource_path.startswith("search/") else "core"
+        resource = _endpoint_bucket(resource_path)
         key = hashlib.sha256(
             (
                 method
@@ -481,7 +505,9 @@ class GitHubClient:
                             (now, json.dumps(h), self.scope, key, now),
                         )
                         return Result(_cached_value(cached), status=304, headers=h)
-                    if 200 <= response.status < 300 and (raw_response or headers.get("Accept") == "application/octet-stream"):
+                    if 200 <= response.status < 300 and (
+                        raw_response or headers.get("Accept") == "application/octet-stream"
+                    ):
                         return Result(response.body, status=response.status, headers=h)
                     try:
                         value = json.loads(response.body) if response.body else None
@@ -507,10 +533,16 @@ class GitHubClient:
                     if graphql and isinstance(value, dict) and value.get("errors"):
                         return Result(value, status=response.status, error="github_graphql_error", headers=h)
                     if not 200 <= response.status < 300:
-                        return Result(value, status=response.status, error="github_http_error", reset_at=reset, headers=h)
+                        return Result(
+                            value, status=response.status, error="github_http_error", reset_at=reset, headers=h
+                        )
                     if resource_path == "rate_limit" and isinstance(value, dict):
                         for name, rate in value.get("resources", {}).items():
-                            if isinstance(rate, dict) and type(rate.get("remaining")) is int and type(rate.get("reset")) is int:
+                            if (
+                                isinstance(rate, dict)
+                                and type(rate.get("remaining")) is int
+                                and type(rate.get("reset")) is int
+                            ):
                                 _store_budget(db, self.scope, name, rate["remaining"], rate["reset"])
                     if cacheable:
                         _store_cache(db, self.scope, key, response.body, h, now)
@@ -538,7 +570,63 @@ class GitHubClient:
         return Result(value, status=response.status, headers=h)
 
 
-def _options(args):
+def _api_hosts(host):
+    """Hosts whose absolute URLs are this client's own API endpoints."""
+    host = canonical_host(host)
+    return {"api.github.com", "uploads.github.com", "github.com"} if host == "github.com" else {host}
+
+
+def _canonical_endpoint(endpoint, host="github.com"):
+    """Return host admission class and normalised path; only ``None`` is unknown.
+
+    Both transports refuse foreign or ambiguous absolute URLs. API host
+    identity uses the same boundary as credentials and budget scopes.
+    """
+    if endpoint is None:
+        return "unknown", None
+    # Reject controls before splitting queries/fragments or URL parsing can discard them.
+    # Keep the existing leading-space refusal; query-value spaces remain valid.
+    if any(ord(char) < 32 or ord(char) == 127 for char in endpoint) or endpoint.startswith(" "):
+        return "rejected", endpoint
+    # gh accepts leading slashes and bare x:y as relative endpoint paths.
+    # Only an initial scheme selects a host; query and fragment text never do.
+    absolute = re.match(r"[A-Za-z][A-Za-z0-9+.-]*://", endpoint) is not None
+    endpoint_path = re.split(r"[?#]", endpoint, maxsplit=1)[0]
+    if not absolute:
+        return "relative", endpoint_path.lstrip("/")
+    try:
+        parsed = urlsplit(endpoint_path)
+        hostname = canonical_host(endpoint_path)
+        if parsed.scheme not in {"http", "https"} or hostname not in _api_hosts(host):
+            return "rejected", endpoint
+    except ValueError:
+        return "rejected", endpoint
+    path = parsed.path.lstrip("/")
+    # gh sends absolute URLs unchanged; GHES uses /api/v3/ for REST
+    # and /api/graphql for GraphQL. Never strip these on public hosts.
+    if hostname not in _api_hosts("github.com"):
+        if path.startswith("api/v3/"):
+            path = path.removeprefix("api/v3/")
+        elif path == "api/graphql":
+            path = "graphql"
+    return "api", path
+
+
+def _resource_path(endpoint, host="github.com"):
+    """Compatibility view of the shared endpoint canonicalizer's resource path."""
+    return _canonical_endpoint(endpoint, host)[1]
+
+
+def _endpoint_bucket(resource_path):
+    """Rate-limit bucket of a normalised path; interior and trailing segments never select one."""
+    if resource_path == "graphql":
+        return "graphql"
+    if resource_path == "search/code":
+        return "code_search"
+    return "search" if resource_path.startswith("search/") else "core"
+
+
+def _options(args, *, valued_flags=None, canonicalize_hosts=False):
     options, positional = {}, []
     valued = {
         "--repo",
@@ -579,6 +667,9 @@ def _options(args):
         "--raw-field",
         "-f",
         "--hostname",
+        "-t",
+        "--cache",
+        "--preview",
         "--title",
         "--body",
         "--body-file",
@@ -606,14 +697,27 @@ def _options(args):
         "-e",
         "-c",
     }
-    iterator = iter(args)
-    for arg in iterator:
+    if valued_flags is not None:
+        valued = valued_flags
+    iterator = iter(enumerate(args))
+    for index, arg in iterator:
         if arg == "--":
-            positional.extend(iterator)
+            positional.extend(value for _, value in iterator)
             break
         if arg.startswith("-"):
             flag, eq, value = arg.partition("=")
-            value = value if eq else next(iterator) if flag in valued else True
+            if not eq and len(flag) > 2 and flag[:2] in valued:
+                flag, value = flag[:2], flag[2:]
+            elif not eq and flag in valued:
+                value_index, value = next(iterator, (None, True))
+            elif not eq:
+                value = True
+            if canonicalize_hosts and flag == "--hostname":
+                value = canonical_host(value)
+                if eq:
+                    args[index] = flag + "=" + value
+                else:
+                    args[value_index] = value
             options.setdefault(flag, []).append(value)
         else:
             positional.append(arg)
@@ -1583,10 +1687,115 @@ def _translation_options(args):
     return options, positional
 
 
+def _native_buckets(args, host="github.com"):
+    """Rate-limit buckets a native ``gh`` argv can spend, ``secondary`` always included.
+
+    ``gh api`` is classified from its one positional endpoint, normalised as
+    ``GitHubClient.request`` does; ``gh search`` from its subcommand. Every
+    other command, and a ``gh api`` whose endpoint cannot be determined, may
+    spend ``core`` or ``graphql``. An unrelated exhausted bucket must not block
+    the command.
+    """
+    buckets = {"secondary"}
+    command = args[1] if len(args) > 1 else ""
+    if command == "search":
+        # Search's valued flags include child-specific filters accepted before
+        # the subcommand. Its -w is boolean, unlike workflow commands' -w.
+        _, positional = _options(
+            args[2:],
+            valued_flags={
+                "--app",
+                "--assignee",
+                "--author",
+                "--author-date",
+                "--author-email",
+                "--author-name",
+                "--base",
+                "--checks",
+                "--closed",
+                "--commenter",
+                "--comments",
+                "--committer",
+                "--committer-date",
+                "--committer-email",
+                "--committer-name",
+                "--created",
+                "--extension",
+                "--filename",
+                "--followers",
+                "--forks",
+                "--good-first-issues",
+                "--hash",
+                "--head",
+                "--help-wanted-issues",
+                "--include-forks",
+                "--interactions",
+                "--involves",
+                "--jq",
+                "--json",
+                "--label",
+                "--language",
+                "--license",
+                "--limit",
+                "--match",
+                "--mentions",
+                "--merged-at",
+                "--milestone",
+                "--number-topics",
+                "--order",
+                "--owner",
+                "--parent",
+                "--project",
+                "--reactions",
+                "--repo",
+                "--review",
+                "--review-requested",
+                "--reviewed-by",
+                "--search-type",
+                "--size",
+                "--sort",
+                "--stars",
+                "--state",
+                "--team-mentions",
+                "--template",
+                "--topic",
+                "--tree",
+                "--updated",
+                "--visibility",
+                "-L",
+                "-R",
+                "-q",
+                "-t",
+            },
+        )
+        buckets.update(
+            {"code_search" if positional[0] == "code" else "search"} if positional else {"search", "code_search"}
+        )
+    elif command == "api":
+        options, positional = _options(args[2:])
+        # Exactly one positional is the endpoint. Zero, or a second one (a
+        # flag this parser does not model took a value), is undeterminable.
+        hostname = _opt(options, "--hostname")
+        host_class, path = _canonical_endpoint(
+            positional[0] if len(positional) == 1 else None,
+            hostname if isinstance(hostname, str) else host,
+        )
+        if host_class == "rejected":
+            raise ValueError("GitHub endpoint host mismatch")
+        buckets.update({_endpoint_bucket(path)} if path is not None else {"core", "graphql"})
+    else:
+        buckets.update({"core", "graphql"})
+    return frozenset(buckets)
+
+
 def _native_command(args, client, runner, kwargs):
     """Fall through once using the bounded, colour-safe native transport."""
+    buckets = sorted(_native_buckets(args, client.host))
     with client._db() as db:
-        budgets = db.execute("SELECT remaining,reset FROM budget WHERE scope=?", (client.scope,)).fetchall()
+        budgets = db.execute(
+            "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (" + ",".join("?" * len(buckets)) + ")",
+            (client.scope, *buckets),
+        ).fetchall()
     reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
     if reset is not None:
         return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
@@ -1673,20 +1882,21 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     limit = kwargs.pop("max_response_bytes", None)
     if limit is not None and (type(limit) is not int or limit < 0):
         raise ValueError("invalid GitHub response byte limit")
-    if client is not None and limit is not None:
+    host_args = list(args[2:])
+    host_options, _ = _options(host_args, canonicalize_hosts=True)
+    if client is not None and (limit is not None or allow_stale or "--hostname" in host_options):
         from copy import copy
 
+        # Per-call host and read options must never retarget the caller's client.
         client = copy(client)
-        client.max_response_bytes = (
-            min(client.max_response_bytes, limit) if client.max_response_bytes is not None else limit
-        )
-    client = client or GitHubClient(
-        env=kwargs.get("env"), cwd=kwargs.get("cwd"), runner=runner, max_response_bytes=limit
-    )
+        client.env = dict(client.env)
+        if limit is not None:
+            client.max_response_bytes = (
+                min(client.max_response_bytes, limit) if client.max_response_bytes is not None else limit
+            )
+    if client is None:
+        client = GitHubClient(env=kwargs.get("env"), cwd=kwargs.get("cwd"), runner=runner, max_response_bytes=limit)
     if allow_stale:
-        from copy import copy
-
-        client = copy(client)
         client.allow_stale = True
     timeout = kwargs.get("timeout") or 30
     if (
@@ -1695,6 +1905,9 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
         and (args[2] == "merge" or any(a.split("=", 1)[0] in {"--approve", "-a"} for a in args[3:]))
     ):
         return _result_process(args, Result(error="github_worker_write_forbidden"), {}, kwargs)
+    if "--hostname" in host_options:
+        client._configure_host(_opt(host_options, "--hostname"))
+        args = [*args[:2], *host_args]
     translation = _translation_options(args)
     if translation is None:
         return _native_command(args, client, runner, kwargs)
@@ -1712,9 +1925,6 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     for short, long in aliases.items():
         if short in options and long not in options:
             options[long] = options[short]
-    if "--hostname" in options:
-        client.host = _opt(options, "--hostname")
-        client.scope = hashlib.sha256((client.scope + "\0" + client.host).encode()).hexdigest()
     if args[1] == "api":
         request_headers = {}
         for raw_header in options.get("-H", []) + options.get("--header", []):
@@ -1816,14 +2026,15 @@ def http_open(request, *, timeout=30, opener=None, **kwargs):
     import urllib.error
     import urllib.request
 
-    host = urlparse(request.full_url).hostname
     client = GitHubClient(
         env={
-            "GH_HOST": "github.com" if host in {"api.github.com", "uploads.github.com"} else host or "github.com",
+            "GH_HOST": request.full_url,
             "GH_TOKEN": request.get_header("Authorization") or "http-unauthenticated",
             "GH_ENTERPRISE_TOKEN": request.get_header("Authorization") or "http-unauthenticated",
         }
     )
+    if client.host in _api_hosts("github.com"):
+        client._configure_host("github.com")
     method = request.get_method()
 
     def transport(_method, endpoint, headers, body, request_timeout):

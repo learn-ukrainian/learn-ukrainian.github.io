@@ -38,6 +38,14 @@ class FleetRepoError(ValueError):
     """Unknown key, bad or unreadable catalog, or missing sibling checkout."""
 
 
+class MissingFleetCheckout(FleetRepoError):
+    """The catalog checkout is not present.
+
+    Review resolution turns this into the neutral private refusal. Other
+    catalog errors stay ``FleetRepoError`` so their text is preserved.
+    """
+
+
 def load_fleet_repos(path: Path | None = None) -> dict[str, FleetRepo]:
     cfg_path = path or _CONFIG_PATH
     try:
@@ -86,6 +94,41 @@ def default_repo_key(repos: Mapping[str, FleetRepo] | None = None) -> str:
     raise FleetRepoError("no default fleet repo")
 
 
+def canonical_repo_key(key: str, repos: Mapping[str, FleetRepo] | None = None) -> str:
+    """Return the one catalog key *key* spells.
+
+    Surrounding whitespace and case are not distinct keys. An empty spelling
+    is not the default. The error is raised before any checkout path exists.
+    """
+    catalog = repos if repos is not None else load_fleet_repos()
+    known = ", ".join(sorted(catalog))
+    if not isinstance(key, str) or not key.strip():
+        raise FleetRepoError(f"unknown --repo ''; allowlisted: {known}")
+    if key in catalog:
+        return key
+    stripped = key.strip()
+    if stripped in catalog:
+        return stripped
+    matches = [candidate for candidate in catalog if candidate.casefold() == stripped.casefold()]
+    if len(matches) == 1:
+        return matches[0]
+    raise FleetRepoError(f"unknown --repo {stripped!r}; allowlisted: {known}")
+
+
+def _missing_checkout_error(repo: FleetRepo, supplied_key: str | None, detail: str) -> MissingFleetCheckout:
+    """Missing-checkout error for *supplied_key*.
+
+    A non-canonical spelling of the private key is still that key. Callers
+    that rewrite only the exact spelling would otherwise print *detail*,
+    which names the checkout path.
+    """
+    if repo.key == "infra-private" and supplied_key != repo.key:
+        from scripts.review.target_resolution import PRIVATE_REVIEW_TARGET_UNRESOLVED
+
+        return MissingFleetCheckout(PRIVATE_REVIEW_TARGET_UNRESOLVED)
+    return MissingFleetCheckout(detail)
+
+
 def resolve_fleet_repo(
     key: str | None,
     *,
@@ -101,24 +144,25 @@ def resolve_fleet_repo(
     from the directory basename (worktree / rename safety).
     """
     catalog = repos or load_fleet_repos()
-    resolved_key = (key or default_repo_key(catalog)).strip()
-    if resolved_key not in catalog:
-        known = ", ".join(sorted(catalog))
-        raise FleetRepoError(f"unknown --repo {resolved_key!r}; allowlisted: {known}")
+    resolved_key = default_repo_key(catalog) if key is None else canonical_repo_key(key, catalog)
     repo = catalog[resolved_key]
     primary = primary_root.resolve()
     checkout = primary if repo.default else (primary.parent / repo.local_name).resolve()
     if require_checkout and not (checkout / ".git").exists() and not checkout.is_dir():
-        raise FleetRepoError(
+        raise _missing_checkout_error(
+            repo,
+            key,
             f"--repo {repo.key} expects sibling checkout at {checkout}; "
-            f"clone {repo.github} next to {primary.name} first"
+            f"clone {repo.github} next to {primary.name} first",
         )
     if require_checkout:
         git_dir = checkout / ".git"
         if not git_dir.exists():
-            raise FleetRepoError(
+            raise _missing_checkout_error(
+                repo,
+                key,
                 f"--repo {repo.key} path {checkout} is not a git checkout "
-                f"(clone {repo.github} as ../{repo.local_name} beside the public primary)"
+                f"(clone {repo.github} as ../{repo.local_name} beside the public primary)",
             )
     return repo, checkout
 

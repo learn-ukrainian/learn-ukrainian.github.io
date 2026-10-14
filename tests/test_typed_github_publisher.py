@@ -367,6 +367,7 @@ def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
         ("issue", {"number": 1}),
         ("comments", {"number": 1}),
         ("checks", {"sha": "a" * 40}),
+        ("commit", {"sha": "a" * 40}),
         ("runs", {"start": "2026-01-01", "end": "2026-01-02"}),
     ],
 )
@@ -377,11 +378,19 @@ def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, mo
     assert calls[0]["argv"][2:4] == ["--method", "GET"]
 
 
+def test_single_commit_read_is_bound_to_the_exact_sha():
+    """#10531: app-bot authorship proof is read live from GitHub for one exact commit."""
+    calls = []
+    pub.read("commit", repo="unit/public", runner=spy(calls), sha="a" * 40)
+    assert calls[0]["argv"][2:5] == ["--method", "GET", f"repos/unit/public/commits/{'a' * 40}?per_page=100"]
+
+
 @pytest.mark.parametrize(
     "operation,fields",
     [
         ("comments", {"number": "1/comments?x=unit"}),
         ("checks", {"sha": "unit?x=y"}),
+        ("commit", {"sha": "unit/check-runs"}),
         ("graphql", {"query": "mutation{x}"}),
         ("subissue-batch", {"cursors": {"unit": None}, "body_roots": set()}),
         ("membership", {"number": 1, "query": "mutation{x}"}),
@@ -742,7 +751,7 @@ def test_verified_host_is_pinned_in_transport(synthetic_opsec):
 def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
     synthetic_opsec, publisher_transport, tmp_path, monkeypatch, consumer
 ):
-    """Invoke each caller with a transport spy; gate failures cannot become sends."""
+    """Blocked text never reaches transport; the recorder can publish a scanned skeleton."""
     import importlib
 
     from scripts.publish.github import Request
@@ -750,6 +759,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
     monkeypatch.setenv("GH_REPO", "unit/public")
     calls = []
     payloads = []
+    comments = []
 
     def transport(args, **kwargs):
         if args[:3] == ["gh", "release", "view"]:
@@ -760,7 +770,23 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             return subprocess.CompletedProcess(args, 0, "https://github.com/unit/public.git", "")
         calls.append(args)
         if "--input" in args:
-            payloads.append(json.loads(Path(args[args.index("--input") + 1]).read_bytes()))
+            payload = json.loads(Path(args[args.index("--input") + 1]).read_bytes())
+            payloads.append(payload)
+            assert TOKEN not in json.dumps(payload)
+            if consumer == "verdict" and "repos/unit/public/issues/1/comments" in args:
+                comment = {
+                    "id": 101,
+                    "body": payload["body"],
+                    "user": {"login": "unit"},
+                    "author_association": "MEMBER",
+                    "created_at": "2026-01-01T00:00:01Z",
+                    "updated_at": "2026-01-01T00:00:01Z",
+                }
+                comments.append(comment)
+                return subprocess.CompletedProcess(args, 0, json.dumps(comment), "")
+        if consumer == "verdict" and "repos/unit/public/issues/comments/101?per_page=100" in args:
+            assert len(comments) == 1
+            return subprocess.CompletedProcess(args, 0, json.dumps(comments[0]), "")
         return subprocess.CompletedProcess(args, 0, "{}", "")
 
     monkeypatch.setattr(subprocess, "run", transport)
@@ -794,7 +820,9 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
                 "model": "gpt-6.1-sol",
                 "started_at": "2026-01-01T00:00:00+00:00",
             }
-            monkeypatch.setattr(module, "_task", lambda *a: (task, "VERDICT: APPROVE\n" + TOKEN))
+            monkeypatch.setattr(
+                module, "_task", lambda *a: (task, "VERDICT: APPROVE\n" + TOKEN + "\nHarmless reviewer prose.")
+            )
             monkeypatch.setattr(module, "_pr", lambda *a: {"number": 1, "headRefName": "unit", "headRefOid": "a" * 40})
             # The recorder's complete-authorship entry point (#9739): an Anthropic-authored PR.
             facts = module.BranchReviewFacts(
@@ -815,7 +843,10 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             monkeypatch.setattr(module, "pr_review_facts", lambda *a, **k: facts)
             monkeypatch.setattr(module.GitHubAdapter, "identity", lambda *a: "unit")
             monkeypatch.setattr(module.GitHubAdapter, "comments", lambda *a: [])
-            module.record("unit-review", pr_number=1, task_root=tmp_path, lock_root=tmp_path / "locks")
+            receipt = module.record("unit-review", pr_number=1, task_root=tmp_path, lock_root=tmp_path / "locks")
+            assert receipt["head"] == "a" * 40
+            assert receipt["verdict"] == "APPROVED"
+            assert receipt["comment"] == receipt["status"] == "posted"
         elif consumer == "review-publisher":
             importlib.import_module("scripts.fleet_comms.review_publisher").post_pr_comment(
                 repository="unit/public", pr_number=1, body=TOKEN, runner=transport
@@ -858,13 +889,36 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
                 tmp_path, branch="unit", base_branch="main", title=TOKEN, body="clean"
             )
 
-    if consumer in {"bridge", "decision", "stream"}:
+    if consumer in {"bridge", "decision", "stream", "verdict"}:
         invoke()
     else:
         with pytest.raises((RuntimeError, ValueError)) as error:
             invoke()
         assert "blocked" in str(error.value)
-    if consumer == "stream":
+    if consumer == "verdict":
+        expected = (
+            f"### Cross-family review\nhead: {'a' * 40}\nReviewer family: openai\nVERDICT: APPROVED\n"
+            "Reviewer model: gpt-6.1-sol\nTask id: unit-review\n\nWithheld findings: unknown\n"
+            "Findings are held privately.\n\n"
+            f"<!-- cf-verdict v1 sha={'a' * 40} task=unit-review started=2026-01-01T00:00:00.000000+00:00 "
+            "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
+        )
+        assert len(calls) == 3
+        assert all(args[:2] == ["gh", "api"] for args in calls)
+        assert "repos/unit/public/issues/1/comments" in calls[0]
+        assert "repos/unit/public/issues/comments/101?per_page=100" in calls[1]
+        assert f"repos/unit/public/statuses/{'a' * 40}" in calls[2]
+        assert comments[0]["body"] == expected
+        assert payloads == [
+            {"body": expected},
+            {
+                "state": "success", "context": "fleet/cross-family-review",
+                "description": "VERDICT: APPROVED openai unit-review",
+            },
+        ]
+        gate.check_texts("github.com/unit/public", [expected], environment={})
+        assert TOKEN not in expected and "Harmless reviewer prose." not in expected
+    elif consumer == "stream":
         assert len(calls) == 1
         assert calls[0][:2] == ["gh", "api"]
         assert payloads[0]["query"].startswith("mutation($p:ID!,$c:ID!){addSubIssue")

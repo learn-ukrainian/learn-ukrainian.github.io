@@ -12,6 +12,10 @@ import pytest
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import regenerable_output as patterns
 from tests.orchestration import test_worktree_artifacts as fixtures
+from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
+from tests.test_continuation_worktree_reap import abandon_cohort as abandon_cohort
+from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
+from tests.test_reused_worktree_retention import cohort as cohort
 
 checkout = fixtures.checkout
 artifact = fixtures.artifact
@@ -1212,3 +1216,209 @@ def test_preserved_overlong_symlink_target_is_refused(checkout, monkeypatch):
     assert "target-too-long" in published
     assert target not in published
     assert link.is_symlink() and os.readlink(link) == target
+
+
+@pytest.mark.parametrize("failure", [None, "missing", "head", "member", "pid", "keep"])
+def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pending_cohort, failure):
+    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration import worktree_claims as claims
+    from tests.orchestration.test_worktree_claims_cli import _git
+    from tests.test_reused_worktree_retention import save
+
+    repo, tree, tasks, _, successor, source = same_branch_pending_cohort
+    head = _git(tree, "rev-parse", "HEAD")
+    with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
+        rw._record_merged_reuse_proof(
+            repo,
+            rw.WorktreeInfo(tree, "codex/boundary", head),
+            rw.PullRequestState(9645, "MERGED", head),
+            tasks_dir=tasks,
+        )
+        path = tasks / "boundary.json"
+        creator = json.loads(path.read_text())
+        if failure == "missing":
+            creator.pop("worktree_reap_proof")
+        elif failure == "head":
+            creator["worktree_reap_proof"]["head_sha"] = "0" * 40
+        elif failure == "member":
+            successor["run_nonce"] = "changed"
+        elif failure == "pid":
+            successor["pid"] = os.getpid()
+        elif failure == "keep":
+            successor["keep_worktree"] = True
+        save(tasks, creator)
+        save(tasks, successor)
+        ok, reason, receipt = output.preserve_worktree_artifacts(
+            tree,
+            primary=repo,
+            tasks_dir=tasks,
+            task_id="boundary",
+            repo_root=repo,
+        )
+    assert ok is (failure is None), reason
+    assert tree.exists() and source.read_bytes() == b"current output"
+    if failure is None:
+        assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+        assert (repo / receipt["location"] / "ignored/output.txt").read_bytes() == b"current output"
+
+
+@pytest.mark.parametrize("mutation", ["pid", "keep", "head", "patch", "new_claim", "dirty"])
+def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation):
+    from scripts.orchestration import worktree_claims as claims
+    from tests.orchestration.test_worktree_claims_cli import _git
+    from tests.test_reused_worktree_retention import save
+
+    repo, tree, tasks, creator, successor, source = abandon_cohort
+    copy = output.artifacts._copy_verified
+    changed = []
+
+    def change_after_copy(*args, **kwargs):
+        result = copy(*args, **kwargs)
+        if not changed:
+            changed.append(True)
+            if mutation == "pid":
+                successor["pid"] = os.getpid()
+                save(tasks, successor)
+            elif mutation == "keep":
+                successor["keep_worktree"] = True
+                save(tasks, successor)
+            elif mutation == "head":
+                _git(tree, "commit", "--allow-empty", "-m", "changed")
+            elif mutation == "patch":
+                manifest = json.loads((repo / creator["worktree_abandon"]["preservation"]["path"]).read_bytes())
+                (repo / manifest["head_patch"]["path"]).write_bytes(b"changed patch")
+            elif mutation == "new_claim":
+                save(tasks, dict(successor, task_id="new-claim", status="running"))
+            else:
+                (tree / "README.md").write_bytes(b"new dirty bytes")
+        return result
+
+    monkeypatch.setattr(output.artifacts, "_copy_verified", change_after_copy)
+    with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
+        ok, reason, _ = output.preserve_worktree_artifacts(
+            tree,
+            primary=repo,
+            tasks_dir=tasks,
+            task_id="boundary",
+            repo_root=repo,
+        )
+    assert not ok and "artifact preservation failed" in reason
+    assert tree.exists() and source.read_bytes() == b"current output"
+
+
+def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_cohort, monkeypatch):
+    from tests.orchestration.test_worktree_claims_cli import _git
+    from tests.test_continuation_worktree_reap import _write_abandon_receipt
+    from tests.test_reused_worktree_retention import save
+
+    repo, tree, tasks, creator, successor, source = abandon_cohort
+    (tree / "large-tracked.bin").write_bytes(b"x" * 4096)
+    _git(tree, "add", "large-tracked.bin")
+    _git(tree, "commit", "-m", "large tracked fixture")
+    for member in (creator, successor):
+        member["final_branch_head_commit"] = _git(tree, "rev-parse", "HEAD")
+        save(tasks, member)
+    _write_abandon_receipt(repo, tree, tasks, creator)
+    (tree / "untracked.txt").write_bytes(b"unique")
+    expected = len(source.read_bytes()) + len(b"unique")
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", expected)
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        tree, primary=repo, tasks_dir=tasks, task_id="boundary", repo_root=repo
+    )
+    assert ok and not reason, (reason, receipt)
+    assert receipt["bytes"] == expected
+    assert [entry["path"] for entry in receipt["paths"]] == ["ignored/output.txt", "untracked.txt"]
+    copy = repo / receipt["location"]
+    assert (copy / "untracked.txt").read_bytes() == b"unique"
+    assert not (copy / "large-tracked.bin").exists()
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+
+
+@pytest.mark.parametrize("flag", ["--assume-unchanged", "--skip-worktree"])
+@pytest.mark.parametrize("present", [False, True])
+def test_10303_abandon_preserves_present_hidden_tracked_bytes(abandon_cohort, flag, present):
+    from tests.orchestration.test_worktree_claims_cli import _git
+
+    repo, tree, tasks, _, _, _ = abandon_cohort
+    _git(tree, "update-index", flag, "README.md")
+    if present:
+        (tree / "README.md").write_bytes(b"hidden local bytes")
+    else:
+        (tree / "README.md").unlink()
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        tree, primary=repo, tasks_dir=tasks, task_id="boundary", repo_root=repo
+    )
+    assert ok and not reason, (reason, receipt)
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    if present:
+        assert (repo / receipt["location"] / "README.md").read_bytes() == b"hidden local bytes"
+    else:
+        assert not (repo / receipt["location"] / "README.md").exists()
+
+
+def test_10303_abandon_refuses_unmerged_index(abandon_cohort):
+    from scripts.orchestration import worktree_claims as claims
+    from tests.orchestration.test_worktree_claims_cli import _git
+    from tests.test_continuation_worktree_reap import _write_abandon_receipt
+
+    repo, tree, tasks, creator, _, source = abandon_cohort
+    base = _git(tree, "rev-parse", "main:README.md")
+    head = _git(tree, "rev-parse", "HEAD:README.md")
+    unique = (
+        subprocess.run(
+            ["git", "hash-object", "-w", "--stdin"],
+            cwd=tree,
+            input=b"unique conflict-stage bytes\n",
+            capture_output=True,
+            check=True,
+            timeout=30,
+        )
+        .stdout.decode()
+        .strip()
+    )
+    entries = (
+        f"0 {'0' * 40}\tREADME.md\n100644 {base} 1\tREADME.md\n"
+        f"100644 {head} 2\tREADME.md\n100644 {unique} 3\tREADME.md\n"
+    )
+    subprocess.run(["git", "update-index", "--index-info"], cwd=tree, input=entries.encode(), check=True, timeout=30)
+    _write_abandon_receipt(repo, tree, tasks, creator)
+    with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
+        ok, reason, _ = output.preserve_worktree_artifacts(
+            tree,
+            primary=repo,
+            tasks_dir=tasks,
+            task_id="boundary",
+            repo_root=repo,
+        )
+    assert not ok and "unmerged index" in reason
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert unique in _git(tree, "ls-files", "--stage", "README.md")
+
+
+def test_10303_abandon_patch_base_must_be_on_main(abandon_cohort):
+    from scripts.orchestration import worktree_claims as claims
+    from tests.test_reused_worktree_retention import save
+
+    repo, tree, tasks, creator, _, source = abandon_cohort
+    receipt = creator["worktree_abandon"]
+    locator = receipt["preservation"]
+    path = repo / locator["path"]
+    manifest = json.loads(path.read_bytes())
+    # Hash-valid empty diffs against the abandoned head omit its unique changes.
+    manifest["base_sha"] = receipt["head_sha"]
+    patch = repo / manifest["head_patch"]["path"]
+    patch.write_bytes(b"")
+    manifest["head_patch"]["sha256"] = hashlib.sha256(b"").hexdigest()
+    path.write_bytes(json.dumps(manifest).encode())
+    locator["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    save(tasks, creator)
+    with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
+        ok, reason, _ = output.preserve_worktree_artifacts(
+            tree,
+            primary=repo,
+            tasks_dir=tasks,
+            task_id="boundary",
+            repo_root=repo,
+        )
+    assert not ok and "preservation manifest identity invalid" in reason
+    assert tree.exists() and source.read_bytes() == b"current output"

@@ -1767,6 +1767,20 @@ entries:
       - {surface: sqlite, how: "read-only SQL on data/sources.db (table list via sources MCP collection_stats)"}
     content_searchable: true
 
+  - id: data-sum20-staging
+    kind: data_store
+    store: [data/sum20_slovnyk_staging.db, data/sum20_staging.db]
+    producer: []
+    producer_note: Named only by scripts/config/backup-allowlist.json. No script in scripts/ writes them; they are local SUM-20 build staging copies the nightly keeps because they are costly to rebuild.
+    local_only: true
+    purpose: Local SUM-20 slovnyk and dictionary staging copies retained by the nightly backup because they are costly to rebuild.
+    keywords: [SUM-20, slovnyk staging, dictionary staging]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: sqlite, how: "read-only SQL on data/sum20_slovnyk_staging.db or data/sum20_staging.db when present"}
+    content_searchable: false
+
   - id: data-vesum-db
     kind: data_store
     store: [data/vesum.db, data/vesum.db.bak, data/vesum.db.bak.*, data/vesum_shadow_v680.db]

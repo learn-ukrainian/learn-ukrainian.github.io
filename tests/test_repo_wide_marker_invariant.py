@@ -127,6 +127,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/review/test_model_catalog.py::test_frozen_artifacts_are_pinned_independently_of_manifest",
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
+    "tests/agent_runtime/test_acpx_claude_host_executable.py::test_tracked_launcher_is_executable_in_git",
     "tests/agent_runtime/test_claude_no_background.py::test_claude_code_harness_denominator_is_complete",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/agent_runtime/test_npm_shim.py::test_shim_files_are_regular_executables",

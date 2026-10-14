@@ -418,3 +418,11 @@ rows with explicit model pins now refuse `MUSE_GUARD_PARITY_UNPROVEN` during
 admission, with no target, argv, or routing mutation. The four Muse rows without
 model pins still refuse `MUSE_MODEL_REFUSED`. Inputs, historical captures,
 occurrences, and every other surface remain unchanged.
+
+Merging main at `7ac5f953ab` regenerates both current baselines with the same
+procedure. Only the 532 dispatch argparse diagnostics change in each
+configuration: #10619 adds `[--claude-account LABEL]` to the dispatch usage.
+Removing that option restores the previous text after whitespace
+normalization. Inputs, occurrences, historical captures and every other
+surface remain byte-identical. The previous approved outcome now also applies
+the #10619 overlay to the historical captures.

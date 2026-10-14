@@ -11,6 +11,7 @@ import yaml
 
 from scripts.agent_runtime import lane_probe
 from scripts.agent_runtime.adapters.base import InvocationPlan
+from scripts.orchestration import handoff_slot_registry
 
 
 class _FakeAdapter:
@@ -179,13 +180,14 @@ def test_session_start_wires_the_active_lane_probe() -> None:
     assert "--timeout 2" in hook
 
 
-def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch):
+def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch, tmp_path):
     areas = yaml.safe_load(Path("scripts/config/area_assignments.yaml").read_text())["assignments"]
     slots = {slot for area in areas.values() for slot in area["slots"]}
+    launcher_only = {"muse-devops", "muse-monitor"}
+    assert {slot for slot in slots if slot.split("-", 1)[0] not in lane_probe.AGENTS} == launcher_only
     for slot in slots:
         provider = slot.split("-", 1)[0]
-        assert provider in lane_probe.AGENTS
-        assert lane_probe.resolve_handoff_agent(slot) == provider
+        assert lane_probe.resolve_handoff_agent(slot) == (slot if slot in launcher_only else provider)
     for provider in lane_probe.AGENTS:
         if "-" not in provider:
             for area, assignment in areas.items():
@@ -193,10 +195,67 @@ def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch):
                     continue
                 assert lane_probe.resolve_handoff_agent(f"{provider}-{area}") == provider
     _registered_lane(monkeypatch, "new-provider")
+    # A runtime key with a hyphen still resolves its explicitly registered slot
+    # in a mixed roster. It cannot acquire another provider's monitor alias.
+    areas["monitor"]["slots"].append("new-provider-monitor")
+    roster = tmp_path / "area_assignments.yaml"
+    roster.write_text(yaml.safe_dump({"assignments": areas}), encoding="utf-8")
+    monkeypatch.setattr(handoff_slot_registry._channels, "ASSIGNMENTS_PATH", roster)
     assert lane_probe.resolve_handoff_agent("new-provider-monitor") == "new-provider"
     assert lane_probe.resolve_handoff_agent("new-provider-new-lane") == "new-provider-new-lane"
     assert lane_probe.resolve_handoff_agent("unknown-lane") == "unknown-lane"
     assert lane_probe.resolve_handoff_agent("claude") == "claude"
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
+@pytest.mark.parametrize("returncode", [0, 23])
+def test_legacy_monitor_cli_probes_its_runtime_provider(monkeypatch, tmp_path, capsys, provider, returncode):
+    loaded = []
+    commands = []
+    adapter = _FakeAdapter(["fixture-cli"])
+    monkeypatch.setattr(lane_probe, "_load_adapter", lambda agent: loaded.append(agent) or adapter)
+
+    def version(command, **_kwargs):
+        commands.append(command)
+        return SimpleNamespace(returncode=returncode)
+
+    monkeypatch.setattr(lane_probe, "run_version_probe", version)
+    assert lane_probe.resolve_handoff_agent(f"{provider}-monitor") == provider
+    assert lane_probe.main(["--handoff-agent", f"{provider}-monitor", "--cwd", str(tmp_path)]) == bool(returncode)
+    payload = json.loads(capsys.readouterr().out)
+    assert loaded == [provider]
+    assert commands == [["fixture-cli"]]
+    assert payload["probes"][0]["agent"] == provider
+    assert payload["probes"][0]["status"] == ("unhealthy" if returncode else "healthy")
+    assert payload["summary"] == {"healthy": int(not returncode), "unhealthy": int(bool(returncode)), "skipped": 0}
+
+
+@pytest.mark.parametrize("selection", ["--agent", "--handoff-agent"])
+@pytest.mark.parametrize(
+    "identity, reason",
+    [
+        ("muse-devops", "registered handoff slot has no runtime adapter"),
+        ("muse-monitor", "registered handoff slot has no runtime adapter"),
+        ("muse", "agent is not registered"),
+        ("unknown-monitor", "agent is not registered"),
+        ("unknown-devops", "agent is not registered"),
+    ],
+)
+def test_launcher_only_and_unknown_slots_fail_closed(monkeypatch, tmp_path, capsys, selection, identity, reason):
+    def unexpected(*_args, **_kwargs):
+        pytest.fail("an unavailable runtime must not load an adapter or execute a version probe")
+
+    monkeypatch.setattr(lane_probe, "_load_adapter", unexpected)
+    monkeypatch.setattr(lane_probe, "run_version_probe", unexpected)
+    assert "muse" not in lane_probe.AGENTS
+    assert lane_probe.resolve_handoff_agent(identity) == identity
+    assert lane_probe.main([selection, identity, "--cwd", str(tmp_path)]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["summary"] == {"healthy": 0, "unhealthy": 1, "skipped": 0}
+    probe = payload["probes"][0]
+    assert probe["agent"] == identity
+    assert probe["status"] == "unhealthy"
+    assert probe["reason"] == reason
 
 
 @pytest.mark.parametrize("identity", ["claude-", "claude-typo-lane", "CLAUDE-infra", "claudex-infra", "kimi-folk"])

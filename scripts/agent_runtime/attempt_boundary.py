@@ -10,10 +10,13 @@ This is separate from code-review isolation (#9251).
 from __future__ import annotations
 
 import contextlib
+import errno
 import hashlib
+import http.client
 import json
 import os
 import platform
+import re
 import shutil
 import signal
 import socket
@@ -22,6 +25,8 @@ import subprocess
 import tempfile
 import threading
 import time
+from collections.abc import Iterator, Mapping
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -43,31 +48,314 @@ from .attempt_safe_read import (
 )
 from .env_sanitize import build_agent_env
 
+# Claude account labels. A run carries one label; the default account is the
+# one this host has always used. Which account a non-default label means lives
+# only in private local configuration (see ``load_claude_account_binding``).
+CLAUDE_ACCOUNT_KEY = "claude_account"
+DEFAULT_CLAUDE_ACCOUNT = "a"
+CLAUDE_ACCOUNT_LABELS = ("a", "b")
+ENV_CLAUDE_ACCOUNTS_FILE = "LU_CLAUDE_ACCOUNTS_FILE"
+CLAUDE_ACCOUNTS_FILE_NAME = "claude_accounts.json"
+CLAUDE_ACCOUNTS_SCHEMA_VERSION = 1
+_CLAUDE_AMBIENT_AUTH_ENV = (
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "CLAUDE_API_KEY",
+    "CLAUDE_CODE_OAUTH_TOKEN",
+)
+_CLAUDE_BINDING_KEYS = frozenset({"config_dir", "account_uuid"})
+_CLAUDE_ACCOUNT_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+_CLAUDE_BINDING_MAX_BYTES = 65536
+_CLAUDE_GLOBAL_CONFIG_MAX_BYTES = 16 * 1024 * 1024
+_PRIVATE_FILE_FAILURES = ("unavailable", "not_private", "oversized", "invalid")
+# Every code a Claude account refusal may carry. Codes name no value or location.
+CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
+    {
+        "claude_account_unknown",
+        "claude_account_seat_unsupported",
+        "claude_account_route_unsealed",
+        "claude_account_default_has_no_binding",
+        "claude_account_binding_missing",
+        "claude_account_ambient_conflict",
+        "claude_account_config_dir_missing",
+        "claude_account_config_dir_unavailable",
+        "claude_account_config_dir_not_private",
+        "claude_account_binding_is_default",
+        "claude_account_unverified",
+        "claude_account_platform_unsupported",
+        "claude_account_credentials_missing",
+        "claude_account_credentials_expired",
+        "claude_account_identity_unavailable",
+        *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
+        *(f"claude_account_{kind}_{failure}" for kind in ("binding", "config") for failure in _PRIVATE_FILE_FAILURES),
+    }
+)
 
-def linux_claude_auth() -> dict[str, str]:
-    """Select only a fresh access token; --bare ignores file-backed login.
 
-    The existing auth staging supports keychain selection on Darwin. Linux
-    needs equivalent selection from its credential file, never a home grant,
-    refresh token, login mutation or copied credential store.
+class ClaudeAccountRefused(ValueError):
+    """A Claude account label or binding was refused; the code names no value or location."""
+
+    def __init__(self, code: str):
+        if code not in CLAUDE_ACCOUNT_REFUSAL_CODES:
+            raise AssertionError(f"unregistered Claude account refusal code: {code}")
+        super().__init__(code)
+        self.code = code
+
+
+@dataclass(frozen=True)
+class ClaudeAccountBinding:
+    """A label's private binding: Claude's config directory and the account it must hold."""
+
+    label: str
+    config_dir: Path = field(repr=False)
+    account_uuid: str = field(repr=False)
+
+
+def resolve_claude_account_label(raw: object) -> str:
+    """The run's account label: omitted means the default; anything unknown is refused."""
+    if raw is None:
+        return DEFAULT_CLAUDE_ACCOUNT
+    if isinstance(raw, str) and raw in CLAUDE_ACCOUNT_LABELS:
+        return raw
+    raise ClaudeAccountRefused("claude_account_unknown")
+
+
+def claude_accounts_file(environ: Mapping[str, str] | None = None) -> Path | None:
+    """``LU_CLAUDE_ACCOUNTS_FILE`` if set (empty means none), else the user config file."""
+    env = os.environ if environ is None else environ
+    if ENV_CLAUDE_ACCOUNTS_FILE in env:
+        value = env[ENV_CLAUDE_ACCOUNTS_FILE]
+        return Path(value) if value else None
+    base = env.get("XDG_CONFIG_HOME")
+    if not base or not Path(base).is_absolute():
+        base = str(Path.home() / ".config")
+    return Path(base) / "learn-ukrainian" / CLAUDE_ACCOUNTS_FILE_NAME
+
+
+def _unique_json_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate object key")
+        result[key] = value
+    return result
+
+
+def _read_private_json(path: Path, *, limit: int, code: str, dir_fd: int | None = None) -> Any:
+    """Owner-only regular file, read without following links; ``None`` when absent.
+
+    Every failure is ``ClaudeAccountRefused`` with ``code`` and a fixed suffix.
     """
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
+    except FileNotFoundError:
+        return None
+    except OSError:
+        raise ClaudeAccountRefused(f"{code}_unavailable") from None
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
+            raise ClaudeAccountRefused(f"{code}_not_private")
+        raw = os.read(fd, limit + 1)
+    except OSError:
+        raise ClaudeAccountRefused(f"{code}_unavailable") from None
+    finally:
+        os.close(fd)
+    if len(raw) > limit:
+        raise ClaudeAccountRefused(f"{code}_oversized")
+    try:
+        # A decode or duplicate-key error is a ValueError; its text is never kept.
+        return json.loads(raw, object_pairs_hook=_unique_json_keys)
+    except ValueError:
+        raise ClaudeAccountRefused(f"{code}_invalid") from None
+
+
+def load_claude_account_binding(label: str, *, environ: Mapping[str, str] | None = None) -> ClaudeAccountBinding:
+    """The private binding for a non-default label, from local configuration only.
+
+    The file is a JSON object ``{"schema_version": 1, "accounts": {"<label>":
+    {"config_dir": "<absolute directory>", "account_uuid": "<account UUID>"}}}``.
+    The default label has no binding: it is always the host's own account.
+    """
+    if resolve_claude_account_label(label) == DEFAULT_CLAUDE_ACCOUNT:
+        raise ClaudeAccountRefused("claude_account_default_has_no_binding")
+    path = claude_accounts_file(environ)
+    data = (
+        None
+        if path is None
+        else _read_private_json(path, limit=_CLAUDE_BINDING_MAX_BYTES, code="claude_account_binding")
+    )
+    if data is None:
+        raise ClaudeAccountRefused("claude_account_binding_missing")
+    if not isinstance(data, dict) or set(data) != {"schema_version", "accounts"}:
+        raise ClaudeAccountRefused("claude_account_binding_invalid")
+    version, accounts = data["schema_version"], data["accounts"]
+    if type(version) is not int or version != CLAUDE_ACCOUNTS_SCHEMA_VERSION or not isinstance(accounts, dict):
+        raise ClaudeAccountRefused("claude_account_binding_invalid")
+    non_default = set(CLAUDE_ACCOUNT_LABELS) - {DEFAULT_CLAUDE_ACCOUNT}
+    if not set(accounts) <= non_default:
+        raise ClaudeAccountRefused("claude_account_binding_invalid")
+    entry = accounts.get(label)
+    if entry is None:
+        raise ClaudeAccountRefused("claude_account_binding_missing")
+    if not isinstance(entry, dict) or set(entry) != _CLAUDE_BINDING_KEYS:
+        raise ClaudeAccountRefused("claude_account_binding_invalid")
+    config_dir, account_uuid = entry["config_dir"], entry["account_uuid"]
+    if (
+        not isinstance(config_dir, str)
+        or not config_dir
+        or not Path(config_dir).is_absolute()
+        or any(ord(c) < 32 or ord(c) == 127 for c in config_dir)
+        or not isinstance(account_uuid, str)
+        or not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(account_uuid)
+    ):
+        raise ClaudeAccountRefused("claude_account_binding_invalid")
+    return ClaudeAccountBinding(label=label, config_dir=Path(config_dir), account_uuid=account_uuid)
+
+
+def _claude_config_account_uuid(global_config: Path, *, dir_fd: int | None = None) -> str | None:
+    """The account Claude Code recorded at login in its global config, if any."""
+    data = _read_private_json(
+        global_config, limit=_CLAUDE_GLOBAL_CONFIG_MAX_BYTES, code="claude_account_config", dir_fd=dir_fd
+    )
+    if data is None:
+        return None
+    account = data.get("oauthAccount") if isinstance(data, dict) else None
+    value = account.get("accountUuid") if isinstance(account, dict) else None
+    return value if isinstance(value, str) else None
+
+
+@contextlib.contextmanager
+def _open_claude_directory(path: Path) -> Iterator[int]:
+    """Walk from root using checked no-follow descriptors; keep the selected handle."""
+    if not path.is_absolute() or ".." in path.parts:
+        raise ClaudeAccountRefused("claude_account_config_dir_not_private")
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+    fd = None
+    try:
+        fd = os.open(path.anchor, flags)
+        parts = path.parts[1:]
+        for index in range(len(parts) + 1):
+            info = os.fstat(fd)
+            selected = index == len(parts)
+            owners = {os.getuid()} if selected else {0, os.getuid()}
+            if not stat.S_ISDIR(info.st_mode) or info.st_uid not in owners or info.st_mode & 0o022:
+                raise ClaudeAccountRefused("claude_account_config_dir_not_private")
+            if selected:
+                break
+            child = os.open(parts[index], flags, dir_fd=fd)
+            os.close(fd)
+            fd = child
+        yield fd
+    except FileNotFoundError:
+        raise ClaudeAccountRefused("claude_account_config_dir_missing") from None
+    except OSError as exc:
+        code = "not_private" if exc.errno in {errno.ELOOP, errno.ENOTDIR} else "unavailable"
+        raise ClaudeAccountRefused(f"claude_account_config_dir_{code}") from None
+    finally:
+        if fd is not None:
+            os.close(fd)
+
+
+def _claude_selected_identity(token: str) -> str:
+    """Ask the provider about the exact material selected for use, with no redirects."""
+    connection = None
+    try:
+        connection = http.client.HTTPSConnection("api.anthropic.com", timeout=10)
+        connection.request(
+            "GET",
+            "/api/oauth/profile",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Cache-Control": "no-cache",
+                "Content-Type": "application/json",
+            },
+        )
+        response = connection.getresponse()
+        raw = response.read(65537)
+        if response.status != 200 or len(raw) > 65536:
+            raise ClaudeAccountRefused("claude_account_identity_unavailable")
+        profile = json.loads(raw, object_pairs_hook=_unique_json_keys)
+        identity = profile["account"]["uuid"]
+        if not isinstance(identity, str) or not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(identity):
+            raise ClaudeAccountRefused("claude_account_identity_unavailable")
+        return identity
+    except (OSError, http.client.HTTPException, ValueError, KeyError, TypeError):
+        raise ClaudeAccountRefused("claude_account_identity_unavailable") from None
+    finally:
+        if connection is not None:
+            with contextlib.suppress(OSError, http.client.HTTPException):
+                connection.close()
+
+
+def _validated_claude_selection(
+    label: str, *, environ: Mapping[str, str] | None = None
+) -> tuple[ClaudeAccountBinding, str]:
+    """Validate and select once, reading both files through the same checked directory."""
     from scripts.review.isolation import ReviewIsolationError
 
-    for key in (
-        "ANTHROPIC_API_KEY",
-        "ANTHROPIC_AUTH_TOKEN",
-        "CLAUDE_API_KEY",
-        "CLAUDE_CODE_OAUTH_TOKEN",
-    ):
-        if value := os.environ.get(key):
-            return {key: value}
-    if platform.system() != "Linux":
-        return {}
-    path = Path.home() / ".claude" / ".credentials.json"
+    env = os.environ if environ is None else environ
+    if any(env.get(key) for key in _CLAUDE_AMBIENT_AUTH_ENV):
+        raise ClaudeAccountRefused("claude_account_ambient_conflict")
     try:
-        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        binding = load_claude_account_binding(label, environ=env)
+        if platform.system() != "Linux":
+            raise ClaudeAccountRefused("claude_account_platform_unsupported")
+        with _open_claude_directory(binding.config_dir) as directory:
+            selected = os.fstat(directory)
+            ambient = env.get("CLAUDE_CONFIG_DIR")
+            if ambient:
+                with _open_claude_directory(Path(ambient).expanduser()) as ambient_fd:
+                    other = os.fstat(ambient_fd)
+                    if (selected.st_dev, selected.st_ino) != (other.st_dev, other.st_ino):
+                        raise ClaudeAccountRefused("claude_account_ambient_conflict")
+            home = Path.home()
+            for default in (home, home / ".claude"):
+                try:
+                    info = default.stat()
+                except FileNotFoundError:
+                    continue
+                if (selected.st_dev, selected.st_ino) == (info.st_dev, info.st_ino):
+                    raise ClaudeAccountRefused("claude_account_binding_is_default")
+            if _claude_config_account_uuid(home / ".claude.json") == binding.account_uuid:
+                raise ClaudeAccountRefused("claude_account_binding_is_default")
+            if _claude_config_account_uuid(Path(".claude.json"), dir_fd=directory) != binding.account_uuid:
+                raise ClaudeAccountRefused("claude_account_unverified")
+            try:
+                token = _claude_access_token(Path(".credentials.json"), dir_fd=directory)
+            except ReviewIsolationError as exc:
+                suffix = str(exc).removeprefix("attempt_claude_auth_")
+                raise ClaudeAccountRefused(f"claude_account_credentials_{suffix}") from None
+            if token is None:
+                raise ClaudeAccountRefused("claude_account_credentials_missing")
+            if _claude_selected_identity(token) != binding.account_uuid:
+                raise ClaudeAccountRefused("claude_account_unverified")
+            return binding, token
+    except (OSError, RuntimeError, ValueError) as exc:
+        if isinstance(exc, ClaudeAccountRefused):
+            raise
+        raise ClaudeAccountRefused("claude_account_config_dir_unavailable") from None
+
+
+def verify_claude_account(label: str, *, environ: Mapping[str, str] | None = None) -> ClaudeAccountBinding | None:
+    """Complete preflight, including the selected state; repeat validation at use.
+
+    The default label returns ``None`` and keeps legacy selection unchanged.
+    """
+    if resolve_claude_account_label(label) == DEFAULT_CLAUDE_ACCOUNT:
+        return None
+    binding, _ = _validated_claude_selection(label, environ=environ)
+    return binding
+
+
+def _claude_access_token(path: Path, *, dir_fd: int | None = None) -> str | None:
+    """A fresh access token from a Claude credentials file; ``None`` when absent."""
+    from scripts.review.isolation import ReviewIsolationError
+
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
     except FileNotFoundError:
-        return {}
+        return None
     except OSError as exc:
         raise ReviewIsolationError("attempt_claude_auth_unavailable") from exc
     try:
@@ -83,11 +371,41 @@ def linux_claude_auth() -> dict[str, str]:
             raise ReviewIsolationError("attempt_claude_auth_expired")
         if not isinstance(token, str) or not 20 <= len(token) <= 8192 or any(c in token for c in "\n\r\0"):
             raise ReviewIsolationError("attempt_claude_auth_invalid")
-        return {"CLAUDE_CODE_OAUTH_TOKEN": token}
+        return token
     except (ValueError, KeyError, TypeError) as exc:
         raise ReviewIsolationError("attempt_claude_auth_invalid") from exc
     finally:
         os.close(fd)
+
+
+def linux_claude_auth(account: str | None = None) -> dict[str, str]:
+    """Select only a fresh access token; --bare ignores file-backed login.
+
+    The existing auth staging supports keychain selection on Darwin. Linux
+    needs equivalent selection from its credential file, never a home grant,
+    refresh token, login mutation or copied credential store.
+
+    ``account`` is the run's label. The default label (or none) keeps the
+    legacy selection: an ambient credential, else the default credential file.
+    A non-default label reads only its verified bound account's credential
+    file and refuses every conflicting source before anything is returned.
+    """
+    from scripts.review.isolation import ReviewIsolationError
+
+    try:
+        label = resolve_claude_account_label(account)
+        if label != DEFAULT_CLAUDE_ACCOUNT:
+            _, token = _validated_claude_selection(label)
+            return {"CLAUDE_CODE_OAUTH_TOKEN": token}
+    except ClaudeAccountRefused as exc:
+        raise ReviewIsolationError(exc.code) from None
+    for key in _CLAUDE_AMBIENT_AUTH_ENV:
+        if value := os.environ.get(key):
+            return {key: value}
+    if platform.system() != "Linux":
+        return {}
+    token = _claude_access_token(Path.home() / ".claude" / ".credentials.json")
+    return {} if token is None else {"CLAUDE_CODE_OAUTH_TOKEN": token}
 
 
 def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]:
@@ -299,7 +617,7 @@ class AttemptBoundary:
             if agent != "agy":
                 self.env.update(stage_engine_auth(agent, write_home=home))
             if agent == "claude":
-                self.env.update(linux_claude_auth())
+                self.env.update(linux_claude_auth(tool_config.get(CLAUDE_ACCOUNT_KEY)))
             self.env.update(HOME=str(home), TMPDIR=str(self.write_root / "tmp"))
             # Native CLI shell discovery calls getpwuid. Supply only this
             # namespace's account, never the host's passwd/group databases.

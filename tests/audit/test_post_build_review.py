@@ -3982,3 +3982,31 @@ def test_regression_catalog_covers_every_discovered_layer() -> None:
     assert venv_symlink["responsible_layer"] == "deterministic_code"
     assert venv_symlink["fixed_in_version"] == "1.0.1"
     assert venv_symlink["version_field"] == "deterministic_contract_version"
+
+
+@pytest.mark.parametrize("trailing", ["", "\n"], ids=["no-final-LF", "final-LF"])
+def test_target_material_lines_split_only_on_physical_newlines(tmp_path, trailing):
+    # #9556: the line-addressed snapshot must reconstruct its exact hashed text.
+    content = 'value: "a\u0085b\u2028c\u2029d"\nnext: line\u2028' + trailing
+    (tmp_path / "vocabulary.yaml").write_text(content, encoding="utf-8")
+    materials = pbr.snapshot_target_materials(
+        {"files": {"vocabulary": "vocabulary.yaml"}},
+        {"vocabulary": pbr.sha256_text(content)},
+        repo_root=tmp_path,
+    )
+
+    material = materials["vocabulary"]
+    assert [entry["text"] for entry in material["lines"]] == ['value: "a\u0085b\u2028c\u2029d"', "next: line\u2028"]
+    assert pbr.target_material_text(material) == content
+    assert yaml.safe_load(pbr.target_material_text(material)) == yaml.safe_load(content)
+
+
+@pytest.mark.parametrize(("content", "lines"), [("", []), ("\n", [""]), ("a\n\n", ["a", ""])])
+def test_target_material_lines_keep_blank_line_shape(tmp_path, content, lines):
+    (tmp_path / "module.md").write_text(content, encoding="utf-8")
+    material = pbr.snapshot_target_materials(
+        {"files": {"module": "module.md"}}, {"module": pbr.sha256_text(content)}, repo_root=tmp_path
+    )["module"]
+
+    assert [entry["text"] for entry in material["lines"]] == lines
+    assert pbr.target_material_text(material) == content

@@ -4,6 +4,12 @@
 # uniform public CLI and driver lifecycle.
 
 launcher_usage() {
+  if [ "$LC_PROVIDER" = muse ]; then
+    # shellcheck source=scripts/launchers/muse.sh
+    source "$(dirname "${BASH_SOURCE[0]}")/../launchers/muse.sh"
+    launcher_muse_usage
+    return
+  fi
   local name="start-${LC_PROVIDER}${LC_MODE:+-${LC_MODE}}.sh"
   local driver_mode provider_env example_three
   if [ "$LC_MODE" = "interactive" ]; then
@@ -164,6 +170,26 @@ launcher_project_python() {
     return 1
   fi
   printf '%s\n' "$python"
+}
+
+# Apply the final CLI credential policy only inside the child process.
+# Direct exec test seams without the project helper retain their environment.
+launcher_drop_unneeded_secrets() {
+  local py sanitizer
+  LC_CHILD_ENV_COMMAND=(env)
+  sanitizer="${LC_ROOT:-}/scripts/agent_runtime/env_sanitize.py"
+  py="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
+  if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$sanitizer" ] || [ ! -x "$py" ]; then
+    return 0
+  fi
+  if ! "$py" "$sanitizer" --provider "$LC_PROVIDER" --check-helper; then
+    launcher_error "could not drop unneeded API keys"
+    return 1
+  fi
+  LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --exec)
+  if [ "${LC_MODE:-}" = driver ]; then
+    LC_CHILD_ENV_COMMAND=("$py" "$sanitizer" --provider "$LC_PROVIDER" --harness "${LC_HARNESS:-}" --driver-launcher --exec)
+  fi
 }
 
 launcher_require_binary() {
@@ -361,6 +387,10 @@ launcher_defaults() {
       fi
       LC_HARNESS="${LAUNCHER_HARNESS:-agy}"
       ;;
+    muse)
+      LC_MODEL="${LAUNCHER_MODEL-muse-wonder-full-1.0}"
+      LC_HARNESS="${LAUNCHER_HARNESS:-muse}"
+      ;;
     grok)
       # Both interactive and driver leave model/effort alone unless the caller
       # sets --model / --effort or LAUNCHER_MODEL / LAUNCHER_EFFORT. Empty means
@@ -387,6 +417,7 @@ launcher_defaults() {
     *) launcher_error "unknown provider '$LC_PROVIDER'"; exit 2 ;;
   esac
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
+  if [ "$LC_PROVIDER" = muse ] && [ -z "$LC_EFFORT" ]; then LC_EFFORT=high; fi
   if [ "$LC_PROVIDER" = codex ] && [ -z "$LC_EFFORT" ]; then
     # Operator 2026-09-22: Sol's seat is high, including the ordinary launcher.
     LC_EFFORT=high
@@ -443,6 +474,11 @@ launcher_drop_force_from_successor_args() {
 
 launcher_parse() {
   while [ "$#" -gt 0 ]; do
+    if [ "$LC_PROVIDER" = muse ] && [ "$1" = --dry-run ]; then
+      LC_DRY_RUN=1
+      shift
+      continue
+    fi
     case "$1" in
       -h|--help)
         launcher_usage
@@ -546,6 +582,12 @@ launcher_normalize_model() {
 }
 
 launcher_normalize_effort() {
+  if [ "$LC_PROVIDER" = muse ]; then
+    case "$LC_EFFORT" in
+      none|minimal|low|medium|high|xhigh|max|ultra) return 0 ;;
+      *) launcher_error 'MUSE_EFFORT_UNSUPPORTED'; exit 2 ;;
+    esac
+  fi
   # Claude Code accepts low|medium|high|xhigh|max (and future levels). Empty
   # means "do not inject --effort" so the last session effort is kept.
   if [ -z "${LC_EFFORT:-}" ]; then
@@ -784,7 +826,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high|grok:grok-4.7|muse:muse-wonder-full-1.0)
       return 0
       ;;
     *)
@@ -855,6 +897,7 @@ launcher_prepare_driver_identity() {
     claude) handoff="$(handoff_identity_for_epic "$LC_EPIC")"; harness="claude-code" ;;
     codex) handoff="$(handoff_identity_for_codex_epic "$LC_EPIC")"; harness="codex-cli" ;;
     gemini) handoff="$(handoff_identity_for_gemini_epic "$LC_EPIC")"; harness="agy" ;;
+    muse) handoff="$(handoff_identity_for_muse_epic "$LC_EPIC")"; harness="muse-cli" ;;
     grok) handoff="$(handoff_identity_for_grok_epic "$LC_EPIC")"; harness="grok-tui" ;;
     cursor) handoff="$(handoff_identity_for_cursor_epic "$LC_EPIC")"; harness="cursor-agent" ;;
   esac
@@ -1170,13 +1213,14 @@ launcher_forward_driver_signal() {
 launcher_driver_wait_hook() { :; }
 
 launcher_exec_command() {
+  launcher_drop_unneeded_secrets || exit 1
   # Interactive sessions retain the direct exec contract. A lease-owning
   # driver keeps this small supervisor shell alive so normal exit and
   # termination signals can atomically close the exact fenced session.
   if [ "$LC_MODE" != "driver" ] \
       || [ "${LC_DRIVER_LEASE_ENABLED:-1}" != "1" ] \
       || [ "${LC_DRIVER_LEASE_CLAIMED:-0}" != "1" ]; then
-    exec "$@"
+    exec "${LC_CHILD_ENV_COMMAND[@]}" "$@"
   fi
 
   local provider_rc=0
@@ -1207,7 +1251,7 @@ launcher_exec_command() {
   # forwarded INT/TERM/HUP reach the provider rather than being ignored.
   (
     trap - INT TERM HUP
-    exec "$@"
+    exec "${LC_CHILD_ENV_COMMAND[@]}" "$@"
   ) 0<&0 &
   LC_DRIVER_CHILD_PID=$!
   launcher_driver_renew_loop "$LC_DRIVER_CHILD_PID"
@@ -1486,6 +1530,10 @@ launcher_main() {
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"
+  if [ "$LC_PROVIDER" = muse ] && [ "$LC_MODEL" != muse-wonder-full-1.0 ]; then
+    launcher_error 'MUSE_MODEL_UNCERTIFIED'
+    exit 4
+  fi
   # Defaults and parsing set the model before this guard reads it. Reject an
   # uncertified Gemini driver model before scope entry, root resolution, adapter
   # preflight, deployment, or any continuity/lease/canary/provider work. Help
@@ -1500,6 +1548,13 @@ launcher_main() {
   launcher_normalize_model
   # shellcheck source=scripts/lib/handoff_identity.sh
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
+  # Muse admission runs before generic slot errors and any scope, deploy,
+  # lease or CLI activity. Its real-session guard gate has no override.
+  if [ "$LC_PROVIDER" = muse ]; then
+    source "$LC_ROOT/scripts/launchers/muse.sh"
+    launcher_adapter_validate
+    launcher_adapter_preflight
+  fi
   launcher_validate_mode
   launcher_validate_driver_certification
   # Usage errors and certification refusals come first; then the weekly cap.

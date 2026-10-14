@@ -1,4 +1,13 @@
 {
+  "pending-orders-announce": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "sh ../scripts/agy_hooks/pending_orders_inject.sh",
+        "timeout": 10
+      }
+    ]
+  },
   "driver-state-pin": {
     "PreInvocation": [
       {

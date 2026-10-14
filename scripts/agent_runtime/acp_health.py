@@ -86,6 +86,8 @@ def probe_acp_health(cwd: Path) -> dict[str, dict[str, Any]]:
                 missing = not (f"{target} " in root_help and "--file" in help_text)
                 if lane == "claude":
                     acpx._require_local_claude_acp_adapter(binary, adapter_label="ACP routing")
+                    # The seat launches the host Claude Code; per-model floors apply per ask.
+                    acpx._require_host_claude_code(model=None, adapter_label="ACP routing")
             return lane, result(code="cli_incompatible" if missing else None)
         except acpx.AcpxShadowRefusalError as exc:
             return lane, result(code=exc.failure_code)

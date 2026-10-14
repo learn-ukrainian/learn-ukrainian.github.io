@@ -207,6 +207,29 @@ def approved_reviewer_seats_baseline(baseline):
     return {**baseline, **SEATS_OVERLAY["surfaces"], "dispatch": dispatch}
 
 
+def approved_claude_account_dispatch_baseline(baseline):
+    """Apply #10619's account option and argparse usage reflow to refusals."""
+    indent = " " * 28
+    before = (
+        f"{indent}[--mode {{read-only,workspace-write,danger}}] [--model MODEL] [--provider {{openrouter}}]\n"
+        f"{indent}[--effort {{low,medium,high,xhigh,max}}] [--repo KEY] [--cwd CWD] [--worktree [WORKTREE]]\n"
+        f"{indent}[--pr PR] [--pinned-head SHA] [--branch EXISTING] [--keep-worktree] [--finalize-open-pr]\n"
+        f"{indent}[--require-review-verdict] [--review-profile {{code,infra,ukrainian}}]\n"
+    )
+    after = (
+        f"{indent}[--mode {{read-only,workspace-write,danger}}] [--model MODEL] [--claude-account LABEL]\n"
+        f"{indent}[--provider {{openrouter}}] [--effort {{low,medium,high,xhigh,max}}] [--repo KEY] [--cwd CWD]\n"
+        f"{indent}[--worktree [WORKTREE]] [--pr PR] [--pinned-head SHA] [--branch EXISTING] [--keep-worktree]\n"
+        f"{indent}[--finalize-open-pr] [--require-review-verdict] [--review-profile {{code,infra,ukrainian}}]\n"
+    )
+    dispatch = deepcopy(baseline["dispatch"])
+    for row in dispatch:
+        if row["stderr"].startswith("usage: delegate.py dispatch "):
+            assert row["stderr"].count(before) == 1
+            row["stderr"] = row["stderr"].replace(before, after)
+    return {**baseline, "dispatch": dispatch}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
 PREVIOUS_APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
@@ -409,6 +432,30 @@ def test_muse_added_reviewer_case_never_selects_muse(index, case, reference, tmp
     actual = CAPTURE["observed"](lambda: result)
     assert APPROVED_INPUTS["reviewer"][index] == case
     assert json.loads(CAPTURE["encode"](actual)) == APPROVED_BASELINE["reviewer"][index]
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_claude_account_dispatch_baseline_changes_only_usage_option(configuration):
+    path = FIXTURE / ("no-cli" if configuration == "no-cli" else "") / "baseline-pre-10511.json.gz"
+    original = json.loads(gzip.decompress(path.read_bytes()))
+    before = deepcopy(original)
+    after = approved_claude_account_dispatch_baseline(original)
+    assert original == before
+    assert {key: value for key, value in after.items() if key != "dispatch"} == {
+        key: value for key, value in before.items() if key != "dispatch"
+    }
+    changed = 0
+    for old, new in zip(before["dispatch"], after["dispatch"], strict=True):
+        assert {key: value for key, value in old.items() if key != "stderr"} == {
+            key: value for key, value in new.items() if key != "stderr"
+        }
+        if old["stderr"].startswith("usage: delegate.py dispatch "):
+            changed += 1
+            assert new["stderr"].count("[--claude-account LABEL]") == 1
+            assert new["stderr"].replace("[--claude-account LABEL]", "").split() == old["stderr"].split()
+        else:
+            assert new == old
+    assert changed > 0
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -833,16 +880,16 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the #10205 Cursor wire pin and allowlist revision and
 # the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "ca1303288ad0afa85067bc33d72a9816e52753a508c742aba48dbec8c6338352",
-    "SPEC.md": "630145f4b7f39e68be3740d138b9045dc7c908997fd84ed4de2b0cb2760d3105",
+    "SHA256SUMS": "dfc4af8aed9c9f52d3851b489ab03d8a15df5aaa584c6c1e000c55c860806b1a",
+    "SPEC.md": "1ef2c7bc2c5fed0fb549446ebb6afb575c43b2e0eee07d5d630306a5d43c00b6",
     "baseline-pre-10511.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
-    "baseline.json.gz": "b523cb5523905cf31dc1f14c246f3b6c2b030fdf7ce14848c907a0746c276714",
+    "baseline.json.gz": "fbc0ce72a1704e8c6f696235aa5e7e18f5e1f470287a60bc50b65098fb437a58",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
-    "no-cli/SHA256SUMS": "b2cc13a64e82df9ff1dd150685cf58fbb9fa005418d1d0739872714c62b99e03",
+    "no-cli/SHA256SUMS": "235175ff3f9d6288de25072702bafe42f3b140a567699969e7478f64d7a41d21",
     "no-cli/baseline-pre-10511.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
-    "no-cli/baseline.json.gz": "9476632bec7ca9f675b0a5e40ce8520ee7b9d521f387859dbe3abf2495fe6580",
+    "no-cli/baseline.json.gz": "7d5a06195cd186c0777fe82bd6c44976b215b37e9e5b0c63120862799f4bcddf",
     "no-cli/inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
@@ -1208,16 +1255,18 @@ def test_extended_capture_denominator_and_current_contract():
 def test_muse_regeneration_changes_only_registered_candidate(configuration):
     folder = FIXTURE / ("" if configuration == "host-cli" else "no-cli")
     historical = json.loads(gzip.decompress((folder / "baseline-pre-10511.json.gz").read_bytes()))
-    old = approved_cto_wrappers_baseline(
-        approved_claude_cap_baseline(
-            approved_cursor_trailer_baseline(
-                approved_launcher_canary_baseline(
-                    approved_reviewer_seats_baseline(
-                        {
-                            **approved_review_baseline(historical),
-                            **GEMINI_OVERLAY["surfaces"],
-                            **RESOURCE_OVERLAY["surfaces"],
-                        }
+    old = approved_claude_account_dispatch_baseline(
+        approved_cto_wrappers_baseline(
+            approved_claude_cap_baseline(
+                approved_cursor_trailer_baseline(
+                    approved_launcher_canary_baseline(
+                        approved_reviewer_seats_baseline(
+                            {
+                                **approved_review_baseline(historical),
+                                **GEMINI_OVERLAY["surfaces"],
+                                **RESOURCE_OVERLAY["surfaces"],
+                            }
+                        )
                     )
                 )
             )

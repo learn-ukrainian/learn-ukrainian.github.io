@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
 from scripts.agent_runtime import kimi_boundary
+from tests.test_agent_github_identity import rescue_app as _rescue_app_fixture
 from tests.test_delegate import (  # noqa: F401
     _fixture_worktree_lock_dir,
     _keep_delegate_unit_tests_local,
@@ -28,6 +29,7 @@ from tests.test_delegate import (  # noqa: F401
 from tests.test_kimi_coding_only_admission import _FAKE_TOKEN, HOSTILE_GIT_ERRORS, assert_no_host_details
 
 pytestmark = pytest.mark.usefixtures("tmp_tasks_dir")
+rescue_app = _rescue_app_fixture
 _DRIVER_CONTEXT = delegate._rescue_execution_context
 
 TASK_ID = "kimi-rescue"
@@ -39,7 +41,9 @@ LABEL = "site/src/components/Label.tsx"
 
 def _git(repo: Path, *args: str) -> str:
     env = {"PATH": os.defpath, "HOME": str(repo), "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull}
-    return subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True, text=True, timeout=60).stdout
+    return subprocess.run(
+        ["git", *args], cwd=repo, env=env, check=True, capture_output=True, text=True, timeout=60
+    ).stdout
 
 
 def _git_proc(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -77,11 +81,18 @@ def kimi_rescue(tmp_path, monkeypatch):
     _git(primary, "worktree", "add", "-b", BRANCH, str(worktree), "HEAD")
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
     from scripts.orchestration.safe_git_context import SafeGitContext
+
     monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda: str(origin))
-    monkeypatch.setattr(delegate, "_rescue_execution_context", lambda repo: SafeGitContext(
-        objects=repo.git_dir / "objects", temp_root=tmp_path,
-        origin=delegate._rescue_canonical_push_url(), local_remote=True,
-    ))
+    monkeypatch.setattr(
+        delegate,
+        "_rescue_execution_context",
+        lambda repo: SafeGitContext(
+            objects=repo.git_dir / "objects",
+            temp_root=tmp_path,
+            origin=delegate._rescue_canonical_push_url(),
+            local_remote=True,
+        ),
+    )
     monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _root: set())
     kimi_boundary.install(worktree, agent="kimi", base_ref="origin/main", owned_paths=[OWNED])
@@ -507,8 +518,10 @@ def test_rescue_typed_snapshot_refusals_publish_nothing(kimi_rescue, tmp_path, m
     worktree, origin, state_path, write = kimi_rescue
     write("export const label = 'Lesson';\n")
     expected = {
-        "filter": "rescue_filtered_path", "embedded": "rescue_embedded_repository",
-        "gitlink": "rescue_new_gitlink", "unreadable": "rescue_input_unreadable",
+        "filter": "rescue_filtered_path",
+        "embedded": "rescue_embedded_repository",
+        "gitlink": "rescue_new_gitlink",
+        "unreadable": "rescue_input_unreadable",
         "changing": "rescue_input_changed",
     }[kind]
     if kind == "filter":
@@ -527,18 +540,22 @@ def test_rescue_typed_snapshot_refusals_publish_nothing(kimi_rescue, tmp_path, m
         (worktree / LABEL).chmod(0)
     else:
         real = SafeGitContext.run
+
         def change_after_add(context, *args, **kwargs):
             result = real(context, *args, **kwargs)
             if args[:2] == ("add", "-A"):
                 (worktree / LABEL).write_text("changed during capture\n")
             return result
+
         monkeypatch.setattr(SafeGitContext, "run", change_after_add)
     pushes = []
     real_git = delegate._rescue_git
+
     def observe(context, *args, **kwargs):
         if args[0] == "push":
             pushes.append(args)
         return real_git(context, *args, **kwargs)
+
     monkeypatch.setattr(delegate, "_rescue_git", observe)
 
     result = delegate._rescue_task(state_path, apply=True)
@@ -553,6 +570,7 @@ def test_rescue_refuses_inputs_changed_after_content_check(kimi_rescue, monkeypa
     worktree, origin, state_path, write = kimi_rescue
     write("export const label = 'Lesson';\n")
     original = delegate._kimi_tree_refusal
+
     def changing(context, base, agent, *, tree):
         verdict = original(context, base, agent, tree=tree)
         if mutation == "file":
@@ -560,6 +578,7 @@ def test_rescue_refuses_inputs_changed_after_content_check(kimi_rescue, monkeypa
         else:
             _git(worktree, "checkout", "--detach")
         return verdict
+
     monkeypatch.setattr(delegate, "_kimi_tree_refusal", changing)
     result = delegate._rescue_task(state_path, apply=True)
     assert result["failure_code"] == "rescue_input_changed", result
@@ -573,21 +592,218 @@ def test_driver_context_pins_destination_and_supplies_identity_explicitly(kimi_r
 
     worktree, _origin, _state_path, _write = kimi_rescue
     supplied = []
+
     def identity(**kwargs):
         supplied.append(kwargs)
         return agent_github_identity.GitHubIdentity(token, "test")
+
     monkeypatch.setattr(agent_github_identity, "resolve_agent_github_identity", identity)
     monkeypatch.setattr(delegate, "_rescue_canonical_push_url", lambda: CANONICAL_ORIGIN)
     repo = delegate._rescue_repo(worktree)
     if token is None:
         with pytest.raises(delegate._RescueFailure) as refused:
-            _DRIVER_CONTEXT(repo)
+            with _DRIVER_CONTEXT(repo):
+                pytest.fail("missing identity accepted")
         assert refused.value.cause.code == "rescue_identity_unavailable"
     else:
         with _DRIVER_CONTEXT(repo) as context:
             assert context.checked("config", "remote.origin.url") == CANONICAL_ORIGIN
-            assert context.checked("config", "http." + CANONICAL_ORIGIN + ".extraHeader").startswith("Authorization: Basic ")
+            assert context.checked("config", "http." + CANONICAL_ORIGIN + ".extraHeader").startswith(
+                "Authorization: Basic "
+            )
     assert supplied[0]["repository"] == "learn-ukrainian/learn-ukrainian.github.io"
+    assert supplied[0]["rescue"] is True
+
+
+@pytest.mark.parametrize("seat", ["claude", "codex", "grok", "agy", "kimi"])
+@pytest.mark.parametrize(
+    "configuration,expected",
+    [
+        ("valid", None),
+        ("absent", ["app-directory:missing", "agent-token:missing"]),
+        ("mode", ["private-key.pem:wrong_mode"]),
+        ("symlink", ["private-key.pem:symlink"]),
+        ("missing-id", ["installation-id:missing"]),
+        ("env", None),
+        ("legacy", ["app-directory:missing", "agent-token:missing"]),
+    ],
+)
+def test_rescue_seat_configuration_matrix(kimi_rescue, rescue_app, monkeypatch, capsys, seat, configuration, expected):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    worktree, origin, state_path, write = kimi_rescue
+    directory, environment, material, token, requests = rescue_app
+    write("export const label = 'Lesson';\n")
+    state = delegate._read_state(state_path)
+    state["agent"] = seat
+    delegate._write_state_atomic(state_path, state)
+    if configuration in {"absent", "legacy"}:
+        directory.rename(directory.with_name("unused"))
+    if configuration == "mode":
+        (directory / "private-key.pem").chmod(0o644)
+    if configuration == "symlink":
+        target = directory.parent / "throwaway-key"
+        (directory / "private-key.pem").rename(target)
+        (directory / "private-key.pem").symlink_to(target)
+    if configuration == "missing-id":
+        (directory / "installation-id").unlink()
+    if configuration == "env":
+        # Explicit App configuration takes precedence even over an invalid directory.
+        directory.chmod(0o777)
+        environment.update(
+            {
+                "LU_AGENT_GITHUB_APP_ID": "123",
+                "LU_AGENT_GITHUB_APP_INSTALLATION_ID": "456",
+                "LU_AGENT_GITHUB_APP_PRIVATE_KEY": material,
+            }
+        )
+    if configuration == "legacy":
+        environment.update(GH_TOKEN=token, GITHUB_TOKEN=token)
+    elif configuration not in {"absent", "env"}:
+        # No present directory, valid or invalid, may reach either fallback.
+        environment.update(LU_AGENT_GITHUB_TOKEN=token, GH_TOKEN=token)
+    with monkeypatch.context() as isolated:
+        for name in (
+            "LU_AGENT_GITHUB_APP_ID",
+            "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+            "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+            "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+            "LU_AGENT_GITHUB_TOKEN",
+            "GH_TOKEN",
+            "GITHUB_TOKEN",
+        ):
+            isolated.delenv(name, raising=False)
+        for name, value in environment.items():
+            isolated.setenv(name, value)
+        isolated.setattr(delegate, "_rescue_execution_context", _DRIVER_CONTEXT)
+        real_context = delegate.SafeGitContext
+        contexts = []
+
+        def local_context(**kwargs):
+            assert kwargs.pop("token") == token
+            kwargs["local_remote"] = True
+            kwargs["temp_root"] = worktree.parent
+            context = real_context(**kwargs)
+            contexts.append(context)
+            return context
+
+        isolated.setattr(delegate, "SafeGitContext", local_context)
+        revoked = []
+        isolated.setattr(module, "revoke_installation_token", revoked.append)
+        result = delegate._rescue_task(state_path, apply=True)
+    if expected is None:
+        assert result["action"] == "rescued", result
+        assert revoked == [token]
+        assert requests == [{"repositories": ["learn-ukrainian.github.io"], "permissions": {"contents": "write"}}]
+        assert len(_remote_heads(origin)) == 2
+        assert all(material not in repr(context.env) and token not in repr(context.env) for context in contexts)
+    else:
+        assert (result["action"], result["failure_code"]) == ("error", "rescue_identity_unavailable")
+        assert result["missing"] == expected
+        assert "normal pre-push push from the worktree" in result["message"]
+        diagnostic = json.loads(delegate._diagnostic_path(TASK_ID).read_text().splitlines()[-1])
+        assert diagnostic["missing"] == expected
+        assert all(item in diagnostic["diagnostic"] for item in expected)
+        assert revoked == [] and requests == []
+    captured = capsys.readouterr()
+    evidence = captured.out + captured.err + json.dumps(result) + state_path.read_text()
+    if delegate._diagnostic_path(TASK_ID).exists():
+        evidence += delegate._diagnostic_path(TASK_ID).read_text()
+    assert material not in evidence and token not in evidence
+    assert all(line not in evidence for line in material.splitlines()[1:-1])
+    assert worktree.exists() and kimi_boundary.is_installed(worktree)
+
+
+@pytest.mark.parametrize("push_fails", [False, True])
+@pytest.mark.parametrize("revoke_fails", [False, True])
+def test_rescue_revokes_app_token_without_masking_push_result(
+    kimi_rescue, rescue_app, monkeypatch, capsys, push_fails, revoke_fails
+):
+    import traceback
+
+    from scripts.agent_runtime import agent_github_identity as module
+
+    worktree, _origin, state_path, write = kimi_rescue
+    _directory, environment, material, token, requests = rescue_app
+    write("export const label = 'Lesson';\n")
+    real_git = delegate._rescue_git
+    real_context = delegate.SafeGitContext
+    revoked = []
+
+    def revoke(value):
+        revoked.append(value)
+        if revoke_fails:
+            raise RuntimeError(material + token)
+
+    def push(context, *args, **kwargs):
+        if push_fails and args[0] == "push":
+            return subprocess.CompletedProcess(args, 1, "", "push refused")
+        return real_git(context, *args, **kwargs)
+
+    def local_context(**kwargs):
+        kwargs.pop("token")
+        return real_context(**kwargs, local_remote=True)
+
+    with monkeypatch.context() as isolated:
+        for name in (
+            "LU_AGENT_GITHUB_APP_ID",
+            "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+            "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+            "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+            "LU_AGENT_GITHUB_TOKEN",
+            "GH_TOKEN",
+            "GITHUB_TOKEN",
+        ):
+            isolated.delenv(name, raising=False)
+        for name, value in environment.items():
+            isolated.setenv(name, value)
+        isolated.setattr(delegate, "_rescue_execution_context", _DRIVER_CONTEXT)
+        isolated.setattr(delegate, "SafeGitContext", local_context)
+        isolated.setattr(delegate, "_rescue_git", push)
+        isolated.setattr(module, "revoke_installation_token", revoke)
+        result = delegate._rescue_task(state_path, apply=True)
+
+        # Even a provider exception carrying secrets must be suppressed at the rescue boundary.
+        def mint_failure(**_kwargs):
+            raise RuntimeError(material + token)
+
+        isolated.setattr(module, "mint_installation_token", mint_failure)
+        with pytest.raises(delegate._RescueFailure) as error:
+            with _DRIVER_CONTEXT(delegate._rescue_repo(worktree)):
+                pytest.fail("mint failure accepted")
+        exception_text = "".join(traceback.format_exception(error.value))
+    assert result["action"] == ("error" if push_fails else "rescued")
+    if push_fails:
+        assert result["failure_code"] == "rescue_push_failed"
+    assert revoked == [token] and len(requests) == 1
+    captured = capsys.readouterr()
+    evidence = captured.out + captured.err + json.dumps(result) + state_path.read_text() + exception_text
+    if delegate._diagnostic_path(TASK_ID).exists():
+        evidence += delegate._diagnostic_path(TASK_ID).read_text()
+    assert token not in evidence and material not in evidence
+    assert all(line not in evidence for line in material.splitlines()[1:-1])
+    assert ("revocation failed" in captured.err) == revoke_fails
+
+
+def test_rescue_revokes_app_token_when_git_context_cannot_start(kimi_rescue, rescue_app, monkeypatch, capsys):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    _worktree, _origin, state_path, _write = kimi_rescue
+    _directory, _environment, material, token, _requests = rescue_app
+    revoked = []
+    monkeypatch.setattr(module, "resolve_agent_github_identity", lambda **_kwargs: module.GitHubIdentity(token, "app"))
+    monkeypatch.setattr(module, "revoke_installation_token", revoked.append)
+
+    def cannot_start(**_kwargs):
+        raise delegate.SnapshotRefusal("rescue_input_unreadable")
+
+    monkeypatch.setattr(delegate, "SafeGitContext", cannot_start)
+    monkeypatch.setattr(delegate, "_rescue_execution_context", _DRIVER_CONTEXT)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["failure_code"] == "rescue_input_unreadable" and revoked == [token]
+    captured = capsys.readouterr()
+    evidence = captured.out + captured.err + json.dumps(result) + state_path.read_text()
+    assert token not in evidence and material not in evidence
 
 
 def test_kimi_checks_exact_blob_bytes_including_crlf(kimi_rescue, monkeypatch):
@@ -599,16 +815,21 @@ def test_kimi_checks_exact_blob_bytes_including_crlf(kimi_rescue, monkeypatch):
     (worktree / LABEL).write_bytes(data)
     seen = []
     original = kimi_admission.refuse_kimi_changes
+
     def inspect(agent, changes, **kwargs):
         changes = list(changes)
         seen.extend(changes)
         return original(agent, changes, **kwargs)
+
     monkeypatch.setattr(kimi_admission, "refuse_kimi_changes", inspect)
     result = delegate._rescue_task(state_path, apply=True)
     assert result["action"] == "rescued", result
     assert next(change.after for change in seen if change.path == LABEL) == data
     from scripts.orchestration.safe_git_context import SafeGitContext
-    with SafeGitContext(objects=origin / "objects", origin=str(origin), local_remote=True, temp_root=worktree.parent) as context:
+
+    with SafeGitContext(
+        objects=origin / "objects", origin=str(origin), local_remote=True, temp_root=worktree.parent
+    ) as context:
         assert context.run("cat-file", "blob", f"{result['head']}:{LABEL}", binary=True).stdout == data
 
 

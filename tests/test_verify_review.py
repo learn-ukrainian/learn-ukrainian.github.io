@@ -522,6 +522,7 @@ def test_branch_target(tmp_path):
 
 def test_pr_target(tmp_path, monkeypatch):
     repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     # Simulate a second commit as PR head.
     (repo / "app.py").write_text("print('v1')\nvalue = 4\n", encoding="utf-8")
@@ -1311,7 +1312,8 @@ def test_dispositions_attached_on_receipt(tmp_path):
 
 @pytest.mark.parametrize("disposition", ["follow_up", "in_scope_blocker"])
 def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle(
-    tmp_path, disposition,
+    tmp_path,
+    disposition,
 ):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
@@ -1324,9 +1326,14 @@ def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle
     raw = json.dumps(payload)
     result = verify_review(
         raw,
-        _ctx(repo, target, raw, dispositions={
-            "F001": {"disposition": disposition, "rationale": "Non-blocking at this head."},
-        }),
+        _ctx(
+            repo,
+            target,
+            raw,
+            dispositions={
+                "F001": {"disposition": disposition, "rationale": "Non-blocking at this head."},
+            },
+        ),
     )
 
     assert result.exit_code == EXIT_ACTIONABLE
@@ -1340,12 +1347,16 @@ def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle
     receipt_bytes = (json.dumps(result.receipt) + "\n").encode()
     receipt_path = tmp_path / "receipt.json"
     receipt_path.write_bytes(receipt_bytes)
-    reference = {"details": {"behavior_proof_receipt": {
-        "receipt_path": str(receipt_path.resolve()),
-        "receipt_sha256": "sha256:" + sha256_text(receipt_bytes.decode()),
-        "input_sha256": result.receipt["target"]["input_sha256"],
-        "target_sha": target.head_sha,
-    }}}
+    reference = {
+        "details": {
+            "behavior_proof_receipt": {
+                "receipt_path": str(receipt_path.resolve()),
+                "receipt_sha256": "sha256:" + sha256_text(receipt_bytes.decode()),
+                "input_sha256": result.receipt["target"]["input_sha256"],
+                "target_sha": target.head_sha,
+            }
+        }
+    }
 
     assert task_lifecycle._behavior_proof_reference_error(reference, head_sha=target.head_sha) is None
     assert receipt_path.read_bytes() == receipt_bytes
@@ -1363,7 +1374,10 @@ def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle
     ids=["missing-disposition", "missing-rationale", "blank-rationale", "invalid-disposition", "forged-correct"],
 )
 def test_correct_verdict_does_not_override_invalid_finding_evidence(
-    tmp_path, dispositions, verbatim, expected_exit,
+    tmp_path,
+    dispositions,
+    verbatim,
+    expected_exit,
 ):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")

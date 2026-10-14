@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import ClassVar
@@ -12,6 +13,277 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.agent_github_identity import resolve_agent_github_identity
 from agent_runtime.env_sanitize import build_agent_env
+
+
+@pytest.fixture
+def rescue_app(tmp_path, monkeypatch):
+    """Throwaway key and fake App API; never inspect host provisioning."""
+    from datetime import UTC, datetime, timedelta
+
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import rsa
+
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory = tmp_path / "config" / "learn-ukrainian" / "agent-github-app"
+    directory.mkdir(parents=True, mode=0o700)
+    material = (
+        rsa.generate_private_key(public_exponent=65537, key_size=2048)
+        .private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption())
+        .decode()
+    )
+    for item, value in {"app-id": "123\n", "installation-id": "456\n", "private-key.pem": material}.items():
+        path = directory / item
+        path.write_text(value)
+        path.chmod(0o600)
+    environment = {"HOME": str(tmp_path), "XDG_CONFIG_HOME": str(directory.parents[1])}
+    requests = []
+    token = "ghs_throwaway_rescue_token_for_tests_only"
+
+    class Response:
+        status = 201
+        headers: ClassVar[dict[str, str]] = {}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            pass
+
+        def read(self):
+            return json.dumps(
+                {
+                    "token": token,
+                    "repositories": [{"full_name": "learn-ukrainian/learn-ukrainian.github.io"}],
+                    "permissions": {"contents": "write", "metadata": "read"},
+                    "expires_at": (datetime.now(UTC) + timedelta(minutes=30)).isoformat(),
+                }
+            ).encode()
+
+    class Opener:
+        def open(self, request, **_kwargs):
+            requests.append(json.loads(request.data))
+            return Response()
+
+    monkeypatch.setattr(module, "_restricted_opener", lambda *_args: Opener())
+    monkeypatch.setattr(module, "_read_legacy_token", lambda *_args: pytest.fail("rescue read legacy credentials"))
+    return directory, environment, material, token, requests
+
+
+def test_rescue_directory_mints_only_contents_write_without_exporting(rescue_app):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    _directory, environment, material, token, requests = rescue_app
+    original = environment.copy()
+    identity = module.resolve_agent_github_identity(
+        environment=environment, rescue=True, repository="learn-ukrainian/learn-ukrainian.github.io"
+    )
+    assert identity.source == "app" and identity.token == token
+    assert requests == [{"repositories": ["learn-ukrainian.github.io"], "permissions": {"contents": "write"}}]
+    assert environment == original
+    assert material not in repr(identity) and token not in repr(identity)
+
+
+@pytest.mark.parametrize("item", ["app-directory", "app-id", "installation-id", "private-key.pem"])
+@pytest.mark.parametrize("kind", ["symlink", "wrong_mode", "wrong_owner", "wrong_type", "unreadable", "changed"])
+def test_rescue_directory_rejects_unsafe_items(rescue_app, monkeypatch, item, kind):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory, environment, material, token, requests = rescue_app
+    target = directory if item == "app-directory" else directory / item
+    if kind == "symlink":
+        saved = directory.parent / (item + "-saved")
+        target.rename(saved)
+        target.symlink_to(saved)
+    elif kind == "wrong_mode":
+        target.chmod(0o770 if item == "app-directory" else 0o640)
+    elif kind == "wrong_type":
+        target.unlink() if target.is_file() else target.rename(target.with_name("saved"))
+        target.write_text("wrong type") if item == "app-directory" else target.mkdir()
+    elif kind == "wrong_owner":
+        monkeypatch.setattr(module.os, "getuid", lambda: os.stat(target).st_uid + 1)
+        # The directory is checked first; mock only the selected item's owner.
+        original_validate = module._validate_rescue_item
+        actual_uid = os.stat(directory).st_uid
+
+        def validate(info, name, **kwargs):
+            monkeypatch.setattr(module.os, "getuid", lambda: actual_uid + (name == item))
+            return original_validate(info, name, **kwargs)
+
+        monkeypatch.setattr(module, "_validate_rescue_item", validate)
+    else:
+        original_open = module.os.open
+
+        def open_item(path, flags, **kwargs):
+            selected = str(directory) if item == "app-directory" else item
+            if str(path) == selected:
+                if kind == "unreadable":
+                    raise PermissionError(material + token)
+                saved = directory.parent / (item + "-saved")
+                target.rename(saved)
+                if item == "app-directory":
+                    target.mkdir(mode=0o700)
+                else:
+                    target.write_text("replacement")
+                    target.chmod(0o600)
+            return original_open(path, flags, **kwargs)
+
+        monkeypatch.setattr(module.os, "open", open_item)
+    environment["LU_AGENT_GITHUB_TOKEN"] = token
+    with pytest.raises(module.RescueIdentityError) as error:
+        module.resolve_agent_github_identity(environment=environment, rescue=True)
+    assert error.value.missing == (f"{item}:{kind}",)
+    assert material not in str(error.value) and token not in str(error.value)
+    assert requests == []
+
+
+@pytest.mark.parametrize("item", ["app-id", "installation-id"])
+@pytest.mark.parametrize("value", ["", "123\n456\n", "123 \n", "１２３\n", "secret-shaped-text"])
+def test_rescue_directory_requires_single_line_numeric_ids(rescue_app, item, value):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory, environment, _material, _token, requests = rescue_app
+    (directory / item).write_text(value)
+    with pytest.raises(module.RescueIdentityError) as error:
+        module.resolve_agent_github_identity(environment=environment, rescue=True)
+    assert error.value.missing == (f"{item}:invalid",)
+    assert requests == []
+
+
+def test_rescue_directory_refuses_unexpected_items(rescue_app):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory, environment, _material, token, requests = rescue_app
+    (directory / "unapproved").write_text(token)
+    with pytest.raises(module.RescueIdentityError) as error:
+        module.resolve_agent_github_identity(environment=environment, rescue=True)
+    assert error.value.missing == ("app-directory:unexpected_items",)
+    assert requests == []
+
+
+def test_other_callers_ignore_rescue_directory(rescue_app, tmp_path):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory, environment, _material, token, requests = rescue_app
+    (directory / "private-key.pem").chmod(0o644)
+    identity = module.resolve_agent_github_identity(environment=environment | {"GH_TOKEN": token})
+    assert identity.source == "legacy" and identity.token == token
+    assert requests == []
+
+
+def test_rescue_uses_home_config_and_dedicated_token_when_directory_absent(rescue_app):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory, environment, _material, token, requests = rescue_app
+    environment.pop("XDG_CONFIG_HOME")
+    directory.parents[1].rename(directory.parents[1].with_name(".config"))
+    identity = module.resolve_agent_github_identity(
+        environment=environment, rescue=True, repository="learn-ukrainian/learn-ukrainian.github.io"
+    )
+    assert identity.source == "app"
+    environment["XDG_CONFIG_HOME"] = str(directory.parents[1])
+    identity = module.resolve_agent_github_identity(
+        environment=environment | {"LU_AGENT_GITHUB_TOKEN": token}, rescue=True
+    )
+    assert identity.source == "token" and identity.token == token
+    assert len(requests) == 1
+
+
+def test_partial_environment_app_refuses_directory_and_token_fallback(rescue_app):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    _directory, environment, _material, token, requests = rescue_app
+    with pytest.raises(module.RescueIdentityError) as error:
+        module.resolve_agent_github_identity(
+            environment=environment
+            | {
+                "LU_AGENT_GITHUB_APP_ID": "123",
+                "LU_AGENT_GITHUB_TOKEN": token,
+            },
+            rescue=True,
+        )
+    assert error.value.missing == ("installation-id:missing", "private-key.pem:missing")
+    assert requests == []
+
+
+@pytest.mark.parametrize("failure", ["read", "mint"])
+def test_rescue_discards_credential_bearing_exception_chains(rescue_app, monkeypatch, failure):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    _directory, environment, material, token, _requests = rescue_app
+    if failure == "mint":
+
+        def fail_mint(**_kwargs):
+            raise RuntimeError(material + token)
+
+        monkeypatch.setattr(module, "mint_installation_token", fail_mint)
+    else:
+        original = module.os.open
+
+        def fail_read(path, flags, **kwargs):
+            if str(path) == "private-key.pem":
+                raise PermissionError(material + token)
+            return original(path, flags, **kwargs)
+
+        monkeypatch.setattr(module.os, "open", fail_read)
+    with pytest.raises(module.RescueIdentityError) as error:
+        module.resolve_agent_github_identity(environment=environment, rescue=True)
+    pending = [error.value]
+    texts = []
+    seen = set()
+    while pending:
+        current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
+        texts.append(str(current))
+        pending.extend(exc for exc in (current.__cause__, current.__context__) if exc is not None)
+    leaked = any(secret in text for text in texts for secret in (material, token))
+    assert not leaked, "credential retained in exception chain"
+
+
+def test_rescue_explicit_key_file_uses_private_reader(rescue_app):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory, environment, _material, token, requests = rescue_app
+    environment.update(
+        {
+            "LU_AGENT_GITHUB_APP_ID": "123",
+            "LU_AGENT_GITHUB_APP_INSTALLATION_ID": "456",
+            "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE": str(directory / "private-key.pem"),
+        }
+    )
+    identity = module.resolve_agent_github_identity(
+        environment=environment, rescue=True, repository="learn-ukrainian/learn-ukrainian.github.io"
+    )
+    assert identity.source == "app" and identity.token == token and len(requests) == 1
+
+
+@pytest.mark.parametrize("item", ["app-directory", "private-key.pem"])
+@pytest.mark.parametrize("changed", ["wrong_mode", "wrong_owner"])
+def test_rescue_revalidates_opened_owner_and_mode(rescue_app, monkeypatch, item, changed):
+    from scripts.agent_runtime import agent_github_identity as module
+
+    directory, environment, _material, _token, requests = rescue_app
+    target = directory if item == "app-directory" else directory / item
+    original = module.os.fstat
+    expected_inode = target.stat().st_ino
+
+    def changed_stat(fd):
+        info = original(fd)
+        if info.st_ino != expected_inode:
+            return info
+        values = list(info)
+        if changed == "wrong_owner":
+            values[4] = info.st_uid + 1
+        else:
+            values[0] = info.st_mode | (0o020 if item == "app-directory" else 0o040)
+        return os.stat_result(values)
+
+    monkeypatch.setattr(module.os, "fstat", changed_stat)
+    with pytest.raises(module.RescueIdentityError) as error:
+        module.resolve_agent_github_identity(environment=environment, rescue=True)
+    assert error.value.missing == (f"{item}:{changed}",) and requests == []
 
 
 def test_dedicated_agent_token_replaces_parent_github_tokens() -> None:
@@ -314,12 +586,20 @@ def test_restricted_mint_excludes_parent_tls_overrides(tmp_path, monkeypatch):
         monkeypatch.setenv("SSL_CERT_FILE", str(ca))
         monkeypatch.setenv("SSL_CERT_DIR", str(tmp_path))
         with pytest.raises(module.GitHubIdentityError, match="minting failed"):
-            module.mint_installation_token(app_id="fixture", private_key="synthetic", installation_id="fixture",
-                                           repository="org/repo", permissions={"contents": "read"}, api_base_url=url)
+            module.mint_installation_token(
+                app_id="fixture",
+                private_key="synthetic",
+                installation_id="fixture",
+                repository="org/repo",
+                permissions={"contents": "read"},
+                api_base_url=url,
+            )
         assert requests == []
 
 
-@pytest.mark.parametrize("kind", ["symlink", "directory", "fifo", "group-read", "group-write", "world-read", "world-execute"])
+@pytest.mark.parametrize(
+    "kind", ["symlink", "directory", "fifo", "group-read", "group-write", "world-read", "world-execute"]
+)
 def test_configured_key_file_refuses_unsafe_type_or_permissions(tmp_path, monkeypatch, capsys, kind):
     import os
 
@@ -425,6 +705,7 @@ def test_revoke_redirect_never_delivers_token(tmp_path):
         handler.end_headers()
 
     with tls_server(tmp_path, target, family=socket.AF_INET6) as (target_url, target_ca, target_requests):
+
         def redirect(handler):
             handler.send_response(302)
             handler.send_header("Location", target_url + "/other")
@@ -433,7 +714,9 @@ def test_revoke_redirect_never_delivers_token(tmp_path):
         with tls_server(tmp_path, redirect) as (url, ca, requests):
             ca.write_bytes(ca.read_bytes() + target_ca.read_bytes())
             with pytest.raises(module.GitHubIdentityError, match="revocation failed"):
-                module.revoke_installation_token(TOKEN, api_base_url=url, ssl_context=ssl.create_default_context(cafile=str(ca)))
+                module.revoke_installation_token(
+                    TOKEN, api_base_url=url, ssl_context=ssl.create_default_context(cafile=str(ca))
+                )
             assert requests == [("/installation/token", f"Bearer {TOKEN}")]
             assert target_requests == []
 

@@ -35,6 +35,9 @@ these helpers rather than re-deriving containment.
 
 from __future__ import annotations
 
+import os
+import re
+import stat
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -69,6 +72,7 @@ __all__ = [
     "primary_checkout_dirty_status",
     "registered_worktrees",
     "resolve_main_root",
+    "resolve_main_root_without_git",
 ]
 
 # A path is exactly one of these relative to the primary checkout:
@@ -234,6 +238,115 @@ def resolve_main_root(start: Path | str | None = None) -> Path:
     if root is None:
         raise NotAGitRepositoryError(f"{origin} is not inside a git repository")
     return root
+
+
+# A worktree's ``.git`` file is one short ``gitdir:`` line; anything larger is not one.
+_GIT_LINK_MAX_BYTES = 4096
+# HEAD names a ref or holds a SHA-1 or SHA-256 object id, as git's own
+# repository check (``is_git_directory`` in git's setup.c) requires.
+_GIT_HEAD_RE = re.compile(r"ref: refs/\S+|[0-9a-f]{40}|[0-9a-f]{64}")
+
+
+def _read_git_link(path: Path) -> str:
+    """Return the single line of a git metadata file, which must be a regular file.
+
+    The type is checked with ``lstat`` before opening, and the file is opened
+    without following a symlink and without blocking, then rechecked with
+    ``fstat``: a FIFO or device is refused instead of stalling the read.
+    """
+    expected = path.lstat()
+    if not stat.S_ISREG(expected.st_mode):
+        raise NotAGitRepositoryError(f"{path.name} is not a regular file")
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK)
+    with os.fdopen(fd, "rb") as handle:
+        opened = os.fstat(handle.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (expected.st_dev, expected.st_ino):
+            raise NotAGitRepositoryError(f"{path.name} changed while it was read")
+        raw = handle.read(_GIT_LINK_MAX_BYTES + 1)
+    if len(raw) > _GIT_LINK_MAX_BYTES:
+        raise NotAGitRepositoryError(f"{path.name} is too large to be a git link")
+    if b"\x00" in raw:
+        raise NotAGitRepositoryError(f"{path.name} contains a NUL byte")
+    lines = raw.decode("utf-8").splitlines()
+    if len(lines) != 1 or not lines[0].strip():
+        raise NotAGitRepositoryError(f"{path.name} is not a one-line git link")
+    return lines[0].strip()
+
+
+def _link_target(base: Path, value: str) -> Path:
+    """Lexical absolute path for a git link value (absolute, or relative to ``base``)."""
+    return Path(os.path.normpath(base / value))
+
+
+def _require_real_directories(path: Path) -> None:
+    """``lstat`` every component of an absolute normalized path: each is a directory, none a symlink."""
+    current = Path(path.anchor)
+    for part in path.parts[1:]:
+        current = current / part
+        if not stat.S_ISDIR(current.lstat().st_mode):
+            raise NotAGitRepositoryError(f"{part} is a symlink or not a directory")
+
+
+def _require_git_head(gitdir: Path) -> None:
+    if not _GIT_HEAD_RE.fullmatch(_read_git_link(gitdir / "HEAD")):
+        raise NotAGitRepositoryError(f"{gitdir.name}/HEAD names no ref or object id")
+
+
+def _require_git_store(common: Path) -> None:
+    """``common`` (already checked as a real directory) has a repository's HEAD, objects and refs."""
+    _require_git_head(common)
+    for name in ("objects", "refs"):
+        if not stat.S_ISDIR((common / name).lstat().st_mode):
+            raise NotAGitRepositoryError(f"{common.name}/{name} is a symlink or not a directory")
+
+
+def resolve_main_root_without_git(checkout: Path | str) -> Path:
+    """Return the primary checkout that owns ``checkout`` without running git.
+
+    For launcher lookups that must not depend on PATH, git configuration or
+    environment variables (#10500). ``checkout`` must be a checkout root: the
+    primary itself (``.git`` is a directory with git's required HEAD, objects
+    and refs) or a linked worktree, whose ``.git`` file must name
+    ``<primary>/.git/worktrees/<name>``, whose gitdir must hold a HEAD and
+    link back to it (``gitdir``) and to the shared store (``commondir``), as
+    ``git worktree add`` writes them, and whose shared store must pass the
+    primary's check. Every path component is checked with ``lstat`` and no
+    symlink is followed; metadata files must be regular files, read without
+    blocking. Any other layout raises :class:`NotAGitRepositoryError`.
+
+    This catches drift, accidents and corrupt metadata. It does not authenticate
+    the layout: a writer running as the same user can fabricate a complete one.
+    """
+    root = Path(os.path.normpath(Path(checkout).absolute()))
+    dotgit = root / ".git"
+    try:
+        _require_real_directories(root)
+        dotgit_stat = dotgit.lstat()
+        if stat.S_ISDIR(dotgit_stat.st_mode):
+            _require_git_store(dotgit)
+            return root
+        if not stat.S_ISREG(dotgit_stat.st_mode):
+            raise NotAGitRepositoryError(f"{root} has no .git directory or regular .git file")
+        link = _read_git_link(dotgit)
+        if not link.startswith("gitdir:"):
+            raise NotAGitRepositoryError(f"{root}/.git is not a gitdir link")
+        gitdir = _link_target(root, link.removeprefix("gitdir:").strip())
+        common = gitdir.parent.parent
+        if gitdir.parent.name != "worktrees" or common.name != ".git":
+            raise NotAGitRepositoryError(f"{root}/.git does not name <primary>/.git/worktrees/<name>")
+        # Covers the shared store, its ``worktrees`` directory and the gitdir itself.
+        _require_real_directories(gitdir)
+        _require_git_store(common)
+        _require_git_head(gitdir)
+        back_link = _link_target(gitdir, _read_git_link(gitdir / "gitdir"))
+        if back_link != dotgit:
+            raise NotAGitRepositoryError(f"{root} is not the worktree its gitdir links back to")
+        if _link_target(gitdir, _read_git_link(gitdir / "commondir")) != common:
+            raise NotAGitRepositoryError(f"{root}/.git names a gitdir outside its shared store")
+    except (OSError, UnicodeError, ValueError) as exc:
+        # ValueError: a link value with an embedded NUL byte is not a path.
+        raise NotAGitRepositoryError(f"cannot read the git links of {root}: {type(exc).__name__}") from exc
+    return common.parent
 
 
 def _fs_main_root(start_dir: Path) -> Path | None:

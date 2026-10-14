@@ -1,10 +1,11 @@
 // @vitest-environment node
 
 import Database from 'better-sqlite3';
-import { describe, expect, test, vi, afterEach, beforeEach } from 'vitest';
+import { describe, expect, test, vi, afterEach, beforeAll, beforeEach } from 'vitest';
 import { resolve } from 'node:path';
 import * as fs from 'node:fs';
 import {
+  type AtlasPayloadCache,
   getAtlasPayloadCache,
   resetAtlasPayloadCacheForTests,
   getPracticeLemmas,
@@ -103,10 +104,22 @@ function firstDifference(left: string, right: string): string {
   return `length differs: manifest=${left.length} db=${right.length}`;
 }
 
+// A cold getAtlasPayloadCache() selects ~142 MB of payload_json and JSON.parses
+// ~27k rows: 2.8-3.6 s on a quiet host, 5.4-8.8 s on a 2-core starved runner
+// (#10639). Both parity tests need the same cache, so it is built once here
+// under its own budget (~5x the worst loaded build) instead of twice inside the
+// 5 s per-test budget.
+const CACHE_BUILD_TIMEOUT_MS = 45_000;
+
 describe('Atlas DB SSG read parity', () => {
-  test('preloaded DB payloads preserve the current manifest route surface', async () => {
+  let cache: AtlasPayloadCache;
+
+  beforeAll(() => {
     resetAtlasPayloadCacheForTests();
-    const cache = getAtlasPayloadCache();
+    cache = getAtlasPayloadCache();
+  }, CACHE_BUILD_TIMEOUT_MS);
+
+  test('preloaded DB payloads preserve the current manifest route surface', async () => {
     const manifestEntries = manifestRouteEntries();
 
     expect(cache.entries.map((entry) => entry.url_slug)).toEqual(
@@ -123,8 +136,6 @@ describe('Atlas DB SSG read parity', () => {
   });
 
   test('renders DB payload HTML byte-identical to manifest payload HTML for parity fixtures', async () => {
-    resetAtlasPayloadCacheForTests();
-    const cache = getAtlasPayloadCache();
     const manifestEntries = manifestRouteEntries();
     const manifestBySlug = new Map(manifestEntries.map((entry) => [entry.url_slug, entry]));
     const fixtureSlugs = Array.from(

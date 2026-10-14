@@ -19,7 +19,7 @@ import sys
 import time
 import urllib.request
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -37,6 +37,98 @@ class GitHubIdentityError(RuntimeError):
     """Raised when configured agent identity material cannot be used safely."""
 
 
+class RescueIdentityError(GitHubIdentityError):
+    """Fixed item/category diagnostics, with no host or credential values."""
+
+    def __init__(self, *missing: str):
+        self.missing = missing
+        super().__init__("rescue identity unavailable: " + ", ".join(missing))
+
+
+def _validate_rescue_item(info: os.stat_result, item: str, *, directory: bool = False) -> None:
+    if stat.S_ISLNK(info.st_mode):
+        raise RescueIdentityError(f"{item}:symlink")
+    if not (stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode)):
+        raise RescueIdentityError(f"{item}:wrong_type")
+    if info.st_uid != os.getuid():
+        raise RescueIdentityError(f"{item}:wrong_owner")
+    if stat.S_IMODE(info.st_mode) & (0o022 if directory else 0o077):
+        raise RescueIdentityError(f"{item}:wrong_mode")
+
+
+def _read_rescue_item(path: str | Path, item: str, *, dir_fd: int | None = None) -> str:
+    """Read only a private, owned regular file through a checked descriptor."""
+    try:
+        info = os.stat(path, dir_fd=dir_fd, follow_symlinks=False)
+        _validate_rescue_item(info, item)
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
+        try:
+            opened = os.fstat(fd)
+            _validate_rescue_item(opened, item)
+            if (info.st_dev, info.st_ino) != (opened.st_dev, opened.st_ino):
+                raise RescueIdentityError(f"{item}:changed")
+            with os.fdopen(fd, encoding="utf-8") as stream:
+                fd = None
+                return stream.read()
+        finally:
+            if fd is not None:
+                os.close(fd)
+    except FileNotFoundError:
+        raise RescueIdentityError(f"{item}:missing") from None
+    except (OSError, UnicodeError):
+        raise RescueIdentityError(f"{item}:unreadable") from None
+
+
+def _rescue_app_fields(env: Mapping[str, str]) -> dict[str, str] | None:
+    """Load rescue-only provisioning without changing the process environment."""
+    fields = {
+        "app-id": env.get("LU_AGENT_GITHUB_APP_ID", ""),
+        "installation-id": env.get("LU_AGENT_GITHUB_APP_INSTALLATION_ID", ""),
+        "private-key.pem": env.get("LU_AGENT_GITHUB_APP_PRIVATE_KEY", ""),
+    }
+    key_file = env.get("LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE")
+    if any(fields.values()) or key_file:
+        if key_file and not fields["private-key.pem"]:
+            fields["private-key.pem"] = _read_rescue_item(key_file, "private-key.pem")
+        missing = [f"{item}:missing" for item, value in fields.items() if not value]
+        if missing:
+            raise RescueIdentityError(*missing)
+        return fields
+
+    config_home = Path(env.get("XDG_CONFIG_HOME") or Path(env.get("HOME") or Path.home()) / ".config")
+    directory = config_home / "learn-ukrainian" / "agent-github-app"
+    try:
+        info = directory.lstat()
+    except FileNotFoundError:
+        return None
+    except OSError:
+        raise RescueIdentityError("app-directory:unreadable") from None
+    _validate_rescue_item(info, "app-directory", directory=True)
+    try:
+        fd = os.open(directory, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
+        try:
+            opened = os.fstat(fd)
+            _validate_rescue_item(opened, "app-directory", directory=True)
+            if (info.st_dev, info.st_ino) != (opened.st_dev, opened.st_ino):
+                raise RescueIdentityError("app-directory:changed")
+            if set(os.listdir(fd)) - set(fields):
+                raise RescueIdentityError("app-directory:unexpected_items")
+            for item in fields:
+                fields[item] = _read_rescue_item(item, item, dir_fd=fd)
+        finally:
+            os.close(fd)
+    except OSError:
+        raise RescueIdentityError("app-directory:unreadable") from None
+    for item in ("app-id", "installation-id"):
+        value = fields[item]
+        if not value.removesuffix("\n").isascii() or not value.removesuffix("\n").isdigit():
+            raise RescueIdentityError(f"{item}:invalid")
+        fields[item] = value.removesuffix("\n")
+    if not fields["private-key.pem"]:
+        raise RescueIdentityError("private-key.pem:invalid")
+    return fields
+
+
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
@@ -46,7 +138,7 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 class GitHubIdentity:
     """A resolved token and its deliberately non-secret provenance."""
 
-    token: str | None
+    token: str | None = field(repr=False)
     source: str | None
 
 
@@ -113,7 +205,10 @@ def _restricted_opener(ssl_context=None):
 
 
 def revoke_installation_token(
-    token: str, *, api_base_url: str = _GITHUB_API_URL, ssl_context=None,
+    token: str,
+    *,
+    api_base_url: str = _GITHUB_API_URL,
+    ssl_context=None,
 ) -> None:
     """Revoke this installation credential without exposing response diagnostics."""
     try:
@@ -206,7 +301,9 @@ def mint_installation_token(
             ):
                 raise ValueError("invalid permissions")
             expires = datetime.fromisoformat(payload["expires_at"].replace("Z", "+00:00"))
-            if expires.tzinfo is None or expires <= datetime.fromtimestamp(time.time() if now is None else issued_at, UTC):
+            if expires.tzinfo is None or expires <= datetime.fromtimestamp(
+                time.time() if now is None else issued_at, UTC
+            ):
                 raise ValueError("invalid expiry")
         except (KeyError, TypeError, ValueError, AttributeError, OverflowError) as exc:
             raise GitHubIdentityError("GitHub App installation token scope or expiry refused") from exc
@@ -221,6 +318,7 @@ def resolve_agent_github_identity(
     permissions: Mapping[str, str] | None = None,
     api_base_url: str = _GITHUB_API_URL,
     ssl_context=None,
+    rescue: bool = False,
 ) -> GitHubIdentity:
     """Resolve App, dedicated-token, then temporary legacy identity.
 
@@ -228,6 +326,31 @@ def resolve_agent_github_identity(
     reason to silently fall through to a broader credential.
     """
     env = os.environ if environment is None else environment
+    if rescue:
+        try:
+            fields = _rescue_app_fields(env)
+            if fields is not None:
+                try:
+                    token = mint_installation_token(
+                        app_id=fields["app-id"],
+                        private_key=fields["private-key.pem"],
+                        installation_id=fields["installation-id"],
+                        repository=repository,
+                        permissions={"contents": "write"},
+                        api_base_url=api_base_url,
+                        ssl_context=ssl_context,
+                    )
+                except Exception:
+                    raise RescueIdentityError("app-token:mint_failed") from None
+                return GitHubIdentity(token=token, source="app")
+            token = env.get("LU_AGENT_GITHUB_TOKEN")
+            if token:
+                return GitHubIdentity(token=token, source="token")
+            raise RescueIdentityError("app-directory:missing", "agent-token:missing")
+        except RescueIdentityError as exc:
+            missing = exc.missing
+        # Raising outside the handler discards credential-bearing exception context.
+        raise RescueIdentityError(*missing) from None
     private_key = env.get("LU_AGENT_GITHUB_APP_PRIVATE_KEY")
     key_file = env.get("LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE")
     if key_file and not private_key:

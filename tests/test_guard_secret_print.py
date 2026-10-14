@@ -142,6 +142,16 @@ def _run(monkeypatch, command: str, *, env_override: bool = False) -> int:
         "tail .envrc",
         "grep KEY .envrc",
         "echo $GH_TOKEN",
+        "cat ~/.secrets/*",
+        "cat ~/.secrets/example.key",
+        "cat ~/.secret/zai.key",
+        "cat $HOME/.secret/example.key",
+        "cat ${HOME}/.secret/*",
+        "cat /synthetic-home/.secret/example.key",
+        "env | grep KEY",
+        "env | grep PATH",
+        "printenv *_KEY",
+        "printenv CURSOR_API_KEY",
     ],
 )
 def test_secret_dump_shapes_blocked(monkeypatch, capsys, cmd):
@@ -648,6 +658,8 @@ def test_bash_comment_starts_after_control_operator_in_secret_hook(operator):
     "cmd",
     [
         "env | cut -d= -f1",
+        "printenv PATH",
+        "printenv HOME",
         '[ -n "${X:-}" ] && echo SET',
         "cat README.md",
         "cat agents_extensions/shared/hooks/guard-secret-print.py",
@@ -770,6 +782,8 @@ def _subprocess_guard(command):
 @pytest.mark.parametrize("shape,secret_exit,other_exit", AUDIT_SHAPES)
 def test_audit_shapes(name, shape, secret_exit, other_exit):
     expected = secret_exit if guard._is_secret_var_name(name) else other_exit
+    if shape == "printenv {name}" and name in {"API_KEY", "PASSWORD", "SECRET", "TOKEN", "AWS_SECRET_ACCESS_KEY"}:
+        expected = 2
     result = _subprocess_guard(shape.replace("{name}", name))
     assert SENTINEL not in result.stdout + result.stderr
     assert result.returncode == expected

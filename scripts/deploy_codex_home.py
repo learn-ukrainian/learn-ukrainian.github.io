@@ -66,7 +66,8 @@ def merge_config(data: bytes) -> bytes:
     expected.setdefault("agents", {}).update(EXPECTED["agents"])
     if original == expected:
         return data
-    lines = data.decode().splitlines(keepends=True)
+    # Frame bytes before decoding: NEL/LS/PS inside a TOML string are value text (#9556).
+    lines = [line.decode() for line in data.splitlines(keepends=True)]
     section, found, insert_at = "", set(), None
     assignment = re.compile(
         r"""^(\s*)(model|model_reasoning_effort|default_subagent_model|default_subagent_reasoning_effort)(\s*=\s*)("(?:[^"\\\r\n]|\\.)*"|'[^'\r\n]*')([ \t]*(?:\#.*)?)(\r?\n)?$"""

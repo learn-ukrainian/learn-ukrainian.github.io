@@ -321,6 +321,60 @@ retain the schema on that invocation's plan for result validation:
 | AGY | `--output-format json --json-schema <JSON>` | `structured_output` in the JSON envelope with `status=SUCCESS` |
 | Grok | `--json-schema <JSON>` with JSON output | `structuredOutput` in the final envelope with `stopReason=end_turn`, without `structuredOutputError` |
 
+### AGY pending supervisory orders
+
+The `pending-orders-announce` overlay runs
+`scripts/agy_hooks/pending_orders_inject.sh` on every `PreInvocation`,
+independently of `driver-state-pin`. It uses the launcher's
+`SESSION_HANDOFF_AGENT` registered slot, including worker slots, and injects
+`{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: ..."}]}` before
+the next model call. It never falls back to the `claude` inbox.
+
+`scripts.inbox_pending` opens the configured legacy broker and Fleet Comms
+authority SQLite stores read-only. It counts unacknowledged, non-live-consumed
+legacy messages and queued or running authority deliveries without durable
+generation-bound supervisory consumption or an expired deadline. A consumed
+wake receipt records receiver observation and leaves the order pending.
+Output contains counts, at most five full message IDs, a truncation flag,
+per-store counts and `probe: ok|unknown`.
+No body is selected, and no delivery is claimed, consumed or acknowledged.
+
+Legacy recipients follow the bridge inbox policy: resolve the roster alias,
+then include permanent seat read aliases. The launcher's `monitor`,
+`infra.monitor`, `ops-api`, `ops.api` and `operator-api` selectors all use the
+monitor lane. With a readable registry containing registered slots, an empty
+monitor area maps `gemini-monitor` to `gemini` in the legacy projection; a
+dedicated registered slot reads only its own recipient set. An entirely empty
+or unreadable roster returns unknown. Authority publish and claim use exact
+recipient names without that roster resolver. For example, `gemini-monitor`
+remains `gemini-monitor` in authority deliveries. The probe checks existing
+authority admission and returns unknown if admission is unavailable or changes
+the recipient. It never uses a legacy empty result to prove authority emptiness.
+
+A proven empty inbox returns `{}`. Pending orders are re-announced on replay
+until acknowledged or consumed. The injected line is at most 200 characters;
+it includes as many full IDs as fit and marks truncation. A `legacy:` pointer
+names `ai_agent_bridge inbox --for` with the resolved legacy recipient. Legacy
+stores are read-only migration projections in authority mode; the notice does
+not recommend legacy acknowledgement writes. An `authority:` pointer names
+`.venv/bin/python -m scripts.fleet_comms deliveries --help`, the existing fenced
+delivery workflow. Both pointers appear when both stores have pending work.
+The authority workflow uses delivery IDs returned by claim, the lease owner's
+worker ID and fence token, and a driver generation for supervisory consumption.
+Use the exact `SESSION_HANDOFF_AGENT` for the workflow's `--recipient` argument.
+Announcement message IDs are not legacy integer ack IDs or authority delivery
+IDs. The hook only prints guidance; it never executes this workflow. In a linked
+worktree, run the documented help with the prescribed shared project interpreter.
+Missing or unreadable stores, invalid hook JSON,
+an invalid or missing slot, and interpreter failures inject `PENDING ORDERS:
+unknown` with exit 0. Hook input and output are never written to temporary files.
+
+Deploy the canonical overlay with `npm run agents:deploy`, which copies
+`agents_extensions/agy/hooks.json` into the workspace `.agents/hooks.json`
+alongside the shared agent configuration. Local synthetic tests prove the
+read-only announcement contract; issue #10558 requires a separate live AGY
+proof of the next-call timing before certification.
+
 ### AGY shell-output guard and startup gate
 
 The native shell event is
@@ -655,6 +709,72 @@ neither control. In Claude Code 2.1.289 `--bare` already offers only Bash,
 Edit and Read, and Bash has no `run_in_background` there (a capture of the
 request sent to a local fake endpoint); the explicit controls keep the route
 closed if that reduced tool set changes.
+
+The ACP Claude seat (`acpx-claude-shadow`, #10500) launches the host Claude
+Code through the repo-owned `scripts/agent_runtime/claude_acp_exec.sh`, which
+`CLAUDE_CODE_EXECUTABLE` names. The adapter reads the launcher only from the
+canonical primary checkout, which the adapter's own checkout names through its
+git links (`resolve_main_root_without_git`: no git process, so PATH, git
+configuration and the environment cannot redirect it); a worktree copy is
+never used. Before every launch it validates the launcher and each parent
+(owner, mode, no symlink), reads it once without following links, checks the
+SHA-256 of those bytes against the adapter's pin
+(`_CLAUDE_ACP_LAUNCHER_CLOSURE`; the launcher is self-contained, and its bytes
+and the pin change in the same commit), writes them to a private `0700`
+per-launch copy under the caller's cache directory, and validates the pinned
+host binary. `CLAUDE_CODE_EXECUTABLE` names that copy, so a later change to the
+checkout does not change what runs. The primary checkout is resolved from git
+metadata files that must have the structure git itself requires (a `.git`
+directory with `HEAD`, `objects` and `refs`, or a worktree link with
+consistent back-links into such a store); every path component is checked with
+`lstat`, no symlink is followed, and a FIFO or device where a metadata file
+belongs is refused without blocking.
+The copy directory in the caller's cache is checked like the
+launcher's parents and must be owned by the caller before anything in it is
+touched. Before each launch, a sweep removes copies older than two days, but only
+`0700` directories the caller owns, with the generated name, that no live
+process holds open (read from `/proc`); sweep failures are logged. The ask's
+own copy is removed when its result is parsed. If a live process still holds it
+or removal fails (permission, `ENOSPC`, `EBUSY`), the result fails with
+`acp_adapter_incompatible` and a logged `ClaudeAcpLauncherCleanupError` instead
+of leaving a silent copy; the runner's final cleanup retries.
+A missing, unsafe, unreadable or mismatched launcher, an unresolvable primary
+checkout or a failed copy refuses with a typed `ClaudeCodeExecutableRefusal`
+before any ACP message, with no fallback. Refusal text names no absolute host
+path. Host paths in the provider's output are replaced with labels before
+the 500-character excerpt is cut. The launcher rechecks the binary's device,
+inode, size, and mtime and ctime in nanoseconds with GNU `stat` (`gnustat`
+where the system `stat` is the uutils build, which rounds nanoseconds; without
+GNU `stat` every launch refuses). It then execs the binary with the deny list
+as one `--disallowedTools` argument; the SDK's own `--disallowedTools` follows
+and accumulates. After the ask, any result, successful or not, fails when the
+binary's identity changed.
+
+These checks are bound to the verified launcher bytes and catch drift,
+accidents and honest misconfiguration: an auto-update mid-ask, a stale or
+edited checkout, unsafe permissions, corrupt git metadata, and ordinary
+concurrent launches. They are not tamper resistance. A writer running as the
+same Unix user already controls the host binary, the user configuration and the
+checkout, so deliberate replacement or forgery by that writer is out of scope.
+Documented residuals (owner: infra; resolved in an isolated-authority phase,
+where launcher verification and execution run under an authority the seat's
+user cannot write):
+
+- Execution is bound to a pathname after hashing. The SDK receives the private
+  copy's path, which that writer can replace between verification and exec.
+- That writer can edit the host binary in place and restore its size and
+  mtime. The nanosecond ctime comparison catches this unless the writer can
+  also reset ctime.
+- That writer can fabricate a complete git layout (`HEAD`, `objects`, `refs`
+  and consistent links) to select a non-canonical primary checkout. The
+  launcher digest still pins the bytes that run.
+
+The seat enforces the denies
+through these launcher flags, not through ACPX permissions: `--deny-all` never
+covers tools that run without asking, such as `Monitor` and `ScheduleWakeup`.
+The plan also sets `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS`,
+`CLAUDE_CODE_DISABLE_ADVISOR_TOOL`, `CLAUDE_CODE_DISABLE_CRON` and
+`CLAUDE_CODE_DISABLE_WORKFLOWS`, allowlisted for this seat only.
 
 Sealed `review_isolation` drops the variable through its own environment
 allowlist. It is still closed, because `--tools Read,Grep,Glob` offers no tool

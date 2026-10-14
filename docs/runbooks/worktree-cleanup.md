@@ -102,6 +102,19 @@ Task output placed in an excluded cache remains disposable. Real `.venv` and
 verified provisioned links are disposable. `worktree_artifacts.is_disposable_path`
 is the shared taxonomy for creation, preservation and scheduled reaping.
 
+The issue-stream audit's refresh sidecars, `batch_state/issue_stream_audit_refresh.json`
+and `batch_state/issue_stream_audit_refresh.lock`, are regenerable tool state, not
+task output (#10519). The audit now writes them under the primary checkout, but
+older runs left them in the checkout they ran from. Exactly these two root-level
+names are exempt from inventory and preservation
+(`regenerable_output.AUDIT_REFRESH_STATE_FILES`), so a clean worktree holding
+only them no longer needs a task record to be removed. The exemption needs an
+untracked regular file of at most 4 KiB with no symlink component; any other
+name (including `batch_state/issue_stream_audit.json`, nested copies and
+`.tmp` leftovers) or a larger file keeps the normal attribution and
+preservation rules. An unrelated file beside them retains the tree only when
+attribution is missing; attributed output can be preserved and the tree removed.
+
 Automatic preservation is capped at **256 MiB per worktree**, bounding disk
 duplication while accommodating text output and small reports. Above the cap,
 no partial copy is attempted and the worktree is retained for its owner's
@@ -171,6 +184,12 @@ ancestor of the authoritative merged PR head. Every current cohort record must
 have a complete task/run/process identity and a commit contained in the checkout
 head. Unknown Git objects, divergent commits, unmerged PRs and live or unknown
 processes retain the tree. This proof does not release retention intent.
+A switched-branch proof identifies the checkout using Git's raw common-directory
+and configured-origin output, then checks Git's porcelain registration list in
+the primary. The candidate must be inside that primary's cleanup root. The
+resolver never reads Git pointer files or normalizes identity output. Unknown
+identity refuses the proof before any pull-request query or removal; malformed
+origins retain their checkout without aborting the sweep.
 This extra owner proof applies only to cohorts of at least two current records;
 single-record trees retain their existing behavior. Its status remains unchanged.
 Removal uses no force flag for this cohort and still checks the delete target;
@@ -311,6 +330,54 @@ attempt with `remote_deleted`, `local_deleted`, and any error. The first line
 records the branch, tip SHA, evidence kind, evidence detail, and UTC time. It
 does not by itself claim that the deletion succeeded. While GitHub still has
 the object, `git fetch origin <tip-sha>` recovers it.
+
+`branch_sweep --archive-after-days N` also classifies expired local report-only
+branches as `archive-expired` after seven days by default. Apply writes one thin
+bundle under `batch_state/branch-archive/`, verifies every selected head, and
+appends durable records to `stale-local-receipts.jsonl` before deleting any local
+ref. Every existing receipt must be a valid, newline-terminated JSON object;
+a broken ledger refuses the batch. A repository-wide exclusive archive lock on
+the control-plane checkout covers fresh validation, bundling, receipts, final
+guards and ref deletion. The persistent `branch-archive/archive.lock` file is
+never unlinked. Each bundle is created and verified under a private temporary
+name in the managed `TMPDIR` lease, or the shared scratch root when `TMPDIR` is
+unset or empty. An atomic hard link publishes it into the archive directory and
+refuses an existing name. Staging and publication must share a filesystem;
+cross-filesystem link failure keeps every selected ref and any existing bundle,
+without copying into a live archive name. Private staging is removed after the
+attempt; published bundles survive later guard or receipt failure.
+Thin bundles exclude `origin/main` history.
+The receipt's restore command needs those prerequisite commits present: fetch
+them from origin or restore in a clone of this repository. Remote refs and
+archive bundles are retained; bundles at least 90 days old are listed for review.
+
+Symbolic local refs are retained. Any selected branch failing pre-bundle
+validation keeps the entire batch without creating a bundle. After receipts are
+durable, a fresh PR snapshot covers the whole selected batch in one GitHub
+response, followed by fresh ref, worktree and task-record snapshots compared
+with classification. Unknown or changed guards keep the entire batch. The last
+local checks before the single `git update-ref --stdin --no-deref` transaction
+explicitly refuse occupied worktrees and live or recent tasks. Archival admits
+only candidate branches with no associated registered worktree,
+including a detached checkout at the candidate tip. The unrelated normal primary
+checkout does not prevent archival of unbound branches. Any native in-progress
+operation anywhere in the repository's worktree set refuses the entire sweep,
+including operations on unrelated branches. The reader checks Git's rebase and
+sequencer directories and bisect, merge, cherry-pick, revert and rebase markers;
+operation state is refused by presence, without parsing branch names or
+`update-refs` contents. An incomplete bisect start also refuses the sweep.
+The reader uses Git administrative registrations even for moved, locked or
+prunable checkouts. Missing, malformed, unreadable, contradictory or unknown
+registration and HEAD evidence refuses deletion. Operation evidence never proves
+that a branch is free. The same census runs before classification, for drift
+snapshots and again at the final destructive boundary. This conservative fallback
+narrows archival availability; it does not certify the original unrestricted
+archival outcome while unrelated operations are active.
+A guard change after its final snapshot and before the transaction remains a residual race
+window; GitHub, task files and worktree registrations do not share a transaction
+with Git refs. Expected-SHA checks abort the whole transaction on head moves;
+`--no-deref` prevents deletion through a symbolic target. The accountable sweep
+driver owns assessment of this residual window before live use.
 
 The scheduled job uses
 `git worktree remove --force` only as the final deletion step after all P0

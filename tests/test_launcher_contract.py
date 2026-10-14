@@ -25,7 +25,7 @@ from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
-from tests.launcher_libraries import launcher_library_files
+from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_launcher_sources, copy_slot_registry
 from tests.rules_core_view import (
     _build_view,
@@ -50,6 +50,7 @@ PUBLIC = (
     "start-cursor-driver.sh",
     "start-gemini.sh",
     "start-gemini-driver.sh",
+    "start-muse-driver.sh",
     "start-grok.sh",
     "start-grok-driver.sh",
     "start-kimi.sh",
@@ -309,6 +310,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
         *launcher_library_files(REPO),
+        *launcher_catalog_files(REPO),
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -463,6 +465,7 @@ def _core_driver_exit_fixture(
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
         *launcher_library_files(REPO),
+        *launcher_catalog_files(REPO),
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -960,7 +963,7 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
 
 
 def test_all_driver_adapters_use_common_closure_wrapper() -> None:
-    for provider in ("claude", "codex", "gemini", "grok"):
+    for provider in ("claude", "codex", "gemini", "grok", "muse"):
         body = (REPO / "scripts" / "launchers" / f"{provider}.sh").read_text(encoding="utf-8")
         assert 'launcher_exec_command "${cmd[@]}"' in body
 

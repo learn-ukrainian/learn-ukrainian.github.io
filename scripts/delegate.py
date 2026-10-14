@@ -185,7 +185,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Callable, Collection, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -204,6 +204,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.env_sanitize import GITHUB_TOKEN_SEATS as _GH_TOKEN_AGENTS
 from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
@@ -249,7 +250,12 @@ from scripts.orchestration.dead_worker_state import (
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
-from scripts.review.verdict_parser import recognized_verdicts
+from scripts.review.verdict_parser import (
+    ACCEPTED_VERDICT_TOKENS,
+    _without_code_fences,
+    recognized_verdicts,
+    unsupported_verdict_tokens,
+)
 from scripts.secret_redactor import redact_text
 
 if TYPE_CHECKING:
@@ -257,25 +263,6 @@ if TYPE_CHECKING:
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
-# The Gemini-family seat is intentionally absent in BOTH spellings: the
-# retired ``gemini`` alias resolves to ``agy`` before Popen (#7041), so the
-# strip has to attach to the resolved seat id ``agy`` — otherwise every
-# ``--agent gemini`` dispatch would slip a parent operator ``GH_TOKEN`` /
-# ``GITHUB_TOKEN`` back in through the alias. Intended App or
-# ``LU_AGENT_GITHUB_TOKEN`` identity still reaches that CLI via
-# ``build_agent_env`` (#7020).
-_GH_TOKEN_AGENTS = {
-    "bridge",
-    "claude",
-    "codex",
-    "cursor",
-    "deepseek",
-    "glm",
-    "grok",
-    "grok-build",
-    "grok-hermes",
-    "kimi",
-}
 _RUNTIME_TMP_TERMINAL_STATUSES = frozenset(
     {
         "done",
@@ -363,6 +350,7 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
         and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
+        and not (key == "claude_account" and value in (None, "a"))
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -384,6 +372,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
+        and not (key == "claude_account" and value in (None, "a"))
     }
 
 
@@ -2637,7 +2626,6 @@ _WRITE_SHAPED_PROMPT_RE = re.compile(
     )
     """,
 )
-_FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
 _HEADING_BOUNDARY_RE = re.compile(r"^\s*\#{1,6}\s+")
 _LIST_BOUNDARY_RE = re.compile(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)")
@@ -2772,6 +2760,7 @@ _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
 _AUTO_FINALIZE_NOTHING_OWNED_REASON = "no_changes_under_owned_paths"
 _AUTO_FINALIZE_NO_OWNED_PATHS_REASON = "no_owned_paths_declared"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
+_REVIEW_UNSUPPORTED_VERDICT_REASON = "review_unsupported_verdict_token"
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2797,14 +2786,17 @@ _CROSS_REPO_BINDING_HINT = (
 
 
 def _strip_quoted_content(prompt: str) -> str:
-    """Drop fenced blocks and Markdown blockquotes before the write-intent scan.
+    """Drop closed fences and Markdown blockquotes before write-intent and DoR scans.
 
     A critique dispatch attaches or includes the brief under review, and that
     brief legitimately contains write-shaped lines ("Add a CLI …").  Quoted
     content is data for the worker to critique, not a directive to mutate the
     repository, so it must not trip the read-only gate (#7814 item 6).
+    Unterminated bodies and nested-container fences remain visible to both
+    safety checks; only parser-mapped, source-closed top-level fences are
+    removed (#9672), so a container exit cannot hide a later directive.
     """
-    without_fences = _FENCED_BLOCK_RE.sub("", prompt)
+    without_fences = _without_code_fences(prompt, keep_unclosed=True)
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
 
 
@@ -2999,7 +2991,7 @@ def parse_review_verdict(response: str) -> str | None:
 
 
 def _review_verdict_failure_reason(response: str) -> str | None:
-    """Return the failure reason when a review-typed reply has no verdict line.
+    """Distinguish missing verdicts from safe unsupported own verdict tokens.
 
     Applies only to dispatches that opt in via ``--require-review-verdict``
     (the ask-* review wrapper); ordinary asks and implement dispatches never
@@ -3011,6 +3003,8 @@ def _review_verdict_failure_reason(response: str) -> str | None:
     """
     if parse_review_verdict(response) is not None:
         return None
+    if unsupported_verdict_tokens(response):
+        return _REVIEW_UNSUPPORTED_VERDICT_REASON
     return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
 
 
@@ -6278,6 +6272,7 @@ def public_causes() -> frozenset[str]:
     exit-scan reasons, and the completion-gate and delivery causes.
     """
     from scripts.agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES
     from scripts.agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 
     advisory = {
@@ -6298,6 +6293,7 @@ def public_causes() -> frozenset[str]:
         _NO_DELIVERABLE_INVALID_DECLARATION_REASON,
         _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON,
         _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON,
+        _REVIEW_UNSUPPORTED_VERDICT_REASON,
         _AUTO_FINALIZE_NOTHING_OWNED_REASON,
         _AUTO_FINALIZE_NO_OWNED_PATHS_REASON,
         COMPLETION_GATE_RESPONSE_UNAVAILABLE,
@@ -6313,6 +6309,7 @@ def public_causes() -> frozenset[str]:
         | RUNTIME_FAILURE_CODES
         | frozenset(AGY_INCOMPLETE_RUN_REASONS)
         | advisory
+        | CLAUDE_ACCOUNT_REFUSAL_CODES
         | delegate_causes
     )
 
@@ -6362,6 +6359,7 @@ class _TypedCause:
     path: str | None = None
     count: int | None = None
     diagnostic: str = dataclasses.field(default="", compare=False, repr=False)
+    missing: tuple[str, ...] = ()
 
     def public(self) -> str:
         parts = [self.code if self.code in public_causes() else UNCLASSIFIED_CAUSE]
@@ -6567,6 +6565,7 @@ def _diagnostic_line(source: str, field: str, cause: _TypedCause) -> bytes:
             "field": field[:64],
             "code": cause.code[:64],
             "public": cause.public(),
+            **({"missing": list(cause.missing)} if cause.missing else {}),
             **({"path": path} if path else {}),
             "diagnostic": text,
         }
@@ -7289,6 +7288,10 @@ def run_completion_gate(
         return CompletionGateResult(gate, reason, reason or "", status=_NO_DELIVERABLE_STATUS)
     if gate == COMPLETION_GATE_REVIEW_VERDICT:
         reason = _review_verdict_failure_reason(response or "")
+        if reason == _REVIEW_UNSUPPORTED_VERDICT_REASON:
+            token = unsupported_verdict_tokens(response or "")[-1]
+            detail = f"{reason}: unsupported token {token!r}; accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
+            return CompletionGateResult(gate, reason, redact_text(detail) or "")
         return CompletionGateResult(gate, reason, reason or "")
     if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
         advisory = _advisory_completion_gate(record, worktree)
@@ -7441,6 +7444,32 @@ def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: S
     return moves
 
 
+def _adopt_continuation_checkout_branch(state: dict[str, Any], worktree: Path) -> None:
+    """Record the branch a reused continuation actually left checked out.
+
+    Dispatch stores the branch name from when the round attached. A worker that
+    creates a fresh branch in that same checkout otherwise keeps the old name,
+    so the unpushed check compares HEAD to the wrong remote and the round ends
+    ``needs_finalize`` after the new branch is already pushed. Detached HEAD
+    and a protected branch are left unchanged.
+    """
+    if state.get("worktree_reused") is not True:
+        return
+    actual = _current_branch(worktree)
+    if not isinstance(actual, str) or not actual or actual == "HEAD":
+        return
+    if actual in _load_worktree_containment().PROTECTED_BRANCHES:
+        return
+    recorded = state.get("worktree_branch")
+    normalized = recorded.strip() if isinstance(recorded, str) else ""
+    for prefix in ("refs/heads/", "origin/"):
+        if normalized.startswith(prefix):
+            normalized = normalized.removeprefix(prefix)
+    if normalized == actual:
+        return
+    state["worktree_branch"] = actual
+
+
 def _current_branch(worktree: Path) -> str | None:
     try:
         proc = subprocess.run(
@@ -7534,7 +7563,9 @@ def _build_worker_env(
     else:
         worker_env["AGENT_NO_MERGE"] = "1"
         worker_env.pop("AGENT_ALLOW_MERGE", None)
-    return worker_env
+    from agent_runtime.env_sanitize import without_unneeded_secrets
+
+    return without_unneeded_secrets(worker_env, dispatch_agent)
 
 
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
@@ -7843,21 +7874,45 @@ def _rescue_canonical_push_url() -> str:
     return CANONICAL_ORIGIN
 
 
-def _rescue_execution_context(repo: _RescueRepo) -> SafeGitContext:
-    from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity
+@contextlib.contextmanager
+def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
+    from scripts.agent_runtime.agent_github_identity import (
+        RescueIdentityError,
+        resolve_agent_github_identity,
+        revoke_installation_token,
+    )
 
-    identity = resolve_agent_github_identity(
-        bash_secrets_path=_BASH_SECRETS_PATH,
-        repository="learn-ukrainian/learn-ukrainian.github.io",
-    )
+    alternative = "Publish through the normal pre-push push from the worktree."
+    try:
+        identity = resolve_agent_github_identity(
+            repository="learn-ukrainian/learn-ukrainian.github.io",
+            rescue=True,
+        )
+    except RescueIdentityError as exc:
+        raise _RescueFailure(
+            f"Rescue identity unavailable ({', '.join(exc.missing)}). {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=exc.missing),
+        ) from None
     if not identity.token:
-        raise _RescueFailure("driver identity unavailable", _TypedCause("rescue_identity_unavailable"))
-    return SafeGitContext(
-        objects=repo.git_dir / "objects",
-        origin=_rescue_canonical_push_url(),
-        token=identity.token,
-        temp_root=Path(tempfile.gettempdir()),
-    )
+        raise _RescueFailure(
+            f"Rescue identity unavailable. {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=("agent-token:missing",)),
+        )
+    try:
+        with SafeGitContext(
+            objects=repo.git_dir / "objects",
+            origin=_rescue_canonical_push_url(),
+            token=identity.token,
+            temp_root=Path(tempfile.gettempdir()),
+        ) as context:
+            yield context
+    finally:
+        if identity.source == "app":
+            try:
+                revoke_installation_token(identity.token)
+            except Exception:
+                # Cleanup must not replace the push result or expose response text.
+                print("WARNING: rescue App token revocation failed", file=sys.stderr)
 
 
 def _rescue_repo(worktree: Path) -> _RescueRepo:
@@ -8096,6 +8151,8 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
         )
         reason = cause.public()
         row.update(action="error", reason=reason, failure_code=reason.split(", ")[0])
+        if cause.code == "rescue_identity_unavailable":
+            row.update(missing=list(cause.missing), message=cause.diagnostic)
         diagnostic = _record_diagnostic(task_id, cause, source="rescue", field="reason")
         if diagnostic:
             row["diagnostic"] = diagnostic
@@ -10414,6 +10471,12 @@ def _run_worker(
         print(f"❌ {advisory_refusal}", file=sys.stderr)
         return 1
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_KEY,
+        DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
+        resolve_claude_account_label,
+    )
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
@@ -10565,6 +10628,14 @@ def _run_worker(
             tool_config: dict[str, Any] = {}
             if state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
+            if agent == "claude" and CLAUDE_ACCOUNT_KEY in state:
+                # The label the task record carries. Only the attempt boundary
+                # authenticates as a non-default account; elsewhere it would
+                # silently run as the default one, so it is refused.
+                claude_account = resolve_claude_account_label(state[CLAUDE_ACCOUNT_KEY])
+                if claude_account != DEFAULT_CLAUDE_ACCOUNT and (review_id is None or attempt_id is None):
+                    raise ClaudeAccountRefused("claude_account_route_unsealed")
+                tool_config[CLAUDE_ACCOUNT_KEY] = claude_account
             if agent in {"agy", "gemini"} and (
                 _dispatch_is_review_typed(argparse.Namespace(**state))
                 or require_review_verdict
@@ -10781,6 +10852,11 @@ def _run_worker(
             worker_exception = _exception_cause("worker_runtime_error", exc)
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except ClaudeAccountRefused as exc:
+            pre_spawn_failure = True
+            failure_cause = exc.code
+            stderr_excerpt = f"CLAUDE_ACCOUNT_REFUSED: {exc.code}"
+            returncode_reason = "the task record's Claude account label was refused; provider not started"
         except bounded_advisory.AdvisoryRefused as exc:
             pre_spawn_failure = True
             advisory_handoff_refusal = exc.code
@@ -11058,6 +11134,9 @@ def _run_worker(
                 if dirty_on_exit in (True, None):
                     needs_finalize = True
 
+                # Measure the branch the continuation left checked out (#10548).
+                _adopt_continuation_checkout_branch(final_state, Path(worktree_path))
+
                 # Catch committed-but-unpushed write dispatches (#7311):
                 # A clean tree with local commits on the dispatch branch has commits_ahead >= 1
                 # relative to base_ref (e.g. origin/main), but if those commits were never
@@ -11210,7 +11289,7 @@ def _run_worker(
                 final_state["review_verdict_failure"] = gate_result.failure
                 final_status = "failed"
                 ok_outcome = False
-                stderr_excerpt = gate_result.failure
+                stderr_excerpt = gate_result.detail
                 failure_cause = gate_result.failure
             else:
                 final_state["failure_reason"] = gate_result.failure
@@ -12175,6 +12254,45 @@ def _refuse_review_scratch_in_worktree() -> None:
         )
 
 
+def _dispatch_claude_account_refusal(args: argparse.Namespace) -> str | None:
+    """The typed code refusing ``--claude-account``, or ``None``; checked before any side effect.
+
+    A non-default label is admitted only for a claude formal review attempt:
+    that sealed boundary is the one worker path that selects the bound
+    account's credential, so any other route would silently run as the
+    default account. Its binding and credential sources are verified here and
+    again where the worker authenticates.
+    """
+    from scripts.agent_runtime.attempt_boundary import (
+        DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
+        resolve_claude_account_label,
+        verify_claude_account,
+    )
+
+    try:
+        label = resolve_claude_account_label(getattr(args, "claude_account", None))
+        if label == DEFAULT_CLAUDE_ACCOUNT:
+            return None
+        if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
+            return "claude_account_seat_unsupported"
+        if not getattr(args, "review_attempt", None):
+            return "claude_account_route_unsealed"
+        verify_claude_account(label)
+    except ClaudeAccountRefused as exc:
+        return exc.code
+    return None
+
+
+def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, str]:
+    """A claude task record's account label, resolved once; the worker reads it back from the record."""
+    if dispatch_agent != "claude":
+        return {}
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+
+    return {CLAUDE_ACCOUNT_KEY: resolve_claude_account_label(getattr(args, "claude_account", None))}
+
+
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     # The stack owns the worktree lock taken before create-or-attach. Dispatch
@@ -12218,6 +12336,11 @@ def _dispatch(
 
     if getattr(args, "pinned_head", None) and not (getattr(args, "branch", None) or getattr(args, "pr", None)):
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
+        return 2
+
+    claude_account_refusal = _dispatch_claude_account_refusal(args)
+    if claude_account_refusal:
+        print(f"❌ CLAUDE_ACCOUNT_REFUSED: {claude_account_refusal}", file=sys.stderr)
         return 2
 
     # Diagnose the required profile before route admission defaults to code
@@ -12316,6 +12439,10 @@ def _dispatch(
         checkout_error = None
     except FleetRepoError as exc:
         checkout_error = f"❌ {exc}"
+        if _dispatch_is_review_typed(args) and fleet_repo_key == "infra-private":
+            from scripts.review.target_resolution import repository_target_error
+
+            checkout_error = f"❌ {repository_target_error(fleet_repo_key, exc)}"
     if checkout_error and not is_kimi_seat(args.agent, model=getattr(args, "model", None)):
         print(checkout_error, file=sys.stderr)
         return 2
@@ -12627,7 +12754,7 @@ def _dispatch(
     pinned_head = getattr(args, "pinned_head", None)
     if pr_number is not None:
         try:
-            pr_branch, resolved_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
+            pr_branch, resolved_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(target_repo_root))
         except GeminiChangedPathListError as exc:
             print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
             return 2
@@ -13587,6 +13714,7 @@ def _dispatch(
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
+            dry_run_state.update(_claude_account_state(args, dispatch_agent))
             if not admission.exempt:
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
@@ -14113,6 +14241,7 @@ def _dispatch(
         initial_state.update(_authoring_review_state_fields(args, authoring_admission))
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
+        initial_state.update(_claude_account_state(args, dispatch_agent))
         if lifecycle_carrier is not None:
             initial_state["task_lifecycle"] = lifecycle_carrier
         if review_plan is not None:
@@ -16517,7 +16646,12 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
     actual base. Attempt records supply their frozen target.changed_paths.
     """
     from scripts.review.security_paths import git_changed_paths
-    from scripts.review.target_resolution import TargetResolutionError, resolve_branch_target, resolve_pr_target
+    from scripts.review.target_resolution import (
+        TargetResolutionError,
+        resolve_branch_target,
+        resolve_pr_target,
+        resolve_review_repository,
+    )
 
     attempt = getattr(args, "review_attempt", None)
     paths: tuple[str, ...] | None = None
@@ -16539,25 +16673,39 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
     pinned = getattr(args, "pinned_head", None)
     if pinned and not (branch or pr):
         raise TargetResolutionError("--pinned-head requires --branch or --pr")
+    repo_key = getattr(args, "repo", None)
+    anchor = _REPO_ROOT if repo_key else _local_repo_root
     if pr is not None:
-        target = resolve_pr_target(_local_repo_root, int(pr))
+        resolution_mode, resolution_branch, resolution_base = "pr", None, None
+    elif branch:
+        resolution_mode = "branch"
+        resolution_branch = pinned or _origin_base_ref(branch)
+        resolution_base = _origin_base_ref(getattr(args, "base", None) or "main")
+    else:
+        resolution_mode, resolution_branch, resolution_base = None, None, None
+    repo_root = resolve_review_repository(
+        anchor,
+        repo_key,
+        mode=resolution_mode,
+        branch=resolution_branch,
+        base=resolution_base,
+    )
+    args._review_repo_root = repo_root
+    if pr is not None:
+        target = resolve_pr_target(repo_root, int(pr))
         if pinned and pinned.lower() != target.head_sha:
             raise TargetResolutionError("pinned head differs from PR head")
         args._review_admission_head = target.head_sha
     elif branch:
         if pinned and not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
             raise TargetResolutionError("pinned head must be a full commit SHA")
-        target = resolve_branch_target(
-            _local_repo_root,
-            pinned or _origin_base_ref(branch),
-            _origin_base_ref(getattr(args, "base", None) or "main"),
-        )
+        target = resolve_branch_target(repo_root, resolution_branch, resolution_base)
         args.pinned_head = target.head_sha
     elif paths is not None:
         return paths
     else:
         raise TargetResolutionError("review target required: supply --branch, --pr or a resolved --review-attempt")
-    literal = git_changed_paths(_local_repo_root, target.base_sha, target.head_sha)
+    literal = git_changed_paths(repo_root, target.base_sha, target.head_sha)
     # The frozen endpoints the complete-authorship facts are read from (#9739).
     args._review_target = target
     return tuple(dict.fromkeys((*literal, *(paths or ()))))
@@ -16566,20 +16714,20 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
 def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str]) -> Any:
     """Complete authorship and scope of the review target for a trusted code review (#9739).
 
-    Only a review that names its author and risk attests cross-family
-    independence, so only it reads the facts; legacy reviews keep intrinsic
-    eligibility. Runs after :func:`_dispatch_review_changed_paths` pinned the
+    A review with a risk reads complete branch facts, including verified app
+    bots that have no author model; legacy reviews keep intrinsic eligibility.
+    Runs after :func:`_dispatch_review_changed_paths` pinned the
     target. Returns None without a branch or PR target.
     """
     from scripts.review.record_cf_verdict import admitted_unknown_history, collect_branch_review_facts
 
     target = getattr(args, "_review_target", None)
     if target is None or not (
-        getattr(args, "review_mode", "cross_family") == "red_team"
-        or (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None))
+        getattr(args, "review_mode", "cross_family") == "red_team" or getattr(args, "review_risk", None)
     ):
         return None
-    repository = _resolve_dispatch_repository(_local_repo_root) or ""
+    repo_root = getattr(args, "_review_repo_root", _local_repo_root)
+    repository = _resolve_dispatch_repository(repo_root) or ""
     unknown_history = ()
     if getattr(args, "review_mode", "cross_family") == "red_team":
         branch = getattr(args, "branch", None)
@@ -16601,11 +16749,11 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
                 branch=branch,
                 head_sha=target.head_sha,
                 task_root=tasks_dir(),
-                repo_root=_local_repo_root,
+                repo_root=repo_root,
             )
-    return collect_branch_review_facts(
+    facts = collect_branch_review_facts(
         repository=repository,
-        repo_root=_local_repo_root,
+        repo_root=repo_root,
         base_tip_sha=target.base_sha,
         head_sha=target.head_sha,
         task_root=tasks_dir(),
@@ -16614,6 +16762,14 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
         subject_families=tuple(getattr(args, "subject_family", None) or ()),
         unknown_history=unknown_history,
     )
+    # An empty target without a declared author supplies no trusted authorship.
+    if (
+        getattr(args, "review_mode", "cross_family") != "red_team"
+        and not getattr(args, "review_author_model", None)
+        and not facts.existing_families
+    ):
+        return None
+    return facts
 
 
 def _admit_dispatch_target(
@@ -16643,7 +16799,7 @@ def _admit_dispatch_target(
         resolve_and_admit,
     )
     from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
-    from scripts.review.target_resolution import TargetResolutionError
+    from scripts.review.target_resolution import TargetResolutionError, repository_target_error
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -16671,7 +16827,8 @@ def _admit_dispatch_target(
         try:
             return _dispatch_review_changed_paths(args)
         except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
-            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+            error = repository_target_error(getattr(args, "repo", None), exc)
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {error}") from exc
 
     def collect_review_facts() -> Any:
         from scripts.review.record_cf_verdict import BranchFactsError
@@ -16761,7 +16918,7 @@ def _admit_dispatch_target(
 
             try:
                 require_no_branch_outside_rejection(
-                    _resolve_dispatch_repository(_local_repo_root) or "",
+                    _resolve_dispatch_repository(getattr(args, "_review_repo_root", _local_repo_root)) or "",
                     getattr(args, "branch", None),
                     review_target.head_sha,
                     pr_number=getattr(args, "pr", None),
@@ -16843,13 +17000,37 @@ def _discard_model_probe_output(plan: object) -> None:
         return
 
 
+def _warn_model_probe_directory_cleanup(entry: object, exc: BaseException) -> None:
+    """Stderr notice when the probe directory cannot be removed (#10529).
+
+    Same non-fatal shape as the inconclusive-probe warning. After the colon
+    the line names only the failure class and, for an ``OSError``, its errno
+    name. The path and the exception text stay off the line, and the caller
+    does not let the failure change the admission result.
+    """
+    detail = type(exc).__name__
+    number = exc.errno if isinstance(exc, OSError) else None
+    if isinstance(number, int):
+        errno_name = errno.errorcode.get(number, "")
+        if errno_name:
+            detail = f"{detail} {errno_name}"
+    print(
+        f"⚠ model probe for {_registry_seat(entry)} could not remove its probe directory: {detail}",
+        file=sys.stderr,
+    )
+
+
 def _adapter_model_rejection(agent: str, model: str) -> str | None:
     """Return the adapter's refusal text, or None when this model is not refused.
 
     A successful probe is not a rejection. Any error other than the adapter's
-    model ValueError is inconclusive: keep the explicit model instead of
-    crashing dispatch. The probe must not leave the temp file ``build_invocation``
-    creates on the accepted path.
+    model ValueError is inconclusive, including a failure to create the probe
+    directory: keep the explicit model instead of crashing dispatch. The probe
+    must not leave the temp file ``build_invocation`` creates on the accepted
+    path. Its cwd is a private temporary directory, created and removed here,
+    so an adapter that installs workspace hooks cannot mutate the process
+    checkout (#10529). A failure to remove that directory is reported on
+    stderr and does not change what this function returns.
     """
     from agent_runtime.registry import get_agent_entry
 
@@ -16860,30 +17041,44 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
     module_name, class_name = spec.split(":", 1)
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
+    # None until mkdtemp returns, so a failed allocation is not passed to rmtree.
+    # The directory is under the fleet scratch root: a private cwd, outside the
+    # process checkout, and an approved temp producer (#10529).
+    probe_cwd: Path | None = None
     try:
-        plan = adapter.build_invocation(
-            prompt="model-probe",
-            mode="read-only",
-            cwd=Path("."),
-            model=model,
-            task_id=None,
-            session_id=None,
-            tool_config=None,
-        )
-    except ValueError as exc:
-        text = str(exc)
-        if model in text and ("rejected" in text or "unsupported" in text.lower()):
-            return text
+        try:
+            probe_cwd = Path(tempfile.mkdtemp(prefix="delegate-model-probe-", dir=ensure_scratch_root()))
+            plan = adapter.build_invocation(
+                prompt="model-probe",
+                mode="read-only",
+                cwd=probe_cwd,
+                model=model,
+                task_id=None,
+                session_id=None,
+                tool_config=None,
+            )
+        except ValueError as exc:
+            text = str(exc)
+            if model in text and ("rejected" in text or "unsupported" in text.lower()):
+                return text
+            return None
+        except Exception as exc:
+            print(
+                f"⚠ model probe for {_registry_seat(entry)} could not verify {_catalog_model_label(model)}: "
+                f"{type(exc).__name__}",
+                file=sys.stderr,
+            )
+            return None
+        _discard_model_probe_output(plan)
         return None
-    except Exception as exc:
-        print(
-            f"⚠ model probe for {_registry_seat(entry)} could not verify {_catalog_model_label(model)}: "
-            f"{type(exc).__name__}",
-            file=sys.stderr,
-        )
-        return None
-    _discard_model_probe_output(plan)
-    return None
+    finally:
+        # Cleanup failure is visible and non-fatal. KeyboardInterrupt still
+        # propagates: only OSError is caught (#10529).
+        if probe_cwd is not None:
+            try:
+                shutil.rmtree(probe_cwd)
+            except OSError as exc:
+                _warn_model_probe_directory_cleanup(entry, exc)
 
 
 def _registry_seat(entry: object) -> str:
@@ -18356,6 +18551,18 @@ def build_parser() -> argparse.ArgumentParser:
         "pointing at an existing added worktree); read-only defaults to an isolated detached worktree.",
     )
     d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
+    d.add_argument(
+        "--claude-account",
+        default=None,
+        metavar="LABEL",
+        help=(
+            "Claude account label for a claude dispatch: a (default) or b. The label is recorded in the "
+            "task record and selects the account the worker authenticates as. Label b needs its private "
+            "local binding and currently runs only formal review attempts, whose sealed boundary selects "
+            "the account; an unknown label, a missing binding or a conflicting credential source is "
+            "refused (CLAUDE_ACCOUNT_REFUSED) before any worktree or task record is created."
+        ),
+    )
     d.add_argument(
         "--provider",
         default=None,

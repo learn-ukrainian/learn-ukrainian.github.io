@@ -133,10 +133,22 @@ def _acp_runtime_paths_from_state(state: dict[str, Any]) -> list[Path]:
     return candidates
 
 
-def _is_under_dispatch_worktrees(path: Path) -> bool:
-    """True for paths inside .worktrees/dispatch/ but outside the ACP runtime subtree."""
+def _dispatch_worktrees_root(repo_root: Path) -> Path:
+    """Dispatch root of the clone named by ``repo_root``.
+
+    The module constant remains the public primary's root, so a test that
+    retargets it still applies when ``repo_root`` is that primary. Any other
+    clone is contained only under its own ``.worktrees/dispatch``.
+    """
+    if repo_root.resolve() == ROOT.resolve():
+        return _DISPATCH_WORKTREES_ROOT
+    return repo_root.resolve() / ".worktrees" / "dispatch"
+
+
+def _is_under_dispatch_worktrees(path: Path, repo_root: Path = ROOT) -> bool:
+    """True for paths inside the clone's .worktrees/dispatch/ but outside ACP."""
     try:
-        rel = path.resolve().relative_to(_DISPATCH_WORKTREES_ROOT)
+        rel = path.resolve().relative_to(_dispatch_worktrees_root(repo_root).resolve())
     except ValueError:
         return False
     return rel.parts[:1] != ("acp",)
@@ -365,7 +377,7 @@ def _reap_main_worktree(
             "error": None,
         }
 
-    if not _is_under_dispatch_worktrees(bound_path):
+    if not _is_under_dispatch_worktrees(bound_path, repo_root):
         return {
             "path": str(bound_path),
             "action": "retained",
@@ -382,7 +394,7 @@ def _reap_main_worktree(
             "error": None,
         }
     try:
-        relative = bound_path.relative_to(_DISPATCH_WORKTREES_ROOT)
+        relative = bound_path.resolve().relative_to(_dispatch_worktrees_root(repo_root).resolve())
     except ValueError:  # guarded above; retain if the filesystem changed.
         relative = ()
     expected_agent = str(state.get("agent") or "")
@@ -428,7 +440,7 @@ def _reap_main_worktree(
                 if creator == state and creator.get("task_id") == task_id and len(matches) >= 2:
                     proven = True
         except (OSError, ValueError, RuntimeError):
-            proven = False
+            proven = reap_worktrees.switched_branch_member_proven(repo_root, bound_path, state, tasks_dir=tasks_dir)
     if len(relative.parts) != 2 or not proven or not expected_agent or relative.parts[0] != expected_agent:
         return {
             "path": str(bound_path),

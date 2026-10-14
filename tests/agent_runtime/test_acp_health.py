@@ -40,6 +40,7 @@ def _healthy_probes(monkeypatch):
     monkeypatch.setattr(acpx, "_probe_cli_help", lambda *_a: _HELP)
     monkeypatch.setattr(acpx, "_require_text_agent", lambda **_kw: "wrapper")
     monkeypatch.setattr(acpx, "_require_local_claude_acp_adapter", lambda *_a, **_kw: {})
+    monkeypatch.setattr(acpx, "_require_host_claude_code", lambda **_kw: {})
     monkeypatch.setattr(acpx, "_resolve_grok_binary", lambda: "grok")
     monkeypatch.setattr(acpx, "_probe_grok_cli_compatibility", lambda _b: ("1.0.0", ()))
     monkeypatch.setattr(acpx, "_require_grok_profile", lambda: "profile")
@@ -110,3 +111,17 @@ def test_acp_missing_generic_exec_does_not_exclude_builtin_routes(monkeypatch, t
     assert health["grok"]["eligible"] is False
     assert health["codex"]["eligible"] is True
     assert health["cursor"]["eligible"] is True
+
+
+def test_acp_refused_host_claude_code_excludes_only_the_claude_lane(monkeypatch, tmp_path):
+    """#10500: the Claude seat launches the host Claude Code, so its refusal is lane health."""
+    _healthy_probes(monkeypatch)
+
+    def refuse(**_kwargs):
+        raise acpx.ClaudeCodeExecutableRefusal("Claude Code too old", reason="too_old")
+
+    monkeypatch.setattr(acpx, "_require_host_claude_code", refuse)
+    health = acp_health.probe_acp_health(tmp_path)
+    assert health["claude"]["eligible"] is False
+    assert health["claude"]["failure_code"] == "acp_adapter_incompatible"
+    assert health["codex"]["eligible"] is True

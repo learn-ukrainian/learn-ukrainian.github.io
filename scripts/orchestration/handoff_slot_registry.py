@@ -48,8 +48,8 @@ def registered_slots(provider: str, *, assignments_path: Path | None = None) -> 
     slots = [slot for slot in _channels._load_registry_slots(assignments_path) if slot.startswith(prefix)]
     slots += [
         f"{prefix}{area}"
-        for area in _channels._load_empty_slot_areas(assignments_path)
-        if f"{prefix}{area}" not in slots
+        for area in _channels._load_empty_slot_areas(assignments_path, provider=provider)
+        if f"{prefix}{area}" not in slots and is_registered_slot(f"{prefix}{area}", assignments_path=assignments_path)
     ]
     return slots
 

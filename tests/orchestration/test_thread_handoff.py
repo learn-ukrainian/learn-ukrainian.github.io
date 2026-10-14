@@ -6,6 +6,7 @@ import json
 import os
 import sqlite3
 import subprocess
+import sys
 import urllib.error
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -5595,3 +5596,51 @@ def test_successor_refuses_missing_durable_handoff(tmp_path, capsys, monkeypatch
     assert th.main(args) == 2
     assert "durable handoff" in capsys.readouterr().out
     assert state_path.read_bytes() == before
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_parse_git_log_keeps_unicode_separators_inside_subjects(separator):
+    # #9556: one ``%h%x09%s`` record per physical line.
+    raw = f"abc1234\tfirst{separator}tail\r\ndef5678\tsecond"
+
+    assert th.parse_git_log(raw) == [
+        {"sha": "abc1234", "subject": f"first{separator}tail"},
+        {"sha": "def5678", "subject": "second"},
+    ]
+
+
+@pytest.mark.parametrize("newline", ["\r", "\n", "\r\n"], ids=["CR", "LF", "CRLF"])
+def test_parse_git_log_splits_records_at_every_ascii_line_ending(newline):
+    raw = f"abc1234\tfirst{newline}def5678\tsecond{newline}"
+
+    assert th.parse_git_log(raw) == [
+        {"sha": "abc1234", "subject": "first"},
+        {"sha": "def5678", "subject": "second"},
+    ]
+
+
+def test_script_by_path_parses_git_log_without_common_jsonl():
+    # #9556: bootstrapped trees run this file by path and ship only its own
+    # import closure (see test_claudex_supervisor); scripts.common.jsonl is not in it.
+    probe = (
+        "import importlib.abc, runpy, sys\n"
+        "class Block(importlib.abc.MetaPathFinder):\n"
+        "    def find_spec(self, name, path=None, target=None):\n"
+        "        if name == 'scripts.common.jsonl':\n"
+        "            raise ModuleNotFoundError(f'No module named {name!r}', name=name)\n"
+        "sys.meta_path.insert(0, Block())\n"
+        "module = runpy.run_path(sys.argv[1], run_name='thread_handoff_by_path')\n"
+        "print(module['parse_git_log']('abc1234\\tfirst\\u2028tail\\rdef5678\\tsecond\\n'))\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", probe, str(_REPO_ROOT / "scripts/orchestration/thread_handoff.py")],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == repr(
+        [{"sha": "abc1234", "subject": "first tail"}, {"sha": "def5678", "subject": "second"}]
+    )

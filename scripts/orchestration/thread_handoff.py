@@ -1686,9 +1686,16 @@ def gh_json(repo_root: Path, args: list[str], timeout_s: int = 15) -> Any:
         return {"_error": f"JSONDecodeError: {exc}"}
 
 
+# The boundaries bytes.splitlines() honours: CRLF, bare CR, bare LF. Inlined
+# rather than imported from scripts.common.jsonl because this script runs by
+# file path in bootstrapped trees that ship only its own dependencies (#9556).
+_GIT_LOG_RECORD_BOUNDARY = re.compile(r"\r\n?|\n")
+
+
 def parse_git_log(raw: str) -> list[dict[str, str]]:
     commits: list[dict[str, str]] = []
-    for line in raw.splitlines():
+    # One ``%h%x09%s`` record per physical line; a subject may contain NEL/LS/PS.
+    for line in _GIT_LOG_RECORD_BOUNDARY.split(raw):
         parts = line.split("\t", 1)
         if not parts or not parts[0]:
             continue

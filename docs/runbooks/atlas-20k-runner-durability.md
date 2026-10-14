@@ -108,7 +108,11 @@ scripts/lexicon/runner/health_20k_runner.sh
    `RESTIC-GATE-RECEIPT.json` binds the current `manifest.json` checksum to
    the restic snapshot. The receipt has no repository location, password, or
    credentials; it records only the snapshot ID, host label, Git SHA, time,
-   and per-mirror manifest fingerprint.
+   and per-mirror manifest fingerprint. The backup renames it into place only
+   after its run is published as complete. A backup that fails or is killed
+   leaves no new receipt, so the gate stays closed for a changed mirror (see
+   the accepted commit-follower window in
+   [the data backup runbook](data-backup.md)).
 
 ## Restore drill
 

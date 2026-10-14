@@ -801,3 +801,18 @@ def test_lean_orient_hung_capacity_and_health_do_not_stall_other_sections(monkey
         assert "section_timeout" not in str(data["meta"]["capacity"].get("error", ""))
     finally:
         release.set()
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_orient_recent_commits_keep_unicode_separators_inside_subjects(monkeypatch, tmp_path, separator):
+    # #9556: ``git log --oneline`` has one record per physical line.
+    repo = _init_orient_git_repo(tmp_path)
+    _git(repo, "commit", "-q", "--allow-empty", "-m", f"first{separator}tail")
+    original_git_collector = api_main._collect_git_orient_data
+    _patch_orient_sources(monkeypatch)
+    ctx = api_main.production_context().with_roots(project_root=repo, live_repo_root=repo)
+
+    commits = original_git_collector(ctx)["recent_commits"]
+
+    assert [commit["subject"] for commit in commits] == [f"first{separator}tail", "init"]
+    assert commits[0]["sha"] == _git(repo, "rev-parse", "--short", "HEAD").stdout.strip()

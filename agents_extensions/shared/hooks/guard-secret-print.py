@@ -737,10 +737,28 @@ def _is_dotenv_secret_file(path: str) -> bool:
     )
 
 
+def _is_secrets_directory(path: str) -> bool:
+    """True for the singular or plural secret directory and its contents."""
+    clean = _strip_quotes(path).replace("\\", "/").lower()
+    if not clean or clean == "-":
+        return False
+    folded = clean.replace("${home}", "~").replace("$home", "~")
+    for directory in (".secret", ".secrets"):
+        if folded in {f"~/{directory}", f"~/{directory}/", f"~/{directory}/*"}:
+            return True
+        if folded.startswith(f"~/{directory}/") or folded.startswith(f"~/{directory}*"):
+            return True
+        if f"/{directory}/" in folded or folded.endswith(f"/{directory}") or folded.endswith(f"/{directory}/*"):
+            return True
+    return False
+
+
 def _is_known_secret_file(path: str) -> bool:
     clean = _strip_quotes(path).lower()
     if not clean or clean == "-":
         return False
+    if _is_secrets_directory(clean):
+        return True
     name = _path_name(clean)
     if clean in {"~/.aws/credentials", "$home/.aws/credentials", "${home}/.aws/credentials", "~/.bash_secrets"}:
         return True
@@ -874,6 +892,16 @@ def _stdout_target(args: list[str]) -> str | None:
     return target
 
 
+_SECRET_FILTER_RE = re.compile(r"(?i)(?:key|token|secret|password)")
+
+
+def _printenv_arg_is_secret(arg: str) -> bool:
+    """True when a printenv operand names or globs a credential."""
+    if not arg or arg.startswith("-"):
+        return False
+    return _is_secret_var_name(arg) or _SECRET_FILTER_RE.search(arg) is not None
+
+
 def _env_source_reason(segment: list[str]) -> str | None:
     command = _command_at(segment)
     if command is None:
@@ -889,7 +917,7 @@ def _env_source_reason(segment: list[str]) -> str | None:
             return None
     elif cmd == "printenv":
         names = [arg for arg in args if not arg.startswith("-")]
-        if names and not any(_is_secret_var_name(name) for name in names):
+        if names and not any(_printenv_arg_is_secret(name) for name in names):
             return None
     elif cmd == "set" and args:
         return None
@@ -1648,7 +1676,24 @@ def _block_msg(reason: str) -> str:
     )
 
 
-def main() -> int:
+def _self_test() -> int:
+    """Block the seeded echo shapes. Used by pre-commit; prints no secret values."""
+    seeded = (
+        "cat ~/.secrets/*",
+        "env | grep KEY",
+        "printenv *_KEY",
+    )
+    for command in seeded:
+        if _scan_command(command, set()) is None:
+            sys.stderr.write("no-print hook did not block a seeded command\n")
+            return 1
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+    if args == ["--self-test"]:
+        return _self_test()
     if os.environ.get("LEARN_UK_SECRETS_OK") == "1":
         return 0
 
