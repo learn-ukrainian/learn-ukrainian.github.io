@@ -35,6 +35,7 @@ from typing import Any, TypeGuard
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.guardrails import worktree_containment
+from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.execution_safe_git import SafeGitRunner
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
@@ -248,7 +249,9 @@ def record_may_claim_worktree(raw: bytes, needles: frozenset[bytes]) -> bool:
     ``queued``, so the pre-filter can never release a claim that
     :func:`active_worktree_claim_refusal` would honor (#8610).
     """
-    if not needles or any(needle in raw for needle in needles):
+    # A terminal status alone cannot release a worker with unknown liveness.
+    # Parse PID records even when a differently named symlink hides the claim.
+    if b'"pid"' in raw or not needles or any(needle in raw for needle in needles):
         return True
     released_status_seen = False
     # ``bytes.find`` then an anchored match is about a third cheaper than
@@ -320,6 +323,20 @@ def review_input_worktree(input_root: Path, *, main_root: Path, registered: Iter
         (tree for tree in registered if tree != main_root and input_root.is_relative_to(tree)),
         key=lambda tree: len(tree.parts),
         default=None,
+    )
+
+
+def _worker_blocks_release(record: dict[str, Any]) -> bool:
+    """Only the proven finishing worker may clean up before its own exit."""
+    if not record.get("pid"):
+        return False
+    alive = worker_liveness(record)
+    if alive is False:
+        return False
+    return not (
+        alive is True
+        and record.get("pid") == os.getpid()
+        and record.get("status") in RELEASED_TASK_STATUSES
     )
 
 
@@ -405,7 +422,11 @@ def active_worktree_claim_refusal(
         if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
             return refused(state_file, "unreadable")
         status = record.get("status")
-        if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
+        if (
+            isinstance(status, str)
+            and status in RELEASED_TASK_STATUSES
+            and not _worker_blocks_release(record)
+        ):
             continue
         contract = record.get("review_contract")
         if contract is not None:
@@ -442,6 +463,7 @@ def active_worktree_claim_refusal(
             and state_file == owner_identity[0]
             and record.get("task_id") == owner_task_id
             and record.get("run_nonce") == owner_identity[1]
+            and not _worker_blocks_release(record)
         ):
             continue
         if not claimed_path:
@@ -848,6 +870,8 @@ def owner_release_refusal(
     nonce = record.get("run_nonce")
     if not isinstance(nonce, str) or not nonce.strip():
         return f"owner task {owner_task_id} has no valid run_nonce; refusing worktree removal"
+    if _worker_blocks_release(record):
+        return f"owner task {owner_task_id} worker is live or unknown; refusing worktree removal"
     status = record.get("status")
     if (not isinstance(status, str) or status not in RELEASED_TASK_STATUSES) and not (
         status == NEEDS_FINALIZE_STATUS and settled_claim is not None and settled_claim(record)

@@ -535,3 +535,57 @@ def test_wt_sh_create_from_linked_worktree_targets_primary_sibling(tmp_path):
     assert proc.returncode == 0, proc.stderr
     assert target.is_dir()
     assert not (worktree / "learn-ukrainian-wt-818").exists()
+
+
+@pytest.mark.parametrize("status", ["crashed", "done", "failed"])
+def test_namespace_unknown_worker_keeps_terminal_worktree_claim(tmp_path, status):
+    from scripts.orchestration import worktree_claims
+
+    target = tmp_path / "checkout"
+    target.mkdir()
+    alias = tmp_path / "other-name"
+    alias.symlink_to(target, target_is_directory=True)
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    record = {
+        "task_id": "worker", "status": status, "run_nonce": "run",
+        "worktree_path": str(alias), "worktree_reused": False, "pid": 999_999_998,
+        "worker_identity": {
+            "pid": 999_999_998, "host_pid": None, "start_time": 100,
+            "pid_namespace": "pid:[999999]", "recorder_pid_namespace": "pid:[999999]",
+        },
+    }
+    (tasks / "worker.json").write_text(json.dumps(record))
+    refusal = worktree_claims.active_worktree_claim_refusal(target, tasks_dir=tasks, repo_root=tmp_path)
+    assert refusal == "worktree claimed by active task worker"
+    refusal = worktree_claims.owner_release_refusal(target, owner_task_id="worker", tasks_dir=tasks, repo_root=tmp_path)
+    assert refusal == "owner task worker worker is live or unknown; refusing worktree removal"
+
+
+def test_namespace_owner_exemption_does_not_release_unknown_worker(tmp_path):
+    from scripts.orchestration import worktree_claims
+
+    target = tmp_path / "checkout"
+    target.mkdir()
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    record = {
+        "task_id": "worker", "status": "crashed", "run_nonce": "run",
+        "worktree_path": str(target), "pid": 999_999_998,
+        "worker_identity": {"pid": 999_999_998, "start_time": 100, "pid_namespace": "pid:[999999]"},
+    }
+    (tasks / "worker.json").write_text(json.dumps(record))
+    assert worktree_claims.active_worktree_claim_refusal(
+        target, tasks_dir=tasks, repo_root=tmp_path, owner_task_id="worker"
+    ) == "worktree claimed by active task worker"
+
+
+def test_namespace_other_live_worker_keeps_terminal_claim(tmp_path):
+    process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+    try:
+        record = {"pid": process.pid, "status": "done"}
+        assert worktree_claims._worker_blocks_release(record) is True
+        assert worktree_claims._worker_blocks_release({"pid": os.getpid(), "status": "done"}) is False
+    finally:
+        process.terminate()
+        process.wait(timeout=10)

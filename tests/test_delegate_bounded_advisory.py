@@ -2437,6 +2437,16 @@ def test_r5_abrupt_termination_during_the_gate_leaves_a_recoverable_non_success_
     killed = on_disk[0]
     assert killed["status"] == "running"
     assert _GATE_KEY[gate] not in killed
+    # Model the killed worker with a real exited child, rather than the live
+    # pytest worker whose identity _run_worker captured during simulation.
+    from scripts.orchestration.dead_worker_state import capture_worker_identity
+
+    child = subprocess.Popen([sys.executable, "-c", "import sys; sys.stdin.read()"], stdin=subprocess.PIPE)
+    killed["worker_identity"] = capture_worker_identity(child.pid)
+    killed["pid"] = killed["worker_identity"]["pid"]
+    assert killed["worker_identity"]["start_time"] is not None
+    child.communicate(timeout=5)
+    assert child.returncode == 0
     # Recovery: the dead-worker probe settles it as non-success, and stays there.
     path = tmp_path / "killed.json"
     path.write_text(json.dumps(killed))

@@ -840,40 +840,16 @@ def test_pid_alive_false_for_nonexistent_pid():
 # ---------------------------------------------------------------------------
 
 
-def test_status_detects_zombie_when_pid_dead(tmp_tasks_dir, capsys):
-    """Regression: if state says 'running' but PID is dead, status must
-    flip the state to 'crashed' and persist the correction."""
+def test_status_dead_worker_is_readonly(tmp_tasks_dir, capsys):
     path = delegate._state_path("zombie-task")
-    delegate._write_state_atomic(
-        path,
-        {
-            "task_id": "zombie-task",
-            "agent": "codex",
-            "status": "running",
-            "pid": 999_999_998,  # guaranteed dead
-            "started_at": "2026-04-10T12:00:00+00:00",
-        },
-    )
-
-    # Run the status command
-    import argparse
-
-    args = argparse.Namespace(task_id="zombie-task")
-    rc = delegate.cmd_status(args)
-    assert rc == 0
-
-    # State file should now be persisted as crashed
-    updated = delegate._read_state(path)
-    assert updated["status"] == "crashed"
-    assert "not alive" in (updated.get("stderr_excerpt") or "")
-    assert "'running'" in (updated.get("stderr_excerpt") or ""), (
-        "stderr_excerpt should reference the PRIOR status, not the new one"
-    )
-
-    # stdout should contain the updated state as JSON
-    captured = capsys.readouterr()
-    parsed = json.loads(captured.out)
-    assert parsed["status"] == "crashed"
+    delegate._write_state_atomic(path, {
+        "task_id": "zombie-task", "agent": "codex", "status": "running",
+        "pid": 999_999_998, "started_at": "2026-04-10T12:00:00+00:00",
+    })
+    before = path.read_bytes()
+    assert delegate.cmd_status(argparse.Namespace(task_id="zombie-task")) == 0
+    assert path.read_bytes() == before
+    assert json.loads(capsys.readouterr().out)["status"] == "running"
 
 
 def test_status_leaves_running_alone_when_pid_alive(tmp_tasks_dir, capsys):
@@ -2333,7 +2309,7 @@ def test_dispatch_popen_failure_records_worktree_head(tmp_tasks_dir, tmp_path, m
     assert state["final_branch_head_commit"] == expected_head
 
 
-@pytest.mark.parametrize("probe", ["status", "wait", "list"])
+@pytest.mark.parametrize("probe", ["wait", "admission"])
 def test_zombie_probes_record_final_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch, capsys, probe):
     _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=f"{probe}-head")
     state_path = delegate._state_path(f"{probe}-head")
@@ -2349,12 +2325,10 @@ def test_zombie_probes_record_final_worktree_head(tmp_tasks_dir, tmp_path, monke
     )
     expected_head = delegate._resolve_sha(worktree)
 
-    if probe == "status":
-        assert delegate.cmd_status(argparse.Namespace(task_id=f"{probe}-head")) == 0
-    elif probe == "wait":
+    if probe == "wait":
         assert delegate.cmd_wait(argparse.Namespace(task_id=f"{probe}-head", timeout=1, poll_interval=0.5)) == 1
     else:
-        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+        delegate._evaluate_dispatch_admission("danger", sweep=True)
 
     state = delegate._read_state(state_path)
     assert state["status"] == "crashed"
@@ -2887,7 +2861,7 @@ def test_zombie_detection_works_on_pid_before_worker_writes(tmp_tasks_dir, capsy
 
     Simulation: write a state file with a dead PID + status=spawning
     (as if the parent wrote PID but the worker crashed before it could
-    run). status must flip it to crashed.
+    run). An explicit wait must flip it to crashed.
     """
     path = delegate._state_path("early-crash")
     delegate._write_state_atomic(
@@ -2901,8 +2875,8 @@ def test_zombie_detection_works_on_pid_before_worker_writes(tmp_tasks_dir, capsy
 
     import argparse
 
-    args = argparse.Namespace(task_id="early-crash")
-    delegate.cmd_status(args)
+    args = argparse.Namespace(task_id="early-crash", timeout=1, poll_interval=0.1)
+    assert delegate.cmd_wait(args) == 1
 
     updated = delegate._read_state(path)
     assert updated["status"] == "crashed", (
@@ -10336,7 +10310,7 @@ def test_list_filters_by_status(tmp_tasks_dir, capsys):
     assert {t["task_id"] for t in tasks} == {"t1", "t3"}
 
 
-def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
+def test_list_preserves_dead_running_record(tmp_tasks_dir, capsys):
     delegate._write_state_atomic(
         delegate._state_path("dead"),
         {
@@ -10348,12 +10322,15 @@ def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
     )
     import argparse
 
+    path = delegate._state_path("dead")
+    before = path.read_bytes()
     args = argparse.Namespace(status=None)
     delegate.cmd_list(args)
     captured = capsys.readouterr()
     tasks = json.loads(captured.out)
     assert len(tasks) == 1
-    assert tasks[0]["status"] == "crashed"
+    assert tasks[0]["status"] == "running"
+    assert path.read_bytes() == before
 
 
 def test_zombie_probe_preserves_done_written_after_initial_read(tmp_tasks_dir):
@@ -21210,3 +21187,102 @@ def test_adapter_model_rejection_warns_when_probe_directory_cleanup_fails(
     assert "delegate-model-probe-" not in err
     assert "raw-secret-text" not in err
     assert len(_model_probe_dirs(tmp_path)) == 1
+
+
+# #10621: process identities and read-only task views.
+def _namespace_worker_record(*, foreign=False, reused=False):
+    from scripts.common.acp_runtime_lock import process_start_time
+
+    pid = os.getpid() if reused else 999_999_998
+    namespace = str(Path("/proc/self/ns/pid").readlink())
+    return {
+        "task_id": "namespace-worker",
+        "agent": "codex",
+        "mode": "danger",
+        "status": "running",
+        "pid": pid,
+        "run_nonce": "namespace-run",
+        "worker_identity": {
+            "pid": pid,
+            "host_pid": pid,
+            "start_time": process_start_time(pid) + 1 if reused else 123,
+            "pid_namespace": "pid:[999999]" if foreign else namespace,
+            "recorder_pid_namespace": "pid:[999999]" if foreign else namespace,
+        },
+    }
+
+
+@pytest.mark.parametrize("probe", ["status", "list", "wait", "admission"])
+def test_namespace_foreign_worker_is_never_crashed(tmp_tasks_dir, capsys, probe):
+    state = _namespace_worker_record(foreign=True)
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    before = path.read_bytes()
+    if probe == "status":
+        assert delegate.cmd_status(argparse.Namespace(task_id=state["task_id"])) == 0
+    elif probe == "list":
+        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+    elif probe == "wait":
+        assert delegate.cmd_wait(argparse.Namespace(task_id=state["task_id"], timeout=0.01, poll_interval=0.01)) == 124
+    else:
+        decision = delegate._evaluate_dispatch_admission("danger", sweep=True)
+        assert state["task_id"] in decision.live_task_ids
+    assert path.read_bytes() == before
+    assert delegate._read_state(path)["status"] == "running"
+
+
+@pytest.mark.parametrize("probe", ["status", "list"])
+def test_namespace_readonly_dead_worker_record_is_byte_identical(tmp_tasks_dir, capsys, probe):
+    state = _namespace_worker_record()
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    before = path.read_bytes()
+    if probe == "status":
+        assert delegate.cmd_status(argparse.Namespace(task_id=state["task_id"])) == 0
+    else:
+        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("reused", [False, True])
+def test_namespace_owner_sweep_marks_proven_dead_worker(tmp_tasks_dir, reused):
+    state = _namespace_worker_record(reused=reused)
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    delegate._heal_dead_task(path, state, source="admission")
+    assert delegate._read_state(path)["status"] == "crashed"
+
+
+def test_namespace_sandbox_pid_does_not_terminalize_live_host_worker(tmp_tasks_dir):
+    state = _namespace_worker_record(foreign=True)
+    state["worker_identity"]["host_pid"] = os.getpid()
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    delegate._heal_dead_task(path, state, source="wait")
+    assert delegate._read_state(path)["status"] == "running"
+
+
+@pytest.mark.parametrize("ok,terminal", [(True, "done"), (False, "failed")])
+def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp_path, ok, terminal):
+    path = delegate._state_path("final-write")
+    delegate._write_state_atomic(path, {"task_id": "final-write", "status": "spawning", "model": "unknown", "cli_version": "unknown"})
+    result = type("_Result", (), {
+        "ok": ok, "response": "finished", "stderr_excerpt": None if ok else "failed",
+        "returncode": 0 if ok else 1, "rate_limited": False,
+        "model": "unknown", "effort": "high", "cli_version": "unknown",
+    })()
+
+    def finish_after_false_mark(*args, **kwargs):
+        state = delegate._read_state(path)
+        assert state["status"] == "running"
+        assert state["worker_identity"]["pid"] == state["pid"]
+        assert state["worker_identity"]["start_time"] is not None
+        delegate._write_state_atomic(path, {**state, "status": "crashed", "last_error": "worker_process_dead"})
+        return result
+
+    with patch("agent_runtime.runner.invoke", side_effect=finish_after_false_mark):
+        assert delegate._run_worker(task_id="final-write", agent="claude", prompt="hi", mode="read-only", cwd_str=str(tmp_path), model=None, hard_timeout=60, effort=None) == (0 if ok else 1)
+    state = delegate._read_state(path)
+    assert state["status"] == terminal
+    assert state["returncode"] == (0 if ok else 1)
+    assert state["last_error"] != "worker_process_dead"

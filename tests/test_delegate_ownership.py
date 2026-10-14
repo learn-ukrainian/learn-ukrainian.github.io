@@ -255,6 +255,123 @@ def test_stale_claim_reconciled(tmp_path: Path):
     assert second.would_refuse is False
 
 
+@pytest.mark.parametrize(
+    "case,remaining",
+    [
+        ("foreign", 1),
+        ("foreign_crashed", 1),
+        ("foreign_done", 1),
+        ("foreign_failed", 1),
+        ("dead", 0),
+        ("reused", 0),
+        ("reused_in_grace", 0),
+        ("legacy_dead", 0),
+        ("legacy_alive", 1),
+        ("legacy_unknown", 1),
+    ],
+)
+def test_namespace_claim_reconciliation(tmp_path, monkeypatch, case, remaining):
+    """#10621: UNKNOWN protects ownership; proven death and PID reuse release it."""
+    import sqlite3
+    import time
+
+    from scripts.guardrails import delegate_ownership as ownership
+    from scripts.orchestration import dead_worker_state as dead
+
+    pid = 999_999_998
+    namespace = dead.INITIAL_PID_NAMESPACE
+    status = case.removeprefix("foreign_") if case.startswith("foreign_") else "running"
+    record = {"task_id": "worker", "status": status, "pid": pid}
+    if not case.startswith("legacy"):
+        record["worker_identity"] = {
+            "pid": pid, "host_pid": None, "start_time": 100,
+            "pid_namespace": "pid:[999999]" if case.startswith("foreign") else namespace,
+            "recorder_pid_namespace": namespace,
+        }
+    (tmp_path / "worker.json").write_text(json.dumps(record))
+    before = (tmp_path / "worker.json").read_bytes()
+    monkeypatch.setattr(dead, "PROC_ROOT", tmp_path / "proc")
+    monkeypatch.setattr(dead, "_pid_namespace", lambda process="self": None if case == "legacy_unknown" else namespace)
+    monkeypatch.setattr(dead, "_proc_pid_namespace", lambda: namespace)
+    monkeypatch.setattr(ownership, "_pid_alive", lambda candidate: case in ("reused", "reused_in_grace", "legacy_alive"))
+
+    def stat(process):
+        if case.startswith("reused"):
+            return pid, 101
+        raise FileNotFoundError
+
+    def signal(candidate, signal):
+        raise ProcessLookupError
+
+    monkeypatch.setattr(dead, "_process_stat", stat)
+    monkeypatch.setattr(dead.os, "kill", signal)
+    ledger = OwnershipLedger(tmp_path / "claims.sqlite", task_state_dir=tmp_path, mode=GuardMode.WARN)
+    with sqlite3.connect(":memory:") as connection:
+        connection.row_factory = sqlite3.Row
+        connection.execute("CREATE TABLE write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL)")
+        created_at = time.time() if case == "reused_in_grace" else time.time() - ownership.ADMISSION_PID_GRACE_S - 1
+        connection.execute("INSERT INTO write_claims VALUES (?, ?, ?, ?)", (
+            "worker", '{"kind":"file","norm":"scripts/fixture.py"}', pid, created_at,
+        ))
+        released = ledger._reconcile_stale(connection)
+        assert connection.execute("SELECT COUNT(*) FROM write_claims").fetchone()[0] == remaining
+        assert released == ([] if remaining else ["worker"])
+    assert (tmp_path / "worker.json").read_bytes() == before
+
+
+@pytest.mark.parametrize("mode", [GuardMode.WARN, GuardMode.REFUSE])
+@pytest.mark.parametrize("same_pid", [False, True])
+@pytest.mark.parametrize("text_pid", [False, True])
+def test_namespace_duplicate_admission_preserves_unknown_claim(tmp_path, mode, same_pid, text_pid):
+    import time
+
+    from scripts.guardrails.delegate_ownership import ADMISSION_PID_GRACE_S
+
+    pid = os.getpid() if same_pid else 999_999_998
+    record = {
+        "task_id": "worker", "status": "running", "pid": str(pid) if text_pid else pid,
+        "worker_identity": {"pid": pid, "host_pid": None, "start_time": 100,
+                            "pid_namespace": "pid:[999999]", "recorder_pid_namespace": "pid:[999999]"},
+    }
+    path = tmp_path / "worker.json"
+    path.write_text(json.dumps(record))
+    before = path.read_bytes()
+    ledger = OwnershipLedger(tmp_path / "claims.sqlite", task_state_dir=tmp_path, mode=mode)
+    assert ledger.admit(task_id="worker", mode="workspace-write", owned_paths=["scripts/held.py"], pid=pid).admitted
+    with ledger._connect() as connection:
+        connection.execute("UPDATE write_claims SET created_at = ?", (time.time() - ADMISSION_PID_GRACE_S - 1,))
+    incoming = ledger.admit(task_id="worker", mode="workspace-write", owned_paths=["scripts/replacement.py"], pid=os.getpid())
+    assert incoming.admitted is (mode is GuardMode.WARN)
+    assert incoming.would_refuse is True
+    with ledger._connect(read_only=True) as connection:
+        rows = connection.execute("SELECT claim_json, pid FROM write_claims").fetchall()
+    assert [(json.loads(row["claim_json"])["norm"], row["pid"]) for row in rows] == [("scripts/held.py", pid)]
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("foreign", [False, True])
+def test_pidless_release_preserves_unknown_worker_claim(tmp_path, foreign):
+    from scripts.orchestration.dead_worker_state import INITIAL_PID_NAMESPACE
+
+    pid = 999_999_998
+    record = {"task_id": "worker", "status": "running", "pid": pid, "worker_identity": {
+        "pid": pid, "start_time": 100,
+        "pid_namespace": "pid:[999999]" if foreign else INITIAL_PID_NAMESPACE,
+    }}
+    path = tmp_path / "worker.json"
+    path.write_text(json.dumps(record))
+    before = path.read_bytes()
+    ledger = OwnershipLedger(tmp_path / "claims.sqlite", task_state_dir=tmp_path)
+    with ledger._connect() as connection:
+        connection.execute("INSERT INTO write_claims VALUES (?, ?, ?, ?)", ("worker", "worker-claim", pid, 0))
+        connection.execute("INSERT INTO write_claims VALUES (?, ?, ?, ?)", ("worker", "null-claim", None, 0))
+    ledger.release("worker")
+    with ledger._connect(read_only=True) as connection:
+        rows = connection.execute("SELECT pid FROM write_claims").fetchall()
+    assert [row["pid"] for row in rows] == ([pid] if foreign else [])
+    assert path.read_bytes() == before
+
+
 def test_override_records_reason(tmp_path: Path):
     ledger = tmp_path / "own.sqlite3"
     state_dir = tmp_path / "tasks"

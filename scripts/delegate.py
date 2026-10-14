@@ -45,6 +45,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "cli_version": str,
         "mode": str,
         "pid": int,
+        "worker_identity": {pid, host_pid, start_time, pid_namespace, recorder_pid_namespace},
         "status": "running" | "done" | "failed" | "timeout" | "rate_limited" | "crashed"
                   | "needs_finalize" | "no_deliverable",
         "started_at": iso-8601 UTC,
@@ -118,20 +119,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
 
 Design notes:
 
-* Zombie detection. ``os.kill(pid, 0)`` is the POSIX way to ask "is this
-  PID alive?" without sending a signal. The ``status`` command does this
-  whenever it reads a state file that says ``running``. If the PID is
-  dead but the file still says running, we mark the state file
-  ``crashed`` — this catches OOM kills, machine reboots, and any other
-  abrupt termination of the worker process.
-
-* PID recycling is theoretically possible (the OS reuses PIDs), but in
-  practice a PID from minutes ago is extremely unlikely to be recycled
-  AND owned by a process matching our command line. For the short-lived
-  nature of agent tasks this is acceptable. A fully bulletproof version
-  would record the process start_time from ``/proc/<pid>/stat`` (Linux)
-  or ``kvm_getprocs`` (BSD/macOS) and re-verify — deferred as over-engineering
-  for the current scale.
+* Liveness. Launch and worker startup record PID namespace and /proc start
+  time. Only same-namespace evidence proves death, including PID reuse.
+  Unreadable or foreign identities remain unknown. Explicit wait and admission
+  sweeps may heal proven dead workers; list and status never write records.
 
 * Atomic writes. Every state-file update goes via write-rename so a
   concurrent reader never sees a half-written JSON. ``os.replace`` is
@@ -241,10 +232,12 @@ from scripts.orchestration import (
     worktree_prep,
 )
 from scripts.orchestration.dead_worker_state import (
+    capture_worker_identity,
     mark_dead_worker_terminal,
     mark_orphaned_admission_hold_crashed,
     mark_orphaned_worktree_prep_crashed,
     task_state_lock,
+    worker_liveness,
     write_state_unlocked,
 )
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
@@ -1025,19 +1018,8 @@ def _bound_task_state_unparseable_reason(path: Path) -> str | None:
 
 
 def _pid_alive(pid: int) -> bool:
-    """Check if a PID is currently alive via signal-0 probe.
-
-    os.kill(pid, 0) raises ProcessLookupError if the PID doesn't exist,
-    PermissionError if it exists but is owned by another user (which
-    still counts as "alive" for our purposes), or returns None on success.
-    """
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True  # exists, we just can't signal it
-    return True
+    """Treat unknown process visibility as alive for marking decisions."""
+    return worker_liveness({"pid": pid}) is not False
 
 
 def _normalize_worktree_path(raw_path: str, *, repo_root: Path | None = None) -> Path:
@@ -4933,8 +4915,10 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
     if state.get("status") not in ("running", "spawning"):
         return
     pid = state.get("pid")
-    if pid and not _pid_alive(int(pid)):
+    if pid and worker_liveness(state, pid_alive=_pid_alive) is False:
         _mark_crashed_task(state_path, state, source=source)
+    elif not pid and worker_liveness({"pid": os.getpid()}) is None:
+        return
     elif worktree_prep.is_orphaned_prep_record(state):
         current, _changed = mark_orphaned_worktree_prep_crashed(
             state_path,
@@ -4969,18 +4953,29 @@ def _evaluate_dispatch_admission(
     sweep: bool,
     thresholds: dispatch_admission.Thresholds | None = None,
 ) -> dispatch_admission.AdmissionDecision:
-    """Host admission for a ``mode`` dispatch (#8645 part A).
+    """Sweep proven dead workers only when admission explicitly requests it."""
+    # Admission's existing callback takes only a PID. Keep identity provenance
+    # from active records; a shared numeric PID remains occupied if any run's
+    # identity is unknown or live.
+    records_by_pid: dict[int, list[dict[str, Any]]] = {}
+    for path in task_record_store.iter_task_records(tasks_dir(), include_archive=False):
+        record = _read_state(path)
+        if not record or record.get("status") not in ("running", "spawning"):
+            continue
+        pid = record.get("pid")
+        if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0:
+            records_by_pid.setdefault(pid, []).append(record)
 
-    With ``sweep`` every running/spawning record whose owner is gone (a dead
-    worker pid, or a pid-less worktree reservation or admission hold whose
-    dispatcher died) is marked ``crashed`` first by the healer ``status``,
-    ``wait``, ``list`` and reconcile use, so it never holds a slot and never
-    sits active until someone probes it (#8717).
-    """
+    def recorded_pid_alive(pid: int) -> bool:
+        records = records_by_pid.get(pid)
+        if records:
+            return any(worker_liveness(record, pid_alive=_pid_alive) is not False for record in records)
+        return _pid_alive(pid)
+
     return dispatch_admission.evaluate(
         mode,
         tasks_dir(),
-        pid_alive=_pid_alive,
+        pid_alive=recorded_pid_alive,
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
     )
@@ -10486,11 +10481,11 @@ def _run_worker(
 
     state_path = _state_path(task_id)
 
-    # Update state to include our actual PID. The parent wrote an
-    # initial state before forking; we overwrite with the real one
-    # (in case the parent's guess was off, or we were re-exec'd).
+    # Capture identity from the worker side, before provider execution.
+    # /proc/self/stat can supply the host PID even when getpid() is local.
     state = _read_state(state_path) or {}
-    state["pid"] = os.getpid()
+    state["worker_identity"] = capture_worker_identity(os.getpid(), self_process=True)
+    state["pid"] = state["worker_identity"]["pid"]
     state["status"] = "running"
     state["max_budget_usd"] = max_budget_usd
     effective_nonce = run_nonce or os.environ.get("LU_RUNTIME_RUN_NONCE")
@@ -14445,11 +14440,11 @@ def _dispatch(
         # _run_worker (e.g. top-level import error in delegate.py,
         # syntax error on a future edit, env var issue), the state
         # file stays at {"status": "spawning", "pid": null} forever
-        # and no subsequent status/wait call can detect the crash
-        # because zombie detection is gated on `pid and not _pid_alive(pid)`.
+        # and no explicit wait/admission sweep can prove the worker died.
         # Fixed after Gemini review 2026-04-10.
         state_with_pid = _read_state(state_path) or initial_state
-        state_with_pid["pid"] = proc.pid
+        state_with_pid["worker_identity"] = capture_worker_identity(proc.pid)
+        state_with_pid["pid"] = state_with_pid["worker_identity"]["pid"]
         state_with_pid.update(launch.as_state())
         _write_state_atomic(state_path, state_with_pid)
         # Bind ownership ledger rows to the long-lived worker PID (not the
@@ -14496,7 +14491,7 @@ def _dispatch(
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    state_path, state = _read_state_or_archived(args.task_id)
+    _state_path, state = _read_state_or_archived(args.task_id)
     if state is None:
         print(
             json.dumps({"error": f"no state file for task {args.task_id!r}"}),
@@ -14518,12 +14513,6 @@ def cmd_status(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
-
-    # Detect zombies: if status is "running" but PID is dead, the worker
-    # crashed (OOM, SIGKILL, reboot, etc.) and never got to update the
-    # state file. Mark as "crashed" and persist the correction so
-    # subsequent status calls get the right answer without redoing the check.
-    _heal_dead_task(state_path, state, source="status")
 
     # Elapsed time for still-running tasks
     if state.get("status") == "running" and state.get("started_at"):
@@ -17990,7 +17979,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
             time.sleep(poll_interval)
             continue
 
-        # Zombie probe (same logic as cmd_status)
+        # Wait is an explicit settling path; heal only on proven death.
         _heal_dead_task(state_path, state, source="wait")
 
         status = state.get("status")
@@ -18106,8 +18095,6 @@ def cmd_list(args: argparse.Namespace) -> int:
         state = _read_state(state_file)
         if state is None:
             continue
-        # Zombie probe inline for running tasks
-        _heal_dead_task(state_file, state, source="list")
         if args.status and state.get("status") != args.status:
             continue
         # Fix 4 (#1476): classify worktree layout so operators can see at
