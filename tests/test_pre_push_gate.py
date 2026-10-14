@@ -1113,7 +1113,8 @@ def test_the_real_registry_fits_the_run_budget_once_heavy_modules_are_deferred()
     durations = json.loads((REPO_ROOT / gate.DURATIONS_FILE).read_text(encoding="utf-8"))
 
     assert deferred, "the docs lookup modules are expected to be deferred"
-    assert sum(durations.get(n, 0.0) for n in run if "::" not in n) <= gate.RUN_BUDGET_S
+    # The registry runs in the pytest stage, so it must fit that stage's own allowance (#10642).
+    assert sum(durations.get(n, 0.0) for n in run if "::" not in n) <= gate.STAGE_BUDGET_S
 
 
 def test_entries_that_read_a_tree_the_sparse_worktree_omits_are_deferred_only_there(repo: Path) -> None:
@@ -2613,8 +2614,9 @@ def test_exclusive_sweep_is_bounded_to_this_repositorys_own_entries(
 
 
 def test_moving_the_base_temp_keeps_admission_budget_and_process_caps(monkeypatch: pytest.MonkeyPatch) -> None:
-    assert (gate.RUN_BUDGET_S, gate.SHADOW_BUDGET_S, gate.CLEANUP_BUDGET_S) == (600.0, 120.0, 10.0)
-    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (740.0, 7400.0, 256)
+    budgets = (gate.STAGE_BUDGET_S, gate.RUN_BUDGET_S, gate.SHADOW_BUDGET_S, gate.CLEANUP_BUDGET_S)
+    assert budgets == (600.0, 1200.0, 120.0, 10.0)
+    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (1340.0, 13400.0, 256)
     monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
     assert (gate.test_process_limit(), gate.concurrent_run_limit()) == (4, 1)
@@ -3950,15 +3952,16 @@ os.kill(pid,signal.SIGKILL)
     monkeypatch.setattr(gate.ResourceScope, "start", start)
     original_execute = gate.ResourceScope.execute
 
-    def execute(scope, plan, config, deadline, event):
+    def execute(scope, plan, config, deadline, event, **kwargs):
         scope.launcher = str(repo / "scripts/pre_commit/project_python.sh")
-        return original_execute(scope, plan, config, deadline, event)
+        return original_execute(scope, plan, config, deadline, event, **kwargs)
 
     monkeypatch.setattr(gate.ResourceScope, "execute", execute)
     monkeypatch.chdir(repo)
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
     # The scope is attempted only for at most 4 effective workers; a pushing caller's override must not decide.
     monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    monkeypatch.setenv("LU_PRE_PUSH_GATE_STAGE_BUDGET_S", "300")  # the scoped child must apply this, not 600
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     code = gate.main(
         [
@@ -3985,6 +3988,9 @@ os.kill(pid,signal.SIGKILL)
             == {"resource_breach": "resource_bound_exceeded", "unsettled": "scope_cleanup_unverified"}[ending]
         )
     assert set(row["stages"]) == {"pre_commit", "pytest"}
+    assert row["stage_budget_s"] == 300.0
+    for stage in row["stages"].values():
+        assert stage["allowance_s"] == pytest.approx(300.0) and stage["allowance_limited_by"] == "stage_budget"
     assert row["requested_test_processes"] == 4
     assert row["effective_test_processes"] in (2, 4)
     _assert_queue_released(gate.state_dir(repo))
@@ -4245,3 +4251,233 @@ def test_terminal_publication_interrupt_refuses_with_paired_complete_measurement
     assert rows[1]["queue_wait_s"] == 0
     assert rows[1]["execution_s"] >= 0
     assert rows[1]["peak_memory_bytes"] is None
+
+
+# ---- #10642: each blocking stage has its own allowance inside the total cap ---------------------------------
+
+
+def _journal_shaped_push(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, clock: FakeClock, needs: dict[str, list[float]]
+) -> None:
+    """Run the real stage functions on a fake clock; each command needs the next duration under its label.
+
+    Like ``run_bounded``, a command whose deadline comes first is killed there (SIGKILL) and the
+    stage ends ``validation_incomplete``; otherwise it consumes its duration and passes.
+    """
+    real_pre_commit, real_pytest = gate.run_pre_commit_stage, gate.run_pytest_stage
+    _fake_validation(tmp_path, monkeypatch, clock)
+    monkeypatch.setattr(gate, "run_pre_commit_stage", real_pre_commit)
+    monkeypatch.setattr(gate, "run_pytest_stage", real_pytest)
+    monkeypatch.setattr(gate.Admission, "_exclusive", False, raising=False)  # no stale-temp sweep
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")  # a dispatch caps pytest processes
+    remaining = {label: iter(durations) for label, durations in needs.items()}
+
+    def run_bounded(command, *, cwd, deadline, label, diagnostics=None):
+        need = next(remaining[label])
+        if clock.now + need > deadline:
+            clock.now = max(clock.now, deadline)
+            if diagnostics is not None:
+                diagnostics.update(returncode=-signal.SIGKILL, signal=signal.SIGKILL, child_unavailable_reason=None)
+            raise gate.GateOutcome(
+                "validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True
+            )
+        clock.now += need
+        if diagnostics is not None:
+            diagnostics.update(returncode=0, signal=None, child_unavailable_reason=None)
+        return 0, f"1 passed in {need}s"
+
+    monkeypatch.setattr(gate, "run_bounded", run_bounded)
+
+
+# Synthetic values in the shape #10642 reports: pre-commit spends part of a shared budget, then the
+# pytest stage is killed when the remainder runs out, with no failing test.
+SLOW_PRE_COMMIT = {
+    "pre-commit pre-push stage": [100.0],
+    "per-commit OPSEC scan": [5.0],
+    "learner-surface internal-ID scan": [5.0],
+}
+UPDATE = gate.Update("local", "a" * 40, "remote", ZERO_SHA)
+
+
+def test_slow_pre_commit_no_longer_shortens_the_pytest_allowance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    # The pytest stage needs 595 s: more than the 490 s a shared budget leaves, inside its own 600 s.
+    _journal_shaped_push(tmp_path, monkeypatch, clock, {**SLOW_PRE_COMMIT, "pytest stage": [20.0, 575.0]})
+    event: dict[str, object] = {}
+    try:
+        gate.validate(UPDATE, tmp_path, "x", "y", event)
+    except gate.GateOutcome as error:
+        stages = {name: round(stage["elapsed_s"], 1) for name, stage in event.get("stages", {}).items()}
+        pytest.fail(f"expired as {error.reason}: {error.detail}; stage elapsed {stages}")
+
+    assert event["outcome"] == "green" and event["admission_wait_s"] == 500.0
+    assert (event["run_budget_s"], event["stage_budget_s"]) == (gate.RUN_BUDGET_S, gate.STAGE_BUDGET_S) == (1200, 600)
+    stages = event["stages"]
+    assert stages["pre_commit"]["elapsed_s"] == pytest.approx(110.0)
+    assert stages["pytest"]["elapsed_s"] == pytest.approx(595.0)
+    for stage in stages.values():
+        assert stage["allowance_s"] == pytest.approx(gate.STAGE_BUDGET_S)
+        assert stage["allowance_limited_by"] == "stage_budget"
+    assert gate.receipt_is_fresh(tmp_path, _plan(), clock.time())
+
+
+@pytest.mark.parametrize("stage", ["pre_commit", "pytest"])
+def test_each_stage_still_expires_at_its_own_allowance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stage: str
+) -> None:
+    clock = FakeClock()
+    needs = {"pytest stage": [20.0, 650.0]}
+    needs.update(SLOW_PRE_COMMIT if stage == "pytest" else {"pre-commit pre-push stage": [650.0]})
+    _journal_shaped_push(tmp_path, monkeypatch, clock, needs)
+    event: dict[str, object] = {}
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(UPDATE, tmp_path, "x", "y", event)
+
+    assert raised.value.incomplete and raised.value.failing == ()
+    assert "exceeded the time budget (timeout)" in raised.value.detail
+    assert set(event["stages"]) == ({"pre_commit"} if stage == "pre_commit" else {"pre_commit", "pytest"})
+    row = event["stages"][stage]
+    assert row["outcome"] == "validation_incomplete" and row["signal"] == signal.SIGKILL
+    assert row["elapsed_s"] == pytest.approx(gate.STAGE_BUDGET_S) == row["allowance_s"]
+    assert row["allowance_limited_by"] == "stage_budget"
+    assert not gate.receipt_is_fresh(tmp_path, _plan(), clock.time())
+
+
+def test_the_run_budget_caps_the_sum_of_stage_allowances(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = FakeClock()
+    _journal_shaped_push(
+        tmp_path, monkeypatch, clock, {"pre-commit pre-push stage": [300.0, 300.0], "pytest stage": [20.0, 430.0]}
+    )
+    budget = gate.Budget(700.0, 600.0)  # a total shorter than two allowances binds the later stage
+    event: dict[str, object] = {}
+    timed_run = gate.run_bounded
+
+    def instant_scans(command, **kwargs):
+        if kwargs["label"] in ("per-commit OPSEC scan", "learner-surface internal-ID scan"):
+            return 0, ""
+        return timed_run(command, **kwargs)
+
+    monkeypatch.setattr(gate, "run_bounded", instant_scans)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(UPDATE, tmp_path, "x", "y", event, budget)
+
+    assert raised.value.incomplete and raised.value.failing == ()
+    stages = event["stages"]
+    assert stages["pre_commit"]["allowance_limited_by"] == "stage_budget"
+    assert stages["pytest"]["allowance_s"] == pytest.approx(400.0)  # 700 total - 300 spent by pre-commit
+    assert stages["pytest"]["allowance_limited_by"] == "run_budget"
+    assert stages["pre_commit"]["elapsed_s"] + stages["pytest"]["elapsed_s"] == pytest.approx(700.0)
+
+    # One push shares the total across its ref updates: the second gets only what the first left.
+    second: dict[str, object] = {}
+    with pytest.raises(gate.GateOutcome):
+        gate.validate(UPDATE, tmp_path, "x", "y", second, budget)
+    assert second["stages"]["pre_commit"]["allowance_s"] == pytest.approx(0.0)
+    assert second["stages"]["pre_commit"]["allowance_limited_by"] == "run_budget"
+
+
+def test_admission_waits_consume_neither_a_stage_allowance_nor_the_total(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    # Both stages use almost all of their own allowance after the 500 s admission wait.
+    needs = {
+        "pre-commit pre-push stage": [590.0],
+        "per-commit OPSEC scan": [4.0],
+        "learner-surface internal-ID scan": [4.0],
+        "pytest stage": [20.0, 578.0],
+    }
+    _journal_shaped_push(tmp_path, monkeypatch, clock, needs)
+    event: dict[str, object] = {}
+    gate.validate(UPDATE, tmp_path, "x", "y", event)
+
+    assert event["outcome"] == "green" and event["admission_wait_s"] == 500.0
+    assert clock.now == pytest.approx(500.0 + 598.0 + 598.0)  # 1,196 s of stages after the wait
+    assert all(stage["allowance_limited_by"] == "stage_budget" for stage in event["stages"].values())
+
+
+def _stage_launcher(repo: Path, pre_commit: str, pytest_run: str) -> None:
+    """A synthetic launcher whose stage commands run the given shell bodies; scans and shadow are instant."""
+    _write(
+        repo,
+        "scripts/pre_commit/project_python.sh",
+        textwrap.dedent(f"""\
+        if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then exit 0; fi
+        if [ "$2" = scripts.ci.pre_push_shadow ]; then echo '{{"selected_tests":[]}}'; exit 0; fi
+        if [ "$2" = pre_commit ]; then
+        {pre_commit}
+        exit 0
+        fi
+        {pytest_run}
+        """),
+    )
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "synthetic timed stages", "tests/test_new.py", "scripts/pre_commit/project_python.sh")
+
+
+@pytest.mark.parametrize("ending", ["green", "red"])
+def test_actual_stages_each_get_their_own_allowance(repo: Path, ending: str) -> None:
+    # pre-commit runs twice (pre-push stage, internal-ID scan) and pytest twice (changed file, invariants):
+    # about 3 s per stage, 6 s together, under a 5 s stage budget that a shared budget would exceed.
+    # A red run fails in the second (invariant) invocation, so it too has spent both stages' time.
+    failure = "FAILED tests/test_invariant.py::test_ok - synthetic"
+    verdict = f'case "$*" in *tests/test_invariant.py*) echo "{failure}"; exit 1;; esac' if ending == "red" else ":"
+    _stage_launcher(repo, "sleep 1.5", f"sleep 1.5; {verdict}; echo '1 passed in 1.5s'; exit 0")
+
+    result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", "LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "5"})
+
+    assert result.returncode == (0 if ending == "green" else gate.EXIT_REFUSED), result.stderr
+    row = _measurements(repo)[-1]
+    stages = row["stages"]
+    assert row["stage_budget_s"] == 5.0 and row["run_budget_s"] == gate.RUN_BUDGET_S
+    assert stages["pre_commit"]["elapsed_s"] + stages["pytest"]["elapsed_s"] > 5.0
+    for stage in stages.values():
+        assert stage["allowance_s"] == pytest.approx(5.0) and stage["allowance_limited_by"] == "stage_budget"
+        assert stage["elapsed_s"] < stage["allowance_s"]
+    if ending == "green":
+        assert row["outcome"] == "green" and len(_receipts(repo)) == 1
+    else:
+        assert _verdict(result) == {
+            "outcome": "refused",
+            "reason": "tests_failed",
+            "failing": ["tests/test_invariant.py::test_ok"],
+        }
+        assert _receipts(repo) == []
+
+
+@pytest.mark.parametrize("bound", ["pre_commit", "pytest", "total"])
+def test_an_actual_overrun_is_killed_at_its_bound_with_descendants(repo: Path, tmp_path: Path, bound: str) -> None:
+    pid_file = tmp_path / "child.pid"
+    (tmp_path / "detach.py").write_text(_DETACHED_CHILD, encoding="utf-8")
+    overrun = f'"{sys.executable}" "{tmp_path / "detach.py"}" "{pid_file}"; sleep 60'
+    pre_commit = overrun if bound == "pre_commit" else "sleep 1.2" if bound == "total" else ":"
+    _stage_launcher(repo, pre_commit, overrun if bound != "pre_commit" else "echo '1 passed in 0.1s'")
+    budgets = {"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "3"}
+    if bound == "total":  # pre-commit spends about 2.4 s of a 5 s total, leaving pytest less than its 4 s
+        budgets = {"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "4", "LU_PRE_PUSH_GATE_RUN_BUDGET_S": "5"}
+
+    result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", **budgets})
+
+    assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
+    assert _verdict(result) == {"outcome": "validation_incomplete", "reason": "validation_incomplete", "failing": []}
+    assert "NOT green" in result.stderr and _receipts(repo) == []
+    assert _gone(int(pid_file.read_text(encoding="utf-8")))
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == "validation_incomplete" and row["failing"] == []
+    killed = row["stages"]["pre_commit" if bound == "pre_commit" else "pytest"]
+    assert set(row["stages"]) == ({"pre_commit"} if bound == "pre_commit" else {"pre_commit", "pytest"})
+    assert killed["outcome"] == "validation_incomplete" and killed["signal"] == signal.SIGKILL
+    assert killed["allowance_s"] <= killed["elapsed_s"] < killed["allowance_s"] + 2 * gate.CLEANUP_BUDGET_S
+    if bound == "total":
+        assert killed["allowance_limited_by"] == "run_budget" and killed["allowance_s"] < 4.0
+        assert row["stages"]["pre_commit"]["allowance_limited_by"] == "stage_budget"
+    else:
+        assert killed["allowance_limited_by"] == "stage_budget"
+        assert killed["allowance_s"] == pytest.approx(3.0)
+
+
+def test_the_run_budget_is_the_sum_of_the_two_stage_allowances() -> None:
+    assert gate.RUN_BUDGET_S == 2 * gate.STAGE_BUDGET_S == 1200

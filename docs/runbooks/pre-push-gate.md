@@ -22,7 +22,7 @@ tracked changes:
    when its whole file is selected). Its version is a digest of the gate version and the ids.
 3. Test files the range adds or changes (`tests/**/test_*.py`).
 
-Stages 2 and 3 run as one pytest process. Importer-closure selection
+Check 1 is the pre-commit stage; checks 2 and 3 form the pytest stage. Importer-closure selection
 (`scripts/ci/pre_push_shadow.py`) runs beside them in shadow: recorded, never blocking.
 
 ## Outcomes
@@ -39,12 +39,25 @@ The last stderr line before the bypass hint is machine-readable: `{"pre_push_gat
 
 ## Bounds
 
-Admission defaults to one gate per repository (lock under the Git common dir). The admission wait and one run
-budget are shared by every ref update of the push; their limits are the constants in `.githooks/pre_push_gate.py`.
-Each update is validated with its own base. Command output goes to a file, and after every command the gate
-kills any descendant that inherited its run token within a short cleanup bound, so a detached child cannot
-stall or outlive the gate. `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and `LU_PRE_PUSH_GATE_RUN_BUDGET_S` can only
-shorten these.
+Admission defaults to one gate per repository (lock under the Git common dir). Execution has two time
+bounds (#10642), both constants in `.githooks/pre_push_gate.py`:
+
+- Each blocking stage, pre-commit and then pytest, has its own allowance (`STAGE_BUDGET_S`) counted
+  from that stage's start. Time pre-commit spends never shortens the pytest allowance.
+- The run budget (`RUN_BUDGET_S`, the two allowances summed) caps total stage execution. It starts at
+  global admission and is shared by every ref update of the push. A stage whose own allowance would
+  outlast the remaining total stops at the total instead.
+
+A command that reaches its stage's bound is killed with its descendants. The push is then
+`validation_incomplete` (`timeout`), and no receipt is written. Each update is validated with its own base.
+Command output goes to a file, and after every command the gate kills any descendant that inherited its run
+token within a short cleanup bound, so a detached child cannot stall or outlive the gate.
+`LU_PRE_PUSH_GATE_ADMISSION_WAIT_S`, `LU_PRE_PUSH_GATE_STAGE_BUDGET_S` and `LU_PRE_PUSH_GATE_RUN_BUDGET_S`
+can only shorten these.
+
+One predecessor's admission allowance (`ADMISSION_WAIT_S`) covers one complete gate run: the run budget
+plus the shadow and two cleanup bounds. The hard admission ceiling is ten of these. The auto-finalize push
+timeout in `scripts/delegate.py` reads both values from the gate.
 
 Before joining the global queue, a caller joins a FIFO queue for its immutable outgoing head under
 `<git-common-dir>/lu-pre-push-gate/heads/<head>/`. Only that head's holder registers a global ticket.
@@ -56,8 +69,8 @@ allowance grows with its head predecessors plus the flock-live global queue dept
 for the holder's global wait and validation. Stale or unsafe global tickets do not grow this allowance.
 The allowance never shrinks as tickets leave. If no reusable green receipt exists after coalescing,
 the global queue's position-based allowance starts at that transition; elapsed coalescing time still
-counts toward the original total hard ceiling. Execution starts after global admission; waiting does
-not consume the shared run budget.
+counts toward the original total hard ceiling. Execution starts after global admission; waiting consumes
+neither a stage allowance nor the run budget.
 
 Live tickets in either queue are locked before atomic publication. Their JSON contains exactly
 `head` (the outgoing SHA from Git's update), `branch` (its frozen local ref), and `task_owner` (the explicit
@@ -83,13 +96,13 @@ and runs without proven exclusivity, preserve other runs' directories, including
 
 `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES` sets the test process ceiling as a positive integer.
 The default is 4, so callers get bounded parallel validation without an override. Serial validation
-consumed the shared run budget. A nonblank `LEARN_UKRAINIAN_DISPATCH_TASK_ID` caps the invocation
+exhausted the time budget. A nonblank `LEARN_UKRAINIAN_DISPATCH_TASK_ID` caps the invocation
 at 2 processes, matching the existing dispatch pytest plugin. An explicit positive integer override
 is still supported; invalid values refuse validation, including receipt reuse. Parallel execution
 requires xdist. Without xdist, execution is serial.
 
-The pytest stage runs the planned node ids in two pytest invocations that share the stage deadline
-(#10610). Changed test files run first with `--dist worksteal`, as CI runs them, so one slow changed
+The pytest stage runs the planned node ids in two pytest invocations that share the pytest stage's
+deadline (#10610). Changed test files run first with `--dist worksteal`, as CI runs them, so one slow changed
 file is spread over the workers instead of setting a one-worker floor. The registered invariant nodes
 then run with `--dist loadfile`, which keeps their files whole. Each invocation gets its own private
 base temp. The first refusal ends the stage, and a green stage and receipt require both invocations to
@@ -192,6 +205,15 @@ verdicts remain negative. These storage failures never invent a durable observat
 The row's `stages` object contains `pre_commit` and `pytest` only when each stage is entered.
 `queue_wait_s` excludes the run's `scope_setup_s` from total admission time. `execution_s` records
 attempt time excluding admission; the existing `duration_s` remains the total push observation.
+`execution_s` is not a budget reading. It also counts plan building and kill cleanup. Since #10642 it can
+exceed one stage allowance when both stages run long. To see which budget a stage consumed, compare that
+stage's `elapsed_s` with its `allowance_s`.
+A row whose stages ran records the configured bounds as `stage_budget_s` and `run_budget_s`.
+Gate version 5 introduced the separate stage allowances. Rows with `gate_version` 4 or lower used one
+budget, the size of today's stage allowance, shared by both stages. Their pytest stage could use only
+what pre-commit left of it.
+The new fields are additive and no existing field changes meaning, so `measurement_schema` remains
+`pre-push-measurement.v1`.
 `resources_at_admission` contains fresh admission observations or explicit nulls.
 The top-level requested/effective test process fields remain null when no count was observed.
 `peak_memory_bytes` comes from the scope's `memory.peak`, read by the scoped executor before it exits.
@@ -202,6 +224,9 @@ and independent held-out review remain necessary; injected scope tests do not ce
 
 Each entry records `elapsed_s` from a monotonic clock, `outcome` and `reason`. Stage time includes
 stage setup, command execution and cleanup; admission wait remains in `admission_wait_s`.
+`allowance_s` is the execution time the stage could use from its start. `allowance_limited_by` names the
+bound that set it: `stage_budget` (the stage's own allowance) or `run_budget` (what remained of the push
+total). After a kill, `elapsed_s` can exceed `allowance_s` by the kill cleanup, at most two cleanup bounds.
 An earlier successful entry survives a later failure. Receipt reuse creates no stage entries.
 
 The pytest stage records `requested_test_processes` (the configured ceiling) and
