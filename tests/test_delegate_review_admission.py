@@ -1324,6 +1324,34 @@ def test_9312_alias_without_model_records_only_the_alias(monkeypatch, capsys):
     assert routing.substitution["requested_model"] is None
 
 
+def _checkout_tree(root: Path) -> list[tuple[str, bytes | None]]:
+    return sorted(
+        (path.relative_to(root).as_posix(), path.read_bytes() if path.is_file() else None) for path in root.rglob("*")
+    )
+
+
+@pytest.mark.parametrize("model", ["gemini-3.1-pro-high", None])
+def test_alias_admission_leaves_the_calling_linked_worktree_unchanged(model, tmp_path, monkeypatch):
+    """#10511/#10529: a read-only reviewer runs admission inside its review worktree.
+
+    Substitute-model probes build the AGY adapter, which installs its hook file
+    into a linked dispatch worktree. The probe must not use the caller's cwd.
+    """
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees/dispatch/reviewer/exec"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {primary}/.git/worktrees/exec\n", encoding="utf-8")
+    monkeypatch.chdir(worktree)
+    before = _checkout_tree(worktree)
+    args = _args("--agent", "gemini", "--review-profile", "ukrainian")
+    args.model = model
+    (refusal, target), routing = _admit(args, monkeypatch)
+    assert refusal is None and target.recipient == "agy"
+    assert routing.substitution["source"] == "retired-cli"
+    assert _checkout_tree(worktree) == before
+    assert not (worktree / ".agents").exists()
+
+
 def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
     with pytest.raises(ReviewAdmissionRefused) as refused:
         resolve_and_admit(
