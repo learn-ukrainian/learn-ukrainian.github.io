@@ -2983,6 +2983,10 @@ def _qualifying_reason(
         try:
             abandoned = _terminal_abandon_matches(repo_root, info.path)
             if abandoned is not None:
+                # Owner abandonment can discard unmerged work. Neither the
+                # scheduled merged-only default nor safe-only opts into it.
+                if merged_pr_only or safe_only:
+                    raise ValueError("terminal-abandon requires merged_pr_only=False and safe_only=False")
                 if not isinstance(active_ids, set) or any(
                     member.get("task_id") in active_ids for _, member in abandoned
                 ):
@@ -4531,7 +4535,19 @@ def _reap_qualified_worktree(
                     if _terminal_abandon_matches(repo_root, info.path) is None:
                         raise ValueError("terminal-abandon proof disappeared")
                 except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
-                    return ReapResult(str(info.path), info.branch, "skipped", f"terminal-abandon refused: {exc}", dirty)
+                    owner = _dispatch_owner(repo_root, info) or "infra lane"
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=(
+                            f"terminal-abandon refused: {exc}; owner={owner}; "
+                            "awaited=owner refreshes exact-head ABANDON and verified preservation proof"
+                        ),
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                        owner=owner,
+                    )
             else:
                 current_clean = _worktree_clean(info.path, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
                 if current_clean is not True:
@@ -4903,6 +4919,8 @@ def reap_worktrees(
 
     Apply mode requires a process-CWD activity probe unless a caller
     deliberately overrides that policy.
+    Owner abandonment requires both ``merged_pr_only=False`` and
+    ``safe_only=False``; the default scheduled policy excludes that class.
     """
     repo_root = repo_root.resolve()
     targets = _target_filter(target_paths)
@@ -5561,7 +5579,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--safe-only",
         action="store_true",
-        help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors + clean pushed detached dispatch checkouts).",
+        help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors + clean pushed detached dispatch checkouts); excludes owner abandonment.",
     )
     parser.add_argument(
         "--merged",
@@ -5575,7 +5593,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--legacy-classes",
         action="store_true",
-        help="Enable pre-P0 non-merged cleanup classes for an explicit manual run.",
+        help="Enable non-merged cleanup classes for an explicit manual run, including verified owner abandonment unless --safe-only is set.",
     )
     parser.add_argument(
         "--terminal-dispatches",

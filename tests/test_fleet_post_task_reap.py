@@ -1685,6 +1685,7 @@ def test_10303_post_task_reap_uses_complete_preservation_path(request, monkeypat
     fixture = request.getfixturevalue("same_branch_pending_cohort" if disposition == "merged" else "abandon_cohort")
     repo, tree, tasks, creator, _, source = fixture
     head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
     if disposition == "merged":
         rw = post_task_reap.reap_worktrees
         monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(9645, "MERGED", head)], None))
@@ -1695,6 +1696,12 @@ def test_10303_post_task_reap_uses_complete_preservation_path(request, monkeypat
         apply=True,
         include_acp_runtime=False,
     )["main_worktree"]
+    if disposition == "abandon":
+        assert row["action"] == "skipped", row
+        assert "terminal-abandon requires merged_pr_only=False and safe_only=False" in row["reason"]
+        assert tree.exists() and source.read_bytes() == b"current output"
+        assert {p: p.read_bytes() for p in before} == before
+        return
     assert row["action"] == "removed", row
     assert not tree.exists()
     receipt = row["preserved_artifacts"]

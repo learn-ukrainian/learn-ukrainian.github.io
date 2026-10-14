@@ -1306,6 +1306,56 @@ def test_10303_abandon_rechecks_after_copy(abandon_cohort, monkeypatch, mutation
     assert tree.exists() and source.read_bytes() == b"current output"
 
 
+def test_10303_abandon_cap_counts_untracked_not_ordinary_tracked_bytes(abandon_cohort, monkeypatch):
+    from tests.orchestration.test_worktree_claims_cli import _git
+    from tests.test_continuation_worktree_reap import _write_abandon_receipt
+    from tests.test_reused_worktree_retention import save
+
+    repo, tree, tasks, creator, successor, source = abandon_cohort
+    (tree / "large-tracked.bin").write_bytes(b"x" * 4096)
+    _git(tree, "add", "large-tracked.bin")
+    _git(tree, "commit", "-m", "large tracked fixture")
+    for member in (creator, successor):
+        member["final_branch_head_commit"] = _git(tree, "rev-parse", "HEAD")
+        save(tasks, member)
+    _write_abandon_receipt(repo, tree, tasks, creator)
+    (tree / "untracked.txt").write_bytes(b"unique")
+    expected = len(source.read_bytes()) + len(b"unique")
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", expected)
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        tree, primary=repo, tasks_dir=tasks, task_id="boundary", repo_root=repo
+    )
+    assert ok and not reason, (reason, receipt)
+    assert receipt["bytes"] == expected
+    assert [entry["path"] for entry in receipt["paths"]] == ["ignored/output.txt", "untracked.txt"]
+    copy = repo / receipt["location"]
+    assert (copy / "untracked.txt").read_bytes() == b"unique"
+    assert not (copy / "large-tracked.bin").exists()
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+
+
+@pytest.mark.parametrize("flag", ["--assume-unchanged", "--skip-worktree"])
+@pytest.mark.parametrize("present", [False, True])
+def test_10303_abandon_preserves_present_hidden_tracked_bytes(abandon_cohort, flag, present):
+    from tests.orchestration.test_worktree_claims_cli import _git
+
+    repo, tree, tasks, _, _, _ = abandon_cohort
+    _git(tree, "update-index", flag, "README.md")
+    if present:
+        (tree / "README.md").write_bytes(b"hidden local bytes")
+    else:
+        (tree / "README.md").unlink()
+    ok, reason, receipt = output.preserve_worktree_artifacts(
+        tree, primary=repo, tasks_dir=tasks, task_id="boundary", repo_root=repo
+    )
+    assert ok and not reason, (reason, receipt)
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    if present:
+        assert (repo / receipt["location"] / "README.md").read_bytes() == b"hidden local bytes"
+    else:
+        assert not (repo / receipt["location"] / "README.md").exists()
+
+
 def test_10303_abandon_refuses_unmerged_index(abandon_cohort):
     from scripts.orchestration import worktree_claims as claims
     from tests.orchestration.test_worktree_claims_cli import _git

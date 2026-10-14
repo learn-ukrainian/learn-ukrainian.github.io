@@ -1525,7 +1525,18 @@ def test_same_branch_pending_cohort_refusals(same_branch_pending_cohort, monkeyp
     elif failure == "unmerged":
         monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(9645, "OPEN", tree.name)], None))
     elif failure == "head_mismatch":
-        successor["final_branch_head_commit"] = "f" * 40
+        head = _git(tree, "rev-parse", "HEAD")
+        successor["final_branch_head_commit"] = _git(
+            tree, "commit-tree", f"{head}^{{tree}}", "-m", "divergent recorded head"
+        )
+        assert _git(tree, "cat-file", "-t", successor["final_branch_head_commit"]) == "commit"
+        divergent = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", successor["final_branch_head_commit"], head],
+            cwd=tree,
+            capture_output=True,
+            timeout=30,
+        )
+        assert divergent.returncode == 1 and divergent.stderr == b""
     elif failure == "running":
         successor["status"] = "running"
     else:
@@ -1654,6 +1665,7 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
             apply=False,
             live_cwds=set(),
             preserve_then_reap=True,
+            merged_pr_only=False,
         )
         if r.path == str(tree)
     )
@@ -1667,6 +1679,7 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
             apply=True,
             live_cwds=set(),
             preserve_then_reap=True,
+            merged_pr_only=False,
         )
         if r.path == str(tree)
     )
@@ -1693,7 +1706,8 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
     ).stdout.strip()
     assert restored == _git(repo, "rev-parse", f"{head}^{{tree}}")
     if dirty:
-        assert (copy / "README.md").read_bytes() == b"working unique bytes\x00"
+        assert not (copy / "README.md").exists()
+        assert b"GIT binary patch" in (repo / manifest["working_patch"]["path"]).read_bytes()
         assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
         assert b"GIT binary patch" in (repo / manifest["index_patch"]["path"]).read_bytes()
         subprocess.run(
@@ -1707,8 +1721,19 @@ def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort,
             ["git", "show", ":README.md"], cwd=repo, env=environment, check=True, capture_output=True, timeout=30
         ).stdout
         assert staged == b"staged unique bytes\x00"
+        subprocess.run(
+            ["git", "apply", "--cached", str(repo / manifest["working_patch"]["path"])],
+            cwd=repo,
+            env=environment,
+            check=True,
+            timeout=30,
+        )
+        working = subprocess.run(
+            ["git", "show", ":README.md"], cwd=repo, env=environment, check=True, capture_output=True, timeout=30
+        ).stdout
+        assert working == b"working unique bytes\x00"
     else:
-        assert (copy / "README.md").read_bytes() == b"unpublished abandoned implementation\n"
+        assert not (copy / "README.md").exists()
     state = json.loads((tasks / "boundary.json").read_text())
     assert state["status"] == "needs_finalize" and state["run_nonce"] == creator["run_nonce"]
     assert _git(repo, "rev-parse", "codex/boundary") == head
@@ -1800,12 +1825,85 @@ def test_10303_terminal_abandon_refuses_incomplete_proof(abandon_cohort, monkeyp
             apply=True,
             live_cwds=set(),
             preserve_then_reap=True,
+            merged_pr_only=False,
         )
         if r.path == str(tree)
     )
     assert row.action == "skipped", row
     assert tree.exists() and source.read_bytes() == b"current output"
     assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("restriction", ["merged_pr_only", "safe_only"])
+def test_10303_abandon_respects_restriction_flags(abandon_cohort, restriction):
+    repo, tree, tasks, _, _, source = abandon_cohort
+    rw = reap.reap_worktrees
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo,
+            apply=False,
+            live_cwds=set(),
+            **({} if restriction == "merged_pr_only" else {"merged_pr_only": False, "safe_only": True}),
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == "skipped", row
+    assert "terminal-abandon requires merged_pr_only=False and safe_only=False" in row.reason
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert {p: p.read_bytes() for p in before} == before
+
+
+def test_10303_abandon_monitor_active_member_refuses(abandon_cohort, monkeypatch):
+    repo, tree, tasks, _, successor, source = abandon_cohort
+    rw = reap.reap_worktrees
+    monkeypatch.setattr(rw, "_read_active_task_probe", lambda: {successor["task_id"]})
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), merged_pr_only=False)
+        if r.path == str(tree)
+    )
+    assert row.action == "skipped", row
+    assert "active task successor" in row.reason or "live task probe unavailable or active" in row.reason
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("closed", [False, True])
+def test_10303_abandon_cleanup_refusal_names_pr_owner_condition(abandon_cohort, monkeypatch, closed):
+    repo, tree, _tasks, _, _, source = abandon_cohort
+    rw = reap.reap_worktrees
+    head = _git(tree, "rev-parse", "HEAD")
+    pr = rw.PullRequestState(9645, "CLOSED", head) if closed else None
+    monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([pr] if pr else [], None))
+    guard = rw._enter_dispatch_worktree_guard
+    rechecks = []
+
+    def proof_disappeared(*_args):
+        rechecks.append(True)
+        raise ValueError("terminal-abandon proof disappeared")
+
+    def change_after_guard(*args, **kwargs):
+        result = guard(*args, **kwargs)
+        assert result is None
+        monkeypatch.setattr(rw, "_terminal_abandon_matches", proof_disappeared)
+        return result
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", change_after_guard)
+    row = next(
+        r
+        for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), merged_pr_only=False)
+        if r.path == str(tree)
+    )
+    assert rechecks == [True]
+    assert row.action == "skipped", row
+    assert row.pr == ({"number": 9645, "state": "CLOSED", "head_sha": head} if closed else None)
+    assert row.owner == "codex"
+    assert "owner=codex" in row.reason
+    assert "awaited=owner refreshes exact-head ABANDON and verified preservation proof" in row.reason
+    assert tree.exists() and source.read_bytes() == b"current output"
 
 
 def test_10303_closed_dirty_without_abandon_retains_bytes(same_branch_pending_cohort, monkeypatch):
@@ -1863,6 +1961,7 @@ def test_10303_dirty_abandon_keeps_stale_index_lock_guard(abandon_cohort, monkey
             apply=True,
             live_cwds=set(),
             preserve_then_reap=True,
+            merged_pr_only=False,
         )
         if r.path == str(tree)
     )

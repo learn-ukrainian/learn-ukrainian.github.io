@@ -827,7 +827,16 @@ def preserve_worktree_artifacts(
     def output_files() -> list[str]:
         names = _ignored_output_files(worktree, primary, record, absent=absent)
         if disposition == "abandon":
-            for name in artifacts._git_paths(worktree, "--cached", "--others", "--exclude-standard"):
+            # Ordinary tracked changes are already bound to verified patches.
+            # Copy untracked bytes and present hidden index entries, whose local
+            # changes Git can omit from those patches. Never copy the whole index.
+            candidates = artifacts._git_paths(worktree, "--others", "--exclude-standard")
+            for tagged in artifacts._git_paths(worktree, "-v", "--cached"):
+                if len(tagged) < 3 or tagged[1] != " ":
+                    raise ValueError("terminal-abandon tagged index inventory malformed")
+                if tagged[0].islower() or tagged[0] == "S":
+                    candidates.append(tagged[2:])
+            for name in candidates:
                 try:
                     (worktree / name).lstat()
                 except FileNotFoundError:
