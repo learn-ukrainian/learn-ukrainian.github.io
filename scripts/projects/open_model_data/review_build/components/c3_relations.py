@@ -1,6 +1,8 @@
 """C3 ULIF section census; only source-readable groups become records."""
 
 import json
+import re
+import unicodedata
 from collections import Counter
 
 from ..bindings import check
@@ -10,6 +12,7 @@ from .wp3_sources import (
     ENTRY,
     SECTION,
     STORE,
+    SURNAME_LABEL,
     Markup,
     anchor,
     authenticate,
@@ -24,6 +27,14 @@ from .wp3_sources import (
 )
 
 COUNTS = {"synonyms": 75955, "antonyms": 2103}
+WITHHELD = {
+    "homonym_unchecked",
+    "homonym_mismatch",
+    "parse_error",
+    "headword_unresolved",
+    "empty_source",
+    "sense_not_visible",
+}
 
 
 def operation_spec(operation):
@@ -96,6 +107,32 @@ def relation_span(markup, entry, operation):
     return (span, None) if span[0] < span[1] else (None, "sense_not_visible")
 
 
+def stressed(text):
+    return re.sub("\u0301+", "\u0301", unicodedata.normalize("NFD", text)).casefold().strip(" ,;.")
+
+
+def names_sibling(reader, markup, entry):
+    """Whether the printed stressed headword names a sibling homonym but not this entry.
+
+    Only a printed stress mark is evidence; unstressed printing cannot tell
+    homonyms apart and leaves the reviewed headword check in force.
+    """
+    headword = unaccent(entry["canonical_headword"])
+    printed = {
+        stressed(markup.text[slice(*markup.span(n))])
+        for n in markup.tagged("b", outside=("i", "b"))
+        if unaccent(markup.text[slice(*markup.span(n))]).strip(" ,;.") == headword
+    }
+    printed = {form for form in printed if "\u0301" in form}
+    if not printed or stressed(entry["canonical_headword"]) in printed:
+        return False
+    siblings = reader.connections[STORE].execute(
+        "SELECT canonical_headword FROM ulif_dictua_entries WHERE normalized_query=? AND id!=?",
+        (entry["normalized_query"], entry["id"]),
+    )
+    return any(stressed(row[0]) in printed for row in siblings)
+
+
 def iter_candidates(ctx):
     reader = ctx.reader
     rows = (
@@ -115,6 +152,8 @@ def iter_candidates(ctx):
             reason = "parse_error"
         elif not entry["canonical_headword"]:
             reason = "headword_unresolved"
+        elif entry["grammatical_label"] == SURNAME_LABEL:
+            reason = "homonym_mismatch"
         else:
             try:
                 payload = json.loads(row["payload_json"])
@@ -123,6 +162,8 @@ def iter_candidates(ctx):
                     reason = "empty_source"
                 else:
                     span, reason = relation_span(markup, entry, operation)
+                    if reason is None and names_sibling(reader, markup, entry):
+                        reason = "homonym_mismatch"
                     if reason is None:
                         sense = section_value(row, "sense", span)
                         # Printed lead/gloss is required even for a single group,
@@ -157,19 +198,18 @@ def validate(ctx, unit):
     require(row["kind"] == c.operation, "binding_group")
     if c.outcome != "accepted":
         require(
-            c.outcome == "withheld"
-            and c.reason
-            in {"homonym_unchecked", "parse_error", "headword_unresolved", "empty_source", "sense_not_visible"}
-            and c.response == (anchor(row, "members"),),
+            c.outcome == "withheld" and c.reason in WITHHELD and c.response == (anchor(row, "members"),),
             "ingestion_outcome",
         )
         return
     require(c.reason == "ok" and not c.evidence and not c.flags and not c.context, "ingestion_outcome")
     check(c, operation_spec(c.operation)["binding"], ctx.reader, {})
     entry = fetch(ctx.reader, ENTRY, row["entry_id"])
+    require(entry["grammatical_label"] != SURNAME_LABEL, "homonym_mismatch")
     markup = Markup(json.loads(row["payload_json"])["raw_html"])
     span, reason = relation_span(markup, entry, c.operation)
     require(reason is None, reason or "sense_not_visible")
+    require(not names_sibling(ctx.reader, markup, entry), "homonym_mismatch")
     require(
         c.slots == (value(ENTRY, entry, "canonical_headword", "ulif", "headword"), section_value(row, "sense", span))
         and c.response == (section_value(row, "members"),),

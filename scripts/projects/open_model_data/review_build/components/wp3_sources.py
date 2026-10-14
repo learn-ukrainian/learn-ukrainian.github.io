@@ -18,6 +18,9 @@ SECTION = "ulif_dictua_sections"
 ARTICLE = "sum20_articles"
 SENSE = "sum20_senses"
 CITATION = "sum20_citations"
+# ULIF relation and phraseology dictionaries describe common lexemes. A section
+# attached to a surname entry belongs to a homonym, never to the surname.
+SURNAME_LABEL = "прізвище"
 
 
 def query(sql, parameters=()):
@@ -149,6 +152,17 @@ class Markup(HTMLParser):
             (n for n in self.nodes if n.tag == tag and not set(outside) & set(n.parents)), key=lambda n: n.start
         )
 
+    def classed(self, name):
+        """Nodes carrying CSS class `name`, in document order (outer node first)."""
+        return sorted(
+            (n for n in self.nodes if name in (n.attrs.get("class") or "").split()), key=lambda n: (n.start, -n.end)
+        )
+
+
+def within(outer, node):
+    """Whether `node` lies inside `outer` (raw text offsets; nonempty nodes only)."""
+    return node is not outer and outer.start <= node.start and node.end <= outer.end
+
 
 class UlifAdapter:
     """Resolve the register's full form from its reviewed bibliography and entry."""
@@ -227,14 +241,29 @@ class CardUnit:
         return self.candidate
 
 
+def sense_unit_key(unit_id):
+    """Split a SUM20 unit id into its sense row key and printed // shade index.
+
+    A numbered sense is `<sense id>`; its k-th shade is `<sense id>//<k>`, k >= 1.
+    """
+    key, separator, shade = unit_id.partition("//")
+    if not separator:
+        return key, 0
+    require(shade.isascii() and shade.isdecimal() and shade == str(int(shade)) and int(shade) > 0, "binding_group")
+    return key, int(shade)
+
+
 def card_unit(ctx, candidate, table):
-    row = fetch(ctx.reader, table, candidate.unit_id)
     if table == SECTION:
+        row = fetch(ctx.reader, table, candidate.unit_id)
         parent, group, order = row["entry_id"], row["sense_or_group_id"], row["source_order"]
         parent_table = ENTRY
     else:
         require(table == SENSE, "ingestion_table")
-        parent, group, order = row["article_id"], str(row["sense_order"]), row["sense_order"]
+        key, shade = sense_unit_key(candidate.unit_id)
+        row = fetch(ctx.reader, table, key)
+        parent, order = row["article_id"], row["sense_order"]
+        group = f"{order}//{shade}" if shade else str(order)
         parent_table = ARTICLE
     return CardUnit(candidate, table, f"id={row['id']}", f"{parent_table}:id={parent}", group, order)
 

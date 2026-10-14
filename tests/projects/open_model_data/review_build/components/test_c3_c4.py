@@ -24,6 +24,7 @@ from scripts.projects.open_model_data.review_build.components.wp3_sources import
     SENSE,
     STORE,
     SUM20_ADAPTER,
+    SURNAME_LABEL,
     ULIF_ADAPTER,
     Markup,
     anchor,
@@ -33,6 +34,8 @@ from scripts.projects.open_model_data.review_build.components.wp3_sources import
     identity,
     query,
     ref,
+    sense_unit_key,
+    within,
 )
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
@@ -40,6 +43,8 @@ from scripts.projects.open_model_data.review_build.snapshot import SnapshotReade
 SYNONYM = "<p><b>SYNTHETIC alpha</b> (SYNTHETIC sense one), <b>SYNTHETIC beta</b>.</p>"
 ANTONYM = "<table><tr><td><b>SYNTHETIC alpha</b></td><td><b>SYNTHETIC omega</b></td></tr><tr><td>SYNTHETIC left sense.</td><td>SYNTHETIC right sense.</td></tr></table>"
 PHRASE = "<p><b>SYNTHETIC idiom,</b> SYNTHETIC definition. —<i>SYNTHETIC example <b>SYNTHETIC emphasis</b></i> (SYNTHETIC author); <i>SYNTHETIC second example</i> (SYNTHETIC second author).</p>"
+GRAMMAR = "SYNTHETIC inflection, SYNTHETIC usage label."
+STRESS = "\u0301"
 
 
 def insert(conn, table, **row):
@@ -47,14 +52,62 @@ def insert(conn, table, **row):
     conn.execute(f"INSERT INTO {table} ({columns}) VALUES ({','.join('?' for _ in row)})", list(row.values()))
 
 
+def illustration(text):
+    return f'<div class="ILL"> <div class="ILLTXT">{text}</div> <div class="ILLSRC">(SYNTHETIC author)</div>;</div> '
+
+
+def sense_block(kind, number, labels, definition, quotes, shades=()):
+    """Synthetic SUM20 markup for one numbered sense and its // shades."""
+    html = f'<div class="{kind}"><div class="INTNUM">{number}</div>. '
+    html += "".join(f'<div class="PARAM">{label}</div> ' for label in labels)
+    html += f'<div class="FORMULA">{definition}</div>. ' + "".join(map(illustration, quotes))
+    for shade_labels, shade_definition, shade_quotes in shades:
+        html += '<div class="SHD"><div class="SHDNUM">//&nbsp;</div>'
+        html += "".join(f'<div class="PARAM">{label}</div> ' for label in shade_labels)
+        html += f'<div class="FORMULA">{shade_definition}</div>' if shade_definition else ""
+        html += ".</div> " + "".join(map(illustration, shade_quotes))
+    return html + "</div>"
+
+
+def article_html(blocks):
+    return (
+        '<article><div class="ENTRY"><div class="WORD">SYNTHETIC</div>'
+        f'<div class="LPART">, {GRAMMAR}</div> {"".join(blocks)}</div></article>'
+    )
+
+
+def render(conn):
+    """Print each stored sense as its own block, exactly as the SUM20 parser read it."""
+    for (article,) in conn.execute("SELECT id FROM sum20_articles").fetchall():
+        senses = conn.execute(
+            "SELECT sense_order, definition, register_labels FROM sum20_senses WHERE article_id=? ORDER BY sense_order",
+            (article,),
+        ).fetchall()
+        blocks = []
+        for index, (order, definition, labels) in enumerate(senses):
+            quotes = conn.execute(
+                'SELECT citation_text FROM sum20_citations WHERE article_id=? AND sense_ref=? ORDER BY "order"',
+                (article, order),
+            ).fetchall()
+            blocks.append(
+                sense_block("INTN" if index else "INTF", order, json.loads(labels), definition, [q for (q,) in quotes])
+            )
+        conn.execute("UPDATE sum20_articles SET article_html=? WHERE id=?", (article_html(blocks), article))
+
+
+def rerender(db):
+    with sqlite3.connect(db) as conn:
+        render(conn)
+
+
 @pytest.fixture
 def sources(tmp_path):
     db = tmp_path / "SYNTHETIC-sources.db"
     with sqlite3.connect(db) as conn:
         conn.executescript("""
-CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, canonical_headword TEXT, homonym_index INTEGER, homonym_checked INTEGER, status TEXT, retrieved_at TEXT);
+CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, normalized_query TEXT, canonical_headword TEXT, grammatical_label TEXT, homonym_index INTEGER, homonym_checked INTEGER, status TEXT, retrieved_at TEXT);
 CREATE TABLE ulif_dictua_sections (id INTEGER PRIMARY KEY, entry_id INTEGER, kind TEXT, source_order INTEGER, sense_or_group_id TEXT, payload_json TEXT);
-CREATE TABLE sum20_articles (id INTEGER PRIMARY KEY, stressed_headword TEXT, pos TEXT, official_url TEXT, fetched_at TEXT, quarantine_reason TEXT);
+CREATE TABLE sum20_articles (id INTEGER PRIMARY KEY, stressed_headword TEXT, pos TEXT, grammar TEXT, article_html TEXT, official_url TEXT, fetched_at TEXT, quarantine_reason TEXT);
 CREATE TABLE sum20_senses (id INTEGER PRIMARY KEY, article_id INTEGER, sense_order INTEGER, definition TEXT, register_labels TEXT);
 CREATE TABLE sum20_citations (id INTEGER PRIMARY KEY, article_id INTEGER, sense_ref INTEGER, "order" INTEGER, citation_text TEXT);
 """)
@@ -63,7 +116,9 @@ CREATE TABLE sum20_citations (id INTEGER PRIMARY KEY, article_id INTEGER, sense_
                 conn,
                 ENTRY,
                 id=key,
+                normalized_query="synthetic alpha",
                 canonical_headword="SYNTHETIC alpha",
+                grammatical_label="SYNTHETIC part of speech",
                 homonym_index=key,
                 homonym_checked=1,
                 status="ok",
@@ -92,6 +147,8 @@ CREATE TABLE sum20_citations (id INTEGER PRIMARY KEY, article_id INTEGER, sense_
                 id=key,
                 stressed_headword=f"SYNTHETIC headword {key}",
                 pos="SYNTHETIC noun",
+                grammar=GRAMMAR,
+                article_html="",
                 official_url="https://sum20ua.com/SYNTHETIC",
                 fetched_at="2026-01-01",
                 quarantine_reason="SYNTHETIC quarantined" if key == 3 else "",
@@ -116,6 +173,7 @@ CREATE TABLE sum20_citations (id INTEGER PRIMARY KEY, article_id INTEGER, sense_
                 **{"order": key},
                 citation_text=f"SYNTHETIC citation {key}",
             )
+        render(conn)
     return db
 
 
@@ -184,6 +242,7 @@ def test_full_numbered_meanings_need_no_training_prompt_discriminator(sources):
                 definition=long_definition,
                 register_labels='["SYNTHETIC label"]',
             )
+        render(conn)
     stream = units(sources, c3_sum20_meaning)
     article = [u for u in stream if u.parent_key == "sum20_articles:id=1"]
     assert [u.source_order for u in article] == list(range(1, 15))
@@ -288,8 +347,16 @@ def test_c4_requires_printed_idiom_definition_and_every_author_label(sources, ht
 def test_meaning_binding_rejects_missing_reordered_or_foreign_values(sources, mutation):
     with sqlite3.connect(sources) as conn:
         insert(conn, CITATION, id=3, article_id=1, sense_ref=1, **{"order": 3}, citation_text="SYNTHETIC third quote")
+        render(conn)
     first, second, _ = units(sources, c3_sum20_meaning)
     c = first.candidate
+    assert c.outcome == "accepted" and [v.slot for v in c.context] == [
+        "grammar",
+        "pos",
+        "register_label",
+        "sense_citations",
+        "sense_citations",
+    ]
     if mutation == "omit":
         bad = replace(c, context=c.context[:-1])
     elif mutation == "reorder":
@@ -453,3 +520,253 @@ def test_phrase_projection_refuses_parent_headword_removed(sources):
     with SnapshotReader({STORE: sources}) as reader:
         with pytest.raises(BuildError, match="headword_unresolved"):
             unit.project(ComponentContext(reader, {}))
+
+
+def texts(candidate, slot):
+    return [v.text for v in candidate.context if v.slot == slot]
+
+
+def shaded_article(db, shade_definition="SYNTHETIC shade definition", mutate=lambda html: html):
+    """Article 1 sense 1 prints a // shade; its stored rows merge the shade, as the SUM20 parser does."""
+    with sqlite3.connect(db) as conn:
+        insert(
+            conn, CITATION, id=3, article_id=1, sense_ref=1, **{"order": 3}, citation_text="SYNTHETIC shade citation"
+        )
+        update_labels = '["SYNTHETIC label", "SYNTHETIC shade label"]'
+        conn.execute("UPDATE sum20_senses SET register_labels=? WHERE id=10", (update_labels,))
+        shade = (["SYNTHETIC shade label"], shade_definition, ["SYNTHETIC shade citation"])
+        blocks = [
+            sense_block("INTF", 1, ["SYNTHETIC label"], "SYNTHETIC definition 10", ["SYNTHETIC citation 1"], [shade]),
+            sense_block("INTN", 2, ["SYNTHETIC label"], "SYNTHETIC definition 11", ["SYNTHETIC citation 2"]),
+        ]
+        conn.execute("UPDATE sum20_articles SET article_html=? WHERE id=1", (mutate(article_html(blocks)),))
+
+
+def test_shades_split_from_their_numbered_sense(sources):
+    shaded_article(sources)
+    stream = units(sources, c3_sum20_meaning)
+    by_group = {(u.source_key, u.group_key): u for u in stream}
+    assert list(by_group) == [("id=10", "1"), ("id=10", "1//1"), ("id=11", "2"), ("id=12", "1")]
+    assert all(u.candidate.outcome == "accepted" for u in stream)
+    numbered, shade = by_group["id=10", "1"], by_group["id=10", "1//1"]
+    assert texts(numbered.candidate, "register_label") == ["SYNTHETIC label"]
+    assert texts(numbered.candidate, "sense_citations") == ["SYNTHETIC citation 1"]
+    assert [v.text for v in numbered.candidate.response] == ["SYNTHETIC definition 10"]
+    assert texts(shade.candidate, "register_label") == ["SYNTHETIC shade label"]
+    assert texts(shade.candidate, "sense_citations") == ["SYNTHETIC shade citation"]
+    assert [v.text for v in shade.candidate.response] == ["SYNTHETIC shade definition"]
+    assert (shade.candidate.unit_id, shade.source_order, shade.parent_key) == ("10//1", 1, "sum20_articles:id=1")
+    printed = shade.candidate.response[0]
+    assert (printed.citations[0].table, printed.citations[0].field, printed.transform) == (
+        ARTICLE,
+        "article_html",
+        c3_sum20_meaning.HTML_TEXT,
+    )
+    with SnapshotReader({STORE: sources}) as reader:
+        ctx = ComponentContext(reader, {})
+        assert [u.project(ctx) for u in stream] == list(c3_sum20_meaning.iter_candidates(ctx))
+    c = numbered.candidate
+    merged = replace(c, context=(*c.context, shade.candidate.context[-1]))
+    with pytest.raises(BuildError, match="binding_sense"):
+        validate(sources, c3_sum20_meaning, replace(numbered, candidate=merged))
+    labelled = replace(c, context=(*c.context[:3], shade.candidate.context[2], *c.context[3:]))
+    with pytest.raises(BuildError, match="binding_sense"):
+        validate(sources, c3_sum20_meaning, replace(numbered, candidate=labelled))
+    with pytest.raises(BuildError, match="binding_group"):
+        validate(sources, c3_sum20_meaning, replace(shade, group_key="1"))
+    for forged_id, group in (("10//0", "1//0"), ("10//01", "1//01"), ("10//2", "1//2")):
+        forged = replace(shade, candidate=replace(shade.candidate, unit_id=forged_id), group_key=group)
+        with pytest.raises(BuildError, match="binding_group"):
+            validate(sources, c3_sum20_meaning, forged)
+
+
+def test_shade_without_printed_definition_withheld_with_its_evidence(sources):
+    shaded_article(sources, shade_definition=None)
+    stream = units(sources, c3_sum20_meaning)
+    shade = next(u for u in stream if u.group_key == "1//1")
+    c = shade.candidate
+    assert (c.outcome, c.reason, c.response) == ("withheld", "definition_unresolved", ())
+    assert texts(c, "register_label") == ["SYNTHETIC shade label"]
+    assert texts(c, "sense_citations") == ["SYNTHETIC shade citation"]
+    assert next(u for u in stream if u.group_key == "1").candidate.outcome == "accepted"
+    with pytest.raises(BuildError, match="ingestion_outcome"):
+        validate(sources, c3_sum20_meaning, replace(shade, candidate=replace(c, outcome="accepted", reason="ok")))
+
+
+SHADE = '<div class="SHDNUM">//&nbsp;</div>'
+SHADE_DEFINITION = '<div class="FORMULA">SYNTHETIC shade definition</div>'
+
+
+@pytest.mark.parametrize(
+    "mutation,sense,shaded",
+    [
+        ("stored_definition", "id=10", False),
+        ("extra_illustration", "id=10", False),
+        ("stored_labels", "id=10", False),
+        ("missing_block", "id=11", False),
+        ("two_entries", "id=10", False),
+        ("block_order", "id=10", False),
+        ("nested_shade", "id=10", True),
+        ("two_shade_definitions", "id=10", True),
+        ("label_in_illustration", "id=10", True),
+    ],
+)
+def test_unaligned_printed_block_withholds_the_whole_sense(sources, mutation, sense, shaded):
+    edits = {
+        "nested_shade": lambda html: html.replace(SHADE, SHADE + '<div class="SHD">SYNTHETIC</div>'),
+        "two_shade_definitions": lambda html: html.replace(SHADE_DEFINITION, SHADE_DEFINITION * 2),
+        "label_in_illustration": lambda html: html.replace(
+            "SYNTHETIC citation 1</div>", 'SYNTHETIC citation 1</div><div class="PARAM">SYNTHETIC</div>'
+        ),
+    }
+    if shaded:
+        shaded_article(sources, mutate=edits[mutation])
+    elif mutation == "stored_definition":
+        update(sources, SENSE, 10, definition="SYNTHETIC unprinted definition")
+    elif mutation == "stored_labels":
+        update(sources, SENSE, 10, register_labels='["SYNTHETIC unprinted label"]')
+    else:
+        quotes = ["SYNTHETIC citation 1"] + (["SYNTHETIC unstored"] if mutation == "extra_illustration" else [])
+        first = sense_block("INTF", 1, ["SYNTHETIC label"], "SYNTHETIC definition 10", quotes)
+        second = sense_block("INTN", 2, ["SYNTHETIC label"], "SYNTHETIC definition 11", ["SYNTHETIC citation 2"])
+        blocks = {"missing_block": [first], "block_order": [second, first]}.get(mutation, [first, second])
+        html = article_html(blocks)
+        if mutation == "two_entries":
+            html = html.replace("</article>", '<div class="ENTRY">SYNTHETIC</div></article>')
+        update(sources, ARTICLE, 1, article_html=html)
+    stream = [u for u in units(sources, c3_sum20_meaning) if u.source_key == sense]
+    assert len(stream) == 1
+    c = stream[0].candidate
+    assert (c.outcome, c.reason) == ("withheld", "sense_scope_unresolved")
+    assert [v.slot for v in c.context][:3] == ["grammar", "pos", "register_labels"]
+    with pytest.raises(BuildError, match="ingestion_outcome"):
+        validate(
+            sources,
+            c3_sum20_meaning,
+            replace(stream[0], candidate=replace(c, outcome="accepted", reason="ok", evidence=())),
+        )
+
+
+def test_article_grammar_line_cited_verbatim_without_pos(sources):
+    update(sources, ARTICLE, 1, pos="")
+    stream = units(sources, c3_sum20_meaning)
+    for unit in stream:
+        grammar = [v for v in unit.candidate.context if v.slot == "grammar"]
+        assert [v.text for v in grammar] == [GRAMMAR]
+        assert (grammar[0].citations[0].table, grammar[0].citations[0].field) == (ARTICLE, "grammar")
+    first = stream[0]
+    assert [v.slot for v in first.candidate.context][:2] == ["grammar", "register_label"]
+    dropped = replace(first.candidate, context=first.candidate.context[1:])
+    with pytest.raises(BuildError, match="binding_sense"):
+        validate(sources, c3_sum20_meaning, replace(first, candidate=dropped))
+
+
+def test_c4_separates_sense_number_and_speaker_tags(sources):
+    html_update(
+        sources,
+        3,
+        "<p><b>SYNTHETIC idiom. 2. </b>SYNTHETIC definition (synthetic usage note). [SYNTHETIC speaker:] "
+        "<i>SYNTHETIC quote</i> (SYNTHETIC author); — [SYNTHETIC other (synthetic aside):] <i>SYNTHETIC reply</i> "
+        "(SYNTHETIC author)..</p>",
+    )
+    unit = units(sources, c4_phraseology)[0]
+    c = unit.candidate
+    assert c.outcome == "accepted"
+    assert [(v.slot, v.text) for v in c.slots] == [("idiom", "SYNTHETIC idiom."), ("sense", "2")]
+    assert [v.text for v in c.response] == [
+        "SYNTHETIC definition (synthetic usage note).",
+        "[SYNTHETIC speaker:] SYNTHETIC quote (SYNTHETIC author)",
+        "[SYNTHETIC other (synthetic aside):] SYNTHETIC reply (SYNTHETIC author)",
+    ]
+    with pytest.raises(BuildError, match="binding_group"):
+        validate(sources, c4_phraseology, replace(unit, candidate=replace(c, slots=c.slots[:1])))
+
+
+@pytest.mark.parametrize(
+    "html,reason",
+    [
+        # A continuation sense prints its idiom in an earlier section; a bold inside quotation text is not one.
+        (
+            "<p><b>2. </b>SYNTHETIC definition. <i>SYNTHETIC quote,</i> SYNTHETIC <b><i>SYNTHETIC idiom</i></b> "
+            "SYNTHETIC rest (SYNTHETIC author).</p>",
+            "headword_unresolved",
+        ),
+        (
+            "<p>[<b>SYNTHETIC idiom</b>] SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "headword_unresolved",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom. </b>SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author); "
+            "// SYNTHETIC shade. <i>SYNTHETIC shade quote</i> (SYNTHETIC author).</p>",
+            "sense_not_visible",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom. </b>SYNTHETIC definition; // SYNTHETIC shade. <i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "sense_not_visible",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom. </b>SYNTHETIC definition. SYNTHETIC plain quote (SYNTHETIC author); "
+            "<i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "citation_unresolved",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom. </b>SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author); "
+            "SYNTHETIC plain <i>SYNTHETIC rest</i> (SYNTHETIC author).</p>",
+            "citation_unresolved",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom. </b>SYNTHETIC definition [SYNTHETIC speaker:] SYNTHETIC line. "
+            "<i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "citation_unresolved",
+        ),
+    ],
+)
+def test_c4_withholds_mis_segmented_paragraphs(sources, html, reason):
+    html_update(sources, 3, html)
+    unit = units(sources, c4_phraseology)[0]
+    assert (unit.candidate.outcome, unit.candidate.reason) == ("withheld", reason)
+
+
+@pytest.mark.parametrize("module,key", [(c3_relations, 1), (c3_relations, 2), (c4_phraseology, 3)])
+def test_surname_entry_never_owns_relation_or_phrase_groups(sources, module, key):
+    accepted = next(u for u in units(sources, module) if u.source_key == f"id={key}")
+    assert accepted.candidate.outcome == "accepted"
+    update(sources, ENTRY, 1, grammatical_label=SURNAME_LABEL)
+    with pytest.raises(BuildError, match="homonym_mismatch"):
+        validate(sources, module, accepted)
+    stream = units(sources, module)
+    unit = next(u for u in stream if u.source_key == f"id={key}")
+    assert (unit.candidate.outcome, unit.candidate.reason) == ("withheld", "homonym_mismatch")
+    # The common-word homonym keeps its own group.
+    assert all(u.candidate.outcome == "accepted" for u in stream if u.parent_key == "ulif_dictua_entries:id=2")
+
+
+def test_printed_stress_naming_a_sibling_homonym_is_withheld(sources):
+    update(sources, ENTRY, 1, canonical_headword=f"SYNTHETIC a{STRESS}lpha")
+    update(sources, ENTRY, 2, canonical_headword="SYNTHETIC beta")
+    for key in (1, 4):
+        html_update(sources, key, SYNONYM.replace("SYNTHETIC alpha", f"SYNTHETIC ALPHA{STRESS}"))
+    accepted = next(u for u in units(sources, c3_relations) if u.source_key == "id=1")
+    assert accepted.candidate.outcome == "accepted"
+    update(sources, ENTRY, 2, canonical_headword=f"SYNTHETIC alpha{STRESS}")
+    with pytest.raises(BuildError, match="homonym_mismatch"):
+        validate(sources, c3_relations, accepted)
+    stream = {u.source_key: u.candidate for u in units(sources, c3_relations) if u.candidate.operation == "synonyms"}
+    assert (stream["id=1"].outcome, stream["id=1"].reason) == ("withheld", "homonym_mismatch")
+    assert stream["id=4"].outcome == "accepted"
+    # Unstressed printing cannot tell the homonyms apart.
+    for key in (1, 4):
+        html_update(sources, key, SYNONYM)
+    assert all(u.candidate.outcome == "accepted" for u in units(sources, c3_relations))
+
+
+def test_sense_unit_key_and_markup_containment():
+    assert sense_unit_key("10") == ("10", 0)
+    assert sense_unit_key("10//3") == ("10", 3)
+    for bad in ("10//", "10//0", "10//01", "10//x", "10//-1", "10//١"):
+        with pytest.raises(BuildError, match="binding_group"):
+            sense_unit_key(bad)
+    markup = Markup('<div class="A SYNTHETIC">x <div class="B">y</div></div><div class="B">z</div>')
+    outer, (inner, after) = markup.classed("A")[0], markup.classed("B")
+    assert within(outer, inner) and not within(outer, after)
+    assert not within(inner, outer) and not within(outer, outer)

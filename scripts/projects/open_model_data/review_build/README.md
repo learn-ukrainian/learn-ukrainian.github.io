@@ -484,11 +484,30 @@ reason and cited source payload. Assembly owns lexeme mapping, persistent card
 and sense identities, and promotion to accepted card facts.
 
 SUM20 ingestion reads every numbered sense of each unquarantined article in
-source order, with the complete definition, labels and that sense's own ordered
-citations. The training catalog's requirement for discriminating examples does
-not restrict ingestion. ULIF relations retain the reviewed printed-discriminator
-rule; phraseology requires a printed idiom, a nonempty definition and author
-labels on every extracted quotation. Missing or ambiguous evidence stays withheld.
+source order, and each `//` shade printed inside it, as its own unit (unit id
+`<sense id>//<k>`, group key `<sense order>//<k>`). Each unit carries the article's
+printed grammar line (`grammar`, which holds usage labels such as `заст.` or
+`діал.`), `pos` when derived, and only its own labels, definition and ordered
+citations. The stored sense rows merge a shade's labels and citations into the
+numbered sense, so scope is read from the printed INTF/INTN and SHD blocks of
+`article_html`: labels and shade definitions cite printed spans there, while
+numbered definitions and citations cite their stored rows after a
+whitespace-insensitive alignment with the printed block. A sense whose stored
+definition, labels or citations do not align is withheld whole as
+`sense_scope_unresolved`; a shade without a printed definition is withheld as
+`definition_unresolved`. The training catalog's requirement for discriminating
+examples does not restrict ingestion.
+
+ULIF relations retain the reviewed printed-discriminator rule. Phraseology
+requires the idiom heading as the paragraph's leading bold; a printed sense
+number closing the heading is cited separately as `sense`. The definition runs
+to the first italic quotation; a `[Speaker:]` tag opening a quotation belongs to
+that citation, and every citation ends with its author label. Continuation
+senses whose idiom is printed in an earlier section, second headings, `//`
+shades, and quotation text outside italics are withheld. Sections attached to
+a surname entry (`прізвище`), and relation groups whose printed stressed
+headword names a sibling homonym but not the owning entry, are withheld as
+`homonym_mismatch`. Missing or ambiguous evidence stays withheld.
 
 `unit.project(ctx)` rechecks field hashes, verbatim values, source identities,
 quarantine and operation bindings against the held snapshot before returning the

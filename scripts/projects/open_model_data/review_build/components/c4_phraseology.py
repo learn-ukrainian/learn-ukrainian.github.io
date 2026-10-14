@@ -10,6 +10,7 @@ from .wp3_sources import (
     ENTRY,
     SECTION,
     STORE,
+    SURNAME_LABEL,
     Markup,
     anchor,
     authenticate,
@@ -20,6 +21,31 @@ from .wp3_sources import (
     ref,
     section_value,
 )
+
+WITHHELD = {
+    "homonym_unchecked",
+    "homonym_mismatch",
+    "parse_error",
+    "headword_unresolved",
+    "sense_not_visible",
+    "definition_unresolved",
+    "citation_unresolved",
+}
+SENSE_NUMBER = re.compile(r"\s(\d+)\.$")
+AUTHOR = re.compile(r"\s*\([^()]+\)")
+# A drama quotation opens with its speaker: `[Надія:]`, `[Фортунат (пошепки):]`.
+SPEAKER = re.compile(r"\[[^\[\]]*:\]")
+SPEAKER_BEFORE = re.compile(r"\[[^\[\]]*:\]\s*$")
+SEPARATORS = re.compile(r"[\s;.,—–-]*")
+
+
+def author_label(text):
+    """A parenthetical opening with a capital letter: a source label, as in `(Ю. Смолич)`."""
+    for match in re.finditer(r"\(([^()]*)\)", text):
+        letter = next((c for c in match.group(1) if c.isalpha()), "")
+        if letter.isupper():
+            return True
+    return False
 
 
 def operation_spec():
@@ -47,39 +73,74 @@ def operation_spec():
 
 
 def phrase_spans(markup):
-    bolds = [
-        n
-        for n in markup.tagged("b", outside=("i", "b"))
-        if any(c.isalpha() for c in markup.text[slice(*markup.span(n))])
-    ]
-    if not bolds:
+    """Segment one printed phraseology paragraph.
+
+    The heading is the paragraph's leading top-level bold: the idiom, then an
+    optional printed sense number. The definition runs from the heading to the
+    first quotation. A quotation is italic, may open with a speaker tag and
+    closes with its parenthesized author label; only separators lie between
+    and after quotations. Returns `(idiom, sense or None, definition, quotes)`
+    spans. Anything else is withheld: a continuation sense whose idiom is
+    printed in an earlier section, a second heading, a // shade, or quotation
+    text outside italics.
+    """
+    text = markup.text
+    heads = [n for n in markup.tagged("b", outside=("i", "b")) if markup.span(n)[0] < markup.span(n)[1]]
+    if not heads or markup.span(heads[0])[0] != 0:
         return None, "headword_unresolved"
-    lead = markup.span(bolds[0])
-    # More than one top-level printed heading would require a different grain.
-    if len(bolds) != 1:
+    lead = markup.span(heads[0])
+    if not any(c.isalpha() for c in text[slice(*lead)]):
+        return None, "headword_unresolved"
+    if sum(any(c.isalpha() for c in text[slice(*markup.span(n))]) for n in heads) != 1:
         return None, "sense_not_visible"
-    quote_spans = []
+    idiom_end, sense = lead[1], None
+    while idiom_end > lead[0] and text[idiom_end - 1] in " ,;":
+        idiom_end -= 1
+    number = SENSE_NUMBER.search(text, lead[0], idiom_end)
+    if number:
+        sense, idiom_end = number.span(1), number.start()
+        while idiom_end > lead[0] and text[idiom_end - 1] in " ,;":
+            idiom_end -= 1
+    quotes = []
     for italic in markup.tagged("i", outside=("i",)):
         start, end = markup.span(italic)
         if start < lead[1]:
             continue
-        author = re.match(r"\s*\([^()]+\)", markup.text[end:])
-        if not author or not any(c.isalpha() for c in author.group()) or start == end:
+        author = AUTHOR.match(text, end)
+        if start == end or not author or not any(c.isalpha() for c in author.group()):
             return None, "citation_unresolved"
-        quote_spans.append((start, end + author.end()))
-    if not quote_spans:
+        if quotes and start < quotes[-1][1]:
+            return None, "citation_unresolved"
+        speaker = SPEAKER_BEFORE.search(text, quotes[-1][1] if quotes else lead[1], start)
+        quotes.append((speaker.start() if speaker else start, author.end()))
+    if not quotes:
         return None, "citation_unresolved"
-    start, end = lead[1], quote_spans[0][0]
-    while start < end and markup.text[start] in " ,;:—–-":
+    start, end = lead[1], quotes[0][0]
+    while start < end and text[start] in " ,;:—–-":
         start += 1
-    while end > start and markup.text[end - 1] in " ,;:—–-":
+    while end > start and text[end - 1] in " ,;:—–-":
         end -= 1
-    if start == end or not any(c.isalpha() for c in markup.text[start:end]):
+    definition = text[start:end]
+    if not any(c.isalpha() for c in definition):
         return None, "definition_unresolved"
-    lead_end = lead[1]
-    while lead_end > lead[0] and markup.text[lead_end - 1] in " ,;":
-        lead_end -= 1
-    return ((lead[0], lead_end), (start, end), quote_spans), None
+    gaps = [text[a:b] for a, b in zip((q[1] for q in quotes), (*(q[0] for q in quotes[1:]), len(text)), strict=True)]
+    if any("//" in part for part in (definition, *gaps)):
+        return None, "sense_not_visible"
+    if SPEAKER.search(definition) or author_label(definition) or not all(map(SEPARATORS.fullmatch, gaps)):
+        return None, "citation_unresolved"
+    return ((lead[0], idiom_end), sense, (start, end), quotes), None
+
+
+def phrase_values(row, spans):
+    idiom, sense, definition, quotes = spans
+    slots = (section_value(row, "idiom", idiom),)
+    if sense:
+        slots = (*slots, section_value(row, "sense", sense))
+    response = (
+        section_value(row, "definition", definition),
+        *(section_value(row, "citation", span) for span in quotes),
+    )
+    return slots, response
 
 
 def iter_candidates(ctx):
@@ -96,17 +157,14 @@ def iter_candidates(ctx):
             reason = "parse_error"
         elif not entry["canonical_headword"]:
             reason = "headword_unresolved"
+        elif entry["grammatical_label"] == SURNAME_LABEL:
+            reason = "homonym_mismatch"
         else:
             try:
                 markup = Markup(json.loads(row["payload_json"])["raw_html"])
                 spans, reason = phrase_spans(markup)
                 if reason is None:
-                    idiom, definition, citations = spans
-                    slots = (section_value(row, "idiom", idiom),)
-                    response = (
-                        section_value(row, "definition", definition),
-                        *(section_value(row, "citation", span) for span in citations),
-                    )
+                    slots, response = phrase_values(row, spans)
             except (KeyError, TypeError, ValueError):
                 reason = "parse_error"
         yield Candidate(
@@ -132,17 +190,7 @@ def validate(ctx, unit):
     require(row["kind"] == "phraseology", "binding_group")
     if c.outcome != "accepted":
         require(
-            c.outcome == "withheld"
-            and c.reason
-            in {
-                "homonym_unchecked",
-                "parse_error",
-                "headword_unresolved",
-                "sense_not_visible",
-                "definition_unresolved",
-                "citation_unresolved",
-            }
-            and c.response == (anchor(row, "definition"),),
+            c.outcome == "withheld" and c.reason in WITHHELD and c.response == (anchor(row, "definition"),),
             "ingestion_outcome",
         )
         return
@@ -151,19 +199,11 @@ def validate(ctx, unit):
     entry = fetch(ctx.reader, ENTRY, row["entry_id"])
     require(entry["homonym_checked"] == 1 and entry["status"] == "ok", "homonym_unchecked")
     require(bool(entry["canonical_headword"]), "headword_unresolved")
+    require(entry["grammatical_label"] != SURNAME_LABEL, "homonym_mismatch")
     markup = Markup(json.loads(row["payload_json"])["raw_html"])
     spans, reason = phrase_spans(markup)
     require(reason is None, reason or "definition_unresolved")
-    idiom, definition, citations = spans
-    require(
-        c.slots == (section_value(row, "idiom", idiom),)
-        and c.response
-        == (
-            section_value(row, "definition", definition),
-            *(section_value(row, "citation", span) for span in citations),
-        ),
-        "binding_group",
-    )
+    require((c.slots, c.response) == phrase_values(row, spans), "binding_group")
 
 
 def iter_card_units(ctx):
