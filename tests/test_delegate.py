@@ -7005,6 +7005,67 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(
     assert not tmp_tasks_dir.exists()
 
 
+@pytest.mark.parametrize(
+    "case,code", [("missing", "claude_account_credentials_missing"), ("expired", "claude_account_credentials_expired")]
+)
+def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code):
+    from tests.agent_runtime.test_attempt_boundary import (
+        BOUND_ACCOUNT_UUID,
+        CLAUDE_AMBIENT_AUTH,
+        DEFAULT_ACCOUNT_UUID,
+        _mock_selected_account_runtime,
+        _private_json,
+    )
+
+    _mock_selected_account_runtime(tmp_path, monkeypatch)
+    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    home, selected = tmp_path / "home", tmp_path / "selected"
+    selected.mkdir(mode=0o700)
+    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    binding = tmp_path / "binding.json"
+    _private_json(
+        binding,
+        {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
+    )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    if case == "expired":
+        _private_json(
+            selected / ".credentials.json",
+            {"claudeAiOauth": {"accessToken": "fixture-expired-" + "e" * 30, "expiresAt": 1}},
+        )
+    for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
+        monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
+    spawn = MagicMock(side_effect=AssertionError("spawned"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
+    args = _claude_account_args(
+        "--agent",
+        "claude",
+        "--claude-account",
+        "b",
+        "--review-attempt",
+        "manifest.yaml",
+        "--review-id",
+        "rev",
+        "--attempt-id",
+        "att",
+    )
+    assert delegate._dispatch_claude_account_refusal(args) == code
+    assert delegate.cmd_dispatch(args) == 2
+    assert capsys.readouterr().err == f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n"
+    assert not tmp_tasks_dir.exists()
+    spawn.assert_not_called()
+
+
+def test_explicit_default_claude_account_matches_omitted_hashes():
+    omitted = _claude_account_args("--agent", "claude")
+    explicit = _claude_account_args("--agent", "claude", "--claude-account", "a")
+    assert delegate.dispatch_args_sha256(explicit) == delegate.dispatch_args_sha256(omitted)
+    assert delegate.advisory_args_sha256(explicit) == delegate.advisory_args_sha256(omitted)
+
+
 def test_omitted_claude_account_leaves_dispatch_hashes_unchanged():
     args = _claude_account_args("--agent", "claude")
     legacy = argparse.Namespace(**{k: v for k, v in vars(args).items() if k != "claude_account"})

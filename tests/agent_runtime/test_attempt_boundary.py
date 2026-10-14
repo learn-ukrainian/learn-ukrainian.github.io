@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import copy
+import errno
 import hashlib
+import http.client
 import http.server
 import json
 import os
@@ -1010,10 +1012,51 @@ def _credentials(path: Path, token: str) -> None:
     _private_json(path, {"claudeAiOauth": oauth})
 
 
+def _mock_selected_account_runtime(tmp_path, monkeypatch):
+    """Model safe system ancestry without changing shared scratch permissions."""
+    ancestors = {(p.stat().st_dev, p.stat().st_ino) for p in tmp_path.parents}
+    fstat = os.fstat
+
+    def checked_stat(fd):
+        info = fstat(fd)
+        if (info.st_dev, info.st_ino) in ancestors:
+            fields = list(info)
+            fields[0] &= ~0o022
+            return os.stat_result(fields)
+        return info
+
+    monkeypatch.setattr(os, "fstat", checked_stat)
+    calls = []
+    identities = {}
+
+    class ProfileConnection:
+        def __init__(self, host, *, timeout):
+            assert host == "api.anthropic.com" and timeout == 10
+
+        def request(self, method, path, *, headers):
+            assert method == "GET" and path == "/api/oauth/profile"
+            self.selected = headers["Authorization"].removeprefix("Bearer ")
+            calls.append(self.selected)
+
+        def getresponse(self):
+            return SimpleNamespace(
+                status=200,
+                read=lambda _limit: json.dumps({"account": {"uuid": identities[self.selected]}}).encode(),
+            )
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(http.client, "HTTPSConnection", ProfileConnection)
+    return identities, calls
+
+
 @pytest.fixture
 def two_accounts(world, tmp_path, monkeypatch):
     """The default account in HOME and a second one under its own config directory."""
     _, home = world
+    home.chmod(0o700)
+    identities, calls = _mock_selected_account_runtime(tmp_path, monkeypatch)
     for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
         monkeypatch.delenv(key, raising=False)
     accounts = SimpleNamespace(
@@ -1023,7 +1066,10 @@ def two_accounts(world, tmp_path, monkeypatch):
         config_dir=tmp_path / "bound-config",
         binding=tmp_path / "private-config" / "claude_accounts.json",
     )
+    identities.update({accounts.default_token: DEFAULT_ACCOUNT_UUID, accounts.bound_token: BOUND_ACCOUNT_UUID})
+    accounts.profile_calls = calls
     _credentials(home / ".claude" / ".credentials.json", accounts.default_token)
+    (home / ".claude").chmod(0o700)
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
     accounts.config_dir.mkdir(mode=0o700)
     _credentials(accounts.config_dir / ".credentials.json", accounts.bound_token)
@@ -1037,6 +1083,185 @@ def two_accounts(world, tmp_path, monkeypatch):
     )
     monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(accounts.binding))
     return accounts
+
+
+def test_selected_material_must_match_bound_identity(two_accounts):
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    _credentials(two_accounts.config_dir / ".credentials.json", two_accounts.default_token)
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_unverified$"):
+        linux_claude_auth("b")
+
+
+def test_selected_directory_swap_cannot_redirect_use(two_accounts, monkeypatch):
+    from scripts.agent_runtime import attempt_boundary as module
+
+    original = module._claude_config_account_uuid
+    swapped = False
+
+    def swap_after_login_read(path, **kwargs):
+        nonlocal swapped
+        result = original(path, **kwargs)
+        if not swapped and (kwargs.get("dir_fd") is not None or path.parent == two_accounts.config_dir):
+            swapped = True
+            two_accounts.config_dir.rename(two_accounts.config_dir.with_name("checked-config"))
+            two_accounts.config_dir.symlink_to(two_accounts.home / ".claude")
+        return result
+
+    monkeypatch.setattr(module, "_claude_config_account_uuid", swap_after_login_read)
+    assert module.linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
+    assert swapped
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "symlink_ancestor",
+        "group_writable_ancestor",
+        "world_writable_ancestor",
+        "group_writable_selected",
+        "world_writable_selected",
+    ],
+)
+def test_selected_directory_rejects_unsafe_ancestry(two_accounts, case):
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    if case.endswith("selected"):
+        two_accounts.config_dir.chmod(0o770 if case.startswith("group") else 0o707)
+    else:
+        parent = two_accounts.config_dir.parent / "ancestor"
+        parent.mkdir(mode=0o700)
+        two_accounts.config_dir.rename(parent / "bound-config")
+        if case == "symlink_ancestor":
+            link = parent.with_name("linked-ancestor")
+            link.symlink_to(parent)
+            selected = link / "bound-config"
+        else:
+            parent.chmod(0o770 if case.startswith("group") else 0o707)
+            selected = parent / "bound-config"
+        _private_json(
+            two_accounts.binding,
+            {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
+        )
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_config_dir_not_private$"):
+        linux_claude_auth("b")
+
+
+def test_selection_path_loop_is_a_value_free_refusal(two_accounts, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, linux_claude_auth
+
+    loop = two_accounts.config_dir.parent / "loop"
+    loop.symlink_to(loop)
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(loop))
+    with pytest.raises(ReviewIsolationError) as refused:
+        linux_claude_auth("b")
+    assert str(refused.value) in CLAUDE_ACCOUNT_REFUSAL_CODES
+    assert str(loop) not in str(refused.value)
+
+
+@pytest.mark.parametrize(
+    "error,code",
+    [
+        (errno.ENOENT, "claude_account_config_dir_missing"),
+        (errno.ENOTDIR, "claude_account_config_dir_not_private"),
+        (errno.ELOOP, "claude_account_config_dir_not_private"),
+        (errno.EACCES, "claude_account_config_dir_unavailable"),
+        (errno.ENAMETOOLONG, "claude_account_config_dir_unavailable"),
+    ],
+)
+def test_selected_path_errors_are_sanitized(two_accounts, monkeypatch, error, code):
+    import traceback
+
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    original = os.open
+
+    def fail_selected(path, *args, **kwargs):
+        if path == two_accounts.config_dir.name:
+            raise OSError(error, "fixture-private-detail", str(two_accounts.config_dir))
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "open", fail_selected)
+    with pytest.raises(ReviewIsolationError) as refused:
+        linux_claude_auth("b")
+    assert str(refused.value) == code
+    rendered = "".join(traceback.format_exception(refused.value))
+    assert "fixture-private-detail" not in rendered
+    assert str(two_accounts.config_dir) not in rendered
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "offline",
+        "unauthorized",
+        "redirect",
+        "oversized",
+        "invalid_json",
+        "missing_identity",
+        "wrong_identity_type",
+        "duplicate_identity",
+    ],
+)
+def test_selected_identity_failure_is_value_free(two_accounts, monkeypatch, case):
+    import traceback
+
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    class FailedProfile:
+        def __init__(self, *_args, **_kwargs):
+            if case == "offline":
+                raise OSError("fixture-private-detail")
+
+        def request(self, *_args, **_kwargs):
+            pass
+
+        def getresponse(self):
+            bodies = {
+                "oversized": b"x" * 65537,
+                "invalid_json": b"fixture-private-detail",
+                "missing_identity": b"{}",
+                "wrong_identity_type": b'{"account":{"uuid":1}}',
+                "duplicate_identity": b'{"account":{},"account":{}}',
+            }
+            return SimpleNamespace(
+                status={"unauthorized": 401, "redirect": 302}.get(case, 200),
+                read=lambda _limit: bodies.get(case, b"{}"),
+            )
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(http.client, "HTTPSConnection", FailedProfile)
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_identity_unavailable$") as refused:
+        linux_claude_auth("b")
+    rendered = "".join(traceback.format_exception(refused.value))
+    for value in ("fixture-private-detail", two_accounts.bound_token, BOUND_ACCOUNT_UUID):
+        assert value not in rendered
+
+
+def test_selected_material_is_not_reopened_after_identity_check(two_accounts, monkeypatch):
+    from scripts.agent_runtime import attempt_boundary as module
+
+    original = module._claude_selected_identity
+
+    def swap_after_identity(token):
+        identity = original(token)
+        _credentials(two_accounts.config_dir / ".credentials.json", two_accounts.default_token)
+        return identity
+
+    monkeypatch.setattr(module, "_claude_selected_identity", swap_after_identity)
+    assert module.linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
+    assert two_accounts.profile_calls == [two_accounts.bound_token]
+
+
+def test_complete_preflight_rechecks_selected_state_at_use(two_accounts):
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth, verify_claude_account
+
+    assert verify_claude_account("b").label == "b"
+    _credentials(two_accounts.config_dir / ".credentials.json", two_accounts.default_token)
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_unverified$"):
+        linux_claude_auth("b")
 
 
 def test_default_claude_account_keeps_legacy_selection(two_accounts, monkeypatch):
