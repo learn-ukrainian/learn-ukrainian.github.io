@@ -2,16 +2,16 @@
 # Claude Code statusline — learn-ukrainian project.
 #
 # Reads Claude Code status JSON from stdin and renders:
-#   [MODEL] [acct: A|B] [ctx: UK/BK (N%)] cwd-basename [wt:worktree-name] (branch*)
+#   [MODEL] [acct: A|B|?] [ctx: UK/BK (N%)] cwd-basename [wt:worktree-name] (branch*)
 #   [effort: level] [think] [5h: N% left] [7d: N% left] [$cost]
 #
 # Segments:
 #   [MODEL]        .model.display_name, omitted if missing
-#   [acct: A|B]    Claude account, from the basename of $CLAUDE_CONFIG_DIR only
+#   [acct: A|B|?]  Claude account, from the basename of $CLAUDE_CONFIG_DIR only
 #                    (the directory is never read): unset/empty or `.claude`
-#                    is A, `.claude-b` is B, anything else omits the segment
-#                    (never guessed, the path is never printed). Placed right
-#                    after MODEL.
+#                    is A, `.claude-b` is B, anything else is `?` (never
+#                    guessed, the path is never printed). Placed right after
+#                    MODEL.
 #   [ctx: UK/BK (N%)] context window — placed immediately after MODEL so
 #                    usage is the first thing visible on the line. Bold +
 #                    color-coded: green<50, yellow 50-79, red 80+.
@@ -34,9 +34,11 @@
 #                    pre-2.1.119 clients.
 #   [5h: N% left]  room left in the 5-hour subscription window: 100 minus
 #                    .rate_limits.five_hour.used_percentage, rounded and
-#                    clamped to 0-100. Always shown when the field is a
-#                    number; omitted otherwise. Colour by remaining room:
-#                    under 20 red, under 40 yellow, otherwise default.
+#                    clamped to 0-100. Shown when the field is a number;
+#                    otherwise the capacity file below supplies it (known
+#                    account only); omitted if neither does. Colour by
+#                    remaining room: under 20 red, under 40 yellow,
+#                    otherwise default.
 #   [7d: N% left]  same for .rate_limits.seven_day.used_percentage (weekly).
 #   [$cost]        .cost.total_cost_usd, formatted to 2 decimals, shown only
 #                    when the input JSON provides the field. Kept last/low-
@@ -44,6 +46,22 @@
 #                    windows above remain the actionable subscription signal;
 #                    this is supplementary session telemetry, shown whenever
 #                    the schema includes it and dropped silently otherwise.
+#
+# Capacity file (optional fallback for the 5h/7d segments):
+#   Set LU_STATUSLINE_CAPACITY_FILE to a capacity-history path (never
+#   committed, never printed). JSON Lines, one object per row:
+#     {"account": "a", "five_hour_left_pct": 62, "seven_day_left_pct": 35}
+#   account            "a" or "b", case-insensitive; a "claude:" prefix is
+#                      accepted ("claude:b").
+#   five_hour_left_pct / seven_day_left_pct
+#                      numbers 0..100 (percent LEFT); either may be absent.
+#   The LAST row whose account matches this session's account supplies any
+#   window Claude Code's own rate_limits did not; Claude Code's field always
+#   wins. Only the last 64 KiB of the file is read (`tail -c`), so a long
+#   history is cheap and a row cut by the window is ignored. A missing
+#   variable/file, unreadable file, malformed row, or a non-numeric or
+#   out-of-range value shows nothing for that window (no error, no clamping).
+#   Not used when the account is `?`. No network.
 #
 # Schema reference: https://code.claude.com/docs/en/statusline.md
 #
@@ -58,8 +76,8 @@
 #   - ANSI escapes use printf '%b' at render time so terminals that don't
 #     support color still render the text (codes just show as literals in
 #     the rare case the terminal is truly ancient — acceptable fallback).
-#   - Script is intentionally cheap: no network, no external state, only
-#     `git` + `jq` + `printf`. Statusline fires on every event.
+#   - Script is intentionally cheap: no network, no external state beyond the
+#     optional capacity-file tail, only `git` + `jq` + `printf` (+ `tail`). Statusline fires on every event.
 #
 # Debug: uncomment the tee line below to capture incoming JSON at
 #        /tmp/.statusline-input.json for schema inspection.
@@ -312,15 +330,59 @@ thinking_seg=""
 thinking_enabled=$(json_get '.thinking.enabled')
 [ "$thinking_enabled" = "true" ] && thinking_seg="[think]"
 
-# Rate-limit segment helper — always shows the room left (100 - used, rounded,
-# clamped to 0-100) when the field is a JSON number; anything else (missing,
-# null, string, non-object parent) yields no segment and no error. The
-# arithmetic runs in the jq call this script already makes.
-# Accepts a label (e.g. "5h", "7d") and a jq path, returns coloured
-# segment on stdout or empty string.
+# Claude account — derived only from the basename of CLAUDE_CONFIG_DIR; the
+# directory is never read and the path is never printed. Unset/empty or
+# `.claude` is A, `.claude-b` is B, anything else (including a bare "/") is `?`.
+# Computed before the rate-limit segments: the capacity fallback keys on it.
+acct_letter="?"
+acct_dir="${CLAUDE_CONFIG_DIR:-}"
+while [ "${acct_dir%/}" != "$acct_dir" ]; do acct_dir="${acct_dir%/}"; done
+if [ -z "${CLAUDE_CONFIG_DIR:-}" ]; then
+  acct_letter="A"
+else
+  case "${acct_dir##*/}" in
+    .claude)   acct_letter="A" ;;
+    .claude-b) acct_letter="B" ;;
+  esac
+fi
+acct_seg="[acct: ${acct_letter}]"
+
+# Rate-limit room left. Claude Code's own field wins: 100 minus
+# .rate_limits.<window>.used_percentage, rounded and clamped to 0-100, when it
+# is a JSON number (anything else yields empty, never an error). Only a window
+# Claude Code did not supply falls back to the capacity file (see header), and
+# only for a known account.
+json_left() {
+  json_get "($1 | select(type == \"number\") | 100 - . | if . < 0 then 0 elif . > 100 then 100 else . end | round)"
+}
+
+rl5h_left=$(json_left ".rate_limits.five_hour.used_percentage")
+rl7d_left=$(json_left ".rate_limits.seven_day.used_percentage")
+
+# Tail of the capacity history (last 64 KiB, never the whole file). The first
+# line of the window may be cut mid-row; `fromjson?` drops it with any other
+# malformed line. Only the last row of this account counts, and a value must be
+# a number within 0..100 or that window shows nothing.
+cap_file="${LU_STATUSLINE_CAPACITY_FILE:-}"
+if { [ -z "$rl5h_left" ] || [ -z "$rl7d_left" ]; } && [ "$acct_letter" != "?" ] \
+   && [ -n "$cap_file" ] && [ -f "$cap_file" ] && [ -r "$cap_file" ]; then
+  cap_left=$(tail -c 65536 "$cap_file" 2>/dev/null | jq -rRs --arg acct "$acct_letter" '
+    def left: if type == "number" and . >= 0 and . <= 100 then round else "" end;
+    [ split("\n")[] | fromjson? | select(type == "object")
+      | select((.account | type == "string")
+               and ((.account | ascii_downcase | sub("^claude:"; "")) == ($acct | ascii_downcase))) ]
+    | if length == 0 then empty else .[-1] | "\(.five_hour_left_pct | left) \(.seven_day_left_pct | left)" end
+  ' 2>/dev/null)
+  cap_5h="${cap_left%% *}"
+  cap_7d="${cap_left#* }"
+  [ -z "$rl5h_left" ] && rl5h_left="$cap_5h"
+  [ -z "$rl7d_left" ] && rl7d_left="$cap_7d"
+fi
+
+# Render one window: label + percent left, coloured by remaining room
+# (under 20 red, under 40 yellow). Anything non-numeric yields no segment.
 rate_limit_seg() {
-  local label=$1 path=$2 left
-  left=$(json_get "($path | select(type == \"number\") | 100 - . | if . < 0 then 0 elif . > 100 then 100 else . end | round)")
+  local label=$1 left=$2
   case "$left" in
     ""|*[!0-9]*) return 0 ;;
   esac
@@ -330,23 +392,8 @@ rate_limit_seg() {
   fi
 }
 
-rl5h_seg=$(rate_limit_seg "5h" ".rate_limits.five_hour.used_percentage")
-rl7d_seg=$(rate_limit_seg "7d" ".rate_limits.seven_day.used_percentage")
-
-# Claude account — derived only from the basename of CLAUDE_CONFIG_DIR; the
-# directory is never read. Unset/empty or `.claude` is A, `.claude-b` is B,
-# anything else (including a bare "/") omits the segment.
-acct_seg=""
-acct_dir="${CLAUDE_CONFIG_DIR:-}"
-while [ "${acct_dir%/}" != "$acct_dir" ]; do acct_dir="${acct_dir%/}"; done
-if [ -z "${CLAUDE_CONFIG_DIR:-}" ]; then
-  acct_seg="[acct: A]"
-else
-  case "${acct_dir##*/}" in
-    .claude)   acct_seg="[acct: A]" ;;
-    .claude-b) acct_seg="[acct: B]" ;;
-  esac
-fi
+rl5h_seg=$(rate_limit_seg "5h" "$rl5h_left")
+rl7d_seg=$(rate_limit_seg "7d" "$rl7d_left")
 
 # Session cost — some Claude Code schema versions include .cost.total_cost_usd,
 # others omit it entirely. Degrade to empty silently either way; never error.
