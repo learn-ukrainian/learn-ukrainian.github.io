@@ -770,16 +770,26 @@ def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, respo
 
 
 @pytest.mark.parametrize("status,wait_rc", [("done", 0), ("no_deliverable", 1), ("failed", 1)])
-@pytest.mark.parametrize("response,token", [
-    ("VERDICT: CHANGES", "CHANGES"), ("## **Verdict**: **REVISE**", "REVISE"),
-    ("**VERDICT: CHANGES.** Explain below.", "CHANGES"),
-])
+@pytest.mark.parametrize(
+    "response,token",
+    [
+        ("VERDICT: ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]"),
+        ("VERDICT: CHANGES", "CHANGES"),
+        ("## **Verdict**: **REVISE**", "REVISE"),
+        ("**VERDICT: CHANGES.** Explain below.", "CHANGES"),
+    ],
+)
 def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_path, status, wait_rc, response, token):
     fields = {}
     if status == "failed":
         fields = {"failure_reason": "review_unsupported_verdict_token", "stderr_excerpt": "old generic error"}
     state = _run_review_with_wait_state(
-        monkeypatch, tmp_path, status=status, wait_rc=wait_rc, response=response, wait_fields=fields,
+        monkeypatch,
+        tmp_path,
+        status=status,
+        wait_rc=wait_rc,
+        response=response,
+        wait_fields=fields,
     )
     serialized = json.loads(json.dumps(state))
     assert serialized["ok"] is False and serialized["status"] == "failed"
@@ -789,12 +799,32 @@ def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_pat
         "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
     )
 
+    assert serialized["response"] == response
+    assert Path(serialized["result_file"]).read_text() == response
+    if token == "[REDACTED_SECRET]":
+        assert "ghp_SYNTHETIC10598TOKENabcdefghij" not in serialized["stderr_excerpt"]
 
-def test_native_ask_cli_stderr_names_unsupported_token_and_vocabulary(tmp_path):
+
+@pytest.mark.parametrize(
+    "token,expected",
+    [
+        (
+            "ghp_SYNTHETIC10598TOKENabcdefghij",
+            "review_unsupported_verdict_token: unsupported token '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "CHANGES",
+            "review_unsupported_verdict_token: unsupported token 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+    ],
+    ids=["sensitive", "benign"],
+)
+def test_native_ask_cli_stderr_names_unsupported_token_and_vocabulary(tmp_path, token, expected):
     """Run the CLI output path in a process; fake only dispatch/wait transport."""
     result = tmp_path / "result.md"
-    result.write_text("VERDICT: CHANGES\n", encoding="utf-8")
-    code = '''
+    response = f"VERDICT: {token}\n"
+    result.write_text(response, encoding="utf-8")
+    code = """
 import json, os, subprocess, sys
 from scripts.ai_agent_bridge import _cli, _dispatch_wrappers as wrappers
 os.environ["LU_RUNTIME_TMP_ROOT"] = sys.argv[2]
@@ -812,16 +842,19 @@ _cli._dispatch_headless_review(
     "claude", "Review the branch", data=None, task_id="review-diagnostic",
     model=None, effort=None, output_path=None, stdout_only=True, hard_timeout=None,
 )
-'''
+"""
     completed = subprocess.run(
-        [sys.executable, "-c", code, str(result), str(tmp_path)], capture_output=True, text=True, timeout=30,
+        [sys.executable, "-c", code, str(result), str(tmp_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     assert completed.returncode == 1
-    assert completed.stdout == "VERDICT: CHANGES\n\n"
-    assert completed.stderr.strip() == (
-        "review_unsupported_verdict_token: unsupported token 'CHANGES'; "
-        "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
-    )
+    assert completed.stdout == response + "\n"
+    assert result.read_text() == response
+    assert completed.stderr.strip() == expected
+    if token.startswith("ghp_"):
+        assert token not in completed.stderr
 
 
 def test_ask_unsupported_token_never_replaces_other_terminal_failure(monkeypatch, tmp_path):

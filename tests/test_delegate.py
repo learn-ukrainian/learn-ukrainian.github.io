@@ -4089,47 +4089,104 @@ def test_run_worker_review_without_verdict_fails_with_reason(
     assert state["last_error"] == state["failure_reason"]
 
 
-@pytest.mark.parametrize("token", ["CHANGES", "REVISE", "changes", "APPROVEX", "APPROVE_2"])
+@pytest.mark.parametrize(
+    "token,expected",
+    [
+        (
+            "ghp_SYNTHETIC10598TOKENabcdefghij",
+            "review_unsupported_verdict_token: unsupported token '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "CHANGES",
+            "review_unsupported_verdict_token: unsupported token 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+    ],
+    ids=["sensitive", "benign"],
+)
+def test_review_verdict_gate_redacts_unsupported_diagnostic(token, expected):
+    result = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=f"VERDICT: {token}",
+        commits_ahead=None,
+        worktree=None,
+    )
+    assert result.failure == "review_unsupported_verdict_token"
+    assert result.status == "failed"
+    assert result.detail == expected
+    if token.startswith("ghp_"):
+        assert token not in result.detail
+
+
+@pytest.mark.parametrize(
+    "token,diagnostic_token",
+    [
+        ("CHANGES", "CHANGES"),
+        ("REVISE", "REVISE"),
+        ("changes", "changes"),
+        ("APPROVEX", "APPROVEX"),
+        ("APPROVE_2", "APPROVE_2"),
+        ("ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]"),
+    ],
+)
 def test_run_worker_review_verdict_unsupported_diagnostic_persists(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys, token,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
+    token,
+    diagnostic_token,
 ):
     response = f"Findings.\n## **VERDICT**: **{token}**\n"
     task_id = "review-unsupported-verdict"
     rc, state = _run_successful_worker_for_deliverable_test(
-        task_id=task_id, mode="read-only", response=response, commits_ahead=None,
-        tmp_path=tmp_path, monkeypatch=monkeypatch, require_review_verdict=True,
+        task_id=task_id,
+        mode="read-only",
+        response=response,
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
     )
     persisted = json.loads(delegate._state_path(task_id).read_text())
     assert rc == 1 and persisted["status"] == "failed"
     for field in ("failure_reason", "review_verdict_failure", "last_error"):
         assert state[field] == persisted[field] == "review_unsupported_verdict_token"
     diagnostic = (
-        f"review_unsupported_verdict_token: unsupported token {token!r}; "
+        f"review_unsupported_verdict_token: unsupported token {diagnostic_token!r}; "
         "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
     )
     assert persisted["stderr_excerpt"] == diagnostic
-    assert diagnostic in capsys.readouterr().err
+    stderr = capsys.readouterr().err
+    assert diagnostic in stderr
+    if token.startswith("ghp_"):
+        assert token not in persisted["stderr_excerpt"]
+        assert token not in stderr
     assert Path(persisted["result_file"]).read_text() == response
+    assert delegate.saved_task_response(persisted, delegate._state_path(task_id)) == response
 
 
-@pytest.mark.parametrize("reply,token", [
-    ("VERDICT: CHANGES", "CHANGES"),
-    ("**Verdict**: **changes**", "changes"),
-    ("__VERDICT__: __REVISE__", "REVISE"),
-    ("   ###### VERDICT: NEEDS_WORK", "NEEDS_WORK"),
-    ("VERDICT: `CHANGES`", "CHANGES"),
-    ("VERDICT: APPROVEX", "APPROVEX"),
-    ("VERDICT: APPROVE_LATER", "APPROVE_LATER"),
-    ("VERDICT: APPROVE_2", "APPROVE_2"),
-    ("VERDICT: CHANGES. Explain below.", "CHANGES"),
-    ("**VERDICT: CHANGES.** Explain below.", "CHANGES"),
-    ("*VERDICT: CHANGES.* Findings follow.", "CHANGES"),
-    ("**Verdict**:\u00a0**CHANGES**", "CHANGES"),
-    ("VERDICT: CHANGES\u00a0— findings follow", "CHANGES"),
-    ("VERDICT: CHANGES\nVERDICT: REVISE", "REVISE"),
-    ("```VERDICT: example``` is inline code\nVERDICT: CHANGES", "CHANGES"),
-    ("  ~~~text\nVERDICT: UNKNOWN\n   ~~~~ \t\nVERDICT: CHANGES", "CHANGES"),
-])
+@pytest.mark.parametrize(
+    "reply,token",
+    [
+        ("VERDICT: CHANGES", "CHANGES"),
+        ("**Verdict**: **changes**", "changes"),
+        ("__VERDICT__: __REVISE__", "REVISE"),
+        ("   ###### VERDICT: NEEDS_WORK", "NEEDS_WORK"),
+        ("VERDICT: `CHANGES`", "CHANGES"),
+        ("VERDICT: APPROVEX", "APPROVEX"),
+        ("VERDICT: APPROVE_LATER", "APPROVE_LATER"),
+        ("VERDICT: APPROVE_2", "APPROVE_2"),
+        ("VERDICT: CHANGES. Explain below.", "CHANGES"),
+        ("**VERDICT: CHANGES.** Explain below.", "CHANGES"),
+        ("*VERDICT: CHANGES.* Findings follow.", "CHANGES"),
+        ("**Verdict**:\u00a0**CHANGES**", "CHANGES"),
+        ("VERDICT: CHANGES\u00a0— findings follow", "CHANGES"),
+        ("VERDICT: CHANGES\nVERDICT: REVISE", "REVISE"),
+        ("```VERDICT: example``` is inline code\nVERDICT: CHANGES", "CHANGES"),
+        ("  ~~~text\nVERDICT: UNKNOWN\n   ~~~~ \t\nVERDICT: CHANGES", "CHANGES"),
+    ],
+)
 def test_review_verdict_unsupported_tokens_use_shared_markdown_scanner(reply, token):
     from scripts.review.verdict_parser import unsupported_verdict_tokens
 
