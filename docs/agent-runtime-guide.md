@@ -302,6 +302,60 @@ retain the schema on that invocation's plan for result validation:
 | AGY | `--output-format json --json-schema <JSON>` | `structured_output` in the JSON envelope with `status=SUCCESS` |
 | Grok | `--json-schema <JSON>` with JSON output | `structuredOutput` in the final envelope with `stopReason=end_turn`, without `structuredOutputError` |
 
+### AGY pending supervisory orders
+
+The `pending-orders-announce` overlay runs
+`scripts/agy_hooks/pending_orders_inject.sh` on every `PreInvocation`,
+independently of `driver-state-pin`. It uses the launcher's
+`SESSION_HANDOFF_AGENT` registered slot, including worker slots, and injects
+`{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: ..."}]}` before
+the next model call. It never falls back to the `claude` inbox.
+
+`scripts.inbox_pending` opens the configured legacy broker and Fleet Comms
+authority SQLite stores read-only. It counts unacknowledged, non-live-consumed
+legacy messages and queued or running authority deliveries without durable
+generation-bound supervisory consumption or an expired deadline. A consumed
+wake receipt records receiver observation and leaves the order pending.
+Output contains counts, at most five full message IDs, a truncation flag,
+per-store counts and `probe: ok|unknown`.
+No body is selected, and no delivery is claimed, consumed or acknowledged.
+
+Legacy recipients follow the bridge inbox policy: resolve the roster alias,
+then include permanent seat read aliases. The launcher's `monitor`,
+`infra.monitor`, `ops-api`, `ops.api` and `operator-api` selectors all use the
+monitor lane. With a readable registry containing registered slots, an empty
+monitor area maps `gemini-monitor` to `gemini` in the legacy projection; a
+dedicated registered slot reads only its own recipient set. An entirely empty
+or unreadable roster returns unknown. Authority publish and claim use exact
+recipient names without that roster resolver. For example, `gemini-monitor`
+remains `gemini-monitor` in authority deliveries. The probe checks existing
+authority admission and returns unknown if admission is unavailable or changes
+the recipient. It never uses a legacy empty result to prove authority emptiness.
+
+A proven empty inbox returns `{}`. Pending orders are re-announced on replay
+until acknowledged or consumed. The injected line is at most 200 characters;
+it includes as many full IDs as fit and marks truncation. A `legacy:` pointer
+names `ai_agent_bridge inbox --for` with the resolved legacy recipient. Legacy
+stores are read-only migration projections in authority mode; the notice does
+not recommend legacy acknowledgement writes. An `authority:` pointer names
+`.venv/bin/python -m scripts.fleet_comms deliveries --help`, the existing fenced
+delivery workflow. Both pointers appear when both stores have pending work.
+The authority workflow uses delivery IDs returned by claim, the lease owner's
+worker ID and fence token, and a driver generation for supervisory consumption.
+Use the exact `SESSION_HANDOFF_AGENT` for the workflow's `--recipient` argument.
+Announcement message IDs are not legacy integer ack IDs or authority delivery
+IDs. The hook only prints guidance; it never executes this workflow. In a linked
+worktree, run the documented help with the prescribed shared project interpreter.
+Missing or unreadable stores, invalid hook JSON,
+an invalid or missing slot, and interpreter failures inject `PENDING ORDERS:
+unknown` with exit 0. Hook input and output are never written to temporary files.
+
+Deploy the canonical overlay with `npm run agents:deploy`, which copies
+`agents_extensions/agy/hooks.json` into the workspace `.agents/hooks.json`
+alongside the shared agent configuration. Local synthetic tests prove the
+read-only announcement contract; issue #10558 requires a separate live AGY
+proof of the next-call timing before certification.
+
 ### AGY shell-output guard and startup gate
 
 The native shell event is
