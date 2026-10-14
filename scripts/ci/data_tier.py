@@ -212,6 +212,7 @@ def remove_test_worktree(primary: Path, checkout: Path) -> None:
         reason="data-tier checkout cleanup",
         owner_task_id=None,
         force=True,
+        data_tier_run=True,
     )
     if removal.action != "removed":
         detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason

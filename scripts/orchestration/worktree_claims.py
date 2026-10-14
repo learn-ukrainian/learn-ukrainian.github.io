@@ -602,6 +602,54 @@ def worktree_is_dirty(worktree: Path) -> bool | None:
     return bool((proc.stdout or "").strip())
 
 
+DATA_TIER_DIR_PARTS = (".worktrees", "data-tier")
+_DATA_TIER_RUN_RE = re.compile(r"run-[0-9a-f]{32}")
+
+
+def data_tier_checkout_refusal(worktree: Path, *, repo_root: Path, tasks_dir: Path) -> str | None:
+    """Return why ``worktree`` is not a disposable nightly data-tier checkout, or ``None`` (#10618).
+
+    The nightly runner (``scripts/ci/data_tier.py``) owns exactly one kind of
+    tree: ``<repo_root>/.worktrees/data-tier/run-<32 lowercase hex>``, a real
+    directory detached at ``origin/main`` that no task record names. Its test
+    run leaves ignored byproducts that carry no task attribution, so the
+    general preservation gate can never release it. Every condition must hold:
+
+    * the path itself is a real directory, never a symlink, directly under the
+      real ``data-tier`` directory of ``repo_root`` and named as above;
+    * the tracked tree is clean (``git status --untracked-files=no``);
+    * ``HEAD`` is an ancestor of ``origin/main``, so no commit is lost;
+    * no hot or archived task record references the tree.
+
+    Unknown state refuses. This never raises.
+    """
+    try:
+        if worktree.is_symlink() or not worktree.is_dir():
+            return "not a real directory"
+        if not _DATA_TIER_RUN_RE.fullmatch(worktree.name):
+            return "name is not run-<32 hex>"
+        expected = repo_root.resolve().joinpath(*DATA_TIER_DIR_PARTS)
+        if worktree.parent.resolve() != expected:
+            return "not directly under the primary data-tier directory"
+        status = _git_probe(["status", "--porcelain", "--untracked-files=no"], cwd=worktree)
+        if status is None or status.returncode != 0:
+            return "tracked-tree state unknown"
+        if (status.stdout or "").strip():
+            return "tracked changes present"
+        ancestor = _git_probe(["merge-base", "--is-ancestor", "HEAD", "origin/main"], cwd=worktree)
+        if ancestor is None or ancestor.returncode not in (0, 1):
+            return "origin/main ancestry unknown"
+        if ancestor.returncode == 1:
+            return "HEAD is not an ancestor of origin/main"
+        from scripts.fleet.ignored_task_output import matching_worktree_records
+
+        if matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False):
+            return "a task record references the tree"
+    except Exception as exc:  # unknown state must refuse, never raise
+        return f"eligibility unknown: {type(exc).__name__}"
+    return None
+
+
 def git_worktree_remove(
     repo_root: Path,
     worktree: Path,
@@ -615,6 +663,7 @@ def git_worktree_remove(
     task_id: str | None = None,
     task_record: Mapping[str, Any] | None = None,
     preservation_receipt: dict[str, Any] | None = None,
+    data_tier_run: bool = False,
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -638,6 +687,10 @@ def git_worktree_remove(
     keep_worktree even when callers supply no task record. Baselines label
     attribution only; missing attribution and failed retrieval retain the tree.
     ``preservation_receipt`` receives retrieval or retention metadata.
+    ``data_tier_run`` names the nightly data-tier runner's own checkout: when
+    :func:`data_tier_checkout_refusal` finds it eligible the ownerless ignored
+    byproducts are discarded instead of preserved (#10618); otherwise the
+    ordinary preservation gate decides, unchanged.
     """
     target = worktree
     if force:
@@ -655,14 +708,18 @@ def git_worktree_remove(
 
     try:
         primary = control_root if control_root is not None else control_plane_root(repo_root)
-        ok, refusal, metadata = preserve_worktree_artifacts(
-            target,
-            primary=primary,
-            task_id=task_id,
-            tasks_dir=tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks",
-            task_record=task_record,
-            repo_root=repo_root,
-        )
+        records_dir = tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks"
+        if data_tier_run and data_tier_checkout_refusal(worktree, repo_root=repo_root, tasks_dir=records_dir) is None:
+            ok, refusal, metadata = True, None, None
+        else:
+            ok, refusal, metadata = preserve_worktree_artifacts(
+                target,
+                primary=primary,
+                task_id=task_id,
+                tasks_dir=records_dir,
+                task_record=task_record,
+                repo_root=repo_root,
+            )
     except (ControlPlaneError, OSError, ValueError) as exc:
         return f"artifact preservation failed: {exc}; refusing worktree removal"
     if metadata is not None and preservation_receipt is not None:
@@ -707,6 +764,7 @@ def remove_unclaimed_worktree(
     lock_timeout_s: float | None = None,
     git_runner: SafeGitRunner | None = None,
     task_record: Mapping[str, Any] | None = None,
+    data_tier_run: bool = False,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -736,6 +794,9 @@ def remove_unclaimed_worktree(
     caller's purpose, recorded on success. This never raises.
     ``git_runner`` may pin a fixed executable for closed maintenance callers;
     it cannot bypass execution controls, locks or the claim scan.
+    ``data_tier_run`` marks the nightly data-tier runner's own checkout; it
+    only skips ownerless-artifact preservation for a tree that proves eligible
+    under :func:`data_tier_checkout_refusal` (#10618).
     """
     branch: str | None = None
     dirty: bool | None = None
@@ -804,6 +865,7 @@ def remove_unclaimed_worktree(
                 task_id=owner_task_id,
                 task_record=task_record,
                 preservation_receipt=preservation_receipt,
+                data_tier_run=data_tier_run,
                 **runner_options,
             )
         except Exception as exc:

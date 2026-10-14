@@ -779,6 +779,7 @@ def test_checkout_cleanup_obeys_guard_outcome(action: str, tmp_path: Path, monke
                 "reason": "data-tier checkout cleanup",
                 "owner_task_id": None,
                 "force": True,
+                "data_tier_run": True,
             },
         )
     ]
