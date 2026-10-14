@@ -48,6 +48,10 @@ def writer_fixture(abandon_cohort, monkeypatch):
     save(tasks, creator)
     monkeypatch.setenv("LU_RUNTIME_INITIATOR", "claude-data")
     monkeypatch.setenv("LU_RUNTIME_INITIATOR_SOURCE", "session_env")
+    # Hermetic: a launcher-run test session must not lend its own stream lease.
+    for key in [key for key in os.environ if key.startswith("SESSION_STREAM_")]:
+        monkeypatch.delenv(key)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
     monkeypatch.setattr(rw.worktree_claims, "control_plane_root", lambda _: repo)
     monkeypatch.setattr(rw, "_has_active_ownership_claim", lambda *_: None)
     return repo, tree, tasks, creator, successor, repo / receipt["preservation"]["path"], receipt["head_sha"]
@@ -271,3 +275,515 @@ def test_bundle_can_contain_only_patch_metadata(writer_fixture, capsys):
     )
     assert invoke(writer_fixture) == 0
     assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
+
+
+# --- Lane succession (#10617): current stream custody, never alias membership ---
+
+
+def _anchor(key):
+    """The launcher's canonical stream id: ``epic:`` plus the stream's first registered epic."""
+    import yaml
+
+    registry = Path(__file__).resolve().parents[2] / "scripts/config/issue_streams.yaml"
+    return f"epic:{yaml.safe_load(registry.read_text())['streams'][key]['epics'][0]}"
+
+
+MONITOR = _anchor("monitor")
+INFRA = _anchor("infra-harness")
+OPEN_MODEL_DATA = _anchor("open-model-data")
+
+_LEASE_ENV = {
+    "ID": MONITOR,
+    "SESSION_ID": "session-current",
+    "LEASE_ID": "lease-current",
+    "GENERATION": "4",
+    "FENCING_TOKEN": "17",
+    "AGENT": "muse",
+    "HARNESS": "muse-cli",
+    "INSTANCE_ID": "muse-monitor-1",
+    "HOLDER_KIND": "process",
+    "PROCESS_ID": "4242",
+}
+
+
+def _set_lease_env(monkeypatch, **overrides):
+    for key, value in dict(_LEASE_ENV, **overrides).items():
+        monkeypatch.setenv(f"SESSION_STREAM_{key}", value)
+
+
+@pytest.fixture
+def succession(writer_fixture, monkeypatch):
+    """A retired monitor seat's tree; the current Muse monitor driver holds custody."""
+    from agents_extensions.shared.session_streams.hooks import lease_from_environment
+    from scripts.session_supervisor import remote
+
+    _, tree, tasks, creator, _, _, _ = writer_fixture
+    creator["initiator"] = "claude-monitor"
+    save(tasks, creator)
+    monkeypatch.setenv("LU_RUNTIME_INITIATOR", "muse-monitor")
+    _set_lease_env(monkeypatch)
+    (tree / "untracked.txt").write_bytes(b"untracked unique bytes")
+    current = dict(
+        remote.RemoteEpicClient._lease_payload(lease_from_environment()),
+        state="active",
+        session_state="open",
+        expires_at="2999-01-01T00:00:00Z",
+    )
+    monitor = {"streams": {MONITOR: current}, "calls": 0, "on_call": None, "error": None}
+
+    def stream(self, stream_id, *, digest_limit=20):
+        monitor["calls"] += 1
+        if monitor["on_call"] is not None:
+            monitor["on_call"](monitor["calls"])
+        if monitor["error"] is not None:
+            raise monitor["error"]
+        return {"stream_id": stream_id, "lease": json.loads(json.dumps(monitor["streams"].get(stream_id)))}
+
+    monkeypatch.setattr(remote.RemoteEpicClient, "stream", stream)
+    return writer_fixture, monitor
+
+
+def _files(repo):
+    return {p: p.read_bytes() for p in (repo / "batch_state").rglob("*") if p.is_file() and p.suffix != ".lock"}
+
+
+def _preserved_files(repo):
+    return [p for p in (repo / "batch_state/preserved").rglob("*") if p.is_file()]
+
+
+def _recorded(fixture):
+    repo, tree, tasks, *_ = fixture
+    matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
+    _, record = output.terminal_abandon_creator(matches, tree, primary=repo, tasks_dir=tasks)
+    receipt = record["worktree_abandon"]
+    manifest = json.loads((repo / receipt["preservation"]["path"]).read_bytes())
+    return record, receipt, manifest
+
+
+def test_same_stream_successor_records_bound_succession_receipt(succession, capsys):
+    fixture, monitor = succession
+    repo, tree, _, _, _, _, head = fixture
+    assert invoke(fixture) == 0
+    assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
+    assert monitor["calls"] == 4  # admission, two reader validations, final writer recheck
+    record, receipt, manifest = _recorded(fixture)
+    # The creator's identity and nonce are kept; succession is appended, not substituted.
+    assert record["initiator"] == "claude-monitor"
+    assert receipt["owner"] == "boundary" and receipt["run_nonce"] == "creation-nonce"
+    assert manifest["owner"] == "boundary" and manifest["run_nonce"] == "creation-nonce"
+    assert receipt["succession"] == {
+        "schema": "terminal-abandon-succession.v1",
+        "task_id": "boundary",
+        "creator_initiator": "claude-monitor",
+        "caller_initiator": "muse-monitor",
+        "stream_id": MONITOR,
+        "mapping_sha256": hashlib.sha256(output.SUCCESSION_MAP.read_bytes()).hexdigest(),
+        "authority": {
+            "stream_id": MONITOR,
+            "session_id": "session-current",
+            "lease_id": "lease-current",
+            "generation": 4,
+            "fencing_token": 17,
+            "holder": {"agent": "muse", "harness": "muse-cli", "instance_id": "muse-monitor-1"},
+        },
+        "tree": tree.relative_to(repo).as_posix(),
+        "branch": "codex/boundary",
+        "head_sha": head,
+        "preservation_sha256": receipt["preservation"]["sha256"],
+    }
+    located = manifest["output"]
+    assert output.verify_retrieval(repo, located) == located["content_sha256"]
+    copy = repo / located["location"]
+    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
+    assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
+
+
+def test_successor_retry_is_idempotent(succession, capsys):
+    fixture, _ = succession
+    repo, *_ = fixture
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    before = _files(repo)
+    assert invoke(fixture) == 0
+    assert json.loads(capsys.readouterr().out)["outcome"] == "already_recorded"
+    assert _files(repo) == before
+
+
+def test_successor_preservation_restores_and_reaper_removes(succession, tmp_path, capsys):
+    fixture, _ = succession
+    repo, tree, _, _, _, _, head = fixture
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    _, receipt, manifest = _recorded(fixture)
+    environment = dict(os.environ, GIT_INDEX_FILE=str(tmp_path / "restore.index"))
+    subprocess.run(["git", "read-tree", manifest["base_sha"]], cwd=repo, env=environment, check=True, timeout=30)
+    subprocess.run(
+        ["git", "apply", "--cached", str(repo / manifest["head_patch"]["path"])],
+        cwd=repo,
+        env=environment,
+        check=True,
+        timeout=30,
+    )
+    restored = subprocess.run(
+        ["git", "write-tree"], cwd=repo, env=environment, check=True, capture_output=True, text=True, timeout=30
+    ).stdout.strip()
+    tree_of_head = subprocess.run(
+        ["git", "rev-parse", f"{head}^{{tree}}"], cwd=repo, check=True, capture_output=True, text=True, timeout=30
+    ).stdout.strip()
+    assert restored == tree_of_head
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == "preserved_then_removed", row
+    assert not tree.exists()
+    # The removal gate reused the successor's verified copy, which outlives the tree.
+    assert row.preserved_artifacts["location"] == manifest["output"]["location"]
+    assert row.preserved_artifacts["abandon_proof"]["succession"] == receipt["succession"]
+    copy = repo / manifest["output"]["location"]
+    assert output.verify_retrieval(repo, manifest["output"]) == manifest["output"]["content_sha256"]
+    assert (copy / "ignored/output.txt").read_bytes() == b"current output"
+    assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
+
+
+def _defect(failure, fixture, monitor, monkeypatch, tmp_path):
+    """Apply one defect and return its exact repair; the repaired run must succeed."""
+    _, _, tasks, creator, successor, _, _ = fixture
+    lease = monitor["streams"][MONITOR]
+    if failure == "alias_only":
+        # Listed in the map for the same stream, but holds no launcher custody.
+        for key in _LEASE_ENV:
+            monkeypatch.delenv(f"SESSION_STREAM_{key}")
+        return lambda: _set_lease_env(monkeypatch)
+    if failure == "unknown_caller":
+        monkeypatch.setenv("LU_RUNTIME_INITIATOR", "unknown")
+        return lambda: monkeypatch.setenv("LU_RUNTIME_INITIATOR", "muse-monitor")
+    if failure == "cross_stream":
+        _set_lease_env(monkeypatch, ID=INFRA)
+        monitor["streams"][INFRA] = dict(lease, stream_id=INFRA)
+        return lambda: _set_lease_env(monkeypatch)
+    if failure in {"stale_fence", "stale_generation", "other_session", "released", "expired", "closed_session"}:
+        field, value = {
+            "stale_fence": ("fencing_token", 18),
+            "stale_generation": ("generation", 5),
+            "other_session": ("session_id", "session-newer"),
+            "released": ("state", "released"),
+            "expired": ("expires_at", "2000-01-01T00:00:00Z"),
+            "closed_session": ("session_state", "closed"),
+        }[failure]
+        original = lease[field]
+        lease[field] = value
+        return lambda: lease.__setitem__(field, original)
+    if failure == "unleased":
+        monitor["streams"][MONITOR] = None
+        return lambda: monitor["streams"].__setitem__(MONITOR, lease)
+    if failure == "authority_unknown":
+        from scripts.session_supervisor.remote import RemoteUnreachableError
+
+        monitor["error"] = RemoteUnreachableError("unreachable")
+        return lambda: monitor.__setitem__("error", None)
+    if failure == "unmapped_suffix":
+        # Same "-monitor" suffix, never listed: no suffix inference.
+        creator["initiator"] = "kimi-monitor"
+        save(tasks, creator)
+
+        def repair():
+            creator["initiator"] = "claude-monitor"
+            save(tasks, creator)
+
+        return repair
+    if failure == "invalid_map":
+        bad = tmp_path / "map.yaml"
+        bad.write_bytes(output.SUCCESSION_MAP.read_bytes() + b'  "epic:9999":\n    initiators: [claude-monitor]\n')
+        monkeypatch.setattr(output, "SUCCESSION_MAP", bad)
+        real = Path(output.__file__).resolve().parents[2] / "scripts/config/terminal_abandon_succession.yaml"
+        return lambda: monkeypatch.setattr(output, "SUCCESSION_MAP", real)
+    if failure == "ambiguous_creator":
+        successor["worktree_reused"] = False
+        save(tasks, successor)
+
+        def repair():
+            successor["worktree_reused"] = True
+            save(tasks, successor)
+
+        return repair
+    if failure == "activity_unknown":
+        monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
+        return lambda: monkeypatch.setattr(rw, "_active_task_ids", set)
+    if failure == "pid_alive":
+        successor["pid"] = os.getpid()
+        save(tasks, successor)
+
+        def repair():
+            successor["pid"] = 999_999_999
+            save(tasks, successor)
+
+        return repair
+    raise AssertionError(failure)
+
+
+@pytest.mark.parametrize(
+    "failure,code,reason",
+    [
+        ("alias_only", "NOT_CREATOR", "stream custody"),
+        ("unknown_caller", "NOT_CREATOR", "creator-of-record"),
+        ("cross_stream", "CROSS_STREAM", "canonical stream"),
+        ("stale_fence", "STALE_AUTHORITY", "current active custody"),
+        ("stale_generation", "STALE_AUTHORITY", "current active custody"),
+        ("other_session", "STALE_AUTHORITY", "current active custody"),
+        ("released", "STALE_AUTHORITY", "current active custody"),
+        ("closed_session", "STALE_AUTHORITY", "current active custody"),
+        ("unleased", "STALE_AUTHORITY", "current active custody"),
+        ("expired", "STALE_AUTHORITY", "expired"),
+        ("authority_unknown", "AUTHORITY_UNKNOWN", "probe unavailable"),
+        ("unmapped_suffix", "STREAM_UNMAPPED", "no reviewed stream mapping"),
+        ("invalid_map", "STREAM_UNMAPPED", "map unavailable or invalid"),
+        ("ambiguous_creator", "CREATOR_RECOVERY_REQUIRED", "recover authentic dispatch creator"),
+        ("activity_unknown", "ACTIVITY_UNKNOWN", "probe unavailable"),
+        ("pid_alive", "LIVE_OR_WANTED", "PID"),
+    ],
+)
+def test_successor_rejection_is_caused_by_the_defect_alone(
+    succession, monkeypatch, tmp_path, capsys, failure, code, reason
+):
+    fixture, monitor = succession
+    repo, tree, *_ = fixture
+    repair = _defect(failure, fixture, monitor, monkeypatch, tmp_path)
+    before = _files(repo)
+    assert invoke(fixture) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert (result["outcome"], result["code"]) == ("refused", code), result
+    assert reason in result["reason"]
+    assert _files(repo) == before and not _preserved_files(repo) and tree.exists()
+    # Paired control: repairing only this defect lets the same successor record.
+    repair()
+    assert invoke(fixture) == 0
+    assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
+
+
+@pytest.mark.parametrize("change", ["custody", "map", "output", "head_patch"])
+def test_successor_inputs_changed_between_check_and_publish_refuse(succession, monkeypatch, tmp_path, capsys, change):
+    fixture, monitor = succession
+    repo, tree, *_ = fixture
+    lease = monitor["streams"][MONITOR]
+    if change == "custody":
+        # Another launch took the stream after admission.
+        monitor["on_call"] = lambda calls: calls == 2 and lease.update(fencing_token=18, session_id="session-newer")
+        expected = "STALE_AUTHORITY"
+    elif change == "map":
+        copy = tmp_path / "map.yaml"
+        copy.write_bytes(output.SUCCESSION_MAP.read_bytes())
+        monkeypatch.setattr(output, "SUCCESSION_MAP", copy)
+        monitor["on_call"] = lambda calls: calls == 2 and copy.write_bytes(copy.read_bytes() + b"# edited\n")
+        expected = "STATE_CHANGED"
+    else:
+        calls = 0
+
+        def active():
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                if change == "output":
+                    (tree / "ignored/output.txt").write_bytes(b"output arrived during activity probe")
+                else:
+                    (tree / "README.md").write_bytes(b"tracked change during activity probe")
+            return set()
+
+        monkeypatch.setattr(rw, "_active_task_ids", active)
+        expected = "PRESERVATION_INVALID"
+    before = _files(repo)
+    assert invoke(fixture) == 2
+    assert json.loads(capsys.readouterr().out)["code"] == expected
+    assert _files(repo) == before and not _preserved_files(repo)
+    assert not list((repo / "batch_state/abandon/boundary").glob(".terminal-abandon-*"))
+    assert "worktree_abandon" not in json.loads((fixture[2] / "boundary.json").read_bytes())
+
+
+@pytest.mark.parametrize("drift", ["map_entry", "output_copy", "branch", "tree", "preservation_digest"])
+def test_successor_record_is_revalidated_at_removal(succession, monkeypatch, tmp_path, capsys, drift):
+    fixture, _ = succession
+    repo, tree, tasks, *_ = fixture
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    record, receipt, manifest = _recorded(fixture)
+    if drift == "map_entry":
+        changed = tmp_path / "map.yaml"
+        changed.write_text(output.SUCCESSION_MAP.read_text().replace("      - claude-monitor   # retired\n", ""))
+        monkeypatch.setattr(output, "SUCCESSION_MAP", changed)
+    elif drift == "output_copy":
+        (repo / manifest["output"]["location"] / "untracked.txt").write_bytes(b"tampered copy")
+    else:
+        field, value = {
+            "branch": ("branch", "codex/other"),
+            "tree": ("tree", ".worktrees/dispatch/codex/other"),
+            "preservation_digest": ("preservation_sha256", "0" * 64),
+        }[drift]
+        receipt["succession"][field] = value
+        save(tasks, record)
+    matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
+    with pytest.raises(ValueError, match="succession"):
+        output.terminal_abandon_creator(matches, tree, primary=repo, tasks_dir=tasks)
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
+        )
+        if r.path == str(tree)
+    )
+    assert row.action not in {"removed", "preserved_then_removed"}, row
+    assert tree.exists()
+
+
+def _refused_removal(fixture, reason):
+    repo, tree, *_ = fixture
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
+        )
+        if r.path == str(tree)
+    )
+    assert row.action not in {"removed", "preserved_then_removed"}, row
+    assert reason in row.reason, row
+    assert tree.exists()
+
+
+@pytest.mark.parametrize(
+    "drift,code",
+    [
+        ("released", "STALE_AUTHORITY"),
+        ("expired", "STALE_AUTHORITY"),
+        ("session_id", "STALE_AUTHORITY"),
+        ("generation", "STALE_AUTHORITY"),
+        ("fencing_token", "STALE_AUTHORITY"),
+        ("unavailable", "AUTHORITY_UNKNOWN"),
+    ],
+)
+def test_successor_current_custody_rechecked_at_removal(succession, capsys, drift, code):
+    from scripts.session_supervisor.remote import RemoteSupervisorError
+
+    fixture, monitor = succession
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    calls = monitor["calls"]
+    lease = monitor["streams"][MONITOR]
+    if drift == "released":
+        lease["state"] = "released"
+    elif drift == "expired":
+        lease["expires_at"] = "2000-01-01T00:00:00Z"
+    elif drift == "unavailable":
+        monitor["error"] = RemoteSupervisorError("unavailable")
+    elif drift == "session_id":
+        lease[drift] = "replacement-session"
+    else:
+        lease[drift] += 1
+    _refused_removal(fixture, code)
+    assert monitor["calls"] > calls
+
+
+def test_successor_mapping_bytes_rechecked_at_removal(succession, monkeypatch, tmp_path, capsys):
+    fixture, _ = succession
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    changed = tmp_path / "map.yaml"
+    changed.write_bytes(output.SUCCESSION_MAP.read_bytes() + b"\n# mapping revision\n")
+    monkeypatch.setattr(output, "SUCCESSION_MAP", changed)
+    assert output.succession_streams()[0]["claude-monitor"] == MONITOR
+    _refused_removal(fixture, "MAPPING_CHANGED")
+
+
+def test_successor_current_output_rechecked_at_removal(succession, capsys):
+    fixture, _ = succession
+    repo, tree, *_ = fixture
+    assert invoke(fixture) == 0
+    capsys.readouterr()
+    before = _preserved_files(repo)
+    (tree / "untracked.txt").write_bytes(b"changed after publication")
+    _refused_removal(fixture, "OUTPUT_CHANGED")
+    assert (tree / "untracked.txt").read_bytes() == b"changed after publication"
+    assert _preserved_files(repo) == before
+
+
+def test_script_writer_preserves_reader_custody_refusal(succession):
+    import runpy
+
+    from scripts.fleet import terminal_abandon
+
+    fixture, monitor = succession
+    _, _, _, creator, _, bundle, head = fixture
+    writer = runpy.run_path(terminal_abandon.__file__)
+
+    def release_on_reader_probe(call):
+        if call == 2:
+            monitor["streams"][MONITOR]["state"] = "released"
+
+    monitor["on_call"] = release_on_reader_probe
+    with pytest.raises(writer["Refusal"]) as refused:
+        writer["record_abandon"](
+            task_id=creator["task_id"], head=head, reason="superseded implementation", bundle=bundle
+        )
+    assert refused.value.code == "STALE_AUTHORITY"
+
+
+def test_creator_path_never_consults_custody_or_copies_output(writer_fixture, monkeypatch, capsys):
+    from scripts.session_supervisor import remote
+
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError("creator path must not use succession machinery")
+
+    monkeypatch.setattr(remote.RemoteEpicClient, "stream", forbidden)
+    monkeypatch.setattr(output, "capture_abandon_output", forbidden)
+    _set_lease_env(monkeypatch)  # A creator that also holds custody still takes the creator path.
+    assert invoke(writer_fixture) == 0
+    assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
+    _, receipt, manifest = _recorded(writer_fixture)
+    assert "succession" not in receipt and "output" not in manifest
+
+
+def test_reviewed_map_is_exact_and_launcher_canonical():
+    import yaml
+
+    mapping, digest = output.succession_streams()
+    assert digest == hashlib.sha256(output.SUCCESSION_MAP.read_bytes()).hexdigest()
+    assert mapping["claude-monitor"] == mapping["muse-monitor"] == MONITOR
+    assert mapping["gemini-open-model-data"] == OPEN_MODEL_DATA
+    assert mapping["claude-infra"] == INFRA
+    for omitted in ("claude-corpus", "claude-core", "claude", "monitor", "kimi-monitor"):
+        assert omitted not in mapping
+    root = Path(output.__file__).resolve().parents[2]
+    streams = yaml.safe_load((root / "scripts/config/issue_streams.yaml").read_text())["streams"]
+    anchors = {f"epic:{entry['epics'][0]}" for entry in streams.values()}
+    assert set(mapping.values()) <= anchors
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        'schema: terminal-abandon-succession-map.v1\nstreams:\n  "epic:1":\n    initiators: [a-x]\n'
+        '  "epic:2":\n    initiators: [a-x]\n',
+        'schema: terminal-abandon-succession-map.v1\nstreams:\n  "epic:1":\n    initiators: [a-x]\n'
+        '  "epic:1":\n    initiators: [b-x]\n',
+        'schema: terminal-abandon-succession-map.v1\nstreams:\n  "monitor":\n    initiators: [a-x]\n',
+        'schema: terminal-abandon-succession-map.v1\nstreams:\n  "epic:1":\n    initiators: ["*-x"]\n',
+        "schema: other.v1\nstreams: {}\n",
+        "streams: {}\n",
+        "- not a mapping\n",
+    ],
+    ids=[
+        "initiator-in-two-streams",
+        "duplicate-stream",
+        "non-canonical-stream",
+        "pattern",
+        "schema",
+        "no-schema",
+        "list",
+    ],
+)
+def test_invalid_map_refuses_whole_map(tmp_path, text):
+    path = tmp_path / "map.yaml"
+    path.write_text(text)
+    with pytest.raises(ValueError):
+        output.succession_streams(path)
