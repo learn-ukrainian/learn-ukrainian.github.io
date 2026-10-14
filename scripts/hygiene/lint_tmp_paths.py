@@ -2094,6 +2094,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "e0e3e8c0d93b60603885ef0d35cc84f49eb744bbd706988abc36a5b6db065ce6:1",
     ),
     (
+        "tests/test_tmp_sweep.py",
+        "Fixture root for the sweep real system-temp check. The gate basetemp is outside that area.",
+        "5150e8a0d2f65deedffe982faa95b6606b9dbf89065d58cac9c08135a74390c8:1 640017e1d15c10f0783936ffd50a2818e0226ee00623f5888d954184a13f6007:1",
+    ),
+    (
         "tests/test_v4_sources_transport_credential_namespace.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "ed3fdee7c888f4389c4222fd891021d840fc087836ee32003ae88cc065cea124:1",

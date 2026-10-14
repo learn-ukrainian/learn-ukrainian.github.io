@@ -191,8 +191,14 @@ def load_tasks(root: Path) -> TaskInventory:
 
 
 def task_referenced(path: Path, references: frozenset[Path]) -> bool:
-    """True when an unsettled task names ``path``, something inside it, or its temp root."""
-    return any(ref == path or path in ref.parents or ref == path.parent for ref in references)
+    """Protect equality, lexical descendants and the immediate parent without resolving."""
+    parts = path.parts
+    parent = path.parent
+    # Component prefixes avoid constructing and traversing ancestor paths.
+    return any(
+        (ref.anchor == path.anchor and ref.parts[:len(parts)] == parts) or ref == parent
+        for ref in references
+    )
 
 
 def task_attribution(name: str, records: dict[str, dict[str, Any]]) -> list[str]:
@@ -346,6 +352,7 @@ def classify_path(
     task attribution is reaped as ``unattributed_scratch`` when it is old,
     quiet throughout, and unreferenced by every process and unsettled task.
     Both classes require a complete process snapshot and task inventory.
+    Lexical component prefixes avoid constructing ancestor paths for containment.
     """
     records = tasks.records
     row: dict[str, Any] = {"name": path.name, "decision": "preserve", "bytes": None, "task": None, "live_pids": []}
@@ -353,10 +360,14 @@ def classify_path(
     row["identity"] = [info.st_dev, info.st_ino, info.st_uid]
     row["kind"] = "file" if stat.S_ISREG(info.st_mode) else "directory" if stat.S_ISDIR(info.st_mode) else "other"
     resolved = path.resolve()
+    parts = resolved.parts
     if path.is_symlink() or not (row["kind"] == "directory" or (scratch and row["kind"] == "file")):
         row["reason"] = "symlink_or_not_directory"
         return row
-    if any(resolved == root or resolved in root.parents or root in resolved.parents for root in managed):
+    if any(
+        root.anchor == resolved.anchor and (root.parts[:len(parts)] == parts or parts[:len(root.parts)] == root.parts)
+        for root in managed
+    ):
         row["reason"] = "managed_scratch"
         return row
     if HARNESS_NAMES.match(path.name):
@@ -373,11 +384,16 @@ def classify_path(
     if matches:
         row["task"] = matches[0]
         row["task_record"] = records[matches[0]]
-    row["live_pids"] = sorted({pid for pid, ref in references if ref == resolved or resolved in ref.parents})
+    row["live_pids"] = sorted({
+        pid for pid, ref in references if ref.anchor == resolved.anchor and ref.parts[:len(parts)] == parts
+    })
     # Conservatively protect ancestors and descendants of registrations.
     if worktrees is None:
         reason = "git_registration_unknown"
-    elif any(resolved == w or resolved in w.parents or w in resolved.parents for w in worktrees):
+    elif any(
+        w.anchor == resolved.anchor and (w.parts[:len(parts)] == parts or parts[:len(w.parts)] == w.parts)
+        for w in worktrees
+    ):
         reason = "registered_worktree"
     elif info.st_uid != os.geteuid():
         reason = "foreign_owner"
