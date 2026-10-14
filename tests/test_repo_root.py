@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -83,6 +84,8 @@ def wt_layout(tmp_path) -> tuple[Path, Path]:
         "scripts/ai_agent_bridge/_env.py",
         "scripts/ai_agent_bridge/_dispatch_wrappers.py",
         "scripts/ai_agent_bridge/_monitor_cache.py",
+        "scripts/review/__init__.py",
+        "scripts/review/verdict_parser.py",
     ]
     for f in files_to_copy:
         dest = worktree / f
@@ -118,19 +121,25 @@ def test_bridge_config_state_paths_resolve_to_primary_in_worktree(wt_layout):
     assert Path(pid_dir_str).resolve() == expected_pid_dir.resolve()
 
 
-def test_bridge_dispatch_wrappers_repo_root_resolves_to_primary_in_worktree(wt_layout):
-    """Verify that importing _dispatch_wrappers.py from a worktree layout resolves REPO_ROOT to primary."""
+@pytest.mark.parametrize("checkout_kind", ["linked-worktree", "normal-checkout"])
+def test_bridge_dispatch_wrappers_repo_root_resolves_to_primary_in_worktree(wt_layout, checkout_kind):
+    """Import the real wrapper and its dependencies in either checkout layout."""
     main_repo, worktree = wt_layout
+    checkout = worktree
+    if checkout_kind == "normal-checkout":
+        shutil.copytree(worktree / "scripts", main_repo / "scripts")
+        checkout = main_repo
 
     script = "from scripts.ai_agent_bridge._dispatch_wrappers import REPO_ROOT; print(REPO_ROOT)"
     proc = subprocess.run(
         [sys.executable, "-c", script],
-        cwd=str(worktree),
+        cwd=str(checkout),
         capture_output=True,
         text=True,
-        check=True,
+        check=False,
         timeout=30,
     )
+    assert proc.returncode == 0, proc.stderr
     resolved_repo_root = Path(proc.stdout.strip())
     assert resolved_repo_root.resolve() == main_repo.resolve()
 
