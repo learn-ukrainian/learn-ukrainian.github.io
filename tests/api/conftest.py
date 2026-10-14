@@ -11,8 +11,11 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _isolate_status_ttl_cache():
+    from scripts.api import claude_account_usage
     from scripts.api.state_helpers import cache_invalidate
 
     cache_invalidate()
+    claude_account_usage._reset_for_tests()
     yield
     cache_invalidate()
+    claude_account_usage._reset_for_tests()

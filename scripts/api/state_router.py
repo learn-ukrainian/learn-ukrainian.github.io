@@ -74,6 +74,7 @@ from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
 from . import preparation_state
+from .claude_account_usage import routing_budget_fields as claude_account_routing_fields
 from .codexbar_usage import (
     compute_weekly_pace_delta_pct,
     get_api_account_data,
@@ -2095,6 +2096,9 @@ def compute_routing_budget(
         batch_state_dir=batch_state_dir,
     )
     budget["transport"] = transport
+    # Per-account view (#10630): additive, display only. ``agents.claude`` stays
+    # the default-account lane and no routing decision reads these rows.
+    budget.update(claude_account_routing_fields())
     if transport == "dispatch":
         return budget
 
@@ -2243,6 +2247,8 @@ def _withdraw_routing_authorization(payload: dict[str, Any]) -> dict[str, Any]:
         payload["agents"] = rewritten
     if isinstance(payload.get("ranked_by_headroom"), list):
         payload["ranked_by_headroom"] = []
+    if payload.get("preferred_claude_account") is not None:
+        payload["preferred_claude_account"] = None
     return payload
 
 

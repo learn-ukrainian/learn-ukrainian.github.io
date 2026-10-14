@@ -418,6 +418,100 @@ def test_routing_page_labels_host_tooling_skip_when_native_probes_unavailable():
     assert output["liveAgy"]["value"] == "agy"
 
 
+def _render_claude_accounts(routing: dict) -> str:
+    """Run the page's own script under node with a stub document; return the table HTML."""
+    html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
+    start = html.index("<script>") + len("<script>")
+    end = html.index("document.getElementById('refresh-btn')")
+    script = f"""
+    const elements = {{}};
+    const document = {{getElementById: id => (elements[id] ||= {{innerHTML: ''}})}};
+    {html[start:end]}
+    renderClaudeAccounts({json.dumps(routing)});
+    console.log(JSON.stringify(elements['claude-accounts-table'].innerHTML));
+    """
+    result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
+    return json.loads(result.stdout)
+
+
+def _cells(row_html: str) -> list[str]:
+    return [cell.split("</td>")[0].strip() for cell in row_html.split("<td")[1:]]
+
+
+# Fails on origin/main: the page has no renderClaudeAccounts and no accounts table.
+def test_routing_page_renders_one_row_per_claude_account():
+    html = (DASHBOARDS / "routing.html").read_text(encoding="utf-8")
+    assert 'id="claude-accounts-table"' in html
+    assert "renderClaudeAccounts(routing);" in html
+    unknown_window = dict.fromkeys(("left_pct", "resets_at", "pace", "pace_delta_pct", "leftover_pct"))
+    table = _render_claude_accounts(
+        {
+            "claude_accounts": {
+                "claude:b": {
+                    "session5h": {"left_pct": 70.0, "leftover_pct": 40, "resets_at": "2026-10-14T18:00:00Z"},
+                    "weekly": {
+                        "left_pct": 80.0,
+                        "leftover_pct": 57,
+                        "pace": "5% in reserve",
+                        "pace_delta_pct": -5.0,
+                        "resets_at": "2026-10-18T07:00:00Z",
+                    },
+                    "updated": "2026-10-14T14:00:00Z",
+                    "age_s": 30.0,
+                    "stale": False,
+                    "status": "ok",
+                    "reason": None,
+                },
+                "claude:a": {
+                    "session5h": {"left_pct": 93.0, "leftover_pct": 89},
+                    "weekly": {"left_pct": 26.0, "leftover_pct": 0, "pace": "27% in deficit <b>", "resets_at": None},
+                    "updated": "2026-10-14T14:00:00Z",
+                    "age_s": 900.0,
+                    "stale": True,
+                    "status": "stale",
+                    "reason": "timeout",
+                },
+                "claude:c": {
+                    "session5h": unknown_window,
+                    "weekly": unknown_window,
+                    "updated": None,
+                    "age_s": None,
+                    "stale": False,
+                    "status": "unknown",
+                    "reason": "claude_account_binding_missing",
+                },
+            },
+            "preferred_claude_account": "b",
+        }
+    )
+
+    assert "Projected leftover at reset" in table
+    rows = table.split("<tr>")[2:]
+    assert len(rows) == 3
+    row_a, row_b, row_c = (_cells(row) for row in rows)
+    assert row_a[0] == 'class="mono">claude:a'
+    assert row_b[0].startswith('class="mono">claude:b')
+    assert "more weekly leftover" in row_b[0]
+    assert "more weekly leftover" not in row_a[0]
+    # 5h left, weekly left, projected leftover
+    assert row_b[2:5] == [">70%", ">80%", ">57%"]
+    assert row_a[2:4] == [">93%", ">26%"]
+    assert row_a[4].startswith(">0%") and "runs out before reset" in row_a[4]
+    assert ">stale<" in row_a[1]
+    assert "27% in deficit &lt;b&gt;" in row_a[5]  # escaped
+    assert "unknown" in row_a[6]  # weekly reset missing
+    assert "timeout" in row_a[7]
+    # Unknown is shown as unknown, never as 0.
+    assert all("unknown" in cell for cell in row_c[2:7])
+    assert not any("0%" in cell for cell in row_c[2:7])
+    assert "claude_account_binding_missing" in row_c[7]
+
+
+def test_routing_page_claude_accounts_absent_payload_renders_placeholder():
+    table = _render_claude_accounts({"agents": {}})
+    assert "No per-account data." in table
+
+
 def test_shared_monitor_css_targets_unified_nav_classes():
     css = (DASHBOARDS / "monitor.css").read_text(encoding="utf-8")
     assert ".topbar .nav" not in css

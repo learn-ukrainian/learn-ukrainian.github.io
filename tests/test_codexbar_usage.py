@@ -1288,6 +1288,7 @@ def test_background_refresh_no_longer_hardcodes_two_second_timeout(monkeypatch):
     monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
     subscription_usage_mod._run_all_refreshes()
     # No override passed -> refresh_provider_usage_data resolves the shared
@@ -1382,6 +1383,7 @@ def test_overlapping_run_all_refreshes_is_serialized(monkeypatch):
     monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
     worker = threading.Thread(target=subscription_usage_mod._run_all_refreshes, daemon=True)
     worker.start()
@@ -2799,6 +2801,7 @@ def test_muse_shares_existing_scheduler_at_most_every_15_minutes(monkeypatch):
     monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_claude_accounts_live", lambda: None)
     monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
     subscription_usage_mod._run_all_refreshes()
     assert "muse" in captured["providers"]

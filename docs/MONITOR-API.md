@@ -1311,6 +1311,21 @@ Parses `review/*-review.md` to extract `Overall Score: X/10` and `Status: PASS|F
 
 ---
 
+### `GET /api/state/routing-budget` — per-account Claude rows
+
+`agents.claude` remains the default-account lane, and every routing decision still reads only that lane. Two additive top-level keys give the per-account view (#10630):
+
+```bash
+curl -s http://localhost:8765/api/state/routing-budget | jq '{claude_accounts, preferred_claude_account}'
+```
+
+- `claude_accounts` — one row per registered label (`claude:a`, `claude:b`). Each row has `session5h` and `weekly` objects with `left_pct`, `resets_at`, `pace`, `pace_delta_pct` and `leftover_pct`, plus `updated`, `age_s`, `stale`, `status` (`ok` | `stale` | `unknown`) and `reason` (a failure code or `null`). `leftover_pct` is the share projected to remain at reset if the current pace continues: `max(0, round(100 - used * 100 / expected))`, where `expected` is CodexBar's expected-used percentage for the elapsed part of the window. `0` means the account runs out before reset. A value that cannot be measured is `null`, never `0`. Rows carry no identity: no email, organization, account id or directory.
+- `preferred_claude_account` — the label with the strictly larger weekly `leftover_pct` when every row is `ok`; otherwise `null`, including ties and unknown rows. It is a display hint only. A snapshot past the stale threshold publishes `null`.
+
+Label `a` is the host's default Claude directory. Other labels use the private account binding; a missing or refused binding makes only that row `unknown`. The background usage refresh runs one bounded CodexBar probe per label (no shell, minimal environment, 60 s timeout, 1 MiB output cap). The request path reads the cache and never starts a probe. A row is `stale` when its last good sample is older than the CodexBar cache TTL, or when a later probe failed.
+
+---
+
 ### `GET /api/state/issues[?track=x&severity=critical]`
 
 Aggregated outstanding issues from review files + audit failures.
