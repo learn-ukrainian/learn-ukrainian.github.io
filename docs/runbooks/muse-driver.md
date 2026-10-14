@@ -1,16 +1,27 @@
-# Muse DevOps driver trial
+# Muse DevOps and Harness/monitor driver trial
 
 `start-muse-driver.sh` prepares the native Muse CLI through the shared launcher
-core for `devops` / `infra.devops` only. The registry resolves these selectors
-to `epic:5703`. This change adds only `muse-devops` to
-`scripts/config/area_assignments.yaml`. It grants no new review or approval
-authority and changes no routing ladder, catalog seat or fallback selection.
-The supervised trial's launcher pin is `muse-spark-1.3`, with high effort by
-default. Other pins, provider flags, forced takeovers and lease disabling refuse.
+core for exactly the canonical stream keys `devops` and `monitor`. DevOps accepts
+`devops` and `infra.devops`; monitor accepts `monitor`, `infra.monitor`, `ops-api`,
+`ops.api` and `operator-api`. The existing taxonomy resolves their streams and
+slots to `muse-devops` and `muse-monitor`. The Harness/monitor seat name does not
+rename the separate `infra-harness` stream: `harness`, `infra` and
+`infra.fleet-comms` remain refused. Every non-Muse roster entry is unchanged.
+Legacy Claude, Codex, Gemini, Grok, Kimi and Cursor monitor identities continue
+to use their bare-provider inboxes. The dedicated `muse-monitor` inbox remains
+separate, and registered slots take precedence over legacy aliases.
+
+The ordered launcher pin is `muse-wonder-full-1.0`, with high effort by default.
+The previous `muse-spark-1.3` pin and every other pin refuse. This repair grants
+no new review or approval authority and changes no routing ladder, catalog seat
+or fallback selection. Provider flags, forced takeovers and lease disabling refuse.
 
 ## Installed CLI evidence
 
-These local read-only commands make no model request. Set
+These prior CLI inspections describe the interface, not certification of the
+ordered full pin. This repair runs no provider probes. The full pin and native
+guards remain unproven for real sessions. These read-only commands make no
+model request. Set
 `MUSE_NO_AUTO_UPDATE=1` to keep the installed executable fixed during inspection.
 
 | Command | Observed result |
@@ -18,7 +29,6 @@ These local read-only commands make no model request. Set
 | `command -v muse` | An installed executable named `muse` resolves. |
 | `MUSE_NO_AUTO_UPDATE=1 muse --help` | Interactive TUI by default, with positional prompt; `exec` is headless. Flags include `--provider`, `--model`, `--reasoning-effort`, `--workspace`, `--worktree`, `--config`, `--disable-shell`, `--disable-write`. |
 | `MUSE_NO_AUTO_UPDATE=1 muse model-profile --help` | `model-profile show <model> [--effort <tier>]`, with `muse-spark-1.3` as the example catalog id. |
-| `MUSE_NO_AUTO_UPDATE=1 muse model-profile show muse-spark-1.3 --effort high` | `model: muse-spark-1.3`, `effort: high`, `default_reasoning_effort: high`. |
 | `MUSE_NO_AUTO_UPDATE=1 muse resume --help` | Picker, `resume --last`, or exact session UUID/name; root options work on either side of `resume`. The launcher refuses resume flags. |
 | `MUSE_NO_AUTO_UPDATE=1 muse config --help` | Enterprise defaults/policy validation and `config status`; validation does not accept the user's flat settings document. |
 
@@ -50,7 +60,8 @@ Ukrainian language lanes and curriculum content lanes refuse before any Muse
 process. Classification uses the shared lane resolver and driver agent type
 classifier that also determines the rules seat. A rules-seat override cannot
 hide a curriculum lane.
-Only the DevOps selector, registered handoff slot and canonical stream are admitted.
+Only the DevOps and monitor selectors, registered handoff slots and their canonical
+streams are admitted.
 The checkout's GitHub visibility must resolve to `PUBLIC`; private, internal,
 missing and unknown results refuse, including in dry runs.
 
@@ -65,7 +76,7 @@ An adapter's separate admission is not driver certification.
 
 ```bash
 ./start-muse-driver.sh --help
-./start-muse-driver.sh --epic devops --effort high --dry-run
+./start-muse-driver.sh --epic monitor --effort high --dry-run
 LAUNCHER_DRY_RUN=1 ./start-muse-driver.sh --epic infra.devops
 ```
 
@@ -76,7 +87,8 @@ lease and run no canary. Do not run the printed argv directly.
 
 The launcher uses the existing core identity, claim, renewal, close and execution
 functions; there is no Muse lease implementation. Its identity is `muse-devops`
-with harness `muse-cli`. The core writes the session capsule and lease receipt.
+or `muse-monitor` with harness `muse-cli`. The core writes the session capsule
+and lease receipt.
 An occupied lease refuses and cannot be forced by this seat. Stub tests exercise
 this lifecycle with admission isolated in the fixture; they are not native Muse
 guard or runtime certification.

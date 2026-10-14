@@ -4,14 +4,16 @@ launcher_muse_usage() {
   cat <<'EOF'
 Usage: ./start-muse-driver.sh [OPTIONS] [PROMPT ...]
 
-Start the supervised Muse DevOps driver through the shared launcher core.
+Start the supervised Muse DevOps or Harness/monitor driver through the shared launcher core.
 Real sessions are refused until native forbidden-action guards are proven.
 There is no interactive launcher and no guard bypass.
 
 Options:
   -h, --help          Show help without starting Muse or claiming a lease.
-  --epic SELECTOR    Required: devops or infra.devops only.
-  --model MODEL      Single certified trial pin: muse-spark-1.3.
+  --epic SELECTOR    Required: devops or monitor, or their supported aliases.
+                     devops: infra.devops; monitor: infra.monitor, ops-api,
+                     ops.api, operator-api. infra/harness remain refused.
+  --model MODEL      Single ordered trial pin: muse-wonder-full-1.0.
   --effort LEVEL     none|minimal|low|medium|high|xhigh|max|ultra; default high.
   --harness muse     Native CLI only.
   --dry-run          Validate admission and print the planned argv.
@@ -32,7 +34,7 @@ EXIT CODES:
 
 Examples:
   ./start-muse-driver.sh --help
-  ./start-muse-driver.sh --epic devops --effort high --dry-run
+  ./start-muse-driver.sh --epic monitor --effort high --dry-run
   LAUNCHER_DRY_RUN=1 ./start-muse-driver.sh --epic infra.devops
 
 Unproven guards: shell, credential, publish, destructive-command, filesystem.
@@ -44,10 +46,10 @@ EOF
 launcher_adapter_validate() {
   [ "$LC_MODE" = driver ] || { launcher_error 'MUSE_DRIVER_ONLY'; exit 4; }
   [ "$LC_HARNESS" = muse ] || { launcher_error 'MUSE_HARNESS_UNSUPPORTED'; exit 2; }
-  [ "$LC_MODEL" = muse-spark-1.3 ] || { launcher_error 'MUSE_MODEL_UNCERTIFIED'; exit 4; }
+  [ "$LC_MODEL" = muse-wonder-full-1.0 ] || { launcher_error 'MUSE_MODEL_UNCERTIFIED'; exit 4; }
   [ "$LC_DRIVER_FORCE" = 0 ] || { launcher_error 'MUSE_FORCE_FORBIDDEN'; exit 4; }
   [ "${LC_DRIVER_LEASE_ENABLED:-1}" = 1 ] || { launcher_error 'MUSE_LEASE_REQUIRED'; exit 4; }
-  local arg lane stream devops_stream py classification visibility
+  local arg lane stream expected_stream py classification visibility
   for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
     case "$arg" in
       -*) launcher_error 'MUSE_PROVIDER_FLAGS_FORBIDDEN'; exit 2 ;;
@@ -67,8 +69,12 @@ launcher_adapter_validate() {
   fi
   [ "$classification" = infra-orchestrator ] || { launcher_error 'MUSE_LANE_CLASSIFICATION_UNKNOWN'; exit 4; }
   stream="$(launcher_selector_stream "$LC_EPIC")" || { launcher_error 'MUSE_STREAM_NOT_ADMITTED'; exit 4; }
-  devops_stream="$(launcher_selector_stream devops)" || { launcher_error 'MUSE_STREAM_NOT_ADMITTED'; exit 4; }
-  [ "$lane" = devops ] && [ "$stream" = "$devops_stream" ] || {
+  case "$lane" in
+    devops|monitor) ;;
+    *) launcher_error 'MUSE_STREAM_NOT_ADMITTED'; exit 4 ;;
+  esac
+  expected_stream="$(launcher_selector_stream "$lane")" || { launcher_error 'MUSE_STREAM_NOT_ADMITTED'; exit 4; }
+  [ "$stream" = "$expected_stream" ] || {
     launcher_error 'MUSE_STREAM_NOT_ADMITTED'; exit 4;
   }
   # gh resolves the checkout's repository. Missing/unknown visibility never

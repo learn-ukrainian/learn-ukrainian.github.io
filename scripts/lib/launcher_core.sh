@@ -391,7 +391,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-agy}"
       ;;
     muse)
-      LC_MODEL="${LAUNCHER_MODEL-muse-spark-1.3}"
+      LC_MODEL="${LAUNCHER_MODEL-muse-wonder-full-1.0}"
       LC_HARNESS="${LAUNCHER_HARNESS:-muse}"
       ;;
     grok)
@@ -829,7 +829,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high|grok:grok-4.7|muse:muse-spark-1.3)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high|grok:grok-4.7|muse:muse-wonder-full-1.0)
       return 0
       ;;
     *)
@@ -1533,7 +1533,7 @@ launcher_main() {
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"
-  if [ "$LC_PROVIDER" = muse ] && [ "$LC_MODEL" != muse-spark-1.3 ]; then
+  if [ "$LC_PROVIDER" = muse ] && [ "$LC_MODEL" != muse-wonder-full-1.0 ]; then
     launcher_error 'MUSE_MODEL_UNCERTIFIED'
     exit 4
   fi

@@ -182,7 +182,7 @@ def test_alias_selector_gate_matches_content_provider_policy() -> None:
             3
             if (provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"})
             or (provider not in {"claude", "codex"} and lanes[selector] == "epics")
-            or (provider == "muse" and lanes[selector] != "devops")
+            or (provider == "muse" and lanes[selector] not in {"devops", "monitor"})
             else 0
         )
     ]
@@ -478,9 +478,36 @@ def test_gate_refuses_when_no_interpreter_can_verify_the_slot(tmp_path: Path) ->
     assert "cannot verify handoff slot 'claude-infra'" in result.stderr
 
 
-def test_muse_slot_gate_accepts_only_devops() -> None:
+def test_muse_slot_gate_accepts_only_devops_and_monitor() -> None:
     lanes, gate = _gate_matrix()
     for lane in set(lanes.values()):
-        assert gate["muse"][lane] == (0 if lane == "devops" else 3)
+        assert gate["muse"][lane] == (0 if lane in {"devops", "monitor"} else 3)
     slots = _channels._load_registry_slots()
-    assert [slot for slot in slots if slot.startswith("muse-")] == ["muse-devops"]
+    assert [slot for slot in slots if slot.startswith("muse-")] == ["muse-devops", "muse-monitor"]
+
+
+@pytest.mark.parametrize(
+    ("selector", "slot"),
+    [
+        ("devops", "muse-devops"),
+        ("infra.devops", "muse-devops"),
+        ("monitor", "muse-monitor"),
+        ("infra.monitor", "muse-monitor"),
+        ("ops-api", "muse-monitor"),
+        ("ops.api", "muse-monitor"),
+        ("operator-api", "muse-monitor"),
+    ],
+)
+def test_muse_alias_identity_and_registered_gate_agree(selector: str, slot: str) -> None:
+    result = _bash('source "$1"; handoff_identity_for_muse_epic "$2"', str(HANDOFF_IDENTITY), selector)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == slot
+    gate = _gate("muse", selector)
+    assert gate.returncode == 0, gate.stderr
+
+
+@pytest.mark.parametrize("selector", ["harness", "infra", "infra.fleet-comms", "infra-harness", "atlas"])
+def test_muse_identity_refuses_other_streams(selector: str) -> None:
+    result = _bash('source "$1"; handoff_identity_for_muse_epic "$2"', str(HANDOFF_IDENTITY), selector)
+    assert result.returncode == 1
+    assert result.stdout == ""

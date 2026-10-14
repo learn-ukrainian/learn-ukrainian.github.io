@@ -14,7 +14,20 @@ from scripts.session_canary import diary, grok_lane, muse_lane
 REPO = Path(__file__).resolve().parents[1]
 
 
-@pytest.mark.parametrize("epic", ["folk", "curriculum-upgrade", "infra", "../devops", "Devops"])
+@pytest.mark.parametrize(
+    "epic",
+    [
+        "folk",
+        "curriculum-upgrade",
+        "infra",
+        "harness",
+        "infra.fleet-comms",
+        "infra-harness",
+        "atlas",
+        "../devops",
+        "Devops",
+    ],
+)
 def test_refuses_other_and_unsafe_lanes_before_writing(tmp_path: Path, epic: str) -> None:
     assert muse_lane.main(["--repo", str(tmp_path), "mint", "--epic", epic]) == 2
     assert list(tmp_path.iterdir()) == []
@@ -50,7 +63,7 @@ def test_help_has_mint_score_and_fixed_policy() -> None:
     assert result.returncode == 0, result.stderr
     assert "{mint,score}" in result.stdout and "launcher owns the lease" in result.stdout
     args = muse_lane.build_parser().parse_args(["score", "--epic", "devops", "--answers", "a.json"])
-    assert args.model == "muse-spark-1.3" and args.pass_ratio == 0.8
+    assert args.model == "muse-wonder-full-1.0" and args.pass_ratio == 0.8
     assert args.preferred == ["MUSE-DRIVER-HANDOFF.md", "INTERIM-DRIVER-HANDOFF.md"]
 
 
@@ -136,4 +149,50 @@ def test_missing_anchors_is_a_failure(tmp_path: Path, monkeypatch: pytest.Monkey
     monkeypatch.setattr(grok_lane, "_load_stream_entries", lambda *a, **kw: [])
     monkeypatch.setattr(grok_lane, "_load_ranked", lambda *a, **kw: [])
     assert muse_lane.main(["--repo", str(tmp_path), "mint", "--epic", "devops"]) == 1
+    assert list(tmp_path.iterdir()) == []
+
+
+@pytest.mark.parametrize(
+    ("selector", "lane", "stream"),
+    [
+        ("devops", "devops", "epic:5703"),
+        ("infra.devops", "devops", "epic:5703"),
+        ("monitor", "monitor", "epic:7919"),
+        ("infra.monitor", "monitor", "epic:7919"),
+        ("ops-api", "monitor", "epic:7919"),
+        ("ops.api", "monitor", "epic:7919"),
+        ("operator-api", "monitor", "epic:7919"),
+    ],
+)
+@pytest.mark.parametrize("command", ["mint", "score"])
+def test_alias_admission_uses_canonical_stream_without_running_canary(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    selector: str,
+    lane: str,
+    stream: str,
+    command: str,
+) -> None:
+    # allow-hardcoded-epic: literal selector contract, independent of the resolver under test
+    calls = []
+
+    def capture(args):
+        calls.append((args.epic, args.stream, getattr(args, "model", None)))
+        return 0
+
+    monkeypatch.delenv("LU_RULES_SEAT", raising=False)
+    monkeypatch.setattr(grok_lane, "cmd_mint", capture)
+    monkeypatch.setattr(grok_lane, "cmd_score", capture)
+    args = ["--repo", str(tmp_path), command, "--epic", selector]
+    if command == "score":
+        args += ["--answers", "unused.json"]
+    assert muse_lane.main(args) == 0
+    assert calls == [(lane, stream, "muse-wonder-full-1.0" if command == "score" else None)]
+    assert list(tmp_path.iterdir()) == []
+
+
+@pytest.mark.parametrize(("lane", "foreign"), [("devops", "epic:7919"), ("monitor", "epic:5703")])
+def test_admitted_lanes_cannot_cross_streams(tmp_path: Path, lane: str, foreign: str) -> None:
+    # allow-hardcoded-epic: literal foreign-stream refusal inputs
+    assert muse_lane.main(["--repo", str(tmp_path), "mint", "--epic", lane, "--stream", foreign]) == 2
     assert list(tmp_path.iterdir()) == []

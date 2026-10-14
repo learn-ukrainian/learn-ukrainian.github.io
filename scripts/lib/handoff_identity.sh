@@ -473,14 +473,15 @@ handoff_identity_for_gemini_epic() {
   printf 'gemini-%s' "$lane"
 }
 
-# The supervised Muse trial has exactly one addressable stream.
+# The supervised Muse trial admits only DevOps and Harness/monitor.
 handoff_identity_for_muse_epic() {
-  local lane='' stream='' devops_stream=''
+  local lane='' stream='' expected_stream=''
   lane="$(launcher_selector_lane "${1:-}")" || return 1
   stream="$(launcher_selector_stream "${1:-}")" || return 1
-  devops_stream="$(launcher_selector_stream devops)" || return 1
-  [ "$lane" = devops ] && [ "$stream" = "$devops_stream" ] || return 1
-  printf 'muse-devops'
+  case "$lane" in devops|monitor) ;; *) return 1 ;; esac
+  expected_stream="$(launcher_selector_stream "$lane")" || return 1
+  [ "$stream" = "$expected_stream" ] || return 1
+  printf 'muse-%s' "$lane"
 }
 
 # handoff_identity_for_grok_epic "<selector>"

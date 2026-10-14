@@ -11,7 +11,6 @@ from pathlib import Path
 
 import pytest
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id
 from tests.test_launcher_contract import (
     _blocking_signal_provider,
     _core_driver_exit_fixture,
@@ -71,20 +70,34 @@ def launch(env: dict[str, str], *args: str, dry: bool = True) -> subprocess.Comp
 def test_help_needs_no_provider_or_visibility_probe(muse_env: dict[str, str]) -> None:
     result = launch({**muse_env, "MUSE_TEST_GH_RC": "1"}, "--help", dry=False)
     assert result.returncode == 0, result.stderr
-    for expected in ("Usage: ./start-muse-driver.sh", "muse-spark-1.3", "--effort", "--dry-run", "EXIT CODES:"):
+    for expected in ("Usage: ./start-muse-driver.sh", "muse-wonder-full-1.0", "--effort", "--dry-run", "EXIT CODES:"):
         assert expected in result.stdout
     assert "--force" not in result.stdout
     assert "Unproven guards: shell, credential, publish, destructive-command, filesystem." in result.stdout
 
 
-@pytest.mark.parametrize("selector", ["devops", "infra.devops"])
+@pytest.mark.parametrize(
+    ("selector", "lane", "stream"),
+    [
+        ("devops", "devops", "epic:5703"),
+        ("infra.devops", "devops", "epic:5703"),
+        ("monitor", "monitor", "epic:7919"),
+        ("infra.monitor", "monitor", "epic:7919"),
+        ("ops-api", "monitor", "epic:7919"),
+        ("ops.api", "monitor", "epic:7919"),
+        ("operator-api", "monitor", "epic:7919"),
+    ],
+)
 @pytest.mark.parametrize("effort", ["none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"])
 def test_dry_run_argv_and_capsule_binding(
     muse_env: dict[str, str],
     tmp_path: Path,
     selector: str,
+    lane: str,
+    stream: str,
     effort: str,
 ) -> None:
+    # allow-hardcoded-epic: literal seven-selector contract independent of resolver
     argv_path = tmp_path / "argv"
     result = launch(
         {**muse_env, "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_path)},
@@ -103,7 +116,7 @@ def test_dry_run_argv_and_capsule_binding(
         "--provider",
         "meta",
         "--model",
-        "muse-spark-1.3",
+        "muse-wonder-full-1.0",
         "--reasoning-effort",
         effort,
         "--workspace",
@@ -115,19 +128,55 @@ def test_dry_run_argv_and_capsule_binding(
     ]
     assert argv[-1].startswith('<rules-core seat="core"')
     assert "A bounded task" in argv[-1]
-    assert "launcher already claimed the devops lease" in argv[-1]
-    stream = stream_anchor_id("devops", REPO)
+    assert f"launcher already claimed the {lane} lease" in argv[-1]
     assert f"would claim lease stream={stream} agent=muse harness=muse-cli" in result.stdout
-    assert "slot=muse-devops" in result.stdout
+    assert f"slot=muse-{lane}" in result.stdout
     assert "provider canary: not run; rollover uses scripts.session_canary.muse_lane mint and score" in result.stdout
     assert "MUSE_GUARD_PARITY_UNPROVEN" in result.stdout
 
 
+@pytest.mark.parametrize(
+    "selector", ["devops", "infra.devops", "monitor", "infra.monitor", "ops-api", "ops.api", "operator-api"]
+)
+def test_dry_run_never_calls_lease_or_provider_boundaries(
+    muse_env: dict[str, str],
+    tmp_path: Path,
+    selector: str,
+) -> None:
+    events = tmp_path / "forbidden-events"
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source "$1"; '
+            "for boundary in claim_session_supervisor_env launcher_driver_renew_loop launcher_close_driver_lease launcher_exec_command; do "
+            r'eval "$boundary() { printf forbidden >> \"\$MUSE_TEST_EVENTS\"; return 99; }"; '
+            'done; launcher_main muse driver --epic "$2" --dry-run',
+            "bash",
+            str(CORE),
+            selector,
+        ],
+        cwd=REPO,
+        env={**muse_env, "MUSE_TEST_EVENTS": str(events), "META_API_KEY": "authentication-must-stay-hidden"},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not events.exists()
+    assert not Path(muse_env["MUSE_TEST_CALLS"]).exists()
+    assert "authentication-must-stay-hidden" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("lane", ["devops", "monitor"])
 @pytest.mark.parametrize("dry", [True, False])
 @pytest.mark.parametrize(
     ("args", "override", "code", "reason"),
     [
         (["--model", "unknown"], {}, 4, "MUSE_MODEL_UNCERTIFIED"),
+        (["--model", "muse-spark-1.3"], {}, 4, "MUSE_MODEL_UNCERTIFIED"),
+        ([], {"LAUNCHER_MODEL": "muse-spark-1.3"}, 4, "MUSE_MODEL_UNCERTIFIED"),
         (["--model", "claude-fable-5"], {}, 4, "MUSE_MODEL_UNCERTIFIED"),
         (["--model="], {}, 4, "MUSE_MODEL_UNCERTIFIED"),
         ([], {"LAUNCHER_MODEL": "unknown"}, 4, "MUSE_MODEL_UNCERTIFIED"),
@@ -139,6 +188,9 @@ def test_dry_run_argv_and_capsule_binding(
         (["--epic", "curriculum-upgrade"], {"LU_RULES_SEAT": "core"}, 4, "MUSE_CURRICULUM_CONTENT_FORBIDDEN"),
         ([], {"LU_RULES_SEAT": "content"}, 4, "MUSE_CURRICULUM_CONTENT_FORBIDDEN"),
         (["--epic", "infra"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
+        (["--epic", "harness"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
+        (["--epic", "infra.fleet-comms"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
+        (["--epic", "infra-harness"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
         (["--epic", "atlas"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
         (["--epic", "unknown"], {}, 4, "MUSE_STREAM_NOT_ADMITTED"),
         ([], {"MUSE_TEST_VISIBILITY": "PRIVATE"}, 4, "MUSE_PRIVATE_REPOSITORY_FORBIDDEN"),
@@ -149,7 +201,7 @@ def test_dry_run_argv_and_capsule_binding(
         (["--harness", "codex"], {}, 2, "MUSE_HARNESS_UNSUPPORTED"),
         (["--force"], {}, 4, "MUSE_FORCE_FORBIDDEN"),
         ([], {"LC_DRIVER_LEASE_ENABLED": "0"}, 4, "MUSE_LEASE_REQUIRED"),
-        (["--", "--model", "muse-spark-1.3"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
+        (["--", "--model", "muse-wonder-full-1.0"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
         (["--", "--config=hooks=[]"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
         (["--", "--yolo"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
         (["--", "resume", "--last"], {}, 2, "MUSE_PROVIDER_FLAGS_FORBIDDEN"),
@@ -162,16 +214,20 @@ def test_typed_refusals_before_provider(
     code: int,
     reason: str,
     dry: bool,
+    lane: str,
 ) -> None:
-    result = launch({**muse_env, **override}, "--epic", "devops", *args, dry=dry)
+    result = launch({**muse_env, **override}, "--epic", lane, *args, dry=dry)
     assert result.returncode == code, result.stdout + result.stderr
     assert reason in result.stderr
     assert "would exec" not in result.stdout
     assert "would claim" not in result.stdout
 
 
-def test_real_guard_gate_cannot_be_overridden(muse_env: dict[str, str]) -> None:
-    result = launch({**muse_env, "MUSE_GUARD_PARITY_PROVEN": "1"}, "--epic", "devops", dry=False)
+@pytest.mark.parametrize(
+    "selector", ["devops", "infra.devops", "monitor", "infra.monitor", "ops-api", "ops.api", "operator-api"]
+)
+def test_real_guard_gate_cannot_be_overridden(muse_env: dict[str, str], selector: str) -> None:
+    result = launch({**muse_env, "MUSE_GUARD_PARITY_PROVEN": "1"}, "--epic", selector, dry=False)
     assert result.returncode == 4
     assert "MUSE_GUARD_PARITY_UNPROVEN: shell,credential,publish,destructive-command,filesystem" in result.stderr
     assert result.stdout == ""
