@@ -2,11 +2,16 @@
 # Claude Code statusline — learn-ukrainian project.
 #
 # Reads Claude Code status JSON from stdin and renders:
-#   [MODEL] [ctx: UK/BK (N%)] cwd-basename [wt:worktree-name] (branch*)
-#   [effort: level] [think] [5h: N%] [7d: N%] [$cost]
+#   [MODEL] [acct: A|B] [ctx: UK/BK (N%)] cwd-basename [wt:worktree-name] (branch*)
+#   [effort: level] [think] [5h: N% left] [7d: N% left] [$cost]
 #
 # Segments:
 #   [MODEL]        .model.display_name, omitted if missing
+#   [acct: A|B]    Claude account, from the basename of $CLAUDE_CONFIG_DIR only
+#                    (the directory is never read): unset/empty or `.claude`
+#                    is A, `.claude-b` is B, anything else omits the segment
+#                    (never guessed, the path is never printed). Placed right
+#                    after MODEL.
 #   [ctx: UK/BK (N%)] context window — placed immediately after MODEL so
 #                    usage is the first thing visible on the line. Bold +
 #                    color-coded: green<50, yellow 50-79, red 80+.
@@ -27,11 +32,12 @@
 #                    max red. Omitted for pre-2.1.119 clients.
 #   [think]        .thinking.enabled — emitted only when true. Omitted for
 #                    pre-2.1.119 clients.
-#   [5h: N%]       .rate_limits.five_hour.used_percentage — subscription
-#                    budget. Only shown when elevated (60%+ yellow, 80%+ red).
-#                    Stays silent while healthy — no noise in normal use.
-#   [7d: N%]       .rate_limits.seven_day.used_percentage — weekly budget.
-#                    Same threshold scheme as 5h.
+#   [5h: N% left]  room left in the 5-hour subscription window: 100 minus
+#                    .rate_limits.five_hour.used_percentage, rounded and
+#                    clamped to 0-100. Always shown when the field is a
+#                    number; omitted otherwise. Colour by remaining room:
+#                    under 20 red, under 40 yellow, otherwise default.
+#   [7d: N% left]  same for .rate_limits.seven_day.used_percentage (weekly).
 #   [$cost]        .cost.total_cost_usd, formatted to 2 decimals, shown only
 #                    when the input JSON provides the field. Kept last/low-
 #                    emphasis: for Claude Max subscribers the 5h/7d rate-limit
@@ -306,21 +312,41 @@ thinking_seg=""
 thinking_enabled=$(json_get '.thinking.enabled')
 [ "$thinking_enabled" = "true" ] && thinking_seg="[think]"
 
-# Rate-limit segment helper — only surface when elevated (60%+).
+# Rate-limit segment helper — always shows the room left (100 - used, rounded,
+# clamped to 0-100) when the field is a JSON number; anything else (missing,
+# null, string, non-object parent) yields no segment and no error. The
+# arithmetic runs in the jq call this script already makes.
 # Accepts a label (e.g. "5h", "7d") and a jq path, returns coloured
 # segment on stdout or empty string.
 rate_limit_seg() {
-  local label=$1 path=$2 pct int
-  pct=$(json_get "$path")
-  [ -z "$pct" ] && return 0
-  int=$(printf '%.0f' "$pct" 2>/dev/null) || return 0
-  if   [ "$int" -ge 80 ]; then printf '\033[31m[%s: %d%%]\033[0m' "$label" "$int"
-  elif [ "$int" -ge 60 ]; then printf '\033[33m[%s: %d%%]\033[0m' "$label" "$int"
+  local label=$1 path=$2 left
+  left=$(json_get "($path | select(type == \"number\") | 100 - . | if . < 0 then 0 elif . > 100 then 100 else . end | round)")
+  case "$left" in
+    ""|*[!0-9]*) return 0 ;;
+  esac
+  if   [ "$left" -lt 20 ]; then printf '\033[31m[%s: %d%% left]\033[0m' "$label" "$left"
+  elif [ "$left" -lt 40 ]; then printf '\033[33m[%s: %d%% left]\033[0m' "$label" "$left"
+  else                          printf '[%s: %d%% left]' "$label" "$left"
   fi
 }
 
 rl5h_seg=$(rate_limit_seg "5h" ".rate_limits.five_hour.used_percentage")
 rl7d_seg=$(rate_limit_seg "7d" ".rate_limits.seven_day.used_percentage")
+
+# Claude account — derived only from the basename of CLAUDE_CONFIG_DIR; the
+# directory is never read. Unset/empty or `.claude` is A, `.claude-b` is B,
+# anything else (including a bare "/") omits the segment.
+acct_seg=""
+acct_dir="${CLAUDE_CONFIG_DIR:-}"
+while [ "${acct_dir%/}" != "$acct_dir" ]; do acct_dir="${acct_dir%/}"; done
+if [ -z "${CLAUDE_CONFIG_DIR:-}" ]; then
+  acct_seg="[acct: A]"
+else
+  case "${acct_dir##*/}" in
+    .claude)   acct_seg="[acct: A]" ;;
+    .claude-b) acct_seg="[acct: B]" ;;
+  esac
+fi
 
 # Session cost — some Claude Code schema versions include .cost.total_cost_usd,
 # others omit it entirely. Degrade to empty silently either way; never error.
@@ -335,6 +361,7 @@ fi
 
 parts=()
 [ -n "$model" ]        && parts+=("[$model]")
+[ -n "$acct_seg" ]     && parts+=("$acct_seg")
 [ -n "$ctx_seg" ]      && parts+=("$ctx_seg")
 parts+=("$cwd_name")
 [ -n "$wt_seg" ]       && parts+=("$wt_seg")
