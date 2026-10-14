@@ -9,14 +9,29 @@ Label ``a`` is the host's default Claude directory. Every other label takes its
 directory from the private binding read by ``load_claude_account_binding``; a
 missing or refused binding makes that row unknown, never an endpoint error.
 
+Threat model: the label is accounting and display, not isolation against a
+hostile process of the same user. The risk closed here is a row of the wrong
+account published as ``ok`` or preferred through accidental or latent drift: a
+binding reassigned or removed while its sample is cached, a directory replaced
+or linked between validation and probe, or an answer naming an account other
+than the bound one. Each of these withholds the row as ``unknown``, never ``ok``.
+
 The selected directory is the only thing that selects the account. The query
 pins CodexBar's Claude source to OAuth, which reads only that directory's
 credentials, and the child runs with a fresh private home, cache and data
 location and no CodexBar configuration, so no shared configuration, token
-account or cache can substitute another account. Each sample also keeps
-private fingerprints of the account it measured; they are never published.
-When two labels measure one account, or a measured label cannot be told
-apart from another, every measured row is withheld as ``account_ambiguous``.
+account or cache can substitute another account.
+
+Attribution: ``account_binding`` validates a label's directory and holds it open
+for the whole probe; afterwards the binding must validate again to the same
+generation (directory identity and bound account), or the sample is refused. An
+account id CodexBar names must be the bound account; any other identity it
+names can only be compared across labels. Each sample keeps its binding
+generation and private fingerprints of its account, never published, logged or
+serialised, and is served only while its label's binding keeps that generation.
+When two served samples share an account, one names its account and another
+does not, or one cannot be identified, every served row is withheld as
+``account_ambiguous``.
 
 Freshness is computed when a row is served, from the measured state's
 timestamp, never frozen into a stored payload.
@@ -25,6 +40,7 @@ timestamp, never frozen into a stored payload.
 from __future__ import annotations
 
 import contextlib
+import errno
 import hashlib
 import json
 import math
@@ -35,7 +51,7 @@ import subprocess
 import tempfile
 import threading
 import time
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -43,6 +59,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.agent_runtime.attempt_boundary import (
+    _CLAUDE_ACCOUNT_UUID_RE,
     CLAUDE_ACCOUNT_LABELS,
     CLAUDE_ACCOUNT_REFUSAL_CODES,
     DEFAULT_CLAUDE_ACCOUNT,
@@ -101,13 +118,30 @@ ROW_REASON_CODES = PROBE_FAILURE_CODES | CLAUDE_ACCOUNT_REFUSAL_CODES | {"not_pr
 
 
 @dataclass(frozen=True)
+class _Binding:
+    """A label's validated binding while its directory is held open; never published or logged."""
+
+    config_dir: Path = field(repr=False)
+    account: str | None = field(repr=False)  # the bound account; ``None`` when the default records none
+    generation: bytes = field(repr=False)  # digest of the directory identity and the bound account
+
+
+@dataclass(frozen=True)
+class _Accounts:
+    """What a sample is attributed to; never published, logged or serialised."""
+
+    generation: bytes = field(repr=False)  # the binding generation it was measured under
+    fingerprints: frozenset[bytes] = field(repr=False)  # the bound and the named accounts
+    named: bool = field(repr=False)  # CodexBar's answer named an account
+
+
+@dataclass(frozen=True)
 class _Sample:
     """A label's last good measurement."""
 
     source_at: float  # epoch seconds of the measured state
     windows: dict[str, dict[str, Any]]
-    # Private fingerprints of the measured account; never published or logged.
-    accounts: frozenset[bytes] = field(default=frozenset(), repr=False)
+    accounts: _Accounts = field(repr=False)
 
 
 _lock = threading.Lock()
@@ -130,16 +164,53 @@ def row_key(label: str) -> str:
     return f"claude:{label}"
 
 
-def account_config_dir(label: str) -> Path:
-    """The Claude directory a label's probe reads.
+@contextlib.contextmanager
+def _open_default_directory(path: Path) -> Iterator[int]:
+    """The host's own Claude directory: a real directory, never a link.
 
-    Raises ``ClaudeAccountRefused`` for a missing, invalid or unsafe binding, one
-    that names the default directory (that would count one account twice), or one
-    whose directory does not hold the bound account.
+    The host chose it, so its mode and ancestors are not checked as a bound
+    directory's are.
     """
-    default = Path.home() / ".claude"
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    except FileNotFoundError:
+        raise ClaudeAccountRefused("claude_account_config_dir_missing") from None
+    except OSError as exc:
+        code = "not_private" if exc.errno in {errno.ELOOP, errno.ENOTDIR} else "unavailable"
+        raise ClaudeAccountRefused(f"claude_account_config_dir_{code}") from None
+    try:
+        yield fd
+    finally:
+        os.close(fd)
+
+
+def _generation(label: str, config_dir: Path, directory: int, account: str | None) -> bytes:
+    """Digest of the binding facts: label, directory path and identity, bound account."""
+    info = os.fstat(directory)
+    facts = [label, str(config_dir), info.st_dev, info.st_ino, account]
+    return hashlib.sha256(json.dumps(facts).encode()).digest()
+
+
+@contextlib.contextmanager
+def account_binding(label: str) -> Iterator[_Binding]:
+    """Validate a label's binding and hold its Claude directory open until exit.
+
+    The default label is the host's ``~/.claude``, bound to the account recorded
+    at login beside it (none when that record is unreadable). Any other label is
+    refused with ``ClaudeAccountRefused`` for a missing, invalid or unsafe
+    binding, one that names the default directory (that would count one account
+    twice), or one whose directory does not hold the bound account.
+    """
+    home = Path.home()
+    default = home / ".claude"
     if label == DEFAULT_CLAUDE_ACCOUNT:
-        return default
+        with _open_default_directory(default) as directory:
+            try:
+                account = _claude_config_account_uuid(home / ".claude.json")
+            except ClaudeAccountRefused:
+                account = None
+            yield _Binding(default, account, _generation(label, default, directory, account))
+        return
     binding = load_claude_account_binding(label)
     with _open_claude_directory(binding.config_dir) as directory:
         selected = os.fstat(directory)
@@ -151,26 +222,12 @@ def account_config_dir(label: str) -> Path:
             raise ClaudeAccountRefused("claude_account_binding_is_default")
         if _claude_config_account_uuid(Path(".claude.json"), dir_fd=directory) != binding.account_uuid:
             raise ClaudeAccountRefused("claude_account_unverified")
-    return binding.config_dir
+        account = binding.account_uuid
+        yield _Binding(binding.config_dir, account, _generation(label, binding.config_dir, directory, account))
 
 
-def _login_account(label: str, config_dir: Path) -> str | None:
-    """The account Claude Code recorded at login for the directory, if readable.
-
-    The default directory's record is the host's global config beside it; a
-    selected directory keeps its own.
-    """
-    record = Path.home() / ".claude.json" if label == DEFAULT_CLAUDE_ACCOUNT else config_dir / ".claude.json"
-    try:
-        return _claude_config_account_uuid(record)
-    except ClaudeAccountRefused:
-        return None
-
-
-def _fingerprint(kind: str, value: Any) -> bytes | None:
-    if not isinstance(value, str) or not value.strip():
-        return None
-    return hashlib.sha256(f"{kind}\0{value.strip().lower()}".encode()).digest()
+def _fingerprint(kind: str, value: str) -> bytes:
+    return hashlib.sha256(f"{kind}\0{value}".encode()).digest()
 
 
 def child_env(config_dir: Path, environ: Mapping[str, str] | None = None, *, sandbox: Path) -> dict[str, str]:
@@ -356,34 +413,66 @@ def parse_codexbar_claude(payload: Any) -> dict[str, Any]:
     return row
 
 
-def returned_account_fingerprints(payload: Any) -> frozenset[bytes]:
-    """Private fingerprints of any account identity CodexBar returned."""
+def _named(kind: str, value: Any) -> tuple[str, str] | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return kind, value.strip().lower()
+
+
+def _named_accounts(payload: Any) -> frozenset[tuple[str, str]]:
+    """Account identity CodexBar named, by namespace.
+
+    An ``accountID`` shaped as a Claude account UUID is an ``account_id``, the
+    binding's own namespace; any other ``accountID`` is an ``opaque_id`` and an
+    email is an ``email``, comparable only with another label's.
+    """
     usage = _claude_item(payload).get("usage")
     usage = usage if isinstance(usage, dict) else {}
     identity = usage.get("identity") if isinstance(usage.get("identity"), dict) else {}
-    found = {
-        _fingerprint("account_id", identity.get("accountID")),
-        _fingerprint("email", identity.get("accountEmail")),
-        _fingerprint("email", usage.get("accountEmail")),
-    }
-    return frozenset(digest for digest in found if digest is not None)
+    account_id = _named("account_id", identity.get("accountID"))
+    if account_id is not None and not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(account_id[1]):
+        account_id = ("opaque_id", account_id[1])
+    found = {account_id, _named("email", identity.get("accountEmail")), _named("email", usage.get("accountEmail"))}
+    return frozenset(item for item in found if item is not None)
 
 
-def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[dict[str, Any], frozenset[bytes]]:
-    """One bounded probe for one label: its row and the measured account's private fingerprints.
+def _attribute(binding: _Binding, payload: Any) -> _Accounts:
+    """What the sample measured, checked against its binding.
 
-    Raises ``ClaudeAccountRefused`` or ``_ProbeFailed``.
+    Refuses an answer that names an account id other than the bound account. The
+    default label without a recorded account has nothing to compare: an account
+    its own directory's credentials answer for is the default account.
     """
-    config_dir = account_config_dir(label)
-    codexbar = _codexbar_bin()
-    if not codexbar:
-        raise _ProbeFailed("missing_binary")
-    login = _fingerprint("login", _login_account(label, config_dir))
-    started = time.time()
-    with tempfile.TemporaryDirectory(prefix="lu-claude-usage-", ignore_cleanup_errors=True) as sandbox:
-        raw = _run_codexbar(
-            codexbar, child_env(config_dir, sandbox=Path(sandbox)), timeout_s=timeout_s, max_bytes=MAX_OUTPUT_BYTES
-        )
+    named = _named_accounts(payload)
+    bound = set() if binding.account is None else {("account_id", binding.account.strip().lower())}
+    if bound and {item for item in named if item[0] == "account_id"} - bound:
+        raise ClaudeAccountRefused("claude_account_unverified")
+    fingerprints = frozenset(_fingerprint(kind, value) for kind, value in bound | named)
+    return _Accounts(binding.generation, fingerprints, named=bool(named))
+
+
+def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[dict[str, Any], _Accounts]:
+    """One bounded probe for one label: its row and what the row is attributed to.
+
+    The label's directory is held open through the probe, and the binding must
+    validate again afterwards to the same generation: a directory or account
+    replaced in between refuses the sample. Raises ``ClaudeAccountRefused`` or
+    ``_ProbeFailed``.
+    """
+    with account_binding(label) as binding:
+        codexbar = _codexbar_bin()
+        if not codexbar:
+            raise _ProbeFailed("missing_binary")
+        started = time.time()
+        with tempfile.TemporaryDirectory(prefix="lu-claude-usage-", ignore_cleanup_errors=True) as sandbox:
+            env = child_env(binding.config_dir, sandbox=Path(sandbox))
+            raw = _run_codexbar(codexbar, env, timeout_s=timeout_s, max_bytes=MAX_OUTPUT_BYTES)
+        # The held directory cannot be freed and its identity reused, so the same
+        # generation means the directory and account the probe ended on are the
+        # ones validated before it started.
+        with account_binding(label) as after:
+            if after.generation != binding.generation:
+                raise ClaudeAccountRefused("claude_account_unverified")
     try:
         payload = json.loads(raw)
     except ValueError:
@@ -391,8 +480,7 @@ def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[di
     row = parse_codexbar_claude(payload)
     if row["updated"] is None:
         row["updated"] = _iso(datetime.fromtimestamp(started, UTC))
-    accounts = returned_account_fingerprints(payload) | ({login} if login is not None else set())
-    return row, frozenset(accounts)
+    return row, _attribute(binding, payload)
 
 
 def _record(
@@ -400,11 +488,13 @@ def _record(
     row: dict[str, Any] | None,
     failure: str | None,
     *,
-    accounts: frozenset[bytes] = frozenset(),
+    accounts: _Accounts | None = None,
     forget: bool = False,
 ) -> None:
     with _lock:
         if row is not None:
+            if accounts is None:
+                raise TypeError("a sample needs its attribution")
             observed = time.time()
             measured = _timestamp(row.get("updated"))
             # The state cannot be newer than the moment it was observed.
@@ -440,15 +530,32 @@ def refresh_claude_account_usage(*, timeout_s: float = PROBE_TIMEOUT_S) -> None:
 
 
 def _ambiguous(samples: Mapping[str, _Sample]) -> bool:
-    """True when the measured labels cannot be attributed to distinct accounts."""
+    """True when the served labels cannot be attributed to distinct accounts."""
     if len(samples) < 2:
         return False
-    fingerprints = [sample.accounts for sample in samples.values()]
+    attributions = [sample.accounts for sample in samples.values()]
+    if len({accounts.named for accounts in attributions}) > 1:
+        return True  # one answer named its account and another did not
+    fingerprints = [accounts.fingerprints for accounts in attributions]
     if not all(fingerprints):
         return True
     return any(
         fingerprints[i] & fingerprints[j] for i in range(len(fingerprints)) for j in range(i + 1, len(fingerprints))
     )
+
+
+def _current_generation(label: str) -> bytes | str:
+    """The label's binding generation now, or the code refusing it.
+
+    Reads the binding, its directory and its account record; never probes.
+    """
+    try:
+        with account_binding(label) as binding:
+            return binding.generation
+    except ClaudeAccountRefused as exc:
+        return exc.code
+    except Exception:  # an attribution defect withholds the row, never breaks the endpoint
+        return "probe_error"
 
 
 def _unknown_row(reason: str) -> dict[str, Any]:
@@ -465,6 +572,10 @@ def _unknown_row(reason: str) -> dict[str, Any]:
 def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = None) -> dict[str, dict[str, Any]]:
     """Rows keyed ``claude:<label>``, aged at call time; never starts a probe.
 
+    A cached sample is served only while its label's binding keeps the generation
+    it was measured under; a changed binding withholds it, a refused one gives
+    the refusal code.
+
     ``ok``: the measured state is younger than the cache TTL and no probe failed since.
     ``stale``: a last good sample that is older or followed by a failure.
     ``unknown``: no usable sample, or numbers withheld as ``account_ambiguous``.
@@ -472,15 +583,21 @@ def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = 
     ttl = _codexbar_cache_ttl_s() if ttl_s is None else ttl_s
     moment = time.time() if now is None else now
     with _lock:
-        samples = {label: _last_good[label] for label in CLAUDE_ACCOUNT_LABELS if label in _last_good}
+        cached = {label: _last_good[label] for label in CLAUDE_ACCOUNT_LABELS if label in _last_good}
         failures = dict(_last_failure)
+    current = {label: _current_generation(label) for label in cached}
+    samples = {label: sample for label, sample in cached.items() if current[label] == sample.accounts.generation}
     withheld = _ambiguous(samples)
     rows: dict[str, dict[str, Any]] = {}
     for label in CLAUDE_ACCOUNT_LABELS:
         sample = samples.get(label)
         failure = failures.get(label)
-        if sample is None or withheld:
-            rows[row_key(label)] = _unknown_row(ACCOUNT_AMBIGUOUS if sample is not None else failure or "not_probed")
+        if sample is None:
+            refusal = current.get(label)
+            rows[row_key(label)] = _unknown_row(refusal if isinstance(refusal, str) else failure or "not_probed")
+            continue
+        if withheld:
+            rows[row_key(label)] = _unknown_row(ACCOUNT_AMBIGUOUS)
             continue
         age = max(0.0, moment - sample.source_at)
         stale = failure is not None or age >= ttl

@@ -128,15 +128,42 @@ EXPECTED_B = {
 }
 
 
+def _write_private(path: Path, value) -> None:
+    path.write_text(json.dumps(value))
+    path.chmod(0o600)
+
+
 def _write_login_record(path: Path, account: str | None) -> None:
     """Claude Code's global config with the account it recorded at login."""
-    path.write_text(json.dumps({"oauthAccount": {"accountUuid": account}} if account else {"projects": {}}))
-    path.chmod(0o600)
+    _write_private(path, {"oauthAccount": {"accountUuid": account}} if account else {"projects": {}})
+
+
+@contextlib.contextmanager
+def _open_leaf_no_follow(path):
+    """The production opener's leaf rule (a link is never followed), without its
+    walk from root, which refuses the shared temporary directory fixtures live under."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except FileNotFoundError:
+        raise cau.ClaudeAccountRefused("claude_account_config_dir_missing") from None
+    except OSError:
+        raise cau.ClaudeAccountRefused("claude_account_config_dir_not_private") from None
+    try:
+        yield fd
+    finally:
+        os.close(fd)
+
+
+def _bind_b(binding_file: Path, config_dir: Path, account: str) -> None:
+    """The private binding of label ``b`` to a fixture directory and the account it holds."""
+    entry = {"config_dir": str(config_dir), "account_uuid": account}
+    _write_private(binding_file, {"schema_version": 1, "accounts": {"b": entry}})
 
 
 @pytest.fixture
 def account_dirs(tmp_path, monkeypatch) -> dict[str, Path]:
-    """Fixture home (label ``a``) and a second Claude directory (label ``b``), each with its login record."""
+    """Fixture home (label ``a``) and a second Claude directory bound to label ``b``,
+    each with its login record; every probe and serve runs the real binding checks."""
     home = tmp_path / "home"
     (home / ".claude").mkdir(parents=True)
     other = tmp_path / "claude-b"
@@ -144,12 +171,18 @@ def account_dirs(tmp_path, monkeypatch) -> dict[str, Path]:
     monkeypatch.setenv("HOME", str(home))
     _write_login_record(home / ".claude.json", _ACCOUNT_A)
     _write_login_record(other / ".claude.json", _ACCOUNT_B)
+    _bind_b(tmp_path / "claude-accounts.json", other, _ACCOUNT_B)
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(tmp_path / "claude-accounts.json"))
+    monkeypatch.setattr(cau, "_open_claude_directory", _open_leaf_no_follow)
     return {"a": home / ".claude", "b": other}
 
 
 def _set_login_account(dirs: dict[str, Path], label: str, account: str | None) -> None:
+    """Record ``account`` at login for a label's directory; ``b`` stays bound to what its directory holds."""
     record = dirs["a"].parent / ".claude.json" if label == "a" else dirs["b"] / ".claude.json"
     _write_login_record(record, account)
+    if label == "b" and account is not None:
+        _bind_b(dirs["b"].parent / "claude-accounts.json", dirs["b"], account)
 
 
 @pytest.fixture
@@ -167,7 +200,6 @@ def fake_probe(monkeypatch, account_dirs):
             raise result
         return json.dumps(result() if callable(result) else result).encode()
 
-    monkeypatch.setattr(cau, "account_config_dir", lambda label: account_dirs[label])
     monkeypatch.setattr(cau, "_codexbar_bin", lambda: "/fixture/bin/codexbar")
     monkeypatch.setattr(cau, "_run_codexbar", run)
     return outputs, calls
@@ -292,10 +324,6 @@ def test_missing_binding_is_unknown_and_forgets_old_numbers(fake_probe, account_
     cau.refresh_claude_account_usage()
     assert _row(cau.claude_accounts_snapshot(), "b")["status"] == "ok"
 
-    def resolver(label):
-        return account_dirs["a"] if label == "a" else _REAL_ACCOUNT_CONFIG_DIR(label)
-
-    monkeypatch.setattr(cau, "account_config_dir", resolver)
     monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", "")  # empty: no binding file
 
     cau.refresh_claude_account_usage()
@@ -307,19 +335,18 @@ def test_missing_binding_is_unknown_and_forgets_old_numbers(fake_probe, account_
     assert row_b["weekly"]["left_pct"] is None
 
 
-_REAL_ACCOUNT_CONFIG_DIR = cau.account_config_dir
-
-
 def test_binding_missing_through_the_real_loader(monkeypatch):
     monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", "")
-    with pytest.raises(cau.ClaudeAccountRefused) as exc:
-        cau.account_config_dir("b")
+    with pytest.raises(cau.ClaudeAccountRefused) as exc, cau.account_binding("b"):
+        pass
     assert exc.value.code == "claude_account_binding_missing"
 
 
 def test_default_label_is_the_host_default_directory(monkeypatch, tmp_path):
     monkeypatch.setattr(cau.Path, "home", classmethod(lambda cls: tmp_path))
-    assert cau.account_config_dir("a") == tmp_path / ".claude"
+    (tmp_path / ".claude").mkdir()
+    with cau.account_binding("a") as binding:
+        assert binding.config_dir == tmp_path / ".claude"
 
 
 @contextlib.contextmanager
@@ -338,8 +365,8 @@ def test_binding_that_names_the_default_directory_is_refused(monkeypatch, tmp_pa
     binding = ClaudeAccountBinding(label="b", config_dir=default, account_uuid=_FAKE_ACCOUNT_ID)
     monkeypatch.setattr(cau, "load_claude_account_binding", lambda label: binding)
     monkeypatch.setattr(cau, "_open_claude_directory", _open_fixture_dir)
-    with pytest.raises(cau.ClaudeAccountRefused) as exc:
-        cau.account_config_dir("b")
+    with pytest.raises(cau.ClaudeAccountRefused) as exc, cau.account_binding("b"):
+        pass
     assert exc.value.code == "claude_account_binding_is_default"
 
     other = tmp_path / "other"
@@ -347,7 +374,8 @@ def test_binding_that_names_the_default_directory_is_refused(monkeypatch, tmp_pa
     _write_login_record(other / ".claude.json", _FAKE_ACCOUNT_ID)
     binding = ClaudeAccountBinding(label="b", config_dir=other, account_uuid=_FAKE_ACCOUNT_ID)
     monkeypatch.setattr(cau, "load_claude_account_binding", lambda label: binding)
-    assert cau.account_config_dir("b") == other
+    with cau.account_binding("b") as bound:
+        assert bound.config_dir == other
 
 
 @pytest.mark.parametrize("recorded", [_ACCOUNT_A, None])
@@ -360,8 +388,8 @@ def test_binding_whose_directory_holds_another_account_is_refused(monkeypatch, t
     binding = ClaudeAccountBinding(label="b", config_dir=other, account_uuid=_ACCOUNT_B)
     monkeypatch.setattr(cau, "load_claude_account_binding", lambda label: binding)
     monkeypatch.setattr(cau, "_open_claude_directory", _open_fixture_dir)
-    with pytest.raises(cau.ClaudeAccountRefused) as exc:
-        cau.account_config_dir("b")
+    with pytest.raises(cau.ClaudeAccountRefused) as exc, cau.account_binding("b"):
+        pass
     assert exc.value.code == "claude_account_unverified"
 
 
@@ -456,7 +484,6 @@ def test_probe_passes_only_the_sanitized_environment(fake_probe, account_dirs, m
 
 
 def test_missing_codexbar_is_unknown(monkeypatch, account_dirs):
-    monkeypatch.setattr(cau, "account_config_dir", lambda label: account_dirs[label])
     monkeypatch.setattr(cau, "_codexbar_bin", lambda: None)
     cau.refresh_claude_account_usage()
     row = _row(cau.claude_accounts_snapshot(), "a")
@@ -690,7 +717,6 @@ def test_shared_configuration_cannot_override_the_selected_directory(account_dir
         (account_dirs[label] / "usage.json").write_text(json.dumps({"weekly_used": used}))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "shared-config"))
     monkeypatch.setenv("CODEXBAR_CONFIG", str(shared / "config.json"))
-    monkeypatch.setattr(cau, "account_config_dir", lambda label: account_dirs[label])
     monkeypatch.setattr(cau, "_codexbar_bin", lambda: _fake_codexbar_emulator(tmp_path))
 
     cau.refresh_claude_account_usage()
@@ -817,6 +843,339 @@ def test_future_source_timestamp_is_capped_at_observation(fake_probe):
     row_b = _row(cau.claude_accounts_snapshot(), "b")
     assert row_b["status"] == "ok"
     assert datetime.fromisoformat(row_b["updated"]) <= datetime.now(UTC)
+
+
+# ---- review regressions (#10630 fix round 2) -----------------------------------
+# Attribution holds through the probe and the cache: every case below measures the
+# real binding checks against fixture directories, never a real account.
+
+_ACCOUNT_C = "0c0c0c0c-0c0c-4c0c-8c0c-0c0c0c0c0c0c"
+_FIXTURE_ACCOUNTS = {"a": _ACCOUNT_A, "b": _ACCOUNT_B, "c": _ACCOUNT_C}
+_FIXTURE_WEEKLY_USED = {"a": 74, "b": 20, "c": 50}
+_REAL_RUN_CODEXBAR = cau._run_codexbar
+
+
+class _BoundFixture:
+    """Label ``a`` is the fixture home's ``.claude``; ``b`` is bound by a private binding file.
+
+    Each directory holds ``usage.json``, the answer a probe of that directory gives,
+    so a probe that reads another directory reports that directory's numbers
+    (weekly left: a 26, b 80, c 50).
+    """
+
+    def __init__(self, root: Path, monkeypatch):
+        self.root = root
+        self.home = root / "home"
+        self.dirs = {"a": self.home / ".claude", "b": root / "selected", "c": root / "replacement"}
+        for label, directory in self.dirs.items():
+            directory.mkdir(parents=True, mode=0o700)
+            self.answer(label, self.payload(label))
+            _write_login_record(directory / ".claude.json", _FIXTURE_ACCOUNTS[label])
+        _write_login_record(self.home / ".claude.json", _ACCOUNT_A)
+        self.binding = root / "claude-accounts.json"
+        self.bind("b")
+        self.hook = None
+        self.calls = 0
+        monkeypatch.setenv("HOME", str(self.home))
+        monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(self.binding))
+        monkeypatch.setattr(cau, "_open_claude_directory", _open_leaf_no_follow)
+        monkeypatch.setattr(cau, "_codexbar_bin", lambda: "/fixture/bin/codexbar")
+        monkeypatch.setattr(cau, "_run_codexbar", self.run)
+
+    def payload(self, label: str) -> list[dict]:
+        """The directory's answer naming no account; a case adds the identity it tests."""
+        used = _FIXTURE_WEEKLY_USED[label]
+        payload = _codexbar_payload(session_used=10, session_expected=50, weekly_used=used, weekly_expected=50)
+        return _without_returned_identity(payload)
+
+    def answer(self, label: str, payload: list[dict]) -> None:
+        _write_private(self.dirs[label] / "usage.json", payload)
+
+    def bind(self, label: str) -> None:
+        """Bind ``b`` to a fixture directory and the account it holds."""
+        _bind_b(self.binding, self.dirs[label], _FIXTURE_ACCOUNTS[label])
+
+    def unbind(self) -> None:
+        _write_private(self.binding, {"schema_version": 1, "accounts": {}})
+
+    def run(self, codexbar, env, *, timeout_s, max_bytes):
+        self.calls += 1
+        directory = Path(env["CLAUDE_CONFIG_DIR"])
+        if self.hook is not None:
+            self.hook(directory)
+        return (directory / "usage.json").read_bytes()
+
+
+@pytest.fixture
+def bound(tmp_path, monkeypatch) -> _BoundFixture:
+    return _BoundFixture(tmp_path, monkeypatch)
+
+
+def _replace_with_link(directory: Path, target: Path) -> None:
+    directory.rename(directory.with_name(directory.name + "-moved"))
+    directory.symlink_to(target, target_is_directory=True)
+
+
+def _replace_with_directory(directory: Path, replacement: Path) -> None:
+    directory.rename(directory.with_name(directory.name + "-moved"))
+    replacement.rename(directory)
+
+
+def _assert_not_published(fields, label, *, reason=None):
+    row = _row(fields["claude_accounts"], label)
+    published = (label, row["status"], row["reason"], row["weekly"]["left_pct"], fields["preferred_claude_account"])
+    assert row["status"] == "unknown", f"published (label, status, reason, weekly left, preferred): {published}"
+    assert row["weekly"]["left_pct"] is None
+    assert fields["preferred_claude_account"] is None
+    if reason is not None:
+        assert row["reason"] == reason
+
+
+def test_bound_fixture_publishes_each_directory(bound):
+    """The fixture's healthy baseline, so the withheld cases below are not vacuous."""
+    cau.refresh_claude_account_usage()
+    fields = cau.routing_budget_fields()
+    assert _row(fields["claude_accounts"], "a")["status"] == "ok"
+    assert _row(fields["claude_accounts"], "a")["weekly"]["left_pct"] == 26.0
+    assert _row(fields["claude_accounts"], "b")["status"] == "ok"
+    assert _row(fields["claude_accounts"], "b")["weekly"]["left_pct"] == 80.0
+    assert fields["preferred_claude_account"] == "b"
+
+
+# Fails on e75cb7e113: the validated directory was released before the probe, so a
+# directory replaced after validation was measured and published ``ok`` as ``b``.
+@pytest.mark.parametrize("replacement", ["link", "directory"])
+def test_selected_directory_replaced_during_the_probe_is_withheld(bound, replacement):
+    selected = bound.dirs["b"]
+    if replacement == "directory":
+        # Same recorded account, different directory, the default's numbers.
+        bound.answer("c", bound.payload("a"))
+        _write_login_record(bound.dirs["c"] / ".claude.json", _ACCOUNT_B)
+
+    def swap(directory):
+        if directory == selected:
+            if replacement == "link":
+                _replace_with_link(selected, bound.dirs["a"])
+            else:
+                _replace_with_directory(selected, bound.dirs["c"])
+            bound.hook = None
+
+    bound.hook = swap
+    cau.refresh_claude_account_usage()
+    _assert_not_published(cau.routing_budget_fields(), "b")
+
+
+# Fails on e75cb7e113: a real child that replaced the selected directory after
+# validation read the default's answer, published ``ok`` as ``b``.
+def test_real_probe_replacing_the_selected_directory_is_withheld(bound, monkeypatch):
+    body = (
+        "directory = os.environ['CLAUDE_CONFIG_DIR']\n"
+        f"if directory == {str(bound.dirs['b'])!r}:\n"
+        "    os.rename(directory, directory + '-moved')\n"
+        f"    os.symlink({str(bound.dirs['a'])!r}, directory)\n"
+        "print(open(os.path.join(directory, 'usage.json')).read())"
+    )
+    monkeypatch.setattr(cau, "_run_codexbar", _REAL_RUN_CODEXBAR)
+    monkeypatch.setattr(cau, "_codexbar_bin", lambda: _fake_codexbar(bound.root, body))
+    cau.refresh_claude_account_usage()
+    fields = cau.routing_budget_fields()
+    assert _row(fields["claude_accounts"], "a")["weekly"]["left_pct"] == 26.0  # the child really ran
+    _assert_not_published(fields, "b")
+
+
+# Fails on e75cb7e113: the default directory was never validated, so a link to the
+# selected directory published the selected account's numbers as ``a``.
+def test_default_directory_linked_to_the_selected_directory_is_withheld(bound):
+    _replace_with_link(bound.dirs["a"], bound.dirs["b"])
+    cau.refresh_claude_account_usage()
+    _assert_not_published(cau.routing_budget_fields(), "a")
+
+
+# Fails on e75cb7e113: the default label had no before/after check, so a default
+# directory or login replaced during the probe was published ``ok``.
+@pytest.mark.parametrize("change", ["directory", "login"])
+def test_default_account_changed_during_the_probe_is_withheld(bound, change):
+    default = bound.dirs["a"]
+
+    def swap(directory):
+        if directory == default:
+            if change == "directory":
+                _replace_with_directory(default, bound.dirs["c"])
+            else:
+                _write_login_record(bound.home / ".claude.json", _ACCOUNT_C)
+            bound.hook = None
+
+    bound.hook = swap
+    cau.refresh_claude_account_usage()
+    _assert_not_published(cau.routing_budget_fields(), "a")
+
+
+# Fails on e75cb7e113: a returned account other than the bound one was published ``ok``,
+# because returned and recorded identities were compared in different namespaces.
+@pytest.mark.parametrize("a_named", [False, True])
+def test_named_account_other_than_the_binding_is_withheld(bound, a_named):
+    payload = bound.payload("b")
+    payload[0]["usage"]["identity"] = {"accountID": _ACCOUNT_A}
+    bound.answer("b", payload)
+    if a_named:
+        payload = bound.payload("a")
+        payload[0]["usage"]["identity"] = {"accountID": _ACCOUNT_A}
+        bound.answer("a", payload)
+    cau.refresh_claude_account_usage()
+    fields = cau.routing_budget_fields()
+    _assert_not_published(fields, "b")
+    assert _row(fields["claude_accounts"], "b")["reason"] == "claude_account_unverified"
+
+
+def test_named_account_matching_the_binding_is_published(bound):
+    for label, account in (("a", _ACCOUNT_A.upper()), ("b", f" {_ACCOUNT_B} ")):
+        payload = bound.payload(label)
+        payload[0]["usage"]["identity"] = {"accountID": account}
+        bound.answer(label, payload)
+    cau.refresh_claude_account_usage()
+    assert {row["status"] for row in cau.claude_accounts_snapshot().values()} == {"ok"}
+
+
+# Fails on e75cb7e113: one answer named its account and the other named none, and
+# both rows were published ``ok``.
+def test_named_answer_beside_an_unnamed_one_is_withheld(bound):
+    payload = bound.payload("b")
+    payload[0]["usage"]["identity"] = {"accountID": _ACCOUNT_B}
+    bound.answer("b", payload)
+    cau.refresh_claude_account_usage()
+    fields = cau.routing_budget_fields()
+    for label in ("a", "b"):
+        _assert_withheld(_row(fields["claude_accounts"], label), "account_ambiguous")
+    assert fields["preferred_claude_account"] is None
+
+
+# Fails on e75cb7e113: samples were keyed by label only, so a sample measured under
+# the old binding stayed ``ok`` and preferred after the binding changed.
+@pytest.mark.parametrize(
+    ("change", "reason"), [("reassigned", "not_probed"), ("removed", "claude_account_binding_missing")]
+)
+def test_cached_sample_is_withheld_once_its_binding_changes(bound, change, reason):
+    cau.refresh_claude_account_usage()
+    assert cau.routing_budget_fields()["preferred_claude_account"] == "b"
+    probes = bound.calls
+
+    if change == "reassigned":
+        bound.bind("c")
+    else:
+        bound.unbind()
+    fields = cau.routing_budget_fields()
+
+    _assert_not_published(fields, "b", reason=reason)
+    assert _row(fields["claude_accounts"], "a")["status"] == "ok"
+    assert bound.calls == probes  # serving checked the binding without probing
+
+
+# Fails on e75cb7e113: the default label's sample stayed ``ok`` after its directory
+# or recorded login changed between refreshes.
+@pytest.mark.parametrize("change", ["directory", "login"])
+def test_cached_default_sample_is_withheld_once_the_default_account_changes(bound, change):
+    cau.refresh_claude_account_usage()
+    assert _row(cau.claude_accounts_snapshot(), "a")["status"] == "ok"
+
+    if change == "directory":
+        _replace_with_directory(bound.dirs["a"], bound.dirs["c"])
+    else:
+        _write_login_record(bound.home / ".claude.json", _ACCOUNT_C)
+    fields = cau.routing_budget_fields()
+
+    _assert_not_published(fields, "a", reason="not_probed")
+    assert _row(fields["claude_accounts"], "b")["status"] == "ok"
+
+
+def test_restored_binding_serves_its_own_sample_again(bound):
+    """Withholding reads the binding now; the cached sample is not rewritten by a serve."""
+    cau.refresh_claude_account_usage()
+    bound.unbind()
+    assert _row(cau.claude_accounts_snapshot(), "b")["status"] == "unknown"
+    bound.bind("b")
+    assert _row(cau.claude_accounts_snapshot(), "b")["status"] == "ok"
+
+
+def test_binding_generation_and_fingerprints_are_never_published(bound, caplog):
+    cau.refresh_claude_account_usage()
+    accounts = cau._last_good["b"].accounts
+    serialized = json.dumps(cau.routing_budget_fields()) + repr(cau._last_good) + repr(accounts) + caplog.text
+    for secret in (accounts.generation, *accounts.fingerprints):
+        assert secret.hex() not in serialized
+        assert repr(secret) not in serialized
+    assert "generation" not in serialized and "fingerprints" not in serialized
+
+
+@pytest.mark.parametrize(
+    ("make", "code"),
+    [
+        (lambda default: None, "claude_account_config_dir_missing"),
+        (lambda default: default.write_text("{}"), "claude_account_config_dir_not_private"),
+        (lambda default: default.symlink_to(default.parent / "elsewhere"), "claude_account_config_dir_not_private"),
+    ],
+)
+def test_default_directory_must_be_a_real_directory(monkeypatch, tmp_path, make, code):
+    monkeypatch.setattr(cau.Path, "home", classmethod(lambda cls: tmp_path))
+    (tmp_path / "elsewhere").mkdir()
+    make(tmp_path / ".claude")
+    with pytest.raises(cau.ClaudeAccountRefused) as exc, cau.account_binding("a"):
+        pass
+    assert exc.value.code == code
+
+
+def test_unreadable_default_directory_is_unavailable(monkeypatch, tmp_path):
+    def refuse(*_args, **_kwargs):
+        raise PermissionError(13, "denied")
+
+    monkeypatch.setattr(cau.os, "open", refuse)
+    with pytest.raises(cau.ClaudeAccountRefused) as exc, cau._open_default_directory(tmp_path):
+        pass
+    assert exc.value.code == "claude_account_config_dir_unavailable"
+
+
+def test_default_without_a_recorded_account_takes_the_account_it_names(bound):
+    _write_login_record(bound.home / ".claude.json", None)
+    for label, account in (("a", _ACCOUNT_A), ("b", _ACCOUNT_B)):
+        payload = bound.payload(label)
+        payload[0]["usage"]["identity"] = {"accountID": account}
+        bound.answer(label, payload)
+    cau.refresh_claude_account_usage()
+    assert {row["status"] for row in cau.claude_accounts_snapshot().values()} == {"ok"}
+
+    # Named as b's account, the default duplicates b: both withheld.
+    payload = bound.payload("a")
+    payload[0]["usage"]["identity"] = {"accountID": _ACCOUNT_B}
+    bound.answer("a", payload)
+    cau.refresh_claude_account_usage()
+    for row in cau.claude_accounts_snapshot().values():
+        _assert_withheld(row, "account_ambiguous")
+
+
+def test_unidentified_default_beside_a_bound_account_is_withheld(bound):
+    """Neither answer names an account and the default records none: it cannot be told apart."""
+    _write_login_record(bound.home / ".claude.json", None)
+    cau.refresh_claude_account_usage()
+    for row in cau.claude_accounts_snapshot().values():
+        _assert_withheld(row, "account_ambiguous")
+
+
+def test_binding_check_defect_withholds_the_row(bound, monkeypatch):
+    cau.refresh_claude_account_usage()
+
+    def broken(label):
+        raise RuntimeError(_MARKER)
+
+    monkeypatch.setattr(cau, "account_binding", broken)
+    fields = cau.routing_budget_fields()
+    for label in ("a", "b"):
+        _assert_withheld(_row(fields["claude_accounts"], label), "probe_error")
+    assert _MARKER not in json.dumps(fields)
+
+
+def test_sample_without_attribution_is_refused():
+    with pytest.raises(TypeError):
+        cau._record("a", {"session5h": {}, "weekly": {}, "updated": None}, None)
+    assert "a" not in cau._last_good
 
 
 # ---- preferred_claude_account -------------------------------------------------

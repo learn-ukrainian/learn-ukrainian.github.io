@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
+import os
 import time
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -1089,16 +1091,40 @@ def _account_payload(label: str, weekly_used: float, weekly_expected: float, *, 
     ).encode()
 
 
+@contextlib.contextmanager
+def _open_fixture_directory(path):
+    """The production opener's leaf rule (a link is never followed), without its
+    walk from root, which refuses the shared temporary directory fixtures live under."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError:
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_config_dir_not_private") from None
+    try:
+        yield fd
+    finally:
+        os.close(fd)
+
+
+def _write_private_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value))
+    path.chmod(0o600)
+
+
 def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:
-    """A fixture home (label ``a``) and a second Claude directory, each recording its own account."""
+    """A fixture home (label ``a``) and a second Claude directory bound to label ``b``,
+    each recording its own account; probes and serves run the real binding checks."""
     home = tmp_path / "account-home"
     dirs = {"a": home / ".claude", "b": tmp_path / "account-b"}
     for label, directory in dirs.items():
         directory.mkdir(parents=True, exist_ok=True)
         record = home / ".claude.json" if label == "a" else directory / ".claude.json"
-        record.write_text(json.dumps({"oauthAccount": {"accountUuid": _ACCOUNT_UUIDS[label]}}))
-        record.chmod(0o600)
+        _write_private_json(record, {"oauthAccount": {"accountUuid": _ACCOUNT_UUIDS[label]}})
+    binding = tmp_path / "claude-accounts.json"
+    entry = {"config_dir": str(dirs["b"]), "account_uuid": _ACCOUNT_UUIDS["b"]}
+    _write_private_json(binding, {"schema_version": 1, "accounts": {"b": entry}})
     monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setattr(claude_account_usage, "_open_claude_directory", _open_fixture_directory)
     return dirs
 
 
@@ -1114,7 +1140,6 @@ def _populate_accounts(monkeypatch, tmp_path: Path, *, b_fails: bool = False, ag
             return _account_payload("b", 20, 47, updated=updated)
         return _account_payload("a", 74, 47, updated=updated)
 
-    monkeypatch.setattr(claude_account_usage, "account_config_dir", lambda label: dirs[label])
     monkeypatch.setattr(claude_account_usage, "_codexbar_bin", lambda: "/fixture/bin/codexbar")
     monkeypatch.setattr(claude_account_usage, "_run_codexbar", run)
     claude_account_usage.refresh_claude_account_usage()
@@ -1260,6 +1285,26 @@ def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
     assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
     assert warm["claude_accounts"]["claude:b"]["status"] == "stale"
     assert warm["claude_accounts"]["claude:b"]["reason"] == "timeout"
+    assert warm["preferred_claude_account"] is None
+
+
+# Fails on e75cb7e113: a warm routing snapshot kept serving b's row ``ok`` and
+# preferred after b's binding was removed.
+def test_warm_snapshot_withholds_a_row_whose_binding_was_removed(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+    client = _routing_client(tmp_path)
+    first = client.get("/api/state/routing-budget").json()
+    assert first["claude_accounts"]["claude:b"]["status"] == "ok"
+
+    _write_private_json(tmp_path / "claude-accounts.json", {"schema_version": 1, "accounts": {}})
+    warm = client.get("/api/state/routing-budget").json()
+
+    assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
+    row_b = warm["claude_accounts"]["claude:b"]
+    assert (row_b["status"], row_b["reason"]) == ("unknown", "claude_account_binding_missing")
+    assert row_b["weekly"]["left_pct"] is None
+    assert warm["claude_accounts"]["claude:a"]["status"] == "ok"
     assert warm["preferred_claude_account"] is None
 
 
