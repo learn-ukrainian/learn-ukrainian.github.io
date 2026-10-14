@@ -59,8 +59,10 @@ import contextlib
 import errno
 import hashlib
 import json
+import logging
 import math
 import os
+import secrets
 import selectors
 import shutil
 import signal
@@ -89,7 +91,9 @@ from scripts.agent_runtime.attempt_boundary import (
     load_claude_account_binding,
 )
 from scripts.api.subscription_usage import _codexbar_bin, _codexbar_cache_ttl_s, _parse_resets_at_any
-from scripts.common.scratch import make_scratch_dir
+from scripts.common import scratch
+
+_log = logging.getLogger(__name__)
 
 PROBE_TIMEOUT_S = 60.0
 MAX_OUTPUT_BYTES = 1024 * 1024
@@ -112,6 +116,9 @@ _SANDBOX_ENV_NAMES = (
 )
 # Never created: CodexBar runs with its built-in defaults and no token accounts.
 _CODEXBAR_CONFIG_NAME = "codexbar-config.json"
+# Probe sandboxes live in this private directory under the fleet scratch root.
+_SANDBOX_PARENT = "account-usage-probe"
+_SANDBOX_PREFIX = "lu-claude-usage-"
 _LOGIN_RECORD = ".claude.json"
 _CREDENTIALS = ".credentials.json"
 _WINDOWS = (("primary", "session5h"), ("secondary", "weekly"))
@@ -133,6 +140,7 @@ PROBE_FAILURE_CODES = frozenset(
         "no_usage",
         "out_of_range",
         "bad_timestamp",
+        "sandbox_unavailable",
         "probe_error",
     }
 )
@@ -194,6 +202,7 @@ _last_good: dict[str, _Sample] = {}
 _last_failure: dict[str, str] = {}
 _revalidation_lock = threading.Lock()
 _revalidation: threading.Thread | None = None
+_sandbox_residue = 0  # probe sandboxes this process could not remove
 
 
 class _ProbeFailed(Exception):
@@ -583,15 +592,172 @@ def _attribute(binding: _Binding, payload: Any) -> _Accounts:
     return _Accounts(binding.watch, fingerprints, named=bool(named))
 
 
+def _scratch_root() -> Path:
+    """The fleet scratch root for this probe: the override, else the default.
+
+    Never the system temp fallback the shared helper uses: a probe with no
+    usable root is refused instead.
+    """
+    override = os.environ.get(scratch.SCRATCH_ROOT_ENV_VAR, "").strip()
+    return Path(override) if override else scratch.DEFAULT_SCRATCH_ROOT
+
+
+def _shared_safely(info: os.stat_result, owners: set[int], *, own_group_may_write: bool = False) -> bool:
+    """A real directory of an allowed owner that no other user can rename entries in.
+
+    A sticky directory lets others create but not rename or remove what is ours.
+    ``own_group_may_write`` also accepts group write when the group is this
+    user's own primary group, as on the host's default scratch root.
+    """
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid not in owners:
+        return False
+    writable = info.st_mode & 0o022
+    if own_group_may_write and info.st_gid == os.getgid():
+        writable &= ~stat.S_IWGRP
+    return not writable or bool(info.st_mode & stat.S_ISVTX)
+
+
+def _git_tree(directory: Path) -> bool:
+    """True when ``directory`` is a Git directory or the top of a Git checkout."""
+    if directory.name == ".git" or os.path.lexists(directory / ".git"):
+        return True
+    return (directory / "HEAD").is_file() and (directory / "objects").is_dir() and (directory / "refs").is_dir()
+
+
+def _inside_git(path: Path) -> bool:
+    """True when ``path`` (resolved) is inside a Git checkout or a Git directory."""
+    return any(_git_tree(directory) for directory in (path, *path.parents))
+
+
+def _create_sandbox() -> Path:
+    """Create one private (0700) directory for a probe, or raise ``_ProbeFailed``.
+
+    The scratch root may be shared with this user's own primary group (the host
+    default is): it must be a real directory, not a link, owned by this user or
+    root and not writable by anyone else unless sticky. Sandboxes go into
+    ``_SANDBOX_PARENT`` below it, a real directory owned by this user and not
+    group- or world-writable unless sticky. Neither may be inside a Git
+    checkout or Git directory. Each directory is created and checked through
+    the descriptor of the one above it, and the path handed to the child must
+    name what was created. Every failure is the value-free
+    ``sandbox_unavailable``; there is no fallback location.
+    """
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+    root_fd = parent_fd = None
+    try:
+        root = _scratch_root()
+        if not root.is_absolute():
+            raise _ProbeFailed("sandbox_unavailable")
+        with contextlib.suppress(FileExistsError):
+            os.mkdir(root, 0o700)
+        root_fd = os.open(root, flags)
+        if not _shared_safely(os.fstat(root_fd), {0, os.getuid()}, own_group_may_write=True):
+            raise _ProbeFailed("sandbox_unavailable")
+        parent = Path(os.path.realpath(root)) / _SANDBOX_PARENT
+        if _inside_git(parent):
+            raise _ProbeFailed("sandbox_unavailable")
+        with contextlib.suppress(FileExistsError):
+            os.mkdir(_SANDBOX_PARENT, 0o700, dir_fd=root_fd)
+        parent_fd = os.open(_SANDBOX_PARENT, flags, dir_fd=root_fd)
+        parent_info = os.fstat(parent_fd)
+        if not _shared_safely(parent_info, {os.getuid()}) or not _same_file(parent, parent_info):
+            raise _ProbeFailed("sandbox_unavailable")
+        for _ in range(100):
+            name = f"{_SANDBOX_PREFIX}{secrets.token_hex(8)}"
+            try:
+                os.mkdir(name, 0o700, dir_fd=parent_fd)
+            except FileExistsError:
+                continue
+            sandbox = parent / name
+            if not _same_file(sandbox, os.stat(name, dir_fd=parent_fd, follow_symlinks=False)):
+                os.rmdir(name, dir_fd=parent_fd)
+                raise _ProbeFailed("sandbox_unavailable")
+            return sandbox
+        raise _ProbeFailed("sandbox_unavailable")
+    except (OSError, ValueError):
+        raise _ProbeFailed("sandbox_unavailable") from None
+    finally:
+        for fd in (parent_fd, root_fd):
+            if fd is not None:
+                os.close(fd)
+
+
+def _same_file(path: Path, info: os.stat_result) -> bool:
+    """True when ``path``, its final link not followed, is the file ``info`` describes."""
+    found = os.stat(path, follow_symlinks=False)
+    return (found.st_dev, found.st_ino) == (info.st_dev, info.st_ino)
+
+
+def _grant_owner(path: str) -> None:
+    """Give the owner back read, write and search on a real directory it owns.
+
+    Opened without following a link, so a link or a link's target is never
+    changed; anything other than this user's directory is left alone.
+    """
+    try:
+        fd = os.open(path, os.O_PATH | os.O_NOFOLLOW | os.O_DIRECTORY | os.O_CLOEXEC)
+    except OSError:
+        return
+    try:
+        info = os.fstat(fd)
+        if info.st_uid == os.getuid():
+            # The descriptor's own entry: the directory opened above, not a path to it.
+            os.chmod(f"/proc/self/fd/{fd}", stat.S_IMODE(info.st_mode) | stat.S_IRWXU)
+    except OSError:
+        pass
+    finally:
+        os.close(fd)
+
+
+def _remove_sandbox(sandbox: Path) -> None:
+    """Remove a probe sandbox, repairing directories the probe locked.
+
+    Links inside it are removed, never followed. What cannot be removed is
+    counted and logged without a value; the probe's result is unaffected.
+    """
+    global _sandbox_residue
+    top = str(sandbox)
+    repaired: set[str] = set()
+
+    def retry(_func: Any, path: str | os.PathLike[str], exc: BaseException) -> None:
+        path = os.fspath(path)
+        if not isinstance(exc, PermissionError) or path in repaired:
+            return
+        repaired.add(path)
+        if path != top:
+            _grant_owner(os.path.dirname(path))
+        _grant_owner(path)
+        try:
+            if stat.S_ISDIR(os.lstat(path).st_mode):
+                shutil.rmtree(path, onexc=retry)
+            else:
+                os.unlink(path)
+        except OSError:
+            return
+
+    with contextlib.suppress(OSError):
+        shutil.rmtree(top, onexc=retry)
+    if os.path.lexists(top):
+        with _lock:
+            _sandbox_residue += 1
+        _log.warning("claude account usage: a probe sandbox could not be removed")
+
+
+def probe_sandbox_residue() -> int:
+    """How many probe sandboxes this process could not remove."""
+    with _lock:
+        return _sandbox_residue
+
+
 @contextlib.contextmanager
 def _probe_sandbox() -> Iterator[Path]:
     """A private (0700) directory under the fleet scratch root for one probe,
     removed when the probe ends, however it ends."""
-    sandbox = make_scratch_dir(prefix="lu-claude-usage-")
+    sandbox = _create_sandbox()
     try:
         yield sandbox
     finally:
-        shutil.rmtree(sandbox, ignore_errors=True)
+        _remove_sandbox(sandbox)
 
 
 def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[dict[str, Any], _Accounts]:
@@ -835,9 +1001,11 @@ def routing_budget_fields() -> dict[str, Any]:
 
 
 def _reset_for_tests() -> None:
+    global _sandbox_residue
     thread = _revalidation
     if thread is not None:
         thread.join(timeout=60)
     with _lock:
         _last_good.clear()
         _last_failure.clear()
+        _sandbox_residue = 0

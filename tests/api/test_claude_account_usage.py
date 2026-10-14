@@ -35,6 +35,38 @@ _FAKE_ACCOUNT_ID = "0f0e0d0c-0b0a-4908-8706-050403020100"
 _ACCOUNT_A = "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a"
 _ACCOUNT_B = "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"
 _MARKER = "SYNTHETIC_PRIVATE_MARKER"
+_REAL_INSIDE_GIT = cau._inside_git
+
+
+@pytest.fixture(autouse=True)
+def _judge_git_below_tmp_path(tmp_path, monkeypatch):
+    """The pre-push gate runs pytest with its base temp inside the Git common
+    directory, so every fixture path is truly inside Git. The sandbox's Git
+    check judges only the directories a test builds below ``tmp_path``."""
+    boundary = tmp_path.resolve()
+
+    def inside_git(path: Path) -> bool:
+        return any(
+            cau._git_tree(directory) for directory in (path, *path.parents) if directory.is_relative_to(boundary)
+        )
+
+    monkeypatch.setattr(cau, "_inside_git", inside_git)
+
+
+def test_git_tree_recognises_every_git_layout(tmp_path):
+    """The unpatched check, on layouts that are Git wherever ``tmp_path`` lives."""
+    (tmp_path / "checkout" / ".git").mkdir(parents=True)
+    (tmp_path / "worktree").mkdir()
+    (tmp_path / "worktree" / ".git").write_text("gitdir: /fixture/primary/.git/worktrees/x\n")
+    bare = tmp_path / "bare"
+    (bare / "objects").mkdir(parents=True)
+    (bare / "refs").mkdir()
+    (bare / "HEAD").write_text("ref: refs/heads/main\n")
+    for directory in ("checkout", "checkout/.git", "worktree", "bare"):
+        assert cau._git_tree(tmp_path / directory)
+    (tmp_path / "plain").mkdir()
+    assert not cau._git_tree(tmp_path / "plain")
+    assert _REAL_INSIDE_GIT((tmp_path / "checkout" / "nested" / "scratch").resolve())
 
 
 def _iso(moment: datetime) -> str:
@@ -579,11 +611,258 @@ def test_probe_sandbox_is_private_managed_scratch_removed_however_the_probe_ends
         with pytest.raises(type(outcome)):
             cau.probe_account("a")
     [(sandbox, mode)] = seen
-    assert sandbox.parent == scratch_root
+    # Sandboxes live in a private (0700) directory of their own under the scratch root.
+    assert sandbox.parent == scratch_root / cau._SANDBOX_PARENT
+    assert stat.S_IMODE(sandbox.parent.stat().st_mode) == 0o700
     assert sandbox.name.startswith("lu-claude-usage-")
     assert stat.S_IMODE(mode) == 0o700
     assert not sandbox.exists()
-    assert list(scratch_root.iterdir()) == []
+    assert list(sandbox.parent.iterdir()) == []
+
+
+@contextlib.contextmanager
+def _restore_modes(root: Path):
+    """Give every directory under ``root`` back to its owner so the fixture tree can be removed."""
+    try:
+        yield
+    finally:
+        for dirpath, dirnames, _ in os.walk(root, topdown=True):
+            for name in dirnames:
+                path = Path(dirpath) / name
+                if not path.is_symlink():
+                    path.chmod(0o700)
+
+
+def _populate(sandbox: Path, outside: Path) -> list[Path]:
+    """A sandbox a probe could leave: a populated nested directory the owner cannot
+    read, write or search, and links to a directory and a file outside it."""
+    locked = sandbox / "cache" / "locked"
+    (locked / "deeper").mkdir(parents=True)
+    (locked / "deeper" / "entry").write_text("probe state")
+    (locked / "entry").write_text("probe state")
+    (locked / "outside-dir").symlink_to(outside)
+    (sandbox / "outside-dir").symlink_to(outside)
+    (sandbox / "outside-file").symlink_to(outside / "keep")
+    (locked / "deeper").chmod(0o000)
+    locked.chmod(0o000)
+    return [locked, locked / "deeper"]
+
+
+@pytest.fixture
+def outside_dir(tmp_path) -> Path:
+    """A directory outside the sandbox, reached only through links; never changed."""
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "keep").write_text("not the probe's")
+    outside.chmod(0o500)
+    yield outside
+    outside.chmod(0o700)
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root ignores directory permissions")
+@pytest.mark.parametrize("lock_sandbox", [False, True], ids=["nested_000", "sandbox_000"])
+def test_probe_sandbox_removes_directories_the_owner_locked(tmp_path, monkeypatch, outside_dir, lock_sandbox):
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch-root"))
+    with _restore_modes(tmp_path / "scratch-root"), cau._probe_sandbox() as sandbox:
+        _populate(sandbox, outside_dir)
+        if lock_sandbox:
+            sandbox.chmod(0o000)
+    assert not os.path.lexists(sandbox)
+    assert cau.probe_sandbox_residue() == 0
+    # Links were removed, never followed: what they pointed at is untouched.
+    assert stat.S_IMODE(outside_dir.stat().st_mode) == 0o500
+    assert (outside_dir / "keep").read_text() == "not the probe's"
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root ignores directory permissions")
+def test_probe_sandbox_reports_residue_it_cannot_remove(tmp_path, monkeypatch, outside_dir, caplog, fake_probe):
+    """Removal that truly fails is counted and logged without a value; the probe still succeeds."""
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch-root"))
+    monkeypatch.setattr(cau, "_grant_owner", lambda path: None)
+    seen: list[Path] = []
+
+    def run(codexbar, env, *, timeout_s, max_bytes):
+        seen.append(Path(env["HOME"]))
+        _populate(seen[0], outside_dir)
+        return json.dumps(_payload_a()).encode()
+
+    monkeypatch.setattr(cau, "_run_codexbar", run)
+    with _restore_modes(tmp_path / "scratch-root"), caplog.at_level("WARNING", logger=cau.__name__):
+        row, _ = cau.probe_account("a")
+        assert os.path.lexists(seen[0])
+    assert row["session5h"]["left_pct"] == 93.0
+    assert cau.probe_sandbox_residue() == 1
+    [record] = [record for record in caplog.records if record.name == cau.__name__]
+    assert record.levelname == "WARNING"
+    assert str(tmp_path) not in record.getMessage()
+    assert record.args in ((), None)
+    cau._reset_for_tests()
+    assert cau.probe_sandbox_residue() == 0
+
+
+def _assert_sandbox_refused(spawned: list[object]) -> None:
+    with pytest.raises(cau._ProbeFailed) as raised:
+        with cau._probe_sandbox():
+            spawned.append("sandbox")
+    assert raised.value.code == "sandbox_unavailable"
+    # No OS error, and so no path, travels with the refusal.
+    assert raised.value.__cause__ is None
+    assert raised.value.__context__ is None or raised.value.__suppress_context__
+    assert spawned == []
+
+
+@pytest.mark.parametrize(
+    ("which", "mode"),
+    [("parent", 0o777), ("parent", 0o770), ("parent", 0o707), ("root", 0o777), ("root", 0o707)],
+)
+def test_probe_sandbox_refuses_a_parent_others_can_write(tmp_path, monkeypatch, which, mode):
+    root = tmp_path / "scratch-root"
+    (root / cau._SANDBOX_PARENT).mkdir(parents=True, mode=0o700)
+    target = root if which == "root" else root / cau._SANDBOX_PARENT
+    target.chmod(mode)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    _assert_sandbox_refused([])
+
+
+@pytest.mark.parametrize("which", ["parent", "root"])
+def test_probe_sandbox_accepts_a_sticky_shared_directory(tmp_path, monkeypatch, which):
+    root = tmp_path / "scratch-root"
+    (root / cau._SANDBOX_PARENT).mkdir(parents=True, mode=0o700)
+    target = root if which == "root" else root / cau._SANDBOX_PARENT
+    target.chmod(0o1777)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    with cau._probe_sandbox() as sandbox:
+        assert stat.S_IMODE(sandbox.stat().st_mode) == 0o700
+    assert not sandbox.exists()
+
+
+@pytest.mark.parametrize("own_group", [True, False])
+def test_probe_sandbox_root_may_be_shared_only_with_the_users_own_group(tmp_path, monkeypatch, own_group):
+    """The host default root is group-writable for the user's private group."""
+    root = tmp_path / "scratch-root"
+    root.mkdir()
+    root.chmod(0o775)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    if not own_group:
+        gid = os.getgid()
+        monkeypatch.setattr(cau.os, "getgid", lambda: gid + 1)
+        _assert_sandbox_refused([])
+        return
+    with cau._probe_sandbox() as sandbox:
+        assert stat.S_IMODE(sandbox.parent.stat().st_mode) == 0o700
+    assert not sandbox.exists()
+
+
+def test_probe_sandbox_refuses_a_parent_owned_by_another_user(tmp_path, monkeypatch):
+    root = tmp_path / "scratch-root"
+    (root / cau._SANDBOX_PARENT).mkdir(parents=True, mode=0o700)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    uid = os.getuid()
+    monkeypatch.setattr(cau.os, "getuid", lambda: uid + 1)
+    _assert_sandbox_refused([])
+
+
+@pytest.mark.parametrize("layout", ["checkout", "linked_worktree", "git_directory", "bare_repository"])
+def test_probe_sandbox_refuses_a_root_inside_git(tmp_path, monkeypatch, layout):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    if layout == "checkout":
+        (repo / ".git").mkdir()
+        root = repo / "nested" / "scratch"
+    elif layout == "linked_worktree":
+        (repo / ".git").write_text("gitdir: /fixture/primary/.git/worktrees/x\n")
+        root = repo / "scratch"
+    elif layout == "git_directory":
+        root = repo / ".git" / "scratch"
+    else:
+        (repo / "HEAD").write_text("ref: refs/heads/main\n")
+        (repo / "objects").mkdir()
+        (repo / "refs").mkdir()
+        root = repo / "scratch"
+    root.mkdir(parents=True)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    _assert_sandbox_refused([])
+    assert not (root / cau._SANDBOX_PARENT).exists()
+
+
+@pytest.mark.parametrize("override", ["missing-parent/scratch", "a-file", "link-to-dir", "relative/scratch"])
+def test_probe_sandbox_turns_an_unusable_override_into_a_typed_failure(tmp_path, monkeypatch, override):
+    (tmp_path / "a-file").write_text("not a directory")
+    (tmp_path / "real-dir").mkdir()
+    (tmp_path / "link-to-dir").symlink_to(tmp_path / "real-dir")
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", override if override.startswith("relative") else str(tmp_path / override))
+    _assert_sandbox_refused([])
+    assert list((tmp_path / "real-dir").iterdir()) == []
+    assert not (tmp_path / "relative").exists()
+
+
+@pytest.mark.exercises_default_scratch_root
+def test_probe_sandbox_never_falls_back_to_the_system_temp(tmp_path, monkeypatch):
+    from scripts.common import scratch
+
+    system_temp = tmp_path / "system-temp"
+    system_temp.mkdir()
+    monkeypatch.setattr(scratch.tempfile, "tempdir", str(system_temp))
+    monkeypatch.setattr(scratch, "DEFAULT_SCRATCH_ROOT", tmp_path / "missing" / "lu")
+    _assert_sandbox_refused([])
+    assert list(system_temp.iterdir()) == []
+
+
+@pytest.mark.exercises_default_scratch_root
+def test_probe_sandbox_uses_the_default_root_when_no_override(tmp_path, monkeypatch):
+    from scripts.common import scratch
+
+    with cau._probe_sandbox() as sandbox:
+        assert sandbox.parent == scratch.DEFAULT_SCRATCH_ROOT / cau._SANDBOX_PARENT
+    assert not sandbox.exists()
+
+
+@pytest.mark.parametrize("failing", ["root", "parent", "sandbox"])
+def test_every_sandbox_creation_failure_is_typed(tmp_path, monkeypatch, failing):
+    """The root, the private parent and the sandbox are created in that order; any
+    of them failing is the typed refusal, never a raw OS error."""
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch-root"))
+    real_mkdir = os.mkdir
+    failing_call = ["root", "parent", "sandbox"].index(failing)
+    made: list[object] = []
+
+    def mkdir(path, mode=0o777, *, dir_fd=None):
+        made.append(path)
+        if len(made) - 1 == failing_call:
+            raise OSError(28, "No space left on device")
+        return real_mkdir(path, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cau.os, "mkdir", mkdir)
+    _assert_sandbox_refused([])
+    assert len(made) == failing_call + 1
+
+
+@pytest.mark.parametrize("mismatch", ["parent", "sandbox"])
+def test_probe_sandbox_refuses_a_path_that_does_not_name_what_it_created(tmp_path, monkeypatch, mismatch):
+    """A path redirected between creation and use is refused; a created sandbox is removed."""
+    root = tmp_path / "scratch-root"
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    real_same_file = cau._same_file
+
+    def same_file(path, info):
+        is_sandbox = path.name.startswith(cau._SANDBOX_PREFIX)
+        return real_same_file(path, info) and is_sandbox != (mismatch == "sandbox")
+
+    monkeypatch.setattr(cau, "_same_file", same_file)
+    _assert_sandbox_refused([])
+    assert list((root / cau._SANDBOX_PARENT).iterdir()) == []
+
+
+def test_sandbox_failure_is_the_rows_registered_reason(fake_probe, tmp_path, monkeypatch):
+    (tmp_path / "a-file").write_text("not a directory")
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "a-file"))
+    cau.refresh_claude_account_usage()
+    _, calls = fake_probe
+    assert calls == []
+    row = _row(cau.claude_accounts_snapshot(), "a")
+    assert (row["status"], row["reason"]) == ("unknown", "sandbox_unavailable")
+    assert "sandbox_unavailable" in cau.ROW_REASON_CODES
 
 
 def test_missing_codexbar_is_unknown(monkeypatch, account_dirs):
