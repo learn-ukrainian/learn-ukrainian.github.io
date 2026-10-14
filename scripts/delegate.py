@@ -250,7 +250,7 @@ from scripts.orchestration.dead_worker_state import (
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
-from scripts.review.verdict_parser import recognized_verdicts
+from scripts.review.verdict_parser import _without_code_fences, recognized_verdicts
 from scripts.secret_redactor import redact_text
 
 if TYPE_CHECKING:
@@ -2618,7 +2618,6 @@ _WRITE_SHAPED_PROMPT_RE = re.compile(
     )
     """,
 )
-_FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
 _HEADING_BOUNDARY_RE = re.compile(r"^\s*\#{1,6}\s+")
 _LIST_BOUNDARY_RE = re.compile(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)")
@@ -2778,14 +2777,17 @@ _CROSS_REPO_BINDING_HINT = (
 
 
 def _strip_quoted_content(prompt: str) -> str:
-    """Drop fenced blocks and Markdown blockquotes before the write-intent scan.
+    """Drop closed fences and Markdown blockquotes before write-intent and DoR scans.
 
     A critique dispatch attaches or includes the brief under review, and that
     brief legitimately contains write-shaped lines ("Add a CLI …").  Quoted
     content is data for the worker to critique, not a directive to mutate the
     repository, so it must not trip the read-only gate (#7814 item 6).
+    Unterminated bodies and nested-container fences remain visible to both
+    safety checks; only parser-mapped, source-closed top-level fences are
+    removed (#9672), so a container exit cannot hide a later directive.
     """
-    without_fences = _FENCED_BLOCK_RE.sub("", prompt)
+    without_fences = _without_code_fences(prompt, keep_unclosed=True)
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
 
 

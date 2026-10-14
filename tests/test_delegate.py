@@ -1826,6 +1826,219 @@ def test_strip_quoted_content_handles_tilde_fences_and_unclosed_fence():
     assert "Add a CLI." in delegate._strip_quoted_content(unclosed)
 
 
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("indent", range(4))
+def test_commonmark_closed_brief_is_data_but_outside_write_intent_is_refused(fence, indent):
+    prompt = (
+        "Critique this brief; report findings only.\n"
+        f"{' ' * indent}{fence}markdown\n"
+        "- Fix the parser.\nVERDICT: APPROVE\n"
+        f"   {fence}{fence[0]} \t\n"
+    )
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+    assert delegate.parse_review_verdict(prompt) is None
+    assert delegate._read_only_write_intent_error(
+        mode="read-only", prompt=prompt + "Please implement the parser.\n"
+    ) is not None
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "```\n- Fix the parser.\n",
+        "   ~~~~\n~~~\n- Fix the parser.\n",
+        "~~~\n```\n- Fix the parser.\n",
+        "```\n```text\n- Fix the parser.\n",
+        "```\n    ```\n- Fix the parser.\n",
+        "```\n```\u00a0\n- Fix the parser.\n",
+    ],
+)
+def test_commonmark_unclosed_body_keeps_write_intent_visible_but_suppresses_verdict(block):
+    prompt = "Critique this brief.\n" + block + "VERDICT: APPROVE\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+    assert delegate.parse_review_verdict(prompt) is None
+
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+def test_commonmark_removed_fence_preserves_write_intent_paragraph_boundary(fence):
+    prompt = f"Context without punctuation\n{fence}\nExample\n{fence}\nFix the parser.\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "```example`\n- Fix the parser.\n```\n",
+        "    ```\n    - Fix the parser.\n    ```\n",
+        "- ```\n    - Fix the parser.\n    ```\n",
+        "> ```\n- Fix the parser.\n> ```\n",
+    ],
+)
+def test_commonmark_invalid_opener_and_containers_do_not_hide_write_intent(block):
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=block) is not None
+
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("items,indent", [(('1.', '2.', '3.'), 3), (('-', '-', '-'), 2)])
+def test_commonmark_list_item_escape_does_not_hide_visible_write_intent(fence, items, indent):
+    prompt = (
+        "Review only; report findings.\n"
+        f"{items[0]} Old example:\n"
+        f"{' ' * indent}{fence}py\n"
+        f"{' ' * indent}x = 1\n"
+        f"{items[1]} Fix the parser.\n"
+        f"{items[2]} New example:\n"
+        f"{' ' * indent}{fence}\n"
+    )
+    assert "Fix the parser." in delegate._strip_quoted_content(prompt)
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+
+@pytest.mark.parametrize(
+    "block,quoted_issue_visible",
+    [
+        (f"{' ' * indent}{fence}markdown\nExample #8886\n   {fence}{fence[0]} \t\n", False)
+        for fence in ("```", "~~~") for indent in range(4)
+    ] + [
+        ("~~~\nExample #8886\n", True),
+        ("````\n```\nExample #8886\n", True),
+        ("```\n~~~\nExample #8886\n", True),
+        ("~~~\n~~~text\nExample #8886\n", True),
+        ("```info`\nExample #8886\n```\n", True),
+        ("    ~~~\n    Example #8886\n    ~~~\n", True),
+        ("- ~~~\n    Example #8886\n    ~~~\n", True),
+        ("1. Old example:\n   ```py\n   x = 1\n2. Fix fixture issue #8886 too.\n3. New example:\n   ```\n", True),
+        ("- Old example:\n  ~~~py\n  x = 1\n- Fix fixture issue #8886 too.\n- New example:\n  ~~~\n", True),
+        ("- Old example:\n\n  ```py\n  x = 1\nFix fixture issue #8886 too.\n  ```\n", True),
+    ],
+)
+def test_commonmark_dor_checks_visible_issue_references_without_weakening_readiness(
+    monkeypatch, block, quoted_issue_visible
+):
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, json.dumps({"number": int(command[-1].rsplit("/", 1)[-1])}), "")
+        number = command[command.index("--issue") + 1]
+        verdict = {"verdict": "WARN", "missing": ["verify"]} if number == "8886" else {"verdict": "PASS", "missing": []}
+        return subprocess.CompletedProcess(command, int(number == "8886"), json.dumps(verdict), "")
+
+    monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    prompt = "Task #9672.\n" + block
+    error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+    expected = [8886, 9672] if quoted_issue_visible else [9672]
+    assert record["issues"] == expected
+    assert [int(command[command.index("--issue") + 1]) for command in calls if "--issue" in command] == expected
+    assert len([command for command in calls if command[:2] == ["gh", "api"]]) == len(expected)
+    if quoted_issue_visible:
+        assert "#8886: verify" in error
+        assert record["warnings"] == {"8886": "verify"}
+    else:
+        assert error is None
+        assert record["warnings"] == {}
+
+
+@pytest.mark.parametrize(
+    "container",
+    ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_container_exit_preserves_write_refusal(container):
+    # Second Opus CF reproduction, with an equivalent blockquote exit.
+    prompt = (
+        "Review the brief below.\n\n" + container
+        + "```\nquoted data\n```\nAdd a CLI flag to scripts/foo.py.\n```\ntrailing\n"
+    )
+    stripped = delegate._strip_quoted_content(prompt)
+    assert "Add a CLI flag to scripts/foo.py.\n" in stripped
+    assert "quoted data" not in stripped
+    assert "trailing\n" in stripped  # The final top-level fence is unclosed.
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
+@pytest.mark.parametrize(
+    "container",
+    ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_container_exit_preserves_dor_warn(monkeypatch, container):
+    calls = []
+
+    def checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, '{"number":9672}', "")
+        return subprocess.CompletedProcess(command, 1, '{"verdict":"WARN","missing":["verify"]}', "")
+
+    monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    monkeypatch.setattr(delegate.subprocess, "run", checker)
+    prompt = "Implement the fix.\n\n" + container + "```\nquoted\n```\nFixes #9672.\n```\n"
+    assert "Fixes #9672.\n" in delegate._strip_quoted_content(prompt)
+    error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+    assert error is not None
+    assert "#9672: verify" in error
+    assert record == {"issues": [9672], "warnings": {"9672": "verify"}}
+    assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/9672"]
+    assert len(calls) == 2
+    assert calls[1][-6:] == ["--issue", "9672", "--repo", delegate._CANONICAL_GITHUB_REPO, "--strict", "--json"]
+
+
+@pytest.mark.parametrize("fence,info", [("```", "markdown"), ("~~~~", "text`example")])
+@pytest.mark.parametrize("indent", [1, 2, 3])
+def test_parser_spans_valid_indented_data_is_admissible(monkeypatch, fence, info, indent):
+    prompt = (
+        "Review only; report findings.\n"
+        f"{' ' * indent}{fence}{info}\n"
+        "Add a CLI flag to scripts/foo.py.\nFixes #9672.\n"
+        f"{' ' * indent}{fence}{fence[0]} \t\n"
+    )
+    monkeypatch.setattr(delegate.subprocess, "run", lambda *_a, **_kw: pytest.fail("quoted issue must not be checked"))
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+    assert delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO) == (None, None)
+
+
+@pytest.mark.parametrize("failure", ["import", "parse"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_parser_spans_failure_precedes_dispatch_effects(tmp_tasks_dir, monkeypatch, failure, mode):
+    if failure == "import":
+        original_import = builtins.__import__
+
+        def refuse_import(name, *args, **kwargs):
+            if name == "markdown_it":
+                raise ImportError("parser_spans injected import failure")
+            return original_import(name, *args, **kwargs)
+
+        monkeypatch.setattr(builtins, "__import__", refuse_import)
+        exception = ImportError
+    else:
+        from markdown_it import MarkdownIt
+
+        def refuse_parse(*args, **kwargs):
+            raise RuntimeError("parser_spans injected parse failure")
+
+        monkeypatch.setattr(MarkdownIt, "parse", refuse_parse)
+        exception = RuntimeError
+
+    def forbidden_effect(*args, **kwargs):
+        pytest.fail("parser failure must precede provisioning and spawn")
+
+    for name in ("_ensure_worktree", "_provision_data_symlinks"):
+        monkeypatch.setattr(delegate, name, forbidden_effect)
+    monkeypatch.setattr(delegate.subprocess, "Popen", forbidden_effect)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "codex", "--task-id", "parser-spans-failure",
+        "--mode", mode, "--prompt", "Review only.\n```\nFixes #9672.\n```\n",
+    ])
+    with pytest.raises(exception, match="parser_spans injected"):
+        delegate.cmd_dispatch(args)
+    assert not (tmp_tasks_dir / "parser-spans-failure.json").exists()
+
+
 def test_read_only_wrapped_prose_continuation_line_is_not_refused():
     """Wrapped continuation prose starting with a verb does not trip read-only (#8703).
 
