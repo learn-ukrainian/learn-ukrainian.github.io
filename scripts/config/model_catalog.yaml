@@ -44,11 +44,13 @@ policy:
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
       Claude Opus 5.5 reviews and drives through native Claude only; no Claude model
       reviews through Cursor (operator decision D-129, #10464).
-      Grok is native CLI ONLY at grok-4.7 for every seat
-      (interactive, orchestrator, ask, dispatch), with the Cursor transport fallback.
-      Operator decision 2026-10-05 (#9769): native Grok and the Cursor seat pinned to
-      grok-4.7-high are regular code/infra reviewers at every risk, including critical;
-      verdicts require runtime model attestation and exclude xAI-authored changes.
+      Grok authoring and review are native CLI ONLY at grok-4.7 (#10622).
+      Cursor and Hermes are not formal review routes. The cursor orchestrator pin
+      stays grok-4.7 because the seat allowlist and cursor bridge require it; that
+      pin is not a stream driver and not a formal reviewer.
+      Operator decision 2026-10-05 (#9769): native Grok reviews code and infra at
+      every risk, including critical; verdicts require runtime model attestation
+      and exclude xAI-authored changes. Native Grok does not outrank eligible Opus or Sol.
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
       Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
@@ -252,12 +254,11 @@ review_scheduler:
       credential_limit: 1
       capacity_weight: 1.0
     cursor:
-      # Operator decision 2026-10-02 (#9488): only the pinned models below are
-      # formal identities on this multi-model harness. Each is dispatched with an
-      # exact Cursor slug and record_cf_verdict accepts its verdict only from the
-      # runtime-reported model. Composer (Kimi lineage), Auto and Cursor-routed
-      # Claude stay unpinned, so the resolver excludes them as unattested.
-      formal_review_eligible: true
+      # Operator decision 2026-10-02 (#9488) pinned Cursor review identities.
+      # #10622: Cursor is not a formal reviewer. The candidate remains so the
+      # seat route and import constant still resolve; formal review refuses it.
+      formal_review_eligible: false
+      formal_review_exclusion_reason: "native Grok only; Cursor transport is not a formal reviewer (#10622)"
       models: [{role: legacy_reviewers, seat: xai_reviewer}]
       participant: cursor
       adapter_transport: acp
@@ -298,6 +299,10 @@ review_scheduler:
 # Bounded execution routing after a frontier advisory pass. This is deliberately
 # separate from review_ladders: it selects an implementation/investigation lane,
 # not a formal reviewer or a release authority.
+# Explicit author pins are concrete catalog ids. Hard-code preference is Opus;
+# routine-code preference is Sonnet (formal_cf_defaults.claude). Reviewer
+# preference is last_resort: Opus is the frontier primary, so a healthy route
+# selects native Opus unless that family is excluded, then native Sol.
 execution_routing:
   sol_advised_bounded:
     advisor:
@@ -1159,9 +1164,7 @@ orchestrator_seats:
     escalate_model_id: {role: legacy_reviewers, seat: xai_reviewer}
     escalate_effort: high
     escalate_when: n/a_same_sku
-    fallback_transport: cursor
-    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
-    note: native grok-4.7; Cursor explicit grok-4.7 if native dark (not a quality escalate)
+    note: native grok-4.7 harness pin; not a stream driver and not a Cursor fallback (#10622)
   agy:
     model_id: {role: bounded_fallback}
     effort: high
@@ -1255,8 +1258,6 @@ formal_cf_defaults:
   grok:
     model_id: {role: legacy_reviewers, seat: xai_reviewer}
     effort: high
-    fallback_transport: cursor
-    fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
   agy:
     # #10073: native low/medium code review; Ukrainian review needs Sources MCP.
     model_id: {role: bounded_fallback}
@@ -1265,38 +1266,38 @@ formal_cf_defaults:
 
 review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
-  # Operator decision 2026-10-05 (#9769): Opus, native Grok, then Cursor Grok.
-  # Both Grok transports require runtime attestation and exclude xAI authors.
+  # #10622: Opus is the only frontier primary. Sol, native Grok, Sonnet and
+  # Gemini are last resort, so a healthy route selects native Opus unless the
+  # author family excludes it, then native Sol. Cursor stays on the ladder only
+  # so the seat route still resolves; its endpoint is not formal-review eligible.
   # No Claude model reviews through Cursor (D-129, #10464).
   # Composer and Pool lack critical_review; critical lists them to record exclusion.
   # GLM remains explicit-pin only. Fable holds no review role at any risk (#9583).
   # Grok reviews security code statically: CI is its execution proof and the
   # review requests no execution (core.md P2; D-129, #10464).
   critical:
-    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
   # High lists only review_scheduler.risk_reviewer_models.high (#9538): when
   # no seat is eligible the resolver returns no reviewer with a stated reason.
   high:
-    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
   medium: &practical_first_code_review
-    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: xai_reviewer, route_name: cursor_fallback, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
-    - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
+    - [{role: openai_frontier_coder, seat: openai_frontier, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: xai_reviewer, route_name: native, field: legacy_label}, {role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}, {role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
   low: *practical_first_code_review
 
 # Explicit --model rewrite when a hard substitution changes the agent (#8855).
@@ -1337,6 +1338,7 @@ seats:
       native:
         legacy_name: openai_frontier
         effort: high
+        last_resort: true
         route: codex
         transport: native_codex
         invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model {wire_id} --effort high
@@ -1359,6 +1361,7 @@ seats:
       native:
         legacy_name: grok-4.7
         effort: high
+        last_resort: true
         suitability_roles:
         - critical_review
         route: grok
@@ -1437,6 +1440,7 @@ seats:
       native:
         legacy_name: claude-sonnet-5-5
         effort: high
+        last_resort: true
         route: claude
         transport: native_claude
         invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id}
@@ -1534,6 +1538,7 @@ seats:
     routes:
       native:
         legacy_name: gemini-3.8-flash-high
+        last_resort: true
         review_profiles: [code]
         capabilities: [code_review]
         health_keys: [agy, gemini]

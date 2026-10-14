@@ -1,6 +1,6 @@
 # Fleet driver routing — mandatory card + breadth (operator GO 2026-08-06)
 
-**Failure prevented:** Epic drivers (especially Grok) fixate on a small subset of
+**Failure prevented:** Epic drivers fixate on a small subset of
 seats (e.g. Claude Sonnet only), under-use heap/economical workers, and rarely
 use **advisor → cheap implement** even when a Sol advisory envelope would unlock Luna
 or weaker models. Measured incident: atlas night drive 2026-08-06 used 2/9
@@ -30,13 +30,14 @@ and ≥2 tiers for 14 consecutive days. A review does not expire the standing ru
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
 | **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high); bounded envelopes use Sol only (§2) |
-| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (code/infra CF through native CLI and Cursor at every risk with runtime attestation, operator decision 2026-10-05 (#9769); never a content judge) |
+| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | Claude Opus 5.5 first for hard code, GPT-6.1 Sol @ high as the native reviewer for an Anthropic author and the hard-code fallback, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), native Grok 4.7 (code/infra review through the native CLI at every risk with runtime attestation, operator decision 2026-10-05 (#9769); never a content judge; Cursor is not a formal route, #10622) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
 review seat and, since operator 2026-09-29 (#9230), took over the former Astra advisory seat at `high`.
 Ordinary advice uses Opus 5.5 / Sol 6.1; Fable and the former Astra seat hold no advisory role (#9583).
 Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
+Use max only for unusually hard scouting.
 `gpt-6-sol` and `gpt-6-astra` are not routable. Designated approval remains separate
 from ordinary advice; do not spend advisory turns on ordinary implementation or review.
 
@@ -47,6 +48,16 @@ approval completes it; a proposal by any other agent needs both; if they disagre
 
 Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or smoke
 `--limit 5` jobs.
+
+**Stream drivers (#10622).** Ordered stream drivers are `claude-opus-5-5`, then
+`gemini-3.8-flash-high`, with fallbacks `gpt-6.1-sol` and `gemini-3.1-pro-high`
+(`gemini-3.1-pro-high` is the certified launcher default; Flash is also certified).
+Native Grok authors and reviews; it does not drive a stream. Cursor and Hermes are not
+formal review routes and are not ordered author routes. The Cursor orchestrator pin stays
+a harness identity, not a reviewer and not a stream driver. Muse
+launcher pin `muse-wonder-full-1.0` is driver-only, not a catalog seat, guard parity unproven, and never
+a critical or security reviewer. Capacity pacing is task fit, then health and risk, then reserve against
+an even burn. Unknown health stays unknown. A burst seat is not the default.
 
 ---
 
@@ -59,8 +70,8 @@ card; `delegate.py` refuses it otherwise. The driver seat, design, consults, dis
 unclear work pin `grok-4.7-high` or `composer-2.5`; a review runs the approved concrete model the reviewer
 resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
-advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
-pool has headroom. A review of a Grok author runs the reviewer resolver's non-xAI pick
+advisor/authority, native Grok is the burst author. Do not select Cursor or Hermes as a
+Grok author or reviewer route (#10622). A review of a Grok author runs the reviewer resolver's non-xAI pick
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
 through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
@@ -88,13 +99,13 @@ lists cool/idle free seats
 `dispatch_fallbacks` has a row (e.g. `codex → cursor`); otherwise it **refuses**
 unless `--force-agent` with a written NOTE.
 
-**Concurrent drivers (typical):** ~**2 Grok** + **1 Claude** + **1–4 Codex**. Shared free
+**Concurrent drivers (typical):** Grok is not a stream driver (#10622). **1 Claude** + **1–4 Codex**, plus certified Gemini pins. Shared free
 worker pools — coordinate via active-delegate + disjoint owned paths so drivers do not
 stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
+| **Cursor, included pool** | not an ordered Grok author or reviewer route (#10622) | The seat pin is a harness identity, not a formal reviewer. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review of a Grok author goes to the `resolve-reviewer` non-xAI pick instead. |
 | **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
