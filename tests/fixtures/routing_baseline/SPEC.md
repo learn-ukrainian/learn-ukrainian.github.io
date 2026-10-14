@@ -366,3 +366,67 @@ refusal with the native CLI, or the allowlist refusal without it. All other
 launchers, dispatch rows, catalog, registry, capacity, role, approval, fallback,
 holder and source-contract surfaces remain identical. Any other difference
 blocks regeneration.
+
+## Reconciled P2 routing overlay (#10622)
+
+`tests/review/fixtures/routing-10622.json.gz` applies after every earlier
+approved overlay, for both `host-cli` and `no-cli`. It has sorted JSON keys
+and zero gzip mtime. Its literal SHA-256 is
+`9d1b7efd38c59bc5a3b0012a9fe3395ef3e5e06fc3f5c415255800056d8dde66`.
+The test module independently pins this digest and this specification.
+
+The supported policy is native Sol for healthy Anthropic-authored reviews
+and native Opus for healthy OpenAI/xAI/Google-authored reviews at all four
+risks. Hard gates precede preference. Opus is the primary frontier reviewer;
+Sol, native Grok, Sonnet and Gemini retain their qualified fallback roles.
+Cursor is not a formal review endpoint. Keeping its identity in an inventory
+or ladder grants no permission. These edits replace exactly three surfaces:
+
+- `catalog`: only the Grok fallback transport/model fields in
+  `formal_cf_defaults.grok` and `orchestrator_seats.grok` are removed. The Grok
+  seat note and the existing native-route policy note explain the boundary.
+  The Cursor endpoint gains `formal_review_eligible: false` and its literal
+  exclusion reason. Exactly four candidates gain `last_resort: true`.
+  The four literal review ladders retain candidate identities and risk gates.
+  No model, capability, tier, author pin, budget rule or other catalog field
+  changes. Grok authoring through native CLI or Cursor `grok-4.7-high` is
+  authorized; formal review is native-only. Only the standalone launcher's
+  Hermes opt-in remains in separately owned security follow-up #10628.
+- `roles`: 220 of 855 complete receipts gain only
+  `formal_endpoint_not_eligible` on the Cursor Grok candidate in the four
+  risk-typed `code_review_*` roles. Existing exclusion ordering is preserved.
+  `legacy_reviewers` is unchanged inventory data. Its `purpose='launch'`
+  constructs argv without execution; it does not certify formal permission.
+  Unknown health, wire ids, argv, provenance and every other field stay frozen.
+- `reviewer`: 1,136 of 1,480 complete receipts differ. Trace order follows the
+  literal ladders. The formal Cursor endpoint exclusion precedes the old
+  capability/isolation and pin checks, clears its score and suitability,
+  and also replaces Composer's former unpinned-endpoint reason. Earlier
+  family, subject and language refusals remain. Eligible unpinned primary
+  Opus replaces 310 Sol and 176 Sonnet selections. Eight formerly successful
+  Cursor pins now select nothing with an explicit hard-gate refusal. Thus
+  494 selections differ. Fallback selection adds the literal last-resort
+  note; 206 notes and eight fail-closed reasons differ. Other reviewer fields,
+  including health, capacity, identity, credit, risk and policy metadata,
+  remain frozen. Non-formal evaluation keeps its existing endpoint semantics.
+
+`expected_p2_catalog`, `expected_p2_roles` and `expected_p2_reviewer` express
+these deltas using literal policy expectations and the historical receipts,
+without importing resolver decisions or deriving expectations from a fresh
+capture. `validate_p2_overlay` checks the entire replacement against them.
+Mutation tests reject unauthorized surfaces, input replacement, identity,
+capability, health, legacy permission, selection, score, reason and metadata
+changes. A separate literal 16-case healthy author/risk test exercises the
+actual resolver. It supplements the unchanged non-author oracle; it is not
+independent review or held-out acceptance proof.
+
+Both complete captures use the existing scoped `CAPTURE_RUNNER`. All twelve
+surfaces are compared. All input identities and denominators remain unchanged:
+1,480 reviewer, 855 role, 880 dispatch, 112 adapter, 70 launcher and 42 capacity
+rows. The other nine surfaces, including `routing_holders`, remain identical.
+Historical baselines, inputs, occurrence census, `capture.py`, `SHA256SUMS`
+and every prior overlay remain byte-identical. The non-author census pins all
+24 historical fixture blobs independently, excluding only this owned SPEC
+update and the new #10622 overlay. This branch proves the ordinary source
+repair only; exact-head independent review, CI, merge, deployment and live
+core proof belong to the accountable driver.

@@ -52,8 +52,8 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 **Stream drivers (#10622).** Ordered stream drivers are `claude-opus-5-5`, then
 `gemini-3.8-flash-high`, with fallbacks `gpt-6.1-sol` and `gemini-3.1-pro-high`
 (`gemini-3.1-pro-high` is the certified launcher default; Flash is also certified).
-Native Grok authors and reviews; it does not drive a stream. Cursor and Hermes are not
-formal review routes and are not ordered author routes. The Cursor orchestrator pin stays
+Grok authors through native CLI or Cursor and reviews through native CLI only; it does not
+drive a stream. Cursor and Hermes are not formal review routes. The Cursor orchestrator pin stays
 a harness identity, not a reviewer and not a stream driver. Muse
 launcher pin `muse-wonder-full-1.0` is driver-only, not a catalog seat, guard parity unproven, and never
 a critical or security reviewer. Capacity pacing is task fit, then health and risk, then reserve against
@@ -70,8 +70,9 @@ card; `delegate.py` refuses it otherwise. The driver seat, design, consults, dis
 unclear work pin `grok-4.7-high` or `composer-2.5`; a review runs the approved concrete model the reviewer
 resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
-advisor/authority, native Grok is the burst author. Do not select Cursor or Hermes as a
-Grok author or reviewer route (#10622). A review of a Grok author runs the reviewer resolver's non-xAI pick
+advisor/authority, Grok is a burst author through native CLI or Cursor `grok-4.7-high`.
+Grok formal review uses native CLI only; Hermes is not an authorized route (#10622).
+Only the standalone launcher's Hermes opt-in remains security follow-up #10628. A review of a Grok author runs the reviewer resolver's non-xAI pick
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
 through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
@@ -105,7 +106,7 @@ stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor, included pool** | not an ordered Grok author or reviewer route (#10622) | The seat pin is a harness identity, not a formal reviewer. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
+| **Cursor, included pool** | Grok burst authoring; never formal review (#10622) | The seat pin is a harness identity, not a formal reviewer. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review of a Grok author goes to the `resolve-reviewer` non-xAI pick instead. |
 | **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
@@ -119,7 +120,7 @@ stampede one hot lane.
 
 **Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / k3-256k / GLM
 (`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
-`resolve-reviewer` pick, which may be native or attested Cursor Grok at every risk (operator decision 2026-10-05, #9769). A valid operator reset
+`resolve-reviewer` pick, which may be native Grok at every risk (operator decision 2026-10-05, #9769). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
 

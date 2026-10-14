@@ -578,8 +578,8 @@ def test_formal_cf_defaults_pin_role_specific_efforts():
     assert defaults["glm"]["escalate_effort"] == "max"
     assert defaults["glm"]["escalate_model_id"] == "glm-5.3"
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
-    assert defaults["grok"]["fallback_transport"] == "cursor"
-    assert defaults["grok"]["fallback_model_id"] == "grok-4.7"
+    assert "fallback_transport" not in defaults["grok"]
+    assert "fallback_model_id" not in defaults["grok"]
     assert defaults["agy"]["model_id"] == "gemini-3.8-flash-high"
     assert defaults["agy"]["effort"] == "high"
     assert defaults["agy"]["formal_review_eligible"] is True
@@ -601,7 +601,8 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     # Operator 2026-09-22: Opus 5.5 drives; #9583: Opus 5.5 and Sol 6.1 are the advisors.
     assert seats["claude"]["model_id"] == "claude-opus-5-5"
     assert seats["claude"]["effort"] == "high"
-    assert seats["grok"]["fallback_model_id"] == "grok-4.7"
+    assert "fallback_model_id" not in seats["grok"]
+    assert "fallback_transport" not in seats["grok"]
     # Operator decision 2026-09-30 (#9274): the seat runs a concrete pin; Auto is coding-dispatch only.
     assert seats["cursor"]["model_id"] == "grok-4.7"
     assert seats["cursor"]["auto_scope"] == "write_implementation_dispatch_with_green_dor"
@@ -628,19 +629,20 @@ def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
 
 
 def test_high_ladder_admits_sol_opus_and_grok():
-    """#9769: high-risk review admits both Grok transports alongside Opus and Sol.
+    """#10622: the inventory retains Cursor, but formal review excludes it.
 
     D-129 (#10464): Opus reviews natively only; no Claude model reviews through Cursor.
     """
     ladders = load_model_catalog()["review_ladders"]
     assert ladders["high"] == [
-        ["openai_frontier"],
         ["claude-opus-5-5"],
-        ["grok-4.7"],
         ["grok-4.7-cursor-fallback"],
+        ["openai_frontier"],
+        ["grok-4.7"],
     ]
     assert ladders["medium"] == ladders["low"]
-    assert ladders["medium"][:4] == ladders["high"]
+    assert ["openai_frontier"] in ladders["medium"]
+    assert ladders["medium"][-1] == ["grok-4.7", "claude-sonnet-5-5", "gemini-3.8-flash-high"]
     assert len(ladders["medium"]) > len(ladders["high"])
 
 
@@ -927,15 +929,20 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
     # #9488: the Cursor endpoint is formal only for an explicit, policy-admitted
     # pin; Composer (Kimi lineage) stays non-eligible.
     broken_ep = deepcopy(load_model_catalog())
+    broken_ep["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
     broken_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = ["composer-2.5"]
-    with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor\.models cannot pin 'composer-2\.5'"):
+    with pytest.raises(
+        ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor\.models cannot pin 'composer-2\.5'"
+    ):
         validate_catalog(broken_ep)
     unpinned_ep = deepcopy(load_model_catalog())
+    unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
     unpinned_ep["review_scheduler"]["endpoints"]["cursor"]["models"] = []
     with pytest.raises(ModelCatalogError, match=r"review_scheduler\.endpoints\.cursor needs an explicit models pin"):
         validate_catalog(unpinned_ep)
 
     broken_ep_models = deepcopy(load_model_catalog())
+    broken_ep_models["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
     broken_ep_models["review_scheduler"]["endpoints"]["cursor"]["models"] = ["auto"]
     with pytest.raises(ModelCatalogError, match=r"cannot treat 'auto' as a formal review identity"):
         validate_catalog(broken_ep_models)
@@ -1012,14 +1019,21 @@ def test_catalog_rejects_future_review_date():
 def test_critical_ladder_anthropic_authority_is_opus_without_fable():
     catalog = load_model_catalog()
     flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
-    assert flat[:4] == ["openai_frontier", "claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback"]
-    assert flat[4:] == ["composer-2.5", "pool", "pool-xs"]
+    assert flat == [
+        "claude-opus-5-5",
+        "grok-4.7-cursor-fallback",
+        "composer-2.5",
+        "pool",
+        "pool-xs",
+        "openai_frontier",
+        "grok-4.7",
+    ]
     # #9583: Fable is no longer a critical last resort.
     assert not any(name.startswith("claude-fable-") for name in flat)
     assert "claude-opus-5" not in flat
     assert "claude-sonnet-5-5" not in flat
     for name in flat:
-        assert catalog["review_candidates"][name].get("last_resort", False) is False
+        assert catalog["review_candidates"][name].get("last_resort", False) == (name in {"openai_frontier", "grok-4.7"})
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
@@ -1270,7 +1284,7 @@ def test_sol_holds_the_astra_advisor_seat_and_runtime_review_pins():
     assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6.1-sol --effort high")
     assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
     for risk in ("low", "medium", "high"):
-        assert catalog["review_ladders"][risk][0] == ["openai_frontier"]
+        assert catalog["review_ladders"][risk][0] == ["claude-opus-5-5"]
 
 
 def test_active_codex_routes_are_gpt6_only():

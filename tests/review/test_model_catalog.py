@@ -249,6 +249,293 @@ APPROVED_BASELINE = approved_claude_account_dispatch_baseline(
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
 
 
+# #10622 is an append-only policy overlay. Prior captures and every input stay frozen.
+P2_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10622.json.gz"
+P2_CURSOR_REASON = "native Grok only; Cursor transport is not a formal reviewer (#10622)"
+P2_LAST_RESORT = {"openai_frontier", "grok-4.7", "claude-sonnet-5-5", "gemini-3.8-flash-high"}
+P2_LADDERS = {
+    "critical": [
+        ["claude-opus-5-5"],
+        ["grok-4.7-cursor-fallback"],
+        ["composer-2.5"],
+        ["pool"],
+        ["pool-xs"],
+        ["openai_frontier"],
+        ["grok-4.7"],
+    ],
+    "high": [["claude-opus-5-5"], ["grok-4.7-cursor-fallback"], ["openai_frontier"], ["grok-4.7"]],
+    "medium": [
+        ["claude-opus-5-5"],
+        ["grok-4.7-cursor-fallback"],
+        ["composer-2.5"],
+        ["pool"],
+        ["pool-xs"],
+        ["openai_frontier"],
+        ["grok-4.7", "claude-sonnet-5-5", "gemini-3.8-flash-high"],
+    ],
+    "low": [
+        ["claude-opus-5-5"],
+        ["grok-4.7-cursor-fallback"],
+        ["composer-2.5"],
+        ["pool"],
+        ["pool-xs"],
+        ["openai_frontier"],
+        ["grok-4.7", "claude-sonnet-5-5", "gemini-3.8-flash-high"],
+    ],
+}
+
+P2_NATIVE_NOTE = "GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug. Claude Opus 5.5 reviews and drives through native Claude only; no Claude model reviews through Cursor (operator decision D-129, #10464). Grok authors through native CLI or Cursor grok-4.7-high and reviews through native CLI only at grok-4.7; it is not a stream driver (#10622). Only the standalone launcher Hermes opt-in remains security follow-up #10628. Cursor and Hermes are not formal review routes. The cursor orchestrator pin stays grok-4.7 because the seat allowlist and cursor bridge require it; that pin is not a stream driver and not a formal reviewer. Operator decision 2026-10-05 (#9769): native Grok reviews code and infra at every risk, including critical; verdicts require runtime model attestation and exclude xAI-authored changes. Native Grok does not outrank eligible Opus or Sol. Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok. Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted."
+
+
+def expected_p2_catalog(before):
+    """Literal policy edits, independent of catalog expansion and capture output."""
+    expected = deepcopy(before)
+    for section in ("formal_cf_defaults", "orchestrator_seats"):
+        assert expected[section]["grok"].pop("fallback_transport") == "cursor"
+        assert expected[section]["grok"].pop("fallback_model_id") == "grok-4.7"
+    expected["orchestrator_seats"]["grok"]["note"] = (
+        "native grok-4.7 harness pin; not a stream driver and not a Cursor fallback (#10622)"
+    )
+    expected["policy"]["notes"][2] = P2_NATIVE_NOTE
+    for name in P2_LAST_RESORT:
+        expected["review_candidates"][name]["last_resort"] = True
+    expected["review_ladders"] = deepcopy(P2_LADDERS)
+    endpoint = expected["review_scheduler"]["endpoints"]["cursor"]
+    assert endpoint["formal_review_eligible"] is True
+    endpoint.update(formal_review_eligible=False, formal_review_exclusion_reason=P2_CURSOR_REASON)
+    return expected
+
+
+def expected_p2_roles(before, inputs):
+    """Only risk-typed roles gain the Cursor endpoint exclusion; inventory stays data."""
+    expected = deepcopy(before)
+    for case, receipt in zip(inputs, expected, strict=True):
+        if case["role"] not in {f"code_review_{risk}" for risk in P2_LADDERS}:
+            continue
+        for candidate in receipt.get("value", {}).get("candidates", []):
+            if (candidate["seat"], candidate["route_name"]) == ("xai_reviewer", "cursor_fallback"):
+                candidate["exclusion_reasons"].append("formal_endpoint_not_eligible")
+    return expected
+
+
+def expected_p2_reviewer(before, case):
+    """Keep frozen gate results and identities; apply only the ordered P2 delta.
+
+    This is deliberately scoped to the historical matrix, not another resolver.
+    Eligible unpinned Opus wins; other picks and all earlier gates stay frozen.
+    A Cursor endpoint refusal precedes capability/isolation and pin checks.
+    """
+    expected = deepcopy(before)
+    value = expected["value"]
+    if not value["trace"]:
+        return expected
+    trace = {row["name"]: row for row in value["trace"]}
+    old_pick = (value["selected"] or {}).get("name")
+    for name, row in trace.items():
+        if row["status"] == "selected":
+            row["status"] = "eligible"
+        endpoint_reasons = (
+            {
+                None,
+                "isolation required but candidate does not support process isolation",
+                "missing required capabilities: ['sealed_evidence']",
+                "missing required capabilities: ['unsupported']",
+            }
+            if name == "grok-4.7-cursor-fallback"
+            else {"sealed endpoint 'cursor' is not pinned for model 'composer-2.5'"}
+        )
+        if (
+            case.get("formal_review", True)
+            and name in {"grok-4.7-cursor-fallback", "composer-2.5"}
+            and row["reason"] in endpoint_reasons
+        ):
+            row.update(status="excluded", reason=P2_CURSOR_REASON, selection_score=None, suitability_rank=None)
+    # Explicit pins never inherit automatic preference; their hard gates still bind.
+    pick = old_pick
+    if old_pick == "grok-4.7-cursor-fallback":
+        assert case["pinned_candidate"] == old_pick
+        pick = None
+        value["fail_closed_reason"] = f"explicit reviewer pin {old_pick!r} failed a hard eligibility gate"
+    elif (
+        old_pick
+        and case.get("formal_review", True)
+        and not case.get("pinned_candidate")
+        and trace["claude-opus-5-5"]["status"] == "eligible"
+    ):
+        pick = "claude-opus-5-5"
+    if pick:
+        trace[pick]["status"] = "selected"
+    value["selected"] = deepcopy(trace[pick]) if pick else None
+    if pick != old_pick:
+        assert pick in {None, "claude-opus-5-5"}
+        value["substitution_note"] = None
+    elif pick in P2_LAST_RESORT:
+        prefix = f"last resort selected {pick}: no eligible primary remained or an explicit pin was requested"
+        value["substitution_note"] = "; ".join(filter(None, (prefix, value["substitution_note"])))
+    order = [name for rung in P2_LADDERS[value["resolved_risk"]] for name in rung]
+    extras = [name for name in trace if name not in order]
+    assert not extras or extras == [case["pinned_candidate"]]
+    value["trace"] = [trace[name] for name in [*order, *extras]]
+    return expected
+
+
+def validate_p2_overlay(baseline, inputs, overlay):
+    """Reject every field outside the literal policy delta, including input changes."""
+    assert set(overlay) == {"catalog", "roles", "reviewer"}
+    assert overlay["catalog"] == expected_p2_catalog(baseline["catalog"])
+    assert overlay["roles"] == expected_p2_roles(baseline["roles"], inputs["roles"])
+    expected = [
+        expected_p2_reviewer(old, case) for old, case in zip(baseline["reviewer"], inputs["reviewer"], strict=True)
+    ]
+    assert overlay["reviewer"] == expected
+
+
+def approved_p2_baseline(baseline):
+    """Apply #10622 equally to host-CLI and no-CLI expectations."""
+    overlay = json.loads(gzip.decompress(P2_OVERLAY_PATH.read_bytes()))
+    return {**baseline, **overlay}
+
+
+PRE_P2_BASELINE = APPROVED_BASELINE
+APPROVED_BASELINE = approved_p2_baseline(PRE_P2_BASELINE)
+
+
+P2_OVERLAY_DIGEST = "9d1b7efd38c59bc5a3b0012a9fe3395ef3e5e06fc3f5c415255800056d8dde66"
+PRE_P2_FIXTURE_BLOBS = {
+    "tests/fixtures/routing_baseline/SHA256SUMS": "5a6ba3c155a7c8ab1f8f6bf9980d47ebf5868853",
+    "tests/fixtures/routing_baseline/baseline.json.gz": "b4cba3427d617e955870d18264e2d85e1bbbab27",
+    "tests/fixtures/routing_baseline/capture.py": "4a404984031ecfdb31ed9abf4befbae9504b785f",
+    "tests/fixtures/routing_baseline/inputs.json": "1f5b36cd526da500fcb1013933c0eba1ba986e22",
+    "tests/fixtures/routing_baseline/no-cli/SHA256SUMS": "4e75c343979c8d9cd0a7558e0a6afb8c6fdb430c",
+    "tests/fixtures/routing_baseline/no-cli/baseline.json.gz": "d842a3c7734f1586c31247360df22e5203533971",
+    "tests/fixtures/routing_baseline/no-cli/inputs.json": "1f5b36cd526da500fcb1013933c0eba1ba986e22",
+    "tests/fixtures/routing_baseline/no-cli/occurrences.json.gz": "ba9c8c0357c2fe10b1588a3ce37348f8318ec502",
+    "tests/fixtures/routing_baseline/occurrences.json.gz": "ba9c8c0357c2fe10b1588a3ce37348f8318ec502",
+    "tests/fixtures/routing_baseline/routing-10263.json.gz": "c706611601703ca8abd792c55c19be26a23d35be",
+    "tests/review/fixtures/claude-advisor-10083.json": "dded4c0e422ad15e23543f9558bd5dcc35ef9d62",
+    "tests/review/fixtures/claude-cap-10355.json": "60cee5798fced0992427f66a574221391262af52",
+    "tests/review/fixtures/cto-wrappers-10453.json": "7440359cbda5e2d0456ee5d1271168c62c284da9",
+    "tests/review/fixtures/fenced_returns/plan-review-a1-p2-agy-r7.yaml": "d70a663e8da6750eaa6a83a81383363305bdba26",
+    "tests/review/fixtures/fenced_returns/plan-review-a1-p3-agy-r2.yaml": "499e4e57e32dfd4114df65b194674961dff7c825",
+    "tests/review/fixtures/isolated-main-prompts/lesson-rereview.md.j2": "69b4747b352cd15fe1e63bcd30c4306b76de2a16",
+    "tests/review/fixtures/isolated-main-prompts/lesson-review.md.j2": "ced41c0aad621a68982ad2bec05e0abbf2b26e17",
+    "tests/review/fixtures/isolated-main-prompts/plan-review.md.j2": "b72f7e936f6f664a15d4aa0746ab60bbbdc332f5",
+    "tests/review/fixtures/launcher-canary-10266.json": "94e378722fb1e70bc5f5cfe6ab45190a520fc23b",
+    "tests/review/fixtures/routing-10016.json.gz": "28c6c43395c1f34c7a30277636240f20b34ecaf1",
+    "tests/review/fixtures/routing-10016.md": "df834617bfd496eeee889fdba080013fddbf3196",
+    "tests/review/fixtures/routing-10073.json.gz": "a37189e451203328e538b4e5f40f6fb6376492e7",
+    "tests/review/fixtures/routing-10073.md": "18ef33da05e46f178f2456723fb00ae636e01adf",
+    "tests/review/fixtures/routing-10464.json.gz": "b432e7dd5dc186c27450efe344925667e277ed93",
+}
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_p2_overlay_is_pinned_and_exactly_policy_scoped(configuration):
+    raw = P2_OVERLAY_PATH.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == P2_OVERLAY_DIGEST
+    assert raw[4:8] == bytes(4)
+    overlay = json.loads(gzip.decompress(raw))
+    # The only configuration-specific data is outside this overlay's three surfaces.
+    original = json.loads(
+        gzip.decompress((FIXTURE / ("no-cli" if configuration == "no-cli" else "") / "baseline.json.gz").read_bytes())
+    )
+    assert {key: original[key] for key in ("catalog", "roles", "reviewer")} == {
+        key: BASELINE[key] for key in ("catalog", "roles", "reviewer")
+    }
+    before = deepcopy(PRE_P2_BASELINE)
+    validate_p2_overlay(before, APPROVED_INPUTS, overlay)
+    after = approved_p2_baseline(before)
+    assert before == PRE_P2_BASELINE
+    assert {key: value for key, value in after.items() if key not in overlay} == {
+        key: value for key, value in before.items() if key not in overlay
+    }
+    assert sum(a != b for a, b in zip(before["roles"], after["roles"], strict=True)) == 220
+    assert sum(a != b for a, b in zip(before["reviewer"], after["reviewer"], strict=True)) == 1136
+    assert (
+        sum(
+            a["value"]["selected"] != b["value"]["selected"]
+            for a, b in zip(before["reviewer"], after["reviewer"], strict=True)
+        )
+        == 494
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "surface",
+        "input",
+        "catalog_identity",
+        "catalog_capability",
+        "endpoint",
+        "role_identity",
+        "role_health",
+        "legacy_permission",
+        "review_identity",
+        "review_health",
+        "review_capability",
+        "review_selection",
+        "review_reason",
+        "review_score",
+        "review_risk",
+        "review_metadata",
+        "review_note",
+    ),
+)
+def test_p2_scope_guard_rejects_unauthorized_changes(mutation):
+    overlay = json.loads(gzip.decompress(P2_OVERLAY_PATH.read_bytes()))
+    if mutation == "surface":
+        overlay["adapters"] = []
+    elif mutation == "input":
+        overlay["inputs"] = APPROVED_INPUTS
+    elif mutation == "catalog_identity":
+        overlay["catalog"]["models"]["grok-4.7"]["family"] = "openai"
+    elif mutation == "catalog_capability":
+        overlay["catalog"]["models"]["grok-4.7"]["roles"].append("ukrainian_review")
+    elif mutation == "endpoint":
+        overlay["catalog"]["review_scheduler"]["endpoints"]["cursor"]["formal_review_eligible"] = True
+    elif mutation.startswith("role_") or mutation == "legacy_permission":
+        index = next(i for i, case in enumerate(APPROVED_INPUTS["roles"]) if case["role"] == "legacy_reviewers")
+        row = next(row for row in overlay["roles"][index]["value"]["candidates"] if row["transport"] == "cursor")
+        if mutation == "role_identity":
+            row["wire_id"] = "grok-4.7-high-fast"
+        elif mutation == "role_health":
+            row["health"] = "healthy"
+        else:
+            row["exclusion_reasons"].append("formal_endpoint_not_eligible")
+    else:
+        value = overlay["reviewer"][84]["value"]
+        row = next(row for row in value["trace"] if row["name"] == "grok-4.7-cursor-fallback")
+        if mutation == "review_identity":
+            row["family"] = "openai"
+        elif mutation == "review_health":
+            row["health"] = "healthy"
+        elif mutation == "review_capability":
+            row["requires_silence_timeout"] = True
+        elif mutation == "review_selection":
+            value["selected"] = row
+        elif mutation == "review_reason":
+            row["reason"] = None
+        elif mutation == "review_score":
+            row["selection_score"] = [0]
+        elif mutation == "review_risk":
+            value["resolved_risk"] = "critical"
+        elif mutation == "review_metadata":
+            value["catalog_reviewed_on"] = "2099-01-01"
+        elif mutation == "review_note":
+            value["substitution_note"] = "approved"
+    with pytest.raises(AssertionError):
+        validate_p2_overlay(PRE_P2_BASELINE, APPROVED_INPUTS, overlay)
+
+
+def test_all_prior_fixture_blobs_remain_frozen():
+    root = Path(__file__).resolve().parents[2]
+    assert len(PRE_P2_FIXTURE_BLOBS) == 24
+    for name, expected_blob in PRE_P2_FIXTURE_BLOBS.items():
+        raw = (root / name).read_bytes()
+        assert hashlib.sha1(f"blob {len(raw)}\0".encode() + raw).hexdigest() == expected_blob, name
+
+
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_claude_account_dispatch_baseline_changes_only_usage_option(configuration):
     path = FIXTURE / ("no-cli" if configuration == "no-cli" else "") / "baseline.json.gz"
@@ -605,8 +892,11 @@ def test_rules_carry_no_claude_cursor_review_pin():
         assert "Other Models pool" not in text, name
     # Cursor-authored work still needs a reviewer outside {xAI, Moonshot}.
     assert "Require a **single** cross-family reviewer from outside {xAI, Moonshot}" in assignment
-    assert "**Cursor-as-reviewer:** Eligible only against authors outside {xAI, Moonshot}." in assignment
-    assert "through native CLI and Cursor with runtime model attestation" in core
+    assert (
+        "**Cursor-as-reviewer:** Not a formal reviewer (#10622), including against authors outside {xAI, Moonshot}. The endpoint is not formal-review eligible."
+        in assignment
+    )
+    assert "through the native CLI with runtime model attestation" in core
     assert "Grok briefs: diff/CI evidence, no execution requests." in core
 
 
@@ -693,7 +983,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "958f43d7368d0552cbf1b5706df35da56cdc9408e4834e05bb0911754ae58455",
+    "SPEC.md": "d2d50b212b854b05d83b64c6b0825560e25cc56ca9a4a80ea22491c2b0aaa857",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -1017,7 +1307,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_claude_account_dispatch_baseline(
+    expected_p2_input = approved_claude_account_dispatch_baseline(
         approved_cto_wrappers_baseline(
             approved_claude_cap_baseline(
                 approved_cursor_trailer_baseline(
@@ -1034,6 +1324,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             )
         )
     )
+    assert actual == approved_p2_baseline(expected_p2_input)
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

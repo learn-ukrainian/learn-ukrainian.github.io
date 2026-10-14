@@ -393,10 +393,49 @@ def test_critical_native_grok_precedes_its_cursor_fallback_when_frontier_is_inel
         ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=FRONTIER_DOWN)
     )
     assert native.selected.name == "grok-4.7"
-    assert {row.name: row.status for row in native.trace}["grok-4.7-cursor-fallback"] == "eligible"
+    assert {row.name: row.status for row in native.trace}["grok-4.7-cursor-fallback"] == "excluded"
     fallback = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-6.1-sol", risk="critical", routing_snapshot={**FRONTIER_DOWN, "grok": "unhealthy"}
         )
     )
-    assert fallback.selected.name == "grok-4.7-cursor-fallback"
+    assert fallback.selected is None
+    assert all(row.status not in {"eligible", "selected"} for row in fallback.trace)
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize(
+    "author,model,transport",
+    [
+        ("claude-sonnet-5-5", "gpt-6.1-sol", "native_codex"),
+        ("gpt-6.1-sol", "claude-opus-5-5", "native_claude"),
+        ("grok-4.7", "claude-opus-5-5", "native_claude"),
+        ("gemini-3.8-flash-high", "claude-opus-5-5", "native_claude"),
+    ],
+)
+def test_p2_literal_healthy_author_family_defaults(risk, author, model, transport):
+    """Sixteen policy expectations frozen independently of resolver output."""
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model=author,
+            risk=risk,
+            review_profile="code",
+            routing_snapshot={
+                "claude": "healthy",
+                "codex": "healthy",
+                "grok": "healthy",
+                "agy": "healthy",
+                "cursor": "healthy",
+            },
+        )
+    )
+    assert (result.selected.concrete_model, result.selected.transport) == (model, transport)
+    assert (
+        result.selected.family
+        != {
+            "claude-sonnet-5-5": "anthropic",
+            "gpt-6.1-sol": "openai",
+            "grok-4.7": "xai",
+            "gemini-3.8-flash-high": "google",
+        }[author]
+    )

@@ -58,12 +58,13 @@ Before **every** implement `delegate.py dispatch`:
    skipped after API resolution. Briefs without issue references are not gated.
    Opening or editing an issue updates one advisory checker comment.
 3. **Default eligible code worker:** older prose named Sol @ high, per the 2026-10-09 resource-policy order.
-   #10622 orders Opus first for hard code and Sonnet first for routine code. Native Grok is a burst
-   author and reviewer, not a stream driver. On a healthy route the resolver selects native Sol for an
+   #10622 orders Opus first for hard code and Sonnet first for routine code. Grok is a burst
+   author through native CLI or Cursor, and a reviewer through native CLI only; not a stream driver.
+   Only the standalone launcher's Hermes opt-in remains security follow-up #10628. On a healthy route the resolver selects native Sol for an
    Anthropic author and native Opus otherwise; YAML rung order is not the selection. Cursor is not a
    formal reviewer. Use Claude workers through the native Claude CLI as heavily as their subscription
-   allows, within task fit and hard gates. Cursor Grok is not language-free
-   overflow. Gemini routes the catalog admits stay language-free overflow only for non-review work.
+   allows, within task fit and hard gates. Cursor Grok is authorized for ordinary authoring,
+   with explicit `grok-4.7-high`; it is not review overflow. Gemini routes the catalog admits stay language-free overflow only for non-review work.
    Explicit Luna and bounded
    Flash workers still require a Sol advisory **envelope** (`--advisory-role
    bounded_advisory_envelope`) bound through `--advisory-task`. There is no direct bounded dispatch

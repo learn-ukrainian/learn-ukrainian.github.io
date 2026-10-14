@@ -44,7 +44,9 @@ policy:
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
       Claude Opus 5.5 reviews and drives through native Claude only; no Claude model
       reviews through Cursor (operator decision D-129, #10464).
-      Grok authoring and review are native CLI ONLY at grok-4.7 (#10622).
+      Grok authors through native CLI or Cursor grok-4.7-high and reviews through
+      native CLI only at grok-4.7; it is not a stream driver (#10622).
+      Only the standalone launcher Hermes opt-in remains security follow-up #10628.
       Cursor and Hermes are not formal review routes. The cursor orchestrator pin
       stays grok-4.7 because the seat allowlist and cursor bridge require it; that
       pin is not a stream driver and not a formal reviewer.
