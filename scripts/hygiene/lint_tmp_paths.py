@@ -505,7 +505,10 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     ),
     (
         "scripts/fleet/terminal_abandon.py",
-        "Same-directory manifest staging for validator checks before atomic os.replace publication (#10594).",
+        "Same-directory manifest (#10594) and detached-bundle (#10624) staging for batch_state validation "
+        "before atomic os.replace; managed scratch helpers allocate outside the preservation parent. "
+        "Exclusive tempfile creation and finally cleanup retain existing digest-copy ownership.",
+        "0ddad365c9229769042f13a23429552a3b8592420d75a5981d2b7aff6f52aedc:1 "
         "f13f80d80757a114fe3aa614b3a23b5a2a00a66cca06151dffd8cef5be4100f9:1",
     ),
     (
