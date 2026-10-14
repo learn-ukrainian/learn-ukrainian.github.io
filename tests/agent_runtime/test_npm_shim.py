@@ -466,6 +466,7 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     tooling = root / "tooling"
     shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
     shim_dir.mkdir(parents=True)
+    _git(tooling, "init", "-q", "-b", "main")
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
     shutil.copy2(NPX_SOURCE, shim_dir / "npx")
     shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
@@ -1394,13 +1395,20 @@ def test_real_npm_allowlisted_program_runs_with_the_sentinel_intact(layout, tool
 # --- shim plumbing --------------------------------------------------------------
 
 
-def test_missing_project_interpreter_fails_closed(layout):
+@pytest.mark.parametrize("enclosing_checkout", [False, True], ids=["standalone", "enclosing-checkout"])
+def test_missing_project_interpreter_fails_closed(layout, enclosing_checkout):
     """Exit 127 when the tooling checkout has no project interpreter.
 
     The shim resolves that checkout through Git and drops every ``GIT_*``
     variable before the lookup, so a ceiling on the temp directory cannot
     keep the lookup there. A git root on the tooling checkout does.
     """
+    if enclosing_checkout:
+        _git(layout["tmp"], "init", "-q", "-b", "main")
+        parent_interpreter = layout["tmp"] / ".venv" / "bin" / "python"
+        parent_interpreter.parent.mkdir(parents=True)
+        parent_interpreter.symlink_to(sys.executable)
+        assert os.access(parent_interpreter, os.X_OK)
     tooling = layout["shim_dir"].parents[2]
     (tooling / ".venv" / "bin" / "python").unlink()
     _git(tooling, "init", "-q", "-b", "main")
