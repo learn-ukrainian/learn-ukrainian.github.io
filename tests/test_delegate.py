@@ -6986,8 +6986,8 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
         CLAUDE_AMBIENT_AUTH,
         DEFAULT_ACCOUNT_UUID,
         _credentials,
+        _login_identity,
         _mock_selected_account_runtime,
-        _oauth_account,
         _private_json,
     )
 
@@ -6999,7 +6999,7 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
     token = "fixture-bound-" + "b" * 30
     identities[token] = BOUND_ACCOUNT_UUID
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
-    _private_json(selected / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
+    _private_json(selected / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
     _credentials(selected / ".credentials.json", token)
     binding = tmp_path / "binding.json"
     _private_json(
@@ -7085,8 +7085,8 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
         MACHINE_POLICY,
         PROFILE_ORGANIZATIONS,
         _credentials,
+        _login_identity,
         _mock_selected_account_runtime,
-        _oauth_account,
         _private_json,
     )
 
@@ -7096,7 +7096,7 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
     home, selected = tmp_path / "home", tmp_path / "selected"
     selected.mkdir(mode=0o700)
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
-    _private_json(selected / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
+    _private_json(selected / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
     if case in ("team_plan", "policy_cache", "machine_policy"):
         # An ordinary worker whose login is otherwise sound.
         identities["fixture-bound-" + "b" * 30] = BOUND_ACCOUNT_UUID

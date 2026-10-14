@@ -813,6 +813,17 @@ def _print_unneeded_env_var_names(provider: str, *, harness: str | None = None) 
 
 # --- Labelled Claude account: settings inputs bound to the launch (#10619) ---
 
+# These digests are change-detection fingerprints the launch guard recomputes
+# and compares, never stored credentials. A parsed JSON selection can hold the
+# login's tokens, so its fingerprint is scrypt, a password KDF, and the digest
+# on the guard's argv stays costly to invert; file bytes and the combined
+# inputs use BLAKE2b. The domain string is public.
+_LAUNCH_DIGEST_DOMAIN = b"lu-launch-digest"
+
+
+def _launch_digest(data: bytes = b"") -> hashlib.blake2b:
+    return hashlib.blake2b(data, digest_size=32, person=_LAUNCH_DIGEST_DOMAIN)
+
 
 def _file_fingerprint(path: Path) -> str:
     """A content digest of ``path`` as Claude Code would read it, or why there is none."""
@@ -825,7 +836,7 @@ def _file_fingerprint(path: Path) -> str:
     try:
         if not stat.S_ISREG(os.fstat(fd).st_mode):
             return "not_regular"
-        digest = hashlib.sha256()
+        digest = _launch_digest()
         while chunk := os.read(fd, 1 << 20):
             digest.update(chunk)
         return digest.hexdigest()
@@ -836,7 +847,9 @@ def _file_fingerprint(path: Path) -> str:
 
 
 def _canonical_digest(value: object) -> str:
-    return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+    """scrypt of ``value``'s canonical JSON (the scrypt paper's interactive cost)."""
+    data = json.dumps(value, sort_keys=True).encode()
+    return hashlib.scrypt(data, salt=_LAUNCH_DIGEST_DOMAIN, n=1 << 14, r=8, p=1, dklen=32).hex()
 
 
 def _json_fingerprint(path: Path, select: Callable[[object], object]) -> str:
@@ -979,7 +992,7 @@ def claude_labelled_inputs_digest(
             for name in ("settings.json", "settings.local.json")
         },
     }
-    return hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
+    return _launch_digest(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
 
 
 def _option_value(argv: list[str], name: str) -> str | None:

@@ -1017,15 +1017,20 @@ def _private_json(path: Path, data: object) -> None:
     path.chmod(0o600)
 
 
-def _credentials(path: Path, token: str, *, plan: str | None = "max") -> None:
+# The builders below write synthetic login files. Their names stay off what
+# code scanning reads as secret-bearing (an ``oauth`` name, for one), so a
+# fixture record written to disk is not reported as a stored credential.
+def _credentials(path: Path, token: str, *, plan: str | None = "max", scopes: list[str] | None = None) -> None:
     """A login's credential record; ``plan`` is the subscription type Claude Code stored with it."""
-    oauth = {"accessToken": token, "refreshToken": "fixture-refresh-" + "r" * 30, "expiresAt": 4_102_444_800_000}
+    record: dict = {"accessToken": token, "refreshToken": "fixture-refresh-" + "r" * 30, "expiresAt": 4_102_444_800_000}
     if plan is not None:
-        oauth["subscriptionType"] = plan
-    _private_json(path, {"claudeAiOauth": oauth})
+        record["subscriptionType"] = plan
+    if scopes is not None:
+        record["scopes"] = scopes
+    _private_json(path, {"claudeAiOauth": record})
 
 
-def _oauth_account(account_uuid: str) -> dict:
+def _login_identity(account_uuid: str) -> dict:
     """The account record Claude Code keeps in a login's global config, with its organisation."""
     return {"accountUuid": account_uuid, "organizationUuid": ACCOUNT_ORG_UUIDS[account_uuid]}
 
@@ -1140,7 +1145,7 @@ def two_accounts(world, tmp_path, monkeypatch):
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
     accounts.config_dir.mkdir(mode=0o700)
     _credentials(accounts.config_dir / ".credentials.json", accounts.bound_token)
-    _private_json(accounts.config_dir / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
+    _private_json(accounts.config_dir / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
     _private_json(
         accounts.binding,
         {

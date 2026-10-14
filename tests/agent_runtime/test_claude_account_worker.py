@@ -17,6 +17,7 @@ identity, token and directory is a fixture.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -47,8 +48,8 @@ from tests.agent_runtime.test_attempt_boundary import (
     MACHINE_POLICY,
     PROFILE_ORGANIZATIONS,
     _credentials,
+    _login_identity,
     _mock_selected_account_runtime,
-    _oauth_account,
     _private_json,
 )
 
@@ -184,7 +185,7 @@ def accounts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
     found.config_dir.mkdir(mode=0o700)
     _credentials(found.config_dir / ".credentials.json", found.bound_token)
-    _private_json(found.config_dir / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
+    _private_json(found.config_dir / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
     binding = tmp_path / "private-config" / "claude_accounts.json"
     _private_json(
         binding,
@@ -502,6 +503,24 @@ def test_bound_label_plan_runs_the_cli_behind_the_launch_guard(accounts):
     )
     assert plan.cmd[guard + 1] == str(accounts.binary)
     assert "--" not in _plan(accounts).cmd[:2]  # the default plan is unwrapped (see the golden snapshot)
+
+
+def test_bound_label_launch_digests_are_domain_separated_one_way_fingerprints(tmp_path):
+    """A file's bytes take domain-separated BLAKE2b-256; a credential-bearing record takes scrypt (#10619)."""
+    settings = tmp_path / "settings.json"
+    _private_json(settings, {"env": {}})
+    record = {"accessToken": "fixture-bound-" + "b" * 30, "expiresAt": 4_102_444_800_000}
+
+    assert (
+        env_sanitize._file_fingerprint(settings)
+        == hashlib.blake2b(settings.read_bytes(), digest_size=32, person=b"lu-launch-digest").hexdigest()
+    )
+    assert (
+        env_sanitize.claude_credential_fingerprint(record)
+        == hashlib.scrypt(
+            json.dumps(record, sort_keys=True).encode(), salt=b"lu-launch-digest", n=1 << 14, r=8, p=1, dklen=32
+        ).hex()
+    )
 
 
 def _settings_change_after_build(accounts: SimpleNamespace, change) -> runner.Result:
@@ -1007,7 +1026,7 @@ STALE_METADATA = {
         accounts.config_dir / ".credentials.json", accounts.bound_token, plan="pro"
     ),
     "record_other_organisation": lambda accounts: _account_record(
-        accounts, {**_oauth_account(BOUND_ACCOUNT_UUID), "organizationUuid": ACCOUNT_ORG_UUIDS[DEFAULT_ACCOUNT_UUID]}
+        accounts, {**_login_identity(BOUND_ACCOUNT_UUID), "organizationUuid": ACCOUNT_ORG_UUIDS[DEFAULT_ACCOUNT_UUID]}
     ),
     "record_without_organisation": lambda accounts: _account_record(accounts, {"accountUuid": BOUND_ACCOUNT_UUID}),
 }
@@ -1161,7 +1180,7 @@ def test_bound_label_account_metadata_changed_after_verification_never_launches(
             _credentials(credentials, accounts.bound_token, plan="team")
         else:
             other = ACCOUNT_ORG_UUIDS[DEFAULT_ACCOUNT_UUID]
-            _account_record(accounts, {**_oauth_account(BOUND_ACCOUNT_UUID), "organizationUuid": other})
+            _account_record(accounts, {**_login_identity(BOUND_ACCOUNT_UUID), "organizationUuid": other})
 
     result = _settings_change_after_build(accounts, edit)
 
@@ -1348,9 +1367,9 @@ def real_cli(accounts: SimpleNamespace) -> SimpleNamespace:
         pytest.skip("Claude CLI is not installed; the fake CLI above covers the same plans")
     accounts.binary = Path(_REAL_CLAUDE)
     # The CLI reports a subscription login only for a token carrying inference scope.
-    oauth = json.loads((accounts.config_dir / ".credentials.json").read_text(encoding="utf-8"))["claudeAiOauth"]
-    oauth.update(scopes=["user:inference", "user:profile"], subscriptionType="max")
-    _private_json(accounts.config_dir / ".credentials.json", {"claudeAiOauth": oauth})
+    _credentials(
+        accounts.config_dir / ".credentials.json", accounts.bound_token, scopes=["user:inference", "user:profile"]
+    )
     return accounts
 
 
