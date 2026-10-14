@@ -22,8 +22,8 @@ from scripts.fleet import credit_lane
 from scripts.fleet.prepaid_status import api_lane_status_from_account
 
 
-def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str, Any]:
-    """Use the warm Monitor snapshot, or a blocking refresh when explicitly fresh/offline."""
+def read_budget(*, fresh: bool = False, transport: str = "dispatch", for_display: bool = False) -> dict[str, Any]:
+    """Read routing inputs; only the usage CLI opts into diagnostic display rows."""
     if not fresh:
         base = os.environ.get("DELEGATE_MONITOR_API", "http://127.0.0.1:8765").rstrip("/")
         query = urllib.parse.urlencode({"transport": transport})
@@ -34,7 +34,8 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
                 isinstance(budget.get(k), dict) for k in ("agents", "api_accounts")
             ):
                 raise ValueError("invalid routing-budget payload")
-            return {**budget, "source": "monitor-api"}
+            snapshot = {**budget, "source": "monitor-api"}
+            return _attach_status_observations(snapshot) if for_display else snapshot
         except (OSError, urllib.error.URLError, ValueError, json.JSONDecodeError):
             print("Monitor snapshot unavailable; running blocking native probes.", file=sys.stderr)
     from scripts.api.state_router import compute_routing_budget
@@ -51,7 +52,23 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
         subscription.result()
         prepaid.result()
     budget = compute_routing_budget(transport=transport)
-    return {**budget, "source": "in-process-fresh"}
+    snapshot = {**budget, "source": "in-process-fresh"}
+    return _attach_status_observations(snapshot) if for_display else snapshot
+
+
+def _attach_status_observations(budget: dict[str, Any]) -> dict[str, Any]:
+    """Copy Muse and AGY diagnostics into a display snapshot, never routing inputs."""
+    from scripts.api.subscription_usage import (
+        get_agy_quota_observation,
+        get_provider_usage_data,
+        project_agy_for_status,
+        project_muse_for_status,
+    )
+
+    agents = dict(budget.get("agents") or {})
+    agents["muse"] = project_muse_for_status(get_provider_usage_data("muse", kick_refresh=False))
+    agents["agy"] = project_agy_for_status(get_agy_quota_observation())
+    return {**budget, "agents": agents}
 
 
 def _observation(info: dict[str, Any]) -> tuple[str, Any]:
@@ -101,12 +118,7 @@ def _window_kind(minutes: Any, explicit: Any = None) -> str:
 
 def _fail_note(info: dict[str, Any]) -> str:
     native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
-    kind = (
-        info.get("failure_kind")
-        or native.get("failure_kind")
-        or info.get("error_kind")
-        or native.get("error_kind")
-    )
+    kind = info.get("failure_kind") or native.get("failure_kind") or info.get("error_kind") or native.get("error_kind")
     code = info.get("last_failure_code") or native.get("last_failure_code")
     probe = info.get("probe_state") or native.get("probe_state")
     login = info.get("login_state") or native.get("login_state")
@@ -162,6 +174,19 @@ def _lane_has_usable_allotment(info: dict[str, Any]) -> bool:
                 continue
             if _is_number(block.get("used_pct")) or _is_number(block.get("remaining_pct")):
                 return True
+
+    groups = info.get("quota_groups")
+    if not isinstance(groups, list):
+        groups = native.get("quota_groups") if isinstance(native.get("quota_groups"), list) else None
+    if isinstance(groups, list):
+        for group in groups:
+            if not isinstance(group, dict):
+                continue
+            for window in group.get("windows") or []:
+                if not isinstance(window, dict):
+                    continue
+                if _is_number(window.get("used_pct")) or _is_number(window.get("remaining_pct")):
+                    return True
 
     freshness, _ = _observation(info)
     status = str(info.get("status") or "unknown")
@@ -256,12 +281,13 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
         extra["Fable only (weekly)"] = info.get("fable_weekly", native.get("fable_weekly"))
     elif lane == "gemini":
         third_party = info.get("claude_gpt_windows", native.get("claude_gpt_windows")) or {}
-        extra = {"Claude/GPT (5h)": third_party.get("five_hour"),
-                 "Claude/GPT (weekly)": third_party.get("weekly")}
+        extra = {"Claude/GPT (5h)": third_party.get("five_hour"), "Claude/GPT (weekly)": third_party.get("weekly")}
     for label, block in extra.items():
         block = block if isinstance(block, dict) else {}
-        lines.append(f"  {label}: used={_pct(block.get('used_pct'))} "
-                     f"rem={_pct(block.get('remaining_pct'))} resets={_resets_text(block.get('resets_at'))}")
+        lines.append(
+            f"  {label}: used={_pct(block.get('used_pct'))} "
+            f"rem={_pct(block.get('remaining_pct'))} resets={_resets_text(block.get('resets_at'))}"
+        )
 
     # Cursor / named provider pools (Cursor Models, Other Models, Grok Bot).
     provider = info.get("provider_windows")
@@ -283,14 +309,40 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
                 f"rem={_pct(block.get('remaining_pct'))} "
                 f"resets={_resets_text(block.get('resets_at'))}"
             )
-            pace = _pace_line(
-                block.get("used_pct"), block.get("resets_at"), window_minutes=block.get("window_minutes")
-            )
+            pace = _pace_line(block.get("used_pct"), block.get("resets_at"), window_minutes=block.get("window_minutes"))
             if pace:
                 lines.append(pace)
         return lines
 
-    # Generic primary/secondary/tertiary windows (Kimi 5h+weekly, Codex, Grok…).
+    if lane == "muse":
+        lines.append(
+            "  quota: "
+            f"remaining={_pct(info.get('remaining_pct'))} "
+            f"headroom={_pct(info.get('headroom_pct'))} "
+            f"resets={_resets_text(info.get('resets_at'))}"
+        )
+
+    if lane == "agy":
+        groups = info.get("quota_groups")
+        if not isinstance(groups, list):
+            groups = native.get("quota_groups") if isinstance(native.get("quota_groups"), list) else []
+        for group in groups:
+            if not isinstance(group, dict):
+                continue
+            label = str(group.get("label") or group.get("key") or "quota")
+            for window in group.get("windows") or []:
+                if not isinstance(window, dict):
+                    continue
+                kind = _window_kind(window.get("window_minutes"), window.get("window"))
+                lines.append(
+                    f"  {label} ({kind}): "
+                    f"used={_pct(window.get('used_pct'))} "
+                    f"rem={_pct(window.get('remaining_pct'))} "
+                    f"resets={_resets_text(window.get('resets_at'))}"
+                )
+        return lines
+
+    # Generic primary/secondary/tertiary windows (Kimi 5h+weekly, Codex, Grok, Muse).
     windows = native.get("windows") if isinstance(native.get("windows"), dict) else None
     if isinstance(windows, dict):
         for name, block in windows.items():
@@ -303,9 +355,7 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
             kind = _window_kind(block.get("window_minutes"), block.get("reset_description") or block.get("window"))
             label = str(block.get("label") or name)
             lines.append(
-                f"  {label} ({kind}): "
-                f"used={_pct(used)} rem={_pct(rem)} "
-                f"resets={_resets_text(block.get('resets_at'))}"
+                f"  {label} ({kind}): used={_pct(used)} rem={_pct(rem)} resets={_resets_text(block.get('resets_at'))}"
             )
             pace = _pace_line(used, block.get("resets_at"), window_minutes=block.get("window_minutes"))
             if pace:
@@ -329,9 +379,7 @@ def _display_status(info: dict[str, Any], *, freshness: str) -> str:
         return "need_login"
     if probe == "NEED_PROBE" and not _lane_has_usable_allotment(info):
         return "unknown"
-    if error_kind in {"missing_credentials", "missing_session_token"} and not _lane_has_usable_allotment(
-        info
-    ):
+    if error_kind in {"missing_credentials", "missing_session_token"} and not _lane_has_usable_allotment(info):
         return "unknown"
     return status
 
@@ -363,15 +411,18 @@ def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
     return tips
 
 
-def format_human(budget: dict[str, Any]) -> str:
-    """Render subscriptions + prepaid without importing Monitor routers."""
+def format_human(budget: dict[str, Any], *, for_display: bool = False) -> str:
+    """Render an authoritative budget; optional diagnostics never count as routing signals."""
+    routing_agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
+    usable = sum(_lane_has_usable_allotment(info) for info in routing_agents.values() if isinstance(info, dict))
+    if for_display:
+        budget = _attach_status_observations(budget)
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     lines = [
         f"source: {budget.get('source', 'unknown')}",
         "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
         "lane | status | remaining% | freshness | age_s | fail",
     ]
-    usable = 0
     for lane in sorted(agents):
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
         freshness, age = _observation(info)
@@ -386,17 +437,12 @@ def format_human(budget: dict[str, Any]) -> str:
             else "unknown"
         )
         fail = _fail_note(info) or "-"
-        lines.append(
-            f"{lane} | {status} | {rem_text} | {freshness} | "
-            f"{age if age is not None else 'unknown'} | {fail}"
-        )
+        lines.append(f"{lane} | {status} | {rem_text} | {freshness} | {age if age is not None else 'unknown'} | {fail}")
         allotments = _named_allotments(lane, info)
         if allotments:
             lines.extend(allotments)
         lines.extend(_lane_tips(lane, info, fail=fail))
-        if _lane_has_usable_allotment(info):
-            usable += 1
-        elif freshness == "unavailable" and fail == "-" and not allotments:
+        if not _lane_has_usable_allotment(info) and freshness == "unavailable" and fail == "-" and not allotments:
             lines.append("  (no allotment windows; probe returned empty)")
 
     lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
@@ -524,7 +570,7 @@ def doctor() -> str:
 
 
 def qa_snapshot(budget: dict[str, Any]) -> tuple[int, str]:
-    """Exit 0 only when at least one subscription lane has a usable allotment signal."""
+    """Check authoritative routing rows, not the diagnostic display snapshot."""
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     if not agents:
         return 1, "QA FAIL: routing-budget agents missing"
@@ -560,6 +606,7 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.fleet.usage doctor\n"
             "  .venv/bin/python -m scripts.fleet.usage qa\n\n"
             "Default: DELEGATE_MONITOR_API (http://127.0.0.1:8765); offline falls back to blocking probes.\n"
+            "Outputs: stdout snapshot or QA result; native refresh updates existing usage caches.\n"
             "Exit codes: 0 ok; 1 read/refresh/qa failed; 2 invalid arguments.\n"
             "Related: /api/state/routing-budget; scripts.fleet.capacity_pick; issue #8074."
         ),
@@ -581,14 +628,18 @@ def main(argv: list[str] | None = None) -> int:
         print(doctor())
         return 0
     try:
-        budget = read_budget(fresh=args.fresh or args.command == "refresh")
+        budget = read_budget(fresh=args.fresh or args.command == "refresh", for_display=args.command == "json")
         if args.command == "qa":
             code, message = qa_snapshot(budget)
             print(message)
             if code == 0:
-                print(format_human(budget))
+                print(format_human(budget, for_display=True))
             return code
-        print(json.dumps(budget, indent=2, sort_keys=True) if args.command == "json" else format_human(budget))
+        print(
+            json.dumps(budget, indent=2, sort_keys=True)
+            if args.command == "json"
+            else format_human(budget, for_display=True)
+        )
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError):
         print("Usage snapshot failed; capacity remains unknown. Run usage doctor.", file=sys.stderr)
         return 1

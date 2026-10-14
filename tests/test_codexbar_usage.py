@@ -2489,3 +2489,828 @@ def test_deepseek_prefers_secrets_dir_over_secret_alias(monkeypatch, tmp_path):
         monkeypatch.delenv(env, raising=False)
     monkeypatch.setattr(su, "_load_opencode_provider_key", lambda _p: None)
     assert su._load_deepseek_api_key() == "NEW_KEY"
+
+
+_MUSE_EMAIL = "secret-email-do-not-leak@example.com"
+_MUSE_KNOWN = {
+    "provider": "muse",
+    "source": "oauth",
+    "usage": {
+        "primary": {"usedPercent": 10, "windowMinutes": 300, "resetsAt": "2026-10-13T18:00:00Z"},
+        "secondary": {"usedPercent": 30, "windowMinutes": 10080, "resetsAt": "2026-10-20T00:00:00Z"},
+        "accountEmail": _MUSE_EMAIL,
+    },
+    "credits": {"remaining": 999},
+    "identity": {"accountEmail": _MUSE_EMAIL},
+}
+_MUSE_NULL = {
+    "provider": "muse",
+    "source": "oauth",
+    "usage": {
+        "primary": None,
+        "secondary": {"usedPercent": None, "windowMinutes": 10080, "resetsAt": None},
+    },
+}
+
+
+def _assert_muse_has_no_account_material(record: dict) -> None:
+    blob = json.dumps(record)
+    assert _MUSE_EMAIL not in blob
+    assert "999" not in blob
+
+
+def test_muse_known_windows_publish_remaining_headroom_and_reset():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(_MUSE_KNOWN)
+    _assert_muse_has_no_account_material(record)
+    assert record["status"] == "healthy"
+    assert record["primary_used_pct"] == 10.0
+    assert record["primary_remaining_pct"] == 90.0
+    assert record["weekly_used_pct"] == 30.0
+    assert record["weekly_remaining_pct"] == 70.0
+    assert record["headroom_pct"] == 70.0
+    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
+    assert record["windows"]["primary"]["resets_at"] == "2026-10-13T18:00:00Z"
+    assert record["windows"]["secondary"]["remaining_pct"] == 70.0
+
+
+def test_muse_null_percentages_are_unknown_not_unlimited():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(_MUSE_NULL)
+    assert record["status"] == "unknown"
+    assert record["error_kind"] == "unsupported"
+    assert record["error_code"] == "NO_QUOTA"
+    assert record["primary_used_pct"] is None
+    assert record["primary_remaining_pct"] is None
+    assert record["weekly_used_pct"] is None
+    assert record["weekly_remaining_pct"] is None
+    assert record["headroom_pct"] is None
+    assert record["primary_used_pct"] != 0
+    assert record["weekly_remaining_pct"] != 100
+
+
+def test_muse_empty_payload_is_unsupported():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload({})
+    assert record["status"] == "unknown"
+    assert record["error_kind"] == "unsupported"
+    assert record["headroom_pct"] is None
+    assert record["weekly_resets_at"] is None
+
+
+def test_muse_omitted_idle_session_keeps_weekly_without_inventing_session():
+    """Meta can omit the 5-hour window while weekly usage is present."""
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            "provider": "muse",
+            "usage": {
+                "primary": None,
+                "secondary": {
+                    "usedPercent": 30,
+                    "windowMinutes": 10080,
+                    "resetsAt": "2026-10-20T00:00:00Z",
+                },
+            },
+        }
+    )
+    assert record["status"] == "healthy"
+    assert record["primary_remaining_pct"] is None
+    assert record["weekly_remaining_pct"] == 70.0
+    assert record["headroom_pct"] == 70.0
+    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
+
+
+def test_muse_zero_used_is_a_real_remaining_reading():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            "provider": "muse",
+            "usage": {
+                "primary": {"usedPercent": 0, "windowMinutes": 300, "resetsAt": "2026-10-13T18:00:00Z"},
+                "secondary": None,
+            },
+        }
+    )
+    assert record["status"] == "healthy"
+    assert record["primary_used_pct"] == 0.0
+    assert record["primary_remaining_pct"] == 100.0
+    assert record["headroom_pct"] == 100.0
+    assert record["weekly_remaining_pct"] is None
+
+
+def test_muse_malformed_payload_is_fetch_error():
+    for payload in ("nope", ["nope"], {"usage": "nope"}):
+        record = subscription_usage_mod._muse_record_from_codexbar_payload(payload)
+        assert record["status"] == "unavailable"
+        assert record["error_kind"] == "fetch_error"
+        assert record["error_code"] == "BAD_JSON"
+        assert record["primary_remaining_pct"] is None
+        assert record["weekly_remaining_pct"] is None
+        assert record.get("headroom_pct") is None
+
+
+def test_muse_provider_error_drops_message_text():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {"provider": "muse", "error": {"kind": "provider", "code": 1, "message": _MUSE_EMAIL}}
+    )
+    _assert_muse_has_no_account_material(record)
+    assert record["status"] == "unavailable"
+    assert record["error_kind"] == "provider"
+    assert record["error_code"] == 1
+    assert record["auth_error"] == "Muse usage probe failed"
+    assert record["weekly_remaining_pct"] is None
+
+
+def test_muse_rate_limit_payload_stays_non_numeric():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        [{"provider": "muse", "error": {"kind": "provider", "code": 429, "message": "slow down"}}]
+    )
+    assert record["error_kind"] == "rate_limit"
+    assert record["error_code"] == 429
+    assert record["status"] == "unavailable"
+    assert record["primary_remaining_pct"] is None
+    assert record["weekly_remaining_pct"] is None
+    projected = subscription_usage_mod.project_muse_for_status(
+        {**_muse_known_with_freshness(), "error_kind": "rate_limit", "error_code": 429, "freshness": "fresh"}
+    )
+    assert projected["headroom_pct"] is None
+    assert projected["remaining_pct"] is None
+    assert projected["resets_at"] is None
+    assert projected["status"] == "unknown"
+
+
+def _muse_known_with_freshness() -> dict:
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(_MUSE_KNOWN)
+    record["freshness"] = "fresh"
+    record["age_s"] = 0
+    return record
+
+
+def test_muse_stale_projection_hides_numeric_headroom():
+    record = _muse_known_with_freshness()
+    record["freshness"] = "stale_last_good"
+    record["age_s"] = 800
+    projected = subscription_usage_mod.project_muse_for_status(record)
+    assert projected["freshness"] == "stale_last_good"
+    assert projected["status"] == "unknown"
+    assert projected["remaining_pct"] is None
+    assert projected["headroom_pct"] is None
+    assert projected["resets_at"] is None
+    assert projected["codexbar"]["windows"]["secondary"]["remaining_pct"] is None
+
+
+def test_muse_fresh_projection_keeps_binding_headroom():
+    projected = subscription_usage_mod.project_muse_for_status(_muse_known_with_freshness())
+    assert projected == {
+        "lane": "muse",
+        "status": "healthy",
+        "remaining_pct": 70.0,
+        "headroom_pct": 70.0,
+        "resets_at": "2026-10-20T00:00:00Z",
+        "freshness": "fresh",
+        "age_s": 0,
+        "error_kind": None,
+        "error_code": None,
+        "failure_kind": None,
+        "last_failure_code": None,
+        "auth_error": None,
+        "codexbar": {
+            "freshness": "fresh",
+            "age_s": 0,
+            "headroom_pct": 70.0,
+            "weekly_resets_at": "2026-10-20T00:00:00Z",
+            "windows": projected["codexbar"]["windows"],
+            "error_kind": None,
+            "failure_kind": None,
+            "last_failure_code": None,
+            "primary_remaining_pct": 90.0,
+            "weekly_remaining_pct": 70.0,
+        },
+    }
+    assert projected["codexbar"]["windows"]["primary"]["remaining_pct"] == 90.0
+    assert projected["codexbar"]["windows"]["secondary"]["remaining_pct"] == 70.0
+
+
+def test_muse_probe_invokes_supported_codexbar_interface(monkeypatch):
+    import subprocess
+
+    captured: dict = {}
+
+    def fake_run(argv, **kwargs):
+        captured["argv"] = argv
+        captured["kwargs"] = kwargs
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps([_MUSE_KNOWN]), stderr=_MUSE_EMAIL)
+
+    monkeypatch.setattr(
+        subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar" if name == "codexbar" else None
+    )
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
+    record = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=5)
+    assert captured["argv"] == [
+        "/usr/bin/codexbar",
+        "usage",
+        "--provider",
+        "muse",
+        "--json",
+        "--no-credits",
+    ]
+    assert captured["kwargs"]["stdin"] is subprocess.DEVNULL
+    assert record["headroom_pct"] == 70.0
+    assert record["weekly_resets_at"] == "2026-10-20T00:00:00Z"
+    _assert_muse_has_no_account_material(record)
+
+
+def test_muse_probe_timeout_and_malformed_stdout_stay_unknown(monkeypatch):
+    import subprocess
+
+    monkeypatch.setattr(subscription_usage_mod.shutil, "which", lambda name: "/usr/bin/codexbar")
+
+    def timeout_run(argv, **kwargs):
+        raise subprocess.TimeoutExpired(argv, kwargs.get("timeout"))
+
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", timeout_run)
+    timed_out = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=1)
+    assert timed_out["error_kind"] == "timeout"
+    assert timed_out["status"] == "unavailable"
+    assert timed_out["weekly_remaining_pct"] is None
+
+    def bad_json(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 0, stdout="not-json", stderr="")
+
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", bad_json)
+    malformed = subscription_usage_mod.fetch_provider_usage("muse", timeout_s=1)
+    assert malformed["error_kind"] == "fetch_error"
+    assert malformed["error_code"] == "BAD_JSON"
+    assert malformed["primary_remaining_pct"] is None
+
+
+def test_muse_shares_existing_scheduler_at_most_every_15_minutes(monkeypatch):
+    monkeypatch.delenv("CODEXBAR_REFRESH_INTERVAL_S", raising=False)
+    assert "muse" in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
+    assert "muse" in subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR
+    assert "muse" in subscription_usage_mod._NATIVE_PROBES
+    assert "muse" not in state_router.SUBSCRIPTION_LANES
+    interval = subscription_usage_mod._codexbar_refresh_interval_s()
+    assert interval == 720.0
+    assert interval <= 15 * 60
+    status = subscription_usage_mod.scheduler_status()
+    assert status["refresh_interval_s"] == 720.0
+    assert status["refresh_interval_s"] <= 15 * 60
+    assert "muse" in status["providers"]
+
+    captured: dict = {}
+
+    def fake_refresh(providers, *, timeout_s=None):
+        captured["providers"] = tuple(providers)
+        return {}
+
+    monkeypatch.setattr(subscription_usage_mod, "refresh_provider_usage_data", fake_refresh)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_cursor_usage_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_api_accounts_live", lambda: None)
+    monkeypatch.setattr(subscription_usage_mod, "_refresh_in_flight", threading.Lock())
+    subscription_usage_mod._run_all_refreshes()
+    assert "muse" in captured["providers"]
+    assert captured["providers"] == tuple(subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR)
+    assert "cursor" not in captured["providers"]
+
+
+_AGY_EMAIL = "secret-email-do-not-leak@example.com"
+_AGY_FIXTURE = Path(__file__).parent / "fixtures" / "usage_9270" / "agy.json"
+
+
+def _agy_usage_payload(*groups: dict) -> dict:
+    return {"command": {"data": {"groups": list(groups)}}}
+
+
+def _probe_agy_stdout(monkeypatch, stdout: str, *, returncode: int = 0, reset: bool = True) -> dict:
+    import subprocess
+
+    if reset:
+        subscription_usage_mod._reset_agy_quota_observation_for_tests()
+    monkeypatch.setattr(subscription_usage_mod, "_agy_cli_bin", lambda: "/usr/bin/agy")
+    captured: dict = {}
+
+    def fake_run(argv, **kwargs):
+        captured["argv"] = list(argv)
+        return subprocess.CompletedProcess(argv, returncode, stdout=stdout, stderr=_AGY_EMAIL)
+
+    monkeypatch.setattr(subscription_usage_mod.subprocess, "run", fake_run)
+    record = subscription_usage_mod._probe_antigravity_native(timeout_s=5)
+    record["_captured_argv"] = captured.get("argv")
+    return record
+
+
+def _agy_window(projected: dict, group_key: str, window: str) -> dict | None:
+    for group in projected["quota_groups"]:
+        if group["key"] != group_key:
+            continue
+        for item in group["windows"]:
+            if item["window"] == window:
+                return item
+    return None
+
+
+def test_agy_fixture_publishes_separate_quota_groups(monkeypatch):
+    payload = json.loads(_AGY_FIXTURE.read_text(encoding="utf-8"))
+    payload["account_id"] = _AGY_EMAIL
+    payload["command"]["data"]["balance"] = 999
+    record = _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    assert record["_captured_argv"] == [
+        "/usr/bin/agy",
+        "--prompt",
+        "/usage",
+        "--output-format",
+        "json",
+    ]
+    assert record["status"] == "healthy"
+    assert record["weekly_used_pct"] == pytest.approx(0.15184879302978516)
+    assert record["claude_gpt_windows"]["five_hour"]["used_pct"] == 0
+    assert "quota_groups" not in record
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    blob = json.dumps(projected)
+    assert _AGY_EMAIL not in blob
+    assert "999" not in blob
+    assert projected["status"] == "healthy"
+    assert projected["remaining_pct"] is None
+    assert projected["headroom_pct"] is None
+    assert projected["freshness"] == "fresh"
+    assert projected["codexbar"]["source"] == "agy_cli_usage"
+    gemini_weekly = _agy_window(projected, "gemini_models", "weekly")
+    claude_weekly = _agy_window(projected, "claude_gpt", "weekly")
+    assert gemini_weekly is not None and claude_weekly is not None
+    assert gemini_weekly["used_pct"] == pytest.approx(0.15184879302978516)
+    assert gemini_weekly["remaining_pct"] == pytest.approx(99.84815120697021)
+    assert gemini_weekly["resets_at"] == "2026-10-07T02:23:27Z"
+    assert claude_weekly["used_pct"] == 0.0
+    assert claude_weekly["remaining_pct"] == 100.0
+    assert claude_weekly["resets_at"] == "2026-10-07T07:33:22Z"
+    assert gemini_weekly["remaining_pct"] != claude_weekly["remaining_pct"]
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] == 100.0
+    assert _agy_window(projected, "claude_gpt", "5h")["resets_at"] == "2026-09-30T12:33:22Z"
+
+
+def test_agy_groups_do_not_copy_a_window_into_its_sibling(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [
+                {"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"},
+            ],
+        },
+        {
+            "name": "Claude and GPT models",
+            "buckets": [
+                {"window": "weekly", "remaining_fraction": 0.25, "reset_time": "2026-10-20T00:00:00Z"},
+            ],
+        },
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "healthy"
+    assert projected["remaining_pct"] is None
+    gemini = next(group for group in projected["quota_groups"] if group["key"] == "gemini_models")
+    claude = next(group for group in projected["quota_groups"] if group["key"] == "claude_gpt")
+    assert [item["window"] for item in gemini["windows"]] == ["5h"]
+    assert [item["window"] for item in claude["windows"]] == ["weekly"]
+    assert gemini["windows"][0]["remaining_pct"] == 50.0
+    assert gemini["windows"][0]["resets_at"] == "2026-10-13T18:00:00Z"
+    assert claude["windows"][0]["remaining_pct"] == 25.0
+    assert claude["windows"][0]["resets_at"] == "2026-10-20T00:00:00Z"
+
+
+def test_agy_missing_fraction_keeps_reset_and_is_unknown(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [
+                {"window": "weekly", "remaining_fraction": None, "reset_time": "2026-10-20T00:00:00Z"},
+            ],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    window = _agy_window(projected, "gemini_models", "weekly")
+    assert projected["status"] == "unknown"
+    assert projected["error_kind"] == "unsupported"
+    assert projected["error_code"] == "NO_QUOTA"
+    assert projected["freshness"] == "fresh"
+    assert window is not None
+    assert window["used_pct"] is None
+    assert window["remaining_pct"] is None
+    assert window["resets_at"] == "2026-10-20T00:00:00Z"
+    assert window["remaining_pct"] != 100
+
+
+def test_agy_measured_empty_and_full_windows_are_not_unlimited(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [
+                {"window": "5h", "remaining_fraction": 0, "reset_time": "2026-10-13T18:00:00Z"},
+                {"window": "weekly", "remaining_fraction": 1, "reset_time": "2026-10-20T00:00:00Z"},
+            ],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "healthy"
+    assert _agy_window(projected, "gemini_models", "5h")["used_pct"] == 100.0
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] == 0.0
+    assert _agy_window(projected, "gemini_models", "weekly")["used_pct"] == 0.0
+    assert _agy_window(projected, "gemini_models", "weekly")["remaining_pct"] == 100.0
+
+
+def test_agy_claude_group_survives_when_gemini_group_is_absent(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Claude and GPT models",
+            "buckets": [
+                {"window": "5h", "remaining_fraction": 0.8, "reset_time": "2026-10-13T18:00:00Z"},
+            ],
+        }
+    )
+    record = _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    assert record["error_code"] == "NEED_LOGIN"
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "healthy"
+    assert [group["key"] for group in projected["quota_groups"]] == ["claude_gpt"]
+    assert _agy_window(projected, "claude_gpt", "5h")["remaining_pct"] == 80.0
+    assert _agy_window(projected, "gemini_models", "5h") is None
+
+
+def test_agy_duplicate_group_keys_stay_distinct(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Claude models",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.9, "reset_time": "2026-10-20T00:00:00Z"}],
+        },
+        {
+            "name": "GPT models",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.1, "reset_time": "2026-10-21T00:00:00Z"}],
+        },
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    keys = [group["key"] for group in projected["quota_groups"]]
+    assert keys == ["claude_gpt", "claude_gpt_2"]
+    assert _agy_window(projected, "claude_gpt", "weekly")["remaining_pct"] == 90.0
+    assert _agy_window(projected, "claude_gpt_2", "weekly")["remaining_pct"] == 10.0
+
+
+def test_agy_credit_group_and_account_label_are_dropped(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Credits",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.5, "reset_time": "2026-10-20T00:00:00Z"}],
+        },
+        {
+            "name": _AGY_EMAIL,
+            "buckets": [{"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"}],
+        },
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    blob = json.dumps(projected)
+    assert _AGY_EMAIL not in blob
+    assert "Credits" not in blob
+    assert projected["status"] == "healthy"
+    assert [group["key"] for group in projected["quota_groups"]] == ["group"]
+    assert _agy_window(projected, "group", "5h")["remaining_pct"] == 50.0
+
+
+def test_agy_malformed_and_rate_limit_drop_numeric_headroom(monkeypatch):
+    malformed = _probe_agy_stdout(monkeypatch, "not-json")
+    assert malformed["error_code"] == "BAD_JSON"
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["status"] == "unknown"
+    assert projected["freshness"] == "unavailable"
+    assert projected["error_kind"] == "fetch_error"
+    assert projected["error_code"] == "BAD_JSON"
+    assert projected["quota_groups"] == []
+    assert _AGY_EMAIL not in json.dumps(projected)
+
+    known = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [{"window": "weekly", "remaining_fraction": 0.5, "reset_time": "2026-10-20T00:00:00Z"}],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(known))
+    fresh = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert fresh["status"] == "healthy"
+    limited = _probe_agy_stdout(monkeypatch, "", returncode=429, reset=False)
+    assert limited["status"] == "unavailable"
+    hidden = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert hidden["status"] == "unknown"
+    assert hidden["error_kind"] == "rate_limit"
+    assert hidden["error_code"] == 429
+    assert hidden["freshness"] == "stale_last_good"
+    assert _agy_window(hidden, "gemini_models", "weekly")["remaining_pct"] is None
+    assert _agy_window(hidden, "gemini_models", "weekly")["resets_at"] is None
+    assert "50.0" not in json.dumps(hidden)
+
+
+def test_agy_stale_observation_hides_quota(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini Models",
+            "buckets": [{"window": "5h", "remaining_fraction": 0.5, "reset_time": "2026-10-13T18:00:00Z"}],
+        }
+    )
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    with subscription_usage_mod._AGY_QUOTA_LOCK:
+        snapshot = subscription_usage_mod._agy_quota_parsed[1]
+        subscription_usage_mod._agy_quota_parsed = (time.monotonic() - 10_000, snapshot)
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert projected["freshness"] == "stale_last_good"
+    assert projected["status"] == "unknown"
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] is None
+    assert _agy_window(projected, "gemini_models", "5h")["resets_at"] is None
+    assert "50.0" not in json.dumps(projected)
+
+
+@pytest.mark.parametrize("value", [-1, 101, 10**400, float("nan"), float("inf"), True, None, "PRIVATE_PERCENT"])
+def test_public_percent_rejects_unmeasured_values(value):
+    assert subscription_usage_mod._public_percent(value) is None
+
+
+@pytest.mark.parametrize(("value", "expected"), [(0, 0.0), (100, 100.0), ("20", 20.0)])
+def test_public_percent_preserves_valid_measurements(value, expected):
+    assert subscription_usage_mod._public_percent(value) == expected
+
+
+@pytest.mark.parametrize("value", [-0.1, 1.1, 10**400, "1.01", True])
+def test_agy_fraction_rejects_out_of_range_values(value):
+    assert subscription_usage_mod._used_pct_from_remaining_fraction(value) is None
+
+
+@pytest.mark.parametrize(
+    ("kind", "code", "expected"),
+    [
+        (None, None, (None, None)),
+        ("unavailable", None, ("unavailable", None)),
+        ("unavailable", "", ("unavailable", None)),
+        ("fetch_error", None, ("fetch_error", None)),
+        ("fetch_error", "FETCH_ERROR", ("fetch_error", "FETCH_ERROR")),
+        ("PRIVATE_KIND", None, ("provider", None)),
+        ("PRIVATE_KIND", "PRIVATE_CODE", ("provider", "PROVIDER_ERROR")),
+        ({"private": "PRIVATE_KIND"}, {"private": "PRIVATE_CODE"}, ("provider", "PROVIDER_ERROR")),
+        ("provider", 600, ("provider", "PROVIDER_ERROR")),
+        ("provider", True, ("provider", "PROVIDER_ERROR")),
+        ("provider", "429", ("rate_limit", 429)),
+        ("ratelimit", None, ("rate_limit", 429)),
+        ("fetch_error", "BAD_JSON", ("fetch_error", "BAD_JSON")),
+        ("provider", 1, ("provider", 1)),
+    ],
+)
+def test_public_quota_errors_are_fixed_and_bounded(kind, code, expected):
+    assert subscription_usage_mod._public_quota_error(kind, code) == expected
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("PRIVATE_RESET", None),
+        (True, None),
+        (float("inf"), None),
+        (10**400, None),
+        ("2026-10-20T02:00:00+02:00", "2026-10-20T00:00:00Z"),
+        (1792454400000, "2026-10-20T00:00:00Z"),
+    ],
+)
+def test_public_resets_are_canonical_timestamps(value, expected):
+    assert subscription_usage_mod._agy_reset_or_none(value) == expected
+
+
+def test_muse_nested_metadata_is_projected_without_private_text():
+    payload = {
+        "provider": "muse",
+        "source": "PRIVATE_SOURCE",
+        "usage": {
+            "primary": {
+                "usedPercent": 20,
+                "windowMinutes": "PRIVATE_MINUTES",
+                "resetsAt": "PRIVATE_RESET",
+                "resetDescription": "PRIVATE_DESCRIPTION",
+                "label": "PRIVATE_LABEL",
+                "identity": "PRIVATE_IDENTITY",
+            },
+        },
+    }
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(payload)
+    projected = subscription_usage_mod.project_muse_for_status({**record, "freshness": "fresh", "age_s": 0})
+    assert "PRIVATE_" not in json.dumps(record) + json.dumps(projected)
+    assert record["source"] == "codexbar_muse"
+    assert projected["codexbar"]["windows"]["primary"] == {
+        "used_pct": 20.0,
+        "remaining_pct": 80.0,
+        "resets_at": None,
+        "window_minutes": None,
+        "reset_description": None,
+    }
+    assert projected["remaining_pct"] == 80.0
+    assert projected["resets_at"] is None
+
+
+@pytest.mark.parametrize("provider", ["codex", "PRIVATE_PROVIDER", None, {"private": "PRIVATE_PROVIDER"}])
+def test_muse_rejects_explicit_provider_mismatch(provider):
+    record = subscription_usage_mod._muse_record_from_codexbar_payload({**_MUSE_KNOWN, "provider": provider})
+    assert record["error_kind"] == "fetch_error"
+    assert record["error_code"] == "PROVIDER_MISMATCH"
+    assert record["primary_remaining_pct"] is None
+    assert "PRIVATE_" not in json.dumps(record)
+
+
+def test_muse_list_prefers_actual_muse_over_unlabelled_and_other_providers():
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        [
+            {"provider": "codex", "usage": {"primary": {"usedPercent": 7}}},
+            {"usage": {"primary": {"usedPercent": 3}}},
+            _MUSE_NULL,
+        ]
+    )
+    assert record["error_code"] == "NO_QUOTA"
+    assert record["headroom_pct"] is None
+
+
+@pytest.mark.parametrize(
+    ("updated_at", "code"),
+    [
+        ("2000-01-01T00:00:00Z", "STALE_DATA"),
+        ("2999-01-01T00:00:00Z", "STALE_DATA"),
+        (None, "BAD_JSON"),
+        ("PRIVATE_OBSERVATION", "BAD_JSON"),
+    ],
+)
+def test_muse_invalid_observation_cannot_become_a_cached_measurement(updated_at, code):
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            **_MUSE_KNOWN,
+            "usage": {**_MUSE_KNOWN["usage"], "updatedAt": updated_at},
+        }
+    )
+    assert record["error_code"] == code
+    assert record["primary_remaining_pct"] is None
+    assert record["weekly_remaining_pct"] is None
+    assert subscription_usage_mod._record_probe_result("muse", record) is False
+    assert "PRIVATE_" not in json.dumps(record)
+
+
+def test_muse_provider_age_expires_before_a_recent_cache_entry(monkeypatch):
+    now = datetime(2026, 10, 13, 12, tzinfo=UTC)
+
+    class Clock(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return now
+
+    monkeypatch.setattr(subscription_usage_mod, "datetime", Clock)
+    monkeypatch.setattr(subscription_usage_mod, "_codexbar_cache_ttl_s", lambda: 720)
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            **_MUSE_KNOWN,
+            "usage": {**_MUSE_KNOWN["usage"], "updatedAt": "2026-10-13T11:50:00Z"},
+        }
+    )
+    record.update(freshness="fresh", age_s=0)
+    projected = subscription_usage_mod.project_muse_for_status(record)
+    assert (projected["freshness"], projected["age_s"], projected["remaining_pct"]) == ("fresh", 600.0, 70.0)
+    now += timedelta(seconds=120)
+    projected = subscription_usage_mod.project_muse_for_status(record)
+    assert (projected["freshness"], projected["age_s"], projected["remaining_pct"]) == ("stale_last_good", 720.0, None)
+    assert projected["error_code"] == "STALE_DATA"
+
+
+@pytest.mark.parametrize("used", [-1, 101, float("nan"), float("inf"), True])
+def test_muse_out_of_range_window_is_unknown(used):
+    record = subscription_usage_mod._muse_record_from_codexbar_payload(
+        {
+            "provider": "muse",
+            "usage": {"primary": {"usedPercent": used, "windowMinutes": 300}},
+        }
+    )
+    assert record["status"] == "unknown"
+    assert record["headroom_pct"] is None
+    assert record["windows"]["primary"]["remaining_pct"] is None
+
+
+def test_agy_public_labels_windows_and_resets_drop_private_metadata(monkeypatch):
+    payload = _agy_usage_payload(
+        {
+            "name": "Gemini PRIVATE_LABEL",
+            "buckets": [
+                {"window": "PRIVATE_WINDOW", "remaining_fraction": 0.8},
+                {"window": "weekly", "remaining_fraction": 0.8, "reset_time": "PRIVATE_RESET"},
+            ],
+        },
+        {"name": "PRIVATE_GROUP", "buckets": [{"window": "5h", "remaining_fraction": 1}]},
+    )
+    record = _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert "PRIVATE_" not in json.dumps(record) + json.dumps(projected)
+    assert projected["quota_groups"] == [
+        {
+            "key": "gemini_models",
+            "label": "Gemini Models",
+            "windows": [
+                {
+                    "window": "weekly",
+                    "used_pct": 20.0,
+                    "remaining_pct": 80.0,
+                    "resets_at": None,
+                    "window_minutes": 10080,
+                }
+            ],
+        },
+        {
+            "key": "group",
+            "label": "Quota group",
+            "windows": [
+                {"window": "5h", "used_pct": 0.0, "remaining_pct": 100.0, "resets_at": None, "window_minutes": 300}
+            ],
+        },
+    ]
+
+
+@pytest.mark.parametrize("nested", [False, True])
+@pytest.mark.parametrize(
+    ("envelope", "kind", "code"),
+    [
+        ({"status": "error", "error": {"code": 429, "message": "PRIVATE_ERROR"}}, "rate_limit", 429),
+        ({"status": "RATE_LIMITED"}, "rate_limit", 429),
+        ({"error": {"kind": "PRIVATE_KIND", "code": "PRIVATE_CODE"}}, "provider", "PROVIDER_ERROR"),
+        ({"status": "PRIVATE_STATUS"}, "provider", "PROVIDER_ERROR"),
+        ({"provider": "PRIVATE_PROVIDER"}, "fetch_error", "PROVIDER_MISMATCH"),
+    ],
+)
+def test_agy_failed_envelope_cannot_publish_healthy_quota(monkeypatch, nested, envelope, kind, code):
+    payload = _agy_usage_payload({"name": "Gemini Models", "buckets": [{"window": "5h", "remaining_fraction": 0.8}]})
+    _probe_agy_stdout(monkeypatch, json.dumps(payload))
+    (payload["command"] if nested else payload).update(envelope)
+    record = _probe_agy_stdout(monkeypatch, json.dumps(payload), reset=False)
+    projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
+    assert (record["error_kind"], record["error_code"]) == (kind, code)
+    assert (projected["status"], projected["freshness"], projected["error_kind"], projected["error_code"]) == (
+        "unknown",
+        "stale_last_good",
+        kind,
+        code,
+    )
+    assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] is None
+    assert "PRIVATE_" not in json.dumps(record) + json.dumps(projected)
+
+
+@pytest.mark.parametrize("lane", ["muse", "agy"])
+def test_public_projection_does_not_trust_cached_provider_metadata(lane):
+    record = {
+        "freshness": "fresh",
+        "age_s": "PRIVATE_AGE",
+        "error_kind": "PRIVATE_KIND",
+        "error_code": "PRIVATE_CODE",
+        "failure_kind": "PRIVATE_FAILURE",
+        "source": "PRIVATE_SOURCE",
+        "account": "PRIVATE_ACCOUNT",
+        "credits": 987654,
+        "windows": {
+            "primary": {
+                "used_pct": 20,
+                "remaining_pct": 80,
+                "resets_at": "PRIVATE_RESET",
+                "window_minutes": "PRIVATE_MINUTES",
+                "reset_description": "PRIVATE_DESCRIPTION",
+                "label": "PRIVATE_LABEL",
+            }
+        },
+        "quota_groups": [
+            {"key": "PRIVATE_KEY", "label": "PRIVATE_LABEL", "windows": []},
+            {
+                "key": "gemini_models",
+                "label": "PRIVATE_LABEL",
+                "windows": [
+                    {"window": "PRIVATE_WINDOW", "used_pct": 20, "remaining_pct": 80},
+                    {"window": "5h", "used_pct": 20, "remaining_pct": 80, "resets_at": "PRIVATE_RESET"},
+                ],
+            },
+        ],
+    }
+    project = (
+        subscription_usage_mod.project_muse_for_status
+        if lane == "muse"
+        else subscription_usage_mod.project_agy_for_status
+    )
+    public = project(record)
+    assert "PRIVATE_" not in json.dumps(public)
+    assert "987654" not in json.dumps(public)
+    assert (public["status"], public["remaining_pct"], public["age_s"], public["error_kind"], public["error_code"]) == (
+        "unknown",
+        None,
+        None,
+        "provider",
+        "PROVIDER_ERROR",
+    )
+    if lane == "agy":
+        assert public["quota_groups"] == [
+            {
+                "key": "gemini_models",
+                "label": "Gemini Models",
+                "windows": [
+                    {"window": "5h", "used_pct": None, "remaining_pct": None, "resets_at": None, "window_minutes": 300},
+                ],
+            }
+        ]

@@ -100,6 +100,7 @@ SUBSCRIPTION_PROVIDERS: tuple[str, ...] = (
     "gemini",
     "grok",
     "kimi",
+    "muse",
 )
 
 PROVIDER_TO_LANE = {
@@ -111,6 +112,7 @@ PROVIDER_TO_LANE = {
     "agy": "gemini",
     "grok": "grok",
     "kimi": "kimi",
+    "muse": "muse",
 }
 
 # In-memory storage for the last successfully fetched usage data (lasts the lifetime of the process)
@@ -363,7 +365,6 @@ def _http_json_request(
         ):
             return 0, None, "request timed out"
         return 0, None, "request failed"
-
 
 
 def _read_json_file(path: Path) -> dict[str, Any] | None:
@@ -986,7 +987,13 @@ def _probe_claude_native(*, timeout_s: float) -> dict[str, Any]:
     if status != 200 or not isinstance(payload, dict):
         return _normalize_provider_error(
             "claude",
-            {"message": "Claude usage request timed out" if status == 0 and "timed out" in (err or "") else f"Claude usage HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
+            {
+                "message": "Claude usage request timed out"
+                if status == 0 and "timed out" in (err or "")
+                else f"Claude usage HTTP {status}",
+                "kind": "fetch_error",
+                "code": status or "FETCH_ERROR",
+            },
         )
     limits = payload.get("limits") if isinstance(payload.get("limits"), list) else []
     primary = None
@@ -1068,8 +1075,11 @@ def _codex_reset_inventory(payload: Any, *, now: datetime | None = None) -> dict
         if expiry is None or expiry > current:
             expirations.append(expiry.isoformat().replace("+00:00", "Z") if expiry else None)
     expirations = sorted(expirations, key=lambda value: value or "9999")
-    return {"available_count": len(expirations), "expires_at": expirations,
-            "fetched_at": current.isoformat().replace("+00:00", "Z")}
+    return {
+        "available_count": len(expirations),
+        "expires_at": expirations,
+        "fetched_at": current.isoformat().replace("+00:00", "Z"),
+    }
 
 
 def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
@@ -1093,7 +1103,13 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     if status != 200 or not isinstance(payload, dict):
         return _normalize_provider_error(
             "codex",
-            {"message": "Codex usage request timed out" if status == 0 and "timed out" in (err or "") else f"Codex usage HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
+            {
+                "message": "Codex usage request timed out"
+                if status == 0 and "timed out" in (err or "")
+                else f"Codex usage HTTP {status}",
+                "kind": "fetch_error",
+                "code": status or "FETCH_ERROR",
+            },
         )
     rate = payload.get("rate_limit") if isinstance(payload.get("rate_limit"), dict) else payload
     primary = rate.get("primary_window") if isinstance(rate, dict) else None
@@ -1156,8 +1172,12 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     reset_status, reset_payload, _ = _http_json_request(
         "GET",
         "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits",
-        headers={"Authorization": f"Bearer {token}", "Accept": "application/json",
-                 "OpenAI-Beta": "codex-1", "originator": "Codex Desktop"},
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/json",
+            "OpenAI-Beta": "codex-1",
+            "originator": "Codex Desktop",
+        },
         timeout_s=timeout_s,
     )
     reset_credits = _codex_reset_inventory(reset_payload if reset_status == 200 else None)
@@ -1175,8 +1195,14 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
         )
     return _normalize_provider_data(
         "codex",
-        {"provider": "codex", "source": "codex_oauth", "usage": usage, "openaiDashboard": {},
-         "reset_credits": reset_credits, "credit_balance": credit_balance},
+        {
+            "provider": "codex",
+            "source": "codex_oauth",
+            "usage": usage,
+            "openaiDashboard": {},
+            "reset_credits": reset_credits,
+            "credit_balance": credit_balance,
+        },
     )
 
 
@@ -1360,11 +1386,238 @@ def _agy_usage_buckets_by_window(group: dict[str, Any]) -> dict[str, dict[str, A
 
 
 def _used_pct_from_remaining_fraction(remaining: Any) -> float | None:
-    """Reject non-finite remaining fractions before clamping (NaN/Inf → unknown)."""
-    frac = _coerce_float(remaining)
-    if frac is None:
+    """Accept only measured fractions within the closed unit interval."""
+    if isinstance(remaining, (int, float)) and not 0.0 <= remaining <= 1.0:
         return None
-    return max(0.0, min(100.0, 100.0 - frac * 100.0))
+    frac = _coerce_float(remaining)
+    if frac is None or not 0.0 <= frac <= 1.0:
+        return None
+    return 100.0 - frac * 100.0
+
+
+def _public_percent(value: Any) -> float | None:
+    if isinstance(value, (int, float)) and not 0.0 <= value <= 100.0:
+        return None
+    number = _coerce_float(value)
+    return number if number is not None and 0.0 <= number <= 100.0 else None
+
+
+def _public_quota_error(kind: Any, code: Any) -> tuple[str | None, str | int | None]:
+    """Project diagnostics onto fixed kinds and bounded codes, never provider text."""
+    if kind is None and code is None:
+        return None, None
+    if code in (429, "429") or kind in ("rate_limit", "ratelimit"):
+        return "rate_limit", 429
+    public_kind = (
+        kind
+        if isinstance(kind, str)
+        and kind in {"provider", "fetch_error", "timeout", "unavailable", "need_login", "unsupported"}
+        else "provider"
+    )
+    if code is None or code == "":
+        return public_kind, None
+    if isinstance(code, int) and not isinstance(code, bool) and 1 <= code <= 599:
+        return public_kind, code
+    if isinstance(code, str) and code in {
+        "NO_QUOTA",
+        "BAD_JSON",
+        "TIMEOUT",
+        "SPAWN_ERROR",
+        "FETCH_ERROR",
+        "NO_PROBE",
+        "EMPTY",
+        "NEED_LOGIN",
+        "STALE_DATA",
+        "PROVIDER_MISMATCH",
+        "PROVIDER_ERROR",
+    }:
+        return public_kind, code
+    return public_kind, "PROVIDER_ERROR"
+
+
+# Public AGY quota view. The Gemini routing lane keeps its own record; this
+# observation is the same `/usage` payload with each subscription group left
+# intact. A later probe error must not keep painting the previous percentages.
+_AGY_QUOTA_LOCK = threading.Lock()
+_agy_quota_parsed: tuple[float, dict[str, Any]] | None = None
+_agy_quota_failure: tuple[float, dict[str, Any]] | None = None
+_AGY_WINDOW_SPECS: tuple[tuple[str, tuple[str, ...], int], ...] = (
+    ("5h", ("5h", "five_hour", "session"), 300),
+    ("weekly", ("weekly",), WEEKLY_WINDOW_MINUTES),
+)
+
+
+def _reset_agy_quota_observation_for_tests() -> None:
+    global _agy_quota_parsed, _agy_quota_failure
+    with _AGY_QUOTA_LOCK:
+        _agy_quota_parsed = None
+        _agy_quota_failure = None
+
+
+def _agy_group_key(name: str) -> str:
+    """Stable group id. Unsafe names never become the id."""
+    lowered = name.lower()
+    if "gemini" in lowered:
+        return "gemini_models"
+    if "claude" in lowered or "gpt" in lowered:
+        return "claude_gpt"
+    return "group"
+
+
+def _agy_group_label(key: str) -> str:
+    return {"gemini_models": "Gemini Models", "claude_gpt": "Claude and GPT models"}.get(key, "Quota group")
+
+
+def _agy_reset_or_none(value: Any) -> str | None:
+    try:
+        parsed = _parse_resets_at_any(value)
+    except OverflowError:
+        return None
+    return parsed.isoformat().replace("+00:00", "Z") if parsed is not None else None
+
+
+def _agy_window_from_bucket(bucket: dict[str, Any]) -> dict[str, Any] | None:
+    """One bucket. A missing fraction stays unknown and is not filled from another window."""
+    raw_window = str(bucket.get("window") or "").strip().lower()
+    if not any(raw_window in aliases for _, aliases, _ in _AGY_WINDOW_SPECS):
+        return None
+    canonical = raw_window
+    minutes: int | None = None
+    for name, aliases, window_minutes in _AGY_WINDOW_SPECS:
+        if raw_window in aliases:
+            canonical = name
+            minutes = window_minutes
+            break
+    used = _used_pct_from_remaining_fraction(bucket.get("remaining_fraction"))
+    remaining = None if used is None else max(0.0, min(100.0, 100.0 - used))
+    return {
+        "window": canonical,
+        "used_pct": used,
+        "remaining_pct": remaining,
+        "resets_at": _agy_reset_or_none(bucket.get("reset_time")),
+        "window_minutes": minutes,
+    }
+
+
+def _agy_quota_groups_from_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """Map `agy /usage` groups onto separate quota rows.
+
+    Gemini Models and Claude/GPT stay distinct. Credit groups are not quota.
+    The first bucket for a window wins; a later bucket does not overwrite it.
+    """
+    command = payload.get("command") if isinstance(payload.get("command"), dict) else {}
+    data = command.get("data") if isinstance(command.get("data"), dict) else {}
+    raw_groups = data.get("groups") if isinstance(data.get("groups"), list) else []
+    groups: list[dict[str, Any]] = []
+    seen_keys: dict[str, int] = {}
+    for raw in raw_groups:
+        if not isinstance(raw, dict):
+            continue
+        raw_name = str(raw.get("name") or "")
+        if "credit" in raw_name.lower():
+            continue
+        base = _agy_group_key(raw_name)
+        seen_keys[base] = seen_keys.get(base, 0) + 1
+        key = base if seen_keys[base] == 1 else f"{base}_{seen_keys[base]}"
+        windows: list[dict[str, Any]] = []
+        seen_windows: set[str] = set()
+        buckets = raw.get("buckets") if isinstance(raw.get("buckets"), list) else []
+        for bucket in buckets:
+            if not isinstance(bucket, dict):
+                continue
+            parsed = _agy_window_from_bucket(bucket)
+            if parsed is None or parsed["window"] in seen_windows:
+                continue
+            seen_windows.add(str(parsed["window"]))
+            windows.append(parsed)
+        groups.append({"key": key, "label": _agy_group_label(base), "windows": windows})
+    return groups
+
+
+def _note_agy_quota_parsed(groups: list[dict[str, Any]]) -> None:
+    global _agy_quota_parsed, _agy_quota_failure
+    with _AGY_QUOTA_LOCK:
+        _agy_quota_parsed = (time.monotonic(), {"quota_groups": groups})
+        _agy_quota_failure = None
+
+
+def _note_agy_quota_failure(kind: Any, code: Any) -> None:
+    global _agy_quota_failure
+    kind, code = _public_quota_error(kind, code)
+    with _AGY_QUOTA_LOCK:
+        _agy_quota_failure = (
+            time.monotonic(),
+            {"error_kind": kind or "unavailable", "error_code": code},
+        )
+
+
+def _agy_finish_unparsed(record: dict[str, Any]) -> dict[str, Any]:
+    """A probe that never returned usage JSON. Do not keep the previous percentages."""
+    kind = record.get("error_kind")
+    code = record.get("error_code")
+    if code in {429, "429"} or kind in {"rate_limit", "ratelimit"}:
+        kind = "rate_limit"
+    _note_agy_quota_failure(kind, code)
+    return record
+
+
+def _copy_agy_groups(groups: Any) -> list[dict[str, Any]]:
+    if not isinstance(groups, list):
+        return []
+    copied: list[dict[str, Any]] = []
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        windows = [dict(window) for window in group.get("windows") or [] if isinstance(window, dict)]
+        copied.append({**group, "windows": windows})
+    return copied
+
+
+def get_agy_quota_observation() -> dict[str, Any]:
+    """Latest AGY `/usage` groups, with the same fresh/stale/unavailable contract as other probes.
+
+    A newer error or an expired snapshot does not count as a fresh quota reading.
+    """
+    now = time.monotonic()
+    ttl = _codexbar_cache_ttl_s()
+    with _AGY_QUOTA_LOCK:
+        parsed = _agy_quota_parsed
+        failure = _agy_quota_failure
+    failure_newer = failure is not None and (parsed is None or failure[0] >= parsed[0])
+    if parsed is not None and not failure_newer:
+        age = now - parsed[0]
+        groups = _copy_agy_groups(parsed[1].get("quota_groups"))
+        freshness = "fresh" if age < ttl else "stale_last_good"
+        return {
+            "quota_groups": groups,
+            "freshness": freshness,
+            "age_s": age,
+            "error_kind": None,
+            "error_code": None,
+        }
+    if parsed is not None and failure is not None:
+        return {
+            "quota_groups": _copy_agy_groups(parsed[1].get("quota_groups")),
+            "freshness": "stale_last_good",
+            "age_s": now - parsed[0],
+            "error_kind": failure[1].get("error_kind"),
+            "error_code": failure[1].get("error_code"),
+        }
+    if failure is not None:
+        return {
+            "quota_groups": [],
+            "freshness": "unavailable",
+            "age_s": None,
+            "error_kind": failure[1].get("error_kind"),
+            "error_code": failure[1].get("error_code"),
+        }
+    return {
+        "quota_groups": [],
+        "freshness": "unavailable",
+        "age_s": None,
+        "error_kind": "unavailable",
+        "error_code": None,
+    }
 
 
 def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
@@ -1376,13 +1629,15 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
     """
     agy_bin = _agy_cli_bin()
     if not agy_bin:
-        return _normalize_provider_error(
-            "gemini",
-            {
-                "message": "agy CLI not found (install AGY; do not probe Google quota APIs)",
-                "kind": "need_login",
-                "code": "NEED_LOGIN",
-            },
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {
+                    "message": "agy CLI not found (install AGY; do not probe Google quota APIs)",
+                    "kind": "need_login",
+                    "code": "NEED_LOGIN",
+                },
+            )
         )
     try:
         completed = subprocess.run(
@@ -1393,38 +1648,70 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
             check=False,
         )
     except subprocess.TimeoutExpired:
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage timed out", "kind": "fetch_error", "code": "TIMEOUT"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage timed out", "kind": "fetch_error", "code": "TIMEOUT"},
+            )
         )
     except OSError:
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+            )
         )
     if completed.returncode != 0:
         # Never forward raw stdout/stderr into auth_error (routing-budget JSON);
         # CLI diagnostics can contain credentials or private content.
-        return _normalize_provider_error(
-            "gemini",
-            {
-                "message": f"agy /usage failed (exit {completed.returncode})",
-                "kind": "provider",
-                "code": completed.returncode,
-            },
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {
+                    "message": f"agy /usage failed (exit {completed.returncode})",
+                    "kind": "provider",
+                    "code": completed.returncode,
+                },
+            )
         )
     try:
         payload = json.loads(completed.stdout or "")
     except json.JSONDecodeError:
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+            )
         )
     if not isinstance(payload, dict):
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "agy /usage JSON root is not an object", "kind": "fetch_error", "code": "BAD_JSON"},
+        return _agy_finish_unparsed(
+            _normalize_provider_error(
+                "gemini",
+                {"message": "agy /usage JSON root is not an object", "kind": "fetch_error", "code": "BAD_JSON"},
+            )
         )
+    command = payload.get("command") if isinstance(payload.get("command"), dict) else {}
+    for envelope in (payload, command):
+        if "provider" in envelope and envelope["provider"] not in ("agy", "antigravity", "gemini"):
+            return _agy_finish_unparsed(
+                _normalize_provider_error(
+                    "gemini", {"kind": "fetch_error", "code": "PROVIDER_MISMATCH", "message": "AGY provider mismatch"}
+                )
+            )
+        error = envelope.get("error")
+        status = envelope.get("status")
+        if error or (status is not None and status not in ("SUCCESS", "success", "OK", "ok")):
+            error = error if isinstance(error, dict) else {}
+            kind, code = _public_quota_error(
+                "rate_limit" if status in ("RATE_LIMITED", "rate_limited") else error.get("kind") or "provider",
+                error.get("code") or "PROVIDER_ERROR",
+            )
+            return _agy_finish_unparsed(
+                _normalize_provider_error("gemini", {"kind": kind, "code": code, "message": "AGY usage probe failed"})
+            )
+    # Public groups come from this same payload. Routing below still requires a
+    # Gemini Models window; a sibling Claude/GPT group is not discarded here.
+    _note_agy_quota_parsed(_agy_quota_groups_from_payload(payload))
     command = payload.get("command") if isinstance(payload.get("command"), dict) else {}
     data = command.get("data") if isinstance(command.get("data"), dict) else {}
     groups = data.get("groups") if isinstance(data.get("groups"), list) else []
@@ -1450,12 +1737,16 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
         if "claude" not in name and "gpt" not in name:
             continue
         buckets = _agy_usage_buckets_by_window(group)
-        for key, aliases, minutes in (("five_hour", ("5h", "five_hour", "session"), 300),
-                                     ("weekly", ("weekly",), WEEKLY_WINDOW_MINUTES)):
+        for key, aliases, minutes in (
+            ("five_hour", ("5h", "five_hour", "session"), 300),
+            ("weekly", ("weekly",), WEEKLY_WINDOW_MINUTES),
+        ):
             bucket = next((buckets[k] for k in aliases if k in buckets), {})
             used = _used_pct_from_remaining_fraction(bucket.get("remaining_fraction"))
             if used is not None:
-                claude_gpt[key] = _window_from_used_pct(used, window_minutes=minutes, resets_at=bucket.get("reset_time"))
+                claude_gpt[key] = _window_from_used_pct(
+                    used, window_minutes=minutes, resets_at=_agy_reset_or_none(bucket.get("reset_time"))
+                )
         break
     by_window = _agy_usage_buckets_by_window(gemini_group)
     five_h = by_window.get("5h") or by_window.get("five_hour") or by_window.get("session")
@@ -1469,7 +1760,7 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
             primary = _window_from_used_pct(
                 used,
                 window_minutes=300,
-                resets_at=str(reset) if isinstance(reset, str) else None,
+                resets_at=_agy_reset_or_none(reset),
             )
     if isinstance(weekly, dict):
         used = _used_pct_from_remaining_fraction(weekly.get("remaining_fraction"))
@@ -1478,7 +1769,7 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
             secondary = _window_from_used_pct(
                 used,
                 window_minutes=WEEKLY_WINDOW_MINUTES,
-                resets_at=str(reset) if isinstance(reset, str) else None,
+                resets_at=_agy_reset_or_none(reset),
             )
     if primary is None and secondary is None:
         return _normalize_provider_error(
@@ -1571,6 +1862,440 @@ def _probe_glm_native(*, timeout_s: float) -> dict[str, Any]:
     )
 
 
+def _codexbar_bin() -> str | None:
+    found = shutil.which("codexbar")
+    if found:
+        return found
+    fallback = Path.home() / ".local" / "bin" / "codexbar"
+    return str(fallback) if fallback.is_file() else None
+
+
+def _muse_binding_headroom(record: dict[str, Any]) -> tuple[float | None, Any]:
+    """Tightest reported remaining percent and its reset.
+
+    A missing window is omitted. It is not treated as 0% used or 100% remaining.
+    """
+    windows = record.get("windows") if isinstance(record.get("windows"), dict) else {}
+    candidates: list[tuple[float, Any]] = []
+    for name in ("primary", "secondary", "tertiary"):
+        block = windows.get(name)
+        if not isinstance(block, dict):
+            continue
+        remaining = _public_percent(block.get("remaining_pct"))
+        if remaining is None:
+            continue
+        candidates.append((remaining, _agy_reset_or_none(block.get("resets_at"))))
+    if not candidates:
+        return None, None
+    remaining, resets_at = min(candidates, key=lambda pair: pair[0])
+    return remaining, resets_at
+
+
+def _muse_clear_unmeasured_window(record: dict[str, Any], usage: dict[str, Any], name: str, *fields: str) -> None:
+    """Drop a window the payload did not measure.
+
+    The shared normalizer copies a lone primary window into the weekly slot.
+    For Muse that copy would invent a weekly quota from the 5-hour reading.
+    """
+    raw = usage.get(name)
+    if isinstance(raw, dict) and _public_percent(raw.get("usedPercent")) is not None:
+        return
+    for field in fields:
+        record[field] = None
+    windows = record.get("windows")
+    if isinstance(windows, dict):
+        windows[name] = {
+            "used_pct": None,
+            "remaining_pct": None,
+            "resets_at": None,
+            "window_minutes": None,
+            "reset_description": None,
+        }
+
+
+def _muse_quota_unsupported(record: dict[str, Any]) -> dict[str, Any]:
+    """Successful probe with no numeric window: unknown quota, not a capacity sample."""
+    result = dict(record)
+    result["status"] = "unknown"
+    result["headroom_pct"] = None
+    result["error_kind"] = "unsupported"
+    result["error_code"] = "NO_QUOTA"
+    result["auth_error"] = "Muse probe returned no quota or rate-limit percentage"
+    return result
+
+
+def _muse_record_from_codexbar_payload(payload: Any) -> dict[str, Any]:
+    """Map a CodexBar ``muse`` usage payload onto the shared provider record.
+
+    Keeps 5-hour (primary) and weekly (secondary) windows when ``usedPercent``
+    is numeric. Drops identity, account, and credit fields. Null percentages
+    stay unknown.
+    """
+    body = payload
+    if isinstance(body, list):
+        body = next(
+            (item for item in body if isinstance(item, dict) and item.get("provider") == "muse"),
+            None,
+        )
+        if body is None:
+            body = next((item for item in payload if isinstance(item, dict) and "provider" not in item), None)
+    if not isinstance(body, dict):
+        return _normalize_provider_error(
+            "muse",
+            {"message": "CodexBar Muse payload was not a JSON object", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    if "provider" in body and body["provider"] != "muse":
+        return _normalize_provider_error(
+            "muse", {"message": "CodexBar Muse provider mismatch", "kind": "fetch_error", "code": "PROVIDER_MISMATCH"}
+        )
+    error = body.get("error")
+    if error:
+        error = error if isinstance(error, dict) else {}
+        kind, code = _public_quota_error(error.get("kind") or "provider", error.get("code") or "PROVIDER_ERROR")
+        message = "Muse usage probe was rate-limited" if kind == "rate_limit" else "Muse usage probe failed"
+        return _normalize_provider_error("muse", {"message": message, "kind": kind, "code": code})
+    usage = body.get("usage")
+    if usage is None:
+        usage = {}
+    if not isinstance(usage, dict):
+        return _normalize_provider_error(
+            "muse",
+            {"message": "CodexBar Muse usage was not an object", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    observed_at = None
+    if "updatedAt" in usage:
+        observed_at = _agy_reset_or_none(usage["updatedAt"])
+        observed = _parse_resets_at_any(observed_at)
+        if observed is None:
+            return _normalize_provider_error(
+                "muse", {"message": "Muse observation timestamp is invalid", "kind": "fetch_error", "code": "BAD_JSON"}
+            )
+        age = (datetime.now(UTC) - observed).total_seconds()
+        if age < 0 or age >= _codexbar_cache_ttl_s():
+            return _normalize_provider_error(
+                "muse", {"message": "Muse observation is not current", "kind": "fetch_error", "code": "STALE_DATA"}
+            )
+    sanitized_usage = {}
+    for name in ("primary", "secondary", "tertiary"):
+        raw = usage.get(name)
+        if not isinstance(raw, dict):
+            continue
+        minutes = raw.get("windowMinutes")
+        sanitized_usage[name] = {
+            "usedPercent": _public_percent(raw.get("usedPercent")),
+            "windowMinutes": minutes
+            if isinstance(minutes, int) and not isinstance(minutes, bool) and minutes > 0
+            else None,
+            "resetsAt": _agy_reset_or_none(raw.get("resetsAt")),
+        }
+    record = _normalize_provider_data(
+        "muse",
+        {"provider": "muse", "source": "codexbar_muse", "usage": sanitized_usage},
+    )
+    record["observed_at"] = observed_at
+    _muse_clear_unmeasured_window(
+        record,
+        sanitized_usage,
+        "primary",
+        "primary_used_pct",
+        "primary_remaining_pct",
+    )
+    _muse_clear_unmeasured_window(
+        record,
+        sanitized_usage,
+        "secondary",
+        "secondary_used_pct",
+        "secondary_remaining_pct",
+        "weekly_used_pct",
+        "weekly_remaining_pct",
+        "weekly_resets_at",
+    )
+    headroom, _resets = _muse_binding_headroom(record)
+    record["headroom_pct"] = headroom
+    if headroom is None:
+        return _muse_quota_unsupported(record)
+    return record
+
+
+def _probe_muse_native(*, timeout_s: float) -> dict[str, Any]:
+    """Read Muse through CodexBar's supported ``usage --provider muse`` interface.
+
+    The Muse CLI has no quota subcommand. This does not open auth files, and it
+    does not copy identity, account, or credit fields into the record.
+    """
+    codexbar_bin = _codexbar_bin()
+    if not codexbar_bin:
+        return _normalize_provider_error(
+            "muse",
+            {"message": "codexbar CLI not found", "kind": "unavailable", "code": "NO_PROBE"},
+        )
+    try:
+        completed = subprocess.run(
+            [codexbar_bin, "usage", "--provider", "muse", "--json", "--no-credits"],
+            capture_output=True,
+            text=True,
+            timeout=max(float(timeout_s), 1.0),
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
+    except subprocess.TimeoutExpired:
+        return _normalize_provider_error(
+            "muse",
+            {"message": "CodexBar Muse probe timed out", "kind": "timeout", "code": "TIMEOUT"},
+        )
+    except OSError:
+        return _normalize_provider_error(
+            "muse",
+            {"message": "CodexBar Muse probe failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+        )
+    stdout = completed.stdout or ""
+    if not stdout.strip():
+        return _normalize_provider_error(
+            "muse",
+            {
+                "message": f"CodexBar Muse probe returned no JSON (exit {completed.returncode})",
+                "kind": "provider" if completed.returncode else "fetch_error",
+                "code": completed.returncode or "EMPTY",
+            },
+        )
+    try:
+        payload = json.loads(stdout)
+    except json.JSONDecodeError:
+        return _normalize_provider_error(
+            "muse",
+            {"message": "CodexBar Muse probe returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    record = _muse_record_from_codexbar_payload(payload)
+    if completed.returncode and record.get("status") == "healthy":
+        return _normalize_provider_error(
+            "muse",
+            {
+                "message": f"CodexBar Muse probe failed (exit {completed.returncode})",
+                "kind": "provider",
+                "code": completed.returncode,
+            },
+        )
+    return record
+
+
+def project_muse_for_status(record: dict[str, Any]) -> dict[str, Any]:
+    """Public Muse row for the usage CLI and the operator status consumer.
+
+    Numeric remaining, headroom, and reset are published only for a fresh
+    supported window. Missing, stale, error, and rate-limit observations keep
+    those fields null so the CLI renders them as unknown.
+    """
+    if not isinstance(record, dict):
+        record = {}
+    freshness = record.get("freshness")
+    if freshness not in ("fresh", "stale_last_good", "unavailable"):
+        freshness = "unavailable"
+    age = record.get("age_s")
+    age = age if isinstance(age, (int, float)) and _coerce_float(age) is not None and age >= 0 else None
+    kind, code = _public_quota_error(
+        record.get("error_kind") or record.get("failure_kind"),
+        record.get("error_code") if record.get("error_code") is not None else record.get("last_failure_code"),
+    )
+    if record.get("observed_at") is not None:
+        observed = _parse_resets_at_any(record["observed_at"])
+        provider_age = None if observed is None else (datetime.now(UTC) - observed).total_seconds()
+        if provider_age is None or provider_age < 0 or provider_age >= _codexbar_cache_ttl_s():
+            freshness = "stale_last_good"
+            kind, code = "fetch_error", "STALE_DATA"
+        if provider_age is not None and provider_age >= 0:
+            age = max(age or 0, provider_age)
+    raw_windows = record.get("windows") if isinstance(record.get("windows"), dict) else {}
+    windows = {}
+    for name in ("primary", "secondary", "tertiary"):
+        raw = raw_windows.get(name)
+        raw = raw if isinstance(raw, dict) else {}
+        used = _public_percent(raw.get("used_pct"))
+        minutes = raw.get("window_minutes")
+        windows[name] = {
+            "used_pct": used,
+            "remaining_pct": None if used is None else 100.0 - used,
+            "resets_at": _agy_reset_or_none(raw.get("resets_at")),
+            "window_minutes": minutes
+            if isinstance(minutes, int) and not isinstance(minutes, bool) and minutes > 0
+            else None,
+            "reset_description": None,
+        }
+    headroom, resets_at = _muse_binding_headroom({"windows": windows})
+    publish = freshness == "fresh" and headroom is not None and kind is None and code is None
+    if not publish:
+        headroom = None
+        resets_at = None
+        windows = {
+            name: {
+                "used_pct": None,
+                "remaining_pct": None,
+                "resets_at": None,
+                "window_minutes": None,
+                "reset_description": None,
+            }
+            for name in ("primary", "secondary", "tertiary")
+        }
+        status = "unknown"
+    else:
+        status = "healthy"
+    return {
+        "lane": "muse",
+        "status": status,
+        "remaining_pct": headroom,
+        "headroom_pct": headroom,
+        "resets_at": resets_at,
+        "freshness": freshness,
+        "age_s": age,
+        "error_kind": kind,
+        "error_code": code,
+        "failure_kind": kind,
+        "last_failure_code": code,
+        "auth_error": None,
+        "codexbar": {
+            "freshness": freshness,
+            "age_s": age,
+            "headroom_pct": headroom,
+            "weekly_resets_at": resets_at,
+            "windows": windows,
+            "error_kind": kind,
+            "failure_kind": kind,
+            "last_failure_code": code,
+            "primary_remaining_pct": windows["primary"]["remaining_pct"],
+            "weekly_remaining_pct": windows["secondary"]["remaining_pct"],
+        },
+    }
+
+
+def _agy_public_groups(
+    groups: Any,
+    *,
+    publish_numbers: bool,
+    publish_resets: bool,
+) -> list[dict[str, Any]]:
+    published: list[dict[str, Any]] = []
+    if not isinstance(groups, list):
+        return published
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        key = group.get("key")
+        if not isinstance(key, str) or not key or len(key) > 40:
+            continue
+        base = next(
+            (
+                base
+                for base in ("gemini_models", "claude_gpt", "group")
+                if key == base
+                or (
+                    key.startswith(base + "_")
+                    and key[len(base) + 1 :].isascii()
+                    and key[len(base) + 1 :].isdigit()
+                    and 2 <= int(key[len(base) + 1 :]) <= len(groups)
+                    and key == f"{base}_{int(key[len(base) + 1 :])}"
+                )
+            ),
+            None,
+        )
+        if base is None:
+            continue
+        label = _agy_group_label(base)
+        windows: list[dict[str, Any]] = []
+        for window in group.get("windows") or []:
+            if not isinstance(window, dict):
+                continue
+            name = window.get("window")
+            if name not in ("5h", "weekly"):
+                continue
+            used = _public_percent(window.get("used_pct")) if publish_numbers else None
+            remaining = _public_percent(window.get("remaining_pct")) if publish_numbers else None
+            if used is None or remaining is None:
+                used = remaining = None
+            resets = _agy_reset_or_none(window.get("resets_at")) if publish_resets else None
+            windows.append(
+                {
+                    "window": name,
+                    "used_pct": used,
+                    "remaining_pct": remaining,
+                    "resets_at": resets,
+                    "window_minutes": 300 if name == "5h" else WEEKLY_WINDOW_MINUTES,
+                }
+            )
+        published.append({"key": key, "label": label, "windows": windows})
+    return published
+
+
+def _agy_any_numeric_window(groups: Any) -> bool:
+    if not isinstance(groups, list):
+        return False
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        for window in group.get("windows") or []:
+            if isinstance(window, dict) and _public_percent(window.get("remaining_pct")) is not None:
+                return True
+    return False
+
+
+def project_agy_for_status(record: dict[str, Any]) -> dict[str, Any]:
+    """Public AGY row. Quota groups are not one interchangeable remaining percent.
+
+    A fresh parsed payload publishes each finite ``remaining_fraction`` and that
+    bucket's own reset. A bucket with no fraction stays unknown and keeps its
+    reset. Stale, malformed, error, and rate-limited observations drop numbers
+    and resets so an older window cannot stand in for the current one.
+    """
+    if not isinstance(record, dict):
+        record = {}
+    freshness = record.get("freshness")
+    if freshness not in ("fresh", "stale_last_good", "unavailable"):
+        freshness = "unavailable"
+    age = record.get("age_s")
+    age = age if isinstance(age, (int, float)) and _coerce_float(age) is not None and age >= 0 else None
+    kind, code = _public_quota_error(
+        record.get("error_kind") or record.get("failure_kind"),
+        record.get("error_code") if record.get("error_code") is not None else record.get("last_failure_code"),
+    )
+    blocking = freshness != "fresh" or kind is not None or code is not None
+    groups = _agy_public_groups(record.get("quota_groups"), publish_numbers=not blocking, publish_resets=not blocking)
+    any_numeric = _agy_any_numeric_window(groups)
+    if blocking:
+        status = "unknown"
+    elif any_numeric:
+        status = "healthy"
+        kind = None
+        code = None
+    else:
+        status = "unknown"
+        kind = kind or "unsupported"
+        if code is None:
+            code = "NO_QUOTA"
+    return {
+        "lane": "agy",
+        "status": status,
+        "remaining_pct": None,
+        "headroom_pct": None,
+        "resets_at": None,
+        "freshness": freshness,
+        "age_s": age,
+        "error_kind": kind,
+        "error_code": code,
+        "failure_kind": kind,
+        "last_failure_code": code,
+        "auth_error": None,
+        "quota_groups": groups,
+        "codexbar": {
+            "freshness": freshness,
+            "age_s": age,
+            "quota_groups": groups,
+            "error_kind": kind,
+            "error_code": code,
+            "failure_kind": kind,
+            "last_failure_code": code,
+            "source": "agy_cli_usage",
+        },
+    }
+
+
 _NATIVE_PROBES = {
     "claude": _probe_claude_native,
     "codex": _probe_codex_native,
@@ -1578,6 +2303,7 @@ _NATIVE_PROBES = {
     "grok": _probe_grok_native,
     "gemini": _probe_antigravity_native,
     "antigravity": _probe_antigravity_native,
+    "muse": _probe_muse_native,
     # GLM/Z.AI is not a live subscription lane. Keep _probe_glm_native for
     # manual diagnostics; do not register it here or routing-budget ranks it.
 }
@@ -1602,6 +2328,8 @@ def fetch_provider_usage(provider: str, *, timeout_s: float | None = None) -> di
     try:
         return probe(timeout_s=timeout_s)
     except Exception as exc:
+        if provider in {"gemini", "antigravity"}:
+            _note_agy_quota_failure("fetch_error", "FETCH_ERROR")
         return _normalize_provider_error(
             provider,
             {"message": f"Native probe failed: {exc}", "kind": "fetch_error", "code": "FETCH_ERROR"},
@@ -2015,9 +2743,10 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         weekly_win = usage.get("secondary") or openai_db.get("secondaryLimit") or primary_win
 
     def _used_pct(win: dict[str, Any] | None) -> float | None:
-        if not win or "usedPercent" not in win:
+        if not isinstance(win, dict) or "usedPercent" not in win:
             return None
-        return float(win["usedPercent"])
+        # Null / non-numeric is unknown. Never coerce a missing reading to 0%.
+        return _coerce_float(win.get("usedPercent"))
 
     def _remaining_pct(used: float | None) -> float | None:
         if used is None:
@@ -2263,8 +2992,7 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
     result["fable_weekly"] = _window_block(fable, _used_pct(fable))
     third_party = usage.get("claude_gpt_windows") or {}
     result["claude_gpt_windows"] = {
-        key: _window_block(third_party.get(key), _used_pct(third_party.get(key)))
-        for key in ("five_hour", "weekly")
+        key: _window_block(third_party.get(key), _used_pct(third_party.get(key))) for key in ("five_hour", "weekly")
     }
     if cursor_provider_windows is not None:
         result["provider_windows"] = cursor_provider_windows
@@ -2706,7 +3434,7 @@ def scheduler_status() -> dict[str, Any]:
     }
 
 
-def get_provider_usage_data(provider: str) -> dict[str, Any]:
+def get_provider_usage_data(provider: str, *, kick_refresh: bool = True) -> dict[str, Any]:
     """Retrieve provider data from cache.
 
     HTTP and routing-budget always take this path. The CLI itself is owned by
@@ -2715,6 +3443,7 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
 
     When no scheduler is running (CLI in-process callers, tests), a cache miss
     still kicks a one-shot background refresh so the next read can see data.
+    ``kick_refresh=False`` reads cache and last-known-good only.
     """
     cache_key = f"codexbar_usage:{provider}"
     cached = cache_get_with_age(cache_key, ttl=_codexbar_cache_ttl_s())
@@ -2733,7 +3462,7 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
     # Under pytest, skip the on-demand CLI fan-out so later tests do not
     # inherit a 25s in-flight lock; tests that need the kick opt in via
     # CODEXBAR_ON_DEMAND_REFRESH=1 or call trigger_background_refresh().
-    if not _scheduler_is_running() and _on_demand_refresh_enabled():
+    if kick_refresh and not _scheduler_is_running() and _on_demand_refresh_enabled():
         trigger_background_refresh()
 
     # Serve last good data as stale fallback
