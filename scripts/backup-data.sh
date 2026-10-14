@@ -735,33 +735,68 @@ validate_repository_config() {
   export RESTIC_REPOSITORY="$REPOSITORY"
 }
 
-# find -path treats * ? [ ] as globs, and shell quoting does not stop that.
-# restic exclude patterns escape the same characters. A project root or a
-# staging root that contains one makes discovery prune a different tree from
-# the tree restic uploads (a `*` root can drop a nested database from the
-# online backup while restic stores its stale main file; a `[` root can fail
-# to prune an ephemeral home whose record is then passed to restic explicitly).
-# TMP_ROOT is the staging root: the private stage directory and its project
-# copy are created under it, and allowlist walks prune it with find -path.
-# Refuse before any discovery, snapshot, or upload. Do not escape.
-refuse_glob_metacharacter_root() {
+# find -path and restic exclude patterns both treat bytes in a root as syntax
+# (\ is an escape, * ? [ ] are globs). Escaping one tool and not the other
+# makes discovery and upload disagree, and a blacklist misses the next byte.
+# Both roots must be absolute and use only [A-Za-z0-9._/-], with no empty
+# segment and no segment made only of dots (".", "..", "..."). The walk below
+# reads every character: a newline-terminated grep or [[ =~ ]] would accept
+# the first line of a string that continues after a newline. Do not escape.
+refuse_disallowed_root() {
   local label=$1
   local root=$2
+  local index char segment rest only_dots
+  local previous_locale=${LC_ALL-unset}
+  local -a segments=()
 
-  if [[ "$root" == *'*'* || "$root" == *'?'* || "$root" == *'['* || "$root" == *']'* ]]; then
-    die "Refusing to run: $label contains a glob metacharacter (* ? [ ]) that find -path would interpret, so discovery and upload would disagree."
+  LC_ALL=C
+  if [[ -z "$root" || "${root:0:1}" != / ]]; then
+    die "Refusing to run: $label is outside the backup path allowlist (absolute path, only [A-Za-z0-9._/-], no empty or dot-only segment): not absolute."
+  fi
+  for ((index = 0; index < ${#root}; index++)); do
+    char=${root:index:1}
+    case "$char" in
+      [A-Za-z0-9._/-]) ;;
+      *)
+        die "Refusing to run: $label is outside the backup path allowlist (absolute path, only [A-Za-z0-9._/-], no empty or dot-only segment): disallowed character."
+        ;;
+    esac
+  done
+  rest=${root#/}
+  # A trailing slash, a leading extra slash, or "//" is an empty segment.
+  # Checked on the whole string: the character walk already rejected newlines.
+  if [[ -z "$rest" || "$rest" == /* || "$rest" == */ || "$rest" == *//* ]]; then
+    die "Refusing to run: $label is outside the backup path allowlist (absolute path, only [A-Za-z0-9._/-], no empty or dot-only segment): empty segment."
+  fi
+  IFS=/ read -r -a segments <<< "$rest"
+  for segment in "${segments[@]}"; do
+    [[ -n "$segment" ]] ||
+      die "Refusing to run: $label is outside the backup path allowlist (absolute path, only [A-Za-z0-9._/-], no empty or dot-only segment): empty segment."
+    only_dots=1
+    for ((index = 0; index < ${#segment}; index++)); do
+      [[ "${segment:index:1}" == . ]] || only_dots=0
+    done
+    [[ "$only_dots" -eq 0 ]] ||
+      die "Refusing to run: $label is outside the backup path allowlist (absolute path, only [A-Za-z0-9._/-], no empty or dot-only segment): dot-only segment."
+  done
+  if [[ "$previous_locale" == unset ]]; then
+    unset LC_ALL
+  else
+    LC_ALL=$previous_locale
   fi
 }
 
-refuse_glob_metacharacter_roots() {
-  refuse_glob_metacharacter_root "project root" "$PROJECT_ROOT"
-  refuse_glob_metacharacter_root "staging root" "$TMP_ROOT"
+refuse_disallowed_roots() {
+  refuse_disallowed_root "project root" "$PROJECT_ROOT"
+  refuse_disallowed_root "staging root" "$TMP_ROOT"
 }
 
 validate_environment() {
-  # backup, init, doctor, and restore all enter here before any walk or upload.
-  # The non-Linux staging copy and the Linux file phase run only after this.
-  refuse_glob_metacharacter_roots
+  # Every command that can discover, stage, snapshot, upload, or restore
+  # (backup, init, doctor, retention, snapshots, verify, restore) enters
+  # here first. The non-Linux staging copy and the Linux file phase run
+  # only after this. Patterns built from either root are not escaped.
+  refuse_disallowed_roots
   require_command restic "brew install restic"
   require_command rclone "brew install rclone"
   require_command sqlite3

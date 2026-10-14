@@ -198,11 +198,28 @@ def path_is_excluded(patterns: list[str], path: str) -> bool:
     return any(match(prepare_pattern(pattern), parts) for pattern in patterns if pattern)
 
 
-def prune(snapshot_root: str, source_root: str, patterns: list[str]) -> None:
-    """Delete snapshot paths whose source path matches a passed exclude pattern."""
+def prune(
+    snapshot_root: str,
+    source_root: str,
+    patterns: list[str],
+    protected: list[str] | None = None,
+) -> None:
+    """Delete snapshot paths whose source path matches a passed exclude pattern.
+
+    ``protected`` paths are explicit backup targets. restic saves an explicit
+    file or directory even when an exclude matches that path, and still
+    applies excludes to children found by walking a directory target.
+    """
     prepared = [prepare_pattern(pattern) for pattern in patterns if pattern]
+    protected_norm = {os.path.normpath(path) for path in protected or []}
 
     def excluded(source: str) -> bool:
+        # An explicit target stays, and so do its ancestor directories: a
+        # directory exclude must not rmtree the explicit file inside it.
+        # Other children of those ancestors are still eligible.
+        norm = os.path.normpath(source)
+        if norm in protected_norm or any(path.startswith(f"{norm}{os.sep}") for path in protected_norm):
+            return False
         parts = split_path(source)
         return any(match(pattern, parts) for pattern in prepared)
 
@@ -228,14 +245,21 @@ def prune(snapshot_root: str, source_root: str, patterns: list[str]) -> None:
                 os.unlink(full)
 
 
+def _nul_texts(raw: bytes) -> list[str]:
+    return [item.decode() for item in raw.split(b"\0") if item]
+
+
 def main(argv: list[str]) -> int:
-    if len(argv) != 3:
-        print("usage: prune SNAPSHOT_ROOT SOURCE_ROOT", file=sys.stderr)
+    if len(argv) not in (3, 4):
+        print("usage: prune SNAPSHOT_ROOT SOURCE_ROOT [PROTECTED_FILE]", file=sys.stderr)
         return 2
     snapshot_root, source_root = argv[1], argv[2]
-    raw = sys.stdin.buffer.read()
-    patterns = [item.decode() for item in raw.split(b"\0") if item]
-    prune(snapshot_root, source_root, patterns)
+    protected: list[str] = []
+    if len(argv) == 4:
+        with open(argv[3], "rb") as handle:
+            protected = _nul_texts(handle.read())
+    patterns = _nul_texts(sys.stdin.buffer.read())
+    prune(snapshot_root, source_root, patterns, protected)
     return 0
 
 

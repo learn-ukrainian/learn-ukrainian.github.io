@@ -144,24 +144,51 @@ if [[ "${1:-}" == "cat" && -z "${RESTIC_REPOSITORY:-}" ]]; then
 fi
 stdin_filename=""
 database_part=0
+dry_run=0
 exclude_patterns=()
+sources=()
 if [[ "${1:-}" == "backup" ]]; then
+  # Selection comes from the positional targets and --files-from-raw list this
+  # process was given. An explicit target is kept even when an exclude matches
+  # it; excludes still apply to children walked under a directory target.
+  # There is no separate name-based delete: wal, qdrant, bytecode, and SQLite
+  # files leave the snapshot only when an exclude argument matches them.
   previous=""
   for argument in "$@"; do
-    [[ "$previous" == "--stdin-filename" ]] && stdin_filename="$argument"
-    [[ "$argument" == "lu-part-db" ]] && database_part=1
-    if [[ "$previous" == "--exclude" ]]; then
-      exclude_patterns+=("$argument")
+    if [[ -n "$previous" ]]; then
+      case "$previous" in
+        --stdin-filename) stdin_filename="$argument" ;;
+        --exclude) exclude_patterns+=("$argument") ;;
+        --exclude-file)
+          while IFS= read -r pattern || [[ -n "$pattern" ]]; do
+            pattern="${pattern#"${pattern%%[![:space:]]*}"}"
+            pattern="${pattern%"${pattern##*[![:space:]]}"}"
+            [[ -n "$pattern" && "$pattern" != \#* ]] || continue
+            exclude_patterns+=("$pattern")
+          done < "$argument"
+          ;;
+        --files-from-raw)
+          while IFS= read -r -d '' listed || [[ -n "$listed" ]]; do
+            [[ -n "$listed" ]] || continue
+            sources+=("$listed")
+          done < "$argument"
+          ;;
+        --tag) [[ "$argument" == "lu-part-db" ]] && database_part=1 ;;
+        --host|--time|--option|--retry-lock|--files-from|--files-from-verbatim|--verbose|--password-file|--repository|--repo|-r) ;;
+      esac
+      previous=""
+      continue
     fi
-    if [[ "$previous" == "--exclude-file" ]]; then
-      while IFS= read -r pattern || [[ -n "$pattern" ]]; do
-        pattern="${pattern#"${pattern%%[![:space:]]*}"}"
-        pattern="${pattern%"${pattern##*[![:space:]]}"}"
-        [[ -n "$pattern" && "$pattern" != \#* ]] || continue
-        exclude_patterns+=("$pattern")
-      done < "$argument"
-    fi
-    previous="$argument"
+    case "$argument" in
+      backup) ;;
+      --stdin-filename|--exclude|--exclude-file|--files-from-raw|--files-from|--files-from-verbatim|--host|--tag|--time|--option|--retry-lock|--verbose|--password-file|--repository|--repo|-r)
+        previous="$argument"
+        ;;
+      --dry-run) dry_run=1 ;;
+      --json|--force|--stdin|--quiet|--no-cache|--verbose=2) ;;
+      --*) ;;
+      *) sources+=("$argument") ;;
+    esac
   done
   if [[ -n "$stdin_filename" ]]; then
     mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$stdin_filename")"
@@ -170,41 +197,45 @@ if [[ "${1:-}" == "backup" ]]; then
     if [[ -n "${FAKE_DB_PHASE_EXIT:-}" ]]; then
       exit "$FAKE_DB_PHASE_EXIT"
     fi
-    batch_files=0
-    batch_bytes=0
-    while IFS= read -r -d '' staged; do
-      staged="${staged#./}"
-      mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$staged")"
-      cp -p "$staged" "$FAKE_SNAPSHOT_DIR/$staged"
-      printf 'db_file=<%s>\n' "$staged" >> "$FAKE_RESTIC_LOG"
-      batch_files=$((batch_files + 1))
-      batch_bytes=$((batch_bytes + $(stat -c '%s' "$staged")))
-    done < <(find . -type f -print0)
-    printf 'db_batch=<%s %s>\n' "$batch_files" "$batch_bytes" >> "$FAKE_RESTIC_LOG"
-  else
+    if [[ "$dry_run" == 0 ]]; then
+      batch_files=0
+      batch_bytes=0
+      for source in "${sources[@]+"${sources[@]}"}"; do
+        while IFS= read -r -d '' staged; do
+          staged="${staged#./}"
+          mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$staged")"
+          cp -p "$staged" "$FAKE_SNAPSHOT_DIR/$staged"
+          printf 'db_file=<%s>\n' "$staged" >> "$FAKE_RESTIC_LOG"
+          batch_files=$((batch_files + 1))
+          batch_bytes=$((batch_bytes + $(stat -c '%s' "$staged")))
+        done < <(find "$source" -type f -print0)
+      done
+      printf 'db_batch=<%s %s>\n' "$batch_files" "$batch_bytes" >> "$FAKE_RESTIC_LOG"
+    fi
+  elif [[ "$dry_run" == 0 ]]; then
     if [[ -n "${FAKE_FILE_PHASE_EXIT:-}" ]]; then
       exit "$FAKE_FILE_PHASE_EXIT"
     fi
     mkdir -p "$FAKE_SNAPSHOT_DIR"
-    cp -a "$PWD/.claude" "$PWD/.agent" "$PWD/batch_state" "$PWD/data" "$FAKE_SNAPSHOT_DIR/"
-    find "$FAKE_SNAPSHOT_DIR" -type f \
-      \( -name '*-wal' -o -name '*-shm' -o -name '*-journal' -o -name '.DS_Store' \) -delete
-    find "$FAKE_SNAPSHOT_DIR" -type d \
-      \( -name qdrant -o -name __pycache__ \) -prune -exec find '{}' -depth -delete \;
-    # Prune from the exclude patterns this invocation was given. An independent
-    # *-home delete would keep agreeing with restic after the anchored patterns
-    # changed, which is how a glob metacharacter in the project root hid a
-    # discovery/upload split.
+    for source in "${sources[@]+"${sources[@]}"}"; do
+      parent="$(dirname "$FAKE_SNAPSHOT_DIR/$source")"
+      mkdir -p "$parent"
+      cp -a "$source" "$parent/"
+    done
     if ((${#exclude_patterns[@]} > 0)); then
+      protected_file="$FAKE_SNAPSHOT_DIR.protected"
+      : > "$protected_file"
+      for source in "${sources[@]+"${sources[@]}"}"; do
+        if [[ "$source" == /* ]]; then
+          printf '%s\0' "$source" >> "$protected_file"
+        else
+          printf '%s\0' "$PWD/$source" >> "$protected_file"
+        fi
+      done
       printf '%s\0' "${exclude_patterns[@]}" |
-        "$LU_TEST_PYTHON" "$LU_TEST_PRUNE" "$FAKE_SNAPSHOT_DIR" "$PWD"
+        "$LU_TEST_PYTHON" "$LU_TEST_PRUNE" "$FAKE_SNAPSHOT_DIR" "$PWD" "$protected_file"
       [[ "${PIPESTATUS[1]}" -eq 0 ]]
     fi
-    while IFS= read -r -d '' candidate; do
-      if head -c 16 "$candidate" | cmp -s - <(printf 'SQLite format 3\0'); then
-        rm "$candidate"
-      fi
-    done < <(find "$FAKE_SNAPSHOT_DIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) -print0)
   fi
 fi
 if [[ "${1:-}" == "backup" && -n "${FAKE_DB_RELATIVE:-}" && "$database_part" == 1 && -f "$FAKE_DB_RELATIVE" ]]; then
