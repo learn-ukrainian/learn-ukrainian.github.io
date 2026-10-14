@@ -91,6 +91,17 @@ A path containing any unknown expansion is BLOCKED as
 directories and git pathspecs follow the same rule. Inherited variables that the
 command never assigns (other than ``HOME``) are unknown too.
 
+ANSI-C ``$'...'`` words are decoded to the exact bytes Bash would expand them to
+(``_decode_ansi_c_span``), so a path spelled with octal/hex byte escapes is
+classified on its real filesystem bytes, not a re-encoded code point (#10633).
+One residual: a ``\\u``/``\\U`` *scalar* ≥ U+0080 is decoded for a UTF-8 locale
+(the fleet's locale); in a non-UTF-8 locale Bash would emit different bytes (or
+leave the escape literal). A sub-0x80 scalar, and every ``\\x``/octal *byte*
+escape, is locale-independent and exact — byte escapes remain the precise way to
+name non-ASCII path bytes. Scalars that are undecidable here (a lone surrogate,
+a value beyond U+10FFFF, an ambiguous ``\\cX``) fail closed on a write target
+(``undecidable_ansi_c_escape``); none of them can be ``/`` or ``..``.
+
 Coverage limitations (documented, by design)
 --------------------------------------------
 * Codex Desktop direct-edit interception is unverified (#4447). Where a provider
@@ -421,6 +432,31 @@ _ANSI_C_SIMPLE = {
 _OCTAL_DIGITS = frozenset("01234567")
 _HEX_DIGITS = frozenset("0123456789abcdefABCDEF")
 
+# A ``$'...'`` escape this decoder cannot reproduce as the exact bytes Bash
+# would write (a lone surrogate or a scalar beyond U+10FFFF — whose byte form is
+# locale/encoder dependent — or an ambiguous ``\cX`` sub-form). It can never be
+# ``/`` or ``..``, so it cannot change a path's directory structure; the risk is
+# only a mismatched leaf. The sentinel is a Unicode non-character that survives
+# ``shlex.quote`` and re-tokenization and encodes cleanly; ``_bash_path_decision``
+# refuses any write target that still contains it (never passed through
+# unrecognized). It is deliberately NOT a NUL: a NUL would truncate the span (see
+# below) and could hide a dangerous suffix. A word reaching an executable/option
+# position with this byte is a command/flag Bash cannot run either, so no writer
+# fires — allowing it there matches Bash.
+_UNDECODABLE = "\ufdd0"
+
+
+def _byte_char(byte: int) -> str:
+    """One raw filesystem byte (0-255) as a str the guard can round-trip.
+
+    A byte >= 0x80 is emitted as its ``surrogateescape`` code point so a later
+    ``os.fsencode`` (the filesystem codec, surrogateescape) reproduces that exact
+    byte — not a re-encoded Unicode scalar (issue #10633 F2). ASCII bytes stay
+    literal; NUL is returned as-is and truncates its span in
+    :func:`_decode_ansi_c_span`.
+    """
+    return chr(0xDC00 + byte) if byte >= 0x80 else chr(byte)
+
 
 def _decode_ansi_c_span(body: str) -> str:
     """Decode one ``$'...'`` body the way Bash expands it, for path classification.
@@ -428,18 +464,26 @@ def _decode_ansi_c_span(body: str) -> str:
     Bash ANSI-C quoting is a C-string escape grammar, **not** Python's
     ``unicode_escape`` (issue #10633): an octal escape ``\\nnn`` is the single
     8-bit byte whose value is ``nnn`` *mod 256* (so ``$'\\457'`` is ``/``, byte
-    0x2F — not U+012F), and ``\\xHH`` is likewise one byte. Modelling these with
-    ``unicode_escape`` turns an absolute path into a relative one and lets a
-    primary-checkout write escape containment.
+    0x2F — not U+012F), and ``\\xHH`` / ``\\x{HH…}`` are likewise one byte each
+    (mod 256). Byte values >= 0x80 are carried as ``surrogateescape`` code points
+    (see :func:`_byte_char`) so the path classifier sees the real filesystem
+    bytes, not a re-encoded scalar — otherwise a byte-escape spelling of a
+    non-ASCII path component (e.g. a dispatch symlink to the primary) is misread
+    and a primary-checkout write escapes containment (#10633 F2).
 
-    A produced NUL byte ends the word's useful content in Bash. This guard does
-    not truncate: it emits the literal NUL and lets the downstream path
-    classifier treat the word as an undecidable write target — it already fails
-    closed on an embedded NUL in a target while leaving a NUL elsewhere inert, so
-    the pre-#10633 NUL judgement is preserved exactly. Any construct this decoder
-    cannot model exactly (a Unicode scalar beyond U+10FFFF, an ambiguous control
-    escape) is collapsed to the same NUL sentinel, so it can never be admitted on
-    its undecoded text and never falls back to ``unicode_escape``.
+    A produced NUL byte terminates the *span* in Bash: everything after the NUL
+    within the same ``$'...'`` is dropped, while literals and other spans
+    concatenated around it survive (``A$'x\\0y'B`` → ``AxB``). This function
+    reproduces that by truncating the decoded span at the first NUL — so a NUL in
+    an executable or option word collapses to the form Bash runs
+    (``$'tee\\0junk'`` → ``tee``) instead of a byte Bash never executes, and an
+    embedded NUL never reaches a path-resolving call that would raise (#10633 F1).
+
+    Constructs whose exact bytes are locale/encoder dependent (a lone surrogate
+    ``\\uD800``, a scalar beyond U+10FFFF, or an ambiguous ``\\cX`` sub-form)
+    collapse to the non-truncating :data:`_UNDECODABLE` sentinel, which the path
+    decision refuses on a write target (#10633 F3). Nothing falls back to
+    ``unicode_escape``.
     """
     out: list[str] = []
     i = 0
@@ -458,14 +502,25 @@ def _decode_ansi_c_span(body: str) -> str:
             end = i + 1
             while end < n and end < i + 4 and body[end] in _OCTAL_DIGITS:
                 end += 1
-            out.append(chr(int(body[i + 1 : end], 8) & 0xFF))
+            out.append(_byte_char(int(body[i + 1 : end], 8) & 0xFF))
             i = end
+        elif esc == "x" and i + 2 < n and body[i + 2] == "{":
+            # Brace hex (``\x{HH…}``): all contiguous hex digits, value mod 256,
+            # one byte; the closing ``}`` is consumed when present. Empty or
+            # ``& 0xFF == 0`` hex yields a NUL that truncates the span, matching
+            # Bash (``$'\\x{}z'`` and ``$'\\x{400}z'`` expand to nothing).
+            end = i + 3
+            while end < n and body[end] in _HEX_DIGITS:
+                end += 1
+            digits = body[i + 3 : end]
+            out.append(_byte_char(int(digits, 16) & 0xFF) if digits else "\x00")
+            i = end + 1 if end < n and body[end] == "}" else end
         elif esc == "x":
             end = i + 2
             while end < n and end < i + 4 and body[end] in _HEX_DIGITS:
                 end += 1
             # ``\x`` with no hex digit is a literal backslash-x in Bash.
-            out.append("\\x" if end == i + 2 else chr(int(body[i + 2 : end], 16) & 0xFF))
+            out.append("\\x" if end == i + 2 else _byte_char(int(body[i + 2 : end], 16) & 0xFF))
             i = end
         elif esc in ("u", "U"):
             width = 4 if esc == "u" else 8
@@ -476,19 +531,29 @@ def _decode_ansi_c_span(body: str) -> str:
                 out.append("\\" + esc)
             else:
                 code = int(body[i + 2 : end], 16)
-                try:
-                    # A Unicode scalar; for path purposes a sub-0x80 value is the
-                    # same single ASCII byte in every locale (backslash-u-002f is a slash).
-                    out.append(chr(code) if code else "\x00")
-                except ValueError:
-                    out.append("\x00")  # beyond U+10FFFF: fail closed.
+                if code == 0:
+                    out.append("\x00")  # NUL: truncates the span (like Bash).
+                elif 0xD800 <= code <= 0xDFFF or code > 0x10FFFF:
+                    # A lone surrogate or a scalar beyond U+10FFFF: Bash's byte
+                    # form is locale/encoder dependent and never ``/``. Fail
+                    # closed without truncating.
+                    out.append(_UNDECODABLE)
+                else:
+                    # A Unicode scalar; a sub-0x80 value is the same single ASCII
+                    # byte in every locale (backslash-u-002f is a slash), and in a
+                    # UTF-8 locale a higher scalar fsencodes to the bytes Bash wrote.
+                    out.append(chr(code))
             i = end
         elif esc == "c":
             # ``\cX`` is a C0 control byte (0x00-0x1F) or 0x7F — it can never be
-            # ``/``. The backslash sub-form and a trailing ``\c`` are ambiguous,
-            # so fail closed on them with the NUL sentinel.
-            if i + 2 >= n or body[i + 2] == "\\":
-                out.append("\x00")
+            # ``/``. A trailing ``\c`` is a literal ``\c`` in Bash; the ``\c\``
+            # sub-form and a non-ASCII target (Bash masks the raw byte, not this
+            # code point) are ambiguous, so fail closed on them without truncating.
+            if i + 2 >= n:
+                out.append("\\c")
+                i += 2
+            elif body[i + 2] == "\\" or ord(body[i + 2]) >= 0x80:
+                out.append(_UNDECODABLE)
                 i += 2
             else:
                 target = body[i + 2]
@@ -498,7 +563,11 @@ def _decode_ansi_c_span(body: str) -> str:
             # Any other escaped char keeps the backslash literal (``\q`` -> ``\q``).
             out.append("\\" + esc)
             i += 2
-    return "".join(out)
+    decoded = "".join(out)
+    # A produced NUL truncates its span in Bash (see the docstring); keep only
+    # the content Bash would actually pass on.
+    nul = decoded.find("\x00")
+    return decoded if nul < 0 else decoded[:nul]
 
 
 def _decode_ansi_c_quotes(command: str) -> str:
@@ -2483,6 +2552,14 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
     reason = getattr(word, "decision_reason", None)
     if reason is not None:
         return _UndecidableWrite(reason, "Use a literal target and a known working directory.")
+    if _UNDECODABLE in word:
+        # An ANSI-C ``$'...'`` escape whose exact bytes the decoder could not
+        # reproduce (a lone surrogate, a scalar beyond U+10FFFF, or an ambiguous
+        # ``\cX`` form). Never classify such a target as safe (#10633 F3).
+        return _UndecidableWrite(
+            "undecidable_ansi_c_escape",
+            "An ANSI-C $'...' escape could not be modeled exactly; use a literal path.",
+        )
     if main_root is not None and re.search(r"[*?\[\]{}]", word):
         parts = Path(word).parts
         first = next(i for i, part in enumerate(parts) if re.search(r"[*?\[\]{}]", part))
