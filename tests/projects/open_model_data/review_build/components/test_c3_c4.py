@@ -1,6 +1,7 @@
 """Synthetic WP3 card-ingestion inputs; no real dictionary content is committed."""
 
 import json
+import re
 import sqlite3
 from dataclasses import replace
 from pathlib import Path
@@ -50,6 +51,15 @@ STRESS = "\u0301"
 def insert(conn, table, **row):
     columns = ",".join('"' + key + '"' for key in row)
     conn.execute(f"INSERT INTO {table} ({columns}) VALUES ({','.join('?' for _ in row)})", list(row.values()))
+
+
+def linked(html):
+    """ULIF markup links each printed word to its own entry; sense numbers stay unlinked."""
+    link = "<a onclick=\"href='dictua.aspx?uid=1'\">{}</a>"
+    return "".join(
+        part if part.startswith("<") else re.sub(r"[^\W\d_]+", lambda word: link.format(word.group()), part)
+        for part in re.split(r"(<[^>]*>)", html)
+    )
 
 
 def illustration(text):
@@ -683,6 +693,81 @@ def test_c4_separates_sense_number_and_speaker_tags(sources):
 
 
 @pytest.mark.parametrize(
+    "html,idiom,definition,quotes",
+    [
+        pytest.param(
+            "<p><b>SYNTHETIC idiom.</b> <b>1.</b> SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "SYNTHETIC idiom.",
+            "SYNTHETIC definition.",
+            ["SYNTHETIC quote (SYNTHETIC author)"],
+            id="separate_bold",
+        ),
+        pytest.param(
+            "<p><b>SYNTHETIC idiom 1.</b> SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "SYNTHETIC idiom",
+            "SYNTHETIC definition.",
+            ["SYNTHETIC quote (SYNTHETIC author)"],
+            id="same_bold",
+        ),
+        # The markup of ULIF sections 150415, 270232, 262961, 315572 and 339768, with synthetic text.
+        pytest.param(
+            linked(
+                "<p><b>SYNTHETIC (SYNTHETIC) idiom.</b> <b>1. </b>SYNTHETIC definition; SYNTHETIC, rest. "
+                "<i>SYNTHETIC — <b>SYNTHETIC idiom </b></i>(SYNTHETIC author).</p>"
+            ),
+            "SYNTHETIC (SYNTHETIC) idiom.",
+            "SYNTHETIC definition; SYNTHETIC, rest.",
+            ["SYNTHETIC — SYNTHETIC idiom (SYNTHETIC author)"],
+            id="ulif_150415_270232",
+        ),
+        pytest.param(
+            linked(
+                "<p><b>SYNTHETIC idiom<i>.</i></b> <b>1. </b>SYNTHETIC definition. <i>— SYNTHETIC! — SYNTHETIC.— "
+                "SYNTHETIC<b> SYNTHETIC idiom? </b>— SYNTHETIC </i>(SYNTHETIC author); <i>SYNTHETIC "
+                "<b>SYNTHETIC idiom,</b> SYNTHETIC </i>(SYNTHETIC second author).</p>"
+            ),
+            "SYNTHETIC idiom.",
+            "SYNTHETIC definition.",
+            [
+                "— SYNTHETIC! — SYNTHETIC.— SYNTHETIC SYNTHETIC idiom? — SYNTHETIC (SYNTHETIC author)",
+                "SYNTHETIC SYNTHETIC idiom, SYNTHETIC (SYNTHETIC second author)",
+            ],
+            id="ulif_262961",
+        ),
+        pytest.param(
+            linked(
+                "<p><b>SYNTHETIC (SYNTHETIC) [SYNTHETIC] idiom</b>. <b>1. </b>SYNTHETIC definition. "
+                "<i>SYNTHETIC “SYNTHETIC” <b>SYNTHETIC idiom</b> SYNTHETIC? </i>(SYNTHETIC author).</p>"
+            ),
+            "SYNTHETIC (SYNTHETIC) [SYNTHETIC] idiom",
+            "SYNTHETIC definition.",
+            ["SYNTHETIC “SYNTHETIC” SYNTHETIC idiom SYNTHETIC? (SYNTHETIC author)"],
+            id="ulif_315572",
+        ),
+        pytest.param(
+            linked(
+                "<p><b>SYNTHETIC idiom</b>. <b>1.</b> SYNTHETIC definition, SYNTHETIC-, SYNTHETIC-SYNTHETIC. "
+                "<i>SYNTHETIC… <b>SYNTHETIC idiom</b></i> (SYNTHETIC author).</p>"
+            ),
+            "SYNTHETIC idiom",
+            "SYNTHETIC definition, SYNTHETIC-, SYNTHETIC-SYNTHETIC.",
+            ["SYNTHETIC… SYNTHETIC idiom (SYNTHETIC author)"],
+            id="ulif_339768",
+        ),
+    ],
+)
+def test_c4_printed_sense_number_is_never_definition_text(sources, html, idiom, definition, quotes):
+    html_update(sources, 3, html)
+    unit = units(sources, c4_phraseology)[0]
+    c = unit.candidate
+    assert c.outcome == "accepted"
+    assert [(v.slot, v.text) for v in c.slots] == [("idiom", idiom), ("sense", "1")]
+    assert [v.text for v in c.response] == [definition, *quotes]
+    with pytest.raises(BuildError, match="binding_group"):
+        validate(sources, c4_phraseology, replace(unit, candidate=replace(c, slots=c.slots[:1])))
+
+
+@pytest.mark.parametrize(
     "html,reason",
     [
         # A continuation sense prints its idiom in an earlier section; a bold inside quotation text is not one.
@@ -719,12 +804,56 @@ def test_c4_separates_sense_number_and_speaker_tags(sources):
             "<i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
             "citation_unresolved",
         ),
+        # One section is one unit, so a sense number must sit right after the idiom and be the only one.
+        (
+            "<p><b>2.</b> SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "headword_unresolved",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom.</b> <b>1.</b> SYNTHETIC definition. <b>2.</b> SYNTHETIC other definition. "
+            "<i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "sense_not_visible",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom.</b> SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author). "
+            "<b>2.</b> SYNTHETIC other definition. <i>SYNTHETIC other quote</i> (SYNTHETIC author).</p>",
+            "sense_not_visible",
+        ),
+        # The markup of ULIF section 252126: a number closes the heading and a stray one follows the definition.
+        (
+            linked(
+                "<p><b>SYNTHETIC [SYNTHETIC] idiom. 1. </b>SYNTHETIC definition.\n<b>1.</b>"
+                '<span lang="en"> </span><i>SYNTHETIC <b>SYNTHETIC idiom,</b> SYNTHETIC </i>'
+                '(SYNTHETIC<span lang="en"> </span>author).</p>'
+            ),
+            "sense_not_visible",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom, </b><i>SYNTHETIC label. </i><b>1. </b>SYNTHETIC definition. "
+            "<i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "sense_not_visible",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom (SYNTHETIC </b><i>SYNTHETIC label</i><b>). 1. </b>SYNTHETIC definition. "
+            "<i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "sense_not_visible",
+        ),
+        (
+            "<p><b>SYNTHETIC idiom.</b> <b>1</b> SYNTHETIC definition. <i>SYNTHETIC quote</i> (SYNTHETIC author).</p>",
+            "sense_not_visible",
+        ),
     ],
 )
 def test_c4_withholds_mis_segmented_paragraphs(sources, html, reason):
     html_update(sources, 3, html)
     unit = units(sources, c4_phraseology)[0]
     assert (unit.candidate.outcome, unit.candidate.reason) == ("withheld", reason)
+    with pytest.raises(BuildError):
+        validate(
+            sources,
+            c4_phraseology,
+            replace(unit, candidate=replace(unit.candidate, outcome="accepted", reason="ok", evidence=())),
+        )
 
 
 @pytest.mark.parametrize("module,key", [(c3_relations, 1), (c3_relations, 2), (c4_phraseology, 3)])

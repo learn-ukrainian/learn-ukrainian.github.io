@@ -32,6 +32,7 @@ WITHHELD = {
     "citation_unresolved",
 }
 SENSE_NUMBER = re.compile(r"\s(\d+)\.$")
+SENSE_HEADING = re.compile(r"(\d+)\.")
 AUTHOR = re.compile(r"\s*\([^()]+\)")
 # A drama quotation opens with its speaker: `[Надія:]`, `[Фортунат (пошепки):]`.
 SPEAKER = re.compile(r"\[[^\[\]]*:\]")
@@ -76,24 +77,26 @@ def phrase_spans(markup):
     """Segment one printed phraseology paragraph.
 
     The heading is the paragraph's leading top-level bold: the idiom, then an
-    optional printed sense number. The definition runs from the heading to the
-    first quotation. A quotation is italic, may open with a speaker tag and
-    closes with its parenthesized author label; only separators lie between
-    and after quotations. Returns `(idiom, sense or None, definition, quotes)`
-    spans. Anything else is withheld: a continuation sense whose idiom is
-    printed in an earlier section, a second heading, a // shade, or quotation
-    text outside italics.
+    optional printed sense number, either closing that bold (`<b>idiom 1.</b>`)
+    or in its own bold right after it (`<b>idiom.</b> <b>1.</b>`). The
+    definition runs from the heading to the first quotation. A quotation is
+    italic, may open with a speaker tag and closes with its parenthesized
+    author label; only separators lie between and after quotations. Returns
+    `(idiom, sense or None, definition, quotes)` spans. Anything else is
+    withheld: a continuation sense whose idiom is printed in an earlier
+    section, a second heading or sense number, a // shade, or quotation text
+    outside italics.
     """
     text = markup.text
-    heads = [n for n in markup.tagged("b", outside=("i", "b")) if markup.span(n)[0] < markup.span(n)[1]]
-    if not heads or markup.span(heads[0])[0] != 0:
+    heads = [s for s in map(markup.span, markup.tagged("b", outside=("i", "b"))) if s[0] < s[1]]
+    if not heads or heads[0][0] != 0:
         return None, "headword_unresolved"
-    lead = markup.span(heads[0])
+    lead, rest = heads[0], heads[1:]
     if not any(c.isalpha() for c in text[slice(*lead)]):
         return None, "headword_unresolved"
-    if sum(any(c.isalpha() for c in text[slice(*markup.span(n))]) for n in heads) != 1:
+    if any(c.isalpha() for s in rest for c in text[slice(*s)]):
         return None, "sense_not_visible"
-    idiom_end, sense = lead[1], None
+    idiom_end, sense, head_end = lead[1], None, lead[1]
     while idiom_end > lead[0] and text[idiom_end - 1] in " ,;":
         idiom_end -= 1
     number = SENSE_NUMBER.search(text, lead[0], idiom_end)
@@ -101,21 +104,27 @@ def phrase_spans(markup):
         sense, idiom_end = number.span(1), number.start()
         while idiom_end > lead[0] and text[idiom_end - 1] in " ,;":
             idiom_end -= 1
+    numbered = [s for s in rest if any(c.isdigit() for c in text[slice(*s)])]
+    if numbered:
+        heading = SENSE_HEADING.fullmatch(text, *numbered[0])
+        if sense or len(numbered) > 1 or not heading or not SEPARATORS.fullmatch(text, lead[1], numbered[0][0]):
+            return None, "sense_not_visible"
+        sense, head_end = heading.span(1), heading.end()
     quotes = []
     for italic in markup.tagged("i", outside=("i",)):
         start, end = markup.span(italic)
-        if start < lead[1]:
+        if start < head_end:
             continue
         author = AUTHOR.match(text, end)
         if start == end or not author or not any(c.isalpha() for c in author.group()):
             return None, "citation_unresolved"
         if quotes and start < quotes[-1][1]:
             return None, "citation_unresolved"
-        speaker = SPEAKER_BEFORE.search(text, quotes[-1][1] if quotes else lead[1], start)
+        speaker = SPEAKER_BEFORE.search(text, quotes[-1][1] if quotes else head_end, start)
         quotes.append((speaker.start() if speaker else start, author.end()))
     if not quotes:
         return None, "citation_unresolved"
-    start, end = lead[1], quotes[0][0]
+    start, end = head_end, quotes[0][0]
     while start < end and text[start] in " ,;:—–-":
         start += 1
     while end > start and text[end - 1] in " ,;:—–-":
