@@ -908,7 +908,7 @@ entries:
   id: claude-code
   count: 1
   kind: non_model_label
-  reason: Claude Code's Linux managed-policy directory, digested for a labelled account's launch (#10619); not a model ID.
+  reason: Claude Code's Linux machine-policy root, which must be absent or empty for a labelled account (#10619); not a model ID.
 - path: scripts/agent_runtime/env_sanitize.py
   scope: child_credential_env
   context: expression

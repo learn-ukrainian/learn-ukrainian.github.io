@@ -7073,6 +7073,7 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(
         ("settings", "claude_account_settings_credential_source"),
         ("team_plan", "claude_account_plan_unsupported"),
         ("policy_cache", "claude_account_policy_cache_present"),
+        ("machine_policy", "claude_account_machine_policy_present"),
     ],
 )
 def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code):
@@ -7081,6 +7082,7 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
         BOUND_ACCOUNT_UUID,
         CLAUDE_AMBIENT_AUTH,
         DEFAULT_ACCOUNT_UUID,
+        MACHINE_POLICY,
         PROFILE_ORGANIZATIONS,
         _credentials,
         _mock_selected_account_runtime,
@@ -7095,7 +7097,7 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
     selected.mkdir(mode=0o700)
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
     _private_json(selected / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
-    if case in ("team_plan", "policy_cache"):
+    if case in ("team_plan", "policy_cache", "machine_policy"):
         # An ordinary worker whose login is otherwise sound.
         identities["fixture-bound-" + "b" * 30] = BOUND_ACCOUNT_UUID
         _credentials(selected / ".credentials.json", "fixture-bound-" + "b" * 30)
@@ -7104,6 +7106,9 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
         monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
     if case == "policy_cache":
         _private_json(selected / "remote-settings.json", {})
+    if case == "machine_policy":
+        # A machine policy helper (#10619): its output cannot be bound, so presence refuses.
+        MACHINE_POLICY["policy_helper"]()
     binding = tmp_path / "binding.json"
     _private_json(
         binding,
@@ -7120,7 +7125,7 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
     if case == "settings":
         # An ordinary worker: the login directory's settings name a key helper.
         _private_json(selected / "settings.json", {"apiKeyHelper": "fixture-helper"})
-    if case in ("settings", "team_plan", "policy_cache"):
+    if case in ("settings", "team_plan", "policy_cache", "machine_policy"):
         attempt = []
     for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
         monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))

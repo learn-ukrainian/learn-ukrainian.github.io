@@ -807,6 +807,20 @@ the worker runs on. For label `b` the adapter
   missing one makes it fetch), the global config's organisation, and the plan
   `auth status` resolves must all agree with that answer
   (`claude_account_plan_unverified`);
+- requires a host with no machine policy. Organisational policy remains a
+  non-goal (above); machine-level policy is refused outright. Claude Code
+  2.1.300 reads all of it on Linux from one machine policy root: managed
+  settings and their `managed-settings.d` drop-ins, `managed-mcp.json`, a
+  managed `CLAUDE.md` and managed rules, skills and agents. A `policyHelper`
+  named in managed settings makes a program's output policy at every CLI
+  start, which no launch digest can bind. So any entry in that root, or
+  anything but a plain directory in its place, refuses whatever it holds
+  (`claude_account_machine_policy_present`; an unreadable root
+  `claude_account_machine_policy_unavailable`). An absent root or an empty
+  directory admits. Under WSL the CLI also reads the Windows policy chain,
+  registry included, so WSL refuses (`claude_account_platform_unsupported`).
+  The check runs at dispatch, again after the launch is bound, and in the
+  launch guard below;
 - refuses server-delivered policy state and profile logins. Claude Code
   2.1.300 caches remote managed settings and policy limits in the login
   directory only for an organisational, unknown-plan or profile login:
@@ -843,13 +857,14 @@ the worker runs on. For label `b` the adapter
 - binds a digest of every input those checks depended on (its arguments, the
   login directory's settings, global config `env` and login organisation,
   legacy file, credential record, policy caches and profile store entries
-  (absent), managed policy, and the checkout's project and local files,
-  including a linked worktree's main checkout) into the plan, after requiring
-  the credential record to be the one whose plan was classified. It runs the
-  CLI behind a guard that recomputes the digest in the spawned process and
-  execs the CLI only on a match (`claude_account_settings_changed`, exit 78),
-  so a policy cache, profile or credential that appears between verification
-  and launch stops the exec. The
+  (absent), and the checkout's project and local files, including a linked
+  worktree's main checkout) into the plan, after requiring the credential
+  record to be the one whose plan was classified. It runs the CLI behind a
+  guard that recomputes the digest in the spawned process and execs the CLI
+  only on a match with still no machine policy
+  (`claude_account_settings_changed`, exit 78), so a policy cache, profile,
+  credential or machine policy that appears between verification and launch
+  stops the exec. The
   credential file stays in place (the CLI rotates its refresh token) and the
   CLI reads the global config only from beside it, so a digest bind, not a
   copy, is the strongest construction available. What remains is the moment

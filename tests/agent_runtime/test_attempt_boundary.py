@@ -25,7 +25,7 @@ from types import SimpleNamespace
 import pytest
 import yaml
 
-from scripts.agent_runtime import runner
+from scripts.agent_runtime import attempt_boundary, env_sanitize, runner
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.attempt_boundary import (
     AttemptBoundary,
@@ -1030,6 +1030,46 @@ def _oauth_account(account_uuid: str) -> dict:
     return {"accountUuid": account_uuid, "organizationUuid": ACCOUNT_ORG_UUIDS[account_uuid]}
 
 
+def _machine_policy_text(relative: str, text: str) -> None:
+    path = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def _machine_policy_link() -> None:
+    root = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR
+    root.mkdir()
+    (root / "managed-settings.json").symlink_to(root / "absent-target")
+
+
+def _machine_policy_root_link() -> None:
+    root = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR
+    root.with_name("machine-policy-target").mkdir()
+    root.symlink_to(root.with_name("machine-policy-target"), target_is_directory=True)
+
+
+# Machine-level policy Claude Code 2.1.300 reads on Linux, all under its one
+# machine policy root (synthetic here; see _mock_selected_account_runtime):
+# managed settings, which may name a policyHelper program whose output becomes
+# policy, their drop-ins, managed MCP servers, a managed CLAUDE.md and managed
+# rules. Presence alone refuses a labelled account (#10619), whatever it holds,
+# and so does a root that is not a plain directory.
+MACHINE_POLICY = {
+    "managed_settings": lambda: _machine_policy_text("managed-settings.json", "{}"),
+    "policy_helper": lambda: _machine_policy_text(
+        "managed-settings.json", json.dumps({"policyHelper": {"path": "/fixture/policy-helper", "timeoutMs": 3000}})
+    ),
+    "drop_in": lambda: _machine_policy_text("managed-settings.d/50-fixture.json", "{}"),
+    "drop_in_directory": lambda: (env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR / "managed-settings.d").mkdir(parents=True),
+    "managed_mcp": lambda: _machine_policy_text("managed-mcp.json", json.dumps({"mcpServers": {}})),
+    "managed_memory": lambda: _machine_policy_text("CLAUDE.md", "fixture\n"),
+    "managed_rules": lambda: _machine_policy_text(".claude/rules/fixture.md", "fixture\n"),
+    "dangling_link": _machine_policy_link,
+    "root_is_a_file": lambda: env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR.write_text("{}", encoding="utf-8"),
+    "root_is_a_link": _machine_policy_root_link,
+}
+
+
 def _mock_selected_account_runtime(tmp_path, monkeypatch):
     """Model safe system ancestry without changing shared scratch permissions."""
     ancestors = {(p.stat().st_dev, p.stat().st_ino) for p in tmp_path.parents}
@@ -1044,6 +1084,12 @@ def _mock_selected_account_runtime(tmp_path, monkeypatch):
         return info
 
     monkeypatch.setattr(os, "fstat", checked_stat)
+    # A synthetic machine policy root, absent unless a test writes policy there,
+    # on a host that is not WSL unless a test says so (#10619).
+    monkeypatch.setattr(env_sanitize, "_CLAUDE_MANAGED_SETTINGS_DIR", tmp_path / "machine-policy")
+    monkeypatch.setattr(attempt_boundary, "_CLAUDE_PROC_VERSION", tmp_path / "proc-version")
+    for name in ("WSL_DISTRO_NAME", "WSL_INTEROP"):
+        monkeypatch.delenv(name, raising=False)
     calls = []
     identities = {}
 
@@ -1420,6 +1466,45 @@ def test_second_claude_account_refuses_conflicting_sources(two_accounts, monkeyp
         str(two_accounts.config_dir),
     ):
         assert value not in rendered
+
+
+@pytest.mark.parametrize("entry", sorted(MACHINE_POLICY))
+def test_second_claude_account_refuses_a_host_with_machine_policy(two_accounts, entry):
+    """Held-out (#10619): any machine policy source refuses the labelled account, at a sealed attempt too.
+
+    On f8dce2b219 every case returned the bound token.
+    """
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    assert linux_claude_auth("b")  # positive control: no machine policy
+    two_accounts.profile_calls.clear()
+    MACHINE_POLICY[entry]()
+
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_machine_policy_present$"):
+        linux_claude_auth("b")
+    assert two_accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("marker", ["WSL_DISTRO_NAME", "WSL_INTEROP", "Microsoft", "WSL2"])
+def test_second_claude_account_refuses_wsl(two_accounts, monkeypatch, tmp_path, marker):
+    """Held-out (#10619): under WSL Claude Code also reads Windows machine policy, which is not enumerable here.
+
+    WSL is what the CLI takes it for: either variable set, or a kernel string naming it.
+    """
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    assert linux_claude_auth("b")  # positive control: a plain Linux kernel string
+    (tmp_path / "proc-version").write_text("Linux version 6.0.0-fixture\n", encoding="utf-8")
+    assert linux_claude_auth("b")
+    two_accounts.profile_calls.clear()
+    if marker.startswith("WSL_"):
+        monkeypatch.setenv(marker, "fixture")
+    else:
+        (tmp_path / "proc-version").write_text(f"Linux version 6.0.0-fixture-{marker}-standard\n", encoding="utf-8")
+
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_platform_unsupported$"):
+        linux_claude_auth("b")
+    assert two_accounts.profile_calls == []
 
 
 def test_attempt_boundary_authenticates_claude_seat_as_the_labelled_account(world, tmp_path, two_accounts, monkeypatch):

@@ -44,6 +44,7 @@ from tests.agent_runtime.test_attempt_boundary import (
     BOUND_ACCOUNT_UUID,
     CLAUDE_AMBIENT_AUTH,
     DEFAULT_ACCOUNT_UUID,
+    MACHINE_POLICY,
     PROFILE_ORGANIZATIONS,
     _credentials,
     _mock_selected_account_runtime,
@@ -202,7 +203,19 @@ def accounts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace
     monkeypatch.setenv("LU_FAKE_CLAUDE_DUMP", str(found.dump))
     found.workdir = tmp_path / "work"
     found.workdir.mkdir()
+    # The launch guard runs in its own process: it reads the same synthetic machine policy root.
+    monkeypatch.setattr(claude, "_LAUNCH_GUARD_CODE", _relocated_guard_code(env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR))
     return found
+
+
+def _relocated_guard_code(root: Path) -> str:
+    """The launch guard's code, unchanged except that it reads machine policy from ``root``."""
+    call = "run_claude_launch_guard(sys.argv[1:])"
+    assert claude._LAUNCH_GUARD_CODE.endswith(call)
+    relocate = (
+        f"import scripts.agent_runtime.env_sanitize as e; e._CLAUDE_MANAGED_SETTINGS_DIR = e.Path({str(root)!r}); "
+    )
+    return claude._LAUNCH_GUARD_CODE.removesuffix(call) + relocate + call
 
 
 def _calls(accounts: SimpleNamespace, kind: str) -> list[dict]:
@@ -744,6 +757,23 @@ def test_default_label_plan_matches_the_base_snapshot(accounts, monkeypatch, too
 
 
 @pytest.mark.parametrize("tool_config", [{}, {"claude_account": "a"}], ids=["omitted", "explicit_default"])
+def test_default_label_never_reads_machine_policy(accounts, monkeypatch, tool_config):
+    """The default account's plan stays the base snapshot on a host with machine policy, which it never reads."""
+    MACHINE_POLICY["policy_helper"]()
+
+    def unread() -> str:
+        pytest.fail("machine policy was read for the default account")
+
+    monkeypatch.setattr(attempt_boundary, "claude_machine_policy_state", unread)
+    monkeypatch.setattr(env_sanitize, "claude_machine_policy_state", unread)
+    expected = json.loads(_GOLDEN.read_text(encoding="utf-8"))
+    expected.pop("_provenance")
+
+    assert _golden_view(accounts, _plan(accounts, **tool_config)) == expected
+    assert accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("tool_config", [{}, {"claude_account": "a"}], ids=["omitted", "explicit_default"])
 def test_default_label_environment_keeps_existing_sanitisation(accounts, monkeypatch, tool_config):
     """The default account keeps the host login and the existing sanitisation, unverified."""
     other = accounts.home / "elsewhere"
@@ -836,6 +866,8 @@ def test_new_refusal_codes_are_registered():
         "claude_account_policy_cache_present",
         "claude_account_policy_cache_unavailable",
         "claude_account_profile_store_present",
+        "claude_account_machine_policy_present",
+        "claude_account_machine_policy_unavailable",
     } <= CLAUDE_ACCOUNT_REFUSAL_CODES
 
 
@@ -1154,6 +1186,157 @@ def test_bound_label_credential_changed_after_classification_is_refused(accounts
         _plan(accounts, claude_account="b")
 
     assert refused.value.code == "claude_account_settings_changed"
+
+
+# --- No machine-level policy (#10619) ---------------------------------------------------------------
+#
+# A machine policy helper's output reaches a run from a program the launch
+# digest cannot bind (final review of f8dce2b219). So a labelled account runs
+# only on a host with no machine policy source at all; presence refuses,
+# whatever it holds. Held out: written against f8dce2b219.
+
+
+def _policy_helper(accounts: SimpleNamespace) -> Path:
+    """Configure a machine policy helper answering from a policy service (a file here); return that answer."""
+    answer = accounts.workdir.parent / "policy-service-answer.json"
+    answer.write_text(json.dumps({"managedSettings": {}}), encoding="utf-8")
+    helper = accounts.workdir.parent / "policy-helper.sh"
+    helper.write_text(f'#!/bin/sh\nexec cat "{answer}"\n', encoding="utf-8")
+    helper.chmod(0o700)
+    root = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR
+    _private_json(root / "managed-settings.json", {"policyHelper": {"path": str(helper), "timeoutMs": 3000}})
+    return answer
+
+
+@pytest.mark.parametrize("entry", sorted(MACHINE_POLICY))
+def test_bound_label_machine_policy_source_is_refused(accounts, entry):
+    """Any machine policy source refuses before any probe or spawn, value-free.
+
+    On f8dce2b219 every case ran the worker.
+    """
+    MACHINE_POLICY[entry]()
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert str(refused.value) == refused.value.code == "claude_account_machine_policy_present"
+    assert accounts.profile_calls == []
+    assert not accounts.dump.exists()
+
+
+def test_bound_label_machine_policy_helper_is_refused_whatever_it_answers(accounts):
+    """The final review's reproduction: a helper whose service answers empty settings at verification refuses.
+
+    On f8dce2b219 it was admitted and the guarded launch ran, so a later answer
+    (an endpoint override) reached the run with the bound digest unchanged.
+    """
+    _policy_helper(accounts)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_machine_policy_present"
+    assert not accounts.dump.exists()
+
+
+def test_launch_guard_stops_a_machine_policy_helper_whose_answer_changed(accounts):
+    """The reproduction at the guard: only the helper's answer changes, the digest does not, the CLI never starts.
+
+    On f8dce2b219 the guard accepted the unchanged digest and exec'd the CLI
+    (exit 0, one recorded run).
+    """
+    answer = _policy_helper(accounts)
+    settings = claude._headless_worker_settings(publish_guard=False)
+    env = {**os.environ, "CLAUDE_CONFIG_DIR": str(accounts.config_dir)}
+
+    def digest() -> str:
+        return claude_labelled_inputs_digest(
+            login_dir=str(accounts.config_dir),
+            cwd=accounts.workdir,
+            settings=settings,
+            setting_sources=LABELLED_ACCOUNT_SETTING_SOURCES,
+            environ=env,
+        )
+
+    bound = digest()
+    answer.write_text(json.dumps({"managedSettings": {"env": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"}}}))
+    assert digest() == bound  # nothing the digest reads changed
+    cmd = [str(accounts.binary), "-p", "--settings", settings, "--setting-sources", "project,local", "--", "fixture"]
+
+    done = subprocess.run(
+        [sys.executable, "-I", "-c", claude._LAUNCH_GUARD_CODE, str(claude._CODE_ROOT), bound, "--", *cmd],
+        cwd=accounts.workdir,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    assert done.returncode == CLAUDE_LAUNCH_GUARD_EXIT
+    assert done.stderr == "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed\n"
+    assert _calls(accounts, "run") == []
+
+
+@pytest.mark.parametrize("entry", sorted(MACHINE_POLICY))
+def test_bound_label_machine_policy_installed_after_verification_never_launches(accounts, entry):
+    """Machine policy that appears between verification and launch stops the guard with exit 78."""
+    result = _settings_change_after_build(accounts, MACHINE_POLICY[entry])
+
+    assert result.ok is False
+    assert result.returncode == CLAUDE_LAUNCH_GUARD_EXIT
+    assert _calls(accounts, "run") == []
+    assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
+
+
+def test_bound_label_machine_policy_installed_after_classification_is_refused(accounts, monkeypatch):
+    """Policy that appears after the account is classified, before the launch is bound, is never bound."""
+    classify = attempt_boundary.verify_claude_account
+
+    def classify_then_install(label, **kwargs):
+        binding = classify(label, **kwargs)
+        MACHINE_POLICY["managed_memory"]()
+        return binding
+
+    monkeypatch.setattr(attempt_boundary, "verify_claude_account", classify_then_install)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_machine_policy_present"
+
+
+def test_bound_label_unreadable_machine_policy_is_refused(accounts, monkeypatch):
+    """A machine policy root whose entries cannot be listed refuses, value-free."""
+    root = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR
+    root.mkdir()
+    original = os.scandir
+
+    def denied(path=".", *args, **kwargs):
+        if isinstance(path, str | os.PathLike) and Path(path) == root:
+            raise PermissionError(13, "fixture-private-detail")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "scandir", denied)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_machine_policy_unavailable"
+    assert "fixture-private-detail" not in repr(refused.value) + repr(refused.value.__cause__)
+    assert accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("root", ["absent", "empty_directory"])
+def test_bound_label_without_machine_policy_is_admitted(accounts, root):
+    """No machine policy root, or an empty one, keeps the labelled run as before."""
+    if root == "empty_directory":
+        env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR.mkdir()
+
+    result, _ = _invoke(accounts, claude_account="b")
+
+    assert result.ok is True
+    assert len(_calls(accounts, "run")) == 1
 
 
 # --- The installed Claude CLI, where present ------------------------------------------------------

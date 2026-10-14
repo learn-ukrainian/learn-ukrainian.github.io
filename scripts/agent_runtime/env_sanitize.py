@@ -122,7 +122,10 @@ CLAUDE_CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR"
 # Claude Code prefers a non-empty legacy global config in that directory over
 # its ``.claude.json``.
 CLAUDE_LEGACY_GLOBAL_CONFIG = ".config.json"
-# Linux managed policy.
+# Claude Code's Linux machine policy root. Every machine-level policy source
+# it reads (2.1.300) is under it: managed settings and their drop-ins (either
+# may name a ``policyHelper`` program whose output becomes policy), managed
+# MCP servers, a managed CLAUDE.md and managed rules, skills and agents.
 _CLAUDE_MANAGED_SETTINGS_DIR = Path("/etc/claude-code")
 # Server-delivered policy state Claude Code (2.1.300) keeps in its config
 # directory: the remote managed settings and policy limits caches, their
@@ -145,7 +148,8 @@ CLAUDE_POLICY_CACHE_NAMES = (
 # of its config directory's credential (2.1.300): the active profile name and
 # the profile configs.
 CLAUDE_PROFILE_STORE_ENTRIES = ("active_config", "configs")
-# The launch guard's exit status when the bound settings changed (EX_CONFIG).
+# The launch guard's exit status when the bound settings changed or machine
+# policy appeared (EX_CONFIG).
 CLAUDE_LAUNCH_GUARD_EXIT = 78
 
 _PROVIDER_SECRET_ALLOWLIST = {
@@ -888,6 +892,29 @@ def claude_profile_store_dirs(environ: Mapping[str, str]) -> list[Path]:
     return list(dict.fromkeys(store for store in stores if store is not None))
 
 
+def claude_machine_policy_state() -> str:
+    """Whether this host has machine-level Claude Code policy (#10619): ``absent``, ``present`` or ``unavailable``.
+
+    ``absent`` only when the machine policy root does not exist or is a plain
+    empty directory; anything else in its place, or any entry in it, is
+    ``present``. Presence, not content, decides: a policy helper's output
+    cannot be bound to a launch, so a labelled account runs only without any.
+    """
+    try:
+        info = os.lstat(_CLAUDE_MANAGED_SETTINGS_DIR)
+    except FileNotFoundError:
+        return "absent"
+    except OSError:
+        return "unavailable"
+    if not stat.S_ISDIR(info.st_mode):
+        return "present"
+    try:
+        with os.scandir(_CLAUDE_MANAGED_SETTINGS_DIR) as entries:
+            return "absent" if next(entries, None) is None else "present"
+    except OSError:
+        return "unavailable"
+
+
 def _checkout_settings_roots(cwd: Path) -> list[Path]:
     """Every directory whose ``.claude`` project or local settings a run in ``cwd`` may load.
 
@@ -925,19 +952,13 @@ def claude_labelled_inputs_digest(
     login account and organisation, legacy global config, credential record
     (the exact credential whose plan was classified) and server-delivered
     policy state (absent when verified); the profile stores ``environ`` (the
-    run's environment) points Claude Code at; managed policy; and the
-    checkout's project and local settings files. The adapter binds it into the
-    plan; ``run_claude_launch_guard`` recomputes it immediately before the CLI
-    starts.
+    run's environment) points Claude Code at; and the checkout's project and
+    local settings files. The adapter binds it into the plan;
+    ``run_claude_launch_guard`` recomputes it immediately before the CLI
+    starts. Machine policy is no input: a labelled run requires none
+    (``claude_machine_policy_state``), checked on its own at each step.
     """
     login, cwd = Path(login_dir), cwd.resolve()  # the guard sees the physical working directory
-    managed_d = _CLAUDE_MANAGED_SETTINGS_DIR / "managed-settings.d"
-    try:
-        drop_ins = sorted(entry.name for entry in os.scandir(managed_d))
-    except FileNotFoundError:
-        drop_ins = []
-    except OSError:
-        drop_ins = ["<unreadable>"]
     inputs = {
         "settings": settings,
         "setting_sources": setting_sources,
@@ -952,8 +973,6 @@ def claude_labelled_inputs_digest(
             for store in claude_profile_store_dirs(environ)
             for name in CLAUDE_PROFILE_STORE_ENTRIES
         },
-        "managed": _file_fingerprint(_CLAUDE_MANAGED_SETTINGS_DIR / "managed-settings.json"),
-        "managed_drop_ins": {name: _file_fingerprint(managed_d / name) for name in drop_ins},
         "checkout": {
             str(root / ".claude" / name): _file_fingerprint(root / ".claude" / name)
             for root in _checkout_settings_roots(cwd)
@@ -970,12 +989,12 @@ def _option_value(argv: list[str], name: str) -> str | None:
 
 
 def run_claude_launch_guard(argv: list[str]) -> None:
-    """Exec the labelled Claude CLI only if its bound settings inputs are unchanged (#10619).
+    """Exec the labelled Claude CLI only on unchanged bound inputs and no machine policy (#10619).
 
     ``argv`` is ``<digest> -- <claude argv>``. Runs in the spawned process
     itself, with the run's own environment, so every launch (first spawn,
     retry, failover rebuild, resume) re-checks just before the CLI reads its
-    files. On a mismatch it prints
+    files. On a mismatch, or with machine policy present, it prints
     the registered code and exits ``CLAUDE_LAUNCH_GUARD_EXIT``; nothing else is
     printed.
     """
@@ -993,6 +1012,7 @@ def run_claude_launch_guard(argv: list[str]) -> None:
             login_dir=login_dir, cwd=Path.cwd(), settings=settings, setting_sources=sources, environ=os.environ
         )
         != digest
+        or claude_machine_policy_state() != "absent"
     ):
         os.write(2, b"CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed\n")
         os._exit(CLAUDE_LAUNCH_GUARD_EXIT)

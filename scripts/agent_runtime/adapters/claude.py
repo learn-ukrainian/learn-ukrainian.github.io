@@ -117,6 +117,19 @@ plan (``CLAUDE_CONSUMER_PLANS``: Max or Pro), which has no organisational
 policy to deliver. Team, Enterprise, unknown or missing plans refuse
 (``claude_account_plan_unsupported``).
 
+Requirement: a host with no machine policy. Machine-level policy (managed
+settings, their drop-ins, managed MCP servers, memory and rules, all under
+Claude Code's machine policy root) applies to every run on the host, and a
+``policyHelper`` named there makes a program's output policy at each CLI
+start, which no launch digest can bind. So a labelled account runs only where
+no machine policy source exists: any entry in that root, or anything but a
+plain directory in its place, refuses whatever it holds
+(``claude_account_machine_policy_present``; an unreadable root
+``claude_account_machine_policy_unavailable``). Under WSL the CLI also reads
+the Windows policy chain, so WSL refuses as an unsupported platform. The
+check runs at dispatch, after the launch is bound and in the launch guard.
+Organisational policy stays a non-goal, as above.
+
 Construction (probed on Claude Code 2.1.300 with fixtures only):
 
 - Consumer plan, bound to the exact launch credential. Verification reads
@@ -165,9 +178,9 @@ Construction (probed on Claude Code 2.1.300 with fixtures only):
   but the login method, organization and email. The text names each
   endpoint, proxy, certificate, token, key and provider override in effect
   (the JSON does not; ``firstParty`` says nothing about the endpoint), so this
-  is the endpoint attestation. It covers managed policy and the checkout's
-  project and local files too. Setting the endpoint variable in the launch
-  environment would not help: the global config's ``env`` is applied over it.
+  is the endpoint attestation. It covers the checkout's project and local
+  files too. Setting the endpoint variable in the launch environment would
+  not help: the global config's ``env`` is applied over it.
 - Snapshot-then-verify-then-launch, in its strongest available form. The
   credential file must stay where it is (the CLI rotates its refresh token
   in place; a copy would invalidate the real login), and Claude Code reads
@@ -181,10 +194,10 @@ Construction (probed on Claude Code 2.1.300 with fixtures only):
   the status probes (a change between them refuses), it goes into the plan's
   argv, and the plan runs the CLI behind
   ``env_sanitize.run_claude_launch_guard``, which recomputes it in the
-  spawned process and execs the CLI only on a match, so policy delivered
-  between verification and launch stops the exec. The guard runs at every
-  spawn of a plan, and every rebuild (retry, failover, resume) re-verifies
-  and re-binds. The
+  spawned process and execs the CLI only on a match with still no machine
+  policy, so policy delivered between verification and launch stops the
+  exec. The guard runs at every spawn of a plan, and every rebuild (retry,
+  failover, resume) re-verifies and re-binds. The
   window left is between that last digest and the CLI reading its files
   (process exec and CLI start-up); exploiting it needs write access to the
   same user's files, which the threat model excludes. A token refresh inside
@@ -193,9 +206,9 @@ Construction (probed on Claude Code 2.1.300 with fixtures only):
   record and refuses the launch (fail-closed). The
   probe is ``auth status``, not the run's own print/session/model arguments,
   and the runner adds telemetry and merge-guard variables to the run's
-  environment; neither selects a credential, endpoint or provider. Managed
-  policy and plugin runtime effects beyond what the status reports were not
-  exhaustively exercised.
+  environment; neither selects a credential, endpoint or provider. Plugin
+  runtime effects beyond what the status reports were not exhaustively
+  exercised.
 
 A token that expires mid-run is the CLI's own refresh path; if that fails the
 run fails. Nothing retries it as another account: the runner's failover
@@ -1192,12 +1205,13 @@ def _verified_labelled_launch(
     """Verify a labelled run's effective login, then bind its inputs to the launch (#10619).
 
     Digest the inputs, verify, digest again (they must not change while being
-    verified) and require the credential to be the one whose plan was
-    classified; return ``cmd`` behind the launch guard, which recomputes the
-    digest in the spawned process and execs the CLI only on a match. See the
-    module docstring for what the remaining window covers.
+    verified), require the credential to be the one whose plan was classified
+    and the host to have no machine policy; return ``cmd`` behind the launch
+    guard, which recomputes the digest in the spawned process and execs the
+    CLI only on a match with still no machine policy. See the module
+    docstring for what the remaining window covers.
     """
-    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, refuse_claude_machine_policy
     from scripts.common.repo_root import project_interpreter
 
     login_dir = str(account.config_dir)
@@ -1216,6 +1230,7 @@ def _verified_labelled_launch(
     _verify_labelled_auth_method(probe_prefix, worker_settings, cwd=cwd, env=env, login_dir=login_dir)
     if digest() != verified or claude_login_credential_fingerprint(login_dir) != account.credential:
         raise ClaudeAccountRefused("claude_account_settings_changed")
+    refuse_claude_machine_policy()
     return [str(project_interpreter()), "-I", "-c", _LAUNCH_GUARD_CODE, str(_CODE_ROOT), verified, "--", *cmd]
 
 
@@ -1232,8 +1247,8 @@ def _verify_labelled_auth_method(
     Runs ``claude auth status`` (JSON, then text) with the run's settings
     arguments, its working directory and ``env``, the environment the runner
     builds from the same overrides, so every settings input the run loads
-    (managed, the login directory's global config, the checkout's project and
-    local files, ``--settings``) is resolved by Claude Code itself. The JSON
+    (the login directory's global config, the checkout's project and local
+    files, ``--settings``) is resolved by Claude Code itself. The JSON
     must name the subscription login, the first-party provider, the bound
     directory and a consumer plan (the plan Claude Code itself resolved for
     the login decides whether it fetches organisational policy), with no key

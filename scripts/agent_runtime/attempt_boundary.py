@@ -52,6 +52,7 @@ from .env_sanitize import (
     CLAUDE_PROFILE_STORE_ENTRIES,
     build_agent_env,
     claude_credential_fingerprint,
+    claude_machine_policy_state,
     claude_profile_store_dirs,
 )
 
@@ -70,6 +71,11 @@ _CLAUDE_AMBIENT_AUTH_ENV = (
     "CLAUDE_API_KEY",
     "CLAUDE_CODE_OAUTH_TOKEN",
 )
+# Claude Code (2.1.300) takes a Linux host for WSL when either variable is set
+# or the kernel string names it, and then also reads the Windows machine policy
+# chain (registry included), which no check here can enumerate (#10619).
+_CLAUDE_WSL_ENV = ("WSL_DISTRO_NAME", "WSL_INTEROP")
+_CLAUDE_PROC_VERSION = Path("/proc/version")
 _CLAUDE_BINDING_KEYS = frozenset({"config_dir", "account_uuid"})
 _CLAUDE_ACCOUNT_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 _CLAUDE_BINDING_MAX_BYTES = 65536
@@ -164,6 +170,8 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_policy_cache_present",
         "claude_account_policy_cache_unavailable",
         "claude_account_profile_store_present",
+        "claude_account_machine_policy_present",
+        "claude_account_machine_policy_unavailable",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
         *(
             f"claude_account_{kind}_{failure}"
@@ -415,6 +423,30 @@ def _refuse_profile_store(env: Mapping[str, str]) -> None:
             raise ClaudeAccountRefused("claude_account_profile_store_present")
 
 
+def refuse_claude_machine_policy() -> None:
+    """Refuse a labelled account on a host with any machine-level Claude Code policy (#10619).
+
+    A machine policy helper's output becomes policy at every CLI start and
+    cannot be bound to a launch, so presence refuses, whatever the policy
+    holds (``claude_machine_policy_state``); a root whose state cannot be read
+    refuses too.
+    """
+    state = claude_machine_policy_state()
+    if state != "absent":
+        raise ClaudeAccountRefused(f"claude_account_machine_policy_{state}")
+
+
+def _claude_host_is_wsl(env: Mapping[str, str]) -> bool:
+    """Whether Claude Code would take this Linux host for WSL, as it decides it (2.1.300)."""
+    if any(env.get(name) for name in _CLAUDE_WSL_ENV):
+        return True
+    try:
+        kernel = _CLAUDE_PROC_VERSION.read_text(encoding="utf-8", errors="replace").lower()
+    except OSError:
+        return False
+    return "microsoft" in kernel or "wsl" in kernel
+
+
 def _refuse_non_consumer_plan(organization: object, record: dict, account: dict) -> None:
     """Admit only a consumer plan, bound to the exact credential and organisation (#10619).
 
@@ -517,8 +549,9 @@ def _validated_claude_selection(
         raise ClaudeAccountRefused("claude_account_ambient_conflict")
     try:
         binding = load_claude_account_binding(label, environ=env)
-        if platform.system() != "Linux":
+        if platform.system() != "Linux" or _claude_host_is_wsl(env):
             raise ClaudeAccountRefused("claude_account_platform_unsupported")
+        refuse_claude_machine_policy()
         with _open_claude_directory(binding.config_dir) as directory:
             selected = os.fstat(directory)
             ambient = env.get("CLAUDE_CONFIG_DIR")
