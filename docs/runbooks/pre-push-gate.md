@@ -86,7 +86,15 @@ The default is 4, so callers get bounded parallel validation without an override
 consumed the shared run budget. A nonblank `LEARN_UKRAINIAN_DISPATCH_TASK_ID` caps the invocation
 at 2 processes, matching the existing dispatch pytest plugin. An explicit positive integer override
 is still supported; invalid values refuse validation, including receipt reuse. Parallel execution
-requires xdist and keeps whole files together with `--dist loadfile`. Without xdist, execution is serial.
+requires xdist. Without xdist, execution is serial.
+
+The pytest stage runs the planned node ids in two pytest invocations that share the stage deadline
+(#10610). Changed test files run first with `--dist worksteal`, as CI runs them, so one slow changed
+file is spread over the workers instead of setting a one-worker floor. The registered invariant nodes
+then run with `--dist loadfile`, which keeps their files whole. Each invocation gets its own private
+base temp. The first refusal ends the stage, and a green stage and receipt require both invocations to
+pass. One invocation collecting no tests is accepted only when the other ran tests. The receipt keeps
+the single plan node list, which covers both invocations.
 
 ## Experimental concurrent admission (#10555)
 
