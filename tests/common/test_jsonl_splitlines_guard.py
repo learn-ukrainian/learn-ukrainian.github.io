@@ -2,7 +2,8 @@
 
 Intraprocedural data flow follows assignments, loop/comprehension variables,
 container mutations, and local parser wrappers. A split is only reported when
-its output reaches a JSON parser; merely sharing a function is not sufficient.
+its output reaches a JSON, CSV, YAML or TOML parser; merely sharing a function
+is not sufficient.
 This is a bounded syntactic guard, not a complete call-graph analysis: parser
 callbacks (including map), assigned parser aliases, JSONDecoder.decode,
 self/cls method calls, imported wrappers, nested/lambda closures, and helpers
@@ -73,6 +74,10 @@ ALLOWLIST: dict[tuple[str, str], tuple[str, str | tuple[str, ...]]] = {
         "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
         "_school_ledger_bytes().splitlines()",
     ),
+    ("scripts/deploy_codex_home.py", "merge_config"): (
+        "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
+        "data.splitlines(keepends=True)",
+    ),
     ("scripts/review/receipts/ledger.py", "records"): (
         "Bytes are split before UTF-8 decoding; bytes.splitlines preserves NEL, LS and PS.",
         "content.splitlines()",
@@ -121,9 +126,29 @@ def _call_name(node: ast.AST) -> str:
     return ast.unparse(node)
 
 
+# Other record parsers whose input must keep NEL/LS/PS as field text (#9556).
+STRUCTURED_PARSERS = frozenset(
+    {
+        "csv.reader",
+        "csv.DictReader",
+        "tomllib.loads",
+        "yaml.load",
+        "yaml.load_all",
+        "yaml.safe_load",
+        "yaml.safe_load_all",
+        "yaml.full_load",
+    }
+)
+
+
 def _direct_parser(node: ast.Call, json_names: set[str], load_names: set[str]) -> bool:
     name = _call_name(node.func)
-    return name in load_names or name in {f"{module}.loads" for module in json_names} or name.endswith(".raw_decode")
+    return (
+        name in load_names
+        or name in STRUCTURED_PARSERS
+        or name in {f"{module}.loads" for module in json_names}
+        or name.endswith(".raw_decode")
+    )
 
 
 class _Flow:
@@ -307,7 +332,7 @@ def test_scripts_structured_readers_do_not_use_str_splitlines():
         source = path.read_text(encoding="utf-8")
         if "splitlines" in source:
             failures.extend(violations(path.relative_to(ROOT).as_posix(), source))
-    assert not failures, "JSON parser consumes splitlines output:\n" + "\n".join(failures)
+    assert not failures, "Structured parser consumes splitlines output:\n" + "\n".join(failures)
 
 
 @pytest.mark.parametrize(
@@ -322,6 +347,9 @@ def test_scripts_structured_readers_do_not_use_str_splitlines():
         "lines = text.splitlines()\nfor number, line in enumerate(lines):\n    json.loads(line)",
         "lines = text.splitlines()\nrows = []\nfor line in lines:\n    rows.append(line)\njson.loads(rows[0])",
         "for line in text.splitlines():\n    loads(line)",
+        "return list(csv.DictReader(text.splitlines()))",
+        "return yaml.safe_load('\\n'.join(text.splitlines()[1:]))",
+        "return tomllib.loads('\\n'.join(text.splitlines()))",
     ],
 )
 def test_guard_detects_parser_data_flow(body):
