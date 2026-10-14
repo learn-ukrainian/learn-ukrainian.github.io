@@ -828,7 +828,10 @@ snapshot_path_is_excluded() {
 
 # Every allowlist content walk prunes the same trees restic excludes:
 # task snapshot directories, bytecode, ephemeral homes, and staging.
-# Ephemeral homes are pruned only under batch_state, the approved boundary.
+# Ephemeral homes are pruned only under this project's batch_state.
+# restic_project_pattern anchors that same relative boundary: restic matches
+# excludes against absolute paths, so an unanchored batch_state pattern would
+# also match an ancestor outside the project or a nested batch_state directory.
 allowlist_find() {
   local root=$1
   shift
@@ -889,6 +892,8 @@ discover_ephemeral_homes() {
   fi
 }
 
+# True only for an ephemeral home under this project's own batch_state.
+# The same relative boundary is written for restic by restic_project_pattern.
 is_ephemeral_home_path() {
   local path=$1 home
   case "$path" in
@@ -1810,6 +1815,19 @@ restic_literal_pattern() {
   printf '%s\n' "$pattern"
 }
 
+# Prefix a project-relative exclude with the tree restic reads. Patterns are
+# matched against absolute paths, including ancestors of that tree, so the
+# prefix is what keeps the boundary on this project's batch_state. tree_root
+# is the project root when restic reads the live tree, and the staging copy
+# when it reads the private staging tree. Only the prefix is escaped; the
+# relative pattern still contains the globs.
+restic_project_pattern() {
+  local tree_root=$1
+  local relative_pattern=$2
+
+  printf '%s/%s\n' "$(restic_literal_pattern "$tree_root")" "$relative_pattern"
+}
+
 # Write RESTIC_EXCLUDES to a private file for --exclude-file. Every restic
 # backup call that walks the tree passes this file instead of argv flags.
 write_restic_exclude_file() {
@@ -1839,8 +1857,10 @@ add_sqlite_exclude() {
 
 build_restic_excludes() {
   local root=$1
-  local relative snapshot_root
+  local relative snapshot_root tree_root
 
+  # root is <tree>/data. The tree is the project root or its staging copy.
+  tree_root=${root%/data}
   RESTIC_EXCLUDES=(
     "$(restic_literal_pattern "$root/qdrant")"
     '**/*.db-wal'
@@ -1857,10 +1877,10 @@ build_restic_excludes() {
     '**/*.sqlite*-journal'
     '**/__pycache__/**'
     '**/.DS_Store'
-    '**/batch_state/**/*-home'
-    '**/batch_state/**/*-home/**'
-    '**/batch_state/review-receipts/**/home'
-    '**/batch_state/review-receipts/**/home/**'
+    "$(restic_project_pattern "$tree_root" 'batch_state/**/*-home')"
+    "$(restic_project_pattern "$tree_root" 'batch_state/**/*-home/**')"
+    "$(restic_project_pattern "$tree_root" 'batch_state/review-receipts/**/home')"
+    "$(restic_project_pattern "$tree_root" 'batch_state/review-receipts/**/home/**')"
     '**/qdrant/**'
     'batch_state/tasks/**/*.lock'
   )

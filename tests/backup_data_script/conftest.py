@@ -12,9 +12,23 @@ from tests.backup_data_script._support import _make_database, _write_executable
 
 
 @pytest.fixture
-def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path]:
+def backup_environment(
+    tmp_path: Path,
+    request: pytest.FixtureRequest,
+) -> tuple[dict[str, str], Path, Path, Path]:
     fake_bin = tmp_path / "bin"
-    project = tmp_path / "project"
+    # An indirect parameter places the fixture project under a chosen relative
+    # path. The default stays `project`, directly inside the test root.
+    try:
+        project_relative = request.param
+    except AttributeError:
+        project_relative = "project"
+    if not isinstance(project_relative, str):
+        raise AssertionError("backup_environment parameter must be a relative path")
+    project_parts = Path(project_relative).parts
+    if not project_parts or any(part in {"", ".", ".."} for part in project_parts):
+        raise AssertionError("backup_environment parameter must stay inside the test root")
+    project = tmp_path.joinpath(*project_parts)
     source = project / "data"
     staging = tmp_path / "staging"
     legacy = tmp_path / "legacy"
@@ -163,7 +177,12 @@ if [[ "${1:-}" == "backup" ]]; then
     find "$FAKE_SNAPSHOT_DIR" -type f \
       \( -name '*-wal' -o -name '*-shm' -o -name '*-journal' -o -name '.DS_Store' \) -delete
     find "$FAKE_SNAPSHOT_DIR" -type d \
-      \( -name qdrant -o -name __pycache__ -o -name '*-home' \) -prune -exec find '{}' -depth -delete \;
+      \( -name qdrant -o -name __pycache__ \) -prune -exec find '{}' -depth -delete \;
+    # Same project-root boundary as the real excludes: only this tree's
+    # batch_state, never a *-home nested under another copied root.
+    if [[ -d "$FAKE_SNAPSHOT_DIR/batch_state" ]]; then
+      find "$FAKE_SNAPSHOT_DIR/batch_state" -type d -name '*-home' -prune -exec find '{}' -depth -delete \;
+    fi
     while IFS= read -r -d '' candidate; do
       if head -c 16 "$candidate" | cmp -s - <(printf 'SQLite format 3\0'); then
         rm "$candidate"
