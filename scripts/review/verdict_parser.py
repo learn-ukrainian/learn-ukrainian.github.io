@@ -35,6 +35,34 @@ from collections.abc import Iterator
 # and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
 # has no space, which CommonMark does not treat as a heading, and
 # ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
+# CommonMark line endings are LF, CR, and CRLF. str.splitlines() also breaks
+# on VT, FF, and Unicode separators, which moves fence spans off the real text.
+_COMMONMARK_LINE_RE = re.compile(r"\r\n|\r|\n")
+
+
+def _commonmark_lines(text: str, *, keepends: bool = False) -> list[str]:
+    """Split on CommonMark line endings, matching str.splitlines for those three."""
+    if text == "":
+        return []
+    if keepends:
+        return _commonmark_keepends(text)
+    lines = _COMMONMARK_LINE_RE.split(text)
+    if text.endswith(("\n", "\r")) and lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
+def _commonmark_keepends(text: str) -> list[str]:
+    lines: list[str] = []
+    cursor = 0
+    for match in _COMMONMARK_LINE_RE.finditer(text):
+        lines.append(text[cursor : match.end()])
+        cursor = match.end()
+    if cursor < len(text):
+        lines.append(text[cursor:])
+    return lines
+
+
 _REVIEW_VERDICT_LINE_RE = re.compile(
     r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
     r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
@@ -106,8 +134,8 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
     input where a block was removed. Dispatch/DoR remove only closed top-level
     CommonMark tokens: a container can end a fence without a lexical closer.
     """
-    raw_lines = text.splitlines(keepends=True)
-    lines = text.splitlines()
+    raw_lines = _commonmark_lines(text, keepends=True)
+    lines = _commonmark_lines(text)
     spans: list[tuple[int, int]] = []
     if keep_unclosed:
         # Use one parser for both context and spans; lexical state can drift

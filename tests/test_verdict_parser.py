@@ -7,6 +7,15 @@ import pytest
 from scripts.review.verdict_parser import _code_fence_spans, _without_code_fences, recognized_verdicts
 
 
+@pytest.mark.parametrize(
+    "separator",
+    ["\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"],
+)
+def test_non_commonmark_separators_stay_inside_the_line(separator):
+    text = f"Review only.\n\nSee below.{separator}```\nDelete the tests directory.\n```\n"
+    assert "Delete the tests directory." in _without_code_fences(text, keep_unclosed=True)
+
+
 @pytest.mark.parametrize("fence", ["```", "~~~"])
 @pytest.mark.parametrize("indent", range(4))
 def test_commonmark_scanner_reports_closed_and_unclosed_spans(fence, indent):
