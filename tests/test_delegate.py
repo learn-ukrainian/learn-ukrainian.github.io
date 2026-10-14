@@ -6931,16 +6931,27 @@ def test_worker_without_a_recorded_account_passes_no_label(tmp_tasks_dir, tmp_pa
     assert "claude_account" not in mock_invoke.call_args.kwargs["tool_config"]
 
 
+def test_ordinary_worker_honours_the_recorded_claude_account(tmp_tasks_dir, tmp_path):
+    """AC-01: outside a sealed attempt the recorded label reaches the Claude adapter, not a refusal."""
+    task_id = "worker-claude-account-ordinary-b"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": "b"})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"]["claude_account"] == "b"
+    assert delegate._read_state(state_path)["claude_account"] == "b"
+
+
+@pytest.mark.parametrize("label", ["c", "B", 2])
 @pytest.mark.parametrize(
-    "label,review,code",
-    [
-        ("b", {"review_id": None, "attempt_id": None}, "claude_account_route_unsealed"),
-        ("c", {}, "claude_account_unknown"),
-    ],
+    "review", [{}, {"review_id": None, "attempt_id": None}], ids=["sealed_attempt", "ordinary_worker"]
 )
-def test_worker_refuses_a_recorded_account_it_cannot_honour(tmp_tasks_dir, tmp_path, label, review, code):
-    """A record naming another account outside the sealed attempt would run as the default one."""
-    task_id = f"worker-claude-account-{code}"
+def test_worker_refuses_a_recorded_account_it_cannot_honour(tmp_tasks_dir, tmp_path, label, review):
+    """A record naming an account the binding does not know is refused before the provider starts."""
+    code = "claude_account_unknown"
+    task_id = f"worker-claude-account-unknown-{label}-{len(review)}"
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": label})
 
@@ -6966,6 +6977,50 @@ def test_dispatch_records_the_default_claude_account(tmp_tasks_dir, tmp_path, mo
         assert delegate._read_state(delegate._state_path(task_id))["claude_account"] == "a"
 
 
+def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-01: a verified non-default label is recorded for an ordinary worker instead of refused as unsealed."""
+    from tests.agent_runtime.test_attempt_boundary import (
+        BOUND_ACCOUNT_UUID,
+        CLAUDE_AMBIENT_AUTH,
+        DEFAULT_ACCOUNT_UUID,
+        _credentials,
+        _mock_selected_account_runtime,
+        _private_json,
+    )
+
+    identities, calls = _mock_selected_account_runtime(tmp_path, monkeypatch)
+    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    home, selected = tmp_path / "home", tmp_path / "selected"
+    selected.mkdir(mode=0o700)
+    token = "fixture-bound-" + "b" * 30
+    identities[token] = BOUND_ACCOUNT_UUID
+    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _credentials(selected / ".credentials.json", token)
+    binding = tmp_path / "binding.json"
+    _private_json(
+        binding,
+        {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
+    )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
+    task_id = "claude-account-ordinary-b"
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
+         "--dry-run", "--claude-account", "b"],
+    )
+
+    assert delegate._dispatch_claude_account_refusal(args) is None
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["claude_account"] == "b"
+    assert str(selected) not in json.dumps(state)
+    assert calls == [token, token]
+
+
 def _claude_account_args(*extra: str) -> argparse.Namespace:
     return delegate.build_parser().parse_args(
         ["dispatch", "--task-id", "claude-account-refused", "--prompt", "test", "--initiator", "codex", *extra]
@@ -6978,7 +7033,7 @@ def _claude_account_args(*extra: str) -> argparse.Namespace:
         (["--agent", "claude", "--claude-account", "c"], "claude_account_unknown"),
         (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
-        (["--agent", "claude", "--claude-account", "b"], "claude_account_route_unsealed"),
+        (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
         (
             ["--agent", "claude", "--claude-account", "b", "--review-attempt", "manifest.yaml",
              "--review-id", "rev", "--attempt-id", "att"],

@@ -113,6 +113,10 @@ _DRIVER_GITHUB_IDENTITY_NAMES = {
     "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
 }
 
+# Claude Code's config directory. Only the Claude adapter's labelled-account
+# override sets it for a claude run (#10619); see build_agent_env.
+CLAUDE_CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR"
+
 _PROVIDER_SECRET_ALLOWLIST = {
     "gemini": {
         "GEMINI_API_KEY",
@@ -618,6 +622,8 @@ def build_agent_env(
     ``model`` is the effective model selected for this invocation, never an
     inherited parent model. Cursor Auto or an absent model has Unknown identity.
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
+    A claude run's ``CLAUDE_CONFIG_DIR`` comes only from ``overrides``; when
+    set it is the run's sole credential source (no Claude API key passes).
     For a Kimi seat it raises ``KimiAdmissionRefused`` when credential
     isolation (an empty ``GH_CONFIG_DIR``, the credential-helper and GitHub
     header resets) cannot be established: no partially isolated environment
@@ -678,6 +684,17 @@ def build_agent_env(
         env.pop("PYTHONPATH", None)
     else:
         env["PYTHONPATH"] = pytest_pythonpath
+
+    login_dir = (overrides or {}).get(CLAUDE_CONFIG_DIR_ENV)
+    if login_dir and _normalized_provider(provider) == "claude":
+        # A labelled Claude account (#10619): the adapter's verified login
+        # directory is the run's only credential source. The loop above never
+        # admits a config directory, ambient or not, nor any Claude token
+        # variable; drop the provider's API keys too. The path skips the
+        # token-shape value filter, which would otherwise silently drop it.
+        for name in [name for name in env if name.upper() in _PROVIDER_SECRET_ALLOWLIST["claude"]]:
+            del env[name]
+        env[CLAUDE_CONFIG_DIR_ENV] = login_dir
 
     if "PATH" not in env and "PATH" in raw and not _looks_sensitive_value(raw["PATH"]):
         env["PATH"] = raw["PATH"]

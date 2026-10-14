@@ -92,11 +92,19 @@ foreground, MCP calls are not auto-backgrounded) and its ``--settings`` deny
 the tools that start or schedule work outside the turn, which that variable
 leaves available: Monitor, ScheduleWakeup, CronCreate and Workflow.
 
+Claude account (#10619): ``tool_config["claude_account"]`` is the run's
+account label. The default label, or none, leaves the host login untouched.
+For another label an ordinary run sets ``CLAUDE_CONFIG_DIR`` to that
+account's verified login directory, and ``env_sanitize`` makes it the run's
+only credential source. The binding checks refuse any conflicting ambient
+credential before the plan is built. A sealed attempt selects its account at
+its own boundary.
+
 Liveness paths:
-- Returns the project-scoped Claude session JSONL file
-  (``~/.claude/projects/<project>/<session>.jsonl``) if we can
-  determine it. The runner's mtime poller catches Claude writing
-  progress when stdout is buffered or quiet.
+- Returns the most recently active project directory under the run's
+  Claude directory (``~/.claude/projects/<project>/``, or the labelled
+  account's login directory). The runner's mtime poller catches Claude
+  writing progress when stdout is buffered or quiet.
 
 Issue: #1184
 """
@@ -115,6 +123,7 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
+from ..env_sanitize import CLAUDE_CONFIG_DIR_ENV
 from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..sources_read_only import sources_tool_sets
@@ -591,6 +600,9 @@ class ClaudeAdapter:
               --bare would disable the mandatory PreToolUse hooks.
             - ``max_budget_usd: float`` — optional Claude Code print-mode
               API spend cap, emitted as ``--max-budget-usd <amount>``
+            - ``claude_account: str`` — the run's account label; see the
+              module docstring. An unknown label is refused before any
+              probe or spawn.
 
         ``effort``: optional reasoning-level string. When None, the headless
         lane default ``high`` is applied (operator 2026-08-13). When the
@@ -600,6 +612,7 @@ class ClaudeAdapter:
         are rejected outright due to the 2026-04-23 postmortem gate.
         """
         tc: dict[str, Any] = tool_config or {}
+        account_login_dir = _claude_account_login_dir(tc)
         from scripts.agent_runtime.mechanical_admission import refuse_mechanical_execution
 
         refuse_mechanical_execution(model or self.default_model, mode=mode, cwd=cwd, tool_config=tc, prompt=prompt)
@@ -860,8 +873,9 @@ class ClaudeAdapter:
                 **HEADLESS_BACKGROUND_ENV,
                 **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
                 **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
+                **({CLAUDE_CONFIG_DIR_ENV: account_login_dir} if account_login_dir is not None else {}),
             },
-            liveness_paths=self._resolve_liveness_paths(cwd),
+            liveness_paths=_recent_project_dir(account_login_dir),
             metadata={
                 **schema_metadata(output_schema),
                 **({"claude_home": str(review_write_root / "home")} if review_write_root is not None else {}),
@@ -910,6 +924,7 @@ class ClaudeAdapter:
                 plan.cwd,
                 session_id,
                 home=claude_home,
+                login_dir=plan.env_overrides.get(CLAUDE_CONFIG_DIR_ENV),
             )
             if session_path is not None:
                 recovered = _tool_calls_from_claude_session_jsonl(session_path)
@@ -975,36 +990,58 @@ class ClaudeAdapter:
         bumps on any child file write — good enough for liveness signal.
         """
         # Caller provided cwd; use it to derive the Claude project dir.
-        # The dir is ~/.claude/projects/<project-slug>/ where project-slug
-        # is the cwd with special chars replaced.
-        _ = plan  # Plan has no cwd; we stored it as env_overrides isn't enough
-        # Fall back to the project-wide directory — any recent activity
-        # across Claude sessions counts as liveness.
-        claude_projects_dir = Path.home() / ".claude" / "projects"
-        if claude_projects_dir.exists():
-            # Find the most recent project subdir as a best-effort signal
-            try:
-                subdirs = [p for p in claude_projects_dir.iterdir() if p.is_dir()]
-                if subdirs:
-                    most_recent = max(subdirs, key=lambda p: p.stat().st_mtime)
-                    return (most_recent,)
-            except OSError:
-                pass
-        return ()
+        # The dir is <claude dir>/projects/<project-slug>/ where project-slug
+        # is the cwd with special chars replaced; a labelled account's runs
+        # write under its login directory.
+        return _recent_project_dir(plan.env_overrides.get(CLAUDE_CONFIG_DIR_ENV))
 
-    def _resolve_liveness_paths(self, cwd: Path) -> tuple[Path, ...]:
-        """Same as liveness_signal_paths but computable at build_invocation time."""
-        _ = cwd
-        claude_projects_dir = Path.home() / ".claude" / "projects"
-        if claude_projects_dir.exists():
-            try:
-                subdirs = [p for p in claude_projects_dir.iterdir() if p.is_dir()]
-                if subdirs:
-                    most_recent = max(subdirs, key=lambda p: p.stat().st_mtime)
-                    return (most_recent,)
-            except OSError:
-                pass
-        return ()
+
+def _claude_account_login_dir(tc: dict[str, Any]) -> str | None:
+    """The run's verified account login directory, or ``None`` for the host login (#10619).
+
+    The default label, or none, keeps the host's own login unchanged. A sealed
+    attempt selects its account inside its own boundary. An ordinary run with
+    another label gets that account's verified login directory, after the
+    binding checks refuse any conflicting credential source. Routes that
+    cannot honour the label refuse it. Refusals carry a value-free code.
+    """
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_KEY,
+        DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
+        resolve_claude_account_label,
+        verify_claude_account,
+    )
+
+    label = resolve_claude_account_label(tc.get(CLAUDE_ACCOUNT_KEY))
+    if label == DEFAULT_CLAUDE_ACCOUNT or tc.get("review_attempt_boundary"):
+        return None
+    if tc.get("review_isolation"):
+        raise ClaudeAccountRefused("claude_account_route_unsealed")
+    binding = verify_claude_account(label)
+    if binding is None:  # only the default label verifies without a binding
+        raise ClaudeAccountRefused("claude_account_default_has_no_binding")
+    return str(binding.config_dir)
+
+
+def _claude_dir(login_dir: str | None) -> Path:
+    """Claude Code's directory: the run's login directory if set, else the host's."""
+    return Path(login_dir) if login_dir else Path.home() / ".claude"
+
+
+def _recent_project_dir(login_dir: str | None) -> tuple[Path, ...]:
+    """The most recently active project directory, a best-effort liveness signal."""
+    # Any recent activity across that directory's sessions counts as liveness.
+    claude_projects_dir = _claude_dir(login_dir) / "projects"
+    if claude_projects_dir.exists():
+        try:
+            subdirs = [p for p in claude_projects_dir.iterdir() if p.is_dir()]
+            if subdirs:
+                most_recent = max(subdirs, key=lambda p: p.stat().st_mtime)
+                return (most_recent,)
+        except OSError:
+            pass
+    return ()
 
 
 def _claude_project_slug(cwd: Path) -> str:
@@ -1016,9 +1053,10 @@ def _claude_session_jsonl_path(
     session_id: str,
     *,
     home: Path | None = None,
+    login_dir: str | None = None,
 ) -> Path | None:
-    base = home or Path.home()
-    candidate = base / ".claude" / "projects" / _claude_project_slug(cwd) / f"{session_id}.jsonl"
+    base = (home / ".claude") if home is not None else _claude_dir(login_dir)
+    candidate = base / "projects" / _claude_project_slug(cwd) / f"{session_id}.jsonl"
     return candidate if candidate.is_file() else None
 
 
