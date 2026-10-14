@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import stat
 import subprocess
 import sys
@@ -23,13 +24,21 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from scripts.fleet.regenerable_output import is_regenerable_ignored_path
 from scripts.orchestration import worktree_artifacts as artifacts
+from scripts.orchestration.preparation_evidence import UniqueKeyLoader
 from scripts.orchestration.task_record_store import task_record_path
 
 # Bound automatic disk duplication. Larger outputs require owner disposition;
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
+
+# Reviewed creator-initiator -> canonical stream map for lane succession (#10617).
+SUCCESSION_MAP = Path(__file__).resolve().parents[2] / "scripts/config/terminal_abandon_succession.yaml"
+_SUCCESSION_STREAM = re.compile(r"epic:[1-9][0-9]*")
+_SUCCESSION_INITIATOR = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 
 _IDENTITY_KEYS = (
     "worktree_path",
@@ -376,6 +385,207 @@ def creation_inventory(worktree: Path, *, primary: Path, task_id: str, run_nonce
     }
 
 
+def succession_streams(path: Path | None = None) -> tuple[dict[str, str], str]:
+    """Load the reviewed initiator -> stream map and the SHA-256 of its exact bytes.
+
+    Exact keys only; a malformed file, duplicate key or an initiator listed under
+    two streams refuses the whole map rather than choosing one.
+    """
+    raw = (SUCCESSION_MAP if path is None else path).read_bytes()
+    try:
+        data = yaml.load(raw.decode("utf-8"), Loader=UniqueKeyLoader)  # SafeLoader subclass
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise ValueError("succession map unreadable") from exc
+    if not isinstance(data, dict) or set(data) != {"schema", "streams"}:
+        raise ValueError("succession map invalid")
+    if data["schema"] != "terminal-abandon-succession-map.v1" or not isinstance(data["streams"], dict):
+        raise ValueError("succession map invalid")
+    mapping: dict[str, str] = {}
+    for stream, entry in data["streams"].items():
+        if (
+            not isinstance(stream, str)
+            or not _SUCCESSION_STREAM.fullmatch(stream)
+            or not isinstance(entry, dict)
+            or set(entry) != {"initiators"}
+            or not isinstance(entry["initiators"], list)
+        ):
+            raise ValueError("succession map invalid")
+        for initiator in entry["initiators"]:
+            if not isinstance(initiator, str) or not _SUCCESSION_INITIATOR.fullmatch(initiator) or initiator in mapping:
+                raise ValueError("succession map invalid")
+            mapping[initiator] = stream
+    return mapping, hashlib.sha256(raw).hexdigest()
+
+
+def _verify_succession(
+    receipt: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+    creator: Mapping[str, Any],
+    worktree: Path,
+    *,
+    primary: Path,
+) -> None:
+    """Prove a successor's receipt still binds this exact task, tree, head and map entry (#10617).
+
+    The writer proved the caller's current stream lease. Removal rechecks every
+    binding that can drift without the caller: the map entry, checkout identity,
+    branch, preservation digest and retrievable untracked/ignored output.
+    """
+    from scripts.orchestration.worktree_claims import checked_out_branch
+
+    succession = receipt.get("succession")
+    authority = succession.get("authority") if isinstance(succession, dict) else None
+    try:
+        tree = worktree.resolve(strict=True).relative_to(primary.resolve(strict=True)).as_posix()
+    except (OSError, ValueError, RuntimeError):
+        raise ValueError("terminal-abandon succession tree binding invalid") from None
+    mapping, _ = succession_streams()
+    initiator = creator.get("initiator")
+    branch = checked_out_branch(worktree)
+    if (
+        not isinstance(succession, dict)
+        or not isinstance(authority, dict)
+        or succession.get("schema") != "terminal-abandon-succession.v1"
+        or succession.get("task_id") != creator.get("task_id")
+        or succession.get("creator_initiator") != initiator
+        or not isinstance(initiator, str)
+        or mapping.get(initiator) != succession.get("stream_id")
+        or not isinstance(succession.get("mapping_sha256"), str)
+        or not re.fullmatch(r"[a-f0-9]{64}", succession["mapping_sha256"])
+        or succession.get("tree") != tree
+        or not isinstance(branch, str)
+        or succession.get("branch") != branch
+        or succession.get("head_sha") != receipt.get("head_sha")
+        or succession.get("preservation_sha256") != (receipt.get("preservation") or {}).get("sha256")
+        or authority.get("stream_id") != succession.get("stream_id")
+        or any(type(authority.get(key)) is not int for key in ("generation", "fencing_token"))
+        or any(not isinstance(authority.get(key), str) or not authority[key] for key in ("session_id", "lease_id"))
+        or not isinstance(succession.get("caller_initiator"), str)
+    ):
+        raise ValueError("terminal-abandon succession receipt invalid")
+    located = manifest.get("output")
+    if not isinstance(located, dict) or located.get("schema") != "terminal-abandon-output.v1":
+        raise ValueError("terminal-abandon succession output preservation missing")
+    try:
+        verify_retrieval(primary, located)
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+        # Never echo filesystem detail into the receipt.
+        raise ValueError("terminal-abandon succession output preservation not retrievable") from None
+
+
+def _abandon_candidates(worktree: Path, *, absent: list[dict[str, str]]) -> list[str]:
+    """Untracked bytes and present hidden index entries, which Git patches can omit.
+
+    Never the whole index: ordinary tracked changes are bound to verified patches.
+    """
+    names = []
+    candidates = artifacts._git_paths(worktree, "--others", "--exclude-standard")
+    for tagged in artifacts._git_paths(worktree, "-v", "--cached"):
+        if len(tagged) < 3 or tagged[1] != " ":
+            raise ValueError("terminal-abandon tagged index inventory malformed")
+        if tagged[0].islower() or tagged[0] == "S":
+            candidates.append(tagged[2:])
+    for name in candidates:
+        try:
+            (worktree / name).lstat()
+        except FileNotFoundError:
+            _record_absence(worktree, name, absent)
+        else:
+            names.append(name)
+    return names
+
+
+def _abandon_output_inventory(worktree: Path, *, primary: Path, record: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """The removal gate's abandon-mode file set; any vanished path refuses here."""
+    absent: list[dict[str, str]] = []
+    names = _ignored_output_files(worktree, primary, record, absent=absent)
+    files = sorted(set(names + _abandon_candidates(worktree, absent=absent)))
+    if absent:
+        raise ValueError("ignored output changed during preservation")
+    return _path_inventory(worktree, files)
+
+
+def capture_abandon_output(
+    worktree: Path, *, primary: Path, record: Mapping[str, Any]
+) -> tuple[dict[str, Any], Path | None]:
+    """Copy untracked and ignored output before a successor's abandon record (#10617).
+
+    Git patches cannot carry these bytes. Copy them below
+    ``batch_state/preserved/<task>`` and verify retrieval independently. Return
+    the hash-bound locator and the directory this call created, or ``None`` when
+    an identical verified copy was reused. The removal gate later reuses the same
+    copy while the bytes are unchanged; it never replaces the removal-time copy.
+    """
+    worktree = worktree.resolve(strict=True)
+    primary = primary.resolve(strict=True)
+    identity = record.get("task_id")
+    if not isinstance(identity, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity):
+        raise ValueError("missing canonical task attribution")
+    paths = _abandon_output_inventory(worktree, primary=primary, record=record)
+    files = [entry["path"] for entry in paths]
+    total = sum(entry["size"] for entry in paths)
+    if total > MAX_PRESERVED_BYTES:
+        raise ValueError(f"ignored output exceeds preservation cap ({total} > {MAX_PRESERVED_BYTES} bytes)")
+    digest = hashlib.sha256(
+        json.dumps([(entry["path"], entry["size"], entry["sha256"]) for entry in paths]).encode()
+    ).hexdigest()
+    parent = primary / "batch_state" / "preserved" / identity
+    if parent.is_relative_to(worktree):
+        raise ValueError("preservation destination is inside the worktree")
+    location = _reusable_copy(parent, worktree, files, digest)
+    created = None
+    try:
+        if location is None:
+            location = created = parent / uuid.uuid4().hex
+            location.mkdir(parents=True, exist_ok=False)
+            for name in files:
+                destination = location / name
+                if destination.resolve() != destination.absolute():
+                    raise ValueError("preserved artifact destination contains a symlink")
+                artifacts._copy_verified(worktree / name, destination, source_root=worktree, destination_root=location)
+        locator = {
+            "schema": "terminal-abandon-output.v1",
+            "location": location.relative_to(primary).as_posix(),
+            "content_sha256": digest,
+            "paths": paths,
+        }
+        verify_retrieval(primary, locator)
+        verify_abandon_output(worktree, primary=primary, record=record, locator=locator)
+    except BaseException:
+        if created is not None:
+            shutil.rmtree(created, ignore_errors=True)
+        raise
+    return locator, created
+
+
+def verify_abandon_output(
+    worktree: Path, *, primary: Path, record: Mapping[str, Any], locator: Mapping[str, Any]
+) -> None:
+    """Refuse when the checkout's untracked or ignored bytes differ from the captured copy."""
+    current = _abandon_output_inventory(worktree.resolve(strict=True), primary=primary, record=record)
+    if _byte_identity(current) != _byte_identity(locator["paths"]):
+        raise ValueError("ignored output changed during preservation")
+
+
+def publish_abandon_output(
+    worktree: Path, *, primary: Path, record: Mapping[str, Any], locator: Mapping[str, Any]
+) -> None:
+    """Write the locator manifest the removal gate's ``_reusable_copy`` recognizes."""
+    location = primary / locator["location"]
+    metadata = {
+        **locator,
+        "owner": record["task_id"],
+        "task_id": record["task_id"],
+        "run_nonce": record.get("run_nonce"),
+        "count": len(locator["paths"]),
+        "bytes": sum(entry["size"] for entry in locator["paths"]),
+        "worktree_sha256": hashlib.sha256(str(worktree.resolve(strict=True)).encode()).hexdigest(),
+    }
+    with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
+        json.dump(metadata, manifest, sort_keys=True)
+        manifest.write("\n")
+
+
 def _abandon_file(primary: Path, entry: Mapping[str, Any]) -> bytes:
     """Read a hash-bound regular receipt below batch_state without following links."""
     if not isinstance(entry, Mapping):
@@ -404,6 +614,8 @@ def terminal_abandon_creator(
     names base_sha and hash-bound head_patch, index_patch and working_patch.
     All three patches must equal Git's binary, full-index diff for this checkout.
     Untracked and ignored bytes still require the ordinary verified-copy gate.
+    A successor's receipt adds ``succession`` and a manifest ``output`` copy;
+    both are revalidated here, at removal (#10617).
     """
     from scripts.orchestration import reap_worktrees as rw
 
@@ -492,6 +704,8 @@ def terminal_abandon_creator(
         )
         if probe.returncode != 0 or probe.stdout != stored:
             raise ValueError(f"terminal-abandon {key} does not preserve current Git bytes")
+    if "succession" in receipt:
+        _verify_succession(receipt, manifest, creator, worktree, primary=primary)
     return path, creator
 
 
@@ -827,22 +1041,7 @@ def preserve_worktree_artifacts(
     def output_files() -> list[str]:
         names = _ignored_output_files(worktree, primary, record, absent=absent)
         if disposition == "abandon":
-            # Ordinary tracked changes are already bound to verified patches.
-            # Copy untracked bytes and present hidden index entries, whose local
-            # changes Git can omit from those patches. Never copy the whole index.
-            candidates = artifacts._git_paths(worktree, "--others", "--exclude-standard")
-            for tagged in artifacts._git_paths(worktree, "-v", "--cached"):
-                if len(tagged) < 3 or tagged[1] != " ":
-                    raise ValueError("terminal-abandon tagged index inventory malformed")
-                if tagged[0].islower() or tagged[0] == "S":
-                    candidates.append(tagged[2:])
-            for name in candidates:
-                try:
-                    (worktree / name).lstat()
-                except FileNotFoundError:
-                    _record_absence(worktree, name, absent)
-                else:
-                    names.append(name)
+            names += _abandon_candidates(worktree, absent=absent)
         for name in extra_files or []:
             artifacts._relative_parts(worktree / name, worktree)
         return sorted(set(names + (extra_files or [])))

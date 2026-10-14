@@ -1,0 +1,105 @@
+# Terminal-abandon lane succession map (#10617) — reviewed, explicit, closed.
+#
+# Maps a dispatch creator's recorded `initiator` to the canonical session stream
+# whose CURRENT launcher-issued lease may record terminal abandonment for that
+# creator's settled worktree (scripts/fleet/terminal_abandon.py). Read by the
+# writer and again by the removal-time reader (scripts/fleet/ignored_task_output.py).
+#
+# Rules:
+# - Membership here grants nothing by itself. The caller must also hold the
+#   Monitor-verified current lease for the SAME stream; the writer never
+#   acquires or transfers a lease.
+# - Exact keys only. No suffix, prefix or provider inference: an initiator that
+#   is not listed refuses with STREAM_UNMAPPED.
+# - Stream ids are the launcher's canonical ids: `epic:<anchor>`, where the
+#   anchor is the first epic of the stream in scripts/config/issue_streams.yaml,
+#   reached through scripts/config/launcher_stream_aliases.tsv
+#   (launcher_selector_resolve in scripts/lib/handoff_identity.sh).
+# - An initiator may appear under exactly one stream; duplicates refuse.
+# - Ambiguous history is omitted on purpose (fail closed):
+#   `<provider>-corpus` (area_assignments lists it under `harness`, while the
+#     `corpus` selector resolves to corpus-channels),
+#   `<provider>-core` (minted by curriculum-upgrade today; historically also
+#     the core-quality alias),
+#   bare provider names (`claude`, `codex`, `grok`, ...) and session-id initiators.
+#   Trees from those creators need the separate creator-recovery contract.
+#
+# Provenance per stream: "slots" = scripts/config/area_assignments.yaml;
+# "retired" = initiators recorded on historical dispatch task records whose
+# seat no longer exists in that registry.
+schema: terminal-abandon-succession-map.v1
+streams:
+  # infra-harness: selectors infra / harness -> infra-harness -> issue_streams 6943.
+  "epic:6943":
+    initiators:
+      - claude-infra   # slot
+      - codex-infra    # slot
+      - gemini-infra   # slot
+      - grok-infra     # slot
+      - kimi-infra     # slot
+      - cursor-infra   # slot
+  # monitor (Ops API + UI): selector monitor -> monitor -> issue_streams 7919.
+  # area_assignments: only muse-monitor is a slot; the rest are retired seats.
+  "epic:7919":
+    initiators:
+      - muse-monitor     # slot
+      - claude-monitor   # retired
+      - codex-monitor    # retired
+      - grok-monitor     # retired
+      - cursor-monitor   # retired
+  # open-model-data: generic selector -> issue_streams 6321.
+  "epic:6321":
+    initiators:
+      - claude-open-model-data   # slot
+      - codex-open-model-data    # slot
+      - gemini-open-model-data   # slot
+      - grok-open-model-data     # retired
+  # devops: selector devops -> devops -> issue_streams 5703.
+  "epic:5703":
+    initiators:
+      - claude-devops   # slot
+      - codex-devops    # slot
+      - gemini-devops   # slot
+      - grok-devops     # slot
+      - kimi-devops     # slot
+      - cursor-devops   # slot
+      - muse-devops     # slot
+  # atlas: selector atlas -> atlas-practice -> issue_streams 4387.
+  "epic:4387":
+    initiators:
+      - claude-atlas   # slot
+      - codex-atlas    # slot
+      - gemini-atlas   # slot
+      - grok-atlas     # slot
+      - kimi-atlas     # slot
+      - cursor-atlas   # slot
+  # epics coordination: selector epics -> epics -> issue_streams 10453.
+  "epic:10453":
+    initiators:
+      - claude-epics   # slot
+      - codex-epics    # slot
+  # curriculum-upgrade: selector curriculum-upgrade -> issue_streams 7994.
+  # These initiators predate the core-lane slot naming and name only this stream.
+  "epic:7994":
+    initiators:
+      - claude-curriculum-upgrade   # retired
+      - grok-curriculum-upgrade     # retired
+      - cursor-curriculum-upgrade   # retired
+  # hramatka: selector hramatka -> hramatka -> issue_streams 4542.
+  "epic:4542":
+    initiators:
+      - claude-hramatka   # slot
+      - codex-hramatka    # slot
+      - gemini-hramatka   # slot
+  # seminars-folk: selector folk -> seminars-folk -> issue_streams 2836.
+  "epic:2836":
+    initiators:
+      - claude-folk   # slot
+      - codex-folk    # slot
+      - gemini-folk   # slot
+  # seminars-bio: selector bio -> seminars-bio -> issue_streams 4431.
+  "epic:4431":
+    initiators:
+      - claude-bio   # slot
+      - codex-bio    # slot
+      - gemini-bio   # slot
