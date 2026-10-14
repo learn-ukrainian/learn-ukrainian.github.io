@@ -83,6 +83,7 @@ SPARSE_TREE_NODES = {
 ZERO_SHA = "0" * 40
 EXIT_REFUSED = 1
 EXIT_INCOMPLETE = 75  # EX_TEMPFAIL: the push was not validated, not judged bad
+NO_TESTS_COLLECTED = 5  # pytest.ExitCode.NO_TESTS_COLLECTED
 FAILURE_RE = re.compile(r"^(?:FAILED|ERROR) (\S+?)(?: - .*)?$", re.MULTILINE)
 SUMMARY_RE = re.compile(r"^=+ .*\bin \d+(?:\.\d+)?s.*=+$|^\d+ \w+.* in \d+(?:\.\d+)?s", re.MULTILINE)
 PRE_COMMIT_FAILED_RE = re.compile(r"^(.+?)\.{3,}.*Failed$", re.MULTILINE)
@@ -1188,14 +1189,27 @@ def test_process_limit() -> int:
         ) from None
 
 
-def parallel_options() -> list[str]:
-    """Use configured parallelism when available; keep whole files together."""
+def parallel_options(dist: str = "loadfile") -> list[str]:
+    """Use configured parallelism when available, scheduled by xdist mode ``dist``."""
     limit = test_process_limit()
     if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
     if os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip():
         limit = min(limit, 2)  # Match ci.pytest_dispatch_cap before recording the invocation.
-    return ["-n", str(limit), "--dist", "loadfile"]
+    return ["-n", str(limit), "--dist", dist]
+
+
+def pytest_invocations(plan: Plan) -> tuple[tuple[tuple[str, ...], str], ...]:
+    """Split the plan's node ids into ``(node_ids, xdist mode)`` runs that together cover every id once.
+
+    Changed test files are distributed per test (``worksteal``, as CI runs them) so one slow
+    changed file cannot pin a single worker for the whole stage (#10610); they run first, as the
+    likeliest to fail. Registered invariant nodes keep whole files on one worker (``loadfile``).
+    """
+    changed = set(plan.changed_tests)
+    distributed = tuple(node for node in plan.node_ids if node.split("::", 1)[0] in changed)
+    grouped = tuple(node for node in plan.node_ids if node.split("::", 1)[0] not in changed)
+    return tuple((nodes, dist) for nodes, dist in ((distributed, "worksteal"), (grouped, "loadfile")) if nodes)
 
 
 def run_pytest_stage(
@@ -1224,40 +1238,50 @@ def run_pytest_stage(
             reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
+    invocations = pytest_invocations(plan)
     options = parallel_options()
     if diagnostics is not None:
         diagnostics.update(
             requested_test_processes=test_process_limit(),
             effective_test_processes=int(options[1]) if options else 1,
+            pytest_invocations=[{"dist": dist, "nodes": len(nodes)} for nodes, dist in invocations],
         )
-    with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
-        code, output = run_bounded(
-            [
-                "bash",
-                launcher,
-                "-m",
-                "pytest",
-                *plan.node_ids,
-                "-rfE",
-                "-q",
-                "--tb=short",
-                "-p",
-                "no:cacheprovider",
-                "--basetemp",
-                base_temp,
-                *options,
-            ],
-            cwd=root,
-            deadline=deadline,
-            label="pytest stage",
-            diagnostics=diagnostics,
-        )
-    failing = failing_node_ids(output)
-    if code == 0:
-        match = SUMMARY_RE.findall(output)
-        return match[-1].strip("= ") if match else "pytest passed"
-    if code == 1 or failing:
-        raise GateOutcome("tests_failed", tail(output), failing=failing)
+    # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
+    summaries = []
+    for nodes, dist in invocations:
+        with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
+            code, output = run_bounded(
+                [
+                    "bash",
+                    launcher,
+                    "-m",
+                    "pytest",
+                    *nodes,
+                    "-rfE",
+                    "-q",
+                    "--tb=short",
+                    "-p",
+                    "no:cacheprovider",
+                    "--basetemp",
+                    base_temp,
+                    *parallel_options(dist),
+                ],
+                cwd=root,
+                deadline=deadline,
+                label="pytest stage",
+                diagnostics=diagnostics,
+            )
+        failing = failing_node_ids(output)
+        if code == 0:
+            match = SUMMARY_RE.findall(output)
+            summaries.append(match[-1].strip("= ") if match else "pytest passed")
+        elif code == 1 or failing:
+            raise GateOutcome("tests_failed", tail(output), failing=failing)
+        elif code != NO_TESTS_COLLECTED:
+            break
+    # One run collecting nothing is fine while the selection as a whole ran tests.
+    if summaries and code in (0, NO_TESTS_COLLECTED):
+        return "; ".join(summaries)
     raise GateOutcome("pytest_error", f"pytest exited {code} without a verdict\n{tail(output)}", incomplete=True)
 
 

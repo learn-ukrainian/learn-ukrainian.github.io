@@ -56,6 +56,8 @@ PRE_COMMIT = textwrap.dedent(
 )
 GREEN_TEST = "def test_ok():\n    assert True\n"
 RED_TEST = "def test_broken():\n    assert False\n"
+# The changed file runs first (worksteal), then the two registered invariants (loadfile).
+SPLIT_SUMMARY_RE = r"1 passed in \d+(?:\.\d+)?s; 2 passed in \d+(?:\.\d+)?s"
 
 
 def _install_surface_scanners(root: Path) -> None:
@@ -1214,21 +1216,22 @@ def test_pytest_measurement_records_requested_and_effective_invocation(
         with gate.stage_measurement(event, "pytest") as diagnostics:
             assert (
                 gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
-                == "1 passed in 0.1s"
+                == "1 passed in 0.1s; 1 passed in 0.1s"
             )
     else:
         with pytest.raises(gate.GateOutcome):
             with gate.stage_measurement(event, "pytest") as diagnostics:
                 gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
-    assert len(seen) == 1
-    command = seen[0]
-    if effective == 1:
-        assert "-n" not in command and "--dist" not in command
-    else:
-        assert command[-4:] == ["-n", str(effective), "--dist", "loadfile"]
+    assert len(seen) == (2 if ending == "green" else 1)
+    for command, dist in zip(seen, ("worksteal", "loadfile"), strict=False):
+        if effective == 1:
+            assert "-n" not in command and "--dist" not in command
+        else:
+            assert command[-4:] == ["-n", str(effective), "--dist", dist]
     row = event["stages"]["pytest"]
     assert row["requested_test_processes"] == requested
     assert row["effective_test_processes"] == effective
+    assert row["pytest_invocations"] == [{"dist": "worksteal", "nodes": 1}, {"dist": "loadfile", "nodes": 1}]
     assert row["outcome"] == {"green": "green", "red": "refused", "timeout": "validation_incomplete"}[ending]
 
 
@@ -1245,6 +1248,135 @@ def test_invalid_process_configuration_refuses_even_without_xdist(value: str, mo
     assert raised.value.reason == "invalid_configuration"
     assert raised.value.incomplete
     assert raised.value.detail == f"{gate.MAX_TEST_PROCESSES_ENV} must be a positive integer"
+
+
+# ---- #10610: changed whole files are distributed per test, not pinned to one worker -------------------
+
+
+def test_pytest_invocations_split_changed_files_from_registered_invariants() -> None:
+    plan = _plan(
+        registry_nodes=(
+            "tests/test_a.py",
+            "tests/test_b.py::test_registered",  # subsumed by the changed whole file
+            "tests/test_c.py::TestX::test_y",
+        ),
+        changed_tests=("tests/test_b.py", "tests/test_d.py"),
+    )
+    invocations = gate.pytest_invocations(plan)
+    assert invocations == (
+        (("tests/test_b.py", "tests/test_d.py"), "worksteal"),
+        (("tests/test_a.py", "tests/test_c.py::TestX::test_y"), "loadfile"),
+    )
+    selected = [node for nodes, _dist in invocations for node in nodes]
+    assert sorted(selected) == list(plan.node_ids) and len(selected) == len(set(selected))
+    # An empty side is not invoked at all.
+    assert gate.pytest_invocations(_plan(changed_tests=())) == ((("tests/test_a.py",), "loadfile"),)
+    assert gate.pytest_invocations(_plan(registry_nodes=())) == ((("tests/test_b.py",), "worksteal"),)
+
+
+def test_changed_whole_file_is_never_passed_as_a_loadfile_unit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "4")
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    plan = _plan(
+        registry_nodes=("tests/test_a.py", "tests/test_slow.py::test_registered"),
+        changed_tests=("tests/test_slow.py",),
+    )
+    commands = []
+
+    def run(command: list[str], **kwargs: object) -> tuple[int, str]:
+        commands.append(command)
+        assert kwargs["deadline"] == deadline  # both runs share the one stage deadline
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    deadline = time.monotonic() + 30
+    assert gate.run_pytest_stage(plan, tmp_path, "launcher", deadline) == "1 passed in 0.1s; 1 passed in 0.1s"
+    by_dist = {command[command.index("--dist") + 1]: command for command in commands}
+    assert set(by_dist) == {"worksteal", "loadfile"}
+    assert "tests/test_slow.py" in by_dist["worksteal"]
+    assert not any(arg.startswith("tests/test_slow.py") for arg in by_dist["loadfile"])
+    executed = [arg for command in commands for arg in command if arg.startswith("tests/")]
+    assert sorted(executed) == list(plan.node_ids)
+
+
+@pytest.mark.parametrize(
+    "codes,expected",
+    [
+        ((5, 0), "green"),  # a changed file collecting nothing, as in the former single run
+        ((0, 5), "green"),
+        ((5, 5), "pytest_error"),  # the selection as a whole ran nothing
+        ((0, 2), "pytest_error"),  # a later usage error never yields green
+        ((0, 1), "tests_failed"),
+        ((1, None), "tests_failed"),  # the first refusal stops the stage
+        ((4, None), "pytest_error"),
+    ],
+)
+def test_split_pytest_stage_is_green_only_when_every_run_passes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, codes: tuple[int, int | None], expected: str
+) -> None:
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    calls = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        code = codes[len(calls)]
+        assert code is not None, "a run started after the stage was already refused"
+        calls.append(command)
+        if code == 0:
+            return 0, "3 passed in 0.1s"
+        return code, "FAILED tests/test_b.py::test_bad" if code == 1 else f"exit {code}"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    if expected == "green":
+        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "3 passed in 0.1s"
+        return
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert raised.value.reason == expected
+    assert raised.value.incomplete == (expected == "pytest_error")
+    if expected == "tests_failed":
+        assert raised.value.failing == ("tests/test_b.py::test_bad",)
+
+
+WORKER_RECORD_TEST = textwrap.dedent(
+    """\
+    import os
+    from pathlib import Path
+
+    def _record(name):
+        Path(os.environ['GATE_WORKER_RECORD'], name).write_text(os.environ.get('PYTEST_XDIST_WORKER', 'main'))
+
+    def test_first():
+        _record('first')
+
+    def test_second():
+        _record('second')
+    """
+)
+
+
+def test_changed_whole_file_runs_on_more_than_one_worker(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pytest.importorskip("xdist")
+    _write(repo, "tests/test_changed_slow.py", WORKER_RECORD_TEST)
+    _commit(repo, "changed whole file", "tests/test_changed_slow.py")
+    record = tmp_path / "workers"
+    record.mkdir()
+    monkeypatch.setenv("GATE_WORKER_RECORD", str(record))
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "2")
+    plan = _plan(registry_nodes=("tests/test_invariant.py",), changed_tests=("tests/test_changed_slow.py",))
+    result = gate.run_pytest_stage(
+        plan, repo, str(repo / "scripts/pre_commit/project_python.sh"), time.monotonic() + 120
+    )
+    assert re.fullmatch(r"2 passed in \d+(?:\.\d+)?s; 1 passed in \d+(?:\.\d+)?s", result), result
+    # Under ``--dist loadfile`` both tests of the changed file would share one worker.
+    workers = {path.name: path.read_text() for path in record.iterdir()}
+    assert set(workers) == {"first", "second"}
+    assert workers["first"] != workers["second"] and set(workers.values()) <= {"gw0", "gw1"}
 
 
 def test_invalid_process_configuration_cannot_reuse_a_green_receipt(repo: Path) -> None:
@@ -1936,11 +2068,16 @@ def test_pytest_stage_owns_and_cleans_a_private_base_temp(
 
     monkeypatch.setattr(gate, "run_bounded", run)
     if ending == "green":
-        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
+        assert (
+            gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+            == "1 passed in 0.1s; 1 passed in 0.1s"
+        )
     else:
         with pytest.raises(OSError if ending == "startup-error" else gate.GateOutcome):
             gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
-    assert len(seen) == 1 and not seen[0].exists()
+    # Each run owns a distinct base; a refused first run never starts the second.
+    assert len(seen) == (2 if ending == "green" else 1) and len(set(seen)) == len(seen)
+    assert not any(base.exists() for base in seen)
     assert list(state.glob("pytest-*")) == []
 
 
@@ -2089,7 +2226,7 @@ def test_pytest_stage_reaps_stale_nodes_without_following_links(
         with gate.Admission(state, 0) as admission:
             assert (
                 gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, admission=admission)
-                == "1 passed in 0.1s"
+                == "1 passed in 0.1s; 1 passed in 0.1s"
             )
         assert not os.path.lexists(stale)
         assert list(state.glob("pytest-*")) == []
@@ -2470,7 +2607,7 @@ def test_production_head_follower_reuses_green_under_global_queue_load(repo: Pat
     leader, follower = rows
     assert leader["queue_position"] == 3
     assert set(leader["stages"]) == {"pre_commit", "pytest"}
-    assert re.fullmatch(r"3 passed in \d+(?:\.\d+)?s", leader["pytest"])
+    assert re.fullmatch(SPLIT_SUMMARY_RE, leader["pytest"])
     assert follower["detail"] == "valid receipt after coalescing"
     assert follower["coalescing_wait_s"] > 4
     assert follower["admission_wait_limit_s"] == 16
@@ -2507,7 +2644,7 @@ def test_production_non_green_head_holder_keeps_later_global_allowance(repo: Pat
     assert row["coalescing_wait_s"] >= 8 and row["admission_wait_s"] > 12
     assert row["admission_wait_limit_s"] >= row["coalescing_wait_s"] + 6 - 0.02
     assert row["queue_position"] == 2 and set(row["stages"]) == {"pre_commit", "pytest"}
-    assert re.fullmatch(r"3 passed in \d+(?:\.\d+)?s", row["pytest"])
+    assert re.fullmatch(SPLIT_SUMMARY_RE, row["pytest"])
     assert "detail" not in row and len(_receipts(repo)) == 1
     _assert_queue_released(state)
 
@@ -3378,7 +3515,7 @@ def test_pytest_stale_sweep_requires_live_exclusive_global_admission(qualified_c
                 admission=admission,
                 diagnostics=diagnostics,
             )
-            == "1 passed in 0.1s"
+            == "1 passed in 0.1s; 1 passed in 0.1s"
         )
         assert (stale / "preserved").read_text() == "other run"
         assert list(state.glob("pytest-*")) == [stale]
