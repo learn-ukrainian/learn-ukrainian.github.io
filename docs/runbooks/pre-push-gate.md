@@ -11,6 +11,12 @@ tracked changes:
 
 1. `pre-commit run --hook-stage pre-push --from-ref <base> --to-ref <head>` over the outgoing range.
    `<base>` is the remote tip when it is an ancestor, else the merge-base with `origin/main`.
+   The same bounded stage then always runs `lint_opsec_leaks.py --commit-range <base>..<head>`.
+   It reads each commit's version of its touched files, including values later reverted or files
+   later deleted. Missing selected blobs refuse the push; diagnostics omit matched values.
+   It also runs the existing `check-no-internal-ids` hook explicitly with `--hook-stage pre-commit`
+   and the same `--from-ref`/`--to-ref` pair. This preserves that hook's exact learner-surface
+   file filter and detection rules while enforcing it during the push gate.
 2. The invariant registry: `KNOWN_REPO_WIDE_MODULES` and `KNOWN_REPO_WIDE_FUNCTIONS` in
    `tests/test_repo_wide_marker_invariant.py`, read by AST and deduplicated (a function id is dropped
    when its whole file is selected). Its version is a digest of the gate version and the ids.
@@ -109,6 +115,13 @@ A later exclusive serial run may reap directories left by a dead run.
 Shared/scoped execution or unknown exclusivity skips the sweep and records
 `stale_pytest_cleanup=skipped_shared_or_unknown` in stage diagnostics. Every run still removes its
 own pytest temporary directory. Sweep failures refuse the push as incomplete.
+
+Tests that assert the exclusive sweep or inject failures into in-process serial stages pin
+`LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS=1` with `monkeypatch`. This keeps their assertions valid
+when the invoking push uses two slots. Startup I/O fault injection and the non-green leader/follower
+test also pin serial admission, where interrupting the leader ends its validation stages before
+the follower checks for a reusable receipt. The existing shared-mode stale-sweep test still verifies
+that shared execution preserves other runs' temporary directories.
 
 Scoped executors share the existing `admission.lock`; legacy and default callers keep its exclusive
 flock. A flock-live ticket, a separate launcher flock, and verified scoped-holder proof permit sharing.

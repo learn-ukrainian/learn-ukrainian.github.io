@@ -314,46 +314,37 @@ def get_files_changed_in_commit_range(
     commit_range: str,
     *,
     apply_infrastructure_skips: bool = True,
-) -> tuple[list[str], str, str]:
-    """Return the union of paths touched by every commit in ``commit_range``.
-
-    A tree diff can omit a path changed and then reverted by a later queued
-    commit.  Landing scans must retain the union of the constituent PR
-    surfaces, so collect each commit's changed paths and read the resulting
-    tree at the range head exactly once.
-    """
+) -> tuple[list[tuple[str, str]], str]:
+    """Select each touched path at the commit that contains its published bytes."""
     commits = run_git_lines(["git", "rev-list", commit_range])
-    paths: list[str] = []
+    selected: list[tuple[str, str]] = []
     for commit in commits:
-        paths.extend(
-            run_git_nul_separated(
-                [
-                    "git",
-                    "diff-tree",
-                    "--root",
-                    "-r",
-                    "-m",
-                    "--no-commit-id",
-                    "--no-renames",
-                    "--name-only",
-                    "--diff-filter=ACMRT",
-                    "-z",
-                    commit,
-                ]
+        paths = run_git_nul_separated(
+            [
+                "git",
+                "diff-tree",
+                "--root",
+                "-r",
+                "-m",
+                "--no-commit-id",
+                "--no-renames",
+                "--name-only",
+                "--diff-filter=ACMRT",
+                "-z",
+                commit,
+            ]
+        )
+        # A merge can delete a path relative to one parent while changing it
+        # relative to another. Only blobs present in this commit can be read.
+        commit_paths = set(run_git_nul_separated(["git", "ls-tree", "-rz", "--name-only", commit]))
+        selected.extend(
+            (path, commit)
+            for path in filter_rel_paths(
+                sorted(set(paths) & commit_paths),
+                apply_infrastructure_skips=apply_infrastructure_skips,
             )
         )
-    head = get_diff_range_head(commit_range)
-    head_paths = set(
-        run_git_nul_separated(["git", "ls-tree", "-rz", "--name-only", head])
-    )
-    return (
-        filter_rel_paths(
-            sorted(set(paths) & head_paths),
-            apply_infrastructure_skips=apply_infrastructure_skips,
-        ),
-        f"git commit range ({commit_range})",
-        head,
-    )
+    return selected, f"git commit range ({commit_range})"
 
 
 def get_files_to_check(
@@ -450,13 +441,20 @@ def get_public_personal_identifier_paths(revision: str = "") -> list[str]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Lint repository for OPSEC leaks.")
+    parser = argparse.ArgumentParser(
+        description="Lint committed or staged files for OPSEC leaks.\nUse commit ranges to check historical content before publication.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  lint_opsec_leaks.py --staged\n  lint_opsec_leaks.py --commit-range origin/main..HEAD\n"
+        "Outputs: redacted findings on stdout; no files written.\n"
+        "Exit codes: 0 clean; 1 leaks or unreadable Git data; 2 invalid arguments.\n"
+        "Related: docs/runbooks/pre-push-gate.md; #10579.",
+    )
     parser.add_argument("diff_range", nargs="?", help="Git diff range (e.g. origin/main...HEAD)")
     parser.add_argument("--staged", action="store_true", help="Inspect staged git index blobs")
     parser.add_argument("--all", action="store_true", help="Explicitly scan all tracked files in repo")
     parser.add_argument(
         "--commit-range",
-        help="Scan the union of paths changed by every commit in a range",
+        help="Scan each commit's touched blobs, e.g. origin/main..HEAD; default: push refs when available",
     )
     parser.add_argument(
         "--public-identifiers",
@@ -473,25 +471,27 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--public-identifiers cannot be combined with --staged or --all")
     if args.commit_range and (args.diff_range or args.staged or args.all):
         parser.error("--commit-range cannot be combined with a diff range, --staged, or --all")
-    if args.commit_range and not args.public_identifiers:
-        parser.error("--commit-range requires --public-identifiers")
     if args.revision and not args.public_identifiers:
         parser.error("--revision requires --public-identifiers")
     if args.revision and (args.diff_range or args.commit_range):
         parser.error("--revision cannot be combined with a diff range or --commit-range")
 
+    commit_range = args.commit_range
+    if not any((commit_range, args.diff_range, args.public_identifiers, args.staged, args.all)):
+        local = os.environ.get("PRE_PUSH_LOCAL_REF") or os.environ.get("PRE_COMMIT_TO_REF", "")
+        remote = os.environ.get("PRE_PUSH_REMOTE_REF") or os.environ.get("PRE_COMMIT_FROM_REF", "")
+        if local and remote and remote != "0" * 40:
+            commit_range = f"{remote}..{local}"
+
     try:
-        if args.public_identifiers:
-            if args.commit_range:
-                changed_paths, diff_mode, rev_target = get_files_changed_in_commit_range(
-                    args.commit_range,
-                    apply_infrastructure_skips=False,
-                )
-                rel_paths = [
-                    path for path in changed_paths if is_public_personal_identifier_path(path)
-                ]
-                mode_str = f"changed learner-facing files (--public-identifiers; {diff_mode})"
-            elif args.diff_range:
+        if commit_range:
+            selected, mode_str = get_files_changed_in_commit_range(
+                commit_range, apply_infrastructure_skips=not args.public_identifiers
+            )
+            if args.public_identifiers:
+                selected = [(path, rev) for path, rev in selected if is_public_personal_identifier_path(path)]
+        elif args.public_identifiers:
+            if args.diff_range:
                 changed_paths, diff_mode, rev_target = get_files_to_check(
                     args.diff_range, apply_infrastructure_skips=False
                 )
@@ -505,21 +505,24 @@ def main(argv: list[str] | None = None) -> int:
                 rev_target = args.revision or "HEAD"
         else:
             rel_paths, mode_str, rev_target = get_files_to_check(args.diff_range, staged_only=args.staged, scan_all=args.all)
+        if not commit_range:
+            selected = [(path, rev_target) for path in rel_paths]
     except Exception as exc:
         print(f"💥 Fail-closed git error: {exc}", file=sys.stderr)
         return 1
 
     total_findings = 0
 
-    print(f"🔒 Checking {len(rel_paths)} files for OPSEC leaks (mode: {mode_str})...")
+    print(f"🔒 Checking {len(selected)} file versions for OPSEC leaks (mode: {mode_str})...")
 
-    for rel_path in rel_paths:
-        if "staged" in mode_str:
-            content = get_git_content(rel_path, rev="")
-        else:
-            content = get_git_content(rel_path, rev=rev_target)
+    for rel_path, rev_target in selected:
+        content = get_git_content(rel_path, rev=rev_target)
 
         if content is None:
+            if commit_range:
+                print(f"💥 Fail-closed unreadable selected blob: {rev_target}:{rel_path}", file=sys.stderr)
+                total_findings += 1
+                continue
             disk_path = REPO_ROOT / rel_path
             if not disk_path.is_file():
                 print(f"💥 Fail-closed unreadable selected file: {rel_path}", file=sys.stderr)
@@ -540,9 +543,9 @@ def main(argv: list[str] | None = None) -> int:
 
         if findings:
             total_findings += len(findings)
-            print(f"\n❌ OPSEC LEAK DETECTED in [{rel_path}]:")
-            for line_num, match_str, desc in findings:
-                print(f"   Line {line_num}: [{desc}] -> {match_str!r}")
+            print(f"\n❌ OPSEC LEAK DETECTED in [{rel_path}] at {rev_target or 'index'}:")
+            for line_num, _match_str, desc in findings:
+                print(f"   Line {line_num}: [{desc}] (value redacted)")
 
     if total_findings > 0:
         print(f"\n💥 Total OPSEC leaks found: {total_findings}")
