@@ -16629,17 +16629,16 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
 def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str]) -> Any:
     """Complete authorship and scope of the review target for a trusted code review (#9739).
 
-    Only a review that names its author and risk attests cross-family
-    independence, so only it reads the facts; legacy reviews keep intrinsic
-    eligibility. Runs after :func:`_dispatch_review_changed_paths` pinned the
+    A review with a risk reads complete branch facts, including verified app
+    bots that have no author model; legacy reviews keep intrinsic eligibility.
+    Runs after :func:`_dispatch_review_changed_paths` pinned the
     target. Returns None without a branch or PR target.
     """
     from scripts.review.record_cf_verdict import admitted_unknown_history, collect_branch_review_facts
 
     target = getattr(args, "_review_target", None)
     if target is None or not (
-        getattr(args, "review_mode", "cross_family") == "red_team"
-        or (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None))
+        getattr(args, "review_mode", "cross_family") == "red_team" or getattr(args, "review_risk", None)
     ):
         return None
     repo_root = getattr(args, "_review_repo_root", _local_repo_root)
@@ -16667,7 +16666,7 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
                 task_root=tasks_dir(),
                 repo_root=repo_root,
             )
-    return collect_branch_review_facts(
+    facts = collect_branch_review_facts(
         repository=repository,
         repo_root=repo_root,
         base_tip_sha=target.base_sha,
@@ -16678,6 +16677,14 @@ def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str])
         subject_families=tuple(getattr(args, "subject_family", None) or ()),
         unknown_history=unknown_history,
     )
+    # An empty target without a declared author supplies no trusted authorship.
+    if (
+        getattr(args, "review_mode", "cross_family") != "red_team"
+        and not getattr(args, "review_author_model", None)
+        and not facts.existing_families
+    ):
+        return None
+    return facts
 
 
 def _admit_dispatch_target(

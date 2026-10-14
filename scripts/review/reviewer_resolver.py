@@ -42,6 +42,7 @@ from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPO
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
 from scripts.fleet import credit_lane
+from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
 from scripts.review.capacity import ReviewCapacity, review_capacity
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
@@ -505,6 +506,8 @@ def complete_author_families(inputs: ResolverInputs, single_family: str) -> froz
 
     Without ``inputs.author_families`` this is just ``single_family``.
     Unknown committed authors are reviewable by any known reviewer family (#9944).
+    A verified app bot (#10531) has no model family: it is a complete
+    attribution that no reviewer family matches.
     """
     if not inputs.author_families:
         return frozenset({single_family})
@@ -512,7 +515,8 @@ def complete_author_families(inputs: ResolverInputs, single_family: str) -> froz
     if inputs.author_model or inputs.author_family:
         members.add(single_family)
     if not all(
-        member in _VALID_CONCRETE_FAMILIES or member in {CURSOR_AUTO_UNION_FAMILY, UNKNOWN_AUTHOR_FAMILY}
+        member in _VALID_CONCRETE_FAMILIES
+        or member in {CURSOR_AUTO_UNION_FAMILY, UNKNOWN_AUTHOR_FAMILY, VERIFIED_APP_BOT}
         for member in members
     ):
         return None
