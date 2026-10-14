@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import signal
 import subprocess
 import tempfile
 from collections.abc import Mapping
@@ -89,6 +90,29 @@ _SAFE_VALUE_NAME_ALLOWLIST = {
     "LU_X_AGENT_TRAILER",
 }
 
+# Launcher metadata whose names resemble credentials. Session fencing and
+# context capacities are decimal counters; Git author fields are identity text.
+# The dispatcher still excludes this parent context and rebuilds Git identity.
+_CHILD_COUNTER_NAMES = {
+    "SESSION_STREAM_FENCING_TOKEN",
+    "LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS",
+    "LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS",
+    "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS",
+}
+_CHILD_IDENTITY_NAMES = {"GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL"}
+_DRIVER_GITHUB_IDENTITY_NAMES = {
+    "GH_TOKEN",
+    "GITHUB_TOKEN",
+    "GH_ENTERPRISE_TOKEN",
+    "GITHUB_ENTERPRISE_TOKEN",
+    "LU_AGENT_GITHUB_TOKEN",
+    "LU_AGENT_GITHUB_APP_ID",
+    "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+    "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+    "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+}
+
 _PROVIDER_SECRET_ALLOWLIST = {
     "gemini": {
         "GEMINI_API_KEY",
@@ -117,6 +141,22 @@ _PROVIDER_SECRET_ALLOWLIST = {
     "acpx-cursor-shadow": {
         "CURSOR_API_KEY",
     },
+}
+
+# Dispatcher seats eligible for the early injected GitHub identity.
+# Gemini aliases are excluded from this intermediate stage (#7020).
+# The final CLI child resolves GitHub identity through child_credential_env.
+GITHUB_TOKEN_SEATS = {
+    "bridge",
+    "claude",
+    "codex",
+    "cursor",
+    "deepseek",
+    "glm",
+    "grok",
+    "grok-build",
+    "grok-hermes",
+    "kimi",
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
@@ -247,14 +287,25 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
 }
 
 
-def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
-    """Environment variable names to omit for ``provider``."""
-    # A dispatcher is a parent for multiple providers. Keep their recognized
-    # keys here; each worker's environment applies its own provider filter.
+def unneeded_env_var_names(env: Mapping[str, str], provider: str, *, harness: str | None = None) -> list[str]:
+    """Names to omit from dispatcher and interactive CLI child environments.
+
+    Preserve the dispatcher's provider allowlists and GitHub seat policy.
+    Codex's Claude Code transport alone needs its route-derived auth token.
+    """
     dispatcher_keys = set().union(*_PROVIDER_SECRET_ALLOWLIST.values()) if provider == "dispatcher" else set()
     drop: list[str] = []
     for var_name in env:
         upper = var_name.upper()
+        if provider != "dispatcher" and (
+            upper == "GITHUB_TOKEN" or (upper == "GH_TOKEN" and provider.lower() not in GITHUB_TOKEN_SEATS)
+        ):
+            drop.append(var_name)
+            continue
+        if upper == "ANTHROPIC_AUTH_TOKEN" and _normalized_provider(provider) == "codex":
+            if harness != "claude-code":
+                drop.append(var_name)
+            continue
         if not (upper.endswith("_API_KEY") or upper.endswith("APIKEY")):
             continue
         if upper in dispatcher_keys or _is_provider_secret(var_name, provider):
@@ -263,9 +314,9 @@ def unneeded_env_var_names(env: Mapping[str, str], provider: str) -> list[str]:
     return drop
 
 
-def without_unneeded_secrets(env: Mapping[str, str], provider: str) -> dict[str, str]:
-    """Copy ``env`` without API keys this provider does not need."""
-    dropped = set(unneeded_env_var_names(env, provider))
+def without_unneeded_secrets(env: Mapping[str, str], provider: str, *, harness: str | None = None) -> dict[str, str]:
+    """Copy ``env`` using the shared CLI child credential policy."""
+    dropped = set(unneeded_env_var_names(env, provider, harness=harness))
     return {name: value for name, value in env.items() if name not in dropped}
 
 
@@ -499,10 +550,65 @@ def _isolated_git_env(
         }
 
 
+def child_credential_env(
+    raw: Mapping[str, str], provider: str, *, harness: str | None = None, driver_launcher: bool = False
+) -> dict[str, str]:
+    """Keep the seat's credentials; resolve GitHub identity only for workers.
+
+    Ordinary launcher context remains available for stored login and driver
+    hooks. build_agent_env further limits non-credential process context.
+    Codex and GLM's derived Claude Code tokens are scoped to that transport.
+    Driver launchers preserve raw GitHub variables without resolving or minting.
+    Dispatched workers resolve identity as before and receive no signing key.
+    """
+    from .agent_github_identity import resolve_agent_github_identity
+    from .kimi_admission import is_kimi_seat
+
+    env = {}
+    seat = _normalized_provider(provider)
+    for name, value in raw.items():
+        route_auth = name.upper() == "ANTHROPIC_AUTH_TOKEN" and seat in {"codex", "glm"} and harness == "claude-code"
+        route_counter = (
+            name == "CLAUDE_CODE_MAX_CONTEXT_TOKENS"
+            and seat in {"glm", "kimi"}
+            and harness == "claude-code"
+            and value.isascii()
+            and value.isdecimal()
+        )
+        driver_identity = driver_launcher and name in _DRIVER_GITHUB_IDENTITY_NAMES
+        if (
+            _is_provider_secret(name, provider)
+            or route_auth
+            or route_counter
+            or driver_identity
+            # Launcher paths can contain token-shaped task names. The dispatcher
+            # applies its existing value filter again in build_agent_env.
+            or name in {"PATH", "HOME", "PWD"}
+            or _is_safe_value_name(name)
+        ):
+            env[name] = value
+        elif _is_provider_safe_name(name, provider) and not _looks_sensitive_value(value):
+            if not name.upper().startswith("ACPX_AUTH_") or value == "1":
+                env[name] = value
+        elif (
+            (name in _CHILD_COUNTER_NAMES and value.isascii() and value.isdecimal())
+            or (name in _CHILD_IDENTITY_NAMES and not _looks_sensitive_value(value))
+            or (not _looks_sensitive_name(name) and not _looks_sensitive_value(value))
+        ):
+            env[name] = value
+
+    identity = None if driver_launcher or is_kimi_seat(provider) else resolve_agent_github_identity(environment=raw)
+    if identity is not None and identity.token:
+        env["GH_TOKEN"] = identity.token
+        env["LU_AGENT_GITHUB_IDENTITY_SOURCE"] = identity.source or "legacy"
+    return env
+
+
 def build_agent_env(
     *,
     provider: str,
     model: str | None = None,
+    harness: str | None = None,
     overrides: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
     """Return a scrubbed env for a spawned agent CLI.
@@ -534,9 +640,11 @@ def build_agent_env(
     # Driver state belongs to the launcher session, never child/consult agents.
     raw.pop("LU_DRIVER_STATE_FILE", None)
 
+    credentials = child_credential_env(raw, provider, harness=harness)
     env: dict[str, str] = {}
-    for name, value in raw.items():
-        if _is_provider_secret(name, provider):
+    for name, value in credentials.items():
+        # Credential admission already happened in the shared child policy.
+        if _looks_sensitive_name(name) and name not in _CHILD_COUNTER_NAMES | _CHILD_IDENTITY_NAMES:
             env[name] = value
             continue
 
@@ -545,7 +653,11 @@ def build_agent_env(
             continue
         if _looks_sensitive_value(value):
             continue
-        if _is_provider_safe_name(name, provider):
+        if _is_provider_safe_name(name, provider) or (
+            name == "ANTHROPIC_BASE_URL"
+            and _normalized_provider(provider) in {"glm", "kimi"}
+            and harness == "claude-code"
+        ):
             if name.upper().startswith("ACPX_AUTH_") and value != "1":
                 continue
             env[name] = value
@@ -574,21 +686,13 @@ def build_agent_env(
 
     # Git-config isolation (#2842) — applied last so it always wins; agents
     # cannot persist a repo-bricking core.bare write into system/global config.
-    from .agent_github_identity import resolve_agent_github_identity
     from .kimi_admission import is_kimi_seat
 
     # A Kimi seat never publishes: delegate commits and pushes its work after
     # the content check (kimi_boundary). It gets no GitHub identity, no
     # credential helper, an empty gh config, and every push URL rewritten below.
     no_push = is_kimi_seat(provider)
-    identity = None if no_push else resolve_agent_github_identity(environment=raw)
-    token = identity.token if identity is not None else None
-    if identity is not None and token:
-        env["GH_TOKEN"] = token
-        env["LU_AGENT_GITHUB_IDENTITY_SOURCE"] = identity.source or "legacy"
-    else:
-        env.pop("GH_TOKEN", None)
-        env.pop("GITHUB_TOKEN", None)
+    token = credentials.get("GH_TOKEN")
     if no_push:
         for name in _PUSH_CREDENTIAL_NAMES:
             env.pop(name, None)
@@ -647,9 +751,9 @@ def _append_push_rewrite(env: dict[str, str], target: str) -> None:
     env["GIT_TERMINAL_PROMPT"] = "0"
 
 
-def _print_unneeded_env_var_names(provider: str) -> int:
-    """Print variable names the current process should drop for ``provider``."""
-    for var_name in unneeded_env_var_names(os.environ, provider):
+def _print_unneeded_env_var_names(provider: str, *, harness: str | None = None) -> int:
+    """Print variable names the CLI child should omit for ``provider``."""
+    for var_name in unneeded_env_var_names(os.environ, provider, harness=harness):
         if var_name.isidentifier():
             sys.stdout.write(f"{var_name}\n")
     return 0
@@ -662,6 +766,9 @@ if __name__ == "__main__":
     # Launchers execute this file by path. Relative imports below need the
     # scripts package on sys.path and a package context.
     if __package__ in {None, ""}:
+        _repo_dir = str(Path(__file__).resolve().parents[2])
+        if _repo_dir not in sys.path:
+            sys.path.insert(0, _repo_dir)
         _scripts_dir = str(Path(__file__).resolve().parents[1])
         if _scripts_dir not in sys.path:
             sys.path.insert(0, _scripts_dir)
@@ -669,4 +776,41 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Print API-key names a child env must drop.")
     parser.add_argument("--provider", required=True)
-    raise SystemExit(_print_unneeded_env_var_names(parser.parse_args().provider))
+    parser.add_argument("--harness", help="Effective child harness, including the Codex Claude Code route.")
+    parser.add_argument(
+        "--driver-launcher", action="store_true", help="Preserve the driver's raw GitHub identity without resolution."
+    )
+    parser.add_argument(
+        "--exec", dest="command", nargs=argparse.REMAINDER, help="Exec the CLI with the shared seat credential policy."
+    )
+    parser.add_argument("--check-helper", action="store_true", help="Check the helper before supervising a child.")
+    # Parse only our options. argparse's REMAINDER still interprets a later
+    # literal --; the provider owns every argument after this boundary.
+    arguments = sys.argv[1:]
+    boundary = next((index for index, value in enumerate(arguments) if value in {"--exec", "--"}), len(arguments))
+    args = parser.parse_args(arguments[:boundary])
+    args.command = arguments[boundary + 1 :] if boundary < len(arguments) else None
+    if args.check_helper or args.command:
+        try:
+            # Match the exec path's import closure before the shell claims a
+            # lease. Import errors must not expose their exception diagnostics.
+            from . import agent_github_identity, kimi_admission
+
+            # Resolve the same members as the child policy without minting.
+            _ = agent_github_identity.resolve_agent_github_identity, kimi_admission.is_kimi_seat
+
+            if args.check_helper:
+                raise SystemExit(0)
+            child = child_credential_env(
+                os.environ, args.provider, harness=args.harness, driver_launcher=args.driver_launcher
+            )
+            # exec preserves ignored signals; undo Python's startup defaults.
+            for signal_name in ("SIGPIPE", "SIGXFSZ"):
+                if (signal_number := getattr(signal, signal_name, None)) is not None:
+                    signal.signal(signal_number, signal.SIG_DFL)
+            os.execvpe(args.command[0], args.command, child)
+        except Exception as exc:
+            # Identity errors and executable diagnostics can contain secrets.
+            sys.stderr.write(f"launcher child environment refused: {type(exc).__name__}\n")
+            raise SystemExit(1) from None
+    raise SystemExit(_print_unneeded_env_var_names(args.provider, harness=args.harness))

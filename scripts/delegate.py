@@ -204,6 +204,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.env_sanitize import GITHUB_TOKEN_SEATS as _GH_TOKEN_AGENTS
 from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
@@ -257,25 +258,6 @@ if TYPE_CHECKING:
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
-# The Gemini-family seat is intentionally absent in BOTH spellings: the
-# retired ``gemini`` alias resolves to ``agy`` before Popen (#7041), so the
-# strip has to attach to the resolved seat id ``agy`` — otherwise every
-# ``--agent gemini`` dispatch would slip a parent operator ``GH_TOKEN`` /
-# ``GITHUB_TOKEN`` back in through the alias. Intended App or
-# ``LU_AGENT_GITHUB_TOKEN`` identity still reaches that CLI via
-# ``build_agent_env`` (#7020).
-_GH_TOKEN_AGENTS = {
-    "bridge",
-    "claude",
-    "codex",
-    "cursor",
-    "deepseek",
-    "glm",
-    "grok",
-    "grok-build",
-    "grok-hermes",
-    "kimi",
-}
 _RUNTIME_TMP_TERMINAL_STATUSES = frozenset(
     {
         "done",

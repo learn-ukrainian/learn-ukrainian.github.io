@@ -2,6 +2,12 @@
 Pytest configuration and shared fixtures for audit tests.
 
 Provides reusable content snippets and module templates for testing.
+
+Credential redaction protects serialized reports, captured output and warnings.
+It cannot intercept direct terminal writes with ``-s``, ``--capture=no``,
+``--capture=tee-sys``, ``-o log_cli=true`` or ``--log-cli-level=...``. Keep capture enabled and live logging disabled when running
+tests with credentials. Such sessions emit one warning, without values.
+``--noconftest`` disables credential stripping, redaction and this warning together.
 """
 
 import os
@@ -32,7 +38,9 @@ import re
 # order does not retain one.
 _CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
 _XDIST_PUBLISHED_CREDENTIALS_KEY = "lu_suite_published_credentials"
+_XDIST_REDACTION_SECRETS_KEY = "lu_suite_redaction_secrets"
 _IMPORT_STRIPPED_SECRETS: dict[str, str] = {}
+_IMPORT_HAD_CREDENTIALS = False
 _CREDENTIAL_ENV_RE = re.compile(r"(?i)(?:^|_)(?:API_KEY|APIKEY|TOKEN|SECRET|PASSWORD|PASSWD)$")
 
 
@@ -43,8 +51,13 @@ def _is_credential_shaped_env_name(name: str) -> bool:
 
 def _strip_credential_shaped_env() -> None:
     """Drop credential-shaped names. This process never puts them back."""
+    global _IMPORT_HAD_CREDENTIALS
     for name in tuple(os.environ):
         if _is_credential_shaped_env_name(name) or _CREDENTIAL_ENV_RE.search(name):
+            # These token-suffix values identify test processes and fenced
+            # leases. Strip them as before, but do not call them credentials.
+            if name not in {"LU_TEST_CURSOR_SESSION_TOKEN", "SESSION_STREAM_FENCING_TOKEN"}:
+                _IMPORT_HAD_CREDENTIALS = True
             value = os.environ[name]
             if len(value) >= 12:
                 _IMPORT_STRIPPED_SECRETS[name] = value
@@ -80,6 +93,9 @@ from typing import Any
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
+from _pytest._io.saferepr import SafeRepr, saferepr
+from _pytest.reports import pytest_report_from_serializable as _restore_pytest_report
+from _pytest.reports import pytest_report_to_serializable as _serialize_pytest_report
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -237,8 +253,15 @@ def pytest_runtest_makereport(
     item: pytest.Item, call: pytest.CallInfo[None]
 ) -> Generator[None, object, pytest.TestReport]:
     """Sanitize all outcomes before terminal, JUnit, or xdist consumers."""
+    item_property_count = len(item.user_properties)
     report = yield
-    return _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    report._lu_xdist_worker = hasattr(item.config, "workerinput")
+    _sanitize_secret_report(report, _IMPORT_STRIPPED_SECRETS)
+    # record_property persists on the item across phases. Store its sanitized
+    # values so teardown cannot count the same disclosure a second time.
+    if _IMPORT_STRIPPED_SECRETS:
+        item.user_properties[:] = report.user_properties[:item_property_count]
+    return report
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)
@@ -283,53 +306,300 @@ def pytest_warning_recorded(warning_message: warnings.WarningMessage) -> None:
         warning_message.line = redacted_line
 
 
-def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
-    """Replace credential values while retaining the original failure cause."""
-    if not secrets:
-        return report
-    chunks = [str(report.longrepr or "")]
-    chunks.extend(title + "\n" + (content or "") for title, content in report.sections)
-    properties = getattr(report, "user_properties", [])
-    property_text = "\n".join(str(name) + "\n" + str(value) for name, value in properties)
-    chunks.append(property_text)
-    text = "\n".join(chunks)
-    leaked = [name for name, value in secrets.items() if value and value in text]
-    if not leaked:
-        return report
-    # Pytest repeats earlier phases' captured output in later reports. Redact
-    # every section, but only promote a passed report for its own phase.
-    phase = getattr(report, "when", None)
-    current_text = "\n".join(
-        [str(report.longrepr or ""), property_text]
-        + [content for title, content in report.sections if phase is None or title.endswith(" " + phase)]
-    )
-    current_leaked = [name for name, value in secrets.items() if value and value in current_text]
-    # Replace longer values first when one credential contains another.
-    values = sorted(set(secrets.values()), key=len, reverse=True)
+_REDACTION_FAILURE = "[REDACTED] report unavailable: credential redaction failed"
 
-    def redact(content: str) -> str:
+
+def _redaction_failure_data(data: Any) -> dict[str, Any]:
+    """Return a fixed failure with no original fields or exception details."""
+    when = data.get("when") if isinstance(data, dict) else None
+    if when in {"setup", "call", "teardown"}:
+        report = pytest.TestReport(
+            nodeid="[REDACTED]",
+            location=("[REDACTED]", 0, "[REDACTED]"),
+            keywords={},
+            outcome="failed",
+            longrepr=_REDACTION_FAILURE,
+            when=when,
+        )
+    else:
+        report = pytest.CollectReport(nodeid="[REDACTED]", outcome="failed", longrepr=_REDACTION_FAILURE, result=[])
+    return _serialize_pytest_report(report)
+
+
+def _redact_clipped_secret_literals(text: str, values: Collection[str]) -> str:
+    """Remove whole clipped literals, including sides shorter than eight chars."""
+    representations = [repr(value) for value in values]
+    max_literal = max(map(len, representations), default=0)
+    # Eight characters cover the observed clipped credential fragments without
+    # treating short ordinary word overlaps as secrets. Only clipped literals
+    # participate; complete values are handled by exact replacement below.
+    minimum_overlap = 8
+    bodies = [rendered[1:-1] for rendered in representations]
+
+    def overlaps(prefix: str, suffix: str = "") -> bool:
+        for body in bodies:
+            # Search for the first eight prefix characters, then confirm the
+            # entire remaining head fragment. Do the converse for the tail.
+            start = prefix.find(body[:minimum_overlap]) if len(body) >= minimum_overlap else -1
+            while start != -1:
+                if body.startswith(prefix[start:]):
+                    return True
+                start = prefix.find(body[:minimum_overlap], start + 1)
+            end = suffix.find(body[-minimum_overlap:]) if len(body) >= minimum_overlap else -1
+            while end != -1:
+                if body.endswith(suffix[: end + minimum_overlap]):
+                    return True
+                end = suffix.find(body[-minimum_overlap:], end + 1)
+        return False
+
+    quotes: dict[str, int] = {}
+    spans = []
+    index = 0
+    while index <= len(text):
+        char = text[index] if index < len(text) else "\n"
+        if char == "\\":
+            index += 2
+            continue
+        if char == "\n":
+            # Pytest also clips entire diff lines, leaving an open literal.
+            for quote, start in quotes.items():
+                if 12 <= index - start < max_literal and text[index - 3 : index] == "...":
+                    prefix = text[start : index - 3]
+                    if any(rendered.startswith(prefix) for rendered in representations) or overlaps(prefix):
+                        spans.append((start, index, quote + "[REDACTED]..."))
+            quotes.clear()
+        elif char in "\"'":
+            start = quotes.get(char)
+            quotes[char] = index
+            if start is not None and 3 < index + 1 - start < max_literal:
+                literal = text[start : index + 1]
+                if "..." in literal:
+                    size = len(literal)
+                    # SafeRepr.repr applies an additional whole-value limit.
+                    # repr1 uses only reprlib's per-element shortening.
+                    renderer = SafeRepr(size)
+                    matches = any(
+                        len(repr(value)) > size and literal in {saferepr(value, maxsize=size), renderer.repr1(value, 1)}
+                        for value in values
+                    )
+                    # Whole-container clipping can leave unequal prefix and
+                    # suffix lengths inside the literal. Both must agree.
+                    cut = literal.find("...")
+                    while not matches and cut != -1:
+                        prefix, suffix = literal[:cut], literal[cut + 3 :]
+                        matches = overlaps(prefix, suffix) or (
+                            len(prefix) > 1
+                            and len(suffix) > 1
+                            and any(
+                                len(rendered) > size and rendered.startswith(prefix) and rendered.endswith(suffix)
+                                for rendered in representations
+                            )
+                        )
+                        cut = literal.find("...", cut + 1)
+                    if matches:
+                        spans.append((start, index + 1, char + "[REDACTED]" + char))
+        index += 1
+    chunks = []
+    end = 0
+    for start, stop, replacement in sorted(spans):
+        if start >= end:
+            chunks.extend((text[end:start], replacement))
+            end = stop
+    chunks.append(text[end:])
+    return "".join(chunks)
+
+
+_SECRET_FRAGMENT_LENGTH = 8
+# Eight consecutive known-secret characters cover the assertion-diff leaks at
+# lengths 40, 108 and 325, including URL interiors, without relying on quoting,
+# clipping markers, entropy or vendor prefixes. Shorter overlaps commonly occur
+# in ordinary words/paths; the 1..7-character controls must remain unchanged.
+# Exact values and recognized clipped reprs still cover shorter disclosures.
+# Windows wholly inside a public vendor prefix are not secret fragments.
+# Every window crossing into the credential body is still indexed, even when
+# it contains only one body character. Exact-value and clipped-repr rules stay.
+_PUBLIC_CREDENTIAL_PREFIX_RE = re.compile(r"github_pat_|sk-(?:proj-|svcacct-|ant-(?:api03-|oat01-|admin01-))")
+
+
+@functools.lru_cache(maxsize=16)
+def _secret_fragment_index(values: tuple[str, ...]) -> frozenset[str]:
+    """Index raw and escaped secret windows once for recursive report fields."""
+    return frozenset(
+        body[start : start + _SECRET_FRAGMENT_LENGTH]
+        for value in values
+        if value
+        for prefix in [_PUBLIC_CREDENTIAL_PREFIX_RE.match(value)]
+        for body in {value, repr(value)[1:-1]}
+        for start in range(
+            max(0, (prefix.end() if prefix else 0) - _SECRET_FRAGMENT_LENGTH + 1),
+            len(body) - _SECRET_FRAGMENT_LENGTH + 1,
+        )
+    )
+
+
+def _secret_fragment_spans(text: str, fragments: frozenset[str]) -> list[tuple[int, int]]:
+    """Merge overlapping/adjacent indexed windows into maximal secret runs."""
+    spans = []
+    for index in range(len(text) - _SECRET_FRAGMENT_LENGTH + 1):
+        if text[index : index + _SECRET_FRAGMENT_LENGTH] not in fragments:
+            continue
+        stop = index + _SECRET_FRAGMENT_LENGTH
+        if spans and index <= spans[-1][1]:
+            spans[-1] = (spans[-1][0], stop)
+        else:
+            spans.append((index, stop))
+    return spans
+
+
+@functools.lru_cache(maxsize=16)
+def _short_secret_repr_pattern(values: tuple[str, ...]) -> re.Pattern[str] | None:
+    """Keep exact tiny SafeRepr coverage when neither side has eight chars."""
+    literals = {
+        rendered
+        for value in values
+        for size in range(5, 2 * _SECRET_FRAGMENT_LENGTH + 4)
+        if len(repr(value)) > size
+        for rendered in (saferepr(value, maxsize=size), SafeRepr(size).repr1(value, 1))
+    }
+    return (
+        re.compile("|".join(re.escape(value) for value in sorted(literals, key=len, reverse=True)))
+        if literals
+        else None
+    )
+
+
+def _redact_shortened_secret_reprs(text: str, values: Collection[str]) -> str:
+    """Redact every known-secret run of at least eight chars anywhere in text."""
+    known = tuple(sorted(set(values)))
+    if "..." in text and (pattern := _short_secret_repr_pattern(known)) is not None:
+        text = pattern.sub(lambda match: match[0][0] + "[REDACTED]" + match[0][-1], text)
+    fragments = _secret_fragment_index(known)
+    if not fragments:
+        return text
+    spans = _secret_fragment_spans(text, fragments)
+    if not spans:
+        return text
+    # Repr normalization also removes very short visible sides. Bound that
+    # work to matched neighborhoods: a clipped literal is shorter than the
+    # longest full repr. Ordinary quoted text needs only the linear gram scan.
+    clipped = "..." in text and ("'" in text or '"' in text)
+    if clipped:
+        padding = max(len(repr(value)) for value in values)
+        windows = []
+        for start, stop in spans:
+            start, stop = max(0, start - padding), min(len(text), stop + padding)
+            if windows and start <= windows[-1][1]:
+                windows[-1] = (windows[-1][0], stop)
+            else:
+                windows.append((start, stop))
+    else:
+        windows = spans
+    chunks = []
+    cursor = 0
+    for start, stop in windows:
+        chunks.append(text[cursor:start])
+        if clipped:
+            region = _redact_clipped_secret_literals(text[start:stop], values)
+            position = 0
+            for left, right in _secret_fragment_spans(region, fragments):
+                chunks.extend((region[position:left], "[REDACTED]"))
+                position = right
+            chunks.append(region[position:])
+        else:
+            chunks.append("[REDACTED]")
+        cursor = stop
+    chunks.append(text[cursor:])
+    return "".join(chunks)
+
+
+def _redact_secret_data(data: Any, values: Collection[str]) -> Any:
+    """Redact every serialized string, including keys and shortened reprs."""
+    if isinstance(data, str):
         for value in values:
             if value:
-                content = content.replace(value, "[REDACTED]")
-        return content
+                for rendered in sorted({value, repr(value)[1:-1]}, key=len, reverse=True):
+                    data = data.replace(rendered, "[REDACTED]")
+        return _redact_shortened_secret_reprs(data, values)
+    if isinstance(data, dict):
+        return {_redact_secret_data(key, values): _redact_secret_data(value, values) for key, value in data.items()}
+    if isinstance(data, list):
+        return [_redact_secret_data(value, values) for value in data]
+    if isinstance(data, tuple):
+        return tuple(_redact_secret_data(value, values) for value in data)
+    return data
 
-    report.sections = [(redact(title), redact(content)) for title, content in report.sections]
-    if properties:
-        report.user_properties = [
-            (
-                redact(name) if isinstance(name, str) else name,
-                redact(str(value)) if any(secret and secret in str(value) for secret in values) else value,
-            )
-            for name, value in properties
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_report_to_serializable() -> Generator[None, object, Any]:
+    """Cover fields added by serialization plugins before xdist transport."""
+    data = yield
+    if _IMPORT_STRIPPED_SECRETS:
+        try:
+            data = _redact_secret_data(data, sorted(set(_IMPORT_STRIPPED_SECRETS.values()), key=len, reverse=True))
+        except Exception:
+            data = _redaction_failure_data(data)
+    return data
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_report_from_serializable(data: dict[str, Any]) -> Generator[None, object, Any]:
+    """Redact incoming serialized fields before any deserializer consumes them."""
+    if _IMPORT_STRIPPED_SECRETS:
+        try:
+            redacted = _redact_secret_data(data, sorted(set(_IMPORT_STRIPPED_SECRETS.values()), key=len, reverse=True))
+        except Exception:
+            redacted = _redaction_failure_data(data)
+        data.clear()
+        data.update(redacted)
+    return (yield)
+
+
+def _sanitize_secret_report(report: Any, secrets: Mapping[str, str]) -> Any:
+    """Round-trip all report fields through pytest's serializer before consumers."""
+    if not secrets:
+        return report
+    try:
+        data = _serialize_pytest_report(report)
+        if data is None:
+            return report
+        # JUnit calls str() on every property. Do this before both redaction and
+        # xdist serialization, including bytes, paths, and plugin objects.
+        data["user_properties"] = [(str(name), str(value)) for name, value in data.get("user_properties", [])]
+        values = sorted(set(secrets.values()), key=len, reverse=True)
+        sanitized = _redact_secret_data(data, values)
+        # Captured output repeats in later phases. Only new output and properties
+        # promote a passed report; all other fields are still redacted recursively.
+        phase = getattr(report, "when", None)
+        current = {"longrepr": data["longrepr"], "user_properties": data.get("user_properties", [])}
+        current["sections"] = [
+            (title, content) for title, content in report.sections if phase is None or title.endswith(" " + phase)
         ]
-    if isinstance(report.longrepr, tuple):
-        report.longrepr = tuple(redact(part) if isinstance(part, str) else part for part in report.longrepr)
-    elif report.longrepr is not None:
-        report.longrepr = redact(str(report.longrepr))
-    if report.outcome == "passed" and current_leaked:
-        report.outcome = "failed"
-        report.longrepr = "captured output contained the value of scrubbed env var " + ", ".join(current_leaked)
-    return report
+        current_leaked = [
+            name for name, value in secrets.items() if value and _redact_secret_data(current, [value]) != current
+        ]
+        restored = _restore_pytest_report(sanitized)
+        # xdist checks the in-memory nodeid against its collected item before
+        # sending the report. Its serialized nodeid is redacted by the hook above.
+        if getattr(report, "_lu_xdist_worker", False):
+            restored.__dict__.pop("nodeid", None)
+        # Collection results are runtime items, deliberately omitted by pytest's
+        # serializer. Keep the original items so redaction never stops collection.
+        restored.__dict__.pop("result", None)
+        report.__dict__.update(restored.__dict__)
+        if report.outcome == "passed" and current_leaked:
+            report.outcome = "failed"
+            report.longrepr = "captured output contained the value of scrubbed env var " + ", ".join(current_leaked)
+        return report
+    except Exception:
+        worker = getattr(report, "_lu_xdist_worker", False)
+        nodeid = report.nodeid if worker else "[REDACTED]"
+        failure = _restore_pytest_report(_redaction_failure_data({"when": getattr(report, "when", None)}))
+        report.__dict__.clear()
+        report.__dict__.update(failure.__dict__)
+        if worker:
+            report.nodeid = nodeid
+            report._lu_xdist_worker = True
+        return report
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
@@ -2270,6 +2540,17 @@ def _restore_published_credentials(config: pytest.Config) -> None:
     workerinput = getattr(config, "workerinput", None)
     if not isinstance(workerinput, dict):
         return
+    # Workers need the controller's import-time snapshot to sanitize before
+    # serialization. It stays in memory and is never restored into os.environ.
+    redaction_secrets = workerinput.get(_XDIST_REDACTION_SECRETS_KEY, {})
+    if isinstance(redaction_secrets, dict):
+        _IMPORT_STRIPPED_SECRETS.update(
+            {
+                name: value
+                for name, value in redaction_secrets.items()
+                if isinstance(name, str) and isinstance(value, str)
+            }
+        )
     published = workerinput.get(_XDIST_PUBLISHED_CREDENTIALS_KEY)
     if not isinstance(published, dict):
         return
@@ -2287,10 +2568,24 @@ def pytest_configure_node(node: Any) -> None:
     again at import and ``pytest_configure`` puts this copy back.
     """
     node.workerinput[_XDIST_PUBLISHED_CREDENTIALS_KEY] = _published_credential_env()
+    node.workerinput[_XDIST_REDACTION_SECRETS_KEY] = dict(_IMPORT_STRIPPED_SECRETS)
 
 
 def pytest_configure(config: pytest.Config) -> None:
     _restore_published_credentials(config)
+    if (
+        not hasattr(config, "workerinput")
+        and _IMPORT_HAD_CREDENTIALS
+        and (
+            config.getoption("capture") in {"no", "tee-sys"}
+            or config.getini("log_cli")
+            or config.getoption("log_cli_level") is not None
+        )
+    ):
+        sys.stderr.write(
+            "WARNING: credential redaction cannot protect direct terminal output; "
+            "keep capture enabled and log_cli disabled when credentials are present.\n"
+        )
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")

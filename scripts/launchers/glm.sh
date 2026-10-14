@@ -55,7 +55,7 @@ launcher_adapter_exec() {
       printf '< /dev/null\n'
       return 0
     fi
-    exec "${cmd[@]}" < /dev/null
+    exec "${LC_CHILD_ENV_COMMAND[@]}" "${cmd[@]}" < /dev/null
   fi
   local cmd=(claude --model "$LEAD_MODEL")
   if [ -n "${LC_EFFORT:-}" ]; then
@@ -66,5 +66,5 @@ launcher_adapter_exec() {
   fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
-  exec "${cmd[@]}"
+  exec "${LC_CHILD_ENV_COMMAND[@]}" "${cmd[@]}"
 }

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.launcher_libraries import launcher_library_files
+from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry
 from tests.rules_core_view import install_loader_bypass
 from tests.test_launcher_driver_scope import install_scope_sandbox
@@ -64,7 +64,7 @@ def _run(command: list[str], cwd: Path, *, env: dict[str, str] | None = None) ->
 def _prepare_repo(tmp_path: Path, *, separate_git_dir: bool = False) -> tuple[Path, Path]:
     primary = tmp_path / "repo"
     primary.mkdir()
-    for relative in (*_LAUNCHER_FILES, *launcher_library_files(_REPO_ROOT)):
+    for relative in (*_LAUNCHER_FILES, *launcher_library_files(_REPO_ROOT), *launcher_catalog_files(_REPO_ROOT)):
         destination = primary / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)

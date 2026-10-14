@@ -52,6 +52,7 @@ exceptions:
   - {module: scripts/agent_runtime/attempt_boundary.py, function: "verify_full_review_tree", program: "git", category: non-claude, reason: "runs git"}
   # scripts/agent_runtime/env_sanitize.py
   - {module: scripts/agent_runtime/env_sanitize.py, function: "_isolated_git_env", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/agent_runtime/env_sanitize.py, function: "<module>", program: "args.command[0]", category: generic-runner, reason: "final exec of the already-selected driver binary under child_credential_env; exec'd provider CLIs are model sessions; argv is launcher-built plus operator-forwarded arguments and no worker-controlled value reaches it; covered by tests/test_secret_redaction.py::test_interactive_launcher_child_uses_dispatcher_credential_policy and tests/test_secret_redaction.py::test_round3_real_launcher_dispatcher_child_parity"}
   # scripts/agent_runtime/grok_hook_bridge.py
   - {module: scripts/agent_runtime/grok_hook_bridge.py, function: "main", program: "argv", category: non-claude, reason: "runs a pinned guard hook (guard_argv) for Grok; never a Claude CLI"}
   # scripts/agent_runtime/kimi_admission.py
