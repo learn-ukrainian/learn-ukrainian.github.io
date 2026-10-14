@@ -184,6 +184,12 @@ ancestor of the authoritative merged PR head. Every current cohort record must
 have a complete task/run/process identity and a commit contained in the checkout
 head. Unknown Git objects, divergent commits, unmerged PRs and live or unknown
 processes retain the tree. This proof does not release retention intent.
+A switched-branch proof identifies the checkout using Git's raw common-directory
+and configured-origin output, then checks Git's porcelain registration list in
+the primary. The candidate must be inside that primary's cleanup root. The
+resolver never reads Git pointer files or normalizes identity output. Unknown
+identity refuses the proof before any pull-request query or removal; malformed
+origins retain their checkout without aborting the sweep.
 This extra owner proof applies only to cohorts of at least two current records;
 single-record trees retain their existing behavior. Its status remains unchanged.
 Removal uses no force flag for this cohort and still checks the delete target;

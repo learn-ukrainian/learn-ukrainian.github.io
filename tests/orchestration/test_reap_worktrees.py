@@ -3298,11 +3298,13 @@ def _patch_gh_transports(
     independent canned answers; the origin remote parses to a GitHub slug."""
     gh_calls: list[list[str]] = []
 
+    monkeypatch.setattr(
+        rw,
+        "_configured_origin_url",
+        lambda _root: b"git@github.com:learn-ukrainian/learn-ukrainian.github.io.git\n",
+    )
+
     def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
-        if args[:3] == ["git", "remote", "get-url"]:
-            return subprocess.CompletedProcess(
-                args, 0, "git@github.com:learn-ukrainian/learn-ukrainian.github.io.git\n", ""
-            )
         if args[:2] == ["gh", "api"]:
             gh_calls.append(args)
             return subprocess.CompletedProcess(args, rest.returncode, rest.stdout, rest.stderr)

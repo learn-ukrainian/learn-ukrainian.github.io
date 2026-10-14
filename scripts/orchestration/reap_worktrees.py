@@ -36,7 +36,7 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -428,18 +428,80 @@ def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
 # an absence -- callers read "no open PR" as permission to delete.
 _PR_STATES = frozenset({"OPEN", "MERGED", "CLOSED"})
 
-_GH_REMOTE_RE = re.compile(r"github\.com[:/](?P<owner>[^/]+)/(?P<repo>[^/]+?)(?:\.git)?/?$")
+_GITHUB_HOST = "github.com"
+# SCP-style SSH. The host is the whole token between ``git@`` and ``:``;
+# ``notgithub.com`` and ``prefix.github.com`` do not match.
+_SCP_GITHUB_REMOTE_RE = re.compile(
+    r"^git@github\.com:(?P<owner>[^/\s]+)/(?P<repo>[^/\s]+)$",
+    re.IGNORECASE,
+)
+
+
+def _github_owner_ok(owner: str) -> bool:
+    """GitHub login: 1–39 alphanumerics or single hyphens, not at either end."""
+    if not re.fullmatch(r"[A-Za-z0-9-]{1,39}", owner):
+        return False
+    return not owner.startswith("-") and not owner.endswith("-") and "--" not in owner
+
+
+def _github_repo_ok(repo: str) -> bool:
+    """One repository segment. A transport ``.git`` suffix is removed by the caller."""
+    if not repo or repo.endswith(".git") or repo.startswith(".") or repo.endswith(".") or ".." in repo:
+        return False
+    return re.fullmatch(r"[A-Za-z0-9._-]{1,100}", repo) is not None
+
+
+def _accept_github_slug(owner: str, repo: str) -> tuple[str, str] | None:
+    if repo.endswith(".git"):
+        repo = repo[: -len(".git")]
+    if not _github_owner_ok(owner) or not _github_repo_ok(repo):
+        return None
+    return owner, repo
+
+
+def _parse_github_origin(remote_url: str) -> tuple[str, str] | None:
+    """Owner and repository for an HTTPS or SSH GitHub origin, else None.
+
+    The host must be exactly ``github.com``. A ``.git`` suffix is optional.
+    Owner and repository must each be one GitHub path segment, so a host that
+    only contains the GitHub name cannot select some other repository.
+    """
+    text = remote_url
+    if not text or any(char.isspace() for char in text) or "\\" in text:
+        return None
+    scp = _SCP_GITHUB_REMOTE_RE.fullmatch(text)
+    if scp is not None:
+        return _accept_github_slug(scp.group("owner"), scp.group("repo"))
+    try:
+        parts = urlsplit(text)
+        if parts.scheme not in {"https", "ssh"} or parts.query or parts.fragment:
+            return None
+        # ``.port`` raises ValueError for a non-numeric or out-of-range port.
+        # That is an unknown origin, not a sweep-wide crash.
+        host = parts.hostname
+        port = parts.port
+    except ValueError:
+        return None
+    if host is None or host.lower() != _GITHUB_HOST or port is not None:
+        return None
+    if parts.scheme == "ssh" and parts.username != "git":
+        return None
+    path = parts.path[:-1] if parts.path.endswith("/") else parts.path
+    segments = path.split("/")
+    if len(segments) != 3 or not segments[1] or not segments[2]:
+        return None
+    return _accept_github_slug(segments[1], segments[2])
 
 
 def _github_owner_repo(repo_root: Path) -> tuple[str, str] | None:
     """Parse the origin remote into an (owner, repo) pair without a network call."""
-    proc = _run(["git", "remote", "get-url", "origin"], cwd=repo_root)
-    if proc.returncode != 0:
+    raw = _configured_origin_url(repo_root)
+    if raw is None:
         return None
-    match = _GH_REMOTE_RE.search((proc.stdout or "").strip())
-    if match is None:
+    try:
+        return _parse_github_origin(raw[:-1].decode("ascii"))
+    except UnicodeError:
         return None
-    return match.group("owner"), match.group("repo")
 
 
 def _parse_rest_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
@@ -3474,14 +3536,121 @@ def _resolve_merged_reuse_creator(
     return path, creator, False
 
 
+def _real_directory(path: Path) -> Path | None:
+    """Absolute directory with no symlink and no ``.`` or ``..`` component."""
+    try:
+        if not path.is_absolute():
+            return None
+        if any(part in {"", ".", ".."} for part in path.parts):
+            return None
+        current = Path(path.anchor)
+        for part in path.parts[1:]:
+            current = current / part
+            if current.is_symlink() or not current.is_dir():
+                return None
+        return current
+    except OSError:
+        return None
+
+
+def _git_identity_output(cwd: Path, args: list[str]) -> bytes | None:
+    """Raw Git stdout, with no text decoding or whitespace/path normalization."""
+    try:
+        proc = safe_git(
+            args,
+            cwd=cwd,
+            profile="local",
+            capture_output=True,
+            text=False,
+            check=False,
+            timeout=_effective_timeout(None),
+            env=sanitized_git_env(),
+        )
+    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0 or not isinstance(proc.stdout, bytes) or not proc.stdout:
+        return None
+    return proc.stdout
+
+
+def _proven_linked_worktree_primary(worktree: Path) -> Path | None:
+    """A registered dispatch checkout, identified only by Git's raw output.
+
+    The common directory names a tentative primary. Git run in that primary
+    must list the primary first and this exact checkout once. The checkout
+    stays within that primary's cleanup root; another repository's copied
+    registration cannot claim a checkout under this repository.
+    """
+    checkout = _real_directory(worktree)
+    if checkout is None:
+        return None
+    common = _git_identity_output(checkout, ["rev-parse", "--path-format=absolute", "--git-common-dir"])
+    if common is None or not common.endswith(b"/.git\n") or common.count(b"\n") != 1:
+        return None
+    try:
+        primary = Path(os.fsdecode(common[: -len(b"/.git\n")]))
+        if _real_directory(primary / ".git") is None or common != os.fsencode(primary / ".git") + b"\n":
+            return None
+        checkout.relative_to(primary / ".worktrees")
+    except (OSError, ValueError, UnicodeError):
+        return None
+    listed = _git_identity_output(primary, ["worktree", "list", "--porcelain"])
+    if listed is None or not listed.endswith(b"\n\n"):
+        return None
+    records = listed[:-2].split(b"\n\n")
+    pattern = (
+        rb"worktree [^\n\0]+\nHEAD (?:[0-9a-f]{40}|[0-9a-f]{64})\n"
+        rb"(?:branch refs/heads/[^\n\0]+|detached)"
+        rb"(?:\n(?:locked|prunable)(?: [^\n\0]*)?)*"
+    )
+    if any(re.fullmatch(pattern, record) is None for record in records):
+        return None
+    registrations = [record.partition(b"\n")[0] for record in records]
+    if not registrations or registrations[0] != b"worktree " + os.fsencode(primary):
+        return None
+    if registrations.count(b"worktree " + os.fsencode(checkout)) != 1:
+        return None
+    return primary
+
+
+def _configured_origin_url(repo: Path) -> bytes | None:
+    """Exactly one raw origin value from Git config, including its terminator."""
+    raw = _git_identity_output(repo, ["config", "--get", "remote.origin.url"])
+    if raw is None or not raw.endswith(b"\n") or raw.count(b"\n") != 1 or b"\0" in raw:
+        return None
+    return raw
+
+
+def _checkout_pr_repository(worktree: Path) -> Path | None:
+    """Git-proven primary with the checkout's identical raw origin, or None.
+
+    Identity failure precedes any pull-request query or removal authorization.
+    """
+    try:
+        root = _proven_linked_worktree_primary(worktree)
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+    if root is None or _github_owner_repo(root) is None:
+        return None
+    origin = _configured_origin_url(worktree)
+    if origin is None or origin != _configured_origin_url(root):
+        return None
+    return root
+
+
 def _switched_branch_merge_proven(
-    repo_root: Path,
+    _repo_root: Path,
     worktree: Path,
     cohort: list[tuple[Path, dict[str, Any]]],
     *,
     expected_head: str | None = None,
 ) -> bool:
     """Exact merged head of the checkout branch, with every recorded commit contained.
+
+    The pull request is read from the repository that owns ``worktree``.
+    ``_repo_root`` is the caller's task-record root and may be the public
+    control plane; it is not the pull-request repository. An owning
+    repository that cannot be resolved is not proven.
 
     A ``done`` or ``needs_finalize`` successor must have recorded that head.
     ``needs_finalize`` is the status a switched round keeps while its record
@@ -3490,6 +3659,10 @@ def _switched_branch_merge_proven(
     """
     from scripts.fleet import ignored_task_output
 
+    # Prove Git identity before querying a pull request or authorizing deletion.
+    pr_repo = _checkout_pr_repository(worktree)
+    if pr_repo is None:
+        return False
     if not cohort or not all(_pid_proven_absent(member) for _, member in cohort):
         return False
     if _worktree_clean(worktree) is not True:
@@ -3525,7 +3698,7 @@ def _switched_branch_merge_proven(
             proving = True
     if not proving:
         return False
-    states, error = _query_pr_states(repo_root, branch)
+    states, error = _query_pr_states(pr_repo, branch)
     if error is not None:
         return False
     pr = _best_pr(states)
@@ -3627,7 +3800,9 @@ def _record_merged_reuse_proof(
     )
     if alternate:
         proven_head = _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head)
-        real_pr = pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search and pr.head_sha == info.head
+        real_pr = (
+            pr is not None and pr.state == "MERGED" and not pr.head_from_commit_search and pr.head_sha == info.head
+        )
         if not proven_head or not real_pr:
             if _retention_release_present(matches):
                 return None  # Preserve #9940's explicit receipt-release path.
