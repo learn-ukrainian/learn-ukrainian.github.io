@@ -1532,11 +1532,20 @@ def test_issue_10633_octal_wrap_spellings_match_bash():
     # The octal-wrap cases above probe real bypasses only if Bash decodes them
     # to these words: the tee program name and an absolute path.
     bash = shutil.which("bash")
-    assert bash is not None
+    if bash is None:
+        pytest.skip("bash not available")
     result = subprocess.run(
         [bash, "-c", "printf '%s|' $'\\564ee' $'\\457tmp'"], capture_output=True, text=True, check=True, timeout=30
     )
     assert result.stdout == "tee|/tmp|"
+
+
+def test_issue_10633_octal_wrap_spellings_skip_without_bash(monkeypatch: pytest.MonkeyPatch):
+    # Without Bash on PATH the companion test skips: it neither fails nor
+    # passes without having compared anything.
+    monkeypatch.setattr(shutil, "which", lambda name: None)
+    with pytest.raises(pytest.skip.Exception, match="bash not available"):
+        test_issue_10633_octal_wrap_spellings_match_bash()
 
 
 def test_issue_10633_guard_has_no_ansi_c_decoder():
@@ -1567,6 +1576,19 @@ def test_issue_10633_parser_never_decodes_ansi_c_program_name():
     (segment,) = hook._expanded_segments("$'\\564ee' notes.txt")
     assert hook._command_word(segment) == ("$\\564ee", 0)
     assert segment[0].unresolved_at == 0
+
+
+def test_issue_10633_parser_ansi_c_path_program_name_keeps_basename(repo: Path):
+    # The parser takes a command word's basename without decoding, so a span
+    # spelled as a plain path still names that program for a direct caller; the
+    # token stays unresolved, and the hook entry refuses the command outright.
+    command = "$'/usr/bin/tee' notes.txt"
+    (segment,) = hook._expanded_segments(command)
+    assert str(segment[0]) == "$/usr/bin/tee"
+    assert segment[0].unresolved_at == 0
+    assert hook._command_word(segment) == ("tee", 0)
+    assert [str(target) for target in hook.bash_write_targets(command, cwd="/tmp")] == ["notes.txt"]
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=repo / ".worktrees/dispatch/claude/task-1"))
 
 
 @pytest.mark.parametrize(

@@ -101,10 +101,13 @@ before a ``'`` inside quotes (the regex anchor in ``grep 'end$'``) is refused
 too; ``"end$"`` is the same pattern. Every command string this hook parses has
 passed that check first. Nothing in this module decodes ANSI-C escapes: a direct
 caller of the parser (``bash_write_targets``, ``guard-reviewer-publish.py``)
-gets each ``$'...'`` span as undecoded literal text whose value is unknown, so a
-path containing one is ``unresolved_shell_variable`` and a command word spelled
-with one names no known program. ``guard-reviewer-publish.py`` refuses the
-marker itself for that reason.
+gets each ``$'...'`` span as undecoded literal text whose value is unknown (the
+word keeps ``unresolved_at`` set), so a path containing one is
+``unresolved_shell_variable``. A command word is still reduced to its basename:
+a span spelled as a plain path keeps naming that program (``$'/usr/bin/tee'``
+reads as ``tee``), while one holding escapes stays undecoded text that names no
+known program (``$'\\564ee'`` reads as ``$\\564ee``). Because nothing is
+decoded, ``guard-reviewer-publish.py`` refuses the marker itself as well.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
@@ -1063,7 +1066,10 @@ def _command_word(segment: list[str]) -> tuple[str, int]:
 
     Skips leading ``VAR=val`` assignments and common wrappers (``sudo``,
     ``env``, ``time``, ``nohup``, ``command``) so ``sudo tee x`` still reads as
-    a ``tee``.
+    a ``tee``. The word is reduced to its basename without decoding, so an
+    ANSI-C span spelled as a plain path (``$'/usr/bin/tee'``) yields ``tee``
+    while the token keeps ``unresolved_at`` set; the hook entry refuses every
+    ``$'`` command before this parser runs (#10633).
     """
     i = 0
     while i < len(segment):
