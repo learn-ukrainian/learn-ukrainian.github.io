@@ -340,8 +340,12 @@ a broken ledger refuses the batch. A repository-wide exclusive archive lock on
 the control-plane checkout covers fresh validation, bundling, receipts, final
 guards and ref deletion. The persistent `branch-archive/archive.lock` file is
 never unlinked. Each bundle is created and verified under a private temporary
-name, then published with an atomic hard link that refuses an existing archive
-name. Publication failure keeps every selected ref and any existing bundle.
+name in the managed `TMPDIR` lease, or the shared scratch root when `TMPDIR` is
+unset or empty. An atomic hard link publishes it into the archive directory and
+refuses an existing name. Staging and publication must share a filesystem;
+cross-filesystem link failure keeps every selected ref and any existing bundle,
+without copying into a live archive name. Private staging is removed after the
+attempt; published bundles survive later guard or receipt failure.
 Thin bundles exclude `origin/main` history.
 The receipt's restore command needs those prerequisite commits present: fetch
 them from origin or restore in a clone of this repository. Remote refs and
@@ -353,8 +357,23 @@ durable, a fresh PR snapshot covers the whole selected batch in one GitHub
 response, followed by fresh ref, worktree and task-record snapshots compared
 with classification. Unknown or changed guards keep the entire batch. The last
 local checks before the single `git update-ref --stdin --no-deref` transaction
-explicitly refuse attached worktrees and live or recent tasks. A guard change
-after its final snapshot and before the transaction remains a residual race
+explicitly refuse occupied worktrees and live or recent tasks. Archival admits
+only candidate branches with no associated registered worktree,
+including a detached checkout at the candidate tip. The unrelated normal primary
+checkout does not prevent archival of unbound branches. Any native in-progress
+operation anywhere in the repository's worktree set refuses the entire sweep,
+including operations on unrelated branches. The reader checks Git's rebase and
+sequencer directories and bisect, merge, cherry-pick, revert and rebase markers;
+operation state is refused by presence, without parsing branch names or
+`update-refs` contents. An incomplete bisect start also refuses the sweep.
+The reader uses Git administrative registrations even for moved, locked or
+prunable checkouts. Missing, malformed, unreadable, contradictory or unknown
+registration and HEAD evidence refuses deletion. Operation evidence never proves
+that a branch is free. The same census runs before classification, for drift
+snapshots and again at the final destructive boundary. This conservative fallback
+narrows archival availability; it does not certify the original unrestricted
+archival outcome while unrelated operations are active.
+A guard change after its final snapshot and before the transaction remains a residual race
 window; GitHub, task files and worktree registrations do not share a transaction
 with Git refs. Expected-SHA checks abort the whole transaction on head moves;
 `--no-deref` prevents deletion through a symbolic target. The accountable sweep

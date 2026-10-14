@@ -140,6 +140,96 @@ def _checked(repo: Path, *args: str) -> str:
     return result.stdout
 
 
+def _occupation_file(path: Path) -> str | None:
+    """Read optional Git administrative evidence without following links or blocking on FIFOs."""
+    try:
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+    except FileNotFoundError:
+        return None
+    try:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode) or info.st_size > 1024 * 1024:
+            raise RuntimeError("occupation evidence is not a bounded regular file")
+        with os.fdopen(descriptor, "rb", closefd=False) as stream:
+            body = stream.read(1024 * 1024 + 1)
+        if len(body) > 1024 * 1024:
+            raise RuntimeError("occupation evidence exceeds the read limit")
+        try:
+            return body.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise RuntimeError("occupation evidence is not UTF-8") from exc
+    finally:
+        os.close(descriptor)
+
+
+def _occupation_directory(path: Path) -> bool:
+    """Absence is known only when lstat reports ENOENT; unsafe directories refuse the sweep."""
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return False
+    if not stat.S_ISDIR(info.st_mode):
+        raise RuntimeError("occupation evidence directory is not a real directory")
+    return True
+
+
+def _occupied_worktrees(repo: Path) -> list[reaper.WorktreeInfo]:
+    """Census all registrations; refuse any native operation anywhere.
+
+    Git's wt-status.c checks rebase directories, BISECT_LOG, MERGE_HEAD,
+    CHERRY_PICK_HEAD and REVERT_HEAD; sequencer.c keeps multi-step replay
+    state in sequencer/. Presence is enough to refuse, even if its contents
+    are malformed. Never parse operation branch names to permit archival.
+    """
+    trees = reaper.list_git_worktrees(repo)
+    if not trees:
+        raise RuntimeError("occupation evidence has no registered worktrees")
+    common = Path(_checked(repo, "rev-parse", "--path-format=absolute", "--git-common-dir").rstrip("\n"))
+    if not common.is_absolute() or not _occupation_directory(common):
+        raise RuntimeError("occupation evidence has no Git common directory")
+    # Git lists the primary worktree first. Linked registrations remain readable
+    # here even when their checkouts are missing, moved, locked or prunable.
+    directories = {trees[0].path: common}
+    linked = common / "worktrees"
+    if _occupation_directory(linked):
+        for directory in linked.iterdir():
+            if not _occupation_directory(directory):
+                raise RuntimeError("occupation evidence registration disappeared")
+            pointer = _occupation_file(directory / "gitdir")
+            if not pointer or not pointer.endswith("\n") or "\n" in pointer[:-1]:
+                raise RuntimeError("occupation evidence has an invalid worktree pointer")
+            gitfile = Path(pointer[:-1])
+            if not gitfile.is_absolute():
+                gitfile = (directory / gitfile).resolve()
+            if gitfile.parent in directories:
+                raise RuntimeError("occupation evidence has an ambiguous worktree pointer")
+            directories[gitfile.parent] = directory
+    if set(directories) != {tree.path for tree in trees}:
+        raise RuntimeError("occupation evidence registrations disagree with Git")
+    if len(directories) != len(trees):
+        raise RuntimeError("occupation evidence has duplicate registrations")
+    for tree in trees:
+        directory = directories[tree.path]
+        if (
+            not tree.head
+            or not SHA_RE.fullmatch(tree.head)
+            or bool(tree.branch) == tree.detached
+            or (tree.branch is not None and not _valid(tree.branch, repo))
+        ):
+            raise RuntimeError("occupation evidence has an unknown worktree HEAD")
+        head = _occupation_file(directory / "HEAD")
+        if head is None or head.rstrip("\n") != (f"ref: refs/heads/{tree.branch}" if tree.branch else tree.head):
+            raise RuntimeError("occupation evidence HEAD disagrees with Git")
+        for marker in ("rebase-apply", "rebase-merge", "sequencer"):
+            if _occupation_directory(directory / marker):
+                raise RuntimeError(f"occupation evidence: in-progress operation ({marker}); sweep refused")
+        # BISECT_START also refuses incomplete bisect state with a missing log.
+        for marker in ("BISECT_LOG", "BISECT_START", "MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "REBASE_HEAD"):
+            if _occupation_file(directory / marker) is not None:
+                raise RuntimeError(f"occupation evidence: in-progress operation ({marker}); sweep refused")
+    return trees
+
+
 def _refs(repo: Path) -> list[Branch]:
     # NUL separates fields; Git ref names cannot contain NUL or a line feed.
     output = _checked(
@@ -980,7 +1070,7 @@ def sweep(
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             protected = PROTECTED
             protection_error = str(exc)
-        worktrees = reaper.list_git_worktrees(repo)
+        worktrees = _occupied_worktrees(repo)
         worktree_branches = {item.branch for item in worktrees if item.branch}
         detached_heads = {item.head for item in worktrees if item.detached and item.head}
         active = _active_tasks(repo)
@@ -1014,7 +1104,7 @@ def sweep(
             if apply and verdict.classification.startswith("delete-"):
                 # Recheck all volatile guards before each destructive call. In particular,
                 # stale origin tracking refs cannot authorize deletion of a moved head.
-                current_worktrees = reaper.list_git_worktrees(repo)
+                current_worktrees = _occupied_worktrees(repo)
                 verdict = _classify(
                     repo,
                     branch,
@@ -1493,7 +1583,7 @@ def _archive_local_snapshot(
 ) -> dict[str, tuple[Branch, tuple[reaper.WorktreeInfo, ...], tuple[str, ...]]]:
     """Freeze ref, worktree registration and complete task-record state per branch."""
     refs = _refs(repo) if branches is None else branches
-    trees = reaper.list_git_worktrees(repo) if worktrees is None else worktrees
+    trees = _occupied_worktrees(repo) if worktrees is None else worktrees
     records = _task_records(repo)
     tasks: dict[str, list[str]] = {}
     for path, state in records:
@@ -1610,7 +1700,7 @@ def _archive_delete_blockers(
     """Finish every PR read, then compare a complete local snapshot with classification."""
     prs = _archive_pr_snapshot(repo, [branch.name for _, branch in confirmed], pr_lookup)
     found = {item.name: item for item in _refs(repo)}
-    worktrees = reaper.list_git_worktrees(repo)
+    worktrees = _occupied_worktrees(repo)
     worktree_branches = {item.branch for item in worktrees if item.branch}
     detached_heads = {item.head for item in worktrees if item.detached and item.head}
     active = _active_tasks(repo)
@@ -1655,7 +1745,7 @@ def _delete_archived_refs(repo: Path, pairs: list[tuple[str, str]]) -> None:
     # No network or other work follows these last local checks before the ref
     # transaction. Guard changes after these reads remain the residual window;
     # expected SHAs bound head moves, and --no-deref protects symbolic targets.
-    trees = reaper.list_git_worktrees(repo)
+    trees = _occupied_worktrees(repo)
     active = _active_tasks(repo) | _recent_released_tasks(repo)
     for name, sha in pairs:
         if any(tree.branch == name or (tree.detached and tree.head == sha) for tree in trees):
@@ -1717,7 +1807,7 @@ def _apply_archive_locked(
     selected = [item for item in decisions if item.classification == "archive-expired"]
     indexes = {item.branch: index for index, item in enumerate(decisions)}
     found = {item.name: item for item in _refs(repo)}
-    worktrees = reaper.list_git_worktrees(repo)
+    worktrees = _occupied_worktrees(repo)
     worktree_branches = {item.branch for item in worktrees if item.branch}
     detached_heads = {item.head for item in worktrees if item.detached and item.head}
     active = _active_tasks(repo)
@@ -1877,6 +1967,7 @@ def build_parser() -> argparse.ArgumentParser:
             "per branch to stale-local-receipts.jsonl. The bundle excludes history already on origin/main.\n"
             "The receipt is re-read, every guard is checked again, and one compare-and-delete then removes\n"
             "only those local refs. Any failure keeps the whole batch. Remote refs stay.\n"
+            "Any native operation in any registered worktree refuses the sweep, even on an unrelated branch.\n"
             "Bundles at least 90 days old are listed as review-bundle and are never deleted.\n"
             "Exit codes: 0 = sweep succeeded; 1 = repository or probe failure; 2 = invalid arguments.\n"
             "Related: issue #9129; issue #9909; issue #10532; docs/runbooks/worktree-cleanup.md; drive-epic §7a."
