@@ -1,20 +1,24 @@
 """Per-account Claude usage rows for the routing budget (#10630).
 
 One bounded CodexBar probe per registered Claude account label, run only by
-the background usage refresh. ``claude_accounts_snapshot`` reads the cache and
-never starts a probe. Rows carry numbers and freshness, never identity: no
-account id, email, organization or directory appears in any row.
+the background usage refresh. ``claude_accounts_snapshot`` serves the cache: it
+never starts a probe and never opens, reads or parses a file. Rows carry
+numbers and freshness, never identity: no account id, email, organization or
+directory appears in any row.
 
-Label ``a`` is the host's default Claude directory. Every other label takes its
-directory from the private binding read by ``load_claude_account_binding``; a
-missing or refused binding makes that row unknown, never an endpoint error.
+Label ``a`` is the host's default Claude directory, bound to the account
+recorded at login beside it. Every other label takes its directory and account
+from the private binding read by ``load_claude_account_binding``; a missing or
+refused binding makes that row unknown, never an endpoint error.
 
 Threat model: the label is accounting and display, not isolation against a
 hostile process of the same user. The risk closed here is a row of the wrong
 account published as ``ok`` or preferred through accidental or latent drift: a
 binding reassigned or removed while its sample is cached, a directory replaced
-or linked between validation and probe, or an answer naming an account other
-than the bound one. Each of these withholds the row as ``unknown``, never ``ok``.
+or linked between validation and probe, credentials of another account in the
+bound directory while its login record still names the bound one, or an answer
+naming an account other than the bound one. Each of these withholds the row as
+``unknown``, never ``ok``. Restoring a file between two checks is out of scope.
 
 The selected directory is the only thing that selects the account. The query
 pins CodexBar's Claude source to OAuth, which reads only that directory's
@@ -22,16 +26,28 @@ credentials, and the child runs with a fresh private home, cache and data
 location and no CodexBar configuration, so no shared configuration, token
 account or cache can substitute another account.
 
-Attribution: ``account_binding`` validates a label's directory and holds it open
-for the whole probe; afterwards the binding must validate again to the same
-generation (directory identity and bound account), or the sample is refused. An
+Proof: a sample is attributed to its label only on positive proof. The
+provider names the owner of the access token the label's directory holds, the
+token CodexBar's OAuth source reads, and that owner must be the bound account.
+Login metadata, CodexBar's own identity fields and pairwise inequality are not
+proof. ``account_binding`` validates a label's directory and holds it open for
+the whole probe; afterwards the binding must validate again to the same
+generation (directory identity and bound account), and credentials rewritten in
+between must be proven the bound account's too, or the sample is refused. An
 account id CodexBar names must be the bound account; any other identity it
-names can only be compared across labels. Each sample keeps its binding
-generation and private fingerprints of its account, never published, logged or
-serialised, and is served only while its label's binding keeps that generation.
-When two served samples share an account, one names its account and another
-does not, or one cannot be identified, every served row is withheld as
-``account_ambiguous``.
+names is compared only across labels. When two served samples share an
+account, one names its account and another does not, or one cannot be
+identified, every served row is withheld as ``account_ambiguous``.
+
+Serving: every read, parse and provider question runs in the background. Each
+sample keeps the cheap stat facts of every file its validation read (type,
+device and inode; for files also mode, owner, size and change times), with its
+generation and private fingerprints of its account, none of them published,
+logged or serialised. Serving only ``lstat``s those paths: any difference
+withholds the row as ``not_probed`` and schedules one background revalidation,
+which re-arms the sample when the binding still validates to the same
+generation (asking the provider again only about changed credentials) and
+otherwise forgets it.
 
 Freshness is computed when a row is served, from the measured state's
 timestamp, never frozen into a stored payload.
@@ -47,13 +63,14 @@ import math
 import os
 import selectors
 import signal
+import stat
 import subprocess
 import tempfile
 import threading
 import time
 from collections.abc import Iterator, Mapping
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -64,8 +81,11 @@ from scripts.agent_runtime.attempt_boundary import (
     CLAUDE_ACCOUNT_REFUSAL_CODES,
     DEFAULT_CLAUDE_ACCOUNT,
     ClaudeAccountRefused,
+    _claude_access_token,
     _claude_config_account_uuid,
+    _claude_selected_identity,
     _open_claude_directory,
+    claude_accounts_file,
     load_claude_account_binding,
 )
 from scripts.api.subscription_usage import _codexbar_bin, _codexbar_cache_ttl_s, _parse_resets_at_any
@@ -91,6 +111,8 @@ _SANDBOX_ENV_NAMES = (
 )
 # Never created: CodexBar runs with its built-in defaults and no token accounts.
 _CODEXBAR_CONFIG_NAME = "codexbar-config.json"
+_LOGIN_RECORD = ".claude.json"
+_CREDENTIALS = ".credentials.json"
 _WINDOWS = (("primary", "session5h"), ("secondary", "weekly"))
 _WINDOW_FIELDS = ("left_pct", "resets_at", "pace", "pace_delta_pct", "leftover_pct")
 
@@ -117,22 +139,43 @@ PROBE_FAILURE_CODES = frozenset(
 ROW_REASON_CODES = PROBE_FAILURE_CODES | CLAUDE_ACCOUNT_REFUSAL_CODES | {"not_probed", "expired", ACCOUNT_AMBIGUOUS}
 
 
+Facts = tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class _Watch:
+    """What one binding validation read, as cheap stat facts; never published or logged."""
+
+    roots: tuple[Path | None, ...] = field(repr=False)  # where the validation starts, found without reading
+    entries: tuple[tuple[Path, bool, Facts | None], ...] = field(repr=False)  # (path, is directory, facts)
+    generation: bytes = field(repr=False)  # digest of the directory identity and the bound account
+    credentials: Facts | None = field(repr=False)  # the credentials whose owner the provider named
+
+
 @dataclass(frozen=True)
 class _Binding:
     """A label's validated binding while its directory is held open; never published or logged."""
 
     config_dir: Path = field(repr=False)
-    account: str | None = field(repr=False)  # the bound account; ``None`` when the default records none
-    generation: bytes = field(repr=False)  # digest of the directory identity and the bound account
+    account: str = field(repr=False)  # the bound account, proven owner of the directory's credentials
+    watch: _Watch = field(repr=False)
+
+    @property
+    def generation(self) -> bytes:
+        return self.watch.generation
 
 
 @dataclass(frozen=True)
 class _Accounts:
     """What a sample is attributed to; never published, logged or serialised."""
 
-    generation: bytes = field(repr=False)  # the binding generation it was measured under
+    watch: _Watch = field(repr=False)  # the validation it is served under
     fingerprints: frozenset[bytes] = field(repr=False)  # the bound and the named accounts
     named: bool = field(repr=False)  # CodexBar's answer named an account
+
+    @property
+    def generation(self) -> bytes:
+        return self.watch.generation
 
 
 @dataclass(frozen=True)
@@ -146,8 +189,10 @@ class _Sample:
 
 _lock = threading.Lock()
 _last_good: dict[str, _Sample] = {}
-# label -> failure code of the newest probe; absent after a success
+# label -> failure code of the newest probe or revalidation; absent after a success
 _last_failure: dict[str, str] = {}
+_revalidation_lock = threading.Lock()
+_revalidation: threading.Thread | None = None
 
 
 class _ProbeFailed(Exception):
@@ -184,46 +229,133 @@ def _open_default_directory(path: Path) -> Iterator[int]:
         os.close(fd)
 
 
-def _generation(label: str, config_dir: Path, directory: int, account: str | None) -> bytes:
+def _facts(path: Path | str, *, directory: bool = False, dir_fd: int | None = None) -> Facts | None:
+    """Stat facts of a path, never following its final link; ``None`` when absent.
+
+    A directory is its identity; a file adds mode, owner, size and change times,
+    so any rewrite changes them.
+    """
+    try:
+        info = os.stat(path, dir_fd=dir_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return None
+    identity = (stat.S_IFMT(info.st_mode), info.st_dev, info.st_ino)
+    if directory:
+        return identity
+    return (*identity, stat.S_IMODE(info.st_mode), info.st_uid, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
+def _facts_before_reading(path: Path | str, code: str, *, dir_fd: int | None = None) -> Facts | None:
+    """Facts taken before the file is read, so any later rewrite differs from them."""
+    try:
+        return _facts(path, dir_fd=dir_fd)
+    except OSError:
+        raise ClaudeAccountRefused(f"{code}_unavailable") from None
+
+
+def _root_paths(label: str) -> tuple[Path | None, ...]:
+    """Where a label's validation starts, found without reading a file."""
+    if label == DEFAULT_CLAUDE_ACCOUNT:
+        home = Path.home()
+        return (home / ".claude", home / _LOGIN_RECORD)
+    return (claude_accounts_file(),)
+
+
+def _generation(label: str, config_dir: Path, directory: Facts, account: str) -> bytes:
     """Digest of the binding facts: label, directory path and identity, bound account."""
-    info = os.fstat(directory)
-    facts = [label, str(config_dir), info.st_dev, info.st_ino, account]
+    facts = [label, str(config_dir), *directory, account]
     return hashlib.sha256(json.dumps(facts).encode()).digest()
 
 
+def _prove_owner(directory: int, account: str) -> None:
+    """Refuse unless the provider names ``account`` as the owner of the directory's access token.
+
+    The token is the one CodexBar's OAuth source reads from this directory. It
+    stays in this frame; refusals carry fixed codes only.
+    """
+    from scripts.review.isolation import ReviewIsolationError  # noqa: PLC0415  # lazy-ok: review stack off API import
+
+    try:
+        token = _claude_access_token(Path(_CREDENTIALS), dir_fd=directory)
+    except ReviewIsolationError as exc:
+        suffix = str(exc).removeprefix("attempt_claude_auth_")
+        raise ClaudeAccountRefused(f"claude_account_credentials_{suffix}") from None
+    if token is None:
+        raise ClaudeAccountRefused("claude_account_credentials_missing")
+    if _claude_selected_identity(token) != account:
+        raise ClaudeAccountRefused("claude_account_unverified")
+
+
+def _proven(
+    label: str,
+    config_dir: Path,
+    directory: int,
+    account: str,
+    entries: list[tuple[Path, bool, Facts | None]],
+    verified: _Watch | None,
+) -> _Binding:
+    """The binding, once the provider has named its account as the credentials' owner.
+
+    ``verified`` is an earlier validation of the same label: when it proved these
+    same credentials for the same generation, the provider is not asked again.
+    """
+    info = os.fstat(directory)
+    identity = (stat.S_IFMT(info.st_mode), info.st_dev, info.st_ino)
+    generation = _generation(label, config_dir, identity, account)
+    credentials = _facts_before_reading(_CREDENTIALS, "claude_account_credentials", dir_fd=directory)
+    proven = (
+        verified is not None
+        and credentials is not None
+        and verified.generation == generation
+        and verified.credentials == credentials
+    )
+    if not proven:
+        _prove_owner(directory, account)
+    entries = [(config_dir, True, identity), *entries, (config_dir / _CREDENTIALS, False, credentials)]
+    return _Binding(config_dir, account, _Watch(_root_paths(label), tuple(entries), generation, credentials))
+
+
 @contextlib.contextmanager
-def account_binding(label: str) -> Iterator[_Binding]:
+def account_binding(label: str, *, verified: _Watch | None = None) -> Iterator[_Binding]:
     """Validate a label's binding and hold its Claude directory open until exit.
 
     The default label is the host's ``~/.claude``, bound to the account recorded
-    at login beside it (none when that record is unreadable). Any other label is
-    refused with ``ClaudeAccountRefused`` for a missing, invalid or unsafe
-    binding, one that names the default directory (that would count one account
-    twice), or one whose directory does not hold the bound account.
+    at login beside it. Any other label is refused with ``ClaudeAccountRefused``
+    for a missing, invalid or unsafe binding, one that names the default
+    directory (that would count one account twice), or one whose directory does
+    not hold the bound account. Either label is refused unless the provider names
+    the bound account as the owner of the directory's credentials. Background
+    only: it reads, parses and may ask the provider.
     """
-    home = Path.home()
-    default = home / ".claude"
     if label == DEFAULT_CLAUDE_ACCOUNT:
+        home = Path.home()
+        default, record = home / ".claude", home / _LOGIN_RECORD
         with _open_default_directory(default) as directory:
-            try:
-                account = _claude_config_account_uuid(home / ".claude.json")
-            except ClaudeAccountRefused:
-                account = None
-            yield _Binding(default, account, _generation(label, default, directory, account))
+            recorded_facts = _facts_before_reading(record, "claude_account_config")
+            recorded = _claude_config_account_uuid(record)
+            account = recorded.strip().lower() if isinstance(recorded, str) else ""
+            if not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(account):
+                raise ClaudeAccountRefused("claude_account_unverified")  # no recorded account to prove
+            yield _proven(label, default, directory, account, [(record, False, recorded_facts)], verified)
         return
+    binding_file = claude_accounts_file()
+    if binding_file is None:
+        raise ClaudeAccountRefused("claude_account_binding_missing")
+    binding_facts = _facts_before_reading(binding_file, "claude_account_binding")
     binding = load_claude_account_binding(label)
     with _open_claude_directory(binding.config_dir) as directory:
         selected = os.fstat(directory)
         try:
-            info = default.stat()
+            info = (Path.home() / ".claude").stat()
         except OSError:
             info = None
         if info is not None and (selected.st_dev, selected.st_ino) == (info.st_dev, info.st_ino):
             raise ClaudeAccountRefused("claude_account_binding_is_default")
-        if _claude_config_account_uuid(Path(".claude.json"), dir_fd=directory) != binding.account_uuid:
+        recorded_facts = _facts_before_reading(_LOGIN_RECORD, "claude_account_config", dir_fd=directory)
+        if _claude_config_account_uuid(Path(_LOGIN_RECORD), dir_fd=directory) != binding.account_uuid:
             raise ClaudeAccountRefused("claude_account_unverified")
-        account = binding.account_uuid
-        yield _Binding(binding.config_dir, account, _generation(label, binding.config_dir, directory, account))
+        entries = [(binding_file, False, binding_facts), (binding.config_dir / _LOGIN_RECORD, False, recorded_facts)]
+        yield _proven(label, binding.config_dir, directory, binding.account_uuid, entries, verified)
 
 
 def _fingerprint(kind: str, value: str) -> bytes:
@@ -437,18 +569,17 @@ def _named_accounts(payload: Any) -> frozenset[tuple[str, str]]:
 
 
 def _attribute(binding: _Binding, payload: Any) -> _Accounts:
-    """What the sample measured, checked against its binding.
+    """What the sample measured, checked against its proven binding.
 
-    Refuses an answer that names an account id other than the bound account. The
-    default label without a recorded account has nothing to compare: an account
-    its own directory's credentials answer for is the default account.
+    Refuses an answer that names an account id other than the bound account.
+    Other identity CodexBar names is not proof; it is compared across labels.
     """
     named = _named_accounts(payload)
-    bound = set() if binding.account is None else {("account_id", binding.account.strip().lower())}
-    if bound and {item for item in named if item[0] == "account_id"} - bound:
+    bound = {("account_id", binding.account)}
+    if {item for item in named if item[0] == "account_id"} - bound:
         raise ClaudeAccountRefused("claude_account_unverified")
     fingerprints = frozenset(_fingerprint(kind, value) for kind, value in bound | named)
-    return _Accounts(binding.generation, fingerprints, named=bool(named))
+    return _Accounts(binding.watch, fingerprints, named=bool(named))
 
 
 def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[dict[str, Any], _Accounts]:
@@ -456,7 +587,9 @@ def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[di
 
     The label's directory is held open through the probe, and the binding must
     validate again afterwards to the same generation: a directory or account
-    replaced in between refuses the sample. Raises ``ClaudeAccountRefused`` or
+    replaced in between refuses the sample, and credentials rewritten in between
+    must be proven the bound account's. The sample is served under the
+    validation made after the probe. Raises ``ClaudeAccountRefused`` or
     ``_ProbeFailed``.
     """
     with account_binding(label) as binding:
@@ -470,7 +603,7 @@ def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[di
         # The held directory cannot be freed and its identity reused, so the same
         # generation means the directory and account the probe ended on are the
         # ones validated before it started.
-        with account_binding(label) as after:
+        with account_binding(label, verified=binding.watch) as after:
             if after.generation != binding.generation:
                 raise ClaudeAccountRefused("claude_account_unverified")
     try:
@@ -480,7 +613,7 @@ def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[di
     row = parse_codexbar_claude(payload)
     if row["updated"] is None:
         row["updated"] = _iso(datetime.fromtimestamp(started, UTC))
-    return row, _attribute(binding, payload)
+    return row, _attribute(after, payload)
 
 
 def _record(
@@ -536,26 +669,74 @@ def _ambiguous(samples: Mapping[str, _Sample]) -> bool:
     attributions = [sample.accounts for sample in samples.values()]
     if len({accounts.named for accounts in attributions}) > 1:
         return True  # one answer named its account and another did not
-    fingerprints = [accounts.fingerprints for accounts in attributions]
-    if not all(fingerprints):
-        return True
+    fingerprints = [accounts.fingerprints for accounts in attributions]  # each holds its proven account
     return any(
         fingerprints[i] & fingerprints[j] for i in range(len(fingerprints)) for j in range(i + 1, len(fingerprints))
     )
 
 
-def _current_generation(label: str) -> bytes | str:
-    """The label's binding generation now, or the code refusing it.
+def _unchanged(label: str, watch: _Watch) -> bool:
+    """True while every file the sample's validation read keeps its stat facts.
 
-    Reads the binding, its directory and its account record; never probes.
+    The serve-time check: a few ``lstat`` calls, never an open, read or parse.
     """
     try:
-        with account_binding(label) as binding:
-            return binding.generation
+        if _root_paths(label) != watch.roots:
+            return False
+        return all(_facts(path, directory=directory) == facts for path, directory, facts in watch.entries)
+    except Exception:  # an unreadable path withholds the row, never breaks the endpoint
+        return False
+
+
+def _replace_sample(label: str, old: _Sample, new: _Sample | None, failure: str | None = None) -> None:
+    """Re-arm or forget ``old`` unless a newer sample was recorded meanwhile."""
+    with _lock:
+        if _last_good.get(label) is not old:
+            return
+        if new is not None:
+            _last_good[label] = new
+            return
+        del _last_good[label]
+        _last_failure[label] = failure or "probe_error"
+
+
+def _revalidate_one(label: str, sample: _Sample) -> None:
+    """Re-arm a sample whose files changed while its binding keeps its generation; else forget it."""
+    watch = sample.accounts.watch
+    try:
+        with account_binding(label, verified=watch) as binding:
+            current = binding.watch
     except ClaudeAccountRefused as exc:
-        return exc.code
-    except Exception:  # an attribution defect withholds the row, never breaks the endpoint
-        return "probe_error"
+        _replace_sample(label, sample, None, exc.code)
+        return
+    except Exception:  # a validation defect withholds the row, never breaks the revalidation
+        _replace_sample(label, sample, None, "probe_error")
+        return
+    if current.generation != watch.generation:
+        _replace_sample(label, sample, None, "not_probed")
+        return
+    _replace_sample(label, sample, replace(sample, accounts=replace(sample.accounts, watch=current)))
+
+
+def revalidate_claude_accounts() -> None:
+    """Re-check every cached sample whose validated files changed. Background only; never probes."""
+    with _lock:
+        cached = dict(_last_good)
+    for label, sample in cached.items():
+        if not _unchanged(label, sample.accounts.watch):
+            _revalidate_one(label, sample)
+
+
+def _schedule_revalidation() -> None:
+    """Start one background revalidation unless one is running; never waits for it."""
+    global _revalidation
+    with _revalidation_lock:
+        if _revalidation is not None and _revalidation.is_alive():
+            return
+        _revalidation = threading.Thread(
+            target=revalidate_claude_accounts, name="account-usage-revalidation", daemon=True
+        )
+        _revalidation.start()
 
 
 def _unknown_row(reason: str) -> dict[str, Any]:
@@ -572,9 +753,11 @@ def _unknown_row(reason: str) -> dict[str, Any]:
 def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = None) -> dict[str, dict[str, Any]]:
     """Rows keyed ``claude:<label>``, aged at call time; never starts a probe.
 
-    A cached sample is served only while its label's binding keeps the generation
-    it was measured under; a changed binding withholds it, a refused one gives
-    the refusal code.
+    Never opens, reads or parses a file, so it is safe on the event loop. A
+    cached sample is served only while every file its validation read keeps its
+    stat facts; otherwise the row is ``not_probed`` and one background
+    revalidation is scheduled, after which a changed binding gives ``not_probed``
+    and a refused one its refusal code.
 
     ``ok``: the measured state is younger than the cache TTL and no probe failed since.
     ``stale``: a last good sample that is older or followed by a failure.
@@ -585,16 +768,16 @@ def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = 
     with _lock:
         cached = {label: _last_good[label] for label in CLAUDE_ACCOUNT_LABELS if label in _last_good}
         failures = dict(_last_failure)
-    current = {label: _current_generation(label) for label in cached}
-    samples = {label: sample for label, sample in cached.items() if current[label] == sample.accounts.generation}
+    samples = {label: sample for label, sample in cached.items() if _unchanged(label, sample.accounts.watch)}
+    if len(samples) < len(cached):
+        _schedule_revalidation()
     withheld = _ambiguous(samples)
     rows: dict[str, dict[str, Any]] = {}
     for label in CLAUDE_ACCOUNT_LABELS:
         sample = samples.get(label)
         failure = failures.get(label)
         if sample is None:
-            refusal = current.get(label)
-            rows[row_key(label)] = _unknown_row(refusal if isinstance(refusal, str) else failure or "not_probed")
+            rows[row_key(label)] = _unknown_row("not_probed" if label in cached else failure or "not_probed")
             continue
         if withheld:
             rows[row_key(label)] = _unknown_row(ACCOUNT_AMBIGUOUS)
@@ -640,6 +823,9 @@ def routing_budget_fields() -> dict[str, Any]:
 
 
 def _reset_for_tests() -> None:
+    thread = _revalidation
+    if thread is not None:
+        thread.join(timeout=60)
     with _lock:
         _last_good.clear()
         _last_failure.clear()

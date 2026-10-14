@@ -1110,15 +1110,32 @@ def _write_private_json(path: Path, value: object) -> None:
     path.chmod(0o600)
 
 
+_SYNTHETIC_TOKEN_PREFIX = "synthetic-access-token:"
+
+
+def _synthetic_token_owner(token: str) -> str:
+    """The provider's answer for the fixture tokens; never the network."""
+    if not token.startswith(_SYNTHETIC_TOKEN_PREFIX):
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
+    return token.removeprefix(_SYNTHETIC_TOKEN_PREFIX)
+
+
 def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:
     """A fixture home (label ``a``) and a second Claude directory bound to label ``b``,
-    each recording its own account; probes and serves run the real binding checks."""
+    each recording its own account and holding its credentials; probes run the
+    real binding checks, and the fixture provider names each token's owner."""
     home = tmp_path / "account-home"
     dirs = {"a": home / ".claude", "b": tmp_path / "account-b"}
+    expires_at = int((time.time() + 3600) * 1000)
     for label, directory in dirs.items():
         directory.mkdir(parents=True, exist_ok=True)
         record = home / ".claude.json" if label == "a" else directory / ".claude.json"
         _write_private_json(record, {"oauthAccount": {"accountUuid": _ACCOUNT_UUIDS[label]}})
+        token = _SYNTHETIC_TOKEN_PREFIX + _ACCOUNT_UUIDS[label]
+        _write_private_json(
+            directory / ".credentials.json", {"claudeAiOauth": {"accessToken": token, "expiresAt": expires_at}}
+        )
+    monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", _synthetic_token_owner)
     binding = tmp_path / "claude-accounts.json"
     entry = {"config_dir": str(dirs["b"]), "account_uuid": _ACCOUNT_UUIDS["b"]}
     _write_private_json(binding, {"schema_version": 1, "accounts": {"b": entry}})
@@ -1302,10 +1319,19 @@ def test_warm_snapshot_withholds_a_row_whose_binding_was_removed(monkeypatch, tm
 
     assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
     row_b = warm["claude_accounts"]["claude:b"]
-    assert (row_b["status"], row_b["reason"]) == ("unknown", "claude_account_binding_missing")
+    # The serve saw the binding file change without reading it.
+    assert (row_b["status"], row_b["reason"]) == ("unknown", "not_probed")
     assert row_b["weekly"]["left_pct"] is None
     assert warm["claude_accounts"]["claude:a"]["status"] == "ok"
     assert warm["preferred_claude_account"] is None
+
+    revalidation = claude_account_usage._revalidation
+    assert revalidation is not None
+    revalidation.join(timeout=30)  # the background revalidation read the binding
+    later = client.get("/api/state/routing-budget").json()
+    row_b = later["claude_accounts"]["claude:b"]
+    assert (row_b["status"], row_b["reason"]) == ("unknown", "claude_account_binding_missing")
+    assert later["preferred_claude_account"] is None
 
 
 # Fails on b62a4a3243: a 710 s old sample served 60 s later still reported ``ok``,
