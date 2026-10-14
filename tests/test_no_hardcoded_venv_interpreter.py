@@ -124,6 +124,11 @@ ALLOWLIST: dict[str, tuple[str, dict[str, int]]] = {
         "require_repo_venv() is the sanctioned gate: it skips when the repo venv is absent",
         {"require_repo_venv:gate": 1},
     ),
+    "tests/agent_runtime/test_npm_shim.py": (
+        "checks the fake enclosing checkout's interpreter symlink under layout['tmp'] is executable "
+        "so the npm shim must refuse that fallback; the test never spawns the hardcoded path",
+        {"test_missing_project_interpreter_fails_closed:gate": 1},
+    ),
     "tests/test_handoff_slot_registry.py": (
         "_helper_root() only picks the checkout that holds the shared interpreter; it never spawns "
         "it and falls back to sys.prefix when the checkout has no .venv",
