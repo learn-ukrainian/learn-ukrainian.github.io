@@ -7061,9 +7061,15 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(
 
 
 @pytest.mark.parametrize(
-    "case,code", [("missing", "claude_account_credentials_missing"), ("expired", "claude_account_credentials_expired")]
+    "case,code",
+    [
+        ("missing", "claude_account_credentials_missing"),
+        ("expired", "claude_account_credentials_expired"),
+        ("settings", "claude_account_settings_credential_source"),
+    ],
 )
 def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code):
+    """The selected login directory's state, including its user settings (#10619), is refused before effects."""
     from tests.agent_runtime.test_attempt_boundary import (
         BOUND_ACCOUNT_UUID,
         CLAUDE_AMBIENT_AUTH,
@@ -7091,22 +7097,16 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
             selected / ".credentials.json",
             {"claudeAiOauth": {"accessToken": "fixture-expired-" + "e" * 30, "expiresAt": 1}},
         )
+    attempt = ["--review-attempt", "manifest.yaml", "--review-id", "rev", "--attempt-id", "att"]
+    if case == "settings":
+        # An ordinary worker: the login directory's settings name a key helper.
+        _private_json(selected / "settings.json", {"apiKeyHelper": "fixture-helper"})
+        attempt = []
     for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
         monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
     spawn = MagicMock(side_effect=AssertionError("spawned"))
     monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
-    args = _claude_account_args(
-        "--agent",
-        "claude",
-        "--claude-account",
-        "b",
-        "--review-attempt",
-        "manifest.yaml",
-        "--review-id",
-        "rev",
-        "--attempt-id",
-        "att",
-    )
+    args = _claude_account_args("--agent", "claude", "--claude-account", "b", *attempt)
     assert delegate._dispatch_claude_account_refusal(args) == code
     assert delegate.cmd_dispatch(args) == 2
     assert capsys.readouterr().err == f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n"

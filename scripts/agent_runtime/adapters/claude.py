@@ -93,12 +93,36 @@ the tools that start or schedule work outside the turn, which that variable
 leaves available: Monitor, ScheduleWakeup, CronCreate and Workflow.
 
 Claude account (#10619): ``tool_config["claude_account"]`` is the run's
-account label. The default label, or none, leaves the host login untouched.
-For another label an ordinary run sets ``CLAUDE_CONFIG_DIR`` to that
-account's verified login directory, and ``env_sanitize`` makes it the run's
-only credential source. The binding checks refuse any conflicting ambient
-credential before the plan is built. A sealed attempt selects its account at
-its own boundary.
+account label. The default label, or none, leaves the host login and the
+plan untouched. For another label an ordinary run sets ``CLAUDE_CONFIG_DIR``
+to that account's verified login directory, and ``env_sanitize`` makes it the
+only credential source in the environment. Claude Code then applies settings
+files after that environment is built, so the settings path is closed too:
+
+- The binding checks refuse, value-free, a login directory whose user
+  ``settings.json`` sets a key helper or any credential, provider or endpoint
+  variable (``attempt_boundary``), as well as any conflicting ambient
+  credential, before the plan is built.
+- The run passes ``--setting-sources project,local``: nothing from the login
+  directory's user scope loads. That scope's env, key helper, hooks,
+  permission rules, plugins and user MCP servers (kept in its ``.claude.json``)
+  do not apply, so a labelled run gets the harness flags and the checkout's
+  settings only, never more authority than a default run. Probed on Claude
+  Code 2.1.299 with fixtures: excluding the user scope drops its API key, key
+  helper, endpoint and MCP servers.
+- After the plan is prepared, ``claude auth status --json`` runs with the
+  same settings arguments, working directory and environment, and the run is
+  refused unless it reports the subscription login, first-party provider and
+  the bound directory. This covers the scopes a labelled run still loads:
+  managed policy and the checkout's project and local files (including a
+  linked worktree's main-checkout local file), which in the probe could
+  select a key helper or a cloud provider. Key, token and endpoint variables
+  in project or local scope were not applied by the CLI in the same probe.
+
+A token that expires mid-run is the CLI's own refresh path; if that fails the
+run fails. Nothing retries it as another account: the runner's failover
+re-sends the same ``tool_config`` (label included) and has no Claude chain.
+A sealed attempt selects its account at its own boundary.
 
 Liveness paths:
 - Returns the most recently active project directory under the run's
@@ -194,6 +218,12 @@ HEADLESS_BACKGROUND_ENV = {
     "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
 }
 HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
+# A labelled account's run loads checkout settings but none from the user
+# scope of its login directory (#10619); see the module docstring.
+LABELLED_ACCOUNT_SETTING_SOURCES = "project,local"
+# The only effective authentication a labelled account's run may report.
+_LABELLED_AUTH_STATUS = {"loggedIn": True, "authMethod": "claude.ai", "apiProvider": "firstParty"}
+_AUTH_STATUS_TIMEOUT_S = 30
 _DISALLOWED_TOOLS_FLAGS = ("--disallowedTools", "--disallowed-tools")
 # The wrappers build the child environment and run the argv directly.
 _WRAPPER_OWNED_KWARGS = frozenset({"env", "shell", "executable"})
@@ -698,7 +728,11 @@ class ClaudeAdapter:
         # review isolation receives the settings flag too, but its existing
         # --safe-mode suppresses hooks and shell/write tools; the isolated OS
         # sandbox does not mount the checkout's tracked hook paths.
-        cmd.extend(["--settings", _headless_worker_settings(publish_guard=reviewer_guard and not review_isolation)])
+        worker_settings = _headless_worker_settings(publish_guard=reviewer_guard and not review_isolation)
+        cmd.extend(["--settings", worker_settings])
+        if account_login_dir is not None:
+            # A labelled account loads no user-scope settings (#10619).
+            cmd.extend(["--setting-sources", LABELLED_ACCOUNT_SETTING_SOURCES])
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
@@ -864,17 +898,28 @@ class ClaudeAdapter:
             # See comment near `cmd.append("-p")` above for the Commander.js rationale.
             cmd.extend(["--", prompt])
 
+        env_overrides = {
+            **HEADLESS_BACKGROUND_ENV,
+            **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
+            **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
+            **({CLAUDE_CONFIG_DIR_ENV: account_login_dir} if account_login_dir is not None else {}),
+        }
+        if account_login_dir is not None:
+            _verify_labelled_auth_method(
+                probe_prefix,
+                worker_settings,
+                cwd=cwd,
+                model=model,
+                env_overrides=env_overrides,
+                login_dir=account_login_dir,
+            )
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
             stdin_payload=prompt if use_stdin else "",
             output_file=None,
-            env_overrides={
-                **HEADLESS_BACKGROUND_ENV,
-                **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
-                **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
-                **({CLAUDE_CONFIG_DIR_ENV: account_login_dir} if account_login_dir is not None else {}),
-            },
+            env_overrides=env_overrides,
             liveness_paths=_recent_project_dir(account_login_dir),
             metadata={
                 **schema_metadata(output_schema),
@@ -1022,6 +1067,60 @@ def _claude_account_login_dir(tc: dict[str, Any]) -> str | None:
     if binding is None:  # only the default label verifies without a binding
         raise ClaudeAccountRefused("claude_account_default_has_no_binding")
     return str(binding.config_dir)
+
+
+def _verify_labelled_auth_method(
+    probe_prefix: tuple[str, ...],
+    worker_settings: str,
+    *,
+    cwd: Path,
+    model: str | None,
+    env_overrides: Mapping[str, str],
+    login_dir: str,
+) -> None:
+    """Refuse unless Claude Code reports the run's own subscription login (#10619).
+
+    Runs ``claude auth status --json`` with the run's settings arguments, its
+    working directory and the environment the runner builds from the same
+    overrides, so every settings scope the run loads (managed, the checkout's
+    project and local files, ``--settings``) is resolved by Claude Code itself.
+    Its output is parsed, never logged or kept.
+    """
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    from ..env_sanitize import build_agent_env
+
+    argv = [
+        *probe_prefix,
+        "--settings",
+        worker_settings,
+        "--setting-sources",
+        LABELLED_ACCOUNT_SETTING_SOURCES,
+        "auth",
+        "status",
+        "--json",
+    ]
+    try:
+        completed = subprocess.run(
+            argv,
+            cwd=cwd,
+            env=build_agent_env(provider="claude", model=model, overrides=env_overrides),
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            text=True,
+            timeout=_AUTH_STATUS_TIMEOUT_S,
+            check=False,
+        )
+        status = json.loads(completed.stdout)
+    except (OSError, subprocess.SubprocessError, ValueError):
+        raise ClaudeAccountRefused("claude_account_auth_status_unavailable") from None
+    if not isinstance(status, dict) or "loggedIn" not in status:
+        raise ClaudeAccountRefused("claude_account_auth_status_unavailable")
+    directory = status.get("configDirectory")
+    if any(status.get(key) != value for key, value in _LABELLED_AUTH_STATUS.items()) or not (
+        isinstance(directory, str) and Path(directory) == Path(login_dir)
+    ):
+        raise ClaudeAccountRefused("claude_account_auth_method_conflict")
 
 
 def _claude_dir(login_dir: str | None) -> Path:

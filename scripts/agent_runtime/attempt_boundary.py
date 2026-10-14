@@ -67,6 +67,14 @@ _CLAUDE_BINDING_KEYS = frozenset({"config_dir", "account_uuid"})
 _CLAUDE_ACCOUNT_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 _CLAUDE_BINDING_MAX_BYTES = 65536
 _CLAUDE_GLOBAL_CONFIG_MAX_BYTES = 16 * 1024 * 1024
+_CLAUDE_SETTINGS_MAX_BYTES = 1024 * 1024
+# User settings that would make Claude Code use a key, helper, provider or
+# endpoint other than the account's own login (#10619). ``ANTHROPIC_*`` names
+# keys, tokens, endpoints, headers and provider settings alike, so the whole
+# namespace is refused.
+_CLAUDE_SETTINGS_CREDENTIAL_KEYS = frozenset({"apiKeyHelper", "awsAuthRefresh", "awsCredentialExport"})
+_CLAUDE_SETTINGS_CREDENTIAL_ENV = frozenset({*_CLAUDE_AMBIENT_AUTH_ENV, "CLAUDE_CONFIG_DIR"})
+_CLAUDE_SETTINGS_CREDENTIAL_ENV_PREFIXES = ("ANTHROPIC_", "CLAUDE_CODE_USE_", "CLAUDE_CODE_OAUTH_")
 _PRIVATE_FILE_FAILURES = ("unavailable", "not_private", "oversized", "invalid")
 # Every code a Claude account refusal may carry. Codes name no value or location.
 CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
@@ -86,8 +94,15 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_credentials_missing",
         "claude_account_credentials_expired",
         "claude_account_identity_unavailable",
+        "claude_account_settings_credential_source",
+        "claude_account_auth_method_conflict",
+        "claude_account_auth_status_unavailable",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
-        *(f"claude_account_{kind}_{failure}" for kind in ("binding", "config") for failure in _PRIVATE_FILE_FAILURES),
+        *(
+            f"claude_account_{kind}_{failure}"
+            for kind in ("binding", "config", "settings")
+            for failure in _PRIVATE_FILE_FAILURES
+        ),
     }
 )
 
@@ -141,10 +156,14 @@ def _unique_json_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
     return result
 
 
-def _read_private_json(path: Path, *, limit: int, code: str, dir_fd: int | None = None) -> Any:
+def _read_private_json(
+    path: Path, *, limit: int, code: str, dir_fd: int | None = None, forbidden_mode: int = 0o077
+) -> Any:
     """Owner-only regular file, read without following links; ``None`` when absent.
 
-    Every failure is ``ClaudeAccountRefused`` with ``code`` and a fixed suffix.
+    ``forbidden_mode`` names the permission bits the file must not carry
+    (default: any group or other access). Every failure is
+    ``ClaudeAccountRefused`` with ``code`` and a fixed suffix.
     """
     try:
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
@@ -154,7 +173,7 @@ def _read_private_json(path: Path, *, limit: int, code: str, dir_fd: int | None 
         raise ClaudeAccountRefused(f"{code}_unavailable") from None
     try:
         info = os.fstat(fd)
-        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & forbidden_mode:
             raise ClaudeAccountRefused(f"{code}_not_private")
         raw = os.read(fd, limit + 1)
     except OSError:
@@ -223,6 +242,36 @@ def _claude_config_account_uuid(global_config: Path, *, dir_fd: int | None = Non
     account = data.get("oauthAccount") if isinstance(data, dict) else None
     value = account.get("accountUuid") if isinstance(account, dict) else None
     return value if isinstance(value, str) else None
+
+
+def _refuse_claude_settings_credential_source(directory: int) -> None:
+    """Refuse a login directory whose user settings name another key source (#10619).
+
+    Claude Code applies the ``settings.json`` in its config directory after the
+    environment is sanitized, so a key, helper, provider switch or endpoint
+    set there would replace the verified login. Only names are inspected; no
+    value is kept or reported. The file may be readable by others, not
+    writable by them.
+    """
+    data = _read_private_json(
+        Path("settings.json"),
+        limit=_CLAUDE_SETTINGS_MAX_BYTES,
+        code="claude_account_settings",
+        dir_fd=directory,
+        forbidden_mode=0o022,
+    )
+    if data is None:
+        return
+    env = data.get("env", {}) if isinstance(data, dict) else None
+    if not isinstance(env, dict):
+        raise ClaudeAccountRefused("claude_account_settings_invalid")
+    names = {name.upper() for name in env}
+    if (
+        _CLAUDE_SETTINGS_CREDENTIAL_KEYS & set(data)
+        or names & _CLAUDE_SETTINGS_CREDENTIAL_ENV
+        or any(name.startswith(_CLAUDE_SETTINGS_CREDENTIAL_ENV_PREFIXES) for name in names)
+    ):
+        raise ClaudeAccountRefused("claude_account_settings_credential_source")
 
 
 @contextlib.contextmanager
@@ -321,6 +370,7 @@ def _validated_claude_selection(
                 raise ClaudeAccountRefused("claude_account_binding_is_default")
             if _claude_config_account_uuid(Path(".claude.json"), dir_fd=directory) != binding.account_uuid:
                 raise ClaudeAccountRefused("claude_account_unverified")
+            _refuse_claude_settings_credential_source(directory)
             try:
                 token = _claude_access_token(Path(".credentials.json"), dir_fd=directory)
             except ReviewIsolationError as exc:

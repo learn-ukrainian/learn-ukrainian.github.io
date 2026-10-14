@@ -41,6 +41,7 @@ exceptions:
   # scripts/agent_runtime/adapters/claude.py
   - {module: scripts/agent_runtime/adapters/claude.py, function: "ClaudeAdapter.build_invocation", program: "<argv-holder>", category: runtime, reason: "builds the runtime Claude plan argv; the shared runner launches it (runner-tested harness)"}
   - {module: scripts/agent_runtime/adapters/claude.py, function: "ClaudeAdapter.build_invocation", program: "cmd", category: runtime, reason: "Claude plan; the shared runner launches it with the plan's HEADLESS_BACKGROUND_ENV and settings denies (tests/agent_runtime/test_claude_no_background.py)"}
+  - {module: scripts/agent_runtime/adapters/claude.py, function: "_verify_labelled_auth_method", program: "argv", category: generic-runner, reason: "non-print `<plan probe prefix> --settings <harness settings> --setting-sources project,local auth status --json` query built in this function (#10619): no prompt, no tools, so there is no background work to deny, and run_headless_claude's appended --disallowedTools is an unknown option to `auth status`; the env is the plan's sanitized env, which already carries HEADLESS_BACKGROUND_ENV (tests/agent_runtime/test_claude_account_worker.py)"}
   # scripts/agent_runtime/adapters/grok_build.py
   - {module: scripts/agent_runtime/adapters/grok_build.py, function: "GrokBuildAdapter.build_invocation", program: "cmd", category: non-claude, reason: "plan runs the Grok Build CLI"}
   # scripts/agent_runtime/adapters/kimicc.py

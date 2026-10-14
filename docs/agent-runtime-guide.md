@@ -783,6 +783,33 @@ Claude entrypoints or lanes remain refused with exit 7. Every Claude launch
 still stops at 99% weekly usage. `LU_CLAUDE_CAP_OVERRIDE=1` bypasses only that
 usage stop and does not expand the Opus exception.
 
+### Claude account labels for ordinary workers (#10619)
+
+`delegate.py dispatch --claude-account b` runs an ordinary Claude worker on the
+bound account's verified login directory. The default label (or none) leaves
+the plan unchanged; `tests/fixtures/claude_default_account_plan.json` pins it.
+For label `b` the adapter (`scripts/agent_runtime/adapters/claude.py`):
+
+- refuses, before any spawn, a login directory whose user `settings.json` sets
+  a key helper or a credential, provider or endpoint variable
+  (`claude_account_settings_credential_source`);
+- passes `--setting-sources project,local`, so the login directory's user
+  scope (env, key helper, hooks, permission rules, plugins, user MCP servers)
+  never applies: a labelled worker gets the harness flags and checkout settings,
+  never more authority than a default worker;
+- runs `claude auth status --json` with the worker's settings arguments,
+  working directory and environment, and refuses unless it reports the
+  subscription login for that directory (`claude_account_auth_method_conflict`,
+  or `claude_account_auth_status_unavailable` when it cannot tell). This covers
+  managed policy and the checkout's project and local files, which can still
+  select a key helper or a cloud provider.
+
+Limitation: the preflight requires the access token to have more than 60
+seconds left. A token that expires during a long worker is refreshed by the CLI
+itself; if that refresh fails, the worker fails. It is never retried as the
+default account: runner failover re-sends the same label and there is no Claude
+failover chain.
+
 ### Native Grok headless permission mapping (#7583)
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell

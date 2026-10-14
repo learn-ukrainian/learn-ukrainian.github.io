@@ -1,0 +1,38 @@
+{
+  "_provenance": "ClaudeAdapter.build_invocation at 1ada13b572 (the base before #10619 PR1b): workspace-write, prompt 'do the task', no model/session, cmd_prefix a fake claude answering --version 2.1.289, an empty checkout and HOME. The --settings value is the harness worker settings (asserted separately). sanitized_env is build_agent_env(provider='claude') with the five ambient claude variables set. Identical for an omitted label and an explicit 'a'. A deliberate change to the default plan updates this file in the same PR.",
+  "cmd": [
+    "<tmp>/claude",
+    "-p",
+    "--settings",
+    "<worker-settings>",
+    "--effort",
+    "high",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--permission-mode",
+    "dontAsk",
+    "--allowedTools",
+    "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch",
+    "--exclude-dynamic-system-prompt-sections",
+    "--",
+    "do the task"
+  ],
+  "env_overrides": {
+    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
+    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"
+  },
+  "env_unsets": [],
+  "liveness_paths": [],
+  "metadata": {},
+  "sanitized_env": {
+    "ANTHROPIC_API_KEY": "fixture-ambient-kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+    "ANTHROPIC_AUTH_TOKEN": null,
+    "CLAUDE_API_KEY": "fixture-ambient-cccccccccccccccccccccccccccccc",
+    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
+    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
+    "CLAUDE_CODE_OAUTH_TOKEN": null,
+    "CLAUDE_CONFIG_DIR": null
+  },
+  "stdin_payload": ""
+}
