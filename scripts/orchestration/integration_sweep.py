@@ -115,6 +115,25 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     if profile is not None:
         item["review_profile"] = profile
     prefix = body.split("<details>", 1)[0]
+    # These readable statements must agree with the terminal marker exactly,
+    # once each. Substrings also admit negation, prefixed labels and conflicts.
+    authorship = item.pop("authorship")
+    history = item.pop("unknown_history")
+    statements = {
+        "Authorship:": f"Authorship: {authorship}" if authorship else None,
+        "Historical authorship:": "Historical authorship: unknown_historical" if history else None,
+        "Unknown history:": f"Unknown history: {history}" if history else None,
+        "author model": "No author model assumed." if history or authorship else None,
+    }
+    for label, expected in statements.items():
+        lines = [
+            line
+            for line in prefix.split("\n")
+            if label.casefold() in line.casefold()
+            and not (label == "Authorship:" and "historical authorship:" in line.casefold())
+        ]
+        if lines != ([expected] if expected is not None else []):
+            return None
     ukrainian = is_ukrainian_review(item) or "Review profile: ukrainian\n" in prefix
     if ukrainian and (item["sources_calls"] is None or item["sources_calls"] <= 0):
         return None
@@ -123,28 +142,14 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
         return None
     mode = item.pop("review_mode")
-    history = item.pop("unknown_history")
     if history is not None:
         shas = history.split(",")
-        if (
-            mode != "red_team"
-            or shas != sorted(set(shas))
-            or f"Unknown history: {history}\n" not in prefix
-            or "Historical authorship: unknown_historical\n" not in prefix
-            or "No author model assumed.\n" not in prefix
-        ):
+        if mode != "red_team" or shas != sorted(set(shas)):
             return None
         item["unknown_history"] = shas
-    elif "Unknown history:" in prefix or "Historical authorship:" in prefix:
-        return None
     # A verified app bot author (#10531) is stated in the readable prefix too.
-    authorship = item.pop("authorship")
     if authorship is not None:
-        if f"Authorship: {authorship}\n" not in prefix or "No author model assumed.\n" not in prefix:
-            return None
         item["authorship"] = authorship
-    elif "Authorship:" in prefix:
-        return None
     if mode is not None:
         item["review_mode"] = mode
         if not body.startswith("### Adversarial red-team review\nReview mode: red_team\n"):

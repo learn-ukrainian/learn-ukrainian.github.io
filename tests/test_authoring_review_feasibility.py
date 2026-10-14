@@ -2538,9 +2538,12 @@ def github_commit(
     """GitHub's REST commit object for ``sha``; the defaults are a real Dependabot commit's fields."""
     return {
         "sha": sha,
+        "url": f"https://api.github.com/repos/{REPOSITORY}/commits/{sha}",
+        "html_url": f"https://github.com/{REPOSITORY}/commit/{sha}",
         "author": {"login": login, "id": account_id, "type": kind},
-        "committer": {"login": committer, "type": "User"},
+        "committer": {"login": committer, "id": 19864447, "type": "User"},
         "commit": {
+            "url": f"https://api.github.com/repos/{REPOSITORY}/git/commits/{sha}",
             "author": {"name": name, "email": email},
             "committer": {"name": "GitHub", "email": "noreply@github.com"},
             "verification": {"verified": verified, "reason": "valid" if verified else "unsigned"},
@@ -2582,7 +2585,7 @@ def listing_with_authors(repo: MiniRepo, authors: dict[str, dict]) -> list[dict]
     listing = github_listing(repo, repo.sha("origin/main"), repo.sha("feature"))
     for entry in listing:
         github = authors.get(entry["sha"], {})
-        entry.update({key: github[key] for key in ("author", "committer") if key in github})
+        entry.update({key: github[key] for key in ("author", "committer", "url", "html_url") if key in github})
         entry["commit"].update({key: value for key, value in github.get("commit", {}).items()})
     return listing
 

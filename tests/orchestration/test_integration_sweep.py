@@ -464,3 +464,39 @@ def test_run_lookup_failure_is_unknown_with_queue_blocker():
     rows = sweep.run(Adapter(), "owner/repo", now=datetime(2026, 9, 23, tzinfo=UTC))
     assert rows[0].state == "CF-unknown"
     assert "queue lookup unknown" in rows[0].blockers
+
+
+@pytest.mark.parametrize("history", [False, True])
+@pytest.mark.parametrize(
+    "line,replacement",
+    [
+        ("Authorship: verified_app_bot", "Not Authorship: verified_app_bot"),
+        ("Authorship: verified_app_bot", "Prefix Authorship: verified_app_bot"),
+        ("Authorship: verified_app_bot", "Authorship: verified_app_bot suffix"),
+        ("Authorship: verified_app_bot", "Authorship: verified_app_bot\nAuthorship: verified_app_bot"),
+        ("Authorship: verified_app_bot", "Authorship: human\nAuthorship: verified_app_bot"),
+        ("Authorship: verified_app_bot", "authorship: human\nAuthorship: verified_app_bot"),
+        ("No author model assumed.", "False: No author model assumed."),
+        ("No author model assumed.", "No author model assumed. false"),
+        ("No author model assumed.", "No author model assumed.\nNo author model assumed."),
+        ("No author model assumed.", "An author model was assumed.\nNo author model assumed."),
+    ],
+)
+def test_corrupt_readable_bot_authorship_refuses_through_parser(history, line, replacement):
+    item = comment()
+    body = build_comment(
+        sha=SHA,
+        task_id="review-one",
+        started=START,
+        verdict="APPROVED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+        app_bot=True,
+        review_mode="red_team" if history else "cross_family",
+        unknown_history=[OTHER] if history else (),
+    )
+    assert sweep.lookup_verdict([{**item, "body": body}], SHA, "fleet").state == "APPROVED"
+    altered = body.replace(line + "\n", replacement + "\n")
+    assert sweep.parse_marker(altered) is None
+    assert sweep.lookup_verdict([{**item, "body": altered}], SHA, "fleet").state == "unknown"

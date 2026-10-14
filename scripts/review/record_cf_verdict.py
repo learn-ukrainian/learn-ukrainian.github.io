@@ -178,7 +178,7 @@ def live_app_bot_login(repository: str, sha: str) -> str | None:
         commit = _run_json(Request("read-commit", repo=repository, sha=sha))
     except RecordError:
         return None
-    return verified_app_bot_login(commit, sha)
+    return verified_app_bot_login(commit, sha, repository)
 
 
 def _hot_or_archived(task_root: Path, name: str) -> Path:
@@ -498,7 +498,7 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
             repository=repository,
             task_root=task_root,
             base_sha=base_sha,
-            app_bot_login=listing_app_bot_login(commits),
+            app_bot_login=listing_app_bot_login(commits, repository),
         ).family
         if family is not None:
             families.add(family)
@@ -1035,7 +1035,7 @@ def pr_review_facts(
         authorship_exclude_sha=exclude,
         unknown_history=unknown_history,
         # GitHub's live listing of this PR carries each commit's author proof.
-        app_bot_login=listing_app_bot_login(listed),
+        app_bot_login=listing_app_bot_login(listed, repository),
     )
     refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
     github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
