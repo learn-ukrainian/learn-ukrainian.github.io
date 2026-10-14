@@ -2513,10 +2513,46 @@ _MUSE_NULL = {
 }
 
 
+def _assert_no_sentinel_value(value: object, sentinel: int | float) -> None:
+    if isinstance(value, dict):
+        for item in value.values():
+            _assert_no_sentinel_value(item, sentinel)
+    elif isinstance(value, list):
+        for item in value:
+            _assert_no_sentinel_value(item, sentinel)
+    else:
+        assert value not in (sentinel, str(sentinel))
+
+
 def _assert_muse_has_no_account_material(record: dict) -> None:
     blob = json.dumps(record)
     assert _MUSE_EMAIL not in blob
-    assert "999" not in blob
+    _assert_no_sentinel_value(record, 999)
+
+
+def test_muse_account_material_check_accepts_sentinel_digits_in_floats():
+    record = {"age_s": 0.1999, "windows": [{"remaining_pct": 99.999}]}
+    _assert_muse_has_no_account_material(record)
+
+
+@pytest.mark.parametrize("sentinel", [999, 50.0, 987654])
+def test_sentinel_value_check_accepts_digits_inside_other_values(sentinel):
+    _assert_no_sentinel_value({"age_s": 0.1999, "windows": [{"used_pct": 50.01}], "value": 0.987654}, sentinel)
+
+
+@pytest.mark.parametrize("sentinel", [999, 50.0, 987654])
+@pytest.mark.parametrize("as_string", [False, True])
+@pytest.mark.parametrize("field", ["balance", "credits"])
+def test_sentinel_value_check_rejects_leaked_values(sentinel, as_string, field):
+    value = str(sentinel) if as_string else sentinel
+    with pytest.raises(AssertionError):
+        _assert_no_sentinel_value({"nested": [{field: {"remaining": value}}]}, sentinel)
+
+
+@pytest.mark.parametrize("value", [999, 999.0, "999"])
+def test_muse_account_material_check_rejects_leaked_sentinel(value):
+    with pytest.raises(AssertionError):
+        _assert_muse_has_no_account_material({"credits": {"remaining": value}})
 
 
 def test_muse_known_windows_publish_remaining_headroom_and_reset():
@@ -2825,7 +2861,7 @@ def test_agy_fixture_publishes_separate_quota_groups(monkeypatch):
     projected = subscription_usage_mod.project_agy_for_status(subscription_usage_mod.get_agy_quota_observation())
     blob = json.dumps(projected)
     assert _AGY_EMAIL not in blob
-    assert "999" not in blob
+    _assert_no_sentinel_value(projected, 999)
     assert projected["status"] == "healthy"
     assert projected["remaining_pct"] is None
     assert projected["headroom_pct"] is None
@@ -3003,7 +3039,7 @@ def test_agy_malformed_and_rate_limit_drop_numeric_headroom(monkeypatch):
     assert hidden["freshness"] == "stale_last_good"
     assert _agy_window(hidden, "gemini_models", "weekly")["remaining_pct"] is None
     assert _agy_window(hidden, "gemini_models", "weekly")["resets_at"] is None
-    assert "50.0" not in json.dumps(hidden)
+    _assert_no_sentinel_value(hidden, 50.0)
 
 
 def test_agy_stale_observation_hides_quota(monkeypatch):
@@ -3022,7 +3058,7 @@ def test_agy_stale_observation_hides_quota(monkeypatch):
     assert projected["status"] == "unknown"
     assert _agy_window(projected, "gemini_models", "5h")["remaining_pct"] is None
     assert _agy_window(projected, "gemini_models", "5h")["resets_at"] is None
-    assert "50.0" not in json.dumps(projected)
+    _assert_no_sentinel_value(projected, 50.0)
 
 
 @pytest.mark.parametrize("value", [-1, 101, 10**400, float("nan"), float("inf"), True, None, "PRIVATE_PERCENT"])
@@ -3296,7 +3332,7 @@ def test_public_projection_does_not_trust_cached_provider_metadata(lane):
     )
     public = project(record)
     assert "PRIVATE_" not in json.dumps(public)
-    assert "987654" not in json.dumps(public)
+    _assert_no_sentinel_value(public, 987654)
     assert (public["status"], public["remaining_pct"], public["age_s"], public["error_kind"], public["error_code"]) == (
         "unknown",
         None,
