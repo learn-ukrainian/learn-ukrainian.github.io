@@ -381,7 +381,12 @@ def _git(cwd: Path, *args: str) -> None:
         "GIT_COMMITTER_NAME": "Test",
         "GIT_COMMITTER_EMAIL": "test@example.invalid",
     }
-    subprocess.run(["git", *args], cwd=cwd, env=env, check=True, capture_output=True, timeout=60)
+    try:
+        subprocess.run(["git", *args], cwd=cwd, env=env, check=True, capture_output=True, timeout=60)
+    except subprocess.CalledProcessError as exc:
+        exc.add_note(f"fixture git stdout: {exc.stdout!r}")
+        exc.add_note(f"fixture git stderr: {exc.stderr!r}")
+        raise
 
 
 def _scratch_checkouts(tmp_path: Path, name: str = "task") -> tuple[Path, Path]:
@@ -461,6 +466,7 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     tooling = root / "tooling"
     shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
     shim_dir.mkdir(parents=True)
+    _git(tooling, "init", "-q", "-b", "main")
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
     shutil.copy2(NPX_SOURCE, shim_dir / "npx")
     shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
@@ -1389,13 +1395,20 @@ def test_real_npm_allowlisted_program_runs_with_the_sentinel_intact(layout, tool
 # --- shim plumbing --------------------------------------------------------------
 
 
-def test_missing_project_interpreter_fails_closed(layout):
+@pytest.mark.parametrize("enclosing_checkout", [False, True], ids=["standalone", "enclosing-checkout"])
+def test_missing_project_interpreter_fails_closed(layout, enclosing_checkout):
     """Exit 127 when the tooling checkout has no project interpreter.
 
     The shim resolves that checkout through Git and drops every ``GIT_*``
     variable before the lookup, so a ceiling on the temp directory cannot
     keep the lookup there. A git root on the tooling checkout does.
     """
+    if enclosing_checkout:
+        _git(layout["tmp"], "init", "-q", "-b", "main")
+        parent_interpreter = layout["tmp"] / ".venv" / "bin" / "python"
+        parent_interpreter.parent.mkdir(parents=True)
+        parent_interpreter.symlink_to(sys.executable)
+        assert os.access(parent_interpreter, os.X_OK)
     tooling = layout["shim_dir"].parents[2]
     (tooling / ".venv" / "bin" / "python").unlink()
     _git(tooling, "init", "-q", "-b", "main")
@@ -2028,3 +2041,145 @@ def test_runner_merge_guard_path_resolves_npm_to_the_shim():
 
     env = runner._apply_merge_guard(mode="danger", env={"PATH": "/usr/bin:/bin"})
     assert shutil.which("npm", path=env["PATH"]) == str(runner._SHIMS_DIR / "npm")
+
+
+# --- git fixture diagnostic reporting (#10408) ---------------------------------
+
+
+def _assert_git_run_call(call: tuple[list[str], dict], cwd: Path, cmd: list[str]) -> None:
+    argv, kwargs = call
+    assert argv == cmd
+    assert kwargs == {
+        "cwd": cwd,
+        "env": {
+            "PATH": "/usr/bin:/bin",
+            "HOME": str(cwd),
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_AUTHOR_NAME": "Test",
+            "GIT_AUTHOR_EMAIL": "test@example.invalid",
+            "GIT_COMMITTER_NAME": "Test",
+            "GIT_COMMITTER_EMAIL": "test@example.invalid",
+        },
+        "check": True,
+        "capture_output": True,
+        "timeout": 60,
+    }
+
+
+def test_git_diagnostics_dg01_ok_alias_silent(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "config", "alias.diag-ok", "!echo diag-ok-out; echo diag-ok-err >&2; exit 0")
+    capsys.readouterr()
+    assert _git(tmp_path, "diag-ok") is None
+    captured = capsys.readouterr()
+    assert captured.out == "" and captured.err == ""
+
+
+def test_git_diagnostics_dg02_fail_alias_rendering(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "config", "alias.diag-fail", "!echo diag-fail-out; echo diag-fail-err >&2; exit 128")
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        _git(tmp_path, "diag-fail")
+    exc = exc_info.value
+    assert (exc.returncode, exc.cmd, exc.stdout, exc.stderr) == (
+        128,
+        ["git", "diag-fail"],
+        b"diag-fail-out\n",
+        b"diag-fail-err\n",
+    )
+    rendered = exc_info.exconly()
+    assert "fixture git stdout: b'diag-fail-out\\n'" in rendered
+    assert "fixture git stderr: b'diag-fail-err\\n'" in rendered
+    traceback_repr = str(exc_info.getrepr())
+    assert "fixture git stdout: b'diag-fail-out\\n'" in traceback_repr
+    assert "fixture git stderr: b'diag-fail-err\\n'" in traceback_repr
+
+
+def test_git_diagnostics_dg03_non_utf8_bytes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[tuple[list[str], dict]] = []
+    cmd = ["git", "status"]
+    pre = subprocess.CalledProcessError(128, cmd, output=b"\xff\n", stderr=b"\xfe\n")
+
+    def fake_run(argv: list[str], **kwargs) -> subprocess.CompletedProcess:
+        calls.append((argv, kwargs))
+        raise pre
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        _git(tmp_path, "status")
+    exc = exc_info.value
+    assert exc is pre
+    assert exc.args == (128, cmd)
+    assert exc.returncode == 128
+    assert exc.cmd == cmd
+    assert exc.output == b"\xff\n"
+    assert exc.stdout == b"\xff\n"
+    assert exc.stderr == b"\xfe\n"
+    rendered = exc_info.exconly()
+    assert "fixture git stdout: b'\\xff\\n'" in rendered
+    assert "fixture git stderr: b'\\xfe\\n'" in rendered
+    assert len(calls) == 1
+    _assert_git_run_call(calls[0], tmp_path, cmd)
+
+
+def test_git_diagnostics_dg04_none_and_empty_bytes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[tuple[list[str], dict]] = []
+    cmd = ["git", "status"]
+    pre = subprocess.CalledProcessError(128, cmd, output=None, stderr=b"")
+
+    def fake_run(argv: list[str], **kwargs) -> subprocess.CompletedProcess:
+        calls.append((argv, kwargs))
+        raise pre
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        _git(tmp_path, "status")
+    exc = exc_info.value
+    assert exc is pre
+    assert exc.args == (128, cmd)
+    assert exc.returncode == 128
+    assert exc.cmd == cmd
+    assert exc.output is None
+    assert exc.stdout is None
+    assert exc.stderr == b""
+    rendered = exc_info.exconly()
+    assert "fixture git stdout: None" in rendered
+    assert "fixture git stderr: b''" in rendered
+    assert len(calls) == 1
+    _assert_git_run_call(calls[0], tmp_path, cmd)
+
+
+def test_git_diagnostics_dg05_timeout_expired_propagates(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[tuple[list[str], dict]] = []
+    cmd = ["git", "status"]
+    pre = subprocess.TimeoutExpired(cmd=cmd, timeout=60)
+
+    def fake_run(argv: list[str], **kwargs) -> subprocess.CompletedProcess:
+        calls.append((argv, kwargs))
+        raise pre
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    with pytest.raises(subprocess.TimeoutExpired) as exc_info:
+        _git(tmp_path, "status")
+    assert exc_info.value is pre
+    assert getattr(exc_info.value, "__notes__", None) is None
+    assert len(calls) == 1
+    _assert_git_run_call(calls[0], tmp_path, cmd)
+
+
+def test_git_diagnostics_dg06_file_not_found_propagates(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[tuple[list[str], dict]] = []
+    cmd = ["git", "status"]
+    pre = FileNotFoundError(2, "No such file or directory", "git")
+
+    def fake_run(argv: list[str], **kwargs) -> subprocess.CompletedProcess:
+        calls.append((argv, kwargs))
+        raise pre
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    with pytest.raises(FileNotFoundError) as exc_info:
+        _git(tmp_path, "status")
+    assert exc_info.value is pre
+    assert getattr(exc_info.value, "__notes__", None) is None
+    assert len(calls) == 1
+    _assert_git_run_call(calls[0], tmp_path, cmd)
