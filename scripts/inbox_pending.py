@@ -11,6 +11,8 @@ from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
 
+from scripts.agent_runtime.agent_identity import seat_read_aliases
+from scripts.ai_agent_bridge._channels import resolve_recipient_alias
 from scripts.common.bridge_paths import configured_bridge_db_path
 from scripts.common.repo_root import main_checkout_root
 from scripts.fleet_comms.paths import default_plane_root
@@ -19,7 +21,7 @@ from scripts.orchestration.handoff_slot_registry import is_registered_slot, regi
 
 ROOT = Path(__file__).resolve().parents[1]
 UNKNOWN_LINE = "PENDING ORDERS: unknown; run ai_agent_bridge inbox for the registered handoff slot"
-LEGACY_WHERE = "to_llm = ? AND COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0"
+LEGACY_PENDING = "COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0"
 AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
     AND (deadline_at IS NULL OR deadline_at > ?)
     AND NOT EXISTS (SELECT 1 FROM authority_idempotency i
@@ -38,17 +40,33 @@ def probe(recipient: str) -> dict:
         "probe": "unknown",
     }
     try:
+        from scripts.agent_runtime.kimi_admission import BRIDGE_MODE
+        from scripts.agent_runtime.target_admission import resolve_and_admit
+
         if not re.fullmatch(r"[a-z]+-[a-z0-9]+(?:-[a-z0-9]+)*", recipient):
             return unknown
         if not registry_readable() or not is_registered_slot(recipient):
             return unknown
+        # Match check_inbox's canonical legacy read set, never a family-wide
+        # fallback for a dedicated slot. Unknown alias policy fails closed.
+        legacy_recipients = seat_read_aliases(resolve_recipient_alias(recipient))
+        if not legacy_recipients:
+            return unknown
+        # Authority publish/claim admit exact names without a roster resolver.
+        # Legacy aliases are not authority aliases. Refuse unavailable or
+        # changed admission rather than guessing another authority address.
+        targets = resolve_and_admit((recipient,), mode=BRIDGE_MODE)
+        if len(targets) != 1 or targets[0].recipient != recipient:
+            return unknown
+        placeholders = ",".join("?" for _ in legacy_recipients)
+        legacy_where = f"to_llm IN ({placeholders}) AND {LEGACY_PENDING}"
         legacy = configured_bridge_db_path(main_checkout_root(ROOT))
         authority = default_plane_root(repo_root=ROOT) / "comms.sqlite3"
         stores = {}
         ids = []
         now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         for name, path, table, column, where, params in (
-            ("legacy", legacy, "messages", "id", LEGACY_WHERE, (recipient,)),
+            ("legacy", legacy, "messages", "id", legacy_where, legacy_recipients),
             ("authority", authority, "authority_deliveries d", "message_id", AUTHORITY_WHERE, (recipient, now)),
         ):
             # Never create a missing store, migrate schema, claim, or read bodies.
@@ -90,12 +108,17 @@ def hook(stdin_text: str, recipient: str) -> dict:
         elif not result["count"]:
             return {}
         else:
-            suffix = f"; ai_agent_bridge inbox --for {recipient}; ack --consumed-by-live-driver"
+            suffix = ""
+            if result["stores"]["legacy"]:
+                suffix += f"; legacy: ai_agent_bridge inbox --for {resolve_recipient_alias(recipient)}"
+            if result["stores"]["authority"]:
+                suffix += "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
             prefix = f"PENDING ORDERS: {result['count']} (ids "
             shown = []
             for identifier in result["ids"]:
                 candidate = [*shown, str(identifier)]
-                if len(prefix + ",".join(candidate) + "; truncated)" + suffix) > 200:
+                ending = "; truncated)" if len(candidate) < result["count"] else ")"
+                if len(prefix + ",".join(candidate) + ending + suffix) > 200:
                     break
                 shown = candidate
             truncated = len(shown) < result["count"]

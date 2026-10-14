@@ -318,10 +318,30 @@ consumption or an expired deadline. Output contains counts, at most five full
 message IDs, a truncation flag, per-store counts and `probe: ok|unknown`.
 No body is selected, and no delivery is claimed, consumed or acknowledged.
 
+Legacy recipients follow the bridge inbox policy: resolve the roster alias,
+then include permanent seat read aliases. An empty monitor roster maps
+`gemini-monitor` to `gemini` in the legacy projection; a dedicated registered
+slot reads only its own recipient set. Authority publish and claim use exact
+recipient names without that roster resolver. For example, `gemini-monitor`
+remains `gemini-monitor` in authority deliveries. The probe checks existing
+authority admission and returns unknown if admission is unavailable or changes
+the recipient. It never uses a legacy empty result to prove authority emptiness.
+
 A proven empty inbox returns `{}`. Pending orders are re-announced on replay
 until acknowledged or consumed. The injected line is at most 200 characters;
-it includes as many full IDs as fit, marks truncation, and names the inbox and
-live-consumption commands. Missing or unreadable stores, invalid hook JSON,
+it includes as many full IDs as fit and marks truncation. A `legacy:` pointer
+names `ai_agent_bridge inbox --for` with the resolved legacy recipient. Legacy
+stores are read-only migration projections in authority mode; the notice does
+not recommend legacy acknowledgement writes. An `authority:` pointer names
+`.venv/bin/python -m scripts.fleet_comms deliveries --help`, the existing fenced
+delivery workflow. Both pointers appear when both stores have pending work.
+The authority workflow uses delivery IDs returned by claim, the lease owner's
+worker ID and fence token, and a driver generation for supervisory consumption.
+Use the exact `SESSION_HANDOFF_AGENT` for the workflow's `--recipient` argument.
+Announcement message IDs are not legacy integer ack IDs or authority delivery
+IDs. The hook only prints guidance; it never executes this workflow. In a linked
+worktree, run the documented help with the prescribed shared project interpreter.
+Missing or unreadable stores, invalid hook JSON,
 an invalid or missing slot, and interpreter failures inject `PENDING ORDERS:
 unknown` with exit 0. Hook input and output are never written to temporary files.
 

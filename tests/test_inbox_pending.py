@@ -84,8 +84,8 @@ def test_recipient_shapes(stores, recipient):
         assert result["ids"] == []
 
 
-def test_registry_unavailable_is_unknown(stores, monkeypatch):
-    monkeypatch.setattr(inbox_pending, "registry_readable", lambda: False)
+def test_registry_unavailable_is_unknown(stores, roster):
+    roster.unlink()
     assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
 
 
@@ -244,7 +244,7 @@ def test_direct_renderer_behavior(stores, count):
         assert result == {
             "injectSteps": [
                 {
-                    "ephemeralMessage": f"PENDING ORDERS: {count} (ids {ids}); ai_agent_bridge inbox --for gemini-infra; ack --consumed-by-live-driver"
+                    "ephemeralMessage": f"PENDING ORDERS: {count} (ids {ids}); legacy: ai_agent_bridge inbox --for gemini-infra"
                 }
             ]
         }
@@ -264,6 +264,27 @@ def test_renderer_authority_length_budget(stores):
     assert "PENDING ORDERS: 2" in line
     assert MESSAGE_ID in line
     assert len(line) <= 200
+
+
+def test_direct_authority_truncation_and_store_failure(stores):
+    add_authority(stores[1])
+    for letter in ("b", "c"):
+        add_authority(stores[1], identifier="authority-message_" + letter * 32, delivery_id=letter)
+    before = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores}
+    assert inbox_pending.hook("{}", "gemini-infra") == {
+        "injectSteps": [
+            {
+                "ephemeralMessage": f"PENDING ORDERS: 3 (ids {MESSAGE_ID}; truncated); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+            }
+        ]
+    }
+    assert {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores} == before
+    stores[1].unlink()
+    assert inbox_pending.hook("{}", "gemini-infra") == {
+        "injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]
+    }
+    assert not stores[1].exists()
+    assert hashlib.sha256(stores[0].read_bytes()).hexdigest() == before[stores[0]]
 
 
 def test_negative_legacy_identifier_is_unknown(stores):

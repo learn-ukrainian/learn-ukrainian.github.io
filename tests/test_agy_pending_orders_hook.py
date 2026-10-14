@@ -13,7 +13,15 @@ import pytest
 
 from scripts import inbox_pending
 from scripts.agent_runtime import agy_hook_config
-from tests.helpers.agy_inbox_fixtures import BODY_MARKER, MESSAGE_ID, add_authority, add_legacy
+from tests.helpers.agy_inbox_fixtures import (
+    BODY_MARKER,
+    MESSAGE_ID,
+    MONITOR_PROVIDERS,
+    add_authority,
+    add_legacy,
+    run_cli,
+    snapshot,
+)
 
 pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 
@@ -34,6 +42,175 @@ def run_hook(payload="{}", *, env=None, cwd=ROOT):
         assert len(line) <= 200
         assert "\n" not in line
     return result
+
+
+@pytest.mark.parametrize("provider", MONITOR_PROVIDERS)
+@pytest.mark.parametrize("roster_kind", ["mixed", "dedicated", "empty", "missing"])
+@pytest.mark.parametrize("source", ["legacy", "authority", "both"])
+def test_monitor_alias_cli_and_hook_policy(stores, roster, monkeypatch, provider, roster_kind, source):
+    slot = f"{provider}-monitor"
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", slot)
+    if roster_kind == "dedicated":
+        roster.write_text(f"assignments:\n  monitor:\n    slots: [{slot}]\n")
+    elif roster_kind == "empty":
+        roster.write_text("assignments:\n  monitor:\n    slots: []\n")
+    elif roster_kind == "missing":
+        roster.unlink()
+    canonical = slot if roster_kind == "dedicated" else provider
+    if source in {"legacy", "both"}:
+        add_legacy(stores[0], recipient=canonical)
+        # Raw alias rows are not canonical legacy mail; dedicated lanes never
+        # read the bare provider, another dedicated lane, or another family.
+        add_legacy(stores[0], recipient=provider if canonical == slot else slot, identifier=2)
+        add_legacy(stores[0], recipient=f"{provider}-infra", identifier=3)
+        add_legacy(stores[0], recipient="claude-devops", identifier=4)
+        if provider == "grok" and roster_kind != "dedicated":
+            add_legacy(stores[0], recipient="grok-build", identifier=5)
+    if source in {"authority", "both"}:
+        add_authority(stores[1], recipient=slot)
+        add_authority(stores[1], recipient=provider, identifier="authority-message_" + "b" * 32, delivery_id="bare")
+        add_authority(
+            stores[1], recipient=f"{provider}-infra", identifier="authority-message_" + "c" * 32, delivery_id="other"
+        )
+    before = snapshot(stores)
+    metadata = run_cli(slot)
+    result = run_hook()
+    assert run_hook() == result
+    assert snapshot(stores) == before
+    if roster_kind in {"empty", "missing"}:
+        assert metadata == {
+            "count": 0,
+            "ids": [],
+            "truncated": False,
+            "stores": {"legacy": None, "authority": None},
+            "probe": "unknown",
+        }
+        assert result == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+        return
+    legacy_count = (2 if provider == "grok" and roster_kind == "mixed" else 1) if source != "authority" else 0
+    authority_count = 0 if source == "legacy" else 1
+    legacy_ids = ([1, 5] if legacy_count == 2 else [1]) if legacy_count else []
+    ids = [*legacy_ids, *([MESSAGE_ID] if authority_count else [])]
+    assert metadata == {
+        "count": legacy_count + authority_count,
+        "ids": ids,
+        "truncated": False,
+        "stores": {"legacy": legacy_count, "authority": authority_count},
+        "probe": "ok",
+    }
+    if source == "legacy":
+        guidance = f"; legacy: ai_agent_bridge inbox --for {canonical}"
+    elif source == "authority":
+        guidance = "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+    else:
+        guidance = f"; legacy: ai_agent_bridge inbox --for {canonical}; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+    shown = ",".join(map(str, ids))
+    assert result == {"injectSteps": [{"ephemeralMessage": f"PENDING ORDERS: {len(ids)} (ids {shown}){guidance}"}]}
+    line = result["injectSteps"][0]["ephemeralMessage"]
+    assert "ack" not in line and "claim" not in line and "consume" not in line
+    # Durable consumption belongs to the fixture driver, never the hook.
+    with sqlite3.connect(stores[0]) as conn:
+        conn.execute("UPDATE messages SET consumed_by_live_driver=1")
+    with sqlite3.connect(stores[1]) as conn:
+        conn.execute("UPDATE authority_deliveries SET state='acknowledged'")
+    after_consumption = snapshot(stores)
+    assert run_cli(slot) == {
+        "count": 0,
+        "ids": [],
+        "truncated": False,
+        "stores": {"legacy": 0, "authority": 0},
+        "probe": "ok",
+    }
+    assert run_hook() == {}
+    assert snapshot(stores) == after_consumption
+
+
+@pytest.mark.parametrize("provider", MONITOR_PROVIDERS)
+@pytest.mark.parametrize("store_index", [0, 1])
+@pytest.mark.parametrize("failure", ["missing", "locked", "unreadable", "corrupt", "schema"])
+def test_alias_store_failure_is_unknown(stores, roster, monkeypatch, provider, store_index, failure):
+    slot = f"{provider}-monitor"
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", slot)
+    add_legacy(stores[0], recipient=provider)
+    add_authority(stores[1], recipient=slot)
+    before = {path: path.read_bytes() for path in stores}
+    target = stores[store_index]
+    lock = None
+    if failure == "missing":
+        target.unlink()
+    elif failure == "locked":
+        lock = sqlite3.connect(target)
+        lock.execute("BEGIN EXCLUSIVE")
+    elif failure == "unreadable":
+        target.chmod(0)
+    elif failure == "corrupt":
+        target.write_bytes(BODY_MARKER.encode())
+        before[target] = target.read_bytes()
+    else:
+        with sqlite3.connect(target) as conn:
+            conn.execute("DROP TABLE messages" if store_index == 0 else "DROP TABLE authority_wake_receipts")
+        before[target] = target.read_bytes()
+    try:
+        assert run_cli(slot) == {
+            "count": 0,
+            "ids": [],
+            "truncated": False,
+            "stores": {"legacy": None, "authority": None},
+            "probe": "unknown",
+        }
+        assert run_hook() == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+        if failure == "missing":
+            assert not target.exists()
+    finally:
+        if lock:
+            lock.close()
+        if failure == "unreadable":
+            target.chmod(0o600)
+    assert {path: path.read_bytes() for path in stores if path.exists()} == {
+        path: content for path, content in before.items() if path.exists()
+    }
+
+
+@pytest.mark.parametrize("provider", MONITOR_PROVIDERS)
+@pytest.mark.parametrize("consumed_by", ["idempotency", "wake"])
+def test_alias_durable_consumption_is_silent(stores, roster, monkeypatch, provider, consumed_by):
+    slot = f"{provider}-monitor"
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", slot)
+    add_legacy(stores[0], recipient=provider, consumed=1)
+    add_authority(
+        stores[1],
+        recipient=slot,
+        state="running",
+        consumed=consumed_by == "idempotency",
+        wake_consumed=consumed_by == "wake",
+    )
+    before = snapshot(stores)
+    assert run_cli(slot) == {
+        "count": 0,
+        "ids": [],
+        "truncated": False,
+        "stores": {"legacy": 0, "authority": 0},
+        "probe": "ok",
+    }
+    assert run_hook() == {}
+    assert snapshot(stores) == before
+
+
+@pytest.mark.parametrize("slot", ["gemini", "gemini-no-such-lane", "kimi-monitor", ""])
+def test_unknown_or_unavailable_authority_admission(stores, roster, monkeypatch, slot):
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", slot)
+    add_legacy(stores[0], recipient="gemini")
+    add_authority(stores[1], recipient="gemini-monitor")
+    before = snapshot(stores)
+    assert run_cli(slot) == {
+        "count": 0,
+        "ids": [],
+        "truncated": False,
+        "stores": {"legacy": None, "authority": None},
+        "probe": "unknown",
+    }
+    assert run_hook() == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+    assert snapshot(stores) == before
 
 
 @pytest.mark.parametrize(
@@ -92,13 +269,12 @@ def test_denominator_matrix(stores, state, recipient, failure, monkeypatch):
             assert result == {}
         else:
             identifier = MESSAGE_ID if state.startswith("authority") else "1"
-            assert result == {
-                "injectSteps": [
-                    {
-                        "ephemeralMessage": f"PENDING ORDERS: 1 (ids {identifier}); ai_agent_bridge inbox --for gemini-infra; ack --consumed-by-live-driver"
-                    }
-                ]
-            }
+            guidance = (
+                "; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+                if state.startswith("authority")
+                else "; legacy: ai_agent_bridge inbox --for gemini-infra"
+            )
+            assert result == {"injectSteps": [{"ephemeralMessage": f"PENDING ORDERS: 1 (ids {identifier}){guidance}"}]}
             if state == "replayed":
                 assert run_hook() == result
     finally:
