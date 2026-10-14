@@ -993,6 +993,194 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}  # selected token reaches the private seat
 
 
+# Fixture-only account identities; real ones live in private local configuration.
+DEFAULT_ACCOUNT_UUID = "00000000-0000-4000-8000-00000000000a"
+BOUND_ACCOUNT_UUID = "00000000-0000-4000-8000-00000000000b"
+CLAUDE_AMBIENT_AUTH = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN")
+
+
+def _private_json(path: Path, data: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data))
+    path.chmod(0o600)
+
+
+def _credentials(path: Path, token: str) -> None:
+    oauth = {"accessToken": token, "refreshToken": "fixture-refresh-" + "r" * 30, "expiresAt": 4_102_444_800_000}
+    _private_json(path, {"claudeAiOauth": oauth})
+
+
+@pytest.fixture
+def two_accounts(world, tmp_path, monkeypatch):
+    """The default account in HOME and a second one under its own config directory."""
+    _, home = world
+    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    accounts = SimpleNamespace(
+        home=home,
+        default_token="fixture-default-" + "d" * 30,
+        bound_token="fixture-bound-" + "b" * 30,
+        config_dir=tmp_path / "bound-config",
+        binding=tmp_path / "private-config" / "claude_accounts.json",
+    )
+    _credentials(home / ".claude" / ".credentials.json", accounts.default_token)
+    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    accounts.config_dir.mkdir(mode=0o700)
+    _credentials(accounts.config_dir / ".credentials.json", accounts.bound_token)
+    _private_json(accounts.config_dir / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _private_json(
+        accounts.binding,
+        {
+            "schema_version": 1,
+            "accounts": {"b": {"config_dir": str(accounts.config_dir), "account_uuid": BOUND_ACCOUNT_UUID}},
+        },
+    )
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(accounts.binding))
+    return accounts
+
+
+def test_default_claude_account_keeps_legacy_selection(two_accounts, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    # The default label never consults the private binding, even when it is absent.
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(two_accounts.binding.with_name("absent.json")))
+    expected = {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.default_token}
+    assert linux_claude_auth() == linux_claude_auth(None) == linux_claude_auth("a") == expected
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "fixture-ambient-" + "e" * 30)
+    assert linux_claude_auth("a") == linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": "fixture-ambient-" + "e" * 30}
+
+
+def test_second_claude_account_reads_only_its_bound_credential(two_accounts, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    assert linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
+    # Naming the same directory ambiently is not a conflict.
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(two_accounts.config_dir))
+    assert linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
+
+
+@pytest.mark.parametrize("label", ["c", "B", "", " b", "a\n", 1])
+def test_unknown_claude_account_label_is_refused(two_accounts, label):
+    """AC-01: base code has no label parameter (TypeError); the label is refused with its typed code."""
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    with pytest.raises(ReviewIsolationError) as refused:
+        linux_claude_auth(label)
+    assert str(refused.value) == "claude_account_unknown"
+
+
+def _conflict(accounts: SimpleNamespace, monkeypatch, case: str) -> None:
+    config, binding = accounts.config_dir, accounts.binding
+    entry = {"config_dir": str(config), "account_uuid": BOUND_ACCOUNT_UUID}
+    if case in CLAUDE_AMBIENT_AUTH:
+        monkeypatch.setenv(case, "fixture-ambient-" + "e" * 30)
+    elif case == "ambient_config_dir":
+        monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(accounts.home / ".claude"))
+    elif case == "binding_absent":
+        binding.unlink()
+    elif case == "binding_disabled":
+        monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", "")
+    elif case == "binding_shared":
+        binding.chmod(0o640)
+    elif case == "binding_symlink":
+        target = binding.with_name("target.json")
+        binding.rename(target)
+        binding.symlink_to(target)
+    elif case == "binding_without_label":
+        _private_json(binding, {"schema_version": 1, "accounts": {}})
+    elif case == "binding_for_default":
+        _private_json(binding, {"schema_version": 1, "accounts": {"a": entry, "b": entry}})
+    elif case == "binding_duplicate_key":
+        binding.write_text(f'{{"schema_version": 1, "accounts": {{}}, "accounts": {{"b": {json.dumps(entry)}}}}}')
+    elif case == "binding_relative_dir":
+        _private_json(binding, {"schema_version": 1, "accounts": {"b": {**entry, "config_dir": "bound-config"}}})
+    elif case == "binding_extra_key":
+        _private_json(binding, {"schema_version": 1, "accounts": {"b": {**entry, "token": "x"}}})
+    elif case == "binding_schema":
+        _private_json(binding, {"schema_version": True, "accounts": {"b": entry}})
+    elif case == "config_dir_absent":
+        shutil.rmtree(config)
+    elif case == "config_dir_symlink":
+        moved = config.with_name("moved-config")
+        config.rename(moved)
+        config.symlink_to(moved)
+    elif case == "config_is_default_dir":
+        _private_json(
+            binding, {"schema_version": 1, "accounts": {"b": {**entry, "config_dir": str(accounts.home / ".claude")}}}
+        )
+    elif case == "default_holds_bound_account":
+        _private_json(accounts.home / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    elif case == "other_account_logged_in":
+        _private_json(config / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    elif case == "login_record_absent":
+        (config / ".claude.json").unlink()
+    elif case == "credentials_absent":
+        (config / ".credentials.json").unlink()
+    else:
+        raise AssertionError(case)
+
+
+@pytest.mark.parametrize(
+    "case,code",
+    [
+        *((key, "claude_account_ambient_conflict") for key in CLAUDE_AMBIENT_AUTH),
+        ("ambient_config_dir", "claude_account_ambient_conflict"),
+        ("binding_absent", "claude_account_binding_missing"),
+        ("binding_disabled", "claude_account_binding_missing"),
+        ("binding_shared", "claude_account_binding_not_private"),
+        ("binding_symlink", "claude_account_binding_unavailable"),
+        ("binding_without_label", "claude_account_binding_missing"),
+        ("binding_for_default", "claude_account_binding_invalid"),
+        ("binding_duplicate_key", "claude_account_binding_invalid"),
+        ("binding_relative_dir", "claude_account_binding_invalid"),
+        ("binding_extra_key", "claude_account_binding_invalid"),
+        ("binding_schema", "claude_account_binding_invalid"),
+        ("config_dir_absent", "claude_account_config_dir_missing"),
+        ("config_dir_symlink", "claude_account_config_dir_not_private"),
+        ("config_is_default_dir", "claude_account_binding_is_default"),
+        ("default_holds_bound_account", "claude_account_binding_is_default"),
+        ("other_account_logged_in", "claude_account_unverified"),
+        ("login_record_absent", "claude_account_unverified"),
+        ("credentials_absent", "claude_account_credentials_missing"),
+    ],
+)
+def test_second_claude_account_refuses_conflicting_sources(two_accounts, monkeypatch, case, code):
+    """AC-01: each conflicting or unverifiable source is refused by code alone, before any token is returned."""
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, linux_claude_auth
+
+    assert linux_claude_auth("b")  # positive control: the unchanged fixture authenticates
+    _conflict(two_accounts, monkeypatch, case)
+    with pytest.raises(ReviewIsolationError) as refused:
+        linux_claude_auth("b")
+    assert str(refused.value) == code and code in CLAUDE_ACCOUNT_REFUSAL_CODES
+    rendered = repr(refused.value) + str(refused.value.__cause__) + str(refused.value.__context__)
+    for value in (
+        two_accounts.bound_token,
+        two_accounts.default_token,
+        BOUND_ACCOUNT_UUID,
+        str(two_accounts.config_dir),
+    ):
+        assert value not in rendered
+
+
+def test_attempt_boundary_authenticates_claude_seat_as_the_labelled_account(world, tmp_path, two_accounts, monkeypatch):
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "claude", review_access="full")
+    tc.update(review_cwd=str(root), claude_account="b")
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    boundary = AttemptBoundary(agent="claude", tool_config=tc)
+    try:
+        assert boundary.env["CLAUDE_CODE_OAUTH_TOKEN"] == two_accounts.bound_token
+        # Sealing is unchanged: a disposable home, no host config directory.
+        assert Path(boundary.env["HOME"]).is_relative_to(boundary.write_root)
+        assert "CLAUDE_CONFIG_DIR" not in boundary.env
+    finally:
+        boundary.cleanup()
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "fixture-ambient-" + "e" * 30)
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_ambient_conflict$"):
+        AttemptBoundary(agent="claude", tool_config=tc)
+
+
 @pytest.mark.parametrize("agent", ["codex", "agy"])
 def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, agent):
     """Reproduce B1/B1b through the real sandbox and runner parse boundary."""
