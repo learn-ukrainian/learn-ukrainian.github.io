@@ -777,14 +777,14 @@ def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     output = json.loads(result.stdout)
     assert output["counts"] == dict(units=150, source_records=272, atlas_articles=114, legacy_alias_rows=140)
     registry = json.loads(paths[1].read_bytes())
-    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 692]
+    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 691]
     assert registry["registry_version"] == 2
     # The source-partition allocation appends to, rather than rewriting, the bootstrap.
     assert sha(dict(entries=registry["entries"][:114], source_records=registry["source_records"],
                     events=registry["events"][:386])) == \
         "a349127ec24789b2bf180cf6edf7a4056e9025f1c2801e4232a11446be3dc5e1"
     assert len(output["unresolved_card_mappings"]) == 22 and output["heldout_isolation"] == "unverified"
-    assert output["foreign_build_events"] == 306  # Separate allocation epoch; not bootstrap mint evidence.
+    assert output["foreign_build_events"] == 305  # Separate allocation epoch; not bootstrap mint evidence.
     member, held = tmp_path / "membership.json", json.loads(paths[0].read_bytes())["selection"]["source_records"][0]
     save(member, dict(heldout=[held["locator"]], replay=[]))  # No committed owner carries an adjudication marker.
     assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
@@ -800,8 +800,11 @@ def test_committed_pilot_source_partition_allocations():
     entries = [e for e in registry["entries"] if e["created_in_build"] == build]
     events = [e for e in registry["events"] if e["build_id"] == build]
     records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
-    assert len(entries) == 150 and len(events) == 306
+    assert len(entries) == 150 and len(events) == 305
     assert len({e["card_id"] for e in entries}) == 150
+    # Immutability guard on the new allocation epoch (Opus review finding 3).
+    assert sha(dict(entries=entries, events=events)) == \
+        "4f7717c56ba723e4db22e89d1ca96baee21fc2731f24fdce078e9dc9021ca422"
     assert sum(e["card_kind"] == "mwe" for e in entries) == 15
     assert sum(e["card_kind"] == "proper_name" for e in entries) == 13
     assert sum(e["card_kind"] == "lexeme" for e in entries) == 122
@@ -823,15 +826,30 @@ def test_committed_pilot_source_partition_allocations():
         assert evidence["snapshot_id"] == anchor["snapshot_id"]
         assert evidence["source_row_sha256"] == anchor["content_sha256"]
         assert evidence["supplementary_correspondence"] == "unresolved"
+        assert evidence["rules_version"] == "rules-v1-draft"
+        assert evidence["normaliser_version"] == "norm-v1"
+        if unit.get("atlas_slug"):
+            assert evidence["legacy_candidate_slug"] == unit["atlas_slug"]
         if unit["entry_type"] == "mwe_candidate":
             assert entry["card_kind"] == "mwe" and entry["key_at_creation"]["pos"] == "phrase"
             assert entry["key_at_creation"]["mwe_key"].startswith(unit["anchor_locator"] + "|")
+            if unit["literal_head"] == "різати правду-матку":
+                assert entry["key_at_creation"]["mwe_key"] == "frazeolohichnyi:frazeolohichnyi:id:2|різати правду-матку"
+            if unit["literal_head"] == "Гнат-безп'ятко":
+                assert entry["key_at_creation"]["mwe_key"] == "frazeolohichnyi:frazeolohichnyi:id:10|гнат-безп'ятко"
         gloss = anchor["raw_row"].get("sense_gloss", "")
-        parts = [p.strip() for p in gloss[1:-1].split(";")] if gloss else [None]
+        # Multi-clause proper-name glosses (e.g. Базар) are kept as one unsplit sense.
+        if entry["card_kind"] == "proper_name" and ";" in gloss:
+            parts = [None]
+        elif gloss:
+            parts = [p.strip() for p in gloss[1:-1].split(";")]
+        else:
+            parts = [None]
         assert len(entry["senses"]) == len(parts)
         for order, (sense, literal) in enumerate(zip(entry["senses"], parts, strict=True), 1):
             allocated_senses.append(sense)
-            assert sense["order"] == order and sense["state"] == ("active" if gloss else "unsplit")
+            expected_state = "active" if (gloss and not (entry["card_kind"] == "proper_name" and ";" in gloss)) else "unsplit"
+            assert sense["order"] == order and sense["state"] == expected_state
             mints = [e for e in events if e["kind"] == "sense_mint" and e["to"] == [sense["sense_id"]]]
             assert len(mints) == 1
             evidence = json.loads(mints[0]["evidence"])
@@ -839,8 +857,10 @@ def test_committed_pilot_source_partition_allocations():
             assert evidence["anchor_locator"] == anchor["locator"]
             assert evidence["source_row_sha256"] == anchor["content_sha256"]
             assert evidence["literal_gloss_unit"] == literal
+            assert evidence["rules_version"] == "rules-v1-draft"
+            assert evidence["normaliser_version"] == "norm-v1"
             assert evidence["source_unit"] == (
-                f"ulif:entry:{anchor['raw_row']['id']} sense_gloss[{order - 1}]" if gloss
+                f"ulif:entry:{anchor['raw_row']['id']} sense_gloss[{order - 1}]" if expected_state == "active"
                 else anchor["locator"] + "#unsplit")
             assert evidence["state"] == sense["state"]
         for locator in unit["source_record_keys"]:
@@ -849,9 +869,9 @@ def test_committed_pilot_source_partition_allocations():
                        any(c.get("locator") == locator and c["snapshot_id"] == record["snapshot_id"] and
                            c["status"] == "unique" for c in r["correspondence"])]
             assert len(matches) == 1
-    assert len(allocated_senses) == len({s["sense_id"] for s in allocated_senses}) == 156
-    assert sum(s["state"] == "active" for s in allocated_senses) == 27
-    assert sum(s["state"] == "unsplit" for s in allocated_senses) == 129
+    assert len(allocated_senses) == len({s["sense_id"] for s in allocated_senses}) == 155
+    assert sum(s["state"] == "active" for s in allocated_senses) == 25
+    assert sum(s["state"] == "unsplit" for s in allocated_senses) == 130
 
 
 def test_help_and_evaluation_refusal(pilot, capsys):
