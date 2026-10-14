@@ -22,8 +22,8 @@ from scripts.fleet import credit_lane
 from scripts.fleet.prepaid_status import api_lane_status_from_account
 
 
-def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str, Any]:
-    """Use the warm Monitor snapshot, or a blocking refresh when explicitly fresh/offline."""
+def read_budget(*, fresh: bool = False, transport: str = "dispatch", for_display: bool = False) -> dict[str, Any]:
+    """Read routing inputs; only the usage CLI opts into diagnostic display rows."""
     if not fresh:
         base = os.environ.get("DELEGATE_MONITOR_API", "http://127.0.0.1:8765").rstrip("/")
         query = urllib.parse.urlencode({"transport": transport})
@@ -34,7 +34,8 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
                 isinstance(budget.get(k), dict) for k in ("agents", "api_accounts")
             ):
                 raise ValueError("invalid routing-budget payload")
-            return _attach_status_observations({**budget, "source": "monitor-api"})
+            snapshot = {**budget, "source": "monitor-api"}
+            return _attach_status_observations(snapshot) if for_display else snapshot
         except (OSError, urllib.error.URLError, ValueError, json.JSONDecodeError):
             print("Monitor snapshot unavailable; running blocking native probes.", file=sys.stderr)
     from scripts.api.state_router import compute_routing_budget
@@ -51,11 +52,12 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
         subscription.result()
         prepaid.result()
     budget = compute_routing_budget(transport=transport)
-    return _attach_status_observations({**budget, "source": "in-process-fresh"})
+    snapshot = {**budget, "source": "in-process-fresh"}
+    return _attach_status_observations(snapshot) if for_display else snapshot
 
 
 def _attach_status_observations(budget: dict[str, Any]) -> dict[str, Any]:
-    """Add Muse and AGY rows from this process's probes, without a second refresh."""
+    """Copy Muse and AGY diagnostics into a display snapshot, never routing inputs."""
     from scripts.api.subscription_usage import (
         get_agy_quota_observation,
         get_provider_usage_data,
@@ -624,7 +626,7 @@ def main(argv: list[str] | None = None) -> int:
         print(doctor())
         return 0
     try:
-        budget = read_budget(fresh=args.fresh or args.command == "refresh")
+        budget = read_budget(fresh=args.fresh or args.command == "refresh", for_display=True)
         if args.command == "qa":
             code, message = qa_snapshot(budget)
             print(message)
