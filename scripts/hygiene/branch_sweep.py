@@ -28,7 +28,7 @@ from pathlib import Path
 
 from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
-from scripts.common.jsonl import jsonl_lines
+from scripts.common.jsonl import jsonl_lines, physical_lines
 from scripts.common.scratch import ensure_scratch_root
 from scripts.orchestration import reap_worktrees as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
@@ -501,7 +501,8 @@ def _pr_merge_index(repo: Path, cache: _EvidenceCache) -> dict[int, list[str]]:
     if result.returncode:
         raise RuntimeError(f"git log failed: {(result.stderr or result.stdout).strip()}")
     found: dict[int, list[str]] = {}
-    for line in result.stdout.splitlines():
+    # One record per LF; a commit subject may contain NEL/LS/PS.
+    for line in physical_lines(result.stdout):
         sha, separator, subject = line.partition("\x1f")
         if not separator or not SHA_RE.fullmatch(sha):
             raise RuntimeError("git log returned an unreadable subject row")
@@ -597,7 +598,8 @@ def _parse_issue_timeline(
         return None, "issue timeline has no HTTP status"
     if status.group(1) != "200":
         return None, f"issue timeline HTTP {status.group(1)}"
-    for line in headers.splitlines():
+    # Header fields end at CRLF; NEL/LS/PS are field-value text.
+    for line in physical_lines(headers):
         if line.lower().startswith("link:") and 'rel="next"' in line.lower():
             return None, "issue timeline is incomplete"
     try:

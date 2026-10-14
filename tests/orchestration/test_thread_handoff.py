@@ -5595,3 +5595,14 @@ def test_successor_refuses_missing_durable_handoff(tmp_path, capsys, monkeypatch
     assert th.main(args) == 2
     assert "durable handoff" in capsys.readouterr().out
     assert state_path.read_bytes() == before
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_parse_git_log_keeps_unicode_separators_inside_subjects(separator):
+    # #9556: one ``%h%x09%s`` record per physical line.
+    raw = f"abc1234\tfirst{separator}tail\r\ndef5678\tsecond"
+
+    assert th.parse_git_log(raw) == [
+        {"sha": "abc1234", "subject": f"first{separator}tail"},
+        {"sha": "def5678", "subject": "second"},
+    ]

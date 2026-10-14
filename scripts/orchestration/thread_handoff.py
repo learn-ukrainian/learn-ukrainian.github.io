@@ -132,6 +132,7 @@ THREAD_LEASE_SCHEMA_VERSION = 2
 from learn_ukrainian_v4_runtime.identity import KNOWN_HARNESS_EXECUTABLES as KNOWN_HARNESS_EXECUTABLES
 
 from scripts.common import github_client
+from scripts.common.jsonl import physical_lines
 
 MAX_HARNESS_ANCESTOR_HOPS = 10
 # Start times are compared at whole-second resolution, not a wider tolerance.
@@ -1688,7 +1689,8 @@ def gh_json(repo_root: Path, args: list[str], timeout_s: int = 15) -> Any:
 
 def parse_git_log(raw: str) -> list[dict[str, str]]:
     commits: list[dict[str, str]] = []
-    for line in raw.splitlines():
+    # One ``%h%x09%s`` record per LF; a subject may contain NEL/LS/PS.
+    for line in physical_lines(raw):
         parts = line.split("\t", 1)
         if not parts or not parts[0]:
             continue

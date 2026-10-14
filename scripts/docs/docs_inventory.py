@@ -128,7 +128,8 @@ class UniqueLoader(yaml.SafeLoader):
 def metadata(text: str) -> tuple[dict, list[str]]:
     """Only typed lifecycle facts escape; no arbitrary YAML values or errors."""
     facts, errors = {}, []
-    lines = text.splitlines()
+    # Physical line breaks only: NEL/LS/PS inside a scalar must reach YAML intact (#9556).
+    lines = re.split(r'\r\n?|\n', text)
     if not lines or lines[0] != '---':
         return facts, errors
     end = next((i for i, line in enumerate(lines[1:], 1) if line in {'---', '...'}), None)

@@ -29,6 +29,7 @@ from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
     REVIEW_SCHEMA_VERSION,
@@ -692,7 +693,8 @@ def _read_commit_entries(repo_root: Path, shas: list[str], *, deadline: float) -
             body = data[newline + 1 : newline + 1 + size].decode("utf-8")
             position = newline + 1 + size + 1
             headers, _, message = body.partition("\n\n")
-            lines = headers.splitlines()
+            # Object headers end at LF; NEL/LS/PS are free text in author names.
+            lines = jsonl_lines(headers)
             trees = [line[5:] for line in lines if line.startswith("tree ")]
             parents = [line[7:] for line in lines if line.startswith("parent ")]
             entries.append(

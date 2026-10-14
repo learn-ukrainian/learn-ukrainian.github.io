@@ -5,7 +5,7 @@ import json
 import pytest
 
 from scripts.agent_runtime.jsonl import jsonl_lines as runtime_lines
-from scripts.common.jsonl import jsonl_lines
+from scripts.common.jsonl import jsonl_lines, physical_lines
 
 
 @pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
@@ -30,3 +30,13 @@ def test_empty_trailing_lf_and_single_cr_removal():
     assert jsonl_lines("") == [""]
     assert jsonl_lines("a\n") == ["a", ""]
     assert jsonl_lines("a\r\r\nb\rc") == ["a\r", "b\rc"]
+
+
+@pytest.mark.parametrize("text", ["", "\n", "a", "a\n", "a\n\n", "a\r\nb\r\n", "\r\n", "a\nb"])
+def test_physical_lines_match_splitlines_shape_on_ascii_line_endings(text):
+    assert physical_lines(text) == text.splitlines()
+
+
+@pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_physical_lines_keep_unicode_separators(sep):
+    assert physical_lines(f"a{sep}b\r\nc{sep}\n") == [f"a{sep}b", f"c{sep}"]

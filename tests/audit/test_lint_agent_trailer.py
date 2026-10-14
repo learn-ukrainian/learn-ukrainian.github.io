@@ -565,3 +565,17 @@ def test_prompt_preamble_mentions_lu_x_agent_trailer() -> None:
         mode="read-only",
     )
     assert "LU_X_AGENT_TRAILER" not in read_only_text
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_commit_meta_fields_split_only_on_physical_newlines(monkeypatch: pytest.MonkeyPatch, separator: str) -> None:
+    # #9556: free-text author name and subject must not shift positional fields.
+    raw = f"committer@example.invalid\nauthor@example.invalid\nAuthor{separator}Name\nfix: a{separator}b"
+    monkeypatch.setattr(lat, "_git", lambda *args, cwd=None: raw)
+
+    assert lat._commit_meta("0" * 40) == (
+        "committer@example.invalid",
+        "author@example.invalid",
+        f"Author{separator}Name",
+        f"fix: a{separator}b",
+    )

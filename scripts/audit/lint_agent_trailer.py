@@ -79,6 +79,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.common.jsonl import physical_lines
 from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from scripts.orchestration.task_record_store import locate_task_record
 
@@ -287,7 +288,8 @@ def _commits_in_range(rev_range: str, cwd: Path | None = None) -> list[str]:
 def _commit_meta(sha: str, cwd: Path | None = None) -> tuple[str, str, str, str]:
     """Return (committer_email, author_email, author_name, subject)."""
     raw = _git("log", "-1", "--format=%ce%n%ae%n%an%n%s", sha, cwd=cwd)
-    parts = raw.splitlines()
+    # Fields are LF-separated; the name and subject may contain NEL/LS/PS.
+    parts = physical_lines(raw)
     while len(parts) < 4:
         parts.append("")
     return parts[0], parts[1], parts[2], parts[3]

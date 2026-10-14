@@ -33,6 +33,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.jsonl import physical_lines
 from scripts.common.repo_root import main_checkout_root
 from scripts.level_config import base_level, resolve_content_track
 from scripts.orchestration.prompt_contracts import (
@@ -1266,7 +1267,8 @@ def snapshot_target_materials(
             "path": path,
             "sha256": str(expected_hash),
             "trailing_newline": content.endswith("\n"),
-            "lines": [{"line": number, "text": text} for number, text in enumerate(content.splitlines(), start=1)],
+            # LF lines only: target_material_text rejoins with LF and rechecks the hash.
+            "lines": [{"line": number, "text": text} for number, text in enumerate(physical_lines(content), start=1)],
         }
     return materials
 
