@@ -537,6 +537,13 @@ def test_wt_sh_create_from_linked_worktree_targets_primary_sibling(tmp_path):
     assert not (worktree / "learn-ukrainian-wt-818").exists()
 
 
+def test_claim_prefilter_skips_terminal_legacy_pid_records():
+    raw = json.dumps({"status": "done", "pid": 123, "worktree_path": "other"}).encode()
+    assert worktree_claims.record_may_claim_worktree(raw, frozenset({b"checkout"})) is False
+    identity_record = json.dumps({"status": "done", "pid": 123, "worker_identity": {}}).encode()
+    assert worktree_claims.record_may_claim_worktree(identity_record, frozenset({b"checkout"})) is True
+
+
 @pytest.mark.parametrize("status", ["crashed", "done", "failed"])
 def test_namespace_unknown_worker_keeps_terminal_worktree_claim(tmp_path, status):
     from scripts.orchestration import worktree_claims

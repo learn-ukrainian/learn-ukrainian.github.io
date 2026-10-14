@@ -52,6 +52,21 @@ def test_pid_reuse_is_dead(proc):
     assert d.worker_liveness(_record()) is False
 
 
+@pytest.mark.parametrize("identity_case,gone", [("foreign", False), ("reused", True), ("alive", False), ("invalid", False)])
+def test_dispatcher_owner_uses_namespace_and_start_time(proc, identity_case, gone):
+    from scripts.orchestration.worktree_prep import owner_gone
+
+    identity = _record()["worker_identity"]
+    if identity_case == "foreign":
+        identity["pid_namespace"] = "pid:[999999]"
+    elif identity_case == "reused":
+        identity["start_time"] -= 1
+    assert owner_gone({
+        "owner_pid": 123, "owner_start": 100,
+        "owner_identity": None if identity_case == "invalid" else identity,
+    }) is gone
+
+
 def test_missing_same_namespace_process_is_dead(proc):
     assert d.worker_liveness({"pid": 999_999_998, "worker_identity": {**_record()["worker_identity"], "pid": 999_999_998}}) is False
 

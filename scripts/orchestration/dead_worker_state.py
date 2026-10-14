@@ -83,8 +83,12 @@ def worker_liveness(
     """Return alive, proven dead, or unknown. Only False permits terminalization.
 
     Legacy records have no namespace provenance. Only a confirmed initial
-    namespace reader retains their signal-0 behavior. Identity records require
+    namespace reader retains their signal-0 behavior. This accepted migration
+    residual is limited to records in flight at deployment, owned by the infra
+    driver. Identity records require
     the same PID view and readable start time; PID reuse is proof of death.
+    Foreign workers remain UNKNOWN even after exit; the infra driver must add
+    namespace-independent launch-unit/cgroup evidence before they can be healed.
     """
     raw_pid = record.get("pid")
     if isinstance(raw_pid, bool) or not isinstance(raw_pid, (int, str)):

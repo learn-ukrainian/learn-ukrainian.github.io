@@ -540,6 +540,18 @@ def _task_still_active(
     clock = time.time() if now is None else now
     in_grace = created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
 
+    # A pid-less dispatch still owns its write claim while its recorded
+    # dispatcher is live or unknown, including after the admission grace.
+    owner = data.get("worktree_prep") or data.get(dispatch_admission.ADMISSION_HOLD_KEY)
+    if (
+        status in ("running", "spawning")
+        and state_pid is None
+        and isinstance(owner, dict)
+        and "owner_identity" in owner
+        and owner.get("owner_pid") == pid
+    ):
+        return not orphaned_prep
+
     state_liveness = worker_liveness(data, pid_alive=_pid_alive)
     claim_liveness = (
         state_liveness if state_pid == pid else worker_liveness({"pid": pid}, pid_alive=_pid_alive)
@@ -555,6 +567,10 @@ def _task_still_active(
             return matcher(candidate_pid, task_id, worktree_path=worktree_path)
         except TypeError:
             return matcher(candidate_pid, task_id)
+
+    # The worker's own terminal write releases this exact PID's write claim.
+    if status in TERMINAL_TASK_STATUSES and state_pid is not None and state_pid == pid:
+        return False
 
     # Namespace uncertainty cannot release an active worker's protection. Proven
     # identity death, including PID reuse, overrides admission grace for its claim.
@@ -580,8 +596,6 @@ def _task_still_active(
     # denied (preserving protection against false eviction). If the PID is verified to be a
     # confirmed mismatch (recycled PID), the stale claim must be released.
     if status in TERMINAL_TASK_STATUSES:
-        if state_pid is not None and pid is not None and state_pid == pid:
-            return False
         if pid is not None and claim_liveness is None:
             return True
         if not pid_is_alive or pid is None:

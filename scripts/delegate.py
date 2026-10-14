@@ -1563,12 +1563,12 @@ def _runtime_tmp_state_for_lease(
 
 
 def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
-    """Treat a valid live recorded PID as an active lease regardless of status."""
+    """Keep a valid live or unknown worker's lease regardless of task status."""
     pid = state.get("pid")
     if isinstance(pid, bool):
         return False
     try:
-        return isinstance(pid, (int, str)) and int(pid) > 0 and _pid_alive(int(pid))
+        return isinstance(pid, (int, str)) and int(pid) > 0 and worker_liveness(state, pid_alive=_pid_alive) is not False
     except (TypeError, ValueError):
         return False
 
@@ -2405,7 +2405,7 @@ def _add_reserved_worktree(
             },
         ) from exc
     identity = worktree_prep.directory_identity(worktree_path)
-    owner = worktree_prep.process_identity(os.getpid())
+    owner = capture_worker_identity(os.getpid(), self_process=True)
     prep: dict[str, Any] = {
         "path": str(worktree_path),
         "run_nonce": run_nonce,
@@ -2417,7 +2417,8 @@ def _add_reserved_worktree(
         "git_pid": None,
         "git_start": None,
         "owner_pid": owner["pid"],
-        "owner_start": owner["start"],
+        "owner_start": owner["start_time"],
+        "owner_identity": owner,
     }
 
     def record_git(pid: int) -> None:
@@ -4954,28 +4955,11 @@ def _evaluate_dispatch_admission(
     thresholds: dispatch_admission.Thresholds | None = None,
 ) -> dispatch_admission.AdmissionDecision:
     """Sweep proven dead workers only when admission explicitly requests it."""
-    # Admission's existing callback takes only a PID. Keep identity provenance
-    # from active records; a shared numeric PID remains occupied if any run's
-    # identity is unknown or live.
-    records_by_pid: dict[int, list[dict[str, Any]]] = {}
-    for path in task_record_store.iter_task_records(tasks_dir(), include_archive=False):
-        record = _read_state(path)
-        if not record or record.get("status") not in ("running", "spawning"):
-            continue
-        pid = record.get("pid")
-        if isinstance(pid, int) and not isinstance(pid, bool) and pid > 0:
-            records_by_pid.setdefault(pid, []).append(record)
-
-    def recorded_pid_alive(pid: int) -> bool:
-        records = records_by_pid.get(pid)
-        if records:
-            return any(worker_liveness(record, pid_alive=_pid_alive) is not False for record in records)
-        return _pid_alive(pid)
-
     return dispatch_admission.evaluate(
         mode,
         tasks_dir(),
-        pid_alive=recorded_pid_alive,
+        pid_alive=_pid_alive,
+        record_liveness=lambda record: worker_liveness(record, pid_alive=_pid_alive),
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
     )
@@ -18058,8 +18042,12 @@ def cmd_cancel(args: argparse.Namespace) -> int:
         return 1
 
     pid = int(pid)
-    if not _pid_alive(pid):
-        print(f"⚠️  pid {pid} is already dead; nothing to cancel")
+    liveness = worker_liveness(state, pid_alive=_pid_alive)
+    if liveness is None:
+        print(f"❌ worker identity for task {args.task_id!r} is unknown; refusing to signal", file=sys.stderr)
+        return 1
+    if liveness is False:
+        print(f"⚠️  recorded worker for pid {pid} is no longer live; nothing to cancel")
         return 0
 
     try:

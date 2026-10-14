@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import resource
+import shutil
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -24,6 +25,103 @@ from scripts.fleet import capacity_pick
 from scripts.orchestration import dispatch_admission, job_host_exec
 
 _GIB = 1024**3
+
+
+def test_admission_reads_once_and_parses_only_active_records(tasks_dir, monkeypatch):
+    tasks_dir.mkdir()
+    for index in range(200):
+        (tasks_dir / f"finished-{index}.json").write_text(json.dumps({"status": "done", "pid": 123}))
+    _running_record(tasks_dir, "active", pid=os.getpid())
+    reads = []
+    parses = []
+    read_bytes = Path.read_bytes
+    loads = json.loads
+
+    def read(path):
+        if path.parent == tasks_dir:
+            reads.append(path.name)
+        return read_bytes(path)
+
+    def parse(raw, *args, **kwargs):
+        result = loads(raw, *args, **kwargs)
+        if isinstance(result, dict) and result.get("status") in ("running", "done"):
+            parses.append(result["status"])
+        return result
+
+    monkeypatch.setattr(Path, "read_bytes", read)
+    monkeypatch.setattr(json, "loads", parse)
+    monkeypatch.setattr(delegate, "_read_state", lambda *_: pytest.fail("admission must not hydrate task sidecars"))
+    result = delegate._evaluate_dispatch_admission("danger", sweep=False)
+    assert result.live_task_ids == ("active",)
+    assert parses == ["running"]
+    assert len(reads) == len(set(reads)) == 201
+
+
+@pytest.mark.parametrize("block", ["admission_hold", "worktree_prep"])
+@pytest.mark.parametrize("reader", ["admission", "reconcile"])
+@pytest.mark.parametrize("real_namespace", [False, True], ids=["hermetic", "bwrap"])
+def test_foreign_dispatcher_keeps_hold_and_record(tasks_dir, tmp_path, monkeypatch, block, reader, real_namespace):
+    from scripts.guardrails.delegate_ownership import OwnershipLedger
+    from scripts.orchestration import dead_worker_state as dead
+    from scripts.orchestration import reconcile_sweep
+
+    proc = None
+    if real_namespace:
+        if not shutil.which("bwrap"):
+            pytest.skip("bwrap unavailable; hermetic namespace cases still run")
+        code = """
+import json, sys
+from scripts.orchestration.dispatch_admission import new_admission_hold
+print(json.dumps(new_admission_hold('namespace-nonce')), flush=True)
+sys.stdin.read()
+"""
+        proc = subprocess.Popen(
+            ["bwrap", "--unshare-pid", "--dev-bind", "/", "/", "--proc", "/proc", sys.executable, "-c", code],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        )
+        line = proc.stdout.readline()
+        if not line:
+            _out, err = proc.communicate(timeout=10)
+            if any(reason in err for reason in ("Operation not permitted", "No permissions", "Permission denied")):
+                pytest.skip(f"second PID namespace unavailable: {err.strip()}")
+            pytest.fail(f"namespace dispatcher failed: {err.strip()}")
+        hold = json.loads(line)
+    else:
+        hold = {
+            "run_nonce": "namespace-nonce", "owner_pid": 999_999_998, "owner_start": 100,
+            "owner_identity": {
+                "pid": 999_999_998, "start_time": 100, "host_pid": None,
+                "pid_namespace": "pid:[999999]", "recorder_pid_namespace": "pid:[999999]",
+            },
+        }
+        monkeypatch.setattr(dead, "_pid_namespace", lambda process="self": dead.INITIAL_PID_NAMESPACE)
+        monkeypatch.setattr(dead, "_proc_pid_namespace", lambda: dead.INITIAL_PID_NAMESPACE)
+    try:
+        tasks_dir.mkdir(exist_ok=True)
+        path = tasks_dir / "foreign-dispatcher.json"
+        record = {
+            "task_id": "foreign-dispatcher", "run_nonce": "namespace-nonce", "status": "spawning",
+            "mode": "danger", "pid": None, block: hold,
+        }
+        path.write_text(json.dumps(record))
+        before = path.read_bytes()
+        if reader == "admission":
+            result = delegate._evaluate_dispatch_admission("danger", sweep=True)
+            assert result.dead_task_ids == ()
+            assert result.live_task_ids == ("foreign-dispatcher",)
+        else:
+            result = reconcile_sweep.run_reconcile_sweep(
+                apply=True, task_dir=tasks_dir,
+                ledger=OwnershipLedger(tmp_path / "claims.sqlite3", task_state_dir=tasks_dir),
+            )
+            assert result.zombie_tasks == []
+            assert result.live_tasks == ["foreign-dispatcher"]
+        assert path.read_bytes() == before
+        if real_namespace:
+            assert proc.poll() is None
+    finally:
+        if proc is not None and proc.poll() is None:
+            proc.communicate(input="", timeout=10)
 
 
 @pytest.mark.parametrize("task_family", ["data", "text", "word cards", "word-cards", "word_cards", "dataset", "reviews"])

@@ -255,13 +255,49 @@ def test_stale_claim_reconciled(tmp_path: Path):
     assert second.would_refuse is False
 
 
+@pytest.mark.parametrize("block", ["admission_hold", "worktree_prep"])
+@pytest.mark.parametrize("identity_case,kept", [("foreign", True), ("alive", True), ("dead", False), ("reused", False)])
+def test_dispatcher_identity_protects_write_claim_after_grace(tmp_path, monkeypatch, block, identity_case, kept):
+    import time
+
+    from scripts.guardrails import delegate_ownership as ownership
+    from scripts.orchestration import dead_worker_state as dead
+
+    pid = 999_999_998
+    namespace = dead.INITIAL_PID_NAMESPACE
+    identity = {"pid": pid, "start_time": 100, "pid_namespace": "pid:[999999]" if identity_case == "foreign" else namespace}
+    record = {
+        "task_id": "dispatcher", "status": "spawning", "pid": None, "run_nonce": "run",
+        block: {"run_nonce": "run", "owner_pid": pid, "owner_start": 100, "owner_identity": identity},
+    }
+    path = tmp_path / "dispatcher.json"
+    path.write_text(json.dumps(record))
+    before = path.read_bytes()
+    monkeypatch.setattr(dead, "PROC_ROOT", tmp_path / "proc")
+    monkeypatch.setattr(dead, "_pid_namespace", lambda process="self": namespace)
+    monkeypatch.setattr(dead, "_proc_pid_namespace", lambda: namespace)
+
+    def stat(process):
+        if identity_case == "dead":
+            raise FileNotFoundError
+        return pid, 101 if identity_case == "reused" else 100
+
+    monkeypatch.setattr(dead, "_process_stat", stat)
+    assert ownership._task_still_active(
+        "dispatcher", pid, tmp_path,
+        created_at=time.time() - ownership.ADMISSION_PID_GRACE_S - 1,
+        process_matches_task=lambda *_args, **_kwargs: False,
+    ) is kept
+    assert path.read_bytes() == before
+
+
 @pytest.mark.parametrize(
     "case,remaining",
     [
         ("foreign", 1),
-        ("foreign_crashed", 1),
-        ("foreign_done", 1),
-        ("foreign_failed", 1),
+        ("foreign_crashed", 0),
+        ("foreign_done", 0),
+        ("foreign_failed", 0),
         ("dead", 0),
         ("reused", 0),
         ("reused_in_grace", 0),

@@ -2742,6 +2742,32 @@ def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeyp
     assert (tmp_tasks_dir / "logs" / "codex" / "test-mkdir-1885.stderr.log").exists()
 
 
+@pytest.mark.parametrize("identity_case,expected", [("foreign", 1), ("reused", 0), ("alive", 0)])
+def test_cancel_uses_recorded_worker_identity(tmp_tasks_dir, monkeypatch, capsys, identity_case, expected):
+    import argparse
+
+    from scripts.orchestration import dead_worker_state as dead
+
+    identity = {"pid": 123, "start_time": 100, "pid_namespace": dead.INITIAL_PID_NAMESPACE}
+    monkeypatch.setattr(dead, "_pid_namespace", lambda process="self": dead.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead, "_proc_pid_namespace", lambda: dead.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead, "_process_stat", lambda process: (123, 100))
+    if identity_case == "foreign":
+        identity["pid_namespace"] = "pid:[999999]"
+    elif identity_case == "reused":
+        identity["start_time"] -= 1
+    path = delegate._state_path("identity-cancel")
+    delegate._write_state_atomic(path, {
+        "task_id": "identity-cancel", "status": "running", "pid": identity["pid"], "worker_identity": identity,
+    })
+    signals = []
+    monkeypatch.setattr(delegate.os, "kill", lambda pid, sig: signals.append((pid, sig)))
+    assert delegate.cmd_cancel(argparse.Namespace(task_id="identity-cancel")) == expected
+    assert signals == ([(identity["pid"], signal.SIGTERM)] if identity_case == "alive" else [])
+    if identity_case == "reused":
+        assert "recorded worker for pid 123 is no longer live" in capsys.readouterr().out
+
+
 def test_cancel_refuses_terminal_status(tmp_tasks_dir, capsys):
     """Regression (Codex 2026-04-10 audit): cmd_cancel must refuse to
     signal a PID whose task is already in a terminal state. The OS may

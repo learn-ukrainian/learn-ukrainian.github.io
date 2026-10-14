@@ -17,6 +17,13 @@ from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.orchestration import dead_worker_state, reconcile_sweep
 
 
+@pytest.fixture(autouse=True)
+def _synthetic_host_pid_view(monkeypatch):
+    """Legacy-record cases explicitly model a host reader, even in a sandbox."""
+    monkeypatch.setattr(dead_worker_state, "_pid_namespace", lambda process="self": dead_worker_state.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead_worker_state, "_proc_pid_namespace", lambda: dead_worker_state.INITIAL_PID_NAMESPACE)
+
+
 @pytest.mark.parametrize("apply", [False, True])
 @pytest.mark.parametrize("identity_case", ["foreign", "alive", "reused", "dead", "unreadable"])
 def test_reconcile_sweep_uses_worker_identity(tmp_path, monkeypatch, apply, identity_case):
@@ -655,7 +662,10 @@ def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
     task_file = task_dir / "died-after-admission.json"
     state = json.loads(task_file.read_text(encoding="utf-8"))
     pid, start = exited_process_identity()
-    state[dispatch_admission.ADMISSION_HOLD_KEY].update(owner_pid=pid, owner_start=start)
+    state[dispatch_admission.ADMISSION_HOLD_KEY].update(
+        owner_pid=pid, owner_start=start,
+        owner_identity={"pid": pid, "start_time": start, "pid_namespace": dead_worker_state.INITIAL_PID_NAMESPACE},
+    )
     task_file.write_text(json.dumps(state), encoding="utf-8")
     ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
     assert _task_still_active("died-after-admission", None, task_dir) is False

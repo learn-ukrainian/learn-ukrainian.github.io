@@ -250,8 +250,8 @@ def record_may_claim_worktree(raw: bytes, needles: frozenset[bytes]) -> bool:
     :func:`active_worktree_claim_refusal` would honor (#8610).
     """
     # A terminal status alone cannot release a worker with unknown liveness.
-    # Parse PID records even when a differently named symlink hides the claim.
-    if b'"pid"' in raw or not needles or any(needle in raw for needle in needles):
+    # Parse identity records even when a differently named symlink hides the claim.
+    if b'"worker_identity"' in raw or not needles or any(needle in raw for needle in needles):
         return True
     released_status_seen = False
     # ``bytes.find`` then an anchored match is about a third cheaper than
