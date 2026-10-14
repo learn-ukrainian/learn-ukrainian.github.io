@@ -154,3 +154,52 @@ def test_concurrent_updates_both_survive(tmp_path):
     worker.join(10)
     assert not worker.is_alive()
     assert json.loads(path.read_text()) == {"task_id": "review", "reaped": True, "receipt": "bound"}
+
+
+def test_locate_finds_a_record_restored_between_its_probes(tmp_path, monkeypatch):
+    """A restore lands after the hot probe and before the archive probe (#10501)."""
+    tasks = tmp_path / "tasks"
+    archived = store.archived_task_record_path(tasks, "review")
+    hot = store.task_record_path(tasks, "review")
+    _write(archived, {"task_id": "review"})
+    original = type(hot).is_file
+    probes = []
+
+    def is_file(self):
+        found = original(self)
+        probes.append((self, found))
+        if self == hot and len(probes) == 1:
+            os.link(archived, hot)  # The supported restore: link into the hot directory, then unlink.
+            archived.unlink()
+        return found
+
+    monkeypatch.setattr(type(hot), "is_file", is_file)
+    assert store.locate_task_record(tasks, "review") == hot
+    assert probes == [(hot, False), (archived, False), (hot, True)]
+
+
+@pytest.mark.parametrize(
+    "build,name,kind",
+    [
+        ("staging", "review.json", "moving"),
+        ("staging", "review.result", "moving"),
+        ("parked", "review.json", "parked"),
+        ("parked", "review.result", "parked"),
+        ("staging", "review.snapshots", None),
+        ("parked", "review.snapshots", None),
+        ("plain", "review.json", None),
+        ("plain", "review.json.lock", None),
+        ("plain", "review.json.tmp.123", None),
+        ("plain", ".review.json.moving", None),
+        ("plain", "review.json.unplaced-xyz", None),
+    ],
+)
+def test_relocation_residue_names_only_mid_move_records_and_replies(build, name, kind):
+    builders = {"staging": store.staging_name, "parked": store.parked_name, "plain": lambda value: value}
+    assert store.relocation_residue(builders[build](name)) == kind
+
+
+def test_staging_and_parked_names_are_unique_per_call():
+    assert store.staging_name("review.json") != store.staging_name("review.json")
+    assert store.staging_name("review.json").startswith(f".review.json.{os.getpid()}.")
+    assert store.parked_name("review.json") != store.parked_name("review.json")

@@ -94,7 +94,6 @@ import os
 import re
 import subprocess
 import sys
-import uuid
 from collections import Counter, defaultdict
 from collections.abc import Callable, Iterable, Mapping
 from datetime import UTC, datetime, timedelta
@@ -1140,7 +1139,7 @@ def _move_no_replace(src: Path, dst: Path) -> None:
 
 def _stage(path: Path, staging_dir: Path) -> Path:
     """Take whatever ``path`` holds right now to a private name nobody else writes."""
-    staged = staging_dir / f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.moving"
+    staged = staging_dir / task_record_store.staging_name(path.name)
     os.rename(path, staged)
     return staged
 
@@ -1174,7 +1173,7 @@ def _unstage(staged: Path, home: Path, dest_dir: Path) -> Path:
     between the two. Returns where the file now is: the staging name only if
     both moves failed.
     """
-    for target in (home, dest_dir / f"{home.name}.unplaced-{uuid.uuid4().hex[:12]}"):
+    for target in (home, dest_dir / task_record_store.parked_name(home.name)):
         try:
             _move_no_replace(staged, target)
         except OSError:

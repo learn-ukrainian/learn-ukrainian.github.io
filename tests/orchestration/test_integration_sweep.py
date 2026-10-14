@@ -699,18 +699,24 @@ def test_historical_evidence_ignores_active_reviews_but_not_receipts(tasks):
     history = sweep.ReviewLedger(tasks, REPO).evidence(42, historical=True)
     assert sweep.lookup_verdict([item], SHA, "fleet", evidence=history).state == sweep.UNRECEIPTED
     bind(tasks, item)
+    # Receipts come from the ledger's one coherent read (#10501): a fresh read sees the new one.
+    assert sweep.lookup_verdict([item], SHA, "fleet", evidence=history).state == sweep.UNRECEIPTED
+    history = sweep.ReviewLedger(tasks, REPO).evidence(42, historical=True)
     assert sweep.lookup_verdict([item], SHA, "fleet", evidence=history).state == "APPROVED"
 
 
-def test_ledger_scans_active_reviews_once_per_snapshot(tasks, monkeypatch):
+def test_ledger_reads_once_per_snapshot(tasks, monkeypatch):
     calls = []
-    original = sweep.active_review_heads
-    monkeypatch.setattr(sweep, "active_review_heads", lambda *args: calls.append(args) or original(*args))
+    original = sweep.read_ledger
+    monkeypatch.setattr(sweep, "read_ledger", lambda *args: calls.append(args) or original(*args))
     item = published()
     bind(tasks, item)
     ledger = sweep.ReviewLedger(tasks, REPO)
     for _ in range(3):
         assert sweep.lookup_verdict([item], SHA, "fleet", evidence=ledger.evidence(42)).state == "APPROVED"
+        assert sweep.lookup_verdict([item], SHA, "fleet", evidence=ledger.evidence(42, historical=True)).state == (
+            "APPROVED"
+        )
     assert len(calls) == 1
 
 
@@ -1046,3 +1052,156 @@ def test_corrupt_readable_bot_authorship_refuses_through_parser(history, line, r
     altered = body.replace(line + "\n", replacement + "\n")
     assert sweep.parse_marker(altered) is None
     assert sweep.lookup_verdict([{**item, "body": altered}], SHA, "fleet").state == "unknown"
+
+
+# Exact-head review of bfd4f38931 (#10501): one coherent ledger read; unresolved reviews never ignored.
+def restore_mid_read(monkeypatch, tasks, name):
+    """Run the supported archive restore of ``name`` right after the first hot-directory listing."""
+    from scripts.orchestration import stale_task_records
+
+    original = Path.iterdir
+    fired = []
+
+    def iterdir(self):
+        items = list(original(self))
+        if not fired and self == tasks:
+            fired.append(stale_task_records.restore_archived(tasks, [name], apply=True)["actions"])
+        return iter(items)
+
+    monkeypatch.setattr(Path, "iterdir", iterdir)
+    return fired
+
+
+@pytest.mark.parametrize("token,expected", [("REQUEST_CHANGES", "CHANGES_REQUESTED"), ("BLOCKED", "BLOCKED")])
+def test_restore_between_ledger_listings_never_hides_a_rejection(tasks, monkeypatch, token, expected):
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "rejecting", f"VERDICT: {token}", archive=True)
+    assert lookup([item], tasks).state == expected
+    fired = restore_mid_read(monkeypatch, tasks, "rejecting")
+    assert lookup([item], tasks).state == expected
+    assert fired == [{"restored": 1}]
+    assert (tasks / "rejecting.json").is_file() and (tasks / "rejecting.result").is_file()
+
+
+def test_record_at_its_archive_staging_name_is_unknown(tasks):
+    from scripts.orchestration import stale_task_records
+
+    item = published()
+    bind(tasks, item)
+    path = completed_review(tasks, "rejecting", "VERDICT: BLOCKED")
+    (tasks / "archive").mkdir()
+    stale_task_records._stage(path, tasks / "archive")  # The archiver's first step, caught mid-move.
+    assert lookup([item], tasks).state == "unknown"
+
+
+def test_record_parked_outside_the_ledger_is_unknown(tasks):
+    from scripts.orchestration import stale_task_records
+
+    item = published()
+    bind(tasks, item)
+    path = completed_review(tasks, "rejecting", "VERDICT: BLOCKED")
+    archive = tasks / "archive"
+    archive.mkdir()
+    staged = stale_task_records._stage(path, archive)
+    path.write_text(json.dumps({"task_id": "rejecting", "status": "running"}))  # A writer took the hot name.
+    parked = stale_task_records._unstage(staged, path, archive)
+    assert parked.parent == archive and ".unplaced-" in parked.name
+    path.unlink()
+    assert lookup([item], tasks).state == "unknown"
+
+
+@pytest.mark.parametrize("record_in", ["hot", "archive"])
+def test_reply_left_in_the_other_directory_still_vetoes(tasks, record_in):
+    item = published()
+    bind(tasks, item)
+    path = completed_review(
+        tasks, "exec", "VERDICT: REQUEST_CHANGES", archive=record_in == "archive", review=False, mode="read-only"
+    )
+    other = tasks / "archive" if record_in == "hot" else tasks
+    other.mkdir(exist_ok=True)
+    path.with_suffix(".result").rename(other / "exec.result")  # A sidecar move that has not happened yet.
+    assert lookup([item], tasks).state == "CHANGES_REQUESTED"
+
+
+def test_review_settling_during_the_read_is_in_flight_or_a_veto(tasks, monkeypatch):
+    item = published()
+    bind(tasks, item)
+    path = tasks / "settling.json"
+    record = {"task_id": "settling", "status": "running", "review": True, "repository": REPO, "pinned_head": SHA}
+    path.write_text(json.dumps(record))
+    original = Path.read_text
+    settled = []
+
+    def read_text(self, *args, **kwargs):
+        text = original(self, *args, **kwargs)
+        if self == path and not settled:
+            settled.append(True)
+            path.with_suffix(".result").write_text("VERDICT: BLOCKED")
+            path.write_text(json.dumps({**record, "status": "done"}))
+        return text
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+    assert lookup([item], tasks).state in {sweep.IN_FLIGHT, "BLOCKED"}
+    assert settled
+
+
+MISSING = object()
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"pinned_head": ""},
+        {"pinned_head": SHA[:12]},
+        {"pinned_head": "g" * 40},
+        {"pinned_head": SHA + "a"},
+        {"pinned_head": SHA, "worktree_base_sha": ""},
+        {"pinned_head": MISSING},
+        {"pinned_head": MISSING, "pr": 42},
+        {"repository": MISSING},
+        {"repository": "not a repository"},
+        {"repository": ["owner/repo"]},
+        {"pr": "42"},
+        {"pr": True},
+        {"pr": 0},
+        {"pinned_head": 7},
+        {"status": 1},
+    ],
+    ids=lambda fields: ",".join(f"{key}={'missing' if value is MISSING else value!r}" for key, value in fields.items()),
+)
+def test_unresolved_active_review_identity_is_unknown(tasks, fields):
+    item = published()
+    bind(tasks, item)
+    record = {"task_id": "active-review", "status": "running", "repository": REPO, "type": "review",
+              "pinned_head": SHA, **fields}
+    record = {key: value for key, value in record.items() if value is not MISSING}
+    (tasks / "active-review.json").write_text(json.dumps(record))
+    assert lookup([item], tasks).state == "unknown"
+    with pytest.raises((ValueError, TypeError)):
+        sweep.outside_review_in_flight(tasks, REPO, SHA)
+
+
+@pytest.mark.parametrize("prep", [{"base_sha": ""}, {"base_sha": SHA[:12]}, {"base_sha": 7}, "not-a-prep"])
+def test_unresolved_preparing_dispatch_is_unknown(tasks, prep):
+    item = published()
+    bind(tasks, item)
+    (tasks / "prep.json").write_text(json.dumps({"status": "spawning", "worktree_prep": prep}))
+    assert lookup([item], tasks).state == "unknown"
+
+
+def test_resolved_or_foreign_active_records_keep_the_positive_control(tasks):
+    item = published()
+    bind(tasks, item)
+    active(tasks, "foreign", repository="owner/else", pinned_head="")
+    active(tasks, "red-team", review_mode="red_team", pinned_head="")
+    (tasks / "unresolved-prep.json").write_text(json.dumps({"status": "spawning", "worktree_prep": {"base_sha": None}}))
+    active(tasks, "other-head", pinned_head=OTHER.upper(), pr=7)
+    assert lookup([item], tasks).state == "APPROVED"
+
+
+def test_completed_task_with_a_malformed_head_is_unknown(tasks):
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "exec", "VERDICT: REQUEST_CHANGES", review=False, worktree_base_sha="", head_sha=SHA)
+    assert lookup([item], tasks).state == "unknown"

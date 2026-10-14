@@ -15,7 +15,7 @@ import json
 import re
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -24,7 +24,13 @@ from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.opsec.prepublish import normalize_repository
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, locate_task_record
+from scripts.orchestration.task_record_store import (
+    ARCHIVE_DIR_NAME,
+    RECORD_SUFFIXES,
+    archived_task_record_path,
+    relocation_residue,
+    task_record_path,
+)
 from scripts.publish.github import Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.verdict_parser import recognized_verdicts
@@ -64,7 +70,8 @@ ACTIVE_TASK_STATUSES = frozenset({"spawning", "running", "queued"})
 NEEDS_FINALIZE = "needs_finalize"
 UNSETTLED_REVIEW_STATUSES = ACTIVE_TASK_STATUSES | {NEEDS_FINALIZE}
 VERDICT_TASK_STATUSES = frozenset({"done", NEEDS_FINALIZE})
-# Approval states that block admission without revoking a queued head.
+# Approval states that block admission; the keeper also removes a queued or armed head in either.
+# Unreceipted is known: every approval's record was read and none binds it. Unreadable evidence is ``unknown``.
 UNRECEIPTED = "CF-unreceipted"
 IN_FLIGHT = "CF-in-flight"
 
@@ -147,17 +154,76 @@ def is_review_task(task: Mapping[str, Any]) -> bool:
     )
 
 
+class UnresolvedReview(ValueError):
+    """An unsettled review, or a dispatch preparing a head, names no resolvable target (#10501)."""
+
+
+def _full_sha(value: object) -> str | None:
+    """``value`` casefolded when it is a full 40-hex commit id, else ``None``."""
+    return value.casefold() if isinstance(value, str) and SHA.fullmatch(value.casefold()) else None
+
+
+def _active_targets(task: Mapping[str, Any], wanted: str) -> tuple[set[str], set[str]]:
+    """The heads one hot record holds: ``(reviewed, prepared)``.
+
+    An unsettled non-red-team review of ``wanted`` (or of a repository it does
+    not name or that does not parse) must name a full-SHA head in every head
+    field it sets, set at least one, and carry a positive integer ``pr`` if
+    any. An active dispatch preparing a worktree must record a full-SHA base,
+    or none. Otherwise :class:`UnresolvedReview` is raised: a target nobody
+    can resolve may be any head, so it is never ignored.
+    """
+    status = task.get("status")
+    review = is_review_task(task)
+    prep = task.get("worktree_prep")
+    if not isinstance(status, str):
+        if review or prep is not None:
+            raise UnresolvedReview("task status malformed")
+        return set(), set()
+    if status not in UNSETTLED_REVIEW_STATUSES or task.get("review_mode", "cross_family") == "red_team":
+        return set(), set()
+    owner = task.get("repository")
+    repository = None if owner is None else normalize_repository(owner) if isinstance(owner, str) else "unknown"
+    foreign = repository not in {None, "unknown", wanted}
+    prepared: set[str] = set()
+    # Prep rows lack review typing and often repository metadata. Fail closed:
+    # even non-review dispatches preparing this head briefly block.
+    if status in ACTIVE_TASK_STATUSES and prep is not None and not foreign:
+        if not isinstance(prep, dict):
+            raise UnresolvedReview("worktree prep malformed")
+        if prep.get("base_sha") is not None:
+            base = _full_sha(prep["base_sha"])
+            if base is None:
+                raise UnresolvedReview("worktree prep base malformed")
+            prepared.add(base)
+    if not review or foreign:
+        return set(), prepared
+    if repository != wanted:
+        raise UnresolvedReview("unsettled review repository unresolved")
+    number = task.get("pr")
+    if number is not None and (type(number) is not int or number < 1):
+        raise UnresolvedReview("unsettled review PR malformed")
+    values = [task[name] for name in REVIEW_HEAD_FIELDS if task.get(name) is not None]
+    heads = {_full_sha(value) for value in values}
+    if not values or None in heads:
+        raise UnresolvedReview("unsettled review head unresolved")
+    return {head for head in heads if head is not None}, prepared
+
+
 def active_review_heads(tasks_dir: Path, repository: str) -> tuple[frozenset[str], frozenset[str]]:
     """Casefolded heads targeted by unsettled non-red-team reviews, and by any active dispatch preparing them.
 
     A review in ``needs_finalize`` is unsettled, so it holds its head like a
     running one. Reads the hot ledger only: an archived record is terminal. An
-    unreadable directory or record raises ``OSError``/``ValueError``/
+    unreadable directory or record, or an unsettled review whose target does
+    not resolve (:func:`_active_targets`), raises ``OSError``/``ValueError``/
     ``TypeError`` so every caller fails closed.
     """
+    wanted = normalize_repository(repository)
+    if wanted == "unknown":
+        raise UnresolvedReview("ledger repository unresolved")
     reviewed: set[str] = set()
     prepared: set[str] = set()
-    wanted = normalize_repository(repository)
     # The shared iterator suppresses enumeration errors. Read locally so both
     # an unreadable directory and a failed glob refuse this guard.
     list(tasks_dir.iterdir())
@@ -165,27 +231,9 @@ def active_review_heads(tasks_dir: Path, repository: str) -> tuple[frozenset[str
         task = json.loads(path.read_text(encoding="utf-8"))
         if not isinstance(task, dict):
             raise ValueError("task record is not an object")
-        status = task.get("status")
-        if status not in UNSETTLED_REVIEW_STATUSES or task.get("review_mode", "cross_family") == "red_team":
-            continue
-        owner = task.get("repository")
-        same_repository = isinstance(owner, str) and normalize_repository(owner) == wanted
-        prep = task.get("worktree_prep")
-        prep_sha = prep.get("base_sha") if isinstance(prep, dict) else None
-        # Prep rows lack review typing and repository metadata. Fail closed:
-        # even non-review dispatches preparing this head briefly block.
-        if (
-            status in ACTIVE_TASK_STATUSES
-            and isinstance(prep_sha, str)
-            and SHA.fullmatch(prep_sha.casefold())
-            and (same_repository or owner is None)
-        ):
-            prepared.add(prep_sha.casefold())
-        if is_review_task(task) and same_repository:
-            heads = [task.get(name) for name in REVIEW_HEAD_FIELDS]
-            if any(value is not None and not isinstance(value, str) for value in heads):
-                raise TypeError("active review head field is malformed")
-            reviewed.update(value.casefold() for value in heads if value is not None)
+        heads, preparing = _active_targets(task, wanted)
+        reviewed |= heads
+        prepared |= preparing
     return frozenset(reviewed), frozenset(prepared)
 
 
@@ -199,125 +247,241 @@ class EvidenceUnavailable(SweepError):
     """The local review ledger could not be read; the head stays unknown."""
 
 
+# A read whose listings moved under it is retried this many times, then is unknown.
+LEDGER_READ_ATTEMPTS = 3
+
+
 @dataclass(frozen=True)
 class CompletedTask:
-    """One completed task pinned to a head; ``scoped`` when bound to exactly that head and repository."""
+    """One completed task pinned to a head; ``scoped`` when bound to exactly that head and repository.
+
+    ``reply`` is where the coherent listing held its ``.result`` (``None``:
+    no reply was listed).
+    """
 
     path: Path
     task_id: str
     declared: bool
     scoped: bool
+    reply: Path | None
 
 
 @dataclass(frozen=True)
-class CompletedIndex:
-    broken: bool
-    candidates: Mapping[str, Sequence[CompletedTask]]
+class _Listing:
+    """Record, reply and mid-move names of the hot directory and its archive, with both directories' identity."""
+
+    hot: frozenset[str]
+    archive: frozenset[str]
+    identity: tuple[Any, ...]
+
+    @property
+    def residue(self) -> str | None:
+        kinds = {relocation_residue(name) for name in self.hot | self.archive}
+        return "parked" if "parked" in kinds else "moving" if "moving" in kinds else None
+
+
+def _names(directory: Path) -> frozenset[str]:
+    return frozenset(
+        path.name
+        for path in directory.iterdir()
+        if path.name.endswith(RECORD_SUFFIXES) or relocation_residue(path.name) is not None
+    )
+
+
+def _ledger_listing(tasks_dir: Path) -> _Listing:
+    """List the hot directory, then the archive; ``OSError`` when either cannot be listed."""
+    hot = tasks_dir.stat()
+    hot_names = _names(tasks_dir)
+    archive_dir = tasks_dir / ARCHIVE_DIR_NAME
+    try:
+        archive = archive_dir.stat()
+    except FileNotFoundError:
+        return _Listing(hot_names, frozenset(), (hot.st_dev, hot.st_ino, None))
+    return _Listing(hot_names, _names(archive_dir), (hot.st_dev, hot.st_ino, archive.st_dev, archive.st_ino))
+
+
+@dataclass(frozen=True)
+class LedgerSnapshot:
+    """One coherent read of the review ledger for a repository (#10501).
+
+    ``error`` makes everything unknown (the listings could not be read, kept
+    changing, or show a record held outside its name); ``active_error`` makes
+    in-flight state unknown; ``broken`` makes completed-review vetoes unknown.
+    A rejection actually read from a record still wins over all three.
+    ``records`` keeps the receipt fields of each readable record that has one.
+    """
+
+    error: str | None = None
+    active_error: str | None = None
+    broken: bool = False
+    reviewed: frozenset[str] = frozenset()
+    prepared: frozenset[str] = frozenset()
+    candidates: Mapping[str, Sequence[CompletedTask]] = field(default_factory=dict)
+    present: frozenset[Path] = frozenset()
+    unreadable: frozenset[Path] = frozenset()
+    records: Mapping[Path, Mapping[str, Any]] = field(default_factory=dict)
+
+
+def _reply_path(record: Path, names: frozenset[str], other_dir: Path, others: frozenset[str]) -> Path | None:
+    """Where the listing holds ``record``'s reply: beside it, or left in the other directory by a move."""
+    name = f"{record.stem}.result"
+    if name in names:
+        return record.with_name(name)
+    if name in others and f"{record.stem}.json" not in others:
+        return other_dir / name
+    return None
+
+
+def _read_listed(tasks_dir: Path, listing: _Listing, wanted: str) -> LedgerSnapshot:
+    """Read every listed record once, deriving in-flight heads, completed candidates and receipts."""
+    archive = tasks_dir / ARCHIVE_DIR_NAME
+    reviewed: set[str] = set()
+    prepared: set[str] = set()
+    candidates: dict[str, list[CompletedTask]] = {}
+    present: set[Path] = set()
+    unreadable: set[Path] = set()
+    records: dict[Path, dict[str, Any]] = {}
+    active_error: str | None = None
+    broken = False
+    for directory, names, other_dir, others in (
+        (tasks_dir, listing.hot, archive, listing.archive),
+        (archive, listing.archive, tasks_dir, listing.hot),
+    ):
+        hot = directory is tasks_dir
+        for name in sorted(name for name in names if name.endswith(".json")):
+            path = directory / name
+            try:
+                task = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError, RecursionError):
+                task = None
+            if not isinstance(task, dict):
+                unreadable.add(path)
+                broken = True
+                active_error = active_error or ("review ledger record unreadable" if hot else None)
+                continue
+            present.add(path)
+            if RECEIPT_FIELD in task:
+                records[path] = {key: task[key] for key in ("task_id", "run_nonce", RECEIPT_FIELD) if key in task}
+            if hot:  # An archived record is terminal: it holds no head in flight.
+                try:
+                    heads, preparing = _active_targets(task, wanted)
+                except UnresolvedReview as exc:
+                    active_error = active_error or str(exc)
+                else:
+                    reviewed |= heads
+                    prepared |= preparing
+            status, owner = task.get("status"), task.get("repository")
+            if (
+                not isinstance(status, str)
+                or status not in VERDICT_TASK_STATUSES
+                or (isinstance(owner, str) and normalize_repository(owner) not in {wanted, "unknown"})
+            ):
+                continue
+            resolved = [_full_sha(task[name]) for name in REVIEW_HEAD_FIELDS if task.get(name) is not None]
+            heads = {head for head in resolved if head is not None}
+            if len(heads) != len(set(resolved)):  # A completed task pinned to a head nobody can resolve.
+                broken = True
+                continue
+            scoped = len(heads) == 1 and isinstance(owner, str) and normalize_repository(owner) == wanted
+            task_id = task["task_id"] if isinstance(task.get("task_id"), str) else path.stem
+            item = CompletedTask(
+                path, task_id, is_review_task(task), scoped, _reply_path(path, names, other_dir, others)
+            )
+            for head in heads:
+                candidates.setdefault(head, []).append(item)
+    return LedgerSnapshot(
+        active_error=active_error,
+        broken=broken,
+        reviewed=frozenset(reviewed),
+        prepared=frozenset(prepared),
+        candidates=candidates,
+        present=frozenset(present),
+        unreadable=frozenset(unreadable),
+        records=records,
+    )
+
+
+def read_ledger(tasks_dir: Path, repository: str, *, attempts: int = LEDGER_READ_ATTEMPTS) -> LedgerSnapshot:
+    """Read the hot ledger and its archive as one coherent snapshot (#10501).
+
+    Both directories are listed before and after their records are read. A
+    record or reply that an archive, restore or re-dispatch moved meanwhile
+    changes a listing or leaves a staging name, so the read is retried and,
+    after ``attempts``, is unknown. A parked record or reply is unknown at
+    once: no reader sees it until someone recovers it. Only an adversary that
+    moves one record three times within one read could hide it, and a
+    same-user writer is outside this traceability control anyway.
+    """
+    wanted = normalize_repository(repository)
+    if wanted == "unknown":
+        return LedgerSnapshot(error="ledger repository unresolved")
+    snapshot = LedgerSnapshot(error="review ledger unreadable")
+    for _attempt in range(attempts):
+        try:
+            before = _ledger_listing(tasks_dir)
+            snapshot = _read_listed(tasks_dir, before, wanted)
+            after = _ledger_listing(tasks_dir)
+        except OSError:
+            return replace(snapshot, error="review ledger unreadable")
+        if before != after:
+            continue
+        residue = before.residue
+        if residue is None:
+            return snapshot
+        if residue == "parked":
+            return replace(snapshot, error="a review ledger file is parked outside its name")
+    return replace(snapshot, error="review ledger kept moving while it was read")
 
 
 @dataclass
 class ReviewLedger:
     """One snapshot of the local review ledger for a repository (#10501).
 
-    The active-review and completed-review scans run at most once per object;
-    build a new one for a fresh read. Receipt lookups read their task record
-    fresh, hot then archive. Same-user traceability only, never isolated
-    authority.
+    The ledger is read at most once per object (:func:`read_ledger`), and
+    in-flight state, completed-review vetoes and recorder receipts all come
+    from that one coherent read; build a new object for a fresh read.
+    Same-user traceability only, never isolated authority.
     """
 
     tasks_dir: Path
     repository: str
-    _active: tuple[frozenset[str], frozenset[str]] | None = field(default=None, repr=False)
-    _completed: CompletedIndex | None = field(default=None, repr=False)
+    _snapshot: LedgerSnapshot | None = field(default=None, repr=False)
     _verdicts: dict[str, Verdict | None] = field(default_factory=dict, repr=False)
 
+    def snapshot(self) -> LedgerSnapshot:
+        if self._snapshot is None:
+            self._snapshot = read_ledger(self.tasks_dir, self.repository)
+        return self._snapshot
+
     def in_flight(self, sha: str) -> bool:
-        if self._active is None:
-            try:
-                self._active = active_review_heads(self.tasks_dir, self.repository)
-            except (OSError, ValueError, TypeError) as exc:
-                raise EvidenceUnavailable("review ledger unreadable") from exc
-        reviewed, prepared = self._active
-        return sha.casefold() in reviewed or sha.casefold() in prepared
-
-    def _completed_reviews(self) -> CompletedIndex:
-        """Index completed tasks by their pinned head, hot then archive, once per snapshot.
-
-        A broken index (unreadable directory or record, malformed declared
-        review head) leaves every head unknown.
-        """
-        if self._completed is not None:
-            return self._completed
-        wanted = normalize_repository(self.repository)
-        broken = wanted == "unknown"
-        candidates: dict[str, list[CompletedTask]] = {}
-        directories = [self.tasks_dir]
-        archive = self.tasks_dir / ARCHIVE_DIR_NAME
-        try:
-            archive.stat()
-        except FileNotFoundError:
-            pass
-        except OSError:
-            broken = True
-        else:
-            directories.append(archive)
-        for directory in directories:
-            try:
-                paths = sorted(path for path in directory.iterdir() if path.suffix == ".json")
-            except OSError:
-                broken = True
-                continue
-            for path in paths:
-                try:
-                    task = json.loads(path.read_text(encoding="utf-8"))
-                except (OSError, ValueError):
-                    broken = True
-                    continue
-                if not isinstance(task, dict):
-                    broken = True
-                    continue
-                owner = task.get("repository")
-                if task.get("status") not in VERDICT_TASK_STATUSES or (
-                    isinstance(owner, str) and normalize_repository(owner) not in {wanted, "unknown"}
-                ):
-                    continue
-                declared = is_review_task(task)
-                values = [
-                    value.casefold() if isinstance(value, str) else value
-                    for name in REVIEW_HEAD_FIELDS
-                    if (value := task.get(name)) is not None
-                ]
-                heads = {value for value in values if isinstance(value, str) and SHA.fullmatch(value)}
-                if declared and any(not isinstance(value, str) or not SHA.fullmatch(value) for value in values):
-                    broken = True
-                    continue
-                scoped = len(heads) == 1 and isinstance(owner, str) and normalize_repository(owner) == wanted
-                task_id = task.get("task_id") if isinstance(task.get("task_id"), str) else path.stem
-                for head in heads:
-                    candidates.setdefault(head, []).append(CompletedTask(path, task_id, declared, scoped))
-        self._completed = CompletedIndex(broken, candidates)
-        return self._completed
+        snapshot = self.snapshot()
+        reason = snapshot.error or snapshot.active_error
+        if reason is not None:
+            raise EvidenceUnavailable(reason)
+        return sha.casefold() in snapshot.reviewed or sha.casefold() in snapshot.prepared
 
     def completed_verdict(self, sha: str) -> Verdict | None:
         """The veto from every completed exact-head review, published or not (RE-07).
 
-        Reads each completed (``done`` or ``needs_finalize``) task pinned to
-        ``sha`` and its ``.result`` reply, including archived runs and tasks
-        that never declared review typing but replied with a verdict. These verdicts veto admission and never grant
-        approval: a known rejection wins; an unreadable, missing, ambiguous or
-        unscoped verdict is ``unknown``; otherwise ``None``.
+        Reads the ``.result`` reply of each completed (``done`` or
+        ``needs_finalize``) task pinned to ``sha``, including archived runs and
+        tasks that never declared review typing but replied with a verdict.
+        These verdicts veto admission and never grant approval: a known
+        rejection wins; an unreadable, missing, ambiguous or unscoped verdict,
+        or a reply that moved since the snapshot listed it, is ``unknown``;
+        otherwise ``None``.
         """
         if sha in self._verdicts:
             return self._verdicts[sha]
-        index = self._completed_reviews()
+        snapshot = self.snapshot()
         rejected: list[Verdict] = []
-        unknown = index.broken
-        for item in index.candidates.get(sha, ()):
-            try:
-                reply = item.path.with_suffix(".result").read_text(encoding="utf-8")
-            except FileNotFoundError:
+        unknown = snapshot.broken or snapshot.error is not None
+        for item in snapshot.candidates.get(sha, ()):
+            if item.reply is None:
                 unknown = unknown or item.declared
                 continue
+            try:
+                reply = item.reply.read_text(encoding="utf-8")
             except (OSError, ValueError):
                 unknown = True
                 continue
@@ -337,17 +501,16 @@ class ReviewLedger:
         return result
 
     def task(self, task_id: str) -> dict[str, Any] | None:
-        """The hot or archived review task record, ``None`` when absent."""
-        try:
-            path = locate_task_record(self.tasks_dir, task_id)
-            if path is None:
-                return None
-            record = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            raise EvidenceUnavailable("review task record unreadable") from exc
-        if not isinstance(record, dict):
-            raise EvidenceUnavailable("review task record malformed")
-        return record
+        """The receipt fields of the hot, else archived, review task record; ``None`` when absent."""
+        snapshot = self.snapshot()
+        if snapshot.error is not None:
+            raise EvidenceUnavailable(snapshot.error)
+        for path in (task_record_path(self.tasks_dir, task_id), archived_task_record_path(self.tasks_dir, task_id)):
+            if path in snapshot.unreadable:
+                raise EvidenceUnavailable("review task record unreadable")
+            if path in snapshot.present:
+                return dict(snapshot.records.get(path, {}))
+        return None
 
     def evidence(self, number: int, *, historical: bool = False) -> RecordedEvidence:
         return RecordedEvidence(self, number, historical)

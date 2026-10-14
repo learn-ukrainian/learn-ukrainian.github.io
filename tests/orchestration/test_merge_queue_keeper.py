@@ -1963,13 +1963,83 @@ def test_unreceipted_approval_is_held_and_never_enqueued(tmp_path: Path) -> None
     assert "#42 held: CF-unreceipted" not in lines  # Not queued: the hold is the initial reason.
 
 
-def test_queued_unreceipted_head_is_not_revoked_or_drop_counted(tmp_path: Path) -> None:
+def test_queued_unreceipted_head_is_revoked_like_a_missing_approval(tmp_path: Path) -> None:
+    """A known unreceipted approval is no recorded approval: the queued head comes out (#10501).
+
+    This replaces the bfd4f38931 expectation that the head stayed queued and
+    uncounted: that asserted the unsafe retention the exact-head review found.
+    """
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", receipt=False)]
     path = tmp_path / "state.json"
-    _lines, failed = keeper.run(fake, path, apply=True)
+    lines, failed = keeper.run(fake, path, apply=True)
     assert not failed
-    assert "dequeue" not in mutations(fake)
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "enqueue" not in mutations(fake)
+    assert "#42 revoked: CF-unreceipted" in lines
+    state = json.loads(path.read_text())
+    assert "42" not in state["queued"]
+    assert state["drops"][f"42:{HEAD_A}"] == 1
+    assert _keeper_comment(fake) == (
+        "Merge queue keeper: #42 was not queued because CF-unreceipted.\n\n"
+        f"<!-- mq-keeper head={HEAD_A} reason=CF-unreceipted -->"
+    )
+
+
+def test_armed_unreceipted_head_is_disarmed(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(autoMergeRequest={"enabledAt": "2026-09-23T13:00:00Z"}))
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", receipt=False)]
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert ("disarm", 42) in fake.actions
+    assert "dequeue" not in mutations(fake) and "enqueue" not in mutations(fake)
+    assert "#42 revoked: CF-unreceipted" in lines
+
+
+class FixedLedger(FakeGitHub):
+    """Bind the genuine receipt once, then leave the ledger as the test arranges it."""
+
+    def __init__(self, row: dict[str, Any] | None = None) -> None:
+        super().__init__(row)
+        self.ledger = FakeGitHub.tasks_dir.fget(self)
+
+    @property
+    def tasks_dir(self) -> Path:
+        return self.ledger
+
+
+@pytest.mark.parametrize("failure", ["unreadable", "mid-archive", "parked"])
+def test_unreadable_receipt_evidence_never_revokes_a_receipted_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    """Evidence the keeper cannot read stays unknown; it is never a known unreceipted approval."""
+    from scripts.orchestration import stale_task_records
+
+    fake = FixedLedger(pr(isInMergeQueue=True))
+    record = fake.ledger / "review.json"
+    archive = fake.ledger / "archive"
+    if failure == "unreadable":
+        original = Path.read_text
+
+        def unreadable(self, *args, **kwargs):
+            if self == record:
+                raise PermissionError("record unreadable")
+            return original(self, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "read_text", unreadable)
+    else:
+        archive.mkdir()
+        staged = stale_task_records._stage(record, archive)
+        if failure == "parked":
+            record.write_text("{}")  # A writer took the hot name; the receipt-bearing record is parked.
+            stale_task_records._unstage(staged, record, archive)
+            record.unlink()
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert mutations(fake) == []
+    assert "reason=CF-unknown" in lines[0]
     assert f"42:{HEAD_A}" not in json.loads(path.read_text())["drops"]
 
 
@@ -2214,3 +2284,71 @@ def test_settled_approval_after_in_flight_removal_requeues(tmp_path: Path) -> No
     assert not failed
     assert mutations(again) == ["enqueue"]
     assert "reason=ready" in lines[0]
+
+
+# Exact-head review of bfd4f38931 (#10501): the fresh read is one coherent ledger read and
+# an unsettled review whose target cannot be resolved blocks admission.
+@pytest.mark.parametrize("token,reason", [("REQUEST_CHANGES", "CF-changes_requested"), ("BLOCKED", "CF-blocked")])
+def test_restore_during_the_fresh_read_never_enqueues_a_rejected_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, token: str, reason: str
+) -> None:
+    """The reviewer's probe: rejection at the first read, then a supported restore splits the fresh read."""
+    from scripts.orchestration import stale_task_records
+
+    original = Path.iterdir
+    fired: list[dict[str, int]] = []
+
+    def hook(fake: FakeGitHub) -> None:
+        ledger = Path(fake._ledger.name)
+
+        def iterdir(self):
+            items = list(original(self))
+            if not fired and self == ledger:
+                fired.append(stale_task_records.restore_archived(ledger, ["unpublished"], apply=True)["actions"])
+            return iter(items)
+
+        monkeypatch.setattr(Path, "iterdir", iterdir)
+
+    fake = FreshHook(hook)
+    unpublished_review(fake, token, archive=True)
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert f"reason={reason}" in lines[0]
+    assert fired == [{"restored": 1}]
+    assert "enqueue" not in mutations(fake)
+    assert (Path(fake._ledger.name) / "unpublished.json").is_file()
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"pinned_head": ""},
+        {"pinned_head": "a" * 12},
+        {"pinned_head": "z" * 40},
+        {"pinned_head": None},
+        {"repository": None},
+        {"pr": "42"},
+    ],
+)
+def test_unresolved_active_review_never_enqueues(tmp_path: Path, fields: dict[str, Any]) -> None:
+    fake = FakeGitHub()
+    record = {"task_id": "active-review", "status": "running", "repository": "unit/public", "type": "review",
+              "pinned_head": HEAD_A, **fields}
+    _ledger_record(fake, "active-review", {key: value for key, value in record.items() if value is not None})
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=CF-unknown" in lines[0]
+
+
+def test_unresolved_active_review_removes_an_approved_queued_head_without_a_drop(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    _ = fake.tasks_dir  # Bind the receipt of the earlier approval.
+    _ledger_record(fake, "active-review", {"task_id": "active-review", "status": "running",
+                                           "repository": "unit/public", "type": "review", "pinned_head": ""})
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: CF-unknown-after-approval" in lines
+    assert f"42:{HEAD_A}" not in json.loads(path.read_text())["drops"]

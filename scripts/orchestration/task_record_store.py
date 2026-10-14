@@ -15,21 +15,55 @@ Readers pick one of three contracts:
   :func:`iter_task_records` with ``include_archive=True``, or state in their
   output that their history is bounded to the hot directory.
 
+While a record or its ``.result`` moves between the two directories it can sit
+at a hidden staging name, or, when a move fails twice, at a parked name; see
+:func:`relocation_residue`.
+
 This module is stdlib-only so any reader can import it cheaply.
 """
 
 from __future__ import annotations
 
 import json
+import os
+import re
+import uuid
 from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any
 
 ARCHIVE_DIR_NAME = "archive"
+# The two files a reader resolves by name: the record and its reply.
+RECORD_SUFFIXES = (".json", ".result")
+_STAGING = re.compile(r"\.(?P<name>.+)\.\d+\.[0-9a-f]{32}\.moving")
+_PARKED = re.compile(r"(?P<name>.+)\.unplaced-[0-9a-f]{12}")
 
 
 class TaskRecordUnavailable(RuntimeError):
     """A by-id record is missing, unreadable, malformed or kept moving."""
+
+
+def staging_name(name: str) -> str:
+    """The private name a file called ``name`` takes while it moves (unique per process and call)."""
+    return f".{name}.{os.getpid()}.{uuid.uuid4().hex}.moving"
+
+
+def parked_name(name: str) -> str:
+    """The visible name a staged file gets when neither its destination nor its home is free."""
+    return f"{name}.unplaced-{uuid.uuid4().hex[:12]}"
+
+
+def relocation_residue(name: str) -> str | None:
+    """``"moving"`` or ``"parked"`` when ``name`` is a record or reply held outside its record name.
+
+    A reader that meets one cannot see that file where it looks for it: a
+    staged file is mid-move, a parked one stays hidden until someone recovers it.
+    """
+    for kind, pattern in (("moving", _STAGING), ("parked", _PARKED)):
+        match = pattern.fullmatch(name)
+        if match is not None and match["name"].endswith(RECORD_SUFFIXES):
+            return kind
+    return None
 
 
 def task_record_path(tasks_dir: Path, task_id: str) -> Path:
@@ -44,8 +78,14 @@ def archived_task_record_path(tasks_dir: Path, task_id: str) -> Path:
 
 
 def locate_task_record(tasks_dir: Path, task_id: str) -> Path | None:
-    """Return ``task_id``'s record in the hot directory, else in the archive, else ``None``."""
-    for path in (task_record_path(tasks_dir, task_id), archived_task_record_path(tasks_dir, task_id)):
+    """Return ``task_id``'s record in the hot directory, else in the archive, else ``None``.
+
+    The hot name is probed again after the archive: a restore that moved the
+    record between the first two probes is found there. A record caught at
+    its staging name by an archive move still reads as ``None``.
+    """
+    hot = task_record_path(tasks_dir, task_id)
+    for path in (hot, archived_task_record_path(tasks_dir, task_id), hot):
         if path.is_file():
             return path
     return None

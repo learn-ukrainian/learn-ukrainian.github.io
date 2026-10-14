@@ -36,6 +36,7 @@ from scripts.opsec.prepublish import (
 )
 from scripts.orchestration.integration_sweep import (
     IN_FLIGHT,
+    UNRECEIPTED,
     RecordedEvidence,
     ReviewLedger,
     SweepError,
@@ -54,6 +55,9 @@ HOLD_TITLE = re.compile(r"\[(?:needs operator go|hold)\]", re.I)
 HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
 # No recorded approval for the head that would merge. All three surface as needs-CF.
 MISSING_CF_STATES = frozenset({"needs-CF", "CF-stale", "CF-unrecorded"})
+# A queued head removed in any of these had no recorder-receipted approval: the
+# removal counts as a drop and owes the PR a note (#10501).
+UNRECORDED_APPROVAL_STATES = MISSING_CF_STATES | {UNRECEIPTED}
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 # Dependency-update PRs get no per-language ``Analyze (…)`` CodeQL runs, only
 # the top-level CodeQL check from GitHub code scanning (#8587, #9921). That
@@ -663,7 +667,10 @@ def _revoke_reason(
 
     A queued head with no cross-family approval at that head is removed. So is
     a queued or armed head with an unsettled outside review (``CF-in-flight``):
-    its verdict may still reject the head an earlier receipt approved.
+    its verdict may still reject the head an earlier receipt approved. So is a
+    queued or armed head whose only approval is known to lack the recorder's
+    receipt (``CF-unreceipted``, #10501). Ledger evidence the keeper cannot read
+    is ``unknown``, never unreceipted: it removes a head only after an approval.
     """
     if row.get("isDraft") is True:
         return "draft"
@@ -673,8 +680,8 @@ def _revoke_reason(
         return checks
     if verdict.state in {"CHANGES_REQUESTED", "BLOCKED"}:
         return f"CF-{verdict.state.lower()}"
-    if verdict_lookup_ok and verdict.state == IN_FLIGHT:
-        return IN_FLIGHT
+    if verdict_lookup_ok and verdict.state in {IN_FLIGHT, UNRECEIPTED}:
+        return verdict.state
     if verdict_lookup_ok and verdict.state == "unknown" and approved_before:
         return "CF-unknown-after-approval"
     if queued and verdict_lookup_ok and verdict.state in MISSING_CF_STATES:
@@ -1008,10 +1015,10 @@ def run(
                         queued_now.pop(key, None)
                     if revoke == "squash-text-blocked":
                         previous.setdefault("squash_revoked", {})[drop_key] = observed
-                    if queued is True and verdict_lookup_ok and current_verdict.state in MISSING_CF_STATES:
+                    if queued is True and verdict_lookup_ok and current_verdict.state in UNRECORDED_APPROVAL_STATES:
                         # Count the removal even when another blocker is the stated reason.
                         previous["drops"][drop_key] = int(previous["drops"].get(drop_key, 0)) + 1
-                        if revoke == "needs-CF":
+                        if revoke in {"needs-CF", UNRECEIPTED}:
                             previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
                 elif reason != "ready":
