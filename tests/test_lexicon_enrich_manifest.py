@@ -2848,6 +2848,26 @@ def test_etymology_has_no_goroh_mirror_fallback(monkeypatch) -> None:
     assert "Goroh" not in result["text"]
 
 
+def test_enrich_runner_mode_raises_on_runner_refusal(monkeypatch, tmp_path) -> None:
+    """#9331: a runner refusal (including the stress gate) fails ``enrich()`` instead of a KeyError."""
+    calls: list[dict[str, Any]] = []
+
+    def refused(**kwargs: Any) -> dict[str, Any]:
+        calls.append(kwargs)
+        return {"error": "paradigm_stress_disagreement", "detail": "2 disagreements / 7 rows; first: []"}
+
+    monkeypatch.setenv("LEXICON_USE_RUNNER", "1")
+    monkeypatch.setattr("scripts.lexicon.runner.offline_engine.enrich_offline_slice", refused)
+    monkeypatch.setattr(enrich_manifest_module, "_load_grac_frequency_cache", lambda: {})
+    monkeypatch.setattr(enrich_manifest_module, "artifact_path", lambda group, rel: tmp_path / "kaikki.json")
+    manifest_path = tmp_path / "manifest.json"
+
+    with pytest.raises(ValueError, match="offline runner refused: paradigm_stress_disagreement: 2 disagreements"):
+        enrich_manifest_module.enrich(manifest_path, fingerprint_path=tmp_path / "fingerprint.json")
+    assert [call["output_path"] for call in calls] == [manifest_path]
+    assert not (tmp_path / "fingerprint.json").exists()
+
+
 def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_path) -> None:
     manifest_path = tmp_path / "manifest.json"
     db_path = tmp_path / "sources.sqlite"

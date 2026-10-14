@@ -408,6 +408,7 @@ def _run(args: argparse.Namespace) -> int:
         "ledger_path",
         "cefr_seal",
         "relations_seal",
+        "paradigm_stress",
         "error",
         "detail",
         "resumable_run_id",

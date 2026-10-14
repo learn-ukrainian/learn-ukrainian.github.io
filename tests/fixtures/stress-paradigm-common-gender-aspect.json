@@ -1,0 +1,3318 @@
+{
+  "source": "Local homonym-checked ULIF rows and exact VESUM analyses; captured for the #9820 review fix (common-gender nouns, case-driven stress shift, same-spelling aspect pair over the 40-row cap).",
+  "build": {
+    "id": 1,
+    "state": "complete",
+    "parser_version": "ulif-forms-v4",
+    "total_entries": 262812,
+    "entries_done": 262753,
+    "entries_failed": 59,
+    "total_forms": 4742272,
+    "started_at": "2026-09-30T04:35:49.190706+00:00",
+    "finished_at": "2026-09-30T06:22:48.886437+00:00",
+    "source_fingerprint": "d1d1a93417fe55ec1be950956138089d98d3604c9a85b22603ff577cc594bf12"
+  },
+  "forms": {
+    "судде": [
+      {
+        "id": 4017959,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "судде",
+        "form_stressed": "су́дде",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_kly\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́дде",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "суддею": [
+      {
+        "id": 4017955,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддею",
+        "form_stressed": "судде́ю",
+        "stress_vowel_indices": "[4]",
+        "grammatical_tags": "[\"v_oru\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "судде́ю",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "суддю": [
+      {
+        "id": 4017953,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддю",
+        "form_stressed": "суддю́",
+        "stress_vowel_indices": "[4]",
+        "grammatical_tags": "[\"v_zna\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "суддю́",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "суддя": [
+      {
+        "id": 4017946,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддя",
+        "form_stressed": "суддя́",
+        "stress_vowel_indices": "[4]",
+        "grammatical_tags": "[]",
+        "unmapped_labels": "[\"іменник чоловічого або жіночого роду, істота\"]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 1,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "суддя́",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      },
+      {
+        "id": 4017947,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддя",
+        "form_stressed": "суддя́",
+        "stress_vowel_indices": "[4]",
+        "grammatical_tags": "[\"v_naz\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "суддя́",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "суддям": [
+      {
+        "id": 4017952,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддям",
+        "form_stressed": "су́ддям",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_dav\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́ддям",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "суддями": [
+      {
+        "id": 4017956,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддями",
+        "form_stressed": "су́ддями",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_oru\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́ддями",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "суддях": [
+      {
+        "id": 4017958,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддях",
+        "form_stressed": "су́ддях",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_mis\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́ддях",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "судді": [
+      {
+        "id": 4017948,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "судді",
+        "form_stressed": "су́дді",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_naz\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́дді",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      },
+      {
+        "id": 4017949,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "судді",
+        "form_stressed": "судді́",
+        "stress_vowel_indices": "[4]",
+        "grammatical_tags": "[\"v_rod\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "судді́",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      },
+      {
+        "id": 4017951,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "судді",
+        "form_stressed": "судді́",
+        "stress_vowel_indices": "[4]",
+        "grammatical_tags": "[\"v_dav\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "судді́",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      },
+      {
+        "id": 4017957,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "судді",
+        "form_stressed": "судді́",
+        "stress_vowel_indices": "[4]",
+        "grammatical_tags": "[\"v_mis\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "судді́",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      },
+      {
+        "id": 4017960,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "судді",
+        "form_stressed": "су́дді",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_kly\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́дді",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "суддів": [
+      {
+        "id": 4017950,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддів",
+        "form_stressed": "су́ддів",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_rod\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́ддів",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      },
+      {
+        "id": 4017954,
+        "entry_id": 228581,
+        "entry_key": "суддя#1",
+        "form_unstressed": "суддів",
+        "form_stressed": "су́ддів",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_zna\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "су́ддів",
+        "source_page_sha256": "f2ad05e2befe1521fb6d66709d370aa8275edeaafb64381e2e10469bebcc0cf8",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "ca47488494358f66598ec2e9a8376e76f39af070dfde3696dea3e726b946c756",
+        "normalized_query": "суддя",
+        "canonical_headword": "суддя́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 1
+      }
+    ],
+    "голова": [
+      {
+        "id": 836942,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голова",
+        "form_stressed": "голова́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"noun\", \"f\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 1,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голова́",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836943,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голова",
+        "form_stressed": "голова́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_naz\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голова́",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836957,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голова",
+        "form_stressed": "голова́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[]",
+        "unmapped_labels": "[\"іменник чоловічого або жіночого роду, істота\"]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 1,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голова́",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      },
+      {
+        "id": 836958,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голова",
+        "form_stressed": "голова́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_naz\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голова́",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "головам": [
+      {
+        "id": 836948,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "головам",
+        "form_stressed": "го́ловам",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_dav\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́ловам",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836963,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "головам",
+        "form_stressed": "го́ловам",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_dav\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́ловам",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "головами": [
+      {
+        "id": 836952,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "головами",
+        "form_stressed": "го́ловами",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_oru\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́ловами",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836967,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "головами",
+        "form_stressed": "го́ловами",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_oru\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́ловами",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "головах": [
+      {
+        "id": 836954,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "головах",
+        "form_stressed": "го́ловах",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_mis\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́ловах",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836969,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "головах",
+        "form_stressed": "го́ловах",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_mis\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́ловах",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "голови": [
+      {
+        "id": 836944,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голови",
+        "form_stressed": "го́лови",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_naz\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лови",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836945,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голови",
+        "form_stressed": "голови́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_rod\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голови́",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836950,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голови",
+        "form_stressed": "го́лови",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_zna\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лови",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836956,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голови",
+        "form_stressed": "го́лови",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_kly\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 1,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лови",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836959,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голови",
+        "form_stressed": "го́лови",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_naz\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лови",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      },
+      {
+        "id": 836960,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голови",
+        "form_stressed": "голови́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_rod\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голови́",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      },
+      {
+        "id": 836971,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голови",
+        "form_stressed": "го́лови",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_kly\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лови",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "голово": [
+      {
+        "id": 836955,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голово",
+        "form_stressed": "го́лово",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_kly\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 1,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лово",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836970,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голово",
+        "form_stressed": "го́лово",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_kly\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лово",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "головою": [
+      {
+        "id": 836951,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "головою",
+        "form_stressed": "голово́ю",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_oru\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голово́ю",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836966,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "головою",
+        "form_stressed": "голово́ю",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_oru\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голово́ю",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "голову": [
+      {
+        "id": 836949,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голову",
+        "form_stressed": "го́лову",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_zna\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лову",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836964,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голову",
+        "form_stressed": "го́лову",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_zna\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лову",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "голові": [
+      {
+        "id": 835123,
+        "entry_id": 53562,
+        "entry_key": "гол#1",
+        "form_unstressed": "голові",
+        "form_stressed": "го́лові",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_dav\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "го́лові",
+        "source_page_sha256": "8cf28c82e697a95b49840a161fb7f66c8bc6beb295f324b1ee2ef44a3e8946b1",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "561b3d527d29c13eca84352a58cf1741e0e2b5910d1dee40f61ade2da8207236",
+        "normalized_query": "гол",
+        "canonical_headword": "гол",
+        "grammatical_label": "іменник чоловічого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836947,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голові",
+        "form_stressed": "голові́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_dav\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голові́",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836953,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голові",
+        "form_stressed": "голові́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_mis\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голові́",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836962,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голові",
+        "form_stressed": "голові́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_dav\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голові́",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      },
+      {
+        "id": 836968,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голові",
+        "form_stressed": "голові́",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"v_mis\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голові́",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "голів": [
+      {
+        "id": 835121,
+        "entry_id": 53562,
+        "entry_key": "гол#1",
+        "form_unstressed": "голів",
+        "form_stressed": "голі́в",
+        "stress_vowel_indices": "[3]",
+        "grammatical_tags": "[\"v_rod\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голі́в",
+        "source_page_sha256": "8cf28c82e697a95b49840a161fb7f66c8bc6beb295f324b1ee2ef44a3e8946b1",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "561b3d527d29c13eca84352a58cf1741e0e2b5910d1dee40f61ade2da8207236",
+        "normalized_query": "гол",
+        "canonical_headword": "гол",
+        "grammatical_label": "іменник чоловічого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836362,
+        "entry_id": 53625,
+        "entry_key": "голіти#1",
+        "form_unstressed": "голів",
+        "form_stressed": "голі́в",
+        "stress_vowel_indices": "[3]",
+        "grammatical_tags": "[\"past\", \"m\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голі́в",
+        "source_page_sha256": "2de79a206b3741573c4de4c96735a368390bde5bb71d2070afa3d2ff9ff9cba2",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "8b8c9b024c4b876385dd67cb3a7005f6cf15e4a06b1a7a088acb1c4bf7831d4e",
+        "normalized_query": "голіти",
+        "canonical_headword": "голі́ти",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836946,
+        "entry_id": 53657,
+        "entry_key": "голова#1",
+        "form_unstressed": "голів",
+        "form_stressed": "голі́в",
+        "stress_vowel_indices": "[3]",
+        "grammatical_tags": "[\"v_rod\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голі́в",
+        "source_page_sha256": "5ff3e00e7d0521cd66ed5d1850a61b5733034ed7b8c9246308dfdc581dbcd87e",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fd6d59bb299f1f989754bb28f593efbf8af81c7c1f53ad6cce6061dd1433ab87",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник жіночого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 836961,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голів",
+        "form_stressed": "голі́в",
+        "stress_vowel_indices": "[3]",
+        "grammatical_tags": "[\"v_rod\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голі́в",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      },
+      {
+        "id": 836965,
+        "entry_id": 53658,
+        "entry_key": "голова#2",
+        "form_unstressed": "голів",
+        "form_stressed": "голі́в",
+        "stress_vowel_indices": "[3]",
+        "grammatical_tags": "[\"v_zna\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "голі́в",
+        "source_page_sha256": "b0ebc5bbda5774570d373d4d3bd1fd1bfc40a7fe1dc51441b5849b9ca338df1c",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "971eec3bea599a300b0770859325076454145405dd65c98c4dec437350286f56",
+        "normalized_query": "голова",
+        "canonical_headword": "голова́",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "homonym_index": 2
+      }
+    ],
+    "висипавсь": [
+      {
+        "id": 529188,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипавсь",
+        "form_stressed": "ви́сипавсь",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"s\"]",
+        "unmapped_labels": "[\"чол.р.\"]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипавсь",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529205,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипавсь",
+        "form_stressed": "висипа́всь",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"m\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́всь",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипався": [
+      {
+        "id": 529187,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипався",
+        "form_stressed": "ви́сипався",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"s\"]",
+        "unmapped_labels": "[\"чол.р.\"]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипався",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529204,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипався",
+        "form_stressed": "висипа́вся",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"m\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́вся",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипаймось": [],
+    "висипаймося": [],
+    "висипайсь": [],
+    "висипайся": [],
+    "висипайтесь": [],
+    "висипайтеся": [],
+    "висипалась": [
+      {
+        "id": 529192,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипалась",
+        "form_stressed": "ви́сипалась",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"s\"]",
+        "unmapped_labels": "[\"жін.р.\"]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипалась",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529209,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипалась",
+        "form_stressed": "висипа́лась",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"f\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́лась",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипалася": [
+      {
+        "id": 529191,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипалася",
+        "form_stressed": "ви́сипалася",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"s\"]",
+        "unmapped_labels": "[\"жін.р.\"]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипалася",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529208,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипалася",
+        "form_stressed": "висипа́лася",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"f\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́лася",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипались": [
+      {
+        "id": 529190,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипались",
+        "form_stressed": "ви́сипались",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"p\"]",
+        "unmapped_labels": "[\"чол.р.\"]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипались",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529207,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипались",
+        "form_stressed": "висипа́лись",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́лись",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипалися": [
+      {
+        "id": 529189,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипалися",
+        "form_stressed": "ви́сипалися",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"p\"]",
+        "unmapped_labels": "[\"чол.р.\"]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипалися",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529206,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипалися",
+        "form_stressed": "висипа́лися",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́лися",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипалось": [
+      {
+        "id": 529194,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипалось",
+        "form_stressed": "ви́сипалось",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"s\"]",
+        "unmapped_labels": "[\"сер.р.\"]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипалось",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529211,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипалось",
+        "form_stressed": "висипа́лось",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"n\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́лось",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипалося": [
+      {
+        "id": 529193,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипалося",
+        "form_stressed": "ви́сипалося",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"past\", \"s\"]",
+        "unmapped_labels": "[\"сер.р.\"]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипалося",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529210,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипалося",
+        "form_stressed": "висипа́лося",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"past\", \"n\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́лося",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипатимемось": [],
+    "висипатимемося": [],
+    "висипатимемся": [],
+    "висипатиметесь": [],
+    "висипатиметеся": [],
+    "висипатиметься": [
+      {
+        "id": 529199,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипатиметься",
+        "form_stressed": "висипа́тиметься",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"futr\", \"s\", \"3\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́тиметься",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипатимешся": [],
+    "висипатимусь": [],
+    "висипатимуся": [],
+    "висипатимуться": [
+      {
+        "id": 529200,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипатимуться",
+        "form_stressed": "висипа́тимуться",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"futr\", \"p\", \"3\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́тимуться",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипатись": [
+      {
+        "id": 529184,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипатись",
+        "form_stressed": "ви́сипатись",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"inf\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипатись",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529198,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипатись",
+        "form_stressed": "висипа́тись",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"inf\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́тись",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипатися": [
+      {
+        "id": 529182,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипатися",
+        "form_stressed": "ви́сипатися",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"verb\", \"perf\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 1,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипатися",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529183,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висипатися",
+        "form_stressed": "ви́сипатися",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"inf\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сипатися",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      },
+      {
+        "id": 529196,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипатися",
+        "form_stressed": "висипа́тися",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"verb\", \"imperf\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 1,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́тися",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      },
+      {
+        "id": 529197,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипатися",
+        "form_stressed": "висипа́тися",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"inf\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́тися",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипаться": [],
+    "висипаюсь": [],
+    "висипаюся": [],
+    "висипаються": [
+      {
+        "id": 529202,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипаються",
+        "form_stressed": "висипа́ються",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"pres\", \"p\", \"3\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́ються",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипаємось": [],
+    "висипаємося": [],
+    "висипаєтесь": [],
+    "висипаєтеся": [],
+    "висипається": [
+      {
+        "id": 529201,
+        "entry_id": 37639,
+        "entry_key": "висипатися#2",
+        "form_unstressed": "висипається",
+        "form_stressed": "висипа́ється",
+        "stress_vowel_indices": "[5]",
+        "grammatical_tags": "[\"pres\", \"s\", \"3\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "висипа́ється",
+        "source_page_sha256": "9c314872a53492710b02d7b9431a6885a1f4d2631a30639e50fda1004afc888f",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "212e3a3a386a3e5f3c0e291926e6f1e5f0ae942070abc639557ce0ae64653770",
+        "normalized_query": "висипатися",
+        "canonical_headword": "висипа́тися",
+        "grammatical_label": "дієслово недоконаного виду",
+        "homonym_index": 2
+      }
+    ],
+    "висипаєшся": [],
+    "висиплемось": [],
+    "висиплемося": [],
+    "висиплетесь": [],
+    "висиплетеся": [],
+    "висиплеться": [
+      {
+        "id": 529185,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висиплеться",
+        "form_stressed": "ви́сиплеться",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"futr\", \"s\", \"3\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сиплеться",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      }
+    ],
+    "висиплешся": [],
+    "висиплюсь": [],
+    "висиплюся": [],
+    "висиплються": [
+      {
+        "id": 529186,
+        "entry_id": 37638,
+        "entry_key": "висипатися#1",
+        "form_unstressed": "висиплються",
+        "form_stressed": "ви́сиплються",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"futr\", \"p\", \"3\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́сиплються",
+        "source_page_sha256": "0a24badb327306e932dbf48dd5d0a5e3826f5372c4f109169c669bc97e7a1122",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "416ad5b61ba5d84160f837d18845fec814936ab3462c1141e8a8e5c93db34175",
+        "normalized_query": "висипатися",
+        "canonical_headword": "ви́сипатися",
+        "grammatical_label": "дієслово доконаного виду",
+        "homonym_index": 1
+      }
+    ],
+    "висипмось": [],
+    "висипмося": [],
+    "висипся": [],
+    "висиптесь": [],
+    "висиптеся": []
+  },
+  "vesum_words": {
+    "судде": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_kly"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_kly"
+      }
+    ],
+    "суддею": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_oru"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_oru"
+      }
+    ],
+    "суддю": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_zna"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_zna"
+      }
+    ],
+    "суддя": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_naz"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz"
+      }
+    ],
+    "суддям": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_dav"
+      }
+    ],
+    "суддями": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_oru"
+      }
+    ],
+    "суддях": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_mis"
+      }
+    ],
+    "судді": [
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_rod"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_dav"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_mis"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_rod"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_dav"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_mis"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_naz"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna:rare"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_kly"
+      }
+    ],
+    "суддів": [
+      {
+        "lemma": "суддів",
+        "pos": "adj",
+        "tags": "adj:m:v_naz"
+      },
+      {
+        "lemma": "суддів",
+        "pos": "adj",
+        "tags": "adj:m:v_zna:rinanim"
+      },
+      {
+        "lemma": "суддів",
+        "pos": "adj",
+        "tags": "adj:m:v_kly"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_rod"
+      },
+      {
+        "lemma": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna"
+      }
+    ],
+    "голова": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_naz"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_naz"
+      }
+    ],
+    "головам": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_dav"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_dav"
+      }
+    ],
+    "головами": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_oru"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_oru"
+      }
+    ],
+    "головах": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_mis"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_mis"
+      }
+    ],
+    "голови": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_rod"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_rod"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_naz"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna:rare"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_kly"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_rod"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_naz"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_zna"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_kly"
+      }
+    ],
+    "голово": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_kly"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_kly"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_kly"
+      }
+    ],
+    "головою": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_oru"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_oru"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_oru"
+      }
+    ],
+    "голову": [
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_zna"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_zna"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_zna"
+      }
+    ],
+    "голові": [
+      {
+        "lemma": "гол",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "lemma": "гол",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_dav"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_mis"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_dav"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_mis"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_dav"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_mis"
+      }
+    ],
+    "голів": [
+      {
+        "lemma": "гол",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_rod"
+      },
+      {
+        "lemma": "голіти",
+        "pos": "verb",
+        "tags": "verb:imperf:past:m"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_rod"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna"
+      },
+      {
+        "lemma": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_rod"
+      }
+    ],
+    "висипавсь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:m"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:m"
+      }
+    ],
+    "висипався": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:m"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:m"
+      }
+    ],
+    "висипаймось": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:1"
+      }
+    ],
+    "висипаймося": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:1"
+      }
+    ],
+    "висипайсь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:s:2"
+      }
+    ],
+    "висипайся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:s:2"
+      }
+    ],
+    "висипайтесь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:2"
+      }
+    ],
+    "висипайтеся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:2"
+      }
+    ],
+    "висипалась": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:f"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:f"
+      }
+    ],
+    "висипалася": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:f"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:f"
+      }
+    ],
+    "висипались": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:p"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:p"
+      }
+    ],
+    "висипалися": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:p"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:p"
+      }
+    ],
+    "висипалось": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:n"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:n"
+      }
+    ],
+    "висипалося": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:n"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:n"
+      }
+    ],
+    "висипатимемось": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:1"
+      }
+    ],
+    "висипатимемося": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:1"
+      }
+    ],
+    "висипатимемся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:1"
+      }
+    ],
+    "висипатиметесь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:2"
+      }
+    ],
+    "висипатиметеся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:2"
+      }
+    ],
+    "висипатиметься": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:3"
+      }
+    ],
+    "висипатимешся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:2"
+      }
+    ],
+    "висипатимусь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:1"
+      }
+    ],
+    "висипатимуся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:1"
+      }
+    ],
+    "висипатимуться": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:3"
+      }
+    ],
+    "висипатись": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:inf"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:inf"
+      }
+    ],
+    "висипатися": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:inf"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:inf"
+      }
+    ],
+    "висипаться": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:inf:short"
+      },
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:inf:short"
+      }
+    ],
+    "висипаюсь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:1"
+      }
+    ],
+    "висипаюся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:1"
+      }
+    ],
+    "висипаються": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:3"
+      }
+    ],
+    "висипаємось": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:1"
+      }
+    ],
+    "висипаємося": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:1"
+      }
+    ],
+    "висипаєтесь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:2"
+      }
+    ],
+    "висипаєтеся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:2"
+      }
+    ],
+    "висипається": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:3"
+      }
+    ],
+    "висипаєшся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:2"
+      }
+    ],
+    "висиплемось": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:1"
+      }
+    ],
+    "висиплемося": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:1"
+      }
+    ],
+    "висиплетесь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:2"
+      }
+    ],
+    "висиплетеся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:2"
+      }
+    ],
+    "висиплеться": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:3"
+      }
+    ],
+    "висиплешся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:2"
+      }
+    ],
+    "висиплюсь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:1"
+      }
+    ],
+    "висиплюся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:1"
+      }
+    ],
+    "висиплються": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:3"
+      }
+    ],
+    "висипмось": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:1"
+      }
+    ],
+    "висипмося": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:1"
+      }
+    ],
+    "висипся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:s:2"
+      }
+    ],
+    "висиптесь": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:2"
+      }
+    ],
+    "висиптеся": [
+      {
+        "lemma": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:2"
+      }
+    ]
+  },
+  "lemmas": {
+    "суддя": [
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_dav"
+      },
+      {
+        "word_form": "судде",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_kly"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_mis"
+      },
+      {
+        "word_form": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz"
+      },
+      {
+        "word_form": "суддею",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_oru"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_rod"
+      },
+      {
+        "word_form": "суддю",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_zna"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_dav"
+      },
+      {
+        "word_form": "судде",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_kly"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_mis"
+      },
+      {
+        "word_form": "суддя",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_naz"
+      },
+      {
+        "word_form": "суддею",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_oru"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_rod"
+      },
+      {
+        "word_form": "суддю",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_zna"
+      },
+      {
+        "word_form": "суддям",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_dav"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_kly"
+      },
+      {
+        "word_form": "суддях",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_mis"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_naz"
+      },
+      {
+        "word_form": "суддями",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_oru"
+      },
+      {
+        "word_form": "суддів",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_rod"
+      },
+      {
+        "word_form": "суддів",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna"
+      },
+      {
+        "word_form": "судді",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna:rare"
+      }
+    ],
+    "голова": [
+      {
+        "word_form": "голові",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_dav"
+      },
+      {
+        "word_form": "голово",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_kly"
+      },
+      {
+        "word_form": "голові",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_mis"
+      },
+      {
+        "word_form": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz"
+      },
+      {
+        "word_form": "головою",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_oru"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_rod"
+      },
+      {
+        "word_form": "голову",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_zna"
+      },
+      {
+        "word_form": "голові",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_dav"
+      },
+      {
+        "word_form": "голово",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_kly"
+      },
+      {
+        "word_form": "голові",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_mis"
+      },
+      {
+        "word_form": "голова",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_naz"
+      },
+      {
+        "word_form": "головою",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_oru"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_rod"
+      },
+      {
+        "word_form": "голову",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_zna"
+      },
+      {
+        "word_form": "головам",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_dav"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_kly"
+      },
+      {
+        "word_form": "головах",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_mis"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_naz"
+      },
+      {
+        "word_form": "головами",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_oru"
+      },
+      {
+        "word_form": "голів",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_rod"
+      },
+      {
+        "word_form": "голів",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna:rare"
+      },
+      {
+        "word_form": "голові",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_dav"
+      },
+      {
+        "word_form": "голово",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_kly"
+      },
+      {
+        "word_form": "голові",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_mis"
+      },
+      {
+        "word_form": "голова",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_naz"
+      },
+      {
+        "word_form": "головою",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_oru"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_rod"
+      },
+      {
+        "word_form": "голову",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_zna"
+      },
+      {
+        "word_form": "головам",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_dav"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_kly"
+      },
+      {
+        "word_form": "головах",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_mis"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_naz"
+      },
+      {
+        "word_form": "головами",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_oru"
+      },
+      {
+        "word_form": "голів",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_rod"
+      },
+      {
+        "word_form": "голови",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_zna"
+      }
+    ],
+    "висипатися": [
+      {
+        "word_form": "висипатимемось",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:1"
+      },
+      {
+        "word_form": "висипатимемося",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:1"
+      },
+      {
+        "word_form": "висипатимемся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:1"
+      },
+      {
+        "word_form": "висипатиметесь",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:2"
+      },
+      {
+        "word_form": "висипатиметеся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:2"
+      },
+      {
+        "word_form": "висипатимуться",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:p:3"
+      },
+      {
+        "word_form": "висипатимусь",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:1"
+      },
+      {
+        "word_form": "висипатимуся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:1"
+      },
+      {
+        "word_form": "висипатимешся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:2"
+      },
+      {
+        "word_form": "висипатиметься",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:futr:s:3"
+      },
+      {
+        "word_form": "висипаймось",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:1"
+      },
+      {
+        "word_form": "висипаймося",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:1"
+      },
+      {
+        "word_form": "висипайтесь",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:2"
+      },
+      {
+        "word_form": "висипайтеся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:p:2"
+      },
+      {
+        "word_form": "висипайсь",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:s:2"
+      },
+      {
+        "word_form": "висипайся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:impr:s:2"
+      },
+      {
+        "word_form": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:inf"
+      },
+      {
+        "word_form": "висипатись",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:inf"
+      },
+      {
+        "word_form": "висипаться",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:inf:short"
+      },
+      {
+        "word_form": "висипалась",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:f"
+      },
+      {
+        "word_form": "висипалася",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:f"
+      },
+      {
+        "word_form": "висипавсь",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:m"
+      },
+      {
+        "word_form": "висипався",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:m"
+      },
+      {
+        "word_form": "висипалось",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:n"
+      },
+      {
+        "word_form": "висипалося",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:n"
+      },
+      {
+        "word_form": "висипались",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:p"
+      },
+      {
+        "word_form": "висипалися",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:past:p"
+      },
+      {
+        "word_form": "висипаємось",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:1"
+      },
+      {
+        "word_form": "висипаємося",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:1"
+      },
+      {
+        "word_form": "висипаєтесь",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:2"
+      },
+      {
+        "word_form": "висипаєтеся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:2"
+      },
+      {
+        "word_form": "висипаються",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:p:3"
+      },
+      {
+        "word_form": "висипаюсь",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:1"
+      },
+      {
+        "word_form": "висипаюся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:1"
+      },
+      {
+        "word_form": "висипаєшся",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:2"
+      },
+      {
+        "word_form": "висипається",
+        "pos": "verb",
+        "tags": "verb:rev:imperf:pres:s:3"
+      },
+      {
+        "word_form": "висиплемось",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:1"
+      },
+      {
+        "word_form": "висиплемося",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:1"
+      },
+      {
+        "word_form": "висиплетесь",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:2"
+      },
+      {
+        "word_form": "висиплетеся",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:2"
+      },
+      {
+        "word_form": "висиплються",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:p:3"
+      },
+      {
+        "word_form": "висиплюсь",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:1"
+      },
+      {
+        "word_form": "висиплюся",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:1"
+      },
+      {
+        "word_form": "висиплешся",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:2"
+      },
+      {
+        "word_form": "висиплеться",
+        "pos": "verb",
+        "tags": "verb:rev:perf:futr:s:3"
+      },
+      {
+        "word_form": "висипмось",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:1"
+      },
+      {
+        "word_form": "висипмося",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:1"
+      },
+      {
+        "word_form": "висиптесь",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:2"
+      },
+      {
+        "word_form": "висиптеся",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:p:2"
+      },
+      {
+        "word_form": "висипся",
+        "pos": "verb",
+        "tags": "verb:rev:perf:impr:s:2"
+      },
+      {
+        "word_form": "висипатися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:inf"
+      },
+      {
+        "word_form": "висипатись",
+        "pos": "verb",
+        "tags": "verb:rev:perf:inf"
+      },
+      {
+        "word_form": "висипаться",
+        "pos": "verb",
+        "tags": "verb:rev:perf:inf:short"
+      },
+      {
+        "word_form": "висипалась",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:f"
+      },
+      {
+        "word_form": "висипалася",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:f"
+      },
+      {
+        "word_form": "висипавсь",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:m"
+      },
+      {
+        "word_form": "висипався",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:m"
+      },
+      {
+        "word_form": "висипалось",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:n"
+      },
+      {
+        "word_form": "висипалося",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:n"
+      },
+      {
+        "word_form": "висипались",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:p"
+      },
+      {
+        "word_form": "висипалися",
+        "pos": "verb",
+        "tags": "verb:rev:perf:past:p"
+      }
+    ]
+  }
+}
