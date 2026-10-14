@@ -795,6 +795,31 @@ login directory, or in a scope the worker still loads, silently changing what
 the worker runs on. For label `b` the adapter
 (`scripts/agent_runtime/adapters/claude.py`, threat model in its docstring):
 
+- admits only a consumer plan. **Non-goal: organisational policy.** A Team or
+  Enterprise organisation's server-managed settings and policy limits arrive
+  from the server, can apply endpoint, proxy and provider overrides after every
+  local check, and are not attested by `auth status`, so they are out of scope.
+  Verification asks the provider's profile endpoint about the login
+  directory's own credential and requires organisation type `claude_max` or
+  `claude_pro` (`CLAUDE_CONSUMER_PLANS`); Team, Enterprise, unknown or missing
+  refuses (`claude_account_plan_unsupported`). The plan Claude Code stored with
+  that credential (it decides whether the CLI fetches organisational policy; a
+  missing one makes it fetch), the global config's organisation, and the plan
+  `auth status` resolves must all agree with that answer
+  (`claude_account_plan_unverified`);
+- refuses server-delivered policy state and profile logins. Claude Code
+  2.1.300 caches remote managed settings and policy limits in the login
+  directory only for an organisational, unknown-plan or profile login:
+  `remote-settings.json`, `policy-limits.json`, each one's `.signature.json`
+  and `.signature-iat.json`, `remote-settings.json.synced-at`,
+  `policy-limits.json.stamp.json`, `remote-settings-consent.json` and
+  `remote-settings-helper-consent` (`CLAUDE_POLICY_CACHE_NAMES`). Any of them,
+  as a file, link or directory, refuses (`claude_account_policy_cache_present`;
+  an unreadable state `claude_account_policy_cache_unavailable`). A profile
+  store (`ANTHROPIC_CONFIG_DIR`, `$XDG_CONFIG_HOME/anthropic` or
+  `$HOME/.config/anthropic`) holding `active_config` or `configs` would replace
+  the login directory's credential without `auth status` showing it, so it
+  refuses (`claude_account_profile_store_present`);
 - holds the login directory to allowlists, refusing value-free before any
   spawn: every `env` name in its global config (`.claude.json`, which the CLI
   applies over the process environment whatever the setting sources) must be on
@@ -815,12 +840,16 @@ the worker runs on. For label `b` the adapter
   login method, organization and email. The text names every endpoint, proxy,
   certificate, token, key or provider override in effect, which the JSON does
   not (`claude_account_status_override`);
-- binds a digest of every settings input that check depended on (its
-  arguments, the login directory's settings, global config `env`, legacy file
-  and remote policy cache, managed policy, and the checkout's project and local
-  files, including a linked worktree's main checkout) into the plan, and runs
-  the CLI behind a guard that recomputes it in the spawned process and execs
-  the CLI only on a match (`claude_account_settings_changed`, exit 78). The
+- binds a digest of every input those checks depended on (its arguments, the
+  login directory's settings, global config `env` and login organisation,
+  legacy file, credential record, policy caches and profile store entries
+  (absent), managed policy, and the checkout's project and local files,
+  including a linked worktree's main checkout) into the plan, after requiring
+  the credential record to be the one whose plan was classified. It runs the
+  CLI behind a guard that recomputes the digest in the spawned process and
+  execs the CLI only on a match (`claude_account_settings_changed`, exit 78),
+  so a policy cache, profile or credential that appears between verification
+  and launch stops the exec. The
   credential file stays in place (the CLI rotates its refresh token) and the
   CLI reads the global config only from beside it, so a digest bind, not a
   copy, is the strongest construction available. What remains is the moment
@@ -831,7 +860,10 @@ Limitation: the preflight requires the access token to have more than 60
 seconds left. A token that expires during a long worker is refreshed by the CLI
 itself; if that refresh fails, the worker fails. It is never retried as the
 default account: runner failover re-sends the same label and there is no Claude
-failover chain.
+failover chain. A token refresh between verification and launch (by another
+worker of the same account, or by the status probe for a token close to
+expiry) changes the credential record, so that launch refuses with
+`claude_account_settings_changed` (fail-closed; a new dispatch re-verifies).
 
 ### Native Grok headless permission mapping (#7583)
 

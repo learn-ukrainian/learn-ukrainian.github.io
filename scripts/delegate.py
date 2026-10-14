@@ -18546,7 +18546,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Claude account label for a claude dispatch: a (default) or b. The label is recorded in the "
             "task record and selects the account the worker authenticates as. Label b needs its private "
-            "local binding: an ordinary worker runs with that account's login directory as its only "
+            "local binding and a consumer (Max or Pro) plan; organisational plans are refused. An ordinary "
+            "worker runs with that account's login directory as its only "
             "credential source, and a formal review attempt's sealed boundary selects the account. An "
             "unknown label, a missing binding or a conflicting credential source (a Claude token or API key "
             "variable, or another config directory) is refused (CLAUDE_ACCOUNT_REFUSED) before any worktree "

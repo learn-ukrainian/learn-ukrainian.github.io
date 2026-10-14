@@ -999,6 +999,16 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
 DEFAULT_ACCOUNT_UUID = "00000000-0000-4000-8000-00000000000a"
 BOUND_ACCOUNT_UUID = "00000000-0000-4000-8000-00000000000b"
 CLAUDE_AMBIENT_AUTH = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN")
+ACCOUNT_ORG_UUIDS = {
+    DEFAULT_ACCOUNT_UUID: "00000000-0000-4000-8000-0000000000a0",
+    BOUND_ACCOUNT_UUID: "00000000-0000-4000-8000-0000000000b0",
+}
+# The organisation each fixture account's live profile reports (a consumer Max
+# plan); a test replaces or deletes an entry to model another plan.
+PROFILE_ORGANIZATIONS = {
+    account: {"uuid": organization, "organization_type": "claude_max"}
+    for account, organization in ACCOUNT_ORG_UUIDS.items()
+}
 
 
 def _private_json(path: Path, data: object) -> None:
@@ -1007,9 +1017,17 @@ def _private_json(path: Path, data: object) -> None:
     path.chmod(0o600)
 
 
-def _credentials(path: Path, token: str) -> None:
+def _credentials(path: Path, token: str, *, plan: str | None = "max") -> None:
+    """A login's credential record; ``plan`` is the subscription type Claude Code stored with it."""
     oauth = {"accessToken": token, "refreshToken": "fixture-refresh-" + "r" * 30, "expiresAt": 4_102_444_800_000}
+    if plan is not None:
+        oauth["subscriptionType"] = plan
     _private_json(path, {"claudeAiOauth": oauth})
+
+
+def _oauth_account(account_uuid: str) -> dict:
+    """The account record Claude Code keeps in a login's global config, with its organisation."""
+    return {"accountUuid": account_uuid, "organizationUuid": ACCOUNT_ORG_UUIDS[account_uuid]}
 
 
 def _mock_selected_account_runtime(tmp_path, monkeypatch):
@@ -1029,8 +1047,10 @@ def _mock_selected_account_runtime(tmp_path, monkeypatch):
     calls = []
     identities = {}
 
-    class ProfileConnection:
-        def __init__(self, host, *, timeout):
+    # A subclass, so urllib still finds the class attributes its default HTTPS
+    # handler reads when another caller builds its first opener.
+    class ProfileConnection(http.client.HTTPSConnection):
+        def __init__(self, host, *, timeout):  # no socket is ever opened
             assert host == "api.anthropic.com" and timeout == 10
 
         def request(self, method, path, *, headers):
@@ -1039,10 +1059,11 @@ def _mock_selected_account_runtime(tmp_path, monkeypatch):
             calls.append(self.selected)
 
         def getresponse(self):
-            return SimpleNamespace(
-                status=200,
-                read=lambda _limit: json.dumps({"account": {"uuid": identities[self.selected]}}).encode(),
-            )
+            account = identities[self.selected]
+            profile = {"account": {"uuid": account}}
+            if account in PROFILE_ORGANIZATIONS:
+                profile["organization"] = PROFILE_ORGANIZATIONS[account]
+            return SimpleNamespace(status=200, read=lambda _limit: json.dumps(profile).encode())
 
         def close(self):
             pass
@@ -1073,7 +1094,7 @@ def two_accounts(world, tmp_path, monkeypatch):
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
     accounts.config_dir.mkdir(mode=0o700)
     _credentials(accounts.config_dir / ".credentials.json", accounts.bound_token)
-    _private_json(accounts.config_dir / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _private_json(accounts.config_dir / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
     _private_json(
         accounts.binding,
         {
@@ -1262,6 +1283,18 @@ def test_complete_preflight_rechecks_selected_state_at_use(two_accounts):
     assert verify_claude_account("b").label == "b"
     _credentials(two_accounts.config_dir / ".credentials.json", two_accounts.default_token)
     with pytest.raises(ReviewIsolationError, match=r"^claude_account_unverified$"):
+        linux_claude_auth("b")
+
+
+@pytest.mark.parametrize("organization_type", ["claude_team", "claude_enterprise", None])
+def test_sealed_attempt_refuses_an_account_outside_the_consumer_plans(two_accounts, monkeypatch, organization_type):
+    """Held-out (#10619): a labelled account is admitted only on a consumer plan, at the sealed boundary too."""
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    organization = {"uuid": ACCOUNT_ORG_UUIDS[BOUND_ACCOUNT_UUID], "organization_type": organization_type}
+    monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
+
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_plan_unsupported$"):
         linux_claude_auth("b")
 
 

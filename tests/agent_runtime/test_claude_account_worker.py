@@ -40,11 +40,14 @@ from scripts.agent_runtime.env_sanitize import (
     claude_labelled_inputs_digest,
 )
 from tests.agent_runtime.test_attempt_boundary import (
+    ACCOUNT_ORG_UUIDS,
     BOUND_ACCOUNT_UUID,
     CLAUDE_AMBIENT_AUTH,
     DEFAULT_ACCOUNT_UUID,
+    PROFILE_ORGANIZATIONS,
     _credentials,
     _mock_selected_account_runtime,
+    _oauth_account,
     _private_json,
 )
 
@@ -112,7 +115,12 @@ _FAKE_CLAUDE = textwrap.dedent(
         elif env.get("ANTHROPIC_API_KEY"):
             status.update(authMethod="api_key", apiKeySource="ANTHROPIC_API_KEY")
         elif os.path.exists(os.path.join(config_dir, ".credentials.json")):
-            status.update(authMethod="claude.ai", subscriptionType="max")
+            status["authMethod"] = "claude.ai"
+            # The plan Claude Code resolves for the login is the one stored with its credential.
+            oauth = load(os.path.join(config_dir, ".credentials.json")).get("claudeAiOauth") or {}
+            plan = "team" if mode == "team_plan" else oauth.get("subscriptionType")
+            if plan is not None:
+                status["subscriptionType"] = plan
         else:
             status = {"loggedIn": False, "authMethod": "none", "apiProvider": "firstParty"}
         if mode == "other_dir":
@@ -175,7 +183,7 @@ def accounts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
     found.config_dir.mkdir(mode=0o700)
     _credentials(found.config_dir / ".credentials.json", found.bound_token)
-    _private_json(found.config_dir / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _private_json(found.config_dir / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
     binding = tmp_path / "private-config" / "claude_accounts.json"
     _private_json(
         binding,
@@ -477,6 +485,7 @@ def test_bound_label_plan_runs_the_cli_behind_the_launch_guard(accounts):
         cwd=accounts.workdir,
         settings=plan.cmd[plan.cmd.index("--settings") + 1],
         setting_sources="project,local",
+        environ=build_agent_env(provider="claude", overrides=plan.env_overrides),
     )
     assert plan.cmd[guard + 1] == str(accounts.binary)
     assert "--" not in _plan(accounts).cmd[:2]  # the default plan is unwrapped (see the golden snapshot)
@@ -639,7 +648,8 @@ def test_bound_label_unconfirmed_auth_status_is_refused(accounts, monkeypatch, m
 
 def test_bound_label_logged_out_status_is_refused(accounts):
     accounts.config_dir.joinpath(".credentials.json").unlink()
-    with patch.object(claude, "_claude_account_login_dir", return_value=str(accounts.config_dir)):
+    binding = attempt_boundary.ClaudeAccountBinding("b", accounts.config_dir, BOUND_ACCOUNT_UUID)
+    with patch.object(claude, "_claude_account_binding", return_value=binding):
         with pytest.raises(ClaudeAccountRefused) as refused:
             _plan(accounts, claude_account="b")
 
@@ -787,7 +797,7 @@ def test_unknown_label_is_refused_before_any_probe(accounts, monkeypatch, label)
 def test_bound_label_on_an_unsealed_isolation_route_is_refused(accounts):
     """A bridge isolation run builds its own environment, so it cannot honour another account."""
     with pytest.raises(ClaudeAccountRefused) as refused:
-        claude._claude_account_login_dir({"claude_account": "b", "review_isolation": True})
+        claude._claude_account_binding({"claude_account": "b", "review_isolation": True})
 
     assert refused.value.code == "claude_account_route_unsealed"
     assert accounts.profile_calls == []
@@ -795,7 +805,7 @@ def test_bound_label_on_an_unsealed_isolation_route_is_refused(accounts):
 
 def test_sealed_attempt_keeps_selecting_its_account_at_its_boundary(accounts):
     """The attempt boundary authenticates a sealed attempt; the adapter adds no login directory."""
-    assert claude._claude_account_login_dir({"claude_account": "b", "review_attempt_boundary": object()}) is None
+    assert claude._claude_account_binding({"claude_account": "b", "review_attempt_boundary": object()}) is None
     assert accounts.profile_calls == []
 
 
@@ -821,6 +831,11 @@ def test_new_refusal_codes_are_registered():
         "claude_account_config_ambiguous",
         "claude_account_status_override",
         "claude_account_settings_changed",
+        "claude_account_plan_unsupported",
+        "claude_account_plan_unverified",
+        "claude_account_policy_cache_present",
+        "claude_account_policy_cache_unavailable",
+        "claude_account_profile_store_present",
     } <= CLAUDE_ACCOUNT_REFUSAL_CODES
 
 
@@ -859,6 +874,286 @@ def test_sanitizer_admits_the_login_directory_only_from_the_claude_adapter(monke
     assert build_agent_env(provider="claude")["CLAUDE_API_KEY"] == "fixture-ambient-" + "k" * 30
     assert "CLAUDE_CONFIG_DIR" not in build_agent_env(provider="codex", overrides={"CLAUDE_CONFIG_DIR": login_dir})
     assert os.environ["CLAUDE_CONFIG_DIR"] == login_dir
+
+
+# --- Consumer plans only (#10619) ------------------------------------------------------------------
+#
+# Organisational (Team or Enterprise) policy can reach a run after its checks,
+# so a labelled account is admitted only on a consumer plan, classified from the
+# live profile of the exact credential the run launches with. Held out: written
+# against 0cefef3f25, where none of the refusals below happened.
+
+# Server-delivered policy state Claude Code 2.1.300 keeps in its config
+# directory: remote managed settings and policy limits, their signatures, sync
+# stamps and consent records. A consumer login neither fetches nor writes any.
+POLICY_CACHES = (
+    "remote-settings.json",
+    "remote-settings.json.signature.json",
+    "remote-settings.json.signature-iat.json",
+    "remote-settings.json.synced-at",
+    "remote-settings-consent.json",
+    "remote-settings-helper-consent",
+    "policy-limits.json",
+    "policy-limits.json.signature.json",
+    "policy-limits.json.signature-iat.json",
+    "policy-limits.json.stamp.json",
+)
+
+
+def _live_plan(monkeypatch: pytest.MonkeyPatch, organization_type: str | None) -> None:
+    """The organisation type the bound credential's live profile reports; ``None``: it reports no organisation."""
+    if organization_type is None:
+        monkeypatch.delitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID)
+        return
+    organization = {"uuid": ACCOUNT_ORG_UUIDS[BOUND_ACCOUNT_UUID], "organization_type": organization_type}
+    monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
+
+
+def _account_record(accounts: SimpleNamespace, record: dict) -> None:
+    _global_config(accounts, oauthAccount=record)
+
+
+def _profile_store_entry(store: Path, entry: str) -> None:
+    """A profile login Claude Code would take instead of the login directory's credential."""
+    if entry == "configs":
+        _private_json(store / "configs" / "default.json", {"authentication": {"type": "user_oauth"}})
+    else:
+        store.mkdir(parents=True, exist_ok=True)
+        (store / "active_config").write_text("fixture\n", encoding="utf-8")
+
+
+# AC-01: (live organisation type, plan stored with the credential, refusal; None admits).
+PLAN_TABLE = {
+    "consumer_max": ("claude_max", "max", None),
+    "consumer_pro": ("claude_pro", "pro", None),
+    "team": ("claude_team", "team", "claude_account_plan_unsupported"),
+    "enterprise": ("claude_enterprise", "enterprise", "claude_account_plan_unsupported"),
+    "unknown": ("claude_fixture_unknown", "max", "claude_account_plan_unsupported"),
+    "missing": (None, "max", "claude_account_plan_unsupported"),
+}
+
+
+@pytest.mark.parametrize("case", list(PLAN_TABLE))
+def test_bound_label_admits_only_a_consumer_plan(accounts, monkeypatch, case):
+    """Only ``claude_max`` and ``claude_pro`` run; any other, unknown or missing type refuses before any probe."""
+    organization_type, stored, code = PLAN_TABLE[case]
+    _live_plan(monkeypatch, organization_type)
+    _credentials(accounts.config_dir / ".credentials.json", accounts.bound_token, plan=stored)
+
+    if code is None:
+        result, _ = _invoke(accounts, claude_account="b")
+        assert result.ok is True
+        assert len(_calls(accounts, "run")) == 1
+        return
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+    assert str(refused.value) == refused.value.code == code
+    assert _calls(accounts, "auth_status") == [] and _calls(accounts, "run") == []
+
+
+def test_bound_label_organisational_credential_with_consumer_metadata_is_refused(accounts, monkeypatch):
+    """Held-out: the stored plan and account record say Max; the exact credential is a Team organisation's."""
+    _live_plan(monkeypatch, "claude_team")
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_plan_unsupported"
+    assert accounts.profile_calls == [accounts.bound_token]
+    assert _calls(accounts, "run") == []
+
+
+# Cached metadata that disagrees with the live classification of the exact credential.
+STALE_METADATA = {
+    "stored_plan_organisational": lambda accounts: _credentials(
+        accounts.config_dir / ".credentials.json", accounts.bound_token, plan="team"
+    ),
+    "stored_plan_missing": lambda accounts: _credentials(
+        accounts.config_dir / ".credentials.json", accounts.bound_token, plan=None
+    ),
+    "stored_plan_other_consumer": lambda accounts: _credentials(
+        accounts.config_dir / ".credentials.json", accounts.bound_token, plan="pro"
+    ),
+    "record_other_organisation": lambda accounts: _account_record(
+        accounts, {**_oauth_account(BOUND_ACCOUNT_UUID), "organizationUuid": ACCOUNT_ORG_UUIDS[DEFAULT_ACCOUNT_UUID]}
+    ),
+    "record_without_organisation": lambda accounts: _account_record(accounts, {"accountUuid": BOUND_ACCOUNT_UUID}),
+}
+
+
+@pytest.mark.parametrize("case", sorted(STALE_METADATA))
+def test_bound_label_stale_or_edited_plan_metadata_is_refused(accounts, case):
+    """Held-out: stale or edited cached plan metadata never stands in for the live classification."""
+    STALE_METADATA[case](accounts)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_plan_unverified"
+    assert _calls(accounts, "run") == []
+
+
+def test_bound_label_status_resolving_an_organisational_plan_is_refused(accounts, monkeypatch):
+    """The plan Claude Code itself resolves for the run's login must be a consumer one."""
+    monkeypatch.setenv("LU_FAKE_CLAUDE_STATUS_MODE", "team_plan")
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_plan_unverified"
+    assert _calls(accounts, "run") == []
+
+
+@pytest.mark.parametrize("name", POLICY_CACHES)
+def test_bound_label_policy_cache_present_is_refused(accounts, name):
+    """Held-out: any server-delivered policy state in the login directory refuses, before any probe."""
+    _private_json(accounts.config_dir / name, {"env": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"}})
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_policy_cache_present"
+    assert "fixture" not in str(refused.value)
+    assert accounts.profile_calls == []
+    assert not accounts.dump.exists()
+
+
+def test_bound_label_policy_cache_link_or_directory_is_refused(accounts):
+    """A dangling link or a directory at a cache path is present, not absent."""
+    (accounts.config_dir / "policy-limits.json").symlink_to(accounts.config_dir / "absent-target")
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+    assert refused.value.code == "claude_account_policy_cache_present"
+
+    (accounts.config_dir / "policy-limits.json").unlink()
+    (accounts.config_dir / "remote-settings.json").mkdir()
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+    assert refused.value.code == "claude_account_policy_cache_present"
+
+
+def test_bound_label_unreadable_policy_cache_state_is_refused(accounts, monkeypatch):
+    """A cache path whose state cannot be read refuses, value-free."""
+    original = os.stat
+
+    def denied(path, *args, **kwargs):
+        if path == "policy-limits.json":
+            raise PermissionError(13, "fixture-private-detail")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "stat", denied)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_policy_cache_unavailable"
+    assert "fixture-private-detail" not in repr(refused.value) + repr(refused.value.__cause__)
+
+
+@pytest.mark.parametrize("name", POLICY_CACHES)
+def test_bound_label_policy_delivered_after_verification_never_launches(accounts, name):
+    """Held-out (delayed policy delivery): a cache written between verification and launch stops the exec.
+
+    On 0cefef3f25 only ``remote-settings.json`` was bound; for every other
+    name the CLI started (``_calls(accounts, "run")`` held one spawn).
+    """
+    result = _settings_change_after_build(
+        accounts,
+        lambda: _private_json(accounts.config_dir / name, {"env": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"}}),
+    )
+
+    assert result.ok is False
+    assert _calls(accounts, "run") == []
+    assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
+
+
+@pytest.mark.parametrize(
+    ("location", "entry"),
+    [("home", "configs"), ("home", "active_config"), ("xdg", "configs"), ("named", "active_config")],
+)
+def test_bound_label_profile_store_login_is_refused(accounts, monkeypatch, tmp_path, location, entry):
+    """A profile store Claude Code could take the login from instead breaks the credential binding."""
+    if location == "home":
+        store = accounts.home / ".config" / "anthropic"
+    elif location == "xdg":
+        monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+        store = tmp_path / "xdg" / "anthropic"
+    else:
+        monkeypatch.setenv("ANTHROPIC_CONFIG_DIR", str(tmp_path / "named"))
+        store = tmp_path / "named"
+    _profile_store_entry(store, entry)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_profile_store_present"
+    assert accounts.profile_calls == []
+
+
+def test_bound_label_empty_profile_store_directory_is_admitted(accounts):
+    """The directory alone selects no profile; only its active profile or profile configs do."""
+    (accounts.home / ".config" / "anthropic").mkdir(parents=True)
+
+    result, _ = _invoke(accounts, claude_account="b")
+
+    assert result.ok is True
+
+
+@pytest.mark.parametrize("entry", ["configs", "active_config"])
+def test_bound_label_profile_written_after_verification_never_launches(accounts, entry):
+    result = _settings_change_after_build(
+        accounts, lambda: _profile_store_entry(accounts.home / ".config" / "anthropic", entry)
+    )
+
+    assert result.ok is False
+    assert _calls(accounts, "run") == []
+    assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
+
+
+@pytest.mark.parametrize(
+    "change",
+    ["credential_replaced", "stored_plan_edited", "record_organisation_edited"],
+)
+def test_bound_label_account_metadata_changed_after_verification_never_launches(accounts, change):
+    """Held-out: the launch uses exactly the classified credential and its plan metadata.
+
+    On 0cefef3f25 neither the credential nor the account record was bound and
+    the CLI started.
+    """
+
+    def edit() -> None:
+        credentials = accounts.config_dir / ".credentials.json"
+        if change == "credential_replaced":
+            _credentials(credentials, "fixture-organisation-" + "o" * 30)
+        elif change == "stored_plan_edited":
+            _credentials(credentials, accounts.bound_token, plan="team")
+        else:
+            other = ACCOUNT_ORG_UUIDS[DEFAULT_ACCOUNT_UUID]
+            _account_record(accounts, {**_oauth_account(BOUND_ACCOUNT_UUID), "organizationUuid": other})
+
+    result = _settings_change_after_build(accounts, edit)
+
+    assert result.ok is False
+    assert _calls(accounts, "run") == []
+    assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
+    assert "fixture-organisation" not in result.stderr_excerpt
+
+
+def test_bound_label_credential_changed_after_classification_is_refused(accounts, monkeypatch):
+    """Held-out: a credential replaced after it was classified, before the launch is bound, is never bound."""
+    classify = attempt_boundary.verify_claude_account
+
+    def classify_then_replace(label, **kwargs):
+        binding = classify(label, **kwargs)
+        _credentials(accounts.config_dir / ".credentials.json", "fixture-organisation-" + "o" * 30)
+        return binding
+
+    monkeypatch.setattr(attempt_boundary, "verify_claude_account", classify_then_replace)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_settings_changed"
 
 
 # --- The installed Claude CLI, where present ------------------------------------------------------

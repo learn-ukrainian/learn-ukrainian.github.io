@@ -6987,6 +6987,7 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
         DEFAULT_ACCOUNT_UUID,
         _credentials,
         _mock_selected_account_runtime,
+        _oauth_account,
         _private_json,
     )
 
@@ -6998,7 +6999,7 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
     token = "fixture-bound-" + "b" * 30
     identities[token] = BOUND_ACCOUNT_UUID
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
-    _private_json(selected / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
     _credentials(selected / ".credentials.json", token)
     binding = tmp_path / "binding.json"
     _private_json(
@@ -7070,25 +7071,39 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(
         ("missing", "claude_account_credentials_missing"),
         ("expired", "claude_account_credentials_expired"),
         ("settings", "claude_account_settings_credential_source"),
+        ("team_plan", "claude_account_plan_unsupported"),
+        ("policy_cache", "claude_account_policy_cache_present"),
     ],
 )
 def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code):
-    """The selected login directory's state, including its user settings (#10619), is refused before effects."""
+    """The selected login directory's state, including its user settings and plan (#10619), is refused before effects."""
     from tests.agent_runtime.test_attempt_boundary import (
         BOUND_ACCOUNT_UUID,
         CLAUDE_AMBIENT_AUTH,
         DEFAULT_ACCOUNT_UUID,
+        PROFILE_ORGANIZATIONS,
+        _credentials,
         _mock_selected_account_runtime,
+        _oauth_account,
         _private_json,
     )
 
-    _mock_selected_account_runtime(tmp_path, monkeypatch)
+    identities, _ = _mock_selected_account_runtime(tmp_path, monkeypatch)
     for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
         monkeypatch.delenv(key, raising=False)
     home, selected = tmp_path / "home", tmp_path / "selected"
     selected.mkdir(mode=0o700)
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
-    _private_json(selected / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": _oauth_account(BOUND_ACCOUNT_UUID)})
+    if case in ("team_plan", "policy_cache"):
+        # An ordinary worker whose login is otherwise sound.
+        identities["fixture-bound-" + "b" * 30] = BOUND_ACCOUNT_UUID
+        _credentials(selected / ".credentials.json", "fixture-bound-" + "b" * 30)
+    if case == "team_plan":
+        organization = {**PROFILE_ORGANIZATIONS[BOUND_ACCOUNT_UUID], "organization_type": "claude_team"}
+        monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
+    if case == "policy_cache":
+        _private_json(selected / "remote-settings.json", {})
     binding = tmp_path / "binding.json"
     _private_json(
         binding,
@@ -7105,6 +7120,7 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
     if case == "settings":
         # An ordinary worker: the login directory's settings name a key helper.
         _private_json(selected / "settings.json", {"apiKeyHelper": "fixture-helper"})
+    if case in ("settings", "team_plan", "policy_cache"):
         attempt = []
     for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
         monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
