@@ -28,7 +28,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
-from scripts.orchestration.handoff_slot_registry import registered_slots
+from scripts.orchestration.handoff_slot_registry import is_registered_slot, registered_slots
 from scripts.utils.claude_version import run_version_probe
 
 from .registry import AGENTS, get_agent_entry
@@ -51,7 +51,8 @@ def resolve_handoff_agent(identity: str) -> str:
     """Map a launcher provider/lane identity to its registered runtime key.
 
     Registry keys are the authority for provider prefixes; area lanes (including
-    empty-slot aliases) do not create separate executable adapters.
+    empty-slot aliases) do not create separate executable adapters. Registered
+    launcher-only slots retain their identity and fail the runtime probe.
     """
     providers = [key for key in AGENTS if identity.startswith(f"{key}-") and identity in registered_slots(key)]
     return max(providers, key=len) if providers else identity
@@ -135,6 +136,8 @@ def probe_lane(agent: str, *, cwd: Path, timeout_seconds: int = _DEFAULT_TIMEOUT
         entry = get_agent_entry(agent)
     except KeyError:
         result["reason"] = "agent is not registered"
+        if is_registered_slot(agent) and resolve_handoff_agent(agent) == agent:
+            result["reason"] = "registered handoff slot has no runtime adapter"
         result["duration_ms"] = round((time.monotonic() - started) * 1000)
         return result
 

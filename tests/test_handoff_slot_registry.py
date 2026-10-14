@@ -66,6 +66,74 @@ def _driver_providers() -> tuple[str, ...]:
 PROVIDERS = _driver_providers()
 
 
+@pytest.fixture(params=[[], ["muse-monitor"], ["muse-monitor", "codex-monitor"]])
+def mixed_roster(request, tmp_path, monkeypatch):
+    assignments = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text())
+    assignments["assignments"]["monitor"]["slots"] = request.param
+    assignments["assignments"]["empty-fixture"] = {"slots": []}
+    roster = tmp_path / "area_assignments.yaml"
+    roster.write_text(yaml.safe_dump(assignments), encoding="utf-8")
+    monkeypatch.setattr(_channels, "ASSIGNMENTS_PATH", roster)
+    return roster
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
+def test_mixed_roster_list_slot_and_inbox_alias_agree(mixed_roster, provider, capsys):
+    slot = f"{provider}-monitor"
+    slots = registry.registered_slots(provider, assignments_path=mixed_roster)
+    assert slots.count(slot) == 1
+    assert f"{provider}-empty-fixture" in slots
+    assert registry.main(["--list", provider, "--assignments", str(mixed_roster)]) == 0
+    assert capsys.readouterr().out.splitlines() == slots
+    assert registry.main(["--slot", slot, "--assignments", str(mixed_roster)]) == 0
+    assert registry.main(["--registered", slot, "unknown-monitor", "--assignments", str(mixed_roster)]) == 0
+    assert capsys.readouterr().out == f"{slot}\n"
+    expected = slot if slot in _channels._load_registry_slots(mixed_roster) else provider
+    assert _channels.resolve_recipient_alias(slot, assignments_path=mixed_roster) == expected
+
+
+@pytest.mark.parametrize("provider", ["muse", "unknown"])
+def test_mixed_roster_never_invents_launcher_only_or_unknown_aliases(mixed_roster, provider, capsys):
+    expected = [slot for slot in _channels._load_registry_slots(mixed_roster) if slot.startswith(f"{provider}-")]
+    assert registry.registered_slots(provider, assignments_path=mixed_roster) == expected
+    assert registry.main(["--list", provider, "--assignments", str(mixed_roster)]) == 0
+    assert capsys.readouterr().out == "\n".join(expected) + "\n"
+    for area in ("monitor", "devops", "empty-fixture"):
+        slot = f"{provider}-{area}"
+        assert registry.main(["--slot", slot, "--assignments", str(mixed_roster)]) == (0 if slot in expected else 3)
+        assert _channels.resolve_recipient_alias(slot, assignments_path=mixed_roster) == slot
+
+
+@pytest.mark.parametrize("provider", ["codex", "gemini"])
+@pytest.mark.parametrize("identity_provider", [None, "muse", "unknown"])
+def test_monitor_hydration_consumes_mixed_roster_without_crossing_provider(
+    mixed_roster, monkeypatch, capsys, provider, identity_provider
+):
+    from scripts.session_canary import codex_lane, gemini_lane
+
+    lane = {"codex": codex_lane, "gemini": gemini_lane}[provider]
+    identity = f"{identity_provider or provider}-monitor"
+    monkeypatch.setenv("SESSION_STREAM_AGENT", identity)
+    calls = []
+
+    def hydrate(stream, checked_identity):
+        calls.append((stream, checked_identity))
+        return {"execution_allowed": True}, 1
+
+    monkeypatch.setattr(lane.shared_hydration, "build_hydration_capsule_with_retry", hydrate)
+    rc = lane.main(["hydrate", "--epic", "monitor", "--stream", "epic:123"])
+    output = capsys.readouterr()
+    if identity_provider is None:
+        assert rc == 0
+        assert calls == [("epic:123", identity)]
+        assert "ACTION: hydration ready" in output.out
+    else:
+        assert rc == 2
+        assert calls == []
+        assert output.out == ""
+        assert output.err == "ACTION: hydration blocked — unregistered lane identity for this provider.\n"
+
+
 def _helper_root() -> Path:
     """Root holding the shared interpreter (dispatch worktrees carry no ``.venv``)."""
     if (REPO / ".venv" / "bin" / "python").exists():

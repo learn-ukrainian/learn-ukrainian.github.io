@@ -89,6 +89,18 @@ def test_roster_slot_count_is_45() -> None:
     assert "gemini-infra" in slots
 
 
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
+def test_monitor_aliases_preserve_inbox_destinations_beside_muse(provider: str) -> None:
+    slot = f"{provider}-monitor"
+    assert _channels.resolve_recipient_alias(slot, assignments_path=_AREA_ASSIGNMENTS_YAML) == provider
+    for muse_slot in ("muse-monitor", "muse-devops"):
+        assert muse_slot in _channels.get_valid_recipient_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
+        assert _channels.resolve_recipient_alias(muse_slot, assignments_path=_AREA_ASSIGNMENTS_YAML) == muse_slot
+    assert _channels.resolve_recipient_alias("unknown-monitor", assignments_path=_AREA_ASSIGNMENTS_YAML) == "unknown-monitor"
+    with pytest.raises(ValueError, match="Unknown delivery target"):
+        _channels._validate_recipient_agent("unknown-monitor", assignments_path=_AREA_ASSIGNMENTS_YAML)
+
+
 def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
     """Ukrainian content/data areas have only eligible Claude, GPT and Gemini identities."""
     assignments = yaml.safe_load(_AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8"))["assignments"]
