@@ -12,7 +12,8 @@ from pathlib import Path
 import pytest
 
 from scripts import inbox_pending
-from tests.helpers.agy_inbox_fixtures import BODY_MARKER, MESSAGE_ID, add_authority, add_legacy
+from scripts.fleet_comms.authority import AuthorityService
+from tests.helpers.agy_inbox_fixtures import BODY_MARKER, MESSAGE_ID, add_authority, add_legacy, run_cli, snapshot
 
 pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +39,7 @@ def test_legacy_delivery_states(stores, acknowledged, consumed, expected):
         ("queued", False, False, 1),
         ("running", False, False, 1),
         ("running", True, False, 0),
-        ("running", False, True, 0),
+        ("running", False, True, 1),
         ("acknowledged", False, False, 0),
         ("expired", False, False, 0),
         ("failed", False, False, 0),
@@ -54,6 +55,97 @@ def test_authority_delivery_states(stores, state, consumed, wake, expected):
         "stores": {"legacy": 0, "authority": expected},
         "probe": "ok",
     }
+
+
+def test_h26_wake_observation_is_not_supervisory_consumption(stores, roster):
+    with AuthorityService(root=stores[1].parent) as service:
+        message = service.enqueue_supervisory_request(
+            sender="supervisor",
+            recipient="gemini-infra",
+            body=BODY_MARKER,
+            correlation_id="h26",
+            idempotency_key="h26",
+        )
+        delivery_id = message.delivery_ids[0]
+        lease = service.claim_next_delivery("gemini-infra", "h26-worker")
+        assert lease is not None
+        service.record_wake_receipt(delivery_id, fence_token=lease.fence_token, state="consumed")
+        expected_metadata = {
+            "count": 1,
+            "ids": [message.message_id],
+            "truncated": False,
+            "stores": {"legacy": 0, "authority": 1},
+            "probe": "ok",
+        }
+        expected_notice = {
+            "injectSteps": [
+                {
+                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {message.message_id}); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+                }
+            ]
+        }
+        print(
+            "H26 frozen expectations:",
+            json.dumps({"status": "delivered", "metadata": expected_metadata, "hook": expected_notice}),
+        )
+        before = snapshot(stores)
+        metadata = run_cli("gemini-infra")
+        hook_proc = subprocess.run(
+            ["sh", str(ROOT / "scripts/agy_hooks/pending_orders_inject.sh")],
+            input="{}",
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        assert hook_proc.returncode == 0
+        assert hook_proc.stderr == ""
+        assert BODY_MARKER not in hook_proc.stdout
+        notice = json.loads(hook_proc.stdout)
+        status = service.supervisory_delivery_status(delivery_id)
+        print(
+            "H26 actual before authority consumption:",
+            json.dumps({"status": status, "metadata": metadata, "hook": notice}),
+        )
+        assert snapshot(stores) == before
+        assert status == "delivered"
+        assert metadata == expected_metadata
+        assert notice == expected_notice
+
+        service.record_supervisory_consumption(
+            delivery_id,
+            worker_id="h26-worker",
+            fence_token=lease.fence_token,
+            driver_generation="h26-generation",
+        )
+        status = service.supervisory_delivery_status(delivery_id)
+        assert status == "live_driver_consumed"
+        before = snapshot(stores)
+        metadata = run_cli("gemini-infra")
+        assert metadata == {
+            "count": 0,
+            "ids": [],
+            "truncated": False,
+            "stores": {"legacy": 0, "authority": 0},
+            "probe": "ok",
+        }
+        hook_proc = subprocess.run(
+            ["sh", str(ROOT / "scripts/agy_hooks/pending_orders_inject.sh")],
+            input="{}",
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        assert hook_proc.returncode == 0
+        assert hook_proc.stderr == ""
+        notice = json.loads(hook_proc.stdout)
+        assert notice == {}
+        assert snapshot(stores) == before
+        print(
+            "H26 actual after authority consumption:",
+            json.dumps({"status": status, "metadata": metadata, "hook": notice, "stores_unchanged": True}),
+        )
 
 
 @pytest.mark.parametrize("state", ["queued", "running"])
@@ -148,6 +240,30 @@ def test_unreadable_store_is_unknown(stores, monkeypatch, store_index):
 def test_schema_drift_and_corrupt_store_unknown(stores, store_index):
     stores[store_index].write_bytes(b"not sqlite " + BODY_MARKER.encode())
     assert inbox_pending.probe("gemini-infra")["probe"] == "unknown"
+
+
+@pytest.mark.parametrize("schema_fault", ["table", "delivery_id", "state"])
+@pytest.mark.parametrize("pending", [False, True])
+def test_wake_schema_drift_is_unknown(stores, roster, schema_fault, pending):
+    if pending:
+        add_authority(stores[1])
+    with sqlite3.connect(stores[1]) as conn:
+        if schema_fault == "table":
+            conn.execute("DROP TABLE authority_wake_receipts")
+        else:
+            conn.execute(f"ALTER TABLE authority_wake_receipts RENAME COLUMN {schema_fault} TO unavailable")
+    before = snapshot(stores)
+    assert run_cli("gemini-infra") == {
+        "count": 0,
+        "ids": [],
+        "truncated": False,
+        "stores": {"legacy": None, "authority": None},
+        "probe": "unknown",
+    }
+    assert inbox_pending.hook("{}", "gemini-infra") == {
+        "injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]
+    }
+    assert snapshot(stores) == before
 
 
 def test_invalid_stored_id_never_injects_data(stores):

@@ -25,9 +25,7 @@ LEGACY_PENDING = "COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_dr
 AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
     AND (deadline_at IS NULL OR deadline_at > ?)
     AND NOT EXISTS (SELECT 1 FROM authority_idempotency i
-                    WHERE i.namespace = 'supervisory-consumption:' || d.delivery_id)
-    AND NOT EXISTS (SELECT 1 FROM authority_wake_receipts w
-                    WHERE w.delivery_id = d.delivery_id AND w.state = 'consumed')"""
+                    WHERE i.namespace = 'supervisory-consumption:' || d.delivery_id)"""
 
 
 def probe(recipient: str) -> dict:
@@ -74,6 +72,10 @@ def probe(recipient: str) -> dict:
                 return unknown
             with closing(open_readonly(path, timeout=0.2)) as conn:
                 conn.execute("BEGIN")
+                if name == "authority":
+                    # Preserve schema uncertainty without treating receiver
+                    # observation as generation-bound supervisory consumption.
+                    conn.execute("SELECT delivery_id, state FROM authority_wake_receipts LIMIT 0")
                 stores[name] = conn.execute(f"SELECT COUNT(*) FROM {table} WHERE {where}", params).fetchone()[0]
                 rows = conn.execute(f"SELECT {column} FROM {table} WHERE {where} ORDER BY {column} LIMIT 5", params)
                 for (identifier,) in rows:

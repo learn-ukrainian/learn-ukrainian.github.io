@@ -314,14 +314,19 @@ the next model call. It never falls back to the `claude` inbox.
 `scripts.inbox_pending` opens the configured legacy broker and Fleet Comms
 authority SQLite stores read-only. It counts unacknowledged, non-live-consumed
 legacy messages and queued or running authority deliveries without durable
-consumption or an expired deadline. Output contains counts, at most five full
-message IDs, a truncation flag, per-store counts and `probe: ok|unknown`.
+generation-bound supervisory consumption or an expired deadline. A consumed
+wake receipt records receiver observation and leaves the order pending.
+Output contains counts, at most five full message IDs, a truncation flag,
+per-store counts and `probe: ok|unknown`.
 No body is selected, and no delivery is claimed, consumed or acknowledged.
 
 Legacy recipients follow the bridge inbox policy: resolve the roster alias,
-then include permanent seat read aliases. An empty monitor roster maps
-`gemini-monitor` to `gemini` in the legacy projection; a dedicated registered
-slot reads only its own recipient set. Authority publish and claim use exact
+then include permanent seat read aliases. The launcher's `monitor`,
+`infra.monitor`, `ops-api`, `ops.api` and `operator-api` selectors all use the
+monitor lane. With a readable registry containing registered slots, an empty
+monitor area maps `gemini-monitor` to `gemini` in the legacy projection; a
+dedicated registered slot reads only its own recipient set. An entirely empty
+or unreadable roster returns unknown. Authority publish and claim use exact
 recipient names without that roster resolver. For example, `gemini-monitor`
 remains `gemini-monitor` in authority deliveries. The probe checks existing
 authority admission and returns unknown if admission is unavailable or changes

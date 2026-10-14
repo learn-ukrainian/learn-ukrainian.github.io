@@ -173,7 +173,7 @@ def test_alias_store_failure_is_unknown(stores, roster, monkeypatch, provider, s
 
 @pytest.mark.parametrize("provider", MONITOR_PROVIDERS)
 @pytest.mark.parametrize("consumed_by", ["idempotency", "wake"])
-def test_alias_durable_consumption_is_silent(stores, roster, monkeypatch, provider, consumed_by):
+def test_alias_only_supervisory_consumption_is_silent(stores, roster, monkeypatch, provider, consumed_by):
     slot = f"{provider}-monitor"
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", slot)
     add_legacy(stores[0], recipient=provider, consumed=1)
@@ -185,14 +185,25 @@ def test_alias_durable_consumption_is_silent(stores, roster, monkeypatch, provid
         wake_consumed=consumed_by == "wake",
     )
     before = snapshot(stores)
+    pending = consumed_by == "wake"
     assert run_cli(slot) == {
-        "count": 0,
-        "ids": [],
+        "count": 1 if pending else 0,
+        "ids": [MESSAGE_ID] if pending else [],
         "truncated": False,
-        "stores": {"legacy": 0, "authority": 0},
+        "stores": {"legacy": 0, "authority": 1 if pending else 0},
         "probe": "ok",
     }
-    assert run_hook() == {}
+    assert run_hook() == (
+        {
+            "injectSteps": [
+                {
+                    "ephemeralMessage": f"PENDING ORDERS: 1 (ids {MESSAGE_ID}); authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+                }
+            ]
+        }
+        if pending
+        else {}
+    )
     assert snapshot(stores) == before
 
 
