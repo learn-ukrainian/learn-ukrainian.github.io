@@ -1,6 +1,6 @@
 #!/bin/sh
 # Read-only AGY PreInvocation announcement. Never persist stdin or probe output.
-fallback='{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: unknown; run ai_agent_bridge inbox for the registered handoff slot"}]}'
+fallback='{"injectSteps":[{"ephemeralMessage":"PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"}]}'
 root=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || { cat >/dev/null; printf '%s\n' "$fallback"; exit 0; }
 # Resolve the shared interpreter for linked worktrees without a worktree venv.
 primary=$root
