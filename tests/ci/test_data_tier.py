@@ -6,10 +6,12 @@ import gc
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import stat
 import subprocess
 import sys
+import tempfile
 from collections.abc import Iterator
 from pathlib import Path
 from types import SimpleNamespace
@@ -652,8 +654,11 @@ def test_slice_memory_states(
 
 
 def test_collection_error_keeps_healthy_selected_test_and_junit(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    outside_git: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # Pytest never recurses into a directory below ``.git``, which is where a
+    # gate-provided --basetemp lives.
+    tmp_path = outside_git
     monkeypatch.chdir(tmp_path)
     (tmp_path / "test_good.py").write_text("def test_ok():\n    assert True\n")
     (tmp_path / "test_bad.py").write_text("raise ImportError('broken import')\n")
@@ -683,8 +688,34 @@ def test_collection_error_keeps_healthy_selected_test_and_junit(
     assert "test_bad.py" in summary["failing_tests"]
 
 
+def _nightly_root_outside_git() -> Path:
+    """Return a private directory with no Git checkout above it.
+
+    The runner refuses a scratch root below any Git checkout, and the pre-push
+    gate's ``--basetemp`` (like a worktree-local one) lives below one, so the
+    nightly fixture cannot use ``tmp_path``. The suite's runtime scratch
+    override is also confined to ``tmp_path``; use the process temp directory,
+    then the POSIX disk-backed default.
+    """
+    for candidate in (Path(tempfile.gettempdir()), Path("/var/tmp"), Path("/tmp")):
+        resolved = candidate.resolve()
+        if resolved.is_dir() and not any((parent / ".git").exists() for parent in (resolved, *resolved.parents)):
+            return Path(tempfile.mkdtemp(prefix="lu-nightly-test-", dir=resolved))
+    pytest.fail("no temporary directory outside a Git checkout is available for the nightly fixture")
+
+
 @pytest.fixture
-def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[SimpleNamespace]:
+def outside_git() -> Iterator[Path]:
+    root = _nightly_root_outside_git()
+    try:
+        yield root
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
+
+@pytest.fixture
+def nightly(monkeypatch: pytest.MonkeyPatch) -> Iterator[SimpleNamespace]:
+    tmp_path = _nightly_root_outside_git()
     primary = tmp_path / "primary"
     project_python = primary / ".venv" / "bin" / "python"
     project_python.parent.mkdir(parents=True)
@@ -752,6 +783,7 @@ def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[SimpleN
             if snapshot.exists():
                 remove_snapshot(snapshot)
             assert not snapshot.exists()
+        remove_snapshot(tmp_path, ignore_errors=True)
 
 
 @pytest.mark.parametrize("action", ["removed", "skipped", "error"])
@@ -1422,8 +1454,8 @@ def test_nightly_missing_snapshots_keep_explicit_bindings(nightly, monkeypatch):
     assert nightly.events == ["stop", "remove"]
 
 
-def test_nightly_invalid_external_override_is_not_ignored(nightly, monkeypatch, tmp_path):
-    invalid = tmp_path / "scratch-file"
+def test_nightly_invalid_external_override_is_not_ignored(nightly, monkeypatch):
+    invalid = nightly.scratch_root.parent / "scratch-file"
     invalid.write_text("keep")
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(invalid))
     monkeypatch.setattr(data_tier, "snapshot_databases", lambda *args, **kwargs: pytest.fail("snapshot reached"))
