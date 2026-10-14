@@ -11,6 +11,9 @@ from contextlib import closing
 from datetime import UTC, datetime
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from scripts.agent_runtime.agent_identity import seat_read_aliases
 from scripts.ai_agent_bridge._channels import resolve_recipient_alias
 from scripts.common.bridge_paths import configured_bridge_db_path
