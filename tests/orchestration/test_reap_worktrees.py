@@ -8097,3 +8097,43 @@ def test_10593_reaper_lock_acquires_after_release(tmp_path, monkeypatch):
         timer.join()
         if not holder.handle.closed:
             holder.__exit__(None, None, None)
+
+
+@pytest.mark.parametrize("entry", ["symlink", "fifo", "hardlink", "directory"])
+def test_reaper_lock_refuses_unsafe_entry_without_mutating_it(tmp_path, entry):
+    repo = init_repo(tmp_path)
+    sentinel = repo / "sentinel.txt"
+    sentinel.write_bytes(b"preserve these bytes\n")
+    lock = repo / ".git/worktree-reaper.lock"
+    if entry == "symlink":
+        lock.symlink_to(sentinel)
+    elif entry == "fifo":
+        os.mkfifo(lock)
+    elif entry == "hardlink":
+        os.link(sentinel, lock)
+    else:
+        lock.mkdir()
+    inode = lock.lstat().st_ino
+    started = time.monotonic()
+    with pytest.raises(RuntimeError, match=r"unsafe|unavailable"):
+        with rw._ReapLock(repo):
+            pytest.fail("unsafe lock entry was acquired")
+    assert time.monotonic() - started < 1
+    assert sentinel.read_bytes() == b"preserve these bytes\n"
+    assert lock.lstat().st_ino == inode
+
+
+@pytest.mark.parametrize("metadata", [b"\xff", b"not a pid"])
+def test_reaper_lock_malformed_legacy_pid_is_unknown(tmp_path, monkeypatch, metadata):
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.05)
+    lock = repo / ".git/worktree-reaper.lock"
+    with lock.open("wb") as holder:
+        holder.write(metadata)
+        holder.flush()
+        fcntl.flock(holder.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(RuntimeError, match="holder pid=unknown"):
+            with rw._ReapLock(repo):
+                pytest.fail("legacy holder was displaced")
+        assert not holder.closed
+        assert lock.read_bytes() == metadata

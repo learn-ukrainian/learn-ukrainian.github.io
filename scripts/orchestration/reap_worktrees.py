@@ -52,6 +52,7 @@ from scripts.common.acp_runtime_lock import (
 from scripts.common.acp_runtime_lock import (
     parse_lock_owner as parse_acp_lock_owner,
 )
+from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
@@ -2304,7 +2305,20 @@ class _ReapLock:
         self.handle: Any = None
 
     def __enter__(self) -> None:
-        self.handle = self.path.open("a+", encoding="utf-8")
+        try:
+            with contextlib.ExitStack() as cleanup:
+                directory = os.open(self.path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+                cleanup.callback(os.close, directory)
+                descriptor = safe_open_below(directory, self.path.name, os.O_RDWR | os.O_CREAT)
+                try:
+                    if os.fstat(descriptor).st_nlink != 1:
+                        raise RuntimeError("unsafe reaper lock: hardlinked file")
+                    self.handle = os.fdopen(descriptor, "r+", encoding="utf-8")
+                except BaseException:
+                    os.close(descriptor)
+                    raise
+        except OSError as exc:
+            raise RuntimeError(f"reaper lock unavailable or unsafe: {exc}") from exc
         deadline = time.monotonic() + DEFAULT_REAP_LOCK_TIMEOUT_S
         try:
             while True:
@@ -2315,7 +2329,10 @@ class _ReapLock:
                     remaining = deadline - time.monotonic()
                     if remaining <= 0:
                         self.handle.seek(0)
-                        raw_pid = self.handle.read(32).strip()
+                        try:
+                            raw_pid = self.handle.read(32).strip()
+                        except UnicodeError:
+                            raw_pid = ""
                         holder = raw_pid if raw_pid.isascii() and raw_pid.isdigit() else "unknown"
                         raise RuntimeError(
                             f"another worktree cleanup holds {self.path}; holder pid={holder}; "

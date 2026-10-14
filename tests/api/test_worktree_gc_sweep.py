@@ -181,20 +181,57 @@ def test_10593_gc_sweep_restart_honours_persisted_ttl(monkeypatch):
     assert len(calls) == 2
 
 
-@pytest.mark.parametrize("operation", ["stat", "touch"])
+@pytest.mark.parametrize("operation", ["open", "utime"])
 def test_gc_sweep_persistence_error_does_not_reap(monkeypatch, operation):
     monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
     calls = []
     monkeypatch.setattr(api_main, "reap_worktrees", lambda **kwargs: calls.append(kwargs) or [])
     stamp = api_main.resolve_context(None).roots.batch_state_dir / "worktree-gc-sweep.last-run"
-    original = getattr(Path, operation)
+    if operation == "open":
+        original = api_main.safe_open_below
 
-    def refused(path, *args, **kwargs):
-        if path == stamp:
-            raise PermissionError("fixture state unavailable")
-        return original(path, *args, **kwargs)
+        def refused(directory, name, *args, **kwargs):
+            if name == stamp.name:
+                raise PermissionError("fixture state unavailable")
+            return original(directory, name, *args, **kwargs)
 
-    monkeypatch.setattr(Path, operation, refused)
+        monkeypatch.setattr(api_main, "safe_open_below", refused)
+    else:
+        original = os.utime
+
+        def refused(path, *args, **kwargs):
+            if isinstance(path, int):
+                raise PermissionError("fixture state unavailable")
+            return original(path, *args, **kwargs)
+
+        monkeypatch.setattr(os, "utime", refused)
     api_main._maybe_run_worktree_gc_sweep()
     assert calls == []
     assert api_main._gc_sweep_thread is None
+
+
+@pytest.mark.parametrize("entry", ["symlink", "fifo", "hardlink", "directory"])
+def test_gc_sweep_refuses_unsafe_timestamp_entry(monkeypatch, entry):
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC_INTERVAL_MIN", "0")
+    root = api_main.resolve_context(None).roots.batch_state_dir
+    sentinel = root / "sentinel.txt"
+    sentinel.write_bytes(b"preserve these bytes\n")
+    stamp = root / "worktree-gc-sweep.last-run"
+    if entry == "symlink":
+        stamp.symlink_to(sentinel)
+    elif entry == "fifo":
+        os.mkfifo(stamp)
+    elif entry == "hardlink":
+        os.link(sentinel, stamp)
+    else:
+        stamp.mkdir()
+    inode = stamp.lstat().st_ino
+    modified = sentinel.stat().st_mtime_ns
+    calls = []
+    monkeypatch.setattr(api_main, "reap_worktrees", lambda **kwargs: calls.append(kwargs) or [])
+    api_main._maybe_run_worktree_gc_sweep()
+    assert calls == []
+    assert sentinel.read_bytes() == b"preserve these bytes\n"
+    assert sentinel.stat().st_mtime_ns == modified
+    assert stamp.lstat().st_ino == inode
