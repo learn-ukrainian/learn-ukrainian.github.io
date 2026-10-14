@@ -108,8 +108,9 @@ def test_hot_agy_remains_avoid_through_budget_and_capacity_cli(monkeypatch, caps
 
         # Render both public views through the real refresh/read/display boundary,
         # then prove that neither the source budget nor later capacity picks changed.
-        for command in ("json", "show"):
-            assert usage.main([command] + (["--fresh"] if fresh else [])) == 0
+        for command in ("json", "show", "qa"):
+            expected_exit = 1 if command == "qa" and not agy_signal else 0
+            assert usage.main([command] + (["--fresh"] if fresh else [])) == expected_exit
             public = capsys.readouterr().out
             for sentinel in (
                 "PRIVATE_LABEL",
@@ -120,6 +121,12 @@ def test_hot_agy_remains_avoid_through_budget_and_capacity_cli(monkeypatch, caps
                 "PRIVATE_STDERR",
             ):
                 assert sentinel not in public
+            if command == "qa" and not agy_signal:
+                # The inherited routing row is an empty shell. Its diagnostic
+                # replacement cannot conceal the existing QA failure either.
+                assert public == "QA FAIL:\n- agy: unavailable with no fail= and no pools\n"
+                assert budget == original
+                continue
             if command == "json":
                 rows = json.loads(public)["agents"]
                 assert {"muse", "agy", "gemini"} <= rows.keys()
@@ -137,11 +144,14 @@ def test_hot_agy_remains_avoid_through_budget_and_capacity_cli(monkeypatch, caps
                     assert rows["agy"]["freshness"] == "stale_last_good"
                     assert rows["agy"]["quota_groups"][0]["windows"][0]["remaining_pct"] is None
             else:
+                if command == "qa":
+                    assert public.splitlines()[0] == ("QA PASS: 2 subscription lane(s) have usable allotment signal(s)")
+                assert "mix-max is blind" not in public
                 assert f"agy | {display_status} | unknown |" in public
                 assert "muse | unknown | unknown |" in public
             assert budget == original
         later = capacity_pick.build_report(usage.read_budget(fresh=fresh), active_in_flight={})
         assert next(row for row in later["pick_order"] if row["lane"] == "agy")["pick"] == "AVOID"
-        assert sorted(refreshes) == (["prepaid"] * 5 + ["subscription"] * 5 if fresh else [])
+        assert sorted(refreshes) == (["prepaid"] * 6 + ["subscription"] * 6 if fresh else [])
     finally:
         subscription_usage._reset_agy_quota_observation_for_tests()

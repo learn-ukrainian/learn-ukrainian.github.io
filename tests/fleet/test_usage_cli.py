@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import copy
 import io
 import json
+import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -789,10 +791,14 @@ def test_muse_boundary_reaches_literal_json_and_human_output(
     monkeypatch.setattr(
         usage,
         "read_budget",
-        lambda **kwargs: {
-            **usage._attach_status_observations({"agents": {}, "api_accounts": {}, "source": "fixture"}),
-            "agents": {"muse": usage._attach_status_observations({})["agents"]["muse"]},
-        },
+        lambda **kwargs: (
+            {
+                **usage._attach_status_observations({"agents": {}, "api_accounts": {}, "source": "fixture"}),
+                "agents": {"muse": usage._attach_status_observations({})["agents"]["muse"]},
+            }
+            if kwargs.get("for_display")
+            else {"agents": {}, "api_accounts": {}, "source": "fixture"}
+        ),
     )
     empty = {
         "used_pct": None,
@@ -839,20 +845,21 @@ def test_muse_boundary_reaches_literal_json_and_human_output(
         "source: fixture",
         "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
         "lane | status | remaining% | freshness | age_s | fail",
+        "agy | unknown | unknown | unavailable | unknown | -",
+        "  (no allotment windows; probe returned empty)",
         f"muse | {status} | {rem_text} | fresh | 0.0 | {fail_text}",
         f"  quota: remaining={quota_text} headroom={quota_text} resets=unknown",
     ]
     if window is not None:
         lines.append(f"  primary (window): used={window['used_pct']:.1f}% rem={remaining:.1f}% resets=unknown")
     lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
-    if remaining is None:
-        lines.extend(
-            [
-                "",
-                "WARN: no usable subscription allotment rows — mix-max is blind. "
-                "Run: usage doctor && usage show --fresh; check fail= codes above.",
-            ]
-        )
+    lines.extend(
+        [
+            "",
+            "WARN: no usable subscription allotment rows — mix-max is blind. "
+            "Run: usage doctor && usage show --fresh; check fail= codes above.",
+        ]
+    )
     assert human == "\n".join(lines) + "\n"
     assert "PRIVATE_" not in json_text + human
 
@@ -999,6 +1006,8 @@ def test_agy_boundary_reaches_literal_json_and_human_output(
     monkeypatch.setattr(su, "get_provider_usage_data", lambda *args, **kwargs: {})
 
     def budget(**kwargs):
+        if not kwargs.get("for_display"):
+            return {"agents": {}, "api_accounts": {}, "source": "fixture"}
         attached = usage._attach_status_observations({"agents": {}, "api_accounts": {}, "source": "fixture"})
         attached["agents"].pop("muse")
         return attached
@@ -1045,15 +1054,20 @@ def test_agy_boundary_reaches_literal_json_and_human_output(
     ]
     if line:
         lines.append(line)
+    lines.extend(
+        [
+            "muse | unknown | unknown | unavailable | unknown | -",
+            "  quota: remaining=unknown headroom=unknown resets=unknown",
+        ]
+    )
     lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
-    if status == "unknown":
-        lines.extend(
-            [
-                "",
-                "WARN: no usable subscription allotment rows — mix-max is blind. "
-                "Run: usage doctor && usage show --fresh; check fail= codes above.",
-            ]
-        )
+    lines.extend(
+        [
+            "",
+            "WARN: no usable subscription allotment rows — mix-max is blind. "
+            "Run: usage doctor && usage show --fresh; check fail= codes above.",
+        ]
+    )
     assert human == "\n".join(lines) + "\n"
     assert "PRIVATE_" not in json_text + human
     assert "987654" not in json_text + human
@@ -1092,6 +1106,8 @@ def test_usage_cli_cold_and_failed_fetch_diagnostics(monkeypatch, capsys, lane, 
     monkeypatch.setattr(su, "trigger_background_refresh", unexpected_fetch)
 
     def budget(**kwargs):
+        if not kwargs.get("for_display"):
+            return {"agents": {}, "api_accounts": {}, "source": "fixture"}
         attached = usage._attach_status_observations({"agents": {}, "api_accounts": {}, "source": "fixture"})
         attached["agents"].pop("agy" if lane == "muse" else "muse")
         return attached
@@ -1156,7 +1172,15 @@ def test_usage_cli_cold_and_failed_fetch_diagnostics(monkeypatch, capsys, lane, 
             f"{lane} | unknown | unknown | unavailable | unknown | {diagnostic}",
         ]
         if lane == "muse":
+            lines.insert(3, "agy | unknown | unknown | unavailable | unknown | unavailable")
             lines.append("  quota: remaining=unknown headroom=unknown resets=unknown")
+        else:
+            lines.extend(
+                [
+                    "muse | unknown | unknown | unavailable | unknown | unavailable",
+                    "  quota: remaining=unknown headroom=unknown resets=unknown",
+                ]
+            )
         lines.extend(
             [
                 "",
@@ -1545,3 +1569,139 @@ def test_usage_cli_stale_and_rate_limit_agy_hide_headroom():
     assert "agy | unknown | unknown | fresh | 1 | rate_limit/429" in limited
     assert "50.0" not in limited
     assert "2026-10-13" not in limited
+
+
+@pytest.mark.parametrize("fresh", [False, True], ids=["monitor", "fresh"])
+@pytest.mark.parametrize("diagnostic", ["muse", "agy", "both"])
+@pytest.mark.parametrize("known_lane", [None, "claude", "codex", "gemini", "grok", "cursor", "kimi"])
+@pytest.mark.parametrize("command", ["qa", "show", "refresh"])
+def test_cli_routing_health_counts_only_authoritative_rows(monkeypatch, capsys, fresh, diagnostic, known_lane, command):
+    from scripts.api import state_router
+    from scripts.api import subscription_usage as su
+
+    _clear_muse_observation()
+    routing = {
+        "agents": {
+            lane: {
+                "status": "unknown",
+                "remaining_pct": None,
+                "freshness": "unavailable",
+                "failure_kind": "fetch_error",
+                "last_failure_code": "TIMEOUT",
+            }
+            for lane in ("claude", "codex", "gemini", "grok", "cursor", "kimi")
+        },
+        "api_accounts": {},
+    }
+    if known_lane is not None:
+        routing["agents"][known_lane] = {
+            "status": "cool",
+            "remaining_pct": 80.0,
+            "freshness": "fresh",
+            "codexbar": {"windows": {"primary": {"used_pct": 20.0, "remaining_pct": 80.0}}},
+        }
+    original = copy.deepcopy(routing)
+    payloads = {
+        "/fixture/codexbar": {
+            "provider": "muse",
+            "usage": {"primary": {"usedPercent": 60}},
+            "account": "PRIVATE_ACCOUNT account@example.invalid",
+            "credits": 987654321,
+        },
+        "/fixture/agy": {
+            "command": {
+                "data": {
+                    "groups": [
+                        {
+                            "name": "Claude and GPT PRIVATE_LABEL",
+                            "buckets": [{"window": "5h", "remaining_fraction": 0.5}],
+                        }
+                    ]
+                }
+            },
+            "account": "PRIVATE_ACCOUNT account@example.invalid",
+            "credits": 987654321,
+        },
+    }
+    monkeypatch.setattr(su, "_codexbar_bin", lambda: "/fixture/codexbar")
+    monkeypatch.setattr(su, "_agy_cli_bin", lambda: "/fixture/agy")
+
+    def run(argv, **kwargs):
+        assert argv[0] in payloads
+        return subprocess.CompletedProcess(argv, 0, stdout=json.dumps(payloads[argv[0]]), stderr="PRIVATE_STDERR")
+
+    monkeypatch.setattr(su.subprocess, "run", run)
+    real_refresh = su.refresh_provider_usage_data
+    providers = {"muse": ["muse"], "agy": ["gemini"], "both": ["muse", "gemini"]}[diagnostic]
+    refreshes = []
+
+    def refresh(requested):
+        assert set(providers) <= set(requested)
+        refreshes.append("subscription")
+        return real_refresh(providers, timeout_s=1)
+
+    monkeypatch.setattr(su, "refresh_provider_usage_data", refresh)
+    monkeypatch.setattr(su, "refresh_api_account_data", lambda requested: refreshes.append("prepaid"))
+    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **kwargs: routing)
+    http_reads = []
+
+    def http(url, **kwargs):
+        http_reads.append(url)
+        return io.StringIO(json.dumps(routing))
+
+    monkeypatch.setattr(usage.urllib.request, "urlopen", http)
+    if not fresh and command != "refresh":
+        real_refresh(providers, timeout_s=1)
+
+    try:
+        expected_exit = 1 if command == "qa" and known_lane is None else 0
+        assert usage.main([command] + (["--fresh"] if fresh else [])) == expected_exit
+        public = capsys.readouterr()
+        if command == "qa" and known_lane is None:
+            assert public.out == "QA FAIL:\n- no usable subscription allotment rows (mix-max blind)\n"
+        else:
+            warning = (
+                "WARN: no usable subscription allotment rows — mix-max is blind. "
+                "Run: usage doctor && usage show --fresh; check fail= codes above."
+            )
+            assert (warning in public.out) == (known_lane is None)
+            if command == "qa":
+                assert public.out.splitlines()[0] == "QA PASS: 1 subscription lane(s) have usable allotment signal(s)"
+            if diagnostic in {"muse", "both"}:
+                assert "muse | healthy | 40.0 | fresh |" in public.out
+                assert "  primary (window): used=60.0% rem=40.0% resets=unknown" in public.out
+            if diagnostic in {"agy", "both"}:
+                assert "agy | healthy | unknown | fresh |" in public.out
+                assert "  Claude and GPT models (5h): used=50.0% rem=50.0% resets=unknown" in public.out
+        for sentinel in ("PRIVATE_", "account@example.invalid", "987654321"):
+            assert sentinel not in public.out + public.err
+        assert public.err == ""
+        assert routing == original
+        assert len(http_reads) == (0 if fresh or command == "refresh" else 1)
+        assert sorted(refreshes) == (["prepaid", "subscription"] if fresh or command == "refresh" else [])
+    finally:
+        _clear_muse_observation()
+        su._reset_agy_quota_observation_for_tests()
+
+
+@pytest.mark.parametrize("agents", [{}, {"codex": "malformed"}])
+def test_cli_qa_rejects_missing_or_malformed_routing_despite_fresh_diagnostics(monkeypatch, capsys, agents):
+    from scripts.api import subscription_usage as su
+
+    monkeypatch.setattr(
+        usage.urllib.request,
+        "urlopen",
+        lambda *args, **kwargs: io.StringIO(json.dumps({"agents": agents, "api_accounts": {}})),
+    )
+    monkeypatch.setattr(
+        su,
+        "get_provider_usage_data",
+        lambda *args, **kwargs: {"freshness": "fresh", "windows": {"primary": {"used_pct": 0}}},
+    )
+    assert usage.main(["qa"]) == 1
+    expected = (
+        "QA FAIL: routing-budget agents missing\n"
+        if not agents
+        else "QA FAIL:\n- codex: not an object\n- no usable subscription allotment rows (mix-max blind)\n"
+    )
+    assert capsys.readouterr().out == expected

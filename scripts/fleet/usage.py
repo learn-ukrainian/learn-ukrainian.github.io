@@ -411,15 +411,18 @@ def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
     return tips
 
 
-def format_human(budget: dict[str, Any]) -> str:
-    """Render subscriptions + prepaid without importing Monitor routers."""
+def format_human(budget: dict[str, Any], *, for_display: bool = False) -> str:
+    """Render an authoritative budget; optional diagnostics never count as routing signals."""
+    routing_agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
+    usable = sum(_lane_has_usable_allotment(info) for info in routing_agents.values() if isinstance(info, dict))
+    if for_display:
+        budget = _attach_status_observations(budget)
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     lines = [
         f"source: {budget.get('source', 'unknown')}",
         "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
         "lane | status | remaining% | freshness | age_s | fail",
     ]
-    usable = 0
     for lane in sorted(agents):
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
         freshness, age = _observation(info)
@@ -439,9 +442,7 @@ def format_human(budget: dict[str, Any]) -> str:
         if allotments:
             lines.extend(allotments)
         lines.extend(_lane_tips(lane, info, fail=fail))
-        if _lane_has_usable_allotment(info):
-            usable += 1
-        elif freshness == "unavailable" and fail == "-" and not allotments:
+        if not _lane_has_usable_allotment(info) and freshness == "unavailable" and fail == "-" and not allotments:
             lines.append("  (no allotment windows; probe returned empty)")
 
     lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
@@ -569,7 +570,7 @@ def doctor() -> str:
 
 
 def qa_snapshot(budget: dict[str, Any]) -> tuple[int, str]:
-    """Exit 0 only when at least one subscription lane has a usable allotment signal."""
+    """Check authoritative routing rows, not the diagnostic display snapshot."""
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     if not agents:
         return 1, "QA FAIL: routing-budget agents missing"
@@ -605,6 +606,7 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.fleet.usage doctor\n"
             "  .venv/bin/python -m scripts.fleet.usage qa\n\n"
             "Default: DELEGATE_MONITOR_API (http://127.0.0.1:8765); offline falls back to blocking probes.\n"
+            "Outputs: stdout snapshot or QA result; native refresh updates existing usage caches.\n"
             "Exit codes: 0 ok; 1 read/refresh/qa failed; 2 invalid arguments.\n"
             "Related: /api/state/routing-budget; scripts.fleet.capacity_pick; issue #8074."
         ),
@@ -626,14 +628,18 @@ def main(argv: list[str] | None = None) -> int:
         print(doctor())
         return 0
     try:
-        budget = read_budget(fresh=args.fresh or args.command == "refresh", for_display=True)
+        budget = read_budget(fresh=args.fresh or args.command == "refresh", for_display=args.command == "json")
         if args.command == "qa":
             code, message = qa_snapshot(budget)
             print(message)
             if code == 0:
-                print(format_human(budget))
+                print(format_human(budget, for_display=True))
             return code
-        print(json.dumps(budget, indent=2, sort_keys=True) if args.command == "json" else format_human(budget))
+        print(
+            json.dumps(budget, indent=2, sort_keys=True)
+            if args.command == "json"
+            else format_human(budget, for_display=True)
+        )
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError):
         print("Usage snapshot failed; capacity remains unknown. Run usage doctor.", file=sys.stderr)
         return 1
