@@ -7621,6 +7621,11 @@
       "risk": "low"
     },
     {
+      "author_model": "muse-wonder-full-1.0",
+      "review_profile": "code",
+      "risk": "low"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "low"
@@ -8857,6 +8862,11 @@
       "risk": "low"
     },
     {
+      "author_model": "muse-wonder-full-1.0",
+      "review_profile": "infra",
+      "risk": "low"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "infra",
       "risk": "low"
@@ -10093,6 +10103,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "muse-wonder-full-1.0",
+      "review_profile": "code",
+      "risk": "medium"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "medium"
@@ -11329,6 +11344,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "muse-wonder-full-1.0",
+      "review_profile": "infra",
+      "risk": "medium"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "infra",
       "risk": "medium"
@@ -12565,6 +12585,11 @@
       "risk": "high"
     },
     {
+      "author_model": "muse-wonder-full-1.0",
+      "review_profile": "code",
+      "risk": "high"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "high"
@@ -13801,6 +13826,11 @@
       "risk": "high"
     },
     {
+      "author_model": "muse-wonder-full-1.0",
+      "review_profile": "infra",
+      "risk": "high"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "infra",
       "risk": "high"
@@ -15037,6 +15067,11 @@
       "risk": "critical"
     },
     {
+      "author_model": "muse-wonder-full-1.0",
+      "review_profile": "code",
+      "risk": "critical"
+    },
+    {
       "author_model": "openrouter/stealth/ox-alpha",
       "review_profile": "code",
       "risk": "critical"
@@ -16269,6 +16304,11 @@
     },
     {
       "author_model": "muse-wonder-1.0",
+      "review_profile": "infra",
+      "risk": "critical"
+    },
+    {
+      "author_model": "muse-wonder-full-1.0",
       "review_profile": "infra",
       "risk": "critical"
     },

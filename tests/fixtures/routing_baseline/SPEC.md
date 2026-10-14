@@ -426,3 +426,15 @@ Removing that option restores the previous text after whitespace
 normalization. Inputs, occurrences, historical captures and every other
 surface remain byte-identical. The previous approved outcome now also applies
 the #10619 overlay to the historical captures.
+
+Adding the held `muse-wonder-full-1.0` candidate regenerates both
+configurations again with the same procedure. Its catalog entry equals the
+`muse-wonder-1.0` entry, so the catalog grows from 44 to 45 models. Reviewer
+inputs and receipts grow from 1,504 to 1,512: one Full author case for each of
+the four risks and two profiles. These receipts equal the Wonder author
+receipts with the model id swapped, and none selects Muse. Approval rows grow
+from 396 to 405: nine Full author rows that require Opus and Sol and never
+count Muse. Every existing receipt, the roles, dispatch, adapter, capacity,
+launcher, registry, fallback, holder and source-contract surfaces, the
+occurrences and the historical captures remain byte-identical. Against the
+previous approved outcome the scope test now expects 32 reviewer additions.

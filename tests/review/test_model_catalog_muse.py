@@ -12,29 +12,40 @@ from scripts.review.model_catalog import load_model_catalog, resolve_role
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 
 MODEL = "muse-wonder-1.0"
+FULL = "muse-wonder-full-1.0"
+MUSE_MODELS = (MODEL, FULL)
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_candidate_is_metadata_only():
+@pytest.mark.parametrize("model", MUSE_MODELS)
+def test_candidate_is_metadata_only(model):
     catalog = load_model_catalog()
-    entry = catalog["models"][MODEL]
+    entry = catalog["models"][model]
     assert entry["family"] == "meta"
     assert entry["lifecycle"] == "hold"
     assert entry["roles"] == ["candidate_author", "candidate_reviewer"]
     assert entry["context_window"] == 1000000
     assert "https://dev.meta.ai/models/muse-wonder" in entry["sources"]
+    assert entry["transports"] == ["muse"]
+    assert entry["weaknesses"] == [
+        "unqualified_no_automatic_routing",
+        "no_security",
+        "no_ukrainian",
+        "no_private_repository",
+    ]
+    assert {key: value for key, value in entry.items()} == catalog["models"][MODEL]
     assert AGENTS["muse"]["default_model"] is None
     assert not AGENTS["muse"]["capabilities"]
-    assert all(row["default_model"] != MODEL for row in AGENTS.values())
+    assert all(row["default_model"] != model for row in AGENTS.values())
     for key, value in catalog.items():
         if key != "models":
-            assert MODEL not in json.dumps(value), key
+            assert model not in json.dumps(value), key
     assert "muse" not in (ROOT / "scripts/config/agent_fallback_substitutions.yaml").read_text()
 
 
 def test_full_frozen_reviewer_matrix_never_selects_muse():
     matrix = json.loads((ROOT / "tests/fixtures/routing_baseline/inputs.json").read_text())["reviewer"]
-    assert len(matrix) == 1504
+    assert len(matrix) == 1512
     for row in matrix:
         typed = dict(row)
         for key in ("required_capabilities", "subject_seats", "subject_families", "author_families"):
@@ -44,10 +55,10 @@ def test_full_frozen_reviewer_matrix_never_selects_muse():
             typed["owned_paths"] = tuple(typed["owned_paths"])
         result = resolve_reviewer(ResolverInputs(**typed))
         if result.selected is not None:
-            assert result.selected.concrete_model != MODEL, row
+            assert result.selected.concrete_model not in MUSE_MODELS, row
             assert result.selected.route != "muse", row
         for candidate in (*result.trace, *result.advisory, *result.quorum):
-            assert candidate.concrete_model != MODEL, row
+            assert candidate.concrete_model not in MUSE_MODELS, row
             assert candidate.route != "muse", row
 
 
@@ -61,7 +72,7 @@ def test_every_generated_role_case_excludes_muse():
             continue
         result = resolve_role(**row)
         for candidate in result.candidates:
-            assert candidate.model_id != MODEL, row
+            assert candidate.model_id not in MUSE_MODELS, row
             assert candidate.transport != "muse", row
 
 
@@ -79,6 +90,13 @@ def test_every_generated_role_case_excludes_muse():
         ("private-infra", False, "muse", MODEL, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
         ("private-product", False, "muse", MODEL, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
         ("public-monorepo", False, "muse", MODEL, "MUSE_GUARD_PARITY_UNPROVEN"),
+        ("public-monorepo", True, "muse", FULL, "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "codex", FULL, "UKRAINIAN_MODEL_REFUSED"),
+        ("public-monorepo", True, "claude", "meta/muse-wonder-full-1.0", "UKRAINIAN_MODEL_REFUSED"),
+        ("private-infra", False, "muse", FULL, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
+        ("private-product", False, "muse", FULL, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
+        ("private-infra", False, "codex", FULL, "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"),
+        ("public-monorepo", False, "muse", FULL, "MUSE_GUARD_PARITY_UNPROVEN"),
     ],
 )
 def test_candidate_exclusion_at_dispatch(repo, language, seat, model, reason):

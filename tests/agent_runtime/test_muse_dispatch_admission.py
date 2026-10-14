@@ -33,7 +33,7 @@ def tasks_dir(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-@pytest.mark.parametrize("model", ["muse-wonder-1.0", "gpt-6.1-sol", "claude-opus-5-5"])
+@pytest.mark.parametrize("model", ["muse-wonder-1.0", "muse-wonder-full-1.0", "gpt-6.1-sol", "claude-opus-5-5"])
 def test_held_muse_dispatch_creates_no_worktree_or_task(tasks_dir, tmp_path, monkeypatch, capsys, mode, model):
     from tests.helpers.dispatch_checkout import isolate_dispatch_repo
 

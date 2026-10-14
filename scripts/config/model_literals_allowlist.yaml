@@ -6112,6 +6112,13 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'kimi-orchestrator.md'; not a model ID.
+- path: scripts/session_canary/muse_lane.py
+  scope: <module>
+  context: expression
+  id: muse-wonder-full-1.0
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/telemetry/legacy_bridge.py
   scope: <module>
   context: expression

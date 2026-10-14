@@ -10,13 +10,20 @@ from scripts import delegate
 from scripts.agent_runtime import registry, target_admission
 from scripts.review.model_catalog import load_model_catalog, model_aliases
 
+MUSE_MODELS = ("muse-wonder-1.0", "muse-wonder-full-1.0")
 EXISTING_MODELS = (
     None,
     *sorted(
-        {alias for alias, model in model_aliases(load_model_catalog()).items() if model != "muse-wonder-1.0"}
+        {alias for alias, model in model_aliases(load_model_catalog()).items() if model not in MUSE_MODELS}
         | {"auto", "opus", "sonnet", "haiku", "qwen3.6-plus"}
     ),
 )
+
+
+def test_muse_candidates_are_exactly_the_meta_or_muse_catalog_identities():
+    models = load_model_catalog()["models"]
+    held = {name for name, entry in models.items() if entry["family"] == "meta" or "muse" in entry["transports"]}
+    assert held == set(MUSE_MODELS)
 
 
 @pytest.mark.parametrize(
@@ -50,6 +57,10 @@ def test_existing_seat_matrix_identical(repo, seat, monkeypatch):
         ("codex", "muse-wonder-1.0"),
         ("codex", "meta/muse-wonder-1.0"),
         ("codex", "MUSE-WONDER-1.0[1m]"),
+        ("muse", "muse-wonder-full-1.0"),
+        ("codex", "muse-wonder-full-1.0"),
+        ("codex", "meta/muse-wonder-full-1.0"),
+        ("codex", "MUSE-WONDER-FULL-1.0[1m]"),
         ("future-seat", None),
     ],
 )
@@ -58,13 +69,14 @@ def test_new_seat_and_model_private_target_denied(repo, seat, model):
         target_admission.resolve_and_admit((seat,), model=model, mode="read-only", repo=repo)
 
 
+@pytest.mark.parametrize("model", MUSE_MODELS)
 @pytest.mark.parametrize("review,role", [(False, None), (True, "review"), (False, "advisor")])
-def test_private_muse_refused_before_review_or_advisor_effects(review, role):
+def test_private_muse_refused_before_review_or_advisor_effects(review, role, model):
     with patch.object(target_admission, "_refuse_non_review_models", side_effect=AssertionError("review reached")):
         with pytest.raises(ValueError, match="PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"):
             target_admission.resolve_and_admit(
                 ("muse",),
-                model="muse-wonder-1.0",
+                model=model,
                 mode="read-only",
                 repo="private-infra",
                 review=review,
@@ -79,10 +91,11 @@ def test_resolved_private_target_is_rechecked():
         )
 
 
-def test_attached_private_target_is_checked():
+@pytest.mark.parametrize("model", MUSE_MODELS)
+def test_attached_private_target_is_checked(model):
     with pytest.raises(ValueError, match="PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED"):
         target_admission.resolve_and_admit(
-            ("codex",), mode="read-only", repo="private-infra", attachments=({"to_model": "muse-wonder-1.0"},)
+            ("codex",), mode="read-only", repo="private-infra", attachments=({"to_model": model},)
         )
 
 
@@ -106,7 +119,8 @@ def test_documented_private_model_labels_still_admitted(seat, model):
     assert target.model == model
 
 
-def test_dispatch_private_refusal_is_typed():
-    args = argparse.Namespace(agent="muse", model="muse-wonder-1.0", mode="read-only", task_id="muse-test")
+@pytest.mark.parametrize("model", MUSE_MODELS)
+def test_dispatch_private_refusal_is_typed(model):
+    args = argparse.Namespace(agent="muse", model=model, mode="read-only", task_id="muse-test")
     refusal, target = delegate._admit_dispatch_target(args, agent="muse", trees=(), repo_role="private-infra")
     assert target is None and "PRIVATE_REPOSITORY_SEAT_NOT_ALLOWED" in refusal

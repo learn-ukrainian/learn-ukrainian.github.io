@@ -249,59 +249,71 @@ MUSE_CANDIDATE_ENTRY = {
     "sources": ["https://dev.meta.ai/models/muse-wonder"],
 }
 
+# Both held candidates share one catalog entry shape (#10511).
+MUSE_MODELS = ("muse-wonder-1.0", "muse-wonder-full-1.0")
+
 
 # #10511: exact additive cases, with their final input positions and frozen
-# receipt references. No seat, ladder or authority is added.
+# receipt references. Both held Muse ids add author cases; the Meta family
+# cases are per family. No seat, ladder or authority is added.
 MUSE_REVIEWER_INPUT_ADDITIONS = [
     (94, {"author_model": "muse-wonder-1.0", "risk": "low", "review_profile": "code"}, 0),
-    (110, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "code", "author_family": "meta"}, 19),
-    (111, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "code", "subject_families": ["meta"]}, 0),
-    (282, {"author_model": "muse-wonder-1.0", "risk": "low", "review_profile": "infra"}, 185),
-    (298, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "infra", "author_family": "meta"}, 204),
-    (299, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "infra", "subject_families": ["meta"]}, 185),
-    (470, {"author_model": "muse-wonder-1.0", "risk": "medium", "review_profile": "code"}, 370),
-    (486, {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "code", "author_family": "meta"}, 389),
+    (95, {"author_model": "muse-wonder-full-1.0", "risk": "low", "review_profile": "code"}, 0),
+    (111, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "code", "author_family": "meta"}, 19),
+    (112, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "code", "subject_families": ["meta"]}, 0),
+    (283, {"author_model": "muse-wonder-1.0", "risk": "low", "review_profile": "infra"}, 185),
+    (284, {"author_model": "muse-wonder-full-1.0", "risk": "low", "review_profile": "infra"}, 185),
+    (300, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "infra", "author_family": "meta"}, 204),
+    (301, {"author_model": "gpt-6.1-sol", "risk": "low", "review_profile": "infra", "subject_families": ["meta"]}, 185),
+    (472, {"author_model": "muse-wonder-1.0", "risk": "medium", "review_profile": "code"}, 370),
+    (473, {"author_model": "muse-wonder-full-1.0", "risk": "medium", "review_profile": "code"}, 370),
+    (489, {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "code", "author_family": "meta"}, 389),
     (
-        487,
+        490,
         {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "code", "subject_families": ["meta"]},
         370,
     ),
-    (658, {"author_model": "muse-wonder-1.0", "risk": "medium", "review_profile": "infra"}, 555),
-    (674, {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "infra", "author_family": "meta"}, 574),
+    (661, {"author_model": "muse-wonder-1.0", "risk": "medium", "review_profile": "infra"}, 555),
+    (662, {"author_model": "muse-wonder-full-1.0", "risk": "medium", "review_profile": "infra"}, 555),
+    (678, {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "infra", "author_family": "meta"}, 574),
     (
-        675,
+        679,
         {"author_model": "gpt-6.1-sol", "risk": "medium", "review_profile": "infra", "subject_families": ["meta"]},
         555,
     ),
-    (846, {"author_model": "muse-wonder-1.0", "risk": "high", "review_profile": "code"}, 740),
-    (862, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "code", "author_family": "meta"}, 759),
-    (863, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "code", "subject_families": ["meta"]}, 740),
-    (1034, {"author_model": "muse-wonder-1.0", "risk": "high", "review_profile": "infra"}, 925),
-    (1050, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "infra", "author_family": "meta"}, 944),
+    (850, {"author_model": "muse-wonder-1.0", "risk": "high", "review_profile": "code"}, 740),
+    (851, {"author_model": "muse-wonder-full-1.0", "risk": "high", "review_profile": "code"}, 740),
+    (867, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "code", "author_family": "meta"}, 759),
+    (868, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "code", "subject_families": ["meta"]}, 740),
+    (1039, {"author_model": "muse-wonder-1.0", "risk": "high", "review_profile": "infra"}, 925),
+    (1040, {"author_model": "muse-wonder-full-1.0", "risk": "high", "review_profile": "infra"}, 925),
+    (1056, {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "infra", "author_family": "meta"}, 944),
     (
-        1051,
+        1057,
         {"author_model": "gpt-6.1-sol", "risk": "high", "review_profile": "infra", "subject_families": ["meta"]},
         925,
     ),
-    (1222, {"author_model": "muse-wonder-1.0", "risk": "critical", "review_profile": "code"}, 1110),
+    (1228, {"author_model": "muse-wonder-1.0", "risk": "critical", "review_profile": "code"}, 1110),
+    (1229, {"author_model": "muse-wonder-full-1.0", "risk": "critical", "review_profile": "code"}, 1110),
     (
-        1238,
+        1245,
         {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "code", "author_family": "meta"},
         1129,
     ),
     (
-        1239,
+        1246,
         {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "code", "subject_families": ["meta"]},
         1110,
     ),
-    (1410, {"author_model": "muse-wonder-1.0", "risk": "critical", "review_profile": "infra"}, 1295),
+    (1417, {"author_model": "muse-wonder-1.0", "risk": "critical", "review_profile": "infra"}, 1295),
+    (1418, {"author_model": "muse-wonder-full-1.0", "risk": "critical", "review_profile": "infra"}, 1295),
     (
-        1426,
+        1434,
         {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "infra", "author_family": "meta"},
         1314,
     ),
     (
-        1427,
+        1435,
         {"author_model": "gpt-6.1-sol", "risk": "critical", "review_profile": "infra", "subject_families": ["meta"]},
         1295,
     ),
@@ -373,6 +385,12 @@ MUSE_APPROVAL_ROW_ADDITIONS = [
     },
 ]
 
+
+def muse_approval_rows(model):
+    """The nine approval rows for one held Muse author; only the author differs."""
+    return [{**row, "author": model} for row in MUSE_APPROVAL_ROW_ADDITIONS]
+
+
 MUSE_REGISTRY_ENTRY = {
     "adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter",
     "default_model": None,
@@ -394,12 +412,12 @@ def test_muse_candidate_approval_rows_grant_no_authority():
     before = deepcopy(BASELINE["approval"])
     actual = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], load_model_catalog())
     assert actual == APPROVED_BASELINE["approval"]
-    assert len(actual["rows"]) == 396
+    assert len(actual["rows"]) == 405
     assert len(before["rows"]) == 387
-    assert [row for row in actual["rows"] if row["author"] != "muse-wonder-1.0"] == before["rows"]
-    added = [row for row in actual["rows"] if row["author"] == "muse-wonder-1.0"]
-    assert added == MUSE_APPROVAL_ROW_ADDITIONS
-    assert len(added) == 9
+    assert [row for row in actual["rows"] if row["author"] not in MUSE_MODELS] == before["rows"]
+    added = [row for row in actual["rows"] if row["author"] in MUSE_MODELS]
+    assert added == [row for model in MUSE_MODELS for row in muse_approval_rows(model)]
+    assert len(added) == 18
     assert actual["holders"] == ["claude-opus-5-5", "gpt-6.1-sol"]
     for row in added:
         assert set(row) == {"author", "required", "votes", "self_approval_counts", "outcome"}
@@ -425,10 +443,10 @@ def test_muse_added_reviewer_case_never_selects_muse(index, case, reference, tmp
     result = resolve_reviewer(ResolverInputs(**typed))
     if result.selected is not None:
         assert result.selected.route != "muse"
-        assert result.selected.concrete_model != "muse-wonder-1.0"
+        assert result.selected.concrete_model not in MUSE_MODELS
     for candidate in (*result.trace, *result.advisory, *result.quorum):
         assert candidate.route != "muse"
-        assert candidate.concrete_model != "muse-wonder-1.0"
+        assert candidate.concrete_model not in MUSE_MODELS
     actual = CAPTURE["observed"](lambda: result)
     assert APPROVED_INPUTS["reviewer"][index] == case
     assert json.loads(CAPTURE["encode"](actual)) == APPROVED_BASELINE["reviewer"][index]
@@ -880,18 +898,18 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the #10205 Cursor wire pin and allowlist revision and
 # the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "dfc4af8aed9c9f52d3851b489ab03d8a15df5aaa584c6c1e000c55c860806b1a",
-    "SPEC.md": "1ef2c7bc2c5fed0fb549446ebb6afb575c43b2e0eee07d5d630306a5d43c00b6",
+    "SHA256SUMS": "72732941387657ad55ab672e4c81f0047184b4c3beb258b01fc07a46f72ce857",
+    "SPEC.md": "bee9ba07d45522236d705e2ca4162fdec1d0fea41b67977f3e73c17ae995bc7e",
     "baseline-pre-10511.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
-    "baseline.json.gz": "fbc0ce72a1704e8c6f696235aa5e7e18f5e1f470287a60bc50b65098fb437a58",
+    "baseline.json.gz": "504566b6e8e27fa95f7f0b157de3f213f4fd0117bb3249ea6d96aca53ac05149",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
-    "no-cli/SHA256SUMS": "235175ff3f9d6288de25072702bafe42f3b140a567699969e7478f64d7a41d21",
+    "inputs.json": "e66ba618a2a0b026cb2c66c322486efab8837358fbf596b3b9aeb2916f58646f",
+    "no-cli/SHA256SUMS": "721a14e5f443b0fdc78724f4be10cd803ef7529141fce757b35b38c23520a62a",
     "no-cli/baseline-pre-10511.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
-    "no-cli/baseline.json.gz": "7d5a06195cd186c0777fe82bd6c44976b215b37e9e5b0c63120862799f4bcddf",
+    "no-cli/baseline.json.gz": "482840152a534300438ec6125b7a939c19cc029cba6878af591b5863a456bcee",
     "no-cli/inputs-pre-10511.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/inputs.json": "78378c2b7e7a802309085dfaf354fa4907d819a9741e6bfc19541b416351d5b0",
+    "no-cli/inputs.json": "e66ba618a2a0b026cb2c66c322486efab8837358fbf596b3b9aeb2916f58646f",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
@@ -1313,7 +1331,7 @@ def test_muse_regeneration_changes_only_registered_candidate(configuration):
             "capacity": (42, 0, 0),
             "dispatch": (348, 28, 532),
             "launchers": (70, 0, 0),
-            "reviewer": (1480, 24, 0),
+            "reviewer": (1480, 32, 0),
             "roles": (855, 15, 0),
         }
         assert (unchanged, len(additions), diagnostics) == expected[surface], (
@@ -1337,23 +1355,21 @@ def test_muse_regeneration_changes_only_registered_candidate(configuration):
                 for case, receipt in zip(new_inputs[surface], new[surface], strict=True)
                 if case["agent"] == "muse" and case["model"] is not None
             )
-    for surface, child, name in (("catalog", "models", "muse-wonder-1.0"), ("registry", None, "muse")):
-        revised = deepcopy(new[surface])
-        target = revised[child] if child else revised
-        addition = target.pop(name)
-        assert revised == old[surface], surface
-        if child:
-            assert addition == MUSE_CANDIDATE_ENTRY
-        else:
-            assert addition == MUSE_REGISTRY_ENTRY
+    catalog = deepcopy(new["catalog"])
+    for name in MUSE_MODELS:
+        assert catalog["models"].pop(name) == MUSE_CANDIDATE_ENTRY, name
+    assert catalog == old["catalog"]
+    registry = deepcopy(new["registry"])
+    assert registry.pop("muse") == MUSE_REGISTRY_ENTRY
+    assert registry == old["registry"]
     approval = deepcopy(new["approval"])
-    added = [row for row in approval["rows"] if row["author"] == "muse-wonder-1.0"]
-    approval["rows"] = [row for row in approval["rows"] if row["author"] != "muse-wonder-1.0"]
+    added = [row for row in approval["rows"] if row["author"] in MUSE_MODELS]
+    approval["rows"] = [row for row in approval["rows"] if row["author"] not in MUSE_MODELS]
     assert approval == old["approval"]
-    assert len(added) == 9
+    assert len(added) == 18
     for row in added:
         assert row["required"] == ["claude-opus-5-5", "gpt-6.1-sol"]
         assert set(row["votes"]) == set(row["required"]) and row["self_approval_counts"] is False
-    assert added == MUSE_APPROVAL_ROW_ADDITIONS
+    assert added == [row for model in MUSE_MODELS for row in muse_approval_rows(model)]
     for surface in ("fallbacks", "routing_holders", "source_contracts"):
         assert old[surface] == new[surface], surface

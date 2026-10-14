@@ -38,12 +38,13 @@ def parse(stdout, **kwargs):
     )
 
 
+@pytest.mark.parametrize("model", ["muse-wonder-1.0", "muse-wonder-full-1.0"])
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-def test_unproven_modes_refuse_before_creating_files(tmp_path, mode):
+def test_unproven_modes_refuse_before_creating_files(tmp_path, mode, model):
     from scripts.agent_runtime.adapters.muse import MuseGuardParityRefused
 
     with pytest.raises(MuseGuardParityRefused, match="MUSE_GUARD_PARITY_UNPROVEN"):
-        build(tmp_path, mode=mode)
+        build(tmp_path, mode=mode, model=model)
     assert list(tmp_path.iterdir()) == []
 
 

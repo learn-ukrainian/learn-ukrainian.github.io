@@ -361,6 +361,18 @@ models:
     weaknesses: [unqualified_no_automatic_routing, no_security, no_ukrainian, no_private_repository]
     sources: [https://dev.meta.ai/models/muse-wonder]
     # Usage meter: codexbar --provider muse
+  muse-wonder-full-1.0:
+    family: meta
+    tier: specialist
+    lifecycle: hold
+    roles: [candidate_author, candidate_reviewer]
+    transports: [muse]
+    # Same vendor 1M convention as muse-wonder-1.0; Muse Code subscription only.
+    context_window: 1000000
+    strengths: [public_code_candidate]
+    weaknesses: [unqualified_no_automatic_routing, no_security, no_ukrainian, no_private_repository]
+    sources: [https://dev.meta.ai/models/muse-wonder]
+    # Usage meter: codexbar --provider muse
   gpt-6.1-sol:
     routing_wire_ids:
       native_codex: gpt-6.1-sol

@@ -282,8 +282,10 @@ rate-limit headroom checks, mode validation, cwd enforcement.
 
 ## Muse candidate
 
-Muse Wonder is a held `meta` candidate for public, non-security code authoring
-and review. It has no default model or routing role and is absent from review
+Muse Wonder (`muse-wonder-1.0`) and Muse Wonder-Full (`muse-wonder-full-1.0`,
+subscription only) are held `meta` candidates for public, non-security code
+authoring and review, with identical catalog entries. Neither has a default
+model or routing role, and both are absent from review
 ladders and fallback tables, including cooler-seat hints. Private targets retain
 the existing seat grants at `target_admission`; aliases resolve before the gate
 excludes the `meta` family and `muse` transport. The Muse seat cannot receive
