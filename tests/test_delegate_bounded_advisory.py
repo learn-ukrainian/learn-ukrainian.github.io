@@ -1932,10 +1932,21 @@ def test_b2_content_only_files_beside_the_probes_stay_eligible(content_repo, pat
     assert bounded_advisory.content_path_problem(path, content_repo) is None
 
 
-def test_b2_an_unreadable_tree_fails_closed(tmp_path):
-    (tmp_path / "docs").mkdir()
-    problem = bounded_advisory.content_path_problem("docs/", tmp_path)
+@pytest.mark.parametrize("inside_git_dir", [False, True], ids=["plain", "git-dir"])
+def test_b2_an_unreadable_tree_fails_closed(tmp_path, monkeypatch, inside_git_dir):
+    for key in tuple(os.environ):
+        if key.startswith("GIT_"):
+            monkeypatch.delenv(key, raising=False)
+    root = tmp_path
+    if inside_git_dir:
+        enclosing = tmp_path / "enclosing"
+        _git("init", "--initial-branch=main", str(enclosing), cwd=tmp_path)
+        root = enclosing / ".git" / "unreadable"
+    (root / "docs").mkdir(parents=True)
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(root.parent))
+    problem = bounded_advisory.content_path_problem("docs/", root)
     assert problem is not None and "cannot be resolved" in problem
+    assert "not a git repository" in problem
 
 
 def test_b2_reviewer_probe_dispatches_are_refused(env, capsys):
