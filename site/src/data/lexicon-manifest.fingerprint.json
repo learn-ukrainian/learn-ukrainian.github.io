@@ -183,7 +183,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "ff471365f617f9d199a4f2c6676017fe002ad2400233f56e36bd85cb81a59838"
+        "sha256": "179b72310415a3026a3308b83bf149f4da8268dd6db2ef1e1a89ab51a131ada4"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -403,7 +403,7 @@
       },
       {
         "path": "scripts/lexicon/validate_paradigm_stress.py",
-        "sha256": "ad1e0c03a5504e096566c04b855a42ba495d349d104def88f3d03c0f236a55b0"
+        "sha256": "e0f082815e3665c5237c85018a567f4d9bbf7cd407a845c8452a9a4f13ef0bf3"
       },
       {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",

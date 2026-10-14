@@ -8693,7 +8693,7 @@ def enrich(
 
     from scripts.lexicon.validate_paradigm_stress import validate_manifest_stress
 
-    stress_report = validate_manifest_stress({"entries": entries})
+    stress_report = validate_manifest_stress({"entries": entries}, verify_lemma_fn=verify_lemma)
     print(f"Paradigm stress: {stress_report['disagreement_count']} disagreements / {stress_report['rows']} rows")
     if stress_report["disagreement_count"]:
         raise ValueError(

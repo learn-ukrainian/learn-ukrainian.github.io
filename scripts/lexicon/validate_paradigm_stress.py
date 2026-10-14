@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -51,7 +52,11 @@ def _choices(lemma: str, witnesses: list[dict[str, Any]], memo: dict[tuple[str, 
     return choices if len(choices) == 1 else set()
 
 
-def validate_manifest_stress(manifest: dict[str, Any]) -> dict[str, Any]:
+def validate_manifest_stress(
+    manifest: dict[str, Any],
+    *,
+    verify_lemma_fn: Callable[[str], list[dict[str, Any]]] | None = None,
+) -> dict[str, Any]:
     """Count all rows, compare each stored accent, and reject unbound display stress.
 
     Legacy rows without raw tags are joined through their decoded label and exact
@@ -59,7 +64,11 @@ def validate_manifest_stress(manifest: dict[str, Any]) -> dict[str, Any]:
     No missing or ambiguous authority may authenticate a stored accent. The display
     map is checked against the lemma's whole modern VESUM paradigm, because the
     card renders paradigm cells beyond the capped ``forms`` rows.
+
+    ``verify_lemma_fn`` lets an in-process build audit against the same VESUM
+    paradigm lookup it enriched from; it defaults to the local VESUM database.
     """
+    lookup = verify_lemma_fn or verify_lemma
     report: dict[str, Any] = {
         "entries": 0,
         "rows": 0,
@@ -77,7 +86,7 @@ def validate_manifest_stress(manifest: dict[str, Any]) -> dict[str, Any]:
             continue
         report["entries"] += 1
         lemma = _base_lemma(str(entry.get("lemma") or ""))
-        analyses = [{**v, "lemma": lemma} for v in verify_lemma(lemma)]
+        analyses = [{**v, "lemma": lemma} for v in lookup(lemma)]
         memo: dict[tuple[str, str, str], set[str]] = {}
         for row in rows:
             report["rows"] += 1

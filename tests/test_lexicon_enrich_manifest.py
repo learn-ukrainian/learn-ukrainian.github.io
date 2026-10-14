@@ -2976,7 +2976,8 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     assert enriched["enrichment"]["morphology"]["forms"] == [
         {"form": "робота", "label": "однина, жін., називний", "tags": "noun:s:f:v_naz"}
     ]
-    assert verify_calls == ["робота"]
+    # Enrichment and the paradigm stress gate both read the base form's paradigm.
+    assert verify_calls == ["робота", "робота"]
 
 
 def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch, tmp_path) -> None:

@@ -163,6 +163,25 @@ def test_separate_unresolved_marked_row_does_not_veto_modern_display(authority):
     assert validate_paradigm_stress.validate_manifest_stress(manifest)["disagreement_count"] == 1
 
 
+def test_validator_audits_against_the_injected_paradigm_lookup(authority, monkeypatch):
+    manifest = candidate()
+    expected = validate_paradigm_stress.validate_manifest_stress(manifest)
+    monkeypatch.setattr(validate_paradigm_stress, "verify_lemma", lambda lemma: pytest.fail("module VESUM lookup"))
+    lookups = []
+
+    def lookup(lemma):
+        lookups.append(lemma)
+        return CAPTURE["lemmas"].get(lemma, [])
+
+    report = validate_paradigm_stress.validate_manifest_stress(manifest, verify_lemma_fn=lookup)
+    assert report == expected
+    assert lookups == list(CAPTURE["lemmas"])
+    # An injected authority that knows nothing cannot authenticate a stored accent.
+    empty = validate_paradigm_stress.validate_manifest_stress(manifest, verify_lemma_fn=lambda lemma: [])
+    assert empty["authority_rows"] == 0
+    assert empty["disagreement_count"] == expected["stressed_rows"] + expected["display_values"]
+
+
 def test_validator_cli_reports_denominator_and_failure(authority, tmp_path, capsys):
     path = tmp_path / "candidate.json"
     manifest = candidate()
