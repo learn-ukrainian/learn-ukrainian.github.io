@@ -7,7 +7,24 @@
 #    with one shared GitHub identity a seat cannot approve its own authored
 #    PR anyway (#7472 / critical-rules §8.6.4). Review of record is a PR
 #    *comment* with VERDICT + exact head SHA + concrete resolved_model.
-#    The cf-attest Gate job is retired.
+#    The cf-attest Gate job is retired. Merge-gate mutations
+#    (enqueuePullRequest, mergePullRequest, enablePullRequestAutoMerge,
+#    mergeBranch, approving reviews; matched case-folded) are refused in every
+#    `gh api` input form: inline fields, `-f/-F/--raw-field/--field` values,
+#    `@file`/`@-` values and `--input file|-` (#10501). A file or stdin body
+#    is read whole and scanned; one the shim cannot read is refused.
+#    dequeuePullRequest stays allowed: removing a queued PR never lands code.
+#    The command is classified after gh's root flags (`-R/--repo`, `--help`,
+#    `--version`) and `pr`'s own flags, so a leading repository selector does
+#    not hide `pr merge`. Under AGENT_NO_MERGE=1 only builtin commands the
+#    publishing admission can admit are classified at all: gh expands an
+#    alias or an extension inside its own process, after this shim has seen
+#    argv, so `alias`, `extension`, `config` and any unknown command word
+#    (a user alias or extension name) are refused, as is a flag the shim
+#    cannot place.
+#    This guards the supported path only: a same-user process that clears
+#    AGENT_NO_MERGE, calls gh directly or rewrites a scanned file afterwards
+#    is not isolated by this shim.
 # 2. Automatically retry operations throttled by GitHub secondary rate limits
 #    (HTTP 403 / 429) using bounded exponential backoff.
 #
@@ -28,6 +45,203 @@ EOF
   exit 1
 }
 
+# Set when an `api` check buffered stdin; the backend then reads this copy.
+_agent_gh_stdin_buffer=""
+
+# Inline argv plus every file and stdin body an `api` call names, for scanning.
+_agent_gh_scan=""
+
+# Builtin commands the publishing admission can admit (scripts/opsec/gh_snapshot.py).
+_is_classified_command() {
+  case "$1" in
+    api|auth|gist|help|issue|label|pr|release|repo|run|search|version|workflow) return 0 ;;
+  esac
+  return 1
+}
+
+_names_merge_operation() {
+  # GraphQL names cannot be escaped or split, so a case-folded token match is
+  # complete for raw query text (over-matching only refuses more).
+  local lowered name
+  lowered="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"
+  for name in enqueuepullrequest mergepullrequest enablepullrequestautomerge mergebranch; do
+    [[ "$lowered" == *"$name"* ]] && return 0
+  done
+  [[ "$lowered" == *pullrequestreview* && "$lowered" == *approve* ]]
+}
+
+_endpoint_merges() {
+  local lowered
+  lowered="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"
+  # Percent-encoding could spell any path segment; no worker call needs it.
+  [[ "$lowered" == *%* ]] && return 0
+  [[ "$lowered" =~ /pulls/[^/]+/merge($|[/?#]) ]] && return 0
+  [[ "$lowered" =~ (^|/)repos/[^/]+/[^/]+/merges($|[/?#]) ]] && return 0
+  [[ "$lowered" =~ /pulls/[^/]+/reviews($|[/?#]) \
+    && "$(printf '%s' "$_agent_gh_scan" | tr '[:upper:]' '[:lower:]')" == *approve* ]]
+}
+
+_scan_input() {
+  # Append one file or stdin body to the scan; non-zero refuses the command.
+  local source="$1" kind="$2" content
+  if [[ "$source" == "-" ]]; then
+    if [[ -z "$_agent_gh_stdin_buffer" ]]; then
+      _agent_gh_stdin_buffer="$(mktemp "${TMPDIR:-/tmp}/agent-gh.stdin.XXXXXX")" || return 1
+      cat >"$_agent_gh_stdin_buffer" || return 1
+    fi
+    source="$_agent_gh_stdin_buffer"
+  fi
+  # An input the shim cannot read whole is refused rather than passed unchecked.
+  [[ -n "$source" && -f "$source" && -r "$source" ]] || return 1
+  content="$(cat -- "$source")" || return 1
+  # A JSON body (--input) may spell any character as \uXXXX; refuse escapes.
+  [[ "$kind" == "json" && "$content" == *'\u'* ]] && return 1
+  _agent_gh_scan+=$'\n'"$content"
+}
+
+_scan_field() {
+  # `key=@path` and `key=@-` read a value from a file or stdin, for -f and -F alike.
+  local value="$1"
+  [[ "$value" == *=* ]] || return 0
+  value="${value#*=}"
+  [[ "$value" == @* ]] || return 0
+  _scan_input "${value#@}" raw
+}
+
+_api_blocks() {
+  # Place every `gh api` token; a flag the shim cannot place is refused.
+  local token flag value letters i
+  local -a endpoints=()
+  _agent_gh_scan="$*"
+  while (( $# )); do
+    token="$1"
+    shift
+    case "$token" in
+      --input|--raw-field|--field|--cache|--header|--hostname|--jq|--method|--preview|--template)
+        (( $# )) || return 0
+        flag="$token"
+        value="$1"
+        shift
+        ;;
+      --input=*|--raw-field=*|--field=*|--cache=*|--header=*|--hostname=*|--jq=*|--method=*|--preview=*|--template=*)
+        flag="${token%%=*}"
+        value="${token#*=}"
+        ;;
+      --allow-escape-sequences|--include|--paginate|--silent|--slurp|--verbose|--help)
+        continue
+        ;;
+      --*|-)
+        return 0
+        ;;
+      -?*)
+        # A short-flag bundle: booleans, then at most one flag taking a value.
+        letters="${token#-}"
+        flag=""
+        for (( i = 0; i < ${#letters}; i++ )); do
+          case "${letters:i:1}" in
+            i) ;;
+            f|F|H|p|q|t|X)
+              flag="-${letters:i:1}"
+              value="${letters:i+1}"
+              break
+              ;;
+            *) return 0 ;;
+          esac
+        done
+        [[ -n "$flag" ]] || continue
+        if [[ -z "$value" ]]; then
+          (( $# )) || return 0
+          value="$1"
+          shift
+        fi
+        ;;
+      *)
+        endpoints+=("$token")
+        continue
+        ;;
+    esac
+    case "$flag" in
+      --input) _scan_input "$value" json || return 0 ;;
+      -f|-F|--raw-field|--field) _scan_field "$value" || return 0 ;;
+    esac
+  done
+  _names_merge_operation "$_agent_gh_scan" && return 0
+  for token in "${endpoints[@]}"; do
+    _endpoint_merges "$token" && return 0
+  done
+  return 1
+}
+
+_review_flag_approves() {
+  local token="$1" letters i
+  case "$token" in
+    --approve|--approve=*) return 0 ;;
+    --*) return 1 ;;
+    -?*)
+      letters="${token#-}"
+      for (( i = 0; i < ${#letters}; i++ )); do
+        case "${letters:i:1}" in
+          a) return 0 ;;
+          # The rest of the token is that flag's value.
+          b|F|R) return 1 ;;
+        esac
+      done
+      ;;
+  esac
+  return 1
+}
+
+_pr_blocks() {
+  # `pr` takes -R/--repo before its subcommand too.
+  local token
+  while (( $# )); do
+    case "$1" in
+      -R|--repo)
+        shift
+        (( $# )) || return 1
+        shift
+        ;;
+      -R?*|--repo=*|--help) shift ;;
+      -*) return 0 ;;
+      *) break ;;
+    esac
+  done
+  (( $# )) || return 1
+  case "$1" in
+    merge) return 0 ;;
+    review)
+      shift
+      for token in "$@"; do
+        _review_flag_approves "$token" && return 0
+      done
+      ;;
+  esac
+  return 1
+}
+
+_blocks_gh_command() {
+  # Classify the command gh will run, after its root flags.
+  while (( $# )); do
+    case "$1" in
+      -R|--repo)
+        shift
+        (( $# )) || return 1
+        shift
+        ;;
+      -R?*|--repo=*|--help|--version) shift ;;
+      -*) return 0 ;;
+      *) break ;;
+    esac
+  done
+  (( $# )) || return 1
+  _is_classified_command "$1" || return 0
+  case "$1" in
+    pr) shift; _pr_blocks "$@" ;;
+    api) shift; _api_blocks "$@" ;;
+    *) return 1 ;;
+  esac
+}
+
 _real_gh() {
   local shim_dir
   shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -46,42 +260,6 @@ _real_gh() {
       return 0
     fi
   done
-
-  return 1
-}
-
-_blocks_gh_command() {
-  local cmd="$1"
-  shift
-
-  case "$cmd" in
-    pr)
-      [[ "${1:-}" == "merge" ]] && return 0
-      if [[ "${1:-}" == "review" ]]; then
-        shift
-        shift || true
-        local arg
-        for arg in "$@"; do
-          [[ "$arg" == "--approve" || "$arg" == "-a" ]] && return 0
-        done
-      fi
-      ;;
-    api)
-      local joined="$*"
-      if [[ "$joined" == *"/pulls/"*"/merge"* ]]; then
-        return 0
-      fi
-      if [[ "$joined" == *"mergePullRequest"* || "$joined" == *"enablePullRequestAutoMerge"* ]]; then
-        return 0
-      fi
-      if [[ "$joined" == *"/pulls/"*"/reviews"* ]] && [[ "$joined" == *"APPROVE"* ]]; then
-        return 0
-      fi
-      if [[ "$joined" == *"PullRequestReview"* ]] && [[ "$joined" == *"APPROVE"* ]]; then
-        return 0
-      fi
-      ;;
-  esac
 
   return 1
 }
@@ -224,8 +402,14 @@ _run_with_secondary_rate_limit_retry() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-  if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_gh_command "${1:-}" "${@:2}"; then
+  if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_gh_command "$@"; then
+    [[ -n "$_agent_gh_stdin_buffer" ]] && rm -f "$_agent_gh_stdin_buffer"
     _deny
+  fi
+  if [[ -n "$_agent_gh_stdin_buffer" ]]; then
+    # The check consumed stdin; hand the backend the same bytes.
+    exec 0<"$_agent_gh_stdin_buffer"
+    rm -f "$_agent_gh_stdin_buffer"
   fi
   real_gh="$(_real_gh)" || {
     echo "error: could not locate the real gh binary behind the agent shim." >&2

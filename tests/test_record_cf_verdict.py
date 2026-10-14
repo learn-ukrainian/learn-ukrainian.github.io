@@ -88,7 +88,9 @@ def task(**updates):
 def write_task(root: Path, *, task_id="review-one", reply="VERDICT: APPROVE", **updates):
     root.mkdir(parents=True, exist_ok=True)
     (root / task_id).parent.mkdir(parents=True, exist_ok=True)
-    (root / f"{task_id}.json").write_text(json.dumps(task(**updates)))
+    # Dispatch writes every record with its id and per-run nonce.
+    record = task(**{"task_id": task_id, "run_nonce": f"nonce-{task_id}", **updates})
+    (root / f"{task_id}.json").write_text(json.dumps(record))
     (root / f"{task_id}.result").write_text(reply)
 
 
@@ -237,7 +239,8 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
             comments.append(item)
             return item
         if args[:2] == ["gh", "api"] and "issues/comments/" in args[2]:
-            return comments[-1]
+            wanted = int(args[2].rsplit("/", 1)[1])
+            return next(item for item in comments if item.get("id") == wanted)
         raise AssertionError(args)
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)
@@ -705,7 +708,7 @@ def test_cli_forwards_explicit_red_team_arguments(monkeypatch, tmp_path, capsys)
 
     def fake_record(task_id, **kwargs):
         seen.update(task_id=task_id, **kwargs)
-        return {"status": "posted", "review_mode": "red_team"}
+        return {"status": "posted", "review_mode": "red_team", "receipt": "recorded"}
 
     monkeypatch.setattr(recorder, "record", fake_record)
     prompt = tmp_path / "red-team.md"
@@ -2855,6 +2858,207 @@ def test_red_team_raw_request_changes_marker_refused():
     )
     with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: outside-family rejection exists for this head"):
         recorder.require_no_outside_rejection([{"body": body}], SHA)
+
+
+# --- #10501: recorder publication receipts ---
+
+
+def _record(tasks, tmp_path, **kwargs):
+    return recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", **kwargs)
+
+
+def _stored(tasks, name="review-one.json"):
+    return json.loads((tasks / name).read_text())
+
+
+def _resolve(tasks, comments):
+    from scripts.orchestration import integration_sweep as sweep
+
+    evidence = sweep.ReviewLedger(tasks, REPOSITORY).evidence(42)
+    return sweep.lookup_verdict(comments, SHA, "fleet", evidence=evidence).state
+
+
+def test_publication_binds_every_identity_in_the_existing_record(monkeypatch, tmp_path):
+    from scripts.orchestration import integration_sweep as sweep
+
+    tasks, comments, _calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, unrelated={"keep": True})
+    result = _record(tasks, tmp_path)
+    assert result["receipt"] == "recorded" and result["comment"] == "posted"
+    record = _stored(tasks)
+    assert record["unrelated"] == {"keep": True}
+    assert record[sweep.RECEIPT_FIELD] == {
+        "schema": "cf-recording.v1",
+        "repository": "github.com/owner/repo",
+        "pr": 42,
+        "head_sha": SHA,
+        "task_id": "review-one",
+        "run_nonce": "nonce-review-one",
+        "model": "gpt-6.1-sol",
+        "family": "openai",
+        "verdict": "APPROVED",
+        "review_mode": "cross_family",
+        "comment_id": comments[0]["id"],
+        "comment_sha256": hashlib.sha256(comments[0]["body"].encode()).hexdigest(),
+    }
+    assert _resolve(tasks, comments) == "APPROVED"
+
+
+def test_crash_after_publication_is_unaccepted_until_retry_reconciles(monkeypatch, tmp_path):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    original = recorder.update_located_record
+
+    def crash(*_args, **_kwargs):
+        raise OSError("disk full")
+
+    monkeypatch.setattr(recorder, "update_located_record", crash)
+    with pytest.raises(recorder.RecordError, match="receipt not recorded"):
+        _record(tasks, tmp_path)
+    assert calls == {"posts": 1, "statuses": 0}
+    assert recorder.RECEIPT_FIELD not in _stored(tasks)
+    assert _resolve(tasks, comments) == "CF-unreceipted"
+
+    monkeypatch.setattr(recorder, "update_located_record", original)
+    result = _record(tasks, tmp_path)
+    assert result["comment"] == "existing" and result["receipt"] == "recorded"
+    assert calls == {"posts": 1, "statuses": 1}
+    assert len(comments) == 1
+    assert _resolve(tasks, comments) == "APPROVED"
+
+    again = _record(tasks, tmp_path)
+    assert again["comment"] == "existing" and again["receipt"] == "existing"
+    assert calls["posts"] == 1 and len(comments) == 1
+
+
+@pytest.mark.parametrize(
+    "change,reason",
+    [
+        ({"run_nonce": "nonce-redispatched"}, "run changed"),
+        ({"task_id": "someone-else"}, "run changed"),
+        ({"status": "running"}, "not done"),
+    ],
+)
+def test_record_changed_after_review_refuses_the_receipt(monkeypatch, tmp_path, change, reason):
+    tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
+    original = recorder.update_located_record
+
+    def changed(task_root, task_id, update):
+        record = _stored(task_root)
+        record.update(change)
+        (task_root / "review-one.json").write_text(json.dumps(record))
+        return original(task_root, task_id, update)
+
+    monkeypatch.setattr(recorder, "update_located_record", changed)
+    with pytest.raises(recorder.RecordError, match=reason):
+        _record(tasks, tmp_path)
+    assert calls["statuses"] == 0
+    assert recorder.RECEIPT_FIELD not in _stored(tasks)
+
+
+def test_conflicting_existing_receipt_is_refused_and_kept(monkeypatch, tmp_path):
+    tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
+    foreign = {"schema": "cf-recording.v1", "comment_id": 999}
+    write_task(tasks, cf_recording=foreign)
+    with pytest.raises(recorder.RecordError, match="different publication receipt"):
+        _record(tasks, tmp_path)
+    assert _stored(tasks)[recorder.RECEIPT_FIELD] == foreign
+    assert calls["statuses"] == 0
+
+
+def _rewrite(tasks, **updates):
+    """Change the stored record's own fields (``write_task``'s ``task_id`` names the file)."""
+    record = {**_stored(tasks), **updates}
+    (tasks / "review-one.json").write_text(json.dumps(record))
+
+
+@pytest.mark.parametrize(
+    "updates,reason",
+    [({"task_id": "someone-else"}, "names another task"), ({"run_nonce": ""}, "malformed"), ({"run_nonce": 7}, "malformed")],
+)
+def test_conflicting_or_malformed_run_identity_refuses_before_publication(monkeypatch, tmp_path, updates, reason):
+    tasks = tmp_path / "tasks"
+    write_task(tasks)
+    _rewrite(tasks, **updates)
+    monkeypatch.setattr(recorder, "_run_json", lambda *a, **k: pytest.fail("publication before identity check"))
+    monkeypatch.setattr(recorder, "_pr", lambda *a, **k: {"number": 42, "headRefOid": SHA, "headRefName": BRANCH})
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *a, **k: facts_for({"google"}))
+    with pytest.raises(recorder.RecordError, match=reason):
+        _record(tasks, tmp_path)
+
+
+@pytest.mark.parametrize("missing", ["run_nonce", "task_id"])
+def test_legacy_record_without_run_identity_publishes_but_never_approves(monkeypatch, tmp_path, capsys, missing):
+    tasks, comments, _calls = setup_record(monkeypatch, tmp_path)
+    _rewrite(tasks, **{missing: None})
+    result = _record(tasks, tmp_path)
+    assert result["comment"] == "posted" and result["receipt"].startswith("unbound")
+    assert recorder.RECEIPT_FIELD not in _stored(tasks)
+    assert _resolve(tasks, comments) == "CF-unreceipted"
+    monkeypatch.setattr(recorder, "_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(recorder, "record", lambda *a, **k: result)
+    assert recorder.main(["--task-id", "review-one", "--pr", "42"]) == 1
+    assert '"receipt": "unbound' in capsys.readouterr().out
+
+
+def test_archived_review_record_receives_its_receipt(monkeypatch, tmp_path):
+    tasks, comments, _calls = setup_record(monkeypatch, tmp_path)
+    archive = tasks / "archive"
+    archive.mkdir()
+    for name in ("review-one.json", "review-one.result"):
+        (tasks / name).rename(archive / name)
+    result = _record(tasks, tmp_path)
+    assert result["receipt"] == "recorded"
+    assert not (tasks / "review-one.json").exists()
+    assert _stored(archive)[recorder.RECEIPT_FIELD]["comment_id"] == comments[0]["id"]
+    assert _resolve(tasks, comments) == "APPROVED"
+
+
+def test_concurrent_locked_writer_keeps_its_fields(monkeypatch, tmp_path):
+    from scripts.orchestration.dead_worker_state import task_state_lock, write_state_unlocked
+
+    tasks, comments, _calls = setup_record(monkeypatch, tmp_path)
+    path = tasks / "review-one.json"
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        with task_state_lock(path):
+            pending = pool.submit(_record, tasks, tmp_path)
+            # The recorder blocks on the lock while another writer lands a field.
+            record = json.loads(path.read_text())
+            record["reaped"] = {"at": "2026-10-12T00:00:00Z"}
+            write_state_unlocked(path, record)
+        result = pending.result(timeout=30)
+    assert result["receipt"] == "recorded"
+    stored = _stored(tasks)
+    assert stored["reaped"] == {"at": "2026-10-12T00:00:00Z"}
+    assert stored[recorder.RECEIPT_FIELD]["comment_id"] == comments[0]["id"]
+
+
+@pytest.mark.parametrize("field,value", [("id", 7), ("body", "edited"), ("updated_at", "2026-09-23T14:00:00Z")])
+def test_readback_mismatch_never_binds_a_receipt(monkeypatch, tmp_path, field, value):
+    tasks, _comments, calls = setup_record(monkeypatch, tmp_path)
+    fake = recorder._run_json
+
+    def tampered(args, **kwargs):
+        data = fake(args, **kwargs)
+        if getattr(args, "verb", None) == "read-comment":
+            data = {**data, field: value}
+        return data
+
+    monkeypatch.setattr(recorder, "_run_json", tampered)
+    with pytest.raises(recorder.RecordError, match="readback mismatch"):
+        _record(tasks, tmp_path)
+    assert recorder.RECEIPT_FIELD not in _stored(tasks)
+    assert calls["statuses"] == 0
+
+
+def test_existing_comment_without_an_integer_id_is_not_reconciled(monkeypatch):
+    monkeypatch.setattr(recorder, "_run_json", lambda *a, **k: pytest.fail("readback of an unknown id"))
+    with pytest.raises(recorder.RecordError, match="comment id unavailable"):
+        recorder._verified_comment(REPOSITORY, "1", login="fleet")
+
+
+def test_receipt_for_a_vanished_record_is_refused(tmp_path):
+    with pytest.raises(recorder.RecordError, match="receipt not recorded: task record not found"):
+        recorder.persist_receipt(tmp_path / "tasks", "review-one", "nonce-review-one", {"schema": "cf-recording.v1"})
 
 
 @pytest.mark.parametrize("case", ["clean_update_merge", "conflict_resolution"])

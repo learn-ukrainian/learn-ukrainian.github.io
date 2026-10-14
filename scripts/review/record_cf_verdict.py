@@ -47,14 +47,22 @@ from scripts.opsec.prepublish import (
 )
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
+    RECEIPT_FIELD,
     REJECTED,
     SHA,
     TRUSTED_ASSOCIATIONS,
     GitHubAdapter,
     SweepError,
+    build_receipt,
+    outside_review_in_flight,
     parse_marker,
+    reply_verdict,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import (
+    ARCHIVE_DIR_NAME,
+    TaskRecordUnavailable,
+    update_located_record,
+)
 from scripts.publish.github import Request, request_run
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT, listing_app_bot_login, verified_app_bot_login
 from scripts.review.language_lane import is_ukrainian_review
@@ -83,15 +91,7 @@ from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError
-from scripts.review.verdict_parser import recognized_verdicts
 
-NORMALIZED = {
-    "APPROVE": "APPROVED",
-    "APPROVED": "APPROVED",
-    "REQUEST_CHANGES": "CHANGES_REQUESTED",
-    "CHANGES_REQUESTED": "CHANGES_REQUESTED",
-    "BLOCKED": "BLOCKED",
-}
 TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\Z")
 MAX_COMMENT_BYTES = 65_000
 # Kimi CLI task records can identify the harness without naming its model;
@@ -112,10 +112,10 @@ class RecordError(RuntimeError):
 
 
 def normalize_verdict(reply: str) -> str:
-    tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
-    if len(tokens) != 1:
+    verdict = reply_verdict(reply)
+    if verdict is None:
         raise RecordError("review reply has missing or ambiguous VERDICT token")
-    return tokens.pop()
+    return verdict
 
 
 def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]]:
@@ -1446,64 +1446,16 @@ def require_no_outside_rejection(comments: Any, sha: str) -> None:
 
 
 def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
-    """Read the active task ledger before red-team admission or publication."""
+    """Read the active task ledger before red-team admission or publication.
+
+    The ledger rule is the queue resolver's own (:func:`outside_review_in_flight`).
+    """
     try:
-        # The shared iterator suppresses enumeration errors. Read locally so
-        # both an unreadable directory and a failed glob refuse this guard.
-        list(task_root.iterdir())
-        for path in sorted(path for path in task_root.glob("*.json") if path.is_file()):
-            task = json.loads(path.read_text(encoding="utf-8"))
-            if not isinstance(task, dict):
-                raise ValueError("task record is not an object")
-            prep = task.get("worktree_prep")
-            prep_sha = prep.get("base_sha") if isinstance(prep, dict) else None
-            prep_matches = (
-                isinstance(prep_sha, str)
-                and SHA.fullmatch(prep_sha.casefold())
-                and prep_sha.casefold() == sha.casefold()
-            )
-            # Prep rows lack review typing and repository metadata. Fail closed:
-            # even non-review dispatches preparing this head briefly block red-team.
-            review = (
-                task.get("review")
-                or task.get("pr") is not None
-                or task.get("review_attempt")
-                or task.get("require_review_verdict")
-                or task.get("review_profile")
-                or task.get("review_author_model")
-                or task.get("review_risk")
-                or task.get("type") == "review"
-            )
-            if (
-                (review or prep_matches)
-                and (
-                    (
-                        isinstance(task.get("repository"), str)
-                        and normalize_repository(task["repository"]) == normalize_repository(repository)
-                    )
-                    or (prep_matches and task.get("repository") is None)
-                )
-                and task.get("status") in {"spawning", "running", "queued"}
-                and task.get("review_mode", "cross_family") != "red_team"
-                and (
-                    prep_matches
-                    or sha
-                    in {
-                        task.get(field)
-                        for field in (
-                            "pinned_head",
-                            "worktree_base_sha",
-                            "review_head",
-                            "review_head_sha",
-                            "pr_head_sha",
-                            "head_sha",
-                        )
-                    }
-                )
-            ):
-                raise RecordError("RED_TEAM_REFUSED: outside-family review in flight for this head")
+        in_flight = outside_review_in_flight(task_root, repository, sha)
     except (OSError, ValueError, TypeError) as exc:
         raise RecordError("RED_TEAM_REFUSED: task ledger unavailable") from exc
+    if in_flight:
+        raise RecordError("RED_TEAM_REFUSED: outside-family review in flight for this head")
 
 
 def require_no_branch_outside_rejection(
@@ -1585,6 +1537,79 @@ def _require_formal_reviewer(
     # #9583: a model the catalog gives no review role never approves, on any harness.
     if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
         raise RecordError(f"reviewer model refused: {refusal}")
+
+
+def _verified_comment(
+    repository: str, comment_id: object, *, login: str, expected_body: str | None = None
+) -> dict[str, Any]:
+    """Read one published verdict comment back and require it intact, trusted and unedited."""
+    if type(comment_id) is not int:
+        raise RecordError("comment id unavailable; retry to reconcile")
+    readback = _run_json(Request("read-comment", repo=repository, number=comment_id))
+    if (
+        not isinstance(readback, dict)
+        or readback.get("id") != comment_id
+        or not isinstance(readback.get("body"), str)
+        or (expected_body is not None and readback["body"] != expected_body)
+        or not isinstance(readback.get("user"), dict)
+        or readback["user"].get("login") != login
+        or readback.get("author_association") not in TRUSTED_ASSOCIATIONS
+        or readback.get("created_at") != readback.get("updated_at")
+    ):
+        raise RecordError("comment readback mismatch; publication state unknown")
+    return readback
+
+
+UNBOUND_RECEIPT = "unbound: review task record has no run identity"
+
+
+def _run_identity(task: Mapping[str, Any], task_id: str) -> str | None:
+    """The run nonce a receipt binds, or ``None`` for a record that predates run identity.
+
+    A record naming another task or carrying a malformed nonce is refused. A
+    legacy record without ``task_id``/``run_nonce`` still publishes but binds no
+    receipt, so the queue never accepts that marker.
+    """
+    named, run_nonce = task.get("task_id"), task.get("run_nonce")
+    if named is not None and named != task_id:
+        raise RecordError("review task record names another task")
+    if run_nonce is not None and (not isinstance(run_nonce, str) or not run_nonce):
+        raise RecordError("review task run nonce malformed")
+    return run_nonce if named is not None else None
+
+
+def persist_receipt(task_root: Path, task_id: str, run_nonce: str, receipt: dict[str, Any]) -> str:
+    """Bind a verified publication into the review task record (#10501).
+
+    Uses the per-task lock and a fresh read, so concurrent writers' fields
+    survive, and finds an archived record. Returns ``recorded``, or
+    ``existing`` when this identical receipt is already bound. A changed run,
+    an unfinished review or a different receipt refuses; the comment then stays
+    unaccepted until a retry reconciles it.
+    """
+    outcome = "existing"
+
+    def bind(current: dict[str, Any]) -> dict[str, Any] | None:
+        nonlocal outcome
+        if current.get("task_id") != task_id or current.get("run_nonce") != run_nonce:
+            raise RecordError("review task run changed since review; receipt not recorded")
+        if current.get("status") != "done":
+            raise RecordError("review task is not done; receipt not recorded")
+        bound = current.get(RECEIPT_FIELD)
+        if bound == receipt:
+            return None
+        if bound is not None:
+            raise RecordError("review task already binds a different publication receipt")
+        outcome = "recorded"
+        return {**current, RECEIPT_FIELD: receipt}
+
+    try:
+        update_located_record(task_root, task_id, bind)
+    except TaskRecordUnavailable as exc:
+        raise RecordError(f"receipt not recorded: {exc}; retry to reconcile") from exc
+    except OSError as exc:
+        raise RecordError("receipt not recorded: task record write failed; retry to reconcile") from exc
+    return outcome
 
 
 @publication_boundary(RecordError)
@@ -1723,6 +1748,7 @@ def record(
     if family in facts.excluded_families and review_mode != "red_team":
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
+    run_nonce = _run_identity(task, task_id)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
@@ -1802,16 +1828,33 @@ def record(
             comment_id = data.get("id") if isinstance(data, dict) else None
             if not isinstance(comment_id, int):
                 raise RecordError("comment post response lacked id; retry to reconcile")
-            readback = _run_json(Request("read-comment", repo=repository, number=comment_id))
-            if (
-                not isinstance(readback, dict)
-                or readback.get("body") != comment
-                or readback.get("user", {}).get("login") != login
-                or readback.get("author_association") not in TRUSTED_ASSOCIATIONS
-                or readback.get("created_at") != readback.get("updated_at")
-            ):
-                raise RecordError("comment readback mismatch; publication state unknown")
+            published = _verified_comment(repository, comment_id, login=login, expected_body=comment)
             posted = True
+        else:
+            # A retry reconciles the comment already published, never a second one.
+            published = _verified_comment(repository, existing.get("id"), login=login, expected_body=existing["body"])
+        # Bind the verified publication before any success status: a marker
+        # without its receipt never approves (#10501).
+        receipt = UNBOUND_RECEIPT
+        if run_nonce is not None:
+            receipt = persist_receipt(
+                task_root,
+                task_id,
+                run_nonce,
+                build_receipt(
+                    repository=repository,
+                    pr=number,
+                    head_sha=sha,
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                    model=model,
+                    family=family,
+                    verdict=verdict,
+                    review_mode=review_mode,
+                    comment_id=published["id"],
+                    body=published["body"],
+                ),
+            )
         description = (
             f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
             if facts.unknown_history
@@ -1840,6 +1883,7 @@ def record(
         "review_mode": review_mode,
         "unknown_history": list(facts.unknown_history),
         "comment": "posted" if posted else "existing",
+        "receipt": receipt,
         "status": status,
     }
     if facts.app_bot_commits:
@@ -1851,13 +1895,17 @@ def record(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
-        "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
+        "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.\n"
+        "Binds the verified comment into the review task record (cf_recording); queue\n"
+        "decisions need that receipt. Re-run to reconcile an interrupted publication.\n"
+        "The receipt is same-user traceability, not isolated review authority (#10501).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
         "--review-mode red_team --red-team-prompt brief.md\n"
-        "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
-        "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
+        "Outputs: GitHub review comment, task-record receipt and commit status; JSON summary on stdout.\n"
+        "Exit codes: 0: recorded and receipt bound; 1: refused, receipt unbound or status publication failed.\n"
+        "Related: #9297, #9951, #10501",
     )
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
@@ -1880,7 +1928,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"CF verdict refused: {exc}")
         return 1
     print(json.dumps(result, sort_keys=True))
-    return 0 if result["status"] == "posted" else 1
+    return 0 if result["status"] == "posted" and result.get("receipt") in {"recorded", "existing"} else 1
 
 
 if __name__ == "__main__":

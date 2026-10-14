@@ -8734,12 +8734,16 @@ def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
         allow_merge=False,
     )
 
+    # A dispatcher environment that claims the grant changes nothing (#10501).
+    monkeypatch.setenv("AGENT_ALLOW_MERGE", "1")
+    monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
     rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     env = recorded["env"]
     assert env["AGENT_NO_MERGE"] == "1"
     assert "AGENT_ALLOW_MERGE" not in env
+    assert json.loads(delegate._state_path("read-only-no-merge").read_text())["allow_merge"] is False
 
 
 @pytest.mark.usefixtures("isolated_dispatch_repo")
@@ -9216,33 +9220,13 @@ def test_dispatch_dry_run_records_and_reaps_runtime_tmp_lease(
     assert not lease_root.exists()
 
 
-def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypatch):
+@pytest.mark.parametrize("grant", [True, "1", 1])
+def test_dispatch_refuses_the_merge_grant_for_every_payload(tmp_tasks_dir, monkeypatch, capsys, grant):
+    """#10501: every delegated payload is a worker; the merge grant is refused before any side effect."""
     import argparse
 
-    recorded: dict[str, object] = {}
-
-    class _FakeStdin:
-        def write(self, _data):
-            pass
-
-        def close(self):
-            pass
-
-    class _FakeProc:
-        pid = 13579
-        stdin = _FakeStdin()
-
-    def fake_popen(*args, **kwargs):
-        recorded["env"] = kwargs.get("env", {})
-        return _FakeProc()
-
-    # The reused checkout is on its dispatch branch: a detached one names no PR to review against (#9739 A7).
-    _, fake_run = _make_run_stub(abbrev_ref="codex/danger-merge-opt-in")
-    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
-    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    root = _tmp_dispatch_repo_root(tmp_tasks_dir.parent / "primary", monkeypatch)
-    worktree = root / ".worktrees" / "dispatch" / "codex" / "wt"
-
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: pytest.fail("worker spawned"))
+    monkeypatch.setattr(delegate.subprocess, "run", lambda *a, **k: pytest.fail("git or forward ran"))
     args = argparse.Namespace(
         agent="codex",
         task_id="danger-merge-opt-in",
@@ -9251,21 +9235,38 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
         mode="danger",
         model=None,
         cwd=None,
-        worktree=str(worktree),
+        worktree=None,
         base="main",
         hard_timeout=3600,
         owned_path=list(_WRITE_OWNED_PATHS),
-        allow_merge=True,
+        allow_merge=grant,
     )
 
-    worktree.mkdir(parents=True)
+    assert delegate.cmd_dispatch(args) == 2
+    assert "MERGE_GRANT_REFUSED" in capsys.readouterr().err
+    assert not delegate._state_path("danger-merge-opt-in").exists()
 
-    rc = delegate.cmd_dispatch(args)
 
-    assert rc == 0
-    env = recorded["env"]
-    assert env.get("AGENT_NO_MERGE") != "1"
-    assert env["AGENT_ALLOW_MERGE"] == "1"
+def test_allow_merge_flag_still_parses_and_documents_its_refusal(capsys):
+    parser = delegate.build_parser()
+    args = parser.parse_args(["dispatch", "--agent", "codex", "--task-id", "t", "--prompt", "p", "--allow-merge"])
+    assert args.allow_merge is True  # Parsed so dispatch can refuse it with a typed reason.
+    with pytest.raises(SystemExit):
+        parser.parse_args(["dispatch", "--help"])
+    assert "#10501" in capsys.readouterr().out
+
+
+def test_worker_env_never_carries_a_merge_grant_even_when_spoofed():
+    spoofed = {"AGENT_ALLOW_MERGE": "1", "PATH": "/usr/bin"}
+    env = delegate._build_worker_env(task_id="t", dispatch_agent="codex", base_env=spoofed)
+    assert env["AGENT_NO_MERGE"] == "1"
+    assert "AGENT_ALLOW_MERGE" not in env
+    cleared = delegate._build_worker_env(task_id="t", dispatch_agent="codex", base_env={"PATH": "/usr/bin"})
+    assert cleared["AGENT_NO_MERGE"] == "1"
+    forged = {"AGENT_NO_MERGE": "0", "AGENT_ALLOW_MERGE": "true", "PATH": "/usr/bin"}
+    assert delegate._build_worker_env(task_id="t", dispatch_agent="codex", base_env=forged)["AGENT_NO_MERGE"] == "1"
+    with pytest.raises(ValueError, match="MERGE_GRANT_REFUSED"):
+        delegate._build_worker_env(task_id="t", dispatch_agent="codex", base_env=spoofed, allow_merge=True)
 
 
 @pytest.mark.usefixtures("isolated_dispatch_repo")

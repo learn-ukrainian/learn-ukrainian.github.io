@@ -4336,6 +4336,283 @@ def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path, gh_shim_sandb
     assert "real-gh" not in proc.stdout
 
 
+_ENQUEUE_QUERY = "mutation($id:ID!){enqueuePullRequest(input:{pullRequestId:$id}){clientMutationId}}"
+
+
+def _recording_gh(tmp_path):
+    """A fake backend that records every invocation and the stdin it received."""
+    calls = tmp_path / "backend-calls.jsonl"
+    fake_gh = tmp_path / "real-gh"
+    fake_gh.write_text(
+        f"#!{sys.executable}\n"
+        "import json,sys\n"
+        f"with open({str(calls)!r}, 'a') as log:\n"
+        "    log.write(json.dumps({'argv': sys.argv[1:], 'stdin': sys.stdin.read()}) + '\\n')\n"
+        "print('{}')\n"
+    )
+    fake_gh.chmod(0o755)
+    return fake_gh, calls
+
+
+def _enqueue_form(tmp_path, form):
+    """Argv and stdin for one supported ``gh api`` input form naming enqueuePullRequest."""
+    raw = tmp_path / "query.graphql"
+    raw.write_text(_ENQUEUE_QUERY)
+    body = tmp_path / "body.json"
+    body.write_text(json.dumps({"query": _ENQUEUE_QUERY, "variables": {"id": "PR_1"}}))
+    escaped = tmp_path / "escaped.json"
+    escaped.write_text('{"query": "mutation{\\u0065nqueuePullRequest(input:{pullRequestId:\\"PR_1\\"}){clientMutationId}}"}')
+    upper = _ENQUEUE_QUERY.replace("enqueuePullRequest", "ENQUEUEPULLREQUEST")
+    forms = {
+        "inline-short": (["-f", f"query={_ENQUEUE_QUERY}"], None),
+        "inline-attached": ([f"-fquery={_ENQUEUE_QUERY}"], None),
+        "inline-raw-field": ([f"--raw-field=query={_ENQUEUE_QUERY}"], None),
+        "inline-typed-field": (["-F", f"query={_ENQUEUE_QUERY}"], None),
+        "inline-case-folded": (["-f", f"query={upper}"], None),
+        "field-file": (["-F", f"query=@{raw}"], None),
+        "field-file-long": (["--field", f"query=@{raw}"], None),
+        "field-file-equals": ([f"--field=query=@{raw}"], None),
+        "field-file-attached": ([f"-Fquery=@{raw}"], None),
+        "field-stdin": (["-F", "query=@-"], _ENQUEUE_QUERY),
+        "input-file": (["--input", str(body)], None),
+        "input-file-equals": ([f"--input={body}"], None),
+        "input-unicode-escape": (["--input", str(escaped)], None),
+        "input-stdin": (["--input", "-"], body.read_text()),
+        "input-unreadable": (["--input", str(tmp_path / "missing.json")], None),
+    }
+    args, stdin = forms[form]
+    return ["api", "graphql", *args], stdin
+
+
+@pytest.mark.parametrize(
+    "form",
+    [
+        "inline-short",
+        "inline-attached",
+        "inline-raw-field",
+        "inline-typed-field",
+        "inline-case-folded",
+        "field-file",
+        "field-file-long",
+        "field-file-equals",
+        "field-file-attached",
+        "field-stdin",
+        "input-file",
+        "input-file-equals",
+        "input-unicode-escape",
+        "input-stdin",
+        "input-unreadable",
+    ],
+)
+def test_gh_shim_refuses_enqueue_in_every_supported_input_form(tmp_path, gh_shim_sandbox, form):
+    """#10501: a worker's enqueue mutation never reaches the backend, whatever the input form."""
+    root, shim, _tooling = gh_shim_sandbox
+    fake_gh, calls = _recording_gh(tmp_path)
+    argv, stdin = _enqueue_form(tmp_path, form)
+    proc = subprocess.run(
+        [str(shim), *argv],
+        cwd=root,
+        input=stdin if stdin is not None else "",
+        capture_output=True,
+        text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(fake_gh), "PATH": os.environ.get("PATH", ""),
+             "TMPDIR": str(tmp_path)},
+        check=False,
+        timeout=15,
+    )
+    assert proc.returncode != 0
+    assert "cannot merge or approve PRs" in proc.stderr
+    assert not calls.exists()
+    assert not list(tmp_path.glob("agent-gh.stdin.*"))
+
+
+def test_gh_shim_still_admits_a_non_enqueue_stdin_request(tmp_path, gh_shim_sandbox):
+    """Positive control: reading stdin for the enqueue check leaves admission unchanged.
+
+    The shim rebinds the buffered bytes as the entry's stdin and removes its
+    buffer; the downstream entry itself does not forward stdin to the backend.
+    """
+    root, shim, _tooling = gh_shim_sandbox
+    fake_gh, calls = _recording_gh(tmp_path)
+    body = json.dumps({"body": "private note"})
+    proc = subprocess.run(
+        [str(shim), "api", "--method", "POST", "repos/unit/private/issues/1/comments", "--input", "-"],
+        cwd=root,
+        input=body,
+        capture_output=True,
+        text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(fake_gh), "PATH": os.environ.get("PATH", ""),
+             "TMPDIR": str(tmp_path)},
+        check=False,
+        timeout=30,
+    )
+    assert "cannot merge or approve PRs" not in proc.stderr, proc.stderr
+    assert proc.returncode == 0, proc.stderr
+    recorded = [json.loads(line) for line in calls.read_text().splitlines()]
+    assert len(recorded) == 1
+    assert recorded[0]["argv"][:6] == ["api", "--method", "POST", "repos/unit/private/issues/1/comments", "--input", "-"]
+    assert not list(tmp_path.glob("agent-gh.stdin.*"))
+
+
+_MERGE_QUERY = "mutation($id:ID!){mergePullRequest(input:{pullRequestId:$id}){clientMutationId}}"
+_AUTO_MERGE_QUERY = "mutation($id:ID!){enablePullRequestAutoMerge(input:{pullRequestId:$id}){clientMutationId}}"
+_MERGE_GATE_FORMS = (
+    # The command after gh's root flags and `pr`'s own flags; aliases and extensions.
+    "root-repo-pr-merge",
+    "root-repo-long-review-approve",
+    "root-repo-equals-pr-merge",
+    "root-repo-attached-pr-merge",
+    "root-repo-api-enqueue",
+    "pr-repo-merge",
+    "pr-repo-short-review-approve",
+    "review-approve-bundle",
+    "review-approve-equals",
+    "root-unknown-flag",
+    "pr-unknown-flag",
+    "alias-set",
+    "alias-import",
+    "alias-delete",
+    "alias-invoked",
+    "extension-exec",
+    "config-set",
+    # Raw-field file and stdin values, every merge mutation, REST merges.
+    "raw-field-file",
+    "raw-field-long-file",
+    "raw-field-equals-file",
+    "raw-field-attached-file",
+    "raw-field-stdin",
+    "raw-field-unreadable",
+    "field-file-merge",
+    "input-file-auto-merge",
+    "input-stdin-merge",
+    "inline-merge-case-folded",
+    "inline-merge-branch",
+    "method-bundle-enqueue",
+    "rest-merge",
+    "rest-merge-upper",
+    "rest-merge-encoded",
+    "rest-branch-merge",
+    "rest-review-approve-file",
+    "api-unknown-flag",
+    "api-end-of-flags",
+)
+
+
+def _merge_gate_form(tmp_path, form):
+    """Full argv and stdin for one merge or approval spelling a delegated worker could reach."""
+    enqueue = tmp_path / "enqueue.graphql"
+    enqueue.write_text(_ENQUEUE_QUERY)
+    merge = tmp_path / "merge.graphql"
+    merge.write_text(_MERGE_QUERY)
+    auto_body = tmp_path / "auto.json"
+    auto_body.write_text(json.dumps({"query": _AUTO_MERGE_QUERY, "variables": {"id": "PR_1"}}))
+    approve_body = tmp_path / "approve.json"
+    approve_body.write_text(json.dumps({"event": "APPROVE"}))
+    inline = f"query={_ENQUEUE_QUERY}"
+    forms = {
+        "root-repo-pr-merge": (["-R", "unit/public", "pr", "merge", "5"], None),
+        "root-repo-long-review-approve": (["--repo", "unit/public", "pr", "review", "5", "--approve"], None),
+        "root-repo-equals-pr-merge": (["--repo=unit/public", "pr", "merge", "5"], None),
+        "root-repo-attached-pr-merge": (["-Runit/public", "pr", "merge", "5"], None),
+        "root-repo-api-enqueue": (["-R", "unit/public", "api", "graphql", "-f", inline], None),
+        "pr-repo-merge": (["pr", "--repo", "unit/public", "merge", "5"], None),
+        "pr-repo-short-review-approve": (["pr", "-R", "unit/public", "review", "5", "-a"], None),
+        "review-approve-bundle": (["pr", "review", "5", "-ca"], None),
+        "review-approve-equals": (["pr", "review", "5", "--approve=true"], None),
+        "root-unknown-flag": (["--unplaceable", "pr", "merge", "5"], None),
+        "pr-unknown-flag": (["pr", "--unplaceable", "merge", "5"], None),
+        "alias-set": (["alias", "set", "q", f"api graphql -f {inline}"], None),
+        "alias-import": (["alias", "import", "-"], f"q: api graphql -f '{inline}'\n"),
+        "alias-delete": (["alias", "delete", "q"], None),
+        "alias-invoked": (["q", "-f", "id=PR_1"], None),
+        "extension-exec": (["extension", "exec", "merge-helper"], None),
+        "config-set": (["config", "set", "pager", "cat"], None),
+        "raw-field-file": (["api", "graphql", "-f", f"query=@{enqueue}"], None),
+        "raw-field-long-file": (["api", "graphql", "--raw-field", f"query=@{enqueue}"], None),
+        "raw-field-equals-file": (["api", "graphql", f"--raw-field=query=@{enqueue}"], None),
+        "raw-field-attached-file": (["api", "graphql", f"-fquery=@{enqueue}"], None),
+        "raw-field-stdin": (["api", "graphql", "-f", "query=@-"], _ENQUEUE_QUERY),
+        "raw-field-unreadable": (["api", "graphql", "-f", f"query=@{tmp_path / 'missing.graphql'}"], None),
+        "field-file-merge": (["api", "graphql", "-F", f"query=@{merge}"], None),
+        "input-file-auto-merge": (["api", "graphql", "--input", str(auto_body)], None),
+        "input-stdin-merge": (["api", "graphql", "--input", "-"], json.dumps({"query": _MERGE_QUERY})),
+        "inline-merge-case-folded": (["api", "GRAPHQL", "-f", f"query={_MERGE_QUERY.lower()}"], None),
+        "inline-merge-branch": (["api", "graphql", "-f", "query=mutation{mergeBranch(input:{}){clientMutationId}}"], None),
+        "method-bundle-enqueue": (["api", "-XPOST", "graphql", "-f", inline], None),
+        "rest-merge": (["api", "-X", "PUT", "repos/unit/public/pulls/5/merge"], None),
+        "rest-merge-upper": (["api", "--method=PUT", "REPOS/unit/public/PULLS/5/MERGE"], None),
+        "rest-merge-encoded": (["api", "-X", "PUT", "repos/unit/public/pulls/5/%6Derge"], None),
+        "rest-branch-merge": (["api", "-X", "POST", "repos/unit/public/merges", "-f", "base=main", "-f", "head=x"], None),
+        "rest-review-approve-file": (
+            ["api", "-X", "POST", "repos/unit/public/pulls/5/reviews", "--input", str(approve_body)],
+            None,
+        ),
+        "api-unknown-flag": (["api", "graphql", "--unplaceable", "x"], None),
+        "api-end-of-flags": (["api", "--", "graphql"], None),
+    }
+    assert set(forms) == set(_MERGE_GATE_FORMS)
+    return forms[form]
+
+
+def _run_no_merge_shim(shim, root, tmp_path, fake_gh, argv, stdin):
+    return subprocess.run(
+        [str(shim), *argv],
+        cwd=root,
+        input=stdin if stdin is not None else "",
+        capture_output=True,
+        text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(fake_gh), "PATH": os.environ.get("PATH", ""),
+             "TMPDIR": str(tmp_path)},
+        check=False,
+        timeout=30,
+    )
+
+
+@pytest.mark.parametrize("form", _MERGE_GATE_FORMS)
+def test_gh_shim_refuses_every_merge_gate_spelling(tmp_path, gh_shim_sandbox, form):
+    """#10501 review at 2c1d222a: no argv spelling of a merge, enqueue or approval reaches the backend."""
+    root, shim, _tooling = gh_shim_sandbox
+    fake_gh, calls = _recording_gh(tmp_path)
+    argv, stdin = _merge_gate_form(tmp_path, form)
+    proc = _run_no_merge_shim(shim, root, tmp_path, fake_gh, argv, stdin)
+    assert proc.returncode != 0
+    assert "cannot merge or approve PRs" in proc.stderr
+    assert not calls.exists()
+    assert not list(tmp_path.glob("agent-gh.stdin.*"))
+
+
+def test_gh_shim_still_admits_a_scanned_field_file(tmp_path, gh_shim_sandbox):
+    """Positive control: a field file the shim reads and finds clean still reaches the backend."""
+    root, shim, _tooling = gh_shim_sandbox
+    fake_gh, calls = _recording_gh(tmp_path)
+    note = tmp_path / "note.txt"
+    note.write_text("private note about the merge queue")
+    argv = ["api", "--method", "POST", "repos/unit/private/issues/1/comments", "-f", f"body=@{note}"]
+    proc = _run_no_merge_shim(shim, root, tmp_path, fake_gh, argv, None)
+    assert "cannot merge or approve PRs" not in proc.stderr, proc.stderr
+    assert proc.returncode == 0, proc.stderr
+    recorded = [json.loads(line) for line in calls.read_text().splitlines()]
+    assert len(recorded) == 1
+    assert recorded[0]["argv"][:6] == argv
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["api", "graphql", "-f", "query=mutation{dequeuePullRequest(input:{id:\"PR_1\"}){clientMutationId}}"],
+        ["-R", "unit/public", "pr", "view", "5"],
+        ["pr", "--repo", "unit/public", "review", "5", "--comment", "-b", "approve once CI is green"],
+    ],
+    ids=["dequeue", "root-repo-read", "review-comment"],
+)
+def test_gh_shim_classifier_does_not_refuse_non_merge_commands(tmp_path, gh_shim_sandbox, argv):
+    """The classifier leaves dequeue, reads and comment reviews to the publishing admission."""
+    root, shim, _tooling = gh_shim_sandbox
+    fake_gh, _calls = _recording_gh(tmp_path)
+    proc = _run_no_merge_shim(shim, root, tmp_path, fake_gh, argv, None)
+    assert "cannot merge or approve PRs" not in proc.stderr, proc.stderr
+
+
 def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sandbox):
     """CF comments still publish under the worker merge guard, through REST."""
     root, _shim, _tooling = gh_shim_sandbox

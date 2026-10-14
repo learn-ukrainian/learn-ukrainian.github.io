@@ -437,7 +437,8 @@ def _apply_one(
     * ``stale_task_records._restore_group``: the per-task lock on the archived
       record around that record's move
     * ``stale_task_records.archive_terminal``: the checkout lock
-      (:func:`_record_lock_target`) while it renames the record and its sidecar
+      (:func:`_record_lock_target`), then the per-task lock, while it renames
+      the record and its sidecar
 
     Taking the per-task lock and then waiting on the checkout lock deadlocks
     a holder that already has the checkout lock and is waiting for the per-task

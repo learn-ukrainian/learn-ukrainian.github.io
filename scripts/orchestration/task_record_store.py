@@ -20,10 +20,16 @@ This module is stdlib-only so any reader can import it cheaply.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+import json
+from collections.abc import Callable, Iterator
 from pathlib import Path
+from typing import Any
 
 ARCHIVE_DIR_NAME = "archive"
+
+
+class TaskRecordUnavailable(RuntimeError):
+    """A by-id record is missing, unreadable, malformed or kept moving."""
 
 
 def task_record_path(tasks_dir: Path, task_id: str) -> Path:
@@ -43,6 +49,40 @@ def locate_task_record(tasks_dir: Path, task_id: str) -> Path | None:
         if path.is_file():
             return path
     return None
+
+
+def update_located_record(
+    tasks_dir: Path, task_id: str, update: Callable[[dict[str, Any]], dict[str, Any] | None]
+) -> Path:
+    """Apply ``update`` to ``task_id``'s hot or archived record under its per-task lock.
+
+    The record is re-read after the lock is taken, so a concurrent locked
+    writer's fields survive. ``update`` returns the record to write, or
+    ``None`` to leave it as it is; it may raise to refuse. A record that an
+    archive or restore moved between lookup and lock is located again, once.
+    The lock and writer are the dispatch ones, imported lazily so readers of
+    this module stay stdlib-only.
+    """
+    from scripts.orchestration.dead_worker_state import task_state_lock, write_state_unlocked
+
+    for _attempt in range(2):
+        path = locate_task_record(tasks_dir, task_id)
+        if path is None:
+            raise TaskRecordUnavailable("task record not found")
+        with task_state_lock(path):
+            if not path.is_file():
+                continue
+            try:
+                record = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise TaskRecordUnavailable("task record unreadable") from exc
+            if not isinstance(record, dict):
+                raise TaskRecordUnavailable("task record malformed")
+            updated = update(record)
+            if updated is not None:
+                write_state_unlocked(path, updated)
+            return path
+    raise TaskRecordUnavailable("task record moved during update")
 
 
 def iter_task_records(tasks_dir: Path, *, include_archive: bool) -> Iterator[Path]:

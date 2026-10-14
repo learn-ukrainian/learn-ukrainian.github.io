@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -81,7 +82,16 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
     second = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert second["comment"] == "existing" and sent == [body]
     assert calls == {"posts": 1, "statuses": 2}
-    assert before == {suffix: (tasks / f"review-one.{suffix}").read_bytes() for suffix in before}
+    assert (tasks / "review-one.result").read_bytes() == before["result"]
+    # The recorder adds its receipt; private findings and every existing task field stay unchanged.
+    original = json.loads(before["json"])
+    after = json.loads((tasks / "review-one.json").read_text())
+    receipt = after.pop(sweep.RECEIPT_FIELD)
+    assert after == original
+    assert receipt["comment_id"] == comments[0]["id"]
+    assert receipt["comment_sha256"] == hashlib.sha256(body.encode()).hexdigest()
+    assert receipt["head_sha"] == SHA
+    assert receipt["run_nonce"] == original["run_nonce"]
 
 
 def test_clean_publication_bytes_unchanged(scanned_recorder, tmp_path):
@@ -275,7 +285,10 @@ def test_branch_identity_binds_supported_record(monkeypatch, tmp_path, identity)
     assert receipt["status"] == "posted"
     assert recorder.parse_marker(comments[0]["body"])["sha"] == SHA
     assert calls == {"posts": 1, "statuses": 1}
-    assert (tasks / "review-one.json").read_bytes() == before
+    # Only the recorder receipt is added; every other field is kept (#10501).
+    after = json.loads((tasks / "review-one.json").read_text())
+    assert after.pop(sweep.RECEIPT_FIELD)["comment_id"] == comments[0]["id"]
+    assert after == json.loads(before)
 
 
 @pytest.mark.parametrize("identity,reason", [

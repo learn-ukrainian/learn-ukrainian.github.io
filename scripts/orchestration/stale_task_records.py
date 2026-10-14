@@ -1261,18 +1261,22 @@ def _archive_one(
         with delegate.worktree_lock(lock_target, timeout_s=lock_timeout_s):
             if before_move is not None:
                 before_move(path)
-            current, stat = _read_pinned(path)
-            if stat.st_mtime_ns != selected_mtime_ns:
-                row["action"], row["skip_reason"] = "skipped", "record changed since selection"
-            elif current is None or current.get("status") not in worktree_claims.RELEASED_TASK_STATUSES:
-                row["action"], row["skip_reason"] = "skipped", "record no longer terminal"
-            elif (reason := keep_hot_reason(current)) is not None:
-                row["action"], row["skip_reason"] = "skipped", reason
-            else:
-                row["moved"], problems = _move_group(path, archive_dir, stamp, checked=stat)
-                row["action"] = "error" if problems else "archived"
-                if problems:
-                    row["error"] = "record archived; " + "; ".join(problems)
+            # Per-task writers (the review receipt among them, #10501) rewrite a
+            # record under its own lock; holding it keeps a rewrite read before
+            # the move from landing on the hot name the move just vacated.
+            with task_state_lock(path):
+                current, stat = _read_pinned(path)
+                if stat.st_mtime_ns != selected_mtime_ns:
+                    row["action"], row["skip_reason"] = "skipped", "record changed since selection"
+                elif current is None or current.get("status") not in worktree_claims.RELEASED_TASK_STATUSES:
+                    row["action"], row["skip_reason"] = "skipped", "record no longer terminal"
+                elif (reason := keep_hot_reason(current)) is not None:
+                    row["action"], row["skip_reason"] = "skipped", reason
+                else:
+                    row["moved"], problems = _move_group(path, archive_dir, stamp, checked=stat)
+                    row["action"] = "error" if problems else "archived"
+                    if problems:
+                        row["error"] = "record archived; " + "; ".join(problems)
     except worktree_claims.WorktreeLockError as exc:
         row["action"], row["skip_reason"] = "skipped", worktree_claims.lock_refusal(exc)
     except FileNotFoundError:
@@ -1300,11 +1304,12 @@ def archive_terminal(
 ) -> dict[str, Any]:
     """Move old terminal records and their sidecars into ``<tasks_dir>/archive/``.
 
-    Each move holds the record's lock (:func:`_record_lock_target`) and first
-    re-reads the record: it is skipped if its mtime changed since selection,
-    its status is no longer terminal, or it still owns a path
-    (:func:`keep_hot_reason`). ``before_move`` is a test seam called under the
-    lock, before that re-check.
+    Each move holds the record's lock (:func:`_record_lock_target`), then its
+    per-task ``<record>.json.lock``, and first re-reads the record: it is
+    skipped if its mtime changed since selection, its status is no longer
+    terminal, or it still owns a path (:func:`keep_hot_reason`).
+    ``before_move`` is a test seam called under the checkout lock, before the
+    per-task lock and that re-check.
     """
     now = now or datetime.now(UTC)
     archive_dir = tasks_dir / ARCHIVE_DIR_NAME

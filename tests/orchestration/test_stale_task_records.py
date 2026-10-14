@@ -853,7 +853,12 @@ def test_archive_round_trip_moves_record_with_sidecars(tasks_dir):
     report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
     assert report["actions"] == {"archived": 2}
     archive = tasks_dir / "archive"
-    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
+    # The move holds each record's per-task lock, whose stable anchor (#8659) stays at the hot name.
+    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
+    assert sorted(path.name for path in tasks_dir.glob("*.lock")) == [
+        "old-done.json.lock",
+        f"redo.{stamp}.archived.json.lock",
+    ]
     assert (archive / "old-done.snapshots" / "read_only_checkout_pre.json").is_file()
     assert (archive / f"redo.snapshots.{stamp}.archived" / "read_only_checkout_post.json").is_file()
     assert task_record_store.locate_task_record(tasks_dir, "old-done") == archive / "old-done.json"
@@ -1072,9 +1077,10 @@ def test_archive_puts_back_a_record_replaced_during_the_move(tasks_dir, monkeypa
 
     def racing_rename(src, dst):
         if Path(src) == target and not raced:
-            # A writer replaces the record after the final re-check, before the rename.
+            # A writer replaces the record after the final re-check, before the rename. A writer
+            # holding the per-task lock now waits for the move; this one bypasses the lock.
             raced.append(True)
-            delegate._write_state_atomic(target, {**json.loads(target.read_text()), "status": "running"})
+            dead_worker_state.write_state_unlocked(target, {**json.loads(target.read_text()), "status": "running"})
         real_rename(src, dst)
 
     monkeypatch.setattr(str_mod.os, "rename", racing_rename)
@@ -1223,7 +1229,7 @@ def test_archive_moves_a_snapshot_directory_onto_an_empty_one(tasks_dir):
     assert row["action"] == "archived"
     assert row["moved"] == ["empty-dest.json", "empty-dest.result", "empty-dest.snapshots"]
     assert _contents(tasks_dir / "archive" / "empty-dest.snapshots") == SNAPSHOT_FILES
-    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
+    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
 
 
 def test_archive_moves_a_snapshot_directory_whole_past_a_writer_filled_name(tasks_dir, monkeypatch):
@@ -1240,7 +1246,7 @@ def test_archive_moves_a_snapshot_directory_whole_past_a_writer_filled_name(task
     assert row["moved"] == ["clash.json", "clash.result", stamped.name]
     assert _contents(stamped) == SNAPSHOT_FILES
     assert _contents(foreign) == {"read_only_checkout_post.json": "writer\n"}
-    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
+    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
     assert _no_staging_left(tasks_dir)
 
 
@@ -1311,7 +1317,7 @@ def test_archive_never_replaces_a_destination_created_during_the_move(tasks_dir,
     assert record_name.endswith(".archived.json") and result_name == record_name.removesuffix(".json") + ".result"
     assert json.loads((foreign.parent / record_name).read_text())["status"] == "done"
     assert (foreign.parent / result_name).read_text() == "reply\n"
-    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
+    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
     assert not list(foreign.parent.glob(".*.moving"))
 
 
@@ -1357,8 +1363,9 @@ def test_archive_double_collision_with_the_hot_name_retaken_parks_the_record_vis
     record = _terminal(tasks_dir, "twice")
     original = record.read_bytes()
     _fill_archive_names(tasks_dir / "archive", "twice.json")
+    # An unlocked writer: one holding the per-task lock waits for the move to finish.
     raced = _link_after_writer(
-        monkeypatch, record, lambda: delegate._write_state_atomic(record, {"task_id": "twice", "status": "running"})
+        monkeypatch, record, lambda: dead_worker_state.write_state_unlocked(record, {"task_id": "twice", "status": "running"})
     )
 
     report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
@@ -1661,3 +1668,39 @@ def test_r7_delivery_counts_a_pull_request_merged_since_the_task_started(tasks_d
     row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["finalized.json"]
 
     assert (row["outcome"], json.loads((tasks_dir / "finalized.json").read_text())["status"]) == ("done", "done")
+
+
+def test_archive_waits_for_a_per_task_writer_and_never_strands_its_update(tasks_dir):
+    """#10501: a receipt write read before the move never lands on the hot name the move vacated."""
+    record_path = _terminal(tasks_dir, "reviewed")
+    (tasks_dir / "reviewed.result").write_text("VERDICT: APPROVE\n")
+    holding, release = threading.Event(), threading.Event()
+
+    def bind(record: dict[str, Any]) -> dict[str, Any]:
+        holding.set()
+        assert release.wait(10)
+        return {**record, "cf_recording": {"schema": "cf-recording.v1"}}
+
+    writer = threading.Thread(target=task_record_store.update_located_record, args=(tasks_dir, "reviewed", bind))
+    reports: list[dict[str, Any]] = []
+    archiver = threading.Thread(
+        target=lambda: reports.append(str_mod.archive_terminal(tasks_dir, now=NOW, apply=True, lock_timeout_s=10))
+    )
+    writer.start()
+    try:
+        assert holding.wait(5)
+        archiver.start()
+        # The archiver waits on the record's own lock while the writer holds it.
+        archiver.join(1.0)
+        assert archiver.is_alive()
+    finally:
+        release.set()
+        writer.join(10)
+        if archiver.ident is not None:
+            archiver.join(10)
+
+    row = reports[0]["records"][0]
+    assert (row["action"], row["skip_reason"]) == ("skipped", "record changed since selection")
+    assert json.loads(record_path.read_text())["cf_recording"] == {"schema": "cf-recording.v1"}
+    assert (tasks_dir / "reviewed.result").is_file()
+    assert not (tasks_dir / "archive" / "reviewed.json").exists()
