@@ -777,14 +777,81 @@ def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     output = json.loads(result.stdout)
     assert output["counts"] == dict(units=150, source_records=272, atlas_articles=114, legacy_alias_rows=140)
     registry = json.loads(paths[1].read_bytes())
-    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [114, 272, 386]
+    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 692]
+    assert registry["registry_version"] == 2
+    # The source-partition allocation appends to, rather than rewriting, the bootstrap.
+    assert sha(dict(entries=registry["entries"][:114], source_records=registry["source_records"],
+                    events=registry["events"][:386])) == \
+        "a349127ec24789b2bf180cf6edf7a4056e9025f1c2801e4232a11446be3dc5e1"
     assert len(output["unresolved_card_mappings"]) == 22 and output["heldout_isolation"] == "unverified"
-    assert output["foreign_build_events"] == 0
+    assert output["foreign_build_events"] == 306  # Separate allocation epoch; not bootstrap mint evidence.
     member, held = tmp_path / "membership.json", json.loads(paths[0].read_bytes())["selection"]["source_records"][0]
     save(member, dict(heldout=[held["locator"]], replay=[]))  # No committed owner carries an adjudication marker.
     assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
                             "--heldout-manifest", str(member)]) == 0 and '"heldout_isolation": "checked"' in capsys.readouterr().out
     assert before == [p.read_bytes() for p in paths]
+
+
+def test_committed_pilot_source_partition_allocations():
+    """Literal frozen units, not spelling matches, are the allocation denominator."""
+    manifest = json.loads((ROOT / "registry/atlas/pilot/pilot-v1.json").read_bytes())
+    registry = json.loads((ROOT / "registry/atlas/identity/registry.json").read_bytes())
+    build = "pilot-identity-allocation-9402@sha256:" + manifest["manifest_sha256"]
+    entries = [e for e in registry["entries"] if e["created_in_build"] == build]
+    events = [e for e in registry["events"] if e["build_id"] == build]
+    records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
+    assert len(entries) == 150 and len(events) == 306
+    assert len({e["card_id"] for e in entries}) == 150
+    assert sum(e["card_kind"] == "mwe" for e in entries) == 15
+    assert sum(e["card_kind"] == "proper_name" for e in entries) == 13
+    assert sum(e["card_kind"] == "lexeme" for e in entries) == 122
+    allocated_senses = []
+    for unit in manifest["selection"]["units"]:
+        matches = [e for e in entries if unit["unit_key"] in
+                   {k["key"] for k in e["key_at_creation"]["source_keys"]}]
+        assert len(matches) == 1, unit["unit_key"]
+        entry, anchor = matches[0], records[unit["anchor_locator"]]
+        keys = entry["key_at_creation"]["source_keys"]
+        assert dict(source_id=anchor["source_id"], key=unit["anchor_locator"],
+                    snapshot_id=anchor["snapshot_id"]) in keys
+        assert all(k["source_id"] == anchor["source_id"] for k in keys)  # No supplementary equivalence.
+        mints = [e for e in events if e["kind"] == "mint" and e["cards"] == [entry["card_id"]]]
+        assert len(mints) == 1
+        evidence = json.loads(mints[0]["evidence"])
+        assert evidence["source_partition"] == unit["unit_key"]
+        assert evidence["anchor_locator"] == unit["anchor_locator"]
+        assert evidence["snapshot_id"] == anchor["snapshot_id"]
+        assert evidence["source_row_sha256"] == anchor["content_sha256"]
+        assert evidence["supplementary_correspondence"] == "unresolved"
+        if unit["entry_type"] == "mwe_candidate":
+            assert entry["card_kind"] == "mwe" and entry["key_at_creation"]["pos"] == "phrase"
+            assert entry["key_at_creation"]["mwe_key"].startswith(unit["anchor_locator"] + "|")
+        gloss = anchor["raw_row"].get("sense_gloss", "")
+        parts = [p.strip() for p in gloss[1:-1].split(";")] if gloss else [None]
+        assert len(entry["senses"]) == len(parts)
+        for order, (sense, literal) in enumerate(zip(entry["senses"], parts, strict=True), 1):
+            allocated_senses.append(sense)
+            assert sense["order"] == order and sense["state"] == ("active" if gloss else "unsplit")
+            mints = [e for e in events if e["kind"] == "sense_mint" and e["to"] == [sense["sense_id"]]]
+            assert len(mints) == 1
+            evidence = json.loads(mints[0]["evidence"])
+            assert evidence["source_partition"] == unit["unit_key"]
+            assert evidence["anchor_locator"] == anchor["locator"]
+            assert evidence["source_row_sha256"] == anchor["content_sha256"]
+            assert evidence["literal_gloss_unit"] == literal
+            assert evidence["source_unit"] == (
+                f"ulif:entry:{anchor['raw_row']['id']} sense_gloss[{order - 1}]" if gloss
+                else anchor["locator"] + "#unsplit")
+            assert evidence["state"] == sense["state"]
+        for locator in unit["source_record_keys"]:
+            record = records[locator]
+            matches = [r for r in registry["source_records"] if r["source_id"] == record["source_id"] and
+                       any(c.get("locator") == locator and c["snapshot_id"] == record["snapshot_id"] and
+                           c["status"] == "unique" for c in r["correspondence"])]
+            assert len(matches) == 1
+    assert len(allocated_senses) == len({s["sense_id"] for s in allocated_senses}) == 156
+    assert sum(s["state"] == "active" for s in allocated_senses) == 27
+    assert sum(s["state"] == "unsplit" for s in allocated_senses) == 129
 
 
 def test_help_and_evaluation_refusal(pilot, capsys):
