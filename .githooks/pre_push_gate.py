@@ -1530,7 +1530,6 @@ def refuse(error: GateOutcome) -> int:
         print("Failing:", file=sys.stderr)
         for node in error.failing:
             print(f"  {node}", file=sys.stderr)
-    print(error.detail, file=sys.stderr)
     if error.incomplete:
         print(
             "\nThe push was NOT validated and is NOT green. The branch is preserved; return to the driver.\n"
@@ -1542,6 +1541,7 @@ def refuse(error: GateOutcome) -> int:
         file=sys.stderr,
     )
     print("To intentionally bypass this gate, use: git push --no-verify", file=sys.stderr)
+    print(error.detail, file=sys.stderr)
     return EXIT_INCOMPLETE if error.incomplete else EXIT_REFUSED
 
 
@@ -1713,6 +1713,7 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             outcome="validation_incomplete" if error.incomplete else "refused",
             reason=error.reason,
             failing=list(error.failing),
+            detail=error.detail,
         )
 
     def publish_terminal(state: Path, event: dict[str, object]) -> bool:
