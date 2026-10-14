@@ -495,6 +495,7 @@ def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path,
 
 
 def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest, "DEFAULT_FINGERPRINT", tmp_path / "fingerprint.json")
     manifest_path = tmp_path / "lexicon-manifest.json"
     manifest_path.write_text('{"entries": [{"lemma": "тест", "url_slug": "тест"}]}\n', encoding="utf-8")
     kaikki_path = tmp_path / "kaikki.json"
@@ -1242,6 +1243,7 @@ def test_poc_thin_target_selection_and_full_entry(monkeypatch: pytest.MonkeyPatc
 
 
 def test_poc_thin_target_cli_skips_canary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(enrich_manifest, "DEFAULT_FINGERPRINT", tmp_path / "fingerprint.json")
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps({"entries": []}), encoding="utf-8")
     kaikki_path = tmp_path / "kaikki.json"

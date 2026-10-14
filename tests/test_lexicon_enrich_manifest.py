@@ -511,6 +511,7 @@ def test_morphology_verb_paradigm_includes_present_past_imperative_and_impersona
 
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", fake_verify_lemma)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("читати")
 
@@ -544,13 +545,14 @@ def test_morphology_can_use_base_form_from_pair_lemma(monkeypatch) -> None:
 
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", fake_verify_lemma)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology(_base_lemma("варити / зварити"))
 
     assert calls == ["варити"]
     assert morphology is not None
     assert morphology["pos"] == "дієслово"
-    assert morphology["forms"][0] == {"form": "варити", "label": "інфінітив"}
+    assert morphology["forms"][0] == {"form": "варити", "label": "інфінітив", "tags": "verb:inf"}
 
 
 def test_vesum_passive_participle_gets_presentation_and_verified_parent(monkeypatch) -> None:
@@ -570,6 +572,7 @@ def test_vesum_passive_participle_gets_presentation_and_verified_parent(monkeypa
         ),
     )
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     entry: dict[str, object] = {
         "lemma": "прийнятий",
@@ -640,6 +643,7 @@ def test_style_markers_match_whole_tokens_only() -> None:
 def test_morphology_segregates_marked_forms_into_marked_group(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: _korysnyi_vesum_rows())
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("корисний")
 
@@ -663,8 +667,8 @@ def test_morphology_marked_form_stress_applies_like_modern_rows(monkeypatch) -> 
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: _korysnyi_vesum_rows())
     monkeypatch.setattr(
         enrich_manifest_module,
-        "_stress_display_form",
-        lambda form: f"{form}́" if form == "корисная" else "",
+        "resolve_paradigm_stress",
+        lambda lemma, form, tags, pos: {"form": f"{form}́", "source": "fixture"} if form == "корисная" else None,
     )
 
     morphology = _morphology("корисний")
@@ -685,6 +689,7 @@ def test_unknown_grammatical_token_stays_in_modern_paradigm(monkeypatch) -> None
     ]
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("сад")
 
@@ -706,6 +711,7 @@ def test_segregated_but_unlabelled_marker_gets_generic_label(monkeypatch) -> Non
     ]
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("новий")
 
@@ -727,6 +733,7 @@ def test_morphology_pluralia_tantum_ns_stays_in_modern_paradigm(monkeypatch) -> 
     ]
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("двері")
 
@@ -745,6 +752,7 @@ def test_morphology_unmarked_lemma_omits_marked_keys(monkeypatch) -> None:
     ]
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("робота")
 
@@ -759,6 +767,7 @@ def test_morphology_form_count_matches_rendered_rows_after_cap(monkeypatch) -> N
     rows = [{"word_form": f"форма{i}", "tags": "noun:inanim:f:v_naz", "pos": "noun"} for i in range(45)]
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("форма")
 
@@ -2929,6 +2938,7 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
     monkeypatch.setattr(enrich_manifest_module, "_prepare_cefr_estimates", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_cefr", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
@@ -2937,13 +2947,15 @@ def test_enrich_uses_base_form_for_pair_single_form_sections(monkeypatch, tmp_pa
     monkeypatch.setattr(enrich_manifest_module, "_ensure_grac_frequency_cache", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", fake_verify_lemma)
 
-    assert enrich_manifest_module.enrich() == (1, 1)
+    assert enrich_manifest_module.enrich(fingerprint_path=tmp_path / "fingerprint.json") == (1, 1)
 
     enriched = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"][0]
     assert enriched["lemma"] == "робота / працювати"
     assert enriched["sections"]["synonyms"]["items"] == ["праця"]
     assert enriched["enrichment"]["etymology"]["text"] == "Fixture mphdict etymology for робота."
-    assert enriched["enrichment"]["morphology"]["forms"] == [{"form": "робота", "label": "однина, жін., називний"}]
+    assert enriched["enrichment"]["morphology"]["forms"] == [
+        {"form": "робота", "label": "однина, жін., називний", "tags": "noun:s:f:v_naz"}
+    ]
     assert verify_calls == ["робота"]
 
 
@@ -3036,6 +3048,7 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_idioms_slovnyk", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
     monkeypatch.setattr(enrich_manifest_module, "_prepare_cefr_estimates", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_cefr", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_morphology", lambda *args, **kwargs: None)
@@ -3045,7 +3058,7 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     monkeypatch.setattr(enrich_manifest_module, "_ensure_grac_frequency_cache", lambda *args, **kwargs: None)
     _patch_vesum_analyses(monkeypatch, {"воля": "noun", "ув'язнення": "noun"})
 
-    assert enrich_manifest_module.enrich() == (1, 1)
+    assert enrich_manifest_module.enrich(fingerprint_path=tmp_path / "fingerprint.json") == (1, 1)
 
     enriched = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"][0]
     print("UNIT SAMPLE before sections:", before["entries"][0].get("sections"))
@@ -6029,6 +6042,7 @@ def test_morphology_filters_russian_infinitive_tsya_form(monkeypatch) -> None:
     ]
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     morphology = _morphology("подаватися")
     assert morphology is not None
@@ -6873,6 +6887,7 @@ def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
     monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", lambda title: None)
     monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: [])
     monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+    monkeypatch.setattr(enrich_manifest_module, "resolve_paradigm_stress", lambda *args: None)
 
     entry = {
         "lemma": "добрий",
