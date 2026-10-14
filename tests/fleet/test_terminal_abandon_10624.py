@@ -47,7 +47,9 @@ def test_detached_head_bundle_restores_after_removal(succession, tmp_path, capsy
     assert hashlib.sha256(payload).hexdigest() == bundle["sha256"]
     _remove(fixture)
     restored = tmp_path / "restored"
-    _git(repo, "clone", str(repo / bundle["path"]), str(restored))
+    _git(repo, "clone", "--no-local", "--single-branch", "--branch", "main", str(repo), str(restored))
+    _git(restored, "fetch", str(repo / bundle["path"]), "HEAD")
+    _git(restored, "checkout", "--detach", "FETCH_HEAD")
     assert _git(restored, "rev-parse", "HEAD") == head
 
 

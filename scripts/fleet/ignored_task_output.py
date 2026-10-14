@@ -36,6 +36,9 @@ from scripts.orchestration.task_record_store import task_record_path
 # Bound automatic disk duplication. Larger outputs require owner disposition;
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
+# A detached bundle gets the same ceiling as the existing output payload budget.
+# It is a separate artifact; neither budget permits a partial preservation.
+MAX_DETACHED_BUNDLE_BYTES = MAX_PRESERVED_BYTES
 
 # Reviewed creator-initiator -> canonical stream map for lane succession (#10617).
 SUCCESSION_MAP = Path(__file__).resolve().parents[2] / "scripts/config/terminal_abandon_succession.yaml"
@@ -648,14 +651,14 @@ def _verify_succession(
             if blob.returncode != 0 or payload != blob.stdout:
                 raise ValueError("terminal-abandon detached concealed tracked changes refuse")
         saved_bundle = manifest.get("detached_bundle")
-        _abandon_file(primary, saved_bundle)
+        _abandon_file(primary, saved_bundle, read_payload=False, max_bytes=MAX_DETACHED_BUNDLE_BYTES)
         bundle_path = primary / saved_bundle["path"]
         verify = artifacts.safe_git(
-            ["bundle", "verify", str(bundle_path)], cwd=worktree, capture_output=True, check=False, timeout=30
+            ["bundle", "verify", str(bundle_path)], cwd=primary, capture_output=True, check=False, timeout=30
         )
         listed = artifacts.safe_git(
             ["bundle", "list-heads", str(bundle_path)],
-            cwd=worktree,
+            cwd=primary,
             capture_output=True,
             text=True,
             check=False,
@@ -836,7 +839,53 @@ def publish_abandon_output(
         manifest.write("\n")
 
 
-def _abandon_file(primary: Path, entry: Mapping[str, Any]) -> bytes:
+def _abandon_regular(
+    primary: Path, path: Path, *, read_payload: bool, max_bytes: int | None = None
+) -> tuple[bytes, str]:
+    """Hash a regular file in bounded reads, walking descriptor-relative without links."""
+    root = primary / "batch_state"
+    parts = artifacts._relative_parts(path, root)
+    with contextlib.ExitStack() as held:
+        root_fd = artifacts._open_trusted_root(root)
+        held.callback(os.close, root_fd)
+        parent_fd, owned = artifacts._walk_parent(root_fd, parts[:-1])
+        if owned:
+            held.callback(os.close, parent_fd)
+        fd = os.open(parts[-1], artifacts._LEAF_FLAGS, dir_fd=parent_fd)
+        held.callback(os.close, fd)
+        before = os.fstat(fd)
+        if not stat.S_ISREG(before.st_mode):
+            raise ValueError("terminal-abandon preservation must be regular")
+        if max_bytes is not None and before.st_size > max_bytes:
+            raise PreservationLimit(
+                f"detached bundle exceeds MAX_DETACHED_BUNDLE_BYTES ({before.st_size} > {max_bytes} bytes)"
+            )
+        digest = hashlib.sha256()
+        payload = bytearray()
+        remaining = before.st_size
+        while remaining:
+            chunk = os.read(fd, min(remaining, 1024 * 1024))
+            if not chunk:
+                raise ValueError("terminal-abandon preservation changed during hashing")
+            digest.update(chunk)
+            if read_payload:
+                payload.extend(chunk)
+            remaining -= len(chunk)
+        after = os.fstat(fd)
+        if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
+            after.st_dev,
+            after.st_ino,
+            after.st_size,
+            after.st_mtime_ns,
+            after.st_ctime_ns,
+        ):
+            raise ValueError("terminal-abandon preservation changed during hashing")
+        return bytes(payload), digest.hexdigest()
+
+
+def _abandon_file(
+    primary: Path, entry: Mapping[str, Any], *, read_payload: bool = True, max_bytes: int | None = None
+) -> bytes:
     """Read a hash-bound regular receipt below batch_state without following links."""
     if not isinstance(entry, Mapping):
         raise ValueError("terminal-abandon preservation locator invalid")
@@ -847,10 +896,10 @@ def _abandon_file(primary: Path, entry: Mapping[str, Any]) -> bytes:
     parts = artifacts._relative_parts(primary / name, root)
     if not parts:
         raise ValueError("terminal-abandon preservation locator invalid")
-    leaf = artifacts._read_preserved_bytes(root.joinpath(*parts), root=root)
-    if leaf.file_type != "regular" or hashlib.sha256(leaf.payload).hexdigest() != digest:
+    payload, observed = _abandon_regular(primary, root.joinpath(*parts), read_payload=read_payload, max_bytes=max_bytes)
+    if observed != digest:
         raise ValueError("terminal-abandon preservation digest invalid")
-    return leaf.payload
+    return payload
 
 
 def terminal_abandon_creator(

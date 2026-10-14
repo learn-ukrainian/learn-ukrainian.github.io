@@ -196,25 +196,47 @@ def _recover_creator(
     return verified[0]
 
 
-def _detached_bundle(tree: Path, parent: Path, primary: Path, head: str) -> dict[str, str]:
-    """Preserve a clean detached commit independently of any surviving ref."""
+def _detached_bundle(
+    tree: Path, parent: Path, primary: Path, head: str, base_sha: str
+) -> tuple[dict[str, str], Path | None]:
+    """Preserve only post-base objects; reuse a digest-named copy without owning it."""
+    if (
+        not isinstance(base_sha, str)
+        or not re.fullmatch(r"[a-f0-9]{40}", base_sha)
+        or not rw._sha_is_ancestor(tree, base_sha, head)
+        or not rw._sha_is_ancestor(primary, base_sha, "refs/remotes/origin/main")
+    ):
+        raise Refusal("PRESERVATION_INVALID", "detached bundle base must be an ancestor of HEAD and origin/main")
     with tempfile.NamedTemporaryFile(dir=parent, prefix=".head-bundle-", delete=False) as handle:
         temporary = Path(handle.name)
     try:
         probe = artifacts.safe_git(
-            ["bundle", "create", str(temporary), "HEAD"], cwd=tree, capture_output=True, check=False, timeout=30
+            ["bundle", "create", str(temporary), "HEAD", "--not", base_sha],
+            cwd=tree,
+            capture_output=True,
+            check=False,
+            timeout=30,
         )
         if probe.returncode != 0:
             raise Refusal("PRESERVATION_INVALID", "detached HEAD bundle could not be created")
-        raw = _regular_bytes(temporary, primary)
-        digest = hashlib.sha256(raw).hexdigest()
+        _, digest = output._abandon_regular(
+            primary, temporary, read_payload=False, max_bytes=output.MAX_DETACHED_BUNDLE_BYTES
+        )
         destination = parent / f"head-{head}-{digest}.bundle"
         if destination.exists() or destination.is_symlink():
-            if _regular_bytes(destination, primary) != raw:
-                raise Refusal("PRESERVATION_INVALID", "detached HEAD bundle collision")
+            output._abandon_file(
+                primary,
+                {"path": destination.relative_to(primary).as_posix(), "sha256": digest},
+                read_payload=False,
+                max_bytes=output.MAX_DETACHED_BUNDLE_BYTES,
+            )
+            created = None
         else:
             os.replace(temporary, destination)
-        return {"path": destination.relative_to(primary).as_posix(), "sha256": digest}
+            created = destination
+        return {"path": destination.relative_to(primary).as_posix(), "sha256": digest}, created
+    except output.PreservationLimit as exc:
+        raise Refusal("PRESERVATION_LIMIT", str(exc)) from None
     finally:
         temporary.unlink(missing_ok=True)
 
@@ -349,62 +371,63 @@ def record_abandon(
             **{key: supplied.get(key) for key in ("base_sha", "head_patch", "index_patch", "working_patch")},
         }
         captured = None
-        if succession is not None:
-            if branch is None:
-                manifest["detached_bundle"] = _detached_bundle(tree, parent, primary, head)
-            # Git patches cannot carry untracked or ignored bytes; a successor
-            # is not their author, so it preserves them before deciding.
-            try:
-                locator, captured = output.capture_abandon_output(tree, primary=primary, record=creator)
-            except output.PreservationLimit as exc:
-                raise Refusal("PRESERVATION_LIMIT", str(exc)) from None
-            except (OSError, ValueError, RuntimeError):
-                raise Refusal("PRESERVATION_INVALID", "untracked or ignored output could not be preserved") from None
-            manifest["output"] = locator
-        encoded = (json.dumps(manifest, sort_keys=True) + "\n").encode()
-        digest = hashlib.sha256(encoded).hexdigest()
-        destination = parent / f"terminal-abandon-{task_id}-{digest}.json"
-        receipt = {
-            "schema": "terminal-abandon.v1",
-            "disposition": "ABANDON",
-            "owner": task_id,
-            "run_nonce": creator.get("run_nonce"),
-            "head_sha": head,
-            "reason": reason,
-            "preservation": {"path": "", "sha256": digest},
-        }
-        if recovery is not None:
-            receipt["creator_recovery"] = recovery
-        if merged_proof is not None:
-            receipt["merged_pr"] = merged_proof
-        if succession is not None:
-            lease, stream, mapping_digest, authority = succession
-            receipt["succession"] = {
-                "schema": "terminal-abandon-succession.v1",
-                "task_id": task_id,
-                "creator_initiator": creator.get("initiator"),
-                "caller_initiator": caller.initiator,
-                "stream_id": stream,
-                "mapping_sha256": mapping_digest,
-                "authority": authority,
-                "tree": tree.relative_to(primary).as_posix(),
-                "branch": branch,
-                "head_sha": head,
-                "preservation_sha256": digest,
-            }
+        created_bundle = None
+        created_manifest = None
+        temporary = None
         published = False
         try:
+            if succession is not None:
+                if branch is None:
+                    manifest["detached_bundle"], created_bundle = _detached_bundle(
+                        tree, parent, primary, head, manifest["base_sha"]
+                    )
+                # Git patches cannot carry untracked or ignored bytes; a successor
+                # is not their author, so it preserves them before deciding.
+                try:
+                    locator, captured = output.capture_abandon_output(tree, primary=primary, record=creator)
+                except output.PreservationLimit as exc:
+                    raise Refusal("PRESERVATION_LIMIT", str(exc)) from None
+                except (OSError, ValueError, RuntimeError):
+                    raise Refusal(
+                        "PRESERVATION_INVALID", "untracked or ignored output could not be preserved"
+                    ) from None
+                manifest["output"] = locator
+            encoded = (json.dumps(manifest, sort_keys=True) + "\n").encode()
+            digest = hashlib.sha256(encoded).hexdigest()
+            destination = parent / f"terminal-abandon-{task_id}-{digest}.json"
+            receipt = {
+                "schema": "terminal-abandon.v1",
+                "disposition": "ABANDON",
+                "owner": task_id,
+                "run_nonce": creator.get("run_nonce"),
+                "head_sha": head,
+                "reason": reason,
+                "preservation": {"path": "", "sha256": digest},
+            }
+            if recovery is not None:
+                receipt["creator_recovery"] = recovery
+            if merged_proof is not None:
+                receipt["merged_pr"] = merged_proof
+            if succession is not None:
+                lease, stream, mapping_digest, authority = succession
+                receipt["succession"] = {
+                    "schema": "terminal-abandon-succession.v1",
+                    "task_id": task_id,
+                    "creator_initiator": creator.get("initiator"),
+                    "caller_initiator": caller.initiator,
+                    "stream_id": stream,
+                    "mapping_sha256": mapping_digest,
+                    "authority": authority,
+                    "tree": tree.relative_to(primary).as_posix(),
+                    "branch": branch,
+                    "head_sha": head,
+                    "preservation_sha256": digest,
+                }
             with tempfile.NamedTemporaryFile(dir=parent, prefix=".terminal-abandon-", delete=False) as handle:
                 temporary = Path(handle.name)
                 handle.write(encoded)
                 handle.flush()
                 os.fsync(handle.fileno())
-        except BaseException:
-            if captured is not None:
-                shutil.rmtree(captured, ignore_errors=True)
-                captured.with_suffix(".tar").unlink(missing_ok=True)
-            raise
-        try:
             receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
             candidate = dict(creator, worktree_abandon=receipt)
             proposed = [(p, candidate if p == creator_path else r) for p, r in matches]
@@ -457,17 +480,25 @@ def record_abandon(
                     raise Refusal("PRESERVATION_INVALID", "existing manifest differs; no overwrite is permitted")
             else:
                 os.replace(temporary, destination)
+                created_manifest = destination
             if captured is not None:
                 output.publish_abandon_output(tree, primary=primary, record=creator, locator=locator)
-            published = True
             artifacts.reaper_lifecycle._atomic_write(creator_path, candidate)
+            published = True
             return {"outcome": "recorded", "task_id": task_id, "head_sha": head}
         finally:
-            temporary.unlink(missing_ok=True)
-            if captured is not None and not published:
-                # Only this call's unpublished copy; the checkout still holds the bytes.
-                shutil.rmtree(captured, ignore_errors=True)
-                captured.with_suffix(".tar").unlink(missing_ok=True)
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+            if not published:
+                if created_bundle is not None:
+                    created_bundle.unlink(missing_ok=True)
+                if created_manifest is not None:
+                    created_manifest.unlink(missing_ok=True)
+                if captured is not None:
+                    # Only this call's unpublished copy; the checkout holds the bytes.
+                    shutil.rmtree(captured, ignore_errors=True)
+                    captured.with_suffix(".tar").unlink(missing_ok=True)
+                    captured.with_suffix(".manifest.json").unlink(missing_ok=True)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -493,7 +524,9 @@ def main(argv: list[str] | None = None) -> int:
             "creator identity and nonce, appends a succession receipt and copies untracked and\n"
             "ignored output below batch_state/preserved/<task> before publishing, with a hash-bound\n"
             "tar archive and a 256 MiB payload cap. Detached HEAD also requires clean tracked\n"
-            "bytes and a retrievable Git bundle. Retention or needs_finalize requires a MERGED\n"
+            "bytes and a thin Git bundle excluding base_sha, separately capped at 256 MiB\n"
+            "(MAX_DETACHED_BUNDLE_BYTES). Restore by fetching into a repository containing the base.\n"
+            "Retention or needs_finalize requires a MERGED\n"
             "source PR containing HEAD; live processes and leases still refuse.\n"
             "Creator recovery: add --recover-creator only for missing creation evidence. It\n"
             "requires exactly one archived creator for the same task, nonce, initiator, tree,\n"
