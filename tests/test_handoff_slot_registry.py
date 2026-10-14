@@ -66,6 +66,74 @@ def _driver_providers() -> tuple[str, ...]:
 PROVIDERS = _driver_providers()
 
 
+@pytest.fixture(params=[[], ["muse-monitor"], ["muse-monitor", "codex-monitor"]])
+def mixed_roster(request, tmp_path, monkeypatch):
+    assignments = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text())
+    assignments["assignments"]["monitor"]["slots"] = request.param
+    assignments["assignments"]["empty-fixture"] = {"slots": []}
+    roster = tmp_path / "area_assignments.yaml"
+    roster.write_text(yaml.safe_dump(assignments), encoding="utf-8")
+    monkeypatch.setattr(_channels, "ASSIGNMENTS_PATH", roster)
+    return roster
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
+def test_mixed_roster_list_slot_and_inbox_alias_agree(mixed_roster, provider, capsys):
+    slot = f"{provider}-monitor"
+    slots = registry.registered_slots(provider, assignments_path=mixed_roster)
+    assert slots.count(slot) == 1
+    assert f"{provider}-empty-fixture" in slots
+    assert registry.main(["--list", provider, "--assignments", str(mixed_roster)]) == 0
+    assert capsys.readouterr().out.splitlines() == slots
+    assert registry.main(["--slot", slot, "--assignments", str(mixed_roster)]) == 0
+    assert registry.main(["--registered", slot, "unknown-monitor", "--assignments", str(mixed_roster)]) == 0
+    assert capsys.readouterr().out == f"{slot}\n"
+    expected = slot if slot in _channels._load_registry_slots(mixed_roster) else provider
+    assert _channels.resolve_recipient_alias(slot, assignments_path=mixed_roster) == expected
+
+
+@pytest.mark.parametrize("provider", ["muse", "unknown"])
+def test_mixed_roster_never_invents_launcher_only_or_unknown_aliases(mixed_roster, provider, capsys):
+    expected = [slot for slot in _channels._load_registry_slots(mixed_roster) if slot.startswith(f"{provider}-")]
+    assert registry.registered_slots(provider, assignments_path=mixed_roster) == expected
+    assert registry.main(["--list", provider, "--assignments", str(mixed_roster)]) == 0
+    assert capsys.readouterr().out == "\n".join(expected) + "\n"
+    for area in ("monitor", "devops", "empty-fixture"):
+        slot = f"{provider}-{area}"
+        assert registry.main(["--slot", slot, "--assignments", str(mixed_roster)]) == (0 if slot in expected else 3)
+        assert _channels.resolve_recipient_alias(slot, assignments_path=mixed_roster) == slot
+
+
+@pytest.mark.parametrize("provider", ["codex", "gemini"])
+@pytest.mark.parametrize("identity_provider", [None, "muse", "unknown"])
+def test_monitor_hydration_consumes_mixed_roster_without_crossing_provider(
+    mixed_roster, monkeypatch, capsys, provider, identity_provider
+):
+    from scripts.session_canary import codex_lane, gemini_lane
+
+    lane = {"codex": codex_lane, "gemini": gemini_lane}[provider]
+    identity = f"{identity_provider or provider}-monitor"
+    monkeypatch.setenv("SESSION_STREAM_AGENT", identity)
+    calls = []
+
+    def hydrate(stream, checked_identity):
+        calls.append((stream, checked_identity))
+        return {"execution_allowed": True}, 1
+
+    monkeypatch.setattr(lane.shared_hydration, "build_hydration_capsule_with_retry", hydrate)
+    rc = lane.main(["hydrate", "--epic", "monitor", "--stream", "epic:123"])
+    output = capsys.readouterr()
+    if identity_provider is None:
+        assert rc == 0
+        assert calls == [("epic:123", identity)]
+        assert "ACTION: hydration ready" in output.out
+    else:
+        assert rc == 2
+        assert calls == []
+        assert output.out == ""
+        assert output.err == "ACTION: hydration blocked — unregistered lane identity for this provider.\n"
+
+
 def _helper_root() -> Path:
     """Root holding the shared interpreter (dispatch worktrees carry no ``.venv``)."""
     if (REPO / ".venv" / "bin" / "python").exists():
@@ -182,6 +250,7 @@ def test_alias_selector_gate_matches_content_provider_policy() -> None:
             3
             if (provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"})
             or (provider not in {"claude", "codex"} and lanes[selector] == "epics")
+            or (provider == "muse" and lanes[selector] not in {"devops", "monitor"})
             else 0
         )
     ]
@@ -402,6 +471,23 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str, curricul
     """curriculum-upgrade mints <provider>-core and its registry anchor stream, and keeps its handoff directory."""
     lanes, gate = _gate_matrix()
     assert lanes["curriculum-upgrade"] == "core"
+    if provider == "muse":
+        assert gate[provider]["core"] == 3
+        refused = _gate(provider, "curriculum-upgrade")
+        assert refused.returncode == 1
+        result = subprocess.run(
+            [str(REPO / "start-muse-driver.sh"), "--epic", "curriculum-upgrade"],
+            cwd=REPO,
+            env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        assert result.returncode == 4
+        assert "MUSE_CURRICULUM_CONTENT_FORBIDDEN" in result.stderr
+        assert "would claim" not in result.stdout
+        return
     assert gate[provider]["core"] == 0
     gate_result = _gate(provider, "curriculum-upgrade")
     assert gate_result.returncode == 0, gate_result.stderr
@@ -458,3 +544,38 @@ def test_gate_refuses_when_no_interpreter_can_verify_the_slot(tmp_path: Path) ->
     )
     assert result.returncode == 2, result.stderr
     assert "cannot verify handoff slot 'claude-infra'" in result.stderr
+
+
+def test_muse_slot_gate_accepts_only_devops_and_monitor() -> None:
+    lanes, gate = _gate_matrix()
+    for lane in set(lanes.values()):
+        assert gate["muse"][lane] == (0 if lane in {"devops", "monitor"} else 3)
+    slots = _channels._load_registry_slots()
+    assert [slot for slot in slots if slot.startswith("muse-")] == ["muse-devops", "muse-monitor"]
+
+
+@pytest.mark.parametrize(
+    ("selector", "slot"),
+    [
+        ("devops", "muse-devops"),
+        ("infra.devops", "muse-devops"),
+        ("monitor", "muse-monitor"),
+        ("infra.monitor", "muse-monitor"),
+        ("ops-api", "muse-monitor"),
+        ("ops.api", "muse-monitor"),
+        ("operator-api", "muse-monitor"),
+    ],
+)
+def test_muse_alias_identity_and_registered_gate_agree(selector: str, slot: str) -> None:
+    result = _bash('source "$1"; handoff_identity_for_muse_epic "$2"', str(HANDOFF_IDENTITY), selector)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == slot
+    gate = _gate("muse", selector)
+    assert gate.returncode == 0, gate.stderr
+
+
+@pytest.mark.parametrize("selector", ["harness", "infra", "infra.fleet-comms", "infra-harness", "atlas"])
+def test_muse_identity_refuses_other_streams(selector: str) -> None:
+    result = _bash('source "$1"; handoff_identity_for_muse_epic "$2"', str(HANDOFF_IDENTITY), selector)
+    assert result.returncode == 1
+    assert result.stdout == ""

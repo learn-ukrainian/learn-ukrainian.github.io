@@ -54,16 +54,18 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_43() -> None:
-    """Verify 24 infrastructure, two epics coordination, twelve Ukrainian content/data, and five core slots."""
+def test_roster_slot_count_is_45() -> None:
+    """Verify 26 infrastructure, two epics coordination, twelve Ukrainian content/data, and five core slots."""
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 43
-    assert len(set(slots)) == 43
+    assert len(slots) == 45
+    assert len(set(slots)) == 45
+    assert len([slot for slot in slots if not slot.startswith("muse-")]) == 43
+    assert data["assignments"]["monitor"]["slots"] == ["muse-monitor"]
     assert set(data["assignments"]["core"]["slots"]) == {
         "claude-core",
         "codex-core",
@@ -85,6 +87,18 @@ def test_roster_slot_count_is_43() -> None:
     assert "codex-bio" in slots
     assert "gemini-hramatka" in slots
     assert "gemini-infra" in slots
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
+def test_monitor_aliases_preserve_inbox_destinations_beside_muse(provider: str) -> None:
+    slot = f"{provider}-monitor"
+    assert _channels.resolve_recipient_alias(slot, assignments_path=_AREA_ASSIGNMENTS_YAML) == provider
+    for muse_slot in ("muse-monitor", "muse-devops"):
+        assert muse_slot in _channels.get_valid_recipient_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
+        assert _channels.resolve_recipient_alias(muse_slot, assignments_path=_AREA_ASSIGNMENTS_YAML) == muse_slot
+    assert _channels.resolve_recipient_alias("unknown-monitor", assignments_path=_AREA_ASSIGNMENTS_YAML) == "unknown-monitor"
+    with pytest.raises(ValueError, match="Unknown delivery target"):
+        _channels._validate_recipient_agent("unknown-monitor", assignments_path=_AREA_ASSIGNMENTS_YAML)
 
 
 def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
