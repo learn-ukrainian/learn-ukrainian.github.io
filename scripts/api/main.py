@@ -463,7 +463,7 @@ def _collect_git_orient_data(ctx: MonitorContext | None = None) -> dict:
         raise RuntimeError(log_proc.stderr.strip() or "git log failed")
 
     recent_commits = []
-    # One ``--oneline`` record per LF; a subject may contain NEL/LS/PS.
+    # One ``--oneline`` record per physical line; a subject may contain NEL/LS/PS.
     for line in physical_lines(log_proc.stdout):
         line = line.strip()
         if not line:

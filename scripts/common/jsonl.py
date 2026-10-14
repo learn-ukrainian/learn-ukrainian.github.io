@@ -10,6 +10,11 @@ fields carry free text: Git object headers and log lines, HTTP header fields.
 
 from __future__ import annotations
 
+import re
+
+# The boundaries bytes.splitlines() honours: CRLF, bare CR, bare LF.
+_PHYSICAL_BOUNDARY = re.compile(r"\r\n?|\n")
+
 
 def jsonl_lines(text: str) -> list[str]:
     """Split ``text`` into records at LF only, dropping one trailing CR from each."""
@@ -17,5 +22,8 @@ def jsonl_lines(text: str) -> list[str]:
 
 
 def physical_lines(text: str) -> list[str]:
-    """``str.splitlines()`` shape (no empty record after a final LF), split at LF only (#9556)."""
-    return jsonl_lines(text.removesuffix("\n")) if text else []
+    """``str.splitlines()`` at CR, LF and CRLF only; other Unicode boundaries stay field text (#9556)."""
+    lines = _PHYSICAL_BOUNDARY.split(text)
+    if lines[-1] == "":
+        lines.pop()
+    return lines

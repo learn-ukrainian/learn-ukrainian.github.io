@@ -1689,7 +1689,7 @@ def gh_json(repo_root: Path, args: list[str], timeout_s: int = 15) -> Any:
 
 def parse_git_log(raw: str) -> list[dict[str, str]]:
     commits: list[dict[str, str]] = []
-    # One ``%h%x09%s`` record per LF; a subject may contain NEL/LS/PS.
+    # One ``%h%x09%s`` record per physical line; a subject may contain NEL/LS/PS.
     for line in physical_lines(raw):
         parts = line.split("\t", 1)
         if not parts or not parts[0]:

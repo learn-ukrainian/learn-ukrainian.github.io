@@ -501,7 +501,7 @@ def _pr_merge_index(repo: Path, cache: _EvidenceCache) -> dict[int, list[str]]:
     if result.returncode:
         raise RuntimeError(f"git log failed: {(result.stderr or result.stdout).strip()}")
     found: dict[int, list[str]] = {}
-    # One record per LF; a commit subject may contain NEL/LS/PS.
+    # One record per physical line; a commit subject may contain NEL/LS/PS.
     for line in physical_lines(result.stdout):
         sha, separator, subject = line.partition("\x1f")
         if not separator or not SHA_RE.fullmatch(sha):

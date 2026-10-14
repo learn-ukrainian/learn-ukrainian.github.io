@@ -5606,3 +5606,13 @@ def test_parse_git_log_keeps_unicode_separators_inside_subjects(separator):
         {"sha": "abc1234", "subject": f"first{separator}tail"},
         {"sha": "def5678", "subject": "second"},
     ]
+
+
+@pytest.mark.parametrize("newline", ["\r", "\n", "\r\n"], ids=["CR", "LF", "CRLF"])
+def test_parse_git_log_splits_records_at_every_ascii_line_ending(newline):
+    raw = f"abc1234\tfirst{newline}def5678\tsecond{newline}"
+
+    assert th.parse_git_log(raw) == [
+        {"sha": "abc1234", "subject": "first"},
+        {"sha": "def5678", "subject": "second"},
+    ]
