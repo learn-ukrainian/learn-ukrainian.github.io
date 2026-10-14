@@ -207,6 +207,8 @@ def _detached_bundle(
         or not rw._sha_is_ancestor(primary, base_sha, "refs/remotes/origin/main")
     ):
         raise Refusal("PRESERVATION_INVALID", "detached bundle base must be an ancestor of HEAD and origin/main")
+    # Stage beside the preserved copy for validation under batch_state and
+    # atomic publication; the finally block owns cleanup, not the scratch lease.
     with tempfile.NamedTemporaryFile(dir=parent, prefix=".head-bundle-", delete=False) as handle:
         temporary = Path(handle.name)
     try:
