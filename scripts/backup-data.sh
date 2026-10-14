@@ -735,7 +735,33 @@ validate_repository_config() {
   export RESTIC_REPOSITORY="$REPOSITORY"
 }
 
+# find -path treats * ? [ ] as globs, and shell quoting does not stop that.
+# restic exclude patterns escape the same characters. A project root or a
+# staging root that contains one makes discovery prune a different tree from
+# the tree restic uploads (a `*` root can drop a nested database from the
+# online backup while restic stores its stale main file; a `[` root can fail
+# to prune an ephemeral home whose record is then passed to restic explicitly).
+# TMP_ROOT is the staging root: the private stage directory and its project
+# copy are created under it, and allowlist walks prune it with find -path.
+# Refuse before any discovery, snapshot, or upload. Do not escape.
+refuse_glob_metacharacter_root() {
+  local label=$1
+  local root=$2
+
+  if [[ "$root" == *'*'* || "$root" == *'?'* || "$root" == *'['* || "$root" == *']'* ]]; then
+    die "Refusing to run: $label contains a glob metacharacter (* ? [ ]) that find -path would interpret, so discovery and upload would disagree."
+  fi
+}
+
+refuse_glob_metacharacter_roots() {
+  refuse_glob_metacharacter_root "project root" "$PROJECT_ROOT"
+  refuse_glob_metacharacter_root "staging root" "$TMP_ROOT"
+}
+
 validate_environment() {
+  # backup, init, doctor, and restore all enter here before any walk or upload.
+  # The non-Linux staging copy and the Linux file phase run only after this.
+  refuse_glob_metacharacter_roots
   require_command restic "brew install restic"
   require_command rclone "brew install rclone"
   require_command sqlite3
@@ -1304,7 +1330,9 @@ build_restic_selection_args() {
       list_file="$STAGE_DIR/restic-files-from"
       : > "$list_file" || die "Could not write the restic file list."
     else
-      list_file="$(mktemp "${TMP_ROOT}/learn-ukrainian-backup-files.XXXXXX")" ||
+      # Assign TMPDIR inside the substitution. A prefix assignment would not
+      # expand this template, and the list would leave the staging root.
+      list_file="$(TMPDIR="$TMP_ROOT"; mktemp "${TMPDIR}/learn-ukrainian-backup-files.XXXXXX")" ||
         die "Could not create the restic file list."
     fi
     FILES_FROM_FILE="$list_file"
@@ -2610,7 +2638,9 @@ integrity_check_restored_database() {
   local label=$2
   local check_output suffix
 
-  RESTORE_CHECK_DIR="$(mktemp -d "${TMP_ROOT}/learn-ukrainian-restore-check.XXXXXX")" ||
+  # Same substitution assignment as the file list: the check directory stays
+  # under the staging root, and mktemp's template names the managed TMPDIR.
+  RESTORE_CHECK_DIR="$(TMPDIR="$TMP_ROOT"; mktemp -d "${TMPDIR}/learn-ukrainian-restore-check.XXXXXX")" ||
     die "Could not create a directory for the restored database integrity check."
   # /bin/cp, not PATH: a backup test replaces cp to prove Linux staging does not copy the tree.
   /bin/cp -p -- "$database_path" "$RESTORE_CHECK_DIR/database" ||

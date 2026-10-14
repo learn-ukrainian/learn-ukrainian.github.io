@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -143,11 +144,23 @@ if [[ "${1:-}" == "cat" && -z "${RESTIC_REPOSITORY:-}" ]]; then
 fi
 stdin_filename=""
 database_part=0
+exclude_patterns=()
 if [[ "${1:-}" == "backup" ]]; then
   previous=""
   for argument in "$@"; do
     [[ "$previous" == "--stdin-filename" ]] && stdin_filename="$argument"
     [[ "$argument" == "lu-part-db" ]] && database_part=1
+    if [[ "$previous" == "--exclude" ]]; then
+      exclude_patterns+=("$argument")
+    fi
+    if [[ "$previous" == "--exclude-file" ]]; then
+      while IFS= read -r pattern || [[ -n "$pattern" ]]; do
+        pattern="${pattern#"${pattern%%[![:space:]]*}"}"
+        pattern="${pattern%"${pattern##*[![:space:]]}"}"
+        [[ -n "$pattern" && "$pattern" != \#* ]] || continue
+        exclude_patterns+=("$pattern")
+      done < "$argument"
+    fi
     previous="$argument"
   done
   if [[ -n "$stdin_filename" ]]; then
@@ -178,10 +191,14 @@ if [[ "${1:-}" == "backup" ]]; then
       \( -name '*-wal' -o -name '*-shm' -o -name '*-journal' -o -name '.DS_Store' \) -delete
     find "$FAKE_SNAPSHOT_DIR" -type d \
       \( -name qdrant -o -name __pycache__ \) -prune -exec find '{}' -depth -delete \;
-    # Same project-root boundary as the real excludes: only this tree's
-    # batch_state, never a *-home nested under another copied root.
-    if [[ -d "$FAKE_SNAPSHOT_DIR/batch_state" ]]; then
-      find "$FAKE_SNAPSHOT_DIR/batch_state" -type d -name '*-home' -prune -exec find '{}' -depth -delete \;
+    # Prune from the exclude patterns this invocation was given. An independent
+    # *-home delete would keep agreeing with restic after the anchored patterns
+    # changed, which is how a glob metacharacter in the project root hid a
+    # discovery/upload split.
+    if ((${#exclude_patterns[@]} > 0)); then
+      printf '%s\0' "${exclude_patterns[@]}" |
+        "$LU_TEST_PYTHON" "$LU_TEST_PRUNE" "$FAKE_SNAPSHOT_DIR" "$PWD"
+      [[ "${PIPESTATUS[1]}" -eq 0 ]]
     fi
     while IFS= read -r -d '' candidate; do
       if head -c 16 "$candidate" | cmp -s - <(printf 'SQLite format 3\0'); then
@@ -293,5 +310,7 @@ exit 0
         "FAKE_SNAPSHOT_DIR": str(tmp_path / "snapshot"),
         "FAKE_REPOSITORY_STATE": "initialized",
         "XDG_RUNTIME_DIR": str(runtime),
+        "LU_TEST_PYTHON": sys.executable,
+        "LU_TEST_PRUNE": str(Path(__file__).resolve().parent / "_restic_exclude_prune.py"),
     }
     return environment, source, staging, legacy
