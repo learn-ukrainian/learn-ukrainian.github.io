@@ -285,6 +285,26 @@ P2_LADDERS = {
 }
 
 P2_NATIVE_NOTE = "GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug. Claude Opus 5.5 reviews and drives through native Claude only; no Claude model reviews through Cursor (operator decision D-129, #10464). Grok authors through native CLI or Cursor grok-4.7-high and reviews through native CLI only at grok-4.7; it is not a stream driver (#10622). Only the standalone launcher Hermes opt-in remains security follow-up #10628. Cursor and Hermes are not formal review routes. The cursor orchestrator pin stays grok-4.7 because the seat allowlist and cursor bridge require it; that pin is not a stream driver and not a formal reviewer. Operator decision 2026-10-05 (#9769): native Grok reviews code and infra at every risk, including critical; verdicts require runtime model attestation and exclude xAI-authored changes. Native Grok does not outrank eligible Opus or Sol. Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok. Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted."
+P2_CURSOR_NOTE = (
+    "Cursor harness pin (parent #6952, #6955). The seat runs the concrete pin "
+    "grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin. "
+    "Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task "
+    "(auto_scope: a write-capable dispatch typed --research-role implementation, with owned "
+    "paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI], "
+    "composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract). The driver "
+    "seat, review, design, consults, discussions and recon never run Auto. "
+    "Cursor Auto selectors use the Cursor author family (#9951), even when the "
+    "runtime reports a concrete model. Reviewers from other families can review "
+    "Cursor-authored work; Cursor reviewers cannot. The legacy "
+    "unknown_auto_union_families field describes the concrete allowlist only. "
+    "A concrete Cursor grok-4.7 pin uses the xAI family and supports ordinary authoring "
+    "through grok-4.7-high. Grok authoring also uses native CLI; formal Grok review uses "
+    "native CLI only (#10622). This harness inventory grants neither formal-review "
+    "eligibility nor a stream-driver assignment. Any driver-of-record claim still requires "
+    "an attested concrete resolved_model from the run. "
+    "Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor "
+    "from within the driver session)."
+)
 
 
 def expected_p2_catalog(before):
@@ -296,6 +316,7 @@ def expected_p2_catalog(before):
     expected["orchestrator_seats"]["grok"]["note"] = (
         "native grok-4.7 harness pin; not a stream driver and not a Cursor fallback (#10622)"
     )
+    expected["orchestrator_seats"]["cursor"]["note"] = P2_CURSOR_NOTE
     expected["policy"]["notes"][2] = P2_NATIVE_NOTE
     for name in P2_LAST_RESORT:
         expected["review_candidates"][name]["last_resort"] = True
@@ -400,7 +421,7 @@ PRE_P2_BASELINE = APPROVED_BASELINE
 APPROVED_BASELINE = approved_p2_baseline(PRE_P2_BASELINE)
 
 
-P2_OVERLAY_DIGEST = "9d1b7efd38c59bc5a3b0012a9fe3395ef3e5e06fc3f5c415255800056d8dde66"
+P2_OVERLAY_DIGEST = "15d22cce723f25a3d265a2891b9b1d517c0742272ea2325d524d5caea0839ffd"
 PRE_P2_FIXTURE_BLOBS = {
     "tests/fixtures/routing_baseline/SHA256SUMS": "5a6ba3c155a7c8ab1f8f6bf9980d47ebf5868853",
     "tests/fixtures/routing_baseline/baseline.json.gz": "b4cba3427d617e955870d18264e2d85e1bbbab27",
@@ -983,7 +1004,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "d2d50b212b854b05d83b64c6b0825560e25cc56ca9a4a80ea22491c2b0aaa857",
+    "SPEC.md": "df10c35d9c5360cb488961ce466658d5b163c92f73815446f70247c8a415709c",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",

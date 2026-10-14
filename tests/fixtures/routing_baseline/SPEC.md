@@ -372,7 +372,7 @@ blocks regeneration.
 `tests/review/fixtures/routing-10622.json.gz` applies after every earlier
 approved overlay, for both `host-cli` and `no-cli`. It has sorted JSON keys
 and zero gzip mtime. Its literal SHA-256 is
-`9d1b7efd38c59bc5a3b0012a9fe3395ef3e5e06fc3f5c415255800056d8dde66`.
+`15d22cce723f25a3d265a2891b9b1d517c0742272ea2325d524d5caea0839ffd`.
 The test module independently pins this digest and this specification.
 
 The supported policy is native Sol for healthy Anthropic-authored reviews
@@ -385,6 +385,12 @@ or ladder grants no permission. These edits replace exactly three surfaces:
 - `catalog`: only the Grok fallback transport/model fields in
   `formal_cf_defaults.grok` and `orchestrator_seats.grok` are removed. The Grok
   seat note and the existing native-route policy note explain the boundary.
+  The Cursor seat note explicitly preserves both Grok author routes and the
+  native-only formal-review boundary. Its harness pin grants no stream-driver
+  assignment. This literal metadata correction is the only catalog-field change
+  from the reviewed `81f401432d6ac82eb4b01b05b72a97d336782e85` overlay;
+  `roles`, `reviewer` and every other catalog field stay identical to that head.
+  The matching inventory-header comment changes no captured field.
   The Cursor endpoint gains `formal_review_eligible: false` and its literal
   exclusion reason. Exactly four candidates gain `last_resort: true`.
   The four literal review ladders retain candidate identities and risk gates.

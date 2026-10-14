@@ -1115,11 +1115,12 @@ review_candidates:
   pool-xs: {role: legacy_reviewers, seat: light_reviewer, route_name: native, field: candidate}
   gemini-3.8-flash-high: {role: legacy_reviewers, seat: google_bounded, route_name: native, field: candidate}
 
-# Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
-# cold-start loop (prioritize → delegate → CF → merge-in-lane).
+# Fleet-comms harness inventory (#5512 / #4707 / #5703). These pins do not grant
+# stream-driver assignments or formal-review eligibility; their admission gates apply.
 # Native AGY reviews low/medium code in an exact-head worktree; its ACP wrapper cannot consume the
-# parent-owned sealed MCP. Native and Cursor Grok review code/infra with runtime
-# attestation at every risk (#9769); Kimi: web, UI and backend coding only, never review.
+# parent-owned sealed MCP. Grok authors through native CLI or Cursor; formal code/infra review
+# uses native CLI only, with runtime attestation at every risk (#9769, #10622).
+# Cursor is not a formal reviewer; Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
@@ -1199,7 +1200,7 @@ orchestrator_seats:
       - xai
       - moonshot
     note: >-
-      Cursor orchestrator seat (parent #6952, #6955). The seat runs the concrete pin
+      Cursor harness pin (parent #6952, #6955). The seat runs the concrete pin
       grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin.
       Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task
       (auto_scope: a write-capable dispatch typed --research-role implementation, with owned
@@ -1210,10 +1211,11 @@ orchestrator_seats:
       runtime reports a concrete model. Reviewers from other families can review
       Cursor-authored work; Cursor reviewers cannot. The legacy
       unknown_auto_union_families field describes the concrete allowlist only.
-      A concrete Cursor grok-4.7 pin uses the xAI family; it is
-      a regular formal code/infra reviewer at every risk, including critical
-      (operator decision 2026-10-05, #9769), alongside the native Grok seat.
-      Driver-of-record still requires an attested concrete resolved_model from the run.
+      A concrete Cursor grok-4.7 pin uses the xAI family and supports ordinary authoring
+      through grok-4.7-high. Grok authoring also uses native CLI; formal Grok review uses
+      native CLI only (#10622). This harness inventory grants neither formal-review
+      eligibility nor a stream-driver assignment. Any driver-of-record claim still requires
+      an attested concrete resolved_model from the run.
       Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
       from within the driver session).
 

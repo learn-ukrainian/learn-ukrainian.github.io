@@ -53,7 +53,12 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 `gemini-3.8-flash-high`, with fallbacks `gpt-6.1-sol` and `gemini-3.1-pro-high`
 (`gemini-3.1-pro-high` is the certified launcher default; Flash is also certified).
 Grok authors through native CLI or Cursor and reviews through native CLI only; it does not
-drive a stream. Cursor and Hermes are not formal review routes. The Cursor orchestrator pin stays
+drive a stream. That limit is still unencoded: `start-grok-driver.sh`, the shared launcher allowlist,
+`area_assignments.yaml` `grok-*` slots, generated Driver seats rows,
+`fleet-comms-coordination.md` launcher guidance and the epic roster still admit or recommend Grok
+drivers. Coordinated runtime and guidance implementation is banked in security follow-up #10638,
+owned by codex-monitor under native parent #7919; this packet does not enforce the limit.
+Cursor and Hermes are not formal review routes. The Cursor orchestrator pin stays
 a harness identity, not a reviewer and not a stream driver. Muse
 launcher pin `muse-wonder-full-1.0` is driver-only, not a catalog seat, guard parity unproven, and never
 a critical or security reviewer. Capacity pacing is task fit, then health and risk, then reserve against
