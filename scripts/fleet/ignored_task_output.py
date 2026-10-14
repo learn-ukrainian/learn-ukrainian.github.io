@@ -119,14 +119,16 @@ def _abandon_merged_equivalent(info: Any, pr: Any) -> bool:
     )
 
 
-def abandon_task_is_terminal(member: Mapping[str, Any], *, successor: bool, merged: bool) -> bool:
-    """Merge evidence substitutes only for terminal status and retention, never liveness."""
+def abandon_task_is_terminal(
+    member: Mapping[str, Any], *, successor: bool, merged: bool, attested: bool = False
+) -> bool:
+    """Merge evidence or an owner attestation substitutes for status and retention, never liveness."""
     from scripts.orchestration import reap_worktrees as rw
 
     return bool(
         member.get("status") in rw._TERMINAL_DISPATCH_STATUSES
-        and (not member.get("keep_worktree") or merged)
-        and (not successor or member.get("status") != "needs_finalize" or merged)
+        and (not member.get("keep_worktree") or merged or attested)
+        and (not successor or member.get("status") != "needs_finalize" or merged or attested)
         and member.get("lease_state") != "active"
         and not (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
         and rw._pid_proven_absent(member)
@@ -618,54 +620,10 @@ def _verify_succession(
     if mapping_digest != succession["mapping_sha256"]:
         raise ValueError("terminal-abandon succession MAPPING_CHANGED: reviewed mapping bytes changed")
     if branch is None:
-        detached = artifacts.safe_git(
-            ["rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree, capture_output=True, text=True, check=False, timeout=30
-        )
-        if detached.returncode != 0 or detached.stdout.strip() != "HEAD":
+        if not detached_head(worktree):
             raise ValueError("terminal-abandon detached HEAD proof unavailable")
-        for revisions in (["--cached", receipt["head_sha"]], []):
-            clean = artifacts.safe_git(
-                ["diff", "--quiet", "--no-ext-diff", *revisions, "--"],
-                cwd=worktree,
-                capture_output=True,
-                check=False,
-                timeout=30,
-            )
-            if clean.returncode != 0:
-                raise ValueError("terminal-abandon detached tracked changes refuse")
-        # Git diff honors hidden index flags. Present flagged files must also
-        # equal the index blob; sparse absent skip-worktree entries are safe.
-        for tagged in artifacts._git_paths(worktree, "-v", "--cached"):
-            if len(tagged) < 3 or tagged[1] != " ":
-                raise ValueError("terminal-abandon detached index inventory invalid")
-            flag, name = tagged[0], tagged[2:]
-            if not (flag.islower() or flag == "S"):
-                continue
-            if flag.upper() == "S" and not os.path.lexists(worktree / name):
-                continue
-            leaf = artifacts._read_preserved_bytes(worktree / name, root=worktree)
-            blob = artifacts.safe_git(
-                ["cat-file", "blob", f":{name}"], cwd=worktree, capture_output=True, check=False, timeout=30
-            )
-            payload = os.fsencode(leaf.target) if leaf.file_type == "symlink" else leaf.payload
-            if blob.returncode != 0 or payload != blob.stdout:
-                raise ValueError("terminal-abandon detached concealed tracked changes refuse")
-        saved_bundle = manifest.get("detached_bundle")
-        _abandon_file(primary, saved_bundle, read_payload=False, max_bytes=MAX_DETACHED_BUNDLE_BYTES)
-        bundle_path = primary / saved_bundle["path"]
-        verify = artifacts.safe_git(
-            ["bundle", "verify", str(bundle_path)], cwd=primary, capture_output=True, check=False, timeout=30
-        )
-        listed = artifacts.safe_git(
-            ["bundle", "list-heads", str(bundle_path)],
-            cwd=primary,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=30,
-        )
-        if verify.returncode != 0 or listed.returncode != 0 or listed.stdout.strip() != f"{receipt['head_sha']} HEAD":
-            raise ValueError("terminal-abandon detached bundle does not preserve HEAD")
+        tracked_clean(worktree, receipt["head_sha"], label="detached")
+        verify_commit_bundle(primary, manifest.get("detached_bundle"), receipt["head_sha"], label="detached")
     from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
 
     try:
@@ -686,6 +644,314 @@ def _verify_succession(
         raise ValueError(
             "terminal-abandon succession OUTPUT_CHANGED: current output differs from authorized snapshot"
         ) from None
+
+
+def detached_head(worktree: Path) -> bool:
+    """Positive detached-HEAD proof; a failed branch probe is not detachment."""
+    probe = artifacts.safe_git(
+        ["rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree, capture_output=True, text=True, check=False, timeout=30
+    )
+    return probe.returncode == 0 and probe.stdout.strip() == "HEAD"
+
+
+def tracked_clean(worktree: Path, head: str, *, label: str) -> None:
+    """Refuse tracked index or working-tree changes, including ones hidden by index flags."""
+    for revisions in (["--cached", head], []):
+        clean = artifacts.safe_git(
+            ["diff", "--quiet", "--no-ext-diff", *revisions, "--"],
+            cwd=worktree,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        if clean.returncode != 0:
+            raise ValueError(f"terminal-abandon {label} tracked changes refuse")
+    # Git diff honors hidden index flags. Present flagged files must also
+    # equal the index blob; sparse absent skip-worktree entries are safe.
+    for tagged in artifacts._git_paths(worktree, "-v", "--cached"):
+        if len(tagged) < 3 or tagged[1] != " ":
+            raise ValueError(f"terminal-abandon {label} index inventory invalid")
+        flag, name = tagged[0], tagged[2:]
+        if not (flag.islower() or flag == "S"):
+            continue
+        if flag.upper() == "S" and not os.path.lexists(worktree / name):
+            continue
+        leaf = artifacts._read_preserved_bytes(worktree / name, root=worktree)
+        blob = artifacts.safe_git(
+            ["cat-file", "blob", f":{name}"], cwd=worktree, capture_output=True, check=False, timeout=30
+        )
+        payload = os.fsencode(leaf.target) if leaf.file_type == "symlink" else leaf.payload
+        if blob.returncode != 0 or payload != blob.stdout:
+            raise ValueError(f"terminal-abandon {label} concealed tracked changes refuse")
+
+
+def index_settled(worktree: Path) -> None:
+    """No in-progress index write and no unmerged entries, which ordinary patches cannot carry."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    index_lock = rw._run(["git", "rev-parse", "--path-format=absolute", "--git-path", "index.lock"], cwd=worktree)
+    if index_lock.returncode != 0 or not Path(index_lock.stdout.strip()).is_absolute():
+        raise ValueError("terminal-abandon index lock probe unavailable")
+    try:
+        Path(index_lock.stdout.strip()).lstat()
+    except FileNotFoundError:
+        pass
+    else:
+        raise ValueError("terminal-abandon index.lock present; existing lock must be settled")
+    if artifacts._git_paths(worktree, "--unmerged"):
+        raise ValueError("terminal-abandon unmerged index cannot be preserved by ordinary patches")
+
+
+def verify_commit_bundle(primary: Path, locator: Any, head: str, *, label: str) -> None:
+    """A hash-bound Git bundle below batch_state whose only head is the exact checkout HEAD."""
+    _abandon_file(primary, locator, read_payload=False, max_bytes=MAX_DETACHED_BUNDLE_BYTES)
+    bundle_path = primary / locator["path"]
+    verify = artifacts.safe_git(
+        ["bundle", "verify", str(bundle_path)], cwd=primary, capture_output=True, check=False, timeout=30
+    )
+    listed = artifacts.safe_git(
+        ["bundle", "list-heads", str(bundle_path)],
+        cwd=primary,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if verify.returncode != 0 or listed.returncode != 0 or listed.stdout.strip() != f"{head} HEAD":
+        raise ValueError(f"terminal-abandon {label} bundle does not preserve HEAD")
+
+
+def _verified_manifest(
+    primary: Path, receipt: Mapping[str, Any], worktree: Path, *, identity: str, nonce: str, head: str
+) -> dict[str, Any]:
+    """The hashed preservation manifest, whose three patches equal Git's current bytes."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    manifest = json.loads(_abandon_file(primary, receipt.get("preservation")))
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema") != "terminal-abandon-preservation.v1"
+        or manifest.get("owner") != identity
+        or manifest.get("run_nonce") != nonce
+        or manifest.get("head_sha") != head
+        or not isinstance(manifest.get("base_sha"), str)
+        or not re.fullmatch(r"[a-f0-9]{40}", manifest["base_sha"])
+        or not rw._sha_is_ancestor(worktree, manifest["base_sha"], head)
+        or not rw._sha_is_ancestor(worktree, manifest["base_sha"], "refs/remotes/origin/main")
+    ):
+        raise ValueError("terminal-abandon preservation manifest identity invalid")
+    for key, revisions in (
+        ("head_patch", [manifest["base_sha"], head]),
+        ("index_patch", ["--cached", head]),
+        ("working_patch", []),
+    ):
+        stored = _abandon_file(primary, manifest.get(key))
+        probe = artifacts.safe_git(
+            ["diff", "--binary", "--full-index", "--no-ext-diff", "--no-textconv", *revisions, "--"],
+            cwd=worktree,
+            env=artifacts._safe_git_env(),
+            capture_output=True,
+            text=False,
+            check=False,
+            timeout=30,
+        )
+        if probe.returncode != 0 or probe.stdout != stored:
+            raise ValueError(f"terminal-abandon {key} does not preserve current Git bytes")
+    return manifest
+
+
+# Owner-attested abandonment (#10657). The attestation may stand in only for
+# missing creator evidence and for unsettled status or retention intent.
+ATTESTATION_SCHEMA = "terminal-abandon-attestation.v1"
+ATTESTATION_REPLACEABLE = frozenset({"CREATOR_RECOVERY_REQUIRED", "LIVE_OR_WANTED"})
+_ATTESTED_RECEIPT_KEYS = frozenset(
+    {"schema", "disposition", "owner", "run_nonce", "head_sha", "reason", "preservation", "attestation"}
+)
+_ATTESTATION_KEYS = frozenset(
+    {
+        "schema",
+        "task_id",
+        "tree",
+        "directory_identity",
+        "branch",
+        "head_sha",
+        "reason",
+        "attested_at",
+        "owner",
+        "replaces",
+        "cohort",
+        "preservation_sha256",
+    }
+)
+_ATTESTATION_OWNER_KEYS = frozenset(
+    {"seat", "area", "stream_id", "task_initiator", "mapping_sha256", "assignments_sha256", "authority"}
+)
+_ATTESTATION_TIME = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z")
+
+
+def attestation_cohort(matches: list[tuple[Path, dict[str, Any]]], tasks_dir: Path) -> list[dict[str, Any]]:
+    """Every task record bound to the tree, by task-store path, task and run."""
+    return sorted(
+        (
+            {
+                "record": path.relative_to(tasks_dir).as_posix(),
+                "task_id": member.get("task_id"),
+                "run_nonce": member.get("run_nonce"),
+            }
+            for path, member in matches
+        ),
+        key=lambda entry: entry["record"],
+    )
+
+
+def _nonempty(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _attestation_well_formed(attestation: Mapping[str, Any]) -> bool:
+    owner = attestation.get("owner")
+    authority = owner.get("authority") if isinstance(owner, dict) else None
+    holder = authority.get("holder") if isinstance(authority, dict) else None
+    identity = attestation.get("directory_identity")
+    replaces = attestation.get("replaces")
+    return bool(
+        set(attestation) == _ATTESTATION_KEYS
+        and attestation["schema"] == ATTESTATION_SCHEMA
+        and all(_nonempty(attestation[key]) for key in ("task_id", "tree", "head_sha", "reason"))
+        and (attestation["branch"] is None or _nonempty(attestation["branch"]))
+        and isinstance(attestation["attested_at"], str)
+        and _ATTESTATION_TIME.fullmatch(attestation["attested_at"])
+        and isinstance(identity, list)
+        and len(identity) == 2
+        and all(type(part) is int for part in identity)
+        and isinstance(attestation["preservation_sha256"], str)
+        and re.fullmatch(r"[a-f0-9]{64}", attestation["preservation_sha256"])
+        and isinstance(owner, dict)
+        and set(owner) == _ATTESTATION_OWNER_KEYS
+        and all(_nonempty(owner[key]) for key in ("seat", "area", "stream_id", "task_initiator"))
+        and all(
+            isinstance(owner[key], str) and re.fullmatch(r"[a-f0-9]{64}", owner[key])
+            for key in ("mapping_sha256", "assignments_sha256")
+        )
+        and isinstance(authority, dict)
+        and set(authority) == {"stream_id", "session_id", "lease_id", "generation", "fencing_token", "holder"}
+        and authority["stream_id"] == owner["stream_id"]
+        and all(_nonempty(authority[key]) for key in ("session_id", "lease_id"))
+        and all(type(authority[key]) is int for key in ("generation", "fencing_token"))
+        and isinstance(holder, dict)
+        and set(holder) == {"agent", "harness", "instance_id"}
+        and all(_nonempty(value) for value in holder.values())
+        and owner["seat"].partition("-")[0] == holder["agent"]
+        and isinstance(replaces, list)
+        and all(
+            isinstance(entry, dict)
+            and set(entry) == {"code", "reason"}
+            and entry["code"] in ATTESTATION_REPLACEABLE
+            and _nonempty(entry["reason"])
+            for entry in replaces
+        )
+        and len({entry["code"] for entry in replaces}) == len(replaces)
+        and isinstance(attestation["cohort"], list)
+    )
+
+
+def _verify_attestation(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
+) -> tuple[Path, dict[str, Any]]:
+    """Prove an owner attestation still binds this exact tree, cohort, HEAD and preservation (#10657).
+
+    The attestation replaces creator evidence and unsettled status or retention
+    only. Liveness, checkout identity, tracked cleanliness, the Git patches, the
+    commit bundle and the untracked/ignored output copy are all rechecked here.
+    Owner custody was Monitor-verified when written; the record is bound to the
+    tree's directory identity and complete task cohort instead of a live lease,
+    so a later session rollover neither strands nor re-authorizes it.
+    """
+    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration.worktree_claims import checked_out_branch
+
+    hosts = [(path, member) for path, member in matches if "worktree_abandon" in member]
+    if len(hosts) != 1:
+        raise ValueError("terminal-abandon attestation must be the tree's only abandon record")
+    path, host = hosts[0]
+    identity, nonce = host.get("task_id"), host.get("run_nonce")
+    if (
+        not isinstance(identity, str)
+        or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity)
+        or not _nonempty(nonce)
+        or path != task_record_path(tasks_dir, identity)
+    ):
+        raise ValueError("terminal-abandon attestation host identity unavailable")
+    receipt = host["worktree_abandon"]
+    attestation = receipt.get("attestation") if isinstance(receipt, dict) else None
+    head = receipt.get("head_sha") if isinstance(receipt, dict) else None
+    if (
+        not isinstance(receipt, dict)
+        or set(receipt) != _ATTESTED_RECEIPT_KEYS
+        or receipt["schema"] != "terminal-abandon.v1"
+        or receipt["disposition"] != "ABANDON"
+        or receipt["owner"] != identity
+        or receipt["run_nonce"] != nonce
+        or not _nonempty(receipt["reason"])
+        or not isinstance(head, str)
+        or not re.fullmatch(r"[a-f0-9]{40}", head)
+        or not isinstance(receipt["preservation"], dict)
+        or not isinstance(attestation, dict)
+        or not _attestation_well_formed(attestation)
+        or attestation["task_id"] != identity
+        or attestation["head_sha"] != head
+        or attestation["reason"] != receipt["reason"]
+        or attestation["preservation_sha256"] != receipt["preservation"].get("sha256")
+    ):
+        raise ValueError("terminal-abandon attestation receipt invalid")
+    try:
+        tree = worktree.resolve(strict=True).relative_to(primary.resolve(strict=True)).as_posix()
+        status = worktree.stat()
+    except (OSError, ValueError, RuntimeError):
+        raise ValueError("terminal-abandon attestation tree binding invalid") from None
+    if attestation["tree"] != tree:
+        raise ValueError("terminal-abandon attestation tree binding invalid")
+    if attestation["directory_identity"] != [status.st_dev, status.st_ino]:
+        raise ValueError("terminal-abandon attestation directory identity changed")
+    if attestation["cohort"] != attestation_cohort(matches, tasks_dir):
+        raise ValueError("terminal-abandon attestation cohort changed")
+    if any(
+        not abandon_task_is_terminal(member, successor=False, merged=False, attested=True)
+        or not _nonempty(member.get("run_nonce"))
+        or not _record_matches_worktree(member, worktree, repo_root=primary)
+        for _, member in matches
+    ):
+        raise ValueError("terminal-abandon attestation task, PID or lease proof unavailable")
+    current = rw._run(["git", "rev-parse", "HEAD"], cwd=worktree)
+    if current is None or current.returncode != 0 or current.stdout.strip() != head:
+        raise ValueError("terminal-abandon checkout HEAD differs from receipt")
+    branch = checked_out_branch(worktree)
+    if branch is None and not detached_head(worktree):
+        raise ValueError("terminal-abandon attestation branch probe unavailable")
+    if branch != attestation["branch"]:
+        raise ValueError("terminal-abandon attestation branch changed")
+    index_settled(worktree)
+    tracked_clean(worktree, head, label="attested")
+    manifest = _verified_manifest(primary, receipt, worktree, identity=identity, nonce=nonce, head=head)
+    bundle = manifest.get("commit_bundle")
+    if bundle is not None:
+        verify_commit_bundle(primary, bundle, head, label="attestation commit")
+    elif not rw._sha_is_ancestor(worktree, head, "refs/remotes/origin/main"):
+        raise ValueError("terminal-abandon attestation commit bundle missing for commits outside origin/main")
+    located = manifest.get("output")
+    if not isinstance(located, dict) or located.get("schema") != "terminal-abandon-output.v1":
+        raise ValueError("terminal-abandon attestation output preservation missing")
+    try:
+        verify_retrieval(primary, located)
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+        raise ValueError("terminal-abandon attestation output preservation not retrievable") from None
+    try:
+        verify_abandon_output(worktree, primary=primary, record=host, locator=located)
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+        raise ValueError(
+            "terminal-abandon attestation OUTPUT_CHANGED: current output differs from attested snapshot"
+        ) from None
+    return path, host
 
 
 def _abandon_candidates(worktree: Path, *, absent: list[dict[str, str]]) -> list[str]:
@@ -914,10 +1180,16 @@ def terminal_abandon_creator(
     All three patches must equal Git's binary, full-index diff for this checkout.
     Untracked and ignored bytes still require the ordinary verified-copy gate.
     A successor's receipt adds ``succession`` and a manifest ``output`` copy;
-    both are revalidated here, at removal (#10617).
+    both are revalidated here, at removal (#10617). An owner attestation is a
+    separate, complete proof that replaces creator evidence (#10657).
     """
     from scripts.orchestration import reap_worktrees as rw
 
+    if any(
+        isinstance(member.get("worktree_abandon"), dict) and "attestation" in member["worktree_abandon"]
+        for _, member in matches
+    ):
+        return _verify_attestation(matches, worktree, primary=primary, tasks_dir=tasks_dir)
     recovery = _recovery_source(matches, worktree, primary=primary, tasks=tasks_dir)
     creators = [item for item in matches if item[0] != recovery and record_created_worktree(item[1])]
     if len(creators) != 1 or not matches:
@@ -968,47 +1240,8 @@ def terminal_abandon_creator(
     current = rw._run(["git", "rev-parse", "HEAD"], cwd=worktree)
     if current is None or current.returncode != 0 or current.stdout.strip() != head:
         raise ValueError("terminal-abandon checkout HEAD differs from receipt")
-    index_lock = rw._run(["git", "rev-parse", "--path-format=absolute", "--git-path", "index.lock"], cwd=worktree)
-    if index_lock.returncode != 0 or not Path(index_lock.stdout.strip()).is_absolute():
-        raise ValueError("terminal-abandon index lock probe unavailable")
-    try:
-        Path(index_lock.stdout.strip()).lstat()
-    except FileNotFoundError:
-        pass
-    else:
-        raise ValueError("terminal-abandon index.lock present; existing lock must be settled")
-    if artifacts._git_paths(worktree, "--unmerged"):
-        raise ValueError("terminal-abandon unmerged index cannot be preserved by ordinary patches")
-    manifest = json.loads(_abandon_file(primary, receipt.get("preservation")))
-    if (
-        not isinstance(manifest, dict)
-        or manifest.get("schema") != "terminal-abandon-preservation.v1"
-        or manifest.get("owner") != identity
-        or manifest.get("run_nonce") != nonce
-        or manifest.get("head_sha") != head
-        or not isinstance(manifest.get("base_sha"), str)
-        or not re.fullmatch(r"[a-f0-9]{40}", manifest["base_sha"])
-        or not rw._sha_is_ancestor(worktree, manifest["base_sha"], head)
-        or not rw._sha_is_ancestor(worktree, manifest["base_sha"], "refs/remotes/origin/main")
-    ):
-        raise ValueError("terminal-abandon preservation manifest identity invalid")
-    for key, revisions in (
-        ("head_patch", [manifest["base_sha"], head]),
-        ("index_patch", ["--cached", head]),
-        ("working_patch", []),
-    ):
-        stored = _abandon_file(primary, manifest.get(key))
-        probe = artifacts.safe_git(
-            ["diff", "--binary", "--full-index", "--no-ext-diff", "--no-textconv", *revisions, "--"],
-            cwd=worktree,
-            env=artifacts._safe_git_env(),
-            capture_output=True,
-            text=False,
-            check=False,
-            timeout=30,
-        )
-        if probe.returncode != 0 or probe.stdout != stored:
-            raise ValueError(f"terminal-abandon {key} does not preserve current Git bytes")
+    index_settled(worktree)
+    manifest = _verified_manifest(primary, receipt, worktree, identity=identity, nonce=nonce, head=head)
     if "succession" in receipt:
         _verify_succession(receipt, manifest, creator, worktree, primary=primary)
     return path, creator
@@ -1428,8 +1661,11 @@ def preserve_worktree_artifacts(
             else:
                 raise
         members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
-        merged_abandon = disposition == "abandon" and "merged_pr" in record["worktree_abandon"]
-        kept = any(member.get("keep_worktree") for _, member in members) and not merged_abandon
+        # Merge proof or an owner attestation (#10657) releases retention intent.
+        retention_released = disposition == "abandon" and (
+            "merged_pr" in record["worktree_abandon"] or "attestation" in record["worktree_abandon"]
+        )
+        kept = any(member.get("keep_worktree") for _, member in members) and not retention_released
 
         files = output_files()
         if not files and not absent and not kept:
@@ -1550,7 +1786,7 @@ def preserve_worktree_artifacts(
                 or current.get("run_nonce") != record.get("run_nonce")
             ):
                 raise ValueError("task attribution changed during preservation")
-            if (current.get("keep_worktree") or kept) and not merged_abandon:
+            if (current.get("keep_worktree") or kept) and not retention_released:
                 metadata.update(
                     {
                         "retention_disposition": "retained",

@@ -303,6 +303,95 @@ preserved or discarded by the responsible driver. Scheduled branch cleanup
 retains a rescue ref with unique commits; a ref whose tip is proven contained
 in another origin ref may be removed under the existing containment rules.
 
+### Owner-attested terminal abandonment (#10657)
+
+`scripts/fleet/terminal_abandon.py` records explicit abandonment of a settled
+dispatch tree in its task record (`worktree_abandon`, `terminal-abandon.v1`).
+Its creator path (#10594) needs the dispatch creator and caller-supplied
+patches, and its succession path (#10617, #10624) needs creator evidence and,
+for `needs_finalize` or `keep_worktree`, a merged source PR. A tree that both
+refuse uses the owner-attested mode, run by the lane that owns the task:
+
+```bash
+# dry-run (default): writes nothing, prints what it would record or the blocker
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.fleet.terminal_abandon --owner-attest \
+  --tree .worktrees/dispatch/<agent>/<task> --task-id <task> \
+  --head "$(git -C .worktrees/dispatch/<agent>/<task> rev-parse HEAD)" \
+  --reason 'owner retired superseded work'
+# write the record: the same command plus --apply (a rerun reports already_recorded)
+# then remove it through the common reaper's normal proofs
+"$PRIMARY_REPO/.venv/bin/python" scripts/orchestration/reap_worktrees.py \
+  --legacy-classes --preserve-then-reap --worktree "$PRIMARY_REPO/.worktrees/dispatch/<agent>/<task>" --apply
+```
+
+Run it from the owning lane's launcher session, in any checkout other than
+the target. A relative `--tree` resolves against the control plane, and the
+writer refuses a symlink spelling or a subdirectory. The owner is never an
+argument. It is the session's launcher lease
+(`SESSION_STREAM_*`), which Monitor must confirm as the stream's current
+custody. The session's attributed seat must be registered for that lease
+holder's provider in `scripts/config/area_assignments.yaml` (roster slot or
+the bridge's legacy `<provider>-monitor` alias). Its lane stream must be the
+one `scripts/config/terminal_abandon_succession.yaml` gives the task's
+`initiator`, and every task record bound to the tree must map to that same
+lane. A missing lease or attribution refuses `OWNER_UNAUTHENTICATED`. An
+unmapped initiator refuses `OWNER_UNMAPPED`. A seat, provider, stream or
+bound task of another lane refuses `FOREIGN_OWNER`. Monitor disagreement or
+outage refuses `STALE_AUTHORITY` or `AUTHORITY_UNKNOWN`. A tree owned by
+another lane is reported to that lane's driver, not attested by this one.
+
+The attestation replaces only two strict refusals, recorded as `replaces` in
+the receipt:
+
+- missing creator evidence (`CREATOR_RECOVERY_REQUIRED`): no sole creator-of-record
+  binds the hosting attempt. When a sole canonical creator exists, the
+  attestation must be hosted on it;
+- unsettled status or retention intent with no live activity (`LIVE_OR_WANTED`
+  from `needs_finalize` or `keep_worktree` alone). The removal gate then treats
+  retention as released.
+
+It never replaces these, which run exactly as for every other abandonment and
+refuse even with a valid owner:
+
+- an active task, a status that is not terminal, or an active worker lease;
+- a PID that is live, or a bound record with no valid PID. A never-launched
+  `failed` or `dry_run` attempt bound to the tree is named in the refusal;
+- live process cwd, rollover, review, ownership or reap activity;
+- an open PR on the checked-out branch or any recorded branch;
+- a dirty tree: tracked index or working-tree changes, changes concealed by
+  index flags, an `index.lock` or unmerged entries (`DIRTY_TREE`);
+- preservation the tool cannot produce (`PRESERVATION_INVALID` or
+  `PRESERVATION_LIMIT`, naming the blocker).
+
+Preservation is produced by the tool, never taken from the caller
+(`--preservation-bundle` is refused in this mode). Files go below
+`batch_state/abandon/<task>/`:
+
+- a Git bundle of every commit not on `origin/main` (`HEAD --not` its merge base);
+- the three Git patches, which are empty for a clean tree;
+- the hash-bound `terminal-abandon-preservation.v1` manifest.
+
+Untracked and ignored output goes to `batch_state/preserved/<task>/` as a
+verified copy plus a tar archive. Each artifact is digest-checked by the
+unmodified removal reader before publication. A detached tree is bound by its
+exact HEAD. The receipt's `attestation` binds:
+
+- tree path, directory identity (device and inode), branch (or `null`) and HEAD;
+- reason, owner seat, area, stream and Monitor-verified lease, and the UTC time;
+- the replaced classes, the manifest digest and the complete cohort of bound
+  task records.
+
+At removal the reader rechecks every one of those bindings. It also rechecks
+liveness, tracked cleanliness, the patches, the bundle and the output copy.
+Any later change of HEAD, branch, directory, cohort or output refuses removal,
+and the record is never overwritten. The lease is not rechecked at removal:
+custody was proven when the record was written, so a later rollover of the
+owner's session neither strands nor re-authorizes it.
+
+Restore commits with `git fetch <bundle> HEAD` in any clone that contains the
+manifest's `base_sha`. Restore the tree bytes with `git apply` of `head_patch`
+on `base_sha`, and output from the preserved copy or its tar.
+
 ## Branch sweep evidence (#9909)
 
 `scripts.hygiene.branch_sweep` stays a dry run unless `--apply` is passed. A
