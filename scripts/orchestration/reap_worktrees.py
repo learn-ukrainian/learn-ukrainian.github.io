@@ -3673,6 +3673,8 @@ def _resolve_merged_reuse_creator(
 
     ``alternate`` is the switched-branch binding. Pending same-branch rounds
     additionally require the complete merged-cohort proof before removal.
+    An exact MERGED source head may bind a cohort without one creator. Its
+    first record holds the preservation receipt, without becoming a creator.
     """
     from scripts.fleet import ignored_task_output
 
@@ -3687,6 +3689,32 @@ def _resolve_merged_reuse_creator(
             head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
             branch = worktree_claims.checked_out_branch(worktree)
             info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
+            if (
+                len(creators) != 1
+                and len(cohort) >= 2
+                and head.returncode == 0
+                and branch
+                and merged_pr.state == "MERGED"
+                and not merged_pr.head_from_commit_search
+                and merged_pr.head_sha == info.head
+                and not any(member.get("keep_worktree") for _, member in matches)
+                and not _retention_release_present(matches)
+                and all(
+                    member.get("worktree_branch") == branch
+                    and member.get("status") in _TERMINAL_DISPATCH_STATUSES
+                    and member.get("lease_state") != "active"
+                    and not (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
+                    and _pid_proven_absent(member)
+                    and isinstance(member.get("worktree_path") or member.get("cwd"), str)
+                    and worktree_claims.resolve_claim_path(
+                        member.get("worktree_path") or member.get("cwd"), repo_root=repo_root
+                    )
+                    == worktree.resolve(strict=True)
+                    for _, member in cohort
+                )
+            ):
+                path, custodian = cohort[0]
+                return path, custodian, False
             if (
                 len(creators) == 1
                 and len(cohort) >= 2
@@ -3926,12 +3954,12 @@ def _preservation_merged_creator(
     """Consume the reaper's proof using current identities and local Git under its lock."""
     from scripts.fleet import ignored_task_output as output
 
-    creators = [
-        item for item in output._current_reuse_records(matches, tasks_dir) if output.record_created_worktree(item[1])
-    ]
-    if len(creators) != 1:
+    cohort = output._current_reuse_records(matches, tasks_dir)
+    creators = [item for item in cohort if output.record_created_worktree(item[1])]
+    if not cohort:
         raise ValueError("merged continuation preservation owner unavailable")
-    proof = creators[0][1].get("worktree_reap_proof")
+    holder = creators[0] if len(creators) == 1 else cohort[0]
+    proof = holder[1].get("worktree_reap_proof")
     proof_pr = (
         PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"))
         if isinstance(proof, dict)

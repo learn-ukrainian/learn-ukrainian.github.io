@@ -863,6 +863,10 @@ def preserve_worktree_artifacts(
                     repo_root=repo_root,
                     publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
                 )
+                if record_path is None and any(member.get("worktree_reap_proof") for _, member in matches):
+                    # Zero creators resolve to no owner rather than raising.
+                    # Reuse the same proof verifier as ambiguous creators below.
+                    raise ValueError("merged cohort requires preservation proof attribution")
         except ValueError:
             # A continuation that switched branch still names the dispatch-time
             # branch, so strict attribution refuses. Preservation may use that
