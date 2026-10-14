@@ -395,16 +395,20 @@ def repo_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return main
 
 
-@pytest.fixture
-def repo(tmp_path: Path, repo_template: Path) -> Path:
-    """Fresh primary checkout and registered worktree for each case."""
-    main = tmp_path / "main"
-    shutil.copytree(repo_template, main)
+def _materialize_repo(template: Path, main: Path) -> Path:
+    """Copy the immutable template to ``main`` and re-point its worktree links."""
+    shutil.copytree(template, main)
     worktree = main / ".worktrees/dispatch/claude/task-1"
     gitdir = main / ".git/worktrees/task-1"
     (worktree / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
     (gitdir / "gitdir").write_text(f"{worktree / '.git'}\n", encoding="utf-8")
     return main
+
+
+@pytest.fixture
+def repo(tmp_path: Path, repo_template: Path) -> Path:
+    """Fresh primary checkout and registered worktree for each case."""
+    return _materialize_repo(repo_template, tmp_path / "main")
 
 
 def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -1322,169 +1326,19 @@ def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
 
 
 # ===========================================================================
-# #10633: ANSI-C ``$'...'`` decoding must match Bash's byte semantics, not
-# Python ``unicode_escape``. The octal-wrap spelling bypassed the guard end to
-# end on main (``$'\457…'`` ALLOWED, exit 0) because ``unicode_escape`` read
-# ``\457`` as U+012F instead of Bash's byte 0x2F (``/``), so the absolute
-# primary path was misread as relative and escaped containment.
+# #10633: ANSI-C ``$'...'`` quoting is refused on presence, never decoded.
+# Three review rounds found new divergences between Bash's ANSI-C decoding and
+# this guard's model of it (octal byte wrap, NUL truncation, byte escapes versus
+# filesystem bytes, oversized escapes, locale-dependent scalars), each a write
+# into the primary checkout. The guard therefore refuses any ``$'`` — in the raw
+# command, after backslash-newline removal, or in a nested ``eval`` / ``sh -c``
+# string — before parsing. Each case runs the real hook as a subprocess from a
+# dispatch worktree cwd.
 # ===========================================================================
 
 
-@pytest.mark.parametrize(
-    "body, expected",
-    [
-        # Octal is one byte, value mod 256 (the bug: unicode_escape gave U+012F).
-        (r"\457", b"/"),
-        (r"\057", b"/"),
-        (r"\0571", b"/1"),  # only 3 octal digits consumed.
-        (r"\1011", b"A1"),
-        (r"\777", b"\xff"),  # 0o777 & 0xFF == 0xFF -> raw byte 0xFF (#10633 F2).
-        (r"\400", b""),  # 0o400 & 0xFF == 0 -> NUL truncates the span (#10633 F1).
-        (r"\000", b""),
-        # ``\xHH`` is one byte; a bare ``\x`` stays literal.
-        (r"\x2f", b"/"),
-        (r"\x2F7", b"/7"),  # only 2 hex digits consumed.
-        (r"\x", b"\\x"),
-        (r"\xg", b"\\xg"),
-        (r"\x4z", b"\x04z"),  # one hex digit then a non-hex literal.
-        (r"\x0", b""),  # byte 0x00 -> NUL -> truncates.
-        # ``\x{HH...}`` brace form: all hex digits, value mod 256, one byte (#10633).
-        (r"\x{2f}", b"/"),
-        (r"\x{12f}", b"/"),  # 0x12F & 0xFF == 0x2F.
-        (r"\x{2f}z", b"/z"),  # closing brace consumed.
-        (r"\x{2fzz}q", b"/zz}q"),  # hex stops at first non-hex; brace not consumed.
-        (r"\x{2f", b"/"),  # unclosed brace still expands.
-        (r"\x{}z", b""),  # empty hex -> 0 -> NUL truncates.
-        (r"\x{400}tail", b""),  # 0x400 & 0xFF == 0 -> NUL truncates.
-        # Raw bytes >= 0x80 reach the classifier as the real filesystem bytes,
-        # not a re-encoded code point -- the #10633 F2 fix (surrogateescape).
-        (r"\xc3\xa9", b"\xc3\xa9"),
-        (r"\303\251", b"\xc3\xa9"),
-        (r"\xff\x80", b"\xff\x80"),
-        # Unicode scalars: a sub-0x80 value is the same ASCII byte everywhere; a
-        # higher scalar fsencodes to its UTF-8 bytes (the fleet's UTF-8 locale).
-        (r"\u002f", b"/"),
-        (r"\U0000002f", b"/"),
-        (r"\u", b"\\u"),
-        (r"\u00e9", b"\xc3\xa9"),
-        (r"\u007f", b"\x7f"),
-        (r"\u{2f}", b"\\u{2f}"),  # brace form is literal for \u/\U (not \x).
-        # C escapes and control escapes (never ``/``; ``\c@`` is NUL).
-        (r"\a\b\f\n\r\t\v", b"\a\b\f\n\r\t\v"),
-        (r"\e\E", b"\x1b\x1b"),
-        (r"\?", b"?"),
-        (r"\q", b"\\q"),  # unknown escape keeps the backslash.
-        (r"\\", b"\\"),
-        (r"\cA", b"\x01"),
-        (r"\c?", b"\x7f"),
-        (r"\c@", b""),  # 0x00 -> NUL -> truncates.
-        (r"\c[", b"\x1b"),
-        (r"\c", b"\\c"),  # trailing \c is literal in Bash.
-        (r"x\cy", b"x\x19"),
-        # NUL terminates only its own span; literals before it survive.
-        ("a\\0b", b"a"),
-        ("pre\\x00post", b"pre"),
-        # Mixed with literals.
-        (r"home\457etc", b"home/etc"),
-        (r"\164racked.md", b"tracked.md"),
-        ("abc", b"abc"),
-    ],
-)
-def test_issue_10633_decode_ansi_c_span_matches_bash(body: str, expected: bytes):
-    # Byte-level (#10633 F2): a raw byte >= 0x80 must reach the path classifier as
-    # that filesystem byte, not a re-encoded code point, so compare os.fsencode of
-    # the decoded span, not its str. Expected bytes were pinned against real GNU
-    # Bash 5.3 via ``printf %s $'<body>'`` (a produced NUL truncates the span).
-    assert os.fsencode(hook._decode_ansi_c_span(body)) == expected
-
-
-@pytest.mark.parametrize(
-    "body",
-    [
-        r"\U00110000",  # one past U+10FFFF.
-        r"\U80000000",  # OverflowError in chr(), not ValueError (#10633 F3).
-        r"\Uffffffff",
-        r"\ud800",  # a lone surrogate.
-        r"\udce9",
-        "\\c\\",  # ambiguous \c\ sub-form.
-        "\\c\xe9",  # \c on a non-ASCII byte (Bash masks the byte, not the scalar).
-    ],
-)
-def test_issue_10633_undecodable_ansi_c_escapes_carry_sentinel(body: str):
-    # A scalar beyond U+10FFFF, a lone surrogate, or an ambiguous \c form cannot
-    # be reproduced as Bash's exact bytes. It must NOT fall back to its undecoded
-    # text and must NOT become a truncating NUL; it carries the fail-closed
-    # sentinel that _bash_path_decision refuses on a write target.
-    decoded = hook._decode_ansi_c_span(body)
-    assert hook._UNDECODABLE in decoded
-    assert "\x00" not in decoded  # never truncates (would hide a dangerous suffix).
-
-
-def _octal_abs(path: Path) -> str:
-    """Spell an absolute path with its leading ``/`` as an ANSI-C octal wrap.
-
-    ``$'\\457'`` is byte 0x2F (``/``) in Bash: octal 0457 == 303, 303 % 256 == 47.
-    Python ``unicode_escape`` wrongly produced U+012F, the #10633 bypass. The
-    first path component never begins with an octal digit here, so ``\\457``
-    consumes exactly three digits.
-    """
-    return "$'\\457" + str(path)[1:] + "'"
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
-        # Redirect form (the issue's evidence spelling) plus non-redirect writers
-        # the guard classifies (tee, cp). Pre-fix each was exit 0 (ALLOWED).
-        "echo x > {octal}",
-        "echo x | tee {octal}",
-        "cp /etc/hostname {octal}",
-    ],
-)
-def test_issue_10633_octal_wrap_absolute_primary_write_blocked(repo: Path, command: str):
-    dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    octal = _octal_abs(repo / "curriculum/tracked.md")
-    result = _bash(repo, command.format(octal=octal), cwd=dispatch)
-    assert result.returncode == 2, result.stderr
-    assert "primary_checkout" in result.stderr
-
-
-def test_issue_10633_nul_spelling_stays_blocked(repo: Path):
-    # The NUL spelling must stay exit 2. Post-fix the NUL truncates the span to
-    # the real primary path (``…/tracked.md``), so it blocks as a tracked write
-    # rather than only as an undecidable one — still fail-closed.
-    dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    command = f"echo x > $'{repo}/curriculum/tracked.md\\0junk'"
-    result = _bash(repo, command, cwd=dispatch)
-    assert result.returncode == 2, result.stderr
-    assert "primary_checkout" in result.stderr
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
-        # A benign ANSI-C spelling of a target in the dispatch worktree or a
-        # scratch path must still be judged on its true Bash path (allowed).
-        "tee $'\\164racked.md'",  # -> tracked.md, relative to the dispatch cwd.
-        "echo x > $'\\x73cratch.txt'",  # -> scratch.txt, relative to the dispatch cwd.
-        "echo x > $'\\457tmp/scratch-10633.txt'",  # -> /tmp/scratch-10633.txt (outside repo).
-    ],
-)
-def test_issue_10633_benign_ansi_c_spelling_judged_on_true_path(repo: Path, command: str):
-    dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    result = _bash(repo, command, cwd=dispatch)
-    assert result.returncode == 0, result.stderr
-
-
-
-
-def _hook_subprocess(
-    repo: Path, command: str, cwd: Path, env_extra: dict[str, str] | None = None
-) -> subprocess.CompletedProcess[str]:
-    """Run the real hook as a subprocess (faithful process boundary, #10633)."""
+def _hook_subprocess(repo: Path, command: str, cwd: Path) -> subprocess.CompletedProcess[str]:
     payload = {"tool_name": "Bash", "cwd": str(cwd), "tool_input": {"command": command}}
-    env = _clean_env()
-    env.update(env_extra or {})
     return subprocess.run(
         [_python(), str(HOOK_PATH)],
         input=json.dumps(payload),
@@ -1492,98 +1346,185 @@ def _hook_subprocess(
         check=False,
         capture_output=True,
         text=True,
-        env=env,
+        env=_clean_env(),
         timeout=30,
     )
 
 
+def _assert_ansi_c_refused(result: subprocess.CompletedProcess[str]) -> None:
+    assert result.returncode == 2, result.stderr
+    assert "Bash ANSI-C quoting ($'...') is refused [ansi_c_quoting]" in result.stderr
+    # printf %b is offered for data inside a dispatch worktree only, never for
+    # building commands or paths.
+    assert "printf %b" in result.stderr
+    assert "never use it to build command words, options or paths" in result.stderr
+    assert "It does not make protected paths writable." in result.stderr
+
+
+def _ansi_c_shape(repo: Path, shape: str) -> str:
+    target = repo / "curriculum/tracked.md"
+    # ``$'\457'`` is byte 0x2F in Bash (octal 0457 wraps mod 256), so this spells
+    # the absolute primary path while reading as relative to a naive decoder.
+    return shape.format(
+        octal="$'\\457" + str(target)[1:] + "'",
+        target=target,
+        tail=str(target)[1:],
+        cur=repo / "curriculum",
+        repo=repo,
+    )
+
+
 @pytest.mark.parametrize(
-    "command",
+    "shape",
     [
-        # Produced NUL in the EXECUTABLE word: Bash truncates to ``tee`` and runs
-        # it; pre-fix the guard saw ``tee\0junk`` and recognized no writer (exit 0
-        # BYPASS). The span must truncate so the writer is recognized (#10633 F1).
-        "printf changed | $'tee\\0junk' {target}",
-        # Produced NUL in an OPTION word: ``find … $'-delete\0junk'`` truncates to
-        # ``-delete`` in Bash; the guard must see the delete, not a mangled flag.
-        "find {cur} -maxdepth 1 -name tracked.md $'-delete\\0junk'",
+        # The octal-wrap spelling: the confirmed end-to-end bypass on main.
+        pytest.param("echo x > {octal}", id="octal-wrap-redirect"),
+        pytest.param("echo x | tee {octal}", id="octal-wrap-tee"),
+        pytest.param("cp /etc/hostname {octal}", id="octal-wrap-cp"),
+        # Produced NUL in a target, executable and option word; brace-hex slash.
+        pytest.param("echo x > $'{target}\\0junk'", id="nul-target"),
+        pytest.param("printf changed | $'tee\\0junk' {target}", id="nul-executable"),
+        pytest.param("find {cur} -maxdepth 1 -name tracked.md $'-delete\\0junk'", id="nul-option"),
+        pytest.param("echo x > $'\\x{{2f}}'{tail}", id="brace-hex-slash"),
+        # Bash drops an oversized \U escape, so these run tee and -delete.
+        pytest.param("printf changed | $'tee\\U80000000' {target}", id="oversized-u-executable"),
+        pytest.param("find {cur} -maxdepth 1 -name tracked.md $'-delete\\U80000000'", id="oversized-u-option"),
+        pytest.param("echo x > $'\\U80000000/curriculum/tracked.md'", id="oversized-u-target"),
+        # Bash removes backslash-newline before tokenizing: still ANSI-C quoting.
+        pytest.param("echo x > $\\\n'\\457{tail}'", id="line-continued-octal-wrap"),
+        pytest.param("echo x > $\\\n\\\n'\\457{tail}'", id="two-line-continuations"),
+        # Presence alone decides: embedded, benign-looking, read-only, quoted.
+        pytest.param("echo x > {repo}/curriculum/tra$'c'ked.md", id="embedded-mid-word"),
+        pytest.param("tee $'\\164racked.md'", id="dispatch-relative-name"),
+        pytest.param("echo x > $'\\457tmp/scratch-10633.txt'", id="outside-repo-path"),
+        pytest.param("printf x > $'\\xc3\\xa9.md'", id="byte-escape-name"),
+        pytest.param("printf '%s\\n' $'a\\tb'", id="no-write-target"),
+        pytest.param("grep -c 'end$' notes.txt", id="single-quoted-regex-anchor"),
+        pytest.param("echo \"$'\\x41'\" > notes.txt", id="inside-double-quotes"),
     ],
 )
-def test_issue_10633_nul_in_executable_or_option_word_blocked(repo: Path, command: str):
+def test_issue_10633_ansi_c_quoting_refused_on_presence(repo: Path, shape: str):
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    filled = command.format(target=repo / "curriculum/tracked.md", cur=repo / "curriculum")
-    result = _hook_subprocess(repo, filled, cwd=dispatch)
-    assert result.returncode == 2, result.stderr
-    assert "primary_checkout" in result.stderr
+    _assert_ansi_c_refused(_hook_subprocess(repo, _ansi_c_shape(repo, shape), cwd=dispatch))
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        # Quote removal joins ``\$\'`` into ``$'`` only inside the eval string.
+        pytest.param(r"eval echo x \> \$\'\\457{tail}\'", id="eval-joined-by-quote-removal"),
+        # The sh -c script holds its own backslash-newline between $ and '.
+        pytest.param('bash -c "printf x > \\$\\\\\n\'\\\\457{tail}\'"', id="sh-c-line-continuation"),
+        # Reached only through the write-target parser (find -exec, not git).
+        pytest.param(r"find . -maxdepth 0 -exec sh -c printf\ x\ \>\ \$\'\\457{tail}\' \;", id="find-exec-sh-c"),
+    ],
+)
+def test_issue_10633_nested_ansi_c_quoting_refused(repo: Path, shape: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    command = _ansi_c_shape(repo, shape)
+    # Only the re-read nested string holds the marker, not the outer command.
+    assert not hook._has_ansi_c_quoting(command)
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=dispatch))
+
+
+@pytest.mark.parametrize(
+    "command, cwd",
+    [
+        # The rescue-clean git allowlist and the sibling-git rail return early;
+        # the refusal comes first.
+        pytest.param("git checkout -- $'curriculum/tracked.md'", "primary", id="git-rescue-allowlist"),
+        pytest.param(
+            ".venv/bin/python -m scripts.fleet.sibling_git status --repo $'infra'", "primary", id="sibling-git-rail"
+        ),
+    ],
+)
+def test_issue_10633_refusal_precedes_allowlisted_early_returns(repo: Path, command: str, cwd: str):
+    where = repo if cwd == "primary" else repo / ".worktrees/dispatch/claude/task-1"
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=where))
 
 
 @pytest.mark.parametrize(
     "spelling",
     [
-        "$'\\xc3\\xa9/curriculum/tracked.md'",  # UTF-8 bytes of 'é' via hex escapes.
-        "$'\\303\\251/curriculum/tracked.md'",  # same bytes via octal escapes.
-        "$'\\xc3'$'\\xa9/curriculum/tracked.md'",  # byte spans split across quotes.
+        "$'\\xc3\\xa9/curriculum/tracked.md'",
+        "$'\\303\\251/curriculum/tracked.md'",
+        "$'\\xc3'$'\\xa9/curriculum/tracked.md'",
     ],
 )
-def test_issue_10633_byte_escape_path_through_symlink_to_primary_blocked(repo: Path, spelling: str):
+def test_issue_10633_byte_escapes_through_symlink_to_primary_refused(repo: Path, spelling: str):
     # A dispatch symlink whose raw name is the UTF-8 bytes of 'é' points at the
-    # protected primary. Pre-fix the guard decoded the byte escapes to a mojibake
-    # code-point path that missed the symlink (exit 0 BYPASS); the bytes must
-    # reach the classifier as the real filesystem bytes (#10633 F2).
+    # protected primary; byte-escape spellings of it are refused on presence.
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    link = os.fsencode(str(dispatch)) + b"/\xc3\xa9"
-    os.symlink(os.fsencode(str(repo)), link)
-    result = _hook_subprocess(repo, f"printf changed > {spelling}", cwd=dispatch)
-    assert result.returncode == 2, result.stderr
-    assert "primary_checkout" in result.stderr
+    os.symlink(os.fsencode(str(repo)), os.fsencode(str(dispatch)) + b"/\xc3\xa9")
+    _assert_ansi_c_refused(_hook_subprocess(repo, f"printf changed > {spelling}", cwd=dispatch))
 
 
 def test_issue_10633_literal_utf8_symlink_name_still_resolves(repo: Path):
-    # A LITERAL (unescaped) UTF-8 path component is ordinary input, not an escape;
-    # it must still resolve through the symlink and block when it reaches primary.
+    # Control: a LITERAL UTF-8 path component is ordinary input; it still
+    # resolves through the symlink and blocks as a primary write.
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    link = os.fsencode(str(dispatch)) + b"/\xc3\xa9"
-    os.symlink(os.fsencode(str(repo)), link)
+    os.symlink(os.fsencode(str(repo)), os.fsencode(str(dispatch)) + b"/\xc3\xa9")
     result = _hook_subprocess(repo, "printf changed > \u00e9/curriculum/tracked.md", cwd=dispatch)
     assert result.returncode == 2, result.stderr
     assert "primary_checkout" in result.stderr
 
 
-def test_issue_10633_brace_hex_absolute_primary_write_blocked(repo: Path):
-    # ``\x{2f}`` is byte 0x2F ('/'): the brace hex form spells the leading slash of
-    # an absolute primary path. Pre-fix it was left literal (relative, exit 0
-    # BYPASS); the decoder must honor the brace form (#10633).
-    dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    tail = str(repo / "curriculum/tracked.md")[1:]  # path without its leading '/'
-    result = _hook_subprocess(repo, f"echo x > $'\\x{{2f}}'{tail}", cwd=dispatch)
-    assert result.returncode == 2, result.stderr
-    assert "primary_checkout" in result.stderr
+def test_issue_10633_byte_escaped_non_ascii_primary_root_refused(tmp_path: Path, repo_template: Path):
+    main = _materialize_repo(repo_template, tmp_path / "r\u00e9po" / "main")
+    dispatch = main / ".worktrees/dispatch/claude/task-1"
+    target = main / "curriculum/tracked.md"
+    # Control: the literal spelling of the non-ASCII primary root is blocked.
+    literal = _hook_subprocess(main, f"printf changed > {target}", cwd=dispatch)
+    assert literal.returncode == 2, literal.stderr
+    assert "primary_checkout" in literal.stderr
+    for escape in ("\\x{:02x}", "\\{:03o}"):
+        spelled = "".join(escape.format(b) if b >= 0x80 else chr(b) for b in os.fsencode(str(target)))
+        _assert_ansi_c_refused(_hook_subprocess(main, f"printf changed > $'{spelled}'", cwd=dispatch))
 
 
-def test_issue_10633_oversized_unicode_escape_fails_closed(repo: Path):
-    # ``\U80000000`` is past U+10FFFF and raises OverflowError in chr() (not the
-    # ValueError the pre-fix decoder caught). It must fail closed as an
-    # undecidable escape, never pass through unrecognized (#10633 F3).
+def test_issue_10633_c_locale_scalar_symlink_refused(repo: Path):
+    # Under a C locale Bash leaves ``$'\u00e9'`` as the literal text ``\u00E9``,
+    # here the name of a dispatch symlink into the primary.
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
-    result = _hook_subprocess(repo, "echo x > $'\\U80000000/curriculum/tracked.md'", cwd=dispatch)
-    assert result.returncode == 2, result.stderr
-    assert "undecidable_ansi_c_escape" in result.stderr
+    os.symlink(repo, dispatch / "\\u00E9")
+    command = "export LC_ALL=C\nprintf changed > $'\\u00e9'/curriculum/tracked.md"
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=dispatch))
 
 
 @pytest.mark.parametrize(
     "command",
     [
-        # Benign byte-escape spellings of a dispatch-local file (no symlink to
-        # primary): judged on the true path, allowed. Preserves normal usage.
-        "printf x > $'\\xc3\\xa9.md'",  # -> 'é.md' in the dispatch worktree.
-        "printf x > caf\u00e9.md",  # a literal UTF-8 filename, not an escape.
-        "printf x > $'\\x73cratch-10633.txt'",  # -> 'scratch-10633.txt' in dispatch.
+        pytest.param("echo 'single quoted $HOME text' > notes.txt", id="single-quotes"),
+        pytest.param("echo 'it'\\''s' > notes.txt", id="single-quote-escape-idiom"),
+        pytest.param('echo "double quoted $HOME text" > notes.txt', id="double-quotes"),
+        pytest.param('grep -c "end$" notes.txt', id="double-quoted-regex-anchor"),
+        pytest.param("printf '%b' 'a\\tb\\n' > data.txt", id="printf-b-data"),
+        pytest.param("printf x > caf\u00e9.md", id="literal-utf8-name"),
+        pytest.param("echo x > scratch.txt && tee -a log.txt < scratch.txt", id="worktree-writes"),
     ],
 )
-def test_issue_10633_benign_non_ascii_writes_in_dispatch_allowed(repo: Path, command: str):
+def test_issue_10633_plain_quoting_controls_allowed(repo: Path, command: str):
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
     result = _hook_subprocess(repo, command, cwd=dispatch)
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command, expected",
+    [
+        ("echo $'x'", True),
+        ("echo $\\\n'x'", True),
+        ("echo $\\\n\\\n'x'", True),
+        # A removal that brings a new pair together is removed too (conservative).
+        ("echo $\\\\\n\n'x'", True),
+        # Bash does not treat backslash-CR as a line continuation.
+        ("echo $\\\r\n'x'", False),
+        ("echo '$HOME' \"$x\" $\"msg\"", False),
+    ],
+)
+def test_issue_10633_ansi_c_marker_detection(command: str, expected: bool):
+    assert hook._has_ansi_c_quoting(command) is expected
+
 
 @pytest.mark.parametrize(
     "command, reason",

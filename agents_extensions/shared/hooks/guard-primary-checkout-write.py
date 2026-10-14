@@ -91,16 +91,16 @@ A path containing any unknown expansion is BLOCKED as
 directories and git pathspecs follow the same rule. Inherited variables that the
 command never assigns (other than ``HOME``) are unknown too.
 
-ANSI-C ``$'...'`` words are decoded to the exact bytes Bash would expand them to
-(``_decode_ansi_c_span``), so a path spelled with octal/hex byte escapes is
-classified on its real filesystem bytes, not a re-encoded code point (#10633).
-One residual: a ``\\u``/``\\U`` *scalar* ≥ U+0080 is decoded for a UTF-8 locale
-(the fleet's locale); in a non-UTF-8 locale Bash would emit different bytes (or
-leave the escape literal). A sub-0x80 scalar, and every ``\\x``/octal *byte*
-escape, is locale-independent and exact — byte escapes remain the precise way to
-name non-ASCII path bytes. Scalars that are undecidable here (a lone surrogate,
-a value beyond U+10FFFF, an ambiguous ``\\cX``) fail closed on a write target
-(``undecidable_ansi_c_escape``); none of them can be ``/`` or ``..``.
+ANSI-C quoting is refused, not decoded (#10633). This guard does not model how
+Bash expands ``$'...'`` escapes, so a Bash command whose text contains the marker
+``$'`` — raw, or after backslash-newline removal (Bash joins ``$\\<newline>'``
+into ``$'``) — is blocked before parsing, target inference or any allowlisted
+early return, and so is every nested command string the parser re-reads
+(``eval`` / ``sh -c``). The check is literal and quote-blind: a ``$`` right
+before a ``'`` inside quotes (the regex anchor in ``grep 'end$'``) is refused
+too; ``"end$"`` is the same pattern. Every command string this hook parses has
+passed that check first; the tokenizer's ``_decode_ansi_c_quotes`` step remains
+only for ``guard-reviewer-publish.py``, which reuses this parser.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
@@ -143,6 +143,7 @@ for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 
 from __future__ import annotations
 
+import codecs
 import fnmatch
 import json
 import os
@@ -422,152 +423,40 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(collapsed)
 
 
-# ANSI-C ``$'...'`` single-char escapes (Bash manual §3.1.2.4). Every mapped
-# byte is below 0x80, so it is the same in any locale.
-_ANSI_C_SIMPLE = {
-    "a": "\a", "b": "\b", "e": "\x1b", "E": "\x1b", "f": "\f",
-    "n": "\n", "r": "\r", "t": "\t", "v": "\v", "\\": "\\",
-    "'": "'", '"': '"', "?": "?",
-}
-_OCTAL_DIGITS = frozenset("01234567")
-_HEX_DIGITS = frozenset("0123456789abcdefABCDEF")
-
-# A ``$'...'`` escape this decoder cannot reproduce as the exact bytes Bash
-# would write (a lone surrogate or a scalar beyond U+10FFFF — whose byte form is
-# locale/encoder dependent — or an ambiguous ``\cX`` sub-form). It can never be
-# ``/`` or ``..``, so it cannot change a path's directory structure; the risk is
-# only a mismatched leaf. The sentinel is a Unicode non-character that survives
-# ``shlex.quote`` and re-tokenization and encodes cleanly; ``_bash_path_decision``
-# refuses any write target that still contains it (never passed through
-# unrecognized). It is deliberately NOT a NUL: a NUL would truncate the span (see
-# below) and could hide a dangerous suffix. A word reaching an executable/option
-# position with this byte is a command/flag Bash cannot run either, so no writer
-# fires — allowing it there matches Bash.
-_UNDECODABLE = "\ufdd0"
+class _AnsiCQuotingRefused(Exception):
+    """A nested command string holds ANSI-C ``$'...'`` quoting (#10633)."""
 
 
-def _byte_char(byte: int) -> str:
-    """One raw filesystem byte (0-255) as a str the guard can round-trip.
+def _has_ansi_c_quoting(command: str) -> bool:
+    """Whether ``command`` contains the ANSI-C quoting marker ``$'`` (#10633).
 
-    A byte >= 0x80 is emitted as its ``surrogateescape`` code point so a later
-    ``os.fsencode`` (the filesystem codec, surrogateescape) reproduces that exact
-    byte — not a re-encoded Unicode scalar (issue #10633 F2). ASCII bytes stay
-    literal; NUL is returned as-is and truncates its span in
-    :func:`_decode_ansi_c_span`.
+    Presence alone decides; nothing is decoded and no quotes are tracked. The
+    raw text is checked, then the text with every backslash-newline pair removed
+    — including pairs that a removal brings together — because Bash deletes
+    those pairs before tokenizing, so ``$\\<newline>'...'`` is still ANSI-C
+    quoting. The stack keeps the removal linear on any input.
     """
-    return chr(0xDC00 + byte) if byte >= 0x80 else chr(byte)
-
-
-def _decode_ansi_c_span(body: str) -> str:
-    """Decode one ``$'...'`` body the way Bash expands it, for path classification.
-
-    Bash ANSI-C quoting is a C-string escape grammar, **not** Python's
-    ``unicode_escape`` (issue #10633): an octal escape ``\\nnn`` is the single
-    8-bit byte whose value is ``nnn`` *mod 256* (so ``$'\\457'`` is ``/``, byte
-    0x2F — not U+012F), and ``\\xHH`` / ``\\x{HH…}`` are likewise one byte each
-    (mod 256). Byte values >= 0x80 are carried as ``surrogateescape`` code points
-    (see :func:`_byte_char`) so the path classifier sees the real filesystem
-    bytes, not a re-encoded scalar — otherwise a byte-escape spelling of a
-    non-ASCII path component (e.g. a dispatch symlink to the primary) is misread
-    and a primary-checkout write escapes containment (#10633 F2).
-
-    A produced NUL byte terminates the *span* in Bash: everything after the NUL
-    within the same ``$'...'`` is dropped, while literals and other spans
-    concatenated around it survive (``A$'x\\0y'B`` → ``AxB``). This function
-    reproduces that by truncating the decoded span at the first NUL — so a NUL in
-    an executable or option word collapses to the form Bash runs
-    (``$'tee\\0junk'`` → ``tee``) instead of a byte Bash never executes, and an
-    embedded NUL never reaches a path-resolving call that would raise (#10633 F1).
-
-    Constructs whose exact bytes are locale/encoder dependent (a lone surrogate
-    ``\\uD800``, a scalar beyond U+10FFFF, or an ambiguous ``\\cX`` sub-form)
-    collapse to the non-truncating :data:`_UNDECODABLE` sentinel, which the path
-    decision refuses on a write target (#10633 F3). Nothing falls back to
-    ``unicode_escape``.
-    """
-    out: list[str] = []
-    i = 0
-    n = len(body)
-    while i < n:
-        char = body[i]
-        if char != "\\" or i + 1 >= n:
-            out.append(char)
-            i += 1
-            continue
-        esc = body[i + 1]
-        if esc in _ANSI_C_SIMPLE:
-            out.append(_ANSI_C_SIMPLE[esc])
-            i += 2
-        elif esc in _OCTAL_DIGITS:
-            end = i + 1
-            while end < n and end < i + 4 and body[end] in _OCTAL_DIGITS:
-                end += 1
-            out.append(_byte_char(int(body[i + 1 : end], 8) & 0xFF))
-            i = end
-        elif esc == "x" and i + 2 < n and body[i + 2] == "{":
-            # Brace hex (``\x{HH…}``): all contiguous hex digits, value mod 256,
-            # one byte; the closing ``}`` is consumed when present. Empty or
-            # ``& 0xFF == 0`` hex yields a NUL that truncates the span, matching
-            # Bash (``$'\\x{}z'`` and ``$'\\x{400}z'`` expand to nothing).
-            end = i + 3
-            while end < n and body[end] in _HEX_DIGITS:
-                end += 1
-            digits = body[i + 3 : end]
-            out.append(_byte_char(int(digits, 16) & 0xFF) if digits else "\x00")
-            i = end + 1 if end < n and body[end] == "}" else end
-        elif esc == "x":
-            end = i + 2
-            while end < n and end < i + 4 and body[end] in _HEX_DIGITS:
-                end += 1
-            # ``\x`` with no hex digit is a literal backslash-x in Bash.
-            out.append("\\x" if end == i + 2 else _byte_char(int(body[i + 2 : end], 16) & 0xFF))
-            i = end
-        elif esc in ("u", "U"):
-            width = 4 if esc == "u" else 8
-            end = i + 2
-            while end < n and end < i + 2 + width and body[end] in _HEX_DIGITS:
-                end += 1
-            if end == i + 2:  # ``\u`` / ``\U`` with no hex digit is literal.
-                out.append("\\" + esc)
-            else:
-                code = int(body[i + 2 : end], 16)
-                if code == 0:
-                    out.append("\x00")  # NUL: truncates the span (like Bash).
-                elif 0xD800 <= code <= 0xDFFF or code > 0x10FFFF:
-                    # A lone surrogate or a scalar beyond U+10FFFF: Bash's byte
-                    # form is locale/encoder dependent and never ``/``. Fail
-                    # closed without truncating.
-                    out.append(_UNDECODABLE)
-                else:
-                    # A Unicode scalar; a sub-0x80 value is the same single ASCII
-                    # byte in every locale (backslash-u-002f is a slash), and in a
-                    # UTF-8 locale a higher scalar fsencodes to the bytes Bash wrote.
-                    out.append(chr(code))
-            i = end
-        elif esc == "c":
-            # ``\cX`` is a C0 control byte (0x00-0x1F) or 0x7F — it can never be
-            # ``/``. A trailing ``\c`` is a literal ``\c`` in Bash; the ``\c\``
-            # sub-form and a non-ASCII target (Bash masks the raw byte, not this
-            # code point) are ambiguous, so fail closed on them without truncating.
-            if i + 2 >= n:
-                out.append("\\c")
-                i += 2
-            elif body[i + 2] == "\\" or ord(body[i + 2]) >= 0x80:
-                out.append(_UNDECODABLE)
-                i += 2
-            else:
-                target = body[i + 2]
-                out.append("\x7f" if target == "?" else chr(ord(target) & 0x1F))
-                i += 3
+    if "$'" in command:
+        return True
+    joined: list[str] = []
+    for char in command:
+        if char == "\n" and joined and joined[-1] == "\\":
+            joined.pop()
         else:
-            # Any other escaped char keeps the backslash literal (``\q`` -> ``\q``).
-            out.append("\\" + esc)
-            i += 2
-    decoded = "".join(out)
-    # A produced NUL truncates its span in Bash (see the docstring); keep only
-    # the content Bash would actually pass on.
-    nul = decoded.find("\x00")
-    return decoded if nul < 0 else decoded[:nul]
+            joined.append(char)
+    return "$'" in "".join(joined)
+
+
+def _refuse_nested_ansi_c_quoting(command: str, depth: int) -> None:
+    """Stop the parse when a re-read command string holds ``$'`` (#10633).
+
+    ``main`` refuses a top-level command before parsing it. A nested string
+    (``eval`` arguments, ``sh -c`` script) is text the parser produced by quote
+    removal and expansion, which can newly join ``$`` and ``'`` (``eval \\$\\'…\\'``),
+    so it is checked again before it is parsed.
+    """
+    if depth and _has_ansi_c_quoting(command):
+        raise _AnsiCQuotingRefused
 
 
 def _decode_ansi_c_quotes(command: str) -> str:
@@ -591,7 +480,10 @@ def _decode_ansi_c_quotes(command: str) -> str:
                 else:
                     end += 1
             if end < len(command):
-                value = _decode_ansi_c_span(command[i + 2 : end])
+                try:
+                    value = codecs.decode(command[i + 2 : end], "unicode_escape")
+                except UnicodeError:
+                    value = command[i + 2 : end]
                 out.append(shlex.quote(value))
                 i = end + 1
                 continue
@@ -2026,6 +1918,7 @@ def bash_write_targets(
     vectors are intentionally out of scope (see module docstring); they rely on
     physical worktree isolation and the monitor/git-shim layers.
     """
+    _refuse_nested_ansi_c_quoting(command, depth)
     if depth >= _MAX_SHELL_DEPTH:
         unknown = ShellWord("shell recursion limit")
         unknown.decision_reason = "undecidable_shell_recursion_target"
@@ -2166,6 +2059,7 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
     Allowlisted: ``git checkout -- <paths>`` and ``git restore <paths>`` without
     ``--source`` (discard dirt / restore from index — rescue pattern).
     """
+    _refuse_nested_ansi_c_quoting(command, depth)
     intents: list[dict[str, object]] = []
 
     def record(intent: dict[str, object]) -> None:
@@ -2552,14 +2446,6 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
     reason = getattr(word, "decision_reason", None)
     if reason is not None:
         return _UndecidableWrite(reason, "Use a literal target and a known working directory.")
-    if _UNDECODABLE in word:
-        # An ANSI-C ``$'...'`` escape whose exact bytes the decoder could not
-        # reproduce (a lone surrogate, a scalar beyond U+10FFFF, or an ambiguous
-        # ``\cX`` form). Never classify such a target as safe (#10633 F3).
-        return _UndecidableWrite(
-            "undecidable_ansi_c_escape",
-            "An ANSI-C $'...' escape could not be modeled exactly; use a literal path.",
-        )
     if main_root is not None and re.search(r"[*?\[\]{}]", word):
         parts = Path(word).parts
         first = next(i for i, part in enumerate(parts) if re.search(r"[*?\[\]{}]", part))
@@ -2596,6 +2482,25 @@ def _block_uncertain(reason: str) -> int:
     sys.stderr.write(
         f"BLOCKED by guard-primary-checkout-write: cannot classify a possible primary write [{reason}]. "
         "Use a literal target from a known dispatch worktree cwd.\n"
+    )
+    return 2
+
+
+def _block_ansi_c_quoting() -> int:
+    sys.stderr.write(
+        "BLOCKED by guard-primary-checkout-write: Bash ANSI-C quoting ($'...') is refused "
+        "[ansi_c_quoting] (issue #10633).\n\n"
+        "This guard does not model how Bash decodes $'...' escapes, so it cannot tell which file "
+        "such a command writes. The check is literal: any $ directly followed by ' is refused, "
+        "also across a backslash-newline, inside quotes, and in nested eval / sh -c strings.\n\n"
+        "Write command words, options and paths as plain literal text (a regex anchor such as "
+        "'end$' can be written \"end$\").\n"
+        "Only to generate escape-decoded file CONTENT inside your dispatch worktree, printf %b "
+        "is available there:\n\n"
+        "  cd .worktrees/dispatch/<agent>/<task> && printf '%b' 'a\\tb\\n' > data.txt\n\n"
+        "That is for data only: never use it to build command words, options or paths. "
+        "It does not make protected paths writable.\n"
+        "Hook source: agents_extensions/shared/hooks/guard-primary-checkout-write.py\n"
     )
     return 2
 
@@ -2695,6 +2600,9 @@ def main() -> int:
         if not isinstance(raw_command, str):
             return _block_uncertain("malformed_hook_command")
         command = raw_command
+        # #10633: refuse ANSI-C quoting before any parse or early return.
+        if _has_ansi_c_quoting(command):
+            return _block_ansi_c_quoting()
         if not command.strip(" \t\n"):
             return 0
         try:
@@ -2713,6 +2621,8 @@ def main() -> int:
     if is_shell_tool(tool_name) and command:
         try:
             git_intents = bash_git_write_intents(command, cwd=cwd)
+        except _AnsiCQuotingRefused:
+            return _block_ansi_c_quoting()
         except Exception:
             return _block_uncertain("undecidable_git_command")
 
@@ -2738,6 +2648,8 @@ def main() -> int:
             raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
         except ShellPreprocessLimit:
             return _block_uncertain("nested_shell_command")
+        except _AnsiCQuotingRefused:
+            return _block_ansi_c_quoting()
 
     # --- #5396: git-mediated mutations against the primary worktree ----------
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
