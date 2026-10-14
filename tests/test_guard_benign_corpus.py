@@ -47,6 +47,9 @@ HEAD_ONLY_BENIGN_COMMANDS = (
 )
 
 
+# #10633: the write guard leaves $'...' undecoded, so the nested scripts of
+# "bash -c $'cat .env'", "bash -c $'gh pr merge 5 --squash'" and
+# "eval $'cat .env'" are unknown and fail closed, like bash -c "$SCRIPT".
 EXPECTED_PROSE_FLIPS = {
     (row["guard"], BASELINE_COMMANDS[row["command_index"]]): (row["before"], row["after"])
     for row in BASELINE_FIXTURE["expected_prose_flips"]

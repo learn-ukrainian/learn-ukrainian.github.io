@@ -1381,6 +1381,8 @@ def _ansi_c_shape(repo: Path, shape: str) -> str:
         pytest.param("echo x > {octal}", id="octal-wrap-redirect"),
         pytest.param("echo x | tee {octal}", id="octal-wrap-tee"),
         pytest.param("cp /etc/hostname {octal}", id="octal-wrap-cp"),
+        # Octal wrap in the executable word: Bash runs tee ($'\564' is 't').
+        pytest.param("printf changed | $'\\564ee' {target}", id="octal-wrap-executable"),
         # Produced NUL in a target, executable and option word; brace-hex slash.
         pytest.param("echo x > $'{target}\\0junk'", id="nul-target"),
         pytest.param("printf changed | $'tee\\0junk' {target}", id="nul-executable"),
@@ -1524,6 +1526,47 @@ def test_issue_10633_plain_quoting_controls_allowed(repo: Path, command: str):
 )
 def test_issue_10633_ansi_c_marker_detection(command: str, expected: bool):
     assert hook._has_ansi_c_quoting(command) is expected
+
+
+def test_issue_10633_octal_wrap_spellings_match_bash():
+    # The octal-wrap cases above probe real bypasses only if Bash decodes them
+    # to these words: the tee program name and an absolute path.
+    bash = shutil.which("bash")
+    assert bash is not None
+    result = subprocess.run(
+        [bash, "-c", "printf '%s|' $'\\564ee' $'\\457tmp'"], capture_output=True, text=True, check=True, timeout=30
+    )
+    assert result.stdout == "tee|/tmp|"
+
+
+def test_issue_10633_guard_has_no_ansi_c_decoder():
+    assert not hasattr(hook, "_decode_ansi_c_quotes")
+    assert "unicode_escape" not in HOOK_PATH.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    "command, literal",
+    [
+        # The final-review probe: Bash writes /tmp/x; a decoder read "įtmp/x".
+        pytest.param("tee $'\\457tmp/x'", "$\\457tmp/x", id="octal-wrap-target"),
+        # The span body is not a reference to a same-command variable.
+        pytest.param("x=/tmp/ok; tee $'x'", "$x", id="span-names-assigned-variable"),
+        pytest.param("echo x > $'a b'", "$a b", id="redirect-target"),
+    ],
+)
+def test_issue_10633_parser_keeps_ansi_c_span_literal_and_unresolved(command: str, literal: str):
+    # The hook entry refuses these commands. A direct parser caller gets the
+    # undecoded span, unresolved like any unknown expansion, so it blocks.
+    targets = hook.bash_write_targets(command, cwd="/tmp")
+    assert [str(target) for target in targets] == [literal]
+    assert targets[0].unresolved_at == 0
+    assert hook._bash_path_decision(targets[0], "/tmp", None).reason == "unresolved_shell_variable"
+
+
+def test_issue_10633_parser_never_decodes_ansi_c_program_name():
+    (segment,) = hook._expanded_segments("$'\\564ee' notes.txt")
+    assert hook._command_word(segment) == ("$\\564ee", 0)
+    assert segment[0].unresolved_at == 0
 
 
 @pytest.mark.parametrize(

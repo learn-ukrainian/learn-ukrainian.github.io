@@ -99,8 +99,12 @@ early return, and so is every nested command string the parser re-reads
 (``eval`` / ``sh -c``). The check is literal and quote-blind: a ``$`` right
 before a ``'`` inside quotes (the regex anchor in ``grep 'end$'``) is refused
 too; ``"end$"`` is the same pattern. Every command string this hook parses has
-passed that check first; the tokenizer's ``_decode_ansi_c_quotes`` step remains
-only for ``guard-reviewer-publish.py``, which reuses this parser.
+passed that check first. Nothing in this module decodes ANSI-C escapes: a direct
+caller of the parser (``bash_write_targets``, ``guard-reviewer-publish.py``)
+gets each ``$'...'`` span as undecoded literal text whose value is unknown, so a
+path containing one is ``unresolved_shell_variable`` and a command word spelled
+with one names no known program. ``guard-reviewer-publish.py`` refuses the
+marker itself for that reason.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
@@ -143,7 +147,6 @@ for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 
 from __future__ import annotations
 
-import codecs
 import fnmatch
 import json
 import os
@@ -459,46 +462,14 @@ def _refuse_nested_ansi_c_quoting(command: str, depth: int) -> None:
         raise _AnsiCQuotingRefused
 
 
-def _decode_ansi_c_quotes(command: str) -> str:
-    """Decode executable Bash ANSI-C words before token and path expansion."""
-    out: list[str] = []
-    quote = ""
-    i = 0
-    while i < len(command):
-        char = command[i]
-        if char == "\\" and quote != "'" and i + 1 < len(command):
-            out.append(command[i : i + 2])
-            i += 2
-            continue
-        if not quote and command.startswith("$'", i):
-            end = i + 2
-            while end < len(command):
-                if command[end] == "\\":
-                    end += 2
-                elif command[end] == "'":
-                    break
-                else:
-                    end += 1
-            if end < len(command):
-                try:
-                    value = codecs.decode(command[i + 2 : end], "unicode_escape")
-                except UnicodeError:
-                    value = command[i + 2 : end]
-                out.append(shlex.quote(value))
-                i = end + 1
-                continue
-        if char in {"'", '"'}:
-            quote = "" if quote == char else quote if quote else char
-        out.append(char)
-        i += 1
-    return "".join(out)
-
-
 # Preserve literal expansion characters and redirect punctuation through shlex,
 # which otherwise strips quotes before redirect tokens can be distinguished from
 # argv words. Restore each sentinel in the expanded word (#8500, #8887).
 _LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": "", "<": "", ">": "", "&": ""}
-_UNMASK = str.maketrans({v: k for k, v in _LITERAL_SENTINELS.items()})
+# The ``$`` of an unquoted ANSI-C ``$'`` opener (#10633): the span stays
+# undecoded literal text, and ``_expand_word`` marks its value unknown there.
+_ANSI_C_OPENER = "\ue007"
+_UNMASK = str.maketrans({**{v: k for k, v in _LITERAL_SENTINELS.items()}, _ANSI_C_OPENER: "$"})
 
 # Shared shell_shlex.split_operator_run separates punctuation runs before
 # this guard tracks scopes and redirections.
@@ -571,6 +542,8 @@ def _mask_quoted_literals(command: str) -> str:
     Inside single quotes expansion characters are literal; inside double quotes
     ``~`` and ``=`` are literal (``$`` and backtick still expand). Redirect
     characters are literal inside either quote style or after a backslash.
+    An unquoted ``$'`` opener keeps its ``$`` as ``_ANSI_C_OPENER``, so the span
+    is never read as a ``$NAME`` reference to its first characters (#10633).
     """
     out: list[str] = []
     in_single = False
@@ -590,6 +563,8 @@ def _mask_quoted_literals(command: str) -> str:
             in_single = not in_single
         elif char == '"' and not in_single:
             in_double = not in_double
+        elif char == "$" and not in_single and not in_double and command.startswith("'", i + 1):
+            char = _ANSI_C_OPENER
         elif char in _LITERAL_SENTINELS and (in_single or (in_double and char in "~=<>&")):
             char = _LITERAL_SENTINELS[char]
         out.append(char)
@@ -702,7 +677,7 @@ def _tokenize(command: str) -> list[str]:
             _mask_quoted_literals(
                 _normalize_quoted_command_substitutions(
                     _normalize_backtick_substitutions(
-                        _decode_ansi_c_quotes(preprocess_shell_command(command))
+                        preprocess_shell_command(command)
                     )
                 )
             ),
@@ -816,8 +791,9 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
 
     ``lookup`` returns a variable's known value or ``None``. Anything else that
     expands — ``$(...)``, backticks, ``${NAME:-x}``, positional/special
-    parameters, a name without a known value — stops the expansion there and
-    marks the word unresolved at that offset.
+    parameters, a name without a known value, an undecoded ANSI-C ``$'...'``
+    span — stops the expansion there and marks the word unresolved at that
+    offset.
     """
     raw = token.translate(_UNMASK)
     shell_redirect = token in _REDIRECT_OPS
@@ -840,7 +816,7 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
                 i = end
     while i < len(token):
         char = token[i]
-        if char in "$`":
+        if char in "$`" or char == _ANSI_C_OPENER:
             match = _VAR_REF_RE.match(token, i) if char == "$" else None
             value = lookup(match.group(1) or match.group(2)) if match else None
             if match is None or value is None:
