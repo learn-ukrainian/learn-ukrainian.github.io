@@ -1552,6 +1552,24 @@ def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
         validate_catalog(catalog)
 
 
+@pytest.mark.parametrize("tier", ["low", "medium", "high"])
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatch, tier, risk):
+    from scripts.agent_runtime import target_admission
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Argon formal review must refuse before routing or provider launch")
+
+    monkeypatch.setattr("subprocess.run", forbidden)
+    monkeypatch.setattr("subprocess.Popen", forbidden)
+    with pytest.raises(target_admission.ReviewAdmissionRefused, match="holds no review, critique or approval role"):
+        target_admission.resolve_and_admit(
+            ("agy",), mode="read-only", model=f"gemini-4-argon-{tier}",
+            review_dispatch=True, review_profile="code", review_risk=risk,
+            review_author_model="gpt-6.1-sol", route=forbidden,
+        )
+
+
 def test_gemini_4_argon_trial_selectors_have_no_authority_roles():
     """Three listed slugs, no trial role id, and no critical/security/advisor admission."""
     catalog = load_model_catalog()

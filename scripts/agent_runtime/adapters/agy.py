@@ -743,13 +743,16 @@ _AGY_PRINT_TIMEOUT = "120m"
 #
 # Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
 # Older Flash, Claude thinking and GPT-OSS selections are refused by the catalog.
+_AGY_ARGON_SLUGS: tuple[str, ...] = (
+    "gemini-4-argon-high",
+    "gemini-4-argon-medium",
+    "gemini-4-argon-low",
+)
 _AGY_GENERAL_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.8-flash-high",
     "gemini-3.8-flash-medium",
     "gemini-3.8-flash-low",
-    "gemini-4-argon-high",
-    "gemini-4-argon-medium",
-    "gemini-4-argon-low",
+    *_AGY_ARGON_SLUGS,
 )
 # Absent from `agy models` on 2026-10-13. Kept so a historical Pro id resolves
 # to the catalog retirement refusal instead of an unknown-model suggestion.
@@ -1236,7 +1239,7 @@ class AgyAdapter:
         _ = call_start_time
 
         stream_mode = plan is not None and "stream-json" in plan.cmd
-        if stream_problem == "agy_model_event_mismatch":
+        if stream_problem in {"agy_model_event_mismatch", "agy_model_identity_missing"}:
             return ParseResult(
                 ok=False,
                 response="",
@@ -2065,7 +2068,9 @@ def _stream_result(
         resolved_expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
     except ValueError:
         resolved_expected = None
-    check_identity = resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
+    argon_identity = resolved_expected in _AGY_ARGON_SLUGS
+    check_identity = argon_identity or resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
+    identity_seen = False
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
     for line in stdout.split("\n"):
@@ -2085,10 +2090,13 @@ def _stream_result(
                 if provider_model is None or provider_model == "":
                     continue
                 try:
-                    mismatch = (
-                        not isinstance(provider_model, str)
-                        or AgyAdapter.resolve_model_slug(provider_model) != resolved_expected
-                    )
+                    if argon_identity:
+                        mismatch = provider_model != resolved_expected
+                    else:
+                        mismatch = (
+                            not isinstance(provider_model, str)
+                            or AgyAdapter.resolve_model_slug(provider_model) != resolved_expected
+                        )
                 except ValueError:
                     mismatch = True
                 if model_identity is not None:
@@ -2100,6 +2108,7 @@ def _stream_result(
                     )
                 if mismatch:
                     return None, "agy_model_event_mismatch"
+                identity_seen = True
         if event["event"] == "result":
             if result is not None or not isinstance(event.get("result"), dict):
                 return None, "agy_stream_output_invalid: duplicate or malformed terminal result"
@@ -2115,6 +2124,8 @@ def _stream_result(
         ) and error else "agy_stream_result_error"
     if not result.get("response", "").strip() and "structured_output" not in result:
         return result, "agy_stream_output_invalid: empty terminal response"
+    if argon_identity and not identity_seen:
+        return None, "agy_model_identity_missing"
     return result, None
 
 

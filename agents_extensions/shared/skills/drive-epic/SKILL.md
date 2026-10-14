@@ -6,9 +6,11 @@ effort: xhigh
 
 # Drive an epic lane
 
-For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
-escalation turns. This overrides the shared effort above for Sol only;
-other providers retain their effort rules and explicit overrides.
+Use Opus 5.5 or GPT-6.1 Sol (`gpt-6.1-sol`) at `xhigh` for advanced hard
+or security code, design and advice, hard debugging, and critical or security
+review (#10568). Routine routes retain their existing effort policy, including
+Sol `high` for orchestration and the bounded advisory envelope. Explicit effort
+overrides remain binding. Resolve the production route before dispatch.
 
 You drive **one epic or track lane** (`SESSION_EPIC` is set). You are **not** the main
 orchestrator. You own the lane's judgment: what is wrong, what is next, which model and

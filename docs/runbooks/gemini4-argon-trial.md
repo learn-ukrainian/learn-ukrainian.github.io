@@ -6,7 +6,7 @@ launcher certification.
 
 ## Listed selectors
 
-`agy models` on 2026-10-13 UTC listed these Gemini selectors and no Gemini 3.1 Pro:
+`agy models` on 2026-10-14 UTC listed these Gemini selectors and no Gemini 3.1 Pro:
 
 | Selector | CLI display label |
 | --- | --- |
@@ -23,6 +23,45 @@ value is not a selector and is refused. Unknown names are refused before a
 subprocess. A provider listing is availability only. It does not prove
 advisor-level quality. Qualification remains DevOps #9619
 (`docs/runbooks/agy-authority-qualification.md`).
+
+## Provider identity
+
+For Argon stream output, the adapter requires the provider's `init.model` or
+top-level init `model` to equal the selected concrete slug. Low and medium
+remain distinct from high despite the catalog's existing aliases. A display
+label is accepted as a request but is insufficient as runtime attestation.
+Conflicting or unrecognized identities produce `agy_model_event_mismatch`.
+A successful response without identity produces `agy_model_identity_missing`.
+Both refuse with `provider_policy_refusal` and return no accepted response.
+Provider errors retain their existing classification. Flash behavior stays
+unchanged. Fixture tests exercise this contract without a provider call.
+
+## Advanced routing remains blocked
+
+The ordered #10568 defaults are Argon high for B1+ Ukrainian and Ukrainian-data
+authoring, with Sol fallback. A1 and A2 authors retain Sol and Flash. Argon joins
+their planning when that work starts. Gemini-authored Ukrainian output requires
+independent Sol or Opus review with Sources. Argon has no formal code-review,
+security, critical-review, or advisor qualification.
+
+This preparation does not implement those defaults. `execution_routing` has
+only `sol_advised_bounded`. `scripts/review/model_catalog.py` validates its fixed
+envelope fields. `scripts/delegate.py::_admit_dispatch_target` admits the supplied
+agent and model but has no CEFR-based author selection. The current catalog has
+no advanced Ukrainian-author role. Adding unused fields or a separate selector
+would not prove a production default. The advanced route stops pending a
+supported consumer contract owned by codex-monitor.
+
+Catalog and core integration waits for merged #10622. Its policy and fixture
+overlay remain owned by that publication unit. No historical capture, input,
+fixture, or checksum is regenerated here. The driver must integrate the merged
+base before final exact-head review and publication.
+
+After admission is merged and installed, the driver owns one read-only delegated
+Argon-high `mcp__sources__verify_word` call. Its evidence must contain the actual
+MCP result, trace, exact runtime identity, and unchanged tracked-checkout digest.
+That proof does not certify model quality or repair the separately owned #10563
+hook-mutation issue. This worker makes no provider call.
 
 ## Catalog schema
 
