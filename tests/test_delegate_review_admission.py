@@ -61,6 +61,7 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
 
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
+    from scripts.orchestration.fleet_repos import load_fleet_repos
     from tests.test_ask_review_admission_floor import _git
 
     repo = tmp_path_factory.mktemp("ordinary-review")
@@ -71,6 +72,8 @@ def ordinary_review_repo(tmp_path_factory):
     (repo / "ordinary.py").write_text("value = 1\n")
     _git(repo, "add", ".")
     _git(repo, "commit", "-qm", "base")
+    # Same-repository PR admission reads this origin before gh pr view.
+    _git(repo, "remote", "add", "origin", f"https://github.com/{load_fleet_repos()['public'].github}.git")
     _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
     # No authored commits past the base: a trusted review's complete authorship
     # (#9739) is then exactly its declared --review-author-model, the identity

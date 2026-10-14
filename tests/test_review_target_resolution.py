@@ -56,6 +56,7 @@ def _init_repo(tmp_path: Path) -> Path:
 
 # --- is_test_path -----------------------------------------------------------
 
+
 def test_is_test_path_recognizes_common_shapes():
     assert is_test_path("tests/test_foo.py")
     assert is_test_path("scripts/tests/test_bar.py")
@@ -66,6 +67,7 @@ def test_is_test_path_recognizes_common_shapes():
 
 
 # --- local mode --------------------------------------------------------------
+
 
 def test_resolve_local_target_clean_tree(tmp_path):
     repo = _init_repo(tmp_path)
@@ -129,6 +131,7 @@ def test_resolve_local_target_excludes_test_files_from_loc(tmp_path):
 
 # --- commit mode ---------------------------------------------------------------
 
+
 def test_resolve_commit_target(tmp_path):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('v2')\n", encoding="utf-8")
@@ -150,6 +153,7 @@ def test_resolve_commit_target_root_commit_raises(tmp_path):
 
 
 # --- branch mode -----------------------------------------------------------------
+
 
 def test_resolve_branch_target_against_explicit_base(tmp_path):
     repo = _init_repo(tmp_path)
@@ -182,8 +186,10 @@ def test_resolve_branch_target_no_merge_base_raises(tmp_path):
 
 # --- pr mode (gh calls stubbed) ---------------------------------------------------
 
+
 def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, monkeypatch):
     repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
     base_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
     (repo / "pr_change.py").write_text("value = 1\n", encoding="utf-8")
     _git(repo, "add", "pr_change.py")
@@ -202,6 +208,7 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
 
     def fake_run_gh(args, cwd, timeout=30.0):
         assert "view" in args
+        assert args[args.index("--repo") + 1] == "example/catalog"
         return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
 
     monkeypatch.setattr(tr, "_run_gh", fake_run_gh)
@@ -226,6 +233,7 @@ def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeyp
     ``base_sha``.
     """
     repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
     merge_base_sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
 
     _git(repo, "checkout", "-q", "-b", "feature")
@@ -274,6 +282,7 @@ def test_resolve_pr_target_diffs_merge_base_not_moved_base_tip(tmp_path, monkeyp
 
 def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
     repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
     import scripts.review.target_resolution as tr
 
     def fake_run_gh(args, cwd, timeout=30.0):
@@ -287,6 +296,7 @@ def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
 @pytest.mark.parametrize("base_name", ["  ", ["main"], None, 1])
 def test_resolve_pr_target_missing_base_name_raises(tmp_path, monkeypatch, base_name):
     repo = _init_repo(tmp_path)
+    _git(repo, "remote", "add", "origin", "https://github.com/example/catalog.git")
     sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
     import scripts.review.target_resolution as tr
 
@@ -301,6 +311,7 @@ def test_resolve_pr_target_missing_base_name_raises(tmp_path, monkeypatch, base_
 
 
 # --- dispatch ---------------------------------------------------------------------
+
 
 def test_resolve_review_target_requires_explicit_mode_args(tmp_path):
     repo = _init_repo(tmp_path)

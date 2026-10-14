@@ -954,6 +954,18 @@ def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.Monkey
     assert pr_paths == ["scripts/x.py", _CONTENT_PATH]
 
 
+_FIXTURE_GITHUB_ORIGIN = "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git"
+
+
+def _answer_origin_url(command: list[str], url: str):
+    """Model ``git config --get remote.origin.url`` for the approved origin pin."""
+    import subprocess
+
+    if command == ["git", "config", "--get", "remote.origin.url"]:
+        return subprocess.CompletedProcess(command, 0, stdout=f"{url}\n")
+    return None
+
+
 def test_delegate_pr_gate_diffs_the_resolved_sha(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -966,6 +978,9 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
+        origin = _answer_origin_url(command, _FIXTURE_GITHUB_ORIGIN)
+        if origin is not None:
+            return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
         if command[:2] == ["git", "fetch"]:
@@ -1015,14 +1030,22 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
 
     sha = "a" * 40
     other = "b" * 40
-    payload = json.dumps({
-        "baseRefName": "main", "baseRefOid": sha,
-        "headRefName": "feature", "headRefOid": sha, "isCrossRepository": False,
-    })
+    payload = json.dumps(
+        {
+            "baseRefName": "main",
+            "baseRefOid": sha,
+            "headRefName": "feature",
+            "headRefOid": sha,
+            "isCrossRepository": False,
+        }
+    )
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
+        origin = _answer_origin_url(command, _FIXTURE_GITHUB_ORIGIN)
+        if origin is not None:
+            return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
         if command[:2] == ["git", "check-ref-format"]:
@@ -1071,14 +1094,22 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
     from scripts import delegate
 
     sha = "a" * 40
-    payload = json.dumps({
-        "baseRefName": "main", "baseRefOid": sha,
-        "headRefName": "feature", "headRefOid": sha, "isCrossRepository": False,
-    })
+    payload = json.dumps(
+        {
+            "baseRefName": "main",
+            "baseRefOid": sha,
+            "headRefName": "feature",
+            "headRefOid": sha,
+            "isCrossRepository": False,
+        }
+    )
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
+        origin = _answer_origin_url(command, _FIXTURE_GITHUB_ORIGIN)
+        if origin is not None:
+            return origin
         if command[:2] == ["gh", "pr"]:
             return subprocess.CompletedProcess(command, 0, stdout=payload)
         if command[:2] == ["git", "check-ref-format"]:
@@ -1116,6 +1147,44 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
     err = capsys.readouterr().err
     assert "--pr 77 with --pinned-head requires --branch 'feature'" in err
     assert args.branch is None
+
+
+def test_delegate_pr_refuses_a_non_github_origin(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """An origin that is not a GitHub owner/name never reaches an unpinned ``gh pr view``."""
+    from scripts import delegate
+
+    def fake_run(command: list[str], **kwargs: object):
+        origin = _answer_origin_url(command, "not-a-github-remote")
+        if origin is not None:
+            return origin
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--model",
+            "gemini-3.8-flash-high",
+            "--task-id",
+            "agy-pr-non-github-origin",
+            "--prompt",
+            "Review the lesson text.",
+            "--require-review-verdict",
+            "--review-profile",
+            "ukrainian",
+            "--pr",
+            "77",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "checkout origin is not a GitHub owner/name; refusing an unpinned gh pr view" in err
 
 
 def test_dispatch_refuses_when_fetched_head_differs_from_gate_sha() -> None:
