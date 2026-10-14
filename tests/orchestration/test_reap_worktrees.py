@@ -2902,9 +2902,11 @@ def test_p0_dynamic_cap_ceiling_stops_run_in_apply_mode(
     assert Path(blocked[0].path).exists()
 
 
+@pytest.mark.parametrize("include_terminal_dispatches", [False, True])
 def test_merged_pr_same_tree_divergent_commit_is_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    include_terminal_dispatches: bool,
 ) -> None:
     """An identical tree with patch-distinct history is not deletion proof."""
     repo = init_repo(tmp_path)
@@ -2923,6 +2925,17 @@ def test_merged_pr_same_tree_divergent_commit_is_kept(
         monkeypatch,
         {branch: [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
     )
+    head = git(worktree, "rev-parse", "HEAD")
+    cherry_outputs: list[str] = []
+    real_run = rw._run
+
+    def record_cherry(args, **kwargs):
+        proc = real_run(args, **kwargs)
+        if args == ["git", "cherry", pr_head, head]:
+            cherry_outputs.append(proc.stdout)
+        return proc
+
+    monkeypatch.setattr(rw, "_run", record_cherry)
 
     result = result_for(
         rw.reap_worktrees(
@@ -2930,6 +2943,7 @@ def test_merged_pr_same_tree_divergent_commit_is_kept(
             apply=True,
             live_cwds=set(),
             prune_merged_branches=True,
+            include_terminal_dispatches=include_terminal_dispatches,
         ),
         worktree,
     )
@@ -2937,6 +2951,53 @@ def test_merged_pr_same_tree_divergent_commit_is_kept(
     assert result.action == "skipped"
     assert result.branch_pruned is False
     assert "same tree as PR #7067 head; not deletion proof" in (result.reason or "")
+    if include_terminal_dispatches:
+        assert cherry_outputs, "patch-equivalent proof was not exercised"
+        assert all(any(line.startswith("+ ") for line in output.splitlines()) for output in cherry_outputs)
+    else:
+        assert cherry_outputs == []
+    assert worktree.exists()
+    assert git(repo, "rev-parse", "--verify", branch)
+
+
+@pytest.mark.parametrize("include_terminal_dispatches", [False, True])
+def test_merged_pr_same_tree_empty_commit_flag_controls_equivalent_cleanup(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    include_terminal_dispatches: bool,
+) -> None:
+    """Empty sibling commits qualify only with patch-equivalent cleanup enabled."""
+    repo = init_repo(tmp_path)
+    branch = "codex/empty-sibling"
+    worktree = add_worktree(repo, branch)
+    git(worktree, "push", "-u", "origin", branch)
+    git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
+    tree = git(worktree, "rev-parse", "HEAD^{tree}")
+    parent = git(repo, "rev-parse", "main")
+    pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
+    patch_gh(
+        monkeypatch,
+        {branch: [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
+    )
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=False,
+            live_cwds=set(),
+            prune_merged_branches=True,
+            include_terminal_dispatches=include_terminal_dispatches,
+        ),
+        worktree,
+    )
+
+    if include_terminal_dispatches:
+        assert result.action == "would_remove"
+        assert result.reason == "PR #7067 MERGED; patch-equivalent"
+    else:
+        assert result.action == "skipped"
+        assert "same tree as PR #7067 head; not deletion proof" in (result.reason or "")
+    assert result.branch_pruned is False
     assert worktree.exists()
     assert git(repo, "rev-parse", "--verify", branch)
 
