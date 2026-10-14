@@ -151,6 +151,11 @@ STAGED_GATE_RECEIPT=""
 # Private copy used so the restore integrity check can apply a sidecar without
 # creating -wal/-shm files beside the restored database.
 RESTORE_CHECK_DIR=""
+# Restore target and the receipt-listed databases whose step finished. A later
+# step can still write file-phase sidecars beside them, so the EXIT trap clears
+# those when a restore fails or is interrupted part-way.
+RESTORE_TARGET_ROOT=""
+RESTORE_COMPLETED_DATABASES=()
 RUN_ID=""
 LINUX_MODE=0
 BACKUP_FAILURES=()
@@ -485,6 +490,7 @@ git_command() {
 
 cleanup() {
   local status=$?
+  local database_path suffix sidecar
 
   if [[ -n "$STAGE_DIR" && -d "$STAGE_DIR" ]]; then
     case "$STAGE_DIR" in
@@ -518,6 +524,17 @@ cleanup() {
         ;;
     esac
   fi
+  for database_path in ${RESTORE_COMPLETED_DATABASES[@]+"${RESTORE_COMPLETED_DATABASES[@]}"}; do
+    for suffix in -wal -shm -journal; do
+      sidecar="$RESTORE_TARGET_ROOT/${database_path}${suffix}"
+      if [[ -L "$sidecar" || -f "$sidecar" ]]; then
+        rm -f -- "$sidecar" ||
+          echo "WARNING: could not remove the stale restored database sidecar: ${database_path}${suffix}" >&2
+      elif [[ -e "$sidecar" ]]; then
+        echo "WARNING: refusing to remove a non-regular restored database sidecar: ${database_path}${suffix}" >&2
+      fi
+    done
+  done
 
   if [[ -n "$LOCK_FD" ]]; then
     exec {LOCK_FD}>&-
@@ -2604,7 +2621,7 @@ run_restore() {
   local target_real receipt receipt_json receipt_schema base_id patch_id database_id database_path database_mode database_target check_output
   local manifest_id snapshots_json size_bytes path_info path_count index db_index
   local scope_is_database=0 databases_selected=0 step_count step_bytes
-  local -a whole_ids=() step_ids=() step_includes=() step_ls_paths=()
+  local -a whole_ids=() step_ids=() step_includes=() step_ls_paths=() step_db_paths=()
   local -a db_paths=() db_ids=() db_modes=() restored_db_paths=() restored_db_modes=()
   local -A db_id_members=() db_id_planned=() restored_db_set=()
 
@@ -2765,14 +2782,23 @@ run_restore() {
     return
   fi
 
+  RESTORE_TARGET_ROOT=$target_real
   for index in "${!step_ids[@]}"; do
-    # An older base snapshot can contain the same database the receipt lists
-    # in a later batch. --overwrite never would keep that stale main file and
-    # skip the consistent copy, so remove the receipt-listed path first.
+    # The selected databases this step writes: all of a wholly restored
+    # snapshot, or only the one a scoped step includes. Earlier steps' databases
+    # are never touched again.
+    step_db_paths=()
     for db_index in "${!db_paths[@]}"; do
       [[ "${db_ids[$db_index]}" == "${step_ids[$index]}" ]] || continue
       database_path=${db_paths[$db_index]}
       [[ -n "${restored_db_set[$database_path]+set}" ]] || continue
+      [[ -z "${step_includes[$index]}" || "$database_path" == "${step_ls_paths[$index]}" ]] || continue
+      step_db_paths+=("$database_path")
+    done
+    # An older base snapshot can contain the same database the receipt lists
+    # in a later batch. --overwrite never would keep that stale main file and
+    # skip the consistent copy, so remove the receipt-listed path first.
+    for database_path in ${step_db_paths[@]+"${step_db_paths[@]}"}; do
       database_target="$target_real/$database_path"
       remove_restored_database_sidecars "$database_path" "$database_target"
       [[ -e "$database_target" || -L "$database_target" ]] || continue
@@ -2783,6 +2809,12 @@ run_restore() {
     done
     restic_repository_command restore "${step_ids[$index]}" --target "$target_real" --overwrite never \
       ${step_includes[$index]:+--include "${step_includes[$index]}"}
+    RESTORE_COMPLETED_DATABASES+=(${step_db_paths[@]+"${step_db_paths[@]}"})
+    # This step may be the file-phase snapshot applied after a restored
+    # database; clear its sidecars before the next step can fail.
+    for database_path in ${RESTORE_COMPLETED_DATABASES[@]+"${RESTORE_COMPLETED_DATABASES[@]}"}; do
+      remove_restored_database_sidecars "$database_path" "$target_real/$database_path"
+    done
     if [[ -z "$scope" && "$index" -eq 0 ]]; then
       receipt="$target_real/BACKUP-RECEIPT.json"
       [[ -f "$receipt" && ! -L "$receipt" ]] ||
@@ -2791,8 +2823,6 @@ run_restore() {
   done
   for index in "${!restored_db_paths[@]}"; do
     database_path="${restored_db_paths[$index]}"
-    # The file-phase snapshot may have been applied after this database.
-    remove_restored_database_sidecars "$database_path" "$target_real/$database_path"
     [[ -f "$target_real/$database_path" && ! -L "$target_real/$database_path" ]] ||
       die "Restored database is missing or unsafe: $database_path"
     chmod "${restored_db_modes[$index]}" "$target_real/$database_path"
