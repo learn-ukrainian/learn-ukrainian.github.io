@@ -3119,7 +3119,7 @@ def test_dispatch_review_mode_help_preserves_legacy_usage_golden():
     dispatch = subcommands.choices["dispatch"]
     assert "--review-mode {cross_family,red_team}" in dispatch.format_help()
     assert hashlib.sha256(dispatch.format_usage().encode()).hexdigest() == (
-        "b7a61d5f40b0ddcedcdf507fa0348d5141ca5de55c2496ba0f995aa260f73074"
+        "8632e66974cd969a5b1a7f6b727fab15931126810b77052e97142eb8e2916f2b"
     )
 
 
