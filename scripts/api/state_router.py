@@ -2097,7 +2097,8 @@ def compute_routing_budget(
     )
     budget["transport"] = transport
     # Per-account view (#10630): additive, display only. ``agents.claude`` stays
-    # the default-account lane and no routing decision reads these rows.
+    # the default-account lane and no routing decision reads these rows. The
+    # endpoint re-reads them on every serve (``_with_live_claude_accounts``).
     budget.update(claude_account_routing_fields())
     if transport == "dispatch":
         return budget
@@ -2185,16 +2186,28 @@ def compute_routing_budget(
     return budget
 
 
+def _with_live_claude_accounts(payload: object) -> object:
+    """A served copy whose per-account Claude rows are aged now (#10630).
+
+    Those rows carry their own freshness, so a stored snapshot never freezes
+    them; the stored payload itself is not modified.
+    """
+    if not isinstance(payload, dict):
+        return payload
+    return {**payload, **claude_account_routing_fields()}
+
+
 def _aged_routing_budget(payload: object, age_s: float) -> object:
     """Publish the real age of a stored routing snapshot without adding keys.
 
     Within the stale threshold the recommendation stays, marked stale. Past
     that threshold the snapshot must not authorize a lane. The threshold is
-    compared to source age plus time spent in this cache.
+    compared to source age plus time spent in this cache. Per-account Claude
+    rows are read live, never from the stored snapshot.
     """
     if not isinstance(payload, dict):
         return payload
-    served = dict(payload)
+    served = {**payload, **claude_account_routing_fields()}
     diagnostics = payload.get("diagnostics")
     threshold = ROUTING_BUDGET_MAX_AGE_S
     reported_age = age_s
@@ -2315,10 +2328,10 @@ async def routing_budget(
     if stored is not None:
         value, age_s = stored
         if age_s < ROUTING_BUDGET_TTL_S:
-            return value
+            return _with_live_claude_accounts(value)
         schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute)
         return _aged_routing_budget(value, age_s)
-    return await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
+    return _with_live_claude_accounts(await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute))
 
 
 @router.get("/github-budget")

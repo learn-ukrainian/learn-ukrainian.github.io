@@ -507,6 +507,30 @@ def test_routing_page_renders_one_row_per_claude_account():
     assert "claude_account_binding_missing" in row_c[7]
 
 
+def test_routing_page_shows_withheld_claude_accounts_as_unknown():
+    unknown_window = dict.fromkeys(("left_pct", "resets_at", "pace", "pace_delta_pct", "leftover_pct"))
+    withheld = {
+        "session5h": unknown_window,
+        "weekly": unknown_window,
+        "updated": None,
+        "age_s": None,
+        "stale": False,
+        "status": "unknown",
+        "reason": "account_ambiguous",
+    }
+    table = _render_claude_accounts(
+        {"claude_accounts": {"claude:a": withheld, "claude:b": withheld}, "preferred_claude_account": None}
+    )
+    rows = [_cells(row) for row in table.split("<tr>")[2:]]
+    assert len(rows) == 2
+    for cells in rows:
+        assert ">unknown<" in cells[1]
+        assert all("unknown" in cell for cell in cells[2:7])
+        assert not any("%" in cell for cell in cells[2:7])
+        assert "account_ambiguous" in cells[7]
+    assert "more weekly leftover" not in table
+
+
 def test_routing_page_claude_accounts_absent_payload_renders_placeholder():
     table = _render_claude_accounts({"agents": {}})
     assert "No per-account data." in table

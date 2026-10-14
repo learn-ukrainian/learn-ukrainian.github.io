@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
@@ -1056,15 +1057,17 @@ _LEGACY_CLAUDE_LANE_KEYS = frozenset(
         "weekly_cap_usd",
     }
 )
-_ACCOUNT_DIRS = {"a": Path("/fixture/claude-a"), "b": Path("/fixture/claude-b")}
 _ACCOUNT_EMAIL = "owner-do-not-leak@example.invalid"
+_ACCOUNT_UUIDS = {"a": "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a", "b": "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"}
 
 
-def _account_payload(weekly_used: float, weekly_expected: float) -> bytes:
+def _account_payload(label: str, weekly_used: float, weekly_expected: float, *, updated: datetime) -> bytes:
+    email = f"{label}-{_ACCOUNT_EMAIL}"
     return json.dumps(
         [
             {
                 "provider": "claude",
+                "source": "oauth",
                 "accountId": "0f0e0d0c-0b0a-4908-8706-050403020100",
                 "pace": {
                     "primary": {"expectedUsedPercent": 50, "deltaPercent": -10, "summary": "10% in reserve"},
@@ -1075,28 +1078,43 @@ def _account_payload(weekly_used: float, weekly_expected: float) -> bytes:
                     },
                 },
                 "usage": {
-                    "updatedAt": "2026-10-14T14:00:00Z",
+                    "updatedAt": updated.isoformat(timespec="seconds").replace("+00:00", "Z"),
                     "primary": {"usedPercent": 30, "resetsAt": "2026-10-14T18:00:00Z"},
                     "secondary": {"usedPercent": weekly_used, "resetsAt": "2026-10-18T07:00:00Z"},
-                    "accountEmail": _ACCOUNT_EMAIL,
-                    "identity": {"accountEmail": _ACCOUNT_EMAIL},
+                    "accountEmail": email,
+                    "identity": {"accountEmail": email},
                 },
             }
         ]
     ).encode()
 
 
-def _populate_accounts(monkeypatch, *, b_fails: bool = False) -> None:
+def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:
+    """A fixture home (label ``a``) and a second Claude directory, each recording its own account."""
+    home = tmp_path / "account-home"
+    dirs = {"a": home / ".claude", "b": tmp_path / "account-b"}
+    for label, directory in dirs.items():
+        directory.mkdir(parents=True, exist_ok=True)
+        record = home / ".claude.json" if label == "a" else directory / ".claude.json"
+        record.write_text(json.dumps({"oauthAccount": {"accountUuid": _ACCOUNT_UUIDS[label]}}))
+        record.chmod(0o600)
+    monkeypatch.setenv("HOME", str(home))
+    return dirs
+
+
+def _populate_accounts(monkeypatch, tmp_path: Path, *, b_fails: bool = False, age_s: float = 0.0) -> None:
     """Fill the per-account cache from fixtures, as the background refresh would."""
+    dirs = _account_dirs(monkeypatch, tmp_path)
+    updated = datetime.now(UTC) - timedelta(seconds=age_s)
 
     def run(codexbar, env, *, timeout_s, max_bytes):
-        if env["CLAUDE_CONFIG_DIR"] == str(_ACCOUNT_DIRS["b"]):
+        if env["CLAUDE_CONFIG_DIR"] == str(dirs["b"]):
             if b_fails:
                 raise claude_account_usage._ProbeFailed("timeout")
-            return _account_payload(20, 47)
-        return _account_payload(74, 47)
+            return _account_payload("b", 20, 47, updated=updated)
+        return _account_payload("a", 74, 47, updated=updated)
 
-    monkeypatch.setattr(claude_account_usage, "account_config_dir", lambda label: _ACCOUNT_DIRS[label])
+    monkeypatch.setattr(claude_account_usage, "account_config_dir", lambda label: dirs[label])
     monkeypatch.setattr(claude_account_usage, "_codexbar_bin", lambda: "/fixture/bin/codexbar")
     monkeypatch.setattr(claude_account_usage, "_run_codexbar", run)
     claude_account_usage.refresh_claude_account_usage()
@@ -1112,7 +1130,7 @@ def _routing_client(tmp_path: Path) -> TestClient:
 # Fails on origin/main: the payload has no ``claude_accounts`` key.
 def test_endpoint_publishes_one_row_per_claude_account(monkeypatch, tmp_path):
     _configure(monkeypatch, tmp_path, [])
-    _populate_accounts(monkeypatch)
+    _populate_accounts(monkeypatch, tmp_path)
 
     response = _routing_client(tmp_path).get("/api/state/routing-budget")
 
@@ -1132,7 +1150,7 @@ def test_endpoint_publishes_one_row_per_claude_account(monkeypatch, tmp_path):
 
 def test_endpoint_stays_200_when_one_account_probe_fails(monkeypatch, tmp_path):
     _configure(monkeypatch, tmp_path, [])
-    _populate_accounts(monkeypatch, b_fails=True)
+    _populate_accounts(monkeypatch, tmp_path, b_fails=True)
 
     response = _routing_client(tmp_path).get("/api/state/routing-budget")
 
@@ -1148,7 +1166,7 @@ def test_endpoint_stays_200_when_one_account_probe_fails(monkeypatch, tmp_path):
 
 def test_endpoint_payload_carries_no_account_identity_or_path(monkeypatch, tmp_path):
     _configure(monkeypatch, tmp_path, [])
-    _populate_accounts(monkeypatch)
+    _populate_accounts(monkeypatch, tmp_path)
 
     response = _routing_client(tmp_path).get("/api/state/routing-budget")
     body = response.text
@@ -1160,9 +1178,12 @@ def test_endpoint_payload_carries_no_account_identity_or_path(monkeypatch, tmp_p
         _ACCOUNT_EMAIL,
         "example.invalid",
         "0f0e0d0c-0b0a-4908-8706-050403020100",
-        "/fixture/claude-",
+        *_ACCOUNT_UUIDS.values(),
+        str(tmp_path),
+        "account-b",
         "accountEmail",
         "accountId",
+        "accountUuid",
         "CLAUDE_CONFIG_DIR",
         "config_dir",
     ):
@@ -1195,10 +1216,11 @@ def test_request_path_never_spawns_the_account_probe(monkeypatch, tmp_path):
 def test_legacy_claude_lane_is_unchanged_by_account_rows(monkeypatch, tmp_path):
     """Legacy readers see the same default-account lane with or without the new rows."""
     _configure(monkeypatch, tmp_path, [])
+    _account_dirs(monkeypatch, tmp_path)  # same fixture home for both computations
     now = datetime(2026, 10, 14, 15, 0, tzinfo=UTC)
 
     without_rows = state_router.compute_routing_budget(now=now, tasks_dir=tmp_path / "tasks")
-    _populate_accounts(monkeypatch)
+    _populate_accounts(monkeypatch, tmp_path)
     with_rows = state_router.compute_routing_budget(now=now, tasks_dir=tmp_path / "tasks")
 
     assert set(without_rows["agents"]["claude"]) == _LEGACY_CLAUDE_LANE_KEYS
@@ -1220,3 +1242,45 @@ def test_withdrawn_snapshot_clears_the_account_preference():
     withdrawn = state_router._withdraw_routing_authorization(payload)
     assert withdrawn["preferred_claude_account"] is None
     assert withdrawn["claude_accounts"] == {"claude:a": {"status": "ok"}}
+
+
+# Fails on b62a4a3243: a warm routing snapshot served the account rows frozen at compute time.
+def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+    client = _routing_client(tmp_path)
+
+    first = client.get("/api/state/routing-budget").json()
+    assert first["claude_accounts"]["claude:b"]["status"] == "ok"
+    assert first["preferred_claude_account"] == "b"
+
+    claude_account_usage._record("b", None, "timeout")  # the next background probe of b fails
+    warm = client.get("/api/state/routing-budget").json()
+
+    assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
+    assert warm["claude_accounts"]["claude:b"]["status"] == "stale"
+    assert warm["claude_accounts"]["claude:b"]["reason"] == "timeout"
+    assert warm["preferred_claude_account"] is None
+
+
+# Fails on b62a4a3243: a 710 s old sample served 60 s later still reported ``ok``,
+# its frozen age, and the account preference, past the 720 s account TTL.
+def test_aged_snapshot_reads_account_freshness_at_serve_time(monkeypatch, tmp_path):
+    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "720")
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path, age_s=710)
+    fields = claude_account_usage.routing_budget_fields()
+    assert {row["status"] for row in fields["claude_accounts"].values()} == {"ok"}
+    assert fields["preferred_claude_account"] == "b"
+    snapshot = {**fields, "diagnostics": {"data_age_s": 0, "stale_threshold_s": 900}}
+
+    served_at = time.time() + 60
+    monkeypatch.setattr(time, "time", lambda: served_at)
+    served = state_router._aged_routing_budget(snapshot, 60)
+
+    row_b = served["claude_accounts"]["claude:b"]
+    assert row_b["status"] == "stale"
+    assert row_b["reason"] == "expired"
+    assert row_b["age_s"] >= 770
+    assert served["preferred_claude_account"] is None
+    assert snapshot["claude_accounts"] is fields["claude_accounts"]  # the stored snapshot is not mutated
