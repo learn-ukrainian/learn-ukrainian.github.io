@@ -2467,6 +2467,20 @@ def _skip_if_sparse_tree_missing(item: pytest.Item) -> None:
         raise pytest.skip.Exception(reason, _use_item_location=True)
 
 
+class _SparseTreeSkip:
+    """Own setup hook, so ``pytest_runtest_setup`` below stays self-contained.
+
+    Tests call that hook with marker-only doubles or copy its source into an
+    isolated conftest; neither has to supply what the sparse check reads.
+    ``tryfirst`` keeps the skip ahead of the conftest checks and fixtures,
+    where pytest's skip-mark evaluation ran it before.
+    """
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_runtest_setup(self, item: pytest.Item) -> None:
+        _skip_if_sparse_tree_missing(item)
+
+
 class _FlakeRerunReporter:
     """Keep successful reruns visible in both xunit2 and the Actions summary."""
 
@@ -2606,6 +2620,7 @@ def pytest_configure(config: pytest.Config) -> None:
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
+    config.pluginmanager.register(_SparseTreeSkip(), "sparse-tree-skip")
     if hasattr(config, "workerinput"):
         collected_path = config.workerinput.get(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR)
     else:
@@ -2646,7 +2661,6 @@ def pytest_configure(config: pytest.Config) -> None:
 
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
-    _skip_if_sparse_tree_missing(item)
     if item.get_closest_marker("site_toolchain"):
         site_modules = Path(__file__).resolve().parents[1] / "site" / "node_modules"
         if not site_modules.is_dir():

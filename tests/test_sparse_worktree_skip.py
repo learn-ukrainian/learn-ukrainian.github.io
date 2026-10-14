@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import inspect
 import sys
-from types import ModuleType
+from pathlib import Path
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
@@ -216,10 +218,14 @@ class _Item:
         self.markers.append(marker.name)
 
 
-def test_sparse_skip_is_decided_at_run_time_not_collection(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_sparse_skip_is_decided_at_run_time_not_collection(
+    monkeypatch: pytest.MonkeyPatch, pytestconfig: pytest.Config
+) -> None:
     """Collection analyzes no module; only a test that runs is checked (#10498)."""
     monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "data/projects")
     conftest = _conftest()
+    setup = pytestconfig.pluginmanager.get_plugin("sparse-tree-skip")
+    assert isinstance(setup, conftest._SparseTreeSkip)
     reader = _Item("tests/projects/open_model_data/test_mine.py", "test_mine")
     unrelated = _Item("tests/api/test_unrelated.py", "test_unrelated")
 
@@ -232,9 +238,29 @@ def test_sparse_skip_is_decided_at_run_time_not_collection(monkeypatch: pytest.M
     assert "skip" not in reader.markers + unrelated.markers
 
     with pytest.raises(pytest.skip.Exception, match="--sparse-include data/projects") as skipped:
-        conftest.pytest_runtest_setup(reader)
+        setup.pytest_runtest_setup(reader)
     assert skipped.value._use_item_location
-    assert conftest.pytest_runtest_setup(unrelated) is None
+    assert setup.pytest_runtest_setup(unrelated) is None
+
+
+def test_conftest_setup_hook_takes_marker_only_doubles_in_a_sparse_tree(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Direct callers pass a double with only get_closest_marker (tests/storage/test_needs_artifact_hook.py)."""
+    monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "data/projects,data/lexicon")
+    item = SimpleNamespace(get_closest_marker=lambda name: None)
+    assert _conftest().pytest_runtest_setup(item) is None
+
+
+def test_conftest_setup_hook_source_runs_in_an_isolated_conftest(tmp_path: Path) -> None:
+    """tests/build/test_fresh_page_safety.py copies the hook's source under only Path and pytest."""
+    source = inspect.getsource(_conftest().pytest_runtest_setup)
+    namespace: dict[str, object] = {"Path": Path, "pytest": pytest, "__file__": str(tmp_path / "tests/conftest.py")}
+    exec(compile(source, "isolated_conftest.py", "exec"), namespace)
+    copied = namespace["pytest_runtest_setup"]
+    marker = pytest.mark.site_toolchain.mark
+
+    assert copied(SimpleNamespace(get_closest_marker=lambda name: None)) is None
+    with pytest.raises(pytest.fail.Exception, match="site_toolchain requires site/node_modules"):
+        copied(SimpleNamespace(get_closest_marker=lambda name: marker if name == "site_toolchain" else None))
 
 
 def test_item_paths_resolve_once_per_module() -> None:
