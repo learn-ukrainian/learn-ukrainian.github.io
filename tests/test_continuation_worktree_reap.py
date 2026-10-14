@@ -290,7 +290,17 @@ def test_merged_continuations_closeout_without_force(cohort, monkeypatch, case, 
 
 @pytest.mark.parametrize("case", ["C", "E"])
 @pytest.mark.parametrize(
-    "failure", ["dirty", "unpushed", "unmerged", "head_not_merged", "running", "branch", "two_creators", "live_pid"]
+    "failure",
+    [
+        "dirty",
+        "unpushed",
+        "unmerged",
+        "head_not_merged",
+        "running",
+        "branch",
+        "two_creators_without_source_head",
+        "live_pid",
+    ],
 )
 def test_continuation_failures_keep_tree_and_records(cohort, monkeypatch, case, failure):
     repo, tree, tasks, _, successor, source = continuation(cohort, case)
@@ -308,8 +318,16 @@ def test_continuation_failures_keep_tree_and_records(cohort, monkeypatch, case, 
             successor["status"] = "running"
         elif failure == "branch":
             successor["worktree_branch"] = "codex/other"
-        elif failure == "two_creators":
+        elif failure == "two_creators_without_source_head":
             successor["worktree_reused"] = False
+            rw = reap.reap_worktrees
+            head = _git(tree, "rev-parse", "HEAD")
+            monkeypatch.setattr(
+                rw,
+                "_query_pr_states",
+                lambda *_: ([rw.PullRequestState(9645, "MERGED", head, head_from_commit_search=True)], None),
+            )
+            monkeypatch.setattr(rw, "_query_pr_by_number", lambda *_: ([], "source head unavailable"))
         else:
             successor["pid"] = os.getpid()
         save(tasks, successor)
@@ -319,6 +337,29 @@ def test_continuation_failures_keep_tree_and_records(cohort, monkeypatch, case, 
     assert row.action == "skipped", row
     assert tree.exists() and source.read_bytes() == b"current output"
     assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("case", ["C", "E"])
+def test_10606_existing_continuation_multiple_creators_reap_at_source_head(cohort, case):
+    repo, tree, tasks, _, successor, source = continuation(cohort, case)
+    successor["worktree_reused"] = False
+    save(tasks, successor)
+    before = {p: json.loads(p.read_bytes()) for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+        if r.path == str(tree)
+    )
+    assert row.action == "removed", row.reason
+    assert not tree.exists()
+    receipt = row.preserved_artifacts
+    assert receipt["merged_head_proof"]["head_relation"] == "exact"
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    for path, member in before.items():
+        current = json.loads(path.read_bytes())
+        assert current["status"] == member["status"]
+        assert current["worktree_reused"] == member["worktree_reused"]
 
 
 def test_D_force_new_history_does_not_replace_creator_or_release_proof(cohort):
@@ -1483,6 +1524,160 @@ def same_branch_pending_cohort(cohort):
         member.update(keep_worktree=False, status="needs_finalize", final_branch_head_commit=head)
         save(tasks, member)
     return repo, tree, tasks, creator, successor, source
+
+
+@pytest.fixture(params=[0, 2], ids=["zero-creators", "multiple-creators"])
+def exact_merged_ambiguous_cohort(same_branch_pending_cohort, monkeypatch, request):
+    repo, tree, tasks, creator, successor, source = same_branch_pending_cohort
+    _git(repo, "remote", "set-url", "origin", "https://github.com/acme/widget.git")
+    for member in (creator, successor):
+        member["worktree_reused"] = request.param == 0
+        save(tasks, member)
+    rw = reap.reap_worktrees
+    head = _git(tree, "rev-parse", "HEAD")
+    monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(10606, "MERGED", head)], None))
+    return repo, tree, tasks, creator, successor, source
+
+
+def test_10606_exact_merged_head_replaces_single_creator(exact_merged_ambiguous_cohort, monkeypatch):
+    repo, tree, tasks, _, _, source = exact_merged_ambiguous_cohort
+    rw = reap.reap_worktrees
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    plan = next(r for r in rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set()) if r.path == str(tree))
+    assert plan.action == "would_remove", plan.reason
+    assert {p: p.read_bytes() for p in before} == before
+    calls = []
+    remove = claims.git_worktree_remove
+
+    def ordinary_remove(*args, **kwargs):
+        calls.append(kwargs["force"])
+        return remove(*args, **kwargs)
+
+    monkeypatch.setattr(claims, "git_worktree_remove", ordinary_remove)
+    row = next(r for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()) if r.path == str(tree))
+    assert row.action == "removed", row.reason
+    assert calls == [False] and not tree.exists()
+    receipt = row.preserved_artifacts
+    assert receipt["merged_head_proof"]["head_relation"] == "exact"
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    for path, data in before.items():
+        current = json.loads(path.read_bytes())
+        prior = json.loads(data)
+        assert current["status"] == prior["status"]
+        assert current["worktree_reused"] == prior["worktree_reused"]
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "dirty",
+        "live_pid",
+        "missing_pid",
+        "running",
+        "keep",
+        "ignored_output",
+        "source_branch",
+        "squash_head",
+        "merge_group_head",
+        "commit_search",
+        "open_pr",
+        "live_activity",
+        "live_cwd",
+        "lease",
+    ],
+)
+def test_10606_exact_merged_head_preserves_refusals(exact_merged_ambiguous_cohort, monkeypatch, failure):
+    repo, tree, tasks, creator, successor, source = exact_merged_ambiguous_cohort
+    rw = reap.reap_worktrees
+    head = _git(tree, "rev-parse", "HEAD")
+    if failure == "dirty":
+        (tree / "README.md").write_bytes(b"unpreserved unique bytes")
+    elif failure == "live_pid":
+        successor["pid"] = os.getpid()
+    elif failure == "missing_pid":
+        successor.pop("pid")
+    elif failure == "running":
+        successor["status"] = "running"
+    elif failure == "keep":
+        creator["keep_worktree"] = True
+    elif failure == "ignored_output":
+        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 0)
+    elif failure == "source_branch":
+        successor["worktree_branch"] = "codex/different-source"
+    elif failure in {"squash_head", "merge_group_head"}:
+        parents = ["-p", head]
+        if failure == "merge_group_head":
+            other = _git(tree, "commit-tree", f"{head}^{{tree}}", "-m", "independent merge-group parent")
+            parents += ["-p", other]
+        replacement = _git(tree, "commit-tree", f"{head}^{{tree}}", *parents, "-m", failure)
+        _git(tree, "reset", "--hard", replacement)
+    elif failure == "commit_search":
+        monkeypatch.setattr(
+            rw,
+            "_query_pr_states",
+            lambda *_: ([rw.PullRequestState(10606, "MERGED", head, head_from_commit_search=True)], None),
+        )
+        monkeypatch.setattr(rw, "_query_pr_by_number", lambda *_: ([], "source head unavailable"))
+    elif failure == "open_pr":
+        monkeypatch.setattr(
+            rw,
+            "_query_pr_states",
+            lambda *_: ([rw.PullRequestState(10606, "MERGED", head), rw.PullRequestState(10607, "OPEN", head)], None),
+        )
+    elif failure == "live_activity":
+        monkeypatch.setattr(rw, "_read_active_task_probe", lambda: {creator["task_id"]})
+    elif failure == "live_cwd":
+        monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: {tree})
+    else:
+        successor["lease"] = {"state": "active"}
+    save(tasks, creator)
+    save(tasks, successor)
+    row = next(
+        r for r in rw.reap_worktrees(repo_root=repo, apply=True, preserve_then_reap=False) if r.path == str(tree)
+    )
+    assert row.action == "skipped", row.reason
+    assert tree.exists() and source.read_bytes() == b"current output"
+    if failure == "dirty":
+        assert (tree / "README.md").read_bytes() == b"unpreserved unique bytes"
+        plan = next(
+            r for r in rw.reap_worktrees(repo_root=repo, apply=False, preserve_then_reap=True) if r.path == str(tree)
+        )
+        assert plan.action in {"skipped", "would_preserve_then_remove"}, plan.reason
+    if failure == "ignored_output":
+        assert "exceeds preservation cap" in row.reason
+
+
+@pytest.mark.parametrize("change", ["head", "branch", "cohort", "live_pid", "keep"])
+def test_10606_exact_merged_head_rechecks_under_lock(exact_merged_ambiguous_cohort, monkeypatch, change):
+    repo, tree, tasks, _, successor, source = exact_merged_ambiguous_cohort
+    rw = reap.reap_worktrees
+    guard = rw._enter_dispatch_worktree_guard
+    entered = []
+
+    def change_after_guard(*args, **kwargs):
+        result = guard(*args, **kwargs)
+        assert result is None
+        entered.append(True)
+        if change == "head":
+            _git(tree, "commit", "--allow-empty", "-m", "changed under lock")
+        elif change == "branch":
+            _git(tree, "checkout", "-b", "codex/changed-under-lock")
+        else:
+            if change == "cohort":
+                successor["worktree_branch"] = "codex/other"
+            elif change == "live_pid":
+                successor["pid"] = os.getpid()
+            else:
+                successor["keep_worktree"] = True
+            save(tasks, successor)
+        return result
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", change_after_guard)
+    row = next(r for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()) if r.path == str(tree))
+    assert entered == [True]
+    assert row.action == "skipped", row.reason
+    assert tree.exists() and source.read_bytes() == b"current output"
 
 
 @pytest.mark.parametrize("relation", ["exact", "ancestor"])
