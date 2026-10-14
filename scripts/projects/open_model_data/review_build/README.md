@@ -468,3 +468,31 @@ toward several source totals. `licence-notices.jsonl` covers only kept records'
 sources and attribution variants; a full pinned register remains available for
 provenance. No candidates or unfiltered build metrics are copied. The exported
 artifact remains `review_only`, with no new training-readiness claim.
+
+## WP3 card ingestion
+
+Issue #9821's C3/C4 source extraction lives in `components/c3_relations.py`,
+`c3_sum20_meaning.py`, and `c4_phraseology.py`. Each module exposes
+`iter_card_units(ComponentContext(reader, request))` over the held `sources.db`
+read transaction. These inputs remain outside direct RB-1 registration, as
+required by the word-card plan's W1b/W3 boundary.
+
+A `CardUnit` retains its complete `Candidate`, source row key, parent entry or
+article key, printed group key and source order. A group key identifies source
+evidence; it never assigns a card sense by position. Withheld units retain their
+reason and cited source payload. Assembly owns lexeme mapping, persistent card
+and sense identities, and promotion to accepted card facts.
+
+SUM20 ingestion reads every numbered sense of each unquarantined article in
+source order, with the complete definition, labels and that sense's own ordered
+citations. The training catalog's requirement for discriminating examples does
+not restrict ingestion. ULIF relations retain the reviewed printed-discriminator
+rule; phraseology requires a printed idiom, a nonempty definition and author
+labels on every extracted quotation. Missing or ambiguous evidence stays withheld.
+
+`unit.project(ctx)` rechecks field hashes, verbatim values, source identities,
+quarantine and operation bindings against the held snapshot before returning the
+candidate. The shared official attribution adapters authenticate the full forms
+in `docs/sources/permissions-register.yaml`. Synthetic tests cover extraction,
+projection equivalence and refusal cases; pilot assembly and host-only product
+verification remain the accountable driver's W1b/W3 work.
