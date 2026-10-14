@@ -1472,3 +1472,76 @@ def test_git_only_resolver_never_reads_pointer_files(tmp_path, monkeypatch):
     monkeypatch.setattr(Path, "read_text", refuse)
     monkeypatch.setattr(Path, "read_bytes", refuse)
     assert reap.reap_worktrees._checkout_pr_repository(tree) == repo
+
+
+@pytest.fixture
+def same_branch_pending_cohort(cohort):
+    repo, tree, tasks, creator, successor, source = cohort
+    head = _git(tree, "rev-parse", "HEAD")
+    for member in (creator, successor):
+        member.update(keep_worktree=False, status="needs_finalize", final_branch_head_commit=head)
+        save(tasks, member)
+    return repo, tree, tasks, creator, successor, source
+
+
+@pytest.mark.parametrize("relation", ["exact", "ancestor"])
+def test_same_branch_pending_cohort_plan(same_branch_pending_cohort, monkeypatch, relation):
+    repo, tree, tasks, creator, successor, source = same_branch_pending_cohort
+    rw = reap.reap_worktrees
+    head = _git(tree, "rev-parse", "HEAD")
+    reviewed = head
+    if relation == "ancestor":
+        _git(tree, "commit", "--allow-empty", "-m", "later reviewed head")
+        reviewed = _git(tree, "rev-parse", "HEAD")
+        _git(tree, "reset", "--hard", head)
+    monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(9645, "MERGED", reviewed)], None))
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(r for r in rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set()) if r.path == str(tree))
+    assert row.action == "would_remove", row
+    assert {p: p.read_bytes() for p in before} == before
+    for member in (creator, successor):
+        assert rw._merged_reuse_claim_proven_settled(repo, tree, member, tasks_dir=tasks) is not None
+    with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
+        proof = rw._record_merged_reuse_proof(
+            repo, rw.WorktreeInfo(tree, "codex/boundary", head),
+            rw.PullRequestState(9645, "MERGED", reviewed), tasks_dir=tasks,
+        )
+    assert proof["schema"] == "merged-reuse-reap.v1"
+    assert proof["head_sha"] == head and proof["head_relation"] == relation
+    assert source.read_bytes() == b"current output"
+
+
+@pytest.mark.parametrize("failure", ["live_pid", "keep", "unmerged", "head_mismatch", "running", "unknown_pid"])
+def test_same_branch_pending_cohort_refusals(same_branch_pending_cohort, monkeypatch, failure):
+    repo, tree, tasks, creator, successor, source = same_branch_pending_cohort
+    rw = reap.reap_worktrees
+    if failure == "live_pid":
+        successor["pid"] = os.getpid()
+    elif failure == "keep":
+        successor["keep_worktree"] = True
+    elif failure == "unmerged":
+        monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(9645, "OPEN", tree.name)], None))
+    elif failure == "head_mismatch":
+        successor["final_branch_head_commit"] = "f" * 40
+    elif failure == "running":
+        successor["status"] = "running"
+    else:
+        successor.pop("pid")
+    save(tasks, successor)
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    assert rw._merged_reuse_claim_proven_settled(repo, tree, creator, tasks_dir=tasks) is None
+    with contextlib.ExitStack() as stack:
+        reason = rw._enter_dispatch_worktree_guard(
+            stack, repo_root=repo,
+            info=rw.WorktreeInfo(tree, "codex/boundary", _git(tree, "rev-parse", "HEAD")),
+        )
+    if failure == "unmerged":
+        assert reason == "active task boundary needs_finalize merge proof unavailable"
+    elif failure != "keep":
+        assert reason == "worktree claimed by active task successor"
+    row = next(r for r in rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set()) if r.path == str(tree))
+    assert row.action == "skipped", row
+    if failure == "keep":
+        assert "ambiguous worktree task attribution with retention intent" in row.reason
+    assert {p: p.read_bytes() for p in before} == before
+    assert tree.exists() and source.read_bytes() == b"current output"

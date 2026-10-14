@@ -3405,18 +3405,59 @@ def _released_reuse_claim_proven_settled(
     return None
 
 
+def _same_branch_merged_cohort(
+    info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
+) -> bool:
+    """Settle inactive same-branch rounds without requiring a done successor."""
+    if (
+        not info.branch
+        or not info.head
+        or pr is None
+        or pr.state != "MERGED"
+        or pr.head_from_commit_search
+        or not pr.head_sha
+        or _worktree_clean(info.path) is not True
+        or not _pr_matches_worktree_head(info, pr)
+    ):
+        return False
+    branch = worktree_claims.checked_out_branch(info.path)
+    tip = _run(["git", "rev-parse", "--verify", f"refs/heads/{info.branch}"], cwd=info.path)
+    return bool(
+        branch == info.branch
+        and tip.returncode == 0
+        and tip.stdout.strip() == info.head
+        and len(cohort) >= 2
+        and all(
+            member.get("status") in _TERMINAL_DISPATCH_STATUSES
+            and not member.get("keep_worktree")
+            and member.get("lease_state") != "active"
+            and not (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
+            and member.get("worktree_branch") == info.branch
+            and _needs_finalize_claim_identity(member) is not None
+            and _pid_proven_absent(member)
+            and _sha_is_ancestor(info.path, member["final_branch_head_commit"], info.head)
+            for _, member in cohort
+        )
+    )
+
+
 def _continuation_head_is_merged(
     info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
 ) -> bool:
     """Prove an exact PR head, or a detached cohort's complete earlier lineage.
 
-    Ancestry is admitted only with a clean checkout and a done successor at
-    that checkout head. Every current record must have a complete identity
-    and a recorded commit contained in it; missing Git objects fail closed.
-    Commit-search membership alone is never a PR-head proof.
+    Pending same-branch cohorts require a clean checkout at its branch tip,
+    absent workers, and complete contained identities. Detached ancestry
+    additionally requires a done successor at that checkout head. Missing
+    Git objects and commit-search membership alone are never proof.
     """
     if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
         return False
+    if info.branch and any(
+        member.get("worktree_reused") is True and member.get("status") == "needs_finalize"
+        for _, member in cohort
+    ):
+        return _same_branch_merged_cohort(info, pr, cohort)
     if pr.head_sha == info.head:
         return True
     branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=info.path)
@@ -3518,8 +3559,8 @@ def _resolve_merged_reuse_creator(
 ) -> tuple[Path, dict[str, Any], bool]:
     """Return ``(path, creator, alternate)``.
 
-    ``alternate`` is the switched-branch binding. The strict attributer still
-    decides every cohort whose checkout branch matches the creator's record.
+    ``alternate`` is the switched-branch binding. Pending same-branch rounds
+    additionally require the complete merged-cohort proof before removal.
     """
     from scripts.fleet import ignored_task_output
 
@@ -3529,10 +3570,32 @@ def _resolve_merged_reuse_creator(
         )
     except ValueError:
         structural = _switched_branch_structural_cohort(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
-        if structural is None:
+        if structural is not None:
+            path, creator = structural
+            return path, creator, True
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+        creators = [item for item in cohort if ignored_task_output.record_created_worktree(item[1])]
+        branch = worktree_claims.checked_out_branch(worktree)
+        if (
+            len(creators) != 1
+            or len(cohort) < 2
+            or not branch
+            or any(member.get("keep_worktree") for _, member in matches)
+            or _retention_release_present(matches)
+            or any(
+                member.get("worktree_branch") != branch
+                or member.get("status") not in _TERMINAL_DISPATCH_STATUSES
+                or (member is not creators[0][1] and member.get("worktree_reused") is not True)
+                or not isinstance(member.get("worktree_path") or member.get("cwd"), str)
+                or worktree_claims.resolve_claim_path(
+                    member.get("worktree_path") or member.get("cwd"), repo_root=repo_root
+                ) != worktree.resolve(strict=True)
+                for _, member in cohort
+            )
+        ):
             raise
-        path, creator = structural
-        return path, creator, True
+        path, creator = creators[0]
+        return path, creator, False
     return path, creator, False
 
 
@@ -3755,13 +3818,17 @@ def _merged_reuse_claim_proven_settled(
             if _switched_branch_merge_proven(repo_root, worktree, cohort):
                 return matches
             return None
-        if creator != record:
-            return None
         head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
         if head.returncode != 0:
             return None
         branch = worktree_claims.checked_out_branch(worktree)
         info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
+        if branch is not None:
+            states, error = _query_pr_states(repo_root, branch)
+            if error is None and _same_branch_merged_cohort(info, _best_pr(states), cohort):
+                return matches
+        if creator != record:
+            return None
         for _, successor in cohort:
             if (
                 successor.get("worktree_reused") is True
