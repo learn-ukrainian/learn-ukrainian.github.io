@@ -62,8 +62,11 @@ def is_transient_sqlite_path(path: Path, relative: str) -> bool:
 
 
 def _should_prune(directory: Path, name: str, project: Path) -> bool:
-    if name == "__pycache__" or name.endswith("-home"):
+    if name == "__pycache__":
         return True
+    if name.endswith("-home"):
+        parent = directory.relative_to(project).as_posix()
+        return parent == "batch_state" or parent.startswith("batch_state/")
     if name.endswith(".snapshots"):
         parent = directory.relative_to(project).as_posix()
         return any(parent == root or parent.startswith(f"{root}/") for root in SNAPSHOT_EXCLUDE_ROOTS)

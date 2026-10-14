@@ -828,12 +828,14 @@ snapshot_path_is_excluded() {
 
 # Every allowlist content walk prunes the same trees restic excludes:
 # task snapshot directories, bytecode, ephemeral homes, and staging.
+# Ephemeral homes are pruned only under batch_state, the approved boundary.
 allowlist_find() {
   local root=$1
   shift
 
   find_pruning_snapshot_dirs "$root" \
-    \( -type d \( -name '__pycache__' -o -name '*-home' \) -prune \) -o \
+    \( -type d -name '__pycache__' -prune \) -o \
+    \( -type d -path "$PROJECT_ROOT/batch_state/*" -name '*-home' -prune \) -o \
     \( -type d -path "$PROJECT_ROOT/batch_state/review-receipts/*" -name home -prune \) -o \
     \( -path "$TMP_ROOT" -prune \) -o \
     "$@"
