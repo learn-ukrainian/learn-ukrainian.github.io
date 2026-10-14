@@ -52,6 +52,7 @@ from scripts.common.acp_runtime_lock import (
 from scripts.common.acp_runtime_lock import (
     parse_lock_owner as parse_acp_lock_owner,
 )
+from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
@@ -1102,6 +1103,42 @@ def _pr_matches_worktree_head(
     if pr_state.head_sha == info.head:
         return True
     return _sha_is_ancestor(info.path, info.head, pr_state.head_sha)
+
+
+def _merged_equivalent(info: WorktreeInfo, pr: PullRequestState | None) -> bool:
+    """Prove every checkout patch against an authoritative merged PR head.
+
+    Cherry omits merges, so divergent merge commits must refuse this class.
+    Missing objects, malformed output and dirty checkouts are not proof.
+    """
+    if (
+        pr is None
+        or pr.state != "MERGED"
+        or pr.head_from_commit_search
+        or not pr.head_sha
+        or not info.head
+        or _worktree_clean(info.path) is not True
+    ):
+        return False
+    for sha in (info.head, pr.head_sha):
+        obj = _run(["git", "cat-file", "-t", sha], cwd=info.path)
+        if obj.returncode != 0 or obj.stdout.strip() != "commit":
+            return False
+    merges = _run(["git", "rev-list", "--min-parents=2", f"{pr.head_sha}..{info.head}"], cwd=info.path)
+    if merges.returncode != 0 or merges.stdout.strip():
+        return False
+    cherry = _run(["git", "cherry", pr.head_sha, info.head], cwd=info.path)
+    return bool(
+        cherry.returncode == 0 and all(re.fullmatch(r"- [a-f0-9]{40}", line) for line in cherry.stdout.splitlines())
+    )
+
+
+def _merged_head_relation(info: WorktreeInfo, pr: PullRequestState) -> str:
+    if pr.head_sha == info.head:
+        return "exact"
+    if info.head and pr.head_sha and _sha_is_ancestor(info.path, info.head, pr.head_sha):
+        return "ancestor"
+    return "patch-equivalent"
 
 
 def _tip_is_ancestor_of_origin_main(info: WorktreeInfo) -> bool:
@@ -2259,18 +2296,56 @@ def _common_git_dir(repo_root: Path, *, timeout: float | None = None) -> Path:
     return path.resolve()
 
 
+DEFAULT_REAP_LOCK_TIMEOUT_S = 30.0
+
+
 class _ReapLock:
     def __init__(self, repo_root: Path) -> None:
         self.path = _common_git_dir(repo_root) / "worktree-reaper.lock"
         self.handle: Any = None
 
     def __enter__(self) -> None:
-        self.handle = self.path.open("a+", encoding="utf-8")
         try:
-            fcntl.flock(self.handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError as exc:
+            with contextlib.ExitStack() as cleanup:
+                directory = os.open(self.path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+                cleanup.callback(os.close, directory)
+                descriptor = safe_open_below(directory, self.path.name, os.O_RDWR | os.O_CREAT)
+                try:
+                    if os.fstat(descriptor).st_nlink != 1:
+                        raise RuntimeError("unsafe reaper lock: hardlinked file")
+                    self.handle = os.fdopen(descriptor, "r+", encoding="utf-8")
+                except BaseException:
+                    os.close(descriptor)
+                    raise
+        except OSError as exc:
+            raise RuntimeError(f"reaper lock unavailable or unsafe: {exc}") from exc
+        deadline = time.monotonic() + DEFAULT_REAP_LOCK_TIMEOUT_S
+        try:
+            while True:
+                try:
+                    fcntl.flock(self.handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError as exc:
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        self.handle.seek(0)
+                        try:
+                            raw_pid = self.handle.read(32).strip()
+                        except UnicodeError:
+                            raw_pid = ""
+                        holder = raw_pid if raw_pid.isascii() and raw_pid.isdigit() else "unknown"
+                        raise RuntimeError(
+                            f"another worktree cleanup holds {self.path}; holder pid={holder}; "
+                            f"waited {DEFAULT_REAP_LOCK_TIMEOUT_S:g}s"
+                        ) from exc
+                    time.sleep(min(0.05, remaining))
+            self.handle.seek(0)
+            self.handle.truncate()
+            self.handle.write(str(os.getpid()))
+            self.handle.flush()
+        except BaseException:
             self.handle.close()
-            raise RuntimeError(f"another worktree cleanup holds {self.path}") from exc
+            raise
 
     def __exit__(self, _exc_type: Any, _exc: Any, _tb: Any) -> None:
         if self.handle is not None:
@@ -3010,6 +3085,8 @@ def _qualifying_reason(
                 return None
             if _tip_is_ancestor_of_origin_main(info):
                 return f"{pr_label} MERGED; HEAD is an ancestor of origin/main"
+            if include_terminal_dispatches and _merged_equivalent(info, pr_state):
+                return f"{pr_label} MERGED; patch-equivalent"
             # A squash merge may leave a divergent local tip. Prove every
             # patch is upstream before allowing cleanup of a deleted branch.
             if info.branch is not None and not _origin_branch_present(info.path, info.branch):
@@ -3459,7 +3536,11 @@ def _same_branch_merged_cohort(
 
 
 def _continuation_head_is_merged(
-    info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
+    info: WorktreeInfo,
+    pr: PullRequestState | None,
+    cohort: list[tuple[Path, dict[str, Any]]],
+    *,
+    allow_equivalent: bool = False,
 ) -> bool:
     """Prove an exact PR head, or a detached cohort's complete earlier lineage.
 
@@ -3470,6 +3551,12 @@ def _continuation_head_is_merged(
     """
     if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
         return False
+    if allow_equivalent and not _pr_matches_worktree_head(info, pr) and _merged_equivalent(info, pr):
+        return bool(cohort) and all(
+            _needs_finalize_claim_identity(member) is not None
+            and _sha_is_ancestor(info.path, member["final_branch_head_commit"], info.head)
+            for _, member in cohort
+        )
     if info.branch and any(
         member.get("worktree_reused") is True and member.get("status") == "needs_finalize" for _, member in cohort
     ):
@@ -3526,6 +3613,14 @@ def _switched_branch_structural_cohort(
 
     cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
     creators = [item for item in cohort if ignored_task_output.record_created_worktree(item[1])]
+    if any(
+        isinstance(member.get("worktree_reap_proof"), dict)
+        and member["worktree_reap_proof"].get("head_relation") == "patch-equivalent"
+        for _, member in cohort
+    ):
+        # Preservation must consume and revalidate the patch proof, rather
+        # than entering the older exact-head switched-branch path.
+        return None
     if len(creators) != 1 or len(cohort) < 2:
         return None
     if any(member.get("keep_worktree") for _, member in matches) or _retention_release_present(matches):
@@ -3572,6 +3667,7 @@ def _resolve_merged_reuse_creator(
     *,
     repo_root: Path,
     tasks_dir: Path,
+    merged_pr: PullRequestState | None = None,
 ) -> tuple[Path, dict[str, Any], bool]:
     """Return ``(path, creator, alternate)``.
 
@@ -3585,6 +3681,33 @@ def _resolve_merged_reuse_creator(
             matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
         )
     except ValueError:
+        if merged_pr is not None and _checkout_pr_repository(worktree) is not None:
+            cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+            creators = [item for item in cohort if ignored_task_output.record_created_worktree(item[1])]
+            head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+            branch = worktree_claims.checked_out_branch(worktree)
+            info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
+            if (
+                len(creators) == 1
+                and len(cohort) >= 2
+                and head.returncode == 0
+                and not any(member.get("keep_worktree") for _, member in matches)
+                and not _retention_release_present(matches)
+                and not _pr_matches_worktree_head(info, merged_pr)
+                and _merged_equivalent(info, merged_pr)
+                and all(
+                    member.get("status") in _TERMINAL_DISPATCH_STATUSES
+                    and (member is creators[0][1] or member.get("worktree_reused") is True)
+                    and member.get("lease_state") != "active"
+                    and not (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
+                    and _pid_proven_absent(member)
+                    and _needs_finalize_claim_identity(member) is not None
+                    and _sha_is_ancestor(worktree, member["final_branch_head_commit"], info.head)
+                    for _, member in cohort
+                )
+            ):
+                path, creator = creators[0]
+                return path, creator, False
         structural = _switched_branch_structural_cohort(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
         if structural is not None:
             path, creator = structural
@@ -3803,10 +3926,20 @@ def _preservation_merged_creator(
     """Consume the reaper's proof using current identities and local Git under its lock."""
     from scripts.fleet import ignored_task_output as output
 
-    path, creator, alternate = _resolve_merged_reuse_creator(
-        matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+    creators = [
+        item for item in output._current_reuse_records(matches, tasks_dir) if output.record_created_worktree(item[1])
+    ]
+    if len(creators) != 1:
+        raise ValueError("merged continuation preservation owner unavailable")
+    proof = creators[0][1].get("worktree_reap_proof")
+    proof_pr = (
+        PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"))
+        if isinstance(proof, dict)
+        else None
     )
-    proof = creator.get("worktree_reap_proof")
+    path, creator, alternate = _resolve_merged_reuse_creator(
+        matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=proof_pr
+    )
     cohort = output._current_reuse_records(matches, tasks_dir)
     if alternate or not isinstance(proof, dict) or proof.get("schema") != "merged-reuse-reap.v1":
         raise ValueError("merged continuation preservation proof unavailable")
@@ -3821,7 +3954,7 @@ def _preservation_merged_creator(
         or head.stdout.strip() != info.head
         or proof.get("clean") is not True
         or _worktree_clean(worktree) is not True
-        or proof.get("head_relation") != ("exact" if pr.head_sha == info.head else "ancestor")
+        or proof.get("head_relation") != _merged_head_relation(info, pr)
         or any(member.get("keep_worktree") for _, member in matches)
         or _retention_release_present(matches)
         or not all(
@@ -3842,7 +3975,9 @@ def _preservation_merged_creator(
             }
             for _, member in cohort
         ]
-        or not _continuation_head_is_merged(info, pr, cohort)
+        or not _continuation_head_is_merged(
+            info, pr, cohort, allow_equivalent=proof.get("head_relation") == "patch-equivalent"
+        )
     ):
         raise ValueError("merged continuation preservation proof changed")
     return path, creator
@@ -3894,11 +4029,31 @@ def _merged_reuse_claim_proven_settled(
                 matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
             )
         except ValueError:
-            return None
+            branch = worktree_claims.checked_out_branch(worktree)
+            pr_repo = _checkout_pr_repository(worktree)
+            if pr_repo is None:
+                return None
+            states, error = _query_pr_states(pr_repo, branch) if branch else ([], None)
+            if error is not None:
+                return None
+            _, creator, alternate = _resolve_merged_reuse_creator(
+                matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=_best_pr(states)
+            )
         if alternate:
             if _switched_branch_merge_proven(repo_root, worktree, cohort):
                 return matches
-            return None
+            branch = worktree_claims.checked_out_branch(worktree)
+            pr_repo = _checkout_pr_repository(worktree)
+            if pr_repo is None:
+                return None
+            states, error = _query_pr_states(pr_repo, branch) if branch else ([], None)
+            if error is not None:
+                return None
+            _, creator, alternate = _resolve_merged_reuse_creator(
+                matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=_best_pr(states)
+            )
+            if alternate:
+                return None
         head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
         if head.returncode != 0:
             return None
@@ -3906,7 +4061,13 @@ def _merged_reuse_claim_proven_settled(
         info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
         if branch is not None:
             states, error = _query_pr_states(repo_root, branch)
-            if error is None and _same_branch_merged_cohort(info, _best_pr(states), cohort):
+            if error is None and (
+                _same_branch_merged_cohort(info, _best_pr(states), cohort)
+                or (
+                    _merged_equivalent(info, _best_pr(states))
+                    and _continuation_head_is_merged(info, _best_pr(states), cohort, allow_equivalent=True)
+                )
+            ):
                 return matches
         if creator != record:
             return None
@@ -3927,7 +4088,12 @@ def _merged_reuse_claim_proven_settled(
 
 
 def _record_merged_reuse_proof(
-    repo_root: Path, info: WorktreeInfo, pr: PullRequestState | None, *, tasks_dir: Path
+    repo_root: Path,
+    info: WorktreeInfo,
+    pr: PullRequestState | None,
+    *,
+    tasks_dir: Path,
+    allow_equivalent: bool = False,
 ) -> dict[str, Any] | None:
     """Record merged-head containment proof under the caller's worktree lock.
 
@@ -3944,7 +4110,7 @@ def _record_merged_reuse_proof(
     if len(cohort) < 2 or any(member.get("keep_worktree") for _, member in matches):
         return None
     path, creator, alternate = _resolve_merged_reuse_creator(
-        matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir
+        matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=pr
     )
     if alternate:
         proven_head = _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head)
@@ -3955,7 +4121,7 @@ def _record_merged_reuse_proof(
             if _retention_release_present(matches):
                 return None  # Preserve #9940's explicit receipt-release path.
             raise ValueError("continuation requires a proven merged PR head containing the checkout")
-    elif not _continuation_head_is_merged(info, pr, cohort):
+    elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
         if _retention_release_present(matches):
             return None  # Preserve #9940's explicit receipt-release path.
         raise ValueError("continuation requires a proven merged PR head containing the checkout")
@@ -3979,7 +4145,7 @@ def _record_merged_reuse_proof(
         "run_nonce": creator["run_nonce"],
         "head_sha": info.head,
         "pr_head_sha": pr.head_sha,
-        "head_relation": "exact" if pr.head_sha == info.head else "ancestor",
+        "head_relation": _merged_head_relation(info, pr),
         "pr_number": pr.number,
         "pr_state": pr.state,
         "clean": True,
@@ -4012,14 +4178,14 @@ def _record_merged_reuse_proof(
         if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
             raise ValueError("checkout changed before merged-head proof")
         rebound_path, rebound_creator, rebound_alternate = _resolve_merged_reuse_creator(
-            matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir
+            matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=pr
         )
         if rebound_path != path or rebound_creator != creator or rebound_alternate != alternate:
             raise ValueError("continuation records changed before merged-head proof")
         if alternate:
             if not _switched_branch_merge_proven(repo_root, info.path, cohort, expected_head=info.head):
                 raise ValueError("continuation ancestry changed before merged-head proof")
-        elif not _continuation_head_is_merged(info, pr, cohort):
+        elif not _continuation_head_is_merged(info, pr, cohort, allow_equivalent=allow_equivalent):
             raise ValueError("continuation ancestry changed before merged-head proof")
         reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
     return proof
@@ -4240,7 +4406,11 @@ def _reap_qualified_worktree(
                     raise ValueError("terminal-abandon proof disappeared")
             elif len(cohort) > 1:
                 _creator_path, _creator, alternate = _resolve_merged_reuse_creator(
-                    matches, info.path, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
+                    matches,
+                    info.path,
+                    repo_root=control_root,
+                    tasks_dir=task_store_paths.tasks_dir(),
+                    merged_pr=pr_state,
                 )
                 if any(member.get("keep_worktree") for _, member in matches):
                     raise ValueError("keep_worktree intent set; retrieval and owner release required")
@@ -4259,7 +4429,9 @@ def _reap_qualified_worktree(
                         raise ValueError("continuation requires a proven merged PR head containing the checkout")
                 else:
                     released = _retention_release_present(matches)
-                    if not released and not _continuation_head_is_merged(info, pr_state, cohort):
+                    if not released and not _continuation_head_is_merged(
+                        info, pr_state, cohort, allow_equivalent=reason.endswith("MERGED; patch-equivalent")
+                    ):
                         raise ValueError("continuation requires a proven merged PR head containing the checkout")
         except (OSError, ValueError, RuntimeError) as exc:
             return ReapResult(
@@ -4560,6 +4732,16 @@ def _reap_qualified_worktree(
                         pr=_pr_dict(pr_state),
                     )
 
+            if reason.endswith("MERGED; patch-equivalent") and not _merged_equivalent(info, pr_state):
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="merged-equivalent Git proof changed during cleanup",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+
             if reason.endswith("MERGED; origin branch gone"):
                 assert pr_state is not None
                 proved, detail = origin_gone if origin_gone is not None else (False, "origin-gone proof was not taken")
@@ -4774,7 +4956,13 @@ def _reap_qualified_worktree(
             merged_reuse_proof = (
                 None
                 if abandoning
-                else _record_merged_reuse_proof(control_root, info, pr_state, tasks_dir=task_store_paths.tasks_dir())
+                else _record_merged_reuse_proof(
+                    control_root,
+                    info,
+                    pr_state,
+                    tasks_dir=task_store_paths.tasks_dir(),
+                    allow_equivalent=reason.endswith("MERGED; patch-equivalent"),
+                )
             )
         except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
             detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
@@ -4791,7 +4979,7 @@ def _reap_qualified_worktree(
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
         approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
         target = info.path
-        if merged_reuse_proof is not None:
+        if merged_reuse_proof is not None or reason.endswith("MERGED; patch-equivalent"):
             try:
                 target = assert_delete_target(info.path, repo_root=repo_root, **approval)
             except ValueError as exc:
@@ -4809,7 +4997,7 @@ def _reap_qualified_worktree(
         remove_error = worktree_claims.git_worktree_remove(
             repo_root,
             target,
-            force=merged_reuse_proof is None,
+            force=merged_reuse_proof is None and not reason.endswith("MERGED; patch-equivalent"),
             control_root=control_root,
             task_id=_dispatch_task_id(repo_root, info),
             tasks_dir=task_store_paths.tasks_dir(),

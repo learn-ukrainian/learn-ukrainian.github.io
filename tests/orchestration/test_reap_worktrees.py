@@ -2902,13 +2902,73 @@ def test_p0_dynamic_cap_ceiling_stops_run_in_apply_mode(
     assert Path(blocked[0].path).exists()
 
 
+@pytest.mark.parametrize("include_terminal_dispatches", [False, True])
 def test_merged_pr_same_tree_divergent_commit_is_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    include_terminal_dispatches: bool,
 ) -> None:
-    """An identical tree at a commit the merged PR does not contain stays."""
+    """An identical tree with patch-distinct history is not deletion proof."""
     repo = init_repo(tmp_path)
     branch = "codex/occupancy-fresh"
+    worktree = add_worktree(repo, branch)
+    git(worktree, "push", "-u", "origin", branch)
+    git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
+    (worktree / "README.md").write_text("patch-distinct work\n")
+    git(worktree, "add", "README.md")
+    git(worktree, "commit", "-m", "unmerged change")
+    git(worktree, "revert", "--no-edit", "HEAD")
+    tree = git(worktree, "rev-parse", "HEAD^{tree}")
+    parent = git(repo, "rev-parse", "main")
+    pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
+    patch_gh(
+        monkeypatch,
+        {branch: [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
+    )
+    head = git(worktree, "rev-parse", "HEAD")
+    cherry_outputs: list[str] = []
+    real_run = rw._run
+
+    def record_cherry(args, **kwargs):
+        proc = real_run(args, **kwargs)
+        if args == ["git", "cherry", pr_head, head]:
+            cherry_outputs.append(proc.stdout)
+        return proc
+
+    monkeypatch.setattr(rw, "_run", record_cherry)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+            include_terminal_dispatches=include_terminal_dispatches,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.branch_pruned is False
+    assert "same tree as PR #7067 head; not deletion proof" in (result.reason or "")
+    if include_terminal_dispatches:
+        assert cherry_outputs, "patch-equivalent proof was not exercised"
+        assert all(any(line.startswith("+ ") for line in output.splitlines()) for output in cherry_outputs)
+    else:
+        assert cherry_outputs == []
+    assert worktree.exists()
+    assert git(repo, "rev-parse", "--verify", branch)
+
+
+@pytest.mark.parametrize("include_terminal_dispatches", [False, True])
+def test_merged_pr_same_tree_empty_commit_flag_controls_equivalent_cleanup(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    include_terminal_dispatches: bool,
+) -> None:
+    """Empty sibling commits qualify only with patch-equivalent cleanup enabled."""
+    repo = init_repo(tmp_path)
+    branch = "codex/empty-sibling"
     worktree = add_worktree(repo, branch)
     git(worktree, "push", "-u", "origin", branch)
     git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
@@ -2923,16 +2983,21 @@ def test_merged_pr_same_tree_divergent_commit_is_kept(
     result = result_for(
         rw.reap_worktrees(
             repo_root=repo,
-            apply=True,
+            apply=False,
             live_cwds=set(),
             prune_merged_branches=True,
+            include_terminal_dispatches=include_terminal_dispatches,
         ),
         worktree,
     )
 
-    assert result.action == "skipped"
+    if include_terminal_dispatches:
+        assert result.action == "would_remove"
+        assert result.reason == "PR #7067 MERGED; patch-equivalent"
+    else:
+        assert result.action == "skipped"
+        assert "same tree as PR #7067 head; not deletion proof" in (result.reason or "")
     assert result.branch_pruned is False
-    assert "same tree as PR #7067 head; not deletion proof" in (result.reason or "")
     assert worktree.exists()
     assert git(repo, "rev-parse", "--verify", branch)
 
@@ -8058,3 +8123,78 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
         entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
         assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
         assert state["preserved_artifacts"]["count"] == 2
+
+
+def test_10593_reaper_lock_waits_and_names_holder(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.15, raising=False)
+    holder = rw._ReapLock(repo)
+    with holder:
+        inode = holder.path.stat().st_ino
+        start = time.monotonic()
+        with pytest.raises(RuntimeError, match=rf"holder pid={os.getpid()}"):
+            with rw._ReapLock(repo):
+                pytest.fail("contending lock was acquired")
+        elapsed = time.monotonic() - start
+        assert 0.12 <= elapsed < 2
+        assert holder.path.stat().st_ino == inode
+        assert holder.handle is not None and not holder.handle.closed
+    with rw._ReapLock(repo):
+        assert holder.path.stat().st_ino == inode
+
+
+def test_10593_reaper_lock_acquires_after_release(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 1.0, raising=False)
+    holder = rw._ReapLock(repo)
+    holder.__enter__()
+    timer = threading.Timer(0.1, holder.__exit__, args=(None, None, None))
+    timer.start()
+    try:
+        with rw._ReapLock(repo):
+            timer.join(timeout=1)
+            assert holder.handle.closed
+    finally:
+        timer.join()
+        if not holder.handle.closed:
+            holder.__exit__(None, None, None)
+
+
+@pytest.mark.parametrize("entry", ["symlink", "fifo", "hardlink", "directory"])
+def test_reaper_lock_refuses_unsafe_entry_without_mutating_it(tmp_path, entry):
+    repo = init_repo(tmp_path)
+    sentinel = repo / "sentinel.txt"
+    sentinel.write_bytes(b"preserve these bytes\n")
+    lock = repo / ".git/worktree-reaper.lock"
+    if entry == "symlink":
+        lock.symlink_to(sentinel)
+    elif entry == "fifo":
+        os.mkfifo(lock)
+    elif entry == "hardlink":
+        os.link(sentinel, lock)
+    else:
+        lock.mkdir()
+    inode = lock.lstat().st_ino
+    started = time.monotonic()
+    with pytest.raises(RuntimeError, match=r"unsafe|unavailable"):
+        with rw._ReapLock(repo):
+            pytest.fail("unsafe lock entry was acquired")
+    assert time.monotonic() - started < 1
+    assert sentinel.read_bytes() == b"preserve these bytes\n"
+    assert lock.lstat().st_ino == inode
+
+
+@pytest.mark.parametrize("metadata", [b"\xff", b"not a pid"])
+def test_reaper_lock_malformed_legacy_pid_is_unknown(tmp_path, monkeypatch, metadata):
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.05)
+    lock = repo / ".git/worktree-reaper.lock"
+    with lock.open("wb") as holder:
+        holder.write(metadata)
+        holder.flush()
+        fcntl.flock(holder.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(RuntimeError, match="holder pid=unknown"):
+            with rw._ReapLock(repo):
+                pytest.fail("legacy holder was displaced")
+        assert not holder.closed
+        assert lock.read_bytes() == metadata
