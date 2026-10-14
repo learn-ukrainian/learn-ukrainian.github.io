@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 import signal
+import stat
 import sys
 import threading
 import time
@@ -543,6 +544,46 @@ def test_probe_passes_only_the_sanitized_environment(fake_probe, account_dirs, m
     assert len(sandboxes) == 2
     assert not any(Path(sandbox).exists() for sandbox in sandboxes)
     assert {env["CLAUDE_CONFIG_DIR"] for env in calls} == {str(path) for path in account_dirs.values()}
+
+
+@pytest.mark.parametrize(
+    "outcome",
+    [
+        None,
+        cau._ProbeFailed("timeout"),
+        cau.ClaudeAccountRefused("claude_account_unverified"),
+        RuntimeError("unexpected"),
+    ],
+    ids=["success", "probe_failed", "account_refused", "unexpected"],
+)
+def test_probe_sandbox_is_private_managed_scratch_removed_however_the_probe_ends(
+    fake_probe, tmp_path, monkeypatch, outcome
+):
+    scratch_root = tmp_path / "scratch-root"
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
+    seen: list[tuple[Path, int]] = []
+
+    def run(codexbar, env, *, timeout_s, max_bytes):
+        sandbox = Path(env["HOME"])
+        seen.append((sandbox, sandbox.stat().st_mode))
+        (sandbox / "cache-entry").write_text("probe state")
+        if outcome is not None:
+            raise outcome
+        return json.dumps(_payload_a()).encode()
+
+    monkeypatch.setattr(cau, "_run_codexbar", run)
+    if outcome is None:
+        row, _ = cau.probe_account("a")
+        assert row["session5h"]["left_pct"] == 93.0
+    else:
+        with pytest.raises(type(outcome)):
+            cau.probe_account("a")
+    [(sandbox, mode)] = seen
+    assert sandbox.parent == scratch_root
+    assert sandbox.name.startswith("lu-claude-usage-")
+    assert stat.S_IMODE(mode) == 0o700
+    assert not sandbox.exists()
+    assert list(scratch_root.iterdir()) == []
 
 
 def test_missing_codexbar_is_unknown(monkeypatch, account_dirs):

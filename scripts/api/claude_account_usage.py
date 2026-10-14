@@ -62,10 +62,10 @@ import json
 import math
 import os
 import selectors
+import shutil
 import signal
 import stat
 import subprocess
-import tempfile
 import threading
 import time
 from collections.abc import Iterator, Mapping
@@ -89,6 +89,7 @@ from scripts.agent_runtime.attempt_boundary import (
     load_claude_account_binding,
 )
 from scripts.api.subscription_usage import _codexbar_bin, _codexbar_cache_ttl_s, _parse_resets_at_any
+from scripts.common.scratch import make_scratch_dir
 
 PROBE_TIMEOUT_S = 60.0
 MAX_OUTPUT_BYTES = 1024 * 1024
@@ -582,6 +583,17 @@ def _attribute(binding: _Binding, payload: Any) -> _Accounts:
     return _Accounts(binding.watch, fingerprints, named=bool(named))
 
 
+@contextlib.contextmanager
+def _probe_sandbox() -> Iterator[Path]:
+    """A private (0700) directory under the fleet scratch root for one probe,
+    removed when the probe ends, however it ends."""
+    sandbox = make_scratch_dir(prefix="lu-claude-usage-")
+    try:
+        yield sandbox
+    finally:
+        shutil.rmtree(sandbox, ignore_errors=True)
+
+
 def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[dict[str, Any], _Accounts]:
     """One bounded probe for one label: its row and what the row is attributed to.
 
@@ -597,8 +609,8 @@ def probe_account(label: str, *, timeout_s: float = PROBE_TIMEOUT_S) -> tuple[di
         if not codexbar:
             raise _ProbeFailed("missing_binary")
         started = time.time()
-        with tempfile.TemporaryDirectory(prefix="lu-claude-usage-", ignore_cleanup_errors=True) as sandbox:
-            env = child_env(binding.config_dir, sandbox=Path(sandbox))
+        with _probe_sandbox() as sandbox:
+            env = child_env(binding.config_dir, sandbox=sandbox)
             raw = _run_codexbar(codexbar, env, timeout_s=timeout_s, max_bytes=MAX_OUTPUT_BYTES)
         # The held directory cannot be freed and its identity reused, so the same
         # generation means the directory and account the probe ended on are the
