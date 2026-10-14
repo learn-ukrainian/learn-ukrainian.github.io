@@ -97,27 +97,65 @@ account label. The default label, or none, leaves the host login and the
 plan untouched. For another label an ordinary run sets ``CLAUDE_CONFIG_DIR``
 to that account's verified login directory, and ``env_sanitize`` makes it the
 only credential source in the environment. Claude Code then applies settings
-files after that environment is built, so the settings path is closed too:
+files after that environment is built, so those are closed too.
 
-- The binding checks refuse, value-free, a login directory whose user
-  ``settings.json`` sets a key helper or any credential, provider or endpoint
-  variable (``attempt_boundary``), as well as any conflicting ambient
-  credential, before the plan is built.
-- The run passes ``--setting-sources project,local``: nothing from the login
-  directory's user scope loads. That scope's env, key helper, hooks,
-  permission rules, plugins and user MCP servers (kept in its ``.claude.json``)
-  do not apply, so a labelled run gets the harness flags and the checkout's
-  settings only, never more authority than a default run. Probed on Claude
-  Code 2.1.299 with fixtures: excluding the user scope drops its API key, key
-  helper, endpoint and MCP servers.
-- After the plan is prepared, ``claude auth status --json`` runs with the
-  same settings arguments, working directory and environment, and the run is
-  refused unless it reports the subscription login, first-party provider and
-  the bound directory. This covers the scopes a labelled run still loads:
-  managed policy and the checkout's project and local files (including a
-  linked worktree's main-checkout local file), which in the probe could
-  select a key helper or a cloud provider. Key, token and endpoint variables
-  in project or local scope were not applied by the CLI in the same probe.
+Threat model. The label is accounting and attribution for load balancing,
+not an isolation boundary against a hostile process of the same user. What
+is closed is accidental or latent misconfiguration: a key, key helper,
+endpoint, proxy or provider switch left in the labelled login directory, or
+in a scope the labelled run still loads, silently changing which credential,
+endpoint or provider the run uses without the dispatch noticing. Anyone who
+can write the same user's configuration files can change a run after its
+checks; that is out of scope, as is an edit made while the run is running.
+
+Construction (probed on Claude Code 2.1.300 with fixtures only):
+
+- Allowlists, not lists of bad names (``attempt_boundary``). The login
+  directory's global config (``.claude.json``) is the one file there a
+  labelled run still loads, and Claude Code applies its ``env`` map over the
+  process environment whatever the setting sources; every name in that map
+  must be on ``CLAUDE_LABELLED_ENV_ALLOWLIST``. A legacy ``.config.json``,
+  which Claude Code would read instead, is refused. The user
+  ``settings.json``, which the run does not load, must carry only allowlisted
+  keys and environment names. Refusals are value-free codes.
+- ``--setting-sources project,local``: nothing from the login directory's
+  user scope loads. Its env, key helper, hooks, permission rules, plugins and
+  user MCP servers do not apply, so a labelled run gets the harness flags and
+  the checkout's settings: no user-scope authority. (Dropping the user scope
+  also drops any restrictive user rules, so this is not a claim of less
+  authority than a default run.)
+- ``claude auth status`` runs with the run's settings arguments, working
+  directory and environment. Its JSON must report the subscription login,
+  first-party provider and bound directory with no key outside an allowlist
+  (a stored or ambient key adds ``apiKeySource``); its text must print no line
+  but the login method, organization and email. The text names each
+  endpoint, proxy, certificate, token, key and provider override in effect
+  (the JSON does not; ``firstParty`` says nothing about the endpoint), so this
+  is the endpoint attestation. It covers managed policy and the checkout's
+  project and local files too. Setting the endpoint variable in the launch
+  environment would not help: the global config's ``env`` is applied over it.
+- Snapshot-then-verify-then-launch, in its strongest available form. The
+  credential file must stay where it is (the CLI rotates its refresh token
+  in place; a copy would invalidate the real login), and Claude Code reads
+  the global config only from that same directory (``CLAUDE_CONFIG_DIR``), so
+  the global config cannot be copied away either; the user settings are not
+  loaded at all, and the checkout's settings must keep loading from the
+  checkout. So instead of a copy, a digest binds every input the
+  verification depended on (``claude_labelled_inputs_digest``): taken before
+  and after the status probes (a change between them refuses), it goes into
+  the plan's argv, and the plan runs the CLI behind
+  ``env_sanitize.run_claude_launch_guard``, which recomputes it in the
+  spawned process and execs the CLI only on a match. The guard runs at every
+  spawn of a plan, and every rebuild (retry, failover, resume) re-verifies
+  and re-binds. The
+  window left is between that last digest and the CLI reading its files
+  (process exec and CLI start-up); exploiting it needs write access to the
+  same user's files, which the threat model excludes. The probe is ``auth
+  status``, not the run's own print/session/model arguments, and the runner
+  adds telemetry and merge-guard variables to the run's environment; neither
+  selects a credential, endpoint or provider. Managed policy and plugin
+  runtime effects beyond what the status reports were not exhaustively
+  exercised.
 
 A token that expires mid-run is the CLI's own refresh path; if that fails the
 run fails. Nothing retries it as another account: the runner's failover
@@ -147,7 +185,7 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
-from ..env_sanitize import CLAUDE_CONFIG_DIR_ENV
+from ..env_sanitize import CLAUDE_CONFIG_DIR_ENV, claude_labelled_inputs_digest
 from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..sources_read_only import sources_tool_sets
@@ -223,7 +261,28 @@ HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "W
 LABELLED_ACCOUNT_SETTING_SOURCES = "project,local"
 # The only effective authentication a labelled account's run may report.
 _LABELLED_AUTH_STATUS = {"loggedIn": True, "authMethod": "claude.ai", "apiProvider": "firstParty"}
+# Every key the JSON status may carry for that login. Claude Code adds
+# ``apiKeySource``, ``allowedProviders`` or ``forcedLoginMethod`` only when a
+# key, provider policy or login policy is in force; each refuses.
+_LABELLED_AUTH_STATUS_KEYS = frozenset(
+    {*_LABELLED_AUTH_STATUS, "analyticsDisabled", "projectsDirectory", "configDirectory"}
+    | {"email", "orgId", "orgName", "subscriptionType"}
+)
+# Every line label the text status may print for that login. It prints a line
+# for each endpoint, proxy, certificate, token, key or provider override in
+# effect (JSON reports none of those), so any other line refuses.
+_LABELLED_STATUS_TEXT_LABELS = frozenset({"Login method", "Organization", "Email"})
 _AUTH_STATUS_TIMEOUT_S = 30
+# Runs ``env_sanitize.run_claude_launch_guard`` from this checkout's code,
+# isolated from the worker's Python environment variables and working
+# directory. That module imports the standard library only, so the guard
+# needs no virtual environment (the runner resolves the interpreter link).
+_LAUNCH_GUARD_CODE = (
+    "import sys; sys.path.insert(0, sys.argv.pop(1)); "
+    "from scripts.agent_runtime.env_sanitize import run_claude_launch_guard; "
+    "run_claude_launch_guard(sys.argv[1:])"
+)
+_CODE_ROOT = Path(__file__).resolve().parents[3]
 _DISALLOWED_TOOLS_FLAGS = ("--disallowedTools", "--disallowed-tools")
 # The wrappers build the child environment and run the argv directly.
 _WRAPPER_OWNED_KWARGS = frozenset({"env", "shell", "executable"})
@@ -905,7 +964,8 @@ class ClaudeAdapter:
             **({CLAUDE_CONFIG_DIR_ENV: account_login_dir} if account_login_dir is not None else {}),
         }
         if account_login_dir is not None:
-            _verify_labelled_auth_method(
+            cmd = _verified_labelled_launch(
+                cmd,
                 probe_prefix,
                 worker_settings,
                 cwd=cwd,
@@ -1069,6 +1129,40 @@ def _claude_account_login_dir(tc: dict[str, Any]) -> str | None:
     return str(binding.config_dir)
 
 
+def _verified_labelled_launch(
+    cmd: list[str],
+    probe_prefix: tuple[str, ...],
+    worker_settings: str,
+    *,
+    cwd: Path,
+    model: str | None,
+    env_overrides: Mapping[str, str],
+    login_dir: str,
+) -> list[str]:
+    """Verify a labelled run's effective login, then bind its settings inputs to the launch (#10619).
+
+    Digest the settings inputs, verify, digest again (they must not change
+    while being verified), and return ``cmd`` behind the launch guard, which
+    recomputes the digest in the spawned process and execs the CLI only on a
+    match. See the module docstring for what the remaining window covers.
+    """
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+    from scripts.common.repo_root import project_interpreter
+
+    def digest() -> str:
+        return claude_labelled_inputs_digest(
+            login_dir=login_dir, cwd=cwd, settings=worker_settings, setting_sources=LABELLED_ACCOUNT_SETTING_SOURCES
+        )
+
+    verified = digest()
+    _verify_labelled_auth_method(
+        probe_prefix, worker_settings, cwd=cwd, model=model, env_overrides=env_overrides, login_dir=login_dir
+    )
+    if digest() != verified:
+        raise ClaudeAccountRefused("claude_account_settings_changed")
+    return [str(project_interpreter()), "-I", "-c", _LAUNCH_GUARD_CODE, str(_CODE_ROOT), verified, "--", *cmd]
+
+
 def _verify_labelled_auth_method(
     probe_prefix: tuple[str, ...],
     worker_settings: str,
@@ -1078,49 +1172,67 @@ def _verify_labelled_auth_method(
     env_overrides: Mapping[str, str],
     login_dir: str,
 ) -> None:
-    """Refuse unless Claude Code reports the run's own subscription login (#10619).
+    """Refuse unless Claude Code reports the run's own subscription login and nothing else (#10619).
 
-    Runs ``claude auth status --json`` with the run's settings arguments, its
-    working directory and the environment the runner builds from the same
-    overrides, so every settings scope the run loads (managed, the checkout's
-    project and local files, ``--settings``) is resolved by Claude Code itself.
-    Its output is parsed, never logged or kept.
+    Runs ``claude auth status`` (JSON, then text) with the run's settings
+    arguments, its working directory and the environment the runner builds
+    from the same overrides, so every settings input the run loads (managed,
+    the login directory's global config, the checkout's project and local
+    files, ``--settings``) is resolved by Claude Code itself. The JSON must
+    name the subscription login, the first-party provider and the bound
+    directory, with no key outside the allowlist; the text must carry no line
+    outside its allowlist, which is what attests the endpoint. Output is
+    parsed, never logged or kept.
     """
     from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
 
     from ..env_sanitize import build_agent_env
 
-    argv = [
-        *probe_prefix,
-        "--settings",
-        worker_settings,
-        "--setting-sources",
-        LABELLED_ACCOUNT_SETTING_SOURCES,
-        "auth",
-        "status",
-        "--json",
-    ]
+    env = build_agent_env(provider="claude", model=model, overrides=env_overrides)
+
+    def status(output: str) -> str:
+        argv = [
+            *probe_prefix,
+            "--settings",
+            worker_settings,
+            "--setting-sources",
+            LABELLED_ACCOUNT_SETTING_SOURCES,
+            "auth",
+            "status",
+            output,
+        ]
+        try:
+            completed = subprocess.run(
+                argv,
+                cwd=cwd,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                capture_output=True,
+                text=True,
+                timeout=_AUTH_STATUS_TIMEOUT_S,
+                check=False,
+            )
+        except (OSError, subprocess.SubprocessError):
+            raise ClaudeAccountRefused("claude_account_auth_status_unavailable") from None
+        return completed.stdout
+
     try:
-        completed = subprocess.run(
-            argv,
-            cwd=cwd,
-            env=build_agent_env(provider="claude", model=model, overrides=env_overrides),
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            text=True,
-            timeout=_AUTH_STATUS_TIMEOUT_S,
-            check=False,
-        )
-        status = json.loads(completed.stdout)
-    except (OSError, subprocess.SubprocessError, ValueError):
+        parsed = json.loads(status("--json"))
+    except ValueError:
         raise ClaudeAccountRefused("claude_account_auth_status_unavailable") from None
-    if not isinstance(status, dict) or "loggedIn" not in status:
+    if not isinstance(parsed, dict) or "loggedIn" not in parsed:
         raise ClaudeAccountRefused("claude_account_auth_status_unavailable")
-    directory = status.get("configDirectory")
-    if any(status.get(key) != value for key, value in _LABELLED_AUTH_STATUS.items()) or not (
-        isinstance(directory, str) and Path(directory) == Path(login_dir)
+    directory = parsed.get("configDirectory")
+    if (
+        any(parsed.get(key) != value for key, value in _LABELLED_AUTH_STATUS.items())
+        or not set(parsed) <= _LABELLED_AUTH_STATUS_KEYS
+        or not (isinstance(directory, str) and Path(directory) == Path(login_dir))
     ):
         raise ClaudeAccountRefused("claude_account_auth_method_conflict")
+    lines = [line for line in status("--text").splitlines() if line.strip()]
+    labels = [line.partition(": ")[0] if ": " in line else None for line in lines]
+    if labels.count("Login method") != 1 or not set(labels) <= _LABELLED_STATUS_TEXT_LABELS:
+        raise ClaudeAccountRefused("claude_account_status_override")
 
 
 def _claude_dir(login_dir: str | None) -> Path:

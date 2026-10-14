@@ -7,10 +7,13 @@ for the provider being invoked, not the full orchestrator environment.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import re
 import shutil
 import signal
+import stat
 import subprocess
 import tempfile
 from collections.abc import Mapping
@@ -116,6 +119,14 @@ _DRIVER_GITHUB_IDENTITY_NAMES = {
 # Claude Code's config directory. Only the Claude adapter's labelled-account
 # override sets it for a claude run (#10619); see build_agent_env.
 CLAUDE_CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR"
+# Claude Code prefers a non-empty legacy global config in that directory over
+# its ``.claude.json``.
+CLAUDE_LEGACY_GLOBAL_CONFIG = ".config.json"
+# Linux managed policy, and the remote policy cache in the config directory.
+_CLAUDE_MANAGED_SETTINGS_DIR = Path("/etc/claude-code")
+_CLAUDE_REMOTE_SETTINGS = "remote-settings.json"
+# The launch guard's exit status when the bound settings changed (EX_CONFIG).
+CLAUDE_LAUNCH_GUARD_EXIT = 78
 
 _PROVIDER_SECRET_ALLOWLIST = {
     "gemini": {
@@ -774,6 +785,142 @@ def _print_unneeded_env_var_names(provider: str, *, harness: str | None = None) 
         if var_name.isidentifier():
             sys.stdout.write(f"{var_name}\n")
     return 0
+
+
+# --- Labelled Claude account: settings inputs bound to the launch (#10619) ---
+
+
+def _file_fingerprint(path: Path) -> str:
+    """A content digest of ``path`` as Claude Code would read it, or why there is none."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC)
+    except FileNotFoundError:
+        return "absent"
+    except OSError:
+        return "unreadable"
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            return "not_regular"
+        digest = hashlib.sha256()
+        while chunk := os.read(fd, 1 << 20):
+            digest.update(chunk)
+        return digest.hexdigest()
+    except OSError:
+        return "unreadable"
+    finally:
+        os.close(fd)
+
+
+def _global_config_env_fingerprint(path: Path) -> str:
+    """The global config's ``env`` map only: Claude Code rewrites the rest at every start."""
+    fingerprint = _file_fingerprint(path)
+    if len(fingerprint) != 64:
+        return fingerprint
+    try:
+        data = json.loads(path.read_bytes())
+    except (OSError, ValueError):
+        return "invalid"
+    env = data.get("env") if isinstance(data, dict) else "invalid"
+    return hashlib.sha256(json.dumps(env, sort_keys=True).encode()).hexdigest()
+
+
+def _checkout_settings_roots(cwd: Path) -> list[Path]:
+    """Every directory whose ``.claude`` project or local settings a run in ``cwd`` may load.
+
+    The working directory, its Git top level and, for a linked worktree, the
+    main checkout (whose local file Claude Code also reads). Read from the
+    ``.git`` files themselves, so the adapter and the launch guard find the
+    same roots whatever ``git`` their ``PATH`` resolves.
+    """
+    roots = [cwd]
+    for top in (cwd, *cwd.parents):
+        marker = top / ".git"
+        if marker.is_dir():
+            roots.append(top)
+            break
+        if marker.is_file():
+            roots.append(top)
+            try:
+                pointer = marker.read_text(encoding="utf-8").strip()
+                gitdir = top / pointer.removeprefix("gitdir:").strip()
+                common = gitdir / (gitdir / "commondir").read_text(encoding="utf-8").strip()
+                roots.append(common.resolve().parent)
+            except (OSError, ValueError):
+                pass
+            break
+    return list(dict.fromkeys(roots))
+
+
+def claude_labelled_inputs_digest(*, login_dir: str, cwd: Path, settings: str, setting_sources: str) -> str:
+    """One digest over every settings input a labelled run's verification depended on (#10619).
+
+    The run's ``--settings`` and ``--setting-sources`` values and login
+    directory; that directory's user settings, global config ``env`` map,
+    legacy global config and remote policy cache; managed policy; and the
+    checkout's project and local settings files. The adapter binds it into
+    the plan; ``run_claude_launch_guard`` recomputes it immediately before the
+    CLI starts.
+    """
+    login, cwd = Path(login_dir), cwd.resolve()  # the guard sees the physical working directory
+    managed_d = _CLAUDE_MANAGED_SETTINGS_DIR / "managed-settings.d"
+    try:
+        drop_ins = sorted(entry.name for entry in os.scandir(managed_d))
+    except FileNotFoundError:
+        drop_ins = []
+    except OSError:
+        drop_ins = ["<unreadable>"]
+    inputs = {
+        "settings": settings,
+        "setting_sources": setting_sources,
+        "login_dir": login_dir,
+        "user_settings": _file_fingerprint(login / "settings.json"),
+        "global_config_env": _global_config_env_fingerprint(login / ".claude.json"),
+        "legacy_global_config": _file_fingerprint(login / CLAUDE_LEGACY_GLOBAL_CONFIG),
+        "remote_settings": _file_fingerprint(login / _CLAUDE_REMOTE_SETTINGS),
+        "managed": _file_fingerprint(_CLAUDE_MANAGED_SETTINGS_DIR / "managed-settings.json"),
+        "managed_drop_ins": {name: _file_fingerprint(managed_d / name) for name in drop_ins},
+        "checkout": {
+            str(root / ".claude" / name): _file_fingerprint(root / ".claude" / name)
+            for root in _checkout_settings_roots(cwd)
+            for name in ("settings.json", "settings.local.json")
+        },
+    }
+    return hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
+
+
+def _option_value(argv: list[str], name: str) -> str | None:
+    """The value after ``name`` among ``argv``'s options (before any ``--``)."""
+    options = argv[: argv.index("--")] if "--" in argv else argv
+    return options[options.index(name) + 1] if name in options[:-1] else None
+
+
+def run_claude_launch_guard(argv: list[str]) -> None:
+    """Exec the labelled Claude CLI only if its bound settings inputs are unchanged (#10619).
+
+    ``argv`` is ``<digest> -- <claude argv>``. Runs in the spawned process
+    itself, so every launch (first spawn, retry, failover rebuild, resume)
+    re-checks just before the CLI reads its files. On a mismatch it prints
+    the registered code and exits ``CLAUDE_LAUNCH_GUARD_EXIT``; nothing else is
+    printed.
+    """
+    digest, separator, cmd = (argv[0], argv[1], argv[2:]) if len(argv) > 2 else ("", "", [])
+    login_dir = os.environ.get(CLAUDE_CONFIG_DIR_ENV)
+    settings = _option_value(cmd, "--settings")
+    sources = _option_value(cmd, "--setting-sources")
+    if (
+        separator != "--"
+        or not cmd
+        or not login_dir
+        or settings is None
+        or sources is None
+        or claude_labelled_inputs_digest(
+            login_dir=login_dir, cwd=Path.cwd(), settings=settings, setting_sources=sources
+        )
+        != digest
+    ):
+        os.write(2, b"CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed\n")
+        os._exit(CLAUDE_LAUNCH_GUARD_EXIT)
+    os.execvp(cmd[0], cmd)
 
 
 if __name__ == "__main__":

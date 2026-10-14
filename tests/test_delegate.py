@@ -6974,7 +6974,9 @@ def test_dispatch_records_the_default_claude_account(tmp_tasks_dir, tmp_path, mo
              "--dry-run", *extra],
         )
         assert delegate.cmd_dispatch(args) == 0
-        assert delegate._read_state(delegate._state_path(task_id))["claude_account"] == "a"
+        state = delegate._read_state(delegate._state_path(task_id))
+        assert state["claude_account"] == "a"
+        assert "claude_account_user_scope_omitted" not in state
 
 
 def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -7017,6 +7019,8 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
     assert delegate.cmd_dispatch(args) == 0
     state = delegate._read_state(delegate._state_path(task_id))
     assert state["claude_account"] == "b"
+    # Its login directory's user scope (hooks, permissions, MCP servers) does not load; the record says so.
+    assert state["claude_account_user_scope_omitted"] is True
     assert str(selected) not in json.dumps(state)
     assert calls == [token, token]
 

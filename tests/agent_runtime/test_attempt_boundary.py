@@ -1096,19 +1096,20 @@ def test_selected_material_must_match_bound_identity(two_accounts):
 def test_selected_directory_swap_cannot_redirect_use(two_accounts, monkeypatch):
     from scripts.agent_runtime import attempt_boundary as module
 
-    original = module._claude_config_account_uuid
+    # The selected directory's global config is read through the held descriptor (#10619).
+    original = module._checked_login_global_config
     swapped = False
 
-    def swap_after_login_read(path, **kwargs):
+    def swap_after_login_read(directory, account_uuid):
         nonlocal swapped
-        result = original(path, **kwargs)
-        if not swapped and (kwargs.get("dir_fd") is not None or path.parent == two_accounts.config_dir):
+        result = original(directory, account_uuid)
+        if not swapped:
             swapped = True
             two_accounts.config_dir.rename(two_accounts.config_dir.with_name("checked-config"))
             two_accounts.config_dir.symlink_to(two_accounts.home / ".claude")
         return result
 
-    monkeypatch.setattr(module, "_claude_config_account_uuid", swap_after_login_read)
+    monkeypatch.setattr(module, "_checked_login_global_config", swap_after_login_read)
     assert module.linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
     assert swapped
 

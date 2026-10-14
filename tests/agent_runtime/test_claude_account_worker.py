@@ -29,12 +29,16 @@ from unittest.mock import patch
 
 import pytest
 
-from scripts.agent_runtime import env_sanitize, runner
+from scripts.agent_runtime import attempt_boundary, env_sanitize, runner
 from scripts.agent_runtime.adapters import claude
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.claude import LABELLED_ACCOUNT_SETTING_SOURCES, ClaudeAdapter
 from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, ClaudeAccountRefused
-from scripts.agent_runtime.env_sanitize import build_agent_env
+from scripts.agent_runtime.env_sanitize import (
+    CLAUDE_LAUNCH_GUARD_EXIT,
+    build_agent_env,
+    claude_labelled_inputs_digest,
+)
 from tests.agent_runtime.test_attempt_boundary import (
     BOUND_ACCOUNT_UUID,
     CLAUDE_AMBIENT_AUTH,
@@ -68,15 +72,21 @@ _FAKE_CLAUDE = textwrap.dedent(
 
     log = os.environ["LU_FAKE_CLAUDE_DUMP"]
     config_dir = os.environ.get("CLAUDE_CONFIG_DIR") or os.path.join(os.environ["HOME"], ".claude")
-    if argv[-3:] == ["auth", "status", "--json"]:
+    if argv[-3:-1] == ["auth", "status"] and argv[-1] in ("--json", "--text"):
         with open(log, "a", encoding="utf-8") as handle:
             handle.write(json.dumps({"kind": "auth_status", "argv": argv, "cwd": os.getcwd()}) + "\\n")
         mode = os.environ.get("LU_FAKE_CLAUDE_STATUS_MODE", "")
         if mode == "garbage":
             print("not json")
             sys.exit(1)
+        touch = os.environ.get("LU_FAKE_CLAUDE_STATUS_TOUCH")
+        if touch:  # a settings input that changes while it is being verified
+            with open(touch, "w", encoding="utf-8") as handle:
+                handle.write("{}")
         sources = (option("--setting-sources") or "user,project,local").split(",")
-        scopes = []  # (scope, settings) in Claude Code's load order, the flag last
+        # (scope, settings) in Claude Code's load order, the flag last. The global
+        # config's env applies whatever the setting sources (probe, 2.1.300).
+        scopes = [("global", load(os.path.join(config_dir, ".claude.json")))]
         if "user" in sources:
             scopes.append(("user", load(os.path.join(config_dir, "settings.json"))))
         if "project" in sources:
@@ -90,23 +100,37 @@ _FAKE_CLAUDE = textwrap.dedent(
         for scope, settings in scopes:
             for name, value in (settings.get("env") or {}).items():
                 # Probe: project and local scopes applied provider switches, not keys or endpoints.
-                if scope in ("user", "flag") or name.startswith("CLAUDE_CODE_USE_"):
+                if scope in ("global", "user", "flag") or name.startswith("CLAUDE_CODE_USE_"):
                     env[name] = value
-            helper = settings.get("apiKeyHelper") or helper
+            if scope != "global":
+                helper = settings.get("apiKeyHelper") or helper
         status = {"loggedIn": True, "apiProvider": "firstParty", "configDirectory": config_dir}
         if env.get("CLAUDE_CODE_USE_BEDROCK"):
             status.update(authMethod="third_party", apiProvider="bedrock")
         elif helper:
             status["authMethod"] = "api_key_helper"
         elif env.get("ANTHROPIC_API_KEY"):
-            status["authMethod"] = "api_key"
+            status.update(authMethod="api_key", apiKeySource="ANTHROPIC_API_KEY")
         elif os.path.exists(os.path.join(config_dir, ".credentials.json")):
-            status["authMethod"] = "claude.ai"
+            status.update(authMethod="claude.ai", subscriptionType="max")
         else:
             status = {"loggedIn": False, "authMethod": "none", "apiProvider": "firstParty"}
         if mode == "other_dir":
             status["configDirectory"] = os.environ["HOME"]
-        print(json.dumps(status))
+        if mode == "key_source":
+            status["apiKeySource"] = "/login managed key"
+        if argv[-1] == "--json":
+            print(json.dumps(status))
+        else:
+            lines = ["Login method: Claude Max account"] if status["authMethod"] == "claude.ai" else []
+            lines += ["Email: fixture@example.invalid"]
+            if env.get("ANTHROPIC_BASE_URL"):
+                lines.append("Anthropic base URL: " + env["ANTHROPIC_BASE_URL"])
+            if env.get("HTTPS_PROXY"):
+                lines.append("Proxy: " + env["HTTPS_PROXY"])
+            if mode == "text_endpoint":
+                lines.append("Anthropic base URL: https://fixture.invalid")
+            print("\\n".join(lines))
         sys.exit(0 if status["loggedIn"] else 1)
     with open(log, "a", encoding="utf-8") as handle:
         handle.write(json.dumps({"kind": "run", "argv": argv, "env": dict(os.environ)}) + "\\n")
@@ -124,7 +148,8 @@ _FAKE_CLAUDE = textwrap.dedent(
 USER_SETTINGS = {
     "env_api_key": {"env": {"ANTHROPIC_API_KEY": "fixture-settings-" + "k" * 30}},
     "api_key_helper": {"apiKeyHelper": "fixture-helper-command"},
-    "clean": {"model": "fixture-model", "env": {"FIXTURE_FLAG": "1"}},
+    # Only allowlisted names: an unknown one refuses (test_bound_label_unknown_setting_is_refused).
+    "clean": {"model": "fixture-model", "env": {"DISABLE_TELEMETRY": "1"}},
 }
 
 
@@ -316,6 +341,249 @@ def test_bound_label_unreadable_user_settings_fail_closed(accounts, content, mod
     assert refused.value.code == code
 
 
+def _global_config(accounts: SimpleNamespace, **fields) -> None:
+    """Add ``fields`` to the labelled login directory's global config (``.claude.json``)."""
+    path = accounts.config_dir / ".claude.json"
+    _private_json(path, {**json.loads(path.read_text(encoding="utf-8")), **fields})
+
+
+# Global-config env names off the allowlist: endpoint, key, provider switch,
+# proxy, certificate, an unknown name, a name variant, and a null value.
+GLOBAL_CONFIG_ENV_REFUSED = {
+    "endpoint": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"},
+    "key": {"ANTHROPIC_API_KEY": "fixture-key-" + "k" * 30},
+    "helper_ttl": {"CLAUDE_CODE_API_KEY_HELPER_TTL_MS": "1"},
+    "provider": {"CLAUDE_CODE_USE_BEDROCK": "1"},
+    "proxy": {"HTTPS_PROXY": "http://127.0.0.1:9"},
+    "certificate": {"NODE_EXTRA_CA_CERTS": "/fixture/ca.pem"},
+    "unknown": {"FIXTURE_UNKNOWN": "1"},
+    "lowercase": {"anthropic_base_url": "https://fixture.invalid"},
+    "null_value": {"ANTHROPIC_BASE_URL": None},
+}
+
+
+@pytest.mark.parametrize("case", sorted(GLOBAL_CONFIG_ENV_REFUSED))
+def test_bound_label_global_config_env_off_the_allowlist_is_refused(accounts, case):
+    """Blocker 1: the global config's env applies whatever the setting sources, so it is held to the allowlist.
+
+    On 8599d23ad5 these did not raise (``DID NOT RAISE ClaudeAccountRefused``):
+    only the user ``settings.json`` was checked, and ``firstParty`` was taken
+    to attest the endpoint.
+    """
+    _global_config(accounts, env=GLOBAL_CONFIG_ENV_REFUSED[case])
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_config_credential_source"
+    assert "fixture" not in str(refused.value)
+    assert accounts.profile_calls == []
+    assert not accounts.dump.exists()
+
+
+def test_bound_label_allowlisted_global_config_env_is_admitted(accounts):
+    _global_config(accounts, env={"DISABLE_TELEMETRY": "1", "MCP_TIMEOUT": "1000"})
+
+    result, _ = _invoke(accounts, claude_account="b")
+
+    assert result.ok is True
+
+
+@pytest.mark.parametrize("env", [["ANTHROPIC_BASE_URL"], None, "x"])
+def test_bound_label_malformed_global_config_env_is_refused(accounts, env):
+    _global_config(accounts, env=env)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_config_invalid"
+
+
+def test_bound_label_legacy_global_config_is_refused(accounts):
+    """Claude Code reads a legacy ``.config.json`` in the login directory instead of ``.claude.json``."""
+    _private_json(accounts.config_dir / ".config.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_config_ambiguous"
+    assert accounts.profile_calls == []
+
+
+@pytest.mark.parametrize(
+    "settings",
+    [{"theme": "dark", "forceLoginMethod": "console"}, {"env": {"FIXTURE_UNKNOWN": "1"}}, {"otelHeadersHelper": "x"}],
+)
+def test_bound_label_unknown_setting_is_refused(accounts, settings):
+    """User settings are held to an allowlist of keys and environment names, not a list of bad ones."""
+    _user_settings(accounts, settings)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_settings_credential_source"
+
+
+def test_bound_label_null_user_settings_is_invalid_not_absent(accounts):
+    (accounts.config_dir / "settings.json").write_text("null", encoding="utf-8")
+    (accounts.config_dir / "settings.json").chmod(0o600)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_settings_invalid"
+
+
+@pytest.mark.parametrize(
+    ("mode", "code"),
+    [("text_endpoint", "claude_account_status_override"), ("key_source", "claude_account_auth_method_conflict")],
+)
+def test_bound_label_status_naming_an_override_is_refused(accounts, monkeypatch, mode, code):
+    """The text status must name nothing but the login; the JSON must carry no key source."""
+    monkeypatch.setenv("LU_FAKE_CLAUDE_STATUS_MODE", mode)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == code
+    assert _calls(accounts, "run") == []
+
+
+def test_bound_label_endpoint_attestation_holds_without_the_static_check(accounts, monkeypatch):
+    """Even with the endpoint name allowlisted, the effective endpoint the status names refuses the run."""
+    monkeypatch.setattr(
+        attempt_boundary,
+        "CLAUDE_LABELLED_ENV_ALLOWLIST",
+        attempt_boundary.CLAUDE_LABELLED_ENV_ALLOWLIST | {"ANTHROPIC_BASE_URL"},
+    )
+    _global_config(accounts, env={"ANTHROPIC_BASE_URL": "https://fixture.invalid"})
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_status_override"
+    assert _calls(accounts, "run") == []
+
+
+def test_bound_label_plan_runs_the_cli_behind_the_launch_guard(accounts):
+    """The plan binds the verified settings digest and launches the CLI only through the guard."""
+    plan = _plan(accounts, claude_account="b")
+
+    guard = plan.cmd.index("--")
+    assert plan.cmd[1:4] == ["-I", "-c", claude._LAUNCH_GUARD_CODE]
+    digest = plan.cmd[guard - 1]
+    assert digest == claude_labelled_inputs_digest(
+        login_dir=str(accounts.config_dir),
+        cwd=accounts.workdir,
+        settings=plan.cmd[plan.cmd.index("--settings") + 1],
+        setting_sources="project,local",
+    )
+    assert plan.cmd[guard + 1] == str(accounts.binary)
+    assert "--" not in _plan(accounts).cmd[:2]  # the default plan is unwrapped (see the golden snapshot)
+
+
+def _settings_change_after_build(accounts: SimpleNamespace, change) -> runner.Result:
+    """Run label b, changing a settings input after the plan is verified and before the spawn."""
+    build = ClaudeAdapter.build_invocation
+
+    def build_then_change(self, **kwargs):
+        plan = build(self, **kwargs)
+        change()
+        return plan
+
+    with patch.object(ClaudeAdapter, "build_invocation", build_then_change):
+        result, _ = _invoke(accounts, claude_account="b")
+    return result
+
+
+@pytest.mark.parametrize("scope", ["local", "project", "global_config", "user"])
+def test_bound_label_settings_changed_after_verification_never_launch(accounts, scope):
+    """Blocker 2: an input changed between verification and launch stops the run before the CLI starts.
+
+    On 8599d23ad5 the worker started (the runner relaunched the CLI, which
+    reread the changed file): ``_calls(accounts, "run")`` held one spawn.
+    """
+
+    def change() -> None:
+        if scope in ("local", "project"):
+            name = "settings.local.json" if scope == "local" else "settings.json"
+            _private_json(accounts.workdir / ".claude" / name, {"apiKeyHelper": "fixture-helper-command"})
+        elif scope == "global_config":
+            _global_config(accounts, env={"ANTHROPIC_BASE_URL": "https://fixture.invalid"})
+        else:
+            _user_settings(accounts, {"apiKeyHelper": "fixture-helper-command"})
+
+    result = _settings_change_after_build(accounts, change)
+
+    assert result.ok is False
+    assert _calls(accounts, "run") == []
+    assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
+    assert "fixture-helper" not in result.stderr_excerpt
+
+
+def test_bound_label_main_checkout_local_settings_are_bound_for_a_linked_worktree(accounts, tmp_path):
+    """A linked worktree's run also loads its main checkout's local settings; a later change there is caught."""
+    main = tmp_path / "main"
+    main.mkdir()
+    git = ["git", "-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid"]
+    subprocess.run([*git, "init", "-q", str(main)], check=True, timeout=30)
+    subprocess.run([*git, "-C", str(main), "commit", "-q", "--allow-empty", "-m", "base"], check=True, timeout=30)
+    linked = tmp_path / "linked"
+    subprocess.run([*git, "-C", str(main), "worktree", "add", "-q", str(linked)], check=True, timeout=30)
+    accounts.workdir = linked
+
+    result = _settings_change_after_build(
+        accounts,
+        lambda: _private_json(main / ".claude" / "settings.local.json", {"apiKeyHelper": "fixture-helper-command"}),
+    )
+
+    assert result.ok is False
+    assert _calls(accounts, "run") == []
+
+
+def test_bound_label_unchanged_inputs_launch_through_a_symlinked_working_directory(accounts, tmp_path):
+    """The guard sees the physical working directory; an unchanged launch still starts the CLI."""
+    link = tmp_path / "work-link"
+    link.symlink_to(accounts.workdir, target_is_directory=True)
+    accounts.workdir = link
+
+    result, _ = _invoke(accounts, claude_account="b")
+
+    assert result.ok is True
+    assert len(_calls(accounts, "run")) == 1
+
+
+def test_bound_label_settings_changed_during_verification_is_refused(accounts, monkeypatch):
+    """An input that changes while the status probes run is refused before any plan is returned."""
+    (accounts.workdir / ".claude").mkdir()
+    monkeypatch.setenv("LU_FAKE_CLAUDE_STATUS_TOUCH", str(accounts.workdir / ".claude" / "settings.local.json"))
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == "claude_account_settings_changed"
+
+
+@pytest.mark.parametrize(
+    "argv", [[], ["digest"], ["digest", "--"], ["digest", "x", "claude"], ["0" * 64, "--", "claude"]]
+)
+def test_launch_guard_refuses_a_malformed_or_unbound_launch(accounts, argv, monkeypatch):
+    """The guard execs nothing unless it is given a digest, ``--`` and a CLI argv whose inputs match it."""
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(accounts.config_dir))
+    done = subprocess.run(
+        [sys.executable, "-I", "-c", claude._LAUNCH_GUARD_CODE, str(claude._CODE_ROOT), *argv],
+        cwd=accounts.workdir,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    assert done.returncode == CLAUDE_LAUNCH_GUARD_EXIT
+    assert done.stderr == "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed\n"
+    assert done.stdout == ""
+
+
 def test_bound_label_clean_user_settings_is_admitted(accounts):
     """AC-01 (iii): clean user settings run, with the user scope unloaded and the auth method verified."""
     _user_settings(accounts, USER_SETTINGS["clean"])
@@ -326,10 +594,12 @@ def test_bound_label_clean_user_settings_is_admitted(accounts):
     assert result.ok is True
     argv = _run(accounts)["argv"]
     assert argv[argv.index("--setting-sources") + 1] == LABELLED_ACCOUNT_SETTING_SOURCES == "project,local"
-    (status,) = _calls(accounts, "auth_status")
-    assert status["cwd"] == str(accounts.workdir)
-    assert status["argv"][-5:] == ["--setting-sources", "project,local", "auth", "status", "--json"]
-    assert status["argv"][status["argv"].index("--settings") + 1] == argv[argv.index("--settings") + 1]
+    statuses = _calls(accounts, "auth_status")
+    assert [status["argv"][-1] for status in statuses] == ["--json", "--text"]
+    for status in statuses:
+        assert status["cwd"] == str(accounts.workdir)
+        assert status["argv"][-5:-1] == ["--setting-sources", "project,local", "auth", "status"]
+        assert status["argv"][status["argv"].index("--settings") + 1] == argv[argv.index("--settings") + 1]
 
 
 @pytest.mark.parametrize(
@@ -547,6 +817,10 @@ def test_new_refusal_codes_are_registered():
         "claude_account_auth_status_unavailable",
         "claude_account_settings_invalid",
         "claude_account_settings_not_private",
+        "claude_account_config_credential_source",
+        "claude_account_config_ambiguous",
+        "claude_account_status_override",
+        "claude_account_settings_changed",
     } <= CLAUDE_ACCOUNT_REFUSAL_CODES
 
 
@@ -657,3 +931,44 @@ def test_real_cli_labelled_run_loads_no_user_mcp_server(real_cli):
 
     assert "fixtureuser" in _real(real_cli, "mcp", "list", sources=False)
     assert "fixtureuser" not in _real(real_cli, "mcp", "list")
+
+
+@pytest.mark.parametrize("case", ["endpoint", "key", "provider", "proxy"])
+def test_real_cli_global_config_override_is_refused(real_cli, case):
+    """Blocker 1 against the installed CLI: the global config's env is checked before any status probe."""
+    _global_config(real_cli, env=GLOBAL_CONFIG_ENV_REFUSED[case])
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(real_cli, claude_account="b")
+
+    assert refused.value.code == "claude_account_config_credential_source"
+
+
+@pytest.mark.parametrize("name", ["ANTHROPIC_BASE_URL", "HTTPS_PROXY"])
+def test_real_cli_status_attests_the_endpoint_and_proxy(real_cli, monkeypatch, name):
+    """With the name let through, the installed CLI's text status still names the override and the run refuses.
+
+    Its JSON status for the same input reports ``claude.ai`` / ``firstParty`` /
+    the bound directory, which is why the JSON alone cannot attest it.
+    """
+    monkeypatch.setattr(
+        attempt_boundary, "CLAUDE_LABELLED_ENV_ALLOWLIST", attempt_boundary.CLAUDE_LABELLED_ENV_ALLOWLIST | {name}
+    )
+    _global_config(real_cli, env={name: "http://127.0.0.1:9"})
+    loaded = json.loads(_real(real_cli, "auth", "status", "--json"))
+    assert (loaded["authMethod"], loaded["apiProvider"]) == ("claude.ai", "firstParty")
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(real_cli, claude_account="b")
+
+    assert refused.value.code == "claude_account_status_override"
+
+
+def test_real_cli_stored_key_in_global_config_is_refused(real_cli):
+    """A key stored in the global config is reported as a key source beside the login, and refused."""
+    _global_config(real_cli, primaryApiKey="fixture-key-" + "k" * 30)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(real_cli, claude_account="b")
+
+    assert refused.value.code == "claude_account_auth_method_conflict"

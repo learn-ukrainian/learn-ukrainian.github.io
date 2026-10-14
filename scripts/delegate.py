@@ -12277,13 +12277,25 @@ def _dispatch_claude_account_refusal(args: argparse.Namespace) -> str | None:
     return None
 
 
-def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, str]:
-    """A claude task record's account label, resolved once; the worker reads it back from the record."""
+def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, Any]:
+    """A claude task record's account label, resolved once; the worker reads it back from the record.
+
+    An ordinary worker on a non-default label loads none of its login
+    directory's user settings (hooks, permission rules, MCP servers, plugins);
+    the record says so in ``claude_account_user_scope_omitted`` (#10619).
+    """
     if dispatch_agent != "claude":
         return {}
-    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_KEY,
+        DEFAULT_CLAUDE_ACCOUNT,
+        resolve_claude_account_label,
+    )
 
-    return {CLAUDE_ACCOUNT_KEY: resolve_claude_account_label(getattr(args, "claude_account", None))}
+    label = resolve_claude_account_label(getattr(args, "claude_account", None))
+    if label == DEFAULT_CLAUDE_ACCOUNT or getattr(args, "review_attempt", None):
+        return {CLAUDE_ACCOUNT_KEY: label}
+    return {CLAUDE_ACCOUNT_KEY: label, "claude_account_user_scope_omitted": True}
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:

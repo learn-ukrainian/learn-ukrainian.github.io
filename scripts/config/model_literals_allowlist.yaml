@@ -903,6 +903,13 @@ entries:
   kind: non_model_label
   reason: Existing dispatcher seat alias moved into the shared child environment policy.
 - path: scripts/agent_runtime/env_sanitize.py
+  scope: <module>
+  context: expression
+  id: claude-code
+  count: 1
+  kind: non_model_label
+  reason: Claude Code's Linux managed-policy directory, digested for a labelled account's launch (#10619); not a model ID.
+- path: scripts/agent_runtime/env_sanitize.py
   scope: child_credential_env
   context: expression
   id: claude-code

@@ -788,21 +788,44 @@ usage stop and does not expand the Opus exception.
 `delegate.py dispatch --claude-account b` runs an ordinary Claude worker on the
 bound account's verified login directory. The default label (or none) leaves
 the plan unchanged; `tests/fixtures/claude_default_account_plan.json` pins it.
-For label `b` the adapter (`scripts/agent_runtime/adapters/claude.py`):
+The label is accounting and attribution for load balancing, not an isolation
+boundary against a hostile process of the same user. What it guards against is
+a key, key helper, endpoint, proxy or provider switch left in the labelled
+login directory, or in a scope the worker still loads, silently changing what
+the worker runs on. For label `b` the adapter
+(`scripts/agent_runtime/adapters/claude.py`, threat model in its docstring):
 
-- refuses, before any spawn, a login directory whose user `settings.json` sets
-  a key helper or a credential, provider or endpoint variable
-  (`claude_account_settings_credential_source`);
+- holds the login directory to allowlists, refusing value-free before any
+  spawn: every `env` name in its global config (`.claude.json`, which the CLI
+  applies over the process environment whatever the setting sources) must be on
+  `CLAUDE_LABELLED_ENV_ALLOWLIST` (`claude_account_config_credential_source`);
+  a legacy `.config.json`, which the CLI would read instead, is refused
+  (`claude_account_config_ambiguous`); the unloaded user `settings.json` may
+  carry only allowlisted keys and names (`claude_account_settings_credential_source`);
 - passes `--setting-sources project,local`, so the login directory's user
   scope (env, key helper, hooks, permission rules, plugins, user MCP servers)
-  never applies: a labelled worker gets the harness flags and checkout settings,
-  never more authority than a default worker;
-- runs `claude auth status --json` with the worker's settings arguments,
-  working directory and environment, and refuses unless it reports the
-  subscription login for that directory (`claude_account_auth_method_conflict`,
-  or `claude_account_auth_status_unavailable` when it cannot tell). This covers
-  managed policy and the checkout's project and local files, which can still
-  select a key helper or a cloud provider.
+  never applies: the worker gets the harness flags and checkout settings and no
+  user-scope authority. Restrictive user rules are dropped too; the task record
+  carries `claude_account_user_scope_omitted: true`;
+- runs `claude auth status` (JSON and text) with the worker's settings
+  arguments, working directory and environment: the JSON must name the
+  subscription login, first-party provider and bound directory with no other
+  key (`claude_account_auth_method_conflict`, or
+  `claude_account_auth_status_unavailable`), and the text must print only the
+  login method, organization and email. The text names every endpoint, proxy,
+  certificate, token, key or provider override in effect, which the JSON does
+  not (`claude_account_status_override`);
+- binds a digest of every settings input that check depended on (its
+  arguments, the login directory's settings, global config `env`, legacy file
+  and remote policy cache, managed policy, and the checkout's project and local
+  files, including a linked worktree's main checkout) into the plan, and runs
+  the CLI behind a guard that recomputes it in the spawned process and execs
+  the CLI only on a match (`claude_account_settings_changed`, exit 78). The
+  credential file stays in place (the CLI rotates its refresh token) and the
+  CLI reads the global config only from beside it, so a digest bind, not a
+  copy, is the strongest construction available. What remains is the moment
+  between the guard's check and the CLI reading its files; exploiting it needs
+  write access to the same user's files.
 
 Limitation: the preflight requires the access token to have more than 60
 seconds left. A token that expires during a long worker is refreshed by the CLI

@@ -46,7 +46,7 @@ from .attempt_safe_read import (
 from .attempt_safe_read import (
     safe_read_attempt_file as safe_read_attempt_file,
 )
-from .env_sanitize import build_agent_env
+from .env_sanitize import CLAUDE_LEGACY_GLOBAL_CONFIG, build_agent_env
 
 # Claude account labels. A run carries one label; the default account is the
 # one this host has always used. Which account a non-default label means lives
@@ -68,13 +68,58 @@ _CLAUDE_ACCOUNT_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9
 _CLAUDE_BINDING_MAX_BYTES = 65536
 _CLAUDE_GLOBAL_CONFIG_MAX_BYTES = 16 * 1024 * 1024
 _CLAUDE_SETTINGS_MAX_BYTES = 1024 * 1024
-# User settings that would make Claude Code use a key, helper, provider or
-# endpoint other than the account's own login (#10619). ``ANTHROPIC_*`` names
-# keys, tokens, endpoints, headers and provider settings alike, so the whole
-# namespace is refused.
-_CLAUDE_SETTINGS_CREDENTIAL_KEYS = frozenset({"apiKeyHelper", "awsAuthRefresh", "awsCredentialExport"})
-_CLAUDE_SETTINGS_CREDENTIAL_ENV = frozenset({*_CLAUDE_AMBIENT_AUTH_ENV, "CLAUDE_CONFIG_DIR"})
-_CLAUDE_SETTINGS_CREDENTIAL_ENV_PREFIXES = ("ANTHROPIC_", "CLAUDE_CODE_USE_", "CLAUDE_CODE_OAUTH_")
+# What a labelled account's login directory may carry (#10619): an allowlist,
+# not a list of known-bad names. Each environment name below only tunes local
+# behaviour; none selects a credential, endpoint, proxy, certificate or
+# provider. Any other name refuses, whatever its value (``null`` included).
+# Names match exactly, as Claude Code applies them.
+CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
+    {
+        "BASH_DEFAULT_TIMEOUT_MS",
+        "BASH_MAX_OUTPUT_LENGTH",
+        "BASH_MAX_TIMEOUT_MS",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
+        "CLAUDE_CODE_DISABLE_TERMINAL_TITLE",
+        "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
+        "DISABLE_AUTOUPDATER",
+        "DISABLE_BUG_COMMAND",
+        "DISABLE_COST_WARNINGS",
+        "DISABLE_ERROR_REPORTING",
+        "DISABLE_TELEMETRY",
+        "MAX_MCP_OUTPUT_TOKENS",
+        "MAX_THINKING_TOKENS",
+        "MCP_TIMEOUT",
+        "MCP_TOOL_TIMEOUT",
+    }
+)
+# Top-level user settings keys the login directory may carry. A labelled run
+# does not load that scope at all; this guards a future CLI that would.
+_CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
+    {
+        "$schema",
+        "alwaysThinkingEnabled",
+        "autoUpdatesChannel",
+        "cleanupPeriodDays",
+        "disabledMcpjsonServers",
+        "effortLevel",
+        "enableAllProjectMcpServers",
+        "enabledMcpjsonServers",
+        "enabledPlugins",
+        "env",
+        "extraKnownMarketplaces",
+        "hooks",
+        "includeCoAuthoredBy",
+        "language",
+        "model",
+        "outputStyle",
+        "permissions",
+        "skipDangerousModePermissionPrompt",
+        "spinnerTipsEnabled",
+        "statusLine",
+        "theme",
+        "verbose",
+    }
+)
 _PRIVATE_FILE_FAILURES = ("unavailable", "not_private", "oversized", "invalid")
 # Every code a Claude account refusal may carry. Codes name no value or location.
 CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
@@ -95,8 +140,12 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_credentials_expired",
         "claude_account_identity_unavailable",
         "claude_account_settings_credential_source",
+        "claude_account_config_credential_source",
+        "claude_account_config_ambiguous",
         "claude_account_auth_method_conflict",
         "claude_account_auth_status_unavailable",
+        "claude_account_status_override",
+        "claude_account_settings_changed",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
         *(
             f"claude_account_{kind}_{failure}"
@@ -163,7 +212,8 @@ def _read_private_json(
 
     ``forbidden_mode`` names the permission bits the file must not carry
     (default: any group or other access). Every failure is
-    ``ClaudeAccountRefused`` with ``code`` and a fixed suffix.
+    ``ClaudeAccountRefused`` with ``code`` and a fixed suffix; a file holding
+    JSON ``null`` is invalid, never taken for an absent one.
     """
     try:
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
@@ -184,9 +234,12 @@ def _read_private_json(
         raise ClaudeAccountRefused(f"{code}_oversized")
     try:
         # A decode or duplicate-key error is a ValueError; its text is never kept.
-        return json.loads(raw, object_pairs_hook=_unique_json_keys)
+        data = json.loads(raw, object_pairs_hook=_unique_json_keys)
     except ValueError:
         raise ClaudeAccountRefused(f"{code}_invalid") from None
+    if data is None:
+        raise ClaudeAccountRefused(f"{code}_invalid")
+    return data
 
 
 def load_claude_account_binding(label: str, *, environ: Mapping[str, str] | None = None) -> ClaudeAccountBinding:
@@ -244,14 +297,22 @@ def _claude_config_account_uuid(global_config: Path, *, dir_fd: int | None = Non
     return value if isinstance(value, str) else None
 
 
-def _refuse_claude_settings_credential_source(directory: int) -> None:
-    """Refuse a login directory whose user settings name another key source (#10619).
+def _refuse_unlisted_env(data: dict, code: str) -> None:
+    """Refuse an ``env`` map naming anything outside the labelled allowlist (#10619)."""
+    env = data.get("env", {})
+    if not isinstance(env, dict):
+        raise ClaudeAccountRefused(f"{code}_invalid")
+    if not set(env) <= CLAUDE_LABELLED_ENV_ALLOWLIST:
+        raise ClaudeAccountRefused(f"{code}_credential_source")
 
-    Claude Code applies the ``settings.json`` in its config directory after the
-    environment is sanitized, so a key, helper, provider switch or endpoint
-    set there would replace the verified login. Only names are inspected; no
-    value is kept or reported. The file may be readable by others, not
-    writable by them.
+
+def _refuse_claude_settings_credential_source(directory: int) -> None:
+    """Refuse a login directory whose user settings carry anything off the allowlist (#10619).
+
+    A labelled run does not load this scope, so this is defence in depth: a
+    key, helper, provider switch, endpoint or unknown setting refuses. Only
+    names are inspected; no value is kept or reported. The file may be
+    readable by others, not writable by them.
     """
     data = _read_private_json(
         Path("settings.json"),
@@ -262,16 +323,35 @@ def _refuse_claude_settings_credential_source(directory: int) -> None:
     )
     if data is None:
         return
-    env = data.get("env", {}) if isinstance(data, dict) else None
-    if not isinstance(env, dict):
+    if not isinstance(data, dict):
         raise ClaudeAccountRefused("claude_account_settings_invalid")
-    names = {name.upper() for name in env}
-    if (
-        _CLAUDE_SETTINGS_CREDENTIAL_KEYS & set(data)
-        or names & _CLAUDE_SETTINGS_CREDENTIAL_ENV
-        or any(name.startswith(_CLAUDE_SETTINGS_CREDENTIAL_ENV_PREFIXES) for name in names)
-    ):
+    _refuse_unlisted_env(data, "claude_account_settings")
+    if not set(data) <= _CLAUDE_LABELLED_USER_SETTINGS_KEYS:
         raise ClaudeAccountRefused("claude_account_settings_credential_source")
+
+
+def _checked_login_global_config(directory: int, account_uuid: str) -> None:
+    """Verify the global config a labelled run loads from its login directory (#10619).
+
+    Claude Code reads it only from the login directory, beside the credential
+    file, and applies its ``env`` map over the process environment even when
+    the user settings scope is off; so that map must stay on the allowlist. A
+    legacy ``.config.json`` there would replace ``.claude.json`` and is
+    refused outright.
+    """
+    try:
+        os.stat(CLAUDE_LEGACY_GLOBAL_CONFIG, dir_fd=directory, follow_symlinks=False)
+    except FileNotFoundError:
+        pass
+    else:
+        raise ClaudeAccountRefused("claude_account_config_ambiguous")
+    data = _read_private_json(
+        Path(".claude.json"), limit=_CLAUDE_GLOBAL_CONFIG_MAX_BYTES, code="claude_account_config", dir_fd=directory
+    )
+    account = data.get("oauthAccount") if isinstance(data, dict) else None
+    if not isinstance(account, dict) or account.get("accountUuid") != account_uuid:
+        raise ClaudeAccountRefused("claude_account_unverified")
+    _refuse_unlisted_env(data, "claude_account_config")
 
 
 @contextlib.contextmanager
@@ -368,8 +448,7 @@ def _validated_claude_selection(
                     raise ClaudeAccountRefused("claude_account_binding_is_default")
             if _claude_config_account_uuid(home / ".claude.json") == binding.account_uuid:
                 raise ClaudeAccountRefused("claude_account_binding_is_default")
-            if _claude_config_account_uuid(Path(".claude.json"), dir_fd=directory) != binding.account_uuid:
-                raise ClaudeAccountRefused("claude_account_unverified")
+            _checked_login_global_config(directory, binding.account_uuid)
             _refuse_claude_settings_credential_source(directory)
             try:
                 token = _claude_access_token(Path(".credentials.json"), dir_fd=directory)
