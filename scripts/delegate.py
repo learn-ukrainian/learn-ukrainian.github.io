@@ -7285,10 +7285,7 @@ def run_completion_gate(
         reason = _review_verdict_failure_reason(response or "")
         if reason == _REVIEW_UNSUPPORTED_VERDICT_REASON:
             token = unsupported_verdict_tokens(response or "")[-1]
-            detail = (
-                f"{reason}: unsupported token {token!r}; "
-                f"accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
-            )
+            detail = f"{reason}: unsupported token {token!r}; accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
             return CompletionGateResult(gate, reason, detail)
         return CompletionGateResult(gate, reason, reason or "")
     if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):

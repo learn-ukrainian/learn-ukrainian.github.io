@@ -4177,6 +4177,56 @@ def test_review_verdict_recognized_tokens_keep_precedence_over_unsupported(token
     assert unsupported_verdict_tokens(f"VERDICT: {token}") == []
 
 
+@pytest.mark.parametrize("newline", ["\n", "\r", "\r\n"], ids=["lf", "cr", "crlf"])
+@pytest.mark.parametrize(
+    "body,expected",
+    [
+        ("```\nVERDICT: CHANGES\n```\nVERDICT: REVISE", ["REVISE"]),
+        ("~~~\nVERDICT: CHANGES\n~~~~ \t\nVERDICT: REVISE", ["REVISE"]),
+        ("````\nVERDICT: CHANGES\n```\nVERDICT: REVISE", []),
+        ("```\nVERDICT: CHANGES\n~~~\nVERDICT: REVISE", []),
+        ("- Example:\n  ```\n  example\n- Outside:\nVERDICT: CHANGES\n  ```", []),
+        ("> VERDICT: CHANGES\n    VERDICT: REVISE", []),
+    ],
+)
+def test_integrated_unsupported_verdicts_keep_main_fence_policy(newline, body, expected):
+    from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
+
+    response = body.replace("\n", newline)
+    assert unsupported_verdict_tokens(response) == expected
+    # Both readers share frozen main's lexical verdict policy, including
+    # conservative suppression across a container exit and unclosed fences.
+    supported_response = response.replace("CHANGES", "APPROVE").replace("REVISE", "BLOCKED")
+    assert recognized_verdicts(supported_response) == (["BLOCKED"] if expected else [])
+    result = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=response,
+        commits_ahead=None,
+        worktree=None,
+    )
+    if expected:
+        assert result.failure == "review_unsupported_verdict_token"
+        assert result.detail == (
+            "review_unsupported_verdict_token: unsupported token 'REVISE'; "
+            "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
+        )
+    else:
+        assert result.failure == result.detail == "review_missing_verdict_line"
+
+
+@pytest.mark.parametrize("separator", ["\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"])
+def test_integrated_verdict_diagnostic_preserves_main_line_maps(separator):
+    from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
+
+    response = f"Context{separator}```\nVERDICT: CHANGES"
+    # A non-CommonMark separator does not create a fence opener. Match the
+    # current main reader, which removes fences before splitting verdict lines.
+    assert recognized_verdicts(response.replace("CHANGES", "APPROVE")) == ["APPROVE"]
+    assert unsupported_verdict_tokens(response) == ["CHANGES"]
+    assert delegate._review_verdict_failure_reason(response) == "review_unsupported_verdict_token"
+
+
 def test_non_review_verdict_unsupported_reply_is_unaffected(tmp_tasks_dir, tmp_path, monkeypatch):
     rc, state = _run_successful_worker_for_deliverable_test(
         task_id="ordinary-unsupported-token", mode="read-only", response="VERDICT: CHANGES",
