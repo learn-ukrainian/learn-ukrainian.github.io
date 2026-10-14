@@ -124,6 +124,10 @@ from scripts.fleet import ignored_task_output, post_task_reap
 from scripts.orchestration.task_record_store import archived_task_record_path, task_record_path
 from scripts.orchestration.worktree_paths import automatic_worktree_path
 from tests import _worktree_artifact_links as links
+from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
+from tests.test_continuation_worktree_reap import abandon_cohort as abandon_cohort
+from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
+from tests.test_reused_worktree_retention import cohort as cohort
 from tests.worktree_prep_helpers import half_built_prep, leave_half_built
 
 
@@ -1674,3 +1678,27 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
         entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
         assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
         assert state["preserved_artifacts"]["count"] == 2
+
+
+@pytest.mark.parametrize("disposition", ["merged", "abandon"])
+def test_10303_post_task_reap_uses_complete_preservation_path(request, monkeypatch, disposition):
+    fixture = request.getfixturevalue("same_branch_pending_cohort" if disposition == "merged" else "abandon_cohort")
+    repo, tree, tasks, creator, _, source = fixture
+    head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+    if disposition == "merged":
+        rw = post_task_reap.reap_worktrees
+        monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(9645, "MERGED", head)], None))
+    row = post_task_reap.post_task_reap(
+        "boundary",
+        tasks_dir=tasks,
+        repo_root=repo,
+        apply=True,
+        include_acp_runtime=False,
+    )["main_worktree"]
+    assert row["action"] == "removed", row
+    assert not tree.exists()
+    receipt = row["preserved_artifacts"]
+    assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    state = json.loads((tasks / "boundary.json").read_text())
+    assert state["status"] == creator["status"] and state["run_nonce"] == creator["run_nonce"]

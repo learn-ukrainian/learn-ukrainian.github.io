@@ -376,6 +376,125 @@ def creation_inventory(worktree: Path, *, primary: Path, task_id: str, run_nonce
     }
 
 
+def _abandon_file(primary: Path, entry: Mapping[str, Any]) -> bytes:
+    """Read a hash-bound regular receipt below batch_state without following links."""
+    if not isinstance(entry, Mapping):
+        raise ValueError("terminal-abandon preservation locator invalid")
+    name, digest = entry.get("path"), entry.get("sha256")
+    if not isinstance(name, str) or not isinstance(digest, str) or not re.fullmatch(r"[a-f0-9]{64}", digest):
+        raise ValueError("terminal-abandon preservation locator invalid")
+    root = primary / "batch_state"
+    parts = artifacts._relative_parts(primary / name, root)
+    if not parts:
+        raise ValueError("terminal-abandon preservation locator invalid")
+    leaf = artifacts._read_preserved_bytes(root.joinpath(*parts), root=root)
+    if leaf.file_type != "regular" or hashlib.sha256(leaf.payload).hexdigest() != digest:
+        raise ValueError("terminal-abandon preservation digest invalid")
+    return leaf.payload
+
+
+def terminal_abandon_creator(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
+) -> tuple[Path, dict[str, Any]]:
+    """Prove explicit owner abandonment and exact Git patches, never infer it from CLOSED.
+
+    The creator's ``worktree_abandon`` record is terminal-abandon.v1: ABANDON,
+    owner, run_nonce, head_sha, reason and a preservation {path, sha256} locator.
+    That hashed terminal-abandon-preservation.v1 manifest repeats the identity,
+    names base_sha and hash-bound head_patch, index_patch and working_patch.
+    All three patches must equal Git's binary, full-index diff for this checkout.
+    Untracked and ignored bytes still require the ordinary verified-copy gate.
+    """
+    from scripts.orchestration import reap_worktrees as rw
+
+    creators = [item for item in matches if record_created_worktree(item[1])]
+    if len(creators) != 1 or not matches:
+        raise ValueError("terminal-abandon owner attribution unavailable")
+    path, creator = creators[0]
+    identity, nonce = creator.get("task_id"), creator.get("run_nonce")
+    if (
+        not isinstance(identity, str)
+        or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity)
+        or not isinstance(nonce, str)
+        or not nonce.strip()
+        or path not in (task_record_path(tasks_dir, identity), task_record_path(tasks_dir / "archive", identity))
+    ):
+        raise ValueError("terminal-abandon owner identity unavailable")
+    if any(
+        member.get("status") not in rw._TERMINAL_DISPATCH_STATUSES
+        or member.get("keep_worktree")
+        or member.get("lease_state") == "active"
+        or (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
+        or not rw._pid_proven_absent(member)
+        or not isinstance(member.get("run_nonce"), str)
+        or not member["run_nonce"].strip()
+        or (member is not creator and member.get("worktree_reused") is not True)
+        or not _record_matches_worktree(member, worktree, repo_root=primary)
+        for _, member in matches
+    ):
+        raise ValueError("terminal-abandon task, PID, lease or retention proof unavailable")
+    receipt = creator.get("worktree_abandon")
+    if not isinstance(receipt, dict):
+        raise ValueError("terminal-abandon owner ABANDON record missing")
+    head = receipt.get("head_sha")
+    if (
+        receipt.get("schema") != "terminal-abandon.v1"
+        or receipt.get("disposition") != "ABANDON"
+        or receipt.get("owner") != identity
+        or receipt.get("run_nonce") != nonce
+        or not isinstance(receipt.get("reason"), str)
+        or not receipt["reason"].strip()
+        or not isinstance(head, str)
+        or not re.fullmatch(r"[a-f0-9]{40}", head)
+    ):
+        raise ValueError("terminal-abandon owner ABANDON record invalid")
+    current = rw._run(["git", "rev-parse", "HEAD"], cwd=worktree)
+    if current is None or current.returncode != 0 or current.stdout.strip() != head:
+        raise ValueError("terminal-abandon checkout HEAD differs from receipt")
+    index_lock = rw._run(["git", "rev-parse", "--path-format=absolute", "--git-path", "index.lock"], cwd=worktree)
+    if index_lock.returncode != 0 or not Path(index_lock.stdout.strip()).is_absolute():
+        raise ValueError("terminal-abandon index lock probe unavailable")
+    try:
+        Path(index_lock.stdout.strip()).lstat()
+    except FileNotFoundError:
+        pass
+    else:
+        raise ValueError("terminal-abandon index.lock present; existing lock must be settled")
+    if artifacts._git_paths(worktree, "--unmerged"):
+        raise ValueError("terminal-abandon unmerged index cannot be preserved by ordinary patches")
+    manifest = json.loads(_abandon_file(primary, receipt.get("preservation")))
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema") != "terminal-abandon-preservation.v1"
+        or manifest.get("owner") != identity
+        or manifest.get("run_nonce") != nonce
+        or manifest.get("head_sha") != head
+        or not isinstance(manifest.get("base_sha"), str)
+        or not re.fullmatch(r"[a-f0-9]{40}", manifest["base_sha"])
+        or not rw._sha_is_ancestor(worktree, manifest["base_sha"], head)
+        or not rw._sha_is_ancestor(worktree, manifest["base_sha"], "refs/remotes/origin/main")
+    ):
+        raise ValueError("terminal-abandon preservation manifest identity invalid")
+    for key, revisions in (
+        ("head_patch", [manifest["base_sha"], head]),
+        ("index_patch", ["--cached", head]),
+        ("working_patch", []),
+    ):
+        stored = _abandon_file(primary, manifest.get(key))
+        probe = artifacts.safe_git(
+            ["diff", "--binary", "--full-index", "--no-ext-diff", "--no-textconv", *revisions, "--"],
+            cwd=worktree,
+            env=artifacts._safe_git_env(),
+            capture_output=True,
+            text=False,
+            check=False,
+            timeout=30,
+        )
+        if probe.returncode != 0 or probe.stdout != stored:
+            raise ValueError(f"terminal-abandon {key} does not preserve current Git bytes")
+    return path, creator
+
+
 def _record_absence(root: Path, name: str, absent: list[dict[str, str]]) -> None:
     """Only a fresh lstat ENOENT licenses omission, under the remover's lock."""
     try:
@@ -702,9 +821,19 @@ def preserve_worktree_artifacts(
         "next_condition": "establish canonical task attribution and verified retrieval",
     }
     absent: list[dict[str, str]] = []
+    disposition = None
+    disposition_members = None
 
     def output_files() -> list[str]:
         names = _ignored_output_files(worktree, primary, record, absent=absent)
+        if disposition == "abandon":
+            for name in artifacts._git_paths(worktree, "--cached", "--others", "--exclude-standard"):
+                try:
+                    (worktree / name).lstat()
+                except FileNotFoundError:
+                    _record_absence(worktree, name, absent)
+                else:
+                    names.append(name)
         for name in extra_files or []:
             artifacts._relative_parts(worktree / name, worktree)
         return sorted(set(names + (extra_files or [])))
@@ -712,29 +841,45 @@ def preserve_worktree_artifacts(
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
+        matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+        if any("worktree_abandon" in member for _, member in matches):
+            record_path, record = terminal_abandon_creator(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+            disposition = "abandon"
+            disposition_members = matches
         try:
-            record_path, record = resolve_worktree_record(
-                worktree,
-                tasks_dir,
-                repo_root=repo_root,
-                publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
-            )
+            if disposition is None:
+                record_path, record = resolve_worktree_record(
+                    worktree,
+                    tasks_dir,
+                    repo_root=repo_root,
+                    publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
+                )
         except ValueError:
             # A continuation that switched branch still names the dispatch-time
             # branch, so strict attribution refuses. Preservation may use that
             # creator only after the merged-head proof; resolve itself stays strict
             # so branch-holder release and retention release do not (#10548).
             from scripts.orchestration.reap_worktrees import (
+                _preservation_merged_creator,
                 _switched_branch_merge_proven,
                 _switched_branch_structural_cohort,
             )
 
             matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
             structural = _switched_branch_structural_cohort(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
-            cohort = _current_reuse_records(matches, tasks_dir)
-            if structural is None or not _switched_branch_merge_proven(repo_root, worktree, cohort):
+            if structural is not None:
+                cohort = _current_reuse_records(matches, tasks_dir)
+                if not _switched_branch_merge_proven(repo_root, worktree, cohort):
+                    raise
+                record_path, record = structural
+            elif any(member.get("worktree_reap_proof") for _, member in matches):
+                record_path, record = _preservation_merged_creator(
+                    matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+                )
+                disposition = "merged"
+                disposition_members = matches
+            else:
                 raise
-            record_path, record = structural
         members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         kept = any(member.get("keep_worktree") for _, member in members)
 
@@ -836,6 +981,17 @@ def preserve_worktree_artifacts(
         # cannot have its keep flag overwritten by this gate's earlier snapshot.
         with artifacts.task_state_lock(record_path):
             current = json.loads(record_path.read_text(encoding="utf-8"))
+            if disposition is not None:
+                current_members = matching_worktree_records(
+                    worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+                )
+                if current_members != disposition_members:
+                    raise ValueError("disposition task records changed during preservation")
+                if disposition == "abandon":
+                    terminal_abandon_creator(current_members, worktree, primary=primary, tasks_dir=tasks_dir)
+                    metadata["abandon_proof"] = record["worktree_abandon"]
+                else:
+                    _preservation_merged_creator(current_members, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
             if (
                 not _record_matches_worktree(current, worktree, repo_root=repo_root)
                 or current.get("task_id") != identity
@@ -869,7 +1025,7 @@ def preserve_worktree_artifacts(
             file=sys.stderr,
         )
         return True, "", metadata
-    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
         # Never place filesystem exception paths in receipts.
         detail = str(exc).replace(str(worktree), "<worktree>").replace(str(primary), "<primary>")
         detail = re.sub(r"/(?:home|Users)/[^\s'\"]+", "<private-path>", detail)

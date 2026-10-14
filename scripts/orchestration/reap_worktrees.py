@@ -1251,8 +1251,7 @@ def _open_file_probe_visibility_reason(deadline: float, proc_root: Path = Path("
         # by systemd. Comparing self with PID 1 alone accepts nested namespaces.
         initial_pid_namespace = f"pid:[{0xEFFFFFFC}]"
         if any(
-            str((proc_root / process / "ns" / "pid").readlink()) != initial_pid_namespace
-            for process in ("self", "1")
+            str((proc_root / process / "ns" / "pid").readlink()) != initial_pid_namespace for process in ("self", "1")
         ):
             return unavailable
         proc_mounts = 0
@@ -1264,12 +1263,13 @@ def _open_file_probe_visibility_reason(deadline: float, proc_root: Path = Path("
                 proc_mounts += 1
                 options = set(fields[5].split(",")) | set(fields[separator + 3].split(","))
                 if (
-                    fields[3] != "/" or fields[separator + 1] != "proc"
+                    fields[3] != "/"
+                    or fields[separator + 1] != "proc"
                     or any(option.split("=", 1)[0] in {"hidepid", "subset", "pidns"} for option in options)
                 ):
                     return unavailable
             elif mountpoint.startswith(f"{proc_root}/"):
-                component = mountpoint[len(str(proc_root)) + 1:].split("/", 1)[0]
+                component = mountpoint[len(str(proc_root)) + 1 :].split("/", 1)[0]
                 if component.isdigit() or component in {"self", "thread-self"}:
                     return unavailable
         if proc_mounts != 1:
@@ -2979,6 +2979,19 @@ def _qualifying_reason(
     ``pr_state`` and already requires the head to be an ancestor of
     origin/main or reachable from a remote, so nothing can be lost.
     """
+    if not pr_unknown and (pr_state is None or pr_state.state != "OPEN"):
+        try:
+            abandoned = _terminal_abandon_matches(repo_root, info.path)
+            if abandoned is not None:
+                if not isinstance(active_ids, set) or any(
+                    member.get("task_id") in active_ids for _, member in abandoned
+                ):
+                    raise ValueError("terminal-abandon live task probe unavailable or active")
+                return "terminal-abandon.v1 verified owner ABANDON and preservation"
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+            if attention is not None:
+                attention.append(f"terminal-abandon refused: {exc}")
+            return None
     if pr_state is not None:
         pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
         if pr_state.state == "MERGED":
@@ -3454,8 +3467,7 @@ def _continuation_head_is_merged(
     if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
         return False
     if info.branch and any(
-        member.get("worktree_reused") is True and member.get("status") == "needs_finalize"
-        for _, member in cohort
+        member.get("worktree_reused") is True and member.get("status") == "needs_finalize" for _, member in cohort
     ):
         return _same_branch_merged_cohort(info, pr, cohort)
     if pr.head_sha == info.head:
@@ -3589,7 +3601,8 @@ def _resolve_merged_reuse_creator(
                 or not isinstance(member.get("worktree_path") or member.get("cwd"), str)
                 or worktree_claims.resolve_claim_path(
                     member.get("worktree_path") or member.get("cwd"), repo_root=repo_root
-                ) != worktree.resolve(strict=True)
+                )
+                != worktree.resolve(strict=True)
                 for _, member in cohort
             )
         ):
@@ -3778,6 +3791,70 @@ def _record_in_cohort(record: dict[str, Any], cohort: list[tuple[Path, dict[str,
 def switched_branch_member_proven(repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path) -> bool:
     """True when ``record`` is a member of a switched-branch cohort with a merged exact head."""
     return _merged_reuse_claim_proven_settled(repo_root, worktree, record, tasks_dir=tasks_dir) is not None
+
+
+def _preservation_merged_creator(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, repo_root: Path, tasks_dir: Path
+) -> tuple[Path, dict[str, Any]]:
+    """Consume the reaper's proof using current identities and local Git under its lock."""
+    from scripts.fleet import ignored_task_output as output
+
+    path, creator, alternate = _resolve_merged_reuse_creator(
+        matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+    )
+    proof = creator.get("worktree_reap_proof")
+    cohort = output._current_reuse_records(matches, tasks_dir)
+    if alternate or not isinstance(proof, dict) or proof.get("schema") != "merged-reuse-reap.v1":
+        raise ValueError("merged continuation preservation proof unavailable")
+    head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+    branch = worktree_claims.checked_out_branch(worktree)
+    info = WorktreeInfo(worktree, branch, proof.get("head_sha"), detached=branch is None)
+    pr = PullRequestState(proof.get("pr_number"), proof.get("pr_state"), proof.get("pr_head_sha"))
+    if (
+        proof.get("owner") != creator.get("task_id")
+        or proof.get("run_nonce") != creator.get("run_nonce")
+        or head.returncode != 0
+        or head.stdout.strip() != info.head
+        or proof.get("clean") is not True
+        or _worktree_clean(worktree) is not True
+        or proof.get("head_relation") != ("exact" if pr.head_sha == info.head else "ancestor")
+        or any(member.get("keep_worktree") for _, member in matches)
+        or _retention_release_present(matches)
+        or not all(
+            _pid_proven_absent(member)
+            and member.get("status") in _TERMINAL_DISPATCH_STATUSES
+            and member.get("lease_state") != "active"
+            and not (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
+            for _, member in cohort
+        )
+        or proof.get("members")
+        != [
+            {
+                "task_id": member.get("task_id"),
+                "run_nonce": member.get("run_nonce"),
+                "branch": member.get("worktree_branch"),
+                "head_sha": member.get("final_branch_head_commit"),
+                "pid": member.get("pid"),
+            }
+            for _, member in cohort
+        ]
+        or not _continuation_head_is_merged(info, pr, cohort)
+    ):
+        raise ValueError("merged continuation preservation proof changed")
+    return path, creator
+
+
+def _terminal_abandon_matches(repo_root: Path, worktree: Path) -> list[tuple[Path, dict[str, Any]]] | None:
+    """An explicit record opts into the whole fail-closed abandon proof."""
+    from scripts.fleet import ignored_task_output as output
+
+    primary = control_plane_root(repo_root)
+    tasks_dir = task_store_paths.tasks_dir()
+    matches = output.matching_worktree_records(worktree, tasks_dir, repo_root=primary, publish_cache=False)
+    if not any("worktree_abandon" in member for _, member in matches):
+        return None
+    output.terminal_abandon_creator(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+    return matches
 
 
 def _merged_reuse_claim_proven_settled(
@@ -4007,8 +4084,19 @@ def _enter_dispatch_worktree_guard(
     proven: set[_ClaimIdentity] = set()
     reused_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
     merged_reuse_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
+    abandon_proofs: list[list[tuple[Path, dict[str, Any]]]] = []
 
     def prove(record: dict[str, Any]) -> bool:
+        try:
+            abandoned = _terminal_abandon_matches(primary, info.path)
+            if abandoned is not None and any(member == record for _, member in abandoned):
+                active = _read_active_task_probe()
+                if not isinstance(active, set) or any(member.get("task_id") in active for _, member in abandoned):
+                    return False
+                abandon_proofs.append(abandoned)
+                return True
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+            return False
         merged_reuse = _merged_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
         if merged_reuse is not None:
             identity = _needs_finalize_claim_identity(record)
@@ -4039,6 +4127,12 @@ def _enter_dispatch_worktree_guard(
 
     def still_settled(record: dict[str, Any]) -> bool:
         # Under the lock: no network. The record must still be the one proven.
+        if any(any(member == record for _, member in matches) for matches in abandon_proofs):
+            try:
+                current = _terminal_abandon_matches(primary, info.path)
+                return current in abandon_proofs
+            except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+                return False
         identity = _needs_finalize_claim_identity(record)
         if identity in merged_reuse_proofs:
             from scripts.fleet import ignored_task_output
@@ -4109,6 +4203,7 @@ def _reap_qualified_worktree(
     now: float | None = None,
 ) -> ReapResult:
     expected_head = info.head
+    abandoning = reason.startswith("terminal-abandon.v1 ")
     if dirty is None:
         return ReapResult(
             path=str(info.path),
@@ -4136,7 +4231,10 @@ def _reap_qualified_worktree(
                 info.path, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
             )
             cohort = ignored_task_output._current_reuse_records(matches, task_store_paths.tasks_dir())
-            if len(cohort) > 1:
+            if abandoning:
+                if _terminal_abandon_matches(repo_root, info.path) is None:
+                    raise ValueError("terminal-abandon proof disappeared")
+            elif len(cohort) > 1:
                 _creator_path, _creator, alternate = _resolve_merged_reuse_creator(
                     matches, info.path, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
                 )
@@ -4343,6 +4441,7 @@ def _reap_qualified_worktree(
                         dirty=True,
                         pr=_pr_dict(pr_state),
                     )
+            if dirty and not abandoning:
                 preserve_error = _preserve_dirty_worktree(info, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
                 if preserve_error is not None:
                     return ReapResult(
@@ -4427,6 +4526,12 @@ def _reap_qualified_worktree(
                         dirty=dirty,
                         pr=_pr_dict(pr_state),
                     )
+            elif abandoning:
+                try:
+                    if _terminal_abandon_matches(repo_root, info.path) is None:
+                        raise ValueError("terminal-abandon proof disappeared")
+                except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+                    return ReapResult(str(info.path), info.branch, "skipped", f"terminal-abandon refused: {exc}", dirty)
             else:
                 current_clean = _worktree_clean(info.path, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
                 if current_clean is not True:
@@ -4650,8 +4755,10 @@ def _reap_qualified_worktree(
         control_root = control_plane_root(repo_root)
         preservation_receipt: dict[str, Any] = {}
         try:
-            merged_reuse_proof = _record_merged_reuse_proof(
-                control_root, info, pr_state, tasks_dir=task_store_paths.tasks_dir()
+            merged_reuse_proof = (
+                None
+                if abandoning
+                else _record_merged_reuse_proof(control_root, info, pr_state, tasks_dir=task_store_paths.tasks_dir())
             )
         except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
             detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
@@ -4986,6 +5093,17 @@ def reap_worktrees(
             # "PR #N MERGED" reason does not enable the cleanup-time re-query.
             pr_unknown = pr_error is not None
             attention: list[str] = []
+            if pr_state is not None and pr_state.state == "CLOSED" and dirty is True:
+                try:
+                    abandoned = _terminal_abandon_matches(repo_root, info.path)
+                    refusal = "closed PR dirty tree requires terminal-abandon.v1" if abandoned is None else None
+                except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+                    refusal = f"terminal-abandon refused: {exc}"
+                if refusal is not None:
+                    results.append(
+                        ReapResult(str(info.path), info.branch, "skipped", refusal, dirty, _pr_dict(pr_state))
+                    )
+                    continue
             if foreign:
                 # A foreign scratch checkout is never a candidate for the
                 # PR- or task-bound classes, only for the one class below --
@@ -5430,7 +5548,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--preserve-then-reap",
         action="store_true",
-        help="Commit dirty eligible worktrees locally with --no-verify before removing them.",
+        help=(
+            "Preserve dirty eligible worktrees before removing them. Verified terminal-abandon copies "
+            "current files without changing HEAD; other classes commit locally with --no-verify."
+        ),
     )
     parser.add_argument(
         "--prune-merged-branches",

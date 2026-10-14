@@ -1,6 +1,7 @@
 """Continuation cohorts from #10008, using disposable records and Git trees."""
 
 import contextlib
+import hashlib
 import json
 import os
 import shutil
@@ -1503,8 +1504,10 @@ def test_same_branch_pending_cohort_plan(same_branch_pending_cohort, monkeypatch
         assert rw._merged_reuse_claim_proven_settled(repo, tree, member, tasks_dir=tasks) is not None
     with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
         proof = rw._record_merged_reuse_proof(
-            repo, rw.WorktreeInfo(tree, "codex/boundary", head),
-            rw.PullRequestState(9645, "MERGED", reviewed), tasks_dir=tasks,
+            repo,
+            rw.WorktreeInfo(tree, "codex/boundary", head),
+            rw.PullRequestState(9645, "MERGED", reviewed),
+            tasks_dir=tasks,
         )
     assert proof["schema"] == "merged-reuse-reap.v1"
     assert proof["head_sha"] == head and proof["head_relation"] == relation
@@ -1532,7 +1535,8 @@ def test_same_branch_pending_cohort_refusals(same_branch_pending_cohort, monkeyp
     assert rw._merged_reuse_claim_proven_settled(repo, tree, creator, tasks_dir=tasks) is None
     with contextlib.ExitStack() as stack:
         reason = rw._enter_dispatch_worktree_guard(
-            stack, repo_root=repo,
+            stack,
+            repo_root=repo,
             info=rw.WorktreeInfo(tree, "codex/boundary", _git(tree, "rev-parse", "HEAD")),
         )
     if failure == "unmerged":
@@ -1545,3 +1549,325 @@ def test_same_branch_pending_cohort_refusals(same_branch_pending_cohort, monkeyp
         assert "ambiguous worktree task attribution with retention intent" in row.reason
     assert {p: p.read_bytes() for p in before} == before
     assert tree.exists() and source.read_bytes() == b"current output"
+
+
+@pytest.mark.parametrize("relation", ["exact", "ancestor"])
+def test_10303_same_branch_pending_removal_preserves_output(same_branch_pending_cohort, monkeypatch, relation):
+    repo, tree, tasks, creator, _, source = same_branch_pending_cohort
+    rw = reap.reap_worktrees
+    head = _git(tree, "rev-parse", "HEAD")
+    reviewed = head
+    if relation == "ancestor":
+        _git(tree, "commit", "--allow-empty", "-m", "later merged head")
+        reviewed = _git(tree, "rev-parse", "HEAD")
+        _git(tree, "reset", "--hard", head)
+    monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(9645, "MERGED", reviewed)], None))
+    row = next(r for r in rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()) if r.path == str(tree))
+    assert row.action == "removed", row
+    assert not tree.exists()
+    receipt = row.preserved_artifacts
+    assert receipt["merged_head_proof"]["head_relation"] == relation
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    assert (repo / receipt["location"] / source.relative_to(tree)).read_bytes() == b"current output"
+    assert json.loads((tasks / "boundary.json").read_text())["status"] == creator["status"]
+
+
+def _write_abandon_receipt(repo, tree, tasks, creator):
+    """Owner-authored, hash-bound real binary patches, including both dirty states."""
+    head = _git(tree, "rev-parse", "HEAD")
+    base = _git(tree, "rev-parse", "main")
+    destination = repo / "batch_state/abandon/boundary"
+    destination.mkdir(parents=True, exist_ok=True)
+
+    def entry(name, payload):
+        path = destination / name
+        path.write_bytes(payload)
+        return {"path": path.relative_to(repo).as_posix(), "sha256": hashlib.sha256(payload).hexdigest()}
+
+    manifest = {
+        "schema": "terminal-abandon-preservation.v1",
+        "owner": creator["task_id"],
+        "run_nonce": creator["run_nonce"],
+        "head_sha": head,
+        "base_sha": base,
+    }
+    for key, revisions in (
+        ("head_patch", [base, head]),
+        ("index_patch", ["--cached", head]),
+        ("working_patch", []),
+    ):
+        patch = subprocess.run(
+            ["git", "diff", "--binary", "--full-index", "--no-ext-diff", "--no-textconv", *revisions, "--"],
+            cwd=tree,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        ).stdout
+        manifest[key] = entry(key + ".patch", patch)
+    creator["worktree_abandon"] = {
+        "schema": "terminal-abandon.v1",
+        "disposition": "ABANDON",
+        "owner": creator["task_id"],
+        "run_nonce": creator["run_nonce"],
+        "head_sha": head,
+        "reason": "superseded implementation",
+        "preservation": entry("manifest.json", json.dumps(manifest, sort_keys=True).encode()),
+    }
+    save(tasks, creator)
+
+
+@pytest.fixture
+def abandon_cohort(same_branch_pending_cohort, monkeypatch):
+    repo, tree, tasks, creator, successor, source = same_branch_pending_cohort
+    rw = reap.reap_worktrees
+    (tree / "README.md").write_bytes(b"unpublished abandoned implementation\n")
+    _git(tree, "add", "README.md")
+    _git(tree, "commit", "-m", "unpublished abandoned work")
+    head = _git(tree, "rev-parse", "HEAD")
+    for member in (creator, successor):
+        member["final_branch_head_commit"] = head
+        save(tasks, member)
+    _write_abandon_receipt(repo, tree, tasks, creator)
+    monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([], None))
+    return repo, tree, tasks, creator, successor, source
+
+
+@pytest.mark.parametrize("closed", [False, True])
+@pytest.mark.parametrize("dirty", [False, True])
+def test_10303_terminal_abandon_removes_only_after_verified_copy(abandon_cohort, monkeypatch, tmp_path, closed, dirty):
+    repo, tree, tasks, creator, _, source = abandon_cohort
+    rw = reap.reap_worktrees
+    head = _git(tree, "rev-parse", "HEAD")
+    if dirty:
+        (tree / "README.md").write_bytes(b"staged unique bytes\x00")
+        _git(tree, "add", "README.md")
+        (tree / "README.md").write_bytes(b"working unique bytes\x00")
+        (tree / "untracked.txt").write_bytes(b"untracked unique bytes")
+        _write_abandon_receipt(repo, tree, tasks, creator)
+    if closed:
+        monkeypatch.setattr(rw, "_query_pr_states", lambda *_: ([rw.PullRequestState(9645, "CLOSED", head)], None))
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    plan = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo,
+            apply=False,
+            live_cwds=set(),
+            preserve_then_reap=True,
+        )
+        if r.path == str(tree)
+    )
+    assert plan.action == ("would_preserve_then_remove" if dirty else "would_remove"), plan
+    assert plan.reason == "terminal-abandon.v1 verified owner ABANDON and preservation"
+    assert {p: p.read_bytes() for p in before} == before
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            preserve_then_reap=True,
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == ("preserved_then_removed" if dirty else "removed"), row
+    assert not tree.exists()
+    receipt = row.preserved_artifacts
+    assert receipt["abandon_proof"]["head_sha"] == head
+    assert output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
+    copy = repo / receipt["location"]
+    assert (copy / source.relative_to(tree)).read_bytes() == b"current output"
+    manifest = json.loads((repo / creator["worktree_abandon"]["preservation"]["path"]).read_bytes())
+    # Restore from the preserved patch using a separate index; compare the real tree.
+    environment = dict(os.environ, GIT_INDEX_FILE=str(tmp_path / "restore.index"))
+    subprocess.run(["git", "read-tree", manifest["base_sha"]], cwd=repo, env=environment, check=True, timeout=30)
+    subprocess.run(
+        ["git", "apply", "--cached", str(repo / manifest["head_patch"]["path"])],
+        cwd=repo,
+        env=environment,
+        check=True,
+        timeout=30,
+    )
+    restored = subprocess.run(
+        ["git", "write-tree"], cwd=repo, env=environment, check=True, capture_output=True, text=True, timeout=30
+    ).stdout.strip()
+    assert restored == _git(repo, "rev-parse", f"{head}^{{tree}}")
+    if dirty:
+        assert (copy / "README.md").read_bytes() == b"working unique bytes\x00"
+        assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
+        assert b"GIT binary patch" in (repo / manifest["index_patch"]["path"]).read_bytes()
+        subprocess.run(
+            ["git", "apply", "--cached", str(repo / manifest["index_patch"]["path"])],
+            cwd=repo,
+            env=environment,
+            check=True,
+            timeout=30,
+        )
+        staged = subprocess.run(
+            ["git", "show", ":README.md"], cwd=repo, env=environment, check=True, capture_output=True, timeout=30
+        ).stdout
+        assert staged == b"staged unique bytes\x00"
+    else:
+        assert (copy / "README.md").read_bytes() == b"unpublished abandoned implementation\n"
+    state = json.loads((tasks / "boundary.json").read_text())
+    assert state["status"] == "needs_finalize" and state["run_nonce"] == creator["run_nonce"]
+    assert _git(repo, "rev-parse", "codex/boundary") == head
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "live_pid",
+        "keep",
+        "lease",
+        "running",
+        "missing_receipt",
+        "invalid_digest",
+        "head_changed",
+        "missing_patch",
+        "wrong_patch",
+        "symlink",
+        "fifo",
+        "owner",
+        "reason",
+        "dirty_changed",
+        "index_lock",
+    ],
+)
+def test_10303_terminal_abandon_refuses_incomplete_proof(abandon_cohort, monkeypatch, failure):
+    repo, tree, tasks, creator, successor, source = abandon_cohort
+    rw = reap.reap_worktrees
+    if failure == "live_pid":
+        successor["pid"] = os.getpid()
+    elif failure == "keep":
+        successor["keep_worktree"] = True
+    elif failure == "lease":
+        successor["lease"] = {"state": "active"}
+    elif failure == "running":
+        successor["status"] = "running"
+    elif failure == "missing_receipt":
+        creator["worktree_abandon"].pop("preservation")
+    elif failure == "invalid_digest":
+        creator["worktree_abandon"]["preservation"]["sha256"] = "0" * 64
+    elif failure == "head_changed":
+        _git(tree, "commit", "--allow-empty", "-m", "head changed")
+    elif failure in {"missing_patch", "wrong_patch", "symlink", "fifo"}:
+        locator = creator["worktree_abandon"]["preservation"]
+        path = repo / locator["path"]
+        manifest = json.loads(path.read_bytes())
+        patch = repo / manifest["head_patch"]["path"]
+        patch.unlink()
+        if failure == "wrong_patch":
+            patch.write_bytes(b"arbitrary bytes are not a preservation patch")
+            manifest["head_patch"]["sha256"] = hashlib.sha256(patch.read_bytes()).hexdigest()
+            path.write_bytes(json.dumps(manifest).encode())
+            locator["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        elif failure == "symlink":
+            patch.symlink_to(path)
+        elif failure == "fifo":
+            os.mkfifo(patch)
+    elif failure == "owner":
+        creator["worktree_abandon"]["owner"] = "successor"
+    elif failure == "reason":
+        creator["worktree_abandon"]["reason"] = ""
+    elif failure == "index_lock":
+        from pathlib import Path
+
+        Path(_git(tree, "rev-parse", "--git-path", "index.lock")).write_bytes(b"existing writer lock")
+    else:
+        (tree / "README.md").write_text("unpreserved dirty bytes")
+    save(tasks, creator)
+    save(tasks, successor)
+    monkeypatch.setattr(
+        rw,
+        "_query_pr_states",
+        lambda *_: (
+            [
+                rw.PullRequestState(
+                    9645,
+                    "CLOSED",
+                    _git(tree, "rev-parse", "HEAD"),
+                )
+            ],
+            None,
+        ),
+    )
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            preserve_then_reap=True,
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == "skipped", row
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert {p: p.read_bytes() for p in before} == before
+
+
+def test_10303_closed_dirty_without_abandon_retains_bytes(same_branch_pending_cohort, monkeypatch):
+    repo, tree, tasks, creator, successor, source = same_branch_pending_cohort
+    rw = reap.reap_worktrees
+    for member in (creator, successor):
+        member["status"] = "done"
+        save(tasks, member)
+    (tasks / "successor.json").unlink()
+    (tree / "README.md").write_bytes(b"unpreserved work")
+    monkeypatch.setattr(
+        rw,
+        "_query_pr_states",
+        lambda *_: (
+            [
+                rw.PullRequestState(
+                    9645,
+                    "CLOSED",
+                    _git(tree, "rev-parse", "HEAD"),
+                )
+            ],
+            None,
+        ),
+    )
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            preserve_then_reap=True,
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == "skipped" and row.reason == "closed PR dirty tree requires terminal-abandon.v1"
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert (tree / "README.md").read_bytes() == b"unpreserved work"
+    assert {p: p.read_bytes() for p in before} == before
+
+
+def test_10303_dirty_abandon_keeps_stale_index_lock_guard(abandon_cohort, monkeypatch):
+    repo, tree, tasks, creator, _, source = abandon_cohort
+    rw = reap.reap_worktrees
+    (tree / "README.md").write_bytes(b"dirty unique bytes")
+    _write_abandon_receipt(repo, tree, tasks, creator)
+    lock = tree / "index.lock"
+    lock.write_bytes(b"preserved stale lock")
+    monkeypatch.setattr(rw, "_stale_index_lock", lambda _path: lock)
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+    row = next(
+        r
+        for r in rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            preserve_then_reap=True,
+        )
+        if r.path == str(tree)
+    )
+    assert row.action == "skipped" and "stale index.lock" in row.reason
+    assert tree.exists() and source.read_bytes() == b"current output"
+    assert lock.read_bytes() == b"preserved stale lock"
+    assert (tree / "README.md").read_bytes() == b"dirty unique bytes"
+    assert {p: p.read_bytes() for p in before} == before
