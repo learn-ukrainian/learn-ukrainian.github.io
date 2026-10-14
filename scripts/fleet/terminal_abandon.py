@@ -49,7 +49,15 @@ def _regular_bytes(path: Path, primary: Path) -> bytes:
     return leaf.payload
 
 
-def _activity(primary: Path, tree: Path, matches: list[tuple[Path, dict[str, Any]]], head: str) -> None:
+def _activity(
+    primary: Path,
+    tree: Path,
+    matches: list[tuple[Path, dict[str, Any]]],
+    head: str,
+    *,
+    successor: bool = False,
+    merged: bool = False,
+) -> None:
     try:
         active = rw._active_task_ids()
         cwds = rw._live_cwd_paths(primary)
@@ -59,14 +67,7 @@ def _activity(primary: Path, tree: Path, matches: list[tuple[Path, dict[str, Any
         raise Refusal("ACTIVITY_UNKNOWN", "live task or process activity probe unavailable")
     if any(member.get("task_id") in active for _, member in matches):
         raise Refusal("LIVE_OR_WANTED", "a bound task is active")
-    if any(
-        member.get("status") not in rw._TERMINAL_DISPATCH_STATUSES
-        or member.get("keep_worktree")
-        or member.get("lease_state") == "active"
-        or (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
-        or not rw._pid_proven_absent(member)
-        for _, member in matches
-    ):
+    if any(not output.abandon_task_is_terminal(member, successor=successor, merged=merged) for _, member in matches):
         raise Refusal("LIVE_OR_WANTED", "bound task status, PID, lease or retention does not permit abandonment")
     info = rw.WorktreeInfo(tree, claims.checked_out_branch(tree), head)
     if rw._activity_reason(repo_root=primary, info=info, active_ids=active, live_cwds=cwds) is not None:
@@ -164,7 +165,63 @@ def _successor(caller: Any, creator: dict[str, Any]) -> tuple[Any, str, str, dic
     return lease, stream, mapping_digest, _current_custody(lease, stream)
 
 
-def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dict[str, Any]:
+def _recover_creator(
+    primary: Path, tasks: Path, path: Path, record: dict[str, Any], tree: Path
+) -> tuple[dict[str, Any], dict[str, str]]:
+    """Separate opt-in recovery; archive evidence must bind the same attempt."""
+    candidates = [
+        tasks / "archive" / f"{record['task_id']}.json",
+        *sorted(tasks.glob(f"{record['task_id']}.*.archived.json")),
+    ]
+    verified = []
+    for source in candidates:
+        if source == path or not output.recovery_source_path(tasks, record["task_id"], source):
+            continue
+        try:
+            raw = _regular_bytes(source, primary)
+            archived = json.loads(raw)
+            if not isinstance(archived, dict):
+                continue
+            recovered = output.recovered_creator(archived, record, tree)
+        except (OSError, ValueError, RuntimeError):
+            continue
+        verified.append(
+            (recovered, {"path": source.relative_to(primary).as_posix(), "sha256": hashlib.sha256(raw).hexdigest()})
+        )
+    if len(verified) != 1:
+        raise Refusal(
+            "CREATOR_RECOVERY_REQUIRED",
+            f"manual item {record['task_id']}: archived creator evidence missing, ambiguous or unverifiable; {RECOVERY}",
+        )
+    return verified[0]
+
+
+def _detached_bundle(tree: Path, parent: Path, primary: Path, head: str) -> dict[str, str]:
+    """Preserve a clean detached commit independently of any surviving ref."""
+    with tempfile.NamedTemporaryFile(dir=parent, prefix=".head-bundle-", delete=False) as handle:
+        temporary = Path(handle.name)
+    try:
+        probe = artifacts.safe_git(
+            ["bundle", "create", str(temporary), "HEAD"], cwd=tree, capture_output=True, check=False, timeout=30
+        )
+        if probe.returncode != 0:
+            raise Refusal("PRESERVATION_INVALID", "detached HEAD bundle could not be created")
+        raw = _regular_bytes(temporary, primary)
+        digest = hashlib.sha256(raw).hexdigest()
+        destination = parent / f"head-{head}-{digest}.bundle"
+        if destination.exists() or destination.is_symlink():
+            if _regular_bytes(destination, primary) != raw:
+                raise Refusal("PRESERVATION_INVALID", "detached HEAD bundle collision")
+        else:
+            os.replace(temporary, destination)
+        return {"path": destination.relative_to(primary).as_posix(), "sha256": digest}
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def record_abandon(
+    *, task_id: str, head: str, reason: str, bundle: Path, recover_creator: bool = False
+) -> dict[str, Any]:
     """Validate under dispatch's locks, then atomically publish the creator record.
 
     Caller identity uses the same initiator resolver as delegate's owner-only
@@ -185,21 +242,30 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
     if tasks.absolute() != primary / "batch_state/tasks" or tasks.resolve(strict=True) != tasks.absolute():
         raise Refusal("INVALID_INPUT", "task store must be the canonical control-plane store without symlinks")
     path = locate_task_record(tasks, task_id)
+    recovery_reason = f"manual item {task_id}: {RECOVERY}" if recover_creator else RECOVERY
     if path is None:
-        raise Refusal("CREATOR_RECOVERY_REQUIRED", RECOVERY)
+        raise Refusal("CREATOR_RECOVERY_REQUIRED", recovery_reason)
     record = json.loads(_regular_bytes(path, primary))
-    if not isinstance(record, dict) or not output.record_created_worktree(record):
-        raise Refusal("CREATOR_RECOVERY_REQUIRED", RECOVERY)
+    if not isinstance(record, dict) or (not recover_creator and not output.record_created_worktree(record)):
+        raise Refusal("CREATOR_RECOVERY_REQUIRED", recovery_reason)
+    if recover_creator and record.get("task_id") != task_id:
+        raise Refusal(
+            "CREATOR_RECOVERY_REQUIRED",
+            f"manual item {task_id}: archived recovery requires a canonical task identity; {RECOVERY}",
+        )
     raw_tree = record.get("worktree_path") or record.get("cwd")
     if not isinstance(raw_tree, str):
-        raise Refusal("CREATOR_RECOVERY_REQUIRED", RECOVERY)
+        raise Refusal("CREATOR_RECOVERY_REQUIRED", recovery_reason)
     tree = claims.resolve_claim_path(raw_tree, repo_root=primary)
     if tree is None or not tree.is_dir():
-        raise Refusal("CREATOR_RECOVERY_REQUIRED", RECOVERY)
+        raise Refusal("CREATOR_RECOVERY_REQUIRED", recovery_reason)
     if tree == primary or not tree.is_relative_to(primary / ".worktrees/dispatch"):
         raise Refusal("INVALID_INPUT", "target must be an existing dispatch worktree")
     branch = claims.checked_out_branch(tree)
-    prs, error = rw._query_pr_states(tree, branch)
+    source_branch = branch
+    if source_branch is None and caller.initiator != record.get("initiator"):
+        source_branch = record.get("worktree_branch")
+    prs, error = rw._query_pr_states(tree, source_branch)
     if error is not None:
         raise Refusal("ACTIVITY_UNKNOWN", "open PR probe unavailable")
     if any(pr.state == "OPEN" for pr in prs):
@@ -217,7 +283,19 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
         current = output.matching_worktree_records(tree, tasks, repo_root=primary, publish_cache=False)
         if current != matches:
             raise Refusal("STATE_CHANGED", "task cohort changed while acquiring locks; retry after it settles")
-        creators = [(p, r) for p, r in matches if output.record_created_worktree(r)]
+        recovery = None
+        recovered = None
+        if recover_creator and not output.record_created_worktree(record):
+            locked_record = next((member for member_path, member in matches if member_path == path), None)
+            if locked_record != record:
+                raise Refusal("STATE_CHANGED", "creator recovery task changed during lock acquisition")
+            recovered, recovery = _recover_creator(primary, tasks, path, locked_record, tree)
+            creators = [(path, recovered)]
+            if any(output.record_created_worktree(r) and p != primary / recovery["path"] for p, r in matches):
+                raise Refusal("CREATOR_RECOVERY_REQUIRED", RECOVERY)
+        else:
+            recovered_source = output._recovery_source(matches, tree, primary=primary, tasks=tasks)
+            creators = [(p, r) for p, r in matches if p != recovered_source and output.record_created_worktree(r)]
         if len(creators) != 1:
             raise Refusal("CREATOR_RECOVERY_REQUIRED", RECOVERY)
         creator_path, creator = creators[0]
@@ -231,12 +309,21 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
             raise Refusal("HEAD_MISMATCH", "checkout HEAD does not match the requested exact head")
         if claims.checked_out_branch(tree) != branch:
             raise Refusal("STATE_CHANGED", "checkout branch changed after PR probe; retry after it settles")
-        if succession is not None and not isinstance(branch, str):
-            raise Refusal("INVALID_INPUT", "succession requires a checked-out branch")
-        _activity(primary, tree, matches, head)
+        merged_proof = None
+        if succession is not None and any(
+            r.get("keep_worktree") or r.get("status") == "needs_finalize" for _, r in matches
+        ):
+            try:
+                merged_proof = output.merged_abandon_proof(tree, creator, head)
+            except (OSError, ValueError, RuntimeError):
+                raise Refusal(
+                    "LIVE_OR_WANTED", "merged terminal proof unavailable or checkout HEAD is unmerged"
+                ) from None
+        _activity(primary, tree, matches, head, successor=succession is not None, merged=merged_proof is not None)
         if "worktree_abandon" in creator:
             output.terminal_abandon_creator(matches, tree, primary=primary, tasks_dir=tasks)
             old = creator["worktree_abandon"]
+            recovery = old.get("creator_recovery")
             if old["head_sha"] != head or old["reason"] != reason:
                 raise Refusal("ALREADY_RECORDED", "existing abandon differs; no overwrite is permitted")
         bundle = bundle if bundle.is_absolute() else primary / bundle
@@ -263,10 +350,14 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
         }
         captured = None
         if succession is not None:
+            if branch is None:
+                manifest["detached_bundle"] = _detached_bundle(tree, parent, primary, head)
             # Git patches cannot carry untracked or ignored bytes; a successor
             # is not their author, so it preserves them before deciding.
             try:
                 locator, captured = output.capture_abandon_output(tree, primary=primary, record=creator)
+            except output.PreservationLimit as exc:
+                raise Refusal("PRESERVATION_LIMIT", str(exc)) from None
             except (OSError, ValueError, RuntimeError):
                 raise Refusal("PRESERVATION_INVALID", "untracked or ignored output could not be preserved") from None
             manifest["output"] = locator
@@ -282,6 +373,10 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
             "reason": reason,
             "preservation": {"path": "", "sha256": digest},
         }
+        if recovery is not None:
+            receipt["creator_recovery"] = recovery
+        if merged_proof is not None:
+            receipt["merged_pr"] = merged_proof
         if succession is not None:
             lease, stream, mapping_digest, authority = succession
             receipt["succession"] = {
@@ -307,6 +402,7 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
         except BaseException:
             if captured is not None:
                 shutil.rmtree(captured, ignore_errors=True)
+                captured.with_suffix(".tar").unlink(missing_ok=True)
             raise
         try:
             receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
@@ -325,7 +421,7 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
                 if creator["worktree_abandon"] != receipt:
                     raise Refusal("ALREADY_RECORDED", "existing abandon differs; no overwrite is permitted")
                 return {"outcome": "already_recorded", "task_id": task_id, "head_sha": head}
-            _activity(primary, tree, matches, head)
+            _activity(primary, tree, matches, head, successor=succession is not None, merged=merged_proof is not None)
             if output.matching_worktree_records(tree, tasks, repo_root=primary, publish_cache=False) != matches:
                 raise Refusal("STATE_CHANGED", "task cohort changed during validation; retry after it settles")
             if succession is not None:
@@ -335,6 +431,11 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
                     raise Refusal("STALE_AUTHORITY", "stream custody changed during validation")
                 if _succession_map()[1] != mapping_digest:
                     raise Refusal("STATE_CHANGED", "succession map changed during validation; retry after review")
+                current_prs, pr_error = rw._query_pr_states(tree, source_branch)
+                if pr_error is not None:
+                    raise Refusal("ACTIVITY_UNKNOWN", "source PR probe unavailable before publication")
+                if any(pr.state == "OPEN" for pr in current_prs):
+                    raise Refusal("LIVE_OR_WANTED", "source PR opened before publication")
                 try:
                     output.verify_abandon_output(tree, primary=primary, record=creator, locator=locator)
                 except (OSError, ValueError, RuntimeError):
@@ -366,6 +467,7 @@ def record_abandon(*, task_id: str, head: str, reason: str, bundle: Path) -> dic
             if captured is not None and not published:
                 # Only this call's unpublished copy; the checkout still holds the bytes.
                 shutil.rmtree(captured, ignore_errors=True)
+                captured.with_suffix(".tar").unlink(missing_ok=True)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -389,7 +491,13 @@ def main(argv: list[str] | None = None) -> int:
             "Monitor-verified current lease of the stream that scripts/config/\n"
             "terminal_abandon_succession.yaml maps the creator's initiator to. It keeps the\n"
             "creator identity and nonce, appends a succession receipt and copies untracked and\n"
-            "ignored output below batch_state/preserved/<task> before publishing.\n"
+            "ignored output below batch_state/preserved/<task> before publishing, with a hash-bound\n"
+            "tar archive and a 256 MiB payload cap. Detached HEAD also requires clean tracked\n"
+            "bytes and a retrievable Git bundle. Retention or needs_finalize requires a MERGED\n"
+            "source PR containing HEAD; live processes and leases still refuse.\n"
+            "Creator recovery: add --recover-creator only for missing creation evidence. It\n"
+            "requires exactly one archived creator for the same task, nonce, initiator, tree,\n"
+            "branch and directory inode; otherwise CREATOR_RECOVERY_REQUIRED names a manual item.\n"
             "Outputs: hashed terminal-abandon-preservation.v1 beside the bundle, atomic\n"
             "worktree_abandon in the existing creator task record, and one JSON receipt.\n"
             "No retention release, tree removal, lease change or creator invention. Monitor must be available.\n"
@@ -409,10 +517,20 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="JSON bundle below control-plane batch_state, e.g. batch_state/abandon/owner-task/bundle.json",
     )
+    parser.add_argument(
+        "--recover-creator",
+        action="store_true",
+        default=False,
+        help="Verify archived creator evidence before abandonment (default: off); e.g. --recover-creator",
+    )
     args = parser.parse_args(argv)
     try:
         result = record_abandon(
-            task_id=args.task_id, head=args.head, reason=args.reason, bundle=args.preservation_bundle
+            task_id=args.task_id,
+            head=args.head,
+            reason=args.reason,
+            bundle=args.preservation_bundle,
+            recover_creator=args.recover_creator,
         )
     except Refusal as exc:
         result = {"outcome": "refused", "code": exc.code, "reason": str(exc)}
