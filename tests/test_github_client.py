@@ -380,6 +380,42 @@ def test_rest_repository_selector_is_not_replaced_by_cwd(tmp_path):
     assert calls[0][1] == "repos/private/recall"
 
 
+@pytest.mark.parametrize(
+    "payload,visibility",
+    [
+        ({"visibility": "public", "private": False}, "PUBLIC"),
+        ({"visibility": "internal", "private": True}, "INTERNAL"),
+        ({"private": True}, "PRIVATE"),
+        ({"private": False}, "PUBLIC"),
+        ({}, None),
+        ({"visibility": None, "private": None}, None),
+        ({"visibility": ""}, None),
+    ],
+)
+def test_rest_repository_visibility_is_unknown_without_evidence(tmp_path, payload, visibility):
+    """#10511: missing visibility and privacy must not read as PUBLIC (the Muse launcher requires PUBLIC)."""
+    store, _ = client(tmp_path, [response({"full_name": "o/r", **payload})])
+    result = gh.run(
+        ["gh", "repo", "view", "o/r", "--json", "visibility,isPrivate"], client=store, text=True, capture_output=True
+    )
+    assert result.returncode == 0
+    assert json.loads(result.stdout) == {"visibility": visibility, "isPrivate": payload.get("private")}
+
+
+@pytest.mark.parametrize("payload,printed", [({}, "null"), ({"private": False}, "PUBLIC")])
+def test_rest_repository_visibility_jq_matches_launcher_probe(tmp_path, payload, printed):
+    store, _ = client(tmp_path, [response({"full_name": "o/r", **payload})])
+    result = gh.run(
+        ["gh", "repo", "view", "--json", "visibility", "--jq", ".visibility"],
+        client=store,
+        text=True,
+        capture_output=True,
+        env={"GH_REPO": "o/r"},
+    )
+    assert result.returncode == 0
+    assert result.stdout.strip() == printed
+
+
 @pytest.mark.parametrize("conclusion,bucket", [("SUCCESS", "pass"), ("CANCELLED", "cancel"), ("SKIPPED", "skipping")])
 def test_checks_preserve_native_buckets_and_fields(tmp_path, conclusion, bucket):
     expected = [

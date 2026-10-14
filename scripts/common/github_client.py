@@ -1066,10 +1066,21 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
             return result
         value = _project(result.value, "repo")
         permissions = value.get("permissions") or {}
+        # Visibility needs positive evidence: absent fields stay unknown (None),
+        # never PUBLIC, so callers that require PUBLIC fail closed (#10511).
+        visibility = value.get("visibility")
+        if isinstance(visibility, str) and visibility:
+            visibility = visibility.upper()
+        elif value.get("private") is True:
+            visibility = "PRIVATE"
+        elif value.get("private") is False:
+            visibility = "PUBLIC"
+        else:
+            visibility = None
         value.update(
             nameWithOwner=value.get("full_name"),
             isPrivate=value.get("private"),
-            visibility=str(value.get("visibility") or ("private" if value.get("private") else "public")).upper(),
+            visibility=visibility,
             viewerPermission=next(
                 (
                     name
