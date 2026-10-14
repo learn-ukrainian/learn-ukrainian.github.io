@@ -3,6 +3,9 @@
 import hashlib
 import json
 import os
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -13,6 +16,28 @@ from tests.test_continuation_worktree_reap import abandon_cohort as abandon_coho
 from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
 from tests.test_reused_worktree_retention import cohort as cohort
 from tests.test_reused_worktree_retention import save
+
+
+@pytest.mark.parametrize("mode", ["file", "module"])
+def test_cli_help_imports(mode, tmp_path):
+    root = Path(__file__).resolve().parents[2]
+    args = (
+        [str(root / "scripts/fleet/terminal_abandon.py")]
+        if mode == "file"
+        else ["-m", "scripts.fleet.terminal_abandon"]
+    )
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [sys.executable, *args, "--help"],
+        cwd=tmp_path if mode == "file" else root,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--preservation-bundle" in result.stdout
 
 
 @pytest.fixture

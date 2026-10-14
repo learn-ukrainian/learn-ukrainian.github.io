@@ -504,6 +504,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "026eadbac42cb1f329a6c3801ab70634ae52edf4f5b1eb648fd000e5e47713de:1 aee6946c6a992d9451a6b5c5a42cd42c4c5a25a3f3b50ddfd147690b58b09e62:1",
     ),
     (
+        "scripts/fleet/terminal_abandon.py",
+        "Same-directory manifest staging for validator checks before atomic os.replace publication (#10594).",
+        "f13f80d80757a114fe3aa614b3a23b5a2a00a66cca06151dffd8cef5be4100f9:1",
+    ),
+    (
         "scripts/fleet_comms/artifacts.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "d2890a23d18c5e0e8a4e48c1f15eb999b4f633191b82bf7ae1cb0d56b9f0bd58:1",

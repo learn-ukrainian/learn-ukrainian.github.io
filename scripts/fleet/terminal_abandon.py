@@ -8,9 +8,14 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
+
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common import task_store_paths
