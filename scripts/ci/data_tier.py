@@ -186,7 +186,11 @@ def require_pool_headroom() -> None:
 
 
 def prune_stale_worktrees(primary: Path) -> None:
-    """Reap abandoned nightly checkouts only when no nightly scope is active."""
+    """Reap abandoned nightly checkouts only when no nightly scope is active.
+
+    ``run`` refreshes ``refs/remotes/origin/main`` before this. Removal refuses
+    when that ref is missing or older than the runner's refresh bound.
+    """
     parent = primary / ".worktrees" / "data-tier"
     if not parent.is_dir():
         return
@@ -206,6 +210,13 @@ def prune_stale_worktrees(primary: Path) -> None:
 
 
 def remove_test_worktree(primary: Path, checkout: Path) -> None:
+    """Remove one nightly checkout through the guarded path.
+
+    ``force=True`` keeps the outer dirty guard, which retains untracked
+    non-ignored files. An eligible checkout is still deleted without
+    ``git worktree remove --force``; :func:`worktree_claims.git_worktree_remove`
+    makes that choice after proving eligibility again.
+    """
     removal = worktree_claims.remove_unclaimed_worktree(
         checkout,
         repo_root=primary,
@@ -235,21 +246,90 @@ def stop_scope(unit: str) -> None:
     command(["systemctl", "--user", "stop", unit], cwd=SOURCE_ROOT, timeout=60)
 
 
+def _git_text(primary: Path, *args: str, timeout: int = 120) -> str:
+    return command(["git", *args], cwd=primary, timeout=timeout).stdout.strip()
+
+
+def _absolute_git_path(primary: Path, spec: str) -> Path:
+    raw = _git_text(primary, "rev-parse", "--path-format=absolute", "--git-path", spec)
+    path = Path(raw)
+    if not path.is_absolute():
+        raise DataTierError("git path is not absolute")
+    return path
+
+
+def _stamp_origin_main(primary: Path) -> None:
+    """Record that this run refreshed ``refs/remotes/origin/main``.
+
+    An unchanged fetch does not rewrite the loose ref or its reflog, so the
+    file mtime would stay at the last time the SHA moved. Eligibility treats
+    that mtime as the ref's age. Touch the on-disk record just verified, or
+    write the loose ref when the SHA lives only in packed-refs and has no log.
+    """
+    ref = worktree_claims.DATA_TIER_ORIGIN_MAIN_REF
+    loose = _absolute_git_path(primary, ref)
+    log = _absolute_git_path(primary, f"logs/{ref}")
+    stamped = False
+    for path in (loose, log):
+        if path.is_file():
+            os.utime(path, None)
+            stamped = True
+    if stamped:
+        return
+    sha = _git_text(primary, "rev-parse", "--verify", f"{ref}^{{commit}}")
+    if not re.fullmatch(r"(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})", sha):
+        raise DataTierError("refs/remotes/origin/main did not resolve to a commit")
+    loose.parent.mkdir(parents=True, exist_ok=True)
+    lock = loose.with_name(loose.name + ".lock")
+    try:
+        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+    except FileExistsError as exc:
+        raise DataTierError("refs/remotes/origin/main is locked") from exc
+    try:
+        os.write(fd, f"{sha}\n".encode("ascii"))
+    except Exception:
+        os.close(fd)
+        lock.unlink(missing_ok=True)
+        raise
+    os.close(fd)
+    os.replace(lock, loose)
+
+
+def refresh_origin_main(primary: Path) -> None:
+    """Fetch origin's main into the remote-tracking ref and stamp its age.
+
+    The refspec is fully qualified so a local branch named ``origin/main``
+    cannot shadow it. Call this before stale prune and before creating the
+    checkout: eligibility refuses a missing or stale ``refs/remotes/origin/main``.
+    """
+    ref = worktree_claims.DATA_TIER_ORIGIN_MAIN_REF
+    command(
+        ["git", "fetch", "--no-tags", "origin", f"+refs/heads/main:{ref}"],
+        cwd=primary,
+        timeout=300,
+    )
+    _git_text(primary, "rev-parse", "--verify", f"{ref}^{{commit}}")
+    _stamp_origin_main(primary)
+
+
 def make_test_worktree(primary: Path) -> Path:
-    # Use Git's common directory only to register a new linked checkout. All
-    # code freshness operations happen from that checkout, never from primary.
+    # Fetch before the checkout exists, then again before reset, so the
+    # detached HEAD is the remote-tracking ref the eligibility proof accepts.
+    # Git's common directory is used only to register the linked checkout.
+    refresh_origin_main(primary)
+    ref = worktree_claims.DATA_TIER_ORIGIN_MAIN_REF
     git_dir = primary / ".git"
     parent = primary / ".worktrees" / "data-tier"
     parent.mkdir(parents=True, exist_ok=True)
     path = parent / f"run-{uuid.uuid4().hex}"
     command(
-        ["git", "--git-dir", str(git_dir), "worktree", "add", "--detach", str(path), "origin/main"],
+        ["git", "--git-dir", str(git_dir), "worktree", "add", "--detach", str(path), ref],
         cwd=parent,
         timeout=300,
     )
     try:
-        command(["git", "fetch", "--no-tags", "origin", "main"], cwd=path, timeout=300)
-        command(["git", "reset", "--hard", "origin/main"], cwd=path, timeout=300)
+        refresh_origin_main(primary)
+        command(["git", "reset", "--hard", ref], cwd=path, timeout=300)
         command(["git", "sparse-checkout", "disable"], cwd=path, timeout=300)
         if command(["git", "status", "--porcelain"], cwd=path).stdout.strip():
             raise DataTierError("new data-tier checkout is not clean")
@@ -664,6 +744,8 @@ def run(args: argparse.Namespace) -> int:
             raise DataTierError("shared project interpreter unavailable") from error
         if not project_python.is_file():
             raise DataTierError("shared project interpreter unavailable")
+        # Prune and checkout creation both require a ref this run refreshed.
+        refresh_origin_main(primary)
         prune_stale_worktrees(primary)
         checkout = make_test_worktree(primary)
         summary["main_sha"] = command(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()

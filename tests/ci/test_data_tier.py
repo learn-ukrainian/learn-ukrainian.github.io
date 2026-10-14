@@ -741,6 +741,7 @@ def nightly(monkeypatch: pytest.MonkeyPatch) -> Iterator[SimpleNamespace]:
     monkeypatch.setattr(data_tier, "primary_checkout", lambda: primary)
     monkeypatch.setattr(data_tier, "project_interpreter", lambda root: project_python if root == primary else None)
     monkeypatch.setattr(data_tier, "require_memory", lambda: None)
+    monkeypatch.setattr(data_tier, "refresh_origin_main", lambda _primary: None)
     monkeypatch.setattr(data_tier, "prune_stale_worktrees", lambda _primary: None)
     monkeypatch.setattr(data_tier, "make_test_worktree", lambda _primary: checkout)
     monkeypatch.setattr(data_tier, "command", lambda *args, **kwargs: SimpleNamespace(stdout="a" * 40))
@@ -820,19 +821,29 @@ def test_checkout_cleanup_obeys_guard_outcome(action: str, tmp_path: Path, monke
 def test_checkout_creation_failure_uses_guarded_cleanup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     created = []
     removed = []
+    added: list[str] = []
+    refreshes = {"n": 0}
+
+    def refresh(_primary: Path) -> None:
+        refreshes["n"] += 1
+        if refreshes["n"] > 1:
+            raise data_tier.DataTierError("fetch failed")
 
     def command(argv: list[str], **kwargs: object) -> SimpleNamespace:
         if "add" in argv:
-            created.append(Path(argv[-2]))
+            added.append(argv[-1])
+            created.append(Path(argv[argv.index("--detach") + 1]))
             return SimpleNamespace(stdout="")
-        raise data_tier.DataTierError("fetch failed")
+        raise data_tier.DataTierError(f"unexpected command: {argv}")
 
+    monkeypatch.setattr(data_tier, "refresh_origin_main", refresh)
     monkeypatch.setattr(data_tier, "command", command)
     monkeypatch.setattr(
         data_tier, "remove_test_worktree", lambda primary, checkout: removed.append((primary, checkout))
     )
     with pytest.raises(data_tier.DataTierError, match="fetch failed"):
         data_tier.make_test_worktree(tmp_path)
+    assert added == [data_tier.worktree_claims.DATA_TIER_ORIGIN_MAIN_REF]
     assert len(created) == 1
     assert removed == [(tmp_path, created[0])]
 

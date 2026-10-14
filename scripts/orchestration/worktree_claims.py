@@ -604,24 +604,125 @@ def worktree_is_dirty(worktree: Path) -> bool | None:
 
 DATA_TIER_DIR_PARTS = (".worktrees", "data-tier")
 _DATA_TIER_RUN_RE = re.compile(r"run-[0-9a-f]{32}")
+# Fully qualified. ``origin/main`` is also a valid local branch
+# (``refs/heads/origin/main``), and Git resolves that branch first.
+DATA_TIER_ORIGIN_MAIN_REF = "refs/remotes/origin/main"
+# ``scripts/ci/data_tier.py`` ``RUN_BUDGET_SECONDS`` is 7 hours. The runner
+# fetches and stamps this ref before stale prune and before it creates the
+# checkout; removal happens in that same run. Eight hours covers the budget
+# plus teardown slack and is shorter than the runner's 9-hour stale-checkout
+# grace, so a ref this run did not refresh cannot authorize deletion.
+DATA_TIER_ORIGIN_MAIN_MAX_AGE_S = 8 * 3600
+_COMMIT_SHA_RE = re.compile(r"(?:[0-9a-f]{40}|[0-9a-f]{64})")
 
 
-def data_tier_checkout_refusal(worktree: Path, *, repo_root: Path, tasks_dir: Path) -> str | None:
+def _commit_sha(worktree: Path, rev: str) -> str | None:
+    """Return the commit ``rev`` resolves to, or ``None`` when it does not."""
+    proc = _git_probe(["rev-parse", "--verify", "--end-of-options", f"{rev}^{{commit}}"], cwd=worktree)
+    if proc is None or proc.returncode != 0:
+        return None
+    sha = (proc.stdout or "").strip().lower()
+    return sha if _COMMIT_SHA_RE.fullmatch(sha) else None
+
+
+def _git_path(worktree: Path, spec: str) -> Path | None:
+    proc = _git_probe(["rev-parse", "--path-format=absolute", "--git-path", spec], cwd=worktree)
+    if proc is None or proc.returncode != 0:
+        return None
+    text = (proc.stdout or "").strip()
+    if not text:
+        return None
+    return Path(text)
+
+
+def _origin_main_age_s(worktree: Path) -> float | None:
+    """Age of the runner's last refresh of ``refs/remotes/origin/main``.
+
+    Prefer the loose ref file. An unchanged fetch does not rewrite it, so the
+    runner stamps that mtime after fetching. A packed ref has no loose file;
+    the reflog mtime is the fallback the runner stamps in that case. Unknown
+    age is ``None`` and must refuse.
+    """
+    loose = _git_path(worktree, DATA_TIER_ORIGIN_MAIN_REF)
+    if loose is not None and loose.is_file():
+        try:
+            return max(0.0, time.time() - loose.stat().st_mtime)
+        except OSError:
+            return None
+    log = _git_path(worktree, f"logs/{DATA_TIER_ORIGIN_MAIN_REF}")
+    if log is None or not log.is_file():
+        return None
+    try:
+        return max(0.0, time.time() - log.stat().st_mtime)
+    except OSError:
+        return None
+
+
+def _origin_main_refusal(worktree: Path) -> str | None:
+    """Refuse unless a fresh ``refs/remotes/origin/main`` contains ``HEAD``."""
+    if _commit_sha(worktree, DATA_TIER_ORIGIN_MAIN_REF) is None:
+        return "refs/remotes/origin/main missing or unresolved"
+    age = _origin_main_age_s(worktree)
+    if age is None:
+        return "refs/remotes/origin/main freshness unknown"
+    if age > DATA_TIER_ORIGIN_MAIN_MAX_AGE_S:
+        return "refs/remotes/origin/main is older than the runner refresh bound"
+    ancestor = _git_probe(
+        ["merge-base", "--is-ancestor", "HEAD", DATA_TIER_ORIGIN_MAIN_REF],
+        cwd=worktree,
+    )
+    if ancestor is None or ancestor.returncode not in (0, 1):
+        return "refs/remotes/origin/main ancestry unknown"
+    if ancestor.returncode == 1:
+        return "HEAD is not an ancestor of refs/remotes/origin/main"
+    return None
+
+
+def _record_dir_refusal(directory: Path) -> str | None:
+    """Refuse when ``directory`` exists but cannot be listed.
+
+    ``Path.glob`` turns ``PermissionError`` into an empty result, so an
+    unreadable archive looks like a directory with no task records. ``os.scandir``
+    raises. A missing directory holds nothing.
+    """
+    try:
+        with os.scandir(directory) as scan:
+            for _entry in scan:
+                pass
+    except FileNotFoundError:
+        return None
+    except OSError as exc:
+        return f"task records unreadable ({directory.name}): {type(exc).__name__}"
+    return None
+
+
+def data_tier_checkout_refusal(
+    worktree: Path,
+    *,
+    repo_root: Path,
+    tasks_dir: Path,
+    proved_head: list[str] | None = None,
+) -> str | None:
     """Return why ``worktree`` is not a disposable nightly data-tier checkout, or ``None`` (#10618).
 
     The nightly runner (``scripts/ci/data_tier.py``) owns exactly one kind of
     tree: ``<repo_root>/.worktrees/data-tier/run-<32 lowercase hex>``, a real
-    directory detached at ``origin/main`` that no task record names. Its test
-    run leaves ignored byproducts that carry no task attribution, so the
+    directory detached at ``refs/remotes/origin/main`` that no task record names.
+    Its test run leaves ignored byproducts that carry no task attribution, so the
     general preservation gate can never release it. Every condition must hold:
 
     * the path itself is a real directory, never a symlink, directly under the
       real ``data-tier`` directory of ``repo_root`` and named as above;
     * the tracked tree is clean (``git status --untracked-files=no``);
-    * ``HEAD`` is an ancestor of ``origin/main``, so no commit is lost;
-    * no hot or archived task record references the tree.
+    * ``refs/remotes/origin/main`` exists, resolves, and was refreshed within
+      :data:`DATA_TIER_ORIGIN_MAIN_MAX_AGE_S` (a local branch named ``origin/main``
+      is not that ref);
+    * ``HEAD`` is an ancestor of that ref, so no commit is lost;
+    * the hot and archive task-record directories can be listed, and no record
+      in them references the tree.
 
-    Unknown state refuses. This never raises.
+    On success, when ``proved_head`` is given it is set to the one-element list
+    ``[HEAD]`` captured by this proof. Unknown state refuses. This never raises.
     """
     try:
         if worktree.is_symlink() or not worktree.is_dir():
@@ -636,15 +737,22 @@ def data_tier_checkout_refusal(worktree: Path, *, repo_root: Path, tasks_dir: Pa
             return "tracked-tree state unknown"
         if (status.stdout or "").strip():
             return "tracked changes present"
-        ancestor = _git_probe(["merge-base", "--is-ancestor", "HEAD", "origin/main"], cwd=worktree)
-        if ancestor is None or ancestor.returncode not in (0, 1):
-            return "origin/main ancestry unknown"
-        if ancestor.returncode == 1:
-            return "HEAD is not an ancestor of origin/main"
+        ancestry = _origin_main_refusal(worktree)
+        if ancestry is not None:
+            return ancestry
+        for record_dir in (tasks_dir, tasks_dir / "archive"):
+            unreadable = _record_dir_refusal(record_dir)
+            if unreadable is not None:
+                return unreadable
         from scripts.fleet.ignored_task_output import matching_worktree_records
 
         if matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False):
             return "a task record references the tree"
+        head = _commit_sha(worktree, "HEAD")
+        if head is None:
+            return "data-tier HEAD unknown"
+        if proved_head is not None:
+            proved_head[:] = [head]
     except Exception as exc:  # unknown state must refuse, never raise
         return f"eligibility unknown: {type(exc).__name__}"
     return None
@@ -690,7 +798,13 @@ def git_worktree_remove(
     ``data_tier_run`` names the nightly data-tier runner's own checkout: when
     :func:`data_tier_checkout_refusal` finds it eligible the ownerless ignored
     byproducts are discarded instead of preserved (#10618); otherwise the
-    ordinary preservation gate decides, unchanged.
+    ordinary preservation gate decides, unchanged. An eligible data-tier
+    checkout is removed without ``--force``. Ignored ``data/atlas.db*`` and
+    ``.pytest_cache`` do not make the tree unclean to ``git worktree remove``,
+    so git deletes them with the checkout; a tracked or untracked change makes
+    git refuse. The eligibility proof is run again immediately before that git
+    call. ``HEAD`` captured by the first proof must still be ``HEAD`` then, or
+    the removal is refused.
     """
     target = worktree
     if force:
@@ -706,10 +820,24 @@ def git_worktree_remove(
     # their ownership/claim checks and immediately before destructive Git.
     from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
 
+    records_dir = tasks_dir
+    eligible = False
+    proof_head: str | None = None
     try:
         primary = control_root if control_root is not None else control_plane_root(repo_root)
-        records_dir = tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks"
-        if data_tier_run and data_tier_checkout_refusal(worktree, repo_root=repo_root, tasks_dir=records_dir) is None:
+        if records_dir is None:
+            records_dir = primary / "batch_state" / "tasks"
+        if data_tier_run:
+            proved: list[str] = []
+            eligibility = data_tier_checkout_refusal(
+                worktree, repo_root=repo_root, tasks_dir=records_dir, proved_head=proved
+            )
+            if eligibility is None:
+                if len(proved) != 1:
+                    return "data-tier HEAD unknown at eligibility proof"
+                proof_head = proved[0]
+                eligible = True
+        if eligible:
             ok, refusal, metadata = True, None, None
         else:
             ok, refusal, metadata = preserve_worktree_artifacts(
@@ -726,12 +854,32 @@ def git_worktree_remove(
         preservation_receipt.update(metadata)
     if not ok:
         return refusal
-    argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
+    remove_force = force
+    if eligible:
+        if records_dir is None or proof_head is None:
+            return "data-tier HEAD unknown at eligibility proof"
+        confirmed: list[str] = []
+        again = data_tier_checkout_refusal(worktree, repo_root=repo_root, tasks_dir=records_dir, proved_head=confirmed)
+        if again is not None:
+            return again
+        current = _commit_sha(worktree, "HEAD")
+        if current != proof_head or confirmed != [proof_head]:
+            return "HEAD changed after the eligibility proof"
+        # Eligible data-tier trees have no tracked or untracked changes. Git
+        # then removes ignored byproducts without --force; --force would also
+        # delete a commit or edit that landed after this proof.
+        remove_force = False
+    argv = ["git", "worktree", "remove", *(["--force"] if remove_force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
         proc = safe_git(
-            argv[1:], cwd=repo_root, runner=git_runner, capture_output=True,
-            text=True, check=False, timeout=bound,
+            argv[1:],
+            cwd=repo_root,
+            runner=git_runner,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=bound,
         )
     except subprocess.TimeoutExpired:
         return f"git worktree remove timed out after {bound:g}s"
@@ -834,8 +982,12 @@ def remove_unclaimed_worktree(
                 branch = checked_out_branch(worktree)
             else:
                 probe = safe_git(
-                    ["symbolic-ref", "--quiet", "--short", "HEAD"], cwd=worktree,
-                    runner=git_runner, text=True, capture_output=True, check=False,
+                    ["symbolic-ref", "--quiet", "--short", "HEAD"],
+                    cwd=worktree,
+                    runner=git_runner,
+                    text=True,
+                    capture_output=True,
+                    check=False,
                 )
                 branch = probe.stdout.strip() if probe.returncode == 0 else None
             if force:
