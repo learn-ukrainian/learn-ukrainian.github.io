@@ -183,8 +183,10 @@ def test_session_start_wires_the_active_lane_probe() -> None:
 def test_handoff_resolution_covers_registry_and_area_lanes(monkeypatch, tmp_path):
     areas = yaml.safe_load(Path("scripts/config/area_assignments.yaml").read_text())["assignments"]
     slots = {slot for area in areas.values() for slot in area["slots"]}
-    launcher_only = {"muse-devops", "muse-monitor"}
+    # #10511 registers the held muse runtime seat, so its launcher slots resolve to it.
+    launcher_only: set[str] = set()
     assert {slot for slot in slots if slot.split("-", 1)[0] not in lane_probe.AGENTS} == launcher_only
+    assert {lane_probe.resolve_handoff_agent(slot) for slot in ("muse-devops", "muse-monitor")} == {"muse"}
     for slot in slots:
         provider = slot.split("-", 1)[0]
         assert lane_probe.resolve_handoff_agent(slot) == (slot if slot in launcher_only else provider)
@@ -245,6 +247,8 @@ def test_launcher_only_and_unknown_slots_fail_closed(monkeypatch, tmp_path, caps
     def unexpected(*_args, **_kwargs):
         pytest.fail("an unavailable runtime must not load an adapter or execute a version probe")
 
+    # Registered slots without a runtime seat stay launcher-only (the pre-#10511 roster).
+    monkeypatch.delitem(lane_probe.AGENTS, "muse")
     monkeypatch.setattr(lane_probe, "_load_adapter", unexpected)
     monkeypatch.setattr(lane_probe, "run_version_probe", unexpected)
     assert "muse" not in lane_probe.AGENTS
@@ -284,3 +288,27 @@ def test_handoff_cli_probes_provider_and_preserves_broken_lane(monkeypatch, tmp_
     assert probe["status"] == ("unhealthy" if returncode else "healthy")
     if returncode:
         assert probe["reason"] == "version command exited 23"
+
+
+@pytest.mark.parametrize("selection", ["--agent", "--handoff-agent"])
+@pytest.mark.parametrize("identity", ["muse", "muse-devops", "muse-monitor"])
+def test_held_muse_runtime_fails_closed_without_version_probe(monkeypatch, tmp_path, capsys, selection, identity):
+    """#10511: the held seat loads its adapter, which refuses before argv or any process."""
+
+    def unexpected(*_args, **_kwargs):
+        pytest.fail("a held runtime must not execute a version probe")
+
+    monkeypatch.setattr(lane_probe, "run_version_probe", unexpected)
+    if selection == "--handoff-agent" or identity == "muse":
+        assert lane_probe.resolve_handoff_agent(identity) == "muse"
+    assert lane_probe.main([selection, identity, "--cwd", str(tmp_path)]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["summary"] == {"healthy": 0, "unhealthy": 1, "skipped": 0}
+    probe = payload["probes"][0]
+    expected = "muse" if selection == "--handoff-agent" else identity
+    assert probe["agent"] == expected and probe["status"] == "unhealthy"
+    if expected == "muse":
+        assert probe["reason"] == "MuseGuardParityRefused while building or spawning the adapter"
+    else:
+        assert probe["reason"] == "agent is not registered"
+    assert list(tmp_path.iterdir()) == []
