@@ -234,7 +234,7 @@ def occupy_branch(repo: Path, name: str, mode: str, *, linked: bool) -> tuple[Pa
 def test_native_occupation_final_guard_keeps_complete_batch(repo: Path, mode: str, linked: bool) -> None:
     other = commit_unique(repo, "codex/free", days=9)
     _, tip = occupy_branch(repo, "codex/occupied", mode, linked=linked)
-    with pytest.raises(RuntimeError, match="skipped-worktree"):
+    with pytest.raises(RuntimeError, match="skipped-worktree" if mode == "checkout" else "in-progress operation"):
         sweep._delete_archived_refs(repo, [("codex/free", other), ("codex/occupied", tip)])
     assert ref_sha(repo, "codex/occupied") == tip
     assert ref_sha(repo, "codex/free") == other
@@ -255,11 +255,16 @@ def test_native_occupation_cli_retains_branch(
 
     monkeypatch.setattr(sweep.reaper, "resolve_repo_root", lambda: repo)
     monkeypatch.setattr(sweep, "sweep", synthetic)
-    assert sweep.main(["--json", *(["--apply"] if apply else [])]) == 0
+    assert sweep.main(["--json", *(["--apply"] if apply else [])]) == (0 if mode == "checkout" else 1)
     payload = json.loads(capsys.readouterr().out)
-    item = next(row for row in payload["decisions"] if row["branch"] == "codex/occupied")
-    assert item["classification"] == "skipped-worktree"
-    assert not item["local_deleted"] and not item["remote_deleted"]
+    if mode == "checkout":
+        item = next(row for row in payload["decisions"] if row["branch"] == "codex/occupied")
+        assert item["classification"] == "skipped-worktree"
+        assert not item["local_deleted"] and not item["remote_deleted"]
+    else:
+        assert payload["ok"] is False
+        assert "in-progress operation" in payload["error"]
+        assert payload["decisions"] == []
     assert ref_sha(repo, "codex/occupied") == tip
     assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
     assert not (repo / sweep.RECEIPT_PATH).exists()
@@ -270,12 +275,169 @@ def test_native_rebase_update_refs_targets_are_occupied(repo: Path) -> None:
     refused = sweep._git(repo, "branch", "-D", "codex/update-target")
     assert refused.returncode == 1 and "used by worktree" in refused.stderr
     free = commit_unique(repo, "codex/free", days=9)
-    with pytest.raises(RuntimeError, match="skipped-worktree"):
+    with pytest.raises(RuntimeError, match="in-progress operation"):
         sweep._delete_archived_refs(repo, [("codex/free", free), ("codex/update-target", tip)])
-    found = by_name(run(repo))
-    assert found["codex/update-target"].classification == "skipped-worktree"
+    with pytest.raises(sweep.SweepError, match="in-progress operation"):
+        run(repo)
     assert ref_sha(repo, "codex/update-target") == tip
     assert ref_sha(repo, "codex/free") == free
+
+
+@pytest.mark.parametrize("separator", ["\u2028", "\u0085"])
+def test_unicode_update_refs_final_guard_retains_real_target(repo: Path, separator: str) -> None:
+    """E1/E2: native Git refuses the real LF-delimited target; the final guard must too."""
+    path, tip = occupy_branch(repo, "codex/occupied", "update-refs", linked=True)
+    name = f"codex/x{separator}{tip}{separator}{tip}{separator}refs/heads/codex/z"
+    git(repo, "check-ref-format", "--branch", name)
+    git(repo, "update-ref", f"refs/heads/{name}", tip)
+    updates = Path(git(path, "rev-parse", "--absolute-git-dir")) / "rebase-merge" / "update-refs"
+    updates.write_text(f"refs/heads/{name}\n{tip}\n{'0' * 40}\n", encoding="utf-8")
+    refused = sweep._git(repo, "branch", "-D", name)
+    assert refused.returncode == 1 and "used by worktree" in refused.stderr
+    with pytest.raises(RuntimeError, match="in-progress operation"):
+        sweep._delete_archived_refs(repo, [(name, tip)])
+    assert ref_sha(repo, name) == tip
+    with pytest.raises(sweep.SweepError):
+        run(repo, apply=True)
+    assert ref_sha(repo, name) == tip
+
+
+@pytest.mark.parametrize("linked", [False, True])
+@pytest.mark.parametrize("mode", ["merge", "apply", "bisect", "merge-operation", "cherry-pick", "revert", "am"])
+def test_unrelated_native_operation_refuses_unbound_archive(repo: Path, linked: bool, mode: str) -> None:
+    free = commit_unique(repo, "codex/free", days=9)
+    occupy_branch(repo, "unrelated", mode, linked=linked)
+    with pytest.raises(sweep.SweepError, match="in-progress operation") as caught:
+        run(repo, apply=True)
+    assert caught.value.decisions == []
+    with pytest.raises(RuntimeError, match="in-progress operation"):
+        sweep._delete_archived_refs(repo, [("codex/free", free)])
+    assert ref_sha(repo, "codex/free") == free
+    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
+    assert not (repo / sweep.RECEIPT_PATH).exists()
+
+
+@pytest.mark.parametrize(
+    "marker", ["BISECT_START", "BISECT_LOG", "MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "REBASE_HEAD"]
+)
+def test_operation_marker_presence_refuses_without_parsing(repo: Path, marker: str) -> None:
+    free = commit_unique(repo, "codex/free", days=9)
+    (repo / ".git" / marker).write_text("malformed\u2028state\n", encoding="utf-8")
+    with pytest.raises(sweep.SweepError, match="in-progress operation"):
+        run(repo, apply=True)
+    with pytest.raises(RuntimeError, match="in-progress operation"):
+        sweep._delete_archived_refs(repo, [("codex/free", free)])
+    assert ref_sha(repo, "codex/free") == free
+
+
+def test_normal_linked_and_detached_checkouts_allow_only_unbound_archive(repo: Path) -> None:
+    bound = commit_unique(repo, "codex/bound", days=9)
+    detached = commit_unique(repo, "codex/detached", days=9)
+    free = commit_unique(repo, "codex/free", days=9)
+    git(repo, "worktree", "add", str(repo.parent / "bound"), "codex/bound")
+    git(repo, "worktree", "add", "--detach", str(repo.parent / "detached"), "codex/detached")
+    preview = by_name(run(repo))
+    assert preview["codex/bound"].classification == "skipped-worktree"
+    assert preview["codex/detached"].classification == "skipped-worktree"
+    assert preview["codex/free"].classification == "archive-expired"
+    for name, sha in (("codex/bound", bound), ("codex/detached", detached)):
+        with pytest.raises(RuntimeError, match="skipped-worktree"):
+            sweep._delete_archived_refs(repo, [("codex/free", free), (name, sha)])
+        assert ref_sha(repo, "codex/free") == free
+    applied = by_name(run(repo, apply=True))
+    assert applied["codex/free"].local_deleted
+    assert ref_sha(repo, "codex/bound") == bound
+    assert ref_sha(repo, "codex/detached") == detached
+    row = next(row for row in receipt_rows(repo) if row["branch"] == "codex/free")
+    clone = repo.parent / "restore"
+    git(repo, "clone", "--quiet", git(repo, "remote", "get-url", "origin"), str(clone))
+    git(clone, *shlex.split(str(row["restore"]))[1:])
+    assert ref_sha(clone, "codex/free") == free
+
+
+@pytest.mark.parametrize("marker", ["rebase-merge", "MERGE_HEAD"])
+def test_operation_started_at_final_boundary_retains_receipted_batch(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, marker: str
+) -> None:
+    heads = {name: commit_unique(repo, name, days=9) for name in ("codex/first", "codex/second")}
+    original = sweep._delete_archived_refs
+
+    def start_operation(root: Path, pairs: list[tuple[str, str]]) -> None:
+        assert {row["branch"]: row["sha"] for row in receipt_rows(root)} == heads
+        # The operation is on primary main, unrelated to either archived branch.
+        state = root / ".git" / marker
+        if marker == "rebase-merge":
+            state.mkdir()
+        else:
+            state.write_text(heads["codex/first"] + "\n", encoding="utf-8")
+        original(root, pairs)
+
+    monkeypatch.setattr(sweep, "_delete_archived_refs", start_operation)
+    found = by_name(run(repo, apply=True))
+    for name, sha in heads.items():
+        assert not found[name].local_deleted
+        assert "in-progress operation" in found[name].reason
+        assert ref_sha(repo, name) == sha
+    assert len(list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))) == 1
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "empty-list",
+        "duplicate",
+        "unknown-head",
+        "contradictory",
+        "head-mismatch",
+        "unreadable-head",
+        "unreadable-census",
+        "missing-head",
+    ],
+)
+def test_unknown_census_without_operations_refuses_archive(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    free = commit_unique(repo, "codex/free", days=9)
+    trees = sweep.reaper.list_git_worktrees(repo)
+    primary = trees[0]
+    if failure in {"empty-list", "duplicate", "unknown-head", "contradictory", "head-mismatch"}:
+        from dataclasses import replace
+
+        changed = {
+            "empty-list": [],
+            "duplicate": [primary, primary],
+            "unknown-head": [replace(primary, head=None)],
+            "contradictory": [replace(primary, detached=True)],
+            "head-mismatch": [replace(primary, branch="codex/free")],
+        }[failure]
+        monkeypatch.setattr(sweep.reaper, "list_git_worktrees", lambda _: changed)
+    elif failure == "unreadable-census":
+        original_directory = sweep._occupation_directory
+
+        def refuse_directory(path: Path) -> bool:
+            if path.name == "worktrees":
+                raise PermissionError("synthetic census read refusal")
+            return original_directory(path)
+
+        monkeypatch.setattr(sweep, "_occupation_directory", refuse_directory)
+    else:
+        original_file = sweep._occupation_file
+
+        def refuse_head(path: Path) -> str | None:
+            if path == repo / ".git" / "HEAD":
+                if failure == "missing-head":
+                    return None
+                raise PermissionError("synthetic HEAD read refusal")
+            return original_file(path)
+
+        monkeypatch.setattr(sweep, "_occupation_file", refuse_head)
+    with pytest.raises(sweep.SweepError):
+        run(repo, apply=True)
+    with pytest.raises((OSError, RuntimeError)):
+        sweep._delete_archived_refs(repo, [("codex/free", free)])
+    assert ref_sha(repo, "codex/free") == free
+    assert not list((repo / sweep.ARCHIVE_DIR).glob("*.bundle"))
+    assert not (repo / sweep.RECEIPT_PATH).exists()
 
 
 @pytest.mark.parametrize("mode", ["merge", "apply", "bisect"])
@@ -291,8 +453,9 @@ def test_native_occupation_survives_linked_checkout_state(repo: Path, mode: str,
         (admin / "gitdir").write_text(os.path.relpath(path / ".git", admin) + "\n", encoding="utf-8")
     refused = sweep._git(repo, "branch", "-D", "codex/occupied")
     assert refused.returncode == 1 and "used by worktree" in refused.stderr
-    assert by_name(run(repo))["codex/occupied"].classification == "skipped-worktree"
-    with pytest.raises(RuntimeError, match="skipped-worktree"):
+    with pytest.raises(sweep.SweepError, match="in-progress operation"):
+        run(repo)
+    with pytest.raises(RuntimeError, match="in-progress operation"):
         sweep._delete_archived_refs(repo, [("codex/occupied", tip)])
     assert ref_sha(repo, "codex/occupied") == tip
 
@@ -301,9 +464,8 @@ def test_native_occupation_survives_linked_checkout_state(repo: Path, mode: str,
 def test_native_occupation_blocks_merged_evidence_and_remote_deletion(repo: Path, mode: str) -> None:
     _, tip = occupy_branch(repo, "codex/occupied", mode, linked=True)
     publish(repo, "codex/occupied")
-    found = by_name(run(repo, apply=True, states={"codex/occupied": [PullRequestState(1, "MERGED", tip)]}))
-    assert found["codex/occupied"].classification == "skipped-worktree"
-    assert not found["codex/occupied"].local_deleted and not found["codex/occupied"].remote_deleted
+    with pytest.raises(sweep.SweepError, match="in-progress operation"):
+        run(repo, apply=True, states={"codex/occupied": [PullRequestState(1, "MERGED", tip)]})
     assert ref_sha(repo, "codex/occupied") == tip
     assert git(repo, "ls-remote", "--heads", "origin", "codex/occupied").split()[0] == tip
 

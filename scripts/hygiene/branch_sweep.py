@@ -174,12 +174,12 @@ def _occupation_directory(path: Path) -> bool:
 
 
 def _occupied_worktrees(repo: Path) -> list[reaper.WorktreeInfo]:
-    """Include Git branch_checked_out bindings, not just the currently attached HEAD.
+    """Census all registrations; refuse any native operation anywhere.
 
-    Git's branch.c binds HEAD, wt_status_check_rebase/bisect and the sequencer's
-    rebase update-refs list across all worktree administrative directories.
-    Merge/cherry-pick/revert keep their attached HEAD binding. Unbound or
-    unreadable operation state refuses the sweep instead of proving absence.
+    Git's wt-status.c checks rebase directories, BISECT_LOG, MERGE_HEAD,
+    CHERRY_PICK_HEAD and REVERT_HEAD; sequencer.c keeps multi-step replay
+    state in sequencer/. Presence is enough to refuse, even if its contents
+    are malformed. Never parse operation branch names to permit archival.
     """
     trees = reaper.list_git_worktrees(repo)
     if not trees:
@@ -206,65 +206,28 @@ def _occupied_worktrees(repo: Path) -> list[reaper.WorktreeInfo]:
             directories[gitfile.parent] = directory
     if set(directories) != {tree.path for tree in trees}:
         raise RuntimeError("occupation evidence registrations disagree with Git")
-    occupied = list(trees)
+    if len(directories) != len(trees):
+        raise RuntimeError("occupation evidence has duplicate registrations")
     for tree in trees:
         directory = directories[tree.path]
+        if (
+            not tree.head
+            or not SHA_RE.fullmatch(tree.head)
+            or bool(tree.branch) == tree.detached
+            or (tree.branch is not None and not _valid(tree.branch, repo))
+        ):
+            raise RuntimeError("occupation evidence has an unknown worktree HEAD")
         head = _occupation_file(directory / "HEAD")
         if head is None or head.rstrip("\n") != (f"ref: refs/heads/{tree.branch}" if tree.branch else tree.head):
             raise RuntimeError("occupation evidence HEAD disagrees with Git")
-        names: set[str] = set()
-        for backend in ("rebase-apply", "rebase-merge"):
-            state = directory / backend
-            if not _occupation_directory(state):
-                continue
-            # git am occupies its attached HEAD rather than a rebase head-name.
-            applying = backend == "rebase-apply" and _occupation_file(state / "applying") is not None
-            if applying:
-                if not tree.branch:
-                    raise RuntimeError("occupation evidence has an unbound apply operation")
-            else:
-                name = _occupation_file(state / "head-name")
-                if not name or not name.startswith("refs/heads/"):
-                    raise RuntimeError("occupation evidence has an unbound rebase")
-                names.add(name.removeprefix("refs/heads/").rstrip("\n"))
-            updates = _occupation_file(state / "update-refs")
-            if updates is not None:
-                rows = updates.splitlines()
-                if (updates and not updates.endswith("\n")) or len(rows) % 3:
-                    raise RuntimeError("occupation evidence has invalid update-refs")
-                for index in range(0, len(rows), 3):
-                    if not rows[index].startswith("refs/heads/") or not all(
-                        SHA_RE.fullmatch(value) and len(value) == len(tree.head or "")
-                        for value in rows[index + 1 : index + 3]
-                    ):
-                        raise RuntimeError("occupation evidence has invalid update-refs")
-                    names.add(rows[index].removeprefix("refs/heads/"))
-        if _occupation_file(directory / "BISECT_LOG") is not None:
-            name = _occupation_file(directory / "BISECT_START")
-            if not name:
-                raise RuntimeError("occupation evidence has an unbound bisect")
-            name = name.rstrip("\n").removeprefix("refs/heads/")
-            names.add(name)
-            # wt-status get_branch abbreviates a raw object ID. Preserve that
-            # native binding too, even when a branch has the abbreviated name.
-            if SHA_RE.fullmatch(name):
-                names.add(_checked(repo, "rev-parse", "--short", name).strip())
-        for marker in ("MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD"):
-            operation = _occupation_file(directory / marker)
-            if operation is not None:
-                if not operation.splitlines() or not all(
-                    SHA_RE.fullmatch(sha) and len(sha) == len(tree.head or "") for sha in operation.splitlines()
-                ):
-                    raise RuntimeError("occupation evidence has an invalid operation head")
-                if not tree.branch and not names:
-                    raise RuntimeError("occupation evidence has an unbound operation")
-        if _occupation_directory(directory / "sequencer") and not tree.branch and not names:
-            raise RuntimeError("occupation evidence has an unbound sequencer")
-        for name in sorted(names):
-            if not _valid(name, repo):
-                raise RuntimeError("occupation evidence has an invalid branch binding")
-            occupied.append(replace(tree, branch=name))
-    return occupied
+        for marker in ("rebase-apply", "rebase-merge", "sequencer"):
+            if _occupation_directory(directory / marker):
+                raise RuntimeError(f"occupation evidence: in-progress operation ({marker}); sweep refused")
+        # BISECT_START also refuses incomplete bisect state with a missing log.
+        for marker in ("BISECT_LOG", "BISECT_START", "MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "REBASE_HEAD"):
+            if _occupation_file(directory / marker) is not None:
+                raise RuntimeError(f"occupation evidence: in-progress operation ({marker}); sweep refused")
+    return trees
 
 
 def _refs(repo: Path) -> list[Branch]:
@@ -2004,6 +1967,7 @@ def build_parser() -> argparse.ArgumentParser:
             "per branch to stale-local-receipts.jsonl. The bundle excludes history already on origin/main.\n"
             "The receipt is re-read, every guard is checked again, and one compare-and-delete then removes\n"
             "only those local refs. Any failure keeps the whole batch. Remote refs stay.\n"
+            "Any native operation in any registered worktree refuses the sweep, even on an unrelated branch.\n"
             "Bundles at least 90 days old are listed as review-bundle and are never deleted.\n"
             "Exit codes: 0 = sweep succeeded; 1 = repository or probe failure; 2 = invalid arguments.\n"
             "Related: issue #9129; issue #9909; issue #10532; docs/runbooks/worktree-cleanup.md; drive-epic §7a."
