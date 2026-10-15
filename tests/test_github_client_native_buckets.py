@@ -7,6 +7,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from scripts.common import github_budget_counters as counters
 from scripts.common import github_client as gh
 
 NOW = 1000
@@ -436,7 +437,7 @@ def test_exhausted_bucket_gates_exactly_the_classified_shapes(no_jq, tmp_path, a
 
 @pytest.mark.parametrize("bucket", ALL_BUCKETS)
 def test_budget_above_reserve_never_blocks(no_jq, tmp_path, bucket):
-    store, runner, translated, native = seeded(tmp_path, [bucket], gh.RESERVE + 1)
+    store, runner, translated, native = seeded(tmp_path, [bucket], max(gh.RESERVE + 1, counters.LANDING_RESERVE))
     result = gh.run(api("--jq", "search/code", "repos/o/r/issues"), client=store, runner=runner, capture_output=True)
     assert not blocked(result) and (translated or native)
 

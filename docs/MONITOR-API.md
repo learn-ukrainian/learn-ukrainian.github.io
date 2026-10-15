@@ -678,6 +678,12 @@ Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/
 
 `GET /api/state/routing-budget` consumes the same weekly rows as `source: notebook-report` with `age_s` when CodexBar on the API host has no authoritative weekly sample; the pinned `records_loaded=0` suppression lifts only when such data exists.
 
+### GitHub request counts by caller
+
+The shared GitHub client (`scripts/common/github_client.py`) counts every request that reaches the network (cache hits count nothing) in its own database, one row per hour, pool (`core`, `graphql`, `search`; code search counts as `search`) and caller tag. The tag comes from the entry point: an explicit `caller=` argument, else `set_process_caller()`, else the entry module or script name; anything outside `[a-z0-9._:-]{1,64}` is stored as `unknown`. No URL, body, token or credential scope is stored, and buckets older than seven days are dropped by the client. `GET /api/github-budget/callers?limit=10` returns, for the current and previous hour and each pool, the busiest callers as `{caller, count}` plus the lowest live `remaining` per pool; the same JSON comes from `.venv/bin/python -m scripts.common.github_budget_counters report --json` (plain text without `--json`).
+
+The same module guards the core pool: while its `remaining` is below 500 (and the window has not reset), non-landing calls raise `GitHubBudgetRefused` (a `GitHubRateLimited`; exit 75 through `github_client.run`, `reason: core_below_landing_reserve`) and are retried by the caller after `reset_at`. Landing calls (merge, enqueue, review, CI status, rerun of failed jobs, the publisher's queue and merge-fact reads, credential lifecycle, `rate_limit`) always proceed, and an unknown budget never refuses. An optional per-caller soft cap reads `caller-soft-caps.json` next to the client database (`{"enabled": true, "hourly_caps": {"<caller>": {"core": 300}}}`); the file does not ship, so the cap is disabled, and it never refuses a landing call.
+
 ### GitHub GraphQL budget
 
 `GET /api/state/github-budget` returns one `python -m scripts.publish read budget` observation of

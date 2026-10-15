@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path
 from urllib.parse import quote
 
-from scripts.common import github_client
+from scripts.common import github_budget_counters, github_client
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
@@ -225,9 +225,14 @@ def _send(argv, *, environment, runner, cwd, **kwargs):
     return _run_transport(argv, env=environment, cwd=cwd, **kwargs)
 
 
+def _caller():
+    """Counter tag for publisher traffic: the host process's own tag when it set one, else ``publish``."""
+    return github_budget_counters.process_caller() or "publish"
+
+
 def _run_transport(command, **kwargs):
     """Execute an admitted command once; the client records and types limits."""
-    return github_client.run(command, **kwargs)
+    return github_client.run(command, caller=_caller(), **kwargs)
 
 
 SQUASH_TEXT_QUERY = (
@@ -877,12 +882,12 @@ def read(
             cursors, roots = fields["cursors"], fields["body_roots"]
             if not isinstance(cursors, dict) or not 1 <= len(cursors) <= 20 or not isinstance(roots, (set,list,tuple)) or any(type(n) is not int or n <= 0 or (c is not None and not isinstance(c,str)) for n,c in cursors.items()):
                 raise gate.PublishBlocked("OPSEC: invalid read batch.")
-        return github_client.rest_read(operation, gh_repo, fields, runner=runner, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
+        return github_client.rest_read(operation, gh_repo, fields, caller=_caller(), runner=runner, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
     if operation in {"queue-snapshot", "queue-status"} and runner is None:
         expected = {"branches"} if operation == "queue-snapshot" else {"number", "branch"}
         if set(fields) != expected or (operation == "queue-snapshot" and (not isinstance(fields["branches"], (list, set, tuple)) or not all(isinstance(b, str) for b in fields["branches"]))):
             raise gate.PublishBlocked("OPSEC: invalid queue fields.")
-        return github_client.queue_read(operation, gh_repo, fields, env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
+        return github_client.queue_read(operation, gh_repo, fields, caller=_caller(), env=environment, cwd=cwd, capture_output=capture_output, text=text, check=check, timeout=timeout, stdout=stdout, stderr=stderr)
     if operation in REST_READS:
         endpoint, schema = REST_READS[operation]
         if operation == "code-scanning-alerts" and set(fields) == {"number"}:

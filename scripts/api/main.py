@@ -84,6 +84,7 @@ from .fleet_board.router import router as fleet_board_router
 from .fleet_router import router as fleet_router
 from .fleet_workers_router import router as fleet_workers_router
 from .git_hygiene_router import router as git_hygiene_router
+from .github_budget_router import router as github_budget_router
 from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
 from .governance_router import router as governance_router
@@ -1928,6 +1929,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(docs_router, prefix="/files")
     factory_app.include_router(discussions_router, prefix="/api/discussions", tags=["discussions"])
     factory_app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
+    factory_app.include_router(github_budget_router, prefix="/api/github-budget", tags=["github-budget"])
     factory_app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
     factory_app.include_router(gold_router, prefix="/api/gold")
     factory_app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])

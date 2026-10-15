@@ -6,6 +6,10 @@ Conditional GETs follow GitHub's documented ETag protocol. No request is retried
 Only fully modelled argv/JSON fields translate; other commands retain their
 native gh semantics through the same bounded, colour-safe process transport.
 Stale JSON reads require allow_stale=True; binary responses are never cached.
+Every request that reaches the network is counted per caller and hour, and a
+landing-first guard refuses non-landing core calls below 500 remaining; see
+``scripts.common.github_budget_counters`` (docs/MONITOR-API.md, "GitHub request
+counts by caller").
 """
 
 from __future__ import annotations
@@ -22,6 +26,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, urlencode, urlsplit
+
+from scripts.common import github_budget_counters as counters
 
 RESERVE = 10
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
@@ -79,6 +85,7 @@ class Result:
     error: str | None = None
     reset_at: int | None = None
     headers: dict[str, str] = field(default_factory=dict)
+    reason: str | None = None
 
     def require_fresh(self):
         if self.error == "github_rate_limited" or self.stale:
@@ -94,6 +101,24 @@ class GitHubRateLimited(RuntimeError):
     def __init__(self, reset_at):
         self.reset_at = reset_at
         super().__init__(f"github_rate_limited reset_at={reset_at}")
+
+
+class GitHubBudgetRefused(GitHubRateLimited):
+    """The landing-first guard or a caller soft cap refused a non-landing call before the network.
+
+    ``reason`` is a fixed code from ``github_budget_counters``, never request content.
+    Retry after ``reset_at``; the client does not sleep or retry.
+    """
+
+    code = "github_budget_refused"
+
+    def __init__(self, reason, reset_at):
+        self.reason = reason
+        super().__init__(reset_at)
+        self.args = (f"{self.code} reason={reason} reset_at={reset_at}",)
+
+
+RETRYABLE_ERRORS = frozenset({GitHubRateLimited.code, GitHubBudgetRefused.code})
 
 
 def _cache_directory():
@@ -249,7 +274,9 @@ class GitHubClient:
         clock=time.time,
         max_response_bytes=None,
         allow_stale=False,
+        caller=None,
     ):
+        self._caller_tag = caller
         self.env = colour_safe_environment(env)
         self.cwd = cwd
         self.transport = transport
@@ -286,6 +313,11 @@ class GitHubClient:
                 credential = "unconfigured-cli"
         self.scope = hashlib.sha256((self.host + "\0" + credential).encode()).hexdigest()
 
+    @property
+    def caller(self):
+        """Counter tag: the explicit one, else the process tag, else the entry module's name."""
+        return counters.resolve_caller(self._caller_tag)
+
     @contextmanager
     def _db(self):
         for attempt in range(2):
@@ -313,6 +345,7 @@ class GitHubClient:
                 db.execute(
                     "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
                 )
+                db.execute(counters.SCHEMA)
                 if self.cache_dir is not None:
                     db.execute(
                         "INSERT OR REPLACE INTO budget (scope, resource, remaining, reset) VALUES ('__probe__', '__probe__', 0, 0)"
@@ -431,6 +464,8 @@ class GitHubClient:
             and not re.search(r"/(?:releases/assets/\d+|artifacts/\d+/zip)$", resource_path)
         )
         now = self.clock()
+        caller = self.caller
+        query = document.get("query") if graphql and isinstance(document, dict) else None
         with self._db() as db:
             cached = (
                 db.execute(
@@ -446,7 +481,21 @@ class GitHubClient:
                 "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (?, 'secondary') ORDER BY reset DESC",
                 (self.scope, resource),
             ).fetchall()
-        limited = next((reset for remaining, reset in budget if remaining <= RESERVE and reset > now), None)
+            limited = next((reset for remaining, reset in budget if remaining <= RESERVE and reset > now), None)
+            refusal = None
+            if limited is None:
+                # This call will reach the network: guard it, then count it (cache hits never get here).
+                refusal = counters.admit(
+                    db,
+                    scope=self.scope,
+                    now=now,
+                    resource=resource,
+                    caller=caller,
+                    landing=counters.is_landing(method, resource_path, query),
+                    soft_caps=counters.load_soft_caps(self.cache_dir),
+                )
+        if refusal is not None:
+            raise GitHubBudgetRefused(refusal.reason, refusal.reset_at)
 
         def deferred(reset):
             if allow_stale and cached and not fresh:
@@ -472,6 +521,7 @@ class GitHubClient:
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
+                    counters.observe(db, now, resource, caller, h)
                     if "x-ratelimit-remaining" in h and "x-ratelimit-reset" in h:
                         with suppress(ValueError):
                             remaining, reset = int(h["x-ratelimit-remaining"]), int(h["x-ratelimit-reset"])
@@ -1788,17 +1838,49 @@ def _native_buckets(args, host="github.com"):
     return frozenset(buckets)
 
 
+def _native_landing(args, host):
+    """Landing verdict of a native ``gh`` argv; ``gh api`` is judged by method, endpoint and field text."""
+    api = False
+    if len(args) > 1 and args[1] == "api":
+        options, positional = _options(args[2:])
+        hostname = _opt(options, "--hostname")
+        _, path = _canonical_endpoint(
+            positional[0] if len(positional) == 1 else None, hostname if isinstance(hostname, str) else host
+        )
+        body_flags = ("-f", "-F", "--field", "--raw-field", "--input")
+        method = _opt(options, "--method", "-X", default="POST" if any(f in options for f in body_flags) else "GET")
+        fields = " ".join(str(v) for f in body_flags for v in options.get(f, []))
+        api = counters.is_landing(method, path, fields)
+    return counters.native_is_landing(args, api)
+
+
 def _native_command(args, client, runner, kwargs):
     """Fall through once using the bounded, colour-safe native transport."""
     buckets = sorted(_native_buckets(args, client.host))
+    # A native subcommand may spend core or graphql and gh does not say which; any ambiguity with core counts as core.
+    pools = [b for b in buckets if b != "secondary"]
+    pool = "core" if "core" in pools else pools[0]
     with client._db() as db:
         budgets = db.execute(
             "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (" + ",".join("?" * len(buckets)) + ")",
             (client.scope, *buckets),
         ).fetchall()
-    reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
+        reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
+        refusal = None
+        if reset is None:
+            refusal = counters.admit(
+                db,
+                scope=client.scope,
+                now=client.clock(),
+                resource=pool,
+                caller=client.caller,
+                landing=_native_landing(args, client.host),
+                soft_caps=counters.load_soft_caps(client.cache_dir),
+            )
     if reset is not None:
         return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+    if refusal is not None:
+        raise GitHubBudgetRefused(refusal.reason, refusal.reset_at)
     executable = client.env.get("AGENT_REAL_GH", "gh")
     executor = runner or client.runner
     if executor is None:
@@ -1858,7 +1940,7 @@ def _native_command(args, client, runner, kwargs):
     return native
 
 
-def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
+def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=False, caller=None, **kwargs):
     """subprocess.run-compatible seam; non-GitHub commands pass through.
 
     A CompletedProcess carries ``github_result``. Stale reads also emit a
@@ -1895,7 +1977,9 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
                 min(client.max_response_bytes, limit) if client.max_response_bytes is not None else limit
             )
     if client is None:
-        client = GitHubClient(env=kwargs.get("env"), cwd=kwargs.get("cwd"), runner=runner, max_response_bytes=limit)
+        client = GitHubClient(
+            env=kwargs.get("env"), cwd=kwargs.get("cwd"), runner=runner, max_response_bytes=limit, caller=caller
+        )
     if allow_stale:
         client.allow_stale = True
     timeout = kwargs.get("timeout") or 30
@@ -2003,12 +2087,25 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     return _result_process(args, result, options, kwargs, api=args[1] == "api")
 
 
-def run(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
-    """Return command/configuration errors through the subprocess contract."""
+def run(args, *, runner=None, client=None, fresh=False, allow_stale=False, caller=None, **kwargs):
+    """Return command/configuration errors through the subprocess contract.
+
+    ``caller`` tags the requests of the client built here (ignored when ``client`` is given).
+    A guard refusal is returned as a typed, retryable result (exit 75), never slept on.
+    """
     try:
-        return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
+        return _run_command(
+            args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, caller=caller, **kwargs
+        )
     except ValueError:
         return _result_process(args, Result(error="github_invalid_command"), {}, kwargs)
+    except GitHubBudgetRefused as refusal:
+        return _result_process(
+            args,
+            Result(error=refusal.code, status=429, reset_at=refusal.reset_at, reason=refusal.reason),
+            {},
+            kwargs,
+        )
 
 
 def check_output(args, **kwargs):
@@ -2084,9 +2181,17 @@ def command(args, *, runner=None, **kwargs):
     return runner(args, **kwargs)
 
 
-def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwargs):
-    """REST equivalents of former named GraphQL reads, with legacy shapes."""
-    client = GitHubClient(env=env, cwd=cwd)
+def rest_read(operation, repo, fields, **kwargs):
+    """REST equivalents of former named GraphQL reads, with legacy shapes.
+
+    The named operation is classified once for the landing-first guard; ``caller`` tags the counters.
+    """
+    with counters.operation(operation):
+        return _rest_read(operation, repo, fields, **kwargs)
+
+
+def _rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, caller=None, **kwargs):
+    client = GitHubClient(env=env, cwd=cwd, caller=caller)
     observed = []
 
     def get(endpoint, *, paginate=False, optional=False):
@@ -2123,6 +2228,8 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
                         return None
             if getattr(proc, "github_result", None) and proc.github_result.error == "github_rate_limited":
                 raise GitHubRateLimited(proc.github_result.reset_at)
+            if getattr(proc, "github_result", None) and proc.github_result.error == GitHubBudgetRefused.code:
+                raise GitHubBudgetRefused(proc.github_result.reason, proc.github_result.reset_at)
             raise RuntimeError("GitHub REST read failed")
         return json.loads(proc.stdout)
 
@@ -2256,7 +2363,7 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
         else:
             raise ValueError("unknown REST read")
     except GitHubRateLimited as exc:
-        result = Result(error=exc.code, reset_at=exc.reset_at, status=429)
+        result = Result(error=exc.code, reset_at=exc.reset_at, status=429, reason=getattr(exc, "reason", None))
     except (ValueError, KeyError, TypeError):
         result = Result(error="github_invalid_read")
     except RuntimeError:
@@ -2271,9 +2378,14 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
     return _result_process(["github", operation], result, {}, kwargs)
 
 
-def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
-    """Queue-only GraphQL fields joined to ordinary conditional REST reads."""
-    client = GitHubClient(env=env, cwd=cwd)
+def queue_read(operation, repo, fields, **kwargs):
+    """Queue-only GraphQL fields joined to ordinary conditional REST reads (landing operations)."""
+    with counters.operation(operation):
+        return _queue_read(operation, repo, fields, **kwargs)
+
+
+def _queue_read(operation, repo, fields, *, env=None, cwd=None, caller=None, **kwargs):
+    client = GitHubClient(env=env, cwd=cwd, caller=caller)
     timeout = kwargs.get("timeout") or 30
     owner, name = repo.split("/", 1)
     observations = []
@@ -2391,13 +2503,15 @@ def _graphql_error_detail(value):
 def _result_process(args, result, options, kwargs, *, api=True):
     if result.error:
         detail = {"error": result.error, "reset_at": result.reset_at}
+        if result.reason:
+            detail["reason"] = result.reason
         if result.error == "github_http_error":
             detail["status"] = result.status
         elif result.error == "github_graphql_error":
             detail["errors"] = _graphql_error_detail(result.value)
         output = json.dumps(detail).encode()
         error = output
-        code = 75 if result.error == "github_rate_limited" else 1
+        code = 75 if result.error in RETRYABLE_ERRORS else 1
     else:
         output = _format_value(result.value, options, api=api)
         error = (
@@ -2519,11 +2633,11 @@ def timer(function):
             if (
                 exc.returncode != 75
                 or not isinstance(observation, Result)
-                or observation.error != "github_rate_limited"
+                or observation.error not in RETRYABLE_ERRORS
             ):
                 raise
             reset = observation.reset_at
-            print(f"GitHub timer: skipped github_rate_limited reset_at={reset}")
+            print(f"GitHub timer: skipped {observation.error} reset_at={reset}")
             return 0
 
     return wrapped
@@ -2538,7 +2652,7 @@ def rate_limited_command(function):
         try:
             return function(*args, **kwargs)
         except GitHubRateLimited as exc:
-            result = Result(error=exc.code, reset_at=exc.reset_at, status=429)
+            result = Result(error=exc.code, reset_at=exc.reset_at, status=429, reason=getattr(exc, "reason", None))
             return _result_process(["github", "publish"], result, {}, kwargs)
 
     return wrapped

@@ -17,7 +17,7 @@ from scripts.common import github_client as gh
 REAL_CLIENT = gh.GitHubClient
 
 
-def response(value, *, status=200, remaining=100, reset=2000, etag='"one"'):
+def response(value, *, status=200, remaining=5000, reset=2000, etag='"one"'):
     return gh.Response(
         status,
         {"ETag": etag, "X-RateLimit-Remaining": str(remaining), "X-RateLimit-Reset": str(reset)},
@@ -1024,7 +1024,7 @@ def test_real_cli_transport_uses_conditional_headers_and_preserves_frozen_body(t
 
     executable = tmp_path / "gh"
     executable.write_text(
-        f'#!{sys.executable}\nimport sys,os,json\nassert not any(k in os.environ for k in ("FORCE_COLOR","CLICOLOR_FORCE","GH_FORCE_TTY"))\nbody=sys.stdin.buffer.read()\nconditional=any("If-None-Match:" in arg for arg in sys.argv)\nprint("HTTP/2 304" if conditional else "HTTP/2 200")\nprint("X-RateLimit-Remaining: 100")\nprint("X-RateLimit-Reset: 2000")\nprint("ETag: \\"one\\"")\nprint()\nif not conditional: print(json.dumps({{"body":body.decode(),"no_colour":os.environ["NO_COLOR"]}}))\n'
+        f'#!{sys.executable}\nimport sys,os,json\nassert not any(k in os.environ for k in ("FORCE_COLOR","CLICOLOR_FORCE","GH_FORCE_TTY"))\nbody=sys.stdin.buffer.read()\nconditional=any("If-None-Match:" in arg for arg in sys.argv)\nprint("HTTP/2 304" if conditional else "HTTP/2 200")\nprint("X-RateLimit-Remaining: 5000")\nprint("X-RateLimit-Reset: 2000")\nprint("ETag: \\"one\\"")\nprint()\nif not conditional: print(json.dumps({{"body":body.decode(),"no_colour":os.environ["NO_COLOR"]}}))\n'
     )
     executable.chmod(0o700)
     store = gh.GitHubClient(
@@ -1426,7 +1426,7 @@ def test_run_hostname_cannot_poison_caller_budget_or_cache(tmp_path, overrides):
         calls.append((args, host))
         if "--include" not in args:
             return subprocess.CompletedProcess(args, 0, json.dumps({"authority": host}).encode(), b"")
-        remaining = 100 if host == "github.com" else 5
+        remaining = 5000 if host == "github.com" else 5
         raw = (
             f'HTTP/2.0 200 OK\r\nETag: "one"\r\nX-RateLimit-Resource: core\r\n'
             f"X-RateLimit-Remaining: {remaining}\r\nX-RateLimit-Reset: 2000\r\n\r\n" + json.dumps({"authority": host})
@@ -1584,7 +1584,7 @@ def test_cli_transport_skips_runtime_shim(tmp_path):
     binary = tmp_path / "bin/gh"
     binary.parent.mkdir()
     binary.write_text(
-        f"#!{sys.executable}\nprint('HTTP/1.1 200 OK\\nX-RateLimit-Remaining: 100\\nX-RateLimit-Reset: 2000\\n\\n{{}}')\n"
+        f"#!{sys.executable}\nprint('HTTP/1.1 200 OK\\nX-RateLimit-Remaining: 5000\\nX-RateLimit-Reset: 2000\\n\\n{{}}')\n"
     )
     binary.chmod(0o755)
     store = gh.GitHubClient(
@@ -1815,7 +1815,7 @@ def test_bounded_cli_body_is_spooled_and_budget_headers_retained(tmp_path):
 
     binary = tmp_path / "gh"
     binary.write_text(
-        f"#!{sys.executable}\nprint('HTTP/2 200\\nX-RateLimit-Remaining: 100\\nX-RateLimit-Reset: 2000\\n\\n' + 'x' * 4096)\n"
+        f"#!{sys.executable}\nprint('HTTP/2 200\\nX-RateLimit-Remaining: 5000\\nX-RateLimit-Reset: 2000\\n\\n' + 'x' * 4096)\n"
     )
     binary.chmod(0o755)
     store = gh.GitHubClient(
@@ -1824,7 +1824,7 @@ def test_bounded_cli_body_is_spooled_and_budget_headers_retained(tmp_path):
     result = store.request("GET", "repos/o/r/actions/artifacts/1/zip")
     assert result.status == 413 and result.value["message"] == "github_response_too_large"
     with store._db() as db:
-        assert db.execute("select remaining from budget").fetchone()[0] == 100
+        assert db.execute("select remaining from budget").fetchone()[0] == 5000
         assert db.execute("select count(*) from cache").fetchone()[0] == 0
 
 
