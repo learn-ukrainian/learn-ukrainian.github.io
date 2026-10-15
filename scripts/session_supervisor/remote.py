@@ -158,6 +158,11 @@ class RemoteEpicClient:
 
     @staticmethod
     def _lease_payload(lease: Lease) -> dict[str, Any]:
+        """The exact-lease envelope for renew, release and fenced writes.
+
+        It never carries ``process_identity``: Monitor matches these operations
+        on the other holder fields only, and the identity is fixed at claim.
+        """
         return {
             "stream_id": lease.stream_id,
             "session_id": lease.session_id,
@@ -190,6 +195,8 @@ class RemoteEpicClient:
             task_id=holder_payload.get("task_id", fallback.task_id),
             holder_kind=HolderKind(holder_payload.get("holder_kind", fallback.holder_kind.value)),
             host_id=holder_payload.get("host_id", fallback.host_id),
+            # Only what Monitor recorded; never the value this client sent.
+            process_identity=holder_payload.get("process_identity"),
         )
         holder.validate()
         return Lease(
@@ -231,6 +238,8 @@ class RemoteEpicClient:
             "holder_kind": holder.holder_kind.value,
             "host_id": holder.host_id,
         }
+        if holder.process_identity is not None:
+            holder_payload["process_identity"] = holder.process_identity
         response = self._request(
             "POST",
             f"/api/epics/v1/{stream_id}/claim",

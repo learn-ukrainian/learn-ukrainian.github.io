@@ -34,6 +34,7 @@ from agents_extensions.shared.session_streams.model import (
     parse_timestamp,
     sha256_text,
 )
+from agents_extensions.shared.session_streams.process_identity import parent_identity
 from agents_extensions.shared.session_streams.receipts import list_migration_state
 from agents_extensions.shared.session_streams.store import (
     LifecycleError,
@@ -391,11 +392,10 @@ class SessionSupervisor:
             response = self.remote.stream(stream_id, digest_limit=digest_limit)
             if lease is not None:
                 current = response.get("lease")
-                expected = self.remote._lease_payload(lease)
                 if (
                     not isinstance(current, dict)
                     or current.get("state") != "active"
-                    or any(current.get(key) != value for key, value in expected.items())
+                    or not _envelope_matches(current, self.remote._lease_payload(lease))
                 ):
                     raise RemoteLeaseLostError("LEASE LOST: live-state reconciliation fenced the bootstrap lease")
                 try:
@@ -462,6 +462,20 @@ class SessionSupervisor:
             "fencing_token": lease.fencing_token,
             "expires_at": lease.expires_at,
         }
+
+
+def _envelope_matches(current: Mapping[str, Any], expected: Mapping[str, Any]) -> bool:
+    """Monitor's lease equals every exact-lease envelope field, holder fields included.
+
+    A recorded ``holder.process_identity`` is outside the envelope (#10657), as
+    in every renew and release match, so it neither fails nor satisfies this.
+    """
+    holder = current.get("holder")
+    return (
+        isinstance(holder, dict)
+        and all(current.get(key) == value for key, value in expected.items() if key != "holder")
+        and all(key in holder and holder[key] == value for key, value in expected["holder"].items())
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -587,6 +601,9 @@ def main(argv: list[str] | None = None) -> int:
                 process_id=args.process_id,
                 task_id=args.task_id,
                 host_id=None if args.local else (args.host_id or _resolve_default_host_id()),
+                # Derived from the kernel for the launcher that runs this command
+                # (its parent), never from an argument or the environment (#10657).
+                process_identity=None if args.local else parent_identity(args.process_id),
             )
             lease = supervisor.open_driver(
                 role=args.role,

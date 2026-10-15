@@ -32,6 +32,7 @@ from agents_extensions.shared.session_streams.model import (
     utc_now,
     validate_stream_id,
 )
+from agents_extensions.shared.session_streams.process_identity import validate_process_identity
 from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
 from agents_extensions.shared.session_streams.store import (
     MAX_ROLLOVER_BUNDLE_BYTES,
@@ -337,9 +338,19 @@ def _epic_stream(value: Any) -> str:
     return stream_id
 
 
-def _holder(payload: dict[str, Any], *, default_host: str | None = None) -> LeaseHolder:
+def _holder(payload: dict[str, Any], *, default_host: str | None = None, acquire: bool = False) -> LeaseHolder:
+    """Parse a holder; ``process_identity`` is read only when ``acquire`` (a claim) records it.
+
+    Renew, release and fenced writes never match or populate the identity
+    (#10657): a value an exact-lease envelope carries, including one echoed
+    back from a read, is ignored, so the stored generation identity is the
+    only one that exists. A claim's value must be a well-formed v1 identity.
+    """
     nested = payload.get("holder")
     source = nested if isinstance(nested, dict) else payload
+    process_identity = source.get("process_identity") if acquire else None
+    if process_identity is not None:
+        process_identity = validate_process_identity(process_identity)
     kind = HolderKind(source.get("holder_kind", HolderKind.PROCESS.value))
     task_id = source.get("task_id")
     if task_id is not None:
@@ -358,6 +369,7 @@ def _holder(payload: dict[str, Any], *, default_host: str | None = None) -> Leas
         task_id=task_id,
         holder_kind=kind,
         host_id=host_id,
+        process_identity=process_identity,
     )
     holder.validate()
     return holder
@@ -387,6 +399,19 @@ def _lease_from_payload(payload: dict[str, Any]) -> Lease:
 
 def _lease_payload(lease: Lease, *, projection_state: str, session_state: str, now: datetime) -> dict[str, Any]:
     expired = projection_state == "active" and now >= parse_timestamp(lease.expires_at)
+    holder = {
+        "agent": _response_token(lease.holder.agent),
+        "harness": _response_token(lease.holder.harness),
+        "instance_id": _response_token(lease.holder.instance_id),
+        "task_id": _response_optional_token(lease.holder.task_id),
+        "process_id": lease.holder.process_id,
+        "holder_kind": lease.holder.holder_kind.value,
+        "host_id": _response_host(lease.holder.host_id),
+    }
+    # A public identifier, not a credential. Omitted for leases that record
+    # none, so their holder objects stay byte-identical for existing clients.
+    if lease.holder.process_identity is not None:
+        holder["process_identity"] = lease.holder.process_identity
     return {
         "stream_id": lease.stream_id,
         "session_id": _response_token(lease.session_id),
@@ -400,15 +425,7 @@ def _lease_payload(lease: Lease, *, projection_state: str, session_state: str, n
         "ttl_seconds": lease.ttl_seconds,
         "version": lease.version,
         "age_seconds": max(0, int((now - parse_timestamp(lease.heartbeat_at)).total_seconds())),
-        "holder": {
-            "agent": _response_token(lease.holder.agent),
-            "harness": _response_token(lease.holder.harness),
-            "instance_id": _response_token(lease.holder.instance_id),
-            "task_id": _response_optional_token(lease.holder.task_id),
-            "process_id": lease.holder.process_id,
-            "holder_kind": lease.holder.holder_kind.value,
-            "host_id": _response_host(lease.holder.host_id),
-        },
+        "holder": holder,
     }
 
 
@@ -521,7 +538,7 @@ def _claim_values(body: dict[str, Any]) -> tuple[str, str, str, LeaseHolder, int
     session_id = _token(body.get("session_id"), "session_id")
     lease_id = _token(body.get("lease_id"), "lease_id")
     lineage_id = _token(body.get("lineage_id"), "lineage_id")
-    holder = _holder(body)
+    holder = _holder(body, acquire=True)
     ttl = _integer(body.get("ttl_seconds", DEFAULT_TTL_SECONDS), "ttl_seconds", maximum=86_400)
     limit = _digest_limit(body.get("digest_limit", 20))
     return session_id, lease_id, lineage_id, holder, ttl, limit

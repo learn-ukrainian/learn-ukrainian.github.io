@@ -605,6 +605,37 @@ path. Duplicate epic membership uses first-wins order from the registry; any
 malformed record is counted in `skipped` rather than silently treated as a
 valid registration.
 
+### Holder process identity (#10657)
+
+A lease generation may record `holder.process_identity`, a typed, versioned
+fingerprint of the long-lived holder process: `v1:` followed by 64 lowercase
+hex digits (see `agents_extensions/shared/session_streams/process_identity.py`).
+The session supervisor derives it at claim time from the kernel, for the
+launcher that runs the claim command, and sends it in the claim body; it reads
+no argument or environment value for it. The contract:
+
+- `claim` accepts an optional `process_identity` (or `holder.process_identity`).
+  A malformed value or one on an `app_thread` holder is refused `400`. A replay
+  with the same IDs must carry the same value, otherwise `409`.
+- The value is fixed for the generation. `heartbeat`, `handoff`, `bundles` and
+  `release` never match, populate or change it: any value in their lease
+  envelope is ignored, so an envelope echoed from a read still works. Store
+  triggers (migration 0008) refuse a change within a generation, a projection
+  whose identity differs from its own lease event, and `INSERT OR REPLACE` of a
+  projection row. A new holder gets a new generation with its own value.
+- Reads (`GET /api/epics/v1`, `GET /api/epics/v1/epic:<N>`, the claim response)
+  return `holder.process_identity` only when the generation recorded one. A
+  lease without it (every lease acquired before migration 0008 or by an older
+  client) keeps its exact previous holder object and renews and releases as
+  before; only owner attestation and lane succession, which require the proof,
+  refuse it until the launcher's next claim records one.
+- The value is an identifier, not a secret or a bearer credential. All its
+  inputs are world-readable, so knowing it proves nothing: a caller proves it
+  holds the lease only by deriving the same value for one of its own kernel
+  ancestors (`scripts/fleet/terminal_abandon.py`, `HOLDER_UNPROVEN` otherwise).
+  Monitor cannot verify a claim's value; a fabricated one only makes the proof
+  impossible for every other process.
+
 Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before claiming. The
 value comes from the canonical `MONITOR_OCCUPANCY_HOST_IDS` mapping and is an
 opaque ID such as `host-teacher`, `host-job`, or `mac-operator`; this keeps

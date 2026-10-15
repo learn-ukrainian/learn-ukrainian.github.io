@@ -10,6 +10,8 @@ from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
+from .process_identity import validate_process_identity
+
 STREAM_ID_RE = re.compile(r"^(?:epic:[1-9][0-9]*|shared:[a-z][a-z0-9-]{0,63})$")
 IDENTITY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$")
 
@@ -48,7 +50,14 @@ class HolderKind(StrEnum):
 
 @dataclass(frozen=True)
 class LeaseHolder:
-    """Exact harness-owned identity for one lease holder."""
+    """Exact harness-owned identity for one lease holder.
+
+    ``process_identity`` is the supervisor's kernel-derived fingerprint of the
+    long-lived holder process (see ``process_identity.py``). It is fixed when a
+    generation is acquired, never changes within it, and is deliberately absent
+    from every renew, release and fenced-write match: those keep matching the
+    other holder fields exactly as before.
+    """
 
     agent: str
     harness: str
@@ -57,8 +66,13 @@ class LeaseHolder:
     task_id: str | None = None
     holder_kind: HolderKind = HolderKind.PROCESS
     host_id: str | None = None
+    process_identity: str | None = None
 
     def validate(self) -> None:
+        if self.process_identity is not None:
+            if self.holder_kind is not HolderKind.PROCESS:
+                raise ValueError("process_identity is only recorded for a process holder")
+            validate_process_identity(self.process_identity)
         for label, value in (
             ("agent", self.agent),
             ("harness", self.harness),

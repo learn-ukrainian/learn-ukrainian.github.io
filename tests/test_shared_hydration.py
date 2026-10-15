@@ -283,6 +283,21 @@ def test_remote_launcher_lease_hydrates_without_next_action_or_local_db(
     assert capsule["fencing_token"]["value"] == 7
 
 
+@pytest.mark.parametrize("other_instance", [False, True])
+def test_recorded_holder_process_identity_is_outside_the_launcher_envelope(
+    monkeypatch: pytest.MonkeyPatch, stream_fetch, other_instance: bool
+) -> None:
+    """#10657: a generation's recorded holder identity never fails its own launcher's hydration."""
+    response = _remote_stream(monkeypatch)
+    response["lease"]["holder"]["process_identity"] = "v1:" + "a" * 64
+    if other_instance:
+        # Every envelope field still binds exactly.
+        response["lease"]["holder"]["instance_id"] = "agy-other"
+    stream_fetch(response)
+
+    assert hydration.build_hydration_capsule("epic:123", "gemini")["execution_allowed"] is not other_instance
+
+
 def test_remote_next_action_becomes_exact_drive_boundary(monkeypatch: pytest.MonkeyPatch, stream_fetch) -> None:
     response = _remote_stream(monkeypatch)
     response["digest"]["recent"] = [

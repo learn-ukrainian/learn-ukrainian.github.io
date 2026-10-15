@@ -276,6 +276,12 @@ def process_exists(process_id: int) -> bool:
     return True
 
 
+def _stored_identity(row: Mapping[str, Any] | sqlite3.Row) -> str | None:
+    """The generation's recorded holder process identity; NULL for leases acquired without one."""
+    value = row["holder_process_identity"]
+    return None if value is None else str(value)
+
+
 def _filename_contains_hostname(filename: str) -> bool:
     """Check the final stem label against the public and private host suffixes."""
     labels = filename.strip(".").rsplit(".", 2)
@@ -688,8 +694,8 @@ class SessionStreamStore:
                     "INSERT INTO stream_leases("
                     "stream_id, session_id, lease_id, generation, fencing_token, state, "
                     "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, holder_host_id, "
-                    "heartbeat_at, expires_at, ttl_seconds, version, last_event_id"
-                    ") VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
+                    "holder_process_identity, heartbeat_at, expires_at, ttl_seconds, version, last_event_id"
+                    ") VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
                     (
                         stream_id,
                         session_id,
@@ -703,6 +709,7 @@ class SessionStreamStore:
                         holder.task_id,
                         holder.process_id,
                         holder.host_id,
+                        holder.process_identity,
                         timestamp,
                         expires_at,
                         ttl_seconds,
@@ -716,8 +723,8 @@ class SessionStreamStore:
                     "UPDATE stream_leases SET "
                     "session_id = ?, lease_id = ?, generation = ?, fencing_token = ?, state = 'active', "
                     "holder_kind = ?, holder_agent = ?, holder_harness = ?, holder_instance_id = ?, holder_task_id = ?, "
-                    "holder_process_id = ?, holder_host_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, "
-                    "version = ?, last_event_id = ? WHERE stream_id = ?",
+                    "holder_process_id = ?, holder_host_id = ?, holder_process_identity = ?, heartbeat_at = ?, expires_at = ?, "
+                    "ttl_seconds = ?, version = ?, last_event_id = ? WHERE stream_id = ?",
                     (
                         session_id,
                         lease_id,
@@ -730,6 +737,7 @@ class SessionStreamStore:
                         holder.task_id,
                         holder.process_id,
                         holder.host_id,
+                        holder.process_identity,
                         timestamp,
                         expires_at,
                         ttl_seconds,
@@ -851,8 +859,8 @@ class SessionStreamStore:
                     "INSERT INTO stream_leases("
                     "stream_id, session_id, lease_id, generation, fencing_token, state, "
                     "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, holder_host_id, "
-                    "heartbeat_at, expires_at, ttl_seconds, version, last_event_id) "
-                    "VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
+                    "holder_process_identity, heartbeat_at, expires_at, ttl_seconds, version, last_event_id) "
+                    "VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
                     (
                         stream_id,
                         session_id,
@@ -866,6 +874,7 @@ class SessionStreamStore:
                         holder.task_id,
                         holder.process_id,
                         holder.host_id,
+                        holder.process_identity,
                         timestamp,
                         expires_at,
                         ttl_seconds,
@@ -959,8 +968,8 @@ class SessionStreamStore:
                 connection.execute(
                     "UPDATE stream_leases SET session_id = ?, lease_id = ?, generation = ?, fencing_token = ?, state = 'active', "
                     "holder_kind = ?, holder_agent = ?, holder_harness = ?, holder_instance_id = ?, holder_task_id = ?, "
-                    "holder_process_id = ?, holder_host_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, "
-                    "version = ?, last_event_id = ? WHERE stream_id = ?",
+                    "holder_process_id = ?, holder_host_id = ?, holder_process_identity = ?, heartbeat_at = ?, expires_at = ?, "
+                    "ttl_seconds = ?, version = ?, last_event_id = ? WHERE stream_id = ?",
                     (
                         session_id,
                         lease_id,
@@ -973,6 +982,7 @@ class SessionStreamStore:
                         holder.task_id,
                         holder.process_id,
                         holder.host_id,
+                        holder.process_identity,
                         timestamp,
                         expires_at,
                         ttl_seconds,
@@ -1758,7 +1768,8 @@ class SessionStreamStore:
             connection.execute(
                 "UPDATE stream_leases SET session_id = ?, lease_id = ?, generation = ?, fencing_token = ?, state = 'active', "
                 "holder_kind = ?, holder_agent = ?, holder_harness = ?, holder_instance_id = ?, holder_task_id = ?, "
-                "holder_process_id = ?, holder_host_id = ?, heartbeat_at = ?, expires_at = ?, ttl_seconds = ?, version = ?, last_event_id = ? "
+                "holder_process_id = ?, holder_host_id = ?, holder_process_identity = ?, heartbeat_at = ?, expires_at = ?, "
+                "ttl_seconds = ?, version = ?, last_event_id = ? "
                 "WHERE stream_id = ?",
                 (
                     session_id,
@@ -1772,6 +1783,7 @@ class SessionStreamStore:
                     successor.task_id,
                     successor.process_id,
                     successor.host_id,
+                    successor.process_identity,
                     timestamp,
                     expires_at,
                     ttl_seconds,
@@ -2793,8 +2805,8 @@ class SessionStreamStore:
             "INSERT INTO lease_events("
             "stream_id, session_id, lease_id, generation, fencing_token, event_type, "
             "holder_kind, holder_agent, holder_harness, holder_instance_id, holder_task_id, holder_process_id, holder_host_id, "
-            "ttl_seconds, ts, proof_json, reason"
-            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "holder_process_identity, ttl_seconds, ts, proof_json, reason"
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 stream_id,
                 session_id,
@@ -2809,6 +2821,7 @@ class SessionStreamStore:
                 holder.task_id,
                 holder.process_id,
                 holder.host_id,
+                holder.process_identity,
                 ttl_seconds,
                 timestamp,
                 canonical_json(proof),
@@ -2835,6 +2848,7 @@ class SessionStreamStore:
             process_id=int(row["holder_process_id"]) if row["holder_process_id"] is not None else None,
             holder_kind=HolderKind(str(row["holder_kind"])),
             host_id=str(row["holder_host_id"]) if row["holder_host_id"] is not None else None,
+            process_identity=_stored_identity(row),
         )
         return self._insert_lease_event(
             connection,
@@ -2867,6 +2881,7 @@ class SessionStreamStore:
                 process_id=int(row["holder_process_id"]) if row["holder_process_id"] is not None else None,
                 holder_kind=HolderKind(str(row["holder_kind"])),
                 host_id=str(row["holder_host_id"]) if row["holder_host_id"] is not None else None,
+                process_identity=_stored_identity(row),
             ),
             heartbeat_at=str(row["heartbeat_at"]),
             expires_at=str(row["expires_at"]),

@@ -392,6 +392,11 @@ def _collect_stream_evidence(stream_id: str, *, deadline: float) -> dict[str, An
     response = _fetch_remote_stream(canonical_stream_id, deadline=deadline)
     current = response.get("lease")
     expected = RemoteEpicClient._lease_payload(lease)
+    if isinstance(current, dict) and isinstance(current.get("holder"), dict):
+        # The generation's recorded holder process identity is outside the
+        # exact-lease envelope, as in every renew and release match (#10657).
+        holder = {key: value for key, value in current["holder"].items() if key != "process_identity"}
+        current = {**current, "holder": holder}
     if (
         response.get("stream_id") != canonical_stream_id
         or not isinstance(current, dict)

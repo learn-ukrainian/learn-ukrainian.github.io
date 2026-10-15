@@ -24,6 +24,11 @@ _ROOT = Path(__file__).resolve().parents[2]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from agents_extensions.shared.session_streams.process_identity import (
+    ProcessIdentityUnavailable,
+    lineage_identity,
+    validate_process_identity,
+)
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common import task_store_paths
 from scripts.fleet import ignored_task_output as output
@@ -107,13 +112,15 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
     from the environment (including its ``LU_MONITOR_HOST_ID`` host label) only
     names the lease and can only narrow the match: Monitor's stream view
     publishes every envelope field, so possession proves nothing until the kernel
-    shows the caller running beneath Monitor's recorded holder process. Read only.
+    shows the caller running beneath Monitor's recorded holder process. The
+    returned authority binds that generation's recorded holder process identity,
+    so every later check compares against the same holder. Read only.
     """
     from scripts.session_supervisor.remote import RemoteEpicClient
 
     if lease.stream_id != stream:
         raise Refusal("CROSS_STREAM", "caller's stream custody is not the creator's canonical stream")
-    verify_current_custody(RemoteEpicClient._lease_payload(lease), caller_holds=True)
+    identity = verify_current_custody(RemoteEpicClient._lease_payload(lease), caller_holds=True)
     return {
         "stream_id": stream,
         "session_id": lease.session_id,
@@ -124,17 +131,46 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
             "agent": lease.holder.agent,
             "harness": lease.holder.harness,
             "instance_id": lease.holder.instance_id,
+            "process_identity": identity,
         },
     }
 
 
-def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = False) -> None:
+def confirm_custody_after_write(path: Path, original: bytes, authority: dict[str, Any]) -> None:
+    """Bind a just-published record to the generation it names, or withdraw it (#10657).
+
+    The record was written under the task-record locks every remover takes
+    before its final check, so no remover has acted on it yet. Monitor
+    generations only advance and a released generation never becomes active
+    again (store triggers), so the named generation being current, held and
+    kernel-verified both at the last check before the write and now proves it
+    was at the write. A lease replaced in between (succession, expiry reclaim,
+    force release) refuses, and the record's exact prior bytes are restored
+    before the locks are released: a lookup that preceded the succession never
+    authorizes the write that followed it. Any failure to confirm withdraws it.
+    """
+    try:
+        verify_current_custody(authority, caller_holds=True)
+    except Exception:
+        temporary = path.with_name(f".{path.name}.{os.getpid()}.restore")
+        with temporary.open("wb") as handle:
+            handle.write(original)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        raise
+
+
+def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = False) -> str | None:
     """Revalidate writer or receipt custody against Monitor without acquiring a lease.
 
     Only the canonical loopback Monitor is asked: an environment-selected
-    endpoint could answer for any lease. With ``caller_holds`` this process must
-    also be Monitor's recorded holder process or one of its descendants, proven
-    from the kernel by ``prove_holder_process``.
+    endpoint could answer for any lease. Every field ``expected`` carries must
+    equal Monitor's current lease, including a recorded ``holder.process_identity``.
+    With ``caller_holds`` this process must also be Monitor's recorded holder
+    process or one of its descendants, proven from the kernel by
+    ``prove_holder_process`` against the identity read in the same response.
+    Returns that generation's recorded holder process identity.
     """
     from agents_extensions.shared.session_streams.model import parse_timestamp
     from scripts.session_supervisor.remote import DEFAULT_MONITOR, RemoteEpicClient, RemoteSupervisorError
@@ -166,74 +202,55 @@ def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = Fal
     if expired:
         raise Refusal("STALE_AUTHORITY", "caller's stream custody has expired")
     if caller_holds:
-        prove_holder_process(current)
+        return prove_holder_process(current)
+    identity = current["holder"].get("process_identity") if isinstance(current.get("holder"), dict) else None
+    return identity if isinstance(identity, str) else None
 
 
-_BOOT_ID = Path("/proc/sys/kernel/random/boot_id")
-
-
-def _process_lineage() -> dict[int, int]:
-    """This process and each of its ancestors, mapped to its start time in clock ticks since boot."""
-    lineage: dict[int, int] = {}
-    pid = os.getpid()
-    while pid > 0 and pid not in lineage:
-        text = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8", errors="replace")
-        # comm is parenthesized and may contain spaces or ')'. The fields after
-        # the final ')' start at state (field 3): ppid is field 4, starttime 22.
-        fields = text.rsplit(")", 1)[1].split()
-        lineage[pid] = int(fields[19])
-        pid = int(fields[1])
-    return lineage
-
-
-def _boot_id() -> str:
-    """This kernel's random per-boot identity; it differs on every other host and boot."""
-    value = _BOOT_ID.read_text(encoding="ascii").strip()
-    if not re.fullmatch(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", value):
-        raise ValueError("kernel boot identity unavailable")
-    return value
-
-
-def _holder_identity(boot_id: str, pid: int, start_ticks: int) -> str:
-    """One process incarnation on one boot of one host: SHA-256 of ``<boot_id>:<pid>:<start_ticks>``."""
-    return hashlib.sha256(f"{boot_id}:{pid}:{start_ticks}".encode("ascii")).hexdigest()
-
-
-def prove_holder_process(lease: Mapping[str, Any]) -> None:
+def prove_holder_process(lease: Mapping[str, Any]) -> str:
     """Prove this process is Monitor's recorded lease holder process or its descendant (#10657).
 
     The launcher records its own PID as the holder and starts the provider
-    beneath it. A PID alone names a process only on one host and boot, and a
-    host label is configuration any caller can set, so locality is proven from
-    the kernel alone: the lease must record ``holder.process_identity``, the
-    SHA-256 of the holder's boot id, PID and start time in clock ticks since
-    boot (/proc/<pid>/stat field 22), and this process's own ancestor with that
-    PID must reproduce it from this kernel. A lease held on another host or
-    boot, a reused PID, a lease that records no identity, and an app-thread
-    holder (no process) are all refused. No environment value is read.
+    beneath it; the session supervisor records that launcher's kernel-derived
+    ``holder.process_identity`` when it acquires the generation. A PID alone
+    names a process only on one host, boot and PID namespace, and a host label
+    is configuration any caller can set, so locality is proven from the kernel
+    alone: this process derives the identity of its own ancestor with the
+    recorded PID independently (``process_identity.lineage_identity``) and it
+    must equal the recorded value. A lease that records no or a malformed
+    identity (acquired before the field existed or by an older client), a lease
+    held on another host, boot or namespace, a reused PID, an app-thread holder
+    (no process), and a machine without ``/proc`` are all refused. No
+    environment value is read. Returns the verified identity.
     """
     holder = lease.get("holder")
     pid = holder.get("process_id") if isinstance(holder, dict) else None
     if not isinstance(holder, dict) or holder.get("holder_kind") != "process" or type(pid) is not int or pid <= 0:
         raise Refusal("HOLDER_UNPROVEN", "stream custody is not held by a recorded local process")
     claimed = holder.get("process_identity")
-    if not isinstance(claimed, str) or not re.fullmatch(r"[a-f0-9]{64}", claimed):
-        raise Refusal(
-            "HOLDER_UNPROVEN",
-            "stream custody records no kernel process identity for its holder, so no host can prove it holds it",
-        )
     try:
-        lineage = _process_lineage()
-        boot = _boot_id()
-    except (OSError, ValueError, IndexError, UnicodeDecodeError):
-        raise Refusal("HOLDER_UNPROVEN", "process ancestry or kernel boot identity unavailable") from None
-    if pid not in lineage:
-        raise Refusal("HOLDER_UNPROVEN", "this process is neither the stream custody holder nor its descendant")
-    if not hmac.compare_digest(_holder_identity(boot, pid, lineage[pid]), claimed):
+        validate_process_identity(claimed)
+    except ValueError:
         raise Refusal(
             "HOLDER_UNPROVEN",
-            "stream custody is held by a process on another host or boot, or by an earlier process with this PID",
+            "stream custody records no valid kernel process identity for its holder; "
+            "the holder's next launcher acquisition records one",
+        ) from None
+    try:
+        derived = lineage_identity(pid)
+    except ProcessIdentityUnavailable:
+        raise Refusal("HOLDER_UNPROVEN", "process ancestry or kernel identity unavailable") from None
+    except LookupError:
+        raise Refusal(
+            "HOLDER_UNPROVEN", "this process is neither the stream custody holder nor its descendant"
+        ) from None
+    if not hmac.compare_digest(derived, claimed):
+        raise Refusal(
+            "HOLDER_UNPROVEN",
+            "stream custody is held by a process on another host, boot or namespace, "
+            "or by an earlier process with this PID",
         )
+    return claimed
 
 
 def _succession_map() -> tuple[dict[str, str], str]:
@@ -645,7 +662,10 @@ def record_abandon(
                 created_manifest = destination
             if captured is not None:
                 output.publish_abandon_output(tree, primary=primary, record=creator, locator=locator)
+            original = _regular_bytes(creator_path, primary)
             artifacts.reaper_lifecycle._atomic_write(creator_path, candidate)
+            if succession is not None:
+                confirm_custody_after_write(creator_path, original, authority)
             published = True
             return {"outcome": "recorded", "task_id": task_id, "head_sha": head}
         finally:
@@ -1233,7 +1253,9 @@ def _publish_attestation(
             created.append(destination)
         if captured is not None:
             output.publish_abandon_output(tree, primary=primary, record=host, locator=locator)
+        original = _regular_bytes(host_path, primary)
         artifacts.reaper_lifecycle._atomic_write(host_path, candidate)
+        confirm_custody_after_write(host_path, original, owner["authority"])
         published = True
         return {
             "outcome": "recorded",
@@ -1273,11 +1295,15 @@ def main(argv: list[str] | None = None) -> int:
             "Dry-run by default; --apply writes one record per tree; a rerun is already_recorded.\n"
             "The owner is never an argument: it is this session's launcher lease, verified as the\n"
             "current custody in the canonical loopback Monitor, with this process running beneath\n"
-            "the lease's recorded holder process, proven from the kernel alone: the lease must\n"
-            "record holder.process_identity, SHA-256 of '<boot_id>:<pid>:<start_ticks>', and this\n"
-            "host must reproduce it for one of this process's ancestors (HOLDER_UNPROVEN otherwise;\n"
-            "a lease without it, an environment copy of a lease or a host label proves nothing;\n"
-            "no environment value is read for this). Its attributed seat must be registered\n"
+            "the lease's recorded holder process, proven from the kernel alone: the lease generation\n"
+            "must record holder.process_identity (the session supervisor derives it from the\n"
+            "launcher at acquisition: v1:SHA-256 of boot id, PID namespace, PID and start ticks),\n"
+            "and this process must derive the same value for one of its own ancestors\n"
+            "(HOLDER_UNPROVEN otherwise; a lease acquired before the field existed, an environment\n"
+            "copy of a lease or a host label proves nothing; no environment value is read for this;\n"
+            "the identity is a public identifier, not a credential). After writing, the tool\n"
+            "rechecks that the same generation is still current and held; a lease replaced in\n"
+            "between restores the record and refuses STALE_AUTHORITY. Its attributed seat must be registered\n"
             "in scripts/config/area_assignments.yaml for the provider holding the lease, and its\n"
             "stream must be the lane that scripts/config/terminal_abandon_succession.yaml maps\n"
             "every bound task's initiator to. It replaces only missing creator evidence\n"

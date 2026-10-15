@@ -33,6 +33,7 @@ from tests.fleet.test_terminal_abandon import (
     invoke,
     kernel_identity,
     monitor_lease,
+    replace_lease_around_write,
 )
 from tests.fleet.test_terminal_abandon import succession as succession
 from tests.fleet.test_terminal_abandon import writer_fixture as writer_fixture
@@ -217,7 +218,13 @@ def test_attested_record_is_consumed_by_reaper_and_restores(attest, monkeypatch,
         "lease_id": "lease-current",
         "generation": 4,
         "fencing_token": 17,
-        "holder": {"agent": "muse", "harness": "muse-cli", "instance_id": "muse-monitor-1"},
+        "holder": {
+            "agent": "muse",
+            "harness": "muse-cli",
+            "instance_id": "muse-monitor-1",
+            # The attested generation's recorded holder, this process (#10657).
+            "process_identity": kernel_identity(os.getpid()),
+        },
     }
     assert sorted(entry["task_id"] for entry in attestation["cohort"]) == (
         ["boundary", "boundary"] if shape == "creatorless" else ["boundary", "successor"]
@@ -730,7 +737,6 @@ def test_reader_refuses_a_malformed_attestation(attest, capsys, tamper):
 
 def _holder_defect(defect, fx, monkeypatch):
     """Make the session's custody unprovable while every envelope field still matches Monitor."""
-    from scripts.fleet import terminal_abandon
 
     lease = fx["monitor"]["streams"][MONITOR]
     if defect == "copied_envelope":
@@ -752,11 +758,12 @@ def _holder_defect(defect, fx, monkeypatch):
         # A launcher that records no kernel identity: locality is unprovable.
         del lease["holder"]["process_identity"]
     elif defect == "ancestry_unavailable":
+        from agents_extensions.shared.session_streams import process_identity
 
         def unavailable():
             raise OSError("no /proc")
 
-        monkeypatch.setattr(terminal_abandon, "_process_lineage", unavailable, raising=False)
+        monkeypatch.setattr(process_identity, "_lineage", unavailable)
     else:
         raise AssertionError(defect)
 
@@ -773,6 +780,29 @@ def test_owner_must_run_beneath_the_recorded_holder_process(attest, monkeypatch,
     result = _out(capsys)
     assert (result["outcome"], result["code"]) == ("refused", "HOLDER_UNPROVEN"), result
     _no_writes(attest, before)
+
+
+@pytest.mark.parametrize("when", ["before_write", "after_write"])
+def test_attestation_written_after_a_succession_is_withdrawn(attest, monkeypatch, capsys, when):
+    """#10657 round 4: the comparison and the write bind the same lease generation.
+
+    A succession after the writer's last check, or after its record write, must
+    not leave an attestation behind: the record's exact prior bytes return, the
+    preservation the call produced is removed, and the refusal is registered.
+    """
+    replace_lease_around_write(attest["monitor"]["streams"], monkeypatch, when=when, final_check_call=1)
+    before = _files(attest["repo"])
+    assert attest_cli(attest, apply=True) == 2
+    result = _out(capsys)
+    assert (result["outcome"], result["code"]) == ("refused", "STALE_AUTHORITY"), result
+    _no_writes(attest, before)
+
+
+def test_attestation_binds_the_generation_identity_it_proved(attest, capsys):
+    """The record names the generation's recorded holder identity; removal requires the same one."""
+    _, receipt, _ = _attested(attest, capsys)
+    assert receipt["attestation"]["owner"]["authority"]["holder"]["process_identity"] == kernel_identity(os.getpid())
+    _remove(attest)
 
 
 def test_holder_may_be_an_ancestor_not_only_this_process(attest, monkeypatch, capsys):
@@ -829,7 +859,13 @@ def test_reader_refuses_fabricated_authorization(attest, capsys, tamper, code):
         owner.update(seat="claude-infra", area="infra-harness", stream_id=INFRA)
         owner.update(mapping_sha256="a" * 64, assignments_sha256="b" * 64)
         authority.update(stream_id=INFRA, session_id="session-invented", lease_id="lease-invented")
-        authority["holder"] = {"agent": "claude", "harness": "claude-code", "instance_id": "claude-infra-1"}
+        authority["holder"] = {
+            "agent": "claude",
+            "harness": "claude-code",
+            "instance_id": "claude-infra-1",
+            # A forger can copy any public identity; it still names no owner.
+            "process_identity": authority["holder"]["process_identity"],
+        }
     elif tamper == "foreign_seat":
         owner["seat"] = "muse-folk"
     elif tamper == "area":
@@ -1084,11 +1120,16 @@ def test_reviewer_probe_remote_host_assertion_cannot_record(attest, monkeypatch,
 
 @pytest.mark.parametrize("variable", HOST_VARIABLES)
 def test_remote_holder_never_consumes_an_attestation(attest, monkeypatch, capsys, variable):
-    """The round-2 probe's reader and removal steps, for every host variable class."""
+    """The round-2 probe's reader and removal steps, for every host variable class.
+
+    The record binds the attested generation's holder process identity, so a
+    remote holder's identity is already a different custody (STALE_AUTHORITY)
+    before the kernel proof, which refuses it too (HOLDER_UNPROVEN, above).
+    """
     _attested(attest, capsys)
     _remote_holder(attest)
     _claim_remote_host(variable, attest, monkeypatch)
-    _reader_refuses(attest, "HOLDER_UNPROVEN")
+    _reader_refuses(attest, "STALE_AUTHORITY")
 
 
 def test_holder_proof_reads_no_environment(attest, monkeypatch):

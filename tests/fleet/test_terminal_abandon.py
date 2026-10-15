@@ -317,14 +317,20 @@ def _set_lease_env(monkeypatch, **overrides):
         monkeypatch.setenv(f"SESSION_STREAM_{key}", value)
 
 
-def kernel_identity(pid, *, boot_id=None, ticks_delta=0):
-    """Independent /proc oracle for a lease's holder identity: SHA-256 of '<boot_id>:<pid>:<start_ticks>'."""
+def kernel_identity(pid, *, boot_id=None, ticks_delta=0, namespace=None):
+    """Independent /proc oracle for a lease's v1 holder identity, written from the spec, not the code.
+
+    ``v1:`` + SHA-256 of the newline-joined schema tag, boot id, PID namespace,
+    PID and start ticks (/proc/<pid>/stat field 22).
+    """
     boot = boot_id or Path("/proc/sys/kernel/random/boot_id").read_text(encoding="ascii").strip()
+    space = namespace or os.readlink("/proc/self/ns/pid")
     try:
         ticks = int(Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19]) + ticks_delta
     except OSError:
         ticks = 0  # Not a process on this host: any identity is foreign here.
-    return hashlib.sha256(f"{boot}:{pid}:{ticks}".encode()).hexdigest()
+    payload = "\n".join(("lu-holder-process.v1", boot, space, str(pid), str(ticks)))
+    return "v1:" + hashlib.sha256(payload.encode()).hexdigest()
 
 
 def monitor_lease():
@@ -400,9 +406,10 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
     repo, tree, _, _, _, _, head = fixture
     assert invoke(fixture) == 0
     assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
-    # Admission, the writer's recheck, then the final reader validation's probe,
-    # which precedes its local recheck; the first reader validation is local only.
-    assert monitor["calls"] == 3
+    # Admission, the writer's recheck, the final reader validation's probe (which
+    # precedes its local recheck; the first reader validation is local only), then
+    # the same-generation confirmation after the record is written (#10657).
+    assert monitor["calls"] == 4
     record, receipt, manifest = _recorded(fixture)
     # The creator's identity and nonce are kept; succession is appended, not substituted.
     assert record["initiator"] == "claude-monitor"
@@ -421,7 +428,12 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
             "lease_id": "lease-current",
             "generation": 4,
             "fencing_token": 17,
-            "holder": {"agent": "muse", "harness": "muse-cli", "instance_id": "muse-monitor-1"},
+            "holder": {
+                "agent": "muse",
+                "harness": "muse-cli",
+                "instance_id": "muse-monitor-1",
+                "process_identity": kernel_identity(os.getpid()),
+            },
         },
         "tree": tree.relative_to(repo).as_posix(),
         "branch": "codex/boundary",
@@ -513,6 +525,22 @@ def _defect(failure, fixture, monitor, monkeypatch, tmp_path):
             _set_lease_env(monkeypatch)
 
         return repair
+    if failure in {"unrecorded_identity", "reused_pid", "malformed_identity", "environment_identity"}:
+        # #10657 round 4: the generation's recorded holder identity is the only proof.
+        recorded = lease["holder"]["process_identity"]
+        if failure == "unrecorded_identity":
+            # A lease acquired before the field existed, or by an older client.
+            del lease["holder"]["process_identity"]
+        elif failure == "reused_pid":
+            # An earlier process with this PID holds it; this one started later.
+            lease["holder"]["process_identity"] = kernel_identity(os.getpid(), ticks_delta=-1)
+        elif failure == "malformed_identity":
+            lease["holder"]["process_identity"] = recorded.removeprefix("v1:")
+        else:
+            # Nothing reads an identity from the environment, whatever it holds.
+            del lease["holder"]["process_identity"]
+            monkeypatch.setenv("SESSION_STREAM_PROCESS_IDENTITY", recorded)
+        return lambda: lease["holder"].__setitem__("process_identity", recorded)
     if failure in {"stale_fence", "stale_generation", "other_session", "released", "expired", "closed_session"}:
         field, value = {
             "stale_fence": ("fencing_token", 18),
@@ -580,6 +608,10 @@ def _defect(failure, fixture, monitor, monkeypatch, tmp_path):
         ("unknown_caller", "NOT_CREATOR", "creator-of-record"),
         ("cross_stream", "CROSS_STREAM", "canonical stream"),
         ("copied_envelope", "HOLDER_UNPROVEN", "neither the stream custody holder nor its descendant"),
+        ("unrecorded_identity", "HOLDER_UNPROVEN", "no valid kernel process identity"),
+        ("reused_pid", "HOLDER_UNPROVEN", "earlier process with this PID"),
+        ("malformed_identity", "HOLDER_UNPROVEN", "no valid kernel process identity"),
+        ("environment_identity", "HOLDER_UNPROVEN", "no valid kernel process identity"),
         ("stale_fence", "STALE_AUTHORITY", "current active custody"),
         ("stale_generation", "STALE_AUTHORITY", "current active custody"),
         ("other_session", "STALE_AUTHORITY", "current active custody"),
@@ -649,6 +681,65 @@ def test_successor_inputs_changed_between_check_and_publish_refuse(succession, m
     assert _files(repo) == before and not _preserved_files(repo)
     assert not list((repo / "batch_state/abandon/boundary").glob(".terminal-abandon-*"))
     assert "worktree_abandon" not in json.loads((fixture[2] / "boundary.json").read_bytes())
+
+
+def replace_lease_around_write(streams, monkeypatch, *, when, final_check_call):
+    """Succeed the stream after the writer's last check (``before_write``) or after its record write.
+
+    Another launcher of the same lane acquires the next generation. The writer's
+    final local check is its ``final_check_call``-th ``terminal_abandon_local``
+    call that validates a proposed record against the on-disk cohort.
+    """
+    from scripts.orchestration import reaper_lifecycle
+
+    def succeed():
+        successor = json.loads(json.dumps(streams[MONITOR]))
+        successor.update(session_id="session-successor", lease_id="lease-successor", generation=5, fencing_token=18)
+        successor["holder"].update(
+            instance_id="muse-monitor-2", process_id=FOREIGN_PID, process_identity=kernel_identity(FOREIGN_PID)
+        )
+        streams[MONITOR] = successor
+
+    if when == "after_write":
+        write = reaper_lifecycle._atomic_write
+
+        def write_then_succeed(path, payload):
+            write(path, payload)
+            if "worktree_abandon" in payload:
+                succeed()
+
+        monkeypatch.setattr(reaper_lifecycle, "_atomic_write", write_then_succeed)
+        return
+    check, calls = output.terminal_abandon_local, []
+
+    def check_then_succeed(*args, **kwargs):
+        result = check(*args, **kwargs)
+        if kwargs.get("on_disk") is not None:
+            calls.append(1)
+            if len(calls) == final_check_call:
+                succeed()
+        return result
+
+    monkeypatch.setattr(output, "terminal_abandon_local", check_then_succeed)
+
+
+@pytest.mark.parametrize("when", ["before_write", "after_write"])
+def test_successor_write_after_a_succession_is_withdrawn(succession, monkeypatch, capsys, when):
+    """#10657 round 4: a custody lookup that preceded a succession never authorizes the write after it.
+
+    The record is published under the task-record locks, then the same
+    generation must still be current and held; otherwise its exact prior bytes
+    are restored and every preservation artifact is removed.
+    """
+    fixture, monitor = succession
+    repo, tree, tasks, *_ = fixture
+    replace_lease_around_write(monitor["streams"], monkeypatch, when=when, final_check_call=2)
+    before = _files(repo)
+    assert invoke(fixture) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert (result["outcome"], result["code"]) == ("refused", "STALE_AUTHORITY"), result
+    assert _files(repo) == before and not _preserved_files(repo) and tree.exists()
+    assert "worktree_abandon" not in json.loads((tasks / "boundary.json").read_bytes())
 
 
 @pytest.mark.parametrize("drift", ["map_entry", "output_copy", "branch", "tree", "preservation_digest"])

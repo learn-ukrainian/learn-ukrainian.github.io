@@ -968,6 +968,8 @@ def _nonempty(value: Any) -> bool:
 
 
 def _attestation_well_formed(attestation: Mapping[str, Any]) -> bool:
+    from agents_extensions.shared.session_streams.process_identity import PROCESS_IDENTITY_RE
+
     owner = attestation.get("owner")
     authority = owner.get("authority") if isinstance(owner, dict) else None
     holder = authority.get("holder") if isinstance(authority, dict) else None
@@ -998,8 +1000,11 @@ def _attestation_well_formed(attestation: Mapping[str, Any]) -> bool:
         and all(_nonempty(authority[key]) for key in ("session_id", "lease_id"))
         and all(type(authority[key]) is int for key in ("generation", "fencing_token"))
         and isinstance(holder, dict)
-        and set(holder) == {"agent", "harness", "instance_id"}
+        # The attested generation's recorded holder process identity (#10657);
+        # removal requires Monitor's current lease to record the same one.
+        and set(holder) == {"agent", "harness", "instance_id", "process_identity"}
         and all(_nonempty(value) for value in holder.values())
+        and PROCESS_IDENTITY_RE.fullmatch(holder["process_identity"])
         and owner["seat"].partition("-")[0] == holder["agent"]
         and isinstance(replaces, list)
         and all(

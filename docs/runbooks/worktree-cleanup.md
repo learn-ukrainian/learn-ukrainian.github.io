@@ -333,16 +333,30 @@ loopback Monitor must confirm as the stream's current custody;
 `LU_MONITOR_LOOPBACK` never selects that endpoint. The envelope alone proves
 nothing, because Monitor's stream view publishes every field of it. The
 command must also run beneath the lease's recorded holder process (the
-launcher), proven from the kernel alone. The lease must record
-`holder.process_identity`: the SHA-256 of `<boot_id>:<pid>:<start_ticks>`, where
-`boot_id` is `/proc/sys/kernel/random/boot_id` and `start_ticks` is field 22 of
-`/proc/<pid>/stat` for the holder. One of this process's ancestors with that
-PID must reproduce it on this kernel. A PID alone names a process only on one
-host and boot, and a host label (`LU_MONITOR_HOST_ID`, the occupancy host map,
-or the platform default every unconfigured host shares) is configuration, so
-no environment value is read for this proof. A lease held on another host or
-boot, a reused PID, a lease that records no identity and an app-thread holder
-all refuse `HOLDER_UNPROVEN`. The session's attributed seat
+launcher), proven from the kernel alone. The lease generation must record
+`holder.process_identity`, a typed, versioned identifier:
+`v1:<sha256>` of the newline-joined `lu-holder-process.v1`, the kernel boot id
+(`/proc/sys/kernel/random/boot_id`), the PID namespace (`/proc/self/ns/pid`),
+the PID and its start time in clock ticks (field 22 of `/proc/<pid>/stat`).
+The session supervisor derives it when the launcher claims the lease, for the
+launcher that runs the claim command (its direct parent) and nothing else; no
+argument, environment value or API client nominates it. It is fixed for the
+generation: renewal, release and fenced writes never match, carry or change it
+(the store's triggers refuse any change within a generation and any
+`INSERT OR REPLACE` of the projection), and a new holder gets a new generation
+with its own value. The attesting command derives the identity of its own
+ancestor with the recorded PID independently and must reproduce the recorded
+value. The value is public (the Monitor API shows it) and every input is
+world-readable, so it is an identifier, not a secret or a bearer credential:
+knowing it proves nothing. A PID alone names a process only on one host, boot
+and PID namespace, and a host label (`LU_MONITOR_HOST_ID`, the occupancy host
+map, or the platform default every unconfigured host shares) is configuration,
+so no environment value is read for this proof. A lease held on another host,
+boot or namespace, a reused PID, a lease that records no or a malformed
+identity (every lease acquired before migration 0008 or by an older client) and
+an app-thread holder all refuse `HOLDER_UNPROVEN`; the launcher's next claim
+records the identity. Machines without `/proc` record none and refuse. The
+session's attributed seat
 must be registered for that lease holder's provider in
 `scripts/config/area_assignments.yaml` (roster slot or the bridge's legacy
 `<provider>-monitor` alias). Its lane stream must be the one
@@ -353,9 +367,17 @@ unmapped initiator refuses `OWNER_UNMAPPED`. A seat, provider, stream or
 bound task of another lane refuses `FOREIGN_OWNER`. Monitor disagreement or
 outage refuses `STALE_AUTHORITY` or `AUTHORITY_UNKNOWN`. A tree owned by
 another lane is reported to that lane's driver, not attested by this one. The
-lane-succession writer applies the same holder-process proof. Until launchers
-record `holder.process_identity` in the lease, both refuse `HOLDER_UNPROVEN`
-rather than accept an unprovable holder.
+lane-succession writer applies the same holder-process proof.
+
+The proof and the write bind the same lease generation. The record names the
+generation and its recorded holder identity, and is written under the
+task-record locks the remover takes. After writing, the tool asks Monitor
+again: the named generation must still be current, unexpired and held by this
+process tree. Generations only advance and a released generation never becomes
+active again, so a match on both sides of the write proves the generation held
+throughout it. A succession, expiry reclaim or force release in between
+refuses `STALE_AUTHORITY`; the task record's exact prior bytes are restored and
+the call's preservation files are removed before the locks are released.
 
 The attestation replaces only two strict refusals, recorded as `replaces` in
 the receipt:
@@ -412,8 +434,9 @@ later change of HEAD, branch, directory, cohort or output refuses removal. No
 recorded owner field is trusted. The reader recomputes the owning lane from
 the current reviewed maps and the bound records' initiators
 (`FOREIGN_OWNER`, or `MAPPING_CHANGED` when either map's bytes changed). The
-attested lease must still be the stream's current custody (`STALE_AUTHORITY`),
-and the remover must run beneath its holder process (`HOLDER_UNPROVEN`). So run
+attested lease must still be the stream's current custody with the same
+recorded holder identity (`STALE_AUTHORITY`), and the remover must run beneath
+its holder process (`HOLDER_UNPROVEN`). So run
 the reaper from the attesting session. After a rollover, a map change or
 another stale binding of the same decision (same tree, HEAD, reason and
 cohort), the lane's current owner reruns the same `--owner-attest` command.
@@ -432,7 +455,13 @@ waits is therefore seen and refuses (`STATE_CHANGED` for a cohort change at the
 writer). The lane-succession and creator paths use the same reader and order.
 Not closed: a write that lands during that final local recheck or between it
 and the deletion itself. Only exclusive access to the tree could close that, so
-run removal only when nothing is working in the tree.
+run removal only when nothing is working in the tree. Removal is irreversible,
+so the remover cannot confirm custody after acting the way the writer does: a
+succession that lands after the remover's custody check still lets that one
+removal of an attestation that was valid when written proceed. Same-user local
+processes are outside this trust model (they can already edit the code and the
+task store); a same-user process can also take custody through Monitor's
+logged `--force` release.
 
 Restore commits with `git fetch <bundle> HEAD 'refs/abandon/reflog/*:refs/restored/*'`
 in any clone that contains the manifest's `base_sha` (`git bundle list-heads`
