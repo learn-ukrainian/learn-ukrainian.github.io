@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import functools
 import hashlib
 import hmac
 import json
@@ -13,7 +14,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from collections.abc import Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -144,47 +145,143 @@ def _observed_custody(lease: Any, stream: str) -> tuple[dict[str, Any], dict[str
     return authority, observation
 
 
-def confirm_custody_after_write(
-    path: Path, original: bytes, authority: dict[str, Any], before: Mapping[str, Any]
-) -> None:
-    """Bind a just-published record to the lease state it was checked against, or withdraw it (#10657).
+# --- Two-phase publication of a terminal-abandon record (#10657) ------------
+#
+# A custody-bound record is consumable only once its publication is confirmed.
+# The writer first writes the complete record to a pending sibling of the task
+# record, which no reader opens (every task-store reader matches ``*.json``
+# only). Confirmation then observes the lease again, requires it to equal the
+# observation the writer checked against in every field and to be unexpired on
+# Monitor's clock, reruns the local checks after that last slow probe, and one
+# atomic rename makes the record consumable. A writer that dies at any earlier
+# point leaves only an inert pending file, which the next applying run for the
+# tree discards under the record locks. The confirmed record names the lease
+# version it was confirmed against; the reader requires that marker and a
+# current lease of the same generation and holder, never an older version.
 
-    ``before`` is the complete lease observation (``observe_custody``) taken
-    after every other slow probe and before the write. The record was written
-    under the task-record locks every remover takes before its final check, so
-    no remover has acted on it yet. Confirmation observes the lease again and
-    requires both:
+PUBLICATION_SCHEMA = "terminal-abandon-publication.v1"
+PENDING_SUFFIX = ".abandon-pending"
 
-    - Monitor's own clock says the lease is active and unexpired now (its
-      projection reports ``expired`` from ``expires_at`` on its clock), and it
-      is held by this process tree;
-    - the observation equals ``before`` in every field: generation, fencing
-      token, the holder including its process identity, and the validity
-      fields ``heartbeat_at``, ``expires_at``, ``version`` and states.
 
-    Store triggers advance ``version`` on every change to the lease row, so
-    equal observations mean the row was not touched in between, and an
-    ``expires_at`` that is unchanged and still in the future now was in the
-    future at the write. A renewal (including an expired holder reviving
-    itself), a succession, an expiry reclaim or a force release in between
-    therefore refuses ``STALE_AUTHORITY``: the record's exact prior bytes are
-    restored before the locks are released, and the caller removes the
-    preservation files it published. Any failure to confirm withdraws it.
+def pending_record_path(path: Path) -> Path:
+    """Where ``path``'s unconfirmed publication waits: a dot name no ``*.json`` reader matches."""
+    return path.with_name(f".{path.name}{PENDING_SUFFIX}")
+
+
+def discard_pending_publications(paths: Iterable[Path]) -> None:
+    """Remove what a writer that died before confirming left beside each record (#10657).
+
+    Callers hold every record's task-state lock, so no live writer owns these
+    files. A pending record was never consumable, so removing it loses nothing.
     """
+    for path in paths:
+        pending_record_path(path).unlink(missing_ok=True)
+
+
+def publication_marker(observation: Mapping[str, Any]) -> dict[str, Any]:
+    """The confirmed form's marker: the lease version the publication is confirmed against."""
+    version = observation.get("version")
+    if type(version) is not int or version < 1:
+        raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody version unavailable")
+    return {"schema": PUBLICATION_SCHEMA, "state": "confirmed", "lease_version": version}
+
+
+def verify_publication(receipt: Mapping[str, Any], observation: Mapping[str, Any]) -> None:
+    """The reader's half: only a confirmed publication, never newer than the current lease, is consumable.
+
+    ``observation`` is Monitor's current lease, already proven to be the
+    recorded generation and holder (``observe_custody``). Store triggers only
+    ever advance ``version``, so a current version below the confirmed one
+    means the lease state the record was confirmed against is gone.
+    """
+    marker = receipt.get("publication")
+    if (
+        not isinstance(marker, dict)
+        or set(marker) != {"schema", "state", "lease_version"}
+        or marker["schema"] != PUBLICATION_SCHEMA
+        or marker["state"] != "confirmed"
+        or type(marker["lease_version"]) is not int
+        or marker["lease_version"] < 1
+    ):
+        raise Refusal("PUBLICATION_UNCONFIRMED", "terminal-abandon record was not published through confirmation")
+    current = observation.get("version")
+    if type(current) is not int:
+        raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody version unavailable")
+    if current < marker["lease_version"]:
+        raise Refusal(
+            "STALE_AUTHORITY", "stream custody is older than the lease state the record was confirmed against"
+        )
+
+
+def confirm_custody(authority: dict[str, Any], before: Mapping[str, Any], recheck: Callable[[], None]) -> datetime:
+    """Confirm a pending publication against the lease it was checked against (#10657).
+
+    ``before`` is the complete lease observation (``observe_custody``) whose
+    version the record's marker names. Confirmation observes the lease again
+    and requires Monitor's own clock to show it active, unexpired and held by
+    this process tree, and the observation to equal ``before`` in every
+    field: generation, fencing token, the holder including its process
+    identity, ``heartbeat_at``, ``expires_at``, ``version`` and states. Store
+    triggers advance ``version`` on every change to the lease row, so a
+    renewal (including an expired holder reviving itself), a succession, an
+    expiry reclaim or a force release since ``before`` refuses
+    ``STALE_AUTHORITY``. ``recheck`` then reruns the caller's local checks,
+    because this observation is the last slow probe before the record becomes
+    consumable. Returns the confirmed ``expires_at``, the deadline for the
+    rename.
+    """
+    from agents_extensions.shared.session_streams.model import parse_timestamp
+
+    _, after = observe_custody(authority, caller_holds=True)
+    if _canonical(after) != _canonical(before):
+        raise Refusal(
+            "STALE_AUTHORITY", "stream custody was renewed, replaced or expired between the last check and the write"
+        )
+    recheck()
+    return parse_timestamp(after["expires_at"])
+
+
+def publish_record(path: Path, payload: Mapping[str, Any], confirm: Callable[[], datetime] | None = None) -> None:
+    """Publish a task record in two phases: pending, then (once confirmed) one atomic rename (#10657).
+
+    ``confirm`` is ``confirm_custody`` bound to the writer's lease for a
+    custody-bound record and ``None`` for a creator's, whose authority is the
+    record itself. The rename happens only while this host's clock is still
+    before the confirmed ``expires_at`` (Monitor is loopback, so the same
+    clock), so the lease was valid from the confirmed observation to the
+    rename. Any refusal or error removes the pending file; a killed writer
+    leaves it inert for ``discard_pending_publications``.
+    """
+    pending = pending_record_path(path)
+    _write_pending(pending, payload)
     try:
-        _, after = observe_custody(authority, caller_holds=True)
-        if _canonical(after) != _canonical(before):
-            raise Refusal(
-                "STALE_AUTHORITY",
-                "stream custody was renewed, replaced or expired between the last check and the write",
-            )
-    except Exception:
-        temporary = path.with_name(f".{path.name}.{os.getpid()}.restore")
-        with temporary.open("wb") as handle:
-            handle.write(original)
+        deadline = confirm() if confirm is not None else None
+        if deadline is not None and datetime.now(UTC) >= deadline:
+            raise Refusal("STALE_AUTHORITY", "stream custody expired before the confirmed record was published")
+        os.replace(pending, path)
+    except BaseException:
+        pending.unlink(missing_ok=True)
+        raise
+    # Losing the rename to a crash only returns the record to unpublished.
+    with contextlib.suppress(OSError):
+        directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+
+
+def _write_pending(pending: Path, payload: Mapping[str, Any]) -> None:
+    """Durably write the complete record to its pending name, never through an existing entry or link."""
+    descriptor = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o666)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, sort_keys=True)
+            handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary, path)
+    except BaseException:
+        pending.unlink(missing_ok=True)
         raise
 
 
@@ -455,6 +552,19 @@ def _detached_bundle(
             shutil.rmtree(scratch, ignore_errors=True)
 
 
+@contextlib.contextmanager
+def _succession_refusals() -> Iterator[None]:
+    """The creator and succession writer's refusals for its final reader checks."""
+    try:
+        yield
+    except Refusal:
+        raise
+    except output.SuccessionRefusal as exc:
+        raise Refusal(exc.code, str(exc)) from None
+    except (OSError, ValueError, RuntimeError):
+        raise Refusal("PRESERVATION_INVALID", "checkout or preservation changed before publication") from None
+
+
 def record_abandon(
     *, task_id: str, head: str, reason: str, bundle: Path, recover_creator: bool = False
 ) -> dict[str, Any]:
@@ -467,7 +577,8 @@ def record_abandon(
     of the creator's stream from the reviewed succession map, and only from
     beneath that lease's recorded holder process (#10657). That record keeps
     the creator identity and nonce, appends a succession receipt, and also
-    preserves untracked and ignored output. This never acquires or moves a lease.
+    preserves untracked and ignored output; it becomes consumable only through
+    ``publish_record``'s confirmed rename. This never acquires or moves a lease.
     """
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id) or not re.fullmatch(r"[a-f0-9]{40}", head):
         raise Refusal("INVALID_INPUT", "task id must be canonical and head must be a full lowercase 40-hex SHA")
@@ -520,6 +631,7 @@ def record_abandon(
         current = output.matching_worktree_records(tree, tasks, repo_root=primary, publish_cache=False)
         if current != matches:
             raise Refusal("STATE_CHANGED", "task cohort changed while acquiring locks; retry after it settles")
+        discard_pending_publications(member_path for member_path, _ in matches)
         recovery = None
         recovered = None
         if recover_creator and not output.record_created_worktree(record):
@@ -658,7 +770,9 @@ def record_abandon(
                 ) from None
             receipt["preservation"]["path"] = destination.relative_to(primary).as_posix()
             if "worktree_abandon" in creator:
-                if creator["worktree_abandon"] != receipt:
+                # The publication marker names the lease version of that run's confirmation.
+                existing = {key: value for key, value in creator["worktree_abandon"].items() if key != "publication"}
+                if existing != receipt:
                     raise Refusal("ALREADY_RECORDED", "existing abandon differs; no overwrite is permitted")
                 return {"outcome": "already_recorded", "task_id": task_id, "head_sha": head}
             _activity(primary, tree, matches, head, successor=succession is not None, merged=merged_proof is not None)
@@ -670,6 +784,8 @@ def record_abandon(
                 rechecked, observation = _observed_custody(lease, stream)
                 if rechecked != authority:
                     raise Refusal("STALE_AUTHORITY", "stream custody changed during validation")
+                # The lease state publication is confirmed against (``confirm_custody``).
+                receipt["publication"] = publication_marker(observation)
                 if _succession_map()[1] != mapping_digest:
                     raise Refusal("STATE_CHANGED", "succession map changed during validation; retry after review")
                 current_prs, pr_error = rw._query_pr_states(tree, source_branch)
@@ -685,14 +801,13 @@ def record_abandon(
                     ) from None
             # Activity and PR probes take time. The validator runs its own GitHub
             # and Monitor probes first, then re-reads the cohort, head, patches and
-            # output, immediately before publishing either final artifact (#10657).
+            # output, immediately before publishing either final artifact. A
+            # successor's record is then published in two phases: its
+            # confirmation's Monitor probe is followed by the same local recheck
+            # before the rename makes it consumable (#10657).
             receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
-            try:
+            with _succession_refusals():
                 output.terminal_abandon_creator(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
-            except output.SuccessionRefusal as exc:
-                raise Refusal(exc.code, str(exc)) from None
-            except (OSError, ValueError, RuntimeError):
-                raise Refusal("PRESERVATION_INVALID", "checkout or preservation changed before publication") from None
             receipt["preservation"]["path"] = destination.relative_to(primary).as_posix()
             if destination.exists() or destination.is_symlink():
                 if _regular_bytes(destination, primary) != encoded:
@@ -702,10 +817,15 @@ def record_abandon(
                 created_manifest = destination
             if captured is not None:
                 output.publish_abandon_output(tree, primary=primary, record=creator, locator=locator)
-            original = _regular_bytes(creator_path, primary)
-            artifacts.reaper_lifecycle._atomic_write(creator_path, candidate)
+            confirm = None
             if succession is not None:
-                confirm_custody_after_write(creator_path, original, authority, observation)
+
+                def recheck() -> None:
+                    with _succession_refusals():
+                        output.terminal_abandon_local(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
+
+                confirm = functools.partial(confirm_custody, authority, observation, recheck)
+            publish_record(creator_path, candidate, confirm)
             published = True
             return {"outcome": "recorded", "task_id": task_id, "head_sha": head}
         finally:
@@ -1115,6 +1235,7 @@ def record_attested_abandon(
             locks.enter_context(artifacts.task_state_lock(member_path))
         if output.matching_worktree_records(target, tasks, repo_root=primary, publish_cache=False) != matches:
             raise Refusal("STATE_CHANGED", "task cohort changed while acquiring locks; retry after it settles")
+        discard_pending_publications(member_path for member_path, _ in matches)
         return _attest(primary, tasks, target, host_path, matches, task_id, head, reason, caller, write=True)
 
 
@@ -1198,6 +1319,24 @@ def _attest(
         if replaces is not None and exc.context is None:
             exc.context = {"replaces": replaces}
         raise
+
+
+@contextlib.contextmanager
+def _attestation_refusals(tree: Path, primary: Path) -> Iterator[None]:
+    """The attested writer's refusals for its final reader checks, free of host paths."""
+    try:
+        yield
+    except Refusal:
+        raise
+    except output.AttestationRefusal as exc:
+        raise Refusal(exc.code, exc.reason) from None
+    except output.CohortChanged as exc:
+        raise Refusal("STATE_CHANGED", str(exc)) from None
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+        raise Refusal(
+            "PRESERVATION_INVALID",
+            f"checkout or preservation changed before publication: {_privacy_safe(str(exc), tree, primary)}",
+        ) from None
 
 
 def _publish_attestation(
@@ -1291,28 +1430,20 @@ def _publish_attestation(
         candidate = dict(host, worktree_abandon=receipt)
         proposed = [(path, candidate if path == host_path else member) for path, member in matches]
 
-        # The unmodified removal reader validates the temporary manifest. Every
-        # slow probe runs first: the reader's GitHub and Monitor probes, then
-        # liveness (Monitor, process scan). Only then does the reader re-read the
-        # cohort and every local fact, immediately before publication (#10657).
+        # The unmodified removal reader validates the temporary manifest. The
+        # lease state publication is confirmed against is observed first, so
+        # the record's marker can name its version. Every slow probe follows:
+        # the reader's GitHub and Monitor probes, then liveness (Monitor,
+        # process scan). Only then does the reader re-read the cohort and every
+        # local fact, immediately before publication; the confirmation's own
+        # Monitor probe is followed by the same local recheck (#10657).
         receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
-        try:
+        with _attestation_refusals(tree, primary):
+            _, observation = observe_custody(owner["authority"], caller_holds=True)
+            receipt["publication"] = publication_marker(observation)
             output.terminal_abandon_external(proposed, tree, primary=primary, tasks_dir=tasks)
             _attested_activity(primary, tasks, tree, matches, head)
-            # The lease state the write is confirmed against: the last slow probe.
-            _, observation = observe_custody(owner["authority"], caller_holds=True)
             output.terminal_abandon_local(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
-        except Refusal:
-            raise
-        except output.AttestationRefusal as exc:
-            raise Refusal(exc.code, exc.reason) from None
-        except output.CohortChanged as exc:
-            raise Refusal("STATE_CHANGED", str(exc)) from None
-        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
-            raise Refusal(
-                "PRESERVATION_INVALID",
-                f"checkout or preservation changed before publication: {_privacy_safe(str(exc), tree, primary)}",
-            ) from None
         receipt["preservation"]["path"] = destination.relative_to(primary).as_posix()
         if destination.exists() or destination.is_symlink():
             if _regular_bytes(destination, primary) != encoded:
@@ -1322,9 +1453,14 @@ def _publish_attestation(
             created.append(destination)
         if captured is not None:
             output.publish_abandon_output(tree, primary=primary, record=host, locator=locator)
-        original = _regular_bytes(host_path, primary)
-        artifacts.reaper_lifecycle._atomic_write(host_path, candidate)
-        confirm_custody_after_write(host_path, original, owner["authority"], observation)
+
+        def recheck() -> None:
+            with _attestation_refusals(tree, primary):
+                output.terminal_abandon_local(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
+
+        publish_record(
+            host_path, candidate, functools.partial(confirm_custody, owner["authority"], observation, recheck)
+        )
         published = True
         return {
             "outcome": "recorded",
@@ -1371,10 +1507,15 @@ def main(argv: list[str] | None = None) -> int:
             "and this process must derive the same value for one of its own ancestors\n"
             "(HOLDER_UNPROVEN otherwise; a lease acquired before the field existed, an environment\n"
             "copy of a lease or a host label proves nothing; no environment value is read for this;\n"
-            "the identity is a public identifier, not a credential). After writing, the tool\n"
-            "observes the lease again: it must be unexpired on Monitor's clock and identical to the\n"
-            "observation before the write, validity fields included; a renewal, replacement or\n"
-            "expiry in between restores the record and refuses STALE_AUTHORITY. --tree is checked\n"
+            "the identity is a public identifier, not a credential). Publication has two phases:\n"
+            "the record is first written beside the task record as .<record>.abandon-pending, which\n"
+            "no reader opens; the tool then observes the lease again (it must be unexpired on\n"
+            "Monitor's clock and identical to the observation taken before the reader's probes,\n"
+            "validity fields and version included), rereads the cohort and the checkout, and only\n"
+            "then renames the record into place before the confirmed expires_at. A renewal,\n"
+            "replacement or expiry in between removes the pending file and refuses STALE_AUTHORITY;\n"
+            "a killed writer leaves only that inert file, which the next --apply run discards.\n"
+            "--tree is checked\n"
             "as spelled: '.', '..', empty components and symlink components refuse INVALID_INPUT.\n"
             "Its attributed seat must be registered\n"
             "in scripts/config/area_assignments.yaml for the provider holding the lease, and its\n"
@@ -1392,8 +1533,12 @@ def main(argv: list[str] | None = None) -> int:
             "complete task cohort including each initiator; any later change refuses removal.\n"
             "Removal recomputes the owning lane from the reviewed maps, rechecks every bound\n"
             "branch's PR, and requires the attested lease to still be current custody with the\n"
-            "remover beneath its holder process. Writer and remover run every GitHub and Monitor\n"
-            "probe first, then re-read the cohort and the checkout, immediately before acting.\n"
+            "remover beneath its holder process; a record without the confirmed publication marker\n"
+            "refuses PUBLICATION_UNCONFIRMED, and a current lease version below the one it was\n"
+            "confirmed against refuses STALE_AUTHORITY. Writer and remover run every GitHub and\n"
+            "Monitor probe first, then re-read the cohort and the checkout, immediately before\n"
+            "acting; for the writer the last probe is the confirmation, then the reread, then the\n"
+            "rename.\n"
             "Run the reaper from the attesting session,\n"
             "  scripts/orchestration/reap_worktrees.py --legacy-classes --preserve-then-reap\n"
             "  --worktree <tree> --apply\n"
@@ -1420,7 +1565,8 @@ def main(argv: list[str] | None = None) -> int:
             "requires exactly one archived creator for the same task, nonce, initiator, tree,\n"
             "branch and directory inode; otherwise CREATOR_RECOVERY_REQUIRED names a manual item.\n"
             "Outputs: hashed terminal-abandon-preservation.v1 beside the bundle (attested: below\n"
-            "batch_state/abandon/<task>), atomic worktree_abandon in the existing task record, and\n"
+            "batch_state/abandon/<task>), worktree_abandon in the existing task record (renamed into\n"
+            "place from its pending file; a successor's record only after confirmation), and\n"
             "one JSON receipt. No retention release, tree removal, lease change or creator invention.\n"
             "Monitor must be available.\n"
             "Exit codes: 0 recorded/already_recorded/would_record (dry-run); 2 typed refusal with no\n"

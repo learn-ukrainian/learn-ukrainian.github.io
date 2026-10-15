@@ -602,11 +602,17 @@ def _succession_authority(receipt: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _succession_custody(receipt: Mapping[str, Any]) -> None:
-    """The external half of the succession proof: the recorded custody is still Monitor's current lease."""
-    from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
+    """The external half of the succession proof: a confirmed publication of Monitor's current lease (#10657).
+
+    The recorded custody must still be the stream's current lease, and the
+    record must carry the confirmed publication marker at a lease version the
+    current lease has not gone below (``verify_publication``).
+    """
+    from scripts.fleet.terminal_abandon import Refusal, observe_custody, verify_publication
 
     try:
-        verify_current_custody(_succession_authority(receipt))
+        _, observation = observe_custody(_succession_authority(receipt))
+        verify_publication(receipt, observation)
     except Refusal as exc:
         raise SuccessionRefusal(exc.code, str(exc)) from None
 
@@ -920,7 +926,7 @@ def _verify_patches(primary: Path, manifest: Mapping[str, Any], worktree: Path, 
 ATTESTATION_SCHEMA = "terminal-abandon-attestation.v1"
 ATTESTATION_REPLACEABLE = frozenset({"CREATOR_RECOVERY_REQUIRED", "LIVE_OR_WANTED"})
 _ATTESTED_RECEIPT_KEYS = frozenset(
-    {"schema", "disposition", "owner", "run_nonce", "head_sha", "reason", "preservation", "attestation"}
+    {"schema", "disposition", "owner", "run_nonce", "head_sha", "reason", "preservation", "attestation", "publication"}
 )
 _ATTESTATION_KEYS = frozenset(
     {
@@ -1091,17 +1097,20 @@ def _attestation_external(matches: list[tuple[Path, dict[str, Any]]], worktree: 
     recorded one, must have no open PR; the local half later proves the
     checkout is still on the attested branch. The attested custody must still
     be the stream's current Monitor lease, held by this process or one of its
-    ancestors (kernel-proven).
+    ancestors (kernel-proven), and the record must carry the confirmed
+    publication marker at a lease version the current lease has not gone
+    below (``verify_publication``).
     """
-    from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
+    from scripts.fleet.terminal_abandon import Refusal, observe_custody, verify_publication
 
-    _, host, _, attestation = _attestation_receipt(matches, tasks_dir)
+    _, host, receipt, attestation = _attestation_receipt(matches, tasks_dir)
     if attestation["cohort"] != attestation_cohort(matches, tasks_dir):
         raise ValueError("terminal-abandon attestation cohort changed")
     _attested_owner_lane(attestation, host, matches)
     bound_branches_unclaimed(worktree, attestation["branch"], matches)
     try:
-        verify_current_custody(attestation["owner"]["authority"], caller_holds=True)
+        _, observation = observe_custody(attestation["owner"]["authority"], caller_holds=True)
+        verify_publication(receipt, observation)
     except Refusal as exc:
         raise AttestationRefusal(exc.code, str(exc)) from None
 

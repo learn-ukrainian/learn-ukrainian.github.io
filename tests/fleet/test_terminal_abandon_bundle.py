@@ -146,11 +146,13 @@ def test_fresh_bundle_removed_on_every_publication_refusal(succession, monkeypat
     elif failure == "output_publish":
         monkeypatch.setattr(output, "publish_abandon_output", refuse)
     else:
-        monkeypatch.setattr(writer.artifacts.reaper_lifecycle, "_atomic_write", refuse)
+        # The record's first write is its pending, not yet consumable, form (#10657).
+        monkeypatch.setattr(writer, "_write_pending", refuse)
     assert invoke(fixture) == 2
     capsys.readouterr()
     assert tree.exists()
     assert "worktree_abandon" not in json.loads((tasks / "boundary.json").read_bytes())
+    assert not writer.pending_record_path(tasks / "boundary.json").exists()
     assert not _bundles(fixture), "refused publication must remove its freshly created bundle"
     assert not list(fixture[5].parent.glob(".head-bundle-*"))
     assert not list(fixture[5].parent.glob("terminal-abandon-*.json"))

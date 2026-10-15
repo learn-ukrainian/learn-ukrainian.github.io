@@ -787,9 +787,9 @@ def test_owner_must_run_beneath_the_recorded_holder_process(attest, monkeypatch,
 def test_attestation_written_after_a_succession_is_withdrawn(attest, monkeypatch, capsys, when):
     """#10657 round 4: the comparison and the write bind the same lease generation.
 
-    A succession after the writer's last check, or after its record write, must
-    not leave an attestation behind: the record's exact prior bytes return, the
-    preservation the call produced is removed, and the refusal is registered.
+    A succession after the writer's last check, or after its pending record
+    write, must not leave an attestation behind: the pending record and the
+    preservation the call produced are removed, and the refusal is registered.
     """
     replace_lease_around_write(attest["monitor"]["streams"], monkeypatch, when=when, final_check_call=1)
     before = _files(attest["repo"])
@@ -1179,7 +1179,8 @@ def test_attestation_written_outside_the_validity_interval_is_withdrawn(attest, 
     holder renews it before confirmation: same generation, holder and identity,
     so round 4 recorded. The complete observation differs (``heartbeat_at``,
     ``expires_at``, ``version``), or Monitor's clock shows it expired, so the
-    record's prior bytes return and the call's preservation is removed.
+    pending record is never renamed into place and the call's preservation is
+    removed.
     """
     expired_writes = lapse_around_write(attest["monitor"]["streams"], monkeypatch, revive=revive)
     before = _files(attest["repo"])
@@ -1193,9 +1194,9 @@ def test_attestation_written_outside_the_validity_interval_is_withdrawn(attest, 
 @pytest.mark.parametrize("field", ["heartbeat_at", "expires_at", "version", "session_state"])
 def test_any_lease_change_between_check_and_confirmation_withdraws(attest, monkeypatch, capsys, field):
     """Every validity field is compared, not only the generation: one changed field refuses."""
-    from scripts.orchestration import reaper_lifecycle
+    from scripts.fleet import terminal_abandon
 
-    lease, write = attest["monitor"]["streams"][MONITOR], reaper_lifecycle._atomic_write
+    lease, write = attest["monitor"]["streams"][MONITOR], terminal_abandon._write_pending
     changed = {
         "heartbeat_at": "2999-01-01T00:00:00Z",
         "expires_at": "2999-01-02T00:00:00Z",
@@ -1205,10 +1206,9 @@ def test_any_lease_change_between_check_and_confirmation_withdraws(attest, monke
 
     def write_then_change(path, payload):
         write(path, payload)
-        if "worktree_abandon" in payload:
-            lease[field] = changed
+        lease[field] = changed
 
-    monkeypatch.setattr(reaper_lifecycle, "_atomic_write", write_then_change)
+    monkeypatch.setattr(terminal_abandon, "_write_pending", write_then_change)
     before = _files(attest["repo"])
     assert attest_cli(attest, apply=True) == 2
     result = _out(capsys)

@@ -383,23 +383,44 @@ outage refuses `STALE_AUTHORITY` or `AUTHORITY_UNKNOWN`. A tree owned by
 another lane is reported to that lane's driver, not attested by this one. The
 lane-succession writer applies the same holder-process proof.
 
-The proof and the write bind the same valid lease. The record names the
-generation and its recorded holder identity, and is written under the
-task-record locks the remover takes. After every other slow probe and before
-its final local checks the writer observes the complete lease: generation,
-fencing token, holder (with its process identity), `heartbeat_at`,
-`expires_at`, `version` and states. After writing it observes it again. The
-second observation must equal the first in every field, and Monitor's own
-clock must report the lease active (Monitor reports `expired` once its clock
-passes `expires_at`) and held by this process tree. Store triggers advance
-`version` on every change to the lease row, so equal observations mean nothing
-touched it in between, and an `expires_at` that did not move and is still in
-the future was in the future at the write. A renewal (including an expired
-holder reviving itself, which keeps the generation), a succession, an expiry
-reclaim or a force release in between refuses `STALE_AUTHORITY`; the task
-record's exact prior bytes are restored and the call's preservation files are
-removed before the locks are released. An ordinary heartbeat that lands inside
-that short window also refuses; rerun the command.
+The proof and the write bind the same valid lease, and a record becomes
+consumable only once its publication is confirmed. The record names the
+generation and its recorded holder identity. Under the task-record locks the
+remover takes, the writer publishes it in two phases (one implementation,
+`publish_record`, for the attested and the lane-succession writers):
+
+1. Before the reader's own GitHub and Monitor probes, the writer observes the
+   complete lease: generation, fencing token, holder (with its process
+   identity), `heartbeat_at`, `expires_at`, `version` and states. The record's
+   `publication` marker (`terminal-abandon-publication.v1`, state `confirmed`)
+   names that `version`.
+2. After every check passes, the complete record is written beside the task
+   record as `.<record>.abandon-pending`. Every task-store reader matches
+   `*.json` only, so nothing reads it and it authorizes nothing.
+3. Confirmation observes the lease again. It must equal the first observation
+   in every field, and Monitor's own clock must report it active (Monitor
+   reports `expired` once its clock passes `expires_at`) and held by this
+   process tree. Store triggers advance `version` on every change to the lease
+   row, so equal observations mean nothing touched it in between. The writer
+   then rereads the cohort and the checkout, because that observation was its
+   last slow probe.
+4. One atomic rename moves the pending record onto the task record, only while
+   this host's clock (Monitor is loopback, so the same clock) is still before
+   the confirmed `expires_at`. This rename is the only step that makes the
+   record consumable.
+
+A renewal (including an expired holder reviving itself, which keeps the
+generation), a succession, an expiry reclaim or a force release before the
+rename refuses `STALE_AUTHORITY`. The task record never changes, and the
+pending record and the call's preservation files are removed before the locks
+are released. An ordinary heartbeat inside that window also refuses; rerun
+the command. A writer killed at any point before the rename leaves only the
+inert pending record and preservation files nothing references. The next
+`--apply` run for the tree discards the pending record under the same locks
+(a dry-run leaves it alone). Digest-named preservation files are reused when
+identical. The reader consumes only the confirmed form: a record without the
+marker refuses `PUBLICATION_UNCONFIRMED`, and a current lease below the
+confirmed `version` refuses `STALE_AUTHORITY` (versions only advance).
 
 The attestation replaces only two strict refusals, recorded as `replaces` in
 the receipt:
@@ -468,20 +489,17 @@ It re-issues the record after every check passes again and reports
 
 Check order. The writer and the remover both run every slow or external probe
 before their final local checks: GitHub PR state, Monitor custody, and (writer)
-Monitor active tasks, the process scan and the lease observation above. Only
-then do they re-read the bound cohort from disk and recheck output, HEAD,
-branch, the bundle, tracked bytes and the patches, and then act. The writer
-publishes; the remover writes its preservation receipt and runs
-`git worktree remove`. One external probe follows the act: the writer's
-custody confirmation queries Monitor after the record is written. A tracked
-edit or other tree change that lands during that query is not seen by the
-writer, which reports `recorded`; the removal reader rechecks every binding,
-so the reaper then reports `skipped` and keeps the tree. That leaves a stale
-receipt, not data loss: it authorizes no removal until every binding verifies
-again. A tracked edit, new untracked or ignored output, a
-new commit, a branch change or a new bound record that lands while a probe
-waits is therefore seen and refuses (`STATE_CHANGED` for a cohort change at the
-writer). The lane-succession and creator paths use the same reader and order.
+Monitor active tasks and the process scan. Only then do they re-read the bound
+cohort from disk and recheck output, HEAD, branch, the bundle, tracked bytes
+and the patches, and then act. The writer's act is the confirmed rename: its
+last slow probe is the confirmation's Monitor observation, which the same
+local recheck follows before the rename. The remover writes its preservation
+receipt and runs `git worktree remove`. A tracked edit, new untracked or
+ignored output, a new commit, a branch change or a new bound record that lands
+while any probe waits, the confirmation included, is therefore seen and
+refuses (`STATE_CHANGED` for a cohort change at the writer). The
+lane-succession and creator paths use the same reader and order; a creator's
+own record has no lease to confirm and is renamed into place directly.
 Not closed: a write that lands during that final local recheck or between it
 and the deletion itself. Only exclusive access to the tree could close that, so
 run removal only when nothing is working in the tree. Removal is irreversible,

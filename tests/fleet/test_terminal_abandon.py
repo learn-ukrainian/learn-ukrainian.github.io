@@ -348,6 +348,8 @@ def monitor_lease():
         session_state="open",
         heartbeat_at=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         expires_at="2999-01-01T00:00:00Z",
+        # Monitor's projection always carries the row version its store advances on every change.
+        version=1,
     )
     if lease["holder"]["process_id"] is not None:
         lease["holder"]["process_identity"] = kernel_identity(lease["holder"]["process_id"])
@@ -406,11 +408,17 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
     repo, tree, _, _, _, _, head = fixture
     assert invoke(fixture) == 0
     assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
-    # Admission, the writer's recheck, the final reader validation's probe (which
-    # precedes its local recheck; the first reader validation is local only), then
-    # the same-generation confirmation after the record is written (#10657).
+    # Admission, the writer's recheck (the observation publication is confirmed
+    # against), the final reader validation's probe (which precedes its local
+    # recheck; the first reader validation is local only), then the confirmation
+    # of the pending record before its rename (#10657).
     assert monitor["calls"] == 4
     record, receipt, manifest = _recorded(fixture)
+    assert receipt["publication"] == {
+        "schema": "terminal-abandon-publication.v1",
+        "state": "confirmed",
+        "lease_version": 1,
+    }
     # The creator's identity and nonce are kept; succession is appended, not substituted.
     assert record["initiator"] == "claude-monitor"
     assert receipt["owner"] == "boundary" and receipt["run_nonce"] == "creation-nonce"
@@ -684,13 +692,13 @@ def test_successor_inputs_changed_between_check_and_publish_refuse(succession, m
 
 
 def replace_lease_around_write(streams, monkeypatch, *, when, final_check_call):
-    """Succeed the stream after the writer's last check (``before_write``) or after its record write.
+    """Succeed the stream after the writer's last check (``before_write``) or after its pending record write.
 
     Another launcher of the same lane acquires the next generation. The writer's
     final local check is its ``final_check_call``-th ``terminal_abandon_local``
     call that validates a proposed record against the on-disk cohort.
     """
-    from scripts.orchestration import reaper_lifecycle
+    from scripts.fleet import terminal_abandon
 
     def succeed():
         successor = json.loads(json.dumps(streams[MONITOR]))
@@ -701,14 +709,13 @@ def replace_lease_around_write(streams, monkeypatch, *, when, final_check_call):
         streams[MONITOR] = successor
 
     if when == "after_write":
-        write = reaper_lifecycle._atomic_write
+        write = terminal_abandon._write_pending
 
         def write_then_succeed(path, payload):
             write(path, payload)
-            if "worktree_abandon" in payload:
-                succeed()
+            succeed()
 
-        monkeypatch.setattr(reaper_lifecycle, "_atomic_write", write_then_succeed)
+        monkeypatch.setattr(terminal_abandon, "_write_pending", write_then_succeed)
         return
     check, calls = output.terminal_abandon_local, []
 
@@ -724,7 +731,7 @@ def replace_lease_around_write(streams, monkeypatch, *, when, final_check_call):
 
 
 def lapse_around_write(streams, monkeypatch, *, revive):
-    """The review's controlled-clock probe: the lease lapses just before the record write.
+    """The review's controlled-clock probe: the lease lapses just before the (pending) record write.
 
     Monitor projects ``expired`` once its clock passes ``expires_at``. With
     ``revive`` the same holder renews before the writer's confirmation, as the
@@ -733,13 +740,11 @@ def lapse_around_write(streams, monkeypatch, *, revive):
     ``expires_at`` and ``version`` moved. Returns the record writes seen while
     the lease was expired.
     """
-    from scripts.orchestration import reaper_lifecycle
+    from scripts.fleet import terminal_abandon
 
-    write, expired_writes = reaper_lifecycle._atomic_write, []
+    write, expired_writes = terminal_abandon._write_pending, []
 
     def lapse_write_revive(path, payload):
-        if "worktree_abandon" not in payload:
-            return write(path, payload)
         lease = streams[MONITOR]
         lease.update(state="expired", expires_at="2000-01-01T00:00:00Z")
         expired_writes.append(path)
@@ -750,10 +755,10 @@ def lapse_around_write(streams, monkeypatch, *, revive):
                 state="active",
                 heartbeat_at=renewed_at,
                 expires_at="2999-01-02T00:00:00Z",
-                version=lease.get("version", 1) + 1,
+                version=lease["version"] + 1,
             )
 
-    monkeypatch.setattr(reaper_lifecycle, "_atomic_write", lapse_write_revive)
+    monkeypatch.setattr(terminal_abandon, "_write_pending", lapse_write_revive)
     return expired_writes
 
 
@@ -780,9 +785,9 @@ def test_successor_write_outside_the_validity_interval_is_withdrawn(succession, 
 def test_successor_write_after_a_succession_is_withdrawn(succession, monkeypatch, capsys, when):
     """#10657 round 4: a custody lookup that preceded a succession never authorizes the write after it.
 
-    The record is published under the task-record locks, then the same
-    generation must still be current and held; otherwise its exact prior bytes
-    are restored and every preservation artifact is removed.
+    The record is staged under the task-record locks, then the same generation
+    must still be current and held before it is renamed into place; otherwise
+    the pending record and every preservation artifact are removed.
     """
     fixture, monitor = succession
     repo, tree, tasks, *_ = fixture

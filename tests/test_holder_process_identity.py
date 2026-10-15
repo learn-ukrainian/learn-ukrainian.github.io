@@ -8,13 +8,15 @@ outside every renew and release match, and never read from the environment.
 
 Entry points: claim, renew (heartbeat), fenced write (handoff), release,
 attest (``verify_current_custody`` with the kernel proof) and API read. Lane
-succession and the attested writers' post-write confirmation are exercised in
-``tests/fleet/test_terminal_abandon_attest.py``.
+succession and the attested writers' confirmed publication are exercised in
+``tests/fleet/test_terminal_abandon_attest.py`` and
+``tests/fleet/test_terminal_abandon_publication.py``.
 """
 
 from __future__ import annotations
 
 import dataclasses
+import functools
 import json
 import os
 import socket
@@ -582,11 +584,11 @@ def test_api_refuses_a_real_ancestor_fingerprint_nominated_by_a_client(tmp_path,
 def test_confirmation_refuses_a_lease_its_holder_revived_through_the_real_store(tmp_path, monkeypatch):
     """The review's controlled-clock probe against the real store and Monitor router.
 
-    The lease lapses on Monitor's clock just before the record write, and its
-    holder revives it through the store before confirmation: same generation,
-    holder and identity, new ``heartbeat_at``, ``expires_at`` and ``version``.
-    Confirmation refuses and restores the record's prior bytes; an unchanged
-    lease still confirms.
+    The lease lapses on Monitor's clock just before the pending record write,
+    and its holder revives it through the store before confirmation: same
+    generation, holder and identity, new ``heartbeat_at``, ``expires_at`` and
+    ``version``. Confirmation refuses, the pending record is removed and the
+    task record keeps its prior bytes; an unchanged lease publishes.
     """
     store = _store(tmp_path)
     holder = LeaseHolder(process_id=os.getpid(), process_identity=kernel_identity(os.getpid()), **CLAIM_FIELDS)
@@ -597,25 +599,33 @@ def test_confirmation_refuses_a_lease_its_holder_revived_through_the_real_store(
     monkeypatch.setattr(epics_router, "utc_now", lambda: clock["now"])
     record, prior = tmp_path / "record.json", b"prior bytes\n"
     record.write_bytes(prior)
+    pending = terminal_abandon.pending_record_path(record)
     with epics_monitor_stub(store) as base:
         monkeypatch.setattr(remote, "DEFAULT_MONITOR", base)
         monitor = remote.RemoteEpicClient(base=base)
         authority = _authority(monitor.stream(STREAM, digest_limit=1)["lease"])
         _, before = terminal_abandon.observe_custody(authority, caller_holds=True)
-        clock["now"] = parse_timestamp(lease.expires_at) + timedelta(seconds=1)
-        assert monitor.stream(STREAM, digest_limit=1)["lease"]["state"] == "expired"
-        record.write_bytes(b"published while expired\n")
-        revived = store.heartbeat(lease, now=clock["now"])
-        assert (revived.generation, revived.fencing_token) == (lease.generation, lease.fencing_token)
+        write = terminal_abandon._write_pending
+
+        def lapse_write_revive(path, payload):
+            clock["now"] = parse_timestamp(lease.expires_at) + timedelta(seconds=1)
+            assert monitor.stream(STREAM, digest_limit=1)["lease"]["state"] == "expired"
+            write(path, payload)
+            revived = store.heartbeat(lease, now=clock["now"])
+            assert (revived.generation, revived.fencing_token) == (lease.generation, lease.fencing_token)
+
+        monkeypatch.setattr(terminal_abandon, "_write_pending", lapse_write_revive)
+        confirm = functools.partial(terminal_abandon.confirm_custody, authority, before, lambda: None)
         with pytest.raises(terminal_abandon.Refusal) as refused:
-            terminal_abandon.confirm_custody_after_write(record, prior, authority, before)
+            terminal_abandon.publish_record(record, {"published": "while expired"}, confirm)
         assert refused.value.code == "STALE_AUTHORITY"
-        assert record.read_bytes() == prior
+        assert record.read_bytes() == prior and not pending.exists()
         # Positive control: nothing moved between the observation and the confirmation.
+        monkeypatch.setattr(terminal_abandon, "_write_pending", write)
         _, unchanged = terminal_abandon.observe_custody(authority, caller_holds=True)
-        record.write_bytes(b"published while valid\n")
-        terminal_abandon.confirm_custody_after_write(record, prior, authority, unchanged)
-        assert record.read_bytes() == b"published while valid\n"
+        confirm = functools.partial(terminal_abandon.confirm_custody, authority, unchanged, lambda: None)
+        terminal_abandon.publish_record(record, {"published": "while valid"}, confirm)
+        assert json.loads(record.read_bytes()) == {"published": "while valid"} and not pending.exists()
 
 
 # --- End to end: real supervisor, real Monitor router, real holder and attester processes ---
