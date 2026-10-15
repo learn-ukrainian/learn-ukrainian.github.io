@@ -238,8 +238,8 @@ class RemoteEpicClient:
             "holder_kind": holder.holder_kind.value,
             "host_id": holder.host_id,
         }
-        if holder.process_identity is not None:
-            holder_payload["process_identity"] = holder.process_identity
+        # Never ``process_identity``: Monitor derives it from this connection and
+        # refuses a claim that carries one (#10657).
         response = self._request(
             "POST",
             f"/api/epics/v1/{stream_id}/claim",

@@ -32,6 +32,7 @@ from tests.fleet.test_terminal_abandon import (
     _set_lease_env,
     invoke,
     kernel_identity,
+    lapse_around_write,
     monitor_lease,
     replace_lease_around_write,
 )
@@ -1165,6 +1166,109 @@ def test_git_redirect_environment_never_hides_a_dirty_tree(attest, monkeypatch, 
     assert attest_cli(attest) == 2
     assert _out(capsys)["code"] == "DIRTY_TREE"
     assert _files(attest["repo"]) == before
+
+
+# --- #10657 round 5: validity at publication and the raw --tree spelling ---
+
+
+@pytest.mark.parametrize("revive", [True, False])
+def test_attestation_written_outside_the_validity_interval_is_withdrawn(attest, monkeypatch, capsys, revive):
+    """#10657 round 5, the review's controlled-clock probe through the attested writer.
+
+    The lease expires just before the record write and (``revive``) the same
+    holder renews it before confirmation: same generation, holder and identity,
+    so round 4 recorded. The complete observation differs (``heartbeat_at``,
+    ``expires_at``, ``version``), or Monitor's clock shows it expired, so the
+    record's prior bytes return and the call's preservation is removed.
+    """
+    expired_writes = lapse_around_write(attest["monitor"]["streams"], monkeypatch, revive=revive)
+    before = _files(attest["repo"])
+    assert attest_cli(attest, apply=True) == 2
+    result = _out(capsys)
+    assert expired_writes, "the probe must reach the record write"
+    assert (result["outcome"], result["code"]) == ("refused", "STALE_AUTHORITY"), result
+    _no_writes(attest, before)
+
+
+@pytest.mark.parametrize("field", ["heartbeat_at", "expires_at", "version", "session_state"])
+def test_any_lease_change_between_check_and_confirmation_withdraws(attest, monkeypatch, capsys, field):
+    """Every validity field is compared, not only the generation: one changed field refuses."""
+    from scripts.orchestration import reaper_lifecycle
+
+    lease, write = attest["monitor"]["streams"][MONITOR], reaper_lifecycle._atomic_write
+    changed = {
+        "heartbeat_at": "2999-01-01T00:00:00Z",
+        "expires_at": "2999-01-02T00:00:00Z",
+        "version": 99,
+        "session_state": "rolling",
+    }[field]
+
+    def write_then_change(path, payload):
+        write(path, payload)
+        if "worktree_abandon" in payload:
+            lease[field] = changed
+
+    monkeypatch.setattr(reaper_lifecycle, "_atomic_write", write_then_change)
+    before = _files(attest["repo"])
+    assert attest_cli(attest, apply=True) == 2
+    result = _out(capsys)
+    assert (result["outcome"], result["code"]) == ("refused", "STALE_AUTHORITY"), result
+    _no_writes(attest, before)
+
+
+@pytest.mark.parametrize(
+    "spelling",
+    ["jump_dotdot", "dot", "dotdot_back", "trailing", "doubled", "leading_doubled", "relative_doubled", "empty"],
+)
+def test_tree_spelling_is_validated_before_normalization(attest, capsys, spelling):
+    """#10657 round 5: no component may disappear before validation (the review's symlink probe).
+
+    ``dispatch/<agent>/jump/../<task>`` with ``jump`` a symlink names, on the
+    filesystem, a location below the symlink's target; normalizing first used
+    to drop ``jump`` and select the real dispatch tree.
+    """
+    tree = attest["tree"]
+    agent_dir = tree.parent
+    elsewhere = attest["repo"] / "elsewhere"
+    (elsewhere / "inner").mkdir(parents=True)
+    (agent_dir / "jump").symlink_to(elsewhere / "inner", target_is_directory=True)
+    relative = tree.relative_to(attest["repo"]).as_posix()
+    raw = {
+        "jump_dotdot": f"{agent_dir}/jump/../{tree.name}",
+        "dot": f"{agent_dir}/./{tree.name}",
+        "dotdot_back": f"{tree}/../{tree.name}",
+        "trailing": f"{tree}/",
+        "doubled": f"{agent_dir}//{tree.name}",
+        "leading_doubled": f"/{tree}",
+        "relative_doubled": relative.replace("/", "//", 1),
+        "empty": "",
+    }[spelling]
+    before = _files(attest["repo"])
+    for apply in (False, True):
+        assert attest_cli(attest, apply=apply, tree=raw) == 2
+        result = _out(capsys)
+        assert (result["outcome"], result["code"]) == ("refused", "INVALID_INPUT"), result
+    _no_writes(attest, before)
+
+
+def test_tree_through_a_symlinked_component_is_refused(attest, capsys):
+    """A symlink component without any '..' is refused on the raw spelling, before resolution."""
+    tree = attest["tree"]
+    (tree.parent.parent / "alias").symlink_to(tree.parent, target_is_directory=True)
+    before = _files(attest["repo"])
+    assert attest_cli(attest, apply=True, tree=f"{tree.parent.parent}/alias/{tree.name}") == 2
+    result = _out(capsys)
+    assert (result["outcome"], result["code"]) == ("refused", "INVALID_INPUT"), result
+    _no_writes(attest, before)
+
+
+def test_plain_relative_and_absolute_spellings_still_record(attest, monkeypatch, capsys):
+    """The canonical spellings keep working: the relative one resolves against the control plane."""
+    task_id = _shape("needs_finalize", attest)
+    monkeypatch.chdir(attest["repo"])
+    for spelling in (attest["tree"].relative_to(attest["repo"]).as_posix(), str(attest["tree"])):
+        assert attest_cli(attest, task_id=task_id, tree=spelling) == 0
+        assert _out(capsys)["outcome"] == "would_record"
 
 
 # --- #10657 review round 2, blocker 1: no slow probe between the last check and the act ---

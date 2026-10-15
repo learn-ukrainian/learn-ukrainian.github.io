@@ -11,6 +11,12 @@ on every host and boot; the PID namespace separates containers sharing one
 kernel; the start time in clock ticks since boot (``/proc/<pid>/stat`` field
 22) separates a reused PID from its earlier owner.
 
+Monitor derives the value itself when it accepts a claim
+(``connected_peer_parent_identity``): from the kernel's view of the loopback
+connection that carries the claim, it fingerprints the parent of the
+connecting process, the launcher that runs the claim command. A claim that
+carries the field is refused, so no client nominates it.
+
 Every input is world-readable, so the value is an identifier, not a secret or
 a bearer credential: knowing it proves nothing. Holding is proven only by a
 process that finds the fingerprinted process among its own kernel ancestors.
@@ -21,8 +27,10 @@ fail closed (no identity recorded, every proof refused).
 from __future__ import annotations
 
 import hashlib
+import ipaddress
 import os
 import re
+import struct
 from pathlib import Path
 
 PROCESS_IDENTITY_SCHEMA = "lu-holder-process.v1"
@@ -119,20 +127,99 @@ def lineage_identity(pid: int) -> str:
     return fingerprint(boot, namespace, pid, starts[pid])
 
 
-def parent_identity(pid: int) -> str | None:
-    """The supervisor's derivation: the identity of ``pid`` only when it is this process's parent.
+def _socket_inode(client: tuple[str, int], server: tuple[str, int]) -> int | None:
+    """The inode of the connecting end of the established TCP connection ``client`` → ``server``.
 
-    The launcher runs the claim command directly, so the long-lived holder it
-    names is the command's parent; the short-lived command itself is never
-    fingerprinted. Any other PID, or any kernel fact that cannot be read, yields
-    ``None``: the lease then records no identity and every proof against it
-    refuses. Nothing here reads the environment.
+    Read from this network namespace's kernel socket tables; IPv4-mapped
+    addresses compare as IPv4. ``None`` unless exactly one socket matches.
     """
-    if isinstance(pid, bool) or not isinstance(pid, int) or pid <= 1 or os.getppid() != pid:
+    want = (_address(client[0]), client[1], _address(server[0]), server[1])
+    found = set()
+    for table, width in ((_PROC_SELF / "net" / "tcp", 4), (_PROC_SELF / "net" / "tcp6", 16)):
+        try:
+            lines = table.read_text(encoding="ascii").splitlines()[1:]
+        except OSError:
+            continue
+        for line in lines:
+            fields = line.split()
+            # Field 3 is the state; 01 is ESTABLISHED. Field 9 is the inode.
+            if len(fields) < 10 or fields[3] != "01":
+                continue
+            local, remote = _endpoint(fields[1], width), _endpoint(fields[2], width)
+            if (*local, *remote) == want and fields[9].isdigit() and int(fields[9]) > 0:
+                found.add(int(fields[9]))
+    return found.pop() if len(found) == 1 else None
+
+
+def _address(value: str) -> ipaddress.IPv4Address | ipaddress.IPv6Address:
+    address = ipaddress.ip_address(value)
+    mapped = getattr(address, "ipv4_mapped", None)
+    return mapped if mapped is not None else address
+
+
+def _endpoint(text: str, width: int) -> tuple[ipaddress.IPv4Address | ipaddress.IPv6Address, int]:
+    """``ADDR:PORT`` as the kernel prints it: 32-bit words in host byte order, port in hex."""
+    address, port = text.split(":")
+    if len(address) != width * 2:
+        raise ValueError("socket table address width mismatch")
+    raw = b"".join(struct.pack("=I", int(address[i : i + 8], 16)) for i in range(0, len(address), 8))
+    return _address(str(ipaddress.ip_address(raw))), int(port, 16)
+
+
+def _socket_owners(inode: int) -> set[int]:
+    """Every process whose descriptor table this process can read and that holds socket ``inode``."""
+    link = f"socket:[{inode}]"
+    owners = set()
+    for entry in os.listdir("/proc"):
+        if not entry.isdigit():
+            continue
+        try:
+            descriptors = os.listdir(f"/proc/{entry}/fd")
+        except OSError:
+            continue
+        for descriptor in descriptors:
+            try:
+                if os.readlink(f"/proc/{entry}/fd/{descriptor}") == link:
+                    owners.add(int(entry))
+                    break
+            except OSError:
+                continue
+    return owners
+
+
+def connected_peer_parent_identity(client: tuple[str, int], server: tuple[str, int], parent_pid: int) -> str | None:
+    """Monitor's derivation: the identity of the parent of the process at the far end of a connection.
+
+    Monitor calls this for an accepted loopback connection (``client`` is the
+    peer's address, ``server`` the address it connected to). The kernel names
+    the connecting socket, the one process holding it and that process's
+    parent. The identity is returned only when that parent is ``parent_pid``,
+    the holder PID the claim records: the launcher runs the claim command as
+    its direct child, so a lease records the launcher it names and nothing a
+    caller nominates. ``None`` when anything is ambiguous or unreadable (a
+    shared socket, a peer in another PID or network namespace, a proxy, a
+    process this one may not inspect, or a parent other than ``parent_pid``):
+    the lease then records no identity and every proof against it refuses.
+    """
+    if isinstance(parent_pid, bool) or not isinstance(parent_pid, int) or parent_pid <= 1:
         return None
     try:
-        identity = lineage_identity(pid)
-    except (ProcessIdentityUnavailable, LookupError):
+        inode = _socket_inode(client, server)
+        owners = _socket_owners(inode) if inode is not None else set()
+        if len(owners) != 1:
+            return None
+        peer = owners.pop()
+        if _stat(_PROC_SELF / "stat")[0] != os.getpid():
+            return None  # /proc belongs to another PID namespace.
+        before = _stat(Path(f"/proc/{peer}/stat"))
+        if before[0] != peer or before[1] != parent_pid:
+            return None
+        found, _, start = _stat(Path(f"/proc/{parent_pid}/stat"))
+        boot, namespace = _boot_id(), _namespace()
+        # The parent exiting (or its PID being reused) meanwhile reparents the
+        # peer; the peer exiting changes its start time or removes it.
+        if found != parent_pid or _stat(Path(f"/proc/{peer}/stat")) != before:
+            return None
+    except (OSError, ValueError, IndexError):
         return None
-    # A parent that exited meanwhile would have reparented this process.
-    return identity if os.getppid() == pid else None
+    return fingerprint(boot, namespace, parent_pid, start)

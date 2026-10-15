@@ -34,7 +34,6 @@ from agents_extensions.shared.session_streams.model import (
     parse_timestamp,
     sha256_text,
 )
-from agents_extensions.shared.session_streams.process_identity import parent_identity
 from agents_extensions.shared.session_streams.receipts import list_migration_state
 from agents_extensions.shared.session_streams.store import (
     LifecycleError,
@@ -601,9 +600,8 @@ def main(argv: list[str] | None = None) -> int:
                 process_id=args.process_id,
                 task_id=args.task_id,
                 host_id=None if args.local else (args.host_id or _resolve_default_host_id()),
-                # Derived from the kernel for the launcher that runs this command
-                # (its parent), never from an argument or the environment (#10657).
-                process_identity=None if args.local else parent_identity(args.process_id),
+                # No process_identity: Monitor derives it from this command's own
+                # connection, for its parent (the launcher), never from a value sent (#10657).
             )
             lease = supervisor.open_driver(
                 role=args.role,

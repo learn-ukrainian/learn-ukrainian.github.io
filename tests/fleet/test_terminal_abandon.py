@@ -723,6 +723,59 @@ def replace_lease_around_write(streams, monkeypatch, *, when, final_check_call):
     monkeypatch.setattr(output, "terminal_abandon_local", check_then_succeed)
 
 
+def lapse_around_write(streams, monkeypatch, *, revive):
+    """The review's controlled-clock probe: the lease lapses just before the record write.
+
+    Monitor projects ``expired`` once its clock passes ``expires_at``. With
+    ``revive`` the same holder renews before the writer's confirmation, as the
+    store lets an expired holder revive itself without a new generation: the
+    generation, holder and identity then match again, but ``heartbeat_at``,
+    ``expires_at`` and ``version`` moved. Returns the record writes seen while
+    the lease was expired.
+    """
+    from scripts.orchestration import reaper_lifecycle
+
+    write, expired_writes = reaper_lifecycle._atomic_write, []
+
+    def lapse_write_revive(path, payload):
+        if "worktree_abandon" not in payload:
+            return write(path, payload)
+        lease = streams[MONITOR]
+        lease.update(state="expired", expires_at="2000-01-01T00:00:00Z")
+        expired_writes.append(path)
+        write(path, payload)
+        if revive:
+            renewed_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+            lease.update(
+                state="active",
+                heartbeat_at=renewed_at,
+                expires_at="2999-01-02T00:00:00Z",
+                version=lease.get("version", 1) + 1,
+            )
+
+    monkeypatch.setattr(reaper_lifecycle, "_atomic_write", lapse_write_revive)
+    return expired_writes
+
+
+@pytest.mark.parametrize("revive", [True, False])
+def test_successor_write_outside_the_validity_interval_is_withdrawn(succession, monkeypatch, capsys, revive):
+    """#10657 round 5: equal generations around the write do not prove the lease was valid at it.
+
+    Confirmation compares the complete lease observation, validity fields
+    included, and requires Monitor's clock to show it unexpired now.
+    """
+    fixture, monitor = succession
+    repo, tree, tasks, *_ = fixture
+    expired_writes = lapse_around_write(monitor["streams"], monkeypatch, revive=revive)
+    before = _files(repo)
+    assert invoke(fixture) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert expired_writes, "the probe must reach the record write"
+    assert (result["outcome"], result["code"]) == ("refused", "STALE_AUTHORITY"), result
+    assert _files(repo) == before and not _preserved_files(repo) and tree.exists()
+    assert "worktree_abandon" not in json.loads((tasks / "boundary.json").read_bytes())
+
+
 @pytest.mark.parametrize("when", ["before_write", "after_write"])
 def test_successor_write_after_a_succession_is_withdrawn(succession, monkeypatch, capsys, when):
     """#10657 round 4: a custody lookup that preceded a succession never authorizes the write after it.

@@ -104,6 +104,11 @@ def _caller_lease(caller: Any) -> Any:
 
 
 def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
+    """The authority ``_observed_custody`` proves, without its observation."""
+    return _observed_custody(lease, stream)[0]
+
+
+def _observed_custody(lease: Any, stream: str) -> tuple[dict[str, Any], dict[str, Any]]:
     """Prove with Monitor that ``lease`` is the stream's current active lease, held by this process tree.
 
     Membership in the succession map grants nothing; only this exact, unexpired
@@ -114,14 +119,16 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
     publishes every envelope field, so possession proves nothing until the kernel
     shows the caller running beneath Monitor's recorded holder process. The
     returned authority binds that generation's recorded holder process identity,
-    so every later check compares against the same holder. Read only.
+    so every later check compares against the same holder. Also returns the
+    complete lease observation (``observe_custody``) for a later write's
+    confirmation. Read only.
     """
     from scripts.session_supervisor.remote import RemoteEpicClient
 
     if lease.stream_id != stream:
         raise Refusal("CROSS_STREAM", "caller's stream custody is not the creator's canonical stream")
-    identity = verify_current_custody(RemoteEpicClient._lease_payload(lease), caller_holds=True)
-    return {
+    identity, observation = observe_custody(RemoteEpicClient._lease_payload(lease), caller_holds=True)
+    authority = {
         "stream_id": stream,
         "session_id": lease.session_id,
         "lease_id": lease.lease_id,
@@ -134,23 +141,43 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
             "process_identity": identity,
         },
     }
+    return authority, observation
 
 
-def confirm_custody_after_write(path: Path, original: bytes, authority: dict[str, Any]) -> None:
-    """Bind a just-published record to the generation it names, or withdraw it (#10657).
+def confirm_custody_after_write(
+    path: Path, original: bytes, authority: dict[str, Any], before: Mapping[str, Any]
+) -> None:
+    """Bind a just-published record to the lease state it was checked against, or withdraw it (#10657).
 
-    The record was written under the task-record locks every remover takes
-    before its final check, so no remover has acted on it yet. Monitor
-    generations only advance and a released generation never becomes active
-    again (store triggers), so the named generation being current, held and
-    kernel-verified both at the last check before the write and now proves it
-    was at the write. A lease replaced in between (succession, expiry reclaim,
-    force release) refuses, and the record's exact prior bytes are restored
-    before the locks are released: a lookup that preceded the succession never
-    authorizes the write that followed it. Any failure to confirm withdraws it.
+    ``before`` is the complete lease observation (``observe_custody``) taken
+    after every other slow probe and before the write. The record was written
+    under the task-record locks every remover takes before its final check, so
+    no remover has acted on it yet. Confirmation observes the lease again and
+    requires both:
+
+    - Monitor's own clock says the lease is active and unexpired now (its
+      projection reports ``expired`` from ``expires_at`` on its clock), and it
+      is held by this process tree;
+    - the observation equals ``before`` in every field: generation, fencing
+      token, the holder including its process identity, and the validity
+      fields ``heartbeat_at``, ``expires_at``, ``version`` and states.
+
+    Store triggers advance ``version`` on every change to the lease row, so
+    equal observations mean the row was not touched in between, and an
+    ``expires_at`` that is unchanged and still in the future now was in the
+    future at the write. A renewal (including an expired holder reviving
+    itself), a succession, an expiry reclaim or a force release in between
+    therefore refuses ``STALE_AUTHORITY``: the record's exact prior bytes are
+    restored before the locks are released, and the caller removes the
+    preservation files it published. Any failure to confirm withdraws it.
     """
     try:
-        verify_current_custody(authority, caller_holds=True)
+        _, after = observe_custody(authority, caller_holds=True)
+        if _canonical(after) != _canonical(before):
+            raise Refusal(
+                "STALE_AUTHORITY",
+                "stream custody was renewed, replaced or expired between the last check and the write",
+            )
     except Exception:
         temporary = path.with_name(f".{path.name}.{os.getpid()}.restore")
         with temporary.open("wb") as handle:
@@ -161,7 +188,17 @@ def confirm_custody_after_write(path: Path, original: bytes, authority: dict[str
         raise
 
 
+def _canonical(value: Any) -> str:
+    """Canonical JSON keeps int, bool and null distinct and ignores key order."""
+    return json.dumps(value, sort_keys=True)
+
+
 def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = False) -> str | None:
+    """``observe_custody`` without the observation."""
+    return observe_custody(expected, caller_holds=caller_holds)[0]
+
+
+def observe_custody(expected: dict[str, Any], *, caller_holds: bool = False) -> tuple[str | None, dict[str, Any]]:
     """Revalidate writer or receipt custody against Monitor without acquiring a lease.
 
     Only the canonical loopback Monitor is asked: an environment-selected
@@ -170,7 +207,9 @@ def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = Fal
     With ``caller_holds`` this process must also be Monitor's recorded holder
     process or one of its descendants, proven from the kernel by
     ``prove_holder_process`` against the identity read in the same response.
-    Returns that generation's recorded holder process identity.
+    Returns that generation's recorded holder process identity and the
+    complete lease observation: every field Monitor returned except
+    ``age_seconds``, which Monitor derives from its clock at each read.
     """
     from agents_extensions.shared.session_streams.model import parse_timestamp
     from scripts.session_supervisor.remote import DEFAULT_MONITOR, RemoteEpicClient, RemoteSupervisorError
@@ -191,8 +230,7 @@ def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = Fal
         or not isinstance(current, dict)
         or current.get("state") != "active"
         or current.get("session_state") not in ("open", "rolling")
-        # Canonical JSON keeps int, bool and null distinct.
-        or json.dumps(observed, sort_keys=True) != json.dumps(expected, sort_keys=True)
+        or _canonical(observed) != _canonical(expected)
     ):
         raise Refusal("STALE_AUTHORITY", "caller's lease is not the stream's current active custody")
     try:
@@ -201,10 +239,11 @@ def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = Fal
         raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody expiry unavailable") from None
     if expired:
         raise Refusal("STALE_AUTHORITY", "caller's stream custody has expired")
+    observation = {key: value for key, value in current.items() if key != "age_seconds"}
     if caller_holds:
-        return prove_holder_process(current)
+        return prove_holder_process(current), observation
     identity = current["holder"].get("process_identity") if isinstance(current.get("holder"), dict) else None
-    return identity if isinstance(identity, str) else None
+    return (identity if isinstance(identity, str) else None), observation
 
 
 def prove_holder_process(lease: Mapping[str, Any]) -> str:
@@ -628,7 +667,8 @@ def record_abandon(
             if succession is not None:
                 # Custody, the reviewed map and the copied output can all move
                 # while probes run; recheck each before publishing anything.
-                if _current_custody(lease, stream) != authority:
+                rechecked, observation = _observed_custody(lease, stream)
+                if rechecked != authority:
                     raise Refusal("STALE_AUTHORITY", "stream custody changed during validation")
                 if _succession_map()[1] != mapping_digest:
                     raise Refusal("STATE_CHANGED", "succession map changed during validation; retry after review")
@@ -665,7 +705,7 @@ def record_abandon(
             original = _regular_bytes(creator_path, primary)
             artifacts.reaper_lifecycle._atomic_write(creator_path, candidate)
             if succession is not None:
-                confirm_custody_after_write(creator_path, original, authority)
+                confirm_custody_after_write(creator_path, original, authority, observation)
             published = True
             return {"outcome": "recorded", "task_id": task_id, "head_sha": head}
         finally:
@@ -693,9 +733,34 @@ def _privacy_safe(text: str, *paths: Path) -> str:
     return re.sub(r"/(?:home|Users|var|tmp)/[^\s'\"]+", "<private-path>", text)
 
 
-def _attested_tree(raw: Path, primary: Path) -> Path:
-    """The named dispatch checkout root itself: no link spelling and no subdirectory."""
-    candidate = Path(os.path.normpath(raw if raw.is_absolute() else primary / raw))
+def _attested_tree(raw: str | os.PathLike[str], primary: Path) -> Path:
+    """The named dispatch checkout root itself: no link spelling and no subdirectory.
+
+    The supplied spelling is validated before anything normalizes it, so no
+    component can disappear first: ``jump/../task`` with ``jump`` a symlink
+    must not become ``task``. Every component must be a plain name (no ``.``,
+    ``..`` or empty component, so no trailing or repeated separator; a single
+    leading ``/`` marks an absolute path) and no component may be a symlink.
+    Only then is the path resolved, and it must resolve to itself.
+    """
+    text = os.fspath(raw)
+    invalid = Refusal("INVALID_INPUT", "tree must be .worktrees/dispatch/<agent>/<task> without symlinks")
+    if not isinstance(text, str) or not text or "\0" in text:
+        raise invalid
+    absolute = text.startswith("/")
+    components = (text[1:] if absolute else text).split("/")
+    if any(component in ("", ".", "..") for component in components):
+        raise Refusal(
+            "INVALID_INPUT", "tree must be spelled without '.', '..', empty, trailing or repeated path components"
+        )
+    candidate = Path("/") if absolute else primary
+    for component in components:
+        candidate = candidate / component
+        try:
+            if candidate.is_symlink():
+                raise invalid
+        except OSError:
+            raise invalid from None
     try:
         tree = candidate.resolve(strict=True)
     except (OSError, RuntimeError):
@@ -1012,7 +1077,9 @@ def _content_file(primary: Path, parent: Path, key: str, payload: bytes) -> tupl
     return locator, destination
 
 
-def record_attested_abandon(*, tree: Path, task_id: str, head: str, reason: str, apply: bool = False) -> dict[str, Any]:
+def record_attested_abandon(
+    *, tree: str | os.PathLike[str], task_id: str, head: str, reason: str, apply: bool = False
+) -> dict[str, Any]:
     """Owner-attested terminal abandonment of one dispatch tree; dry-run unless ``apply`` (#10657).
 
     The attestation replaces only missing creator evidence and unsettled status
@@ -1232,6 +1299,8 @@ def _publish_attestation(
         try:
             output.terminal_abandon_external(proposed, tree, primary=primary, tasks_dir=tasks)
             _attested_activity(primary, tasks, tree, matches, head)
+            # The lease state the write is confirmed against: the last slow probe.
+            _, observation = observe_custody(owner["authority"], caller_holds=True)
             output.terminal_abandon_local(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
         except Refusal:
             raise
@@ -1255,7 +1324,7 @@ def _publish_attestation(
             output.publish_abandon_output(tree, primary=primary, record=host, locator=locator)
         original = _regular_bytes(host_path, primary)
         artifacts.reaper_lifecycle._atomic_write(host_path, candidate)
-        confirm_custody_after_write(host_path, original, owner["authority"])
+        confirm_custody_after_write(host_path, original, owner["authority"], observation)
         published = True
         return {
             "outcome": "recorded",
@@ -1296,14 +1365,18 @@ def main(argv: list[str] | None = None) -> int:
             "The owner is never an argument: it is this session's launcher lease, verified as the\n"
             "current custody in the canonical loopback Monitor, with this process running beneath\n"
             "the lease's recorded holder process, proven from the kernel alone: the lease generation\n"
-            "must record holder.process_identity (the session supervisor derives it from the\n"
-            "launcher at acquisition: v1:SHA-256 of boot id, PID namespace, PID and start ticks),\n"
+            "must record holder.process_identity (Monitor derives it at claim from the kernel's view\n"
+            "of the claim connection: the claim command's parent, the launcher; a claim carrying the\n"
+            "field is refused; v1:SHA-256 of boot id, PID namespace, PID and start ticks),\n"
             "and this process must derive the same value for one of its own ancestors\n"
             "(HOLDER_UNPROVEN otherwise; a lease acquired before the field existed, an environment\n"
             "copy of a lease or a host label proves nothing; no environment value is read for this;\n"
             "the identity is a public identifier, not a credential). After writing, the tool\n"
-            "rechecks that the same generation is still current and held; a lease replaced in\n"
-            "between restores the record and refuses STALE_AUTHORITY. Its attributed seat must be registered\n"
+            "observes the lease again: it must be unexpired on Monitor's clock and identical to the\n"
+            "observation before the write, validity fields included; a renewal, replacement or\n"
+            "expiry in between restores the record and refuses STALE_AUTHORITY. --tree is checked\n"
+            "as spelled: '.', '..', empty components and symlink components refuse INVALID_INPUT.\n"
+            "Its attributed seat must be registered\n"
             "in scripts/config/area_assignments.yaml for the provider holding the lease, and its\n"
             "stream must be the lane that scripts/config/terminal_abandon_succession.yaml maps\n"
             "every bound task's initiator to. It replaces only missing creator evidence\n"
@@ -1386,7 +1459,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--tree",
-        type=Path,
+        # The raw spelling: Path() would already drop '.', repeated and trailing separators.
+        type=str,
         default=None,
         help="With --owner-attest: the dispatch checkout to retire, e.g. .worktrees/dispatch/codex/owner-task",
     )

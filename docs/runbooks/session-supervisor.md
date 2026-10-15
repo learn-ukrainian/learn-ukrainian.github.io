@@ -25,16 +25,17 @@ launcher reads the capsule, exports the full `SESSION_STREAM_*` envelope that th
 hook surface requires, and writes a small diagnostics capsule before exec-ing the
 harness.
 
-In remote mode `open`/`claim` also records `holder.process_identity` (#10657):
-the kernel-derived fingerprint of the long-lived holder, so owner attestation
-and lane succession can later prove a caller runs beneath it. The supervisor
-derives it only when `--process-id` is its own direct parent (the launcher
-shell that runs it, `$$` in `scripts/lib/session_supervisor.sh`), reading the
-parent's start time, the boot id and the PID namespace from `/proc`; it never
-fingerprints itself, takes the value from an argument, or reads the
-environment. Any other `--process-id`, or a machine without `/proc`, records no
-identity: the claim still succeeds, and only attestation and succession refuse
-that lease (`HOLDER_UNPROVEN`). The identity is fixed for the generation; it is
+In remote mode an `open`/`claim` lease also records `holder.process_identity`
+(#10657): the kernel-derived fingerprint of the long-lived holder, so owner
+attestation and lane succession can later prove a caller runs beneath it. The
+supervisor never sends it; Monitor refuses a claim that carries it and derives
+it from the claim's own loopback connection: the process holding the
+connecting socket is this command, and its parent is fingerprinted only when
+it is the `--process-id` the claim names (the launcher shell that runs the
+command, `$$` in `scripts/lib/session_supervisor.sh`). Any other
+`--process-id`, a Monitor that cannot inspect the connecting process, or a
+machine without `/proc` records no identity: the claim still succeeds, and only
+attestation and succession refuse that lease (`HOLDER_UNPROVEN`). The identity is fixed for the generation; it is
 not part of the `SESSION_STREAM_*` envelope and never affects `heartbeat`,
 `resume`, `capsule` or `close` matching. Existing leases get one at their next
 launcher claim. It is a public identifier, not a credential. See

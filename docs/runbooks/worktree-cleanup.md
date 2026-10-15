@@ -327,7 +327,11 @@ refuse uses the owner-attested mode, run by the lane that owns the task:
 Run both commands directly from the owning lane's launcher session (not through
 `systemd-run` or another detached launcher), in any checkout other than the
 target. A relative `--tree` resolves against the control plane, and the writer
-refuses a symlink spelling or a subdirectory. The owner is never an argument.
+refuses a symlink spelling or a subdirectory. The spelling is checked as
+supplied, before anything normalizes it: a `.`, `..` or empty component (so a
+trailing or repeated `/`) or any component that is a symlink refuses
+`INVALID_INPUT`, so `dispatch/<agent>/<link>/../<task>` cannot lose `<link>`
+first. The owner is never an argument.
 It is the session's launcher lease (`SESSION_STREAM_*`), which the canonical
 loopback Monitor must confirm as the stream's current custody;
 `LU_MONITOR_LOOPBACK` never selects that endpoint. The envelope alone proves
@@ -338,9 +342,15 @@ launcher), proven from the kernel alone. The lease generation must record
 `v1:<sha256>` of the newline-joined `lu-holder-process.v1`, the kernel boot id
 (`/proc/sys/kernel/random/boot_id`), the PID namespace (`/proc/self/ns/pid`),
 the PID and its start time in clock ticks (field 22 of `/proc/<pid>/stat`).
-The session supervisor derives it when the launcher claims the lease, for the
-launcher that runs the claim command (its direct parent) and nothing else; no
-argument, environment value or API client nominates it. It is fixed for the
+Monitor derives it itself when it accepts the claim. From the kernel's socket
+tables it finds the one process holding the connecting end of the claim's
+loopback connection and fingerprints that process's parent, recording it only
+when that parent is the holder PID the claim names: the launcher runs the claim
+command (the session supervisor) as its direct child. A claim that carries the
+field at all is refused `400` with error `process_identity_nominated`, so no
+argument, environment value or API client nominates it. Anything ambiguous (a
+socket shared by two processes, a peer in another PID or network namespace, a
+proxy, a process Monitor may not inspect) records none. It is fixed for the
 generation: renewal, release and fenced writes never match, carry or change it
 (the store's triggers refuse any change within a generation and any
 `INSERT OR REPLACE` of the projection), and a new holder gets a new generation
@@ -369,15 +379,23 @@ outage refuses `STALE_AUTHORITY` or `AUTHORITY_UNKNOWN`. A tree owned by
 another lane is reported to that lane's driver, not attested by this one. The
 lane-succession writer applies the same holder-process proof.
 
-The proof and the write bind the same lease generation. The record names the
+The proof and the write bind the same valid lease. The record names the
 generation and its recorded holder identity, and is written under the
-task-record locks the remover takes. After writing, the tool asks Monitor
-again: the named generation must still be current, unexpired and held by this
-process tree. Generations only advance and a released generation never becomes
-active again, so a match on both sides of the write proves the generation held
-throughout it. A succession, expiry reclaim or force release in between
-refuses `STALE_AUTHORITY`; the task record's exact prior bytes are restored and
-the call's preservation files are removed before the locks are released.
+task-record locks the remover takes. After every other slow probe and before
+its final local checks the writer observes the complete lease: generation,
+fencing token, holder (with its process identity), `heartbeat_at`,
+`expires_at`, `version` and states. After writing it observes it again. The
+second observation must equal the first in every field, and Monitor's own
+clock must report the lease active (Monitor reports `expired` once its clock
+passes `expires_at`) and held by this process tree. Store triggers advance
+`version` on every change to the lease row, so equal observations mean nothing
+touched it in between, and an `expires_at` that did not move and is still in
+the future was in the future at the write. A renewal (including an expired
+holder reviving itself, which keeps the generation), a succession, an expiry
+reclaim or a force release in between refuses `STALE_AUTHORITY`; the task
+record's exact prior bytes are restored and the call's preservation files are
+removed before the locks are released. An ordinary heartbeat that lands inside
+that short window also refuses; rerun the command.
 
 The attestation replaces only two strict refusals, recorded as `replaces` in
 the receipt:
@@ -445,11 +463,18 @@ It re-issues the record after every check passes again and reports
 `ALREADY_RECORDED`.
 
 Check order. The writer and the remover both run every slow or external probe
-first: GitHub PR state, Monitor custody, and (writer) Monitor active tasks and
-the process scan. Only then do they re-read the bound cohort from disk and
-recheck output, HEAD, branch, the bundle, tracked bytes and the patches, and
-then act. The writer publishes; the remover writes its preservation receipt and
-runs `git worktree remove`. A tracked edit, new untracked or ignored output, a
+before their final local checks: GitHub PR state, Monitor custody, and (writer)
+Monitor active tasks, the process scan and the lease observation above. Only
+then do they re-read the bound cohort from disk and recheck output, HEAD,
+branch, the bundle, tracked bytes and the patches, and then act. The writer
+publishes; the remover writes its preservation receipt and runs
+`git worktree remove`. One external probe follows the act: the writer's
+custody confirmation queries Monitor after the record is written. A tracked
+edit or other tree change that lands during that query is not seen by the
+writer, which reports `recorded`; the removal reader rechecks every binding,
+so the reaper then reports `skipped` and keeps the tree. That leaves a stale
+receipt, not data loss: it authorizes no removal until every binding verifies
+again. A tracked edit, new untracked or ignored output, a
 new commit, a branch change or a new bound record that lands while a probe
 waits is therefore seen and refuses (`STATE_CHANGED` for a cohort change at the
 writer). The lane-succession and creator paths use the same reader and order.
@@ -461,7 +486,11 @@ succession that lands after the remover's custody check still lets that one
 removal of an attestation that was valid when written proceed. Same-user local
 processes are outside this trust model (they can already edit the code and the
 task store); a same-user process can also take custody through Monitor's
-logged `--force` release.
+logged `--force` release. The model covers a caller that copies the lease's
+environment values or stale records: it cannot nominate an identity, and a
+process that claims a free stream itself gets only its own actual parent
+recorded, so the lease truthfully names it and proves nothing for any other
+process.
 
 Restore commits with `git fetch <bundle> HEAD 'refs/abandon/reflog/*:refs/restored/*'`
 in any clone that contains the manifest's `base_sha` (`git bundle list-heads`

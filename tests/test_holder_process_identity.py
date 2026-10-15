@@ -17,9 +17,13 @@ from __future__ import annotations
 import dataclasses
 import json
 import os
+import socket
 import sqlite3
 import subprocess
 import sys
+import urllib.error
+import urllib.request
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -34,9 +38,11 @@ from agents_extensions.shared.session_streams.model import (
     Lease,
     LeaseHolder,
     isoformat_z,
+    parse_timestamp,
     utc_now,
 )
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.api import epics_router
 from scripts.fleet import terminal_abandon
 from scripts.session_supervisor import remote
 from tests.epics_monitor_stub import epics_app_for_store, epics_monitor_stub
@@ -119,27 +125,86 @@ def _held_here(monkeypatch, base: str, authority: dict) -> str:
 # --- Kernel derivation: the actual long-lived holder, never a nominated value ---
 
 
-def test_parent_identity_fingerprints_only_the_actual_parent():
-    """The supervisor's derivation names its launcher (parent) and nothing else."""
-    script = (
-        "import json, os, sys\n"
-        "from agents_extensions.shared.session_streams.process_identity import parent_identity\n"
-        "print(json.dumps([parent_identity(os.getppid()), parent_identity(os.getpid()),"
-        " parent_identity(1), parent_identity(int(sys.argv[1])), parent_identity(True)]))\n"
-    )
-    done = subprocess.run(
-        [sys.executable, "-c", script, str(os.getppid())],
+PEER = r"""
+import socket, sys
+connection = socket.create_connection(("127.0.0.1", int(sys.argv[1])))
+print(*connection.getsockname(), flush=True)
+sys.stdin.readline()
+"""
+
+
+def _peer(port: int) -> subprocess.Popen:
+    """A process connected to ``port`` that holds the connection until its stdin closes."""
+    return subprocess.Popen(
+        [sys.executable, "-c", PEER, str(port)],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        text=True,
         cwd=REPO,
         env={**os.environ, **SPOOFED_ENV},
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=60,
     )
-    parent, itself, init, grandparent, boolean = json.loads(done.stdout)
-    assert parent == kernel_identity(os.getpid())
-    # The short-lived command itself, init, a further ancestor and a non-integer are never fingerprinted.
-    assert itself is init is grandparent is boolean is None
+
+
+def test_monitor_derives_only_the_parent_of_the_connecting_process():
+    """Monitor's derivation names the connecting process's actual parent, if it is the claimed holder PID."""
+    derive = process_identity.connected_peer_parent_identity
+    with socket.socket() as listener:
+        listener.bind(("127.0.0.1", 0))
+        listener.listen()
+        server = listener.getsockname()
+        child = _peer(server[1])
+        try:
+            accepted, client = listener.accept()
+            with accepted:
+                assert child.stdout is not None
+                assert child.stdout.readline().split() == [client[0], str(client[1])]
+                assert derive(client, server, os.getpid()) == kernel_identity(os.getpid())
+                # Never the connecting command itself, a further ancestor, init or a non-integer.
+                for other in (child.pid, os.getppid(), 1, True, FOREIGN_PID):
+                    assert derive(client, server, other) is None
+                # A connection the claim did not arrive on names nothing.
+                assert derive(client, (server[0], server[1] + 1), os.getpid()) is None
+        finally:
+            assert child.stdin is not None
+            child.stdin.close()
+            child.wait(timeout=30)
+        # A client connecting directly records only its own actual parent, never itself.
+        with socket.create_connection(server) as own:
+            accepted, client = listener.accept()
+            with accepted:
+                assert derive(client, server, os.getpid()) is None
+                assert derive(client, server, os.getppid()) == kernel_identity(os.getppid())
+                # A connection shared with another process is ambiguous and records nothing.
+                sharer = subprocess.Popen(
+                    [sys.executable, "-c", "import sys; sys.stdin.readline()"],
+                    stdin=subprocess.PIPE,
+                    pass_fds=(own.fileno(),),
+                )
+                try:
+                    assert derive(client, server, os.getppid()) is None
+                finally:
+                    assert sharer.stdin is not None
+                    sharer.stdin.close()
+                    sharer.wait(timeout=30)
+
+
+def test_monitor_derivation_fails_closed_without_kernel_facts(monkeypatch):
+    with socket.socket() as listener:
+        listener.bind(("127.0.0.1", 0))
+        listener.listen()
+        server = listener.getsockname()
+        with socket.create_connection(server):
+            accepted, client = listener.accept()
+            with accepted:
+                assert process_identity.connected_peer_parent_identity(client, server, os.getppid()) is not None
+
+                def unreadable(*_args, **_kwargs):
+                    raise OSError("no /proc")
+
+                for name in ("_boot_id", "_namespace", "_socket_owners", "_socket_inode"):
+                    with monkeypatch.context() as patch:
+                        patch.setattr(process_identity, name, unreadable)
+                        assert process_identity.connected_peer_parent_identity(client, server, os.getppid()) is None
 
 
 def test_lineage_identity_refuses_a_non_ancestor_and_unreadable_kernel_facts(monkeypatch):
@@ -366,11 +431,26 @@ def test_store_check_refuses_a_malformed_identity(tmp_path):
 # --- API entry points: claim records, reads expose, nothing else populates ---
 
 
-def test_api_claim_records_the_identity_and_every_read_exposes_it(tmp_path):
+def _derived(monkeypatch, value: str | None) -> list[tuple]:
+    """Stand in for the kernel lookup (TestClient has no socket); record what Monitor asked."""
+    calls: list[tuple] = []
+
+    def derive(client, server, parent_pid):
+        calls.append((client, server, parent_pid))
+        return value
+
+    monkeypatch.setattr(epics_router, "connected_peer_parent_identity", derive)
+    return calls
+
+
+def test_api_claim_records_the_monitor_derived_identity_and_every_read_exposes_it(tmp_path, monkeypatch):
+    calls = _derived(monkeypatch, IDENTITY)
     store = _store(tmp_path)
     client = _client(store, tmp_path)
-    claimed = client.post(f"/api/epics/v1/{STREAM}/claim", json=_claim_body(process_id=os.getpid(), identity=IDENTITY))
+    claimed = client.post(f"/api/epics/v1/{STREAM}/claim", json=_claim_body(process_id=os.getpid()))
     assert claimed.status_code == 200, claimed.text
+    # Monitor asked the kernel about this very connection and the holder PID the claim names.
+    assert calls == [(("127.0.0.1", 8765), ("127.0.0.1", 80), os.getpid())]
     assert claimed.json()["lease"]["holder"]["process_identity"] == IDENTITY
     read = client.get(f"/api/epics/v1/{STREAM}?limit=1").json()["lease"]
     assert read["holder"]["process_identity"] == IDENTITY
@@ -394,24 +474,38 @@ def test_api_lease_without_the_field_keeps_its_exact_holder_shape(tmp_path):
     assert projection is None and set(events) == {None}
 
 
+@pytest.mark.parametrize("nested", [False, True])
 @pytest.mark.parametrize(
-    "bad",
-    ["", "a" * 64, "v1:" + "A" * 64, "v1:" + "a" * 65, "v2:" + "a" * 64, 12345, ["v1:" + "a" * 64], {"v": 1}],
+    "nominated",
+    ["own", "ancestor", "v1:" + "a" * 64, None, "", "v1:" + "A" * 64, 12345, ["v1:" + "a" * 64]],
 )
-def test_api_claim_refuses_a_malformed_identity(tmp_path, bad):
-    """Fabricated field via the API: only a typed v1 value can be recorded at claim."""
+def test_api_claim_refuses_any_client_nominated_identity(tmp_path, monkeypatch, nominated, nested):
+    """A claim carrying the field is refused, typed, whatever it holds: a real ancestor's value included."""
+    value = {"own": kernel_identity(os.getpid()), "ancestor": kernel_identity(os.getppid())}.get(
+        nominated if isinstance(nominated, str) else "", nominated
+    )
+    calls = _derived(monkeypatch, IDENTITY)
     store = _store(tmp_path)
     client = _client(store, tmp_path)
-    response = client.post(f"/api/epics/v1/{STREAM}/claim", json=_claim_body(process_id=os.getpid(), identity=bad))
+    body = _claim_body(process_id=os.getpid())
+    if nested:
+        holder = {key: body.pop(key) for key in [*CLAIM_FIELDS, "process_id"]}
+        body["holder"] = {**holder, "process_identity": value}
+    else:
+        body["process_identity"] = value
+    response = client.post(f"/api/epics/v1/{STREAM}/claim", json=body)
     assert response.status_code == 400
+    assert response.json()["error"] == "process_identity_nominated"
+    assert calls == []
     assert client.get(f"/api/epics/v1/{STREAM}?limit=1").status_code == 404
 
 
-def test_api_never_populates_or_changes_the_identity_outside_claim(tmp_path):
+def test_api_never_populates_or_changes_the_identity_outside_claim(tmp_path, monkeypatch):
     """Fabricated field via the API: renew, fenced write and release ignore any supplied identity."""
+    _derived(monkeypatch, IDENTITY)
     store = _store(tmp_path)
     client = _client(store, tmp_path)
-    lease = client.post(f"/api/epics/v1/{STREAM}/claim", json=_claim_body(process_id=os.getpid(), identity=IDENTITY))
+    lease = client.post(f"/api/epics/v1/{STREAM}/claim", json=_claim_body(process_id=os.getpid()))
     lease = lease.json()["lease"]
     forged = {**lease, "holder": {**lease["holder"], "process_identity": "v1:" + "f" * 64}}
     heartbeat = client.post(f"/api/epics/v1/{STREAM}/heartbeat", json=forged)
@@ -427,27 +521,101 @@ def test_api_never_populates_or_changes_the_identity_outside_claim(tmp_path):
     assert projection == IDENTITY and set(events) == {IDENTITY}
 
 
-def test_api_replayed_claim_cannot_change_the_identity(tmp_path):
+def test_api_replayed_claim_cannot_change_the_identity(tmp_path, monkeypatch):
     store = _store(tmp_path)
     client = _client(store, tmp_path)
-    body = _claim_body(process_id=os.getpid(), identity=IDENTITY)
+    body = _claim_body(process_id=os.getpid())
+    _derived(monkeypatch, IDENTITY)
     assert client.post(f"/api/epics/v1/{STREAM}/claim", json=body).json()["outcome"] == "claimed"
     assert client.post(f"/api/epics/v1/{STREAM}/claim", json=body).json()["outcome"] == "replayed"
     for other in ("v1:" + "e" * 64, None):
-        replay = _claim_body(process_id=os.getpid(), identity=other)
-        assert client.post(f"/api/epics/v1/{STREAM}/claim", json=replay).status_code == 409
+        _derived(monkeypatch, other)
+        assert client.post(f"/api/epics/v1/{STREAM}/claim", json=body).status_code == 409
     assert _stored(store)[0] == IDENTITY
 
 
-def test_api_well_formed_fabricated_identity_proves_nothing(tmp_path, monkeypatch):
-    """A claim may record any well-formed value; no process that is not its holder can prove it."""
+def _raw_claim(base: str, body: dict) -> tuple[int, dict]:
+    """POST a claim as any HTTP client would, without the session supervisor."""
+    request = urllib.request.Request(
+        f"{base}/api/epics/v1/{STREAM}/claim",
+        data=json.dumps(body).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    try:
+        with opener.open(request, timeout=30) as response:
+            return response.status, json.loads(response.read())
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read())
+
+
+def test_api_refuses_a_real_ancestor_fingerprint_nominated_by_a_client(tmp_path, monkeypatch):
+    """The review probe: a valid kernel identity of an actual ancestor, sent straight to Monitor over HTTP.
+
+    Before this round it was recorded and the sender then proved custody
+    (``HELD``). Now the claim is refused, typed, and nothing is recorded; a
+    client that claims without the field gets only what the kernel says about
+    its own connection.
+    """
     store = _store(tmp_path)
     with epics_monitor_stub(store) as base:
-        client = remote.RemoteEpicClient(base=base)
-        fabricated = LeaseHolder(process_id=os.getpid(), process_identity="v1:" + "b" * 64, **CLAIM_FIELDS)
-        client.claim(stream_id=STREAM, holder=fabricated, lineage_id="lineage-r4", session_id="s-1", lease_id="l-1")
-        lease = client.stream(STREAM, digest_limit=1)["lease"]
-        assert _held_here(monkeypatch, base, _authority(lease)) == "HOLDER_UNPROVEN"
+        for pid in (os.getpid(), os.getppid()):
+            status, payload = _raw_claim(base, _claim_body(process_id=pid, identity=kernel_identity(pid)))
+            assert (status, payload["error"]) == (400, "process_identity_nominated")
+        assert _stored(store) == (None, [])
+        # Without the field, this process names itself as holder; it is not its own parent.
+        status, payload = _raw_claim(base, _claim_body(process_id=os.getpid()))
+        assert status == 200, payload
+        assert "process_identity" not in payload["lease"]["holder"]
+        assert _held_here(monkeypatch, base, _authority(payload["lease"])) == "HOLDER_UNPROVEN"
+        # A supervisor client that still holds a value never sends it.
+        remote.RemoteEpicClient(base=base).release(_envelope(payload["lease"]))
+        nominated = LeaseHolder(process_id=os.getpid(), process_identity=kernel_identity(os.getpid()), **CLAIM_FIELDS)
+        lease, _ = remote.RemoteEpicClient(base=base).claim(
+            stream_id=STREAM, holder=nominated, lineage_id="lineage-r4", session_id="s-2", lease_id="l-2"
+        )
+        assert lease.holder.process_identity is None
+        assert _stored(store)[0] is None
+
+
+def test_confirmation_refuses_a_lease_its_holder_revived_through_the_real_store(tmp_path, monkeypatch):
+    """The review's controlled-clock probe against the real store and Monitor router.
+
+    The lease lapses on Monitor's clock just before the record write, and its
+    holder revives it through the store before confirmation: same generation,
+    holder and identity, new ``heartbeat_at``, ``expires_at`` and ``version``.
+    Confirmation refuses and restores the record's prior bytes; an unchanged
+    lease still confirms.
+    """
+    store = _store(tmp_path)
+    holder = LeaseHolder(process_id=os.getpid(), process_identity=kernel_identity(os.getpid()), **CLAIM_FIELDS)
+    lease, _ = store.claim_remote_session(
+        stream_id=STREAM, holder=holder, lineage_id="lineage-r5", ttl_seconds=60, session_id="s-1", lease_id="l-1"
+    )
+    clock = {"now": utc_now()}
+    monkeypatch.setattr(epics_router, "utc_now", lambda: clock["now"])
+    record, prior = tmp_path / "record.json", b"prior bytes\n"
+    record.write_bytes(prior)
+    with epics_monitor_stub(store) as base:
+        monkeypatch.setattr(remote, "DEFAULT_MONITOR", base)
+        monitor = remote.RemoteEpicClient(base=base)
+        authority = _authority(monitor.stream(STREAM, digest_limit=1)["lease"])
+        _, before = terminal_abandon.observe_custody(authority, caller_holds=True)
+        clock["now"] = parse_timestamp(lease.expires_at) + timedelta(seconds=1)
+        assert monitor.stream(STREAM, digest_limit=1)["lease"]["state"] == "expired"
+        record.write_bytes(b"published while expired\n")
+        revived = store.heartbeat(lease, now=clock["now"])
+        assert (revived.generation, revived.fencing_token) == (lease.generation, lease.fencing_token)
+        with pytest.raises(terminal_abandon.Refusal) as refused:
+            terminal_abandon.confirm_custody_after_write(record, prior, authority, before)
+        assert refused.value.code == "STALE_AUTHORITY"
+        assert record.read_bytes() == prior
+        # Positive control: nothing moved between the observation and the confirmation.
+        _, unchanged = terminal_abandon.observe_custody(authority, caller_holds=True)
+        record.write_bytes(b"published while valid\n")
+        terminal_abandon.confirm_custody_after_write(record, prior, authority, unchanged)
+        assert record.read_bytes() == b"published while valid\n"
 
 
 # --- End to end: real supervisor, real Monitor router, real holder and attester processes ---
@@ -463,6 +631,7 @@ for line in sys.stdin:
 
 ATTEST = r"""
 import json, sys
+from scripts.api import epics_router
 from scripts.fleet import terminal_abandon
 from scripts.session_supervisor import remote
 remote.DEFAULT_MONITOR = sys.argv[1]
@@ -646,7 +815,15 @@ def test_migration_of_a_running_fleet_end_to_end(tmp_path, holder, sibling, monk
         earlier = LeaseHolder(
             process_id=holder.pid, process_identity=kernel_identity(holder.pid, ticks_delta=-1), **CLAIM_FIELDS
         )
-        client.claim(stream_id=STREAM, holder=earlier, lineage_id="lineage-r4", session_id="s-pid", lease_id="l-pid")
+        # Written through Monitor's own store: no client can record an identity.
+        store.claim_remote_session(
+            stream_id=STREAM,
+            holder=earlier,
+            lineage_id="lineage-r4",
+            ttl_seconds=900,
+            session_id="s-pid",
+            lease_id="l-pid",
+        )
         reused = client.stream(STREAM, digest_limit=1)["lease"]
         assert holder.attest(base, _authority(reused)) == "HOLDER_UNPROVEN"
         # Same-generation authority naming another identity is a different custody.
@@ -654,7 +831,7 @@ def test_migration_of_a_running_fleet_end_to_end(tmp_path, holder, sibling, monk
 
 
 def test_supervisor_records_no_identity_for_a_holder_that_is_not_its_parent(tmp_path):
-    """Never let a client nominate the tuple: only the command's own parent is fingerprinted."""
+    """The real supervisor CLI: Monitor fingerprints only the claim command's own parent."""
     store = _store(tmp_path)
     with epics_monitor_stub(store) as base:
         argv = [sys.executable, "-m", "scripts.session_supervisor", "claim", "--role", "driver", "--stream", STREAM]

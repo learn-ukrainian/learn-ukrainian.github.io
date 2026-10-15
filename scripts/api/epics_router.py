@@ -9,6 +9,7 @@ import logging
 import os
 import re
 import sqlite3
+from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 from threading import Lock
@@ -32,7 +33,7 @@ from agents_extensions.shared.session_streams.model import (
     utc_now,
     validate_stream_id,
 )
-from agents_extensions.shared.session_streams.process_identity import validate_process_identity
+from agents_extensions.shared.session_streams.process_identity import connected_peer_parent_identity
 from agents_extensions.shared.session_streams.receipts import register_manifest_inventory
 from agents_extensions.shared.session_streams.store import (
     MAX_ROLLOVER_BUNDLE_BYTES,
@@ -295,10 +296,10 @@ def _registry_fields(store: SessionStreamStore, stream_id: str) -> dict[str, Any
     }
 
 
-def _error(status: int, detail: str) -> JSONResponse:
+def _error(status: int, detail: str, *, code: str = "request_refused") -> JSONResponse:
     return JSONResponse(
         status_code=status,
-        content={"schema": SCHEMA, "error": "request_refused", "detail": detail},
+        content={"schema": SCHEMA, "error": code, "detail": detail},
         headers={"Cache-Control": "no-store"},
     )
 
@@ -338,19 +339,24 @@ def _epic_stream(value: Any) -> str:
     return stream_id
 
 
-def _holder(payload: dict[str, Any], *, default_host: str | None = None, acquire: bool = False) -> LeaseHolder:
-    """Parse a holder; ``process_identity`` is read only when ``acquire`` (a claim) records it.
+class NominatedIdentityError(ValueError):
+    """A claim carried ``process_identity``; only Monitor derives it (#10657)."""
 
-    Renew, release and fenced writes never match or populate the identity
-    (#10657): a value an exact-lease envelope carries, including one echoed
-    back from a read, is ignored, so the stored generation identity is the
-    only one that exists. A claim's value must be a well-formed v1 identity.
+
+def _holder(payload: dict[str, Any], *, default_host: str | None = None, acquire: bool = False) -> LeaseHolder:
+    """Parse a holder; it never carries ``process_identity`` (#10657).
+
+    A claim (``acquire``) that names the field at all is refused with
+    ``NominatedIdentityError``: Monitor derives the identity from the
+    connection itself (``_derived_identity``). Renew, release and fenced writes
+    never match or populate it; a value an exact-lease envelope carries,
+    including one echoed back from a read, is ignored, so the stored generation
+    identity is the only one that exists.
     """
     nested = payload.get("holder")
     source = nested if isinstance(nested, dict) else payload
-    process_identity = source.get("process_identity") if acquire else None
-    if process_identity is not None:
-        process_identity = validate_process_identity(process_identity)
+    if acquire and ("process_identity" in payload or (isinstance(nested, dict) and "process_identity" in nested)):
+        raise NominatedIdentityError("process_identity is derived by Monitor; a claim must not carry it")
     kind = HolderKind(source.get("holder_kind", HolderKind.PROCESS.value))
     task_id = source.get("task_id")
     if task_id is not None:
@@ -369,10 +375,37 @@ def _holder(payload: dict[str, Any], *, default_host: str | None = None, acquire
         task_id=task_id,
         holder_kind=kind,
         host_id=host_id,
-        process_identity=process_identity,
     )
     holder.validate()
     return holder
+
+
+def _derived_identity(request: Request, holder: LeaseHolder) -> LeaseHolder:
+    """Record the identity Monitor derives from the claim's own connection, never a client value.
+
+    The kernel names the process at the far end of this loopback connection
+    and its parent; the identity is recorded only when that parent is the
+    holder PID the claim names (the launcher runs the claim command as its
+    direct child). Anything else records none, and every proof against the
+    lease then refuses.
+    """
+    client = request.client
+    server = request.scope.get("server")
+    if (
+        holder.holder_kind is not HolderKind.PROCESS
+        or holder.process_id is None
+        or client is None
+        or not isinstance(server, (tuple, list))
+        or len(server) != 2
+    ):
+        return holder
+    try:
+        identity = connected_peer_parent_identity(
+            (str(client.host), int(client.port)), (str(server[0]), int(server[1])), holder.process_id
+        )
+    except (TypeError, ValueError):
+        identity = None
+    return holder if identity is None else replace(holder, process_identity=identity)
 
 
 def _lease_from_payload(payload: dict[str, Any]) -> Lease:
@@ -924,6 +957,7 @@ def remote_claim(
     try:
         stream_id = _epic_stream(stream_id)
         session_id, lease_id, lineage_id, holder, ttl, limit = _claim_values({**body, "stream_id": stream_id})
+        holder = _derived_identity(request, holder)
         store = _store(ctx)
         _lease, outcome = store.claim_remote_session(
             stream_id=stream_id,
@@ -952,6 +986,8 @@ def remote_claim(
             f"instance_id={holder.get('instance_id', '?')}; "
             f"expires_at={lease.get('expires_at', '?')}",
         )
+    except NominatedIdentityError as exc:
+        return _error(400, str(exc), code="process_identity_nominated")
     except (ValueError, ContentRejectedError):
         return _error(400, "invalid epic claim request")
     except (sqlite3.IntegrityError, LifecycleError):

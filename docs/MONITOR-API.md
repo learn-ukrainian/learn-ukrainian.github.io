@@ -610,13 +610,19 @@ valid registration.
 A lease generation may record `holder.process_identity`, a typed, versioned
 fingerprint of the long-lived holder process: `v1:` followed by 64 lowercase
 hex digits (see `agents_extensions/shared/session_streams/process_identity.py`).
-The session supervisor derives it at claim time from the kernel, for the
-launcher that runs the claim command, and sends it in the claim body; it reads
-no argument or environment value for it. The contract:
+Monitor derives it at claim time from the kernel; no client supplies it. The
+contract:
 
-- `claim` accepts an optional `process_identity` (or `holder.process_identity`).
-  A malformed value or one on an `app_thread` holder is refused `400`. A replay
-  with the same IDs must carry the same value, otherwise `409`.
+- `claim` refuses a body that carries `process_identity` or
+  `holder.process_identity` at all, whatever its value: `400` with
+  `"error": "process_identity_nominated"`. For a `process` holder Monitor finds,
+  in the kernel's socket tables, the one process holding the connecting end of
+  the claim's loopback connection, and records the identity of that process's
+  parent when the parent is the claim's `process_id` (the launcher runs the
+  claim command as its direct child). Otherwise, including a shared socket, a
+  peer in another PID or network namespace, a proxy or a process Monitor may
+  not inspect, it records none. A replay with the same IDs must derive the same
+  value, otherwise `409`.
 - The value is fixed for the generation. `heartbeat`, `handoff`, `bundles` and
   `release` never match, populate or change it: any value in their lease
   envelope is ignored, so an envelope echoed from a read still works. Store
@@ -633,8 +639,8 @@ no argument or environment value for it. The contract:
   inputs are world-readable, so knowing it proves nothing: a caller proves it
   holds the lease only by deriving the same value for one of its own kernel
   ancestors (`scripts/fleet/terminal_abandon.py`, `HOLDER_UNPROVEN` otherwise).
-  Monitor cannot verify a claim's value; a fabricated one only makes the proof
-  impossible for every other process.
+  A same-user process that claims a free stream itself gets only its own
+  actual parent recorded, so the lease truthfully names it as holder.
 
 Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before claiming. The
 value comes from the canonical `MONITOR_OCCUPANCY_HOST_IDS` mapping and is an
