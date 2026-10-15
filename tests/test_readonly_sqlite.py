@@ -78,12 +78,54 @@ def test_schema_and_journal_pragmas_cannot_write(database):
     assert database.read_bytes() == before
 
 
-def test_extension_loading_is_not_enabled(database):
+@pytest.mark.skipif(
+    not hasattr(sqlite3.Connection, "enable_load_extension"),
+    reason="Python was built without the extension-loading API; there is no API loading path to test",
+)
+@pytest.mark.parametrize("initially_enabled", [False, True])
+def test_extension_loading_is_not_enabled(monkeypatch, database, tmp_path, initially_enabled):
+    connect = sqlite3.connect
+
+    def connect_with_build_default(*args, **kwargs):
+        conn = connect(*args, **kwargs)
+        if initially_enabled:
+            conn.enable_load_extension(True)
+        return conn
+
+    monkeypatch.setattr(sqlite3, "connect", connect_with_build_default)
+    extension = tmp_path / "missing_extension_10747"
+    assert not extension.exists()
     with closing(open_readonly(database)) as conn:
-        with pytest.raises(sqlite3.OperationalError, match="not authorized"):
-            conn.execute("SELECT load_extension(?)", ("missing_extension_10747",))
-        with pytest.raises(sqlite3.OperationalError, match="not authorized"):
-            conn.load_extension("missing_extension_10747")
+        functions_before = conn.execute("PRAGMA function_list").fetchall()
+        for load in (
+            lambda: conn.execute("SELECT load_extension(?)", (str(extension),)),
+            lambda: conn.load_extension(str(extension)),
+        ):
+            with pytest.raises(sqlite3.OperationalError) as error:
+                load()
+            # Disabled loading must fail before looking up a library. Loader
+            # errors include its filename, with platform-specific wording.
+            assert "missing_extension_10747" not in str(error.value)
+            assert "cannot open shared object file" not in str(error.value)
+        assert conn.execute("PRAGMA function_list").fetchall() == functions_before
+        assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
+    assert not extension.exists()
+
+
+def test_build_without_extension_loading_api_still_opens_readonly(monkeypatch, database):
+    class NoExtensionAPIConnection(sqlite3.Connection):
+        def __getattribute__(self, name):
+            if name in {"enable_load_extension", "load_extension"}:
+                raise AttributeError(name)
+            return super().__getattribute__(name)
+
+    connect = sqlite3.connect
+    monkeypatch.setattr(sqlite3, "connect", lambda *a, **kw: connect(*a, **kw, factory=NoExtensionAPIConnection))
+    with closing(open_readonly(database)) as conn:
+        assert not hasattr(conn, "enable_load_extension")
+        assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("INSERT INTO synthetic VALUES (8)")
 
 
 def test_executescript_preserves_readonly_and_attachment_refusal(database):
@@ -145,10 +187,14 @@ def test_reader_settings_preserve_thread_and_transaction_contract(database):
         conn.rollback()
 
 
-@pytest.mark.parametrize("stage", ["query_only", "attachment_limit"])
+@pytest.mark.parametrize("stage", ["extension_loading", "query_only", "attachment_limit"])
 def test_setup_failure_closes_connection(monkeypatch, database, stage):
     class BrokenConnection:
         closed = False
+
+        def enable_load_extension(self, enabled):
+            if stage == "extension_loading":
+                raise RuntimeError("synthetic setup failure")
 
         def execute(self, sql):
             if stage == "attachment_limit":

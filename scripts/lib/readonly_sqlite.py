@@ -47,7 +47,7 @@ def open_readonly(
     isolation_level: str | None = "",
     immutable: bool = False,
 ) -> sqlite3.Connection:
-    """Open exactly path, read-only; refuse attachment of other databases.
+    """Open exactly path, read-only; refuse extensions and other databases.
 
     Optional settings preserve reader concurrency, transaction, and immutable
     side-artifact contracts. The caller owns closing the returned connection.
@@ -72,6 +72,8 @@ def open_readonly(
         settings["isolation_level"] = isolation_level
     conn = sqlite3.connect(uri, uri=True, **settings)
     try:
+        if hasattr(conn, "enable_load_extension"):
+            conn.enable_load_extension(False)
         conn.execute("PRAGMA query_only=ON")
         conn.setlimit(sqlite3.SQLITE_LIMIT_ATTACHED, 0)
     except BaseException:
