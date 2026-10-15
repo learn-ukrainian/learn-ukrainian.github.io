@@ -106,6 +106,7 @@ OVERLAY_PATHSPECS = (
 SCRATCH_ROOT_ENV = "LU_SCRATCH_ROOT"
 DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
 FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
+SCRATCH_LINK_LIMIT = 40  # links followed while verifying a scratch root, as Linux's MAXSYMLINKS
 
 
 class GateOutcome(Exception):
@@ -1273,24 +1274,102 @@ def private_directory(path: Path) -> int:
     return fd
 
 
+def scratch_root_refusal(problem: str) -> GateOutcome:
+    """Refuse the push as incomplete over the scratch root, naming the problem's class but never a path."""
+    return GateOutcome(
+        "pytest_temp_unavailable",
+        f"the pytest base temp root {problem}; set {SCRATCH_ROOT_ENV} to a private directory (yours, mode 0700) "
+        "outside every Git checkout",
+        incomplete=True,
+    )
+
+
+def unsafe_scratch_component(info: os.stat_result) -> str | None:
+    """Name the class of a directory or link another user could replace or redirect, or ``None`` if safe.
+
+    Only this user and root are trusted. A directory writable by group or others is safe only when it is
+    sticky, as the system temp directories are: there only an entry's owner can rename or replace it.
+    """
+    kind = "link" if stat.S_ISLNK(info.st_mode) else "directory"
+    if info.st_uid not in (0, os.geteuid()):
+        return f"a {kind} owned by another user"
+    if kind == "directory" and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH) and not info.st_mode & stat.S_ISVTX:
+        return "a directory writable by group or others without the sticky bit"
+    return None
+
+
+def verified_scratch_root(candidate: Path) -> Path:
+    """Resolve ``candidate`` one component at a time from ``/``, verify each, and create what is missing.
+
+    Every directory passed must be safe (``unsafe_scratch_component``), and every link must be owned by
+    this user or root and is followed only into a target that passes the same checks. So no other user
+    can redirect the returned link-free path; same-user changes are outside the gate's trust model
+    (#10654). Missing components are created with mode 0700 below the verified part, after the Git
+    check, and verified again. Raises ``GateOutcome`` for an unsafe or in-Git root, else ``OSError``
+    when the root cannot be inspected or created.
+    """
+
+    def verify(info: os.stat_result) -> None:
+        if not (stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+            raise NotADirectoryError(errno.ENOTDIR, "a scratch root component is not a directory")
+        problem = unsafe_scratch_component(info)
+        if problem is not None:
+            raise scratch_root_refusal(f"or one of its ancestors is {problem}, so another user could redirect it")
+
+    current = Path("/")
+    verify(os.lstat(current))
+    pending, missing, links = list(reversed((Path.cwd() / candidate).parts[1:])), [], 0
+    while pending:
+        part = pending.pop()
+        if part == "..":
+            if missing:
+                missing.pop()
+            else:
+                current = current.parent  # an ancestor of a verified directory, so verified itself
+            continue
+        if missing:
+            missing.append(part)
+            continue
+        try:
+            info = os.lstat(current / part)
+        except FileNotFoundError:
+            missing.append(part)
+            continue
+        verify(info)
+        if not stat.S_ISLNK(info.st_mode):
+            current = current / part
+            continue
+        links += 1
+        if links > SCRATCH_LINK_LIMIT:
+            raise scratch_root_refusal("passes through a link loop")
+        target = Path(os.readlink(current / part))
+        if target.is_absolute():
+            current = Path("/")
+        pending.extend(reversed(target.parts[1:] if target.is_absolute() else target.parts))
+    if inside_git_tree(current.joinpath(*missing)):
+        raise scratch_root_refusal("is inside a Git checkout or Git directory")
+    for part in missing:
+        current = current / part
+        with contextlib.suppress(FileExistsError):  # a concurrent run created it; verify it like any other
+            os.mkdir(current, 0o700)
+        info = os.lstat(current)
+        verify(info)
+        if stat.S_ISLNK(info.st_mode):
+            raise NotADirectoryError(errno.ENOTDIR, "a created scratch root component is not a directory")
+    return current
+
+
 def pytest_temp_parent(state: Path) -> Path:
     """Return this repository's private parent for pytest base temps, outside every Git tree (#10654).
 
     The root follows the fleet scratch convention: ``LU_SCRATCH_ROOT`` when set (strictly), else
-    ``/var/tmp/lu``, else ``<system temp>/lu-scratch`` when the default cannot be created. Below it a
-    per-user 0700 directory holds one 0700 directory per Git common dir. Nothing sweeps them: each run
-    removes only its own base (``own_base_temp``) and the host's scratch aging owns what a killed run
-    leaves. An unsafe or uncreatable location refuses the push as incomplete; it never falls back into Git.
+    ``/var/tmp/lu``, else ``<system temp>/lu-scratch`` when the default cannot be created. Its whole
+    ancestry is verified before anything is created (``verified_scratch_root``). Below it a per-user
+    0700 directory holds one 0700 directory per Git common dir. Nothing sweeps them: each run removes
+    only its own base (``own_base_temp``) and the host's scratch aging owns what a killed run leaves. An
+    unsafe or uncreatable location refuses the push as incomplete; an unsafe default never falls back,
+    and nothing falls back into Git.
     """
-
-    def unsafe() -> GateOutcome:
-        return GateOutcome(
-            "pytest_temp_unavailable",
-            f"the pytest base temp root is inside a Git checkout or Git directory; set {SCRATCH_ROOT_ENV} "
-            "to a directory outside every Git checkout",
-            incomplete=True,
-        )
-
     override = os.environ.get(SCRATCH_ROOT_ENV, "").strip()
     candidates = (
         [Path(override)] if override else [DEFAULT_SCRATCH_ROOT, Path(tempfile.gettempdir()) / FALLBACK_SCRATCH_DIRNAME]
@@ -1298,28 +1377,19 @@ def pytest_temp_parent(state: Path) -> Path:
     scratch, failure = None, "error"
     for candidate in candidates:
         try:
-            resolved = candidate.resolve()
-            if inside_git_tree(resolved):
-                raise unsafe()
-            resolved.mkdir(parents=True, exist_ok=True)
-        except (OSError, RuntimeError) as error:  # RuntimeError: a symlink loop before Python 3.13
-            failure = errno.errorcode.get(getattr(error, "errno", None), "error")
+            scratch = verified_scratch_root(candidate)
+        except OSError as error:
+            failure = errno.errorcode.get(error.errno, "error")
             continue
-        scratch = resolved
         break
     if scratch is None:
-        raise GateOutcome(
-            "pytest_temp_unavailable",
-            f"cannot create the pytest base temp root ({failure}); "
-            f"set {SCRATCH_ROOT_ENV} to a writable directory outside every Git checkout",
-            incomplete=True,
-        )
+        raise scratch_root_refusal(f"cannot be created ({failure})")
     user = scratch / f"pre-push-gate-{os.geteuid()}"
     parent = user / hashlib.sha256(os.fsencode(state.resolve())).hexdigest()[:32]
     for directory in (user, parent):
         os.close(private_directory(directory))
     if inside_git_tree(parent):
-        raise unsafe()
+        raise scratch_root_refusal("is inside a Git checkout or Git directory")
     return parent
 
 

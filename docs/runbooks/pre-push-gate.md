@@ -33,7 +33,7 @@ Check 1 is the pre-commit stage; checks 2 and 3 form the pytest stage. Importer-
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
-| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 
@@ -114,18 +114,43 @@ that require a scratch tree outside any checkout behave the same in the gate. Th
 fleet scratch convention of `scripts/common/scratch.py`: `LU_SCRATCH_ROOT` when set, else the
 disk-backed default, else `<system temp>/lu-scratch` when the default cannot be created. Below it,
 `pre-push-gate-<uid>/` holds one directory per Git common dir; both are created with mode 0700 and
-must be real directories owned by the user with no group or other access. A root inside a Git
-checkout or Git directory, an uncreatable root, or a directory that is not private refuses the push
-as `pytest_temp_unavailable`; the gate never falls back into the Git directory. Admission, queue,
+must be real directories owned by the user with no group or other access. Admission, queue,
 receipt and measurement files stay under `<git-common-dir>/lu-pre-push-gate/`.
+
+Trust model: the gate trusts the pushing user and root, on a host the user controls. A process running
+as the same user can already edit the hook, so same-user changes to the scratch tree are outside the
+model. That includes renaming an ancestor while pytest runs: pytest receives the base as a path and
+deletes and recreates it, so the gate cannot bind pytest to the directory it created. What the gate
+guarantees is that no other user can redirect the base. Before it creates anything, it walks the root
+from `/`. Every directory on the way must be owned by the user or root and must not be writable by
+group or others unless it is sticky, as the system temp directories are (only an entry's owner can
+rename an entry there). A link is followed only if the user or root owns it, and its target passes the
+same checks. Missing components are then created with mode 0700.
+
+Each of these refuses the push as `pytest_temp_unavailable`:
+
+- a directory or link on the way that another user owns;
+- a directory that group or others can write and that is not sticky;
+- a link loop;
+- a root inside a Git checkout or Git directory;
+- a root that cannot be created;
+- a gate directory that is not private.
+
+The message names the kind of component at fault, never its path. An unsafe default root never falls
+back to `<system temp>/lu-scratch`, and nothing falls back into the Git directory. To fix a refusal,
+set `LU_SCRATCH_ROOT` to a private directory (owned by the user, mode 0700) whose ancestors only the
+user or root can write. Alternatively, remove group and other write from the directory at fault. A
+root created under umask 002 is group-writable, so it is refused.
 
 Each invocation creates its own uniquely named base in the repository directory and removes only that
 base when the invocation ends, green or not. The repository directory is opened once without
-following links, and the base is created and removed relative to that descriptor, so renaming or
-replacing an ancestor cannot redirect either step into another run's base. A cleanup failure refuses
-the push as incomplete unless the run has already failed. Nothing sweeps this location: a base left by
-a killed gate, including one a surviving pytest worker still uses, stays until the host's scratch
-aging described in `scripts/common/scratch.py` removes it.
+following links, and the base is created and removed relative to that descriptor, so the gate's own
+create and remove never follow a replaced ancestor into another run's base. A cleanup failure refuses
+the push as incomplete unless the run has already failed. Nothing sweeps this location. A base left by
+a killed gate, including one a surviving pytest worker still uses, stays until host temp aging removes
+it. On systemd hosts the stock `tmpfiles.d` rules age `/var/tmp` and `/tmp`, which hold the default
+root and, unless `TMPDIR` points elsewhere, the fallback. A custom `LU_SCRATCH_ROOT` ages only if the
+host has a rule for it.
 
 ## Experimental concurrent admission (#10555)
 

@@ -2462,14 +2462,15 @@ def test_a_killed_gate_leaves_its_live_base_to_scratch_aging(repo: Path, tmp_pat
 
 
 @pytest.mark.parametrize("when", ["after-validation", "during-run"])
-def test_replacing_the_scratch_ancestry_cannot_redirect_cleanup_into_another_repository(
+def test_replacing_the_scratch_ancestry_cannot_redirect_the_gates_own_cleanup(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, when: str
 ) -> None:
-    # Another user who can write a shared, non-sticky scratch root can rename this user's directory and put
-    # a decoy in its place whose repository entry leads into another repository's live bases (#10654 review).
+    # A root another user can write is refused before anything is created (see the round-3 ancestry tests).
+    # Below a verified root only this user can rename its directory, which is outside the trust model, and
+    # pytest's own --basetemp handling then follows the path. This pins the narrower guarantee that the
+    # gate's own create and remove never follow a replaced ancestor into another repository's live base.
     scratch = tmp_path / "scratch"
-    scratch.mkdir()
-    scratch.chmod(0o777)
+    scratch.mkdir(mode=0o700)
     monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(scratch))
     state, other_state = tmp_path / "state", tmp_path / "other-state"
     state.mkdir()
@@ -2674,6 +2675,10 @@ def test_pytest_stage_refuses_without_a_safe_base_temp_location(
             "uncreatable": blocker / "scratch",
         }[location]
         monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(target))
+    if location != "uncreatable":
+        # Close the ancestry to others whatever the caller's umask, so the Git check is what refuses.
+        gate.state_dir(repo).mkdir(mode=0o755, exist_ok=True)
+        _close_to_others(target.parent, tmp_path)
     monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: pytest.fail("pytest must not start"))
 
     with pytest.raises(gate.GateOutcome) as raised:
@@ -2681,27 +2686,138 @@ def test_pytest_stage_refuses_without_a_safe_base_temp_location(
 
     assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
     assert gate.SCRATCH_ROOT_ENV in raised.value.detail and str(tmp_path) not in raised.value.detail
+    assert ("inside a Git checkout" in raised.value.detail) == (location != "uncreatable")
     assert not target.exists()
 
 
-@pytest.mark.parametrize("tampering", ["symlink", "group-readable", "file"])
+@pytest.mark.parametrize(
+    "tampering", ["symlink", "group-readable", "file", "foreign-owner", "repository-group-readable"]
+)
 def test_pytest_stage_refuses_a_base_temp_directory_that_is_not_private(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tampering: str
 ) -> None:
     scratch = tmp_path / "scratch"
-    scratch.mkdir()
+    scratch.mkdir(mode=0o700)  # a safe root, so only the tampered directory below it can refuse
     monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(scratch))
     outside = tmp_path / "outside"
     outside.mkdir()
     (outside / "preserved").write_text("preserve me")
+    state = tmp_path / "state"
+    state.mkdir()
     user = scratch / f"pre-push-gate-{os.geteuid()}"
     if tampering == "symlink":
         user.symlink_to(outside, target_is_directory=True)
     elif tampering == "group-readable":
         user.mkdir()
         user.chmod(0o750)
+    elif tampering == "foreign-owner":
+        user.mkdir(mode=0o700)
+        _pretend_owned_by_another_user(monkeypatch, user)
+    elif tampering == "repository-group-readable":
+        gate.pytest_temp_parent(state).chmod(0o750)
     else:
         user.write_text("not a directory")
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: pytest.fail("pytest must not start"))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    assert "pytest base temp directory" in raised.value.detail  # refused at the tampered level, not the root
+    assert [path.name for path in outside.iterdir()] == ["preserved"]
+
+
+# ---- #10654 round 3: the scratch root's whole ancestry is verified before anything is created ----------
+# Trust model: this user and root. A same-user process can already edit the hook, so same-user swaps are
+# outside it; what must hold is that no other user can redirect the base temp.
+
+
+def _pretend_owned_by_another_user(monkeypatch: pytest.MonkeyPatch, path: Path) -> None:
+    """Report ``path``'s own inode (a link itself, not its target) as owned by neither this user nor root."""
+    real = path.lstat()
+    key, other = (real.st_dev, real.st_ino), os.geteuid() + 1
+
+    def reporting(original):
+        def report(*args: object, **kwargs: object) -> os.stat_result:
+            info = original(*args, **kwargs)
+            if (info.st_dev, info.st_ino) != key:
+                return info
+            fields = list(info[:10])
+            fields[4] = other  # st_uid
+            return os.stat_result(fields)
+
+        return report
+
+    for name in ("lstat", "stat", "fstat"):
+        monkeypatch.setattr(gate.os, name, reporting(getattr(os, name)))
+
+
+def _gate_directories(top: Path) -> list[Path]:
+    """Every per-user gate directory below ``top``, without following links."""
+    return [Path(here) / name for here, names, _files in os.walk(top) for name in names if "pre-push-gate-" in name]
+
+
+def _close_to_others(path: Path, stop: Path) -> None:
+    """Remove group and other write from ``path`` and its existing ancestors up to ``stop``."""
+    for directory in (path, *path.parents):
+        if directory.is_dir() and not directory.is_symlink():
+            directory.chmod(stat.S_IMODE(directory.lstat().st_mode) & ~0o022)
+        if directory == stop:
+            break
+
+
+UNSAFE_ANCESTRY = {
+    "foreign-owned-ancestor": "a directory owned by another user",
+    "group-writable-ancestor": "a directory writable by group or others without the sticky bit",
+    "other-writable-ancestor": "a directory writable by group or others without the sticky bit",
+    "group-writable-root": "a directory writable by group or others without the sticky bit",
+    "link-to-unsafe-directory": "a directory writable by group or others without the sticky bit",
+    "foreign-link-in-sticky-directory": "a link owned by another user",
+    "link-loop": "a link loop",
+}
+
+
+def _unsafe_ancestry(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str) -> tuple[Path, list[Path]]:
+    """Build one unsafe scratch root; return it and the paths that must still be absent after a refusal."""
+    shared, safe = tmp_path / "shared", tmp_path / "safe"
+    shared.mkdir(mode=0o755)
+    safe.mkdir(mode=0o700)
+    if case == "foreign-owned-ancestor":
+        _pretend_owned_by_another_user(monkeypatch, shared)
+    elif case in ("group-writable-ancestor", "group-writable-root"):
+        shared.chmod(0o775)
+    elif case == "other-writable-ancestor":
+        shared.chmod(0o757)
+    if case == "group-writable-root":
+        root = tmp_path / "root"
+        root.mkdir()
+        root.chmod(0o775)  # an existing root created under umask 002
+        return root, []
+    if case == "link-to-unsafe-directory":
+        shared.chmod(0o777)
+        (tmp_path / "link").symlink_to(shared, target_is_directory=True)
+        return tmp_path / "link" / "scratch", [shared / "scratch"]
+    if case == "foreign-link-in-sticky-directory":
+        sticky = tmp_path / "sticky"
+        sticky.mkdir()
+        sticky.chmod(0o1777)  # the system temp pattern: anyone may add entries, only their owner may replace them
+        (sticky / "link").symlink_to(safe, target_is_directory=True)
+        _pretend_owned_by_another_user(monkeypatch, sticky / "link")
+        return sticky / "link" / "scratch", [safe / "scratch"]
+    if case == "link-loop":
+        (tmp_path / "loop-a").symlink_to(tmp_path / "loop-b")
+        (tmp_path / "loop-b").symlink_to(tmp_path / "loop-a")
+        return tmp_path / "loop-a" / "scratch", []
+    return shared / "lu" / "scratch", [shared / "lu"]
+
+
+@pytest.mark.parametrize("case", sorted(UNSAFE_ANCESTRY))
+def test_an_unsafe_scratch_ancestry_refuses_before_anything_is_created(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    root, absent = _unsafe_ancestry(tmp_path, monkeypatch, case)
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(root))
     state = tmp_path / "state"
     state.mkdir()
     monkeypatch.setattr(gate, "state_dir", lambda _root: state)
@@ -2711,7 +2827,100 @@ def test_pytest_stage_refuses_a_base_temp_directory_that_is_not_private(
         gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
 
     assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
-    assert [path.name for path in outside.iterdir()] == ["preserved"]
+    # The message names the offending component's class and the fix, never a path.
+    assert UNSAFE_ANCESTRY[case] in raised.value.detail and gate.SCRATCH_ROOT_ENV in raised.value.detail
+    assert str(tmp_path) not in raised.value.detail
+    assert _gate_directories(tmp_path) == [] and not any(os.path.lexists(path) for path in absent)
+
+
+@pytest.mark.parametrize(
+    "case", ["absent-root", "existing-root", "sticky-ancestor", "link-to-safe-directory", "parent-of-a-link-target"]
+)
+def test_a_safe_scratch_ancestry_keeps_create_pytest_and_cleanup_inside_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    created: list[Path] = []
+    if case == "absent-root":
+        root = private / "a" / "b"
+        created = [private / "a", root]
+    elif case == "existing-root":
+        root = private / "root"
+        root.mkdir(mode=0o755)
+    elif case == "sticky-ancestor":
+        sticky = tmp_path / "sticky"
+        sticky.mkdir()
+        sticky.chmod(0o1777)
+        root = sticky / "scratch"
+        created = [root]
+    elif case == "link-to-safe-directory":
+        (tmp_path / "link").symlink_to(private, target_is_directory=True)
+        root = tmp_path / "link" / "scratch"
+        created = [private / "scratch"]
+    else:  # ".." after a link leaves the link's target, as the kernel resolves it, not the link's directory
+        (private / "inner").mkdir(mode=0o700)
+        (tmp_path / "link").symlink_to(private / "inner", target_is_directory=True)
+        root = tmp_path / "link" / ".." / "scratch"
+        created = [private / "scratch"]
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(root))
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    seen: list[Path] = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        base = Path(command[command.index("--basetemp") + 1])
+        seen.append(base)
+        assert os.path.realpath(base) == str(base)  # pytest receives the verified, link-free path
+        (base / "probe").touch()
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    assert gate.run_pytest_stage(_plan(changed_tests=()), tmp_path, "launcher", time.monotonic() + 30) == (
+        "1 passed in 0.1s"
+    )
+
+    resolved_root = Path(os.path.realpath(root))
+    assert len(seen) == 1 and seen[0].parent.parent.parent == resolved_root
+    assert not os.path.lexists(seen[0]) and list(seen[0].parent.iterdir()) == []  # only its own base, removed
+    for directory in created:  # components the gate created are private to this user
+        assert stat.S_IMODE(directory.lstat().st_mode) == 0o700 and directory.lstat().st_uid == os.geteuid()
+    if case == "existing-root":
+        assert stat.S_IMODE(root.lstat().st_mode) == 0o755  # an existing safe root is used as it is
+    if case == "parent-of-a-link-target":
+        assert resolved_root == private / "scratch" and not (tmp_path / "scratch").exists()
+
+
+@pytest.mark.parametrize("unsafe", ["ancestor", "root"])
+def test_an_unsafe_default_scratch_root_refuses_without_falling_back(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, unsafe: str
+) -> None:
+    # The fallback covers only a default that cannot be created; an unsafe one must be fixed, not bypassed.
+    monkeypatch.delenv(gate.SCRATCH_ROOT_ENV, raising=False)
+    shared = tmp_path / "shared"
+    shared.mkdir(mode=0o755)
+    default = shared / "lu"
+    if unsafe == "ancestor":
+        shared.chmod(0o775)
+    else:
+        default.mkdir()
+        default.chmod(0o775)
+    monkeypatch.setattr(gate, "DEFAULT_SCRATCH_ROOT", default)
+    system_temp = tmp_path / "system-temp"
+    system_temp.mkdir(mode=0o700)
+    monkeypatch.setattr(gate.tempfile, "tempdir", str(system_temp))
+    state = tmp_path / "state"
+    state.mkdir()
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.pytest_temp_parent(state)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    assert UNSAFE_ANCESTRY["group-writable-ancestor"] in raised.value.detail
+    assert gate.SCRATCH_ROOT_ENV in raised.value.detail and str(tmp_path) not in raised.value.detail
+    assert not (system_temp / gate.FALLBACK_SCRATCH_DIRNAME).exists() and _gate_directories(tmp_path) == []
+    assert os.path.isdir(default) == (unsafe == "root")
 
 
 @pytest.mark.parametrize("default_usable", [True, False])
@@ -2729,7 +2938,7 @@ def test_pytest_temp_parent_follows_the_fleet_scratch_convention(
     default = tmp_path / "default" / "lu" if default_usable else blocker / "lu"
     monkeypatch.setattr(gate, "DEFAULT_SCRATCH_ROOT", default)
     system_temp = tmp_path / "system-temp"
-    system_temp.mkdir()
+    system_temp.mkdir(mode=0o700)
     monkeypatch.setattr(gate.tempfile, "tempdir", str(system_temp))
     states = [tmp_path / "state", tmp_path / "other-state"]
     for state in states:
