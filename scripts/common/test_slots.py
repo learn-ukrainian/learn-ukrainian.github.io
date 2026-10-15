@@ -11,8 +11,8 @@ at once. Files a dead process leaves behind are inert and the next waiter reaps 
 deleting one while a holder keeps it open would let a second holder lock a fresh inode.
 
 The pool is ``<fleet scratch root>/learn-ukrainian/test-slots-<uid>``. ``LU_SCRATCH_ROOT`` overrides the default
-``/var/tmp/lu``, as in ``scratch.py``. It is mode 0700 and owned by this user. It never falls back to a per-process
-temp directory, which would split the pool, and it never lies inside a Git checkout or Git directory.
+root (``DEFAULT_SCRATCH_ROOT``), as in ``scratch.py``. It is mode 0700 and owned by this user. It never falls back to
+a per-process temp directory, which would split the pool, and it never lies inside a Git checkout or Git directory.
 
 Environment:
   LU_TEST_SLOTS         on or off. Default on, except where ``CI`` is true, so CI runs are unchanged.

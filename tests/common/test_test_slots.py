@@ -423,6 +423,51 @@ def test_launcher_holds_slots_for_the_command_and_passes_its_exit_code() -> None
     assert test_slots.status()["slots_in_use"] == 0
 
 
+@pytest.mark.parametrize(("size", "concurrent"), [(3, False), (4, True)], ids=["pool_too_small", "pool_fits_both"])
+def test_two_concurrent_wrapped_runs_never_exceed_the_pool(tmp_path: Path, size: int, concurrent: bool) -> None:
+    """Two wrapped ``-n 2`` runs started together overlap only when the pool holds both of them."""
+    probe = textwrap.dedent(
+        """\
+        import json, sys, time
+        from pathlib import Path
+        from scripts.common import test_slots
+
+        own, other = Path(sys.argv[1]), Path(sys.argv[2])
+        Path(f"{own}.started").touch()
+        overlapped, deadline = False, time.monotonic() + 5
+        while time.monotonic() < deadline:
+            if Path(f"{other}.started").exists():
+                overlapped = not Path(f"{other}.done").exists()
+                break
+            time.sleep(0.02)
+        in_use = test_slots.status()["slots_in_use"]
+        own.write_text(json.dumps({"argv": sys.argv[3:], "overlapped": overlapped, "in_use": in_use}))
+        Path(f"{own}.done").touch()
+        """
+    )
+    first, second = tmp_path / "first", tmp_path / "second"
+    wrapped = [sys.executable, "-m", "scripts.common.test_slots", "run", "--", sys.executable, "-c", probe]
+    runs = [
+        subprocess.Popen(
+            [*wrapped, str(own), str(other), "-n", "2"],
+            cwd=REPO_ROOT,
+            env=_child_env(**{test_slots.COUNT_ENV: str(size)}),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        for own, other in ((first, second), (second, first))
+    ]
+    for run in runs:
+        _, stderr = run.communicate(timeout=60)
+        assert run.returncode == 0, stderr
+    results = [json.loads(path.read_text()) for path in (first, second)]
+    assert [result["argv"] for result in results] == [["-n", "2"], ["-n", "2"]]
+    assert all(result["in_use"] <= size for result in results)
+    assert any(result["overlapped"] for result in results) is concurrent
+    assert test_slots.status()["slots_in_use"] == 0
+
+
 def test_a_nested_launch_runs_inside_its_holders_slots() -> None:
     nested = [
         sys.executable,
