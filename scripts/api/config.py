@@ -87,24 +87,37 @@ def _read_manifest_levels(repo_root: Path | None = None) -> dict[str, Any] | Non
 
 def load_seminar_track_ids(repo_root: Path | None = None) -> set[str]:
     """Derive active seminar track IDs from curriculum.yaml manifest."""
-    levels = _read_manifest_levels(repo_root)
+    return _seminar_track_ids_from_levels(_read_manifest_levels(repo_root))
+
+
+def _seminar_track_ids_from_levels(levels: dict[str, Any] | None) -> set[str]:
     if levels is not None:
-        return {
-            track_id
-            for track_id, cfg in levels.items()
-            if isinstance(cfg, dict) and cfg.get("type") == "track"
-        }
+        return {track_id for track_id, cfg in levels.items() if isinstance(cfg, dict) and cfg.get("type") == "track"}
     # Fallback if manifest fails to load
     return {
-        "hist", "istorio", "bio", "lit", "lit-essay", "lit-hist-fic",
-        "lit-fantastika", "lit-war", "lit-humor", "lit-youth", "lit-drama",
-        "oes", "ruth", "folk",
+        "hist",
+        "istorio",
+        "bio",
+        "lit",
+        "lit-essay",
+        "lit-hist-fic",
+        "lit-fantastika",
+        "lit-war",
+        "lit-humor",
+        "lit-youth",
+        "lit-drama",
+        "oes",
+        "ruth",
+        "folk",
     }
 
 
 def load_levels(repo_root: Path | None = None) -> list[dict[str, str]]:
     """Derive active levels and tracks list from curriculum.yaml manifest."""
-    levels = _read_manifest_levels(repo_root)
+    return _levels_from_manifest(_read_manifest_levels(repo_root))
+
+
+def _levels_from_manifest(levels: dict[str, Any] | None) -> list[dict[str, str]]:
     if levels is not None:
         return [
             {
@@ -114,18 +127,16 @@ def load_levels(repo_root: Path | None = None) -> list[dict[str, str]]:
             }
             for track_id in levels
         ]
-    return [
-        {"id": k, "name": v, "path": k}
-        for k, v in _KNOWN_LEVEL_NAMES.items()
-    ]
+    return [{"id": k, "name": v, "path": k} for k, v in _KNOWN_LEVEL_NAMES.items()]
 
 
-
-# Levels configuration — derived from curriculum.yaml
-LEVELS = load_levels()
+# Share one manifest read during import; explicit helper calls stay fresh.
+_manifest_levels = _read_manifest_levels()
+LEVELS = _levels_from_manifest(_manifest_levels)
 
 # Seminar tracks (require Phase 0 research) — derived from curriculum.yaml
-SEMINAR_TRACK_IDS = load_seminar_track_ids()
+SEMINAR_TRACK_IDS = _seminar_track_ids_from_levels(_manifest_levels)
+del _manifest_levels
 
 # Batch state directory
 BATCH_STATE_DIR = Path(os.environ.get("LEARN_UKRAINIAN_BATCH_STATE_DIR", PROJECT_ROOT / "batch_state"))
