@@ -2295,3 +2295,24 @@ unsupported filesystems, unsafe ownership/modes and POSIX ACLs are refused. Cons
 contain only reason codes, record ids, component ids and hashed row keys. `verify` re-runs
 all gates against pinned inputs and compares every artifact byte; it does not certify D2/D3,
 training readiness or RB-1 delivery. No network calls or database writes are performed.
+
+### Issue readiness and daily counts
+
+- `scripts/ci/check_issue_task_quality.py`: `--issue NUMBER --repo OWNER/REPO
+  --strict --json` checks DoR, canonical stable-ID DoD structure and live
+  repository-qualified ancestry. `--body` and `--body-file` leave membership
+  unchecked. Unchecked ACs pass structure validation; closeout proof is separate.
+- `scripts/ci/comment_issue_task_quality.py`: issue-event entry point. Refetches
+  current data, reconciles the existing bot marker, and records observation time.
+- `scripts/orchestration/issue_quality_report.py`: prepares a daily counts-only
+  fleet report. `--publish --sender devops` publishes persisted bytes to the
+  epics channel. `--date YYYY-MM-DD` retries that day's immutable payload under
+  ignored `batch_state/reports/`. Unknown or truncated sources stay incomplete;
+  private issue data never enters the report. `scripts.publish read issue-count
+  --repo OWNER/REPO` is the fixed independent open-count reader.
+- `scripts/orchestration/install_issue_quality_report_timer.py`: `--check`
+  compares daily user units; `--apply` installs safely and reloads systemd;
+  `--apply --enable` also starts the timer. Run installation from the primary
+  checkout after approval, not from a dispatch worktree.
+
+See `docs/best-practices/task-quality.md` and issue #10565 for admission semantics.

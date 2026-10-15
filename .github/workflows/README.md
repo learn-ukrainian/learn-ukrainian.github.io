@@ -57,3 +57,16 @@ Use local machine-agent review via `scripts/delegate.py` instead.
 - **Agent cooperation:** `docs/best-practices/agent-cooperation.md`
 - **Workflow audit:** `docs/dev/GITHUB_WORKFLOWS_AUDIT.md`
 - **Stanza CI autopsy:** `docs/bug-autopsies/stanza-model-md5-flake.md`
+
+### Issue task quality
+
+`issue-task-quality.yml` runs only on issue opened/edited events. DevOps owns
+its single marker comment and non-overrideable structure/ancestry failures plus
+new-orphan feedback. It refetches the current issue and observes native ancestry
+once, at most eight parent reads. It never audits the full tree or retries body
+evidence. Dispatch owns full orphan and body-evidence classification. It is not
+a required code-PR check.
+Parent-link-only changes do not trigger Actions; dispatch rechecks live ancestry.
+A workflow in another repository can invoke the pinned public checkout's
+`.venv/bin/python -m scripts.ci.check_issue_task_quality --repo OWNER/REPO --issue NUMBER
+--strict --json`; the caller must install that checkout's pinned dependencies.
