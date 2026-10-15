@@ -5432,7 +5432,7 @@ function LexiconPracticeIsland({
               )}
               {selection ? (
                 <PracticeItem
-                    key={selection.cardKey}
+                    key={`${selection.cardKey}:${presentationSeq}`}
                     selection={selection}
                     deck={deck}
                     pairs={pairs}

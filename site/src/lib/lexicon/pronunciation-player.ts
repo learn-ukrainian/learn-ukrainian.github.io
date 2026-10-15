@@ -81,7 +81,9 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   let disposed = false;
   let audio: HTMLAudioElement | undefined;
   let isCdn = false;
-  let playing = false;
+  let phase: 'idle' | 'pending' | 'playing' = 'idle';
+  let audioUsed = false;
+  let audioSource = '';
   let hasError = false;
   let attempt = 0;
   let fallbackHandledAttempt = 0;
@@ -89,20 +91,23 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   const label = () => {
     const locale = copy() === COPY.en ? 'en' : 'uk';
     button.lang = status.lang = locale;
-    button.textContent = playing ? copy().stop : copy().play;
+    button.textContent = phase === 'playing' ? copy().stop : copy().play;
     status.textContent = hasError ? copy().error : '';
   };
   const stop = () => {
     attempt++;
     if (active === stop) active = undefined;
     if (utterance) {
-      utterance.onend = utterance.onerror = null;
+      utterance.onstart = utterance.onend = utterance.onerror = null;
       utterance = undefined;
       synthesis.cancel();
     }
-    audio?.pause();
-    if (audio) audio.currentTime = 0;
-    playing = false;
+    if (audio) {
+      audio.onended = audio.onpause = audio.onerror = null;
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    phase = 'idle';
     label();
   };
   const failed = () => {
@@ -123,11 +128,17 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     utterance = new SpeechSynthesisUtterance(spoken);
     utterance.lang = 'uk-UA';
     utterance.voice = voice;
+    utterance.onstart = () => {
+      if (disposed || current !== attempt) return;
+      phase = 'playing';
+      label();
+    };
     utterance.onend = () => {
       if (disposed || current !== attempt) return;
       utterance = undefined;
       if (active === stop) active = undefined;
-      playing = false;
+      attempt++;
+      phase = 'idle';
       label();
     };
     utterance.onerror = () => {
@@ -140,6 +151,13 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     if (fallbackHandledAttempt === current) return;
     fallbackHandledAttempt = current;
     if (fromCdnFallback) {
+      if (audio) {
+        audio.onended = audio.onpause = audio.onerror = null;
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      phase = 'pending';
+      label();
       speakWithSynthesis(current);
     } else {
       failed();
@@ -147,18 +165,43 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   };
   const click = async (event: Event) => {
     event.stopPropagation();
-    if (playing) { stop(); return; }
+    if (phase !== 'idle') { stop(); return; }
     active?.();
     active = stop;
     hasError = false;
-    playing = true;
+    phase = 'pending';
     label();
     const current = ++attempt;
     try {
       if (audio) {
-        audio.currentTime = 0;
-        await audio.play();
-        if (disposed || !playing || active !== stop) audio.pause();
+        if (audioUsed) {
+          // Media events carry no attempt ID; retries need their own native element.
+          audio.onended = audio.onpause = audio.onerror = null;
+          audio.removeAttribute('src');
+          audio.load();
+          audio = new Audio(audioSource);
+          audio.preload = 'none';
+        }
+        audioUsed = true;
+        const media = audio;
+        const finished = () => {
+          if (disposed || current !== attempt) return;
+          attempt++;
+          if (active === stop) active = undefined;
+          phase = 'idle';
+          label();
+        };
+        media.onended = finished;
+        media.onpause = () => { if (phase === 'playing' && media.paused) finished(); };
+        media.onerror = () => handlePlaybackFailure(current, isCdn);
+        media.currentTime = 0;
+        await media.play();
+        if (disposed || current !== attempt || active !== stop) {
+          media.pause();
+          return;
+        }
+        phase = 'playing';
+        label();
       } else {
         speakWithSynthesis(current);
       }
@@ -194,23 +237,18 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   status.textContent = '';
   button.addEventListener('click', click);
   button.addEventListener('keydown', keydown);
+  window.addEventListener('pagehide', stop);
+  document.addEventListener('astro:before-swap', stop);
   const localeObserver = new MutationObserver(label);
   localeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-chrome-locale'] });
   if (lemma) {
     const attachAudio = (file: string, fromCdn: boolean) => {
-      audio = new Audio(`${getAudioBase()}${file}`);
+      audioSource = `${getAudioBase()}${file}`;
+      audio = new Audio(audioSource);
       isCdn = fromCdn;
       audio.preload = 'none';
-      audio.onended = () => { attempt++; playing = false; label(); };
-      audio.onpause = () => { attempt++; playing = false; label(); };
       audio.onerror = () => {
-        if (fromCdn) {
-          if (playing) {
-            handlePlaybackFailure(attempt, true);
-          }
-        } else {
-          failed();
-        }
+        if (!fromCdn) failed();
       };
       label();
       button.hidden = false;
@@ -265,6 +303,8 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     }
     button.removeEventListener('click', click);
     button.removeEventListener('keydown', keydown);
+    window.removeEventListener('pagehide', stop);
+    document.removeEventListener('astro:before-swap', stop);
     localeObserver.disconnect();
     mounted.delete(root);
   };

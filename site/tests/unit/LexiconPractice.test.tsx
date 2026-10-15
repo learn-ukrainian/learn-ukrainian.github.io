@@ -1052,6 +1052,46 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
+  test('#10706 audio: actual Next cancels a same-item presentation without another review', async () => {
+    const { resetManifestCacheForTesting } = await import('@site/src/lib/lexicon/pronunciation-player');
+    resetManifestCacheForTesting();
+    const pause = vi.fn();
+    class AudioBoundary {
+      currentTime = 0;
+      preload = '';
+      play = vi.fn().mockResolvedValue(undefined);
+      pause = pause;
+      load = vi.fn();
+      removeAttribute = vi.fn();
+    }
+    vi.stubGlobal('Audio', AudioBoundary);
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => String(input).endsWith('manifest.json')
+      ? okJson({ schemaVersion: 1, entries: { 'книга': { file: `${'a'.repeat(64)}.wav` } } })
+      : notFoundResponse());
+    const view = render(<LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'flashcards')} autoStart initialMode="flashcards" />);
+    try {
+      const card = view.container.querySelector<HTMLElement>('[data-activity="flashcard"]')!;
+      await waitFor(() => expect(card).toBeVisible());
+      fireEvent.click(card);
+      fireEvent.click(view.container.querySelector<HTMLButtonElement>('[data-rate="again"]')!);
+      const answered = localStorage.getItem(SRS_STORAGE_KEY);
+      fireEvent.click(await screen.findByRole('button', { name: 'Послухати вимову' }));
+      await screen.findByRole('button', { name: 'Зупинити відтворення' });
+      pause.mockClear();
+      fireEvent.click(screen.getByTestId('practice-advance-button'));
+      await waitFor(() => expect(view.container.querySelector('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false'));
+      expect(pause).toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'Послухати вимову' })).toBeVisible();
+      expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe(answered);
+      expect(JSON.parse(answered!).reviews).toHaveLength(1);
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('1/');
+    } finally {
+      view.unmount();
+      vi.unstubAllGlobals();
+      resetManifestCacheForTesting();
+    }
+  });
+
   test('memoizes 10k curated-key membership checks instead of rebuilding their set', () => {
     const keys = Array.from({ length: 5_000 }, (_, index) => `Ключ-${index}`);
     const firstSet = getCachedLowercaseLemmaKeySet(keys);
