@@ -44,7 +44,12 @@ from practice_linguistic import (
     index_from_generator_candidates,
 )
 
-from scripts.practice_deck.io import PracticeDeckHydrationError, ensure_practice_deck_hydrated
+from scripts.practice_deck.io import (
+    DEFAULT_POINTER,
+    PracticeDeckHydrationError,
+    _pointer_file_map,
+    _validate_pointer,
+)
 
 
 @contextmanager
@@ -306,7 +311,7 @@ def _check_shard_meta(path: Path, payload: Any, *, level: str, kind: str, errors
     expected_schema = EXPECTED_SCHEMAS[kind]
     if payload.get("schema") != expected_schema:
         errors.append(f"{path}: schema {payload.get('schema')!r} != {expected_schema!r}")
-    if payload.get("schemaVersion") != 1:
+    if type(payload.get("schemaVersion")) is not int or payload.get("schemaVersion") != 1:
         errors.append(f"{path}: schemaVersion must be 1")
     if payload.get("level") != level:
         errors.append(f"{path}: level {payload.get('level')!r} != {level!r}")
@@ -379,27 +384,50 @@ def _check_level(
     *,
     lower_lexeme_ids: set[str] | None = None,
     linguistic_shards: dict[str, dict[str, Any]] | None = None,
+    pointer: dict[str, Any],
 ) -> dict[str, Any]:
     paths = {
         "index": practice_dir / f"practice-index.{level}.json",
         "lexemes": practice_dir / f"practice-lexemes.{level}.json",
         **{kind: practice_dir / f"practice-{kind}.{level}.json" for kind in MODE_SHARD_KINDS},
     }
-    shards = {
-        kind: _check_shard_meta(
-            path,
-            _read_json(path, errors),
-            level=level,
-            kind=kind,
-            errors=errors,
+    index = _check_shard_meta(
+        paths["index"], _read_json(paths["index"], errors), level=level, kind="index", errors=errors,
+    )
+    pinned = bool(pointer) and index.get("deckVersion") == pointer["deck_version"]
+    pinned_names = {entry["path"] for entry in pointer.get("files", []) if entry["level"] == level}
+    if pointer and f"practice-index.{level}.json" not in pinned_names:
+        errors.append(f"{DEFAULT_POINTER}: requested level {level} is not covered by pointer")
+    counts = index.get("counts")
+    counts = counts if isinstance(counts, dict) else {}
+    advertised = set()
+    for row in [index, *(index.get("items") if isinstance(index.get("items"), list) else [])]:
+        if isinstance(row, dict) and isinstance(row.get("modes"), list):
+            advertised.update(mode for mode in row["modes"] if isinstance(mode, str))
+    shards = {"index": index}
+    unavailable: set[str] = set()
+    for kind, path in paths.items():
+        if kind == "index":
+            continue
+        references = kind in advertised or any(
+            isinstance(counts.get(key), dict) and kind in counts[key]
+            for key in ("modeCounts", "modeCoverage")
         )
-        for kind, path in paths.items()
-    }
+        optional = kind in {"homonym", "imperative"} and (not pinned or path.name not in pinned_names)
+        if optional and not path.exists() and not references:
+            unavailable.add(kind)
+            warnings.append(f"{level} {kind} unavailable")
+            continue
+        if pinned and path.name not in pinned_names:
+            errors.append(f"{path}: not listed in pinned deck; file, counters and advertisements must all be absent")
+        shards[kind] = _check_shard_meta(
+            path, _read_json(path, errors), level=level, kind=kind, errors=errors,
+        )
 
     index_items = shards["index"].get("items")
     lexemes = shards["lexemes"].get("lexemes")
     cloze_items = shards["cloze"].get("cloze")
-    mode_items = {kind: shards[kind].get(MODE_BODY_KEYS[kind]) for kind in DRILL_MODES}
+    mode_items = {kind: shards[kind].get(MODE_BODY_KEYS[kind]) for kind in DRILL_MODES if kind not in unavailable}
     if not isinstance(index_items, list):
         errors.append(f"{paths['index']}: items must be a list")
         index_items = []
@@ -409,7 +437,7 @@ def _check_level(
     if not isinstance(cloze_items, list):
         errors.append(f"{paths['cloze']}: cloze must be a list")
         cloze_items = []
-    for kind in DRILL_MODES:
+    for kind in mode_items:
         if not isinstance(mode_items[kind], list):
             errors.append(f"{paths[kind]}: {MODE_BODY_KEYS[kind]} must be a list")
             mode_items[kind] = []
@@ -418,7 +446,7 @@ def _check_level(
         linguistic_shards[level] = {
             "lexemes": [item for item in lexemes if isinstance(item, dict)],
             "cloze": [item for item in cloze_items if isinstance(item, dict)],
-            **{kind: [item for item in mode_items[kind] if isinstance(item, dict)] for kind in DRILL_MODES},
+            **{kind: [item for item in mode_items[kind] if isinstance(item, dict)] for kind in mode_items},
         }
 
     if len(index_items) < min_lexemes:
@@ -554,6 +582,8 @@ def _check_level(
         errors.append(f"{paths['index']}: missing counts.modeCoverage")
         mode_coverage = {}
     for kind in MODE_SHARD_KINDS:
+        if kind in unavailable:
+            continue
         rows = cloze_items if kind == "cloze" else mode_items[kind]
         assert isinstance(rows, list)
         expected_count = len(rows)
@@ -562,18 +592,29 @@ def _check_level(
             if lexemes
             else 0.0
         )
-        if mode_counts.get(kind) != expected_count:
+        if type(mode_counts.get(kind)) is not int or mode_counts.get(kind) != expected_count:
             errors.append(f"{paths['index']}: counts.modeCounts.{kind} {mode_counts.get(kind)!r} != {expected_count!r}")
-        if mode_coverage.get(kind) != expected_mode_coverage:
+        if (
+            type(mode_coverage.get(kind)) not in (int, float)
+            or mode_coverage.get(kind) != expected_mode_coverage
+        ):
             errors.append(
                 f"{paths['index']}: counts.modeCoverage.{kind} "
                 f"{mode_coverage.get(kind)!r} != {expected_mode_coverage!r}"
             )
 
+    if not pinned:
+        for kind in MODE_SHARD_KINDS:
+            if kind in shards and shards[kind].get(MODE_BODY_KEYS[kind]) == []:
+                warnings.append(
+                    f"{level} {kind}: custom origin unknown; present-empty custom shard "
+                    "is not provenance evidence"
+                )
+
     if isinstance(mode_coverage, dict):
         for mode, threshold in THIN_WARN_THRESHOLDS.items():
-            cov = mode_coverage.get(mode, 0.0)
-            if cov < threshold:
+            cov = mode_coverage.get(mode)
+            if mode not in unavailable and type(cov) in (int, float) and cov < threshold:
                 warnings.append(f"{level} {mode} coverage {cov:.4f} is below thin-deck threshold {threshold:.2f}")
 
     return {
@@ -598,7 +639,9 @@ def _build_coverage(
             mode_coverage = {}
         cells: dict[str, dict[str, Any]] = {}
         for mode in COVERAGE_MODES:
-            ratio = float(mode_coverage.get(mode, 0.0))
+            if mode not in mode_coverage or type(mode_coverage[mode]) not in (int, float):
+                continue
+            ratio = float(mode_coverage[mode])
             threshold = THIN_WARN_THRESHOLDS.get(mode)
             cells[mode] = {
                 "ratio": ratio,
@@ -620,6 +663,9 @@ def _format_coverage_table(coverage: dict[str, Any]) -> str:
     for level, row in level_rows.items():
         cells = []
         for mode in modes:
+            if mode not in row:
+                cells.append(f"{'N/A':>9}")
+                continue
             cell = row[mode]
             label = f"{cell['pct']:5.1f}%"
             if cell["thin"]:
@@ -631,97 +677,26 @@ def _format_coverage_table(coverage: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _ensure_registered_mode_shards(
-    practice_dir: Path,
-    levels: tuple[str, ...],
-) -> None:
-    """Materialize empty fail-closed shards for modes registered in code but
-    not yet present in the hydrated release package (e.g. new antonym mode).
-    """
-    sample_index: dict[str, Any] | None = None
-    sample_mode: dict[str, Any] | None = None
-    for level in levels:
-        index_path = practice_dir / f"practice-index.{level}.json"
-        if index_path.is_file():
-            try:
-                sample_index = json.loads(index_path.read_text(encoding="utf-8"))
-            except json.JSONDecodeError:
-                sample_index = None
-            if isinstance(sample_index, dict):
-                break
-    for kind in DRILL_MODES:
-        if kind == "cloze":
-            continue
-        for level in levels:
-            path = practice_dir / f"practice-{kind}.{level}.json"
-            if path.is_file():
-                try:
-                    sample_mode = json.loads(path.read_text(encoding="utf-8"))
-                except json.JSONDecodeError:
-                    sample_mode = None
-                if isinstance(sample_mode, dict):
-                    break
-        if isinstance(sample_mode, dict):
-            break
-
-    deck_version = None
-    schema_version = 1
-    source = "hydrated"
-    if isinstance(sample_index, dict):
-        deck_version = sample_index.get("deckVersion")
-        schema_version = sample_index.get("schemaVersion", 1)
-        source = sample_index.get("source") or source
-    if isinstance(sample_mode, dict):
-        deck_version = sample_mode.get("deckVersion") or deck_version
-        schema_version = sample_mode.get("schemaVersion", schema_version)
-        source = sample_mode.get("source") or source
-
-    for level in levels:
-        for kind in DRILL_MODES:
-            body_key = MODE_BODY_KEYS[kind]
-            path = practice_dir / f"practice-{kind}.{level}.json"
-            if not path.is_file():
-                payload = {
-                    "deckVersion": deck_version,
-                    "level": level,
-                    body_key: [],
-                    "schema": EXPECTED_SCHEMAS[kind],
-                    "schemaVersion": schema_version,
-                    "sizeBudget": {
-                        "ok": True,
-                        "rawBytes": 0,
-                        "rawLimitBytes": 0,
-                        "gzipBytes": 0,
-                        "gzipLimitBytes": 0,
-                    },
-                    "source": source,
-                }
-                path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-            index_path = practice_dir / f"practice-index.{level}.json"
-            if not index_path.is_file():
-                continue
-            try:
-                index = json.loads(index_path.read_text(encoding="utf-8"))
-            except json.JSONDecodeError:
-                continue
-            if not isinstance(index, dict):
-                continue
-            counts = index.setdefault("counts", {})
-            if not isinstance(counts, dict):
-                continue
-            mode_counts = counts.setdefault("modeCounts", {})
-            mode_coverage = counts.setdefault("modeCoverage", {})
-            if not isinstance(mode_counts, dict) or not isinstance(mode_coverage, dict):
-                continue
-            changed = False
-            if kind not in mode_counts:
-                mode_counts[kind] = 0
-                changed = True
-            if kind not in mode_coverage:
-                mode_coverage[kind] = 0.0
-                changed = True
-            if changed:
-                index_path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+def _read_pointer(errors: list[str]) -> dict[str, Any]:
+    """Read the committed classifier without preparing or repairing inputs."""
+    pointer = _read_json(DEFAULT_POINTER, errors)
+    if not isinstance(pointer, dict):
+        errors.append(f"{DEFAULT_POINTER}: pointer must be an object")
+        return {}
+    try:
+        _validate_pointer(pointer, DEFAULT_POINTER)
+        if type(pointer["package_schema_version"]) is not int:
+            raise PracticeDeckHydrationError("pointer package_schema_version must be integer 1")
+        files = _pointer_file_map(pointer)
+        if not _has_text(pointer.get("deck_version")):
+            raise PracticeDeckHydrationError("pointer missing deck_version")
+        for name, metadata in files.items():
+            if name != f"practice-{metadata['kind']}.{metadata['level']}.json":
+                raise PracticeDeckHydrationError(f"pointer filename/metadata mismatch: {name}")
+    except PracticeDeckHydrationError as exc:
+        errors.append(f"{DEFAULT_POINTER}: invalid pointer: {exc}")
+        return {}
+    return pointer
 
 
 def _run_linguistic_pack(
@@ -827,16 +802,9 @@ def check_assets(
     error_corrections: Path | None = None,
     run_qa_gate: bool = False,
 ) -> dict[str, Any]:
-    if practice_dir == DEFAULT_PRACTICE_DIR:
-        try:
-            ensure_practice_deck_hydrated(practice_dir)
-        except PracticeDeckHydrationError as exc:
-            if "refusing to overwrite local practice deck" not in str(exc):
-                raise
-    _ensure_registered_mode_shards(practice_dir, levels)
-
     errors: list[str] = []
     warnings: list[str] = []
+    pointer = _read_pointer(errors)
     daily = _check_daily_pool(daily_pool, min_daily_pool_size, errors)
     reviewed = _reviewed_source_keys(reviewed_sources, errors)
     practice: dict[str, dict[str, Any]] = {}
@@ -854,6 +822,7 @@ def check_assets(
             warnings,
             lower_lexeme_ids=seen_lexeme_ids,
             linguistic_shards=linguistic_shards,
+            pointer=pointer,
         )
         seen_lexeme_ids |= set(row.pop("lexeme_ids", None) or ())
         practice[level] = row
@@ -897,8 +866,6 @@ def check_assets(
                 errors.append(f"practice_quality_gate [{cat}] {v.get('type')}: {v.get('message')}")
 
     coverage = _build_coverage(practice, levels)
-    for level_row in practice.values():
-        level_row.pop("mode_coverage", None)
 
     return {
         "ok": not errors,
@@ -930,7 +897,7 @@ def _print_summary(summary: dict[str, Any]) -> None:
     print(f"Deck versions: {', '.join(summary['deck_versions']) or 'none'}")
     print(f"Reviewed cloze source allowlist rows: {summary['reviewed_sources']}")
     for level, row in summary["practice"].items():
-        mode_counts = " ".join(f"{mode}={row.get(mode, 0)}" for mode in DRILL_MODES)
+        mode_counts = " ".join(f"{mode}={row.get(mode, 'N/A')}" for mode in DRILL_MODES)
         print(f"  {level}: index={row['index']} lexemes={row['lexemes']} cloze={row['cloze']} {mode_counts}")
     print(_format_coverage_table(summary["coverage"]))
 
@@ -938,12 +905,13 @@ def _print_summary(summary: dict[str, Any]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Validate hydrated Word Atlas daily and practice assets. "
-        "Run after generation or release hydration; this does not compile missing shards.",
+        "Run after explicit generation or release preparation; validates supplied files without writes.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
   %(prog)s
   %(prog)s --practice-dir site/public/lexicon --vesum-db data/vesum.db
-Outputs: summary or JSON on stdout; validates hydrated static practice assets and mode shards.
+Outputs: summary or JSON on stdout; warnings on stderr. No input or database writes.
+Preparation: .venv/bin/python -m scripts.practice_deck.io (separate I/O command).
 Exit codes: 0 valid; 1 validation failure; 2 invalid arguments.
 Related: generate_practice_deck.py; docs/practice/IMPERATIVE-PRACTICE-SPEC.md.
 """,
