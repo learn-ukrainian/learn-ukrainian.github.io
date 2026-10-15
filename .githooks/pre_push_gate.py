@@ -110,6 +110,9 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/tox.ini",
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
+    # Pytest's default norecursedirs skips node_modules; pyproject.toml sets testpaths = ["tests"].
+    # Its scripts-only pythonpath and conftest setup never add node_modules to the interpreter path.
+    ":(exclude,glob)**/node_modules/**",
 )
 # Pytest base temps live outside every Git checkout and Git directory (#10654), under the fleet scratch
 # root of scripts/common/scratch.py. The hook imports no project code, so it restates that convention.

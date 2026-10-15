@@ -1526,6 +1526,53 @@ def test_an_untracked_python_overlay_is_refused_before_execution(repo: Path, ign
     assert _receipts(repo) == []
 
 
+@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
+@pytest.mark.parametrize("directory", ["node_modules", "site/node_modules", "site/vendor/node_modules"])
+@pytest.mark.parametrize("filename", ["x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml"])
+def test_node_modules_overlays_do_not_block_the_scan(
+    repo: Path, ignored: bool, directory: str, filename: str
+) -> None:
+    relative = f"{directory}/katex/src/fonts/{filename}"
+    if ignored:
+        _write(repo, ".gitignore", f"/{relative}\n")
+        _commit(repo, "ignore dependency overlay", ".gitignore")
+    _write(repo, relative, "# dependency file\n")
+
+    assert gate.reject_untracked_inputs(repo) is None
+
+
+@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "site/katex/src/fonts/x.py",
+        "site/katex/src/fonts/x.pth",
+        "conftest.py",
+        "sitecustomize.py",
+        "tests/conftest.py",
+        "site/node_modules_extra/katex/src/fonts/x.py",
+        "site/node_modules_extra/katex/src/fonts/x.pth",
+        "site/not_node_modules/katex/src/fonts/x.py",
+        "site/not_node_modules/katex/src/fonts/x.pth",
+        "site/prefix_node_modules_suffix/katex/src/fonts/x.py",
+        "site/prefix_node_modules_suffix/katex/src/fonts/x.pth",
+    ],
+)
+def test_overlays_outside_exact_node_modules_directories_remain_refused(
+    repo: Path, ignored: bool, relative: str
+) -> None:
+    if ignored:
+        _write(repo, ".gitignore", f"/{relative}\n")
+        _commit(repo, "ignore validation overlay", ".gitignore")
+    _write(repo, relative, "# validation overlay\n")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert relative in raised.value.detail
+
+
 def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(repo: Path) -> None:
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green test", "tests/test_new.py")
