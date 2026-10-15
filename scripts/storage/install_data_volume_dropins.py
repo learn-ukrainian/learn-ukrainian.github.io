@@ -43,7 +43,7 @@ def main() -> int:
             "  .venv/bin/python "
             "scripts/storage/install_data_volume_dropins.py --apply\n"
             "Outputs: prints each target and complete rendered content; --apply writes "
-            "fourteen data-volume.conf files (mode 0644, replaced by rename) under the destination; "
+            "thirteen data-volume.conf files (mode 0644, replaced by rename) under the destination; "
             "a symlinked drop-in or a symlinked directory on the way to it is refused.\n"
             "Exit codes: 0 on success; 1 for an unsafe or failed write; 2 for "
             "invalid arguments.\n"
@@ -73,8 +73,8 @@ def main() -> int:
         parser.error("repository paths cannot contain whitespace or systemd percent specifiers")
 
     templates = sorted(TEMPLATE_ROOT.glob("*.service.d/data-volume.conf"))
-    if len(templates) != 14:
-        parser.error(f"expected fourteen drop-in templates, found {len(templates)}")
+    if len(templates) != 13:
+        parser.error(f"expected thirteen drop-in templates, found {len(templates)}")
     for template in templates:
         content = (
             template.read_text(encoding="utf-8")

@@ -4113,7 +4113,7 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     _set_http_mode(True)
     import uvicorn
 
-    # All-thread stack dump on SIGUSR1 for the hang watchdog (#10674).
+    # All-thread stack dump on SIGUSR1 for diagnosing a hung server (#10674).
     from scripts.rag.hang_diagnostics import install_signal_dump, resolve_dump_dir
 
     try:

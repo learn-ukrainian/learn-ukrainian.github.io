@@ -49,6 +49,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, TypeVar
 
+from scripts.rag.hang_diagnostics import SLOW_CALL_PREFIX, prune_dump_dir
+
 T = TypeVar("T")
 
 LOGGER_NAME = "sources.calls"
@@ -340,8 +342,7 @@ class CallGovernor:
             return None
         self._last_dump = now
         self._dumped.update(call_id for call_id, _tool, _age in slow)
-        # sources_watchdog.prune_dump_dir rotates these with the incidents.
-        path = self.dump_dir / f"slow-call-{datetime.now(UTC):%Y%m%dT%H%M%SZ}-pid{os.getpid()}.txt"
+        path = self.dump_dir / f"{SLOW_CALL_PREFIX}{datetime.now(UTC):%Y%m%dT%H%M%SZ}-pid{os.getpid()}.txt"
         with contextlib.suppress(OSError):
             self.dump_dir.mkdir(parents=True, exist_ok=True)
             fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
@@ -352,5 +353,8 @@ class CallGovernor:
                 handle.flush()
                 faulthandler.dump_traceback(file=handle, all_threads=True)
             self.logger.warning("slow_call_dump path=%s calls=%d", path.name, len(slow))
+            # The writer keeps the dump directory bounded.
+            with contextlib.suppress(OSError):
+                prune_dump_dir(self.dump_dir)
             return path
         return None
