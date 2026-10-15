@@ -6200,6 +6200,12 @@ describe('LexiconPractice', () => {
   });
 
   describe('Curated Deck & Custom Sets Automated UI Selection Tests', () => {
+    beforeEach(() => {
+      // initialDeck seeds practice state; the daily preview still fetches metadata.
+      const { fn } = mockShardFetch({});
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    });
+
     test('exposes the active deck above the fold without opening Sync & decks (#6544)', async () => {
       document.documentElement.dataset.chromeLocale = 'en';
       const user = userEvent.setup();
