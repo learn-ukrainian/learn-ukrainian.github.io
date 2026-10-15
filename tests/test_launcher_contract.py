@@ -102,7 +102,7 @@ def run_launcher(
     launch_env = os.environ.copy()
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
-    with TemporaryDirectory(prefix="launcher-manager-guard-") as guard:
+    with TemporaryDirectory(prefix="launcher-manager-guard-", dir=ensure_scratch_root()) as guard:
         contact = Path(guard) / "real-manager-contact"
         if not dry_run:
             # After the directories a test put ahead of the inherited PATH (its

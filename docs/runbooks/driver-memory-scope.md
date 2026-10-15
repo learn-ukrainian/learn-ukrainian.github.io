@@ -58,7 +58,8 @@ adds them exactly once.
 The entry helper verifies the unit against the launcher's validated mode; the
 replayed wrapper verifies it again against its own mode, provider and label.
 Typed refusals: `entrypoint-not-allowlisted` (a copy, alias or other script
-calling the shared core, which cannot be replayed), `entrypoint-mismatch` (a
+calling the shared core, which cannot be replayed; this includes an interactive
+Cursor session, which has no tracked wrapper), `entrypoint-mismatch` (a
 tracked name running another provider or mode), `mode-mismatch` and
 `identity-mismatch`.
 
@@ -81,9 +82,12 @@ the whole job.
 Known limits, each with a test or listed as untested: a terminal Ctrl-C reaches
 a driver's provider twice, once from the terminal and once from the supervisor
 shell (`test_driver_keyboard_interrupt_reaches_the_provider_exactly_once`,
-expected failure, owned by DevOps). A provider that suspends only its own process
-leaves the waiting launcher running, so the shell regains the terminal only on
-a second Ctrl-Z (untested with a real TUI).
+expected failure, owned by DevOps). A launcher started with INT ignored, such as
+a background job of a non-interactive script, cannot relay an INT sent to its
+own PID, because Bash does not trap a signal ignored on entry; the provider
+inherits the same disposition as with direct execution. A provider that
+suspends only its own process leaves the waiting launcher running, so the shell
+regains the terminal only on a second Ctrl-Z (untested with a real TUI).
 
 ## Nesting
 

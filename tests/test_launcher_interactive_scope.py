@@ -1022,15 +1022,21 @@ def test_interactive_terminal_signal_relays_once_without_a_foreground_terminal(t
     """A launcher with no terminal foreground group relays an INT sent only to it."""
     root, env = _checkout(tmp_path)
     env = {**env, "TEST_PROVIDER": env["TEST_SIGNAL_PROVIDER"]}
-    process = subprocess.Popen(
-        ["bash", str(root / "start-claude.sh")],
-        cwd=root,
-        env=env,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        start_new_session=True,
-    )
+    # A runner started as a background job ignores INT, and Bash cannot trap a
+    # signal ignored on entry: give the launcher a caller's default disposition.
+    original_handler = signal.signal(signal.SIGINT, signal.SIG_DFL)
+    try:
+        process = subprocess.Popen(
+            ["bash", str(root / "start-claude.sh")],
+            cwd=root,
+            env=env,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            start_new_session=True,
+        )
+    finally:
+        signal.signal(signal.SIGINT, original_handler)
 
     def alive() -> bool:
         assert process.poll() is None, f"launcher exited early with {process.returncode}"
