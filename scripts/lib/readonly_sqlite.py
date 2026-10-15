@@ -47,11 +47,18 @@ def open_readonly(
     isolation_level: str | None = "",
     immutable: bool = False,
 ) -> sqlite3.Connection:
-    """Open exactly path, read-only; refuse attachment of other databases.
+    """Open exactly path, read-only; refuse extensions and other databases.
 
     Optional settings preserve reader concurrency, transaction, and immutable
     side-artifact contracts. The caller owns closing the returned connection.
     URI strings are not filesystem paths and must be decoded by their owner.
+
+    SQLite's native attachment limit avoids Python callbacks on connections
+    shared across threads. ATTACH raises OperationalError ("too many attached
+    databases"); DETACH uses SQLite's own errors for main, temp, or absent names.
+    No additional database can be attached, so none can be detached. VACUUM INTO
+    is also refused by the attachment limit. Callers must preserve the limit
+    and avoid installing Python SQL callbacks on shared connections.
     """
     uri = Path(path).resolve().as_uri() + "?mode=ro"
     if immutable:
@@ -65,12 +72,9 @@ def open_readonly(
         settings["isolation_level"] = isolation_level
     conn = sqlite3.connect(uri, uri=True, **settings)
     try:
+        if hasattr(conn, "enable_load_extension"):
+            conn.enable_load_extension(False)
         conn.execute("PRAGMA query_only=ON")
-        # Refuse ATTACH with SQLite's own limit, never a Python callback: a
-        # callback runs while SQLite holds the connection mutex with the GIL
-        # released, so a connection shared across threads deadlocks against a
-        # thread that holds the GIL and waits for that mutex (#10674). With no
-        # attached database, DETACH has nothing to remove.
         conn.setlimit(sqlite3.SQLITE_LIMIT_ATTACHED, 0)
     except BaseException:
         conn.close()

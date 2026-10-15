@@ -11,6 +11,7 @@ import json
 import os
 import shutil
 import socket
+import string
 import subprocess
 import sys
 import tempfile
@@ -25,7 +26,7 @@ from types import SimpleNamespace
 import pytest
 import yaml
 
-from scripts.agent_runtime import runner
+from scripts.agent_runtime import attempt_boundary, env_sanitize, runner
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.attempt_boundary import (
     AttemptBoundary,
@@ -999,17 +1000,137 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
 DEFAULT_ACCOUNT_UUID = "00000000-0000-4000-8000-00000000000a"
 BOUND_ACCOUNT_UUID = "00000000-0000-4000-8000-00000000000b"
 CLAUDE_AMBIENT_AUTH = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN")
+ACCOUNT_ORG_UUIDS = {
+    DEFAULT_ACCOUNT_UUID: "00000000-0000-4000-8000-0000000000a0",
+    BOUND_ACCOUNT_UUID: "00000000-0000-4000-8000-0000000000b0",
+}
+# The organisation each fixture account's live profile reports (a consumer Max
+# plan); a test replaces or deletes an entry to model another plan.
+PROFILE_ORGANIZATIONS = {
+    account: {"uuid": organization, "organization_type": "claude_max"}
+    for account, organization in ACCOUNT_ORG_UUIDS.items()
+}
+# The inert user settings names a real second login carries (#10619), each with a
+# neutral placeholder value, never a real file's. The labelled allowlists admit
+# every one of them, alone or together.
+INERT_USER_SETTINGS = {
+    "modelSettings": {"fixture-placeholder-model": {"effortLevel": "low", "autoCompactWindow": 200000}},
+    "tui": "default",
+    "env": {"DISABLE_AUTO_COMPACT": "1"},
+}
+INERT_USER_SETTINGS_CASES = {
+    **{name: {name: value} for name, value in INERT_USER_SETTINGS.items()},
+    "together": INERT_USER_SETTINGS,
+}
+# Credential, endpoint, provider and unknown names that still refuse beside the
+# inert ones, including case variants of them (names match exactly).
+SETTINGS_REFUSED_BESIDE_INERT = {
+    "api_key_helper": {"apiKeyHelper": "fixture-placeholder-helper"},
+    "api_key": {"env": {"ANTHROPIC_API_KEY": "fixture-placeholder-" + "k" * 30}},
+    "endpoint": {"env": {"ANTHROPIC_BASE_URL": "https://fixture-placeholder.invalid"}},
+    "provider": {"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}},
+    "unknown_key": {"fixturePlaceholderSetting": "fixture-placeholder"},
+    "key_case_variant": {"AutoMode": {"allow": ["fixture-placeholder-allow"]}},
+    "env_case_variant": {"env": {"disable_auto_compact": "1"}},
+}
 
 
-def _private_json(path: Path, data: object) -> None:
+def inert_user_settings_with(extra: dict) -> dict:
+    """All the inert names plus ``extra``, whose ``env`` names join the inert one."""
+    return {**INERT_USER_SETTINGS, **extra, "env": {**INERT_USER_SETTINGS["env"], **extra.get("env", {})}}
+
+
+# ``autoMode`` is not inert (#10619): Claude Code 2.1.300's auto mode classifier
+# reads it from the user settings whatever ``--setting-sources`` says, and its
+# four rule lists become classifier policy. It refuses alone, with extra
+# endpoint or helper keys inside it, and beside the inert names.
+AUTO_MODE_LISTS = {key: [f"fixture-placeholder-{key}"] for key in ("allow", "soft_deny", "hard_deny", "environment")}
+AUTO_MODE_SETTINGS = {
+    "auto_mode": {"autoMode": AUTO_MODE_LISTS},
+    "auto_mode_with_endpoint_keys": {
+        "autoMode": {
+            **AUTO_MODE_LISTS,
+            "baseUrl": "https://fixture-placeholder.invalid",
+            "apiKeyHelper": "fixture-placeholder-helper",
+        }
+    },
+}
+AUTO_MODE_REFUSED = {
+    **AUTO_MODE_SETTINGS,
+    **{f"{case}_beside_inert_names": inert_user_settings_with(value) for case, value in AUTO_MODE_SETTINGS.items()},
+}
+
+
+def _private_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data))
+    path.write_text(text)
     path.chmod(0o600)
 
 
-def _credentials(path: Path, token: str) -> None:
-    oauth = {"accessToken": token, "refreshToken": "fixture-refresh-" + "r" * 30, "expiresAt": 4_102_444_800_000}
-    _private_json(path, {"claudeAiOauth": oauth})
+def _private_json(path: Path, data: object) -> None:
+    _private_text(path, json.dumps(data))
+
+
+# Committed synthetic Claude Code login files with obviously fake values.
+_LOGIN_FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "claude_login"
+
+
+def _credentials(path: Path, token: str, *, plan: str | None = "max") -> None:
+    """A login's credential file, filled in from the committed template.
+
+    ``token`` is the fixture access token and ``plan`` the subscription type
+    Claude Code stored with it (``None`` takes the template without one). As
+    in a real login, the record carries inference scope, which the installed
+    CLI needs before it reports a subscription login.
+    """
+    name = "credentials-with-plan" if plan is not None else "credentials-without-plan"
+    template = _LOGIN_FIXTURES / f"{name}.template.json"
+    _private_text(path, string.Template(template.read_text()).substitute(access_token=token, subscription_type=plan))
+
+
+def _login_identity(account_uuid: str) -> dict:
+    """The account record Claude Code keeps in a login's global config, with its organisation."""
+    return {"accountUuid": account_uuid, "organizationUuid": ACCOUNT_ORG_UUIDS[account_uuid]}
+
+
+def _machine_policy_text(relative: str, text: str) -> None:
+    path = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def _machine_policy_link() -> None:
+    root = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR
+    root.mkdir()
+    (root / "managed-settings.json").symlink_to(root / "absent-target")
+
+
+def _machine_policy_root_link() -> None:
+    root = env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR
+    root.with_name("machine-policy-target").mkdir()
+    root.symlink_to(root.with_name("machine-policy-target"), target_is_directory=True)
+
+
+# Machine-level policy Claude Code 2.1.300 reads on Linux, all under its one
+# machine policy root (synthetic here; see _mock_selected_account_runtime):
+# managed settings, which may name a policyHelper program whose output becomes
+# policy, their drop-ins, managed MCP servers, a managed CLAUDE.md and managed
+# rules. Presence alone refuses a labelled account (#10619), whatever it holds,
+# and so does a root that is not a plain directory.
+MACHINE_POLICY = {
+    "managed_settings": lambda: _machine_policy_text("managed-settings.json", "{}"),
+    "policy_helper": lambda: _machine_policy_text(
+        "managed-settings.json", json.dumps({"policyHelper": {"path": "/fixture/policy-helper", "timeoutMs": 3000}})
+    ),
+    "drop_in": lambda: _machine_policy_text("managed-settings.d/50-fixture.json", "{}"),
+    "drop_in_directory": lambda: (env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR / "managed-settings.d").mkdir(parents=True),
+    "managed_mcp": lambda: _machine_policy_text("managed-mcp.json", json.dumps({"mcpServers": {}})),
+    "managed_memory": lambda: _machine_policy_text("CLAUDE.md", "fixture\n"),
+    "managed_rules": lambda: _machine_policy_text(".claude/rules/fixture.md", "fixture\n"),
+    "dangling_link": _machine_policy_link,
+    "root_is_a_file": lambda: env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR.write_text("{}", encoding="utf-8"),
+    "root_is_a_link": _machine_policy_root_link,
+}
 
 
 def _mock_selected_account_runtime(tmp_path, monkeypatch):
@@ -1026,11 +1147,19 @@ def _mock_selected_account_runtime(tmp_path, monkeypatch):
         return info
 
     monkeypatch.setattr(os, "fstat", checked_stat)
+    # A synthetic machine policy root, absent unless a test writes policy there,
+    # on a host that is not WSL unless a test says so (#10619).
+    monkeypatch.setattr(env_sanitize, "_CLAUDE_MANAGED_SETTINGS_DIR", tmp_path / "machine-policy")
+    monkeypatch.setattr(attempt_boundary, "_CLAUDE_PROC_VERSION", tmp_path / "proc-version")
+    for name in ("WSL_DISTRO_NAME", "WSL_INTEROP"):
+        monkeypatch.delenv(name, raising=False)
     calls = []
     identities = {}
 
-    class ProfileConnection:
-        def __init__(self, host, *, timeout):
+    # A subclass, so urllib still finds the class attributes its default HTTPS
+    # handler reads when another caller builds its first opener.
+    class ProfileConnection(http.client.HTTPSConnection):
+        def __init__(self, host, *, timeout):  # no socket is ever opened
             assert host == "api.anthropic.com" and timeout == 10
 
         def request(self, method, path, *, headers):
@@ -1039,10 +1168,11 @@ def _mock_selected_account_runtime(tmp_path, monkeypatch):
             calls.append(self.selected)
 
         def getresponse(self):
-            return SimpleNamespace(
-                status=200,
-                read=lambda _limit: json.dumps({"account": {"uuid": identities[self.selected]}}).encode(),
-            )
+            account = identities[self.selected]
+            profile = {"account": {"uuid": account}}
+            if account in PROFILE_ORGANIZATIONS:
+                profile["organization"] = PROFILE_ORGANIZATIONS[account]
+            return SimpleNamespace(status=200, read=lambda _limit: json.dumps(profile).encode())
 
         def close(self):
             pass
@@ -1073,7 +1203,7 @@ def two_accounts(world, tmp_path, monkeypatch):
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
     accounts.config_dir.mkdir(mode=0o700)
     _credentials(accounts.config_dir / ".credentials.json", accounts.bound_token)
-    _private_json(accounts.config_dir / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _private_json(accounts.config_dir / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
     _private_json(
         accounts.binding,
         {
@@ -1096,19 +1226,20 @@ def test_selected_material_must_match_bound_identity(two_accounts):
 def test_selected_directory_swap_cannot_redirect_use(two_accounts, monkeypatch):
     from scripts.agent_runtime import attempt_boundary as module
 
-    original = module._claude_config_account_uuid
+    # The selected directory's global config is read through the held descriptor (#10619).
+    original = module._checked_login_global_config
     swapped = False
 
-    def swap_after_login_read(path, **kwargs):
+    def swap_after_login_read(directory, account_uuid):
         nonlocal swapped
-        result = original(path, **kwargs)
-        if not swapped and (kwargs.get("dir_fd") is not None or path.parent == two_accounts.config_dir):
+        result = original(directory, account_uuid)
+        if not swapped:
             swapped = True
             two_accounts.config_dir.rename(two_accounts.config_dir.with_name("checked-config"))
             two_accounts.config_dir.symlink_to(two_accounts.home / ".claude")
         return result
 
-    monkeypatch.setattr(module, "_claude_config_account_uuid", swap_after_login_read)
+    monkeypatch.setattr(module, "_checked_login_global_config", swap_after_login_read)
     assert module.linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
     assert swapped
 
@@ -1264,6 +1395,18 @@ def test_complete_preflight_rechecks_selected_state_at_use(two_accounts):
         linux_claude_auth("b")
 
 
+@pytest.mark.parametrize("organization_type", ["claude_team", "claude_enterprise", None])
+def test_sealed_attempt_refuses_an_account_outside_the_consumer_plans(two_accounts, monkeypatch, organization_type):
+    """Held-out (#10619): a labelled account is admitted only on a consumer plan, at the sealed boundary too."""
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    organization = {"uuid": ACCOUNT_ORG_UUIDS[BOUND_ACCOUNT_UUID], "organization_type": organization_type}
+    monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
+
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_plan_unsupported$"):
+        linux_claude_auth("b")
+
+
 def test_default_claude_account_keeps_legacy_selection(two_accounts, monkeypatch):
     from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
@@ -1388,6 +1531,97 @@ def test_second_claude_account_refuses_conflicting_sources(two_accounts, monkeyp
         assert value not in rendered
 
 
+@pytest.mark.parametrize("case", sorted(INERT_USER_SETTINGS_CASES))
+def test_second_claude_account_admits_inert_user_settings_names(two_accounts, case):
+    """The sealed boundary admits the inert user settings names a real second login carries (#10619).
+
+    On 4e1f252ca7 each of these refused with
+    ``claude_account_settings_credential_source``.
+    """
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    _private_json(two_accounts.config_dir / "settings.json", INERT_USER_SETTINGS_CASES[case])
+
+    assert linux_claude_auth("b") == {"CLAUDE_CODE_OAUTH_TOKEN": two_accounts.bound_token}
+
+
+@pytest.mark.parametrize("case", sorted(SETTINGS_REFUSED_BESIDE_INERT))
+def test_second_claude_account_refuses_a_credential_source_beside_inert_names(two_accounts, case):
+    """Beside the inert names, a key, helper, endpoint, provider or unknown name still refuses, value-free."""
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    _private_json(
+        two_accounts.config_dir / "settings.json", inert_user_settings_with(SETTINGS_REFUSED_BESIDE_INERT[case])
+    )
+
+    with pytest.raises(ReviewIsolationError) as refused:
+        linux_claude_auth("b")
+
+    assert str(refused.value) == "claude_account_settings_credential_source"
+    rendered = repr(refused.value) + str(refused.value.__cause__) + str(refused.value.__context__)
+    assert "fixture" not in rendered and str(two_accounts.config_dir) not in rendered
+    assert two_accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("case", sorted(AUTO_MODE_REFUSED))
+def test_second_claude_account_refuses_auto_mode(two_accounts, case):
+    """The sealed boundary refuses user settings carrying ``autoMode``, value-free (#10619).
+
+    On d183ad934b this was admitted, although the classifier reads it whatever
+    the setting sources.
+    """
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    _private_json(two_accounts.config_dir / "settings.json", AUTO_MODE_REFUSED[case])
+
+    with pytest.raises(ReviewIsolationError) as refused:
+        linux_claude_auth("b")
+
+    assert str(refused.value) == "claude_account_settings_credential_source"
+    rendered = repr(refused.value) + str(refused.value.__cause__) + str(refused.value.__context__)
+    assert "fixture" not in rendered and str(two_accounts.config_dir) not in rendered
+    assert two_accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("entry", sorted(MACHINE_POLICY))
+def test_second_claude_account_refuses_a_host_with_machine_policy(two_accounts, entry):
+    """Held-out (#10619): any machine policy source refuses the labelled account, at a sealed attempt too.
+
+    On f8dce2b219 every case returned the bound token.
+    """
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    assert linux_claude_auth("b")  # positive control: no machine policy
+    two_accounts.profile_calls.clear()
+    MACHINE_POLICY[entry]()
+
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_machine_policy_present$"):
+        linux_claude_auth("b")
+    assert two_accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("marker", ["WSL_DISTRO_NAME", "WSL_INTEROP", "Microsoft", "WSL2"])
+def test_second_claude_account_refuses_wsl(two_accounts, monkeypatch, tmp_path, marker):
+    """Held-out (#10619): under WSL Claude Code also reads Windows machine policy, which is not enumerable here.
+
+    WSL is what the CLI takes it for: either variable set, or a kernel string naming it.
+    """
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    assert linux_claude_auth("b")  # positive control: a plain Linux kernel string
+    (tmp_path / "proc-version").write_text("Linux version 6.0.0-fixture\n", encoding="utf-8")
+    assert linux_claude_auth("b")
+    two_accounts.profile_calls.clear()
+    if marker.startswith("WSL_"):
+        monkeypatch.setenv(marker, "fixture")
+    else:
+        (tmp_path / "proc-version").write_text(f"Linux version 6.0.0-fixture-{marker}-standard\n", encoding="utf-8")
+
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_platform_unsupported$"):
+        linux_claude_auth("b")
+    assert two_accounts.profile_calls == []
+
+
 def test_attempt_boundary_authenticates_claude_seat_as_the_labelled_account(world, tmp_path, two_accounts, monkeypatch):
     root, _ = world
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "claude", review_access="full")
@@ -1473,3 +1707,143 @@ def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, 
     assert result.stderr_excerpt == "attempt_read_unsafe_path"
     assert sentinel not in repr(result)
     assert observed and not observed[0].workspace.exists()
+
+
+# The fleet-wide default account file (#10619 PR1c): read once at dispatch, fail closed.
+def _default_file(tmp_path: Path, monkeypatch, content: bytes, *, mode: int = 0o600) -> Path:
+    path = tmp_path / "operator-config" / "claude-default-account"
+    path.parent.mkdir(exist_ok=True)
+    path.write_bytes(content)
+    path.chmod(mode)
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
+    return path
+
+
+@pytest.mark.parametrize(
+    "content,label",
+    [(b"b", "b"), (b"b\n", "b"), (b"  a\r\n", "a"), (b"\tb \n\n", "b"), (b"", None), (b" \n", None)],
+)
+def test_default_account_file_names_one_label_or_none(tmp_path, monkeypatch, content, label):
+    from scripts.agent_runtime.attempt_boundary import read_claude_default_account
+
+    _default_file(tmp_path, monkeypatch, content)
+    assert read_claude_default_account() == label
+
+
+def test_default_account_file_may_be_readable_by_others(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import read_claude_default_account
+
+    _default_file(tmp_path, monkeypatch, b"b\n", mode=0o644)
+    assert read_claude_default_account() == "b"
+
+
+def test_default_account_file_lives_in_the_user_config_directory(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import claude_default_account_file, read_claude_default_account
+
+    monkeypatch.delenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", raising=False)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg"))
+    expected = tmp_path / "xdg" / "learn-ukrainian" / "claude-default-account"
+    assert claude_default_account_file() == expected
+    assert read_claude_default_account() is None  # absent
+    monkeypatch.setenv("XDG_CONFIG_HOME", "relative")
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    assert claude_default_account_file() == tmp_path / "home" / ".config" / "learn-ukrainian" / "claude-default-account"
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
+    assert claude_default_account_file() is None
+
+
+def test_dispatch_resolution_prefers_explicit_then_file_then_builtin(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_dispatch_claude_account
+
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(tmp_path / "absent"))
+    assert resolve_dispatch_claude_account(None) == ("a", "builtin")
+    path = _default_file(tmp_path, monkeypatch, b"b\n")
+    assert resolve_dispatch_claude_account(None) == ("b", "default-file")
+    assert resolve_dispatch_claude_account("a") == ("a", "explicit")
+    path.write_bytes(b"c")
+    assert resolve_dispatch_claude_account("b") == ("b", "explicit")  # the file is not read
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        resolve_dispatch_claude_account(None)
+    assert refused.value.code == "claude_account_default_file_invalid"
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        resolve_dispatch_claude_account("c")
+    assert refused.value.code == "claude_account_unknown"
+
+
+def test_default_file_refusal_names_no_value_or_location(tmp_path, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, read_claude_default_account
+
+    path = _default_file(tmp_path, monkeypatch, b"fixture-secretish-content\n")
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        read_claude_default_account()
+    rendered = (
+        repr(refused.value) + str(refused.value) + repr(refused.value.__cause__) + repr(refused.value.__context__)
+    )
+    assert "fixture-secretish" not in rendered
+    assert str(path) not in rendered
+
+
+def test_new_default_file_and_record_codes_are_registered():
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES
+
+    assert {
+        "claude_account_record_conflict",
+        "claude_account_forward_unsupported",
+        *(
+            f"claude_account_default_file_{failure}"
+            for failure in ("unavailable", "not_private", "oversized", "invalid")
+        ),
+    } <= CLAUDE_ACCOUNT_REFUSAL_CODES
+
+
+def test_sealed_attempt_selection_records_a_verified_receipt(two_accounts):
+    """The sealed boundary's verified selection of the bound credential is this run's receipt."""
+    from scripts.agent_runtime.attempt_boundary import (
+        claude_account_auth_receipt,
+        linux_claude_auth,
+        reset_claude_account_receipts,
+    )
+
+    reset_claude_account_receipts()
+    assert claude_account_auth_receipt("b", source="explicit")["verified"] is False
+    linux_claude_auth("b")
+    assert claude_account_auth_receipt("b", source="explicit") == {
+        "label": "b",
+        "source": "explicit",
+        "method": "bound_account_token",
+        "verified": True,
+    }
+    reset_claude_account_receipts()
+    assert claude_account_auth_receipt("b", source="explicit")["verified"] is False
+
+
+def test_receipt_is_shared_by_both_import_names_of_the_binding_module():
+    """The worker imports ``scripts.agent_runtime``; the runner loads the same files as ``agent_runtime``."""
+    import agent_runtime.attempt_boundary as short_name
+    import scripts.agent_runtime.attempt_boundary as canonical
+
+    canonical.reset_claude_account_receipts()
+    short_name.note_claude_account_verified("b", "subscription_login")
+    assert canonical.claude_account_auth_receipt("b", source="default-file")["verified"] is True
+    short_name.reset_claude_account_receipts()
+    assert canonical.claude_account_auth_receipt("b", source="default-file")["verified"] is False
+
+
+def test_receipt_carries_only_fixed_vocabulary():
+    from scripts.agent_runtime.attempt_boundary import (
+        claude_account_auth_receipt,
+        note_claude_account_verified,
+        reset_claude_account_receipts,
+    )
+
+    reset_claude_account_receipts()
+    with pytest.raises(AssertionError):
+        note_claude_account_verified("b", "fixture-token-value")
+    with pytest.raises(AssertionError):
+        note_claude_account_verified("a", "subscription_login")
+    assert claude_account_auth_receipt("a", source="not-a-source") == {
+        "label": "a",
+        "source": None,
+        "method": "host_login",
+        "verified": False,
+    }

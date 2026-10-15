@@ -36,6 +36,23 @@ phases (CEFR → relations → leaf chunks) with a resumable ledger.
 
 Bare invocation and `--help` never start a multi-hour run (#5393 class).
 
+## Paradigm stress gate (#9331, #9820)
+
+Before it marks the run complete or writes the candidate, the engine audits
+every entry it would write with
+`scripts/lexicon/validate_paradigm_stress.py` (each stored accent must match
+the lemma + tag authority; each display accent must hold for every modern
+reading of that spelling in the full VESUM paradigm, not only the capped
+rows). Any disagreement refuses the run: the summary event carries
+`error: paradigm_stress_disagreement` with the counts under
+`paradigm_stress`, the CLI exits 3, no candidate is written and the ledger
+run stays incomplete. `finalize.py` repeats the audit on sealed artifacts
+before it assembles a publication tree. Audit a candidate by hand with:
+
+```bash
+.venv/bin/python -m scripts.lexicon.validate_paradigm_stress --manifest candidate-enriched.json
+```
+
 ## VPS recipe (run-20k, post-reduce)
 
 Assumes fetch + reduce already completed under `$ATLAS_RUN_ROOT/run-20k`:

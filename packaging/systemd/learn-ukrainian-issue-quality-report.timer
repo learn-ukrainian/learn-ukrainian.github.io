@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily issue readiness counts
+
+[Timer]
+OnCalendar=*-*-* 07:00:00 UTC
+Persistent=true
+RandomizedDelaySec=300
+Unit=learn-ukrainian-issue-quality-report.service
+
+[Install]
+WantedBy=timers.target

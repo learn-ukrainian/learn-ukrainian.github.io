@@ -1311,6 +1311,25 @@ Parses `review/*-review.md` to extract `Overall Score: X/10` and `Status: PASS|F
 
 ---
 
+### `GET /api/state/routing-budget` — per-account Claude rows
+
+`agents.claude` remains the default-account lane, and every routing decision still reads only that lane. Two additive top-level keys give the per-account view (#10630):
+
+```bash
+curl -s http://localhost:8765/api/state/routing-budget | jq '{claude_accounts, preferred_claude_account}'
+```
+
+- `claude_accounts` — one row per registered label (`claude:a`, `claude:b`). Each row has `session5h` and `weekly` objects with `left_pct`, `resets_at`, `pace`, `pace_delta_pct` and `leftover_pct`, plus `updated`, `age_s`, `stale`, `status` (`ok` | `stale` | `unknown`) and `reason` (a failure code or `null`). `left_pct` is `100 - used`. `leftover_pct` is the share projected to remain at reset if the current pace continues: `round(100 - used * 100 / expected)` clamped to 0–100, where `expected` is CodexBar's expected-used percentage for the elapsed part of the window. `0` means the account runs out before reset. `pace_delta_pct` is `used - expected`, and `pace` is derived from it (`N% in deficit`, `N% in reserve` or `on pace`); CodexBar's own pace text is never passed through. `updated` and `resets_at` are UTC ISO-8601 timestamps parsed from CodexBar's values. A value that cannot be measured is `null`, never `0`. Rows carry no identity: no email, organization, account id or directory.
+- `preferred_claude_account` — the label with the strictly larger weekly `leftover_pct` when every row is `ok`; otherwise `null`, including ties and unknown rows. It is a display hint only. A snapshot past the stale threshold publishes `null`.
+
+Label `a` is the host's default Claude directory, bound to the account recorded at login beside it. Other labels use the private account binding, whose directory must hold the bound account; a missing or refused binding makes only that row `unknown`. The background usage refresh runs one bounded CodexBar probe per label: no shell, the fixed query `codexbar usage --json --provider claude --source oauth`, a 60 s timeout, a 1 MiB output cap, and the whole process group killed before the probe returns. The child sees only the label's Claude directory plus a fresh private home, cache and data location with no CodexBar configuration, so a shared configuration, token account or cache cannot pick another account; an answer from any other source is refused. The request path never starts a probe and never opens, reads or parses a file.
+
+Freshness is computed on every response, including responses served from the routing-budget cache: `age_s` runs from the measured state's timestamp (CodexBar's `updatedAt`, else the probe start, never later than the probe). A row is `ok` only while that age is below the CodexBar cache TTL and no later probe failed; otherwise it is `stale` (`reason` is the failure code or `expired`).
+
+Attribution: a row is `ok` only on positive proof that it measured the bound account; a wrong or unproven account's numbers are withheld, never published `ok` (the label is accounting and display, not isolation against a hostile process of the same user). The proof is the provider's answer for the access token the label's directory holds, the token CodexBar's OAuth source reads: its owner must be the bound account (the account recorded at login for `a`). Login metadata, CodexBar's own identity fields and two labels merely differing are not proof. A directory without credentials, with expired, unreadable or unsafe credentials, or whose owner the provider does not confirm gives `claude_account_credentials_*`, `claude_account_identity_unavailable` or `claude_account_unverified`; `a` with no recorded account gives `claude_account_unverified`. The probe holds the label's validated directory open throughout; label `a`'s directory must be a real directory, not a link. After the probe the binding is validated again and must keep the same generation (directory identity and bound account), and credentials rewritten during the probe must be proven the bound account's too, or the sample is refused. An account id CodexBar names must be the bound account (`claude_account_unverified` otherwise); its other identity fields are only compared across labels. Each sample keeps its generation, private fingerprints of its account and the stat facts of every file its validation read (type, device and inode; for files also mode, owner, size and change times); none of them is published or logged. Serving only compares those facts with `lstat`: any difference makes the row `unknown` with `reason` `not_probed` and schedules one background revalidation, never a probe. The revalidation reads the binding, the login record and, only when they changed, asks the provider about the credentials again; it re-arms the sample when the binding keeps its generation, and otherwise forgets it, so the row then shows `not_probed` for a reassigned binding or replaced directory, or the refusal code for a removed or refused binding. When two served samples measure the same account, one names its account and the other does not, or one cannot be identified, both rows are `unknown` with `reason` `account_ambiguous`. Other `reason` codes: `not_probed`, `expired`, `missing_binary`, `spawn_error`, `timeout`, `oversized`, `exit_nonzero`, `bad_json`, `provider_mismatch`, `provider_error`, `source_mismatch`, `no_usage`, `out_of_range` (a used or expected percentage outside 0–100), `bad_timestamp`, `sandbox_unavailable` (no private probe directory could be made under the fleet scratch root: a missing, linked, shared, Git-contained or unwritable root, or an existing `account-usage-probe` directory below it that is not this user's own real directory with mode exactly 0700, which is refused, never repaired; the probe never falls back to the system temp directory), `probe_error`, and the `claude_account_*` binding refusals. A probe directory that cannot be removed afterwards is logged without a path and counted; the row is unaffected.
+
+---
+
 ### `GET /api/state/issues[?track=x&severity=critical]`
 
 Aggregated outstanding issues from review files + audit failures.
@@ -3738,6 +3757,48 @@ HTTP status, and aggregate counts.
 feature truth independently. Their failure never changes
 `recall.available`, task disposition, or any canonical GitHub/Fleet/Monitor
 state. Cache age and `stale` are returned explicitly.
+
+## Host test slots — `/api/ops/v1/test-slots`
+
+`GET /api/ops/v1/test-slots` is the read-only view of the host test-slot pool that worker pytest runs and
+the pre-push gate share (#10662; runbook: [`docs/runbooks/test-slots.md`](runbooks/test-slots.md)). It
+returns the same object as `.venv/bin/python -m scripts.common.test_slots status --json`
+(schema `test-slots.status.v1`):
+
+- `enabled`, `pool_size`, `wait_timeout_s`, `location` (`default` or `override`), `pool_exists`;
+- `slots_in_use`, `slots_free`, `queue_depth`, `longest_wait_s`;
+- `holders`: `task_id`, `kind` (`gate`, `pytest` or `launcher`), `pid`, `requested`, `slots`, `held_s`,
+  `waited_s`;
+- `queue`, in FIFO order: `position`, `task_id`, `kind`, `pid`, `requested`, `waiting_s`;
+- `error`: `null`, or a typed `reason` and a path-free `detail`. A malformed setting or an unusable pool
+  still returns 200 with this field set.
+
+Liveness is `flock`, read live per request, so a crashed holder disappears at once. The response never
+names a path, and the route never creates or changes pool files.
+
+```bash
+curl -s http://localhost:8765/api/ops/v1/test-slots | python3 -m json.tool
+```
+
+---
+
+## High-load samples — `/api/ops/v1/load-samples`
+
+`GET /api/ops/v1/load-samples?limit=50` returns `load-samples.v1` with `samples` and `error`.
+The limit is 1–500; invalid values return 422. Samples are oldest first, each with:
+
+- `timestamp`: UTC ISO 8601;
+- `load_averages`: 1-, 5- and 15-minute load;
+- `top_processes`: at most five `{name, cpu_percent}` records, sorted by CPU usage;
+- `top_cpu_percent`: summed CPU usage of those processes, with one CPU equal to 100%;
+- `test_slots`: `{holders: [{task_id, slots}], enabled, error}` from the governor.
+
+The existing Monitor periodic collector samples only above `LU_LOAD_SAMPLE_THRESHOLD` (default 20),
+at most once per 60 seconds, and retains 500 lines in ignored runtime state. Process CPU usage uses
+a shared 0.1-second observation interval. It never collects arguments, paths, environments or PIDs.
+Malformed command names become `unknown`. Reads never trigger collection or create files.
+Missing state returns an empty list; unreadable state returns `error: "load_samples_unavailable"`.
+See [High-load attribution](runbooks/test-slots.md#high-load-attribution) for configuration and limits.
 
 ---
 

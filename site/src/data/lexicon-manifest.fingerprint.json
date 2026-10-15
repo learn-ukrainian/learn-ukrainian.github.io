@@ -183,7 +183,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "6bcd257bf2ec323ba2ab5489c8a6530434d896a593b6b68989959e400ff0fd6a"
+        "sha256": "179b72310415a3026a3308b83bf149f4da8268dd6db2ef1e1a89ab51a131ada4"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -310,6 +310,10 @@
         "sha256": "01c479a7a7ed929366dcc2c0953990c9804bcbd42b67ce88ee27bb81b3398118"
       },
       {
+        "path": "scripts/lexicon/paradigm_stress.py",
+        "sha256": "d90ba4741caba7a396931b1c7fc6f8f1322f8b1b6081466ce0b4fc887c7d1eb3"
+      },
+      {
         "path": "scripts/lexicon/park_thin_entries.py",
         "sha256": "a2a66448e73ee2f9a2077f84c13158ed75051ffe881ae7be5b3ee2494f8b6b7b"
       },
@@ -396,6 +400,10 @@
       {
         "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
         "sha256": "8a1139cebf07450ff880540840cd77d00fba6c017fe1e3781952580767d137dc"
+      },
+      {
+        "path": "scripts/lexicon/validate_paradigm_stress.py",
+        "sha256": "a4e6123fcab6456d5a1bccbe057fd69c8720db30480c84758796d0b034d68570"
       },
       {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",

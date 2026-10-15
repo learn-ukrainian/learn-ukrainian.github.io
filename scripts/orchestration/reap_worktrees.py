@@ -56,6 +56,7 @@ from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
+from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.path_safety import assert_delete_target
@@ -2078,12 +2079,10 @@ def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | N
             rows = cur.fetchall()
             for _row_tid, row_pid in rows:
                 if row_pid is not None and int(row_pid) > 0:
-                    try:
-                        os.kill(int(row_pid), 0)
-                        return f"active write claim task-id={task_id}"
-                    except (ProcessLookupError, ValueError):
-                        pass
-                    except PermissionError:
+                    record = _task_record(repo_root, task_id) or {"pid": int(row_pid)}
+                    if record.get("pid") != int(row_pid):
+                        record = {"pid": int(row_pid)}
+                    if worker_liveness(record) is not False:
                         return f"active write claim task-id={task_id}"
         finally:
             conn.close()
@@ -2112,26 +2111,10 @@ def _task_record_status(repo_root: Path, task_id: str | None) -> str | None:
 
 
 def _task_pid_alive(payload: dict[str, Any] | None) -> bool:
-    """Return True only when task JSON names a live process."""
-    if not payload:
+    """Protect workers whose identity is live or unknown; pid-less records use status."""
+    if not payload or not payload.get("pid"):
         return False
-    raw_pid = payload.get("pid")
-    if raw_pid is None:
-        return False
-    try:
-        pid = int(raw_pid)
-    except (TypeError, ValueError):
-        return False
-    if pid <= 0:
-        return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        # Exists but not signalable by this user — treat as live.
-        return True
-    return True
+    return worker_liveness(payload) is not False
 
 
 def _activity_reason(
@@ -3406,13 +3389,7 @@ def _pid_proven_absent(record: dict[str, Any]) -> bool:
     pid = record.get("pid")
     if isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0:
         return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return True
-    except OSError:
-        return False
-    return False
+    return worker_liveness(record) is False
 
 
 def _needs_finalize_claim_identity(record: dict[str, Any]) -> _ClaimIdentity | None:

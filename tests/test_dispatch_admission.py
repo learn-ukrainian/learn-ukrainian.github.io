@@ -547,3 +547,114 @@ def test_invalid_env_file_value_is_refused(tmp_path):
     env_file.write_text(f"{adm.ENV_MAX_LIVE_WRITE_WORKERS}=many\n", encoding="utf-8")
     with pytest.raises(ValueError, match="is not a whole number"):
         adm.load_thresholds({adm.ENV_ADMISSION_FILE: str(env_file)})
+
+
+# --- Host test-slot queue (#10662) -----------------------------------------------------------
+
+
+@pytest.fixture
+def slot_pool(tmp_path, monkeypatch):
+    """A private one-slot pool; an outer governed run's holder marker must not leak in."""
+    from scripts.common import test_slots
+
+    monkeypatch.setenv(test_slots.ENABLE_ENV, "on")
+    monkeypatch.setenv(test_slots.DIR_ENV, str(tmp_path / "test-slots"))
+    monkeypatch.setenv(test_slots.COUNT_ENV, "1")
+    monkeypatch.delenv(test_slots.HOLDER_ENV, raising=False)
+    return test_slots
+
+
+def test_a_long_test_slot_queue_refuses_a_write_worker(tmp_path, probe, monkeypatch):
+    monkeypatch.setattr(adm, "probe_test_slots", lambda: adm.SlotQueueProbe(depth=5, pool_size=14))
+    limits = adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "4"})
+
+    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=limits)
+
+    assert not decision.admitted
+    [failure] = decision.failures
+    assert failure == "test-slot queue 5 is longer than 4 waiting runs (DISPATCH_MAX_TEST_SLOT_QUEUE=4)"
+    record = decision.to_record()
+    assert (record["test_slot_queue_depth"], record["max_test_slot_queue"]) == (5, 4)
+    assert record["test_slot_queue_skipped"] is None
+
+
+def test_a_queue_at_the_limit_is_admitted_and_reported(tmp_path, probe, monkeypatch):
+    monkeypatch.setattr(adm, "probe_test_slots", lambda: adm.SlotQueueProbe(depth=4, pool_size=14))
+
+    decision = adm.evaluate(
+        "workspace-write", tmp_path / "tasks", thresholds=adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "4"})
+    )
+
+    assert decision.admitted
+    assert "test-slot queue 4 (limit 4, pool 14)" in decision.summary()
+
+
+def test_the_real_test_slot_queue_is_counted(tmp_path, probe, slot_pool):
+    import subprocess
+    import sys
+
+    from tests.wait_helpers import wait_for_line
+
+    repo = Path(__file__).resolve().parents[1]
+    log = tmp_path / "waiter.log"
+    with slot_pool.acquire(1, kind="pytest"):
+        env = {k: v for k, v in os.environ.items() if k != slot_pool.HOLDER_ENV}
+        env["PYTHONPATH"] = str(repo)
+        with log.open("w", encoding="utf-8") as stderr:
+            waiter = subprocess.Popen(
+                [sys.executable, "-m", "scripts.common.test_slots", "run", "--", sys.executable, "-c", "pass"],
+                cwd=repo,
+                env=env,
+                stderr=stderr,
+            )
+        try:
+            wait_for_line(log, stop_if=lambda: waiter.poll() is not None)
+            strict = adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "0"})
+            decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=strict)
+        finally:
+            waiter.terminate()
+            waiter.wait(timeout=30)
+
+    assert not decision.admitted
+    assert decision.failures == (
+        "test-slot queue 1 is longer than 0 waiting runs (DISPATCH_MAX_TEST_SLOT_QUEUE=0)",
+    )
+
+
+@pytest.mark.parametrize(("setting", "clause"), [("off", "pool disabled"), ("maybe", "invalid_configuration")])
+def test_a_disabled_or_unreadable_pool_skips_the_queue_check_and_says_why(tmp_path, probe, slot_pool, monkeypatch, setting, clause):
+    monkeypatch.setenv(slot_pool.ENABLE_ENV, setting)
+
+    decision = adm.evaluate(
+        "workspace-write", tmp_path / "tasks", thresholds=adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "0"})
+    )
+
+    assert decision.admitted
+    assert f"test-slot queue check skipped ({clause}" in decision.summary()
+    assert clause in decision.to_record()["test_slot_queue_skipped"]
+
+
+def test_test_slot_queue_threshold_defaults_to_config_and_rejects_invalid_values():
+    from scripts import config
+
+    assert adm.load_thresholds({}).max_test_slot_queue == config.DISPATCH_MAX_TEST_SLOT_QUEUE == 4
+    assert adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "2"}).max_test_slot_queue == 2
+    with pytest.raises(ValueError, match=adm.ENV_MAX_TEST_SLOT_QUEUE):
+        adm.load_thresholds({adm.ENV_MAX_TEST_SLOT_QUEUE: "many"})
+
+
+def test_read_only_dispatch_does_not_read_the_test_slot_pool(tmp_path, monkeypatch):
+    monkeypatch.setattr(adm, "probe_test_slots", lambda: pytest.fail("read-only must not read the slot pool"))
+
+    assert adm.evaluate("read-only", tmp_path / "tasks").admitted
+
+
+def test_healthy_test_host_never_reads_the_real_test_slot_pool(tmp_path, probe, monkeypatch):
+    monkeypatch.delenv(adm.test_slots.DIR_ENV, raising=False)
+    monkeypatch.setattr(adm.test_slots, "status", lambda *_a, **_k: pytest.fail("real slot pool read"))
+
+    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
+
+    assert decision.admitted
+    assert decision.slots is not None and decision.slots.skipped == "test host"
+    assert "test-slot queue check skipped (test host)" in decision.summary()

@@ -19,6 +19,9 @@ def _features(row: dict) -> set[str]:
         atoms.update(grammar.tags)
     # Additional entry POS labels not mapped by the forms parser.
     labels = {
+        # Common gender (суддя, голова 'chair'): a noun without a gender, so the
+        # entry joins both the masculine and feminine VESUM analyses.
+        "іменник чоловічого або жіночого роду": ("noun",),
         "сполучник": ("conj",),
         "займенник": ("noun", "pron"),
         "прізвище": ("noun", "prop"),

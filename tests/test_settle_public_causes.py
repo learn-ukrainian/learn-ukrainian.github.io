@@ -185,7 +185,9 @@ def test_settle_default_reason_shows_registered_code(tmp_path, monkeypatch, caps
             path, state, pid_alive=lambda _pid: False
         )
         assert changed
-    # dead-crashed is settled by cmd_status -> _mark_crashed_task.
+    # Healing is explicit; status only renders the persisted public cause.
+    if writer == "dead-crashed":
+        delegate._heal_dead_task(path, state, source="wait")
     assert delegate.cmd_status(argparse.Namespace(task_id=writer, run_nonce=None)) == 0
     shown = json.loads(capsys.readouterr().out)
     expected = "worktree_missing_at_settle" if writer == "missing-worktree" else "worker_process_dead"

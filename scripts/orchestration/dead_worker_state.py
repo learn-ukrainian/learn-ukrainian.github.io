@@ -14,6 +14,136 @@ from typing import Any
 from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
 from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
 
+PROC_ROOT = Path("/proc")
+INITIAL_PID_NAMESPACE = f"pid:[{0xEFFFFFFC}]"
+
+
+def _pid_namespace(process: str = "self") -> str | None:
+    try:
+        namespace = str((PROC_ROOT / process / "ns" / "pid").readlink())
+    except OSError:
+        return None
+    if namespace.startswith("pid:[") and namespace.endswith("]") and namespace[5:-1].isdigit():
+        return namespace
+    return None
+
+
+def _process_stat(process: str) -> tuple[int, int]:
+    """Read PID and field 22, allowing spaces and parentheses in comm."""
+    text = (PROC_ROOT / process / "stat").read_text(encoding="ascii")
+    return int(text.split("(", 1)[0]), int(text.rsplit(")", 1)[1].split()[19])
+
+
+def _proc_pid_namespace() -> str | None:
+    """Confirm the initial PID view, or identify the procfs view's PID 1.
+
+    In a nested namespace numeric PIDs can coincide with the outer view;
+    equality with getpid() alone is insufficient evidence there.
+    """
+    try:
+        namespace = _pid_namespace()
+        if namespace == INITIAL_PID_NAMESPACE and _process_stat("self")[0] == os.getpid():
+            return namespace
+    except (OSError, ValueError, IndexError):
+        return None
+    namespace = _pid_namespace("1")
+    return namespace if namespace and namespace.startswith("pid:[") else None
+
+
+def capture_worker_identity(pid: int, *, self_process: bool = False) -> dict[str, Any]:
+    """Capture identity on launch and again in the worker, before provider execution.
+
+    A nested procfs cannot supply a host PID. Preserve its namespace explicitly
+    and leave host_pid unknown; never relabel a namespace-local PID as a host PID.
+    With host procfs, /proc/self/stat supplies the worker's host PID even when
+    getpid() returns a nested-namespace PID.
+    """
+    recorder = _pid_namespace()
+    view = _proc_pid_namespace()
+    start = None
+    namespace = recorder
+    if self_process or (recorder is not None and recorder == view):
+        try:
+            pid, start = _process_stat("self" if self_process else str(pid))
+            namespace = view
+        except (OSError, ValueError, IndexError):
+            pass
+    return {
+        "pid": pid,
+        "host_pid": pid if namespace == INITIAL_PID_NAMESPACE else None,
+        "start_time": start,
+        "pid_namespace": namespace,
+        "recorder_pid_namespace": recorder,
+    }
+
+
+def worker_liveness(
+    record: dict[str, Any], *, pid_alive: Callable[[int], bool] | None = None
+) -> bool | None:
+    """Return alive, proven dead, or unknown. Only False permits terminalization.
+
+    Legacy records have no namespace provenance. Only a confirmed initial
+    namespace reader retains their signal-0 behavior. This accepted migration
+    residual is limited to records in flight at deployment, owned by the infra
+    driver. Identity records require
+    the same PID view and readable start time; PID reuse is proof of death.
+    Foreign workers remain UNKNOWN even after exit; the infra driver must add
+    namespace-independent launch-unit/cgroup evidence before they can be healed.
+    """
+    raw_pid = record.get("pid")
+    if isinstance(raw_pid, bool) or not isinstance(raw_pid, (int, str)):
+        return None
+    try:
+        pid = int(raw_pid)
+    except (ValueError, TypeError):
+        return None
+    if pid <= 0:
+        return None
+    namespace = _pid_namespace()
+    view = _proc_pid_namespace()
+    identity = record.get("worker_identity")
+    if identity is not None:
+        if (
+            not isinstance(identity, dict)
+            or namespace is None
+            or namespace != view
+            or identity.get("pid_namespace") != namespace
+            or identity.get("pid") != pid
+        ):
+            return None
+        try:
+            actual_pid, start = _process_stat(str(pid))
+        except FileNotFoundError:
+            if (PROC_ROOT / str(pid)).exists():
+                return None
+            # hidepid can omit a live process in this very namespace. Confirm
+            # absence with signal-0 only after proving the PID view above.
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                return False
+            except OSError:
+                return None
+            return None
+        except (OSError, ValueError, IndexError):
+            return None
+        if type(identity.get("start_time")) is not int:
+            return None
+        return actual_pid == pid and start == identity["start_time"]
+    if namespace != INITIAL_PID_NAMESPACE or view != namespace:
+        return None
+    try:
+        if pid_alive is not None:
+            return pid_alive(pid)
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError:
+        return None
+    return True
+
 
 @contextmanager
 def task_state_lock(path: Path) -> Iterator[None]:
@@ -77,7 +207,9 @@ def mark_dead_worker_terminal(
             or current.get("run_nonce") != observed.get("run_nonce")
             or current.get("pid") != observed.get("pid")
             or current.get("started_at") != observed.get("started_at")
-            or (pid is not None and pid_alive(pid))
+            or (pid is not None and worker_liveness(current, pid_alive=pid_alive) is not False)
+            or (pid is None and worker_liveness({"pid": os.getpid()}) is None)
+            or (pid is None and current.get("worker_identity") is not None)
         ):
             return current, False
         prior_status = current["status"]
@@ -217,7 +349,9 @@ def mark_missing_worktree_failed(
         if (
             worktree is None
             or worktree.is_dir()
-            or (pid is not None and pid_alive(pid))
+            or (pid is not None and worker_liveness(current, pid_alive=pid_alive) is not False)
+            or (pid is None and worker_liveness({"pid": os.getpid()}) is None)
+            or (pid is None and current.get("worker_identity") is not None)
             or current.get("status") in TERMINAL_TASK_STATUSES
             or current.get("status") == "needs_finalize"
             or current.get("run_nonce") != observed.get("run_nonce")

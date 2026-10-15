@@ -15,6 +15,11 @@ A run that cannot finish (admission wait, time budget, tooling error) is
 driver decides, and nothing is retried or reported green.  Importer-closure
 selection runs afterwards in shadow only; it is recorded and never blocks.
 
+Before pytest starts, the gate takes host test slots from the pool worker pytest runs share
+(``scripts/common/test_slots.py``, #10662) and runs no more test processes than it holds. The wait
+for slots is bounded, recorded apart as ``slot_wait_s``, and spends neither the stage allowance nor
+the run budget.
+
 Receipts are bound to the commit, its tree, the range, the registry digest and
 the gate version, and are ignored once the tree is dirty or any of those
 change.  ``git push --no-verify`` remains the explicit operator bypass.
@@ -46,7 +51,18 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 5  # 5: per-stage execution allowances (#10642)
+GATE_VERSION = 7  # 7: inherited thread caps for the pytest stage (#10716)
+# Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
+# tests/test_pre_push_gate.py checks table and behavior parity.
+THREAD_CAPS = {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "ORT_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "RAYON_NUM_THREADS": "1",
+}
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -60,7 +76,12 @@ STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 SHADOW_BUDGET_S = 120.0
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
-ADMISSION_WAIT_S = RUN_BUDGET_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
+# The host test-slot governor (#10662), loaded by path from this gate's own checkout: it is stdlib-only.
+TEST_SLOTS_MODULE = "scripts/common/test_slots.py"
+# The longest wait for host test slots before pytest. It spends neither the stage allowance nor the run
+# budget; LU_TEST_SLOTS_WAIT_S can only shorten it.
+TEST_SLOT_WAIT_S = STAGE_BUDGET_S
+ADMISSION_WAIT_S = RUN_BUDGET_S + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
 # Each predecessor gets one complete gate allowance. The ceiling of ten allowances covers a burst of
 # ten predecessors, while bounding overload or a stuck holder. Environment overrides only shorten it.
 ADMISSION_MAX_WAIT_S = 10 * ADMISSION_WAIT_S
@@ -101,6 +122,12 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
 )
+# Pytest base temps live outside every Git checkout and Git directory (#10654), under the fleet scratch
+# root of scripts/common/scratch.py. The hook imports no project code, so it restates that convention.
+SCRATCH_ROOT_ENV = "LU_SCRATCH_ROOT"
+DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
+FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
+SCRATCH_LINK_LIMIT = 40  # links followed while verifying a scratch root, as Linux's MAXSYMLINKS
 
 
 class GateOutcome(Exception):
@@ -136,6 +163,22 @@ class Plan:
 
     def __post_init__(self) -> None:
         self.node_ids = dedupe_node_ids((*self.registry_nodes, *self.changed_tests))
+
+
+def apply_thread_caps(env: dict[str, str]) -> dict[str, str]:
+    """Copy the shared test-thread policy without importing project code (#10716)."""
+    result = dict(env)
+    if env.get("LU_TEST_THREAD_CAP", "").strip().lower() == "off":
+        return result
+    for name, cap in THREAD_CAPS.items():
+        if cap != "false" and name in env:
+            try:
+                if env[name].isascii() and env[name].isdecimal() and 0 < int(env[name]) <= int(cap):
+                    continue
+            except ValueError:
+                pass
+        result[name] = cap
+    return result
 
 
 def clean_environment() -> dict[str, str]:
@@ -267,12 +310,52 @@ def outgoing_base(update: Update, root: Path) -> str:
     return base
 
 
+def is_regenerable_dependency_input(path: str, *, root: Path, tracked: set[str]) -> bool:
+    """Restate scripts/fleet/regenerable_output.py's dependency-directory predicate.
+
+    The hook stays stdlib-only. Keep this in parity with is_regenerable_ignored_path:
+    walk through the first node_modules, then require its tracked, local regular
+    sibling package-lock.json. Like the reaper, do not traverse dependency contents.
+    """
+    relative = Path(path)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or ".venv" in relative.parts
+        or "node_modules" not in relative.parts
+        or relative.as_posix() in tracked
+    ):
+        return False
+    current = root
+    try:
+        for index, part in enumerate(relative.parts):
+            current /= part
+            status = current.lstat()
+            if not (stat.S_ISDIR(status.st_mode) or stat.S_ISREG(status.st_mode)):
+                return False
+            if part == "node_modules" and stat.S_ISDIR(status.st_mode):
+                lock = Path(*relative.parts[:index]) / "package-lock.json"
+                return lock.as_posix() in tracked and stat.S_ISREG((root / lock).lstat().st_mode)
+    except OSError:
+        return False
+    return False
+
+
 def reject_untracked_inputs(root: Path) -> None:
     """Refuse when untracked or ignored Python/config files could change the run but not the receipt."""
     listing = git_ok("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
     if listing is None:
         raise GateOutcome("state_unavailable", "cannot list untracked validation inputs", incomplete=True)
-    overlays = sorted(path for path in listing.split("\0") if path)
+    candidates = [path for path in listing.split("\0") if path]
+    tracked: set[str] = set()
+    if any("node_modules" in Path(path).parts for path in candidates):
+        tracked_listing = git_ok("ls-files", "-z", "--cached", cwd=root)
+        if tracked_listing is None:
+            raise GateOutcome("state_unavailable", "cannot list tracked dependency inputs", incomplete=True)
+        tracked = set(tracked_listing.split("\0"))
+    overlays = sorted(
+        path for path in candidates if not is_regenerable_dependency_input(path, root=root, tracked=tracked)
+    )
     if overlays:
         shown = ", ".join(overlays[:10]) + (f" (+{len(overlays) - 10} more)" if len(overlays) > 10 else "")
         raise GateOutcome(
@@ -702,7 +785,9 @@ class ResourceScope:
         self, plan: Plan, config: str, deadline: float, event: dict[str, object], *, stage_budget_s: float
     ) -> None:
         assert self.stream is not None and self.channel is not None
-        self.channel.settimeout(max(0.01, deadline - time.monotonic()) + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S)
+        self.channel.settimeout(
+            max(0.01, deadline - time.monotonic()) + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
+        )
         packet = {
             "plan": {name: value for name, value in vars(plan).items() if name != "node_ids"},
             "root": str(self.root),
@@ -1048,12 +1133,19 @@ def terminate_run(process: subprocess.Popen[str], token: str) -> bool:
 
 
 def run_bounded(
-    command: list[str], *, cwd: Path, deadline: float, label: str, diagnostics: dict[str, object] | None = None
+    command: list[str],
+    *,
+    cwd: Path,
+    deadline: float,
+    label: str,
+    diagnostics: dict[str, object] | None = None,
+    extra_env: dict[str, str] | None = None,
 ) -> tuple[int, str]:
     """Run in its own process group; on budget exhaustion kill the group and report incomplete.
 
     Output goes to a file, never a pipe, so a descendant that outlives the command cannot block the
     gate on a pipe it still holds.  Every exit path then kills the run's leftover descendants.
+    ``extra_env`` adds variables to the cleaned environment, such as the test-slot holder marker.
     """
     remaining = deadline - time.monotonic()
     if remaining <= 0:
@@ -1063,7 +1155,7 @@ def run_bounded(
             "validation_incomplete", f"{label}: time budget exhausted before start (timeout)", incomplete=True
         )
     token = uuid.uuid4().hex
-    environment = {**clean_environment(), RUN_TOKEN_ENV: token}
+    environment = {**clean_environment(), **(extra_env or {}), RUN_TOKEN_ENV: token}
     if diagnostics is not None:
         diagnostics["child_unavailable_reason"] = "output_file_unavailable"
     with tempfile.TemporaryFile() as sink:
@@ -1195,9 +1287,11 @@ def test_process_limit() -> int:
         ) from None
 
 
-def parallel_options(dist: str = "loadfile") -> list[str]:
-    """Use configured parallelism when available, scheduled by xdist mode ``dist``."""
+def parallel_options(dist: str = "loadfile", cap: int | None = None) -> list[str]:
+    """Use configured parallelism when available, scheduled by xdist mode ``dist``, at most ``cap`` processes."""
     limit = test_process_limit()
+    if cap is not None:
+        limit = min(limit, cap)
     if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
     if os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip():
@@ -1218,6 +1312,307 @@ def pytest_invocations(plan: Plan) -> tuple[tuple[tuple[str, ...], str], ...]:
     return tuple((nodes, dist) for nodes, dist in ((distributed, "worksteal"), (grouped, "loadfile")) if nodes)
 
 
+def inside_git_tree(path: Path) -> bool:
+    """Whether ``path`` or an ancestor is a Git checkout or a Git directory, as Git discovery finds them.
+
+    A checkout has a ``.git`` entry (directory or gitfile). A Git directory, bare or not, holds
+    ``HEAD``, ``objects`` and ``refs``. An ancestor that cannot be inspected counts as inside.
+    """
+
+    def present(entry: Path) -> bool:
+        try:
+            entry.lstat()
+        except (FileNotFoundError, NotADirectoryError):
+            return False
+        return True
+
+    try:
+        return any(
+            present(directory / ".git") or all(present(directory / name) for name in ("HEAD", "objects", "refs"))
+            for directory in (path, *path.parents)
+        )
+    except OSError:
+        return True
+
+
+def private_directory(path: Path) -> int:
+    """Create ``path`` with mode 0700 if missing and open it without following a link.
+
+    Requires a real directory owned by this user, closed to others, and returns its descriptor for the
+    caller to close.
+    """
+    try:
+        path.mkdir(mode=0o700, exist_ok=True)
+        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError as error:
+        raise GateOutcome(
+            "pytest_temp_unavailable",
+            f"cannot create a private pytest base temp directory ({errno.errorcode.get(error.errno, 'error')}); "
+            f"set {SCRATCH_ROOT_ENV} to a writable directory outside every Git checkout",
+            incomplete=True,
+        ) from None
+    info = os.fstat(fd)
+    if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
+        os.close(fd)
+        raise GateOutcome(
+            "pytest_temp_unavailable",
+            "the pytest base temp directory is not private to this user (owner or mode); remove it and push again",
+            incomplete=True,
+        )
+    return fd
+
+
+def scratch_root_refusal(problem: str) -> GateOutcome:
+    """Refuse the push as incomplete over the scratch root, naming the problem's class but never a path."""
+    return GateOutcome(
+        "pytest_temp_unavailable",
+        f"the pytest base temp root {problem}; set {SCRATCH_ROOT_ENV} to a private directory (yours, mode 0700) "
+        "outside every Git checkout",
+        incomplete=True,
+    )
+
+
+def unsafe_scratch_component(info: os.stat_result) -> str | None:
+    """Name the class of a directory or link another user could replace or redirect, or ``None`` if safe.
+
+    Only this user and root are trusted. A directory writable by group or others is safe only when it is
+    sticky, as the system temp directories are: there only an entry's owner can rename or replace it.
+    """
+    kind = "link" if stat.S_ISLNK(info.st_mode) else "directory"
+    if info.st_uid not in (0, os.geteuid()):
+        return f"a {kind} owned by another user"
+    if kind == "directory" and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH) and not info.st_mode & stat.S_ISVTX:
+        return "a directory writable by group or others without the sticky bit"
+    return None
+
+
+def verified_scratch_root(candidate: Path) -> Path:
+    """Resolve ``candidate`` one component at a time from ``/``, verify each, and create what is missing.
+
+    Every directory passed must be safe (``unsafe_scratch_component``), and every link must be owned by
+    this user or root and is followed only into a target that passes the same checks. So no other user
+    can redirect the returned link-free path; same-user changes are outside the gate's trust model
+    (#10654). Missing components are created with mode 0700 below the verified part, after the Git
+    check, and verified again. Raises ``GateOutcome`` for an unsafe or in-Git root, else ``OSError``
+    when the root cannot be inspected or created.
+    """
+
+    def verify(info: os.stat_result) -> None:
+        if not (stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+            raise NotADirectoryError(errno.ENOTDIR, "a scratch root component is not a directory")
+        problem = unsafe_scratch_component(info)
+        if problem is not None:
+            raise scratch_root_refusal(f"or one of its ancestors is {problem}, so another user could redirect it")
+
+    current = Path("/")
+    verify(os.lstat(current))
+    pending, missing, links = list(reversed((Path.cwd() / candidate).parts[1:])), [], 0
+    while pending:
+        part = pending.pop()
+        if part == "..":
+            if missing:
+                missing.pop()
+            else:
+                current = current.parent  # an ancestor of a verified directory, so verified itself
+            continue
+        if missing:
+            missing.append(part)
+            continue
+        try:
+            info = os.lstat(current / part)
+        except FileNotFoundError:
+            missing.append(part)
+            continue
+        verify(info)
+        if not stat.S_ISLNK(info.st_mode):
+            current = current / part
+            continue
+        links += 1
+        if links > SCRATCH_LINK_LIMIT:
+            raise scratch_root_refusal("passes through a link loop")
+        target = Path(os.readlink(current / part))
+        if target.is_absolute():
+            current = Path("/")
+        pending.extend(reversed(target.parts[1:] if target.is_absolute() else target.parts))
+    if inside_git_tree(current.joinpath(*missing)):
+        raise scratch_root_refusal("is inside a Git checkout or Git directory")
+    for part in missing:
+        current = current / part
+        with contextlib.suppress(FileExistsError):  # a concurrent run created it; verify it like any other
+            os.mkdir(current, 0o700)
+        info = os.lstat(current)
+        verify(info)
+        if stat.S_ISLNK(info.st_mode):
+            raise NotADirectoryError(errno.ENOTDIR, "a created scratch root component is not a directory")
+    return current
+
+
+def pytest_temp_parent(state: Path) -> Path:
+    """Return this repository's private parent for pytest base temps, outside every Git tree (#10654).
+
+    The root follows the fleet scratch convention: ``LU_SCRATCH_ROOT`` when set (strictly), else
+    ``/var/tmp/lu``, else ``<system temp>/lu-scratch`` when the default cannot be created. Its whole
+    ancestry is verified before anything is created (``verified_scratch_root``). Below it a per-user
+    0700 directory holds one 0700 directory per Git common dir. Nothing sweeps them: each run removes
+    only its own base (``own_base_temp``) and the host's scratch aging owns what a killed run leaves. An
+    unsafe or uncreatable location refuses the push as incomplete; an unsafe default never falls back,
+    and nothing falls back into Git.
+    """
+    override = os.environ.get(SCRATCH_ROOT_ENV, "").strip()
+    candidates = (
+        [Path(override)] if override else [DEFAULT_SCRATCH_ROOT, Path(tempfile.gettempdir()) / FALLBACK_SCRATCH_DIRNAME]
+    )
+    scratch, failure = None, "error"
+    for candidate in candidates:
+        try:
+            scratch = verified_scratch_root(candidate)
+        except OSError as error:
+            failure = errno.errorcode.get(error.errno, "error")
+            continue
+        break
+    if scratch is None:
+        raise scratch_root_refusal(f"cannot be created ({failure})")
+    user = scratch / f"pre-push-gate-{os.geteuid()}"
+    parent = user / hashlib.sha256(os.fsencode(state.resolve())).hexdigest()[:32]
+    for directory in (user, parent):
+        os.close(private_directory(directory))
+    if inside_git_tree(parent):
+        raise scratch_root_refusal("is inside a Git checkout or Git directory")
+    return parent
+
+
+def remove_own_base_temp(parent_fd: int, name: str) -> None:
+    """Remove ``name`` below ``parent_fd`` and everything in it, never following a link.
+
+    Every directory is opened relative to its parent's descriptor with ``O_NOFOLLOW``, so a rename or
+    link above or inside the base cannot redirect the removal. A directory a test left without owner
+    access is first given 0700, as ``tempfile.TemporaryDirectory`` does, without following a link.
+    """
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    try:
+        if not stat.S_ISDIR(os.stat(name, dir_fd=parent_fd, follow_symlinks=False).st_mode):
+            os.unlink(name, dir_fd=parent_fd)
+            return
+        try:
+            fd = os.open(name, flags, dir_fd=parent_fd)
+        except PermissionError:
+            os.chmod(name, 0o700, dir_fd=parent_fd, follow_symlinks=False)
+            fd = os.open(name, flags, dir_fd=parent_fd)
+        try:
+            os.fchmod(fd, 0o700)
+            for entry in os.listdir(fd):
+                remove_own_base_temp(fd, entry)
+        finally:
+            os.close(fd)
+        os.rmdir(name, dir_fd=parent_fd)
+    except FileNotFoundError:
+        return
+
+
+@contextlib.contextmanager
+def own_base_temp(parent: Path):
+    """Create this run's own pytest base temp below ``parent`` and remove only it afterwards (#10654).
+
+    The private parent is opened once without following a link, and the base is created and removed
+    relative to that descriptor, so replacing any ancestor after validation cannot redirect either step
+    into another run's base. Pytest deletes and recreates a given ``--basetemp``, so the base is held by
+    name inside the anchored parent, not by its own descriptor. No other run's base is ever removed.
+    """
+    parent_fd = private_directory(parent)
+    try:
+        name = f"pytest-{uuid.uuid4().hex}"
+        try:
+            os.mkdir(name, 0o700, dir_fd=parent_fd)
+        except OSError as error:
+            raise GateOutcome(
+                "pytest_temp_unavailable",
+                f"cannot create the pytest base temp ({errno.errorcode.get(error.errno, 'error')})",
+                incomplete=True,
+            ) from None
+        try:
+            yield str(parent / name)
+        except BaseException:
+            with contextlib.suppress(OSError):  # the run's own outcome outranks a cleanup failure
+                remove_own_base_temp(parent_fd, name)
+            raise
+        try:
+            remove_own_base_temp(parent_fd, name)
+        except OSError as error:
+            raise GateOutcome(
+                "validation_incomplete",
+                f"pytest base temp cleanup failed ({errno.errorcode.get(error.errno, 'error')})",
+                incomplete=True,
+            ) from None
+    finally:
+        os.close(parent_fd)
+
+
+def load_test_slots(path: Path | None = None):
+    """Import the self-contained host test-slot governor from this gate's checkout; refuse when it cannot.
+
+    The governor's directory is appended to ``sys.path`` only for the import, so the standard library and
+    installed packages keep every name, and the imported file must be the expected one.
+    """
+    path = (path or Path(__file__).resolve().parents[1] / TEST_SLOTS_MODULE).resolve()
+    directory = str(path.parent)
+    sys.path.append(directory)
+    try:
+        import test_slots as governor
+    except Exception as error:  # any load failure is a typed refusal, never a crash or an ungoverned run
+        raise GateOutcome(
+            "test_slots_unavailable",
+            f"the host test-slot governor cannot be loaded ({type(error).__name__})",
+            incomplete=True,
+        ) from error
+    finally:
+        sys.path.pop()  # the governor adds no path entries, so the last one is the entry appended above
+    if Path(governor.__file__).resolve() != path:
+        raise GateOutcome(
+            "test_slots_unavailable", "another test_slots module shadows the host test-slot governor", incomplete=True
+        )
+    return governor
+
+
+def acquire_pytest_slots(plan: Plan, event: dict[str, object]) -> tuple[object | None, float]:
+    """Hold host test slots for the pytest stage; return the hold and the wait on this gate's clock.
+
+    The wait is recorded apart (``slot_wait_s``) so neither budget pays for it. A disabled pool changes
+    nothing; a gate nested in a holder runs inside its holder's slots; a refusal is typed and incomplete.
+    """
+    record: dict[str, object] = {
+        "status": "not_needed",
+        "requested": None,
+        "held": None,
+        "pool_size": None,
+        "wait_s": 0.0,
+        "queue_position": None,
+    }
+    event.update(test_slots=record, slot_wait_s=0.0)
+    if not plan.node_ids:
+        return None, 0.0
+    governor = load_test_slots()
+    options = parallel_options()
+    record["requested"] = requested = int(options[1]) if options else 1
+    try:
+        if not governor.enabled():
+            record["status"] = "disabled"
+            return None, 0.0
+        inherited = governor.inherited_hold()
+        if inherited is not None:
+            record.update(status="inherited", held=inherited)
+            return governor.Hold.inherited(inherited), 0.0
+        limit = min(governor.wait_timeout(), TEST_SLOT_WAIT_S)
+        started = time.monotonic()
+        try:
+            hold = governor.acquire(requested, kind="gate", wait_s=limit)
+        finally:
+            record["wait_s"] = event["slot_wait_s"] = time.monotonic() - started
+    except governor.SlotError as error:
+        raise GateOutcome(f"test_slots_{error.reason}", str(error), incomplete=True) from None
+    record.update(status="held", held=hold.count, pool_size=hold.pool_size, queue_position=hold.queue_position)
+    return hold, record["wait_s"]
+
+
 def run_pytest_stage(
     plan: Plan,
     root: Path,
@@ -1226,9 +1621,11 @@ def run_pytest_stage(
     *,
     diagnostics: dict[str, object] | None = None,
     admission: Admission | None = None,
+    slots: object | None = None,
 ) -> str:
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
+    temp_parent = pytest_temp_parent(state)
     # Only the actual exclusive global holder can prove that no other gate owns these bases.
     exclusive = (
         admission is not None
@@ -1245,7 +1642,13 @@ def run_pytest_stage(
     if not plan.node_ids:
         return "no tests selected"
     invocations = pytest_invocations(plan)
-    options = parallel_options()
+    # Never more test processes than the host test slots held (#10662).
+    cap = slots.count if slots is not None else None
+    slot_environment = slots.environment() if slots is not None else None
+    if slot_environment is not None:
+        capped = apply_thread_caps(clean_environment())
+        slot_environment.update({name: capped[name] for name in THREAD_CAPS if name in capped})
+    options = parallel_options(cap=cap)
     if diagnostics is not None:
         diagnostics.update(
             requested_test_processes=test_process_limit(),
@@ -1255,7 +1658,7 @@ def run_pytest_stage(
     # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
     summaries = []
     for nodes, dist in invocations:
-        with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
+        with own_base_temp(temp_parent) as base_temp:
             code, output = run_bounded(
                 [
                     "bash",
@@ -1270,12 +1673,13 @@ def run_pytest_stage(
                     "no:cacheprovider",
                     "--basetemp",
                     base_temp,
-                    *parallel_options(dist),
+                    *parallel_options(dist, cap=cap),
                 ],
                 cwd=root,
                 deadline=deadline,
                 label="pytest stage",
                 diagnostics=diagnostics,
+                extra_env=slot_environment,
             )
         failing = failing_node_ids(output)
         if code == 0:
@@ -1377,8 +1781,8 @@ def tail(output: str, lines: int = 40) -> str:
 class Budget:
     """Push execution budget: a total shared by every ref update, plus each stage's own allowance.
 
-    The total starts at admission and excludes later admission waits. Each blocking stage's allowance
-    starts when that stage starts and stays inside the total (#10642).
+    The total starts at admission and excludes later admission waits and host test-slot waits. Each
+    blocking stage's allowance starts when that stage starts and stays inside the total (#10642).
     """
 
     def __init__(self, seconds: float, stage_seconds: float = STAGE_BUDGET_S):
@@ -1400,9 +1804,13 @@ class Budget:
         return self._deadline
 
     def after_admission(self, waited: float) -> float:
+        self.exclude_wait(waited)
+        return self.deadline
+
+    def exclude_wait(self, waited: float) -> None:
+        """Time spent waiting (admission, host test slots) never spends the run budget."""
         if self._deadline is not None:
             self._deadline += waited
-        return self.deadline
 
 
 @contextlib.contextmanager
@@ -1471,15 +1879,21 @@ def execute_stages(
                 stage_deadline(deadline, stage_budget_s, diagnostics),
                 diagnostics=diagnostics,
             )
-        with stage_measurement(event, "pytest") as diagnostics:
-            event["pytest"] = run_pytest_stage(
-                plan,
-                root,
-                launcher,
-                stage_deadline(deadline, stage_budget_s, diagnostics),
-                diagnostics=diagnostics,
-                admission=admission,
-            )
+        slots, slot_wait = acquire_pytest_slots(plan, event)
+        try:
+            with stage_measurement(event, "pytest") as diagnostics:
+                event["pytest"] = run_pytest_stage(
+                    plan,
+                    root,
+                    launcher,
+                    stage_deadline(deadline + slot_wait, stage_budget_s, diagnostics),
+                    diagnostics=diagnostics,
+                    admission=admission,
+                    slots=slots,
+                )
+        finally:
+            if slots is not None:
+                slots.release()
         if persist_receipt:
             try:
                 write_receipt(state, plan, time.time())
@@ -1584,6 +1998,7 @@ def validate(
                     stage_budget_s=budget.stage_seconds,
                     admission=admitted,
                 )
+            budget.exclude_wait(float(event.get("slot_wait_s") or 0.0))  # later ref updates keep it too
     except GateOutcome:
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
@@ -1772,6 +2187,8 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             "peak_memory_unknown_reason": "no_supported_scope",
             "admission_wait_s": 0.0,
             "queue_wait_s": 0.0,
+            "slot_wait_s": 0.0,
+            "test_slots": None,
             "scope_setup_s": 0.0,
             "resources_at_admission": None,
             "begin_durable": False,
@@ -1799,7 +2216,7 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         event["duration_s"] = round(time.monotonic() - started, 2)
         times = event_times[event["attempt_id"]]
         elapsed = (times[1] if len(times) > 1 else time.monotonic()) - times[0]
-        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0))
+        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0) - event.get("slot_wait_s", 0.0))
         event["phase"] = "TERMINAL"
         pytest_stage = event.get("stages", {}).get("pytest", {})
         event["effective_test_processes"] = pytest_stage.get("effective_test_processes")

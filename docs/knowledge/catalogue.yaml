@@ -1395,9 +1395,9 @@ entries:
 
   - id: registry-atlas-word-cards
     kind: registry
-    paths: [registry/atlas/identity/registry.json, registry/atlas/pilot/pilot-v1.json, registry/atlas/pilot/pilot-v1.register-pin.json]
-    purpose: Word Atlas word-card foundation data - the identity registry (card entries with keys at creation, source records and lineage events), the frozen pilot manifest (selection, admission record, database fingerprints, counts and manifest hash), and its register pin sidecar.
-    keywords: [word card identity registry, card id, pilot selection, source keys, admission state]
+    paths: [registry/atlas/identity/registry.json, registry/atlas/pilot/pilot-v1.json, registry/atlas/pilot/pilot-v1.register-pin.json, registry/atlas/source-completeness/required-source-matrix.md]
+    purpose: Word Atlas word-card foundation inputs - the identity registry (card entries with keys at creation, source records and lineage events), the frozen pilot manifest (selection, admission record, database fingerprints, counts and manifest hash), its register pin sidecar, and the authored source-completeness requirements matrix with unresolved boundaries and gaps.
+    keywords: [word card identity registry, card id, pilot selection, source keys, admission state, source completeness, source coverage]
     lifecycle: active
     owner: atlas-practice
     entrypoints:

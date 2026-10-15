@@ -783,6 +783,12 @@ Claude entrypoints or lanes remain refused with exit 7. Every Claude launch
 still stops at 99% weekly usage. `LU_CLAUDE_CAP_OVERRIDE=1` bypasses only that
 usage stop and does not expand the Opus exception.
 
+### Claude account labels for ordinary workers (#10619)
+
+Moved to [`docs/runbooks/claude-account-labels.md`](runbooks/claude-account-labels.md):
+the `delegate.py dispatch --claude-account` label, its checks and threat model,
+and the fleet-wide default-account file a dispatch without the flag reads.
+
 ### Native Grok headless permission mapping (#7583)
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell

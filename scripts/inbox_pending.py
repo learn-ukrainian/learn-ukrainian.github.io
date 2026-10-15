@@ -23,7 +23,10 @@ from scripts.lib.readonly_sqlite import open_readonly
 from scripts.orchestration.handoff_slot_registry import is_registered_slot, registry_readable
 
 ROOT = Path(__file__).resolve().parents[1]
-UNKNOWN_LINE = "PENDING ORDERS: unknown; run ai_agent_bridge inbox for the registered handoff slot"
+UNKNOWN_LINE = (
+    "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
+    "authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+)
 LEGACY_PENDING = "COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0"
 AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
     AND (deadline_at IS NULL OR deadline_at > ?)

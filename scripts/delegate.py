@@ -45,6 +45,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "cli_version": str,
         "mode": str,
         "pid": int,
+        "worker_identity": {pid, host_pid, start_time, pid_namespace, recorder_pid_namespace},
         "status": "running" | "done" | "failed" | "timeout" | "rate_limited" | "crashed"
                   | "needs_finalize" | "no_deliverable",
         "started_at": iso-8601 UTC,
@@ -71,6 +72,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "review_risk": str | null,  # code review resolver risk; budget substitution needs author + risk
         "review_profile": str | null,  # code (default) or ukrainian
         "review_language_lane": bool,  # dispatch's Ukrainian content classification
+        "review_brief_warnings": [str] | absent,  # advisory brief checks, e.g. review_brief_no_dispositions (#10665)
         "sources_mcp_call_count": int | null,  # runtime evidence; null means unknown
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
@@ -118,20 +120,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
 
 Design notes:
 
-* Zombie detection. ``os.kill(pid, 0)`` is the POSIX way to ask "is this
-  PID alive?" without sending a signal. The ``status`` command does this
-  whenever it reads a state file that says ``running``. If the PID is
-  dead but the file still says running, we mark the state file
-  ``crashed`` — this catches OOM kills, machine reboots, and any other
-  abrupt termination of the worker process.
-
-* PID recycling is theoretically possible (the OS reuses PIDs), but in
-  practice a PID from minutes ago is extremely unlikely to be recycled
-  AND owned by a process matching our command line. For the short-lived
-  nature of agent tasks this is acceptable. A fully bulletproof version
-  would record the process start_time from ``/proc/<pid>/stat`` (Linux)
-  or ``kvm_getprocs`` (BSD/macOS) and re-verify — deferred as over-engineering
-  for the current scale.
+* Liveness. Launch and worker startup record PID namespace and /proc start
+  time. Only same-namespace evidence proves death, including PID reuse.
+  Unreadable or foreign identities remain unknown. Explicit wait and admission
+  sweeps may heal proven dead workers; list and status never write records.
 
 * Atomic writes. Every state-file update goes via write-rename so a
   concurrent reader never sees a half-written JSON. ``os.replace`` is
@@ -167,6 +159,7 @@ import errno
 import fcntl
 import functools
 import hashlib
+import io
 import json
 import logging
 import os
@@ -241,10 +234,12 @@ from scripts.orchestration import (
     worktree_prep,
 )
 from scripts.orchestration.dead_worker_state import (
+    capture_worker_identity,
     mark_dead_worker_terminal,
     mark_orphaned_admission_hold_crashed,
     mark_orphaned_worktree_prep_crashed,
     task_state_lock,
+    worker_liveness,
     write_state_unlocked,
 )
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
@@ -1027,19 +1022,8 @@ def _bound_task_state_unparseable_reason(path: Path) -> str | None:
 
 
 def _pid_alive(pid: int) -> bool:
-    """Check if a PID is currently alive via signal-0 probe.
-
-    os.kill(pid, 0) raises ProcessLookupError if the PID doesn't exist,
-    PermissionError if it exists but is owned by another user (which
-    still counts as "alive" for our purposes), or returns None on success.
-    """
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True  # exists, we just can't signal it
-    return True
+    """Treat unknown process visibility as alive for marking decisions."""
+    return worker_liveness({"pid": pid}) is not False
 
 
 def _normalize_worktree_path(raw_path: str, *, repo_root: Path | None = None) -> Path:
@@ -1583,12 +1567,12 @@ def _runtime_tmp_state_for_lease(
 
 
 def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
-    """Treat a valid live recorded PID as an active lease regardless of status."""
+    """Keep a valid live or unknown worker's lease regardless of task status."""
     pid = state.get("pid")
     if isinstance(pid, bool):
         return False
     try:
-        return isinstance(pid, (int, str)) and int(pid) > 0 and _pid_alive(int(pid))
+        return isinstance(pid, (int, str)) and int(pid) > 0 and worker_liveness(state, pid_alive=_pid_alive) is not False
     except (TypeError, ValueError):
         return False
 
@@ -2425,7 +2409,7 @@ def _add_reserved_worktree(
             },
         ) from exc
     identity = worktree_prep.directory_identity(worktree_path)
-    owner = worktree_prep.process_identity(os.getpid())
+    owner = capture_worker_identity(os.getpid(), self_process=True)
     prep: dict[str, Any] = {
         "path": str(worktree_path),
         "run_nonce": run_nonce,
@@ -2437,7 +2421,8 @@ def _add_reserved_worktree(
         "git_pid": None,
         "git_start": None,
         "owner_pid": owner["pid"],
-        "owner_start": owner["start"],
+        "owner_start": owner["start_time"],
+        "owner_identity": owner,
     }
 
     def record_git(pid: int) -> None:
@@ -2889,6 +2874,40 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
         "❌ write-shaped prompt cannot run with --mode read-only. "
         "Re-run with --mode workspace-write --worktree for repository edits "
         "(or --mode danger --worktree only when its extra permissions are required)."
+    )
+
+
+# #10665: a review brief freezes what blocks and what becomes a follow-up. A brief without
+# a disposition section is still dispatched; it gets this typed warning on stderr and in
+# the task record's ``review_brief_warnings``.
+REVIEW_BRIEF_NO_DISPOSITIONS = "review_brief_no_dispositions"
+_DISPOSITION_HEADING_RE = re.compile(r"^[ \t]{0,3}#{1,6}[ \t]+.*\bdispositions?\b", re.IGNORECASE | re.MULTILINE)
+
+
+def _review_brief_warnings(args: argparse.Namespace, prompt: str) -> list[str]:
+    """Typed warnings for a review-typed dispatch's own prompt; empty when none apply (#10665).
+
+    ``prompt`` is the brief as given (``--prompt``, stdin or ``--prompt-file``), before
+    delegate appends its blocks. It needs a Markdown heading naming its dispositions,
+    such as ``## Dispositions``. Fenced and blockquoted text is data, as in the
+    write-shape scan, so a quoted brief under critique does not count. A formal
+    ``--review-attempt`` prompt is exempt: its rendered template fixes the severities
+    and the validator computes the verdict.
+    """
+    if not _dispatch_is_review_typed(args) or getattr(args, "review_attempt", None):
+        return []
+    if _DISPOSITION_HEADING_RE.search(_strip_quoted_content(prompt)):
+        return []
+    return [REVIEW_BRIEF_NO_DISPOSITIONS]
+
+
+def _review_brief_warning_line(code: str) -> str:
+    """The stderr line for one ``_review_brief_warnings`` code; dispatch continues."""
+    return (
+        f"⚠ {code}: this review brief has no disposition section. Add a '## Dispositions' heading "
+        "that freezes what blocks (in_scope_blocker), what is a follow-up (follow_up) and what "
+        "escalates (stop_and_escalate); template: drive-epic references/review-merge-cleanup.md §6 "
+        "(#10665). Dispatch continues."
     )
 
 
@@ -4935,8 +4954,10 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
     if state.get("status") not in ("running", "spawning"):
         return
     pid = state.get("pid")
-    if pid and not _pid_alive(int(pid)):
+    if pid and worker_liveness(state, pid_alive=_pid_alive) is False:
         _mark_crashed_task(state_path, state, source=source)
+    elif not pid and worker_liveness({"pid": os.getpid()}) is None:
+        return
     elif worktree_prep.is_orphaned_prep_record(state):
         current, _changed = mark_orphaned_worktree_prep_crashed(
             state_path,
@@ -4971,18 +4992,12 @@ def _evaluate_dispatch_admission(
     sweep: bool,
     thresholds: dispatch_admission.Thresholds | None = None,
 ) -> dispatch_admission.AdmissionDecision:
-    """Host admission for a ``mode`` dispatch (#8645 part A).
-
-    With ``sweep`` every running/spawning record whose owner is gone (a dead
-    worker pid, or a pid-less worktree reservation or admission hold whose
-    dispatcher died) is marked ``crashed`` first by the healer ``status``,
-    ``wait``, ``list`` and reconcile use, so it never holds a slot and never
-    sits active until someone probes it (#8717).
-    """
+    """Sweep proven dead workers only when admission explicitly requests it."""
     return dispatch_admission.evaluate(
         mode,
         tasks_dir(),
         pid_alive=_pid_alive,
+        record_liveness=lambda record: worker_liveness(record, pid_alive=_pid_alive),
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
     )
@@ -9814,6 +9829,8 @@ def _augment_prompt_with_worktree(
             "code that imports a changed shared helper, and name those test files explicitly.\n"
             "Never collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`); "
             "never `-n auto` or `-n` above 2.\n"
+            "A run that prints `TEST SLOTS: waiting … queue position` is queued for host test slots, "
+            "not hung; let it wait.\n"
             "Run tests in the foreground and wait for them "
             "(never end the turn while a test runs in the background).\n"
             "The full suite runs in the PR's CI (and again in the merge queue on the merged "
@@ -10471,9 +10488,12 @@ def _run_worker(
         return 1
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
     from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_AUTH_KEY,
         CLAUDE_ACCOUNT_KEY,
-        DEFAULT_CLAUDE_ACCOUNT,
+        CLAUDE_ACCOUNT_SOURCE_KEY,
         ClaudeAccountRefused,
+        claude_account_auth_receipt,
+        reset_claude_account_receipts,
         resolve_claude_account_label,
     )
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
@@ -10496,11 +10516,11 @@ def _run_worker(
 
     state_path = _state_path(task_id)
 
-    # Update state to include our actual PID. The parent wrote an
-    # initial state before forking; we overwrite with the real one
-    # (in case the parent's guess was off, or we were re-exec'd).
+    # Capture identity from the worker side, before provider execution.
+    # /proc/self/stat can supply the host PID even when getpid() is local.
     state = _read_state(state_path) or {}
-    state["pid"] = os.getpid()
+    state["worker_identity"] = capture_worker_identity(os.getpid(), self_process=True)
+    state["pid"] = state["worker_identity"]["pid"]
     state["status"] = "running"
     state["max_budget_usd"] = max_budget_usd
     effective_nonce = run_nonce or os.environ.get("LU_RUNTIME_RUN_NONCE")
@@ -10599,6 +10619,7 @@ def _run_worker(
     # handoff, or the typed code that refused it there.
     advisory_prompt_sha256: str | None = None
     advisory_handoff_refusal: str | None = None
+    claude_account: str | None = None
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     leftovers_scan: worker_leftovers.ExitScan | None = None
@@ -10628,13 +10649,13 @@ def _run_worker(
             if state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if agent == "claude" and CLAUDE_ACCOUNT_KEY in state:
-                # The label the task record carries. Only the attempt boundary
-                # authenticates as a non-default account; elsewhere it would
-                # silently run as the default one, so it is refused.
+                # The label the task record carries. The Claude adapter (or a
+                # sealed attempt's boundary) authenticates as that account and
+                # verifies its binding again at use; an unknown label is refused.
+                # Only this run's verification may reach its receipt.
                 claude_account = resolve_claude_account_label(state[CLAUDE_ACCOUNT_KEY])
-                if claude_account != DEFAULT_CLAUDE_ACCOUNT and (review_id is None or attempt_id is None):
-                    raise ClaudeAccountRefused("claude_account_route_unsealed")
                 tool_config[CLAUDE_ACCOUNT_KEY] = claude_account
+                reset_claude_account_receipts()
             if agent in {"agy", "gemini"} and (
                 _dispatch_is_review_typed(argparse.Namespace(**state))
                 or require_review_verdict
@@ -10952,6 +10973,11 @@ def _run_worker(
             final_state["failure_reason"] = advisory_handoff_refusal
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
+        if claude_account is not None:
+            # Value-free: label, its source, method class and whether it was verified (#10619).
+            final_state[CLAUDE_ACCOUNT_AUTH_KEY] = claude_account_auth_receipt(
+                claude_account, source=state.get(CLAUDE_ACCOUNT_SOURCE_KEY)
+            )
 
         # A headless worker that ended its turn while its own background jobs
         # still run has not finished (#8991): record them before anything
@@ -12003,6 +12029,8 @@ def _run_dor_preflight(
     (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
     says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
     """
+    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE
+
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
         repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
@@ -12017,6 +12045,8 @@ def _run_dor_preflight(
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
+    non_overridable: set[str] = set()
+    membership_records: dict[str, Any] = {}
     issue_numbers: list[int] = []
     checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
     issue_repositories: list[dict[str, Any]] = []
@@ -12048,12 +12078,18 @@ def _run_dor_preflight(
                     [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
                     capture_output=True,
                     text=True,
-                    timeout=75,
+                    timeout=135,
                     check=False,
                 )
                 payload = json.loads(result.stdout)
                 if not isinstance(payload, dict):
                     raise ValueError("checker result must be an object")
+                codes = set(payload.get("missing") or [])
+                non_overridable.update(codes & NON_OVERRIDABLE)
+                # Old checker payloads retain their existing meaning. A missing
+                # section is explicitly unchecked, never evidence of membership.
+                if "membership" in payload:
+                    membership_records[label] = payload["membership"] or {"status": "unchecked"}
                 if result.returncode or payload.get("verdict") != "PASS":
                     warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
             except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
@@ -12079,12 +12115,16 @@ def _run_dor_preflight(
     if not issue_numbers:
         return None, None
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    if membership_records:
+        record["membership"] = membership_records
     if stream_epics:
         record["stream_epic"] = stream_epics
     if issue_repositories:
         record["issue_repositories"] = issue_repositories
     if allow_reason is not None:
         record["allow_warn_reason"] = allow_reason
+    if non_overridable:
+        return "❌ DoR refused: " + ",".join(sorted(non_overridable)) + "; fix the card or ancestry; no override applies", record
     if warnings and allow_reason is None:
         details = "; ".join(
             f"{('#' + label) if label.isdigit() else label}: {missing}" for label, missing in warnings.items()
@@ -12253,43 +12293,115 @@ def _refuse_review_scratch_in_worktree() -> None:
         )
 
 
-def _dispatch_claude_account_refusal(args: argparse.Namespace) -> str | None:
-    """The typed code refusing ``--claude-account``, or ``None``; checked before any side effect.
+def _recorded_claude_account(args: argparse.Namespace) -> str | None:
+    """The label a ``--force-new`` re-run inherits from its task id's earlier record, if that record has one.
 
-    A non-default label is admitted only for a claude formal review attempt:
-    that sealed boundary is the one worker path that selects the bound
-    account's credential, so any other route would silently run as the
-    default account. Its binding and credential sources are verified here and
-    again where the worker authenticates.
+    Read without creating anything: the hot record, else the archived one.
+    """
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+
+    task_id = getattr(args, "task_id", None)
+    if not getattr(args, "force_new", False) or not task_id:
+        return None
+    path = task_record_store.locate_task_record(tasks_dir(), task_id)
+    record = _read_state_json(path) if path is not None else None
+    if record is None or CLAUDE_ACCOUNT_KEY not in record:
+        return None
+    return resolve_claude_account_label(record[CLAUDE_ACCOUNT_KEY])
+
+
+def _resolve_dispatch_claude_account(args: argparse.Namespace) -> tuple[str, str] | None:
+    """A claude dispatch's account label and its source, resolved once before any side effect (#10619).
+
+    ``None`` for another seat, which takes no label and never reads the
+    default-account file. Otherwise the label is, in order: a ``--force-new``
+    re-run's recorded label (a conflicting ``--claude-account`` is refused),
+    ``--claude-account``, the default-account file, then the built-in default.
+    A non-default label from any source has its binding and credential
+    sources verified here and again where the worker authenticates: an
+    ordinary worker runs with the bound account's login directory, a formal
+    review attempt's sealed boundary selects that account's credential.
+    Raises ``ClaudeAccountRefused``.
     """
     from scripts.agent_runtime.attempt_boundary import (
         DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
         resolve_claude_account_label,
+        resolve_dispatch_claude_account,
         verify_claude_account,
     )
 
+    explicit = getattr(args, "claude_account", None)
+    if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
+        if resolve_claude_account_label(explicit) != DEFAULT_CLAUDE_ACCOUNT:
+            raise ClaudeAccountRefused("claude_account_seat_unsupported")
+        return None
+    recorded = _recorded_claude_account(args)
+    if recorded is None:
+        label, source = resolve_dispatch_claude_account(explicit)
+    elif explicit is None:
+        label, source = recorded, "record"
+    elif resolve_claude_account_label(explicit) == recorded:
+        label, source = recorded, "explicit"
+    else:
+        raise ClaudeAccountRefused("claude_account_record_conflict")
+    verify_claude_account(label)
+    return label, source
+
+
+def _claude_account_forward_argv(
+    argv: list[str], args: argparse.Namespace, claude_account: tuple[str, str] | None
+) -> list[str]:
+    """The argv a worker-host forward sends: a claude dispatch names the label resolved here (#10619).
+
+    The worker host would resolve an omitted ``--claude-account`` from its own
+    default-account file and task records, and could run as another account.
+    So the label resolved here is added as ``--claude-account`` and the worker
+    host admits it with every check; an explicit flag is sent as given. The
+    argv is parsed back to prove it names that label; otherwise nothing is
+    forwarded (``ClaudeAccountRefused``: ``claude_account_forward_unsupported``).
+    """
+    if claude_account is None:
+        return list(argv)
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    label = claude_account[0]
+    forwarded = list(argv) if getattr(args, "claude_account", None) is not None else [*argv, "--claude-account", label]
     try:
-        label = resolve_claude_account_label(getattr(args, "claude_account", None))
-        if label == DEFAULT_CLAUDE_ACCOUNT:
-            return None
-        if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
-            return "claude_account_seat_unsupported"
-        if not getattr(args, "review_attempt", None):
-            return "claude_account_route_unsealed"
-        verify_claude_account(label)
-    except ClaudeAccountRefused as exc:
-        return exc.code
-    return None
+        # A parse error may quote the argv; it is never shown.
+        with contextlib.redirect_stderr(io.StringIO()):
+            parsed = build_parser().parse_args(forwarded[1:])
+    except SystemExit:
+        parsed = None
+    if parsed is None or parsed.command != "dispatch" or parsed.claude_account != label:
+        raise ClaudeAccountRefused("claude_account_forward_unsupported")
+    return forwarded
 
 
-def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, str]:
-    """A claude task record's account label, resolved once; the worker reads it back from the record."""
+def _claude_account_state(
+    args: argparse.Namespace, claude_account: tuple[str, str] | None, dispatch_agent: str
+) -> dict[str, Any]:
+    """A claude task record's account label and its source; the worker reads the label back from the record.
+
+    ``claude_account`` is what dispatch resolved before any side effect
+    (``_resolve_dispatch_claude_account``). An ordinary worker on a
+    non-default label, from any source, loads none of its login directory's
+    user settings (hooks, permission rules, MCP servers, plugins); the record
+    says so in ``claude_account_user_scope_omitted`` (#10619).
+    """
     if dispatch_agent != "claude":
         return {}
-    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_KEY,
+        CLAUDE_ACCOUNT_SOURCE_KEY,
+        DEFAULT_CLAUDE_ACCOUNT,
+    )
 
-    return {CLAUDE_ACCOUNT_KEY: resolve_claude_account_label(getattr(args, "claude_account", None))}
+    label, source = claude_account or (DEFAULT_CLAUDE_ACCOUNT, "builtin")
+    state: dict[str, Any] = {CLAUDE_ACCOUNT_KEY: label, CLAUDE_ACCOUNT_SOURCE_KEY: source}
+    if label != DEFAULT_CLAUDE_ACCOUNT and not getattr(args, "review_attempt", None):
+        state["claude_account_user_scope_omitted"] = True
+    return state
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -12337,9 +12449,12 @@ def _dispatch(
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
 
-    claude_account_refusal = _dispatch_claude_account_refusal(args)
-    if claude_account_refusal:
-        print(f"❌ CLAUDE_ACCOUNT_REFUSED: {claude_account_refusal}", file=sys.stderr)
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    try:
+        claude_account = _resolve_dispatch_claude_account(args)
+    except ClaudeAccountRefused as exc:
+        print(f"❌ CLAUDE_ACCOUNT_REFUSED: {exc.code}", file=sys.stderr)
         return 2
 
     # Diagnose the required profile before route admission defaults to code
@@ -13182,6 +13297,11 @@ def _dispatch(
         print(write_intent_error, file=sys.stderr)
         return 2
 
+    # Advisory only (#10665): checked on the brief as given, never refusing the dispatch.
+    review_brief_warnings = _review_brief_warnings(args, prompt)
+    for code in review_brief_warnings:
+        print(_review_brief_warning_line(code), file=sys.stderr)
+
     try:
         lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(getattr(args, "lifecycle_file", None))
     except (OSError, ValueError) as exc:
@@ -13313,13 +13433,18 @@ def _dispatch(
                     file=sys.stderr,
                 )
                 return 2
+            try:
+                forward_argv = _claude_account_forward_argv(sys.argv, args, claude_account)
+            except ClaudeAccountRefused as exc:
+                print(f"❌ CLAUDE_ACCOUNT_REFUSED: {exc.code}", file=sys.stderr)
+                return 2
             print(f"→ forwarding dispatch to {host_id} (run_nonce={run_nonce})", file=sys.stderr)
             forward_error: BaseException | None = None
             forward_rc: int | None = None
             try:
                 forward_rc = forward_dispatch(
                     host_id=host_id,
-                    argv=sys.argv,
+                    argv=forward_argv,
                     initiator=attribution.initiator,
                     initiator_source=attribution.source,
                     run_nonce=run_nonce,
@@ -13711,9 +13836,11 @@ def _dispatch(
                 dry_run_state["mechanical_task"] = mechanical_task
             if routing.budget_diagnostics:
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
+            if review_brief_warnings:
+                dry_run_state["review_brief_warnings"] = review_brief_warnings
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
-            dry_run_state.update(_claude_account_state(args, dispatch_agent))
+            dry_run_state.update(_claude_account_state(args, claude_account, dispatch_agent))
             if not admission.exempt:
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
@@ -14231,6 +14358,8 @@ def _dispatch(
         }
         if routing.budget_diagnostics:
             initial_state["routing_facts"] = routing.budget_diagnostics
+        if review_brief_warnings:
+            initial_state["review_brief_warnings"] = review_brief_warnings
         if getattr(args, "review_mode", "cross_family") == "red_team":
             initial_state["review_mode"] = "red_team"
             initial_state["review_branch_facts"] = args._red_team_branch_facts
@@ -14240,7 +14369,7 @@ def _dispatch(
         initial_state.update(_authoring_review_state_fields(args, authoring_admission))
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
-        initial_state.update(_claude_account_state(args, dispatch_agent))
+        initial_state.update(_claude_account_state(args, claude_account, dispatch_agent))
         if lifecycle_carrier is not None:
             initial_state["task_lifecycle"] = lifecycle_carrier
         if review_plan is not None:
@@ -14514,11 +14643,11 @@ def _dispatch(
         # _run_worker (e.g. top-level import error in delegate.py,
         # syntax error on a future edit, env var issue), the state
         # file stays at {"status": "spawning", "pid": null} forever
-        # and no subsequent status/wait call can detect the crash
-        # because zombie detection is gated on `pid and not _pid_alive(pid)`.
+        # and no explicit wait/admission sweep can prove the worker died.
         # Fixed after Gemini review 2026-04-10.
         state_with_pid = _read_state(state_path) or initial_state
-        state_with_pid["pid"] = proc.pid
+        state_with_pid["worker_identity"] = capture_worker_identity(proc.pid)
+        state_with_pid["pid"] = state_with_pid["worker_identity"]["pid"]
         state_with_pid.update(launch.as_state())
         _write_state_atomic(state_path, state_with_pid)
         # Bind ownership ledger rows to the long-lived worker PID (not the
@@ -14565,7 +14694,7 @@ def _dispatch(
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    state_path, state = _read_state_or_archived(args.task_id)
+    _state_path, state = _read_state_or_archived(args.task_id)
     if state is None:
         print(
             json.dumps({"error": f"no state file for task {args.task_id!r}"}),
@@ -14587,12 +14716,6 @@ def cmd_status(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
-
-    # Detect zombies: if status is "running" but PID is dead, the worker
-    # crashed (OOM, SIGKILL, reboot, etc.) and never got to update the
-    # state file. Mark as "crashed" and persist the correction so
-    # subsequent status calls get the right answer without redoing the check.
-    _heal_dead_task(state_path, state, source="status")
 
     # Elapsed time for still-running tasks
     if state.get("status") == "running" and state.get("started_at"):
@@ -18059,7 +18182,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
             time.sleep(poll_interval)
             continue
 
-        # Zombie probe (same logic as cmd_status)
+        # Wait is an explicit settling path; heal only on proven death.
         _heal_dead_task(state_path, state, source="wait")
 
         status = state.get("status")
@@ -18138,8 +18261,12 @@ def cmd_cancel(args: argparse.Namespace) -> int:
         return 1
 
     pid = int(pid)
-    if not _pid_alive(pid):
-        print(f"⚠️  pid {pid} is already dead; nothing to cancel")
+    liveness = worker_liveness(state, pid_alive=_pid_alive)
+    if liveness is None:
+        print(f"❌ worker identity for task {args.task_id!r} is unknown; refusing to signal", file=sys.stderr)
+        return 1
+    if liveness is False:
+        print(f"⚠️  recorded worker for pid {pid} is no longer live; nothing to cancel")
         return 0
 
     try:
@@ -18175,8 +18302,6 @@ def cmd_list(args: argparse.Namespace) -> int:
         state = _read_state(state_file)
         if state is None:
             continue
-        # Zombie probe inline for running tasks
-        _heal_dead_task(state_file, state, source="list")
         if args.status and state.get("status") != args.status:
             continue
         # Fix 4 (#1476): classify worktree layout so operators can see at
@@ -18431,7 +18556,9 @@ def build_parser() -> argparse.ArgumentParser:
             f"DISPATCH_MAX_LIVE_WRITE_WORKERS (default {admission_defaults.max_live_write_workers}),\n"
             f"  /proc/meminfo MemAvailable is below DISPATCH_MIN_MEM_AVAILABLE_GIB (default "
             f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
-            f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}). "
+            f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}), or more test runs "
+            f"than DISPATCH_MAX_TEST_SLOT_QUEUE\n  (default {admission_defaults.max_test_slot_queue}) wait for host "
+            "test slots (scripts/common/test_slots.py). "
             "Environment variables override the scripts/config.py defaults.\n"
             "  Without /proc (macOS) memory and CPU are unknown and only the worker cap applies. Records whose pid\n"
             "  is dead are marked crashed first. The final check holds a host-wide lock until the spawning record\n"
@@ -18446,6 +18573,11 @@ def build_parser() -> argparse.ArgumentParser:
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
             "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "Claude account (#10619):\n"
+            "  A claude dispatch runs as --claude-account, else the label in the default-account file read once at\n"
+            "  dispatch (see --claude-account), else a. The task record keeps the label and its source\n"
+            "  (claude_account_source); the worker adds a value-free claude_account_auth receipt. A forward to a\n"
+            "  worker host sends the resolved label as --claude-account, which that host admits again.\n\n"
             "Related:\n"
             "  scripts/orchestration/dispatch_admission.py; docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md; #8645\n"
         ),
@@ -18540,9 +18672,20 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Claude account label for a claude dispatch: a (default) or b. The label is recorded in the "
             "task record and selects the account the worker authenticates as. Label b needs its private "
-            "local binding and currently runs only formal review attempts, whose sealed boundary selects "
-            "the account; an unknown label, a missing binding or a conflicting credential source is "
-            "refused (CLAUDE_ACCOUNT_REFUSED) before any worktree or task record is created."
+            "local binding and a consumer (Max or Pro) plan on a host with no machine-level Claude Code "
+            "policy; organisational plans and machine policy are refused. An ordinary "
+            "worker runs with that account's login directory as its only "
+            "credential source, and a formal review attempt's sealed boundary selects the account. An "
+            "unknown label, a missing binding or a conflicting credential source (a Claude token or API key "
+            "variable, or another config directory) is refused (CLAUDE_ACCOUNT_REFUSED) before any worktree "
+            "or task record is created, and checked again before the worker starts Claude. Without this flag "
+            "a claude dispatch takes the label in the default-account file learn-ukrainian/claude-default-account "
+            "in the user config directory ($XDG_CONFIG_HOME, else ~/.config), or the path in "
+            "LU_CLAUDE_DEFAULT_ACCOUNT_FILE (empty means none), else a; a label from the file passes every "
+            "check above exactly as this flag would. The file is read once, at dispatch: the worker and a "
+            "--force-new re-run of the task id keep the recorded label, and a --claude-account that "
+            "contradicts it is refused. A present but invalid file (not one label, over 64 bytes, a link or "
+            "non-regular file, not owned by you, or group- or world-writable) is refused the same way."
         ),
     )
     d.add_argument(

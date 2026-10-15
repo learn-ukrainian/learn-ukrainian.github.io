@@ -30,6 +30,11 @@ every check passes. Read-only dispatches are exempt.
   from ``memory.stat``) plus a per-worker reserve must stay at or below its
   ``memory.high``. Missing cgroup files (CI, macOS) skip this check; the reason
   is logged and recorded (:mod:`scripts.orchestration.pool_headroom`).
+* **Host test-slot queue (#10662).** Worker pytest runs and the pre-push gate
+  wait in one FIFO queue for host test slots (:mod:`scripts.common.test_slots`).
+  More waiting runs than ``DISPATCH_MAX_TEST_SLOT_QUEUE`` means the host's CPUs
+  are already spoken for, so no new worker starts. A disabled or unreadable
+  pool skips this check; the reason is shown.
 * **Slice use is reported, not enforced.** When ``lu-dispatch.slice`` is
   active, the admission line adds its current memory against ``MemoryMax``.
   An inactive or missing slice omits that clause. The floor and the caps
@@ -65,6 +70,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common import test_slots
 from scripts.orchestration import pool_headroom, task_record_store, worktree_prep
 from scripts.orchestration.dispatch_isolation import slice_usage_clause
 
@@ -82,7 +88,9 @@ ENV_MAX_LIVE_WRITE_WORKERS = "DISPATCH_MAX_LIVE_WRITE_WORKERS"
 ENV_MIN_MEM_AVAILABLE_GIB = "DISPATCH_MIN_MEM_AVAILABLE_GIB"
 ENV_MAX_LOAD_PER_CPU = "DISPATCH_MAX_LOAD_PER_CPU"
 ENV_WORKER_MEM_RESERVE_GIB = "DISPATCH_WORKER_MEM_RESERVE_GIB"
+ENV_MAX_TEST_SLOT_QUEUE = "DISPATCH_MAX_TEST_SLOT_QUEUE"
 _DEFAULT_WORKER_MEM_RESERVE_GIB = 2.5
+_DEFAULT_MAX_TEST_SLOT_QUEUE = 4
 # Deployment env file with the same variables (``NAME=value`` or
 # ``export NAME=value`` lines). Read only for the live environment, after the
 # process environment, so a long-running session started before the host set
@@ -95,6 +103,7 @@ _THRESHOLD_ENV_NAMES = (
     ENV_MIN_MEM_AVAILABLE_GIB,
     ENV_MAX_LOAD_PER_CPU,
     ENV_WORKER_MEM_RESERVE_GIB,
+    ENV_MAX_TEST_SLOT_QUEUE,
 )
 
 # Pid-less ``spawning`` record naming the dispatcher that holds an admitted
@@ -116,6 +125,16 @@ class Thresholds:
     min_mem_available_gib: float
     max_load_per_cpu: float
     worker_mem_reserve_gib: float = _DEFAULT_WORKER_MEM_RESERVE_GIB
+    max_test_slot_queue: int = _DEFAULT_MAX_TEST_SLOT_QUEUE
+
+
+@dataclass(frozen=True)
+class SlotQueueProbe:
+    """Runs waiting for host test slots, or why the count is unknown (``skipped``)."""
+
+    depth: int | None = None
+    pool_size: int | None = None
+    skipped: str | None = None
 
 
 @dataclass(frozen=True)
@@ -150,6 +169,7 @@ class AdmissionDecision:
     swept: bool = False
     failures: tuple[str, ...] = field(default_factory=tuple)
     pool: pool_headroom.PoolCheck | None = None
+    slots: SlotQueueProbe | None = None
 
     @property
     def live_write_workers(self) -> int:
@@ -181,6 +201,13 @@ class AdmissionDecision:
         # no logging, so this line is the operator's only visible trace (#9975).
         if self.pool is not None:
             parts.append(self.pool.clause())
+        if self.slots is not None:
+            parts.append(
+                f"test-slot queue check skipped ({self.slots.skipped})"
+                if self.slots.depth is None
+                else f"test-slot queue {self.slots.depth} (limit {limits.max_test_slot_queue}, "
+                f"pool {self.slots.pool_size})"
+            )
         text = ", ".join(parts)
         if not probe.proc_available:
             text += " — /proc is not available on this platform, so only the worker cap is enforced"
@@ -232,6 +259,9 @@ class AdmissionDecision:
             "pool_limit_gib": round(pool_limit / _GIB, 2) if pool_limit is not None else None,
             "worker_mem_reserve_gib": limits.worker_mem_reserve_gib if limits else None,
             "pool_check_skipped": pool.skipped if pool else None,
+            "test_slot_queue_depth": self.slots.depth if self.slots else None,
+            "max_test_slot_queue": limits.max_test_slot_queue if limits else None,
+            "test_slot_queue_skipped": self.slots.skipped if self.slots else None,
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
         }
 
@@ -247,6 +277,7 @@ def config_defaults() -> Thresholds:
         min_mem_available_gib=float(config.DISPATCH_MIN_MEM_AVAILABLE_GIB),
         max_load_per_cpu=float(config.DISPATCH_MAX_LOAD_PER_CPU),
         worker_mem_reserve_gib=float(config.DISPATCH_WORKER_MEM_RESERVE_GIB),
+        max_test_slot_queue=int(config.DISPATCH_MAX_TEST_SLOT_QUEUE),
     )
 
 
@@ -330,6 +361,7 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
         worker_mem_reserve_gib=_env_number(
             env, ENV_WORKER_MEM_RESERVE_GIB, defaults.worker_mem_reserve_gib, integer=False
         ),
+        max_test_slot_queue=int(_env_number(env, ENV_MAX_TEST_SLOT_QUEUE, defaults.max_test_slot_queue, integer=True)),
     )
 
 
@@ -420,6 +452,27 @@ def probe_pool(reserve_gib: float) -> pool_headroom.PoolCheck:
     return pool_headroom.check_pool(reserve)
 
 
+def probe_test_slots() -> SlotQueueProbe:
+    """Runs waiting in the host test-slot queue (#10662). The seam slot-queue tests replace.
+
+    Under pytest with the healthy-host fixture, the host's pool is not read unless
+    ``LU_TEST_SLOTS_DIR`` points the test at a private pool.
+    """
+    if (
+        os.environ.get("PYTEST_CURRENT_TEST")
+        and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1"
+        and not os.environ.get(test_slots.DIR_ENV)
+    ):
+        return SlotQueueProbe(skipped=TEST_HOST_POOL_SKIP)
+    report = test_slots.status()
+    error = report["error"]
+    if error:
+        return SlotQueueProbe(skipped=f"{error['reason']}: {error['detail']}")  # type: ignore[index]
+    if not report["enabled"]:
+        return SlotQueueProbe(skipped="pool disabled")
+    return SlotQueueProbe(depth=int(report["queue_depth"]), pool_size=int(report["pool_size"]))  # type: ignore[call-overload]
+
+
 def process_alive(pid: int) -> bool:
     """Signal-0 probe; a pid owned by another user still counts as alive."""
     try:
@@ -456,11 +509,14 @@ def _age_s(started_at: Any, now: datetime) -> float | None:
 
 def new_admission_hold(run_nonce: str) -> dict[str, Any]:
     """This dispatcher's claim on an admitted slot: run, pid and ``/proc`` start time."""
-    owner = worktree_prep.process_identity(os.getpid())
+    from scripts.orchestration.dead_worker_state import capture_worker_identity
+
+    owner = capture_worker_identity(os.getpid(), self_process=True)
     return {
         "run_nonce": run_nonce,
         "owner_pid": owner["pid"],
-        "owner_start": owner["start"],
+        "owner_start": owner["start_time"],
+        "owner_identity": owner,
         "admitted_at": datetime.now(UTC).isoformat(),
     }
 
@@ -490,7 +546,7 @@ def is_orphaned_admission_hold(record: dict[str, Any]) -> bool:
         record.get("status") in ACTIVE_STATUSES
         and "worktree_prep" not in record
         and is_admission_hold_record(record)
-        and worktree_prep.process_gone(hold.get("owner_pid"), hold.get("owner_start"))  # type: ignore[union-attr]
+        and worktree_prep.owner_gone(hold)  # type: ignore[arg-type]
     )
 
 
@@ -518,6 +574,7 @@ def scan_task_records(
     tasks_dir: Path,
     *,
     pid_alive: Callable[[int], bool] | None = None,
+    record_liveness: Callable[[dict[str, Any]], bool | None] | None = None,
     now: datetime | None = None,
 ) -> WorkerScan:
     """Live write workers, and every active record (any mode) whose owner is gone.
@@ -559,7 +616,13 @@ def scan_task_records(
                 # Held while the dispatcher lives, however long its worktree
                 # add runs. A missing pid is proof it is gone even on a host
                 # without /proc, where only the pid can be checked.
-                if alive(owner_pid):
+                if "owner_identity" in owner:
+                    from scripts.orchestration.dead_worker_state import worker_liveness
+
+                    owner_live = worker_liveness({"pid": owner_pid, "worker_identity": owner["owner_identity"]}) is not False
+                else:
+                    owner_live = alive(owner_pid)
+                if owner_live:
                     live.append(task_id)
                 continue
             age = _age_s(state.get("started_at"), clock)
@@ -572,7 +635,8 @@ def scan_task_records(
             elif age is not None and age <= PIDLESS_SPAWNING_GRACE_S:
                 live.append(task_id)
             continue
-        if alive(pid):
+        worker_live = record_liveness(state) is not False if record_liveness is not None else alive(pid)
+        if worker_live:
             if write_capable:
                 live.append(task_id)
         else:
@@ -585,6 +649,7 @@ def evaluate(
     tasks_dir: Path,
     *,
     pid_alive: Callable[[int], bool] | None = None,
+    record_liveness: Callable[[dict[str, Any]], bool | None] | None = None,
     on_dead: Callable[[Path, dict[str, Any]], None] | None = None,
     thresholds: Thresholds | None = None,
 ) -> AdmissionDecision:
@@ -598,7 +663,7 @@ def evaluate(
     if mode not in WRITE_CAPABLE_MODES:
         return AdmissionDecision(mode=mode, exempt=True, admitted=True)
     limits = thresholds or load_thresholds()
-    scan = scan_task_records(tasks_dir, pid_alive=pid_alive)
+    scan = scan_task_records(tasks_dir, pid_alive=pid_alive, record_liveness=record_liveness)
     if on_dead is not None:
         for path, state in scan.dead:
             on_dead(path, state)
@@ -631,6 +696,12 @@ def evaluate(
         log("dispatch admission: shared pool check skipped: %s", pool.skipped)
     elif not pool.fits:
         failures.append(f"{pool.failure()} ({ENV_WORKER_MEM_RESERVE_GIB}={limits.worker_mem_reserve_gib:g})")
+    slots = probe_test_slots()
+    if slots.depth is not None and slots.depth > limits.max_test_slot_queue:
+        failures.append(
+            f"test-slot queue {slots.depth} is longer than {limits.max_test_slot_queue} waiting runs "
+            f"({ENV_MAX_TEST_SLOT_QUEUE}={limits.max_test_slot_queue})"
+        )
     return AdmissionDecision(
         mode=mode,
         exempt=False,
@@ -642,6 +713,7 @@ def evaluate(
         swept=on_dead is not None,
         failures=tuple(failures),
         pool=pool,
+        slots=slots,
     )
 
 

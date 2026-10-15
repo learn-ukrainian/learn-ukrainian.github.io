@@ -130,6 +130,7 @@ not delivery proof for the live driver.
 
 Seat-specific adjustments for your model and for the seats you route to:
 [model-deltas](references/model-deltas.md).
+Sol drivers follow its Sol driver row for plain messages, bounded reads and output, and launcher-held authority with current hydration.
 
 ## Escalate — do NOT decide these solo
 
