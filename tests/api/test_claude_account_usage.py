@@ -1121,7 +1121,8 @@ def test_shared_configuration_cannot_override_the_selected_directory(account_dir
         (account_dirs[label] / "usage.json").write_text(json.dumps({"weekly_used": used}))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "shared-config"))
     monkeypatch.setenv("CODEXBAR_CONFIG", str(shared / "config.json"))
-    monkeypatch.setattr(cau, "_codexbar_bin", lambda: _fake_codexbar_emulator(tmp_path))
+    codexbar = _fake_codexbar_emulator(tmp_path)
+    monkeypatch.setattr(cau, "_codexbar_bin", lambda: codexbar)
 
     cau.refresh_claude_account_usage()
     snapshot = cau.claude_accounts_snapshot()
@@ -1383,7 +1384,8 @@ def test_real_probe_replacing_the_selected_directory_is_withheld(bound, monkeypa
         "print(open(os.path.join(directory, 'usage.json')).read())"
     )
     monkeypatch.setattr(cau, "_run_codexbar", _REAL_RUN_CODEXBAR)
-    monkeypatch.setattr(cau, "_codexbar_bin", lambda: _fake_codexbar(bound.root, body))
+    codexbar = _fake_codexbar(bound.root, body)
+    monkeypatch.setattr(cau, "_codexbar_bin", lambda: codexbar)
     cau.refresh_claude_account_usage()
     fields = cau.routing_budget_fields()
     assert _row(fields["claude_accounts"], "a")["weekly"]["left_pct"] == 26.0  # the child really ran
@@ -1627,7 +1629,8 @@ def _token_measuring_codexbar(root: Path, *, identity: str) -> str:
 @pytest.mark.parametrize("identity", ["omitted", "email"])
 def test_measured_account_drift_under_an_unchanged_binding_is_withheld(bound, monkeypatch, identity):
     monkeypatch.setattr(cau, "_run_codexbar", _REAL_RUN_CODEXBAR)
-    monkeypatch.setattr(cau, "_codexbar_bin", lambda: _token_measuring_codexbar(bound.root, identity=identity))
+    codexbar = _token_measuring_codexbar(bound.root, identity=identity)
+    monkeypatch.setattr(cau, "_codexbar_bin", lambda: codexbar)
     cau.refresh_claude_account_usage()
     fields = cau.routing_budget_fields()
     assert _row(fields["claude_accounts"], "b")["status"] == "ok"
@@ -2027,7 +2030,12 @@ def test_routing_budget_fields_prefers_the_larger_weekly_leftover(fake_probe):
 
 
 def _fake_codexbar(tmp_path: Path, body: str) -> str:
-    """An executable CodexBar stand-in run by this interpreter; ``args`` holds its arguments."""
+    """An executable CodexBar stand-in run by this interpreter; ``args`` holds its arguments.
+
+    Write it before a refresh starts, never from a patched ``_codexbar_bin``: the
+    refresh probes labels in parallel threads, and one rewriting the script while
+    another executes it fails the probe (text file busy).
+    """
     script = tmp_path / "codexbar"
     script.write_text(f"#!{sys.executable} -I\nimport json, os, sys, time\nargs = sys.argv[1:]\n{body}\n")
     script.chmod(0o700)
@@ -2040,7 +2048,7 @@ def _gone_within(pid: int, timeout_s: float) -> bool:
     while True:
         try:
             state = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0]
-        except FileNotFoundError:
+        except (FileNotFoundError, ProcessLookupError):  # reading a task that just exited is ESRCH
             return True
         if state in {"Z", "X"}:
             return True
