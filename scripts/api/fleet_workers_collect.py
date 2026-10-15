@@ -641,6 +641,21 @@ def collect_local_workers_for_reporter(
     return [worker_row_dict(item.row) for item in workers[:200]]
 
 
+def reconcile_worker_counts(payload: dict[str, Any]) -> None:
+    """Count retained rows using the payload's final host coverage and freshness."""
+    hosts = payload["hosts"]
+    payload["counts"].update(
+        live=sum(
+            row["state"] == "live"
+            for host in hosts
+            if host["freshness"] == "fresh" and host["workers_status"] == "reported"
+            for row in host["workers"]
+        ),
+        hosts_unknown=sum(host["freshness"] == "unknown" for host in hosts),
+        workers_total=sum(len(host["workers"]) for host in hosts),
+    )
+
+
 def _build_workers_payload(
     *,
     host_id: str | None = None,
@@ -658,9 +673,6 @@ def _build_workers_payload(
     selected = _selected_host_ids(host_id)
     hosts: list[dict[str, Any]] = []
     attention: list[str] = []
-    live_count = 0
-    total_workers = 0
-    unknown_hosts = 0
     tally = SkipTally()
 
     all_unattributed: list[CollectedWorker] = []
@@ -680,8 +692,6 @@ def _build_workers_payload(
             presence_store=presence_store,
             report_store=report_store,
         )
-        if freshness == "unknown":
-            unknown_hosts += 1
         workers_status, reported = _reported_workers(
             opaque, now_mono=stamp, tally=tally, report_store=report_store
         )
@@ -729,10 +739,6 @@ def _build_workers_payload(
 
         _related_links(host_workers, host_id=opaque)
         shaped = [_shape_worker(item) for item in host_workers]
-        for item in shaped:
-            total_workers += 1
-            if item.get("state") == "live" and freshness == "fresh":
-                live_count += 1
         hosts.append(
             {
                 "host_id": opaque,
@@ -747,13 +753,10 @@ def _build_workers_payload(
     if all_unattributed and (host_id is None or host_id == UNATTRIBUTED_HOST_ID):
         _related_links(all_unattributed, host_id=UNATTRIBUTED_HOST_ID)
         shaped = [_shape_worker(item) for item in all_unattributed]
-        for item in shaped:
-            total_workers += 1
-            live_count += 1 if item.get("state") == "live" else 0
         hosts.append(
             {
                 "host_id": UNATTRIBUTED_HOST_ID,
-                "freshness": "fresh",
+                "freshness": "unknown",
                 "workers_status": "reported",
                 "workers": shaped,
                 "unattributed_burn": {},
@@ -761,19 +764,18 @@ def _build_workers_payload(
             }
         )
 
-    return {
+    payload = {
         "schema": WORKERS_SCHEMA,
         "observed_at": clock.isoformat().replace("+00:00", "Z"),
         "counts": {
-            "live": live_count,
-            "hosts_unknown": unknown_hosts,
-            "workers_total": total_workers,
             "attention": len(attention),
             "skipped": tally.count,
         },
         "attention": attention,
         "hosts": hosts,
     }
+    reconcile_worker_counts(payload)
+    return payload
 
 
 def workers_payload(
