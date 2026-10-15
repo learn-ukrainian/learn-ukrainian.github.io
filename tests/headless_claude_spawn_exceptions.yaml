@@ -116,6 +116,8 @@ exceptions:
   - {module: scripts/api/blue_router.py, function: "get_audit_status", program: "str(audit_script)", category: non-claude, reason: "runs the module audit script"}
   # scripts/api/comms_router.py
   - {module: scripts/api/comms_router.py, function: "_check_build_processes", program: "ps", category: non-claude, reason: "runs ps"}
+  # scripts/api/claude_account_usage.py
+  - {module: scripts/api/claude_account_usage.py, function: "_run_codexbar", program: "codexbar", category: non-claude, reason: "CodexBar per-account Claude usage probe (fixed `codexbar usage --json --provider claude --source oauth` argv); no Claude print-mode run"}
   # scripts/api/subscription_usage.py
   - {module: scripts/api/subscription_usage.py, function: "_load_claude_oauth_token", program: "str(security)", category: non-claude, reason: "reads a keychain item with the macOS security tool"}
   - {module: scripts/api/subscription_usage.py, function: "_probe_antigravity_native", program: "agy_bin", category: non-claude, reason: "AGY `/usage` probe"}

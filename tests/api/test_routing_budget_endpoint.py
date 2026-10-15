@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
+import os
+import time
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
@@ -11,7 +14,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.analytics.cost_report import CostRecord
-from scripts.api import state_router
+from scripts.api import claude_account_usage, state_router
 from scripts.api.monitor_context import fixture_context
 from scripts.fleet import reset_reserve
 
@@ -231,6 +234,9 @@ _ROUTING_BUDGET_TOP_LEVEL_KEYS = frozenset(
         "diagnostics",
         "ranked_by_headroom",
         "transport",
+        # Per-account Claude view (#10630); additive, display only.
+        "claude_accounts",
+        "preferred_claude_account",
     }
 )
 _ROUTING_BUDGET_RECOMMENDATION_KEYS = frozenset(
@@ -1027,3 +1033,356 @@ def test_claude_weekly_near_cap_status_and_warning_boundary(monkeypatch, tmp_pat
     assert data["agents"]["claude"]["status"] == ("near_cap" if near_cap else "cool")
     warnings = data["recommendation"]["warnings"]
     assert any("lane claude is in deficit" in warning for warning in warnings) is near_cap
+
+
+# ---- per-account Claude rows (#10630) ------------------------------------------
+
+# ``agents.claude`` stays the default-account lane. Its field set is pinned as it
+# was before the per-account view existed; the new rows must not change it.
+_LEGACY_CLAUDE_LANE_KEYS = frozenset(
+    {
+        "agentic_pool",
+        "burn_pct_7d",
+        "codexbar",
+        "credit",
+        "fleet_burn",
+        "health",
+        "interactive",
+        "pace_deficit",
+        "remaining_pct",
+        "resets_at",
+        "routing_facts",
+        "runtime",
+        "spent_7d_usd",
+        "status",
+        "status_source",
+        "weekly_cap_usd",
+    }
+)
+_ACCOUNT_EMAIL = "owner-do-not-leak@example.invalid"
+_ACCOUNT_UUIDS = {"a": "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a", "b": "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"}
+
+
+def _account_payload(label: str, weekly_used: float, weekly_expected: float, *, updated: datetime) -> bytes:
+    email = f"{label}-{_ACCOUNT_EMAIL}"
+    return json.dumps(
+        [
+            {
+                "provider": "claude",
+                "source": "oauth",
+                "accountId": "0f0e0d0c-0b0a-4908-8706-050403020100",
+                "pace": {
+                    "primary": {"expectedUsedPercent": 50, "deltaPercent": -10, "summary": "10% in reserve"},
+                    "secondary": {
+                        "expectedUsedPercent": weekly_expected,
+                        "deltaPercent": 5,
+                        "summary": "5% in deficit",
+                    },
+                },
+                "usage": {
+                    "updatedAt": updated.isoformat(timespec="seconds").replace("+00:00", "Z"),
+                    "primary": {"usedPercent": 30, "resetsAt": "2026-10-14T18:00:00Z"},
+                    "secondary": {"usedPercent": weekly_used, "resetsAt": "2026-10-18T07:00:00Z"},
+                    "accountEmail": email,
+                    "identity": {"accountEmail": email},
+                },
+            }
+        ]
+    ).encode()
+
+
+@contextlib.contextmanager
+def _open_fixture_directory(path):
+    """The production opener's leaf rule (a link is never followed), without its
+    walk from root, which refuses the shared temporary directory fixtures live under."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError:
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_config_dir_not_private") from None
+    try:
+        yield fd
+    finally:
+        os.close(fd)
+
+
+def _write_private_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value))
+    path.chmod(0o600)
+
+
+_SYNTHETIC_TOKEN_PREFIX = "synthetic-access-token:"
+
+
+def _synthetic_token_owner(token: str) -> str:
+    """The provider's answer for the fixture tokens; never the network."""
+    if not token.startswith(_SYNTHETIC_TOKEN_PREFIX):
+        raise claude_account_usage.ClaudeAccountRefused("claude_account_identity_unavailable")
+    return token.removeprefix(_SYNTHETIC_TOKEN_PREFIX)
+
+
+def _account_dirs(monkeypatch, tmp_path: Path) -> dict[str, Path]:
+    """A fixture home (label ``a``) and a second Claude directory bound to label ``b``,
+    each recording its own account and holding its credentials; probes run the
+    real binding checks, and the fixture provider names each token's owner."""
+    home = tmp_path / "account-home"
+    dirs = {"a": home / ".claude", "b": tmp_path / "account-b"}
+    expires_at = int((time.time() + 3600) * 1000)
+    for label, directory in dirs.items():
+        directory.mkdir(parents=True, exist_ok=True)
+        record = home / ".claude.json" if label == "a" else directory / ".claude.json"
+        _write_private_json(record, {"oauthAccount": {"accountUuid": _ACCOUNT_UUIDS[label]}})
+        token = _SYNTHETIC_TOKEN_PREFIX + _ACCOUNT_UUIDS[label]
+        _write_private_json(
+            directory / ".credentials.json", {"claudeAiOauth": {"accessToken": token, "expiresAt": expires_at}}
+        )
+    monkeypatch.setattr(claude_account_usage, "_claude_selected_identity", _synthetic_token_owner)
+    binding = tmp_path / "claude-accounts.json"
+    entry = {"config_dir": str(dirs["b"]), "account_uuid": _ACCOUNT_UUIDS["b"]}
+    _write_private_json(binding, {"schema_version": 1, "accounts": {"b": entry}})
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setattr(claude_account_usage, "_open_claude_directory", _open_fixture_directory)
+    return dirs
+
+
+def _populate_accounts(monkeypatch, tmp_path: Path, *, b_fails: bool = False, age_s: float = 0.0) -> None:
+    """Fill the per-account cache from fixtures, as the background refresh would."""
+    dirs = _account_dirs(monkeypatch, tmp_path)
+    updated = datetime.now(UTC) - timedelta(seconds=age_s)
+
+    def run(codexbar, env, *, timeout_s, max_bytes):
+        if env["CLAUDE_CONFIG_DIR"] == str(dirs["b"]):
+            if b_fails:
+                raise claude_account_usage._ProbeFailed("timeout")
+            return _account_payload("b", 20, 47, updated=updated)
+        return _account_payload("a", 74, 47, updated=updated)
+
+    monkeypatch.setattr(claude_account_usage, "_codexbar_bin", lambda: "/fixture/bin/codexbar")
+    monkeypatch.setattr(claude_account_usage, "_run_codexbar", run)
+    claude_account_usage.refresh_claude_account_usage()
+
+
+def _routing_client(tmp_path: Path) -> TestClient:
+    app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
+    app.include_router(state_router.router, prefix="/api/state")
+    return TestClient(app)
+
+
+# Fails on origin/main: the payload has no ``claude_accounts`` key.
+def test_endpoint_publishes_one_row_per_claude_account(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+
+    response = _routing_client(tmp_path).get("/api/state/routing-budget")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert set(data["claude_accounts"]) == {"claude:a", "claude:b"}
+    row_a, row_b = data["claude_accounts"]["claude:a"], data["claude_accounts"]["claude:b"]
+    assert row_a["status"] == row_b["status"] == "ok"
+    assert row_a["weekly"]["left_pct"] == 26.0
+    assert row_a["weekly"]["leftover_pct"] == 0
+    assert row_b["weekly"]["left_pct"] == 80.0
+    assert row_b["weekly"]["leftover_pct"] == 57
+    assert row_b["session5h"]["left_pct"] == 70.0
+    assert row_b["session5h"]["leftover_pct"] == 40
+    assert data["preferred_claude_account"] == "b"
+
+
+def test_endpoint_stays_200_when_one_account_probe_fails(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path, b_fails=True)
+
+    response = _routing_client(tmp_path).get("/api/state/routing-budget")
+
+    assert response.status_code == 200
+    rows = response.json()["claude_accounts"]
+    assert rows["claude:a"]["status"] == "ok"
+    assert rows["claude:a"]["weekly"]["leftover_pct"] == 0
+    assert rows["claude:b"]["status"] == "unknown"
+    assert rows["claude:b"]["reason"] == "timeout"
+    assert rows["claude:b"]["weekly"]["left_pct"] is None
+    assert response.json()["preferred_claude_account"] is None
+
+
+def test_endpoint_payload_carries_no_account_identity_or_path(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+
+    response = _routing_client(tmp_path).get("/api/state/routing-budget")
+    body = response.text
+
+    # The rows are present, so the absence checks below are not vacuous.
+    rows = response.json()["claude_accounts"]
+    assert {row["status"] for row in rows.values()} == {"ok"}
+    for forbidden in (
+        _ACCOUNT_EMAIL,
+        "example.invalid",
+        "0f0e0d0c-0b0a-4908-8706-050403020100",
+        *_ACCOUNT_UUIDS.values(),
+        str(tmp_path),
+        "account-b",
+        "accountEmail",
+        "accountId",
+        "accountUuid",
+        "CLAUDE_CONFIG_DIR",
+        "config_dir",
+    ):
+        assert forbidden not in body, forbidden
+
+
+def test_request_path_never_spawns_the_account_probe(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    spawned: list[str] = []
+
+    def forbidden(*_args, **_kwargs):
+        spawned.append("probe")
+        raise AssertionError("request path must not probe")
+
+    monkeypatch.setattr(claude_account_usage, "probe_account", forbidden)
+    monkeypatch.setattr(claude_account_usage, "_run_codexbar", forbidden)
+    monkeypatch.setattr(claude_account_usage, "refresh_claude_account_usage", forbidden)
+    client = _routing_client(tmp_path)
+
+    cold = client.get("/api/state/routing-budget")
+    warm = client.get("/api/state/routing-budget")
+    in_process = state_router.compute_routing_budget(tasks_dir=tmp_path / "tasks")
+
+    assert cold.status_code == warm.status_code == 200
+    assert spawned == []
+    assert {row["status"] for row in cold.json()["claude_accounts"].values()} == {"unknown"}
+    assert set(in_process["claude_accounts"]) == {"claude:a", "claude:b"}
+
+
+def test_legacy_claude_lane_is_unchanged_by_account_rows(monkeypatch, tmp_path):
+    """Legacy readers see the same default-account lane with or without the new rows."""
+    _configure(monkeypatch, tmp_path, [])
+    _account_dirs(monkeypatch, tmp_path)  # same fixture home for both computations
+    now = datetime(2026, 10, 14, 15, 0, tzinfo=UTC)
+
+    without_rows = state_router.compute_routing_budget(now=now, tasks_dir=tmp_path / "tasks")
+    _populate_accounts(monkeypatch, tmp_path)
+    with_rows = state_router.compute_routing_budget(now=now, tasks_dir=tmp_path / "tasks")
+
+    assert set(without_rows["agents"]["claude"]) == _LEGACY_CLAUDE_LANE_KEYS
+    assert json.dumps(with_rows["agents"]["claude"], sort_keys=True, default=str) == json.dumps(
+        without_rows["agents"]["claude"], sort_keys=True, default=str
+    )
+    assert [row["lane"] for row in with_rows["ranked_by_headroom"]].count("claude") == 1
+    assert not any(str(lane).startswith("claude:") for lane in with_rows["agents"])
+    assert with_rows["recommendation"] == without_rows["recommendation"]
+
+
+def test_withdrawn_snapshot_clears_the_account_preference():
+    payload = {
+        "recommendation": {"primary_agent_for_code": "claude", "warnings": []},
+        "agents": {},
+        "claude_accounts": {"claude:a": {"status": "ok"}},
+        "preferred_claude_account": "a",
+    }
+    withdrawn = state_router._withdraw_routing_authorization(payload)
+    assert withdrawn["preferred_claude_account"] is None
+    assert withdrawn["claude_accounts"] == {"claude:a": {"status": "ok"}}
+
+
+# Fails on b62a4a3243: a warm routing snapshot served the account rows frozen at compute time.
+def test_warm_snapshot_serves_live_account_rows(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+    client = _routing_client(tmp_path)
+
+    first = client.get("/api/state/routing-budget").json()
+    assert first["claude_accounts"]["claude:b"]["status"] == "ok"
+    assert first["preferred_claude_account"] == "b"
+
+    claude_account_usage._record("b", None, "timeout")  # the next background probe of b fails
+    warm = client.get("/api/state/routing-budget").json()
+
+    assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
+    assert warm["claude_accounts"]["claude:b"]["status"] == "stale"
+    assert warm["claude_accounts"]["claude:b"]["reason"] == "timeout"
+    assert warm["preferred_claude_account"] is None
+
+
+# Fails on e75cb7e113: a warm routing snapshot kept serving b's row ``ok`` and
+# preferred after b's binding was removed.
+def test_warm_snapshot_withholds_a_row_whose_binding_was_removed(monkeypatch, tmp_path):
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+    client = _routing_client(tmp_path)
+    first = client.get("/api/state/routing-budget").json()
+    assert first["claude_accounts"]["claude:b"]["status"] == "ok"
+
+    _write_private_json(tmp_path / "claude-accounts.json", {"schema_version": 1, "accounts": {}})
+    warm = client.get("/api/state/routing-budget").json()
+
+    assert warm["diagnostics"] == first["diagnostics"]  # served from the routing cache
+    row_b = warm["claude_accounts"]["claude:b"]
+    # The serve saw the binding file change without reading it.
+    assert (row_b["status"], row_b["reason"]) == ("unknown", "not_probed")
+    assert row_b["weekly"]["left_pct"] is None
+    assert warm["claude_accounts"]["claude:a"]["status"] == "ok"
+    assert warm["preferred_claude_account"] is None
+
+    revalidation = claude_account_usage._revalidation
+    assert revalidation is not None
+    revalidation.join(timeout=30)  # the background revalidation read the binding
+    later = client.get("/api/state/routing-budget").json()
+    row_b = later["claude_accounts"]["claude:b"]
+    assert (row_b["status"], row_b["reason"]) == ("unknown", "claude_account_binding_missing")
+    assert later["preferred_claude_account"] is None
+
+
+# Fails on b62a4a3243: a 710 s old sample served 60 s later still reported ``ok``,
+# its frozen age, and the account preference, past the 720 s account TTL.
+def test_aged_snapshot_reads_account_freshness_at_serve_time(monkeypatch, tmp_path):
+    monkeypatch.setenv("CODEXBAR_CACHE_TTL_S", "720")
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path, age_s=710)
+    fields = claude_account_usage.routing_budget_fields()
+    assert {row["status"] for row in fields["claude_accounts"].values()} == {"ok"}
+    assert fields["preferred_claude_account"] == "b"
+    snapshot = {**fields, "diagnostics": {"data_age_s": 0, "stale_threshold_s": 900}}
+
+    served_at = time.time() + 60
+    monkeypatch.setattr(time, "time", lambda: served_at)
+    served = state_router._aged_routing_budget(snapshot, 60)
+
+    row_b = served["claude_accounts"]["claude:b"]
+    assert row_b["status"] == "stale"
+    assert row_b["reason"] == "expired"
+    assert row_b["age_s"] >= 770
+    assert served["preferred_claude_account"] is None
+    assert snapshot["claude_accounts"] is fields["claude_accounts"]  # the stored snapshot is not mutated
+
+
+# Fails on 7f1bcc27f0 (#10646): the pre-push gate's base temp is inside the Git
+# common directory, so every probe sandbox was refused and every row read unknown.
+def test_account_rows_do_not_depend_on_a_base_temp_inside_git(monkeypatch, tmp_path):
+    real_git_tree = claude_account_usage._git_tree
+    above = tmp_path.resolve().parent  # reads as Git, as the gate's base temp does
+
+    def git_tree(directory: Path) -> bool:
+        return directory == above or real_git_tree(directory)
+
+    monkeypatch.setattr(claude_account_usage, "_git_tree", git_tree)
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+
+    rows = _routing_client(tmp_path).get("/api/state/routing-budget").json()["claude_accounts"]
+
+    assert {row["status"] for row in rows.values()} == {"ok"}
+
+
+def test_account_rows_refuse_a_scratch_root_inside_a_git_checkout(monkeypatch, tmp_path):
+    """Git a test builds below ``tmp_path`` is still judged, so the rows are refused."""
+    checkout = tmp_path / "checkout"
+    (checkout / ".git").mkdir(parents=True)
+    _configure(monkeypatch, tmp_path, [])
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(checkout / "scratch"))
+    _populate_accounts(monkeypatch, tmp_path)
+
+    rows = _routing_client(tmp_path).get("/api/state/routing-budget").json()["claude_accounts"]
+
+    assert {(row["status"], row["reason"]) for row in rows.values()} == {("unknown", "sandbox_unavailable")}

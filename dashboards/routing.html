@@ -35,7 +35,7 @@ tr:last-child td { border-bottom:none; }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 .pill { border-radius:999px; display:inline-flex; font-size:11px; font-weight:650; padding:2px 8px; }
 .pill.cool, .pill.ok, .pill.done { background:rgba(63,185,80,.15); color:var(--green); }
-.pill.warm, .pill.hot, .pill.warn, .pill.timeout { background:rgba(210,153,34,.15); color:var(--orange); }
+.pill.warm, .pill.hot, .pill.warn, .pill.timeout, .pill.stale { background:rgba(210,153,34,.15); color:var(--orange); }
 .pill.near_cap, .pill.error, .pill.failed, .pill.rate_limited, .pill.zombie { background:rgba(248,81,73,.15); color:var(--red); }
 .pill.gray, .pill.unknown, .pill.spawning, .pill.running, .pill.unavailable, .pill.need_login, .pill.need_probe { background:rgba(72,79,88,.2); color:var(--text2); }
 .pill.need_login { background:rgba(248,81,73,.2); color:var(--red); font-weight:700; }
@@ -91,6 +91,12 @@ tr:last-child td { border-bottom:none; }
     <h2>Subscriptions</h2>
     <p class="sub" style="margin-bottom:10px">Provider allotment (Auto/API monthly for Cursor; other lanes per payload). Fleet burn is our dispatch JSONL — distinct from provider remaining.</p>
     <div id="subscriptions-table"></div>
+  </section>
+
+  <section class="section panel">
+    <h2>Claude accounts</h2>
+    <p class="sub" style="margin-bottom:10px">One row per registered Claude account. The <span class="mono">claude</span> lane above stays the default account. Projected leftover is the weekly share left at reset if the current pace continues; 0% means the account runs out before reset. Display only: routing does not read these rows.</p>
+    <div id="claude-accounts-table"></div>
   </section>
 
   <section class="section panel">
@@ -459,6 +465,54 @@ function renderApiAccounts(routing) {
   </table>`;
 }
 
+function accountPctCell(value, zeroNote) {
+  const num = (value === null || value === undefined) ? NaN : Number(value);
+  if (!Number.isFinite(num)) return '<span class="pill unknown">unknown</span>';
+  const text = `${Math.round(num)}%`;
+  return zeroNote && num === 0
+    ? `${escapeHtml(text)} <span class="stale-note">${escapeHtml(zeroNote)}</span>`
+    : escapeHtml(text);
+}
+
+function accountTextCell(value, format = v => v) {
+  return value ? escapeHtml(format(value)) : '<span class="pill unknown">unknown</span>';
+}
+
+function claudeAccountRowsHtml(routing) {
+  const accounts = routing.claude_accounts;
+  if (!accounts || typeof accounts !== 'object') return '';
+  const preferred = routing.preferred_claude_account;
+  return Object.keys(accounts).sort().map(key => {
+    const row = accounts[key] && typeof accounts[key] === 'object' ? accounts[key] : {};
+    const session = row.session5h || {};
+    const weekly = row.weekly || {};
+    const label = key.replace(/^claude:/, '');
+    const freshness = [];
+    if (row.updated) freshness.push(formatTs(row.updated));
+    if (row.age_s != null) freshness.push(formatAge(row.age_s));
+    if (row.reason) freshness.push(String(row.reason));
+    const preferredPill = preferred && preferred === label ? ' <span class="pill ok">more weekly leftover</span>' : '';
+    return `<tr>
+      <td class="mono">${escapeHtml(key)}${preferredPill}</td>
+      <td>${statusPill(row.status || 'unknown')}</td>
+      <td>${accountPctCell(session.left_pct)}</td>
+      <td>${accountPctCell(weekly.left_pct)}</td>
+      <td>${accountPctCell(weekly.leftover_pct, 'runs out before reset')}</td>
+      <td>${accountTextCell(weekly.pace)}</td>
+      <td>${accountTextCell(weekly.resets_at, formatTs)}</td>
+      <td>${freshness.length ? `<span class="stale-note">${escapeHtml(freshness.join(' · '))}</span>` : ''}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderClaudeAccounts(routing) {
+  const rows = claudeAccountRowsHtml(routing);
+  document.getElementById('claude-accounts-table').innerHTML = `<table>
+    <tr><th>Account</th><th>Status</th><th>5h left</th><th>Weekly left</th><th>Projected leftover at reset</th><th>Weekly pace</th><th>Weekly reset</th><th>Freshness</th></tr>
+    ${rows || '<tr><td colspan="8">No per-account data.</td></tr>'}
+  </table>`;
+}
+
 function resolveSubscriptionAgent(agents, name) {
   // Budget API keys Gemini-family allotment as `gemini`; live seat is `agy`.
   if (name === 'agy') return agents.agy || agents.gemini || null;
@@ -579,10 +633,12 @@ async function loadRouting() {
   if (routing) {
     renderSummary(routing, usage, delegates);
     renderSubscriptions(routing);
+    renderClaudeAccounts(routing);
     renderApiAccounts(routing);
   } else {
     document.getElementById('summary-grid').innerHTML = `<div class="error">Routing budget unavailable${errors.length ? `: ${escapeHtml(errors.join(', '))}` : ''}</div>`;
     document.getElementById('subscriptions-table').innerHTML = '<div class="error">Subscriptions unavailable — routing-budget failed.</div>';
+    document.getElementById('claude-accounts-table').innerHTML = '<div class="error">Claude accounts unavailable — routing-budget failed.</div>';
     document.getElementById('api-accounts-table').innerHTML = '<div class="error">API accounts unavailable — routing-budget failed.</div>';
   }
   renderAgents(agents, usage);
