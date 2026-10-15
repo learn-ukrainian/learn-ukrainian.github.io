@@ -129,6 +129,14 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
         yield log_dir
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None:
+    """Let the dispatch fixture clone be built once per worker (#9065)."""
+    from tests.helpers.dispatch_checkout import register_template_factory
+
+    register_template_factory(tmp_path_factory)
+
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -2390,7 +2398,14 @@ def _sparse_missing_trees() -> frozenset[str]:
 
 def _item_repo_rel(item: pytest.Item) -> str:
     raw = getattr(item, "path", None) or getattr(item, "fspath", "")
-    path = Path(str(raw))
+    return _repo_rel(str(raw))
+
+
+# Items of one module share its path: resolve each path once, not per item
+# (19.6k items cost 39k resolve() calls in the repo_wide collection child, #10498).
+@functools.cache
+def _repo_rel(raw: str) -> str:
+    path = Path(raw)
     try:
         return path.resolve().relative_to(_REPO_ROOT).as_posix()
     except ValueError:
@@ -2412,7 +2427,7 @@ def _mark_nightly_groups(items: list[pytest.Item]) -> None:
 
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
-    """Skip tests whose sparse-excluded tree is not in this worktree."""
+    """Mark nightly groups and quarantined flakes; refuse unserved ``rules_core_absent`` tests."""
     _mark_nightly_groups(items)
     selected = rerun_node_ids(
         load_registry(),
@@ -2437,18 +2452,41 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
         raise pytest.UsageError(
             f"rules_core_absent tests whose module does not import the rules_core_absent_when_marked fixture: {unserved}"
         )
+
+
+def _skip_if_sparse_tree_missing(item: pytest.Item) -> None:
+    """Skip a test whose sparse-excluded tree is not in this worktree.
+
+    Decided when the test runs, before its fixtures, as a skip mark would be.
+    A collect-only child or an xdist worker then analyzes only the modules
+    whose tests it runs, not every collected one (#10498).
+    """
     missing = _sparse_missing_trees()
     if not missing:
         return
-    for item in items:
-        reason = sparse_missing_tree_skip_reason(
-            _item_repo_rel(item),
-            sparse_enabled=True,
-            missing_trees=missing,
-            item_name=item.name,
-        )
-        if reason:
-            item.add_marker(pytest.mark.skip(reason=reason))
+    reason = sparse_missing_tree_skip_reason(
+        _item_repo_rel(item),
+        sparse_enabled=True,
+        missing_trees=missing,
+        item_name=item.name,
+    )
+    if reason:
+        # Report the test's location, as pytest's own skip marks do.
+        raise pytest.skip.Exception(reason, _use_item_location=True)
+
+
+class _SparseTreeSkip:
+    """Own setup hook, so ``pytest_runtest_setup`` below stays self-contained.
+
+    Tests call that hook with marker-only doubles or copy its source into an
+    isolated conftest; neither has to supply what the sparse check reads.
+    ``tryfirst`` keeps the skip ahead of the conftest checks and fixtures,
+    where pytest's skip-mark evaluation ran it before.
+    """
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_runtest_setup(self, item: pytest.Item) -> None:
+        _skip_if_sparse_tree_missing(item)
 
 
 class _FlakeRerunReporter:
@@ -2590,6 +2628,7 @@ def pytest_configure(config: pytest.Config) -> None:
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
+    config.pluginmanager.register(_SparseTreeSkip(), "sparse-tree-skip")
     if hasattr(config, "workerinput"):
         collected_path = config.workerinput.get(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR)
     else:

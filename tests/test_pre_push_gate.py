@@ -21,7 +21,7 @@ import pytest
 import yaml
 
 from tests.helpers.python import project_python
-from tests.wait_helpers import wait_for_line
+from tests.wait_helpers import wait_for_line, wait_for_pid_line, wait_until
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO_ROOT / ".githooks"
@@ -56,6 +56,8 @@ PRE_COMMIT = textwrap.dedent(
 )
 GREEN_TEST = "def test_ok():\n    assert True\n"
 RED_TEST = "def test_broken():\n    assert False\n"
+# The changed file runs first (worksteal), then the two registered invariants (loadfile).
+SPLIT_SUMMARY_RE = r"1 passed in \d+(?:\.\d+)?s; 2 passed in \d+(?:\.\d+)?s"
 
 
 def _install_surface_scanners(root: Path) -> None:
@@ -735,11 +737,14 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
                         text=True,
                     )
                 )
-            deadline = time.monotonic() + 10.0
-            while len(list((state / "queue").glob("*.ticket"))) != 4:
-                assert time.monotonic() < deadline, "four pushers failed to register"
+
+            def four_registered() -> bool:
+                if len(list((state / "queue").glob("*.ticket"))) == 4:
+                    return True
                 assert all(process.poll() is None for process in processes), "a pusher exited before admission"
-                time.sleep(0.02)
+                return False
+
+            wait_until(four_registered, timeout=10.0, interval=0.02, message="four pushers registering")
         for process in processes:
             stdout, stderr = process.communicate(timeout=30)
             assert process.returncode == 0, stdout + stderr
@@ -1110,7 +1115,8 @@ def test_the_real_registry_fits_the_run_budget_once_heavy_modules_are_deferred()
     durations = json.loads((REPO_ROOT / gate.DURATIONS_FILE).read_text(encoding="utf-8"))
 
     assert deferred, "the docs lookup modules are expected to be deferred"
-    assert sum(durations.get(n, 0.0) for n in run if "::" not in n) <= gate.RUN_BUDGET_S
+    # The registry runs in the pytest stage, so it must fit that stage's own allowance (#10642).
+    assert sum(durations.get(n, 0.0) for n in run if "::" not in n) <= gate.STAGE_BUDGET_S
 
 
 def test_entries_that_read_a_tree_the_sparse_worktree_omits_are_deferred_only_there(repo: Path) -> None:
@@ -1214,21 +1220,22 @@ def test_pytest_measurement_records_requested_and_effective_invocation(
         with gate.stage_measurement(event, "pytest") as diagnostics:
             assert (
                 gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
-                == "1 passed in 0.1s"
+                == "1 passed in 0.1s; 1 passed in 0.1s"
             )
     else:
         with pytest.raises(gate.GateOutcome):
             with gate.stage_measurement(event, "pytest") as diagnostics:
                 gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics)
-    assert len(seen) == 1
-    command = seen[0]
-    if effective == 1:
-        assert "-n" not in command and "--dist" not in command
-    else:
-        assert command[-4:] == ["-n", str(effective), "--dist", "loadfile"]
+    assert len(seen) == (2 if ending == "green" else 1)
+    for command, dist in zip(seen, ("worksteal", "loadfile"), strict=False):
+        if effective == 1:
+            assert "-n" not in command and "--dist" not in command
+        else:
+            assert command[-4:] == ["-n", str(effective), "--dist", dist]
     row = event["stages"]["pytest"]
     assert row["requested_test_processes"] == requested
     assert row["effective_test_processes"] == effective
+    assert row["pytest_invocations"] == [{"dist": "worksteal", "nodes": 1}, {"dist": "loadfile", "nodes": 1}]
     assert row["outcome"] == {"green": "green", "red": "refused", "timeout": "validation_incomplete"}[ending]
 
 
@@ -1245,6 +1252,135 @@ def test_invalid_process_configuration_refuses_even_without_xdist(value: str, mo
     assert raised.value.reason == "invalid_configuration"
     assert raised.value.incomplete
     assert raised.value.detail == f"{gate.MAX_TEST_PROCESSES_ENV} must be a positive integer"
+
+
+# ---- #10610: changed whole files are distributed per test, not pinned to one worker -------------------
+
+
+def test_pytest_invocations_split_changed_files_from_registered_invariants() -> None:
+    plan = _plan(
+        registry_nodes=(
+            "tests/test_a.py",
+            "tests/test_b.py::test_registered",  # subsumed by the changed whole file
+            "tests/test_c.py::TestX::test_y",
+        ),
+        changed_tests=("tests/test_b.py", "tests/test_d.py"),
+    )
+    invocations = gate.pytest_invocations(plan)
+    assert invocations == (
+        (("tests/test_b.py", "tests/test_d.py"), "worksteal"),
+        (("tests/test_a.py", "tests/test_c.py::TestX::test_y"), "loadfile"),
+    )
+    selected = [node for nodes, _dist in invocations for node in nodes]
+    assert sorted(selected) == list(plan.node_ids) and len(selected) == len(set(selected))
+    # An empty side is not invoked at all.
+    assert gate.pytest_invocations(_plan(changed_tests=())) == ((("tests/test_a.py",), "loadfile"),)
+    assert gate.pytest_invocations(_plan(registry_nodes=())) == ((("tests/test_b.py",), "worksteal"),)
+
+
+def test_changed_whole_file_is_never_passed_as_a_loadfile_unit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "4")
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    plan = _plan(
+        registry_nodes=("tests/test_a.py", "tests/test_slow.py::test_registered"),
+        changed_tests=("tests/test_slow.py",),
+    )
+    commands = []
+
+    def run(command: list[str], **kwargs: object) -> tuple[int, str]:
+        commands.append(command)
+        assert kwargs["deadline"] == deadline  # both runs share the one stage deadline
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    deadline = time.monotonic() + 30
+    assert gate.run_pytest_stage(plan, tmp_path, "launcher", deadline) == "1 passed in 0.1s; 1 passed in 0.1s"
+    by_dist = {command[command.index("--dist") + 1]: command for command in commands}
+    assert set(by_dist) == {"worksteal", "loadfile"}
+    assert "tests/test_slow.py" in by_dist["worksteal"]
+    assert not any(arg.startswith("tests/test_slow.py") for arg in by_dist["loadfile"])
+    executed = [arg for command in commands for arg in command if arg.startswith("tests/")]
+    assert sorted(executed) == list(plan.node_ids)
+
+
+@pytest.mark.parametrize(
+    "codes,expected",
+    [
+        ((5, 0), "green"),  # a changed file collecting nothing, as in the former single run
+        ((0, 5), "green"),
+        ((5, 5), "pytest_error"),  # the selection as a whole ran nothing
+        ((0, 2), "pytest_error"),  # a later usage error never yields green
+        ((0, 1), "tests_failed"),
+        ((1, None), "tests_failed"),  # the first refusal stops the stage
+        ((4, None), "pytest_error"),
+    ],
+)
+def test_split_pytest_stage_is_green_only_when_every_run_passes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, codes: tuple[int, int | None], expected: str
+) -> None:
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    calls = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        code = codes[len(calls)]
+        assert code is not None, "a run started after the stage was already refused"
+        calls.append(command)
+        if code == 0:
+            return 0, "3 passed in 0.1s"
+        return code, "FAILED tests/test_b.py::test_bad" if code == 1 else f"exit {code}"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    if expected == "green":
+        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "3 passed in 0.1s"
+        return
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert raised.value.reason == expected
+    assert raised.value.incomplete == (expected == "pytest_error")
+    if expected == "tests_failed":
+        assert raised.value.failing == ("tests/test_b.py::test_bad",)
+
+
+WORKER_RECORD_TEST = textwrap.dedent(
+    """\
+    import os
+    from pathlib import Path
+
+    def _record(name):
+        Path(os.environ['GATE_WORKER_RECORD'], name).write_text(os.environ.get('PYTEST_XDIST_WORKER', 'main'))
+
+    def test_first():
+        _record('first')
+
+    def test_second():
+        _record('second')
+    """
+)
+
+
+def test_changed_whole_file_runs_on_more_than_one_worker(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pytest.importorskip("xdist")
+    _write(repo, "tests/test_changed_slow.py", WORKER_RECORD_TEST)
+    _commit(repo, "changed whole file", "tests/test_changed_slow.py")
+    record = tmp_path / "workers"
+    record.mkdir()
+    monkeypatch.setenv("GATE_WORKER_RECORD", str(record))
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "2")
+    plan = _plan(registry_nodes=("tests/test_invariant.py",), changed_tests=("tests/test_changed_slow.py",))
+    result = gate.run_pytest_stage(
+        plan, repo, str(repo / "scripts/pre_commit/project_python.sh"), time.monotonic() + 120
+    )
+    assert re.fullmatch(r"2 passed in \d+(?:\.\d+)?s; 1 passed in \d+(?:\.\d+)?s", result), result
+    # Under ``--dist loadfile`` both tests of the changed file would share one worker.
+    workers = {path.name: path.read_text() for path in record.iterdir()}
+    assert set(workers) == {"first", "second"}
+    assert workers["first"] != workers["second"] and set(workers.values()) <= {"gw0", "gw1"}
 
 
 def test_invalid_process_configuration_cannot_reuse_a_green_receipt(repo: Path) -> None:
@@ -1393,15 +1529,18 @@ def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(r
 
 
 def _gone(pid: int) -> bool:
-    for _ in range(100):
+    def exited() -> bool:
         try:
             state = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8").rsplit(")", 1)[1].split()[0]
         except OSError:
             return True
-        if state == "Z":
-            return True
-        time.sleep(0.05)
-    return False
+        return state == "Z"
+
+    try:
+        wait_until(exited, timeout=5.0, interval=0.05, message=f"process {pid} exiting")
+    except AssertionError:
+        return False
+    return True
 
 
 _DETACHED_CHILD = (
@@ -1710,7 +1849,7 @@ def test_an_absent_registered_file_with_an_approved_deferral_is_not_incomplete(
 _SHADOW_DETACHED = (
     "import json, subprocess, sys\n"
     "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(300)'], start_new_session=True)\n"
-    "open({pid_file!r}, 'w').write(str(child.pid))\n"
+    "open({pid_file!r}, 'w').write(str(child.pid) + '\\n')\n"
     "{tail}"
 )
 _SHADOW_ANSWER = "print(json.dumps({'components': [], 'fallback_reasons': [], 'selected_tests': []}))\n"
@@ -1726,10 +1865,7 @@ def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
     monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 3.0 if ending == "timeout" else 60.0)
     plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
     shadow = gate.Shadow(plan, repo, str(repo / "scripts/pre_commit/project_python.sh"))
-    for _ in range(200):  # the selector must have spawned its child before the ending is exercised
-        if pid_file.exists() and pid_file.read_text(encoding="utf-8"):
-            break
-        time.sleep(0.05)
+    wait_for_pid_line(pid_file, timeout=10.0)  # the selector must have spawned its child before the ending
     started = time.monotonic()
 
     if ending == "abandon":
@@ -1936,11 +2072,16 @@ def test_pytest_stage_owns_and_cleans_a_private_base_temp(
 
     monkeypatch.setattr(gate, "run_bounded", run)
     if ending == "green":
-        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
+        assert (
+            gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+            == "1 passed in 0.1s; 1 passed in 0.1s"
+        )
     else:
         with pytest.raises(OSError if ending == "startup-error" else gate.GateOutcome):
             gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
-    assert len(seen) == 1 and not seen[0].exists()
+    # Each run owns a distinct base; a refused first run never starts the second.
+    assert len(seen) == (2 if ending == "green" else 1) and len(set(seen)) == len(seen)
+    assert not any(base.exists() for base in seen)
     assert list(state.glob("pytest-*")) == []
 
 
@@ -2089,7 +2230,7 @@ def test_pytest_stage_reaps_stale_nodes_without_following_links(
         with gate.Admission(state, 0) as admission:
             assert (
                 gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, admission=admission)
-                == "1 passed in 0.1s"
+                == "1 passed in 0.1s; 1 passed in 0.1s"
             )
         assert not os.path.lexists(stale)
         assert list(state.glob("pytest-*")) == []
@@ -2362,31 +2503,44 @@ def _start_controlled_gate(
 
 def _wait_tickets(state: Path, count: int, processes: list[subprocess.Popen]) -> list[dict]:
     """Wait for complete atomic publications, not for an assumed scheduler delay."""
-    deadline = time.monotonic() + 30
-    while time.monotonic() < deadline:
+    paths: list[Path] = []
+
+    def published() -> bool:
+        nonlocal paths
         paths = list((state / "queue").glob("*.ticket"))
         if len(paths) == count:
-            return [json.loads(path.read_text()) for path in paths]
+            return True
         exited = [process for process in processes if process.poll() is not None]
         assert not exited, "gate exited before publishing its ticket: " + "\n".join(
             process.stderr.read() for process in exited
         )
-        time.sleep(0.01)
-    pytest.fail(f"expected {count} tickets, observed {len(paths)}")
+        return False
+
+    try:
+        wait_until(published, timeout=30.0, interval=0.01, message=f"{count} tickets")
+    except AssertionError as error:
+        if str(error).startswith(f"{count} tickets"):
+            pytest.fail(f"expected {count} tickets, observed {len(paths)}")
+        raise
+    return [json.loads(path.read_text()) for path in paths]
 
 
 def _finish_controlled(process: subprocess.Popen, control: Path, result: str = "green") -> tuple[str, str]:
     assert wait_for_line(control / "entered", stop_if=lambda: process.poll() is not None) == "entered"
     # Nonblocking open proves the validator is already waiting on the FIFO. Retry only the
     # synchronization probe; never restart a validation attempt.
-    deadline = time.monotonic() + 30
-    while True:
+    fds: list[int] = []
+
+    def reader_waiting() -> bool:
         try:
-            fd = os.open(control / "release", os.O_WRONLY | os.O_NONBLOCK)
-            break
+            fds.append(os.open(control / "release", os.O_WRONLY | os.O_NONBLOCK))
         except OSError as error:
-            assert error.errno == errno.ENXIO and time.monotonic() < deadline
-            time.sleep(0.01)
+            assert error.errno == errno.ENXIO, error
+            return False
+        return True
+
+    wait_until(reader_waiting, timeout=30.0, interval=0.01, message="validator waiting on the release FIFO")
+    fd = fds[0]
     with os.fdopen(fd, "w") as release:
         release.write(result)
     return process.communicate(timeout=60)
@@ -2456,7 +2610,7 @@ def test_production_head_follower_reuses_green_under_global_queue_load(repo: Pat
         _wait_tickets(state / "heads" / head, 2, processes)
         # Keep the synchronized load beyond one shortened allowance. The leader has
         # two real predecessors, so its valid global allowance is eight seconds.
-        time.sleep(4.5)
+        time.sleep(4.5)  # wall-clock hold: the allowance under test is measured in elapsed seconds
         _finish_controlled(processes[0], controls[0])
         stdout, stderr = _finish_controlled(processes[1], controls[1])
         assert processes[1].returncode == 0, stdout + stderr
@@ -2470,7 +2624,7 @@ def test_production_head_follower_reuses_green_under_global_queue_load(repo: Pat
     leader, follower = rows
     assert leader["queue_position"] == 3
     assert set(leader["stages"]) == {"pre_commit", "pytest"}
-    assert re.fullmatch(r"3 passed in \d+(?:\.\d+)?s", leader["pytest"])
+    assert re.fullmatch(SPLIT_SUMMARY_RE, leader["pytest"])
     assert follower["detail"] == "valid receipt after coalescing"
     assert follower["coalescing_wait_s"] > 4
     assert follower["admission_wait_limit_s"] == 16
@@ -2491,10 +2645,10 @@ def test_production_non_green_head_holder_keeps_later_global_allowance(repo: Pat
         processes.append(_start_global_load(state, controls[1], ticket_count=0))
         processes.append(_start_controlled_gate(repo, controls[2], LU_PRE_PUSH_GATE_ADMISSION_WAIT_S="6"))
         _wait_tickets(state / "heads" / head, 3, processes)
-        time.sleep(8)
+        time.sleep(8)  # wall-clock hold: the coalescing wait under test is measured in elapsed seconds
         _finish_controlled(processes[0], controls[0])
         _wait_tickets(state, 1, processes[1:])
-        time.sleep(5)
+        time.sleep(5)  # wall-clock hold: no receipt may appear while the global allowance is still running
         assert _receipts(repo) == [], "head holders without green proof must not authorize reuse"
         _finish_controlled(processes[1], controls[1])
         stdout, stderr = _finish_controlled(processes[2], controls[2])
@@ -2507,7 +2661,7 @@ def test_production_non_green_head_holder_keeps_later_global_allowance(repo: Pat
     assert row["coalescing_wait_s"] >= 8 and row["admission_wait_s"] > 12
     assert row["admission_wait_limit_s"] >= row["coalescing_wait_s"] + 6 - 0.02
     assert row["queue_position"] == 2 and set(row["stages"]) == {"pre_commit", "pytest"}
-    assert re.fullmatch(r"3 passed in \d+(?:\.\d+)?s", row["pytest"])
+    assert re.fullmatch(SPLIT_SUMMARY_RE, row["pytest"])
     assert "detail" not in row and len(_receipts(repo)) == 1
     _assert_queue_released(state)
 
@@ -3378,7 +3532,7 @@ def test_pytest_stale_sweep_requires_live_exclusive_global_admission(qualified_c
                 admission=admission,
                 diagnostics=diagnostics,
             )
-            == "1 passed in 0.1s"
+            == "1 passed in 0.1s; 1 passed in 0.1s"
         )
         assert (stale / "preserved").read_text() == "other run"
         assert list(state.glob("pytest-*")) == [stale]
@@ -3612,13 +3766,14 @@ os.kill(pid,signal.SIGKILL)
     monkeypatch.setattr(gate.ResourceScope, "start", start)
     original_execute = gate.ResourceScope.execute
 
-    def execute(scope, plan, config, deadline, event):
+    def execute(scope, plan, config, deadline, event, **kwargs):
         scope.launcher = str(repo / "scripts/pre_commit/project_python.sh")
-        return original_execute(scope, plan, config, deadline, event)
+        return original_execute(scope, plan, config, deadline, event, **kwargs)
 
     monkeypatch.setattr(gate.ResourceScope, "execute", execute)
     monkeypatch.chdir(repo)
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
+    monkeypatch.setenv("LU_PRE_PUSH_GATE_STAGE_BUDGET_S", "300")  # the scoped child must apply this, not 600
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     code = gate.main(
         [
@@ -3645,6 +3800,9 @@ os.kill(pid,signal.SIGKILL)
             == {"resource_breach": "resource_bound_exceeded", "unsettled": "scope_cleanup_unverified"}[ending]
         )
     assert set(row["stages"]) == {"pre_commit", "pytest"}
+    assert row["stage_budget_s"] == 300.0
+    for stage in row["stages"].values():
+        assert stage["allowance_s"] == pytest.approx(300.0) and stage["allowance_limited_by"] == "stage_budget"
     assert row["requested_test_processes"] == 4
     assert row["effective_test_processes"] in (2, 4)
     _assert_queue_released(gate.state_dir(repo))
@@ -3702,14 +3860,15 @@ os._exit(0)
         with pytest.raises(BlockingIOError):
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         release.touch()
-        deadline = time.monotonic() + 10
-        while True:
+
+        def lock_free() -> bool:
             try:
                 fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                break
             except BlockingIOError:
-                assert time.monotonic() < deadline
-                time.sleep(0.05)
+                return False
+            return True
+
+        wait_until(lock_free, timeout=10.0, interval=0.05, message="scoped reservation releasing the lock")
     finally:
         release.touch()
         os.close(fd)
@@ -3763,10 +3922,12 @@ with pathlib.Path(sys.argv[1]).open('r+') as stream:
         )
         try:
             wait_for_line(marker, stop_if=lambda: legacy.poll() is not None)
-            deadline = time.monotonic() + 10
-            while gate.sharing_lock_inventory(holder._fd, "READ"):
-                assert time.monotonic() < deadline
-                time.sleep(0.02)
+            wait_until(
+                lambda: not gate.sharing_lock_inventory(holder._fd, "READ"),
+                timeout=10.0,
+                interval=0.02,
+                message="legacy waiter queued behind the scoped holder",
+            )
             with (
                 pytest.raises(gate.GateOutcome, match="admission_timeout"),
                 gate.Admission(tmp_path, 0, scope=InjectedScope(qualified_cgroups)),
@@ -3905,3 +4066,233 @@ def test_terminal_publication_interrupt_refuses_with_paired_complete_measurement
     assert rows[1]["queue_wait_s"] == 0
     assert rows[1]["execution_s"] >= 0
     assert rows[1]["peak_memory_bytes"] is None
+
+
+# ---- #10642: each blocking stage has its own allowance inside the total cap ---------------------------------
+
+
+def _journal_shaped_push(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, clock: FakeClock, needs: dict[str, list[float]]
+) -> None:
+    """Run the real stage functions on a fake clock; each command needs the next duration under its label.
+
+    Like ``run_bounded``, a command whose deadline comes first is killed there (SIGKILL) and the
+    stage ends ``validation_incomplete``; otherwise it consumes its duration and passes.
+    """
+    real_pre_commit, real_pytest = gate.run_pre_commit_stage, gate.run_pytest_stage
+    _fake_validation(tmp_path, monkeypatch, clock)
+    monkeypatch.setattr(gate, "run_pre_commit_stage", real_pre_commit)
+    monkeypatch.setattr(gate, "run_pytest_stage", real_pytest)
+    monkeypatch.setattr(gate.Admission, "_exclusive", False, raising=False)  # no stale-temp sweep
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")  # a dispatch caps pytest processes
+    remaining = {label: iter(durations) for label, durations in needs.items()}
+
+    def run_bounded(command, *, cwd, deadline, label, diagnostics=None):
+        need = next(remaining[label])
+        if clock.now + need > deadline:
+            clock.now = max(clock.now, deadline)
+            if diagnostics is not None:
+                diagnostics.update(returncode=-signal.SIGKILL, signal=signal.SIGKILL, child_unavailable_reason=None)
+            raise gate.GateOutcome(
+                "validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True
+            )
+        clock.now += need
+        if diagnostics is not None:
+            diagnostics.update(returncode=0, signal=None, child_unavailable_reason=None)
+        return 0, f"1 passed in {need}s"
+
+    monkeypatch.setattr(gate, "run_bounded", run_bounded)
+
+
+# Synthetic values in the shape #10642 reports: pre-commit spends part of a shared budget, then the
+# pytest stage is killed when the remainder runs out, with no failing test.
+SLOW_PRE_COMMIT = {
+    "pre-commit pre-push stage": [100.0],
+    "per-commit OPSEC scan": [5.0],
+    "learner-surface internal-ID scan": [5.0],
+}
+UPDATE = gate.Update("local", "a" * 40, "remote", ZERO_SHA)
+
+
+def test_slow_pre_commit_no_longer_shortens_the_pytest_allowance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    # The pytest stage needs 595 s: more than the 490 s a shared budget leaves, inside its own 600 s.
+    _journal_shaped_push(tmp_path, monkeypatch, clock, {**SLOW_PRE_COMMIT, "pytest stage": [20.0, 575.0]})
+    event: dict[str, object] = {}
+    try:
+        gate.validate(UPDATE, tmp_path, "x", "y", event)
+    except gate.GateOutcome as error:
+        stages = {name: round(stage["elapsed_s"], 1) for name, stage in event.get("stages", {}).items()}
+        pytest.fail(f"expired as {error.reason}: {error.detail}; stage elapsed {stages}")
+
+    assert event["outcome"] == "green" and event["admission_wait_s"] == 500.0
+    assert (event["run_budget_s"], event["stage_budget_s"]) == (gate.RUN_BUDGET_S, gate.STAGE_BUDGET_S) == (1200, 600)
+    stages = event["stages"]
+    assert stages["pre_commit"]["elapsed_s"] == pytest.approx(110.0)
+    assert stages["pytest"]["elapsed_s"] == pytest.approx(595.0)
+    for stage in stages.values():
+        assert stage["allowance_s"] == pytest.approx(gate.STAGE_BUDGET_S)
+        assert stage["allowance_limited_by"] == "stage_budget"
+    assert gate.receipt_is_fresh(tmp_path, _plan(), clock.time())
+
+
+@pytest.mark.parametrize("stage", ["pre_commit", "pytest"])
+def test_each_stage_still_expires_at_its_own_allowance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stage: str
+) -> None:
+    clock = FakeClock()
+    needs = {"pytest stage": [20.0, 650.0]}
+    needs.update(SLOW_PRE_COMMIT if stage == "pytest" else {"pre-commit pre-push stage": [650.0]})
+    _journal_shaped_push(tmp_path, monkeypatch, clock, needs)
+    event: dict[str, object] = {}
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(UPDATE, tmp_path, "x", "y", event)
+
+    assert raised.value.incomplete and raised.value.failing == ()
+    assert "exceeded the time budget (timeout)" in raised.value.detail
+    assert set(event["stages"]) == ({"pre_commit"} if stage == "pre_commit" else {"pre_commit", "pytest"})
+    row = event["stages"][stage]
+    assert row["outcome"] == "validation_incomplete" and row["signal"] == signal.SIGKILL
+    assert row["elapsed_s"] == pytest.approx(gate.STAGE_BUDGET_S) == row["allowance_s"]
+    assert row["allowance_limited_by"] == "stage_budget"
+    assert not gate.receipt_is_fresh(tmp_path, _plan(), clock.time())
+
+
+def test_the_run_budget_caps_the_sum_of_stage_allowances(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = FakeClock()
+    _journal_shaped_push(
+        tmp_path, monkeypatch, clock, {"pre-commit pre-push stage": [300.0, 300.0], "pytest stage": [20.0, 430.0]}
+    )
+    budget = gate.Budget(700.0, 600.0)  # a total shorter than two allowances binds the later stage
+    event: dict[str, object] = {}
+    timed_run = gate.run_bounded
+
+    def instant_scans(command, **kwargs):
+        if kwargs["label"] in ("per-commit OPSEC scan", "learner-surface internal-ID scan"):
+            return 0, ""
+        return timed_run(command, **kwargs)
+
+    monkeypatch.setattr(gate, "run_bounded", instant_scans)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(UPDATE, tmp_path, "x", "y", event, budget)
+
+    assert raised.value.incomplete and raised.value.failing == ()
+    stages = event["stages"]
+    assert stages["pre_commit"]["allowance_limited_by"] == "stage_budget"
+    assert stages["pytest"]["allowance_s"] == pytest.approx(400.0)  # 700 total - 300 spent by pre-commit
+    assert stages["pytest"]["allowance_limited_by"] == "run_budget"
+    assert stages["pre_commit"]["elapsed_s"] + stages["pytest"]["elapsed_s"] == pytest.approx(700.0)
+
+    # One push shares the total across its ref updates: the second gets only what the first left.
+    second: dict[str, object] = {}
+    with pytest.raises(gate.GateOutcome):
+        gate.validate(UPDATE, tmp_path, "x", "y", second, budget)
+    assert second["stages"]["pre_commit"]["allowance_s"] == pytest.approx(0.0)
+    assert second["stages"]["pre_commit"]["allowance_limited_by"] == "run_budget"
+
+
+def test_admission_waits_consume_neither_a_stage_allowance_nor_the_total(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    # Both stages use almost all of their own allowance after the 500 s admission wait.
+    needs = {
+        "pre-commit pre-push stage": [590.0],
+        "per-commit OPSEC scan": [4.0],
+        "learner-surface internal-ID scan": [4.0],
+        "pytest stage": [20.0, 578.0],
+    }
+    _journal_shaped_push(tmp_path, monkeypatch, clock, needs)
+    event: dict[str, object] = {}
+    gate.validate(UPDATE, tmp_path, "x", "y", event)
+
+    assert event["outcome"] == "green" and event["admission_wait_s"] == 500.0
+    assert clock.now == pytest.approx(500.0 + 598.0 + 598.0)  # 1,196 s of stages after the wait
+    assert all(stage["allowance_limited_by"] == "stage_budget" for stage in event["stages"].values())
+
+
+def _stage_launcher(repo: Path, pre_commit: str, pytest_run: str) -> None:
+    """A synthetic launcher whose stage commands run the given shell bodies; scans and shadow are instant."""
+    _write(
+        repo,
+        "scripts/pre_commit/project_python.sh",
+        textwrap.dedent(f"""\
+        if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then exit 0; fi
+        if [ "$2" = scripts.ci.pre_push_shadow ]; then echo '{{"selected_tests":[]}}'; exit 0; fi
+        if [ "$2" = pre_commit ]; then
+        {pre_commit}
+        exit 0
+        fi
+        {pytest_run}
+        """),
+    )
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "synthetic timed stages", "tests/test_new.py", "scripts/pre_commit/project_python.sh")
+
+
+@pytest.mark.parametrize("ending", ["green", "red"])
+def test_actual_stages_each_get_their_own_allowance(repo: Path, ending: str) -> None:
+    # pre-commit runs twice (pre-push stage, internal-ID scan) and pytest twice (changed file, invariants):
+    # about 3 s per stage, 6 s together, under a 5 s stage budget that a shared budget would exceed.
+    # A red run fails in the second (invariant) invocation, so it too has spent both stages' time.
+    failure = "FAILED tests/test_invariant.py::test_ok - synthetic"
+    verdict = f'case "$*" in *tests/test_invariant.py*) echo "{failure}"; exit 1;; esac' if ending == "red" else ":"
+    _stage_launcher(repo, "sleep 1.5", f"sleep 1.5; {verdict}; echo '1 passed in 1.5s'; exit 0")
+
+    result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", "LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "5"})
+
+    assert result.returncode == (0 if ending == "green" else gate.EXIT_REFUSED), result.stderr
+    row = _measurements(repo)[-1]
+    stages = row["stages"]
+    assert row["stage_budget_s"] == 5.0 and row["run_budget_s"] == gate.RUN_BUDGET_S
+    assert stages["pre_commit"]["elapsed_s"] + stages["pytest"]["elapsed_s"] > 5.0
+    for stage in stages.values():
+        assert stage["allowance_s"] == pytest.approx(5.0) and stage["allowance_limited_by"] == "stage_budget"
+        assert stage["elapsed_s"] < stage["allowance_s"]
+    if ending == "green":
+        assert row["outcome"] == "green" and len(_receipts(repo)) == 1
+    else:
+        assert _verdict(result) == {
+            "outcome": "refused",
+            "reason": "tests_failed",
+            "failing": ["tests/test_invariant.py::test_ok"],
+        }
+        assert _receipts(repo) == []
+
+
+@pytest.mark.parametrize("bound", ["pre_commit", "pytest", "total"])
+def test_an_actual_overrun_is_killed_at_its_bound_with_descendants(repo: Path, tmp_path: Path, bound: str) -> None:
+    pid_file = tmp_path / "child.pid"
+    (tmp_path / "detach.py").write_text(_DETACHED_CHILD, encoding="utf-8")
+    overrun = f'"{sys.executable}" "{tmp_path / "detach.py"}" "{pid_file}"; sleep 60'
+    pre_commit = overrun if bound == "pre_commit" else "sleep 1.2" if bound == "total" else ":"
+    _stage_launcher(repo, pre_commit, overrun if bound != "pre_commit" else "echo '1 passed in 0.1s'")
+    budgets = {"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "3"}
+    if bound == "total":  # pre-commit spends about 2.4 s of a 5 s total, leaving pytest less than its 4 s
+        budgets = {"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "4", "LU_PRE_PUSH_GATE_RUN_BUDGET_S": "5"}
+
+    result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", **budgets})
+
+    assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
+    assert _verdict(result) == {"outcome": "validation_incomplete", "reason": "validation_incomplete", "failing": []}
+    assert "NOT green" in result.stderr and _receipts(repo) == []
+    assert _gone(int(pid_file.read_text(encoding="utf-8")))
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == "validation_incomplete" and row["failing"] == []
+    killed = row["stages"]["pre_commit" if bound == "pre_commit" else "pytest"]
+    assert set(row["stages"]) == ({"pre_commit"} if bound == "pre_commit" else {"pre_commit", "pytest"})
+    assert killed["outcome"] == "validation_incomplete" and killed["signal"] == signal.SIGKILL
+    assert killed["allowance_s"] <= killed["elapsed_s"] < killed["allowance_s"] + 2 * gate.CLEANUP_BUDGET_S
+    if bound == "total":
+        assert killed["allowance_limited_by"] == "run_budget" and killed["allowance_s"] < 4.0
+        assert row["stages"]["pre_commit"]["allowance_limited_by"] == "stage_budget"
+    else:
+        assert killed["allowance_limited_by"] == "stage_budget"
+        assert killed["allowance_s"] == pytest.approx(3.0)
+
+
+def test_the_run_budget_is_the_sum_of_the_two_stage_allowances() -> None:
+    assert gate.RUN_BUDGET_S == 2 * gate.STAGE_BUDGET_S == 1200

@@ -1,0 +1,337 @@
+{
+  "version": 1,
+  "keep": [
+    {
+      "path": ".claude/*-epic",
+      "kind": "epic_glob",
+      "required": true,
+      "action": "keep",
+      "reason": "Driver plans and handoffs are the only copy of in-flight epic state."
+    },
+    {
+      "path": ".agent",
+      "kind": "tree",
+      "required": true,
+      "action": "keep",
+      "reason": "Agent recovery state is local and is not in Git."
+    },
+    {
+      "path": "data/sources.db",
+      "kind": "file",
+      "required": true,
+      "action": "keep",
+      "reason": "The corpus database is the source of truth for dictionary text."
+    },
+    {
+      "path": "data/sum20_slovnyk_staging.db",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "SUM-20 slovnyk staging is costly to rebuild."
+    },
+    {
+      "path": "data/sum20_staging.db",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "SUM-20 staging is costly to rebuild."
+    },
+    {
+      "path": "data/lexicon/slovnyk_cache",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "The slovnyk cache is costly to rebuild."
+    },
+    {
+      "path": "data/lexicon/source-inventory",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Source inventory is the lexicon intake record."
+    },
+    {
+      "path": "data/lexicon/side",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Side lexicon inputs are not regenerated from Git."
+    },
+    {
+      "path": "data/lexicon/intake",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Lexicon intake is not regenerated from Git."
+    },
+    {
+      "path": "data/lexicon/parked",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Parked lexicon inputs are not regenerated from Git."
+    },
+    {
+      "path": "data/lexicon/*.json",
+      "kind": "glob_files",
+      "required": false,
+      "action": "keep",
+      "reason": "Every regular JSON file directly under data/lexicon. No size cutoff; nested directories are not included."
+    },
+    {
+      "path": "data/lexicon/runner-mirror",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "The gate receipt proves this tree matches the snapshot before a wipe.",
+      "note": "Existing addition beyond the approved 31 keep paths. The gate receipt compares this tree with the snapshot. When the mirror is absent the script logs one line and continues."
+    },
+    {
+      "path": "data/movaua.db",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "The movaua corpus is costly to rebuild."
+    },
+    {
+      "path": "data/movne_pytannya.db",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "The language-question corpus is costly to rebuild."
+    },
+    {
+      "path": "data/grac_frequency.db",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "The GRAC frequency database is costly to rebuild."
+    },
+    {
+      "path": "data/atlas.db",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "The atlas database is costly to rebuild."
+    },
+    {
+      "path": "data/wiki_*.db",
+      "kind": "glob_files",
+      "required": false,
+      "action": "keep",
+      "reason": "Wiki databases matched by this non-recursive glob."
+    },
+    {
+      "path": "data/lexicon/cache/ulif_raw.sqlite",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "ULIF raw cache is one SQLite snapshot in the same nightly."
+    },
+    {
+      "path": "data/textbook_chunks",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Textbook chunks are costly to rebuild."
+    },
+    {
+      "path": "data/projects",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Project data is not regenerated from Git."
+    },
+    {
+      "path": "data/mphdict",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "mphdict inputs are costly to rebuild."
+    },
+    {
+      "path": "data/native-reviewer-lessons",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Native-reviewer lessons are not regenerated from Git."
+    },
+    {
+      "path": "data/ua-gec",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "UA-GEC inputs are costly to rebuild."
+    },
+    {
+      "path": "data/ubertext-freq",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "UberText frequencies are costly to rebuild."
+    },
+    {
+      "path": "data/processed",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Processed inputs are costly to rebuild."
+    },
+    {
+      "path": "data/datasets",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Datasets are costly to rebuild."
+    },
+    {
+      "path": "batch_state/fleet-comms",
+      "kind": "tree",
+      "required": true,
+      "action": "keep",
+      "reason": "Fleet Comms is the durable message and job store."
+    },
+    {
+      "path": "batch_state/review-receipts",
+      "kind": "tree",
+      "required": true,
+      "action": "keep",
+      "reason": "Review receipts are the record of independent review."
+    },
+    {
+      "path": "batch_state/branch-archive",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Branch archive is the local copy of superseded branch state."
+    },
+    {
+      "path": "batch_state/tasks",
+      "kind": "task_records",
+      "required": false,
+      "action": "keep",
+      "reason": "Task records and archive only; lock files and snapshot directories are excluded."
+    },
+    {
+      "path": "batch_state/open-model-data",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "Open-model data stays until the data lane says it is regenerable."
+    },
+    {
+      "path": "batch_state/open-model-data-20261007",
+      "kind": "tree",
+      "required": false,
+      "action": "keep",
+      "reason": "This open-model snapshot stays until the data lane says it is regenerable."
+    }
+  ],
+  "drop": [
+    {
+      "path": "batch_state/codex-atlas",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Atlas worker checkouts are regenerable."
+    },
+    {
+      "path": "batch_state/preserved",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Preserved SQLite evidence is outside the nightly."
+    },
+    {
+      "path": "batch_state/devops-*",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Devops scratch is regenerable."
+    },
+    {
+      "path": "batch_state/briefs",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Briefs are regenerable."
+    },
+    {
+      "path": "batch_state/github-client",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "GitHub client cache is regenerable."
+    },
+    {
+      "path": "batch_state/backups/archives",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Packed archives are not a nightly root."
+    },
+    {
+      "path": "batch_state/reports",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Reports are regenerable."
+    },
+    {
+      "path": "batch_state/bakeoff-*",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Bakeoff output is regenerable."
+    },
+    {
+      "path": "batch_state/telemetry",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Telemetry is regenerable."
+    },
+    {
+      "path": "batch_state/manifests",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Generated manifests are regenerable."
+    },
+    {
+      "path": "data/backups",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Local backup copies are not a nightly root."
+    },
+    {
+      "path": "data/vesum.db",
+      "kind": "file",
+      "required": false,
+      "action": "drop",
+      "reason": "VESUM is rebuilt from its source, not recovered from this nightly."
+    },
+    {
+      "path": "data/vesum_shadow_v680.db",
+      "kind": "file",
+      "required": false,
+      "action": "drop",
+      "reason": "VESUM shadow is rebuilt, not recovered from this nightly."
+    },
+    {
+      "path": "data/vesum.db.bak.*",
+      "kind": "glob_files",
+      "required": false,
+      "action": "drop",
+      "reason": "VESUM backups are outside the nightly."
+    },
+    {
+      "path": "data/lexicon/cache",
+      "kind": "tree",
+      "required": false,
+      "action": "drop",
+      "reason": "Lexicon cache is dropped except the allowlisted ulif_raw.sqlite file."
+    }
+  ]
+}

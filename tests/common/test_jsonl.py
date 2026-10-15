@@ -5,7 +5,7 @@ import json
 import pytest
 
 from scripts.agent_runtime.jsonl import jsonl_lines as runtime_lines
-from scripts.common.jsonl import jsonl_lines
+from scripts.common.jsonl import jsonl_lines, physical_lines
 
 
 @pytest.mark.parametrize("sep", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
@@ -30,3 +30,43 @@ def test_empty_trailing_lf_and_single_cr_removal():
     assert jsonl_lines("") == [""]
     assert jsonl_lines("a\n") == ["a", ""]
     assert jsonl_lines("a\r\r\nb\rc") == ["a\r", "b\rc"]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "",
+        "\n",
+        "a",
+        "a\n",
+        "a\n\n",
+        "a\r\nb\r\n",
+        "\r\n",
+        "a\nb",
+        "a\rb",
+        "\r",
+        "\ra",
+        "a\r",
+        "\r\r",
+        "a\r\rb",
+        "a\n\rb",
+        "a\r\r\nb",
+        "\r\na\r",
+        "a\rb\nc\r\nd",
+    ],
+)
+def test_physical_lines_match_splitlines_on_cr_lf_and_crlf(text):
+    assert physical_lines(text) == text.splitlines()
+    assert physical_lines(text) == [line.decode() for line in text.encode().splitlines()]
+
+
+def test_physical_lines_keep_bare_cr_commit_boundaries():
+    # thread_handoff parses `git log --format=%h%x09%s` output one commit per line.
+    raw = "abc1234\tfirst\rdef5678\tsecond"
+    assert [line.split("\t", 1) for line in physical_lines(raw)] == [["abc1234", "first"], ["def5678", "second"]]
+
+
+@pytest.mark.parametrize("sep", ["\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"])
+def test_physical_lines_keep_unicode_separators(sep):
+    assert physical_lines(f"a{sep}b\r\nc{sep}\n") == [f"a{sep}b", f"c{sep}"]
+    assert physical_lines(f"a{sep}b\rc") == [f"a{sep}b", "c"]

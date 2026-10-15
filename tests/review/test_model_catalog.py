@@ -204,24 +204,73 @@ def approved_reviewer_seats_baseline(baseline):
     return {**baseline, **SEATS_OVERLAY["surfaces"], "dispatch": dispatch}
 
 
+def approved_claude_account_dispatch_baseline(baseline):
+    """Apply #10619's account option and argparse usage reflow to refusals."""
+    indent = " " * 28
+    before = (
+        f"{indent}[--mode {{read-only,workspace-write,danger}}] [--model MODEL] [--provider {{openrouter}}]\n"
+        f"{indent}[--effort {{low,medium,high,xhigh,max}}] [--repo KEY] [--cwd CWD] [--worktree [WORKTREE]]\n"
+        f"{indent}[--pr PR] [--pinned-head SHA] [--branch EXISTING] [--keep-worktree] [--finalize-open-pr]\n"
+        f"{indent}[--require-review-verdict] [--review-profile {{code,infra,ukrainian}}]\n"
+    )
+    after = (
+        f"{indent}[--mode {{read-only,workspace-write,danger}}] [--model MODEL] [--claude-account LABEL]\n"
+        f"{indent}[--provider {{openrouter}}] [--effort {{low,medium,high,xhigh,max}}] [--repo KEY] [--cwd CWD]\n"
+        f"{indent}[--worktree [WORKTREE]] [--pr PR] [--pinned-head SHA] [--branch EXISTING] [--keep-worktree]\n"
+        f"{indent}[--finalize-open-pr] [--require-review-verdict] [--review-profile {{code,infra,ukrainian}}]\n"
+    )
+    dispatch = deepcopy(baseline["dispatch"])
+    for row in dispatch:
+        if row["stderr"].startswith("usage: delegate.py dispatch "):
+            assert row["stderr"].count(before) == 1
+            row["stderr"] = row["stderr"].replace(before, after)
+    return {**baseline, "dispatch": dispatch}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-APPROVED_BASELINE = approved_cto_wrappers_baseline(
-    approved_claude_cap_baseline(
-        approved_cursor_trailer_baseline(
-            approved_launcher_canary_baseline(
-                approved_reviewer_seats_baseline(
-                    {
-                        **REVIEW_CAPACITY_BASELINE,
-                        **GEMINI_OVERLAY["surfaces"],
-                        **RESOURCE_OVERLAY["surfaces"],
-                    }
+APPROVED_BASELINE = approved_claude_account_dispatch_baseline(
+    approved_cto_wrappers_baseline(
+        approved_claude_cap_baseline(
+            approved_cursor_trailer_baseline(
+                approved_launcher_canary_baseline(
+                    approved_reviewer_seats_baseline(
+                        {
+                            **REVIEW_CAPACITY_BASELINE,
+                            **GEMINI_OVERLAY["surfaces"],
+                            **RESOURCE_OVERLAY["surfaces"],
+                        }
+                    )
                 )
             )
         )
     )
 )
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_claude_account_dispatch_baseline_changes_only_usage_option(configuration):
+    path = FIXTURE / ("no-cli" if configuration == "no-cli" else "") / "baseline.json.gz"
+    original = json.loads(gzip.decompress(path.read_bytes()))
+    before = deepcopy(original)
+    after = approved_claude_account_dispatch_baseline(original)
+    assert original == before
+    assert {key: value for key, value in after.items() if key != "dispatch"} == {
+        key: value for key, value in before.items() if key != "dispatch"
+    }
+    changed = 0
+    for old, new in zip(before["dispatch"], after["dispatch"], strict=True):
+        assert {key: value for key, value in old.items() if key != "stderr"} == {
+            key: value for key, value in new.items() if key != "stderr"
+        }
+        if old["stderr"].startswith("usage: delegate.py dispatch "):
+            changed += 1
+            assert new["stderr"].count("[--claude-account LABEL]") == 1
+            assert new["stderr"].replace("[--claude-account LABEL]", "").split() == old["stderr"].split()
+        else:
+            assert new == old
+    assert changed > 0
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -968,16 +1017,18 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_cto_wrappers_baseline(
-        approved_claude_cap_baseline(
-            approved_cursor_trailer_baseline(
-                approved_launcher_canary_baseline(
-                    approved_reviewer_seats_baseline(
-                        {
-                            **approved_review_baseline(original),
-                            **GEMINI_OVERLAY["surfaces"],
-                            **RESOURCE_OVERLAY["surfaces"],
-                        }
+    assert actual == approved_claude_account_dispatch_baseline(
+        approved_cto_wrappers_baseline(
+            approved_claude_cap_baseline(
+                approved_cursor_trailer_baseline(
+                    approved_launcher_canary_baseline(
+                        approved_reviewer_seats_baseline(
+                            {
+                                **approved_review_baseline(original),
+                                **GEMINI_OVERLAY["surfaces"],
+                                **RESOURCE_OVERLAY["surfaces"],
+                            }
+                        )
                     )
                 )
             )

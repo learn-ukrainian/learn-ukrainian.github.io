@@ -342,6 +342,7 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
         and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
+        and not (key == "claude_account" and value in (None, "a"))
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -363,6 +364,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
+        and not (key == "claude_account" and value in (None, "a"))
     }
 
 
@@ -6248,6 +6250,7 @@ def public_causes() -> frozenset[str]:
     exit-scan reasons, and the completion-gate and delivery causes.
     """
     from scripts.agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES
     from scripts.agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 
     advisory = {
@@ -6284,6 +6287,7 @@ def public_causes() -> frozenset[str]:
         | RUNTIME_FAILURE_CODES
         | frozenset(AGY_INCOMPLETE_RUN_REASONS)
         | advisory
+        | CLAUDE_ACCOUNT_REFUSAL_CODES
         | delegate_causes
     )
 
@@ -10445,6 +10449,12 @@ def _run_worker(
         print(f"❌ {advisory_refusal}", file=sys.stderr)
         return 1
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_KEY,
+        DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
+        resolve_claude_account_label,
+    )
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
@@ -10596,6 +10606,14 @@ def _run_worker(
             tool_config: dict[str, Any] = {}
             if state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
+            if agent == "claude" and CLAUDE_ACCOUNT_KEY in state:
+                # The label the task record carries. Only the attempt boundary
+                # authenticates as a non-default account; elsewhere it would
+                # silently run as the default one, so it is refused.
+                claude_account = resolve_claude_account_label(state[CLAUDE_ACCOUNT_KEY])
+                if claude_account != DEFAULT_CLAUDE_ACCOUNT and (review_id is None or attempt_id is None):
+                    raise ClaudeAccountRefused("claude_account_route_unsealed")
+                tool_config[CLAUDE_ACCOUNT_KEY] = claude_account
             if agent in {"agy", "gemini"} and (
                 _dispatch_is_review_typed(argparse.Namespace(**state))
                 or require_review_verdict
@@ -10812,6 +10830,11 @@ def _run_worker(
             worker_exception = _exception_cause("worker_runtime_error", exc)
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except ClaudeAccountRefused as exc:
+            pre_spawn_failure = True
+            failure_cause = exc.code
+            stderr_excerpt = f"CLAUDE_ACCOUNT_REFUSED: {exc.code}"
+            returncode_reason = "the task record's Claude account label was refused; provider not started"
         except bounded_advisory.AdvisoryRefused as exc:
             pre_spawn_failure = True
             advisory_handoff_refusal = exc.code
@@ -12209,6 +12232,45 @@ def _refuse_review_scratch_in_worktree() -> None:
         )
 
 
+def _dispatch_claude_account_refusal(args: argparse.Namespace) -> str | None:
+    """The typed code refusing ``--claude-account``, or ``None``; checked before any side effect.
+
+    A non-default label is admitted only for a claude formal review attempt:
+    that sealed boundary is the one worker path that selects the bound
+    account's credential, so any other route would silently run as the
+    default account. Its binding and credential sources are verified here and
+    again where the worker authenticates.
+    """
+    from scripts.agent_runtime.attempt_boundary import (
+        DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
+        resolve_claude_account_label,
+        verify_claude_account,
+    )
+
+    try:
+        label = resolve_claude_account_label(getattr(args, "claude_account", None))
+        if label == DEFAULT_CLAUDE_ACCOUNT:
+            return None
+        if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
+            return "claude_account_seat_unsupported"
+        if not getattr(args, "review_attempt", None):
+            return "claude_account_route_unsealed"
+        verify_claude_account(label)
+    except ClaudeAccountRefused as exc:
+        return exc.code
+    return None
+
+
+def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, str]:
+    """A claude task record's account label, resolved once; the worker reads it back from the record."""
+    if dispatch_agent != "claude":
+        return {}
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+
+    return {CLAUDE_ACCOUNT_KEY: resolve_claude_account_label(getattr(args, "claude_account", None))}
+
+
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     # The stack owns the worktree lock taken before create-or-attach. Dispatch
@@ -12252,6 +12314,11 @@ def _dispatch(
 
     if getattr(args, "pinned_head", None) and not (getattr(args, "branch", None) or getattr(args, "pr", None)):
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
+        return 2
+
+    claude_account_refusal = _dispatch_claude_account_refusal(args)
+    if claude_account_refusal:
+        print(f"❌ CLAUDE_ACCOUNT_REFUSED: {claude_account_refusal}", file=sys.stderr)
         return 2
 
     # Diagnose the required profile before route admission defaults to code
@@ -13625,6 +13692,7 @@ def _dispatch(
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
+            dry_run_state.update(_claude_account_state(args, dispatch_agent))
             if not admission.exempt:
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
@@ -14151,6 +14219,7 @@ def _dispatch(
         initial_state.update(_authoring_review_state_fields(args, authoring_admission))
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
+        initial_state.update(_claude_account_state(args, dispatch_agent))
         if lifecycle_carrier is not None:
             initial_state["task_lifecycle"] = lifecycle_carrier
         if review_plan is not None:
@@ -18439,6 +18508,18 @@ def build_parser() -> argparse.ArgumentParser:
         "pointing at an existing added worktree); read-only defaults to an isolated detached worktree.",
     )
     d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
+    d.add_argument(
+        "--claude-account",
+        default=None,
+        metavar="LABEL",
+        help=(
+            "Claude account label for a claude dispatch: a (default) or b. The label is recorded in the "
+            "task record and selects the account the worker authenticates as. Label b needs its private "
+            "local binding and currently runs only formal review attempts, whose sealed boundary selects "
+            "the account; an unknown label, a missing binding or a conflicting credential source is "
+            "refused (CLAUDE_ACCOUNT_REFUSED) before any worktree or task record is created."
+        ),
+    )
     d.add_argument(
         "--provider",
         default=None,

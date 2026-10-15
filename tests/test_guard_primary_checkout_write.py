@@ -28,12 +28,15 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
+from collections.abc import Iterator
 from contextlib import chdir, redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
+from scripts.common.scratch import ensure_scratch_root
 from tests.test_guard_benign_corpus import BENIGN_COMMANDS
 
 pytestmark = pytest.mark.reads_content
@@ -395,16 +398,47 @@ def repo_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return main
 
 
-@pytest.fixture
-def repo(tmp_path: Path, repo_template: Path) -> Path:
-    """Fresh primary checkout and registered worktree for each case."""
-    main = tmp_path / "main"
-    shutil.copytree(repo_template, main)
+def _materialize_repo(template: Path, main: Path) -> Path:
+    """Copy the immutable template to ``main`` and re-point its worktree links."""
+    shutil.copytree(template, main)
     worktree = main / ".worktrees/dispatch/claude/task-1"
     gitdir = main / ".git/worktrees/task-1"
     (worktree / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
     (gitdir / "gitdir").write_text(f"{worktree / '.git'}\n", encoding="utf-8")
     return main
+
+
+@pytest.fixture
+def repo(tmp_path: Path, repo_template: Path) -> Path:
+    """Fresh primary checkout and registered worktree for each case."""
+    return _materialize_repo(repo_template, tmp_path / "main")
+
+
+@pytest.fixture
+def outside_dir() -> Iterator[Path]:
+    """Scratch outside every Git checkout, whatever pytest's ``--basetemp`` is.
+
+    The pre-push gate puts ``--basetemp`` inside the primary checkout's Git
+    directory, so ``tmp_path`` there resolves into that protected primary.
+    The directory comes from the managed scratch lease instead and is checked
+    to lie outside any repository.
+    """
+    path = Path(
+        tempfile.mkdtemp(prefix="guard-outside-", dir=os.environ.get("TMPDIR", ensure_scratch_root()))
+    ).resolve()
+    try:
+        probe = subprocess.run(
+            ["git", "-C", str(path), "rev-parse", "--git-dir"],
+            capture_output=True,
+            text=True,
+            env=_clean_env(),
+            check=False,
+            timeout=10,
+        )
+        assert probe.returncode != 0, f"scratch dir {path} is inside a Git repository: {probe.stdout.strip()}"
+        yield path
+    finally:
+        shutil.rmtree(path)
 
 
 def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -554,7 +588,7 @@ def test_issue_8896_quoted_substitution_recursion_limit_blocks(repo: Path):
     assert result.returncode == 2, result.stderr
 
 
-def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, tmp_path: Path):
+def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, outside_dir: Path):
     # Only the payload cwd is outside Git; the hook never executes the command.
     outside = Path("/tmp")
     for command in (
@@ -571,13 +605,13 @@ def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, tmp
     assert result.returncode == 2, result.stderr
     result = _run(
         repo,
-        {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": f"touch {tmp_path}/harmless"}},
+        {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": f"touch {outside_dir}/harmless"}},
     )
     assert result.returncode == 0, result.stderr
 
 
-def test_issue_8896_review_round_three_outside_cwd_expanded_targets(repo: Path, tmp_path: Path):
-    outside = tmp_path / "outside"
+def test_issue_8896_review_round_three_outside_cwd_expanded_targets(repo: Path, outside_dir: Path):
+    outside = outside_dir / "outside"
     outside.mkdir()
     for command, home, expected in (
         (f"touch ~/{repo.name}/new-file", repo.parent, 2),
@@ -1321,6 +1355,273 @@ def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
+# ===========================================================================
+# #10633: ANSI-C ``$'...'`` quoting is refused on presence, never decoded.
+# Three review rounds found new divergences between Bash's ANSI-C decoding and
+# this guard's model of it (octal byte wrap, NUL truncation, byte escapes versus
+# filesystem bytes, oversized escapes, locale-dependent scalars), each a write
+# into the primary checkout. The guard therefore refuses any ``$'`` — in the raw
+# command, after backslash-newline removal, or in a nested ``eval`` / ``sh -c``
+# string — before parsing. Each case runs the real hook as a subprocess from a
+# dispatch worktree cwd.
+# ===========================================================================
+
+
+def _hook_subprocess(repo: Path, command: str, cwd: Path) -> subprocess.CompletedProcess[str]:
+    payload = {"tool_name": "Bash", "cwd": str(cwd), "tool_input": {"command": command}}
+    return subprocess.run(
+        [_python(), str(HOOK_PATH)],
+        input=json.dumps(payload),
+        cwd=str(cwd),
+        check=False,
+        capture_output=True,
+        text=True,
+        env=_clean_env(),
+        timeout=30,
+    )
+
+
+def _assert_ansi_c_refused(result: subprocess.CompletedProcess[str]) -> None:
+    assert result.returncode == 2, result.stderr
+    assert "Bash ANSI-C quoting ($'...') is refused [ansi_c_quoting]" in result.stderr
+    # printf %b is offered for data inside a dispatch worktree only, never for
+    # building commands or paths.
+    assert "printf %b" in result.stderr
+    assert "never use it to build command words, options or paths" in result.stderr
+    assert "It does not make protected paths writable." in result.stderr
+
+
+def _ansi_c_shape(repo: Path, shape: str) -> str:
+    target = repo / "curriculum/tracked.md"
+    # ``$'\457'`` is byte 0x2F in Bash (octal 0457 wraps mod 256), so this spells
+    # the absolute primary path while reading as relative to a naive decoder.
+    return shape.format(
+        octal="$'\\457" + str(target)[1:] + "'",
+        target=target,
+        tail=str(target)[1:],
+        cur=repo / "curriculum",
+        repo=repo,
+    )
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        # The octal-wrap spelling: the confirmed end-to-end bypass on main.
+        pytest.param("echo x > {octal}", id="octal-wrap-redirect"),
+        pytest.param("echo x | tee {octal}", id="octal-wrap-tee"),
+        pytest.param("cp /etc/hostname {octal}", id="octal-wrap-cp"),
+        # Octal wrap in the executable word: Bash runs tee ($'\564' is 't').
+        pytest.param("printf changed | $'\\564ee' {target}", id="octal-wrap-executable"),
+        # Produced NUL in a target, executable and option word; brace-hex slash.
+        pytest.param("echo x > $'{target}\\0junk'", id="nul-target"),
+        pytest.param("printf changed | $'tee\\0junk' {target}", id="nul-executable"),
+        pytest.param("find {cur} -maxdepth 1 -name tracked.md $'-delete\\0junk'", id="nul-option"),
+        pytest.param("echo x > $'\\x{{2f}}'{tail}", id="brace-hex-slash"),
+        # Bash drops an oversized \U escape, so these run tee and -delete.
+        pytest.param("printf changed | $'tee\\U80000000' {target}", id="oversized-u-executable"),
+        pytest.param("find {cur} -maxdepth 1 -name tracked.md $'-delete\\U80000000'", id="oversized-u-option"),
+        pytest.param("echo x > $'\\U80000000/curriculum/tracked.md'", id="oversized-u-target"),
+        # Bash removes backslash-newline before tokenizing: still ANSI-C quoting.
+        pytest.param("echo x > $\\\n'\\457{tail}'", id="line-continued-octal-wrap"),
+        pytest.param("echo x > $\\\n\\\n'\\457{tail}'", id="two-line-continuations"),
+        # Presence alone decides: embedded, benign-looking, read-only, quoted.
+        pytest.param("echo x > {repo}/curriculum/tra$'c'ked.md", id="embedded-mid-word"),
+        pytest.param("tee $'\\164racked.md'", id="dispatch-relative-name"),
+        pytest.param("echo x > $'\\457tmp/scratch-10633.txt'", id="outside-repo-path"),
+        pytest.param("printf x > $'\\xc3\\xa9.md'", id="byte-escape-name"),
+        pytest.param("printf '%s\\n' $'a\\tb'", id="no-write-target"),
+        pytest.param("grep -c 'end$' notes.txt", id="single-quoted-regex-anchor"),
+        pytest.param("echo \"$'\\x41'\" > notes.txt", id="inside-double-quotes"),
+    ],
+)
+def test_issue_10633_ansi_c_quoting_refused_on_presence(repo: Path, shape: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    _assert_ansi_c_refused(_hook_subprocess(repo, _ansi_c_shape(repo, shape), cwd=dispatch))
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        # Quote removal joins ``\$\'`` into ``$'`` only inside the eval string.
+        pytest.param(r"eval echo x \> \$\'\\457{tail}\'", id="eval-joined-by-quote-removal"),
+        # The sh -c script holds its own backslash-newline between $ and '.
+        pytest.param('bash -c "printf x > \\$\\\\\n\'\\\\457{tail}\'"', id="sh-c-line-continuation"),
+        # Reached only through the write-target parser (find -exec, not git).
+        pytest.param(r"find . -maxdepth 0 -exec sh -c printf\ x\ \>\ \$\'\\457{tail}\' \;", id="find-exec-sh-c"),
+    ],
+)
+def test_issue_10633_nested_ansi_c_quoting_refused(repo: Path, shape: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    command = _ansi_c_shape(repo, shape)
+    # Only the re-read nested string holds the marker, not the outer command.
+    assert not hook._has_ansi_c_quoting(command)
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=dispatch))
+
+
+@pytest.mark.parametrize(
+    "command, cwd",
+    [
+        # The rescue-clean git allowlist and the sibling-git rail return early;
+        # the refusal comes first.
+        pytest.param("git checkout -- $'curriculum/tracked.md'", "primary", id="git-rescue-allowlist"),
+        pytest.param(
+            ".venv/bin/python -m scripts.fleet.sibling_git status --repo $'infra'", "primary", id="sibling-git-rail"
+        ),
+    ],
+)
+def test_issue_10633_refusal_precedes_allowlisted_early_returns(repo: Path, command: str, cwd: str):
+    where = repo if cwd == "primary" else repo / ".worktrees/dispatch/claude/task-1"
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=where))
+
+
+@pytest.mark.parametrize(
+    "spelling",
+    [
+        "$'\\xc3\\xa9/curriculum/tracked.md'",
+        "$'\\303\\251/curriculum/tracked.md'",
+        "$'\\xc3'$'\\xa9/curriculum/tracked.md'",
+    ],
+)
+def test_issue_10633_byte_escapes_through_symlink_to_primary_refused(repo: Path, spelling: str):
+    # A dispatch symlink whose raw name is the UTF-8 bytes of 'é' points at the
+    # protected primary; byte-escape spellings of it are refused on presence.
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    os.symlink(os.fsencode(str(repo)), os.fsencode(str(dispatch)) + b"/\xc3\xa9")
+    _assert_ansi_c_refused(_hook_subprocess(repo, f"printf changed > {spelling}", cwd=dispatch))
+
+
+def test_issue_10633_literal_utf8_symlink_name_still_resolves(repo: Path):
+    # Control: a LITERAL UTF-8 path component is ordinary input; it still
+    # resolves through the symlink and blocks as a primary write.
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    os.symlink(os.fsencode(str(repo)), os.fsencode(str(dispatch)) + b"/\xc3\xa9")
+    result = _hook_subprocess(repo, "printf changed > \u00e9/curriculum/tracked.md", cwd=dispatch)
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
+def test_issue_10633_byte_escaped_non_ascii_primary_root_refused(tmp_path: Path, repo_template: Path):
+    main = _materialize_repo(repo_template, tmp_path / "r\u00e9po" / "main")
+    dispatch = main / ".worktrees/dispatch/claude/task-1"
+    target = main / "curriculum/tracked.md"
+    # Control: the literal spelling of the non-ASCII primary root is blocked.
+    literal = _hook_subprocess(main, f"printf changed > {target}", cwd=dispatch)
+    assert literal.returncode == 2, literal.stderr
+    assert "primary_checkout" in literal.stderr
+    for escape in ("\\x{:02x}", "\\{:03o}"):
+        spelled = "".join(escape.format(b) if b >= 0x80 else chr(b) for b in os.fsencode(str(target)))
+        _assert_ansi_c_refused(_hook_subprocess(main, f"printf changed > $'{spelled}'", cwd=dispatch))
+
+
+def test_issue_10633_c_locale_scalar_symlink_refused(repo: Path):
+    # Under a C locale Bash leaves ``$'\u00e9'`` as the literal text ``\u00E9``,
+    # here the name of a dispatch symlink into the primary.
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    os.symlink(repo, dispatch / "\\u00E9")
+    command = "export LC_ALL=C\nprintf changed > $'\\u00e9'/curriculum/tracked.md"
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=dispatch))
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        pytest.param("echo 'single quoted $HOME text' > notes.txt", id="single-quotes"),
+        pytest.param("echo 'it'\\''s' > notes.txt", id="single-quote-escape-idiom"),
+        pytest.param('echo "double quoted $HOME text" > notes.txt', id="double-quotes"),
+        pytest.param('grep -c "end$" notes.txt', id="double-quoted-regex-anchor"),
+        pytest.param("printf '%b' 'a\\tb\\n' > data.txt", id="printf-b-data"),
+        pytest.param("printf x > caf\u00e9.md", id="literal-utf8-name"),
+        pytest.param("echo x > scratch.txt && tee -a log.txt < scratch.txt", id="worktree-writes"),
+    ],
+)
+def test_issue_10633_plain_quoting_controls_allowed(repo: Path, command: str):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _hook_subprocess(repo, command, cwd=dispatch)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command, expected",
+    [
+        ("echo $'x'", True),
+        ("echo $\\\n'x'", True),
+        ("echo $\\\n\\\n'x'", True),
+        # A removal that brings a new pair together is removed too (conservative).
+        ("echo $\\\\\n\n'x'", True),
+        # Bash does not treat backslash-CR as a line continuation.
+        ("echo $\\\r\n'x'", False),
+        ("echo '$HOME' \"$x\" $\"msg\"", False),
+    ],
+)
+def test_issue_10633_ansi_c_marker_detection(command: str, expected: bool):
+    assert hook._has_ansi_c_quoting(command) is expected
+
+
+def test_issue_10633_octal_wrap_spellings_match_bash():
+    # The octal-wrap cases above probe real bypasses only if Bash decodes them
+    # to these words: the tee program name and an absolute path.
+    bash = shutil.which("bash")
+    if bash is None:
+        pytest.skip("bash not available")
+    result = subprocess.run(
+        [bash, "-c", "printf '%s|' $'\\564ee' $'\\457tmp'"], capture_output=True, text=True, check=True, timeout=30
+    )
+    assert result.stdout == "tee|/tmp|"
+
+
+def test_issue_10633_octal_wrap_spellings_skip_without_bash(monkeypatch: pytest.MonkeyPatch):
+    # Without Bash on PATH the companion test skips: it neither fails nor
+    # passes without having compared anything.
+    monkeypatch.setattr(shutil, "which", lambda name: None)
+    with pytest.raises(pytest.skip.Exception, match="bash not available"):
+        test_issue_10633_octal_wrap_spellings_match_bash()
+
+
+def test_issue_10633_guard_has_no_ansi_c_decoder():
+    assert not hasattr(hook, "_decode_ansi_c_quotes")
+    assert "unicode_escape" not in HOOK_PATH.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    "command, literal",
+    [
+        # The final-review probe: Bash wraps \457 to "/" and writes an absolute
+        # path; a decoder read "įtmp/x".
+        pytest.param("tee $'\\457tmp/x'", "$\\457tmp/x", id="octal-wrap-target"),
+        # The span body is not a reference to a same-command variable.
+        pytest.param("x=/srv/ok; tee $'x'", "$x", id="span-names-assigned-variable"),
+        pytest.param("echo x > $'a b'", "$a b", id="redirect-target"),
+    ],
+)
+def test_issue_10633_parser_keeps_ansi_c_span_literal_and_unresolved(command: str, literal: str):
+    # The hook entry refuses these commands. A direct parser caller gets the
+    # undecoded span, unresolved like any unknown expansion, so it blocks.
+    targets = hook.bash_write_targets(command, cwd="/")
+    assert [str(target) for target in targets] == [literal]
+    assert targets[0].unresolved_at == 0
+    assert hook._bash_path_decision(targets[0], "/", None).reason == "unresolved_shell_variable"
+
+
+def test_issue_10633_parser_never_decodes_ansi_c_program_name():
+    (segment,) = hook._expanded_segments("$'\\564ee' notes.txt")
+    assert hook._command_word(segment) == ("$\\564ee", 0)
+    assert segment[0].unresolved_at == 0
+
+
+def test_issue_10633_parser_ansi_c_path_program_name_keeps_basename(repo: Path):
+    # The parser takes a command word's basename without decoding, so a span
+    # spelled as a plain path still names that program for a direct caller; the
+    # token stays unresolved, and the hook entry refuses the command outright.
+    command = "$'/usr/bin/tee' notes.txt"
+    (segment,) = hook._expanded_segments(command)
+    assert str(segment[0]) == "$/usr/bin/tee"
+    assert segment[0].unresolved_at == 0
+    assert hook._command_word(segment) == ("tee", 0)
+    assert [str(target) for target in hook.bash_write_targets(command, cwd="/")] == ["notes.txt"]
+    _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=repo / ".worktrees/dispatch/claude/task-1"))
+
+
 @pytest.mark.parametrize(
     "command, reason",
     [
@@ -1552,10 +1853,10 @@ def test_issue_8785_hidden_component_glob_semantics():
         "echo x > {scratch}/out-?.txt",
     ],
 )
-def test_issue_8785_safe_commands_remain_allowed(repo: Path, command: str):
+def test_issue_8785_safe_commands_remain_allowed(repo: Path, outside_dir: Path, command: str):
     # #10343: a shared scratch.txt can be a symlink into a primary checkout.
     # Own the directory and its leaves instead of assuming global temp state.
-    scratch = repo.parent / "scratch"
+    scratch = outside_dir / "scratch"
     scratch.mkdir()
     command = command.format(scratch=shlex.quote(str(scratch)))
     worktree = repo / ".worktrees/dispatch/claude/task-1"
@@ -1565,8 +1866,8 @@ def test_issue_8785_safe_commands_remain_allowed(repo: Path, command: str):
 
 @pytest.mark.parametrize("primary_cwd", [False, True])
 @pytest.mark.parametrize("target", ["outside", "primary", "symlink"])
-def test_issue_10343_cd_then_tee_containment(repo: Path, primary_cwd: bool, target: str):
-    scratch = repo.parent / "scratch with spaces"
+def test_issue_10343_cd_then_tee_containment(repo: Path, outside_dir: Path, primary_cwd: bool, target: str):
+    scratch = outside_dir / "scratch with spaces"
     scratch.mkdir()
     if target == "symlink":
         (scratch / "scratch.txt").symlink_to(repo / "scratch.txt")

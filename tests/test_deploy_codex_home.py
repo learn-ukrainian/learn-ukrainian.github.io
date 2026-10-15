@@ -395,3 +395,22 @@ def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):
             args, capture_output=True, text=True, check=True, timeout=60
         ).stdout
         assert snapshot(home) == before
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_merge_config_keeps_unicode_separators_inside_strings(separator):
+    # #9556: TOML lines end at LF/CRLF; separators inside a basic string are value text.
+    data = (
+        f'model = "old{separator}value"\r\n'
+        f'note = "x{separator}model = \\"forged\\""\n'
+        "[agents]\n"
+        'default_subagent_model = "old"\n'
+    ).encode()
+
+    merged = deployer.merge_config(data)
+
+    parsed = tomllib.loads(merged.decode())
+    assert parsed["model"] == deployer.EXPECTED["model"]
+    assert parsed["note"] == f'x{separator}model = "forged"'
+    assert parsed["agents"] == deployer.EXPECTED["agents"]
+    assert merged.count(b"\r\n") == 1

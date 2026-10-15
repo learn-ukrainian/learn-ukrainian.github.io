@@ -158,7 +158,8 @@ def _path_buckets(since: str, until: str) -> dict[str, int]:
         chunk = chunk.strip("\n")
         if not chunk.strip():
             continue
-        lines = chunk.splitlines()
+        # Records end at LF only: a subject may contain NEL/LS/PS (#9556).
+        lines = chunk.split("\n")
         head = lines[0]
         if "\x1f" not in head:
             continue

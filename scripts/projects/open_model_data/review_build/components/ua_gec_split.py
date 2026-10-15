@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 import importlib.util
+import io
 import math
 import re
 import sys
@@ -342,7 +343,8 @@ class UaGecFileStore:
         self._corpus: list[dict] = []
         if self.root is None:
             return
-        self.metadata = list(csv.DictReader(self._read("data/metadata.csv").splitlines()))
+        # newline="" lets csv frame records itself; NEL/LS/PS stay field text (#9556).
+        self.metadata = list(csv.DictReader(io.StringIO(self._read("data/metadata.csv"), newline="")))
         require(len({r["id"] for r in self.metadata}) == len(self.metadata), "metadata_duplicate")
         for relative in ("README.md", "LICENSE"):
             self._read(relative)

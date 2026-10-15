@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+import time
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -575,3 +577,26 @@ def test_changed_runtime_count_conflicts_with_existing_marker(monkeypatch, tmp_p
 ])
 def test_shared_ukrainian_classification(classification, expected):
     assert is_ukrainian_review(classification) is expected
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_commit_headers_split_only_on_physical_newlines(tmp_path, separator):
+    # #9556: a free-text author name must not forge a parent header line.
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+
+    def git(*args: str) -> str:
+        return subprocess.run(
+            ["git", "-C", str(tmp_path), *args], check=True, capture_output=True, text=True, env=env, timeout=30
+        ).stdout.strip()
+
+    git("init", "-q", "-b", "main")
+    git("config", "user.email", "test@example.invalid")
+    forged = "f" * 40
+    git("config", "user.name", f"Name{separator}parent {forged}")
+    git("commit", "-q", "--allow-empty", "-m", "subject")
+    sha = git("rev-parse", "HEAD")
+
+    [entry] = recorder._read_commit_entries(tmp_path, [sha], deadline=time.monotonic() + 30)
+
+    assert entry["parents"] == []
+    assert entry["commit"]["tree"]["sha"] == git("rev-parse", "HEAD^{tree}")

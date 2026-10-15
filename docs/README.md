@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-121 document families and 31 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+121 document families and 32 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -246,6 +246,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | Store | Names | Status | How to query |
 | --- | --- | --- | --- |
 | `data-sources-db` | `data/sources.db` | current | mcp: sources MCP search_sources / search_text / search_literary / search_definitions / query_sum20 / search_esum; api: GET /api/sources/search_text?q=<term>; GET /api/sources/stats; sqlite: read-only SQL on data/sources.db (table list via sources MCP collection_stats) |
+| `data-sum20-staging` | `data/sum20_slovnyk_staging.db`, `data/sum20_staging.db` | current | sqlite: read-only SQL on data/sum20_slovnyk_staging.db or data/sum20_staging.db when present |
 | `data-vesum-db` | `data/vesum.db`, `data/vesum.db.bak`, `data/vesum.db.bak.*`, `data/vesum_shadow_v680.db` | current | mcp: sources MCP verify_word / verify_words / verify_lemma / inspect_word |
 | `data-grac-frequency-db` | `data/grac_frequency.db`, `data/grac-10.db` | current | mcp: sources MCP query_grac with mode frequency or lemma_forms; cache_only=true for offline snapshot lookups |
 | `data-atlas-db` | `data/atlas.db` | current | sqlite: Python API in scripts/atlas/atlas_db.py or read-only SQL on data/atlas.db |

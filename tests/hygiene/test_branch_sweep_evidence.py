@@ -678,3 +678,24 @@ def test_issue_read_is_one_rest_get_without_pagination(repo: Path, monkeypatch: 
         ]
     ]
     assert "--paginate" not in seen[0]
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_merge_index_keeps_unicode_separators_inside_subjects(repo: Path, separator: str) -> None:
+    # #9556: git log records end at LF; a separator inside %s is subject text.
+    sha = commit_files(repo, "main", {"alpha.txt": "one\n"}, f"fix: first{separator}second (#4321)")
+    publish(repo, "main")
+    git(repo, "fetch", "-q", "origin")
+
+    assert sweep._pr_merge_index(repo, sweep._EvidenceCache())[4321] == [sha]
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_timeline_headers_split_only_on_physical_newlines(separator: str) -> None:
+    # #9556: a separator inside one header value must not start a forged Link header.
+    raw = http([]).replace("\r\n\r\n", f'\r\nX-Note: a{separator}Link: <next>; rel="next"\r\n\r\n', 1)
+
+    closure, problem = read_timeline(raw)
+
+    assert problem is None
+    assert closure == read_timeline(http([]))[0]

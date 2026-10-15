@@ -1533,6 +1533,24 @@
       "after": true
     },
     {
+      "guard": "primary_checkout_write",
+      "command_index": 455,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "primary_checkout_write",
+      "command_index": 456,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "primary_checkout_write",
+      "command_index": 827,
+      "before": false,
+      "after": true
+    },
+    {
       "guard": "secret_print",
       "command_index": 255,
       "before": true,

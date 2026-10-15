@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 from jsonschema import validate
 
 from scripts.docs.docs_inventory import build, canonical, digest, main, metadata
@@ -156,3 +157,13 @@ def test_reference_definitions_encoding_and_config(repo):
     edges = [e for e in graph['edges'] if e['source'] == 'docs/links.md']
     assert {'source': 'docs/links.md', 'target': 'docs/space name.md', 'kind': 'supersedes'} in edges
     assert {e['target'] for e in edges} == {'docs/space name.md', 'scripts/config/policy.yaml'}
+
+
+@pytest.mark.parametrize('separator', ['\u0085', '\u2028', '\u2029'], ids=['NEL', 'LS', 'PS'])
+def test_metadata_frontmatter_keeps_unicode_separators(separator):
+    # #9556: frontmatter is framed on LF only, so YAML sees the original bytes.
+    frontmatter = f'status: active\nsupersedes: "docs/a{separator}b.md"\n'
+    facts, errors = metadata(f'---\r\n{frontmatter}---\r\nbody{separator}---\n')
+
+    assert errors == []
+    assert facts == {'status': 'active', 'supersedes': [yaml.safe_load(frontmatter)['supersedes']]}
