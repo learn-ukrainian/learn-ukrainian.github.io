@@ -584,7 +584,8 @@ def test_unknown_model_suggestion(model: str, expected: str) -> None:
 def test_unknown_model_suggestion_preserves_general_ids_when_restricted_slugs_are_added(monkeypatch) -> None:
     expected = (
         "Accepted AGY model ids: `gemini-3.8-flash-high`, `gemini-3.8-flash-medium`, "
-        "`gemini-3.8-flash-low`, `gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
+        "`gemini-3.8-flash-low`, `gemini-3.1-pro-high`, `gemini-3.1-pro-low`, "
+        "`gemini-4-argon-high`, `gemini-4-argon-medium`, `gemini-4-argon-low`."
     )
     general_slugs = agy_module._AGY_GENERAL_MODEL_SLUGS
     restricted_slugs = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
@@ -636,6 +637,179 @@ def test_build_invocation_none_model_falls_back_to_default(tmp_path: Path) -> No
 def test_build_invocation_maps_pro_preview_to_supported_slug(tmp_path: Path) -> None:
     plan = _build(tmp_path, model="gemini-3.1-pro-preview")
     assert _model_after_flag(plan) == "gemini-3.1-pro-high"
+
+
+@pytest.mark.parametrize(
+    ("requested", "selector"),
+    [
+        ("gemini-4-argon-high", "gemini-4-argon-high"),
+        ("gemini-4-argon-medium", "gemini-4-argon-medium"),
+        ("gemini-4-argon-low", "gemini-4-argon-low"),
+        ("Gemini 4 Argon (High)", "gemini-4-argon-high"),
+        ("Gemini 4 Argon (Medium)", "gemini-4-argon-medium"),
+        ("Gemini 4 Argon (Low)", "gemini-4-argon-low"),
+    ],
+)
+@pytest.mark.parametrize("effort", [None, "low", "medium", "high"])
+def test_argon_selectors_pass_through_unchanged(
+    tmp_path: Path, requested: str, selector: str, effort: str | None
+) -> None:
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+
+    assert AgyAdapter.resolve_model_slug(requested) == selector
+    targets = resolve_and_admit(("agy",), mode="workspace-write", model=requested)
+    assert [(target.recipient, target.model) for target in targets] == [("agy", requested)]
+    plan = AgyAdapter().build_invocation(
+        prompt="hello",
+        mode="danger",
+        cwd=tmp_path,
+        model=requested,
+        task_id="t-argon",
+        session_id=None,
+        tool_config=None,
+        effort=effort,
+    )
+    assert _model_after_flag(plan) == selector
+
+
+def test_accepted_agy_selectors_preserve_pro_and_add_argon() -> None:
+    assert agy_module._AGY_GENERAL_MODEL_SLUGS == (
+        "gemini-3.8-flash-high",
+        "gemini-3.8-flash-medium",
+        "gemini-3.8-flash-low",
+        "gemini-3.1-pro-high",
+        "gemini-3.1-pro-low",
+        "gemini-4-argon-high",
+        "gemini-4-argon-medium",
+        "gemini-4-argon-low",
+    )
+
+
+@pytest.mark.parametrize("tier", ["low", "medium", "high"])
+@pytest.mark.parametrize("shape", ["nested", "top-level", "both"])
+def test_argon_provider_identity_preserves_the_selected_effort(tmp_path: Path, tier: str, shape: str) -> None:
+    selector = f"gemini-4-argon-{tier}"
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply("IDENTITY_TEST_ONLY")])
+    plan.cmd.extend(["--output-format", "stream-json", "--model", selector])
+    init = {"event": "init"}
+    if shape in {"nested", "both"}:
+        init["init"] = {"model": selector}
+    if shape in {"top-level", "both"}:
+        init["model"] = selector
+    stdout = json.dumps(init) + "\n" + json.dumps({"event": "result", "result": {
+        "status": "SUCCESS", "response": "IDENTITY_TEST_ONLY", "conversation_id": _FINISHED_CONVERSATION_ID,
+    }})
+    parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    assert parsed.ok is True
+    assert parsed.response == "IDENTITY_TEST_ONLY"
+    assert parsed.model_identity == {
+        "actual_model": selector, "actual_model_known": True,
+        "source": "provider-init", "substituted": False,
+    }
+
+
+@pytest.mark.parametrize("tier", ["low", "medium", "high"])
+@pytest.mark.parametrize("shape", ["nested", "top-level", "conflict", "two-init"])
+@pytest.mark.parametrize("reported", ["other-effort", "display", "unknown", "non-string", "case"])
+def test_argon_provider_identity_refuses_other_or_ambiguous_models(
+    tmp_path: Path, tier: str, shape: str, reported: str,
+) -> None:
+    selector = f"gemini-4-argon-{tier}"
+    observed = {
+        "other-effort": "gemini-4-argon-low" if tier == "high" else "gemini-4-argon-high",
+        "display": f"Gemini 4 Argon ({tier.title()})",
+        "unknown": "gemini-4-argon-ultra",
+        "non-string": [selector],
+        "case": selector.upper(),
+    }[reported]
+    plan = _plan(tmp_path, log_file=tmp_path / "agy.log", app_data=tmp_path / "app",
+                 cmd=["agy", "--output-format", "stream-json", "--model", selector])
+    init = {"event": "init"}
+    if shape == "nested":
+        init["init"] = {"model": observed}
+    else:
+        init["model"] = observed
+    if shape == "conflict":
+        init["init"] = {"model": selector}
+    prefix = json.dumps({"event": "init", "init": {"model": selector}}) + "\n" if shape == "two-init" else ""
+    stdout = prefix + json.dumps(init) + "\n" + json.dumps({"event": "result", "result": {
+        "status": "SUCCESS", "response": "IDENTITY_TEST_ONLY",
+    }})
+    parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    assert parsed.ok is False
+    assert parsed.response == ""
+    assert parsed.failure_code == "provider_policy_refusal"
+    assert parsed.stderr_excerpt == "agy_model_event_mismatch"
+
+
+@pytest.mark.parametrize("tier", ["low", "medium", "high"])
+@pytest.mark.parametrize("init", [None, {"event": "init"}, {"event": "init", "init": {"model": ""}}])
+def test_argon_success_without_provider_identity_is_refused(tmp_path: Path, tier: str, init: dict | None) -> None:
+    selector = f"gemini-4-argon-{tier}"
+    plan = _plan(tmp_path, log_file=tmp_path / "agy.log", app_data=tmp_path / "app",
+                 cmd=["agy", "--output-format", "stream-json", "--model", selector])
+    stdout = (json.dumps(init) + "\n" if init else "") + json.dumps({"event": "result", "result": {
+        "status": "SUCCESS", "response": "IDENTITY_TEST_ONLY",
+    }})
+    parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    assert parsed.ok is False
+    assert parsed.response == ""
+    assert parsed.failure_code == "provider_policy_refusal"
+    assert parsed.stderr_excerpt == "agy_model_identity_missing"
+    assert parsed.model_identity is None
+
+
+@pytest.mark.parametrize("tier", ["low", "medium", "high"])
+@pytest.mark.parametrize("status,error", [("ERROR", "429 Too Many Requests"), ("CANCELLED", "cancelled")])
+def test_argon_pre_identity_provider_failures_keep_flash_classification(tmp_path: Path, tier: str, status: str, error: str):
+    plan = _plan(tmp_path, log_file=tmp_path / "agy.log", app_data=tmp_path / "app",
+                 cmd=["agy", "--output-format", "stream-json", "--model", "gemini-3.8-flash-high"])
+    stdout = json.dumps({"event": "result", "result": {"status": status, "error": error, "response": ""}})
+    baseline = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=1, output_file=None, plan=plan)
+    plan.cmd[-1] = f"gemini-4-argon-{tier}"
+    parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=1, output_file=None, plan=plan)
+    assert parsed == baseline
+    assert parsed.ok is False
+    assert parsed.failure_code != "provider_policy_refusal"
+
+
+@pytest.mark.parametrize(
+    ("requested", "selector"),
+    [
+        ("gemini-3.8-flash-high", "gemini-3.8-flash-high"),
+        ("gemini-3.8-flash-medium", "gemini-3.8-flash-medium"),
+        ("gemini-3.8-flash-low", "gemini-3.8-flash-low"),
+        ("Gemini 3.8 Flash (High)", "gemini-3.8-flash-high"),
+        ("Gemini 3.8 Flash (Medium)", "gemini-3.8-flash-medium"),
+        ("Gemini 3.8 Flash (Low)", "gemini-3.8-flash-low"),
+    ],
+)
+def test_listed_flash_selectors_still_pass_through(tmp_path: Path, requested: str, selector: str) -> None:
+    assert AgyAdapter.resolve_model_slug(requested) == selector
+    plan = _build(tmp_path, model=requested)
+    assert _model_after_flag(plan) == selector
+
+
+@pytest.mark.parametrize("model", [
+    "gemini-4-argon", "gemini-4-argon-ultra", "gemini-4-argon-xhigh", "gemini-4-argon-max",
+    "gemini-4-argon-high-preview", "gemini-4-argon-minimal", "gemini-4-pro", "gemini-9.9-pro-preview",
+])
+@pytest.mark.parametrize("effort", [None, "low", "medium", "high"])
+def test_unlisted_argon_and_pro_names_are_refused(tmp_path: Path, model: str, effort: str | None, monkeypatch) -> None:
+    def forbidden(*args, **kwargs):
+        pytest.fail("Unknown selectors must refuse without a subprocess")
+
+    monkeypatch.setattr("subprocess.run", forbidden)
+    monkeypatch.setattr("subprocess.Popen", forbidden)
+    with pytest.raises(ValueError, match="Unsupported AGY model") as error:
+        AgyAdapter().build_invocation(
+            prompt="hello", mode="workspace-write", cwd=tmp_path, model=model,
+            task_id=None, session_id=None, tool_config=None, effort=effort,
+        )
+    message = str(error.value)
+    if "pro" in model.casefold():
+        assert "For Gemini Pro, use `--model gemini-3.1-pro-high`." in message
+        assert "gemini-3.8-flash-high" not in message
 
 
 @pytest.mark.parametrize("tier", ["high", "medium", "low"])

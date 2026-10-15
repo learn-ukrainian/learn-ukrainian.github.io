@@ -308,6 +308,27 @@ entries:
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: gemini-4-argon-high
+  count: 1
+  kind: adapter_identity
+  reason: 'Listed AGY selector gemini-4-argon-high; supervised trial, not an authority role (#10568).'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: gemini-4-argon-low
+  count: 1
+  kind: adapter_identity
+  reason: 'Listed AGY selector gemini-4-argon-low; supervised trial, not an authority role (#10568).'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: gemini-4-argon-medium
+  count: 1
+  kind: adapter_identity
+  reason: 'Listed AGY selector gemini-4-argon-medium; supervised trial, not an authority role (#10568).'
+- path: scripts/agent_runtime/adapters/agy.py
   scope: AgyAdapter
   context: expression
   id: gemini-3.8-flash-high
@@ -881,6 +902,13 @@ entries:
   count: 1
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/agent_runtime/attempt_boundary.py
+  scope: <module>
+  context: expression
+  id: claude-default-account
+  count: 1
+  kind: non_model_label
+  reason: File name of the fleet-wide default Claude account label file (#10619); not a model ID.
 - path: scripts/agent_runtime/codex_hook_probe.py
   scope: _run_case
   context: expression
@@ -4157,6 +4185,13 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
+- path: scripts/delegate.py
+  scope: build_parser
+  context: expression
+  id: claude-default-account
+  count: 1
+  kind: non_model_label
+  reason: File name of the fleet-wide default Claude account label file in --claude-account help (#10619); not a model ID.
 - path: scripts/delegate.py
   scope: build_parser
   context: expression

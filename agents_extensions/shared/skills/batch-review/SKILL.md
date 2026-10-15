@@ -95,7 +95,7 @@ Follow the content review prompt (in `agents_extensions/shared/skills/content-re
 - `mcp__sources__search_text` for grammar verification against textbooks
 - `mcp__sources__query_r2u` for Russicism checking
 
-Produce the full content-review report with grade (A/B/C/F).
+Produce the full content-review report with grade (A/B/C/F, or INCONCLUSIVE). Its review rules (#10665) apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8: every sourced Ukrainian error blocks (grade F), one finding per error class lists every occurrence with a source-verified correction, and an unsourced blocker is INCONCLUSIVE, which still blocks.
 
 Write to TWO locations:
 1. `curriculum/l2-uk-en/{track}/audit/{slug}-content-review.md`
@@ -111,7 +111,7 @@ Return a JSON summary for the main agent:
       "num": N,
       "slug": "...",
       "prompt_review": {"template_health": "GOOD/NEEDS_WORK/BROKEN", "fix_count": N, "top_fix": "..."},
-      "content_review": {"grade": "A/B/C/F", "critical_count": N, "high_count": N, "issues_summary": "..."}
+      "content_review": {"grade": "A/B/C/F/INCONCLUSIVE", "critical_count": N, "high_count": N, "issues_summary": "..."}
     }
   ]
 }
@@ -124,7 +124,7 @@ After all subagents return, the main agent:
 1. **Collect all findings** — read all generated reports
 2. **Cross-module pattern analysis** — identify recurring issues:
    - Same friction type across 3+ modules = template-level bug
-   - Same content issue across 3+ modules = systematic prompt problem
+   - Same content issue across 3+ modules = systematic prompt problem (group Ukrainian errors by error class)
    - Same VESUM failures = pipeline limitation
 3. **Write cross-module summary** to `curriculum/l2-uk-en/{track}/audit/batch-review-summary-M{start}-M{end}.md`
 4. **Propose auto-fixes** — for template-level patterns, list specific file + diff changes

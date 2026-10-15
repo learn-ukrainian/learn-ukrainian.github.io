@@ -181,6 +181,11 @@ dispatches use them for authoring review admission without becoming review-typed
 Other non-review read-only calls refuse these flags instead of ignoring them.
 Review substitutes require their own budget snapshot; direct and substituted
 reviewers share the allowance rule (#10016), with pace advisory for both.
+A review-typed brief (other than a formal `--review-attempt` prompt) with no
+Markdown heading naming its dispositions is still dispatched, with the typed
+warning `review_brief_no_dispositions` on stderr and in the task record's
+`review_brief_warnings` (#10665). Brief template: `drive-epic`
+`references/review-merge-cleanup.md` §6.
 
 ## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 
@@ -469,12 +474,28 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 
 - **Cold start**: your queue = YOUR stream's epic checklist/sub-issues, not the global
   issue list. Check `/api/issues/streams` (from `scripts.orchestration.issue_stream_audit`) for drift.
+- **Before filing (#10665)**: search open issues for duplicates by symptom AND by
+  affected file. When an open parent issue has the same outcome, add the finding there as
+  a checklist item. File a new linked issue only when the work needs its own PR or has a
+  different outcome, and give it an owner and acceptance criteria. Security work and
+  evidence-backed preventive reliability work may keep their own issue.
 - **Creating an issue**: link it to its stream epic AT CREATION — native sub-issue
   (preferred) or a `#N` checklist line in the epic body. An unlinked issue is an ORPHAN
   and gets flagged at every agent's cold start until adopted.
-- **Closing**: when a PR fixes an issue, CLOSE it with evidence (auto-close keywords are
-  fine, but verify — `Fixes #N` closes the whole issue even when scope remains; split
-  remainders into a new linked issue FIRST).
+- **Finish before starting (#10665)**: a lane with an open PR that has waited more than
+  24 h on review or finalize takes no new issue until that wait clears. The only exception
+  is an external dependency named in the lane's blocker post. Lane worker caps still apply.
+- **Pull order (#10665; trial from 2026-10-14, reviewed after one week on delivered
+  outcomes)**: product ready work (the curriculum product and its data, in the operator's
+  current focus order) comes first.
+  Only P1s, outages, security fixes and product blockers go ahead of it. There is no
+  fixed share. Already-ordered work continues (operator contract item 10).
+- **Closing**: requires evidence: the merged PR that delivered the issue, or a verified
+  duplicate whose unresolved criteria were first moved to the surviving issue. Auto-close
+  keywords are fine, but verify — `Fixes #N` closes the whole issue even when scope
+  remains: use `Refs #N`, or move the remaining criteria FIRST (to an open parent with the
+  same outcome, else a new linked issue under the filing rule above).
+- These intake rules bind every lane, the CTO included.
 - **New stream?** Only with a new epic + a registry entry in the same PR — streams are
   deliberate, not emergent.
 - Auditor: `.venv/bin/python -m scripts.orchestration.issue_stream_audit` (`--check` for
@@ -492,7 +513,8 @@ default); unknown attribution or liveness always preserves them.
 
 Every task follows this workflow. No exceptions for non-trivial changes.
 
-1. **Create GH issue** — describe the problem and link it to exactly one stream epic.
+1. **Create GH issue** — after the duplicate search in § Work intake, describe the problem
+   and link it to exactly one stream epic.
 2. **Review the plan** — obtain outside input and incorporate the disposition.
 3. **Finalize stable ACs** — use `- [ ] **AC-ID** — text`, then snapshot their
    applicability, due state, evidence types, and content hash in

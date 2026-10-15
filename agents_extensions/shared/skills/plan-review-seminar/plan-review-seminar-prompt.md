@@ -168,7 +168,7 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 # Plan Review (Seminar): {slug}
 
 **Track:** {track} | **Sequence:** {sequence} | **Version:** {version}
-**Verdict:** PASS / FAIL / NEEDS FIXES
+**Verdict:** PASS / FAIL / NEEDS FIXES / INCONCLUSIVE
 
 ## Rule Compliance
 | Check | Status | Details |
@@ -215,6 +215,23 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 ## Suggested Fixes
 [Concrete YAML edits with old/new]
 ```
+
+### Review rules (#10665, binding)
+
+These apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8 to a seminar plan
+review. The contract is the plan's acceptance: the track's size policy, the seminar level,
+the stated scope and the cited sources.
+
+- **Ukrainian errors block.** A sourced Ukrainian language, factual or source error in the
+  plan (vocabulary, forms, stress, Russicisms, people, dates, events, sources) is
+  **CRITICAL** and the verdict is FAIL, whatever severity a check above names. It is never a
+  follow-up.
+- **One finding per error class**, listing every occurrence with its location, the
+  source-verified correction and the tool that proves it.
+- **Unsourced is INCONCLUSIVE.** A suspected error you cannot source after the tool
+  escalation makes the verdict INCONCLUSIVE, which blocks like FAIL until re-checked.
+- **Pedagogy** blocks when the plan contradicts its contract; preferences are MEDIUM or LOW
+  follow-ups. PASS may carry tracked follow-ups.
 
 ---
 
