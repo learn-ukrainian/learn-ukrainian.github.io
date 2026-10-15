@@ -539,10 +539,11 @@ def test_a_data_directory_elsewhere_is_bound_where_it_resolves(tmp_path: Path, h
     assert sup.main(["check-paths", "--repo-root", str(repo)]) == 0
 
 
-def test_a_writable_path_outside_the_data_bind_is_reported_hidden(hidden: Path, capsys) -> None:
+@pytest.mark.parametrize("where", ["in_the_read_only_checkout", "in_another_hidden_directory"])
+def test_a_writable_path_outside_the_data_bind_is_reported_hidden(hidden: Path, capsys, where: str) -> None:
     """A database linked out of the data directory would be read-only under ProtectSystem=strict."""
     repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
-    elsewhere = hidden / "op" / "bulk"
+    elsewhere = repo / "bulk" if where == "in_the_read_only_checkout" else hidden / "op" / "bulk"
     elsewhere.mkdir()
     (elsewhere / "sources.db").touch()
     (repo / "data" / "sources.db").unlink()

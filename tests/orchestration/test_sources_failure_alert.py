@@ -408,6 +408,7 @@ def test_a_start_limit_trigger_merged_into_a_running_notify_is_published_once(di
     fleet = RefusedRestartDuringPublish()
     args = ["--state-dir", str(state), "notify"]
     assert alert.main(args, publish=fleet, unit_state=unit) == 0
+    assert fleet.classes == ["watchdog", "start_limit"]  # the same run rescanned and sent it
     assert alert.main(args, publish=fleet, unit_state=unit) == 0  # a timer run: nothing new
     assert fleet.classes == ["watchdog", "start_limit"]
     assert len({key for _message, key in fleet.calls}) == 2
