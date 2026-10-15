@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import ChromeText from '../../lib/i18n/ChromeText';
 import type { CustomSet } from '../../lib/lexicon/custom-decks';
 import { getTeacherTableVirtualDeck } from '../../lib/lexicon/custom-decks';
@@ -61,7 +61,7 @@ export default function SettingsDrawer({
     });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen) {
       if (wasOpenRef.current) {
         wasOpenRef.current = false;
@@ -81,10 +81,7 @@ export default function SettingsDrawer({
     if (!wasOpenRef.current && isEffectivelyOpen) {
       wasOpenRef.current = true;
       previousFocusRef.current = document.activeElement as HTMLElement | null;
-      const timer = setTimeout(() => {
-        closeButtonRef.current?.focus();
-      }, 50);
-      return () => clearTimeout(timer);
+      closeButtonRef.current?.focus();
     }
   }, [isOpen, isEffectivelyOpen]);
 
@@ -168,7 +165,9 @@ export default function SettingsDrawer({
           zIndex: 999,
           transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
           visibility: isEffectivelyOpen ? 'visible' : 'hidden',
-          transition: 'transform 0.25s ease-in-out, visibility 0.25s ease-in-out',
+          transition: isEffectivelyOpen
+            ? 'transform 0.25s ease-in-out'
+            : 'transform 0.25s ease-in-out, visibility 0.25s ease-in-out',
           overflowY: 'auto',
           padding: '1.5rem',
           display: 'flex',

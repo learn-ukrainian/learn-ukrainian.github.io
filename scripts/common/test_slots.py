@@ -19,7 +19,7 @@ checkout or Git directory.
 
 Environment:
   LU_TEST_SLOTS         on or off. Default on, except where ``CI`` is true, so CI runs are unchanged.
-  LU_TEST_SLOTS_COUNT   pool size. Default: the CPU count minus 2 for services, and at least 2.
+  LU_TEST_SLOTS_COUNT   pool size. Default: half the CPU count, rounded down, and at least 2.
   LU_TEST_SLOTS_WAIT_S  longest wait for slots in seconds (default 3600), then a typed refusal.
   LU_TEST_SLOTS_DIR     absolute pool directory, for tests and experiments.
   LU_TEST_SLOTS_HOLDER  set by a holder for its descendants, which then run inside its slots.
@@ -60,7 +60,6 @@ DIR_ENV = "LU_TEST_SLOTS_DIR"
 HOLDER_ENV = "LU_TEST_SLOTS_HOLDER"
 TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 XDIST_AUTO_ENV = "PYTEST_XDIST_AUTO_NUM_WORKERS"
-SERVICE_RESERVE = 2
 MIN_DEFAULT_SLOTS = 2
 DEFAULT_WAIT_S = 3600.0
 POLL_S = 0.1
@@ -115,7 +114,7 @@ def pool_size(environ: Mapping[str, str] | None = None) -> int:
         if _COUNT_RE.fullmatch(value) is None or int(value) < 1:
             raise SlotError("invalid_configuration", f"{COUNT_ENV} must be a positive whole number")
         return int(value)
-    return max(MIN_DEFAULT_SLOTS, (os.cpu_count() or 0) - SERVICE_RESERVE)
+    return max(MIN_DEFAULT_SLOTS, (os.cpu_count() or 0) // 2)
 
 
 def wait_timeout(environ: Mapping[str, str] | None = None) -> float:
@@ -884,7 +883,7 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.common.test_slots run --slots 2 -- bash scripts/some_suite.sh\n"
             "  .venv/bin/python -m scripts.common.test_slots status --json\n\n"
             "Environment: LU_TEST_SLOTS (on|off; default on, off under CI=true), LU_TEST_SLOTS_COUNT (pool size;\n"
-            "default CPUs minus 2, at least 2), LU_TEST_SLOTS_WAIT_S (default 3600), LU_TEST_SLOTS_DIR.\n\n"
+            "default half the CPUs rounded down, at least 2), LU_TEST_SLOTS_WAIT_S (default 3600), LU_TEST_SLOTS_DIR.\n\n"
             "Outputs: lock and ticket files in the private pool directory; progress lines on stderr while waiting.\n"
             "Exit codes: run: the command's own exit code; 75 refused (wait timeout, unusable pool, invalid\n"
             "configuration) and the command did not run; 127 command not found. status: 0, or 1 when the pool\n"
