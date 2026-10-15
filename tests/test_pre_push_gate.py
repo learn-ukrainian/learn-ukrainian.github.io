@@ -1266,7 +1266,7 @@ def test_pytest_uses_configured_parallelism_kept_by_file(monkeypatch: pytest.Mon
     assert gate.parallel_options() == []
 
 
-@pytest.mark.parametrize("value,expected", [(None, 2), ("6", 2), ("2", 2), ("1", 1)])
+@pytest.mark.parametrize("value,expected", [(None, 2), ("9999", 2), ("6", 2), ("2", 2), ("1", 1)])
 def test_pytest_preserves_dispatch_process_clamp(
     value: str | None, expected: int, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1351,8 +1351,11 @@ def test_pytest_measurement_records_requested_and_effective_invocation(
 
 @pytest.mark.parametrize(
     "value",
-    ["", "0", "-1", "1.5", "nan", "inf", "auto", " 3", "+3", "٣", "9" * 5000],
-    ids=["empty", "zero", "negative", "decimal", "nan", "infinite", "auto", "space", "sign", "unicode", "oversized"],
+    ["", "0", "-1", "1.5", "nan", "inf", "auto", " 3", "+3", "٣", "10000", "9" * 5000],
+    ids=[
+        "empty", "zero", "negative", "decimal", "nan", "infinite", "auto", "space", "sign", "unicode",
+        "five_digits", "oversized",
+    ],
 )
 def test_invalid_process_configuration_refuses_even_without_xdist(value: str, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, value)

@@ -1278,7 +1278,7 @@ def test_process_limit() -> int:
     """Read the configured process ceiling; invalid configuration refuses validation."""
     value = os.environ.get(MAX_TEST_PROCESSES_ENV, "4")
     try:
-        if re.fullmatch(r"[0-9]+", value) is None or int(value) < 1:
+        if len(value) > 4 or re.fullmatch(r"[0-9]+", value) is None or int(value) < 1:
             raise ValueError
         return int(value)
     except ValueError:
