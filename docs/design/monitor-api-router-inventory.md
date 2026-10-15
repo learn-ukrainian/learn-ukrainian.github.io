@@ -66,7 +66,7 @@ Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
 
 ```bash
 grep -rn '\.include_router(' scripts/api/*.py | grep -v 'factory_app\.include_router'
-# scripts/api/ops_router.py:17:router.include_router(entire_context_router, prefix="/entire-context")
+# scripts/api/ops_router.py:19:router.include_router(entire_context_router, prefix="/entire-context")
 ```
 
 Decorator-sum script (complete `ROUTER_MAP`; `NESTED` adds child router files
