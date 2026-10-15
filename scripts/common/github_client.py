@@ -2087,8 +2087,10 @@ def _native_command(args, client, runner, kwargs):
             executable = real_gh({**client.env, "AGENT_ORIGINAL_PATH": client.env.get("PATH", os.defpath)})
         except PublishBlocked:
             return _result_process(args, Result(error="github_transport_unavailable"), {}, kwargs)
-    # gh itself runs with its request log on; an injected runner keeps the caller's env.
-    environment, forced_log = _request_log_env(client.env) if executor is None else (client.env, False)
+    # gh runs with its request log on. An injected runner keeps the caller's env unless the run
+    # paginates, where only gh's log can say how many pages were requested.
+    wants_log = executor is None or "--paginate" in args[2:]
+    environment, forced_log = _request_log_env(client.env) if wants_log else (client.env, False)
     call = dict(
         input=kwargs.get("input").encode() if isinstance(kwargs.get("input"), str) else kwargs.get("input"),
         env=environment,

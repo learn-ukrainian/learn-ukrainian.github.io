@@ -745,7 +745,7 @@ def test_an_injected_runner_without_a_log_is_judged_by_its_result(tmp_path, stde
     assert reported(tmp_path) == expected
 
 
-def test_an_injected_runner_gets_the_callers_environment_unchanged(tmp_path):
+def test_an_injected_runner_is_asked_for_the_request_log_only_when_it_paginates(tmp_path):
     seen = []
 
     def runner(command, **kwargs):
@@ -753,8 +753,9 @@ def test_an_injected_runner_gets_the_callers_environment_unchanged(tmp_path):
         return subprocess.CompletedProcess(command, 0, b"1\n", b"")
 
     client, _ = make(tmp_path, caller="drv")
+    gh._run_command(["gh", "api", "--jq", ".x", "--slurp", "repos/o/r/issues"], client=client, runner=runner)
     gh._run_command(PAGED, client=client, runner=runner, capture_output=True)
-    assert seen == [None]
+    assert seen == [None, "1"]  # an unpaginated run keeps the caller's environment exactly
 
 
 def gh_home(tmp_path):
