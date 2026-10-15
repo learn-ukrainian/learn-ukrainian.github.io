@@ -7484,6 +7484,10 @@ def _break_claude_account_b(tmp_path: Path, monkeypatch, selected: Path, case: s
         from tests.agent_runtime.test_attempt_boundary import inert_user_settings_with
 
         _private_json(selected / "settings.json", inert_user_settings_with({"apiKeyHelper": "fixture-helper"}))
+    elif case.startswith("user_settings_auto_mode"):
+        from tests.agent_runtime.test_attempt_boundary import AUTO_MODE_REFUSED
+
+        _private_json(selected / "settings.json", AUTO_MODE_REFUSED[case.removeprefix("user_settings_")])
     elif case == "policy_cache_unavailable":
         original_stat = os.stat
 
@@ -7525,6 +7529,9 @@ ACCOUNT_B_REFUSALS = {
     "login_names_another_account": "claude_account_unverified",
     "user_settings_key_helper": "claude_account_settings_credential_source",
     "user_settings_key_beside_inert_names": "claude_account_settings_credential_source",
+    # The classifier reads autoMode whatever the setting sources (#10619).
+    "user_settings_auto_mode": "claude_account_settings_credential_source",
+    "user_settings_auto_mode_with_endpoint_keys_beside_inert_names": "claude_account_settings_credential_source",
     "credentials_missing": "claude_account_credentials_missing",
     "credentials_expired": "claude_account_credentials_expired",
     "identity_unavailable": "claude_account_identity_unavailable",

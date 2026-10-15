@@ -42,6 +42,9 @@ from scripts.agent_runtime.env_sanitize import (
 )
 from tests.agent_runtime.test_attempt_boundary import (
     ACCOUNT_ORG_UUIDS,
+    AUTO_MODE_LISTS,
+    AUTO_MODE_REFUSED,
+    AUTO_MODE_SETTINGS,
     BOUND_ACCOUNT_UUID,
     CLAUDE_AMBIENT_AUTH,
     DEFAULT_ACCOUNT_UUID,
@@ -491,6 +494,37 @@ def test_bound_label_credential_source_beside_inert_names_is_refused(accounts, c
     assert "fixture" not in repr(refused.value) + repr(refused.value.__context__) + repr(refused.value.__cause__)
     assert not accounts.dump.exists()
     assert accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("case", sorted(AUTO_MODE_REFUSED))
+def test_bound_label_auto_mode_is_refused(accounts, case):
+    """User settings carrying ``autoMode`` refuse value-free before spawn (#10619).
+
+    On d183ad934b the worker ran: the classifier reads ``autoMode`` from the
+    user settings whatever the setting sources (see
+    ``test_real_cli_reads_auto_mode_whatever_the_setting_sources``).
+    """
+    _user_settings(accounts, AUTO_MODE_REFUSED[case])
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _invoke(accounts, claude_account="b")
+
+    assert refused.value.code == str(refused.value) == "claude_account_settings_credential_source"
+    assert "fixture" not in repr(refused.value) + repr(refused.value.__context__) + repr(refused.value.__cause__)
+    assert not accounts.dump.exists()
+    assert accounts.profile_calls == []
+
+
+def test_bound_label_auto_mode_written_after_verification_never_launches(accounts):
+    """The launch guard has no name list of its own: ``autoMode`` written after verification changes the digest."""
+    result = _settings_change_after_build(
+        accounts, lambda: _user_settings(accounts, inert_user_settings_with(AUTO_MODE_SETTINGS["auto_mode"]))
+    )
+
+    assert result.ok is False
+    assert _calls(accounts, "run") == []
+    assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in result.stderr_excerpt
+    assert "fixture" not in result.stderr_excerpt
 
 
 def test_bound_label_global_config_disable_auto_compact_is_admitted(accounts):
@@ -1681,6 +1715,21 @@ def test_real_cli_inert_user_settings_names_change_no_auth_source(real_cli):
     assert json.loads(before[0])["authMethod"] == "claude.ai"
     assert after == before
     assert _plan(real_cli, claude_account="b").env_overrides["CLAUDE_CONFIG_DIR"] == str(real_cli.config_dir)
+
+
+def test_real_cli_reads_auto_mode_whatever_the_setting_sources(real_cli):
+    """Why ``autoMode`` refuses (#10619): with the labelled run's own arguments the classifier still reads it.
+
+    ``--setting-sources project,local`` leaves the user scope off, yet the
+    installed CLI reports the user file's four rule lists as its classifier
+    configuration. Equal ``auth status`` output says nothing about this.
+    """
+    _user_settings(real_cli, AUTO_MODE_SETTINGS["auto_mode"])
+
+    assert json.loads(_real(real_cli, "auto-mode", "config")) == AUTO_MODE_LISTS
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(real_cli, claude_account="b")
+    assert refused.value.code == "claude_account_settings_credential_source"
 
 
 def test_real_cli_labelled_run_loads_no_user_mcp_server(real_cli):

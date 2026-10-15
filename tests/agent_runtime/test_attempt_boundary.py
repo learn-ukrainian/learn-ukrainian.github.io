@@ -1010,11 +1010,10 @@ PROFILE_ORGANIZATIONS = {
     account: {"uuid": organization, "organization_type": "claude_max"}
     for account, organization in ACCOUNT_ORG_UUIDS.items()
 }
-# The user settings names a real second login carries (#10619), each with a
+# The inert user settings names a real second login carries (#10619), each with a
 # neutral placeholder value, never a real file's. The labelled allowlists admit
 # every one of them, alone or together.
 INERT_USER_SETTINGS = {
-    "autoMode": {"allow": ["fixture-placeholder-allow"], "soft_deny": ["fixture-placeholder-deny"]},
     "modelSettings": {"fixture-placeholder-model": {"effortLevel": "low", "autoCompactWindow": 200000}},
     "tui": "default",
     "env": {"DISABLE_AUTO_COMPACT": "1"},
@@ -1039,6 +1038,27 @@ SETTINGS_REFUSED_BESIDE_INERT = {
 def inert_user_settings_with(extra: dict) -> dict:
     """All the inert names plus ``extra``, whose ``env`` names join the inert one."""
     return {**INERT_USER_SETTINGS, **extra, "env": {**INERT_USER_SETTINGS["env"], **extra.get("env", {})}}
+
+
+# ``autoMode`` is not inert (#10619): Claude Code 2.1.300's auto mode classifier
+# reads it from the user settings whatever ``--setting-sources`` says, and its
+# four rule lists become classifier policy. It refuses alone, with extra
+# endpoint or helper keys inside it, and beside the inert names.
+AUTO_MODE_LISTS = {key: [f"fixture-placeholder-{key}"] for key in ("allow", "soft_deny", "hard_deny", "environment")}
+AUTO_MODE_SETTINGS = {
+    "auto_mode": {"autoMode": AUTO_MODE_LISTS},
+    "auto_mode_with_endpoint_keys": {
+        "autoMode": {
+            **AUTO_MODE_LISTS,
+            "baseUrl": "https://fixture-placeholder.invalid",
+            "apiKeyHelper": "fixture-placeholder-helper",
+        }
+    },
+}
+AUTO_MODE_REFUSED = {
+    **AUTO_MODE_SETTINGS,
+    **{f"{case}_beside_inert_names": inert_user_settings_with(value) for case, value in AUTO_MODE_SETTINGS.items()},
+}
 
 
 def _private_text(path: Path, text: str) -> None:
@@ -1533,6 +1553,26 @@ def test_second_claude_account_refuses_a_credential_source_beside_inert_names(tw
     _private_json(
         two_accounts.config_dir / "settings.json", inert_user_settings_with(SETTINGS_REFUSED_BESIDE_INERT[case])
     )
+
+    with pytest.raises(ReviewIsolationError) as refused:
+        linux_claude_auth("b")
+
+    assert str(refused.value) == "claude_account_settings_credential_source"
+    rendered = repr(refused.value) + str(refused.value.__cause__) + str(refused.value.__context__)
+    assert "fixture" not in rendered and str(two_accounts.config_dir) not in rendered
+    assert two_accounts.profile_calls == []
+
+
+@pytest.mark.parametrize("case", sorted(AUTO_MODE_REFUSED))
+def test_second_claude_account_refuses_auto_mode(two_accounts, case):
+    """The sealed boundary refuses user settings carrying ``autoMode``, value-free (#10619).
+
+    On d183ad934b this was admitted, although the classifier reads it whatever
+    the setting sources.
+    """
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    _private_json(two_accounts.config_dir / "settings.json", AUTO_MODE_REFUSED[case])
 
     with pytest.raises(ReviewIsolationError) as refused:
         linux_claude_auth("b")
