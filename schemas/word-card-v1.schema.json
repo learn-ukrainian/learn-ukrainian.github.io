@@ -768,63 +768,7 @@
           "type": "string",
           "description": "The strongest alias of the source record at extraction time (e.g. ulif:register:2795:11, vesum:record:замок/noun/noun:inanim:m:v_naz:xp1): matching evidence for correspondence into a new snapshot, never the identity itself and never a local row id."
         }
-      },
-      "allOf": [
-        {
-          "description": "A sense-level field asserted on the card subject is unaligned evidence (schema.md §6): it is retained but never votes, so the build must say it is low or unresolved.",
-          "if": {
-            "properties": {
-              "subject": {
-                "properties": {
-                  "kind": {
-                    "const": "card"
-                  }
-                },
-                "required": [
-                  "kind"
-                ]
-              },
-              "field": {
-                "enum": [
-                  "definition_uk",
-                  "gloss_en",
-                  "sense_label",
-                  "register",
-                  "synonyms",
-                  "antonyms",
-                  "examples",
-                  "russification_exposed",
-                  "collocations"
-                ]
-              }
-            },
-            "required": [
-              "subject",
-              "field"
-            ]
-          },
-          "then": {
-            "required": [
-              "mapping"
-            ],
-            "properties": {
-              "mapping": {
-                "required": [
-                  "confidence"
-                ],
-                "properties": {
-                  "confidence": {
-                    "enum": [
-                      "low",
-                      "unresolved"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
+      }
     },
     "review": {
       "type": "object",

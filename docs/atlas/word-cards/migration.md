@@ -118,9 +118,13 @@ Exit 0 proves foundation preparation only, never full pilot or 220-case certific
 ### Pilot assembly (#8981, mechanics-only)
 
 `.venv/bin/python -m scripts.atlas.word_card_assembly {build|verify|rehearse}` assembles the 150 frozen pilot units into host-only
-cards over the frozen registry (it never mints), re-reads every locator, and rehearses withdrawal and rollback; counts, findings and
-residuals are in [`pilot-findings.md`](pilot-findings.md). Atlas pages, practice items, the dataset projection and the golden set are
-not part of this step, and its cards are uncertified.
+cards over the frozen registry (it never mints), authenticates derived ULIF forms against the held raw pages, re-reads every locator,
+and rehearses withdrawal and rollback; counts, findings and residuals are in [`pilot-findings.md`](pilot-findings.md). Atlas pages,
+practice items, the dataset projection and the golden set are not part of this step, and its cards are uncertified.
+
+Registry v3 is the reviewed pilot allocation (v2) plus one appended `unsplit` holding sense on each of the three pilot cards whose
+relation groups cannot be aligned and that had none (`scripts/atlas/allocate_pilot_identities.py --append-holding`, §6 placement,
+§13 allocation): an append-only, idempotent registry step under its own build id; no existing identity or event changes.
 
 ## 4. Gate 2 — the golden set, with an independent held-out evaluation (before full scale; gates C2)
 

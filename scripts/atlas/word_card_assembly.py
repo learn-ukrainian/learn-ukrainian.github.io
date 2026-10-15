@@ -1,12 +1,14 @@
 """Pilot word-card assembly: `build(S, V, I, O, R)` over the frozen pilot inventory (#8981, schema.md §13).
 
-Reads the admitted pilot manifest, the frozen identity registry, the held `sources.db` / `vesum.db` and the
-permissions register; emits one schema-valid card per frozen unit plus a field-accounting ledger. Every Ukrainian
-value is a verbatim source value with its exact locator; nothing is generated, translated or paraphrased.
+Reads the admitted pilot manifest, the frozen identity registry, the held `sources.db` / `vesum.db` / ULIF raw
+cache and the permissions register; emits one schema-valid card per frozen unit plus a field-accounting ledger.
+Every Ukrainian value is a verbatim source value with its exact locator; nothing is generated, translated or
+paraphrased. Derived ULIF forms are attached only after they authenticate against the held raw page.
 
-Assembly never mints identities (it refuses ids the registry does not allocate), never writes to the sources, and
-is deterministic: the same inputs give byte-identical cards. Cards are host-only build output; the writer refuses
-a destination inside the repository that git does not ignore, so this module can commit no card data.
+Assembly never mints identities (it refuses cards, senses and holding senses the registry does not allocate),
+never writes to the sources, and is deterministic: the same inputs give byte-identical cards. Its build id covers
+every row and query result it consumed. Cards are host-only build output: every write and deletion is refused in
+the primary checkout and in every sibling worktree, and inside the running checkout only into git-ignored paths.
 
 Exit codes of the CLI: 0 success, 1 source/data refusal, 2 usage error.
 """
@@ -34,13 +36,17 @@ from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
 from scripts.atlas.allocate_pilot_identities import (
     BUILD_PREFIX,
+    HOLDING_BUILD_PREFIX,
     is_proper_name,
     label_pos,
     normalize_mwe_form,
 )
 from scripts.atlas.word_card_resolver import CONF_ORDER, _project, _recompute, aid, card_version
+from scripts.common.git_context import sanitized_git_env
+from scripts.guardrails import worktree_containment as containment
+from scripts.lexicon import ulif_raw_cache
 
-ASSEMBLER_VERSION = "pilot-assembly-v1"
+ASSEMBLER_VERSION = "pilot-assembly-v2"
 ALIAS_ORDER = ("uid", "register_position", "content", "query_headword_label", "vesum_entry_form", "table_row")
 # Register source id -> (independence group, tier): schema.md §9.1 (lineage lives in R until the register records it).
 # ukrainian_word_stress follows the register entry (ULIF-derived stress data, 2026-10-06): one lineage with ULIF.
@@ -63,6 +69,7 @@ SENSE_FIELDS = (
     "definition_uk", "gloss_en", "sense_label", "register", "synonyms", "antonyms", "examples",
     "russification_exposed", "collocations",
 )
+RELATION_FIELDS = ("synonyms", "antonyms")
 # WC-S requirement -> the card/sense fields that carry it (issue #8981 §word-card-source-coverage).
 REQUIREMENT_FIELDS = {
     "WC-S01": ("definition_uk", "register", "pos", "grammatical_label", "synonyms", "antonyms"),
@@ -90,6 +97,10 @@ NOT_IN_FROZEN_INPUTS = {
     "register": "no register-label source (СУМ-20 / ВТС labels) is in the frozen pilot S",
     "mwe_frame": "slot words are not separable from the aggregator entry body without an extractor",
 }
+# Normaliser versions this build carries (schema.md §12.1: every version a selector may pin stays available in R).
+NORMALISERS = {"norm-v1": src.norm_v1}
+SENSE_RULE_ALIGNED = "rules:one-unit-alignment"
+SENSE_RULE_HOLDING = "rules:unsplit-holding"
 
 
 class AssemblyError(foundation.Refusal):
@@ -131,6 +142,7 @@ class Inputs:
         self.records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
         self.units = manifest["selection"]["units"]
         build = BUILD_PREFIX + manifest["manifest_sha256"]
+        builds = {build, HOLDING_BUILD_PREFIX + manifest["manifest_sha256"]}
         self.entry_by_unit = {}
         for unit in self.units:
             matches = [e for e in registry["entries"]
@@ -142,14 +154,20 @@ class Inputs:
             for correspondence in sr["correspondence"]:
                 if correspondence.get("locator") and correspondence["status"] == "unique":
                     self.record_ids[(sr["source_id"], correspondence["locator"])] = sr
+        # Seed senses (the pilot allocation) and appended holding senses (the registry's append-only step).
         self.sense_events = {}
         for event in registry["events"]:
-            if event["kind"] == "sense_mint" and event["build_id"] == build:
+            if event["kind"] == "sense_mint" and event["build_id"] in builds:
                 self.sense_events[event["to"][0]] = json.loads(event["evidence"])
 
 
 def sha_of_file(path: Path) -> str:
     return foundation.file_digest(path)
+
+
+def raw_cache_path(sources_db: Path) -> Path:
+    """The held ULIF raw-response cache of this sources store (`LU_ULIF_RAW_CACHE` wins, as everywhere)."""
+    return ulif_raw_cache.cache_path(sources_db)
 
 
 def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_db, atlas_db, stack: ExitStack,
@@ -167,6 +185,10 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
     sources_conn = foundation.readonly(stack, sources_db)
     vesum_conn = foundation.readonly(stack, vesum_db)
     atlas_conn = foundation.readonly(stack, atlas_db)
+    raw_path = raw_cache_path(sources_db)
+    need(raw_path.is_absolute() and raw_path.is_file(),
+         "The ULIF raw-response cache of the sources store is missing; derived forms cannot be authenticated")
+    raw_conn = foundation.readonly(stack, raw_path)
     drift = 0
     for record in manifest["selection"]["source_records"]:
         conn = atlas_conn if record.get("database") == "atlas" else sources_conn
@@ -174,11 +196,12 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
         need(observed == [record["raw_row"]] and foundation.digest(observed[0]) == record["content_sha256"],
              "Source row drift against the frozen literal row; re-admit the source version")
         drift += 1
-    sources = src.PilotSources(sources_conn, vesum_conn)
+    sources = src.PilotSources(sources_conn, vesum_conn, raw_conn)
     entry_ids = sorted(r["raw_row"]["id"] for r in manifest["selection"]["source_records"]
                        if r["table"] == "ulif_dictua_entries")
     extract = scratch / "pilot-wp3-extract.sqlite"
-    counts = src.write_extract(sources_conn, entry_ids, extract)
+    require_host_only([extract])
+    extracted = src.write_extract(sources_conn, entry_ids, extract)
     wp3 = wp3_card_units(extract, set(entry_ids))
     hashes = {
         "sources_file": sha_of_file(sources_db),
@@ -189,7 +212,8 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
             register, sorted({r["source_id"] for r in manifest["selection"]["source_records"]})),
         "manifest": manifest["manifest_sha256"],
         "frozen_rows_verified": drift,
-        "extract_rows": counts,
+        "extract_rows": extracted["tables"],
+        "extract_sha256": extracted["content_sha256"],
     }
     return Inputs(manifest, registry, register, sources, hashes, wp3, heldout)
 
@@ -212,6 +236,39 @@ def wp3_card_units(extract: Path, entry_ids: set[int]):
                 if parent in entry_ids:
                     kept.append(unit)
     return kept
+
+
+# --- sense placement (schema.md §6, identity.md §8) --------------------------------------------------------
+
+def relation_units(wp3_units, entry_id: int) -> dict[str, list]:
+    """The entry's C3 synonym/antonym units by kind, in extraction order."""
+    parent = f"ulif_dictua_entries:id={entry_id}"
+    by_kind = defaultdict(list)
+    for u in wp3_units:
+        if u.parent_key == parent and u.candidate.operation in RELATION_FIELDS:
+            by_kind[u.candidate.operation].append(u)
+    return by_kind
+
+
+def aligned_sense(senses: list[dict], units_of_kind: list) -> dict | None:
+    """The one rule: automatic only when the card has exactly one ACTIVE sense and the source one unit."""
+    active = [s for s in senses if s["state"] == "active"]
+    return active[0] if len(active) == 1 and len(units_of_kind) == 1 else None
+
+
+def holding_sense(senses: list[dict]) -> dict | None:
+    return next((s for s in senses if s["state"] == "unsplit"), None)
+
+
+def needs_holding_sense(senses: list[dict], units_by_kind: dict[str, list]) -> bool:
+    """True when an accepted unit cannot be aligned and the card has no `unsplit` sense to hold it.
+
+    Allocation and assembly share this check: the allocator appends exactly the senses the build will need.
+    """
+    if holding_sense(senses) is not None:
+        return False
+    return any(u.candidate.outcome == "accepted" and aligned_sense(senses, units) is None
+               for units in units_by_kind.values() for u in units)
 
 
 # --- assertion construction ----------------------------------------------------------------------------
@@ -307,14 +364,7 @@ def vesum_gender(lemma_rows: list[dict]) -> list[str]:
 
 
 def vesum_aspect(rows: list[dict]) -> str | None:
-    tags = {t for row in rows for t in row["tags"].split(":")}
-    if {"perf", "imperf"} <= tags:
-        return "both"
-    if "imperf" in tags:
-        return "imperf"
-    if "perf" in tags:
-        return "perf"
-    return None
+    return src.vesum_aspect_of([row["tags"] for row in rows])
 
 
 def declared(forms: list[str], proper: bool) -> str:
@@ -343,6 +393,31 @@ class Ledger:
         self.cards[card_id]["held"].append({"kind": kind, "reason": reason, **extra})
 
 
+def class_homonyms(inputs: Inputs, raw: dict, unit: dict, proper: bool) -> dict[int, dict]:
+    """Checked ULIF homonyms of the anchor's POS and proper/common class (identity.md §4 step 1).
+
+    A homonym whose forms did not authenticate is kept with `paradigm: None`: an unknown competitor is never
+    dropped, so it can never make another homonym's match look unique.
+    """
+    sources = inputs.sources
+    entry_id = raw["id"]
+    class_pos = label_pos(raw["grammatical_label"])
+    homonyms = {}
+    for row in sources.homonyms(raw["normalized_query"]):
+        same = (label_pos(row["grammatical_label"]) == class_pos
+                and is_proper_name(row["grammatical_label"], row["canonical_headword"], row["sense_gloss"]) == proper
+                and (class_pos is not None or row["grammatical_label"] == raw["grammatical_label"]))
+        if row["id"] != entry_id and not same:
+            continue
+        forms = sources.forms(row["id"])
+        head = row["canonical_headword"] or (unit["literal_head"] if row["id"] == entry_id
+                                             else lemma_row_head(forms or []))
+        if head or forms is None or row["id"] == entry_id:
+            homonyms[row["id"]] = {"head": head, "row": row, "aspect": parse_aspect(row["grammatical_label"]),
+                                   "paradigm": src.ulif_paradigm(forms) if forms is not None else None}
+    return homonyms
+
+
 def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, homograph_count: Counter,
                     match_cache: dict):
     """Assertions for a ULIF-anchored lexeme or proper-name card."""
@@ -360,30 +435,24 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
     sources = inputs.sources
     ledger.start(card_id, unit["unit_key"])
 
-    # ULIF homonyms of the same class and the VESUM entries of the spelling (identity.md §4).
-    class_pos = label_pos(raw["grammatical_label"])
-    homonyms = {}
-    for row in sources.homonyms(raw["normalized_query"]):
-        same = (label_pos(row["grammatical_label"]) == class_pos
-                and is_proper_name(row["grammatical_label"], row["canonical_headword"], row["sense_gloss"]) == proper
-                and (class_pos is not None or row["grammatical_label"] == raw["grammatical_label"]))
-        if row["id"] == entry_id or same:
-            head = row["canonical_headword"] or (unit["literal_head"] if row["id"] == entry_id
-                                                  else lemma_row_head(sources.forms(row["id"])))
-            if head:
-                homonyms[row["id"]] = {"head": head, "row": row,
-                                       "paradigm": src.ulif_paradigm(sources.forms(row["id"]))}
+    # ULIF homonyms of the same class and the VESUM entries of the spelling (identity.md §4): same part of speech
+    # and proper names only with proper names. Common-noun evidence never attaches to a proper-name card.
+    homonyms = class_homonyms(inputs, raw, unit, proper)
     keep_gender = any(len(slot) > 1 and any(t in src.GENDERS for t in slot)
-                      for h in homonyms.values() for slot in h["paradigm"]["slots"])
+                      for h in homonyms.values() if h["paradigm"] for slot in h["paradigm"]["slots"])
     vesum_rows = sources.vesum_forms(spelling)
     entries_all = src.vesum_paradigm([r for r in vesum_rows if r["pos"] == pos], keep_gender)
-    wanted = {eid: e for eid, e in entries_all.items() if (("prop" in e["flags"]) == proper) or (
-        proper and not any("prop" in x["flags"] for x in entries_all.values()))}
+    wanted = {eid: e for eid, e in entries_all.items() if ("prop" in e["flags"]) == proper}
     cache_key = (entry_id, tuple(sorted(wanted)))
     if cache_key not in match_cache:
         match_cache[cache_key] = src.match_identity(entry_id, homonyms, wanted)
     match = match_cache[cache_key]
     vesum_entry = match["vesum_entry"]
+    if vesum_entry is None and match["candidates"]:
+        # Unselected candidate evidence stays visible in the ledger with what excluded it; it is never attached.
+        ledger.hold(card_id, "identity", "vesum_correspondence_unresolved",
+                    candidates=[f"vesum:entry:{c}" for c in match["candidates"]],
+                    evidence={f"vesum:entry:{k}": v for k, v in match["evidence"].items()})
     vsnap = "vesum@" + inputs.hashes["vesum_canonical"][:16]
     v_conf = {"high": "high", "medium": "medium"}.get(match["confidence"], "unresolved")
     v_map = mapping(v_conf, match["basis"] if match["basis"] in {"paradigm", "stress", "entry"} else "paradigm",
@@ -486,24 +555,24 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
     else:
         ledger.field(card_id, "aspect", "not_applicable", "not a verb")
 
-    # paradigm: per slot, ULIF (accepted slots) and VESUM (all of the matched entry's slots). Both sides are
-    # projected onto the dimensions each prints for every slot, so one slot name means one proposition.
+    # paradigm: per slot, ULIF (authenticated rows, accepted slots) and VESUM (every visible form of the matched
+    # entry's slots), each in the source's own slots, forms and tags.
     paradigm = homonyms[entry_id]["paradigm"]
     vparadigm = entries_all[vesum_entry] if vesum_entry else None
-    if vparadigm and paradigm["slots"] and vparadigm["slots"]:
-        dims = src.common_dims(paradigm, vparadigm)
-        paradigm, vparadigm = src.project(paradigm, dims), src.project(vparadigm, dims)
     # The forms are parsed from the entry's paradigm section; a frozen section record is their source record.
     section_locator = next((k for k in unit["source_record_keys"]
                             if inputs.records[k]["table"] == "ulif_dictua_sections"), None)
     forms_record = inputs.record_ids[("ulif", section_locator)] if section_locator else srec
     failed = sources.forms_failed(entry_id)
-    forms_rows = sources.forms(entry_id)
-    forms_snapshot = "ulif-forms@sha256:" + foundation.digest(forms_rows) if forms_rows else None
+    refused = sources.forms_status(entry_id)
     withheld_slots = {}
-    if failed:
+    if refused:
+        ledger.hold(card_id, "paradigm", "forms_unauthenticated", detail=refused,
+                    locator=f"ulif:ulif_forms:entry:{entry_id}", source_record_id=forms_record["source_record_id"])
+    elif failed:
         ledger.hold(card_id, "paradigm", "forms_entry_failed", detail=failed)
     else:
+        forms_snapshot = "ulif-forms@sha256:" + foundation.digest(sources.forms(entry_id))
         for slot, item in sorted(paradigm["slots"].items()):
             name = src.slot_name(slot)
             if item["withheld"]:
@@ -514,7 +583,7 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
                   f"{name}=" + "|".join(item["forms"]), "ulif", forms_snapshot,
                   f"ulif:ulif_forms:entry:{entry_id}:slot:{name}", src.EXTRACTION["ulif_forms"], "high",
                   record=forms_record)
-        for slot in sorted(homonyms[entry_id]["paradigm"].get("uncertain_only", {})):
+        for slot in sorted(paradigm.get("uncertain_only", {})):
             ledger.hold(card_id, "paradigm_slot", "asterisk_marked", slot=src.slot_name(slot), source="ulif")
     if vparadigm:
         for slot, item in sorted(vparadigm["slots"].items()):
@@ -523,10 +592,13 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
                                                 "tags": sorted(item["tags"])},
                   f"{name}=" + "|".join(sorted(item["forms"])), "vesum", vsnap, f"{v_locator} [slot {name}]",
                   src.EXTRACTION["vesum"], "high", mapping=v_map)
-    if paradigm["slots"] or (vparadigm and vparadigm["slots"]):
+    if (paradigm and paradigm["slots"] and not refused and not failed) or (vparadigm and vparadigm["slots"]):
         ledger.field(card_id, "paradigm", "asserted",
                      withheld_slots=withheld_slots or None,
                      identity_match=match["method"])
+    elif refused:
+        ledger.field(card_id, "paradigm", "held", "derived ULIF forms did not authenticate against the held raw page",
+                     detail=refused)
     else:
         ledger.field(card_id, "paradigm", "not_applicable", "invariable: no inflection slots in ULIF or VESUM")
 
@@ -589,21 +661,26 @@ def senses(inputs: Inputs, b: Builder, unit, entry, anchor, srec, ledger):
 
 
 def relations(inputs: Inputs, b: Builder, unit, entry, srec, ledger):
-    """C3 synonym/antonym groups of the entry, aligned only by the one-unit rule (schema.md §6)."""
+    """C3 synonym/antonym groups of the entry: aligned by the one-unit rule, otherwise held on the `unsplit` sense.
+
+    A unit that cannot be aligned is retained whole (payload, locator, source record) on the card's registry-
+    allocated `unsplit` holding sense with an `unresolved`, ambiguous mapping; it never votes. A card without a
+    holding sense is refused: the build never mints one and never places a unit on the card or a seeded sense.
+    """
     card_id = entry["card_id"]
     entry_id = inputs.records[unit["anchor_locator"]]["raw_row"]["id"]
-    parent = f"ulif_dictua_entries:id={entry_id}"
-    by_kind = defaultdict(list)
-    for u in inputs.wp3_units:
-        if u.parent_key == parent and u.candidate.operation in {"synonyms", "antonyms"}:
-            by_kind[u.candidate.operation].append(u)
-    active = [s for s in entry["senses"] if s["state"] in {"active", "unsplit"}]
-    for kind in ("synonyms", "antonyms"):
+    by_kind = relation_units(inputs.wp3_units, entry_id)
+    if needs_holding_sense(entry["senses"], by_kind):
+        raise MissingAllocation("Card needs an unsplit holding sense the frozen registry does not allocate; run the "
+                                "append-only holding-sense allocation (allocate_pilot_identities --append-holding)")
+    hold = holding_sense(entry["senses"])
+    for kind in RELATION_FIELDS:
         units = by_kind.get(kind, [])
         accepted = [u for u in units if u.candidate.outcome == "accepted"]
         withheld = [u for u in units if u.candidate.outcome != "accepted"]
         for u in withheld:
             ledger.hold(card_id, kind, u.candidate.reason, locator=f"ulif:ulif_dictua_sections:{u.source_key}")
+        target = aligned_sense(entry["senses"], units)
         aligned = unaligned = 0
         for u in accepted:
             c = u.candidate
@@ -613,26 +690,26 @@ def relations(inputs: Inputs, b: Builder, unit, entry, srec, ledger):
             locator = f"ulif:ulif_dictua_sections:id:{section_id} [payload_json#/raw_html]"
             value = {"members": members.text, "group": u.group_key, "span": list(members.span) if members.span
                      else None, "discriminator": discriminator.text if discriminator else None}
-            if len(active) == 1 and len(units) == 1:
-                sense = active[0]
-                b.add("sense", sense["sense_id"], kind, value, src.norm_v1(members.text), "ulif",
-                      "ulif-section@sha256:" + members.citations[0].field_sha256, locator,
+            snap = "ulif-section@sha256:" + members.citations[0].field_sha256
+            if target is not None:
+                b.add("sense", target["sense_id"], kind, value, src.norm_v1(members.text), "ulif", snap, locator,
                       src.EXTRACTION["ulif_section"], "high",
-                      mapping=mapping("high", "sense", note="one card sense and one source group"), record=srec)
+                      mapping=mapping("high", "sense", note="one active card sense and one source group"),
+                      record=srec)
                 aligned += 1
             else:
-                b.add("card", card_id, kind, value, src.norm_v1(members.text), "ulif",
-                      "ulif-section@sha256:" + members.citations[0].field_sha256, locator,
+                active = sum(1 for s in entry["senses"] if s["state"] == "active")
+                b.add("sense", hold["sense_id"], kind, value, src.norm_v1(members.text), "ulif", snap, locator,
                       src.EXTRACTION["ulif_section"], "high",
                       mapping=mapping("unresolved", "sense", ambiguous=True,
-                                      note=f"{len(units)} source group(s) against {len(active)} card sense(s): "
-                                           "no alignment by position"), record=srec)
+                                      note=f"{len(units)} source group(s) against {active} active card sense(s): "
+                                           "held on the unsplit sense, no alignment by position"), record=srec)
                 unaligned += 1
         if not units:
             ledger.field(card_id, kind, "source_absent", "the entry has no ULIF section of this kind")
         else:
             ledger.field(card_id, kind, "asserted" if aligned else ("unresolved" if unaligned else "held"),
-                         aligned=aligned, unaligned=unaligned, withheld=len(withheld))
+                         aligned=aligned, held_unsplit=unaligned, withheld=len(withheld))
 
 
 # --- MWE cards ------------------------------------------------------------------------------------------
@@ -724,8 +801,8 @@ def account_remaining_fields(ledger: Ledger, card_id: str, card_kind: str):
 
 # --- card assembly --------------------------------------------------------------------------------------
 
-def card_json(inputs: Inputs, entry: dict, builder: Builder, match: dict, build_block: dict):
-    """One card from its assertions: resolutions, links added later, quality and the build block."""
+def card_json(inputs: Inputs, entry: dict, builder: Builder, match: dict):
+    """One card from its assertions: resolutions, links added later, quality; the build block is set at the end."""
     assertions = sorted(builder.assertions.values(), key=lambda a: (a["field"], a["assertion_id"]))
     sense_rows = []
     for sense in entry["senses"]:
@@ -737,16 +814,6 @@ def card_json(inputs: Inputs, entry: dict, builder: Builder, match: dict, build_
         if sense["state"] == "active" and event.get("literal_gloss_unit"):
             row["seeded_from"] = "ulif_sense_gloss:" + event["source_unit"]
         sense_rows.append(row)
-    # Sense-map units of aligned relation groups.
-    for a in assertions:
-        if a["subject"]["kind"] == "sense" and a["field"] in {"synonyms", "antonyms"}:
-            for row in sense_rows:
-                if row["sense_id"] == a["subject"]["id"]:
-                    section = re.search(r"id:(\d+)", a["locator"]).group(1)
-                    unit = {"source_id": "ulif", "source_sense_key": f"ulif:section:{section}",
-                            "mapped_by": "rules:one-unit-alignment"}
-                    if unit not in row["sense_map"]:
-                        row["sense_map"].append(unit)
     key = entry["key_at_creation"]
     identity_keys = [dict(k) for k in key["source_keys"]]
     if match.get("vesum_entry"):
@@ -769,9 +836,26 @@ def card_json(inputs: Inputs, entry: dict, builder: Builder, match: dict, build_
             "practice_eligibility": [],
         },
         "overlay_applied": [],
-        "build": dict(build_block),
+        "build": {},
     }
+    refresh_sense_maps(out)
     return out
+
+
+def refresh_sense_maps(card: dict) -> None:
+    """Registry units plus one unit per LIVE relation group on each sense (schema.md §6: `unsplit` senses carry
+    every unit that could not be aligned). A withdrawn group leaves the map with its assertion's withdrawal."""
+    by_sense = defaultdict(list)
+    for a in card["assertions"]:
+        if a["subject"]["kind"] == "sense" and a["field"] in RELATION_FIELDS and a["status"] == "active":
+            section = re.search(r"id:(\d+)", a["locator"]).group(1)
+            rule = SENSE_RULE_ALIGNED if a["mapping"]["confidence"] == "high" else SENSE_RULE_HOLDING
+            unit = {"source_id": "ulif", "source_sense_key": f"ulif:section:{section}", "mapped_by": rule}
+            if unit not in by_sense[a["subject"]["id"]]:
+                by_sense[a["subject"]["id"]].append(unit)
+    for row in card["senses"]:
+        registry_units = [u for u in row["sense_map"] if u["mapped_by"].startswith("registry:")]
+        row["sense_map"] = registry_units + sorted(by_sense[row["sense_id"]], key=lambda u: u["source_sense_key"])
 
 
 def attach_unmatched_phraseology(inputs: Inputs, ledger: Ledger, cards: dict) -> None:
@@ -819,14 +903,16 @@ def homograph_links(cards: dict[str, dict]) -> None:
                 right["links"].append(json.loads(json.dumps(link)))
 
 
-def build_id_of(inputs: Inputs, suppressions: dict) -> str:
+def build_id_of(inputs: Inputs, suppressions: dict, consumed: str) -> str:
+    """Content address of every input the build consumed, supplemental candidate and absence evidence included."""
     material = {"manifest": inputs.manifest["manifest_sha256"], "registry": inputs.hashes["registry_file"],
                 "register": inputs.hashes["register_entries"], "vesum": inputs.hashes["vesum_canonical"],
+                "consumed": consumed, "extract": inputs.hashes["extract_sha256"],
                 "suppressions": foundation.digest(suppressions), "assembler": ASSEMBLER_VERSION}
     return "pilot-assembly@sha256:" + foundation.digest(material)
 
 
-def build_block(inputs: Inputs, suppressions: dict, build_id: str) -> dict:
+def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str, reads: int) -> dict:
     h = inputs.hashes
     frozen_sources = inputs.manifest["database_file_sha256"]["sources"]
     frozen_atlas = inputs.manifest["database_file_sha256"]["atlas"]
@@ -838,7 +924,14 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str) -> dict:
                 "ulif": {"ref": "sources.ulif_dictua_entries + ulif_dictua_sections + ulif_forms",
                          "content_sha256": frozen_sources,
                          "note": f"whole-file digest at freeze; observed at build {h['sources_file']}. Frozen rows "
-                                 "are re-read literally at every build; other rows carry their own row digests"},
+                                 "are re-read literally at every build; every other row read is in S.consumed"},
+                "consumed": {"ref": "every row lookup and query result the build read: ULIF homonym queries, "
+                                    "ulif_forms rows with their entry fingerprint, raw manifest and raw page digests, "
+                                    "VESUM lemma queries (empty results included), СУМ-20 headers",
+                             "content_sha256": consumed, "note": f"{reads} reads"},
+                "wp3_extract": {"ref": "verbatim rows of the pilot entries, their homonym siblings, their sections "
+                                       "and the СУМ-20 tables read by the C3/C4 ingestion",
+                                "content_sha256": h["extract_sha256"]},
                 "puls": {"ref": "sources.puls_cefr", "content_sha256": frozen_sources, "note": "frozen rows only"},
                 "frazeolohichnyi": {"ref": "sources.frazeolohichnyi", "content_sha256": frozen_sources,
                                     "note": "frozen rows only"},
@@ -858,6 +951,8 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str) -> dict:
             "R": {"rules": {"ref": "scripts/atlas/word_card_resolver.py", "version": inputs.manifest["rules_version"]},
                   "normaliser": {"ref": "norm_v1()", "version": inputs.manifest["normaliser_version"]},
                   "assembler": {"ref": "scripts/atlas/word_card_assembly.py", "version": ASSEMBLER_VERSION},
+                  "forms_parser": {"ref": "scripts/lexicon/runner/ulif_dictua_parse.py",
+                                   "version": src.FORMS_PARSER_VERSION},
                   "register": {"ref": "docs/sources/permissions-register.yaml referenced entries",
                                "version": f"schema_version {inputs.register_version}",
                                "content_sha256": h["register_entries"],
@@ -869,48 +964,97 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str) -> dict:
 
 # --- suppression (takedown) ----------------------------------------------------------------------------
 
-def selector_matches(selector: dict, assertion: dict, spelling: str, normaliser: str) -> bool:
+def check_selector(selector: dict) -> None:
+    """Refuse a selector this build cannot evaluate before anything is matched (fail closed)."""
+    kind = selector["kind"]
+    if kind == "assertion_id":
+        need(selector.get("fallback", {}).get("kind") == "assertion_content",
+             "An assertion_id selector needs a complete assertion_content fallback")
+        check_selector(selector["fallback"])
+    elif kind == "assertion_content":
+        need(selector["normaliser_version"] in NORMALISERS,
+             "Suppression selector is pinned to a normaliser this build does not carry; re-pin it")
+    elif kind not in {"source", "source_record"}:
+        raise AssemblyError("Unsupported suppression selector kind")
+
+
+def proposition(assertion: dict, normalise) -> str:
+    """The assertion's proposition regenerated from its RAW value under one normaliser (schema.md §8.1, §12.1):
+    a declared set is the sorted set of its members, a paradigm slot is `<slot>=<forms>`, a relation group its
+    members text, anything else the normalised text."""
+    field, value = assertion["field"], assertion["value"]
+    if field == "paradigm":
+        return value["slot"] + "=" + "|".join(sorted({normalise(src.unstressed(f)) for f in value["forms"]}))
+    if isinstance(value, dict) and "members" in value:
+        return normalise(value["members"])
+    if isinstance(value, list):
+        return "|".join(sorted({normalise(v) for v in value}))
+    return normalise(value)
+
+
+def selector_proposition(value_norm: str, assertion: dict, normalise) -> str:
+    """A selector's pinned `value_norm` in the same canonical form as the assertion it is compared with: the slot
+    stays its slot and a set stays a whole set, so one member never equals a declared set."""
+    if assertion["field"] == "paradigm":
+        slot, _, forms = value_norm.partition("=")
+        return slot + "=" + "|".join(sorted({normalise(f) for f in forms.split("|")}))
+    if isinstance(assertion["value"], list):
+        return "|".join(sorted({normalise(v) for v in value_norm.split("|")}))
+    return normalise(value_norm)
+
+
+def selector_matches(selector: dict, assertion: dict, spelling: str) -> bool:
     kind = selector["kind"]
     if kind == "source":
         return assertion["source_id"] == selector["source_id"]
     if kind == "source_record":
         return assertion.get("source_record_id") == selector["source_record_id"]
     if kind == "assertion_content":
-        need(selector["normaliser_version"] == normaliser,
-             "Suppression selector is pinned to a normaliser this build does not carry; re-pin it")
-        value = assertion["value"]
-        raw = value if isinstance(value, str) else None
-        return (assertion["source_id"] == selector["source_id"] and assertion["field"] == selector["field"]
-                and spelling.lower() == selector["subject_spelling"].lower() and raw is not None
-                and src.norm_v1(raw) == src.norm_v1(selector["value_norm"]))
+        if (assertion["source_id"], assertion["field"]) != (selector["source_id"], selector["field"]) or \
+                src.nfc(spelling) != src.nfc(selector["subject_spelling"]):
+            return False
+        if "value_norm" not in selector:
+            return True
+        normalise = NORMALISERS[selector["normaliser_version"]]
+        return proposition(assertion, normalise) == selector_proposition(selector["value_norm"], assertion, normalise)
     if kind == "assertion_id":
         return assertion["assertion_id"] == selector["assertion_id"] or selector_matches(
-            selector["fallback"], assertion, spelling, normaliser)
+            selector["fallback"], assertion, spelling)
     raise AssemblyError("Unsupported suppression selector kind")
 
 
-def apply_suppressions(cards: dict[str, dict], suppressions: dict, normaliser: str) -> list[dict]:
-    """Mark matching assertions suppressed, then recompute resolutions, link states and card states.
+def apply_suppressions(cards: dict[str, dict], suppressions: dict) -> list[dict]:
+    """Match every selector against the ORIGINAL assertion inventory, suppress the union, then recompute
+    resolutions, link states, sense maps and card states once (schema.md §12.1-§12.2).
 
-    Returns the takedown report: per suppression the assertions, fields, links and cards it reached (ids only).
+    Each selector must match something in the original inventory, whatever other selectors also match, so the
+    outcome never depends on selector order. Every match is credited to every selector that reached it; the
+    assertion's single `suppression_ref` is the smallest matching suppression id. Returns the takedown report.
     """
-    report = []
-    for entry in suppressions.get("entries", []):
-        touched = {"suppression_id": entry["suppression_id"], "assertions": [], "cards": set(), "fields": set()}
+    entries = suppressions.get("entries", [])
+    ids = [e["suppression_id"] for e in entries]
+    need(len(ids) == len(set(ids)), "Duplicate suppression id")
+    for entry in entries:
+        check_selector(entry["selector"])
+    report, owners = [], defaultdict(list)
+    for entry in entries:
+        touched = {"suppression_id": entry["suppression_id"], "assertions": set(), "cards": set(), "fields": set()}
         for card in cards.values():
             spelling = card["key_at_creation"]["spelling"]
             for a in card["assertions"]:
-                if a.get("status") == "active" and selector_matches(entry["selector"], a, spelling, normaliser):
-                    a["status"] = "suppressed"
-                    a["suppression_ref"] = entry["suppression_id"]
-                    touched["assertions"].append(a["assertion_id"])
+                if selector_matches(entry["selector"], a, spelling):
+                    owners[(card["card_id"], a["assertion_id"])].append(entry["suppression_id"])
+                    touched["assertions"].add(a["assertion_id"])
                     touched["cards"].add(card["card_id"])
                     touched["fields"].add(f"{card['card_id']}:{a['field']}")
         need(touched["assertions"], "Suppression selector matches no assertion; re-pin it before building")
-        touched["assertions"] = sorted(touched["assertions"])
-        touched["cards"] = sorted(touched["cards"])
-        touched["fields"] = sorted(touched["fields"])
-        report.append(touched)
+        report.append({k: sorted(v) if isinstance(v, set) else v for k, v in touched.items()})
+    for card in cards.values():
+        for a in card["assertions"]:
+            matched = owners.get((card["card_id"], a["assertion_id"]))
+            if matched:
+                a["status"] = "suppressed"
+                a["suppression_ref"] = min(matched)
     status = {a["assertion_id"]: a["status"] for c in cards.values() for a in c["assertions"]}
     for card in cards.values():
         for link in card["links"]:
@@ -920,27 +1064,21 @@ def apply_suppressions(cards: dict[str, dict], suppressions: dict, normaliser: s
             if gone:
                 link["state"] = "suppressed"
         _recompute(card)
+        refresh_sense_maps(card)
         live = [a for a in card["assertions"] if a["status"] == "active"]
         if card["assertions"] and not live:
             card["state"] = "suppressed"
     return report
 
 
-def finish_cards(cards: dict[str, dict]) -> None:
-    for card in cards.values():
-        _recompute(card)
-        card["build"]["card_version"] = card_version(_project(card))
-
-
 # --- build ---------------------------------------------------------------------------------------------
 
 def build(inputs: Inputs, suppressions: dict | None = None) -> dict:
-    """Pure assembly over loaded inputs. Returns {cards, ledger, build_id, takedown}."""
+    """Pure assembly over loaded inputs. Returns {cards, ledger, build_id, takedown, block}."""
     suppressions = suppressions or {"schema_version": "1", "entries": []}
     allocated = {e["card_id"] for e in inputs.registry["entries"]}
     need(len(inputs.units) == len(set(inputs.entry_by_unit)), "Duplicate frozen unit key")
-    build_id = build_id_of(inputs, suppressions)
-    block = build_block(inputs, suppressions, build_id)
+    inputs.sources.begin()
     spelling_count = Counter(
         inputs.entry_by_unit[u["unit_key"]]["key_at_creation"]["spelling"].lower() for u in inputs.units
         if u["entry_type"] == "lexeme_candidate")
@@ -960,14 +1098,20 @@ def build(inputs: Inputs, suppressions: dict | None = None) -> dict:
         else:
             builder, match = assemble_lexeme(inputs, unit, entry, ledger, spelling_count, match_cache)
         account_remaining_fields(ledger, entry["card_id"], entry["card_kind"])
-        cards[entry["card_id"]] = card_json(inputs, entry, builder, match, block)
+        cards[entry["card_id"]] = card_json(inputs, entry, builder, match)
     attach_unmatched_phraseology(inputs, ledger, cards)
     homograph_links(cards)
-    finish_cards(cards)
-    takedown = apply_suppressions(cards, suppressions, inputs.manifest["normaliser_version"])
     for card in cards.values():
+        _recompute(card)
+    takedown = apply_suppressions(cards, suppressions)
+    consumed = inputs.sources.consumed_digest()
+    build_id = build_id_of(inputs, suppressions, consumed)
+    block = build_block(inputs, suppressions, build_id, consumed, len(inputs.sources.consumed))
+    for card in cards.values():
+        card["build"] = json.loads(json.dumps(block))
         card["build"]["card_version"] = card_version(_project(card))
-    return {"cards": cards, "ledger": ledger, "build_id": build_id, "takedown": takedown, "block": block}
+    return {"cards": cards, "ledger": ledger, "build_id": build_id, "takedown": takedown, "block": block,
+            "consumed": dict(inputs.sources.consumed)}
 
 
 # --- reports -------------------------------------------------------------------------------------------
@@ -999,6 +1143,7 @@ def accounting(result: dict) -> dict:
         for name in names:
             c.update(per_field.get(name, {}))
         requirement[rid] = dict(sorted(c.items()))
+    relation = [a for c in cards.values() for a in c["assertions"] if a["field"] in RELATION_FIELDS]
     return {
         "cards": len(cards),
         "card_kinds": dict(Counter(c["card_kind"] for c in cards.values())),
@@ -1006,6 +1151,10 @@ def accounting(result: dict) -> dict:
         "assertions_by_source": dict(Counter(a["source_id"] for c in cards.values() for a in c["assertions"])),
         "identity_confidence": dict(Counter(c["identity"]["confidence"] for c in cards.values())),
         "identity_method": dict(Counter(c["identity"]["method"] for c in cards.values())),
+        "relation_units": {"total": len(relation),
+                           "aligned": sum(1 for a in relation if a["mapping"]["confidence"] == "high"),
+                           "held_unsplit": sum(1 for a in relation if a["mapping"]["confidence"] == "unresolved"),
+                           "on_card_subject": sum(1 for a in relation if a["subject"]["kind"] == "card")},
         "field_states": {k: dict(sorted(v.items())) for k, v in sorted(states.items())},
         "field_dispositions": dict(sorted(dispositions.items())),
         "field_dispositions_by_field": {k: dict(sorted(v.items())) for k, v in sorted(per_field.items())},
@@ -1014,39 +1163,89 @@ def accounting(result: dict) -> dict:
         "links": sum(1 for c in cards.values() for link in c["links"]) // 2,
         "unattached_phraseology": dict(Counter(
             f"{u['outcome']}:{u['reason']}" for u in result["ledger"].unattached)),
+        "consumed_reads": len(result.get("consumed", {})),
     }
 
 
-# --- CLI -----------------------------------------------------------------------------------------------
+# --- host-only output ------------------------------------------------------------------------------------
 
-def require_host_only(output: Path) -> None:
-    """Cards are host-only data: refuse a destination inside the repository that git does not ignore."""
-    root = Path(__file__).resolve().parents[2]
-    target = output.resolve()
-    if root not in (target, *target.parents):
+def _checkouts(anchor: Path) -> tuple[list[Path], Path]:
+    """Every registered checkout of the repository that owns `anchor`, and the one `anchor` is in.
+
+    Discovery failure is a refusal: an unknown layout is never classified as "outside the repository".
+    """
+    try:
+        main_root = containment.resolve_main_root(anchor)
+    except containment.NotAGitRepositoryError as error:
+        raise AssemblyError("Cannot resolve the repository checkouts; output refused") from error
+    checkouts = containment.registered_worktrees(main_root)
+    need(main_root in checkouts, "Cannot list the registered worktrees; output refused")
+    current = max((c for c in checkouts if containment.canonicalize(anchor).is_relative_to(c)),
+                  key=lambda c: len(c.parts), default=None)
+    need(current is not None, "The running checkout is not a registered worktree; output refused")
+    return checkouts, current
+
+
+def require_host_only(paths: list[Path], anchor: Path | None = None) -> None:
+    """Refuse any write or deletion target that would land in a protected checkout (schema.md §13 host-only).
+
+    Each path is canonicalised (symlinks followed) before the decision. A target outside every registered checkout
+    is host scratch. Inside a checkout, only the running checkout's git-ignored paths are writable; the primary
+    checkout and every sibling worktree, including ones outside the primary tree, are refused whatever their
+    ignore rules. Called before every mkdir, write and stale-file deletion.
+    """
+    anchor = Path(__file__).resolve().parent if anchor is None else anchor
+    checkouts, current = _checkouts(anchor)
+    inside = []
+    for path in paths:
+        target = containment.canonicalize(path)
+        owner = max((c for c in checkouts if target.is_relative_to(c)), key=lambda c: len(c.parts), default=None)
+        if owner is None:
+            continue
+        need(owner == current, "Output must not be written into the primary checkout or another worktree")
+        inside.append(str(target.relative_to(current)))
+    if not inside:
         return
-    ignored = subprocess.run(["git", "-C", str(root), "check-ignore", "-q", "--", str(target / "cards")],
-                             check=False, capture_output=True, timeout=30).returncode == 0
-    need(ignored, "Output must be outside the repository or in an ignored tree: cards are host-only data")
+    proc = subprocess.run(["git", "-C", str(current), "check-ignore", "-z", "--stdin"], input="\0".join(inside),
+                          capture_output=True, text=True, check=False, timeout=60,
+                          env=sanitized_git_env())
+    need(proc.returncode in (0, 1), "Cannot check the ignore rules of the output; output refused")
+    ignored = set(filter(None, proc.stdout.split("\0")))
+    need(set(inside) <= ignored, "Output must be outside the repository or in an ignored tree: cards are host-only")
 
 
-def write_output(output: Path, result: dict, report: dict) -> None:
-    require_host_only(output)
+def write_host_only(output: Path, files: dict[str, dict], cards: dict[str, dict] | None = None,
+                    anchor: Path | None = None) -> None:
+    """Write named JSON files (and, when given, the card directory) under `output` after the containment check."""
+    targets = [output, *(output / name for name in files)]
     cards_dir = output / "cards"
-    cards_dir.mkdir(parents=True, exist_ok=True)
-    for stale in cards_dir.glob("*.json"):
-        stale.unlink()
-    for card_id, card in sorted(result["cards"].items()):
-        foundation.write(cards_dir / f"{card_id}.json", card)
-    foundation.write(output / "ledger.json", {"build_id": result["build_id"], "cards": result["ledger"].cards,
-                                              "unattached": result["ledger"].unattached})
-    foundation.write(output / "build-manifest.json", {"build_id": result["build_id"], "inputs": result["block"]["inputs"],
-                                                      "rules_version": result["block"]["rules_version"]})
-    foundation.write(output / "report.json", report)
-    if result["takedown"]:
-        foundation.write(output / "takedown-report.json", {"build_id": result["build_id"],
-                                                           "suppressions": result["takedown"]})
+    stale = []
+    if cards is not None:
+        stale = sorted(cards_dir.glob("*.json")) if cards_dir.is_dir() else []
+        targets += [cards_dir, *(cards_dir / f"{card_id}.json" for card_id in cards), *stale]
+    require_host_only(targets, anchor)
+    if cards is not None:
+        cards_dir.mkdir(parents=True, exist_ok=True)
+        for path in stale:
+            path.unlink()
+        for card_id, card in sorted(cards.items()):
+            foundation.write(cards_dir / f"{card_id}.json", card)
+    for name, value in files.items():
+        foundation.write(output / name, value)
 
+
+def write_output(output: Path, result: dict, report: dict, anchor: Path | None = None) -> None:
+    files = {"ledger.json": {"build_id": result["build_id"], "cards": result["ledger"].cards,
+                             "unattached": result["ledger"].unattached},
+             "build-manifest.json": {"build_id": result["build_id"], "inputs": result["block"]["inputs"],
+                                     "rules_version": result["block"]["rules_version"]},
+             "report.json": report}
+    if result["takedown"]:
+        files["takedown-report.json"] = {"build_id": result["build_id"], "suppressions": result["takedown"]}
+    write_host_only(output, files, result["cards"], anchor)
+
+
+# --- CLI -----------------------------------------------------------------------------------------------
 
 def load_suppressions(path: Path | None) -> dict:
     if path is None:
@@ -1088,7 +1287,9 @@ def main(argv=None) -> int:
         command.add_argument("--suppressions", type=Path)
         command.add_argument("--heldout-manifest", type=Path)
         for store in ("sources", "vesum", "atlas"):
-            command.add_argument(f"--{store}-db", type=Path, help=f"{store} database (default: the primary store)")
+            command.add_argument(f"--{store}-db", type=Path, help=f"{store} database (default: the primary store); "
+                                 "the ULIF raw cache is the one ulif_raw_cache.cache_path() binds to --sources-db"
+                                 if store == "sources" else f"{store} database (default: the primary store)")
     args = parser.parse_args(argv)
     try:
         suppressions = load_suppressions(args.suppressions)
@@ -1109,10 +1310,10 @@ def main(argv=None) -> int:
 
             if args.operation == "rehearse":
                 outcome = verifier.rehearse(inputs)
-                foundation.write(args.output / "takedown-rehearsal.json", outcome)
+                write_host_only(args.output, {"takedown-rehearsal.json": outcome})
                 print(json.dumps(outcome, ensure_ascii=False, sort_keys=True))
                 return 0 if outcome["passed"] else 1
-            outcome = verifier.verify(inputs, result, build(inputs, suppressions))
+            outcome = verifier.verify(inputs, result, build(inputs, suppressions), suppressions)
             on_disk = {p.stem: foundation.load(p) for p in (args.output / "cards").glob("*.json")}
             outcome["on_disk"] = {"passed": set(on_disk) == set(result["cards"]) and all(
                 foundation.digest(on_disk[k]) == foundation.digest(v) for k, v in result["cards"].items()),

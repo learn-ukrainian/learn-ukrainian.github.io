@@ -1,4 +1,4 @@
-"""Field resolution rules added for keyed declared sets and card-subject sense evidence (schema.md §6, §8.1)."""
+"""Field resolution rules for keyed declared sets and held sense evidence (schema.md §6, §8.1)."""
 
 from scripts.atlas import word_card_resolver as resolver
 
@@ -51,12 +51,13 @@ def test_keyed_single_forms_keep_the_per_slot_resolution():
     assert result["state"] == "single-source"
 
 
-def test_sense_field_asserted_on_the_card_is_retained_never_a_card_field():
-    card = {
-        "card_id": "wc_x", "senses": [], "links": [],
-        "assertions": [assertion("ulif", "G-ULIF", 1, "synonyms", "група", mapping={
-            "confidence": "unresolved", "basis": "sense", "ambiguous": True}),
-            assertion("ulif", "G-ULIF", 1, "spelling", "слово")],
-    }
+def test_unresolved_sense_evidence_is_retained_and_never_votes():
+    held = assertion("ulif", "G-ULIF", 1, "synonyms", "група", subject="ws_x", kind="sense",
+                     mapping={"confidence": "unresolved", "basis": "sense", "ambiguous": True})
+    card = {"card_id": "wc_x", "links": [], "senses": [{"sense_id": "ws_x", "fields": {}}],
+            "assertions": [held, assertion("ulif", "G-ULIF", 1, "spelling", "слово")]}
     resolver._recompute(card)
     assert set(card["fields"]) == {"spelling"}
+    synonyms = card["senses"][0]["fields"]["synonyms"]
+    assert synonyms["state"] == "unverified" and synonyms["selected"] is None
+    assert synonyms["non_voting"] == [{"assertion_id": held["assertion_id"], "reason": "mapping unresolved"}]
