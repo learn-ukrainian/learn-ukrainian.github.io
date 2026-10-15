@@ -1696,7 +1696,8 @@ test.describe('#10706 audio:', () => {
       const srs = (await audioLearningState(page)).saved.srs;
       await audioButton(page).click();
       await expect.poll(() => requested).toBe(true);
-      await expect(audioButton(page)).toHaveText('Play pronunciation');
+      await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
       if (transition === 'Home') await page.getByRole('button', { name: /Додому|Home/ }).click();
       else if (transition === 'locale') await page.locator('#lu-locale-toggle').click();
       else await page.getByTestId('practice-advance-button').click();
