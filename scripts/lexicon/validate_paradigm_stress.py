@@ -41,15 +41,18 @@ def _witness_choices(lemma: str, witness: dict[str, Any]) -> set[str]:
 
 
 def _choices(lemma: str, witnesses: list[dict[str, Any]], memo: dict[tuple[str, str, str], set[str]]) -> set[str]:
-    """The single accent all witnesses license, else nothing."""
+    """The single accent every witness licenses, else nothing."""
     choices: set[str] = set()
     for witness in witnesses:
         key = (witness["word_form"], witness["tags"], witness.get("pos") or "")
         if key not in memo:
             memo[key] = _witness_choices(lemma, witness)
-        choices |= memo[key]
-    # Multiple indistinguishable lexical readings cannot select an accent.
-    return choices if len(choices) == 1 else set()
+        # An unresolved witness, or indistinguishable readings that disagree,
+        # cannot select an accent for the row they share.
+        if len(memo[key]) != 1 or (choices and memo[key] != choices):
+            return set()
+        choices = memo[key]
+    return choices
 
 
 def validate_manifest_stress(
@@ -82,7 +85,9 @@ def validate_manifest_stress(
     for entry in manifest.get("entries", []):
         morphology = (entry.get("enrichment") or {}).get("morphology") or {}
         rows = [*morphology.get("forms", []), *morphology.get("marked_forms", [])]
-        if not rows:
+        display = (morphology.get("stress") or {}).get("forms", {})
+        # Display stress is audited on its own: an entry without rows still renders it.
+        if not rows and not display:
             continue
         report["entries"] += 1
         lemma = _base_lemma(str(entry.get("lemma") or ""))
@@ -115,7 +120,6 @@ def validate_manifest_stress(
                     )
             elif choices:
                 report["missing_stress_rows"] += 1
-        display = (morphology.get("stress") or {}).get("forms", {})
         # Every modern reading of a spelling, including ones past the row cap or
         # dropped as same-label duplicates, must license the displayed accent.
         # The separate marked group never feeds the modern display map.

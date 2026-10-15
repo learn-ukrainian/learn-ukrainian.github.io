@@ -403,7 +403,7 @@
       },
       {
         "path": "scripts/lexicon/validate_paradigm_stress.py",
-        "sha256": "e0f082815e3665c5237c85018a567f4d9bbf7cd407a845c8452a9a4f13ef0bf3"
+        "sha256": "a4e6123fcab6456d5a1bccbe057fd69c8720db30480c84758796d0b034d68570"
       },
       {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",

@@ -291,6 +291,35 @@ def test_same_spelling_aspect_pair_withholds_every_shared_form(review_authority)
     assert [(d["form"], d["kind"]) for d in report["disagreements"]] == [("висипався", "display_stress")]
 
 
+def test_legacy_label_needs_every_matching_witness_to_license_the_accent(monkeypatch):
+    # The infinitive label covers both aspects; a legacy row cannot say which one it means.
+    label = enrich_manifest._decode_tag("verb:rev:imperf:inf")
+    entry = {
+        "lemma": "висипатися",
+        "enrichment": {"morphology": {"forms": [{"form": "висипатися", "label": label, "stress": "висипа́тися"}]}},
+    }
+    capture = copy.deepcopy(REVIEW)
+    _install(monkeypatch, capture)
+    conflicting = validate_paradigm_stress.validate_manifest_stress({"entries": [entry]})
+    assert conflicting["unresolved_rows"] == conflicting["disagreement_count"] == 1
+    assert conflicting["disagreements"][0]["expected"] == []
+    # Without the perfective ULIF entry, its witness is unresolved and must still withhold.
+    capture["forms"]["висипатися"] = [r for r in capture["forms"]["висипатися"] if r["entry_key"] != "висипатися#1"]
+    witnesses = [
+        {**r, "lemma": "висипатися"} for r in capture["lemmas"]["висипатися"] if r["word_form"] == "висипатися"
+    ]
+    assert sorted(
+        (w["tags"], sorted(validate_paradigm_stress._witness_choices("висипатися", w))) for w in witnesses
+    ) == [("verb:rev:imperf:inf", ["висипа́тися"]), ("verb:rev:perf:inf", [])]
+    partial = validate_paradigm_stress.validate_manifest_stress({"entries": [entry]})
+    assert partial["authority_rows"] == 0
+    assert partial["unresolved_rows"] == partial["disagreement_count"] == 1
+    # A tagged row names its own witness, so the resolved reading still authenticates it.
+    entry["enrichment"]["morphology"]["forms"][0]["tags"] = "verb:rev:imperf:inf"
+    tagged = validate_paradigm_stress.validate_manifest_stress({"entries": [entry]})
+    assert tagged["authority_rows"] == 1 and tagged["disagreement_count"] == 0
+
+
 def test_display_stress_past_the_row_cap_is_checked_against_the_full_paradigm(review_authority):
     entry = review_entry("висипатися")
     morphology = entry["enrichment"]["morphology"]
@@ -307,6 +336,35 @@ def test_display_stress_past_the_row_cap_is_checked_against_the_full_paradigm(re
     display["висиплеться"] = "висипле́ться"
     report = validate_paradigm_stress.validate_manifest_stress({"entries": [entry]})
     assert [(d["form"], d["kind"]) for d in report["disagreements"]] == [("висиплеться", "display_stress")]
+
+
+def display_only_entry(accent):
+    return {
+        "lemma": "висипатися",
+        "enrichment": {"morphology": {"forms": [], "stress": {"forms": {"висиплеться": accent}}}},
+    }
+
+
+def test_display_stress_is_audited_on_an_entry_without_rows(review_authority):
+    good = validate_paradigm_stress.validate_manifest_stress({"entries": [display_only_entry("ви́сиплеться")]})
+    assert (good["entries"], good["rows"], good["display_values"], good["disagreement_count"]) == (1, 0, 1, 0)
+    bad = validate_paradigm_stress.validate_manifest_stress({"entries": [display_only_entry("висипле́ться")]})
+    assert bad["display_values"] == 1
+    assert [(d["form"], d["kind"]) for d in bad["disagreements"]] == [("висиплеться", "display_stress")]
+
+
+def test_validator_cli_rejects_a_rowless_display_in_a_mixed_manifest(review_authority, tmp_path, capsys):
+    path = tmp_path / "candidate.json"
+    with_rows = review_entry("суддя")
+    morphology = with_rows["enrichment"]["morphology"]
+    rows = len(morphology["forms"]) + len(morphology.get("marked_forms", []))
+    displayed = len(morphology["stress"]["forms"])
+    for accent, code in (("ви́сиплеться", 0), ("висипле́ться", 1)):
+        path.write_text(json.dumps({"entries": [with_rows, display_only_entry(accent)]}, ensure_ascii=False))
+        assert validate_paradigm_stress.main(["--manifest", str(path)]) == code
+        report = json.loads(capsys.readouterr().out)
+        assert (report["entries"], report["rows"], report["display_values"]) == (2, rows, displayed + 1)
+        assert report["disagreement_count"] == code
 
 
 def test_paradigm_row_kind_matches_the_card_partition():
