@@ -13,14 +13,12 @@ test below. CI skips it by default; no real sources writer is ever launched.
 import asyncio
 import fnmatch
 import importlib.util
-import io
 import json
 import os
 import shlex
 import shutil
 import subprocess
 import sys
-import tarfile
 from pathlib import Path
 
 import pytest
@@ -32,6 +30,7 @@ from scripts.agent_runtime.adapters.claude import (
 from scripts.agent_runtime.env_sanitize import build_agent_env
 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
+from scripts.common.repo_root import project_interpreter
 
 SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
 SOURCES_RULES = [f"mcp__sources__{name}" for name in SOURCES_READ_ONLY_TOOLS]
@@ -121,7 +120,9 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     hooks = settings["hooks"]["PreToolUse"]
     assert {"Bash", "Write|Edit|MultiEdit"} <= {group["matcher"] for group in hooks}
     commands = [hook["command"] for group in hooks for hook in group["hooks"]]
-    tracked_hooks = Path(__file__).resolve().parents[2] / "agents_extensions/shared/hooks"
+    root = Path(__file__).resolve().parents[2]
+    tracked_hooks = root / "agents_extensions/shared/hooks"
+    interpreter = str(project_interpreter(root))
     for name in (
         "guard-primary-checkout-write.py",
         "guard-secret-print.py",
@@ -131,9 +132,11 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
         "enforce-venv.sh",
         "heal-core-bare.py",
     ):
-        assert str(tracked_hooks / name) in commands
-    assert all(Path(command).is_file() for command in commands)
-    assert str(tracked_hooks / "guard-reviewer-publish.py") not in commands
+        tracked = str(tracked_hooks / name)
+        expected = shlex.join([interpreter, tracked]) if name in _PINNED_GUARDS else shlex.quote(tracked)
+        assert expected in commands
+    assert all(Path(arg).is_file() for command in commands for arg in shlex.split(command))
+    assert shlex.quote(str(tracked_hooks / "guard-reviewer-publish.py")) not in commands
     assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
     if mode == "read-only":
         assert plan.cmd.count("--disallowedTools") == 1
@@ -403,7 +406,10 @@ def test_review_isolation_keeps_separate_permissions(tmp_path: Path, monkeypatch
 
 
 @pytest.mark.repo_wide
-def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Path, monkeypatch) -> None:
+@pytest.mark.parametrize("has_interpreter", [True, False], ids=["with-interpreter", "missing-interpreter"])
+def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(
+    tmp_path: Path, monkeypatch, has_interpreter: bool
+) -> None:
     from scripts.agent_runtime.adapters import claude
 
     # Fixture clone of the tracked hook tree. Cloning this repository
@@ -420,24 +426,31 @@ def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Pat
         timeout=30,
     )
     assert tracked_claude.stdout == ""
-    archived = subprocess.run(
+    candidate_paths = subprocess.run(
         [
             "git",
             "-C",
             str(root),
-            "archive",
-            "--format=tar",
-            "HEAD",
+            "ls-files",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "--",
             "agents_extensions/shared/settings.json",
             "agents_extensions/shared/hooks",
             "scripts/agent_runtime/adapters/claude.py",
         ],
         check=True,
         capture_output=True,
+        text=True,
         timeout=30,
     )
-    with tarfile.open(fileobj=io.BytesIO(archived.stdout), mode="r|") as bundle:
-        bundle.extractall(seed, filter="data")
+    # Clone one candidate snapshot, including newly added canonical hooks.
+    # HEAD alone may still contain the base settings during author validation.
+    for relative in candidate_paths.stdout.splitlines():
+        destination = seed / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(root / relative, destination)
     for args in (
         ["init"],
         ["config", "user.name", "Test"],
@@ -449,10 +462,39 @@ def test_tracked_hooks_work_in_fresh_clone_without_deployed_claude(tmp_path: Pat
     subprocess.run(["git", "clone", str(seed), str(clone)], check=True, capture_output=True, timeout=30)
     assert not (clone / ".claude").exists()
     monkeypatch.setattr(claude, "__file__", str(clone / "scripts/agent_runtime/adapters/claude.py"))
+    interpreter = clone / ".venv/bin/python"
+    if not has_interpreter:
+        assert not interpreter.exists()
+        # Hosted CI's unowned interpreter is a valid fallback. Pin a foreign
+        # checkout's interpreter so this case exercises refusal on every runner.
+        foreign = tmp_path / "other/.venv/bin/python"
+        foreign.parent.mkdir(parents=True)
+        foreign.symlink_to(sys.executable)
+        monkeypatch.setattr(sys, "executable", str(foreign))
+        with pytest.raises(FileNotFoundError, match="project interpreter not found"):
+            claude._worker_guard_settings(publish_guard=True)
+        return
+
+    interpreter.parent.mkdir(parents=True)
+    interpreter.symlink_to(sys.executable)
     settings = json.loads(claude._worker_guard_settings(publish_guard=True))
     commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
-    assert str(clone / "agents_extensions/shared/hooks/guard-reviewer-publish.py") in commands
-    assert all(Path(command).is_file() for command in commands)
+    tracked_hooks = clone / "agents_extensions/shared/hooks"
+    assert shlex.quote(str(tracked_hooks / "guard-reviewer-publish.py")) in commands
+    assert all(Path(arg).is_file() for command in commands for arg in shlex.split(command))
+    for name in _PINNED_GUARDS:
+        expected = shlex.join([str(interpreter), str(tracked_hooks / name)])
+        assert expected in commands
+        result = subprocess.run(
+            shlex.split(expected),
+            input=json.dumps({"tool_name": "Bash", "tool_input": {"command": "git status"}}),
+            cwd=clone,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, (name, result.stdout, result.stderr)
+    assert not (clone / ".claude").exists()
 
 
 _ROOT = Path(__file__).resolve().parents[2]

@@ -20,6 +20,7 @@ import importlib.util
 import io
 import json
 import os
+import runpy
 import shutil
 import subprocess
 import sys
@@ -46,7 +47,11 @@ REDIRECTS_9479 = ["", "2>&1", ">file", "2>/dev/null", "&>file", "<file", "| cat"
 
 @pytest.mark.parametrize("redirect", REDIRECTS_9479)
 @pytest.mark.parametrize("shape", ["cd", "admin-before", "admin-after", "implicit"])
-def test_issue_9479_redirect_denominator(monkeypatch, redirect, shape):
+def test_issue_9479_redirect_denominator(monkeypatch, tmp_path, redirect, shape):
+    # The leading `cd` must reach a real directory before anything is judged (#10521 item 4).
+    (tmp_path / "fixture").mkdir()
+    (tmp_path / "file").touch()
+    monkeypatch.chdir(tmp_path)
     args = {"cd": "5 --admin", "admin-before": "--admin 5", "admin-after": "5 --admin", "implicit": "--admin"}[shape]
     command = {
         "cd": f"cd fixture {redirect} && gh pr merge 5 --admin {redirect}",
@@ -61,7 +66,7 @@ def test_issue_9479_redirect_denominator(monkeypatch, redirect, shape):
     judged = [guard._admin_merge_args(seg) for seg in guard._segments(command)]
     assert args.split() in judged
     seen = []
-    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or ["Test (pytest)"])
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr, cwd=None: seen.append(pr) or ["Test (pytest)"])
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
     assert guard.main() == 2
     assert seen == ([] if shape == "implicit" else ["5"])
@@ -70,7 +75,7 @@ def test_issue_9479_redirect_denominator(monkeypatch, redirect, shape):
 @pytest.mark.parametrize("command", ["gh pr merge --admin 2>&1", "gh pr merge 2>&1 5 --admin"])
 def test_issue_9479_reviewer_reproductions(monkeypatch, command):
     seen = []
-    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or ["Test (pytest)"])
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr, cwd=None: seen.append(pr) or ["Test (pytest)"])
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
     assert guard.main() == 2
     assert seen == ([] if command.endswith("2>&1") else ["5"])
@@ -108,7 +113,7 @@ def test_issue_9479_real_bash_argv(tmp_path, monkeypatch, redirect, placement):
     judged = [guard._admin_merge_args(seg) for seg in guard._segments(command)]
     assert actual[3:] in judged
     seen = []
-    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or [])
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr, cwd=None: seen.append(pr) or [])
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
     assert guard.main() == 0
     assert seen == ["5"]
@@ -117,7 +122,9 @@ def test_issue_9479_real_bash_argv(tmp_path, monkeypatch, redirect, placement):
 @pytest.mark.parametrize("redirect", [">file", "2>&1", "<file", "&>file"])
 @pytest.mark.parametrize("target", ["$PR", '"$PR"', "$(cat selector)", "`cat selector`"])
 def test_issue_9479_redirect_never_launders_target(monkeypatch, redirect, target):
-    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: pytest.fail("unreadable target reached lookup"))
+    monkeypatch.setattr(
+        guard, "_failing_blocking_checks", lambda pr, cwd=None: pytest.fail("unreadable target reached lookup")
+    )
     command = f"gh pr merge --admin {target} {redirect}"
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
     assert guard.main() == 2
@@ -138,7 +145,9 @@ def test_issue_9479_dynamic_redirect_refused(monkeypatch, redirect, position):
         "suffix": f"gh pr merge 5 --admin {redirect}",
         "cd": f"cd fixture {redirect} && gh pr merge 5 --admin",
     }[position]
-    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: pytest.fail("dynamic redirect reached lookup"))
+    monkeypatch.setattr(
+        guard, "_failing_blocking_checks", lambda pr, cwd=None: pytest.fail("dynamic redirect reached lookup")
+    )
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
     assert guard.main() == 2
 
@@ -154,7 +163,6 @@ def test_issue_9479_literal_redirect_target(monkeypatch, target):
 def test_issue_9479_missing_shared_helper_fails_closed(tmp_path, hook):
     hook_path = HOOK_PATH.parent / hook
     shutil.copy2(hook_path, tmp_path / hook)
-    shutil.copy2(HOOK_PATH.parent / "shell_shlex.py", tmp_path / "shell_shlex.py")
     command = "git switch -c fixture" if "branch" in hook else "gh pr merge 5 --admin"
     result = subprocess.run(
         [sys.executable, str(tmp_path / hook)],
@@ -164,7 +172,7 @@ def test_issue_9479_missing_shared_helper_fails_closed(tmp_path, hook):
         timeout=10,
     )
     assert result.returncode == 2
-    assert "guard dependency unavailable: shell_redirects" in result.stderr
+    assert "guard dependency unavailable: shell_bash" in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -219,7 +227,7 @@ def test_issue_9115_escaped_nested_backtick_admin_merge_is_visible():
 
 
 def test_issue_9115_backtick_depth_limit_blocks_in_hook(monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setattr(sys.modules["shell_bash"], "MAX_DEPTH", 2)
     body = "gh pr merge 5 --admin"
     for _ in range(3):
         body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
@@ -227,7 +235,7 @@ def test_issue_9115_backtick_depth_limit_blocks_in_hook(monkeypatch):
 
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
-    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+    assert ["echo", 'a " b'] in guard._segments(r'echo "a \" b" <<EOF' + "\nfixture\nEOF")
 
 
 @pytest.mark.parametrize(
@@ -240,7 +248,7 @@ def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     ],
 )
 def test_issue_9088_standard_heredoc_delimiters(opener, closer):
-    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
+    assert ["cat"] in guard._segments(f"cat {opener}\nfixture\n{closer}")
     assert not _any_admin(f"cat {opener}\ngh pr merge 5 --admin\n{closer}")
     assert _any_admin(f"cat {opener}\nnote\n{closer}\ngh pr merge 5 --admin")
 
@@ -257,7 +265,7 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer):
 )
 def test_issue_9088_here_strings_keep_admin_merge_visible(monkeypatch, first):
     command = f"{first}\ngh pr merge 5 --admin\nEOF"
-    assert guard._heredoc_delimiters(first) == []
+    assert ["true"] in guard._segments(first)
     assert _any_admin(command)
     assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
 
@@ -290,7 +298,8 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
 )
 def test_issue_9088_exotic_heredoc_keeps_admin_merge_visible(monkeypatch, opener, closer):
     command = f"cat {opener}\ngh pr merge 5 --admin\n{closer}"
-    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    with pytest.raises(guard.ShellParseError):
+        guard.read_commands(f"cat {opener}\nfixture\n{closer}")
     assert _any_admin(command)
     assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
 
@@ -313,7 +322,7 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
         timeout=30,
     )
     assert result.returncode == 2
-    assert "guard dependency unavailable: shell_shlex" in result.stderr
+    assert "guard dependency unavailable: shell_bash" in result.stderr
 
 
 def _run(monkeypatch, command: str, *, pr: str | None = "5", failing=()) -> int:
@@ -321,11 +330,45 @@ def _run(monkeypatch, command: str, *, pr: str | None = "5", failing=()) -> int:
     payload = json.dumps({"tool_input": {"command": command}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
     monkeypatch.setattr(guard, "_pr_number", lambda args: pr)
-    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda p: list(failing) if failing is not None else None)
+    monkeypatch.setattr(
+        guard, "_failing_blocking_checks", lambda p, cwd=None: list(failing) if failing is not None else None
+    )
     return guard.main()
 
 
 # --- detection (pure, no network) ------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "shell_options",
+    [
+        "bash -oc errexit",
+        "bash -co errexit",
+        "bash -Oc extglob",
+        "bash -cO extglob",
+        "bash -xco errexit",
+        "bash -xcO extglob",
+        "bash -ooc errexit nounset",
+        "bash -oOc errexit extglob",
+        "sh -co errexit",
+        "sh -oc errexit",
+    ],
+)
+def test_issue_9484_packed_shell_c_options_blocked(monkeypatch, shell_options):
+    command = f"{shell_options} 'gh pr merge 5 --admin'"
+    # Packed -O also starts the shell with shopt options, refused unconditionally (#10521 item 5).
+    with pytest.raises(guard.ShellParseError, match=r"packed shell -c with -o/-O|shell started with `shopt` options"):
+        guard.read_commands(command)
+    assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
+
+
+@pytest.mark.parametrize("option", ["-xo errexit", "+xo errexit", "-xO extglob", "+xO extglob"])
+def test_issue_9484_packed_shell_options_invalidate_directory(monkeypatch, option):
+    command = f"bash {option} -c 'gh pr merge 5 --admin'"
+    # A merge in a shell payload, or a shell started with shopt options, refuses (#10521 items 3 and 5).
+    with pytest.raises(guard.ShellParseError):
+        guard.read_commands(command, operation=lambda argv: guard._admin_scope(argv))
+    assert _run(monkeypatch, command) == 2
 
 
 @pytest.mark.parametrize(
@@ -627,7 +670,197 @@ def test_issue_9479_r2_redirect_bash_argv(tmp_path, monkeypatch, shape):
     assert record.read_text().splitlines() == ["pr", "merge", "5", "--admin"]
     assert ["5", "--admin"] in [guard._admin_merge_args(seg) for seg in guard._segments(command)]
     seen = []
-    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or ["CI Gate"])
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr, cwd=None: seen.append(pr) or ["CI Gate"])
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
     assert guard.main() == 2
     assert seen == ["5"]
+
+
+def test_admin_checks_follow_literal_cd(monkeypatch, tmp_path):
+    target = tmp_path / "a"
+    target.mkdir()
+    calls = _capture_gh(monkeypatch, returncode=0, stdout='[{"name":"CI Gate","bucket":"fail"}]')
+    payload = {"cwd": str(tmp_path), "tool_input": {"command": "cd a && gh pr merge 5 --admin"}}
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
+    assert guard.main() == 2
+    assert calls[0][1]["cwd"] == str(target)
+    # #10521 ruling item 4: only one leading `cd <literal> &&` sets the directory; `;` refuses unlooked-up.
+    calls.clear()
+    payload["tool_input"]["command"] = "cd a; gh pr merge 5 --admin"
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
+    assert guard.main() == 2
+    assert calls == []
+
+
+def test_admin_unknown_cd_cannot_reach_checks(monkeypatch):
+    monkeypatch.setattr(
+        guard, "_failing_blocking_checks", lambda *args, **kwargs: pytest.fail("unknown repository reached checks")
+    )
+    monkeypatch.setattr(
+        sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": 'cd "$P"; gh pr merge 5 --admin'}}))
+    )
+    assert guard.main() == 2
+
+
+# --- dynamic command construction (prefilter bypass) ------------------------
+# The raw-text prefilter must not accept an admin merge whose guarded words only exist
+# after expansion. Each shape is refused by the parser (fail-closed), before any gh lookup.
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "A=ad; B=min; gh pr merge 5 --$A$B",
+        "G=gh; A=ad; B=min; $G pr merge 5 --$A$B",
+        'P=pr; M=merge; G=g; H=h; eval "$G$H $P $M 5 --admin"',
+        "$(echo g)h $(echo p)r $(echo mer)ge 5 --$(echo ad)min",
+        "G=g; H=h; N=ge; timeout -s KILL 5 $G$H pr mer$N 5 --admin",
+        "G=g;H=h;P=p;R=r;N=ge;M=mer; $G$H $P$R $M$N 5 --admin",
+    ],
+)
+def test_dynamic_admin_merge_is_refused_before_lookup(monkeypatch, capsys, command):
+    monkeypatch.setattr(
+        guard, "_failing_blocking_checks", lambda *a, **k: pytest.fail("unreadable merge reached lookup")
+    )
+    assert _run(monkeypatch, command) == 2
+    assert "cannot be read" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "command",
+    ['echo "$HOME" && ls -la', "printf '%s\\n' \"$FOO\"", "timeout 600 .venv/bin/python -m pytest $X"],
+)
+def test_expansion_without_merge_words_is_not_refused_as_admin(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize("payload, code", [("{", 2), ("[]", 2), ('{"tool_input":{"command":"git status"}}', 0)])
+def test_admin_cli_validates_payload_before_dependency_loading(monkeypatch, capsys, payload, code):
+    monkeypatch.setattr(sys, "stdin", io.StringIO(payload))
+    with pytest.raises(SystemExit) as result:
+        runpy.run_path(str(HOOK_PATH), run_name="__main__")
+    assert result.value.code == code
+    error = capsys.readouterr().err
+    assert ("malformed hook payload" in error) == (code == 2)
+
+
+@pytest.mark.parametrize("command", ["gh pr merge 5 `printf -- --admin`", "gh pr merge 5 `fixture-option`"])
+def test_backtick_merge_options_are_not_classified_as_non_admin(monkeypatch, command):
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda *a, **k: pytest.fail("opaque options reached lookup"))
+    assert _run(monkeypatch, command) == 2
+
+
+def test_unavailable_expansion_classifier_fails_closed(monkeypatch):
+    import shell_bash
+
+    def unavailable(*args, **kwargs):
+        raise RuntimeError("classifier unavailable")
+
+    monkeypatch.setattr(shell_bash, "expanded_merge_candidate", unavailable)
+    assert _run(monkeypatch, "G=gh; $G pr merge 5 --admin") == 2
+
+
+@pytest.mark.parametrize("command", [r"echo $'\U00110000'", r"echo $'\Uffffffff'"])
+def test_invalid_unicode_prefilter_fails_closed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize("prefix", ["exit(){ :; }; ", "cd(){ :; }; ", ""])
+def test_issue_10521_cd_or_exit_never_ends_admin_analysis(tmp_path, monkeypatch, prefix):
+    """A function can shadow `exit` or `cd`, so `|| exit` never ends analysis (#10521 ruling)."""
+    command = prefix + "cd missing || exit; gh pr merge 5 --admin"
+    recorder = tmp_path / "gh"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", command],
+        cwd=tmp_path,
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        timeout=10,
+    )
+    # Bash runs the admin merge exactly when a function shadows the builtin.
+    assert record.exists() == bool(prefix)
+    if prefix:
+        assert record.read_text().splitlines() == [str(tmp_path), "pr", "merge", "5", "--admin"]
+    monkeypatch.chdir(tmp_path)
+    seen = []
+    monkeypatch.setattr(
+        guard, "_failing_blocking_checks", lambda pr, cwd=None, **kwargs: seen.append(pr) or ["CI Gate"]
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    # The definition refuses before any check lookup (#10521 definition ruling), and
+    # `cd || exit` is no longer modelled, so the plain form refuses too (ruling item 4).
+    assert seen == []
+
+
+# A shell definition can change what `cd` or any wrapper runs. With an admin
+# merge in the same command the hook refuses before any check lookup, so an
+# inferred worktree can never supply green checks (#10521 ruling 2026-10-14T21:20Z).
+_ADMIN_DEFINITION_SHADOWS = [
+    "cd(){{ :; }}; cd {wt} && gh pr merge 5 --admin",
+    "pushd(){{ :; }}; pushd {wt} && gh pr merge 5 --admin",
+    "builtin(){{ :; }}; builtin cd {wt} && gh pr merge 5 --admin",
+    "command(){{ :; }}; command cd {wt} && gh pr merge 5 --admin",
+    "function cd {{ :; }}; cd {wt} && gh pr merge 5 --admin",
+    "bash -c 'cd(){{ :; }}; cd {wt} && gh pr merge 5 --admin'",
+    "trap 'builtin(){{ :; }}' DEBUG; builtin cd {wt} && gh pr merge 5 --admin",
+    "command_not_found_handle(){{ gh pr merge 5 --admin; }}; zz",
+]
+
+
+def _admin_main(monkeypatch, capsys, command, cwd, worktree):
+    seen = []
+    monkeypatch.setattr(
+        guard,
+        "_failing_blocking_checks",
+        lambda pr, cwd=None, **kwargs: seen.append(cwd) or ([] if cwd == str(worktree) else ["CI Gate"]),
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}, "cwd": str(cwd)})))
+    return guard.main(), capsys.readouterr().err, seen
+
+
+@pytest.mark.parametrize("shape", _ADMIN_DEFINITION_SHADOWS)
+def test_issue_10521_definition_refuses_admin_merge_before_lookup(tmp_path, monkeypatch, capsys, shape):
+    primary, worktree = tmp_path / "primary", tmp_path / "primary/.worktrees/wt"
+    worktree.mkdir(parents=True)
+    command = shape.format(wt=worktree)
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    (binaries / "gh").write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    (binaries / "gh").chmod(0o755)
+    record = tmp_path / "record"
+    subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", command],
+        cwd=primary,
+        env={**os.environ, "PATH": f"{binaries}{os.pathsep}{os.environ['PATH']}", "GUARD_RECORD": str(record)},
+        capture_output=True,
+        timeout=10,
+    )
+    # Bash merges from the primary, where the checks are red.
+    assert record.read_text().splitlines() == [str(primary), "pr", "merge", "5", "--admin"]
+    code, stderr, seen = _admin_main(monkeypatch, capsys, command, primary, worktree)
+    assert (code, seen) == (2, [])
+    assert 'GUARD_JUDGMENT {"disposition": "refuse", "reason_class": "ALIAS_EXECUTION"}' in stderr
+    # Ruling item 6: no harness markers, so isolation is unproven and the
+    # "separate calls" repair is not offered.
+    assert "keep shell definitions out of a guarded git/gh command" in stderr
+    assert "separate Bash tool calls" not in stderr
+    assert "uv pip install" not in stderr
+
+
+def test_issue_10521_definition_with_operation_text_refuses(tmp_path, monkeypatch, capsys):
+    """A definition can rebind the word that consumes operation text (`echo(){ runner "$@"; }`),
+    so a definition next to operation-shaped data refuses (#10521 ruling item 3, enumerated over-refusal)."""
+    command = 'f(){ echo hi; }; f; echo "gh pr merge 5 --admin"'
+    code, stderr, seen = _admin_main(monkeypatch, capsys, command, tmp_path, tmp_path)
+    assert (code, seen) == (2, [])
+    assert '"reason_class": "ALIAS_EXECUTION"' in stderr
+
+
+@pytest.mark.parametrize("command", ['echo "f() { gh pr merge 5 --admin; }"'])
+def test_issue_10521_definition_controls_keep_admin_allowed(tmp_path, monkeypatch, capsys, command):
+    assert guard._may_guard(command)
+    assert _admin_main(monkeypatch, capsys, command, tmp_path, tmp_path) == (0, "", [])

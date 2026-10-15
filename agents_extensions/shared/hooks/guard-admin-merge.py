@@ -23,30 +23,115 @@ substring (case-insensitive); erring toward "treat as blocking" is the safe dire
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 import re
 import subprocess
 import sys
 
+
+def _expansion_may_build_words(command: str) -> bool:
+    """Classify assembled operation words before the reader refuses them."""
+    if not re.search(r"[$`]", command):
+        return False
+    # Pure parameter data without an operation or local command binding stays
+    # on the dependency-free path. Substitutions may assemble operation words.
+    if not re.search(r"gh|pr\s+merge|\w+=|\$\((?!\()|`", command):
+        return False
+    try:
+        from shell_bash import expanded_merge_candidate
+
+        return expanded_merge_candidate(command, admin=True)
+    except Exception:
+        return True
+
+
+def _may_guard(command: str) -> bool:
+    # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
+    # This is only a conservative prefilter; the pinned AST decides execution.
+    probe = re.sub(r"\$(['\"])", r"\1", command)
+    try:
+        probe = re.sub(
+            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            probe,
+        )
+    except (ValueError, OverflowError):
+        return True  # unreadable escape: let the full parser refuse it
+    probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
+    if _expansion_may_build_words(command):
+        return True
+    return bool(
+        ("git" in re.sub(r"\$git\b", "", probe) and re.search(r"\b(?:checkout|switch|branch)\b", probe))
+        or (("gh" in probe or re.search(r"\bpr\s+merge\b", probe)) and "--admin" in probe)
+        or re.search(r"(?:^|[\s;{(`])gh\s+[^;\n]*\$", probe)
+        or re.search(r"(?:--pre(?:=|\s)|--config-env|\bmergetool\b|\bgit\s+worktree[^;\n]*\$|\bgh\s+alias\s)", probe)
+    )
+
+
+# Raw words that can introduce an unconditional shell-binding refusal (#10521 ruling
+# item 5). Kept identical to shell_bash.BINDING_PREFILTER, which a test asserts.
+_BINDING_PREFILTER = re.compile(
+    r"alias|hash|enable|shopt|POSIXLY|SHELLOPTS|BASHOPTS|BASH_ALIASES|BASH_CMDS|posix|keyword|"
+    r"\bset\b|declare|typeset|local|export|readonly|\bread\b|readarray|mapfile|getopts|printf|\blet\b|"
+    r"\$\{!|\(\(|\$\["
+)
+
+# Without the reader, ruling item 5 holds on its literal spellings only: the other
+# prefilter words (printf, read, export, ...) mean nothing without a parse.
+_LITERAL_BINDING = re.compile(
+    r"\b(?:alias|unalias|hash|enable|shopt)\b|BASH_ALIASES|BASH_CMDS|POSIXLY_CORRECT|SHELLOPTS|BASHOPTS|"
+    r"--posix|\bset\s+[-+][A-Za-z]*[ko]"
+)
+
+
+if __name__ == "__main__":
+    try:
+        _CLI_PAYLOAD = json.loads(sys.stdin.read() or "{}")
+        _CLI_COMMAND = (_CLI_PAYLOAD.get("tool_input") or {}).get("command", "")
+        if (
+            isinstance(_CLI_COMMAND, str)
+            and not _may_guard(_CLI_COMMAND)
+            and not _BINDING_PREFILTER.search(_CLI_COMMAND)
+        ):
+            sys.exit(0)
+    except (ValueError, AttributeError):
+        print("BLOCKED: malformed hook payload; provide a literal Bash command", file=sys.stderr)
+        sys.exit(2)
+
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import (
-        ShellPreprocessLimit,
-        skippable_heredoc_delimiters,
-        strip_skippable_heredoc_bodies,
+    from shell_bash import (
+        REPAIR,
+        UNREADABLE,
+        ShellDefinitionError,
+        ShellParseError,
+        command_argvs,
+        definition_repair,
+        emit_refusal,
+        read_commands,
+        unconditional_refusal,
     )
 except Exception as exc:
-    print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
+    _DEGRADED = _CLI_COMMAND if __name__ == "__main__" else None
+    if isinstance(_DEGRADED, str) and not _may_guard(_DEGRADED) and not _LITERAL_BINDING.search(_DEGRADED):
+        sys.exit(0)  # Only the binding prefilter engaged, and nothing literal binds.
+    print(
+        f"guard dependency unavailable: shell_bash ({type(exc).__name__}); "
+        "repair: uv pip install --python <canonical-checkout>/.venv/bin/python "
+        "--require-hashes --only-binary=:all: -r requirements-hooks.txt; "
+        "npm run agents:deploy",
+        file=sys.stderr,
+    )
+    raise SystemExit(2) from None
 
-try:
-    from shell_redirects import segments_with_following_operator
-except Exception as exc:
-    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
-    raise SystemExit(2) from exc
+
+_merge_guard = importlib.import_module("guard-pr-merge")
+
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
 # `gh --json` emit ANSI-colorized JSON on pipes -> json.loads fails -> the guard reads
@@ -131,149 +216,55 @@ def _flag_enabled(args: list[str], name: str) -> bool:
     return enabled
 
 
-# --- Command segmentation hardened against glued shell operators (#4876). ---
-# Pattern lifted from guard-secret-print.py. Hooks are standalone by design,
-# so the helpers are copied, not imported. Keep the three active copies in
-# guard-branch-switch-in-main.py, guard-admin-merge.py, and guard-pr-merge.py
-# in sync.
-
-
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]] | None:
-    """Keep only the shared parser's unambiguous here-doc delimiters."""
-    parsed = skippable_heredoc_delimiters(line)
-    return None if parsed is None else [(delimiter, strip_tabs) for delimiter, strip_tabs, _ in parsed]
-
-
-def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands.
-
-    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
-    opener must not make trailing real `gh pr merge --admin` vanish. Only a
-    heredoc that actually closes has its body + closer dropped.
-    """
-    return strip_skippable_heredoc_bodies(command)
-
-
-def _join_line_continuations(text: str) -> str:
-    r"""Fold `\<newline>` into one logical line, as the shell does — so a
-    `\`-continued `gh pr merge --admin` is not split across physical lines
-    and missed. Over-folding a quoted literal `\` only merges argv text."""
-    return text.replace("\\\n", "")
-
-
-_UNREADABLE_MARKER = "--__guard_unreadable__"
+_UNREADABLE_MARKER = UNREADABLE
 
 
 def _segments(command: str) -> list[list[str]]:
-    """Read the argv Bash executes, removing redirects while quotes exist."""
-    return [argv for argv, _ in _segments_with_following_operator(command)]
-
-
-def _segments_with_following_operator(command: str) -> list[tuple[list[str], str | None]]:
-    """Keep command separators after removing redirect operators/operands."""
-    return segments_with_following_operator(
-        command,
-        mark_redirect_unreadable=True,
-        unreadable_marker=_UNREADABLE_MARKER,
-        unparsed=[_UNREADABLE_MARKER],
-        may_match=lambda line: False,
-    )
-
-
-def _is_env_assignment(tok: str) -> bool:
-    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
-
-
-_WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
-
-_WRAPPER_VALUE_OPTIONS = {
-    "env": frozenset({"-u", "--unset", "-C", "--chdir"}),
-    "sudo": frozenset(
-        {
-            "-u",
-            "--user",
-            "-g",
-            "--group",
-            "-r",
-            "--role",
-            "-t",
-            "--type",
-            "-C",
-            "--close-from",
-            "-c",
-            "--command-timeout",
-            "-T",
-        }
-    ),
-    "time": frozenset({"-f", "--format", "-o", "--output"}),
-    "nice": frozenset({"-n", "--adjustment"}),
-    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
-}
-
-
-def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
-    """Return the first command word after one transparent wrapper.
-
-    A missing operand for a recognised value-taking option cannot execute a
-    command, so the scan consumes to the end instead of guessing a verb.
-    """
-    value_options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
-    while i < len(seg):
-        tok = seg[i]
-        if tok == "--":
-            return i + 1
-        if not tok.startswith("-") or tok == "-":
-            return i
-        i += 1
-        if tok in value_options:
-            if i >= len(seg):
-                return len(seg)
-            i += 1
-    return i
-
-
-def _skip_command_prefix(seg: list[str], i: int) -> int:
-    """Advance past wrappers (and their flags), assignments, and ``{``.
-
-    Thus `sudo -u root gh pr merge --admin` reaches `gh`, rather than stopping
-    on the wrapper option (#4878).
-    """
-    while i < len(seg):
-        tok = seg[i]
-        if tok in _WRAPPERS:
-            i = _skip_wrapper_options(tok, seg, i + 1)
-        elif tok == "{" or _is_env_assignment(tok):
-            i += 1
-        else:
-            break
-    return i
+    try:
+        return command_argvs(command)
+    except ShellParseError:
+        return [["gh", "pr", "merge", "--admin", UNREADABLE]] if _may_guard(command) else []
 
 
 def _admin_merge_args(seg: list[str]) -> list[str] | None:
     """Return the args of a `gh pr merge ... --admin` segment, else None."""
-    i = _skip_command_prefix(seg, 0)
-    if seg[i : i + 3] != ["gh", "pr", "merge"]:
-        return None
-    args = seg[i + 3 :]
-    return args if _flag_enabled(args, "admin") else None
+    args = _merge_guard._merge_args(seg)
+    return args if args is not None and _merge_guard._flag_enabled(_merge_guard._classify(args)[0], "admin") else None
+
+
+def _admin_scope(seg: list[str]) -> bool:
+    """This hook's operation: a merge that spells an admin flag, enabled or not."""
+    args = _merge_guard._merge_args(seg)
+    return args is not None and any(
+        flag == "--admin" or flag.startswith("--admin=") for flag in _merge_guard._classify(args)[0]
+    )
+
+
+def _foreign_shape(argv: list[str]) -> bool:
+    """A dynamic executable whose literal shape another hook owns and refuses.
+
+    Branch shapes belong to the branch hook; a literal non-admin merge shape
+    belongs to the PR merge hook, which refuses every dynamic merge identity.
+    """
+    if UNREADABLE in argv[1:]:
+        return False
+    if argv[1:2] in [["checkout"], ["switch"], ["branch"]]:
+        return True
+    return argv[1:3] == ["pr", "merge"] and not any(arg.startswith("--admin") for arg in argv[3:])
 
 
 def _pr_number(args: list[str]) -> str | None:
-    """First numeric positional after `merge`; implicit discovery is refused."""
-    if _UNREADABLE_MARKER in args:
-        return None
-    for a in args:
-        if not a.startswith("-") and a.isdigit():
-            return a
-    return None
+    """Explicit selector after removing value-taking options."""
+    return None if UNREADABLE in args else _merge_guard._pr_selector(args)
 
 
-def _failing_blocking_checks(pr: str) -> list[str] | None:
+def _failing_blocking_checks(pr: str, cwd: str | None = None, repo: str | None = None) -> list[str] | None:
     """Failing non-advisory check names for the PR, or None if undeterminable (→ fail-closed)."""
     try:
         out = subprocess.run(
-            ["gh", "pr", "checks", pr, "--json", "name,bucket,state"],
+            ["gh", "pr", "checks", pr, *_merge_guard._repo_args(repo), "--json", "name,bucket,state"],
             capture_output=True,
+            cwd=cwd,
             env=_gh_env(),
             text=True,
             timeout=8,
@@ -316,28 +307,92 @@ def _block_msg(reason: str) -> str:
 
 
 def main() -> int:
-    payload = _read_payload()
+    payload = _CLI_PAYLOAD if __name__ == "__main__" else _read_payload()
     command = _command(payload)
-    # Fast path: only engage on `gh ... --admin` (leave every other command untouched).
-    if not command or "--admin" not in command or "gh" not in command:
+    if not command:
         return 0
-    try:
-        segments = _segments(command)
-    except ShellPreprocessLimit:
-        sys.stderr.write(_block_msg("nested shell command could not be parsed safely"))
+    # Fast path: only engage on `gh ... --admin` (leave every other command untouched).
+    if not _may_guard(command):
+        # Shell-binding changes refuse even when no operation is visible (#10521 item 5).
+        binding = unconditional_refusal(command)
+        if binding is None:
+            return 0
+        sys.stderr.write(_block_msg(f"{binding}; {definition_repair(payload)}"))
+        emit_refusal("ALIAS_EXECUTION")
         return 2
-    redirect_unreadable = any(_UNREADABLE_MARKER in seg for seg in segments)
-    for seg in segments:
-        args = _admin_merge_args(seg)
-        if args is None:
+    try:
+        rows = read_commands(
+            command,
+            cwd=payload.get("cwd") or os.getcwd(),
+            consumer_check=lambda *args: _merge_guard._check_consumer(
+                *args, eval_guarded=bool(_merge_guard._may_merge(command, include_branch=False))
+            ),
+            operation=_admin_scope,
+            foreign=_foreign_shape,
+            explicit=_merge_guard._explicit_target,
+        )
+        segments = [row.argv for row in rows if row.guarded]
+    except Exception as exc:
+        if isinstance(exc, ShellDefinitionError):
+            sys.stderr.write(_block_msg(f"{exc}; {definition_repair(payload)}"))
+            emit_refusal(exc.reason_class)
+            return 2
+        if (
+            isinstance(exc, ShellParseError)
+            and str(exc) in {"Bash parse error", "ambiguous heredoc delimiter", "reserved word parsed as an argument"}
+            and not _merge_guard._may_merge(command, include_branch=False)
+        ):
+            # Unrelated malformed branch syntax is the branch guard's scope.
+            return 0
+        sys.stderr.write(
+            _block_msg(
+                f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}; repair: {REPAIR}"
+            )
+        )
+        emit_refusal(exc.reason_class if isinstance(exc, ShellParseError) else "RUNTIME_UNAVAILABLE")
+        return 2
+    redirect_unreadable = any(row.redirect_unknown for row in rows) or any(
+        _UNREADABLE_MARKER in seg for seg in segments
+    )
+    for row in rows:
+        if not row.guarded:
             continue
+        args = _admin_merge_args(row.argv)
+        if args is None:
+            merge_args = _merge_guard._merge_args(row.argv)
+            if merge_args is not None and any(
+                arg == "--admin" or arg.startswith("--admin=") for arg in _merge_guard._classify(merge_args)[0]
+            ):
+                pr = _pr_number(merge_args)
+                if pr and not row.cwd_unreadable and not _merge_guard._target_conflict(merge_args):
+                    _failing_blocking_checks(
+                        pr, cwd=row.cwd, repo=_merge_guard._repo_option(merge_args) or row.environment_repo
+                    )
+            continue
+        if row.environment_repo is not None and not _merge_guard._repo_option(args):
+            args = [*args, "--repo", row.environment_repo]
+        if _merge_guard._target_conflict(args):
+            sys.stderr.write(_block_msg("conflicting merge repositories"))
+            emit_refusal("UNKNOWN_REPOSITORY")
+            return 2
+        if row.cwd_unreadable:
+            sys.stderr.write(
+                _block_msg(f"merge working directory cannot be read; use a literal directory; repair: {REPAIR}")
+            )
+            if row.context_reason:
+                emit_refusal(row.context_reason)
+            return 2
         pr = None if redirect_unreadable else _pr_number(args)
         if not pr:
             sys.stderr.write(_block_msg("could not determine the target PR number"))
+            emit_refusal("UNKNOWN_TARGET")
             return 2
-        failing = _failing_blocking_checks(pr)
+        repo = _merge_guard._repo_option(args)
+        failing = _failing_blocking_checks(pr, cwd=row.cwd, **({"repo": repo} if repo else {}))
         if failing is None:
             sys.stderr.write(_block_msg(f"could not verify PR #{pr} check states (gh error/timeout)"))
+            if row.context_reason:
+                emit_refusal(row.context_reason)
             return 2
         if failing:
             sys.stderr.write(_block_msg(f"PR #{pr} has FAILING blocking checks: {', '.join(failing)}"))

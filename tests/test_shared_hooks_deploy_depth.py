@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -30,12 +32,12 @@ def test_shell_shlex_importers_do_not_write_bytecode() -> None:
 
 
 @pytest.mark.parametrize("hook_name", ["guard-admin-merge.py", "guard-branch-switch-in-main.py", "guard-pr-merge.py"])
-@pytest.mark.parametrize("helper", ["shell_redirects", "shell_shlex"])
+@pytest.mark.parametrize("helper", ["shell_bash"])
 @pytest.mark.parametrize("failure", ["missing", "syntax", "raises"])
 def test_issue_9479_broken_helper_fails_closed(tmp_path, hook_name, helper, failure):
     hooks = tmp_path / ".claude" / "hooks"
     hooks.mkdir(parents=True)
-    for name in (hook_name, "shell_redirects.py", "shell_shlex.py"):
+    for name in (hook_name, "shell_bash.py"):
         if name == helper + ".py" and failure == "missing":
             continue
         shutil.copy2(HOOKS_ROOT / name, hooks / name)
@@ -52,7 +54,7 @@ def test_issue_9479_broken_helper_fails_closed(tmp_path, hook_name, helper, fail
         timeout=10,
     )
     assert result.returncode == 2, result.stderr
-    assert f"guard dependency unavailable: {helper}" in result.stderr
+    assert "guard dependency unavailable: shell_bash" in result.stderr
     assert "Traceback" not in result.stderr
     assert not (hooks / "__pycache__").exists()
 
@@ -60,7 +62,7 @@ def test_issue_9479_broken_helper_fails_closed(tmp_path, hook_name, helper, fail
 def _bash_python_hooks() -> tuple[str, ...]:
     settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
     names = {
-        Path(hook["command"]).name
+        Path(shlex.split(hook["command"])[-1]).name
         for group in settings["hooks"]["PreToolUse"]
         if group["matcher"] == "Bash"
         for hook in group["hooks"]
@@ -152,3 +154,146 @@ def test_heal_core_bare_silently_allows_missing_repo_marker(tmp_path: Path) -> N
         )
         assert result.returncode == 0
         assert result.stdout == result.stderr == ""
+
+
+@pytest.mark.parametrize("hook_name", ["guard-pr-merge.py", "guard-branch-switch-in-main.py", "guard-admin-merge.py"])
+def test_guard_wrapper_ignores_system_python_on_path(tmp_path, hook_name):
+    import os
+
+    fake = tmp_path / "python3"
+    fake.write_text("#!/bin/sh\nexit 99\n")
+    fake.chmod(0o755)
+    wrapper = HOOKS_ROOT / "run-project-python-hook.sh"
+    result = subprocess.run(
+        ["bash", str(wrapper), hook_name],
+        cwd=REPO_ROOT,
+        env={
+            **os.environ,
+            "CLAUDE_PROJECT_DIR": str(REPO_ROOT),
+            "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"],
+        },
+        input=json.dumps({"tool_input": {"command": "echo 'git checkout -b fixture; gh pr merge 5 --admin'"}}),
+        text=True,
+        capture_output=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+_GUARDED_HOOKS = ["guard-pr-merge.py", "guard-branch-switch-in-main.py", "guard-admin-merge.py"]
+
+
+@pytest.mark.parametrize("hook_name", _GUARDED_HOOKS)
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "no_git",
+        "git_failure",
+        "missing_project",
+        "missing_helper",
+        "helper_exit",
+        "missing_interpreter",
+        "invalid_interpreter",
+    ],
+)
+@pytest.mark.parametrize(
+    "command,expected",
+    [("ls", 0), ("uv sync", 0), ("git status", 0), ("git switch -c fixture && gh pr merge 5 --admin", 2)],
+)
+def test_guard_wrapper_errors_keep_unrelated_commands_usable(tmp_path, hook_name, failure, command, expected):
+    project = tmp_path / "project"
+    project.mkdir()
+    helper = project / "scripts/lib/project_interpreter.sh"
+    helper.parent.mkdir(parents=True)
+    helper.write_text("project_interpreter_resolve() { return 1; }\n")
+    env = {**os.environ, "CLAUDE_PROJECT_DIR": str(project)}
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    # Deliberately use the wrong interpreter: it has no pinned parser packages.
+    # No project virtualenv is created, copied, or used by these error fixtures.
+    wrong_python = shutil.which("python3", path="/usr/bin:/bin")
+    assert wrong_python
+    (binaries / "python3").symlink_to(wrong_python)
+    (binaries / "dirname").symlink_to(shutil.which("dirname"))
+    env["PATH"] = str(binaries)
+    if failure in {"no_git", "git_failure"}:
+        env.pop("CLAUDE_PROJECT_DIR")
+        if failure == "git_failure":
+            git = binaries / "git"
+            git.write_text("#!/bin/sh\nexit 128\n")
+            git.chmod(0o755)
+    elif failure == "missing_project":
+        env["CLAUDE_PROJECT_DIR"] = str(tmp_path / "absent")
+    elif failure == "missing_helper":
+        helper.unlink()
+    elif failure == "helper_exit":
+        helper.write_text("exit 1\n")
+    elif failure == "missing_interpreter":
+        shutil.copy2(REPO_ROOT / "scripts/lib/project_interpreter.sh", helper)
+    elif failure == "invalid_interpreter":
+        helper.write_text("project_interpreter_resolve() { printf '%s' /nonexistent/guard-python; }\n")
+    result = subprocess.run(
+        ["/bin/bash", str(HOOKS_ROOT / "run-project-python-hook.sh"), hook_name],
+        cwd=tmp_path,
+        env=env,
+        input=json.dumps({"tool_input": {"command": command}}),
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == expected, result.stderr
+    assert "Traceback" not in result.stderr
+    if expected:
+        assert "guard dependency unavailable: shell_bash" in result.stderr
+        assert "repair:" in result.stderr
+
+
+@pytest.mark.parametrize("hook_name", _GUARDED_HOOKS)
+@pytest.mark.parametrize(
+    "failure", ["no_python", "hook_missing", "interpreter_exits_1", "interpreter_exits_128", "helper_syntax"]
+)
+def test_guard_wrapper_never_returns_an_allow_error(tmp_path, hook_name, failure):
+    hooks = tmp_path / "hooks"
+    hooks.mkdir()
+    shutil.copy2(HOOKS_ROOT / "run-project-python-hook.sh", hooks)
+    if failure != "hook_missing":
+        shutil.copy2(HOOKS_ROOT / hook_name, hooks)
+    project = tmp_path / "project"
+    helper = project / "scripts/lib/project_interpreter.sh"
+    helper.parent.mkdir(parents=True)
+    helper.write_text("project_interpreter_resolve() { return 1; }\n")
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    (binaries / "dirname").symlink_to(shutil.which("dirname"))
+    if failure != "no_python":
+        (binaries / "python3").symlink_to(shutil.which("python3", path="/usr/bin:/bin"))
+    if failure.startswith("interpreter_exits_"):
+        interpreter = tmp_path / "fixture-interpreter"
+        interpreter.write_text("#!/bin/sh\nexit " + failure.rsplit("_", 1)[1] + "\n")
+        interpreter.chmod(0o755)
+        helper.write_text("project_interpreter_resolve() { printf '%s' " + shlex.quote(str(interpreter)) + "; }\n")
+    elif failure == "helper_syntax":
+        helper.write_text("this is not valid ( shell syntax\n")
+    result = subprocess.run(
+        ["/bin/bash", str(hooks / "run-project-python-hook.sh"), hook_name],
+        cwd=tmp_path,
+        env={**os.environ, "CLAUDE_PROJECT_DIR": str(project), "PATH": str(binaries)},
+        input=json.dumps({"tool_input": {"command": "git switch -c fixture && gh pr merge 5 --admin"}}),
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 2, result.stderr
+
+
+def test_guard_wrapper_unknown_hook_is_blocked(tmp_path):
+    result = subprocess.run(
+        ["/bin/bash", str(HOOKS_ROOT / "run-project-python-hook.sh"), "unknown.py"],
+        cwd=tmp_path,
+        input=json.dumps({"tool_input": {"command": "git checkout -b fixture"}}),
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 2
+    assert "BLOCKED: unknown guard hook" in result.stderr

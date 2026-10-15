@@ -61,7 +61,15 @@ def test_issue_9479_redirect_denominator(repos, redirect, shape):
     assert guard._command_danger_reason(command, repos["other"]) is not None
     assert ["git", "switch", "-c", "fixture"] in guard._segments(command)
     safe = command.replace(str(repos["public"]), str(repos["public_worktree"]))
-    assert guard._command_danger_reason(safe, repos["other"]) is None
+    classes: list[str] = []
+    reason = guard._command_danger_reason(safe, repos["other"], diagnostic=classes.append)
+    if merge:
+        # #10521 ruling item 4: only read-only git/gh may precede the guarded
+        # operation; `gh pr merge` is refused before any directory inference
+        # (an enumerated over-refusal of a worktree operation).
+        assert reason is not None and classes == ["UNKNOWN_CONTEXT"], reason
+    else:
+        assert reason is None
 
 
 @pytest.mark.parametrize("redirect,verb", [(">/dev/null", "checkout -b"), ("2>&1", "switch -c")])
@@ -92,11 +100,8 @@ def test_issue_9479_real_bash_cwd_and_argv(repos, tmp_path, redirect, verb):
     assert result.returncode == 0, result.stderr
     actual = record.read_text().splitlines()
     assert actual == [str(repos["public"]), *verb.split(), "fixture"]
-    segments = guard._segments_with_following_operator(command)
-    cd_argv, operator = segments[0]
-    assert operator == "&&"
-    assert str(guard._cd_target(cd_argv, tmp_path)) == actual[0]
-    assert ["git", *actual[1:]] in [argv for argv, _ in segments]
+    rows = guard.read_commands(command, cwd=str(tmp_path))
+    assert any(row.argv == ["git", *actual[1:]] and row.cwd == actual[0] for row in rows)
     assert guard._command_danger_reason(command, repos["other"]) is not None
 
 
@@ -198,7 +203,7 @@ def test_issue_9115_escaped_nested_backtick_switch_is_visible(repos):
 
 
 def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
-    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.setattr(sys.modules["shell_bash"], "MAX_DEPTH", 2)
     monkeypatch.chdir(repos["public"])
     body = "git checkout -b feature"
     for _ in range(3):
@@ -208,7 +213,7 @@ def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
 
 
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
-    assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
+    assert ["echo", 'a " b'] in guard._segments(r'echo "a \" b" <<EOF' + "\nfixture\nEOF")
 
 
 @pytest.mark.parametrize(
@@ -221,7 +226,7 @@ def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     ],
 )
 def test_issue_9088_standard_heredoc_delimiters(opener, closer):
-    assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
+    assert ["cat"] in guard._segments(f"cat {opener}\nfixture\n{closer}")
     assert _dangerous(f"cat {opener}\ngit checkout -b feature\n{closer}") is None
     assert _dangerous(f"cat {opener}\nnote\n{closer}\ngit checkout -b feature") is not None
 
@@ -238,7 +243,7 @@ def test_issue_9088_standard_heredoc_delimiters(opener, closer):
 )
 def test_issue_9088_here_strings_keep_branch_switch_visible(repos, first):
     command = f"{first}\ngit checkout -b feature\nEOF"
-    assert guard._heredoc_delimiters(first) == []
+    assert ["true"] in guard._segments(first)
     assert _dangerous(command) is not None
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
@@ -274,7 +279,8 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(repos, monkeypatch):
 )
 def test_issue_9088_exotic_heredoc_keeps_branch_switch_visible(repos, opener, closer):
     command = f"cat {opener}\ngit checkout -b x\n{closer}"
-    assert guard._heredoc_delimiters(f"cat {opener}") is None
+    with pytest.raises(guard.ShellParseError):
+        guard.read_commands(f"cat {opener}\nfixture\n{closer}")
     assert _dangerous(command) is not None
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
@@ -297,7 +303,7 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
         timeout=30,
     )
     assert result.returncode == 2
-    assert "guard dependency unavailable: shell_shlex" in result.stderr
+    assert "guard dependency unavailable: shell_bash" in result.stderr
 
 
 def _dangerous(command: str) -> str | None:
@@ -531,7 +537,7 @@ def test_glued_operator_evasion_blocked(cmd):
         # …quoting still protects commit messages…
         'git commit -m "git branch -D notreal"',
         # …and safe ops with glued separators stay allowed.
-        "git branch -d merged-ok; echo done",
+        "git branch -d merged-ok; echo 'done'",
         # Commented-out danger is dead text.
         "echo hi # git branch -D victim",
     ],
@@ -714,12 +720,23 @@ def test_issue_9479_r2_bash_cwd(repos, tmp_path, tail):
     ]
     assert guard._command_danger_reason(command, repos["other"]) is not None
     safe = command.replace(str(repos["public"]), str(repos["public_worktree"]))
-    assert guard._command_danger_reason(safe, repos["other"]) is None
+    classes: list[str] = []
+    reason = guard._command_danger_reason(safe, repos["other"], diagnostic=classes.append)
+    if tail.startswith("("):
+        # #10521 ruling item 3: a guarded operation inside a subshell refuses
+        # wherever it would run (an enumerated over-refusal in the worktree).
+        assert reason is not None and classes == ["UNKNOWN_CONTEXT"], reason
+    else:
+        assert reason is None
 
 
 def test_issue_9479_r2_subshell_cd_stays_local(repos):
+    # #10521 ruling item 4: a compound construct before the guarded operation
+    # refuses before any directory inference, so neither direction is judged.
     command = f"(cd {repos['public']}) && git switch -c fixture"
-    assert guard._command_danger_reason(command, repos["public_worktree"]) is None
+    classes: list[str] = []
+    assert guard._command_danger_reason(command, repos["public_worktree"], diagnostic=classes.append) is not None
+    assert classes == ["UNKNOWN_CONTEXT"]
     command = f"(cd {repos['public_worktree']}) && git switch -c fixture"
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
@@ -745,7 +762,16 @@ def _assert_r3_bash_decision(repos, tmp_path, command, cwd, verb, expected_cwd):
     assert result.returncode == 0, result.stderr
     actual = record.read_text().splitlines()
     assert actual == [str(expected_cwd), *verb.split(), "fixture"]
-    assert (guard._command_danger_reason(command, cwd) is not None) == (actual[0] == str(repos["public"]))
+    classes: list[str] = []
+    reason = guard._command_danger_reason(command, cwd, diagnostic=classes.append)
+    if "&& $(cd " in command or actual[0] == str(repos["public"]):
+        # AC-02: an operation Bash runs in the primary checkout is never allowed.
+        assert reason is not None
+    else:
+        # #10521 closed grammar: a worktree operation is allowed, or refused with a
+        # typed reason before any inference when its shape is outside the grammar
+        # (an enumerated over-refusal), never judged in a wrong directory.
+        assert reason is None or classes, reason
 
 
 @pytest.mark.parametrize("parentheses", ["({body})", "( {body} )"])
@@ -800,8 +826,16 @@ def test_issue_9479_r2_unreadable_respects_repository(repos, tmp_path, command, 
     cwd = tmp_path / "non-repo" if location == "non_repo" else repos[location]
     cwd.mkdir(exist_ok=True)
     # An unreadable cd can change the repository even from an unprotected cwd.
-    expected_block = location == "public" or command.startswith("cd $(")
-    assert (guard._command_danger_reason(command, cwd) is not None) == expected_block
+    expected_block = location in {"public", "non_repo"} or command.startswith("cd $(")
+    classes: list[str] = []
+    reason = guard._command_danger_reason(command, cwd, diagnostic=classes.append)
+    if command in {"git switch -c feat-$(date +%s)", 'echo fixture >"$LOG" && git checkout -b feat'}:
+        # #10521 ruling item 4: an unadmitted substitution or an expansion
+        # before the guarded operation refuses with a typed reason wherever it
+        # runs (an enumerated over-refusal in the worktree).
+        assert reason is not None and classes, reason
+    else:
+        assert (reason is not None) == expected_block
 
 
 @pytest.mark.parametrize(
@@ -829,21 +863,39 @@ def test_issue_9479_r2_named_fd_cd(repos, target):
 @pytest.mark.parametrize("target", ["public", "public_worktree"])
 def test_issue_9479_r2_literal_cd_dynamic_redirect(repos, redirect, target):
     command = f"cd {repos[target]} {redirect} && git switch -c fixture"
-    assert (guard._command_danger_reason(command, repos["public_worktree"]) is not None) == (target == "public")
+    # #10521 ruling item 4: a dynamic redirect on the leading cd is outside the
+    # grammar and refuses before any directory inference, in either target
+    # (an enumerated over-refusal for the worktree).
+    classes: list[str] = []
+    assert guard._command_danger_reason(command, repos["public_worktree"], diagnostic=classes.append) is not None
+    assert classes == ["UNKNOWN_CONTEXT"]
 
 
 def test_issue_9479_r2_redirect_substitution_runs_before_cd(repos):
+    # #10521 ruling item 3: a guarded operation inside a substitution refuses
+    # wherever it would run (an enumerated over-refusal from the worktree).
     command = f"cd {repos['public']} >$(git switch -c fixture) && echo ok"
-    assert guard._command_danger_reason(command, repos["public_worktree"]) is None
+    classes: list[str] = []
+    assert guard._command_danger_reason(command, repos["public_worktree"], diagnostic=classes.append) is not None
+    assert classes == ["UNKNOWN_CONTEXT"]
     command = f"cd {repos['public_worktree']} >$(git switch -c fixture) && echo ok"
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
 
 def test_issue_9479_r2_operator_boundaries(repos):
+    # #10521 ruling item 3: the reader no longer models the subshell, so a
+    # guarded operation glued into `&&(...)` refuses with a typed reason.
     command = f"cd {repos['public']} &&(git switch -c fixture) && echo ok"
-    rows = guard._segments_with_following_operator(command)
-    assert rows[0][1] == "&&open"
-    assert rows[1][1] == "close&&"
+    with pytest.raises(guard.ShellParseError) as refused:
+        guard.read_commands(command, cwd=str(repos["other"]))
+    assert refused.value.reason_class == "UNKNOWN_CONTEXT"
+    assert guard._command_danger_reason(command, repos["other"]) is not None
+    # A glued `&&` still ends the leading cd: the operation is read in its directory.
+    command = f"cd {repos['public']} &&git switch -c fixture && echo ok"
+    rows = guard.read_commands(command, cwd=str(repos["other"]))
+    assert next(row for row in rows if row.argv[0] == "git").cwd == str(repos["public"])
+    assert rows[-1].cwd == str(repos["public"])
+    assert guard._command_danger_reason(command, repos["other"]) is not None
 
 
 @pytest.mark.parametrize("start", ["public", "public_worktree"])
@@ -933,7 +985,12 @@ def test_issue_9479_r4_unmatched_close_fails_closed(repos, tmp_path):
 def test_issue_9479_r2_absolute_git_cwd_resolves_unreadable_cd(repos, option, target):
     directory = "relative" if target == "relative" else str(repos[target])
     command = f'cd "$ROOT" && git {option}{directory} switch -c fixture'
-    assert (guard._command_danger_reason(command, repos["other"]) is not None) == (target != "public_worktree")
+    # #10521 ruling item 4: an unreadable leading cd is outside the grammar and
+    # refuses before inference, even when `git -C` names a worktree (an
+    # enumerated over-refusal).
+    classes: list[str] = []
+    assert guard._command_danger_reason(command, repos["other"], diagnostic=classes.append) is not None
+    assert classes == ["UNKNOWN_CONTEXT"]
 
 
 def _assert_r5_bash_record(tmp_path, command, cwd, expected_cwd):
@@ -989,7 +1046,7 @@ def test_issue_9479_r5_case_without_cd_deliberately_overblocks_worktree(repos, t
 @pytest.mark.parametrize(
     "body",
     [
-        "echo case",
+        "echo 'case'",
         "echo ${x:-word}",
         "echo '${x:-(}'",
         'git commit -m "case x"',
@@ -998,7 +1055,22 @@ def test_issue_9479_r5_case_without_cd_deliberately_overblocks_worktree(repos, t
     ],
 )
 def test_issue_9479_r5_literal_case_and_parameter_controls_allowed(repos, body):
-    assert guard._command_danger_reason(body + " && git switch -c fixture", repos["public_worktree"]) is None
+    classes: list[str] = []
+    reason = guard._command_danger_reason(
+        body + " && git switch -c fixture", repos["public_worktree"], diagnostic=classes.append
+    )
+    over_refused = {
+        "echo ${x:-word}": "UNKNOWN_CONTEXT",
+        "case=1": "UNKNOWN_CONTEXT",
+        "cat <<'EOF'\ncase x in x) ${x:-(}\nEOF\ntrue": "UNKNOWN_EXECUTOR",
+    }
+    if body in over_refused:
+        # #10521 ruling item 4: only read-only git/gh and literal
+        # echo/printf/true/:/test/[/pwd may precede the guarded operation, so an
+        # expansion, assignment or `cat` refuses (an enumerated over-refusal).
+        assert reason is not None and classes == [over_refused[body]], reason
+    else:
+        assert reason is None
 
 
 @pytest.mark.parametrize(
@@ -1108,17 +1180,35 @@ def test_issue_9479_r6_case_anywhere_deliberately_overblocks_worktree(
 
 @pytest.mark.parametrize(
     "body",
-    ["echo case", 'git commit -m "case study"', 'grep -r "case " .', "echo ${x:-default}", "echo ${#arr[@]}"],
+    ["echo 'case'", 'git commit -m "case study"', 'grep -r "case " .', "echo ${x:-default}", "echo ${#arr[@]}"],
 )
 def test_issue_9479_r6_common_worktree_controls_allowed(repos, body):
-    assert guard._command_danger_reason(body + " && git switch -c fixture", repos["public_worktree"]) is None
+    classes: list[str] = []
+    reason = guard._command_danger_reason(
+        body + " && git switch -c fixture", repos["public_worktree"], diagnostic=classes.append
+    )
+    over_refused = {
+        'grep -r "case " .': "UNKNOWN_EXECUTOR",
+        "echo ${x:-default}": "UNKNOWN_CONTEXT",
+        "echo ${#arr[@]}": "UNKNOWN_CONTEXT",
+    }
+    if body in over_refused:
+        # #10521 ruling item 4: `grep` or an expansion before the guarded
+        # operation is outside the grammar (an enumerated over-refusal).
+        assert reason is not None and classes == [over_refused[body]], reason
+    else:
+        assert reason is None
 
 
 @pytest.mark.parametrize("body", ["case x in x) true;; esac", "echo ${x:-(}", 'echo "$(case x in x) echo;; esac)"'])
 @pytest.mark.parametrize("start", ["public", "public_worktree"])
 def test_issue_9479_r6_unmodeled_without_branch_is_unaffected(repos, body, start):
     assert guard._command_danger_reason(body, repos[start]) is None
-    assert guard._command_danger_reason(body + '; echo "git switch -c literal"', repos[start]) is None
+    reason = guard._command_danger_reason(body + '; echo "git switch -c literal"', repos[start])
+    if body == "echo ${x:-(}":
+        assert reason is not None and "Bash parse error" in reason
+    else:
+        assert reason is None
 
 
 @pytest.mark.parametrize("target", ["public", "public_worktree"])
@@ -1132,7 +1222,10 @@ def test_issue_9479_r6_helper_exception_exits_two(monkeypatch, failure):
     def broken(*args, **kwargs):
         raise RuntimeError("synthetic helper failure")
 
-    monkeypatch.setattr(guard, "command_repository_unknown" if failure == "detector" else "scope_events", broken)
+    if failure == "detector":
+        monkeypatch.setattr(guard, "read_commands", broken)
+    else:
+        monkeypatch.setattr(sys.modules["shell_bash"], "Parser", broken)
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": "git switch -c fixture"}})))
     assert guard.main() == 2
 
@@ -1285,7 +1378,8 @@ def test_issue_9479_r7_real_expansions_and_later_case_stay_blocked(repos, tmp_pa
 @pytest.mark.parametrize("opener", ["<<EOF", "<<'EOF'", r"<<\EOF", "<<-EOF"])
 def test_issue_9479_r7_missing_terminator_fails_closed(repos, start, opener):
     command = f'git switch -c fixture && git commit -m "$(cat {opener}\nIt\'s fixed\nEOF trailing\n)"'
-    assert guard.command_repository_unknown(command)
+    with pytest.raises(guard.ShellParseError, match="Bash parse error"):
+        guard.read_commands(command, str(repos[start]))
     assert guard._command_danger_reason(command, repos[start]) is not None
 
 
@@ -1346,6 +1440,10 @@ def test_issue_9479_r9_later_line_after_heredoc_bash(
     # Heredoc removal must preserve precisely the decision for the executed
     # operation, including worktree admission and benign later commands.
     expected = guard._command_danger_reason(operation, repos[start]) is not None
+    if operation and operation != "git status":
+        # #10521 ruling item 3: every wrapper puts the guarded operation inside a
+        # substitution or subshell, which refuses wherever it would run.
+        expected = True
     assert (guard._command_danger_reason(command, repos[start]) is not None) == expected
     monkeypatch.chdir(repos[start])
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
@@ -1370,6 +1468,10 @@ def test_issue_9479_r9_multiple_heredocs_bash(repos, tmp_path, start, queued, op
     else:
         assert len(records) == (1 if prefix.startswith(("git commit", "gh pr create")) else 0)
     expected = guard._command_danger_reason(operation, repos[start]) is not None
+    if operation and operation != "git status":
+        # #10521 ruling item 3: every wrapper puts the guarded operation inside a
+        # substitution or subshell, which refuses wherever it would run.
+        expected = True
     assert (guard._command_danger_reason(command, repos[start]) is not None) == expected
 
 
@@ -1409,4 +1511,334 @@ def test_issue_9479_r8_unquoted_branch_expansion_executes_bash(repos, tmp_path, 
         ["git", str(repos[start]), "checkout", "-b", "evil"],
         ["git", str(repos[start]), "commit", "-m", "It's active: " if apostrophe else "active: "],
     ]
-    assert (guard._command_danger_reason(command, repos[start]) is not None) == (start == "public")
+    # #10521 ruling item 3: a guarded operation inside a substitution refuses
+    # wherever it would run (an enumerated over-refusal in the worktree).
+    classes: list[str] = []
+    assert guard._command_danger_reason(command, repos[start], diagnostic=classes.append) is not None
+    assert classes == ["UNKNOWN_CONTEXT"]
+
+
+@pytest.mark.parametrize("word", ["done", "case"])
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+def test_issue_9484_reserved_arguments_are_refused_only_after_raw_gate(repos, word, start):
+    cwd = repos[start]
+    assert guard._command_danger_reason("echo " + word, cwd) is None
+    bare = f"echo {word}; git branch -d merged-ok"
+    assert guard._command_danger_reason(bare, cwd) is not None
+    with pytest.raises(guard.ShellParseError, match="reserved word parsed as an argument"):
+        guard.read_commands(bare, cwd=str(cwd))
+    quoted = f"echo '{word}'; git branch -d merged-ok"
+    assert guard._command_danger_reason(quoted, cwd) is None
+
+
+@pytest.mark.parametrize("command", ["git switch -c fixture", "gh pr checkout 5", "git branch -M fixture"])
+def test_unknown_repository_never_proves_safe(monkeypatch, repos, command):
+    monkeypatch.setattr(guard, "_git_repo_root", lambda cwd: None)
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+    assert guard._command_danger_reason("git status", repos["public"]) is None
+
+
+def test_failed_worktree_probe_cannot_allow_branch_operation(monkeypatch, repos):
+    def failure(*args, **kwargs):
+        raise FileNotFoundError("fixture git unavailable")
+
+    monkeypatch.setattr(guard.subprocess, "run", failure)
+    with pytest.raises(RuntimeError, match="worktree probe unavailable"):
+        guard._in_main_worktree(repos["public"])
+
+
+def test_unknown_current_branch_cannot_allow_force_rename(monkeypatch, repos):
+    monkeypatch.setattr(guard, "_checked_out_branch", lambda cwd: None)
+    assert guard._command_danger_reason("git branch -M fixture", repos["public"]) is not None
+
+
+def test_payload_directory_is_used_at_actual_hook_entry(monkeypatch, repos):
+    import io
+    import json
+
+    monkeypatch.setattr(
+        guard.sys,
+        "stdin",
+        io.StringIO(
+            json.dumps(
+                {
+                    "cwd": str(repos["public"]),
+                    "tool_input": {"command": "git switch -c fixture"},
+                }
+            )
+        ),
+    )
+    assert guard.main() == 2
+
+
+@pytest.mark.parametrize("command", [r"echo $'\U00110000'", r"echo $'\Uffffffff'"])
+def test_invalid_unicode_branch_prefilter_fails_closed(command):
+    assert guard._command_danger_reason(command) is not None
+
+
+@pytest.mark.parametrize("prefix", [[], ["--hostname", "github.com"], ["-R", "fixture/repo", "--verbose"]])
+def test_gh_checkout_global_options_judge_the_effective_directory(repos, prefix):
+    command = ["gh", *prefix, "pr", "checkout", "5"]
+    assert guard._gh_pr_checkout_reason(command, repos["public"]) is not None
+    assert guard._gh_pr_checkout_reason(command, repos["public_worktree"]) is None
+    assert guard._gh_pr_checkout_reason(command, None) == "branch-switch target could not be parsed safely"
+
+
+def test_gh_checkout_non_primary_probe_is_allowed(repos, monkeypatch):
+    monkeypatch.setattr(guard, "_in_main_worktree", lambda cwd: False)
+    assert guard._gh_pr_checkout_reason(["gh", "pr", "checkout", "5"], repos["public"]) is None
+
+
+def test_empty_branch_hook_payload_allows(monkeypatch):
+    monkeypatch.setattr(sys, "stdin", io.StringIO("{}"))
+    assert guard.main() == 0
+
+
+def test_branch_hook_directory_exception_fails_closed(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": "git switch topic"}})))
+
+    def unavailable(*args):
+        raise RuntimeError("directory unavailable")
+
+    monkeypatch.setattr(guard, "_command_danger_reason", unavailable)
+    assert guard.main() == 2
+    assert "nested shell command could not be parsed safely" in capsys.readouterr().err
+
+
+def test_inherited_home_does_not_unblock_main_branch_case(repos, monkeypatch):
+    monkeypatch.setenv("P", str(repos["public"]))
+    command = 'HOME="$P/.worktrees/wt" cd && git checkout -b f'
+    assert "dynamic local HOME" in guard._command_danger_reason(command, repos["public"])
+
+
+# A function can shadow `exit` or `cd`; Bash then runs the branch operation in
+# the primary checkout, so `cd ... || exit` never ends analysis (#10521 ruling).
+_SHADOWED_CD_OR_EXIT = [
+    "exit(){ :; }; cd missing || exit; git checkout -b fixture",
+    "cd(){ :; }; cd missing || exit; git checkout -b fixture",
+    "cd(){ :; }; cd missing || exit; git switch -c fixture",
+]
+
+
+@pytest.mark.parametrize("command", [*_SHADOWED_CD_OR_EXIT, "cd missing || exit; git checkout -b fixture"])
+def test_issue_10521_cd_or_exit_never_ends_branch_analysis(repos, tmp_path, command):
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    recorder = binaries / "git"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", command],
+        cwd=repos["public"],
+        env={**os.environ, "PATH": str(binaries) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        timeout=10,
+    )
+    assert record.exists() == (command in _SHADOWED_CD_OR_EXIT)
+    if record.exists():
+        assert record.read_text().splitlines()[0] == str(repos["public"])
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+# The refusal names the supported spellings, so agents are not stuck (#10521).
+# The closed-allowlist ruling refuses `cd ... || exit` before any directory is
+# inferred, so the spelling names a `<worktree>` placeholder, never a directory.
+_CONTEXT_REFUSAL = "branch operation context cannot be established: "
+
+
+@pytest.mark.parametrize(
+    "command,detail,reason_class",
+    [
+        (
+            "cd .worktrees/topic || exit; git checkout -b fixture",
+            "a leading `cd` must reach the guarded operation through `&&` only",
+            "UNKNOWN_CONTEXT",
+        ),
+        (
+            "cd .worktrees/topic || exit 1; git checkout -b fixture",
+            "a leading `cd` must reach the guarded operation through `&&` only",
+            "UNKNOWN_CONTEXT",
+        ),
+        ('cd .worktrees/topic || exit; git checkout -b "$B"', None, "DYNAMIC_OPERATION"),
+        ('cd "$WT" || exit; git checkout -b fixture', "`cd` before a guarded operation", "UNKNOWN_CONTEXT"),
+    ],
+)
+def test_issue_10521_cd_or_exit_block_names_git_dash_c(repos, monkeypatch, capsys, command, detail, reason_class):
+    classes: list[str] = []
+    reason = guard._command_danger_reason(command, repos["public"], diagnostic=classes.append)
+    assert reason is not None and classes == [reason_class], reason
+    if detail is not None:
+        operation = "checkout -b fixture"
+        expected = (
+            f"{_CONTEXT_REFUSAL}{detail}: use `git -C <worktree> {operation}` "
+            f"or one leading `cd <worktree> && git {operation}`"
+        )
+        assert reason == expected
+    payload = {"tool_input": {"command": command}, "cwd": str(repos["public"])}
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
+    assert guard.main() == 2
+    stderr = capsys.readouterr().err
+    assert stderr.startswith(f"BLOCKED by guard-branch-switch-in-main: {reason}.\n")
+    assert f'GUARD_JUDGMENT {{"disposition": "refuse", "reason_class": "{reason_class}"}}' in stderr
+    # The named spelling is admitted once a literal worktree fills the placeholder.
+    spelling = f"git -C {repos['public_worktree']} checkout -b fixture"
+    assert guard._command_danger_reason(spelling, repos["public"]) is None
+
+
+@pytest.mark.parametrize(
+    "command", ["cd . || exit; git checkout -b fixture", "cd .worktrees/topic || exit; git branch -D main"]
+)
+def test_issue_10521_explicit_directory_names_only_admitted_switch_targets(repos, command):
+    # Ported to the closed-allowlist refusal: the hint names only a `<worktree>`
+    # placeholder, never the inferred directory, and spells only switch verbs.
+    classes: list[str] = []
+    reason = guard._command_danger_reason(command, repos["public"], diagnostic=classes.append)
+    assert reason is not None and classes == ["UNKNOWN_CONTEXT"], reason
+    assert "git -C ." not in reason
+    assert str(repos["public"]) not in reason
+    assert "branch -D" not in reason
+
+
+# A shell definition can change what any later word runs. With a branch
+# operation in the same command the hook refuses before it infers a directory
+# (#10521 ruling 2026-10-14T21:20Z). Every target exists: builtin semantics
+# would place the switch in the worktree while Bash runs it in the primary.
+_DEFINITION_SHADOWS = [
+    "cd(){{ :; }}; cd {wt} && git checkout -b fixture",
+    "pushd(){{ :; }}; pushd {wt} && git checkout -b fixture",
+    "builtin(){{ :; }}; builtin cd {wt} && git checkout -b fixture",
+    "command(){{ :; }}; command cd {wt} && git checkout -b fixture",
+    "function cd {{ :; }}; cd {wt} && git checkout -b fixture",
+    "bash -c 'cd(){{ :; }}; cd {wt} && git checkout -b fixture'",
+    "trap 'builtin(){{ :; }}' DEBUG; builtin cd {wt} && git checkout -b fixture",
+    "bash --posix -c 'BASH_ALIASES=([cd]=:)\ncd {wt} && git checkout -b fixture'",
+    "command_not_found_handle(){{ git checkout -b fixture; }}; zz",
+]
+# Refused regardless of execution order or scope, although Bash stays in the worktree.
+_DEFINITION_ANYWHERE = [
+    "x=$(cd(){{ :; }}; echo ok); cd {wt} && git checkout -b fixture",
+    "cd {wt} && git checkout -b fixture; cd(){{ :; }}",
+    "exit(){{ :; }}; cd {wt} || exit; git switch -c fixture",
+    "f(){{ g(){{ :; }}; }}; git -C {wt} checkout -b fixture",
+]
+_DEFINITION_BENIGN = [
+    "f(){{ echo hi; }}; f; git -C {wt} branch --list",
+    'echo "cd(){{ :; }}"; git -C {wt} checkout -b fixture',
+    'git -C {wt} commit -m "alias x=y; f() {{ :; }}; git checkout -b z"',
+]
+# Enumerated over-refusals of formerly allowed controls (#10521 closed allowlist).
+_DEFINITION_OVER_REFUSALS = [
+    ("f(){{ echo hi; }}; f; git checkout main", "ALIAS_EXECUTION"),
+    ("echo 'function cd {{ :; }}' && cd {wt} && git checkout -b fixture", "UNKNOWN_CONTEXT"),
+]
+_DEFINITION_REPAIR = (
+    "keep shell definitions out of a guarded git/gh command (a semicolon or newline inside one "
+    "command does not separate them), and use `git -C <worktree> ...` (for gh, `-R <owner>/<repo>`)"
+)
+
+
+def _branch_main(monkeypatch, capsys, command, cwd):
+    payload = {"tool_input": {"command": command}, "cwd": str(cwd)}
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
+    code = guard.main()
+    return code, capsys.readouterr().err
+
+
+@pytest.mark.parametrize("shape", _DEFINITION_SHADOWS)
+def test_issue_10521_definition_with_existing_target_refuses(repos, tmp_path, monkeypatch, capsys, shape):
+    command = shape.format(wt=repos["public_worktree"])
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    recorder = binaries / "git"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", command],
+        cwd=repos["public"],
+        env={**os.environ, "PATH": f"{binaries}{os.pathsep}{os.environ['PATH']}", "GUARD_RECORD": str(record)},
+        capture_output=True,
+        timeout=10,
+    )
+    # Real Bash runs the branch operation in the protected primary checkout.
+    assert record.read_text().splitlines()[0] == str(repos["public"])
+    code, stderr = _branch_main(monkeypatch, capsys, command, repos["public"])
+    assert code == 2
+    assert 'GUARD_JUDGMENT {"disposition": "refuse", "reason_class": "ALIAS_EXECUTION"}' in stderr
+    # Outside a proven Claude Code payload the repair never claims that
+    # separate tool calls isolate shell state (#10521 ruling item 6).
+    assert _DEFINITION_REPAIR in stderr
+    assert "separate Bash tool calls" not in stderr
+    assert "uv pip install" not in stderr
+    # A Claude Code payload (CLAUDECODE=1 plus transcript_path) proves isolation.
+    monkeypatch.setenv("CLAUDECODE", "1")
+    payload = {"tool_input": {"command": command}, "cwd": str(repos["public"]), "transcript_path": "/dev/null"}
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
+    assert guard.main() == 2
+    stderr = capsys.readouterr().err
+    assert "separate Bash tool calls" in stderr
+    assert "`git -C <worktree> ...`" in stderr
+    assert 'GUARD_JUDGMENT {"disposition": "refuse", "reason_class": "ALIAS_EXECUTION"}' in stderr
+
+
+@pytest.mark.parametrize("shape", _DEFINITION_ANYWHERE)
+def test_issue_10521_definition_refuses_regardless_of_order_or_scope(repos, shape):
+    command = shape.format(wt=repos["public_worktree"])
+    classes: list[str] = []
+    reason = guard._command_danger_reason(command, repos["public"], diagnostic=classes.append)
+    assert reason is not None and _DEFINITION_REPAIR in reason
+    assert classes == ["ALIAS_EXECUTION"]
+    # The refusal never depends on where the session starts.
+    assert guard._command_danger_reason(command, repos["public_worktree"]) == reason
+
+
+@pytest.mark.parametrize("shape", _DEFINITION_BENIGN)
+def test_issue_10521_definition_controls_stay_allowed(repos, monkeypatch, capsys, shape):
+    command = shape.format(wt=repos["public_worktree"])
+    assert guard._may_guard(command)
+    assert _branch_main(monkeypatch, capsys, command, repos["public"]) == (0, "")
+
+
+@pytest.mark.parametrize("shape,reason_class", _DEFINITION_OVER_REFUSALS)
+def test_issue_10521_definition_controls_enumerated_over_refusals(repos, monkeypatch, capsys, shape, reason_class):
+    # Formerly allowed controls. #10521 ruling item 3: a definition in a command
+    # with text shaped like a guarded operation refuses; item 4: only one
+    # leading `cd <literal> &&` is admitted, so `echo ... && cd ...` refuses.
+    command = shape.format(wt=repos["public_worktree"])
+    code, stderr = _branch_main(monkeypatch, capsys, command, repos["public"])
+    assert code == 2
+    assert f'GUARD_JUDGMENT {{"disposition": "refuse", "reason_class": "{reason_class}"}}' in stderr
+
+
+def test_issue_10521_shadowed_popd_from_a_worktree_refuses(repos, tmp_path, monkeypatch, capsys):
+    command = f"popd(){{ :; }}; pushd {repos['public']} >/dev/null && popd; git checkout -b fixture"
+    record = tmp_path / "record"
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    (binaries / "git").write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" > "$GUARD_RECORD"\n')
+    (binaries / "git").chmod(0o755)
+    subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", command],
+        cwd=repos["public_worktree"],
+        env={**os.environ, "PATH": f"{binaries}{os.pathsep}{os.environ['PATH']}", "GUARD_RECORD": str(record)},
+        capture_output=True,
+        timeout=10,
+    )
+    assert record.read_text().strip() == str(repos["public"])
+    code, stderr = _branch_main(monkeypatch, capsys, command, repos["public_worktree"])
+    assert code == 2
+    assert '"reason_class": "ALIAS_EXECUTION"' in stderr
+
+
+def test_issue_10521_definition_refusal_precedes_repository_probes(repos, monkeypatch):
+    def probed(*args, **kwargs):
+        raise AssertionError("directory inferred before the definition refusal")
+
+    command = f"cd(){{ :; }}; cd {repos['public_worktree']} && git checkout -b fixture"
+    for name in ("_git_repo_root", "_in_main_worktree", "_checked_out_branch"):
+        monkeypatch.setattr(guard, name, probed)
+    classes: list[str] = []
+    reason = guard._command_danger_reason(command, repos["public_worktree"], diagnostic=classes.append)
+    assert _DEFINITION_REPAIR in reason
+    assert classes == ["ALIAS_EXECUTION"]
