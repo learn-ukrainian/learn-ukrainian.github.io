@@ -1,34 +1,99 @@
-# Driver memory scopes
+# Driver and interactive session memory scopes
 
-Every real driver route enters a unique `lu-driver-<provider>-<lane>-<uuid>.scope`
-in the user manager's `lu-driver.slice` before rules loading, provider preparation,
-deploy, rollover import or lease acquisition. Normal, untrusted and governor
-routes share this boundary. Help and dry-run do not contact the manager.
+Every real launcher session enters a unique scope in the user manager's
+`lu-driver.slice` before rules loading, provider preparation, deploy, rollover
+import or lease acquisition (#9624). That covers every driver route (normal,
+untrusted and governor), every interactive and compatibility wrapper
+(`start-claude.sh`, `start-codex.sh`, `start-gemini.sh`, `start-grok.sh`,
+`start-kimi.sh`, `start-kimicc.sh`, `start-glm.sh`, `start-glmcc.sh`) and
+`scripts/start-bio-driver.sh`. Driver units are
+`lu-driver-<provider>-<lane>-<uuid>.scope`. Interactive units are
+`lu-interactive-<provider>-<label>-<uuid>.scope`, where the label names the
+invoked wrapper (`claude`, `codex`, `gemini`, `grok`, `kimi`, `kimicc`, `glm`,
+`glmcc` or `bio`), so a journal OOM record names the session's route.
+Interactive sessions get the same limits in the same slice as drivers; there is
+no separate sub-slice. Lease claim and renewal, rollover import, adapter
+prelease, provider canary and supervisory start-failure publication stay
+driver-only, whatever an interactive session inherits. Help and dry-run do not
+contact the manager.
 
 `scripts/lib/driver_scope.sh` is the single per-session configuration point. It
 sets `MemoryHigh=`, `MemoryMax=` and `MemorySwapMax=` from the deployment's
 configuration (see [Limits are set per deployment](#limits-are-set-per-deployment)),
 with explicit `OOMPolicy=continue`. Limits are read back from the actual cgroup; unit ID,
 ControlGroup, Slice, ActiveState and OOMPolicy must agree. Re-entry requires the
-same launcher PID and verified unit. A nested driver gets a new UUID and scope.
+same launcher PID and verified unit. A nested launch gets a new UUID and scope.
 
-The outside shell only waits and forwards signals. Scope mode preserves the
-terminal, stdin and process group; the existing inner launcher supervises the
-provider, renewal and lease cleanup. The command's status (including refusal
-codes 1–5) propagates. Failure to enter or verify returns 6 and a typed
-`DRIVER_SCOPE_REFUSED reason=...`. There is no unbounded override. Restore the
-user manager/bus and install the unit; do not bypass this boundary. The helper
-derives a missing runtime directory only from the current user's owned logind
-directory and bus socket. Headless tool shells, cron and service callers must
-have access to that user's manager; an inaccessible manager is a refusal.
-Before starting a scope, `lu-driver.slice` must report both `LoadState=loaded`
-and a non-empty `FragmentPath`. A loaded implicit slice with no unit file is
-refused as `slice-not-installed` before preparation or lease acquisition.
+The outside shell only waits. Scope mode preserves the terminal, stdin and
+process group; for drivers the existing inner launcher supervises the provider,
+renewal and lease cleanup, and an interactive launcher replaces itself with the
+provider. The command's status, including the earlier refusal codes, propagates.
+Failure to enter or verify returns 6 and a typed `DRIVER_SCOPE_REFUSED
+reason=...` for drivers and interactive sessions alike. There is no unbounded
+override. Restore the user manager/bus and install the unit; do not bypass this
+boundary. The helper derives a missing runtime directory only from the current
+user's owned logind directory and bus socket. Headless tool shells, cron and
+service callers must have access to that user's manager; an inaccessible manager
+is a refusal. Before starting a scope, `lu-driver.slice` must report both
+`LoadState=loaded` and a non-empty `FragmentPath`. A loaded implicit slice with
+no unit file is refused as `slice-not-installed` before preparation or lease
+acquisition.
 
-SIGQUIT remains ignored throughout the scoped tree because Bash launches the
-scope wrapper as a background job without job control. INT, TERM and HUP are
-forwarded; when trapped, their conventional statuses (130, 143 and 129) replace
-the inner status. An ordinary unsignalled exit preserves the provider's status.
+Admission refusals keep their own codes and come before any manager contact:
+usage errors (2), certification and Muse refusals (4), uncertified Gemini driver
+models (4) and the Claude weekly cap or Opus block (7). Refusals after entry,
+such as an adapter preflight, keep their codes too, but run inside the scope.
+
+## Entry, replay and identity
+
+Entry starts `systemd-run --scope`, which runs the entry helper and then
+replays the wrapper the caller invoked, with the caller's arguments byte for
+byte. The wrapper is the invoked script itself, resolved inside the checkout and
+checked against the tracked allowlist in `driver_scope.sh`, never a name derived
+from the provider: `start-glmcc.sh` must not become `start-glm.sh`, which selects
+another route. Arguments a wrapper adds itself (the CTO lane, the kimicc harness,
+the bio agent) are kept out of the replayed arguments, so the replayed wrapper
+adds them exactly once.
+
+The entry helper verifies the unit against the launcher's validated mode; the
+replayed wrapper verifies it again against its own mode, provider and label.
+Typed refusals: `entrypoint-not-allowlisted` (a copy, alias or other script
+calling the shared core, which cannot be replayed), `entrypoint-mismatch` (a
+tracked name running another provider or mode), `mode-mismatch` and
+`identity-mismatch`.
+
+## Signals and the terminal
+
+Drivers: INT, TERM and HUP are forwarded; when trapped, their conventional
+statuses (130, 143 and 129) replace the inner status. SIGQUIT remains ignored
+throughout the scoped driver tree because Bash launches the scope wrapper as a
+background job without job control.
+
+Interactive sessions: the provider shares the terminal's foreground process
+group, so a keyboard INT or QUIT reaches it directly, exactly once. The waiting
+launcher relays INT and QUIT only when its process group is not the terminal's
+foreground group, for example a session without a terminal. TERM and HUP are
+relayed. The provider keeps the default QUIT disposition, as with direct
+execution. The status is the provider's own unless the launcher relayed a
+signal (130, 143, 129 or 131). Window resizes and terminal suspend/resume reach
+the whole job.
+
+Known limits, each with a test or listed as untested: a terminal Ctrl-C reaches
+a driver's provider twice, once from the terminal and once from the supervisor
+shell (`test_driver_keyboard_interrupt_reaches_the_provider_exactly_once`,
+expected failure, owned by DevOps). A provider that suspends only its own process
+leaves the waiting launcher running, so the shell regains the terminal only on
+a second Ctrl-Z (untested with a real TUI).
+
+## Nesting
+
+A launch from inside a driver or interactive scope gets a new sibling scope in
+`lu-driver.slice`; its memory then counts against its own scope, not the
+parent's. A launch from inside `lu-dispatch.slice` is refused as
+`inside-dispatch-slice` before any manager contact, so a worker cannot leave its
+slice's cap; an unreadable caller cgroup is refused as
+`caller-cgroup-unavailable`. Dispatch from an interactive session behaves as from
+a driver: bounded worker scopes start, and the unbounded fallback is refused.
 
 ## Entry marker ownership
 
@@ -42,8 +107,10 @@ child's status even if a sibling removed or hid the former pathname.
 Configuration or containment verification failures write a refusal marker and
 exit 6; the waiting launcher preserves that refusal without publishing a
 successor-start failure. An absent verified/refusal marker is
-`scope-start-failed`. Only a supervisory successor with a captured predecessor
-generation publishes that status, after refusal and before exit 6. This path
+`scope-start-failed`. Only a supervisory driver successor with a captured
+predecessor generation publishes that status, after refusal and before exit 6;
+an interactive session never publishes, even with inherited supervisor
+variables. This path
 never prepares a provider, claims a lease, closes a lease, or retries entry.
 See [supervisory wake status](session-supervisor.md#supervisory-wake-ownership-and-failure-status).
 
@@ -130,7 +197,7 @@ drop-ins, a runtime override would keep the cap in force until reboot. The
 deployment tooling reinstalls the limits drop-in on its next run, so disable
 that first if the rollback must stick.
 
-Inside a driver scope, `scripts/lib/driver_scope.sh` exports
+Inside a driver or interactive scope, `scripts/lib/driver_scope.sh` exports
 `PYTEST_XDIST_AUTO_NUM_WORKERS` capped at `LU_DRIVER_PYTEST_MAX_WORKERS` (set per
 deployment, conservative generic fallback; an inherited value from zero up to the
 cap is kept), so `pytest -n auto` and `-n logical` stay within the cap. An explicit
@@ -144,8 +211,9 @@ kernel OOM victim, but does not guarantee which process survives. If the
 provider dies, the existing launcher closes its lease and preserves its exit
 status. If the launcher dies, renewal stops when its owner is gone and the
 existing TTL/expiry path recovers the lease; no early reclaim is introduced.
+An interactive session has no lease; its exit status is the provider's.
 
-Plain dispatch fallback inside a driver scope is refused with
+Plain dispatch fallback inside a driver or interactive scope is refused with
 `fallback-refused: inside-driver-scope`. No harness has a validated bounded
 fallback exemption. Missing caller cgroup evidence also refuses fallback.
 This caller check precedes `allow_fallback`, so missing or unverifiable cgroup
@@ -173,27 +241,38 @@ observations, not reservations or guarantees against concurrent growth.
 
 ## Containment proof and residuals
 
-A soak must first verify a test scope's finite memory and swap limits before
-starting a synthetic allocator (small synthetic limits with swap set to zero).
+The live soak is an opt-in test, never part of CI:
+`LU_RUN_DRIVER_SCOPE_SOAK=1 .venv/bin/python -m pytest -q
+tests/test_launcher_driver_scope.py::test_bounded_live_scope_soak
+tests/test_launcher_interactive_scope.py::test_bounded_live_interactive_scope_soak`.
+It uses a throwaway scope with `MemoryHigh` 128M, `MemoryMax` 192M and swap 0,
+refuses to start while the one-minute load is above 18, while another soak holds
+its lock (one run at a time) or without twice the scope's maximum free in the
+`lu.slice` pool, so it never fills the live pool. The synthetic allocator reads
+its scope's three limits back and checks them before it allocates anything.
 Use the real launcher with a synthetic provider; raise only the hog's OOM
-score so the cleanup shell is likely to survive. Require SIGKILL, an increase
-in the scope's `memory.events` `oom_kill`, normal launcher cleanup and the
-provider's exit status. Compare all four shared services' MainPID, memory,
-invocation ID, restart count and OOM counters before/after. A memory sample
-can vary during normal service activity; identity/restart/OOM evidence must
-remain unchanged. Never run the allocator outside its verified finite scope.
+score so the cleanup shell is likely to survive. Require SIGKILL, an OOM record
+for the exact unit, normal launcher cleanup and the provider's exit status.
+Compare all four shared services' MainPID, memory, invocation ID, restart count
+and OOM counters before/after. A memory sample can vary during normal service
+activity; identity/restart/OOM evidence must remain unchanged. Never run the
+allocator outside its verified finite scope.
 
 The four services are siblings in `app.slice`, outside driver and worker
-scopes. Without the separately approved shared parent cap, aggregate driver
+scopes. Without the separately approved shared parent cap, aggregate session
 and worker growth can still cause global pressure. A future parent OOM can
-choose another driver or worker before the growing driver's own maximum is
-reached; per-driver maxima do not prevent sibling victims at a parent limit.
+choose another driver, interactive session or worker before the growing
+session's own maximum is reached; per-session maxima do not prevent sibling
+victims at a parent limit. Interactive sessions now share the `lu.slice` pool
+with drivers and workers, so this pool-level failure mode applies to them as
+well: an interactive session can be the victim of another session's growth.
 Test parent saturation separately after its cap is approved.
 
-Interactive shells and terminal-multiplexer panes started outside a launcher,
-including new panes created through an existing multiplexer server, remain
-uncontained. The operator owns that residual. Per-driver containment does not
-complete the whole issue denominator.
+Escape classes remain uncontained: login shells, terminal-multiplexer panes
+started outside a launcher (including new panes created through an existing
+multiplexer server) and ad hoc commands run from them. The operator owns that
+residual. Repository detached jobs are a separate step of #9624. Per-session
+containment does not complete the whole issue denominator.
 
 References: [systemd-run](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd-run.xml),
 [memory controls](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.resource-control.xml),

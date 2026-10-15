@@ -3,6 +3,15 @@
 # route, credential, endpoint, and binary decision; this file owns only the
 # uniform public CLI and driver lifecycle.
 
+# Fixed arguments a public wrapper adds to its caller's argv: launcher options
+# (the CTO lane, the kimicc harness) and leading provider arguments (the bio
+# agent). A wrapper sets them after sourcing this file. Scope re-entry and
+# supervisory successors replay the caller's argv alone, so the wrapper adds
+# them exactly once (#9624). Sourcing resets them; arrays are never inherited.
+unset LC_WRAPPER_LAUNCHER_ARGS LC_WRAPPER_PROVIDER_ARGS
+LC_WRAPPER_LAUNCHER_ARGS=()
+LC_WRAPPER_PROVIDER_ARGS=()
+
 launcher_usage() {
   if [ "$LC_PROVIDER" = muse ]; then
     # shellcheck source=scripts/launchers/muse.sh
@@ -1512,7 +1521,8 @@ launcher_main() {
   LC_MODE="$2"
   LC_PROVIDER_CANARY_RAN=0
   shift 2
-  # Consumed by session_supervisor_exec_successor in the sourced helper.
+  # The caller's argv, without the wrapper's fixed arguments, which the
+  # replayed wrapper adds again. Consumed by session_supervisor_exec_successor.
   # shellcheck disable=SC2034
   LC_DRIVER_ORIGINAL_ARGS=("$@")
   # Re-entry must retain --force for the first actual lease acquisition;
@@ -1529,7 +1539,11 @@ launcher_main() {
   fi
   launcher_clear_foreign_route_state
   launcher_defaults
-  launcher_parse "$@"
+  launcher_parse ${LC_WRAPPER_LAUNCHER_ARGS[@]+"${LC_WRAPPER_LAUNCHER_ARGS[@]}"} "$@"
+  LC_FORWARD_ARGS=(
+    ${LC_WRAPPER_PROVIDER_ARGS[@]+"${LC_WRAPPER_PROVIDER_ARGS[@]}"}
+    ${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}
+  )
   if [ "$LC_PROVIDER" = muse ] && [ "$LC_MODEL" != muse-wonder-full-1.0 ]; then
     launcher_error 'MUSE_MODEL_UNCERTIFIED'
     exit 4
@@ -1559,15 +1573,18 @@ launcher_main() {
   launcher_validate_driver_certification
   # Usage errors and certification refusals come first; then the weekly cap.
   launcher_claude_cap_guard
-  # Every admitted driver path enters before expensive preparation, import and lease.
-  if [ "$LC_MODE" = driver ]; then
-    if [ "$LC_DRY_RUN" = 1 ]; then
+  # Every admitted session, driver or interactive, enters before expensive
+  # preparation, import and lease (#9624).
+  if [ "$LC_DRY_RUN" = 1 ]; then
+    if [ "$LC_MODE" = driver ]; then
       printf 'LAUNCHER_DRY_RUN=1: would enter a verified per-driver memory-limited scope in lu-driver.slice\n'
     else
-      # shellcheck source=scripts/lib/driver_scope.sh
-      source "$LC_ROOT/scripts/lib/driver_scope.sh" || exit 6
-      launcher_enter_driver_scope || exit 6
+      printf 'LAUNCHER_DRY_RUN=1: would enter a verified per-session memory-limited scope in lu-driver.slice\n'
     fi
+  else
+    # shellcheck source=scripts/lib/driver_scope.sh
+    source "$LC_ROOT/scripts/lib/driver_scope.sh" || exit 6
+    launcher_enter_driver_scope || exit 6
   fi
   # Before any adapter check, plane probe or deploy: no core, no launch.
   launcher_load_rules_core

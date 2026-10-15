@@ -59,6 +59,15 @@ def copy_launcher_sources(root: Path) -> None:
             destination.write_bytes(blob.stdout)
 
 
+def tracked_launcher_wrappers() -> tuple[str, ...]:
+    """Every tracked public wrapper: ``start-*.sh`` at the root and in ``scripts/``."""
+    listed = subprocess.run(
+        ["git", "ls-files", "-z", "--", "start-*.sh", "scripts/start-*.sh"],
+        cwd=_REPO_ROOT, capture_output=True, text=True, check=True, timeout=30,
+    )
+    return tuple(sorted(raw for raw in listed.stdout.split("\0") if raw))
+
+
 def copy_interactive_launcher_checkout(root: Path) -> None:
     """Copy real launcher/deploy sources so production's root lookup stays in tmp."""
     copy_launcher_sources(root)
