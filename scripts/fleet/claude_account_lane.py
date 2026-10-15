@@ -358,19 +358,36 @@ def capacity_verdict(payload: Mapping[str, Any] | None, *, account: ClaudeAccoun
 
     The capacity owner's class (:func:`credit_lane.routing_facts`) of the
     claude lane record read as ``account``: ``avoid`` is hot, ``verified`` is
-    healthy, and any unknown or stale reading is unknown. An unresolved
-    account is unknown whatever the lane row says. Every decision consumer
-    reaches the same verdict.
+    healthy, and any unknown reading is unknown. Only a fresh reading is hot or
+    healthy: a stale meter is advisory and reads unknown, as the dispatch guard
+    (a stale account meter never substitutes), reviewer selection
+    (``review_capacity`` keeps stale allowance advisory) and the plan-headroom
+    stop (only a fresh reading blocks) treat it. A route fact no meter owns
+    (ineligible, unhealthy, NEED_LOGIN, a runtime block) stays hot at any
+    freshness. An unresolved account is unknown whatever the lane row says.
+    Every decision consumer reaches the same verdict.
     """
     from scripts.fleet import credit_lane
 
     if not require_account(account).resolved:
         return UNKNOWN
     diagnostics = payload.get("diagnostics") if isinstance(payload, Mapping) else None
+    record = lane_record(payload, "claude", account=account)
     facts = credit_lane.routing_facts(
         "claude",
-        lane_record(payload, "claude", account=account),
+        record,
         model=None,
         snapshot_metadata=diagnostics if isinstance(diagnostics, Mapping) else None,
     )
+    runtime = record.get("runtime")
+    route_refusal = (
+        record.get("eligible") is False
+        or facts.health == credit_lane.UNHEALTHY
+        or "NEED_LOGIN" in (record.get("login_state"), record.get("probe_state"))
+        or (isinstance(runtime, Mapping) and bool(runtime.get("headroom_blocked")))
+    )
+    if facts.capacity == credit_lane.CAPACITY_AVOID and route_refusal:
+        return HOT
+    if facts.observation_freshness != credit_lane.FRESH:
+        return UNKNOWN
     return {credit_lane.CAPACITY_AVOID: HOT, credit_lane.CAPACITY_VERIFIED: HEALTHY}.get(facts.capacity, UNKNOWN)

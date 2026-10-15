@@ -42,7 +42,7 @@ from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPO
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
 from scripts.fleet import credit_lane
-from scripts.fleet.claude_account_lane import ClaudeAccount
+from scripts.fleet.claude_account_lane import ClaudeAccount, require_account, select_account
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
 from scripts.review.capacity import ReviewCapacity, review_capacity
 from scripts.review.model_catalog import (
@@ -501,13 +501,20 @@ class ResolverInputs:
     author_models: tuple[str | None, ...] = ()
     author_task_models: tuple[str, ...] = ()
     # The account a claude-route reviewer runs as: the account part of its
-    # route key (#10619, #10630). The plan-headroom stop reads the claude
-    # lane's usage as that account, and a caller's full ``routing_snapshot``
-    # must be its ``claude_account_lane.select_account`` view; an unresolved
-    # account excludes every claude-route seat and no other. None names no
-    # account (a structural check, which no quota decides): the claude lane's
-    # usage then reads as unknown and never blocks.
-    claude_account: ClaudeAccount | None = None
+    # route key (#10619, #10630). Required, with no default: a construction
+    # without a ``ClaudeAccount`` raises ``TypeError``. The resolver reads
+    # ``routing_snapshot`` as this account's ``claude_account_lane.select_account``
+    # view (a caller may pass the raw payload or that view), and the
+    # plan-headroom stop reads the claude lane's usage as it. An unresolved
+    # account excludes every claude-route seat and no other.
+    claude_account: ClaudeAccount = field(kw_only=True)
+    # A structural check that no quota decides (authoring feasibility, verdict
+    # qualification). The account still decides: an unresolved one removes the
+    # claude seats. The claude lane's plan-headroom usage reads unknown.
+    structural: bool = field(default=False, kw_only=True)
+
+    def __post_init__(self) -> None:
+        require_account(self.claude_account)
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -636,16 +643,17 @@ _DUAL_FAMILY_QUORUM_RULE = (
 )
 
 
-def _health_of(candidate: ReviewerCandidate, snapshot: Mapping[str, str] | None) -> str | None:
-    if not snapshot:
+def _health_of(candidate: ReviewerCandidate, health: Mapping[str, str] | None) -> str | None:
+    """``candidate``'s status in a :func:`normalize_routing_snapshot` route-health map."""
+    if not health:
         return None
     return (
-        snapshot.get(candidate.name)
-        or snapshot.get(candidate.route)
-        or snapshot.get(candidate.concrete_model)
-        or snapshot.get(candidate.family)
+        health.get(candidate.name)
+        or health.get(candidate.route)
+        or health.get(candidate.concrete_model)
+        or health.get(candidate.family)
         or next(
-            (snapshot[key] for key in sorted(candidate.health_keys) if key in snapshot),
+            (health[key] for key in sorted(candidate.health_keys) if key in health),
             None,
         )
     )
@@ -682,13 +690,14 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
-    # ``inputs`` None: a bare exclusion probe (tests) names no account.
-    account = getattr(inputs, "claude_account", None)
-    if candidate.route == "claude" and account is not None and not account.resolved:
+    account = inputs.claude_account
+    if candidate.route == "claude" and not account.resolved:
         return f"claude account unresolved: {account.refusal}"
     from scripts.agent_runtime.model_pause import account_used_pct, refusal_reason
 
-    paused = refusal_reason(candidate_dispatch_model(candidate), used_pct=account_used_pct(account))
+    paused = refusal_reason(
+        candidate_dispatch_model(candidate), used_pct=account_used_pct(None if inputs.structural else account)
+    )
     if paused:
         return paused
     # Custom ladders and pins cannot fabricate review authority for a
@@ -842,6 +851,22 @@ def _author_family_exclusion(candidate: ReviewerCandidate, family: str, health: 
     return result(*exclusion) if exclusion else None
 
 
+def _account_view(inputs: ResolverInputs) -> ResolverInputs:
+    """``inputs`` with ``routing_snapshot`` read as ``inputs.claude_account`` (#10630).
+
+    The claude lane of a routing-budget payload is the default account's meter;
+    :func:`claude_account_lane.select_account` gives the named account's view
+    (an unresolved account reads an unknown meter). A malformed payload raises
+    ``ValueError`` first, exactly as :func:`normalize_routing_snapshot` does.
+    """
+    snapshot = inputs.routing_snapshot
+    normalize_routing_snapshot(snapshot)
+    if not isinstance(snapshot, Mapping) or not snapshot:
+        return inputs
+    view, _ = select_account(snapshot, account=inputs.claude_account)
+    return replace(inputs, routing_snapshot=view)
+
+
 def evaluate_candidate(
     candidate: ReviewerCandidate,
     inputs: ResolverInputs,
@@ -856,7 +881,19 @@ def evaluate_candidate(
     candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
     ``red_team`` relaxes authorship independence only; callers must first
     validate an explicit adversarial prompt bound to the completed review.
+    The routing snapshot is read as ``inputs.claude_account`` (#10630).
     """
+    return _evaluate_candidate(candidate, _account_view(inputs), author_family=author_family, review_mode=review_mode)
+
+
+def _evaluate_candidate(
+    candidate: ReviewerCandidate,
+    inputs: ResolverInputs,
+    *,
+    author_family: str | None,
+    review_mode: str,
+) -> CandidateResult:
+    """:func:`evaluate_candidate` on inputs whose snapshot is already the account's view."""
     if review_mode not in {"cross_family", "red_team"}:
         raise ValueError("unsupported review mode")
     # Direct dispatch admission calls this without walking a ladder. The floor
@@ -1304,7 +1341,8 @@ def resolve_reviewer(
             # gate below before it can be selected.
             active_ladder = (*active_ladder, (pinned_definition,))
     try:
-        normalize_routing_snapshot(inputs.routing_snapshot)
+        # #10630: every reading below judges the claude lane as ``inputs.claude_account``.
+        inputs = _account_view(inputs)
     except ValueError as exc:
         return resolution_type(
             selected=None,
@@ -1436,7 +1474,7 @@ def resolve_reviewer(
 
     for rung_index, rung in enumerate(active_ladder):
         for candidate in rung:
-            result = evaluate_candidate(candidate, inputs, author_family=author_family, review_mode=review_mode)
+            result = _evaluate_candidate(candidate, inputs, author_family=author_family, review_mode=review_mode)
             if result.status == "eligible":
                 eligible_quota_buckets.add(candidate.quota_bucket)
             if result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
@@ -1486,7 +1524,8 @@ def resolve_reviewer(
             candidate.name
             for entries in eligible_by_fit_and_tier.values()
             for candidate, _, _ in entries
-            if evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
+            if _evaluate_candidate(candidate, inputs, author_family=author_family, review_mode="cross_family").status
+            == "eligible"
         }
         if outside_family:
             eligible_by_fit_and_tier = {
@@ -1650,7 +1689,9 @@ def resolve_reviewer(
         for rung in REVIEW_LADDERS.get(inputs.risk, ()):
             for candidate in rung:
                 if candidate.name not in reasons:
-                    excluded = evaluate_candidate(candidate, inputs, author_family=author_family)
+                    excluded = _evaluate_candidate(
+                        candidate, inputs, author_family=author_family, review_mode="cross_family"
+                    )
                     reasons[candidate.name] = excluded.reason or "excluded from dispatch review ladder"
         failure = "REVIEW_CAPACITY_UNAVAILABLE: " + "; ".join(f"{name}: {reason}" for name, reason in reasons.items())
     elif (

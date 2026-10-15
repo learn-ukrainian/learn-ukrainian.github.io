@@ -11,6 +11,7 @@ from scripts.fleet import credit_lane
 from scripts.review import closeout_cli
 from scripts.review.capacity import review_capacity, review_capacity_action
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 def snapshot(*, remaining=54, short=96, stale=False, **lane):
@@ -34,7 +35,7 @@ def snapshot(*, remaining=54, short=96, stale=False, **lane):
 
 
 def inputs(data):
-    return ResolverInputs(author_model="gpt-6.1-sol", risk="critical", language_lane=True, routing_snapshot=data)
+    return ResolverInputs(author_model="gpt-6.1-sol", risk="critical", language_lane=True, routing_snapshot=data, claude_account=HOST_ACCOUNT)
 
 
 def test_c6b_pace_only_selects_opus_without_attesting_missing_health():
@@ -122,7 +123,7 @@ def test_stale_or_missing_allowance_is_advisory_and_recorded(data):
 def test_pace_pressure_orders_only_equal_fits():
     data = snapshot()
     data["agents"]["codex"] = {"status": "cool", "remaining_pct": 40}
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data))
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
     assert result.selected.concrete_model == "gpt-6.1-sol"
     # Suitability/tier remains ahead of pressure: Sonnet cannot replace Opus at critical.
     assert resolve_reviewer(inputs(data)).selected.concrete_model == "claude-opus-5-5"
@@ -131,7 +132,7 @@ def test_pace_pressure_orders_only_equal_fits():
 def test_10016_known_capacity_with_pace_pressure_precedes_unknown_capacity():
     data = snapshot(remaining=80, status="cool", health={"healthy": True})
     data["agents"]["claude"]["codexbar"]["weekly_pace_delta_pct"] = 1
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data))
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
 
     assert result.selected.concrete_model == "claude-opus-5-5"
     assert result.selected.health == "healthy"
@@ -256,7 +257,7 @@ def test_legacy_normalization_keeps_writer_policy_and_hot_orders_equal_review_fi
 
     data = {"claude": "hot", "codex": "healthy"}
     assert normalize_routing_snapshot(data) == {"claude": "near_cap", "codex": "healthy"}
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data))
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
     assert result.selected.concrete_model == "gpt-6.1-sol"
     assert next(item for item in result.trace if item.concrete_model == "claude-opus-5-5").status == "eligible"
 

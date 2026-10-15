@@ -653,9 +653,9 @@ def _resolve_review_target(
     if review_mode == "red_team":
         refusal = red_team_seat_refusal(
             (requested_model,),
-            author_models=facts.resolver_inputs(risk=risk).author_models,
+            author_models=facts.author_models,
             author_model=author_model,
-            author_task_models=facts.resolver_inputs(risk=risk).author_task_models,
+            author_task_models=facts.author_task_models,
         )
         if refusal:
             raise ReviewAdmissionRefused(refusal)

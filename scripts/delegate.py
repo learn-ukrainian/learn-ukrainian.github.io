@@ -16236,8 +16236,12 @@ def _authoring_require_route(
     from scripts.review.security_paths import effective_review_risk
 
     risk = str(planned_risk or AUTHORING_REVIEW_DEFAULT_RISK).strip().casefold()
+    # A claude reviewer would run as the account a review dispatch resolves and binds (#10630).
+    claude_account = claude_account_lane.resolve_route_account(None, strict=False)
     try:
-        resolution = structural_review_route(facts, risk=risk, review_mode=review_mode)
+        resolution = structural_review_route(
+            facts, risk=risk, review_mode=review_mode, claude_account=claude_account
+        )
     except ModelCatalogError as exc:
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog unavailable ({exc}).", record

@@ -186,7 +186,7 @@ def test_formal_review_and_advice_roles_refused(activity):
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 def test_reviewer_resolver_never_selects_haiku(profile, risk):
     result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk,
-                                            review_profile=profile, pinned_candidate=HAIKU))
+                                            review_profile=profile, pinned_candidate=HAIKU, claude_account=HOST_ACCOUNT))
     assert result.selected is None
     assert all(row.model_id != HAIKU for row in result.trace)
 
@@ -198,7 +198,7 @@ def test_custom_review_metadata_cannot_grant_haiku_authority(formal, risk):
                         invocation=f"dispatch --agent claude --model {HAIKU}",
                         model_roles=frozenset({"routine_review", "critical_review"}))
     result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk,
-                                            formal_review=formal), ladder=((candidate,),))
+                                            formal_review=formal, claude_account=HOST_ACCOUNT), ladder=((candidate,),))
     assert result.selected is None
     assert result.trace and all(
         "mechanical-only" in row.reason or "formal review at high risk" in row.reason

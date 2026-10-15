@@ -28,6 +28,7 @@ from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefuse
 from scripts.fleet import claude_account_lane
 from scripts.fleet.claude_account_lane import HEALTHY, HOT, UNKNOWN, ClaudeAccount
 from scripts.review import closeout_cli
+from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 from tests.test_delegate import _bind_claude_account_b, _default_account_file
 from tests.test_delegate_check_budget import (
@@ -114,6 +115,7 @@ def test_mypy_refuses_a_claude_reading_without_a_named_account(tmp_path):
     snippet.write_text(
         "from scripts.agent_runtime.model_pause import account_used_pct, routing_budget_used_pct\n"
         "from scripts.fleet.claude_account_lane import lane_record, select_account\n"
+        "from scripts.review.reviewer_resolver import ResolverInputs\n"
         "\n"
         "payload: dict = {}\n"
         "select_account(payload)\n"
@@ -121,6 +123,8 @@ def test_mypy_refuses_a_claude_reading_without_a_named_account(tmp_path):
         'lane_record(payload, "claude", account=None)\n'
         'routing_budget_used_pct("claude")\n'
         'account_used_pct("b")\n'
+        'ResolverInputs(author_model="gpt-6.1-sol")\n'
+        'ResolverInputs(author_model="gpt-6.1-sol", claude_account="b")\n'
     )
     result = subprocess.run(
         [
@@ -146,7 +150,83 @@ def test_mypy_refuses_a_claude_reading_without_a_named_account(tmp_path):
         'Argument "account" to "lane_record" has incompatible type "None"; expected "ClaudeAccount"  [arg-type]',
         'Missing named argument "account" for "routing_budget_used_pct"  [call-arg]',
         'Argument 1 to "account_used_pct" has incompatible type "str"; expected "ClaudeAccount | None"  [arg-type]',
+        'Missing named argument "claude_account" for "ResolverInputs"  [call-arg]',
+        'Argument "claude_account" to "ResolverInputs" has incompatible type "str"; expected "ClaudeAccount"  [arg-type]',
     ]
+
+
+# --- row 1 at the public resolver: ResolverInputs names its account, and the resolver reads it --
+
+
+def _reviewer_inputs(raw: dict, route_account: object) -> ResolverInputs:
+    return ResolverInputs(
+        author_model="gpt-6.1-sol",
+        risk="critical",
+        owned_paths=("ordinary.py",),
+        routing_snapshot=raw,
+        claude_account=route_account,
+    )
+
+
+@pytest.mark.parametrize(
+    ("default_lane", "b_left", "verdict"),
+    [("healthy", 0.5, HOT), ("near_cap", 89.0, HEALTHY)],
+    ids=["b_hot_while_the_lane_row_is_healthy", "b_healthy_while_the_lane_row_is_near_cap"],
+)
+def test_the_resolver_judges_claude_on_the_named_accounts_meter(default_lane, b_left, verdict):
+    """Review of e98e30c5 finding 1: the raw snapshot plus account b must be judged on b's row, both ways."""
+    raw = _accounts_budget(_default_claude_lane(default_lane), {"b": _account_row(b_left)})
+    assert claude_account_lane.capacity_verdict(raw, account=account("b")) == verdict
+
+    resolution = resolve_reviewer(_reviewer_inputs(raw, account("b")))
+    claude = next(entry for entry in resolution.trace if entry.route == "claude")
+
+    assert (resolution.selected.route == "claude") is (verdict == HEALTHY)
+    assert claude.status == ("selected" if verdict == HEALTHY else "excluded")
+    direct = evaluate_candidate(REVIEW_CANDIDATES[claude.name], _reviewer_inputs(raw, account("b")))
+    assert direct.status == ("eligible" if verdict == HEALTHY else "excluded")
+    # The caller's select_account view is the same input: the view is a fixed point.
+    view, _ = claude_account_lane.select_account(raw, account=account("b"))
+    assert resolve_reviewer(_reviewer_inputs(view, account("b"))).selected.name == resolution.selected.name
+
+
+@pytest.mark.parametrize("route_account", ["missing", None, "a", "b"])
+def test_resolver_inputs_without_a_named_account_fail_loudly(route_account):
+    kwargs = {} if route_account == "missing" else {"claude_account": route_account}
+    with pytest.raises(TypeError, match=r"claude_account|named ClaudeAccount"):
+        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", **kwargs)
+
+
+def test_an_unresolved_default_account_file_removes_every_claude_seat_from_the_resolver(tmp_path, monkeypatch):
+    raw = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(89.0)})
+    _default_account_file(tmp_path, monkeypatch, b"c\n")
+    route_account = claude_account_lane.resolve_route_account(None, strict=False)
+    assert route_account == unresolved("claude_account_default_file_invalid")
+
+    resolution = resolve_reviewer(_reviewer_inputs(raw, route_account))
+
+    assert resolution.selected is not None and resolution.selected.route != "claude"
+    claude = [entry for entry in resolution.trace if entry.route == "claude"]
+    assert claude and all(entry.status == "excluded" for entry in claude)
+    assert {entry.reason for entry in claude} == {"claude account unresolved: claude_account_default_file_invalid"}
+
+
+@pytest.mark.parametrize("route_account", [HOST_ACCOUNT, account("b"), unresolved("claude_account_unknown")])
+def test_the_account_view_is_a_fixed_point(route_account):
+    """The resolver reads its snapshot through select_account; a caller's view must read the same."""
+    for b_row in (_account_row(0.5), _account_row(89.0, status="stale"), _UNVERIFIED_ROW):
+        raw = _accounts_budget(_default_claude_lane("near_cap"), {"b": b_row})
+        raw["agents"]["claude"]["runtime"] = {"ok": 1, "headroom_blocked": True, "rate_limited": 2}
+        view, _ = claude_account_lane.select_account(raw, account=route_account)
+        again, _ = claude_account_lane.select_account(view, account=route_account)
+        # The same reading; only the clock-derived pace fields of a recomputed account view may move.
+        decided = ("status", "remaining_pct", "burn_pct_7d", "freshness", "health", "runtime", "scheduler")
+        claude, claude_again = view["agents"]["claude"], again["agents"]["claude"]
+        assert {key: claude_again.get(key) for key in decided} == {key: claude.get(key) for key in decided}
+        assert {**again, "agents": {}} == {**view, "agents": {}}
+        assert claude_account_lane.capacity_verdict(again, account=route_account) == (
+            claude_account_lane.capacity_verdict(view, account=route_account)
+        )
 
 
 # --- row 5: every final claude route resolves and binds its account before admission ----------
@@ -278,9 +358,28 @@ AGREEMENT_CASES = {
     "b_hot_while_a_is_healthy": ("healthy", _account_row(0.5), b"b\n", HOT),
     "b_unknown_meter": ("healthy", _UNVERIFIED_ROW, b"b\n", UNKNOWN),
     "b_without_a_row": ("healthy", None, b"b\n", UNKNOWN),
+    # A stale meter is advisory whatever it reads: only a fresh reading is hot or healthy.
+    "b_stale_near_cap": ("healthy", _account_row(0.5, status="stale"), b"b\n", UNKNOWN),
+    "b_stale_with_headroom": ("near_cap", _account_row(89.0, status="stale"), b"b\n", UNKNOWN),
     "unresolved_default_file": ("healthy", _account_row(89.0), b"c\n", UNKNOWN),
     "unbound_b": ("near_cap", _account_row(89.0), b"unbound-b", UNKNOWN),
 }
+
+
+@pytest.mark.parametrize(
+    ("route_fact", "verdict"),
+    [
+        ({}, UNKNOWN),
+        ({"eligible": False}, HOT),
+        ({"health": {"healthy": False, "consecutive_failures": 3}}, HOT),
+    ],
+)
+def test_a_stale_meter_is_advisory_but_a_route_fact_still_binds(route_fact, verdict):
+    """The owner's rule: only a fresh reading is hot or healthy; a route fact no meter owns stays hot."""
+    for b_left in (0.5, 89.0):
+        budget = _agreement_snapshot("healthy", _account_row(b_left, status="stale"))
+        budget["agents"]["claude"].update(route_fact)
+        assert claude_account_lane.capacity_verdict(budget, account=account("b")) == verdict
 
 
 def _route_key_for(tmp_path, monkeypatch, default_file: bytes | None) -> ClaudeAccount:
@@ -314,6 +413,9 @@ def _guard_verdict(monkeypatch, capsys, budget: dict, route_account: ClaudeAccou
     if seat != "claude":
         assert "HARD AUTO-SUBSTITUTE" in err
         return HOT
+    if f"ROUTING CHECK ADVISORY (stale claude account {route_account.label} meter" in err:
+        # A stale account meter keeps the seat with no hard substitution: the guard's advisory verdict.
+        return UNKNOWN
     if sink["capacity"] == "verified":
         assert "ROUTING CHECK UNKNOWN" not in err
         return HEALTHY

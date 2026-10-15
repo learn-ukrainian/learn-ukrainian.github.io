@@ -85,7 +85,7 @@ def test_reviewer_resolver_excludes_a_paused_candidate(tmp_path, monkeypatch) ->
     future = (datetime.now(UTC) + timedelta(days=1)).isoformat()
     path.write_text(json.dumps({"pauses": [{"pattern": model, "until": future}]}))
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
-    reason = rr._hard_exclusion_reason(candidate, None)
+    reason = rr._hard_exclusion_reason(candidate, rr.ResolverInputs(author_model="gpt-6.1-sol", claude_account=HOST_ACCOUNT))
     assert reason and "MODEL_PAUSED" in reason
 
 

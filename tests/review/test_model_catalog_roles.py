@@ -24,6 +24,7 @@ from scripts.review.model_catalog import (
 )
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
+from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.review.test_model_catalog import APPROVED_BASELINE, APPROVED_INPUTS, BASELINE, CAPTURE, FIXTURE, INPUTS
 
 
@@ -405,7 +406,7 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
                         now=CAPTURE["FIXED_NOW"], usage_dir=tmp_path / "usage"))
     monkeypatch.setattr(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief,
                         now=CAPTURE["FIXED_NOW"]))
-    actual = CAPTURE["observed"](lambda: resolve_reviewer(ResolverInputs(**case)))
+    actual = CAPTURE["observed"](lambda: resolve_reviewer(ResolverInputs(**case, claude_account=HOST_ACCOUNT)))
     assert json.loads(CAPTURE["encode"](actual)) == APPROVED_BASELINE["reviewer"][index]
 
 

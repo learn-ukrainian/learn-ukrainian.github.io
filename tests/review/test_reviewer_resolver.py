@@ -14,6 +14,7 @@ from scripts.review.reviewer_resolver import (
     resolve_reviewer,
     review_task_id_comparison_keys,
 )
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
 
@@ -60,7 +61,7 @@ def test_different_task_comparison_keys_do_not_intersect():
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
 @pytest.mark.parametrize("entrypoint", ["evaluate", "pin", "ladder"])
 def test_gemini_risk_boundary(profile, risk, entrypoint):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", review_profile=profile, risk=risk)
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", review_profile=profile, risk=risk, claude_account=HOST_ACCOUNT)
     if entrypoint == "evaluate":
         eligible = evaluate_candidate(GEMINI, inputs).status == "eligible"
     else:
@@ -76,7 +77,7 @@ def test_gemini_risk_boundary(profile, risk, entrypoint):
     "path", ["scripts/review/reviewer_resolver.py", "scripts/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"]
 )
 def test_gemini_security_paths_override_declared_risk(risk, scope, path):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **{scope: (path,)})
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **{scope: (path,)}, claude_account=HOST_ACCOUNT)
     result = evaluate_candidate(GEMINI, inputs)
     assert result.status == "excluded"
     assert "security-sensitive" in result.reason
@@ -88,18 +89,18 @@ def test_custom_roles_cannot_grant_gemini_high_risk(formal):
     forged = replace(GEMINI, model_roles=frozenset({"critical_review", "standard_review"}))
     assert (
         evaluate_candidate(
-            forged, ResolverInputs(author_model="gpt-6.1-sol", risk="critical", formal_review=formal)
+            forged, ResolverInputs(author_model="gpt-6.1-sol", risk="critical", formal_review=formal, claude_account=HOST_ACCOUNT)
         ).status
         == "excluded"
     )
 
 
 def test_gemini_independence_and_unhealthy_route():
-    same = evaluate_candidate(GEMINI, ResolverInputs(author_model="gemini-3.8-flash-high", risk="low"))
+    same = evaluate_candidate(GEMINI, ResolverInputs(author_model="gemini-3.8-flash-high", risk="low", claude_account=HOST_ACCOUNT))
     assert same.status == "excluded"
     assert "same family" in same.reason
     unhealthy = evaluate_candidate(
-        GEMINI, ResolverInputs(author_model="gpt-6.1-sol", risk="low", routing_snapshot={"agy": "unhealthy"})
+        GEMINI, ResolverInputs(author_model="gpt-6.1-sol", risk="low", routing_snapshot={"agy": "unhealthy"}, claude_account=HOST_ACCOUNT)
     )
     assert unhealthy.status == "excluded"
 
@@ -108,7 +109,7 @@ def test_gemini_independence_and_unhealthy_route():
 def test_automatic_ladder_can_use_gemini_when_other_routes_unavailable(risk):
     snapshot = {route: "unhealthy" for route in {candidate.route for candidate in REVIEW_CANDIDATES.values()}}
     snapshot["agy"] = "healthy"
-    result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot))
+    result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
     assert (result.selected.name if result.selected else None) == (GEMINI.name if risk in {"low", "medium"} else None)
 
 
@@ -124,7 +125,7 @@ def test_native_agy_suitability_precedes_grok_when_frontier_budgets_near_cap(ris
                     for route in ("claude", "codex")
                 },
                 "diagnostics": {"stale": False},
-            },
+            }, claude_account=HOST_ACCOUNT,
         )
     )
     assert result.selected.name == GEMINI.name
@@ -144,7 +145,7 @@ def test_native_agy_suitability_precedes_grok_when_frontier_budgets_near_cap(ris
 )
 def test_native_endpoint_identity_cannot_be_forged(field, value):
     forged = replace(GEMINI, **{field: value})
-    result = evaluate_candidate(forged, ResolverInputs(author_model="gpt-6.1-sol", risk="low"))
+    result = evaluate_candidate(forged, ResolverInputs(author_model="gpt-6.1-sol", risk="low", claude_account=HOST_ACCOUNT))
     assert result.status == "excluded"
     assert "endpoint identity" in result.reason
 
@@ -163,7 +164,7 @@ def test_red_team_prefers_outside_family_before_same_family(outside_available):
     opus = REVIEW_CANDIDATES["claude-opus-5-5"]
     snapshot = {"claude": "healthy" if outside_available else "unhealthy"}
     result = resolve_reviewer(
-        ResolverInputs(author_model="gpt-6-luna", risk="critical", routing_snapshot=snapshot),
+        ResolverInputs(author_model="gpt-6-luna", risk="critical", routing_snapshot=snapshot, claude_account=HOST_ACCOUNT),
         ladder=((sol,), (opus,)),
         review_mode="red_team",
     )
@@ -177,7 +178,7 @@ def test_red_team_pin_cannot_override_outside_family_preference():
         author_model="gpt-6.1-sol",
         risk="critical",
         pinned_candidate="openai_frontier",
-        pressure_override_reason="adversarial fixture",
+        pressure_override_reason="adversarial fixture", claude_account=HOST_ACCOUNT,
     )
     result = resolve_reviewer(inputs, review_mode="red_team")
     assert result.selected is None
@@ -187,12 +188,12 @@ def test_red_team_pin_cannot_override_outside_family_preference():
 @pytest.mark.parametrize(
     "inputs",
     [
-        ResolverInputs(author_model="unknown-author", risk="critical"),
+        ResolverInputs(author_model="unknown-author", risk="critical", claude_account=HOST_ACCOUNT),
         ResolverInputs(
             author_model="gpt-6.1-sol",
             risk="critical",
             subject_seats=frozenset({"codex"}),
-            routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"},
+            routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}, claude_account=HOST_ACCOUNT,
         ),
     ],
 )
@@ -202,7 +203,7 @@ def test_red_team_keeps_identity_and_subject_gates(inputs):
 
 def test_resolver_refuses_invalid_review_mode():
     with pytest.raises(ValueError, match="unsupported review mode"):
-        resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol"), review_mode="invalid")
+        resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", claude_account=HOST_ACCOUNT), review_mode="invalid")
 
 
 @pytest.mark.parametrize(
@@ -256,14 +257,14 @@ def test_red_team_seat_rule_uses_canonical_models(reviewer, authors, explicit, e
 
 def test_red_team_evaluation_refuses_same_model_before_selection():
     sol = REVIEW_CANDIDATES["openai_frontier"]
-    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6.1-sol"), review_mode="red_team")
+    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6.1-sol", claude_account=HOST_ACCOUNT), review_mode="red_team")
     assert result.status == "excluded"
     assert result.reason == "RED_TEAM_REFUSED: reviewer model equals a branch author model"
 
 
 def test_red_team_evaluation_accepts_different_same_family_model():
     sol = REVIEW_CANDIDATES["openai_frontier"]
-    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6-luna"), review_mode="red_team")
+    result = evaluate_candidate(sol, ResolverInputs(author_model="gpt-6-luna", claude_account=HOST_ACCOUNT), review_mode="red_team")
     assert result.status == "eligible"
 
 
@@ -271,7 +272,7 @@ def test_red_team_evaluation_accepts_unknown_history_with_known_author():
     sol = REVIEW_CANDIDATES["openai_frontier"]
     result = evaluate_candidate(
         sol,
-        ResolverInputs(author_model="", author_models=("gpt-6-luna", None), author_families=frozenset({"openai"})),
+        ResolverInputs(author_model="", author_models=("gpt-6-luna", None), author_families=frozenset({"openai"}), claude_account=HOST_ACCOUNT),
         review_mode="red_team",
     )
     assert result.status == "eligible"
@@ -287,7 +288,7 @@ def test_red_team_evaluation_accepts_unknown_history_with_known_author():
 def test_red_team_flag_conflict_with_validated_author_task(explicit, expected):
     result = evaluate_candidate(
         REVIEW_CANDIDATES["openai_frontier"],
-        ResolverInputs(author_model=explicit, author_models=(None, "gpt-6-luna"), author_task_models=("gpt-6-luna",)),
+        ResolverInputs(author_model=explicit, author_models=(None, "gpt-6-luna"), author_task_models=("gpt-6-luna",), claude_account=HOST_ACCOUNT),
         review_mode="red_team",
     )
     assert result.status == expected
@@ -321,7 +322,7 @@ def test_no_claude_review_candidate_runs_on_cursor():
 @pytest.mark.parametrize("risk", RISKS)
 def test_no_ladder_or_trace_row_reviews_claude_through_cursor(author, risk):
     for snapshot in (None, FRONTIER_DOWN):
-        result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, routing_snapshot=snapshot))
+        result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
         assert result.trace
         assert not [row.name for row in result.trace if claude_on_cursor(row)]
         assert result.selected is None or not claude_on_cursor(result.selected)
@@ -334,7 +335,7 @@ def test_explicit_claude_cursor_pin_stays_excluded(risk):
             author_model="gpt-6.1-sol",
             risk=risk,
             pinned_candidate="claude-opus-5-5-cursor-fallback",
-            pressure_override_reason="D-129 boundary test",
+            pressure_override_reason="D-129 boundary test", claude_account=HOST_ACCOUNT,
         )
     )
     assert result.selected is None
@@ -344,18 +345,18 @@ def test_explicit_claude_cursor_pin_stays_excluded(risk):
 @pytest.mark.parametrize("author", ("claude-opus-5-5", "gpt-6.1-sol", "grok-4.7"))
 @pytest.mark.parametrize("risk", RISKS)
 def test_sonnet_reviews_routine_code_only(author, risk):
-    result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk))
+    result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, claude_account=HOST_ACCOUNT))
     names = [row.name for row in result.trace]
     assert (SONNET.name in names) == (risk in {"low", "medium"})
     if risk in {"high", "critical"}:
         assert result.selected is None or result.selected.name != SONNET.name
-        assert evaluate_candidate(SONNET, ResolverInputs(author_model=author, risk=risk)).status == "excluded"
+        assert evaluate_candidate(SONNET, ResolverInputs(author_model=author, risk=risk, claude_account=HOST_ACCOUNT)).status == "excluded"
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
 @pytest.mark.parametrize("scope", ["changed_paths", "owned_paths"])
 def test_security_path_at_routine_risk_resolves_critical_without_sonnet(risk, scope):
-    routine = ResolverInputs(author_model="gpt-6.1-sol", risk=risk)
+    routine = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, claude_account=HOST_ACCOUNT)
     # Control: on its own ladder Sonnet reviews routine code.
     assert resolve_reviewer(routine, ladder=((SONNET,),)).selected.name == SONNET.name
     secure = replace(routine, **{scope: (SECURITY_PATH,)})
@@ -369,7 +370,7 @@ def test_security_path_at_routine_risk_resolves_critical_without_sonnet(risk, sc
 @pytest.mark.parametrize("author", ("claude-opus-5-5", "gpt-6.1-sol", "claude-sonnet-5-5"))
 def test_critical_grok_is_eligible_but_frontier_authority_is_selected(author):
     healthy = {"codex": "healthy", "claude": "healthy", "grok": "healthy", "cursor": "healthy"}
-    result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", routing_snapshot=healthy))
+    result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", routing_snapshot=healthy, claude_account=HOST_ACCOUNT))
     trace = {row.name: row for row in result.trace}
     assert trace["grok-4.7"].status == "eligible"
     assert result.selected.name == ("openai_frontier" if author.startswith("claude") else "claude-opus-5-5")
@@ -381,7 +382,7 @@ def test_critical_grok_is_eligible_but_frontier_authority_is_selected(author):
 
 
 def test_critical_grok_is_excluded_for_an_xai_author():
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical"))
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", claude_account=HOST_ACCOUNT))
     trace = {row.name: row for row in result.trace}
     assert trace["grok-4.7"].status == "excluded"
     assert trace["grok-4.7-cursor-fallback"].status == "excluded"
@@ -390,13 +391,13 @@ def test_critical_grok_is_excluded_for_an_xai_author():
 
 def test_critical_native_grok_precedes_its_cursor_fallback_when_frontier_is_ineligible():
     native = resolve_reviewer(
-        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=FRONTIER_DOWN)
+        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", routing_snapshot=FRONTIER_DOWN, claude_account=HOST_ACCOUNT)
     )
     assert native.selected.name == "grok-4.7"
     assert {row.name: row.status for row in native.trace}["grok-4.7-cursor-fallback"] == "eligible"
     fallback = resolve_reviewer(
         ResolverInputs(
-            author_model="gpt-6.1-sol", risk="critical", routing_snapshot={**FRONTIER_DOWN, "grok": "unhealthy"}
+            author_model="gpt-6.1-sol", risk="critical", routing_snapshot={**FRONTIER_DOWN, "grok": "unhealthy"}, claude_account=HOST_ACCOUNT
         )
     )
     assert fallback.selected.name == "grok-4.7-cursor-fallback"
