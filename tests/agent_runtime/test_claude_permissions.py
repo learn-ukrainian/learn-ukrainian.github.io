@@ -732,9 +732,17 @@ def test_readonly_transport_rejects_every_push_wrapper(tmp_path: Path) -> None:
         ("gh api --raw-field body=x repos/o/r", True),
         ("gh release create v1", True),
         ("gh workflow run ci.yml", True),
+        # #10633: the shared parser keeps $'...' undecoded, so ANSI-C spellings
+        # are refused (Bash expands $'\547it' to git).
+        ("$'git' push", True),
+        ("$'\\547it' push", True),
+        ("bash -c \"\\$'git' push\"", True),
+        # Only the eval string re-read after quote removal holds the marker.
+        (r"eval \$\'git\' push", True),
         ("gh pr view 1 --json number", False),
         ("gh api -X GET repos/o/r", False),
         ("git status --short", False),
+        ('grep -c "end$" notes.txt', False),
     ],
 )
 def test_reviewer_publish_hook(command: str, blocked: bool) -> None:

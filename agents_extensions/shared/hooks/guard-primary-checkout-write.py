@@ -91,6 +91,24 @@ A path containing any unknown expansion is BLOCKED as
 directories and git pathspecs follow the same rule. Inherited variables that the
 command never assigns (other than ``HOME``) are unknown too.
 
+ANSI-C quoting is refused, not decoded (#10633). This guard does not model how
+Bash expands ``$'...'`` escapes, so a Bash command whose text contains the marker
+``$'`` — raw, or after backslash-newline removal (Bash joins ``$\\<newline>'``
+into ``$'``) — is blocked before parsing, target inference or any allowlisted
+early return, and so is every nested command string the parser re-reads
+(``eval`` / ``sh -c``). The check is literal and quote-blind: a ``$`` right
+before a ``'`` inside quotes (the regex anchor in ``grep 'end$'``) is refused
+too; ``"end$"`` is the same pattern. Every command string this hook parses has
+passed that check first. Nothing in this module decodes ANSI-C escapes: a direct
+caller of the parser (``bash_write_targets``, ``guard-reviewer-publish.py``)
+gets each ``$'...'`` span as undecoded literal text whose value is unknown (the
+word keeps ``unresolved_at`` set), so a path containing one is
+``unresolved_shell_variable``. A command word is still reduced to its basename:
+a span spelled as a plain path keeps naming that program (``$'/usr/bin/tee'``
+reads as ``tee``), while one holding escapes stays undecoded text that names no
+known program (``$'\\564ee'`` reads as ``$\\564ee``). Because nothing is
+decoded, ``guard-reviewer-publish.py`` refuses the marker itself as well.
+
 Coverage limitations (documented, by design)
 --------------------------------------------
 * Codex Desktop direct-edit interception is unverified (#4447). Where a provider
@@ -132,7 +150,6 @@ for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 
 from __future__ import annotations
 
-import codecs
 import fnmatch
 import json
 import os
@@ -412,46 +429,50 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(collapsed)
 
 
-def _decode_ansi_c_quotes(command: str) -> str:
-    """Decode executable Bash ANSI-C words before token and path expansion."""
-    out: list[str] = []
-    quote = ""
-    i = 0
-    while i < len(command):
-        char = command[i]
-        if char == "\\" and quote != "'" and i + 1 < len(command):
-            out.append(command[i : i + 2])
-            i += 2
-            continue
-        if not quote and command.startswith("$'", i):
-            end = i + 2
-            while end < len(command):
-                if command[end] == "\\":
-                    end += 2
-                elif command[end] == "'":
-                    break
-                else:
-                    end += 1
-            if end < len(command):
-                try:
-                    value = codecs.decode(command[i + 2 : end], "unicode_escape")
-                except UnicodeError:
-                    value = command[i + 2 : end]
-                out.append(shlex.quote(value))
-                i = end + 1
-                continue
-        if char in {"'", '"'}:
-            quote = "" if quote == char else quote if quote else char
-        out.append(char)
-        i += 1
-    return "".join(out)
+class _AnsiCQuotingRefused(Exception):
+    """A nested command string holds ANSI-C ``$'...'`` quoting (#10633)."""
+
+
+def _has_ansi_c_quoting(command: str) -> bool:
+    """Whether ``command`` contains the ANSI-C quoting marker ``$'`` (#10633).
+
+    Presence alone decides; nothing is decoded and no quotes are tracked. The
+    raw text is checked, then the text with every backslash-newline pair removed
+    — including pairs that a removal brings together — because Bash deletes
+    those pairs before tokenizing, so ``$\\<newline>'...'`` is still ANSI-C
+    quoting. The stack keeps the removal linear on any input.
+    """
+    if "$'" in command:
+        return True
+    joined: list[str] = []
+    for char in command:
+        if char == "\n" and joined and joined[-1] == "\\":
+            joined.pop()
+        else:
+            joined.append(char)
+    return "$'" in "".join(joined)
+
+
+def _refuse_nested_ansi_c_quoting(command: str, depth: int) -> None:
+    """Stop the parse when a re-read command string holds ``$'`` (#10633).
+
+    ``main`` refuses a top-level command before parsing it. A nested string
+    (``eval`` arguments, ``sh -c`` script) is text the parser produced by quote
+    removal and expansion, which can newly join ``$`` and ``'`` (``eval \\$\\'…\\'``),
+    so it is checked again before it is parsed.
+    """
+    if depth and _has_ansi_c_quoting(command):
+        raise _AnsiCQuotingRefused
 
 
 # Preserve literal expansion characters and redirect punctuation through shlex,
 # which otherwise strips quotes before redirect tokens can be distinguished from
 # argv words. Restore each sentinel in the expanded word (#8500, #8887).
 _LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": "", "<": "", ">": "", "&": ""}
-_UNMASK = str.maketrans({v: k for k, v in _LITERAL_SENTINELS.items()})
+# The ``$`` of an unquoted ANSI-C ``$'`` opener (#10633): the span stays
+# undecoded literal text, and ``_expand_word`` marks its value unknown there.
+_ANSI_C_OPENER = "\ue007"
+_UNMASK = str.maketrans({**{v: k for k, v in _LITERAL_SENTINELS.items()}, _ANSI_C_OPENER: "$"})
 
 # Shared shell_shlex.split_operator_run separates punctuation runs before
 # this guard tracks scopes and redirections.
@@ -524,6 +545,8 @@ def _mask_quoted_literals(command: str) -> str:
     Inside single quotes expansion characters are literal; inside double quotes
     ``~`` and ``=`` are literal (``$`` and backtick still expand). Redirect
     characters are literal inside either quote style or after a backslash.
+    An unquoted ``$'`` opener keeps its ``$`` as ``_ANSI_C_OPENER``, so the span
+    is never read as a ``$NAME`` reference to its first characters (#10633).
     """
     out: list[str] = []
     in_single = False
@@ -543,6 +566,8 @@ def _mask_quoted_literals(command: str) -> str:
             in_single = not in_single
         elif char == '"' and not in_single:
             in_double = not in_double
+        elif char == "$" and not in_single and not in_double and command.startswith("'", i + 1):
+            char = _ANSI_C_OPENER
         elif char in _LITERAL_SENTINELS and (in_single or (in_double and char in "~=<>&")):
             char = _LITERAL_SENTINELS[char]
         out.append(char)
@@ -655,7 +680,7 @@ def _tokenize(command: str) -> list[str]:
             _mask_quoted_literals(
                 _normalize_quoted_command_substitutions(
                     _normalize_backtick_substitutions(
-                        _decode_ansi_c_quotes(preprocess_shell_command(command))
+                        preprocess_shell_command(command)
                     )
                 )
             ),
@@ -769,8 +794,9 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
 
     ``lookup`` returns a variable's known value or ``None``. Anything else that
     expands — ``$(...)``, backticks, ``${NAME:-x}``, positional/special
-    parameters, a name without a known value — stops the expansion there and
-    marks the word unresolved at that offset.
+    parameters, a name without a known value, an undecoded ANSI-C ``$'...'``
+    span — stops the expansion there and marks the word unresolved at that
+    offset.
     """
     raw = token.translate(_UNMASK)
     shell_redirect = token in _REDIRECT_OPS
@@ -793,7 +819,7 @@ def _expand_word(token: str, lookup: Lookup) -> ShellWord:
                 i = end
     while i < len(token):
         char = token[i]
-        if char in "$`":
+        if char in "$`" or char == _ANSI_C_OPENER:
             match = _VAR_REF_RE.match(token, i) if char == "$" else None
             value = lookup(match.group(1) or match.group(2)) if match else None
             if match is None or value is None:
@@ -1040,7 +1066,10 @@ def _command_word(segment: list[str]) -> tuple[str, int]:
 
     Skips leading ``VAR=val`` assignments and common wrappers (``sudo``,
     ``env``, ``time``, ``nohup``, ``command``) so ``sudo tee x`` still reads as
-    a ``tee``.
+    a ``tee``. The word is reduced to its basename without decoding, so an
+    ANSI-C span spelled as a plain path (``$'/usr/bin/tee'``) yields ``tee``
+    while the token keeps ``unresolved_at`` set; the hook entry refuses every
+    ``$'`` command before this parser runs (#10633).
     """
     i = 0
     while i < len(segment):
@@ -1871,6 +1900,7 @@ def bash_write_targets(
     vectors are intentionally out of scope (see module docstring); they rely on
     physical worktree isolation and the monitor/git-shim layers.
     """
+    _refuse_nested_ansi_c_quoting(command, depth)
     if depth >= _MAX_SHELL_DEPTH:
         unknown = ShellWord("shell recursion limit")
         unknown.decision_reason = "undecidable_shell_recursion_target"
@@ -2011,6 +2041,7 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
     Allowlisted: ``git checkout -- <paths>`` and ``git restore <paths>`` without
     ``--source`` (discard dirt / restore from index — rescue pattern).
     """
+    _refuse_nested_ansi_c_quoting(command, depth)
     intents: list[dict[str, object]] = []
 
     def record(intent: dict[str, object]) -> None:
@@ -2437,6 +2468,25 @@ def _block_uncertain(reason: str) -> int:
     return 2
 
 
+def _block_ansi_c_quoting() -> int:
+    sys.stderr.write(
+        "BLOCKED by guard-primary-checkout-write: Bash ANSI-C quoting ($'...') is refused "
+        "[ansi_c_quoting] (issue #10633).\n\n"
+        "This guard does not model how Bash decodes $'...' escapes, so it cannot tell which file "
+        "such a command writes. The check is literal: any $ directly followed by ' is refused, "
+        "also across a backslash-newline, inside quotes, and in nested eval / sh -c strings.\n\n"
+        "Write command words, options and paths as plain literal text (a regex anchor such as "
+        "'end$' can be written \"end$\").\n"
+        "Only to generate escape-decoded file CONTENT inside your dispatch worktree, printf %b "
+        "is available there:\n\n"
+        "  cd .worktrees/dispatch/<agent>/<task> && printf '%b' 'a\\tb\\n' > data.txt\n\n"
+        "That is for data only: never use it to build command words, options or paths. "
+        "It does not make protected paths writable.\n"
+        "Hook source: agents_extensions/shared/hooks/guard-primary-checkout-write.py\n"
+    )
+    return 2
+
+
 def _sibling_git_invocation(command: str, cwd: str) -> bool:
     """Usability rail for literal argv in the root owning this hook (#9309).
 
@@ -2532,6 +2582,9 @@ def main() -> int:
         if not isinstance(raw_command, str):
             return _block_uncertain("malformed_hook_command")
         command = raw_command
+        # #10633: refuse ANSI-C quoting before any parse or early return.
+        if _has_ansi_c_quoting(command):
+            return _block_ansi_c_quoting()
         if not command.strip(" \t\n"):
             return 0
         try:
@@ -2550,6 +2603,8 @@ def main() -> int:
     if is_shell_tool(tool_name) and command:
         try:
             git_intents = bash_git_write_intents(command, cwd=cwd)
+        except _AnsiCQuotingRefused:
+            return _block_ansi_c_quoting()
         except Exception:
             return _block_uncertain("undecidable_git_command")
 
@@ -2575,6 +2630,8 @@ def main() -> int:
             raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
         except ShellPreprocessLimit:
             return _block_uncertain("nested_shell_command")
+        except _AnsiCQuotingRefused:
+            return _block_ansi_c_quoting()
 
     # --- #5396: git-mediated mutations against the primary worktree ----------
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
