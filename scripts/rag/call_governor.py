@@ -49,7 +49,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, TypeVar
 
-from scripts.rag.hang_diagnostics import SLOW_CALL_PREFIX, prune_dump_dir
+from scripts.rag.hang_diagnostics import SLOW_CALL_PREFIX, ensure_dump_dir, prune_dump_dir
 
 T = TypeVar("T")
 
@@ -344,7 +344,7 @@ class CallGovernor:
         self._dumped.update(call_id for call_id, _tool, _age in slow)
         path = self.dump_dir / f"{SLOW_CALL_PREFIX}{datetime.now(UTC):%Y%m%dT%H%M%SZ}-pid{os.getpid()}.txt"
         with contextlib.suppress(OSError):
-            self.dump_dir.mkdir(parents=True, exist_ok=True)
+            ensure_dump_dir(self.dump_dir)
             fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
             with os.fdopen(fd, "w", encoding="utf-8") as handle:
                 for call_id, tool, age in slow:
