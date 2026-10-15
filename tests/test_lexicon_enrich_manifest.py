@@ -6750,8 +6750,10 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     assert "нижчий дух" not in str(wiki_ref)
 
 
-def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
+def test_ulif_authoritative_enrichment_integration(monkeypatch, tmp_path) -> None:
     """Validate authoritative ULIF DictUA enrichment integration for synonyms, antonyms, idioms, and stress."""
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path / "slovnyk-cache")
+    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
     from scripts.lexicon.enrich_manifest import (
         _antonyms_ulif,
         _idioms_ulif,
@@ -6941,6 +6943,37 @@ def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
     assert "stress" in enrichment
     assert enrichment["stress"]["source"] == ULIF_DICTUA_LABEL
     assert enrichment["stress"]["form"] == "до́брий"
+
+
+def test_ulif_integration_preserves_shared_cache_without_network(monkeypatch, tmp_path) -> None:
+    import socket
+
+    shared_cache = tmp_path / "shared-cache"
+    shared_cache.mkdir()
+    sentinel = shared_cache / "добрий.json"
+    sentinel_bytes = b'{"downloaded": "shared-cache sentinel"}\n'
+    sentinel.write_bytes(sentinel_bytes)
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", shared_cache)
+    monkeypatch.setenv("LEXICON_SLOVNYK_CACHE", str(shared_cache))
+    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "0")
+    network_attempts = []
+
+    def forbid_network(*args, **kwargs):
+        network_attempts.append((args, kwargs))
+        raise AssertionError("ULIF integration attempted live network access")
+
+    monkeypatch.setattr(enrich_manifest_module.requests.sessions.Session, "request", forbid_network)
+    monkeypatch.setattr(socket.socket, "connect", forbid_network)
+
+    integration_tmp = tmp_path / "integration"
+    integration_tmp.mkdir()
+    test_ulif_authoritative_enrichment_integration(monkeypatch, integration_tmp)
+
+    assert network_attempts == []
+    assert sentinel.read_bytes() == sentinel_bytes
+    assert set(shared_cache.iterdir()) == {sentinel}
+    assert integration_tmp / "slovnyk-cache" == enrich_manifest_module.SLOVNYK_CACHE
+    assert enrich_manifest_module._phase1_offline_mode() is True
 
 
 def test_offline_mode_does_not_poison_slovnyk_cache(monkeypatch, tmp_path) -> None:
