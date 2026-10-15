@@ -729,6 +729,44 @@ new dispatch.
 
 ## Immediate cleanup after merge
 
+On apply, `merge_closeout` and `post_task_reap` first capture local Git facts
+through the lifecycle API for each task carrying a lifecycle ledger. Capture
+runs while the dispatch worktree still exists, before invoking the common
+reaper. Existing valid local observations are reused. Tasks without a ledger
+keep their existing cleanup behavior. A capture or ledger-write failure
+retains the worktree and blocks cleanup. The exceptional
+`--no-lifecycle-observation "reason"` option logs its explicit reason in the
+cleanup report; it does not waive any common-reaper guard.
+
+For a merged task already removed without that observation, use the supported
+append-only recovery command. Rehearse on private copies of the ledger, task
+record, successful push record and complete preservation tree first. Keep the
+tree's `batch_state/preserved/<task>/<attempt>` layout within the copy root.
+
+```bash
+.venv/bin/python -m scripts.orchestration.task_closeout recover-local \
+  --state-file ledger.json \
+  --task-record task.json \
+  --preserved-manifest batch_state/preserved/example/attempt.manifest.json \
+  --push-record successful-push.json
+```
+
+The push JSON must record `status: pushed_exact_head`, equal `head` and
+`remote_head`, the task's worktree in `cwd`, and a `steps` entry named `push`
+with integer `exit_code: 0`. A failed push log is insufficient. The delegate
+record must bind the lifecycle, preservation receipt and merged PR reaper
+proof, including the task's branch/head member. Recovery validates every
+preserved file and appends a receipt marked `recovered_from_preserved` with
+SHA-256 references to all three source records. The source files must remain
+available at those locators for later validation.
+
+Recovery never recreates a worktree, backdates an observation, edits previous
+receipts or calls GitHub. Repeating recovery returns the existing verified
+receipt. Missing inputs, changed digests, wrong task/branch and unavailable or
+unrelated commits produce typed `RECOVERY_*` refusals. Reconcile with current
+GitHub authority afterward; recovery alone does not close the issue or prove
+review, CI or delivery.
+
 The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
 `scripts.orchestration.merge_closeout` — not the P0 reaper directly. This is the one
 command that proves the PR MERGED, finds every worktree tied to it (by branch, by

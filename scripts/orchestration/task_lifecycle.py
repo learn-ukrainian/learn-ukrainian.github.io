@@ -1098,6 +1098,7 @@ def observe_local_git(
     head_sha: str | None,
     branch: str | None,
     worktree: str | None,
+    base_sha: str | None = None,
 ) -> dict[str, Any]:
     """Collect deterministic local Git/worktree closeout facts.
 
@@ -1152,7 +1153,9 @@ def observe_local_git(
     changed_paths: list[str] = []
     if head_sha:
         try:
-            base = _run_git(root, ["merge-base", "origin/main", head_sha])
+            base = base_sha or _run_git(root, ["merge-base", "origin/main", head_sha])
+            if base_sha:
+                _run_git(root, ["merge-base", "--is-ancestor", base, head_sha])
             changed_raw = _run_git(root, ["diff", "--name-only", f"{base}..{head_sha}"])
             changed_paths = [line for line in changed_raw.splitlines() if line]
             log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", f"{base}..{head_sha}"])
@@ -1377,11 +1380,18 @@ def _criteria_due_blockers(
     return blockers
 
 
-def _latest_premerge_local(ledger: Mapping[str, Any]) -> Mapping[str, Any] | None:
+def _latest_premerge_local(
+    ledger: Mapping[str, Any], *, head_sha: str | None = None, branch: str | None = None,
+) -> Mapping[str, Any] | None:
     for receipt in reversed(ledger["observation_receipts"]):
         local = (receipt.get("observation") or {}).get("local")
         if not isinstance(local, dict):
             continue
+        if "recovered_from_preserved" in local:
+            from scripts.orchestration.lifecycle_observation import recovery_refusal
+
+            if recovery_refusal(ledger, local, head_sha=head_sha, branch=branch):
+                continue
         if (
             local.get("dispatch_worktree_used")
             and local.get("worktree_present")
@@ -1513,7 +1523,15 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     hard.extend(evidence_status["invalid_evidence"])
 
     readiness_local = local
-    prior_local = _latest_premerge_local(ledger)
+    prior_local = _latest_premerge_local(ledger, head_sha=head_sha, branch=pr.get("head_branch"))
+    for receipt in ledger["observation_receipts"]:
+        recovered = (receipt.get("observation") or {}).get("local") or {}
+        if "recovered_from_preserved" in recovered:
+            from scripts.orchestration.lifecycle_observation import recovery_refusal
+
+            refusal = recovery_refusal(ledger, recovered, head_sha=head_sha, branch=pr.get("head_branch"))
+            if refusal:
+                hard.append(refusal)
     if prior_local is not None and (
         not local.get("commits") or not local.get("worktree_present") or not local.get("worktree_branch_matches")
     ):
