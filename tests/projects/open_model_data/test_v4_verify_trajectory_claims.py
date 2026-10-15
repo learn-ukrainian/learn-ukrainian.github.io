@@ -121,30 +121,43 @@ def mock_dbs(tmp_path: Path) -> tuple[Path, Path, Path]:
     return vesum_path, sources_path, ulif_path
 
 
-def test_seed_trajectories_full_verification_suite(tmp_path: Path, receipt_schema: dict) -> None:
-    """Validate that real seed trajectories pass all checks with 100% verification rate."""
-    if not (DEFAULT_VESUM_DB.is_file() and DEFAULT_SOURCES_DB.is_file()):
-        pytest.skip(f"Requires local databases: {DEFAULT_VESUM_DB}, {DEFAULT_SOURCES_DB}")
+def test_seed_trajectories_full_verification_suite(tmp_path: Path, source_role_fixture) -> None:
+    """Prove batch routing on synthetic records, without recertifying legacy seeds."""
+    import copy
 
-    receipt = run_claim_verifier(
-        input_path=DEFAULT_INPUT_TRAJECTORIES,
-        verified_output_path=tmp_path / "verified.jsonl",
-        rejected_output_path=tmp_path / "rejected.jsonl",
-        receipt_output_path=tmp_path / "receipt.json",
-        vesum_db=DEFAULT_VESUM_DB,
-        sources_db=DEFAULT_SOURCES_DB,
-        verify_only=False,
-    )
-
-    # Validate receipt against schema
-    jsonschema.validate(instance=receipt, schema=receipt_schema)
-
-    assert receipt["counts"]["total_trajectories"] == 3
-    assert receipt["counts"]["trajectories_passed"] == 3
-    assert receipt["counts"]["trajectories_rejected"] == 0
-    assert receipt["counts"]["total_claims_verified"] >= 40
-    assert receipt["invariants"]["pass_rate_100_percent"] is True
-    assert receipt["invariants"]["zero_unverified_dictionary_claims"] is True
+    module, vesum, sources, control, validator = source_role_fixture
+    historical = copy.deepcopy(control)
+    historical["trajectory_id"] = "traj.decolonize.bbbbbbbbbbbbbbbb"
+    historical["final_response"] = "SUM-11 proves UNRELATED_MEANING_SENTINEL"
+    register = copy.deepcopy(control)
+    register["trajectory_id"] = "traj.decolonize.cccccccccccccccc"
+    register["register_spectrum"]["alternatives"][0]["register_tier"] = "classical_regional"
+    records = [control, historical, register]
+    for rec in records:
+        validator.validate(rec)
+    inp, accepted, refused, receipt_path = [
+        tmp_path / name for name in ("input.jsonl", "accepted.jsonl", "refused.jsonl", "receipt.json")
+    ]
+    inp.write_text("".join(json.dumps(rec) + "\n" for rec in records))
+    receipt = module.run_claim_verifier(inp, accepted, refused, receipt_path, vesum, sources)
+    jsonschema.validate(receipt, json.loads(module.RECEIPT_SCHEMA_PATH.read_text()))
+    assert [json.loads(line) for line in accepted.read_text().splitlines()] == [control]
+    assert [json.loads(line)["trajectory_id"] for line in refused.read_text().splitlines()] == [
+        "traj.decolonize.bbbbbbbbbbbbbbbb",
+        "traj.decolonize.cccccccccccccccc",
+    ]
+    assert receipt["counts"] == {
+        "total_trajectories": 3,
+        "trajectories_passed": 1,
+        "trajectories_rejected": 2,
+        "total_claims_verified": 14,
+        "vesum_claims_verified": 9,
+        "sum11_claims_verified": 0,
+        "r2u_claims_verified": 0,
+        "ulif_claims_verified": 5,
+    }
+    assert receipt["invariants"]["pass_rate_100_percent"] is False
+    assert receipt["invariants"]["zero_unverified_dictionary_claims"] is False
     assert receipt["invariants"]["no_private_host_paths"] is True
 
 
@@ -966,7 +979,9 @@ def test_hard_rejection_sum11_stylistic_label_mismatch(mock_dbs: tuple[Path, Pat
     assert receipt["counts"]["trajectories_passed"] == 0
     assert receipt["counts"]["trajectories_rejected"] == 1
     rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
-    assert any("does not contain claimed stylistic label «діал»" in str(r) for r in rej_data[0]["rejection_reasons"])
+    assert any(
+        "a SUM-11 editorial label cannot establish modern register" in str(r) for r in rej_data[0]["rejection_reasons"]
+    )
 
 
 def test_hard_rejection_non_living_register_tier_validation(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
@@ -1026,7 +1041,7 @@ def test_hard_rejection_non_living_register_tier_validation(mock_dbs: tuple[Path
     )
     assert receipt["counts"]["trajectories_passed"] == 0
     rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
-    assert any("is completely unattested in VESUM and sources" in str(r) for r in rej_data[0]["rejection_reasons"])
+    assert any("requires approved sense-bound evidence" in str(r) for r in rej_data[0]["rejection_reasons"])
 
     # 2. Classical regional term with missing evidence_source
     rec_missing_src = {
@@ -1076,7 +1091,7 @@ def test_hard_rejection_non_living_register_tier_validation(mock_dbs: tuple[Path
     )
     assert receipt["counts"]["trajectories_passed"] == 0
     rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
-    assert any("requires non-empty evidence_source citation" in str(r) for r in rej_data[0]["rejection_reasons"])
+    assert any("requires approved sense-bound evidence" in str(r) for r in rej_data[0]["rejection_reasons"])
 
     # 3. Purist neologism claimed unrecorded (0 forms) but actually attested in VESUM
     rec_purist_conflict = {
@@ -1757,3 +1772,216 @@ def test_check_ulif_attestation_separately_supplied_canonical_db(tmp_path: Path)
     verifier = CoTClaimVerifier(vesum_conn=v_conn, sources_conn=s_conn, ulif_conn=u_conn)
     assert verifier.check_ulif_attestation("словник") is True
     assert verifier.check_ulif_attestation("неіснуюче") is False
+
+
+@pytest.fixture
+def source_role_fixture(tmp_path, monkeypatch):
+    """Disposable pseudowords; bind the tracked contracts rather than missing-schema fallback."""
+    from scripts.projects.open_model_data import v4_verify_trajectory_claims as module
+
+    contracts = Path(__file__).resolve().parents[3] / "registry/projects/open_model_data/contracts"
+    for attr, name in (
+        ("TRAJECTORY_SCHEMA_PATH", "v1_decolonization_trajectory.schema.json"),
+        ("RECEIPT_SCHEMA_PATH", "v1_cot_claim_verification_receipt.schema.json"),
+    ):
+        path = contracts / name
+        assert path.is_file()
+        monkeypatch.setattr(module, attr, path)
+    monkeypatch.setattr(module, "DEFAULT_ULIF_DB", None)
+    monkeypatch.setattr(module, "DEFAULT_R2U_CACHE", None)
+    vesum = tmp_path / "synthetic_vesum.db"
+    sources = tmp_path / "synthetic_sources.db"
+    with sqlite3.connect(vesum) as conn:
+        conn.execute("CREATE TABLE forms_all (lemma TEXT, word_form TEXT, pos TEXT, tags TEXT)")
+        conn.execute("INSERT INTO forms_all VALUES ('zorf', 'zorfa', 'noun', 'noun:m')")
+    with sqlite3.connect(sources) as conn:
+        conn.execute(
+            "CREATE TABLE sum11 (id INTEGER, word TEXT, definition TEXT, text TEXT, "
+            "sovietization_risk INTEGER, sovietization_keywords TEXT, ideological_markers TEXT)"
+        )
+        conn.execute(
+            "INSERT INTO sum11 VALUES (1, 'zorf', 'GLOSS_SENTINEL', 'діал. RAW_SENTINEL', "
+            "0, 'KEYWORD_SENTINEL', 'MARKER_SENTINEL')"
+        )
+        conn.execute(
+            "INSERT INTO sum11 VALUES (2, 'blorf', 'GLOSS_SENTINEL', 'RAW_SENTINEL', "
+            "2, 'KEYWORD_SENTINEL', 'MARKER_SENTINEL')"
+        )
+    rec = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.aaaaaaaaaaaaaaaa",
+        "query": "SENTINEL question",
+        "target_term": "zorf",
+        "is_calque_or_russianism": False,
+        "morphemic_breakdown": {
+            "source_formation": "SENTINEL formation",
+            "ukrainian_equivalent_mechanism": "SENTINEL mechanism",
+        },
+        "vesum_attestation": [{"lemma": "zorf", "vesum_forms_count": 1, "is_standard_attested": True}],
+        "register_spectrum": {
+            "primary_living_standard": "zorf",
+            "alternatives": [{"lemma": "zorf", "register_tier": "living_standard", "evidence_source": "SENTINEL"}],
+        },
+        "reasoning_steps": ["SENTINEL only"],
+        "final_response": "SENTINEL answer",
+    }
+    validator = jsonschema.Draft202012Validator(json.loads(module.TRAJECTORY_SCHEMA_PATH.read_text()))
+    validator.validate(rec)
+    return module, vesum, sources, rec, validator
+
+
+@pytest.mark.parametrize("tier", ["classical_regional", "technical_compound"])
+@pytest.mark.parametrize("term", ["zorf", "blorf", "missing_sentinel"])
+def test_source_role_register_acceptance_and_receipt(source_role_fixture, tmp_path, tier, term):
+    module, vesum, sources, rec, validator = source_role_fixture
+    rec["register_spectrum"]["alternatives"] = [
+        {
+            "lemma": term,
+            "register_tier": tier,
+            "evidence_source": "arbitrary citation " * 20,
+        }
+    ]
+    validator.validate(rec)
+    inp, accepted, refused, receipt_path = [
+        tmp_path / name for name in ("input.jsonl", "accepted.jsonl", "refused.jsonl", "receipt.json")
+    ]
+    inp.write_text(json.dumps(rec) + "\n")
+    receipt = module.run_claim_verifier(inp, accepted, refused, receipt_path, vesum, sources)
+    jsonschema.validate(receipt, json.loads(module.RECEIPT_SCHEMA_PATH.read_text()))
+    assert accepted.read_text() == ""
+    rejection = json.loads(refused.read_text())
+    assert rejection["rejected"] is True
+    assert rejection["rejection_reasons"] == [
+        {
+            "claim_type": "ULIF_REGISTER",
+            "source_field": "register_spectrum.alternatives[0]",
+            "term": term,
+            "claim_text": f"Alternative «{term}» register tier claims «{tier}»",
+            "error": f"Register tier «{tier}» requires approved sense-bound evidence; "
+            "SUM-11, morphology and an arbitrary citation cannot establish it",
+            "evidence": "Unresolved register evidence",
+        }
+    ]
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    assert receipt["counts"]["ulif_claims_verified"] == 1
+    assert receipt["counts"]["sum11_claims_verified"] == 0
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["reasoning_steps", "final_response", "lexicographical_context", "morphemic_breakdown", "register_spectrum"],
+)
+def test_source_role_semantic_prose_cannot_hide_behind_citation(source_role_fixture, field):
+    module, vesum, sources, rec, validator = source_role_fixture
+    text = "SUM-11: zorf means ARBITRARY_UNRELATED_MEANING"
+    if field == "reasoning_steps":
+        rec[field] = [text]
+    elif field == "lexicographical_context":
+        rec[field] = {"historical_suppression_note": text}
+    elif field == "morphemic_breakdown":
+        rec[field]["source_formation"] = text
+    elif field == "register_spectrum":
+        rec[field]["alternatives"][0]["evidence_source"] = text
+    else:
+        rec[field] = text
+    validator.validate(rec)
+    with sqlite3.connect(vesum) as v_conn, sqlite3.connect(sources) as s_conn:
+        outcome = module.CoTClaimVerifier(v_conn, s_conn).verify_trajectory(rec, validator)
+    assert outcome.passed is False
+    assert outcome.rejection_reasons[0] == {
+        "claim_type": "SUM11_SOURCE_ROLE",
+        "source_field": "root",
+        "evidence": "soviet_colonization_context",
+        "error": "Unresolved: historical SUM-11 context cannot certify modern semantic prose",
+    }
+
+
+@pytest.mark.parametrize(
+    "claim_type,attributes",
+    [
+        ("SUM11_HEADWORD", {}),
+        ("SUM11_STYLISTIC", {"label": "діал"}),
+        ("SUM11_VOLUME_YEAR", {"volume": 3, "year": 1972, "target_term": "зорф"}),
+        ("SUM11_SOVIETIZATION", {"context": "INVENTED suppression assertion"}),
+    ],
+)
+def test_source_role_historical_facts_never_verify_semantics(source_role_fixture, claim_type, attributes):
+    module, vesum, sources, rec, _validator = source_role_fixture
+    claim = module.ParsedClaim(module.ClaimType(claim_type), "sentinel", "zorf", "SENTINEL", attributes)
+    with sqlite3.connect(vesum) as v_conn, sqlite3.connect(sources) as s_conn:
+        result = module.CoTClaimVerifier(v_conn, s_conn).verify_claim(claim, rec)
+    assert result.passed is False
+    assert result.evidence == "soviet_colonization_context"
+    assert result.error_message.startswith("Unresolved:")
+
+
+@pytest.mark.parametrize("term", ["zorf", "zorfa", "zorf extra"])
+def test_source_role_lookup_fallback_keeps_context_not_raw_definition(source_role_fixture, term):
+    module, vesum, sources, _rec, _validator = source_role_fixture
+    with sqlite3.connect(vesum) as v_conn, sqlite3.connect(sources) as s_conn:
+        entry = module.CoTClaimVerifier(v_conn, s_conn).get_sum11_entry(term)
+    # A phrase/head fallback is diagnostic only; raw definitions never escape.
+    if term == "zorf extra":
+        assert entry is None
+    else:
+        assert entry == {
+            "id": 1,
+            "word": "zorf",
+            "soviet_colonization_context": {
+                "sovietization_risk": 0,
+                "sovietization_keywords": "KEYWORD_SENTINEL",
+                "ideological_markers": "MARKER_SENTINEL",
+            },
+        }
+
+
+@pytest.mark.parametrize("citation", ["СУМ-20", "SUM-20", "підсумок SENTINEL"])
+def test_source_role_does_not_reclassify_other_sources(source_role_fixture, citation):
+    module, vesum, sources, rec, validator = source_role_fixture
+    rec["final_response"] = citation + " SENTINEL answer"
+    validator.validate(rec)
+    with sqlite3.connect(vesum) as v_conn, sqlite3.connect(sources) as s_conn:
+        outcome = module.CoTClaimVerifier(v_conn, s_conn).verify_trajectory(rec, validator)
+    assert outcome.passed is True
+    assert outcome.rejection_reasons == []
+
+
+def test_source_role_unparsed_citation_marks_receipt_unverified(source_role_fixture, tmp_path):
+    module, vesum, sources, rec, validator = source_role_fixture
+    rec["final_response"] = "SUM11 proves ARBITRARY_UNSUPPORTED_SENSE"
+    validator.validate(rec)
+    inp, accepted, refused, receipt_path = [
+        tmp_path / name for name in ("input.jsonl", "accepted.jsonl", "refused.jsonl", "receipt.json")
+    ]
+    inp.write_text(json.dumps(rec) + "\n")
+    receipt = module.run_claim_verifier(inp, accepted, refused, receipt_path, vesum, sources)
+    assert accepted.read_text() == ""
+    assert receipt["invariants"]["zero_unverified_dictionary_claims"] is False
+    assert receipt["counts"]["sum11_claims_verified"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    assert json.loads(refused.read_text())["rejection_reasons"][0]["claim_type"] == "SUM11_SOURCE_ROLE"
+
+
+@pytest.mark.parametrize(
+    "kind,term,attributes,passed,evidence",
+    [
+        ("SUM11_HEADWORD", "zorf extra", {}, False, "soviet_colonization_context"),
+        ("SUM11_STYLISTIC", "missing_sentinel", {"label": "діал"}, False, "Not in sum11"),
+        ("SUM11_SOVIETIZATION", "missing_sentinel", {}, False, "Term not in СУМ-11"),
+        ("SUM11_VOLUME_YEAR", "зорф", {"volume": 12}, False, "Invalid volume 12"),
+        ("SUM11_VOLUME_YEAR", "зорф", {"volume": 3, "year": 1971}, False, "Year mismatch for vol 3"),
+        ("SUM11_VOLUME_YEAR", "зорф", {"volume": 1, "year": 1970}, False, "Alphabetical volume mismatch"),
+        ("VESUM_TAGS", "zorf", {"tags": ["noun"]}, True, "Tags ['noun'] attested in VESUM"),
+        ("VESUM_TAGS", "zorf", {"tags": ["verb"]}, False, "Tags not found"),
+        ("VESUM_TAGS", "missing_sentinel", {"tags": ["noun"]}, False, "Tags not found"),
+        ("VESUM_LEMMA", "zorf zorf", {}, True, "Attested phrase in VESUM (words attested: [1, 1])"),
+    ],
+)
+def test_source_role_diagnostics_and_morphology_controls(source_role_fixture, kind, term, attributes, passed, evidence):
+    module, vesum, sources, rec, _validator = source_role_fixture
+    claim = module.ParsedClaim(module.ClaimType(kind), "sentinel", term, "SENTINEL", attributes)
+    with sqlite3.connect(vesum) as v_conn, sqlite3.connect(sources) as s_conn:
+        result = module.CoTClaimVerifier(v_conn, s_conn).verify_claim(claim, rec)
+    assert result.passed is passed
+    assert result.evidence == evidence

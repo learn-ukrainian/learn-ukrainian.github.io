@@ -28,9 +28,7 @@ except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
     # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
+    _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
     from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
@@ -157,11 +155,7 @@ def search_literary(
         hits = [hit for hit in hits if genre_l in str(hit.get("genre", "")).lower()]
     if period:
         period_l = period.lower()
-        hits = [
-            hit
-            for hit in hits
-            if period_l in str(hit.get("language_period", "")).lower()
-        ]
+        hits = [hit for hit in hits if period_l in str(hit.get("language_period", "")).lower()]
     return hits[:limit]
 
 
@@ -267,6 +261,20 @@ def search_dictionary(
     hits: list[dict[str, Any]] = []
     for row in rows[:limit]:
         text = row.get("text") or row.get("definition") or row.get("guideword") or ""
+        metadata = row
+        if collection in {"sum11", "sum", "definitions"}:
+            # Keep historical material out of the generic answer field. Unknown
+            # editorial metadata cannot license publication of the raw entry.
+            context = dict(row)
+            for key in ("sovietization_risk", "sovietization_keywords", "ideological_markers"):
+                context.setdefault(key, None)
+            if any(
+                context[key] is None for key in ("sovietization_risk", "sovietization_keywords", "ideological_markers")
+            ):
+                context.pop("text", None)
+                context.pop("definition", None)
+            metadata = {"soviet_colonization_context": context}
+            text = "SUM-11: historical Soviet occupation context only; modern meaning withheld."
         hits.append(
             {
                 "score": _score(row),
@@ -274,7 +282,7 @@ def search_dictionary(
                 "word": row.get("word", query),
                 "collection": collection,
                 "source": row.get("source", ""),
-                "metadata": row,
+                "metadata": metadata,
             }
         )
     return hits

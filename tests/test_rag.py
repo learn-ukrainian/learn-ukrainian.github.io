@@ -135,11 +135,19 @@ def test_search_dictionary_uses_sqlite_dictionary_helpers(monkeypatch):
     assert hits == [
         {
             "score": 0.0,
-            "text": "пояснення",
+            "text": "SUM-11: historical Soviet occupation context only; modern meaning withheld.",
             "word": "мова",
             "collection": "sum11",
             "source": "sum11",
-            "metadata": {"word": "мова", "definition": "пояснення", "source": "sum11"},
+            "metadata": {
+                "soviet_colonization_context": {
+                    "word": "мова",
+                    "source": "sum11",
+                    "sovietization_risk": None,
+                    "sovietization_keywords": None,
+                    "ideological_markers": None,
+                }
+            },
         }
     ]
 
@@ -159,3 +167,75 @@ def test_collection_stats_reports_sources_db(monkeypatch):
             "status": "ok",
         }
     }
+
+
+# These are invented sentinels, not linguistic evidence.
+def test_sum11_aliases_context_and_cli(monkeypatch, capsys):
+    import json
+    import sys
+
+    for alias in ("sum11", "SuM", "DEFINITIONS"):
+        for raw_field in ("text", "definition"):
+            for risk in (0, 3, None):
+                row = {
+                    "word": "sentinel_head",
+                    raw_field: "RAW_SENTINEL",
+                    "source": "sum11",
+                    "sovietization_risk": risk,
+                    "sovietization_keywords": "KEYWORD_SENTINEL",
+                    "ideological_markers": ["MARKER_SENTINEL"],
+                }
+                monkeypatch.setattr(query.sources_db, "search_definitions", lambda *a, row=row, **k: [row])
+                hits = query.search_dictionary("sentinel_head", alias)
+                assert hits[0]["text"] == (
+                    "SUM-11: historical Soviet occupation context only; modern meaning withheld."
+                )
+                context = hits[0]["metadata"]["soviet_colonization_context"]
+                assert context["sovietization_risk"] == risk
+                assert context["sovietization_keywords"] == "KEYWORD_SENTINEL"
+                assert context["ideological_markers"] == ["MARKER_SENTINEL"]
+                if risk is None:
+                    assert "RAW_SENTINEL" not in json.dumps(hits)
+                else:
+                    assert context[raw_field] == "RAW_SENTINEL"
+                monkeypatch.setattr(sys, "argv", ["query", "dict", alias, "sentinel_head"])
+                query.main()
+                assert json.loads(capsys.readouterr().out) == hits
+
+
+def test_sum11_missing_editorial_metadata_withholds_raw(monkeypatch):
+    import json
+
+    for missing in ("sovietization_risk", "sovietization_keywords", "ideological_markers"):
+        row = {
+            "word": "sentinel_head",
+            "text": "RAW_SENTINEL",
+            "definition": "GLOSS_SENTINEL",
+            "sovietization_risk": 0,
+            "sovietization_keywords": [],
+            "ideological_markers": [],
+        }
+        del row[missing]
+        monkeypatch.setattr(query.sources_db, "search_definitions", lambda *a, row=row, **k: [row])
+        hit = query.search_dictionary("sentinel_head", "sum11")[0]
+        assert hit["metadata"]["soviet_colonization_context"][missing] is None
+        assert "RAW_SENTINEL" not in json.dumps(hit)
+        assert "GLOSS_SENTINEL" not in json.dumps(hit)
+        assert row["text"] == "RAW_SENTINEL"
+
+
+def test_other_dictionary_routes_preserve_text(monkeypatch):
+    for alias, helper in (
+        ("grinchenko", "search_grinchenko_1907"),
+        ("style", "search_style_guide"),
+        ("cefr", "query_cefr_level"),
+        ("idioms", "search_idioms"),
+        ("synonyms", "search_synonyms"),
+        ("esum", "search_esum"),
+        ("other", "search_sources"),
+    ):
+        row = {"word": "sentinel_head", "text": "OTHER_ROUTE"}
+        monkeypatch.setattr(query.sources_db, helper, lambda *a, row=row, **k: [row])
+        hit = query.search_dictionary("sentinel_head", alias)[0]
+        assert hit["text"] == "OTHER_ROUTE"
+        assert hit["metadata"] == row

@@ -111,10 +111,7 @@ def release_receipt() -> dict[str, Any]:
 
 @pytest.fixture
 def vesum_db_fixture(tmp_path: Path) -> Path:
-    """Provide real vesum.db if present, or create a minimal fixture with forms_all for unit tests."""
-    if DEFAULT_VESUM_DB.is_file() and DEFAULT_VESUM_DB.stat().st_size >= 1_000_000:
-        return DEFAULT_VESUM_DB
-
+    """Use disposable morphology rows without consulting live lexical evidence."""
     mock_db = tmp_path / "fixture_vesum.db"
     with sqlite3.connect(mock_db) as conn:
         conn.execute("CREATE TABLE forms_all (lemma TEXT, form TEXT, pos TEXT, tags TEXT)")
@@ -1210,7 +1207,7 @@ def test_partition_author_alias_leakage_regression() -> None:
 
 
 def test_find_attested_synonym_rejects_descriptive_and_crossref(vesum_db_fixture: Path) -> None:
-    """Verify find_attested_synonym rejects descriptive fragments and crossrefs, and validates real synonyms."""
+    """Raw glosses and morphology cannot verify a modern synonym relationship."""
     # Descriptive definition with adjective 'слизький' for noun 'затока'
     defn_zatoka = "ЗА́ТОКА, и, ж., діал. Слизький схил, боковий спад дороги, куди сповзають сани."
     assert find_attested_synonym(defn_zatoka, "затока", vesum_db_fixture) is None
@@ -1223,21 +1220,18 @@ def test_find_attested_synonym_rejects_descriptive_and_crossref(vesum_db_fixture
     defn_chotyry = "ЧОТИ́РИ, рьо́х, числ. 1. Назва числа 4... // див. сидіти; див. іти."
     assert find_attested_synonym(defn_chotyry, "чотири", vesum_db_fixture) is None
 
-    # Valid noun-noun synonyms
+    # Even morphologically compatible glosses lack approved sense-bound evidence.
     defn_barabolya = "БАРАБО́ЛЯ, і, ж., діал. Картопля."
     res_barabolya = find_attested_synonym(defn_barabolya, "бараболя", vesum_db_fixture)
-    assert res_barabolya is not None
-    assert res_barabolya[0] == "картопля"
+    assert res_barabolya is None
 
     defn_boz = "Боз, зу, м. = бузок."
     res_boz = find_attested_synonym(defn_boz, "боз", vesum_db_fixture)
-    assert res_boz is not None
-    assert res_boz[0] == "бузок"
+    assert res_boz is None
 
     defn_hazdynya = "ГА́ЗДИНЯ, і, ж., зах. Господарка."
     res_hazdynya = find_attested_synonym(defn_hazdynya, "газдиня", vesum_db_fixture)
-    assert res_hazdynya is not None
-    assert res_hazdynya[0] == "господарка"
+    assert res_hazdynya is None
 
 
 @pytest.mark.needs_artifact(
@@ -1332,13 +1326,11 @@ def test_sub_sense_boundary_and_synonym_binding(
         "// Закинути, загубити. Панотець наробив крику, що.. загирили йому одно важне письмо (Март., Тв., 1954, 233);"
     )
     res_zagiriti_sub1 = find_attested_synonym(defn_zagiriti_sub1, "загирити", vesum_db_fixture)
-    assert res_zagiriti_sub1 is not None
-    assert res_zagiriti_sub1[0] == "закинути"
+    assert res_zagiriti_sub1 is None
 
     defn_zagolomshiti_sub1 = "// Заспокоїти, затамувати. — Я рвалася до роботи, аби заголомшити в собі той біль, що мені під серце підступав (Март., Тв., 1954, 155)."
     res_zagolomshiti_sub1 = find_attested_synonym(defn_zagolomshiti_sub1, "заголомшити", vesum_db_fixture)
-    assert res_zagolomshiti_sub1 is not None
-    assert res_zagolomshiti_sub1[0] == "заспокоїти"
+    assert res_zagolomshiti_sub1 is None
 
     # 2. Check SFT trajectories: if загирити or заголомшити are in SFT, ensure no sense crossing occurred
     for t in sft_trajectories:
@@ -1355,3 +1347,145 @@ def test_sub_sense_boundary_and_synonym_binding(
             assert "заспокоїти" in lemmas or "затамувати" in lemmas
             assert "приголомшити" not in lemmas
             assert "приголомшити" not in equiv_mech
+
+
+@pytest.fixture
+def source_role_candidate():
+    """Invented text and provenance, never protected dialect examples."""
+    return MinedSentence(
+        word="зорф",
+        sentence="SENTINEL зорф passage with invented words.",
+        citation="CITATION_SENTINEL",
+        macro_zone="southwestern",
+        sub_zone="SENTINEL",
+        bucket="southwestern",
+        locality="SENTINEL",
+        collector="SENTINEL",
+        work="SENTINEL",
+        source_db="sum11_literary_citation",
+        raw_definition="діал. = блорф. GLOSS_SENTINEL",
+    )
+
+
+@pytest.mark.parametrize("source", ["sum11", "sum11_literary_citation", "SUM11", "", "unknown"])
+def test_source_role_evaluation_projection_refuses_normative_expectations(source_role_candidate, source):
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_evaluation_benchmark
+
+    source_role_candidate.source_db = source
+    with pytest.raises(ValueError, match="Unresolved source role: historical SUM-11 or unknown evidence"):
+        build_evaluation_benchmark([source_role_candidate], 1, 0, 0, 0)
+
+
+def test_source_role_grinchenko_evaluation_route_retained(source_role_candidate, monkeypatch):
+    from scripts.projects.open_model_data import v5_mine_dialect_corpus as module
+
+    source_role_candidate.source_db = "grinchenko"
+    source_role_candidate.raw_definition = "HISTORICAL_WITNESS_SENTINEL"
+    monkeypatch.setattr(module, "CALQUE_INJECTIONS", [("ERROR_SENTINEL", "REPAIR_SENTINEL")])
+    cases = module.build_evaluation_benchmark([source_role_candidate] * 2, 2, 0, 0, 0)
+    assert len(cases) == 2
+    assert cases[0]["expected_action"] == "CORRECT"
+    assert cases[1]["expected_action"] == "PRESERVE"
+    assert cases[1]["expected_output"] == "SENTINEL зорф passage with invented words."
+    assert cases[1]["source_metadata"] == {
+        "source": "grinchenko",
+        "citation": "CITATION_SENTINEL",
+        "language_period": "modern_regional",
+    }
+
+
+@pytest.mark.parametrize("source", ["sum11_literary_citation", "grinchenko", "unknown"])
+def test_source_role_sft_withholds_semantics_and_final_answer(tmp_path, source_role_candidate, source):
+    from scripts.projects.open_model_data import v5_mine_dialect_corpus as module
+
+    source_role_candidate.source_db = source
+    vesum = tmp_path / "morphology.db"
+    with sqlite3.connect(vesum) as conn:
+        conn.execute("CREATE TABLE forms_all (lemma TEXT, pos TEXT)")
+        conn.executemany("INSERT INTO forms_all VALUES (?, 'noun')", [("зорф",), ("блорф",)])
+    assert module.find_attested_synonym("діал. = блорф.", "зорф", vesum) is None
+    with pytest.raises(ValueError, match="Unresolved modern synonym evidence"):
+        module.build_sft_dialect_dataset([source_role_candidate], vesum, 1)
+    assert module.build_sft_dialect_dataset([source_role_candidate], vesum, 0) == []
+
+
+def test_source_role_miner_withholds_sum11_quotes(tmp_path, monkeypatch):
+    from scripts.projects.open_model_data import v5_mine_dialect_corpus as module
+
+    monkeypatch.setattr(
+        module,
+        "AUTHORS_MAP",
+        {
+            "southwestern": {"Зорф": ("SENTINEL", "SENTINEL", "SENTINEL", "SENTINEL")},
+        },
+    )
+
+    source = tmp_path / "synthetic_sources.db"
+    with sqlite3.connect(source) as conn:
+        conn.execute(
+            "CREATE TABLE sum11 (word TEXT, definition TEXT, text TEXT, "
+            "source_role TEXT, sovietization_risk INTEGER, ideological_markers TEXT)"
+        )
+        conn.executemany(
+            "INSERT INTO sum11 VALUES ('зорф', ?, ?, ?, 0, 'MARKER_SENTINEL')",
+            [
+                (
+                    "діал. = блорф. Зорфове зорфило зорфить зорфами зорфового зорфу (Зорф, 1, 1900, 7).",
+                    "Зорфове зорфило зорфить зорфами зорфового зорфу (Зорф, 1, 1900, 7).",
+                    role,
+                )
+                for role in ("modern_standard", "literary", None)
+            ],
+        )
+        conn.execute("CREATE TABLE grinchenko (word TEXT, definition TEXT)")
+    assert module.mine_all_candidate_sentences(source) == []
+
+
+def test_source_role_grinchenko_mining_retained(tmp_path, monkeypatch):
+    from scripts.projects.open_model_data import v5_mine_dialect_corpus as module
+
+    monkeypatch.setattr(
+        module,
+        "AUTHORS_MAP",
+        {
+            "southwestern": {"Зорф": ("SENTINEL", "SENTINEL", "SENTINEL", "SENTINEL")},
+        },
+    )
+    source = tmp_path / "witness.db"
+    definition = "Зорфове зорфило зорфить зорфами зорфового зорфу Зорф. 1"
+    with sqlite3.connect(source) as conn:
+        conn.execute("CREATE TABLE grinchenko (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO grinchenko VALUES ('зорф', ?)", (definition,))
+    candidates = module.mine_all_candidate_sentences(source)
+    assert len(candidates) == 1
+    assert candidates[0].source_db == "grinchenko"
+    assert candidates[0].word == "зорф"
+    assert candidates[0].sentence == "Зорфове зорфило зорфить зорфами зорфового зорфу"
+    assert candidates[0].raw_definition == definition
+
+
+def test_source_role_replay_cannot_export_sum11_conclusions(tmp_path):
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
+
+    shards = tmp_path / "replay"
+    shards.mkdir()
+    record = {"is_calque_or_russianism": True, "final_response": "SUM11 proves UNRELATED_SENTINEL"}
+    (shards / "sft_shard_001.jsonl").write_text(json.dumps(record) + "\n")
+    with pytest.raises(ValueError, match="Unresolved replay source role"):
+        build_sft_dialect_dataset([], tmp_path / "unused.db", 0, 1, shards)
+
+
+def test_source_role_conflicting_grinchenko_citation_cannot_export_evaluation(source_role_candidate):
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_evaluation_benchmark
+
+    source_role_candidate.source_db = "grinchenko"
+    source_role_candidate.citation = "SUM-11: no independent witness"
+    with pytest.raises(ValueError, match="Unresolved source role"):
+        build_evaluation_benchmark([source_role_candidate], 1, 0, 0, 0)
+
+
+def test_source_role_reader_missing_database_is_not_evidence(tmp_path):
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import mine_all_candidate_sentences
+
+    with pytest.raises(FileNotFoundError, match="Database missing or empty"):
+        mine_all_candidate_sentences(tmp_path / "missing.db")
