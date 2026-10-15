@@ -1131,3 +1131,40 @@ test('P08 non-unknown Work fields without canonical PR association cannot certif
   assert.match(out,/canonical PR association unavailable/);
   assert.match(out,/canonical PR membership unavailable/);
 });
+
+test('refresh keeps a focused card or table row at its visible position until focus leaves',()=>{
+  const row={id:'cedar'}, first={id:'birch'}, second={id:'aspen'};
+  const parent={children:[first,second,row],insertBefore(child,before){
+    this.children=this.children.filter(el=>el!==child);
+    this.children.splice(before ? this.children.indexOf(before) : this.children.length,0,child);
+  }};
+  row.parentElement=parent;
+  const element={closest:()=>row};
+  FB.preserveFocusedRow(element,0);
+  assert.deepEqual(parent.children.map(el=>el.id),['cedar','birch','aspen']);
+  FB.preserveFocusedRow(element,1);
+  assert.deepEqual(parent.children.map(el=>el.id),['birch','cedar','aspen']);
+  FB.preserveFocusedRow(element,-1);
+  assert.deepEqual(parent.children.map(el=>el.id),['birch','cedar','aspen']);
+  assert.doesNotThrow(()=>FB.preserveFocusedRow(null,0));
+});
+
+test('duplicate task destinations and source retries have distinct focus identities',()=>{
+  const out=operator();
+  for(const task of sampleBodies().tasks.tasks) assert.ok(out.includes('data-focus-key="task:'+task.task_id+'"'));
+  assert.match(out,/data-focus-key="work:Derived impediments"/);
+  assert.match(out,/data-focus-key="work:Public PR observations"/);
+  assert.match(out,/data-focus-key="pr:sample\/repo:17"/);
+});
+
+test('source disclosure focus identity is scoped to its panel',()=>{
+  const out=operator();
+  assert.match(out,/<summary data-focus-key="source:work:Derived impediments">Source qualifications/);
+  assert.match(out,/<summary data-focus-key="source:work:Public PR observations">Source qualifications/);
+});
+
+test('board cards distinguish their focus from registry links to the same epic',()=>{
+  const out=FB.cardHtml(cedar);
+  assert.match(out,/data-focus-key="board:cedar"/);
+  assert.match(out,/href="#\/epic\/cedar"/);
+});

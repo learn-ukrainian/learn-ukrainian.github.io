@@ -205,7 +205,7 @@
     return `<div class="fb-table-wrap"><table class="fb-table"><caption>${esc(caption)}</caption><thead><tr>${headers.map((h) => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell, i) => `<td data-l="${esc(headers[i])}">${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   }
 
-  function sourceNotes(entry, now) {
+  function sourceNotes(entry, now, focusKey) {
     if (!entry?.body) return '';
     const b = entry.body;
     const rows = [];
@@ -227,7 +227,7 @@
         `<li>Projection cache age ${ageText(advancedAge(b.cache_age_s, entry.fetchedAt, now))}; source age remains independent.</li>`,
       );
     return rows.length
-      ? `<details class="fb-provenance"><summary>Source qualifications</summary><ul>${rows.join('')}</ul></details>`
+      ? `<details class="fb-provenance"><summary data-focus-key="${esc(focusKey)}">Source qualifications</summary><ul>${rows.join('')}</ul></details>`
       : '';
   }
 
@@ -264,7 +264,7 @@
     return `<section class="fb-panel" data-read="${key}" aria-busy="${busy}"><h3>${esc(title)}</h3><p class="fb-read-state">${esc(status)}</p>
         ${b ? render(b, e) : '<p>No values available.</p>'}${extra || ''}
         <p class="fb-src">Source age unknown unless qualified below. Last successful fetch: ${esc(fetchAge)}. Read: ${esc(READS[key])}</p>
-        ${sourceNotes(e, now)}<button type="button" class="fb-btn" data-retry="${key}">Retry ${esc(title)}</button></section>`;
+        ${sourceNotes(e, now, "source:" + key + ":" + title)}<button type="button" class="fb-btn" data-focus-key="${esc(key + ":" + title)}" data-retry="${key}">Retry ${esc(title)}</button></section>`;
   }
 
   function gap(id, owner, reason) {
@@ -512,7 +512,7 @@
                 (Array.isArray(f.blocker.checks) ? ': ' + f.blocker.checks.map(esc).join(', ') : '')
               : 'unknown; Work PR flags carry no blocker evidence';
           return [
-            `<a href="#/prs?pr=${esc(encodeURIComponent(id))}">#${esc(id)} ${esc(title)}</a><br>${valueText(i?.repository_id || f?.repo)}<br>Head ${valueText(v.head_sha || f?.head_sha)}<br>${valueText(i?.lifecycle || (f?.draft ? 'draft' : 'open observation'))}`,
+            `<a data-focus-key="pr:${esc(i?.repository_id || f?.repo)}:${esc(id)}" href="#/prs?pr=${esc(encodeURIComponent(id))}">#${esc(id)} ${esc(title)}</a><br>${valueText(i?.repository_id || f?.repo)}<br>Head ${valueText(v.head_sha || f?.head_sha)}<br>${valueText(i?.lifecycle || (f?.draft ? 'draft' : 'open observation'))}`,
             'unknown (D04; canonical PR association unavailable)',
             'unknown (D04; canonical PR membership unavailable)',
             `${valueText(f?.owner_lane)}; provenance unverified`,
@@ -735,7 +735,7 @@
             b.tasks.map((t) => [
               esc(t.task_id),
               esc(t.status),
-              `<a href="/delegate.html">Select task in Delegate</a>`,
+              `<a data-focus-key="task:${esc(t.task_id)}" href="/delegate.html">Select task in Delegate</a>`,
             ]),
           ),
       )}`;
@@ -974,7 +974,7 @@
     const driverLine = driver
       ? `<p class="fb-sub">driver: <b>${esc(driver.cli || "unknown cli")}</b> · ${esc(driver.model || "unknown model")}</p>`
       : `<p class="fb-sub">driver unknown</p>`;
-    return `<a class="fb-card is-${state}" href="${esc(href)}">
+    return `<a class="fb-card is-${state}" data-focus-key="board:${esc(id)}" href="${esc(href)}">
       <div class="fb-card-top"><div><h3>${esc(epic.title || id || "Untitled")}</h3>
         <p class="fb-sub">${esc(subtitle(epic))}</p></div>${statePill(epic.state)}</div>
       <p class="fb-reason">${esc(epic.state_reason || "unknown reason")} <span class="fb-sub">since ${esc(sinceLabel(epic.since))}</span></p>
@@ -1351,7 +1351,7 @@
   }
 
   const api = {
-    READS, validRead, readResult, elapsedSeconds, advancedAge, workerBuckets, renderOperator,
+    preserveFocusedRow, READS, validRead, readResult, elapsedSeconds, advancedAge, workerBuckets, renderOperator,
     REFRESH_MS,
     STALE_MS,
     esc,
@@ -1513,12 +1513,25 @@
     }
   }
 
+  function preserveFocusedRow(element, index) {
+    if (index < 0 || !element?.closest) return;
+    const row = element.closest('.fb-card, tr');
+    const parent = row?.parentElement;
+    if (!parent) return;
+    const peers = Array.from(parent.children).filter(el => el !== row);
+    parent.insertBefore(row, peers[Math.min(index, peers.length)] || null);
+  }
+
   function paint() {
     const app = document.getElementById("fb-app");
     if (!app) return;
     const route = parseRoute(location.hash || "#/home");
+    const expandedSources = new Set(Array.from(app.querySelectorAll ? app.querySelectorAll('details[open] summary[data-focus-key]') : []).map(el => el.getAttribute('data-focus-key')));
     const focused = document.activeElement;
     const focusId = focused && focused.id;
+    const focusKey = focused?.getAttribute && focused.getAttribute('data-focus-key');
+    const focusedRow = focused?.closest?.('.fb-card, tr');
+    const focusedIndex = focusedRow?.parentElement ? Array.from(focusedRow.parentElement.children).indexOf(focusedRow) : -1;
     const focusAgent = focused?.getAttribute && focused.getAttribute("data-agent");
     const focusRetry = focused?.getAttribute && focused.getAttribute("data-retry");
     const focusFilter = focused?.getAttribute && focused.getAttribute("data-filter");
@@ -1560,13 +1573,16 @@
     const live = document.getElementById('fb-status');
     if (live && live.textContent !== statusText) live.textContent = statusText;
     app.innerHTML = html;
+    if (app.querySelectorAll) app.querySelectorAll('details summary[data-focus-key]').forEach(summary => {
+      if (expandedSources.has(summary.getAttribute('data-focus-key'))) summary.parentElement.open = true;
+    });
     markNav(route.view);
     syncStamp(route);
-    if (focusId || focusAgent || focusRetry || focusFilter || focusHref) {
+    if (focusId || focusKey || focusAgent || focusRetry || focusFilter || focusHref) {
       // Match attributes directly; untrusted identities never enter a CSS selector.
-      const candidates = Array.from(app.querySelectorAll ? app.querySelectorAll('a, button, input, select') : []);
-      const replacement = candidates.find(el => focusId ? el.id === focusId : focusAgent ? el.getAttribute('data-agent') === focusAgent : focusRetry ? el.getAttribute('data-retry') === focusRetry : focusFilter ? el.getAttribute('data-filter') === focusFilter : el.getAttribute('href') === focusHref);
-      if (replacement) replacement.focus();
+      const candidates = Array.from(app.querySelectorAll ? app.querySelectorAll('a, button, input, select, summary') : []);
+      const replacement = candidates.find(el => focusId ? el.id === focusId : focusKey ? el.getAttribute("data-focus-key") === focusKey : focusAgent ? el.getAttribute('data-agent') === focusAgent : focusRetry ? el.getAttribute('data-retry') === focusRetry : focusFilter ? el.getAttribute('data-filter') === focusFilter : el.getAttribute('href') === focusHref);
+      if (replacement) { preserveFocusedRow(replacement, focusedIndex); replacement.focus(); }
     }
     if (draft != null) {
       const field = document.getElementById("fb-search");
