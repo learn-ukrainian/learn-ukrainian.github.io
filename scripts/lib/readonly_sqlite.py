@@ -75,6 +75,11 @@ def open_readonly(
         if hasattr(conn, "enable_load_extension"):
             conn.enable_load_extension(False)
         conn.execute("PRAGMA query_only=ON")
+        # Refuse ATTACH with SQLite's own limit, never a Python callback: a
+        # callback runs while SQLite holds the connection mutex with the GIL
+        # released, so a connection shared across threads deadlocks against a
+        # thread that holds the GIL and waits for that mutex (#10674). With no
+        # attached database, DETACH has nothing to remove.
         conn.setlimit(sqlite3.SQLITE_LIMIT_ATTACHED, 0)
     except BaseException:
         conn.close()
