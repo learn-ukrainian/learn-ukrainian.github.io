@@ -504,3 +504,33 @@ def test_the_five_decision_consumers_agree_on_one_snapshot_and_account(case, tmp
     assert {"target_admission": admitted, "closeout_cli": selected} == dict.fromkeys(
         ("target_admission", "closeout_cli"), keeps_claude
     )
+
+
+@pytest.mark.parametrize(("default_file", "lists_claude"), [(None, True), (b"c\n", False)])
+def test_another_seats_refusal_lists_claude_as_a_rerouted_claude_dispatch_would_run(
+    tmp_path, monkeypatch, default_file, lists_claude
+):
+    """Parity with main: an ordinary dispatch reaches no claude seat, but its re-route advice still reads claude.
+
+    The advice reads the claude lane as the account a claude dispatch would resolve and bind: the
+    default account's lane row lists claude as before, and an unresolvable default account does not.
+    """
+    budget = _agreement_snapshot("healthy", _account_row(89.0))
+    budget["agents"]["grok"] = _fresh_lane(
+        status="near_cap", remaining_pct=0.5, codexbar={"weekly_remaining_pct": 0.5, "will_last_to_reset": False}
+    )
+    if default_file is None:
+        monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
+    else:
+        _default_account_file(tmp_path, monkeypatch, default_file)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="Cooler seats from budget snapshot") as refused:
+        delegate._resolve_agent_with_budget_guard(
+            "grok", fallbacks={}, claude_account=claude_account_lane.no_claude_account()
+        )
+
+    listed = str(refused.value).split("Cooler seats from budget snapshot: ", 1)[1].split(". Re-route", 1)[0]
+    assert ("claude" in listed.split(", ")) is lists_claude
+    assert "codex" in listed.split(", ")

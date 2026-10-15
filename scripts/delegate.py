@@ -17732,6 +17732,7 @@ def _resolve_agent_with_budget_guard(
     diags = payload.get("diagnostics") or {}
     rec = payload.get("recommendation") or {}
     # #10619, #10630: every lane record below is read as the dispatch's claude account.
+    routing_payload = payload
     view, account_evidence = claude_account_lane.select_account(payload, account=claude_account)
     payload = dict(view)
     agents = claude_account_lane.account_agents(payload, account=claude_account)
@@ -18021,7 +18022,14 @@ def _resolve_agent_with_budget_guard(
             print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
         return fallback
 
-    cooler = _budget_cooler_lanes(agents if isinstance(agents, dict) else {}, exclude=requested)
+    listed: Mapping[str, Any] = agents if isinstance(agents, dict) else {}
+    if not claude_account.resolved:
+        # This dispatch reaches no claude seat; a re-route to claude would run as the account
+        # that dispatch resolves and binds (#10630), so the advice reads the claude lane as it.
+        listed = claude_account_lane.account_agents(
+            routing_payload, account=claude_account_lane.resolve_route_account(None, strict=False)
+        )
+    cooler = _budget_cooler_lanes(dict(listed), exclude=requested)
     cooler_txt = ", ".join(cooler) if cooler else "(none marked cool/warm in snapshot)"
     raise BudgetGuardRefuseError(
         f"ROUTING REFUSED: --agent {requested} is {reason} and "
