@@ -16,6 +16,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from scripts.common import github_client
+from scripts.common.scratch import ensure_scratch_root
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
@@ -703,7 +704,7 @@ def main(argv=None, *, runner=None):
     read_parser.add_argument(
         "name",
         choices=sorted(
-            set(REST_READS) | set(GQL_READS) | REST_COMPAT_READS | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}
+            set(REST_READS) | set(GQL_READS) | REST_COMPAT_READS | {"queue-snapshot", "subissue-batch", "issue-states", "issue-count", "merge-facts"}
         ),
     )
     read_parser.add_argument(
@@ -860,6 +861,35 @@ def read(
     if dest != "unknown":
         environment["GH_HOST"] = dest.split("/", 1)[0]
     gh_repo = dest.split("/", 1)[-1]
+    if operation == "issue-count":
+        # One fixed aggregate read. No selectors, arbitrary queries or text leave this path.
+        known = gate.catalog()
+        allowed = {"github.com/" + row["github"].casefold() for row in known.values()}
+        if fields or dest not in allowed:
+            raise gate.PublishBlocked("OPSEC: invalid issue count repository or fields.")
+        owner, name = gh_repo.split("/", 1)
+        query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){issues(states:OPEN){totalCount}}}"
+        with tempfile.TemporaryDirectory(prefix="lu-issue-count-", dir=ensure_scratch_root()) as directory:
+            frozen = Path(directory) / "query.json"
+            frozen.write_text(json.dumps({"query": query, "variables": {"owner": owner, "name": name}}))
+            result = _send(
+                ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen), *_hostname_flag(dest)],
+                environment=environment, runner=runner, cwd=cwd, capture_output=True, text=True,
+                check=check, timeout=timeout,
+            )
+        if result.returncode == 0:
+            try:
+                document = json.loads(result.stdout)
+                count = document["data"]["repository"]["issues"]["totalCount"]
+                if document.get("errors") or type(count) is not int or count < 0:
+                    raise ValueError
+            except (ValueError, KeyError, TypeError):
+                raise gate.PublishBlocked("OPSEC: malformed issue count response.") from None
+            return github_client._result_process(
+                ["github", operation], github_client.Result(value=document), {},
+                {"capture_output": capture_output, "text": text, "stdout": stdout, "stderr": stderr, "check": check},
+            )
+        return result
     for key in ("number",):
         if key in fields and (type(fields[key]) is not int or fields[key] <= 0):
             raise gate.PublishBlocked("OPSEC: invalid read identifier.")
