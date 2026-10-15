@@ -503,17 +503,17 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         resolve_dispatch_claude_account,
     )
 
+    account_unresolved: str | None = None
     try:
         # A claude reviewer runs as the account a claude dispatch without
         # --claude-account resolves: the default-account file, else the
         # built-in default. Its seats are judged on that account (#10619).
         account_label, account_source = resolve_dispatch_claude_account(None)
     except ClaudeAccountRefused as exc:
-        payload = {"selected": None, "fail_closed_reason": f"claude account unresolved: {exc.code}"}
-        state["resolved_reviewer"] = payload
-        _save_state(args.state_file, state)
-        print(json.dumps(payload, indent=2))
-        return 1
+        # Only the claude seats cannot be judged; every other seat is selected
+        # as before, and the code is recorded on the receipt.
+        account_unresolved = exc.code
+        account_label, account_source = DEFAULT_CLAUDE_ACCOUNT, "unresolved"
     account = {"label": account_label, "meter": None}
     if isinstance(routing_snapshot, dict):
         routing_snapshot, account = claude_account_lane.select_account(routing_snapshot, account_label)
@@ -527,6 +527,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "routing_snapshot": routing_snapshot,
         "author_family": args.author_family,
         "claude_account": account_label,
+        "claude_account_unresolved": account_unresolved,
     }
     if facts is not None:
         inputs = facts.resolver_inputs(risk=args.risk, review_profile=args.review_profile, **common)
@@ -559,6 +560,15 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "resolved_risk": resolution.resolved_risk,
         "fail_closed_reason": resolution.fail_closed_reason,
     }
+    if account_unresolved:
+        payload["claude_account_unresolved"] = account_unresolved
+        if resolution.selected is None and len(resolution.quorum) < 2:
+            # Nothing outside the claude seats qualified: name why they could not.
+            payload["fail_closed_reason"] = "; ".join(
+                part
+                for part in (f"claude account unresolved: {account_unresolved}", resolution.fail_closed_reason)
+                if part
+            )
     # Persist the durable receipt: drivers downstream expect the resolution on
     # disk, not just on stdout. Merge with any prior state; without a target,
     # code-profile resolution needs explicit owned paths.
@@ -567,7 +577,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     state["resolved_reviewer"] = payload
     _save_state(args.state_file, state)
     print(json.dumps(payload, indent=2))
-    if resolution.fail_closed_reason:
+    if payload["fail_closed_reason"]:
         return 1
     # A dual-family quorum plan (unattested-harness author) is a successful
     # resolution: no single reviewer of record, both seats must PASS.

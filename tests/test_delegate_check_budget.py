@@ -2265,6 +2265,16 @@ def test_account_view_without_a_usable_meter_is_unknown(row, reason):
     assert view == {"status": "unknown", "freshness": "unavailable", "health": {"healthy": True}}
 
 
+@pytest.mark.parametrize("status", [[], ["ok"], {}, {"ok": True}, 1, None])
+def test_account_view_with_a_non_string_status_is_unknown(status):
+    row = {**_account_row(89.0), "status": status}
+
+    view, unknown = claude_account_lane.lane_view(row, {})
+
+    assert unknown is not None
+    assert view["status"] == "unknown" and view["freshness"] == "unavailable"
+
+
 def test_account_view_of_a_stale_row_reads_stale_last_good():
     view, unknown = claude_account_lane.lane_view(_account_row(0.5, status="stale"), {})
 

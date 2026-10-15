@@ -427,6 +427,44 @@ def test_resolve_reviewer_headroom_stop_reads_the_default_claude_account(
         assert "MODEL_HEADROOM" in opus["reason"]
 
 
+def _claude_author_cli(tmp_path, capsys, data):
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(data))
+    code = closeout_cli.main(
+        [
+            "--state-file",
+            str(tmp_path / "state.json"),
+            "resolve-reviewer",
+            "--author-model",
+            "claude-opus-5-5",
+            "--risk",
+            "critical",
+            "--owned-path",
+            "ordinary.py",
+            "--language-lane",
+            "--routing-snapshot-file",
+            str(path),
+        ]
+    )
+    return code, json.loads(capsys.readouterr().out)
+
+
+def test_unresolved_default_account_removes_only_claude_seats(tmp_path, capsys, monkeypatch):
+    """A broken default-account file must not block a reviewer that never runs as a claude account."""
+    _default_account(tmp_path, monkeypatch, "c")
+    data = snapshot()
+    data["agents"]["codex"] = {"status": "cool", "remaining_pct": 40}
+
+    code, result = _claude_author_cli(tmp_path, capsys, data)
+
+    assert code == 0
+    assert result["selected"]["concrete_model"] == "gpt-6.1-sol"
+    assert result["claude_account_unresolved"] == "claude_account_default_file_invalid"
+    assert result["fail_closed_reason"] is None
+    # The default-account output keys are untouched: no claude_account block.
+    assert "claude_account" not in result
+
+
 def test_resolve_reviewer_fails_closed_on_an_unreadable_default_account(tmp_path, capsys, monkeypatch):
     _default_account(tmp_path, monkeypatch, "c")
     path = tmp_path / "snapshot.json"
@@ -435,4 +473,8 @@ def test_resolve_reviewer_fails_closed_on_an_unreadable_default_account(tmp_path
     code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
 
     assert code == 1 and result["selected"] is None
+    # Only claude seats are eligible for a gpt-6.1-sol author, and they cannot be judged.
     assert result["fail_closed_reason"] == "claude account unresolved: claude_account_default_file_invalid"
+    assert result["claude_account_unresolved"] == "claude_account_default_file_invalid"
+    opus = next(item for item in result["trace"] if item["name"] == "claude-opus-5-5")
+    assert opus["status"] == "excluded" and "claude account unresolved" in opus["reason"]

@@ -504,6 +504,9 @@ class ResolverInputs:
     # ``routing_snapshot`` must already carry its view (``agents.claude``).
     # None or the default label reads the Monitor's claude lane row.
     claude_account: str | None = None
+    # The refusal code when that account could not be resolved: claude-route
+    # seats cannot be judged, so they are excluded; other seats are unaffected.
+    claude_account_unresolved: str | None = None
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -678,6 +681,9 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    unresolved = getattr(inputs, "claude_account_unresolved", None)
+    if unresolved and candidate.route == "claude":
+        return f"claude account unresolved: {unresolved}"
     from scripts.agent_runtime.model_pause import account_used_pct, refusal_reason
 
     paused = refusal_reason(

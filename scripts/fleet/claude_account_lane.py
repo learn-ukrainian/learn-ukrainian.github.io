@@ -75,7 +75,8 @@ def lane_view(row: Any, lane_row: Any) -> tuple[dict[str, Any], str | None]:
 
     route = route_facts(lane_row)
     meter = row if isinstance(row, Mapping) else {}
-    state = meter.get("status")
+    # A non-string status (a list or mapping) is unhashable and never healthy.
+    state = meter.get("status") if isinstance(meter.get("status"), str) else None
     session, weekly = meter.get("session5h"), meter.get("weekly")
     session_left, weekly_left = account_left_pct(session), account_left_pct(weekly)
     if state not in {"ok", "stale"} or session_left is None or weekly_left is None:
