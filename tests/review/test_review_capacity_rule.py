@@ -353,10 +353,15 @@ def _account_row(left):
     }
 
 
-def _default_account(tmp_path, monkeypatch, label: str | None) -> None:
+def _default_account(tmp_path, monkeypatch, label: str | None, *, bound: bool = True) -> None:
+    """The default-account file naming ``label``; account b is bound like a real login (#10733: closeout binds it)."""
     if label is None:
         monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
         return
+    if label == "b":
+        from tests.test_delegate import _bind_claude_account_b
+
+        _bind_claude_account_b(tmp_path, monkeypatch, bound=bound)
     path = tmp_path / "claude-default-account"
     path.write_bytes(f"{label}\n".encode())
     path.chmod(0o600)
@@ -462,6 +467,20 @@ def test_unresolved_default_account_removes_only_claude_seats(tmp_path, capsys, 
     assert result["claude_account_unresolved"] == "claude_account_default_file_invalid"
     assert result["fail_closed_reason"] is None
     # The default-account output keys are untouched: no claude_account block.
+    assert "claude_account" not in result
+
+
+def test_unbound_default_account_removes_only_claude_seats(tmp_path, capsys, monkeypatch):
+    """#10733: the default file names b, but b has no binding: claude seats are removed before selection."""
+    _default_account(tmp_path, monkeypatch, "b", bound=False)
+    data = snapshot(remaining=90) | {"claude_accounts": {"claude:b": _account_row(89.0)}}
+    data["agents"]["codex"] = {"status": "cool", "remaining_pct": 40}
+
+    code, result = _claude_author_cli(tmp_path, capsys, data)
+
+    assert code == 0
+    assert result["selected"]["concrete_model"] == "gpt-6.1-sol"
+    assert result["claude_account_unresolved"] == "claude_account_binding_missing"
     assert "claude_account" not in result
 
 

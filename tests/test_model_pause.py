@@ -9,6 +9,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 
 from scripts.agent_runtime import model_pause as mp
+from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 
 NOW = datetime(2026, 10, 10, 12, 0, tzinfo=UTC)
 POLICY = {
@@ -45,13 +46,13 @@ def test_unreadable_usage_does_not_block() -> None:
 
 def test_naive_or_invalid_until_is_inert() -> None:
     policy = {"pauses": [{"pattern": "claude-opus-*", "until": "2026-10-12T07:00:00"}]}
-    mp.refuse_paused_models(["claude-opus-5-5"], policy=policy, now=NOW)
+    mp.refuse_paused_models(["claude-opus-5-5"], policy=policy, now=NOW, used_pct=mp.account_used_pct(HOST_ACCOUNT))
 
 
 def test_missing_policy_file_means_no_pauses(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(tmp_path / "absent.json"))
     assert mp.load_policy() == {}
-    mp.refuse_paused_models(["claude-opus-5-5"])
+    mp.refuse_paused_models(["claude-opus-5-5"], used_pct=mp.account_used_pct(HOST_ACCOUNT))
 
 
 def test_policy_file_is_read(tmp_path, monkeypatch) -> None:
@@ -60,7 +61,7 @@ def test_policy_file_is_read(tmp_path, monkeypatch) -> None:
     path.write_text(json.dumps({"pauses": [{"pattern": "claude-opus-*", "until": future}]}))
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
     with pytest.raises(mp.ModelPausedRefused):
-        mp.refuse_paused_models(["claude-opus-5-5"])
+        mp.refuse_paused_models(["claude-opus-5-5"], used_pct=mp.account_used_pct(HOST_ACCOUNT))
 
 
 def test_admission_refuses_a_paused_seat_default(tmp_path, monkeypatch) -> None:
@@ -72,7 +73,7 @@ def test_admission_refuses_a_paused_seat_default(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
     monkeypatch.setattr(ta, "_seat_default_model", lambda seat: "paused-model-1")
     with pytest.raises(mp.ModelPausedRefused):
-        ta._refuse_paused([None, ta._seat_default_model("claude")])
+        ta._refuse_paused([None, ta._seat_default_model("claude")], claude_account=HOST_ACCOUNT)
 
 
 def test_reviewer_resolver_excludes_a_paused_candidate(tmp_path, monkeypatch) -> None:
@@ -84,7 +85,7 @@ def test_reviewer_resolver_excludes_a_paused_candidate(tmp_path, monkeypatch) ->
     future = (datetime.now(UTC) + timedelta(days=1)).isoformat()
     path.write_text(json.dumps({"pauses": [{"pattern": model, "until": future}]}))
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
-    reason = rr._hard_exclusion_reason(candidate, None)  # type: ignore[arg-type]
+    reason = rr._hard_exclusion_reason(candidate, None)
     assert reason and "MODEL_PAUSED" in reason
 
 
@@ -98,7 +99,7 @@ def test_malformed_usage_is_unreadable(monkeypatch) -> None:
 
     for payload in ("[1, 2]", '{"agents": {"claude": {"codexbar": [1]}}}', '{"agents": 3}'):
         monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *a, _p=payload, **k: io.StringIO(_p))
-        assert mp.routing_budget_used_pct("claude") is None
+        assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
 
 
 def test_refusals_are_public_safe() -> None:
@@ -151,7 +152,7 @@ def test_dispatch_admission_refuses_a_paused_model(tmp_path, monkeypatch) -> Non
     policy.write_text(json.dumps({"pauses": [{"pattern": "claude-opus-*", "until": "2999-01-01T00:00:00Z"}]}))
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
     with pytest.raises(mp.ModelPausedRefused):
-        ta._refuse_paused(["claude-opus-5-5"])
+        ta._refuse_paused(["claude-opus-5-5"], claude_account=HOST_ACCOUNT)
 
 
 def test_pause_inputs_by_dispatch_kind() -> None:
@@ -168,7 +169,7 @@ def test_withdrawn_reading_is_unavailable(monkeypatch) -> None:
 
     payload = '{"agents": {"claude": {"status": "unknown", "weekly_used_pct": 95}}}'
     monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *a, **k: io.StringIO(payload))
-    assert mp.routing_budget_used_pct("claude") is None
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
 
 
 def test_public_source_has_no_endpoint_literal() -> None:
@@ -182,7 +183,7 @@ def _budget(monkeypatch, payload: dict) -> float | None:
     import io
 
     monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(payload)))
-    return mp.routing_budget_used_pct("claude")
+    return mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT)
 
 
 def test_only_fresh_probe_readings_count(monkeypatch) -> None:
@@ -210,7 +211,7 @@ def test_truncated_response_is_unavailable(monkeypatch) -> None:
         raise http.client.IncompleteRead(b"{")
 
     monkeypatch.setattr(mp.urllib.request, "urlopen", boom)
-    assert mp.routing_budget_used_pct("claude") is None
+    assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
 
 
 def test_endpoint_resolves_under_plain_package_import() -> None:
@@ -298,7 +299,7 @@ def test_admission_refuses_native_alias_under_concrete_pause(tmp_path, monkeypat
     policy.write_text(json.dumps({"pauses": [{"pattern": "claude-opus-5-5", "until": "2999-01-01T00:00:00Z"}]}))
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
     with pytest.raises(mp.ModelPausedRefused):
-        ta._refuse_paused(["opus"])
+        ta._refuse_paused(["opus"], claude_account=HOST_ACCOUNT)
 
 
 # --- #10619: the headroom stop reads the account a claude dispatch runs as -----------------
@@ -349,21 +350,43 @@ def _serve(monkeypatch, payload: dict) -> None:
 )
 def test_selected_claude_account_reads_only_its_own_fresh_row(monkeypatch, b_row, expected) -> None:
     _serve(monkeypatch, _accounts_payload(b_row))
-    assert mp.routing_budget_used_pct("claude", claude_account="b") == expected
-    # The default label and an unlabelled read keep the lane row; other lanes ignore the label.
-    for label in (None, "a"):
-        assert mp.routing_budget_used_pct("claude", claude_account=label) == 84.0
-    assert mp.routing_budget_used_pct("codex", claude_account="b") == 30.0
+    assert mp.routing_budget_used_pct("claude", account=account("b")) == expected
+    # The default account keeps the lane row, from any source; other lanes ignore the account.
+    for default in (HOST_ACCOUNT, account("a"), account("a", "default-file")):
+        assert mp.routing_budget_used_pct("claude", account=default) == 84.0
+    assert mp.routing_budget_used_pct("codex", account=account("b")) == 30.0
+    # #10630: no account named, or one unresolved, never reads a claude meter.
+    for unnamed in (None, unresolved("claude_account_default_file_invalid")):
+        assert mp.routing_budget_used_pct("claude", account=unnamed) is None
+        assert mp.routing_budget_used_pct("codex", account=unnamed) == 30.0
 
 
 def test_account_reader_holds_only_on_the_selected_accounts_meter(monkeypatch) -> None:
     policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}
     _serve(monkeypatch, _accounts_payload(_account(89.0)))
-    assert mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct("b")) is None
-    for label in (None, "a"):
-        held = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(label))
+    reader = mp.account_used_pct(account("b"))
+    assert mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=reader) is None
+    for default in (HOST_ACCOUNT, account("a")):
+        held = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(default))
         assert held == "MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom"
-    assert mp.account_used_pct(None) is mp.routing_budget_used_pct
+    # An unnamed or unresolved account has no claude meter, so its headroom never holds.
+    for unnamed in (None, unresolved("claude_account_binding_missing")):
+        unheld = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(unnamed))
+        assert unheld is None
+
+
+def test_usage_readers_require_a_named_claude_account(monkeypatch) -> None:
+    """#10630 row 1: there is no default account; a bare label or a missing account fails loudly."""
+    _serve(monkeypatch, _accounts_payload(_account(89.0)))
+    with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'account'"):
+        mp.routing_budget_used_pct("claude")
+    for bare in ("b", "a"):
+        with pytest.raises(TypeError, match="named ClaudeAccount"):
+            mp.routing_budget_used_pct("claude", account=bare)
+        with pytest.raises(TypeError, match="named ClaudeAccount"):
+            mp.account_used_pct(bare)
+    with pytest.raises(TypeError, match="used_pct"):
+        mp.refuse_paused_models(["claude-opus-5-5"], policy={"headroom": []}, now=NOW)
 
 
 @pytest.mark.parametrize(("label", "refused"), [("b", False), ("a", True), (None, True)])

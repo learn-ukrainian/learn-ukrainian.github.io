@@ -24,6 +24,7 @@ import pytest
 import delegate
 from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
 from scripts.fleet import claude_account_lane
+from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 
@@ -284,7 +285,7 @@ def test_force_agent_on_a_deficit_keeps_diagnostics_and_the_seat(monkeypatch, tm
     }
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: {})
-    assert delegate._resolve_agent_with_budget_guard("claude", fallbacks={"claude": "codex"}) == "codex"
+    assert delegate._resolve_agent_with_budget_guard("claude", fallbacks={"claude": "codex"}, claude_account=HOST_ACCOUNT) == "codex"
     capsys.readouterr()
 
     state = _force_dispatch(monkeypatch, tmp_path, budget)
@@ -539,7 +540,7 @@ def _hot_language_budget():
 def test_language_lane_refuses_to_shed_onto_cursor(monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
     with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
-        delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks())
+        delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
 
 
 @pytest.mark.parametrize("marker", ["--language-lane", "--review-profile=ukrainian"])
@@ -580,13 +581,13 @@ def test_language_fallback_refuses_grok_even_when_cool(monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
     _use_fallbacks(monkeypatch, {"claude": "codex", "codex": "grok"})
     with pytest.raises(delegate.BudgetGuardRefuseError, match="cannot move to grok"):
-        delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks())
+        delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
 
 
 def test_language_budget_guard_refuses_direct_grok_even_when_cool(monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
     with pytest.raises(delegate.BudgetGuardRefuseError, match="--agent grok is outside"):
-        delegate._resolve_agent_with_budget_guard("grok", language_lane=True, fallbacks=_fallbacks())
+        delegate._resolve_agent_with_budget_guard("grok", language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
 
 
 def _codex_reserve_budget(status: str = "warm"):
@@ -642,7 +643,7 @@ def test_check_budget_uses_reset_reserve_for_codex(monkeypatch, capsys):
             "expires_at": "2099-03-01T00:00:00Z",
         },
     )
-    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) == "codex"
+    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) == "codex"
     assert "reset reserve active (2 confirmed reset(s) remaining)" in capsys.readouterr().err
 
 
@@ -669,9 +670,9 @@ def test_reset_reserve_never_overrides_the_owner_avoid(monkeypatch, capsys, lang
     if language_lane:
         _use_fallbacks(monkeypatch, {"codex": "claude"})
         with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
-            delegate._resolve_agent_with_budget_guard("codex", language_lane=True, fallbacks=_fallbacks())
+            delegate._resolve_agent_with_budget_guard("codex", language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
     else:
-        assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) != "codex"
+        assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) != "codex"
     assert "reset reserve active" not in capsys.readouterr().err
 
 
@@ -716,11 +717,12 @@ def test_budget_guard_bounds_old_assertion_by_snapshot_inventory(
     )
     if requested == "claude" and inventory_state != "available":
         with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
-            delegate._resolve_agent_with_budget_guard(requested, language_lane=True, fallbacks=_fallbacks())
+            delegate._resolve_agent_with_budget_guard(requested, language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
         assert "reset reserve active" not in capsys.readouterr().err
         return
     result = delegate._resolve_agent_with_budget_guard(
-        requested, language_lane=requested == "claude", fallbacks=_fallbacks()
+        requested, language_lane=requested == "claude", fallbacks=_fallbacks(),
+        claude_account=HOST_ACCOUNT,
     )
     output = capsys.readouterr().err
     if inventory_state == "available":
@@ -747,7 +749,7 @@ def test_check_budget_stale_snapshot_does_not_activate_reset_reserve(monkeypatch
             "expires_at": "2099-03-01T00:00:00Z",
         },
     )
-    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) == "codex"
+    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) == "codex"
     assert "reset reserve active" not in capsys.readouterr().err
 
 
@@ -765,7 +767,7 @@ def test_language_fallback_can_land_on_reserve_eligible_codex(monkeypatch):
         },
     )
     _use_fallbacks(monkeypatch, {"claude": "codex"})
-    assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks()) == "codex"
+    assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) == "codex"
 
 
 def test_adapter_rejects_foreign_model_after_substitution(monkeypatch, tmp_path):
@@ -1164,7 +1166,7 @@ def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_pa
     assert rc == 0
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE" not in err
-    assert delegate._resolve_agent_with_budget_guard("claude", fallbacks=_fallbacks()) == "claude"
+    assert delegate._resolve_agent_with_budget_guard("claude", fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) == "claude"
 
 
 def test_genuine_pace_deficit_still_hard_substitutes(monkeypatch, tmp_path, capsys):
@@ -1575,7 +1577,7 @@ def test_prepaid_guard_refuses_without_cost_ledger(monkeypatch, lane, provider, 
         },
     )
     with pytest.raises(delegate.BudgetGuardRefuseError, match=f"NOTE: ROUTING REFUSED: prepaid {prepaid}"):
-        delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks())
+        delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
 
 
 @pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
@@ -1598,7 +1600,7 @@ def test_fresh_funded_prepaid_does_not_require_cost_ledger(monkeypatch, lane, pr
             "diagnostics": {"records_loaded": 0, "stale": True},
         },
     )
-    assert delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks()) == lane
+    assert delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT) == lane
 
 
 @pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
@@ -1608,7 +1610,7 @@ def test_prepaid_monitor_failure_refuses(monkeypatch, lane, provider):
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
     with pytest.raises(delegate.BudgetGuardRefuseError, match="NEED_PROBE"):
-        delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks())
+        delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks(), claude_account=HOST_ACCOUNT)
 
 
 @pytest.mark.parametrize(
@@ -1969,7 +1971,7 @@ def _owner_guard(monkeypatch, lane: str, record: dict, *, model: str | None = No
     }
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: snapshot)
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-    return delegate._resolve_agent_with_budget_guard(lane, requested_model=model, fallbacks={lane: "claude"})
+    return delegate._resolve_agent_with_budget_guard(lane, requested_model=model, fallbacks={lane: "claude"}, claude_account=HOST_ACCOUNT)
 
 
 def test_near_cap_hard_acts_without_cost_ledger_records(monkeypatch, capsys):
@@ -2124,15 +2126,22 @@ def _accounts_budget(lane: dict, rows: dict[str, dict | None]) -> dict:
     }
 
 
-def _account_guard(monkeypatch, budget: dict, label: str | None, *, model: str | None = "claude-opus-5-5", **kwargs):
+def _route_account(label: str | claude_account_lane.ClaudeAccount | None) -> claude_account_lane.ClaudeAccount:
+    """A claude request's account: None is what a dispatch without a default-account file resolves (a)."""
+    if label is None:
+        return HOST_ACCOUNT
+    return label if isinstance(label, claude_account_lane.ClaudeAccount) else account(label)
+
+
+def _account_guard(monkeypatch, budget: dict, label, *, model: str | None = "claude-opus-5-5", **kwargs):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
     return delegate._resolve_agent_with_budget_guard(
-        "claude", requested_model=model, fallbacks={"claude": "codex"}, claude_account=label, **kwargs
+        "claude", requested_model=model, fallbacks={"claude": "codex"}, claude_account=_route_account(label), **kwargs
     )
 
 
-def _guard_outcome(monkeypatch, budget: dict, label: str | None, **kwargs) -> tuple[str, str]:
+def _guard_outcome(monkeypatch, budget: dict, label, **kwargs) -> tuple[str, str]:
     """``("agent", name)`` or ``("refused", message)`` for one guard call."""
     try:
         return "agent", _account_guard(monkeypatch, budget, label, **kwargs)
@@ -2388,7 +2397,8 @@ def test_default_label_reads_the_lane_row_and_ignores_account_rows(monkeypatch, 
             None,
         ),
         ("a", {"b": _account_row(89.0)}, {"label": "a", "meter": "agents.claude"}, 0.5),
-        (None, {"b": _account_row(89.0)}, None, 0.5),
+        # #10630: every claude request names its account; the built-in default reads the lane row.
+        (None, {"b": _account_row(89.0)}, {"label": "a", "meter": "agents.claude"}, 0.5),
     ],
 )
 def test_forced_dispatch_diagnostics_name_the_account_evaluated(monkeypatch, capsys, label, rows, account, remaining):
@@ -2413,7 +2423,7 @@ def test_forced_dispatch_without_the_monitor_names_the_unevaluated_account(monke
 
     assert (
         delegate._resolve_agent_with_budget_guard(
-            "claude", fallbacks={"claude": "codex"}, force_agent=True, diagnostic_sink=sink, claude_account="b"
+            "claude", fallbacks={"claude": "codex"}, force_agent=True, diagnostic_sink=sink, claude_account=account("b")
         )
         == "claude"
     )
@@ -2475,7 +2485,7 @@ def test_review_reselection_reads_the_selected_account_after_another_seat(monkey
             requested_model="gpt-6.1-sol",
             fallbacks={"codex": "claude"},
             review_select=review_select,
-            claude_account="b",
+            claude_account=account("b"),
         )
 
     (snapshot,) = seen
@@ -2610,24 +2620,48 @@ def test_ordinary_claude_dispatch_retains_the_account_and_capacity(monkeypatch, 
     assert "⚠ ROUTING CHECK: lane claude" not in capsys.readouterr().err
 
 
-def test_ordinary_dispatch_without_a_claude_account_retains_nothing(monkeypatch):
+@pytest.mark.parametrize(
+    "route_account", [claude_account_lane.no_claude_account(), HOST_ACCOUNT, account("b", "default-file")]
+)
+def test_ordinary_dispatch_of_another_seat_retains_no_claude_account(monkeypatch, route_account):
+    """Only a claude request records the account it was judged on; another seat's ordinary dispatch keeps nothing."""
     budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(89.0)})
+    budget["agents"]["codex"] = _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 90.0})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
     sink: dict = {}
 
-    assert _account_guard(monkeypatch, budget, None, diagnostic_sink=sink) == "claude"
+    assert (
+        delegate._resolve_agent_with_budget_guard(
+            "codex", fallbacks={"codex": "cursor"}, diagnostic_sink=sink, claude_account=route_account
+        )
+        == "codex"
+    )
     assert sink == {}
+
+
+def test_claude_request_on_an_unresolved_account_is_refused_before_the_monitor(monkeypatch):
+    """#10733: the guard never selects a claude seat on an account that was not resolved and bound."""
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("read the Monitor"))
+
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="CLAUDE_ACCOUNT_REFUSED: claude_account_default_file_invalid"):
+        delegate._resolve_agent_with_budget_guard(
+            "claude", fallbacks={"claude": "codex"}, claude_account=unresolved("claude_account_default_file_invalid")
+        )
 
 
 def test_select_account_reads_only_a_non_default_label_and_keeps_the_payload(tmp_path):
     lane = _unattributed_rate_limited_lane(tmp_path)
     budget = _accounts_budget(lane, {"b": _account_row(89.0)})
 
-    assert claude_account_lane.select_account(budget, None) == (budget, None)
-    assert claude_account_lane.select_account(budget, "a") == (budget, {"label": "a", "meter": "agents.claude"})
+    assert claude_account_lane.select_account(budget, account=HOST_ACCOUNT) == (
+        budget,
+        {"label": "a", "meter": "agents.claude"},
+    )
     flat = {"claude": "healthy"}
-    assert claude_account_lane.select_account(flat, "b") == (flat, {"label": "b", "meter": None})
+    assert claude_account_lane.select_account(flat, account=account("b")) == (flat, {"label": "b", "meter": None})
 
-    selected, evidence = claude_account_lane.select_account(budget, "b")
+    selected, evidence = claude_account_lane.select_account(budget, account=account("b"))
 
     assert selected["agents"]["claude"]["remaining_pct"] == pytest.approx(89.0)
     assert selected["agents"]["codex"] is budget["agents"]["codex"]

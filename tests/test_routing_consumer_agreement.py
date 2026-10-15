@@ -84,6 +84,7 @@ from scripts.review import reviewer_scheduler
 from scripts.review.model_catalog import retired_model_refusal
 from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate
 from tests.api.test_routing_budget import _configure_base
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
 FETCHED = "2026-10-05T11:59:30Z"
@@ -618,7 +619,7 @@ def test_picker_cli_reports_the_same_rows(snapshot, monkeypatch, capsys):
 
 def _guard(budget: dict[str, Any], monkeypatch: pytest.MonkeyPatch, model: str) -> str:
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    return delegate._resolve_agent_with_budget_guard("codex", requested_model=model, fallbacks={"codex": "claude"})
+    return delegate._resolve_agent_with_budget_guard("codex", requested_model=model, fallbacks={"codex": "claude"}, claude_account=HOST_ACCOUNT)
 
 
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
@@ -641,7 +642,7 @@ def test_budget_guard_honours_the_hot_label_source(snapshot, monkeypatch):
     _case, budget = snapshot
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
     facts = owner(budget, "cursor")
-    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"})
+    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
     if budget["diagnostics"].get("stale") or facts.capacity != credit_lane.CAPACITY_AVOID:
         assert chosen == "cursor"
     else:
@@ -902,7 +903,7 @@ def test_cursor_auto_hot_label_is_not_cleared_by_an_on_pace_weekly_window(snapsh
     assert facts.capacity == credit_lane.CAPACITY_AVOID
     assert _rows(budget)["cursor"]["avoid"] is True
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"})
+    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
     assert chosen == "claude"
 
 

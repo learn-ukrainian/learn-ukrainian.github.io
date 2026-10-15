@@ -42,6 +42,7 @@ from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPO
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
 from scripts.fleet import credit_lane
+from scripts.fleet.claude_account_lane import ClaudeAccount
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
 from scripts.review.capacity import ReviewCapacity, review_capacity
 from scripts.review.model_catalog import (
@@ -499,14 +500,14 @@ class ResolverInputs:
     author_families: frozenset[str] = field(default_factory=frozenset)
     author_models: tuple[str | None, ...] = ()
     author_task_models: tuple[str, ...] = ()
-    # The account a claude-route reviewer runs as (#10619). The plan-headroom
-    # stop reads the claude lane's usage as that account, and a caller's
-    # ``routing_snapshot`` must already carry its view (``agents.claude``).
-    # None or the default label reads the Monitor's claude lane row.
-    claude_account: str | None = None
-    # The refusal code when that account could not be resolved: claude-route
-    # seats cannot be judged, so they are excluded; other seats are unaffected.
-    claude_account_unresolved: str | None = None
+    # The account a claude-route reviewer runs as: the account part of its
+    # route key (#10619, #10630). The plan-headroom stop reads the claude
+    # lane's usage as that account, and a caller's full ``routing_snapshot``
+    # must be its ``claude_account_lane.select_account`` view; an unresolved
+    # account excludes every claude-route seat and no other. None names no
+    # account (a structural check, which no quota decides): the claude lane's
+    # usage then reads as unknown and never blocks.
+    claude_account: ClaudeAccount | None = None
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -681,14 +682,13 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
-    unresolved = getattr(inputs, "claude_account_unresolved", None)
-    if unresolved and candidate.route == "claude":
-        return f"claude account unresolved: {unresolved}"
+    # ``inputs`` None: a bare exclusion probe (tests) names no account.
+    account = getattr(inputs, "claude_account", None)
+    if candidate.route == "claude" and account is not None and not account.resolved:
+        return f"claude account unresolved: {account.refusal}"
     from scripts.agent_runtime.model_pause import account_used_pct, refusal_reason
 
-    paused = refusal_reason(
-        candidate_dispatch_model(candidate), used_pct=account_used_pct(getattr(inputs, "claude_account", None))
-    )
+    paused = refusal_reason(candidate_dispatch_model(candidate), used_pct=account_used_pct(account))
     if paused:
         return paused
     # Custom ladders and pins cannot fabricate review authority for a

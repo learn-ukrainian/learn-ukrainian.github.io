@@ -88,6 +88,13 @@ def _bench_inventory(
             routing_snapshot = compute_routing_budget()
         except Exception:
             routing_snapshot = {}
+    from scripts.fleet import claude_account_lane
+
+    # Claude seats count on the account a claude review dispatch would run as (#10630);
+    # one that cannot be resolved or bound counts no claude seat.
+    claude_account = claude_account_lane.resolve_route_account(None, strict=False)
+    if isinstance(routing_snapshot, Mapping):
+        routing_snapshot, _ = claude_account_lane.select_account(routing_snapshot, account=claude_account)
 
     family_eligible: dict[str, list[str]] = {}
     family_excluded: dict[str, dict[str, str]] = {}
@@ -100,6 +107,7 @@ def _bench_inventory(
             risk=risk,
             data_egress_policy=data_egress_policy,
             routing_snapshot=routing_snapshot,
+            claude_account=claude_account,
         )
         eligible = []
         excluded = {}

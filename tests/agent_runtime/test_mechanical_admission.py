@@ -25,6 +25,7 @@ from scripts.review.model_catalog import (
 )
 from scripts.review.reviewer_resolver import SONNET_5_5, ResolverInputs, resolve_reviewer
 from scripts.telemetry.pricing import compute_cost
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 HAIKU = "claude-haiku-5-5"
 ROOT = Path(__file__).resolve().parents[2]
@@ -48,7 +49,7 @@ def test_catalog_role_admits_typed_work(family):
     result = resolve_role(family, purpose="inspect")
     assert result.candidates[0].model_id == HAIKU
     admission.refuse_mechanical_task((result.candidates[0].model_id,), **scope(task_family=family))
-    (target,) = resolve_and_admit(("claude",), model=HAIKU, **scope(task_family=family))
+    (target,) = resolve_and_admit(("claude",), model=HAIKU, **scope(task_family=family), claude_account=HOST_ACCOUNT)
     assert target.model == HAIKU
 
 
@@ -106,7 +107,7 @@ def test_excluded_work_refuses_before_routing(overrides, reason):
     def never_route(_request):
         pytest.fail("ineligible original model reached route resolution")
     with pytest.raises(admission.MechanicalAdmissionRefused, match=reason):
-        resolve_and_admit(("claude",), model=HAIKU, route=never_route, **scope(**overrides))
+        resolve_and_admit(("claude",), model=HAIKU, route=never_route, **scope(**overrides), claude_account=HOST_ACCOUNT)
 
 
 @pytest.mark.parametrize("path", [

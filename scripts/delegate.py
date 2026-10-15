@@ -6976,7 +6976,6 @@ def _kimi_worker_refusal(
     that worktree's git config and hooks directory.
     """
     from scripts.agent_runtime import kimi_boundary
-    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY
     from scripts.agent_runtime.kimi_admission import (
         ADMITTED_MODE,
         KimiAdmissionRefused,
@@ -7000,9 +6999,8 @@ def _kimi_worker_refusal(
             launch = _read_state_json(_state_path_no_create(task_id)) or {}
             scope = mechanical_worker_scope(launch, mode=mode, model=model, prompt=prompt)
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
-            # A claude worker re-checks headroom on the account its record names (#10619);
-            # an unknown label is refused where the worker authenticates.
-            account = launch.get(CLAUDE_ACCOUNT_KEY) if agent == "claude" else None
+            # A worker re-checks headroom on the account its record names (#10619, #10630);
+            # an unknown label is refused before any claude seat is admitted on it.
             (target,) = resolve_and_admit(
                 (agent,),
                 model=model,
@@ -7011,7 +7009,7 @@ def _kimi_worker_refusal(
                 trees=lambda: _kimi_worktree_trees(cwd),
                 new_dispatch=True,
                 harness=harness,
-                claude_account=account if isinstance(account, str) else None,
+                claude_account=claude_account_lane.account_from_record(launch, agent=agent),
                 **scope,
             )
         except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
@@ -7042,7 +7040,15 @@ def _kimi_worker_refusal(
     try:
         if mode != ADMITTED_MODE or review:
             # Refused by mode or review alone: no need to read the task record (or create its directory).
-            resolve_and_admit((agent,), model=model, mode=mode, review=review, new_dispatch=True, harness=harness)
+            resolve_and_admit(
+                (agent,),
+                model=model,
+                mode=mode,
+                review=review,
+                new_dispatch=True,
+                harness=harness,
+                claude_account=claude_account_lane.account_from_record({}, agent=agent),
+            )
         # Read-only: a refused worker must leave no task directory or file behind.
         launch = _read_state_json(_state_path_no_create(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
@@ -7056,6 +7062,7 @@ def _kimi_worker_refusal(
             new_dispatch=True,
             harness=harness,
             trees=lambda: _kimi_worktree_trees(cwd),
+            claude_account=claude_account_lane.account_from_record(launch, agent=agent),
         )
     except MechanicalAdmissionRefused as exc:
         # e.g. an operator model pause that began after dispatch. The task record
@@ -7086,9 +7093,12 @@ def _kimi_worker_refusal(
             # and a refused Kimi worker writes nothing.
             return _TypedCause("kimi_admission_refused").public(), None
         # A tree reader failed: the refusal names its class; the reader's message stays local.
-        cause = _exception_cause("kimi_admission_refused", exc.read_errors[0])
+        read_cause = _exception_cause("kimi_admission_refused", exc.read_errors[0])
         detail = "\n".join(f"{type(error).__name__}: {error}" for error in exc.read_errors)
-        return _publish_cause(task_id, dataclasses.replace(cause, diagnostic=f"{exc}\n{detail}"), source="worker"), None
+        return (
+            _publish_cause(task_id, dataclasses.replace(read_cause, diagnostic=f"{exc}\n{detail}"), source="worker"),
+            None,
+        )
     worktree = launch.get("worktree_path")
     if not worktree or Path(worktree).resolve() != cwd.resolve():
         return _TypedCause("kimi_worktree_mismatch").public(), None
@@ -12445,49 +12455,49 @@ def _recorded_claude_account(args: argparse.Namespace) -> str | None:
     return resolve_claude_account_label(record[CLAUDE_ACCOUNT_KEY])
 
 
-def _resolve_dispatch_claude_account(args: argparse.Namespace) -> tuple[str, str] | None:
-    """A claude dispatch's account label and its source, resolved once before any side effect (#10619).
+def _resolve_dispatch_claude_account(args: argparse.Namespace) -> claude_account_lane.ClaudeAccount:
+    """The account this dispatch's claude routes run as, resolved and bound before admission (#10619, #10733).
 
-    ``None`` for another seat, which takes no label and never reads the
-    default-account file. Otherwise the label is, in order: a ``--force-new``
-    re-run's recorded label (a conflicting ``--claude-account`` is refused),
-    ``--claude-account``, the default-account file, then the built-in default.
-    A non-default label from any source has its binding and credential
-    sources verified here and again where the worker authenticates: an
-    ordinary worker runs with the bound account's login directory, a formal
-    review attempt's sealed boundary selects that account's credential.
-    Raises ``ClaudeAccountRefused``.
+    It is the account part of every route key admission judges
+    (``claude_account_lane.resolve_route_account``): the label is, in order, a
+    ``--force-new`` re-run's recorded label (a conflicting ``--claude-account``
+    is refused), ``--claude-account``, the default-account file, then the
+    built-in default. A non-default label from any source has its binding and
+    credential sources verified here and again where the worker
+    authenticates: an ordinary worker runs with the bound account's login
+    directory, a formal review attempt's sealed boundary selects that
+    account's credential.
+
+    A claude request raises ``ClaudeAccountRefused``. A review dispatch for
+    another seat can still select a claude reviewer, so it resolves the
+    account too; a refusal there makes it unresolved, which removes the
+    claude seats and no other. Any other seat reaches no claude route (no
+    ``dispatch_fallbacks`` row maps onto claude) and reads no account file;
+    its account is unresolved. ``--claude-account`` other than the default
+    on another seat raises ``claude_account_seat_unsupported``.
     """
     from scripts.agent_runtime.attempt_boundary import (
         DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
         resolve_claude_account_label,
-        resolve_dispatch_claude_account,
-        verify_claude_account,
     )
 
     explicit = getattr(args, "claude_account", None)
-    if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
+    claude_request = str(getattr(args, "agent", "") or "").strip().casefold() == "claude"
+    if not claude_request:
         if resolve_claude_account_label(explicit) != DEFAULT_CLAUDE_ACCOUNT:
             raise ClaudeAccountRefused("claude_account_seat_unsupported")
-        return None
-    recorded = _recorded_claude_account(args)
-    if recorded is None:
-        label, source = resolve_dispatch_claude_account(explicit)
-    elif explicit is None:
-        label, source = recorded, "record"
-    elif resolve_claude_account_label(explicit) == recorded:
-        label, source = recorded, "explicit"
-    else:
-        raise ClaudeAccountRefused("claude_account_record_conflict")
-    verify_claude_account(label)
-    return label, source
+        if not _dispatch_is_review_typed(args):
+            return claude_account_lane.no_claude_account()
+    return claude_account_lane.resolve_route_account(
+        explicit, strict=claude_request, recorded=lambda: _recorded_claude_account(args)
+    )
 
 
 def _claude_account_forward_argv(
-    argv: list[str], args: argparse.Namespace, claude_account: tuple[str, str] | None
+    argv: list[str], args: argparse.Namespace, claude_account: claude_account_lane.ClaudeAccount
 ) -> list[str]:
-    """The argv a worker-host forward sends: a claude dispatch names the label resolved here (#10619).
+    """The argv a worker-host forward sends: a claude request names the label resolved here (#10619).
 
     The worker host would resolve an omitted ``--claude-account`` from its own
     default-account file and task records, and could run as another account.
@@ -12495,12 +12505,16 @@ def _claude_account_forward_argv(
     host admits it with every check; an explicit flag is sent as given. The
     argv is parsed back to prove it names that label; otherwise nothing is
     forwarded (``ClaudeAccountRefused``: ``claude_account_forward_unsupported``).
+    Another seat's request is forwarded as given: the worker host resolves and
+    binds its own claude account before its own admission.
     """
-    if claude_account is None:
+    if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
         return list(argv)
     from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
 
-    label = claude_account[0]
+    label = claude_account.label
+    if label is None:
+        raise ClaudeAccountRefused(claude_account.refusal or "claude_account_unknown")
     forwarded = list(argv) if getattr(args, "claude_account", None) is not None else [*argv, "--claude-account", label]
     try:
         # A parse error may quote the argv; it is never shown.
@@ -12514,15 +12528,18 @@ def _claude_account_forward_argv(
 
 
 def _claude_account_state(
-    args: argparse.Namespace, claude_account: tuple[str, str] | None, dispatch_agent: str
+    args: argparse.Namespace, claude_account: claude_account_lane.ClaudeAccount, dispatch_agent: str
 ) -> dict[str, Any]:
     """A claude task record's account label and its source; the worker reads the label back from the record.
 
-    ``claude_account`` is what dispatch resolved before any side effect
-    (``_resolve_dispatch_claude_account``). An ordinary worker on a
-    non-default label, from any source, loads none of its login directory's
-    user settings (hooks, permission rules, MCP servers, plugins); the record
-    says so in ``claude_account_user_scope_omitted`` (#10619).
+    ``claude_account`` is what dispatch resolved and bound before admission
+    (``_resolve_dispatch_claude_account``), whichever step made the route
+    claude. An ordinary worker on a non-default label, from any source, loads
+    none of its login directory's user settings (hooks, permission rules, MCP
+    servers, plugins); the record says so in
+    ``claude_account_user_scope_omitted`` (#10619). An unresolved account
+    raises ``ClaudeAccountRefused``: admission never admits a claude route on
+    one (#10733), so no record names an account that was not resolved.
     """
     if dispatch_agent != "claude":
         return {}
@@ -12530,9 +12547,12 @@ def _claude_account_state(
         CLAUDE_ACCOUNT_KEY,
         CLAUDE_ACCOUNT_SOURCE_KEY,
         DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
     )
 
-    label, source = claude_account or (DEFAULT_CLAUDE_ACCOUNT, "builtin")
+    label, source = claude_account.label, claude_account.source
+    if label is None:
+        raise ClaudeAccountRefused(claude_account.refusal or "claude_account_unknown")
     state: dict[str, Any] = {CLAUDE_ACCOUNT_KEY: label, CLAUDE_ACCOUNT_SOURCE_KEY: source}
     if label != DEFAULT_CLAUDE_ACCOUNT and not getattr(args, "review_attempt", None):
         state["claude_account_user_scope_omitted"] = True
@@ -12855,10 +12875,8 @@ def _dispatch(
     kimi_refusal, kimi_start_commit, launch_target = _kimi_dispatch_gate(
         args,
         agent=original_agent,
-        route=_dispatch_route(
-            args, routing, language_lane=language_lane, review_attempt=review_attempt, claude_account=claude_account
-        ),
-        claude_account=claude_account[0] if claude_account is not None else None,
+        route=_dispatch_route(args, routing, language_lane=language_lane, review_attempt=review_attempt),
+        claude_account=claude_account,
         repo_role=fleet_repo.role,
         target_repo_root=target_repo_root,
         validated_worktree=validated_worktree,
@@ -13554,7 +13572,7 @@ def _dispatch(
     _warn_kimicc_oauth_token_life(requested_harness, args.hard_timeout)
 
     try:
-        _check_capacity_hint(dispatch_agent, args=args)
+        _check_capacity_hint(dispatch_agent, args=args, claude_account=claude_account)
     except CapacityGuardRefuseError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
@@ -16710,7 +16728,6 @@ def _dispatch_route(
     *,
     language_lane: bool,
     review_attempt: Any,
-    claude_account: tuple[str, str] | None = None,
 ) -> Route:
     """The launch route ``resolve_and_admit`` runs for a dispatch, after the original request is gated.
 
@@ -16720,14 +16737,15 @@ def _dispatch_route(
     keeps the requested seat and still records quota and health; its model is
     mapped or defaulted (``_resolve_substitution_model``). Review routes use
     ``request.review_select`` instead, retaining the resolver's exact model.
-    ``claude_account`` is the ``(label, source)`` dispatch resolved
-    (``_resolve_dispatch_claude_account``); the guard judges a claude seat on
-    that account (#10619). Refusals raise
+    The guard judges every claude seat on ``request.claude_account``, the
+    account admission was given (#10619, #10630). Refusals raise
     ``_DispatchRouteRefused`` or ``BudgetGuardRefuseError``. Records what it
     decided in ``routing``.
     """
 
     def route(request: RouteRequest) -> tuple[str, str | None, str]:
+        if request.claude_account is None:
+            raise TypeError("a dispatch route is admitted with the ClaudeAccount its claude seats run as (#10630)")
         original_agent, original_model = request.seat, request.model
         model_resolution: dict[str, Any] = {}
         requested_agent = original_agent
@@ -16803,7 +16821,7 @@ def _dispatch_route(
                 ),
                 force_agent=force_agent,
                 diagnostic_sink=diagnostic_sink,
-                claude_account=claude_account[0] if claude_account is not None else None,
+                claude_account=request.claude_account,
             )
             if diagnostic_sink:
                 routing.budget_diagnostics = diagnostic_sink
@@ -16847,7 +16865,7 @@ def _kimi_dispatch_gate(
     target_repo_root: Path,
     validated_worktree: Path | None,
     validated_cwd: Path | None,
-    claude_account: str | None = None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
 ) -> tuple[str | None, str | None, Any]:
     """The dispatch-side gate: ``(refusal, start commit, admitted target)``.
 
@@ -16859,9 +16877,9 @@ def _kimi_dispatch_gate(
     owned paths were last read at — in the worktree of the seat resolved so
     far — which the worker's worktree must be created from or checked out at;
     None when the call is refused, is not Kimi, or owns no paths. The tree is
-    resolved only after every policy check admits. ``claude_account`` is a
-    claude dispatch's resolved account label, which admission's claude
-    readings use (#10619).
+    resolved only after every policy check admits. ``claude_account`` is the
+    account dispatch resolved and bound for its claude routes (None: resolved
+    here from ``args``, see :func:`_admit_dispatch_target`).
     """
     from scripts.agent_runtime.target_admission import launch_seat
 
@@ -16900,9 +16918,10 @@ def _kimi_admission_refusal(
     agent: str,
     trees: Any,
     repo_role: str | None = None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
 ) -> str | None:
     """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted."""
-    return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role)[0]
+    return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role, claude_account=claude_account)[0]
 
 
 def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
@@ -17046,25 +17065,37 @@ def _admit_dispatch_target(
     trees: Any,
     repo_role: str | None = None,
     route: Route | None = None,
-    claude_account: str | None = None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
 ) -> tuple[str | None, Any]:
     """``(refusal, admitted target)`` for launching ``agent`` with ``--model``; exactly one is None.
 
     The original request (``agent``, ``--model``) and the launch ``route``
     it resolves to (retired-CLI alias, budget substitution) are resolved and
     admitted in one step (``resolve_and_admit``); a route refusal is returned
-    like a Kimi refusal. ``claude_account`` is a claude dispatch's account
-    label: reviewer selection, the red-team initial snapshot and the
-    plan-headroom stop read the claude lane as that account (#10619). ``--owned-path`` and ``--research-owned-path`` both
+    like a Kimi refusal. ``claude_account`` is the account the dispatch's
+    claude routes run as, the account part of every route key admission
+    judges (#10619, #10630): the launch route, reviewer selection, the
+    red-team initial snapshot and the plan-headroom stop read the claude lane
+    as that account. None resolves it from ``args`` first
+    (:func:`_resolve_dispatch_claude_account`); a refusal is returned as
+    ``CLAUDE_ACCOUNT_REFUSED``. ``--owned-path`` and ``--research-owned-path`` both
     declare task ownership, so every path from either flag must be on the
     Kimi allowlist and is read for Ukrainian content in ``trees`` (see
     ``refuse_kimi_if_disallowed``).
     """
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
     from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
     from scripts.review.target_resolution import TargetResolutionError, repository_target_error
+
+    if claude_account is None:
+        try:
+            claude_account = _resolve_dispatch_claude_account(args)
+        except ClaudeAccountRefused as exc:
+            return f"CLAUDE_ACCOUNT_REFUSED: {exc.code}", None
+    account = claude_account
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -17129,7 +17160,7 @@ def _admit_dispatch_target(
             review_mode=getattr(args, "review_mode", "cross_family"),
             review_task_id=getattr(args, "task_id", None),
             review_initial_snapshot=(
-                (lambda: claude_account_lane.select_account(_fetch_routing_budget(), claude_account)[0])
+                (lambda: claude_account_lane.select_account(_fetch_routing_budget(), account=account)[0])
                 if getattr(args, "review_mode", "cross_family") == "red_team"
                 else None
             ),
@@ -17159,7 +17190,7 @@ def _admit_dispatch_target(
             task_family=getattr(args, "research_task_family", None),
             task_role=getattr(args, "research_role", None),
             task_prompt=getattr(args, "prompt", None),
-            claude_account=claude_account,
+            claude_account=account,
         )
         _require_ukrainian_model_family(args, target.model, resolved=True)
         if mechanical_task != _mechanical_task_scope(args):
@@ -17469,7 +17500,7 @@ def _remember_agent_substitution(
     requested_agent: str,
     requested_model: str | None,
     actual_agent: str,
-    actual_model: str,
+    actual_model: str | None,
     how: str,
 ) -> None:
     if sink is None:
@@ -17582,7 +17613,7 @@ def _resolve_agent_with_budget_guard(
     review_trusted_inputs: bool = False,
     force_agent: bool = False,
     diagnostic_sink: dict[str, Any] | None = None,
-    claude_account: str | None = None,
+    claude_account: claude_account_lane.ClaudeAccount,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -17599,26 +17630,28 @@ def _resolve_agent_with_budget_guard(
     pace only orders equal fits and ``force_agent`` never bypasses review hard gates.
     A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
 
-    ``claude_account`` is a claude dispatch's resolved account label (#10619). The
-    ``claude`` lane row is the Monitor host's default account, so a non-default
-    label is judged on its own ``claude_accounts`` row instead
-    (:func:`claude_account_lane.select_account`), by every decision below that
-    reads the claude lane, whichever seat is requested at that point: writer
-    substitution, the language-lane chain, and every review candidate,
-    including a reviewer reselected after another seat. A stale row is
-    advisory like a stale snapshot, and an unknown one is advisory and never
-    healthy. None or the default label reads the lane row as before. The
-    evaluated account and its lane reading are kept in ``diagnostic_sink`` for
-    every claude dispatch, forced or not.
+    ``claude_account`` is required: the account the dispatch's claude routes
+    run as, the account part of their route key (#10619, #10630). Every lane
+    record below is read through :func:`claude_account_lane.select_account`,
+    so the claude lane is that account's meter for every decision that reads
+    it, whichever seat is requested at that point: writer substitution, the
+    language-lane chain, and every review candidate, including a reviewer
+    reselected after another seat. The default account reads the lane row
+    as before; another reads its own ``claude_accounts`` row. A stale
+    account meter is advisory like a stale snapshot, an unknown one is
+    advisory and never healthy, and a claude request on an unresolved account
+    is refused. The evaluated account and its lane reading are kept in
+    ``diagnostic_sink`` for every claude request, forced or not.
     """
     requested = (agent or "").strip().lower()
+    claude_account_lane.require_account(claude_account)
     # The account every claude-lane reading below is judged on (#10619).
-    evaluated_account = {"label": claude_account, "meter": None} if claude_account is not None else None
+    evaluated_account: dict[str, Any] = {"label": claude_account.label, "meter": None}
 
     def retain(record: Mapping[str, Any] | None, metadata: Any, ranked: Any = None) -> None:
         # A forced lane prints and keeps its quota and health (#9673); a claude
-        # dispatch keeps the account it was judged on and that reading (#10619).
-        if force_agent or (evaluated_account is not None and diagnostic_sink is not None):
+        # request keeps the account it was judged on and that reading (#10619).
+        if force_agent or (requested == "claude" and diagnostic_sink is not None):
             _publish_lane_diagnostics(
                 requested,
                 record,
@@ -17626,7 +17659,7 @@ def _resolve_agent_with_budget_guard(
                 model=requested_model,
                 sink=diagnostic_sink,
                 ranked=ranked,
-                account=evaluated_account,
+                account=evaluated_account if requested == "claude" else None,
                 announce=force_agent,
             )
 
@@ -17634,6 +17667,11 @@ def _resolve_agent_with_budget_guard(
         raise BudgetGuardRefuseError(
             "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
             f"--agent {requested} is outside claude, codex (GPT), and agy (Gemini)."
+        )
+    if requested == "claude" and not claude_account.resolved:
+        # #10733: no claude seat is selected on an account that was not resolved and bound.
+        raise BudgetGuardRefuseError(
+            f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}: no claude seat is admitted on an unresolved account"
         )
     try:
         payload = _fetch_routing_budget()
@@ -17652,15 +17690,15 @@ def _resolve_agent_with_budget_guard(
 
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
-        status = _api_lane_status_from_account(prepaid, account)
+        prepaid_status = _api_lane_status_from_account(prepaid, account)
         blocked = (
-            status not in {"cool", "warm"}
+            prepaid_status not in {"cool", "warm"}
             or account.get("is_available") is False
             or account.get("status") == "near_cap"
         )
         if blocked and not force_agent:
             raise BudgetGuardRefuseError(
-                f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
+                f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={prepaid_status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
                 f"freshness={account.get('freshness', 'unavailable')}. "
                 "Verify funding with `python -m scripts.fleet.usage refresh` or pass --force-agent."
@@ -17668,7 +17706,7 @@ def _resolve_agent_with_budget_guard(
         if force_agent:
             if blocked:
                 print(
-                    f"⚠ ROUTING CHECK: prepaid {prepaid} status={status}; "
+                    f"⚠ ROUTING CHECK: prepaid {prepaid} status={prepaid_status}; "
                     f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
                     f"freshness={account.get('freshness', 'unavailable')}.",
                     file=sys.stderr,
@@ -17684,7 +17722,10 @@ def _resolve_agent_with_budget_guard(
 
     diags = payload.get("diagnostics") or {}
     rec = payload.get("recommendation") or {}
-    agents = payload.get("agents") or {}
+    # #10619, #10630: every lane record below is read as the dispatch's claude account.
+    view, account_evidence = claude_account_lane.select_account(payload, account=claude_account)
+    payload = dict(view)
+    agents = claude_account_lane.account_agents(payload, account=claude_account)
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
@@ -17709,11 +17750,10 @@ def _resolve_agent_with_budget_guard(
         return requested
 
     account_stale = False
-    if claude_account is not None:
+    if requested == "claude":
         # #10619: the lane row is the default account; a selected one is judged on its own meter.
-        payload, evaluated_account = claude_account_lane.select_account(payload, claude_account)
-        agents = payload.get("agents") or {}
-        meter_state = evaluated_account.get("state")
+        evaluated_account = account_evidence
+        meter_state = account_evidence.get("state")
         account_stale = meter_state == "stale"
         if meter_state == "unknown":
             # Policy (#10619, driver decision): an unknown or missing selected-account meter is
@@ -17723,22 +17763,22 @@ def _resolve_agent_with_budget_guard(
             # dispatch while the Monitor's per-account rows are unknown; a KNOWN exhausted
             # account is still substituted or refused below.
             print(
-                f"⚠ ROUTING CHECK UNKNOWN: claude account {claude_account} meter unavailable "
-                f"({evaluated_account['reason']}); no hard sub",
+                f"⚠ ROUTING CHECK UNKNOWN: claude account {claude_account.label} meter unavailable "
+                f"({account_evidence['reason']}); no hard sub",
                 file=sys.stderr,
             )
         elif account_stale:
             print(
-                f"⚠ ROUTING CHECK ADVISORY (stale claude account {claude_account} meter, "
-                f"age_s={agents['claude'].get('age_s')}) — verify manually; no hard sub",
+                f"⚠ ROUTING CHECK ADVISORY (stale claude account {claude_account.label} meter, "
+                f"age_s={(agents.get('claude') or {}).get('age_s')}) — verify manually; no hard sub",
                 file=sys.stderr,
             )
-        unattributed = evaluated_account.get("unattributed_rate_limits")
-        if unattributed:
+        unattributed = account_evidence.get("unattributed_rate_limits")
+        if isinstance(unattributed, Mapping) and unattributed:
             print(
                 "⚠ ROUTING CHECK ADVISORY: lane claude runtime headroom blocked "
                 f"({unattributed.get('headroom_reason') or 'recent rate_limited cluster'}) is not attributed to "
-                f"an account; not counted against claude account {claude_account}",
+                f"an account; not counted against claude account {claude_account.label}",
                 file=sys.stderr,
             )
 
@@ -17926,17 +17966,18 @@ def _resolve_agent_with_budget_guard(
     if not needs_action:
         return requested
 
-    sub = fallbacks.get(requested)
+    fallback = fallbacks.get(requested)
     # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
     # no inferred/hardcoded mappings (a deleted config entry must mean
     # refuse or advisory, not silently resurrect an old route).
-    if sub and sub not in _DISPATCH_AGENT_CHOICES:
+    if fallback and fallback not in _DISPATCH_AGENT_CHOICES:
         print(
-            f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {sub}, not a known dispatch agent — ignoring hard sub.",
+            f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {fallback}, not a known dispatch agent — "
+            "ignoring hard sub.",
             file=sys.stderr,
         )
-        sub = None
-    if sub and sub != requested:
+        fallback = None
+    if fallback and fallback != requested:
         if language_lane:
             return _language_lane_substitute(
                 requested,
@@ -17949,9 +17990,9 @@ def _resolve_agent_with_budget_guard(
                 model_resolution=model_resolution,
                 origin_agent=origin_agent or requested,
             )
-        chosen, how = _resolve_substitution_model(sub, requested_model)
+        chosen, how = _resolve_substitution_model(fallback, requested_model)
         note = (
-            f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
+            f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {fallback} "
             f"{_substitution_model_phrase(chosen, how, requested_model)} "
             f"({reason}; "
             f"sub per agent_fallback_substitutions.yaml dispatch_fallbacks). "
@@ -17963,13 +18004,13 @@ def _resolve_agent_with_budget_guard(
             source="budget-guard",
             requested_agent=origin_agent or requested,
             requested_model=requested_model,
-            actual_agent=sub,
+            actual_agent=fallback,
             actual_model=chosen,
             how=how,
         )
         if burn is not None:
             print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
-        return sub
+        return fallback
 
     cooler = _budget_cooler_lanes(agents if isinstance(agents, dict) else {}, exclude=requested)
     cooler_txt = ", ".join(cooler) if cooler else "(none marked cool/warm in snapshot)"
@@ -18182,8 +18223,15 @@ def _cursor_driver_lease_is_self_dispatch(lease: dict[str, Any]) -> bool:
         return False
 
 
-def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = None) -> None:
-    """Refuse Cursor driver-lease self-dispatch; otherwise retain the busy-lane hint."""
+def _check_capacity_hint(
+    dispatch_agent: str,
+    args: argparse.Namespace | None = None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
+) -> None:
+    """Refuse Cursor driver-lease self-dispatch; otherwise retain the busy-lane hint.
+
+    ``claude_account`` is the dispatch's (None: resolved from ``args``), which the Kimi suggestion admits with.
+    """
     target_norm = str(dispatch_agent or "").strip().lower()
     force_agent = bool(getattr(args, "force_agent", False)) if args is not None else False
 
@@ -18241,7 +18289,10 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         kimi_admissible = target_norm == "kimi" or (
             args is not None
             and getattr(args, "repo", None) is None
-            and _kimi_admission_refusal(args, agent="kimi", trees=(DirectoryTree(_REPO_ROOT),)) is None
+            and _kimi_admission_refusal(
+                args, agent="kimi", trees=(DirectoryTree(_REPO_ROOT),), claude_account=claude_account
+            )
+            is None
         )
         subscription_lanes = tuple(
             lane

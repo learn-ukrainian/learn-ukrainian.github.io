@@ -20,6 +20,7 @@ import subprocess
 import sys
 from dataclasses import asdict
 from pathlib import Path
+from typing import Any
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.fleet import claude_account_lane, credit_lane
@@ -32,7 +33,7 @@ from scripts.review.record_cf_verdict import (
     collect_branch_review_facts,
     refuse_excluded_only_range,
 )
-from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+from scripts.review.reviewer_resolver import RedTeamResolution, ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
     ScopeBaseline,
     check_cycle_convergence_breaker,
@@ -459,6 +460,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         repo_root = Path(repo_root_value)
         try:
             base_sha = rev_parse(repo_root, "HEAD") if target.mode == "local" else target.base_sha
+            if base_sha is None:
+                raise CloseoutStateError("target_sha_invalid")
             literal_paths = git_changed_paths(repo_root, base_sha, target.head_sha)
         except TargetResolutionError as exc:
             raise CloseoutStateError(str(exc)) from exc
@@ -468,6 +471,9 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             # same facts the verdict recorder accepts (#9739). --author-model is
             # added to them, never substituted for them.
             try:
+                head_sha = target.head_sha
+                if head_sha is None:
+                    raise CloseoutStateError("target_sha_invalid")
                 raw_base = target_args.get("base")
                 exclude = authorship_exclude_sha(repo_root, base_branch=raw_base if isinstance(raw_base, str) else None)
                 # Resolution previews the explicit plan on the frozen target.
@@ -481,8 +487,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
                 facts = collect_branch_review_facts(
                     repository=args.repository or _checkout_repository(repo_root),
                     repo_root=repo_root,
-                    base_tip_sha=target.base_sha,
-                    head_sha=target.head_sha,
+                    base_tip_sha=base_sha,
+                    head_sha=head_sha,
                     task_root=Path(args.task_root) if args.task_root else _checkout_task_root(repo_root),
                     owned_paths=tuple(args.owned_path or []),
                     subject_seats=tuple(args.subject_seat or []),
@@ -492,32 +498,26 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
                 )
                 refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
             except (BranchFactsError, CloseoutStateError) as exc:
-                payload = {"selected": None, "fail_closed_reason": f"branch review facts unavailable: {exc}"}
-                state["resolved_reviewer"] = payload
+                failed: dict[str, Any] = {
+                    "selected": None,
+                    "fail_closed_reason": f"branch review facts unavailable: {exc}",
+                }
+                state["resolved_reviewer"] = failed
                 _save_state(args.state_file, state)
-                print(json.dumps(payload, indent=2))
+                print(json.dumps(failed, indent=2))
                 return 1
-    from scripts.agent_runtime.attempt_boundary import (
-        DEFAULT_CLAUDE_ACCOUNT,
-        ClaudeAccountRefused,
-        resolve_dispatch_claude_account,
-    )
+    from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
 
-    account_unresolved: str | None = None
-    try:
-        # A claude reviewer runs as the account a claude dispatch without
-        # --claude-account resolves: the default-account file, else the
-        # built-in default. Its seats are judged on that account (#10619).
-        account_label, account_source = resolve_dispatch_claude_account(None)
-    except ClaudeAccountRefused as exc:
-        # Only the claude seats cannot be judged; every other seat is selected
-        # as before, and the code is recorded on the receipt.
-        account_unresolved = exc.code
-        account_label, account_source = DEFAULT_CLAUDE_ACCOUNT, "unresolved"
-    account = {"label": account_label, "meter": None}
+    # A claude reviewer runs as the account a review dispatch resolves and
+    # binds before admission: the default-account file, else the built-in
+    # default (#10619, #10733). Its seats are judged on that account; one that
+    # cannot be resolved or bound removes only the claude seats, and its code
+    # is recorded on the receipt.
+    account = claude_account_lane.resolve_route_account(None, strict=False)
+    evidence: dict[str, Any] = {"label": account.label, "meter": None}
     if isinstance(routing_snapshot, dict):
-        routing_snapshot, account = claude_account_lane.select_account(routing_snapshot, account_label)
-    common = {
+        routing_snapshot, evidence = claude_account_lane.select_account(routing_snapshot, account=account)
+    common: dict[str, Any] = {
         "author_model": args.author_model,
         "domain": args.domain,
         "language_lane": args.language_lane,
@@ -526,8 +526,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "isolation_required": args.isolation_required,
         "routing_snapshot": routing_snapshot,
         "author_family": args.author_family,
-        "claude_account": account_label,
-        "claude_account_unresolved": account_unresolved,
+        "claude_account": account,
     }
     if facts is not None:
         inputs = facts.resolver_inputs(risk=args.risk, review_profile=args.review_profile, **common)
@@ -542,12 +541,14 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             **common,
         )
     resolution = resolve_reviewer(inputs, review_mode=args.review_mode)
-    payload = {
+    payload: dict[str, Any] = {
         "selected": asdict(resolution.selected) if resolution.selected else None,
         "routing_snapshot": snapshot_receipt,
         # Named only when claude seats were judged on another account than the lane row's.
         **(
-            {"claude_account": {**account, "source": account_source}} if account_label != DEFAULT_CLAUDE_ACCOUNT else {}
+            {"claude_account": {**evidence, "source": account.source}}
+            if account.resolved and account.label != DEFAULT_CLAUDE_ACCOUNT
+            else {}
         ),
         "branch_facts": facts.receipt() if facts is not None else None,
         "quorum": [asdict(q) for q in resolution.quorum],
@@ -560,19 +561,19 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "resolved_risk": resolution.resolved_risk,
         "fail_closed_reason": resolution.fail_closed_reason,
     }
-    if account_unresolved:
-        payload["claude_account_unresolved"] = account_unresolved
+    if not account.resolved:
+        payload["claude_account_unresolved"] = account.refusal
         if resolution.selected is None and len(resolution.quorum) < 2:
             # Nothing outside the claude seats qualified: name why they could not.
             payload["fail_closed_reason"] = "; ".join(
                 part
-                for part in (f"claude account unresolved: {account_unresolved}", resolution.fail_closed_reason)
+                for part in (f"claude account unresolved: {account.refusal}", resolution.fail_closed_reason)
                 if part
             )
     # Persist the durable receipt: drivers downstream expect the resolution on
     # disk, not just on stdout. Merge with any prior state; without a target,
     # code-profile resolution needs explicit owned paths.
-    if args.review_mode == "red_team":
+    if args.review_mode == "red_team" and isinstance(resolution, RedTeamResolution):
         payload.update(review_mode=resolution.review_mode, limitation=resolution.limitation)
     state["resolved_reviewer"] = payload
     _save_state(args.state_file, state)
@@ -1087,7 +1088,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
     try:
-        return args.func(args)
+        code: int = args.func(args)
+        return code
     except CloseoutStateError as exc:
         print(json.dumps({"error": str(exc)}), file=sys.stderr)
         return 1

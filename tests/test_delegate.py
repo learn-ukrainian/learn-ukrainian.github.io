@@ -50,6 +50,7 @@ from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
+from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 from tests.test_ask_review_admission_floor import write_code_review_manifest
@@ -17310,7 +17311,8 @@ def _patch_admitted_codex_review_substitution(monkeypatch):
         )
         routing.substitution = resolution["record"]
         (target,) = resolve_and_admit(
-            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True
+            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True,
+            claude_account=HOST_ACCOUNT,
         )
         return None, None, target
 

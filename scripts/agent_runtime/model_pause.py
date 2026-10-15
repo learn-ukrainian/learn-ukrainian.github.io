@@ -20,9 +20,10 @@ entry is inert, so the pause lifts by itself at the reset.
 
 ``headroom``: a model matching ``pattern`` is refused while the lane's weekly
 plan usage (routing-budget) is at or above ``max_weekly_used_pct``. The
-``claude`` lane's usage is the account a claude dispatch runs as
-(``account_used_pct``, #10619). Unreadable usage does not block (a warning is
-the caller's to log); a missing or invalid policy file means no pauses.
+``claude`` lane's usage is the meter of the account the claude seat runs as,
+which every reader names (``account_used_pct``, #10619, #10630). Unreadable
+usage does not block (a warning is the caller's to log); a missing or invalid
+policy file means no pauses.
 """
 
 from __future__ import annotations
@@ -36,9 +37,12 @@ import urllib.request
 from collections.abc import Callable, Iterable, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+
+if TYPE_CHECKING:
+    from scripts.fleet.claude_account_lane import ClaudeAccount
 
 DEFAULT_POLICY = Path("~/.config/learn-ukrainian/model-pause.json")
 
@@ -152,13 +156,20 @@ def _monitor_base() -> str:
     return (os.environ.get("DELEGATE_MONITOR_API") or DEFAULT_BASE_URL).rstrip("/")
 
 
-def routing_budget_used_pct(lane: str, *, claude_account: str | None = None) -> float | None:
+def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> float | None:
     """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None.
 
-    The ``claude`` lane row is the Monitor host's default account. With another
-    ``claude_account`` label the ``claude`` lane reads that account's
-    ``claude_accounts`` row instead (#10619), under the same fresh-only rule.
+    ``account`` is required: the ``claude`` lane is that account's meter
+    (``claude_account_lane.account_weekly_used_pct``), and None (no account
+    named, for a structural check) reads the ``claude`` lane as unknown. Other
+    lanes ignore it. Only a fresh probe reading counts.
     """
+    from scripts.fleet import claude_account_lane
+
+    if account is not None:
+        claude_account_lane.require_account(account)
+    elif lane == "claude":
+        return None
     base = _monitor_base()
     try:
         with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
@@ -167,16 +178,10 @@ def routing_budget_used_pct(lane: str, *, claude_account: str | None = None) -> 
         return None  # unreachable, unreadable or truncated: no usable reading
     if not isinstance(data, dict):
         return None
-    if lane == "claude" and claude_account is not None:
-        from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
-
-        if claude_account != DEFAULT_CLAUDE_ACCOUNT:
-            from scripts.fleet.claude_account_lane import account_weekly_used_pct
-
-            return account_weekly_used_pct(data, claude_account)
-    agents = data.get("agents")
-    info = agents.get(lane) if isinstance(agents, dict) else None
-    if not isinstance(info, dict) or info.get("status") == "unknown":
+    if lane == "claude" and account is not None:
+        return claude_account_lane.account_weekly_used_pct(data, account=account)
+    info = claude_account_lane.other_lane_record(data, lane)
+    if not info or info.get("status") == "unknown":
         return None  # missing, or withdrawn as stale by Monitor
     codexbar = info.get("codexbar")
     if not isinstance(codexbar, dict):
@@ -189,20 +194,22 @@ def routing_budget_used_pct(lane: str, *, claude_account: str | None = None) -> 
     return None
 
 
-def account_used_pct(claude_account: str | None) -> Callable[[str], float | None]:
-    """The usage reader for work whose claude seat runs as ``claude_account`` (#10619).
+def account_used_pct(account: ClaudeAccount | None) -> Callable[[str], float | None]:
+    """The usage reader for work whose claude seat runs as ``account`` (#10619, #10630).
 
-    None (not a claude dispatch, or no label) is :func:`routing_budget_used_pct` itself.
+    Required: None names no account, so the claude lane then reads as unknown.
     """
-    if claude_account is None:
-        return routing_budget_used_pct
-    return functools.partial(routing_budget_used_pct, claude_account=claude_account)
+    if account is not None:
+        from scripts.fleet.claude_account_lane import require_account
+
+        require_account(account)
+    return functools.partial(routing_budget_used_pct, account=account)
 
 
 def headroom_stop(
     model: str | None,
     policy: Mapping[str, Any],
-    used_pct: Callable[[str], float | None] = routing_budget_used_pct,
+    used_pct: Callable[[str], float | None],
 ) -> dict[str, Any] | None:
     if not model:
         return None
@@ -223,7 +230,7 @@ def refusal_reason(
     *,
     policy: Mapping[str, Any] | None = None,
     now: datetime | None = None,
-    used_pct: Callable[[str], float | None] = routing_budget_used_pct,
+    used_pct: Callable[[str], float | None],
 ) -> str | None:
     policy = load_policy() if policy is None else policy
     if not policy or not model:
@@ -242,9 +249,12 @@ def refuse_paused_models(
     *,
     policy: Mapping[str, Any] | None = None,
     now: datetime | None = None,
-    used_pct: Callable[[str], float | None] = routing_budget_used_pct,
+    used_pct: Callable[[str], float | None],
 ) -> None:
-    """Raise ``ModelPausedRefused`` for the first paused or out-of-headroom model."""
+    """Raise ``ModelPausedRefused`` for the first paused or out-of-headroom model.
+
+    ``used_pct`` is required: :func:`account_used_pct` of the account the work's claude seat runs as.
+    """
     wanted = [m for m in models if m]
     if not wanted:
         return

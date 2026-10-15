@@ -632,10 +632,18 @@ def compact_status(ledger: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def default_health_probe() -> Mapping[str, Any]:
-    """Refresh CodexBar-backed quota plus lane circuit health for a model wave."""
-    from scripts.api.state_router import compute_routing_budget
+    """Refresh CodexBar-backed quota plus lane circuit health for a model wave.
 
-    return compute_routing_budget(fresh_codexbar=True)
+    The claude lane is the account the wave's claude dispatches run as, the
+    default-account resolution a dispatch without ``--claude-account`` binds
+    (#10630); one that cannot be resolved or bound reads as unknown.
+    """
+    from scripts.api.state_router import compute_routing_budget
+    from scripts.fleet import claude_account_lane
+
+    snapshot = compute_routing_budget(fresh_codexbar=True)
+    account = claude_account_lane.resolve_route_account(None, strict=False)
+    return claude_account_lane.select_account(snapshot, account=account)[0]
 
 
 # Health capability groups name lanes, not models (the config schema has no
