@@ -29,6 +29,7 @@ from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
+from scripts.common.agent_trailer import AgentTrailerError, x_agent_trailers
 from scripts.common.jsonl import jsonl_lines
 from scripts.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
@@ -384,7 +385,9 @@ def _attribute_commit(
     only for an untrailered commit that is neither a clean base merge nor
     admitted unknown history; a login is GitHub's live proof that an
     allowlisted app bot authored it (#10531), recorded as ``verified_app_bot``
-    without any model. Every ``X-Agent`` line is a trailer; a commit with
+    without any model. Every ``X-Agent`` line, in any key spelling git parses,
+    is a trailer, and a line git would not parse as one refuses
+    (:func:`scripts.common.agent_trailer.x_agent_trailers`); a commit with
     several distinct ones attributes each through :func:`_attribute_trailer`
     and refuses when any one is malformed or refused (#10450).
     """
@@ -392,22 +395,23 @@ def _attribute_commit(
     message = (entry.get("commit") or {}).get("message")
     if not isinstance(message, str):
         raise RecordError("commit message unavailable")
-    trailers = [line.strip() for line in re.findall(r"(?m)^X-Agent:(.*)$", message)]
+    try:
+        trailers = [trailer.value for trailer in x_agent_trailers(message)]
+    except AgentTrailerError as exc:
+        raise RecordError(f"author model unknown: {exc}") from exc
     if (
         not trailers
-        and not re.search(r"(?m)^X-Agent:", message)
         and isinstance(commit_sha, str)
         and SHA.fullmatch(commit_sha)
         and _is_clean_base_merge(entry, base_sha(), checkout=checkout)
     ):
         return CommitAttribution(commit_sha, None, "clean-base-merge")
-    if not trailers and not re.search(r"(?m)^X-Agent:", message) and commit_sha in unknown_history:
+    if not trailers and commit_sha in unknown_history:
         return CommitAttribution(
             commit_sha, UNKNOWN_AUTHOR_FAMILY, "unknown_historical", authorship="unknown_historical"
         )
     if (
         not trailers
-        and not re.search(r"(?m)^X-Agent:", message)
         and app_bot_login is not None
         and isinstance(commit_sha, str)
         and SHA.fullmatch(commit_sha)

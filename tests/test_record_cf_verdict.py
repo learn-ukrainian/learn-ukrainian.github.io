@@ -1833,6 +1833,170 @@ def test_red_team_reviewer_of_either_trailer_task_is_self_review(monkeypatch, tm
     assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
+# --- X-Agent key spellings git parses as the same trailer (#10450) -------------------------------
+
+
+def sol_and_opus_tasks(tmp_path: Path) -> Path:
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="one", agent="codex", model="gpt-6.1-sol")
+    write_task(tasks, task_id="two", agent="claude", model="claude-opus-5-5")
+    return tasks
+
+
+@pytest.mark.parametrize(
+    "second",
+    [
+        "x-agent: claude/two",
+        "X-AGENT: claude/two",
+        "X-Agent : claude/two",
+        "X-Agent\t: claude/two",
+        "x-AgEnT: claude/two",
+    ],
+    ids=["lower-case", "upper-case", "space-before-colon", "tab-before-colon", "mixed-case"],
+)
+def test_every_key_spelling_git_parses_attributes_its_author(monkeypatch, tmp_path, second):
+    from dataclasses import replace
+
+    tasks = sol_and_opus_tasks(tmp_path)
+    message = f"feat: probe\n\nX-Agent: codex/one\n{second}\n"
+    attribution = attribute(message, tasks)
+    assert attribution.families == {"openai", "anthropic"}
+    assert attribution.task_ids == ("one", "two")
+    monkeypatch.setattr(recorder, "_pages", lambda args: [{"sha": SHA, "commit": {"message": message}}])
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai", "anthropic"}
+    facts = replace(facts_for(attribution.families), commits=(attribution,))
+    assert "anthropic" in facts.excluded_families
+    inputs = facts.resolver_inputs(risk="medium")
+    assert recorder.red_team_seat_refusal(("claude-opus-5-5",), author_models=inputs.author_models) == (
+        "RED_TEAM_REFUSED: reviewer model equals a branch author model"
+    )
+
+
+@pytest.mark.parametrize("only", ["x-agent: claude/two", "X-AGENT: claude/two", "X-Agent : claude/two"])
+def test_a_key_variant_as_the_only_trailer_is_attributed_not_unknown_history(tmp_path, only):
+    tasks = sol_and_opus_tasks(tmp_path)
+    attribution = recorder._attribute_commit(
+        {"sha": SHA, "commit": {"message": f"feat: probe\n\n{only}\n"}},
+        repository=REPOSITORY,
+        task_root=tasks,
+        base_sha=lambda: OTHER,
+        unknown_history=(SHA,),
+        app_bot_login=lambda _sha: "lu-bot[bot]",
+    )
+    assert (attribution.family, attribution.source, attribution.authorship) == ("anthropic", "task-record", None)
+    assert attribution.task_ids == ("two",)
+
+
+LOOSE_NOT_GIT = [
+    "X_Agent: claude/two",
+    "X Agent: claude/two",
+    "XAgent: claude/two",
+    " X-Agent: claude/two",
+    "\tx-agent: claude/two",
+    "X-Agent= claude/two",
+    "X-Agent claude/two",
+]
+LOOSE_IDS = ["underscore", "space-in-key", "no-hyphen", "indented", "tab-indented", "equals", "no-separator"]
+
+
+@pytest.mark.parametrize("loose", LOOSE_NOT_GIT, ids=LOOSE_IDS)
+@pytest.mark.parametrize("loose_first", [False, True])
+def test_a_loose_x_agent_line_git_does_not_parse_refuses(tmp_path, loose, loose_first):
+    tasks = sol_and_opus_tasks(tmp_path)
+    lines = [loose, "X-Agent: codex/one"] if loose_first else ["X-Agent: codex/one", loose]
+    # After a trailer, git folds an indented line into its value; either reading refuses.
+    with pytest.raises(recorder.RecordError, match=r"author model unknown: an X-Agent (line|trailer value continues)"):
+        attribute("feat: probe\n\n" + "\n".join(lines) + "\n", tasks)
+
+
+@pytest.mark.parametrize("loose", LOOSE_NOT_GIT, ids=LOOSE_IDS)
+def test_a_loose_x_agent_line_alone_never_reaches_zero_trailer_paths(monkeypatch, tmp_path, loose):
+    tasks = sol_and_opus_tasks(tmp_path)
+    monkeypatch.setattr(recorder, "_is_clean_base_merge", lambda *_a, **_k: True)
+    with pytest.raises(recorder.RecordError, match="author model unknown: an X-Agent line"):
+        recorder._attribute_commit(
+            {"sha": SHA, "commit": {"message": f"feat: probe\n\n{loose}\n"}},
+            repository=REPOSITORY,
+            task_root=tasks,
+            base_sha=lambda: OTHER,
+            unknown_history=(SHA,),
+            app_bot_login=lambda _sha: "lu-bot[bot]",
+        )
+
+
+def test_a_folded_x_agent_value_refuses(tmp_path):
+    """git unfolds an indented next line into the value (``codex/one two``); neither reading may be guessed."""
+    tasks = sol_and_opus_tasks(tmp_path)
+    with pytest.raises(recorder.RecordError, match="author model unknown: an X-Agent trailer value continues"):
+        attribute("feat: probe\n\nX-Agent: codex/one\n two\n", tasks)
+
+
+@pytest.mark.parametrize(
+    "lines",
+    [
+        ("X-Agent: codex/one", "x-agent: claude"),
+        ("X-Agent: codex/one", "x-agent: claude/"),
+        ("X-Agent: codex/one", "X-AGENT : claude/two three"),
+        ("X-Agent: codex/one", "x-agent:"),
+        ("x-agent: claude/two", "X-Agent: codex"),
+    ],
+    ids=["variant-no-slash", "variant-empty-task", "variant-whitespace", "variant-blank", "canonical-no-slash"],
+)
+def test_a_key_variant_beside_a_malformed_trailer_refuses(tmp_path, lines):
+    tasks = sol_and_opus_tasks(tmp_path)
+    with pytest.raises(recorder.RecordError, match="author model unknown"):
+        attribute("feat: probe\n\n" + "\n".join(lines) + "\n", tasks)
+
+
+@pytest.mark.parametrize(
+    "body_line",
+    [
+        "X-Agent trailers are matched case-insensitively now.",
+        "The X-Agent: key is spelled as git parses it.",
+        "x-agents: plural keys are other trailers",
+        "X-Agent-Model: claude-opus-5-5",
+        "# X-Agent: claude/two",
+    ],
+    ids=["prose-after-key", "key-mid-line", "longer-key", "hyphenated-longer-key", "comment"],
+)
+def test_a_body_line_that_is_not_an_x_agent_trailer_stays_ignored(tmp_path, body_line):
+    """Ignored only when no reading makes it an X-Agent key with a separator; git ignores these too."""
+    tasks = sol_and_opus_tasks(tmp_path)
+    attribution = attribute(f"feat: probe\n\n{body_line}\n\nX-Agent: codex/one\n", tasks)
+    assert attribution.families == {"openai"}
+    assert attribution.task_ids == ("one",)
+
+
+def test_canonical_x_agent_lines_in_earlier_paragraphs_stay_attributed(tmp_path):
+    """Squash merges keep each commit's trailer in a body paragraph git's trailer block does not cover."""
+    tasks = sol_and_opus_tasks(tmp_path)
+    attribution = attribute(
+        "feat: squash (#1)\n\n* first\n\nx-agent: claude/two\n\n* second\n\nX-Agent: codex/one\n\n"
+        "Co-authored-by: OpenAI <openai@local.invalid>\n",
+        tasks,
+    )
+    assert attribution.families == {"anthropic", "openai"}
+    assert attribution.task_ids == ("two", "one")
+
+
+@pytest.mark.parametrize(
+    "second",
+    ["X-Agent: codex/author-practice-10672-r2", "x-agent: codex/author-practice-10672-r2"],
+    ids=["atlas-shape", "atlas-shape-lower-case-second"],
+)
+def test_atlas_shape_is_unchanged_by_key_spelling(tmp_path, second):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-practice-10672-r2-sol-v2", agent="codex", model="gpt-6.1-sol")
+    write_task(tasks, task_id="author-practice-10672-r2", agent="codex", model="gpt-6.1-sol", status="dry_run")
+    attribution = attribute(
+        "feat(practice): synthetic continuation\n\nX-Agent: codex/author-practice-10672-r2-sol-v2\n"
+        f"{second}\nCo-Authored-By: GPT <noreply@openai.invalid>\n",
+        tasks,
+    )
+    assert attribution.families == {"openai"}
+    assert attribution.task_ids == ("author-practice-10672-r2-sol-v2", "author-practice-10672-r2")
+
+
 @pytest.mark.parametrize(
     "text,expected",
     [

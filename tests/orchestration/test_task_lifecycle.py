@@ -1659,6 +1659,75 @@ def test_local_git_commit_attribution(
 
 
 @pytest.mark.parametrize(
+    ("shape", "trailers", "accepted"),
+    [
+        ("ordinary", "x-agent: codex/42-closeout", True),
+        ("ordinary", "X-Agent : codex/42-closeout", True),
+        ("ordinary", "X-AGENT:\tcodex/42-closeout", True),
+        ("publisher", "x-agent : codex/42-closeout", True),
+        ("ordinary", " X-Agent: codex/42-closeout", False),
+        ("ordinary", "X-Agent: codex/42-closeout\nX_Agent: claude/other", False),
+        ("ordinary", "X-Agent: codex/42-closeout\n continued", False),
+        ("publisher", "X Agent: codex/42-closeout", False),
+        ("publisher", "X-Agent= codex/42-closeout", False),
+    ],
+)
+def test_local_git_x_agent_key_spellings_follow_the_recorder(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, shape: str, trailers: str, accepted: bool,
+) -> None:
+    """Closeout recognises X-Agent lines with the recorder's recogniser (#10450)."""
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        monkeypatch.delenv(name, raising=False)
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def git(*args: str, message: str | None = None) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=repo, input=message, capture_output=True, text=True,
+            check=True, timeout=30,
+        ).stdout.strip()
+
+    git("init", "-q", "-b", "main")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.com")
+    git("config", "commit.gpgsign", "false")
+    (repo / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
+    git("add", ".gitignore")
+    tree = git("write-tree")
+
+    def commit(message: str, *parents: str) -> str:
+        return git("commit-tree", tree, *(arg for parent in parents for arg in ("-p", parent)), message=message + "\n")
+
+    base = commit("base")
+    git("update-ref", "refs/heads/main", base)
+    main_parent = commit("main update", base)
+    git("update-ref", "refs/remotes/origin/main", commit("later main update", main_parent))
+    topic = commit("implementation\n\nX-Agent: codex/42-closeout", base)
+    if shape == "publisher":
+        subject, parents = "Merge branch 'main' into codex/42-closeout", [topic, main_parent]
+        # Signature and tree proofs are covered above; this test is about trailer recognition.
+        monkeypatch.setattr(task_lifecycle, "_verified_publisher_merge", lambda *_args: True)
+    else:
+        subject, parents = "implementation update", [topic]
+    head = commit(f"{subject}\n\n{trailers}", *parents)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "42-closeout"
+    git("worktree", "add", "-qb", "codex/42-closeout", str(worktree), head)
+
+    observed = task_lifecycle.observe_local_git(
+        worktree, head_sha=head, branch="codex/42-closeout", worktree=str(worktree),
+    )
+
+    observed_commit = next(item for item in observed["commits"] if item["sha"] == head)
+    blockers = task_lifecycle._local_readiness(observed)
+    if accepted:
+        assert observed_commit["x_agent_trailers"] == [trailers.strip()]
+        assert blockers == []
+    else:
+        assert observed_commit["verified_publisher_merge"] is False
+        assert blockers == [f"commit {head} lacks exactly one valid X-Agent trailer"]
+
+
+@pytest.mark.parametrize(
     ("signature", "accepted"),
     [
         ("G\x1f5DE3E0509C47EA3CF04A42D34AEE18F83AFDEB23", False),

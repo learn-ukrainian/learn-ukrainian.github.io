@@ -27,6 +27,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.common.agent_trailer import AgentTrailerError, x_agent_trailers
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.orchestration import issue_stream_audit, task_identity
 from scripts.review.review_contract import ALLOWED_DISPOSITIONS
@@ -1161,9 +1162,12 @@ def observe_local_git(
                     continue
                 sha, subject, parent_shas, message = record.strip().split("\x1f", 3)
                 parents = parent_shas.split()
-                trailers = [
-                    line.strip() for line in message.splitlines() if line.strip().lower().startswith("x-agent:")
-                ]
+                # The review recorder's recogniser: git's key spellings count, other spellings refuse.
+                try:
+                    trailers = [trailer.line for trailer in x_agent_trailers(message)]
+                    trailer_error = None
+                except AgentTrailerError as exc:
+                    trailers, trailer_error = [], str(exc)
                 second_parent_on_main = False
                 if len(parents) == 2:
                     try:
@@ -1174,6 +1178,7 @@ def observe_local_git(
                         pass
                 verified_publisher_merge = bool(
                     not trailers
+                    and trailer_error is None
                     and branch
                     and subject == f"Merge branch 'main' into {branch}"
                     and second_parent_on_main
@@ -1186,6 +1191,7 @@ def observe_local_git(
                     "second_parent_on_main": second_parent_on_main,
                     "verified_publisher_merge": verified_publisher_merge,
                     "x_agent_trailers": trailers,
+                    **({"x_agent_trailer_error": trailer_error} if trailer_error else {}),
                 })
         except LifecycleError:
             # The immutable pre-merge receipt remains the authority for hygiene
@@ -1407,6 +1413,9 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
         blockers.append("no task commits were available for X-Agent validation")
     for commit in commits:
         trailers = commit.get("x_agent_trailers") or []
+        if commit.get("x_agent_trailer_error"):
+            blockers.append(f"commit {commit.get('sha', 'unknown')} lacks exactly one valid X-Agent trailer")
+            continue
         if (
             not trailers
             and local.get("branch")
