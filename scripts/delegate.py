@@ -1572,7 +1572,9 @@ def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
     if isinstance(pid, bool):
         return False
     try:
-        return isinstance(pid, (int, str)) and int(pid) > 0 and worker_liveness(state, pid_alive=_pid_alive) is not False
+        return (
+            isinstance(pid, (int, str)) and int(pid) > 0 and worker_liveness(state, pid_alive=_pid_alive) is not False
+        )
     except (TypeError, ValueError):
         return False
 
@@ -5597,6 +5599,17 @@ def _worktree_is_dirty(worktree: Path) -> bool | None:
 # time — is never this task's mutation, and it false-failed cleanly-successful
 # read-only dispatches (#7124). The guard diffs only what the task could own.
 _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS = frozenset({".worktrees"})
+# The workspace guard file the AGY adapter installs and AGY executes (#10727).
+_READ_ONLY_AGY_HOOK_PATH = ".agents/hooks.json"
+_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR = "agy hook snapshot failed:"
+# Snapshot errors that withhold content evidence Git status cannot provide.
+# A read-only task with one never settles ``done``.
+_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = ("linked database snapshot failed:", _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR)
+
+
+def _read_only_snapshot_error_fails_closed(error: str | None) -> bool:
+    """Return whether a snapshot error must fail the read-only task."""
+    return (error or "").startswith(_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS)
 
 
 def _is_read_only_snapshot_excluded_path(path: str) -> bool:
@@ -5606,7 +5619,7 @@ def _is_read_only_snapshot_excluded_path(path: str) -> bool:
     return top_level in _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS
 
 
-def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str | None]:
+def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[dict[str, str] | None, str | None]:
     """Capture Git state and linked database contents for a read-only worker.
 
     The snapshot includes ignored files because a writeful legacy audit can
@@ -5620,6 +5633,10 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     written (#9421). Fingerprint their link text, resolved path, and contents,
     including SQLite's persistent journal/WAL at the resolved target, so a
     write followed by retargeting to an older copy cannot settle ``done``.
+    The ignored AGY guard file keeps its status through a valid-to-valid
+    rewrite, so with ``agy_hook`` its bytes are fingerprinted the same way
+    and an acquisition failure fails the snapshot (#10727). Only AGY
+    executes that guard; other agents keep the snapshot without it.
     """
     commands = (
         (
@@ -5720,7 +5737,109 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
             + ":"
             + json.dumps({"link_text": link_text, "resolved_path": str(target), "contents": fingerprints})
         )
+    if not agy_hook:
+        return entries, None
+    hook_fingerprint, hook_error = _read_only_agy_hook_fingerprint(cwd)
+    if hook_error is not None:
+        return None, hook_error
+    if hook_fingerprint is not None:
+        entries[_READ_ONLY_AGY_HOOK_PATH] = (
+            entries.get(_READ_ONLY_AGY_HOOK_PATH, "!!") + ":" + json.dumps(hook_fingerprint)
+        )
     return entries, None
+
+
+def _provision_agy_read_only_guard(cwd: Path) -> None:
+    """Install AGY's workspace guard before the read-only baseline (#10727).
+
+    The adapter installs a missing guard while it builds the invocation, after
+    the pre-snapshot, so the harness's own file read as a provider mutation.
+    Only an absent file is provisioned, through the installer's dispatch
+    containment; an existing file, valid or not, is never touched. A failure
+    here is left to the adapter's provider-time check, which stays
+    authoritative and refuses before any provider subprocess.
+    """
+    from scripts.agent_runtime.agy_hook_config import install_worktree_guard
+
+    if os.path.lexists(cwd / _READ_ONLY_AGY_HOOK_PATH):
+        return
+    with contextlib.suppress(OSError, ValueError):
+        install_worktree_guard(cwd)
+
+
+class _AgyHookChangedDuringSnapshot(Exception):
+    """The AGY guard changed while the snapshot was reading it."""
+
+
+def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, str | None]:
+    """Fingerprint the AGY guard the adapter validates, through accepted links.
+
+    The adapter follows a symlinked ``.agents`` parent and a symlinked final
+    file and validates the bytes they lead to, so the record holds both link
+    texts, the effective file's real path and type, and its bytes (#10727).
+    Only a hook missing at the first ``lstat`` is absent: ``(None, None)``,
+    and Git status still reports a new ``.agents`` entry. A hook lost, made
+    unreadable or changed after that observation is an acquisition error,
+    never absence, and the snapshot then fails closed. Nothing but a regular
+    effective file is opened, so a FIFO or device cannot block the snapshot.
+    """
+    path = cwd / _READ_ONLY_AGY_HOOK_PATH
+    try:
+        path.lstat()
+    except (FileNotFoundError, NotADirectoryError):
+        return None, None
+    except OSError as exc:
+        return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: {type(exc).__name__}"
+    try:
+        identity, inode = _read_only_agy_hook_identity(path)
+        digest = _read_only_agy_hook_digest(identity, inode)
+        # Re-observe: the links and target read above describe the hashed bytes.
+        if _read_only_agy_hook_identity(path) != (identity, inode):
+            raise _AgyHookChangedDuringSnapshot
+    except OSError as exc:
+        return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: {type(exc).__name__}"
+    except _AgyHookChangedDuringSnapshot:
+        return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: changed during snapshot"
+    return {**identity, "sha256": digest}, None
+
+
+def _read_only_agy_hook_identity(path: Path) -> tuple[dict[str, Any], tuple[int, int] | None]:
+    """Return the guard's parent, final entry and effective target without reading it.
+
+    Every error propagates: the caller has already observed the hook. Only a
+    final symlink may lead to a missing target, which the adapter refuses as
+    a missing file; that is recorded as ``target: None``. The ``(st_dev,
+    st_ino)`` of the target binds the later read to this observation.
+    """
+    identity: dict[str, Any] = {}
+    for name, component in (("parent", path.parent), ("hook", path)):
+        info = component.lstat()
+        identity[name] = {"file_type": stat.S_IFMT(info.st_mode)}
+        if stat.S_ISLNK(info.st_mode):
+            identity[name]["link_text"] = os.readlink(component)
+    target = os.path.realpath(path)
+    try:
+        info = os.lstat(target)
+    except (FileNotFoundError, NotADirectoryError):
+        if identity["hook"]["file_type"] != stat.S_IFLNK:
+            raise  # The observed hook file itself is gone.
+        identity["target"] = None
+        return identity, None
+    identity["target"] = {"path": target, "file_type": stat.S_IFMT(info.st_mode)}
+    return identity, (info.st_dev, info.st_ino)
+
+
+def _read_only_agy_hook_digest(identity: dict[str, Any], inode: tuple[int, int] | None) -> str | None:
+    """Hash the effective guard bytes when the observed target is a regular file."""
+    target = identity["target"]
+    if target is None or target["file_type"] != stat.S_IFREG:
+        return None
+    fd = os.open(Path(target["path"]), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+    with os.fdopen(fd, "rb") as handle:
+        info = os.fstat(handle.fileno())
+        if not stat.S_ISREG(info.st_mode) or (info.st_dev, info.st_ino) != inode:
+            raise _AgyHookChangedDuringSnapshot
+        return hashlib.file_digest(handle, "sha256").hexdigest()
 
 
 def _read_only_task_record_snapshot(
@@ -10550,8 +10669,15 @@ def _run_worker(
     # Set only after digest.json is on disk. Phase files stay until the
     # terminal record that names retention=digest has been written.
     clean_snapshots_to_discard: Path | None = None
+    # Only AGY executes the workspace guard, so only AGY acquires it, before
+    # and after alike; other agents keep the base snapshot call (#10727).
+    read_only_snapshot_options: dict[str, bool] = {"agy_hook": True} if agent == "agy" else {}
     if mode == "read-only":
-        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
+        if agent == "agy":
+            _provision_agy_read_only_guard(cwd)
+        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
+            cwd, **read_only_snapshot_options
+        )
         task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
         task_records_snapshot_error = task_records_error
         if read_only_snapshot_error is None:
@@ -11008,7 +11134,9 @@ def _run_worker(
                 ok_outcome = False
 
         if mode == "read-only":
-            read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
+            read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(
+                cwd, **read_only_snapshot_options
+            )
             task_records_post, task_records_error = _read_only_task_record_snapshot(task_id, task_records_pre)
             if task_records_snapshot_error is None:
                 task_records_snapshot_error = task_records_error
@@ -11056,7 +11184,7 @@ def _run_worker(
             if (
                 read_only_mutation_paths
                 or task_records_snapshot_error
-                or (read_only_snapshot_error or "").startswith("linked database snapshot failed:")
+                or _read_only_snapshot_error_fails_closed(read_only_snapshot_error)
             ):
                 final_status = "failed"
                 ok_outcome = False
@@ -11394,7 +11522,7 @@ def _run_worker(
                 field="last_error",
             )
             last_error = f"{last_error}; {snapshot}" if last_error else snapshot
-        elif (read_only_snapshot_error or "").startswith("linked database snapshot failed:"):
+        elif _read_only_snapshot_error_fails_closed(read_only_snapshot_error):
             snapshot = _publish_cause(
                 task_id,
                 _TypedCause("read_only_checkout_snapshot_failed", diagnostic=read_only_snapshot_error),
