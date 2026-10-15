@@ -85,9 +85,23 @@ body { min-height: 100vh; }
   .ops-grid { grid-template-columns: 1fr; }
   .filters { grid-template-columns: 1fr; }
 }
+
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.skip-link { position: absolute; left: -10000px; }
+.skip-link:focus { position: fixed; left: 8px; top: 8px; z-index: 1000; background: var(--bg); padding: 12px; }
+p, td, .meta, .card-path, .refresh-info { overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+  .topbar, .filters, .tabs, .page-controls, .bulk-bar { flex-wrap: wrap; }
+  .layout, .page-layout { display: block; }
+  .main, .panel { padding: 12px; overflow-x: auto; }
+  .ann-row { display: flex; flex-wrap: wrap; }
+  .modal { width: 95vw; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#page-main">Skip to content</a>
 <div class="top-bar">
   <div class="top-left"><h1>Artifacts</h1></div>
   <div class="top-right">
@@ -105,7 +119,7 @@ body { min-height: 100vh; }
   </nav>
 </div>
 
-<main class="wrap">
+<main id="page-main" tabindex="-1" class="wrap">
   <section class="hero">
     <div>
       <h2>Documents, handoffs, reports</h2>
@@ -128,7 +142,7 @@ body { min-height: 100vh; }
     </summary>
     <div class="ops-body">
       <div class="ops-grid">
-        <a class="ops-card runtime" href="/admin.html"><strong>Admin</strong><span>Backups, health checks, disk usage, broker vacuum, log cleanup.</span></a>
+        <a class="ops-card runtime" href="/admin.html"><strong>Admin</strong><span>Backup status, health checks, disk usage, broker vacuum, log cleanup.</span></a>
         <a class="ops-card agent" href="/fleet.html"><strong>Fleet Observer</strong><span>Durable requests, discussions, reviews, deliveries, and provenance.</span></a>
         <a class="ops-card pipeline" href="/build-events.html"><strong>Build Events</strong><span>Active module builds and dispatch meta events.</span></a>
         <a class="ops-card runtime" href="/consultation.html"><strong>Consultation Loop</strong><span>Template proposals, review queue, history, metrics.</span></a>
@@ -152,17 +166,17 @@ body { min-height: 100vh; }
   </div>
 
   <section class="filters" aria-label="Artifact filters">
-    <input id="search" placeholder="Search titles, paths, KPI summaries" autocomplete="off">
-    <select id="class-filter"><option value="">All classes</option></select>
-    <select id="status-filter">
+    <input id="search" aria-label="Search artifacts" placeholder="Search titles, paths, KPI summaries" autocomplete="off">
+    <select id="class-filter" aria-label="Artifact class"><option value="">All classes</option></select>
+    <select id="status-filter" aria-label="Artifact status">
       <option value="">All statuses</option>
       <option value="ok">ok</option>
       <option value="warn">warn</option>
       <option value="fail">fail</option>
       <option value="unknown">unknown</option>
     </select>
-    <select id="author-filter"><option value="">All authors</option></select>
-    <select id="type-filter"><option value="">All types</option><option value="html">HTML</option><option value="md">MD</option></select>
+    <select id="author-filter" aria-label="Artifact author"><option value="">All authors</option></select>
+    <select id="type-filter" aria-label="Artifact type"><option value="">All types</option><option value="html">HTML</option><option value="md">MD</option></select>
     <input id="date-filter" type="date" aria-label="Date from">
   </section>
 
@@ -170,7 +184,7 @@ body { min-height: 100vh; }
 </main>
 
 <script>
-const state = { artifacts: [], filtered: [], generatedAt: null, loading: true };
+const state = { artifacts: [], filtered: [], generatedAt: null, fetchedAt: null, loading: false, error: null, hasData: false };
 const els = {
   total: document.getElementById('total-count'),
   totalSub: document.getElementById('total-sub'),
@@ -190,7 +204,7 @@ const els = {
 function escapeHtml(value) {
   const node = document.createElement('span');
   node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
+  return node.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function optionList(values) {
@@ -226,8 +240,8 @@ function filtersActive() {
 }
 
 function initFilters() {
-  const classes = [...new Set(state.artifacts.map(item => item.class).filter(Boolean))].sort();
-  const authors = [...new Set(state.artifacts.map(item => item.author).filter(Boolean))].sort();
+  const classes = [...new Set([...state.artifacts.map(item => item.class), els.classFilter.value].filter(Boolean))].sort();
+  const authors = [...new Set([...state.artifacts.map(item => item.author), els.authorFilter.value].filter(Boolean))].sort();
   const keep = {
     class: els.classFilter.value,
     author: els.authorFilter.value,
@@ -273,12 +287,12 @@ function renderLoading() {
 
 function renderCard(item) {
   const type = artifactType(item);
-  const issues = (item.related_issues || []).map(n => `<span class="badge">#${n}</span>`).join('');
-  const prs = (item.related_prs || []).map(n => `<span class="badge">PR #${n}</span>`).join('');
+  const issues = (item.related_issues || []).map(n => `<span class="badge">#${escapeHtml(n)}</span>`).join('');
+  const prs = (item.related_prs || []).map(n => `<span class="badge">PR #${escapeHtml(n)}</span>`).join('');
   const agents = (item.agents || []).map(a => `<span class="badge">${escapeHtml(a)}</span>`).join('');
   const summary = item.kpi_summary || (type === 'md' ? 'Markdown document — open to view source.' : item.path);
   const showPath = item.title && item.path && item.title !== item.path.split('/').pop()?.replace(/\.(html|md)$/i, '');
-  return `<a class="artifact-card" href="${escapeHtml(item.url)}" target="_blank" rel="noopener">
+  return `<a class="artifact-card" href="${escapeHtml(artifactUrl(item.url) || '#')}" ${artifactUrl(item.url) ? '' : 'aria-disabled="true" data-unavailable="true"'} target="_blank" rel="noopener">
     <div class="card-top">
       <div>
         <div class="card-title">${escapeHtml(item.title || item.path)}</div>
@@ -291,11 +305,12 @@ function renderCard(item) {
     </div>
     <div class="meta">${escapeHtml(item.date || 'undated')} · ${escapeHtml(item.class || 'document')} · ${escapeHtml(formatAuthor(item.author))}</div>
     <div class="summary">${escapeHtml(summary)}</div>
-    <div class="badges">${issues}${prs}${agents}</div>
+    <div class="badges">${issues}${prs}${agents}${artifactUrl(item.url) ? '' : '<span>Artifact link unavailable</span>'}</div>
   </a>`;
 }
 
 function render() {
+  if (!state.hasData) return;
   state.filtered = state.artifacts.filter(artifactMatches);
   els.total.textContent = state.filtered.length;
   els.totalSub.textContent = `of ${state.artifacts.length} total`;
@@ -307,7 +322,7 @@ function render() {
   if (!state.filtered.length) {
     els.groups.innerHTML = filtersActive()
       ? `<div class="empty">No artifacts match the current filters. <button class="btn" type="button" id="empty-clear">Clear filters</button></div>`
-      : '<div class="empty">No artifacts found in the index.</div>';
+      : '<div class="empty">No artifacts returned; source age and coverage unknown.</div>';
     const emptyClear = document.getElementById('empty-clear');
     if (emptyClear) emptyClear.addEventListener('click', clearFilters);
     return;
@@ -337,38 +352,59 @@ function clearFilters() {
   render();
 }
 
+function artifactUrl(value) {
+  if (typeof value !== 'string' || /[\\\x00-\x1f\x7f]/.test(value)) return null;
+  try {
+    const url = new URL(value, location.origin);
+    if (url.origin !== location.origin || url.username || url.password || !/^\/artifacts\//.test(url.pathname)) return null;
+    return url.href;
+  } catch { return null; }
+}
+
 function setRefreshInfo() {
-  if (state.loading) {
-    els.refreshInfo.textContent = 'Loading…';
-    return;
-  }
-  const when = state.generatedAt ? new Date(state.generatedAt) : new Date();
-  els.refreshInfo.textContent = `Updated ${when.toLocaleTimeString()}`;
+  const sample = Date.parse(state.generatedAt);
+  const age = Number.isFinite(sample) && sample <= Date.now() ? Math.floor((Date.now() - sample) / 1000) : null;
+  els.refreshInfo.textContent = `${state.loading ? 'Loading. ' : ''}${state.error ? `Request failed: ${state.error}. ${state.hasData ? 'Historical observation retained. ' : ''}` : ''}Source age unknown. ${age === null ? 'Index assembly time unknown.' : `Index assembled ${age}s ago.`} Last successful fetch: ${state.fetchedAt || 'none'}.`;
 }
 
 async function loadArtifacts() {
+  if (state.loading) return;
   state.loading = true;
   els.refreshBtn.disabled = true;
-  renderLoading();
+  els.groups.setAttribute('aria-busy', 'true');
+  if (!state.hasData) renderLoading();
   setRefreshInfo();
   try {
     const response = await fetch('/api/artifacts/html');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
-    state.artifacts = data.artifacts || [];
+    if (!data || !Array.isArray(data.artifacts) || !data.artifacts.every(item => item && typeof item.path === 'string' && ['title', 'url', 'class', 'author', 'date', 'kpi_summary'].every(key => item[key] == null || typeof item[key] === 'string') && ['agents', 'related_issues', 'related_prs'].every(key => item[key] == null || Array.isArray(item[key])))) throw new Error('Malformed successful response');
+    state.artifacts = data.artifacts;
     state.generatedAt = data.generated_at || null;
+    state.fetchedAt = new Date().toISOString();
+    state.error = null;
+    state.hasData = true;
     initFilters();
     render();
   } catch (error) {
-    els.total.textContent = '!';
-    els.totalSub.textContent = 'load failed';
-    els.groups.innerHTML = `<div class="empty">Failed to load artifacts: ${escapeHtml(error.message)}</div>`;
+    state.error = error.message;
+    if (!state.hasData) {
+      els.total.textContent = 'Unknown';
+      els.totalSub.textContent = 'load failed';
+      els.groups.textContent = 'Artifact index unavailable. Retry with Refresh.';
+    }
   } finally {
     state.loading = false;
+    els.groups.setAttribute('aria-busy', 'false');
     els.refreshBtn.disabled = false;
     setRefreshInfo();
   }
 }
+
+els.groups.addEventListener('click', event => {
+  if (event.target.closest('[data-unavailable]')) event.preventDefault();
+});
+setInterval(setRefreshInfo, 1000);
 
 let searchTimer = null;
 els.search.addEventListener('input', () => {

@@ -89,15 +89,29 @@ table.stats-table tr:hover { background: var(--bg3); }
 .bar-track { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
 .bar-value { font-size: 12px; color: var(--text3); min-width: 70px; text-align: right; }
+
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.skip-link { position: absolute; left: -10000px; }
+.skip-link:focus { position: fixed; left: 8px; top: 8px; z-index: 1000; background: var(--bg); padding: 12px; }
+p, td, .meta, .card-path, .refresh-info { overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+  .topbar, .filters, .tabs, .page-controls, .bulk-bar { flex-wrap: wrap; }
+  .layout, .page-layout { display: block; }
+  .main, .panel { padding: 12px; overflow-x: auto; }
+  .ann-row { display: flex; flex-wrap: wrap; }
+  .modal { width: 95vw; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#page-main">Skip to content</a>
 
 <div class="topbar">
   <h1>Admin &amp; Maintenance</h1>
   <div class="spacer"></div>
-  <span class="refresh-info" id="last-refresh"></span>
+  <span class="refresh-info" id="last-refresh">Source age unknown; fetch times below.</span>
   <nav class="monitor-nav" aria-label="Ops API sections">
     <a href="/">Home</a>
     <a href="/orient.html">Orient</a>
@@ -112,11 +126,12 @@ table.stats-table tr:hover { background: var(--bg3); }
 <div class="layout">
   <div class="sidebar">
     <a href="#health" class="active" data-section="health">Health</a>
+    <a href="#backup" data-section="backup">Backups</a>
     <a href="#maintenance" data-section="maintenance">Maintenance</a>
     <a href="#stats" data-section="stats">Stats</a>
   </div>
 
-  <div class="main">
+  <main class="main" id="page-main" tabindex="-1">
 
     <!-- Health Section -->
     <div class="section active" id="section-health">
@@ -130,6 +145,11 @@ table.stats-table tr:hover { background: var(--bg3); }
       </div>
     </div>
 
+    <section class="section" id="section-backup">
+      <h2>Backup and restore status</h2>
+      <p>Backup and restore-test observations are available in <a href="/fleet-board.html#ops">Operator home Ops</a>.</p>
+      <p>Source age unknown here. Missing backup or restore evidence remains unknown.</p>
+    </section>
     <!-- Maintenance Section -->
     <div class="section" id="section-maintenance">
       <h2>Maintenance</h2>
@@ -169,7 +189,7 @@ table.stats-table tr:hover { background: var(--bg3); }
       </div>
     </div>
 
-  </div>
+  </main>
 </div>
 
 <script>
@@ -177,30 +197,30 @@ table.stats-table tr:hover { background: var(--bg3); }
 
 const sectionLoaders = {
   health:      () => Promise.all([loadHealth(), loadDisk()]),
-  backup:      () => loadBackupList(),
+  backup:      () => Promise.resolve(),
   maintenance: () => Promise.resolve(),
   stats:       () => Promise.all([loadEmbedStats(), loadAnnotationStats()]),
 };
 const loadedSections = new Set();
 
 function activateSection(section) {
-  document.querySelectorAll('.sidebar a').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.section').forEach(x => x.classList.remove('active'));
-  const link = document.querySelector(`.sidebar a[data-section="${section}"]`);
-  if (link) link.classList.add('active');
-  document.getElementById(`section-${section}`).classList.add('active');
-  history.replaceState(null, '', `#${section}`);
-  if (!loadedSections.has(section) && Object.prototype.hasOwnProperty.call(sectionLoaders, section)) {
+  if (!Object.hasOwn(sectionLoaders, section) || !document.getElementById(`section-${section}`)) {
+    section = 'health';
+    history.replaceState(null, '', '#health');
+  }
+  document.querySelectorAll('.sidebar a').forEach(x => x.classList.toggle('active', x.dataset.section === section));
+  document.querySelectorAll('.section').forEach(x => x.classList.toggle('active', x.id === `section-${section}`));
+  if (location.hash !== `#${section}`) location.hash = section;
+  if (!loadedSections.has(section)) {
     loadedSections.add(section);
     sectionLoaders[section]();
   }
 }
-
+window.addEventListener('hashchange', () => {
+  if (location.hash !== '#page-main') activateSection(location.hash.slice(1));
+});
 document.querySelectorAll('.sidebar a').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    activateSection(a.dataset.section);
-  });
+  a.addEventListener('click', () => activateSection(a.dataset.section));
 });
 
 // ── API helpers ─────────────────────────────────────
@@ -221,11 +241,6 @@ async function apiFetch(path, opts) {
 
 const apiGet = (path) => apiFetch(path);
 const apiPost = (path) => apiFetch(path, { method: 'POST' });
-const apiDelete = (path) => apiFetch(path, { method: 'DELETE' });
-
-// Restore section from hash or default to health after API helpers exist.
-const hash = location.hash.slice(1);
-activateSection(hash || 'health');
 
 function showResult(id, data) {
   const el = document.getElementById(id);
@@ -245,60 +260,53 @@ function setLoading(btnId, loading) {
   }
 }
 
-// ── Health ──────────────────────────────────────────
-async function loadHealth() {
+const readState = new Map();
+const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const numberText = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value.toLocaleString() : 'Unknown';
+
+async function readPanel(id, path, validate, render, retry) {
+  const el = document.getElementById(id);
+  const previous = readState.get(id);
+  if (previous?.loading) return;
+  const state = previous || {};
+  state.loading = true;
+  readState.set(id, state);
+  el.setAttribute('aria-busy', 'true');
+  if (!state.html) el.textContent = 'Loading observation…';
   try {
-    const data = await apiGet('/api/admin/health');
-    const grid = document.getElementById('health-grid');
-    const b = data.broker;
-
-    grid.innerHTML = `
-      <div class="status-item">
-        <div class="label">Overall</div>
-        <div class="value"><span class="dot ${data.status === 'ok' ? 'green' : 'yellow'}"></span>${data.status}</div>
-        <div class="sub">uptime ${Math.round(data.uptime_seconds || 0)}s</div>
-      </div>
-      <div class="status-item">
-        <div class="label">Broker</div>
-        <div class="value"><span class="dot ${b.status === 'healthy' ? 'green' : 'red'}"></span>${b.status}</div>
-        <div class="sub">${b.messages || 0} messages &middot; ${escapeHtml(b.size_human || b.size || '')}</div>
-      </div>
-      <div class="status-item">
-        <div class="label">Disk</div>
-        <div class="value">${data.disk.used_pct}%</div>
-        <div class="sub">${escapeHtml(data.disk.free)} free</div>
-      </div>
-    `;
-  } catch (e) {
-    document.getElementById('health-grid').innerHTML = `<div class="status-item"><div class="label">Error</div><div class="value" style="color:var(--red)">${e.message}</div></div>`;
+    const data = await apiGet(path);
+    if (!isRecord(data)) throw new Error('Malformed successful response');
+    if (data.error) throw new Error('Source unavailable');
+    if (!validate(data)) throw new Error('Malformed successful response');
+    state.html = render(data);
+    state.fetched = new Date().toISOString();
+    state.error = false;
+  } catch (error) {
+    state.error = true;
+    state.message = error.message;
+  } finally {
+    state.loading = false;
+    el.setAttribute('aria-busy', 'false');
+    el.innerHTML = (state.html || '') + `<p role="status">${state.error ? `Request failed: ${escapeHtml(state.message)}. ${state.html ? 'Historical observation retained. ' : ''}` : ''}Source age unknown. Last successful fetch: ${escapeHtml(state.fetched || 'none')}.</p>`;
+    const button = document.createElement('button');
+    button.textContent = state.error ? 'Retry' : 'Refresh';
+    button.onclick = retry;
+    el.appendChild(button);
   }
-
-  document.getElementById('last-refresh').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
 }
 
-async function loadDisk() {
-  try {
-    const data = await apiGet('/api/admin/disk-usage');
-    const container = document.getElementById('disk-bars');
-    const maxSize = Math.max(...Object.values(data.breakdown).map(v => v.size_bytes), 1);
-    const colors = { textbook_images: 'var(--yellow)', textbooks: 'var(--orange)', literary_texts: 'var(--purple)', textbook_chunks: 'var(--green)', backups: 'var(--text2)', logs: 'var(--red)', vesum_db: 'var(--text3)' };
+function loadHealth() {
+  return readPanel('health-grid', '/api/admin/health', d => typeof d.status === 'string' && isRecord(d.broker) && isRecord(d.disk), d => `
+    <div class="status-item"><div class="label">API observation</div><div class="value">${escapeHtml(d.status)}</div><div class="sub">Uptime: ${numberText(d.uptime_seconds)} seconds</div></div>
+    <div class="status-item"><div class="label">Broker</div><div class="value">${escapeHtml(d.broker.status || 'Unknown')}</div><div class="sub">${numberText(d.broker.messages)} messages · ${escapeHtml(d.broker.size_human || d.broker.size || 'Size unknown')}</div></div>
+    <div class="status-item"><div class="label">Disk used</div><div class="value">${numberText(d.disk.used_pct)}%</div><div class="sub">${escapeHtml(d.disk.free || 'Unknown')} free</div></div>`, loadHealth);
+}
 
-    let html = '';
-    for (const [key, val] of Object.entries(data.breakdown)) {
-      if (!val.exists) continue;
-      const pct = (val.size_bytes / maxSize * 100).toFixed(1);
-      const color = colors[key] || 'var(--text2)';
-      html += `<div class="bar-row">
-        <div class="bar-label">${key}</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
-        <div class="bar-value">${val.size_human}</div>
-      </div>`;
-    }
-    html += `<div style="margin-top:8px;font-size:13px;color:var(--text2)">Total: ${data.total_human}</div>`;
-    container.innerHTML = html;
-  } catch (e) {
-    document.getElementById('disk-bars').innerHTML = `<span style="color:var(--red)">${e.message}</span>`;
-  }
+function loadDisk() {
+  return readPanel('disk-bars', '/api/admin/disk-usage', d => isRecord(d.breakdown) && Object.values(d.breakdown).every(v => isRecord(v) && typeof v.exists === 'boolean'), d => {
+    const maxSize = Math.max(...Object.values(d.breakdown).map(v => Number.isFinite(v.size_bytes) ? v.size_bytes : 0), 1);
+    return Object.entries(d.breakdown).map(([key, val]) => `<div class="bar-row"><div class="bar-label">${escapeHtml(key)}</div><div class="bar-track"><div class="bar-fill" style="width:${Number.isFinite(val.size_bytes) ? Math.max(0, Math.min(100, val.size_bytes / maxSize * 100)) : 0}%;background:var(--blue)"></div></div><div class="bar-value">${val.exists ? escapeHtml(val.size_human || 'Unknown') : 'Unavailable'}</div></div>`).join('') + `<p>Total: ${escapeHtml(d.total_human || 'Unknown')}</p>`;
+  }, loadDisk);
 }
 
 // ── Maintenance ─────────────────────────────────────
@@ -318,7 +326,7 @@ async function cleanLogs() {
   const days = document.getElementById('log-age').value;
   setLoading('btn-logs', true);
   try {
-    const data = await apiPost(`/api/admin/maintenance/clean-logs?max_age_days=${days}`);
+    const data = await apiPost(`/api/admin/maintenance/clean-logs?max_age_days=${encodeURIComponent(days)}`);
     showResult('logs-result', data);
   } catch (e) {
     showResult('logs-result', { error: e.message });
@@ -329,51 +337,19 @@ async function cleanLogs() {
 
 // ── Stats ───────────────────────────────────────────
 
-async function loadEmbedStats() {
-  try {
-    const data = await apiGet('/api/admin/maintenance/embedding-cache-stats');
-    const el = document.getElementById('embed-stats');
-    if (!data.exists) {
-      el.innerHTML = '<span style="color:var(--text3)">Embedding cache not found</span>';
-      return;
-    }
-    el.innerHTML = `
-      <div class="status-grid">
-        <div class="status-item"><div class="label">Cached Files</div><div class="value">${data.cached_files}</div></div>
-        <div class="status-item"><div class="label">Source Files</div><div class="value">${data.source_files}</div></div>
-        <div class="status-item"><div class="label">Cache Size</div><div class="value">${data.total_size_human}</div></div>
-      </div>
-    `;
-  } catch (e) {
-    document.getElementById('embed-stats').innerHTML = `<span style="color:var(--red)">${e.message}</span>`;
-  }
+function loadEmbedStats() {
+  return readPanel('embed-stats', '/api/admin/maintenance/embedding-cache-stats', d => typeof d.exists === 'boolean', d => d.exists ? `
+    <p>Cached files: ${numberText(d.cached_files)}</p><p>Source files: ${numberText(d.source_files)}</p><p>Cache size: ${escapeHtml(d.total_size_human || 'Unknown')}</p>` : '<p>Embedding cache unavailable: no cache found.</p>', loadEmbedStats);
 }
 
-async function loadAnnotationStats() {
-  try {
-    const data = await apiGet('/api/admin/maintenance/annotation-stats');
-    const el = document.getElementById('annotation-stats');
-    const tv = data.teaching_value_distribution || {};
-    el.innerHTML = `
-      <div class="status-grid">
-        <div class="status-item"><div class="label">Total Images</div><div class="value">${data.total_images?.toLocaleString() || 0}</div></div>
-        <div class="status-item"><div class="label">Annotated</div><div class="value">${data.annotated?.toLocaleString() || 0}</div><div class="sub">${data.annotation_rate || 0}%</div></div>
-        <div class="status-item"><div class="label">Empty Descriptions</div><div class="value" style="color:var(--yellow)">${data.empty_descriptions || 0}</div></div>
-        <div class="status-item"><div class="label">Garbled Encoding</div><div class="value" style="color:var(--red)">${data.garbled_encoding || 0}</div></div>
-      </div>
-      <h3 style="margin-top:12px">Teaching Value</h3>
-      <div class="status-grid" style="margin-top:8px">
-        <div class="status-item"><div class="label">High</div><div class="value" style="color:var(--green)">${tv.high || 0}</div></div>
-        <div class="status-item"><div class="label">Medium</div><div class="value" style="color:var(--blue)">${tv.medium || 0}</div></div>
-        <div class="status-item"><div class="label">Low</div><div class="value" style="color:var(--yellow)">${tv.low || 0}</div></div>
-        <div class="status-item"><div class="label">None</div><div class="value" style="color:var(--text3)">${tv.none || 0}</div></div>
-      </div>
-    `;
-  } catch (e) {
-    document.getElementById('annotation-stats').innerHTML = `<span style="color:var(--red)">${e.message}</span>`;
-  }
+function loadAnnotationStats() {
+  return readPanel('annotation-stats', '/api/admin/maintenance/annotation-stats', d => Number.isFinite(d.total_images), d => {
+    const tv = isRecord(d.teaching_value_distribution) ? d.teaching_value_distribution : {};
+    return `<p>Total images: ${numberText(d.total_images)}</p><p>Annotated: ${numberText(d.annotated)} (${numberText(d.annotation_rate)}%)</p><p>Empty descriptions: ${numberText(d.empty_descriptions)}</p><p>Garbled encoding: ${numberText(d.garbled_encoding)}</p><h3>Teaching value</h3>` + ['high', 'medium', 'low', 'none', 'unknown'].map(key => `<p>${key}: ${numberText(tv[key])}</p>`).join('');
+  }, loadAnnotationStats);
 }
 
+activateSection(location.hash.slice(1) || 'health');
 
 // ── Auto-refresh health every 30s ────────────────────
 

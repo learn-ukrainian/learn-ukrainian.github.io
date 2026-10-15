@@ -122,10 +122,24 @@ tr:hover td { background: var(--bg2); }
 
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.6s linear infinite; margin-left: 8px; vertical-align: middle; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.skip-link { position: absolute; left: -10000px; }
+.skip-link:focus { position: fixed; left: 8px; top: 8px; z-index: 1000; background: var(--bg); padding: 12px; }
+p, td, .meta, .card-path, .refresh-info { overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+  .topbar, .filters, .tabs, .page-controls, .bulk-bar { flex-wrap: wrap; }
+  .layout, .page-layout { display: block; }
+  .main, .panel { padding: 12px; overflow-x: auto; }
+  .ann-row { display: flex; flex-wrap: wrap; }
+  .modal { width: 95vw; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#page-main">Skip to content</a>
 
 <div class="topbar">
   <h1>Consultation Loop</h1>
@@ -143,23 +157,23 @@ tr:hover td { background: var(--bg2); }
 </div>
 
 <div class="tabs">
-  <div class="tab active" data-tab="queue">Queue</div>
-  <div class="tab" data-tab="history">History</div>
-  <div class="tab" data-tab="metrics">Metrics</div>
+  <button class="tab active" data-tab="queue">Queue</button>
+  <button class="tab" data-tab="history">History</button>
+  <button class="tab" data-tab="metrics">Metrics</button>
 </div>
 
-<div class="main">
+<main class="main" id="page-main" tabindex="-1">
   <!-- QUEUE TAB -->
   <div class="section active" id="tab-queue">
     <div class="stats-row" id="queue-stats"></div>
-    <div id="queue-list"></div>
+    <p id="queue-list-status" role="status"></p><button onclick="loadQueue()">Retry / refresh</button><div id="queue-list"></div>
   </div>
 
   <!-- HISTORY TAB -->
   <div class="section" id="tab-history">
-    <div class="filters">
-      <select id="filter-track"><option value="">All tracks</option></select>
-      <select id="filter-outcome">
+    <p id="config-status" role="status"></p><button onclick="loadTrackFilter()">Retry track options</button><div class="filters">
+      <select id="filter-track" aria-label="History track"><option value="">All tracks</option></select>
+      <select id="filter-outcome" aria-label="History outcome">
         <option value="">All outcomes</option>
         <option value="applied">Applied</option>
         <option value="queued">Queued</option>
@@ -168,28 +182,28 @@ tr:hover td { background: var(--bg2); }
         <option value="parse_failed">Parse failed</option>
       </select>
     </div>
-    <div id="history-table"></div>
+    <p id="history-table-status" role="status"></p><button onclick="loadHistory()">Retry / refresh</button><div id="history-table"></div>
   </div>
 
   <!-- METRICS TAB -->
   <div class="section" id="tab-metrics">
     <div class="stats-row" id="metrics-stats"></div>
-    <div id="metrics-charts"></div>
+    <p id="metrics-charts-status" role="status"></p><button onclick="loadMetrics()">Retry / refresh</button><div id="metrics-charts"></div>
   </div>
-</div>
+</main>
 
 <!-- Detail Modal -->
-<div class="modal-overlay" id="detail-modal">
+<div class="modal-overlay" id="detail-modal" role="dialog" aria-modal="true" aria-label="Proposal detail">
   <div class="modal">
-    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <button aria-label="Close proposal detail" class="close-btn" onclick="closeModal()">&times;</button>
     <div id="modal-content"></div>
   </div>
 </div>
 
 <!-- Confirm Modal -->
-<div class="confirm-overlay" id="confirm-modal">
+<div class="confirm-overlay" id="confirm-modal" role="dialog" aria-modal="true" aria-label="Confirm proposal action">
   <div class="confirm-box">
-    <p id="confirm-text"></p>
+    <p id="confirm-text"></p><p id="action-error" role="alert"></p>
     <div class="actions" style="justify-content:center">
       <button class="action-btn" onclick="closeConfirm()">Cancel</button>
       <button class="action-btn" id="confirm-action-btn">Confirm</button>
@@ -200,318 +214,254 @@ tr:hover td { background: var(--bg2); }
 <script>
 const API = '/api/consultation';
 let currentDetail = null;
+let detailGeneration = 0;
+let returnFocus = null;
+let confirmFocus = null;
+let pendingAction = null;
+const reads = new Map();
+const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const count = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
+const text = value => escHtml(value == null ? 'Unknown' : value);
+const bucket = value => ['high', 'medium', 'low', 'applied', 'queued', 'no_action', 'no_match', 'parse_failed'].includes(value) ? value : 'unknown';
 
 async function fetchJson(url, options) {
   const res = await fetch(url, options);
-  let data = null;
-  try {
-    data = await res.json();
-  } catch (e) {}
-  if (!res.ok) {
-    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
-  }
+  let data;
+  try { data = await res.json(); } catch { throw new Error(res.ok ? 'Malformed successful response: invalid JSON' : `HTTP ${res.status}`); }
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (data == null) throw new Error('Malformed successful response');
+  if (data.error) throw new Error('Source unavailable');
   return data;
 }
 
-// Tab switching
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-  });
-});
+function escHtml(value) {
+  const d = document.createElement('div');
+  d.textContent = value == null ? '' : String(value);
+  return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 
-// ==================== QUEUE ====================
+function timeAgo(ts) {
+  const stamp = typeof ts === 'string' && ts ? Date.parse(ts) : NaN;
+  if (!Number.isFinite(stamp) || stamp > Date.now()) return 'Unknown';
+  const seconds = Math.floor((Date.now() - stamp) / 1000);
+  return seconds < 60 ? `${seconds}s ago` : seconds < 3600 ? `${Math.floor(seconds / 60)}m ago` : `${Math.floor(seconds / 3600)}h ago`;
+}
 
-async function loadQueue() {
+function readStatus(id, state) {
+  const el = document.getElementById(`${id}-status`);
+  el.textContent = `${state.loading ? 'Loading. ' : ''}${state.error ? `Request failed: ${state.error}. ${state.fetched ? 'Historical observation retained. ' : ''}` : ''}Source age and coverage unknown. Last successful fetch: ${state.fetched || 'none'}.`;
+}
+
+async function readPanel(id, url, valid, render, coalesce = true) {
+  const old = reads.get(id);
+  if (coalesce && old?.loading) return;
+  const state = old?.url === url ? { ...old } : { url };
+  reads.set(id, state);
+  state.loading = true;
+  const el = document.getElementById(id);
+  el.setAttribute('aria-busy', 'true');
+  if (!state.fetched) el.textContent = 'Loading…';
+  readStatus(id, state);
   try {
-    const data = await fetchJson(`${API}/queue`);
-    const items = data.pending || [];
-
-    document.getElementById('queue-stats').innerHTML = `
-      <div class="stat-card"><div class="value" style="color:var(--purple)">${items.length}</div><div class="label">Pending</div></div>
-    `;
-
-    if (items.length === 0) {
-      document.getElementById('queue-list').innerHTML = `
-        <div class="empty-state"><div class="icon">&#10003;</div><p>No pending consultation proposals</p></div>
-      `;
-      return;
+    const data = await fetchJson(url);
+    if (reads.get(id) !== state) return;
+    if (!valid(data)) throw new Error('Malformed successful response');
+    render(data);
+    state.fetched = new Date().toISOString();
+    state.error = null;
+  } catch (error) {
+    if (reads.get(id) !== state) return;
+    state.error = error.message;
+    if (!state.fetched) el.textContent = 'Observation unavailable. Use Retry.';
+  } finally {
+    if (reads.get(id) === state) {
+      state.loading = false;
+      el.setAttribute('aria-busy', 'false');
+      readStatus(id, state);
     }
-
-    document.getElementById('queue-list').innerHTML = items.map(item => `
-      <div class="proposal-card" onclick="loadDetail('${item.filename}')">
-        <div class="header">
-          <span class="module">${item.source_module}${item.consultation_num ? ` #${item.consultation_num}` : ''}</span>
-          <span class="badge ${item.confidence}">${item.confidence}</span>
-          <span class="meta">${item.change_count} change${item.change_count !== 1 ? 's' : ''}</span>
-        </div>
-        <div class="root-cause">${escHtml(item.root_cause_summary)}</div>
-        <div class="meta" style="margin-top:6px">
-          ${item.target_files.map(f => `<code style="font-size:11px;color:var(--text3)">${f}</code>`).join(' ')}
-          &middot; ${timeAgo(item.queued_at)}
-        </div>
-      </div>
-    `).join('');
-  } catch (e) {
-    document.getElementById('queue-list').innerHTML = `<div class="empty-state"><p>Failed to load queue: ${e.message}</p></div>`;
   }
 }
 
+function switchTab(id) {
+  if (!['queue', 'history', 'metrics'].includes(id)) {
+    id = 'queue';
+    history.replaceState(null, '', '#queue');
+  }
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === `tab-${id}`));
+  if (location.hash !== `#${id}`) location.hash = id;
+}
+document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+window.addEventListener('hashchange', () => {
+  if (location.hash !== '#page-main') switchTab(location.hash.slice(1));
+});
+
+function loadQueue() {
+  return readPanel('queue-list', `${API}/queue`, d => record(d) && Array.isArray(d.pending) && count(d.count) && d.pending.every(i => record(i) && typeof i.filename === 'string' && Array.isArray(i.target_files)), data => {
+    document.getElementById('queue-stats').textContent = `${data.pending.length} proposals returned. Operator-decision obligations unknown.`;
+    document.getElementById('queue-list').innerHTML = data.pending.map(item => `
+      <div class="proposal-card">
+        <div class="header"><button class="module" data-detail="${text(item.filename)}">${text(item.source_module)}${item.consultation_num == null ? '' : ` #${text(item.consultation_num)}`}</button>
+        <span class="badge ${bucket(item.confidence)}">${text(item.confidence)}</span><span class="meta">${count(item.change_count) ? item.change_count : 'Unknown'} changes</span></div>
+        <div class="root-cause">${text(item.root_cause_summary)}</div>
+        <div class="meta">${item.target_files.map(f => `<code>${text(f)}</code>`).join(' ')} · Queued ${timeAgo(item.queued_at)}</div>
+      </div>`).join('') || '<p>No proposals returned; source age and coverage unknown.</p>';
+  });
+}
+document.getElementById('queue-list').addEventListener('click', event => {
+  const button = event.target.closest('[data-detail]');
+  if (button) loadDetail(button.dataset.detail);
+});
+
 async function loadDetail(filename) {
+  const generation = ++detailGeneration;
+  closeConfirm();
+  const modal = document.getElementById('detail-modal');
+  if (!modal.classList.contains('visible')) returnFocus = document.activeElement;
+  modal.classList.add('visible');
+  modal.querySelector('.close-btn').focus();
+  currentDetail = null;
+  const content = document.getElementById('modal-content');
+  content.textContent = 'Loading proposal…';
+  content.setAttribute('aria-busy', 'true');
   try {
-    const data = await fetchJson(`${API}/queue/${filename}`);
+    const data = await fetchJson(`${API}/queue/${encodeURIComponent(filename)}`);
+    if (generation !== detailGeneration) return;
+    if (!record(data) || !['pending', 'applied', 'rejected'].includes(data.status) || !Array.isArray(data.proposed_changes) || !data.proposed_changes.every(record)) throw new Error('Malformed successful response');
     currentDetail = { filename, data };
-
-    const changes = data.proposed_changes || [];
-    const isPending = data.status === 'pending';
-
-    const numLabel = data.consultation_num ? ` — Consultation #${data.consultation_num}` : '';
-    document.getElementById('modal-content').innerHTML = `
-      <h2>${data.source_module || filename}${numLabel}</h2>
-      <p style="margin-bottom:4px"><span class="badge ${data.confidence}">${data.confidence}</span> &middot; ${data.status}</p>
-      <h3 style="margin-top:16px;font-size:14px;color:var(--text2)">Root Cause</h3>
-      <p style="font-size:13px;line-height:1.5;margin:8px 0 16px;white-space:pre-wrap">${escHtml(data.root_cause || '')}</p>
-      <h3 style="font-size:14px;color:var(--text2)">Proposed Changes (${changes.length})</h3>
-      ${changes.map((c, i) => `
-        <div class="diff-block">
-          <div class="diff-header"><span>Change ${i + 1}</span><span>${escHtml(c.file || 'unknown')}</span></div>
-          <div class="diff-find">${escHtml(c.find || '')}</div>
-          <div class="diff-replace">${escHtml(c.replace || '')}</div>
-          ${c.rationale ? `<div class="diff-rationale">${escHtml(c.rationale)}</div>` : ''}
-        </div>
-      `).join('')}
-      ${data.additional_notes ? `<p style="font-size:12px;color:var(--text3);margin-top:12px"><em>${escHtml(data.additional_notes)}</em></p>` : ''}
-      ${isPending ? `
-        <div class="actions">
-          <button class="action-btn approve" onclick="confirmAction('approve', '${filename}')">Approve & Apply</button>
-          <button class="action-btn reject" onclick="confirmAction('reject', '${filename}')">Reject</button>
-        </div>
-      ` : ''}
-    `;
-    document.getElementById('detail-modal').classList.add('visible');
-  } catch (e) {
-    alert('Failed to load detail: ' + e.message);
+    content.innerHTML = `<h2 id="detail-title">${text(data.source_module || filename)}</h2>
+      <p>Proposal: ${text(filename)} · ${text(data.status)} · <span class="badge ${bucket(data.confidence)}">${text(data.confidence)}</span></p>
+      <p>Queued ${timeAgo(data.queued_at)}. Source age and coverage unknown. Last successful fetch: ${new Date().toISOString()}.</p>
+      <h3>Root cause</h3><p style="white-space:pre-wrap">${text(data.root_cause)}</p>
+      <h3>Proposed changes (${data.proposed_changes.length})</h3>
+      ${data.proposed_changes.map((c, i) => `<div class="diff-block"><div class="diff-header">Change ${i + 1}: ${text(c.file)}</div><div class="diff-find">${text(c.find)}</div><div class="diff-replace">${text(c.replace)}</div>${c.rationale ? `<div class="diff-rationale">${text(c.rationale)}</div>` : ''}</div>`).join('')}
+      ${data.additional_notes ? `<p>${text(data.additional_notes)}</p>` : ''}
+      ${data.status === 'pending' ? '<div class="actions"><button class="action-btn approve" data-action="approve">Approve &amp; Apply</button><button class="action-btn reject" data-action="reject">Reject</button></div>' : ''}`;
+    content.querySelectorAll('[data-action]').forEach(button => {
+      button.onclick = () => confirmAction(button.dataset.action, filename);
+    });
+  } catch (error) {
+    if (generation !== detailGeneration) return;
+    content.textContent = `Failed to load proposal: ${error.message}. Source age unknown. Last successful fetch: none. `;
+    const retry = document.createElement('button');
+    retry.textContent = 'Retry detail';
+    retry.onclick = () => loadDetail(filename);
+    content.appendChild(retry);
+  } finally {
+    if (generation === detailGeneration) content.setAttribute('aria-busy', 'false');
   }
 }
 
 function closeModal() {
+  ++detailGeneration;
+  closeConfirm();
   document.getElementById('detail-modal').classList.remove('visible');
   currentDetail = null;
+  if (returnFocus?.isConnected) returnFocus.focus();
 }
 
-// ==================== APPROVE / REJECT ====================
-
-let pendingAction = null;
-
 function confirmAction(action, filename) {
+  if (!['approve', 'reject'].includes(action) || currentDetail?.filename !== filename || currentDetail.data.status !== 'pending') return;
   pendingAction = { action, filename };
-  const text = action === 'approve'
-    ? 'Apply template changes and approve this proposal?'
-    : 'Reject this proposal?';
-  document.getElementById('confirm-text').textContent = text;
+  confirmFocus = document.activeElement;
+  document.getElementById('confirm-text').textContent = action === 'approve' ? 'Apply template changes and approve this proposal?' : 'Reject this proposal?';
+  document.getElementById('action-error').textContent = '';
   const btn = document.getElementById('confirm-action-btn');
   btn.className = `action-btn ${action}`;
   btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
   btn.onclick = executeAction;
   document.getElementById('confirm-modal').classList.add('visible');
+  document.getElementById('confirm-modal').querySelector('button').focus();
 }
 
 function closeConfirm() {
   document.getElementById('confirm-modal').classList.remove('visible');
   pendingAction = null;
+  if (confirmFocus?.isConnected) confirmFocus.focus();
 }
 
 async function executeAction() {
   if (!pendingAction) return;
-  const { action, filename } = pendingAction;
+  const actionState = pendingAction;
+  const { action, filename } = actionState;
   const btn = document.getElementById('confirm-action-btn');
+  if (btn.disabled) return;
   btn.disabled = true;
-  btn.innerHTML = action === 'approve' ? 'Applying...' : 'Rejecting...';
-
+  btn.textContent = action === 'approve' ? 'Applying…' : 'Rejecting…';
   try {
-    await fetchJson(`${API}/queue/${filename}/${action}?confirm=true`, { method: 'POST' });
+    const data = await fetchJson(`${API}/queue/${encodeURIComponent(filename)}/${action}?confirm=true`, { method: 'POST' });
+    if (!record(data) || !['approved', 'already_applied', 'rejected', 'already_rejected'].includes(data.status)) throw new Error('Mutation result unknown; reload proposal before retrying');
+    if (pendingAction !== actionState) return;
     closeConfirm();
     closeModal();
-    loadQueue();
-  } catch (e) {
-    alert('Request failed: ' + e.message);
+    await loadQueue();
+  } catch (error) {
+    if (pendingAction === actionState) document.getElementById('action-error').textContent = `Request failed: ${error.message}`;
   } finally {
     btn.disabled = false;
+    btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
   }
 }
 
-// ==================== HISTORY ====================
-
-async function loadHistory() {
+function loadHistory() {
+  const params = new URLSearchParams({ limit: '200' });
   const track = document.getElementById('filter-track').value;
   const outcome = document.getElementById('filter-outcome').value;
-  let url = `${API}/history?limit=200`;
-  if (track) url += `&track=${track}`;
-  if (outcome) url += `&outcome=${outcome}`;
+  if (track) params.set('track', track);
+  if (outcome) params.set('outcome', outcome);
+  return readPanel('history-table', `${API}/history?${params}`, d => record(d) && Array.isArray(d.consultations) && count(d.total) && d.consultations.every(record), data => {
+    document.getElementById('history-table').innerHTML = data.consultations.length ? `<table><caption>Consultation history, ${data.consultations.length} of ${data.total} returned</caption><thead><tr><th>Module</th><th>Track</th><th>Outcome</th><th>Confidence</th><th>Scope</th><th>Changes</th><th>Event age</th></tr></thead><tbody>${data.consultations.map(c => `<tr><td>${text(c.slug)}</td><td>${text(c.track)}</td><td><span class="outcome-badge ${bucket(c.outcome)}">${text(c.outcome)}</span></td><td><span class="badge ${bucket(c.confidence)}">${text(c.confidence)}</span></td><td>${text(c.scope)}</td><td>${count(c.changes_count) ? c.changes_count : 'Unknown'}</td><td>${timeAgo(c.ts)}</td></tr>`).join('')}</tbody></table>` : '<p>No history rows returned for these filters; source age and coverage unknown.</p>';
+  }, false);
+}
 
+async function loadTrackFilter() {
   try {
-    const data = await fetchJson(url);
-    const items = data.consultations || [];
-
-    if (items.length === 0) {
-      document.getElementById('history-table').innerHTML = `<div class="empty-state"><p>No consultation history found</p></div>`;
-      return;
-    }
-
-    document.getElementById('history-table').innerHTML = `
-      <table>
-        <thead><tr><th>Module</th><th>Track</th><th>Outcome</th><th>Confidence</th><th>Scope</th><th>Changes</th><th>Date</th></tr></thead>
-        <tbody>
-          ${items.map(c => `<tr>
-            <td><strong>${escHtml(c.slug || '')}</strong></td>
-            <td>${c.track || ''}</td>
-            <td><span class="outcome-badge ${c.outcome || ''}">${c.outcome || 'unknown'}</span></td>
-            <td><span class="badge ${c.confidence || ''}">${c.confidence || '?'}</span></td>
-            <td style="font-size:12px;color:var(--text3)">${c.scope || '?'}</td>
-            <td>${c.changes_count || 0}</td>
-            <td style="font-size:12px;color:var(--text3)">${timeAgo(c.ts)}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-      <div style="margin-top:12px;font-size:12px;color:var(--text3)">Showing ${items.length} of ${data.total}</div>
-    `;
-  } catch (e) {
-    document.getElementById('history-table').innerHTML = `<div class="empty-state"><p>Failed to load history: ${e.message}</p></div>`;
+    const data = await fetchJson('/api/config');
+    if (!record(data) || !Array.isArray(data.levels) || !data.levels.every(l => record(l) && typeof l.id === 'string')) throw new Error('Malformed successful response');
+    const select = document.getElementById('filter-track');
+    const selected = select.value;
+    select.replaceChildren(new Option('All tracks', ''));
+    data.levels.forEach(l => select.add(new Option(l.id, l.id)));
+    select.value = selected;
+    document.getElementById('config-status').textContent = `Source age unknown. Last successful fetch: ${new Date().toISOString()}.`;
+  } catch (error) {
+    document.getElementById('config-status').textContent = `Track options unavailable: ${error.message}. Source age unknown.`;
   }
 }
 
-// Populate track filter
-async function loadTrackFilter() {
-  try {
-    const config = await fetchJson('/api/config');
-    const select = document.getElementById('filter-track');
-    (config.levels || []).forEach(l => {
-      const opt = document.createElement('option');
-      opt.value = l.id;
-      opt.textContent = l.id;
-      select.appendChild(opt);
-    });
-  } catch (e) {}
+function loadMetrics() {
+  return readPanel('metrics-charts', `${API}/metrics`, d => record(d) && count(d.total) && count(d.pending_queue) && ['by_outcome', 'by_track', 'by_confidence', 'by_scope'].every(k => record(d[k]) && Object.values(d[k]).every(count)) && Array.isArray(d.top_root_causes) && d.top_root_causes.every(row => Array.isArray(row) && row.length === 2 && count(row[1])), data => {
+    const outcomes = data.by_outcome;
+    document.getElementById('metrics-stats').textContent = `Total: ${data.total}. Applied: ${outcomes.applied ?? 0}. Queued: ${outcomes.queued ?? 0}. Parse failed: ${outcomes.parse_failed ?? 0}. Pending proposals: ${data.pending_queue}.`;
+    const largest = Math.max(1, ...Object.values(data.by_track));
+    const trackChart = `<h3>Consultations by track</h3><div class="bar-chart">${Object.entries(data.by_track).map(([track, value]) => `<div class="bar-row"><div class="bar-label">${text(track)}</div><div class="bar-track"><div class="bar-fill" style="width:${value / largest * 100}%">${value}</div></div></div>`).join('')}</div>`;
+    document.getElementById('metrics-charts').innerHTML = trackChart + ['by_track', 'by_confidence', 'by_scope'].map(key => `<h3>${key.replace('by_', 'By ')}</h3><table><thead><tr><th>Category</th><th>Count</th></tr></thead><tbody>${Object.entries(data[key]).map(([label, value]) => `<tr><td>${text(label)}</td><td>${value}</td></tr>`).join('')}</tbody></table>`).join('') + `<h3>Root cause keywords</h3>${data.top_root_causes.map(([word, value]) => `<span class="keyword">${text(word)} (${value})</span>`).join('')}`;
+  });
 }
 
 document.getElementById('filter-track').addEventListener('change', loadHistory);
 document.getElementById('filter-outcome').addEventListener('change', loadHistory);
-
-// ==================== METRICS ====================
-
-async function loadMetrics() {
-  try {
-    const data = await fetchJson(`${API}/metrics`);
-
-    const outcomes = data.by_outcome || {};
-    document.getElementById('metrics-stats').innerHTML = `
-      <div class="stat-card"><div class="value">${data.total}</div><div class="label">Total</div></div>
-      <div class="stat-card"><div class="value" style="color:var(--green)">${outcomes.applied || 0}</div><div class="label">Applied</div></div>
-      <div class="stat-card"><div class="value" style="color:var(--purple)">${outcomes.queued || 0}</div><div class="label">Queued</div></div>
-      <div class="stat-card"><div class="value" style="color:var(--red)">${outcomes.parse_failed || 0}</div><div class="label">Parse Failed</div></div>
-      <div class="stat-card"><div class="value" style="color:var(--yellow)">${data.pending_queue}</div><div class="label">Pending</div></div>
-    `;
-
-    // Track bar chart
-    const byTrack = data.by_track || {};
-    const trackEntries = Object.entries(byTrack).sort((a, b) => b[1] - a[1]);
-    const maxVal = trackEntries.length > 0 ? trackEntries[0][1] : 1;
-
-    let chartsHtml = '<h3 style="font-size:14px;color:var(--text2);margin-bottom:12px">Consultations by Track</h3>';
-    if (trackEntries.length === 0) {
-      chartsHtml += '<p style="color:var(--text3)">No data yet</p>';
-    } else {
-      chartsHtml += '<div class="bar-chart">';
-      trackEntries.forEach(([track, count]) => {
-        const pct = Math.max(5, (count / maxVal) * 100);
-        chartsHtml += `
-          <div class="bar-row">
-            <div class="bar-label">${track}</div>
-            <div class="bar-track"><div class="bar-fill" style="width:${pct}%">${count}</div></div>
-          </div>
-        `;
-      });
-      chartsHtml += '</div>';
-    }
-
-    // Top root causes
-    const rootCauses = data.top_root_causes || [];
-    if (rootCauses.length > 0) {
-      chartsHtml += '<h3 style="font-size:14px;color:var(--text2);margin-top:24px;margin-bottom:8px">Top Root Cause Keywords</h3>';
-      chartsHtml += '<div class="keywords-list">';
-      rootCauses.forEach(([word, count]) => {
-        chartsHtml += `<span class="keyword">${escHtml(word)} (${count})</span>`;
-      });
-      chartsHtml += '</div>';
-    }
-
-    // Confidence & scope breakdown
-    const byConf = data.by_confidence || {};
-    const byScope = data.by_scope || {};
-    chartsHtml += `
-      <div style="display:flex;gap:24px;margin-top:24px;flex-wrap:wrap">
-        <div>
-          <h3 style="font-size:14px;color:var(--text2);margin-bottom:8px">By Confidence</h3>
-          ${Object.entries(byConf).map(([k, v]) => `<div style="font-size:13px"><span class="badge ${k}">${k}</span> ${v}</div>`).join('')}
-        </div>
-        <div>
-          <h3 style="font-size:14px;color:var(--text2);margin-bottom:8px">By Scope</h3>
-          ${Object.entries(byScope).map(([k, v]) => `<div style="font-size:13px;margin-bottom:4px"><code style="color:var(--text2)">${k}</code> ${v}</div>`).join('')}
-        </div>
-      </div>
-    `;
-
-    document.getElementById('metrics-charts').innerHTML = chartsHtml;
-  } catch (e) {
-    document.getElementById('metrics-charts').innerHTML = `<div class="empty-state"><p>Failed to load metrics: ${e.message}</p></div>`;
+document.addEventListener('keydown', event => {
+  const modal = ['confirm-modal', 'detail-modal'].map(id => document.getElementById(id)).find(el => el.classList.contains('visible'));
+  if (!modal) return;
+  if (event.key === 'Escape') {
+    if (modal.id === 'confirm-modal') closeConfirm(); else closeModal();
   }
-}
-
-// ==================== UTILS ====================
-
-function escHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-function timeAgo(ts) {
-  if (!ts) return '';
-  const d = new Date(ts);
-  const now = new Date();
-  const sec = Math.floor((now - d) / 1000);
-  if (sec < 60) return 'just now';
-  if (sec < 3600) return Math.floor(sec / 60) + 'm ago';
-  if (sec < 86400) return Math.floor(sec / 3600) + 'h ago';
-  return Math.floor(sec / 86400) + 'd ago';
-}
-
-// Close modals on escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+  if (event.key === 'Tab') {
+    const focusable = [...modal.querySelectorAll('button:not(:disabled), [href], input, select')];
+    const first = focusable[0], last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  }
 });
-// Close modal on overlay click
-document.getElementById('detail-modal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeModal();
-});
-document.getElementById('confirm-modal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeConfirm();
-});
-
-// ==================== INIT ====================
-
-async function init() {
-  await loadTrackFilter();
-  loadQueue();
-  loadHistory();
-  loadMetrics();
-  document.getElementById('refresh-info').textContent = 'Loaded at ' + new Date().toLocaleTimeString();
-}
-
-init();
+['detail-modal', 'confirm-modal'].forEach(id => document.getElementById(id).addEventListener('click', event => {
+  if (event.target === event.currentTarget) { if (id === 'detail-modal') closeModal(); else closeConfirm(); }
+}));
+loadTrackFilter();
+loadQueue();
+loadHistory();
+loadMetrics();
+switchTab(location.hash.slice(1));
 </script>
 </body>
 </html>
