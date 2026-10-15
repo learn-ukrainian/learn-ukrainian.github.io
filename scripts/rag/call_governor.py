@@ -22,9 +22,7 @@ Every ``tools/call`` passes through one :class:`CallGovernor`:
 - each call logs one start and one end line (call id, tool name, in-flight,
   queued and abandoned counts, outcome, duration), and an abandoned call one
   more line when its work finishes and frees the slot. Argument values are
-  never logged;
-- a call still running after ``slow_dump_after`` seconds triggers one
-  all-thread stack dump into the dump directory, at most one per minute.
+  never logged.
 
 Defaults come from the server's own request log (18,946 calls: p99 4.5 s,
 p99.9 20.5 s, max 36.7 s) and are overridable through ``LU_SOURCES_*``
@@ -35,7 +33,6 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
-import faulthandler
 import functools
 import itertools
 import logging
@@ -45,16 +42,11 @@ from collections import deque
 from collections.abc import Awaitable, Callable, Mapping
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any, TypeVar
-
-from scripts.rag.hang_diagnostics import SLOW_CALL_PREFIX, ensure_dump_dir, prune_dump_dir
 
 T = TypeVar("T")
 
 LOGGER_NAME = "sources.calls"
-SLOW_DUMP_INTERVAL_S = 60.0
 # Each call runs at most one executor job at a time, and its slot outlives
 # that job, so ``max_concurrent`` threads cover every call. The margin is
 # for executor users outside a call (asyncio resolves host names on the
@@ -77,7 +69,6 @@ class GovernorLimits:
     max_concurrent: int = 12
     queue_timeout: float = 30.0
     call_timeout: float = 120.0
-    slow_dump_after: float = 60.0
 
     @classmethod
     def from_environ(cls, environ: Mapping[str, str] | None = None) -> GovernorLimits:
@@ -98,7 +89,6 @@ class GovernorLimits:
             max_concurrent=int(number("LU_SOURCES_MAX_CONCURRENT_CALLS", defaults.max_concurrent, 1)),
             queue_timeout=number("LU_SOURCES_QUEUE_TIMEOUT_S", defaults.queue_timeout, 0.1),
             call_timeout=number("LU_SOURCES_CALL_TIMEOUT_S", defaults.call_timeout, 0.1),
-            slow_dump_after=number("LU_SOURCES_SLOW_CALL_DUMP_S", defaults.slow_dump_after, 0.1),
         )
 
 
@@ -118,12 +108,10 @@ class CallGovernor:
         self,
         limits: GovernorLimits,
         *,
-        dump_dir: Path | None = None,
         logger: logging.Logger | None = None,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self.limits = limits
-        self.dump_dir = dump_dir
         self.logger = logger or default_logger()
         self._clock = clock
         self._ids = itertools.count(1)
@@ -133,10 +121,7 @@ class CallGovernor:
         self._running: dict[int, tuple[str, float]] = {}
         self._abandoned: set[int] = set()
         self._tasks: set[asyncio.Task[Any]] = set()
-        self._dumped: set[int] = set()
         self._queued = 0
-        self._last_dump = float("-inf")
-        self._watcher: asyncio.Task[None] | None = None
 
     @property
     def in_flight(self) -> int:
@@ -169,8 +154,6 @@ class CallGovernor:
             self._running.clear()
             self._abandoned.clear()
             self._tasks.clear()
-            self._dumped.clear()
-            self._watcher = None
             # A new pool per loop: asyncio.run shuts the loop's default
             # executor down when the loop ends.
             loop.set_default_executor(
@@ -239,7 +222,6 @@ class CallGovernor:
         """Done callback of a call's work: its slot is freed here, when the work ends."""
         self._tasks.discard(task)
         self._running.pop(call_id, None)
-        self._dumped.discard(call_id)
         abandoned = call_id in self._abandoned
         self._abandoned.discard(call_id)
         self._release()
@@ -269,7 +251,6 @@ class CallGovernor:
             self._log_end(call_id, tool, refusal.code, started)
             raise
         self._running[call_id] = (tool, self._clock())
-        self._ensure_watcher()
         self.logger.info(
             "call_start id=%d tool=%s inflight=%d queued=%d abandoned=%d wait_ms=%d",
             call_id,
@@ -318,43 +299,3 @@ class CallGovernor:
             self._queued,
             self.abandoned,
         )
-
-    def _ensure_watcher(self) -> None:
-        if self.dump_dir is None or (self._watcher is not None and not self._watcher.done()):
-            return
-        self._watcher = asyncio.get_running_loop().create_task(self._watch_slow_calls())
-
-    async def _watch_slow_calls(self) -> None:
-        interval = min(5.0, self.limits.slow_dump_after / 2)
-        while self._running:
-            await asyncio.sleep(interval)
-            self.check_slow_calls()
-
-    def check_slow_calls(self) -> Path | None:
-        """Dump all thread stacks once for a call past ``slow_dump_after``."""
-        now = self._clock()
-        slow = [
-            (call_id, tool, now - begun)
-            for call_id, (tool, begun) in self._running.items()
-            if now - begun >= self.limits.slow_dump_after and call_id not in self._dumped
-        ]
-        if not slow or self.dump_dir is None or now - self._last_dump < SLOW_DUMP_INTERVAL_S:
-            return None
-        self._last_dump = now
-        self._dumped.update(call_id for call_id, _tool, _age in slow)
-        path = self.dump_dir / f"{SLOW_CALL_PREFIX}{datetime.now(UTC):%Y%m%dT%H%M%SZ}-pid{os.getpid()}.txt"
-        with contextlib.suppress(OSError):
-            ensure_dump_dir(self.dump_dir)
-            fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-            with os.fdopen(fd, "w", encoding="utf-8") as handle:
-                for call_id, tool, age in slow:
-                    handle.write(f"slow call id={call_id} tool={tool} running={age:.0f}s\n")
-                handle.write(f"inflight={self.in_flight} queued={self._queued}\n")
-                handle.flush()
-                faulthandler.dump_traceback(file=handle, all_threads=True)
-            self.logger.warning("slow_call_dump path=%s calls=%d", path.name, len(slow))
-            # The writer keeps the dump directory bounded.
-            with contextlib.suppress(OSError):
-                prune_dump_dir(self.dump_dir)
-            return path
-        return None

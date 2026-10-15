@@ -54,7 +54,6 @@ def _serve(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, call_timeout: flo
     monkeypatch.setenv("LU_SOURCES_MAX_CONCURRENT_CALLS", str(MAX_CONCURRENT))
     monkeypatch.setenv("LU_SOURCES_QUEUE_TIMEOUT_S", "60")
     monkeypatch.setenv("LU_SOURCES_CALL_TIMEOUT_S", str(call_timeout))
-    monkeypatch.setenv("LU_SOURCES_DUMP_DIR", str(tmp_path / "dumps"))
     monkeypatch.setenv("LU_MCP_SOURCES_LOG_DIR", str(tmp_path / "logs"))
     spec = importlib.util.spec_from_file_location("mcp_sources_load_server", SERVER_PATH)
     module = importlib.util.module_from_spec(spec)

@@ -76,7 +76,8 @@ session-stream driver leases; `MONITOR_OCCUPANCY_MARKERS` publishes
 Foundry/compiler heartbeats. Do not put addresses or SSH hostnames in the
 occupancy JSON. `host-job` is not a default glance row.
 
-Units are **Linux-native `Type=simple`** processes. Do not wrap
+Units are **Linux-native `Type=simple`** processes (the sources server is
+`Type=notify`, which also supervises the listener). Do not wrap
 `./services.sh start` in `Type=oneshot RemainAfterExit=yes`: that is
 launchd-shaped and does not supervise the listener on Linux. macOS still
 uses `./services.sh supervise api` / launchd.
@@ -86,7 +87,8 @@ Public fixtures use opaque ids `host-teacher` (and mapped `host-job` only when n
 Available service templates:
 - `learn-ukrainian-api.service`: Monitor API service (`scripts/api/main.py`).
 - `learn-ukrainian-astro.service`: Astro frontend UI.
-- `learn-ukrainian-sources.service`: Sources lookup service.
+- `learn-ukrainian-sources.service`: Sources lookup service, supervised by systemd's watchdog (`Type=notify`, see [Sources MCP server](#sources-mcp-server-call-governor-and-systemd-supervision-10674)).
+- `learn-ukrainian-sources-alert@.service` and `learn-ukrainian-sources-alert-publish.service`: its failure notices.
 - `learn-ukrainian-work.service`: Work projection adapter.
 - `learn-ukrainian-loopback.target`: Target grouping loopback services.
 
@@ -176,6 +178,64 @@ runner, and orchestrator hosts).
   ```
   The templates do not install or enable themselves.
 
-### Sources MCP call governor (in-server, no unit)
+## Sources MCP server: call governor and systemd supervision (#10674)
 
-`scripts/rag/call_governor.py` bounds the sources server's tool calls (#10674). At most 12 tool calls hold a slot at once and the rest queue for up to 30 s; a call with no result after 120 s is answered `Tool call failed: <tool> (call_timeout: ...)`, a call that cannot get a slot `(... server_busy: ...)`. A timed-out call keeps its slot until its worker thread actually finishes (Python cannot kill the thread), so timeouts never let more than 12 calls' work run at once; while every slot is held by such work, new and queued calls are refused at once with `(... server_overloaded: ...)`. The calls' worker threads come from the server's own pool of the slot count plus 4, not Python's default pool (`min(32, CPUs + 4)` threads), so all 12 slots can run on any host and no call's timeout is spent waiting for a thread. Each call logs `call_start`/`call_end` lines (id, tool, in-flight, queued and abandoned counts, outcome, duration; never argument values) to the service log, and a timed-out call a `call_released` line when its work ends. A call still running after 60 s writes `slow-call-*.txt` (all-thread stacks) into the dump directory (`batch_state/sources-dumps/`, or `$LU_SOURCES_DUMP_DIR`). The writer bounds that directory: each dump keeps the newest 20 slow-call dumps within 8 MiB, and the pruning only touches a real directory owned by the service user. Override the limits with `LU_SOURCES_MAX_CONCURRENT_CALLS`, `LU_SOURCES_QUEUE_TIMEOUT_S`, `LU_SOURCES_CALL_TIMEOUT_S` and `LU_SOURCES_SLOW_CALL_DUMP_S`.
+### Call governor (in the server)
+
+`scripts/rag/call_governor.py` bounds the sources server's tool calls. At most 12 tool calls hold a slot at once and the rest queue for up to 30 s; a call with no result after 120 s is answered `Tool call failed: <tool> (call_timeout: ...)`, a call that cannot get a slot `(... server_busy: ...)`. A timed-out call keeps its slot until its worker thread actually finishes (Python cannot kill the thread), so timeouts never let more than 12 calls' work run at once; while every slot is held by such work, new and queued calls are refused at once with `(... server_overloaded: ...)`. The calls' worker threads come from the server's own pool of the slot count plus 4, not Python's default pool (`min(32, CPUs + 4)` threads), so all 12 slots can run on any host and no call's timeout is spent waiting for a thread. Each call logs `call_start`/`call_end` lines (id, tool, in-flight, queued and abandoned counts, outcome, duration; never argument values) to the service log, and a timed-out call a `call_released` line when its work ends. Override the limits with `LU_SOURCES_MAX_CONCURRENT_CALLS`, `LU_SOURCES_QUEUE_TIMEOUT_S` and `LU_SOURCES_CALL_TIMEOUT_S`.
+
+### Readiness and the watchdog
+
+`learn-ukrainian-sources.service` is `Type=notify` with `NotifyAccess=main` and `WatchdogSec=90`. The server (`scripts/rag/sources_supervision.py`, standard library only) sends:
+
+- `READY=1` once, after uvicorn is listening and one health probe has passed;
+- `WATCHDOG=1` only after a probe completes inside its deadline.
+
+A probe is one small coroutine on the serving event loop. It enters the real call governor as tool `_watchdog_probe`, then looks up one form on the shared VESUM connection through the governor's executor, taking the same connection lock as every VESUM tool. That connection is where the server deadlocked in #10674 (a Python callback under SQLite's connection mutex). A blocked event loop, a governor whose slots are all held by stuck work, or a held connection lock therefore stop the pings, and systemd treats 90 s without one as a failure. Probes start every 22.5 s (a quarter of the interval) with a 45 s deadline (half), and only one is outstanding: no new probe starts until the previous probe's job has finished. Keep `LU_SOURCES_QUEUE_TIMEOUT_S` below half of `WatchdogSec`, so a probe that waits the whole queue timeout for a slot can still meet its deadline. Each probe logs the governor's `call_start`/`call_end` lines; a failed one also logs `watchdog_probe outcome=deadline|error|still_running`.
+
+Under systemd only: the stdio server, and a standalone server started without `$NOTIFY_SOCKET`, send nothing and arm no dump. The data-volume drop-in's guard `exec`s into the server, so the server keeps the main PID that `NotifyAccess=main` accepts.
+
+### Dump before the kill
+
+On a missed watchdog systemd sends `SIGABRT` (the default `WatchdogSignal=`). At start-up the server armed `faulthandler` on a file it opened in the unit's state directory, so the signal writes every thread's Python stack there and the process dies; after `TimeoutAbortSec=30` systemd sends `SIGKILL` (`SendSIGKILL=yes`, `KillMode=control-group`), then restarts the unit after `RestartSec=5`.
+
+- **Where:** `StateDirectory=learn-ukrainian-sources`, created by systemd with mode 0700: `$XDG_STATE_HOME/learn-ukrainian-sources/` (usually `~/.local/state/...`) under a user manager, `/var/lib/learn-ukrainian-sources/` under the system manager. Files are `abort-<UTC start time>-pid<N>-<random>.txt`, mode 0600. Read the newest non-empty one after a watchdog notice.
+- **Bounds:** every server process creates one file, and a fatal signal ends the process, so a file holds at most one dump (faulthandler caps it at 100 threads of 100 frames, under 11 MiB). At start-up the server removes earlier empty files and keeps the newest earlier dumps within 7 files and 21 MiB, so the directory never holds more than 8 dump files or 32 MiB. A file whose lock is held by a live process is never removed, and the directory is opened once without following symlinks; nothing is created or opened by path at crash time.
+- **Privacy:** stacks carry file names, line numbers and function names, never argument values. Core dumps are off (`LimitCORE=0`, and the server sets `PR_SET_DUMPABLE` to 0, which also stops a piped `core_pattern` helper), so process memory never leaves the process.
+- The directory also holds `ready-invocation`, the systemd invocation id of the last run that became ready, which tells the failure notice a start-up failure from a later one.
+
+### Restart budget
+
+`Restart=on-failure` restarts the server after a watchdog kill, a crash or a non-zero exit (except exit 78, the data-volume guard's refusal, which `RestartPreventExitStatus=78` leaves failed). `[Unit]` limits it with `StartLimitIntervalSec=30min`, `StartLimitBurst=5` and `StartLimitAction=none`.
+
+- systemd counts **starts**, including the first and manual ones: a sixth start within any 30 minutes is refused.
+- Why these values: the shortest watchdog cycle is about 100 s (start, 90 s without a ping, abort, 5 s delay), so a server that hangs again soon after each start reaches its refused sixth start within about 8 minutes, and one that crashes during start-up within about a minute. A hang that recurs less often than every 6 minutes keeps being restarted, and every failure sends a notice. systemd's default (5 starts in 10 s) never catches a watchdog cycle.
+- **Exhausted:** the unit stays `failed` (`Result=start-limit-hit`); systemd does not restart it again, and time alone does not either. A `start_limit` notice goes to the `cto` channel. No reboot or other action follows.
+- **Recovery is manual:** read the dump and `journalctl --user -u learn-ukrainian-sources.service`, fix the cause, then run `systemctl --user reset-failed learn-ukrainian-sources.service` and `systemctl --user start learn-ukrainian-sources.service` (without `--user` for a system install). Automated resets are prohibited: no timer, script or agent runs `reset-failed` or `start` on this unit to get around the budget. Five manual restarts within 30 minutes also use the budget; `reset-failed` clears it.
+- **While the server is down:** sources tools fail for every seat that reaches the server over HTTP at `127.0.0.1:8766` (the default `.mcp.json` client and the V7 writer seats), so lookups and VESUM verification wait until it is back, or follow the documented fallbacks in the rules. Formal review seats start their own stdio server and keep working. Monitor's health glance reports `mcp_sources: false`; it only checks the port, so a hung server that still accepts connections reads `true` until the watchdog kills it.
+
+### Failure notices
+
+Every failure of the unit starts `learn-ukrainian-sources-alert@learn-ukrainian-sources.service.service` (`OnFailure=`), and its `OnSuccess=` starts `learn-ukrainian-sources-alert-publish.service`. Both run `scripts/orchestration/sources_failure_alert.py` and share the owner-only `StateDirectory=learn-ukrainian-sources-alerts`.
+
+- **Episode:** one failed run of the unit (one systemd invocation id), plus, separately, the start-limit refusal that follows the last one. Each episode sends exactly one message. A watchdog kill that systemd then recovers from **does** notify: the server hung and its dump is waiting. The start limit caps them at 5 failure notices in any 30 minutes, plus one start-limit notice that ends the run of restarts until a manual reset.
+- **Recorder** (the `@` unit, `TimeoutStartSec=30`): local and quick. It classifies the failure from systemd's `MONITOR_*` variables as `watchdog`, `start_limit`, `startup` (the run never became ready) or `other`, and writes one record (fsync, then an atomic link, so a re-run of the same episode keeps the first record). It never contacts Fleet Comms, so it cannot delay a restart, and it finishes long before the next failure can start it again (systemd merges a start into an already running one).
+- **Publisher** (`TimeoutStartSec=180`): sends every pending record, oldest first, through the backup alert's Fleet Comms publisher (`channel publish cto --sender sre-timers --kind report`) with the idempotency key `lu-sources-alert:v1:<episode>`, then deletes it. A record whose publish fails stays, and the unit retries every 60 s, at most 6 runs an hour; after that the record waits for the next failure or `systemctl --user start learn-ukrainian-sources-alert-publish.service`. If the publisher is killed after Fleet Comms stored a message, the retry sends the same bytes with the same key and Fleet Comms keeps one message. At most 64 records wait; beyond that the oldest go.
+- **Content:** only the allowlisted fields: schema version, `service=sources`, an opaque episode id (a hash, not the invocation id), the UTC time of the record and the class, plus a fixed sentence per class. For example:
+
+  ```text
+  [sources-alert] schema=1 service=sources class=watchdog episode=3f2a...e1 at=2026-10-15T15:00:00Z
+  systemd killed the sources MCP server after missed health pings and restarted it; its all-thread stack dump is in the unit's state directory.
+  ```
+
+  Exception text, exit details, health bodies, paths and stacks never enter a record or a message; a record with any other field, or a file left by the old watchdog, is deleted unsent.
+
+### Install and rollout (operator-approved only)
+
+The templates do not install themselves.
+
+1. **Read the live install first.** This repository does not record whether the live sources service runs under the user manager or the system manager, or which drop-ins it has. Check with `systemctl --user cat learn-ukrainian-sources.service` (or `systemctl cat ...`) on the host and use the matching manager in every command below.
+2. **Check `ProtectHome=yes`.** The template keeps its restrictions, including `ProtectHome=yes`, which hides `/home`, `/root` and `/run/user` from the service. It can therefore run only from a checkout, interpreter and base interpreter outside those trees. From the checkout, run `.venv/bin/python -m scripts.rag.sources_supervision check-paths --repo-root "$(pwd -P)"`: exit 0 means everything is visible, exit 1 lists what would be hidden. If anything is listed, the installation needs a reviewed decision before it proceeds; do not edit the restrictions on the host. Under a user manager `ProtectHome=` also implies `PrivateUsers=yes`, and `ProtectProc=`/`ProcSubset=` are available to system services only.
+3. **Render and verify** the three units into the manager's unit directory, replacing `@REPO_ROOT@` with the absolute checkout path (`sed -e "s|@REPO_ROOT@|$repo_root|g"`), install the data-volume drop-in with `scripts/storage/install_data_volume_dropins.py`, then run `systemd-analyze [--user] verify` on the rendered files, `systemctl [--user] daemon-reload` and `systemctl [--user] restart learn-ukrainian-sources.service`. Check `systemctl [--user] show -p Type,WatchdogUSec,NRestarts learn-ukrainian-sources.service` and the journal's `sd_notify ready` line.
+4. **One supervisor only.** This repository ships no `learn-ukrainian-sources-watchdog` unit (a test enforces it). A host that ever installed the parked custom watchdog's `learn-ukrainian-sources-watchdog.service` and `.timer` must stop, disable and delete them, then reload the manager, before native supervision goes live, so two supervisors never act on the same server.
+5. **Live drill:** dump, kill, restart, start-limit failure, notices, manual recovery and a successful MCP tool call afterwards need separate CTO consent; the unit tests run without a service manager.

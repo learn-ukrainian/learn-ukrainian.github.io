@@ -241,6 +241,10 @@ NOT_REPO_WIDE = {
         "Reads packaging/systemd; packaging/ is not a test or script candidate, so any "
         "change to a systemd template already forces the full tier."
     ),
+    "tests/packaging/test_sources_supervision_units.py::test_no_second_supervisor_unit_is_shipped": (
+        "Globs packaging/systemd for watchdog unit names; packaging/ is not a test or script "
+        "candidate, so any change to a systemd template already forces the full tier."
+    ),
     "tests/projects/open_model_data/test_audit_dataset_acceptance.py::test_reproduces_v05_grammar_valency_findings": (
         "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
         "any change already forces the full tier."

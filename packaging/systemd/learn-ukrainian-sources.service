@@ -2,9 +2,42 @@
 Description=Learn Ukrainian MCP Sources server (loopback)
 After=network-online.target
 Wants=network-online.target
+# Restart budget (#10674): at most 5 starts in any 30 minutes, counting the
+# first and manual starts. A watchdog cycle (start, hang, 90 s watchdog,
+# abort, 5 s restart delay) takes at least about 100 s, so a server that
+# hangs again soon after every start reaches the refused sixth start within
+# about 8 minutes, and a crash at start-up within about a minute. Then the
+# unit stays failed with no further restarts until an operator runs
+# reset-failed and start; see packaging/systemd/README.md. No reboot or
+# other action.
+StartLimitIntervalSec=30min
+StartLimitBurst=5
+StartLimitAction=none
+# One safe-field Fleet Comms notice per failed run, and one when the budget
+# runs out. Recording is local and quick; publishing runs in its own unit.
+OnFailure=learn-ukrainian-sources-alert@%n.service
 
 [Service]
-Type=simple
+# READY=1 once the server listens and a health probe has passed; WATCHDOG=1
+# only after a probe passes the call governor and the shared VESUM
+# connection lock in time (scripts/rag/sources_supervision.py). Only the
+# server process may notify (the data-volume guard execs into it, keeping
+# its PID).
+Type=notify
+NotifyAccess=main
+WatchdogSec=90
+# WatchdogSignal= keeps its default, SIGABRT: faulthandler writes every
+# thread's stack to the file opened at start-up, then the signal ends the
+# process. TimeoutAbortSec= bounds that; SIGKILL follows if it is exceeded.
+TimeoutAbortSec=30
+TimeoutStartSec=120
+TimeoutStopSec=30
+KillMode=control-group
+SendSIGKILL=yes
+# Stacks stay in an owner-only directory; no core dumps.
+LimitCORE=0
+StateDirectory=learn-ukrainian-sources
+StateDirectoryMode=0700
 UMask=0077
 NoNewPrivileges=yes
 PrivateMounts=yes

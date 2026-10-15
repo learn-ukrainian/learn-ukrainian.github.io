@@ -1,17 +1,13 @@
-"""Call governor: concurrency cap, queue and call timeouts, logging, slow dumps (#10674)."""
+"""Call governor: concurrency cap, queue and call timeouts, logging (#10674)."""
 
 from __future__ import annotations
 
 import asyncio
-import functools
-import itertools
 import logging
 import os
 import threading
 import time
 from collections.abc import Callable
-from datetime import datetime
-from pathlib import Path
 
 import pytest
 
@@ -338,68 +334,15 @@ def test_handler_error_is_logged_and_propagates(caplog: pytest.LogCaptureFixture
     assert governor.in_flight == 0
 
 
-def test_slow_call_writes_one_stack_dump(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
-    logger = logging.getLogger("test.sources.calls")
-    caplog.set_level(logging.INFO, logger="test.sources.calls")
-    governor = CallGovernor(
-        GovernorLimits(max_concurrent=2, queue_timeout=1, call_timeout=5, slow_dump_after=0.2),
-        dump_dir=tmp_path,
-        logger=logger,
-    )
-
-    async def slow() -> str:
-        await asyncio.sleep(0.6)
-        return "done"
-
-    assert asyncio.run(governor.run("vet_vocabulary", slow)) == "done"
-    dumps = list(tmp_path.glob("slow-call-*.txt"))
-    assert len(dumps) == 1
-    text = dumps[0].read_text(encoding="utf-8")
-    assert "tool=vet_vocabulary" in text and "most recent call first" in text
-    assert oct(dumps[0].stat().st_mode & 0o777) == "0o600"
-
-
-def test_slow_dumps_beyond_the_retention_limit_are_pruned_by_the_writer(
-    caplog: pytest.LogCaptureFixture, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """More slow dumps than the limit leave at most the limit: the writer prunes."""
-    from scripts.rag import call_governor as cg
-
-    limit = 3
-    monkeypatch.setattr(cg, "prune_dump_dir", functools.partial(cg.prune_dump_dir, keep=limit))
-    monkeypatch.setattr(cg, "SLOW_DUMP_INTERVAL_S", 0.0)
-    seconds = itertools.count()
-
-    class Clock(datetime):
-        @classmethod
-        def now(cls, tz=None):  # type: ignore[no-untyped-def]
-            return datetime(2026, 10, 15, 12, 0, next(seconds), tzinfo=tz)
-
-    monkeypatch.setattr(cg, "datetime", Clock)
-    caplog.set_level(logging.INFO, logger="test.sources.calls")
-    governor = CallGovernor(
-        GovernorLimits(max_concurrent=2, queue_timeout=1, call_timeout=5, slow_dump_after=0.0),
-        dump_dir=tmp_path,
-        logger=logging.getLogger("test.sources.calls"),
-    )
-    for call_id in range(1, 8):
-        governor._running[call_id] = ("vet_vocabulary", governor._clock() - 1)
-        assert governor.check_slow_calls() is not None
-    names = sorted(path.name for path in tmp_path.glob("slow-call-*.txt"))
-    assert len(names) == limit
-    assert names[-1].startswith("slow-call-20261015T120006Z")
-
-
 def test_limits_from_environ_reject_invalid_values() -> None:
     limits = GovernorLimits.from_environ(
         {
             "LU_SOURCES_MAX_CONCURRENT_CALLS": "4",
             "LU_SOURCES_CALL_TIMEOUT_S": "abc",
             "LU_SOURCES_QUEUE_TIMEOUT_S": "-1",
-            "LU_SOURCES_SLOW_CALL_DUMP_S": "90",
         }
     )
-    assert limits == GovernorLimits(max_concurrent=4, queue_timeout=30.0, call_timeout=120.0, slow_dump_after=90.0)
+    assert limits == GovernorLimits(max_concurrent=4, queue_timeout=30.0, call_timeout=120.0)
 
 
 def test_a_governor_survives_successive_event_loops(caplog: pytest.LogCaptureFixture) -> None:

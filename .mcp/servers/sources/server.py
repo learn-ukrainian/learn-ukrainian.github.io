@@ -2009,19 +2009,10 @@ _CALL_GOVERNOR: CallGovernor | None = None
 
 
 def _call_governor() -> CallGovernor:
-    """The process-wide bound on concurrent tool calls (#10674).
-
-    Slow-call stack dumps are written only by the standalone HTTP service;
-    a per-agent stdio server keeps the bound and the logging.
-    """
+    """The process-wide bound on concurrent tool calls (#10674)."""
     global _CALL_GOVERNOR
     if _CALL_GOVERNOR is None:
-        from scripts.rag.hang_diagnostics import resolve_dump_dir
-
-        _CALL_GOVERNOR = CallGovernor(
-            GovernorLimits.from_environ(),
-            dump_dir=resolve_dump_dir(PROJECT_ROOT) if _HTTP_MODE else None,
-        )
+        _CALL_GOVERNOR = CallGovernor(GovernorLimits.from_environ())
     return _CALL_GOVERNOR
 
 
@@ -4134,13 +4125,28 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     limits = _call_governor().limits
     print(
         f"  Call limits: {limits.max_concurrent} concurrent, queue {limits.queue_timeout:.0f}s, "
-        f"timeout {limits.call_timeout:.0f}s, slow-call dump {limits.slow_dump_after:.0f}s"
+        f"timeout {limits.call_timeout:.0f}s"
     )
+    # Under learn-ukrainian-sources.service (#10674): an all-thread stack dump
+    # on the watchdog's SIGABRT, and READY/WATCHDOG notifications. Both stay
+    # off outside systemd ($STATE_DIRECTORY and $NOTIFY_SOCKET unset).
+    from scripts.rag.hang_diagnostics import arm_abort_dump, write_ready_marker
+    from scripts.rag.sources_supervision import start_supervision
+
+    dump_name = arm_abort_dump()
+    if dump_name:
+        print(f"  Abort dump: {dump_name} in the unit's state directory")
     sys.stdout.flush()
     # Idle keep-alive connections close after 5 s (uvicorn's default, pinned).
     config = uvicorn.Config(app, host=host, port=port, log_level="warning", timeout_keep_alive=5)
     srv = uvicorn.Server(config)
-    await srv.serve()
+    supervision = start_supervision(srv, _call_governor(), on_ready=write_ready_marker)
+    try:
+        await srv.serve()
+    finally:
+        if supervision is not None:
+            # A probe may be waiting on this loop: never block shutdown on it.
+            supervision.stop(timeout=0)
 
 
 if __name__ == "__main__":

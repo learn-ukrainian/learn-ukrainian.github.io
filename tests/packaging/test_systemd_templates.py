@@ -24,7 +24,8 @@ DROPINS = PACKAGING / "dropins"
 def test_systemd_templates_are_type_simple() -> None:
     for name in UNITS:
         text = (PACKAGING / name).read_text(encoding="utf-8")
-        assert "Type=simple" in text
+        # The sources server tells systemd when it is ready and alive (#10674).
+        assert ("Type=notify" if name == "learn-ukrainian-sources.service" else "Type=simple") in text
         assert "Type=oneshot" not in text
         assert "RemainAfterExit" not in text
         assert "services.sh start" not in text
