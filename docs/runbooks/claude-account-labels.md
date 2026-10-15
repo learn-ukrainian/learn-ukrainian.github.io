@@ -3,8 +3,10 @@
 Moved from [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 
 `delegate.py dispatch --claude-account b` runs an ordinary Claude worker on the
-bound account's verified login directory. The default label (or none) leaves
-the plan unchanged; `tests/fixtures/claude_default_account_plan.json` pins it.
+bound account's verified login directory. The default label `a` (also what a
+dispatch without the flag and without a default-account file, below, resolves
+to) leaves the plan unchanged; `tests/fixtures/claude_default_account_plan.json`
+pins it.
 The label is accounting and attribution for load balancing, not an isolation
 boundary against a hostile process of the same user. What it guards against is
 a key, key helper, endpoint, proxy or provider switch left in the labelled
@@ -85,8 +87,13 @@ the worker runs on. For label `b` the adapter
   credential file stays in place (the CLI rotates its refresh token) and the
   CLI reads the global config only from beside it, so a digest bind, not a
   copy, is the strongest construction available. What remains is the moment
-  between the guard's check and the CLI reading its files; exploiting it needs
-  write access to the same user's files.
+  between the guard's check and the CLI reading its files. Two things can land
+  inside it: a write by a process of the same user (outside the threat model),
+  and an administrative policy deployment that installs machine policy in that
+  moment, which needs no access to the user's files. No launch-side check can
+  close the second: a worker started in that moment runs under the new machine
+  policy. Every later launch and dispatch on that host refuses
+  (`claude_account_machine_policy_present`).
 
 Limitation: the preflight requires the access token to have more than 60
 seconds left. A token that expires during a long worker is refreshed by the CLI
@@ -96,3 +103,50 @@ failover chain. A token refresh between verification and launch (by another
 worker of the same account, or by the status probe for a token close to
 expiry) changes the credential record, so that launch refuses with
 `claude_account_settings_changed` (fail-closed; a new dispatch re-verifies).
+
+## Fleet-wide default account file
+
+A claude dispatch without `--claude-account` takes its label from one
+per-user file, `learn-ukrainian/claude-default-account` in the user config
+directory (`$XDG_CONFIG_HOME`, else `~/.config`). `LU_CLAUDE_DEFAULT_ACCOUNT_FILE`
+overrides the path for tests and operations; an empty value disables the file.
+The file holds one token, `a` or `b`, optionally surrounded by whitespace. A
+missing or empty file means `a`, exactly as before. Editing the file moves every
+new Claude dispatch to that account without changing any dispatch command.
+
+- Order: an explicit `--claude-account` (the file is then not read), else the
+  file, else `a`. A label from the file is admitted exactly like an explicit
+  one, with every check above (binding, credential, consumer plan, machine
+  policy, WSL, policy caches and profile store, and the launch digest bind),
+  so a file naming `b` on a host or login that `--claude-account b` would
+  refuse refuses the dispatch instead of running as `a`. Other seats never
+  read the file, and neither does a dispatch whose request names another seat
+  that a reviewer resolver routes to claude: like an explicit label there, it
+  runs as `a` (source `builtin`).
+- A present but invalid file is refused before any worktree or task record is
+  created, with a value-free `CLAUDE_ACCOUNT_REFUSED` cause that names neither
+  the content nor the path: `claude_account_default_file_invalid` (not exactly
+  one known label, binary or non-ASCII), `_oversized` (over 64 bytes),
+  `_not_private` (not a regular file, not owned by the current user, or group-
+  or world-writable; readable by others is fine) or `_unavailable` (unreadable,
+  including a symbolic link).
+- The file is read once, at dispatch. The task record keeps `claude_account`
+  and `claude_account_source` (`explicit`, `default-file`, `builtin`, or
+  `record` for a `--force-new` re-run of the same task id, which keeps the
+  earlier record's label; a `--claude-account` that contradicts it is refused
+  with `claude_account_record_conflict`, and a record label that is not a known
+  one with `claude_account_unknown`). A record without a label (another
+  seat's, or one from before labels) has none to keep, so its re-run resolves
+  like a new dispatch. A recorded label passes every check above again, like
+  an explicit one. The worker, runner failover and re-runs use the recorded
+  label and never read the file, so changing it affects only new task ids.
+- The worker adds `claude_account_auth` to its record: `label`, `source`,
+  `method` and `verified`, never a token, identity or path. `method` is
+  `subscription_login` when the adapter's launch preparation passed every check
+  above for this run (status probes, unchanged digest, the classified
+  credential, no machine policy), `bound_account_token` when a sealed attempt's
+  boundary verified the bound credential, `unverified` when no verification
+  passed in this run (a refusal, or a failure before launch preparation), and
+  `host_login` for label `a`, which runs on the host's own login and is not
+  probed (`verified: false`). A launch guard refusal after a verified
+  preparation shows as the worker's failure, not in the receipt.

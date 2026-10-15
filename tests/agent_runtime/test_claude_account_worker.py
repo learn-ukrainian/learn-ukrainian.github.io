@@ -811,6 +811,166 @@ def test_default_label_plan_matches_the_base_snapshot(accounts, monkeypatch, too
     assert _calls(accounts, "auth_status") == []
 
 
+@pytest.mark.parametrize("content", [b"b\n", b"c\n"], ids=["default_file_b", "default_file_invalid"])
+def test_worker_plan_never_reads_the_default_account_file(accounts, monkeypatch, content):
+    """AC-01 golden (#10619 PR1c): the default file is a dispatch input only; a run without a label stays a.
+
+    Whatever the file holds, a plan built without a label is the base
+    snapshot: the worker uses the label its task record carries.
+    """
+    path = accounts.home / "claude-default-account"
+    path.write_bytes(content)
+    path.chmod(0o600)
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
+    expected = json.loads(_GOLDEN.read_text(encoding="utf-8"))
+    expected.pop("_provenance")
+
+    assert _golden_view(accounts, _plan(accounts)) == expected
+    assert _calls(accounts, "auth_status") == []
+
+
+def test_verified_labelled_run_leaves_a_value_free_receipt(accounts):
+    """AC-01 (#10619 PR1c): the auth-status check that admits label b is the run's receipt; it holds no value."""
+    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+
+    reset_claude_account_receipts()
+    result, _ = _invoke(accounts, claude_account="b")
+
+    assert result.ok is True
+    receipt = claude_account_auth_receipt("b", source="default-file")
+    assert receipt == {"label": "b", "source": "default-file", "method": "subscription_login", "verified": True}
+    rendered = json.dumps(receipt)
+    assert str(accounts.config_dir) not in rendered and accounts.bound_token not in rendered
+
+
+def test_refused_labelled_run_leaves_an_unverified_receipt(accounts):
+    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+
+    reset_claude_account_receipts()
+    _private_json(accounts.workdir / ".claude" / "settings.local.json", {"apiKeyHelper": "fixture-helper-command"})
+
+    with pytest.raises(ClaudeAccountRefused):
+        _invoke(accounts, claude_account="b")
+
+    assert claude_account_auth_receipt("b", source="explicit") == {
+        "label": "b",
+        "source": "explicit",
+        "method": "unverified",
+        "verified": False,
+    }
+
+
+def _late_refusal(accounts: SimpleNamespace, monkeypatch: pytest.MonkeyPatch, case: str) -> None:
+    """Arrange a refusal that comes after the status probes have passed."""
+    if case == "inputs_changed_during_verification":
+        (accounts.workdir / ".claude").mkdir()
+        monkeypatch.setenv("LU_FAKE_CLAUDE_STATUS_TOUCH", str(accounts.workdir / ".claude" / "settings.local.json"))
+        return
+    classify = attempt_boundary.verify_claude_account
+
+    def classify_then_change(label, **kwargs):
+        binding = classify(label, **kwargs)
+        if case == "credential_replaced_after_classification":
+            _credentials(accounts.config_dir / ".credentials.json", "fixture-organisation-" + "o" * 30)
+        else:
+            MACHINE_POLICY["managed_memory"]()
+        return binding
+
+    monkeypatch.setattr(attempt_boundary, "verify_claude_account", classify_then_change)
+
+
+@pytest.mark.parametrize(
+    "case,code",
+    [
+        ("inputs_changed_during_verification", "claude_account_settings_changed"),
+        ("credential_replaced_after_classification", "claude_account_settings_changed"),
+        ("machine_policy_after_classification", "claude_account_machine_policy_present"),
+    ],
+)
+def test_receipt_needs_every_launch_check_not_only_the_status_probes(accounts, monkeypatch, case, code):
+    """The receipt is noted only once the launch is bound: a refusal after passing status probes leaves it unverified."""
+    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+
+    reset_claude_account_receipts()
+    _late_refusal(accounts, monkeypatch, case)
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _plan(accounts, claude_account="b")
+
+    assert refused.value.code == code
+    assert len(_calls(accounts, "auth_status")) == 2  # both status probes ran and passed
+    assert claude_account_auth_receipt("b", source="default-file") == {
+        "label": "b",
+        "source": "default-file",
+        "method": "unverified",
+        "verified": False,
+    }
+
+
+@pytest.mark.parametrize("policy_after_build", [False, True], ids=["admitted", "machine_policy_after_build"])
+def test_worker_runs_a_default_file_label_only_through_the_launch_guard(
+    accounts, tmp_path, monkeypatch, policy_after_build
+):
+    """End to end from a task record whose b came from the default file (#10619 PR1c).
+
+    The worker hands the recorded label to the real runner and adapter, which
+    verify the login and launch the CLI only behind the launch guard; machine
+    policy installed after the plan is built stops the exec there, exactly as
+    for an explicit b.
+    """
+    import delegate
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    task_id = "claude-default-file-end-to-end"
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "claude_account": "b", "claude_account_source": "default-file"},
+    )
+    build = ClaudeAdapter.build_invocation
+
+    def build_then_policy(self, **kwargs):
+        plan = build(self, **kwargs)
+        if policy_after_build:
+            MACHINE_POLICY["managed_memory"]()
+        return plan
+
+    def real_runner(agent, prompt, *, tool_config, **kwargs):
+        with patch.object(runner, "has_headroom", return_value=(True, "")), patch.object(runner, "write_record"):
+            return runner.invoke(
+                agent, prompt, tool_config={"cmd_prefix": [str(accounts.binary)], **tool_config}, **kwargs
+            )
+
+    with (
+        patch.object(ClaudeAdapter, "build_invocation", build_then_policy),
+        patch("agent_runtime.runner.invoke", side_effect=real_runner),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="claude",
+            prompt="do the task",
+            mode="read-only",
+            cwd_str=str(accounts.workdir),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    # The adapter's launch preparation passed every check; a guard refusal shows as the run's failure.
+    assert state["claude_account_auth"] == {
+        "label": "b",
+        "source": "default-file",
+        "method": "subscription_login",
+        "verified": True,
+    }
+    if policy_after_build:
+        assert rc == 1
+        assert _calls(accounts, "run") == []
+        assert "CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed" in state["stderr_excerpt"]
+    else:
+        assert rc == 0
+        assert _run(accounts)["env"]["CLAUDE_CONFIG_DIR"] == str(accounts.config_dir)
+
+
 @pytest.mark.parametrize("tool_config", [{}, {"claude_account": "a"}], ids=["omitted", "explicit_default"])
 def test_default_label_never_reads_machine_policy(accounts, monkeypatch, tool_config):
     """The default account's plan stays the base snapshot on a host with machine policy, which it never reads."""
