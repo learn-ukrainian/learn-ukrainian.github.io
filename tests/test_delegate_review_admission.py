@@ -1179,6 +1179,96 @@ def test_9959_no_capacity_refusal_lists_entire_resolver_trace(monkeypatch):
     assert "author" in refusal
 
 
+def test_10619_reselected_claude_reviewer_is_judged_on_the_selected_account(monkeypatch):
+    """Finding 1 through the real resolver: a b-bound request first selects codex, then returns to claude.
+
+    Sonnet is no high-risk reviewer, so admission first selects codex; codex is
+    near cap, and on 15a2840e reselection returned to claude on account a's
+    lane row (90% remaining) while b, the account the worker runs as, had 0.5%.
+    """
+    from tests.test_delegate_check_budget import _account_row, _accounts_budget, _default_claude_lane
+
+    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(0.5)})
+    budget["agents"]["codex"] = {"status": "near_cap", "remaining_pct": 0.5}
+    args = _args(
+        "--agent",
+        "claude",
+        "--model",
+        "claude-sonnet-5-5",
+        "--review-author-model",
+        "gemini-3.8-flash-high",
+        "--review-risk",
+        "high",
+        "--check-budget",
+    )
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    routing = delegate._DispatchRouting()
+
+    refusal, target = delegate._admit_dispatch_target(
+        args,
+        agent=args.agent,
+        trees=None,
+        route=delegate._dispatch_route(
+            args, routing, language_lane=False, review_attempt=None, claude_account=("b", "explicit")
+        ),
+    )
+
+    assert routing.requested_agent == "claude"
+    assert target is None, (target, routing.substitution)
+    assert "REVIEW_CAPACITY_UNAVAILABLE" in refusal and "claude-opus-5-5: quota bucket is near cap" in refusal
+
+
+@pytest.mark.parametrize(
+    ("account", "selected"), [("b", ("claude", "claude-opus-5-5")), ("a", ("codex", "gpt-6.1-sol"))]
+)
+def test_10619_review_headroom_stop_reads_the_selected_account(monkeypatch, tmp_path, account, selected):
+    """Finding 3 for reviewer selection: a's 84% weekly use excluded b's claude reviewers at an 80% cap."""
+    from tests.test_delegate_check_budget import _serve_headroom
+
+    _serve_headroom(tmp_path, monkeypatch, a_used=84.0, b_left=89.0)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _budget(codex="cool"))
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    args = _9959_review_args("claude", "claude-opus-5-5", "grok-4.7")
+    routing = delegate._DispatchRouting()
+
+    refusal, target = delegate._admit_dispatch_target(
+        args,
+        agent=args.agent,
+        trees=None,
+        route=delegate._dispatch_route(
+            args, routing, language_lane=False, review_attempt=None, claude_account=(account, "explicit")
+        ),
+        claude_account=account,
+    )
+
+    assert refusal is None
+    assert (target.recipient, target.model) == selected
+
+
+def test_10619_red_team_initial_snapshot_reads_the_selected_account(monkeypatch):
+    """The red-team initial selection reads its snapshot through the selected account too."""
+    from tests.test_delegate_check_budget import _account_row, _accounts_budget, _default_claude_lane
+
+    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(0.5)})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    seen: list = []
+
+    def admit(*_recipients, review_initial_snapshot=None, **_kwargs):
+        seen.append(review_initial_snapshot() if callable(review_initial_snapshot) else review_initial_snapshot)
+        raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: stop after the snapshot")
+
+    monkeypatch.setattr(target_admission, "resolve_and_admit", admit)
+    args = _9959_review_args("claude", "claude-opus-5-5", "grok-4.7")
+    args.review_mode = "red_team"
+
+    refusal, target = delegate._admit_dispatch_target(args, agent=args.agent, trees=None, claude_account="b")
+
+    assert target is None and refusal
+    (snapshot,) = seen
+    assert snapshot["agents"]["claude"]["remaining_pct"] == pytest.approx(0.5)
+
+
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
 def test_9959_explicit_eligible_pick_keeps_model_and_seat(monkeypatch, flags):
     budget = _budget(claude="near_cap", codex="cool")

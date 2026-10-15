@@ -335,3 +335,104 @@ def test_sole_pace_only_reviewer_cannot_exceed_durable_reservation_limits(tmp_pa
                 with pytest.raises(RoutingReservationUnavailable, match=r"(credential|quota)_bucket_exhausted"):
                     ledger.reserve_selection(request, select)
     assert len(reads) == limit + 1
+
+
+# --- #10619: resolve-reviewer judges claude seats on the account a claude dispatch runs as ---
+
+
+def _account_row(left):
+    window = {"left_pct": left, "resets_at": None, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
+    return {
+        "session5h": dict(window, left_pct=100.0),
+        "weekly": window,
+        "updated": None,
+        "age_s": 60.0,
+        "stale": False,
+        "status": "ok",
+        "reason": None,
+    }
+
+
+def _default_account(tmp_path, monkeypatch, label: str | None) -> None:
+    if label is None:
+        monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
+        return
+    path = tmp_path / "claude-default-account"
+    path.write_bytes(f"{label}\n".encode())
+    path.chmod(0o600)
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
+
+
+@pytest.mark.parametrize(
+    ("label", "code", "selected", "account"),
+    [
+        (
+            "b",
+            0,
+            "claude-opus-5-5",
+            {
+                "label": "b",
+                "source": "default-file",
+                "meter": "claude_accounts.claude:b",
+                "state": "ok",
+                "reason": None,
+            },
+        ),
+        (None, 1, None, None),
+    ],
+)
+def test_resolve_reviewer_reads_the_default_claude_account(
+    tmp_path, capsys, monkeypatch, label, code, selected, account
+):
+    """Account a's lane row is at 5% remaining; account b, which the default-account file names, has 89%."""
+    _default_account(tmp_path, monkeypatch, label)
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(snapshot(remaining=5) | {"claude_accounts": {"claude:b": _account_row(89.0)}}))
+
+    result_code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
+
+    assert result_code == code
+    assert (result["selected"] or {}).get("name") == selected
+    # The default account reads the lane row, and its output is unchanged: no claude_account key.
+    assert result.get("claude_account") == account
+    assert result["routing_snapshot"]["source"] == "file"
+
+
+@pytest.mark.parametrize(("label", "selected"), [("b", "claude-opus-5-5"), (None, None)])
+def test_resolve_reviewer_headroom_stop_reads_the_default_claude_account(
+    tmp_path, capsys, monkeypatch, label, selected
+):
+    """At an 80% cap, a's 84% weekly use no longer excludes claude reviewers that run as b (11% used)."""
+    import io
+
+    _default_account(tmp_path, monkeypatch, label)
+    policy = tmp_path / "pause.json"
+    policy.write_text(json.dumps({"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}))
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
+    live = {
+        "agents": {
+            "claude": {"status": "hot", "codexbar": {"stale": False, "freshness": "fresh", "weekly_used_pct": 84}}
+        },
+        "claude_accounts": {"claude:b": _account_row(89.0)},
+    }
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **k: io.StringIO(json.dumps(live)))
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(snapshot() | {"claude_accounts": {"claude:b": _account_row(89.0)}}))
+
+    _code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
+
+    assert (result["selected"] or {}).get("name") == selected
+    if selected is None:
+        opus = next(item for item in result["trace"] if item["name"] == "claude-opus-5-5")
+        assert "MODEL_HEADROOM" in opus["reason"]
+
+
+def test_resolve_reviewer_fails_closed_on_an_unreadable_default_account(tmp_path, capsys, monkeypatch):
+    _default_account(tmp_path, monkeypatch, "c")
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(snapshot()))
+
+    code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
+
+    assert code == 1 and result["selected"] is None
+    assert result["fail_closed_reason"] == "claude account unresolved: claude_account_default_file_invalid"

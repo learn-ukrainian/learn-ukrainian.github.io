@@ -22,7 +22,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from scripts.common.git_context import sanitized_git_env
-from scripts.fleet import credit_lane
+from scripts.fleet import claude_account_lane, credit_lane
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS
@@ -497,6 +497,26 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
                 _save_state(args.state_file, state)
                 print(json.dumps(payload, indent=2))
                 return 1
+    from scripts.agent_runtime.attempt_boundary import (
+        DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
+        resolve_dispatch_claude_account,
+    )
+
+    try:
+        # A claude reviewer runs as the account a claude dispatch without
+        # --claude-account resolves: the default-account file, else the
+        # built-in default. Its seats are judged on that account (#10619).
+        account_label, account_source = resolve_dispatch_claude_account(None)
+    except ClaudeAccountRefused as exc:
+        payload = {"selected": None, "fail_closed_reason": f"claude account unresolved: {exc.code}"}
+        state["resolved_reviewer"] = payload
+        _save_state(args.state_file, state)
+        print(json.dumps(payload, indent=2))
+        return 1
+    account = {"label": account_label, "meter": None}
+    if isinstance(routing_snapshot, dict):
+        routing_snapshot, account = claude_account_lane.select_account(routing_snapshot, account_label)
     common = {
         "author_model": args.author_model,
         "domain": args.domain,
@@ -506,6 +526,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "isolation_required": args.isolation_required,
         "routing_snapshot": routing_snapshot,
         "author_family": args.author_family,
+        "claude_account": account_label,
     }
     if facts is not None:
         inputs = facts.resolver_inputs(risk=args.risk, review_profile=args.review_profile, **common)
@@ -523,6 +544,10 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     payload = {
         "selected": asdict(resolution.selected) if resolution.selected else None,
         "routing_snapshot": snapshot_receipt,
+        # Named only when claude seats were judged on another account than the lane row's.
+        **(
+            {"claude_account": {**account, "source": account_source}} if account_label != DEFAULT_CLAUDE_ACCOUNT else {}
+        ),
         "branch_facts": facts.receipt() if facts is not None else None,
         "quorum": [asdict(q) for q in resolution.quorum],
         "quorum_rule": resolution.quorum_rule,
@@ -833,12 +858,14 @@ def _build_parser() -> argparse.ArgumentParser:
             "  stdout JSON (selected, quorum, advisory, trace, fail_closed_reason) and the\n"
             "  same object stored at resolved_reviewer in --state-file. Code-profile\n"
             "  resolution requires a target or owned path; security paths raise risk to critical.\n"
-            "  A governed seat is excluded and the trace records why.\n"
+            "  A governed seat is excluded and the trace records why. Claude seats are judged\n"
+            "  on the account a claude dispatch would run as (the default-account file, else\n"
+            "  a); another account than a is named in claude_account.\n"
             "\n"
             "Exit codes:\n"
             "  0  a reviewer was selected, or a dual-family quorum was planned\n"
             "  1  fail-closed (unknown author, ambiguous owned path, unknown subject\n"
-            "     seat/family, or no eligible reviewer)\n"
+            "     seat/family, an unreadable default-account file, or no eligible reviewer)\n"
             "\n"
             "Related:\n"
             "  scripts/review/reviewer_resolver.py\n"

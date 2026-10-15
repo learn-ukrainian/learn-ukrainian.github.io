@@ -237,6 +237,7 @@ def resolve_and_admit(
     task_prompt: str | None = None,
     new_dispatch: bool = False,
     harness: str | None = None,
+    claude_account: str | None = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -288,6 +289,10 @@ def resolve_and_admit(
     returning one, collected at the same point) supplies the target's complete
     authorship and protected scope; reviewer evaluation then excludes every
     author family, not only ``review_author_model``'s (#9739).
+
+    ``claude_account`` is the account a claude dispatch runs as (#10619): the
+    reviewer resolver and the plan-headroom stop read the claude lane's usage as
+    that account. None or the default label reads the Monitor's claude lane row.
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -405,6 +410,7 @@ def resolve_and_admit(
                 facts=review_facts,
                 review_mode=review_mode,
                 reviewer_task_id=review_task_id,
+                claude_account=claude_account,
             )
             _require_agy_code_review_risk(selected[0], review_risk, review_profile or "code")
             approved.add(selected)
@@ -473,7 +479,7 @@ def resolve_and_admit(
         selected = [target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved]
         # A new worker dispatch also answers for every model it asked for
         # (explicit, attached or also_models); reviewer selection only for what it picked.
-        _refuse_paused(selected if review_dispatch else [*models, *selected])
+        _refuse_paused(selected if review_dispatch else [*models, *selected], claude_account=claude_account)
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 
@@ -508,11 +514,14 @@ def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
     return str(raw).strip() if isinstance(raw, str) and raw.strip() else None
 
 
-def _refuse_paused(models: Iterable[str | None]) -> None:
-    """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches."""
-    from .model_pause import refuse_paused_models
+def _refuse_paused(models: Iterable[str | None], *, claude_account: str | None = None) -> None:
+    """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches.
 
-    refuse_paused_models(models)
+    The claude lane's headroom is read as ``claude_account``, the account a claude dispatch runs as (#10619).
+    """
+    from .model_pause import account_used_pct, refuse_paused_models
+
+    refuse_paused_models(models, used_pct=account_used_pct(claude_account))
 
 
 def _refuse_non_review_models(models: Iterable[str | None]) -> None:
@@ -552,6 +561,7 @@ def _resolve_review_target(
     facts: Any = None,
     review_mode: str = "cross_family",
     reviewer_task_id: str | None = None,
+    claude_account: str | None = None,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
@@ -560,7 +570,8 @@ def _resolve_review_target(
     retained. This does not attest cross-family independence for those legacy calls.
     An existing attempt's seat AND model are immutable. ``facts`` (complete branch
     authorship and scope, #9739) stand in for a single ``author_model``; a given
-    ``author_model`` is added to them, never substituted.
+    ``author_model`` is added to them, never substituted. ``claude_account`` is
+    the account a claude reviewer runs as (``ResolverInputs.claude_account``).
     """
     from scripts.review.capacity import review_capacity_action
     from scripts.review.model_catalog import risk_reviewer_refusal
@@ -657,6 +668,7 @@ def _resolve_review_target(
             review_profile=profile,
             author_model=author_model or "",
             routing_snapshot=snapshot,
+            claude_account=claude_account,
         )
     else:
         inputs = ResolverInputs(
@@ -670,6 +682,7 @@ def _resolve_review_target(
             subject_seats=subject.seats,
             subject_families=subject.families,
             subject_evidence=subject.evidence,
+            claude_account=claude_account,
         )
     author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
     if (

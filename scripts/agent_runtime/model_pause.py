@@ -19,14 +19,16 @@ catalog id) is refused until ``until`` (explicit-UTC ISO). After that time the
 entry is inert, so the pause lifts by itself at the reset.
 
 ``headroom``: a model matching ``pattern`` is refused while the lane's weekly
-plan usage (routing-budget) is at or above ``max_weekly_used_pct``. Unreadable
-usage does not block (a warning is the caller's to log); a missing or invalid
-policy file means no pauses.
+plan usage (routing-budget) is at or above ``max_weekly_used_pct``. The
+``claude`` lane's usage is the account a claude dispatch runs as
+(``account_used_pct``, #10619). Unreadable usage does not block (a warning is
+the caller's to log); a missing or invalid policy file means no pauses.
 """
 
 from __future__ import annotations
 
 import fnmatch
+import functools
 import http.client
 import json
 import os
@@ -150,8 +152,13 @@ def _monitor_base() -> str:
     return (os.environ.get("DELEGATE_MONITOR_API") or DEFAULT_BASE_URL).rstrip("/")
 
 
-def routing_budget_used_pct(lane: str) -> float | None:
-    """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None."""
+def routing_budget_used_pct(lane: str, *, claude_account: str | None = None) -> float | None:
+    """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None.
+
+    The ``claude`` lane row is the Monitor host's default account. With another
+    ``claude_account`` label the ``claude`` lane reads that account's
+    ``claude_accounts`` row instead (#10619), under the same fresh-only rule.
+    """
     base = _monitor_base()
     try:
         with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
@@ -160,6 +167,13 @@ def routing_budget_used_pct(lane: str) -> float | None:
         return None  # unreachable, unreadable or truncated: no usable reading
     if not isinstance(data, dict):
         return None
+    if lane == "claude" and claude_account is not None:
+        from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
+
+        if claude_account != DEFAULT_CLAUDE_ACCOUNT:
+            from scripts.fleet.claude_account_lane import account_weekly_used_pct
+
+            return account_weekly_used_pct(data, claude_account)
     agents = data.get("agents")
     info = agents.get(lane) if isinstance(agents, dict) else None
     if not isinstance(info, dict) or info.get("status") == "unknown":
@@ -173,6 +187,16 @@ def routing_budget_used_pct(lane: str) -> float | None:
     if isinstance(value, int | float) and not isinstance(value, bool):
         return float(value)
     return None
+
+
+def account_used_pct(claude_account: str | None) -> Callable[[str], float | None]:
+    """The usage reader for work whose claude seat runs as ``claude_account`` (#10619).
+
+    None (not a claude dispatch, or no label) is :func:`routing_budget_used_pct` itself.
+    """
+    if claude_account is None:
+        return routing_budget_used_pct
+    return functools.partial(routing_budget_used_pct, claude_account=claude_account)
 
 
 def headroom_stop(

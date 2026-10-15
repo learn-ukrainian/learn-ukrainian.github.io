@@ -7359,6 +7359,74 @@ def test_check_budget_refuses_an_exhausted_claude_account_as_before(
     assert not delegate._state_path_no_create("claude-budget-exhausted").exists()
 
 
+@pytest.mark.parametrize(
+    ("extra", "b_left", "admitted"),
+    [
+        (["--claude-account", "b"], 89.0, True),
+        (["--claude-account", "b"], 15.0, False),
+        (["--claude-account", "a"], 89.0, False),
+        ([], 89.0, False),
+    ],
+)
+def test_headroom_stop_reads_the_selected_claude_account(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, extra, b_left, admitted
+):
+    """#10619 finding 3: a's 84% weekly use held b (89% left) at an 80% cap after the route admitted b.
+
+    On 15a2840e every case here refused with MODEL_HEADROOM; b is now held only by its own meter.
+    """
+    from tests.test_delegate_check_budget import _serve_headroom
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _serve_headroom(tmp_path, monkeypatch, a_used=84.0, b_left=b_left)
+    task_id = "claude-headroom-account"
+
+    rc = _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id, "--model", "claude-opus-5-5", *extra)
+
+    err = capsys.readouterr().err
+    if admitted:
+        assert rc == 0, err
+        state = delegate._read_state(delegate._state_path(task_id))
+        assert (state["status"], state["agent"], state["model"], state["claude_account"]) == (
+            "dry_run",
+            "claude",
+            "claude-opus-5-5",
+            "b",
+        )
+    else:
+        assert rc == 2
+        assert "MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom" in err
+        assert not delegate._state_path_no_create(task_id).exists()
+
+
+def test_ordinary_check_budget_dispatch_records_the_unknown_account(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#10619 finding 4: without --force-agent the record keeps the account evaluated and capacity unknown."""
+    from tests.test_delegate_check_budget import _UNVERIFIED_ROW, _accounts_budget, _default_claude_lane
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    budget = _accounts_budget(_default_claude_lane("hot"), {"a": _UNVERIFIED_ROW, "b": _UNVERIFIED_ROW})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    task_id = "claude-budget-unknown-account"
+
+    rc = _dry_run_claude_dispatch(
+        tmp_path, monkeypatch, task_id, "--model", "claude-opus-5-5", "--check-budget", "--claude-account", "b"
+    )
+
+    err = capsys.readouterr().err
+    assert rc == 0, err
+    assert "⚠ ROUTING CHECK UNKNOWN: claude account b meter unavailable (claude_account_unverified); no hard sub" in err
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["agent"], state["substitution"]) == ("claude", None)
+    facts = state["routing_facts"]
+    assert facts["claude_account"] == {
+        "label": "b",
+        "meter": "claude_accounts.claude:b",
+        "state": "unknown",
+        "reason": "claude_account_unverified",
+    }
+    assert facts["capacity"] == "unknown" and facts["plan_remaining_pct"] is None
+
+
 def _invalid_default_file(tmp_path: Path, monkeypatch, case: str) -> None:
     path = _default_account_file(tmp_path, monkeypatch)
     if case == "unknown_label":

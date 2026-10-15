@@ -299,3 +299,96 @@ def test_admission_refuses_native_alias_under_concrete_pause(tmp_path, monkeypat
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
     with pytest.raises(mp.ModelPausedRefused):
         ta._refuse_paused(["opus"])
+
+
+# --- #10619: the headroom stop reads the account a claude dispatch runs as -----------------
+
+
+def _account(left: float | None, *, status: str = "ok") -> dict:
+    window = {"left_pct": left, "resets_at": None, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
+    return {
+        "session5h": dict(window, left_pct=100.0),
+        "weekly": window,
+        "updated": None,
+        "age_s": 60.0,
+        "stale": status == "stale",
+        "status": status,
+        "reason": None,
+    }
+
+
+def _accounts_payload(b_row: dict | None) -> dict:
+    fresh = {"stale": False, "freshness": "fresh"}
+    return {
+        "agents": {
+            "claude": {"status": "hot", "codexbar": {**fresh, "weekly_used_pct": 84}},
+            "codex": {"status": "cool", "codexbar": {**fresh, "weekly_used_pct": 30}},
+        },
+        "claude_accounts": {} if b_row is None else {"claude:b": b_row},
+    }
+
+
+def _serve(monkeypatch, payload: dict) -> None:
+    import io
+
+    monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(payload)))
+
+
+@pytest.mark.parametrize(
+    ("b_row", "expected"),
+    [
+        (_account(89.0), 11.0),
+        (_account(15.0), 85.0),
+        (_account(89.0, status="stale"), None),
+        ({**_account(89.0), "stale": True}, None),
+        (_account(None, status="unknown"), None),
+        (_account(None), None),
+        (_account(101.0), None),
+        (None, None),
+    ],
+)
+def test_selected_claude_account_reads_only_its_own_fresh_row(monkeypatch, b_row, expected) -> None:
+    _serve(monkeypatch, _accounts_payload(b_row))
+    assert mp.routing_budget_used_pct("claude", claude_account="b") == expected
+    # The default label and an unlabelled read keep the lane row; other lanes ignore the label.
+    for label in (None, "a"):
+        assert mp.routing_budget_used_pct("claude", claude_account=label) == 84.0
+    assert mp.routing_budget_used_pct("codex", claude_account="b") == 30.0
+
+
+def test_account_reader_holds_only_on_the_selected_accounts_meter(monkeypatch) -> None:
+    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}
+    _serve(monkeypatch, _accounts_payload(_account(89.0)))
+    assert mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct("b")) is None
+    for label in (None, "a"):
+        held = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=mp.account_used_pct(label))
+        assert held == "MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom"
+    assert mp.account_used_pct(None) is mp.routing_budget_used_pct
+
+
+@pytest.mark.parametrize(("label", "refused"), [("b", False), ("a", True), (None, True)])
+def test_worker_admission_reads_the_records_claude_account(tmp_path, monkeypatch, label, refused) -> None:
+    """The worker's own admission re-checks headroom on the account its task record names."""
+    from scripts import delegate
+
+    policy = tmp_path / "pause.json"
+    policy.write_text(json.dumps({"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}))
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
+    _serve(monkeypatch, _accounts_payload(_account(89.0)))
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    task_id = "claude-worker-headroom"
+    state = delegate._state_path_no_create(task_id)
+    state.parent.mkdir(parents=True, exist_ok=True)
+    record = {"task_id": task_id, "status": "spawning", "agent": "claude", "mode": "read-only"}
+    state.write_text(json.dumps(record | ({"claude_account": label} if label else {})))
+
+    refusal, target = delegate._kimi_worker_refusal(
+        task_id, agent="claude", model="claude-opus-5-5", mode="read-only", cwd=tmp_path, review=False
+    )
+
+    if refused:
+        assert refusal and target is None
+        assert json.loads(state.read_text())["status"] == "failed"
+    else:
+        assert refusal is None and (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+        assert json.loads(state.read_text())["status"] == "spawning"

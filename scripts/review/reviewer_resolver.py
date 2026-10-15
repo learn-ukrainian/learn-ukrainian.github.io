@@ -499,6 +499,11 @@ class ResolverInputs:
     author_families: frozenset[str] = field(default_factory=frozenset)
     author_models: tuple[str | None, ...] = ()
     author_task_models: tuple[str, ...] = ()
+    # The account a claude-route reviewer runs as (#10619). The plan-headroom
+    # stop reads the claude lane's usage as that account, and a caller's
+    # ``routing_snapshot`` must already carry its view (``agents.claude``).
+    # None or the default label reads the Monitor's claude lane row.
+    claude_account: str | None = None
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -673,9 +678,11 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
-    from scripts.agent_runtime.model_pause import refusal_reason
+    from scripts.agent_runtime.model_pause import account_used_pct, refusal_reason
 
-    paused = refusal_reason(candidate_dispatch_model(candidate))
+    paused = refusal_reason(
+        candidate_dispatch_model(candidate), used_pct=account_used_pct(getattr(inputs, "claude_account", None))
+    )
     if paused:
         return paused
     # Custom ladders and pins cannot fabricate review authority for a
