@@ -288,3 +288,4 @@ so Codex compaction counts restart from zero.
   journalctl --user -u learn-ukrainian-sources-watchdog.service -n 20
   ```
   `py-spy` is optional; installing it is a separate reviewed host step.
+- **Inside the server** (`scripts/rag/call_governor.py`): at most 12 tool calls run at once and the rest queue for up to 30 s; a call with no result after 120 s is answered `Tool call failed: <tool> (call_timeout: ...)`, a call that cannot get a slot `(... server_busy: ...)`. Each call logs `call_start`/`call_end` lines (id, tool, in-flight, queued, outcome, duration; never argument values) to the service log. A call still running after 60 s writes `slow-call-*.txt` (all-thread stacks) into the dump directory, which the watchdog rotates. Override with `LU_SOURCES_MAX_CONCURRENT_CALLS`, `LU_SOURCES_QUEUE_TIMEOUT_S`, `LU_SOURCES_CALL_TIMEOUT_S` and `LU_SOURCES_SLOW_CALL_DUMP_S`.
