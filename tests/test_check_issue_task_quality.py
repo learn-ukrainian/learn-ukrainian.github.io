@@ -121,7 +121,9 @@ def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
         "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
-    assert main(["--issue", "123", "--strict", "--json"]) == 0
+    assert (
+        main(["--issue", "123", "--repo", "learn-ukrainian/learn-ukrainian-infra-private", "--strict", "--json"]) == 0
+    )
     assert json.loads(capsys.readouterr().out)["trivial"] is True
     assert "PASS (trivial exemption)" in render_comment(payload)
 
@@ -132,7 +134,9 @@ def test_issue_first_line_trivial_exemption(monkeypatch, capsys) -> None:
         "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
-    assert main(["--issue", "123", "--strict", "--json"]) == 0
+    assert (
+        main(["--issue", "123", "--repo", "learn-ukrainian/learn-ukrainian-infra-private", "--strict", "--json"]) == 0
+    )
     assert json.loads(capsys.readouterr().out)["trivial"] is True
     assert "PASS (trivial exemption)" in render_comment(payload)
 
@@ -143,7 +147,9 @@ def test_nontrivial_issue_warns(monkeypatch, capsys) -> None:
         "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
-    assert main(["--issue", "123", "--strict", "--json"]) == 1
+    assert (
+        main(["--issue", "123", "--repo", "learn-ukrainian/learn-ukrainian-infra-private", "--strict", "--json"]) == 1
+    )
     assert json.loads(capsys.readouterr().out)["verdict"] == "WARN"
     assert "DoR card check: WARN" in render_comment(payload)
 
@@ -229,10 +235,348 @@ def test_intake_accepted_plain_colon_criteria_initialize_lifecycle():
     from scripts.orchestration import task_lifecycle
 
     assert score_body(COMPLETE)["verdict"] == "PASS"
-    policy = {key: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}
-              for key in ("AC-01", "AC-02")}
+    policy = {key: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]} for key in ("AC-01", "AC-02")}
     snapshot = task_lifecycle.build_ac_snapshot(COMPLETE, policy, finalized_at="2026-10-05T12:36:05Z")
     assert [(item["id"], item["text"]) for item in snapshot["criteria"]] == [
         ("AC-01", "checker WARN when new DoR fields missing"),
         ("AC-02", "PR merged with CF + green CI"),
     ]
+
+
+# #10565: supplied observations exercise the real lifecycle ancestry validator.
+from scripts.ci import check_issue_task_quality as checker
+from scripts.ci import comment_issue_task_quality as commenter
+from scripts.orchestration import issue_stream_audit as audit
+
+REPO = "learn-ukrainian/learn-ukrainian.github.io"
+REGISTRY = {"devops": [5703], "harness": [6943]}
+
+
+def audit_report(*, native=(), body=()):
+    result = audit.classify(
+        [{"number": 123, "title": "target"}], REGISTRY, {5703: (set(native), set(body)), 6943: (set(), set())}
+    )
+    result.update(repository=REPO, warnings=[])
+    return result
+
+
+def test_dod_structure_uses_canonical_grammar():
+    from scripts.orchestration.task_lifecycle import parse_issue_acceptance_criteria
+
+    for body in [COMPLETE, COMPLETE.replace("[ ]", "[x]")]:
+        assert parse_issue_acceptance_criteria(body)
+        assert checker.score_body(body)["dod"]["status"] == "PASS"
+    absent = checker.score_body("## Definition of Done\nShip it")
+    assert "dod_structure_absent" in absent["missing"]
+    for suffix in ["\n- [ ] AC-01: duplicate", "\n- [yes] AC-03: broken"]:
+        result = checker.score_body(COMPLETE + suffix)
+        assert "dod_structure_malformed" in result["missing"]
+        assert result["dod"]["errors"][0]["message"]
+        assert set(result["dod"]["errors"][0]) == {"section", "field", "code", "message"}
+
+
+@pytest.mark.parametrize(
+    "parents,claim,expected",
+    [
+        ({123: {"number": 5703, "repository": REPO}}, "[5703]", "PASS"),
+        ({123: {"number": 456, "repository": REPO}, 456: {"number": 5703, "repository": REPO}}, "[5703]", "PASS"),
+        ({123: None}, "", "membership_missing_parent"),
+        ({123: {"number": 5703, "repository": "other/repository"}}, "[5703]", "membership_conflicting_ancestry"),
+        ({123: {"number": 6943, "repository": REPO}}, "[5703]", "membership_conflicting_ancestry"),
+        (
+            {123: {"number": 456, "repository": REPO}, 456: {"number": 123, "repository": REPO}},
+            "",
+            "membership_conflicting_ancestry",
+        ),
+        ({n: {"number": n + 1, "repository": REPO} for n in range(123, 131)}, "", "membership_unknown"),
+    ],
+)
+def test_membership_real_validator(parents, claim, expected):
+    result = checker.evaluate_membership({"title": claim}, REPO, 123, REGISTRY, parents)
+    assert result["status"] == "PASS" if expected == "PASS" else result["errors"][0]["code"] == expected
+
+
+def test_membership_body_requires_fresh_unique_audit():
+    report = audit_report(body=[123])
+    result = checker.evaluate_membership({"title": "[5703]"}, REPO, 123, REGISTRY, {123: None}, report)
+    assert result == {"status": "PASS", "errors": [], "pending_native_link": True}
+    report["generated_at"] = 0
+    assert (
+        checker.evaluate_membership({}, REPO, 123, REGISTRY, {123: None}, report)["errors"][0]["code"]
+        == "membership_audit_stale"
+    )
+    report = audit_report(body=[123])
+    report["membership_complete"] = False
+    assert (
+        checker.evaluate_membership({}, REPO, 123, REGISTRY, {123: None}, report)["errors"][0]["code"]
+        == "membership_audit_incomplete"
+    )
+
+
+def test_multihome_is_conflicting_even_in_one_stream():
+    report = audit_report(body=[123])
+    report["effective_membership"]["123"].update(epics=[5703, 6943], streams=["devops", "harness"], unique_stream=False)
+    result = checker.evaluate_membership({}, REPO, 123, REGISTRY, {123: None}, report)
+    assert result["errors"][0]["code"] == "membership_conflicting_ancestry"
+
+
+def test_registered_root_has_only_membership_exemption():
+    result = checker.evaluate_issue({"body": ""}, checker.evaluate_membership({}, REPO, 5703, REGISTRY, {}))
+    assert result["membership"]["status"] == "root_exempt"
+    assert result["dod"]["status"] == "WARN"
+
+
+@pytest.mark.parametrize(
+    "failure,code",
+    [
+        (RuntimeError("private detail"), "membership_unknown"),
+        (TimeoutError(), "membership_timeout"),
+        (checker.subprocess.TimeoutExpired("reader", 30), "membership_timeout"),
+        (checker.github_client.GitHubRateLimited(2000), "membership_rate_limited"),
+    ],
+)
+def test_read_failures_are_unknown(monkeypatch, failure, code):
+    monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
+
+    def fail(*a):
+        raise failure
+
+    monkeypatch.setattr(checker, "read_parent", fail)
+    result = checker.observe_membership({}, REPO, 123)
+    assert result["errors"][0]["code"] == code
+    assert "private detail" not in json.dumps(result)
+
+
+def test_observation_audits_only_target_null_and_never_writes_cache(monkeypatch):
+    monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
+    monkeypatch.setattr(checker, "read_parent", lambda r, n: {"number": 5703, "repository": REPO})
+    monkeypatch.setattr(checker, "live_audit", lambda *a: pytest.fail("native parent must not audit"))
+    assert checker.observe_membership({}, REPO, 123)["status"] == "PASS"
+    monkeypatch.setattr(checker, "read_parent", lambda r, n: None)
+    monkeypatch.setattr(checker, "live_audit", lambda *a: audit_report(body=[123]))
+    assert checker.observe_membership({}, REPO, 123)["pending_native_link"] is True
+
+
+def test_in_memory_audit(monkeypatch):
+    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
+    monkeypatch.setattr(audit, "run_audit", lambda *a: pytest.fail("cache writer forbidden"))
+    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": 123, "title": "target"}])
+    monkeypatch.setattr(audit, "fetch_tree_membership", lambda *a: {5703: (set(), {123})})
+    report = checker.live_audit(REPO, REGISTRY)
+    assert report["effective_membership"]["123"]["via"] == "body"
+    assert report["repository"] == REPO
+
+
+@pytest.mark.parametrize("source", ["--body", "--body-file", "--issue"])
+@pytest.mark.parametrize("strict", [False, True])
+@pytest.mark.parametrize("as_json", [False, True])
+@pytest.mark.parametrize("repo", [REPO, "learn-ukrainian/learn-ukrainian-infra-private"])
+def test_cli_matrix(source, strict, as_json, repo, tmp_path, monkeypatch, capsys):
+    bodyfile = tmp_path / "body.md"
+    bodyfile.write_text(COMPLETE)
+    monkeypatch.setattr(checker, "fetch_issue", lambda *a: {"body": COMPLETE})
+    monkeypatch.setattr(
+        checker,
+        "observe_membership",
+        lambda *a: checker.section("PASS" if repo == REPO else "membership_not_applicable"),
+    )
+    value = {"--body": COMPLETE, "--body-file": str(bodyfile), "--issue": "123"}[source]
+    assert (
+        checker.main(
+            [source, value, "--repo", repo] + (["--strict"] if strict else []) + (["--json"] if as_json else [])
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    if as_json:
+        result = json.loads(output)
+        assert result["membership"]["status"] == (
+            "unchecked" if source != "--issue" else "PASS" if repo == REPO else "membership_not_applicable"
+        )
+
+
+def test_trivial_does_not_exempt_live_membership():
+    result = checker.evaluate_issue({"body": "trivial: yes"}, checker.membership_error("membership_missing_parent"))
+    assert result["trivial"]
+    assert result["verdict"] == "WARN"
+    assert result["dod"]["status"] == "exempt"
+
+
+def test_comment_private_boundary_and_bot_filter():
+    issue = {"body": "SECRET_BODY_CANARY", "title": "SECRET_TITLE_CANARY", "_observed_at": "2026-10-15T00:00:00Z"}
+    issue["_quality"] = checker.evaluate_issue(issue, checker.membership_error("membership_missing_parent"))
+    text = commenter.render_comment(issue)
+    assert "SECRET" not in text
+    assert "no native parent observed at 2026-10-15T00:00:00Z; dispatch re-checks live" in text
+    calls = []
+    commenter.reconcile_comments(
+        issue, [{"body": MARKER, "id": 9, "user": {"login": "person"}}], lambda *a: calls.append(a), "/issues/123"
+    )
+    assert [c[0] for c in calls] == ["POST"]
+
+
+def test_opened_retry_observes_late_parent(monkeypatch):
+    observations = iter([checker.membership_error("membership_missing_parent"), checker.section("PASS")])
+    sleeps = []
+    monkeypatch.setattr(commenter, "observe_membership", lambda *a: next(observations))
+    monkeypatch.setattr(commenter.time, "sleep", lambda seconds: sleeps.append(seconds))
+    result = commenter.check_current_issue({"body": COMPLETE}, REPO, 123, opened=True)
+    assert result["membership"]["status"] == "PASS"
+    assert sleeps == [15]
+
+
+def test_comment_main_rate_limit_skip(monkeypatch, capsys):
+    def fail():
+        raise checker.github_client.GitHubRateLimited(2000)
+
+    monkeypatch.setattr(commenter, "_main", fail)
+    assert commenter.main() == 0
+    assert "rate_limited" in capsys.readouterr().out
+
+
+def test_cli_stub_entrypoint_and_safe_errors(tmp_path, monkeypatch, capsys):
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    command = [
+        sys.executable,
+        str(Path(__file__).resolve().parents[1] / "scripts/check_issue_task_quality.py"),
+        "--body",
+        "trivial: yes",
+        "--json",
+        "--strict",
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=30, check=True)
+    assert json.loads(result.stdout)["membership"]["status"] == "unchecked"
+
+    def fail(*a):
+        raise ValueError("PRIVATE_BODY_CANARY")
+
+    monkeypatch.setattr(checker, "fetch_issue", fail)
+    assert checker.main(["--issue", "123", "--json", "--strict"]) == 1
+    output = capsys.readouterr().out
+    assert "CANARY" not in output and "checker_error" in output
+
+
+@pytest.mark.parametrize("parent", [None, {"number": 5703, "repository": {"nameWithOwner": REPO}}])
+def test_typed_parent_reader(monkeypatch, parent):
+    document = {"data": {"repository": {"nameWithOwner": REPO, "issue": {"number": 123, "parent": parent}}}}
+    monkeypatch.setattr(
+        checker, "read", lambda *a, **k: checker.subprocess.CompletedProcess([], 0, json.dumps(document), "")
+    )
+    result = checker.read_parent(REPO, 123)
+    assert result == (None if parent is None else {"number": 5703, "repository": REPO})
+    document["data"]["repository"]["nameWithOwner"] = "other/repository"
+    with pytest.raises(ValueError):
+        checker.read_parent(REPO, 123)
+
+
+def test_claim_from_parent_line_resolved_through_registry():
+    report = audit_report(native=[123, 456])
+    result = checker.evaluate_membership(
+        {"body": "Parent: #456"}, REPO, 123, REGISTRY, {123: {"number": 6943, "repository": REPO}}, report
+    )
+    assert result["errors"][0]["code"] == "membership_conflicting_ancestry"
+
+
+def test_unknown_repository_and_empty_registry(monkeypatch):
+    assert (
+        checker.observe_membership({}, "other/unregistered", 5703)["errors"][0]["code"] == "membership_registry_absent"
+    )
+    monkeypatch.setattr(checker, "registry_for", lambda *a: {})
+    assert checker.observe_membership({}, REPO, 123)["errors"][0]["code"] == "membership_registry_absent"
+
+
+def test_total_deadline_restores_handler():
+    import signal
+
+    previous = signal.getsignal(signal.SIGALRM)
+    with pytest.raises(TimeoutError), checker.time_budget(0.01):
+        signal.pause()
+    assert signal.getsignal(signal.SIGALRM) == previous
+
+
+def test_comment_refetches_current_issue_and_paginates(monkeypatch, tmp_path):
+    event = tmp_path / "event.json"
+    event.write_text(json.dumps({"action": "edited", "issue": {"number": 123, "body": "STALE_EVENT_CANARY"}}))
+    monkeypatch.setenv("GITHUB_EVENT_PATH", str(event))
+    monkeypatch.setenv("GITHUB_TOKEN", "fixture")
+    monkeypatch.setenv("GITHUB_REPOSITORY", REPO)
+    calls = []
+
+    class Response:
+        def __init__(self, value):
+            self.value = value
+
+        def require_fresh(self):
+            return self.value
+
+    class Client:
+        def __init__(self, **kw):
+            pass
+
+        def request(self, method, path, **kwargs):
+            calls.append((method, path, kwargs.get("payload")))
+            if method != "GET":
+                return Response({})
+            if "comments?" in path:
+                if path.endswith("&page=1"):
+                    return Response([{"id": i, "body": "other", "user": {"login": "person"}} for i in range(100)])
+                return Response([])
+            return Response({"number": 123, "body": COMPLETE, "title": "Current"})
+
+    monkeypatch.setattr(commenter, "GitHubClient", Client)
+
+    def check(issue, *a, **kw):
+        assert issue["body"] == COMPLETE
+        return checker.evaluate_issue(issue, checker.section("PASS"))
+
+    monkeypatch.setattr(commenter, "check_current_issue", check)
+    assert commenter.main() == 0
+    assert len([c for c in calls if "comments?" in c[1]]) == 2
+    assert calls[-1][0] == "POST"
+    assert "STALE_EVENT_CANARY" not in json.dumps(calls)
+
+
+def test_opened_retry_is_bounded(monkeypatch):
+    now = [0.0]
+    monkeypatch.setattr(commenter.time, "monotonic", lambda: now[0])
+    monkeypatch.setattr(commenter.time, "sleep", lambda s: now.__setitem__(0, now[0] + s))
+    monkeypatch.setattr(
+        commenter, "observe_membership", lambda *a: checker.membership_error("membership_missing_parent")
+    )
+    result = commenter.check_current_issue({"body": COMPLETE}, REPO, 123, opened=True)
+    assert now[0] == 180
+    assert result["membership"]["errors"][0]["code"] == "membership_missing_parent"
+
+
+def test_deadline_cannot_be_swallowed_by_audit_retry_handlers():
+    import signal
+
+    with pytest.raises(TimeoutError), checker.time_budget(0.01):
+        try:
+            signal.pause()
+        except (OSError, RuntimeError, ValueError):
+            pytest.fail("audit swallowed the global deadline")
+
+
+def test_ancestor_null_is_unknown_and_does_not_report_target_as_orphan():
+    parents = {123: {"number": 456, "repository": REPO}, 456: None}
+    result = checker.evaluate_membership({}, REPO, 123, REGISTRY, parents)
+    assert result["errors"][0]["code"] == "membership_unknown"
+
+
+def test_absent_public_registry_is_reported_as_absent(monkeypatch):
+    def missing(*a, **k):
+        raise FileNotFoundError
+
+    monkeypatch.setattr(audit, "load_registry", missing)
+    assert checker.observe_membership({}, REPO, 123)["errors"][0]["code"] == "membership_registry_absent"
+
+
+def test_in_memory_audit_refuses_mismatched_checkout(monkeypatch):
+    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: ("other", "repository"))
+    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: pytest.fail("must refuse before fetching"))
+    with pytest.raises(ValueError, match="audit repository does not match target"):
+        checker.live_audit(REPO, REGISTRY)

@@ -12043,6 +12043,8 @@ def _run_dor_preflight(
     epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
     tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
+    non_overridable: set[str] = set()
+    membership_records: dict[str, Any] = {}
     issue_numbers: list[int] = []
     checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
     issue_repositories: list[dict[str, Any]] = []
@@ -12080,6 +12082,12 @@ def _run_dor_preflight(
                 payload = json.loads(result.stdout)
                 if not isinstance(payload, dict):
                     raise ValueError("checker result must be an object")
+                codes = set(payload.get("missing") or [])
+                non_overridable.update(codes & {"dod_structure_malformed", "membership_conflicting_ancestry"})
+                # Old checker payloads retain their existing meaning. A missing
+                # section is explicitly unchecked, never evidence of membership.
+                if "membership" in payload:
+                    membership_records[label] = payload["membership"] or {"status": "unchecked"}
                 if result.returncode or payload.get("verdict") != "PASS":
                     warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
             except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
@@ -12105,12 +12113,16 @@ def _run_dor_preflight(
     if not issue_numbers:
         return None, None
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    if membership_records:
+        record["membership"] = membership_records
     if stream_epics:
         record["stream_epic"] = stream_epics
     if issue_repositories:
         record["issue_repositories"] = issue_repositories
     if allow_reason is not None:
         record["allow_warn_reason"] = allow_reason
+    if non_overridable:
+        return "❌ DoR refused: " + ",".join(sorted(non_overridable)) + "; fix the card or ancestry; no override applies", record
     if warnings and allow_reason is None:
         details = "; ".join(
             f"{('#' + label) if label.isdigit() else label}: {missing}" for label, missing in warnings.items()

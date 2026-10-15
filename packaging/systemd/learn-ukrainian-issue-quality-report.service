@@ -1,0 +1,10 @@
+[Unit]
+Description=Learn Ukrainian daily counts-only issue readiness report
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.issue_quality_report --publish --sender devops
+TimeoutStartSec=1800
+Nice=15
+IOSchedulingClass=idle

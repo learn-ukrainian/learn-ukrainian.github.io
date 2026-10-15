@@ -208,14 +208,14 @@ def test_delegate_dor_issue_reaches_real_shim_and_checker(body, verdict, tmp_pat
     # delegate anchors its checker at the primary checkout. From a worktree that
     # file is not this branch; CI checks out the branch, so use this tree.
     monkeypatch.setattr(delegate, "_REPO_ROOT", ROOT)
-    error, record = delegate._run_dor_preflight("Issue: #1", None, dispatch_repo="unit/public")
+    error, record = delegate._run_dor_preflight("Issue: #1", None, dispatch_repo="learn-ukrainian/learn-ukrainian-infra-private")
     assert record["issues"] == [1]
     assert bool(record["warnings"]) == (verdict == "WARN")
     assert "checker_error" not in record["warnings"].values()
     assert (error is None) == (verdict == "PASS")
     calls = [json.loads(line) for line in log.read_text().splitlines()]
-    assert all(args[0] == "api" and "repos/unit/public/issues/1" in args for args in calls)
-    assert any("--include" in args and "repos/unit/public/issues/1" in args for args in calls)
+    assert all(args[0] == "api" and "repos/learn-ukrainian/learn-ukrainian-infra-private/issues/1" in args for args in calls)
+    assert any("--include" in args and "repos/learn-ukrainian/learn-ukrainian-infra-private/issues/1" in args for args in calls)
 
 
 def test_hook_recognises_typed_merge(monkeypatch):
@@ -318,3 +318,50 @@ def test_review_publisher_default_uses_guarded_transport(synthetic_opsec, tmp_pa
     assert review_publisher.post_pr_comment(repository="unit/public", pr_number=1, body="fixture") == "https://example.invalid/comment/1"
     assert len(calls) == 1 and calls[0][1:3] == ["pr", "comment"]
     assert "--body-file" in calls[0]
+
+
+def test_issue_count_fixed_read_positive_and_existing_reads_unchanged(tmp_path):
+    calls = []
+    def transport(command, **kwargs):
+        document = json.loads(Path(command[command.index("--input") + 1]).read_text())
+        calls.append(document)
+        return subprocess.CompletedProcess(command, 0, '{"data":{"repository":{"issues":{"totalCount":612}}}}', '')
+    result = pub.read("issue-count", repo="unit/public", runner=transport, cwd=tmp_path, env={}, capture_output=True, text=True)
+    assert json.loads(result.stdout)["data"]["repository"]["issues"]["totalCount"] == 612
+    assert calls == [{"query": "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){issues(states:OPEN){totalCount}}}",
+                      "variables": {"owner": "unit", "name": "public"}}]
+    assert "issue-count" not in pub.GQL_READS and "issue-count" not in pub.REST_READS
+
+
+@pytest.mark.parametrize("response", ['{}', '{"data":{"repository":null}}', '{"data":{"repository":{"issues":{"totalCount":true}}}}',
+                                     '{"data":{"repository":{"issues":{"totalCount":-1}}}}',
+                                     '{"data":{"repository":{"issues":{"totalCount":3}}},"errors":[{"message":"private"}]}'])
+def test_issue_count_malformed_refused(response):
+    with pytest.raises(gate.PublishBlocked, match="malformed issue count response"):
+        pub.read("issue-count", repo="unit/private", runner=lambda command, **k: subprocess.CompletedProcess(command, 0, response, ''), env={})
+
+
+def test_issue_count_unknown_repository_or_fields_refused():
+    for fields in [{"repo": "unit/unknown"}, {"repo": "unit/public", "number": 1}]:
+        with pytest.raises(gate.PublishBlocked):
+            pub.read("issue-count", **fields, runner=lambda *a, **k: pytest.fail("must not send"), env={})
+
+
+def test_issue_count_cli_prints_validated_json(capsys):
+    response = '{"data":{"repository":{"issues":{"totalCount":42}}}}'
+    assert pub.main(['read', 'issue-count', '--repo', 'unit/public'], runner=lambda command, **k: subprocess.CompletedProcess(command, 0, response, '')) == 0
+    assert json.loads(capsys.readouterr().out)['data']['repository']['issues']['totalCount'] == 42
+
+
+def test_issue_count_uses_fixed_read_output_contract():
+    import io
+    response = '{"data":{"repository":{"issues":{"totalCount":42}}}}'
+    def transport(command, **kwargs):
+        return subprocess.CompletedProcess(command, 0, response, '')
+    result = pub.read('issue-count', repo='unit/public', runner=transport, env={}, capture_output=True)
+    assert isinstance(result.stdout, bytes)
+    assert json.loads(result.stdout)['data']['repository']['issues']['totalCount'] == 42
+    output = io.StringIO()
+    result = pub.read('issue-count', repo='unit/public', runner=transport, env={}, text=True, stdout=output)
+    assert result.returncode == 0
+    assert json.loads(output.getvalue())['data']['repository']['issues']['totalCount'] == 42

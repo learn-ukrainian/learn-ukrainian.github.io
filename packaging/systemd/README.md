@@ -175,3 +175,20 @@ runner, and orchestrator hosts).
   journalctl --user -u learn-ukrainian-opencode-retention.service -n 30
   ```
   The templates do not install or enable themselves.
+
+## Daily issue quality report
+
+`learn-ukrainian-issue-quality-report.service` runs a counts-only fleet census
+and publishes its persisted payload to Fleet Comms. Its independent daily timer
+runs at 07:00 UTC with up to five minutes of jitter and catches missed runs.
+It does not use the five-minute project-state reporter. Private repositories
+contribute counts only and explicit unknown membership. A failed publication
+fails the service; retry reuses the day's ignored `batch_state/reports/` payload
+and idempotency key.
+
+Preview and verify with
+`.venv/bin/python -m scripts.orchestration.install_issue_quality_report_timer --check`.
+After landing and approval, use `--apply`, or `--apply --enable` to start the
+timer. The installer uses `safe_unit_install` and refuses symlinked destinations.
+The data-volume drop-in is installed through the existing drop-in installer.
+No unit is installed or enabled by tests or by preparing this source candidate.

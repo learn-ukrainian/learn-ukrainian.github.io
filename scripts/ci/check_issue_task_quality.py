@@ -10,8 +10,10 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import signal
 import subprocess
 import sys
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -19,11 +21,223 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import github_client
+from scripts.orchestration import fleet_repos
+from scripts.orchestration import issue_stream_audit as audit
+from scripts.orchestration import task_lifecycle as lifecycle
+from scripts.publish.github import read
+
+ROOT = Path(__file__).resolve().parents[2]
+MAX_AGE_S = 3600
+NON_OVERRIDABLE = frozenset({"dod_structure_malformed", "membership_conflicting_ancestry"})
+
+
+class _DeadlineExpired(BaseException):
+    """Escape the auditor's retry handlers, then translate at the I/O boundary."""
+
+
+def error(section: str, field: str, code: str, message: str) -> dict:
+    return {"section": section, "field": field, "code": code, "message": message}
+
+
+def section(status: str, errors: list[dict] | None = None, **details) -> dict:
+    return {"status": status, "errors": errors or [], **details}
+
+
+def membership_error(code: str) -> dict:
+    return section("WARN", [error("membership", "ancestry", code, code.replace("_", " "))])
+
+
+@contextmanager
+def time_budget(seconds: float = 60):
+    """Bound the complete synchronous CLI operation, including audit retries."""
+
+    def expired(_signum, _frame):
+        raise _DeadlineExpired
+
+    old_handler = signal.signal(signal.SIGALRM, expired)
+    old_timer = signal.setitimer(signal.ITIMER_REAL, seconds)
+    try:
+        yield
+    except _DeadlineExpired:
+        raise TimeoutError("issue quality deadline") from None
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, *old_timer)
+        signal.signal(signal.SIGALRM, old_handler)
+
+
+def registry_for(repository: str) -> dict[str, list[int]] | None:
+    """Only the public monorepo owns this registry; numbers are repository scoped."""
+    for repo in fleet_repos.load_fleet_repos().values():
+        if repo.github.casefold() == repository.casefold() and repo.role == "public-monorepo":
+            try:
+                return audit.load_registry(ROOT / "scripts/config/issue_streams.yaml", audit_only=True)
+            except FileNotFoundError:
+                return {}
+    return None
+
+
+def registry_absence(repository: str) -> dict:
+    known = any(r.github.casefold() == repository.casefold() for r in fleet_repos.load_fleet_repos().values())
+    if known:
+        return section("membership_not_applicable")
+    return membership_error("membership_registry_absent")
+
+
+def live_audit(repository: str, registry: dict, *, root: Path = ROOT) -> dict:
+    """Compose the existing live auditor in memory. Never write its shared cache."""
+    observed_repository = "/".join(audit._repo_owner_name(root))
+    if observed_repository.casefold() != repository.casefold():
+        raise ValueError("audit repository does not match target")
+    issues = audit.fetch_open_issues(root)
+    warnings: list[dict] = []
+    membership = audit.fetch_tree_membership({n for ns in registry.values() for n in ns}, root, warnings)
+    report = audit.classify(issues, registry, membership, incomplete_nodes=audit._unread_warning_nodes(warnings))
+    report.update(repository=observed_repository, warnings=warnings)
+    if len(issues) >= 500:
+        report["membership_complete"] = False
+    return report
+
+
+def read_parent(repository: str, number: int) -> dict | None:
+    proc = read("issue-parent", repo=repository, number=number, capture_output=True, text=True, timeout=30)
+    if proc.returncode:
+        raise RuntimeError("parent read failed")
+    doc = json.loads(proc.stdout)
+    repo = (doc.get("data") or {}).get("repository")
+    if (
+        doc.get("errors")
+        or not isinstance(repo, dict)
+        or str(repo.get("nameWithOwner", "")).casefold() != repository.casefold()
+    ):
+        raise ValueError("parent repository unread")
+    issue = repo.get("issue")
+    if (
+        not isinstance(issue, dict)
+        or type(issue.get("number")) is not int
+        or issue["number"] != number
+        or "parent" not in issue
+    ):
+        raise ValueError("parent issue unread")
+    parent = issue["parent"]
+    if parent is None:
+        return None
+    if not isinstance(parent, dict):
+        raise ValueError("parent malformed")
+    slug = (parent.get("repository") or {}).get("nameWithOwner")
+    if not lifecycle.repository_identity_valid(slug) or type(parent.get("number")) is not int or parent["number"] < 1:
+        raise ValueError("parent identity malformed")
+    return {"number": parent["number"], "repository": slug}
+
+
+def _claim(issue: dict, roots: list[int], index: dict, parents: dict) -> int | None:
+    """Resolve the documented title/body claim independently of the observed root."""
+    candidates = re.findall(r"\[(\d+)\]", issue.get("title") or "")
+    candidates += re.findall(r"(?im)^Parent:\s*#(\d+)\b", issue.get("body") or "")
+    for candidate in candidates:
+        number = int(candidate)
+        visited = set()
+        for _ in range(8):
+            if number in roots:
+                return number
+            entry = index.get(str(number), {})
+            if entry.get("unique_stream") is True and len(entry.get("epics", [])) == 1:
+                return entry["epics"][0]
+            if number in visited or not parents.get(number):
+                break
+            visited.add(number)
+            parent = parents[number]
+            number = parent.get("number")
+    return None
+
+
+def evaluate_membership(
+    issue: dict, repository: str, number: int, registry: dict, parents: dict, report: dict | None = None
+) -> dict:
+    """Pure evaluation of qualified observations using the canonical validator."""
+    roots = [n for ns in registry.values() for n in ns]
+    if number in roots:
+        return section("root_exempt")
+    index = (report or {}).get("effective_membership", {})
+    if report is not None:
+        if not audit.membership_report_is_complete(report):
+            return membership_error("membership_audit_incomplete")
+        if audit.validate_membership_report(report, MAX_AGE_S) is None:
+            return membership_error("membership_audit_stale")
+    entry = index.get(str(number), {})
+    if entry and entry.get("unique_stream") is not True:
+        return membership_error("membership_conflicting_ancestry")
+    claim = _claim(issue, roots, index, parents)
+    if claim is not None and entry and entry.get("epics") != [claim]:
+        return membership_error("membership_conflicting_ancestry")
+    observed_root = next(
+        (
+            p["number"]
+            for p in parents.values()
+            if p and p.get("repository", "").casefold() == repository.casefold() and p.get("number") in roots
+        ),
+        None,
+    )
+    if claim is None:
+        claim = observed_root or (entry.get("epics") or [None])[0]
+    # A synthetic claim permits the canonical resolver to diagnose a cycle,
+    # missing link or repository crossing even when no documentary claim exists.
+    result = lifecycle.resolve_live_ancestry(
+        repository=repository,
+        issue_number=number,
+        stream_epic=claim or roots[0],
+        registered_epics=roots,
+        read_parent=lambda _r, n: parents[n],
+        membership_report=report,
+    )
+    if result["valid"]:
+        return section("PASS", pending_native_link=result["method"] == "body")
+    reason = result["reason"]
+    if any(s in reason for s in ("cyclic", "crosses a repository", "different registered", "multi-homed")):
+        code = "membership_conflicting_ancestry"
+    elif parents.get(number) is None and not entry:
+        code = "membership_missing_parent"
+    else:
+        code = "membership_unknown"
+    return membership_error(code)
+
+
+def observe_membership(issue: dict, repository: str, number: int) -> dict:
+    try:
+        registry = registry_for(repository)
+        if registry is None:
+            return registry_absence(repository)
+        if not registry:
+            return membership_error("membership_registry_absent")
+        roots = {n for ns in registry.values() for n in ns}
+        if number in roots:
+            return section("root_exempt")
+        parents: dict = {}
+        current = number
+        for _ in range(8):
+            parent = read_parent(repository, current)
+            parents[current] = parent
+            if (
+                parent is None
+                or parent.get("repository", "").casefold() != repository.casefold()
+                or parent.get("number") in roots
+                or parent.get("number") in parents
+            ):
+                break
+            if type(parent.get("number")) is not int:
+                raise ValueError("malformed parent")
+            current = parent["number"]
+        report = live_audit(repository, registry) if parents.get(number) is None else None
+        return evaluate_membership(issue, repository, number, registry, parents, report)
+    except (TimeoutError, subprocess.TimeoutExpired):
+        return membership_error("membership_timeout")
+    except github_client.GitHubRateLimited:
+        return membership_error("membership_rate_limited")
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+        return membership_error("membership_unknown")
+
 
 HTML_COMMENT_RE = re.compile(r"(?s)<!--.*?-->")
-PLACEHOLDER_RE = re.compile(
-    r"(?i)^(?:todo|tbd|n/?a|…|\.\.\.|\[.*\]|<.*>|criterion \d+|path/to/)\s*$"
-)
+PLACEHOLDER_RE = re.compile(r"(?i)^(?:todo|tbd|n/?a|…|\.\.\.|\[.*\]|<.*>|criterion \d+|path/to/)\s*$")
 EXPLICIT_NONE_RE = re.compile(r"(?i)^(?:none|n/?a|na)\s*(?:[—\-].*)?$")
 TERMINAL_GOALS = ("merge", "deploy", "certify", "decision-only", "audit-only")
 
@@ -101,16 +315,12 @@ FIELDS: tuple[FieldCheck, ...] = (
     FieldCheck(
         "residual",
         "residual policy / leftover owner",
-        re.compile(
-            r"(?im)^#{1,3}\s*(?:residual(?:\s+policy)?|leftovers?)\s*$"
-        ),
+        re.compile(r"(?im)^#{1,3}\s*(?:residual(?:\s+policy)?|leftovers?)\s*$"),
     ),
     FieldCheck(
         "review_plan",
         "review plan (author family · outside-family reviewer · backup)",
-        re.compile(
-            r"(?im)^#{1,3}\s*(?:review\s+plan|cf\s+path|cross[- ]family\s+review)\s*$"
-        ),
+        re.compile(r"(?im)^#{1,3}\s*(?:review\s+plan|cf\s+path|cross[- ]family\s+review)\s*$"),
     ),
 )
 
@@ -154,20 +364,14 @@ def _substantive(chunk: str | None, *, allow_none: bool = False) -> bool:
         if re.match(r"^(```|~~~)", stripped):
             continue
         # Markdown headings / hash comments; keep "#1234" issue refs.
-        if (
-            stripped.startswith("#")
-            and not re.match(r"^#\d", stripped)
-            and re.match(r"^#{1,6}(?:\s|$)", stripped)
-        ):
+        if stripped.startswith("#") and not re.match(r"^#\d", stripped) and re.match(r"^#{1,6}(?:\s|$)", stripped):
             continue
         line = stripped.lstrip("-* ").strip()
         line = re.sub(r"^\[\s*[xX ]\s*\]\s*", "", line).strip()
         if not line or line in {"```", "~~~"}:
             continue
         # Bare fence language tags are not content.
-        if re.fullmatch(r"[a-zA-Z0-9_+-]+", line) and re.match(
-            r"^(```|~~~)", raw.strip()
-        ):
+        if re.fullmatch(r"[a-zA-Z0-9_+-]+", line) and re.match(r"^(```|~~~)", raw.strip()):
             continue
         if allow_none and EXPLICIT_NONE_RE.match(line):
             lines.append(line)
@@ -188,13 +392,16 @@ def _terminal_goal_ok(chunk: str | None) -> bool:
 def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
     text = _strip_noise(body or "")
     if trivial or issue_is_trivial(body, []) or TRIVIAL_RE.search(text):
-        return {
-            "verdict": "PASS",
-            "trivial": True,
-            "missing": [],
-            "present": [f.key for f in FIELDS],
-            "notes": ["trivial exemption — full card not required"],
-        }
+        return complete_result(
+            {
+                "verdict": "PASS",
+                "trivial": True,
+                "missing": [],
+                "present": [f.key for f in FIELDS],
+                "notes": ["trivial exemption — full card not required"],
+            },
+            body,
+        )
 
     missing: list[str] = []
     present: list[str] = []
@@ -203,25 +410,62 @@ def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
         if field.key == "terminal_goal":
             ok = _terminal_goal_ok(chunk)
         else:
-            ok = _substantive(
-                chunk, allow_none=field.key in {"deps", "residual", "non_goals"}
-            )
+            ok = _substantive(chunk, allow_none=field.key in {"deps", "residual", "non_goals"})
         if ok:
             present.append(field.key)
         else:
             missing.append(field.key)
 
     verdict = "PASS" if not missing else "WARN"
-    return {
-        "verdict": verdict,
-        "trivial": False,
-        "missing": missing,
-        "present": present,
-        "notes": [],
-    }
+    return complete_result(
+        {
+            "verdict": verdict,
+            "trivial": False,
+            "missing": missing,
+            "present": present,
+            "notes": [],
+        },
+        body,
+    )
 
 
-def _fetch_issue_body(repo: str, number: int) -> tuple[str, bool]:
+def complete_result(result: dict, body: str, membership: dict | None = None) -> dict:
+    """Keep the legacy keys while adding independent, field-level sections."""
+    result = dict(result)
+    result["missing"] = list(result["missing"])
+    result["dor"] = section(
+        "PASS" if not result["missing"] else "WARN",
+        [error("dor", key, key, "required task card field is absent or empty") for key in result["missing"]],
+    )
+    dod_errors = []
+    if not result["trivial"]:
+        try:
+            lifecycle.parse_issue_acceptance_criteria(body)
+        except lifecycle.LifecycleError as exc:
+            code = (
+                "dod_structure_absent"
+                if str(exc) == "issue body has no stable-ID acceptance criteria"
+                else "dod_structure_malformed"
+            )
+            dod_errors.append(error("dod", "acceptance_criteria", code, str(exc)))
+    result["dod"] = section("exempt" if result["trivial"] else "WARN" if dod_errors else "PASS", dod_errors)
+    result["membership"] = membership or section("unchecked")
+    for part in (result["dod"], result["membership"]):
+        result["missing"].extend(e["code"] for e in part["errors"])
+    result["verdict"] = "WARN" if result["missing"] else "PASS"
+    return result
+
+
+def evaluate_issue(issue: dict, membership: dict) -> dict:
+    body = issue.get("body") or ""
+    result = score_body(body, trivial=issue_is_trivial(body, issue.get("labels") or []))
+    result["membership"] = membership
+    result["missing"].extend(e["code"] for e in membership["errors"])
+    result["verdict"] = "WARN" if result["missing"] else "PASS"
+    return result
+
+
+def fetch_issue(repo: str, number: int) -> dict:
     raw = github_client.check_output(
         [
             "gh",
@@ -237,13 +481,21 @@ def _fetch_issue_body(repo: str, number: int) -> tuple[str, bool]:
         timeout=60,
     )
     data = json.loads(raw)
-    body = data.get("body") or ""
-    return body, issue_is_trivial(body, data.get("labels") or [])
+    if not isinstance(data, dict) or not isinstance(data.get("body", ""), (str, type(None))):
+        raise ValueError("issue unread")
+    return data
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Advisory DoR/DoD field check for an issue body (#7854)."
+        description="Check DoR, stable-ID DoD structure and live issue membership.\n"
+        "Use --issue for dispatch; body-only modes leave membership unchecked.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python -m scripts.ci.check_issue_task_quality --issue 10565 --strict --json\n"
+        "  .venv/bin/python -m scripts.ci.check_issue_task_quality --body-file card.md\n"
+        "Outputs: stdout only; no audit cache writes. Live reads have a 60-second total budget.\n"
+        "Exit codes: 0 = advisory or PASS; 1 = strict WARN; 2 = invalid arguments.\n"
+        "Related: docs/best-practices/task-quality.md, issue #10565.",
     )
     src = parser.add_mutually_exclusive_group(required=True)
     src.add_argument("--issue", type=int, help="GitHub issue number (uses gh)")
@@ -252,7 +504,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--repo",
         default="learn-ukrainian/learn-ukrainian.github.io",
-        help="owner/repo for --issue",
+        help="owner/repo for --issue (default: learn-ukrainian/learn-ukrainian.github.io); other pinned checkouts may use this CLI",
     )
     parser.add_argument(
         "--trivial",
@@ -269,7 +521,11 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.issue is not None:
-            body, issue_trivial = _fetch_issue_body(args.repo, args.issue)
+            with time_budget():
+                issue = fetch_issue(args.repo, args.issue)
+                if args.trivial:
+                    issue = {**issue, "labels": [{"name": "trivial"}]}
+                result = evaluate_issue(issue, observe_membership(issue, args.repo, args.issue))
         elif args.body_file:
             with open(args.body_file, encoding="utf-8") as handle:
                 body = handle.read()
@@ -277,21 +533,34 @@ def main(argv: list[str] | None = None) -> int:
         else:
             body = args.body or ""
             issue_trivial = False
-        result = score_body(body, trivial=args.trivial or issue_trivial)
+        if args.issue is None:
+            result = score_body(body, trivial=args.trivial or issue_trivial)
     except (
         OSError,
         subprocess.SubprocessError,
         json.JSONDecodeError,
         UnicodeError,
         ValueError,
+        RuntimeError,
     ) as exc:
-        result = {
-            "verdict": "WARN",
-            "trivial": False,
-            "missing": ["input"],
-            "present": [],
-            "notes": [f"input_error:{type(exc).__name__}:{exc}"],
-        }
+        code = (
+            "membership_timeout"
+            if isinstance(exc, (TimeoutError, subprocess.TimeoutExpired))
+            else "membership_rate_limited"
+            if isinstance(exc, github_client.GitHubRateLimited)
+            else "checker_error"
+        )
+        result = complete_result(
+            {
+                "verdict": "WARN",
+                "trivial": False,
+                "missing": ["input"],
+                "present": [],
+                "notes": ["input_error"],
+            },
+            "",
+            membership_error(code),
+        )
 
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
