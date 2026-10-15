@@ -43,6 +43,13 @@ from types import ModuleType
 
 import pytest
 
+try:
+    from scripts.common.test_thread_caps import THREAD_CAPS
+    from scripts.common.test_thread_caps import apply as apply_thread_caps
+except ImportError:
+    from common.test_thread_caps import THREAD_CAPS
+    from common.test_thread_caps import apply as apply_thread_caps
+
 DISPATCH_TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 LOCK_ENV = "LU_PYTEST_FULL_SUITE_LOCK"
 MAX_PROCESSES = 2
@@ -59,6 +66,7 @@ _CLAMP_ATTR = "_lu_dispatch_cap_clamped"
 _SLOTS_ATTR = "_lu_test_slots_hold"
 _SLOTS_PRIOR_MARKER_ATTR = "_lu_test_slots_prior_marker"
 _AUTO_PRIOR_ATTR = "_lu_test_slots_prior_auto_workers"
+_THREAD_PRIOR_ATTR = "_lu_test_slots_prior_thread_caps"
 # Informational runs execute no test, so they never queue for slots.
 _NO_TEST_OPTIONS = ("help", "version", "showfixtures", "show_fixtures_per_test", "markers")
 
@@ -348,6 +356,12 @@ def _limit_workers(config: pytest.Config, count: int) -> None:
         option.tx = specs[:count]
 
 
+def _cap_threads(config: pytest.Config) -> None:
+    """Limit threads for this session, retaining the caller's environment for cleanup."""
+    setattr(config, _THREAD_PRIOR_ATTR, {name: os.environ.get(name) for name in THREAD_CAPS})
+    os.environ.update(apply_thread_caps(os.environ))
+
+
 def _run_inside_inherited_hold(config: pytest.Config, slots: ModuleType, count: int) -> None:
     """Start at most ``count`` workers, the slots a live ancestor holds, here and in this run's descendants."""
     config.add_cleanup(lambda: _release_test_slots(config))
@@ -356,6 +370,7 @@ def _run_inside_inherited_hold(config: pytest.Config, slots: ModuleType, count: 
     auto_cap = slots.auto_worker_cap()  # a lower existing cap, such as a driver scope's, is kept
     setattr(config, _AUTO_PRIOR_ATTR, (name, os.environ.get(name)))
     os.environ[name] = str(count if auto_cap is None else min(auto_cap, count))
+    _cap_threads(config)
 
 
 def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
@@ -388,16 +403,25 @@ def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
     setattr(config, _SLOTS_PRIOR_MARKER_ATTR, os.environ.get(slots.HOLDER_ENV))
     # Workers and nested runs inherit the marker and run inside these slots instead of queueing.
     os.environ.update(hold.environment())
+    _cap_threads(config)
     _limit_workers(config, hold.count)
     if hold.waited >= 1.0:
         print(f"TEST SLOTS: holding {hold.count} of {hold.pool_size} slot(s) after {hold.waited:.1f}s", flush=True)
 
 
 def _release_test_slots(config: pytest.Config) -> None:
-    """Give back what this session took: its slots, its holder marker and the auto-worker count it set.
+    """Release this session's slots and restore its holder, worker-count and thread-cap environment.
 
     A ``config.add_cleanup`` callback, so it also runs when a hook refuses the run before it configures.
     """
+    thread_prior = getattr(config, _THREAD_PRIOR_ATTR, None)
+    if thread_prior is not None:
+        setattr(config, _THREAD_PRIOR_ATTR, None)
+        for name, prior in thread_prior.items():
+            if prior is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = prior
     recorded = getattr(config, _AUTO_PRIOR_ATTR, None)
     if recorded is not None:
         setattr(config, _AUTO_PRIOR_ATTR, None)

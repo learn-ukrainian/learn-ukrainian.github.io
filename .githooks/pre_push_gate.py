@@ -51,7 +51,18 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 6  # 6: host test slots for the pytest stage (#10662)
+GATE_VERSION = 7  # 7: inherited thread caps for the pytest stage (#10716)
+# Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
+# tests/test_pre_push_gate.py checks table and behavior parity.
+THREAD_CAPS = {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "ORT_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "RAYON_NUM_THREADS": "1",
+}
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -152,6 +163,22 @@ class Plan:
 
     def __post_init__(self) -> None:
         self.node_ids = dedupe_node_ids((*self.registry_nodes, *self.changed_tests))
+
+
+def apply_thread_caps(env: dict[str, str]) -> dict[str, str]:
+    """Copy the shared test-thread policy without importing project code (#10716)."""
+    result = dict(env)
+    if env.get("LU_TEST_THREAD_CAP", "").strip().lower() == "off":
+        return result
+    for name, cap in THREAD_CAPS.items():
+        if cap != "false" and name in env:
+            try:
+                if env[name].isascii() and env[name].isdecimal() and 0 < int(env[name]) <= int(cap):
+                    continue
+            except ValueError:
+                pass
+        result[name] = cap
+    return result
 
 
 def clean_environment() -> dict[str, str]:
@@ -283,12 +310,52 @@ def outgoing_base(update: Update, root: Path) -> str:
     return base
 
 
+def is_regenerable_dependency_input(path: str, *, root: Path, tracked: set[str]) -> bool:
+    """Restate scripts/fleet/regenerable_output.py's dependency-directory predicate.
+
+    The hook stays stdlib-only. Keep this in parity with is_regenerable_ignored_path:
+    walk through the first node_modules, then require its tracked, local regular
+    sibling package-lock.json. Like the reaper, do not traverse dependency contents.
+    """
+    relative = Path(path)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or ".venv" in relative.parts
+        or "node_modules" not in relative.parts
+        or relative.as_posix() in tracked
+    ):
+        return False
+    current = root
+    try:
+        for index, part in enumerate(relative.parts):
+            current /= part
+            status = current.lstat()
+            if not (stat.S_ISDIR(status.st_mode) or stat.S_ISREG(status.st_mode)):
+                return False
+            if part == "node_modules" and stat.S_ISDIR(status.st_mode):
+                lock = Path(*relative.parts[:index]) / "package-lock.json"
+                return lock.as_posix() in tracked and stat.S_ISREG((root / lock).lstat().st_mode)
+    except OSError:
+        return False
+    return False
+
+
 def reject_untracked_inputs(root: Path) -> None:
     """Refuse when untracked or ignored Python/config files could change the run but not the receipt."""
     listing = git_ok("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
     if listing is None:
         raise GateOutcome("state_unavailable", "cannot list untracked validation inputs", incomplete=True)
-    overlays = sorted(path for path in listing.split("\0") if path)
+    candidates = [path for path in listing.split("\0") if path]
+    tracked: set[str] = set()
+    if any("node_modules" in Path(path).parts for path in candidates):
+        tracked_listing = git_ok("ls-files", "-z", "--cached", cwd=root)
+        if tracked_listing is None:
+            raise GateOutcome("state_unavailable", "cannot list tracked dependency inputs", incomplete=True)
+        tracked = set(tracked_listing.split("\0"))
+    overlays = sorted(
+        path for path in candidates if not is_regenerable_dependency_input(path, root=root, tracked=tracked)
+    )
     if overlays:
         shown = ", ".join(overlays[:10]) + (f" (+{len(overlays) - 10} more)" if len(overlays) > 10 else "")
         raise GateOutcome(
@@ -1578,6 +1645,9 @@ def run_pytest_stage(
     # Never more test processes than the host test slots held (#10662).
     cap = slots.count if slots is not None else None
     slot_environment = slots.environment() if slots is not None else None
+    if slot_environment is not None:
+        capped = apply_thread_caps(clean_environment())
+        slot_environment.update({name: capped[name] for name in THREAD_CAPS if name in capped})
     options = parallel_options(cap=cap)
     if diagnostics is not None:
         diagnostics.update(

@@ -13,10 +13,22 @@ import pytest
 
 from scripts import inbox_pending
 from scripts.fleet_comms.authority import AuthorityService
-from tests.helpers.agy_inbox_fixtures import BODY_MARKER, MESSAGE_ID, add_authority, add_legacy, run_cli, snapshot
+from tests.helpers.agy_inbox_fixtures import (
+    BODY_MARKER,
+    CLI_BOOTSTRAP,
+    MESSAGE_ID,
+    add_authority,
+    add_legacy,
+    run_cli,
+    snapshot,
+)
 
 pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_UNKNOWN_NOTICE = (
+    "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
+    "authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+)
 
 
 @pytest.mark.parametrize(
@@ -260,9 +272,7 @@ def test_wake_schema_drift_is_unknown(stores, roster, schema_fault, pending):
         "stores": {"legacy": None, "authority": None},
         "probe": "unknown",
     }
-    assert inbox_pending.hook("{}", "gemini-infra") == {
-        "injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]
-    }
+    assert inbox_pending.hook("{}", "gemini-infra") == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
     assert snapshot(stores) == before
 
 
@@ -316,7 +326,7 @@ def test_cli_bad_arguments_hide_error_data(capsys, hook_mode):
     assert BODY_MARKER not in captured.out
     result = json.loads(captured.out)
     if hook_mode:
-        assert result == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+        assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
     else:
         assert result["probe"] == "unknown"
 
@@ -328,7 +338,54 @@ def test_hook_cli_does_not_echo_stdin(stores, monkeypatch, capsys):
     assert inbox_pending.main(["--agy-hook"]) == 0
     captured = capsys.readouterr()
     assert captured.err == ""
-    assert json.loads(captured.out) == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+    assert json.loads(captured.out) == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+
+
+@pytest.mark.parametrize(
+    ("failure", "store_index", "pending"),
+    [
+        ("missing-store", 0, True),
+        ("missing-store", 1, True),
+        ("malformed-schema", 0, False),
+        ("malformed-schema", 0, True),
+        ("malformed-schema", 1, False),
+        ("malformed-schema", 1, True),
+        ("garbage-stdin", None, True),
+        ("missing-slot", None, True),
+    ],
+)
+def test_unknown_cli_notice_guides_both_drains(stores, roster, tmp_path, monkeypatch, failure, store_index, pending):
+    if pending:
+        add_legacy(stores[0])
+        add_authority(stores[1], state="running")
+    if failure == "missing-store":
+        stores[store_index].unlink()
+    elif failure == "malformed-schema":
+        with sqlite3.connect(stores[store_index]) as conn:
+            conn.execute("DROP TABLE messages" if store_index == 0 else "DROP TABLE authority_wake_receipts")
+    elif failure == "missing-slot":
+        monkeypatch.delenv("SESSION_HANDOFF_AGENT")
+    existing_stores = [path for path in stores if path.exists()]
+    before = snapshot(existing_stores)
+    files = set(tmp_path.rglob("*"))
+    proc = subprocess.run(
+        [sys.executable, "-c", CLI_BOOTSTRAP, "--agy-hook"],
+        input=BODY_MARKER if failure == "garbage-stdin" else "{}",
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert proc.returncode == 0
+    assert proc.stderr == ""
+    assert BODY_MARKER not in proc.stdout
+    result = json.loads(proc.stdout)
+    assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    line = result["injectSteps"][0]["ephemeralMessage"]
+    assert len(line) <= 200
+    assert line.isascii() and all(32 <= ord(char) < 127 for char in line)
+    assert snapshot(existing_stores) == before
+    assert set(tmp_path.rglob("*")) == files
 
 
 def test_wal_reader_sees_latest_committed_order(stores):
@@ -369,7 +426,7 @@ def test_direct_renderer_behavior(stores, count):
 @pytest.mark.parametrize("payload", ["[]", '{"value": NaN}', BODY_MARKER])
 def test_direct_invalid_payload_is_unknown(stores, payload):
     assert inbox_pending.hook(payload, "gemini-infra") == {
-        "injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]
+        "injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]
     }
 
 
@@ -396,9 +453,7 @@ def test_direct_authority_truncation_and_store_failure(stores):
     }
     assert {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in stores} == before
     stores[1].unlink()
-    assert inbox_pending.hook("{}", "gemini-infra") == {
-        "injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]
-    }
+    assert inbox_pending.hook("{}", "gemini-infra") == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
     assert not stores[1].exists()
     assert hashlib.sha256(stores[0].read_bytes()).hexdigest() == before[stores[0]]
 

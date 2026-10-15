@@ -6,6 +6,7 @@ private pool whose slots this process holds or leaves free.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import subprocess
@@ -149,6 +150,49 @@ def test_runs_outside_the_governor_never_wait(project: Path, case: str) -> None:
     assert "test_slots" not in result.stderr
 
 
+@pytest.mark.parametrize("case", ["governed", "opt_out", "disabled", "operator_shell", "ci", "nested"])
+def test_worker_children_inherit_thread_caps_only_when_governed(project: Path, case: str) -> None:
+    from tests.common.test_test_thread_caps import EXPECTED
+
+    source = f"import json, os; print(json.dumps({{key: os.environ.get(key) for key in {list(EXPECTED)!r}}}))"
+    (project / "tests/test_sample.py").write_text(
+        "import json, os, subprocess, sys\nimport pytest\n"
+        "@pytest.mark.parametrize('index', range(4))\n"
+        "def test_child(index):\n"
+        f"    output = subprocess.check_output([sys.executable, '-c', {source!r}], text=True, timeout=30)\n"
+        "    with open(os.environ['SLOT_PROBE_OUT'], 'a') as stream:\n"
+        "        stream.write(json.dumps({'worker': os.environ['PYTEST_XDIST_WORKER'], "
+        "'env': json.loads(output)}) + '\\n')\n",
+        encoding="utf-8",
+    )
+    extra = dict.fromkeys(EXPECTED, "8")
+    extra.update({"LU_TEST_THREAD_CAP": "off" if case == "opt_out" else "on", test_slots.COUNT_ENV: "2"})
+    if case == "disabled":
+        extra[test_slots.ENABLE_ENV] = "off"
+    elif case == "operator_shell":
+        extra[DISPATCH_TASK_ENV] = None
+    elif case == "ci":
+        extra.update({"CI": "true", test_slots.ENABLE_ENV: None})
+    with contextlib.ExitStack() as stack:
+        if case == "nested":
+            held = stack.enter_context(test_slots.acquire(2, kind="launcher", environ=_env(project, **extra)))
+            extra[test_slots.HOLDER_ENV] = held.marker()
+            extra[DISPATCH_TASK_ENV] = None
+        result = subprocess.run(
+            _pytest(project, "-n", "2"),
+            cwd=project,
+            env=_env(project, **extra),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    assert result.returncode == 0, result.stdout + result.stderr
+    rows = _probe(project)
+    assert {row["worker"] for row in rows} == {"gw0", "gw1"}
+    expected = EXPECTED if case in {"governed", "nested"} else dict.fromkeys(EXPECTED, "8")
+    assert all(row["env"] == expected for row in rows)
+
+
 def test_a_slot_wait_timeout_is_a_typed_usage_error(project: Path) -> None:
     with test_slots.acquire(1, kind="pytest"):
         result = subprocess.run(
@@ -265,6 +309,9 @@ def test_an_in_process_nested_session_restores_the_auto_worker_count(
     monkeypatch.setenv(test_slots.ENABLE_ENV, "on")
     monkeypatch.setenv(test_slots.DIR_ENV, str(tmp_path / "pool"))
     monkeypatch.setenv(test_slots.COUNT_ENV, "2")
+    monkeypatch.setenv("LU_TEST_THREAD_CAP", "on")
+    monkeypatch.setenv("OMP_NUM_THREADS", "8")
+    monkeypatch.delenv("MKL_NUM_THREADS", raising=False)
     if prior is None:
         monkeypatch.delenv(test_slots.XDIST_AUTO_ENV, raising=False)
     else:
@@ -277,9 +324,13 @@ def test_an_in_process_nested_session_restores_the_auto_worker_count(
         pytest_dispatch_cap._acquire_test_slots(config, acquire=True)
         assert option.maxprocesses == 2
         assert os.environ[test_slots.XDIST_AUTO_ENV] == (prior if prior in {"0", "1"} else "2")
+        assert os.environ["OMP_NUM_THREADS"] == "1"
+        assert os.environ["MKL_NUM_THREADS"] == "1"
         assert len(cleanups) == 1
         cleanups.pop()()  # pytest's config cleanup stack, closed when the session ends
         assert os.environ.get(test_slots.XDIST_AUTO_ENV) == prior
+        assert os.environ["OMP_NUM_THREADS"] == "8"
+        assert "MKL_NUM_THREADS" not in os.environ
         assert os.environ[test_slots.HOLDER_ENV] == hold.marker()
         assert test_slots.inherited_hold() == 2
 

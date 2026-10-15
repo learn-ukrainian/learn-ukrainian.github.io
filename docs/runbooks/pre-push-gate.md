@@ -25,6 +25,18 @@ tracked changes:
 Check 1 is the pre-commit stage; checks 2 and 3 form the pytest stage. Importer-closure selection
 (`scripts/ci/pre_push_shadow.py`) runs beside them in shadow: recorded, never blocking.
 
+When the pytest stage holds test slots, its children inherit the thread caps from
+`scripts/common/test_thread_caps.py` (#10716): `OMP_NUM_THREADS`, `MKL_NUM_THREADS`,
+`OPENBLAS_NUM_THREADS`, `NUMEXPR_NUM_THREADS`, `ORT_NUM_THREADS` and `RAYON_NUM_THREADS`
+are capped at `1`, and `TOKENIZERS_PARALLELISM` is `false`.
+Existing positive integers at or below `1`,
+written as ASCII decimal digits, are preserved. Every other value is replaced with `1`, including zero,
+negatives, fractions, padded or signed values, empty strings, `nan`, infinities, oversized integers and
+nonnumeric tokens such as `8,4`, `true` and `0x10`. The stdlib-only gate copies the policy;
+`tests/test_pre_push_gate.py` checks table and behavior parity with the helper.
+`LU_TEST_THREAD_CAP=off` preserves the caller's thread environment while retaining slot accounting.
+The governor's disabled and CI paths apply no thread caps. See `docs/runbooks/test-slots.md`.
+
 ## Outcomes
 
 | Outcome | Exit | Meaning |
