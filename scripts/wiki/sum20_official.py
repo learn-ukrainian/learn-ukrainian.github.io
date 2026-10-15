@@ -148,6 +148,64 @@ def _node_text(node: _Node, *, include_entries: bool = False) -> str:
     return _clean_text("".join(parts))
 
 
+def _valid_reference_leaf(field: _Node, class_name: str) -> bool:
+    return (
+        _classes(field) == {class_name}
+        and bool(_node_text(field))
+        and all(not _classes(node) for node in _walk(field, stop_classes=frozenset()) if node is not field)
+    )
+
+
+def _valid_reference_word(word: _Node) -> bool:
+    """Require lexical text before the optional, directly owned UX marker."""
+    if _classes(word) != {"WORD"}:
+        return False
+    markers = [child for child in word.children if isinstance(child, _Node) and _classes(child)]
+    if len(markers) > 1 or any(not _valid_reference_leaf(marker, "UX") for marker in markers):
+        return False
+    prefix = word.children[: word.children.index(markers[0])] if markers else word.children
+    if not _node_text(_Node(word.tag, {}, prefix)):
+        return False
+    owned = {id(word), *(id(marker) for marker in markers)}
+    return all(not _classes(node) or id(node) in owned for node in _walk(word, stop_classes=frozenset()))
+
+
+def _matches_marked_terminal_reference(
+    entry: _Node, root: _Node, link: _Node, reference: _Node, target_word: _Node
+) -> bool:
+    """Compare one owned BUX/UX association with a direct terminal U+002E."""
+    if _classes(link) != {"LINK"} or _classes(reference) != {"LINKTXT"}:
+        return False
+    markers = [child for child in reference.children if isinstance(child, _Node) and _classes(child)]
+    if len(markers) != 1 or not _valid_reference_leaf(markers[0], "BUX"):
+        return False
+    marker = markers[0]
+    after = reference.children[reference.children.index(marker) + 1 :]
+    if any(not isinstance(child, str) for child in after) or not re.fullmatch(r"\s*\.\s*", "".join(after)):
+        return False
+    prefix = reference.children[: reference.children.index(marker)]
+    if not _node_text(_Node(reference.tag, {}, prefix)):
+        return False
+    reference_owned = {id(link), id(reference), id(marker)}
+    if any(_classes(node) and id(node) not in reference_owned for node in _walk(link, stop_classes=frozenset())):
+        return False
+    words = _all_with_class(entry, "WORD")
+    if len(words) != 1 or not _valid_reference_word(words[0]) or not _valid_reference_word(target_word):
+        return False
+    target_markers = [child for child in target_word.children if isinstance(child, _Node) and _classes(child)]
+    if len(target_markers) != 1 or _node_text(target_markers[0]) != _node_text(marker):
+        return False
+    owned_markers = {id(marker), id(target_markers[0])} | {
+        id(child) for child in words[0].children if isinstance(child, _Node) and _classes(child) == {"UX"}
+    }
+    if any(
+        _classes(node) & {"UX", "BUX"} and id(node) not in owned_markers
+        for node in _walk(root, stop_classes=frozenset())
+    ):
+        return False
+    return normalize_sum20_lookup(_node_text(reference)[:-1]) == normalize_sum20_lookup(_node_text(target_word))
+
+
 def _has_reference_target(entry: _Node, root: _Node) -> bool:
     """Require one primary reference and one matching, defined linked article."""
     links = _all_with_class(entry, "LINK")
@@ -172,12 +230,12 @@ def _has_reference_target(entry: _Node, root: _Node) -> bool:
     words = _all_with_class(target, "WORD")
     if len(words) != 1 or not _node_text(words[0]):
         return False
-    if normalize_sum20_lookup(reference) != normalize_sum20_lookup(_node_text(words[0])):
-        return False
     for sense in _all_with_class(target, "INTF") + _all_with_class(target, "INTN"):
         formula = _first_with_class(sense, "FORMULA")
         if formula is not None and _node_text(formula):
-            return True
+            return normalize_sum20_lookup(reference) == normalize_sum20_lookup(
+                _node_text(words[0])
+            ) or _matches_marked_terminal_reference(entry, root, links[0], references[0], words[0])
     return False
 
 
@@ -192,7 +250,8 @@ def _has_phrase_reference(entry: _Node, root: _Node) -> bool:
         "PHRASE": {"PHRTXT": (1, 1), "LINK": (1, 1)},
         "LINK": {"LINKTXT": (1, 1)},
         "LINKTXT": {"BUX": (0, 1)},
-        "WORD": {},
+        "WORD": {"UX": (0, 1)},
+        "UX": {},
         "LPART": {},
         "PHRSYM": {},
         "PHRTXT": {},
@@ -203,6 +262,8 @@ def _has_phrase_reference(entry: _Node, root: _Node) -> bool:
 
     def validate(field: _Node, class_name: str) -> bool:
         if _classes(field) != {class_name} or not _node_text(field):
+            return False
+        if class_name == "WORD" and not _valid_reference_word(field):
             return False
         if class_name == "LINKTXT" and not any(
             _clean_text(child) if isinstance(child, str) else not _classes(child) and _node_text(child)

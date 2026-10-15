@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 import sys
@@ -1191,3 +1192,502 @@ def test_legacy_ingest_help_and_failure_exit(monkeypatch, capsys):
     )
     assert sum20_official_ingest.main([]) == 1
     assert "failed" in capsys.readouterr().err
+
+
+# Response SHA-256: 1b83ffbb50717e1770a1acf702fc7ee37f095a88a368dfa9c2d5831ebb4bbe85
+# Article SHA-256: 2c0a7fb9fefad0fa23fc17b1982352ec6aaf98c16579231c4dd2a1f457fc8791
+WORDID2354_HTML = (
+    "<article>\r\n"
+    "            \r\n"
+    "\r\n"
+    "\r\n"
+    "\r\n"
+    "\r\n"
+    "<div>\r\n"
+    '     <div class="ENTRY"> <div class="WORD">БА́КИ<div class="UX">2</div></div><div class="LPART"><b>,</b> ів, <i>мн.</i>:</div> <div class="PHRF"><div class="PHRSYM">&#9671;</div> <div class="PHRASE"><div class="PHRTXT">Відби́ло ба́ки (па́м\'ять)</div> <div class="LINK">див. <div class="LINKTXT">відбива́ти</div>;</div></div> <div class="PHRASE"><div class="PHRTXT">Забива́ти / заби́ти ба́ки</div> <div class="LINK">див. <div class="LINKTXT">забива́ти</div>.</div></div></div>\r\n'
+    "    \r\n"
+    "</div>\r\n"
+    " \r\n"
+    "        </article>"
+)
+
+
+# Response SHA-256: b4238efeb1e73404af16b4cb23856d67dc2cffdb03641f722015c143afb70b62
+# Article SHA-256: 3a06d33644865c6cad81c8320b71870e4f26c465de65c3a2982ea79094381d9d
+WORDID1521_HTML = (
+    "<article>\r\n"
+    "            \r\n"
+    "\r\n"
+    "\r\n"
+    "\r\n"
+    "\r\n"
+    "<div>\r\n"
+    '     <div class="ENTRY"> <div class="WORD">АРГОНА́ВТ<div class="UX">1</div></div> <div class="LINK">див. <div class="LINKTXT">аргона́вти<div class="BUX">1</div>.</div></div></div><div class="LINKENTRY"> <div class="ENTRY"> <div class="WORD">АРГОНА́ВТИ<div class="UX">1</div></div><div class="LPART"><b>,</b> ів, <i>мн. (одн.</i> <b>аргона́вт,</b> а, <i>ч.).</i></div> <div class="INTF"><div class="INTNUM">1</div>. <div class="FORMULA">У грецькій міфології – герої, які здійснили далекий морський похід на кораблі “Арго” в Колхіду по золоте руно</div>. <div class="ILL"> <div class="ILLTXT">Там аргонавтів весло не плескалось в нерушеній хвилі, Не мандрувала там Медея-зрадниця</div> <div class="ILLSRC">(М. Зеров)</div>;</div> <div class="ILL"> <div class="ILLTXT">Саме кентавр Хірон вказав аргонавтам дорогу в Колхіду, коли вони пустилися в мандри по золоте руно</div> <div class="ILLSRC">(із журн.)</div>;</div> <div class="ILL"> * У порівн.  <div class="ILLTXT">Як аргонавти в давнину, покинемо свій дім</div> <div class="ILLSRC">(Ю. Яновський)</div>.</div></div><div class="INTN"><div class="INTNUM">2</div>. <div class="PARAM">перен.</div> <div class="FORMULA">Відважні мореплавці, які подорожують у невідомі країни, шукаючи багатства, пригод і т. ін</div>. <div class="ILL"> <div class="ILLTXT">Аргонавти без човна, Що по горах пішки лазять І не руна золотого, А з ведмедя шкури хочуть</div> <div class="ILLSRC">(Леся Українка)</div>;</div> <div class="SHD"><div class="SHDNUM">//&nbsp;</div><div class="PARAM">перен.</div> <div class="FORMULA">Учасники наукової експедиції, мандрівники</div>.</div> <div class="ILL"> <div class="ILLTXT">– Наша зміна, – сказав я. – Зоряні мрійники. Майбутні космонавти. Аргонавти всесвіту</div> <div class="ILLSRC">(А. Крижанівський)</div>.</div></div></div></div>\r\n'
+    "    \r\n"
+    "</div>\r\n"
+    " \r\n"
+    "        </article>"
+)
+
+
+def test_parser_preserves_verbatim_wordid2354_marked_phrase_reference() -> None:
+    source = WORDID2354_HTML
+    assert len(source.encode("utf-8")) == 627
+    assert (
+        hashlib.sha256(source.encode("utf-8")).hexdigest()
+        == "2c0a7fb9fefad0fa23fc17b1982352ec6aaf98c16579231c4dd2a1f457fc8791"
+    )
+    article = parse_sum20_article(source, 2354)
+    assert article.headword == "БАКИ 2"
+    assert article.stressed_headword == "БА́КИ 2"
+    assert article.normalized_lookup_key == "баки 2"
+    assert article.grammar == "ів, мн.:"
+    assert article.pos == "мн."
+    current_observed_literal = (
+        "БА́КИ 2 , ів, мн.: ◇ Відби́ло ба́ки (па́м'ять) див. відбива́ти ; Забива́ти / заби́ти ба́ки див. забива́ти ."
+    )
+    assert article.article_text == current_observed_literal
+    assert article.article_html == source
+    assert article.senses == article.citations == []
+
+
+def test_parser_preserves_verbatim_wordid1521_marked_word_reference() -> None:
+    source = WORDID1521_HTML
+    assert len(source.encode("utf-8")) == 2533
+    assert (
+        hashlib.sha256(source.encode("utf-8")).hexdigest()
+        == "3a06d33644865c6cad81c8320b71870e4f26c465de65c3a2982ea79094381d9d"
+    )
+    article = parse_sum20_article(source, 1521)
+    assert article.headword == "АРГОНАВТ 1"
+    assert article.stressed_headword == "АРГОНА́ВТ 1"
+    assert article.normalized_lookup_key == "аргонавт 1"
+    assert article.grammar == ""
+    assert article.pos == ""
+    current_observed_literal = "АРГОНА́ВТ 1 див. аргона́вти 1 . АРГОНА́ВТИ 1 , ів, мн. (одн. аргона́вт, а, ч.). 1 . У грецькій міфології – герої, які здійснили далекий морський похід на кораблі “Арго” в Колхіду по золоте руно . Там аргонавтів весло не плескалось в нерушеній хвилі, Не мандрувала там Медея-зрадниця (М. Зеров) ; Саме кентавр Хірон вказав аргонавтам дорогу в Колхіду, коли вони пустилися в мандри по золоте руно (із журн.) ; * У порівн. Як аргонавти в давнину, покинемо свій дім (Ю. Яновський) . 2 . перен. Відважні мореплавці, які подорожують у невідомі країни, шукаючи багатства, пригод і т. ін . Аргонавти без човна, Що по горах пішки лазять І не руна золотого, А з ведмедя шкури хочуть (Леся Українка) ; // перен. Учасники наукової експедиції, мандрівники . – Наша зміна, – сказав я. – Зоряні мрійники. Майбутні космонавти. Аргонавти всесвіту (А. Крижанівський) ."
+    assert article.article_text == current_observed_literal
+    assert article.article_html == source
+    assert article.senses == article.citations == []
+
+
+# English structural sentinels keep authentic article literals untouched.
+MARKED_PRIMARY = '<div class="WORD">PRIMARY<div class="UX">1</div></div>'
+MARKED_TARGET = '<div class="WORD">TARGET<div class="UX">1</div></div>'
+MARKED_LINKTXT = '<div class="LINKTXT">target<div class="BUX">1</div>.</div>'
+MARKED_LINK = '<div class="LINK">see ' + MARKED_LINKTXT + "</div>"
+MARKED_LINKED = '<div class="LINKENTRY"><div class="ENTRY">' + MARKED_TARGET + TARGET_SENSE + "</div></div>"
+MARKED_WORD_HTML = (
+    '<article><div class="ENTRY">' + MARKED_PRIMARY + MARKED_LINK + "</div>" + MARKED_LINKED + "</article>"
+)
+MARKED_PHRASE_HTML = PHRASE_REFERENCE_HTML.replace(PRIMARY_WORD, MARKED_PRIMARY)
+
+INVALID_MARKED_WORDS = [
+    pytest.param('<div class="WORD"><div class="UX">1</div></div>', id="marker-only"),
+    pytest.param('<div class="WORD"> <div class="UX">1</div> </div>', id="whitespace-only"),
+    pytest.param('<div class="WORD"><div class="UX">1</div>PRIMARY</div>', id="lexical-after-marker"),
+    pytest.param(MARKED_PRIMARY + PRIMARY_WORD, id="two-words"),
+    pytest.param(MARKED_PRIMARY.replace("</div></div>", '</div><div class="UX">1</div></div>'), id="duplicate-ux"),
+    pytest.param(MARKED_PRIMARY.replace(">1<", "> <"), id="empty-ux"),
+    pytest.param(MARKED_PRIMARY.replace('class="UX"', 'class="UX OTHER"'), id="combined-ux"),
+    pytest.param('<div class="WORD">PRIMARY<span><div class="UX">1</div></span></div>', id="wrapped-ux"),
+    pytest.param(MARKED_PRIMARY.replace('class="UX"', 'class="BUX"'), id="bux-under-word"),
+    pytest.param(MARKED_PRIMARY.replace('class="UX"', 'class="OTHER"'), id="foreign-child"),
+    pytest.param(MARKED_PRIMARY.replace(">1<", '><span class="OTHER">1</span><'), id="foreign-under-ux"),
+    pytest.param(MARKED_PRIMARY.replace(">1<", '><span class="ENTRY">1</span><'), id="entry-under-ux"),
+    pytest.param(MARKED_PRIMARY.replace("PRIMARY", '<span class="LINKENTRY">hidden</span>'), id="hidden-lexical"),
+    pytest.param(MARKED_PRIMARY.replace("PRIMARY", '<span class="FORMULA">hidden</span>'), id="definition-lexical"),
+    pytest.param(MARKED_PRIMARY.replace("PRIMARY", '<span class="ILLTXT">hidden</span>'), id="citation-lexical"),
+    pytest.param(MARKED_PRIMARY.replace('class="WORD"', 'class="WORD OTHER"'), id="combined-word"),
+]
+
+
+@pytest.mark.parametrize("word", INVALID_MARKED_WORDS)
+def test_marked_phrase_reference_refuses_invalid_ownership(word: str) -> None:
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(MARKED_PHRASE_HTML.replace(MARKED_PRIMARY, word), 2354)
+
+
+@pytest.mark.parametrize("word", INVALID_MARKED_WORDS)
+@pytest.mark.parametrize("owner", ["primary", "target"])
+def test_marked_word_reference_refuses_invalid_ownership(word: str, owner: str) -> None:
+    if owner == "target":
+        word = word.replace("PRIMARY", "TARGET")
+    source = MARKED_WORD_HTML.replace(MARKED_PRIMARY if owner == "primary" else MARKED_TARGET, word)
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(source, 1521)
+
+
+@pytest.mark.parametrize("owner", ["LINK", "LINKTXT", "LPART", "PHRF", "PHRASE", "PHRTXT", "outside-entry"])
+@pytest.mark.parametrize("path", ["phrase", "word"])
+def test_marked_reference_refuses_misplaced_primary_markers(owner: str, path: str) -> None:
+    source = MARKED_PHRASE_HTML if path == "phrase" else MARKED_WORD_HTML
+    extra = '<div class="UX">1</div>'
+    if owner == "outside-entry":
+        source = source.replace("</article>", extra + "</article>")
+    else:
+        needle = f'<div class="{owner}">'
+        if needle in source:
+            source = source.replace(needle, needle + extra, 1)
+        else:
+            source = source.replace(MARKED_PRIMARY, MARKED_PRIMARY + needle + extra + "</div>")
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(source, 1521)
+
+
+INVALID_MARKED_REFERENCES = [
+    pytest.param('<div class="LINKTXT"><div class="BUX">1</div>.</div>', id="no-lexical-target"),
+    pytest.param('<div class="LINKTXT">.</div>', id="period-only"),
+    pytest.param(MARKED_LINKTXT.replace(">1<", "> <"), id="empty-bux"),
+    pytest.param(MARKED_LINKTXT.replace(">1<", ">2<"), id="marker-mismatch"),
+    pytest.param(MARKED_LINKTXT.replace(">1<", ">01<"), id="leading-zero-mismatch"),
+    pytest.param(MARKED_LINKTXT.replace("</div>.", '</div><div class="BUX">1</div>.'), id="duplicate-bux"),
+    pytest.param(MARKED_LINKTXT.replace('class="BUX"', 'class="BUX OTHER"'), id="combined-bux"),
+    pytest.param('<div class="LINKTXT">target<span><div class="BUX">1</div></span>.</div>', id="wrapped-bux"),
+    pytest.param(MARKED_LINKTXT.replace(">1<", '><span class="OTHER">1</span><'), id="classed-bux-descendant"),
+    pytest.param(MARKED_LINKTXT.replace(">1<", '><span class="UX">1</span><'), id="ux-under-bux"),
+    pytest.param(MARKED_LINKTXT.replace('class="BUX"', 'class="UX"'), id="ux-under-linktxt"),
+    pytest.param(MARKED_LINKTXT.replace("target", "wrong"), id="wrong-target"),
+    pytest.param(MARKED_LINKTXT.replace("target", ".target"), id="leading-period"),
+    pytest.param(MARKED_LINKTXT.replace("target", "tar.get"), id="interior-period"),
+    pytest.param(MARKED_LINKTXT.replace("target", "target."), id="period-before-bux"),
+    pytest.param(MARKED_LINKTXT.replace("target", '<span class="OTHER">target</span>'), id="foreign-target-text"),
+    pytest.param(MARKED_LINKTXT.replace("target", '<span class="ENTRY">target</span>'), id="hidden-target-text"),
+    pytest.param(MARKED_LINKTXT.replace("target", '<span class="LINKENTRY">target</span>'), id="linked-target-text"),
+    pytest.param(MARKED_LINKTXT.replace('<div class="BUX">1</div>', ""), id="unmarked-period"),
+    *[
+        pytest.param(MARKED_LINKTXT.replace("</div>.", "</div>" + suffix), id="suffix-" + name)
+        for name, suffix in [
+            ("double-dot", ".."),
+            ("ellipsis", "..."),
+            ("semicolon", ";"),
+            ("colon", ":"),
+            ("comma", ","),
+            ("lexical", ". extra"),
+            ("unicode-dot", "．"),
+            ("wrapped-dot", "<i>.</i>"),
+            ("wrapped-whitespace", " <i> </i>."),
+            ("foreign-dot", '<span class="OTHER">.</span>'),
+        ]
+    ],
+]
+
+
+@pytest.mark.parametrize("reference", INVALID_MARKED_REFERENCES)
+def test_marked_word_reference_refuses_ambiguous_marker_or_punctuation(reference: str) -> None:
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(MARKED_WORD_HTML.replace(MARKED_LINKTXT, reference), 1521)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "missing-link",
+        "empty-link",
+        "duplicate-link",
+        "missing-linktxt",
+        "empty-linktxt",
+        "duplicate-linktxt",
+        "orphan-linktxt",
+        "combined-link",
+        "combined-linktxt",
+        "duplicate-container",
+        "duplicate-target-entry",
+        "missing-target-word",
+        "empty-target-word",
+        "missing-target-marker",
+        "missing-definition",
+        "empty-definition",
+        "nested-definition",
+        "unrelated-definition",
+        "extra-primary-entry",
+        "stray-primary-bux",
+        "stray-primary-ux",
+        "stray-link-tail-bux",
+        "stray-target-ux",
+        "stray-target-bux",
+    ],
+)
+def test_marked_word_reference_refuses_invalid_association(mutation: str) -> None:
+    source = MARKED_WORD_HTML
+    replacements = {
+        "missing-link": (MARKED_LINK, ""),
+        "empty-link": (MARKED_LINK, '<div class="LINK"> </div>'),
+        "duplicate-link": (MARKED_LINK, MARKED_LINK * 2),
+        "missing-linktxt": (MARKED_LINKTXT, ""),
+        "empty-linktxt": (MARKED_LINKTXT, '<div class="LINKTXT"> </div>'),
+        "duplicate-linktxt": (MARKED_LINKTXT, MARKED_LINKTXT * 2),
+        "orphan-linktxt": (MARKED_LINK, '<div class="LINK">see</div>' + MARKED_LINKTXT),
+        "combined-link": ('class="LINK"', 'class="LINK OTHER"'),
+        "combined-linktxt": ('class="LINKTXT"', 'class="LINKTXT OTHER"'),
+        "duplicate-container": (MARKED_LINKED, MARKED_LINKED * 2),
+        "duplicate-target-entry": (MARKED_LINKED, MARKED_LINKED.replace(TARGET_SENSE, TARGET_SENSE + TARGET_ENTRY)),
+        "missing-target-word": (MARKED_TARGET, ""),
+        "empty-target-word": (MARKED_TARGET, '<div class="WORD"> </div>'),
+        "missing-target-marker": (MARKED_TARGET, '<div class="WORD">TARGET</div>'),
+        "missing-definition": (TARGET_SENSE, ""),
+        "empty-definition": (TARGET_SENSE, '<div class="INTF"><div class="FORMULA"> </div></div>'),
+        "nested-definition": (TARGET_SENSE, '<div class="ENTRY">' + TARGET_SENSE + "</div>"),
+        "unrelated-definition": (MARKED_LINKED, MARKED_LINKED.replace(TARGET_SENSE, "") + TARGET_SENSE),
+        "extra-primary-entry": (MARKED_PRIMARY, MARKED_PRIMARY + '<div class="ENTRY">' + PRIMARY_WORD + "</div>"),
+        "stray-primary-bux": (MARKED_PRIMARY, MARKED_PRIMARY + '<div class="BUX">1</div>'),
+        "stray-primary-ux": (MARKED_PRIMARY, MARKED_PRIMARY + '<div class="UX">1</div>'),
+        "stray-link-tail-bux": (
+            MARKED_LINK,
+            MARKED_LINK.replace(MARKED_LINKTXT, MARKED_LINKTXT + '<div class="BUX">1</div>'),
+        ),
+        "stray-target-ux": (MARKED_TARGET, MARKED_TARGET + '<div class="UX">1</div>'),
+        "stray-target-bux": (MARKED_TARGET, MARKED_TARGET + '<div class="BUX">1</div>'),
+    }
+    old, new = replacements[mutation]
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(source.replace(old, new), 1521)
+
+
+@pytest.mark.parametrize(
+    "layout",
+    [
+        "period",
+        "whitespace",
+        "inline-marker",
+        "inline-lexical",
+        "unmarked-primary",
+        "exact",
+        "link-tail-period",
+        "wrapped-linktxt",
+    ],
+)
+def test_marked_reference_preserves_valid_layouts(layout: str) -> None:
+    source = MARKED_WORD_HTML
+    if layout == "wrapped-linktxt":
+        source = source.replace(MARKED_LINKTXT, "<span>" + MARKED_LINKTXT + "</span>")
+    elif layout == "whitespace":
+        source = source.replace(">1<", "> 1 <").replace("</div>.", "</div> \t . \n")
+    elif layout == "inline-marker":
+        source = source.replace(">1<", "><i>1</i><")
+    elif layout == "inline-lexical":
+        source = source.replace(">PRIMARY<", "><i>PRIMARY</i><").replace(">target<", "><b>target</b><")
+    elif layout == "unmarked-primary":
+        source = source.replace(MARKED_PRIMARY, PRIMARY_WORD)
+    elif layout == "exact":
+        source = source.replace("</div>.", "</div>")
+    elif layout == "link-tail-period":
+        source = source.replace(MARKED_LINKTXT, MARKED_LINKTXT.replace("</div>.", "</div>") + ".")
+    article = parse_sum20_article(source, 1521)
+    assert article.headword == ("PRIMARY" if layout == "unmarked-primary" else "PRIMARY 1")
+    assert article.normalized_lookup_key == ("primary" if layout == "unmarked-primary" else "primary 1")
+    assert article.senses == article.citations == []
+    assert article.article_html == source
+
+
+def test_defined_marked_word_preserves_existing_identity() -> None:
+    source = (
+        '<article><div class="ENTRY"><div class="WORD">PRÍMARY<div class="UX">2</div></div>'
+        + TARGET_SENSE
+        + "</div></article>"
+    )
+    article = parse_sum20_article(source, 5)
+    assert article.headword == "PRIMARY 2"
+    assert article.stressed_headword == "PRÍMARY 2"
+    assert article.normalized_lookup_key == "primary 2"
+    assert [sense.definition for sense in article.senses] == ["target definition"]
+    assert [citation.citation_text for citation in article.citations] == ["target citation"]
+
+
+@pytest.mark.parametrize(
+    "wordid,source,key,bare,headword,stressed,grammar,pos,digest",
+    [
+        (
+            2354,
+            WORDID2354_HTML,
+            "баки 2",
+            "баки",
+            "БАКИ 2",
+            "БА́КИ 2",
+            "ів, мн.:",
+            "мн.",
+            "2c0a7fb9fefad0fa23fc17b1982352ec6aaf98c16579231c4dd2a1f457fc8791",
+        ),
+        (
+            1521,
+            WORDID1521_HTML,
+            "аргонавт 1",
+            "аргонавт",
+            "АРГОНАВТ 1",
+            "АРГОНА́ВТ 1",
+            "",
+            "",
+            "3a06d33644865c6cad81c8320b71870e4f26c465de65c3a2982ea79094381d9d",
+        ),
+    ],
+    ids=["2354", "1521"],
+)
+def test_marked_reference_ingest_and_consumers(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    wordid: int,
+    source: str,
+    key: str,
+    bare: str,
+    headword: str,
+    stressed: str,
+    grammar: str,
+    pos: str,
+    digest: str,
+) -> None:
+    from scripts.lexicon.sum20_lookup import lookup_sum20_cached
+
+    db_path = tmp_path / "sources.db"
+    with sqlite3.connect(db_path) as conn:
+        ensure_sum20_official_schema(conn)
+        conn.execute("UPDATE sum20_crawl_checkpoint SET last_wordid = ?", (wordid - 1,))
+    session = _FakeSession([_FakeResponse(200, source), _FakeResponse(200, source)])
+    requested: list[int] = []
+
+    def offline_fetch(requested_wordid: int, **kwargs: object) -> FetchOutcome:
+        requested.append(requested_wordid)
+        return fetch_sum20_wordid(requested_wordid, session=session, **kwargs)
+
+    monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
+    for repeat in (False, True):
+        counts = sum20_official_ingest.ingest_wordids(db_path, start_wordid=wordid, limit=1, delay_s=0, retries=0)
+        assert counts == {
+            "ok": int(not repeat),
+            "unchanged": int(repeat),
+            "not_found": 0,
+            "transient_error": 0,
+            "parse_error": 0,
+        }
+        assert counts.exit_code == 0
+        with sqlite3.connect(db_path) as conn:
+            assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone() == (wordid,)
+            assert conn.execute("SELECT wordid, status FROM sum20_crawl_outcomes").fetchall() == [(wordid, "ok")]
+            assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone() == (1,)
+            assert conn.execute("SELECT COUNT(*) FROM sum20_senses").fetchone() == (0,)
+            assert conn.execute("SELECT COUNT(*) FROM sum20_citations").fetchone() == (0,)
+            assert conn.execute(
+                "SELECT wordid, headword, stressed_headword, normalized_lookup_key, grammar, pos, definition_text, article_html, content_sha256, parser_version FROM sum20_articles"
+            ).fetchone() == (
+                wordid,
+                headword,
+                stressed,
+                key,
+                grammar,
+                pos,
+                "",
+                source,
+                digest,
+                "sum20_official_v4",
+            )
+            conn.row_factory = sqlite3.Row
+            for query in (key, bare):
+                rows = lookup_sum20_cached(query, conn)
+                assert len(rows) == 1
+                assert rows[0]["wordid"] == wordid
+                assert rows[0]["headword"] == headword
+                assert rows[0]["definition"] == ""
+                assert rows[0]["senses"] == []
+        records = sources_db.query_sum20(key, db_path=db_path)
+        assert len(records) == 1
+        assert source_query_sum20(key, db_path=str(db_path)) == records
+        assert sources_db.query_sum20(bare, db_path=db_path) == []
+        assert source_query_sum20(bare, db_path=str(db_path)) == []
+        record = records[0]
+        assert record["headword"] == headword
+        assert record["stressed_headword"] == stressed
+        assert record["senses"] == record["citations"] == []
+        assert record["source_id"] == "sum20_official"
+        assert record["source_record_id"] == str(wordid)
+        assert record["official_url"] == f"https://sum20ua.com/?wordid={wordid}"
+        assert record["content_sha256"] == digest
+        assert record["parser_version"] == "sum20_official_v4"
+        assert record["status"] == "ok"
+        assert record["retrieved_at"]
+        assert record["attribution_label"] == official_module.SUM20_ATTRIBUTION_LABEL
+    assert requested == [wordid, wordid]
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_vesum_base_lemma", lambda *_args: None)
+    for query in (key, bare):
+        assert enrich_manifest_module._sum20_official_definition_card(query) is None
+        assert enrich_manifest_module._sum20_definition_card(query) is None
+
+
+@pytest.mark.parametrize(
+    "wordid,source",
+    [
+        pytest.param(
+            2354,
+            WORDID2354_HTML.replace('<div class="UX">2</div>', '<div class="UX">2</div><div class="UX">2</div>', 1),
+            id="duplicate_primary_ux_phrase",
+        ),
+        pytest.param(
+            1521,
+            WORDID1521_HTML.replace('<div class="BUX">1</div>', '<div class="BUX">2</div>', 1),
+            id="bux_ux_mismatch_period",
+        ),
+    ],
+)
+def test_marked_reference_ingest_stops_before_second_request(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    wordid: int,
+    source: str,
+) -> None:
+    db_path = tmp_path / "staging.db"
+    with sqlite3.connect(db_path) as conn:
+        ensure_sum20_official_schema(conn)
+        conn.execute("UPDATE sum20_crawl_checkpoint SET last_wordid = ?", (wordid - 1,))
+    session = _FakeSession([_FakeResponse(200, source), _FakeResponse(200, WORDID36_HTML)])
+    requested: list[int] = []
+
+    def offline_fetch(requested_wordid: int, **kwargs: object) -> FetchOutcome:
+        requested.append(requested_wordid)
+        return fetch_sum20_wordid(requested_wordid, session=session, **kwargs)
+
+    monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
+    counts = sum20_official_ingest.ingest_wordids(db_path, limit=2, delay_s=0, retries=0)
+    assert requested == [wordid]
+    assert counts == {"ok": 0, "unchanged": 0, "not_found": 0, "transient_error": 0, "parse_error": 1}
+    assert counts.exit_code == 4
+    with sqlite3.connect(db_path) as conn:
+        assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone() == (wordid - 1,)
+        assert conn.execute("SELECT wordid, status FROM sum20_crawl_outcomes").fetchall() == [(wordid, "parse_error")]
+        for table in ("sum20_articles", "sum20_senses", "sum20_citations"):
+            assert conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone() == (0,)
+
+
+@pytest.mark.parametrize("layout", ["direct", "whitespace", "inline-ux", "inline-lexical", "inline-bux"])
+def test_marked_phrase_reference_preserves_owned_markers(layout: str) -> None:
+    source = MARKED_PHRASE_HTML
+    if layout == "whitespace":
+        source = source.replace(">1<", "> 1 <")
+    elif layout == "inline-ux":
+        source = source.replace(">1<", "><i>1</i><")
+    elif layout == "inline-lexical":
+        source = source.replace(">PRIMARY<", "><i>PRIMARY</i><")
+    elif layout == "inline-bux":
+        source = source.replace(
+            PHRASE_FIELDS["LINKTXT"], '<div class="LINKTXT">target<div class="BUX"><i>1</i></div></div>'
+        )
+    article = parse_sum20_article(source, 2354)
+    assert article.headword == "PRIMARY 1"
+    assert article.normalized_lookup_key == "primary 1"
+    assert article.senses == article.citations == []
+    assert article.article_html == source
+
+
+def test_marked_phrase_presence_prevents_word_reference_fallback() -> None:
+    source = MARKED_PHRASE_HTML.replace('class="PHRTXT"', 'class="OTHER"').replace("</article>", LINKED + "</article>")
+    with pytest.raises(Sum20ParseError, match="no definition senses"):
+        parse_sum20_article(source, 2354)
+
+
+@pytest.mark.parametrize("marker_only", [False, True], ids=["empty-markers", "marker-only-fields"])
+def test_marked_word_reference_refuses_matching_but_empty_association(marker_only: bool) -> None:
+    source = MARKED_WORD_HTML
+    if marker_only:
+        source = source.replace("target<div", "<div").replace("TARGET<div", "<div")
+    else:
+        source = source.replace(">1<", "><")
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(source, 1521)
