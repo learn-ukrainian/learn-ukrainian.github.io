@@ -219,19 +219,34 @@ jobs:
       # fail closed unless that exact build and those inputs are still current.
       # The drift check stays directly after the build (#7673).
       - if: steps.scope.outputs.run == 'true'
-        name: Build, drift check, unit and built-output tests
+        name: Install locked practice browser
+        working-directory: site
+        run: node node_modules/@playwright/test/cli.js install --with-deps chromium
+      - if: steps.scope.outputs.run == 'true'
+        name: Build, drift check, unit, built-output and practice browser tests
         working-directory: site
         env:
           FRONTEND_BUILD_RECORD: ${{ runner.temp }}/frontend-build/record.json
+          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           npm run hydrate
           node --experimental-strip-types tests/helpers/ci-build-artifact.ts \
             record --record "$FRONTEND_BUILD_RECORD" -- npm run astro -- build
           git diff --exit-code -- src/data/lexicon-teacher-lesson-keys.json src/data/practice-zno-meta.json
+          node --experimental-strip-types tests/helpers/practice-browser-ci.mjs baseline --record "$FRONTEND_BUILD_RECORD"
           npm run test:unit:ci
           node --experimental-strip-types tests/helpers/ci-build-artifact.ts verify --record "$FRONTEND_BUILD_RECORD"
           npm run test:built-output
+          node --experimental-strip-types tests/helpers/practice-browser-ci.mjs run --record "$FRONTEND_BUILD_RECORD"
+      - name: Upload exact-build practice browser evidence
+        if: ${{ !cancelled() && steps.scope.outputs.run == 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: frontend-practice-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/frontend-build/
+          if-no-files-found: error
+          retention-days: 14
 
   pytest:
     name: pytest (${{ matrix.shard }})
