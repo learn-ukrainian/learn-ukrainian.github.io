@@ -604,6 +604,8 @@ def test_probe_sandbox_is_private_managed_scratch_removed_however_the_probe_ends
     assert stat.S_IMODE(mode) == 0o700
     assert not sandbox.exists()
     assert list(sandbox.parent.iterdir()) == []
+    # Nothing is left beside the private parent either.
+    assert list(scratch_root.iterdir()) == [sandbox.parent]
 
 
 @contextlib.contextmanager
@@ -697,29 +699,56 @@ def _assert_sandbox_refused(spawned: list[object]) -> None:
     assert spawned == []
 
 
-@pytest.mark.parametrize(
-    ("which", "mode"),
-    [("parent", 0o777), ("parent", 0o770), ("parent", 0o707), ("root", 0o777), ("root", 0o707)],
-)
-def test_probe_sandbox_refuses_a_parent_others_can_write(tmp_path, monkeypatch, which, mode):
+@pytest.mark.parametrize("mode", [0o777, 0o707], ids=oct)
+def test_probe_sandbox_refuses_a_root_others_can_write(tmp_path, monkeypatch, mode):
     root = tmp_path / "scratch-root"
     (root / cau._SANDBOX_PARENT).mkdir(parents=True, mode=0o700)
-    target = root if which == "root" else root / cau._SANDBOX_PARENT
-    target.chmod(mode)
+    root.chmod(mode)
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
     _assert_sandbox_refused([])
 
 
-@pytest.mark.parametrize("which", ["parent", "root"])
-def test_probe_sandbox_accepts_a_sticky_shared_directory(tmp_path, monkeypatch, which):
+@pytest.mark.parametrize("mode", [0o755, 0o1777, 0o777, 0o770, 0o750, 0o711, 0o707, 0o1700, 0o500], ids=oct)
+def test_probe_sandbox_refuses_an_existing_parent_that_is_not_exactly_0700(tmp_path, monkeypatch, mode):
+    """The private parent is refused, never repaired: its mode is left as found."""
     root = tmp_path / "scratch-root"
-    (root / cau._SANDBOX_PARENT).mkdir(parents=True, mode=0o700)
-    target = root if which == "root" else root / cau._SANDBOX_PARENT
-    target.chmod(0o1777)
+    parent = root / cau._SANDBOX_PARENT
+    parent.mkdir(parents=True, mode=0o700)
+    parent.chmod(mode)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    try:
+        _assert_sandbox_refused([])
+        assert stat.S_IMODE(parent.stat().st_mode) == mode
+    finally:
+        parent.chmod(0o700)
+    assert list(parent.iterdir()) == []
+
+
+def test_probe_sandbox_refuses_a_parent_that_is_a_link(tmp_path, monkeypatch):
+    root = tmp_path / "scratch-root"
+    root.mkdir()
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    (root / cau._SANDBOX_PARENT).symlink_to(private)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    _assert_sandbox_refused([])
+    assert list(private.iterdir()) == []
+    assert stat.S_IMODE(private.stat().st_mode) == 0o700
+
+
+@pytest.mark.parametrize("root_mode", [0o700, 0o1777], ids=["private_root", "sticky_shared_root"])
+def test_probe_sandbox_accepts_an_existing_0700_parent(tmp_path, monkeypatch, root_mode):
+    """The root may be a shared sticky directory such as the system temp; the parent stays 0700."""
+    root = tmp_path / "scratch-root"
+    parent = root / cau._SANDBOX_PARENT
+    parent.mkdir(parents=True, mode=0o700)
+    root.chmod(root_mode)
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
     with cau._probe_sandbox() as sandbox:
+        assert sandbox.parent == parent
         assert stat.S_IMODE(sandbox.stat().st_mode) == 0o700
     assert not sandbox.exists()
+    assert stat.S_IMODE(parent.stat().st_mode) == 0o700
 
 
 @pytest.mark.parametrize("own_group", [True, False])

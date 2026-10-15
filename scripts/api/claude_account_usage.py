@@ -602,19 +602,24 @@ def _scratch_root() -> Path:
     return Path(override) if override else scratch.DEFAULT_SCRATCH_ROOT
 
 
-def _shared_safely(info: os.stat_result, owners: set[int], *, own_group_may_write: bool = False) -> bool:
-    """A real directory of an allowed owner that no other user can rename entries in.
+def _shared_safely(info: os.stat_result) -> bool:
+    """A real directory of this user's or root's that no other user can rename entries in.
 
     A sticky directory lets others create but not rename or remove what is ours.
-    ``own_group_may_write`` also accepts group write when the group is this
-    user's own primary group, as on the host's default scratch root.
+    Group write is accepted when the group is this user's own primary group, as
+    on the host's default scratch root.
     """
-    if not stat.S_ISDIR(info.st_mode) or info.st_uid not in owners:
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid not in {0, os.getuid()}:
         return False
     writable = info.st_mode & 0o022
-    if own_group_may_write and info.st_gid == os.getgid():
+    if info.st_gid == os.getgid():
         writable &= ~stat.S_IWGRP
     return not writable or bool(info.st_mode & stat.S_ISVTX)
+
+
+def _private(info: os.stat_result) -> bool:
+    """A real directory of this user's with mode exactly 0700: no one else may enter it."""
+    return stat.S_ISDIR(info.st_mode) and info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o700
 
 
 def _git_tree(directory: Path) -> bool:
@@ -635,9 +640,10 @@ def _create_sandbox() -> Path:
     The scratch root may be shared with this user's own primary group (the host
     default is): it must be a real directory, not a link, owned by this user or
     root and not writable by anyone else unless sticky. Sandboxes go into
-    ``_SANDBOX_PARENT`` below it, a real directory owned by this user and not
-    group- or world-writable unless sticky. Neither may be inside a Git
-    checkout or Git directory. Each directory is created and checked through
+    ``_SANDBOX_PARENT`` below it, created 0700 when missing; it must be a real
+    directory owned by this user with mode exactly 0700, and one that exists
+    with any other mode or owner, or as a link, is refused, never repaired.
+    Neither may be inside a Git checkout or Git directory. Each directory is created and checked through
     the descriptor of the one above it, and the path handed to the child must
     name what was created. Every failure is the value-free
     ``sandbox_unavailable``; there is no fallback location.
@@ -651,7 +657,7 @@ def _create_sandbox() -> Path:
         with contextlib.suppress(FileExistsError):
             os.mkdir(root, 0o700)
         root_fd = os.open(root, flags)
-        if not _shared_safely(os.fstat(root_fd), {0, os.getuid()}, own_group_may_write=True):
+        if not _shared_safely(os.fstat(root_fd)):
             raise _ProbeFailed("sandbox_unavailable")
         parent = Path(os.path.realpath(root)) / _SANDBOX_PARENT
         if _inside_git(parent):
@@ -660,7 +666,7 @@ def _create_sandbox() -> Path:
             os.mkdir(_SANDBOX_PARENT, 0o700, dir_fd=root_fd)
         parent_fd = os.open(_SANDBOX_PARENT, flags, dir_fd=root_fd)
         parent_info = os.fstat(parent_fd)
-        if not _shared_safely(parent_info, {os.getuid()}) or not _same_file(parent, parent_info):
+        if not _private(parent_info) or not _same_file(parent, parent_info):
             raise _ProbeFailed("sandbox_unavailable")
         for _ in range(100):
             name = f"{_SANDBOX_PREFIX}{secrets.token_hex(8)}"
