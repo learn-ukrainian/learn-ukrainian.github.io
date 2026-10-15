@@ -214,6 +214,52 @@ tr:last-child td { border-bottom: none; }
 </div>
 
 <script>
+
+// Retained panel clocks: response assembly and cache age never certify source age.
+const retainedPanels = new Map();
+function retainedStatus(id, state, options = {}) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  let record = retainedPanels.get(id);
+  if (!record) {
+    const node = document.createElement('p');
+    node.className = 'muted retained-status';
+    node.style.cssText = 'font-size:12px;overflow-wrap:anywhere;padding:8px 0';
+    target.after(node);
+    const announcement = document.createElement('span');
+    announcement.setAttribute('role', 'status');
+    announcement.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)';
+    node.after(announcement);
+    record = { node, announcement, fetched: null, received: null, sourceAge: null, cacheAge: null };
+    retainedPanels.set(id, record);
+  }
+  if (options.fetched) {
+    record.fetched = Date.now();
+    record.received = performance.now();
+    record.sourceAge = options.sourceAge;
+    record.cacheAge = options.cacheAge;
+  }
+  if (record.state !== state) record.announcement.textContent = `${id.replaceAll('-', ' ')}: ${state}`;
+  record.state = state;
+  record.note = options.note || '';
+  target.setAttribute('aria-busy', String(state === 'Loading'));
+  record.node.dataset.state = state;
+  paintRetainedStatus(record);
+}
+function paintRetainedStatus(record) {
+  const elapsed = record.received === null ? 0 : Math.max(0, (performance.now() - record.received) / 1000);
+  const age = value => typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? `${Math.floor(value + elapsed)}s` : 'unknown';
+  const source = age(record.sourceAge);
+  const cache = age(record.cacheAge);
+  record.node.textContent = [record.state, `Source age ${source}`,
+    cache === 'unknown' ? '' : `Cache/read age ${cache}`,
+    record.fetched === null ? 'No successful fetch' : `Last successful fetch ${new Date(record.fetched).toISOString()}`,
+    record.note].filter(Boolean).join(' · ');
+}
+setInterval(() => retainedPanels.forEach(paintRetainedStatus), 1000);
+// End retained panel clocks.
+
 const REFRESH_MS = 30000;
 const API_TIMEOUT_MS = 5000;
 let refreshTimer = null;
@@ -221,7 +267,7 @@ let refreshTimer = null;
 function escapeHtml(value) {
   const node = document.createElement('span');
   node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
+  return node.innerHTML.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 }
 
 function formatTs(value) {
@@ -242,12 +288,8 @@ async function fetchJson(url) {
   try {
     const response = await fetch(url, { signal: controller.signal });
     const text = await response.text();
-    let data = {};
-    try {
-      data = text ? JSON.parse(text) : {};
-    } catch {
-      data = { detail: text };
-    }
+    let data;
+    try { data = JSON.parse(text); } catch { throw new Error('Malformed JSON response'); }
     if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
     return data;
   } catch (error) {
@@ -258,7 +300,33 @@ async function fetchJson(url) {
   }
 }
 
+const runtimeTargets = {
+  agents: 'agents-content', acpx: 'acpx-content', 'routing-assignments': 'routing-assignments-content',
+  usage: 'usage-content', headroom: 'headroom-content', recent: 'recent-content',
+};
+async function readRuntime(kind, url) {
+  const data = await fetchJson(url);
+  const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  if (!object(data)) throw new Error('Malformed runtime response');
+  const listKey = { agents: 'agents', recent: 'records', acpx: 'seats', 'routing-assignments': 'assignments' }[kind];
+  if (listKey && (!Array.isArray(data[listKey]) || data[listKey].some(row => !object(row)))) throw new Error('Malformed runtime rows');
+  if (kind === 'agents' && data.agents.some(row => typeof row.name !== 'string')) throw new Error('Malformed runtime agent');
+  if (kind === 'usage' && (!object(data.by_agent) || Object.values(data.by_agent).some(row => !object(row)))) throw new Error('Malformed runtime usage');
+  if (kind === 'acpx' && !object(data.transport)) throw new Error('Malformed runtime transport');
+  if (kind === 'headroom' && typeof data.has_headroom !== 'boolean') throw new Error('Malformed headroom response');
+  if (data.availability === 'malformed') throw new Error('Malformed upstream history');
+  const partial = data.unreadable && Object.values(data.unreadable).some(count => typeof count === 'number' && count > 0);
+  const state = data.availability === 'not_configured' ? 'Not installed'
+    : data.availability === 'unavailable' ? 'Unavailable'
+    : partial ? 'Partial' : data.window && data.window.stale === true ? 'Stale'
+    : listKey && !data[listKey].length ? 'Empty' : 'Unknown';
+  if (kind !== 'headroom') retainedStatus(runtimeTargets[kind], state, { fetched: true,
+    note: 'Bounded history; event timestamps are not source age. Collection coverage may be incomplete.' });
+  return data;
+}
+
 function setBanner(id, message) {
+  if (message && runtimeTargets[id.replace('-banner', '')]) retainedStatus(runtimeTargets[id.replace('-banner', '')], 'Error');
   const el = document.getElementById(id);
   el.textContent = message || '';
   el.style.display = message ? 'block' : 'none';
@@ -293,10 +361,8 @@ function displayValue(value) {
 }
 
 function shadowCallCount(seats) {
-  return seats.reduce((total, seat) => {
-    const count = Number(seat.evidence?.total);
-    return total + (Number.isFinite(count) ? count : 0);
-  }, 0);
+  if (!seats.length || seats.some(seat => typeof seat.evidence?.total !== 'number' || !Number.isFinite(seat.evidence.total) || seat.evidence.total < 0)) return null;
+  return seats.reduce((total, seat) => total + seat.evidence.total, 0);
 }
 
 function normalizeSeats(snapshot) {
@@ -305,8 +371,8 @@ function normalizeSeats(snapshot) {
 
 function seatEvidenceSummary(seat) {
   const evidence = seat.evidence && typeof seat.evidence === 'object' ? seat.evidence : {};
-  const total = Number(evidence.total);
-  if (!Number.isFinite(total)) return 'No shadow calls in window';
+  const total = typeof evidence.total === 'number' ? evidence.total : NaN;
+  if (!Number.isFinite(total)) return 'Shadow call count unknown';
   const outcomes = ['ok', 'error', 'rate_limited', 'timeout'].filter(key => evidence[key]).map(key => `${key} ${evidence[key]}`);
   const state = seat.evidence_state ? `${displayLabel(seat.evidence_state)} · ` : '';
   return `${state}${total} shadow calls${outcomes.length ? ` (${outcomes.join(', ')})` : ''}`;
@@ -321,9 +387,9 @@ function renderAcpx(snapshot) {
   const compatibility = snapshot.compatibility || {};
   const comparison = snapshot.comparison_evidence || {};
   const calls = shadowCallCount(seats);
-  const comparisons = Number(comparison.comparisons);
-  const parity = Number(comparison.classification_parity);
-  const mismatches = Number(comparison.classification_mismatch);
+  const comparisons = (typeof comparison.comparisons === 'number' ? comparison.comparisons : NaN);
+  const parity = (typeof comparison.classification_parity === 'number' ? comparison.classification_parity : NaN);
+  const mismatches = (typeof comparison.classification_mismatch === 'number' ? comparison.classification_mismatch : NaN);
   const mode = transport.mode;
   const facts = [
     ['Monitor env mode', mode, 'mode'],
@@ -343,7 +409,7 @@ function renderAcpx(snapshot) {
     ['OpenCode contract', compatibility.opencode_cli?.contract],
     ['Validation', compatibility.acpx?.validation
       ? displayLabel(compatibility.acpx.validation) : null],
-    ['Snapshot', formatTs(snapshot.generated_at)],
+    ['Response assembled', formatTs(snapshot.generated_at)],
   ];
   const seatMarkup = seatSlots.map((seat, index) => {
     if (!seat) return `<div class="acpx-seat"><div class="acpx-seat-name">Shadow seat ${index + 1}</div><div class="acpx-seat-detail">No seat telemetry reported.</div></div>`;
@@ -408,7 +474,7 @@ function segment(count, total, cls, label) {
 function renderUsage(byAgent) {
   const entries = Object.entries(byAgent || {});
   if (!entries.length) {
-    document.getElementById('usage-content').innerHTML = '<div class="empty">No usage records in the last 7 days</div>';
+    document.getElementById('usage-content').innerHTML = '<div class="empty">No usage rows returned in the last 7 days; source age and coverage unknown</div>';
     return;
   }
   entries.sort((a, b) => b[1].total - a[1].total);
@@ -421,7 +487,7 @@ function renderUsage(byAgent) {
         ${segment(stats.rate_limited || 0, stats.total || 0, 'warn', 'rate')}
         ${segment(stats.timeout || 0, stats.total || 0, 'gray', 'timeout')}
       </div>
-      <div class="usage-tail">${stats.total || 0} calls · ${formatDuration(stats.total_duration_s)}</div>
+      <div class="usage-tail">${typeof stats.total === 'number' ? stats.total : 'Unknown'} calls · ${formatDuration(stats.total_duration_s)}</div>
     </div>
   `).join('')}</div>`;
 }
@@ -434,7 +500,7 @@ function renderHeadroom(cards) {
   document.getElementById('headroom-content').innerHTML = `<div class="headroom-grid">${cards.map(card => `
     <div class="headroom-card">
       <div class="agent">${escapeHtml(card.agent)}</div>
-      <div class="big" style="color:${card.has_headroom ? 'var(--green)' : 'var(--red)'}">${card.has_headroom ? '&#10003;' : '&#10007;'}</div>
+      <div class="big" style="color:${card.has_headroom === true ? 'var(--green)' : card.has_headroom === false ? 'var(--red)' : 'var(--text2)'}">${card.has_headroom === true ? 'Available' : card.has_headroom === false ? 'Unavailable' : 'Unknown'}</div>
       <div class="muted mono">${escapeHtml(card.model || '—')}</div>
       <div style="margin-top:10px;font-size:13px">${escapeHtml(card.reason || 'No reason given')}</div>
     </div>
@@ -443,7 +509,7 @@ function renderHeadroom(cards) {
 
 function renderRecent(records) {
   if (!records.length) {
-    document.getElementById('recent-content').innerHTML = '<div class="empty">No recent calls today</div>';
+    document.getElementById('recent-content').innerHTML = '<div class="empty">No recent call rows returned; source age and coverage unknown</div>';
     return;
   }
   document.getElementById('recent-content').innerHTML = `<table>
@@ -772,10 +838,11 @@ let runtimeLoading = false;
 async function loadRuntime() {
   if (runtimeLoading) return;
   runtimeLoading = true;
+  Object.values(runtimeTargets).forEach(id => retainedStatus(id, 'Loading'));
   try {
     const agentsPromise = (async () => {
       try {
-        const data = await fetchJson('/api/runtime/agents');
+        const data = await readRuntime('agents', '/api/runtime/agents');
         if (!Array.isArray(data.agents)) throw new Error('Invalid agent list');
         const agents = data.agents;
         renderAgents(agents);
@@ -792,7 +859,7 @@ async function loadRuntime() {
       agentsPromise,
       (async () => {
         try {
-          const data = await fetchJson('/api/runtime/acpx?days=7');
+          const data = await readRuntime('acpx', '/api/runtime/acpx?days=7');
           renderAcpx(data && typeof data === 'object' ? data : {});
           setBanner('acpx-banner', '');
         } catch (error) {
@@ -804,7 +871,7 @@ async function loadRuntime() {
       (async () => {
         try {
           document.getElementById('routing-assignments-content').setAttribute('aria-busy', 'true');
-          const data = await fetchJson('/api/runtime/routing-assignments?limit=100');
+          const data = await readRuntime('routing-assignments', '/api/runtime/routing-assignments?limit=100');
           renderRoutingAssignments(data && typeof data === 'object' ? data : {});
           setBanner('routing-assignments-banner', '');
         } catch (error) {
@@ -822,7 +889,7 @@ async function loadRuntime() {
       })(),
       (async () => {
         try {
-          const data = await fetchJson('/api/runtime/usage?days=7');
+          const data = await readRuntime('usage', '/api/runtime/usage?days=7');
           renderUsage(data.by_agent || {});
           setBanner('usage-banner', '');
         } catch (error) {
@@ -839,17 +906,22 @@ async function loadRuntime() {
             setBanner('headroom-banner', '');
             document.getElementById('headroom-content').innerHTML =
               '<div class="empty">No runtime agents to check</div>';
+            retainedStatus('headroom-content', 'Empty', { note: 'No agent rows returned; source age and coverage unknown.' });
             return;
           }
-          const cards = await Promise.all(
+          const results = await Promise.allSettled(
             agents.map((agent) =>
-              fetchJson(
+              readRuntime('headroom',
                 `/api/runtime/headroom?agent=${encodeURIComponent(agent.name)}&model=${encodeURIComponent(agent.headroom_model || agent.last_used_model || agent.default_model || '')}`,
               ),
             ),
           );
+          const cards = results.map((result, index) => result.status === 'fulfilled' ? result.value
+            : { agent: agents[index].name, has_headroom: null, reason: 'Request or response validation failed' });
           renderHeadroom(cards);
           setBanner('headroom-banner', '');
+          retainedStatus('headroom-content', results.every(row => row.status === 'rejected') ? 'Error' : results.some(row => row.status === 'rejected') ? 'Partial' : 'Unknown',
+            { fetched: results.some(row => row.status === 'fulfilled'), note: 'Per-agent headroom observations; source age unknown.' });
         } catch (error) {
           setBanner('headroom-banner', `API unavailable: ${error.message}`);
           document.getElementById('headroom-content').innerHTML =
@@ -858,7 +930,7 @@ async function loadRuntime() {
       })(),
       (async () => {
         try {
-          const data = await fetchJson('/api/runtime/recent?limit=50');
+          const data = await readRuntime('recent', '/api/runtime/recent?limit=50');
           renderRecent(Array.isArray(data.records) ? data.records : []);
           setBanner('recent-banner', '');
         } catch (error) {
@@ -895,10 +967,13 @@ startRefresh();
 
 <script>
 async function refreshAgentMonitor() {
+  retainedStatus('agent-monitor-status-badge', 'Loading');
   try {
     const res = await fetch('/api/agent-monitor/status');
     if (!res.ok) throw new Error('Monitor unavailable');
     const data = await res.json();
+    if (!data || !['healthy', 'warning', 'critical', 'degraded'].includes(data.severity) || !data.ram || !['available_mb', 'total_mb', 'used_percent'].every(key => typeof data.ram[key] === 'number' && Number.isFinite(data.ram[key])) || !data.capacity_reservations || !['active_leases_count', 'total_reserved_ram_mb'].every(key => typeof data.capacity_reservations[key] === 'number' && Number.isFinite(data.capacity_reservations[key])) || !Array.isArray(data.load_1m_5m_15m) || data.load_1m_5m_15m.length < 2 || data.load_1m_5m_15m.some(value => typeof value !== 'number' || !Number.isFinite(value))) throw new Error('Malformed monitor observation');
+    retainedStatus('agent-monitor-status-badge', 'Unknown', { fetched: true, note: 'Existing monitor observation; source age unknown.' });
     const badge = document.getElementById('agent-monitor-status-badge');
     if (badge) {
       badge.textContent = data.severity.toUpperCase();
@@ -913,6 +988,7 @@ async function refreshAgentMonitor() {
     const reserved = document.getElementById('reserved-ram');
     if (reserved) reserved.textContent = `${data.capacity_reservations.total_reserved_ram_mb} MB`;
   } catch (e) {
+    retainedStatus('agent-monitor-status-badge', 'Error');
     const badge = document.getElementById('agent-monitor-status-badge');
     if (badge) { badge.textContent = 'UNAVAILABLE'; badge.className = 'pill warn'; }
     for (const id of ['ram-avail', 'sys-load', 'active-leases-count', 'reserved-ram']) {

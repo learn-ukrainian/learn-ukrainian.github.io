@@ -201,10 +201,12 @@ const html = fs.readFileSync('dashboards/fleet.html', 'utf8');
 const slice = (start, end) => html.slice(html.indexOf(start), html.indexOf(end));
 const nodes = {};
 const context = vm.createContext({
+  performance: {now: () => 0},
   document: {getElementById(id) { return nodes[id] ||= {innerHTML: ''}; }},
 });
 vm.runInContext(
   "function escapeHtml(v) { return String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }"
+  + slice('function retainedAge(', 'setInterval(() => document.querySelectorAll')
   + slice('function short(', 'function formatTime(')
   + slice('function pill(', 'function allowlistedSafeUrl(')
   + slice('function renderProjects(', 'function renderWorkers('),

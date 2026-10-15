@@ -269,6 +269,61 @@ button, input, select { font: inherit; }
 </div>
 
 <script>
+
+// Retained panel clocks: response assembly and cache age never certify source age.
+const retainedPanels = new Map();
+function retainedStatus(id, state, options = {}) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  let record = retainedPanels.get(id);
+  if (!record) {
+    const node = document.createElement('p');
+    node.className = 'muted retained-status';
+    node.style.cssText = 'font-size:12px;overflow-wrap:anywhere;padding:8px 0';
+    target.after(node);
+    const announcement = document.createElement('span');
+    announcement.setAttribute('role', 'status');
+    announcement.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)';
+    node.after(announcement);
+    record = { node, announcement, fetched: null, received: null, sourceAge: null, cacheAge: null };
+    retainedPanels.set(id, record);
+  }
+  if (options.fetched) {
+    record.fetched = Date.now();
+    record.received = performance.now();
+    record.sourceAge = options.sourceAge;
+    record.cacheAge = options.cacheAge;
+  }
+  if (record.state !== state) record.announcement.textContent = `${id.replaceAll('-', ' ')}: ${state}`;
+  record.state = state;
+  record.note = options.note || '';
+  target.setAttribute('aria-busy', String(state === 'Loading'));
+  record.node.dataset.state = state;
+  paintRetainedStatus(record);
+}
+function paintRetainedStatus(record) {
+  const elapsed = record.received === null ? 0 : Math.max(0, (performance.now() - record.received) / 1000);
+  const age = value => typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? `${Math.floor(value + elapsed)}s` : 'unknown';
+  const source = age(record.sourceAge);
+  const cache = age(record.cacheAge);
+  record.node.textContent = [record.state, `Source age ${source}`,
+    cache === 'unknown' ? '' : `Cache/read age ${cache}`,
+    record.fetched === null ? 'No successful fetch' : `Last successful fetch ${new Date(record.fetched).toISOString()}`,
+    record.note].filter(Boolean).join(' · ');
+}
+setInterval(() => retainedPanels.forEach(paintRetainedStatus), 1000);
+function retainedAge(value, received = performance.now(), usable = true) {
+  if (!usable || typeof value !== 'number' || !Number.isFinite(value) || value < 0) return 'unknown';
+  return `<span data-retained-age="${value}" data-received="${received}">${Math.floor(value + Math.max(0, (performance.now() - received) / 1000))}s</span>`;
+}
+setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node => {
+  const value = Number(node.dataset.retainedAge);
+  const received = Number(node.dataset.received);
+  if (Number.isFinite(value) && Number.isFinite(received)) node.textContent = `${Math.floor(value + Math.max(0, (performance.now() - received) / 1000))}s`;
+}), 1000);
+// End retained panel clocks.
+
 (function () {
   const ALLOWED_FILTER_KEYS = new Set(['health', 'kind', 'lifecycle', 'orphan', 'repository_id', 'source_id', 'view']);
   const PUBLIC_SINGLETON_REPO = 'learn-ukrainian/learn-ukrainian.github.io';
@@ -294,6 +349,7 @@ button, input, select { font: inherit; }
   const RFC3339_Z_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
   const state = {
+    receivedAt: new Map(),
     projection: null,
     merged: null,
     itemsById: new Map(),
@@ -874,19 +930,29 @@ button, input, select { font: inherit; }
     });
   }
 
+  function safeWorkUrl(item) {
+    try {
+      const url = new URL(item.urls && item.urls.html);
+      const kind = item.resource_kind === 'pr' ? 'pull' : item.resource_kind === 'issue' ? 'issues' : null;
+      return kind && url.origin === 'https://github.com' && !url.username && !url.password && !url.search && !url.hash
+        && url.pathname === '/' + item.repository_id + '/' + kind + '/' + item.remote_id ? url.href : null;
+    } catch { return null; }
+  }
+
   function renderDetail(item) {
     if (!item) {
       els.detail.classList.add('empty');
       els.detail.textContent = 'Select a row to inspect ownership, evidence, and the safe next action.';
       return;
     }
+    const safeUrl = safeWorkUrl(item);
     const stream = (item.projections && item.projections.stream) || {};
     const dispatch = (item.projections && item.projections.dispatch) || {};
     const review = (item.projections && item.projections.review) || {};
     const verification = (item.projections && item.projections.verification) || {};
     const action = item.safe_next_action || {};
     const authorities = (item.authority || []).map((a) =>
-      a.domain + ': age=' + (a.age_s == null ? '—' : a.age_s + 's') + (a.stale ? ' stale' : '')
+      escapeHtml(a.domain) + ': source age=' + retainedAge(a.age_s, state.receivedAt.get(item.source_id), Number.isFinite(Date.parse(a.observed_at)) && Date.parse(a.observed_at) <= Date.now()) + (a.stale ? ' stale' : '')
     ).join(' · ');
     const rels = (item.relationships || []).map((r) => r.type + ' → ' + r.target_id).join('; ') || 'none';
     els.detail.classList.remove('empty');
@@ -906,9 +972,9 @@ button, input, select { font: inherit; }
         '<div><dt>Review</dt><dd>' + escapeHtml(review.review_decision || (review.states || []).join(', ') || 'none') + (review.sealed_verdict_available ? ' · sealed available' : '') + '</dd></div>' +
         '<div><dt>Verification</dt><dd>' + escapeHtml(verification.ci_state || verification.state || '—') + '</dd></div>' +
         '<div><dt>Relationships</dt><dd class="mono">' + escapeHtml(rels) + '</dd></div>' +
-        '<div><dt>Authority / freshness</dt><dd>' + escapeHtml(authorities || '—') + '</dd></div>' +
+        '<div><dt>Authority / freshness</dt><dd>' + (authorities || 'Unknown') + '</dd></div>' +
         '<div><dt>Safe next action</dt><dd><strong>' + escapeHtml(action.code || 'NONE') + '</strong> · ' + (action.reason_codes || []).map(escapeHtml).join(', ') + '</dd></div>' +
-        '<div><dt>URL</dt><dd>' + (item.urls && item.urls.html ? ('<a href="' + escapeAttr(item.urls.html) + '" target="_blank" rel="noopener">' + escapeHtml(item.urls.html) + '</a>') : '—') + '</dd></div>' +
+        '<div><dt>URL</dt><dd>' + (safeUrl ? ('<a href="' + escapeAttr(safeUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(safeUrl) + '</a>') : '—') + '</dd></div>' +
       '</dl>';
   }
 
@@ -939,17 +1005,17 @@ button, input, select { font: inherit; }
     if (projection && pub.source_id === PUBLIC_SOURCE_ID) {
       els.publicMeta.textContent = [
         'status=' + pubStatus,
-        'cache_age_s=' + (projection.cache_age_s ?? '—'),
+        'projection_cache_age_s_at_fetch=' + (projection.cache_age_s ?? '—'),
         'issues=' + sectionCount(pubSections, 'issues'),
         'prs=' + sectionCount(pubSections, 'prs'),
         'streams=' + (publicStreamsComplete(pub) ? 'complete' : 'incomplete'),
         'class4 d1=' + (den.class4 && den.class4.delegate_active) + ' d2=' + (den.class4 && den.class4.delegate_tasks) + ' r1=' + (den.class4 && den.class4.fleet_reviews),
       ].join(' · ');
-      els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
-      els.attentionMeta.textContent = rankedCount + ' ranked' + metaSuffix + ' · cache ' + (projection.cache_age_s ?? 0) + 's';
+      els.foundation.textContent = projection.foundation_status || 'UNKNOWN';
+      els.attentionMeta.textContent = rankedCount + ' ranked' + metaSuffix + ' · projection cache age at fetch ' + (projection.cache_age_s ?? 'unknown') + 's';
     } else if (projection) {
-      els.foundation.textContent = projection.foundation_status || 'FOUNDATION_COMPLETE';
-      els.attentionMeta.textContent = rankedCount + ' ranked' + metaSuffix + ' · cache ' + (projection.cache_age_s ?? 0) + 's';
+      els.foundation.textContent = projection.foundation_status || 'UNKNOWN';
+      els.attentionMeta.textContent = rankedCount + ' ranked' + metaSuffix + ' · projection cache age at fetch ' + (projection.cache_age_s ?? 'unknown') + 's';
       if (publicStatusOverride) {
         els.publicMeta.textContent = 'status=' + publicStatusOverride;
       }
@@ -974,14 +1040,15 @@ button, input, select { font: inherit; }
     const currentRepo = els.repo.value;
     els.repo.innerHTML = '<option value="">All repositories</option>' +
       Array.from(repos).sort().map((r) => '<option value="' + escapeAttr(r) + '">' + escapeHtml(r) + '</option>').join('');
-    if (currentRepo) els.repo.value = currentRepo;
+    if (currentRepo && !repos.has(currentRepo)) els.repo.add(new Option(currentRepo + ' (not returned)', currentRepo));
+    els.repo.value = currentRepo;
 
     if (els.source) {
       const currentSource = els.source.value;
       // Only list private source after an admitted private payload contributed items or source.
       const hasPrivate = sources.some((s) => s && s.source_id === PRIVATE_SOURCE_ID && s.status !== 'unavailable') || sourcesPresent.has(PRIVATE_SOURCE_ID);
       const opts = ['<option value="">All sources</option>', '<option value="public-monitor">public-monitor</option>'];
-      if (hasPrivate) opts.push('<option value="private-local-adapter">private-local-adapter</option>');
+      if (hasPrivate || currentSource === PRIVATE_SOURCE_ID) opts.push('<option value="private-local-adapter">private-local-adapter</option>');
       els.source.innerHTML = opts.join('');
       if (currentSource) els.source.value = currentSource;
     }
@@ -1134,10 +1201,27 @@ button, input, select { font: inherit; }
     renderDetail(state.selectedId ? state.itemsById.get(state.selectedId) : null);
   }
 
+  function recordWorkFetch(id, doc) {
+    state.receivedAt.set(id === 'source-public-meta' ? PUBLIC_SOURCE_ID : PRIVATE_SOURCE_ID, performance.now());
+    const sourceId = id === 'source-public-meta' ? PUBLIC_SOURCE_ID : PRIVATE_SOURCE_ID;
+    const source = doc.sources.find(row => row.source_id === sourceId);
+    const status = source && source.status;
+    const sections = Object.values((source && source.sections) || {});
+    const partial = sections.some(section => section.status !== 'ok') || Object.values((source && source.truncation) || {}).some(value => value === true);
+    const stateName = status === 'not_configured' ? 'Not installed'
+      : status === 'unavailable' || status === 'permission_denied' || status === 'timeout' ? 'Unavailable'
+      : status === 'stale' ? 'Stale' : status === 'degraded' || status === 'truncated' || partial ? 'Partial' : 'Unknown';
+    retainedStatus(id, stateName, { fetched: true, cacheAge: doc.cache_age_s,
+      sourceAge: !['Unavailable', 'Not installed'].includes(stateName) && source && source.freshness && Number.isFinite(Date.parse(source.freshness.observed_at)) && Date.parse(source.freshness.observed_at) <= Date.now() ? source.freshness.age_s : null,
+      note: 'Projection cache age does not certify upstream sections; inspect item authority and omissions.' });
+  }
+
   let projectionGeneration = 0;
 
   async function loadProjection(opts) {
     const generation = ++projectionGeneration;
+    retainedStatus('source-public-meta', 'Loading');
+    retainedStatus('source-private-meta', 'Loading');
     showError('');
     state.publicStatusOverride = null;
     const publicUrl = (opts && opts.fresh)
@@ -1149,6 +1233,7 @@ button, input, select { font: inherit; }
       if (generation === projectionGeneration) {
         const admitted = admitPublicDocument(doc);
         if (admitted.ok) {
+          recordWorkFetch('source-public-meta', admitted.doc);
           state.privateStatusText = 'Checking capability…';
           installView(admitted.doc);
         }
@@ -1171,6 +1256,8 @@ button, input, select { font: inherit; }
       publicFail = classifyPublicFailure(publicSettled.reason);
     }
 
+    if (!publicDoc) retainedStatus('source-public-meta', 'Error', { note: publicFail || 'Unavailable' });
+
     let privateDoc = null;
     let privateFail = null;
     let privateAdmittedStatus = null;
@@ -1178,6 +1265,7 @@ button, input, select { font: inherit; }
       const admitted = admitPrivateDocument(privateSettled.value);
       if (admitted.ok) {
         privateDoc = admitted.doc;
+        recordWorkFetch('source-private-meta', privateDoc);
         privateAdmittedStatus = admitted.sourceStatus;
       } else {
         privateFail = 'schema_mismatch';
@@ -1185,6 +1273,8 @@ button, input, select { font: inherit; }
     } else {
       privateFail = classifyPrivateFailure(privateSettled.reason);
     }
+
+    if (!privateDoc) retainedStatus('source-private-meta', 'Unavailable', { note: privateFail || 'Unknown' });
 
     if (publicDoc && privateDoc) {
       const merged = mergeProjections(publicDoc, privateDoc);

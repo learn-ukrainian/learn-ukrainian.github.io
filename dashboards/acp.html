@@ -57,7 +57,7 @@ a { color: var(--blue); }.topbar { display: flex; align-items: center; gap: 14px
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
-<header class="topbar"><div><h1>ACP Conversations</h1><div class="sub">Read-only local conversation reader</div></div><div class="spacer"></div><div class="meta"><div>Read-only observation</div><div id="last-refresh">Loading…</div></div><nav class="monitor-nav" aria-label="Ops API sections"><a href="/">Home</a><a href="/orient.html">Orient</a><a href="/fleet.html">Fleet</a><a href="/work.html">Work</a><a href="/artifacts/">Artifacts</a><a href="/runtime.html">Runtime</a><a class="active" href="/acp.html">Conversations</a><a href="/docs">API</a></nav></header>
+<header class="topbar"><div><h1>ACP Conversations</h1><div class="sub">Read-only local conversation reader</div></div><div class="spacer"></div><div class="meta"><div>Read-only observation</div><button type="button" onclick="loadPage()">Refresh conversations</button><div id="last-refresh">Loading…</div></div><nav class="monitor-nav" aria-label="Ops API sections"><a href="/">Home</a><a href="/orient.html">Orient</a><a href="/fleet.html">Fleet</a><a href="/work.html">Work</a><a href="/artifacts/">Artifacts</a><a href="/runtime.html">Runtime</a><a class="active" href="/acp.html">Conversations</a><a href="/docs">API</a></nav></header>
 <main class="container">
   <section class="intro" aria-labelledby="page-heading"><div><div class="eyebrow">Conversation reader</div><h2 id="page-heading">Read what the agents discussed.</h2><p>Each round shows one shared prompt, the participant responses, and the final synthesis. Raw protocol messages and operational events remain available as secondary evidence.</p></div><aside class="privacy"><strong>Local-only transcript access.</strong> Message bodies are requested only from the loopback Ops API. This reader has no send, edit, retry, cancel, route, or review controls.</aside></section>
   <div class="banner" id="error-banner" role="status"></div>
@@ -65,6 +65,52 @@ a { color: var(--blue); }.topbar { display: flex; align-items: center; gap: 14px
   <section class="workspace" aria-label="ACP conversation browser"><aside class="ledger" aria-labelledby="ledger-heading"><div class="section-head"><h3 id="ledger-heading">Recent conversations</h3><span class="count" id="conversation-count">Loading</span></div><nav class="conversation-list" id="conversation-list" aria-label="Recent ACP conversations" aria-live="polite"><div class="empty">Loading recent conversations…</div></nav></aside><section class="reader" aria-labelledby="detail-heading"><div id="conversation-detail" class="reader-empty"><div><strong id="detail-heading">Select a conversation</strong><br>Its round-by-round discussion will appear here.</div></div></section></section>
 </main>
 <script>
+
+// Retained panel clocks: response assembly and cache age never certify source age.
+const retainedPanels = new Map();
+function retainedStatus(id, state, options = {}) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  let record = retainedPanels.get(id);
+  if (!record) {
+    const node = document.createElement('p');
+    node.className = 'muted retained-status';
+    node.style.cssText = 'font-size:12px;overflow-wrap:anywhere;padding:8px 0';
+    target.after(node);
+    const announcement = document.createElement('span');
+    announcement.setAttribute('role', 'status');
+    announcement.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)';
+    node.after(announcement);
+    record = { node, announcement, fetched: null, received: null, sourceAge: null, cacheAge: null };
+    retainedPanels.set(id, record);
+  }
+  if (options.fetched) {
+    record.fetched = Date.now();
+    record.received = performance.now();
+    record.sourceAge = options.sourceAge;
+    record.cacheAge = options.cacheAge;
+  }
+  if (record.state !== state) record.announcement.textContent = `${id.replaceAll('-', ' ')}: ${state}`;
+  record.state = state;
+  record.note = options.note || '';
+  target.setAttribute('aria-busy', String(state === 'Loading'));
+  record.node.dataset.state = state;
+  paintRetainedStatus(record);
+}
+function paintRetainedStatus(record) {
+  const elapsed = record.received === null ? 0 : Math.max(0, (performance.now() - record.received) / 1000);
+  const age = value => typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? `${Math.floor(value + elapsed)}s` : 'unknown';
+  const source = age(record.sourceAge);
+  const cache = age(record.cacheAge);
+  record.node.textContent = [record.state, `Source age ${source}`,
+    cache === 'unknown' ? '' : `Cache/read age ${cache}`,
+    record.fetched === null ? 'No successful fetch' : `Last successful fetch ${new Date(record.fetched).toISOString()}`,
+    record.note].filter(Boolean).join(' · ');
+}
+setInterval(() => retainedPanels.forEach(paintRetainedStatus), 1000);
+// End retained panel clocks.
+
 const LIST_URL = '/api/runtime/acp/conversations?limit=50';
 const DETAIL_URL = '/api/runtime/acp/conversations/';
 const TRANSCRIPT_SUFFIX = '/transcript';
@@ -86,7 +132,7 @@ function eventFlow(event) { const sender = typeof event.sender === 'string' ? ev
 async function fetchJson(url) { const response = await fetch(url); const responseText = await response.text(); let data = {}; try { data = responseText ? JSON.parse(responseText) : {}; } catch { throw new ApiError('Malformed response', response.status); } if (!response.ok) throw new ApiError(text(data.detail || data.error || `HTTP ${response.status}`), response.status); return data; }
 function showError(message) { const banner = document.getElementById('error-banner'); banner.textContent = message; banner.style.display = 'block'; }
 function setReaderState(title, message) { const detail = document.getElementById('conversation-detail'); detail.className = 'reader-empty'; detail.replaceChildren(make('div', '', undefined)); detail.firstChild.append(make('strong', '', title), document.createElement('br'), document.createTextNode(message)); }
-function renderList(conversations, activeId) { const content = document.getElementById('conversation-list'); document.getElementById('conversation-count').textContent = `${conversations.length} recent`; if (!conversations.length) { content.replaceChildren(empty('No recent ACP conversations. Run no action from this page; it observes persisted metadata only.')); return; } const fragment = document.createDocumentFragment(); for (const conversation of conversations) { const id = conversation && typeof conversation.conversation_id === 'string' ? conversation.conversation_id : null; if (!id) continue; const row = make('a', 'conversation-row'); row.href = `/acp.html?conversation=${encodeURIComponent(id)}`; if (id === activeId) row.setAttribute('aria-current', 'true'); const top = make('div', 'row-top'); top.append(make('span', 'conversation-id', id), pill(stateLabel(conversation.current_state), stateClass(conversation.current_state))); const meta = make('div', 'row-meta'); meta.append(make('span', '', (conversation.participants || []).map(label).join(' · ') || 'Participants unavailable'), make('span', '', `Rounds ${Number(conversation.rounds_completed) || 0}/${Number(conversation.rounds_requested) || 0}`), make('span', '', `Updated ${formatTs(conversation.updated_at)}`)); row.append(top, meta); fragment.append(row); } content.replaceChildren(fragment); }
+function renderList(conversations, activeId) { const content = document.getElementById('conversation-list'); document.getElementById('conversation-count').textContent = `${conversations.length} recent`; if (!conversations.length) { content.replaceChildren(empty('No recent ACP conversations. Run no action from this page; it observes persisted metadata only.')); return; } const fragment = document.createDocumentFragment(); for (const conversation of conversations) { const id = conversation && typeof conversation.conversation_id === 'string' ? conversation.conversation_id : null; if (!id) continue; const row = make('a', 'conversation-row'); row.href = `/acp.html?conversation=${encodeURIComponent(id)}`; if (id === activeId) row.setAttribute('aria-current', 'true'); const top = make('div', 'row-top'); top.append(make('span', 'conversation-id', id), pill(stateLabel(conversation.current_state), stateClass(conversation.current_state))); const meta = make('div', 'row-meta'); meta.append(make('span', '', (conversation.participants || []).map(label).join(' · ') || 'Participants unavailable'), make('span', '', `Rounds ${(Number.isFinite(conversation.rounds_completed) ? conversation.rounds_completed : 'Unknown')}/${(Number.isFinite(conversation.rounds_requested) ? conversation.rounds_requested : 'Unknown')}`), make('span', '', `Updated ${formatTs(conversation.updated_at)}`)); row.append(top, meta); fragment.append(row); } content.replaceChildren(fragment); }
 function renderEventRail(conversation) { const events = Array.isArray(conversation.events) ? conversation.events : []; const rail = make('details', 'event-rail'); const summary = make('summary', '', `Operational event rail · Event flow · ${events.length} allowlisted events`); const body = make('div', 'event-rail-body'); const participants = make('div', 'participants'); participants.append(make('span', 'participants-label', 'Participants')); const names = Array.isArray(conversation.participants) ? conversation.participants : []; if (names.length) names.forEach(participant => participants.append(make('span', 'lane', label(participant)))); else participants.append(make('span', 'muted', 'Not reported')); body.append(participants); if (!events.length) { body.append(empty('No allowlisted timeline events were recorded for this conversation.')); } else { const timeline = make('div', 'timeline'); for (const event of events) { const status = eventStatus(event); const item = make('article', 'event'); const top = make('div', 'event-top'); top.append(make('span', 'event-flow', eventFlow(event)), make('span', 'event-type', label(event.event_type)), pill(status.text, status.className), make('span', 'event-time', formatTs(event.created_at))); const facts = make('div', 'event-facts'); if (Number.isFinite(event.duration_ms)) facts.append(pill(`Duration ${formatDurationMs(event.duration_ms)}`)); if (Number.isFinite(event.token_count)) facts.append(pill(`Tokens ${event.token_count}`)); item.append(top); if (facts.childElementCount) item.append(facts); timeline.append(item); } body.append(timeline); } rail.append(summary, body); return rail; }
 function renderDetail(conversation) {
   const detail = document.getElementById('conversation-detail');
@@ -99,7 +145,7 @@ function renderDetail(conversation) {
   title.append(make('p', 'reader-sub', `${participantNames || 'Participants unavailable'} · Round-based conversation view`));
   heading.append(title, pill(stateLabel(conversation.current_state), stateClass(conversation.current_state)));
   const facts = make('div', 'facts');
-  [`Rounds completed ${Number(conversation.rounds_completed) || 0} of ${Number(conversation.rounds_requested) || 0}`, `Started ${formatTs(conversation.created_at)}`, `Updated ${formatTs(conversation.updated_at)}`, `Duration ${formatDurationMs(conversation.total_duration_ms)}`, `Tokens ${Number.isFinite(conversation.total_tokens) ? conversation.total_tokens : '—'}`, `Synthesis ${label(conversation.synthesis_state)}`].forEach(fact => facts.append(pill(fact)));
+  [`Rounds completed ${(Number.isFinite(conversation.rounds_completed) ? conversation.rounds_completed : 'Unknown')} of ${(Number.isFinite(conversation.rounds_requested) ? conversation.rounds_requested : 'Unknown')}`, `Started ${formatTs(conversation.created_at)}`, `Updated ${formatTs(conversation.updated_at)}`, `Duration ${formatDurationMs(conversation.total_duration_ms)}`, `Tokens ${Number.isFinite(conversation.total_tokens) ? conversation.total_tokens : '—'}`, `Synthesis ${label(conversation.synthesis_state)}`].forEach(fact => facts.append(pill(fact)));
   const grid = make('div', 'reader-grid');
   const transcriptPanel = make('section', 'transcript-panel');
   transcriptPanel.setAttribute('aria-labelledby', 'transcript-heading');
@@ -270,8 +316,76 @@ function renderTranscript(payload, conversationId) {
   if (target) target.replaceWith(conversation);
   announceConversationStatus(`${conversationId || 'Conversation'} loaded: ${grouped.rounds.length} ${grouped.rounds.length === 1 ? 'round' : 'rounds'}.`);
 }
-async function loadTranscript(activeId) { try { renderTranscript(await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}${TRANSCRIPT_SUFFIX}`), activeId); } catch (error) { if (error instanceof ApiError && error.status === 403) transcriptState('Transcript is local-only. Open this page at localhost on the API host.'); else if (error instanceof ApiError && error.status === 404) transcriptState('Transcript is unavailable on this local Ops API instance.'); else { transcriptState('Transcript could not be loaded.'); showError(`Transcript load failure: ${error.message}`); } } }
-async function loadPage() { try { const snapshot = await fetchJson(LIST_URL); if (!snapshot || typeof snapshot !== 'object' || !Array.isArray(snapshot.conversations)) throw new Error('Malformed conversation data'); if (snapshot.availability === 'unavailable') { document.getElementById('conversation-count').textContent = 'Unavailable'; document.getElementById('conversation-list').replaceChildren(empty('Conversation storage is unavailable. No routing or provider health is inferred.')); setReaderState('Conversation reader unavailable', 'Restore read-only conversation storage, then refresh the page.'); return; } const conversations = snapshot.conversations.filter(item => item && typeof item.conversation_id === 'string'); const activeId = conversations.some(item => item.conversation_id === selectedId()) ? selectedId() : conversations[0]?.conversation_id; renderList(conversations, activeId); if (!activeId) { setReaderState('No recent conversations', 'There is no persisted conversation to display.'); return; } try { const conversation = await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}`); renderDetail(conversation); await loadTranscript(activeId); } catch (error) { setReaderState('Conversation detail unavailable', 'The selected conversation could not be loaded.'); showError(`Conversation detail unavailable: ${error.message}`); } } catch (error) { document.getElementById('conversation-count').textContent = 'Error'; document.getElementById('conversation-list').replaceChildren(empty('Recent conversations could not be loaded.')); setReaderState('Conversation reader unavailable', 'Check the read-only Runtime API and refresh.'); showError(`ACP conversations unavailable: ${error.message}`); } finally { document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()}`; } }
+let acpGeneration = 0;
+async function loadTranscript(activeId, generation) {
+  retainedStatus('conversation-detail', 'Loading');
+  try {
+    const payload = await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}${TRANSCRIPT_SUFFIX}`);
+    if (generation !== acpGeneration) return;
+    if (transcriptMessages(payload) === null) throw new Error('Malformed transcript response');
+    renderTranscript(payload, activeId);
+    retainedStatus('conversation-detail', 'Unknown', { fetched: true, note: 'Transcript event times are not source age.' });
+  } catch (error) {
+    if (generation !== acpGeneration) return;
+    if (error instanceof ApiError && error.status === 403) transcriptState('Transcript is local-only. Open this page at localhost on the API host.');
+    else if (error instanceof ApiError && error.status === 404) transcriptState('Transcript is unavailable on this local Ops API instance.');
+    else { transcriptState('Transcript could not be loaded.'); showError('Transcript request or parse failure.'); }
+    retainedStatus('conversation-detail', error instanceof ApiError && [403, 404].includes(error.status) ? 'Unavailable' : 'Error', { note: 'Conversation metadata remains available; transcript fetch failed.' });
+  }
+}
+async function loadPage() {
+  const generation = ++acpGeneration;
+  document.getElementById('error-banner').style.display = 'none';
+  retainedStatus('conversation-list', 'Loading');
+  retainedStatus('conversation-detail', 'Loading');
+  try {
+    const snapshot = await fetchJson(LIST_URL);
+    if (generation !== acpGeneration) return;
+    if (!snapshot || !Array.isArray(snapshot.conversations)) throw new Error('Malformed conversation data');
+    if (snapshot.availability === 'unavailable') {
+      document.getElementById('conversation-count').textContent = 'Unavailable';
+      document.getElementById('conversation-list').replaceChildren(empty('Conversation storage is unavailable. No routing or provider health is inferred.'));
+      setReaderState('Conversation reader unavailable', 'Restore read-only conversation storage, then refresh the page.');
+      retainedStatus('conversation-list', 'Unavailable');
+      retainedStatus('conversation-detail', 'Unavailable');
+      return;
+    }
+    const conversations = snapshot.conversations.filter(item => item && typeof item.conversation_id === 'string'
+      && (!item.participants || Array.isArray(item.participants)));
+    const activeId = conversations.some(item => item.conversation_id === selectedId()) ? selectedId() : conversations[0]?.conversation_id;
+    renderList(conversations, activeId);
+    retainedStatus('conversation-list', conversations.length !== snapshot.conversations.length ? 'Partial' : conversations.length ? 'Unknown' : 'Empty',
+      { fetched: true, note: 'Recent persisted rows only; source age and whole-history coverage unknown.' });
+    document.getElementById('last-refresh').textContent = `Last successful list fetch ${new Date().toLocaleTimeString()} · Source age unknown`;
+    if (!activeId) {
+      setReaderState('No recent conversations', 'No conversation rows returned; source age and coverage unknown.');
+      retainedStatus('conversation-detail', 'Unknown');
+      return;
+    }
+    try {
+      const conversation = await fetchJson(`${DETAIL_URL}${encodeURIComponent(activeId)}`);
+      if (generation !== acpGeneration) return;
+      if (!conversation || conversation.conversation_id !== activeId || !Array.isArray(conversation.events)
+        || conversation.events.some(row => !row || typeof row !== 'object') || !Array.isArray(conversation.participants)) throw new Error('Malformed conversation detail');
+      renderDetail(conversation);
+      retainedStatus('conversation-detail', 'Unknown', { fetched: true, note: 'Persisted metadata; event times are not source age.' });
+      await loadTranscript(activeId, generation);
+    } catch (error) {
+      if (generation !== acpGeneration) return;
+      setReaderState('Conversation detail unavailable', 'The selected conversation could not be loaded.');
+      showError('Conversation detail request or parse failure.');
+      retainedStatus('conversation-detail', 'Error');
+    }
+  } catch (error) {
+    if (generation !== acpGeneration) return;
+    document.getElementById('conversation-count').textContent = 'Error';
+    document.getElementById('conversation-list').replaceChildren(empty('Recent conversations could not be loaded.'));
+    setReaderState('Conversation reader unavailable', 'Check the read-only Runtime API and refresh.');
+    showError('ACP conversation request or parse failure.');
+    retainedStatus('conversation-list', 'Error');
+    retainedStatus('conversation-detail', 'Unavailable');
+  }
+}
 loadPage();
 </script>
 </body>

@@ -29,11 +29,13 @@ a { color: var(--blue); text-decoration: none; }
 .stat { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
 .stat .label { color: var(--text2); font-size: 12px; text-transform: uppercase; }
 .stat .value { font-size: 28px; font-weight: 700; margin: 8px 0; }
-.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
 th { color: var(--text2); font-size: 11px; text-transform: uppercase; }
 .banner { display: none; padding: 10px 12px; border-radius: 8px; background: rgba(248,81,73,0.15); border: 1px solid rgba(248,81,73,0.35); color: var(--red); }
+.card { min-width: 0; overflow-x: auto; }
+input, select { max-width: 100%; min-width: 0; }
 .list { display: grid; gap: 8px; font-size: 13px; }
 .empty { color: var(--text2); font-size: 13px; }
 @media (max-width: 720px) { .topbar { flex-wrap: wrap; } }
@@ -106,17 +108,63 @@ th { color: var(--text2); font-size: 11px; text-transform: uppercase; }
 </div>
 
 <script>
+
+// Retained panel clocks: response assembly and cache age never certify source age.
+const retainedPanels = new Map();
+function retainedStatus(id, state, options = {}) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  let record = retainedPanels.get(id);
+  if (!record) {
+    const node = document.createElement('p');
+    node.className = 'muted retained-status';
+    node.style.cssText = 'font-size:12px;overflow-wrap:anywhere;padding:8px 0';
+    target.after(node);
+    const announcement = document.createElement('span');
+    announcement.setAttribute('role', 'status');
+    announcement.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)';
+    node.after(announcement);
+    record = { node, announcement, fetched: null, received: null, sourceAge: null, cacheAge: null };
+    retainedPanels.set(id, record);
+  }
+  if (options.fetched) {
+    record.fetched = Date.now();
+    record.received = performance.now();
+    record.sourceAge = options.sourceAge;
+    record.cacheAge = options.cacheAge;
+  }
+  if (record.state !== state) record.announcement.textContent = `${id.replaceAll('-', ' ')}: ${state}`;
+  record.state = state;
+  record.note = options.note || '';
+  target.setAttribute('aria-busy', String(state === 'Loading'));
+  record.node.dataset.state = state;
+  paintRetainedStatus(record);
+}
+function paintRetainedStatus(record) {
+  const elapsed = record.received === null ? 0 : Math.max(0, (performance.now() - record.received) / 1000);
+  const age = value => typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? `${Math.floor(value + elapsed)}s` : 'unknown';
+  const source = age(record.sourceAge);
+  const cache = age(record.cacheAge);
+  record.node.textContent = [record.state, `Source age ${source}`,
+    cache === 'unknown' ? '' : `Cache/read age ${cache}`,
+    record.fetched === null ? 'No successful fetch' : `Last successful fetch ${new Date(record.fetched).toISOString()}`,
+    record.note].filter(Boolean).join(' · ');
+}
+setInterval(() => retainedPanels.forEach(paintRetainedStatus), 1000);
+// End retained panel clocks.
+
 const API_TIMEOUT_MS = 5000;
 let activeWindow = 'all_time';
 
 function esc(value) {
   const node = document.createElement('span');
   node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
+  return node.innerHTML.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 }
 
-function fmtInt(value) { return Number(value || 0).toLocaleString(); }
-function fmtCost(value) { return `~$${Number(value || 0).toFixed(2)}`; }
+function fmtInt(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value.toLocaleString() : 'Unknown'; }
+function fmtCost(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? `~$${value.toFixed(2)}` : 'Unknown'; }
 
 async function fetchJson(url) {
   const controller = new AbortController();
@@ -153,11 +201,11 @@ function setBanner(message) {
 function renderTable(targetId, rows) {
   const target = document.getElementById(targetId);
   if (!rows.length) {
-    target.innerHTML = '<div class="empty">No data for this window</div>';
+    target.innerHTML = '<div class="empty">No rows returned for this window; source age and coverage unknown</div>';
     return;
   }
   target.innerHTML = `<table><thead><tr><th>Name</th><th>Calls</th><th>Prompt est.</th><th>Output est.</th><th>USD est.</th></tr></thead><tbody>${
-    rows.map(row => `<tr><td>${esc(row.name)}</td><td>${row.calls}</td><td>${fmtInt(row.prompt_tokens_est)}</td><td>${fmtInt(row.response_tokens_est)}</td><td>${fmtCost(row.cost_usd_est)}</td></tr>`).join('')
+    rows.map(row => `<tr><td>${esc(row.name)}</td><td>${fmtInt(row.calls)}</td><td>${fmtInt(row.prompt_tokens_est)}</td><td>${fmtInt(row.response_tokens_est)}</td><td>${fmtCost(row.cost_usd_est)}</td></tr>`).join('')
   }</tbody></table>`;
 }
 
@@ -166,11 +214,11 @@ function renderWarnings(windowData) {
     `${item.phase}: median prompt_chars=${fmtInt(item.median_prompt_chars)} across ${item.calls} call(s)`)];
   document.getElementById('warnings').innerHTML = items.length
     ? `<div class="list">${items.map(item => `<div>${esc(item)}</div>`).join('')}</div>`
-    : '<div class="empty">No warnings in this window</div>';
+    : '<div class="empty">No warning rows returned; source coverage unknown</div>';
 }
 
 function renderSummary(payload) {
-  const windows = payload.windows || {};
+  const windows = payload.windows;
   document.getElementById('summary').innerHTML = Object.entries(windows).map(([key, data]) => {
     const totals = data.totals || {};
     const active = key === activeWindow ? ' style="border-color:var(--red)"' : '';
@@ -185,14 +233,15 @@ function renderSummary(payload) {
       <div class="label">${label}</div>
       ${heroValue}
       <div class="muted">${fmtInt(totals.prompt_tokens_est)} prompt est. · ${fmtInt(totals.response_tokens_est)} output est.</div>
-      <div class="muted">${totals.calls || 0} call(s)</div>
+      <div class="muted">${fmtInt(totals.calls)} call(s)</div>
       ${runtimeNote}
     </div>`;
   }).join('');
 }
 
 function renderWindow(payload) {
-  const data = payload.windows?.[activeWindow] || { totals: {}, per_phase: [], per_model: [], top_modules: [], warnings: [] };
+  const data = payload.windows[activeWindow];
+  if (!data) throw new Error('Malformed cost window');
   document.getElementById('scope-label').textContent = `Scope: ${data.scope?.label || 'all'}`;
   renderTable('per-phase', data.per_phase || []);
   renderTable('per-model', data.per_model || []);
@@ -203,22 +252,45 @@ function renderWindow(payload) {
 function setWindow(name) {
   activeWindow = name;
   document.querySelectorAll('[data-window]').forEach(btn => btn.classList.toggle('active', btn.dataset.window === name));
-  if (window.__costPayload) renderWindow(window.__costPayload);
+  if (window.__costPayload) { renderSummary(window.__costPayload); renderWindow(window.__costPayload); }
 }
 
+let costGeneration = 0;
+const costTargets = ['summary', 'per-phase', 'per-model', 'top-modules', 'warnings'];
+function validateCost(payload) {
+  if (!payload || !payload.windows || typeof payload.windows !== 'object' || Array.isArray(payload.windows)) throw new Error('Malformed cost response');
+  for (const name of ['all_time', 'last_7_days', 'last_30_days']) {
+    const data = payload.windows[name];
+    if (!data || !data.totals || typeof data.totals !== 'object' || Array.isArray(data.totals)) throw new Error('Malformed cost totals');
+    for (const field of ['per_phase', 'per_model', 'top_modules', 'warnings', 'prompt_bloat_watch']) {
+      if (!Array.isArray(data[field])) throw new Error('Malformed cost rows');
+      if (field === 'warnings' ? data[field].some(row => typeof row !== 'string')
+        : data[field].some(row => !row || typeof row !== 'object' || Array.isArray(row) || (field !== 'prompt_bloat_watch' && typeof row.name !== 'string'))) throw new Error('Malformed cost row');
+    }
+  }
+  return payload;
+}
 async function refresh() {
+  const generation = ++costGeneration;
+  window.__costPayload = null;
+  costTargets.forEach(id => retainedStatus(id, 'Loading'));
   try {
-    const payload = await fetchJson(buildUrl());
+    const payload = validateCost(await fetchJson(buildUrl()));
+    if (generation !== costGeneration) return;
     window.__costPayload = payload;
     renderSummary(payload);
     renderWindow(payload);
     setBanner('');
-    document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+    costTargets.forEach(id => retainedStatus(id, payload.windows[activeWindow].totals.calls === 0 ? 'Empty' : 'Unknown',
+      { fetched: true, note: 'Historical estimates; collection coverage and source age unknown. Spend is not account capacity.' }));
+    document.getElementById('last-refresh').textContent = `Last successful fetch ${new Date().toLocaleTimeString()} · Source age unknown`;
   } catch (error) {
+    if (generation !== costGeneration) return;
+    window.__costPayload = null;
     setBanner(error.message);
-    document.getElementById('summary').innerHTML = '';
-    ['per-phase', 'per-model', 'top-modules', 'warnings'].forEach(id => {
-      document.getElementById(id).innerHTML = '<div class="empty">Unavailable</div>';
+    costTargets.forEach(id => {
+      document.getElementById(id).textContent = 'Cost data unavailable';
+      retainedStatus(id, 'Error', { note: error.message });
     });
   }
 }

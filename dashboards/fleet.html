@@ -215,13 +215,68 @@ button, input, select { font: inherit; }
 </main>
 
 <script>
+
+// Retained panel clocks: response assembly and cache age never certify source age.
+const retainedPanels = new Map();
+function retainedStatus(id, state, options = {}) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  let record = retainedPanels.get(id);
+  if (!record) {
+    const node = document.createElement('p');
+    node.className = 'muted retained-status';
+    node.style.cssText = 'font-size:12px;overflow-wrap:anywhere;padding:8px 0';
+    target.after(node);
+    const announcement = document.createElement('span');
+    announcement.setAttribute('role', 'status');
+    announcement.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)';
+    node.after(announcement);
+    record = { node, announcement, fetched: null, received: null, sourceAge: null, cacheAge: null };
+    retainedPanels.set(id, record);
+  }
+  if (options.fetched) {
+    record.fetched = Date.now();
+    record.received = performance.now();
+    record.sourceAge = options.sourceAge;
+    record.cacheAge = options.cacheAge;
+  }
+  if (record.state !== state) record.announcement.textContent = `${id.replaceAll('-', ' ')}: ${state}`;
+  record.state = state;
+  record.note = options.note || '';
+  target.setAttribute('aria-busy', String(state === 'Loading'));
+  record.node.dataset.state = state;
+  paintRetainedStatus(record);
+}
+function paintRetainedStatus(record) {
+  const elapsed = record.received === null ? 0 : Math.max(0, (performance.now() - record.received) / 1000);
+  const age = value => typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? `${Math.floor(value + elapsed)}s` : 'unknown';
+  const source = age(record.sourceAge);
+  const cache = age(record.cacheAge);
+  record.node.textContent = [record.state, `Source age ${source}`,
+    cache === 'unknown' ? '' : `Cache/read age ${cache}`,
+    record.fetched === null ? 'No successful fetch' : `Last successful fetch ${new Date(record.fetched).toISOString()}`,
+    record.note].filter(Boolean).join(' · ');
+}
+setInterval(() => retainedPanels.forEach(paintRetainedStatus), 1000);
+function retainedAge(value, received = performance.now(), usable = true) {
+  if (!usable || typeof value !== 'number' || !Number.isFinite(value) || value < 0) return 'unknown';
+  return `<span data-retained-age="${value}" data-received="${received}">${Math.floor(value + Math.max(0, (performance.now() - received) / 1000))}s</span>`;
+}
+setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node => {
+  const value = Number(node.dataset.retainedAge);
+  const received = Number(node.dataset.received);
+  if (Number.isFinite(value) && Number.isFinite(received)) node.textContent = `${Math.floor(value + Math.max(0, (performance.now() - received) / 1000))}s`;
+}), 1000);
+// End retained panel clocks.
+
 const API_TIMEOUT_MS = 5000;
 let refreshTimer = null;
 
 function escapeHtml(value) {
   const node = document.createElement('span');
   node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
+  return node.innerHTML.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 }
 
 function short(value, fallback = '—') {
@@ -241,7 +296,7 @@ function pill(value) {
 }
 
 function table(headers, rows, empty) {
-  if (!rows.length) return `<div class="empty">${escapeHtml(empty)}</div>`;
+  if (!rows.length) return `<div class="empty">${escapeHtml(empty)} Source age and whole-list coverage unknown.</div>`;
   return `<div class="table-wrap"><table class="table"><thead><tr>${headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
 }
 
@@ -319,23 +374,23 @@ function renderHealth(health) {
     ? ` · ${runtimeRecords} runtime/delegate records in window`
     : '';
   document.getElementById('plane-mode').textContent = `${mode} · durable authority`;
-  document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Authority ${authorityState} · ${short(authority.jobs?.total, '0')} fleet-comms authority jobs in the last ${short(authority.window?.hours, '24')}h${runtimeCopy}` : 'Durable database not present yet';
+  document.getElementById('plane-status').textContent = health.schema?.db_exists ? `Authority ${authorityState} · ${short(authority.jobs?.total, 'Unknown')} fleet-comms authority jobs in the last ${short(authority.window?.hours, '24')}h${runtimeCopy}` : 'Durable database not present yet';
   document.getElementById('plane-dot').className = `signal-dot ${healthy ? 'live' : 'warn'}`;
 }
 
 function renderOverview(data) {
   const counts = data.counts || {};
-  const set = (id, value) => { document.getElementById(id).textContent = short(value, '0'); };
+  const set = (id, value) => { document.getElementById(id).textContent = short(value, 'Unknown'); };
   set('requests-total', counts.requests?.total); set('messages-total', counts.messages?.total);
   set('reviews-total', counts.reviews?.total); set('acp-total', counts.acp_conversations?.total);
   set('dead-total', counts.dead_letters?.total);
   document.getElementById('requests-detail').textContent = summaryDetail(counts.requests?.by_state);
   document.getElementById('messages-detail').textContent = summaryDetail(counts.messages?.by_kind);
   document.getElementById('reviews-detail').textContent = summaryDetail(counts.reviews?.by_state);
-  document.getElementById('acp-detail').textContent = counts.acp_conversations?.total ? 'Event timelines available' : 'No durable ACP rows yet';
-  document.getElementById('dead-detail').textContent = counts.dead_letters?.total ? 'Follow-up evidence available' : 'No dead letters observed';
+  document.getElementById('acp-detail').textContent = counts.acp_conversations?.total == null ? 'Conversation count unknown' : counts.acp_conversations.total > 0 ? 'Event timelines available' : 'No durable ACP rows returned; coverage unknown';
+  document.getElementById('dead-detail').textContent = counts.dead_letters?.total == null ? 'Dead-letter count unknown' : counts.dead_letters.total > 0 ? 'Follow-up evidence available' : 'No dead-letter rows returned; coverage unknown';
   const legacy = counts.legacy_requests || {};
-  document.getElementById('legacy-requests-note').textContent = `${short(legacy.total, '0')} legacy request rows remain readable for compatibility and are excluded from current authority health.`;
+  document.getElementById('legacy-requests-note').textContent = `${short(legacy.total, 'Unknown')} legacy request rows remain readable for compatibility and are excluded from current authority health.`;
 }
 
 function renderContextHealth(status) {
@@ -358,23 +413,23 @@ function renderContextHealth(status) {
   const use = objectValue(status.use);
   const consumers = Object.entries(objectValue(use.by_consumer));
   const consumerCopy = consumers.length
-    ? consumers.map(([consumer, count]) => `${escapeHtml(consumer)} ${escapeHtml(short(count, '0'))}`).join(' · ')
+    ? consumers.map(([consumer, count]) => `${escapeHtml(consumer)} ${escapeHtml(short(count, 'Unknown'))}`).join(' · ')
     : 'No proven use receipts';
-  const lag = acp.lag_seconds == null ? 'Not reported' : `${escapeHtml(short(acp.lag_seconds, '0'))}s`;
+  const lag = acp.lag_seconds == null ? 'Not reported' : `${escapeHtml(short(acp.lag_seconds, 'Unknown'))}s`;
   const reconciliation = acp.last_reconciliation_at
     ? formatTime(acp.last_reconciliation_at)
     : 'Not reported';
   target.innerHTML = `
     <div class="health-grid">
-      <div class="health-item"><strong>${escapeHtml(short(counts.promoted, '0'))}</strong><span>Verified locators</span></div>
-      <div class="health-item"><strong>${escapeHtml(short(health.pending ?? counts.pending, '0'))}</strong><span>Pending claims</span></div>
-      <div class="health-item"><strong>${escapeHtml(short(health.tombstoned ?? counts.tombstoned, '0'))}</strong><span>Tombstoned</span></div>
+      <div class="health-item"><strong>${escapeHtml(short(counts.promoted, 'Unknown'))}</strong><span>Verified locators</span></div>
+      <div class="health-item"><strong>${escapeHtml(short(health.pending ?? counts.pending, 'Unknown'))}</strong><span>Pending claims</span></div>
+      <div class="health-item"><strong>${escapeHtml(short(health.tombstoned ?? counts.tombstoned, 'Unknown'))}</strong><span>Tombstoned</span></div>
       <div class="health-item"><strong>${escapeHtml(short(health.dangling, 'Not reported'))}</strong><span>Dangling locators</span></div>
       <div class="health-item"><strong>${lag}</strong><span>Projection lag</span></div>
       <div class="health-item"><strong>${escapeHtml(short(acp.retries, 'Not reported'))}</strong><span>ACP retries</span></div>
     </div>
     <div class="context-section"><h4>Reconciliation</h4><div class="context-facts"><span>Last reconciliation: ${escapeHtml(reconciliation)}</span><span>Last projected event: ${escapeHtml(formatTime(projection.last_event_at))}</span><span>Failures: ${escapeHtml(short(acp.failures, 'Not reported'))}</span></div></div>
-    <div class="context-section"><h4>Proven use by consumer</h4><div class="context-facts"><span>${consumerCopy}</span><span>${escapeHtml(short(use.receipts, '0'))} body-free use receipts · last ${escapeHtml(formatTime(use.last_use_at))}</span><span>Initiating orchestrator is shown only when a canonical source explicitly supplies it; it is never inferred here.</span></div></div>`;
+    <div class="context-section"><h4>Proven use by consumer</h4><div class="context-facts"><span>${consumerCopy}</span><span>${escapeHtml(short(use.receipts, 'Unknown'))} body-free use receipts · last ${escapeHtml(formatTime(use.last_use_at))}</span><span>Initiating orchestrator is shown only when a canonical source explicitly supplies it; it is never inferred here.</span></div></div>`;
 }
 
 function contextSourceLabel(kind) {
@@ -469,45 +524,59 @@ function renderConversationContext(conversationId, payload, relatedPayload) {
 
 async function refreshConversationContext(contextStatus, isCurrent = () => true) {
   renderContextHealth(contextStatus);
+  const projection = contextStatus.recall?.projection;
+  const failed = contextStatus.recall?.reason === 'projection_request_failed';
+  retainedStatus('context-health-content', failed ? 'Error' : projection?.available === true ? 'Unknown' : 'Unavailable',
+    { fetched: !failed, note: 'Body-free projection diagnostics; event and projection lag are not source age.' });
   const conversationId = filters().conversation;
   if (!conversationId) {
     renderConversationContext('', {}, {});
+    retainedStatus('context-used-content', 'Unknown', { note: 'No exact conversation selected; no context search fetched.' });
     return;
   }
   try {
     const params = new URLSearchParams({ q: conversationId, limit: '10' });
     const payload = await fetchJson(`/api/ops/entire-context/search?${params}`);
+    if (!payload || typeof payload !== 'object' || !Array.isArray(payload.results) || payload.results.some(row => !row || typeof row !== 'object')) throw new Error('Malformed context search');
     const exact = listValue(payload.results).find(card => card.kind === 'acp_conversation' && card.canonical_id === conversationId);
     let relatedPayload = { results: [], omitted: [] };
     if (exact && typeof exact.git_sha === 'string') {
       const related = new URLSearchParams({ q: exact.git_sha, limit: '10' });
       relatedPayload = await fetchJson(`/api/ops/entire-context/search?${related}`);
+      if (!relatedPayload || !Array.isArray(relatedPayload.results) || relatedPayload.results.some(row => !row || typeof row !== 'object')) throw new Error('Malformed related context search');
     }
-    if (isCurrent()) renderConversationContext(conversationId, payload, relatedPayload);
+    if (isCurrent()) {
+      renderConversationContext(conversationId, payload, relatedPayload);
+      retainedStatus('context-used-content', payload.available === false ? 'Unavailable' : payload.omitted?.length || relatedPayload.omitted?.length ? 'Partial' : 'Unknown',
+        { fetched: true, note: 'Bounded reverified locators; canonical event time is not source age.' });
+    }
   } catch {
-    if (isCurrent()) renderConversationContext(conversationId, { available: false, reason: 'projection_request_failed' }, {});
+    if (isCurrent()) {
+      renderConversationContext(conversationId, { available: false, reason: 'projection_request_failed' }, {});
+      retainedStatus('context-used-content', 'Error');
+    }
   }
 }
 
 function renderOperations(data) {
   const broker = data.broker || {};
-  const processValue = broker.live_process_count == null ? 'Unavailable' : short(broker.live_process_count, '0');
+  const processValue = broker.live_process_count == null ? 'Unavailable' : short(broker.live_process_count, 'Unknown');
   document.getElementById('broker-operations-content').innerHTML = `
     <div class="operations-stats">
-      <div class="operation-stat"><strong>${escapeHtml(short(broker.unacknowledged_depth, '0'))}</strong><span>Unacknowledged</span></div>
+      <div class="operation-stat"><strong>${escapeHtml(short(broker.unacknowledged_depth, 'Unknown'))}</strong><span>Unacknowledged</span></div>
       <div class="operation-stat"><strong>${escapeHtml(processValue)}</strong><span>Live processes</span></div>
-      <div class="operation-stat"><strong>${escapeHtml(short(broker.size_kb, '0'))}</strong><span>Database KiB</span></div>
+      <div class="operation-stat"><strong>${escapeHtml(short(broker.size_kb, 'Unknown'))}</strong><span>Database KiB</span></div>
       <div class="operation-stat"><strong>${escapeHtml(short(broker.availability))}</strong><span>Read status</span></div>
     </div>`;
 
   const zombies = data.zombies || {};
   const zombieRows = (zombies.items || []).map(item => `<tr><td>${pill(item.severity)}</td><td>${escapeHtml(short(item.type).replaceAll('_', ' '))}</td><td>${escapeHtml(short(item.age_hours ?? item.message_count_1h ?? item.error_count))}</td></tr>`);
   const zombieEmpty = zombies.availability === 'unavailable' ? 'Zombie read model unavailable.' : 'No zombie signals observed in the available read models.';
-  const zombieBound = zombies.truncated ? `<div class="empty">Showing ${escapeHtml(short(zombies.returned, '0'))} of ${escapeHtml(short(zombies.total, '0'))} sanitized signals.</div>` : '';
+  const zombieBound = zombies.truncated ? `<div class="empty">Showing ${escapeHtml(short(zombies.returned, 'Unknown'))} of ${escapeHtml(short(zombies.total, 'Unknown'))} sanitized signals.</div>` : '';
   document.getElementById('zombie-operations-content').innerHTML = zombieBound + table(['Severity', 'Type', 'Bounded metric'], zombieRows, zombieEmpty);
 
   const batches = data.batches || {};
-  const batchRows = (batches.tracks || []).map(item => `<tr><td class="mono">${escapeHtml(short(item.track))}</td><td>${pill(item.health)}</td><td>${escapeHtml(short(item.research_done, '0'))}/${escapeHtml(short(item.total_expected, '0'))}</td><td>${escapeHtml(short(item.remaining, '0'))}</td><td>${escapeHtml(short(item.throughput_per_hour, '0'))}/h</td></tr>`);
+  const batchRows = (batches.tracks || []).map(item => `<tr><td class="mono">${escapeHtml(short(item.track))}</td><td>${pill(item.health)}</td><td>${escapeHtml(short(item.research_done, 'Unknown'))}/${escapeHtml(short(item.total_expected, 'Unknown'))}</td><td>${escapeHtml(short(item.remaining, 'Unknown'))}</td><td>${escapeHtml(short(item.throughput_per_hour, 'Unknown'))}/h</td></tr>`);
   const batchErrors = (Array.isArray(batches.errors) ? batches.errors : [])
     .filter(item => typeof item === 'string' && item.length > 0 && item.length <= 80);
   const batchDegraded = batches.availability === 'degraded'
@@ -518,7 +587,7 @@ function renderOperations(data) {
     : batches.availability === 'degraded'
       ? 'No batch tracks observed while the process probe is degraded.'
       : 'No batch tracks observed in the available read models.';
-  const batchBound = batches.truncated ? `<div class="empty">Showing ${escapeHtml(short(batches.returned, '0'))} of ${escapeHtml(short(batches.total, '0'))} sanitized tracks.</div>` : '';
+  const batchBound = batches.truncated ? `<div class="empty">Showing ${escapeHtml(short(batches.returned, 'Unknown'))} of ${escapeHtml(short(batches.total, 'Unknown'))} sanitized tracks.</div>` : '';
   document.getElementById('batch-operations-content').innerHTML = batchDegraded + batchBound + table(['Track', 'Health', 'Research', 'Remaining', 'Throughput'], batchRows, batchEmpty);
 }
 
@@ -562,20 +631,20 @@ function renderProjects(data) {
     if (!host || typeof host !== 'object') continue;
     const hostId = short(host.host_id);
     const freshness = short(host.freshness);
-    const ageText = host.age_s == null ? '—' : `${Math.round(Number(host.age_s) * 100) / 100}s`;
+    const ageText = retainedAge(host.age_s, performance.now(), ['fresh', 'stale'].includes(host.freshness));
     const primary = objectValue(host.primary);
     const head = short(primary.head_sha, '—');
     const origin = short(primary.origin_main_sha, '—');
     const dirty = primary.dirty_count != null ? String(primary.dirty_count) : '—';
     const services = listValue(host.services);
     if (!services.length) {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td class="mono">${escapeHtml(ageText)}</td><td class="mono">${escapeHtml(head)}</td><td class="mono">${escapeHtml(origin)}</td><td>${escapeHtml(dirty)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td class="mono">${ageText}</td><td class="mono">${escapeHtml(head)}</td><td class="mono">${escapeHtml(origin)}</td><td>${escapeHtml(dirty)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
       continue;
     }
     services.forEach((service, index) => {
       const drift = service.drift;
       const driftLabel = drift === true ? 'drift' : drift === false ? 'sync' : String(drift || 'unknown');
-      const unresolved = service.serving_mode === 'unknown';
+      const unresolved = !['checkout', 'release'].includes(service.serving_mode);
       const modeBadge = unresolved ? 'unresolved' : service.serving_mode === 'checkout' ? 'checkout' : 'release';
       const sha = unresolved
         ? short(service.unresolved_reason, 'unknown reason').replaceAll('_', ' ')
@@ -585,7 +654,7 @@ function renderProjects(data) {
       const attention = index === 0 && Array.isArray(host.attention) && host.attention.length
         ? host.attention.join(', ')
         : '—';
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td class="mono">${escapeHtml(ageText)}</td><td class="mono">${escapeHtml(head)}</td><td class="mono">${escapeHtml(origin)}</td><td>${escapeHtml(dirty)}</td><td>${escapeHtml(short(service.name))}</td><td>${pill(service.state)}</td><td>${pill(modeBadge)} <span class="mono">${escapeHtml(sha)}</span></td><td>${pill(driftLabel)}</td><td class="muted">${escapeHtml(attention)}</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td class="mono">${ageText}</td><td class="mono">${escapeHtml(head)}</td><td class="mono">${escapeHtml(origin)}</td><td>${escapeHtml(dirty)}</td><td>${escapeHtml(short(service.name))}</td><td>${pill(service.state)}</td><td>${pill(modeBadge)} <span class="mono">${escapeHtml(sha)}</span></td><td>${pill(driftLabel)}</td><td class="muted">${escapeHtml(attention)}</td></tr>`);
     });
   }
   document.getElementById('projects-content').innerHTML = table(
@@ -602,7 +671,7 @@ function renderWorkers(data) {
   for (const host of hosts) {
     if (!host || typeof host !== 'object') continue;
     const hostId = short(host.host_id);
-    const freshness = short(host.freshness);
+    const freshness = hostId === 'unattributed' ? 'unknown' : short(host.freshness);
     const workersStatus = short(host.workers_status);
     if (workersStatus === 'unreported') {
       banners.push(`<div class="context-muted">Workers unknown for ${escapeHtml(hostId)} — reporter has not published a v2 workers block.</div>`);
@@ -612,21 +681,21 @@ function renderWorkers(data) {
     }
     const workers = listValue(host.workers);
     if (!workers.length) {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td>${pill(workersStatus)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}<br>Report age ${retainedAge(host.age_s, performance.now(), hostId !== 'unattributed' && ['fresh', 'stale'].includes(host.freshness))}</td><td>${pill(freshness)}</td><td>${pill(workersStatus)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
       continue;
     }
     workers.forEach(worker => {
       const related = Array.isArray(worker.related) && worker.related.length
         ? worker.related.map(item => `${short(item.source)}:${short(item.id)}`).join(', ')
         : '—';
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(freshness)}</td><td>${pill(workersStatus)}</td><td class="mono">${escapeHtml(short(worker.source))}</td><td>${pill(worker.state)}</td><td class="mono">${escapeHtml(short(worker.kind))}</td><td class="mono">${escapeHtml(short(worker.agent))}</td><td class="mono">${escapeHtml(short(worker.id))}</td><td class="muted">${escapeHtml(related)}</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}<br>Report age ${retainedAge(host.age_s, performance.now(), hostId !== 'unattributed' && ['fresh', 'stale'].includes(host.freshness))}</td><td>${pill(freshness)}</td><td>${pill(workersStatus)}</td><td class="mono">${escapeHtml(short(worker.source))}</td><td>${pill(worker.state === 'live' && freshness !== 'fresh' ? 'last observed live; current state unknown' : worker.state)}</td><td class="mono">${escapeHtml(short(worker.kind))}</td><td class="mono">${escapeHtml(short(worker.agent))}</td><td class="mono">${escapeHtml(short(worker.id))}</td><td class="muted">${escapeHtml(related)}</td></tr>`);
     });
   }
   const bannerHtml = banners.join('');
   document.getElementById('workers-content').innerHTML = bannerHtml + table(
     ['Host', 'Freshness', 'Workers', 'Source', 'State', 'Kind', 'Agent', 'Id', 'Related'],
     rows,
-    'No AI workers observed. Remote hosts must publish schema v2 workers through the project-state reporter.',
+    'No worker rows returned; fleet coverage and source age unknown. Remote hosts must publish schema v2 workers through the project-state reporter.',
   );
 }
 
@@ -661,7 +730,7 @@ function renderOccupancy(data) {
     if (!host || typeof host !== 'object') continue;
     const hostId = short(host.host_id);
     const occupants = listValue(host.occupants);
-    const idleState = host.burn_state || (host.status === 'unavailable' ? 'unknown' : (host.idle_or_empty ? 'idle' : 'active'));
+    const idleState = host.burn_state || (host.status === 'unavailable' ? 'unknown' : (['fresh', 'stale'].includes(host.status) && typeof host.idle_or_empty === 'boolean' ? (host.idle_or_empty ? 'idle' : 'active') : 'unknown'));
     let utilText = '—';
     if (host.status !== 'unavailable') {
       const parts = [];
@@ -672,15 +741,15 @@ function renderOccupancy(data) {
     }
     const sourceRows = Object.entries(objectValue(host.burn_sources)).map(([source, detail]) => {
       const sourceState = detail && ['active', 'clear', 'unknown'].includes(detail.state) ? detail.state : 'unknown';
-      const rawAge = detail && Number(detail.observation_age_s);
-      const ageText = Number.isFinite(rawAge) && rawAge >= 0 ? `${Math.round(rawAge * 100) / 100}s` : '—';
-      return `<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>source</td><td class="mono">—</td><td class="mono">${escapeHtml(source)}</td><td class="mono">—</td><td>${pill(sourceState)} <span class="muted mono">${escapeHtml(ageText)}</span></td></tr>`;
+      const rawAge = detail && detail.observation_age_s;
+      const ageText = retainedAge(rawAge, performance.now(), host.status !== 'unavailable');
+      return `<tr><td class="mono">${escapeHtml(hostId)}<br>Source age ${retainedAge(host.age_seconds, performance.now(), ['fresh', 'stale'].includes(host.status) && Number.isFinite(Date.parse(host.observed_at)) && Date.parse(host.observed_at) <= Date.now())}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>source</td><td class="mono">—</td><td class="mono">${escapeHtml(source)}</td><td class="mono">—</td><td>${pill(sourceState)} <span class="muted mono">${ageText}</span></td></tr>`;
     });
     if (!occupants.length && !sourceRows.length) {
-      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
+      rows.push(`<tr><td class="mono">${escapeHtml(hostId)}<br>Source age ${retainedAge(host.age_seconds, performance.now(), ['fresh', 'stale'].includes(host.status) && Number.isFinite(Date.parse(host.observed_at)) && Date.parse(host.observed_at) <= Date.now())}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>`);
     } else {
       occupants.forEach(item => {
-        rows.push(`<tr><td class="mono">${escapeHtml(hostId)}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td>${pill(item.status)}</td></tr>`);
+        rows.push(`<tr><td class="mono">${escapeHtml(hostId)}<br>Source age ${retainedAge(host.age_seconds, performance.now(), ['fresh', 'stale'].includes(host.status) && Number.isFinite(Date.parse(host.observed_at)) && Date.parse(host.observed_at) <= Date.now())}</td><td>${pill(host.status)}</td><td>${pill(idleState)}</td><td class="muted">${escapeHtml(utilText)}</td><td>${escapeHtml(short(item.kind))}</td><td class="mono">${escapeHtml(short(item.agent))}</td><td class="mono">${escapeHtml(short(item.task_id))}</td><td class="mono">${escapeHtml(short(item.epic))}</td><td>${pill(item.status)}</td></tr>`);
       });
       rows.push(...sourceRows);
     }
@@ -702,11 +771,46 @@ function renderMessages(data) {
   document.getElementById('messages-content').innerHTML = table(['When', 'Source', 'Agent', 'Via', 'Kind', 'Bounded preview'], rows, 'No messages match the current observer filters.');
 }
 
+function validateFleetPanel(url, data) {
+  const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  if (!object(data)) throw new Error('Malformed observer response');
+  const path = url.split('?')[0];
+  const lists = {
+    '/api/fleet/authority/jobs': ['jobs', 'job_id'], '/api/fleet/reviews': ['reviews', 'review_id'],
+    '/api/fleet/acp/conversations': ['conversations', 'conversation_id'], '/api/fleet/dead-letters': ['dead_letters', 'dead_letter_id'],
+    '/api/fleet/workers/v1': ['hosts', 'host_id'],
+    '/api/fleet/activity': ['records', null], '/api/fleet/messages': ['messages', null],
+  };
+  let partial = ['partial', 'degraded'].includes(data.availability) || data.truncated === true;
+  if (lists[path]) {
+    const [key, identity] = lists[path];
+    if (!Array.isArray(data[key])) throw new Error('Malformed observer rows');
+    const rows = data[key].filter(row => object(row) && (!identity || typeof row[identity] === 'string'));
+    if (data[key].length && !rows.length) throw new Error('Malformed observer rows');
+    if (rows.length !== data[key].length) partial = true;
+    data = { ...data, [key]: rows };
+  } else if (path === '/api/fleet/overview' && !object(data.counts)) throw new Error('Malformed observer counts');
+  else if (path === '/api/fleet/health' && !object(data.authority_health)) throw new Error('Malformed authority health');
+  else if (path === '/api/fleet/operations' && !['broker', 'zombies', 'batches'].every(key => object(data[key]))) throw new Error('Malformed operation sections');
+  else if (['/api/occupancy', '/api/fleet/projects/v1'].includes(path) && !object(data.hosts)) throw new Error('Malformed host observations');
+  else if (path === '/api/ops/entire-context/status' && !object(data.recall)) throw new Error('Malformed context status');
+  return { data, partial };
+}
+function fleetPanelState(data, partial) {
+  if (data.availability === 'not_configured') return 'Not installed';
+  if (['unavailable', 'db_unavailable', 'db_missing', 'schema_read_failed', 'table_missing'].includes(data.availability)) return 'Unavailable';
+  if (partial) return 'Partial';
+  if (data.stale === true) return 'Stale';
+  return 'Unknown';
+}
+
 let fleetGeneration = 0;
 
 async function refreshFleet() {
   const generation = ++fleetGeneration;
   setError('');
+  retainedStatus('context-health-content', 'Loading');
+  retainedStatus('context-used-content', 'Loading');
   const common = ['state', 'agent', 'source', 'conversation'];
   const contextStatusFallback = {
     recall: { available: false, reason: 'projection_request_failed', projection: { available: false, reason: 'projection_request_failed' } },
@@ -769,14 +873,29 @@ async function refreshFleet() {
       apply: async (data) => { await refreshConversationContext(data, () => generation === fleetGeneration); },
     },
   ];
+  loads.forEach(({ targets = [] }) => targets.forEach(id => retainedStatus(id, 'Loading')));
   const settled = await Promise.allSettled(loads.map(async ({ label, url, apply, softFail, targets = [] }) => {
     try {
-      const data = await fetchJson(url);
+      const { data, partial } = validateFleetPanel(url, await fetchJson(url));
       if (generation !== fleetGeneration) return label;
-      await apply(data);
+      const panelState = fleetPanelState(data, partial);
+      if (panelState === 'Unavailable' || panelState === 'Not installed') {
+        targets.forEach(id => { document.getElementById(id).textContent = `${panelState}; no usable source observation`; });
+        if (label === '/api/fleet/health') document.getElementById('plane-dot').className = 'signal-dot warn';
+      } else await apply(data);
+      if (generation !== fleetGeneration) return label;
+      targets.forEach((id, index) => {
+        const section = label === '/api/fleet/operations' ? data[['broker', 'zombies', 'batches'][index]] : data;
+        const state = fleetPanelState(section, section === data ? partial : ['partial', 'degraded'].includes(section.availability));
+        if (['Unavailable', 'Not installed'].includes(state)) document.getElementById(id).textContent = `${state}; no usable source observation`;
+        retainedStatus(id, state, { fetched: true, note: 'Filtered, bounded observations; source age and whole-list coverage unknown.' });
+      });
     } catch (error) {
       if (generation !== fleetGeneration) return label;
-      for (const id of targets) document.getElementById(id).textContent = 'Unavailable — refresh to retry';
+      for (const id of targets) {
+        document.getElementById(id).textContent = 'Unavailable — refresh to retry';
+        retainedStatus(id, 'Error', { note: 'Request, parse or response validation failed.' });
+      }
       if (label === '/api/fleet/health') document.getElementById('plane-dot').className = 'signal-dot warn';
       if (label === '/api/occupancy') renderOccupancyAttention([]);
       if (softFail) {
@@ -797,6 +916,7 @@ async function refreshFleet() {
 }
 
 function queueRefresh() {
+  ++fleetGeneration;
   clearTimeout(refreshTimer);
   refreshTimer = setTimeout(refreshFleet, 220);
 }
