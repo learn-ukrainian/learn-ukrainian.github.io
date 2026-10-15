@@ -1,0 +1,618 @@
+{
+  "source": "Local homonym-checked ULIF rows and exact VESUM analyses; captured for #9820.",
+  "build": {
+    "id": 1,
+    "state": "complete",
+    "parser_version": "ulif-forms-v4",
+    "total_entries": 262812,
+    "entries_done": 262753,
+    "entries_failed": 59,
+    "total_forms": 4742272,
+    "started_at": "2026-09-30T04:35:49.190706+00:00",
+    "finished_at": "2026-09-30T06:22:48.886437+00:00",
+    "source_fingerprint": "d1d1a93417fe55ec1be950956138089d98d3604c9a85b22603ff577cc594bf12"
+  },
+  "forms": {
+    "показникові": [
+      {
+        "id": 3005679,
+        "entry_id": 173697,
+        "entry_key": "показник#1",
+        "form_unstressed": "показникові",
+        "form_stressed": "пока́зникові",
+        "stress_vowel_indices": "[3]",
+        "grammatical_tags": "[\"v_dav\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "пока́зникові",
+        "source_page_sha256": "a560aada09c3f996b653809721d481e030c0e4ebd9ce0ab691d296c38b47dcb4",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "b0e4cd4ac5581fe69e49fb2d423169c76e1c0a64b61e07d04bc10ccf3b5b4e15",
+        "normalized_query": "показник",
+        "canonical_headword": "пока́зник",
+        "grammatical_label": "іменник чоловічого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 3005693,
+        "entry_id": 173698,
+        "entry_key": "показниковий#1",
+        "form_unstressed": "показникові",
+        "form_stressed": "показнико́ві",
+        "stress_vowel_indices": "[8]",
+        "grammatical_tags": "[\"v_naz\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "показнико́ві",
+        "source_page_sha256": "5e34c9522833b0edfe13624acb6b7ea8457bd6c82e62fcfe4112f715e28c6766",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fcd3f62ff046c92009f525e948944dc28a09bb038bad681fa44ad0bed778a1a1",
+        "normalized_query": "показниковий",
+        "canonical_headword": "показнико́вий",
+        "grammatical_label": "прикметник",
+        "homonym_index": 1
+      },
+      {
+        "id": 3005705,
+        "entry_id": 173698,
+        "entry_key": "показниковий#1",
+        "form_unstressed": "показникові",
+        "form_stressed": "показнико́ві",
+        "stress_vowel_indices": "[8]",
+        "grammatical_tags": "[\"v_zna\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "показнико́ві",
+        "source_page_sha256": "5e34c9522833b0edfe13624acb6b7ea8457bd6c82e62fcfe4112f715e28c6766",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "fcd3f62ff046c92009f525e948944dc28a09bb038bad681fa44ad0bed778a1a1",
+        "normalized_query": "показниковий",
+        "canonical_headword": "показнико́вий",
+        "grammatical_label": "прикметник",
+        "homonym_index": 1
+      }
+    ],
+    "випадкові": [
+      {
+        "id": 510227,
+        "entry_id": 36714,
+        "entry_key": "випадковий#1",
+        "form_unstressed": "випадкові",
+        "form_stressed": "випадко́ві",
+        "stress_vowel_indices": "[6]",
+        "grammatical_tags": "[\"v_naz\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "випадко́ві",
+        "source_page_sha256": "0ea6900dc2c122dde87f2693709d2eb225d4cb60ef13adb7d67ad02b3846c405",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "42203c7e6622223590cf3386e8c8389b8a830e3f75d054660b944989c0a2b26d",
+        "normalized_query": "випадковий",
+        "canonical_headword": "випадко́вий",
+        "grammatical_label": "прикметник",
+        "homonym_index": 1
+      },
+      {
+        "id": 510240,
+        "entry_id": 36714,
+        "entry_key": "випадковий#1",
+        "form_unstressed": "випадкові",
+        "form_stressed": "випадко́ві",
+        "stress_vowel_indices": "[6]",
+        "grammatical_tags": "[\"v_zna\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "випадко́ві",
+        "source_page_sha256": "0ea6900dc2c122dde87f2693709d2eb225d4cb60ef13adb7d67ad02b3846c405",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "42203c7e6622223590cf3386e8c8389b8a830e3f75d054660b944989c0a2b26d",
+        "normalized_query": "випадковий",
+        "canonical_headword": "випадко́вий",
+        "grammatical_label": "прикметник",
+        "homonym_index": 1
+      },
+      {
+        "id": 510305,
+        "entry_id": 36720,
+        "entry_key": "випадок#1",
+        "form_unstressed": "випадкові",
+        "form_stressed": "ви́падкові",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_dav\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́падкові",
+        "source_page_sha256": "0bb6217f8a4c90db75b14f078703a4020a12c5cd52851cfd23c0f64ae9229665",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "0c3180764ec36e91540275c39289d6ecb526f1508d28b3d4c57b1b0763d992aa",
+        "normalized_query": "випадок",
+        "canonical_headword": "ви́падок",
+        "grammatical_label": "іменник чоловічого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 510312,
+        "entry_id": 36720,
+        "entry_key": "випадок#1",
+        "form_unstressed": "випадкові",
+        "form_stressed": "ви́падкові",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_mis\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́падкові",
+        "source_page_sha256": "0bb6217f8a4c90db75b14f078703a4020a12c5cd52851cfd23c0f64ae9229665",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "0c3180764ec36e91540275c39289d6ecb526f1508d28b3d4c57b1b0763d992aa",
+        "normalized_query": "випадок",
+        "canonical_headword": "ви́падок",
+        "grammatical_label": "іменник чоловічого роду",
+        "homonym_index": 1
+      }
+    ],
+    "виняткові": [
+      {
+        "id": 509610,
+        "entry_id": 36681,
+        "entry_key": "винятковий#1",
+        "form_unstressed": "виняткові",
+        "form_stressed": "винятко́ві",
+        "stress_vowel_indices": "[6]",
+        "grammatical_tags": "[\"v_naz\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "винятко́ві",
+        "source_page_sha256": "40306b4852bd699699c80679bba929a22876599ef3e54c57b73cc7a039360e5b",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "3aa32ed0e755c381e6f337caef93435360fc6180599a13bea27ff198ca56e84a",
+        "normalized_query": "винятковий",
+        "canonical_headword": "винятко́вий",
+        "grammatical_label": "прикметник",
+        "homonym_index": 1
+      },
+      {
+        "id": 509622,
+        "entry_id": 36681,
+        "entry_key": "винятковий#1",
+        "form_unstressed": "виняткові",
+        "form_stressed": "винятко́ві",
+        "stress_vowel_indices": "[6]",
+        "grammatical_tags": "[\"v_zna\", \"p\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "винятко́ві",
+        "source_page_sha256": "40306b4852bd699699c80679bba929a22876599ef3e54c57b73cc7a039360e5b",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "3aa32ed0e755c381e6f337caef93435360fc6180599a13bea27ff198ca56e84a",
+        "normalized_query": "винятковий",
+        "canonical_headword": "винятко́вий",
+        "grammatical_label": "прикметник",
+        "homonym_index": 1
+      },
+      {
+        "id": 509648,
+        "entry_id": 36684,
+        "entry_key": "виняток#1",
+        "form_unstressed": "виняткові",
+        "form_stressed": "ви́няткові",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_dav\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́няткові",
+        "source_page_sha256": "bee59037a19b59da81b8995ba257f819d5cdb2191f55bea202ea6a1ed71e5cf0",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "d1e27c962237ba624a470cc5e2062b90eb1ca4c9a66d616ccf7e6786d5543782",
+        "normalized_query": "виняток",
+        "canonical_headword": "ви́няток",
+        "grammatical_label": "іменник чоловічого роду",
+        "homonym_index": 1
+      },
+      {
+        "id": 509655,
+        "entry_id": 36684,
+        "entry_key": "виняток#1",
+        "form_unstressed": "виняткові",
+        "form_stressed": "ви́няткові",
+        "stress_vowel_indices": "[1]",
+        "grammatical_tags": "[\"v_mis\", \"s\"]",
+        "unmapped_labels": "[]",
+        "variant_order": 2,
+        "preposition": "на/у",
+        "marked_asterisk": 0,
+        "is_lemma": 0,
+        "is_invariable": 0,
+        "dual_stress_flag": 0,
+        "pedagogical_stressed_form": "ви́няткові",
+        "source_page_sha256": "bee59037a19b59da81b8995ba257f819d5cdb2191f55bea202ea6a1ed71e5cf0",
+        "parser_version": "ulif-forms-v4",
+        "source_entry_fingerprint": "d1e27c962237ba624a470cc5e2062b90eb1ca4c9a66d616ccf7e6786d5543782",
+        "normalized_query": "виняток",
+        "canonical_headword": "ви́няток",
+        "grammatical_label": "іменник чоловічого роду",
+        "homonym_index": 1
+      }
+    ]
+  },
+  "vesum_words": {
+    "показникові": [
+      {
+        "lemma": "показник",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "lemma": "показник",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "lemma": "показниковий",
+        "pos": "adj",
+        "tags": "adj:p:v_naz"
+      },
+      {
+        "lemma": "показниковий",
+        "pos": "adj",
+        "tags": "adj:p:v_zna:rinanim"
+      },
+      {
+        "lemma": "показниковий",
+        "pos": "adj",
+        "tags": "adj:p:v_kly"
+      }
+    ],
+    "випадкові": [
+      {
+        "lemma": "випадковий",
+        "pos": "adj",
+        "tags": "adj:p:v_naz:compb"
+      },
+      {
+        "lemma": "випадковий",
+        "pos": "adj",
+        "tags": "adj:p:v_zna:rinanim:compb"
+      },
+      {
+        "lemma": "випадковий",
+        "pos": "adj",
+        "tags": "adj:p:v_kly:compb"
+      },
+      {
+        "lemma": "випадок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "lemma": "випадок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      }
+    ],
+    "виняткові": [
+      {
+        "lemma": "винятковий",
+        "pos": "adj",
+        "tags": "adj:p:v_naz"
+      },
+      {
+        "lemma": "винятковий",
+        "pos": "adj",
+        "tags": "adj:p:v_zna:rinanim"
+      },
+      {
+        "lemma": "винятковий",
+        "pos": "adj",
+        "tags": "adj:p:v_kly"
+      },
+      {
+        "lemma": "виняток",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "lemma": "виняток",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      }
+    ]
+  },
+  "lemmas": {
+    "показник": [
+      {
+        "word_form": "показникові",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "word_form": "показнику",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "word_form": "показнику",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_kly"
+      },
+      {
+        "word_form": "показникові",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "word_form": "показнику",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "word_form": "показник",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_naz"
+      },
+      {
+        "word_form": "показником",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_oru"
+      },
+      {
+        "word_form": "показника",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_rod"
+      },
+      {
+        "word_form": "показник",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_zna"
+      },
+      {
+        "word_form": "показникам",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_dav"
+      },
+      {
+        "word_form": "показники",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_kly"
+      },
+      {
+        "word_form": "показниках",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_mis"
+      },
+      {
+        "word_form": "показники",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_naz"
+      },
+      {
+        "word_form": "показниками",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_oru"
+      },
+      {
+        "word_form": "показників",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_rod"
+      },
+      {
+        "word_form": "показники",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_zna"
+      }
+    ],
+    "випадок": [
+      {
+        "word_form": "випадкові",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "word_form": "випадку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "word_form": "випадку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_kly"
+      },
+      {
+        "word_form": "випадкові",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "word_form": "випадку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "word_form": "випадок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_naz"
+      },
+      {
+        "word_form": "випадком",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_oru"
+      },
+      {
+        "word_form": "випадку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_rod"
+      },
+      {
+        "word_form": "випадок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_zna"
+      },
+      {
+        "word_form": "випадкам",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_dav"
+      },
+      {
+        "word_form": "випадки",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_kly"
+      },
+      {
+        "word_form": "випадках",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_mis"
+      },
+      {
+        "word_form": "випадки",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_naz"
+      },
+      {
+        "word_form": "випадками",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_oru"
+      },
+      {
+        "word_form": "випадків",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_rod"
+      },
+      {
+        "word_form": "випадки",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_zna"
+      }
+    ],
+    "виняток": [
+      {
+        "word_form": "виняткові",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "word_form": "винятку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "word_form": "винятку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_kly"
+      },
+      {
+        "word_form": "виняткові",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "word_form": "винятку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "word_form": "виняток",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_naz"
+      },
+      {
+        "word_form": "винятком",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_oru"
+      },
+      {
+        "word_form": "винятку",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_rod"
+      },
+      {
+        "word_form": "виняток",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_zna"
+      },
+      {
+        "word_form": "виняткам",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_dav"
+      },
+      {
+        "word_form": "винятки",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_kly"
+      },
+      {
+        "word_form": "винятках",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_mis"
+      },
+      {
+        "word_form": "винятки",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_naz"
+      },
+      {
+        "word_form": "винятками",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_oru"
+      },
+      {
+        "word_form": "винятків",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_rod"
+      },
+      {
+        "word_form": "винятки",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_zna"
+      }
+    ]
+  }
+}

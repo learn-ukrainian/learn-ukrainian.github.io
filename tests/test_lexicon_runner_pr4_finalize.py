@@ -399,6 +399,48 @@ def test_fingerprint_mismatch_refuses_publication(ledger: Ledger, tmp_path: Path
     assert "fingerprint_mismatch_refused" in result.detail
 
 
+def test_paradigm_stress_gate_refuses_publication(
+    ledger: Ledger, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#9331: a sealed artifact whose stored stress no authority licenses never ships."""
+    from scripts.lexicon import validate_paradigm_stress
+
+    arts = tmp_path / "arts"
+    run, _fp = _seed_sealed_run(ledger, arts, cohort="stress-gate")
+    stressed = {
+        "lemma": "beta",
+        "url_slug": "beta",
+        "enrichment": {
+            "morphology": {
+                "forms": [
+                    {
+                        "form": "показникові",
+                        "label": "однина, чол., давальний",
+                        "tags": "noun:inanim:m:v_dav",
+                        "stress": "показнико́ві",
+                    }
+                ]
+            }
+        },
+    }
+    (arts / "chunk-0" / "beta.json").write_text(json.dumps(stressed, ensure_ascii=False) + "\n", encoding="utf-8")
+    # No VESUM witness: the stored accent is unbound, so the real validator rejects it.
+    monkeypatch.setattr(validate_paradigm_stress, "verify_lemma", lambda lemma: [])
+    out = tmp_path / "out"
+    result = finalize_run(
+        ledger=ledger,
+        run_id=run,
+        artifacts_dir=arts,
+        out_dir=out,
+        grant_first_run_escape=True,
+        verify_vendor=False,
+    )
+    assert result.ok is False
+    assert result.detail.startswith("paradigm stress gate refused: 1 disagreements / 1 rows")
+    assert result.archive_path is None
+    assert not (out / "tree").exists()
+
+
 def test_rss_ceiling_constant_and_probe(ledger: Ledger, tmp_path: Path) -> None:
     """Criterion 2 / V2: 200 MiB incremental assembly RSS ceiling (delta, not process total)."""
     assert ASSEMBLY_RSS_CEILING_BYTES == 200 * 1024 * 1024

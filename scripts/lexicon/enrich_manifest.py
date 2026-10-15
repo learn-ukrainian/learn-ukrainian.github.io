@@ -7,7 +7,7 @@ no fabrication):
 
 - **morphology** — full VESUM paradigm (``data/vesum.db``), forms decoded into
   human-readable Ukrainian grammatical labels, with optional stress display
-  forms from ``ukrainian-word-stress``.
+  forms bound to the lemma and grammatical slot in ULIF, then the tagged stress oracle.
 - **meaning** — legacy single-source meaning kept for compatibility.
 - **definition_cards** — public meaning cards from ВТС and СУМ-20 only
   (СУМ-11, the Soviet-era dictionary, is excluded — decolonization decision
@@ -93,6 +93,7 @@ from scripts.lexicon.manifest_io import (
     GATE_SKIPPED_OFFLINE,
     SOURCE_WITHDRAWN_UNVERIFIED,
 )
+from scripts.lexicon.paradigm_stress import resolve_paradigm_stress
 from scripts.lexicon.source_attribution import (
     BALLA_LABEL,
     CORRECTION_DICTIONARIES_LABEL,
@@ -3904,6 +3905,18 @@ def _is_slovnyk_warning_candidate(entry: dict[str, Any], status: dict[str, Any])
     )
 
 
+def _paradigm_row_kind(row: dict[str, Any]) -> str | None:
+    """``modern`` or ``marked`` for a VESUM row a word card shows; ``None`` when dropped.
+
+    The Russian-pattern ``-ться`` infinitive is never a card form.
+    """
+    form = row.get("word_form") or ""
+    raw_tag = row.get("tags") or ""
+    if not form or ("inf" in raw_tag.split(":") and form.endswith("ться")):
+        return None
+    return "marked" if _style_markers_in_tag(raw_tag) else "modern"
+
+
 def _morphology(
     lemma: str,
     *,
@@ -3933,18 +3946,19 @@ def _morphology(
     seen_marked: set[tuple[str, str, str]] = set()
     decoded: list[dict[str, str]] = []
     marked: list[dict[str, str]] = []
+    # Every modern reading of a spelling votes on its display stress, including
+    # one the forms list drops as a same-label duplicate (an aspect pair such as
+    # ви́сипатися / висипа́тися, or a VESUM homonym).
+    readings_by_form: dict[str, list[dict[str, Any] | None]] = {}
     for row in forms:
-        form = row.get("word_form") or ""
-        if not form:
+        kind = _paradigm_row_kind(row)
+        if kind is None:
             continue
+        form = row["word_form"]
         raw_tag = row.get("tags") or ""
-        tag_tokens = set(raw_tag.split(":"))
-        if "inf" in tag_tokens and form.endswith("ться"):
-            continue
         label = _decode_tag(raw_tag)
-        markers = _style_markers_in_tag(raw_tag)
-        if markers:
-            marker = markers[0]
+        if kind == "marked":
+            marker = _style_markers_in_tag(raw_tag)[0]
             marked_key = (form, label, marker)
             if marked_key in seen_marked:
                 continue
@@ -3952,22 +3966,26 @@ def _morphology(
             marked_row = {
                 "form": form,
                 "label": label,
+                "tags": raw_tag,
                 "marker": marker,
                 "marker_label": _STYLE_MARKER_LABELS.get(marker, _GENERIC_STYLE_MARKER_LABEL),
             }
-            stressed_form = _stress_display_form(form)
-            if stressed_form:
-                marked_row["stress"] = stressed_form
+            stress = resolve_paradigm_stress(lemma, form, raw_tag, row.get("pos") or pos_raw)
+            if stress:
+                marked_row["stress"] = stress["form"]
+                marked_row["stress_source"] = stress["source"]
             marked.append(marked_row)
             continue
+        stress = resolve_paradigm_stress(lemma, form, raw_tag, row.get("pos") or pos_raw)
+        readings_by_form.setdefault(form, []).append(stress)
         key = (form, label)
         if key in seen:
             continue
         seen.add(key)
-        decoded_row = {"form": form, "label": label}
-        stressed_form = _stress_display_form(form)
-        if stressed_form:
-            decoded_row["stress"] = stressed_form
+        decoded_row = {"form": form, "label": label, "tags": raw_tag}
+        if stress:
+            decoded_row["stress"] = stress["form"]
+            decoded_row["stress_source"] = stress["source"]
         decoded.append(decoded_row)
     if not decoded and not marked:
         return None
@@ -3985,16 +4003,23 @@ def _morphology(
     ) or _build_paradigm(pos_raw, decoded)
     if paradigm:
         morphology["paradigm"] = paradigm
-    stressed_forms = {
-        row["form"]: row["stress"] for row in decoded if row.get("stress") and row.get("form") != row.get("stress")
-    }
+    # A display map has no slot key and covers the whole paradigm, not just the
+    # capped rows: publish only agreement across ALL modern readings of that
+    # spelling. A missing reading in one slot cannot borrow another's stress.
+    stressed_forms: dict[str, str] = {}
+    stress_sources: set[str] = set()
+    for form, readings in readings_by_form.items():
+        choices = {reading["form"] if reading else "" for reading in readings}
+        if len(choices) == 1 and "" not in choices:
+            stressed_forms[form] = choices.pop()
+            stress_sources.update(part for reading in readings if reading for part in reading["source"].split("+"))
     if paradigm:
         for form in _collect_string_values(paradigm):
-            stressed_form = _stress_display_form(form)
-            if stressed_form and stressed_form != form:
-                stressed_forms[form] = stressed_form
+            variants = form.split(" / ")
+            if len(variants) > 1 and all(variant in stressed_forms for variant in variants):
+                stressed_forms[form] = " / ".join(stressed_forms[variant] for variant in variants)
     if stressed_forms:
-        morphology["stress"] = {"source": _STRESS_SOURCE, "forms": stressed_forms}
+        morphology["stress"] = {"source": "+".join(sorted(stress_sources)), "forms": stressed_forms}
     if marked:
         marked_out = marked[:_MORPHOLOGY_FORM_CAP]
         morphology["marked_forms"] = marked_out
@@ -8518,6 +8543,9 @@ def enrich(
             memory_policy=MemoryPolicy(),
             require_memory_self_test=True,
         )
+        if result.get("error"):
+            # Includes the paradigm stress gate; the runner wrote no manifest.
+            raise ValueError(f"offline runner refused: {result['error']}: {result.get('detail')}")
         return int(result["completed"]), int(result["entry_count"])
 
     from scripts.lexicon.runner.phase_cefr import (
@@ -8662,6 +8690,15 @@ def enrich(
 
     if citation_violations:
         raise ValueError("unflagged citations in enriched entries:\n" + "\n".join(citation_violations))
+
+    from scripts.lexicon.validate_paradigm_stress import validate_manifest_stress
+
+    stress_report = validate_manifest_stress({"entries": entries}, verify_lemma_fn=verify_lemma)
+    print(f"Paradigm stress: {stress_report['disagreement_count']} disagreements / {stress_report['rows']} rows")
+    if stress_report["disagreement_count"]:
+        raise ValueError(
+            "paradigm stress disagrees with lemma+tag authority: " + json.dumps(stress_report, ensure_ascii=False)
+        )
 
     fingerprint_payload = write_fingerprint(target_fingerprint, root=ROOT)
     with StreamingCandidateWriter(
