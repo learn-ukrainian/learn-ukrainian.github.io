@@ -417,6 +417,23 @@ def test_remote_moves_after_admission_refuses_before_provider_start(review_repo,
     assert record["worktree_branch"] is None
 
 
+@pytest.mark.parametrize("has_dispositions", [False, True], ids=["without", "with"])
+def test_live_review_record_carries_the_brief_warning(review_repo, capsys, has_dispositions):
+    """#10665: the launched review records the typed warning; the brief is never refused for it."""
+    repo, head = review_repo
+    brief = "Review the exact branch head.\n" + ("\n## Dispositions\n- follow_up: wording.\n" if has_dispositions else "")
+    args = review_args(head)
+    args.prompt = brief
+    assert delegate.cmd_dispatch(args) == 0
+    assert len(repo.launches) == 1
+    record = json.loads(delegate._state_path("snapshot-review").read_text())
+    warned = f"⚠ {delegate.REVIEW_BRIEF_NO_DISPOSITIONS}: " in capsys.readouterr().err
+    if has_dispositions:
+        assert not warned and "review_brief_warnings" not in record
+    else:
+        assert warned and record["review_brief_warnings"] == [delegate.REVIEW_BRIEF_NO_DISPOSITIONS]
+
+
 def test_write_branch_continuation_reuses_the_existing_attached_tree(review_repo):
     repo, head = review_repo
     author = repo.root / ".worktrees/dispatch/codex/author"

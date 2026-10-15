@@ -111,7 +111,7 @@ Only for slugs containing "cyrillic-code":
 # Plan Review: {slug}
 
 **Track:** {track} | **Sequence:** {sequence} | **Version:** {version}
-**Verdict:** PASS / FAIL / NEEDS FIXES
+**Verdict:** PASS / FAIL / NEEDS FIXES / INCONCLUSIVE
 
 ## Rule Compliance
 | Check | Status | Details |
@@ -158,6 +158,22 @@ Only for slugs containing "cyrillic-code":
 ## Suggested Fixes
 [Concrete YAML edits with old/new]
 ```
+
+### Review rules (#10665, binding)
+
+These apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8 to a plan review.
+The contract is the plan's acceptance: the State Standard floor, the CEFR level, the config
+targets above and the cited sources.
+
+- **Ukrainian errors block.** A sourced Ukrainian error in the plan (vocabulary, forms,
+  stress, example phrases, grammar rules, Russicism claims) is **CRITICAL** and the verdict
+  is FAIL, whatever severity a check above names. It is never a follow-up.
+- **One finding per error class**, listing every occurrence with its location, the
+  source-verified correction and the tool that proves it.
+- **Unsourced is INCONCLUSIVE.** A suspected error you cannot source after the tool
+  escalation makes the verdict INCONCLUSIVE, which blocks like FAIL until re-checked.
+- **Pedagogy** blocks when the plan contradicts its contract; preferences are MEDIUM or LOW
+  follow-ups. PASS may carry tracked follow-ups.
 
 ---
 

@@ -44,6 +44,9 @@ To match sequence numbers, read each YAML and check the `sequence:` field.
 ## Execute
 
 Read and follow the full seminar plan review prompt at [plan-review-seminar-prompt.md](plan-review-seminar-prompt.md). It contains all checks, RAG tool usage, and the output format.
+Its review rules (#10665) apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8:
+every sourced Ukrainian or factual error blocks (FAIL), one finding per error class lists
+every occurrence, and an unsourced blocker is INCONCLUSIVE, which still blocks.
 
 For review-tier reference, see the Tier 3 rubric at `agents_extensions/shared/skills/plan-review/review-tiers/tier-3-seminar.md`.
 

@@ -47,6 +47,9 @@ To match sequence numbers, read each YAML and check the `sequence:` field.
 ## Execute
 
 Read and follow the full plan review prompt at [plan-review-prompt.md](plan-review-prompt.md). It contains all checks, RAG tool usage, and the output format.
+Its review rules (#10665) apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8:
+every sourced Ukrainian error blocks (FAIL), one finding per error class lists every
+occurrence, and an unsourced blocker is INCONCLUSIVE, which still blocks.
 
 For review-tier reference docs, see [review-tiers/](review-tiers/).
 

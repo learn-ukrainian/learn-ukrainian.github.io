@@ -65,7 +65,7 @@ Cite the deterministic run (`python_qg` or `scripts.audit.probe_uk_writing_score
 ```
 # Seminar Content Review — <track>/<slug>  (<date>)
 
-## Verdict: PASS | REVISE | REJECT
+## Verdict: PASS | REVISE | REJECT | INCONCLUSIVE
 Factual accuracy: <n_supported>/<n_claims> supported · <n> contradicted · <n> imprecise · <n> unattested
 Decolonization: CLEAN | ISSUES  ·  Linguistic: <vesum%> VESUM, <n> russicisms
 
@@ -89,3 +89,9 @@ Decolonization: CLEAN | ISSUES  ·  Linguistic: <vesum%> VESUM, <n> russicisms
 ```
 
 **Rules:** REJECT on any CRITICAL (contradicted fact, ghost person/event/source, imperial myth). REVISE on HIGH (imprecise or unattested specifics, real russicism). Every SUPPORTED verdict MUST name its source — an unsourced "SUPPORTED" is itself a review failure. **Report only; never edit the content.** No self-review (the reviewer must not have authored the content). Reference issue #729.
+
+**Review rules (#10665, binding):** these apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8. REVISE and REJECT both block; PASS may carry tracked MEDIUM and LOW follow-ups.
+- **Ukrainian errors block.** A sourced Ukrainian language error in the content (form, stress, agreement, Russianism or calque, register) is at least **HIGH**; a contradicted fact stays **CRITICAL**. None of these is ever a follow-up.
+- **One entry per error class**, listing every occurrence with its location, the source-verified correction and the tool that proves it.
+- **Your own unsourced blocker is INCONCLUSIVE**: report the verdict as INCONCLUSIVE, which still blocks, and re-check with the tools. This differs from an UNATTESTED claim, which is a defect in the content that no source confirms.
+- **Pedagogy and framing preferences** are follow-ups unless they contradict the module's plan.

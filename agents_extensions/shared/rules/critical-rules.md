@@ -144,6 +144,11 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
   an optimistic reading.
 - The tier is the **reviewer's** call, recorded explicitly in the verdict, not the author's. An author
   who disagrees escalates to a second reviewer rather than re-tiering their own finding.
+- **Scope of the question (#10665).** It is asked of the change's stated contract, the paths the
+  change introduces, modifies or newly exposes, and regressions against main. Pre-existing defects
+  off those paths and P2/P3 findings are tracked follow-ups unless their impact, or the change's
+  dependency on them, is material. Dispositions, class-level findings and INCONCLUSIVE (a reviewer
+  missing a required capability; it still blocks) follow the `local-code-review` checklist, Steps 2-6.
 
 **8.5 — Merge queue protocol.** The sole ordered landing and cleanup recipe is
 [`workflow.md`](workflow.md) § Merge policy. Workers never merge, enqueue or arm

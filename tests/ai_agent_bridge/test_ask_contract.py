@@ -578,7 +578,10 @@ def test_native_review_data_stays_separate_from_caller_instructions(
     verdict_instruction = (
         "Review completion requires your own plain, unfenced verdict line: "
         "the label VERDICT, a colon, then one accepted token. "
-        "Accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED."
+        "Accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED. "
+        "An approval may carry tracked non-blocking follow-ups. A review that lacks a capability "
+        "its brief requires (shell, diff access, hashing, sources tools) is inconclusive: give the "
+        "BLOCKED token and name the missing capability."
     )
     guidance = "\n\n" + """## Existing code-review output and exact-target evidence contract
 
