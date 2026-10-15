@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
@@ -71,6 +73,64 @@ QUIET_GATE_REASONS = frozenset({"requeue-pending"})
 # times per head. Aggregate jobs only mirror other jobs and never attribute.
 SHARED_FAILURE_REQUEUE_LIMIT = 3
 AGGREGATE_JOBS = frozenset({"CI Gate"})
+# Job names and failed-test identifiers come from workflow files and CI logs, so
+# any PR author controls them. They reach public issue titles, issue bodies and
+# PR comments only through ``display_text`` / ``code_span``, bounded here.
+DISPLAY_JOB_LIMIT = 100  # characters of a job name shown, before the id suffix
+DISPLAY_TEST_LIMIT = 200  # characters of a failed-test identifier shown
+DISPLAY_TEST_ITEMS = 10  # failed tests listed in one issue body
+DISPLAY_ID_LENGTH = 8  # hex digits of the raw-text digest appended to altered text
+
+
+# (pattern, replacement) pairs applied in order by ``display_text``.
+_NEUTRALISERS = tuple(
+    (re.compile(pattern), replacement)
+    for pattern, replacement in (
+        (r"@", "(at)"),  # user and team mentions, and bare addresses
+        (r"#(?=\d)", "(#)"),  # issue and PR references
+        (r"(?i)\bGH-(?=\d)", "GH(-)"),
+        (r"\[", "("),  # inline links, images and references
+        (r"\]", ")"),
+        (r"<", "\u2039"),  # HTML and autolinks
+        (r">", "\u203a"),
+        (r"`", "'"),  # code spans and fences
+        (r"~", "-"),  # tilde fences and strike-through
+        (r"&(?=#?\w+;)", "(&)"),  # character references
+        (r"://", ":(//)"),  # bare URLs
+        (r"(?i)\bwww\.", "www(.)"),
+    )
+)
+_DROPPED_CATEGORIES = frozenset({"Cf", "Cs", "Co", "Cn"})  # format, surrogate, private, unassigned
+_SPACED_CATEGORIES = frozenset({"Cc", "Zl", "Zp"})  # control and line or paragraph separators
+
+
+def display_text(raw: str, limit: int = DISPLAY_JOB_LIMIT) -> str:
+    """Plain text safe for an issue title or Markdown body, deterministic in ``raw``.
+
+    Neutralises mentions (including look-alike ``@`` signs and ``@org/team``),
+    Markdown links and images, HTML, backticks and tildes, issue and PR
+    auto-references, newlines and control or format characters, then bounds the
+    length. Text that had to change gets a short digest of the raw text, so two
+    different hostile names never collapse into one title. Benign names pass
+    through unchanged, which keeps titles of already filed issues matching.
+    """
+    text = unicodedata.normalize("NFKC", raw)  # folds full-width and small ``@``, ``#``, backtick, ``<``
+    categories = [(char, unicodedata.category(char)) for char in text]
+    text = "".join(" " if cat in _SPACED_CATEGORIES else char for char, cat in categories if cat not in _DROPPED_CATEGORIES)
+    text = " ".join(text.split())
+    for pattern, replacement in _NEUTRALISERS:
+        text = pattern.sub(replacement, text)
+    if len(text) > limit:
+        text = text[: limit - 1].rstrip() + "\u2026"
+    text = text or "(unnamed)"
+    if text != raw:
+        text += f" (id:{hashlib.sha256(raw.encode('utf-8', 'surrogatepass')).hexdigest()[:DISPLAY_ID_LENGTH]})"
+    return text
+
+
+def code_span(raw: str, limit: int = DISPLAY_JOB_LIMIT) -> str:
+    """``display_text`` inside an inline code span: inert Markdown even if a pattern slips through."""
+    return f"`{display_text(raw, limit)}`"
 
 
 class KeeperError(RuntimeError):
@@ -719,7 +779,8 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
     )
-    detail = f"{run_detail}; failing jobs: {', '.join(failed) or 'none reported'}."
+    names = ", ".join(code_span(name) for name in failed) or "none reported"
+    detail = f"{run_detail}; failing jobs: {names}."
     job = next(
         (
             job
@@ -735,7 +796,7 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         try:
             test = gh.first_failed_test(job["id"])
             if test:
-                detail += f" First FAILED test: {test}."
+                detail += f" First FAILED test: {code_span(test, DISPLAY_TEST_LIMIT)}."
                 tests[str(job["name"])] = test
         except KeeperError:
             pass  # Optional log enrichment must not hide the run/job diagnosis.
@@ -1045,10 +1106,15 @@ def run(
         for job, (numbers, tests) in _flaky_jobs(failures).items():
             if not budget:
                 continue
-            title = f"Merge queue flaky test: {job}"
-            body = f"{job} failed merge_group runs on distinct PRs {', '.join(f'#{n}' for n in numbers)} within 24 hours."
+            title = f"Merge queue flaky test: {display_text(job)}"
+            body = (
+                f"{code_span(job)} failed merge_group runs on distinct PRs "
+                f"{', '.join(f'#{n}' for n in numbers)} within 24 hours."
+            )
             if tests:
-                body += f" Failed test: {', '.join(tests)}."
+                shown = ", ".join(code_span(test, DISPLAY_TEST_LIMIT) for test in tests[:DISPLAY_TEST_ITEMS])
+                more = len(tests) - DISPLAY_TEST_ITEMS
+                body += f" Failed test: {shown}{f' and {more} more' if more > 0 else ''}."
             try:
                 issues = gh.issues(title)
                 if not any(item.get("title") == title for item in issues):

@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import fcntl
+import hashlib
 import json
+import re
 import subprocess
+import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -832,7 +835,7 @@ def test_red_merge_group_drop_with_green_branch_checks(
         assert mutations(fake) == ["comment"]
         assert "reason=requeue-pending" in lines[0]
         assert "https://github.com/example/runs/123" in comments[0]
-        assert "failing jobs: pytest" in comments[0]
+        assert "failing jobs: `pytest`" in comments[0]
         # The persisted drop still holds after the observation cycle ends.
         again = FakeGitHub()
         lines, failed = run(again, path, monkeypatch)
@@ -937,7 +940,7 @@ def test_drop_finds_run_created_before_last_queue_observation(monkeypatch, entry
     fake.job_rows = [{"name": "pytest", "conclusion": "failure"}]
     detail, jobs, tests = keeper._drop_detail(fake, 42, HEAD_A, observed)
     assert windows == [entered if entry_available else fake.created_at(42)]
-    assert "Failing merge_group: 123; failing jobs: pytest" in detail
+    assert "Failing merge_group: 123; failing jobs: `pytest`" in detail
     assert jobs == ["pytest"] and tests == {}
 
 
@@ -995,8 +998,8 @@ def test_drop_comment_does_not_publish_failed_test_parameters(tmp_path, monkeypa
     assert not failed
     comments = [body for action, body in fake.actions if action == "comment"]
     assert len(comments) == 1
-    assert "First FAILED test: tests/test_unit.py::test_case." in comments[0]
-    assert "Failing merge_group: 123; failing jobs: pytest" in comments[0]
+    assert "First FAILED test: `tests/test_unit.py::test_case`." in comments[0]
+    assert "Failing merge_group: 123; failing jobs: `pytest`" in comments[0]
     public_and_state = "\n".join([*lines, *comments, path.read_text()])
     assert private_value not in public_and_state
     assert "private-error-value" not in public_and_state
@@ -1027,7 +1030,7 @@ def test_drop_detail_keeps_run_and_jobs_with_optional_first_failed_test(tmp_path
     detail, jobs, tests = keeper._drop_detail(client, 10256, HEAD_A, "2026-10-10T00:00:00Z")
     assert "https://github.com/example/runs/123" in detail and "pytest (N)" in detail
     assert jobs == ["CI Gate", "pytest (N)"]
-    assert ("First FAILED test: tests/test_lint_tmp_paths.py::test_paths" in detail) is not log_error
+    assert ("First FAILED test: `tests/test_lint_tmp_paths.py::test_paths`" in detail) is not log_error
     assert tests == ({} if log_error else {"pytest (N)": "tests/test_lint_tmp_paths.py::test_paths"})
     assert "other.py" not in detail and "unknown" not in detail
 
@@ -1935,8 +1938,8 @@ def test_issue_body_names_the_failed_test_when_known(tmp_path: Path, monkeypatch
     monkeypatch.setattr(fake, "create_issue", lambda title, body: bodies.append(body))
     run(fake, path, monkeypatch)
     assert len(bodies) == 1
-    assert "pytest (3) failed" in bodies[0] and "#42" in bodies[0] and "#10596" in bodies[0]
-    assert f"Failed test: {test}." in bodies[0]
+    assert "`pytest (3)` failed" in bodies[0] and "#42" in bodies[0] and "#10596" in bodies[0]
+    assert f"Failed test: `{test}`." in bodies[0]
     assert {item["test"] for item in json.loads(path.read_text())["failures"] if item["pr"] == 42} == {test}
 
 
@@ -1975,3 +1978,199 @@ def test_ejection_with_no_failed_jobs_records_nothing_and_opens_no_issue(
     fake, path = _flaky_run(tmp_path, monkeypatch, [], [])
     assert _issue_titles(fake) == []
     assert json.loads(path.read_text()).get("failures", []) == []
+
+
+# --- untrusted job names and test text in public issue and comment text (#10600) ---
+
+HOSTILE_JOB = "pytest @review-probe/maintainers [review-probe](https://example.invalid/probe)"
+
+
+def _public_flaky_issue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, job: str, *, test: str | None = None
+) -> tuple[FakeGitHub, list[tuple[str, str]]]:
+    """Fail ``job`` on two distinct PRs and return the fake plus every (title, body) it was asked to file."""
+    record = {**_recent(job, 10596), **({"test": test} if test else {})}
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [job], failures=[record])
+    filed: list[tuple[str, str]] = []
+
+    def create_issue(title: str, body: str) -> None:
+        filed.append((title, body))
+        fake.issue_rows.append({"title": title})
+
+    monkeypatch.setattr(fake, "create_issue", create_issue)
+    run(fake, path, monkeypatch)
+    return fake, filed
+
+
+def test_reviewer_reproducer_publishes_no_mention_or_link(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, HOSTILE_JOB)
+    assert len(filed) == 1
+    for field in filed[0]:
+        assert "@" not in field
+        assert "](" not in field and "[review-probe]" not in field
+        assert "https://" not in field
+        assert "review-probe" in field  # still identifies the job
+
+
+def test_sanitised_job_text_is_identical_in_title_and_body(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, HOSTILE_JOB)
+    title, body = filed[0]
+    shown = keeper.display_text(HOSTILE_JOB)
+    assert title == f"Merge queue flaky test: {shown}"
+    assert body.startswith(f"`{shown}` failed merge_group runs on distinct PRs #42, #10596")
+
+
+HOSTILE_CLASSES = {
+    "mention": ("pytest @octocat", "@"),
+    "team-mention": ("pytest @org/team-name", "@"),
+    "link": ("pytest [click](https://evil.example/x)", "]("),
+    "image": ("pytest ![pixel](https://evil.example/p.png)", "]("),
+    "reference-link": ("pytest [a][b]", "]["),
+    "html-tag": ("pytest <img src=x onerror=alert(1)>", "<"),
+    "html-autolink": ("pytest <https://evil.example>", "<"),
+    "backtick": ("pytest `` ` ``", "`"),
+    "fence": ("pytest ```sh", "`"),
+    "tilde-fence": ("pytest ~~~sh", "~"),
+    "newline": ("pytest\n@octocat\n# heading", "\n"),
+    "carriage-return": ("pytest\r\n- [ ] task", "\r"),
+    "control-char": ("pytest\x00\x1b[31m\x7f", "\x00"),
+    "bidi-and-zero-width": ("pytest ‮evil​@​octocat", "‮"),
+    "fullwidth-at": ("pytest ＠octocat", "＠"),
+    "small-at": ("pytest ﹫octo/team", "﹫"),
+    "issue-reference": ("pytest #123", "#123"),
+    "repo-reference": ("pytest octo/repo#9", "#9"),
+    "gh-reference": ("pytest GH-45", "GH-4"),
+    "character-reference": ("pytest &#64;octocat &commat;x", "&#"),
+    "bare-url": ("pytest https://evil.example/path www.evil.example", "://"),
+}
+
+
+@pytest.mark.parametrize("name", sorted(HOSTILE_CLASSES))
+def test_each_hostile_class_is_neutralised_in_title_body_and_pr_comment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, name: str
+) -> None:
+    job, forbidden = HOSTILE_CLASSES[name]
+    shown = keeper.display_text(job)
+    assert forbidden not in shown
+    assert "＠" not in shown and "﹫" not in shown and "@" not in shown
+    assert not any(unicodedata.category(char) in {"Cc", "Cf", "Zl", "Zp"} for char in shown)
+    assert not re.search(r"(?i)\bwww\.|&#?\w+;|#\d|\bGH-\d", shown)
+    assert keeper.code_span(job) == f"`{shown}`"
+    assert shown != job and f"(id:{hashlib.sha256(job.encode()).hexdigest()[:8]})" in shown
+
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, job)
+    assert len(filed) == 1
+    title, body = filed[0]
+    assert "\n" not in title and shown in title and f"`{shown}`" in body
+    assert forbidden not in title
+    assert forbidden not in body.replace("`" + shown + "`", "")
+
+
+def test_unicode_lookalike_at_never_survives_in_any_published_field(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    job = "pytest ＠maintainers ﹫team"
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, job)
+    for field in filed[0]:
+        assert not {"@", "＠", "﹫"} & set(field)
+
+
+def test_very_long_job_name_is_bounded_and_distinct_names_keep_distinct_titles(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first, second = "pytest " + "a" * 5000 + "1", "pytest " + "a" * 5000 + "2"
+    shown = keeper.display_text(first)
+    assert len(shown) <= keeper.DISPLAY_JOB_LIMIT + len(" (id:)") + keeper.DISPLAY_ID_LENGTH
+    assert shown.count("…") == 1
+    assert keeper.display_text(first) != keeper.display_text(second)
+    assert keeper.display_text(first) == keeper.display_text(first)  # deterministic
+
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [], failures=[_recent(first, 1), _recent(first, 2), _recent(second, 3), _recent(second, 4)])
+    run(fake, path, monkeypatch)
+    titles = _issue_titles(fake)
+    assert len(titles) == 2 and len(set(titles)) == 2
+    assert all(len(title) < 256 for title in titles)
+
+
+def test_empty_after_sanitising_still_has_a_name() -> None:
+    shown = keeper.display_text("​\x00\n")
+    assert shown.startswith("(unnamed) (id:")
+
+
+@pytest.mark.parametrize("job", ["pytest (3)", "Frontend", "Test / pytest (shard 12, py3.12)", "Build, drift check"])
+def test_benign_names_pass_through_unchanged(job: str) -> None:
+    assert keeper.display_text(job) == job
+    assert keeper.code_span(job) == f"`{job}`"
+
+
+def test_grouping_and_counting_use_the_raw_name(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    raw = {"job": HOSTILE_JOB, "pr": 5}
+    assert keeper._flaky_jobs([raw, {**raw, "pr": 6}]) == {HOSTILE_JOB: ([5, 6], [])}
+    # Two names that sanitise to the same visible text but differ raw stay two groups.
+    twin = HOSTILE_JOB.replace("@", "＠")
+    assert keeper._flaky_jobs([raw, {"job": twin, "pr": 6}]) == {}
+
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [HOSTILE_JOB], failures=[_recent(HOSTILE_JOB, 10596)])
+    run(fake, path, monkeypatch)
+    assert len(_issue_titles(fake)) == 1
+    stored = json.loads(path.read_text())["failures"]
+    assert {item["job"] for item in stored} == {HOSTILE_JOB}  # state keeps the raw name
+
+
+def test_second_run_finds_the_sanitised_title_and_files_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake, filed = _public_flaky_issue(tmp_path, monkeypatch, HOSTILE_JOB)
+    assert len(filed) == 1
+    path = tmp_path / "state.json"  # the state now holds PRs 10596 and 42 for the same raw name
+    run(fake, path, monkeypatch)
+    assert len(filed) == 1
+    assert [row["title"] for row in fake.issue_rows] == [filed[0][0]]
+
+
+def test_hostile_failed_test_text_is_sanitised_in_issue_body(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    test = "tests/a.py::test_x @octocat [l](https://evil.example)\n# 12 `x`"
+    _, filed = _public_flaky_issue(tmp_path, monkeypatch, "pytest (3)", test=test)
+    body = filed[0][1]
+    assert f"Failed test: `{keeper.display_text(test, keeper.DISPLAY_TEST_LIMIT)}`." in body
+    for token in ("@", "](", "https://", "\n", "#12", "`x`"):
+        assert token not in body
+
+
+def test_failed_test_list_in_issue_body_is_bounded(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tests = [f"tests/a.py::test_{index:03d}" for index in range(keeper.DISPLAY_TEST_ITEMS + 5)]
+    failures = [{"job": "pytest (3)", "pr": number, "test": test} for number, test in enumerate(tests, 100)]
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [], failures=[{**item, "at": "2999-01-01T00:00:00+00:00"} for item in failures])
+    bodies: list[str] = []
+    monkeypatch.setattr(fake, "create_issue", lambda title, body: bodies.append(body))
+    run(fake, path, monkeypatch)
+    assert len(bodies) == 1
+    assert bodies[0].count("`tests/a.py::test_") == keeper.DISPLAY_TEST_ITEMS
+    assert "and 5 more." in bodies[0]
+
+
+def test_drop_comment_sanitises_failed_job_names_and_log_derived_test(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    job = "pytest @review-probe/maintainers [x](https://example.invalid/p)"
+    test = "tests/a.py::test_x @octocat [l](https://evil.example)"
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [])
+    fake.job_rows = [{"id": 5, "name": job, "conclusion": "failure"}]
+    monkeypatch.setattr(fake, "first_failed_test", lambda job_id: test, raising=False)
+    run(fake, path, monkeypatch)
+    comments = [body for kind, body in fake.actions if kind == "comment"]
+    assert comments, fake.actions
+    for body in comments:
+        assert "@" not in body and "](" not in body and "https://evil" not in body and "https://example.invalid" not in body
+        assert f"failing jobs: `{keeper.display_text(job)}`" in body
+        assert f"First FAILED test: `{keeper.display_text(test, keeper.DISPLAY_TEST_LIMIT)}`." in body
+    # Raw names stay in the recorded failures so grouping still works.
+    assert json.loads(path.read_text())["failures"][-1]["job"] == job
