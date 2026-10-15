@@ -236,13 +236,77 @@ def relation_conservation(inputs: wa.Inputs, cards: dict) -> dict:
             "errors": {k: v for k, v in errors.items() if v}}
 
 
-def withdrawal(cards: dict, takedown: list[dict], suppressions: dict | None) -> dict:
+def _stored_proposition(field: str, value_norm: str, structured: bool, normalise) -> tuple | str:
+    """A proposition read from a STORED `value_norm` (the assembler regenerates it from the raw value instead):
+    a paradigm slot is its slot plus its unstressed form set, a declared set its member set, else the text."""
+    if field == "paradigm":
+        slot, _, forms = value_norm.partition("=")
+        return slot, frozenset(normalise(src.unstressed(f)) for f in forms.split("|"))
+    if structured:
+        return frozenset(normalise(m) for m in value_norm.split("|"))
+    return normalise(value_norm)
+
+
+def intended_matches(selector: dict, inventory: dict, records: dict) -> set[str] | None:
+    """The assertion ids a declared selector is meant to reach, worked out independently of the assembler from
+    the original inventory (`assertion_id -> (assertion, card spelling)`) and the registry's source records.
+    None when the selector is inconsistent or unevaluable, which no withdrawn build may carry."""
+    kind = selector["kind"]
+    if kind == "source":
+        return {i for i, (a, _) in inventory.items() if a["source_id"] == selector["source_id"]}
+    if kind == "source_record":
+        record = records.get(selector["source_record_id"])
+        if record is None or record["source_id"] != selector["source_id"] or (
+                "alias_at_creation" in selector
+                and selector["alias_at_creation"] not in {x["key"] for x in record["aliases"]}):
+            return None
+        return {i for i, (a, _) in inventory.items() if a["source_id"] == selector["source_id"]
+                and a.get("source_record_id") == selector["source_record_id"]}
+    if kind == "assertion_id":
+        fallback = intended_matches(selector["fallback"], inventory, records)
+        if selector["assertion_id"] not in inventory:
+            return fallback
+        # While the id exists it alone is withdrawn, and its fallback must describe it.
+        return {selector["assertion_id"]} if fallback and selector["assertion_id"] in fallback else None
+    if kind == "assertion_content":
+        normalise = wa.NORMALISERS.get(selector["normaliser_version"])
+        if normalise is None:
+            return None
+        out = set()
+        for i, (a, spelling) in inventory.items():
+            if (a["source_id"], a["field"]) != (selector["source_id"], selector["field"]) or \
+                    src.nfc(spelling) != src.nfc(selector["subject_spelling"]):
+                continue
+            structured = isinstance(a["value"], list)
+            if "value_norm" not in selector or _stored_proposition(
+                    a["field"], selector["value_norm"], structured, normalise) == _stored_proposition(
+                    a["field"], a["value_norm"], structured, normalise):
+                out.add(i)
+        return out
+    return None
+
+
+def withdrawal(cards: dict, takedown: list[dict], suppressions: dict | None, source_records: list[dict]) -> dict:
     """Suppressed provenance: every suppressed assertion is credited by the takedown entry it names, every
-    credited assertion is retained and suppressed, and the takedown covers exactly the declared selectors."""
+    credited assertion is retained and suppressed, the takedown covers exactly the declared selectors, and each
+    selector reached exactly the assertions it was meant to (`intended_matches`, worked out independently)."""
     errors = Counter()
     entries = {t["suppression_id"]: t for t in takedown}
-    declared = [e["suppression_id"] for e in (suppressions or {}).get("entries", [])]
-    errors["takedown_vs_selectors"] += sorted(entries) != sorted(declared)
+    declared = (suppressions or {}).get("entries", [])
+    errors["takedown_vs_selectors"] += sorted(entries) != sorted(e["suppression_id"] for e in declared)
+    inventory = {a["assertion_id"]: (a, card["key_at_creation"]["spelling"])
+                 for card in cards.values() for a in card["assertions"]}
+    records = {sr["source_record_id"]: sr for sr in source_records}
+    intended_union = set()
+    for e in declared:
+        intended = intended_matches(e["selector"], inventory, records)
+        errors["selector_inconsistent"] += intended is None
+        intended = intended or set()
+        intended_union |= intended
+        credited = entries.get(e["suppression_id"], {})
+        errors["selector_scope"] += set(credited.get("assertions", [])) != intended
+    errors["suppressed_outside_selectors"] += {
+        i for i, (a, _) in inventory.items() if a["status"] == "suppressed"} != intended_union
     retained = {}
     for card in cards.values():
         for a in card["assertions"]:
@@ -338,6 +402,13 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
     report["relation_units"] = relation_conservation(inputs, cards)
 
     registry_sr = {sr["source_record_id"]: sr for sr in inputs.registry["source_records"]}
+    # Each frozen row's persistent record, read from the registry's correspondence in the row's OWN snapshot.
+    binding = {}
+    for record in inputs.manifest["selection"]["source_records"]:
+        owners = [sr for sr in inputs.registry["source_records"] if sr["source_id"] == record["source_id"] and any(
+            c["snapshot_id"] == record["snapshot_id"] and c.get("locator") == record["locator"]
+            and c["status"] == "unique" for c in sr["correspondence"])]
+        binding[record["locator"]] = (owners[0]["source_record_id"], record["snapshot_id"]) if len(owners) == 1 else None
     id_errors, register_errors, lineage_errors, sr_errors, forbidden = Counter(), Counter(), Counter(), Counter(), 0
     cited_records = set()
     for card in cards.values():
@@ -354,12 +425,19 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
                 cited_records.add(a["source_record_id"])
                 sr_errors["unknown"] += a["source_record_id"] not in registry_sr
                 sr_errors["source"] += registry_sr.get(a["source_record_id"], {}).get("source_id") != a["source_id"]
+                bound = binding.get(a["locator"].split(" ")[0], False)
+                sr_errors["unbound_frozen_row"] += bound is None
+                if bound:
+                    sr_errors["snapshot_binding"] += bound[0] != a["source_record_id"]
+                    sr_errors["key_outside_snapshot"] += a.get("source_record_key") not in {
+                        x["key"] for x in registry_sr.get(a["source_record_id"], {}).get("aliases", [])
+                        if x["snapshot_id"] == bound[1]}
             forbidden += a["source_id"] == "sum11" and a["field"] != "russification_exposed"
     report["assertion_identity"] = {"passed": not any(id_errors.values()), "errors": dict(id_errors)}
     report["register_lineage"] = {"passed": not any(register_errors.values()) and not any(lineage_errors.values()),
                                   "errors": {**register_errors, **lineage_errors}}
-    frozen = {sr["source_record_id"] for sr in inputs.registry["source_records"]
-              if any(c.get("locator") in inputs.records for c in sr["correspondence"])}
+    frozen = {bound[0] for bound in binding.values() if bound}
+    sr_errors["unbound_frozen_row"] += sum(bound is None for bound in binding.values())
     # A frozen record no assertion cites must be accounted for by a ledger hold naming it (refused evidence).
     held = {h["source_record_id"] for item in result["ledger"].cards.values() for h in item["held"]
             if h.get("source_record_id")}
@@ -380,7 +458,7 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
                 locator_errors[f"{a['source_id']}:{a['field']}:{problem}"] += 1
     report["locators"] = {"passed": not locator_errors, "checked": checked, "errors": dict(locator_errors)}
 
-    report["withdrawal"] = withdrawal(cards, result["takedown"], suppressions)
+    report["withdrawal"] = withdrawal(cards, result["takedown"], suppressions, inputs.registry["source_records"])
     withdrawn_fields = {f for t in result["takedown"] for f in t["fields"]}
     ledger_errors = Counter()
     for card_id, item in result["ledger"].cards.items():
