@@ -10472,7 +10472,6 @@ def _run_worker(
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
     from scripts.agent_runtime.attempt_boundary import (
         CLAUDE_ACCOUNT_KEY,
-        DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
         resolve_claude_account_label,
     )
@@ -10628,13 +10627,10 @@ def _run_worker(
             if state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if agent == "claude" and CLAUDE_ACCOUNT_KEY in state:
-                # The label the task record carries. Only the attempt boundary
-                # authenticates as a non-default account; elsewhere it would
-                # silently run as the default one, so it is refused.
-                claude_account = resolve_claude_account_label(state[CLAUDE_ACCOUNT_KEY])
-                if claude_account != DEFAULT_CLAUDE_ACCOUNT and (review_id is None or attempt_id is None):
-                    raise ClaudeAccountRefused("claude_account_route_unsealed")
-                tool_config[CLAUDE_ACCOUNT_KEY] = claude_account
+                # The label the task record carries. The Claude adapter (or a
+                # sealed attempt's boundary) authenticates as that account and
+                # verifies its binding again at use; an unknown label is refused.
+                tool_config[CLAUDE_ACCOUNT_KEY] = resolve_claude_account_label(state[CLAUDE_ACCOUNT_KEY])
             if agent in {"agy", "gemini"} and (
                 _dispatch_is_review_typed(argparse.Namespace(**state))
                 or require_review_verdict
@@ -12256,11 +12252,11 @@ def _refuse_review_scratch_in_worktree() -> None:
 def _dispatch_claude_account_refusal(args: argparse.Namespace) -> str | None:
     """The typed code refusing ``--claude-account``, or ``None``; checked before any side effect.
 
-    A non-default label is admitted only for a claude formal review attempt:
-    that sealed boundary is the one worker path that selects the bound
-    account's credential, so any other route would silently run as the
-    default account. Its binding and credential sources are verified here and
-    again where the worker authenticates.
+    A non-default label is admitted only for a claude dispatch. An ordinary
+    worker runs with the bound account's login directory; a formal review
+    attempt's sealed boundary selects that account's credential. The binding
+    and credential sources are verified here and again where the worker
+    authenticates.
     """
     from scripts.agent_runtime.attempt_boundary import (
         DEFAULT_CLAUDE_ACCOUNT,
@@ -12275,21 +12271,31 @@ def _dispatch_claude_account_refusal(args: argparse.Namespace) -> str | None:
             return None
         if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
             return "claude_account_seat_unsupported"
-        if not getattr(args, "review_attempt", None):
-            return "claude_account_route_unsealed"
         verify_claude_account(label)
     except ClaudeAccountRefused as exc:
         return exc.code
     return None
 
 
-def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, str]:
-    """A claude task record's account label, resolved once; the worker reads it back from the record."""
+def _claude_account_state(args: argparse.Namespace, dispatch_agent: str) -> dict[str, Any]:
+    """A claude task record's account label, resolved once; the worker reads it back from the record.
+
+    An ordinary worker on a non-default label loads none of its login
+    directory's user settings (hooks, permission rules, MCP servers, plugins);
+    the record says so in ``claude_account_user_scope_omitted`` (#10619).
+    """
     if dispatch_agent != "claude":
         return {}
-    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_ACCOUNT_KEY,
+        DEFAULT_CLAUDE_ACCOUNT,
+        resolve_claude_account_label,
+    )
 
-    return {CLAUDE_ACCOUNT_KEY: resolve_claude_account_label(getattr(args, "claude_account", None))}
+    label = resolve_claude_account_label(getattr(args, "claude_account", None))
+    if label == DEFAULT_CLAUDE_ACCOUNT or getattr(args, "review_attempt", None):
+        return {CLAUDE_ACCOUNT_KEY: label}
+    return {CLAUDE_ACCOUNT_KEY: label, "claude_account_user_scope_omitted": True}
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -18540,9 +18546,13 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Claude account label for a claude dispatch: a (default) or b. The label is recorded in the "
             "task record and selects the account the worker authenticates as. Label b needs its private "
-            "local binding and currently runs only formal review attempts, whose sealed boundary selects "
-            "the account; an unknown label, a missing binding or a conflicting credential source is "
-            "refused (CLAUDE_ACCOUNT_REFUSED) before any worktree or task record is created."
+            "local binding and a consumer (Max or Pro) plan on a host with no machine-level Claude Code "
+            "policy; organisational plans and machine policy are refused. An ordinary "
+            "worker runs with that account's login directory as its only "
+            "credential source, and a formal review attempt's sealed boundary selects the account. An "
+            "unknown label, a missing binding or a conflicting credential source (a Claude token or API key "
+            "variable, or another config directory) is refused (CLAUDE_ACCOUNT_REFUSED) before any worktree "
+            "or task record is created, and checked again before the worker starts Claude."
         ),
     )
     d.add_argument(

@@ -7,13 +7,17 @@ for the provider being invoked, not the full orchestrator environment.
 
 from __future__ import annotations
 
+import hashlib
+import hmac
+import json
 import os
 import re
 import shutil
 import signal
+import stat
 import subprocess
 import tempfile
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 
 _SENSITIVE_NAME_RE = re.compile(
@@ -112,6 +116,42 @@ _DRIVER_GITHUB_IDENTITY_NAMES = {
     "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
     "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
 }
+
+# Claude Code's config directory. Only the Claude adapter's labelled-account
+# override sets it for a claude run (#10619); see build_agent_env.
+CLAUDE_CONFIG_DIR_ENV = "CLAUDE_CONFIG_DIR"
+# Claude Code prefers a non-empty legacy global config in that directory over
+# its ``.claude.json``.
+CLAUDE_LEGACY_GLOBAL_CONFIG = ".config.json"
+# Claude Code's Linux machine policy root. Every machine-level policy source
+# it reads (2.1.300) is under it: managed settings and their drop-ins (either
+# may name a ``policyHelper`` program whose output becomes policy), managed
+# MCP servers, a managed CLAUDE.md and managed rules, skills and agents.
+_CLAUDE_MANAGED_SETTINGS_DIR = Path("/etc/claude-code")
+# Server-delivered policy state Claude Code (2.1.300) keeps in its config
+# directory: the remote managed settings and policy limits caches, their
+# signatures and sync stamps, and the remote settings consent records. It
+# fetches them only for a Team, Enterprise, unknown-plan or profile login, so a
+# labelled account (consumer plans only, #10619) must have none.
+CLAUDE_POLICY_CACHE_NAMES = (
+    "remote-settings.json",
+    "remote-settings.json.signature.json",
+    "remote-settings.json.signature-iat.json",
+    "remote-settings.json.synced-at",
+    "remote-settings-consent.json",
+    "remote-settings-helper-consent",
+    "policy-limits.json",
+    "policy-limits.json.signature.json",
+    "policy-limits.json.signature-iat.json",
+    "policy-limits.json.stamp.json",
+)
+# A profile store's entries that make Claude Code take a profile login instead
+# of its config directory's credential (2.1.300): the active profile name and
+# the profile configs.
+CLAUDE_PROFILE_STORE_ENTRIES = ("active_config", "configs")
+# The launch guard's exit status when the bound settings changed or machine
+# policy appeared (EX_CONFIG).
+CLAUDE_LAUNCH_GUARD_EXIT = 78
 
 _PROVIDER_SECRET_ALLOWLIST = {
     "gemini": {
@@ -618,6 +658,8 @@ def build_agent_env(
     ``model`` is the effective model selected for this invocation, never an
     inherited parent model. Cursor Auto or an absent model has Unknown identity.
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
+    A claude run's ``CLAUDE_CONFIG_DIR`` comes only from ``overrides``; when
+    set it is the run's sole credential source (no Claude API key passes).
     For a Kimi seat it raises ``KimiAdmissionRefused`` when credential
     isolation (an empty ``GH_CONFIG_DIR``, the credential-helper and GitHub
     header resets) cannot be established: no partially isolated environment
@@ -678,6 +720,17 @@ def build_agent_env(
         env.pop("PYTHONPATH", None)
     else:
         env["PYTHONPATH"] = pytest_pythonpath
+
+    login_dir = (overrides or {}).get(CLAUDE_CONFIG_DIR_ENV)
+    if login_dir and _normalized_provider(provider) == "claude":
+        # A labelled Claude account (#10619): the adapter's verified login
+        # directory is the run's only credential source. The loop above never
+        # admits a config directory, ambient or not, nor any Claude token
+        # variable; drop the provider's API keys too. The path skips the
+        # token-shape value filter, which would otherwise silently drop it.
+        for name in [name for name in env if name.upper() in _PROVIDER_SECRET_ALLOWLIST["claude"]]:
+            del env[name]
+        env[CLAUDE_CONFIG_DIR_ENV] = login_dir
 
     if "PATH" not in env and "PATH" in raw and not _looks_sensitive_value(raw["PATH"]):
         env["PATH"] = raw["PATH"]
@@ -757,6 +810,248 @@ def _print_unneeded_env_var_names(provider: str, *, harness: str | None = None) 
         if var_name.isidentifier():
             sys.stdout.write(f"{var_name}\n")
     return 0
+
+
+# --- Labelled Claude account: settings inputs bound to the launch (#10619) ---
+
+# These digests are change-detection fingerprints the launch guard recomputes
+# and compares, never stored credentials. A parsed JSON selection can hold the
+# login's tokens, so its fingerprint is scrypt, a password KDF, and the digest
+# on the guard's argv stays costly to invert; file bytes and the combined
+# inputs use BLAKE2b. Each purpose has its own fixed public domain (a BLAKE2b
+# personalization, at most 16 bytes, or the scrypt salt), so the same bytes
+# give a different digest for each purpose.
+_FILE_DIGEST_PERSON = b"lu-launch-file"
+_INPUTS_DIGEST_PERSON = b"lu-launch-inputs"
+_SELECTION_DIGEST_SALT = b"lu-launch-select"
+
+
+def _blake2b_256(person: bytes, data: bytes = b"") -> hashlib.blake2b:
+    return hashlib.blake2b(data, digest_size=32, person=person)
+
+
+def claude_fingerprints_match(left: str, right: str) -> bool:
+    """Constant-time equality of two launch fingerprints, whatever text either holds.
+
+    ``surrogatepass`` encodes every ``str``, including an argument the OS
+    could not decode, one-to-one, so a malformed value compares unequal
+    instead of raising.
+    """
+    return hmac.compare_digest(left.encode("utf-8", "surrogatepass"), right.encode("utf-8", "surrogatepass"))
+
+
+def _file_fingerprint(path: Path) -> str:
+    """A content digest of ``path`` as Claude Code would read it, or why there is none."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC)
+    except FileNotFoundError:
+        return "absent"
+    except OSError:
+        return "unreadable"
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            return "not_regular"
+        digest = _blake2b_256(_FILE_DIGEST_PERSON)
+        while chunk := os.read(fd, 1 << 20):
+            digest.update(chunk)
+        return digest.hexdigest()
+    except OSError:
+        return "unreadable"
+    finally:
+        os.close(fd)
+
+
+def _canonical_digest(value: object) -> str:
+    """scrypt of ``value``'s canonical JSON (the scrypt paper's interactive cost)."""
+    data = json.dumps(value, sort_keys=True).encode()
+    return hashlib.scrypt(data, salt=_SELECTION_DIGEST_SALT, n=1 << 14, r=8, p=1, dklen=32).hex()
+
+
+def _json_fingerprint(path: Path, select: Callable[[object], object]) -> str:
+    """A digest of the part of a JSON file ``select`` picks, or why there is none."""
+    fingerprint = _file_fingerprint(path)
+    if len(fingerprint) != 64:
+        return fingerprint
+    try:
+        data = json.loads(path.read_bytes())
+    except (OSError, ValueError):
+        return "invalid"
+    return _canonical_digest(select(data))
+
+
+def _global_config_inputs(data: object) -> object:
+    """The global config's ``env`` map and login account and organisation: Claude Code rewrites the rest."""
+    if not isinstance(data, dict):
+        return "invalid"
+    account = data.get("oauthAccount")
+    if isinstance(account, dict):
+        account = {key: account.get(key) for key in ("accountUuid", "organizationUuid")}
+    return {"env": data.get("env"), "oauthAccount": account}
+
+
+def claude_credential_fingerprint(record: object) -> str:
+    """The identity of a login's credential: a digest of its whole ``claudeAiOauth`` record (#10619).
+
+    The record holds the token a labelled account's plan was classified for
+    and the subscription type Claude Code stored with it; a refresh or a
+    replacement changes it.
+    """
+    return _canonical_digest(record)
+
+
+def claude_login_credential_fingerprint(login_dir: str) -> str:
+    """``claude_credential_fingerprint`` of the credential in ``login_dir`` now, or why there is none."""
+    return _json_fingerprint(
+        Path(login_dir) / ".credentials.json",
+        lambda data: data.get("claudeAiOauth") if isinstance(data, dict) else "invalid",
+    )
+
+
+def claude_profile_store_dirs(environ: Mapping[str, str]) -> list[Path]:
+    """Every profile store Claude Code may read under ``environ`` (2.1.300, #10619).
+
+    It takes ``ANTHROPIC_CONFIG_DIR``, else ``$XDG_CONFIG_HOME/anthropic``,
+    else ``$HOME/.config/anthropic``; each one ``environ`` sets is listed, so
+    a check holds whichever the CLI's own environment keeps.
+    """
+    named, xdg, home = (environ.get(name, "").strip() for name in ("ANTHROPIC_CONFIG_DIR", "XDG_CONFIG_HOME", "HOME"))
+    stores = [Path(named) if named else None, Path(xdg) / "anthropic" if xdg else None]
+    stores.append(Path(home) / ".config" / "anthropic" if home else None)
+    return list(dict.fromkeys(store for store in stores if store is not None))
+
+
+def claude_machine_policy_state() -> str:
+    """Whether this host has machine-level Claude Code policy (#10619): ``absent``, ``present`` or ``unavailable``.
+
+    ``absent`` only when the machine policy root does not exist or is a plain
+    empty directory; anything else in its place, or any entry in it, is
+    ``present``. Presence, not content, decides: a policy helper's output
+    cannot be bound to a launch, so a labelled account runs only without any.
+    """
+    try:
+        info = os.lstat(_CLAUDE_MANAGED_SETTINGS_DIR)
+    except FileNotFoundError:
+        return "absent"
+    except OSError:
+        return "unavailable"
+    if not stat.S_ISDIR(info.st_mode):
+        return "present"
+    try:
+        with os.scandir(_CLAUDE_MANAGED_SETTINGS_DIR) as entries:
+            return "absent" if next(entries, None) is None else "present"
+    except OSError:
+        return "unavailable"
+
+
+def _checkout_settings_roots(cwd: Path) -> list[Path]:
+    """Every directory whose ``.claude`` project or local settings a run in ``cwd`` may load.
+
+    The working directory, its Git top level and, for a linked worktree, the
+    main checkout (whose local file Claude Code also reads). Read from the
+    ``.git`` files themselves, so the adapter and the launch guard find the
+    same roots whatever ``git`` their ``PATH`` resolves.
+    """
+    roots = [cwd]
+    for top in (cwd, *cwd.parents):
+        marker = top / ".git"
+        if marker.is_dir():
+            roots.append(top)
+            break
+        if marker.is_file():
+            roots.append(top)
+            try:
+                pointer = marker.read_text(encoding="utf-8").strip()
+                gitdir = top / pointer.removeprefix("gitdir:").strip()
+                common = gitdir / (gitdir / "commondir").read_text(encoding="utf-8").strip()
+                roots.append(common.resolve().parent)
+            except (OSError, ValueError):
+                pass
+            break
+    return list(dict.fromkeys(roots))
+
+
+def claude_labelled_inputs_digest(
+    *, login_dir: str, cwd: Path, settings: str, setting_sources: str, environ: Mapping[str, str]
+) -> str:
+    """One digest over every input a labelled run's verification depended on (#10619).
+
+    The run's ``--settings`` and ``--setting-sources`` values and login
+    directory; that directory's user settings, global config ``env`` map and
+    login account and organisation, legacy global config, credential record
+    (the exact credential whose plan was classified) and server-delivered
+    policy state (absent when verified); the profile stores ``environ`` (the
+    run's environment) points Claude Code at; and the checkout's project and
+    local settings files. The adapter binds it into the plan;
+    ``run_claude_launch_guard`` recomputes it immediately before the CLI
+    starts. Machine policy is no input: a labelled run requires none
+    (``claude_machine_policy_state``), checked on its own at each step.
+    """
+    login, cwd = Path(login_dir), cwd.resolve()  # the guard sees the physical working directory
+    inputs = {
+        "settings": settings,
+        "setting_sources": setting_sources,
+        "login_dir": login_dir,
+        "user_settings": _file_fingerprint(login / "settings.json"),
+        "global_config": _json_fingerprint(login / ".claude.json", _global_config_inputs),
+        "legacy_global_config": _file_fingerprint(login / CLAUDE_LEGACY_GLOBAL_CONFIG),
+        "credential": claude_login_credential_fingerprint(login_dir),
+        "policy_caches": {name: _file_fingerprint(login / name) for name in CLAUDE_POLICY_CACHE_NAMES},
+        "profile_stores": {
+            str(store / name): _file_fingerprint(store / name)
+            for store in claude_profile_store_dirs(environ)
+            for name in CLAUDE_PROFILE_STORE_ENTRIES
+        },
+        "checkout": {
+            str(root / ".claude" / name): _file_fingerprint(root / ".claude" / name)
+            for root in _checkout_settings_roots(cwd)
+            for name in ("settings.json", "settings.local.json")
+        },
+    }
+    return _inputs_digest(inputs)
+
+
+def _inputs_digest(inputs: Mapping[str, object]) -> str:
+    """BLAKE2b-256 of the labelled run's collected input fingerprints, in canonical JSON."""
+    return _blake2b_256(_INPUTS_DIGEST_PERSON, json.dumps(inputs, sort_keys=True).encode()).hexdigest()
+
+
+def _option_value(argv: list[str], name: str) -> str | None:
+    """The value after ``name`` among ``argv``'s options (before any ``--``)."""
+    options = argv[: argv.index("--")] if "--" in argv else argv
+    return options[options.index(name) + 1] if name in options[:-1] else None
+
+
+def run_claude_launch_guard(argv: list[str]) -> None:
+    """Exec the labelled Claude CLI only on unchanged bound inputs and no machine policy (#10619).
+
+    ``argv`` is ``<digest> -- <claude argv>``. Runs in the spawned process
+    itself, with the run's own environment, so every launch (first spawn,
+    retry, failover rebuild, resume) re-checks just before the CLI reads its
+    files. On a mismatch, or with machine policy present, it prints
+    the registered code and exits ``CLAUDE_LAUNCH_GUARD_EXIT``; nothing else is
+    printed.
+    """
+    digest, separator, cmd = (argv[0], argv[1], argv[2:]) if len(argv) > 2 else ("", "", [])
+    login_dir = os.environ.get(CLAUDE_CONFIG_DIR_ENV)
+    settings = _option_value(cmd, "--settings")
+    sources = _option_value(cmd, "--setting-sources")
+    if (
+        separator != "--"
+        or not cmd
+        or not login_dir
+        or settings is None
+        or sources is None
+        or not claude_fingerprints_match(
+            claude_labelled_inputs_digest(
+                login_dir=login_dir, cwd=Path.cwd(), settings=settings, setting_sources=sources, environ=os.environ
+            ),
+            digest,
+        )
+        or claude_machine_policy_state() != "absent"
+    ):
+        os.write(2, b"CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed\n")
+        os._exit(CLAUDE_LAUNCH_GUARD_EXIT)
+    os.execvp(cmd[0], cmd)
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ import tempfile
 import threading
 import time
 from collections.abc import Iterator, Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -46,7 +46,15 @@ from .attempt_safe_read import (
 from .attempt_safe_read import (
     safe_read_attempt_file as safe_read_attempt_file,
 )
-from .env_sanitize import build_agent_env
+from .env_sanitize import (
+    CLAUDE_LEGACY_GLOBAL_CONFIG,
+    CLAUDE_POLICY_CACHE_NAMES,
+    CLAUDE_PROFILE_STORE_ENTRIES,
+    build_agent_env,
+    claude_credential_fingerprint,
+    claude_machine_policy_state,
+    claude_profile_store_dirs,
+)
 
 # Claude account labels. A run carries one label; the default account is the
 # one this host has always used. Which account a non-default label means lives
@@ -63,10 +71,74 @@ _CLAUDE_AMBIENT_AUTH_ENV = (
     "CLAUDE_API_KEY",
     "CLAUDE_CODE_OAUTH_TOKEN",
 )
+# Claude Code (2.1.300) takes a Linux host for WSL when either variable is set
+# or the kernel string names it, and then also reads the Windows machine policy
+# chain (registry included), which no check here can enumerate (#10619).
+_CLAUDE_WSL_ENV = ("WSL_DISTRO_NAME", "WSL_INTEROP")
+_CLAUDE_PROC_VERSION = Path("/proc/version")
 _CLAUDE_BINDING_KEYS = frozenset({"config_dir", "account_uuid"})
 _CLAUDE_ACCOUNT_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 _CLAUDE_BINDING_MAX_BYTES = 65536
 _CLAUDE_GLOBAL_CONFIG_MAX_BYTES = 16 * 1024 * 1024
+_CLAUDE_SETTINGS_MAX_BYTES = 1024 * 1024
+# What a labelled account's login directory may carry (#10619): an allowlist,
+# not a list of known-bad names. Each environment name below only tunes local
+# behaviour; none selects a credential, endpoint, proxy, certificate or
+# provider. Any other name refuses, whatever its value (``null`` included).
+# Names match exactly, as Claude Code applies them.
+CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
+    {
+        "BASH_DEFAULT_TIMEOUT_MS",
+        "BASH_MAX_OUTPUT_LENGTH",
+        "BASH_MAX_TIMEOUT_MS",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
+        "CLAUDE_CODE_DISABLE_TERMINAL_TITLE",
+        "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
+        "DISABLE_AUTOUPDATER",
+        "DISABLE_BUG_COMMAND",
+        "DISABLE_COST_WARNINGS",
+        "DISABLE_ERROR_REPORTING",
+        "DISABLE_TELEMETRY",
+        "MAX_MCP_OUTPUT_TOKENS",
+        "MAX_THINKING_TOKENS",
+        "MCP_TIMEOUT",
+        "MCP_TOOL_TIMEOUT",
+    }
+)
+# Top-level user settings keys the login directory may carry. A labelled run
+# does not load that scope at all; this guards a future CLI that would.
+_CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
+    {
+        "$schema",
+        "alwaysThinkingEnabled",
+        "autoUpdatesChannel",
+        "cleanupPeriodDays",
+        "disabledMcpjsonServers",
+        "effortLevel",
+        "enableAllProjectMcpServers",
+        "enabledMcpjsonServers",
+        "enabledPlugins",
+        "env",
+        "extraKnownMarketplaces",
+        "hooks",
+        "includeCoAuthoredBy",
+        "language",
+        "model",
+        "outputStyle",
+        "permissions",
+        "skipDangerousModePermissionPrompt",
+        "spinnerTipsEnabled",
+        "statusLine",
+        "theme",
+        "verbose",
+    }
+)
+# The only plans a labelled account may run on (#10619): the organisation type
+# the provider reports for the login's own token, and the subscription type
+# Claude Code stores with that credential (which decides whether it fetches
+# organisational policy). Team, Enterprise, unknown or missing refuses;
+# organisational policy is a non-goal (see the Claude adapter's docstring).
+CLAUDE_CONSUMER_PLANS = {"claude_max": "max", "claude_pro": "pro"}
 _PRIVATE_FILE_FAILURES = ("unavailable", "not_private", "oversized", "invalid")
 # Every code a Claude account refusal may carry. Codes name no value or location.
 CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
@@ -86,8 +158,26 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_credentials_missing",
         "claude_account_credentials_expired",
         "claude_account_identity_unavailable",
+        "claude_account_settings_credential_source",
+        "claude_account_config_credential_source",
+        "claude_account_config_ambiguous",
+        "claude_account_auth_method_conflict",
+        "claude_account_auth_status_unavailable",
+        "claude_account_status_override",
+        "claude_account_settings_changed",
+        "claude_account_plan_unsupported",
+        "claude_account_plan_unverified",
+        "claude_account_policy_cache_present",
+        "claude_account_policy_cache_unavailable",
+        "claude_account_profile_store_present",
+        "claude_account_machine_policy_present",
+        "claude_account_machine_policy_unavailable",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
-        *(f"claude_account_{kind}_{failure}" for kind in ("binding", "config") for failure in _PRIVATE_FILE_FAILURES),
+        *(
+            f"claude_account_{kind}_{failure}"
+            for kind in ("binding", "config", "settings")
+            for failure in _PRIVATE_FILE_FAILURES
+        ),
     }
 )
 
@@ -104,11 +194,16 @@ class ClaudeAccountRefused(ValueError):
 
 @dataclass(frozen=True)
 class ClaudeAccountBinding:
-    """A label's private binding: Claude's config directory and the account it must hold."""
+    """A label's private binding: Claude's config directory and the account it must hold.
+
+    After verification ``credential`` is the ``claude_credential_fingerprint``
+    of the credential record whose plan was classified.
+    """
 
     label: str
     config_dir: Path = field(repr=False)
     account_uuid: str = field(repr=False)
+    credential: str = field(default="", repr=False, compare=False)
 
 
 def resolve_claude_account_label(raw: object) -> str:
@@ -141,10 +236,15 @@ def _unique_json_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
     return result
 
 
-def _read_private_json(path: Path, *, limit: int, code: str, dir_fd: int | None = None) -> Any:
+def _read_private_json(
+    path: Path, *, limit: int, code: str, dir_fd: int | None = None, forbidden_mode: int = 0o077
+) -> Any:
     """Owner-only regular file, read without following links; ``None`` when absent.
 
-    Every failure is ``ClaudeAccountRefused`` with ``code`` and a fixed suffix.
+    ``forbidden_mode`` names the permission bits the file must not carry
+    (default: any group or other access). Every failure is
+    ``ClaudeAccountRefused`` with ``code`` and a fixed suffix; a file holding
+    JSON ``null`` is invalid, never taken for an absent one.
     """
     try:
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=dir_fd)
@@ -154,7 +254,7 @@ def _read_private_json(path: Path, *, limit: int, code: str, dir_fd: int | None 
         raise ClaudeAccountRefused(f"{code}_unavailable") from None
     try:
         info = os.fstat(fd)
-        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & forbidden_mode:
             raise ClaudeAccountRefused(f"{code}_not_private")
         raw = os.read(fd, limit + 1)
     except OSError:
@@ -165,9 +265,12 @@ def _read_private_json(path: Path, *, limit: int, code: str, dir_fd: int | None 
         raise ClaudeAccountRefused(f"{code}_oversized")
     try:
         # A decode or duplicate-key error is a ValueError; its text is never kept.
-        return json.loads(raw, object_pairs_hook=_unique_json_keys)
+        data = json.loads(raw, object_pairs_hook=_unique_json_keys)
     except ValueError:
         raise ClaudeAccountRefused(f"{code}_invalid") from None
+    if data is None:
+        raise ClaudeAccountRefused(f"{code}_invalid")
+    return data
 
 
 def load_claude_account_binding(label: str, *, environ: Mapping[str, str] | None = None) -> ClaudeAccountBinding:
@@ -225,6 +328,149 @@ def _claude_config_account_uuid(global_config: Path, *, dir_fd: int | None = Non
     return value if isinstance(value, str) else None
 
 
+def _refuse_unlisted_env(data: dict, code: str) -> None:
+    """Refuse an ``env`` map naming anything outside the labelled allowlist (#10619)."""
+    env = data.get("env", {})
+    if not isinstance(env, dict):
+        raise ClaudeAccountRefused(f"{code}_invalid")
+    if not set(env) <= CLAUDE_LABELLED_ENV_ALLOWLIST:
+        raise ClaudeAccountRefused(f"{code}_credential_source")
+
+
+def _refuse_claude_settings_credential_source(directory: int) -> None:
+    """Refuse a login directory whose user settings carry anything off the allowlist (#10619).
+
+    A labelled run does not load this scope, so this is defence in depth: a
+    key, helper, provider switch, endpoint or unknown setting refuses. Only
+    names are inspected; no value is kept or reported. The file may be
+    readable by others, not writable by them.
+    """
+    data = _read_private_json(
+        Path("settings.json"),
+        limit=_CLAUDE_SETTINGS_MAX_BYTES,
+        code="claude_account_settings",
+        dir_fd=directory,
+        forbidden_mode=0o022,
+    )
+    if data is None:
+        return
+    if not isinstance(data, dict):
+        raise ClaudeAccountRefused("claude_account_settings_invalid")
+    _refuse_unlisted_env(data, "claude_account_settings")
+    if not set(data) <= _CLAUDE_LABELLED_USER_SETTINGS_KEYS:
+        raise ClaudeAccountRefused("claude_account_settings_credential_source")
+
+
+def _checked_login_global_config(directory: int, account_uuid: str) -> dict:
+    """Verify the global config a labelled run loads from its login directory; return its login account (#10619).
+
+    Claude Code reads it only from the login directory, beside the credential
+    file, and applies its ``env`` map over the process environment even when
+    the user settings scope is off; so that map must stay on the allowlist. A
+    legacy ``.config.json`` there would replace ``.claude.json`` and is
+    refused outright.
+    """
+    try:
+        os.stat(CLAUDE_LEGACY_GLOBAL_CONFIG, dir_fd=directory, follow_symlinks=False)
+    except FileNotFoundError:
+        pass
+    else:
+        raise ClaudeAccountRefused("claude_account_config_ambiguous")
+    data = _read_private_json(
+        Path(".claude.json"), limit=_CLAUDE_GLOBAL_CONFIG_MAX_BYTES, code="claude_account_config", dir_fd=directory
+    )
+    account = data.get("oauthAccount") if isinstance(data, dict) else None
+    if not isinstance(account, dict) or account.get("accountUuid") != account_uuid:
+        raise ClaudeAccountRefused("claude_account_unverified")
+    _refuse_unlisted_env(data, "claude_account_config")
+    return account
+
+
+def _refuse_policy_caches(directory: int) -> None:
+    """Refuse server-delivered policy state in the login directory (#10619).
+
+    Claude Code fetches and caches remote managed settings and policy limits
+    only for a Team, Enterprise, unknown-plan or profile login, so a consumer
+    login has none. Any entry at those names (file, link or directory)
+    refuses, and so does one whose state cannot be read.
+    """
+    for name in CLAUDE_POLICY_CACHE_NAMES:
+        try:
+            os.stat(name, dir_fd=directory, follow_symlinks=False)
+        except FileNotFoundError:
+            continue
+        except OSError:
+            raise ClaudeAccountRefused("claude_account_policy_cache_unavailable") from None
+        raise ClaudeAccountRefused("claude_account_policy_cache_present")
+
+
+def _refuse_profile_store(env: Mapping[str, str]) -> None:
+    """Refuse a profile store Claude Code could take the run's login from instead (#10619).
+
+    An active profile or profile configs there would replace the login
+    directory's credential, so the classified credential could not be bound to
+    the launch. Every store the environment can point at is checked; an entry
+    whose state cannot be read refuses too.
+    """
+    for store in claude_profile_store_dirs({**env, "HOME": env.get("HOME") or str(Path.home())}):
+        for name in CLAUDE_PROFILE_STORE_ENTRIES:
+            try:
+                os.lstat(store / name)
+            except FileNotFoundError:
+                continue
+            except OSError:
+                pass
+            raise ClaudeAccountRefused("claude_account_profile_store_present")
+
+
+def refuse_claude_machine_policy() -> None:
+    """Refuse a labelled account on a host with any machine-level Claude Code policy (#10619).
+
+    A machine policy helper's output becomes policy at every CLI start and
+    cannot be bound to a launch, so presence refuses, whatever the policy
+    holds (``claude_machine_policy_state``); a root whose state cannot be read
+    refuses too.
+    """
+    state = claude_machine_policy_state()
+    if state != "absent":
+        raise ClaudeAccountRefused(f"claude_account_machine_policy_{state}")
+
+
+def _claude_host_is_wsl(env: Mapping[str, str]) -> bool:
+    """Whether Claude Code would take this Linux host for WSL, as it decides it (2.1.300)."""
+    if any(env.get(name) for name in _CLAUDE_WSL_ENV):
+        return True
+    try:
+        kernel = _CLAUDE_PROC_VERSION.read_text(encoding="utf-8", errors="replace").lower()
+    except OSError:
+        return False
+    return "microsoft" in kernel or "wsl" in kernel
+
+
+def _refuse_non_consumer_plan(organization: object, record: dict, account: dict) -> None:
+    """Admit only a consumer plan, bound to the exact credential and organisation (#10619).
+
+    ``organization`` is what the provider reports for the credential's own
+    token. ``record`` (the credential's stored subscription type, which decides
+    whether Claude Code fetches organisational policy) and ``account`` (the
+    global config's organisation) are what Claude Code cached at login; they
+    must agree with that answer, so stale or edited metadata never stands in
+    for it.
+    """
+    organization_type = organization.get("organization_type") if isinstance(organization, dict) else None
+    plan = CLAUDE_CONSUMER_PLANS.get(organization_type) if isinstance(organization_type, str) else None
+    if plan is None:
+        raise ClaudeAccountRefused("claude_account_plan_unsupported")
+    organization_uuid = organization.get("uuid")
+    if (
+        not isinstance(organization_uuid, str)
+        or not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(organization_uuid)
+        or record.get("subscriptionType") != plan
+        or account.get("organizationUuid") != organization_uuid
+    ):
+        raise ClaudeAccountRefused("claude_account_plan_unverified")
+
+
 @contextlib.contextmanager
 def _open_claude_directory(path: Path) -> Iterator[int]:
     """Walk from root using checked no-follow descriptors; keep the selected handle."""
@@ -257,8 +503,12 @@ def _open_claude_directory(path: Path) -> Iterator[int]:
             os.close(fd)
 
 
-def _claude_selected_identity(token: str) -> str:
-    """Ask the provider about the exact material selected for use, with no redirects."""
+def _claude_selected_identity(token: str) -> tuple[str, object]:
+    """Ask the provider about the exact material selected for use, with no redirects.
+
+    Returns the account it belongs to and the organisation the provider
+    reports for it (unvalidated; ``None`` when absent).
+    """
     connection = None
     try:
         connection = http.client.HTTPSConnection("api.anthropic.com", timeout=10)
@@ -279,7 +529,7 @@ def _claude_selected_identity(token: str) -> str:
         identity = profile["account"]["uuid"]
         if not isinstance(identity, str) or not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(identity):
             raise ClaudeAccountRefused("claude_account_identity_unavailable")
-        return identity
+        return identity, profile.get("organization")
     except (OSError, http.client.HTTPException, ValueError, KeyError, TypeError):
         raise ClaudeAccountRefused("claude_account_identity_unavailable") from None
     finally:
@@ -299,8 +549,9 @@ def _validated_claude_selection(
         raise ClaudeAccountRefused("claude_account_ambient_conflict")
     try:
         binding = load_claude_account_binding(label, environ=env)
-        if platform.system() != "Linux":
+        if platform.system() != "Linux" or _claude_host_is_wsl(env):
             raise ClaudeAccountRefused("claude_account_platform_unsupported")
+        refuse_claude_machine_policy()
         with _open_claude_directory(binding.config_dir) as directory:
             selected = os.fstat(directory)
             ambient = env.get("CLAUDE_CONFIG_DIR")
@@ -319,18 +570,23 @@ def _validated_claude_selection(
                     raise ClaudeAccountRefused("claude_account_binding_is_default")
             if _claude_config_account_uuid(home / ".claude.json") == binding.account_uuid:
                 raise ClaudeAccountRefused("claude_account_binding_is_default")
-            if _claude_config_account_uuid(Path(".claude.json"), dir_fd=directory) != binding.account_uuid:
-                raise ClaudeAccountRefused("claude_account_unverified")
+            account = _checked_login_global_config(directory, binding.account_uuid)
+            _refuse_claude_settings_credential_source(directory)
+            _refuse_policy_caches(directory)
+            _refuse_profile_store(env)
             try:
-                token = _claude_access_token(Path(".credentials.json"), dir_fd=directory)
+                selected = _claude_oauth_record(Path(".credentials.json"), dir_fd=directory)
             except ReviewIsolationError as exc:
                 suffix = str(exc).removeprefix("attempt_claude_auth_")
                 raise ClaudeAccountRefused(f"claude_account_credentials_{suffix}") from None
-            if token is None:
+            if selected is None:
                 raise ClaudeAccountRefused("claude_account_credentials_missing")
-            if _claude_selected_identity(token) != binding.account_uuid:
+            token, record = selected
+            identity, organization = _claude_selected_identity(token)
+            if identity != binding.account_uuid:
                 raise ClaudeAccountRefused("claude_account_unverified")
-            return binding, token
+            _refuse_non_consumer_plan(organization, record, account)
+            return replace(binding, credential=claude_credential_fingerprint(record)), token
     except (OSError, RuntimeError, ValueError) as exc:
         if isinstance(exc, ClaudeAccountRefused):
             raise
@@ -350,6 +606,12 @@ def verify_claude_account(label: str, *, environ: Mapping[str, str] | None = Non
 
 def _claude_access_token(path: Path, *, dir_fd: int | None = None) -> str | None:
     """A fresh access token from a Claude credentials file; ``None`` when absent."""
+    selected = _claude_oauth_record(path, dir_fd=dir_fd)
+    return None if selected is None else selected[0]
+
+
+def _claude_oauth_record(path: Path, *, dir_fd: int | None = None) -> tuple[str, dict] | None:
+    """A fresh access token and its whole ``claudeAiOauth`` record; ``None`` when absent."""
     from scripts.review.isolation import ReviewIsolationError
 
     try:
@@ -371,7 +633,7 @@ def _claude_access_token(path: Path, *, dir_fd: int | None = None) -> str | None
             raise ReviewIsolationError("attempt_claude_auth_expired")
         if not isinstance(token, str) or not 20 <= len(token) <= 8192 or any(c in token for c in "\n\r\0"):
             raise ReviewIsolationError("attempt_claude_auth_invalid")
-        return token
+        return token, oauth
     except (ValueError, KeyError, TypeError) as exc:
         raise ReviewIsolationError("attempt_claude_auth_invalid") from exc
     finally:
