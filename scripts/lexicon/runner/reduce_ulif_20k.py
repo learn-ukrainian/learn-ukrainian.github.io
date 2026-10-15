@@ -164,7 +164,9 @@ def _maybe_enrich(
         "failed_terminal",
         "interrupted",
         "output_path",
+        "paradigm_stress",
         "error",
+        "detail",
     )
     _event(
         "offline_enrich_summary",

@@ -908,6 +908,25 @@ def finalize_run(
         )
 
     try:
+        # Sealed artifacts may predate the enrich-time gate (resumed or older
+        # runs), so publication streams them through the same audit (#9331).
+        from scripts.lexicon.validate_paradigm_stress import validate_manifest_stress
+
+        stress = validate_manifest_stress(
+            {"entries": (entry for _, entry, _ in stream_lemma_payloads(ledger, run_id, artifacts_dir, phase=phase))}
+        )
+        if stress["disagreement_count"]:
+            return FinalizeResult(
+                ok=False,
+                run_id=run_id,
+                fingerprint=fingerprint,
+                detail=(
+                    f"paradigm stress gate refused: {stress['disagreement_count']} disagreements / "
+                    f"{stress['rows']} rows; first: " + json.dumps(stress["disagreements"][:20], ensure_ascii=False)
+                ),
+                dry_run=report,
+            )
+
         tree_root = out_dir / "tree"
         assembly = assemble_version_tree(
             ledger=ledger,

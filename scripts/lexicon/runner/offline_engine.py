@@ -413,6 +413,29 @@ def enrich_offline_slice(
             )
             processed_this_invocation += 1
 
+        # Same gate as the in-process build (#9331): audit exactly the entries this
+        # run would write; on any disagreement, neither complete the run nor write.
+        from scripts.lexicon.validate_paradigm_stress import validate_manifest_stress
+
+        output_entries = [
+            completed[lemma_id] if lemma_id in completed else entry_by_id[lemma_id]
+            for lemma_id in lemma_ids
+            if lemma_id in completed or lemma_id in entry_by_id
+        ]
+        stress_report = validate_manifest_stress({"entries": output_entries})
+        paradigm_stress = {key: value for key, value in stress_report.items() if key != "disagreements"}
+        if stress_report["disagreement_count"]:
+            return {
+                "error": "paradigm_stress_disagreement",
+                "detail": (
+                    f"{stress_report['disagreement_count']} disagreements / {stress_report['rows']} rows; "
+                    "first: " + json.dumps(stress_report["disagreements"][:20], ensure_ascii=False)
+                ),
+                "paradigm_stress": paradigm_stress,
+                "fingerprint": fingerprint,
+                "run_id": active_run_id,
+            }
+
         interrupted = stop_after_chunks is not None and any(
             str((ledger.get_chunk(active_run_id, c.chunk_id) or {}).get("state"))
             in {
@@ -448,11 +471,8 @@ def enrich_offline_slice(
                 "interrupted": interrupted,
             },
         ) as writer:
-            for lemma_id in lemma_ids:
-                if lemma_id in completed:
-                    writer.write_entry(completed[lemma_id])
-                elif lemma_id in entry_by_id:
-                    writer.write_entry(entry_by_id[lemma_id])
+            for entry in output_entries:
+                writer.write_entry(entry)
 
         return {
             "cohort_digest": staged["cohort_digest"],
@@ -467,6 +487,7 @@ def enrich_offline_slice(
             "ledger_path": str(ledger_db),
             "interrupted": interrupted,
             "processed_this_invocation": processed_this_invocation,
+            "paradigm_stress": paradigm_stress,
             "memory_proof": {
                 "kind": proof.kind,
                 "enforced": proof.enforced,
