@@ -52,14 +52,21 @@ def wait_until(
 
     Raises ``AssertionError`` naming ``message`` if ``timeout`` elapses first.
     Each sleep is capped at the time remaining, so the wait never overshoots
-    the deadline; the predicate is checked once more at the deadline itself,
-    and a condition that only becomes true after it is a timeout. An
-    ``AssertionError`` raised by the predicate propagates, so callers can fail
-    fast (e.g. a watched process exited) with their own diagnostics.
+    the deadline. A wait succeeds only if the predicate returned true at a time
+    that is not after the deadline, with the time read from the monotonic clock
+    after the predicate returns: a true result observed past the deadline (a
+    late wake-up, or a slow predicate) is a timeout. The evaluation at exactly
+    the deadline may succeed. An ``AssertionError`` raised by the predicate
+    propagates, so callers can fail fast (e.g. a watched process exited) with
+    their own diagnostics.
     """
     deadline = time.monotonic() + timeout
-    while not predicate():
-        remaining = deadline - time.monotonic()
+    while True:
+        met = predicate()
+        now = time.monotonic()
+        if now <= deadline and met:
+            return
+        remaining = deadline - now
         if remaining <= 0:
             raise AssertionError(f"{message} not met within {timeout}s")
         time.sleep(min(interval, remaining))

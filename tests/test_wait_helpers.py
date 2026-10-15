@@ -79,6 +79,30 @@ def test_wait_until_fails_a_condition_that_is_only_true_after_the_deadline(monke
         wait_helpers.wait_until(lambda: elapsed[0] > 0.1, timeout=0.1, interval=1.0, message="late condition")
 
 
+def test_wait_until_fails_when_the_sleep_wakes_past_the_deadline(monkeypatch):
+    elapsed = [0.0]
+    monkeypatch.setattr(wait_helpers.time, "monotonic", lambda: elapsed[0])
+    # The OS wakes the sleeper 0.01 s late: 0.10 s requested, 0.11 s elapsed.
+    monkeypatch.setattr(
+        wait_helpers.time, "sleep", lambda interval: elapsed.__setitem__(0, elapsed[0] + interval + 0.01)
+    )
+    with pytest.raises(AssertionError, match=r"oversleep not met within 0\.1s"):
+        wait_helpers.wait_until(lambda: elapsed[0] >= 0.11, timeout=0.1, interval=1.0, message="oversleep")
+
+
+def test_wait_until_fails_when_the_predicate_itself_crosses_the_deadline(monkeypatch):
+    elapsed = [0.0]
+    monkeypatch.setattr(wait_helpers.time, "monotonic", lambda: elapsed[0])
+    monkeypatch.setattr(wait_helpers.time, "sleep", lambda interval: elapsed.__setitem__(0, elapsed[0] + interval))
+
+    def slow_predicate() -> bool:
+        elapsed[0] = 0.2
+        return True
+
+    with pytest.raises(AssertionError, match=r"slow predicate not met within 0\.1s"):
+        wait_helpers.wait_until(slow_predicate, timeout=0.1, interval=1.0, message="slow predicate")
+
+
 def test_wait_until_accepts_a_condition_true_exactly_at_the_deadline(monkeypatch):
     elapsed = [0.0]
     monkeypatch.setattr(wait_helpers.time, "monotonic", lambda: elapsed[0])
