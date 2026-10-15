@@ -31,6 +31,7 @@ from scripts.work.schema import (
 )
 from scripts.work.sources_public import fetch_open_prs, private_capability_seam, public_repository_id
 
+from .load_samples import sample as sample_host_load
 from .monitor_context import (
     _WORK_IN_FLIGHT_BUILDS,
     MonitorContext,
@@ -443,6 +444,10 @@ async def refresh_projection_cache_periodically(ctx: MonitorContext) -> None:
     key = projection_cache_key({}, ctx)
     while True:
         await asyncio.sleep(CACHE_TTL_S / 2)
+        try:
+            await asyncio.to_thread(sample_host_load, ctx.roots.batch_state_dir)
+        except Exception as exc:
+            log.warning("Load sampling failed: %s", type(exc).__name__)
         fetch_open_prs()  # nonblocking single-flight snapshot refresh
         if cache_get_with_age(key, CACHE_TTL_S) is not None:
             continue
