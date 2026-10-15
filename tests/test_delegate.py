@@ -50,6 +50,7 @@ from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
+from tests.claude_route_accounts import HOST_ACCOUNT, account
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 from tests.test_ask_review_admission_floor import write_code_review_manifest
@@ -7531,16 +7532,29 @@ def test_default_file_does_not_apply_to_another_seat(tmp_path, monkeypatch):
     assert _claude_account_refusal(_claude_account_args("--agent", "codex")) is None
 
 
-def test_a_claude_route_for_another_seats_request_records_the_builtin_default(monkeypatch, tmp_path):
-    """A request naming another seat takes no label (an explicit one is refused), so a route to claude runs as a."""
-    _default_account_file(tmp_path, monkeypatch, b"b\n")
-    args = _claude_account_args("--agent", "codex")
+def test_a_claude_route_for_another_seats_request_runs_on_the_account_it_resolved(monkeypatch, tmp_path):
+    """#10733: a claude route reached from another seat's request is never recorded on an account it did not bind.
 
-    assert delegate._resolve_dispatch_claude_account(args) is None
-    assert delegate._claude_account_state(args, None, "claude") == {
-        "claude_account": "a",
-        "claude_account_source": "builtin",
+    On ef19215956 the request resolved nothing and the claude route was recorded as the built-in a. A review
+    for another seat can select a claude reviewer, so it resolves and binds the account a claude dispatch
+    would run as; another seat's ordinary dispatch reaches no claude route, so a claude record on it is refused.
+    """
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    review = _claude_account_args("--agent", "codex", "--mode", "read-only", "--require-review-verdict")
+    resolved = delegate._resolve_dispatch_claude_account(review)
+
+    assert resolved == account("b", "default-file")
+    assert delegate._claude_account_state(review, resolved, "claude") == {
+        "claude_account": "b",
+        "claude_account_source": "default-file",
+        "claude_account_user_scope_omitted": True,
     }
+    ordinary = _claude_account_args("--agent", "codex")
+    with pytest.raises(ClaudeAccountRefused, match="claude_account_seat_unsupported"):
+        delegate._claude_account_state(ordinary, delegate._resolve_dispatch_claude_account(ordinary), "claude")
 
 
 def _break_claude_account_b(tmp_path: Path, monkeypatch, selected: Path, case: str) -> None:
@@ -7687,7 +7701,7 @@ def test_every_label_source_meets_every_refusal_of_an_explicit_b(
         before = {path.name: path.read_bytes() for path in tmp_tasks_dir.iterdir()}
         extra.append("--force-new")
     args = _claude_account_args("--agent", "claude", *extra)
-    assert delegate._resolve_dispatch_claude_account(args) == ("b", source)  # positive control
+    assert delegate._resolve_dispatch_claude_account(args) == account("b", source)  # positive control
     _break_claude_account_b(tmp_path, monkeypatch, Path(selected), case)
     spawn = _forbid_dispatch_side_effects(monkeypatch)
 
@@ -7720,7 +7734,9 @@ def test_dispatch_admits_b_with_the_inert_user_settings_names(tmp_path, monkeypa
     else:
         _default_account_file(tmp_path, monkeypatch, b"b\n")
 
-    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude", *extra)) == ("b", source)
+    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude", *extra)) == account(
+        "b", source
+    )
 
 
 def test_worker_refuses_a_default_file_label_when_machine_policy_appears_after_dispatch(
@@ -8051,7 +8067,8 @@ def _received_claude_account(command: list[str], tmp_path: Path, monkeypatch, *,
     args = delegate.build_parser().parse_args(command[1:])
     if record is not None:
         _terminal_claude_record(args.task_id, record, "explicit")
-    return delegate._resolve_dispatch_claude_account(args)
+    resolved = delegate._resolve_dispatch_claude_account(args)
+    return resolved.label, resolved.source
 
 
 def _account_flags(command: list[str]) -> list[str]:
@@ -8065,7 +8082,9 @@ def test_forwarded_default_file_label_is_kept_when_the_worker_host_has_no_defaul
     _bind_claude_account_b(tmp_path, monkeypatch)
     _default_account_file(tmp_path, monkeypatch, b"b\n")
     task_id = "claude-forward-default-file"
-    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude")) == ("b", "default-file")
+    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude")) == account(
+        "b", "default-file"
+    )
 
     rc, command = _forward_claude_dispatch(monkeypatch, task_id)
 
@@ -17310,7 +17329,8 @@ def _patch_admitted_codex_review_substitution(monkeypatch):
         )
         routing.substitution = resolution["record"]
         (target,) = resolve_and_admit(
-            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True
+            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True,
+            claude_account=HOST_ACCOUNT,
         )
         return None, None, target
 
