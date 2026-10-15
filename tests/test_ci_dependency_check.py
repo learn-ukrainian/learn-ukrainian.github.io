@@ -108,7 +108,7 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
 @pytest.mark.repo_wide
 def test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache() -> None:
     """A pin change cannot leave the cache writer or setup-uv on another Python."""
-    assert (_REPO_ROOT / ".python-version").read_text().strip() == "3.12.14"
+    assert (_REPO_ROOT / ".python-version").read_text().strip() == "3.14.8"
     for path in sorted((_REPO_ROOT / ".github/workflows").glob("*.y*ml")):
         document = yaml.safe_load(path.read_text(encoding="utf-8"))
         assert "UV_PYTHON" not in document.get("env", {}), path
@@ -139,7 +139,7 @@ def test_setup_uv_reads_the_pin_instead_of_inferencing_an_interpreter(tmp_path: 
     reader = _action_step("Read Python pin")
     assert reader["id"] == "python-pin"
     assert steps.index(reader) < steps.index(_action_step("Set up uv"))
-    for pin in ("3.12.14", "3.12.15"):
+    for pin in ("3.14.8", "3.14.9"):
         (tmp_path / ".python-version").write_text(pin + "\n")
         output = tmp_path / "output"
         output.write_text("")

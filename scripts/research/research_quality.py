@@ -27,7 +27,7 @@ except ImportError:
 _ = safe_join
 
 
-def _resolve_caller_path(candidate: "Path | str | None") -> Path | None:
+def _resolve_caller_path(candidate: Path | str | None) -> Path | None:
     """Resolve a caller-supplied path with normalization, returning None on
     invalid input.
 
@@ -229,7 +229,7 @@ def _extract_ukrainian_words(text: str) -> list[str]:
     return list(set(w.lower() for w in words))
 
 
-def _parse_discovery(discovery_path: "Path | None") -> dict:
+def _parse_discovery(discovery_path: Path | None) -> dict:
     """Parse discovery.yaml once, returning normalised data.
 
     Returns a dict with keys: blogs, videos, rag_chunks, rag_literary (each a list).
@@ -979,7 +979,7 @@ def assess_research(
     text: str,
     track_id: str,
     content_text: str | None = None,
-    discovery_path: "Path | None" = None,
+    discovery_path: Path | None = None,
 ) -> dict:
     """
     Assess research file quality.
@@ -1068,10 +1068,10 @@ def assess_research(
 
 
 def assess_research_compat(
-    path: "Path | str",
+    path: Path | str,
     track_id: str,
-    content_path: "Path | str | None" = None,
-    discovery_path: "Path | str | None" = None,
+    content_path: Path | str | None = None,
+    discovery_path: Path | str | None = None,
 ) -> dict | None:
     """
     Compatibility wrapper that reads files and calls assess_research.

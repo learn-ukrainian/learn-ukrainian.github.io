@@ -1,5 +1,7 @@
 """Message CRUD operations: send, read, check inbox, acknowledge, conversations."""
 
+from __future__ import annotations
+
 import json
 import os
 import re
@@ -161,7 +163,7 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
 
 
 def _insert_message(
-    target: "AdmittedTarget",
+    target: AdmittedTarget,
     *,
     content: str,
     task_id: str | None,

@@ -7,6 +7,8 @@ Catches non-conforming activity formats during the audit workflow.
 Issue: #397
 """
 
+from __future__ import annotations
+
 import copy
 import json
 import re
@@ -231,7 +233,7 @@ def _schema_with_plan_item_minimums(
 
 def generate_actionable_error(
     activity: dict,
-    error: 'jsonschema.ValidationError',
+    error: jsonschema.ValidationError,
     type_schema: dict,
     activity_index: int | None = None
 ) -> str:
@@ -299,7 +301,7 @@ def generate_actionable_error(
     return '\n'.join(parts)
 
 
-def _generate_example_fix(activity_type: str, error: 'jsonschema.ValidationError', type_schema: dict) -> str | None:
+def _generate_example_fix(activity_type: str, error: jsonschema.ValidationError, type_schema: dict) -> str | None:
     """Generate a minimal example fix for common schema errors."""
 
     # For missing required fields, show minimal valid structure

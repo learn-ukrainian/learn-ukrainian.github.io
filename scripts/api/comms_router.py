@@ -226,7 +226,7 @@ def _maybe_run_delivery_expiry_sweep(ctx: MonitorContext) -> None:
         _expire_sweep_thread.start()
 
 
-def _run_delivery_expiry_sweep(message_db: "os.PathLike[str]") -> None:
+def _run_delivery_expiry_sweep(message_db: os.PathLike[str]) -> None:
     try:
         # Canonical identity only (#6812): this module already imports
         # `scripts.*` at module level, so the repo root is always on sys.path
