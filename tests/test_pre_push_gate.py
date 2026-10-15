@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import errno
 import fcntl
 import importlib.util
@@ -10,6 +11,7 @@ import os
 import re
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import textwrap
@@ -2055,12 +2057,13 @@ def test_pytest_stage_owns_and_cleans_a_private_base_temp(
     state = tmp_path / "state"
     state.mkdir()
     monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    temp_parent = gate.pytest_temp_parent(state)
     seen: list[Path] = []
 
     def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
         assert "--basetemp" in command
         base = Path(command[command.index("--basetemp") + 1])
-        assert base.parent == state and base.name.startswith("pytest-")
+        assert base.parent == temp_parent and base.name.startswith("pytest-")
         base.mkdir(exist_ok=True)
         (base / "probe").touch()
         seen.append(base)
@@ -2082,7 +2085,7 @@ def test_pytest_stage_owns_and_cleans_a_private_base_temp(
     # Each run owns a distinct base; a refused first run never starts the second.
     assert len(seen) == (2 if ending == "green" else 1) and len(set(seen)) == len(seen)
     assert not any(base.exists() for base in seen)
-    assert list(state.glob("pytest-*")) == []
+    assert list(state.glob("pytest-*")) == list(temp_parent.glob("pytest-*")) == []
 
 
 def test_stale_and_dangling_tickets_are_reaped_before_the_live_cap(
@@ -2380,9 +2383,10 @@ def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_
         stdout, stderr = process.communicate(timeout=60)
         assert process.returncode == 0, stdout + stderr
         probe = Path(marker.read_text(encoding="utf-8").strip())
-        assert probe.is_relative_to(gate.state_dir(repo))
+        temp_parent = gate.pytest_temp_parent(gate.state_dir(repo))
+        assert probe.is_relative_to(temp_parent)
         assert not probe.exists()  # the gate cleaned its private base on completion
-        assert list(gate.state_dir(repo).glob("pytest-*")) == []
+        assert list(gate.state_dir(repo).glob("pytest-*")) == list(temp_parent.glob("pytest-*")) == []
     finally:
         release.touch()
         if process.poll() is None:
@@ -2390,43 +2394,574 @@ def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_
         process.communicate(timeout=60)
 
 
-def test_next_pytest_stage_reaps_the_base_of_a_killed_gate(repo: Path, tmp_path: Path) -> None:
-    marker = tmp_path / "killed-base.txt"
+SURVIVING_WORKER = textwrap.dedent(
+    """\
+    import json, os, pathlib, sys, time
+    signals = pathlib.Path(sys.argv[1])
+    base = pathlib.Path(sys.argv[sys.argv.index("--basetemp") + 1])
+    (base / "live").write_text("in use")
+    (signals / "ready").write_text(json.dumps({"pid": os.getpid(), "base": str(base)}) + "\\n")
+    deadline = time.monotonic() + 60
+    while not (signals / "release").exists() and time.monotonic() < deadline:
+        if not (base / "live").exists():
+            (signals / "deleted").touch()
+        time.sleep(0.01)
+    """
+)
+
+
+def test_a_killed_gate_leaves_its_live_base_to_scratch_aging(repo: Path, tmp_path: Path) -> None:
+    # SIGKILL releases the gate's admission while its detached pytest worker keeps running (#10654 review).
+    # The next exclusive gate must remove only its own base; the host's scratch aging owns the residue.
+    signals = tmp_path / "signals"
+    signals.mkdir()
+    worker = tmp_path / "worker.py"
+    worker.write_text(SURVIVING_WORKER, encoding="utf-8")
+    launcher = tmp_path / "launcher.sh"
+    launcher.write_text(f'exec "{sys.executable}" "{worker}" "{signals}" "$@"\n', encoding="utf-8")
     script = (
-        f"import runpy, pathlib, os, signal, time\ng = runpy.run_path({str(GATE_PATH)!r})\n"
-        "def kill(command, **kwargs):\n"
-        "    base = pathlib.Path(command[command.index('--basetemp') + 1])\n"
-        "    (base / 'leftover').touch()\n"
-        f"    pathlib.Path({str(marker)!r}).write_text(str(base))\n"
-        "    os.kill(os.getpid(), signal.SIGKILL)\n"
-        "g['run_pytest_stage'].__globals__['run_bounded'] = kill\n"
+        f"import runpy, pathlib, time\ng = runpy.run_path({str(GATE_PATH)!r})\n"
         "plan = g['Plan']('h', 't', 'b', 'v', ('tests/test_invariant.py',), (), ())\n"
-        f"g['run_pytest_stage'](plan, pathlib.Path({str(repo)!r}), 'unused', time.monotonic() + 30)\n"
+        f"g['run_pytest_stage'](plan, pathlib.Path({str(repo)!r}), {str(launcher)!r}, time.monotonic() + 60)\n"
     )
-    killed = subprocess.run(
+    killed = subprocess.Popen(
         [sys.executable, "-c", script],
         cwd=tmp_path,
         env=_env(),
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
-    assert killed.returncode == -9, killed.stdout + killed.stderr
-    stale = Path(marker.read_text(encoding="utf-8"))
-    assert (stale / "leftover").exists()
-    plan = _plan(registry_nodes=("tests/test_invariant.py",), changed_tests=())
-    with gate.Admission(gate.state_dir(repo), 0.0) as admission:
-        result = gate.run_pytest_stage(
-            plan,
-            repo,
-            str(repo / "scripts/pre_commit/project_python.sh"),
-            time.monotonic() + 30,
-            admission=admission,
-        )
-    assert "1 passed" in result
-    assert not stale.exists()
-    assert list(gate.state_dir(repo).glob("pytest-*")) == []
+    worker_pid = None
+    try:
+        ready = json.loads(wait_for_line(signals / "ready", timeout=30.0, stop_if=lambda: killed.poll() is not None))
+        worker_pid, base = ready["pid"], Path(ready["base"])
+        killed.kill()
+        assert killed.wait(timeout=30) == -signal.SIGKILL
+        os.kill(worker_pid, 0)  # the worker outlived its gate
+        plan = _plan(registry_nodes=("tests/test_invariant.py",), changed_tests=())
+        with gate.Admission(gate.state_dir(repo), 0.0) as admission:
+            assert admission._exclusive
+            result = gate.run_pytest_stage(
+                plan,
+                repo,
+                str(repo / "scripts/pre_commit/project_python.sh"),
+                time.monotonic() + 30,
+                admission=admission,
+            )
+        assert "1 passed" in result
+        assert base.parent == gate.pytest_temp_parent(gate.state_dir(repo))
+        assert (base / "live").read_text(encoding="utf-8") == "in use"
+        assert not (signals / "deleted").exists()
+        assert list(base.parent.glob("pytest-*")) == [base]  # the successor removed only its own base
+    finally:
+        (signals / "release").touch()
+        if killed.poll() is None:
+            killed.kill()
+        killed.wait(timeout=30)
+        if worker_pid is not None:
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(worker_pid, signal.SIGKILL)
+
+
+@pytest.mark.parametrize("when", ["after-validation", "during-run"])
+def test_replacing_the_scratch_ancestry_cannot_redirect_the_gates_own_cleanup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, when: str
+) -> None:
+    # A root another user can write is refused before anything is created (see the round-3 ancestry tests).
+    # Below a verified root only this user can rename its directory, which is outside the trust model, and
+    # pytest's own --basetemp handling then follows the path. This pins the narrower guarantee that the
+    # gate's own create and remove never follow a replaced ancestor into another repository's live base.
+    scratch = tmp_path / "scratch"
+    scratch.mkdir(mode=0o700)
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(scratch))
+    state, other_state = tmp_path / "state", tmp_path / "other-state"
+    state.mkdir()
+    other_state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    parent, other = gate.pytest_temp_parent(state), gate.pytest_temp_parent(other_state)
+    parked = scratch / "parked"
+    decoys: list[Path] = []
+
+    def replace_ancestry(decoy_name: str) -> None:
+        parent.parent.rename(parked)
+        parent.parent.mkdir()
+        parent.symlink_to(parked / other.name, target_is_directory=True)
+        decoy = parked / other.name / decoy_name  # another repository's live base
+        decoy.mkdir()
+        (decoy / "live").write_text("in use")
+        decoys.append(decoy)
+
+    if when == "after-validation":
+        validated = gate.pytest_temp_parent
+
+        def validate_then_replace(path: Path) -> Path:
+            checked = validated(path)
+            replace_ancestry("pytest-live")
+            return checked
+
+        monkeypatch.setattr(gate, "pytest_temp_parent", validate_then_replace)
+        monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
+    else:
+        own: list[Path] = []
+
+        def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+            base = Path(command[command.index("--basetemp") + 1])
+            (base / "probe").touch()
+            own.append(parked / parent.name / base.name)  # where this run's base lives after the rename
+            replace_ancestry(base.name)  # the decoy shares the base's name, so a path-based removal hits it
+            return 0, "1 passed in 0.1s"
+
+        monkeypatch.setattr(gate, "run_bounded", run)
+
+    with gate.Admission(state, 0) as admission:
+        try:
+            outcome = gate.run_pytest_stage(
+                _plan(changed_tests=()), tmp_path, "launcher", time.monotonic() + 30, admission=admission
+            )
+        except gate.GateOutcome as error:
+            outcome = error.reason
+    assert len(decoys) == 1 and (decoys[0] / "live").read_text() == "in use"
+    if when == "after-validation":
+        assert outcome == "pytest_temp_unavailable"  # the replaced parent is refused, never followed
+    else:
+        assert outcome == "1 passed in 0.1s"
+        assert len(own) == 1 and not own[0].exists()  # the run still removed its own base
+
+
+@pytest.mark.parametrize("ending", ["green", "red"])
+def test_own_base_is_removed_whatever_pytest_and_its_tests_leave_in_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
+) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    seen: list[Path] = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        base = Path(command[command.index("--basetemp") + 1])
+        seen.append(base)
+        base.rmdir()  # pytest deletes a given --basetemp and creates a fresh directory
+        base.mkdir(mode=0o700)
+        (base / "link").symlink_to(outside, target_is_directory=True)
+        (base / "read-only" / "nested").mkdir(parents=True)
+        (base / "read-only" / "nested" / "file").touch()
+        (base / "read-only").chmod(0o500)
+        (base / "unreadable").mkdir()
+        (base / "unreadable" / "file").touch()
+        (base / "unreadable").chmod(0o000)
+        os.mkfifo(base / "fifo")
+        return (1, "FAILED tests/test_a.py::test_bad") if ending == "red" else (0, "1 passed in 0.1s")
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    plan = _plan(changed_tests=())
+    if ending == "green":
+        assert gate.run_pytest_stage(plan, tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
+    else:
+        with pytest.raises(gate.GateOutcome) as raised:
+            gate.run_pytest_stage(plan, tmp_path, "launcher", time.monotonic() + 30)
+        assert raised.value.reason == "tests_failed"
+    assert len(seen) == 1 and not os.path.lexists(seen[0])
+    assert list(seen[0].parent.iterdir()) == []
+    assert [path.name for path in outside.iterdir()] == ["preserved"]
+
+
+@pytest.mark.parametrize("ending", ["green", "timeout"])
+def test_own_base_cleanup_failure_is_typed_and_never_masks_the_run_outcome(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
+) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    real_rmdir = os.rmdir
+
+    def refuse_own_base(path: object, *args: object, **kwargs: object) -> None:
+        if kwargs.get("dir_fd") is not None and str(path).startswith("pytest-"):
+            raise PermissionError(errno.EACCES, "denied", str(path))
+        real_rmdir(path, *args, **kwargs)
+
+    def run(_command: list[str], **_kwargs: object) -> tuple[int, str]:
+        monkeypatch.setattr(gate.os, "rmdir", refuse_own_base)
+        if ending == "timeout":
+            raise gate.GateOutcome("validation_incomplete", "pytest stage: exceeded the time budget", incomplete=True)
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(changed_tests=()), tmp_path, "launcher", time.monotonic() + 30)
+    monkeypatch.setattr(gate.os, "rmdir", real_rmdir)
+    assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
+    if ending == "timeout":
+        assert "time budget" in raised.value.detail  # the run's own refusal outranks a cleanup error
+    else:
+        assert raised.value.detail == "pytest base temp cleanup failed (EACCES)"  # typed, path-free
+
+
+# ---- #10654: pytest base temps outside every Git checkout and Git directory -----------------------------
+
+OUTSIDE_GIT_TEST = textwrap.dedent(
+    """\
+    def test_tmp_path_is_outside_every_git_checkout(tmp_path):
+        # The data-tier runner's own guard (scripts/ci/data_tier.py) refuses scratch below any checkout.
+        assert not any((parent / ".git").exists() for parent in (tmp_path, *tmp_path.parents))
+    """
+)
+
+
+def _outside_git(path: Path) -> bool:
+    """No ancestor is a checkout (``.git``) or a Git directory (``HEAD``, ``objects``, ``refs``)."""
+    return not any(
+        (directory / ".git").exists() or all((directory / name).exists() for name in ("HEAD", "objects", "refs"))
+        for directory in (path, *path.parents)
+    )
+
+
+def test_pytest_base_temp_is_private_and_outside_every_git_tree(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    state = gate.state_dir(repo)
+    seen: list[Path] = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        base = Path(command[command.index("--basetemp") + 1])
+        seen.append(base)
+        assert _outside_git(base)
+        for tree in (repo, repo / ".git", state):
+            assert not base.resolve().is_relative_to(tree.resolve())
+        # The base, its repository directory and the per-user directory are all private to this user.
+        for directory in (base, base.parent, base.parent.parent):
+            info = directory.lstat()
+            assert stat.S_ISDIR(info.st_mode) and info.st_uid == os.geteuid()
+            assert stat.S_IMODE(info.st_mode) == 0o700
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    assert (
+        gate.run_pytest_stage(_plan(), repo, "launcher", time.monotonic() + 30) == "1 passed in 0.1s; 1 passed in 0.1s"
+    )
+    assert len(seen) == 2 and not any(base.exists() for base in seen)
+
+
+def test_gate_runs_tests_that_require_a_temp_tree_outside_git(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
+    _write(repo, "tests/test_outside_git.py", OUTSIDE_GIT_TEST)
+    _commit(repo, "outside git", "tests/test_outside_git.py")
+
+    result = _run_gate(repo)
+
+    assert result.returncode == 0, result.stderr
+    assert len(_receipts(repo)) == 1
+    # Only the base temp moved: admission, receipts and measurements stay under the Git common dir.
+    state = gate.state_dir(repo)
+    assert (state / "admission.lock").is_file() and (state / "measurements.jsonl").is_file()
+    assert list(state.glob("pytest-*")) == list(gate.pytest_temp_parent(state).glob("pytest-*")) == []
+
+
+@pytest.mark.parametrize("location", ["checkout", "git-dir", "bare-repo", "uncreatable", "fallback-in-checkout"])
+def test_pytest_stage_refuses_without_a_safe_base_temp_location(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, location: str
+) -> None:
+    blocker = tmp_path / "blocker"
+    blocker.write_text("a file, not a directory")
+    if location == "fallback-in-checkout":
+        # An uncreatable default falls back to the system temp, which here is the checkout itself.
+        monkeypatch.delenv(gate.SCRATCH_ROOT_ENV, raising=False)
+        monkeypatch.setattr(gate, "DEFAULT_SCRATCH_ROOT", blocker / "lu")
+        monkeypatch.setattr(gate.tempfile, "tempdir", str(repo))
+        target = repo / gate.FALLBACK_SCRATCH_DIRNAME
+    else:
+        target = {
+            "checkout": repo / "scratch",
+            "git-dir": gate.state_dir(repo) / "scratch",
+            "bare-repo": tmp_path / "remote.git" / "scratch",
+            "uncreatable": blocker / "scratch",
+        }[location]
+        monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(target))
+    if location != "uncreatable":
+        # Close the ancestry to others whatever the caller's umask, so the Git check is what refuses.
+        gate.state_dir(repo).mkdir(mode=0o755, exist_ok=True)
+        _close_to_others(target.parent, tmp_path)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: pytest.fail("pytest must not start"))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), repo, "launcher", time.monotonic() + 30)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    assert gate.SCRATCH_ROOT_ENV in raised.value.detail and str(tmp_path) not in raised.value.detail
+    assert ("inside a Git checkout" in raised.value.detail) == (location != "uncreatable")
+    assert not target.exists()
+
+
+@pytest.mark.parametrize(
+    "tampering", ["symlink", "group-readable", "file", "foreign-owner", "repository-group-readable"]
+)
+def test_pytest_stage_refuses_a_base_temp_directory_that_is_not_private(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tampering: str
+) -> None:
+    scratch = tmp_path / "scratch"
+    scratch.mkdir(mode=0o700)  # a safe root, so only the tampered directory below it can refuse
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(scratch))
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    state = tmp_path / "state"
+    state.mkdir()
+    user = scratch / f"pre-push-gate-{os.geteuid()}"
+    if tampering == "symlink":
+        user.symlink_to(outside, target_is_directory=True)
+    elif tampering == "group-readable":
+        user.mkdir()
+        user.chmod(0o750)
+    elif tampering == "foreign-owner":
+        user.mkdir(mode=0o700)
+        _pretend_owned_by_another_user(monkeypatch, user)
+    elif tampering == "repository-group-readable":
+        gate.pytest_temp_parent(state).chmod(0o750)
+    else:
+        user.write_text("not a directory")
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: pytest.fail("pytest must not start"))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    assert "pytest base temp directory" in raised.value.detail  # refused at the tampered level, not the root
+    assert [path.name for path in outside.iterdir()] == ["preserved"]
+
+
+# ---- #10654 round 3: the scratch root's whole ancestry is verified before anything is created ----------
+# Trust model: this user and root. A same-user process can already edit the hook, so same-user swaps are
+# outside it; what must hold is that no other user can redirect the base temp.
+
+
+def _pretend_owned_by_another_user(monkeypatch: pytest.MonkeyPatch, path: Path) -> None:
+    """Report ``path``'s own inode (a link itself, not its target) as owned by neither this user nor root."""
+    real = path.lstat()
+    key, other = (real.st_dev, real.st_ino), os.geteuid() + 1
+
+    def reporting(original):
+        def report(*args: object, **kwargs: object) -> os.stat_result:
+            info = original(*args, **kwargs)
+            if (info.st_dev, info.st_ino) != key:
+                return info
+            fields = list(info[:10])
+            fields[4] = other  # st_uid
+            return os.stat_result(fields)
+
+        return report
+
+    for name in ("lstat", "stat", "fstat"):
+        monkeypatch.setattr(gate.os, name, reporting(getattr(os, name)))
+
+
+def _gate_directories(top: Path) -> list[Path]:
+    """Every per-user gate directory below ``top``, without following links."""
+    return [Path(here) / name for here, names, _files in os.walk(top) for name in names if "pre-push-gate-" in name]
+
+
+def _close_to_others(path: Path, stop: Path) -> None:
+    """Remove group and other write from ``path`` and its existing ancestors up to ``stop``."""
+    for directory in (path, *path.parents):
+        if directory.is_dir() and not directory.is_symlink():
+            directory.chmod(stat.S_IMODE(directory.lstat().st_mode) & ~0o022)
+        if directory == stop:
+            break
+
+
+UNSAFE_ANCESTRY = {
+    "foreign-owned-ancestor": "a directory owned by another user",
+    "group-writable-ancestor": "a directory writable by group or others without the sticky bit",
+    "other-writable-ancestor": "a directory writable by group or others without the sticky bit",
+    "group-writable-root": "a directory writable by group or others without the sticky bit",
+    "link-to-unsafe-directory": "a directory writable by group or others without the sticky bit",
+    "foreign-link-in-sticky-directory": "a link owned by another user",
+    "link-loop": "a link loop",
+}
+
+
+def _unsafe_ancestry(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str) -> tuple[Path, list[Path]]:
+    """Build one unsafe scratch root; return it and the paths that must still be absent after a refusal."""
+    shared, safe = tmp_path / "shared", tmp_path / "safe"
+    shared.mkdir(mode=0o755)
+    safe.mkdir(mode=0o700)
+    if case == "foreign-owned-ancestor":
+        _pretend_owned_by_another_user(monkeypatch, shared)
+    elif case in ("group-writable-ancestor", "group-writable-root"):
+        shared.chmod(0o775)
+    elif case == "other-writable-ancestor":
+        shared.chmod(0o757)
+    if case == "group-writable-root":
+        root = tmp_path / "root"
+        root.mkdir()
+        root.chmod(0o775)  # an existing root created under umask 002
+        return root, []
+    if case == "link-to-unsafe-directory":
+        shared.chmod(0o777)
+        (tmp_path / "link").symlink_to(shared, target_is_directory=True)
+        return tmp_path / "link" / "scratch", [shared / "scratch"]
+    if case == "foreign-link-in-sticky-directory":
+        sticky = tmp_path / "sticky"
+        sticky.mkdir()
+        sticky.chmod(0o1777)  # the system temp pattern: anyone may add entries, only their owner may replace them
+        (sticky / "link").symlink_to(safe, target_is_directory=True)
+        _pretend_owned_by_another_user(monkeypatch, sticky / "link")
+        return sticky / "link" / "scratch", [safe / "scratch"]
+    if case == "link-loop":
+        (tmp_path / "loop-a").symlink_to(tmp_path / "loop-b")
+        (tmp_path / "loop-b").symlink_to(tmp_path / "loop-a")
+        return tmp_path / "loop-a" / "scratch", []
+    return shared / "lu" / "scratch", [shared / "lu"]
+
+
+@pytest.mark.parametrize("case", sorted(UNSAFE_ANCESTRY))
+def test_an_unsafe_scratch_ancestry_refuses_before_anything_is_created(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    root, absent = _unsafe_ancestry(tmp_path, monkeypatch, case)
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(root))
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: pytest.fail("pytest must not start"))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    # The message names the offending component's class and the fix, never a path.
+    assert UNSAFE_ANCESTRY[case] in raised.value.detail and gate.SCRATCH_ROOT_ENV in raised.value.detail
+    assert str(tmp_path) not in raised.value.detail
+    assert _gate_directories(tmp_path) == [] and not any(os.path.lexists(path) for path in absent)
+
+
+@pytest.mark.parametrize(
+    "case", ["absent-root", "existing-root", "sticky-ancestor", "link-to-safe-directory", "parent-of-a-link-target"]
+)
+def test_a_safe_scratch_ancestry_keeps_create_pytest_and_cleanup_inside_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    created: list[Path] = []
+    if case == "absent-root":
+        root = private / "a" / "b"
+        created = [private / "a", root]
+    elif case == "existing-root":
+        root = private / "root"
+        root.mkdir(mode=0o755)
+    elif case == "sticky-ancestor":
+        sticky = tmp_path / "sticky"
+        sticky.mkdir()
+        sticky.chmod(0o1777)
+        root = sticky / "scratch"
+        created = [root]
+    elif case == "link-to-safe-directory":
+        (tmp_path / "link").symlink_to(private, target_is_directory=True)
+        root = tmp_path / "link" / "scratch"
+        created = [private / "scratch"]
+    else:  # ".." after a link leaves the link's target, as the kernel resolves it, not the link's directory
+        (private / "inner").mkdir(mode=0o700)
+        (tmp_path / "link").symlink_to(private / "inner", target_is_directory=True)
+        root = tmp_path / "link" / ".." / "scratch"
+        created = [private / "scratch"]
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(root))
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    seen: list[Path] = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        base = Path(command[command.index("--basetemp") + 1])
+        seen.append(base)
+        assert os.path.realpath(base) == str(base)  # pytest receives the verified, link-free path
+        (base / "probe").touch()
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    assert gate.run_pytest_stage(_plan(changed_tests=()), tmp_path, "launcher", time.monotonic() + 30) == (
+        "1 passed in 0.1s"
+    )
+
+    resolved_root = Path(os.path.realpath(root))
+    assert len(seen) == 1 and seen[0].parent.parent.parent == resolved_root
+    assert not os.path.lexists(seen[0]) and list(seen[0].parent.iterdir()) == []  # only its own base, removed
+    for directory in created:  # components the gate created are private to this user
+        assert stat.S_IMODE(directory.lstat().st_mode) == 0o700 and directory.lstat().st_uid == os.geteuid()
+    if case == "existing-root":
+        assert stat.S_IMODE(root.lstat().st_mode) == 0o755  # an existing safe root is used as it is
+    if case == "parent-of-a-link-target":
+        assert resolved_root == private / "scratch" and not (tmp_path / "scratch").exists()
+
+
+@pytest.mark.parametrize("unsafe", ["ancestor", "root"])
+def test_an_unsafe_default_scratch_root_refuses_without_falling_back(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, unsafe: str
+) -> None:
+    # The fallback covers only a default that cannot be created; an unsafe one must be fixed, not bypassed.
+    monkeypatch.delenv(gate.SCRATCH_ROOT_ENV, raising=False)
+    shared = tmp_path / "shared"
+    shared.mkdir(mode=0o755)
+    default = shared / "lu"
+    if unsafe == "ancestor":
+        shared.chmod(0o775)
+    else:
+        default.mkdir()
+        default.chmod(0o775)
+    monkeypatch.setattr(gate, "DEFAULT_SCRATCH_ROOT", default)
+    system_temp = tmp_path / "system-temp"
+    system_temp.mkdir(mode=0o700)
+    monkeypatch.setattr(gate.tempfile, "tempdir", str(system_temp))
+    state = tmp_path / "state"
+    state.mkdir()
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.pytest_temp_parent(state)
+
+    assert raised.value.reason == "pytest_temp_unavailable" and raised.value.incomplete
+    assert UNSAFE_ANCESTRY["group-writable-ancestor"] in raised.value.detail
+    assert gate.SCRATCH_ROOT_ENV in raised.value.detail and str(tmp_path) not in raised.value.detail
+    assert not (system_temp / gate.FALLBACK_SCRATCH_DIRNAME).exists() and _gate_directories(tmp_path) == []
+    assert os.path.isdir(default) == (unsafe == "root")
+
+
+@pytest.mark.parametrize("default_usable", [True, False])
+def test_pytest_temp_parent_follows_the_fleet_scratch_convention(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, default_usable: bool
+) -> None:
+    from scripts.common import scratch
+
+    assert gate.SCRATCH_ROOT_ENV == scratch.SCRATCH_ROOT_ENV_VAR
+    assert gate.DEFAULT_SCRATCH_ROOT == scratch.DEFAULT_SCRATCH_ROOT
+    assert gate.FALLBACK_SCRATCH_DIRNAME == scratch.FALLBACK_SCRATCH_DIRNAME
+    monkeypatch.delenv(gate.SCRATCH_ROOT_ENV, raising=False)
+    blocker = tmp_path / "blocker"
+    blocker.write_text("a file, not a directory")
+    default = tmp_path / "default" / "lu" if default_usable else blocker / "lu"
+    monkeypatch.setattr(gate, "DEFAULT_SCRATCH_ROOT", default)
+    system_temp = tmp_path / "system-temp"
+    system_temp.mkdir(mode=0o700)
+    monkeypatch.setattr(gate.tempfile, "tempdir", str(system_temp))
+    states = [tmp_path / "state", tmp_path / "other-state"]
+    for state in states:
+        state.mkdir()
+
+    parents = [gate.pytest_temp_parent(state) for state in states]
+
+    root = default if default_usable else system_temp / gate.FALLBACK_SCRATCH_DIRNAME
+    assert parents[0].parent == parents[1].parent == root / f"pre-push-gate-{os.geteuid()}"
+    assert parents[0] != parents[1]  # one namespace per Git common dir
+    assert parents[0] == gate.pytest_temp_parent(states[0])  # stable across runs, so crashes can be reaped
+
+
+def test_moving_the_base_temp_keeps_admission_budget_and_process_caps(monkeypatch: pytest.MonkeyPatch) -> None:
+    budgets = (gate.STAGE_BUDGET_S, gate.RUN_BUDGET_S, gate.SHADOW_BUDGET_S, gate.CLEANUP_BUDGET_S)
+    assert budgets == (600.0, 1200.0, 120.0, 10.0)
+    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (1340.0, 13400.0, 256)
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
+    assert (gate.test_process_limit(), gate.concurrent_run_limit()) == (4, 1)
 
 
 # ---- #10523: exact-plan coalescing before global admission ---------------------------------------------
@@ -2556,7 +3091,7 @@ def _stop_controls(processes: list[subprocess.Popen]) -> None:
 def _assert_queue_released(state: Path) -> None:
     assert list(state.rglob("*.ticket")) == []
     assert list(state.rglob("*.pending")) == []
-    assert list(state.glob("pytest-*")) == []
+    assert list(state.glob("pytest-*")) == list(gate.pytest_temp_parent(state).glob("pytest-*")) == []
     for lock in state.rglob("admission.lock"):
         with lock.open() as held:
             fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -3404,6 +3939,8 @@ def test_actual_missing_user_bus_runs_each_serial_check_once(repo, ending, monke
     _commit(repo, "serial fallback control", "scripts/pre_commit/project_python.sh")
     monkeypatch.chdir(repo)
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
+    # The scope is attempted only for at most 4 effective workers; a pushing caller's override must not decide.
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     monkeypatch.setenv("DBUS_SESSION_BUS_ADDRESS", "unix:path=/nonexistent-gate-test-bus")
     monkeypatch.setenv("XDG_RUNTIME_DIR", str(repo.parent / "absent-runtime"))
     monkeypatch.setattr(
@@ -3508,6 +4045,9 @@ def test_pytest_stale_sweep_requires_live_exclusive_global_admission(qualified_c
     stale = state / "pytest-other"
     stale.mkdir()
     (stale / "preserved").write_text("other run")
+    current = gate.pytest_temp_parent(state) / "pytest-current"
+    current.mkdir()
+    (current / "preserved").write_text("other run")
     monkeypatch.setattr(gate, "state_dir", lambda _root: state)
     monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
     admission = None
@@ -3534,8 +4074,9 @@ def test_pytest_stale_sweep_requires_live_exclusive_global_admission(qualified_c
             )
             == "1 passed in 0.1s; 1 passed in 0.1s"
         )
-        assert (stale / "preserved").read_text() == "other run"
+        assert (stale / "preserved").read_text() == (current / "preserved").read_text() == "other run"
         assert list(state.glob("pytest-*")) == [stale]
+        assert list(current.parent.glob("pytest-*")) == [current]
         assert diagnostics["stale_pytest_cleanup"] == "skipped_shared_or_unknown"
     finally:
         if admission is not None:
@@ -3773,6 +4314,8 @@ os.kill(pid,signal.SIGKILL)
     monkeypatch.setattr(gate.ResourceScope, "execute", execute)
     monkeypatch.chdir(repo)
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
+    # The scope is attempted only for at most 4 effective workers; a pushing caller's override must not decide.
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     monkeypatch.setenv("LU_PRE_PUSH_GATE_STAGE_BUDGET_S", "300")  # the scoped child must apply this, not 600
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     code = gate.main(

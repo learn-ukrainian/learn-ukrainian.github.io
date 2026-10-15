@@ -101,6 +101,12 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
 )
+# Pytest base temps live outside every Git checkout and Git directory (#10654), under the fleet scratch
+# root of scripts/common/scratch.py. The hook imports no project code, so it restates that convention.
+SCRATCH_ROOT_ENV = "LU_SCRATCH_ROOT"
+DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
+FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
+SCRATCH_LINK_LIMIT = 40  # links followed while verifying a scratch root, as Linux's MAXSYMLINKS
 
 
 class GateOutcome(Exception):
@@ -1218,6 +1224,241 @@ def pytest_invocations(plan: Plan) -> tuple[tuple[tuple[str, ...], str], ...]:
     return tuple((nodes, dist) for nodes, dist in ((distributed, "worksteal"), (grouped, "loadfile")) if nodes)
 
 
+def inside_git_tree(path: Path) -> bool:
+    """Whether ``path`` or an ancestor is a Git checkout or a Git directory, as Git discovery finds them.
+
+    A checkout has a ``.git`` entry (directory or gitfile). A Git directory, bare or not, holds
+    ``HEAD``, ``objects`` and ``refs``. An ancestor that cannot be inspected counts as inside.
+    """
+
+    def present(entry: Path) -> bool:
+        try:
+            entry.lstat()
+        except (FileNotFoundError, NotADirectoryError):
+            return False
+        return True
+
+    try:
+        return any(
+            present(directory / ".git") or all(present(directory / name) for name in ("HEAD", "objects", "refs"))
+            for directory in (path, *path.parents)
+        )
+    except OSError:
+        return True
+
+
+def private_directory(path: Path) -> int:
+    """Create ``path`` with mode 0700 if missing and open it without following a link.
+
+    Requires a real directory owned by this user, closed to others, and returns its descriptor for the
+    caller to close.
+    """
+    try:
+        path.mkdir(mode=0o700, exist_ok=True)
+        fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError as error:
+        raise GateOutcome(
+            "pytest_temp_unavailable",
+            f"cannot create a private pytest base temp directory ({errno.errorcode.get(error.errno, 'error')}); "
+            f"set {SCRATCH_ROOT_ENV} to a writable directory outside every Git checkout",
+            incomplete=True,
+        ) from None
+    info = os.fstat(fd)
+    if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
+        os.close(fd)
+        raise GateOutcome(
+            "pytest_temp_unavailable",
+            "the pytest base temp directory is not private to this user (owner or mode); remove it and push again",
+            incomplete=True,
+        )
+    return fd
+
+
+def scratch_root_refusal(problem: str) -> GateOutcome:
+    """Refuse the push as incomplete over the scratch root, naming the problem's class but never a path."""
+    return GateOutcome(
+        "pytest_temp_unavailable",
+        f"the pytest base temp root {problem}; set {SCRATCH_ROOT_ENV} to a private directory (yours, mode 0700) "
+        "outside every Git checkout",
+        incomplete=True,
+    )
+
+
+def unsafe_scratch_component(info: os.stat_result) -> str | None:
+    """Name the class of a directory or link another user could replace or redirect, or ``None`` if safe.
+
+    Only this user and root are trusted. A directory writable by group or others is safe only when it is
+    sticky, as the system temp directories are: there only an entry's owner can rename or replace it.
+    """
+    kind = "link" if stat.S_ISLNK(info.st_mode) else "directory"
+    if info.st_uid not in (0, os.geteuid()):
+        return f"a {kind} owned by another user"
+    if kind == "directory" and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH) and not info.st_mode & stat.S_ISVTX:
+        return "a directory writable by group or others without the sticky bit"
+    return None
+
+
+def verified_scratch_root(candidate: Path) -> Path:
+    """Resolve ``candidate`` one component at a time from ``/``, verify each, and create what is missing.
+
+    Every directory passed must be safe (``unsafe_scratch_component``), and every link must be owned by
+    this user or root and is followed only into a target that passes the same checks. So no other user
+    can redirect the returned link-free path; same-user changes are outside the gate's trust model
+    (#10654). Missing components are created with mode 0700 below the verified part, after the Git
+    check, and verified again. Raises ``GateOutcome`` for an unsafe or in-Git root, else ``OSError``
+    when the root cannot be inspected or created.
+    """
+
+    def verify(info: os.stat_result) -> None:
+        if not (stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+            raise NotADirectoryError(errno.ENOTDIR, "a scratch root component is not a directory")
+        problem = unsafe_scratch_component(info)
+        if problem is not None:
+            raise scratch_root_refusal(f"or one of its ancestors is {problem}, so another user could redirect it")
+
+    current = Path("/")
+    verify(os.lstat(current))
+    pending, missing, links = list(reversed((Path.cwd() / candidate).parts[1:])), [], 0
+    while pending:
+        part = pending.pop()
+        if part == "..":
+            if missing:
+                missing.pop()
+            else:
+                current = current.parent  # an ancestor of a verified directory, so verified itself
+            continue
+        if missing:
+            missing.append(part)
+            continue
+        try:
+            info = os.lstat(current / part)
+        except FileNotFoundError:
+            missing.append(part)
+            continue
+        verify(info)
+        if not stat.S_ISLNK(info.st_mode):
+            current = current / part
+            continue
+        links += 1
+        if links > SCRATCH_LINK_LIMIT:
+            raise scratch_root_refusal("passes through a link loop")
+        target = Path(os.readlink(current / part))
+        if target.is_absolute():
+            current = Path("/")
+        pending.extend(reversed(target.parts[1:] if target.is_absolute() else target.parts))
+    if inside_git_tree(current.joinpath(*missing)):
+        raise scratch_root_refusal("is inside a Git checkout or Git directory")
+    for part in missing:
+        current = current / part
+        with contextlib.suppress(FileExistsError):  # a concurrent run created it; verify it like any other
+            os.mkdir(current, 0o700)
+        info = os.lstat(current)
+        verify(info)
+        if stat.S_ISLNK(info.st_mode):
+            raise NotADirectoryError(errno.ENOTDIR, "a created scratch root component is not a directory")
+    return current
+
+
+def pytest_temp_parent(state: Path) -> Path:
+    """Return this repository's private parent for pytest base temps, outside every Git tree (#10654).
+
+    The root follows the fleet scratch convention: ``LU_SCRATCH_ROOT`` when set (strictly), else
+    ``/var/tmp/lu``, else ``<system temp>/lu-scratch`` when the default cannot be created. Its whole
+    ancestry is verified before anything is created (``verified_scratch_root``). Below it a per-user
+    0700 directory holds one 0700 directory per Git common dir. Nothing sweeps them: each run removes
+    only its own base (``own_base_temp``) and the host's scratch aging owns what a killed run leaves. An
+    unsafe or uncreatable location refuses the push as incomplete; an unsafe default never falls back,
+    and nothing falls back into Git.
+    """
+    override = os.environ.get(SCRATCH_ROOT_ENV, "").strip()
+    candidates = (
+        [Path(override)] if override else [DEFAULT_SCRATCH_ROOT, Path(tempfile.gettempdir()) / FALLBACK_SCRATCH_DIRNAME]
+    )
+    scratch, failure = None, "error"
+    for candidate in candidates:
+        try:
+            scratch = verified_scratch_root(candidate)
+        except OSError as error:
+            failure = errno.errorcode.get(error.errno, "error")
+            continue
+        break
+    if scratch is None:
+        raise scratch_root_refusal(f"cannot be created ({failure})")
+    user = scratch / f"pre-push-gate-{os.geteuid()}"
+    parent = user / hashlib.sha256(os.fsencode(state.resolve())).hexdigest()[:32]
+    for directory in (user, parent):
+        os.close(private_directory(directory))
+    if inside_git_tree(parent):
+        raise scratch_root_refusal("is inside a Git checkout or Git directory")
+    return parent
+
+
+def remove_own_base_temp(parent_fd: int, name: str) -> None:
+    """Remove ``name`` below ``parent_fd`` and everything in it, never following a link.
+
+    Every directory is opened relative to its parent's descriptor with ``O_NOFOLLOW``, so a rename or
+    link above or inside the base cannot redirect the removal. A directory a test left without owner
+    access is first given 0700, as ``tempfile.TemporaryDirectory`` does, without following a link.
+    """
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    try:
+        if not stat.S_ISDIR(os.stat(name, dir_fd=parent_fd, follow_symlinks=False).st_mode):
+            os.unlink(name, dir_fd=parent_fd)
+            return
+        try:
+            fd = os.open(name, flags, dir_fd=parent_fd)
+        except PermissionError:
+            os.chmod(name, 0o700, dir_fd=parent_fd, follow_symlinks=False)
+            fd = os.open(name, flags, dir_fd=parent_fd)
+        try:
+            os.fchmod(fd, 0o700)
+            for entry in os.listdir(fd):
+                remove_own_base_temp(fd, entry)
+        finally:
+            os.close(fd)
+        os.rmdir(name, dir_fd=parent_fd)
+    except FileNotFoundError:
+        return
+
+
+@contextlib.contextmanager
+def own_base_temp(parent: Path):
+    """Create this run's own pytest base temp below ``parent`` and remove only it afterwards (#10654).
+
+    The private parent is opened once without following a link, and the base is created and removed
+    relative to that descriptor, so replacing any ancestor after validation cannot redirect either step
+    into another run's base. Pytest deletes and recreates a given ``--basetemp``, so the base is held by
+    name inside the anchored parent, not by its own descriptor. No other run's base is ever removed.
+    """
+    parent_fd = private_directory(parent)
+    try:
+        name = f"pytest-{uuid.uuid4().hex}"
+        try:
+            os.mkdir(name, 0o700, dir_fd=parent_fd)
+        except OSError as error:
+            raise GateOutcome(
+                "pytest_temp_unavailable",
+                f"cannot create the pytest base temp ({errno.errorcode.get(error.errno, 'error')})",
+                incomplete=True,
+            ) from None
+        try:
+            yield str(parent / name)
+        except BaseException:
+            with contextlib.suppress(OSError):  # the run's own outcome outranks a cleanup failure
+                remove_own_base_temp(parent_fd, name)
+            raise
+        try:
+            remove_own_base_temp(parent_fd, name)
+        except OSError as error:
+            raise GateOutcome(
+                "validation_incomplete",
+                f"pytest base temp cleanup failed ({errno.errorcode.get(error.errno, 'error')})",
+                incomplete=True,
+            ) from None
+    finally:
+        os.close(parent_fd)
+
+
 def run_pytest_stage(
     plan: Plan,
     root: Path,
@@ -1229,6 +1470,7 @@ def run_pytest_stage(
 ) -> str:
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
+    temp_parent = pytest_temp_parent(state)
     # Only the actual exclusive global holder can prove that no other gate owns these bases.
     exclusive = (
         admission is not None
@@ -1255,7 +1497,7 @@ def run_pytest_stage(
     # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
     summaries = []
     for nodes, dist in invocations:
-        with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
+        with own_base_temp(temp_parent) as base_temp:
             code, output = run_bounded(
                 [
                     "bash",
