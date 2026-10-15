@@ -2966,7 +2966,9 @@ def test_pytest_temp_parent_follows_the_fleet_scratch_convention(
 def test_moving_the_base_temp_keeps_admission_budget_and_process_caps(monkeypatch: pytest.MonkeyPatch) -> None:
     budgets = (gate.STAGE_BUDGET_S, gate.RUN_BUDGET_S, gate.SHADOW_BUDGET_S, gate.CLEANUP_BUDGET_S)
     assert budgets == (600.0, 1200.0, 120.0, 10.0)
-    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (1340.0, 13400.0, 256)
+    # The host test-slot governor (#10662) adds exactly one slot wait to each predecessor's allowance.
+    assert gate.TEST_SLOT_WAIT_S == 600.0
+    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (1940.0, 19400.0, 256)
     monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
     assert (gate.test_process_limit(), gate.concurrent_run_limit()) == (4, 1)
@@ -5054,3 +5056,62 @@ def test_the_real_gate_waits_for_a_host_slot_and_records_the_wait(repo: Path, tm
     assert row["slot_wait_s"] > 0 and row["test_slots"]["wait_s"] == row["slot_wait_s"]
     assert row["stages"]["pytest"]["effective_test_processes"] == 1
     assert row["execution_s"] <= row["duration_s"] - row["slot_wait_s"] + 1.0
+
+
+def test_the_gate_holds_host_slots_beside_its_verified_base_temp_under_umask_002(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The pytest stage takes host slots before it creates its base temp, and both live below one scratch root
+    # (#10662, #10654). The pool is created first, so it must leave that root private whatever the umask, or
+    # the gate refuses its own base temp as one another user could redirect.
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    root = private / "scratch"  # absent: the governor creates it before the gate looks for its base temp
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(root))
+    for name in ("LU_TEST_SLOTS_DIR", "LU_TEST_SLOTS_HOLDER", "LEARN_UKRAINIAN_DISPATCH_TASK_ID"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("LU_TEST_SLOTS", "on")
+    monkeypatch.setenv("LU_TEST_SLOTS_COUNT", "2")
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "2")
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "Shadow", lambda *_args: SimpleNamespace(finish=dict, abandon=lambda: None))
+    monkeypatch.setattr(gate, "run_pre_commit_stage", lambda *_args, **_kwargs: None)
+    governor = gate.load_test_slots()
+    seen = []
+
+    def run(command: list[str], **kwargs: object) -> tuple[int, str]:
+        seen.append((Path(command[command.index("--basetemp") + 1]), governor.status(), kwargs.get("extra_env")))
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    event: dict[str, object] = {}
+    previous = os.umask(0o002)
+    try:
+        gate.execute_stages(
+            _plan(changed_tests=()),
+            tmp_path,
+            "launcher",
+            "config",
+            time.monotonic() + 60,
+            event,
+            stage_budget_s=gate.STAGE_BUDGET_S,
+            persist_receipt=False,
+        )
+    finally:
+        os.umask(previous)
+
+    assert event["outcome"] == "green" and event["test_slots"]["status"] == "held"
+    [(base, report, marker)] = seen
+    pool = root / f"test-slots-{os.geteuid()}"
+    assert base.parent.parent == root / f"pre-push-gate-{os.geteuid()}"
+    assert not gate.inside_git_tree(base.parent) and not gate.inside_git_tree(pool)
+    # While pytest ran, the gate held its slots as kind "gate" and handed its children the holder marker.
+    assert [(holder["kind"], holder["slots"]) for holder in report["holders"]] == [("gate", 2)]
+    assert set(marker) == {"LU_TEST_SLOTS_HOLDER"}
+    for directory in (root, pool, base.parent.parent, base.parent):
+        info = directory.lstat()
+        assert stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid(), directory.name
+    assert not os.path.lexists(base) and governor.status()["slots_in_use"] == 0  # both released at stage end

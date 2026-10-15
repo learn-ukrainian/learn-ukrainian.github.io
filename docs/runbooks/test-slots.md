@@ -40,12 +40,30 @@ variable turns the pool off unless `LU_TEST_SLOTS=on` is set explicitly.
 | `LU_TEST_SLOTS` | on (off when `CI` is true) | `off` restores the previous behaviour everywhere: no waits, no `-n` changes and no admission check. |
 | `LU_TEST_SLOTS_COUNT` | CPU count minus 2, at least 2 | Pool size. Every participant on the host must use the same value. |
 | `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. The gate never waits longer than 600 s. |
-| `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/learn-ukrainian/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`. |
+| `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits beside the pre-push gate's `pre-push-gate-<uid>`. |
 
-The pool directory is mode 0700 and owned by the current user. A pool directory that is a symlink,
-belongs to someone else, or lies inside a Git checkout or Git directory is refused with
-`test_slots_pool_unavailable`. The pool never falls back to a per-process temp directory, because
-that would split it.
+The pool directory is mode 0700 and owned by the current user. Its path follows the trust model of
+the pre-push gate's base temp (#10654; see "Bounds" in `docs/runbooks/pre-push-gate.md`): only the
+current user and root are trusted, and no other user may be able to redirect the path. Before anything
+is created, the path is resolved from `/` one component at a time. Every directory on the way must be
+owned by the user or root and must not be writable by group or others unless it is sticky, as the
+system temp directories are. A link is followed only if the user or root owns it, and its target passes
+the same checks. Missing components, the scratch root included, are created with mode 0700 whatever
+the umask. A root created under umask 002 would be group-writable, and the gate would then refuse its
+own base temp below the same root. `status` runs the same checks and creates nothing.
+
+Each of these is refused with `test_slots_pool_unavailable`:
+
+- a directory or link on the way that another user owns;
+- a directory that group or others can write and that is not sticky;
+- a link loop;
+- a pool directory that is itself a link, or that belongs to someone else;
+- a pool inside a Git checkout or Git directory.
+
+The message names the kind of component at fault, never its path. To fix a refusal, set
+`LU_SCRATCH_ROOT` to a private directory (owned by the user, mode 0700) whose ancestors only the user or
+root can write, or remove group and other write from the directory at fault. The pool never falls back
+to a per-process temp directory, because that would split it.
 
 ## Refusals
 

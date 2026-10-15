@@ -284,14 +284,14 @@ def test_the_built_in_default_root_is_isolated_like_scratch_py(monkeypatch: pyte
 
     monkeypatch.delenv(test_slots.DIR_ENV)
     assert test_slots.DEFAULT_SCRATCH_ROOT == scratch.DEFAULT_SCRATCH_ROOT != Path("/var/tmp/lu")
-    expected = scratch.DEFAULT_SCRATCH_ROOT / "learn-ukrainian" / f"test-slots-{os.geteuid()}"
+    expected = scratch.DEFAULT_SCRATCH_ROOT / f"test-slots-{os.geteuid()}"
     assert test_slots.pool_dir() == expected
 
 
 def test_default_pool_lives_under_the_fleet_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(test_slots.DIR_ENV)
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
-    expected = tmp_path / "scratch" / "learn-ukrainian" / f"test-slots-{os.geteuid()}"
+    expected = tmp_path / "scratch" / f"test-slots-{os.geteuid()}"
     assert test_slots.pool_dir() == expected
     with test_slots.acquire(1, kind="pytest"):
         assert expected.is_dir()
@@ -303,7 +303,7 @@ def test_a_pool_inside_any_git_checkout_or_git_directory_is_refused(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, marker: str
 ) -> None:
     root = tmp_path / "repo"
-    root.mkdir()
+    root.mkdir(mode=0o700)  # private whatever the umask, so only the Git marker makes the path unusable
     if marker == "checkout":
         (root / ".git").mkdir()
         target = root / "batch_state" / "pool"
@@ -333,6 +333,122 @@ def test_a_symlinked_pool_directory_is_refused(tmp_path: Path, pool: Path) -> No
         test_slots.acquire(1, kind="pytest")
     assert refused.value.reason == "pool_unavailable"
     assert list(real.iterdir()) == []
+
+
+def _pretend_owned_by_another_user(monkeypatch: pytest.MonkeyPatch, path: Path) -> None:
+    """Report ``path``'s own inode (a link itself, not its target) as owned by neither this user nor root."""
+    real = path.lstat()
+    key, other = (real.st_dev, real.st_ino), os.geteuid() + 1
+
+    def reporting(original):
+        def report(*args: object, **kwargs: object) -> os.stat_result:
+            info = original(*args, **kwargs)
+            if (info.st_dev, info.st_ino) != key:
+                return info
+            fields = list(info[:10])
+            fields[4] = other  # st_uid
+            return os.stat_result(fields)
+
+        return report
+
+    for name in ("lstat", "stat", "fstat"):
+        monkeypatch.setattr(test_slots.os, name, reporting(getattr(os, name)))
+
+
+# The same classes, in the same words, as the pre-push gate's base temp refusals (#10654).
+UNSAFE_POOL_PATHS = {
+    "foreign-owned-ancestor": "a directory owned by another user",
+    "group-writable-ancestor": "a directory writable by group or others without the sticky bit",
+    "other-writable-ancestor": "a directory writable by group or others without the sticky bit",
+    "group-writable-pool": "a directory writable by group or others without the sticky bit",
+    "link-to-unsafe-directory": "a directory writable by group or others without the sticky bit",
+    "foreign-link-in-sticky-directory": "a link owned by another user",
+    "link-loop": "a link loop",
+}
+
+
+def _unsafe_pool_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str) -> tuple[Path, list[Path]]:
+    """Build one pool path another user could redirect; return it and the paths that must stay absent."""
+    shared, safe = tmp_path / "shared", tmp_path / "safe"
+    shared.mkdir(mode=0o755)
+    safe.mkdir(mode=0o700)
+    if case == "foreign-owned-ancestor":
+        _pretend_owned_by_another_user(monkeypatch, shared)
+    elif case == "group-writable-ancestor":
+        shared.chmod(0o775)
+    elif case == "other-writable-ancestor":
+        shared.chmod(0o757)
+    elif case == "group-writable-pool":
+        (shared / "pool").mkdir()
+        (shared / "pool").chmod(0o775)  # an existing pool created under umask 002
+        return shared / "pool", [shared / "pool" / "pool.lock", shared / "pool" / "queue"]
+    elif case == "link-to-unsafe-directory":
+        shared.chmod(0o777)
+        (tmp_path / "link").symlink_to(shared, target_is_directory=True)
+        return tmp_path / "link" / "pool", [shared / "pool"]
+    elif case == "foreign-link-in-sticky-directory":
+        sticky = tmp_path / "sticky"
+        sticky.mkdir()
+        sticky.chmod(0o1777)  # the system temp pattern: anyone may add entries, only their owner may replace them
+        (sticky / "link").symlink_to(safe, target_is_directory=True)
+        _pretend_owned_by_another_user(monkeypatch, sticky / "link")
+        return sticky / "link" / "pool", [safe / "pool"]
+    elif case == "link-loop":
+        (tmp_path / "loop-a").symlink_to(tmp_path / "loop-b")
+        (tmp_path / "loop-b").symlink_to(tmp_path / "loop-a")
+        return tmp_path / "loop-a" / "pool", []
+    return shared / "lu" / "pool", [shared / "lu"]
+
+
+@pytest.mark.parametrize("case", sorted(UNSAFE_POOL_PATHS))
+def test_a_pool_path_another_user_could_redirect_is_refused_before_anything_is_created(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    path, absent = _unsafe_pool_path(tmp_path, monkeypatch, case)
+    monkeypatch.setenv(test_slots.DIR_ENV, str(path))
+
+    with pytest.raises(test_slots.SlotError) as refused:
+        test_slots.acquire(1, kind="pytest", wait_s=0.1)
+    report = test_slots.status()
+
+    assert refused.value.reason == "pool_unavailable"
+    assert UNSAFE_POOL_PATHS[case] in refused.value.detail and str(tmp_path) not in refused.value.detail
+    assert report["error"]["reason"] == "pool_unavailable" and report["pool_exists"] is False
+    assert not any(os.path.lexists(entry) for entry in absent)
+
+
+@pytest.mark.parametrize("case", ["absent-root", "sticky-ancestor", "link-to-safe-directory"])
+def test_a_safe_pool_path_is_created_private_whatever_the_umask(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    # The pre-push gate verifies its base temp below the same scratch root and refuses a group-writable one.
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    if case == "absent-root":
+        root, created = private / "a" / "b", [private / "a", private / "a" / "b"]
+    elif case == "sticky-ancestor":
+        sticky = tmp_path / "sticky"
+        sticky.mkdir()
+        sticky.chmod(0o1777)
+        root, created = sticky / "scratch", [sticky / "scratch"]
+    else:
+        (tmp_path / "link").symlink_to(private, target_is_directory=True)
+        root, created = tmp_path / "link" / "scratch", [private / "scratch"]
+    monkeypatch.delenv(test_slots.DIR_ENV)
+    monkeypatch.setenv(test_slots.SCRATCH_ROOT_ENV, str(root))
+
+    previous = os.umask(0o002)
+    try:
+        with test_slots.acquire(1, kind="pytest", wait_s=0.1):
+            report = test_slots.status()
+    finally:
+        os.umask(previous)
+
+    pool = Path(os.path.realpath(root)) / f"test-slots-{os.geteuid()}"
+    for directory in (*created, pool, pool / "queue", pool / "holders"):
+        info = directory.lstat()
+        assert stat.S_ISDIR(info.st_mode) and stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid()
+    assert report["error"] is None and report["slots_in_use"] == 1
 
 
 # ---- visibility -----------------------------------------------------------------------------------------------
@@ -372,6 +488,9 @@ def test_status_is_read_only_and_reports_a_missing_or_disabled_pool(
     assert report["pool_exists"] is False and report["holders"] == [] and report["queue_depth"] == 0
     monkeypatch.setenv(test_slots.ENABLE_ENV, "off")
     assert test_slots.status()["enabled"] is False
+    assert not pool.exists()
+    monkeypatch.setenv(test_slots.DIR_ENV, str(pool / "absent-parent" / "pool"))
+    assert test_slots.status()["pool_exists"] is False  # a missing ancestor is not created either
     assert not pool.exists()
 
 

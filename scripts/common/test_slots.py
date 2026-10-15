@@ -10,9 +10,12 @@ locked. The kernel drops a lock when its process exits, including on SIGKILL, so
 at once. Files a dead process leaves behind are inert and the next waiter reaps them. Lock files are permanent:
 deleting one while a holder keeps it open would let a second holder lock a fresh inode.
 
-The pool is ``<fleet scratch root>/learn-ukrainian/test-slots-<uid>``. ``LU_SCRATCH_ROOT`` overrides the default
-root (``DEFAULT_SCRATCH_ROOT``), as in ``scratch.py``. It is mode 0700 and owned by this user. It never falls back to
-a per-process temp directory, which would split the pool, and it never lies inside a Git checkout or Git directory.
+The pool is ``<fleet scratch root>/test-slots-<uid>``, beside the pre-push gate's ``pre-push-gate-<uid>``.
+``LU_SCRATCH_ROOT`` overrides the default root (``DEFAULT_SCRATCH_ROOT``), as in ``scratch.py``. The whole path is
+verified from ``/`` as the gate verifies its own (#10654): no directory or link on it may let another user redirect
+it, and missing components are created mode 0700 whatever the umask. The pool is owned by this user and mode 0700.
+It never falls back to a per-process temp directory, which would split the pool, and it never lies inside a Git
+checkout or Git directory.
 
 Environment:
   LU_TEST_SLOTS         on or off. Default on, except where ``CI`` is true, so CI runs are unchanged.
@@ -65,6 +68,7 @@ REPORT_EVERY_S = 30.0
 MAX_TICKETS = 1024
 MAX_RECORD_BYTES = 4096
 PENDING_GRACE_S = 60.0
+LINK_LIMIT = 40  # links followed while verifying the pool directory, as Linux's MAXSYMLINKS
 STATUS_SCHEMA = "test-slots.status.v1"
 EXIT_REFUSED = 75  # EX_TEMPFAIL: the command did not run; retry once slots free up
 KINDS = frozenset({"gate", "pytest", "launcher"})
@@ -140,7 +144,7 @@ def pool_dir(environ: Mapping[str, str] | None = None) -> Path:
     base = Path(root) if root else DEFAULT_SCRATCH_ROOT
     if not base.is_absolute():
         raise SlotError("invalid_configuration", f"{SCRATCH_ROOT_ENV} must be an absolute path")
-    return base / "learn-ukrainian" / f"test-slots-{os.geteuid()}"
+    return base / f"test-slots-{os.geteuid()}"
 
 
 # ---- the pool directory ---------------------------------------------------------------------------------------
@@ -154,6 +158,94 @@ def _inside_git(path: Path) -> bool:
         if (candidate / "HEAD").is_file() and (candidate / "objects").is_dir() and (candidate / "refs").is_dir():
             return True
     return False
+
+
+def _unsafe_component(info: os.stat_result) -> str | None:
+    """Name the class of a directory or link another user could replace or redirect, or ``None`` if safe.
+
+    Only this user and root are trusted. A directory writable by group or others is safe only when it is
+    sticky, as the system temp directories are: there only an entry's owner can rename or replace it.
+    """
+    kind = "link" if stat.S_ISLNK(info.st_mode) else "directory"
+    if info.st_uid not in (0, os.geteuid()):
+        return f"a {kind} owned by another user"
+    if kind == "directory" and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH) and not info.st_mode & stat.S_ISVTX:
+        return "a directory writable by group or others without the sticky bit"
+    return None
+
+
+def _verified_directory(path: Path, *, create: bool) -> Path | None:
+    """Resolve absolute ``path`` from ``/`` one component at a time, so no other user can redirect it.
+
+    The pre-push gate verifies its pytest base temp root the same way (#10654), and both live under one
+    scratch root. Every directory passed must be safe (``_unsafe_component``), and a link must be owned by
+    this user or root and is followed only into a target that passes the same checks; the pool directory
+    itself must not be a link. Missing components are created mode 0700, whatever the umask, after the Git
+    check, and verified again: a umask-derived group-writable root would make the gate refuse its own base
+    temp. Without ``create`` a missing component returns ``None`` and nothing is written. Raises
+    ``SlotError`` for an unsafe, linked or in-Git path, else ``OSError`` when it cannot be inspected or created.
+    """
+
+    def verify(info: os.stat_result) -> None:
+        if not (stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+            raise NotADirectoryError(errno.ENOTDIR, "a pool directory component is not a directory")
+        problem = _unsafe_component(info)
+        if problem is not None:
+            raise SlotError(
+                "pool_unavailable",
+                f"the pool directory or one of its ancestors is {problem}, so another user could redirect it; "
+                f"point {SCRATCH_ROOT_ENV} or {DIR_ENV} at a private directory",
+            )
+
+    current = Path("/")
+    verify(os.lstat(current))
+    pending, missing, links = list(reversed(path.parts[1:])), [], 0
+    while pending:
+        part = pending.pop()
+        if part == "..":
+            if missing:
+                missing.pop()
+            else:
+                current = current.parent  # an ancestor of a verified directory, so verified itself
+            continue
+        if missing:
+            missing.append(part)
+            continue
+        try:
+            info = os.lstat(current / part)
+        except FileNotFoundError:
+            missing.append(part)
+            continue
+        verify(info)
+        if not stat.S_ISLNK(info.st_mode):
+            current = current / part
+            continue
+        if not pending:  # link targets stack above the requested path, so this is its last component
+            raise SlotError("pool_unavailable", "the pool directory is a symbolic link")
+        links += 1
+        if links > LINK_LIMIT:
+            raise SlotError("pool_unavailable", "the pool directory passes through a link loop")
+        target = Path(os.readlink(current / part))
+        if target.is_absolute():
+            current = Path("/")
+        pending.extend(reversed(target.parts[1:] if target.is_absolute() else target.parts))
+    if missing and not create:
+        return None
+    if _inside_git(current.joinpath(*missing)):
+        raise SlotError(
+            "pool_unavailable",
+            f"the pool directory lies inside a Git checkout or Git directory; point {DIR_ENV} or "
+            f"{SCRATCH_ROOT_ENV} outside every checkout",
+        )
+    for part in missing:
+        current = current / part
+        with contextlib.suppress(FileExistsError):  # a concurrent run created it; verify it like any other
+            os.mkdir(current, 0o700)
+        info = os.lstat(current)
+        verify(info)
+        if stat.S_ISLNK(info.st_mode):
+            raise NotADirectoryError(errno.ENOTDIR, "a created pool directory component is not a directory")
+    return current
 
 
 def _private_directory(path: Path) -> None:
@@ -177,15 +269,10 @@ def _private_directory(path: Path) -> None:
 
 
 def _open_pool(env: Mapping[str, str]) -> Path:
-    path = pool_dir(env)
-    if _inside_git(Path(os.path.realpath(path))):
-        raise SlotError(
-            "pool_unavailable",
-            f"the pool directory lies inside a Git checkout or Git directory; point {DIR_ENV} or "
-            f"{SCRATCH_ROOT_ENV} outside every checkout",
-        )
+    """Return the verified, link-free pool directory with its queue and holder directories, creating them."""
     try:
-        path.parent.mkdir(parents=True, exist_ok=True)
+        path = _verified_directory(pool_dir(env), create=True)
+        assert path is not None  # creating never reports a missing component
         _private_directory(path)
         for name in ("queue", "holders"):
             _private_directory(path / name)
@@ -583,7 +670,9 @@ def status(environ: Mapping[str, str] | None = None) -> dict[str, object]:
         report["enabled"] = enabled(env)
         size = pool_size(env)
         report.update(pool_size=size, slots_free=size, wait_timeout_s=wait_timeout(env))
-        path = pool_dir(env)
+        path = _verified_directory(pool_dir(env), create=False)  # verifies the path, creates nothing
+        if path is None:
+            return report
         try:
             fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
         except FileNotFoundError:
