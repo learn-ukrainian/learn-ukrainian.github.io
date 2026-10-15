@@ -15,6 +15,7 @@ import os
 import socket
 import threading
 import time
+from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 
 import httpx
@@ -97,42 +98,65 @@ def _serve(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, call_timeout: flo
     thread.join(timeout=10)
 
 
-async def _load(base_url: str, port: int) -> tuple[list[float], list[httpx.Response]]:
-    stalled = []
-    for _ in range(STALLED_CONNECTIONS):
-        _reader, writer = await asyncio.open_connection("127.0.0.1", port)
-        writer.write(b"POST /mcp HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: 500\r\n\r\n{")
-        stalled.append(writer)
-    limits = httpx.Limits(max_connections=CALLS + 10, max_keepalive_connections=0)
-    async with httpx.AsyncClient(limits=limits, timeout=60) as client:
-
-        async def tool_call(number: int) -> httpx.Response:
-            payload = {
-                "jsonrpc": "2.0",
-                "id": number,
-                "method": "tools/call",
-                "params": {"name": "collection_stats", "arguments": {}},
-            }
-            return await client.post(f"{base_url}/mcp", json=payload)
-
-        calls = [asyncio.create_task(tool_call(number)) for number in range(CALLS)]
-        latencies: list[float] = []
-        while not all(call.done() for call in calls):
-            started = time.monotonic()
-            async with httpx.AsyncClient(timeout=5) as probe:
+async def _health_probes(base_url: str, ready: Future[None], stop: threading.Event) -> list[float]:
+    latencies = []
+    try:
+        async with httpx.AsyncClient(timeout=5) as probe:
+            assert (await probe.get(f"{base_url}/health")).status_code == 200
+            ready.set_result(None)
+            while not stop.is_set():
+                started = time.monotonic()
                 response = await probe.get(f"{base_url}/health")
-            assert response.status_code == 200
-            latencies.append(time.monotonic() - started)
-            await asyncio.sleep(0.1)
-        responses = await asyncio.gather(*calls)
-    for writer in stalled:
-        writer.close()
+                latencies.append(time.monotonic() - started)
+                assert response.status_code == 200
+                await asyncio.sleep(0.1)
+    except BaseException as exc:
+        if not ready.done():
+            ready.set_exception(exc)
+        raise
+    return latencies
+
+
+async def _load(base_url: str, port: int) -> tuple[list[float], list[httpx.Response]]:
+    ready: Future[None] = Future()
+    stop = threading.Event()
+    stalled = []
+    # Warm the probe before load starts and keep its loop off the burst's loop.
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        probes = pool.submit(asyncio.run, _health_probes(base_url, ready, stop))
+        try:
+            await asyncio.wrap_future(ready)
+            for _ in range(STALLED_CONNECTIONS):
+                _reader, writer = await asyncio.open_connection("127.0.0.1", port)
+                writer.write(b"POST /mcp HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: 500\r\n\r\n{")
+                stalled.append(writer)
+            limits = httpx.Limits(max_connections=CALLS + 10, max_keepalive_connections=0)
+            async with httpx.AsyncClient(limits=limits, timeout=60) as client:
+
+                async def tool_call(number: int) -> httpx.Response:
+                    payload = {
+                        "jsonrpc": "2.0",
+                        "id": number,
+                        "method": "tools/call",
+                        "params": {"name": "collection_stats", "arguments": {}},
+                    }
+                    return await client.post(f"{base_url}/mcp", json=payload)
+
+                responses = await asyncio.gather(*(tool_call(number) for number in range(CALLS)))
+        finally:
+            stop.set()
+            for writer in stalled:
+                writer.close()
+            await asyncio.gather(*(writer.wait_closed() for writer in stalled))
+        latencies = await asyncio.wrap_future(probes)
     return latencies, responses
 
 
-def test_health_stays_under_one_second_while_saturated(saturated_server) -> None:
+def test_health_stays_under_one_second_while_saturated(saturated_server, record_property) -> None:
     base_url, port, stats = saturated_server
     latencies, responses = asyncio.run(_load(base_url, port))
+    record_property("health_probe_count", len(latencies))
+    record_property("max_health_latency_s", max(latencies))
     assert len(latencies) >= 10
     assert max(latencies) < 1.0, f"slowest /health {max(latencies):.3f}s"
     assert all(response.status_code == 200 for response in responses)
