@@ -1,0 +1,18 @@
+# PROPOSED CPU-time ceiling for lu.slice (#10735). INERT: the .example suffix is
+# never loaded by systemd, and no script installs this file. Nothing here is
+# applied until a reviewer approves the ceiling and the operator's host
+# maintenance copies it next to the existing limits drop-in as
+# ~/.config/systemd/user/lu.slice.d/20-cpu.conf (procedure and rollback:
+# docs/runbooks/driver-memory-scope.md, "CPU-time containment").
+# Leave the memory limits drop-in (10-limits.conf) untouched.
+[Slice]
+# Turn on CPU accounting so cpu.stat and the quota are enforced for the slice.
+CPUAccounting=yes
+# Percent of ONE CPU per 100%: 1200% is twelve CPUs' worth of CPU time across
+# every descendant. It caps CPU time, not load average or thread count.
+CPUQuota=1200%
+# Enforcement window; a short period limits how long a burst can run at full speed.
+CPUQuotaPeriodSec=100ms
+# Relative share under contention (default 100); half weight lets interactive
+# services win when the host is busy.
+CPUWeight=50

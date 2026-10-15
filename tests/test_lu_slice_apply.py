@@ -6,6 +6,7 @@ values here are synthetic test values, not any host's sizing.
 
 from __future__ import annotations
 
+import configparser
 import os
 import subprocess
 from pathlib import Path
@@ -172,3 +173,52 @@ def test_never_restarts_or_stops_units(tmp_path: Path) -> None:
     calls = (tmp_path / "systemctl.log").read_text()
     for verb in ("restart", "stop", "kill", "start "):
         assert verb not in calls
+
+
+# CPU-time containment (#10735): the ceiling is documentation plus an inert example.
+CPU_EXAMPLE = REPO / "packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example"
+RUNBOOK = REPO / "docs/runbooks/driver-memory-scope.md"
+
+
+def test_cpu_example_is_inert_and_has_exactly_the_documented_keys() -> None:
+    assert CPU_EXAMPLE.name.endswith(".example")  # systemd never loads it
+    parser = configparser.ConfigParser(interpolation=None)
+    parser.optionxform = str  # type: ignore[assignment,method-assign]
+    parser.read_string(CPU_EXAMPLE.read_text())
+    assert parser.sections() == ["Slice"]
+    assert dict(parser["Slice"]) == {
+        "CPUAccounting": "yes",
+        "CPUQuota": "1200%",
+        "CPUQuotaPeriodSec": "100ms",
+        "CPUWeight": "50",
+    }
+
+
+def test_runbook_cpu_section_names_each_verification_property() -> None:
+    body = RUNBOOK.read_text()
+    section = body.split("## CPU-time containment", 1)[1].split("\n## ", 1)[0]
+    for needle in (
+        "CPUAccounting", "CPUQuotaPerSecUSec", "CPUQuotaPeriodUSec", "CPUWeight",
+        "MemoryMax", "MemoryHigh", "MemorySwapMax", "cpu.max", "cpu.weight",
+        "nr_throttled", "throttled_usec", "cpu.pressure", "/api/health",
+        "20-cpu.conf", "daemon-reload", "set-property --runtime", "CPUQuota= CPUWeight=",
+        "1200%", "100ms", "PROPOSED",
+    ):  # fmt: skip
+        assert needle in section, needle
+    assert "not a load-average bound and not a thread-count bound" in section
+    assert "no script" in section
+
+
+def test_apply_script_is_unchanged_from_main() -> None:
+    """Guards the #10735 change: the apply script must not parse unit or drop-in text."""
+    ref = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", "origin/main"],
+        cwd=REPO, capture_output=True, text=True, timeout=30,
+    )  # fmt: skip
+    if ref.returncode != 0:
+        pytest.skip("origin/main is not available in this checkout")
+    diff = subprocess.run(
+        ["git", "diff", "--quiet", "origin/main", "--", "scripts/ops/lu_slice_apply.sh"],
+        cwd=REPO, capture_output=True, text=True, timeout=30,
+    )  # fmt: skip
+    assert diff.returncode == 0, "scripts/ops/lu_slice_apply.sh differs from origin/main"
