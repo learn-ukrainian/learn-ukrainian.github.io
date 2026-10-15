@@ -59,10 +59,9 @@ Governed runs also limit native library threads (#10716). Before xdist starts wo
 `ORT_NUM_THREADS` and `RAYON_NUM_THREADS` to `1`, and `TOKENIZERS_PARALLELISM` to `false`.
 The launcher and the pre-push gate's pytest stage apply the same policy. Children inherit the limits.
 The policy preserves only positive integers at or below `1` for numeric settings, written as ASCII
-decimal digits. It replaces zero, negatives, fractions, empty or whitespace-only strings, `nan` and
-infinities with `1`; those values do not reliably limit native threads. Nonnumeric tokens remain
-unchanged, including nested OpenMP settings such as `8,4`. Such tokens are not capped and may allow
-more than one native thread per worker.
+decimal digits. It replaces every other value with `1`, including zero, negatives, fractions, padded
+or signed values, empty strings, `nan`, infinities, oversized integers and nonnumeric tokens such as
+`8,4`, `true` and `0x10`. Those values do not reliably limit native threads.
 It disables tokenizer parallelism regardless of its previous setting. The caller's shell stays unchanged.
 
 For a test that needs native parallelism, set `LU_TEST_THREAD_CAP=off` for that command and record

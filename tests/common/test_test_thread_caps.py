@@ -22,8 +22,8 @@ def test_apply_sets_caps_without_mutating_input() -> None:
     assert THREAD_CAPS == EXPECTED
 
 
-@pytest.mark.parametrize("value", ["1", "01", "not-a-number", "8,4", "true", "0x10"])
-def test_apply_preserves_positive_integers_within_cap_and_non_numeric_values(value: str) -> None:
+@pytest.mark.parametrize("value", ["1", "01"])
+def test_apply_preserves_positive_integers_within_cap(value: str) -> None:
     from scripts.common.test_thread_caps import apply
 
     original = {key: value for key in EXPECTED if key != "TOKENIZERS_PARALLELISM"}
@@ -49,7 +49,21 @@ def test_apply_preserves_positive_integers_within_cap_and_non_numeric_values(val
         "1.0",
         "0_1",
         " 1 ",
+        "+1",
+        "1\n",
+        "٣",
+        "00",
+        "2",
+        "1_000",
+        "16abc",
+        "1abc",
+        "8,4",
+        "true",
+        "0x10",
+        "not-a-number",
+        "huge",
         "1" * 500,
+        "1" * 5000,
     ],
 )
 def test_apply_replaces_values_that_are_not_positive_integer_limits(value: str) -> None:

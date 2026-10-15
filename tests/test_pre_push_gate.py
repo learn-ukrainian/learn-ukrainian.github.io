@@ -133,28 +133,51 @@ def test_gate_pytest_child_thread_caps_match_helper(
         " ",
         "\t\n",
         "nan",
+        "NaN",
         "inf",
         "-inf",
         "1e400",
         "1.5",
+        "0.9",
+        "1.0",
         "0_1",
         " 1 ",
+        "+1",
+        "1\n",
+        "٣",
+        "00",
+        "2",
+        "1_000",
+        "16abc",
+        "1abc",
         "1",
         "01",
         "8,4",
+        "true",
+        "0x10",
+        "not-a-number",
+        "huge",
         "1" * 500,
+        "1" * 5000,
     ],
 )
 @pytest.mark.parametrize("setting", ["on", "off"])
 def test_gate_thread_policy_parity(value: str | None, setting: str) -> None:
     from scripts.common.test_thread_caps import THREAD_CAPS, apply
+    from tests.common.test_test_thread_caps import EXPECTED
 
     env = {"LU_TEST_THREAD_CAP": setting}
     if value is not None:
         env.update(dict.fromkeys(THREAD_CAPS, value))
     assert gate.THREAD_CAPS == THREAD_CAPS
     original = dict(env)
-    assert gate.apply_thread_caps(env) == apply(env)
+    expected = {"LU_TEST_THREAD_CAP": setting, **EXPECTED}
+    if setting == "off":
+        expected = original
+    elif value in {"1", "01"}:
+        expected.update(dict.fromkeys(EXPECTED, value))
+        expected["TOKENIZERS_PARALLELISM"] = "false"
+    assert gate.apply_thread_caps(env) == apply(env) == expected
     assert env == original
 
 

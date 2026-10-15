@@ -14,17 +14,16 @@ THREAD_CAPS = {
 
 
 def apply(env: Mapping[str, str]) -> dict[str, str]:
-    """Return a capped copy, preserving positive integer limits within the cap and nonnumeric tokens."""
+    """Return a capped copy, preserving only positive ASCII integer limits within the cap."""
     result = dict(env)
     if env.get("LU_TEST_THREAD_CAP", "").strip().lower() == "off":
         return result
     for name, cap in THREAD_CAPS.items():
         if cap != "false" and name in env:
             try:
-                value = float(env[name].strip() or "0")
-                if env[name].isascii() and env[name].isdecimal() and 0 < value <= int(cap):
+                if env[name].isascii() and env[name].isdecimal() and 0 < int(env[name]) <= int(cap):
                     continue
             except ValueError:
-                continue
+                pass
         result[name] = cap
     return result
