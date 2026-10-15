@@ -292,21 +292,100 @@ def test_a_failed_publish_keeps_the_record_for_the_next_run(dirs) -> None:
     assert _records(notices) == []
 
 
-def test_the_backlog_is_bounded_and_keeps_the_newest(dirs, monkeypatch: pytest.MonkeyPatch) -> None:
-    state_fd, notices_fd, _state, notices = dirs
-    monkeypatch.setattr(alert, "MAX_PENDING", 3)
-    for minute in range(5):
+def _record_runs(state_fd: int, notices_fd: int, minutes: range) -> list[str]:
+    episodes = []
+    for minute in minutes:
         alert.record_stopped_run(
             _stopped("watchdog", f"{minute:032x}"),
             state_fd=state_fd,
             notices_fd=notices_fd,
-            now=f"2026-10-15T15:0{minute}:00Z",
+            now=f"2026-10-15T15:{minute:02d}:00Z",
         )
-    assert [record["at"] for record in sorted(_records(notices), key=lambda r: r["at"])] == [
-        "2026-10-15T15:02:00Z",
-        "2026-10-15T15:03:00Z",
-        "2026-10-15T15:04:00Z",
-    ]
+        episodes.append(alert.episode_id(f"{minute:032x}", "watchdog"))
+    return episodes
+
+
+def test_the_recorder_never_removes_a_record(dirs, monkeypatch: pytest.MonkeyPatch) -> None:
+    state_fd, notices_fd, _state, notices = dirs
+    monkeypatch.setattr(alert, "MAX_PENDING", 3)
+    _record_runs(state_fd, notices_fd, range(5))
+    assert len(_records(notices)) == 5  # bounding is the notifier's job, after counting
+
+
+def test_the_backlog_bound_merges_the_oldest_into_one_overflow_record(dirs, monkeypatch: pytest.MonkeyPatch) -> None:
+    state_fd, notices_fd, _state, notices = dirs
+    monkeypatch.setattr(alert, "MAX_PENDING", 3)
+    episodes = _record_runs(state_fd, notices_fd, range(5))
+    alert.coalesce(notices_fd, "2026-10-15T16:00:00Z")
+    records = _records(notices)
+    [overflow] = [record for record in records if record["class"] == "overflow"]
+    assert (overflow["count"], overflow["first"], overflow["last"]) == (2, episodes[0], episodes[1])
+    assert sorted(record["episode"] for record in records if record["class"] == "watchdog") == sorted(episodes[2:])
+    # Two more runs while Fleet Comms stays away: one cumulative overflow record.
+    episodes += _record_runs(state_fd, notices_fd, range(5, 7))
+    alert.coalesce(notices_fd, "2026-10-15T16:05:00Z")
+    records = _records(notices)
+    [overflow] = [record for record in records if record["class"] == "overflow"]
+    assert (overflow["count"], overflow["first"], overflow["last"]) == (4, episodes[0], episodes[3])
+    assert sorted(record["episode"] for record in records if record["class"] == "watchdog") == sorted(episodes[4:])
+    assert set(overflow) == {"schema", "service", "episode", "class", "at", "count", "first", "last"}
+    assert overflow["episode"] == alert.overflow_id(4, episodes[0], episodes[3])
+    alert.coalesce(notices_fd, "2026-10-15T16:10:00Z")  # within the bound: nothing changes
+    assert _records(notices) == records
+
+
+def test_an_overflow_record_that_cannot_be_written_removes_nothing(dirs, monkeypatch: pytest.MonkeyPatch) -> None:
+    state_fd, notices_fd, state, notices = dirs
+    monkeypatch.setattr(alert, "MAX_PENDING", 3)
+    _record_runs(state_fd, notices_fd, range(5))
+    _disk_full(state, monkeypatch)
+    alert.coalesce(notices_fd, "2026-10-15T16:00:00Z")
+    assert [record["class"] for record in _records(notices)] == ["watchdog"] * 5
+
+
+def test_the_overflow_notice_keeps_the_run_pending_until_it_is_sent(dirs, monkeypatch: pytest.MonkeyPatch) -> None:
+    state_fd, notices_fd, state, _notices = dirs
+    monkeypatch.setattr(alert, "MAX_PENDING", 2)
+    episodes = _record_runs(state_fd, notices_fd, range(3))
+    args = ["--state-dir", str(state), "notify"]
+
+    class OverflowRefused(Publisher):
+        def __call__(self, message: str, key: str) -> None:
+            self.calls.append((message, key))
+            if "class=overflow" in message:
+                raise AlertError("fleet_comms publish exited 1")
+
+    assert alert.main(args, publish=OverflowRefused(), unit_state=FakeSystemd()) == alert.EXIT_PENDING
+    fleet = Publisher()
+    assert alert.main(args, publish=fleet, unit_state=FakeSystemd()) == 0
+    [(message, key)] = fleet.calls
+    assert message == (
+        f"[sources-alert] schema=1 service=sources class=overflow episode={alert.overflow_id(1, episodes[0], episodes[0])} "
+        f"at={_fields(message)['at']} count=1 first={episodes[0]} last={episodes[0]}\n{alert.SUMMARIES['overflow']}\n"
+    )
+    assert key == f"lu-sources-alert:v1:{alert.overflow_id(1, episodes[0], episodes[0])}"
+    assert "/" not in alert.SUMMARIES["overflow"]
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"count": 0},
+        {"count": "2"},
+        {"count": True},
+        {"first": "/home/op/x"},
+        {"last": "A" * 32},
+        {"detail": "Traceback"},
+    ],
+)
+def test_a_tampered_overflow_record_is_never_published(dirs, fields: dict[str, object]) -> None:
+    _state_fd, notices_fd, _state, notices = dirs
+    good = alert.Record("a" * 32, "overflow", NOW, 2, "b" * 32, "c" * 32)
+    assert alert.parse_record(good.as_json().encode()) == good
+    (notices / good.name).write_text(json.dumps({**json.loads(good.as_json()), **fields}))
+    publish = Publisher()
+    assert alert.publish_pending(notices_fd, publish) == alert.PublishResult(sent=0, failed=0, pending=0)
+    assert publish.calls == []
 
 
 def test_sent_markers_are_bounded_and_keep_the_newest(dirs, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -583,3 +662,162 @@ def test_cli_exit_codes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None
     assert alert.main(["notify"], publish=Publisher(), unit_state=FakeSystemd()) == 1  # no state directory
     (state / alert.NOTICES_DIR).chmod(0o750)
     assert alert.main(notify, publish=Publisher(), unit_state=FakeSystemd()) == 1  # not owner-only
+
+
+# --- review round 3: no notice is lost silently ---------------------------------------
+
+
+@pytest.fixture
+def unit_dirs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
+    """The state and runtime directories systemd gives both units, as their environment names them."""
+    state, runtime = tmp_path / "state", tmp_path / "runtime"
+    for path in (state, runtime):
+        path.mkdir(mode=0o700)
+    monkeypatch.setenv("STATE_DIRECTORY", str(state))
+    monkeypatch.setenv("RUNTIME_DIRECTORY", str(runtime))
+    return state, runtime
+
+
+def _record_cli(monkeypatch: pytest.MonkeyPatch, invocation: str, result: str = "watchdog") -> int | None:
+    """``record`` as ``ExecStopPost=`` runs it; an escaping exception is a failed recorder (systemd ignores it)."""
+    for key, value in _stopped(result, invocation).items():
+        monkeypatch.setenv(key, value)
+    try:
+        return alert.main(["record"])
+    except OSError:
+        return None
+
+
+def _fields(message: str) -> dict[str, str]:
+    return dict(part.split("=", 1) for part in message.splitlines()[0].split()[1:])
+
+
+def test_a_backlog_beyond_the_bound_is_coalesced_into_an_overflow_notice(
+    unit_dirs, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Reviewer reproducer 1: 65 distinct episodes queue before any publication."""
+    seconds = iter(range(10_000))
+
+    def utc_now() -> str:
+        second = next(seconds)
+        return f"2026-10-15T15:{second // 60:02d}:{second % 60:02d}Z"
+
+    monkeypatch.setattr(alert, "utc_now", utc_now)
+    invocations = [f"{number:032x}" for number in range(1, 66)]
+    for invocation in invocations:
+        _record_cli(monkeypatch, invocation)
+    episodes = {alert.episode_id(invocation, "watchdog") for invocation in invocations}
+    oldest = alert.episode_id(invocations[0], "watchdog")
+
+    failing = Publisher(fail=True)
+    assert alert.main(["notify"], publish=failing, unit_state=FakeSystemd()) == alert.EXIT_PENDING
+    fleet = Publisher()
+    assert alert.main(["notify"], publish=fleet, unit_state=FakeSystemd()) == 0
+    sent_alone = {_fields(message)["episode"] for message, _key in fleet.calls if "class=overflow" not in message}
+    overflow = [_fields(message) for message, _key in fleet.calls if "class=overflow" in message]
+    covered = sum(int(fields["count"]) for fields in overflow)
+    print(f"BACKLOG generated={len(episodes)} sent_alone={len(sent_alone)} overflow_counted={covered}")
+    assert sent_alone <= episodes and len(sent_alone) + covered == len(episodes)
+    assert oldest not in sent_alone and overflow[0]["first"] == oldest
+    assert alert.main(["notify"], publish=fleet, unit_state=FakeSystemd()) == 0  # nothing left
+
+
+def _disk_full(state: Path, monkeypatch: pytest.MonkeyPatch) -> list[int]:
+    """Every fsync of a file or directory under ``state`` fails with ENOSPC; returns the hit count."""
+    real_fsync = os.fsync
+    hits: list[int] = []
+
+    def fsync(fd: int) -> None:
+        if os.readlink(f"/proc/self/fd/{fd}").startswith(str(state)):
+            hits.append(fd)
+            raise OSError(28, "No space left on device")
+        real_fsync(fd)
+
+    monkeypatch.setattr(os, "fsync", fsync)
+    return hits
+
+
+@pytest.mark.parametrize("disk_recovered", [True, False])
+def test_a_recorder_that_cannot_write_the_state_directory_still_leaves_the_notice(
+    unit_dirs, monkeypatch: pytest.MonkeyPatch, disk_recovered: bool
+) -> None:
+    """Reviewer reproducer 2: ENOSPC at the recorder's fsync, then the server recovers before the scan."""
+    state, _runtime = unit_dirs
+    _ready(state, INVOCATION)
+    hits = _disk_full(state, monkeypatch)
+    _record_cli(monkeypatch, INVOCATION)
+    assert hits, "the injected disk-full condition was never reached"
+    if disk_recovered:
+        monkeypatch.undo()
+        monkeypatch.setenv("STATE_DIRECTORY", str(unit_dirs[0]))
+        monkeypatch.setenv("RUNTIME_DIRECTORY", str(unit_dirs[1]))
+    recovered = FakeSystemd("active", "running", "success", OTHER_INVOCATION)  # a new, healthy run
+    fleet = Publisher()
+    code = alert.main(["notify"], publish=fleet, unit_state=recovered)
+    print(f"RECORDER disk_recovered={disk_recovered} published={len(fleet.calls)} exit={code}")
+    assert fleet.classes == ["watchdog"]
+    assert _fields(fleet.calls[0][0])["episode"] == alert.episode_id(INVOCATION, "watchdog")
+    assert code == 0
+    assert alert.main(["notify"], publish=fleet, unit_state=recovered) == 0
+    assert len(fleet.calls) == 1  # sent once
+
+
+def test_a_record_written_to_both_directories_is_sent_once(unit_dirs, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The record is linked in the state directory but its directory fsync fails: it also goes to memory."""
+    state, runtime = unit_dirs
+    real_fsync = os.fsync
+
+    def fsync(fd: int) -> None:
+        if os.readlink(f"/proc/self/fd/{fd}") == str(state / alert.NOTICES_DIR):
+            raise OSError(28, "No space left on device")
+        real_fsync(fd)
+
+    monkeypatch.setattr(os, "fsync", fsync)
+    assert _record_cli(monkeypatch, INVOCATION) == 0
+    assert len(_records(state / alert.NOTICES_DIR)) == 1 and len(_records(runtime / alert.NOTICES_DIR)) == 1
+    fleet = Publisher()
+    for _run in range(2):
+        assert alert.main(["notify"], publish=fleet, unit_state=FakeSystemd()) == 0
+    assert fleet.classes == ["watchdog"]
+    assert _records(runtime / alert.NOTICES_DIR) == []
+
+
+def test_a_recorded_fallback_moves_to_the_state_directory_before_it_is_sent(
+    unit_dirs, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Fleet Comms is down when the disk recovers: the record must survive a reboot from then on."""
+    state, runtime = unit_dirs
+    with monkeypatch.context() as patch:
+        _disk_full(state, patch)
+        _record_cli(monkeypatch, INVOCATION)
+    assert len(_records(runtime / alert.NOTICES_DIR)) == 1
+    assert alert.main(["notify"], publish=Publisher(fail=True), unit_state=FakeSystemd()) == alert.EXIT_PENDING
+    assert _records(runtime / alert.NOTICES_DIR) == []
+    assert [record["class"] for record in _records(state / alert.NOTICES_DIR)] == ["watchdog"]
+
+
+def test_a_recorder_that_can_write_nowhere_fails_without_raising(
+    unit_dirs, monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    state, runtime = unit_dirs
+    _disk_full(state, monkeypatch)
+    _disk_full(runtime, monkeypatch)
+    assert _record_cli(monkeypatch, INVOCATION) == 1
+    assert "could not write the record anywhere: ENOSPC, ENOSPC" in capsys.readouterr().err
+
+
+def test_the_notifier_publishes_from_memory_while_the_state_directory_is_unusable(
+    unit_dirs, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state, runtime = unit_dirs
+    with monkeypatch.context() as patch:
+        _disk_full(state, patch)
+        _record_cli(monkeypatch, INVOCATION)
+    state.chmod(0o750)  # the state directory is refused from now on
+    fleet = Publisher()
+    assert alert.main(["notify"], publish=fleet, unit_state=FakeSystemd()) == 1  # reported, yet published
+    assert fleet.classes == ["watchdog"]
+    assert alert.main(["notify"], publish=fleet, unit_state=FakeSystemd()) == 1
+    assert len(fleet.calls) == 1
+    runtime.chmod(0o750)
+    assert alert.main(["notify"], publish=fleet, unit_state=FakeSystemd()) == 1  # neither is owner-only
