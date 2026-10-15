@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import threading
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -61,17 +63,21 @@ def test_queue_timeout_refuses_as_server_busy(caplog: pytest.LogCaptureFixture) 
     assert "outcome=server_busy" in caplog.text
 
 
-def test_call_timeout_returns_typed_refusal_and_frees_the_slot(caplog: pytest.LogCaptureFixture) -> None:
+def test_call_timeout_returns_typed_refusal_and_frees_the_slot_when_the_work_ends(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     governor = _governor(caplog, max_concurrent=1, queue_timeout=5, call_timeout=0.1)
 
-    async def stuck() -> None:
-        await asyncio.sleep(30)
+    async def slow() -> None:
+        await asyncio.sleep(0.4)
 
     async def quick() -> str:
         return "ok"
 
     async def main() -> tuple[object, str]:
-        refused = await asyncio.gather(governor.run("query_wikipedia", stuck), return_exceptions=True)
+        refused = await asyncio.gather(governor.run("query_wikipedia", slow), return_exceptions=True)
+        while governor.in_flight:
+            await asyncio.sleep(0.02)
         return refused[0], await governor.run("query_wikipedia", quick)
 
     started = time.monotonic()
@@ -80,6 +86,183 @@ def test_call_timeout_returns_typed_refusal_and_frees_the_slot(caplog: pytest.Lo
     assert isinstance(refused, CallRefused) and refused.code == "call_timeout"
     assert after == "ok"
     assert "outcome=call_timeout" in caplog.text
+    assert "call_released id=1 tool=query_wikipedia outcome=ok" in caplog.text
+
+
+class _BlockedWorkers:
+    """Thread work that ignores cancellation, like a stuck SQLite query."""
+
+    def __init__(self) -> None:
+        self.release = threading.Event()
+        self.lock = threading.Lock()
+        self.running = self.peak = 0
+
+    def work(self) -> str:
+        with self.lock:
+            self.running += 1
+            self.peak = max(self.peak, self.running)
+        try:
+            self.release.wait(10)
+            return "done"
+        finally:
+            with self.lock:
+                self.running -= 1
+
+    async def call(self) -> str:
+        return await asyncio.to_thread(self.work)
+
+
+async def _until(predicate: Callable[[], bool], limit: float = 5.0) -> None:
+    deadline = time.monotonic() + limit
+    while not predicate():
+        assert time.monotonic() < deadline, "condition not reached"
+        await asyncio.sleep(0.01)
+
+
+def test_timed_out_thread_work_keeps_its_slot_until_it_finishes(caplog: pytest.LogCaptureFixture) -> None:
+    """Sol's reproducer: a timeout must not recycle the slot of work still running."""
+    governor = _governor(caplog, max_concurrent=1, queue_timeout=5, call_timeout=0.1)
+    workers = _BlockedWorkers()
+
+    async def main() -> tuple[list[object], list[float], str]:
+        try:
+            outcomes: list[object] = []
+            waits: list[float] = []
+            for _ in range(3):
+                begun = time.monotonic()
+                outcomes.extend(
+                    await asyncio.gather(governor.run("verify_words", workers.call), return_exceptions=True)
+                )
+                waits.append(time.monotonic() - begun)
+            assert workers.running == 1
+            assert governor.in_flight == 1 and governor.abandoned == 1
+        finally:
+            workers.release.set()
+        await _until(lambda: governor.in_flight == 0)
+        assert governor.abandoned == 0
+        return outcomes, waits, await governor.run("verify_words", workers.call)
+
+    outcomes, waits, after = asyncio.run(main())
+    codes = [outcome.code if isinstance(outcome, CallRefused) else outcome for outcome in outcomes]
+    assert codes == ["call_timeout", "server_overloaded", "server_overloaded"]
+    # Refused at once, not after the 5 s queue wait.
+    assert max(waits[1:]) < 1.0
+    assert workers.peak == 1
+    assert after == "done"
+    assert "outcome=server_overloaded" in caplog.text
+    overloaded = next(
+        outcome for outcome in outcomes if isinstance(outcome, CallRefused) and outcome.code != "call_timeout"
+    )
+    assert overloaded.detail == "all 1 call slots held by timed-out work still running"
+
+
+def test_queued_calls_are_refused_once_every_slot_is_abandoned(caplog: pytest.LogCaptureFixture) -> None:
+    governor = _governor(caplog, max_concurrent=1, queue_timeout=10, call_timeout=0.2)
+    workers = _BlockedWorkers()
+
+    async def main() -> tuple[list[object], float]:
+        try:
+            holder = asyncio.create_task(governor.run("search_text", workers.call))
+            await _until(lambda: governor.in_flight == 1)
+            begun = time.monotonic()
+            queued = await asyncio.gather(governor.run("search_text", workers.call), return_exceptions=True)
+            waited = time.monotonic() - begun
+            return [*(await asyncio.gather(holder, return_exceptions=True)), *queued], waited
+        finally:
+            workers.release.set()
+
+    (held, queued), waited = asyncio.run(main())
+    assert isinstance(held, CallRefused) and held.code == "call_timeout"
+    assert isinstance(queued, CallRefused) and queued.code == "server_overloaded"
+    assert waited < 2.0
+    assert governor.queued == 0
+
+
+def test_finished_abandoned_work_hands_its_slot_to_the_next_waiter(caplog: pytest.LogCaptureFixture) -> None:
+    governor = _governor(caplog, max_concurrent=2, queue_timeout=10, call_timeout=1.0)
+    stuck, live = _BlockedWorkers(), _BlockedWorkers()
+
+    async def quick() -> str:
+        return "quick"
+
+    async def main() -> object:
+        try:
+            refused = await asyncio.gather(governor.run("search_text", stuck.call), return_exceptions=True)
+            assert isinstance(refused[0], CallRefused) and refused[0].code == "call_timeout"
+            holder = asyncio.create_task(governor.run("search_text", live.call))
+            await _until(lambda: governor.in_flight == 2)
+            waiter = asyncio.create_task(governor.run("search_text", quick))
+            await _until(lambda: governor.queued == 1)
+            assert not waiter.done()
+            stuck.release.set()
+            result = await asyncio.wait_for(waiter, 0.8)
+            live.release.set()
+            await holder
+            return result
+        finally:
+            stuck.release.set()
+            live.release.set()
+
+    assert asyncio.run(main()) == "quick"
+    assert governor.in_flight == 0
+
+
+def test_a_slot_granted_to_a_cancelled_waiter_passes_to_the_next(caplog: pytest.LogCaptureFixture) -> None:
+    governor = _governor(caplog, max_concurrent=1, queue_timeout=2, call_timeout=5)
+
+    async def main() -> list[object]:
+        release = asyncio.Event()
+        waiters: list[asyncio.Task[str]] = []
+
+        async def holder() -> str:
+            # Runs after the governor's own done callback has granted the
+            # slot to the first waiter, before that waiter resumes.
+            task = asyncio.current_task()
+            assert task is not None
+            task.add_done_callback(lambda _task: waiters[0].cancel())
+            await release.wait()
+            return "held"
+
+        async def quick() -> str:
+            return "quick"
+
+        first = asyncio.create_task(governor.run("search_text", holder))
+        await _until(lambda: governor.in_flight == 1)
+        waiters.extend(asyncio.create_task(governor.run("search_text", quick)) for _ in range(2))
+        await _until(lambda: governor.queued == 2)
+        release.set()
+        results = await asyncio.gather(first, *waiters, return_exceptions=True)
+        return [*results, await asyncio.wait_for(governor.run("search_text", quick), 1)]
+
+    held, cancelled, second, after = asyncio.run(main())
+    assert held == "held"
+    assert isinstance(cancelled, asyncio.CancelledError)
+    assert second == "quick" and after == "quick"
+    assert governor.in_flight == 0 and governor.queued == 0
+
+
+def test_a_cancelled_request_keeps_the_slot_until_its_work_ends(caplog: pytest.LogCaptureFixture) -> None:
+    governor = _governor(caplog, max_concurrent=1, queue_timeout=5, call_timeout=30)
+    workers = _BlockedWorkers()
+
+    async def main() -> object:
+        try:
+            request = asyncio.create_task(governor.run("check_text", workers.call))
+            await _until(lambda: workers.running == 1)
+            request.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await request
+            assert governor.in_flight == 1 and governor.abandoned == 1
+            refused = await asyncio.gather(governor.run("check_text", workers.call), return_exceptions=True)
+        finally:
+            workers.release.set()
+        await _until(lambda: governor.in_flight == 0)
+        return refused[0]
+
+    refused = asyncio.run(main())
+    assert isinstance(refused, CallRefused) and refused.code == "server_overloaded"
+    assert workers.peak == 1
+    assert "outcome=cancelled" in caplog.text
 
 
 def test_log_lines_carry_tool_and_counts_never_arguments(caplog: pytest.LogCaptureFixture) -> None:

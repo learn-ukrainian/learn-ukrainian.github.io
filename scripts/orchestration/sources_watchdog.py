@@ -7,22 +7,31 @@ fails. This probe runs from ``learn-ukrainian-sources-watchdog.timer`` every
 15 seconds and acts only on a sustained failure of a running unit:
 
 1. ``/health`` must answer 200 with ``{"status": "ok"}`` within the probe
-   timeout. Three consecutive failures (about 45 s) make a sustained failure.
+   timeout. Three consecutive failures (about 45 s) of the same main process
+   make a sustained failure; a new main process starts a fresh count.
 2. Evidence first: an incident directory under the dump directory receives a
    ``/proc`` snapshot (thread states and wait channels, socket states on the
    service port, the accept backlog), a ``py-spy dump --native`` when py-spy
    is installed and allowed to attach, and the server's own all-thread Python
    stacks, triggered with ``SIGUSR1`` (see ``scripts/rag/hang_diagnostics.py``).
-3. Then the restart: ``SIGKILL`` to the unit (a process blocked on the GIL
-   never runs its ``SIGTERM`` handler) and ``systemctl --user start``, then a
-   bounded wait for ``/health``.
-4. One Fleet Comms report to ``cto`` per incident, through the existing
+3. Then, immediately before signalling, a second ``/health`` probe and a
+   second read of the unit's main process (pid and start time). If the server
+   recovered while the dump ran, or the unit now runs another process or is
+   no longer active, the restart is aborted and recorded as such.
+4. Otherwise the restart: ``SIGKILL`` to the unit (a process blocked on the
+   GIL never runs its ``SIGTERM`` handler) and ``systemctl --user start``,
+   then a bounded wait for ``/health``.
+5. One Fleet Comms report to ``cto`` per incident, through the existing
    ``sre-timers`` publisher. An incident stays open until the service has been
    healthy for ``--incident-quiet-seconds`` after its last restart.
 
 No restart loop: at most ``--max-restarts`` restarts in ``--restart-window``
-seconds; beyond that the probe only logs. A unit that is not active (stopped
-by an operator, crashed and left to systemd's ``Restart=``) is never touched.
+seconds, counted from a rolling restart history kept apart from incidents, so
+closing an incident does not refill the budget; beyond that the probe only
+logs. A unit that is not active (stopped by an operator, crashed and left to
+systemd's ``Restart=``) is never touched. The only unit this tool probes,
+dumps or restarts is ``learn-ukrainian-sources.service``; any other name is
+refused before any action.
 
 Without ``--apply`` the probe reports what it would do and changes nothing.
 ``dump --pid N`` captures an incident dump on demand (forced-hang drills).
@@ -44,7 +53,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 from urllib.parse import urlsplit
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -59,6 +68,9 @@ from scripts.rag.hang_diagnostics import (
 )
 
 UNIT = "learn-ukrainian-sources.service"
+# The units this tool may probe, dump or restart. Checked where the action
+# happens, not only in argument parsing.
+ALLOWED_UNITS = frozenset({UNIT})
 HEALTH_URL = "http://127.0.0.1:8766/health"
 STATE_FILE = "watchdog-state.json"
 INCIDENT_PREFIX = "incident-"
@@ -93,6 +105,22 @@ class WatchdogError(RuntimeError):
     """A probe step could not run."""
 
 
+class UnitState(NamedTuple):
+    """A unit's state and the identity of its main process."""
+
+    active: str
+    sub: str
+    pid: int
+    # ExecMainStartTimestampMonotonic (µs): tells a new process from an old
+    # one even if the kernel reuses the pid.
+    started: int
+
+
+def require_sources_unit(unit: str) -> None:
+    if unit not in ALLOWED_UNITS:
+        raise WatchdogError(f"refusing unit {unit!r}: this watchdog acts only on {', '.join(sorted(ALLOWED_UNITS))}")
+
+
 def utc_stamp(epoch: float) -> str:
     return datetime.fromtimestamp(epoch, UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -120,10 +148,11 @@ def probe_health(url: str, timeout: float) -> tuple[bool, str]:
     return True, f"ok in {elapsed:.3f}s"
 
 
-def systemd_unit_state(unit: str) -> tuple[str, str, int]:
-    """Return ``(ActiveState, SubState, MainPID)`` of a user unit."""
+def systemd_unit_state(unit: str) -> UnitState:
+    """Return the state of a user unit and the identity of its main process."""
+    require_sources_unit(unit)
     result = subprocess.run(
-        ["systemctl", "--user", "show", "-p", "ActiveState,SubState,MainPID", unit],
+        ["systemctl", "--user", "show", "-p", "ActiveState,SubState,MainPID,ExecMainStartTimestampMonotonic", unit],
         capture_output=True,
         text=True,
         check=False,
@@ -132,15 +161,24 @@ def systemd_unit_state(unit: str) -> tuple[str, str, int]:
     if result.returncode != 0:
         raise WatchdogError(f"systemctl show {unit} exited {result.returncode}: {result.stderr.strip()}")
     values = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
-    try:
-        pid = int(values.get("MainPID", "0"))
-    except ValueError:
-        pid = 0
-    return values.get("ActiveState", ""), values.get("SubState", ""), pid
+
+    def number(name: str) -> int:
+        try:
+            return int(values.get(name, "0"))
+        except ValueError:
+            return 0
+
+    return UnitState(
+        values.get("ActiveState", ""),
+        values.get("SubState", ""),
+        number("MainPID"),
+        number("ExecMainStartTimestampMonotonic"),
+    )
 
 
 def systemd_kill_and_start(unit: str) -> str:
     """SIGKILL the unit's processes, then start it again."""
+    require_sources_unit(unit)
     steps = (
         ["systemctl", "--user", "kill", "--signal=SIGKILL", unit],
         ["systemctl", "--user", "start", unit],
@@ -389,7 +427,7 @@ class Host:
     """Side effects, injectable for tests."""
 
     probe: Callable[[str, float], tuple[bool, str]] = probe_health
-    unit_state: Callable[[str], tuple[str, str, int]] = systemd_unit_state
+    unit_state: Callable[[str], UnitState] = systemd_unit_state
     restart: Callable[[str], str] = systemd_kill_and_start
     capture: Callable[..., Path] = capture_incident_dump
     wait_healthy: Callable[[str, float, float], tuple[bool, str]] = wait_healthy
@@ -417,7 +455,7 @@ def incident_message(config: Config, incident: Mapping[str, Any], dump: str, act
         f"[sre-timers] {config.unit} HUNG: /health failed {config.failures_to_act} consecutive probes "
         f"(last: {incident.get('last_failure', 'unknown')}).\n"
         f"Incident {incident['id']} opened {utc_stamp(incident['opened'])}; pid {incident.get('pid')}.\n"
-        f"Dump captured before restart: {dump}\n"
+        f"Dump captured: {dump}\n"
         f"Action: {action}\n"
         f"Self-heal budget: {config.max_restarts} restarts per {config.restart_window / 60:.0f} min; "
         "one report per incident (#10674).\n"
@@ -446,7 +484,42 @@ def _flush_notification(incident: dict[str, Any], publish: Callable[[str, str], 
     return "cto notified"
 
 
+def _identity(unit: UnitState) -> dict[str, int]:
+    return {"pid": unit.pid, "started": unit.started}
+
+
+def _restart_history(state: Mapping[str, Any], now: float, window: float) -> list[float]:
+    """Restarts inside the rolling window. Kept apart from incidents (#10674)."""
+    stamps = state.get("restart_history")
+    if not isinstance(stamps, list):
+        return []
+    return [float(stamp) for stamp in stamps if isinstance(stamp, int | float) and now - stamp < window]
+
+
+def _recheck_before_signal(config: Config, host: Host, unit: UnitState) -> str | None:
+    """Why the restart must not happen now, or None when it still must.
+
+    The dump can take half a minute. A server that recovered meanwhile, or a
+    unit an operator restarted or stopped meanwhile, is not killed.
+    """
+    ok, detail = host.probe(config.health_url, config.probe_timeout)
+    if ok:
+        return f"restart aborted: recovered (/health {detail} after the dump)"
+    try:
+        current = host.unit_state(config.unit)
+    except (WatchdogError, OSError, subprocess.TimeoutExpired) as error:
+        return f"restart aborted: unverified ({config.unit} state unreadable: {error})"
+    if current.active != "active" or _identity(current) != _identity(unit):
+        return (
+            f"restart aborted: changed ({config.unit} is now {current.active}/{current.sub} "
+            f"pid {current.pid} started {current.started}; the failing process was pid {unit.pid} "
+            f"started {unit.started})"
+        )
+    return None
+
+
 def run_once(config: Config, host: Host) -> str:
+    require_sources_unit(config.unit)
     state_path = config.dump_dir / STATE_FILE
     state = read_state(state_path)
     now = host.now()
@@ -460,68 +533,91 @@ def run_once(config: Config, host: Host) -> str:
     ok, detail = host.probe(config.health_url, config.probe_timeout)
     if ok:
         state["failures"] = 0
+        state.pop("failing", None)
         state["last_ok"] = now
-        if isinstance(incident, dict) and incident.get("notified"):
-            last_restart = max(incident.get("restarts") or [incident.get("opened", now)])
-            if now - last_restart >= config.incident_quiet:
-                state.pop("incident", None)
-                notes.append(f"incident {incident['id']} closed")
+        if (
+            isinstance(incident, dict)
+            and incident.get("notified")
+            and now - float(incident.get("last_restart", incident.get("opened", now))) >= config.incident_quiet
+        ):
+            state.pop("incident", None)
+            notes.append(f"incident {incident['id']} closed")
         if config.apply:
             write_state(state_path, state)
         return "; ".join([f"healthy ({detail})", *notes])
 
-    active, sub, pid = host.unit_state(config.unit)
-    if active != "active" or pid <= 0:
+    unit = host.unit_state(config.unit)
+    if unit.active != "active" or unit.pid <= 0:
         state["failures"] = 0
+        state.pop("failing", None)
         if config.apply:
             write_state(state_path, state)
-        return f"unhealthy ({detail}) but {config.unit} is {active}/{sub}; systemd owns a stopped or crashed unit"
+        return (
+            f"unhealthy ({detail}) but {config.unit} is {unit.active}/{unit.sub}; "
+            "systemd owns a stopped or crashed unit"
+        )
     if now < float(state.get("grace_until", 0)):
         if config.apply:
             write_state(state_path, state)
         return f"unhealthy ({detail}) within startup grace"
 
-    failures = int(state.get("failures", 0)) + 1
+    # Failures count per main process: a process an operator started between
+    # two probes is not killed for its predecessor's failures.
+    same_process = state.get("failing") == _identity(unit)
+    failures = (int(state.get("failures", 0)) if same_process else 0) + 1
     state["failures"] = failures
+    state["failing"] = _identity(unit)
     if failures < config.failures_to_act:
         if config.apply:
             write_state(state_path, state)
         return f"unhealthy ({detail}); failure {failures}/{config.failures_to_act}"
 
     if not isinstance(incident, dict):
-        incident = {"id": f"{datetime.fromtimestamp(now, UTC):%Y%m%dT%H%M%SZ}", "opened": now, "restarts": []}
-    incident["pid"] = pid
+        incident = {"id": f"{datetime.fromtimestamp(now, UTC):%Y%m%dT%H%M%SZ}", "opened": now}
+    incident["pid"] = unit.pid
     incident["last_failure"] = detail
-    recent = [stamp for stamp in incident.get("restarts", []) if now - stamp < config.restart_window]
-    if len(recent) >= config.max_restarts:
+    history = _restart_history(state, now, config.restart_window)
+    state["restart_history"] = history
+    if len(history) >= config.max_restarts:
+        exhausted = f"restart budget exhausted ({len(history)} in {config.restart_window:.0f}s); no dump, no restart"
         state["failures"] = 0
+        if not config.apply:
+            return f"unhealthy ({detail}); {exhausted}"
+        # The budget outlives incidents, so a new incident can open with it
+        # spent: report that hang too, once, rather than stay silent.
+        if not incident.get("notified"):
+            incident["pending_message"] = incident_message(config, incident, "none", exhausted)
         state["incident"] = incident
-        if config.apply:
-            write_state(state_path, state)
-        return (
-            f"unhealthy ({detail}); restart budget exhausted ({len(recent)} in {config.restart_window:.0f}s); "
-            "no dump, no restart"
-        )
+        write_state(state_path, state)
+        note = _flush_notification(incident, host.publish)
+        write_state(state_path, state)
+        return "; ".join(part for part in (f"unhealthy ({detail}); {exhausted}", note) if part)
     if not config.apply:
-        return f"unhealthy ({detail}); would dump pid {pid}, restart {config.unit} and notify cto"
+        return f"unhealthy ({detail}); would dump pid {unit.pid}, restart {config.unit} and notify cto"
 
-    dump = host.capture(pid, config.dump_dir, config.port, now, reason=detail)
-    try:
-        restart_detail = host.restart(config.unit)
-        healthy, recovery = host.wait_healthy(config.health_url, config.probe_timeout, config.recovery_wait)
-        action = f"{restart_detail}; {recovery}"
-    except (WatchdogError, OSError, subprocess.TimeoutExpired) as error:
-        healthy, action = False, f"restart failed: {error}"
-    incident["restarts"] = [*recent, now]
+    dump = host.capture(unit.pid, config.dump_dir, config.port, now, reason=detail)
     state["failures"] = 0
-    state["grace_until"] = now + config.startup_grace
+    aborted = _recheck_before_signal(config, host, unit)
+    if aborted is not None:
+        action, outcome = aborted, "not restarted"
+        state.pop("failing", None)
+    else:
+        try:
+            restart_detail = host.restart(config.unit)
+            healthy, recovery = host.wait_healthy(config.health_url, config.probe_timeout, config.recovery_wait)
+            action = f"{restart_detail}; {recovery}"
+        except (WatchdogError, OSError, subprocess.TimeoutExpired) as error:
+            healthy, action = False, f"restart failed: {error}"
+        outcome = "recovered" if healthy else "NOT recovered"
+        state["restart_history"] = [*history, now]
+        incident["last_restart"] = now
+        state["grace_until"] = now + config.startup_grace
     if not incident.get("notified"):
         incident["pending_message"] = incident_message(config, incident, _relative(dump), action)
     state["incident"] = incident
     write_state(state_path, state)
     note = _flush_notification(incident, host.publish)
     write_state(state_path, state)
-    outcome = "recovered" if healthy else "NOT recovered"
     return "; ".join(part for part in (f"sustained failure: dump {_relative(dump)}; {action}; {outcome}", note) if part)
 
 
@@ -542,7 +638,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--health-url", default=HEALTH_URL)
     sub = parser.add_subparsers(dest="command", required=True)
     once = sub.add_parser("run-once", help="probe once; on a sustained failure dump, restart and notify")
-    once.add_argument("--unit", default=UNIT)
+    once.add_argument("--unit", default=UNIT, choices=sorted(ALLOWED_UNITS))
     once.add_argument("--apply", action="store_true", help="act; without it, report only")
     once.add_argument("--failures-to-act", type=int, default=DEFAULT_FAILURES_TO_ACT)
     once.add_argument("--probe-timeout", type=float, default=DEFAULT_PROBE_TIMEOUT_S)
