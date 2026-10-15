@@ -15,6 +15,7 @@ import os
 import socket
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import httpx
@@ -97,42 +98,68 @@ def _serve(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, call_timeout: flo
     thread.join(timeout=10)
 
 
-async def _load(base_url: str, port: int) -> tuple[list[float], list[httpx.Response]]:
+async def _load(base_url: str, port: int, stats: dict, saturated: threading.Event) -> list[httpx.Response]:
     stalled = []
-    for _ in range(STALLED_CONNECTIONS):
-        _reader, writer = await asyncio.open_connection("127.0.0.1", port)
-        writer.write(b"POST /mcp HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: 500\r\n\r\n{")
-        stalled.append(writer)
-    limits = httpx.Limits(max_connections=CALLS + 10, max_keepalive_connections=0)
-    async with httpx.AsyncClient(limits=limits, timeout=60) as client:
+    try:
+        for _ in range(STALLED_CONNECTIONS):
+            _reader, writer = await asyncio.open_connection("127.0.0.1", port)
+            writer.write(b"POST /mcp HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Length: 500\r\n\r\n{")
+            stalled.append(writer)
+        limits = httpx.Limits(max_connections=CALLS + 10, max_keepalive_connections=0)
+        async with httpx.AsyncClient(limits=limits, timeout=60) as client:
 
-        async def tool_call(number: int) -> httpx.Response:
-            payload = {
-                "jsonrpc": "2.0",
-                "id": number,
-                "method": "tools/call",
-                "params": {"name": "collection_stats", "arguments": {}},
-            }
-            return await client.post(f"{base_url}/mcp", json=payload)
+            async def tool_call(number: int) -> httpx.Response:
+                payload = {
+                    "jsonrpc": "2.0",
+                    "id": number,
+                    "method": "tools/call",
+                    "params": {"name": "collection_stats", "arguments": {}},
+                }
+                return await client.post(f"{base_url}/mcp", json=payload)
 
-        calls = [asyncio.create_task(tool_call(number)) for number in range(CALLS)]
-        latencies: list[float] = []
-        while not all(call.done() for call in calls):
-            started = time.monotonic()
-            async with httpx.AsyncClient(timeout=5) as probe:
-                response = await probe.get(f"{base_url}/health")
-            assert response.status_code == 200
-            latencies.append(time.monotonic() - started)
-            await asyncio.sleep(0.1)
-        responses = await asyncio.gather(*calls)
-    for writer in stalled:
-        writer.close()
-    return latencies, responses
+            calls = [asyncio.create_task(tool_call(number)) for number in range(CALLS)]
+            # Sample /health only once every bounded worker is busy and the rest queue.
+            deadline = time.monotonic() + 10
+            while stats["running"] < MAX_CONCURRENT:
+                assert time.monotonic() < deadline, f"only {stats['running']} calls ever ran at once"
+                await asyncio.sleep(0.01)
+            saturated.set()
+            return await asyncio.gather(*calls)
+    finally:
+        for writer in stalled:
+            writer.close()
+        await asyncio.gather(*(writer.wait_closed() for writer in stalled), return_exceptions=True)
+
+
+def _sample_health(probe: httpx.Client, url: str, saturated: threading.Event, drained: threading.Event) -> list[float]:
+    saturated.wait()
+    latencies: list[float] = []
+    while not drained.is_set():
+        started = time.monotonic()
+        response = probe.get(url)
+        latencies.append(time.monotonic() - started)
+        assert response.status_code == 200
+        drained.wait(0.1)
+    return latencies
 
 
 def test_health_stays_under_one_second_while_saturated(saturated_server) -> None:
     base_url, port, stats = saturated_server
-    latencies, responses = asyncio.run(_load(base_url, port))
+    saturated, drained = threading.Event(), threading.Event()
+    # The probe client is built and warmed before any load and is timed on its
+    # own thread, so a sample holds only the server's /health path: never client
+    # start-up, nor the load generator's event loop. Without keep-alive each
+    # probe opens a fresh connection, as the watchdog's probe does.
+    limits = httpx.Limits(max_keepalive_connections=0)
+    with httpx.Client(limits=limits, timeout=5) as probe, ThreadPoolExecutor(max_workers=1) as pool:
+        assert probe.get(f"{base_url}/health").status_code == 200
+        sampling = pool.submit(_sample_health, probe, f"{base_url}/health", saturated, drained)
+        try:
+            responses = asyncio.run(_load(base_url, port, stats, saturated))
+        finally:
+            saturated.set()
+            drained.set()
+        latencies = sampling.result()
     assert len(latencies) >= 10
     assert max(latencies) < 1.0, f"slowest /health {max(latencies):.3f}s"
     assert all(response.status_code == 200 for response in responses)
