@@ -1,0 +1,10 @@
+[Unit]
+Description=Retry learn-ukrainian-sources failure notices every 5 minutes
+
+[Timer]
+OnCalendar=*:0/5
+AccuracySec=30s
+Unit=learn-ukrainian-sources-alert.service
+
+[Install]
+WantedBy=timers.target

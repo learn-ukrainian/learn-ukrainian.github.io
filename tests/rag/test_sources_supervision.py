@@ -469,37 +469,128 @@ def test_the_same_load_without_the_callback_keeps_pinging(abstract_listener: Not
         child.stderr.close()  # type: ignore[union-attr]
 
 
-# --- ProtectHome=yes visibility ----------------------------------------------------------
+# --- the unit's narrow view under ProtectHome=tmpfs --------------------------------------
 
 
-def _fake_checkout(root: Path, base_home: Path) -> Path:
-    base_home.mkdir(parents=True)
-    (base_home / "python3.12").touch()
+def _fake_checkout(root: Path, base_bin: Path, *, data: Path | None = None) -> Path:
+    """A checkout whose virtual environment's interpreter links to a base installation."""
+    base_bin.mkdir(parents=True)
+    (base_bin / "python3.12").touch()
+    (base_bin.parent / "lib" / "python3.12").mkdir(parents=True)
     (root / ".venv" / "bin").mkdir(parents=True)
-    (root / ".venv" / "bin" / "python").symlink_to(base_home / "python3.12")
-    (root / ".venv" / "pyvenv.cfg").write_text(f"home = {base_home}\nversion = 3.12\n", encoding="utf-8")
+    (root / ".venv" / "bin" / "python").symlink_to(base_bin / "python3.12")
+    (root / ".venv" / "pyvenv.cfg").write_text(f"home = {base_bin}\nversion_info = 3.12.14\n", encoding="utf-8")
+    if data is None:
+        data = root / "data"
+    else:
+        (root / "data").symlink_to(data)
+    data.mkdir(parents=True, exist_ok=True)
+    for name in sup.DATABASES:
+        (data / name).touch()
     return root
 
 
-def test_protect_home_check_passes_a_checkout_outside_the_hidden_trees(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setattr(sup, "PROTECT_HOME_HIDDEN", (tmp_path / "home", tmp_path / "root", tmp_path / "run" / "user"))
+@pytest.fixture
+def hidden(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    home = tmp_path / "home"
+    monkeypatch.setattr(sup, "PROTECT_HOME_HIDDEN", (home, tmp_path / "root", tmp_path / "run" / "user"))
+    return home
+
+
+def test_a_checkout_in_a_home_directory_is_bound_back_narrowly(hidden: Path, capsys) -> None:
+    """The live layout: checkout and managed interpreter both inside one home directory."""
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / ".local" / "python" / "cpython-3.12" / "bin")
+    paths, needed = sup.resolve_unit_paths(repo)
+    assert paths == sup.UnitPaths(
+        repo_root=repo,
+        venv_root=repo / ".venv",
+        python_root=hidden / "op" / ".local" / "python" / "cpython-3.12",
+        data_root=repo / "data",
+    )
+    coverage = {label: sup.bind_coverage(path, writable, paths) for label, path, writable in needed}
+    assert coverage == {
+        "checkout": "BindReadOnlyPaths=",
+        "virtual environment": "BindReadOnlyPaths=",
+        "interpreter": "BindReadOnlyPaths=",
+        "standard library": "BindReadOnlyPaths=",
+        "data": "BindPaths=",
+        "sources.db directory": "BindPaths=",
+        "vesum.db directory": "BindPaths=",
+    }
+    assert sup.broad_binds(paths) == []
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 0
+    out = capsys.readouterr().out.splitlines()
+    assert sum(line.startswith("ok: ") for line in out) == 8  # every needed path is printed
+    assert f"@PYTHON_ROOT@={paths.python_root}" in out and f"@DATA_ROOT@={repo / 'data'}" in out
+
+
+def test_a_checkout_outside_the_home_trees_still_gets_a_writable_data_directory(tmp_path: Path, hidden: Path) -> None:
     repo = _fake_checkout(tmp_path / "srv" / "repo", tmp_path / "usr" / "bin")
-    assert sup.protect_home_conflicts(repo) == []
+    paths, needed = sup.resolve_unit_paths(repo)
+    assert paths.python_root == tmp_path / "usr"
+    assert {label: sup.bind_coverage(path, writable, paths) for label, path, writable in needed}["data"] == "BindPaths="
     assert sup.main(["check-paths", "--repo-root", str(repo)]) == 0
 
 
-def test_protect_home_check_names_a_hidden_checkout_and_interpreter(tmp_path: Path, monkeypatch, capsys) -> None:
-    hidden = tmp_path / "home"
-    monkeypatch.setattr(sup, "PROTECT_HOME_HIDDEN", (hidden, tmp_path / "root", tmp_path / "run" / "user"))
-    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / ".local" / "python" / "bin")
-    labels = [label for label, _path in sup.protect_home_conflicts(repo)]
-    assert labels == ["checkout", "interpreter", "base interpreter"]
+def test_a_data_directory_elsewhere_is_bound_where_it_resolves(tmp_path: Path, hidden: Path) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin", data=tmp_path / "volume" / "data")
+    paths, _needed = sup.resolve_unit_paths(repo)
+    assert paths.data_root == tmp_path / "volume" / "data"
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 0
+
+
+def test_a_writable_path_outside_the_data_bind_is_reported_hidden(hidden: Path, capsys) -> None:
+    """A database linked out of the data directory would be read-only under ProtectSystem=strict."""
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
+    elsewhere = hidden / "op" / "bulk"
+    elsewhere.mkdir()
+    (elsewhere / "sources.db").touch()
+    (repo / "data" / "sources.db").unlink()
+    (repo / "data" / "sources.db").symlink_to(elsewhere / "sources.db")
     assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
-    assert capsys.readouterr().out.count("hidden by ProtectHome=yes") == 3
+    assert f"HIDDEN: sources.db directory {elsewhere} (writable, not exposed)" in capsys.readouterr().out
 
 
-def test_protect_home_check_follows_the_venv_symlink_out_of_a_visible_checkout(tmp_path: Path, monkeypatch) -> None:
-    hidden = tmp_path / "home"
-    monkeypatch.setattr(sup, "PROTECT_HOME_HIDDEN", (hidden,))
-    repo = _fake_checkout(tmp_path / "srv" / "repo", hidden / "op" / "python" / "bin")
-    assert [label for label, _path in sup.protect_home_conflicts(repo)] == ["interpreter", "base interpreter"]
+@pytest.mark.parametrize(
+    ("layout", "placeholder"),
+    [
+        ("interpreter_is_a_whole_home", "@PYTHON_ROOT@"),
+        ("data_is_the_checkout", "@DATA_ROOT@"),
+        ("checkout_is_a_whole_home", "@REPO_ROOT@"),
+    ],
+)
+def test_a_bind_broader_than_the_unit_needs_is_refused(hidden: Path, layout: str, placeholder: str, capsys) -> None:
+    if layout == "interpreter_is_a_whole_home":
+        repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "bin")  # bind would be the home directory
+    elif layout == "data_is_the_checkout":
+        repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin", data=hidden / "op" / "repo-data")
+        (repo / "data").unlink()
+        (repo / "data").symlink_to(repo)
+        for name in sup.DATABASES:
+            (repo / name).touch()
+    else:
+        repo = _fake_checkout(hidden / "op", hidden / "other" / "py" / "bin")
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    assert any(line.startswith(f"BROAD: {placeholder} ") for line in capsys.readouterr().out.splitlines()), placeholder
+
+
+def test_a_missing_dependency_is_reported(hidden: Path, capsys) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
+    (repo / "data" / "vesum.db").unlink()
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    assert capsys.readouterr().out.startswith("error: a path the unit needs is missing")
+
+
+def test_render_fills_every_placeholder_and_refuses_after_a_failed_check(hidden: Path, capsys) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
+    template = Path(__file__).resolve().parents[2] / "packaging" / "systemd" / "learn-ukrainian-sources.service"
+    assert sup.main(["render", "--repo-root", str(repo), str(template)]) == 0
+    rendered = capsys.readouterr().out
+    assert "@" not in rendered.replace("~@debug", "")
+    assert f"BindReadOnlyPaths={repo}\n" in rendered and f"BindPaths={repo / 'data'}\n" in rendered
+    paths, _needed = sup.resolve_unit_paths(repo)
+    with pytest.raises(sup.PathCheckError, match="@UNKNOWN@"):
+        sup.render_unit("ExecStart=@REPO_ROOT@/x @UNKNOWN@\n", paths)
+    (repo / "data" / "sources.db").unlink()
+    assert sup.main(["render", "--repo-root", str(repo), str(template)]) == 1
+    assert capsys.readouterr().out == ""

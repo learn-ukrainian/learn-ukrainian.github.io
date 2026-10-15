@@ -1,0 +1,20 @@
+[Unit]
+Description=Publish learn-ukrainian-sources failure notices to the Fleet Comms cto channel
+# Started by OnFailure= in learn-ukrainian-sources.service and every 5 minutes
+# by learn-ukrainian-sources-alert.timer (#10674). Records the failure the
+# server unit is in now (the start-limit refusal runs no ExecStopPost=), then
+# sends every pending record with a stable idempotency key. Exit 75 means a
+# record is still pending; the timer's next run retries it. Its starts are
+# bounded by the server's start limit and the timer, and a refused start
+# would leave a record waiting, so it has no start limit of its own.
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+# 150 s of publishing, plus the 120 s timeout of a publish already started.
+TimeoutStartSec=300
+UMask=0077
+StateDirectory=learn-ukrainian-sources
+StateDirectoryMode=0700
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.sources_failure_alert notify

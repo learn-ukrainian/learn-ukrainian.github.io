@@ -53,6 +53,10 @@ ALLOWLIST: dict[str, tuple[int, str]] = {
         1,
         "probes the private work-service checkout's interpreter, not this repo's",
     ),
+    "scripts/rag/sources_supervision.py": (
+        1,
+        "check-paths resolves the interpreter the sources unit's ExecStart names in the checkout it is rendered for; does not spawn",
+    ),
     "scripts/orchestration/install_worktree_cleanup_launchd.py": (
         1,
         "validates the interpreter of the checkout the LaunchAgent unit is installed for",

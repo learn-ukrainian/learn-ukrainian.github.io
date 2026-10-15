@@ -2,20 +2,23 @@
 Description=Learn Ukrainian MCP Sources server (loopback)
 After=network-online.target
 Wants=network-online.target
-# Restart budget (#10674): at most 5 starts in any 30 minutes, counting the
-# first and manual starts. A watchdog cycle (start, hang, 90 s watchdog,
-# abort, 5 s restart delay) takes at least about 100 s, so a server that
-# hangs again soon after every start reaches the refused sixth start within
-# about 8 minutes, and a crash at start-up within about a minute. Then the
-# unit stays failed with no further restarts until an operator runs
-# reset-failed and start; see packaging/systemd/README.md. No reboot or
-# other action.
+# Restart budget (#10674): at most 5 starts per 30-minute window, counting
+# the first and manual starts. systemd's limit is a fixed window, opened by
+# the first start after the previous window ended, not a rolling count. A
+# watchdog cycle (start, hang, 90 s watchdog, abort, 5 s restart delay)
+# takes at least about 100 s, so a server that hangs again soon after every
+# start uses up a window's 5 starts within about 8 minutes, and a crash at
+# start-up within about a minute. Then the unit stays failed with no further
+# automatic restarts; see packaging/systemd/README.md for recovery. No
+# reboot or other action.
 StartLimitIntervalSec=30min
 StartLimitBurst=5
 StartLimitAction=none
 # One safe-field Fleet Comms notice per failed run, and one when the budget
-# runs out. Recording is local and quick; publishing runs in its own unit.
-OnFailure=learn-ukrainian-sources-alert@%n.service
+# runs out. ExecStopPost= below records each failed run locally; this starts
+# the notifier, which also records the start-limit refusal and publishes.
+# Its timer retries, so no notice depends on this trigger surviving.
+OnFailure=learn-ukrainian-sources-alert.service
 
 [Service]
 # READY=1 once the server listens and a health probe has passed; WATCHDOG=1
@@ -34,7 +37,8 @@ TimeoutStartSec=120
 TimeoutStopSec=30
 KillMode=control-group
 SendSIGKILL=yes
-# Stacks stay in an owner-only directory; no core dumps.
+# Stacks, the request log and failure records stay in an owner-only
+# directory; no core dumps.
 LimitCORE=0
 StateDirectory=learn-ukrainian-sources
 StateDirectoryMode=0700
@@ -43,7 +47,18 @@ NoNewPrivileges=yes
 PrivateMounts=yes
 PrivateTmp=yes
 ProtectSystem=strict
-ProtectHome=yes
+# Home trees are hidden behind empty read-only file systems; only the paths
+# the server needs come back, resolved by `python -m
+# scripts.rag.sources_supervision check-paths` (which also renders this
+# file): the checkout, its virtual environment and the base interpreter's
+# installation read-only, and the data directory writable, because SQLite
+# must create the -shm file beside a WAL database even to read it.
+# StateDirectory= above is the only other writable path.
+ProtectHome=tmpfs
+BindReadOnlyPaths=@REPO_ROOT@
+BindReadOnlyPaths=@VENV_ROOT@
+BindReadOnlyPaths=@PYTHON_ROOT@
+BindPaths=@DATA_ROOT@
 ProtectProc=invisible
 ProcSubset=pid
 SystemCallFilter=~@debug
@@ -54,7 +69,14 @@ Environment=HRAMATKA_V4_EXECUTION_ENABLED=0
 Environment=HRAMATKA_V4_ADMISSION_ENABLED=0
 WorkingDirectory=@REPO_ROOT@
 Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+# The request log goes to the state directory: the checkout is read-only.
+Environment=LU_MCP_SOURCES_LOG_DIR=%S/learn-ukrainian-sources
 ExecStart=@REPO_ROOT@/.venv/bin/python .mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766
+# Runs after every run of the server, in that run's own stop path, so each
+# failed run is recorded whatever happens to the OnFailure= trigger. Local,
+# under a second, never contacts Fleet Comms; "-": it never fails the unit.
+ExecStopPost=-@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.sources_failure_alert record
 Restart=on-failure
 RestartSec=5
 
