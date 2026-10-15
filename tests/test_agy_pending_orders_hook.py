@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -11,7 +12,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts import inbox_pending
 from scripts.agent_runtime import agy_hook_config
 from tests.helpers.agy_inbox_fixtures import (
     BODY_MARKER,
@@ -26,6 +26,10 @@ from tests.helpers.agy_inbox_fixtures import (
 pytest_plugins = ("tests.helpers.agy_inbox_fixtures",)
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_UNKNOWN_NOTICE = (
+    "PENDING ORDERS: unknown; legacy: ai_agent_bridge inbox for the registered handoff slot; "
+    "authority: .venv/bin/python -m scripts.fleet_comms deliveries --help"
+)
 SCRIPT = ROOT / "scripts/agy_hooks/pending_orders_inject.sh"
 
 
@@ -40,7 +44,7 @@ def run_hook(payload="{}", *, env=None, cwd=ROOT):
     if result:
         line = result["injectSteps"][0]["ephemeralMessage"]
         assert len(line) <= 200
-        assert "\n" not in line
+        assert line.isascii() and all(32 <= ord(char) < 127 for char in line)
     return result
 
 
@@ -85,7 +89,7 @@ def test_monitor_alias_cli_and_hook_policy(stores, roster, monkeypatch, provider
             "stores": {"legacy": None, "authority": None},
             "probe": "unknown",
         }
-        assert result == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+        assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
         return
     legacy_count = (2 if provider == "grok" and roster_kind == "mixed" else 1) if source != "authority" else 0
     authority_count = 0 if source == "legacy" else 1
@@ -158,7 +162,7 @@ def test_alias_store_failure_is_unknown(stores, roster, monkeypatch, provider, s
             "stores": {"legacy": None, "authority": None},
             "probe": "unknown",
         }
-        assert run_hook() == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+        assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
         if failure == "missing":
             assert not target.exists()
     finally:
@@ -220,7 +224,7 @@ def test_unknown_or_unavailable_authority_admission(stores, roster, monkeypatch,
         "stores": {"legacy": None, "authority": None},
         "probe": "unknown",
     }
-    assert run_hook() == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+    assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
     assert snapshot(stores) == before
 
 
@@ -275,7 +279,7 @@ def test_denominator_matrix(stores, state, recipient, failure, monkeypatch):
     try:
         result = run_hook(payload)
         if failure != "none" or recipient != "gemini-infra":
-            assert result == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+            assert result == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
         elif state in {"legacy-acknowledged", "legacy-consumed", "authority-consumed", "authority-expired"}:
             assert result == {}
         else:
@@ -318,13 +322,32 @@ def test_next_call_arrival_replay_consumption_and_hash(stores, tmp_path):
 
 @pytest.mark.parametrize("payload", ["", "[]", "null", "{", '{"value":NaN}', '{"value":Infinity}', "\x00{}", "{} {}"])
 def test_invalid_payload_unknown(stores, payload):
-    assert run_hook(payload) == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+    assert run_hook(payload) == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+
+
+def test_root_resolution_failure_unknown(stores, tmp_path, monkeypatch):
+    add_legacy(stores[0])
+    add_authority(stores[1], state="running")
+    commands = tmp_path / "commands"
+    commands.mkdir()
+    dirname = commands / "dirname"
+    dirname.write_text("#!/bin/sh\nprintf '%s\\n' \"$TEST_MISSING_ROOT\"\n")
+    dirname.chmod(0o700)
+    monkeypatch.setenv("TEST_MISSING_ROOT", str(tmp_path / "missing"))
+    monkeypatch.setenv("PATH", f"{commands}:{os.environ['PATH']}")
+    before = snapshot(stores)
+    files = set(tmp_path.rglob("*"))
+    assert run_hook(BODY_MARKER) == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    assert snapshot(stores) == before
+    assert set(tmp_path.rglob("*")) == files
 
 
 @pytest.mark.parametrize(
     "mode", ["missing", "crash", "nonzero-empty", "invalid-json", "array", "oversized", "nonascii"]
 )
 def test_interpreter_failure_unknown(stores, tmp_path, monkeypatch, mode):
+    add_legacy(stores[0])
+    add_authority(stores[1], state="running")
     interpreter = tmp_path / "synthetic-interpreter"
     if mode != "missing":
         # A deterministic local child, never a provider executable.
@@ -341,7 +364,11 @@ def test_interpreter_failure_unknown(stores, tmp_path, monkeypatch, mode):
         )
         interpreter.chmod(0o700)
     monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", str(interpreter))
-    assert run_hook() == {"injectSteps": [{"ephemeralMessage": inbox_pending.UNKNOWN_LINE}]}
+    before = snapshot(stores)
+    files = set(tmp_path.rglob("*"))
+    assert run_hook() == {"injectSteps": [{"ephemeralMessage": EXPECTED_UNKNOWN_NOTICE}]}
+    assert snapshot(stores) == before
+    assert set(tmp_path.rglob("*")) == files
 
 
 def test_shared_interpreter_resolution(stores, monkeypatch):

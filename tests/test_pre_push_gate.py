@@ -95,6 +95,92 @@ def _load_gate():
 gate = _load_gate()
 
 
+@pytest.mark.parametrize(("setting", "held"), [("on", True), ("off", True), ("on", False)])
+def test_gate_pytest_child_thread_caps_match_helper(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, setting: str, held: bool
+) -> None:
+    from tests.common.test_test_thread_caps import EXPECTED
+
+    monkeypatch.setenv("LU_TEST_THREAD_CAP", setting)
+    for key in EXPECTED:
+        monkeypatch.setenv(key, "8")
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    seen = []
+
+    def run(command, **kwargs):
+        env = {**gate.clean_environment(), **(kwargs.get("extra_env") or {})}
+        source = f"import json, os; print(json.dumps({{key: os.environ.get(key) for key in {list(EXPECTED)!r}}}))"
+        output = subprocess.check_output([sys.executable, "-c", source], env=env, text=True, timeout=30)
+        seen.append(json.loads(output))
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    slots = SimpleNamespace(count=1, environment=lambda: {"LU_TEST_SLOTS_HOLDER": "1:fake"}) if held else None
+    gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, slots=slots)
+    assert seen and all(env == (EXPECTED if setting == "on" and held else dict.fromkeys(EXPECTED, "8")) for env in seen)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        None,
+        "8",
+        "0",
+        "-1",
+        "0.5",
+        "bad",
+        "",
+        " ",
+        "\t\n",
+        "nan",
+        "NaN",
+        "inf",
+        "-inf",
+        "1e400",
+        "1.5",
+        "0.9",
+        "1.0",
+        "0_1",
+        " 1 ",
+        "+1",
+        "1\n",
+        "٣",
+        "00",
+        "2",
+        "1_000",
+        "16abc",
+        "1abc",
+        "1",
+        "01",
+        "8,4",
+        "true",
+        "0x10",
+        "not-a-number",
+        "huge",
+        "1" * 500,
+        "1" * 5000,
+    ],
+)
+@pytest.mark.parametrize("setting", ["on", "off"])
+def test_gate_thread_policy_parity(value: str | None, setting: str) -> None:
+    from scripts.common.test_thread_caps import THREAD_CAPS, apply
+    from tests.common.test_test_thread_caps import EXPECTED
+
+    env = {"LU_TEST_THREAD_CAP": setting}
+    if value is not None:
+        env.update(dict.fromkeys(THREAD_CAPS, value))
+    assert gate.THREAD_CAPS == THREAD_CAPS
+    original = dict(env)
+    expected = {"LU_TEST_THREAD_CAP": setting, **EXPECTED}
+    if setting == "off":
+        expected = original
+    elif value in {"1", "01"}:
+        expected.update(dict.fromkeys(EXPECTED, value))
+        expected["TOKENIZERS_PARALLELISM"] = "false"
+    assert gate.apply_thread_caps(env) == apply(env) == expected
+    assert env == original
+
+
 def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
@@ -1524,6 +1610,174 @@ def test_an_untracked_python_overlay_is_refused_before_execution(repo: Path, ign
     assert _verdict(result)["reason"] == "untracked_inputs"
     assert "tests/conftest.py" in result.stderr
     assert _receipts(repo) == []
+
+
+@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
+@pytest.mark.parametrize("directory", ["node_modules", "site/node_modules", "site/vendor/node_modules"])
+@pytest.mark.parametrize("filename", ["x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml"])
+def test_node_modules_overlays_do_not_block_the_scan(
+    repo: Path, ignored: bool, directory: str, filename: str
+) -> None:
+    lock = f"{Path(directory).parent}/package-lock.json"
+    _write(repo, lock, "{}\n")
+    _commit(repo, "dependency lock", lock)
+    relative = f"{directory}/katex/src/fonts/{filename}"
+    if ignored:
+        _write(repo, ".gitignore", f"/{relative}\n")
+        _commit(repo, "ignore dependency overlay", ".gitignore")
+    _write(repo, relative, "# dependency file\n")
+
+    assert gate.reject_untracked_inputs(repo) is None
+
+
+@pytest.mark.parametrize("lock_state", ["missing", "untracked", "ignored", "symlink"])
+@pytest.mark.parametrize("filename", ["x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml"])
+def test_unproven_node_modules_overlays_are_refused(repo: Path, lock_state: str, filename: str) -> None:
+    lock = "site/package-lock.json"
+    if lock_state == "symlink":
+        _write(repo, "lock-target.json", "{}\n")
+        (repo / "site").mkdir()
+        (repo / lock).symlink_to("../lock-target.json")
+        _commit(repo, "symlink lock", lock)
+    elif lock_state != "missing":
+        _write(repo, lock, "{}\n")
+        if lock_state == "ignored":
+            _write(repo, ".gitignore", f"/{lock}\n")
+            _commit(repo, "ignore lock", ".gitignore")
+    relative = f"site/node_modules/katex/src/fonts/{filename}"
+    _write(repo, relative, "# overlay\n")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert relative in raised.value.detail
+
+
+@pytest.mark.parametrize(
+    ("relative", "state", "expected"),
+    [
+        (f"{directory}/katex/src/fonts/{name}", state, state == "tracked_lock")
+        for directory in ("node_modules", "site/node_modules", "site/vendor/node_modules")
+        for name in ("x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml")
+        for state in ("tracked_lock", "missing_lock", "untracked_lock", "ignored_lock")
+    ] + [
+        ("site/node_modules/katex/src/fonts/x.py", state, False)
+        for state in (
+            "tracked_input", "symlink_lock", "directory_lock", "missing_tracked_lock",
+            "symlink_dependency", "symlink_ancestor", "symlink_component",
+        )
+    ] + [
+        (name, "tracked_lock", False)
+        for name in (
+            "site/node_modules_extra/x.py", "not_node_modules/x.py",
+            "site/.venv/node_modules/x.py", "site/node_modules/.venv/x.py",
+            "conftest.py", "sitecustomize.py", "tests/conftest.py", "tests/sitecustomize.py",
+        )
+    ],
+)
+def test_dependency_input_predicate_matches_reaper(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, relative: str, state: str, expected: bool
+) -> None:
+    from scripts.fleet.regenerable_output import is_regenerable_ignored_path
+
+    parts = Path(relative).parts
+    parent = Path(*parts[:parts.index("node_modules")]) if "node_modules" in parts else Path("site")
+    lock = (parent / "package-lock.json").as_posix()
+    _write(repo, relative, "# overlay\n")
+    if state != "missing_lock":
+        _write(repo, lock, "{}\n")
+        if state == "ignored_lock":
+            _write(repo, ".gitignore", f"/{lock}\n")
+            _commit(repo, "ignore lock", ".gitignore")
+        elif state != "untracked_lock":
+            _commit(repo, "tracked lock", lock)
+    if state == "tracked_input":
+        _commit(repo, "tracked dependency input", relative)
+    elif state in {"symlink_lock", "directory_lock", "missing_tracked_lock"}:
+        (repo / lock).unlink()
+        if state == "symlink_lock":
+            _write(repo, "outside-lock.json", "{}\n")
+            (repo / lock).symlink_to(repo / "outside-lock.json")
+        elif state == "directory_lock":
+            (repo / lock).mkdir()
+    elif state.startswith("symlink_"):
+        link = repo / {"symlink_dependency": "site/node_modules", "symlink_ancestor": "site",
+                       "symlink_component": "site/vendor"}[state]
+        if state == "symlink_component":
+            relative = "site/vendor/node_modules/x.py"
+            _write(repo, relative, "# overlay\n")
+            _write(repo, "site/vendor/package-lock.json", "{}\n")
+            _commit(repo, "nested lock", "site/vendor/package-lock.json")
+        target = repo.parent / "link-target"
+        link.rename(target)
+        link.symlink_to(target, target_is_directory=True)
+    tracked = set(_git(repo, "ls-files", "-z", "--cached").stdout.split("\0"))
+
+    assert is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked) is expected
+    assert gate.is_regenerable_dependency_input(relative, root=repo, tracked=tracked) is expected
+    # Git does not descend directory symlinks. Supply that enumerated path to
+    # also prove the scan applies its predicate if such an input is returned.
+    if state.startswith("symlink_") and state != "symlink_lock":
+        original_git_ok = gate.git_ok
+
+        def listing(*args: str, cwd: Path) -> str | None:
+            if "--others" in args:
+                return relative + "\0"
+            return original_git_ok(*args, cwd=cwd)
+
+        monkeypatch.setattr(gate, "git_ok", listing)
+    if expected or state == "tracked_input":
+        assert gate.reject_untracked_inputs(repo) is None
+    else:
+        with pytest.raises(gate.GateOutcome) as raised:
+            gate.reject_untracked_inputs(repo)
+        assert raised.value.reason == "untracked_inputs"
+        assert relative in raised.value.detail
+
+
+def test_dependency_input_scan_fails_closed_when_tracked_listing_is_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(gate, "git_ok", lambda *args, **kwargs: "site/node_modules/x.py\0" if "--others" in args else None)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(tmp_path)
+    assert raised.value.reason == "state_unavailable"
+    assert raised.value.incomplete
+
+
+@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "site/katex/src/fonts/x.py",
+        "site/katex/src/fonts/x.pth",
+        "conftest.py",
+        "sitecustomize.py",
+        "tests/conftest.py",
+        "tests/sitecustomize.py",
+        "not_node_modules/x.py",
+        "site/node_modules_extra/katex/src/fonts/x.py",
+        "site/node_modules_extra/katex/src/fonts/x.pth",
+        "site/not_node_modules/katex/src/fonts/x.py",
+        "site/not_node_modules/katex/src/fonts/x.pth",
+        "site/prefix_node_modules_suffix/katex/src/fonts/x.py",
+        "site/prefix_node_modules_suffix/katex/src/fonts/x.pth",
+    ],
+)
+def test_overlays_outside_exact_node_modules_directories_remain_refused(
+    repo: Path, ignored: bool, relative: str
+) -> None:
+    if ignored:
+        _write(repo, ".gitignore", f"/{relative}\n")
+        _commit(repo, "ignore validation overlay", ".gitignore")
+    _write(repo, relative, "# validation overlay\n")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert relative in raised.value.detail
 
 
 def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(repo: Path) -> None:
@@ -5009,7 +5263,12 @@ def test_pytest_runs_never_use_more_processes_than_slots_held(
             assert "-n" not in command and "--dist" not in command
         else:
             assert command[-4:] == ["-n", str(held), "--dist", dist]
-        assert extra == {"LU_TEST_SLOTS_HOLDER": f"{held}:fake"}
+        assert extra["LU_TEST_SLOTS_HOLDER"] == f"{held}:fake"
+        capped = gate.apply_thread_caps(gate.clean_environment())
+        assert extra == {
+            "LU_TEST_SLOTS_HOLDER": f"{held}:fake",
+            **{name: capped[name] for name in gate.THREAD_CAPS if name in capped},
+        }
     assert diagnostics["requested_test_processes"] == 4 and diagnostics["effective_test_processes"] == held
 
 
@@ -5110,7 +5369,7 @@ def test_the_gate_holds_host_slots_beside_its_verified_base_temp_under_umask_002
     assert not gate.inside_git_tree(base.parent) and not gate.inside_git_tree(pool)
     # While pytest ran, the gate held its slots as kind "gate" and handed its children the holder marker.
     assert [(holder["kind"], holder["slots"]) for holder in report["holders"]] == [("gate", 2)]
-    assert set(marker) == {"LU_TEST_SLOTS_HOLDER"}
+    assert set(marker) == {"LU_TEST_SLOTS_HOLDER", *gate.THREAD_CAPS}
     for directory in (root, pool, base.parent.parent, base.parent):
         info = directory.lstat()
         assert stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid(), directory.name
