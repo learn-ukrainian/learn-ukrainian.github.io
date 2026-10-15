@@ -350,6 +350,17 @@ HealthPinger(
 ).start()
 time.sleep(warmup)
 conn = vesum.get_vesum_conn(db)
+if mode == "hold":
+    # One long step holds SQLite's mutex on the shared connection for about
+    # 4 s, with the GIL released: no Python callback, no deadlock.
+    count = "WITH RECURSIVE c(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM c WHERE x < ?) SELECT count(*) FROM c"
+    began = time.monotonic()
+    sqlite3.connect(":memory:").execute(count, (1_000_000,)).fetchone()
+    rows = int(1_000_000 * 4.0 / max(time.monotonic() - began, 1e-3))
+    Notifier(target, quiet).send("X-LOAD=1")
+    conn.execute(count, (rows,)).fetchone()
+    Notifier(target, quiet).send("X-DONE=1")
+    time.sleep(60)
 if mode == "bug":
     # open_readonly before the #10674 fix: a Python authorizer on the
     # connection every worker thread shares.
@@ -424,6 +435,26 @@ def test_the_original_shared_connection_deadlock_stops_the_pings_and_sigabrt_dum
     assert text.count("Thread 0x") >= 4, text[:2000]
     assert "in verify_words" in text and "in reader" in text
     assert oct(dumps[0].stat().st_mode & 0o777) == "0o600"
+
+
+def test_a_held_sqlite_connection_mutex_stops_the_pings(abstract_listener: NotifyListener, tmp_path: Path) -> None:
+    """The probe's query waits for SQLite's mutex on the shared VESUM connection.
+
+    While another thread holds it no ping is sent; pings resume when it is
+    released. A probe that only took the Python-level connection lock, or ran
+    an unrelated query, would keep pinging here.
+    """
+    child, load_at, _state = _run_deadlock_child(abstract_listener, tmp_path, "hold", watch_s=0.0)
+    try:
+        abstract_listener.wait_for(lambda: "X-DONE=1" in abstract_listener.texts(), timeout=60)
+        done_at = next(at for at, text in abstract_listener.messages if text == "X-DONE=1")
+        assert done_at - load_at >= 2.5, "the mutex was not held long enough to judge"
+        assert [at for at in abstract_listener.pings(since=load_at + 1.5) if at < done_at] == []
+        abstract_listener.wait_for(lambda: abstract_listener.pings(since=done_at))
+    finally:
+        child.kill()
+        child.wait(10)
+        child.stderr.close()  # type: ignore[union-attr]
 
 
 def test_the_same_load_without_the_callback_keeps_pinging(abstract_listener: NotifyListener, tmp_path: Path) -> None:
