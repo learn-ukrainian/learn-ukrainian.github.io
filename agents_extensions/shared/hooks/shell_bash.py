@@ -23,7 +23,6 @@ No filesystem probe or network lookup happens before step 6.
 
 from __future__ import annotations
 
-import codecs
 import json
 import os
 import re
@@ -248,30 +247,113 @@ def literal(node) -> str | None:
     }:
         return None
     if node.type == "concatenation":
+        # Quoted pieces never brace-expand, but they can sit between unquoted braces.
+        unquoted = "".join(c.text.decode() if c.type in {"word", "number"} else "q" for c in node.named_children)
         parts = [literal(child) for child in node.named_children]
-        return None if None in parts else "".join(parts)
+        return None if None in parts or _brace_expansion(unquoted) else "".join(parts)
     if node.type == "ansi_c_string":
-        # Unsupported control escapes refuse rather than manufacture shell text.
-        if re.search(r"\\[ce]", raw):
-            return None
-        try:
-            return codecs.decode(raw[2:-1], "unicode_escape")
-        except UnicodeDecodeError:
-            return None
-    if node.type == "translated_string":
-        return literal(node.named_children[0])
+        return ansi_c_value(raw[2:-1])
+    # `$"..."` is looked up in the locale's message catalog; its word is not provable.
+    # Grammar 0.25 reads it as an anonymous `$` before a plain string.
+    dollar = node.prev_sibling
+    if node.type == "translated_string" or (
+        node.type == "string" and dollar is not None and dollar.type == "$" and dollar.end_byte == node.start_byte
+    ):
+        return None
     if node.type == "string":
         if any(child.type not in {"string_content"} for child in node.named_children):
             return None
-        raw = raw.removeprefix("$")[1:-1]
+        raw = raw[1:-1]
         return re.sub(r'\\([$`"\\\n])', lambda m: "" if m[1] == "\n" else m[1], raw)
     if node.type == "raw_string":
         return raw[1:-1]
-    if node.named_children or re.search(r"(?<!\\)[$`*?\[]", raw):
+    if node.named_children or re.search(r"(?<!\\)[$`*?\[]", raw) or _brace_expansion(raw):
         return None
     try:
         return shlex.split(raw.replace("\\\n", ""), comments=False)[0] if raw else ""
     except (ValueError, IndexError):
+        return None
+
+
+def _brace_expansion(unquoted: str) -> bool:
+    """Whether unquoted text may brace-expand: an unescaped `{` ... `}` around `,` or `..`.
+
+    Bash turns `gh pr {merge,} 5` into `gh pr merge 5`; a superset refuses.
+    """
+    opened = []
+    index = 0
+    while index < len(unquoted):
+        char = unquoted[index]
+        if char == "\\":
+            index += 2
+            continue
+        if char == "{":
+            opened.append(index)
+        elif char == "}" and opened:
+            inner = unquoted[opened.pop() + 1 : index]
+            if "," in inner or ".." in inner:
+                return True
+        index += 1
+    return False
+
+
+_ANSI_C_BYTES = {ord(k): v for k, v in zip("abeEfnrtv\\'\"?", b"\a\b\x1b\x1b\f\n\r\t\v\\'\"?", strict=True)}
+
+
+def ansi_c_value(content: str) -> str | None:
+    """The word Bash 5.3 makes of ``$'content'``, or None where it is not provable.
+
+    Escapes yield bytes: an octal escape takes one to three digits and wraps to
+    8 bits, ``\\xHH`` takes one or two hex digits, ``\\cX`` is a control byte
+    (``\\c?`` is DEL), and the first NUL ends the quoted text. An unknown escape
+    keeps its backslash. None refuses forms whose value depends on the locale or
+    the Bash version (``\\u``/``\\U`` above U+007F, ksh-style ``\\x{...}``, and
+    ``\\c`` before a backslash, a non-ASCII byte, ``i`` or the end) and values
+    that are not UTF-8.
+    """
+    source = content.encode()
+    value = bytearray()
+    index = 0
+    while index < len(source):
+        byte = source[index]
+        index += 1
+        if byte != 0x5C or index == len(source):
+            value.append(byte)
+            continue
+        escape = source[index]
+        index += 1
+        if escape in _ANSI_C_BYTES:
+            decoded = _ANSI_C_BYTES[escape]
+        elif 0x30 <= escape <= 0x37:
+            digits = re.match(rb"[0-7]{0,2}", source[index:])[0]
+            index += len(digits)
+            decoded = int(bytes([escape]) + digits, 8) & 0xFF
+        elif escape in b"xuU":
+            if escape == ord("x") and source[index : index + 1] == b"{":
+                return None
+            width = {ord("x"): 2, ord("u"): 4, ord("U"): 8}[escape]
+            digits = re.match(rb"[0-9A-Fa-f]{0,%d}" % width, source[index:])[0]
+            if not digits:
+                value += b"\\" + bytes([escape])
+                continue
+            index += len(digits)
+            decoded = int(digits, 16)
+            if escape != ord("x") and decoded > 0x7F:
+                return None
+        elif escape == ord("c"):
+            if index == len(source) or source[index] in b"\\i" or source[index] > 0x7F:
+                return None
+            decoded = 0x7F if source[index] == ord("?") else source[index] & 0x1F
+            index += 1
+        else:
+            value += b"\\" + bytes([escape])
+            continue
+        if decoded == 0:
+            break
+        value.append(decoded)
+    try:
+        return value.decode()
+    except UnicodeDecodeError:
         return None
 
 
@@ -316,18 +398,6 @@ _BINDING_TABLE = re.compile(r"(?:BASH_ALIASES|BASH_CMDS)(?:\[.*\])?(?:\+?=.*)?",
 _COMMAND_WORDS = {"command_name", "word", "number", "string", "raw_string", "ansi_c_string", "translated_string"}
 _COMMAND_WORDS |= {"concatenation", "simple_expansion", "expansion", "command_substitution", "process_substitution"}
 
-_ANSI_C_ESCAPES = {
-    "a": "\a",
-    "b": "\b",
-    "e": "\x1b",
-    "E": "\x1b",
-    "f": "\f",
-    "n": "\n",
-    "r": "\r",
-    "t": "\t",
-    "v": "\v",
-}
-
 
 def ansi_c_reading(command: str) -> str | None:
     """Decode escapes only inside parsed ``$'...'`` spans, as Bash does.
@@ -341,17 +411,6 @@ def ansi_c_reading(command: str) -> str | None:
     tree = Parser(_LANGUAGE).parse(source)
     if tree.root_node.has_error:
         return None
-
-    def decode(match: re.Match[str]) -> str:
-        escape = match[1]
-        if escape[0] in "xuU" and len(escape) > 1:
-            return chr(int(escape[1:], 16))
-        if escape[0] in "01234567":
-            return chr(int(escape, 8))
-        if escape[0] == "c":
-            return chr(ord(escape[1:] or "@") & 0x1F)
-        return _ANSI_C_ESCAPES.get(escape, escape if escape in "\\'\"?" else "\\" + escape)
-
     spans, pending = [], [tree.root_node]
     while pending:
         node = pending.pop()
@@ -360,20 +419,12 @@ def ansi_c_reading(command: str) -> str | None:
         else:
             pending.extend(node.named_children)
     pieces, cursor = [], 0
-    try:
-        for node in sorted(spans, key=lambda span: span.start_byte):
-            pieces.append(source[cursor : node.start_byte].decode())
-            pieces.append(
-                re.sub(
-                    r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3}|c.?|.)",
-                    decode,
-                    node.text.decode()[2:-1],
-                    flags=re.DOTALL,
-                )
-            )
-            cursor = node.end_byte
-    except (ValueError, OverflowError):
-        return None
+    for node in sorted(spans, key=lambda span: span.start_byte):
+        decoded = ansi_c_value(node.text.decode()[2:-1])
+        if decoded is None:
+            return None
+        pieces.extend([source[cursor : node.start_byte].decode(), decoded])
+        cursor = node.end_byte
     return "".join(pieces) + source[cursor:].decode()
 
 
@@ -393,20 +444,28 @@ def operation_candidate(text: str) -> bool:
 
     if visible(text):
         return True
-    try:
-        decoded = re.sub(
-            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
-            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
-            text,
-        )
-    except (ValueError, OverflowError):
-        return True
-    if visible(decoded):
+    decoded = numeric_reading(text)
+    if decoded is None or visible(decoded):
         return True
     if "$'" not in text:
         return False
     reading = ansi_c_reading(text)
     return reading is None or visible(reading)
+
+
+_NUMERIC_ESCAPE = re.compile(r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})")
+
+
+def numeric_reading(text: str) -> str | None:
+    """Every numeric escape in text decoded, an octal one wrapped to a byte as Bash does.
+
+    A conservative extra reading for the engagement gates; None (engage) when
+    a code point is out of range.
+    """
+    try:
+        return _NUMERIC_ESCAPE.sub(lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8) & 0xFF), text)
+    except (ValueError, OverflowError):
+        return None
 
 
 # A blockable operation spelled in text that cannot be parsed as shell (an
@@ -438,15 +497,8 @@ def operation_shape(text: str) -> bool:
 
     if visible(text):
         return True
-    try:
-        decoded = re.sub(
-            r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
-            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
-            text,
-        )
-    except (ValueError, OverflowError):
-        return True
-    if visible(decoded):
+    decoded = numeric_reading(text)
+    if decoded is None or visible(decoded):
         return True
     if "$'" not in text:
         return False
@@ -651,10 +703,306 @@ def cd_target(argv: list[str], cwd: str | None) -> str | None:
 # ---------------------------------------------------------------------------
 
 
+@dataclass(frozen=True)
+class _Heredoc:
+    """A here-document as Bash reads it. Only an unquoted delimiter expands the body."""
+
+    literal: bool
+    body: str
+    spans: tuple[str, ...] = ()
+
+
+# The only admitted delimiter words: a plain word, or one quoted whole.
+_HEREDOC_DELIMITER = re.compile(rb"[A-Za-z_0-9]+|'[A-Za-z_0-9]+'|\"[A-Za-z_0-9]+\"|\\[A-Za-z_0-9]+")
+_HEREDOC_TOKEN = "GUARD_HERE_"
+_WORD_END = (b"", b" ", b"\t", b"\n", b";", b"&", b"|", b"<", b">", b"(", b")")
+MAX_HEREDOCS = 64
+MAX_SPAN_PARSES = 64
+_HEREDOC_WORDS = {"command_substitution", "arithmetic_expansion", "expansion", "simple_expansion"}
+
+
+def _descendants(root):
+    pending = [root]
+    while pending:
+        node = pending.pop()
+        yield node
+        pending.extend(node.named_children)
+
+
+def _in_backquotes(node) -> bool:
+    """Old-style substitutions are re-read from their own unescaped text, heredocs included."""
+    parent = node.parent
+    while parent is not None:
+        if parent.type == "command_substitution" and parent.text.startswith(b"`"):
+            return True
+        parent = parent.parent
+    return False
+
+
+def _opener_line_end(encoded: bytes, start: int) -> int | None:
+    """The newline that ends a heredoc opener's command line, or None if the rest may span lines."""
+    index, quote = start, None
+    while index < len(encoded):
+        char, pair = encoded[index : index + 1], encoded[index : index + 2]
+        if char == b"\n":
+            return index if quote is None else None
+        if quote == b"'":
+            quote = None if char == b"'" else quote
+        elif char == b"\\":
+            if encoded[index + 1 : index + 2] in (b"\n", b""):
+                return None
+            index += 1
+        elif quote is not None and char == quote[-1:]:
+            quote = None
+        elif char == b"`" or pair in (b"$(", b"${", b"$[", b"<(", b">("):
+            return None
+        elif quote is None and pair == b"$'":
+            quote, index = pair, index + 1
+        elif quote is None and char in (b"'", b'"'):
+            quote = char
+        elif quote is None and char == b"#" and encoded[index - 1 : index] in b" \t;&|()":
+            end = encoded.find(b"\n", index)
+            return end if end >= 0 else None
+        index += 1
+    return None
+
+
+def _grammar_line_end(encoded: bytes, tree, opener) -> int:
+    """Fallback for a complex opener line: where an error-free parse starts the body."""
+    if tree.root_node.has_error:
+        raise ShellParseError("Bash parse error")
+    anchor = next((c for c in opener.parent.named_children if c.type in {"heredoc_body", "heredoc_end"}), None)
+    if anchor is None:
+        raise ShellParseError("here-document body start cannot be established")
+    begin = anchor.start_byte
+    while encoded[begin - 1 : begin] in (b" ", b"\t"):
+        begin -= 1
+    if encoded[begin - 1 : begin] != b"\n" or begin - 1 < opener.end_byte:
+        raise ShellParseError("here-document body start cannot be established")
+    return begin - 1
+
+
+def _heredoc_document(encoded: bytes, start: int, delimiter: bytes, strip_tabs: bool, join: bool):
+    """Read one here-document as Bash does, from its first body line.
+
+    Returns the document and the source range of its delimiter line. An unquoted
+    document joins backslash-newline pairs while it is read, so a joined line can
+    be the delimiter; `<<-` strips leading tabs from every line. The delimiter
+    line holds the word alone; the last line may lack its newline. Bash reads an
+    undelimited document to the end of its input, which a harness may extend,
+    so that refuses as a parse error, as grammar 0.25 does.
+    """
+    document = bytearray()
+    position = start
+    while position < len(encoded):
+        line, line_start, newline = bytearray(), position, False
+        while position < len(encoded):
+            byte = encoded[position]
+            if join and byte == 0x5C:
+                if encoded[position + 1 : position + 2] != b"\n":
+                    line += encoded[position : position + 2]
+                position += 2
+                continue
+            position += 1
+            if byte == 0x0A:
+                newline = True
+                break
+            line.append(byte)
+        if strip_tabs:
+            line = line.lstrip(b"\t")
+        if line == delimiter:
+            return document.decode(), line_start, position - newline
+        document += line + b"\n"
+    raise ShellParseError("Bash parse error")
+
+
+_PARAMETER = re.compile(r"\$(?:[A-Za-z_][A-Za-z_0-9]*|[0-9@*#?$!-])")
+_EXPANSION_KINDS = {
+    "(": (")", {"command_substitution", "arithmetic_expansion"}),
+    "{": ("}", {"expansion"}),
+    "[": ("]", {"arithmetic_expansion"}),
+}
+
+
+def _expansion_spans(document: str) -> tuple[str, ...]:
+    """Every expansion Bash performs in an unquoted here-document body, in order.
+
+    A backslash quotes only `$`, a backquote or another backslash there;
+    quotes and `$'...'` are plain text.
+    """
+    spans = []
+    index = 0
+    while index < len(document):
+        char = document[index]
+        if char == "\\":
+            index += 2 if document[index + 1 : index + 2] in ("$", "`", "\\") else 1
+            continue
+        if char == "`":
+            end = index + 1
+            while end < len(document) and document[end] != "`":
+                end += 2 if document[end] == "\\" else 1
+            if end >= len(document):
+                raise ShellParseError("unterminated backquote in a here-document")
+            spans.append(document[index : end + 1])
+            index = end + 1
+            continue
+        if char == "$" and document[index + 1 : index + 2] in _EXPANSION_KINDS:
+            end = _expansion_end(document, index)
+            spans.append(document[index:end])
+            index = end
+            continue
+        parameter = _PARAMETER.match(document, index)
+        if parameter:
+            spans.append(parameter[0])
+            index = parameter.end()
+            continue
+        index += 1
+    return tuple(spans)
+
+
+def _expansion_end(document: str, start: int) -> int:
+    """End of the `$(`, `${` or `$[` expansion at start: the first closer that parses cleanly.
+
+    Inside `${...}` a single quote is read differently by Bash versions and modes,
+    so it refuses.
+    """
+    closer, kinds = _EXPANSION_KINDS[document[start + 1]]
+    end = start + 2
+    for _ in range(MAX_SPAN_PARSES):
+        end = document.find(closer, end) + 1
+        if not end:
+            raise ShellParseError("unterminated expansion in a here-document")
+        span = document[start:end]
+        root = Parser(_LANGUAGE).parse((": " + span).encode()).root_node
+        words = root.named_children[0].named_children if len(root.named_children) == 1 else []
+        if not root.has_error and len(words) == 2 and words[1].type in kinds and words[1].text.decode() == span:
+            if closer == "}" and "'" in span:
+                raise ShellParseError("single quote in a here-document parameter expansion")
+            return end
+    raise ShellParseError("here-document expansion limit", reason_class="LIMIT_EXCEEDED")
+
+
+def _neutralize_heredocs(encoded: bytes, tree, heredocs: dict[str, _Heredoc]) -> bytes | None:
+    """Read the first command line's unread here-documents as Bash does; hide their bodies.
+
+    Grammar 0.25 loses expansions after leading whitespace in heredoc bodies and
+    fails on others. Each body is read here instead, and its opener and delimiter
+    line are renamed to a quoted unique token, so the grammar sees opaque text.
+    """
+    openers = sorted(
+        (
+            node
+            for node in _descendants(tree.root_node)
+            if node.type == "heredoc_start"
+            and node.text.strip(b"'").decode() not in heredocs
+            and not _in_backquotes(node)
+        ),
+        key=lambda node: node.start_byte,
+    )
+    # Bodies follow their openers in order, so reading stops at the first opener
+    # the grammar left in an ERROR node; the parse then refuses.
+    readable = [
+        node.parent.type == "heredoc_redirect"
+        and node.prev_sibling is not None
+        and node.prev_sibling.type in {"<<", "<<-"}
+        for node in openers
+    ]
+    if False in readable:
+        openers = openers[: readable.index(False)]
+    if not openers:
+        return None
+    line_end = _opener_line_end(encoded, openers[0].end_byte)
+    if line_end is None:
+        line_end = _grammar_line_end(encoded, tree, openers[0])
+        if any(node.start_byte < line_end for node in openers[1:]):
+            raise ShellParseError("here-document body start cannot be established")
+    body_start = line_end + 1
+    # A body queued behind an already read heredoc on the same line starts after its delimiter.
+    for end in _descendants(tree.root_node):
+        if end.type == "heredoc_end" and end.text.decode() in heredocs and end.start_byte > line_end:
+            earlier = next(c for c in end.parent.named_children if c.type == "heredoc_start")
+            if earlier.end_byte <= openers[0].start_byte and b"\n" not in encoded[earlier.end_byte : line_end]:
+                body_start = max(body_start, end.end_byte + 1)
+    edits = []
+    for opener in (node for node in openers if node.start_byte < line_end):
+        operator = opener.prev_sibling
+        if (
+            not _HEREDOC_DELIMITER.fullmatch(opener.text)
+            or encoded[opener.end_byte : opener.end_byte + 1] not in _WORD_END
+        ):
+            raise ShellParseError("ambiguous heredoc delimiter")
+        quoted = bool(re.search(rb"['\"\\]", opener.text))
+        delimiter = opener.text.strip(b"'\"").lstrip(b"\\")
+        document, closer_start, closer_end = _heredoc_document(
+            encoded, body_start, delimiter, operator.type == "<<-", join=not quoted
+        )
+        token = f"{_HEREDOC_TOKEN}{len(heredocs)}{'Q' if quoted else 'U'}"
+        heredocs[token] = _Heredoc(quoted, document, () if quoted else _expansion_spans(document))
+        edits += [
+            (opener.start_byte, opener.end_byte, f"'{token}'".encode()),
+            (closer_start, closer_end, token.encode()),
+        ]
+        if encoded[body_start : body_start + 1] == b"\\":
+            # Grammar 0.25 reads a first body line that starts with a backslash as
+            # command words, quoted or not. The body is already read; pad only the grammar's copy.
+            edits.append((body_start, body_start, b" "))
+        body_start = closer_end + 1
+    for begin, end, replacement in sorted(edits, reverse=True):
+        encoded = encoded[:begin] + replacement + encoded[end:]
+    return encoded
+
+
+def _queue_heredoc(encoded: bytes, tree) -> bytes | None:
+    """Grammar 0.25 cannot queue multiple heredocs: its second opener is an ERROR '<'
+    plus a file_redirect. Move it to an inert `:` reader on the line where its body
+    starts, after the first heredoc's delimiter line. Shell readers need the final
+    stdin specifically and are refused."""
+    for candidate in _descendants(tree.root_node):
+        if candidate.type != "heredoc_redirect":
+            continue
+        end = next((c for c in candidate.named_children if c.type == "heredoc_end"), None)
+        extra = next((c for c in candidate.named_children if c.type == "file_redirect"), None)
+        if end is None or extra is None or encoded[extra.start_byte - 1 : extra.start_byte] != b"<":
+            continue
+        opener = b"<" + extra.text
+        if not opener.startswith(b"<<"):
+            continue
+        body_start = encoded.find(b"\n", end.end_byte) + 1
+        if not body_start:
+            continue
+        reader = next((c for c in candidate.parent.named_children if c.type == "command"), None)
+        if reader is not None:
+            arguments = [literal(c) or UNREADABLE for c in reader.named_children if c.type != "variable_assignment"]
+            index, _ = invoked_start(arguments)
+            if index < len(arguments) and Path(arguments[index]).name in _SHELLS:
+                raise ShellParseError("queued shell heredoc payload")
+        begin = extra.start_byte - 1
+        encoded = encoded[:body_start] + b": " + opener + b"\n" + encoded[body_start:]
+        return encoded[:begin] + b" " * (extra.end_byte - begin) + encoded[extra.end_byte :]
+    return None
+
+
 def _parse(source: str):
-    """Parse one Bash program, repairing only AST-identified grammar-0.25 misparses."""
+    """Parse one Bash program, repairing only AST-identified grammar-0.25 misparses.
+
+    Returns the tree and the Bash reading of each here-document, keyed by the
+    token that names it in the tree.
+    """
+    if _HEREDOC_TOKEN in source:
+        raise ShellParseError("reserved here-document token in the command")
     encoded = source.encode()
     tree = Parser(_LANGUAGE).parse(encoded)
+    heredocs: dict[str, _Heredoc] = {}
+    for _ in range(MAX_HEREDOCS):
+        rewritten = _neutralize_heredocs(encoded, tree, heredocs)
+        if rewritten is None:
+            rewritten = _queue_heredoc(encoded, tree)
+        if rewritten is None:
+            break
+        encoded = rewritten
+        tree = Parser(_LANGUAGE).parse(encoded)
+    else:
+        raise ShellParseError("here-document limit", reason_class="LIMIT_EXCEEDED")
     # Grammar 0.25 splits words around line continuations. Repair only
     # gaps between AST words in commands; quoted data and heredocs stay intact.
     pending = [tree.root_node]
@@ -669,90 +1017,6 @@ def _parse(source: str):
     for begin, end in sorted(joins, reverse=True):
         encoded = encoded[:begin] + encoded[end:]
     if joins:
-        tree = Parser(_LANGUAGE).parse(encoded)
-    # Grammar 0.25 cannot queue multiple heredocs: its second opener is an
-    # ERROR '<' plus a file_redirect. Reparse it as a separate inert reader,
-    # preserving each body's expansion and quoting semantics. Shell readers
-    # need the final stdin specifically and are refused.
-    for _ in range(MAX_DEPTH):
-        pending = [tree.root_node]
-        queued = None
-        while pending:
-            candidate = pending.pop()
-            if candidate.type == "heredoc_redirect":
-                end = next((c for c in candidate.named_children if c.type == "heredoc_end"), None)
-                extra = next((c for c in candidate.named_children if c.type == "file_redirect"), None)
-                if end is not None and extra is not None and encoded[extra.start_byte - 1 : extra.start_byte] == b"<":
-                    opener = b"<" + extra.text
-                    if not opener.startswith(b"<<"):
-                        continue
-                    try:
-                        token = shlex.split(opener[3 if opener.startswith(b"<<-") else 2 :].decode())[0].encode()
-                    except (ValueError, IndexError):
-                        continue
-                    body_start = encoded.find(b"\n", end.end_byte) + 1
-                    closer = re.search(
-                        rb"(?m)^" + (rb"\t*" if opener.startswith(b"<<-") else b"") + re.escape(token) + rb"$",
-                        encoded[body_start:],
-                    )
-                    if body_start and closer:
-                        reader = next((c for c in candidate.parent.named_children if c.type == "command"), None)
-                        if reader is not None:
-                            arguments = [
-                                literal(c) or UNREADABLE
-                                for c in reader.named_children
-                                if c.type != "variable_assignment"
-                            ]
-                            index, _ = invoked_start(arguments)
-                            if index < len(arguments) and Path(arguments[index]).name in _SHELLS:
-                                raise ShellParseError("queued shell heredoc payload")
-                        queued = (extra.start_byte - 1, extra.end_byte, body_start, opener)
-                        break
-            pending.extend(candidate.named_children)
-        if queued is None:
-            break
-        begin, end, body_start, opener = queued
-        encoded = encoded[:body_start] + b": " + opener + b"\n" + encoded[body_start:]
-        encoded = encoded[:begin] + b" " * (end - begin) + encoded[end:]
-        tree = Parser(_LANGUAGE).parse(encoded)
-    # The external lexer can close <<- on a delimiter PREFIX. Rename only
-    # AST-identified openers and their exact physical-line closer.
-    pending = [tree.root_node]
-    heredoc_edits = []
-    while pending:
-        candidate = pending.pop()
-        if candidate.type == "heredoc_start":
-            start = candidate
-            end = next((c for c in start.parent.named_children if c.type == "heredoc_end"), None)
-            try:
-                delimiter = shlex.split(start.text.decode(), comments=False)[0].encode()
-            except (ValueError, IndexError):
-                continue
-            if end is not None:
-                line_end = encoded.find(b"\n", end.end_byte)
-                line_end = len(encoded) if line_end < 0 else line_end
-                if encoded[end.end_byte : line_end] not in {b"", b"\r"}:
-                    body_start = encoded.find(b"\n", start.end_byte) + 1
-                    strip_tabs = b"<<-" in encoded[start.parent.start_byte : start.start_byte]
-                    closer = re.search(
-                        rb"(?m)^" + (rb"\t*" if strip_tabs else b"") + re.escape(delimiter) + rb"$",
-                        encoded[body_start:],
-                    )
-                    if closer:
-                        position = body_start + closer.end() - len(delimiter)
-                        token = f"GUARD_HERE_{start.start_byte}".encode()
-                        quoted = any(q in start.text for q in (b"'", b'"', b"\\"))
-                        heredoc_edits.extend(
-                            [
-                                (start.start_byte, start.end_byte, b"'" + token + b"'" if quoted else token),
-                                (position, position + len(delimiter), token),
-                            ]
-                        )
-        else:
-            pending.extend(candidate.named_children)
-    for begin, end, replacement in sorted(heredoc_edits, reverse=True):
-        encoded = encoded[:begin] + replacement + encoded[end:]
-    if heredoc_edits:
         tree = Parser(_LANGUAGE).parse(encoded)
     # Repair AST-identified descriptor and escaped-number lexer errors. Bash
     # treats out-of-range descriptors as argv, whereas zero and leading-zero
@@ -804,7 +1068,15 @@ def _parse(source: str):
         tree = Parser(_LANGUAGE).parse(encoded)
     if tree.root_node.has_error:
         raise ShellParseError("Bash parse error")
-    return tree
+    for node in _descendants(tree.root_node):
+        if node.type != "heredoc_redirect" or _in_backquotes(node):
+            continue
+        opener = next((c for c in node.named_children if c.type == "heredoc_start"), None)
+        end = next((c for c in node.named_children if c.type == "heredoc_end"), None)
+        token = opener.text[1:-1].decode() if opener is not None else ""
+        if token not in heredocs or opener.text != f"'{token}'".encode() or end is None or end.text != token.encode():
+            raise ShellParseError("here-document does not end where Bash ends it")
+    return tree, heredocs
 
 
 # ---------------------------------------------------------------------------
@@ -827,6 +1099,8 @@ class _Command:
     member: int
     left: list = field(default_factory=list)
     payload_error: ShellParseError | None = None
+    # Expansions of this command's unquoted heredoc bodies, parsed as words.
+    heredoc_words: list = field(default_factory=list)
 
     @property
     def selected(self) -> list[str]:
@@ -854,6 +1128,9 @@ class _Program:
     definitions: list = field(default_factory=list)
     items: list = field(default_factory=list)
     compounds: list = field(default_factory=list)
+    # By heredoc_redirect node id: Bash's reading of the body, and its expansions as words.
+    heredocs: dict = field(default_factory=dict)
+    heredoc_words: dict = field(default_factory=dict)
 
 
 class _Budget:
@@ -914,10 +1191,6 @@ def _redirect_words(command, redirects, budget):
     dynamic_redirect = False
     for redirect in all_redirects:
         budget.charge()
-        if redirect.type == "heredoc_redirect":
-            opener = next(c for c in redirect.named_children if c.type == "heredoc_start").text
-            if not re.fullmatch(rb"(?:[A-Za-z_0-9]+|'[A-Za-z_0-9]+'|\"[A-Za-z_0-9]+\"|\\[A-Za-z_0-9]+)", opener):
-                raise ShellParseError("ambiguous heredoc delimiter")
         if redirect.type == "herestring_redirect":
             dynamic_redirect |= any(literal(c) is None for c in redirect.named_children)
         if redirect.type == "file_redirect":
@@ -944,7 +1217,7 @@ def _redirect_words(command, redirects, budget):
     return words, all_redirects, dynamic_redirect
 
 
-def _shell_payload(selected: list[str], redirects) -> tuple[str | None, ShellParseError | None]:
+def _shell_payload(selected: list[str], redirects, heredocs: dict) -> tuple[str | None, ShellParseError | None]:
     """The literal code a shell or eval invocation runs, or the refusal for unreadable code."""
     utility = utility_name(selected[0])
     if utility == "eval":
@@ -971,13 +1244,14 @@ def _shell_payload(selected: list[str], redirects) -> tuple[str | None, ShellPar
             if payload == UNREADABLE:
                 return None, ShellParseError("dynamic shell payload", reason_class="DYNAMIC_COMMAND")
             return payload, None
-    bodies = [
-        r.child_by_field_name("body") or next((c for c in r.named_children if c.type == "heredoc_body"), None)
-        for r in redirects
-        if r.type == "heredoc_redirect"
-    ]
-    if bodies:
-        return "\n".join(b.text.decode() for b in bodies if b is not None), None
+    documents = [heredocs.get(r.id) for r in redirects if r.type == "heredoc_redirect"]
+    if documents:
+        # An unquoted body is code only after its expansions run; their output is unknown.
+        if any(document is None or document.spans for document in documents):
+            return None, ShellParseError("dynamic shell payload", reason_class="DYNAMIC_COMMAND")
+        return "\n".join(
+            document.body if document.literal else re.sub(r"\\([$`\\])", r"\1", document.body) for document in documents
+        ), None
     here_strings = [r for r in redirects if r.type == "herestring_redirect"]
     if here_strings:
         value = literal(here_strings[-1].named_children[-1])
@@ -1015,7 +1289,7 @@ def _collect(
     """Record every simple command, definition and node, with no pruning."""
     if depth > MAX_DEPTH:
         raise ShellParseError("nested shell depth limit", reason_class="LIMIT_EXCEEDED")
-    tree = _parse(source)
+    tree, heredocs = _parse(source)
     root = tree.root_node
     pending = [root]
     while pending:
@@ -1023,6 +1297,9 @@ def _collect(
         budget.charge()
         if node.type not in GRAMMAR_NODES:
             raise ShellParseError(f"`{node.type}` is outside the written grammar")
+        if node.type == "heredoc_redirect" and not _in_backquotes(node):
+            opener = next(c for c in node.named_children if c.type == "heredoc_start")
+            program.heredocs[node.id] = heredocs[opener.text[1:-1].decode()]
         pending.extend(node.named_children)
     program.nodes.append(root)
     top = not nested and depth == 0
@@ -1044,7 +1321,8 @@ def _collect(
                 return
             program.compounds.append(node)
             for redirect in redirects:
-                visit_children(redirect, True)
+                # Through visit, so a heredoc's expansions are read like any other.
+                visit(redirect, True, None, 0, [])
             if body is not None:
                 visit(body, True, item, member, left)
             return
@@ -1055,7 +1333,7 @@ def _collect(
             return
         for redirect in attached:
             # Redirects a compound statement carries still run their substitutions.
-            visit_children(redirect, True)
+            visit(redirect, True, None, 0, [])
         if kind == "function_definition":
             program.definitions.append(node)
             visit_children(node, True)
@@ -1069,15 +1347,23 @@ def _collect(
             visit_children(node, True)
             return
         if kind == "heredoc_redirect":
-            opener = next(c for c in node.named_children if c.type == "heredoc_start")
-            if any(q in opener.text for q in (b"'", b'"', b"\\")):
-                return
-            body = next((c for c in node.named_children if c.type == "heredoc_body"), None)
-            if body is not None:
-                # Grammar 0.25 omits old-style substitutions in heredoc bodies.
-                for match in re.finditer(r"(?<!\\)`(?:\\[\s\S]|[^`\\])*`", body.text.decode()):
-                    _collect("echo " + match[0], program, budget, depth + 1, nested=True)
-            visit_children(node, True)
+            document = program.heredocs.get(node.id)
+            if document is None:
+                raise ShellParseError("here-document was not read")
+            if document.spans:
+                # Bash expands an unquoted body before the command runs. Read its
+                # expansions exactly as the same words outside a heredoc.
+                first = len(program.nodes)
+                _collect(": " + " ".join(document.spans), program, budget, depth + 1, nested=True)
+                synthetic = program.nodes[first].named_children
+                words = synthetic[0].named_children[1:] if len(synthetic) == 1 else []
+                if len(words) != len(document.spans) or any(w.type not in _HEREDOC_WORDS for w in words):
+                    raise ShellParseError("here-document expansions cannot be read")
+                program.heredoc_words[node.id] = words
+            # The body was read above; the grammar's copy of it is opaque.
+            for child in node.named_children:
+                if child.type != "heredoc_body":
+                    visit(child, True, None, 0, [])
             return
         if kind in {"raw_string", "ansi_c_string", "comment"}:
             return
@@ -1135,12 +1421,18 @@ def _collect(
                 visit_children(child, True)
         for redirect in redirects:
             visit(redirect, True, None, 0, [])
+        command.heredoc_words = [
+            word
+            for redirect in all_redirects
+            if redirect.type == "heredoc_redirect"
+            for word in program.heredoc_words.get(redirect.id, ())
+        ]
         selected = command.selected
         if not selected or selected[0] == UNREADABLE:
             return
         utility = utility_name(selected[0])
         if utility in _SHELLS or utility == "eval":
-            payload, error = _shell_payload(selected, all_redirects)
+            payload, error = _shell_payload(selected, all_redirects, program.heredocs)
             command.payload_error = error
             if payload is not None:
                 # The payload reads the invoking shell's stdin.
@@ -1997,13 +2289,8 @@ def _plain_words(command: _Command, *, expansions: bool) -> bool:
                 return False
         if redirect.type == "herestring_redirect" and any(literal(c) is None for c in redirect.named_children):
             return False
-        if redirect.type == "heredoc_redirect":
-            opener = next(c for c in redirect.named_children if c.type == "heredoc_start")
-            body = next((c for c in redirect.named_children if c.type == "heredoc_body"), None)
-            quoted = any(q in opener.text for q in (b"'", b'"', b"\\"))
-            if not quoted and body is not None and (body.named_children or b"`" in body.text):
-                return False
-    return True
+    # An unquoted heredoc body that expands anything is not plain.
+    return not command.heredoc_words
 
 
 def _before_reason(command: _Command) -> str | None:
@@ -2187,8 +2474,9 @@ def _admit(
             )
     # The backstop: whatever the checks above admitted, every node in the
     # region up to the last guarded operation must be in the written grammar.
-    for item in items[: last + 1]:
-        outside = next(filter(None, map(_outside_admitted, [item.node, *item.redirects])), None)
+    for index, item in enumerate(items[: last + 1]):
+        heredoc_words = [word for command in by_item.get(index, []) for word in command.heredoc_words]
+        outside = next(filter(None, map(_outside_admitted, [item.node, *item.redirects, *heredoc_words])), None)
         if outside is not None:
             raise ShellParseError(
                 f"`{outside}` is outside the admitted grammar before a guarded operation",
@@ -2200,7 +2488,7 @@ def _admit(
 def _substitution_reason(command: _Command) -> str | None:
     """Commands in a guarded operation's own words run before it and are not admitted."""
     found = None
-    pending = [*command.words, *command.redirects]
+    pending = [*command.words, *command.redirects, *command.heredoc_words]
     while pending:
         node = pending.pop()
         if node.type in {"command_substitution", "process_substitution"}:

@@ -76,6 +76,13 @@ def _expansion_may_build_words(command: str) -> bool:
         return True
 
 
+def _ansi_c_unmodelled(command: str, decoded: str) -> bool:
+    """Bash `$'...'` bytes the numeric reading cannot model (#10521): a NUL ends the
+    quoted text, and `\\x{...}`, `\\cX`, `\\u` and `\\U` vary or need the reader."""
+    joined = command.replace("\\\n", "")
+    return "$'" in joined and ("\0" in decoded or bool(re.search(r"\\(?:x\{|c|[uU])", joined)))
+
+
 def _probe_may_merge(probe: str, include_branch: bool) -> bool:
     probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
     # A dynamic program can run the literal operation without spelling `gh`.
@@ -101,14 +108,19 @@ def _may_merge(command: str, *, include_branch: bool = True) -> bool:
         return True
     probe = re.sub(r"\$(['\"])", r"\1", command)
     try:
+        # Bash wraps an octal escape to one byte: \547 is g.
         probe = re.sub(
             r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
-            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8) & 0xFF),
             probe,
         )
     except (ValueError, OverflowError):
         return True  # unreadable escape: let the full parser refuse it
-    if _probe_may_merge(probe, include_branch) or _expansion_may_build_words(command):
+    if (
+        _probe_may_merge(probe, include_branch)
+        or _ansi_c_unmodelled(command, probe)
+        or _expansion_may_build_words(command)
+    ):
         return True
     # One word may mix both spellings: `$'\163cripts'.p\ublish` runs as
     # `scripts.publish`, which neither whole-string reading sees. The pinned

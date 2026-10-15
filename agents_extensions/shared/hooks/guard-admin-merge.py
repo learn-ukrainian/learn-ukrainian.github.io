@@ -47,18 +47,28 @@ def _expansion_may_build_words(command: str) -> bool:
         return True
 
 
+def _ansi_c_unmodelled(command: str, decoded: str) -> bool:
+    """Bash `$'...'` bytes the numeric reading cannot model (#10521): a NUL ends the
+    quoted text, and `\\x{...}`, `\\cX`, `\\u` and `\\U` vary or need the reader."""
+    joined = command.replace("\\\n", "")
+    return "$'" in joined and ("\0" in decoded or bool(re.search(r"\\(?:x\{|c|[uU])", joined)))
+
+
 def _may_guard(command: str) -> bool:
     # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
     # This is only a conservative prefilter; the pinned AST decides execution.
     probe = re.sub(r"\$(['\"])", r"\1", command)
     try:
+        # Bash wraps an octal escape to one byte: \547 is g.
         probe = re.sub(
             r"\\(x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|[0-7]{1,3})",
-            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8)),
+            lambda m: chr(int(m[1][1:], 16) if m[1][0] in "xuU" else int(m[1], 8) & 0xFF),
             probe,
         )
     except (ValueError, OverflowError):
         return True  # unreadable escape: let the full parser refuse it
+    if _ansi_c_unmodelled(command, probe):
+        return True
     probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
     if _expansion_may_build_words(command):
         return True
