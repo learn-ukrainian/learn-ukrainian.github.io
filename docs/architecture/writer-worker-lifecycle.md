@@ -424,6 +424,10 @@ It joins the normalized `task_id` and `record_task_id` to the complete hot/archi
 dispatch identity, mode and any lifecycle/epoch binding. An indexed identity/alias remains registered if its task record is MISSING.
 
 An ordinary mandatory `X-Agent` trailer is author attribution, not proof of registered dispatch.
+Trailers are recognised by `scripts/common/agent_trailer.py`: every line git reads as the `X-Agent` key attributes,
+in any paragraph, and any other line that reads as a trailer attempt (hidden or non-ASCII characters, a fullwidth
+colon, `X_Agent:`, indentation, `X-Agent agent/task`) refuses before the zero-trailer paths. Documented limit:
+cross-script homoglyph letters inside the key survive Unicode normalisation and are not detected.
 `_attribute_commit` permits `trailer-model`, `single-family-harness` and `unresolved-author` when no task record exists.
 Its `task_id` and `BranchReviewFacts.author_task_ids` can contain an unregistered slug.
 Neither that slug, a `TASK_ID` pattern match, a model/family token nor a branch prefix proves registration.

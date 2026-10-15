@@ -3196,3 +3196,45 @@ def test_unknown_history_excludes_all_possible_author_families():
     assert red_team.review_mode == "red_team"
     assert red_team.limitation
     assert red_team.selected.concrete_model != "gpt-6-luna"
+
+
+# --- Trailer attempts in forms git does not parse as the key refuse before any zero-trailer path (#10450) ---
+
+HIDDEN_ATTEMPTS = [
+    "X-Agent : claude/two",
+    "​X-Agent: claude/two",
+    "X-​Agent: claude/two",
+    "X-Agent： claude/two",
+    "X-Agent claude/two trailing",
+]
+HIDDEN_IDS = ["nbsp-before-colon", "zero-width-prefix", "zero-width-inside-key", "fullwidth-colon", "ascii-no-colon"]
+
+
+@pytest.mark.parametrize("attempt", HIDDEN_ATTEMPTS, ids=HIDDEN_IDS)
+def test_a_trailer_attempt_beside_a_valid_trailer_refuses_instead_of_dropping_its_author(tmp_path, attempt):
+    tasks = sol_and_opus_tasks(tmp_path)
+    with pytest.raises(recorder.RecordError, match=r"author model unknown: an X-Agent line \(line 4, "):
+        attribute(f"feat: probe\n\nX-Agent: codex/one\n{attempt}\n", tasks)
+
+
+@pytest.mark.parametrize("attempt", HIDDEN_ATTEMPTS, ids=HIDDEN_IDS)
+def test_a_trailer_attempt_alone_never_reaches_a_zero_trailer_path(monkeypatch, tmp_path, attempt):
+    tasks = sol_and_opus_tasks(tmp_path)
+    monkeypatch.setattr(recorder, "_is_clean_base_merge", lambda *_a, **_k: True)
+    with pytest.raises(recorder.RecordError, match="author model unknown: an X-Agent line") as raised:
+        recorder._attribute_commit(
+            {"sha": SHA, "commit": {"message": f"feat: probe\n\n{attempt}\n"}},
+            repository=REPOSITORY,
+            task_root=tasks,
+            base_sha=lambda: OTHER,
+            unknown_history=(SHA,),
+            app_bot_login=lambda _sha: "lu-bot[bot]",
+        )
+    assert "two" not in str(raised.value)
+
+
+def test_a_hidden_second_author_does_not_let_opus_review_its_own_branch(tmp_path):
+    """The Sol + Opus reproducer: the second author's family and model must not silently drop out."""
+    tasks = sol_and_opus_tasks(tmp_path)
+    with pytest.raises(recorder.RecordError, match="author model unknown"):
+        attribute("feat: probe\n\nX-Agent: codex/one\nX-Agent : claude/two\n", tasks)

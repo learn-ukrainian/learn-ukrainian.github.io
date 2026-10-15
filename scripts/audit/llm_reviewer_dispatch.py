@@ -28,6 +28,7 @@ import yaml
 
 from scripts.audit import anchor_primitives, llm_qg_canaries, llm_reviewer, model_families, qg_schema
 from scripts.audit.content_surface_gates import policy_for_level
+from scripts.common.agent_trailer import AgentTrailerError, x_agent_trailers
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -77,7 +78,7 @@ _AUTHOR_FIELDS = (
     "model",
     "reviewer",
 )
-_X_AGENT_RE = re.compile(r"^X-Agent:\s*([^/\s:]+)", re.IGNORECASE | re.MULTILINE)
+_X_AGENT_FAMILY_RE = re.compile(r"[^/\s:]+")
 _COAUTHOR_RE = re.compile(r"^Co-Authored-By:\s*([^<\n]+)", re.IGNORECASE | re.MULTILINE)
 _SOURCE_TOOL_PREFIXES = ("sources_", "mcp__sources")
 _WIKI_TOOL_MARKERS = ("wikipedia", "wiki")
@@ -232,10 +233,17 @@ class AuthorLineage:
     family: str | None
     source: str
     evidence: str | None = None
+    # Every author family of the lineage, in attribution order; ``family`` is the first.
+    author_families: tuple[str, ...] = ()
 
     @property
     def available(self) -> bool:
         return self.family is not None
+
+    @property
+    def excluded_families(self) -> frozenset[str]:
+        """The union of ``family`` and ``author_families``: no reviewer route may match any of them."""
+        return frozenset(self.author_families) | ({self.family} if self.family else frozenset())
 
 
 @dataclass(frozen=True, slots=True)
@@ -494,10 +502,10 @@ def validate_cross_family(route: ReviewerRoute, lineage: AuthorLineage) -> None:
     assert_route_allowed(route)
     if not lineage.family:
         raise ReviewerLineageError("author family unavailable; pass --author-family")
-    if route.reviewer_family == lineage.family:
+    if route.reviewer_family in lineage.excluded_families:
         raise ReviewerSelfReviewError(
             f"self-review blocked: reviewer_family={route.reviewer_family} "
-            f"author_family={lineage.family}"
+            f"author_family={','.join(sorted(lineage.excluded_families))}"
         )
 
 
@@ -1087,9 +1095,14 @@ def _lineage_from_git(*, level: str, slug: str, module_dir: Path) -> AuthorLinea
     if result.returncode != 0:
         return AuthorLineage(family=None, source="git_failed", evidence=result.stderr[-400:])
     for body in result.stdout.split("---END---"):
-        family = _family_from_commit_body(body)
-        if family:
-            return AuthorLineage(family=family, source="git_history", evidence=body.strip().splitlines()[0])
+        families = _families_from_commit_body(body)
+        if families:
+            return AuthorLineage(
+                family=families[0],
+                source="git_history",
+                evidence=body.strip().splitlines()[0],
+                author_families=families,
+            )
     return AuthorLineage(family=None, source="git_no_family")
 
 
@@ -1117,16 +1130,36 @@ def _module_git_paths(*, level: str, slug: str, module_dir: Path) -> list[str]:
     return out
 
 
-def _family_from_commit_body(body: str) -> str | None:
-    for match in _X_AGENT_RE.finditer(body):
-        family = normalize_family(match.group(1))
-        if family:
-            return family
+def _families_from_commit_body(body: str) -> tuple[str, ...]:
+    """Every author family a commit body attributes, in order, or ``()`` when it names none.
+
+    All ``X-Agent`` trailers count (#10450), so a reviewer route is excluded
+    for each author family and not only the first. A line that reads as an
+    ``X-Agent`` attempt git does not parse, or a trailer whose agent maps to no
+    family, refuses: its author cannot be excluded. ``Co-Authored-By`` lines are
+    read only when the body has no ``X-Agent`` trailer.
+    """
+    try:
+        trailers = x_agent_trailers(body)
+    except AgentTrailerError as exc:
+        raise ReviewerLineageError(f"author lineage refused: {exc}") from exc
+    families: list[str] = []
+    for trailer in trailers:
+        token = _X_AGENT_FAMILY_RE.match(trailer.value)
+        family = normalize_family(token.group(0)) if token else None
+        if family is None:
+            raise ReviewerLineageError(
+                "author family unavailable for an X-Agent trailer in the commit history; pass --author-family"
+            )
+        if family not in families:
+            families.append(family)
+    if families:
+        return tuple(families)
     for match in _COAUTHOR_RE.finditer(body):
         family = normalize_family(match.group(1))
-        if family:
-            return family
-    return None
+        if family and family not in families:
+            families.append(family)
+    return tuple(families)
 
 
 def _invoke_output_path_bridge(

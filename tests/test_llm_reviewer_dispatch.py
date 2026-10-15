@@ -1970,3 +1970,76 @@ def test_v2_enforcement_findings_path_recovers_exact_abstain(monkeypatch) -> Non
     kept = result.payload.get("findings", [])
     assert len(kept) == 1  # recovered as provenance-passed, not dropped as ungrounded
     assert kept[0]["anchor_recovered_ambiguous"] is True
+
+
+# --- Every author family on the git lineage excludes its reviewer route (#10450) ---
+
+
+class _GitLog:
+    def __init__(self, *bodies: str) -> None:
+        self.returncode = 0
+        self.stdout = "".join(f"{body}\n---END---" for body in bodies)
+        self.stderr = ""
+
+
+def _git_lineage(*bodies: str) -> llm_reviewer_dispatch.AuthorLineage:
+    module_dir = llm_reviewer_dispatch.PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "lineage-probe"
+    with patch(f"{_DISPATCH}.subprocess.run", return_value=_GitLog(*bodies)):
+        return llm_reviewer_dispatch._lineage_from_git(level="a1", slug="lineage-probe", module_dir=module_dir)
+
+
+def test_every_x_agent_author_family_excludes_the_spot_audit_route() -> None:
+    """Sol first, Opus second: the second family must stay excluded (admission path)."""
+    lineage = _git_lineage("feat: probe\n\nX-Agent: codex/one\nX-Agent: claude/two\n")
+    assert lineage.available
+    assert set(lineage.author_families) == {"openai", "anthropic"}
+    with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError, match="anthropic"):
+        llm_reviewer_dispatch.validate_cross_family(llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_ROUTE, lineage)
+    # A route outside every author family is still admitted.
+    llm_reviewer_dispatch.validate_cross_family(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE, lineage)
+
+
+def test_single_anthropic_author_control_still_refuses_the_spot_audit_route() -> None:
+    lineage = _git_lineage("feat: probe\n\nX-Agent: claude/two\n")
+    assert lineage.author_families == ("anthropic",)
+    with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError):
+        llm_reviewer_dispatch.validate_cross_family(llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_ROUTE, lineage)
+
+
+def test_key_spellings_git_parses_all_count_as_authors() -> None:
+    lineage = _git_lineage("feat: probe\n\nX-Agent: codex/one\nx-agent : claude/two\n")
+    assert set(lineage.author_families) == {"openai", "anthropic"}
+
+
+@pytest.mark.parametrize(
+    "attempt",
+    ["X-Agent : claude/two", "​X-Agent: claude/two", "X-Agent： claude/two", "X-Agent claude/two"],
+    ids=["nbsp", "zero-width", "fullwidth-colon", "no-colon"],
+)
+def test_a_malformed_trailer_attempt_refuses_lineage_instead_of_dropping_an_author(attempt: str) -> None:
+    with pytest.raises(llm_reviewer_dispatch.ReviewerLineageError, match=r"X-Agent line \(line 4"):
+        _git_lineage(f"feat: probe\n\nX-Agent: codex/one\n{attempt}\n")
+    with pytest.raises(llm_reviewer_dispatch.ReviewerLineageError):
+        _git_lineage(f"feat: probe\n\n{attempt}\nCo-Authored-By: GPT <noreply@openai.invalid>\n")
+
+
+def test_live_dispatcher_refuses_a_second_anthropic_author_before_the_provider(tmp_path: Path) -> None:
+    calls: list[str] = []
+
+    def runner(route: Any, prompt: str, task_id: str) -> Any:
+        calls.append(task_id)
+        raise AssertionError("provider must not be called")
+
+    dispatcher = llm_reviewer_dispatch.LiveReviewerDispatcher(
+        policy_family="seminar", gate_version="g", escalation=True, runner=runner
+    )
+    target = type("Target", (), {"level": "a1", "slug": "lineage-probe", "module_dir": tmp_path})()
+    with (
+        patch(
+            f"{_DISPATCH}.subprocess.run",
+            return_value=_GitLog("feat: probe\n\nX-Agent: codex/one\nX-Agent: claude/two\n"),
+        ),
+        pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError),
+    ):
+        dispatcher(target, "prompt")
+    assert calls == []

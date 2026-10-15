@@ -579,3 +579,62 @@ def test_commit_meta_fields_split_only_on_physical_newlines(monkeypatch: pytest.
         f"Author{separator}Name",
         f"fix: a{separator}b",
     )
+
+
+# --- Every X-Agent trailer is linted, not only the first exact-spelled one (#10450) ---
+
+
+def _inactive_provenance(tmp_path: Path) -> lat.ProvenanceContext:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    return resolve_provenance_context(tasks_dir=tasks_dir)
+
+
+def test_a_second_trailer_with_an_unknown_agent_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    ctx = _inactive_provenance(tmp_path)
+    _mock_commit(monkeypatch, "fix: x\n\nX-Agent: codex/one\nX-Agent: mystery/two\n")
+    verdict, reason = _check_commit("fake-sha", provenance=ctx)
+    assert verdict == "FAIL"
+    assert "X-Agent" in reason
+
+
+def test_every_trailer_must_match_the_dispatch_provenance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task_record(tasks_dir, "impl-8638-r2", agent="codex")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "impl-8638-r2")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    _mock_commit(monkeypatch, "fix: x\n\nX-Agent: codex/impl-8638-r2\nx-agent: codex/8638-r2\n")
+    verdict, reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "FAIL"
+    assert "task record '8638-r2' not found" in reason
+
+
+def test_a_key_variant_is_linted_like_the_canonical_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    ctx = _inactive_provenance(tmp_path)
+    _mock_commit(monkeypatch, "fix: x\n\nx-agent : codex/one\n")
+    verdict, reason = _check_commit("fake-sha", provenance=ctx)
+    assert (verdict, reason) == ("PASS", "X-Agent: codex/one")
+
+
+@pytest.mark.parametrize(
+    "attempt",
+    ["X-Agent : codex/one", "​X-Agent: codex/one", "X-Agent： codex/one", "X-Agent codex/one"],
+    ids=["nbsp", "zero-width", "fullwidth-colon", "no-colon"],
+)
+def test_a_trailer_attempt_git_does_not_parse_fails_with_its_line(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, attempt: str
+) -> None:
+    ctx = _inactive_provenance(tmp_path)
+    _mock_commit(monkeypatch, f"fix: x\n\nX-Agent: codex/one\n{attempt}\n")
+    verdict, reason = _check_commit("fake-sha", provenance=ctx)
+    assert verdict == "FAIL"
+    assert "line 4" in reason
+    assert "codex/one" not in reason.split("line 4", 1)[1]
+
+
+def test_the_docstring_says_the_cli_can_fail_and_only_the_hook_wrapper_warns() -> None:
+    doc = lat.__doc__ or ""
+    assert "standalone CLI exits 1" in doc
+    assert "pre-push hook wrapper" in doc

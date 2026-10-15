@@ -33,6 +33,14 @@ Outputs
 - exit 0 if every non-skipped commit has a valid ``X-Agent`` trailer.
 - exit 1 if any commit is missing the trailer.
 
+The standalone CLI exits 1 on a failing commit; only the pre-push hook wrapper
+in ``.pre-commit-config.yaml`` turns that into a warning during the rollout.
+Every ``X-Agent`` trailer of a commit is checked, in the spellings git parses
+(any case, spaces before the colon), and a line that reads as a trailer attempt
+git does not parse fails with its line number
+(:func:`scripts.common.agent_trailer.x_agent_trailers`). This is a lint of
+trailer presence and provenance only; it never selects or admits a reviewer.
+
 Skipped (exit 0 regardless)
 ===========================
 - merge commits (``git log --no-merges`` is applied)
@@ -79,14 +87,18 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.common.agent_trailer import AgentTrailerError, x_agent_trailers
 from scripts.common.jsonl import physical_lines
 from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from scripts.orchestration.task_record_store import locate_task_record
 
-_TRAILER_RE = re.compile(
-    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek|deepseek-v4-pro|cursor|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
-    re.MULTILINE,
+_AGENT_TASK = (
+    r"(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes"
+    r"|deepseek|deepseek-v4-pro|cursor|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)"
 )
+# A whole trailer line (the dispatch environment's literal trailer) and a parsed trailer value.
+_TRAILER_RE = re.compile(rf"^X-Agent:\s+{_AGENT_TASK}\s*$", re.MULTILINE)
+_VALUE_RE = re.compile(_AGENT_TASK)
 
 _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 
@@ -322,12 +334,35 @@ def _check_commit(
         return "SKIP", f'dependabot/bot ("{subject[:50]}")'
 
     body = _commit_body(sha, cwd=cwd)
-    match = _TRAILER_RE.search(body)
-    if match is None:
+    try:
+        values = [trailer.value for trailer in x_agent_trailers(body)]
+    except AgentTrailerError as exc:
+        return "FAIL", f'{exc} in commit "{subject[:60]}"'
+    if not values:
         return "FAIL", f'missing X-Agent trailer in commit "{subject[:60]}"'
 
-    agent = match.group("agent")
-    task = match.group("task")
+    reasons: list[str] = []
+    for value in values:
+        match = _VALUE_RE.fullmatch(value)
+        if match is None:
+            return "FAIL", f'missing a valid X-Agent trailer value in commit "{subject[:60]}"'
+        verdict, reason = _check_trailer(
+            match.group("agent"), match.group("task"), provenance=provenance, cwd=cwd
+        )
+        if verdict == "FAIL":
+            return verdict, reason
+        reasons.append(reason)
+    return "PASS", "; ".join(reasons)
+
+
+def _check_trailer(
+    agent: str,
+    task: str,
+    *,
+    provenance: ProvenanceContext | None,
+    cwd: Path | None,
+) -> tuple[str, str]:
+    """Return (verdict, reason) for one trailer's ``agent``/``task``; verdict ∈ {'PASS', 'FAIL'}."""
     trailer_str = f"X-Agent: {agent}/{task}"
 
     if _is_exempt_trailer(agent, task):
