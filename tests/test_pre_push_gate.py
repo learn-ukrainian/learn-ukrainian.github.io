@@ -77,6 +77,12 @@ def _install_surface_scanners(root: Path) -> None:
     _write(root, ".pre-commit-config.yaml", yaml.safe_dump(config))
 
 
+def _install_test_slot_governor(root: Path) -> None:
+    """The gate loads the self-contained host test-slot governor from its own checkout (#10662)."""
+    governor = "scripts/common/test_slots.py"
+    _write(root, governor, (REPO_ROOT / governor).read_text(encoding="utf-8"))
+
+
 def _load_gate():
     spec = importlib.util.spec_from_file_location("pre_push_gate_under_test", GATE_PATH)
     assert spec is not None and spec.loader is not None
@@ -93,6 +99,7 @@ def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
     env.pop("PYTEST_ADDOPTS", None)
+    env.pop("LU_TEST_SLOTS_HOLDER", None)  # a gate under test is never nested in this run's test slots
     env["PYTHONPATH"] = str(REPO_ROOT / "scripts")
     env.update(extra or {})
     return env
@@ -131,6 +138,7 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     launcher.write_text(f'#!/usr/bin/env bash\nexec "{PYTHON}" "$@"\n', encoding="utf-8")
     launcher.chmod(0o755)
     _install_surface_scanners(root)
+    _install_test_slot_governor(root)
     _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
     _write(root, "tests/test_invariant.py", GREEN_TEST)
@@ -2958,7 +2966,9 @@ def test_pytest_temp_parent_follows_the_fleet_scratch_convention(
 def test_moving_the_base_temp_keeps_admission_budget_and_process_caps(monkeypatch: pytest.MonkeyPatch) -> None:
     budgets = (gate.STAGE_BUDGET_S, gate.RUN_BUDGET_S, gate.SHADOW_BUDGET_S, gate.CLEANUP_BUDGET_S)
     assert budgets == (600.0, 1200.0, 120.0, 10.0)
-    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (1340.0, 13400.0, 256)
+    # The host test-slot governor (#10662) adds exactly one slot wait to each predecessor's allowance.
+    assert gate.TEST_SLOT_WAIT_S == 600.0
+    assert (gate.ADMISSION_WAIT_S, gate.ADMISSION_MAX_WAIT_S, gate.MAX_QUEUE_ENTRIES) == (1940.0, 19400.0, 256)
     monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
     monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
     assert (gate.test_process_limit(), gate.concurrent_run_limit()) == (4, 1)
@@ -3217,6 +3227,7 @@ def native_repo(tmp_path: Path) -> Path:
     _write(root, "scripts/pre_commit/project_python.sh", f'#!/usr/bin/env bash\nexec "{sys.executable}" "$@"\n')
     (root / "scripts/pre_commit/project_python.sh").chmod(0o755)
     _install_surface_scanners(root)
+    _install_test_slot_governor(root)
     _write(root, "pytest.ini", "[pytest]\n")
     _write(root, "tests/test_repo_wide_marker_invariant.py", REGISTRY)
     _write(root, "tests/test_invariant.py", GREEN_TEST)
@@ -4631,7 +4642,7 @@ def _journal_shaped_push(
     monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "gate-test")  # a dispatch caps pytest processes
     remaining = {label: iter(durations) for label, durations in needs.items()}
 
-    def run_bounded(command, *, cwd, deadline, label, diagnostics=None):
+    def run_bounded(command, *, cwd, deadline, label, diagnostics=None, extra_env=None):
         need = next(remaining[label])
         if clock.now + need > deadline:
             clock.now = max(clock.now, deadline)
@@ -4839,3 +4850,268 @@ def test_an_actual_overrun_is_killed_at_its_bound_with_descendants(repo: Path, t
 
 def test_the_run_budget_is_the_sum_of_the_two_stage_allowances() -> None:
     assert gate.RUN_BUDGET_S == 2 * gate.STAGE_BUDGET_S == 1200
+
+
+# ---- host test-slot pool (#10662) ------------------------------------------------------------------------
+
+
+class _FakeSlotError(Exception):
+    def __init__(self, reason: str, detail: str) -> None:
+        super().__init__(f"test_slots_{reason}: {detail}")
+        self.reason = reason
+
+
+class _FakeGovernor:
+    """Stands in for scripts/common/test_slots.py: each acquisition spends ``wait`` seconds of the fake clock."""
+
+    SlotError = _FakeSlotError
+
+    def __init__(self, clock: FakeClock, *, wait: float, error: Exception | None = None) -> None:
+        self.clock, self.wait, self.error, self.calls, self.holds = clock, wait, error, [], []
+
+    def enabled(self) -> bool:
+        return True
+
+    def wait_timeout(self) -> float:
+        return 3600.0
+
+    def inherited_hold(self) -> None:
+        return None
+
+    def acquire(self, requested: int, **kwargs: object) -> SimpleNamespace:
+        self.calls.append((requested, kwargs))
+        self.clock.now += self.wait
+        if self.error is not None:
+            raise self.error
+        released: list[bool] = []
+        self.holds.append(released)
+        return SimpleNamespace(
+            count=min(requested, 2),
+            pool_size=2,
+            queue_position=1,
+            environment=lambda: {"LU_TEST_SLOTS_HOLDER": "2:fake"},
+            release=lambda: released.append(True),
+        )
+
+
+@pytest.mark.parametrize(
+    ("run_budget", "expected_deadlines", "allowance", "limited_by"),
+    [
+        # 2 s of a 10 s run budget remain spent by pre-commit; the 300 s slot wait spends none of the rest.
+        (10.0, [500.0 + gate.SHADOW_BUDGET_S, 510.0, 810.0], 8.0, "run_budget"),
+        # With room in the run budget the pytest stage still gets its whole own allowance after the wait.
+        (1200.0, [500.0 + gate.SHADOW_BUDGET_S, 1100.0, 1402.0], 600.0, "stage_budget"),
+    ],
+)
+def test_the_slot_wait_is_recorded_apart_and_spends_neither_budget(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    run_budget: float,
+    expected_deadlines: list[float],
+    allowance: float,
+    limited_by: str,
+) -> None:
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "4")
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    clock = FakeClock()
+    deadlines = _fake_validation(tmp_path, monkeypatch, clock)
+    governor = _FakeGovernor(clock, wait=300.0)
+    monkeypatch.setattr(gate, "load_test_slots", lambda: governor)
+    budget = gate.Budget(run_budget)
+    event: dict[str, object] = {}
+
+    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event, budget)
+
+    assert deadlines == expected_deadlines
+    assert [requested for requested, _ in governor.calls] == [4]
+    assert governor.calls[0][1]["kind"] == "gate"
+    assert event["slot_wait_s"] == 300.0
+    assert event["test_slots"] == {
+        "status": "held", "requested": 4, "held": 2, "pool_size": 2, "wait_s": 300.0, "queue_position": 1,
+    }
+    pytest_stage = event["stages"]["pytest"]
+    assert (pytest_stage["allowance_s"], pytest_stage["allowance_limited_by"]) == (allowance, limited_by)
+    assert budget.deadline == 500.0 + run_budget + 300.0  # later ref updates keep the excluded wait
+    assert governor.holds == [[True]]  # released once the pytest stage ended
+
+
+def test_a_disabled_pool_changes_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LU_TEST_SLOTS", "off")
+    monkeypatch.setenv("LU_TEST_SLOTS_DIR", str(tmp_path / "pool"))
+    clock = FakeClock()
+    deadlines = _fake_validation(tmp_path, monkeypatch, clock)
+    event: dict[str, object] = {}
+
+    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event, gate.Budget(10.0))
+
+    assert deadlines == [500.0 + gate.SHADOW_BUDGET_S, 510.0, 510.0]
+    assert event["test_slots"]["status"] == "disabled" and event["slot_wait_s"] == 0.0
+    assert not (tmp_path / "pool").exists()
+
+
+@pytest.mark.parametrize("reason", ["wait_timeout", "pool_unavailable", "invalid_configuration"])
+def test_a_slot_refusal_is_typed_validation_incomplete_before_pytest_starts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, reason: str
+) -> None:
+    clock = FakeClock()
+    deadlines = _fake_validation(tmp_path, monkeypatch, clock)
+    governor = _FakeGovernor(clock, wait=5.0, error=_FakeSlotError(reason, "no slots"))
+    monkeypatch.setattr(gate, "load_test_slots", lambda: governor)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", {}, gate.Budget(10.0))
+
+    assert raised.value.incomplete and raised.value.reason == f"test_slots_{reason}"
+    assert len(deadlines) == 2  # the shadow and pre-commit started; pytest never did
+
+
+def test_the_gate_slot_wait_is_bounded_by_its_own_ceiling(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = FakeClock()
+    _fake_validation(tmp_path, monkeypatch, clock)
+    governor = _FakeGovernor(clock, wait=0.0)
+    governor.wait_timeout = lambda: 10 * gate.TEST_SLOT_WAIT_S
+    monkeypatch.setattr(gate, "load_test_slots", lambda: governor)
+
+    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", {}, gate.Budget(10.0))
+
+    assert governor.calls[0][1]["wait_s"] == gate.TEST_SLOT_WAIT_S
+
+
+def test_admission_allowance_covers_a_predecessors_slot_wait() -> None:
+    assert gate.TEST_SLOT_WAIT_S == gate.STAGE_BUDGET_S
+    assert gate.ADMISSION_WAIT_S == (
+        gate.RUN_BUDGET_S + gate.TEST_SLOT_WAIT_S + gate.SHADOW_BUDGET_S + 2 * gate.CLEANUP_BUDGET_S
+    )
+
+
+@pytest.mark.parametrize("held", [1, 2, 4])
+def test_pytest_runs_never_use_more_processes_than_slots_held(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, held: int
+) -> None:
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "4")
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    seen = []
+
+    def run(command: list[str], **kwargs: object) -> tuple[int, str]:
+        seen.append((command, kwargs.get("extra_env")))
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    slots = SimpleNamespace(count=held, environment=lambda: {"LU_TEST_SLOTS_HOLDER": f"{held}:fake"})
+    event: dict[str, object] = {}
+    with gate.stage_measurement(event, "pytest") as diagnostics:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, diagnostics=diagnostics, slots=slots)
+
+    for (command, extra), dist in zip(seen, ("worksteal", "loadfile"), strict=True):
+        if held == 1:
+            assert "-n" not in command and "--dist" not in command
+        else:
+            assert command[-4:] == ["-n", str(held), "--dist", dist]
+        assert extra == {"LU_TEST_SLOTS_HOLDER": f"{held}:fake"}
+    assert diagnostics["requested_test_processes"] == 4 and diagnostics["effective_test_processes"] == held
+
+
+def test_a_missing_governor_refuses_validation(tmp_path: Path) -> None:
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.load_test_slots(tmp_path / "scripts/common/test_slots.py")
+    assert raised.value.incomplete and raised.value.reason == "test_slots_unavailable"
+
+
+def test_the_real_gate_waits_for_a_host_slot_and_records_the_wait(repo: Path, tmp_path: Path) -> None:
+    from scripts.common import test_slots
+
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green", "tests/test_new.py")
+    pool = {"LU_TEST_SLOTS": "on", "LU_TEST_SLOTS_DIR": str(tmp_path / "pool"), "LU_TEST_SLOTS_COUNT": "1"}
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    log = tmp_path / "gate.log"
+    held = test_slots.acquire(1, kind="pytest", environ=pool)
+    with log.open("w", encoding="utf-8") as stderr:
+        process = subprocess.Popen(
+            [
+                str(PYTHON), str(repo / ".githooks/pre_push_gate.py"),
+                "--launcher", str(repo / "scripts/pre_commit/project_python.sh"),
+                "--config", str(repo / ".pre-commit-config.yaml"), "origin", "unused",
+            ],
+            cwd=repo,
+            env=_env({"PRE_COMMIT_HOME": str(repo.parent / "pre-commit-cache"), gate.MAX_CONCURRENT_RUNS_ENV: "1",
+                      **pool}),
+            stdin=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=stderr,
+            text=True,
+        )
+    try:
+        process.stdin.write(f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n")
+        process.stdin.close()
+        assert "queue position 1/1" in wait_for_line(log, timeout=120, stop_if=lambda: process.poll() is not None)
+    finally:
+        held.release()
+    assert process.wait(timeout=180) == 0, log.read_text()
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == "green"
+    assert row["test_slots"]["status"] == "held" and row["test_slots"]["held"] == 1
+    assert row["slot_wait_s"] > 0 and row["test_slots"]["wait_s"] == row["slot_wait_s"]
+    assert row["stages"]["pytest"]["effective_test_processes"] == 1
+    assert row["execution_s"] <= row["duration_s"] - row["slot_wait_s"] + 1.0
+
+
+def test_the_gate_holds_host_slots_beside_its_verified_base_temp_under_umask_002(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The pytest stage takes host slots before it creates its base temp, and both live below one scratch root
+    # (#10662, #10654). The pool is created first, so it must leave that root private whatever the umask, or
+    # the gate refuses its own base temp as one another user could redirect.
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+    root = private / "scratch"  # absent: the governor creates it before the gate looks for its base temp
+    monkeypatch.setenv(gate.SCRATCH_ROOT_ENV, str(root))
+    for name in ("LU_TEST_SLOTS_DIR", "LU_TEST_SLOTS_HOLDER", "LEARN_UKRAINIAN_DISPATCH_TASK_ID"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("LU_TEST_SLOTS", "on")
+    monkeypatch.setenv("LU_TEST_SLOTS_COUNT", "2")
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "2")
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "Shadow", lambda *_args: SimpleNamespace(finish=dict, abandon=lambda: None))
+    monkeypatch.setattr(gate, "run_pre_commit_stage", lambda *_args, **_kwargs: None)
+    governor = gate.load_test_slots()
+    seen = []
+
+    def run(command: list[str], **kwargs: object) -> tuple[int, str]:
+        seen.append((Path(command[command.index("--basetemp") + 1]), governor.status(), kwargs.get("extra_env")))
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    event: dict[str, object] = {}
+    previous = os.umask(0o002)
+    try:
+        gate.execute_stages(
+            _plan(changed_tests=()),
+            tmp_path,
+            "launcher",
+            "config",
+            time.monotonic() + 60,
+            event,
+            stage_budget_s=gate.STAGE_BUDGET_S,
+            persist_receipt=False,
+        )
+    finally:
+        os.umask(previous)
+
+    assert event["outcome"] == "green" and event["test_slots"]["status"] == "held"
+    [(base, report, marker)] = seen
+    pool = root / f"test-slots-{os.geteuid()}"
+    assert base.parent.parent == root / f"pre-push-gate-{os.geteuid()}"
+    assert not gate.inside_git_tree(base.parent) and not gate.inside_git_tree(pool)
+    # While pytest ran, the gate held its slots as kind "gate" and handed its children the holder marker.
+    assert [(holder["kind"], holder["slots"]) for holder in report["holders"]] == [("gate", 2)]
+    assert set(marker) == {"LU_TEST_SLOTS_HOLDER"}
+    for directory in (root, pool, base.parent.parent, base.parent):
+        info = directory.lstat()
+        assert stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid(), directory.name
+    assert not os.path.lexists(base) and governor.status()["slots_in_use"] == 0  # both released at stage end

@@ -59,6 +59,9 @@ DISPATCH_MAX_LOAD_PER_CPU = 1.0
 # (memory.current minus file cache) plus this per-worker reserve, in GiB, would
 # exceed lu.slice memory.high. Skipped when the cgroup files are missing.
 DISPATCH_WORKER_MEM_RESERVE_GIB = 2.5
+# Host test-slot pool (#10662): refused while more test runs than this wait for
+# slots (scripts/common/test_slots.py). Skipped when the pool is disabled.
+DISPATCH_MAX_TEST_SLOT_QUEUE = 4
 
 # =============================================================================
 # TRACK CONFIGURATION

@@ -51,14 +51,14 @@ print(sum(calls.values()), len(calls), [n for n, c in calls.items() if c > 1])
 The one-line `grep -oE` form of this count is not authoritative: it breaks on the
 multiline `reviewer_ghosts_router` call. The AST parse above is.
 
-### Total route-handler count — **289** decorator sum; **290** OpenAPI HTTP ops + **1** WebSocket
+### Total route-handler count — **290** decorator sum; **291** OpenAPI HTTP ops + **1** WebSocket
 
 Three separate denominators (do not conflate them):
 
 | Metric | Value | Source |
 | --- | ---: | --- |
-| Route-handler decorator sum | **289** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
-| OpenAPI HTTP operations | **290** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
+| Route-handler decorator sum | **290** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
+| OpenAPI HTTP operations | **291** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
 | WebSocket routes | **1** | `FROZEN_WEBSOCKET_ROUTE_COUNT`; `WS /ws/batch` on `batch_router` — absent from `app.openapi()['paths']` |
 
 Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
@@ -66,7 +66,7 @@ Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
 
 ```bash
 grep -rn '\.include_router(' scripts/api/*.py | grep -v 'factory_app\.include_router'
-# scripts/api/ops_router.py:17:router.include_router(entire_context_router, prefix="/entire-context")
+# scripts/api/ops_router.py:19:router.include_router(entire_context_router, prefix="/entire-context")
 ```
 
 Decorator-sum script (complete `ROUTER_MAP`; `NESTED` adds child router files
@@ -141,7 +141,7 @@ for var, path in sorted(ROUTER_MAP.items()):
     total += n
 print(total)
 "
-# 289
+# 290
 
 .venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
@@ -151,8 +151,8 @@ print(sum(len(v) for v in app.openapi()['paths'].values()))
 print(FROZEN_HTTP_OPERATION_COUNT)
 print(FROZEN_WEBSOCKET_ROUTE_COUNT)
 "
-# 290
-# 290
+# 291
+# 291
 # 1
 ```
 
@@ -370,7 +370,7 @@ ACP (`/acpx`, `/acp/conversations/*`); routing/transport (`/headroom`,
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `admin_router.py` | `/api/admin` | 8 | 402 | — | `BACKUP_DIR`, `DATA_DIR`, `IMAGE_DIR`, `LOGS_DIR`, `MCP_DIR` | 0 | 8 |
-| `ops_router.py` | `/api/ops` (+ nested `/entire-context`) | 4 | 74 | — | `DEFAULT_PLAN_DIR` | 0 | 8 |
+| `ops_router.py` | `/api/ops` (+ nested `/entire-context`) | 5 | 85 | — | — | 0 | 8 |
 | `git_hygiene_router.py` | `/api/git` | 2 | 775 | — | `POLICY_DOC` | 0 | 8 |
 
 ### Step 9 — `dashboard_router` (large)
@@ -520,8 +520,8 @@ beyond the config imports and module globals listed above.
 | Router registrations (`include_router` calls) | 48 |
 | Distinct router objects (46 imported modules + `core_router`) | 47 |
 | Routers mounted twice | 1 (`docs_router`) |
-| Route handlers (decorator sum, nested included) | 289 |
-| OpenAPI HTTP operations (sweep denominator) | 290 |
+| Route handlers (decorator sum, nested included) | 290 |
+| OpenAPI HTTP operations (sweep denominator) | 291 |
 | WebSocket routes (separate denominator) | 1 |
 | OPSEC fixture `setattr` targets (unique; see *OPSEC fixture seams*) | 22 |
 
