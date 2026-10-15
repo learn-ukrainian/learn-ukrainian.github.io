@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from types import SimpleNamespace
 
 import pytest
@@ -18,6 +19,14 @@ from scripts.audit import llm_reviewer_dispatch
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 pytestmark = pytest.mark.reads_content
+
+
+@pytest.fixture(autouse=True)
+def fixed_reviewer_headroom(monkeypatch, reviewer_headroom_snapshot):
+    """Dispatch profile tests must not consult live reviewer capacity (#10764)."""
+    from scripts import delegate
+
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: deepcopy(reviewer_headroom_snapshot))
 
 
 def test_missing_profile_names_the_flag() -> None:

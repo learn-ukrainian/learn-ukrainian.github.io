@@ -116,6 +116,7 @@ pytest_plugins = [
     "tests.helpers.checkout_write_defaults",
     "tests.cursor_process_guard",
     "tests.helpers.stress_fixtures",
+    "tests.helpers.reviewer_routing",
     "tests.data_store_fixtures",
 ]
 
