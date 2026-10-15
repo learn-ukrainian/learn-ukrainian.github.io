@@ -714,8 +714,13 @@ class _Heredoc:
     escaped: bool = False
 
 
-# The only admitted delimiter words: a plain word, or one quoted whole.
-_HEREDOC_DELIMITER = re.compile(rb"[A-Za-z_0-9]+|'[A-Za-z_0-9]+'|\"[A-Za-z_0-9]+\"|\\[A-Za-z_0-9]+")
+# The closed allowlist of delimiter words read as literal: an identifier, as origin/main's
+# guards define one (shell_shlex._HEREDOC_IDENTIFIER), bare, quoted whole or escaped.
+# Main finds no closer for any other spelling (a digit first, a hyphen, a dot, a
+# non-ASCII letter, an empty or mixed-quoted word) and its merge and admin guards read
+# the body as commands, so every other spelling refuses here, whatever Bash makes of it.
+_HEREDOC_IDENTIFIER = rb"[A-Za-z_][A-Za-z_0-9]*"
+_HEREDOC_DELIMITER = re.compile(rb"%s|'%s'|\"%s\"|\\%s" % ((_HEREDOC_IDENTIFIER,) * 4))
 _HEREDOC_TOKEN = "GUARD_HERE_"
 _WORD_END = (b"", b" ", b"\t", b"\n", b";", b"&", b"|", b"<", b">", b"(", b")")
 MAX_HEREDOCS = 64
@@ -928,8 +933,10 @@ def _neutralize_heredocs(encoded: bytes, tree, heredocs: dict[str, _Heredoc]) ->
     edits = []
     for opener in (node for node in openers if node.start_byte < line_end):
         operator = opener.prev_sibling
+        # The whole word Bash reads: only blanks before it, a word end after it.
         if (
             not _HEREDOC_DELIMITER.fullmatch(opener.text)
+            or encoded[operator.end_byte : opener.start_byte].strip(b" \t")
             or encoded[opener.end_byte : opener.end_byte + 1] not in _WORD_END
         ):
             raise ShellParseError("ambiguous heredoc delimiter")

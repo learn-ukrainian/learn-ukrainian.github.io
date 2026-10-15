@@ -525,6 +525,109 @@ def test_whole_quoted_and_plain_delimiters_are_not_escaped(opener) -> None:
     assert [row.argv for row in rows] == [["cat"]]
 
 
+# The review of 3c85a581 (review-10521-redo-3c85a581) found a quoted delimiter that
+# starts with a digit (`'9_Z'`) read as literal, while origin/main's merge and admin
+# guards find no closer for it and read the body as commands. Only an identifier, as
+# main's guards define one, bare, quoted whole or escaped, is a literal delimiter; any
+# other spelling refuses in every guard. Each pair is (opener, the closer Bash 5.3 uses).
+_OUTSIDE_THE_ALLOWLIST = [
+    # a digit first, quoted and unquoted
+    ("'9_Z'", "9_Z"), ('"9_Z"', "9_Z"), ("'9'", "9"), ('"9"', "9"), ("'123'", "123"), ('"123"', "123"),
+    ("'9Z'", "9Z"), ('"9Z"', "9Z"), ("'0_A'", "0_A"), ('"0_A"', "0_A"), ("9_Z", "9_Z"), ("9", "9"),
+    ("123", "123"), ("9Z", "9Z"), ("0_A", "0_A"), ("'9_'", "9_"), ("9_", "9_"), ("'0'", "0"), ('"0"', "0"),
+    ("'00'", "00"), ("0", "0"), ("'1EOF'", "1EOF"), ("1EOF", "1EOF"),
+    # escaped
+    ("\\9Z", "9Z"), ("\\9", "9"), ("\\0_A", "0_A"), ("\\\\A", "\\A"), ("\\E\\O\\F", "EOF"), ("\\-", "-"),
+    ("\\'A\\'", "'A'"),
+    # mixed quoting and concatenation
+    ("'9'Z", "9Z"), ('"A"B', "AB"), ("A\\B", "AB"), ("E\\OF", "EOF"), ("'A'B", "AB"), ("A'B'", "AB"),
+    ('A"B"', "AB"), ("'A'\"B\"", "AB"), ("'9'\"Z\"", "9Z"), ("9'Z'", "9Z"), ("'EO'F", "EOF"),
+    ("\"EO\"'F'", "EOF"), ("'A''B'", "AB"), ('"A""B"', "AB"), ("A\\'\\'", "A''"), ("'\\A'", "\\A"),
+    # $'...' and $"..."
+    ("$'EOF'", "EOF"), ('$"EOF"', "EOF"), ("$'9Z'", "9Z"), ("$'\\x45OF'", "EOF"), ("EO$'F'", "EOF"),
+    ("$'E'OF", "EOF"), ("$'A'", "A"), ('$"A"', "A"), ("$'_9'", "_9"),
+    # a hyphen, dot, space or non-ASCII character
+    ("A-B", "A-B"), ("'A-B'", "A-B"), ('"A-B"', "A-B"), ("A.B", "A.B"), ("'A.B'", "A.B"), ('"A.B"', "A.B"),
+    ("'a-'", "a-"), ("'-'", "-"), ("'.'", "."), ("'A B'", "A B"), ("'A\tB'", "A\tB"), ("É", "É"),
+    ("'É'", "É"), ('"É"', "É"), ("'é'", "é"), ("'ЕОФ'", "ЕОФ"), ("ЕОФ", "ЕОФ"), ("'Ⅸ'", "Ⅸ"),
+    ("'٩'", "٩"), ("'Ａ'", "Ａ"), ("Ａ", "Ａ"),
+    # empty
+    ("''", ""), ('""', ""),
+    # other shell characters
+    ("{A}", "{A}"), ("A}", "A}"), ("$A", "$A"), ("${A}", "${A}"), ("`A`", "`A`"), ("~A", "~A"),
+    ("A*", "A*"), ("A?", "A?"), ("[A]", "[A]"), ("!A", "!A"), ("%A", "%A"), ("A=B", "A=B"), ("A:B", "A:B"),
+    ("A,B", "A,B"), ("A@", "A@"), ("+A", "+A"), ("A/B", "A/B"), ("A$", "A$"),
+]  # fmt: skip
+# Identifiers main's guards admit too: a leading underscore is a letter there.
+_ALLOWLISTED = [
+    ("_X", "_X"), ("_", "_"), ("Z", "Z"), ("A9", "A9"), ("EOF1", "EOF1"), ("'_9'", "_9"), ('"_"', "_"),
+    ("'_1'", "_1"), ("'Z'", "Z"), ('"A9"', "A9"), ("\\_A", "_A"), ("\\EOF", "EOF"),
+]  # fmt: skip
+
+
+@pytest.mark.parametrize("opener,closer", _OUTSIDE_THE_ALLOWLIST)
+def test_delimiter_outside_the_allowlist_refuses(opener, closer) -> None:
+    with pytest.raises(shell_bash.ShellParseError):
+        shell_bash.read_commands(f"cat <<{opener}\nbody\n{closer}", allow_escaped_heredoc_delimiters=True)
+
+
+@pytest.mark.parametrize("opener,closer", _ALLOWLISTED)
+def test_allowlisted_delimiter_is_read(opener, closer) -> None:
+    _tree, heredocs = shell_bash._parse(f"cat <<{opener}\nbody\n{closer}")
+    (document,) = heredocs.values()
+    assert document.body == "body\n"
+    assert document.literal == (opener[0] in "'\"\\")
+
+
+def test_delimiter_allowlist_is_mains_identifier() -> None:
+    """The one definition admits exactly what origin/main's shell_shlex reads as a closer.
+
+    Main also reads `\\WORD` as ambiguous; the reader admits it with the identifier
+    rule and the escaped flag refuses it in the merge and admin guards.
+    """
+    import shell_shlex
+
+    def mains(word: str) -> bool:
+        whole = len(word) >= 3 and word[0] in "'\"" and word[-1] == word[0]
+        return bool(shell_shlex._HEREDOC_IDENTIFIER.fullmatch(word[1:-1] if whole else word))
+
+    words = {opener for opener, _closer in _OUTSIDE_THE_ALLOWLIST + _ALLOWLISTED}
+    words |= {f"{quote}{core}{quote}" for core in ("A", "_", "9", "A-B", "") for quote in ("", "'", '"')}
+    for word in words:
+        expected = mains(word[1:]) and word[1] not in "'\"" if word.startswith("\\") else mains(word)
+        assert bool(shell_bash._HEREDOC_DELIMITER.fullmatch(word.encode())) == expected, word
+
+
+@pytest.fixture(scope="module")
+def delimiter_report() -> dict:
+    cases = []
+    for opener, closer in _OUTSIDE_THE_ALLOWLIST + _ALLOWLISTED:
+        cases += [
+            ("merge", f"cat <<{opener}\n$({OPERATIONS['merge']})\n{closer}"),
+            ("admin", f"cat <<{opener}\n$({OPERATIONS['admin']})\n{closer}"),
+            ("branch", f"cat <<{opener}\n$({OPERATIONS['branch']})\n{closer}"),
+        ]
+    return _oracle_report(cases)
+
+
+def test_delimiter_outside_the_allowlist_refuses_in_every_guard(delimiter_report) -> None:
+    assert not _misses(delimiter_report)
+    outside = 3 * len(_OUTSIDE_THE_ALLOWLIST)
+    for hook, command, observation in delimiter_report["cases"][:outside]:
+        assert observation["blocked"], (hook, command, observation)
+
+
+def test_allowlisted_delimiters_keep_their_reading(delimiter_report) -> None:
+    outside = 3 * len(_OUTSIDE_THE_ALLOWLIST)
+    for hook, command, observation in delimiter_report["cases"][outside:]:
+        opener = command.split("\n", 1)[0].removeprefix("cat <<")
+        # An unquoted body runs its substitution; a quoted one is data; `\WORD` refuses in the merge guards.
+        executes = opener[0] not in "'\"\\"
+        assert observation["operation_executed"] == executes, (hook, command, observation)
+        refuses = executes or (opener[0] == "\\" and hook != "branch")
+        assert observation["blocked"] == refuses, (hook, command, observation)
+
+
 _CONTROL_ESCAPES = [
     "\\cG", "\\cA", "\\c[", "\\c?", "\\a", "\\b", "\\e", "\\E", "\\f", "\\n", "\\r", "\\t", "\\v",
     "\\x01", "\\x1f", "\\x7f", "\\001", "\\177", "\\u0007", "\\U0000001b",

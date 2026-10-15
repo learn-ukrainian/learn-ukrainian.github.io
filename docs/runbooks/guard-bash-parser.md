@@ -139,13 +139,24 @@ opaque body under a quoted unique delimiter:
   included. The delimiter line holds the word alone: a trailing space or CR
   does not end the body. An undelimited body refuses as a parse error, since a
   harness may append input.
-- Any quoting of the delimiter word (`'`, `"` or `\`) makes the body literal.
-  Other delimiter spellings, such as `$'...'` or partial quoting, refuse.
-  `<<\WORD` refuses in the merge and admin guards: origin/main's merge guards
+- A delimiter word is read only from a closed allowlist, defined once in
+  `_HEREDOC_DELIMITER`: an identifier as origin/main's guards define one
+  (`[A-Za-z_][A-Za-z_0-9]*`), bare, quoted whole (`'WORD'`, `"WORD"`) or
+  escaped (`\WORD`), with only blanks before it and a word end after it.
+  Quoting makes the body literal. Every other spelling refuses, whatever Bash
+  makes of it: a digit first (`'9_Z'`, `"123"`, `<<9`), a hyphen, dot, space or
+  non-ASCII character, an empty word, `$'...'`, `$"..."`, partial quoting or a
+  concatenation. Main finds no closer for those words, and its merge and admin
+  guards read the body as commands, so the reader never treats it as data.
+- `<<\WORD` refuses in the merge and admin guards: origin/main's merge guards
   read that body as commands and refuse an operation spelled there, so the
   reader refuses it unless the caller passes `allow_escaped_heredoc_delimiters`.
   Only the branch guard does, because origin/main's branch guard reads the body
-  as literal data, as Bash does.
+  as literal data, as Bash does. The merge and admin guards are stricter than
+  main here: main refuses only an operation the body spells as a command, while
+  these guards refuse any escaped body in a command that names the operation,
+  such as `gh pr create --body "$(cat <<\EOF ...)"` text that quotes
+  `gh pr merge 5 --admin`.
 - In an unquoted body a backslash quotes only `$`, a backquote and another
   backslash; quotes, `$'...'` and `$"..."` are plain text. Every `$(...)`,
   backquote, `${...}`, `$((...))` and parameter is read as the same words
@@ -169,7 +180,7 @@ with an `$'` span holding a NUL-valued escape, `\x{`, `\c`, `\u` or `\U` always
 reaches the reader; without the reader such a command blocks.
 `tests/test_guard_bash_decoding.py` compares these rules byte for byte with the
 installed Bash and replays generated cases through `bash_oracle`. The held-out
-corpus keeps its 350 frozen rows and appends 61 heredoc and decoded-word rows,
+corpus keeps its 350 frozen rows and appends 71 heredoc, delimiter and decoded-word rows,
 measured against the same frozen main SHA; class `decoded_word` carries their
 ruling attribution.
 
