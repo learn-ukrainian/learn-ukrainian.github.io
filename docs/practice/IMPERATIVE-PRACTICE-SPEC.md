@@ -159,7 +159,7 @@ The client and verification engine must normalize responses (`stripStressMarks`,
 3. **Scale Threshold**:
    - Generator must admit $\ge 1,000$ unique verb lemmas across all level shards (`practice/coverage_report.py`).
 4. **Automated Audits**:
-   - `scripts/audit/check_static_practice_assets.py` must hydrate and validate all `practice-imperative.*.json` shards.
+   - `scripts.practice_deck.io` prepares release-pinned shards explicitly before validation. `scripts/audit/check_static_practice_assets.py` only reads supplied assets. Required imperative shards are validated; an unavailable mode is reported as N/A without creating files or counters.
    - Unit tests in `tests/test_generate_practice_deck.py` assert schema validity, multi-key handling, and distractor correctness.
 
 ---
