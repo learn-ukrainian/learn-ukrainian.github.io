@@ -33,7 +33,7 @@ Check 1 is the pre-commit stage; checks 2 and 3 form the pytest stage. Importer-
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
-| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`), `test_slots_wait_timeout`, `test_slots_pool_unavailable`, `test_slots_invalid_configuration`, `test_slots_unavailable` (host test slots, below). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 
@@ -55,9 +55,19 @@ token within a short cleanup bound, so a detached child cannot stall or outlive 
 `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S`, `LU_PRE_PUSH_GATE_STAGE_BUDGET_S` and `LU_PRE_PUSH_GATE_RUN_BUDGET_S`
 can only shorten these.
 
-One predecessor's admission allowance (`ADMISSION_WAIT_S`) covers one complete gate run: the run budget
-plus the shadow and two cleanup bounds. The hard admission ceiling is ten of these. The auto-finalize push
-timeout in `scripts/delegate.py` reads both values from the gate.
+Before pytest starts, the gate takes host test slots from the pool worker pytest runs share
+(`scripts/common/test_slots.py`, #10662; see `docs/runbooks/test-slots.md`). It asks for the process
+count it would use, waits in the host's FIFO queue for at most `TEST_SLOT_WAIT_S` (one stage
+allowance; `LU_TEST_SLOTS_WAIT_S` can only shorten it), and passes `-n` equal to the slots held. The wait is
+recorded as `slot_wait_s` and in `test_slots` (status, requested, held, pool size, queue position).
+It spends neither the pytest stage allowance nor the run budget, and `execution_s` excludes it. A
+refusal is `validation_incomplete` with a `test_slots_*` reason before pytest starts. The gate loads the
+governor from its own checkout and refuses (`test_slots_unavailable`) when it cannot. `LU_TEST_SLOTS=off`,
+or a true `CI` variable, leaves the stage exactly as before.
+
+One predecessor's admission allowance (`ADMISSION_WAIT_S`) covers one complete gate run: the run budget,
+the longest test-slot wait, the shadow and two cleanup bounds. The hard admission ceiling is ten of these.
+The auto-finalize push timeout in `scripts/delegate.py` reads both values from the gate.
 
 Before joining the global queue, a caller joins a FIFO queue for its immutable outgoing head under
 `<git-common-dir>/lu-pre-push-gate/heads/<head>/`. Only that head's holder registers a global ticket.

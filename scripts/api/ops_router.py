@@ -1,4 +1,4 @@
-"""Ops surfaces — Sol PR-L retention latest plan (read-only)."""
+"""Ops surfaces — Sol PR-L retention latest plan and the host test-slot pool (read-only)."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ import logging
 from pathlib import Path
 
 from fastapi import APIRouter, Depends
+
+from scripts.common import test_slots
 
 from .entire_context_router import router as entire_context_router
 from .monitor_context import MonitorContext, get_ctx
@@ -72,3 +74,12 @@ async def retention_plan_dir(ctx: MonitorContext = Depends(get_ctx)) -> dict:
         ),
         "scheduled_apply_default": False,
     }
+
+
+@router.get("/v1/test-slots")
+def test_slots_status(_ctx: MonitorContext = Depends(get_ctx)) -> dict:
+    """Host test-slot pool (#10662): holders by task, the FIFO queue and wait times; never a path.
+
+    A plain ``def``: the status read touches files, so FastAPI runs it off the event loop.
+    """
+    return test_slots.status()

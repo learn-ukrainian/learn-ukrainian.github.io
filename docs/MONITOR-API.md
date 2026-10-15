@@ -3758,6 +3758,28 @@ feature truth independently. Their failure never changes
 `recall.available`, task disposition, or any canonical GitHub/Fleet/Monitor
 state. Cache age and `stale` are returned explicitly.
 
+## Host test slots — `/api/ops/v1/test-slots`
+
+`GET /api/ops/v1/test-slots` is the read-only view of the host test-slot pool that worker pytest runs and
+the pre-push gate share (#10662; runbook: [`docs/runbooks/test-slots.md`](runbooks/test-slots.md)). It
+returns the same object as `.venv/bin/python -m scripts.common.test_slots status --json`
+(schema `test-slots.status.v1`):
+
+- `enabled`, `pool_size`, `wait_timeout_s`, `location` (`default` or `override`), `pool_exists`;
+- `slots_in_use`, `slots_free`, `queue_depth`, `longest_wait_s`;
+- `holders`: `task_id`, `kind` (`gate`, `pytest` or `launcher`), `pid`, `requested`, `slots`, `held_s`,
+  `waited_s`;
+- `queue`, in FIFO order: `position`, `task_id`, `kind`, `pid`, `requested`, `waiting_s`;
+- `error`: `null`, or a typed `reason` and a path-free `detail`. A malformed setting or an unusable pool
+  still returns 200 with this field set.
+
+Liveness is `flock`, read live per request, so a crashed holder disappears at once. The response never
+names a path, and the route never creates or changes pool files.
+
+```bash
+curl -s http://localhost:8765/api/ops/v1/test-slots | python3 -m json.tool
+```
+
 ---
 
 ## Atlas VPS Job Protocol — `/api/atlas-jobs`

@@ -1361,13 +1361,15 @@ def _hermetic_dispatch_admission_host(monkeypatch):
     or developer box must not refuse the write dispatches other tests make.
     Admission tests monkeypatch ``probe_host`` themselves. The shared
     ``lu.slice`` pool is not read unless a test sets ``LU_SLICE_CGROUP`` to a
-    fake cgroup (#9975).
+    fake cgroup (#9975), and the host test-slot queue is not read unless a test
+    sets ``LU_TEST_SLOTS_DIR`` to a private pool (#10662).
     """
     for name in (
         "DISPATCH_MAX_LIVE_WRITE_WORKERS",
         "DISPATCH_MIN_MEM_AVAILABLE_GIB",
         "DISPATCH_MAX_LOAD_PER_CPU",
         "DISPATCH_WORKER_MEM_RESERVE_GIB",
+        "DISPATCH_MAX_TEST_SLOT_QUEUE",
         "LU_SLICE_CGROUP",
     ):
         monkeypatch.delenv(name, raising=False)
@@ -1805,7 +1807,9 @@ def _isolate_runtime_scratch_root(
         for module in list(sys.modules.values()):
             if module is None or module is scratch:
                 continue
-            if getattr(module, "DEFAULT_SCRATCH_ROOT", None) is real_default:
+            # A self-contained copy of the default (scripts/common/test_slots.py) is an equal path, not the same object.
+            value = getattr(module, "DEFAULT_SCRATCH_ROOT", None)
+            if isinstance(value, Path) and value == real_default:
                 monkeypatch.setattr(module, "DEFAULT_SCRATCH_ROOT", fake_root)
         return fake_root
 

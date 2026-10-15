@@ -958,7 +958,7 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     assert capsys.readouterr().out.splitlines()[-1] == (
         "admission (write dispatch): would admit now | live write workers 1/2, "
         "MemAvailable 64.0 GiB (floor 8.5 GiB), load 0.00 per CPU (limit 1.00), "
-        "lu.slice pool check skipped (test host); "
+        "lu.slice pool check skipped (test host), test-slot queue check skipped (test host); "
         "1 record(s) dead pid, not counted: gone"
     )
 

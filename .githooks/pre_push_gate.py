@@ -15,6 +15,11 @@ A run that cannot finish (admission wait, time budget, tooling error) is
 driver decides, and nothing is retried or reported green.  Importer-closure
 selection runs afterwards in shadow only; it is recorded and never blocks.
 
+Before pytest starts, the gate takes host test slots from the pool worker pytest runs share
+(``scripts/common/test_slots.py``, #10662) and runs no more test processes than it holds. The wait
+for slots is bounded, recorded apart as ``slot_wait_s``, and spends neither the stage allowance nor
+the run budget.
+
 Receipts are bound to the commit, its tree, the range, the registry digest and
 the gate version, and are ignored once the tree is dirty or any of those
 change.  ``git push --no-verify`` remains the explicit operator bypass.
@@ -46,7 +51,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 5  # 5: per-stage execution allowances (#10642)
+GATE_VERSION = 6  # 6: host test slots for the pytest stage (#10662)
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -60,7 +65,12 @@ STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 SHADOW_BUDGET_S = 120.0
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
-ADMISSION_WAIT_S = RUN_BUDGET_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
+# The host test-slot governor (#10662), loaded by path from this gate's own checkout: it is stdlib-only.
+TEST_SLOTS_MODULE = "scripts/common/test_slots.py"
+# The longest wait for host test slots before pytest. It spends neither the stage allowance nor the run
+# budget; LU_TEST_SLOTS_WAIT_S can only shorten it.
+TEST_SLOT_WAIT_S = STAGE_BUDGET_S
+ADMISSION_WAIT_S = RUN_BUDGET_S + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
 # Each predecessor gets one complete gate allowance. The ceiling of ten allowances covers a burst of
 # ten predecessors, while bounding overload or a stuck holder. Environment overrides only shorten it.
 ADMISSION_MAX_WAIT_S = 10 * ADMISSION_WAIT_S
@@ -708,7 +718,9 @@ class ResourceScope:
         self, plan: Plan, config: str, deadline: float, event: dict[str, object], *, stage_budget_s: float
     ) -> None:
         assert self.stream is not None and self.channel is not None
-        self.channel.settimeout(max(0.01, deadline - time.monotonic()) + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S)
+        self.channel.settimeout(
+            max(0.01, deadline - time.monotonic()) + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
+        )
         packet = {
             "plan": {name: value for name, value in vars(plan).items() if name != "node_ids"},
             "root": str(self.root),
@@ -1054,12 +1066,19 @@ def terminate_run(process: subprocess.Popen[str], token: str) -> bool:
 
 
 def run_bounded(
-    command: list[str], *, cwd: Path, deadline: float, label: str, diagnostics: dict[str, object] | None = None
+    command: list[str],
+    *,
+    cwd: Path,
+    deadline: float,
+    label: str,
+    diagnostics: dict[str, object] | None = None,
+    extra_env: dict[str, str] | None = None,
 ) -> tuple[int, str]:
     """Run in its own process group; on budget exhaustion kill the group and report incomplete.
 
     Output goes to a file, never a pipe, so a descendant that outlives the command cannot block the
     gate on a pipe it still holds.  Every exit path then kills the run's leftover descendants.
+    ``extra_env`` adds variables to the cleaned environment, such as the test-slot holder marker.
     """
     remaining = deadline - time.monotonic()
     if remaining <= 0:
@@ -1069,7 +1088,7 @@ def run_bounded(
             "validation_incomplete", f"{label}: time budget exhausted before start (timeout)", incomplete=True
         )
     token = uuid.uuid4().hex
-    environment = {**clean_environment(), RUN_TOKEN_ENV: token}
+    environment = {**clean_environment(), **(extra_env or {}), RUN_TOKEN_ENV: token}
     if diagnostics is not None:
         diagnostics["child_unavailable_reason"] = "output_file_unavailable"
     with tempfile.TemporaryFile() as sink:
@@ -1201,9 +1220,11 @@ def test_process_limit() -> int:
         ) from None
 
 
-def parallel_options(dist: str = "loadfile") -> list[str]:
-    """Use configured parallelism when available, scheduled by xdist mode ``dist``."""
+def parallel_options(dist: str = "loadfile", cap: int | None = None) -> list[str]:
+    """Use configured parallelism when available, scheduled by xdist mode ``dist``, at most ``cap`` processes."""
     limit = test_process_limit()
+    if cap is not None:
+        limit = min(limit, cap)
     if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
     if os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip():
@@ -1459,6 +1480,72 @@ def own_base_temp(parent: Path):
         os.close(parent_fd)
 
 
+def load_test_slots(path: Path | None = None):
+    """Import the self-contained host test-slot governor from this gate's checkout; refuse when it cannot.
+
+    The governor's directory is appended to ``sys.path`` only for the import, so the standard library and
+    installed packages keep every name, and the imported file must be the expected one.
+    """
+    path = (path or Path(__file__).resolve().parents[1] / TEST_SLOTS_MODULE).resolve()
+    directory = str(path.parent)
+    sys.path.append(directory)
+    try:
+        import test_slots as governor
+    except Exception as error:  # any load failure is a typed refusal, never a crash or an ungoverned run
+        raise GateOutcome(
+            "test_slots_unavailable",
+            f"the host test-slot governor cannot be loaded ({type(error).__name__})",
+            incomplete=True,
+        ) from error
+    finally:
+        sys.path.pop()  # the governor adds no path entries, so the last one is the entry appended above
+    if Path(governor.__file__).resolve() != path:
+        raise GateOutcome(
+            "test_slots_unavailable", "another test_slots module shadows the host test-slot governor", incomplete=True
+        )
+    return governor
+
+
+def acquire_pytest_slots(plan: Plan, event: dict[str, object]) -> tuple[object | None, float]:
+    """Hold host test slots for the pytest stage; return the hold and the wait on this gate's clock.
+
+    The wait is recorded apart (``slot_wait_s``) so neither budget pays for it. A disabled pool changes
+    nothing; a gate nested in a holder runs inside its holder's slots; a refusal is typed and incomplete.
+    """
+    record: dict[str, object] = {
+        "status": "not_needed",
+        "requested": None,
+        "held": None,
+        "pool_size": None,
+        "wait_s": 0.0,
+        "queue_position": None,
+    }
+    event.update(test_slots=record, slot_wait_s=0.0)
+    if not plan.node_ids:
+        return None, 0.0
+    governor = load_test_slots()
+    options = parallel_options()
+    record["requested"] = requested = int(options[1]) if options else 1
+    try:
+        if not governor.enabled():
+            record["status"] = "disabled"
+            return None, 0.0
+        inherited = governor.inherited_hold()
+        if inherited is not None:
+            record.update(status="inherited", held=inherited)
+            return governor.Hold.inherited(inherited), 0.0
+        limit = min(governor.wait_timeout(), TEST_SLOT_WAIT_S)
+        started = time.monotonic()
+        try:
+            hold = governor.acquire(requested, kind="gate", wait_s=limit)
+        finally:
+            record["wait_s"] = event["slot_wait_s"] = time.monotonic() - started
+    except governor.SlotError as error:
+        raise GateOutcome(f"test_slots_{error.reason}", str(error), incomplete=True) from None
+    record.update(status="held", held=hold.count, pool_size=hold.pool_size, queue_position=hold.queue_position)
+    return hold, record["wait_s"]
+
+
 def run_pytest_stage(
     plan: Plan,
     root: Path,
@@ -1467,6 +1554,7 @@ def run_pytest_stage(
     *,
     diagnostics: dict[str, object] | None = None,
     admission: Admission | None = None,
+    slots: object | None = None,
 ) -> str:
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
@@ -1487,7 +1575,10 @@ def run_pytest_stage(
     if not plan.node_ids:
         return "no tests selected"
     invocations = pytest_invocations(plan)
-    options = parallel_options()
+    # Never more test processes than the host test slots held (#10662).
+    cap = slots.count if slots is not None else None
+    slot_environment = slots.environment() if slots is not None else None
+    options = parallel_options(cap=cap)
     if diagnostics is not None:
         diagnostics.update(
             requested_test_processes=test_process_limit(),
@@ -1512,12 +1603,13 @@ def run_pytest_stage(
                     "no:cacheprovider",
                     "--basetemp",
                     base_temp,
-                    *parallel_options(dist),
+                    *parallel_options(dist, cap=cap),
                 ],
                 cwd=root,
                 deadline=deadline,
                 label="pytest stage",
                 diagnostics=diagnostics,
+                extra_env=slot_environment,
             )
         failing = failing_node_ids(output)
         if code == 0:
@@ -1619,8 +1711,8 @@ def tail(output: str, lines: int = 40) -> str:
 class Budget:
     """Push execution budget: a total shared by every ref update, plus each stage's own allowance.
 
-    The total starts at admission and excludes later admission waits. Each blocking stage's allowance
-    starts when that stage starts and stays inside the total (#10642).
+    The total starts at admission and excludes later admission waits and host test-slot waits. Each
+    blocking stage's allowance starts when that stage starts and stays inside the total (#10642).
     """
 
     def __init__(self, seconds: float, stage_seconds: float = STAGE_BUDGET_S):
@@ -1642,9 +1734,13 @@ class Budget:
         return self._deadline
 
     def after_admission(self, waited: float) -> float:
+        self.exclude_wait(waited)
+        return self.deadline
+
+    def exclude_wait(self, waited: float) -> None:
+        """Time spent waiting (admission, host test slots) never spends the run budget."""
         if self._deadline is not None:
             self._deadline += waited
-        return self.deadline
 
 
 @contextlib.contextmanager
@@ -1713,15 +1809,21 @@ def execute_stages(
                 stage_deadline(deadline, stage_budget_s, diagnostics),
                 diagnostics=diagnostics,
             )
-        with stage_measurement(event, "pytest") as diagnostics:
-            event["pytest"] = run_pytest_stage(
-                plan,
-                root,
-                launcher,
-                stage_deadline(deadline, stage_budget_s, diagnostics),
-                diagnostics=diagnostics,
-                admission=admission,
-            )
+        slots, slot_wait = acquire_pytest_slots(plan, event)
+        try:
+            with stage_measurement(event, "pytest") as diagnostics:
+                event["pytest"] = run_pytest_stage(
+                    plan,
+                    root,
+                    launcher,
+                    stage_deadline(deadline + slot_wait, stage_budget_s, diagnostics),
+                    diagnostics=diagnostics,
+                    admission=admission,
+                    slots=slots,
+                )
+        finally:
+            if slots is not None:
+                slots.release()
         if persist_receipt:
             try:
                 write_receipt(state, plan, time.time())
@@ -1826,6 +1928,7 @@ def validate(
                     stage_budget_s=budget.stage_seconds,
                     admission=admitted,
                 )
+            budget.exclude_wait(float(event.get("slot_wait_s") or 0.0))  # later ref updates keep it too
     except GateOutcome:
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
@@ -2014,6 +2117,8 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             "peak_memory_unknown_reason": "no_supported_scope",
             "admission_wait_s": 0.0,
             "queue_wait_s": 0.0,
+            "slot_wait_s": 0.0,
+            "test_slots": None,
             "scope_setup_s": 0.0,
             "resources_at_admission": None,
             "begin_durable": False,
@@ -2041,7 +2146,7 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         event["duration_s"] = round(time.monotonic() - started, 2)
         times = event_times[event["attempt_id"]]
         elapsed = (times[1] if len(times) > 1 else time.monotonic()) - times[0]
-        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0))
+        event["execution_s"] = max(0.0, elapsed - event.get("admission_wait_s", 0.0) - event.get("slot_wait_s", 0.0))
         event["phase"] = "TERMINAL"
         pytest_stage = event.get("stages", {}).get("pytest", {})
         event["effective_test_processes"] = pytest_stage.get("effective_test_processes")

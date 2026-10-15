@@ -115,6 +115,20 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "keep as a non-authoritative locator and observability surface",
     ),
     RouteContract(
+        "/api/ops/v1/test-slots",
+        "exact",
+        "http",
+        "Host test-slot pool (#10662): slots in use, holders by task, the FIFO queue with positions, and wait times.",
+        "This host's private test-slot pool directory: flock-live holder records and queue tickets "
+        "(scripts/common/test_slots.py).",
+        "Read live per request; flock decides liveness, so a crashed holder disappears at once. No cache.",
+        ("operators", "dispatch", "agents"),
+        "Same data as `python -m scripts.common.test_slots status --json`; dispatch admission reads the queue depth.",
+        "low; read-only and path-free",
+        "keep",
+        response_schema_version="test-slots.status.v1",
+    ),
+    RouteContract(
         "/api/contracts/routes",
         "exact",
         "http",

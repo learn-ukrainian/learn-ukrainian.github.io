@@ -952,6 +952,19 @@ the primary checkout's interpreter, source DB and deck dir via an exported
 `PRIMARY_REPO` (`run --help` prints the copyable form). Full contract and the Atlas
 410k invocation: `docs/runbooks/worktree-cleanup.md` § Task-owned scratch.
 
+### Host test slots (#10662)
+
+```bash
+# run a multi-process test command inside host test slots (caps -n at the slots held)
+.venv/bin/python -m scripts.common.test_slots run -- .venv/bin/python -m pytest -n 4 -q tests/x.py
+# who holds slots and who waits, by task (same data: GET /api/ops/v1/test-slots)
+.venv/bin/python -m scripts.common.test_slots status [--json]
+```
+
+Dispatch-worker pytest runs and the pre-push gate already hold slots, so they need no wrapper. A
+waiting run prints `TEST SLOTS: waiting ... queue position N/M`. Settings, refusals and the
+long-queue procedure: `docs/runbooks/test-slots.md`.
+
 ### Build pipeline entry point
 
 `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree` is the single end-to-end build entry point. It drives the write -> enrich -> review -> audit -> publish chain.

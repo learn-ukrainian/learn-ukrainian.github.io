@@ -20,6 +20,13 @@ pyyaml, as the rules-deployment-check lane builds), the fan-out cap is a no-op:
 xdist is the only thing that fans a run out, so it also owns the ``-n``/``--tx``
 options this plugin clamps. The full-suite lock does not depend on xdist and
 still applies.
+
+A dispatch run also holds host test slots for its whole session (#10662): it
+asks ``scripts/common/test_slots.py`` for its process count (its xdist workers
+after the cap, or one), waits in the host's FIFO queue with progress lines, and
+starts no more workers than the slots it holds. ``LU_TEST_SLOTS=off`` and a
+true ``CI`` variable disable this. Runs nested inside a holder, ``--collect-only``,
+``--help`` and other runs that execute no test take no slots.
 """
 
 from __future__ import annotations
@@ -45,6 +52,10 @@ CAP_LINE = f"dispatch xdist cap: maxprocesses={MAX_PROCESSES}"
 TX_TOO_MANY = "dispatch xdist cap: --tx specifies {count} workers; at most {max} are allowed"
 _LOCK_ATTR = "_lu_dispatch_full_suite_lock_fd"
 _CLAMP_ATTR = "_lu_dispatch_cap_clamped"
+_SLOTS_ATTR = "_lu_test_slots_hold"
+_SLOTS_PRIOR_MARKER_ATTR = "_lu_test_slots_prior_marker"
+# Informational runs execute no test, so they never queue for slots.
+_NO_TEST_OPTIONS = ("help", "version", "showfixtures", "show_fixtures_per_test", "markers")
 
 _lock_fd: int | None = None
 
@@ -287,6 +298,68 @@ def _reject_oversized_tx(early_config: pytest.Config) -> None:
         raise pytest.UsageError(TX_TOO_MANY.format(count=count, max=MAX_PROCESSES))
 
 
+def _test_slots():
+    """The host test-slot governor, from the repository root or, like this plugin, from ``scripts/``."""
+    try:
+        from scripts.common import test_slots
+    except ImportError:
+        from common import test_slots  # type: ignore[no-redef]
+    return test_slots
+
+
+def requested_test_processes(config: pytest.Config) -> int:
+    """Processes this run starts: its xdist workers after the dispatch cap, otherwise one."""
+    if not xdist_available():
+        return 1
+    option = config.option
+    numprocesses = getattr(option, "numprocesses", None)
+    cap = int(getattr(option, "maxprocesses", None) or MAX_PROCESSES)
+    if numprocesses in ("auto", "logical"):
+        return cap
+    if isinstance(numprocesses, int) and numprocesses > 0:
+        return min(numprocesses, cap)
+    tx = list(getattr(option, "tx", None) or [])
+    return max(1, min(tx_spec_worker_count(tx), cap)) if tx else 1
+
+
+def _acquire_test_slots(config: pytest.Config) -> None:
+    """Hold host test slots for this session and start no more xdist workers than it holds."""
+    if collection_only(config) or any(getattr(config.option, name, False) for name in _NO_TEST_OPTIONS):
+        return
+    slots = _test_slots()
+    try:
+        if not slots.enabled() or slots.inherited_hold() is not None:
+            return
+        hold = slots.acquire(requested_test_processes(config), kind="pytest")
+    except slots.SlotError as error:
+        raise pytest.UsageError(str(error)) from None
+    setattr(config, _SLOTS_ATTR, hold)
+    setattr(config, _SLOTS_PRIOR_MARKER_ATTR, os.environ.get(slots.HOLDER_ENV))
+    # Workers and nested runs inherit the marker and run inside these slots instead of queueing.
+    os.environ.update(hold.environment())
+    option = config.option
+    if getattr(option, "numprocesses", None):
+        option.maxprocesses = min(int(getattr(option, "maxprocesses", None) or hold.count), hold.count)
+    elif len(list(getattr(option, "tx", None) or [])) > hold.count:
+        option.tx = list(option.tx)[: hold.count]
+    if hold.waited >= 1.0:
+        print(f"TEST SLOTS: holding {hold.count} of {hold.pool_size} slot(s) after {hold.waited:.1f}s", flush=True)
+
+
+def _release_test_slots(config: pytest.Config) -> None:
+    hold = getattr(config, _SLOTS_ATTR, None)
+    if hold is None:
+        return
+    setattr(config, _SLOTS_ATTR, None)
+    holder_env = _test_slots().HOLDER_ENV
+    prior = getattr(config, _SLOTS_PRIOR_MARKER_ATTR, None)
+    if prior is None:
+        os.environ.pop(holder_env, None)
+    else:
+        os.environ[holder_env] = prior
+    hold.release()
+
+
 def pytest_load_initial_conftests(early_config: pytest.Config, parser: pytest.Parser, args: list[str]) -> None:
     del parser, args
     _reject_oversized_tx(early_config)
@@ -314,6 +387,8 @@ def pytest_cmdline_main(config: pytest.Config) -> Generator[None, object, object
         _arm_maxprocesses(config)
     if armed and is_full_suite(config) and not collection_only(config):
         _acquire_for_config(config)
+    if armed:
+        _acquire_test_slots(config)
     result = yield
     if cap_armed:
         _shrink_tx(config)
@@ -331,4 +406,5 @@ def pytest_sessionstart(session: pytest.Session) -> None:
 
 
 def pytest_unconfigure(config: pytest.Config) -> None:
+    _release_test_slots(config)
     _release_for_config(config)
