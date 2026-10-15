@@ -135,6 +135,24 @@ track-completion ledger.
    `BLOCK`, `REVISE`, or `INCOMPLETE`; it is a review outcome, not a tool crash.
 9. Verify `git status --short` is unchanged from before the invocation.
 
+## Review rules (#10665)
+
+`agents_extensions/shared/rules/ukrainian-linguistics.md` §8 binds this review. The
+versioned protocol carries it as follows; this section changes no protocol version.
+
+- Every learner-visible line of the module is text under review, so every sourced
+  Ukrainian error in it blocks completion. The semantic prompt makes false teaching and
+  contradicted facts blockers and caps a Russianism or calque dimension at `6.0` (BLOCK
+  band); `PASS` admits only low/info findings, and a Ukrainian error is never polish.
+- Findings carry their error class as `issue_id`, one located finding per occurrence;
+  report them grouped by class.
+- Missing source support or unavailable tools yield `INCOMPLETE`, this protocol's
+  INCONCLUSIVE: it blocks like `BLOCK` and `REVISE`. `PASS` may carry the low/info
+  improvement backlog only.
+- When reading a result back, a low or info finding that records a Ukrainian error in
+  learner text is a protocol defect: never report that result as clean, and report the
+  defect through the bug-fix workflow in `docs/runbooks/post-build-review.md`.
+
 ## Canonical resources
 
 - Deterministic contract: [contracts/deterministic-audit-contract.md](contracts/deterministic-audit-contract.md)

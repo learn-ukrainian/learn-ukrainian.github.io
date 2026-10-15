@@ -47,8 +47,10 @@ fail-open, but the classification duty is mandatory. Canonical contract and exam
 Every open GH issue belongs to **exactly one stream epic** — registry:
 `scripts/config/issue_streams.yaml` (table: `docs/WORKSTREAMS.md` § Streams). Your work
 queue is YOUR stream's epic, not the global issue list. Link every issue you create to
-its stream epic AT CREATION (native sub-issue preferred). `Fixes #N` auto-close eats
-remaining scope — split remainders into a new linked issue FIRST. Orphans are flagged at
+its stream epic AT CREATION (native sub-issue preferred), after a duplicate search by
+symptom and affected file. `Fixes #N` auto-close eats remaining scope — use `Refs #N`, or
+move the remaining criteria FIRST (open parent with the same outcome, else a new linked
+issue). Orphans are flagged at
 every agent cold start (session-setup 11b) and at `GET /api/issues/streams`. Full
 protocol: `agents_extensions/shared/rules/workflow.md` § Work intake (served at
 `/api/rules`).

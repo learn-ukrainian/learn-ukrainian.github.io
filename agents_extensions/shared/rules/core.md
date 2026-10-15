@@ -163,7 +163,7 @@ The repo is public and Ukraine is at war with Russia; the enemy reads it too.
 
 ## Load when
 
-- Any repo change: `critical-rules.md` §8, `delegate-must-use-worktree.md`, `workflow.md`.
+- Any repo change or new issue: `critical-rules.md` §8, `delegate-must-use-worktree.md`, `workflow.md`.
 - Review, merge, cleanup: `drive-epic/references/review-merge-cleanup.md`, `docs/runbooks/worktree-cleanup.md`.
 - DoR, DoD, residual: `docs/best-practices/task-quality.md`, `shared/contracts/task-lifecycle-closeout.md`.
 - Routing, capacity: `model-assignment.md`, `fleet-driver-routing.md`, `drive-epic/references/routing-and-dispatch.md`.

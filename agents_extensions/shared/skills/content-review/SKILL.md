@@ -37,6 +37,9 @@ If a track + sequence is given, find the slug by reading plan files to match `se
 ## Execute
 
 Read and follow the full content review prompt at [content-review-prompt.md](content-review-prompt.md).
+Its review rules (#10665) apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8:
+every sourced Ukrainian error blocks (grade F), one finding per error class lists every
+occurrence, and an unsourced blocker is INCONCLUSIVE, which still blocks.
 
 **Output path**: Save the review to `curriculum/l2-uk-en/{track}/audit/{slug}-content-review.md`
 

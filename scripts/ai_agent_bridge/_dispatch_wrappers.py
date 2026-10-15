@@ -47,7 +47,16 @@ REVIEW_DEEP_INSTRUCTIONS = (
     "Adversarial review. Find logical bugs, security issues, contradictions, "
     "missing tests, dead code, performance footguns. Cite file:line. Be terse "
     "but complete. Do NOT propose stylistic preferences. Output: structured "
-    "`## Findings` markdown."
+    "`## Findings` markdown. Report one finding per input class with a "
+    "reproducer, not one spelling at a time. Give each finding a disposition "
+    "from the local-code-review checklist Step 5: in_scope_blocker (violates "
+    "the change's stated contract, or an existing invariant on a path it "
+    "introduces, modifies or newly exposes, or regresses main), follow_up "
+    "(pre-existing off-path defect, wording, P2/P3, unless material) or "
+    "stop_and_escalate (material contract ambiguity). Each blocker states the "
+    "reproducible failure, its impact and the required corrected behaviour. "
+    "APPROVED may carry tracked follow-ups; a missing required capability is "
+    "BLOCKED, naming that capability (#10665)."
 )
 
 
@@ -514,7 +523,11 @@ _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
 _REVIEW_VERDICT_OUTPUT = (
     "Review completion requires your own plain, unfenced verdict line: "
     "the label VERDICT, a colon, then one accepted token. "
-    f"Accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}."
+    f"Accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}. "
+    # #10665: proportional verdicts; INCONCLUSIVE maps onto the existing BLOCKED token.
+    "An approval may carry tracked non-blocking follow-ups. A review that lacks a capability "
+    "its brief requires (shell, diff access, hashing, sources tools) is inconclusive: give the "
+    "BLOCKED token and name the missing capability."
 )
 
 _NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract

@@ -72,6 +72,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "review_risk": str | null,  # code review resolver risk; budget substitution needs author + risk
         "review_profile": str | null,  # code (default) or ukrainian
         "review_language_lane": bool,  # dispatch's Ukrainian content classification
+        "review_brief_warnings": [str] | absent,  # advisory brief checks, e.g. review_brief_no_dispositions (#10665)
         "sources_mcp_call_count": int | null,  # runtime evidence; null means unknown
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
@@ -2872,6 +2873,40 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
         "❌ write-shaped prompt cannot run with --mode read-only. "
         "Re-run with --mode workspace-write --worktree for repository edits "
         "(or --mode danger --worktree only when its extra permissions are required)."
+    )
+
+
+# #10665: a review brief freezes what blocks and what becomes a follow-up. A brief without
+# a disposition section is still dispatched; it gets this typed warning on stderr and in
+# the task record's ``review_brief_warnings``.
+REVIEW_BRIEF_NO_DISPOSITIONS = "review_brief_no_dispositions"
+_DISPOSITION_HEADING_RE = re.compile(r"^[ \t]{0,3}#{1,6}[ \t]+.*\bdispositions?\b", re.IGNORECASE | re.MULTILINE)
+
+
+def _review_brief_warnings(args: argparse.Namespace, prompt: str) -> list[str]:
+    """Typed warnings for a review-typed dispatch's own prompt; empty when none apply (#10665).
+
+    ``prompt`` is the brief as given (``--prompt``, stdin or ``--prompt-file``), before
+    delegate appends its blocks. It needs a Markdown heading naming its dispositions,
+    such as ``## Dispositions``. Fenced and blockquoted text is data, as in the
+    write-shape scan, so a quoted brief under critique does not count. A formal
+    ``--review-attempt`` prompt is exempt: its rendered template fixes the severities
+    and the validator computes the verdict.
+    """
+    if not _dispatch_is_review_typed(args) or getattr(args, "review_attempt", None):
+        return []
+    if _DISPOSITION_HEADING_RE.search(_strip_quoted_content(prompt)):
+        return []
+    return [REVIEW_BRIEF_NO_DISPOSITIONS]
+
+
+def _review_brief_warning_line(code: str) -> str:
+    """The stderr line for one ``_review_brief_warnings`` code; dispatch continues."""
+    return (
+        f"⚠ {code}: this review brief has no disposition section. Add a '## Dispositions' heading "
+        "that freezes what blocks (in_scope_blocker), what is a follow-up (follow_up) and what "
+        "escalates (stop_and_escalate); template: drive-epic references/review-merge-cleanup.md §6 "
+        "(#10665). Dispatch continues."
     )
 
 
@@ -13167,6 +13202,11 @@ def _dispatch(
         print(write_intent_error, file=sys.stderr)
         return 2
 
+    # Advisory only (#10665): checked on the brief as given, never refusing the dispatch.
+    review_brief_warnings = _review_brief_warnings(args, prompt)
+    for code in review_brief_warnings:
+        print(_review_brief_warning_line(code), file=sys.stderr)
+
     try:
         lifecycle_carrier, lifecycle_prompt = _load_task_lifecycle_carrier(getattr(args, "lifecycle_file", None))
     except (OSError, ValueError) as exc:
@@ -13696,6 +13736,8 @@ def _dispatch(
                 dry_run_state["mechanical_task"] = mechanical_task
             if routing.budget_diagnostics:
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
+            if review_brief_warnings:
+                dry_run_state["review_brief_warnings"] = review_brief_warnings
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
             dry_run_state.update(_claude_account_state(args, dispatch_agent))
@@ -14216,6 +14258,8 @@ def _dispatch(
         }
         if routing.budget_diagnostics:
             initial_state["routing_facts"] = routing.budget_diagnostics
+        if review_brief_warnings:
+            initial_state["review_brief_warnings"] = review_brief_warnings
         if getattr(args, "review_mode", "cross_family") == "red_team":
             initial_state["review_mode"] = "red_team"
             initial_state["review_branch_facts"] = args._red_team_branch_facts

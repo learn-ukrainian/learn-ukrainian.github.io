@@ -64,6 +64,14 @@ you exactly what to reason about yourself. Do not re-run test suites that the
 PR's CI runs; review the diff, run at most the specific tests that reproduce
 a finding you are checking, and cite CI run ids for suite results.
 
+The review rules bind every round (#10665): the round-1 brief freezes the
+outcome, the threat and input model and the dispositions (checklist Step 2);
+findings are one per input class, each with a reproducer (Step 4); blocking
+follows the stated contract, existing invariants on the change's paths and
+regressions against main, verdicts are proportional, and a missing required
+capability is INCONCLUSIVE, which still blocks (Step 5); the breakers are
+unchanged (Step 6).
+
 ## Output
 
 Print a structured report to the conversation (the checklist's Step 8 gives

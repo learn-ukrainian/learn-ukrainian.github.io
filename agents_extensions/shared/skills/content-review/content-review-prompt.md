@@ -133,7 +133,7 @@ Read the activities YAML and check:
 **Mode:** core / folk / history / biography / literary / oes-ruth
 **Tier:** 1-beginner / 2-core / 3-seminar / 4-advanced
 **Pipeline:** PASS (words: X, target: Y)
-**Verdict:** A / B / C / F
+**Verdict:** A / B / C / F / INCONCLUSIVE
 
 ## Plan Adherence
 | Objective | Covered? | Section | Notes |
@@ -197,5 +197,22 @@ Read the activities YAML and check:
 **Auto-fail triggers (immediate F):**
 - Any CRITICAL issue
 - Missing >2 plan objectives
-- >3 Russianisms or ghost words
+- Any sourced Ukrainian language error (see the review rules below)
 - Lesson Quality Score <= 5
+
+### Review rules (#10665, binding)
+
+These apply `agents_extensions/shared/rules/ukrainian-linguistics.md` §8 to this review.
+Every learner-visible line of a built module is text under review.
+
+- **Ukrainian errors block.** A sourced Ukrainian error anywhere in the module (prose,
+  examples, tables, activities and their answers, vocabulary) is **CRITICAL**, whatever
+  severity a check above names: form, stress, agreement, Russianism or calque, register,
+  fact or source. One such error makes the grade F. It is never a follow-up.
+- **One row per error class** in Linguistic Accuracy, listing every occurrence with its
+  location, the source-verified correction and the tool that proves it.
+- **Unsourced is INCONCLUSIVE.** A suspected error you cannot source after the tool
+  escalation is reported as INCONCLUSIVE instead of a grade; it blocks like F until it is
+  re-checked with the tools. A `check_russian_shadow` hit alone is a suspicion.
+- **Pedagogy** blocks (CRITICAL or HIGH) only when the content contradicts the plan;
+  preferences are MEDIUM or LOW follow-ups. Grades A and B may carry tracked follow-ups.

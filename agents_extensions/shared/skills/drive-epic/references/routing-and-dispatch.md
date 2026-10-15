@@ -140,6 +140,20 @@ quoted raw evidence). Classify the task and pass the research flags
 repeatable `--owned-path <path>` for the paths the worker may commit: auto-finalize commits
 only under them and commits nothing without them (#8991). Stagger same-lane spawns ~10s.
 
+**Security-code briefs (#10665).** An author brief for security code (hooks, launchers,
+credentials, admission, sandbox, guards) states the trust boundary, the allowed inputs, the
+refusal behaviour and the attack classes in scope. The default design is fail-closed: an
+allowlist of known-good forms, with everything else refused; a design that is not an
+allowlist says why. The author ships the entry-point matrix, one reproducer per class and the
+untested boundaries that the review brief freezes
+([review-merge-cleanup](review-merge-cleanup.md) §6). Where compatibility with real Bash or a
+real CLI is intended, the author's attack-class tests use the real tool as the oracle, with
+its version pinned, and run under the host-wide test-run governor (#10662) once it exists.
+Reviewers keep their own independent adversarial cases; the author's matrix does not replace
+review. After the second rejected review round the author stops and the driver takes a design
+decision, consulting an advisor when needed; a rewrite is not mandatory. A contested decision
+or a fragile or high-risk fix escalates per the rules core P6.
+
 Write every brief so pytest basetemp, probe copies, and report copies go to the
 managed scratch directory outside the worktree (`$TMPDIR`, the dispatch-managed
 lease). A write-capable round ends with empty `git status --porcelain`. The

@@ -80,6 +80,19 @@ workflow YAML, config, schemas, and documentation are changed paths just
 as much as `.py`/`.ts` files, and none of them are silently excluded from
 scope or from review in the steps below.
 
+**The round-1 review brief freezes three things (#10665)**, and later rounds
+reuse them unchanged: the outcome (`--intended-behavior`, acceptance criteria,
+non-goals); the threat and input model, which names the attacker (who controls
+which input) and the input classes in scope; and the Step 5 dispositions. The
+author ships bounded class coverage with the change: an entry-point matrix (each
+input class against each affected entry point), one reproducer per class, and
+the untested boundaries stated. The brief names input classes, never lists of
+individual spellings for the reviewer to try. Changing the outcome, the threat
+model or the dispositions after round 1 is a contract change (Step 6). The brief
+template is `drive-epic` `references/review-merge-cleanup.md` §6; a review-typed
+dispatch whose brief has no heading naming the dispositions gets the typed
+warning `review_brief_no_dispositions` (stderr and task record), not a refusal.
+
 Learner-content semantic review is unsupported here. A normal BIO request uses
 `$curriculum-lifecycle` / `$track-completion`, with `$post-build-review` as its
 single bounded semantic gate; do not freeze or resolve a content profile in
@@ -202,6 +215,12 @@ audit of the owning module, and not files outside `frozen_files` unless a
 sibling instance is actually found there (in which case treat it as a new
 finding subject to the same breakers as everything else, not a freebie).
 
+**Class-level findings (#10665)**: the reviewer reports one finding per input
+class, with one reproducer and every sibling spelling found in this round, not
+one spelling per round. A discovery outside the stated classes still blocks or
+escalates when it exposes a material defect. Reviewers keep their own
+independent adversarial cases; the author's matrix narrows nothing.
+
 ---
 
 ## Step 5: Record and adjudicate findings — nothing dropped, nothing "as-is"
@@ -220,13 +239,30 @@ For every finding, raise it, then adjudicate it:
 Disposition guide:
 
 - **`in_scope_blocker`** — a real, verified bug inside the frozen scope
-  that must be fixed before this closes out.
-- **`follow_up`** — real but not blocking (out of frozen scope, or minor);
-  track it, do not fix it here.
+  that must be fixed before this closes out: it violates the stated
+  contract, or an existing invariant on a path the change introduces,
+  modifies or newly exposes, or it regresses main, whether or not the brief
+  listed the case.
+- **`follow_up`** — real but not blocking (out of frozen scope, or minor):
+  pre-existing defects off the change's paths, wording, and P2/P3 findings,
+  unless their impact, or the change's dependency on them, is material;
+  track it with an owner, do not fix it here.
 - **`stop_and_escalate`** — fixing it would itself blow a breaker (Step 6):
   it changes the public/task contract, crosses an owner boundary, needs a
   canonical design decision, or the fix/review loop already failed to
-  converge. Escalate instead of patching around it.
+  converge; material ambiguity in the contract also escalates. Escalate
+  instead of patching around it.
+
+**Proportional verdicts (#10665).** APPROVE with tracked follow-ups is allowed;
+only an `in_scope_blocker` (or an open `stop_and_escalate`) withholds approval.
+Every blocker states a reproducible failure, its impact and the required
+corrected behaviour; a code-level fix is a suggestion, not the requirement. A
+delta review (round 2 onwards) attests the new exact head and checks the fix's
+interactions with the rest of the change, including weakened or deleted tests.
+A reviewer that lacks a capability the brief requires (shell, diff access,
+hashing, the `sources` tools) returns INCONCLUSIVE: the verdict line uses the
+`BLOCKED` token and names the missing capability. INCONCLUSIVE still blocks
+landing and is never reported as changes requested against the diff.
 
 **If the reviewer/challenger is unavailable**, raise the finding anyway (if
 you have one from your own read) and leave it unadjudicated — do not
@@ -292,6 +328,11 @@ Stop and reclassify (treat as `stop_and_escalate`, do not keep patching) when:
 data loss, a crash, a broken install/upgrade, a release blocker, or a
 concrete security exposure. "It would be nice to fix this too" is never
 one of them.
+
+Security code (hooks, launchers, credentials, admission, sandbox, guards)
+adds one stop to these breakers: after the second rejected review round the
+author stops and the driver takes a design decision (`drive-epic`
+`references/routing-and-dispatch.md` §4, #10665).
 
 ---
 
