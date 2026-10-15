@@ -73,13 +73,18 @@ QUIET_GATE_REASONS = frozenset({"requeue-pending"})
 # times per head. Aggregate jobs only mirror other jobs and never attribute.
 SHARED_FAILURE_REQUEUE_LIMIT = 3
 AGGREGATE_JOBS = frozenset({"CI Gate"})
-# Job names and failed-test identifiers come from workflow files and CI logs, so
-# any PR author controls them. They reach public issue titles, issue bodies and
-# PR comments only through ``display_text`` / ``code_span``, bounded here.
+# Job and check names and failed-test identifiers come from workflow files and CI
+# logs, so any PR author controls them; gate reasons embed check names, and
+# GitHub error text is unvetted. They reach public issue titles, issue bodies and
+# PR comments only through ``display_text`` / ``code_span``, bounded here, and the
+# HTML comment marker only through ``marker_value``. Decisions and local log
+# lines keep the raw text.
 DISPLAY_JOB_LIMIT = 100  # characters of a job name shown, before the id suffix
 DISPLAY_TEST_LIMIT = 200  # characters of a failed-test identifier shown
+DISPLAY_REASON_LIMIT = 200  # characters of a gate reason or GitHub error shown
 DISPLAY_TEST_ITEMS = 10  # failed tests listed in one issue body
 DISPLAY_ID_LENGTH = 8  # hex digits of the raw-text digest appended to altered text
+MARKER_ID_LENGTH = 16  # hex digits of the raw-text digest that replaces a disallowed marker value
 
 
 # (pattern, replacement) pairs applied in order by ``display_text``.
@@ -102,6 +107,9 @@ _NEUTRALISERS = tuple(
 )
 _DROPPED_CATEGORIES = frozenset({"Cf", "Cs", "Co", "Cn"})  # format, surrogate, private, unassigned
 _SPACED_CATEGORIES = frozenset({"Cc", "Zl", "Zp"})  # control and line or paragraph separators
+# Short ASCII without ``<``, ``>``, ``!``, ``@``, brackets, backticks or line breaks:
+# such a value can neither end the HTML comment nor mention, link or format anything.
+_MARKER_VALUE = re.compile(r"[A-Za-z0-9 _.,;:=+/()-]{1,200}\Z")
 
 
 def display_text(raw: str, limit: int = DISPLAY_JOB_LIMIT) -> str:
@@ -131,6 +139,18 @@ def display_text(raw: str, limit: int = DISPLAY_JOB_LIMIT) -> str:
 def code_span(raw: str, limit: int = DISPLAY_JOB_LIMIT) -> str:
     """``display_text`` inside an inline code span: inert Markdown even if a pattern slips through."""
     return f"`{display_text(raw, limit)}`"
+
+
+def marker_value(raw: str) -> str:
+    """``raw`` for an HTML comment marker when it is allowlisted, else a digest of it.
+
+    Fixed reasons, head SHAs and plain check names keep the markers of comments
+    already posted, so de-duplication still finds them. Any other text becomes
+    ``sha256-<hex>``: deterministic in ``raw`` and unable to break out of the marker.
+    """
+    if _MARKER_VALUE.fullmatch(raw):
+        return raw
+    return f"sha256-{hashlib.sha256(raw.encode('utf-8', 'surrogatepass')).hexdigest()[:MARKER_ID_LENGTH]}"
 
 
 class KeeperError(RuntimeError):
@@ -731,10 +751,12 @@ def _flush_pending_comments(
 def _comment_once(
     gh: GitHub, number: int, head: str, reason: str, comments: list[dict[str, Any]], login: str, detail: str = ""
 ) -> None:
-    marker = MARKER.format(head=head, reason=reason)
+    """Post why ``head`` was not queued, once per head and reason; ``detail`` is already display-safe."""
+    marker = MARKER.format(head=marker_value(head), reason=marker_value(reason))
     if any(marker in str(row.get("body", "")) and (row.get("user") or {}).get("login") == login for row in comments):
         return
-    gh.comment(number, f"Merge queue keeper: #{number} was not queued because {reason}.{detail}\n\n{marker}")
+    shown = display_text(reason, DISPLAY_REASON_LIMIT)
+    gh.comment(number, f"Merge queue keeper: #{number} was not queued because {shown}.{detail}\n\n{marker}")
     comments.append({"body": marker, "user": {"login": login}})
 
 
@@ -775,7 +797,7 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     try:
         jobs = gh.jobs(run["id"])
     except KeeperError as exc:
-        return f"{run_detail}; failing job lookup failed: {exc}.", [], {}
+        return f"{run_detail}; failing job lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}.", [], {}
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
     )
@@ -915,7 +937,7 @@ def run(
                 else:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError as exc:
-                detail = f" Queue removal diagnosis lookup failed: {exc}."
+                detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
         if reason == "ready" and queued is not True and not armed:
             try:
