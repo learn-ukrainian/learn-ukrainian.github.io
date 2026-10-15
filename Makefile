@@ -80,6 +80,7 @@ teacher-deck-refresh:
 	$(PYTHON) -m scripts.lexicon.teacher_deck refresh --docx "$(DOCX)" --publish
 
 practice-deck-linguistic-gate:
+	$(PYTHON) -c 'from scripts.practice_deck.io import PracticeDeckHydrationError, ensure_practice_deck_hydrated; exec("try:\n    ensure_practice_deck_hydrated()\nexcept PracticeDeckHydrationError as exc:\n    if \"refusing to overwrite local practice deck\" not in str(exc):\n        raise")'
 	$(PYTHON) scripts/audit/check_static_practice_assets.py --vesum-db data/vesum.db
 
 open-dataset:
