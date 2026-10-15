@@ -7,12 +7,13 @@ import contextlib
 import json
 import os
 import subprocess
-import tempfile
+import uuid
 from datetime import UTC, date, datetime
 from pathlib import Path
 
 from scripts.ci import check_issue_task_quality as checker
 from scripts.common import github_client
+from scripts.common.repo_root import project_interpreter
 from scripts.orchestration import fleet_repos
 from scripts.orchestration import issue_stream_audit as audit
 from scripts.publish.github import read
@@ -130,12 +131,11 @@ def summarize_repository(
     evaluated = root_exempt = 0
     for issue in issues or []:
         number = issue["number"]
-        if number in roots:
-            lanes[roots[number]]["open"] += 1
-            root_exempt += 1
-            continue
         entry = (report or {}).get("effective_membership", {}).get(str(number), {})
-        if not membership_ok:
+        if number in roots:
+            key = roots[number]
+            root_exempt += 1
+        elif not membership_ok:
             key = "membership_unknown"
         elif entry and entry.get("unique_stream") is not True:
             key = "ambiguous"
@@ -151,8 +151,9 @@ def summarize_repository(
                 trivial=checker.issue_is_trivial(issue.get("body") or "", issue.get("labels") or []),
             )
             bucket["missing_dor"] += int(result["dor"]["status"] == "WARN")
-            bucket["missing_dod"] += int("dod_structure_absent" in result["missing"])
-            bucket["malformed_dod"] += int("dod_structure_malformed" in result["missing"])
+            dod_codes = {e["code"] for e in result["dod"]["errors"]}
+            bucket["missing_dod"] += int("dod_structure_absent" in dod_codes)
+            bucket["malformed_dod"] += int("dod_structure_malformed" in dod_codes)
             if membership_ok:
                 # Reuse canonical membership semantics over this audit snapshot.
                 epic = (entry.get("epics") or [None])[0]
@@ -204,13 +205,19 @@ def persisted_payload(day: str, *, root: Path = ROOT, build=build_report) -> byt
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"issue-quality-report-{day}.json"
     if not path.exists():
+        if date.fromisoformat(day) != datetime.now(UTC).date():
+            raise ValueError("only today's report can be prepared; other dates require a saved payload")
         payload = (json.dumps(build(), sort_keys=True, indent=2) + "\n").encode()
-        with tempfile.NamedTemporaryFile(dir=directory, prefix=".issue-quality-", delete=False) as handle:
-            temporary = Path(handle.name)
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
+        # Stage this report beside its destination, as the other atomic report
+        # writers do. A managed scratch volume may be on another filesystem,
+        # where the no-replace hard link below would fail.
+        temporary = directory / f".issue-quality-{uuid.uuid4().hex}.json"
+        descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         try:
+            with os.fdopen(descriptor, "wb") as handle:
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
             with contextlib.suppress(FileExistsError):
                 os.link(temporary, path)
         finally:
@@ -221,7 +228,7 @@ def persisted_payload(day: str, *, root: Path = ROOT, build=build_report) -> byt
 def publish_payload(payload: bytes, day: str, sender: str) -> int:
     result = subprocess.run(
         [
-            str(ROOT / ".venv/bin/python"),
+            str(project_interpreter(ROOT)),
             "-m",
             "scripts.fleet_comms",
             "channel",
@@ -258,7 +265,7 @@ def main(argv: list[str] | None = None) -> int:
         "--date",
         type=date.fromisoformat,
         default=datetime.now(UTC).date(),
-        help="UTC day to prepare or retry, YYYY-MM-DD (default: today UTC)",
+        help="UTC day, YYYY-MM-DD; prepare today or retry a saved payload (default: today UTC)",
     )
     args = parser.parse_args(argv)
     day = args.date.isoformat()

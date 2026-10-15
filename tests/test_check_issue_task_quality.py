@@ -206,8 +206,8 @@ def test_dor_workflow_comment_lists_missing_fields_and_updates_one() -> None:
         calls.append((method, path, data))
 
     comments = [
-        {"id": 1, "body": "old " + MARKER, "user": {"login": "github-actions[bot]"}},
-        {"id": 2, "body": "duplicate " + MARKER, "user": {"login": "github-actions[bot]"}},
+        {"id": 1, "body": MARKER + "\nold", "user": {"login": "github-actions[bot]"}},
+        {"id": 2, "body": MARKER + "\nduplicate", "user": {"login": "github-actions[bot]"}},
     ]
     reconcile_comments(issue, comments, api, "/issues/123")
     assert calls == [
@@ -415,14 +415,20 @@ def test_comment_private_boundary_and_bot_filter():
     assert [c[0] for c in calls] == ["POST"]
 
 
-def test_opened_retry_observes_late_parent(monkeypatch):
-    observations = iter([checker.membership_error("membership_missing_parent"), checker.section("PASS")])
-    sleeps = []
-    monkeypatch.setattr(commenter, "observe_membership", lambda *a: next(observations))
-    monkeypatch.setattr(commenter.time, "sleep", lambda seconds: sleeps.append(seconds))
-    result = commenter.check_current_issue({"body": COMPLETE}, REPO, 123, opened=True)
-    assert result["membership"]["status"] == "PASS"
-    assert sleeps == [15]
+@pytest.mark.parametrize("membership", [checker.membership_error("membership_missing_parent"),
+                                      checker.section("PASS", pending_native_link=True)])
+def test_workflow_observes_once_without_retrying_or_auditing(monkeypatch, membership):
+    calls = []
+
+    def observe(*args, **kwargs):
+        calls.append((args, kwargs))
+        return membership
+
+    monkeypatch.setattr(commenter, "observe_membership", observe)
+    issue = {"body": COMPLETE}
+    result = commenter.check_current_issue(issue, REPO, 123)
+    assert result["membership"] == membership
+    assert calls == [((issue, REPO, 123), {"audit_orphans": False})]
 
 
 def test_comment_main_rate_limit_skip(monkeypatch, capsys):
@@ -539,16 +545,14 @@ def test_comment_refetches_current_issue_and_paginates(monkeypatch, tmp_path):
     assert "STALE_EVENT_CANARY" not in json.dumps(calls)
 
 
-def test_opened_retry_is_bounded(monkeypatch):
-    now = [0.0]
-    monkeypatch.setattr(commenter.time, "monotonic", lambda: now[0])
-    monkeypatch.setattr(commenter.time, "sleep", lambda s: now.__setitem__(0, now[0] + s))
-    monkeypatch.setattr(
-        commenter, "observe_membership", lambda *a: checker.membership_error("membership_missing_parent")
-    )
-    result = commenter.check_current_issue({"body": COMPLETE}, REPO, 123, opened=True)
-    assert now[0] == 180
-    assert result["membership"]["errors"][0]["code"] == "membership_missing_parent"
+def test_workflow_membership_timeout_preserves_card(monkeypatch):
+    import signal
+
+    budget = checker.time_budget
+    monkeypatch.setattr(commenter, "time_budget", lambda: budget(0.01))
+    monkeypatch.setattr(commenter, "observe_membership", lambda *a, **k: signal.pause())
+    result = commenter.check_current_issue({"body": COMPLETE + "\n- [ ] AC-01: duplicate"}, REPO, 123)
+    assert result["missing"] == ["dod_structure_malformed", "membership_timeout"]
 
 
 def test_deadline_cannot_be_swallowed_by_audit_retry_handlers():
@@ -580,3 +584,157 @@ def test_in_memory_audit_refuses_mismatched_checkout(monkeypatch):
     monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: pytest.fail("must refuse before fetching"))
     with pytest.raises(ValueError, match="audit repository does not match target"):
         checker.live_audit(REPO, REGISTRY)
+
+
+@pytest.mark.parametrize("failure", [ValueError("PRIVATE_CANARY"), TimeoutError(),
+                                     checker.subprocess.TimeoutExpired("fetch", 60),
+                                     checker.github_client.GitHubRateLimited(2000)])
+def test_fetch_failure_does_not_invent_card_findings(monkeypatch, capsys, failure):
+    def fail(*args):
+        raise failure
+
+    monkeypatch.setattr(checker, "fetch_issue", fail)
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    output = capsys.readouterr().out
+    result = json.loads(output)
+    assert result["missing"] == ["input", "checker_error"]
+    assert result["dod"] == {"status": "unchecked", "errors": []}
+    assert result["dor"] == {"status": "unchecked", "errors": []}
+    assert result["membership"] == {"status": "unchecked", "errors": []}
+    assert "PRIVATE_CANARY" not in output
+
+
+@pytest.mark.parametrize("trivial", ["body", "flag", "label"])
+def test_trivial_malformed_dod_is_reported_without_refusal(trivial, monkeypatch, capsys):
+    body = COMPLETE + "\n- [ ] AC-01: duplicate"
+    issue = {"body": ("trivial: yes\n" if trivial == "body" else "") + body,
+             "labels": [{"name": "trivial"}] if trivial == "label" else []}
+    monkeypatch.setattr(checker, "fetch_issue", lambda *a: issue)
+    monkeypatch.setattr(checker, "observe_membership", lambda *a: checker.section("PASS"))
+    assert checker.main(["--issue", "123", "--strict", "--json"] + (["--trivial"] if trivial == "flag" else [])) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["verdict"] == "PASS"
+    assert result["missing"] == []
+    assert result["dod"]["status"] == "WARN"
+    assert [e["code"] for e in result["dod"]["errors"]] == ["dod_structure_malformed"]
+    assert "dod_structure_malformed" in result["notes"]
+    assert "dod_structure_malformed" in commenter.render_comment({**issue, "_quality": result})
+
+
+def test_bot_marker_inside_other_comment_is_untouched():
+    calls = []
+    reconcile_comments({"body": COMPLETE}, [
+        {"id": 10, "body": "Quoted example: " + MARKER, "user": {"login": commenter.BOT_LOGIN}},
+        {"id": 11, "body": MARKER + "\nuser copy", "user": {"login": "person"}},
+    ], lambda *a: calls.append(a), "/issues/123")
+    assert len(calls) == 1
+    assert calls[0][:2] == ("POST", "/issues/123/comments")
+
+
+@pytest.mark.parametrize("depth", [1, 8, 9])
+def test_workflow_native_parent_reads_are_bounded(monkeypatch, depth):
+    calls = []
+    monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
+
+    def parent(repo, number):
+        calls.append(number)
+        target = 5703 if len(calls) == depth else number + 1
+        return {"number": target, "repository": repo}
+
+    monkeypatch.setattr(checker, "read_parent", parent)
+    monkeypatch.setattr(checker, "live_audit", lambda *a: pytest.fail("workflow must not audit"))
+    result = commenter.check_current_issue({"body": COMPLETE}, REPO, 123)
+    assert len(calls) == min(depth, 8)
+    if depth <= 8:
+        assert result["membership"]["status"] == "PASS"
+    else:
+        assert result["missing"] == ["membership_unknown"]
+
+
+@pytest.mark.parametrize("action,body,parent,exit_code", [
+    ("opened", COMPLETE, None, 1),
+    ("edited", COMPLETE, None, 0),
+    ("edited", COMPLETE + "\n- [ ] AC-01: duplicate", 5703, 1),
+    ("opened", "trivial: yes\n" + COMPLETE + "\n- [ ] AC-01: duplicate", 5703, 0),
+], ids=["opened-orphan", "edited-orphan", "malformed", "trivial-malformed"])
+def test_event_api_cost_and_exit_status(monkeypatch, tmp_path, action, body, parent, exit_code, capsys):
+    """Reviewer API-cost probe: an orphan event has a ceiling of 4 reads.
+
+    Two workflow GETs fetch the current issue and its empty comment page.
+    The real publisher/REST parent reader fetches the issue and its parent,
+    which returns a typed 404 for an orphan. The synthetic
+    tree has 17 roots and 31/19/6 containers, so any full audit exceeds this
+    fixed ceiling independently of the size of the live repository.
+    """
+    import itertools
+    import subprocess
+
+    roots = list(range(5703, 5720))
+    registry = {"devops": roots}
+    children = {}
+    counter = itertools.count(100000)
+    level = roots
+    for containers in [31, 19, 6]:
+        following = []
+        for number in level:
+            children[number] = [next(counter) for _ in range(5)]
+            following.extend(children[number])
+        level = following[:containers]
+    for number in level:
+        children[number] = [next(counter) for _ in range(3)]
+
+    calls = []
+    comments = []
+
+    def command(args, **kwargs):
+        endpoint = args[4]
+        calls.append(endpoint)
+        number = int(endpoint.split("?")[0].split("/")[4])
+        if endpoint.endswith("/parent"):
+            if parent is None:
+                result = subprocess.CompletedProcess(args, 1, "", "")
+                result.github_result = checker.github_client.Result(status=404, error="github_http_error")
+                return result
+            value = {"number": parent, "html_url": f"https://github.com/{REPO}/issues/{parent}",
+                     "repository_url": f"https://api.github.com/repos/{REPO}"}
+        elif "/sub_issues" in endpoint:
+            value = [{"number": child, "repository_url": f"https://api.github.com/repos/{REPO}",
+                      "sub_issues_summary": {"total": len(children.get(child, []))}}
+                     for child in children.get(number, [])]
+        else:
+            value = {"number": number, "state": "open", "body": "", "labels": [],
+                     "html_url": f"https://github.com/{REPO}/issues/{number}",
+                     "repository_url": f"https://api.github.com/repos/{REPO}"}
+        return subprocess.CompletedProcess(args, 0, json.dumps(value), "")
+
+    class Client:
+        def __init__(self, **kwargs):
+            pass
+
+        def request(self, method, path, **kwargs):
+            if method == "GET":
+                calls.append(path)
+                value = [] if "comments?" in path else {"number": 123, "body": body, "title": "target"}
+                return checker.github_client.Result(value=value)
+            assert method == "POST"
+            comments.append(kwargs["payload"]["body"])
+            return checker.github_client.Result(value={})
+
+    monkeypatch.setattr(checker, "registry_for", lambda r: registry)
+    monkeypatch.setattr(checker.github_client, "command", command)
+    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
+    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": 123, "title": "target"}])
+    monkeypatch.setattr(commenter, "GitHubClient", Client)
+    event = tmp_path / "event.json"
+    event.write_text(json.dumps({"action": action, "issue": {"number": 123}}))
+    monkeypatch.setenv("GITHUB_EVENT_PATH", str(event))
+    monkeypatch.setenv("GITHUB_TOKEN", "fixture")
+    monkeypatch.setenv("GITHUB_REPOSITORY", REPO)
+    assert commenter.main() == exit_code
+    assert len(calls) <= 4
+    assert calls == [f"repos/{REPO}/issues/123", f"repos/{REPO}/issues/123", f"repos/{REPO}/issues/123/parent",
+                     f"repos/{REPO}/issues/123/comments?per_page=100&page=1"]
+    assert len(comments) == 1
+    assert ("membership_missing_parent" if parent is None else "Membership: PASS") in comments[0]
+    assert "membership_unknown" not in comments[0]
+    assert "synchronized" in capsys.readouterr().out

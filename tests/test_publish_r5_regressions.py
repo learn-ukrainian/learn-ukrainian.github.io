@@ -320,10 +320,17 @@ def test_review_publisher_default_uses_guarded_transport(synthetic_opsec, tmp_pa
     assert "--body-file" in calls[0]
 
 
-def test_issue_count_fixed_read_positive_and_existing_reads_unchanged(tmp_path):
+def test_issue_count_fixed_read_positive_and_existing_reads_unchanged(tmp_path, monkeypatch):
     calls = []
+    query_paths = []
+    scratch = tmp_path / "managed-scratch"
+    scratch.mkdir()
+    monkeypatch.setattr(pub, "ensure_scratch_root", lambda: scratch)
     def transport(command, **kwargs):
-        document = json.loads(Path(command[command.index("--input") + 1]).read_text())
+        query_path = Path(command[command.index("--input") + 1])
+        assert query_path.parent.parent == scratch
+        query_paths.append(query_path)
+        document = json.loads(query_path.read_text())
         calls.append(document)
         return subprocess.CompletedProcess(command, 0, '{"data":{"repository":{"issues":{"totalCount":612}}}}', '')
     result = pub.read("issue-count", repo="unit/public", runner=transport, cwd=tmp_path, env={}, capture_output=True, text=True)
@@ -331,6 +338,8 @@ def test_issue_count_fixed_read_positive_and_existing_reads_unchanged(tmp_path):
     assert calls == [{"query": "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){issues(states:OPEN){totalCount}}}",
                       "variables": {"owner": "unit", "name": "public"}}]
     assert "issue-count" not in pub.GQL_READS and "issue-count" not in pub.REST_READS
+    assert all(not path.exists() for path in query_paths)
+    assert list(scratch.iterdir()) == []
 
 
 @pytest.mark.parametrize("response", ['{}', '{"data":{"repository":null}}', '{"data":{"repository":{"issues":{"totalCount":true}}}}',

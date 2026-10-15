@@ -29,11 +29,14 @@ gathering may proceed to close gaps. Operator everyday “ready” still means
 
 On issue open or edit, `.github/workflows/issue-task-quality.yml` refetches the
 current issue and reconciles one `issue-task-quality:v1` bot comment. DevOps
-owns it. It fails only for malformed DoD structure, conflicting ancestry, or a
-new orphan after bounded parent retries of up to three minutes. It is not a
-required check for code PRs. Parent-link changes do not trigger this workflow;
-dispatch always checks live parentage again. The comment records the UTC
-membership observation time and never reproduces issue body text.
+owns it. It fails only for non-trivial malformed DoD structure, conflicting
+ancestry, or a new issue with no native parent at observation time. Each event
+walks native ancestry once, at most eight parent reads, without a full-tree
+audit or retries. Full orphan and body-evidence classification belongs to the
+dispatch check. It is not a required check for code PRs. Parent-link changes
+do not trigger this workflow; dispatch always checks live parentage again.
+The comment records the UTC membership observation time and never reproduces
+issue body text.
 
 The checker reports DoR, DoD structure and membership separately. DoD structure
 uses `task_lifecycle.parse_issue_acceptance_criteria`: stable-ID checkboxes may
@@ -41,7 +44,9 @@ be unchecked or checked at admission. Missing structure is
 `dod_structure_absent`; malformed or duplicate IDs are
 `dod_structure_malformed`, with the canonical parser diagnostic. Completion
 still requires the delivery evidence below. The trivial exemption covers card
-fields and DoD structure, never live membership. Body-only CLI modes report
+fields and missing DoD structure, never live membership. Malformed DoD on a
+trivial card remains visible in the DoD section, comment and report, but does
+not refuse admission. Body-only CLI modes report
 membership `unchecked` and cannot establish membership proof.
 
 The live checker follows at most eight repository-qualified parent links to a
@@ -51,10 +56,15 @@ evidence is accepted as `pending_native_link`. Overflow containers remain
 ordinary issues. Conflicting roots, multiple owners, cycles and cross-repository
 parents refuse admission without an override. Read failures, depth exhaustion,
 timeouts and stale or incomplete audits are unknown, never proof of membership.
-The full dispatch check has a 60-second budget and never writes the audit cache.
+Issue fetching and membership observation each have a 60-second budget. A
+membership timeout preserves the fetched card's DoR and DoD findings. A fetch
+failure reports `checker_error`, with all three sections unchecked. Only a
+dispatch target with no native parent triggers the full audit; it never writes
+the audit cache.
 
 Implementation dispatch checks both workspace-write and danger modes; read-only
-triage stays exempt. Malformed DoD and conflicting ancestry cannot be overridden.
+triage stays exempt. Non-trivial malformed DoD and conflicting ancestry cannot
+be overridden.
 Absent DoD, missing parent, unavailable registry and unknown membership refuse
 by default, with the existing recorded `--allow-dor-warn REASON` exception.
 Cursor Auto refuses any override. Registered fleet repositories without a
@@ -69,8 +79,12 @@ Unreachable data is unknown, never zero defects. Private repositories expose
 only counts, with membership explicitly incomplete under `membership_unknown`
 and `membership_registry_absent`. Payloads use `issue-quality-report.v1`, persist
 under ignored `batch_state/reports/`, and retry the same bytes with a UTC-date
-Fleet Comms idempotency key. Publication failure exits non-zero. Installation
-and live delivery proof belong to DevOps; this source change installs nothing.
+Fleet Comms idempotency key. Publication failure exits non-zero.
+Root issues count toward DoR and DoD totals like other issues; their exemption
+applies only to membership. A date other than today can only retry a saved
+payload; the report refuses to label a current snapshot with another date.
+Installation and live delivery proof belong to DevOps; this source change
+installs nothing.
 The private issue workflow and hramatka event wiring remain DevOps-owned work.
 
 **Quality posture (binding intent at DoR; graded at CF):** research established

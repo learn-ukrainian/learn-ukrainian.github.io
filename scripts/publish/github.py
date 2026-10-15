@@ -16,6 +16,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from scripts.common import github_client
+from scripts.common.scratch import ensure_scratch_root
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
 from scripts.publish import recovery
@@ -868,7 +869,7 @@ def read(
             raise gate.PublishBlocked("OPSEC: invalid issue count repository or fields.")
         owner, name = gh_repo.split("/", 1)
         query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){issues(states:OPEN){totalCount}}}"
-        with tempfile.TemporaryDirectory(prefix="lu-issue-count-") as directory:
+        with tempfile.TemporaryDirectory(prefix="lu-issue-count-", dir=ensure_scratch_root()) as directory:
             frozen = Path(directory) / "query.json"
             frozen.write_text(json.dumps({"query": query, "variables": {"owner": owner, "name": name}}))
             result = _send(

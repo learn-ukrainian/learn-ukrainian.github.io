@@ -12029,6 +12029,8 @@ def _run_dor_preflight(
     (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
     says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
     """
+    from scripts.ci.check_issue_task_quality import NON_OVERRIDABLE
+
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
         repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
@@ -12076,14 +12078,14 @@ def _run_dor_preflight(
                     [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
                     capture_output=True,
                     text=True,
-                    timeout=75,
+                    timeout=135,
                     check=False,
                 )
                 payload = json.loads(result.stdout)
                 if not isinstance(payload, dict):
                     raise ValueError("checker result must be an object")
                 codes = set(payload.get("missing") or [])
-                non_overridable.update(codes & {"dod_structure_malformed", "membership_conflicting_ancestry"})
+                non_overridable.update(codes & NON_OVERRIDABLE)
                 # Old checker payloads retain their existing meaning. A missing
                 # section is explicitly unchecked, never evidence of membership.
                 if "membership" in payload:

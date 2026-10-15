@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+from datetime import UTC, datetime
 
 import pytest
 
@@ -44,7 +45,7 @@ def test_roots_exempt_containers_ordinary_and_counts_reconcile():
     membership["open_total"] = 3
     result = summarize(issues, 3, membership)
     assert result["root_exempt_total"] == 1
-    assert result["evaluated_total"] == 2
+    assert result["evaluated_total"] == 3
     assert result["lanes"]["devops"] == dict.fromkeys(report.COUNTERS, 0) | {"open": 3}
     assert result["coverage"] == "complete"
 
@@ -149,23 +150,25 @@ def test_collection_redacts_exception_data(monkeypatch):
 
 def test_payload_persisted_before_publish_and_reused(tmp_path, monkeypatch):
     calls = []
+    day = datetime.now(UTC).date().isoformat()
 
     def build():
         calls.append("build")
         return {"schema": "issue-quality-report.v1", "generated_at": "fixture"}
 
-    first = report.persisted_payload("2026-10-15", root=tmp_path, build=build)
+    first = report.persisted_payload(day, root=tmp_path, build=build)
     assert (
-        report.persisted_payload("2026-10-15", root=tmp_path, build=lambda: pytest.fail("retry must reuse payload"))
+        report.persisted_payload(day, root=tmp_path, build=lambda: pytest.fail("retry must reuse payload"))
         == first
     )
-    path = tmp_path / "batch_state/reports/issue-quality-report-2026-10-15.json"
+    path = tmp_path / f"batch_state/reports/issue-quality-report-{day}.json"
     assert path.is_file() and path.read_bytes() == first
     assert calls == ["build"]
 
     def run(command, **kwargs):
         assert path.read_bytes() == kwargs["input"]
-        assert command[-1] == "issue-quality-report:2026-10-15"
+        assert command[-1] == f"issue-quality-report:{day}"
+        assert command[0] == str(expected_interpreter)
         assert "epics" in command and "--source" in command
         return subprocess.CompletedProcess(command, 1)
 
@@ -175,8 +178,9 @@ def test_payload_persisted_before_publish_and_reused(tmp_path, monkeypatch):
         ).returncode
         == 0
     )
+    expected_interpreter = report.project_interpreter(report.ROOT)
     monkeypatch.setattr(report.subprocess, "run", run)
-    assert report.publish_payload(first, "2026-10-15", "devops") == 1
+    assert report.publish_payload(first, day, "devops") == 1
 
 
 def test_build_enumerates_catalog(monkeypatch):
@@ -228,3 +232,87 @@ def test_collection_rate_limit_never_zeros(monkeypatch):
     issues, count, membership, codes = report.collect_repository(PRIVATE)
     assert issues is count is membership is None
     assert set(codes) == {"rate_limited"}
+
+
+@pytest.mark.parametrize("body,missing,malformed", [("", 1, 0), (COMPLETE + "\n- [ ] AC-01: duplicate", 0, 1)])
+def test_registered_roots_still_count_dor_and_dod(body, missing, malformed):
+    membership = audit_report()
+    result = summarize([{"number": 5703, "body": body}], 1, membership)
+    assert result["evaluated_total"] == 1
+    assert result["root_exempt_total"] == 1
+    assert result["lanes"]["devops"] == {
+        "open": 1, "missing_dor": missing, "missing_dod": missing,
+        "malformed_dod": malformed, "missing_epic": 0, "pending_native_link": 0,
+    }
+
+
+def test_trivial_malformed_dod_is_counted():
+    result = summarize([{"number": 123, "body": "trivial: yes\n" + COMPLETE + "\n- [ ] AC-01: duplicate"}], 1,
+                       audit_report(native=[123]))
+    assert result["lanes"]["devops"]["malformed_dod"] == 1
+    assert result["lanes"]["devops"]["missing_dor"] == 0
+
+
+@pytest.mark.parametrize("day", ["2000-01-01", "9999-01-01"])
+def test_other_day_without_saved_payload_refuses_current_snapshot(tmp_path, day):
+    with pytest.raises(ValueError, match="only today's report can be prepared"):
+        report.persisted_payload(day, root=tmp_path, build=lambda: pytest.fail("must not fetch today's snapshot"))
+    assert list((tmp_path / "batch_state/reports").iterdir()) == []
+
+
+def test_historical_saved_payload_can_be_retried(tmp_path):
+    path = tmp_path / "batch_state/reports/issue-quality-report-2000-01-01.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(b'{"generated_at":"2000-01-01T12:00:00Z"}\n')
+    assert report.persisted_payload("2000-01-01", root=tmp_path,
+                                    build=lambda: pytest.fail("must not rebuild historical data")) == path.read_bytes()
+
+
+def test_date_cli_refuses_unsaved_past_snapshot(tmp_path, monkeypatch, capsys):
+    persist = report.persisted_payload
+    monkeypatch.setattr(report, "persisted_payload", lambda day: persist(
+        day, root=tmp_path, build=lambda: pytest.fail("must not fetch today's snapshot")))
+    monkeypatch.setattr(report, "publish_payload", lambda *a: pytest.fail("must not publish mislabeled data"))
+    assert report.main(["--date", "2000-01-01", "--publish"]) == 1
+    assert capsys.readouterr().out == "issue quality report: checker_error\n"
+    assert list((tmp_path / "batch_state/reports").iterdir()) == []
+
+
+def test_payload_staging_is_atomic_on_destination_filesystem(tmp_path, monkeypatch):
+    day = datetime.now(UTC).date().isoformat()
+    link = report.os.link
+    calls = []
+
+    def publish(source, destination):
+        assert source.parent == destination.parent
+        assert json.loads(source.read_bytes()) == {"complete": True}
+        assert source.stat().st_mode & 0o777 == 0o600
+        assert not destination.exists()
+        calls.append(destination)
+        link(source, destination)
+
+    monkeypatch.setattr(report.os, "link", publish)
+    assert report.persisted_payload(day, root=tmp_path, build=lambda: {"complete": True}) == b'{\n  "complete": true\n}\n'
+    assert list((tmp_path / "batch_state/reports").iterdir()) == calls
+
+
+def test_concurrent_payload_winner_is_kept(tmp_path, monkeypatch):
+    day = datetime.now(UTC).date().isoformat()
+
+    def publish(source, destination):
+        destination.write_bytes(b'{"winner":true}\n')
+        raise FileExistsError
+
+    monkeypatch.setattr(report.os, "link", publish)
+    assert report.persisted_payload(day, root=tmp_path, build=lambda: {"loser": True}) == b'{"winner":true}\n'
+    assert len(list((tmp_path / "batch_state/reports").iterdir())) == 1
+
+
+def test_payload_write_failure_leaves_no_partial_report(tmp_path, monkeypatch):
+    def fail(*args):
+        raise OSError("storage failure")
+
+    monkeypatch.setattr(report.os, "fsync", fail)
+    with pytest.raises(OSError, match="storage failure"):
+        report.persisted_payload(datetime.now(UTC).date().isoformat(), root=tmp_path, build=lambda: {"partial": True})
+    assert list((tmp_path / "batch_state/reports").iterdir()) == []

@@ -136,3 +136,52 @@ def test_both_actual_dispatch_mode_guards(mode, expected, callsite):
     )
     namespace["guard"]()
     assert len(calls) == expected
+
+
+@pytest.mark.parametrize("reason", [None, "override"])
+def test_membership_timeout_never_downgrades_malformed_dod(monkeypatch, capsys, reason):
+    """Reviewer timeout probe through the real checker main and delegate mapping."""
+    import signal
+
+    malformed = COMPLETE + "\n- [ ] AC-01: duplicate"
+    monkeypatch.setattr(checker, "fetch_issue", lambda *a: {"body": malformed, "title": "target", "labels": []})
+    budget = checker.time_budget
+    monkeypatch.setattr(checker, "time_budget", lambda: budget(0.01))
+    monkeypatch.setattr(checker, "observe_membership", lambda *a: signal.pause())
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["missing"] == ["dod_structure_malformed", "membership_timeout"]
+    assert payload["dod"]["status"] == "WARN"
+    refusal, record = admission(monkeypatch, payload, reason=reason)
+    assert "dod_structure_malformed" in refusal
+    assert "no override applies" in refusal
+    assert record["warnings"] == {"123": "dod_structure_malformed,membership_timeout"}
+
+
+def test_delegate_uses_checker_non_overridable_set(monkeypatch):
+    monkeypatch.setattr(checker, "NON_OVERRIDABLE", checker.NON_OVERRIDABLE | {"future_structure_defect"})
+    refusal, _ = admission(monkeypatch, {"verdict": "WARN", "missing": ["future_structure_defect"]}, reason="override")
+    assert "future_structure_defect" in refusal and "no override applies" in refusal
+
+
+def test_trivial_malformed_dod_remains_advisory_in_delegate(monkeypatch):
+    payload = checker.evaluate_issue({"body": "trivial: yes\n" + COMPLETE + "\n- [ ] AC-01: duplicate"}, checker.section("PASS"))
+    refusal, record = admission(monkeypatch, payload)
+    assert payload["dod"]["errors"][0]["code"] == "dod_structure_malformed"
+    assert refusal is None
+    assert record["warnings"] == {}
+
+
+def test_delegate_allows_both_checker_read_budgets(monkeypatch):
+    timeouts = []
+
+    def run(command, **kwargs):
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, '{"number":123}', "")
+        timeouts.append(kwargs["timeout"])
+        return subprocess.CompletedProcess(command, 0, '{"verdict":"PASS","missing":[]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    refusal, _ = delegate._run_dor_preflight("Implement #123", None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+    assert refusal is None
+    assert timeouts == [135]

@@ -6,7 +6,6 @@ from __future__ import annotations
 import json
 import os
 import sys
-import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -62,7 +61,7 @@ def reconcile_comments(issue: dict[str, Any], comments: list[dict[str, Any]], ap
     matching = [
         comment
         for comment in comments
-        if comment.get("user", {}).get("login") == BOT_LOGIN and MARKER in (comment.get("body") or "")
+        if comment.get("user", {}).get("login") == BOT_LOGIN and (comment.get("body") or "").startswith(MARKER)
     ]
     if matching:
         keep = matching[0]
@@ -74,25 +73,14 @@ def reconcile_comments(issue: dict[str, Any], comments: list[dict[str, Any]], ap
         api("POST", f"{path}/comments", {"body": body})
 
 
-def check_current_issue(issue: dict, repo: str, number: int, *, opened: bool) -> dict:
-    """Allow native parent creation to settle after opened, at most three minutes."""
-    deadline = time.monotonic() + 180
-    while True:
-        try:
-            with time_budget(min(60, max(0.01, deadline - time.monotonic()))):
-                membership = observe_membership(issue, repo, number)
-        except TimeoutError:
-            membership = membership_error("membership_timeout")
-        if (
-            not opened
-            or not (
-                membership.get("pending_native_link")
-                or any(e["code"] == "membership_missing_parent" for e in membership["errors"])
-            )
-            or time.monotonic() >= deadline
-        ):
-            return evaluate_issue(issue, membership)
-        time.sleep(min(15, max(0, deadline - time.monotonic())))
+def check_current_issue(issue: dict, repo: str, number: int) -> dict:
+    """Observe native ancestry once; full-tree/body evidence is dispatch-only."""
+    try:
+        with time_budget():
+            membership = observe_membership(issue, repo, number, audit_orphans=False)
+    except TimeoutError:
+        membership = membership_error("membership_timeout")
+    return evaluate_issue(issue, membership)
 
 
 def _main() -> int:
@@ -106,7 +94,7 @@ def _main() -> int:
         return github.request(method, f"repos/{repo}{path}", payload=data, fresh=True).require_fresh()
 
     issue = api("GET", f"/issues/{number}")
-    issue["_quality"] = check_current_issue(issue, repo, number, opened=event.get("action") == "opened")
+    issue["_quality"] = check_current_issue(issue, repo, number)
     issue["_observed_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     comments: list[dict[str, Any]] = []
     page = 1

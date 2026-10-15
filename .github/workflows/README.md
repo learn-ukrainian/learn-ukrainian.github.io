@@ -62,8 +62,10 @@ Use local machine-agent review via `scripts/delegate.py` instead.
 
 `issue-task-quality.yml` runs only on issue opened/edited events. DevOps owns
 its single marker comment and non-overrideable structure/ancestry failures plus
-new-orphan feedback. It refetches the current issue and retries parent creation
-on opened events for up to three minutes. It is not a required code-PR check.
+new-orphan feedback. It refetches the current issue and observes native ancestry
+once, at most eight parent reads. It never audits the full tree or retries body
+evidence. Dispatch owns full orphan and body-evidence classification. It is not
+a required code-PR check.
 Parent-link-only changes do not trigger Actions; dispatch rechecks live ancestry.
 A workflow in another repository can invoke the pinned public checkout's
 `.venv/bin/python -m scripts.ci.check_issue_task_quality --repo OWNER/REPO --issue NUMBER

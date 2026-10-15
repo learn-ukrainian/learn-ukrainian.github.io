@@ -49,7 +49,7 @@ def membership_error(code: str) -> dict:
 
 @contextmanager
 def time_budget(seconds: float = 60):
-    """Bound the complete synchronous CLI operation, including audit retries."""
+    """Bound membership observation, including audit retries."""
 
     def expired(_signum, _frame):
         raise _DeadlineExpired
@@ -201,7 +201,8 @@ def evaluate_membership(
     return membership_error(code)
 
 
-def observe_membership(issue: dict, repository: str, number: int) -> dict:
+def observe_membership(issue: dict, repository: str, number: int, *, audit_orphans: bool = True) -> dict:
+    """Walk bounded native ancestry; dispatch also audits targets with no parent."""
     try:
         registry = registry_for(repository)
         if registry is None:
@@ -226,7 +227,7 @@ def observe_membership(issue: dict, repository: str, number: int) -> dict:
             if type(parent.get("number")) is not int:
                 raise ValueError("malformed parent")
             current = parent["number"]
-        report = live_audit(repository, registry) if parents.get(number) is None else None
+        report = live_audit(repository, registry) if audit_orphans and parents.get(number) is None else None
         return evaluate_membership(issue, repository, number, registry, parents, report)
     except (TimeoutError, subprocess.TimeoutExpired):
         return membership_error("membership_timeout")
@@ -438,19 +439,23 @@ def complete_result(result: dict, body: str, membership: dict | None = None) -> 
         [error("dor", key, key, "required task card field is absent or empty") for key in result["missing"]],
     )
     dod_errors = []
-    if not result["trivial"]:
-        try:
-            lifecycle.parse_issue_acceptance_criteria(body)
-        except lifecycle.LifecycleError as exc:
-            code = (
-                "dod_structure_absent"
-                if str(exc) == "issue body has no stable-ID acceptance criteria"
-                else "dod_structure_malformed"
-            )
+    try:
+        lifecycle.parse_issue_acceptance_criteria(body)
+    except lifecycle.LifecycleError as exc:
+        code = (
+            "dod_structure_absent"
+            if str(exc) == "issue body has no stable-ID acceptance criteria"
+            else "dod_structure_malformed"
+        )
+        if not result["trivial"] or code == "dod_structure_malformed":
             dod_errors.append(error("dod", "acceptance_criteria", code, str(exc)))
-    result["dod"] = section("exempt" if result["trivial"] else "WARN" if dod_errors else "PASS", dod_errors)
+    result["dod"] = section("WARN" if dod_errors else "exempt" if result["trivial"] else "PASS", dod_errors)
     result["membership"] = membership or section("unchecked")
-    for part in (result["dod"], result["membership"]):
+    # Trivial cards retain their admission exemption, but malformed structure
+    # remains visible in the DoD section, comments, reports and CLI notes.
+    if result["trivial"]:
+        result["notes"] = [*result["notes"], *(e["code"] for e in dod_errors)]
+    for part in ([result["membership"]] if result["trivial"] else [result["dod"], result["membership"]]):
         result["missing"].extend(e["code"] for e in part["errors"])
     result["verdict"] = "WARN" if result["missing"] else "PASS"
     return result
@@ -493,7 +498,7 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.ci.check_issue_task_quality --issue 10565 --strict --json\n"
         "  .venv/bin/python -m scripts.ci.check_issue_task_quality --body-file card.md\n"
-        "Outputs: stdout only; no audit cache writes. Live reads have a 60-second total budget.\n"
+        "Outputs: stdout only; no audit cache writes. Issue fetch and membership each have a 60-second budget.\n"
         "Exit codes: 0 = advisory or PASS; 1 = strict WARN; 2 = invalid arguments.\n"
         "Related: docs/best-practices/task-quality.md, issue #10565.",
     )
@@ -521,11 +526,15 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.issue is not None:
-            with time_budget():
-                issue = fetch_issue(args.repo, args.issue)
-                if args.trivial:
-                    issue = {**issue, "labels": [{"name": "trivial"}]}
-                result = evaluate_issue(issue, observe_membership(issue, args.repo, args.issue))
+            issue = fetch_issue(args.repo, args.issue)
+            if args.trivial:
+                issue = {**issue, "labels": [{"name": "trivial"}]}
+            try:
+                with time_budget():
+                    membership = observe_membership(issue, args.repo, args.issue)
+            except (TimeoutError, subprocess.TimeoutExpired):
+                membership = membership_error("membership_timeout")
+            result = evaluate_issue(issue, membership)
         elif args.body_file:
             with open(args.body_file, encoding="utf-8") as handle:
                 body = handle.read()
@@ -542,25 +551,17 @@ def main(argv: list[str] | None = None) -> int:
         UnicodeError,
         ValueError,
         RuntimeError,
-    ) as exc:
-        code = (
-            "membership_timeout"
-            if isinstance(exc, (TimeoutError, subprocess.TimeoutExpired))
-            else "membership_rate_limited"
-            if isinstance(exc, github_client.GitHubRateLimited)
-            else "checker_error"
-        )
-        result = complete_result(
-            {
-                "verdict": "WARN",
-                "trivial": False,
-                "missing": ["input"],
-                "present": [],
-                "notes": ["input_error"],
-            },
-            "",
-            membership_error(code),
-        )
+    ):
+        result = {
+            "verdict": "WARN",
+            "trivial": False,
+            "missing": ["input", "checker_error"],
+            "present": [],
+            "notes": ["input_error"],
+            "dor": section("unchecked"),
+            "dod": section("unchecked"),
+            "membership": section("unchecked"),
+        }
 
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
