@@ -69,11 +69,22 @@ def colour_safe_environment(env=None):
     return result
 
 
+def _connect(path):
+    """The one place the client opens its own cache database (writer allowlisted for #10730)."""
+    return sqlite3.connect(path, timeout=5)
+
+
 @dataclass
 class Response:
     status: int
     headers: dict[str, str]
     body: bytes
+    # False for a status the client made up because nothing was sent (no executable, no HTTP reply).
+    sent: bool = True
+
+
+def _unsent(message):
+    return Response(599, {}, b'{"message":"' + message.encode() + b'"}', sent=False)
 
 
 @dataclass
@@ -288,6 +299,9 @@ class GitHubClient:
         self.max_response_bytes = max_response_bytes
         self._configure_host(canonical_host(self.env.get("GH_HOST", "github.com")))
         self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
+        # Counts keep their own durable path: a locked database degrades ``cache_dir`` to a
+        # private memory store for the cache, but a sent request still has to be counted.
+        self._counter_dir = self.cache_dir
         self._memory_db = None
 
     def _configure_host(self, host):
@@ -333,7 +347,7 @@ class GitHubClient:
                     self.cache_dir = None
                     path = ":memory:"
             try:
-                db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
+                db = self._memory_db if self._memory_db is not None else _connect(path)
                 if self.cache_dir is None:
                     self._memory_db = db
                 else:
@@ -368,6 +382,48 @@ class GitHubClient:
             if self.cache_dir is not None:
                 db.close()
 
+    def _count(self, now, resource, caller, *, requests=1, headers=None):
+        """Durably count ``requests`` that were sent; never raises and never blocks the request for long.
+
+        A write that cannot get the database lock within ``COUNT_BUSY_SECONDS`` is appended
+        to a spill file that the next successful writer merges, so a count is not lost to a
+        long-held lock. Only a spill that cannot be written either is lost, and says so.
+        """
+        pool = counters.count_resource(resource)
+        directory = self._counter_dir
+        if directory is not None:
+            database = Path(directory) / "cache.sqlite3"
+            if database.exists() and not os.access(database, os.W_OK):
+                directory = None
+        if directory is None:
+            # No durable store exists (private in-memory cache): nothing outside this process can read it.
+            with suppress(sqlite3.Error, OSError), self._db() as db:
+                counters.record(db, now, pool, caller, requests)
+                counters.observe(db, now, pool, caller, headers or {})
+            return
+        claimed = []
+        try:
+            db = _connect(Path(directory) / "cache.sqlite3")
+            try:
+                db.execute(
+                    f"PRAGMA busy_timeout={int(counters.COUNT_BUSY_SECONDS * 1000)}"
+                )  # shorter than a cache read waits
+                with db:
+                    db.execute(counters.SCHEMA)
+                    counters.record(db, now, pool, caller, requests)
+                    counters.observe(db, now, pool, caller, headers or {})
+                    claimed = counters.claim_spill(directory)
+                    counters.apply_spill(db, claimed, now)
+            finally:
+                db.close()
+        except (sqlite3.Error, OSError):
+            try:
+                counters.spill_append(directory, now, pool, caller, requests)
+            except OSError:
+                counters.logger.warning("github_counter_lost pool=%s caller=%s requests=%d", pool, caller, requests)
+            return
+        counters.release_spill(claimed)
+
     def _send(self, method, endpoint, headers, body, timeout):
         if self.transport:
             response = self.transport(method, endpoint, headers, body, timeout)
@@ -379,7 +435,7 @@ class GitHubClient:
             try:
                 executable = real_gh({**self.env, "AGENT_ORIGINAL_PATH": self.env.get("PATH", os.defpath)})
             except PublishBlocked:
-                return Response(599, {}, b'{"message":"github_transport_unavailable"}')
+                return _unsent("github_transport_unavailable")
         command = [executable, "api", "--include", "--method", method, endpoint]
         if self.host != "github.com":
             command.extend(["--hostname", self.host])
@@ -407,12 +463,12 @@ class GitHubClient:
         if self.runner and not ANSI.sub(b"", raw).startswith(b"HTTP/"):
             return self._bounded_response(Response(200 if proc.returncode == 0 else 500, {}, raw))
         if not ANSI.sub(b"", raw).startswith(b"HTTP/"):
-            return Response(599, {}, b'{"message":"github_transport_unavailable"}')
+            return _unsent("github_transport_unavailable")
         return self._bounded_response(parse_http(raw))
 
     def _bounded_response(self, response):
         if self.max_response_bytes is not None and len(response.body) > self.max_response_bytes:
-            return Response(413, response.headers, b'{"message":"github_response_too_large"}')
+            return Response(413, response.headers, b'{"message":"github_response_too_large"}', sent=response.sent)
         return response
 
     def request(
@@ -481,17 +537,21 @@ class GitHubClient:
                 "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (?, 'secondary') ORDER BY reset DESC",
                 (self.scope, resource),
             ).fetchall()
-            limited = next((reset for remaining, reset in budget if remaining <= RESERVE and reset > now), None)
+            # Landing calls are never held back by the client's own small reserve; they stop only at
+            # zero with the reset still ahead, where the call could only fail at GitHub.
+            landing = counters.is_landing(method, resource_path, query)
+            floor = 0 if landing else RESERVE
+            limited = next((reset for remaining, reset in budget if remaining <= floor and reset > now), None)
             refusal = None
             if limited is None:
-                # This call will reach the network: guard it, then count it (cache hits never get here).
+                # This call will reach the network: guard it (it is counted once it was sent).
                 refusal = counters.admit(
                     db,
                     scope=self.scope,
                     now=now,
                     resource=resource,
                     caller=caller,
-                    landing=counters.is_landing(method, resource_path, query),
+                    landing=landing,
                     soft_caps=counters.load_soft_caps(self.cache_dir),
                 )
         if refusal is not None:
@@ -506,7 +566,12 @@ class GitHubClient:
                     reset_at=reset,
                     headers=json.loads(cached[1]),
                 )
-            return Result(status=429, error="github_rate_limited", reset_at=reset)
+            return Result(
+                status=429,
+                error="github_rate_limited",
+                reset_at=reset,
+                reason=counters.REASON_POOL_EXHAUSTED if landing else None,
+            )
 
         if limited is not None:
             return deferred(limited)
@@ -515,13 +580,19 @@ class GitHubClient:
             old_headers = json.loads(cached[1])
             if old_headers.get("etag"):
                 headers["If-None-Match"] = old_headers["etag"]
-        response = self._send(method, endpoint, headers, raw, timeout)
+        try:
+            response = self._send(method, endpoint, headers, raw, timeout)
+        except subprocess.TimeoutExpired:
+            # The request left this process; whether GitHub answered is unknown, so it still spent budget.
+            self._count(now, resource, caller)
+            raise
         h = {k.lower(): v for k, v in response.headers.items()}
+        if response.sent:
+            self._count(now, resource, caller, headers=h)
         reset = None
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
-                    counters.observe(db, now, resource, caller, h)
                     if "x-ratelimit-remaining" in h and "x-ratelimit-reset" in h:
                         with suppress(ValueError):
                             remaining, reset = int(h["x-ratelimit-remaining"]), int(h["x-ratelimit-reset"])
@@ -1854,6 +1925,19 @@ def _native_landing(args, host):
     return counters.native_is_landing(args, api)
 
 
+# gh's own HTTP log (``GH_DEBUG=api``): one ``* Request at`` block per request actually made.
+_HTTP_LOG_BLOCK = re.compile(rb"^\* Request at [^\n]*\n.*?(?:^\* Request took [^\n]*(?:\n|\Z)|\Z)", re.M | re.S)
+_HTTP_LOG_REQUEST = re.compile(rb"^\* Request to ", re.M)
+
+
+def _native_requests(error):
+    """Split gh's HTTP request log out of its stderr: ``(requests made, stderr without the log)``."""
+    raw = error.encode() if isinstance(error, str) else error
+    made = len(_HTTP_LOG_REQUEST.findall(raw))
+    stripped = _HTTP_LOG_BLOCK.sub(b"", raw)
+    return made, stripped.decode() if isinstance(error, str) else stripped
+
+
 def _native_command(args, client, runner, kwargs):
     """Fall through once using the bounded, colour-safe native transport."""
     buckets = sorted(_native_buckets(args, client.host))
@@ -1865,7 +1949,9 @@ def _native_command(args, client, runner, kwargs):
             "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (" + ",".join("?" * len(buckets)) + ")",
             (client.scope, *buckets),
         ).fetchall()
-        reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
+        landing = _native_landing(args, client.host)
+        floor = 0 if landing else RESERVE
+        reset = next((reset for remaining, reset in budgets if remaining <= floor and reset > client.clock()), None)
         refusal = None
         if reset is None:
             refusal = counters.admit(
@@ -1874,11 +1960,12 @@ def _native_command(args, client, runner, kwargs):
                 now=client.clock(),
                 resource=pool,
                 caller=client.caller,
-                landing=_native_landing(args, client.host),
+                landing=landing,
                 soft_caps=counters.load_soft_caps(client.cache_dir),
             )
     if reset is not None:
-        return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+        reason = counters.REASON_POOL_EXHAUSTED if landing else None
+        return _result_process(args, Result(error="github_rate_limited", reset_at=reset, reason=reason), {}, kwargs)
     if refusal is not None:
         raise GitHubBudgetRefused(refusal.reason, refusal.reset_at)
     executable = client.env.get("AGENT_REAL_GH", "gh")
@@ -1890,9 +1977,12 @@ def _native_command(args, client, runner, kwargs):
             executable = real_gh({**client.env, "AGENT_ORIGINAL_PATH": client.env.get("PATH", os.defpath)})
         except PublishBlocked:
             return _result_process(args, Result(error="github_transport_unavailable"), {}, kwargs)
+    # A paginated gh makes one HTTP request per page and prints a merged document, so the only
+    # exact request count is gh's own request log, which is then removed from the stderr handed back.
+    log_requests = "--paginate" in args[2:] and "GH_DEBUG" not in client.env
     call = dict(
         input=kwargs.get("input").encode() if isinstance(kwargs.get("input"), str) else kwargs.get("input"),
-        env=client.env,
+        env={**client.env, "GH_DEBUG": "api"} if log_requests else client.env,
         cwd=client.cwd,
         timeout=kwargs.get("timeout") or 30,
         capture_output=True,
@@ -1908,6 +1998,14 @@ def _native_command(args, client, runner, kwargs):
     else:
         native = (executor or _transport_process)([executable, *args[1:]], **call)
     output, error = native.stdout or b"", native.stderr or b""
+    made, quiet = _native_requests(error)
+    if log_requests:
+        error = quiet
+    # Other commands make one request; a paginated one without a log (an older gh, an injected
+    # runner) made at least one if it succeeded, and none if it was refused before any request.
+    sent = made or (0 if log_requests and native.returncode else 1)
+    if sent:
+        client._count(client.clock(), pool, client.caller, requests=sent)
     raw_error = error.encode() if isinstance(error, str) else error
     if native.returncode and b"rate limit" in raw_error.lower():
         reset = int(client.clock() + 60)
@@ -2630,11 +2728,7 @@ def timer(function):
             return 0
         except subprocess.CalledProcessError as exc:
             observation = getattr(exc, "github_result", None)
-            if (
-                exc.returncode != 75
-                or not isinstance(observation, Result)
-                or observation.error not in RETRYABLE_ERRORS
-            ):
+            if exc.returncode != 75 or not isinstance(observation, Result) or observation.error not in RETRYABLE_ERRORS:
                 raise
             reset = observation.reset_at
             print(f"GitHub timer: skipped {observation.error} reset_at={reset}")

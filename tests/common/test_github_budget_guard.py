@@ -27,7 +27,9 @@ def make(tmp_path, *, caller="drv", now=NOW, env=None):
         calls.append((method, endpoint))
         return ok()
 
-    return gh.GitHubClient(cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}, caller=caller), calls
+    return gh.GitHubClient(
+        cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}, caller=caller
+    ), calls
 
 
 def seed(client, remaining, *, resource="core", reset=RESET):
@@ -86,7 +88,7 @@ def test_a_refused_call_is_typed_value_free_and_counts_nothing(tmp_path):
     client, calls = make(tmp_path, caller="orphan-triage")
     seed(client, 77)
     with pytest.raises(gh.GitHubRateLimited) as refusal:  # existing handlers already catch this base
-        client.request("POST", "repos/secret-owner/secret-repo/issues/9/comments", payload={"body": "private-body"})
+        client.request("POST", "repos/secret-owner/secret-repo/issues/9/labels", payload={"labels": ["private-body"]})
     exc = refusal.value
     assert isinstance(exc, gh.GitHubBudgetRefused) and exc.code == "github_budget_refused"
     assert "secret" not in str(exc) and "private" not in str(exc)
@@ -128,19 +130,35 @@ def test_only_the_core_pool_is_guarded(tmp_path):
         ("GET", "repos/o/r/actions/runs/55/jobs", None, True),
         ("POST", "repos/o/r/actions/runs/55/rerun-failed-jobs", None, True),
         ("POST", "repos/o/r/actions/jobs/66/rerun", None, True),
+        # verdict publication, its readback and the commit status line (F1)
+        ("POST", "repos/o/r/issues/7/comments", None, True),
+        ("GET", "repos/o/r/issues/7/comments", None, True),
+        ("GET", "repos/o/r/issues/comments/9", None, True),
+        ("GET", "repos/o/r/issues/7/timeline", None, True),
+        ("POST", "repos/o/r/statuses/0123abc", None, True),
         ("GET", "rate_limit", None, True),
         ("POST", "app/installations/12/access_tokens", None, True),
         ("DELETE", "installation/token", None, True),
-        ("POST", "graphql", "mutation($i:EnqueuePullRequestInput!){enqueuePullRequest(input:$i){clientMutationId}}", True),
+        (
+            "POST",
+            "graphql",
+            "mutation($i:EnqueuePullRequestInput!){enqueuePullRequest(input:$i){clientMutationId}}",
+            True,
+        ),
         ("POST", "graphql", "mutation{ enablePullRequestAutoMerge(input:{}){clientMutationId} }", True),
-        ("POST", "graphql", "query{repository(owner:\"o\",name:\"r\"){mergeQueue(branch:\"main\"){url}}}", True),
+        ("POST", "graphql", 'query{repository(owner:"o",name:"r"){mergeQueue(branch:"main"){url}}}', True),
         # not landing: wrong verb, a full rerun, bulk reads, writes unrelated to landing, unknown shapes
         ("DELETE", "repos/o/r/pulls/7/merge", None, False),
         ("POST", "repos/o/r/actions/runs/55/rerun", None, False),
         ("GET", "repos/o/r/actions/runs", None, False),
         ("GET", "repos/o/r/pulls", None, False),
         ("GET", "repos/o/r/issues", None, False),
-        ("POST", "repos/o/r/issues/7/comments", None, False),
+        ("PATCH", "repos/o/r/issues/comments/9", None, False),
+        ("DELETE", "repos/o/r/issues/comments/9", None, False),
+        ("POST", "repos/o/r/issues/7/labels", None, False),
+        ("GET", "repos/o/r/issues/7/events", None, False),
+        ("POST", "repos/o/r/commits/abc123/comments", None, False),
+        ("GET", "repos/o/r/statuses/abc123", None, False),
         ("PATCH", "repos/o/r/issues/7", None, False),
         ("GET", "repos/o/r/pulls/7/files", None, False),
         ("GET", "search/issues", None, False),
@@ -182,7 +200,9 @@ def test_native_landing_allowlist(args, landing):
 def test_native_api_shapes_are_classified_by_endpoint_and_method():
     assert gh._native_landing(["gh", "api", "--method", "PUT", "repos/o/r/pulls/7/merge"], "github.com")
     assert gh._native_landing(["gh", "api", "repos/o/r/commits/abc/check-runs"], "github.com")
-    assert gh._native_landing(["gh", "api", "graphql", "-f", "query=mutation{enqueuePullRequest(input:{}){x}}"], "github.com")
+    assert gh._native_landing(
+        ["gh", "api", "graphql", "-f", "query=mutation{enqueuePullRequest(input:{}){x}}"], "github.com"
+    )
     assert not gh._native_landing(["gh", "api", "repos/o/r/issues"], "github.com")
     assert not gh._native_landing(["gh", "api", "graphql", "-f", "query=query{viewer{login}}"], "github.com")
 
@@ -324,7 +344,9 @@ def test_simulated_exhaustion_names_the_top_three_callers(tmp_path):
 
     def transport(method, endpoint, headers, body, timeout):
         remaining["left"] -= 1
-        return gh.Response(200, {"X-RateLimit-Remaining": str(remaining["left"]), "X-RateLimit-Reset": str(RESET)}, b"{}")
+        return gh.Response(
+            200, {"X-RateLimit-Remaining": str(remaining["left"]), "X-RateLimit-Reset": str(RESET)}, b"{}"
+        )
 
     order = [name for name, n in plan.items() for _ in range(n)]
     for index, name in enumerate(order):
@@ -367,13 +389,21 @@ def route_client_builder(tmp_path, monkeypatch, answers):
 def test_rest_read_tags_the_caller_and_lets_landing_operations_through(tmp_path, monkeypatch):
     calls = route_client_builder(tmp_path, monkeypatch, lambda m, e: gh.Response(200, {}, b'{"merged_at": null}'))
     seed(gh.GitHubClient(env=None), 77)
-    landing = gh.rest_read("merge-facts", "o/r", {"batch": [("o/r", 7)]}, caller="lander", capture_output=True, text=True)
+    landing = gh.rest_read(
+        "merge-facts", "o/r", {"batch": [("o/r", 7)]}, caller="lander", capture_output=True, text=True
+    )
     assert landing.returncode == 0 and json.loads(landing.stdout) == {"data": {"r0": {"p7": {"mergedAt": None}}}}
     assert calls == [("GET", "repos/o/r/pulls/7")]
-    assert counters.report_for(tmp_path, NOW)["windows"]["current"]["resources"]["core"] == [{"caller": "lander", "count": 1}]
+    assert counters.report_for(tmp_path, NOW)["windows"]["current"]["resources"]["core"] == [
+        {"caller": "lander", "count": 1}
+    ]
     reader = gh.rest_read("pr-bases", "o/r", {}, caller="reader", capture_output=True, text=True)
     assert reader.returncode == 75 and len(calls) == 1
-    assert json.loads(reader.stderr) == {"error": "github_budget_refused", "reset_at": RESET, "reason": "core_below_landing_reserve"}
+    assert json.loads(reader.stderr) == {
+        "error": "github_budget_refused",
+        "reset_at": RESET,
+        "reason": "core_below_landing_reserve",
+    }
 
 
 def test_queue_read_is_a_landing_operation(tmp_path, monkeypatch):
@@ -383,11 +413,15 @@ def test_queue_read_is_a_landing_operation(tmp_path, monkeypatch):
 
     calls = route_client_builder(tmp_path, monkeypatch, answer)
     seed(gh.GitHubClient(env=None), 77)
-    result = gh.queue_read("queue-snapshot", "o/r", {"branches": ["main"]}, caller="keeper", capture_output=True, text=True)
+    result = gh.queue_read(
+        "queue-snapshot", "o/r", {"branches": ["main"]}, caller="keeper", capture_output=True, text=True
+    )
     assert result.returncode == 0, result.stderr
     assert [endpoint.split("?")[0] for _, endpoint in calls] == ["repos/o/r/pulls", "graphql"]
     resources = counters.report_for(tmp_path, NOW)["windows"]["current"]["resources"]
-    assert resources["core"] == [{"caller": "keeper", "count": 1}] and resources["graphql"] == [{"caller": "keeper", "count": 1}]
+    assert resources["core"] == [{"caller": "keeper", "count": 1}] and resources["graphql"] == [
+        {"caller": "keeper", "count": 1}
+    ]
 
 
 def test_publisher_tags_its_traffic(monkeypatch):
@@ -400,3 +434,119 @@ def test_publisher_tags_its_traffic(monkeypatch):
     counters.set_process_caller("keeper")
     publisher._run_transport(["gh", "api", "user"], env={})
     assert seen == ["publish", "keeper"]
+
+
+# --- landing-class verdict traffic and the exhaustion gate (review round 1: F1, F2) --------------
+
+VERDICT_TRAFFIC = {
+    "verdict-comment": ("POST", "repos/o/r/issues/7/comments", {"body": "VERDICT: APPROVE"}),
+    "comment-readback": ("GET", "repos/o/r/issues/7/comments?per_page=100", None),
+    "single-comment-readback": ("GET", "repos/o/r/issues/comments/9", None),
+    "timeline-readback": ("GET", "repos/o/r/issues/7/timeline", None),
+    "commit-status": ("POST", "repos/o/r/statuses/0123abcd", {"state": "success", "context": "cf"}),
+}
+LANDING_WRITES = {
+    "merge": ("PUT", "repos/o/r/pulls/7/merge", {"merge_method": "squash"}),
+    "enqueue": (
+        "POST",
+        "graphql",
+        {"query": "mutation($i:EnqueuePullRequestInput!){enqueuePullRequest(input:$i){clientMutationId}}"},
+    ),
+    "update-branch": ("PUT", "repos/o/r/pulls/7/update-branch", None),
+    "rerun-failed": ("POST", "repos/o/r/actions/runs/55/rerun-failed-jobs", None),
+}
+
+
+def send(client, shape):
+    method, path, payload = shape
+    return client.request(method, path, payload=payload, fresh=True)
+
+
+@pytest.mark.parametrize("name", sorted(VERDICT_TRAFFIC))
+@pytest.mark.parametrize("remaining", [499, 500, 501])
+def test_verdict_traffic_is_landing_class_around_the_reserve(tmp_path, name, remaining):
+    client, calls = make(tmp_path)
+    seed(client, remaining)
+    assert send(client, VERDICT_TRAFFIC[name]).status == 200
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("name", sorted(VERDICT_TRAFFIC))
+def test_verdict_traffic_stops_only_at_a_proven_empty_pool(tmp_path, name):
+    client, calls = make(tmp_path)
+    seed(client, 0)
+    result = send(client, VERDICT_TRAFFIC[name])
+    assert result.error == "github_rate_limited" and result.reset_at == RESET
+    assert result.reason == counters.REASON_POOL_EXHAUSTED
+    assert calls == [] and count(tmp_path) == 0
+
+
+@pytest.mark.parametrize("name", sorted(VERDICT_TRAFFIC))
+def test_verdict_traffic_is_never_starved_by_an_unknown_or_expired_budget(tmp_path, name):
+    client, calls = make(tmp_path)
+    assert send(client, VERDICT_TRAFFIC[name]).status == 200  # no budget row at all
+    seed(client, 0, reset=NOW)  # the window has rolled over
+    assert send(client, VERDICT_TRAFFIC[name]).status == 200 and len(calls) == 2
+
+
+@pytest.mark.parametrize("name", sorted(LANDING_WRITES))
+@pytest.mark.parametrize("remaining", [499, 1])
+def test_landing_writes_are_not_held_back_by_either_reserve(tmp_path, name, remaining):
+    client, calls = make(tmp_path)
+    seed(client, remaining)
+    assert send(client, LANDING_WRITES[name]).status == 200
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("name", sorted(LANDING_WRITES))
+def test_landing_writes_at_zero_are_refused_with_a_typed_value_free_reason(tmp_path, name):
+    client, calls = make(tmp_path)
+    seed(client, 0, resource="graphql" if name == "enqueue" else "core")
+    result = send(client, LANDING_WRITES[name])
+    assert result.error == "github_rate_limited" and result.reason == counters.REASON_POOL_EXHAUSTED
+    assert result.reset_at == RESET and calls == []
+
+
+def test_non_landing_below_the_client_reserve_keeps_its_untyped_deferral(tmp_path):
+    client, calls = make(tmp_path)
+    seed(client, 0)
+    result = client.request(*NON_LANDING)
+    assert result.error == "github_rate_limited" and result.reason is None and calls == []
+
+
+@pytest.mark.parametrize("remaining", [499, 1, 0])
+def test_run_rerun_failed_and_update_branch_through_the_cli_seam(tmp_path, remaining):
+    client, calls = make(tmp_path)
+    seed(client, remaining)
+    update = gh.run(
+        ["gh", "api", "--method", "PUT", "repos/o/r/pulls/7/update-branch"], client=client, capture_output=True
+    )
+    rerun = gh.run(
+        ["gh", "api", "--method", "POST", "repos/o/r/actions/runs/55/rerun-failed-jobs"],
+        client=client,
+        capture_output=True,
+    )
+    if remaining:
+        assert update.returncode == 0 and rerun.returncode == 0 and len(calls) == 2
+    else:
+        assert update.returncode == 75 and rerun.returncode == 75 and calls == []
+        assert json.loads(rerun.stderr)["reason"] == counters.REASON_POOL_EXHAUSTED
+
+
+@pytest.mark.parametrize("remaining", [499, 1, 0])
+def test_native_landing_read_follows_the_same_gate(tmp_path, remaining):
+    client, _ = make(tmp_path)
+    seed(client, remaining)
+    native = []
+
+    def runner(command, **kwargs):
+        native.append(command)
+        return gh.subprocess.CompletedProcess(command, 0, b"{}", b"")
+
+    shape = ["gh", "api", "--paginate", "--jq", ".x", "repos/o/r/pulls/7/reviews"]
+    result = gh._run_command(shape, client=client, runner=runner, capture_output=True)
+    if remaining:
+        assert len(native) == 1
+    else:
+        assert native == [] and result.returncode == 75
+        assert json.loads(result.stderr)["reason"] == counters.REASON_POOL_EXHAUSTED

@@ -42,7 +42,9 @@ def make(tmp_path, *, caller=None, now=NOW, answers=None):
 def rows(tmp_path):
     db = sqlite3.connect(tmp_path / "cache.sqlite3")
     try:
-        return db.execute("SELECT hour,resource,caller,count FROM caller_counter ORDER BY hour,resource,caller").fetchall()
+        return db.execute(
+            "SELECT hour,resource,caller,count FROM caller_counter ORDER BY hour,resource,caller"
+        ).fetchall()
     finally:
         db.close()
 
@@ -112,7 +114,9 @@ def test_a_tag_at_the_length_bound_is_kept(tmp_path):
 
 def test_default_caller_comes_from_the_entry_module(monkeypatch):
     monkeypatch.setattr(counters, "_process_caller", None)
-    monkeypatch.setitem(sys.modules, "__main__", SimpleNamespace(__spec__=SimpleNamespace(name="scripts.publish.__main__")))
+    monkeypatch.setitem(
+        sys.modules, "__main__", SimpleNamespace(__spec__=SimpleNamespace(name="scripts.publish.__main__"))
+    )
     assert counters.resolve_caller() == "scripts.publish"
     monkeypatch.setitem(sys.modules, "__main__", SimpleNamespace(__spec__=None))
     monkeypatch.setattr(sys, "argv", ["/x/My Poller.py"])
@@ -244,8 +248,12 @@ def test_report_orders_callers_by_count_then_name(tmp_path):
     db = sqlite3.connect(tmp_path / "cache.sqlite3")
     db.execute(counters.SCHEMA)
     for caller, count in (("b", 5), ("a", 5), ("z", 9), ("c", 1)):
-        db.execute("INSERT INTO caller_counter(hour,resource,caller,count) VALUES(?,?,?,?)", (HOUR, "core", caller, count))
-    db.execute("INSERT INTO caller_counter(hour,resource,caller,count) VALUES(?,?,?,?)", (HOUR - 3600, "search", "old", 2))
+        db.execute(
+            "INSERT INTO caller_counter(hour,resource,caller,count) VALUES(?,?,?,?)", (HOUR, "core", caller, count)
+        )
+    db.execute(
+        "INSERT INTO caller_counter(hour,resource,caller,count) VALUES(?,?,?,?)", (HOUR - 3600, "search", "old", 2)
+    )
     db.commit()
     db.close()
     report = counters.report_for(tmp_path, NOW, limit=3)
@@ -297,7 +305,272 @@ def test_a_storage_error_never_blocks_a_request(tmp_path, monkeypatch):
     def broken(*args, **kwargs):
         raise sqlite3.OperationalError("database is locked")
 
-    monkeypatch.setattr(counters, "_record", broken)
+    monkeypatch.setattr(counters, "record", broken)
     client, calls = make(tmp_path, caller="drv")
     assert client.request("GET", "repos/o/r/issues/1").status == 200
     assert len(calls) == 1
+
+
+# --- only sent requests are counted (review round 1: F5) ----------------------------------------
+
+
+def total(tmp_path):
+    return sum(row[3] for row in rows(tmp_path)) if (tmp_path / "cache.sqlite3").exists() else 0
+
+
+def test_an_unavailable_transport_counts_nothing(tmp_path):
+    client = gh.GitHubClient(
+        cache_dir=tmp_path, env={"AGENT_REAL_GH": str(tmp_path / "no-such-gh")}, clock=lambda: NOW, caller="drv"
+    )
+    result = client.request("GET", "repos/o/r/issues/1", fresh=True)
+    assert result.status == 599 and result.error == "github_http_error"
+    assert total(tmp_path) == 0
+
+
+def test_a_reply_without_an_http_status_counts_nothing(tmp_path):
+    fake = tmp_path / "gh-no-reply"
+    fake.write_text("#!/bin/sh\necho 'could not reach the network'\nexit 1\n")
+    fake.chmod(0o755)
+    client = gh.GitHubClient(cache_dir=tmp_path, env={"AGENT_REAL_GH": str(fake)}, clock=lambda: NOW, caller="drv")
+    result = client.request("GET", "repos/o/r/issues/1", fresh=True)
+    assert result.status == 599
+    assert total(tmp_path) == 0
+
+
+def test_a_crash_before_the_transport_returns_leaves_no_phantom_count(tmp_path):
+    def transport(*args):
+        raise RuntimeError("died before sending")
+
+    client = gh.GitHubClient(cache_dir=tmp_path, transport=transport, clock=lambda: NOW, env={}, caller="drv")
+    with pytest.raises(RuntimeError):
+        client.request("GET", "repos/o/r/issues/1", fresh=True)
+    assert total(tmp_path) == 0
+
+
+def test_a_request_that_timed_out_after_sending_still_counts(tmp_path):
+    def transport(*args):
+        raise subprocess.TimeoutExpired("gh", 30)
+
+    client = gh.GitHubClient(cache_dir=tmp_path, transport=transport, clock=lambda: NOW, env={}, caller="drv")
+    with pytest.raises(subprocess.TimeoutExpired):
+        client.request("GET", "repos/o/r/issues/1", fresh=True)
+    assert rows(tmp_path) == [(HOUR, "core", "drv", 1)]
+
+
+@pytest.mark.parametrize("status", [404, 422, 500, 502])
+def test_real_http_error_statuses_count(tmp_path, status):
+    client, _ = make(tmp_path, caller="drv", answers=lambda n: reply(status=status))
+    client.request("GET", "repos/o/r/issues/1", fresh=True)
+    assert rows(tmp_path) == [(HOUR, "core", "drv", 1)]
+
+
+def test_the_too_large_marker_still_counts_because_the_request_was_sent(tmp_path):
+    def transport(*args):
+        return gh.Response(200, {}, b"x" * 100)
+
+    client = gh.GitHubClient(
+        cache_dir=tmp_path, transport=transport, clock=lambda: NOW, env={}, caller="drv", max_response_bytes=10
+    )
+    assert client.request("GET", "repos/o/r/issues/1", fresh=True).status == 413
+    assert total(tmp_path) == 1
+
+
+# --- counting is durable under a long-held lock (review round 1: F3) -----------------------------
+
+HOLDER = (
+    "import sqlite3, sys, time\n"
+    "db = sqlite3.connect(sys.argv[1], isolation_level=None)\n"
+    "db.execute('BEGIN EXCLUSIVE')\n"
+    "print('locked', flush=True)\n"
+    "time.sleep(float(sys.argv[2]))\n"
+    "db.execute('COMMIT')\n"
+)
+
+
+def test_a_lock_held_past_five_seconds_does_not_lose_the_count(tmp_path, monkeypatch):
+    monkeypatch.setattr(counters, "COUNT_BUSY_SECONDS", 0.2)
+    client, _ = make(tmp_path, caller="drv")
+    client.request("GET", "repos/o/r/issues/1", fresh=True)
+    assert rows(tmp_path) == [(HOUR, "core", "drv", 1)]
+    holder = subprocess.Popen(
+        [sys.executable, "-c", HOLDER, str(tmp_path / "cache.sqlite3"), "6.0"],
+        stdout=subprocess.PIPE,
+        text=True,
+        cwd=REPO_ROOT,
+    )
+    try:
+        assert holder.stdout.readline().strip() == "locked"
+        started = time.monotonic()
+        busy, _ = make(tmp_path, caller="drv")
+        assert busy.request("GET", "repos/o/r/issues/2", fresh=True).status == 200
+        assert time.monotonic() - started >= 5  # the request really waited on the held lock
+        assert (tmp_path / counters.SPILL_FILE).read_text() == f"{HOUR}\tcore\tdrv\t1\n"
+    finally:
+        assert holder.wait(timeout=30) == 0
+    assert rows(tmp_path) == [(HOUR, "core", "drv", 1)]  # still only in the spill file
+    after, _ = make(tmp_path, caller="drv")
+    after.request("GET", "repos/o/r/issues/3", fresh=True)
+    assert rows(tmp_path) == [(HOUR, "core", "drv", 3)]  # the next writer merged the spill
+    assert not (tmp_path / counters.SPILL_FILE).exists()
+    assert list(tmp_path.glob(f"*{counters.CLAIM_SUFFIX}")) == []
+
+
+def test_concurrent_spillers_lose_nothing(tmp_path):
+    def spill(index):
+        for _ in range(20):
+            counters.spill_append(tmp_path, NOW, "core", f"w{index}", 1)
+
+    pool = [threading.Thread(target=spill, args=(i,)) for i in range(4)]
+    for thread in pool:
+        thread.start()
+    for thread in pool:
+        thread.join()
+    db = sqlite3.connect(":memory:")
+    db.execute(counters.SCHEMA)
+    claimed = counters.claim_spill(tmp_path)
+    assert counters.apply_spill(db, claimed, NOW) == 80
+    assert db.execute("SELECT caller,count FROM caller_counter ORDER BY caller").fetchall() == [
+        (f"w{i}", 20) for i in range(4)
+    ]
+
+
+def test_a_spill_merge_skips_malformed_and_expired_lines(tmp_path):
+    later = NOW + 20 * 24 * 3600  # the HOUR bucket is now past the seven-day retention
+    current = counters.hour_start(later)
+    (tmp_path / counters.SPILL_FILE).write_text(
+        "\n".join(
+            [
+                f"{current}\tcore\tgood\t2",
+                f"{current}\tnot-a-pool\tgood\t1",
+                f"{current}\tcore\tBad Caller\t1",
+                f"{current}\tcore\tgood",
+                f"{current}\tcore\tgood\tmany",
+                f"{HOUR}\tcore\told\t5",
+                "garbage",
+            ]
+        )
+        + "\n"
+    )
+    db = sqlite3.connect(":memory:")
+    db.execute(counters.SCHEMA)
+    assert counters.apply_spill(db, counters.claim_spill(tmp_path), later) == 2
+    assert db.execute("SELECT hour,resource,caller,count FROM caller_counter").fetchall() == [
+        (current, "core", "good", 2)
+    ]
+
+
+def test_a_dead_mergers_claim_is_taken_over_only_when_stale(tmp_path):
+    now_ns = 10_000 * 1_000_000_000
+    fresh = tmp_path / f"{counters.SPILL_FILE}.{now_ns - 10 * 1_000_000_000}.4242-0{counters.CLAIM_SUFFIX}"
+    stale = tmp_path / f"{counters.SPILL_FILE}.{now_ns - 400 * 1_000_000_000}.4243-0{counters.CLAIM_SUFFIX}"
+    fresh.write_text(f"{HOUR}\tcore\tfresh\t1\n")
+    stale.write_text(f"{HOUR}\tcore\tstale\t1\n")
+    claimed = counters.claim_spill(tmp_path, now_ns=now_ns)
+    assert len(claimed) == 1 and not stale.exists() and fresh.exists()
+    assert claimed[0].read_text() == f"{HOUR}\tcore\tstale\t1\n"
+
+
+def test_a_count_that_can_be_neither_written_nor_spilled_is_reported(tmp_path, monkeypatch, caplog):
+    def locked(*args, **kwargs):
+        raise sqlite3.OperationalError("database is locked")
+
+    def no_space(*args, **kwargs):
+        raise OSError("no space left")
+
+    monkeypatch.setattr(counters, "record", locked)
+    monkeypatch.setattr(counters, "spill_append", no_space)
+    client, calls = make(tmp_path, caller="drv")
+    with caplog.at_level("WARNING", logger=counters.logger.name):
+        assert client.request("GET", "repos/o/r/issues/1", fresh=True).status == 200
+    assert len(calls) == 1
+    assert [r.getMessage() for r in caplog.records] == ["github_counter_lost pool=core caller=drv requests=1"]
+
+
+# --- native pagination counts the pages gh really requested (review round 1: F4) ----------------
+
+PAGE_LOG = (
+    "* Request at 2026-10-15 16:34:03 +0000 UTC m=+0.05\n"
+    "* Request to https://api.github.com/repos/o/r/issues?per_page=100\n"
+    "> GET /repos/o/r/issues?per_page=100 HTTP/1.1\n"
+    "\n"
+    "< HTTP/2.0 200 OK\n"
+    '< Link: <https://api.github.com/repos/o/r/issues?page=2>; rel="next"\n'
+    "\n"
+    '[\n  {\n    "n": 1\n  }\n]\n'
+    "\n"
+    "* Request took 1.5ms\n"
+)
+PAGED = ["gh", "api", "--paginate", "--jq", ".[].n", "repos/o/r/issues"]  # --jq keeps it native
+
+
+def native_runner(seen, stderr, returncode=0):
+    def runner(command, **kwargs):
+        seen.append(kwargs.get("env", {}).get("GH_DEBUG"))
+        return subprocess.CompletedProcess(command, returncode, b"1\n2\n3\n", stderr)
+
+    return runner
+
+
+def test_native_pagination_counts_every_page(tmp_path):
+    client, _ = make(tmp_path, caller="drv")
+    seen = []
+    proc = gh._run_command(
+        PAGED, client=client, runner=native_runner(seen, (PAGE_LOG * 3).encode()), capture_output=True
+    )
+    assert seen == ["api"]  # gh was asked for its request log
+    assert rows(tmp_path) == [(HOUR, "core", "drv", 3)]
+    assert proc.stderr == b"" and proc.stdout == b"1\n2\n3\n"
+
+
+def test_native_pagination_hands_back_the_real_stderr_without_the_log(tmp_path):
+    client, _ = make(tmp_path, caller="drv")
+    stderr = (PAGE_LOG * 2 + "warning: something gh said\n").encode()
+    proc = gh._run_command(PAGED, client=client, runner=native_runner([], stderr), capture_output=True)
+    assert proc.stderr == b"warning: something gh said\n"
+    assert rows(tmp_path) == [(HOUR, "core", "drv", 2)]
+
+
+def test_native_pagination_log_is_stripped_when_text_mode_is_requested(tmp_path):
+    client, _ = make(tmp_path, caller="drv")
+    proc = gh._run_command(
+        PAGED, client=client, runner=native_runner([], (PAGE_LOG * 2).encode()), capture_output=True, text=True
+    )
+    assert proc.stderr == "" and total(tmp_path) == 2
+
+
+def test_a_logged_run_cut_short_still_counts_the_request_it_made(tmp_path):
+    client, _ = make(tmp_path, caller="drv")
+    cut = PAGE_LOG.replace("* Request took 1.5ms\n", "")
+    gh._run_command(PAGED, client=client, runner=native_runner([], cut.encode(), returncode=1), capture_output=True)
+    assert total(tmp_path) == 1
+
+
+def test_a_paginated_command_gh_refused_before_any_request_counts_nothing(tmp_path):
+    client, _ = make(tmp_path, caller="drv")
+    gh._run_command(
+        PAGED, client=client, runner=native_runner([], b"unknown flag\n", returncode=1), capture_output=True
+    )
+    assert total(tmp_path) == 0
+
+
+def test_a_successful_native_run_without_a_log_counts_one(tmp_path):
+    client, _ = make(tmp_path, caller="drv")
+    gh._run_command(PAGED, client=client, runner=native_runner([], b""), capture_output=True)
+    assert total(tmp_path) == 1
+
+
+def test_an_unpaginated_native_command_is_not_asked_for_a_log(tmp_path):
+    client, _ = make(tmp_path, caller="drv")
+    seen = []
+    gh._run_command(["gh", "repo", "view"], client=client, runner=native_runner(seen, b""), capture_output=True)
+    assert seen == [None] and total(tmp_path) == 1
+
+
+def test_a_callers_own_gh_debug_setting_is_left_alone(tmp_path):
+    client = gh.GitHubClient(
+        cache_dir=tmp_path, env={"GH_DEBUG": "1"}, transport=lambda *a: reply(), clock=lambda: NOW, caller="drv"
+    )
+    seen = []
+    proc = gh._run_command(PAGED, client=client, runner=native_runner(seen, PAGE_LOG.encode()), capture_output=True)
+    assert seen == ["1"] and proc.stderr == PAGE_LOG.encode()
+    assert total(tmp_path) == 1

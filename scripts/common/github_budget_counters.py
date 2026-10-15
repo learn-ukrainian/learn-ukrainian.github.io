@@ -1,18 +1,25 @@
 """Per-caller GitHub request counters and the landing-first budget guard (#10730, #10660).
 
 The shared client (``scripts.common.github_client``) calls :func:`admit` once per
-request that reaches the network. ``admit`` refuses the request when the guard
-says so, and otherwise increments an hourly counter in the client's own SQLite
-file. Nothing about the request is stored: only the hour bucket, the rate-limit
-pool (``core``, ``graphql`` or ``search``), a bounded caller tag, a count and the
-last rate-limit headers seen.
+request that is about to reach the network; ``admit`` refuses the request when
+the guard says so. The client counts a request only after it was actually sent
+(:func:`record`, never for a synthetic transport failure), in the client's own
+SQLite file; a count that cannot be written because the file stays locked goes to
+an append-only spill file in the same directory that the next writer merges
+(:func:`spill_append`, :func:`claim_spill`, :func:`apply_spill`). Nothing about
+the request is stored: only the hour bucket, the rate-limit pool (``core``,
+``graphql`` or ``search``), a bounded caller tag, a count and the last
+rate-limit headers seen.
 
 Guard policy: while the ``core`` pool of the request's credential scope has fewer
 than :data:`LANDING_RESERVE` calls left (and its reset is still in the future),
 non-landing calls are refused with a typed, value-free reason; landing calls
-(an allowlist by operation: merge, enqueue, review, CI status, rerun of failed
-jobs, credential lifecycle and the free ``rate_limit`` probe) always proceed.
-An unknown budget (no row, or an expired window) never refuses anything. An
+(an allowlist by operation: merge, enqueue, review, verdict comments and their
+readback, commit statuses, CI status, rerun of failed jobs, credential lifecycle
+and the free ``rate_limit`` probe) are never refused by this reserve. The
+client's own exhaustion gate still stops any call, landing included, once the
+pool is at zero with its reset in the future: such a call can only fail at
+GitHub. An unknown budget (no row, or an expired window) never refuses anything. An
 optional per-caller soft cap, read from a file that does not ship, refuses only
 the capped caller's non-landing calls. The client never sleeps: a refusal is an
 exception the caller may retry after ``reset_at``.
@@ -26,6 +33,7 @@ import argparse
 import contextlib
 import contextvars
 import json
+import logging
 import os
 import re
 import sqlite3
@@ -45,8 +53,16 @@ CALLER_MAX_LENGTH = 64
 CALLER_PATTERN = re.compile(r"[a-z0-9][a-z0-9._:-]{0,63}")
 REASON_CORE_RESERVE = "core_below_landing_reserve"
 REASON_SOFT_CAP = "caller_soft_cap"
+REASON_POOL_EXHAUSTED = "pool_exhausted"
 SOFT_CAP_FILE = "caller-soft-caps.json"
 SOFT_CAP_ENV = "LU_GITHUB_SOFT_CAP_FILE"
+COUNT_BUSY_SECONDS = 2.0  # how long one count write waits for the database lock before it spills
+SPILL_FILE = "github-counter-spill.log"
+CLAIM_SUFFIX = ".claimed"
+CLAIM_STALE_SECONDS = 300  # a claimed spill whose merger died is taken over after this
+MAX_SPILL_BYTES = 1 << 20
+
+logger = logging.getLogger(__name__)
 
 SCHEMA = """CREATE TABLE IF NOT EXISTS caller_counter (
     hour INTEGER NOT NULL,
@@ -118,6 +134,14 @@ _LANDING_REST = (
     ("POST", re.compile(_REPO + r"pulls/\d+/reviews/\d+/events")),
     ("PUT", re.compile(_REPO + r"pulls/\d+/merge")),
     ("PUT", re.compile(_REPO + r"pulls/\d+/update-branch")),
+    # Verdict publication and its readback: a verdict is an issue comment on the PR, and
+    # recovery/verdict flows read comments, one comment and the timeline back.
+    ("POST", re.compile(_REPO + r"issues/\d+/comments")),
+    ("GET", re.compile(_REPO + r"issues/\d+/comments")),
+    ("GET", re.compile(_REPO + r"issues/comments/\d+")),
+    ("GET", re.compile(_REPO + r"issues/\d+/timeline")),
+    # Commit-status write (the CF verdict's status line); reading statuses is listed below.
+    ("POST", re.compile(_REPO + r"statuses/[^/]+")),
     ("GET", re.compile(_REPO + r"commits/[^/]+/(?:check-runs|check-suites|status|statuses)")),
     ("GET", re.compile(_REPO + r"check-suites/\d+/check-runs")),
     ("GET", re.compile(_REPO + r"check-runs/\d+")),
@@ -183,14 +207,87 @@ def hour_start(now) -> int:
     return int(now // HOUR) * HOUR
 
 
-def _record(db, now, resource, caller):
-    bucket = hour_start(now)
-    db.execute(
-        """INSERT INTO caller_counter(hour,resource,caller,count) VALUES(?,?,?,1)
-        ON CONFLICT(hour,resource,caller) DO UPDATE SET count=count+1""",
-        (bucket, resource, caller),
-    )
+def record(db, now, resource, caller, requests=1) -> None:
+    """Add ``requests`` sent requests to this hour's bucket and drop buckets past retention."""
+    _add(db, hour_start(now), resource, caller, requests)
     db.execute("DELETE FROM caller_counter WHERE hour<?", (hour_start(now - RETENTION_SECONDS),))
+
+
+def _add(db, hour, resource, caller, requests) -> None:
+    db.execute(
+        """INSERT INTO caller_counter(hour,resource,caller,count) VALUES(?,?,?,?)
+        ON CONFLICT(hour,resource,caller) DO UPDATE SET count=count+excluded.count""",
+        (hour, resource, caller, requests),
+    )
+
+
+# --- spill: counts that could not be written in time -----------------------------------
+
+
+def spill_append(cache_dir, now, resource, caller, requests=1) -> None:
+    """Append one count line (hour, pool, caller, requests) to the spill file; one atomic small write."""
+    line = f"{hour_start(now)}\t{resource}\t{caller}\t{int(requests)}\n".encode("ascii")
+    descriptor = os.open(Path(cache_dir) / SPILL_FILE, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+    try:
+        os.write(descriptor, line)
+    finally:
+        os.close(descriptor)
+
+
+def claim_spill(cache_dir, *, now_ns=None) -> list[Path]:
+    """Take ownership of the pending spill (and of claims whose merger died) by atomic rename.
+
+    A claim is a file named ``<spill>.<claim time ns>.<pid>-<n>.claimed``; another process
+    takes it over only once it is older than :data:`CLAIM_STALE_SECONDS`.
+    """
+    directory = Path(cache_dir)
+    now_ns = time.time_ns() if now_ns is None else now_ns
+    sources = [directory / SPILL_FILE]
+    for path in directory.glob(f"{SPILL_FILE}.*{CLAIM_SUFFIX}"):
+        try:
+            claimed_ns = int(path.name.split(".")[-3])
+        except (IndexError, ValueError):
+            continue
+        if now_ns - claimed_ns > CLAIM_STALE_SECONDS * 1_000_000_000:
+            sources.append(path)
+    claimed = []
+    for index, source in enumerate(sources):
+        target = directory / f"{SPILL_FILE}.{now_ns}.{os.getpid()}-{index}{CLAIM_SUFFIX}"
+        try:
+            os.rename(source, target)
+        except OSError:
+            continue  # nothing pending, or another process won the claim
+        claimed.append(target)
+    return claimed
+
+
+def apply_spill(db, claimed, now) -> int:
+    """Add the lines of claimed spill files to the counters; malformed or expired lines are skipped."""
+    oldest = hour_start(now - RETENTION_SECONDS)
+    applied = 0
+    for path in claimed:
+        try:
+            with path.open("rb") as handle:
+                text = handle.read(MAX_SPILL_BYTES).decode("ascii", errors="replace")
+        except OSError:
+            continue
+        for line in text.splitlines():
+            fields = line.split("\t")
+            if len(fields) != 4 or not fields[0].isdigit() or not fields[3].isdigit():
+                continue
+            hour, resource, caller, requests = int(fields[0]), fields[1], fields[2], int(fields[3])
+            if resource not in RESOURCES or valid_caller(caller) != caller or hour < oldest or not requests:
+                continue
+            _add(db, hour_start(hour), resource, caller, requests)
+            applied += requests
+    return applied
+
+
+def release_spill(claimed) -> None:
+    """Delete claimed spill files after their counts were committed."""
+    for path in claimed:
+        with contextlib.suppress(OSError):
+            path.unlink()
 
 
 def observe(db, now, resource, caller, headers) -> None:
@@ -273,11 +370,13 @@ class Refusal:
 
 
 def admit(db, *, scope, now, resource, caller, landing, soft_caps=None) -> Refusal | None:
-    """Refuse the request, or count it and return ``None``.
+    """Refuse a non-landing request below the reserve or over its soft cap, else return ``None``.
 
+    Nothing is counted here: the client records a request only after it was sent.
     The core reserve only gates calls that spend the core pool (graphql and search have
     their own pools, as the client's per-bucket gate already assumes). Every storage
-    error fails open: missing telemetry never starves a call. ``resource`` is a rate-limit bucket; it is folded into the counted pools.
+    error fails open: missing telemetry never starves a call. ``resource`` is a
+    rate-limit bucket; it is folded into the counted pools.
     """
     pool = count_resource(resource)
     try:
@@ -292,7 +391,6 @@ def admit(db, *, scope, now, resource, caller, landing, soft_caps=None) -> Refus
             limit = (soft_caps or {}).get(caller, {}).get(pool)
             if limit is not None and current_count(db, now, pool, caller) >= limit:
                 return Refusal(REASON_SOFT_CAP, hour_start(now) + HOUR)
-        _record(db, now, pool, caller)
     except sqlite3.Error:
         return None
     return None
