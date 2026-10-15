@@ -173,7 +173,8 @@ def apply_thread_caps(env: dict[str, str]) -> dict[str, str]:
     for name, cap in THREAD_CAPS.items():
         if cap != "false" and name in env:
             try:
-                if not float(env[name]) > float(cap):
+                value = float(env[name].strip() or "0")
+                if env[name].isascii() and env[name].isdecimal() and 0 < value <= int(cap):
                     continue
             except ValueError:
                 continue

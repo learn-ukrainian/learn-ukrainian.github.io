@@ -551,6 +551,14 @@ def test_status_cli_prints_json_and_a_readable_summary(pool: Path) -> None:
 # ---- the launcher ---------------------------------------------------------------------------------------------
 
 
+def test_launcher_help_describes_thread_cap_opt_out() -> None:
+    result = _launch("--help")
+    assert result.returncode == 0, result.stderr
+    assert "LU_TEST_THREAD_CAP" in result.stdout
+    assert "off" in result.stdout
+    assert "native thread caps" in result.stdout
+
+
 @pytest.mark.parametrize("case", ["governed", "opt_out", "disabled", "ci"])
 @pytest.mark.parametrize("direct", [False, True], ids=["module", "script"])
 def test_launcher_child_thread_environment(case: str, direct: bool, monkeypatch: pytest.MonkeyPatch) -> None:

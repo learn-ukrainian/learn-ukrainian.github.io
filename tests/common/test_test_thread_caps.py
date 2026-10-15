@@ -22,12 +22,42 @@ def test_apply_sets_caps_without_mutating_input() -> None:
     assert THREAD_CAPS == EXPECTED
 
 
-@pytest.mark.parametrize("value", ["0", "-1", "0.5", "1", "not-a-number", ""])
-def test_apply_preserves_lower_and_non_numeric_values(value: str) -> None:
+@pytest.mark.parametrize("value", ["1", "01", "not-a-number", "8,4", "true", "0x10"])
+def test_apply_preserves_positive_integers_within_cap_and_non_numeric_values(value: str) -> None:
     from scripts.common.test_thread_caps import apply
 
     original = {key: value for key in EXPECTED if key != "TOKENIZERS_PARALLELISM"}
     assert apply(original) == {**original, "TOKENIZERS_PARALLELISM": "false"}
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "0",
+        "-1",
+        "0.5",
+        "",
+        " ",
+        "\t\n",
+        "nan",
+        "NaN",
+        "inf",
+        "-inf",
+        "1e400",
+        "1.5",
+        "0.9",
+        "1.0",
+        "0_1",
+        " 1 ",
+        "1" * 500,
+    ],
+)
+def test_apply_replaces_values_that_are_not_positive_integer_limits(value: str) -> None:
+    from scripts.common.test_thread_caps import apply
+
+    original = dict.fromkeys(EXPECTED, value)
+    assert apply(original) == EXPECTED
+    assert original == dict.fromkeys(EXPECTED, value)
 
 
 def test_apply_lowers_existing_parallelism() -> None:

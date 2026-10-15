@@ -120,7 +120,31 @@ def test_gate_pytest_child_thread_caps_match_helper(
     assert seen and all(env == (EXPECTED if setting == "on" and held else dict.fromkeys(EXPECTED, "8")) for env in seen)
 
 
-@pytest.mark.parametrize("value", [None, "8", "0", "0.5", "bad", ""])
+@pytest.mark.parametrize(
+    "value",
+    [
+        None,
+        "8",
+        "0",
+        "-1",
+        "0.5",
+        "bad",
+        "",
+        " ",
+        "\t\n",
+        "nan",
+        "inf",
+        "-inf",
+        "1e400",
+        "1.5",
+        "0_1",
+        " 1 ",
+        "1",
+        "01",
+        "8,4",
+        "1" * 500,
+    ],
+)
 @pytest.mark.parametrize("setting", ["on", "off"])
 def test_gate_thread_policy_parity(value: str | None, setting: str) -> None:
     from scripts.common.test_thread_caps import THREAD_CAPS, apply
