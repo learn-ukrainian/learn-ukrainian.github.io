@@ -86,10 +86,23 @@ tr:hover td { background: var(--bg3); }
 
 .loading-msg { color: var(--text3); font-size: 13px; padding: 16px 0; }
 .error-msg { color: var(--red); font-size: 13px; padding: 8px 0; }
+
+.reader-status { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 0; font-size:12px; color:var(--text2); overflow-wrap:anywhere; }
+.reader-status button { color:var(--text); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:5px 10px; cursor:pointer; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+button { font:inherit; }
+td, .meta-row, .module-cell, .issue-card { overflow-wrap:anywhere; }
+.container, .left-panel, .right-panel { min-width:0; }
+.container { overflow-x:auto; }
+.topbar { flex-wrap:wrap; }
+.skip-link { position:absolute; top:-100px; left:8px; z-index:100; background:var(--bg); padding:10px; }
+.skip-link:focus { top:8px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#reader-main">Skip to content</a>
 
 <div class="topbar">
   <h1>&#9881; Quality</h1>
@@ -111,27 +124,27 @@ tr:hover td { background: var(--bg3); }
   <a href="/docs">API</a>
 </nav>
 
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('research')">Research Coverage</div>
-  <div class="tab" onclick="switchTab('reviews')">Review Coverage</div>
-  <div class="tab" onclick="switchTab('issues')">Outstanding Issues</div>
-  <div class="tab" onclick="switchTab('weak')">Weak Modules</div>
-  <div class="tab" onclick="switchTab('scores')">Module Scores ★</div>
+<div class="tabs" role="tablist" aria-label="Quality views">
+  <button type="button" class="tab active" data-tab="research" role="tab" aria-selected="true" aria-controls="tab-research" onclick="switchTab('research')">Research Coverage</button>
+  <button type="button" class="tab" data-tab="reviews" role="tab" aria-selected="false" aria-controls="tab-reviews" onclick="switchTab('reviews')">Review Coverage</button>
+  <button type="button" class="tab" data-tab="issues" role="tab" aria-selected="false" aria-controls="tab-issues" onclick="switchTab('issues')">Outstanding Issues</button>
+  <button type="button" class="tab" data-tab="weak" role="tab" aria-selected="false" aria-controls="tab-weak" onclick="switchTab('weak')">Weak Modules</button>
+  <button type="button" class="tab" data-tab="scores" role="tab" aria-selected="false" aria-controls="tab-scores" onclick="switchTab('scores')">Module Scores ★</button>
 </div>
 
 <!-- ===== TAB: RESEARCH ===== -->
-<div class="container">
-<div id="tab-research" class="tab-panel active">
+<div class="container" id="reader-main" role="main" tabindex="-1">
+<div id="tab-research" role="tabpanel" class="tab-panel active">
   <div id="research-content"><div class="loading-msg">Loading research coverage...</div></div>
 </div>
 
 <!-- ===== TAB: REVIEWS ===== -->
-<div id="tab-reviews" class="tab-panel">
+<div id="tab-reviews" role="tabpanel" class="tab-panel">
   <div id="reviews-content"><div class="loading-msg">Loading review coverage...</div></div>
 </div>
 
 <!-- ===== TAB: ISSUES ===== -->
-<div id="tab-issues" class="tab-panel">
+<div id="tab-issues" role="tabpanel" class="tab-panel">
   <div class="issue-filters">
     <label style="font-size:13px;color:var(--text2)">Track:</label>
     <select class="filter-select" id="issue-track-filter" onchange="filterIssues()">
@@ -149,7 +162,7 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <!-- ===== TAB: WEAK ===== -->
-<div id="tab-weak" class="tab-panel">
+<div id="tab-weak" role="tabpanel" class="tab-panel">
   <div class="issue-filters">
     <label style="font-size:13px;color:var(--text2)">Track:</label>
     <select class="filter-select" id="weak-track-filter" onchange="filterWeak()">
@@ -160,7 +173,7 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <!-- ===== TAB: SCORES ===== -->
-<div id="tab-scores" class="tab-panel">
+<div id="tab-scores" role="tabpanel" class="tab-panel">
   <div class="issue-filters">
     <label style="font-size:13px;color:var(--text2)">Track:</label>
     <select class="filter-select" id="scores-track-filter" onchange="loadScores()">
@@ -185,63 +198,168 @@ tr:hover td { background: var(--bg3); }
 </div><!-- /container -->
 
 <script>
-async function fetchJson(url, options) {
-  const res = await fetch(url, options);
-  let data = null;
+
+const readerStates = new Map();
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+function numeric(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0; }
+function count(value) { return numeric(value) ? String(value) : 'unknown'; }
+function identity(row, key) { return object(row) && typeof row[key] === 'string' && row[key].length > 0; }
+function collection(data, key, valid) {
+  if (!object(data) || !Array.isArray(data[key])) throw Error('Malformed success: invalid ' + key);
+  const rows = data[key].filter(valid);
+  if (data[key].length && !rows.length) throw Error('Malformed success: invalid ' + key + ' rows');
+  return {...data, [key]: rows, _empty: rows.length === 0, _partial: rows.length !== data[key].length || data.partial === true};
+}
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    data = await res.json();
-  } catch (e) {}
-  if (!res.ok) {
-    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+    // Legacy callers may request fresh=true; readers use the existing bounded cache.
+    const target = new URL(url, location.origin);
+    target.searchParams.delete('fresh');
+    const res = await fetch(target.pathname + target.search, {signal: controller.signal});
+    if (!res.ok) throw Error('Request failed: HTTP ' + res.status);
+    let data;
+    try { data = await res.json(); } catch { throw Error('Parse failure: invalid JSON'); }
+    if (data === null || typeof data !== 'object') throw Error('Malformed success: expected JSON object or array');
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw Error('Request timed out');
+    throw error;
+  } finally { clearTimeout(timeout); }
+}
+function validTime(value) {
+  const time = typeof value === 'string' && value ? Date.parse(value) : NaN;
+  return Number.isFinite(time) && time <= Date.now() ? time : null;
+}
+function readerClock(state) {
+  const elapsed = Math.max(0, (Date.now() - state.fetchedAt) / 1000);
+  const meta = state.data?.meta;
+  const generated = validTime(meta?.generated_at || state.data?.generated_at);
+  const cacheAge = numeric(meta?.age_s) ? ` · Cache age ${Math.floor(meta.age_s + elapsed)}s` : '';
+  const stale = meta?.stale === true || (numeric(meta?.age_s) && numeric(meta?.stale_after_s) && meta.stale_after_s > 0 && meta.age_s + elapsed > meta.stale_after_s) ? ' · Stale snapshot cache' : '';
+  const fetched = state.data?._partial || meta?.error ? 'Last partial fetch' : 'Last successful fetch';
+  const snapshot = generated === null ? '' : ` · Snapshot generated ${new Date(generated).toLocaleString()} (${Math.floor((Date.now()-generated)/1000)}s ago)`;
+  return `Source age unknown${snapshot}${cacheAge}${stale} · ${fetched} ${new Date(state.fetchedAt).toLocaleString()}`;
+}
+function runReader(id, url, validate, render) {
+  const panel = document.getElementById(id);
+  let state = readerStates.get(id);
+  if (state?.pending && state.scope === url && state.panel === panel) return state.pending;
+  if (!state || state.panel !== panel) {
+    state = {generation: 0, panel}; readerStates.set(id, state);
   }
-  return data;
+  if (state.scope !== url) { state.data = null; state.fetchedAt = null; }
+  state.scope = url;
+  const generation = ++state.generation;
+  let status = document.getElementById(id + '-reader-status');
+  if (!status) {
+    status = document.createElement('div'); status.id = id + '-reader-status'; status.className = 'reader-status';
+    const label = document.createElement('span'); label.setAttribute('role', 'status');
+    const clock = document.createElement('span'); clock.className = 'reader-clock';
+    const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry';
+    retry.setAttribute('aria-label', 'Retry ' + id.replaceAll('-', ' '));
+    status.append(label, clock, retry); panel.before(status);
+  }
+  const [label, clock, retry] = status.children;
+  retry.onclick = () => runReader(id, url, validate, render);
+  label.textContent = 'Loading';
+  clock.textContent = state.fetchedAt ? readerClock(state) : 'Source age unknown · No successful fetch';
+  panel.setAttribute('aria-busy', 'true');
+  if (!state.data) panel.textContent = 'Loading…';
+  const current = () => state.generation === generation && document.getElementById(id) === panel;
+  state.pending = (async () => {
+    try {
+      const data = validate(await fetchJson(url));
+      if (!current()) return;
+      const active = panel.contains(document.activeElement) ? document.activeElement.dataset.readerKey : null;
+      render(data, panel);
+      if (active != null) [...panel.querySelectorAll('[data-reader-key]')].find(el => el.dataset.readerKey === active)?.focus({preventScroll:true});
+      state.data = data; state.fetchedAt = Date.now();
+      const meta = data.meta || {};
+      label.textContent = [data._partial ? 'Partial · incomplete coverage' : data._empty ? 'Empty · no rows returned' : 'Loaded', meta.error ? 'Source unavailable' : '', meta.stale === true || data.stale === true ? 'Stale · retained source snapshot' : '', 'Source age/coverage unknown'].filter(Boolean).join(' · ');
+      clock.textContent = readerClock(state);
+      return data;
+    } catch (error) {
+      if (!current()) return;
+      label.textContent = error.message + (state.data ? ' · Historical values retained' : ' · No data');
+      if (!state.data) panel.textContent = 'Unable to load this section. Use Retry.';
+    } finally {
+      if (current()) { panel.setAttribute('aria-busy', 'false'); state.pending = null; }
+    }
+  })();
+  return state.pending;
+}
+setInterval(() => {
+  for (const [id, state] of readerStates) {
+    const clock = document.getElementById(id + '-reader-status')?.querySelector('.reader-clock');
+    if (clock && state.fetchedAt) clock.textContent = readerClock(state);
+  }
+}, 10000);
+
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => { const selected = t.dataset.tab === name; t.classList.toggle('active', selected); t.setAttribute('aria-selected', String(selected)); });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${name}`));
 }
 
-// ---- Tab switching ----
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById(`tab-${name}`).classList.add('active');
-}
 
 // ---- Score helpers ----
 function scoreClass(s) {
-  if (s === null || s === undefined) return 'score-none';
+  if (!numeric(s) || s > 10) return 'score-none';
   if (s >= 8) return 'score-high';
   if (s >= 6) return 'score-mid';
   return 'score-low';
 }
 function scoreStr(s) {
-  return (s !== null && s !== undefined) ? `${s}/10` : '—';
+  return (numeric(s) && s <= 10) ? `${s}/10` : '—';
 }
 function pct(a, b) { return b > 0 ? Math.round(a / b * 100) : 0; }
 
 // ---- Quality bar ----
 function qualityBar(q, total) {
-  if (!q || total === 0) return '<div class="quality-bar" style="background:var(--bg3);width:120px"></div>';
+  if (!object(q) || !numeric(total)) return '<span>Quality unknown</span>';
+  if (total === 0) return '<span>No research rows reported</span>';
   const keys = ['exemplary','solid','adequate','thin','stub'];
   const segments = keys.map(k => {
-    const w = pct(q[k] || 0, total);
-    return w > 0 ? `<div class="q-${k}" style="flex:${q[k] || 0}" title="${k}: ${q[k] || 0}"></div>` : '';
+    const w = numeric(q[k]) && numeric(total) ? pct(q[k], total) : 0;
+    return w > 0 ? `<div class="q-${k}" style="flex:${numeric(q[k]) ? q[k] : 0}" title="${k}: ${numeric(q[k]) ? q[k] : 0}"></div>` : '';
   }).join('');
   return `<div class="quality-bar">${segments}</div>`;
 }
 
+
+function trackCoverage(data, key) {
+  if (!object(data?.tracks)) throw Error('Malformed success: invalid coverage tracks');
+  const rows = Object.entries(data.tracks).filter(([, t]) => object(t) && numeric(t[key]));
+  if (Object.keys(data.tracks).length && !rows.length) throw Error('Malformed success: invalid coverage rows');
+  return {...data, tracks:Object.fromEntries(rows), _empty:rows.length === 0, _partial:rows.length !== Object.keys(data.tracks).length};
+}
+function updateTrackFilter(id, tracks) {
+  const select = document.getElementById(id), value = select.value;
+  select.replaceChildren();
+  for (const track of ['', ...[...new Set([...tracks, ...(value ? [value] : [])])].sort()]) {
+    const option = document.createElement('option'); option.value = track; option.textContent = track || 'All tracks'; select.append(option);
+  }
+  select.value = value;
+}
+
 // ---- RESEARCH ----
-async function loadResearch() {
-  try {
-    const data = await fetchJson('/api/state/research-coverage');
+function loadResearch() {
+  return runReader('research-content', '/api/state/research-coverage', d => trackCoverage(d, 'total_modules'), data => {
     const tracks = Object.entries(data.tracks).filter(([, v]) => v.total_modules > 0);
 
     const rows = tracks.map(([id, t]) => `
       <tr>
-        <td style="font-weight:600">${id}</td>
-        <td>${t.total_modules}</td>
-        <td>${t.has_research} (${t.pct_coverage}%)</td>
+        <td style="font-weight:600">${escapeHtml(id)}</td>
+        <td>${count(t.total_modules)}</td>
+        <td>${count(t.has_research)} (${count(t.pct_coverage)}%)</td>
         <td>${qualityBar(t.quality, t.has_research)}</td>
         <td class="score-cell ${scoreClass(t.avg_score)}">${scoreStr(t.avg_score)}</td>
-        <td style="color:${t.needs_upgrade > 0 ? 'var(--red)' : 'var(--text3)'}">${t.needs_upgrade}</td>
+        <td style="color:${t.needs_upgrade > 0 ? 'var(--red)' : 'var(--text3)'}">${count(t.needs_upgrade)}</td>
       </tr>`).join('');
 
     document.getElementById('research-content').innerHTML = `
@@ -251,7 +369,7 @@ async function loadResearch() {
           <th>Quality (exemplary→stub)</th><th>Avg Score</th><th>Needs Upgrade</th>
         </tr></thead>
         <tbody>${rows}</tbody>
-      </table>
+      </table>${rows ? '' : '<p>No rows returned for this section; coverage/source age unknown.</p>'}
       <div style="margin-top:12px;font-size:11px;color:var(--text3)">
         Quality bar:
         <span style="color:#3fb950">■ exemplary</span>
@@ -260,36 +378,33 @@ async function loadResearch() {
         <span style="color:#f85149;margin-left:8px">■ stub</span>
         &nbsp;| Needs upgrade = score &lt; 7
       </div>`;
-  } catch(e) {
-    document.getElementById('research-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
-  }
+  });
 }
 
 // ---- REVIEWS ----
-async function loadReviews() {
-  try {
-    const data = await fetchJson('/api/state/review-coverage');
+function loadReviews() {
+  return runReader('reviews-content', '/api/state/review-coverage', d => trackCoverage(d, 'total_built'), data => {
     const tracks = Object.entries(data.tracks).filter(([, v]) => v.total_built > 0);
 
     const rows = tracks.map(([id, t]) => {
-      const passRateStr = t.pass_rate !== null ? `${Math.round(t.pass_rate * 100)}%` : '—';
+      const passRateStr = numeric(t.pass_rate) && t.pass_rate <= 1 ? `${Math.round(t.pass_rate * 100)}%` : '—';
       const highlight = t.has_review === 0 && t.total_built > 0 ? 'style="color:var(--red)"' : '';
-      const pr = t.plan_reviewed || 0;
-      const pp = t.plan_pass || 0;
-      const pnf = t.plan_needs_fixes || 0;
-      const pf = t.plan_fail || 0;
+      const pr = t.plan_reviewed;
+      const pp = t.plan_pass;
+      const pnf = t.plan_needs_fixes;
+      const pf = t.plan_fail;
       return `<tr>
-        <td style="font-weight:600">${id}</td>
-        <td>${t.total_built}</td>
-        <td ${highlight}>${t.has_review}</td>
-        <td>${t.has_final_review}</td>
+        <td style="font-weight:600">${escapeHtml(id)}</td>
+        <td>${count(t.total_built)}</td>
+        <td ${highlight}>${count(t.has_review)}</td>
+        <td>${count(t.has_final_review)}</td>
         <td class="score-cell ${scoreClass(t.avg_score)}">${scoreStr(t.avg_score)}</td>
         <td style="color:${t.pass_rate === null ? 'var(--text3)' : t.pass_rate >= 0.9 ? 'var(--green)' : 'var(--red)'}">${passRateStr}</td>
-        <td style="color:${t.total_issues_found > 0 ? 'var(--yellow)' : 'var(--text3)'}">${t.total_issues_found}</td>
-        <td>${pr}</td>
-        <td style="color:${pp > 0 ? 'var(--green)' : 'var(--text3)'}">${pp}</td>
-        <td style="color:${pnf > 0 ? 'var(--orange)' : 'var(--text3)'}">${pnf}</td>
-        <td style="color:${pf > 0 ? 'var(--red)' : 'var(--text3)'}">${pf}</td>
+        <td style="color:${t.total_issues_found > 0 ? 'var(--yellow)' : 'var(--text3)'}">${count(t.total_issues_found)}</td>
+        <td>${count(pr)}</td>
+        <td style="color:${pp > 0 ? 'var(--green)' : 'var(--text3)'}">${count(pp)}</td>
+        <td style="color:${pnf > 0 ? 'var(--orange)' : 'var(--text3)'}">${count(pnf)}</td>
+        <td style="color:${pf > 0 ? 'var(--red)' : 'var(--text3)'}">${count(pf)}</td>
       </tr>`;
     }).join('');
 
@@ -301,13 +416,11 @@ async function loadReviews() {
           <th>Plan Rev'd</th><th>Plan Pass</th><th>Plan NF</th><th>Plan Fail</th>
         </tr></thead>
         <tbody>${rows}</tbody>
-      </table>
+      </table>${rows ? '' : '<p>No rows returned for this section; coverage/source age unknown.</p>'}
       <div style="margin-top:12px;font-size:11px;color:var(--text3)">
         Red "reviewed" = zero reviews on built modules. Pass rate = PASS status in review file. Plan NF = NEEDS FIXES.
       </div>`;
-  } catch(e) {
-    document.getElementById('reviews-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
-  }
+  });
 }
 
 // ---- ISSUES ----
@@ -317,24 +430,15 @@ let _filteredIssues = [];
 let _renderedCount = 0;
 const PAGE_SIZE = 50;
 
-async function loadIssues() {
-  try {
-    const data = await fetchJson('/api/state/issues');
+function loadIssues() {
+  return runReader('issues-content', '/api/state/issues', d => collection(d, 'issues', i => identity(i, 'track') && identity(i, 'slug') && typeof i.title === 'string'), data => {
     allIssues = data.issues || [];
     issueTracksSet = new Set(allIssues.map(i => i.track));
 
-    // Populate track filter
-    const sel = document.getElementById('issue-track-filter');
-    [...issueTracksSet].sort().forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t; opt.textContent = t;
-      sel.appendChild(opt);
-    });
+    updateTrackFilter('issue-track-filter', issueTracksSet);
 
     filterIssues();
-  } catch(e) {
-    document.getElementById('issues-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
-  }
+  });
 }
 
 function filterIssues() {
@@ -344,11 +448,11 @@ function filterIssues() {
   if (trackF) _filteredIssues = _filteredIssues.filter(i => i.track === trackF);
   if (sevF) _filteredIssues = _filteredIssues.filter(i => i.severity === sevF);
 
-  document.getElementById('issue-count').textContent = `${_filteredIssues.length} issue${_filteredIssues.length !== 1 ? 's' : ''}`;
+  document.getElementById('issue-count').textContent = `${_filteredIssues.length} returned issue${_filteredIssues.length !== 1 ? 's' : ''}`;
 
   const container = document.getElementById('issues-content');
   if (_filteredIssues.length === 0) {
-    container.innerHTML = '<div style="color:var(--green);padding:16px 0">No issues found for this filter.</div>';
+    container.innerHTML = '<p>No issues returned for this filter; coverage/source age unknown.</p>';
     return;
   }
 
@@ -365,17 +469,19 @@ function _appendIssues(container) {
     const issue = _filteredIssues[idx];
     const card = document.createElement('div');
     card.className = 'issue-card';
-    card.onclick = function() { this.classList.toggle('expanded'); };
+    card.dataset.readerKey = JSON.stringify([issue.track,issue.slug,issue.title]); card.tabIndex = 0; card.setAttribute('role','button'); card.setAttribute('aria-expanded','false');
+    card.onclick = function() { this.classList.toggle('expanded'); this.setAttribute('aria-expanded', String(this.classList.contains('expanded'))); };
+    card.onkeydown = function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); } };
     card.innerHTML = `
       <div class="issue-header">
-        <span class="severity-badge severity-${issue.severity}">${issue.severity}</span>
-        <span class="issue-title">${escHtml(issue.title)}</span>
-        <span class="issue-meta">${issue.track} #${issue.num} · ${issue.source}</span>
+        <span class="severity-badge severity-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span>
+        <span class="issue-title">${escapeHtml(issue.title)}</span>
+        <span class="issue-meta">${escapeHtml(issue.track)} #${escapeHtml(issue.num)} · ${escapeHtml(issue.source)}</span>
       </div>
       <div class="issue-details">
-        <div class="detail-row"><span class="detail-label">Module:</span><span class="detail-val">${issue.slug}</span></div>
-        ${issue.location ? `<div class="detail-row"><span class="detail-label">Location:</span><span class="detail-val">${escHtml(issue.location)}</span></div>` : ''}
-        ${issue.fix ? `<div class="detail-row"><span class="detail-label">Fix:</span><span class="detail-val">${escHtml(issue.fix)}</span></div>` : ''}
+        <div class="detail-row"><span class="detail-label">Module:</span><span class="detail-val">${escapeHtml(issue.slug)}</span></div>
+        ${issue.location ? `<div class="detail-row"><span class="detail-label">Location:</span><span class="detail-val">${escapeHtml(issue.location)}</span></div>` : ''}
+        ${issue.fix ? `<div class="detail-row"><span class="detail-label">Fix:</span><span class="detail-val">${escapeHtml(issue.fix)}</span></div>` : ''}
       </div>`;
     frag.appendChild(card);
   }
@@ -402,19 +508,12 @@ function _appendIssues(container) {
 let allWeak = [];
 let weakTracksSet = new Set();
 
-async function loadWeak() {
-  try {
-    const data = await fetchJson('/api/state/weak-points?limit=500');
+function loadWeak() {
+  return runReader('weak-content', '/api/state/weak-points?limit=500', d => collection(d, 'modules', m => identity(m, 'track') && identity(m, 'slug') && Array.isArray(m.issues) && m.issues.every(i => typeof i === 'string')), data => {
     allWeak = data.modules || [];
     weakTracksSet = new Set(allWeak.map(m => m.track));
 
-    // Populate track filter
-    const sel = document.getElementById('weak-track-filter');
-    [...weakTracksSet].sort().forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t; opt.textContent = t;
-      sel.appendChild(opt);
-    });
+    updateTrackFilter('weak-track-filter', weakTracksSet);
 
     // Stat row — render once, avoid stack on tab re-visit
     const auditFail = allWeak.filter(m => m.audit_status === 'fail').length;
@@ -423,16 +522,14 @@ async function loadWeak() {
     const container = document.getElementById('weak-content');
     container.innerHTML = `
       <div class="stat-row" style="margin-bottom:16px" id="weak-stats">
-        <div class="stat-box"><div class="val" style="color:var(--red)">${auditFail}</div><div class="lbl">Audit Fail</div></div>
-        <div class="stat-box"><div class="val" style="color:var(--yellow)">${thinResearch}</div><div class="lbl">Thin Research</div></div>
-        <div class="stat-box"><div class="val" style="color:var(--blue)">${lowWords}</div><div class="lbl">Low Word Count</div></div>
-        <div class="stat-box"><div class="val">${allWeak.length}</div><div class="lbl">Total Weak</div></div>
-      </div>`;
+        <div class="stat-box"><div class="val" style="color:var(--red)">${auditFail}</div><div class="lbl">Loaded Audit Fail</div></div>
+        <div class="stat-box"><div class="val" style="color:var(--yellow)">${thinResearch}</div><div class="lbl">Loaded Thin Research</div></div>
+        <div class="stat-box"><div class="val" style="color:var(--blue)">${lowWords}</div><div class="lbl">Loaded Low Word Count</div></div>
+        <div class="stat-box"><div class="val">${allWeak.length}</div><div class="lbl">Loaded Weak</div></div>
+      </div><div id="weak-results"></div><p>Loaded ${allWeak.length} of ${count(data.count)} reported weak modules; coverage/source age unknown.</p>`;
 
     filterWeak();
-  } catch(e) {
-    document.getElementById('weak-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
-  }
+  });
 }
 
 function filterWeak() {
@@ -440,32 +537,35 @@ function filterWeak() {
   let filtered = allWeak;
   if (trackF) filtered = filtered.filter(m => m.track === trackF);
 
+
+  const results = document.getElementById('weak-results');
+  if (!results) return;
   if (filtered.length === 0) {
-    const tbl = document.getElementById('weak-table');
-    if (tbl) tbl.innerHTML = '<tr><td colspan="6" style="color:var(--green)">No weak modules!</td></tr>';
+    results.textContent = 'No weak modules returned for this filter; source age/coverage unknown.';
     return;
   }
+
 
   const rows = filtered.map(m => {
     let tags = m.issues.map(issue => {
       if (issue === 'audit_fail') return `<span class="issue-tag tag-audit">audit fail</span>`;
-      if (issue.startsWith('research_score')) return `<span class="issue-tag tag-research">${issue.replace('research_score_', 'score: ')}</span>`;
-      if (issue.startsWith('low_words')) return `<span class="issue-tag tag-words">${issue.replace('low_words_', 'words: ')}</span>`;
-      return `<span class="issue-tag">${issue}</span>`;
+      if (issue.startsWith('research_score')) return `<span class="issue-tag tag-research">${escapeHtml(issue.replace('research_score_', 'score: '))}</span>`;
+      if (issue.startsWith('low_words')) return `<span class="issue-tag tag-words">${escapeHtml(issue.replace('low_words_', 'words: '))}</span>`;
+      return `<span class="issue-tag">${escapeHtml(issue)}</span>`;
     }).join('');
     if (m.pipeline_version && m.pipeline_version !== 'v6') {
-      tags += `<span class="issue-tag tag-legacy">${m.pipeline_version}</span>`;
+      tags += `<span class="issue-tag tag-legacy">${escapeHtml(m.pipeline_version)}</span>`;
     }
-    const rsStr = m.research_score !== null ? `${m.research_score}/10` : '—';
+    const rsStr = scoreStr(m.research_score);
     const rsCls = scoreClass(m.research_score);
-    const wordCount = m.word_count || 0;
-    const wordsStr = m.word_target > 0 ? `${wordCount}/${m.word_target}` : `${wordCount}`;
+    const wordCount = numeric(m.word_count) ? m.word_count : null;
+    const wordsStr = m.word_target > 0 ? `${count(wordCount)}/${count(m.word_target)}` : count(wordCount);
     return `<tr>
-      <td style="font-weight:600">${m.track}</td>
-      <td style="color:var(--text2)">${m.num}</td>
-      <td>${m.slug}</td>
-      <td><span class="score-cell ${rsCls}">${rsStr}</span></td>
-      <td style="color:${wordCount < m.word_target * 0.8 && m.word_target > 0 ? 'var(--red)' : 'var(--text2)'}">${wordsStr}</td>
+      <td style="font-weight:600">${escapeHtml(m.track)}</td>
+      <td style="color:var(--text2)">${escapeHtml(m.num)}</td>
+      <td>${escapeHtml(m.slug)}</td>
+      <td><span class="score-cell ${rsCls}">${escapeHtml(rsStr)}</span></td>
+      <td style="color:${wordCount < m.word_target * 0.8 && m.word_target > 0 ? 'var(--red)' : 'var(--text2)'}">${escapeHtml(wordsStr)}</td>
       <td>${tags}</td>
     </tr>`;
   }).join('');
@@ -477,19 +577,10 @@ function filterWeak() {
     <tbody>${rows}</tbody>
   </table>`;
 
-  // Replace or insert table (stat-row is already rendered by loadWeak)
-  const container = document.getElementById('weak-content');
-  const oldTable = container.querySelector('table');
-  if (oldTable) {
-    oldTable.outerHTML = html;
-  } else {
-    container.insertAdjacentHTML('beforeend', html);
-  }
+  results.innerHTML = html;
 }
 
-function escHtml(str) {
-  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
+
 
 // ---- MODULE SCORES (LLM-QG per-dim) ----
 const SCORE_DIMS = ['pedagogical','engagement','beauty','decolonization','naturalness','tone'];
@@ -497,15 +588,16 @@ const SEMINAR_TERMINAL = new Set(['pedagogical','engagement','beauty','decoloniz
 async function loadScores() {
   const track = document.getElementById('scores-track-filter').value;
   const el = document.getElementById('scores-content');
-  el.innerHTML = '<div class="loading-msg">Loading scores...</div>';
-  try {
-    const data = await fetchJson(`/api/state/scores/${track}`);
+  return runReader('scores-content', `/api/state/scores/${encodeURIComponent(track)}`, d => {
+    if (d?.track !== track) throw Error('Malformed success: score track identity mismatch');
+    return collection(d, 'modules', m => identity(m, 'slug') && typeof m.scored === 'boolean');
+  }, data => {
     const dimHead = SCORE_DIMS.map(d =>
       `<th title="${d}">${d.slice(0,4)}${SEMINAR_TERMINAL.has(d) ? ' ★' : ''}</th>`).join('');
     const rows = data.modules.map(m => {
       if (!m.scored) {
         return `<tr style="opacity:.45">
-          <td>${m.num}</td><td>${m.slug}</td><td>${m.status || '—'}</td>
+          <td>${escapeHtml(m.num)}</td><td>${escapeHtml(m.slug)}</td><td>${escapeHtml(m.status || '—')}</td>
           <td>—</td><td>—</td>${SCORE_DIMS.map(() => '<td>—</td>').join('')}</tr>`;
       }
       const a = m.aggregate || {};
@@ -517,27 +609,25 @@ async function loadScores() {
         return `<td class="score-cell ${scoreClass(s)}"${term ? ' style="font-weight:700"' : ''}>${scoreStr(s)}</td>`;
       }).join('');
       return `<tr>
-        <td>${m.num}</td><td style="font-weight:600">${m.slug}</td>
-        <td>${m.status || '—'}</td>
-        <td style="color:${tvColor};font-weight:600">${tv}</td>
-        <td>${a.min_dim ? `${a.min_dim} ${scoreStr(a.min_score)}` : '—'}</td>
+        <td>${escapeHtml(m.num)}</td><td style="font-weight:600">${escapeHtml(m.slug)}</td>
+        <td>${escapeHtml(m.status || '—')}</td>
+        <td style="color:${tvColor};font-weight:600">${escapeHtml(tv)}</td>
+        <td>${escapeHtml(a.min_dim ? `${a.min_dim} ${scoreStr(a.min_score)}` : '—')}</td>
         ${cells}</tr>`;
     }).join('');
     el.innerHTML = `
-      <div style="margin-bottom:8px;font-size:13px;color:var(--text2)">${data.scored}/${data.count} modules scored · track <b>${data.track}</b></div>
+      <div style="margin-bottom:8px;font-size:13px;color:var(--text2)">${count(data.scored)}/${count(data.count)} modules scored · track <b>${escapeHtml(data.track)}</b></div>
       <table>
         <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Terminal</th><th>Min dim</th>${dimHead}</tr></thead>
         <tbody>${rows}</tbody>
-      </table>
+      </table>${rows ? '' : '<p>No rows returned for this section; coverage/source age unknown.</p>'}
       <div style="margin-top:12px;font-size:11px;color:var(--text3)">
         <span style="color:var(--green)">■ ≥8 (passing)</span>
         <span style="color:var(--orange);margin-left:8px">■ 6–8</span>
         <span style="color:var(--red);margin-left:8px">■ &lt;6</span>
-        &nbsp;| <b>★</b> / bold = seminar-terminal dim (must reach floor to ship) | <b>Terminal</b> = profile-gated verdict | source: <code>llm_qg.json</code>, live.
+        &nbsp;| <b>★</b> / bold = seminar-terminal dim (must reach floor to ship) | <b>Terminal</b> = profile-gated verdict | source: <code>llm_qg.json</code>, observed at fetch.
       </div>`;
-  } catch (e) {
-    el.innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
-  }
+  });
 }
 
 // ---- Init ----

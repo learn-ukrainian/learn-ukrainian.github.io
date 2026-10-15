@@ -61,10 +61,23 @@ tr:last-child td { border-bottom: none; }
   .track-buttons { flex-direction: row; flex-wrap: wrap; }
   .topbar { flex-wrap: wrap; }
 }
+
+.reader-status { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 0; font-size:12px; color:var(--text2); overflow-wrap:anywhere; }
+.reader-status button { color:var(--text); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:5px 10px; cursor:pointer; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+button { font:inherit; }
+td, .meta-row, .module-cell, .issue-card { overflow-wrap:anywhere; }
+.container, .left-panel, .right-panel { min-width:0; }
+.container { overflow-x:auto; }
+.topbar { flex-wrap:wrap; }
+.skip-link { position:absolute; top:-100px; left:8px; z-index:100; background:var(--bg); padding:10px; }
+.skip-link:focus { top:8px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#reader-main">Skip to content</a>
 <div class="topbar">
   <div>
     <h1>Wiki</h1>
@@ -84,24 +97,27 @@ tr:last-child td { border-bottom: none; }
   </nav>
 </div>
 
-<div class="container">
+<div class="container" id="reader-main" role="main" tabindex="-1">
   <section class="card">
     <div class="card-header"><h2>&#128214; Per-Track Progress</h2><div class="muted" id="progress-muted"></div></div>
     <div class="banner" id="progress-banner"></div>
+    <div id="summary-content" class="muted"></div>
     <div id="progress-content" class="empty">Loading...</div>
   </section>
 
   <section class="card cyan">
     <div class="card-header"><h2>&#128269; Track Detail</h2><div class="muted" id="detail-muted">Click a track</div></div>
     <div class="banner" id="detail-banner"></div>
-    <div id="detail-content" class="empty">Loading...</div>
+    <button class="btn" type="button" onclick="selectTrack(null)">Clear selection</button>
+    <div id="detail-content" class="empty">Select a track</div>
+    <div id="gate-content" class="empty"></div>
   </section>
 
   <section class="card orange">
     <div class="card-header"><h2>&#128221; Recent Build Log</h2><div class="muted">limit 50</div></div>
     <div class="banner" id="log-banner"></div>
     <div class="filters">
-      <select id="log-track-filter"></select>
+      <select id="log-track-filter" aria-label="Log track"></select>
       <button class="btn" onclick="loadBuildLog()">Apply</button>
     </div>
     <div id="log-content" class="empty">Loading...</div>
@@ -110,201 +126,242 @@ tr:last-child td { border-bottom: none; }
 
 <script>
 const REFRESH_MS = 60000;
-const API_TIMEOUT_MS = 5000;
 let refreshTimer = null;
 let selectedTrack = null;
 let tracksCache = [];
 let operationalTrackIds = null;
 
-function escapeHtml(value) {
-  const node = document.createElement('span');
-  node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
-}
 
-function formatTs(value) {
-  if (!value) return '—';
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
-}
+
+function formatTs(value) { const time = validTime(value); return time === null ? 'unknown event time' : new Date(time).toLocaleString(); }
 
 function summaryText(event) {
   if (event.summary) return String(event.summary);
-  return Object.entries(event)
-    .filter(([key, value]) => !['ts', 'track', 'slug', 'event'].includes(key) && value != null && value !== '')
-    .slice(0, 3)
-    .map(([key, value]) => `${key}=${value}`)
-    .join(' · ') || '—';
+  return 'No summary supplied';
 }
 
+
+const readerStates = new Map();
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+function numeric(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0; }
+function count(value) { return numeric(value) ? String(value) : 'unknown'; }
+function identity(row, key) { return object(row) && typeof row[key] === 'string' && row[key].length > 0; }
+function collection(data, key, valid) {
+  if (!object(data) || !Array.isArray(data[key])) throw Error('Malformed success: invalid ' + key);
+  const rows = data[key].filter(valid);
+  if (data[key].length && !rows.length) throw Error('Malformed success: invalid ' + key + ' rows');
+  return {...data, [key]: rows, _empty: rows.length === 0, _partial: rows.length !== data[key].length || data.partial === true};
+}
 async function fetchJson(url) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const response = await fetch(url, { signal: controller.signal });
-    const text = await response.text();
-    let data = {};
-    try {
-      data = text ? JSON.parse(text) : {};
-    } catch {
-      data = { detail: text };
-    }
-    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    // Legacy callers may request fresh=true; readers use the existing bounded cache.
+    const target = new URL(url, location.origin);
+    target.searchParams.delete('fresh');
+    const res = await fetch(target.pathname + target.search, {signal: controller.signal});
+    if (!res.ok) throw Error('Request failed: HTTP ' + res.status);
+    let data;
+    try { data = await res.json(); } catch { throw Error('Parse failure: invalid JSON'); }
+    if (data === null || typeof data !== 'object') throw Error('Malformed success: expected JSON object or array');
     return data;
   } catch (error) {
-    if (error.name === 'AbortError') throw new Error('Request timed out');
+    if (error.name === 'AbortError') throw Error('Request timed out');
     throw error;
-  } finally {
-    clearTimeout(timeout);
+  } finally { clearTimeout(timeout); }
+}
+function validTime(value) {
+  const time = typeof value === 'string' && value ? Date.parse(value) : NaN;
+  return Number.isFinite(time) && time <= Date.now() ? time : null;
+}
+function readerClock(state) {
+  const elapsed = Math.max(0, (Date.now() - state.fetchedAt) / 1000);
+  const meta = state.data?.meta;
+  const generated = validTime(meta?.generated_at || state.data?.generated_at);
+  const cacheAge = numeric(meta?.age_s) ? ` · Cache age ${Math.floor(meta.age_s + elapsed)}s` : '';
+  const stale = meta?.stale === true || (numeric(meta?.age_s) && numeric(meta?.stale_after_s) && meta.stale_after_s > 0 && meta.age_s + elapsed > meta.stale_after_s) ? ' · Stale snapshot cache' : '';
+  const fetched = state.data?._partial || meta?.error ? 'Last partial fetch' : 'Last successful fetch';
+  const snapshot = generated === null ? '' : ` · Snapshot generated ${new Date(generated).toLocaleString()} (${Math.floor((Date.now()-generated)/1000)}s ago)`;
+  return `Source age unknown${snapshot}${cacheAge}${stale} · ${fetched} ${new Date(state.fetchedAt).toLocaleString()}`;
+}
+function invalidateReader(id) {
+  const state = readerStates.get(id);
+  if (state) { state.generation++; state.scope = null; state.pending = null; }
+}
+function runReader(id, url, validate, render) {
+  const panel = document.getElementById(id);
+  let state = readerStates.get(id);
+  if (state?.pending && state.scope === url && state.panel === panel) return state.pending;
+  if (!state || state.panel !== panel) {
+    state = {generation: 0, panel}; readerStates.set(id, state);
   }
+  if (state.scope !== url) { state.data = null; state.fetchedAt = null; }
+  state.scope = url;
+  const generation = ++state.generation;
+  let status = document.getElementById(id + '-reader-status');
+  if (!status) {
+    status = document.createElement('div'); status.id = id + '-reader-status'; status.className = 'reader-status';
+    const label = document.createElement('span'); label.setAttribute('role', 'status');
+    const clock = document.createElement('span'); clock.className = 'reader-clock';
+    const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry';
+    retry.setAttribute('aria-label', 'Retry ' + id.replaceAll('-', ' '));
+    status.append(label, clock, retry); panel.before(status);
+  }
+  const [label, clock, retry] = status.children;
+  retry.onclick = () => runReader(id, url, validate, render);
+  label.textContent = 'Loading';
+  clock.textContent = state.fetchedAt ? readerClock(state) : 'Source age unknown · No successful fetch';
+  panel.setAttribute('aria-busy', 'true');
+  if (!state.data) panel.textContent = 'Loading…';
+  const current = () => state.generation === generation && document.getElementById(id) === panel;
+  state.pending = (async () => {
+    try {
+      const data = validate(await fetchJson(url));
+      if (!current()) return;
+      const active = panel.contains(document.activeElement) ? document.activeElement.dataset.readerKey : null;
+      render(data, panel);
+      if (active != null) [...panel.querySelectorAll('[data-reader-key]')].find(el => el.dataset.readerKey === active)?.focus({preventScroll:true});
+      state.data = data; state.fetchedAt = Date.now();
+      const meta = data.meta || {};
+      label.textContent = [data._partial ? 'Partial · incomplete coverage' : data._empty ? 'Empty · no rows returned' : 'Loaded', meta.error ? 'Source unavailable' : '', meta.stale === true || data.stale === true ? 'Stale · retained source snapshot' : '', 'Source age/coverage unknown'].filter(Boolean).join(' · ');
+      clock.textContent = readerClock(state);
+      return data;
+    } catch (error) {
+      if (!current()) return;
+      label.textContent = error.message + (state.data ? ' · Historical values retained' : ' · No data');
+      if (!state.data) panel.textContent = 'Unable to load this section. Use Retry.';
+    } finally {
+      if (current()) { panel.setAttribute('aria-busy', 'false'); state.pending = null; }
+    }
+  })();
+  return state.pending;
 }
+setInterval(() => {
+  for (const [id, state] of readerStates) {
+    const clock = document.getElementById(id + '-reader-status')?.querySelector('.reader-clock');
+    if (clock && state.fetchedAt) clock.textContent = readerClock(state);
+  }
+}, 10000);
 
-function setBanner(id, message) {
-  const el = document.getElementById(id);
-  el.textContent = message || '';
-  el.style.display = message ? 'block' : 'none';
-}
-
+let wikiTracks = [];
+let wikiPartial = false;
+let initialSelection = true;
+let gateIssues = null;
 function initLogFilter() {
   const select = document.getElementById('log-track-filter');
-  const options = [''].concat(tracksCache.map(track => track.track));
-  select.innerHTML = options.map(track => `<option value="${track}">${track || 'All tracks'}</option>`).join('');
+  const previous = select.value;
+  select.replaceChildren();
+  for (const track of ['', ...tracksCache.map(t => t.track), ...(previous && !tracksCache.some(t => t.track === previous) ? [previous] : [])]) {
+    const option = document.createElement('option'); option.value = track; option.textContent = track || 'All tracks'; select.append(option);
+  }
+  select.value = previous;
 }
-
 function operationalTrackIdSet(summary) {
-  if (!summary?.tracks) return null;
-  return new Set(Object.entries(summary?.tracks || {})
-    .filter(([, track]) => track.module_source !== 'plans-fallback')
-    .map(([track]) => track));
+  if (!object(summary?.tracks) || !Object.values(summary.tracks).every(object)) throw Error('Malformed success: invalid summary tracks');
+  return new Set(Object.entries(summary.tracks).filter(([, t]) => object(t) && t.module_source !== 'plans-fallback').map(([id]) => id));
 }
-
 function renderProgress(tracks) {
-  tracksCache = tracks.slice();
-  initLogFilter();
-  document.getElementById('progress-muted').textContent = `${tracks.length} tracks`;
-  if (!tracks.length) {
-    document.getElementById('progress-content').innerHTML = '<div class="empty">No wiki tracks found</div>';
-    return;
+  tracksCache = tracks.slice(); initLogFilter();
+  document.getElementById('progress-muted').textContent = `${tracks.length} returned tracks`;
+  const panel = document.getElementById('progress-content');
+  panel.innerHTML = tracks.length ? '<div class="track-list"></div>' : '<p>No operational wiki tracks returned; source age/coverage unknown.</p>';
+  for (const track of tracks) {
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'track-row';
+    button.dataset.readerKey = track.track; button.classList.toggle('active', selectedTrack === track.track); button.setAttribute('aria-pressed', String(selectedTrack === track.track));
+    button.style.cssText = 'text-align:left;color:var(--text)';
+    button.innerHTML = `<span class="track-top"><strong>${escapeHtml(track.track)}</strong><span>${count(track.compiled)}/${count(track.total)} · ${count(track.pct)}%</span></span><span class="bar" style="display:block"><span class="bar-fill" style="display:block;width:${Math.min(100, track.pct)}%"></span></span>`;
+    button.onclick = () => selectTrack(track.track); panel.querySelector('.track-list').append(button);
   }
-  document.getElementById('progress-content').innerHTML = `<div class="track-list">${tracks.map(track => `
-    <div class="track-row ${selectedTrack === track.track ? 'active' : ''}" onclick='selectTrack(${JSON.stringify(String(track.track || ""))})'>
-      <div class="track-top">
-        <strong>${escapeHtml(track.track)}</strong>
-        <span class="muted">${track.compiled}/${track.total} · ${track.pct}%</span>
-      </div>
-      <div class="bar"><div class="bar-fill" style="width:${track.pct}%;background:${track.pct >= 90 ? 'var(--green)' : track.pct >= 50 ? 'var(--yellow)' : 'var(--red)'}"></div></div>
-    </div>
-  `).join('')}</div>`;
 }
-
-function issueMapForTrack(raw, track) {
-  return raw && raw[track] ? raw[track] : {};
+function reconcileTracks() {
+  const tracks = wikiTracks.filter(t => !operationalTrackIds || operationalTrackIds.has(t.track)).sort((a, b) => b.pct-a.pct || a.track.localeCompare(b.track));
+  if (selectedTrack && !tracks.some(t => t.track === selectedTrack) && !wikiPartial) selectTrack(null);
+  if (initialSelection && tracks.length) { initialSelection = false; selectTrack(tracks[0].track); }
+  renderProgress(tracks);
 }
-
-function issuesForSlug(issueMap, slug) {
-  return Object.entries(issueMap).find(([path]) => path === `${slug}.md` || path.endsWith(`/${slug}.md`));
-}
-
-function renderDetailButtons() {
-  return `<div class="track-buttons">${tracksCache.map(track => `
-    <button class="track-btn ${selectedTrack === track.track ? 'active' : ''}" onclick='selectTrack(${JSON.stringify(String(track.track || ""))})'>${escapeHtml(track.track)}</button>
-  `).join('')}</div>`;
-}
-
-async function selectTrack(track) {
-  selectedTrack = track;
-  document.getElementById('detail-muted').textContent = track ? `Selected ${track}` : 'Click a track';
-  if (tracksCache.length) renderProgress(tracksCache);
-  await loadTrackDetail();
-}
-
-async function loadProgress() {
-  try {
-    const [data, summary] = await Promise.all([
-      fetchJson('/api/wiki/status'),
-      fetchJson('/api/state/summary?fresh=true').catch(() => null),
-    ]);
-    operationalTrackIds = operationalTrackIdSet(summary);
-    let tracks = Array.isArray(data.tracks) ? data.tracks.slice() : [];
-    if (operationalTrackIds) {
-      tracks = tracks.filter(track => operationalTrackIds.has(track.track));
+function selectTrack(track) {
+  initialSelection = false;
+  selectedTrack = track; gateIssues = null;
+  document.getElementById('detail-muted').textContent = track ? `Selected ${track}` : 'Select a track';
+  document.querySelectorAll('.track-row').forEach((button, index) => {
+    const active = tracksCache[index]?.track === track;
+    button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+  });
+  if (!track) {
+    for (const id of ['detail-content','gate-content']) {
+      invalidateReader(id); document.getElementById(id).textContent = id === 'detail-content' ? 'Select a track to inspect its modules' : '';
+      document.getElementById(id + '-reader-status')?.remove();
     }
-    tracks.sort((a, b) => b.pct - a.pct || a.track.localeCompare(b.track));
-    if (selectedTrack && !tracks.some(track => track.track === selectedTrack)) selectedTrack = null;
-    if (!selectedTrack && tracks.length) selectedTrack = tracks[0].track;
-    renderProgress(tracks);
-    setBanner('progress-banner', '');
-  } catch (error) {
-    setBanner('progress-banner', `API unavailable: ${error.message}`);
-    document.getElementById('progress-content').innerHTML = '<div class="empty">Unable to load wiki status</div>';
+    return Promise.resolve();
   }
+  return loadTrackDetail();
 }
-
-async function loadTrackDetail() {
-  if (!selectedTrack) {
-    document.getElementById('detail-content').innerHTML = '<div class="empty">Select a track to inspect its modules</div>';
-    return;
-  }
-  try {
-    const [statusRows, gateRaw] = await Promise.all([
-      fetchJson(`/api/wiki/status/${encodeURIComponent(selectedTrack)}`),
-      fetchJson(`/api/wiki/quality-gate/${encodeURIComponent(selectedTrack)}`),
-    ]);
-    const issueMap = issueMapForTrack(gateRaw, selectedTrack);
-    const rows = Array.isArray(statusRows) ? statusRows : [];
-    const grid = rows.length ? `<div class="module-grid">${rows.map(row => {
-      const hit = issuesForSlug(issueMap, row.slug);
-      const issues = hit ? hit[1] : [];
-      const stateClass = issues.length ? 'failed' : row.compiled ? 'compiled' : 'pending';
-      return `<div class="module-cell ${stateClass}" title="${escapeHtml(issues.join(' | ') || (row.compiled ? 'compiled' : 'pending'))}">
-        <div class="slug">${escapeHtml(row.slug || '—')}</div>
-        <div class="meta">${row.compiled ? `compiled · ${row.word_count || 0}w` : 'pending'}</div>
-        <div class="meta">${row.source_count || 0} sources</div>
-        <div class="meta">${issues.length ? escapeHtml(issues[0]) : (row.compiled_at ? formatTs(row.compiled_at) : 'no issues')}</div>
-      </div>`;
-    }).join('')}</div>` : '<div class="empty">No modules for this track</div>';
-    document.getElementById('detail-content').innerHTML = `<div class="detail-shell">
-      ${renderDetailButtons()}
-      <div>${grid}</div>
-    </div>`;
-    setBanner('detail-banner', '');
-  } catch (error) {
-    setBanner('detail-banner', `API unavailable: ${error.message}`);
-    document.getElementById('detail-content').innerHTML = `<div class="detail-shell">${renderDetailButtons()}<div class="empty">Unable to load track detail</div></div>`;
-  }
+function loadProgress() {
+  const status = runReader('progress-content', '/api/wiki/status', d => collection(d, 'tracks', t => identity(t, 'track') && numeric(t.total) && numeric(t.compiled) && numeric(t.pct) && t.compiled <= t.total && t.pct <= 100), d => {
+    wikiTracks = d.tracks; wikiPartial = d._partial; reconcileTracks();
+  });
+  const summary = runReader('summary-content', '/api/state/summary?fresh=true', d => {
+    operationalTrackIdSet(d); return d;
+  }, (d, panel) => {
+    operationalTrackIds = operationalTrackIdSet(d);
+    panel.textContent = 'Operational track filter loaded; plan-only tracks excluded.';
+    reconcileTracks();
+  });
+  return Promise.all([status, summary]);
 }
-
-async function loadBuildLog() {
+function renderTrackRows(rows, panel) {
+  panel.innerHTML = rows.length ? `<div class="module-grid">${rows.map(row => {
+    const hit = gateIssues && Object.entries(gateIssues).find(([path]) => path === `${row.slug}.md` || path.endsWith(`/${row.slug}.md`));
+    const issues = hit ? hit[1] : [];
+    const gate = gateIssues === null ? 'Gate unknown' : issues.length ? issues.join(' | ') : 'No gate issues returned';
+    return `<div class="module-cell ${issues.length ? 'failed' : row.compiled ? 'compiled' : 'pending'}" tabindex="0" title="${escapeHtml(gate)}">
+      <div class="slug">${escapeHtml(row.slug)}</div><div class="meta">${row.compiled ? 'compiled' : 'pending'} · ${count(row.word_count)} words</div>
+      <div class="meta">${count(row.source_count)} sources</div><div class="meta">${escapeHtml(gate)}</div>
+      <div class="meta">Compiled (event time): ${escapeHtml(formatTs(row.compiled_at))}</div></div>`;
+  }).join('')}</div>` : '<p>No modules returned for this track; source age/coverage unknown.</p>';
+}
+function loadTrackDetail() {
+  if (!selectedTrack) return Promise.resolve();
+  const track = selectedTrack;
+  gateIssues = null;
+  const previous = readerStates.get('detail-content');
+  if (previous?.data && previous.scope === `/api/wiki/status/${encodeURIComponent(track)}`) renderTrackRows(previous.data.modules, previous.panel);
+  const status = runReader('detail-content', `/api/wiki/status/${encodeURIComponent(track)}`, rows => {
+    if (!Array.isArray(rows)) throw Error('Malformed success: invalid track status');
+    const result = collection({modules: rows}, 'modules', r => identity(r, 'slug') && typeof r.compiled === 'boolean');
+    return result;
+  }, (d, panel) => renderTrackRows(d.modules, panel));
+  const gate = runReader('gate-content', `/api/wiki/quality-gate/${encodeURIComponent(track)}`, d => {
+    if (!object(d) || !object(d[track]) || !Object.values(d[track]).every(v => Array.isArray(v) && v.every(i => typeof i === 'string'))) throw Error('Malformed success: invalid quality gate');
+    return d;
+  }, (d, panel) => {
+    gateIssues = d[track];
+    panel.textContent = 'Quality gate observations loaded; coverage/source age unknown.';
+    const state = readerStates.get('detail-content');
+    if (state?.data && state.scope === `/api/wiki/status/${encodeURIComponent(track)}`) renderTrackRows(state.data.modules, state.panel);
+  });
+  // A failed gate must revoke historical gate labels without hiding usable status rows.
+  gate.then(() => {
+    if (selectedTrack !== track) return;
+    const gateState = readerStates.get('gate-content');
+    if (gateState?.data && gateState.scope.endsWith('/' + encodeURIComponent(track)) && gateIssues === null) {
+      const state = readerStates.get('detail-content');
+      if (state?.data) renderTrackRows(state.data.modules, state.panel);
+    }
+  });
+  return Promise.all([status, gate]);
+}
+function loadBuildLog() {
   const filter = document.getElementById('log-track-filter').value;
-  const params = new URLSearchParams({ limit: '50' });
-  if (filter) params.set('track', filter);
-  try {
-    const data = await fetchJson(`/api/wiki/build-log?${params.toString()}`);
-    let events = Array.isArray(data.events) ? data.events : [];
-    if (!filter && operationalTrackIds) {
-      events = events.filter(event => operationalTrackIds.has(event.track));
-    }
-    if (!events.length) {
-      document.getElementById('log-content').innerHTML = '<div class="empty">No build log events for the selected filter</div>';
-    } else {
-      document.getElementById('log-content').innerHTML = `<table>
-        <thead><tr><th>ts</th><th>track</th><th>slug</th><th>event</th><th>summary</th></tr></thead>
-        <tbody>${events.map(event => `<tr>
-          <td>${formatTs(event.ts)}</td>
-          <td>${escapeHtml(event.track || '—')}</td>
-          <td class="mono">${escapeHtml(event.slug || '—')}</td>
-          <td>${escapeHtml(event.event || '—')}</td>
-          <td>${escapeHtml(summaryText(event))}</td>
-        </tr>`).join('')}</tbody>
-      </table>`;
-    }
-    setBanner('log-banner', '');
-  } catch (error) {
-    setBanner('log-banner', `API unavailable: ${error.message}`);
-    document.getElementById('log-content').innerHTML = '<div class="empty">Unable to load build log</div>';
-  }
+  const params = new URLSearchParams({limit: '50'}); if (filter) params.set('track', filter);
+  return runReader('log-content', `/api/wiki/build-log?${params}`, d => collection(d, 'events', e => identity(e, 'track') && identity(e, 'event')), (data, panel) => {
+    const events = data.events.filter(e => filter || !operationalTrackIds || operationalTrackIds.has(e.track));
+    panel.innerHTML = events.length ? `<table><caption>Returned build log events for ${escapeHtml(filter || 'operational tracks')}</caption><thead><tr><th>Event time</th><th>Track</th><th>Slug</th><th>Event</th><th>Summary</th></tr></thead><tbody>${events.map(e => `<tr><td>${escapeHtml(formatTs(e.ts))}</td><td>${escapeHtml(e.track)}</td><td>${escapeHtml(e.slug)}</td><td>${escapeHtml(e.event)}</td><td>${escapeHtml(summaryText(e))}</td></tr>`).join('')}</tbody></table>` : '<p>No build log events returned for this filter; source age/coverage unknown.</p>';
+  });
 }
-
 function stopRefresh() {
   if (refreshTimer) {
     clearInterval(refreshTimer);
@@ -317,9 +374,10 @@ function startRefresh() {
 }
 
 function refreshAll() {
-  loadProgress().then(loadTrackDetail);
+  loadProgress();
+  if (selectedTrack) loadTrackDetail();
   loadBuildLog();
-  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · auto-refresh every 60s`;
+  document.getElementById('last-refresh').textContent = `Refresh attempted ${new Date().toLocaleTimeString()} · auto-refresh every 60s`;
 }
 
 document.addEventListener('visibilitychange', () => {

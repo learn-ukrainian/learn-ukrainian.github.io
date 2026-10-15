@@ -102,10 +102,23 @@ a:hover { text-decoration: underline; }
 .freshness-banner .warn { color:var(--yellow); }
 
 .error-msg { color: var(--red); font-size: 13px; padding: 8px 0; }
+
+.reader-status { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 0; font-size:12px; color:var(--text2); overflow-wrap:anywhere; }
+.reader-status button { color:var(--text); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:5px 10px; cursor:pointer; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+button { font:inherit; }
+td, .meta-row, .module-cell, .issue-card { overflow-wrap:anywhere; }
+.container, .left-panel, .right-panel { min-width:0; }
+.container { overflow-x:auto; }
+.topbar { flex-wrap:wrap; }
+.skip-link { position:absolute; top:-100px; left:8px; z-index:100; background:var(--bg); padding:10px; }
+.skip-link:focus { top:8px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#reader-main">Skip to content</a>
 <div id="tooltip"></div>
 
 <div class="topbar">
@@ -141,7 +154,7 @@ a:hover { text-decoration: underline; }
   <div class="stat-card"><div class="value" style="color:var(--gray)" id="total-rebuild">—</div><div class="label">Rebuild Backlog</div></div>
 </div>
 
-<div class="container">
+<div class="container" id="reader-main" role="main" tabindex="-1">
   <div class="freshness-banner" id="freshness-banner">
     <span>Loading latest snapshot…</span>
   </div>
@@ -162,24 +175,119 @@ a:hover { text-decoration: underline; }
 <script>
 const PROFILE_COLOR = { core: '#58a6ff', seminar: '#f0883e', pro: '#bc8cff' };
 
-async function fetchJson(url, options) {
-  const res = await fetch(url, options);
-  let data = null;
-  try {
-    data = await res.json();
-  } catch (e) {}
-  if (!res.ok) {
-    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
-  }
-  return data;
+
+const readerStates = new Map();
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+function numeric(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0; }
+function count(value) { return numeric(value) ? String(value) : 'unknown'; }
+function identity(row, key) { return object(row) && typeof row[key] === 'string' && row[key].length > 0; }
+function collection(data, key, valid) {
+  if (!object(data) || !Array.isArray(data[key])) throw Error('Malformed success: invalid ' + key);
+  const rows = data[key].filter(valid);
+  if (data[key].length && !rows.length) throw Error('Malformed success: invalid ' + key + ' rows');
+  return {...data, [key]: rows, _empty: rows.length === 0, _partial: rows.length !== data[key].length || data.partial === true};
+}
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  try {
+    // Legacy callers may request fresh=true; readers use the existing bounded cache.
+    const target = new URL(url, location.origin);
+    target.searchParams.delete('fresh');
+    const res = await fetch(target.pathname + target.search, {signal: controller.signal});
+    if (!res.ok) throw Error('Request failed: HTTP ' + res.status);
+    let data;
+    try { data = await res.json(); } catch { throw Error('Parse failure: invalid JSON'); }
+    if (data === null || typeof data !== 'object') throw Error('Malformed success: expected JSON object or array');
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw Error('Request timed out');
+    throw error;
+  } finally { clearTimeout(timeout); }
+}
+function validTime(value) {
+  const time = typeof value === 'string' && value ? Date.parse(value) : NaN;
+  return Number.isFinite(time) && time <= Date.now() ? time : null;
+}
+function readerClock(state) {
+  const elapsed = Math.max(0, (Date.now() - state.fetchedAt) / 1000);
+  const meta = state.data?.meta;
+  const generated = validTime(meta?.generated_at || state.data?.generated_at);
+  const cacheAge = numeric(meta?.age_s) ? ` · Cache age ${Math.floor(meta.age_s + elapsed)}s` : '';
+  const stale = meta?.stale === true || (numeric(meta?.age_s) && numeric(meta?.stale_after_s) && meta.stale_after_s > 0 && meta.age_s + elapsed > meta.stale_after_s) ? ' · Stale snapshot cache' : '';
+  const fetched = state.data?._partial || meta?.error ? 'Last partial fetch' : 'Last successful fetch';
+  const snapshot = generated === null ? '' : ` · Snapshot generated ${new Date(generated).toLocaleString()} (${Math.floor((Date.now()-generated)/1000)}s ago)`;
+  return `Source age unknown${snapshot}${cacheAge}${stale} · ${fetched} ${new Date(state.fetchedAt).toLocaleString()}`;
+}
+function invalidateReader(id) {
+  const state = readerStates.get(id);
+  if (state) { state.generation++; state.scope = null; state.pending = null; }
+}
+function runReader(id, url, validate, render) {
+  const panel = document.getElementById(id);
+  let state = readerStates.get(id);
+  if (state?.pending && state.scope === url && state.panel === panel) return state.pending;
+  if (!state || state.panel !== panel) {
+    state = {generation: 0, panel}; readerStates.set(id, state);
+  }
+  if (state.scope !== url) { state.data = null; state.fetchedAt = null; }
+  state.scope = url;
+  const generation = ++state.generation;
+  let status = document.getElementById(id + '-reader-status');
+  if (!status) {
+    status = document.createElement('div'); status.id = id + '-reader-status'; status.className = 'reader-status';
+    const label = document.createElement('span'); label.setAttribute('role', 'status');
+    const clock = document.createElement('span'); clock.className = 'reader-clock';
+    const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry';
+    retry.setAttribute('aria-label', 'Retry ' + id.replaceAll('-', ' '));
+    status.append(label, clock, retry); panel.before(status);
+  }
+  const [label, clock, retry] = status.children;
+  retry.onclick = () => runReader(id, url, validate, render);
+  label.textContent = 'Loading';
+  clock.textContent = state.fetchedAt ? readerClock(state) : 'Source age unknown · No successful fetch';
+  panel.setAttribute('aria-busy', 'true');
+  if (!state.data) panel.textContent = 'Loading…';
+  const current = () => state.generation === generation && document.getElementById(id) === panel;
+  state.pending = (async () => {
+    try {
+      const data = validate(await fetchJson(url));
+      if (!current()) return;
+      const active = panel.contains(document.activeElement) ? document.activeElement.dataset.readerKey : null;
+      render(data, panel);
+      if (active != null) [...panel.querySelectorAll('[data-reader-key]')].find(el => el.dataset.readerKey === active)?.focus({preventScroll:true});
+      state.data = data; state.fetchedAt = Date.now();
+      const meta = data.meta || {};
+      label.textContent = [data._partial ? 'Partial · incomplete coverage' : data._empty ? 'Empty · no rows returned' : 'Loaded', meta.error ? 'Source unavailable' : '', meta.stale === true || data.stale === true ? 'Stale · retained source snapshot' : '', 'Source age/coverage unknown'].filter(Boolean).join(' · ');
+      clock.textContent = readerClock(state);
+      return data;
+    } catch (error) {
+      if (!current()) return;
+      label.textContent = error.message + (state.data ? ' · Historical values retained' : ' · No data');
+      if (!state.data) panel.textContent = 'Unable to load this section. Use Retry.';
+    } finally {
+      if (current()) { panel.setAttribute('aria-busy', 'false'); state.pending = null; }
+    }
+  })();
+  return state.pending;
+}
+setInterval(() => {
+  for (const [id, state] of readerStates) {
+    const clock = document.getElementById(id + '-reader-status')?.querySelector('.reader-clock');
+    if (clock && state.fetchedAt) clock.textContent = readerClock(state);
+  }
+}, 10000);
 
 function pct(val, total) {
   return total > 0 ? Math.round(val / total * 100) : 0;
 }
 
 function progressBar(val, total, cls) {
-  const p = pct(val, total);
+  if (!numeric(val) || !numeric(total)) return '<div class="phase-count">unknown</div>';
+  const p = Math.min(100, pct(val, total));
   return `<div class="progress-bar">
     <div class="progress-fill ${cls}" style="width:${p}%"></div>
   </div>
@@ -207,16 +315,16 @@ function emptySummaryTotals() {
   };
 }
 
+
 function sumSummaryTotals(trackEntries) {
   const totals = emptySummaryTotals();
-  for (const [, track] of trackEntries) {
-    for (const [key, value] of Object.entries(track)) {
-      if (typeof value !== 'number') continue;
-      totals[key] = (totals[key] || 0) + value;
-    }
+  for (const key of Object.keys(totals)) {
+    const values = trackEntries.map(([, track]) => track[key]);
+    totals[key] = values.every(numeric) ? values.reduce((sum, value) => sum + value, 0) : null;
   }
   return totals;
 }
+
 
 const BACKLOG_PENDING_LABEL = 'backlog pending';
 
@@ -228,37 +336,17 @@ function formatBacklogSegment(buildState) {
   return buildState.pending ? BACKLOG_PENDING_LABEL : `${buildState.backlog} backlog`;
 }
 
+
 function buildStateSummary(pv, trackIds) {
-  if (!pv) {
-    return { pending: true, current: null, backlog: null };
+  if (!pv) return {pending: true, current: null, backlog: null};
+  if (trackIds) {
+    const rows = [...trackIds].map(id => pv.per_track?.[id]);
+    if (rows.some(r => !object(r) || !['v6','v5','v3','unbuilt'].every(k => numeric(r[k])))) return {pending: true, current: null, backlog: null};
+    return {pending: false, current: rows.reduce((s,r) => s+r.v6, 0), backlog: rows.reduce((s,r) => s+r.v5+r.v3+r.unbuilt, 0)};
   }
-  if (trackIds && trackIds.size && pv.per_track) {
-    const counts = {v6:0,v5:0,v3:0,unbuilt:0};
-    for (const trackId of trackIds) {
-      const row = pv.per_track[trackId] || {};
-      for (const key of Object.keys(counts)) counts[key] += row[key] || 0;
-    }
-    return {
-      pending: false,
-      current: counts.v6,
-      backlog: counts.v5 + counts.v3 + counts.unbuilt,
-    };
-  }
-  if (trackIds && trackIds.size) {
-    return { pending: true, current: null, backlog: null };
-  }
-  const state = pv.build_state || {};
-  const current = pv.current_builds ?? state.current ?? pv.counts?.v6;
-  const backlog = pv.rebuild_backlog ?? state.backlog ?? pv.needs_rebuild;
-  if (current == null && backlog == null) {
-    return { pending: true, current: null, backlog: null };
-  }
-  return {
-    pending: false,
-    current: current ?? 0,
-    backlog: backlog ?? 0,
-  };
+  return {pending: true, current: null, backlog: null};
 }
+
 
 function pipelineLabel(version) {
   if (version === 'v6') return 'current build state';
@@ -296,47 +384,38 @@ function chipTitle(mod) {
   const phases = mod.phases || {};
   const buildState = pipelineLabel(mod.pipeline_version);
   const phaseStates = Object.entries(phases)
-    .map(([k, v]) => `${k}:${v.status || 'pending'}`)
+    .map(([k, v]) => `${k}:${v?.status || 'pending'}`)
     .join(' | ');
   const dossier = mod.dossier?.exists ? `dossier:${mod.dossier.source || 'yes'}` : 'dossier:missing';
   const mdx = mod.published_mdx ? 'published:yes' : 'published:no';
   return `#${mod.num} ${mod.slug} [${buildState}] | ${phaseStates} | audit:${mod.audit} | words:${mod.words} | ${dossier} | ${mdx}`;
 }
 
-async function loadModulePanel(trackId, panel) {
-  panel.innerHTML = '<div class="loading-msg">Loading module data...</div>';
-  try {
-    const data = await fetchJson(`/api/state/pipeline/${trackId}?fresh=true`);
-    const mods = data.modules || [];
 
-    const chips = mods.map(mod => {
-      const cls = chipClass(mod);
-      const label = chipLabel(mod);
-      const title = chipTitle(mod);
-      const obsolete = moduleNeedsRefresh(mod) ? ' obsolete' : '';
-      return `<div class="module-chip ${cls}${obsolete}" data-tip="${title}">${label}</div>`;
-    }).join('');
-
-    panel.innerHTML = `<div class="module-grid">${chips}</div>`;
-  } catch(e) {
-    panel.innerHTML = `<div class="error-msg">Failed to load: ${e.message}</div>`;
-  }
+function loadModulePanel(trackId, panel) {
+  return runReader(panel.id, `/api/state/pipeline/${encodeURIComponent(trackId)}?fresh=true`, d => {
+    if (d?.track !== trackId) throw Error('Malformed success: track identity mismatch');
+    return collection(d, 'modules', m => identity(m, 'slug') && (m.phases == null || object(m.phases)));
+  }, (data, el) => {
+    el.innerHTML = data.modules.length ? `<div class="module-grid">${data.modules.map(mod => `<div tabindex="0" class="module-chip ${chipClass(mod)}${moduleNeedsRefresh(mod) ? ' obsolete' : ''}" data-reader-key="${escapeHtml(mod.slug)}" data-tip="${escapeHtml(chipTitle(mod))}" title="${escapeHtml(chipTitle(mod))}">${chipLabel(mod)}</div>`).join('')}</div>` : '<p>No modules returned for this track; coverage/age unknown.</p>';
+  });
 }
+
 
 function renderTrack(trackId, trackData) {
   const { total, profile, research_done, content_done, audit_passing, reviewed, final_review_done } = trackData;
   const profileColor = PROFILE_COLOR[profile] || '#8b949e';
-  const dossierDone = trackData.dossier_done || 0;
-  const published = trackData.published_mdx || 0;
+  const dossierDone = trackData.dossier_done;
+  const published = trackData.published_mdx;
   const staleAudit = trackData.audit_stale || 0;
   const next = nextAction(trackData);
   const dossierLabel = trackData.is_seminar ? 'Dossier' : 'Research';
 
   return `
-  <div class="track-row" id="track-${trackId}">
-    <div class="track-header-row" onclick="toggleTrack('${trackId}')">
-      <div class="track-label">${trackId}</div>
-      <div class="track-profile" style="color:${profileColor}">${profile}</div>
+  <div class="track-row" id="track-${escapeHtml(trackId)}">
+    <button type="button" class="track-header-row" data-reader-key="${escapeHtml(trackId)}" data-track="${escapeHtml(trackId)}" aria-expanded="false" style="width:100%;text-align:left;background:transparent;color:var(--text);border:0">
+      <div class="track-label">${escapeHtml(trackId)}</div>
+      <div class="track-profile" style="color:${profileColor}">${escapeHtml(profile)}</div>
       <div class="track-phases">
         <div class="phase-col">
           <div class="phase-label">${dossierLabel}</div>
@@ -352,7 +431,7 @@ function renderTrack(trackId, trackData) {
         </div>
         <div class="phase-col">
           <div class="phase-label">Reviewed</div>
-          ${progressBar(reviewed || 0, total, 'fill-review')}
+          ${progressBar(reviewed, total, 'fill-review')}
         </div>
         <div class="phase-col">
           <div class="phase-label">Final QA</div>
@@ -364,12 +443,12 @@ function renderTrack(trackId, trackData) {
         </div>
       </div>
       <div class="track-hints">
-        <div class="${next.cls}">${next.text}</div>
-        ${staleAudit ? `<div class="hint-stale">${staleAudit} stale audit cache${staleAudit === 1 ? '' : 's'}</div>` : ''}
+        <div class="${next.cls}">${escapeHtml(next.text)}</div>
+        ${staleAudit ? `<div class="hint-stale">${count(staleAudit)} stale audit cache${staleAudit === 1 ? '' : 's'}</div>` : ''}
       </div>
-      <div class="track-chevron">▶</div>
-    </div>
-    <div class="module-panel" id="panel-${trackId}">
+      <span class="track-chevron">▶</span>
+    </button>
+    <div class="module-panel" id="panel-${escapeHtml(trackId)}">
       <div class="loading-msg">Click to expand</div>
     </div>
   </div>`;
@@ -379,12 +458,14 @@ function toggleTrack(trackId) {
   const row = document.getElementById(`track-${trackId}`);
   const panel = document.getElementById(`panel-${trackId}`);
   const isExpanded = row.classList.toggle('track-expanded');
-  if (isExpanded && panel.querySelector('.loading-msg')) {
+  row.querySelector('button').setAttribute('aria-expanded', String(isExpanded));
+  if (isExpanded && !readerStates.get(panel.id)?.data) {
     loadModulePanel(trackId, panel);
   }
 }
 
 function nextAction(trackData) {
+  if (!['total','research_done','content_done','audit_passing','final_review_done','dossier_done','generated_md','audit_stale'].every(k => numeric(trackData[k]))) return {text:'Next action unknown', cls:'hint-warn'};
   const total = trackData.total || 0;
   if (trackData.is_seminar && (trackData.dossier_done || 0) < total) {
     return { text: `Dossier gap ${trackData.dossier_done || 0}/${total}`, cls: 'hint-warn' };
@@ -404,73 +485,64 @@ function nextAction(trackData) {
   if ((trackData.final_review_done || 0) < (trackData.audit_passing || 0)) {
     return { text: 'Final review next', cls: 'hint-warn' };
   }
-  return { text: 'No immediate blocker', cls: 'hint-ok' };
+  return { text: 'No next action derived', cls: 'hint-ok' };
 }
 
-function formatTimestamp(value) {
-  if (!value) return 'unknown time';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-}
 
 function renderFreshness(meta) {
-  const banner = document.getElementById('freshness-banner');
-  const generated = formatTimestamp(meta?.generated_at);
-  banner.innerHTML = `<span>Last updated <strong>${escapeHtml(generated)}</strong></span>`;
+  document.getElementById('freshness-banner').textContent = 'Source age unknown; snapshot generation and cache age are reported per section.';
 }
-
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
+function validateSummary(data) {
+  if (!object(data) || !object(data.tracks)) throw Error('Malformed success: invalid summary tracks');
+  const entries = Object.entries(data.tracks).filter(([, t]) => object(t) && numeric(t.total));
+  if (Object.keys(data.tracks).length && !entries.length) throw Error('Malformed success: invalid summary rows');
+  return {...data, tracks: Object.fromEntries(entries), _empty: entries.length === 0, _partial: entries.length !== Object.keys(data.tracks).length};
 }
-
-async function load() {
-  try {
-    const [res, pv] = await Promise.all([
-      fetchJson('/api/state/summary?fresh=true'),
-      fetchJson('/api/state/pipeline-versions?fresh=true').catch(() => null),
-    ]);
-    const data = res;
+function load() {
+  return runReader('tracks-container', '/api/state/summary?fresh=true', validateSummary, (data, container) => {
     const trackEntries = operationalTrackEntries(data.tracks);
     const t = sumSummaryTotals(trackEntries);
-    const trackIds = operationalTrackIdSet(trackEntries);
+    if (data._partial || data.meta?.error) for (const key of Object.keys(t)) t[key] = null;
     renderFreshness(data.meta);
-
-    document.getElementById('total-modules').textContent = t.total;
-    document.getElementById('total-research').textContent = t.research_done;
-    document.getElementById('total-content').textContent = t.content_done;
-    document.getElementById('total-audit').textContent = t.audit_passing;
-    document.getElementById('total-reviewed').textContent = t.reviewed || 0;
-    document.getElementById('total-final-review').textContent = t.final_review_done;
-    document.getElementById('total-dossier').textContent = t.dossier_done || 0;
-    document.getElementById('total-published').textContent = t.published_mdx || 0;
-    const buildState = buildStateSummary(pv, trackIds);
-    document.getElementById('total-current-builds').textContent = displayBuildCount(buildState.current);
-    document.getElementById('total-rebuild').textContent = displayBuildCount(buildState.backlog);
-    document.getElementById('topbar-subtitle').textContent =
-      `Build state across operational tracks — ${displayBuildCount(buildState.current)} current, ${t.published_mdx || 0} published, ${formatBacklogSegment(buildState)}`;
-
-    const container = document.getElementById('tracks-container');
-
-    // Sort: seminar first, then by name
-    trackEntries.sort(([a], [b]) => {
-      const pa = data.tracks[a].profile;
-      const pb = data.tracks[b].profile;
-      if (pa === pb) return a.localeCompare(b);
-      const order = { seminar: 0, pro: 1, core: 2 };
-      return (order[pa] ?? 3) - (order[pb] ?? 3);
-    });
-
-    container.innerHTML = trackEntries
-      .map(([id, td]) => renderTrack(id, td))
-      .join('');
-  } catch(e) {
-    document.getElementById('tracks-container').innerHTML =
-      `<div class="error-msg">Failed to load: ${e.message}</div>`;
-  }
+    const metrics = {'total-modules':'total','total-research':'research_done','total-content':'content_done','total-audit':'audit_passing','total-reviewed':'reviewed','total-final-review':'final_review_done','total-dossier':'dossier_done','total-published':'published_mdx'};
+    for (const [id, key] of Object.entries(metrics)) document.getElementById(id).textContent = count(t[key]);
+    const oldPanels = new Map([...container.querySelectorAll('.track-expanded')].map(row => [row.id, row]));
+    trackEntries.sort(([a],[b]) => a.localeCompare(b));
+    container.innerHTML = trackEntries.length ? trackEntries.map(([id, td]) => renderTrack(id, td)).join('') : '<p>No operational tracks returned; source age/coverage unknown.</p>';
+    for (const row of container.querySelectorAll('.track-row')) {
+      const previous = oldPanels.get(row.id);
+      if (previous) {
+        row.classList.add('track-expanded');
+        row.querySelector('.module-panel').replaceWith(previous.querySelector('.module-panel'));
+        const status = previous.querySelector('.reader-status');
+        if (status) row.querySelector('.module-panel').before(status);
+      }
+      const button = row.querySelector('button'); button.setAttribute('aria-expanded', String(row.classList.contains('track-expanded')));
+      button.onclick = () => toggleTrack(button.dataset.track);
+    }
+    // Build counts have a separate source; failure cannot discard the summary.
+    const trackIds = operationalTrackIdSet(trackEntries);
+    const counts = document.getElementById('build-counts-content');
+    if (!counts) {
+      const el = document.createElement('div'); el.id = 'build-counts-content';
+      document.getElementById('freshness-banner').after(el);
+    }
+    for (const id of ['total-current-builds','total-rebuild']) document.getElementById(id).textContent = 'unknown';
+    document.getElementById('topbar-subtitle').textContent = 'Build counts pending; published ' + count(t.published_mdx);
+    invalidateReader('build-counts-content');
+    runReader('build-counts-content', '/api/state/pipeline-versions?fresh=true', d => {
+      if (!object(d?.per_track)) throw Error('Malformed success: invalid pipeline versions');
+      return d;
+    }, (pv, panel) => {
+      const buildState = buildStateSummary(data._partial || data.meta?.error ? null : pv, trackIds);
+      document.getElementById('total-current-builds').textContent = displayBuildCount(buildState.current);
+      document.getElementById('total-rebuild').textContent = displayBuildCount(buildState.backlog);
+      document.getElementById('topbar-subtitle').textContent = `${displayBuildCount(buildState.current)} current, ${count(t.published_mdx)} published, ${formatBacklogSegment(buildState)}`;
+      panel.textContent = buildState.pending ? 'Build count coverage unknown' : 'Build counts loaded for returned operational tracks';
+    }).catch(() => null);
+  });
 }
+
 
 // ---- JS tooltip (bug #7: avoids CSS attr() off-screen clipping) ----
 const tooltip = document.getElementById('tooltip');
@@ -499,6 +571,11 @@ document.addEventListener('mouseout', e => {
   if (e.target.closest('.module-chip[data-tip]')) tooltip.style.display = 'none';
 });
 
+document.addEventListener('focusin', e => {
+  const chip = e.target.closest('.module-chip[data-tip]');
+  if (chip) { tooltip.textContent = chip.dataset.tip; tooltip.style.display = 'block'; const box = chip.getBoundingClientRect(); positionTooltip({clientX:box.left, clientY:box.top}); }
+});
+document.addEventListener('focusout', () => { tooltip.style.display = 'none'; });
 load();
 </script>
 </body>

@@ -23,10 +23,10 @@ a:hover { text-decoration: underline; }
 .topbar .monitor-nav a { color: var(--text2); }
 .refresh-indicator { font-size: 11px; color: var(--text3); }
 
-.main { display: grid; grid-template-columns: 1fr 400px; height: calc(100vh - 49px); }
+.main { display: grid; grid-template-columns: minmax(0,1fr) 400px; height: calc(100vh - 49px); }
 @media (max-width: 1000px) { .main { grid-template-columns: 1fr; } }
 
-.left-panel { overflow-y: auto; padding: 16px 24px; }
+.left-panel { overflow-x:auto; overflow-y: auto; padding: 16px 24px; }
 .right-panel { border-left: 1px solid var(--border); overflow-y: auto; padding: 16px; background: var(--bg2); }
 
 /* Treemap */
@@ -95,11 +95,24 @@ a:hover { text-decoration: underline; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .track-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-.track-stats { display: flex; gap: 12px; font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+.track-stats { display: flex; flex-wrap:wrap; gap: 12px; font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+
+.reader-status { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 0; font-size:12px; color:var(--text2); overflow-wrap:anywhere; }
+.reader-status button { color:var(--text); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:5px 10px; cursor:pointer; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+button { font:inherit; }
+td, .meta-row, .module-cell, .issue-card { overflow-wrap:anywhere; }
+.container, .left-panel, .right-panel { min-width:0; }
+.container { overflow-x:auto; }
+.topbar { flex-wrap:wrap; }
+.skip-link { position:absolute; top:-100px; left:8px; z-index:100; background:var(--bg); padding:10px; }
+.skip-link:focus { top:8px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#reader-main">Skip to content</a>
 
 <div class="topbar">
   <h1>Curriculum Dashboard</h1>
@@ -120,9 +133,10 @@ a:hover { text-decoration: underline; }
   <a href="/quality.html">Quality</a>
 </nav>
 
-<div class="main">
+<div class="main" id="reader-main" role="main" tabindex="-1">
   <div class="left-panel" id="left-panel">
-    <div class="loading"><div class="spinner"></div></div>
+    <div id="overview-content">Loading overview…</div>
+    <div id="track-detail">Select a track to inspect modules</div>
   </div>
   <div class="right-panel" id="right-panel">
     <div class="empty">Select a module to see details</div>
@@ -130,319 +144,228 @@ a:hover { text-decoration: underline; }
 </div>
 
 <script>
+
+const readerStates = new Map();
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+function numeric(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0; }
+function count(value) { return numeric(value) ? String(value) : 'unknown'; }
+function identity(row, key) { return object(row) && typeof row[key] === 'string' && row[key].length > 0; }
+function collection(data, key, valid) {
+  if (!object(data) || !Array.isArray(data[key])) throw Error('Malformed success: invalid ' + key);
+  const rows = data[key].filter(valid);
+  if (data[key].length && !rows.length) throw Error('Malformed success: invalid ' + key + ' rows');
+  return {...data, [key]: rows, _empty: rows.length === 0, _partial: rows.length !== data[key].length || data.partial === true};
+}
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  try {
+    // Legacy callers may request fresh=true; readers use the existing bounded cache.
+    const target = new URL(url, location.origin);
+    target.searchParams.delete('fresh');
+    const res = await fetch(target.pathname + target.search, {signal: controller.signal});
+    if (!res.ok) throw Error('Request failed: HTTP ' + res.status);
+    let data;
+    try { data = await res.json(); } catch { throw Error('Parse failure: invalid JSON'); }
+    if (data === null || typeof data !== 'object') throw Error('Malformed success: expected JSON object or array');
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw Error('Request timed out');
+    throw error;
+  } finally { clearTimeout(timeout); }
+}
+function validTime(value) {
+  const time = typeof value === 'string' && value ? Date.parse(value) : NaN;
+  return Number.isFinite(time) && time <= Date.now() ? time : null;
+}
+function readerClock(state) {
+  const elapsed = Math.max(0, (Date.now() - state.fetchedAt) / 1000);
+  const meta = state.data?.meta;
+  const generated = validTime(meta?.generated_at || state.data?.generated_at);
+  const cacheAge = numeric(meta?.age_s) ? ` · Cache age ${Math.floor(meta.age_s + elapsed)}s` : '';
+  const stale = meta?.stale === true || (numeric(meta?.age_s) && numeric(meta?.stale_after_s) && meta.stale_after_s > 0 && meta.age_s + elapsed > meta.stale_after_s) ? ' · Stale snapshot cache' : '';
+  const fetched = state.data?._partial || meta?.error ? 'Last partial fetch' : 'Last successful fetch';
+  const snapshot = generated === null ? '' : ` · Snapshot generated ${new Date(generated).toLocaleString()} (${Math.floor((Date.now()-generated)/1000)}s ago)`;
+  return `Source age unknown${snapshot}${cacheAge}${stale} · ${fetched} ${new Date(state.fetchedAt).toLocaleString()}`;
+}
+function invalidateReader(id) {
+  const state = readerStates.get(id);
+  if (state) { state.generation++; state.scope = null; state.pending = null; }
+}
+function runReader(id, url, validate, render) {
+  const panel = document.getElementById(id);
+  let state = readerStates.get(id);
+  if (state?.pending && state.scope === url && state.panel === panel) return state.pending;
+  if (!state || state.panel !== panel) {
+    state = {generation: 0, panel}; readerStates.set(id, state);
+  }
+  if (state.scope !== url) { state.data = null; state.fetchedAt = null; }
+  state.scope = url;
+  const generation = ++state.generation;
+  let status = document.getElementById(id + '-reader-status');
+  if (!status) {
+    status = document.createElement('div'); status.id = id + '-reader-status'; status.className = 'reader-status';
+    const label = document.createElement('span'); label.setAttribute('role', 'status');
+    const clock = document.createElement('span'); clock.className = 'reader-clock';
+    const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry';
+    retry.setAttribute('aria-label', 'Retry ' + id.replaceAll('-', ' '));
+    status.append(label, clock, retry); panel.before(status);
+  }
+  const [label, clock, retry] = status.children;
+  retry.onclick = () => runReader(id, url, validate, render);
+  label.textContent = 'Loading';
+  clock.textContent = state.fetchedAt ? readerClock(state) : 'Source age unknown · No successful fetch';
+  panel.setAttribute('aria-busy', 'true');
+  if (!state.data) panel.textContent = 'Loading…';
+  const current = () => state.generation === generation && document.getElementById(id) === panel;
+  state.pending = (async () => {
+    try {
+      const data = validate(await fetchJson(url));
+      if (!current()) return;
+      const active = panel.contains(document.activeElement) ? document.activeElement.dataset.readerKey : null;
+      render(data, panel);
+      if (active != null) [...panel.querySelectorAll('[data-reader-key]')].find(el => el.dataset.readerKey === active)?.focus({preventScroll:true});
+      state.data = data; state.fetchedAt = Date.now();
+      const meta = data.meta || {};
+      label.textContent = [data._partial ? 'Partial · incomplete coverage' : data._empty ? 'Empty · no rows returned' : 'Loaded', meta.error ? 'Source unavailable' : '', meta.stale === true || data.stale === true ? 'Stale · retained source snapshot' : '', 'Source age/coverage unknown'].filter(Boolean).join(' · ');
+      clock.textContent = readerClock(state);
+      return data;
+    } catch (error) {
+      if (!current()) return;
+      label.textContent = error.message + (state.data ? ' · Historical values retained' : ' · No data');
+      if (!state.data) panel.textContent = 'Unable to load this section. Use Retry.';
+    } finally {
+      if (current()) { panel.setAttribute('aria-busy', 'false'); state.pending = null; }
+    }
+  })();
+  return state.pending;
+}
+setInterval(() => {
+  for (const [id, state] of readerStates) {
+    const clock = document.getElementById(id + '-reader-status')?.querySelector('.reader-clock');
+    if (clock && state.fetchedAt) clock.textContent = readerClock(state);
+  }
+}, 10000);
+
 const API = '/api/dashboard';
 let overviewData = null;
 let selectedTrack = null;
-let trackDetailCache = {};
-
-async function fetchJson(url, options) {
-  const res = await fetch(url, options);
-  let data = null;
-  try {
-    data = await res.json();
-  } catch (e) {}
-  if (!res.ok) {
-    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
-  }
-  return data;
-}
-
+let selectedModule = null;
 function pctColor(pct) {
-  if (pct >= 80) return 'rgba(63,185,80,0.5)';
-  if (pct >= 50) return 'rgba(210,153,34,0.5)';
-  if (pct >= 20) return 'rgba(248,81,73,0.3)';
-  return 'rgba(72,79,88,0.3)';
+  if (!numeric(pct)) return 'var(--bg3)';
+  return pct >= 80 ? 'rgba(63,185,80,0.5)' : pct >= 50 ? 'rgba(210,153,34,0.5)' : 'rgba(248,81,73,0.3)';
 }
-
 function pipelineLabel(version) {
-  if (version === 'v6') return 'current';
-  if (version === 'v5' || version === 'v3') return 'legacy';
-  if (version === 'unbuilt' || !version) return 'pending';
-  return 'unknown';
+  return version === 'v6' ? 'current' : ['v5','v3'].includes(version) ? 'legacy' : !version || version === 'unbuilt' ? 'pending' : 'unknown';
 }
-
-function pipelineClass(version) {
-  const label = pipelineLabel(version);
-  if (label === 'current') return 'ver-current';
-  if (label === 'legacy') return 'ver-backlog';
-  return 'ver-pending';
+function pipelineClass(version) { return pipelineLabel(version) === 'current' ? 'ver-current' : 'ver-pending'; }
+function needsBuildRefresh(module) { return typeof module.needs_rebuild === 'boolean' ? module.needs_rebuild : pipelineLabel(module.pipeline_version) !== 'current'; }
+function operationalTracks(tracks) { return tracks.filter(t => t.module_source !== 'plans-fallback'); }
+function clearDetail() {
+  selectedModule = null; invalidateReader('right-panel');
+  document.getElementById('right-panel').textContent = 'Select a module to see details';
+  document.getElementById('right-panel-reader-status')?.remove();
 }
-
-function needsBuildRefresh(module) {
-  if (typeof module.needs_rebuild === 'boolean') return module.needs_rebuild;
-  return pipelineLabel(module.pipeline_version) !== 'current';
+function fetchOverview() {
+  return runReader('overview-content', `${API}/overview`, d => collection(d, 'tracks', t => identity(t, 'id') && numeric(t.module_count) && object(t.stats)), data => {
+    overviewData = {...data, tracks: operationalTracks(data.tracks)};
+    if (selectedTrack && !overviewData.tracks.some(t => t.id === selectedTrack) && !data._partial && !data.meta?.error) {
+      selectedTrack = null; invalidateReader('track-detail'); clearDetail();
+      document.getElementById('track-detail').textContent = 'Selected track is no longer in this overview';
+      document.getElementById('track-detail-reader-status')?.remove();
+    }
+    renderTreemap(overviewData.tracks);
+    if (selectedTrack) loadTrackDetail(selectedTrack);
+    document.getElementById('refresh-info').textContent = 'Overview fetched ' + new Date().toLocaleTimeString();
+  });
 }
-
-function operationalTracks(tracks) {
-  return (tracks || []).filter(track => track.module_source !== 'plans-fallback');
-}
-
-async function fetchOverview() {
-  overviewData = await fetchJson(`${API}/overview`);
-  overviewData.tracks = operationalTracks(overviewData.tracks);
-  if (selectedTrack && !overviewData.tracks.some(track => track.id === selectedTrack)) selectedTrack = null;
-  renderTreemap(overviewData.tracks);
-  document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
-}
-
 function renderTreemap(tracks) {
-  const left = document.getElementById('left-panel');
-  const totalModules = tracks.reduce((s, t) => s + t.module_count, 0);
-
-  const treemapHtml = tracks.map(t => {
-    const w = Math.max(80, Math.round(t.module_count / totalModules * 1200));
-    const h = Math.max(60, Math.round(t.module_count / totalModules * 600));
-    const sel = selectedTrack === t.id ? 'selected' : '';
-    return `
-      <div class="treemap-cell ${sel}" style="width:${w}px;min-height:${h}px;background:${pctColor(t.pct_complete)}"
-           onclick="selectTrack('${t.id}')">
-        <span class="name">${t.id.toUpperCase()}</span>
-        <span class="count">${t.module_count} modules &middot; ${t.pct_complete}%</span>
-      </div>
-    `;
-  }).join('');
-
-  let html = `<div class="treemap">${treemapHtml}</div>`;
-
-  if (selectedTrack) {
-    html += `<div id="track-detail"><div class="loading"><div class="spinner"></div></div></div>`;
-  }
-
-  left.innerHTML = html;
-
-  if (selectedTrack) {
-    loadTrackDetail(selectedTrack);
+  const container = document.getElementById('overview-content');
+  const total = tracks.reduce((sum, t) => sum + t.module_count, 0);
+  container.innerHTML = tracks.length ? '<div class="treemap"></div>' : '<p>No operational tracks returned; coverage/age unknown.</p>';
+  const map = container.querySelector('.treemap');
+  for (const t of tracks) {
+    const w = total ? Math.max(80, Math.round(t.module_count / total * 1200)) : 80;
+    const h = total ? Math.max(60, Math.round(t.module_count / total * 600)) : 60;
+    const button = document.createElement('button');
+    button.className = 'treemap-cell' + (selectedTrack === t.id ? ' selected' : '');
+    button.style.cssText = `width:${w}px;min-height:${h}px;background:${pctColor(t.pct_complete)};color:var(--text);border:0`;
+    button.setAttribute('aria-pressed', String(selectedTrack === t.id)); button.dataset.readerKey = t.id;
+    button.innerHTML = `<span class="name">${escapeHtml(t.id.toUpperCase())}</span><span class="count">${count(t.module_count)} modules · ${numeric(t.pct_complete) ? t.pct_complete + '%' : 'unknown'}</span>`;
+    button.onclick = () => selectTrack(t.id); map.append(button);
   }
 }
-
-async function selectTrack(trackId) {
+function selectTrack(trackId) {
+  if (selectedTrack !== trackId) clearDetail();
   selectedTrack = trackId;
-  renderTreemap(overviewData.tracks);
+  document.querySelectorAll('.treemap-cell').forEach((button, index) => {
+    const active = overviewData.tracks[index].id === trackId;
+    button.classList.toggle('selected', active); button.setAttribute('aria-pressed', String(active));
+  });
+  return loadTrackDetail(trackId);
 }
-
-async function loadTrackDetail(trackId) {
-  const container = document.getElementById('track-detail');
-  if (!container) return;
-
-  let data = trackDetailCache[trackId];
-  if (!data) {
-    data = await fetchJson(`${API}/track/${trackId}`);
-    trackDetailCache[trackId] = data;
-  }
-
-  const t = overviewData.tracks.find(t => t.id === trackId);
-  const s = t.stats;
-
-  const rs = s.research || {};
-  const hasRubric = !!rs.profile;
-
-  // Research stats line
-  let researchStat = '';
-  if (hasRubric) {
-    const parts = [];
-    for (const label of ['exemplary','solid','adequate','thin','stub']) {
-      if (rs[label] > 0) parts.push(`${rs[label]} ${label}`);
+function loadTrackDetail(trackId) {
+  return runReader('track-detail', `${API}/track/${encodeURIComponent(trackId)}`, d => {
+    if (d?.track_id !== trackId) throw Error('Malformed success: track identity mismatch');
+    return collection(d, 'modules', m => identity(m, 'slug'));
+  }, (data, container) => {
+    const t = overviewData.tracks.find(t => t.id === trackId);
+    const s = data.stats || {};
+    const research = object(s.research) ? s.research : {};
+    container.innerHTML = `<h2 class="track-title">${escapeHtml(t?.name || trackId)}</h2>
+      <div class="track-stats">${['pass','content_complete','fail','unaudited','missing','final_review'].map(k => `<span>${escapeHtml(k)}: ${count(s[k])}</span>`).join('')}</div>
+      <p>Research: ${count(research.total)} returned · ${escapeHtml(research.profile ?? 'rubric unknown')} · ${['exemplary','solid','adequate','thin','stub'].map(key => escapeHtml(key) + ': ' + count(research[key])).join(', ')}</p>
+      <table class="module-table"><caption>Returned modules for ${escapeHtml(trackId)}</caption>
+      <thead><tr><th>#</th><th>Module</th><th>Build</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead><tbody>
+      ${data.modules.map(m => `<tr class="${needsBuildRefresh(m) ? 'obsolete' : ''}">
+        <td>${count(m.num)}</td><td><button type="button" class="module-select" data-reader-key="${escapeHtml(m.slug)}">${escapeHtml(m.slug)}</button></td>
+        <td><span class="ver-label ${pipelineClass(m.pipeline_version)}">${pipelineLabel(m.pipeline_version)}</span></td>
+        <td>${escapeHtml(m.status ?? 'unknown')}</td><td>${count(m.word_count)}/${count(m.word_target)}</td>
+        <td>${m.research?.exists === true ? (numeric(m.research.score) ? count(m.research.score) + '/10' : count(m.research.words) + ' words') : m.research?.exists === false ? 'missing' : 'unknown'}</td>
+        <td>${m.has_final_review === true ? 'Reviewed' : m.has_final_review === false ? 'Pending' : 'unknown'}</td></tr>`).join('')}
+      </tbody></table>${data.modules.length ? '' : '<p>No modules returned; coverage/age unknown.</p>'}`;
+    container.querySelectorAll('.module-select').forEach((button, index) => {
+      button.onclick = () => loadModuleDetail(trackId, data.modules[index].slug);
+    });
+    if (selectedModule && !data.modules.some(m => m.slug === selectedModule)) clearDetail();
+  });
+}
+function metadataCard(title, entries) {
+  return `<section class="detail-card"><h3>${escapeHtml(title)}</h3>${entries.map(([label, value]) => `<div class="meta-row"><span class="label">${escapeHtml(label)}</span><span>${escapeHtml(value == null ? 'unknown' : typeof value === 'object' ? JSON.stringify(value) : value)}</span></div>`).join('')}</section>`;
+}
+function listCard(title, values) {
+  return Array.isArray(values) && values.length ? `<section class="detail-card"><h3>${escapeHtml(title)}</h3><ul class="section-list">${values.map(v => `<li>${escapeHtml(typeof v === 'object' ? JSON.stringify(v) : v)}</li>`).join('')}</ul></section>` : '';
+}
+function loadModuleDetail(trackId, slug) {
+  selectedModule = slug;
+  return runReader('right-panel', `${API}/module/${encodeURIComponent(trackId)}/${encodeURIComponent(slug)}`, m => {
+    if (!object(m) || m.track !== trackId || m.slug !== slug) throw Error('Malformed success: module identity mismatch');
+    return {...m, _partial: ['plan','meta','lesson','research'].some(k => m[k] != null && !object(m[k]))};
+  }, (m, panel) => {
+    const plan = object(m.plan) ? m.plan : null;
+    const research = object(m.research) ? m.research : null;
+    let html = `<h2>${escapeHtml(slug)}</h2><p>${escapeHtml(trackId)} · ${pipelineLabel(m.pipeline_version)} build state</p>`;
+    html += metadataCard('Review and audit', [['Audit', m.status?.overall?.status], ['Audit freshness', m.status_is_fresh], ['QA review', m.has_final_review], ['Review score', m.review_score], ['Review verdict', m.review_verdict], ['Plan review', m.plan_review_verdict]]);
+    if (research) {
+      html += metadataCard('Research', ['exists','profile','score','quality','words'].map(k => [k, research[k]]));
+      if (object(research.dimensions)) html += metadataCard('Research dimensions', Object.entries(research.dimensions));
+      html += listCard('Research gaps', research.gaps) + listCard('Refresh reasons', research.content_alignment?.reasons);
     }
-    researchStat = `<span style="color:var(--purple)">${parts.join(', ')} | ${rs.total}/${data.module_count}</span>`;
-  } else {
-    researchStat = `<span style="color:var(--text3)">${rs.total || 0}/${data.module_count} researched</span>`;
-  }
-
-  container.innerHTML = `
-    <div class="track-title">${t.name}</div>
-    <div class="track-stats">
-      <span style="color:var(--green)">${s.pass} pass</span>
-      <span style="color:var(--blue)">${s.content_complete} prose</span>
-      <span style="color:var(--red)">${s.fail} fail</span>
-      <span style="color:var(--yellow)">${s.unaudited} unaudited</span>
-      <span style="color:var(--gray)">${s.missing} missing</span>
-      <span style="color:#58a6ff" title="Claude QA reviews done">🔵 ${s.final_review || 0} QA</span>
-      ${researchStat}
-    </div>
-    <table class="module-table">
-      <thead><tr><th>#</th><th>Module</th><th>Build</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead>
-      <tbody>
-        ${data.modules.map(m => {
-          const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
-          const ver = m.pipeline_version || 'unbuilt';
-          const obsolete = needsBuildRefresh(m) ? ' obsolete' : '';
-          const verCls = pipelineClass(ver);
-          const verLabel = pipelineLabel(ver);
-          const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
-          const r = m.research || {};
-          let rCol;
-          if (r.exists && r.score != null) {
-            rCol = `<td><span class="rq-score ${r.quality}">${r.score}/10</span></td>`;
-          } else if (r.exists) {
-            rCol = `<td><span class="rq-coverage">${r.words}w</span></td>`;
-          } else {
-            rCol = `<td style="color:var(--text3)">-</td>`;
-          }
-          const qaCol = m.has_final_review
-            ? `<td style="color:#58a6ff;font-weight:600" title="Claude QA done">✓</td>`
-            : (m.status === 'pass' ? `<td style="color:var(--text3)">⏳</td>` : `<td style="color:var(--text3)">-</td>`);
-          return `
-            <tr class="${obsolete}" onclick="loadModuleDetail('${trackId}','${m.slug}')">
-              <td>${m.num}</td>
-              <td>${m.slug}</td>
-              <td><span class="ver-label ${verCls}">${verLabel}</span></td>
-              <td><span class="status-dot ${cls}"></span> ${m.status}</td>
-              <td>${m.word_count.toLocaleString()}/${m.word_target.toLocaleString()} <span class="word-mini" style="width:${wordPct}%"></span></td>
-              ${rCol}
-              ${qaCol}
-            </tr>
-          `;
-        }).join('')}
-      </tbody>
-    </table>
-  `;
+    if (plan) {
+      html += metadataCard('Plan', ['title','word_target','focus','pedagogy','grammar'].map(k => [k, plan[k]]));
+      html += listCard('Objectives', plan.objectives) + listCard('Content outline', plan.content_outline || plan.outline);
+    } else html += '<p>No plan returned.</p>';
+    if (object(m.meta)) html += metadataCard('Meta', ['duration','pedagogy','transliteration','grammar'].map(k => [k, m.meta[k]]));
+    if (object(m.lesson)) html += metadataCard('Lesson', [['Words', m.lesson.word_count], ['Modified (event time)', m.lesson.last_modified]]) + listCard('Sections', m.lesson.sections);
+    panel.innerHTML = html;
+  });
 }
-
-async function loadModuleDetail(trackId, slug) {
-  const panel = document.getElementById('right-panel');
-  panel.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-
-  const m = await fetchJson(`${API}/module/${trackId}/${slug}`);
-
-  let planHtml = '<div class="empty">No plan</div>';
-  if (m.plan) {
-    const outline = m.plan.content_outline || m.plan.outline || [];
-    const objectives = m.plan.objectives || [];
-    const grammar = m.plan.grammar || [];
-
-    planHtml = `
-      <div class="detail-card">
-        <h3>Plan</h3>
-        <div class="meta-row"><span class="label">Title</span><span>${m.plan.title || slug}</span></div>
-        <div class="meta-row"><span class="label">Word Target</span><span>${m.plan.word_target || 0}</span></div>
-        <div class="meta-row"><span class="label">Focus</span><span>${m.plan.focus || 'N/A'}</span></div>
-        <div class="meta-row"><span class="label">Pedagogy</span><span>${m.plan.pedagogy || 'N/A'}</span></div>
-        ${grammar.length > 0 ? `<div class="meta-row"><span class="label">Grammar</span><span>${grammar.join(', ')}</span></div>` : ''}
-      </div>
-
-      ${objectives.length > 0 ? `
-        <div class="detail-card">
-          <h3>Objectives</h3>
-          <ul class="obj-list">${objectives.map(o => `<li>${o}</li>`).join('')}</ul>
-        </div>
-      ` : ''}
-
-      ${outline.length > 0 ? `
-        <div class="detail-card">
-          <h3>Content Outline</h3>
-          <ul class="section-list">${outline.map(s => {
-            const label = typeof s === 'string' ? s : (s.section || s.title || JSON.stringify(s));
-            return `<li>${label}</li>`;
-          }).join('')}</ul>
-        </div>
-      ` : ''}
-    `;
-  }
-
-  let metaHtml = '';
-  if (m.meta) {
-    metaHtml = `
-      <div class="detail-card">
-        <h3>Meta</h3>
-        <div class="meta-row"><span class="label">Duration</span><span>${m.meta.duration || 'N/A'}</span></div>
-        <div class="meta-row"><span class="label">Pedagogy</span><span>${m.meta.pedagogy || 'N/A'}</span></div>
-        <div class="meta-row"><span class="label">Transliteration</span><span>${m.meta.transliteration || 'N/A'}</span></div>
-        ${m.meta.grammar ? `<div class="meta-row"><span class="label">Grammar</span><span>${Array.isArray(m.meta.grammar) ? m.meta.grammar.join(', ') : m.meta.grammar}</span></div>` : ''}
-      </div>
-    `;
-  }
-
-  let lessonHtml = '';
-  if (m.lesson) {
-    lessonHtml = `
-      <div class="detail-card">
-        <h3>Lesson</h3>
-        <div class="meta-row"><span class="label">Words</span><span>${m.lesson.word_count.toLocaleString()}</span></div>
-        <div class="meta-row"><span class="label">Sections</span><span>${m.lesson.sections.length}</span></div>
-        <div class="meta-row"><span class="label">Modified</span><span>${new Date(m.lesson.last_modified).toLocaleString()}</span></div>
-        ${m.lesson.sections.length > 0 ? `
-          <ul class="section-list" style="margin-top:8px">
-            ${m.lesson.sections.map(s => `<li>${s}</li>`).join('')}
-          </ul>
-        ` : ''}
-      </div>
-    `;
-  }
-
-  let researchHtml = '';
-  if (m.research) {
-    const r = m.research;
-    const qColors = {exemplary:'var(--green)',solid:'var(--blue)',adequate:'var(--yellow)',thin:'#f0883e',stub:'var(--red)'};
-
-    if (r.exists && r.score != null) {
-      // Rubric-scored research
-      let dimsHtml = '';
-      if (r.dimensions) {
-        dimsHtml = Object.entries(r.dimensions).map(([name, d]) => {
-          const filled = '<span class="dim-fill filled" style="width:' + (d.score * 14) + 'px"></span>';
-          const empty = '<span class="dim-fill empty" style="width:' + ((d.max - d.score) * 14) + 'px"></span>';
-          return `<div class="dim-bar"><span class="dim-label">${name.split('_').map(w=>w[0].toUpperCase()).join('')}</span>${filled}${empty}<span class="dim-val">${d.score}/${d.max}</span></div>`;
-        }).join('');
-      }
-      let gapsHtml = '';
-      if (r.gaps && r.gaps.length > 0) {
-        gapsHtml = `<ul class="gap-list">${r.gaps.map(g => `<li>${g}</li>`).join('')}</ul>`;
-      }
-      let alignHtml = '';
-      const ca = r.content_alignment;
-      if (ca && ca.refresh_recommended) {
-        alignHtml = `<div class="refresh-banner">Research upgraded \u2014 content may benefit from refresh<ul class="gap-list">${ca.reasons.map(r => `<li>${r}</li>`).join('')}</ul></div>`;
-      }
-      researchHtml = `
-        <div class="detail-card">
-          <h3>Research <span style="font-size:11px;color:var(--text3)">(${r.profile} rubric)</span></h3>
-          <div class="meta-row"><span class="label">Score</span><span style="color:${qColors[r.quality]||'var(--text2)'};font-weight:600">${r.score}/10 ${r.quality.toUpperCase()}</span></div>
-          <div class="meta-row"><span class="label">Words</span><span>${r.words}</span></div>
-          ${dimsHtml ? `<div style="margin-top:8px">${dimsHtml}</div>` : ''}
-          ${gapsHtml ? `<div style="margin-top:8px"><span style="font-size:11px;color:var(--text2)">Gaps:</span>${gapsHtml}</div>` : ''}
-          ${alignHtml}
-        </div>
-      `;
-    } else if (r.exists) {
-      // No rubric — coverage only
-      researchHtml = `
-        <div class="detail-card">
-          <h3>Research</h3>
-          <div class="meta-row"><span class="label">Status</span><span>${r.words} words | no rubric defined</span></div>
-        </div>
-      `;
-    } else {
-      researchHtml = `
-        <div class="detail-card">
-          <h3>Research</h3>
-          <div style="color:var(--red);font-size:12px;">No research file found.</div>
-        </div>
-      `;
-    }
-  }
-
-  const qaHtml = m.has_final_review
-    ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:#58a6ff;font-weight:600">✓ Reviewed</span></div></div>`
-    : (m.status?.overall?.status === 'pass'
-        ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:var(--yellow)">⏳ Pending — run with --final-review</span></div></div>`
-        : '');
-
-  const pipelineVer = pipelineLabel(m.pipeline_version);
-  const verColor = pipelineVer === 'current' ? 'var(--green)' : 'var(--text3)';
-
-  panel.innerHTML = `
-    <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>
-    <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId} &middot; <span style="color:${verColor};font-weight:600">${pipelineVer} build state</span></div>
-    ${qaHtml}
-    ${researchHtml}
-    ${planHtml}
-    ${metaHtml}
-    ${lessonHtml}
-  `;
-}
-
 fetchOverview();
-setInterval(() => { trackDetailCache = {}; fetchOverview(); }, 30000);
+setInterval(() => { if (!document.hidden) fetchOverview(); }, 30000);
+
 </script>
 </body>
 </html>

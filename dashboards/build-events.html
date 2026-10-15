@@ -48,10 +48,23 @@ tr:last-child td { border-bottom: none; }
 .pill.ok { background: rgba(63,185,80,0.15); color: var(--green); }
 .pill.err { background: rgba(248,81,73,0.15); color: var(--red); }
 @media (max-width: 760px) { .topbar { flex-wrap: wrap; } }
+
+.reader-status { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 0; font-size:12px; color:var(--text2); overflow-wrap:anywhere; }
+.reader-status button { color:var(--text); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:5px 10px; cursor:pointer; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+button { font:inherit; }
+td, .meta-row, .module-cell, .issue-card { overflow-wrap:anywhere; }
+.container, .left-panel, .right-panel { min-width:0; }
+.container { overflow-x:auto; }
+.topbar { flex-wrap:wrap; }
+.skip-link { position:absolute; top:-100px; left:8px; z-index:100; background:var(--bg); padding:10px; }
+.skip-link:focus { top:8px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
 </style>
 <link rel="stylesheet" href="/monitor.css">
 </head>
 <body>
+<a class="skip-link" href="#reader-main">Skip to content</a>
 <div class="topbar">
   <div>
     <h1>Build Events</h1>
@@ -71,7 +84,7 @@ tr:last-child td { border-bottom: none; }
   </nav>
 </div>
 
-<div class="container">
+<div class="container" id="reader-main" role="main" tabindex="-1">
   <section class="card">
     <div class="card-header"><h2>&#128293; Active Builds</h2><div class="muted" id="active-muted"></div></div>
     <div class="banner" id="active-banner"></div>
@@ -82,8 +95,8 @@ tr:last-child td { border-bottom: none; }
     <div class="card-header"><h2>&#128196; Recent Events</h2><div class="muted">Refetches on filter change</div></div>
     <div class="banner" id="recent-banner"></div>
     <div class="filters">
-      <select id="level-filter"></select>
-      <input id="slug-filter" placeholder="Filter by slug">
+      <select id="level-filter" aria-label="Level"></select>
+      <input id="slug-filter" aria-label="Slug" placeholder="Filter by slug">
       <button class="btn" onclick="refreshRecent()">Apply</button>
     </div>
     <div id="recent-content" class="empty">Loading...</div>
@@ -92,50 +105,125 @@ tr:last-child td { border-bottom: none; }
 
 <script>
 const REFRESH_MS = 10000;
-const API_TIMEOUT_MS = 5000;
 const LEVEL_OPTIONS = ['','a1','a2','b1','b2','b2-pro','c1','c1-pro','c2','folk','hist','bio','istorio','lit','oes','ruth'];
 let refreshTimer = null;
 let slugDebounce = null;
 
-function escapeHtml(value) {
-  const node = document.createElement('span');
-  node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
-}
 
-function formatTs(value) {
-  if (!value) return '—';
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
-}
+
+function formatTs(value) { const time = validTime(value); return time === null ? 'unknown event time' : new Date(time).toLocaleString(); }
 
 function formatDuration(value) {
-  if (typeof value !== 'number') return '—';
+  if (!numeric(value)) return '—';
   if (value >= 60) return `${(value / 60).toFixed(1)}m`;
   return `${value.toFixed(1)}s`;
 }
 
+
+const readerStates = new Map();
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+function numeric(value) { return typeof value === 'number' && Number.isFinite(value) && value >= 0; }
+function count(value) { return numeric(value) ? String(value) : 'unknown'; }
+function identity(row, key) { return object(row) && typeof row[key] === 'string' && row[key].length > 0; }
+function collection(data, key, valid) {
+  if (!object(data) || !Array.isArray(data[key])) throw Error('Malformed success: invalid ' + key);
+  const rows = data[key].filter(valid);
+  if (data[key].length && !rows.length) throw Error('Malformed success: invalid ' + key + ' rows');
+  return {...data, [key]: rows, _empty: rows.length === 0, _partial: rows.length !== data[key].length || data.partial === true};
+}
 async function fetchJson(url) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const response = await fetch(url, { signal: controller.signal });
-    const text = await response.text();
-    let data = {};
-    try {
-      data = text ? JSON.parse(text) : {};
-    } catch {
-      data = { detail: text };
-    }
-    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    // Legacy callers may request fresh=true; readers use the existing bounded cache.
+    const target = new URL(url, location.origin);
+    target.searchParams.delete('fresh');
+    const res = await fetch(target.pathname + target.search, {signal: controller.signal});
+    if (!res.ok) throw Error('Request failed: HTTP ' + res.status);
+    let data;
+    try { data = await res.json(); } catch { throw Error('Parse failure: invalid JSON'); }
+    if (data === null || typeof data !== 'object') throw Error('Malformed success: expected JSON object or array');
     return data;
   } catch (error) {
-    if (error.name === 'AbortError') throw new Error('Request timed out');
+    if (error.name === 'AbortError') throw Error('Request timed out');
     throw error;
-  } finally {
-    clearTimeout(timeout);
-  }
+  } finally { clearTimeout(timeout); }
 }
+function validTime(value) {
+  const time = typeof value === 'string' && value ? Date.parse(value) : NaN;
+  return Number.isFinite(time) && time <= Date.now() ? time : null;
+}
+function readerClock(state) {
+  const elapsed = Math.max(0, (Date.now() - state.fetchedAt) / 1000);
+  const meta = state.data?.meta;
+  const generated = validTime(meta?.generated_at || state.data?.generated_at);
+  const cacheAge = numeric(meta?.age_s) ? ` · Cache age ${Math.floor(meta.age_s + elapsed)}s` : '';
+  const stale = meta?.stale === true || (numeric(meta?.age_s) && numeric(meta?.stale_after_s) && meta.stale_after_s > 0 && meta.age_s + elapsed > meta.stale_after_s) ? ' · Stale snapshot cache' : '';
+  const fetched = state.data?._partial || meta?.error ? 'Last partial fetch' : 'Last successful fetch';
+  const snapshot = generated === null ? '' : ` · Snapshot generated ${new Date(generated).toLocaleString()} (${Math.floor((Date.now()-generated)/1000)}s ago)`;
+  return `Source age unknown${snapshot}${cacheAge}${stale} · ${fetched} ${new Date(state.fetchedAt).toLocaleString()}`;
+}
+function invalidateReader(id) {
+  const state = readerStates.get(id);
+  if (state) { state.generation++; state.scope = null; state.pending = null; }
+}
+function runReader(id, url, validate, render) {
+  const panel = document.getElementById(id);
+  let state = readerStates.get(id);
+  if (state?.pending && state.scope === url && state.panel === panel) return state.pending;
+  if (!state || state.panel !== panel) {
+    state = {generation: 0, panel}; readerStates.set(id, state);
+  }
+  if (state.scope !== url) { state.data = null; state.fetchedAt = null; }
+  state.scope = url;
+  const generation = ++state.generation;
+  let status = document.getElementById(id + '-reader-status');
+  if (!status) {
+    status = document.createElement('div'); status.id = id + '-reader-status'; status.className = 'reader-status';
+    const label = document.createElement('span'); label.setAttribute('role', 'status');
+    const clock = document.createElement('span'); clock.className = 'reader-clock';
+    const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry';
+    retry.setAttribute('aria-label', 'Retry ' + id.replaceAll('-', ' '));
+    status.append(label, clock, retry); panel.before(status);
+  }
+  const [label, clock, retry] = status.children;
+  retry.onclick = () => runReader(id, url, validate, render);
+  label.textContent = 'Loading';
+  clock.textContent = state.fetchedAt ? readerClock(state) : 'Source age unknown · No successful fetch';
+  panel.setAttribute('aria-busy', 'true');
+  if (!state.data) panel.textContent = 'Loading…';
+  const current = () => state.generation === generation && document.getElementById(id) === panel;
+  state.pending = (async () => {
+    try {
+      const data = validate(await fetchJson(url));
+      if (!current()) return;
+      const active = panel.contains(document.activeElement) ? document.activeElement.dataset.readerKey : null;
+      render(data, panel);
+      if (active != null) [...panel.querySelectorAll('[data-reader-key]')].find(el => el.dataset.readerKey === active)?.focus({preventScroll:true});
+      state.data = data; state.fetchedAt = Date.now();
+      const meta = data.meta || {};
+      label.textContent = [data._partial ? 'Partial · incomplete coverage' : data._empty ? 'Empty · no rows returned' : 'Loaded', meta.error ? 'Source unavailable' : '', meta.stale === true || data.stale === true ? 'Stale · retained source snapshot' : '', 'Source age/coverage unknown'].filter(Boolean).join(' · ');
+      clock.textContent = readerClock(state);
+      return data;
+    } catch (error) {
+      if (!current()) return;
+      label.textContent = error.message + (state.data ? ' · Historical values retained' : ' · No data');
+      if (!state.data) panel.textContent = 'Unable to load this section. Use Retry.';
+    } finally {
+      if (current()) { panel.setAttribute('aria-busy', 'false'); state.pending = null; }
+    }
+  })();
+  return state.pending;
+}
+setInterval(() => {
+  for (const [id, state] of readerStates) {
+    const clock = document.getElementById(id + '-reader-status')?.querySelector('.reader-clock');
+    if (clock && state.fetchedAt) clock.textContent = readerClock(state);
+  }
+}, 10000);
 
 function setBanner(id, message) {
   const el = document.getElementById(id);
@@ -148,6 +236,8 @@ function initFilters() {
   level.innerHTML = LEVEL_OPTIONS.map(option => `<option value="${option}">${option || 'All levels'}</option>`).join('');
   level.addEventListener('change', refreshRecent);
   document.getElementById('slug-filter').addEventListener('input', () => {
+    invalidateReader('recent-content');
+    document.getElementById('recent-content').textContent = 'Loading results for the edited filter…';
     clearTimeout(slugDebounce);
     slugDebounce = setTimeout(refreshRecent, 250);
   });
@@ -165,15 +255,15 @@ function recentQuery() {
 function renderActive(active) {
   document.getElementById('active-muted').textContent = `${active.length} active modules`;
   if (!active.length) {
-    document.getElementById('active-content').innerHTML = '<div class="empty">No active builds right now</div>';
+    document.getElementById('active-content').innerHTML = '<div class="empty">No active build rows returned; source age/coverage unknown</div>';
     return;
   }
   document.getElementById('active-content').innerHTML = `<div class="active-grid">${active.map(item => `
-    <div class="active-card ${item.age_s > 300 ? 'stale' : 'live'}">
+    <div class="active-card ${numeric(item.age_s) ? item.age_s > 300 ? 'stale' : 'live' : ''}">
       <div class="k">level</div><div class="v">${escapeHtml(item.level || '—')}</div>
       <div class="k">slug</div><div class="v mono">${escapeHtml(item.slug || '—')}</div>
       <div class="k">current phase</div><div class="v">${escapeHtml(item.current_phase || '—')}</div>
-      <div class="k">age</div><div class="v">${formatDuration(item.age_s)}</div>
+      <div class="k">last dispatch age (not source age)</div><div class="v">${formatDuration(item.age_s)}</div>
     </div>
   `).join('')}</div>`;
 }
@@ -183,46 +273,37 @@ function renderRecent(events) {
     const level = document.getElementById('level-filter')?.value.trim();
     const slug = document.getElementById('slug-filter')?.value.trim();
     const message = (level || slug)
-      ? 'No build events match the current filters'
-      : 'No recent build events';
+      ? 'No build events returned for the current filters; source age/coverage unknown'
+      : 'No recent build events returned; source age/coverage unknown';
     document.getElementById('recent-content').innerHTML = `<div class="empty">${message}</div>`;
     return;
   }
   document.getElementById('recent-content').innerHTML = `<table>
     <thead><tr><th>ts</th><th>level</th><th>slug</th><th>phase</th><th>agent</th><th>duration</th><th>ok</th></tr></thead>
     <tbody>${events.map(event => `<tr>
-      <td>${formatTs(event.ts)}</td>
+      <td>${escapeHtml(formatTs(event.ts))}</td>
       <td>${escapeHtml(event.level || '—')}</td>
       <td class="mono">${escapeHtml(event.slug || '—')}</td>
       <td>${escapeHtml(event.phase || '—')}</td>
       <td>${escapeHtml(event.agent || '—')}</td>
       <td>${formatDuration(event.duration_s)}</td>
-      <td><span class="pill ${event.ok ? 'ok' : 'err'}">${event.ok ? 'yes' : 'no'}</span></td>
+      <td><span class="pill ${event.ok === true ? 'ok' : event.ok === false ? 'err' : ''}">${event.ok === true ? 'yes' : event.ok === false ? 'no' : 'unknown'}</span></td>
     </tr>`).join('')}</tbody>
   </table>`;
 }
 
-async function loadActive() {
-  try {
-    const data = await fetchJson('/api/build/events/active');
-    renderActive(Array.isArray(data.active) ? data.active : []);
-    setBanner('active-banner', '');
-  } catch (error) {
-    setBanner('active-banner', `API unavailable: ${error.message}`);
-    document.getElementById('active-content').innerHTML = '<div class="empty">Unable to load active builds</div>';
-  }
+
+function loadActive() {
+  return runReader('active-content', '/api/build/events/active', d => collection(d, 'active', row => identity(row, 'slug') && identity(row, 'level')), d => {
+    renderActive(d.active); setBanner('active-banner', '');
+  });
+}
+function refreshRecent() {
+  return runReader('recent-content', `/api/build/events/recent?${recentQuery()}`, d => collection(d, 'events', row => identity(row, 'slug') && identity(row, 'level')), d => {
+    renderRecent(d.events); setBanner('recent-banner', '');
+  });
 }
 
-async function refreshRecent() {
-  try {
-    const data = await fetchJson(`/api/build/events/recent?${recentQuery()}`);
-    renderRecent(Array.isArray(data.events) ? data.events : []);
-    setBanner('recent-banner', '');
-  } catch (error) {
-    setBanner('recent-banner', `API unavailable: ${error.message}`);
-    document.getElementById('recent-content').innerHTML = '<div class="empty">Unable to load recent build events</div>';
-  }
-}
 
 function stopRefresh() {
   if (refreshTimer) {
@@ -238,7 +319,7 @@ function startRefresh() {
 function refreshAll() {
   loadActive();
   refreshRecent();
-  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · auto-refresh every 10s`;
+  document.getElementById('last-refresh').textContent = `Refresh attempted ${new Date().toLocaleTimeString()} · auto-refresh every 10s`;
 }
 
 document.addEventListener('visibilitychange', () => {
