@@ -1,7 +1,7 @@
 # Host test slots
 
-The host runs at most as many test processes as it has CPUs for (#10662). Worker pytest runs and the
-pre-push gate take slots from one pool before they start their processes. A run that cannot get slots
+The host defaults to a test pool of half its CPUs, rounded down, with at least 2 slots (#10715).
+Worker pytest runs and the pre-push gate take slots from one pool before they start their processes. A run that cannot get slots
 waits in a first-come-first-served queue and prints its position. It never starts and piles up.
 
 Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.common.test_slots status` or
@@ -47,7 +47,7 @@ workers only for runs below a live holder, and a true `CI` variable turns the po
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `LU_TEST_SLOTS` | on (off when `CI` is true) | `off` restores the previous behaviour everywhere: no waits, no `-n` changes and no admission check. |
-| `LU_TEST_SLOTS_COUNT` | CPU count minus 2, at least 2 | Pool size. Every participant on the host must use the same value. |
+| `LU_TEST_SLOTS_COUNT` | Half the CPU count, rounded down, at least 2 | Pool size. Every participant on the host must use the same value. |
 | `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. The gate never waits longer than 600 s. |
 | `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits beside the pre-push gate's `pre-push-gate-<uid>`. |
 
@@ -93,3 +93,25 @@ The launcher exits 75 and prints a `{"test_slots": {"outcome": "refused", ...}}`
    lets a second run take the same slot.
 3. As an emergency stop for one command, set `LU_TEST_SLOTS=off`. Report it, because that run is
    ungoverned.
+
+## High-load attribution
+
+The Monitor's existing periodic collector checks load on its refresh ticks, with a 15-second sleep
+between ticks. A work projection refresh can delay the next tick. When the 1-minute load is
+greater than `LU_LOAD_SAMPLE_THRESHOLD` (default `20`), it records at most one sample per 60 seconds,
+including across Monitor workers and restarts. The threshold must be finite and non-negative.
+Collection failures leave the work projection collector running and log only the exception type.
+
+`GET /api/ops/v1/load-samples?limit=50` reads the latest samples in chronological order, with
+`limit` from 1 to 500. The ignored runtime ring at `batch_state/load-samples/samples.jsonl` retains
+the last 500 JSON lines. Reading the route never collects processes or creates files. A missing
+ring returns an empty list; an unreadable ring returns `load_samples_unavailable`.
+
+Each sample has a UTC timestamp, all three load averages, the top five processes by CPU usage,
+their summed CPU percentage, and the governor's holder task IDs and slot counts. CPU usage is
+measured over a shared 0.1-second interval; 100% means one CPU, so a multithreaded process can exceed
+100%. Command names are the only process text collected. Arguments, executable paths, environments
+and PIDs are never recorded; names containing path separators or other non-name characters become
+`unknown`. An unavailable governor is recorded as an error, not as proof of an idle pool.
+
+Sampling does not kill, throttle or admit processes and does not change which tests use the governor.
