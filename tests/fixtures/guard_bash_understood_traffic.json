@@ -1,0 +1,1802 @@
+{
+  "schema": "guard-traffic.v2",
+  "legacy_file": "tests/fixtures/guard_bash_traffic.json",
+  "legacy_subjects": 400,
+  "legacy_shapes_per_subject": 3,
+  "rows": [
+    {
+      "id": "inspection-000",
+      "family": "search-inspection",
+      "command": "grep -nF 'git checkout' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "grep -nF 'git checkout' file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-001",
+      "family": "search-inspection",
+      "command": "rg -nF 'git checkout' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "rg -nF 'git checkout' file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-002",
+      "family": "search-inspection",
+      "command": "git grep -n -F 'git checkout'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git grep -n -F 'git checkout'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "grep",
+              "-n",
+              "-F",
+              "git checkout"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-003",
+      "family": "search-inspection",
+      "command": "git log --grep='git checkout'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log --grep='git checkout'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "--grep=git checkout"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-004",
+      "family": "search-inspection",
+      "command": "git log -S 'git checkout'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log -S 'git checkout'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "-S",
+              "git checkout"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-005",
+      "family": "search-inspection",
+      "command": "echo 'git checkout'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "echo 'git checkout'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-006",
+      "family": "search-inspection",
+      "command": "printf \"%s\\n\" 'git checkout'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "printf \"%s\\n\" 'git checkout'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-007",
+      "family": "search-inspection",
+      "command": "cat <<'EOF'\ngit checkout\nEOF",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "cat <<'EOF'\ngit checkout\nEOF",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-008",
+      "family": "search-inspection",
+      "command": "jq -n --arg text 'git checkout' '$text'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "jq -n --arg text 'git checkout' '$text'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-009",
+      "family": "search-inspection",
+      "command": "sed -n \"/git checkout/p\" file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "sed -n \"/git checkout/p\" file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-010",
+      "family": "search-inspection",
+      "command": "grep -nF 'gh pr merge' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "grep -nF 'gh pr merge' file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-011",
+      "family": "search-inspection",
+      "command": "rg -nF 'gh pr merge' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "rg -nF 'gh pr merge' file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-012",
+      "family": "search-inspection",
+      "command": "git grep -n -F 'gh pr merge'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git grep -n -F 'gh pr merge'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "grep",
+              "-n",
+              "-F",
+              "gh pr merge"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-013",
+      "family": "search-inspection",
+      "command": "git log --grep='gh pr merge'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log --grep='gh pr merge'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "--grep=gh pr merge"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-014",
+      "family": "search-inspection",
+      "command": "git log -S 'gh pr merge'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log -S 'gh pr merge'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "-S",
+              "gh pr merge"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-015",
+      "family": "search-inspection",
+      "command": "echo 'gh pr merge'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "echo 'gh pr merge'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-016",
+      "family": "search-inspection",
+      "command": "printf \"%s\\n\" 'gh pr merge'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "printf \"%s\\n\" 'gh pr merge'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-017",
+      "family": "search-inspection",
+      "command": "cat <<'EOF'\ngh pr merge\nEOF",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "cat <<'EOF'\ngh pr merge\nEOF",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-018",
+      "family": "search-inspection",
+      "command": "jq -n --arg text 'gh pr merge' '$text'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "jq -n --arg text 'gh pr merge' '$text'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-019",
+      "family": "search-inspection",
+      "command": "sed -n \"/gh pr merge/p\" file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "sed -n \"/gh pr merge/p\" file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-020",
+      "family": "search-inspection",
+      "command": "grep -nF 'git switch' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "grep -nF 'git switch' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-021",
+      "family": "search-inspection",
+      "command": "rg -nF 'git switch' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "rg -nF 'git switch' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-022",
+      "family": "search-inspection",
+      "command": "git grep -n -F 'git switch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git grep -n -F 'git switch'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "grep",
+              "-n",
+              "-F",
+              "git switch"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-023",
+      "family": "search-inspection",
+      "command": "git log --grep='git switch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log --grep='git switch'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "--grep=git switch"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-024",
+      "family": "search-inspection",
+      "command": "git log -S 'git switch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log -S 'git switch'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "-S",
+              "git switch"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-025",
+      "family": "search-inspection",
+      "command": "echo 'git switch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "echo 'git switch'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-026",
+      "family": "search-inspection",
+      "command": "printf \"%s\\n\" 'git switch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "printf \"%s\\n\" 'git switch'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-027",
+      "family": "search-inspection",
+      "command": "cat <<'EOF'\ngit switch\nEOF",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "cat <<'EOF'\ngit switch\nEOF",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-028",
+      "family": "search-inspection",
+      "command": "jq -n --arg text 'git switch' '$text'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "jq -n --arg text 'git switch' '$text'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-029",
+      "family": "search-inspection",
+      "command": "sed -n \"/git switch/p\" file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "sed -n \"/git switch/p\" file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-030",
+      "family": "search-inspection",
+      "command": "grep -nF 'git branch' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "grep -nF 'git branch' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-031",
+      "family": "search-inspection",
+      "command": "rg -nF 'git branch' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "rg -nF 'git branch' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-032",
+      "family": "search-inspection",
+      "command": "git grep -n -F 'git branch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git grep -n -F 'git branch'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "grep",
+              "-n",
+              "-F",
+              "git branch"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-033",
+      "family": "search-inspection",
+      "command": "git log --grep='git branch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log --grep='git branch'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "--grep=git branch"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-034",
+      "family": "search-inspection",
+      "command": "git log -S 'git branch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log -S 'git branch'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "-S",
+              "git branch"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-035",
+      "family": "search-inspection",
+      "command": "echo 'git branch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "echo 'git branch'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-036",
+      "family": "search-inspection",
+      "command": "printf \"%s\\n\" 'git branch'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "printf \"%s\\n\" 'git branch'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-037",
+      "family": "search-inspection",
+      "command": "cat <<'EOF'\ngit branch\nEOF",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "cat <<'EOF'\ngit branch\nEOF",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-038",
+      "family": "search-inspection",
+      "command": "jq -n --arg text 'git branch' '$text'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "jq -n --arg text 'git branch' '$text'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-039",
+      "family": "search-inspection",
+      "command": "sed -n \"/git branch/p\" file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "sed -n \"/git branch/p\" file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-040",
+      "family": "search-inspection",
+      "command": "grep -nF 'gh pr merge --admin' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "grep -nF 'gh pr merge --admin' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-041",
+      "family": "search-inspection",
+      "command": "rg -nF 'gh pr merge --admin' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "rg -nF 'gh pr merge --admin' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-042",
+      "family": "search-inspection",
+      "command": "git grep -n -F 'gh pr merge --admin'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git grep -n -F 'gh pr merge --admin'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "grep",
+              "-n",
+              "-F",
+              "gh pr merge --admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-043",
+      "family": "search-inspection",
+      "command": "git log --grep='gh pr merge --admin'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log --grep='gh pr merge --admin'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "--grep=gh pr merge --admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-044",
+      "family": "search-inspection",
+      "command": "git log -S 'gh pr merge --admin'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log -S 'gh pr merge --admin'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "-S",
+              "gh pr merge --admin"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-045",
+      "family": "search-inspection",
+      "command": "echo 'gh pr merge --admin'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "echo 'gh pr merge --admin'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-046",
+      "family": "search-inspection",
+      "command": "printf \"%s\\n\" 'gh pr merge --admin'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "printf \"%s\\n\" 'gh pr merge --admin'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-047",
+      "family": "search-inspection",
+      "command": "cat <<'EOF'\ngh pr merge --admin\nEOF",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "cat <<'EOF'\ngh pr merge --admin\nEOF",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-048",
+      "family": "search-inspection",
+      "command": "jq -n --arg text 'gh pr merge --admin' '$text'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "jq -n --arg text 'gh pr merge --admin' '$text'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-049",
+      "family": "search-inspection",
+      "command": "sed -n \"/gh pr merge --admin/p\" file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "sed -n \"/gh pr merge --admin/p\" file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-050",
+      "family": "search-inspection",
+      "command": "grep -nF 'git worktree' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "grep -nF 'git worktree' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-051",
+      "family": "search-inspection",
+      "command": "rg -nF 'git worktree' file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "rg -nF 'git worktree' file",
+        "returncode": 1,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-052",
+      "family": "search-inspection",
+      "command": "git grep -n -F 'git worktree'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git grep -n -F 'git worktree'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "grep",
+              "-n",
+              "-F",
+              "git worktree"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-053",
+      "family": "search-inspection",
+      "command": "git log --grep='git worktree'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log --grep='git worktree'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "--grep=git worktree"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-054",
+      "family": "search-inspection",
+      "command": "git log -S 'git worktree'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "git log -S 'git worktree'",
+        "returncode": 0,
+        "records": [
+          {
+            "argv": [
+              "git",
+              "log",
+              "-S",
+              "git worktree"
+            ],
+            "cwd": "<probe>/primary",
+            "environment": {
+              "GH_REPO": "fixture/default"
+            }
+          }
+        ],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-055",
+      "family": "search-inspection",
+      "command": "echo 'git worktree'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "echo 'git worktree'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-056",
+      "family": "search-inspection",
+      "command": "printf \"%s\\n\" 'git worktree'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "printf \"%s\\n\" 'git worktree'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-057",
+      "family": "search-inspection",
+      "command": "cat <<'EOF'\ngit worktree\nEOF",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "cat <<'EOF'\ngit worktree\nEOF",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-058",
+      "family": "search-inspection",
+      "command": "jq -n --arg text 'git worktree' '$text'",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "jq -n --arg text 'git worktree' '$text'",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    },
+    {
+      "id": "inspection-059",
+      "family": "search-inspection",
+      "command": "sed -n \"/git worktree/p\" file",
+      "hooks": [
+        "branch",
+        "merge",
+        "admin"
+      ],
+      "expected": {
+        "disposition": "allow",
+        "reason_class": null
+      },
+      "bash_truth": {
+        "method": "real-bash-recording-git-gh",
+        "executed_command": "sed -n \"/git worktree/p\" file",
+        "returncode": 0,
+        "records": [],
+        "operation_seen": false,
+        "operation_contexts": [],
+        "limitation": null,
+        "probe_error": null,
+        "scratch_branch_after": "main",
+        "git_internal_execution": null
+      }
+    }
+  ]
+}

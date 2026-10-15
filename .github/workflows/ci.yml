@@ -269,6 +269,11 @@ jobs:
         uses: ./.github/actions/python-ci-env
       - run: bash scripts/ci/test_env.sh wait
         timeout-minutes: 5
+      - name: Guard Bash oracle (#9484)
+        if: matrix.shard == 1
+        run: |
+          uv pip install --python .venv/bin/python --require-hashes --only-binary=:all: --reinstall-package tree-sitter --reinstall-package tree-sitter-bash -r requirements-hooks.txt
+          .venv/bin/python scripts/hooks/bash_oracle.py
       - name: Run pytest
         env:
           SHARD: ${{ matrix.shard }}
