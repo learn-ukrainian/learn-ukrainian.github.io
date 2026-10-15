@@ -16,22 +16,31 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
 - A run holds its slots for its whole session and starts no more processes than it holds.
 - Each slot is a lock file, and each waiting or holding run keeps its ticket locked (`flock`). The
   kernel drops a lock when its process exits, including on SIGKILL. A crashed run therefore frees its
-  slots at once. The next waiter reaps the inert files it leaves behind.
+  slots at once. The next waiter reaps the inert files it leaves behind, however many there are: only
+  live tickets count toward the limit of 1024. Until a waiter has reaped them, `status` reports
+  `test_slots_pool_unavailable` while more than 1024 ticket files exist.
 - Descendants of a holder run inside its slots and never queue themselves. Examples are xdist workers,
   pytest runs started by tests and the gate's pytest children. The holder marks them with
   `LU_TEST_SLOTS_HOLDER`. A marker whose holder is dead is ignored.
+- A pytest run below a live holder, dispatch run or not, starts at most the held count of xdist
+  workers. Before the session starts, the `ci.pytest_dispatch_cap` plugin caps `-n` (`auto` included),
+  cuts an explicit `--tx` list and lowers `PYTEST_XDIST_AUTO_NUM_WORKERS` for the run and its own
+  descendants. The count is per run: it does not add up the runs that share one hold.
+- The governor never raises an existing `PYTEST_XDIST_AUTO_NUM_WORKERS`, such as a driver scope's
+  memory cap. A value of `0` keeps `-n auto` serial.
 
 ## Who uses it
 
 | Caller | How |
 | --- | --- |
-| Dispatch-worker pytest runs | The `ci.pytest_dispatch_cap` plugin holds slots when `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set. This covers every documented command, such as `.venv/bin/python -m pytest -n 2 -q <files>`, the pre-commit pytest hooks and `scripts/ci/components.py`. It skips `--collect-only`, `--help` and nested runs. A wait timeout is a pytest usage error (exit 4) naming `test_slots_wait_timeout`. |
+| Dispatch-worker pytest runs | The `ci.pytest_dispatch_cap` plugin holds slots when `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set. This covers every documented command, such as `.venv/bin/python -m pytest -n 2 -q <files>`, the pre-commit pytest hooks and `scripts/ci/components.py`. It skips `--collect-only` and `--help`. A nested run queues for nothing and starts at most the inherited count of workers. A wait timeout is a pytest usage error (exit 4) naming `test_slots_wait_timeout`. |
 | Pre-push gate | The pytest stage holds slots and passes `-n` equal to the slots held. The wait is bounded by `TEST_SLOT_WAIT_S` (600 s) and recorded as `slot_wait_s`. It spends neither the stage allowance nor the run budget. See `docs/runbooks/pre-push-gate.md`. |
-| Any other test command | `.venv/bin/python -m scripts.common.test_slots run -- <command>` waits for slots, rewrites a visible `-n`/`--numprocesses` (including `auto`) to the slots held, caps a hidden `-n auto` through `PYTEST_XDIST_AUTO_NUM_WORKERS`, and execs the command, so the command itself holds the slots until it exits. |
+| Any other test command | `.venv/bin/python -m scripts.common.test_slots run -- <command>` waits for slots, rewrites a visible `-n`/`--numprocesses` (including `auto`) to the slots held, caps a hidden `-n auto` through `PYTEST_XDIST_AUTO_NUM_WORKERS`, and execs the command, so the command itself holds the slots until it exits. A repo pytest the command starts with a hidden explicit `-n` is capped by the plugin above. |
 | Dispatch admission | `delegate.py dispatch` refuses a new write worker while more than `DISPATCH_MAX_TEST_SLOT_QUEUE` runs (default 4) wait for slots. The refusal uses the usual admission message and exit 3. |
 
-Operator shells and CI are unchanged: the plugin acts only for dispatch workers, and a true `CI`
-variable turns the pool off unless `LU_TEST_SLOTS=on` is set explicitly.
+Operator shells and CI are unchanged: the plugin takes slots only for dispatch workers, it caps
+workers only for runs below a live holder, and a true `CI` variable turns the pool off unless
+`LU_TEST_SLOTS=on` is set explicitly.
 
 ## Settings
 

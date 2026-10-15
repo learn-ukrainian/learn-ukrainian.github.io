@@ -132,6 +132,19 @@ def wait_timeout(environ: Mapping[str, str] | None = None) -> float:
     return seconds
 
 
+def auto_worker_cap(environ: Mapping[str, str] | None = None) -> int | None:
+    """Workers ``-n auto`` starts under an existing :data:`XDIST_AUTO_ENV`, read as xdist reads it, else ``None``.
+
+    A driver scope sets it as a memory cap (#9624); a governed run may lower it but never raise it. A negative
+    value starts no worker, like ``0``.
+    """
+    env = os.environ if environ is None else environ
+    try:
+        return max(0, int(env.get(XDIST_AUTO_ENV, "")))
+    except ValueError:  # unset or not a number: xdist ignores it and counts CPUs
+        return None
+
+
 def pool_dir(environ: Mapping[str, str] | None = None) -> Path:
     """The pool directory this environment selects; nothing is created."""
     env = os.environ if environ is None else environ
@@ -329,12 +342,16 @@ def _read_record(fd: int) -> dict[str, object]:
 
 
 def _scan(directory: Path, *, reap: bool, own: Path | None = None) -> list[tuple[Path, dict[str, object]]]:
-    """Live tickets in queue order with their records; ``reap`` unlinks the ones no process holds."""
+    """Live tickets in queue order with their records; ``reap`` unlinks the ones no process holds.
+
+    At most :data:`MAX_TICKETS` may be live. A reaping scan unlinks dead tickets before it counts, so tickets
+    left by killed runs or a reboot never refuse the pool for good; the read-only scan stays bounded instead.
+    """
     try:
         names = sorted(name for name in os.listdir(directory) if name.endswith(".ticket") and not name.startswith("."))
     except FileNotFoundError:
         return []
-    if len(names) > MAX_TICKETS:
+    if len(names) > MAX_TICKETS and not reap:
         raise SlotError("pool_unavailable", f"more than {MAX_TICKETS} tickets; the queue scan stopped")
     live = []
     for name in names:
@@ -364,6 +381,8 @@ def _scan(directory: Path, *, reap: bool, own: Path | None = None) -> list[tuple
                     path.unlink()
         finally:
             os.close(fd)
+    if len(live) > MAX_TICKETS:
+        raise SlotError("pool_unavailable", f"more than {MAX_TICKETS} live tickets; no further run may queue")
     return live
 
 
@@ -744,8 +763,11 @@ def _process_value(command: list[str], index: int) -> tuple[int, int, str] | Non
     return None
 
 
-def requested_processes(command: list[str], size: int) -> int:
-    """The worker count a wrapped command asks for: its last ``-n``, the pool for auto, otherwise 1."""
+def requested_processes(command: list[str], size: int, auto_cap: int | None = None) -> int:
+    """The worker count a wrapped command asks for: its last ``-n``, otherwise 1.
+
+    ``-n auto`` asks for the pool, or for ``auto_cap`` (:func:`auto_worker_cap`) when that is lower.
+    """
     requested = 1
     for index in range(len(command)):
         found = _process_value(command, index)
@@ -753,26 +775,32 @@ def requested_processes(command: list[str], size: int) -> int:
             continue
         value = found[2]
         if value in _AUTO_VALUES:
-            requested = size
+            requested = size if auto_cap is None else max(1, min(size, auto_cap))
         elif value.isdigit():
             requested = max(1, int(value))
     return requested
 
 
-def limit_processes(command: list[str], count: int) -> list[str]:
-    """Rewrite every visible ``-n`` above ``count`` (or auto) to ``count``."""
+def limit_processes(command: list[str], count: int, auto_cap: int | None = None) -> list[str]:
+    """Rewrite every visible ``-n`` above ``count`` to ``count``, and ``-n auto`` to ``count`` or a lower ``auto_cap``."""
+    auto = count if auto_cap is None else min(count, auto_cap)
     limited = list(command)
     for index in range(len(command)):
         found = _process_value(command, index)
         if found is None:
             continue
         token_index, value_index, value = found
-        if value in _AUTO_VALUES or (value.isdigit() and int(value) > count):
-            if value_index == token_index:
-                prefix = limited[token_index][: len(limited[token_index]) - len(value)]
-                limited[token_index] = f"{prefix}{count}"
-            else:
-                limited[value_index] = str(count)
+        if value in _AUTO_VALUES:
+            limit = auto
+        elif value.isdigit() and int(value) > count:
+            limit = count
+        else:
+            continue
+        if value_index == token_index:
+            prefix = limited[token_index][: len(limited[token_index]) - len(value)]
+            limited[token_index] = f"{prefix}{limit}"
+        else:
+            limited[value_index] = str(limit)
     return limited
 
 
@@ -798,6 +826,7 @@ def _run(arguments: argparse.Namespace, parser: argparse.ArgumentParser) -> int:
     if not command:
         parser.error("run needs a command after --")
     env = dict(os.environ)
+    auto_cap = auto_worker_cap(env)
     try:
         if not enabled(env):
             return _exec(command, env)
@@ -806,14 +835,14 @@ def _run(arguments: argparse.Namespace, parser: argparse.ArgumentParser) -> int:
         if inherited is not None:
             hold = Hold.inherited(inherited)
         else:
-            requested = arguments.slots if arguments.slots is not None else requested_processes(command, size)
+            requested = arguments.slots if arguments.slots is not None else requested_processes(command, size, auto_cap)
             hold = acquire(requested, kind="launcher", environ=env)
     except SlotError as error:
         return _refuse(error)
     env.update(hold.environment())
-    env[XDIST_AUTO_ENV] = str(hold.count)
+    env[XDIST_AUTO_ENV] = str(hold.count if auto_cap is None else min(hold.count, auto_cap))
     hold.inheritable()
-    return _exec(limit_processes(command, hold.count), env)
+    return _exec(limit_processes(command, hold.count, auto_cap), env)
 
 
 def _print_status(report: dict[str, object]) -> int:
@@ -874,8 +903,8 @@ def main(argv: list[str] | None = None) -> int:
         type=int,
         default=None,
         metavar="N",
-        help="slots to request; default: the command's -n/--numprocesses value, the pool size for -n auto, "
-        "otherwise 1 (capped at the pool size)",
+        help="slots to request; default: the command's -n/--numprocesses value, the pool size for -n auto "
+        "(or a lower PYTEST_XDIST_AUTO_NUM_WORKERS already set), otherwise 1 (capped at the pool size)",
     )
     run.add_argument("command", nargs=argparse.REMAINDER, help="the command to run, after --")
     view = commands.add_parser("status", help="read-only view of holders, the queue and wait times")

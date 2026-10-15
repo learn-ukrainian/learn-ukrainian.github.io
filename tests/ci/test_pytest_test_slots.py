@@ -10,10 +10,13 @@ import json
 import os
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from scripts.ci import pytest_dispatch_cap
 from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV
 from scripts.common import test_slots
 from tests.wait_helpers import wait_for_line
@@ -29,6 +32,8 @@ def _record():
         stream.write(json.dumps({
             "holder": os.environ.get("LU_TEST_SLOTS_HOLDER"),
             "worker": os.environ.get("PYTEST_XDIST_WORKER"),
+            "workers": os.environ.get("PYTEST_XDIST_WORKER_COUNT"),
+            "auto": os.environ.get("PYTEST_XDIST_AUTO_NUM_WORKERS"),
         }) + "\\n")
 
 
@@ -173,3 +178,151 @@ def test_xdist_workers_never_exceed_the_slots_held(project: Path) -> None:
     assert len(rows) == 3
     assert {row["worker"] for row in rows} == {"gw0"}
     assert all(row["holder"] and row["holder"].startswith("1:") for row in rows)
+
+
+def _xdist_run(project: Path, *args: str, **extra: str | None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        _pytest(project, "-p", "xdist", *args),
+        cwd=project,
+        env=_env(project, **extra),
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+
+
+# xdist sets PYTEST_XDIST_WORKER_COUNT in every worker it starts, so the probe reads the real fan-out.
+_NESTED_CASES = [
+    pytest.param(1, "dispatch", ["-n", "2"], id="dispatch-n2-held1"),
+    pytest.param(1, "dispatch", ["-n", "auto"], id="dispatch-nauto-held1"),
+    pytest.param(1, "dispatch", ["--dist=load", "--tx", "popen", "--tx", "popen"], id="dispatch-tx-list-held1"),
+    pytest.param(1, "dispatch", ["--dist=load", "--tx", "2*popen"], id="dispatch-tx-star-held1"),
+    pytest.param(1, "inside_a_worker", ["-n", "2"], id="inside-a-worker-n2-held1"),
+    pytest.param(2, "operator_shell", ["-n", "4"], id="operator-n4-held2"),
+    pytest.param(2, "operator_shell", ["-n", "auto"], id="operator-nauto-held2"),
+    pytest.param(2, "operator_shell", ["--dist=load", "--tx", "3*popen"], id="operator-tx-star-held2"),
+]
+
+
+@pytest.mark.parametrize(("held", "case", "args"), _NESTED_CASES)
+def test_a_nested_run_starts_no_more_workers_than_the_hold_it_inherits(
+    project: Path, monkeypatch: pytest.MonkeyPatch, held: int, case: str, args: list[str]
+) -> None:
+    """A pytest run below a live holder runs inside its slots: it never queues and never fans out wider (#10662)."""
+    monkeypatch.setenv(test_slots.COUNT_ENV, str(held))
+    with test_slots.acquire(held, kind="pytest") as hold:
+        # The test holds the whole pool, so a child that queued for its own slots would time out.
+        extra: dict[str, str | None] = {
+            test_slots.HOLDER_ENV: hold.marker(),
+            test_slots.WAIT_ENV: "1",
+            test_slots.XDIST_AUTO_ENV: "4",
+        }
+        if case == "operator_shell":  # a descendant of the gate or the launcher in an operator shell
+            extra[DISPATCH_TASK_ENV] = None
+        elif case == "inside_a_worker":  # started by a test that itself runs in an xdist worker
+            extra["PYTEST_XDIST_WORKER"] = "gw0"
+        result = _xdist_run(project, *args, **extra)
+        rows = _probe(project) if (project / "probe.jsonl").exists() else []
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert len(rows) == 3
+        assert {row["workers"] for row in rows} == {str(held)}
+        assert {row["holder"] for row in rows} == {hold.marker()}
+        assert {row["auto"] for row in rows} == {str(held)}
+        assert "test_slots" not in result.stderr
+
+
+@pytest.mark.parametrize("marker", ["stale", "forged"])
+def test_a_stale_or_forged_holder_marker_never_loosens_the_cap(project: Path, marker: str) -> None:
+    """A marker without a live holder is ignored: the dispatch run queues for its own slots and fans out to them."""
+    with test_slots.acquire(1, kind="pytest") as gone:
+        stale = gone.marker()
+    value = stale if marker == "stale" else f"9:{Path(stale).parent / 'forged.ticket'}"
+    result = _xdist_run(project, "-n", "2", **{test_slots.HOLDER_ENV: value})
+    assert result.returncode == 0, result.stdout + result.stderr
+    rows = _probe(project)
+    assert len(rows) == 3 and {row["workers"] for row in rows} == {"1"}
+    holders = {row["holder"] for row in rows}
+    assert len(holders) == 1 and holders != {value} and holders.pop().startswith("1:")
+    assert test_slots.status()["slots_in_use"] == 0
+
+
+def test_a_dispatch_run_cuts_a_starred_tx_list_to_the_slots_it_holds(project: Path) -> None:
+    result = _xdist_run(project, "--dist=load", "--tx", "2*popen")
+    assert result.returncode == 0, result.stdout + result.stderr
+    rows = _probe(project)
+    assert len(rows) == 3 and {row["workers"] for row in rows} == {"1"}
+    assert all(row["holder"] and row["holder"].startswith("1:") for row in rows)
+
+
+@pytest.mark.parametrize("prior", [None, "8", "1", "0"])
+def test_an_in_process_nested_session_restores_the_auto_worker_count(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, prior: str | None
+) -> None:
+    """``pytest.main`` inside a holder caps ``-n auto`` for its own session only and leaves the outer hold held.
+
+    An existing lower cap, ``0`` (serial) included, is kept.
+    """
+    monkeypatch.setenv(test_slots.ENABLE_ENV, "on")
+    monkeypatch.setenv(test_slots.DIR_ENV, str(tmp_path / "pool"))
+    monkeypatch.setenv(test_slots.COUNT_ENV, "2")
+    if prior is None:
+        monkeypatch.delenv(test_slots.XDIST_AUTO_ENV, raising=False)
+    else:
+        monkeypatch.setenv(test_slots.XDIST_AUTO_ENV, prior)
+    with test_slots.acquire(2, kind="pytest") as hold:
+        monkeypatch.setenv(test_slots.HOLDER_ENV, hold.marker())
+        option = SimpleNamespace(numprocesses="auto", maxprocesses=None, tx=None, collectonly=False)
+        cleanups: list[Callable[[], None]] = []
+        config = SimpleNamespace(option=option, add_cleanup=cleanups.append)
+        pytest_dispatch_cap._acquire_test_slots(config, acquire=True)
+        assert option.maxprocesses == 2
+        assert os.environ[test_slots.XDIST_AUTO_ENV] == (prior if prior in {"0", "1"} else "2")
+        assert len(cleanups) == 1
+        cleanups.pop()()  # pytest's config cleanup stack, closed when the session ends
+        assert os.environ.get(test_slots.XDIST_AUTO_ENV) == prior
+        assert os.environ[test_slots.HOLDER_ENV] == hold.marker()
+        assert test_slots.inherited_hold() == 2
+
+
+_REFUSED_AFTER_THE_PLUGIN = """\
+import json
+import os
+
+import pytest
+
+from scripts.common import test_slots
+
+code = pytest.main(["-q", "-p", "no:cacheprovider", "tests/test_sample.py", "-n", "2", "--pdb"])
+print(json.dumps({
+    "code": int(code),
+    "in_use": test_slots.status()["slots_in_use"],
+    "holder": os.environ.get(test_slots.HOLDER_ENV),
+    "auto": os.environ.get(test_slots.XDIST_AUTO_ENV),
+}))
+"""
+
+
+@pytest.mark.parametrize("nested", [False, True], ids=["own-slots", "inherited-hold"])
+def test_an_in_process_run_refused_after_the_plugin_ran_gives_everything_back(project: Path, nested: bool) -> None:
+    """xdist refuses ``--pdb`` with workers after this plugin's hook, before the session configures.
+
+    ``pytest.main`` must still return the slots it took and restore the variables it set.
+    """
+    outer = test_slots.acquire(1, kind="pytest") if nested else None
+    marker = outer.marker() if outer is not None else None
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", _REFUSED_AFTER_THE_PLUGIN],
+            cwd=project,
+            env=_env(project, **{test_slots.HOLDER_ENV: marker}),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    finally:
+        if outer is not None:
+            outer.release()
+    assert result.returncode == 0, result.stdout + result.stderr
+    seen = json.loads(result.stdout.strip().splitlines()[-1])
+    expected = {"code": pytest.ExitCode.USAGE_ERROR, "in_use": 1 if nested else 0, "holder": marker, "auto": None}
+    assert seen == expected, result.stderr

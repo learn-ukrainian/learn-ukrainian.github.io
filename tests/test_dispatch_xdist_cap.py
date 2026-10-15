@@ -7,6 +7,7 @@ import subprocess
 import sys
 import textwrap
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -16,17 +17,21 @@ from scripts.ci.pytest_dispatch_cap import (
     FULL_SUITE_BUSY,
     LOCK_ENV,
     LOCK_PATH,
+    MAX_PROCESSES,
     acquire_full_suite_lock,
     collection_only,
     configured_lock_path,
     dispatch_marker_set,
+    expand_tx_specs,
     is_full_suite,
     is_tests_root,
     path_covers_full_suite,
     release_full_suite_lock,
     repository_root,
+    tx_spec_worker_count,
     xdist_available,
 )
+from scripts.common import test_slots
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _PYTEST = sys.executable
@@ -76,9 +81,13 @@ def _run_pytest(directory: Path, args: list[str], env: dict[str, str]) -> subpro
 
 
 def _child_env(directory: Path, *, marker: str | None) -> dict[str, str]:
+    """A child run outside this run's test slots: the outer hold would cap its workers (#10662)."""
     env = os.environ.copy()
     env["PYTHONPATH"] = os.pathsep.join([str(directory), str(_REPO_ROOT), env.get("PYTHONPATH", "")])
     env.pop("PYTEST_ADDOPTS", None)
+    env.pop(test_slots.HOLDER_ENV, None)
+    env[test_slots.DIR_ENV] = str(directory / "slot-pool")
+    env[test_slots.COUNT_ENV] = str(MAX_PROCESSES)  # a private pool that can always grant the cap
     env["PYTEST_XDIST_AUTO_NUM_WORKERS"] = "8"
     env.pop("PYTEST_XDIST_WORKER", None)
     env.pop("PYTEST_XDIST_WORKER_COUNT", None)
@@ -272,6 +281,26 @@ def test_without_marker_explicit_n_is_unchanged(tmp_path: Path) -> None:
     assert completed.returncode == 0, completed.stderr
     assert "OBSERVED_WORKERS=4" in completed.stdout
     assert CAP_LINE not in completed.stdout
+
+
+@pytest.mark.parametrize(
+    "specs",
+    [
+        ["popen"],
+        ["2*popen"],
+        ["popen", "2*popen//python=python3"],
+        ["x*popen"],
+        ["-3*popen", "5*popen"],
+        ["0*popen", "popen"],
+    ],
+)
+def test_tx_specs_expand_exactly_as_xdist_starts_them(specs: list[str]) -> None:
+    """The cap counts and cuts the worker list xdist will start, negative and zero counts included."""
+    from xdist.workermanage import parse_tx_spec_config
+
+    started = parse_tx_spec_config(SimpleNamespace(getvalue=lambda name: specs))
+    assert expand_tx_specs(specs) == started
+    assert tx_spec_worker_count(specs) == len(started)
 
 
 def _arm_suite_sentinel(directory: Path) -> Path:

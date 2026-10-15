@@ -25,8 +25,11 @@ A dispatch run also holds host test slots for its whole session (#10662): it
 asks ``scripts/common/test_slots.py`` for its process count (its xdist workers
 after the cap, or one), waits in the host's FIFO queue with progress lines, and
 starts no more workers than the slots it holds. ``LU_TEST_SLOTS=off`` and a
-true ``CI`` variable disable this. Runs nested inside a holder, ``--collect-only``,
-``--help`` and other runs that execute no test take no slots.
+true ``CI`` variable disable this. ``--collect-only``, ``--help`` and other runs
+that execute no test take no slots. A run nested inside a live holder
+(``LU_TEST_SLOTS_HOLDER``) queues for nothing, dispatch run or not, and starts
+at most the inherited count of workers: ``maxprocesses``, an explicit ``--tx``
+list and ``PYTEST_XDIST_AUTO_NUM_WORKERS`` are all capped before the session.
 """
 
 from __future__ import annotations
@@ -36,6 +39,7 @@ import fcntl
 import os
 from collections.abc import Generator, Mapping
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 
@@ -54,6 +58,7 @@ _LOCK_ATTR = "_lu_dispatch_full_suite_lock_fd"
 _CLAMP_ATTR = "_lu_dispatch_cap_clamped"
 _SLOTS_ATTR = "_lu_test_slots_hold"
 _SLOTS_PRIOR_MARKER_ATTR = "_lu_test_slots_prior_marker"
+_AUTO_PRIOR_ATTR = "_lu_test_slots_prior_auto_workers"
 # Informational runs execute no test, so they never queue for slots.
 _NO_TEST_OPTIONS = ("help", "version", "showfixtures", "show_fixtures_per_test", "markers")
 
@@ -179,19 +184,23 @@ def configured_lock_path(environ: Mapping[str, str] | None = None) -> Path:
     return Path(override) if override else LOCK_PATH
 
 
-def tx_spec_worker_count(specs: list[str]) -> int:
-    """Workers an xdist ``--tx`` list will start, including ``N*popen`` forms."""
-    total = 0
+def expand_tx_specs(specs: list[str]) -> list[str]:
+    """One spec per worker, ``N*popen`` expanded exactly as xdist's ``parse_tx_spec_config`` expands it."""
+    expanded: list[str] = []
     for spec in specs:
         star = spec.find("*")
-        if star == -1:
-            total += 1
-            continue
         try:
-            total += int(spec[:star])
+            count = int(spec[:star])
         except ValueError:
-            total += 1
-    return total
+            expanded.append(spec)
+        else:
+            expanded.extend([spec[star + 1 :]] * count)
+    return expanded
+
+
+def tx_spec_worker_count(specs: list[str]) -> int:
+    """Workers an xdist ``--tx`` list will start, including ``N*popen`` forms."""
+    return len(expand_tx_specs(specs))
 
 
 def _lock_file(path: Path) -> int:
@@ -322,31 +331,81 @@ def requested_test_processes(config: pytest.Config) -> int:
     return max(1, min(tx_spec_worker_count(tx), cap)) if tx else 1
 
 
-def _acquire_test_slots(config: pytest.Config) -> None:
-    """Hold host test slots for this session and start no more xdist workers than it holds."""
+def _limit_workers(config: pytest.Config, count: int) -> None:
+    """Start at most ``count`` xdist workers: cap ``-n`` (``auto`` included) and cut an explicit ``--tx`` list.
+
+    Runs before xdist's own ``pytest_cmdline_main`` turns ``-n`` into a ``tx`` list, and before the session
+    expands ``N*popen`` specs.
+    """
+    option = config.option
+    if getattr(option, "numprocesses", None):
+        current = getattr(option, "maxprocesses", None)
+        # xdist treats a missing or non-positive maxprocesses as unlimited.
+        option.maxprocesses = count if current is None or int(current) < 1 else min(int(current), count)
+        return
+    specs = expand_tx_specs(list(getattr(option, "tx", None) or []))
+    if len(specs) > count:
+        option.tx = specs[:count]
+
+
+def _run_inside_inherited_hold(config: pytest.Config, slots: ModuleType, count: int) -> None:
+    """Start at most ``count`` workers, the slots a live ancestor holds, here and in this run's descendants."""
+    config.add_cleanup(lambda: _release_test_slots(config))
+    _limit_workers(config, count)
+    name = slots.XDIST_AUTO_ENV
+    auto_cap = slots.auto_worker_cap()  # a lower existing cap, such as a driver scope's, is kept
+    setattr(config, _AUTO_PRIOR_ATTR, (name, os.environ.get(name)))
+    os.environ[name] = str(count if auto_cap is None else min(auto_cap, count))
+
+
+def _acquire_test_slots(config: pytest.Config, *, acquire: bool) -> None:
+    """Start no more xdist workers than the host test slots this session runs inside.
+
+    A live ancestor hold bounds every run below it, dispatch run or not: the run queues for nothing and starts
+    at most the inherited count of workers. Otherwise only a dispatch run (``acquire``) waits for and holds
+    slots of its own. A marker without a live holder is ignored, so a dispatch run under it still queues.
+    """
     if collection_only(config) or any(getattr(config.option, name, False) for name in _NO_TEST_OPTIONS):
         return
     slots = _test_slots()
+    if not acquire and not os.environ.get(slots.HOLDER_ENV, "").strip():
+        return  # no hold to run inside and none to take: an operator shell or CI run stays unchanged
     try:
-        if not slots.enabled() or slots.inherited_hold() is not None:
+        if not slots.enabled():
+            return
+        inherited = slots.inherited_hold()
+        if inherited is not None:
+            _run_inside_inherited_hold(config, slots, inherited)
+            return
+        if not acquire:
             return
         hold = slots.acquire(requested_test_processes(config), kind="pytest")
     except slots.SlotError as error:
         raise pytest.UsageError(str(error)) from None
+    # pytest closes the cleanup stack even when a later hook refuses the run before the session configures.
+    config.add_cleanup(lambda: _release_test_slots(config))
     setattr(config, _SLOTS_ATTR, hold)
     setattr(config, _SLOTS_PRIOR_MARKER_ATTR, os.environ.get(slots.HOLDER_ENV))
     # Workers and nested runs inherit the marker and run inside these slots instead of queueing.
     os.environ.update(hold.environment())
-    option = config.option
-    if getattr(option, "numprocesses", None):
-        option.maxprocesses = min(int(getattr(option, "maxprocesses", None) or hold.count), hold.count)
-    elif len(list(getattr(option, "tx", None) or [])) > hold.count:
-        option.tx = list(option.tx)[: hold.count]
+    _limit_workers(config, hold.count)
     if hold.waited >= 1.0:
         print(f"TEST SLOTS: holding {hold.count} of {hold.pool_size} slot(s) after {hold.waited:.1f}s", flush=True)
 
 
 def _release_test_slots(config: pytest.Config) -> None:
+    """Give back what this session took: its slots, its holder marker and the auto-worker count it set.
+
+    A ``config.add_cleanup`` callback, so it also runs when a hook refuses the run before it configures.
+    """
+    recorded = getattr(config, _AUTO_PRIOR_ATTR, None)
+    if recorded is not None:
+        setattr(config, _AUTO_PRIOR_ATTR, None)
+        name, prior = recorded
+        if prior is None:
+            os.environ.pop(name, None)
+        else:
+            os.environ[name] = prior
     hold = getattr(config, _SLOTS_ATTR, None)
     if hold is None:
         return
@@ -373,6 +432,9 @@ def pytest_cmdline_main(config: pytest.Config) -> Generator[None, object, object
     it returns, so a lock taken after ``yield`` does not cover execution.
     xdist workers already have ``workerinput`` and ``PYTEST_XDIST_WORKER`` set
     and must not take the host lock; neither does a ``--collect-only`` run.
+    Test slots skip only real workers (``workerinput``): a pytest that a test
+    starts inside a worker inherits ``PYTEST_XDIST_WORKER`` but is a new run,
+    and it must start no more workers than the hold it runs inside.
 
     A new-style wrapper, so an exception raised inside the session (for
     example pytest's own ``tmp_path`` teardown ``KeyError`` after a SIGINT
@@ -387,8 +449,8 @@ def pytest_cmdline_main(config: pytest.Config) -> Generator[None, object, object
         _arm_maxprocesses(config)
     if armed and is_full_suite(config) and not collection_only(config):
         _acquire_for_config(config)
-    if armed:
-        _acquire_test_slots(config)
+    if not hasattr(config, "workerinput"):
+        _acquire_test_slots(config, acquire=armed)
     result = yield
     if cap_armed:
         _shrink_tx(config)
@@ -406,5 +468,4 @@ def pytest_sessionstart(session: pytest.Session) -> None:
 
 
 def pytest_unconfigure(config: pytest.Config) -> None:
-    _release_test_slots(config)
     _release_for_config(config)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import signal
@@ -78,7 +79,10 @@ def pool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 def _child_env(**extra: str) -> dict[str, str]:
-    env = {key: value for key, value in os.environ.items() if key != test_slots.HOLDER_ENV}
+    """This run's environment without its holder marker or an auto-worker cap a driver scope may have set."""
+    env = {
+        key: value for key, value in os.environ.items() if key not in {test_slots.HOLDER_ENV, test_slots.XDIST_AUTO_ENV}
+    }
     env["PYTHONPATH"] = str(REPO_ROOT)
     env.update(extra)
     return env
@@ -210,6 +214,47 @@ def test_stale_slot_files_and_tickets_do_not_block(pool: Path) -> None:
         assert hold.count == 2 and hold.queue_position == 1
         assert test_slots.status()["queue"] == []
     assert not any((pool / "queue").glob("0*.ticket")) and not any((pool / "holders").glob("0*.ticket"))
+
+
+def _dead_tickets(pool: Path, count: int) -> None:
+    """Tickets runs killed while waiting or holding leave behind: regular files that nobody locks."""
+    pool.mkdir(mode=0o700, exist_ok=True)
+    for directory in ("queue", "holders"):
+        (pool / directory).mkdir(mode=0o700, exist_ok=True)
+        for index in range(count):
+            (pool / directory / f"{index:020d}-dead.ticket").write_text('{"requested": 1}\n')
+
+
+def test_more_dead_tickets_than_the_scan_limit_are_reaped_not_refused_forever(
+    pool: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(test_slots, "MAX_TICKETS", 4)
+    _dead_tickets(pool, 6)
+    # The read-only view stays bounded and says why; the next waiter reaps the dead tickets and is served.
+    assert test_slots.status()["error"]["reason"] == "pool_unavailable"
+    with test_slots.acquire(2, kind="pytest", wait_s=2) as hold:
+        assert hold.count == 2
+    assert not any((pool / "queue").glob("*-dead.ticket")) and not any((pool / "holders").glob("*-dead.ticket"))
+    report = test_slots.status()
+    assert report["error"] is None and report["queue"] == [] and report["holders"] == []
+
+
+def test_more_live_tickets_than_the_scan_limit_are_still_refused(pool: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(test_slots, "MAX_TICKETS", 4)
+    _dead_tickets(pool, 4)
+    held = []
+    try:
+        for path in sorted((pool / "queue").glob("*-dead.ticket")):
+            fd = os.open(path, os.O_RDONLY)
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)  # a waiting run's lock: this ticket is live
+            held.append(fd)
+        with pytest.raises(test_slots.SlotError) as refused:
+            test_slots.acquire(1, kind="pytest", wait_s=2)
+        assert refused.value.reason == "pool_unavailable"
+        assert len(list((pool / "queue").glob("*.ticket"))) == 4  # the refused run left no ticket
+    finally:
+        for fd in held:
+            os.close(fd)
 
 
 # ---- configuration --------------------------------------------------------------------------------------------
@@ -529,6 +574,32 @@ def test_launcher_limits_the_wrapped_run_to_the_slots_it_holds(
     assert seen["holder"] is not None and seen["holder"].split(":", 1)[0] == auto
     assert seen["auto"] == auto
     assert test_slots.status()["slots_in_use"] == 0
+
+
+@pytest.mark.parametrize(
+    ("arguments", "cap", "expected", "auto", "held"),
+    [
+        (["-n", "auto"], "1", ["-n", "1"], "1", "1"),
+        (["-n", "logical"], "1", ["-n", "1"], "1", "1"),
+        (["-n", "auto"], "0", ["-n", "0"], "0", "1"),
+        (["-n", "auto"], "9", ["-n", "2"], "2", "2"),
+        (["-n", "8"], "1", ["-n", "2"], "1", "2"),
+        (["-q"], "0", ["-q"], "0", "1"),
+    ],
+)
+def test_launcher_never_raises_an_existing_auto_worker_cap(
+    arguments: list[str], cap: str, expected: list[str], auto: str, held: str
+) -> None:
+    """``PYTEST_XDIST_AUTO_NUM_WORKERS`` may already cap ``-n auto`` (a driver scope's memory cap, #9624).
+
+    ``-n auto`` then asks for no more slots than that cap and never starts more workers; ``0`` stays serial.
+    """
+    result = _launch("run", "--", sys.executable, "-c", PRINTER, *arguments, **{test_slots.XDIST_AUTO_ENV: cap})
+    assert result.returncode == 0, result.stderr
+    seen = json.loads(result.stdout)
+    assert seen["argv"] == expected
+    assert seen["holder"] is not None and seen["holder"].split(":", 1)[0] == held
+    assert seen["auto"] == auto
 
 
 def test_launcher_holds_slots_for_the_command_and_passes_its_exit_code() -> None:
