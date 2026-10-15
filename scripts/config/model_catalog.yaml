@@ -717,18 +717,12 @@ models:
   gemini-3.1-pro-high:
     family: google
     tier: frontier_practical
-    lifecycle: retired
-    replaced_by: gemini-3.8-flash-high
-    aliases: [gemini-3.1-pro-preview, gemini-3.1-pro, gemini-3.1-pro-low]
-    # activity_roles still names architecture_support and factual_review, and this
-    # retired entry is their only holder. Admission refuses the retired id first.
+    lifecycle: active
+    aliases: [gemini-3.1-pro-preview, gemini-3.1-pro]
     roles: [architecture_support, factual_review, multimodal_analysis]
-    transports: []
+    transports: [agy]
     strengths: [complex_reasoning, deep_single_shot, multimodal_long_context]
-    weaknesses: [absent_from_agy_models_2026_10_13, not_an_available_selector]
-    notes: >-
-      Absent from `agy models` on 2026-10-13. Not an available AGY selector.
-      Launcher certification of this id is a separate security-owned change.
+    weaknesses: [higher_latency_and_cost_than_3_7_flash, not_default_agentic_workhorse, operator_2026_09_22_outperformed_by_3_8_flash_high]
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
   gemini-3.5-flash-high:

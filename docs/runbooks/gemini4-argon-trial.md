@@ -52,10 +52,11 @@ no advanced Ukrainian-author role. Adding unused fields or a separate selector
 would not prove a production default. The advanced route stops pending a
 supported consumer contract owned by codex-monitor.
 
-Catalog and core integration waits for merged #10622. Its policy and fixture
-overlay remain owned by that publication unit. No historical capture, input,
-fixture, or checksum is regenerated here. The driver must integrate the merged
-base before final exact-head review and publication.
+This worker-admission unit publishes independently of #10622. Only the later
+advanced-routing and core P2 policy unit waits for merged #10622. That follow-up
+also owns launcher changes, Pro retirement, author defaults and effort policy.
+This unit's `routing-10568` overlay records only its Argon model-data additions.
+Historical captures, inputs, fixtures and checksums stay unchanged.
 
 After admission is merged and installed, the driver owns one read-only delegated
 Argon-high `mcp__sources__verify_word` call. Its evidence must contain the actual
@@ -72,47 +73,47 @@ policy change.
 The catalog entry `gemini-4-argon-high` uses lifecycle `hold` and the existing
 role `explicit_bakeoff_only`. Medium and low are aliases of that entry, matching
 the Flash selector convention, while the adapter still emits each listed slug.
-`explicit_bakeoff_only` is not in `review_scheduler.activity_roles` for review
-or consult, so the entry is refused for review, critique, approval, and ACP
-consult. It is not a review candidate and it is not on a review ladder. It has
-no `critical_review`, `security_review`, or advisor role. `require_execution_model`
-refuses it for execution.
+The AGY worker path admits the three listed selectors through the adapter
+allowlist. `delegate.py::_admit_dispatch_target` and `resolve_and_admit` do not
+consult lifecycle for these worker requests. The adapter preserves the requested
+tier and requires the exact provider identity on a successful stream.
 
-`review_scheduler.activity_roles` still names `architecture_support` and
-`factual_review`. The retired `gemini-3.1-pro-high` entry is their only holder,
-so those role strings stay on that retired entry. Admission refuses the retired
-id before roles are read. They are not copied onto Argon.
+`require_execution_model` separately refuses lifecycle `hold`. Its consumers
+include the native Gemini, Hermes and Google API paths; it is not the AGY worker
+admission gate. Catalog helper refusal does not make an AGY worker request
+undispatchable.
 
-## Absent Pro selectors
+The admission unit grants no review or advice eligibility:
 
-`gemini-3.1-pro-high` is retired, with `replaced_by: gemini-3.8-flash-high`
-and no transport. Aliases `gemini-3.1-pro-preview`, `gemini-3.1-pro`, and
-`gemini-3.1-pro-low` resolve to that retirement refusal. The accepted AGY id
-list no longer names them. An unknown name containing "pro" is told that no
-Gemini Pro selector is listed. It is not told to use `gemini-3.1-pro-high`.
+- Formal code review is refused for every Argon tier at all four risk levels.
+  Argon is not a review candidate or a review-ladder entry.
+- Review, critique, approval and ACP consult are refused because
+  `explicit_bakeoff_only` is outside their activity roles.
+- Critical review, security review and advisor roles remain absent. Selector
+  admission does not qualify Argon for security work or consequential advice.
 
-The Gemini registry seat default is `gemini-3.8-flash-high`. The AGY seat
-default was already that Flash pin.
+## Preserved Pro compatibility
+
+The baseline `gemini-3.1-pro-high` catalog entry remains active with transport
+`agy` and aliases `gemini-3.1-pro-preview` and `gemini-3.1-pro`. The adapter's
+existing Pro slug handling and guidance remain unchanged. The Gemini registry
+seat retains its Pro default; the AGY seat retains its Flash default. Core P2,
+launcher certification and other consumers keep their baseline behavior.
+
+Preserving this configuration is not evidence that Pro is currently available
+from the provider. The supplied listing omitted Pro. This unit makes no live
+provider call and does not use a configuration or execution claim to establish
+availability. Coordinated retirement remains follow-up work.
 
 ## Routing receipts
 
 `tests/review/fixtures/routing-10568.json.gz` records this data change on top of
 the frozen routing baseline. Historical baseline bytes are unchanged. The
-overlay adds the Argon catalog entry, retires `gemini-3.1-pro-high`, moves the
-Gemini registry default to `gemini-3.8-flash-high`, and updates only the
-captured rows whose model text follows that data. Existing reviewer verdicts
-are unchanged. Thirty-two new author rows cover the three Argon selectors and
-the `gemini-3.1-pro-low` alias. A provider listing is still not qualification.
-
-## Left for the launcher owner
-
-These still name `gemini-3.1-pro-high` and are outside this packet:
-
-- `scripts/lib/launcher_core.sh` (`LC_GEMINI_DRIVER_MODELS` and the Gemini driver default)
-- `scripts/agent_runtime/adapters/gemini.py` `GeminiAdapter.default_model`
-
-An explicit launcher pin of the retired id is refused by the AGY adapter.
-The captured Gemini driver default still asks for `gemini-3.1-pro-high`, and
-catalog retirement now makes that row exit 2. This packet does not edit the
-launcher. Retargeting certification belongs to the qualified launcher change
-on this same issue.
+overlay adds the Argon catalog entry and its approval-contract rows. Twenty-four
+new reviewer-author rows cover the three Argon selectors. Existing model entries,
+reviewer verdicts, registry defaults, launcher results and adapter results remain
+at their literal baseline values. Dispatch decisions are unchanged; twelve
+refusal messages add the Argon slugs to their accepted-id lists. Reconciliation prunes
+the earlier Pro changes from the existing overlay; it does not derive a new
+expected result from candidate captures. A provider listing is still not
+qualification.

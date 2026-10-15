@@ -131,7 +131,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "gemini": {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
-        "default_model": "gemini-3.8-flash-high",
+        "default_model": "gemini-3.1-pro-high",
         "cost_tier": "low",
         "capabilities": frozenset(
             {

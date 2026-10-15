@@ -440,6 +440,13 @@ entries:
   count: 1
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: unknown_model_suggestion
+  context: expression
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in unknown_model_suggestion; #9302 consumer migration owned by infra.'
 - path: scripts/agent_runtime/adapters/base.py
   scope: AgentAdapter
   context: docstring
@@ -1115,10 +1122,17 @@ entries:
 - path: scripts/agent_runtime/registry.py
   scope: <module>
   context: expression
-  id: gemini-3.8-flash-high
-  count: 3
+  id: gemini-3.1-pro-high
+  count: 1
   kind: migration_debt
-  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra. Gemini seat default moved off absent 3.1 Pro (#10568).'
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  context: expression
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/agent_runtime/registry.py
   scope: <module>
   context: expression

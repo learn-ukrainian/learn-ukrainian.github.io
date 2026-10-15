@@ -1600,14 +1600,7 @@ def test_gemini_4_argon_trial_selectors_have_no_authority_roles():
     assert "gemini-4-argon-high" not in catalog["review_candidates"]
     for ladder in catalog["review_ladders"].values():
         assert "gemini-4-argon-high" not in {candidate for rung in ladder for candidate in rung}
-    pro = catalog["models"]["gemini-3.1-pro-high"]
-    assert pro["lifecycle"] == "retired"
-    assert pro["transports"] == []
-    assert pro["replaced_by"] == "gemini-3.8-flash-high"
-    assert "gemini-3.1-pro-low" in pro["aliases"]
-    assert "absent_from_agy_models_2026_10_13" in pro["weaknesses"]
-    assert "retired" in activity_role_refusal("gemini-3.1-pro-high", "review")
-    assert AGENTS["gemini"]["default_model"] == "gemini-3.8-flash-high"
+    assert AGENTS["gemini"]["default_model"] == "gemini-3.1-pro-high"
     assert AGENTS["agy"]["default_model"] == "gemini-3.8-flash-high"
     assert canonical_model_id("gemini-3.8-flash-medium") == "gemini-3.8-flash-high"
     assert canonical_model_id("gemini-3.1-pro-preview") == "gemini-3.1-pro-high"
@@ -1615,8 +1608,8 @@ def test_gemini_4_argon_trial_selectors_have_no_authority_roles():
 
 def test_issue_9301_active_exceptions_and_advisory_effort():
     catalog = load_model_catalog()
-    assert catalog["models"]["deepseek-v4.1-flash"]["lifecycle"] == "active"
-    assert catalog["models"]["gemini-3.1-pro-high"]["lifecycle"] == "retired"
+    for model in ("deepseek-v4.1-flash", "gemini-3.1-pro-high"):
+        assert catalog["models"][model]["lifecycle"] == "active"
     assert {model for model, spec in catalog["models"].items()
             if spec["family"] == "openai" and spec["lifecycle"] != "retired"} == {"gpt-6.1-sol", "gpt-6-luna"}
     for section in ("orchestrator_seats", "formal_cf_defaults"):

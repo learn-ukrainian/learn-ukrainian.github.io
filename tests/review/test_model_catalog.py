@@ -209,11 +209,10 @@ ARGON_OVERLAY = json.loads(gzip.decompress(ARGON_OVERLAY_PATH.read_bytes()))
 
 
 def approved_argon_trial_baseline(baseline, configuration):
-    """Apply #10568's listed Argon selectors and the absent Pro retirement.
+    """Apply #10568's Argon catalog, approval and reviewer additions.
 
-    Historical baseline bytes stay put. This overlay replaces the shared catalog,
-    registry, approval and reviewer surfaces, then patches the captured rows whose
-    model text follows that data. Launcher sources are not edited.
+    Historical baseline bytes stay put. Pro, registry, launcher and adapter
+    receipts retain their baseline values. Refusal help lists the added slugs.
     """
     updated = {**baseline, **ARGON_OVERLAY["surfaces"]}
     for surface, rows in ARGON_OVERLAY["row_patches"].items():
@@ -277,36 +276,34 @@ APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["
 def test_argon_trial_overlay_records_only_the_model_data_delta():
     """#10568 changes model data. Existing reviewer verdicts and other surfaces stay."""
     assert hashlib.sha256(ARGON_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "6abf5823eae2fabb41ef52bddd8ce5cac7e733e2ae4608590bac9c3c233de1a1"
+        "efe9c9b9db2f651e421e42769cc1682c12b724122545d2e2e8b4b0d66d1148ba"
     )
     assert set(ARGON_OVERLAY) == {"adapter_patches", "inputs", "row_patches", "surfaces"}
     before, after = PRE_ARGON_HOST_BASELINE, APPROVED_BASELINE
     assert set(before) == set(after)
-    for surface in set(before) - {"catalog", "registry", "approval", "reviewer", "launchers", "dispatch", "adapters"}:
+    assert set(ARGON_OVERLAY["surfaces"]) == {"catalog", "approval", "reviewer"}
+    assert set(ARGON_OVERLAY["inputs"]) == {"reviewer"}
+    assert set(ARGON_OVERLAY["row_patches"]) == {"dispatch"}
+    assert ARGON_OVERLAY["adapter_patches"] == {"host-cli": {}, "no-cli": {}}
+    for surface in set(before) - {"catalog", "approval", "reviewer", "dispatch"}:
         assert before[surface] == after[surface], surface
+    changed_dispatch = [i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new]
+    assert changed_dispatch == list(range(196, 220, 2))
+    old_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
+    new_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`, `gemini-4-argon-high`, `gemini-4-argon-medium`, `gemini-4-argon-low`."
+    for index in changed_dispatch:
+        expected = deepcopy(before["dispatch"][index])
+        assert expected["value"]["refusal"].count(old_ids) == 1
+        expected["value"]["refusal"] = expected["value"]["refusal"].replace(old_ids, new_ids)
+        assert after["dispatch"][index] == expected
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
     assert set(new_models) - set(old_models) == {"gemini-4-argon-high"}
-    assert [model for model in old_models if old_models[model] != new_models[model]] == ["gemini-3.1-pro-high"]
+    assert {model: new_models[model] for model in old_models} == old_models
+    assert {key: value for key, value in after["catalog"].items() if key != "models"} == {
+        key: value for key, value in before["catalog"].items() if key != "models"
+    }
     assert new_models["gemini-4-argon-high"]["lifecycle"] == "hold"
     assert new_models["gemini-4-argon-high"]["roles"] == ["explicit_bakeoff_only"]
-    assert new_models["gemini-3.1-pro-high"]["lifecycle"] == "retired"
-    assert new_models["gemini-3.1-pro-high"]["transports"] == []
-    assert new_models["gemini-3.1-pro-high"]["replaced_by"] == "gemini-3.8-flash-high"
-    changed_registry = [seat for seat, entry in before["registry"].items() if entry != after["registry"][seat]]
-    assert changed_registry == ["gemini"]
-    assert after["registry"]["gemini"]["default_model"] == "gemini-3.8-flash-high"
-    assert [i for i, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new] == [25]
-    assert after["launchers"][25]["exit_status"] == 2
-    assert "is retired in the model catalog" in after["launchers"][25]["stderr"]
-    assert after["launchers"][25]["stdout"] == ""
-    for index in range(24, 28):
-        old_cmd = before["adapters"][index]["value"]["cmd"]
-        new_cmd = after["adapters"][index]["value"]["cmd"]
-        assert old_cmd[old_cmd.index("-m") + 1] == "gemini-3.1-pro-high"
-        assert new_cmd[new_cmd.index("-m") + 1] == "gemini-3.8-flash-high"
-        assert [token for token in old_cmd if token != "gemini-3.1-pro-high"] == [
-            token for token in new_cmd if token != "gemini-3.8-flash-high"
-        ]
     old_review_inputs = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}["reviewer"]
     new_review_inputs = APPROVED_INPUTS["reviewer"]
     old_by_input = {dispatch_key(row): receipt for row, receipt in zip(old_review_inputs, before["reviewer"], strict=True)}
@@ -317,12 +314,11 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
             added += 1
         elif old_by_input[key] != receipt:
             changed += 1
-    assert added == 32 and changed == 0
+    assert added == 24 and changed == 0
     assert {row["author_model"] for row in new_review_inputs} - {row["author_model"] for row in old_review_inputs} == {
         "gemini-4-argon-high",
         "gemini-4-argon-medium",
         "gemini-4-argon-low",
-        "gemini-3.1-pro-low",
     }
     old_authors = {row["author"] for row in before["approval"]["rows"]}
     new_rows = after["approval"]["rows"]
