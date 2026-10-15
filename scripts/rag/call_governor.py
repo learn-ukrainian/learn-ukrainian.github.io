@@ -13,6 +13,12 @@ Every ``tools/call`` passes through one :class:`CallGovernor`:
 - while every slot is held by abandoned work, new and queued calls are
   refused at once as overloaded instead of waiting for a slot that may never
   come back;
+- calls' blocking work runs on the event loop's default executor, which the
+  governor replaces with its own pool of ``max_concurrent`` +
+  ``EXECUTOR_MARGIN`` threads. Python's default pool has
+  ``min(32, cpu_count + 4)`` threads, so on a small host it would cap
+  running work below the bound, and time a call spent queued in it would
+  count against ``call_timeout``;
 - each call logs one start and one end line (call id, tool name, in-flight,
   queued and abandoned counts, outcome, duration), and an abandoned call one
   more line when its work finishes and frees the slot. Argument values are
@@ -37,6 +43,7 @@ import os
 import time
 from collections import deque
 from collections.abc import Awaitable, Callable, Mapping
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -46,6 +53,12 @@ T = TypeVar("T")
 
 LOGGER_NAME = "sources.calls"
 SLOW_DUMP_INTERVAL_S = 60.0
+# Each call runs at most one executor job at a time, and its slot outlives
+# that job, so ``max_concurrent`` threads cover every call. The margin is
+# for executor users outside a call (asyncio resolves host names on the
+# default executor), so they never take a thread a call is entitled to.
+# The /health handler and the call bookkeeping run on the loop thread.
+EXECUTOR_MARGIN = 4
 
 
 class CallRefused(Exception):
@@ -137,6 +150,11 @@ class CallGovernor:
     def queued(self) -> int:
         return self._queued
 
+    @property
+    def executor_workers(self) -> int:
+        """Threads in the executor the governor gives each event loop."""
+        return self.limits.max_concurrent + EXECUTOR_MARGIN
+
     def _bind_loop(self) -> asyncio.AbstractEventLoop:
         # Slots, waiters and tasks belong to one event loop. The server runs
         # one loop; a caller that runs several in turn (asyncio.run per call)
@@ -151,6 +169,11 @@ class CallGovernor:
             self._tasks.clear()
             self._dumped.clear()
             self._watcher = None
+            # A new pool per loop: asyncio.run shuts the loop's default
+            # executor down when the loop ends.
+            loop.set_default_executor(
+                ThreadPoolExecutor(max_workers=self.executor_workers, thread_name_prefix="sources-call")
+            )
         return loop
 
     def _overloaded(self) -> CallRefused:

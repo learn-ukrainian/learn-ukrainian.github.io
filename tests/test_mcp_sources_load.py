@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import importlib.util
+import os
 import socket
 import threading
 import time
@@ -22,6 +23,7 @@ import uvicorn
 
 SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 MAX_CONCURRENT = 12
+SMALL_HOST_CPUS = 4
 CALLS = 120
 CALL_SECONDS = 0.5
 STALLED_CONNECTIONS = 150
@@ -44,6 +46,10 @@ def timing_out_server(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
 
 
 def _serve(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, call_timeout: float, call_seconds: float):
+    # A 4-CPU host, like the CI runner: Python's default thread pool would
+    # hold min(32, 4 + 4) = 8 threads there. The bound, not the host's CPU
+    # count, must decide how many calls run.
+    monkeypatch.setattr(os, "cpu_count", lambda: SMALL_HOST_CPUS)
     monkeypatch.setenv("LU_SOURCES_MAX_CONCURRENT_CALLS", str(MAX_CONCURRENT))
     monkeypatch.setenv("LU_SOURCES_QUEUE_TIMEOUT_S", "60")
     monkeypatch.setenv("LU_SOURCES_CALL_TIMEOUT_S", str(call_timeout))

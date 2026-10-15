@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 import threading
 import time
 from collections.abc import Callable
@@ -11,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
+from scripts.rag.call_governor import EXECUTOR_MARGIN, CallGovernor, CallRefused, GovernorLimits
 
 
 def _governor(caplog: pytest.LogCaptureFixture, **limits: float) -> CallGovernor:
@@ -39,6 +40,49 @@ def test_concurrency_is_capped_and_queued_calls_complete(caplog: pytest.LogCaptu
     assert asyncio.run(main()) == ["ok"] * 20
     assert peak == 3
     assert governor.in_flight == 0 and governor.queued == 0
+
+
+def test_the_bound_not_the_cpu_count_decides_how_much_thread_work_runs(
+    caplog: pytest.LogCaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """On one CPU Python's default pool has 5 threads; all 12 calls must still run at once.
+
+    Each call's thread waits until all 12 are running. Had the 7 calls past the
+    default pool queued in the executor, they would not start, and that queued
+    time would run out their call timeout.
+    """
+    monkeypatch.setattr(os, "cpu_count", lambda: 1)
+    governor = _governor(caplog, max_concurrent=12, queue_timeout=5, call_timeout=2)
+    assert governor.executor_workers == 12 + EXECUTOR_MARGIN
+
+    async def main() -> tuple[list[object], int, set[str]]:
+        all_running = threading.Barrier(12, timeout=3)
+        workers = _BlockedWorkers()
+        names: set[str] = set()
+
+        def work() -> str:
+            with workers.lock:
+                names.add(threading.current_thread().name.rsplit("_", 1)[0])
+                workers.running += 1
+                workers.peak = max(workers.peak, workers.running)
+            all_running.wait()
+            return "ok"
+
+        async def call() -> str:
+            return await asyncio.to_thread(work)
+
+        outcomes = await asyncio.gather(
+            *(governor.run("verify_words", call) for _ in range(12)), return_exceptions=True
+        )
+        return outcomes, workers.peak, names
+
+    # A fresh event loop gets its own pool: asyncio.run shut the first one down.
+    for _ in range(2):
+        outcomes, peak, names = asyncio.run(main())
+        assert outcomes == ["ok"] * 12
+        assert peak == 12
+        assert names == {"sources-call"}
+        assert governor.abandoned == 0
 
 
 def test_queue_timeout_refuses_as_server_busy(caplog: pytest.LogCaptureFixture) -> None:
