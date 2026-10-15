@@ -1612,6 +1612,174 @@ def test_an_untracked_python_overlay_is_refused_before_execution(repo: Path, ign
     assert _receipts(repo) == []
 
 
+@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
+@pytest.mark.parametrize("directory", ["node_modules", "site/node_modules", "site/vendor/node_modules"])
+@pytest.mark.parametrize("filename", ["x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml"])
+def test_node_modules_overlays_do_not_block_the_scan(
+    repo: Path, ignored: bool, directory: str, filename: str
+) -> None:
+    lock = f"{Path(directory).parent}/package-lock.json"
+    _write(repo, lock, "{}\n")
+    _commit(repo, "dependency lock", lock)
+    relative = f"{directory}/katex/src/fonts/{filename}"
+    if ignored:
+        _write(repo, ".gitignore", f"/{relative}\n")
+        _commit(repo, "ignore dependency overlay", ".gitignore")
+    _write(repo, relative, "# dependency file\n")
+
+    assert gate.reject_untracked_inputs(repo) is None
+
+
+@pytest.mark.parametrize("lock_state", ["missing", "untracked", "ignored", "symlink"])
+@pytest.mark.parametrize("filename", ["x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml"])
+def test_unproven_node_modules_overlays_are_refused(repo: Path, lock_state: str, filename: str) -> None:
+    lock = "site/package-lock.json"
+    if lock_state == "symlink":
+        _write(repo, "lock-target.json", "{}\n")
+        (repo / "site").mkdir()
+        (repo / lock).symlink_to("../lock-target.json")
+        _commit(repo, "symlink lock", lock)
+    elif lock_state != "missing":
+        _write(repo, lock, "{}\n")
+        if lock_state == "ignored":
+            _write(repo, ".gitignore", f"/{lock}\n")
+            _commit(repo, "ignore lock", ".gitignore")
+    relative = f"site/node_modules/katex/src/fonts/{filename}"
+    _write(repo, relative, "# overlay\n")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert relative in raised.value.detail
+
+
+@pytest.mark.parametrize(
+    ("relative", "state", "expected"),
+    [
+        (f"{directory}/katex/src/fonts/{name}", state, state == "tracked_lock")
+        for directory in ("node_modules", "site/node_modules", "site/vendor/node_modules")
+        for name in ("x.py", "x.pth", "pytest.ini", "tox.ini", "setup.cfg", "pyproject.toml")
+        for state in ("tracked_lock", "missing_lock", "untracked_lock", "ignored_lock")
+    ] + [
+        ("site/node_modules/katex/src/fonts/x.py", state, False)
+        for state in (
+            "tracked_input", "symlink_lock", "directory_lock", "missing_tracked_lock",
+            "symlink_dependency", "symlink_ancestor", "symlink_component",
+        )
+    ] + [
+        (name, "tracked_lock", False)
+        for name in (
+            "site/node_modules_extra/x.py", "not_node_modules/x.py",
+            "site/.venv/node_modules/x.py", "site/node_modules/.venv/x.py",
+            "conftest.py", "sitecustomize.py", "tests/conftest.py", "tests/sitecustomize.py",
+        )
+    ],
+)
+def test_dependency_input_predicate_matches_reaper(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, relative: str, state: str, expected: bool
+) -> None:
+    from scripts.fleet.regenerable_output import is_regenerable_ignored_path
+
+    parts = Path(relative).parts
+    parent = Path(*parts[:parts.index("node_modules")]) if "node_modules" in parts else Path("site")
+    lock = (parent / "package-lock.json").as_posix()
+    _write(repo, relative, "# overlay\n")
+    if state != "missing_lock":
+        _write(repo, lock, "{}\n")
+        if state == "ignored_lock":
+            _write(repo, ".gitignore", f"/{lock}\n")
+            _commit(repo, "ignore lock", ".gitignore")
+        elif state != "untracked_lock":
+            _commit(repo, "tracked lock", lock)
+    if state == "tracked_input":
+        _commit(repo, "tracked dependency input", relative)
+    elif state in {"symlink_lock", "directory_lock", "missing_tracked_lock"}:
+        (repo / lock).unlink()
+        if state == "symlink_lock":
+            _write(repo, "outside-lock.json", "{}\n")
+            (repo / lock).symlink_to(repo / "outside-lock.json")
+        elif state == "directory_lock":
+            (repo / lock).mkdir()
+    elif state.startswith("symlink_"):
+        link = repo / {"symlink_dependency": "site/node_modules", "symlink_ancestor": "site",
+                       "symlink_component": "site/vendor"}[state]
+        if state == "symlink_component":
+            relative = "site/vendor/node_modules/x.py"
+            _write(repo, relative, "# overlay\n")
+            _write(repo, "site/vendor/package-lock.json", "{}\n")
+            _commit(repo, "nested lock", "site/vendor/package-lock.json")
+        target = repo.parent / "link-target"
+        link.rename(target)
+        link.symlink_to(target, target_is_directory=True)
+    tracked = set(_git(repo, "ls-files", "-z", "--cached").stdout.split("\0"))
+
+    assert is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked) is expected
+    assert gate.is_regenerable_dependency_input(relative, root=repo, tracked=tracked) is expected
+    # Git does not descend directory symlinks. Supply that enumerated path to
+    # also prove the scan applies its predicate if such an input is returned.
+    if state.startswith("symlink_") and state != "symlink_lock":
+        original_git_ok = gate.git_ok
+
+        def listing(*args: str, cwd: Path) -> str | None:
+            if "--others" in args:
+                return relative + "\0"
+            return original_git_ok(*args, cwd=cwd)
+
+        monkeypatch.setattr(gate, "git_ok", listing)
+    if expected or state == "tracked_input":
+        assert gate.reject_untracked_inputs(repo) is None
+    else:
+        with pytest.raises(gate.GateOutcome) as raised:
+            gate.reject_untracked_inputs(repo)
+        assert raised.value.reason == "untracked_inputs"
+        assert relative in raised.value.detail
+
+
+def test_dependency_input_scan_fails_closed_when_tracked_listing_is_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(gate, "git_ok", lambda *args, **kwargs: "site/node_modules/x.py\0" if "--others" in args else None)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(tmp_path)
+    assert raised.value.reason == "state_unavailable"
+    assert raised.value.incomplete
+
+
+@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "site/katex/src/fonts/x.py",
+        "site/katex/src/fonts/x.pth",
+        "conftest.py",
+        "sitecustomize.py",
+        "tests/conftest.py",
+        "tests/sitecustomize.py",
+        "not_node_modules/x.py",
+        "site/node_modules_extra/katex/src/fonts/x.py",
+        "site/node_modules_extra/katex/src/fonts/x.pth",
+        "site/not_node_modules/katex/src/fonts/x.py",
+        "site/not_node_modules/katex/src/fonts/x.pth",
+        "site/prefix_node_modules_suffix/katex/src/fonts/x.py",
+        "site/prefix_node_modules_suffix/katex/src/fonts/x.pth",
+    ],
+)
+def test_overlays_outside_exact_node_modules_directories_remain_refused(
+    repo: Path, ignored: bool, relative: str
+) -> None:
+    if ignored:
+        _write(repo, ".gitignore", f"/{relative}\n")
+        _commit(repo, "ignore validation overlay", ".gitignore")
+    _write(repo, relative, "# validation overlay\n")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.reject_untracked_inputs(repo)
+
+    assert raised.value.reason == "untracked_inputs"
+    assert relative in raised.value.detail
+
+
 def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(repo: Path) -> None:
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green test", "tests/test_new.py")
