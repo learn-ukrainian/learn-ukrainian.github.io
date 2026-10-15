@@ -412,6 +412,12 @@ def test_suite_runs_with_the_test_unit_prefix() -> None:
     assert scope_unit_prefix() == TEST_SCOPE_UNIT_PREFIX
 
 
+def test_suite_test_prefix_literals_match_runner_memory() -> None:
+    """tests/conftest.py cannot import the runner package, so it carries literals."""
+    assert SCOPE_UNIT_PREFIX_ENV == "LEXICON_CAP_UNIT_PREFIX"
+    assert TEST_SCOPE_UNIT_PREFIX == "lexicon-captest"
+
+
 @pytest.mark.parametrize(("env_value", "expected"), [(TEST_SCOPE_UNIT_PREFIX, TEST_SCOPE_UNIT_PREFIX), (None, SCOPE_UNIT_PREFIX)])
 def test_run_bounded_command_names_unit_from_active_prefix(
     monkeypatch: pytest.MonkeyPatch, env_value: str | None, expected: str

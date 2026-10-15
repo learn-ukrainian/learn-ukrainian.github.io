@@ -137,18 +137,22 @@ def _lexicon_cap_test_unit_prefix() -> Generator[None, None, None]:
     the host's CappedScopeOomKill alert counts them as word-card workload
     kills. ``os.environ`` (not a fixture-local value) so xdist workers and
     nested subprocesses inherit it.
-    """
-    from scripts.lexicon.runner.memory import SCOPE_UNIT_PREFIX_ENV, TEST_SCOPE_UNIT_PREFIX
 
-    previous = os.environ.get(SCOPE_UNIT_PREFIX_ENV)
-    os.environ[SCOPE_UNIT_PREFIX_ENV] = TEST_SCOPE_UNIT_PREFIX
+    The two strings are literals because importing ``scripts.lexicon.runner``
+    runs its package ``__init__`` (bs4), which shared-conftest setup must not
+    do; ``test_suite_test_prefix_literals_match_runner_memory`` pins them to
+    ``scripts.lexicon.runner.memory``.
+    """
+    env_name = "LEXICON_CAP_UNIT_PREFIX"
+    previous = os.environ.get(env_name)
+    os.environ[env_name] = "lexicon-captest"
     try:
         yield
     finally:
         if previous is None:
-            os.environ.pop(SCOPE_UNIT_PREFIX_ENV, None)
+            os.environ.pop(env_name, None)
         else:
-            os.environ[SCOPE_UNIT_PREFIX_ENV] = previous
+            os.environ[env_name] = previous
 
 
 @pytest.fixture(scope="session", autouse=True)
