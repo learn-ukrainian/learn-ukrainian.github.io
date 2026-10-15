@@ -7480,6 +7480,10 @@ def _break_claude_account_b(tmp_path: Path, monkeypatch, selected: Path, case: s
         _private_json(selected / ".claude.json", {"oauthAccount": _login_identity(DEFAULT_ACCOUNT_UUID)})
     elif case == "user_settings_key_helper":
         _private_json(selected / "settings.json", {"apiKeyHelper": "fixture-helper"})
+    elif case == "user_settings_key_beside_inert_names":
+        from tests.agent_runtime.test_attempt_boundary import inert_user_settings_with
+
+        _private_json(selected / "settings.json", inert_user_settings_with({"apiKeyHelper": "fixture-helper"}))
     elif case == "policy_cache_unavailable":
         original_stat = os.stat
 
@@ -7520,6 +7524,7 @@ ACCOUNT_B_REFUSALS = {
     "legacy_global_config": "claude_account_config_ambiguous",
     "login_names_another_account": "claude_account_unverified",
     "user_settings_key_helper": "claude_account_settings_credential_source",
+    "user_settings_key_beside_inert_names": "claude_account_settings_credential_source",
     "credentials_missing": "claude_account_credentials_missing",
     "credentials_expired": "claude_account_credentials_expired",
     "identity_unavailable": "claude_account_identity_unavailable",
@@ -7566,6 +7571,26 @@ def test_every_label_source_meets_every_refusal_of_an_explicit_b(
     else:
         assert not tmp_tasks_dir.exists()
     spawn.assert_not_called()
+
+
+@pytest.mark.parametrize("kind", ["ordinary", "sealed_attempt"])
+@pytest.mark.parametrize("source", ["explicit", "default-file"])
+def test_dispatch_admits_b_with_the_inert_user_settings_names(tmp_path, monkeypatch, source, kind):
+    """Dispatch admits b whose user settings carry the inert names a real second login has (#10619).
+
+    On 4e1f252ca7 this refused with ``claude_account_settings_credential_source``.
+    """
+    from tests.agent_runtime.test_attempt_boundary import INERT_USER_SETTINGS, _private_json
+
+    selected = _bind_claude_account_b(tmp_path, monkeypatch)
+    _private_json(Path(selected) / "settings.json", INERT_USER_SETTINGS)
+    extra = list(_SEALED_ATTEMPT_ARGS) if kind == "sealed_attempt" else []
+    if source == "explicit":
+        extra += ["--claude-account", "b"]
+    else:
+        _default_account_file(tmp_path, monkeypatch, b"b\n")
+
+    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude", *extra)) == ("b", source)
 
 
 def test_worker_refuses_a_default_file_label_when_machine_policy_appears_after_dispatch(

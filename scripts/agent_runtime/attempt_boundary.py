@@ -115,6 +115,7 @@ CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
         "CLAUDE_CODE_DISABLE_TERMINAL_TITLE",
         "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
         "DISABLE_AUTOUPDATER",
+        "DISABLE_AUTO_COMPACT",
         "DISABLE_BUG_COMMAND",
         "DISABLE_COST_WARNINGS",
         "DISABLE_ERROR_REPORTING",
@@ -126,11 +127,13 @@ CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
     }
 )
 # Top-level user settings keys the login directory may carry. A labelled run
-# does not load that scope at all; this guards a future CLI that would.
+# does not load that scope at all; this guards a future CLI that would. Each
+# key's reason is in docs/runbooks/claude-account-labels.md.
 _CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
     {
         "$schema",
         "alwaysThinkingEnabled",
+        "autoMode",
         "autoUpdatesChannel",
         "cleanupPeriodDays",
         "disabledMcpjsonServers",
@@ -144,12 +147,14 @@ _CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
         "includeCoAuthoredBy",
         "language",
         "model",
+        "modelSettings",
         "outputStyle",
         "permissions",
         "skipDangerousModePermissionPrompt",
         "spinnerTipsEnabled",
         "statusLine",
         "theme",
+        "tui",
         "verbose",
     }
 )

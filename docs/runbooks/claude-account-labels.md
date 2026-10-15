@@ -104,6 +104,69 @@ worker of the same account, or by the status probe for a token close to
 expiry) changes the credential record, so that launch refuses with
 `claude_account_settings_changed` (fail-closed; a new dispatch re-verifies).
 
+## Allowlisted login-directory names
+
+Two closed lists in `scripts/agent_runtime/attempt_boundary.py` hold the names
+a labelled login directory may carry. Names match exactly (no patterns, no
+case folding, no exception for a value, `null` included), and no value of an
+admitted name is read into a record or a refusal.
+
+- `CLAUDE_LABELLED_ENV_ALLOWLIST`: `env` names, one list for both the global
+  config (`.claude.json`, applied to the run) and the user `settings.json`
+  (not loaded). Each name only tunes local behaviour: Bash and MCP timeouts and
+  output limits, output and thinking token budgets, auto-compaction, the
+  terminal title, or switching off the updater, telemetry, error reporting,
+  cost warnings, the bug command and nonessential traffic.
+- `_CLAUDE_LABELLED_USER_SETTINGS_KEYS`: top-level keys of the user
+  `settings.json`, which a labelled run does not load. They configure display
+  (`theme`, `tui`, `outputStyle`, `language`, `statusLine`,
+  `spinnerTipsEnabled`, `verbose`), model and effort within the account
+  (`model`, `modelSettings`, `effortLevel`, `alwaysThinkingEnabled`),
+  permissions and automation (`permissions`, `autoMode`,
+  `skipDangerousModePermissionPrompt`, `hooks`), plugins and MCP servers
+  (`enabledPlugins`, `extraKnownMarketplaces`, `enabledMcpjsonServers`,
+  `disabledMcpjsonServers`, `enableAllProjectMcpServers`), housekeeping
+  (`autoUpdatesChannel`, `cleanupPeriodDays`, `includeCoAuthoredBy`,
+  `$schema`) and `env` (held to the list above).
+
+None of them names a credential, key helper, endpoint, proxy, certificate or
+provider. Those names (`apiKeyHelper`, `awsAuthRefresh`,
+`ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `CLAUDE_CODE_USE_BEDROCK`,
+`HTTPS_PROXY` and the like), and every name not listed, still refuse.
+
+The four names a real second login carries were added after reading how
+Claude Code 2.1.300 (the installed binary, `claude --version`) defines and
+reads each one, by fixed-string search of that binary:
+
+| Name | What 2.1.300 does with it | Why it is inert |
+| --- | --- | --- |
+| `autoMode` | Auto mode classifier prompt text: `allow`, `soft_deny`, `hard_deny` and `environment` rule lists and the `classifyAllShell` switch. Read only from user, flag and managed settings ("only user/flag/managed settings may set classifier rules"). | Permission rules like `permissions`; no field names a credential, endpoint, model or provider. |
+| `modelSettings` | Per-model map; each entry is read only for `effortLevel`, `maxEffortLevel` and `autoCompactWindow`. | Effort and compaction for a model the account already runs; no route, endpoint or provider. |
+| `tui` | `"default"` or `"fullscreen"`: which terminal renderer to use. | Display only. |
+| `DISABLE_AUTO_COMPACT` (`env`) | Read once, as a switch that turns auto-compaction off. | Local behaviour only. In the global config it does apply: that labelled run does not auto-compact. |
+
+Reproduce with the installed binary, for example
+`grep -a -c -F "tui:()=>B([\"default\",\"fullscreen\"])" "$(readlink -f "$(command -v claude)")"`
+(the minified names are specific to 2.1.300). Behaviour proof:
+`tests/agent_runtime/test_claude_account_worker.py::test_real_cli_inert_user_settings_names_change_no_auth_source`
+loads all four names with the user scope on and shows the installed CLI's
+`auth status` JSON and text unchanged. Claude Code's own list of environment
+names safe to apply before workspace trust also holds `DISABLE_AUTO_COMPACT`,
+but that list admits provider switches too, so it is not used as evidence.
+Other Claude Code versions are not checked: re-check these names when the CLI
+changes how it reads them.
+
+Where the lists apply (every labelled entry point uses the same two lists,
+through `_validated_claude_selection`):
+
+| Entry point | Check |
+| --- | --- |
+| Dispatch (`delegate.py`, `_resolve_dispatch_claude_account`) | `verify_claude_account`: both lists. |
+| Ordinary worker launch preparation (`adapters/claude.py`, `_claude_account_binding`) | `verify_claude_account`: both lists. |
+| Launch guard (`env_sanitize.run_claude_launch_guard`) | No second name check: it recomputes the digest that binds the verified `settings.json` and global config `env` map, so any change refuses (`claude_account_settings_changed`). |
+| Sealed attempt boundary (`attempt_boundary.linux_claude_auth`) | Both lists. |
+| Usage probe (`scripts/api/claude_account_usage.py`) | Not applied: CodexBar's OAuth source reads only the credential file, and no Claude Code process loads that directory's settings. |
+
 ## Fleet-wide default account file
 
 A claude dispatch without `--claude-account` takes its label from one
