@@ -3,6 +3,7 @@ name = "learn-ukrainian"
 version = "1.0.0"
 description = "Ukrainian language learning curriculum generator"
 requires-python = ">=3.10"
+dependencies = ["tree-sitter==0.26.0", "tree-sitter-bash==0.25.1"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
