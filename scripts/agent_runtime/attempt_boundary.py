@@ -193,6 +193,7 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_machine_policy_present",
         "claude_account_machine_policy_unavailable",
         "claude_account_record_conflict",
+        "claude_account_forward_unsupported",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
         *(
             f"claude_account_{kind}_{failure}"

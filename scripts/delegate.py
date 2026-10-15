@@ -158,6 +158,7 @@ import errno
 import fcntl
 import functools
 import hashlib
+import io
 import json
 import logging
 import os
@@ -12297,6 +12298,35 @@ def _resolve_dispatch_claude_account(args: argparse.Namespace) -> tuple[str, str
     return label, source
 
 
+def _claude_account_forward_argv(
+    argv: list[str], args: argparse.Namespace, claude_account: tuple[str, str] | None
+) -> list[str]:
+    """The argv a worker-host forward sends: a claude dispatch names the label resolved here (#10619).
+
+    The worker host would resolve an omitted ``--claude-account`` from its own
+    default-account file and task records, and could run as another account.
+    So the label resolved here is added as ``--claude-account`` and the worker
+    host admits it with every check; an explicit flag is sent as given. The
+    argv is parsed back to prove it names that label; otherwise nothing is
+    forwarded (``ClaudeAccountRefused``: ``claude_account_forward_unsupported``).
+    """
+    if claude_account is None:
+        return list(argv)
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    label = claude_account[0]
+    forwarded = list(argv) if getattr(args, "claude_account", None) is not None else [*argv, "--claude-account", label]
+    try:
+        # A parse error may quote the argv; it is never shown.
+        with contextlib.redirect_stderr(io.StringIO()):
+            parsed = build_parser().parse_args(forwarded[1:])
+    except SystemExit:
+        parsed = None
+    if parsed is None or parsed.command != "dispatch" or parsed.claude_account != label:
+        raise ClaudeAccountRefused("claude_account_forward_unsupported")
+    return forwarded
+
+
 def _claude_account_state(
     args: argparse.Namespace, claude_account: tuple[str, str] | None, dispatch_agent: str
 ) -> dict[str, Any]:
@@ -13347,13 +13377,18 @@ def _dispatch(
                     file=sys.stderr,
                 )
                 return 2
+            try:
+                forward_argv = _claude_account_forward_argv(sys.argv, args, claude_account)
+            except ClaudeAccountRefused as exc:
+                print(f"❌ CLAUDE_ACCOUNT_REFUSED: {exc.code}", file=sys.stderr)
+                return 2
             print(f"→ forwarding dispatch to {host_id} (run_nonce={run_nonce})", file=sys.stderr)
             forward_error: BaseException | None = None
             forward_rc: int | None = None
             try:
                 forward_rc = forward_dispatch(
                     host_id=host_id,
-                    argv=sys.argv,
+                    argv=forward_argv,
                     initiator=attribution.initiator,
                     initiator_source=attribution.source,
                     run_nonce=run_nonce,
@@ -18479,7 +18514,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Claude account (#10619):\n"
             "  A claude dispatch runs as --claude-account, else the label in the default-account file read once at\n"
             "  dispatch (see --claude-account), else a. The task record keeps the label and its source\n"
-            "  (claude_account_source); the worker adds a value-free claude_account_auth receipt.\n\n"
+            "  (claude_account_source); the worker adds a value-free claude_account_auth receipt. A forward to a\n"
+            "  worker host sends the resolved label as --claude-account, which that host admits again.\n\n"
             "Related:\n"
             "  scripts/orchestration/dispatch_admission.py; docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md; #8645\n"
         ),

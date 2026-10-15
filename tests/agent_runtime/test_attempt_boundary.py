@@ -1687,6 +1687,7 @@ def test_new_default_file_and_record_codes_are_registered():
 
     assert {
         "claude_account_record_conflict",
+        "claude_account_forward_unsupported",
         *(
             f"claude_account_default_file_{failure}"
             for failure in ("unavailable", "not_private", "oversized", "invalid")

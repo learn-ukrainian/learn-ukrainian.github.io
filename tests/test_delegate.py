@@ -19,6 +19,7 @@ import hashlib
 import io
 import json
 import os
+import shlex
 import signal
 import sqlite3
 import subprocess
@@ -7842,6 +7843,210 @@ def test_force_new_reuse_of_a_record_without_a_label_reads_the_default_file(tmp_
 
     state = delegate._read_state(delegate._state_path(task_id))
     assert (state["claude_account"], state["claude_account_source"]) == ("b", "default-file")
+
+
+# A dispatch forwarded to a worker host (#10619 PR1c r4). The real serializer runs; only SSH is mocked.
+def _forward_claude_dispatch(
+    monkeypatch, task_id: str, *extra: str, argv: list[str] | None = None, transport_rc: int = 0
+):
+    """Dispatch on this host with placement on a worker host: the exit code and what the worker host would run.
+
+    The second value is the remote ``scripts/delegate.py ...`` argv parsed from
+    the SSH stdin script, or ``None`` when nothing was sent. SSH exits
+    ``transport_rc`` (255 is a transport failure).
+    """
+    monkeypatch.delenv(job_host_exec.ENV_ALLOW_NOTEBOOK, raising=False)
+    monkeypatch.setenv(job_host_exec.ENV_HOST, "fixture-alias")
+    monkeypatch.setenv(job_host_exec.ENV_REPO, "/fixture/repo")
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "available", "host-job"))
+    sent: list[str] = []
+    real_run = subprocess.run
+
+    def _transport(cmd, *args, **kwargs):
+        if list(cmd[:1]) != ["ssh"]:
+            return real_run(cmd, *args, **kwargs)
+        sent.append(kwargs["input"].decode("utf-8"))
+        return subprocess.CompletedProcess(cmd, transport_rc)
+
+    monkeypatch.setattr(job_host_exec.subprocess, "run", _transport)
+    raw_argv = ["scripts/delegate.py", "dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex",
+                "--prompt", "test", "--mode", "read-only", *extra]
+    monkeypatch.setattr(sys, "argv", raw_argv if argv is None else argv)
+    rc = delegate.cmd_dispatch(delegate.build_parser().parse_args(raw_argv[1:]))
+    if not sent:
+        return rc, None
+    assert len(sent) == 1
+    command = shlex.split(sent[0].strip().splitlines()[-1])
+    return rc, command[command.index("scripts/delegate.py"):]
+
+
+def _received_claude_account(command: list[str], tmp_path: Path, monkeypatch, *, default: bytes | None = None,
+                             record: str | None = None):
+    """Resolve a forwarded request as the worker host does: its own default file and task records, no others."""
+    host = tmp_path / "worker-host"
+    tasks = host / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    path = host / "claude-default-account"
+    path.unlink(missing_ok=True)
+    if default is not None:
+        path.write_bytes(default)
+        path.chmod(0o600)
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    args = delegate.build_parser().parse_args(command[1:])
+    if record is not None:
+        _terminal_claude_record(args.task_id, record, "explicit")
+    return delegate._resolve_dispatch_claude_account(args)
+
+
+def _account_flags(command: list[str]) -> list[str]:
+    return [part for part in command if part.startswith("--claude-account")]
+
+
+def test_forwarded_default_file_label_is_kept_when_the_worker_host_has_no_default_file(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    """The reviewed defect: a default-file b reached the worker host unlabelled and resolved there as builtin a."""
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    task_id = "claude-forward-default-file"
+    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude")) == ("b", "default-file")
+
+    rc, command = _forward_claude_dispatch(monkeypatch, task_id)
+
+    assert rc == 0 and command is not None
+    assert _account_flags(command) == ["--claude-account"]
+    assert command[command.index("--claude-account") + 1] == "b"
+    # The worker host admits b with every check; it never re-resolves to its own default.
+    assert _received_claude_account(command, tmp_path, monkeypatch) == ("b", "explicit")
+    # A forward leaves no record here: the worker host keeps the task's only one.
+    assert not delegate._state_path_no_create(task_id).exists()
+
+
+@pytest.mark.parametrize(
+    "here,there,label",
+    [(b"b\n", b"a\n", "b"), (b"a\n", b"b\n", "a"), (None, b"b\n", "a")],
+    ids=["file_b_over_host_a", "file_a_over_host_b", "builtin_a_over_host_b"],
+)
+def test_forwarded_label_wins_over_a_differing_worker_host_default(
+    tmp_tasks_dir, tmp_path, monkeypatch, here, there, label
+):
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, here)
+
+    rc, command = _forward_claude_dispatch(monkeypatch, "claude-forward-differing-defaults")
+
+    assert rc == 0 and command is not None
+    assert _account_flags(command) == ["--claude-account"]
+    assert command[command.index("--claude-account") + 1] == label
+    assert _received_claude_account(command, tmp_path, monkeypatch, default=there) == (label, "explicit")
+
+
+def test_forwarded_label_meets_the_worker_hosts_own_admission(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A worker host that cannot admit the forwarded b refuses it; it never runs the task as a instead."""
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    rc, command = _forward_claude_dispatch(monkeypatch, "claude-forward-unbound-there")
+    assert rc == 0 and command is not None
+
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(tmp_path / "worker-host-has-no-binding.json"))
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _received_claude_account(command, tmp_path, monkeypatch)
+    assert refused.value.code == "claude_account_binding_missing"
+
+
+def test_forwarded_force_new_rerun_carries_the_recorded_label(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A re-run's recorded b reached the worker host unlabelled; there it resolved from that host's own state."""
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch)  # absent here
+    task_id = "claude-forward-record"
+    _terminal_claude_record(task_id, "b", "default-file")
+
+    rc, command = _forward_claude_dispatch(monkeypatch, task_id, "--force-new")
+
+    assert rc == 0 and command is not None
+    assert _account_flags(command) == ["--claude-account"]
+    assert command[command.index("--claude-account") + 1] == "b"
+    assert _received_claude_account(command, tmp_path, monkeypatch, default=b"a\n") == ("b", "explicit")
+    # A worker host whose own record names another label refuses rather than choosing one.
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        _received_claude_account(command, tmp_path, monkeypatch, record="a")
+    assert refused.value.code == "claude_account_record_conflict"
+
+
+@pytest.mark.parametrize(
+    "flag",
+    [["--claude-account", "b"], ["--claude-account=b"], ["--claude-account", "a"], ["--claude-acc", "b"]],
+    ids=["separate", "equals", "default_label", "abbreviated"],
+)
+def test_forwarded_explicit_label_is_sent_unchanged(tmp_tasks_dir, tmp_path, monkeypatch, flag):
+    """An explicit label is forwarded as given: neither duplicated nor rewritten."""
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"a\n" if flag[-1].endswith("b") else b"b\n")
+
+    rc, command = _forward_claude_dispatch(monkeypatch, "claude-forward-explicit", *flag)
+
+    assert rc == 0 and command is not None
+    sent = command[: len(sys.argv)]
+    assert sent == sys.argv
+    assert command[len(sys.argv):][::2] == ["--run-nonce"]  # the transport's own addition
+    label = flag[-1].rpartition("=")[2]
+    assert _received_claude_account(command, tmp_path, monkeypatch, default=b"b\n" if label == "a" else b"a\n") == (
+        label,
+        "explicit",
+    )
+
+
+@pytest.mark.usefixtures("isolated_dispatch_repo")
+def test_transport_failure_spawns_here_with_the_label_resolved_here(tmp_tasks_dir, tmp_path, monkeypatch):
+    """An SSH transport failure falls back to this host, which runs the label it resolved, with its source."""
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    task_id = "claude-forward-fallback"
+
+    with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()) as spawn:
+        rc, command = _forward_claude_dispatch(monkeypatch, task_id, transport_rc=255)
+
+    assert rc == 0 and spawn.call_count == 1
+    assert command is not None and command[command.index("--claude-account") + 1] == "b"
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["claude_account"], state["claude_account_source"]) == ("b", "default-file")
+
+
+def test_forward_refuses_when_its_argv_would_not_carry_the_label(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """When the argv to send is not a dispatch that names the label, nothing is forwarded: a value-free refusal."""
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    task_id = "claude-forward-unsupported"
+    # Another command line in this process, as when dispatch is called in process rather than as the script.
+    caller = ["scripts/fixture-caller.py", "--body", "fixture-body"]
+
+    rc, command = _forward_claude_dispatch(monkeypatch, task_id, argv=caller)
+
+    assert (rc, command) == (2, None)
+    err = capsys.readouterr().err
+    assert err.endswith("❌ CLAUDE_ACCOUNT_REFUSED: claude_account_forward_unsupported\n")
+    assert "fixture-body" not in err and "forwarding dispatch" not in err and "usage:" not in err
+    assert not delegate._state_path_no_create(task_id).exists()
+
+
+def test_a_non_claude_forward_is_sent_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Another seat takes no label and never reads the file: its forwarded argv is exactly the command line."""
+    _default_account_file(tmp_path, monkeypatch, b"c\n")  # invalid, so reading it would refuse
+    raw_argv = ["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "codex-forward-unlabelled",
+                "--initiator", "codex", "--prompt", "test", "--mode", "read-only"]
+    monkeypatch.setattr(sys, "argv", raw_argv)
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "available", "host-job"))
+    sent: list[list[str]] = []
+    monkeypatch.setattr(job_host_exec, "forward_dispatch", lambda **kwargs: sent.append(kwargs["argv"]) or 0)
+
+    assert delegate.cmd_dispatch(delegate.build_parser().parse_args(raw_argv[1:])) == 0
+
+    assert sent == [raw_argv]
 
 
 def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(

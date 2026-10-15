@@ -140,6 +140,18 @@ new Claude dispatch to that account without changing any dispatch command.
   like a new dispatch. A recorded label passes every check above again, like
   an explicit one. The worker, runner failover and re-runs use the recorded
   label and never read the file, so changing it affects only new task ids.
+- A dispatch that `delegate.py` forwards to a worker host sends the label
+  resolved here as `--claude-account` (an explicit flag is sent as given), so
+  the worker host never resolves its own default file or record for it: it
+  admits that label with every check above or refuses (its own record naming
+  another label refuses with `claude_account_record_conflict`), and records the
+  source as `explicit`. A worker host whose `delegate.py` predates the flag
+  rejects it as an unknown argument and nothing spawns. If the argv to forward
+  cannot be shown to name the label, nothing is forwarded
+  (`claude_account_forward_unsupported`). An SSH transport failure falls back
+  to this host, which runs the label it resolved. `job_host_exec.py -- …
+  delegate.py dispatch` resolves nothing locally: dispatch runs on the worker
+  host, with that host's file.
 - The worker adds `claude_account_auth` to its record: `label`, `source`,
   `method` and `verified`, never a token, identity or path. `method` is
   `subscription_login` when the adapter's launch preparation passed every check
