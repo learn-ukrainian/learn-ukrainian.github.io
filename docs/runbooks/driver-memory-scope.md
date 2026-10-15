@@ -82,6 +82,17 @@ The waiting launcher never blocks in `wait` while the session runs: a trapped
 signal that interrupts `wait` as the provider exits makes Bash drop the
 provider's status (a later `wait` reports 127). It polls the child's process
 state with a timed read and collects the status only after the child has exited.
+Once the child has exited, the relay leaves its status and recorded signal
+unchanged, including when a later TERM arrives after status collection.
+
+HUP or TERM sent to the whole process group can still reach the interactive
+provider twice: directly and through the waiting launcher's relay. Sending
+either signal to the launcher PID alone reaches the provider once. The
+deterministic `test_hup_term_delivery_exactly_once` group cases expose this
+unresolved #9624 blocker; its PID cases preserve the relay requirement. Bash's
+trap supplies no delivery-target information, and a pending-signal snapshot
+cannot show a signal the provider has already handled. Fixing both delivery
+paths requires a single signal owner, beyond the current shared-group relay.
 
 Known limits, each with a test or listed as untested: a terminal Ctrl-C reaches
 a driver's provider twice, once from the terminal and once from the supervisor

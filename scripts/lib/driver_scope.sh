@@ -201,6 +201,9 @@ driver_scope_verify() {
 }
 
 driver_scope_relay() {
+  # A completed provider owns its exit cause. In particular, a late TERM
+  # must not replace a collected OOM/SIGKILL status with 143.
+  if [ -n "${child:-}" ] && ! driver_scope_child_running "$child"; then return 0; fi
   # Trap action of the waiting launcher. A keyboard INT or QUIT has already
   # reached the interactive provider through the terminal's foreground process
   # group; relaying it would deliver it twice. Drivers keep their relay.
@@ -218,7 +221,10 @@ driver_scope_child_running() {
   # not reaped yet, is finished (state after the parenthesised command name,
   # proc_pid_stat(5)).
   local stat
-  { IFS= read -r stat < "/proc/$1/stat"; } 2>/dev/null || return 1
+  # Also called from the relay trap: a nested read would cancel the timed
+  # read in driver_scope_wait_child, so use Bash's file-read expansion.
+  { stat="$(< "/proc/$1/stat")"; } 2>/dev/null || return 1
+  [ -n "$stat" ] || return 1
   stat="${stat##*) }"
   case "${stat%% *}" in Z|X) return 1 ;; esac
 }

@@ -953,6 +953,103 @@ def _signal_log(env: dict[str, str]) -> list[str]:
     return _lines(env["TEST_SIGNAL_LOG"])
 
 
+@pytest.mark.parametrize("provider_exit", ["exit 42", "kill -KILL $$"])
+def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provider_exit: str) -> None:
+    """Hold the real collector after wait, then deliver TERM before final logging."""
+    root, env = _checkout(tmp_path)
+    collected = tmp_path / "collected"
+    release = tmp_path / "release"
+    os.mkfifo(release)
+    release_fd = os.open(release, os.O_RDWR | os.O_NONBLOCK)
+    helper = root / "scripts/lib/driver_scope.sh"
+    body = helper.read_text().replace("driver_scope_wait_child() {", "original_wait_child() {")
+    helper.write_text(
+        body
+        + "\ndriver_scope_wait_child() {\n"
+        + '  original_wait_child "$@"\n'
+        + f"  printf 'collected\\n' > {shlex.quote(str(collected))}\n"
+        + f"  IFS= read -r -t {DEADLINE_S} _ < {shlex.quote(str(release))}\n"
+        + "}\n"
+    )
+    _write(Path(env["TEST_PROVIDER"]), f"#!/usr/bin/env bash\n{provider_exit}\n", 0o755)
+    terminal = _Terminal(tmp_path, ["bash", str(root / "start-claude.sh")], env, root)
+    try:
+        terminal.wait_for(collected.exists, "collected provider exit")
+        job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
+        os.kill(job, signal.SIGTERM)
+        # Writing the FIFO completes the collector's positive synchronization;
+        # the pending trap runs before the launcher chooses its final status.
+        os.write(release_fd, b"release\n")
+        expected = 137 if provider_exit.startswith("kill") else 42
+        assert terminal.finish() == expected
+        assert f"rc={expected} signal=none " in terminal.output.decode(errors="replace")
+    finally:
+        terminal.close()
+        os.close(release_fd)
+
+
+@pytest.mark.parametrize("name", ["HUP", "TERM"])
+@pytest.mark.parametrize("target", ["group", "pid"])
+def test_hup_term_delivery_exactly_once(tmp_path: Path, name: str, target: str) -> None:
+    """Separate group delivery from relay by stopping only the waiting launcher."""
+    root, env = _checkout(tmp_path)
+    helper = root / "scripts/lib/driver_scope.sh"
+    helper.write_text(
+        helper.read_text().replace("driver_scope_relay() {", "observed_relay() {")
+        + '\ndriver_scope_relay() { observed_relay "$@"; printf "done\\n" > "$TEST_RELAY_DONE"; }\n'
+    )
+    provider = Path(env["TEST_SIGNAL_PROVIDER"])
+    provider.write_text(
+        provider.read_text().replace(
+            'stat="$(< /proc/$$/stat)"',
+            'trap \'printf "HUP\\n" >> "$log"\' HUP\n'
+            'trap \'printf "TERM\\n" >> "$log"\' TERM\n'
+            'stat="$(< /proc/$$/stat)"',
+        )
+    )
+    counts = []
+    for iteration in range(10):
+        log = tmp_path / f"signal-{iteration}"
+        relayed = tmp_path / f"relay-{iteration}"
+        case_env = {**env, "TEST_PROVIDER": str(provider), "TEST_SIGNAL_LOG": str(log), "TEST_RELAY_DONE": str(relayed)}
+        process = subprocess.Popen(
+            ["bash", str(root / "start-claude.sh")],
+            cwd=root,
+            env=case_env,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            start_new_session=True,
+        )
+        try:
+            wait_until(lambda log=log: any(row.startswith("ready ") for row in _lines(log)), timeout=DEADLINE_S)
+            os.kill(process.pid, signal.SIGSTOP)
+            wait_until(
+                lambda process=process: (
+                    Path(f"/proc/{process.pid}/stat").read_text().rsplit(")", 1)[1].split()[0] == "T"
+                ),
+                timeout=DEADLINE_S,
+            )
+            sig = getattr(signal, f"SIG{name}")
+            if target == "group":
+                os.killpg(process.pid, sig)
+                # The provider positively acknowledges direct delivery while
+                # the launcher cannot yet relay, irrespective of scheduling.
+                wait_until(lambda log=log: name in _lines(log), timeout=DEADLINE_S)
+            else:
+                os.kill(process.pid, sig)
+            os.kill(process.pid, signal.SIGCONT)
+            wait_until(relayed.exists, timeout=DEADLINE_S)
+            _, stderr = process.communicate(b"done\n", timeout=DEADLINE_S)
+            counts.append(_lines(log).count(name))
+            assert process.returncode in (42, 129, 143), stderr.decode(errors="replace")
+        finally:
+            with suppress(ProcessLookupError):
+                os.killpg(process.pid, signal.SIGKILL)
+            process.wait(timeout=10)
+    assert counts == [1] * 10, (name, target, counts)
+
+
 def test_interactive_terminal_keeps_tty_stdin_and_foreground_group(tmp_path: Path) -> None:
     terminal, env = _signal_session(tmp_path, "start-claude.sh")
     try:
