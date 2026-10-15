@@ -241,6 +241,7 @@ from typing import TYPE_CHECKING, Any
 from ..env_sanitize import (
     CLAUDE_CONFIG_DIR_ENV,
     build_agent_env,
+    claude_fingerprints_match,
     claude_labelled_inputs_digest,
     claude_login_credential_fingerprint,
 )
@@ -1228,7 +1229,9 @@ def _verified_labelled_launch(
 
     verified = digest()
     _verify_labelled_auth_method(probe_prefix, worker_settings, cwd=cwd, env=env, login_dir=login_dir)
-    if digest() != verified or claude_login_credential_fingerprint(login_dir) != account.credential:
+    if not claude_fingerprints_match(digest(), verified) or not claude_fingerprints_match(
+        claude_login_credential_fingerprint(login_dir), account.credential
+    ):
         raise ClaudeAccountRefused("claude_account_settings_changed")
     refuse_claude_machine_policy()
     return [str(project_interpreter()), "-I", "-c", _LAUNCH_GUARD_CODE, str(_CODE_ROOT), verified, "--", *cmd]

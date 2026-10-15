@@ -505,22 +505,42 @@ def test_bound_label_plan_runs_the_cli_behind_the_launch_guard(accounts):
     assert "--" not in _plan(accounts).cmd[:2]  # the default plan is unwrapped (see the golden snapshot)
 
 
-def test_bound_label_launch_digests_are_domain_separated_one_way_fingerprints(tmp_path):
-    """A file's bytes take domain-separated BLAKE2b-256; a credential-bearing record takes scrypt (#10619)."""
-    settings = tmp_path / "settings.json"
-    _private_json(settings, {"env": {}})
-    record = {"accessToken": "fixture-bound-" + "b" * 30, "expiresAt": 4_102_444_800_000}
+def test_bound_label_launch_digests_take_one_domain_per_purpose(tmp_path):
+    """The same bytes give three different digests: file bytes, a JSON selection and the combined inputs (#10619).
 
-    assert (
-        env_sanitize._file_fingerprint(settings)
-        == hashlib.blake2b(settings.read_bytes(), digest_size=32, person=b"lu-launch-digest").hexdigest()
-    )
-    assert (
-        env_sanitize.claude_credential_fingerprint(record)
-        == hashlib.scrypt(
-            json.dumps(record, sort_keys=True).encode(), salt=b"lu-launch-digest", n=1 << 14, r=8, p=1, dklen=32
-        ).hex()
-    )
+    File bytes and the combined inputs take BLAKE2b-256, each with its own
+    personalization; a selection, which can hold the login's tokens, takes
+    scrypt with its own salt.
+    """
+    value = {"env": {}}
+    data = json.dumps(value, sort_keys=True).encode()
+    settings = tmp_path / "settings.json"
+    settings.write_bytes(data)
+
+    file_digest = env_sanitize._file_fingerprint(settings)
+    selection_digest = env_sanitize.claude_credential_fingerprint(value)
+    inputs_digest = env_sanitize._inputs_digest(value)
+
+    assert len({file_digest, selection_digest, inputs_digest}) == 3
+    assert file_digest == hashlib.blake2b(data, digest_size=32, person=b"lu-launch-file").hexdigest()
+    assert inputs_digest == hashlib.blake2b(data, digest_size=32, person=b"lu-launch-inputs").hexdigest()
+    assert selection_digest == hashlib.scrypt(data, salt=b"lu-launch-select", n=1 << 14, r=8, p=1, dklen=32).hex()
+
+
+@pytest.mark.parametrize(
+    ("left", "right", "match"),
+    [
+        ("a" * 64, "a" * 64, True),
+        ("a" * 64, "a" * 63 + "b", False),
+        ("a" * 64, "a" * 63, False),
+        ("absent", "", False),  # a binding without a classified credential never matches
+        ("\udcff" * 64, "f" * 64, False),  # an argument the OS could not decode compares, never raises
+    ],
+    ids=["equal", "one_character", "shorter", "unbound", "undecodable"],
+)
+def test_launch_fingerprints_compare_in_constant_time_on_any_text(left, right, match):
+    assert env_sanitize.claude_fingerprints_match(left, right) is match
+    assert env_sanitize.claude_fingerprints_match(right, left) is match
 
 
 def _settings_change_after_build(accounts: SimpleNamespace, change) -> runner.Result:
@@ -605,11 +625,27 @@ def test_bound_label_settings_changed_during_verification_is_refused(accounts, m
     assert refused.value.code == "claude_account_settings_changed"
 
 
+_GUARDED_CLI = ["claude", "--settings", "{}", "--setting-sources", LABELLED_ACCOUNT_SETTING_SOURCES]
+
+
 @pytest.mark.parametrize(
-    "argv", [[], ["digest"], ["digest", "--"], ["digest", "x", "claude"], ["0" * 64, "--", "claude"]]
+    "argv",
+    [
+        [],
+        ["digest"],
+        ["digest", "--"],
+        ["digest", "x", "claude"],
+        ["0" * 64, "--", "claude"],
+        ["0" * 64, "--", *_GUARDED_CLI],
+        [b"\xff" * 64, "--", *_GUARDED_CLI],
+    ],
 )
 def test_launch_guard_refuses_a_malformed_or_unbound_launch(accounts, argv, monkeypatch):
-    """The guard execs nothing unless it is given a digest, ``--`` and a CLI argv whose inputs match it."""
+    """The guard execs nothing unless it is given a digest, ``--`` and a CLI argv whose inputs match it.
+
+    The last two reach the digest comparison: a wrong digest, and one the OS
+    cannot decode, refuse with the same code and nothing else printed.
+    """
     monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(accounts.config_dir))
     done = subprocess.run(
         [sys.executable, "-I", "-c", claude._LAUNCH_GUARD_CODE, str(claude._CODE_ROOT), *argv],
@@ -1366,10 +1402,8 @@ def real_cli(accounts: SimpleNamespace) -> SimpleNamespace:
     if not _REAL_CLAUDE:
         pytest.skip("Claude CLI is not installed; the fake CLI above covers the same plans")
     accounts.binary = Path(_REAL_CLAUDE)
-    # The CLI reports a subscription login only for a token carrying inference scope.
-    _credentials(
-        accounts.config_dir / ".credentials.json", accounts.bound_token, scopes=["user:inference", "user:profile"]
-    )
+    # The bound login's credential already carries the inference scope the CLI
+    # needs to report a subscription login (see _credentials).
     return accounts
 
 

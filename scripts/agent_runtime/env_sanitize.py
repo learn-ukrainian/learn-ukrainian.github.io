@@ -8,6 +8,7 @@ for the provider being invoked, not the full orchestrator environment.
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 import os
 import re
@@ -817,12 +818,26 @@ def _print_unneeded_env_var_names(provider: str, *, harness: str | None = None) 
 # and compares, never stored credentials. A parsed JSON selection can hold the
 # login's tokens, so its fingerprint is scrypt, a password KDF, and the digest
 # on the guard's argv stays costly to invert; file bytes and the combined
-# inputs use BLAKE2b. The domain string is public.
-_LAUNCH_DIGEST_DOMAIN = b"lu-launch-digest"
+# inputs use BLAKE2b. Each purpose has its own fixed public domain (a BLAKE2b
+# personalization, at most 16 bytes, or the scrypt salt), so the same bytes
+# give a different digest for each purpose.
+_FILE_DIGEST_PERSON = b"lu-launch-file"
+_INPUTS_DIGEST_PERSON = b"lu-launch-inputs"
+_SELECTION_DIGEST_SALT = b"lu-launch-select"
 
 
-def _launch_digest(data: bytes = b"") -> hashlib.blake2b:
-    return hashlib.blake2b(data, digest_size=32, person=_LAUNCH_DIGEST_DOMAIN)
+def _blake2b_256(person: bytes, data: bytes = b"") -> hashlib.blake2b:
+    return hashlib.blake2b(data, digest_size=32, person=person)
+
+
+def claude_fingerprints_match(left: str, right: str) -> bool:
+    """Constant-time equality of two launch fingerprints, whatever text either holds.
+
+    ``surrogatepass`` encodes every ``str``, including an argument the OS
+    could not decode, one-to-one, so a malformed value compares unequal
+    instead of raising.
+    """
+    return hmac.compare_digest(left.encode("utf-8", "surrogatepass"), right.encode("utf-8", "surrogatepass"))
 
 
 def _file_fingerprint(path: Path) -> str:
@@ -836,7 +851,7 @@ def _file_fingerprint(path: Path) -> str:
     try:
         if not stat.S_ISREG(os.fstat(fd).st_mode):
             return "not_regular"
-        digest = _launch_digest()
+        digest = _blake2b_256(_FILE_DIGEST_PERSON)
         while chunk := os.read(fd, 1 << 20):
             digest.update(chunk)
         return digest.hexdigest()
@@ -849,7 +864,7 @@ def _file_fingerprint(path: Path) -> str:
 def _canonical_digest(value: object) -> str:
     """scrypt of ``value``'s canonical JSON (the scrypt paper's interactive cost)."""
     data = json.dumps(value, sort_keys=True).encode()
-    return hashlib.scrypt(data, salt=_LAUNCH_DIGEST_DOMAIN, n=1 << 14, r=8, p=1, dklen=32).hex()
+    return hashlib.scrypt(data, salt=_SELECTION_DIGEST_SALT, n=1 << 14, r=8, p=1, dklen=32).hex()
 
 
 def _json_fingerprint(path: Path, select: Callable[[object], object]) -> str:
@@ -992,7 +1007,12 @@ def claude_labelled_inputs_digest(
             for name in ("settings.json", "settings.local.json")
         },
     }
-    return _launch_digest(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
+    return _inputs_digest(inputs)
+
+
+def _inputs_digest(inputs: Mapping[str, object]) -> str:
+    """BLAKE2b-256 of the labelled run's collected input fingerprints, in canonical JSON."""
+    return _blake2b_256(_INPUTS_DIGEST_PERSON, json.dumps(inputs, sort_keys=True).encode()).hexdigest()
 
 
 def _option_value(argv: list[str], name: str) -> str | None:
@@ -1021,10 +1041,12 @@ def run_claude_launch_guard(argv: list[str]) -> None:
         or not login_dir
         or settings is None
         or sources is None
-        or claude_labelled_inputs_digest(
-            login_dir=login_dir, cwd=Path.cwd(), settings=settings, setting_sources=sources, environ=os.environ
+        or not claude_fingerprints_match(
+            claude_labelled_inputs_digest(
+                login_dir=login_dir, cwd=Path.cwd(), settings=settings, setting_sources=sources, environ=os.environ
+            ),
+            digest,
         )
-        != digest
         or claude_machine_policy_state() != "absent"
     ):
         os.write(2, b"CLAUDE_ACCOUNT_REFUSED: claude_account_settings_changed\n")
