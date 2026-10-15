@@ -36,6 +36,7 @@ from unittest.mock import patch
 
 import pytest
 
+from scripts.common.scratch import ensure_scratch_root
 from tests.test_guard_benign_corpus import BENIGN_COMMANDS
 
 pytestmark = pytest.mark.reads_content
@@ -419,19 +420,22 @@ def outside_dir() -> Iterator[Path]:
 
     The pre-push gate puts ``--basetemp`` inside the primary checkout's Git
     directory, so ``tmp_path`` there resolves into that protected primary.
+    The directory comes from the managed scratch lease instead and is checked
+    to lie outside any repository.
     """
-    base = Path(tempfile.gettempdir()).resolve()
-    probe = subprocess.run(
-        ["git", "-C", str(base), "rev-parse", "--git-dir"],
-        capture_output=True,
-        text=True,
-        env=_clean_env(),
-        check=False,
-        timeout=10,
-    )
-    assert probe.returncode != 0, f"temp dir {base} is inside a Git repository: {probe.stdout.strip()}"
-    path = Path(tempfile.mkdtemp(prefix="guard-outside-", dir=base))
+    path = Path(
+        tempfile.mkdtemp(prefix="guard-outside-", dir=os.environ.get("TMPDIR", ensure_scratch_root()))
+    ).resolve()
     try:
+        probe = subprocess.run(
+            ["git", "-C", str(path), "rev-parse", "--git-dir"],
+            capture_output=True,
+            text=True,
+            env=_clean_env(),
+            check=False,
+            timeout=10,
+        )
+        assert probe.returncode != 0, f"scratch dir {path} is inside a Git repository: {probe.stdout.strip()}"
         yield path
     finally:
         shutil.rmtree(path)
@@ -1582,20 +1586,21 @@ def test_issue_10633_guard_has_no_ansi_c_decoder():
 @pytest.mark.parametrize(
     "command, literal",
     [
-        # The final-review probe: Bash writes /tmp/x; a decoder read "įtmp/x".
+        # The final-review probe: Bash wraps \457 to "/" and writes an absolute
+        # path; a decoder read "įtmp/x".
         pytest.param("tee $'\\457tmp/x'", "$\\457tmp/x", id="octal-wrap-target"),
         # The span body is not a reference to a same-command variable.
-        pytest.param("x=/tmp/ok; tee $'x'", "$x", id="span-names-assigned-variable"),
+        pytest.param("x=/srv/ok; tee $'x'", "$x", id="span-names-assigned-variable"),
         pytest.param("echo x > $'a b'", "$a b", id="redirect-target"),
     ],
 )
 def test_issue_10633_parser_keeps_ansi_c_span_literal_and_unresolved(command: str, literal: str):
     # The hook entry refuses these commands. A direct parser caller gets the
     # undecoded span, unresolved like any unknown expansion, so it blocks.
-    targets = hook.bash_write_targets(command, cwd="/tmp")
+    targets = hook.bash_write_targets(command, cwd="/")
     assert [str(target) for target in targets] == [literal]
     assert targets[0].unresolved_at == 0
-    assert hook._bash_path_decision(targets[0], "/tmp", None).reason == "unresolved_shell_variable"
+    assert hook._bash_path_decision(targets[0], "/", None).reason == "unresolved_shell_variable"
 
 
 def test_issue_10633_parser_never_decodes_ansi_c_program_name():
@@ -1613,7 +1618,7 @@ def test_issue_10633_parser_ansi_c_path_program_name_keeps_basename(repo: Path):
     assert str(segment[0]) == "$/usr/bin/tee"
     assert segment[0].unresolved_at == 0
     assert hook._command_word(segment) == ("tee", 0)
-    assert [str(target) for target in hook.bash_write_targets(command, cwd="/tmp")] == ["notes.txt"]
+    assert [str(target) for target in hook.bash_write_targets(command, cwd="/")] == ["notes.txt"]
     _assert_ansi_c_refused(_hook_subprocess(repo, command, cwd=repo / ".worktrees/dispatch/claude/task-1"))
 
 
