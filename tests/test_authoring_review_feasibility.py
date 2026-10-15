@@ -550,7 +550,7 @@ def test_recorder_refuses_a_github_listing_that_differs_from_rev_list(repo, task
     "case,reason",
     [
         ("missing-trailer", "missing explicit X-Agent"),
-        ("duplicate-trailer", "missing explicit X-Agent"),
+        ("malformed-second-trailer", "missing explicit X-Agent"),
         ("repository-mismatch", "conflicts with commit trailer"),
         ("unproven-merge", "missing explicit X-Agent"),
     ],
@@ -559,8 +559,8 @@ def test_invalid_attribution_is_never_green(repo, tasks, case, reason):
     repo.commit(OPUS)
     if case == "missing-trailer":
         repo.commit(None)
-    elif case == "duplicate-trailer":
-        repo.commit(f"{OPUS}\nX-Agent: {SOL}")
+    elif case == "malformed-second-trailer":
+        repo.commit(f"{OPUS}\nX-Agent: codex")
     elif case == "repository-mismatch":
         task_record(tasks, "elsewhere", agent="codex", model="gpt-6.1-sol", repository="other/repo")
         repo.commit("codex/elsewhere")
@@ -572,6 +572,49 @@ def test_invalid_attribution_is_never_green(repo, tasks, case, reason):
     with pytest.raises(recorder.BranchFactsError, match=reason) as refused:
         facts(repo, tasks, writer=OPUS)
     assert refused.value.code == recorder.FACTS_AUTHORSHIP_UNKNOWN
+
+
+# --- 5b. several X-Agent trailers on one commit (#10450) -----------------------------------------
+
+
+def test_a_two_family_commit_excludes_both_families_from_review(repo, tasks, monkeypatch, tmp_path):
+    task_record(tasks, "sol-task", agent="codex", model="gpt-6.1-sol")
+    repo.commit(f"codex/sol-task\nX-Agent: {OPUS}")
+    repo.publish()
+    fact = facts(repo, tasks)
+    assert fact.existing_families == {"anthropic", "openai"} and len(fact.commits) == 1
+    resolution = recorder.structural_review_route(fact, risk="critical")
+    assert resolution.selected is not None and resolution.selected.family not in {"anthropic", "openai"}
+    for agent, model in (("codex", "gpt-6.1-sol"), ("claude", "claude-opus-5-5")):
+        with pytest.raises(recorder.RecordError, match="equals an author family"):
+            record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model)
+
+
+def test_an_unrecorded_trailer_beside_a_recorded_one_stays_reviewable_by_a_known_family(
+    repo, tasks, monkeypatch, tmp_path
+):
+    task_record(tasks, "sol-task", agent="codex", model="gpt-6.1-sol")
+    head = repo.commit("codex/sol-task\nX-Agent: codex/impl-missing-task")
+    repo.publish()
+    assert facts(repo, tasks).existing_families == {"openai", "unknown"}
+    receipt = record_verdict(monkeypatch, tmp_path, repo, agent="claude", model="claude-opus-5-5")
+    assert receipt["head"] == head and receipt["verdict"] == "APPROVED"
+    with pytest.raises(recorder.RecordError, match="equals an author family"):
+        record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol")
+
+
+def test_continuation_with_two_sol_task_trailers_admits_cross_family(repo, tasks, boundary):
+    """The refused continuation shape: one commit, two Sol task-id trailers (a done and a dry-run record)."""
+    task_record(tasks, "author-practice-10672-r2-sol-v2", agent="codex", model="gpt-6.1-sol", status="done")
+    task_record(tasks, "author-practice-10672-r2", agent="codex", model="gpt-6.1-sol", status="dry_run")
+    repo.commit("codex/author-practice-10672-r2-sol-v2\nX-Agent: codex/author-practice-10672-r2")
+    repo.publish()
+    admitted = history_admission(repo, tasks, plan="cross_family", writer=SOL)
+    assert admitted.record["existing_families"] == ["openai"]
+    assert admitted.record["author_families"] == ["openai"]
+    assert admitted.suspect_history == () and "review_plan" not in admitted.record
+    assert admitted.record["applicable"] is True
+    assert admitted.record["reviewer"]["family"] not in {"openai", "unknown"}
 
 
 def test_proven_clean_base_merge_authors_nothing(repo, tasks):
@@ -887,10 +930,14 @@ def test_history_group_6_protected_gates_take_precedence(repo, tasks, frozen_his
 @pytest.mark.parametrize("case", ["conflicting", "after-admission", "malformed", "empty-model", "invalid-model"])
 def test_history_group_7_only_frozen_zero_trailers(repo, tasks, frozen_history, case, monkeypatch, tmp_path):
     if case == "conflicting":
+        # Two well-formed trailers name two authors, never unknown history.
         repo.commit(f"{OPUS}\nX-Agent: {SOL}")
         repo.publish()
-        with pytest.raises(delegate._AuthoringReviewRefused, match="missing explicit X-Agent"):
-            history_admission(repo, tasks)
+        admitted = history_admission(repo, tasks)
+        assert admitted.suspect_history == () and "unknown_history" not in admitted.record
+        assert admitted.record["existing_families"] == ["anthropic", "openai"]
+        assert admitted.record["reviewer"]["family"] not in {"anthropic", "openai"}
+        assert admitted.record["reviewer"].get("review_mode", "cross_family") == "cross_family"
         return
     if case in {"malformed", "empty-model", "invalid-model"}:
         repo.commit("broken" if case == "malformed" else "claude/" if case == "empty-model" else "cursor/bad@@")
@@ -2053,7 +2100,8 @@ def test_rebase_admits_only_branch_authors_and_pins_onto(
     [
         (SOL, delegate.AUTHORING_REVIEW_NO_ROUTE),
         (None, delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
-        ("codex/impl-a\n\nX-Agent: codex/impl-b", delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
+        # Each trailer resolves on its own (#10450); a malformed one keeps the squash unattributed.
+        ("codex/impl-a\n\nX-Agent: codex", delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
     ],
 )
 def test_release_target_rebase_onto_main_keeps_imported_authors_and_refuses_untouched(

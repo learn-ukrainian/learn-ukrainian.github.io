@@ -302,9 +302,13 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path
 
 @dataclass(frozen=True)
 class CommitAttribution:
-    """One branch commit and the author family its provenance proves.
+    """One branch commit and the author families its provenance proves.
 
     ``family`` is None only for a Git-proven clean base merge, which authors nothing.
+    A commit with several distinct ``X-Agent`` trailers resolves each one on its
+    own (#10450): ``trailers`` holds those attributions and the singular fields
+    repeat the first, so read the commit's authors through ``attributions``,
+    ``families`` and ``task_ids``.
     """
 
     sha: str | None
@@ -314,6 +318,29 @@ class CommitAttribution:
     record_task_id: str | None = None
     author_models: tuple[str, ...] = ()
     authorship: str | None = None
+    trailers: tuple[CommitAttribution, ...] = ()
+
+    @property
+    def attributions(self) -> tuple[CommitAttribution, ...]:
+        """One attribution per distinct ``X-Agent`` trailer; any other commit is its own."""
+        return self.trailers or (self,)
+
+    @property
+    def families(self) -> frozenset[str]:
+        """Every author family the commit proves; empty for a clean base merge."""
+        return frozenset(each.family for each in self.attributions if each.family is not None)
+
+    @property
+    def task_ids(self) -> tuple[str, ...]:
+        """Every author task identity retained from the commit's trailers and their task records."""
+        return tuple(
+            dict.fromkeys(
+                task_id
+                for each in self.attributions
+                for task_id in (each.task_id, each.record_task_id)
+                if task_id is not None
+            )
+        )
 
 
 def _author_model_family(harness: str, model: str) -> str:
@@ -349,7 +376,7 @@ def _attribute_commit(
     unknown_history: Iterable[str] = (),
     app_bot_login: Callable[[str], str | None] | None = None,
 ) -> CommitAttribution:
-    """Resolve one commit's author family, retaining unresolvable authors as Unknown.
+    """Resolve one commit's author families, retaining unresolvable authors as Unknown.
 
     ``entry`` has the GitHub commit-listing shape (``sha``, ``commit.message``,
     ``commit.tree.sha``, ``parents``). ``base_sha`` is called only when an
@@ -357,13 +384,15 @@ def _attribute_commit(
     only for an untrailered commit that is neither a clean base merge nor
     admitted unknown history; a login is GitHub's live proof that an
     allowlisted app bot authored it (#10531), recorded as ``verified_app_bot``
-    without any model.
+    without any model. Every ``X-Agent`` line is a trailer; a commit with
+    several distinct ones attributes each through :func:`_attribute_trailer`
+    and refuses when any one is malformed or refused (#10450).
     """
     commit_sha = entry.get("sha")
     message = (entry.get("commit") or {}).get("message")
     if not isinstance(message, str):
         raise RecordError("commit message unavailable")
-    trailers = re.findall(r"(?m)^X-Agent:\s*([^\s]+)\s*$", message)
+    trailers = [line.strip() for line in re.findall(r"(?m)^X-Agent:(.*)$", message)]
     if (
         not trailers
         and not re.search(r"(?m)^X-Agent:", message)
@@ -385,9 +414,20 @@ def _attribute_commit(
         and app_bot_login(commit_sha) is not None
     ):
         return CommitAttribution(commit_sha, VERIFIED_APP_BOT, VERIFIED_APP_BOT, authorship=VERIFIED_APP_BOT)
-    if len(trailers) != 1 or "/" not in trailers[0]:
+    # Identical duplicates name one author.
+    trailers = list(dict.fromkeys(trailers))
+    if not trailers or any("/" not in trailer or not re.fullmatch(r"\S+", trailer) for trailer in trailers):
         raise RecordError("author model unknown: missing explicit X-Agent model trailer")
-    harness, model = trailers[0].split("/", 1)
+    sha = commit_sha if isinstance(commit_sha, str) else None
+    attributions = tuple(
+        _attribute_trailer(trailer, sha=sha, repository=repository, task_root=task_root) for trailer in trailers
+    )
+    return attributions[0] if len(attributions) == 1 else replace(attributions[0], trailers=attributions)
+
+
+def _attribute_trailer(trailer: str, *, sha: str | None, repository: str, task_root: Path) -> CommitAttribution:
+    """Resolve one well-formed ``X-Agent: <harness>/<model or task id>`` trailer of commit ``sha``."""
+    harness, model = trailer.split("/", 1)
     if not harness or not model:
         raise RecordError("author model unknown")
     # Task provenance wins over family tokens embedded in the trailer's task id.
@@ -462,7 +502,7 @@ def _attribute_commit(
         dict.fromkeys(value for value in model_values if isinstance(value, str) and resolve_catalog_model_id(value))
     )
     return CommitAttribution(
-        commit_sha if isinstance(commit_sha, str) else None,
+        sha,
         family,
         source,
         normalize_review_task_id(task_id, agent=harness) if task_id is not None else None,
@@ -492,17 +532,15 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
             base.append(value)
         return base[0]
 
-    families = set()
+    families: set[str] = set()
     for entry in commits:
-        family = _attribute_commit(
+        families |= _attribute_commit(
             entry,
             repository=repository,
             task_root=task_root,
             base_sha=base_sha,
             app_bot_login=listing_app_bot_login(commits, repository),
-        ).family
-        if family is not None:
-            families.add(family)
+        ).families
     if not families:
         raise RecordError("PR has no attributed author commits")
     return families
@@ -562,12 +600,7 @@ class BranchReviewFacts:
     @property
     def author_task_ids(self) -> frozenset[str]:
         """Author task identities retained from the complete branch's X-Agent trailers."""
-        return frozenset(
-            normalize_review_task_id(task_id)
-            for commit in self.commits
-            for task_id in (commit.task_id, commit.record_task_id)
-            if task_id is not None
-        )
+        return frozenset(normalize_review_task_id(task_id) for commit in self.commits for task_id in commit.task_ids)
 
     @property
     def author_families(self) -> frozenset[str]:
@@ -598,13 +631,16 @@ class BranchReviewFacts:
                 for commit in self.commits
                 # A clean merge authors nothing; a verified app bot has no model.
                 if commit.source not in {"clean-base-merge", VERIFIED_APP_BOT}
-                for model in (commit.author_models or (None,))
+                for each in commit.attributions
+                for model in (each.author_models or (None,))
             ),
             author_task_models=tuple(
                 model
                 for commit in self.commits
-                if commit.sha == self.head_sha and commit.source in {"task-record", "task-record-archived"}
-                for model in commit.author_models
+                if commit.sha == self.head_sha
+                for each in commit.attributions
+                if each.source in {"task-record", "task-record-archived"}
+                for model in each.author_models
             ),
             review_profile=review_profile,
             risk=risk,
@@ -840,7 +876,7 @@ def collect_branch_review_facts(
         head_sha=head_sha,
         merge_base_sha=merge_base,
         commits=tuple(commits),
-        existing_families=frozenset(commit.family for commit in commits if commit.family),
+        existing_families=frozenset(family for commit in commits for family in commit.families),
         incoming_writer=incoming_writer,
         incoming_family=incoming_family,
         changed_paths=changed,
@@ -968,7 +1004,7 @@ def refuse_excluded_only_range(facts: BranchReviewFacts, *, repo_root: Path, exc
         )
     if exclude_sha is None or facts.existing_families:
         return
-    if any(commit.family is not None for commit in facts.commits):
+    if any(commit.families for commit in facts.commits):
         return
     if facts.commits:
         raise BranchFactsError(

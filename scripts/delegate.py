@@ -16042,7 +16042,7 @@ def _authoring_review_admission(
     known_facts = dataclasses.replace(
         facts,
         commits=known_commits,
-        existing_families=frozenset(commit.family for commit in known_commits if commit.family is not None),
+        existing_families=frozenset(family for commit in known_commits for family in commit.families),
     )
     _authoring_require_route(known_facts, planned_risk=planned_risk, record=record, at=head)
     if suspect_history:

@@ -1711,6 +1711,128 @@ def test_missing_task_record_retains_unknown_for_multifamily_harnesses(monkeypat
     assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
 
 
+# --- several X-Agent trailers on one commit (#10450) ----------------------------------------------
+
+
+def trailered(*values: str) -> str:
+    return "feat: work\n\n" + "".join(f"X-Agent: {value}\n" for value in values)
+
+
+def attribute(message: str, tasks: Path) -> recorder.CommitAttribution:
+    return recorder._attribute_commit(
+        {"sha": SHA, "commit": {"message": message}}, repository=REPOSITORY, task_root=tasks, base_sha=lambda: OTHER
+    )
+
+
+def test_two_same_family_task_trailers_keep_both_task_records(tmp_path):
+    from dataclasses import replace
+
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-one", agent="codex", model="gpt-6.1-sol")
+    write_task(tasks / "archive", task_id="author-two", agent="codex", model="gpt-6-luna")
+    attribution = attribute(trailered("codex/author-one", "codex/author-two"), tasks)
+    assert attribution.families == {"openai"}
+    assert attribution.task_ids == ("author-one", "author-two")
+    assert [(each.source, each.author_models) for each in attribution.attributions] == [
+        ("task-record", ("gpt-6.1-sol",)),
+        ("task-record-archived", ("gpt-6-luna",)),
+    ]
+    facts = replace(facts_for({"openai"}), commits=(attribution,))
+    assert facts.author_task_ids == {"author-one", "author-two"}
+    inputs = facts.resolver_inputs(risk="medium")
+    assert inputs.author_models == ("gpt-6.1-sol", "gpt-6-luna")
+    assert inputs.author_task_models == ("gpt-6.1-sol", "gpt-6-luna")
+
+
+def test_two_family_task_trailers_attribute_both_families(monkeypatch, tmp_path):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-one", agent="codex", model="gpt-6.1-sol")
+    write_task(tasks, task_id="author-two", agent="claude", model="claude-opus-5-5")
+    message = trailered("codex/author-one", "claude/author-two")
+    assert attribute(message, tasks).families == {"openai", "anthropic"}
+    monkeypatch.setattr(recorder, "_pages", lambda args: [{"sha": SHA, "commit": {"message": message}}])
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai", "anthropic"}
+
+
+def test_an_unrecorded_task_trailer_beside_a_recorded_one_stays_unknown(tmp_path):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-one", agent="codex", model="gpt-6.1-sol")
+    attribution = attribute(trailered("codex/author-one", "codex/impl-missing-task"), tasks)
+    assert attribution.families == {"openai", "unknown"}
+    assert attribution.task_ids == ("author-one", "impl-missing-task")
+    assert [each.source for each in attribution.attributions] == ["task-record", "unresolved-author"]
+
+
+@pytest.mark.parametrize("malformed", ["codex", "codex/", "/author-two", "codex/../author-two", "codex/author two", ""])
+@pytest.mark.parametrize("malformed_first", [False, True])
+def test_a_malformed_trailer_beside_a_valid_one_refuses(tmp_path, malformed, malformed_first):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-one", agent="codex", model="gpt-6.1-sol")
+    values = [malformed, "codex/author-one"] if malformed_first else ["codex/author-one", malformed]
+    with pytest.raises(recorder.RecordError, match="author model unknown"):
+        attribute(trailered(*values), tasks)
+
+
+@pytest.mark.parametrize(
+    "second,reason",
+    [
+        ({"repository": "other/repo"}, "provenance conflicts with commit trailer"),
+        ({"agent": "claude"}, "provenance conflicts with commit trailer"),
+    ],
+    ids=["cross-repository", "harness-mismatch"],
+)
+def test_a_conflicting_second_task_record_refuses(tmp_path, second, reason):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-one", agent="codex", model="gpt-6.1-sol")
+    write_task(tasks, task_id="author-two", **{"agent": "codex", "model": "gpt-6.1-sol", **second})
+    with pytest.raises(recorder.RecordError, match=reason):
+        attribute(trailered("codex/author-one", "codex/author-two"), tasks)
+
+
+def test_duplicate_identical_trailers_attribute_as_one(tmp_path):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-one", agent="codex", model="gpt-6.1-sol")
+    single = attribute(trailered("codex/author-one"), tasks)
+    assert attribute(trailered("codex/author-one", "codex/author-one"), tasks) == single
+    assert single.attributions == (single,) and single.trailers == ()
+
+
+def test_continuation_commit_with_two_sol_task_trailers_is_openai(tmp_path):
+    """The shape of the refused continuation commit: a done and a dry-run task record, both Sol."""
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-practice-10672-r2-sol-v2", agent="codex", model="gpt-6.1-sol")
+    write_task(tasks, task_id="author-practice-10672-r2", agent="codex", model="gpt-6.1-sol", status="dry_run")
+    attribution = attribute(
+        "feat(practice): synthetic continuation\n\n"
+        "X-Agent: codex/author-practice-10672-r2-sol-v2\n"
+        "X-Agent: codex/author-practice-10672-r2\n",
+        tasks,
+    )
+    assert attribution.families == {"openai"}
+    assert attribution.task_ids == ("author-practice-10672-r2-sol-v2", "author-practice-10672-r2")
+    assert {model for each in attribution.attributions for model in each.author_models} == {"gpt-6.1-sol"}
+
+
+@pytest.mark.parametrize("trailer", ["codex/author-one", "codex/author-two"])
+def test_red_team_reviewer_of_either_trailer_task_is_self_review(monkeypatch, tmp_path, trailer):
+    from dataclasses import replace
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    path = tasks / "review-one.json"
+    path.write_text(json.dumps({**json.loads(path.read_text()), "task_id": trailer}))
+    write_task(tasks, task_id="author-one", agent="codex", model="gpt-6.1-sol")
+    write_task(tasks, task_id="author-two", agent="codex", model="gpt-6-luna")
+    attribution = attribute(trailered("codex/author-one", "codex/author-two"), tasks)
+    facts = replace(facts_for({"openai"}), commits=(attribution,))
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    with pytest.raises(recorder.RecordError, match="SELF_REVIEW_DETECTED"):
+        recorder.record(
+            "review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt
+        )
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.mark.parametrize(
     "text,expected",
     [
