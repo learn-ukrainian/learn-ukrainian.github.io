@@ -442,8 +442,23 @@ another removes. Classification only selects
 candidates; it does not decide a removal.
 
 For each candidate that classified as removable, the reaper takes delegate's
-per-worktree lock, then the cleanup lock, and under both reads again every fact
-the removal rests on:
+per-worktree lock and runs the checks below twice. No Monitor, forge or
+remote-Git read runs while the cleanup lock is held:
+
+1. Under the per-worktree lock alone, before it requests the cleanup lock, it
+   runs the checks once and keeps every network answer they read afresh: the
+   Monitor active-task answer, the forge answers (branch PRs, the review
+   checkout's PR heads, commit-search hits, settlement proofs) and the remote
+   Git proofs (`ls-remote`, fetches). A refusal here retains the checkout
+   without taking the cleanup lock.
+2. Under both locks it runs them again. Every local fact is read afresh and
+   each network answer is the one kept in step 1. A check that needs a
+   network answer step 1 did not read, because a local fact changed in
+   between, is refused, never sent, and the checkout is retained with
+   `network answer not read before the reaper lock (...)`. Monitor, forge and
+   remote-Git calls also refuse to run at all while the lock is held.
+
+The checks:
 
 - the registration, pinned when the pass listed the checkout: open directory
   descriptors on the checkout and on the admin directory its `.git` pointer
@@ -458,36 +473,44 @@ the removal rests on:
   forge answers for the branch PRs, the review checkout's PR heads and
   commit-search hits. It must reproduce the same reason and dirty state;
 - delegate's claim scan, with every needs_finalize, continuation and
-  terminal-abandon settlement proof read again;
-- the daily cap, the merged-head proofs that need remote Git (`ls-remote`,
-  fetches), the review and detached-class re-checks, HEAD, and, after a
-  settled task's leftover jobs are stopped, the registration and a last
-  process-CWD scan.
+  terminal-abandon settlement proof;
+- the merged-head proofs that need remote Git, and the PR snapshot the
+  terminal-dispatch classes use.
+
+Under the cleanup lock only, it then checks and counts the daily cap, takes
+the reservation, stops a settled task's leftover jobs, and re-checks HEAD,
+cleanliness, the review and detached classes, the registration and a last
+process-CWD scan.
 
 A checkout is retained with a reason when any of these is unreadable, past its
 bound, or different from classification; a checkout that vanishes is retained
 with `worktree path vanished during cleanup` and the run goes on. Immediately
 before `git worktree remove`, the pinned directories must still be the ones at
-their paths.
+their paths. Network answers are read before the cleanup lock, so they are as
+fresh as step 1; the per-worktree lock keeps a dispatch from attaching to the
+checkout throughout, and every local fact the removal rests on is read under
+the cleanup lock.
 
 The cleanup lock is released before artifact preservation and
 `git worktree remove`, which run under the per-worktree lock alone, so a slow
 removal never keeps other cleanups out. Removal starts only when the candidate
 released the lock itself before the hold deadline below: then its reservation
-and every read above ran under one continuous hold.
+and every local read in step 2 ran under one continuous hold.
 
 Hold deadline. From the per-worktree lock until removal one deadline applies,
 `worktree_claims.DEFAULT_LOCK_TIMEOUT_S` (30 s) minus a 5 s margin, so 25 s:
-it bounds the wait for the cleanup lock, every read under it, and the hold
-itself. Each read also has its own cap, clipped to what is left when it
-starts: Git 5 s (15 s for status, add and commit), forge calls 30 s, Monitor
-3 s, ownership storage 2 s (the sqlite busy wait, or the PostgreSQL connect
-and statement timeouts), process-CWD scan 15 s. Those caps bound each read's
-inactivity, not its total: a Monitor response that trickles in, forge pages
-and the several Git subprocesses of one call can each stay inside their caps
-and still outlast the deadline. The lock therefore enforces the deadline
-itself: a watchdog thread unlocks and closes it at the deadline whatever read
-is still in flight. The candidate is then retained with
+it bounds the network reads of step 1, the wait for the cleanup lock, every
+read under it, and the hold itself. Each read also has its own cap, clipped to
+what is left when it starts: Git 5 s (15 s for status, add and commit), forge
+calls 30 s, Monitor 3 s, ownership storage 2 s (the sqlite busy wait, or the
+PostgreSQL connect and statement timeouts), process-CWD scan 15 s. Those caps
+bound each read's inactivity, not its total: a Monitor response that trickles
+in or forge pages can each stay inside their caps and use up the deadline,
+which then retains the checkout before the cleanup lock is requested; under
+the lock, the several Git subprocesses of one call or a slow process-CWD scan
+can outlast it too. The lock therefore enforces the deadline itself: a
+watchdog thread unlocks and closes it at the deadline whatever read is still
+in flight. The candidate is then retained with
 `reaper lock hold deadline passed`, nothing more is mutated or removed, and
 every later candidate and husk of that run is retained with
 `...; deferred to the next pass`. The in-flight read itself still ends only
@@ -517,9 +540,11 @@ path, even when another release fails. An unlock that fails still closes the
 descriptor, which frees the lock; the candidate is retained with
 `reaper lock release failed (...)`. A reservation that cannot be cleared stays
 with its owner pid and is reported in the result's error as
-`reaper cleanup failed: reservation clear ...`; a daily-cap slot that cannot
-be given back stays spent and is reported as
-`reaper cleanup failed: daily-cap slot release ...`. Either stops the run:
+`reaper cleanup failed: reservation clear ...`; a failed give-back of a
+daily-cap slot is reported as
+`reaper cleanup failed: daily-cap slot release (unconfirmed: the slot may stay spent) ...`:
+one that fails before its write leaves the slot spent, one whose write
+committed before its unlock failed has given it back. Either stops the run:
 nothing further is removed and the rest is deferred. Reservation recovery
 releases such a reservation once its owner process has exited.
 
@@ -539,7 +564,8 @@ forge latency, on a host at load 10 to 13: the lock was taken 30 times, held
 a small checkout is quick, so the head before the hold deadline (d2d367a2)
 measured the same; the deadline and the early release matter when a read
 outlasts its share or removal is slow. Before #10637 one pass held it once for
-29 s of a 30 s pass.
+29 s of a 30 s pass. Forge and Monitor latency now falls in step 1, before the
+hold, not inside it as in that measurement.
 
 Lock order is always delegate's per-worktree lock first, then the cleanup lock:
 for candidates, for husks, and for reservation recovery, which takes the

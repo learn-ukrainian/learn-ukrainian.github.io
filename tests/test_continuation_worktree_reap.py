@@ -547,7 +547,9 @@ def test_commit_search_requires_real_pr_head(cohort, monkeypatch, number_head):
         real_head = head if number_head == "exact" else "b" * 40
         return [reap.reap_worktrees.PullRequestState(number, "MERGED", real_head)], None
 
-    monkeypatch.setattr(reap.reap_worktrees, "_query_pr_by_number", by_number)
+    # Answered before the cleanup-wide lock, like the lookup it replaces (#10637).
+    answered = reap.reap_worktrees._answered_before_the_lock(reap.reap_worktrees._unanswered_forge)
+    monkeypatch.setattr(reap.reap_worktrees, "_query_pr_by_number", answered(by_number))
     row = next(
         r
         for r in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())

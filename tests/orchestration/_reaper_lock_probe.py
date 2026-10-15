@@ -1,11 +1,12 @@
 """Record what the reaper reads, and how it waits, while it holds the cleanup-wide lock (#10637).
 
 The cleanup-wide lock (``worktree-reaper.lock``) is held for one removable
-candidate at a time. Inside that section the reaper must read every authority
-answer again, fresh (Monitor, forge, ownership storage, remote Git), and every
-such read must carry a bound: a locked-region deadline or an explicit timeout.
-No other phase may read them under the lock, and nothing under the lock may
-wait on another lock without a bound.
+candidate at a time. No Monitor, forge or remote Git read runs while it is
+held: a candidate reads them afresh inside its own bounded section before it
+requests the lock, and under the lock its checks are answered from those
+reads. Ownership storage, a local authority, is read under the lock only
+inside a candidate section, with a bound. Nothing under the lock waits on
+another lock without a bound.
 
 The probe tracks which thread holds the lock, and for which phase, by wrapping
 ``_ReapLock`` itself, so a lock held by another thread or process never counts.
@@ -28,22 +29,30 @@ from scripts.orchestration import reap_worktrees as rw
 
 # Captured at import, before any test patches them: the real lookups reach the
 # forge only through ``_run_gh``; a test's stand-in answers directly, so it is
-# itself the network seam.
+# itself the network seam. It is answered before the lock like the lookup it
+# replaces, and the seam records only the calls that would reach the forge.
 _REAL_LOOKUPS = {
     name: getattr(rw, name) for name in ("_query_pr_states", "_query_pr_by_number", "_query_prs_by_head_sha")
 }
 _REMOTE_GIT = frozenset({"fetch", "ls-remote", "pull", "push", "remote"})
+_NETWORK = frozenset({"_run_gh", "_active_task_ids", *_REAL_LOOKUPS, *(f"git {command}" for command in _REMOTE_GIT)})
 _CANDIDATE_PHASE = "candidate-mutation"
 
 
 @dataclass(frozen=True)
 class SeamCall:
-    """One Monitor, forge, ownership-storage or remote Git read."""
+    """One Monitor, forge, ownership-storage or remote Git read.
+
+    ``in_section`` is whether a candidate's bounded locked region was active:
+    with ``held`` false, the read ran in that candidate's section before its
+    cleanup-wide lock was requested.
+    """
 
     name: str
     held: bool
     phase: str | None
     bounded: bool
+    in_section: bool
 
 
 def _finite_positive(value: Any) -> bool:
@@ -73,6 +82,10 @@ class ReaperLockProbe:
             phases = [phase for holder, phase in self._held.values() if holder == thread]
             return phases[-1] if phases else None
 
+    def _record(self, name: str, bounded: bool) -> None:
+        phase = self._holding()
+        self.calls.append(SeamCall(name, phase is not None, phase, bounded, _region_active()))
+
     def _install(self, monkeypatch: pytest.MonkeyPatch) -> None:
         probe = self
         real_enter = rw._ReapLock.__enter__
@@ -98,8 +111,7 @@ class ReaperLockProbe:
             name: str, original: Callable[..., Any], bound: Callable[[dict[str, Any]], bool]
         ) -> Callable[..., Any]:
             def call(*args: Any, **kwargs: Any) -> Any:
-                phase = probe._holding()
-                probe.calls.append(SeamCall(name, phase is not None, phase, bound(kwargs)))
+                probe._record(name, bound(kwargs))
                 return original(*args, **kwargs)
 
             return call
@@ -119,13 +131,13 @@ class ReaperLockProbe:
         for name, real in _REAL_LOOKUPS.items():
             current = getattr(rw, name)
             if current is not real:
-                monkeypatch.setattr(rw, name, seam(name, current, region_only))
+                answered = rw._answered_before_the_lock(rw._unanswered_forge)(seam(name, current, region_only))
+                monkeypatch.setattr(rw, name, answered)
         original_run = rw._run
 
         def run(args: list[str], **kwargs: Any) -> Any:
             if len(args) > 1 and args[0] == "git" and args[1] in _REMOTE_GIT:
-                phase = probe._holding()
-                probe.calls.append(SeamCall(f"git {args[1]}", phase is not None, phase, explicit_timeout(kwargs)))
+                probe._record(f"git {args[1]}", explicit_timeout(kwargs))
             return original_run(args, **kwargs)
 
         monkeypatch.setattr(rw, "_run", run)
@@ -143,13 +155,19 @@ class ReaperLockProbe:
     def under_lock(self, name: str) -> list[SeamCall]:
         return [call for call in self.calls if call.held and call.name == name]
 
+    def before_lock(self, name: str) -> list[SeamCall]:
+        """``name`` reads a candidate took in its own bounded section, before its cleanup-wide lock."""
+        return [call for call in self.calls if not call.held and call.in_section and call.name == name]
+
     def violations(self) -> list[str]:
         """Every breach of the locked-section contract; empty when the run honoured it."""
         found: list[str] = []
         for call in self.calls:
             if not call.held:
                 continue
-            if call.phase != _CANDIDATE_PHASE:
+            if call.name in _NETWORK:
+                found.append(f"{call.name} under the lock (phase {call.phase})")
+            elif call.phase != _CANDIDATE_PHASE:
                 found.append(f"{call.name} under the lock outside a candidate section (phase {call.phase})")
             elif not call.bounded:
                 found.append(f"{call.name} under the lock without a bound")

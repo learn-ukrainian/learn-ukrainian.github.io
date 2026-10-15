@@ -180,6 +180,109 @@ def _locked_call_timeout(cap: float) -> float:
     return min(cap, remaining)
 
 
+# Why a candidate is retained when a Monitor, forge or remote-Git read was
+# wanted under the cleanup-wide lock that had not been read before it (#10637).
+REAP_NETWORK_UNANSWERED = "network answer not read before the reaper lock"
+
+
+class _PreLockAnswers:
+    """One candidate's Monitor, forge and remote-Git answers, read before its cleanup-wide hold (#10637).
+
+    No network read runs under the cleanup-wide lock. Before the lock is
+    requested the candidate's checks run while answers are recorded: each
+    read made through :func:`_answered_before_the_lock` reaches the network
+    once per argument set and its answer is kept. Once :attr:`locked` is set
+    the same checks run again with every local fact read afresh, and each
+    such read returns its kept answer. A read with no kept answer, and any
+    Monitor, forge or remote-Git call made another way, never reaches the
+    network: it returns its own failure, is listed in :attr:`unanswered`, and
+    the candidate is retained.
+    """
+
+    def __init__(self) -> None:
+        self._kept: dict[tuple[Any, ...], Any] = {}
+        self.locked = False
+        self.unanswered: list[str] = []
+
+    def answer(self, label: str, key: tuple[Any, ...], read: Callable[[], Any], refused: Callable[[], Any]) -> Any:
+        if key in self._kept:
+            return self._kept[key]
+        if self.refuse(label):
+            return refused()
+        self._kept[key] = kept = read()
+        return kept
+
+    def refuse(self, what: str) -> bool:
+        """Whether a network call must not run now; a refused call is recorded."""
+        if self.locked:
+            self.unanswered.append(what)
+        return self.locked
+
+    def refusal(self) -> str | None:
+        """The skip reason once any read was refused, else ``None``."""
+        if not self.unanswered:
+            return None
+        return f"{REAP_NETWORK_UNANSWERED} ({', '.join(dict.fromkeys(self.unanswered))})"
+
+
+_PRE_LOCK_ANSWERS: contextvars.ContextVar[_PreLockAnswers | None] = contextvars.ContextVar(
+    "reap_worktrees_pre_lock_answers",
+    default=None,
+)
+
+
+@contextlib.contextmanager
+def _pre_lock_answers() -> Iterator[_PreLockAnswers]:
+    """Record a candidate's network answers until the context ends (#10637)."""
+    answers = _PreLockAnswers()
+    token = _PRE_LOCK_ANSWERS.set(answers)
+    try:
+        yield answers
+    finally:
+        _PRE_LOCK_ANSWERS.reset(token)
+
+
+def _network_refused(what: str) -> bool:
+    """True, and recorded, while a candidate requests or holds the cleanup-wide lock (#10637)."""
+    answers = _PRE_LOCK_ANSWERS.get()
+    return answers is not None and answers.refuse(what)
+
+
+def _answer_key(value: Any) -> Any:
+    return str(Path(value).resolve()) if isinstance(value, Path) else value
+
+
+def _answered_before_the_lock(
+    refused: Callable[[], Any],
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    """Answer a network read from the candidate's :class:`_PreLockAnswers` (#10637).
+
+    ``refused`` builds the read's own failure for a read with no kept answer
+    under the lock. Outside a candidate's section the read runs as before.
+    """
+
+    def wrap(read: Callable[..., Any]) -> Callable[..., Any]:
+        @functools.wraps(read)
+        def answered(*args: Any, **kwargs: Any) -> Any:
+            answers = _PRE_LOCK_ANSWERS.get()
+            if answers is None:
+                return read(*args, **kwargs)
+            key = (
+                read,
+                *map(_answer_key, args),
+                *sorted((name, _answer_key(value)) for name, value in kwargs.items()),
+            )
+            return answers.answer(read.__name__, key, functools.partial(read, *args, **kwargs), refused)
+
+        return answered
+
+    return wrap
+
+
+def _unanswered_forge() -> tuple[list[PullRequestState], str]:
+    return [], REAP_NETWORK_UNANSWERED
+
+
 def _run(
     args: list[str],
     *,
@@ -187,6 +290,11 @@ def _run(
     timeout: float | None = None,
     env_overrides: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    command = args[1] if len(args) > 1 else ""
+    # No forge or remote-Git call runs while a candidate requests or holds the cleanup-wide lock (#10637).
+    remote = bool(args) and (Path(args[0]).name == "gh" or (args[0] == "git" and command in REMOTE_COMMANDS))
+    if remote and _network_refused(f"{Path(args[0]).name} {command}"):
+        return subprocess.CompletedProcess(args, 1, "", f"{REAP_NETWORK_UNANSWERED}: refused under the reaper lock")
     env = sanitized_git_env()
     if env_overrides:
         env.update(env_overrides)
@@ -201,7 +309,6 @@ def _run(
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)
     if args and args[0] == "git":
-        command = args[1] if len(args) > 1 else ""
         profile = "remote" if command in REMOTE_COMMANDS else "commit" if command in COMMIT_COMMANDS else "local"
         return safe_git(
             args[1:], cwd=cwd, profile=profile, capture_output=True, text=True, check=False, timeout=timeout, env=env
@@ -228,8 +335,12 @@ def _run_gh(
     Modelled argv translates to REST. Every other shape, including
     ``gh pr list --head`` and ``gh search prs``, falls through to native gh
     on that client's colour-safe transport. Callers still parse stdout:
-    an empty body is unknown, and a JSON ``[]`` is no PR.
+    an empty body is unknown, and a JSON ``[]`` is no PR. While a candidate
+    requests or holds the cleanup-wide lock the call is refused, never sent
+    (#10637).
     """
+    if _network_refused("forge"):
+        return subprocess.CompletedProcess(args, 1, "", f"{REAP_NETWORK_UNANSWERED}: refused under the reaper lock")
     timeout = _effective_timeout(timeout)
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)
@@ -261,16 +372,16 @@ def _bounded_locked_git() -> Iterator[None]:
       does not delete.
 
     A qualified candidate enters one region right after delegate's lock
-    (#10637): the wait for the cleanup-wide lock, then every read under both
-    locks, including Monitor, forge, ownership storage and remote Git (each
-    with its own cap, clipped the same way), share this deadline. The
-    cleanup-wide hold ends at it too, enforced by that lock's watchdog even
-    while a read is in flight: per-call caps bound each read's inactivity,
-    not the sum. The context ends before ``git worktree remove``, and so
-    does the cleanup-wide hold. Removal keeps its own
-    :data:`worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S` (120s) and is not
-    clipped to the time left here: a fraction of a second is enough to kill
-    ``git worktree remove --force`` mid-delete. A dispatch waiting on the
+    (#10637): its Monitor, forge and remote-Git reads, taken before the
+    cleanup-wide lock is requested, the wait for that lock, then every local
+    read under both locks, ownership storage included (each with its own cap,
+    clipped the same way), share this deadline. The cleanup-wide hold ends at
+    it too, enforced by that lock's watchdog even while a read is in flight:
+    per-call caps bound each read's inactivity, not the sum. The context ends
+    before ``git worktree remove``, and so does the cleanup-wide hold. Removal
+    keeps its own :data:`worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S` (120s)
+    and is not clipped to the time left here: a fraction of a second is enough
+    to kill ``git worktree remove --force`` mid-delete. A dispatch waiting on the
     lock that hits its 30s timeout retries. Branch prune is also outside
     this bound.
     """
@@ -599,6 +710,7 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
     return states, None
 
 
+@_answered_before_the_lock(_unanswered_forge)
 def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequestState], str | None]:
     if not branch:
         return [], None
@@ -737,6 +849,7 @@ def _query_pr_by_number_rest(repo_root: Path, number: int) -> tuple[list[PullReq
     return [parsed], None
 
 
+@_answered_before_the_lock(_unanswered_forge)
 def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
     """Look up one PR by number. Fail closed: an unreadable answer is an error."""
     states, rest_error = _query_pr_by_number_rest(repo_root, number)
@@ -980,6 +1093,7 @@ def _best_pr(prs: list[PullRequestState]) -> PullRequestState | None:
     return prs[0] if prs else None
 
 
+@_answered_before_the_lock(_unanswered_forge)
 def _query_prs_by_head_sha(
     repo_root: Path,
     head_sha: str | None,
@@ -1163,10 +1277,41 @@ def _tip_is_ancestor_of_origin_main(info: WorktreeInfo) -> bool:
     return _sha_is_ancestor(info.path, info.head, "origin/main")
 
 
+@_answered_before_the_lock(lambda: REAP_NETWORK_UNANSWERED)
+def _origin_gone_remote_failure(primary: Path, branch: str | None, number: int, head_sha: str) -> str | None:
+    """Origin's half of the origin-gone proof; why it failed, or ``None``.
+
+    The branch must be gone from origin, PR ``number``'s head must fetch as
+    ``head_sha``, and ``origin/main`` must fetch. The fetched head is read
+    right after its own fetch, so one answer covers both (#10637).
+    """
+    live_branch = _run(["git", "ls-remote", "--heads", "origin", branch or ""], cwd=primary, timeout=30)
+    if live_branch.returncode != 0:
+        detail = f": {live_branch.code}" if isinstance(live_branch, GitRefusal) else ""
+        return f"origin branch probe failed{detail}"
+    if live_branch.stdout.strip():
+        return "origin branch returned"
+    fetched_pr = _run(["git", "fetch", "--no-tags", "origin", f"refs/pull/{number}/head"], cwd=primary, timeout=30)
+    if fetched_pr.returncode != 0:
+        return "PR head fetch failed"
+    fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=primary)
+    if fetched_sha.returncode != 0 or fetched_sha.stdout.strip() != head_sha:
+        return "fetched PR head does not match PR state"
+    fetched_main = _run(
+        ["git", "fetch", "--no-tags", "origin", "+refs/heads/main:refs/remotes/origin/main"],
+        cwd=primary,
+        timeout=30,
+    )
+    if fetched_main.returncode != 0:
+        return "origin/main fetch failed"
+    return None
+
+
 def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) -> tuple[bool, str]:
     """Prove a local tip is contained in a merged PR or patch-equivalent upstream.
 
-    Fetch both sources of proof live. A missing ref, ambiguous Git result, or
+    Fetch both sources of proof live (:func:`_origin_gone_remote_failure`),
+    then prove containment locally. A missing ref, ambiguous Git result, or
     failed probe retains the worktree and identifies commits for inspection.
     """
     if info.head is None:
@@ -1186,35 +1331,9 @@ def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) ->
         primary = primary_checkout_root(info.path)
         if pr_state.number is None or not pr_state.head_sha:
             return unproven(local_commits(), "PR head unavailable")
-        live_branch = _run(
-            ["git", "ls-remote", "--heads", "origin", info.branch or ""],
-            cwd=primary,
-            timeout=30,
-        )
-        if live_branch.returncode != 0:
-            detail = f": {live_branch.code}" if isinstance(live_branch, GitRefusal) else ""
-            return unproven(local_commits(), f"origin branch probe failed{detail}")
-        if live_branch.stdout.strip():
-            return unproven(local_commits(), "origin branch returned")
-
-        fetched_pr = _run(
-            ["git", "fetch", "--no-tags", "origin", f"refs/pull/{pr_state.number}/head"],
-            cwd=primary,
-            timeout=30,
-        )
-        if fetched_pr.returncode != 0:
-            return unproven(local_commits(), "PR head fetch failed")
-        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=primary)
-        if fetched_sha.returncode != 0 or fetched_sha.stdout.strip() != pr_state.head_sha:
-            return unproven(local_commits(), "fetched PR head does not match PR state")
-
-        fetched_main = _run(
-            ["git", "fetch", "--no-tags", "origin", "+refs/heads/main:refs/remotes/origin/main"],
-            cwd=primary,
-            timeout=30,
-        )
-        if fetched_main.returncode != 0:
-            return unproven(local_commits(), "origin/main fetch failed")
+        remote_failure = _origin_gone_remote_failure(primary, info.branch, pr_state.number, pr_state.head_sha)
+        if remote_failure is not None:
+            return unproven(local_commits(), remote_failure)
 
         for descendant in (pr_state.head_sha, "origin/main"):
             ancestor = _run(
@@ -2693,12 +2812,13 @@ def _origin_branch_present(path: Path, branch: str | None) -> bool:
     return verify.returncode == 0
 
 
+@_answered_before_the_lock(lambda: None)
 def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
     """Return whether origin has ``branch``; None on failure, reporting typed refusals."""
     if not branch:
         return False
-    # Called under both locks (#10637). 30s is this probe's own cap, clipped
-    # to the time left on the locked-region deadline.
+    # Read before the cleanup-wide lock (#10637). 30s is this probe's own cap,
+    # clipped to the time left on the locked-region deadline.
     proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=primary_checkout_root(path), timeout=30)
     if proc.returncode != 0:
         if isinstance(proc, GitRefusal):
@@ -2744,7 +2864,17 @@ class _ActiveTaskProbeFailure(RuntimeError):
 _ACTIVE_TASK_PROBE_TIMEOUT_S = 3.0
 
 
+def _unanswered_monitor() -> _ActiveTaskProbeFailure:
+    return _ActiveTaskProbeFailure(
+        reason=f"active-task probe unavailable [active_task_probe_unanswered]: {REAP_NETWORK_UNANSWERED}",
+        fallback_allowed=False,
+    )
+
+
 def _active_task_ids() -> set[str] | None:
+    # Never sent while a candidate requests or holds the cleanup-wide lock (#10637).
+    if _network_refused("Monitor"):
+        raise _unanswered_monitor()
     try:
         import urllib.request
 
@@ -2770,8 +2900,13 @@ def _active_task_ids() -> set[str] | None:
         ) from exc
 
 
+@_answered_before_the_lock(_unanswered_monitor)
 def _read_active_task_probe() -> set[str] | _ActiveTaskProbeFailure | None:
-    """Keep typed failures for the reaper; delegate callers handle them as unknown."""
+    """Keep typed failures for the reaper; delegate callers handle them as unknown.
+
+    A candidate reads it before its cleanup-wide lock and is answered from
+    that read under the lock (#10637).
+    """
     try:
         return _active_task_ids()
     except _ActiveTaskProbeFailure as exc:
@@ -3023,9 +3158,9 @@ def _detached_clean_contained_recheck(
 ) -> str | None:
     """Re-prove the class immediately before deletion, under both locks.
 
-    ``active_probe`` is the Monitor answer read under both locks (#10637);
-    everything else is read here. Returns a skip reason, or ``None`` when
-    every precondition still holds.
+    ``active_probe`` is the Monitor answer read before the cleanup-wide lock
+    (#10637); everything else is read here. Returns a skip reason, or ``None``
+    when every precondition still holds.
     """
     try:
         worktrees = list_git_worktrees(repo_root)
@@ -3326,9 +3461,10 @@ def _review_checkout_recheck(
 
     The class is derived again from fresh state, not carried over from
     qualification: the tree residue, the remote containment, the PR heads
-    (re-read; an unreadable or now-equal head keeps the checkout), the age and
-    task-record test, and detached HEAD for the detached classes.
-    ``active_probe`` is the Monitor answer read under both locks (#10637).
+    (the answers read before the cleanup-wide lock; an unreadable or now-equal
+    head keeps the checkout), the age and task-record test, and detached HEAD
+    for the detached classes. ``active_probe`` is the Monitor answer read
+    before that lock (#10637).
     """
     try:
         worktrees = list_git_worktrees(repo_root)
@@ -4750,8 +4886,8 @@ def _enter_dispatch_worktree_guard(
     an unfinished status that names the checkout refuses removal. Settlement
     proofs that read the forge run before the lock; under it they are
     re-checked locally. The reaper repeats the whole scan, proofs included,
-    under both locks (:func:`_locked_claim_refusal`). Returns a skip reason,
-    or ``None`` with the lock held until ``stack`` closes.
+    under this lock and again under both locks (:func:`_locked_claim_refusal`).
+    Returns a skip reason, or ``None`` with the lock held until ``stack`` closes.
     """
     scan = _claim_scan(repo_root, info)
     if isinstance(scan, str):
@@ -4783,12 +4919,14 @@ def _enter_dispatch_worktree_guard(
 
 
 def _locked_claim_refusal(repo_root: Path, info: WorktreeInfo) -> str | None:
-    """Delegate's claim scan again under both locks, every settlement proof read now (#10637).
+    """Delegate's claim scan again, every settlement proof read now (#10637).
 
-    The guard's scan ran before the cleanup-wide lock was granted. Here the
-    owner's attempt and every unfinished claim naming the checkout are proven
-    afresh, the forge and Monitor included, inside the candidate's bounded
-    locked region. Returns a skip reason, or ``None``.
+    The guard's scan ran before delegate's lock was granted. Here the owner's
+    attempt and every unfinished claim naming the checkout are proven afresh
+    inside the candidate's bounded locked region: once before the cleanup-wide
+    lock, reading the forge and Monitor, and once under it, with task records
+    read afresh and those network answers (:func:`_candidate_proofs`).
+    Returns a skip reason, or ``None``.
     """
     scan = _claim_scan(repo_root, info)
     if isinstance(scan, str):
@@ -4937,8 +5075,8 @@ def _locked_activity_refusal(
 ) -> str | None:
     """Re-prove under both locks that nothing uses the checkout (#10637); skip reason or None.
 
-    ``active_ids`` is the Monitor answer read under both locks; the task
-    records, leases, rollover leases and claims are read now, with
+    ``active_ids`` is the Monitor answer read before the cleanup-wide lock;
+    the task records, leases, rollover leases and claims are read now, with
     ``live_cwds`` (a process-CWD scan taken under both locks), or a scan taken
     here. Before a settled task's leftover jobs are stopped, their cwds are
     spared, as at classification; after it, every live cwd inside retains.
@@ -5040,9 +5178,12 @@ class _CandidateSection:
             unwind.callback(attempt("locked region", self.region.close))
             unwind.callback(attempt("reaper lock context", self.reap_lock.close))
             if self.cap_slot is not None:
+                # The release can fail before its write, which leaves the slot
+                # spent until that UTC date ends, or after it, which already
+                # gave it back: either way, never a removal past the cap.
                 unwind.callback(
                     attempt(
-                        "daily-cap slot release (the slot stays spent)",
+                        "daily-cap slot release (unconfirmed: the slot may stay spent)",
                         functools.partial(_give_back_cap_slot, repo_root, self.cap_slot),
                     )
                 )
@@ -5108,15 +5249,19 @@ def _reap_qualified_worktree(
     Lock order (#10637): delegate's per-worktree lock, then the cleanup-wide
     lock, held for this candidate only. From the per-worktree lock until just
     before ``git worktree remove`` one deadline (:func:`_bounded_locked_git`)
-    bounds every read, and under both locks every fact the removal rests on
-    is read again: the pinned registration, the Monitor answer, a process-CWD
-    scan, ``reclassify`` (the pass's own classification re-run with those
-    answers, which must reproduce ``reason`` and ``dirty`` exactly), every
-    claim with its settlement proofs, the daily cap, each class's forge and
-    remote Git proofs, and the local re-checks. Anything unreadable, past its
-    bound, or changed retains the checkout. ``pin`` is the registration
-    pinned before classification; without one it is pinned here. Without
-    ``reclassify`` (a caller-supplied reason) activity is re-proven instead.
+    bounds every read. No Monitor, forge or remote-Git read runs under the
+    cleanup-wide lock: under the per-worktree lock alone the candidate's
+    checks (:func:`_candidate_proofs`) read each of them once, fresh, and keep
+    the answers. Under both locks every fact the removal rests on is read
+    again: the pinned registration, a process-CWD scan, ``reclassify`` (the
+    pass's own classification re-run, which must reproduce ``reason`` and
+    ``dirty`` exactly), every claim with its settlement proofs, the daily cap,
+    and the local re-checks, all with local facts read afresh and network
+    answers taken from what was kept. A read that was not kept is refused,
+    never sent, and retains the checkout, as does anything unreadable, past
+    its bound, or changed. ``pin`` is the registration pinned before
+    classification; without one it is pinned here. Without ``reclassify`` (a
+    caller-supplied reason) activity is re-proven instead.
 
     The cleanup-wide hold ends at that same deadline, enforced by the lock's
     watchdog, and before preservation and removal, which run under the
@@ -5243,6 +5388,169 @@ def _reap_qualified_worktree(
     return section.outcome(result, section.close(repo_root, info.path, pin if owns_pin else None))
 
 
+class _CandidateProofs(NamedTuple):
+    """What a candidate's read-only checks established (#10637)."""
+
+    active_ids: set[str] | None
+    pr_state: PullRequestState | None
+    origin_gone: tuple[bool, str] | None
+    live_origin: bool | None
+    pr_snapshot: tuple[list[PullRequestState], str | None] | None
+
+
+def _candidate_proofs(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    reason: str,
+    dirty: bool,
+    pr_state: PullRequestState | None,
+    pin: _RegistrationPin,
+    reclassify: Callable[..., ReapResult | _Qualified] | None,
+    require_terminal_dispatch_guards: bool,
+) -> ReapResult | _CandidateProofs:
+    """Every read-only check a removal rests on, network included; the skip, or what they established.
+
+    Runs twice for one candidate (#10637), both times under delegate's
+    per-worktree lock and inside its locked region: before the cleanup-wide
+    lock is requested, recording each Monitor, forge and remote-Git answer
+    (:class:`_PreLockAnswers`), and again under that lock, where the pinned
+    registration, task records, leases, claims, process cwds, cleanliness and
+    HEAD are read afresh and each network answer is the one recorded. Only
+    the second run decides the removal.
+    """
+    identity_refusal = _classified_identity_refusal(repo_root, info, pin)
+    if identity_refusal is not None:
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"{identity_refusal}; originally qualified because {reason}",
+            dirty=dirty,
+            pr=_pr_dict(pr_state),
+        )
+
+    if reason.startswith("terminal-abandon.v1 "):
+        # The typed refusal names the owner and what it must refresh (#10303).
+        abandon_refusal = _terminal_abandon_refusal(repo_root, info, dirty=dirty, pr_state=pr_state)
+        if abandon_refusal is not None:
+            return abandon_refusal
+
+    # Nothing classification read decides this removal (a Monitor transport
+    # outage falls back to this checkout's bound task record, as at
+    # classification).
+    active_ids, probe_error = _resolve_activity_probe(repo_root, info, _read_active_task_probe())
+    if probe_error is not None:
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"{probe_error}; originally qualified because {reason}",
+            dirty=dirty,
+            pr=_pr_dict(pr_state),
+        )
+    live_cwds = _live_cwd_paths(repo_root)
+    if live_cwds is None:
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"process-CWD activity probe unavailable during cleanup; originally qualified because {reason}",
+            dirty=dirty,
+            pr=_pr_dict(pr_state),
+        )
+    if reclassify is not None:
+        fresh = reclassify(active_probe=active_ids, live_cwds=live_cwds)
+        if isinstance(fresh, ReapResult):
+            if not info.path.exists():
+                # An uncooperative remover took it after the identity check.
+                raise FileNotFoundError(info.path)
+            return replace(fresh, reason=f"{fresh.reason}; originally qualified because {reason}")
+        if fresh.dirty != dirty:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"worktree changed during cleanup; originally qualified because {reason}",
+                dirty=fresh.dirty,
+                pr=_pr_dict(fresh.pr_state),
+            )
+        if fresh.reason != reason:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"reap class changed under the reaper lock to: {fresh.reason}; "
+                f"originally qualified because {reason}",
+                dirty=dirty,
+                pr=_pr_dict(fresh.pr_state),
+            )
+        pr_state = fresh.pr_state
+    else:
+        activity = _locked_activity_refusal(
+            repo_root, info, active_ids, spare_settled_leftovers=True, live_cwds=live_cwds
+        )
+        if activity is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=activity,
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+    claim_refusal = _locked_claim_refusal(repo_root, info)
+    if claim_refusal is not None:
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"{claim_refusal}; originally qualified because {reason}",
+            dirty=dirty,
+            pr=_pr_dict(pr_state),
+        )
+
+    # Search only establishes commit membership, not the actual PR head.
+    if pr_state is not None and pr_state.head_from_commit_search:
+        from scripts.fleet import ignored_task_output
+
+        tasks_dir = task_store_paths.tasks_dir()
+        matches = ignored_task_output.matching_worktree_records(
+            info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
+        )
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+    else:
+        cohort = []
+    if len(cohort) >= 2:
+        states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
+        fresh_pr = next((state for state in states if state.number == pr_state.number), None)
+        if error is not None or fresh_pr is None or fresh_pr.head_from_commit_search:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="commit-search PR head unavailable",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+        pr_state = fresh_pr
+
+    # Each class's remote proofs. The re-run classification proved an
+    # origin-gone class with the same live probe.
+    origin_gone: tuple[bool, str] | None = None
+    live_origin: bool | None = None
+    pr_snapshot: tuple[list[PullRequestState], str | None] | None = None
+    if reason.endswith("MERGED; origin branch gone") and pr_state is not None:
+        origin_gone = (True, "") if reclassify is not None else _merged_origin_gone_proof(info, pr_state)
+    if reason.startswith("dispatch HEAD ancestor of origin/main"):
+        live_origin = _live_origin_heads_present(info.path, info.branch)
+    if info.branch is not None and (
+        require_terminal_dispatch_guards or reason.startswith("dispatch HEAD ancestor of origin/main")
+    ):
+        pr_snapshot = _query_pr_states(repo_root, info.branch)
+    return _CandidateProofs(active_ids, pr_state, origin_gone, live_origin, pr_snapshot)
+
+
 def _reap_candidate_locked(
     section: _CandidateSection,
     *,
@@ -5264,7 +5572,7 @@ def _reap_candidate_locked(
     Lock order, reads and bounds are :func:`_reap_qualified_worktree`'s. The
     cleanup-wide lock ends before preservation and removal, and removal starts
     only when this candidate released it before its deadline, which proves the
-    reservation and every read ran under one continuous hold. The caller
+    reservation and every local read ran under one continuous hold. The caller
     releases everything in ``section`` on every path.
     """
     expected_head = info.head
@@ -5303,6 +5611,24 @@ def _reap_candidate_locked(
         # cleanup-wide lock, so a dispatch waiting on the per-worktree lock is
         # not held past its own timeout before removal starts.
         region.enter_context(_bounded_locked_git())
+        # No Monitor, forge or remote-Git read runs under the cleanup-wide lock
+        # (#10637). The checks run here first and record each network answer;
+        # under the lock they run again with every local fact read afresh and
+        # those answers, and a read that was not recorded retains the checkout.
+        answers = region.enter_context(_pre_lock_answers())
+        proofs = _candidate_proofs(
+            repo_root=repo_root,
+            info=info,
+            reason=reason,
+            dirty=dirty,
+            pr_state=pr_state,
+            pin=pin,
+            reclassify=reclassify,
+            require_terminal_dispatch_guards=require_terminal_dispatch_guards,
+        )
+        if isinstance(proofs, ReapResult):
+            return proofs
+        answers.locked = True
         try:
             # The hold ends at this region's deadline: a watchdog releases the
             # cleanup-wide lock then, whatever read is in flight (#10637).
@@ -5335,96 +5661,32 @@ def _reap_candidate_locked(
                 dirty=dirty,
                 pr=_pr_dict(pr_state),
             )
-        identity_refusal = _classified_identity_refusal(repo_root, info, pin)
-        if identity_refusal is not None:
+        # Under both locks: every local fact afresh, each network answer as
+        # read before the lock. A local change that needs a read not taken
+        # then is refused, never sent, and retains the checkout.
+        proofs = _candidate_proofs(
+            repo_root=repo_root,
+            info=info,
+            reason=reason,
+            dirty=dirty,
+            pr_state=pr_state,
+            pin=pin,
+            reclassify=reclassify,
+            require_terminal_dispatch_guards=require_terminal_dispatch_guards,
+        )
+        unanswered = answers.refusal()
+        if unanswered is not None:
             return ReapResult(
                 path=str(info.path),
                 branch=info.branch,
                 action="skipped",
-                reason=f"{identity_refusal}; originally qualified because {reason}",
+                reason=f"{unanswered}; originally qualified because {reason}",
                 dirty=dirty,
                 pr=_pr_dict(pr_state),
             )
-
-        if abandoning:
-            # The typed refusal names the owner and what it must refresh (#10303).
-            abandon_refusal = _terminal_abandon_refusal(repo_root, info, dirty=dirty, pr_state=pr_state)
-            if abandon_refusal is not None:
-                return abandon_refusal
-
-        # Authority answers read now, under both locks; nothing read before the
-        # lock decides this removal (a Monitor transport outage falls back to
-        # this checkout's bound task record, as at classification).
-        active_ids, probe_error = _resolve_activity_probe(repo_root, info, _read_active_task_probe())
-        if probe_error is not None:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="skipped",
-                reason=f"{probe_error}; originally qualified because {reason}",
-                dirty=dirty,
-                pr=_pr_dict(pr_state),
-            )
-        live_cwds = _live_cwd_paths(repo_root)
-        if live_cwds is None:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="skipped",
-                reason=f"process-CWD activity probe unavailable during cleanup; originally qualified because {reason}",
-                dirty=dirty,
-                pr=_pr_dict(pr_state),
-            )
-        if reclassify is not None:
-            fresh = reclassify(active_probe=active_ids, live_cwds=live_cwds)
-            if isinstance(fresh, ReapResult):
-                if not info.path.exists():
-                    # An uncooperative remover took it after the identity check.
-                    raise FileNotFoundError(info.path)
-                return replace(fresh, reason=f"{fresh.reason}; originally qualified because {reason}")
-            if fresh.dirty != dirty:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=f"worktree changed during cleanup; originally qualified because {reason}",
-                    dirty=fresh.dirty,
-                    pr=_pr_dict(fresh.pr_state),
-                )
-            if fresh.reason != reason:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=f"reap class changed under the reaper lock to: {fresh.reason}; "
-                    f"originally qualified because {reason}",
-                    dirty=dirty,
-                    pr=_pr_dict(fresh.pr_state),
-                )
-            pr_state = fresh.pr_state
-        else:
-            activity = _locked_activity_refusal(
-                repo_root, info, active_ids, spare_settled_leftovers=True, live_cwds=live_cwds
-            )
-            if activity is not None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason=activity,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-        claim_refusal = _locked_claim_refusal(repo_root, info)
-        if claim_refusal is not None:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="skipped",
-                reason=f"{claim_refusal}; originally qualified because {reason}",
-                dirty=dirty,
-                pr=_pr_dict(pr_state),
-            )
+        if isinstance(proofs, ReapResult):
+            return proofs
+        active_ids, pr_state, origin_gone, live_origin, pr_snapshot = proofs
 
         # The daily cap is checked under the cleanup-wide lock and this removal
         # is counted right there, before anything destructive (#10637). Every
@@ -5452,30 +5714,6 @@ def _reap_candidate_locked(
         reaper_lifecycle.record_reap_for_cap(repo_root, now=counted_at)
         section.cap_slot = counted_at
 
-        # Search only establishes commit membership, not the actual PR head.
-        if pr_state is not None and pr_state.head_from_commit_search:
-            from scripts.fleet import ignored_task_output
-
-            tasks_dir = task_store_paths.tasks_dir()
-            matches = ignored_task_output.matching_worktree_records(
-                info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
-            )
-            cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
-        else:
-            cohort = []
-        if len(cohort) >= 2:
-            states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
-            fresh_pr = next((state for state in states if state.number == pr_state.number), None)
-            if error is not None or fresh_pr is None or fresh_pr.head_from_commit_search:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="commit-search PR head unavailable",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            pr_state = fresh_pr
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
         # No mutation in the hold starts after the hold ended (#10637).
@@ -5496,20 +5734,6 @@ def _reap_candidate_locked(
                 pr=_pr_dict(pr_state),
             )
         section.pending_marked = True
-
-        # Each class's remote proofs, read now. The re-run classification
-        # just proved an origin-gone class with the same live probe.
-        origin_gone: tuple[bool, str] | None = None
-        live_origin: bool | None = None
-        pr_snapshot: tuple[list[PullRequestState], str | None] | None = None
-        if reason.endswith("MERGED; origin branch gone") and pr_state is not None:
-            origin_gone = (True, "") if reclassify is not None else _merged_origin_gone_proof(info, pr_state)
-        if reason.startswith("dispatch HEAD ancestor of origin/main"):
-            live_origin = _live_origin_heads_present(info.path, info.branch)
-        if info.branch is not None and (
-            require_terminal_dispatch_guards or reason.startswith("dispatch HEAD ancestor of origin/main")
-        ):
-            pr_snapshot = _query_pr_states(repo_root, info.branch)
 
         # A settled worker's background jobs die with its worktree, never
         # after it into a deleted cwd (#8991); if they survive, it stays.
@@ -5612,8 +5836,9 @@ def _reap_candidate_locked(
                     error=f"worktree unlock failed: {_format_failure(unlock)}",
                 )
         elif _is_review_checkout_reason(reason):
-            # The class is derived once more, forge included, now that leftover
-            # jobs are stopped, with the Monitor answer read under both locks.
+            # The class is derived once more from local state read now that
+            # leftover jobs are stopped, with the forge and Monitor answers
+            # read before the cleanup-wide lock.
             recheck = _review_checkout_recheck(repo_root, info, reason, now, active_probe=active_ids)
             if recheck is not None:
                 return ReapResult(
@@ -5902,12 +6127,26 @@ def _reap_candidate_locked(
             )
         if merged_reuse_proof is not None:
             preservation_receipt["merged_head_proof"] = merged_reuse_proof
+        # A recheck above that wanted a network read not taken before the lock
+        # was refused it; nothing it answered authorizes removal (#10637).
+        unanswered = answers.refusal()
+        if unanswered is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"{unanswered}; originally qualified because {reason}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+                recovery_ref=recovery_ref,
+                preserved_artifacts=preservation_receipt or None,
+            )
 
         # The cleanup-wide lock ends here, before preservation and removal
         # (#10637). Removal starts only when this candidate released it before
-        # its deadline: then the reservation and every read above ran under
-        # one continuous hold. A hold the watchdog ended, or an unlock that
-        # failed, retains the checkout and stops the run.
+        # its deadline: then the reservation and every local read above ran
+        # under one continuous hold. A hold the watchdog ended, or an unlock
+        # that failed, retains the checkout and stops the run.
         try:
             hold.release()
         except (ReapLockHoldExpired, ReapLockReleaseFailed) as exc:
@@ -5927,7 +6166,8 @@ def _reap_candidate_locked(
         # mid-delete. Removal keeps :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`
         # (120s) under the per-worktree lock alone; the artifact preservation
         # inside it bounds each forge read (30s) and task-record lock wait
-        # (``_LOCKED_LOCK_WAIT_S``). Legacy classes retain their force
+        # (``_LOCKED_LOCK_WAIT_S``); closing the region also ends the pre-lock
+        # answers, so those reads are live. Legacy classes retain their force
         # setting. Proven continuation cohorts use ordinary Git removal after
         # mandatory preservation.
         region.close()
@@ -6117,9 +6357,11 @@ def _classify_worktree(
     """Classify one listed worktree: the skip result, or why it may be removed.
 
     It only reads. A pass runs it without the cleanup-wide lock to select
-    candidates; a candidate's removal runs it again under both locks with a
-    Monitor answer and process-CWD scan taken there (#10637), so every fact a
-    removal rests on is read inside the critical section that removes.
+    candidates. A candidate's removal runs it twice more (#10637): under the
+    per-worktree lock, reading the forge, Monitor and remote Git afresh, then
+    under both locks with every local fact read afresh and those network
+    answers, so every local fact a removal rests on is read inside the
+    critical section that removes, and no network read is.
     """
     if info.path.resolve() == repo_root.resolve() or info.path.resolve() == primary_checkout_root(repo_root).resolve():
         return ReapResult(

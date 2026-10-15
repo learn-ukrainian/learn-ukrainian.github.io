@@ -699,9 +699,10 @@ def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_and_bounded_unde
 ) -> None:
     """The claim proof's PR lookup runs before delegate's lock is taken.
 
-    Since #10637 it is proven again inside the candidate's locked section,
-    under both locks, where every read shares the region deadline that keeps
-    a waiting dispatch inside its own lock timeout.
+    Since #10637 it is proven again inside the candidate's bounded section,
+    before the cleanup-wide lock and never under it, where every read shares
+    the region deadline that keeps a waiting dispatch inside its own lock
+    timeout.
     """
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
@@ -7935,7 +7936,9 @@ def test_detached_review_class_stays_when_a_branch_is_checked_out_at_the_same_sh
     result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
 
     assert result.action == "skipped"
-    assert "proof changed during cleanup" in result.reason
+    # The new branch needs PR lookups the candidate did not read before the
+    # cleanup-wide lock; under it they are refused, never sent (#10637).
+    assert rw.REAP_NETWORK_UNANSWERED in result.reason, result.reason
     assert worktree.exists()
     assert git(worktree, "branch", "--show-current") == "review/same-sha"
 
@@ -8541,15 +8544,16 @@ def test_10637_impossible_lock_acquisition_time_is_unknown(acquired_at):
 def _reap_under_lock_probe(monkeypatch: pytest.MonkeyPatch, repo: Path, **kwargs: Any) -> list[rw.ReapResult]:
     """Run the reaper under :class:`ReaperLockProbe` and enforce the locked-section contract (#10637).
 
-    Under the cleanup-wide lock only one candidate's section reads Monitor, the
-    forge, ownership storage or remote Git, every such read is bounded, and no
-    lock wait is unbounded. A removed candidate read Monitor inside that section.
+    Nothing reads Monitor, the forge or remote Git under the cleanup-wide lock;
+    only one candidate's section reads ownership storage there, bounded, and
+    no lock wait is unbounded. A removed candidate read Monitor afresh in its
+    own section, before its lock.
     """
     probe = probe_reaper_lock(monkeypatch)
     results = rw.reap_worktrees(repo_root=repo, **kwargs)
     assert probe.violations() == [], f"locked-section contract broken: {probe.violations()}"
     if any(result.action in {"removed", "preserved_then_removed"} for result in results):
-        assert probe.under_lock("_active_task_ids"), "no Monitor answer was read under the cleanup-wide lock"
+        assert probe.before_lock("_active_task_ids"), "no Monitor answer was read in the candidate's section"
     return results
 
 
@@ -8694,9 +8698,9 @@ def test_10637_authority_reads_under_the_lock_are_fresh_and_bounded(tmp_path, mo
         probe = probe_reaper_lock(monkeypatch)
         results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), **options)
         assert probe.violations() == [], probe.violations()
-        assert probe.under_lock("_active_task_ids"), "no Monitor answer was read under the cleanup-wide lock"
-        # Each class's branch PR answer is read again inside the candidate's locked section.
-        assert probe.under_lock("_run_gh"), "the branch PR state was not re-read under the cleanup-wide lock"
+        assert probe.before_lock("_active_task_ids"), "no Monitor answer was read in the candidate's section"
+        # Each class's branch PR answer is read again in the candidate's section, before its lock.
+        assert probe.before_lock("_run_gh"), "the branch PR state was not re-read in the candidate's section"
 
     result = result_for(results, worktree)
     assert result.action == "removed", result.reason
@@ -8754,17 +8758,37 @@ def _before_candidate_lock(monkeypatch: pytest.MonkeyPatch, event: Any) -> list[
     return fired
 
 
+def _before_candidate_reads(monkeypatch: pytest.MonkeyPatch, event: Any) -> list[str]:
+    """Run ``event`` once, after classification, when delegate's lock is taken for a candidate.
+
+    That is before the candidate reads Monitor, the forge and remote Git
+    afresh, which it does before requesting the cleanup-wide lock (#10637).
+    """
+    real_guard = rw._enter_dispatch_worktree_guard
+    fired: list[str] = []
+
+    def guard(stack: Any, **kwargs: Any) -> Any:
+        refusal = real_guard(stack, **kwargs)
+        if refusal is None and not fired:
+            fired.append("candidate-reads")
+            event()
+        return refusal
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", guard)
+    return fired
+
+
 def _rescue_refs(repo: Path) -> list[str]:
     return git(repo, "for-each-ref", "--format=%(refname)", "refs/reaper-rescue").splitlines()
 
 
 @pytest.mark.parametrize("change", ["pr_head_restored", "monitor_active"])
 def test_10637_review_authority_change_before_the_lock_is_retained(tmp_path, monkeypatch, change):
-    """#10637: a review checkout's PR heads and Monitor answer are read inside its locked section.
+    """#10637: a review checkout's PR heads and Monitor answer are read afresh for its removal.
 
-    The change lands after every read the run took before the lock and just
-    before the lock is granted, where the base, holding the lock for the
-    whole pass, read both again.
+    The change lands after every read classification took, when delegate's
+    lock is taken for the candidate: the candidate reads both again in its
+    own section, before its cleanup-wide lock, never under it.
     """
     repo = init_repo(tmp_path)
     worktree, old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
@@ -8777,16 +8801,19 @@ def test_10637_review_authority_change_before_the_lock_is_retained(tmp_path, mon
     def event() -> None:
         if change == "pr_head_restored":
             # The open PR is force-pushed back to the review checkout's head.
+            # The stand-in is answered before the lock, like the lookup it replaces.
             monkeypatch.setattr(
                 rw,
                 "_query_pr_by_number",
-                lambda _repo, number: ([restored[number]], None) if number in restored else ([], "not found"),
+                rw._answered_before_the_lock(rw._unanswered_forge)(
+                    lambda _repo, number: ([restored[number]], None) if number in restored else ([], "not found")
+                ),
             )
         else:
             monkeypatch.setattr(rw, "_active_task_ids", lambda: {task_id})
 
     patch_gh(monkeypatch, {})
-    fired = _before_candidate_lock(monkeypatch, event)
+    fired = _before_candidate_reads(monkeypatch, event)
     result = result_for(
         rw.reap_worktrees(
             repo_root=repo,
@@ -8800,7 +8827,7 @@ def test_10637_review_authority_change_before_the_lock_is_retained(tmp_path, mon
         worktree,
     )
 
-    assert fired == ["candidate-mutation"]
+    assert fired == ["candidate-reads"]
     assert result.action == "skipped", result.reason
     assert worktree.is_dir()
     assert git(worktree, "rev-parse", "HEAD") == old
@@ -8820,7 +8847,13 @@ def test_10637_review_authority_change_before_the_lock_is_retained(tmp_path, mon
     ],
 )
 def test_10637_change_before_the_candidate_lock_is_retained(tmp_path, monkeypatch, change, expected):
-    """#10637: every fact a MERGED removal rests on is read again inside the candidate's locked section."""
+    """#10637: every fact a MERGED removal rests on is read again for the candidate.
+
+    A Monitor or forge change lands after classification, when delegate's lock
+    is taken: the candidate reads both afresh in its own section, before its
+    cleanup-wide lock. A local change lands just before that lock is granted:
+    the candidate reads it under the lock.
+    """
     repo = init_repo(tmp_path)
     task_id = "merged-10637-r3"
     branch = f"codex/{task_id}"
@@ -8849,10 +8882,11 @@ def test_10637_change_before_the_candidate_lock_is_retained(tmp_path, monkeypatc
         else:
             _write_rollover_lease(repo, {"status": "resumed", "source_checkout": {"path": str(worktree)}})
 
-    fired = _before_candidate_lock(monkeypatch, event)
+    network = change in {"monitor_active", "new_open_pr"}
+    fired = (_before_candidate_reads if network else _before_candidate_lock)(monkeypatch, event)
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
 
-    assert fired == ["candidate-mutation"]
+    assert fired == ["candidate-reads" if network else "candidate-mutation"]
     assert result.action == "skipped", result.reason
     assert expected in result.reason, result.reason
     assert worktree.is_dir()

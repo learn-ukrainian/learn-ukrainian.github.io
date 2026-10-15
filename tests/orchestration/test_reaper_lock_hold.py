@@ -1,9 +1,11 @@
 """#10637: one enforced deadline on every hold of the cleanup-wide lock, released on every exit path.
 
 A removable candidate is re-proven under delegate's per-worktree lock and the
-cleanup-wide lock. A watchdog ends that hold at the candidate's locked-region
-deadline whatever read is still in flight; the candidate is then retained and
-the rest of the pass is deferred. A release at or after the deadline is an
+cleanup-wide lock. No Monitor, forge or remote-Git read runs under the
+cleanup-wide lock: the candidate reads them in its own bounded section first.
+A watchdog ends that hold at the candidate's locked-region deadline whatever
+local read is still in flight; the candidate is then retained and the rest of
+the pass is deferred. A release at or after the deadline is an
 expired hold too, even when scheduling delayed the watchdog. Preservation and
 removal run after the hold, under the per-worktree lock alone. Every resource
 is released on every exit path, a failed reservation clear or a failed unlock
@@ -33,7 +35,17 @@ import pytest
 
 from scripts.orchestration import lock_wait_bound, reaper_lifecycle, worktree_claims
 from scripts.orchestration import reap_worktrees as rw
-from tests.orchestration.test_reap_worktrees import _backdate_tree, add_worktree, init_repo, patch_gh, result_for
+from tests.orchestration.test_reap_worktrees import (
+    _backdate_tree,
+    _before_candidate_lock,
+    _dead_pid,
+    _write_task_record,
+    add_worktree,
+    git,
+    init_repo,
+    patch_gh,
+    result_for,
+)
 from tests.orchestration.test_reap_worktrees import (
     _no_default_foreign_scratch_roots as _no_default_foreign_scratch_roots,
 )
@@ -184,6 +196,21 @@ def _on_candidate_grant(monkeypatch: pytest.MonkeyPatch, event: Any) -> list[flo
     return granted
 
 
+def _candidate_grants(monkeypatch: pytest.MonkeyPatch) -> list[float]:
+    """When each candidate's cleanup-wide lock was granted."""
+    real_enter = rw._ReapLock.__enter__
+    granted: list[float] = []
+
+    def enter(lock: Any) -> Any:
+        entered = real_enter(lock)
+        if lock.phase == "candidate-mutation":
+            granted.append(time.monotonic())
+        return entered
+
+    monkeypatch.setattr(rw._ReapLock, "__enter__", enter)
+    return granted
+
+
 def _attempted_candidates(monkeypatch: pytest.MonkeyPatch) -> list[Path]:
     real_guard = rw._enter_dispatch_worktree_guard
     attempts: list[Path] = []
@@ -218,31 +245,39 @@ def _trickling_response(body: bytes, *, timeout: float, byte_s: float, finished:
     return response
 
 
-def _slow_monitor(monkeypatch: pytest.MonkeyPatch, finished: list[float]) -> None:
-    """The real Monitor read, over a socket whose inactivity timeout never fires."""
+def _slow_monitor(monkeypatch: pytest.MonkeyPatch, started: Any, finished: list[float]) -> None:
+    """The real Monitor read, over a socket whose inactivity timeout never fires.
+
+    Only the first candidate's read trickles; the pass's opening read and
+    every later one answer at once. ``started`` runs as that read begins.
+    """
     import urllib.request
 
     monkeypatch.setattr(rw, "_active_task_ids", _REAL_ACTIVE_TASK_IDS)
+    slow: list[bool] = []
 
     def urlopen(_url: str, *, timeout: float) -> Any:
-        # Only the read under the lock trickles; the pass's opening read answers at once.
-        locked = rw._remaining_locked_s() is not None
+        trickle = rw._remaining_locked_s() is not None and not slow
+        if trickle:
+            slow.append(True)
+            started()
         return _trickling_response(
             b'{"tasks": []}',
             timeout=timeout,
-            byte_s=_TRICKLE_BYTE_S if locked else 0.0,
-            finished=finished if locked else [],
+            byte_s=_TRICKLE_BYTE_S if trickle else 0.0,
+            finished=finished if trickle else [],
         )
 
     monkeypatch.setattr(urllib.request, "urlopen", urlopen)
 
 
-def _slow_forge(monkeypatch: pytest.MonkeyPatch, finished: list[float]) -> None:
-    """A paginated forge read under the lock: every page inside the call's timeout, the sum past the hold."""
+def _slow_forge(monkeypatch: pytest.MonkeyPatch, started: Any, finished: list[float]) -> None:
+    """The first candidate's first forge read is paginated: every page inside the call's timeout, the sum past the hold."""
     answer = rw._run_gh
 
     def paged(args: list[str], **kwargs: Any) -> Any:
         if rw._remaining_locked_s() is not None and not finished:
+            started()
             for _page in range(_FORGE_PAGES):
                 time.sleep(_FORGE_PAGE_S)
             finished.append(time.monotonic())
@@ -251,43 +286,255 @@ def _slow_forge(monkeypatch: pytest.MonkeyPatch, finished: list[float]) -> None:
     monkeypatch.setattr(rw, "_run_gh", paged)
 
 
-@pytest.mark.parametrize("slow_read", ["monitor_trickle", "forge_pages"])
+def _slow_cwd_scan(monkeypatch: pytest.MonkeyPatch, granted: list[float], finished: list[float]) -> None:
+    """The first process-CWD scan under a candidate's cleanup-wide lock outlasts the hold."""
+
+    def scan(_repo_root: Path) -> set[Path]:
+        if granted and not finished:
+            time.sleep(_FORGE_PAGES * _FORGE_PAGE_S)
+            finished.append(time.monotonic())
+        return set()
+
+    monkeypatch.setattr(rw, "_live_cwd_paths", scan)
+
+
+@pytest.mark.parametrize("slow_read", ["monitor_trickle", "forge_pages", "cwd_scan"])
 def test_10637_hold_ends_at_its_deadline_while_a_read_is_in_flight(tmp_path, monkeypatch, slow_read):
-    """#10637 P1: reads that each honour their own cap but together outlast the hold release the lock on time.
+    """#10637 P1: reads that each honour their own cap but together outlast the hold never keep the lock.
 
     The review's reproducers: a Monitor response trickling inside its socket
-    timeout, and forge pages each inside the call's timeout. Another process
-    waiting on the lock is granted it at the hold deadline, while the read is
-    still running; the candidate is retained and the rest of the pass deferred.
+    timeout, and forge pages each inside the call's timeout. Neither runs
+    under the cleanup-wide lock: another process is granted it while the read
+    is still in flight, before the candidate ever requests it, and the
+    candidate, whose bounded section the read outlasted, is retained. A local
+    read under the lock, the process-CWD scan, is cut off by the watchdog at
+    the hold deadline: the waiting process is granted the lock then, the
+    candidate is retained and the rest of the pass deferred.
     """
     repo = init_repo(tmp_path)
     trees = _merged_trees(repo, monkeypatch, f"hold-{slow_read.replace('_', '-')}", 150)
     monkeypatch.setattr(rw, "_locked_region_budget_s", lambda: _HOLD_S)
     read_finished: list[float] = []
-    (_slow_monitor if slow_read == "monitor_trickle" else _slow_forge)(monkeypatch, read_finished)
     attempts = _attempted_candidates(monkeypatch)
     contender = _Contender(repo)
+    network = slow_read != "cwd_scan"
+    contender_granted: float | None = None
     try:
-        granted = _on_candidate_grant(monkeypatch, contender.go)
-        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
-        contender_granted = contender.granted_at()
-        # The reaper never unlocks a lock another process now holds.
-        assert not _lock_is_free(repo)
+        if network:
+            started: list[float] = []
+
+            def read_started() -> None:
+                # The other process takes the lock while the read runs, and lets it go.
+                nonlocal contender_granted
+                started.append(time.monotonic())
+                contender.go()
+                contender_granted = contender.granted_at()
+                contender.release()
+
+            (_slow_monitor if slow_read == "monitor_trickle" else _slow_forge)(monkeypatch, read_started, read_finished)
+            granted = _candidate_grants(monkeypatch)
+            results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+        else:
+            granted = _on_candidate_grant(monkeypatch, contender.go)
+            _slow_cwd_scan(monkeypatch, granted, read_finished)
+            results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+            contender_granted = contender.granted_at()
+            # The reaper never unlocks a lock another process now holds.
+            assert not _lock_is_free(repo)
     finally:
         contender.release()
 
-    assert granted and read_finished, (granted, read_finished)
+    assert read_finished, "the slow read never ran"
     assert contender_granted is not None, "the other process was never granted the lock"
     assert contender_granted < read_finished[0], "the lock stayed held until the slow read finished"
-    assert contender_granted - granted[0] <= _HOLD_S + _GRANT_SLACK_S, contender_granted - granted[0]
     first, second = (result_for(results, tree) for tree in trees)
-    assert all(tree.is_dir() for tree in trees)
+    assert trees[0].is_dir()
     assert first.action == "skipped", first.reason
-    assert first.reason.startswith(rw.REAP_LOCK_HOLD_EXPIRED), first.reason
-    assert second.action == "skipped", second.reason
-    assert second.reason.startswith(f"{rw.REAP_LOCK_HOLD_EXPIRED}; deferred to the next pass"), second.reason
-    assert [path.resolve() for path in attempts] == [trees[0].resolve()]
+    if network:
+        # Granted at once: the read held no lock. The first candidate's
+        # section ran out during it, so only the second ever took the lock.
+        assert contender_granted - started[0] <= _GRANT_SLACK_S, contender_granted - started[0]
+        assert len(granted) == 1, granted
+        assert not first.reason.startswith(rw.REAP_LOCK_HOLD_EXPIRED), first.reason
+        assert "originally qualified because PR #150 MERGED" in first.reason, first.reason
+        assert second.action == "removed", second.reason
+        assert [path.resolve() for path in attempts] == [tree.resolve() for tree in trees]
+    else:
+        assert contender_granted - granted[0] <= _HOLD_S + _GRANT_SLACK_S, contender_granted - granted[0]
+        assert all(tree.is_dir() for tree in trees)
+        assert first.reason.startswith(rw.REAP_LOCK_HOLD_EXPIRED), first.reason
+        assert second.action == "skipped", second.reason
+        assert second.reason.startswith(f"{rw.REAP_LOCK_HOLD_EXPIRED}; deferred to the next pass"), second.reason
+        assert [path.resolve() for path in attempts] == [trees[0].resolve()]
     assert not any(reaper_lifecycle.is_reap_pending(repo, tree) for tree in trees)
+    assert _lock_is_free(repo)
+
+
+def _cleanup_lock_held(repo: Path) -> bool:
+    """Whether some open file description holds the cleanup-wide lock, probed from a new one."""
+    path = rw._common_git_dir(repo) / "worktree-reaper.lock"
+    if not path.exists():
+        return False
+    descriptor = os.open(path, os.O_RDWR | os.O_CLOEXEC)
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return True
+        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        return False
+    finally:
+        os.close(descriptor)
+
+
+def _origin_gone_tree(repo: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A squash-merged PR whose origin branch is gone: its proof fetches the PR head and main."""
+    branch = "codex/net-origin-gone"
+    tree = add_worktree(repo, branch)
+    base = git(repo, "rev-parse", "main")
+    (tree / "change.txt").write_text("squashed change\n", encoding="utf-8")
+    git(tree, "add", "change.txt")
+    git(tree, "commit", "-m", "PR change")
+    pr_head = git(tree, "rev-parse", "HEAD")
+    git(tree, "push", "-u", "origin", branch)
+    git(repo, "push", "origin", f"{pr_head}:refs/pull/11/head")
+    git(tree, "reset", "--hard", base)
+    (tree / "change.txt").write_text("squashed change\n", encoding="utf-8")
+    git(tree, "add", "change.txt")
+    git(tree, "commit", "-m", "reconciled local patch")
+    (repo / "change.txt").write_text("squashed change\n", encoding="utf-8")
+    git(repo, "add", "change.txt")
+    git(repo, "commit", "-m", "squash PR")
+    git(repo, "push", "origin", "main")
+    git(repo, "push", "origin", "--delete", branch)
+    patch_gh(monkeypatch, {branch: [{"number": 11, "state": "MERGED", "headRefOid": pr_head}]})
+    return tree
+
+
+@pytest.mark.parametrize("kind", ["merged", "origin_gone", "dispatch_main"])
+def test_10637_no_network_read_runs_under_the_cleanup_lock(tmp_path, monkeypatch, kind):
+    """#10637 round 6, blocker: no Monitor, forge or remote-Git read runs while the cleanup-wide lock is held.
+
+    The review's probe: at the real network boundaries (``urlopen``, the
+    response ``read``, ``_run_gh`` and a remote Git subprocess) the
+    cleanup-wide lock is tested from an independent open file description.
+    Each read runs in the candidate's own bounded section, before the lock;
+    the removal still succeeds on the local facts re-read under it.
+    """
+    import io
+    import urllib.request
+
+    repo = init_repo(tmp_path)
+    options: dict[str, Any] = {}
+    if kind == "merged":
+        tree = add_worktree(repo, "codex/net-merged")
+        patch_gh(monkeypatch, {"codex/net-merged": [{"number": 240, "state": "MERGED"}]})
+        expected = {"Monitor urlopen", "Monitor read", "forge _run_gh"}
+    elif kind == "origin_gone":
+        tree = _origin_gone_tree(repo, monkeypatch)
+        options["safe_only"] = True
+        expected = {"Monitor urlopen", "Monitor read", "forge _run_gh", "git ls-remote", "git fetch"}
+    else:
+        tree = add_worktree(
+            repo, "codex/net-main-10637", path=repo / ".worktrees" / "dispatch" / "codex" / "net-main-10637"
+        )
+        os.utime(tree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
+        patch_gh(monkeypatch, {"codex/net-main-10637": []})
+        options["include_terminal_dispatches"] = True
+        expected = {"Monitor urlopen", "Monitor read", "forge _run_gh", "git ls-remote"}
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    reads: list[tuple[str, bool, bool]] = []
+
+    def observe(boundary: str) -> None:
+        reads.append((boundary, _cleanup_lock_held(repo), rw._remaining_locked_s() is not None))
+
+    class Response(io.BytesIO):
+        def read(self, *args: Any) -> bytes:
+            observe("Monitor read")
+            return super().read(*args)
+
+    def urlopen(_url: str, **_kwargs: Any) -> Response:
+        observe("Monitor urlopen")
+        return Response(b'{"tasks": []}')
+
+    forge = rw._run_gh
+
+    def run_gh(args: list[str], **kwargs: Any) -> Any:
+        observe("forge _run_gh")
+        return forge(args, **kwargs)
+
+    real_safe_git = rw.safe_git
+
+    def safe_git(args: list[str], **kwargs: Any) -> Any:
+        if kwargs.get("profile") == "remote":
+            observe(f"git {args[0]}")
+        return real_safe_git(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_active_task_ids", _REAL_ACTIVE_TASK_IDS)
+    monkeypatch.setattr(urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(rw, "_run_gh", run_gh)
+    monkeypatch.setattr(rw, "safe_git", safe_git)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), **options), tree)
+
+    assert [read for read in reads if read[1]] == [], "a network read ran under the cleanup-wide lock"
+    in_section = {boundary for boundary, _held, section in reads if section}
+    assert expected <= in_section, f"not read afresh in the candidate's section: {expected - in_section}"
+    assert result.action == "removed", result.reason
+    assert not tree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, tree)
+    assert _lock_is_free(repo)
+
+
+def test_10637_a_network_read_not_taken_before_the_lock_is_refused_and_retains(tmp_path, monkeypatch):
+    """#10637 round 6: under the lock no check reaches the network for an answer it was not given.
+
+    A claim lands just before the candidate's cleanup-wide lock is granted: a
+    ``needs_finalize`` task naming the checkout, whose settlement needs its
+    branch's PR state. Under the lock that lookup is refused, never sent, and
+    the checkout is retained; no network fact read before the lock settles
+    the new claim.
+    """
+    repo = init_repo(tmp_path)
+    tree = add_worktree(repo, "codex/net-unanswered")
+    head = git(tree, "rev-parse", "HEAD")
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/net-unanswered": [{"number": 245, "state": "MERGED"}],
+            "codex/net-claimant": [{"number": 246, "state": "MERGED", "headRefOid": head}],
+        },
+    )
+    forge = rw._run_gh
+    under_lock: list[list[str]] = []
+
+    def run_gh(args: list[str], **kwargs: Any) -> Any:
+        if _cleanup_lock_held(repo):
+            under_lock.append(args)
+        return forge(args, **kwargs)
+
+    def claim() -> None:
+        _write_task_record(
+            repo,
+            "net-claimant",
+            status="needs_finalize",
+            run_nonce="late-claim",
+            worktree_path=str(tree),
+            worktree_branch="codex/net-claimant",
+            final_branch_head_commit=head,
+            pid=_dead_pid(),
+        )
+
+    monkeypatch.setattr(rw, "_run_gh", run_gh)
+    fired = _before_candidate_lock(monkeypatch, claim)
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), tree)
+
+    assert fired == ["candidate-mutation"]
+    assert under_lock == [], under_lock
+    assert result.action == "skipped", result.reason
+    assert result.reason.startswith(f"{rw.REAP_NETWORK_UNANSWERED} (_query_pr_states)"), result.reason
+    assert tree.is_dir()
+    assert not reaper_lifecycle.is_reap_pending(repo, tree)
     assert _lock_is_free(repo)
 
 
@@ -790,7 +1037,14 @@ def test_10637_cap_slot_is_given_back_only_when_nothing_destructive_started(tmp_
 
 
 def test_10637_a_slot_that_cannot_be_given_back_stays_spent_and_stops_the_run(tmp_path, monkeypatch):
-    """Giving a slot back can fail; the slot then stays spent, the failure is reported and nothing more is removed."""
+    """Giving a slot back can fail; the failure is reported, nothing more is removed, and the cap holds.
+
+    A release that fails before its write leaves the slot spent. One whose
+    write commits and whose unlock then fails has given it back (round 6
+    review): the report never claims the slot stayed spent, only that the
+    release is unconfirmed.
+    """
+    unconfirmed = f"{rw.REAP_CLEANUP_FAILED}: daily-cap slot release (unconfirmed: the slot may stay spent)"
     repo = init_repo(tmp_path)
     trees = _merged_trees(repo, monkeypatch, "cap-give-back-fails", 230)
     monkeypatch.setenv("LU_REAPER_MAX_REAPS_PER_DAY", "5")
@@ -814,9 +1068,49 @@ def test_10637_a_slot_that_cannot_be_given_back_stays_spent_and_stops_the_run(tm
     assert all(tree.is_dir() for tree in trees)
     assert first.action == "skipped", first.reason
     assert first.error is not None
-    assert first.error.startswith(f"{rw.REAP_CLEANUP_FAILED}: daily-cap slot release (the slot stays spent)")
+    assert first.error.startswith(unconfirmed), first.error
     assert "LockWaitTimeout" in first.error, first.error
     assert second.reason.startswith(f"{rw.REAP_CLEANUP_FAILED}; deferred to the next pass"), second.reason
     assert _cap_count(cap_file, today) == 2
     assert not any(reaper_lifecycle.is_reap_pending(repo, tree) for tree in trees)
     assert _lock_is_free(repo)
+
+    # The give-back is written, then unlocking the cap lock fails.
+    committed = init_repo(tmp_path, "committed")
+    tree = add_worktree(committed, "codex/cap-give-back-committed")
+    patch_gh(monkeypatch, {"codex/cap-give-back-committed": [{"number": 235, "state": "MERGED"}]})
+    cap_file, today = _seed_cap(committed, 1)
+    cap_lock = str(reaper_lifecycle._cap_path(committed).with_suffix(".lock"))
+    real_flock = reaper_lifecycle.fcntl.flock
+    refunding: list[bool] = []
+    failed: list[bool] = []
+
+    def refuse(*_args: Any, **_kwargs: Any) -> str:
+        refunding.append(True)
+        return "artifact preservation failed: injected; refusing worktree removal"
+
+    def is_cap_lock(descriptor: Any) -> bool:
+        try:
+            return isinstance(descriptor, int) and os.readlink(f"/proc/self/fd/{descriptor}") == cap_lock
+        except OSError:
+            return False
+
+    def flock(descriptor: Any, operation: int) -> Any:
+        if refunding and not failed and operation == fcntl.LOCK_UN and is_cap_lock(descriptor):
+            failed.append(True)
+            raise OSError(errno.EIO, "injected cap unlock failure after the give-back was written")
+        return real_flock(descriptor, operation)
+
+    monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", refuse)
+    monkeypatch.setattr(reaper_lifecycle.fcntl, "flock", flock)
+    given_back = result_for(rw.reap_worktrees(repo_root=committed, apply=True, live_cwds=set()), tree)
+    monkeypatch.setattr(reaper_lifecycle.fcntl, "flock", real_flock)
+
+    assert failed, "the cap lock was never unlocked after the give-back"
+    assert tree.is_dir()
+    assert given_back.action == "skipped", given_back.reason
+    assert given_back.error is not None and given_back.error.startswith(unconfirmed), given_back.error
+    assert "stays spent" not in given_back.error, given_back.error
+    assert _cap_count(cap_file, today) == 1, "the give-back was written: the slot is free again"
+    assert not reaper_lifecycle.is_reap_pending(committed, tree)
+    assert _lock_is_free(committed)
