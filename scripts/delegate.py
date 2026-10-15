@@ -5597,6 +5597,17 @@ def _worktree_is_dirty(worktree: Path) -> bool | None:
 # time — is never this task's mutation, and it false-failed cleanly-successful
 # read-only dispatches (#7124). The guard diffs only what the task could own.
 _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS = frozenset({".worktrees"})
+# The workspace guard file the AGY adapter installs and AGY executes (#10727).
+_READ_ONLY_AGY_HOOK_PATH = ".agents/hooks.json"
+_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR = "agy hook snapshot failed:"
+# Snapshot errors that withhold content evidence Git status cannot provide.
+# A read-only task with one never settles ``done``.
+_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS = ("linked database snapshot failed:", _READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR)
+
+
+def _read_only_snapshot_error_fails_closed(error: str | None) -> bool:
+    """Return whether a snapshot error must fail the read-only task."""
+    return (error or "").startswith(_READ_ONLY_FAIL_CLOSED_SNAPSHOT_ERRORS)
 
 
 def _is_read_only_snapshot_excluded_path(path: str) -> bool:
@@ -5620,6 +5631,8 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     written (#9421). Fingerprint their link text, resolved path, and contents,
     including SQLite's persistent journal/WAL at the resolved target, so a
     write followed by retargeting to an older copy cannot settle ``done``.
+    The ignored AGY guard file keeps its status through a valid-to-valid
+    rewrite, so its bytes are fingerprinted the same way (#10727).
     """
     commands = (
         (
@@ -5720,7 +5733,56 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
             + ":"
             + json.dumps({"link_text": link_text, "resolved_path": str(target), "contents": fingerprints})
         )
+    hook_fingerprint, hook_error = _read_only_agy_hook_fingerprint(cwd)
+    if hook_error is not None:
+        return None, hook_error
+    if hook_fingerprint is not None:
+        entries[_READ_ONLY_AGY_HOOK_PATH] = (
+            entries.get(_READ_ONLY_AGY_HOOK_PATH, "!!") + ":" + json.dumps(hook_fingerprint)
+        )
     return entries, None
+
+
+def _provision_agy_read_only_guard(cwd: Path) -> None:
+    """Install AGY's workspace guard before the read-only baseline (#10727).
+
+    The adapter installs a missing guard while it builds the invocation, after
+    the pre-snapshot, so the harness's own file read as a provider mutation.
+    Only an absent file is provisioned, through the installer's dispatch
+    containment; an existing file, valid or not, is never touched. A failure
+    here is left to the adapter's provider-time check, which stays
+    authoritative and refuses before any provider subprocess.
+    """
+    from scripts.agent_runtime.agy_hook_config import install_worktree_guard
+
+    if os.path.lexists(cwd / _READ_ONLY_AGY_HOOK_PATH):
+        return
+    with contextlib.suppress(OSError, ValueError):
+        install_worktree_guard(cwd)
+
+
+def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, str | None]:
+    """Fingerprint the AGY guard file without following a final symlink.
+
+    Returns ``(None, None)`` when the file is absent; Git status still reports
+    a new ``.agents`` entry. A file that cannot be read is an error, never an
+    absent file: the snapshot then fails closed (#10727).
+    """
+    path = cwd / _READ_ONLY_AGY_HOOK_PATH
+    try:
+        info = path.lstat()
+        if stat.S_ISLNK(info.st_mode):
+            return {"link_text": os.readlink(path)}, None
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+        with os.fdopen(fd, "rb") as handle:
+            file_type = stat.S_IFMT(os.fstat(handle.fileno()).st_mode)
+            if file_type != stat.S_IFREG:
+                return {"file_type": file_type}, None
+            return {"sha256": hashlib.file_digest(handle, "sha256").hexdigest()}, None
+    except (FileNotFoundError, NotADirectoryError):
+        return None, None
+    except OSError as exc:
+        return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: {type(exc).__name__}"
 
 
 def _read_only_task_record_snapshot(
@@ -10551,6 +10613,8 @@ def _run_worker(
     # terminal record that names retention=digest has been written.
     clean_snapshots_to_discard: Path | None = None
     if mode == "read-only":
+        if agent == "agy":
+            _provision_agy_read_only_guard(cwd)
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
         task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
         task_records_snapshot_error = task_records_error
@@ -11056,7 +11120,7 @@ def _run_worker(
             if (
                 read_only_mutation_paths
                 or task_records_snapshot_error
-                or (read_only_snapshot_error or "").startswith("linked database snapshot failed:")
+                or _read_only_snapshot_error_fails_closed(read_only_snapshot_error)
             ):
                 final_status = "failed"
                 ok_outcome = False
@@ -11394,7 +11458,7 @@ def _run_worker(
                 field="last_error",
             )
             last_error = f"{last_error}; {snapshot}" if last_error else snapshot
-        elif (read_only_snapshot_error or "").startswith("linked database snapshot failed:"):
+        elif _read_only_snapshot_error_fails_closed(read_only_snapshot_error):
             snapshot = _publish_cause(
                 task_id,
                 _TypedCause("read_only_checkout_snapshot_failed", diagnostic=read_only_snapshot_error),
