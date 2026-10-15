@@ -5619,7 +5619,7 @@ def _is_read_only_snapshot_excluded_path(path: str) -> bool:
     return top_level in _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS
 
 
-def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str | None]:
+def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[dict[str, str] | None, str | None]:
     """Capture Git state and linked database contents for a read-only worker.
 
     The snapshot includes ignored files because a writeful legacy audit can
@@ -5634,7 +5634,9 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     including SQLite's persistent journal/WAL at the resolved target, so a
     write followed by retargeting to an older copy cannot settle ``done``.
     The ignored AGY guard file keeps its status through a valid-to-valid
-    rewrite, so its bytes are fingerprinted the same way (#10727).
+    rewrite, so with ``agy_hook`` its bytes are fingerprinted the same way
+    and an acquisition failure fails the snapshot (#10727). Only AGY
+    executes that guard; other agents keep the snapshot without it.
     """
     commands = (
         (
@@ -5735,6 +5737,8 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
             + ":"
             + json.dumps({"link_text": link_text, "resolved_path": str(target), "contents": fingerprints})
         )
+    if not agy_hook:
+        return entries, None
     hook_fingerprint, hook_error = _read_only_agy_hook_fingerprint(cwd)
     if hook_error is not None:
         return None, hook_error
@@ -10665,10 +10669,15 @@ def _run_worker(
     # Set only after digest.json is on disk. Phase files stay until the
     # terminal record that names retention=digest has been written.
     clean_snapshots_to_discard: Path | None = None
+    # Only AGY executes the workspace guard, so only AGY acquires it, before
+    # and after alike; other agents keep the base snapshot call (#10727).
+    read_only_snapshot_options: dict[str, bool] = {"agy_hook": True} if agent == "agy" else {}
     if mode == "read-only":
         if agent == "agy":
             _provision_agy_read_only_guard(cwd)
-        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
+        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(
+            cwd, **read_only_snapshot_options
+        )
         task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
         task_records_snapshot_error = task_records_error
         if read_only_snapshot_error is None:
@@ -11125,7 +11134,9 @@ def _run_worker(
                 ok_outcome = False
 
         if mode == "read-only":
-            read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
+            read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(
+                cwd, **read_only_snapshot_options
+            )
             task_records_post, task_records_error = _read_only_task_record_snapshot(task_id, task_records_pre)
             if task_records_snapshot_error is None:
                 task_records_snapshot_error = task_records_error

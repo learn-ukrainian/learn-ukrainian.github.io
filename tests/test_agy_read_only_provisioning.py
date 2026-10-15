@@ -36,6 +36,7 @@ from scripts.agent_runtime import agy_hook_config as hooks
 
 HOOK = ".agents/hooks.json"
 _MODEL = "gemini-3.1-pro-high"
+_CODEX_MODEL = "gpt-6.1-sol"
 
 
 def _clean_env() -> dict[str, str]:
@@ -114,11 +115,11 @@ def fake_agy(tmp_path, monkeypatch) -> Path:
     agy_module._agy_version.cache_clear()
 
 
-def _dispatch_worktree(primary: Path, task_id: str) -> Path:
+def _dispatch_worktree(primary: Path, task_id: str, agent: str = "agy") -> Path:
     worktree, _, _ = delegate._ensure_worktree(
-        agent="agy",
+        agent=agent,
         task_id=task_id,
-        raw_path=str(primary / ".worktrees" / "dispatch" / "agy" / task_id),
+        raw_path=str(primary / ".worktrees" / "dispatch" / agent / task_id),
         resolved_base_sha=_git(primary, "rev-parse", "HEAD"),
         detached=True,
     )
@@ -134,37 +135,40 @@ def _launch(
     *,
     mode: str = "read-only",
     provider_ok: bool = True,
+    agent: str = "agy",
 ) -> tuple[int, dict, list[dict]]:
-    """Run the real worker; substitute only the AGY process behind the adapter.
+    """Run the real worker; substitute only the provider process behind the adapter.
 
     Each provider start records what the provider found: the hook bytes and
-    their validation, the baseline sidecar keys and the Git status around the
-    tool calls.
+    their validation (AGY only), the baseline sidecar keys and the Git status
+    around the tool calls.
     """
+    model_id = _MODEL if agent == "agy" else _CODEX_MODEL
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(
         state_path,
-        {"task_id": task_id, "cwd": str(worktree), "mode": mode, "model": _MODEL, "cli_version": "fixture"},
+        {"task_id": task_id, "cwd": str(worktree), "mode": mode, "model": model_id, "cli_version": "fixture"},
     )
     launches: list[dict] = []
 
-    def provider(agent, prompt, *, mode, cwd, model, task_id, tool_config, **_kwargs):
-        assert agent == "agy"
-        # The real provider-time boundary: model resolution, hook provisioning and validation.
-        AgyAdapter().build_invocation(
-            prompt=prompt,
-            mode=mode,
-            cwd=cwd,
-            model=model,
-            task_id=task_id,
-            session_id=None,
-            tool_config=tool_config,
-        )
+    def provider(provider_agent, prompt, *, mode, cwd, model, task_id, tool_config, **_kwargs):
+        assert provider_agent == agent
+        if agent == "agy":
+            # The real provider-time boundary: model resolution, hook provisioning and validation.
+            AgyAdapter().build_invocation(
+                prompt=prompt,
+                mode=mode,
+                cwd=cwd,
+                model=model,
+                task_id=task_id,
+                session_id=None,
+                tool_config=tool_config,
+            )
         hook = cwd / HOOK
         pre_sidecar = delegate._read_only_snapshot_sidecar_path(task_id, "pre")
         launch = {
-            "hook_bytes": hook.read_bytes() if hook.exists() else None,
-            "hook_check": hooks.check_hook_config(hooks.hook_locations(cwd, Path.home())),
+            "hook_bytes": hook.read_bytes() if agent == "agy" and hook.exists() else None,
+            "hook_check": hooks.check_hook_config(hooks.hook_locations(cwd, Path.home())) if agent == "agy" else None,
             "baseline_paths": (
                 sorted(json.loads(pre_sidecar.read_text(encoding="utf-8"))) if pre_sidecar.exists() else None
             ),
@@ -172,7 +176,8 @@ def _launch(
         }
         subprocess.run([sys.executable, "-c", provider_script], cwd=cwd, check=True, timeout=60)
         launch["status_after"] = _status(cwd)
-        launch["hook_check_after"] = hooks.check_hook_config(hooks.hook_locations(cwd, Path.home()))
+        if agent == "agy":
+            launch["hook_check_after"] = hooks.check_hook_config(hooks.hook_locations(cwd, Path.home()))
         launches.append(launch)
         return type(
             "_Result",
@@ -183,7 +188,7 @@ def _launch(
                 "stderr_excerpt": None if provider_ok else "provider fixture exited 1",
                 "returncode": 0 if provider_ok else 1,
                 "rate_limited": False,
-                "model": _MODEL,
+                "model": model_id,
                 "effort": "high",
                 "cli_version": "fixture",
             },
@@ -192,11 +197,11 @@ def _launch(
     with patch("agent_runtime.runner.invoke", side_effect=provider):
         rc = delegate._run_worker(
             task_id=task_id,
-            agent="agy",
+            agent=agent,
             prompt="Read scripts/f.txt and report its first line; do not edit the tree.",
             mode=mode,
             cwd_str=str(worktree),
-            model=_MODEL,
+            model=model_id,
             hard_timeout=60,
         )
     state = delegate._read_state(state_path)
@@ -634,10 +639,10 @@ def _race_snapshot_call(monkeypatch, worktree: Path, name: str, matches: set[str
     active: list[bool] = []
     raised: list[int] = []
 
-    def snapshot(cwd):
+    def snapshot(cwd, **options):
         active.append(True)
         try:
-            return original_snapshot(cwd)
+            return original_snapshot(cwd, **options)
         finally:
             active.pop()
 
@@ -770,3 +775,98 @@ def test_parent_link_lost_around_readlink_fails_closed(primary, tmp_tasks_dir, f
     rc, state, launches = _launch(worktree, task_id, _READ)
 
     _assert_acquisition_failed(rc, state, launches, raised, errno.ENOENT)
+
+
+# --- Agent scope of the hook acquisition (#10727 review F3) ------------------
+#
+# Only AGY executes the workspace guard, so only an AGY read-only worker
+# acquires it and fails closed when it cannot. Another agent keeps the base
+# snapshot: a static, ignored ``.agents`` loop is no evidence it lacks, while
+# its Git-status, database-link and task-record checks still run.
+
+
+def _hook_parent_loop(worktree: Path) -> None:
+    """``.agents`` -> ``.agents``: the kernel refuses to traverse it (ELOOP)."""
+    import errno
+
+    (worktree / ".agents").symlink_to(".agents")
+    with pytest.raises(OSError) as loop:
+        (worktree / HOOK).lstat()
+    assert loop.value.errno == errno.ELOOP
+
+
+def test_non_agy_read_only_worker_ignores_a_static_hook_loop(primary, tmp_tasks_dir):
+    """F3: a Codex worker beside a static ignored hook-parent loop settles ``done`` as on base."""
+    task_id = "ro-10727-codex-loop"
+    worktree = _dispatch_worktree(primary, task_id, agent="codex")
+    _hook_parent_loop(worktree)
+
+    rc, state, launches = _launch(worktree, task_id, _READ, agent="codex")
+
+    assert len(launches) == 1
+    assert launches[0]["status_before"] == launches[0]["status_after"]
+    assert HOOK not in launches[0]["baseline_paths"]
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["read_only_mutation_paths"] == []
+    assert state["status"] == "done"
+    assert state["last_error"] is None
+    assert rc == 0
+    assert os.readlink(worktree / ".agents") == ".agents"
+
+
+def test_non_agy_read_only_worker_still_fails_on_a_checkout_mutation(primary, tmp_tasks_dir):
+    """F3 control: the loop is ignored, the Codex worker's tracked-file write is not."""
+    task_id = "ro-10727-codex-loop-write"
+    worktree = _dispatch_worktree(primary, task_id, agent="codex")
+    _hook_parent_loop(worktree)
+
+    rc, state, launches = _launch(worktree, task_id, _EDIT_TRACKED, agent="codex")
+
+    assert len(launches) == 1
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["read_only_mutation_paths"] == ["scripts/f.txt"]
+    assert state["status"] == "failed"
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    assert rc == 1
+
+
+def test_agy_read_only_worker_still_fails_closed_on_the_same_loop(primary, tmp_tasks_dir, fake_agy):
+    """F3 control: for AGY the unreadable guard is withheld evidence, never a clean checkout."""
+    task_id = "ro-10727-agy-loop"
+    worktree = _dispatch_worktree(primary, task_id)
+    _hook_parent_loop(worktree)
+
+    rc, state, _launches = _launch(worktree, task_id, _READ)
+
+    assert state["read_only_checkout_snapshot_error"] == f"agy hook snapshot failed: {HOOK}: OSError"
+    assert state["read_only_mutation_paths"] == []
+    assert state["status"] == "failed"
+    assert rc == 1
+    assert os.readlink(worktree / ".agents") == ".agents"
+
+
+def test_checkout_snapshot_acquires_the_hook_only_when_asked(tmp_path):
+    """The shared helper keeps its base call contract; the AGY worker opts in to the hook."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q")
+    (repo / ".gitignore").write_text(".agents/\n", encoding="utf-8")
+    (repo / ".agents").mkdir()
+    (repo / HOOK).write_bytes(b"{}\n")
+
+    base, error = delegate._read_only_checkout_snapshot(repo)
+    assert error is None
+    assert base[HOOK] == "!!"
+    with_hook, error = delegate._read_only_checkout_snapshot(repo, agy_hook=True)
+    assert error is None
+    assert with_hook[HOOK].startswith("!!:")
+    assert json.loads(with_hook[HOOK][3:])["sha256"] is not None
+
+    (repo / ".agents" / "hooks.json").unlink()
+    (repo / ".agents").rmdir()
+    _hook_parent_loop(repo)
+    assert delegate._read_only_checkout_snapshot(repo)[1] is None
+    assert delegate._read_only_checkout_snapshot(repo, agy_hook=True) == (
+        None,
+        f"agy hook snapshot failed: {HOOK}: OSError",
+    )
