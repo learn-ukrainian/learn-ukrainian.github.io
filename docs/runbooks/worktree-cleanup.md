@@ -423,8 +423,8 @@ reaps immediately. Apply mode also recovers interrupted reap reservations:
 new reservations record the holding PID, and recovery requires that PID to be
 absent plus acquisition of the worktree attachment lock. Live or unverifiable
 PIDs are retained regardless of age. Legacy reservations without a PID require
-a timestamp at least one hour old, the exclusive sweep lock, and the attachment
-lock. Malformed or future legacy timestamps remain reserved. A stable sidecar lock
+a timestamp at least one hour old, the attachment lock, and the repository-wide
+cleanup lock, taken in that order. Malformed or future legacy timestamps remain reserved. A stable sidecar lock
 serializes pending-state replacements so concurrent writers cannot lose entries.
 Recovery journals `reservation-recovery` before releasing a reservation, then
 reruns the normal safety proofs; dirty, active, or unmerged trees remain refused.
@@ -432,6 +432,133 @@ Dry runs and disabled reapers never release reservations. To recover one target,
 use the existing `reap_worktrees --apply --merged --worktree <path>` command;
 never edit `reap-pending.json` manually. Reservations for already removed trees
 can also be released; no second deletion path is used.
+
+The repository-wide cleanup lock (`worktree-reaper.lock` in the Git common
+directory) is held for one removal at a time (#10637): one candidate, one husk,
+or one interrupted reservation. Classification runs without it, a dry run never
+takes it, and an apply pass with nothing to remove and no interrupted
+reservation to release never takes it, so one cleanup can classify while
+another removes. Classification only selects
+candidates; it does not decide a removal.
+
+For each candidate that classified as removable, the reaper takes delegate's
+per-worktree lock, then the cleanup lock, and under both reads again every fact
+the removal rests on:
+
+- the registration, pinned when the pass listed the checkout: open directory
+  descriptors on the checkout and on the admin directory its `.git` pointer
+  names, compared with a fresh `lstat` of each path, plus the pointer bytes and
+  the listing's branch, HEAD, detached and lock state. A held descriptor keeps
+  its inode allocated, so no checkout removed and registered again at the same
+  path, branch and HEAD can match, even with a restored timestamp;
+- the Monitor active-task answer (a transport outage falls back to the
+  checkout's bound task record), and a process-CWD scan;
+- the pass's own classification, re-run with those answers: task records,
+  worker and rollover leases, ownership and review claims, cleanliness, and the
+  forge answers for the branch PRs, the review checkout's PR heads and
+  commit-search hits. It must reproduce the same reason and dirty state;
+- delegate's claim scan, with every needs_finalize, continuation and
+  terminal-abandon settlement proof read again;
+- the daily cap, the merged-head proofs that need remote Git (`ls-remote`,
+  fetches), the review and detached-class re-checks, HEAD, and, after a
+  settled task's leftover jobs are stopped, the registration and a last
+  process-CWD scan.
+
+A checkout is retained with a reason when any of these is unreadable, past its
+bound, or different from classification; a checkout that vanishes is retained
+with `worktree path vanished during cleanup` and the run goes on. Immediately
+before `git worktree remove`, the pinned directories must still be the ones at
+their paths.
+
+The cleanup lock is released before artifact preservation and
+`git worktree remove`, which run under the per-worktree lock alone, so a slow
+removal never keeps other cleanups out. Removal starts only when the candidate
+released the lock itself before the hold deadline below: then its reservation
+and every read above ran under one continuous hold.
+
+Hold deadline. From the per-worktree lock until removal one deadline applies,
+`worktree_claims.DEFAULT_LOCK_TIMEOUT_S` (30 s) minus a 5 s margin, so 25 s:
+it bounds the wait for the cleanup lock, every read under it, and the hold
+itself. Each read also has its own cap, clipped to what is left when it
+starts: Git 5 s (15 s for status, add and commit), forge calls 30 s, Monitor
+3 s, ownership storage 2 s (the sqlite busy wait, or the PostgreSQL connect
+and statement timeouts), process-CWD scan 15 s. Those caps bound each read's
+inactivity, not its total: a Monitor response that trickles in, forge pages
+and the several Git subprocesses of one call can each stay inside their caps
+and still outlast the deadline. The lock therefore enforces the deadline
+itself: a watchdog thread unlocks and closes it at the deadline whatever read
+is still in flight. The candidate is then retained with
+`reaper lock hold deadline passed`, nothing more is mutated or removed, and
+every later candidate and husk of that run is retained with
+`...; deferred to the next pass`. The in-flight read itself still ends only
+at its own cap, under the per-worktree lock. Every other hold (husk removal,
+reservation recovery) is due to end `DEFAULT_REAP_LOCK_HOLD_S` (25 s) after
+it was granted, inside a waiter's 30 s.
+
+The watchdog is a thread, so scheduling (or a long pause holding the
+interpreter lock) can run it late, and a waiter is granted the lock that much
+after the deadline. Removal never depends on it running: before each mutation
+and when it releases the lock, the holder reads the deadline on the same
+monotonic clock, and a hold found or released at or after its deadline counts
+as expired. The time is read after the unlock, so a removal or husk removal
+proceeds only when the lock was released before the deadline.
+
+Lock waits. A task-record, reservation, daily-cap or journal lock is never
+waited on for more than 5 s. An expired wait on a task record retains the
+checkout; on the journal, a reservation write or the daily-cap count it stops
+the run, as a journal failure always has. Merged-head proof publication runs inside the deadline.
+`git worktree remove` keeps its own 120 s bound; artifact preservation inside
+it bounds each forge call (30 s) and task-record lock (5 s). Branch pruning is
+capped at 5 s.
+
+Release on every path. The cleanup lock, the per-worktree lock, the deadline,
+the reservation and the pinned descriptors are each released on every exit
+path, even when another release fails. An unlock that fails still closes the
+descriptor, which frees the lock; the candidate is retained with
+`reaper lock release failed (...)`. A reservation that cannot be cleared stays
+with its owner pid and is reported in the result's error as
+`reaper cleanup failed: reservation clear ...`; a daily-cap slot that cannot
+be given back stays spent and is reported as
+`reaper cleanup failed: daily-cap slot release ...`. Either stops the run:
+nothing further is removed and the rest is deferred. Reservation recovery
+releases such a reservation once its owner process has exited.
+
+The daily cap is checked under the cleanup lock and the removal is counted
+right there, before anything destructive. Every check and count happens inside
+a hold, and a removal follows only a hold released before its deadline, so two
+cleanups never both spend the last slot, and no failure after a removal can
+leave it uncounted. The slot is given back only when nothing destructive
+started: the candidate was retained before `git worktree remove`, or artifact
+preservation refused, which happens before Git removes anything. After a Git
+removal failure it stays spent. A slot that stays spent can only delay a later
+removal, never exceed the cap.
+
+Measured on a synthetic repository with 30 removable checkouts, 0.7 s simulated
+forge latency, on a host at load 10 to 13: the lock was taken 30 times, held
+1.07 s per candidate (median) and at most 1.16 s; the pass took 56 s. Removing
+a small checkout is quick, so the head before the hold deadline (d2d367a2)
+measured the same; the deadline and the early release matter when a read
+outlasts its share or removal is slow. Before #10637 one pass held it once for
+29 s of a 30 s pass.
+
+Lock order is always delegate's per-worktree lock first, then the cleanup lock:
+for candidates, for husks, and for reservation recovery, which takes the
+per-worktree lock without waiting and skips a reservation whose lock is held.
+A waiter for the cleanup lock gives up after 30 seconds (a candidate waits at
+most what is left of its 25 s deadline) and names the holder's pid, phase
+(`reservation-recovery`, `candidate-mutation` or `husk-removal`) and UTC
+acquisition time (a real UTC second, else `unknown`), never the lock path, a
+branch or any other text from the lock file. A refusal during reservation
+recovery fails the run; a refusal at a candidate retains it and every later
+candidate and husk of that run with a `reaper lock busy` reason, deferred to
+the next pass. The Monitor API's
+hourly sweep runs in a background thread, one pass at a time, and logs
+`worktree GC sweep skipped: reaper_lock_busy ...` instead of a traceback.
+
+Residual: no lock keeps out a process that ignores both locks. One that enters
+or re-registers the checkout between the last check and Git's own removal is
+not detected.
+
 The first seven days are capped by
 `LU_REAPER_MAX_REAPS_PER_DAY` (default 25); when the eligible backlog of
 fully safety-qualified worktrees exceeds the remaining daily budget, the cap

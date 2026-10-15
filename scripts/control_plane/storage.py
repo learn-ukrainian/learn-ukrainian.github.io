@@ -37,6 +37,7 @@ Monitor API) or the store-specific overrides above.
 
 from __future__ import annotations
 
+import math
 import os
 import sqlite3
 from enum import StrEnum
@@ -51,6 +52,8 @@ _ENV_AUTHORITY = "LEARN_UKRAINIAN_CP_AUTHORITY"
 _ENV_PG_DSN = "LEARN_UKRAINIAN_CP_PG_DSN"
 _ENV_AUTHORITY_PREFIX = "LEARN_UKRAINIAN_CP_AUTHORITY_"
 _PG_CONNECT_TIMEOUT_S = 3
+# libpq treats any connect_timeout below 2 seconds as 2.
+_PG_MIN_CONNECT_TIMEOUT_S = 2
 
 
 class StoreId(StrEnum):
@@ -201,8 +204,12 @@ def _pg_dsn() -> str:
     return (os.environ.get(_ENV_PG_DSN) or "").strip()
 
 
-def _connect_postgres(store: StoreId, *, read_only: bool) -> Any:
-    """Open a real Postgres connection; never touch sqlite paths."""
+def _connect_postgres(store: StoreId, *, read_only: bool, timeout_s: float | None = None) -> Any:
+    """Open a real Postgres connection; never touch sqlite paths.
+
+    ``timeout_s`` caps the connect wait (never below libpq's 2 s floor) and
+    sets the session ``statement_timeout``.
+    """
     import psycopg
 
     dsn = _pg_dsn()
@@ -214,9 +221,17 @@ def _connect_postgres(store: StoreId, *, read_only: bool) -> Any:
     connect_kwargs: dict[str, Any] = {
         "connect_timeout": _PG_CONNECT_TIMEOUT_S,
     }
+    options: list[str] = []
     if read_only:
         # Session-default read-only so autocommit and explicit txs honor it.
-        connect_kwargs["options"] = "-c default_transaction_read_only=on"
+        options.append("-c default_transaction_read_only=on")
+    if timeout_s is not None:
+        connect_kwargs["connect_timeout"] = max(
+            _PG_MIN_CONNECT_TIMEOUT_S, min(_PG_CONNECT_TIMEOUT_S, math.ceil(timeout_s))
+        )
+        options.append(f"-c statement_timeout={max(1, math.ceil(timeout_s * 1000))}")
+    if options:
+        connect_kwargs["options"] = " ".join(options)
 
     try:
         return psycopg.connect(dsn, **connect_kwargs)
@@ -233,9 +248,14 @@ def connect(
     path: Path | str | None = None,
     read_only: bool = False,
     repo_root: Path | None = None,
+    timeout_s: float | None = None,
     **sqlite_kwargs: Any,
 ) -> sqlite3.Connection | Any:
     """Open the configured backend for ``store``.
+
+    ``timeout_s``, when given, bounds every wait the connection can make: the
+    sqlite busy wait, or the Postgres connect wait and statement timeout.
+    It must be a finite positive number of seconds.
 
     ``sqlite`` and ``shadow`` open the existing canonical sqlite files
     (``shadow`` remains a sqlite synonym in this slice).
@@ -247,11 +267,13 @@ def connect(
     ``ControlPlaneSqliteRefusedError`` remains for explicit sqlite-under-pg
     refusals elsewhere; it is not the ``pg`` success path.
     """
+    if timeout_s is not None and not (math.isfinite(timeout_s) and timeout_s > 0):
+        raise ValueError("timeout_s must be a finite positive number of seconds")
     authority = resolve_authority(store)
     if authority is Authority.PG:
         # Never open or create the sqlite path — even when callers pass one.
         # path / sqlite_kwargs / repo_root apply only to sqlite|shadow.
-        return _connect_postgres(store, read_only=read_only)
+        return _connect_postgres(store, read_only=read_only, timeout_s=timeout_s)
 
     if authority not in {Authority.SQLITE, Authority.SHADOW}:
         raise ControlPlaneError(f"unsupported authority for store {store.value!r}")
@@ -261,6 +283,8 @@ def connect(
         if path is not None
         else sqlite_path(store, repo_root=repo_root)
     )
+    if timeout_s is not None:
+        sqlite_kwargs["timeout"] = timeout_s
     if read_only:
         if not db_path.is_file():
             raise ControlPlaneStoreUnavailableError(

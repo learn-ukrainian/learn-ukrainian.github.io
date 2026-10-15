@@ -12,8 +12,8 @@ import json
 import os
 import re
 import subprocess
-from collections.abc import Iterator
-from contextlib import contextmanager
+from collections.abc import Callable, Iterator
+from contextlib import AbstractContextManager, contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -21,6 +21,7 @@ from typing import Any
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.execution_safe_git import primary_repository
 from scripts.orchestration.execution_safe_git import run_git as safe_git
+from scripts.orchestration.lock_wait_bound import flock_exclusive
 
 _STATE_RELATIVE = Path("batch_state") / "worktree-reaper"
 _PENDING_NAME = "reap-pending.json"
@@ -56,6 +57,25 @@ def _cap_path(repo_root: Path) -> Path:
     return _state_dir(repo_root) / _CAP_NAME
 
 
+@contextmanager
+def _cap_state(repo_root: Path) -> Iterator[Path]:
+    """Serialize read/replace transactions on the daily-cap file (#10637).
+
+    The reaper counts a removal under its cleanup-wide hold but can give an
+    unused slot back after that hold has ended, so two cleanups can write at
+    once; the lock is on a stable sibling inode, like the reservation file's,
+    and its wait is bounded while the reaper runs.
+    """
+    path = _cap_path(repo_root)
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    with path.with_suffix(".lock").open("a+", encoding="utf-8") as handle:
+        flock_exclusive(handle.fileno(), label="reaper daily-cap lock")
+        try:
+            yield path
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
 def _atomic_write(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
@@ -76,7 +96,11 @@ def _read_mapping(path: Path) -> dict[str, Any]:
 
 
 def append_journal(repo_root: Path, event: str, **evidence: Any) -> None:
-    """Append one fsync'd event; journal failures must stop enforcement."""
+    """Append one fsync'd event; journal failures must stop enforcement.
+
+    The append lock's wait is bounded while the reaper holds its cleanup lock
+    (#10637); an expired wait raises like any other journal failure.
+    """
     path = journal_path(repo_root)
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     row = {
@@ -86,7 +110,7 @@ def append_journal(repo_root: Path, event: str, **evidence: Any) -> None:
         **evidence,
     }
     with path.open("a", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        flock_exclusive(handle.fileno(), label="reaper journal lock")
         handle.write(json.dumps(row, sort_keys=True) + "\n")
         handle.flush()
         os.fsync(handle.fileno())
@@ -95,11 +119,14 @@ def append_journal(repo_root: Path, event: str, **evidence: Any) -> None:
 
 @contextmanager
 def _pending_entries(repo_root: Path) -> Iterator[dict[str, Any]]:
-    """Serialize read/replace transactions on an inode that is never replaced."""
+    """Serialize read/replace transactions on an inode that is never replaced.
+
+    The wait is bounded while the reaper holds its cleanup lock (#10637).
+    """
     path = pending_path(repo_root)
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     with path.with_suffix(".lock").open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        flock_exclusive(handle.fileno(), label="reap reservation lock")
         try:
             try:
                 current = json.loads(path.read_text(encoding="utf-8"))
@@ -182,19 +209,25 @@ def recover_orphaned_reap_pending(
     worktree_path: Path,
     *,
     lock_dir: Path,
+    reaper_lock: Callable[[], AbstractContextManager[object]],
 ) -> bool:
-    """Release an orphan, never delete a tree; caller holds the sweep's reaper lock.
+    """Release an orphan, never delete a tree.
 
-    Recheck the entry under both the stable state lock and the attachment lock.
-    Journal before mutation: an unavailable journal leaves the reservation intact.
-    Live or unverifiable PIDs remain protected regardless of age (including PID
-    reuse). Legacy PID-less entries require age plus the caller's reaper lock.
+    Takes the attachment lock without waiting (``timeout_s=0``: a held one
+    means a live remover or dispatch, so nothing is released), then
+    ``reaper_lock()``, the cleanup-wide reaper lock, in the order every
+    reaper mutation uses (#10637), then the stable state lock, and rechecks
+    the entry under all three. Journal before mutation: an unavailable journal
+    leaves the reservation intact. Live or unverifiable PIDs remain protected
+    regardless of age (including PID reuse). Legacy PID-less entries require
+    age plus the reaper lock.
     """
     if not is_reap_pending(repo_root, worktree_path):
         return False
     try:
         with (
             worktree_claims.worktree_lock(worktree_path, lock_dir=lock_dir, timeout_s=0),
+            reaper_lock(),
             _pending_entries(repo_root) as entries,
         ):
             key = str(worktree_path.resolve())
@@ -247,6 +280,12 @@ def cap_allows_reap(
     but never beyond a hard ceiling of 2x the configured base.  The ceiling
     is not env-expandable, and any doubt about the backlog count means no
     expansion.
+
+    A removal in progress is already counted (#10637): the reaper checks the
+    cap and counts the removal with :func:`record_reap_for_cap` under one
+    cleanup-wide hold, before anything destructive, so concurrent cleanups
+    never both spend a last slot and no failure after a removal leaves it
+    uncounted.
     """
     if os.environ.get("LU_REAPER_LIFT_FIRST_CLASS_CAP") == "1":
         return True, None
@@ -288,19 +327,38 @@ def cap_allows_reap(
 
 
 def record_reap_for_cap(repo_root: Path, *, now: datetime | None = None) -> None:
+    """Count one removal, before it starts (see :func:`cap_allows_reap`)."""
     current = now or utc_now()
-    path = _cap_path(repo_root)
-    state = _read_mapping(path)
-    counts = state.get("counts") if isinstance(state.get("counts"), dict) else {}
-    day = current.date().isoformat()
-    previous = counts.get(day, 0)
-    counts[day] = previous + 1 if isinstance(previous, int) else 1
-    state = {
-        "schema_version": "worktree-reaper-first-class-cap.v1",
-        "enabled_at": state.get("enabled_at") or current.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-        "counts": counts,
-    }
-    _atomic_write(path, state)
+    with _cap_state(repo_root) as path:
+        state = _read_mapping(path)
+        counts = state.get("counts") if isinstance(state.get("counts"), dict) else {}
+        day = current.date().isoformat()
+        previous = counts.get(day, 0)
+        counts[day] = previous + 1 if isinstance(previous, int) else 1
+        state = {
+            "schema_version": "worktree-reaper-first-class-cap.v1",
+            "enabled_at": state.get("enabled_at") or current.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+            "counts": counts,
+        }
+        _atomic_write(path, state)
+
+
+def release_reap_for_cap(repo_root: Path, *, now: datetime) -> None:
+    """Give back a slot :func:`record_reap_for_cap` counted at ``now`` for a removal that never started.
+
+    Only a caller that proves no destructive step began calls this (#10637);
+    a slot that cannot be given back stays spent, which can only delay a
+    later removal, never exceed the cap.
+    """
+    with _cap_state(repo_root) as path:
+        state = _read_mapping(path)
+        counts = state.get("counts")
+        day = now.date().isoformat()
+        previous = counts.get(day) if isinstance(counts, dict) else None
+        if not isinstance(previous, int) or isinstance(previous, bool) or previous <= 0:
+            return
+        counts[day] = previous - 1
+        _atomic_write(path, {**state, "counts": counts})
 
 
 def create_recovery_ref(

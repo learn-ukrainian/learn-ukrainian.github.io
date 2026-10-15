@@ -48,7 +48,7 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from scripts.orchestration import issue_stream_audit as isa
-from scripts.orchestration.reap_worktrees import primary_checkout_root, reap_worktrees
+from scripts.orchestration.reap_worktrees import ReapLockBusy, primary_checkout_root, reap_worktrees
 
 from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
@@ -979,6 +979,7 @@ def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
 
         _last_gc_sweep_summary = {
             "time": _isoformat_z(datetime.now(UTC)),
+            "status": "completed",
             "removed": removed,
             "skipped": skipped,
             "errors": errors,
@@ -991,6 +992,15 @@ def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
             errors,
             len(needs_attention),
         )
+    except ReapLockBusy as exc:
+        # Another cleanup is mid-mutation (#10637); this pass retains everything.
+        _last_gc_sweep_summary = {
+            "time": _isoformat_z(datetime.now(UTC)),
+            "status": "skipped",
+            "reason": "reaper_lock_busy",
+            "holder": exc.holder,
+        }
+        logger.warning("worktree GC sweep skipped: reaper_lock_busy %s", exc.holder)
     except Exception as exc:
         logger.exception("worktree GC sweep failed: %s", exc)
 

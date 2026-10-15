@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import threading
 import time
@@ -13,9 +14,11 @@ from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
 import scripts.api.state_helpers as state_helpers
-from scripts.orchestration.reap_worktrees import ReapResult
+from scripts.orchestration.reap_worktrees import ReapLockBusy, ReapResult
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
+# The autouse fixture runs the sweep thread inline; the threading test restores this.
+_REAL_THREAD_START = threading.Thread.start
 
 
 def _patch_orient_sources(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -235,3 +238,68 @@ def test_gc_sweep_refuses_unsafe_timestamp_entry(monkeypatch, entry):
     assert sentinel.read_bytes() == b"preserve these bytes\n"
     assert sentinel.stat().st_mtime_ns == modified
     assert stamp.lstat().st_ino == inode
+
+
+def test_10637_gc_sweep_skips_with_typed_log_when_reaper_lock_busy(monkeypatch, caplog):
+    """#10637: a busy cleanup lock is a typed skip, not a logged traceback."""
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
+    busy = ReapLockBusy(
+        pid=4242,
+        phase="candidate-mutation",
+        acquired_at="2026-10-14T18:04:42Z",
+        waited_s=30.0,
+    )
+
+    def refuse(**_kwargs):
+        raise busy
+
+    monkeypatch.setattr(api_main, "reap_worktrees", refuse)
+    monkeypatch.setattr(api_main, "primary_checkout_root", lambda path: Path("/dummy"))
+    with caplog.at_level(logging.INFO, logger=api_main.logger.name):
+        api_main._maybe_run_worktree_gc_sweep()
+
+    records = [record for record in caplog.records if "worktree GC sweep" in record.getMessage()]
+    assert [record.getMessage() for record in records] == [
+        "worktree GC sweep skipped: reaper_lock_busy holder pid=4242 phase=candidate-mutation "
+        "acquired_at=2026-10-14T18:04:42Z"
+    ]
+    assert records[0].exc_info is None
+    summary = api_main._last_gc_sweep_summary
+    assert summary is not None
+    assert (summary["status"], summary["reason"]) == ("skipped", "reaper_lock_busy")
+    assert summary["holder"] == busy.holder
+    assert str(busy) == f"another worktree cleanup holds the reaper lock; {busy.holder}; waited 30s"
+
+
+def test_10637_orient_does_not_wait_and_never_overlaps_sweeps(monkeypatch):
+    """#10637: orient returns while a sweep runs, and a second trigger starts no second pass."""
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "1")
+    monkeypatch.setenv("LEARN_UK_WORKTREE_GC_INTERVAL_MIN", "0")
+    _patch_orient_sources(monkeypatch)
+    monkeypatch.setattr(threading.Thread, "start", _REAL_THREAD_START)
+    started = threading.Event()
+    release = threading.Event()
+    calls = []
+
+    def slow_reap(**kwargs):
+        calls.append(kwargs)
+        started.set()
+        assert release.wait(10)
+        return []
+
+    monkeypatch.setattr(api_main, "reap_worktrees", slow_reap)
+    monkeypatch.setattr(api_main, "primary_checkout_root", lambda path: Path("/dummy"))
+    try:
+        began = time.monotonic()
+        response = client.get("/api/orient?fresh=true")
+        assert response.status_code == 200
+        assert started.wait(5)
+        api_main._maybe_run_worktree_gc_sweep()
+        assert time.monotonic() - began < 5
+        assert len(calls) == 1
+        assert api_main._gc_sweep_thread is not None and api_main._gc_sweep_thread.is_alive()
+    finally:
+        release.set()
+        if api_main._gc_sweep_thread is not None:
+            api_main._gc_sweep_thread.join(10)
+    assert api_main._last_gc_sweep_summary["status"] == "completed"

@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES, OwnershipLedger
+from scripts.orchestration.lock_wait_bound import flock_exclusive
 from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
 
 PROC_ROOT = Path("/proc")
@@ -152,11 +153,14 @@ def task_state_lock(path: Path) -> Iterator[None]:
     Lock files (<task>.json.lock) are permanent stable anchors: deleting or moving
     a lock file while a writer holds or waits on its descriptor breaks mutual exclusion
     by letting subsequent callers open a new, distinct inode (#8659).
+    Under :func:`scripts.orchestration.lock_wait_bound.bounded_lock_waits` (the
+    worktree reaper's cleanup lock, #10637) the wait is bounded and raises
+    :class:`~scripts.orchestration.lock_wait_bound.LockWaitTimeout`.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor = os.open(path.with_suffix(path.suffix + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
     try:
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        flock_exclusive(descriptor, label="task state lock")
         yield
     finally:
         fcntl.flock(descriptor, fcntl.LOCK_UN)

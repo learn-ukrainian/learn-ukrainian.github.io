@@ -5,6 +5,7 @@ import fcntl
 import inspect
 import json
 import os
+import re
 import shutil
 import signal
 import sqlite3
@@ -12,6 +13,7 @@ import subprocess
 import sys
 import threading
 import time
+import traceback
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -24,6 +26,7 @@ from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
 from tests import _worktree_artifact_links as links
+from tests.orchestration._reaper_lock_probe import probe_reaper_lock
 from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
@@ -690,10 +693,16 @@ def test_needs_finalize_claim_with_no_pid_in_the_record_blocks_the_reap(
     assert worktree.exists()
 
 
-def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
+def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_and_bounded_under_it(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """The claim proof's PR lookup runs before delegate's lock is taken.
+
+    Since #10637 it is proven again inside the candidate's locked section,
+    under both locks, where every read shares the region deadline that keeps
+    a waiting dispatch inside its own lock timeout.
+    """
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
     head = git(repo, "rev-parse", "claude/impl-9230")
@@ -709,19 +718,27 @@ def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
         pid=_dead_pid(),
     )
     real_query = rw._query_pr_states
-    lookups_under_lock: list[bool] = []
+    # (under delegate's lock, inside a bounded locked region) per lookup
+    lookups: list[tuple[bool, bool]] = []
 
     def spy(repo_root: Path, branch: str) -> Any:
-        lookups_under_lock.append(any(thread == threading.get_ident() for _, thread in worktree_claims._HELD_LOCKS))
+        lookups.append(
+            (
+                any(thread == threading.get_ident() for _, thread in worktree_claims._HELD_LOCKS),
+                rw._remaining_locked_s() is not None,
+            )
+        )
         return real_query(repo_root, branch)
 
     monkeypatch.setattr(rw, "_query_pr_states", spy)
+    probe = probe_reaper_lock(monkeypatch)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
     assert result.action == "removed"
-    assert lookups_under_lock
-    assert not any(lookups_under_lock)
+    assert any(not under_lock for under_lock, _ in lookups), "the proof no longer runs before the lock"
+    assert all(bounded for under_lock, bounded in lookups if under_lock), lookups
+    assert probe.violations() == [], probe.violations()
 
 
 @pytest.mark.parametrize("changed_field", ["final_branch_head_commit", "run_nonce", "pid"])
@@ -2368,19 +2385,28 @@ def test_reaper_lock_rejects_concurrent_cleanup(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """A concurrent cleanup's lock refuses this run's mutation; it never removes past it.
+
+    Since #10637 only a removal takes the lock, so the refusal retains the
+    candidate with ``reaper lock busy`` instead of failing a run that has
+    nothing to remove.
+    """
     repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/concurrent-cleanup")
+    patch_gh(monkeypatch, {"codex/concurrent-cleanup": [{"number": 92, "state": "MERGED"}]})
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.1)
     lock_path = rw._common_git_dir(repo) / "worktree-reaper.lock"
 
     with lock_path.open("a+", encoding="utf-8") as handle:
         fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        with pytest.raises(RuntimeError, match="another worktree cleanup holds"):
-            rw.reap_worktrees(
-                repo_root=repo,
-                apply=True,
-                live_cwds=set(),
-            )
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
         fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith(f"{rw.REAP_LOCK_BUSY} (holder pid=unknown"), result.reason
+    assert worktree.is_dir()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
 
 
 def test_missing_registered_worktree_is_reported_not_crashed(
@@ -5715,21 +5741,23 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     the ``git worktree remove`` timeout, so a remove could start with a
     fraction of a second and be killed mid-delete. Removal now keeps its own
     120s bound. A remove that outlasts the leftover deadline still finishes,
-    and the per-worktree lock is already released before branch prune and the
-    daily-cap write.
+    and the per-worktree lock is already released before branch prune. The
+    daily-cap slot is counted under the locks before removal starts, so no
+    cap write follows the removal (#10637).
     """
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/own-bound")
     head = git(worktree, "rev-parse", "HEAD")
     patch_gh(monkeypatch, {"codex/own-bound": [{"number": 91, "state": "MERGED", "headRefOid": head}]})
-    real_recovery = rw.reaper_lifecycle.create_recovery_ref
+    real_publication = rw._record_merged_reuse_proof
 
-    def expire_after_recovery(*args: Any, **kwargs: Any):
-        result = real_recovery(*args, **kwargs)
+    def expire_after_last_check(*args: Any, **kwargs: Any):
+        # Merged-head proof publication is the region's last step (#10637).
+        result = real_publication(*args, **kwargs)
         rw._LOCKED_REGION_DEADLINE.set(time.monotonic() + 0.05)
         return result
 
-    monkeypatch.setattr(rw.reaper_lifecycle, "create_recovery_ref", expire_after_recovery)
+    monkeypatch.setattr(rw, "_record_merged_reuse_proof", expire_after_last_check)
     remove_timeouts: list[float | None] = []
     held_during_remove: list[bool] = []
     held_during_prune: list[bool] = []
@@ -5738,7 +5766,10 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     real_prune = rw._prune_branch
     real_record = rw.reaper_lifecycle.record_reap_for_cap
 
+    order: list[str] = []
+
     def spy_remove(*args: Any, **kwargs: Any):
+        order.append("remove")
         remove_timeouts.append(kwargs.get("timeout"))
         held_during_remove.append(bool(worktree_claims._HELD_LOCKS))
         return real_remove(*args, **kwargs)
@@ -5748,6 +5779,7 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
         return real_prune(*args, **kwargs)
 
     def spy_record(*args: Any, **kwargs: Any):
+        order.append("record")
         held_during_record.append(bool(worktree_claims._HELD_LOCKS))
         return real_record(*args, **kwargs)
 
@@ -5786,7 +5818,8 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     assert remove_timeouts == [None]
     assert held_during_remove == [True]
     assert held_during_prune == [False]
-    assert held_during_record == [False]
+    assert held_during_record == [True]
+    assert order == ["record", "remove"]
 
 
 def test_timeout_after_recovery_ref_keeps_the_ref(
@@ -5836,11 +5869,16 @@ def test_timeout_after_recovery_ref_keeps_the_ref(
     assert started_remove is False
 
 
-def test_network_probes_run_before_the_per_worktree_lock(
+def test_network_probes_under_the_per_worktree_lock_are_bounded(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """``ls-remote`` and ``gh`` finish before the lock; the lock does not call them again."""
+    """``ls-remote`` and ``gh`` never run inside delegate's guard; after it, only bounded.
+
+    #10637 reads them again inside the candidate's locked section, which sits
+    under delegate's per-worktree lock; every such read shares the region
+    deadline that keeps a waiting dispatch inside its own lock timeout.
+    """
     repo = init_repo(tmp_path)
     worktree = add_worktree(
         repo,
@@ -5872,12 +5910,19 @@ def test_network_probes_run_before_the_per_worktree_lock(
         finally:
             in_guard = False
 
+    def label(name: str) -> str:
+        if in_guard:
+            return f"{name}-in-guard"
+        if any(thread == threading.get_ident() for _, thread in worktree_claims._HELD_LOCKS):
+            return f"{name}-bounded" if rw._remaining_locked_s() is not None else f"{name}-unbounded"
+        return name
+
     def prs(repo_root: Path, branch: str | None):
-        order.append("gh-in-lock" if in_guard else "gh")
+        order.append(label("gh"))
         return real_prs(repo_root, branch)
 
     def live(path: Path, branch: str | None) -> bool | None:
-        order.append("ls-remote-in-lock" if in_guard else "ls-remote")
+        order.append(label("ls-remote"))
         return real_live(path, branch)
 
     monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", guard)
@@ -5895,10 +5940,10 @@ def test_network_probes_run_before_the_per_worktree_lock(
     )
 
     assert result.action == "removed"
-    assert order.index("ls-remote") < order.index("guard")
-    assert "ls-remote-in-lock" not in order
-    assert "gh-in-lock" not in order
-    assert "gh" in order
+    assert order.index("gh") < order.index("guard")
+    assert order.index("guard") < order.index("ls-remote-bounded")
+    assert "gh-bounded" in order
+    assert not [step for step in order if step.endswith(("-in-guard", "-unbounded"))], order
 
 
 def test_stale_index_lock_is_named_and_left_in_place(
@@ -6215,8 +6260,9 @@ def _reap_contained(
 ) -> list[rw.ReapResult]:
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     patch_gh(monkeypatch, {})
-    return rw.reap_worktrees(
-        repo_root=repo,
+    return _reap_under_lock_probe(
+        monkeypatch,
+        repo,
         apply=apply,
         safe_only=True,
         merged_pr_only=True,
@@ -6434,12 +6480,15 @@ def test_detached_clean_contained_rechecks_provisioned_link_target_under_lock(
     assert dry.action == "would_remove", dry.reason
     info = next(info for info in rw.list_git_worktrees(repo) if info.path == worktree)
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
-    assert rw._detached_clean_contained_recheck(repo, info) is None
+    assert rw._detached_clean_contained_recheck(repo, info, active_probe=set()) is None
 
     link.unlink()
     link.symlink_to(repo / "site/node_modules")
 
-    assert rw._detached_clean_contained_recheck(repo, info) == "detached clean contained proof changed during cleanup"
+    assert (
+        rw._detached_clean_contained_recheck(repo, info, active_probe=set())
+        == "detached clean contained proof changed during cleanup"
+    )
     assert worktree.exists()
     assert {target: target.read_bytes() for target in snapshots} == snapshots
 
@@ -6930,7 +6979,8 @@ def test_detached_clean_contained_preserves_when_probe_fails_between_qualify_and
     )
 
     assert result.action == "skipped"
-    assert "active-task probe unavailable during cleanup" in result.reason
+    # Re-run under both locks, the class's own gate refuses an unknown Monitor answer (#10637).
+    assert "active-task probe unavailable" in result.reason
     assert worktree.exists()
 
 
@@ -7114,8 +7164,9 @@ def _reap_review(
 ) -> list[rw.ReapResult]:
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     patch_gh(monkeypatch, {})
-    return rw.reap_worktrees(
-        repo_root=repo,
+    return _reap_under_lock_probe(
+        monkeypatch,
+        repo,
         apply=apply,
         preserve_then_reap=True,
         safe_only=True,
@@ -8236,6 +8287,852 @@ def test_reaper_lock_malformed_legacy_pid_is_unknown(tmp_path, monkeypatch, meta
         assert not holder.closed
         assert lock.read_bytes() == metadata
 
+
+def _park_in_classification(
+    monkeypatch: pytest.MonkeyPatch, thread_name: str
+) -> tuple[threading.Event, threading.Event]:
+    """Park the named thread at its first status probe, which is still classification."""
+    entered = threading.Event()
+    release = threading.Event()
+    real_clean = rw._worktree_clean
+
+    def parked(path, *args, **kwargs):
+        if threading.current_thread().name == thread_name and not entered.is_set():
+            entered.set()
+            assert release.wait(10)
+        return real_clean(path, *args, **kwargs)
+
+    monkeypatch.setattr(rw, "_worktree_clean", parked)
+    return entered, release
+
+
+def test_10637_second_apply_proceeds_while_first_classifies(tmp_path, monkeypatch):
+    """#10637: classification holds no cleanup-wide lock, so a second apply is not refused."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/merged-10637")
+    patch_gh(monkeypatch, {"codex/merged-10637": [{"number": 106, "state": "MERGED"}]})
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.3)
+    entered, release = _park_in_classification(monkeypatch, "first-reaper")
+    first: dict[str, Any] = {}
+
+    def run_first() -> None:
+        try:
+            first["results"] = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+        except Exception as exc:  # reported below; a thread must not swallow it
+            first["error"] = traceback.format_exc()
+
+    thread = threading.Thread(target=run_first, name="first-reaper")
+    thread.start()
+    try:
+        assert entered.wait(10)
+        second = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+    finally:
+        release.set()
+        thread.join(30)
+
+    assert second.action == "removed", second.reason
+    assert not worktree.exists()
+    assert not thread.is_alive()
+    assert "error" not in first, first.get("error")
+    assert result_for(first["results"], worktree).action == "skipped"
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+@pytest.mark.parametrize("change", ["switched_branch", "detached", "re_added", "removed", "removed_under_guard"])
+def test_10637_candidate_changed_after_classification_is_retained(tmp_path, monkeypatch, change):
+    """#10637: the registration a candidate was classified from is re-read under the lock."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/merged-10637")
+    patch_gh(monkeypatch, {"codex/merged-10637": [{"number": 107, "state": "MERGED"}]})
+    real_reap = rw._reap_qualified_worktree
+    real_guard = rw._enter_dispatch_worktree_guard
+
+    def change_then_reap(**kwargs):
+        if change == "switched_branch":
+            git(worktree, "switch", "-c", "codex/other-10637")
+        elif change == "detached":
+            git(worktree, "switch", "--detach")
+        elif change != "removed_under_guard":
+            git(repo, "worktree", "remove", str(worktree))
+            if change == "re_added":
+                git(repo, "worktree", "add", "-b", "codex/reused-10637", str(worktree), "main")
+        return real_reap(**kwargs)
+
+    def guard_then_remove(stack, **kwargs):
+        refusal = real_guard(stack, **kwargs)
+        # An uncooperative remover between the per-worktree guard and the
+        # cleanup-wide lock: only the locked registration re-read can see it.
+        git(repo, "worktree", "remove", str(worktree))
+        return refusal
+
+    monkeypatch.setattr(rw, "_reap_qualified_worktree", change_then_reap)
+    if change == "removed_under_guard":
+        monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", guard_then_remove)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "skipped"
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    if change == "removed":
+        assert result.reason.startswith("worktree path vanished since classification")
+        return
+    if change == "removed_under_guard":
+        assert result.reason.startswith("worktree no longer registered since classification")
+        return
+    assert result.reason.startswith("worktree identity changed since classification")
+    assert worktree.is_dir()
+    assert git(worktree, "rev-parse", "HEAD") == git(repo, "rev-parse", "main")
+
+
+def test_10637_dry_run_never_waits_on_the_cleanup_lock(tmp_path, monkeypatch):
+    """#10637: a dry run mutates nothing, so it neither takes nor waits on the lock."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/dry-10637")
+    patch_gh(monkeypatch, {"codex/dry-10637": [{"number": 108, "state": "MERGED"}]})
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.1)
+
+    with rw._ReapLock(repo, phase="candidate-mutation"):
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set()), worktree)
+
+    assert result.action == "would_remove"
+    assert worktree.exists()
+
+
+def test_10637_lock_refusal_mid_run_retains_remaining_candidates(tmp_path, monkeypatch):
+    """#10637: a busy lock at mutation retains this and every later candidate and keeps receipts."""
+    repo = init_repo(tmp_path)
+    trees = [add_worktree(repo, f"codex/busy-10637-{index}") for index in range(2)]
+    patch_gh(
+        monkeypatch, {f"codex/busy-10637-{index}": [{"number": 110 + index, "state": "MERGED"}] for index in range(2)}
+    )
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.1)
+    holder = rw._ReapLock(repo, phase="husk-removal")
+    real_guard = rw._enter_dispatch_worktree_guard
+    attempts: list[Path] = []
+
+    def guard_then_contend(stack, **kwargs):
+        attempts.append(kwargs["info"].path)
+        if holder.handle is None:
+            holder.__enter__()
+        return real_guard(stack, **kwargs)
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", guard_then_contend)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        if holder.handle is not None and not holder.handle.closed:
+            holder.__exit__(None, None, None)
+
+    rows = [result_for(results, tree) for tree in trees]
+    assert [row.action for row in rows] == ["skipped", "skipped"]
+    assert all(row.reason.startswith(rw.REAP_LOCK_BUSY) for row in rows)
+    assert all(f"holder pid={os.getpid()} phase=husk-removal" in row.reason for row in rows)
+    assert len(attempts) == 1
+    assert all(tree.exists() for tree in trees)
+    assert not any(reaper_lifecycle.is_reap_pending(repo, tree) for tree in trees)
+    events = [json.loads(row) for row in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    assert {row["path"] for row in events if row["event"] == "skip"} >= {str(tree) for tree in trees}
+
+
+def test_10637_reaper_lock_holder_diagnostics_are_value_free(tmp_path, monkeypatch):
+    """#10637: a waiter names the holder's pid, phase and acquisition time, and nothing else."""
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.1)
+    holder = rw._ReapLock(repo, phase="candidate-mutation")
+    with holder:
+        metadata = json.loads(holder.path.read_text(encoding="utf-8"))
+        with pytest.raises(rw.ReapLockBusy) as busy:
+            with rw._ReapLock(repo, phase="reservation-recovery"):
+                pytest.fail("contending lock was acquired")
+
+    assert set(metadata) == {"schema", "pid", "phase", "acquired_at"}
+    assert (metadata["schema"], metadata["pid"], metadata["phase"]) == (
+        "worktree-reaper-lock.v1",
+        os.getpid(),
+        "candidate-mutation",
+    )
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", metadata["acquired_at"])
+    exc = busy.value
+    assert (exc.holder_pid, exc.holder_phase, exc.holder_acquired_at) == (
+        os.getpid(),
+        "candidate-mutation",
+        metadata["acquired_at"],
+    )
+    assert exc.holder == f"holder pid={os.getpid()} phase=candidate-mutation acquired_at={metadata['acquired_at']}"
+    assert str(exc) == f"another worktree cleanup holds the reaper lock; {exc.holder}; waited 0.1s"
+    assert str(holder.path) not in str(exc) and str(tmp_path) not in str(exc)
+    with pytest.raises(ValueError, match="unknown reaper lock phase"):
+        rw._ReapLock(repo, phase="/home/someone/branch")
+
+
+@pytest.mark.parametrize(
+    ("metadata", "expected"),
+    [
+        (
+            {
+                "schema": "worktree-reaper-lock.v1",
+                "pid": 4242,
+                "phase": "/home/someone/secret-branch",
+                "acquired_at": "2026-10-14T18:04:42Z",
+            },
+            (4242, None, "2026-10-14T18:04:42Z"),
+        ),
+        (
+            {
+                "schema": "worktree-reaper-lock.v1",
+                "pid": "4242; rm -rf",
+                "phase": "candidate-mutation",
+                "acquired_at": "yesterday at noon",
+            },
+            (None, "candidate-mutation", None),
+        ),
+        (
+            {"schema": "forged", "pid": 4242, "phase": "candidate-mutation", "acquired_at": "2026-10-14T18:04:42Z"},
+            (None, None, None),
+        ),
+        (["/home/someone/secret-branch"], (None, None, None)),
+    ],
+)
+def test_10637_forged_lock_metadata_never_reaches_the_refusal(tmp_path, monkeypatch, metadata, expected):
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "DEFAULT_REAP_LOCK_TIMEOUT_S", 0.05)
+    lock = repo / ".git/worktree-reaper.lock"
+    raw = json.dumps(metadata).encode("utf-8")
+    with lock.open("wb") as handle:
+        handle.write(raw)
+        handle.flush()
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(rw.ReapLockBusy) as busy:
+            with rw._ReapLock(repo, phase="candidate-mutation"):
+                pytest.fail("forged holder was displaced")
+        assert lock.read_bytes() == raw
+
+    exc = busy.value
+    assert (exc.holder_pid, exc.holder_phase, exc.holder_acquired_at) == expected
+    # Value-free: pid, phase and UTC time only; neither the lock path nor the file's text.
+    refusal = str(exc)
+    assert refusal == f"another worktree cleanup holds the reaper lock; {exc.holder}; waited 0.05s"
+    for token in ("secret-branch", "/home/someone", "rm -rf", "yesterday", "forged", str(tmp_path), ".git"):
+        assert token not in refusal
+
+
+@pytest.mark.parametrize(
+    "acquired_at",
+    [
+        "2026-99-99T99:99:99Z",
+        "2026-02-30T12:00:00Z",
+        "2026-10-14T24:00:00Z",
+        "2026-10-14T23:60:00Z",
+        "2026-10-14T23:59:60Z",
+        "0000-01-01T00:00:00Z",
+        "２０２６-10-14T18:04:42Z",
+    ],
+)
+def test_10637_impossible_lock_acquisition_time_is_unknown(acquired_at):
+    """#10637: only a real UTC instant reaches the refusal; a well-shaped impossible one is unknown."""
+    raw = json.dumps(
+        {"schema": "worktree-reaper-lock.v1", "pid": 4242, "phase": "husk-removal", "acquired_at": acquired_at}
+    ).encode("utf-8")
+    assert rw._parse_reap_lock_holder(raw) == (4242, "husk-removal", None)
+    valid = raw.replace(json.dumps(acquired_at).encode("utf-8"), b'"2026-10-14T18:04:42Z"')
+    assert rw._parse_reap_lock_holder(valid) == (4242, "husk-removal", "2026-10-14T18:04:42Z")
+
+
+def _reap_under_lock_probe(monkeypatch: pytest.MonkeyPatch, repo: Path, **kwargs: Any) -> list[rw.ReapResult]:
+    """Run the reaper under :class:`ReaperLockProbe` and enforce the locked-section contract (#10637).
+
+    Under the cleanup-wide lock only one candidate's section reads Monitor, the
+    forge, ownership storage or remote Git, every such read is bounded, and no
+    lock wait is unbounded. A removed candidate read Monitor inside that section.
+    """
+    probe = probe_reaper_lock(monkeypatch)
+    results = rw.reap_worktrees(repo_root=repo, **kwargs)
+    assert probe.violations() == [], f"locked-section contract broken: {probe.violations()}"
+    if any(result.action in {"removed", "preserved_then_removed"} for result in results):
+        assert probe.under_lock("_active_task_ids"), "no Monitor answer was read under the cleanup-wide lock"
+    return results
+
+
+@pytest.mark.parametrize("when", ["before_worktree_lock", "under_worktree_lock", "under_both_locks"])
+def test_10637_same_identity_recreation_is_retained(tmp_path, monkeypatch, when):
+    """#10637: path, branch and HEAD survive remove-then-add; the registration incarnation does not."""
+    repo = init_repo(tmp_path)
+    branch = "codex/merged-10637"
+    worktree = add_worktree(repo, branch)
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {branch: [{"number": 107, "state": "MERGED"}]})
+    real_reap = rw._reap_qualified_worktree
+    real_guard = rw._enter_dispatch_worktree_guard
+    real_stop = rw._stop_task_background_jobs
+
+    def recreate() -> None:
+        # Another cleanup removed the checkout; a dispatch registered the same path, branch and HEAD.
+        git(repo, "worktree", "remove", str(worktree))
+        git(repo, "worktree", "add", str(worktree), branch)
+
+    def stop_then_recreate(*args, **kwargs):
+        # An uncooperative remover, after the locked identity check: only the
+        # re-check just before removal can see it.
+        refusal = real_stop(*args, **kwargs)
+        recreate()
+        return refusal
+
+    def recreate_then_reap(**kwargs):
+        recreate()
+        return real_reap(**kwargs)
+
+    def guard_then_recreate(stack, **kwargs):
+        refusal = real_guard(stack, **kwargs)
+        recreate()
+        return refusal
+
+    if when == "before_worktree_lock":
+        monkeypatch.setattr(rw, "_reap_qualified_worktree", recreate_then_reap)
+    elif when == "under_worktree_lock":
+        monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", guard_then_recreate)
+    else:
+        monkeypatch.setattr(rw, "_stop_task_background_jobs", stop_then_recreate)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "skipped", result.reason
+    assert result.reason.startswith("worktree registration changed since classification"), result.reason
+    assert worktree.is_dir()
+    assert git(worktree, "rev-parse", "HEAD") == head
+    assert git(worktree, "branch", "--show-current") == branch
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+@pytest.mark.parametrize("activity", ["live_process", "monitor_active", "rollover_lease"])
+def test_10637_activity_after_classification_retains_the_candidate(tmp_path, monkeypatch, activity):
+    """#10637: a healthy-probe MERGED candidate re-proves activity under both locks before removal."""
+    repo = init_repo(tmp_path)
+    task_id = "merged-10637-activity"
+    branch = "codex/merged-10637"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    patch_gh(monkeypatch, {branch: [{"number": 109, "state": "MERGED"}]})
+    real_reap = rw._reap_qualified_worktree
+    processes: list[subprocess.Popen[bytes]] = []
+
+    def activate_then_reap(**kwargs):
+        if activity == "live_process":
+            processes.append(subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=worktree))
+        elif activity == "monitor_active":
+            monkeypatch.setattr(rw, "_active_task_ids", lambda: {task_id})
+        else:
+            _write_rollover_lease(repo, {"status": "resumed", "source_checkout": {"path": str(worktree)}})
+        return real_reap(**kwargs)
+
+    monkeypatch.setattr(rw, "_reap_qualified_worktree", activate_then_reap)
+    try:
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+        if processes:
+            assert processes[0].poll() is None
+            assert Path(os.readlink(f"/proc/{processes[0].pid}/cwd")) == worktree.resolve()
+    finally:
+        for process in processes:
+            process.kill()
+            process.wait(10)
+
+    expected = {
+        "live_process": f"live process cwd={worktree.resolve()}",
+        "monitor_active": f"active dispatch task-id={task_id}",
+        "rollover_lease": "active rollover lease",
+    }[activity]
+    assert result.action == "skipped", result.reason
+    assert expected in result.reason
+    assert worktree.is_dir()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+def test_10637_husk_cwd_after_classification_is_retained(tmp_path):
+    """#10637: a husk re-proves process cwds under its locks; the run's snapshot can be stale."""
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-late-cwd"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=husk / "site")
+    try:
+        results = rw._reap_dispatch_husks(repo, registered=set(), apply=True, live_cwds=set(), targets=None)
+        assert process.poll() is None
+    finally:
+        process.kill()
+        process.wait(10)
+
+    result = result_for(results, husk)
+    assert result.action == "skipped", result.reason
+    assert "live process cwd inside unregistered empty directory" in result.reason
+    assert (husk / "site").is_dir()
+
+
+@pytest.mark.parametrize("kind", ["merged", "settled_dispatch", "dispatch_main", "detached_contained", *_REVIEW_KINDS])
+def test_10637_authority_reads_under_the_lock_are_fresh_and_bounded(tmp_path, monkeypatch, kind):
+    """#10637: a removal's Monitor and forge answers are read inside its own locked section, bounded."""
+    repo = init_repo(tmp_path)
+    if kind in _REVIEW_KINDS:
+        worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+        results = _reap_review(repo, monkeypatch, now=now)
+    elif kind == "detached_contained":
+        worktree = _detached_dispatch_worktree(repo)
+        results = _reap_contained(repo, monkeypatch)
+    else:
+        task_id = f"{kind.replace('_', '-')}-10637"
+        branch = f"codex/{task_id}"
+        worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+        options: dict[str, Any] = {}
+        if kind == "merged":
+            patch_gh(monkeypatch, {branch: [{"number": 120, "state": "MERGED"}]})
+        else:
+            patch_gh(monkeypatch, {branch: []})
+            options["include_terminal_dispatches"] = True
+            if kind == "settled_dispatch":
+                tasks_dir = repo / "batch_state" / "tasks"
+                tasks_dir.mkdir(parents=True, exist_ok=True)
+                (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
+            else:
+                options["now"] = time.time() + 7 * 3600
+        probe = probe_reaper_lock(monkeypatch)
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), **options)
+        assert probe.violations() == [], probe.violations()
+        assert probe.under_lock("_active_task_ids"), "no Monitor answer was read under the cleanup-wide lock"
+        # Each class's branch PR answer is read again inside the candidate's locked section.
+        assert probe.under_lock("_run_gh"), "the branch PR state was not re-read under the cleanup-wide lock"
+
+    result = result_for(results, worktree)
+    assert result.action == "removed", result.reason
+    expected = {
+        "settled_dispatch": "settled dispatch task-id=",
+        "dispatch_main": "dispatch HEAD ancestor of origin/main",
+        "detached_contained": "detached clean contained",
+    }.get(kind)
+    if expected is not None:
+        assert result.reason.startswith(expected), result.reason
+    assert not worktree.exists()
+
+
+def test_10637_checkout_vanishing_after_the_identity_check_is_retained(tmp_path, monkeypatch):
+    """#10637: a checkout removed after its locked identity check is retained, and the run goes on."""
+    repo = init_repo(tmp_path)
+    trees = [add_worktree(repo, f"codex/vanish-10637-{index}") for index in range(2)]
+    patch_gh(
+        monkeypatch, {f"codex/vanish-10637-{index}": [{"number": 130 + index, "state": "MERGED"}] for index in range(2)}
+    )
+    real_check = rw._classified_identity_refusal
+
+    def check_then_vanish(repo_root, info, *args, **kwargs):
+        refusal = real_check(repo_root, info, *args, **kwargs)
+        if info.path.resolve() == trees[0].resolve():
+            # An uncooperative remover, after this cleanup proved the registration.
+            git(repo, "worktree", "remove", "--force", str(trees[0]))
+        return refusal
+
+    monkeypatch.setattr(rw, "_classified_identity_refusal", check_then_vanish)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    first, second = (result_for(results, tree) for tree in trees)
+    assert first.action == "skipped", first.reason
+    assert first.reason.startswith("worktree path vanished during cleanup; originally qualified because PR #130")
+    assert first.error is None
+    assert second.action == "removed", second.reason
+    assert not trees[1].exists()
+    assert not any(reaper_lifecycle.is_reap_pending(repo, tree) for tree in trees)
+
+
+def _before_candidate_lock(monkeypatch: pytest.MonkeyPatch, event: Any) -> list[str]:
+    """Run ``event`` once, immediately before a candidate's cleanup-wide lock is granted."""
+    real_enter = rw._ReapLock.__enter__
+    fired: list[str] = []
+
+    def enter(lock: Any) -> Any:
+        if lock.phase == "candidate-mutation" and not fired:
+            fired.append(lock.phase)
+            event()
+        return real_enter(lock)
+
+    monkeypatch.setattr(rw._ReapLock, "__enter__", enter)
+    return fired
+
+
+def _rescue_refs(repo: Path) -> list[str]:
+    return git(repo, "for-each-ref", "--format=%(refname)", "refs/reaper-rescue").splitlines()
+
+
+@pytest.mark.parametrize("change", ["pr_head_restored", "monitor_active"])
+def test_10637_review_authority_change_before_the_lock_is_retained(tmp_path, monkeypatch, change):
+    """#10637: a review checkout's PR heads and Monitor answer are read inside its locked section.
+
+    The change lands after every read the run took before the lock and just
+    before the lock is granted, where the base, holding the lock for the
+    whole pass, read both again.
+    """
+    repo = init_repo(tmp_path)
+    worktree, old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    task_id = worktree.name
+    restored = {
+        _OLD_PR: rw.PullRequestState(_OLD_PR, "OPEN", old),
+        9230: rw.PullRequestState(9230, "MERGED", old),
+    }
+
+    def event() -> None:
+        if change == "pr_head_restored":
+            # The open PR is force-pushed back to the review checkout's head.
+            monkeypatch.setattr(
+                rw,
+                "_query_pr_by_number",
+                lambda _repo, number: ([restored[number]], None) if number in restored else ([], "not found"),
+            )
+        else:
+            monkeypatch.setattr(rw, "_active_task_ids", lambda: {task_id})
+
+    patch_gh(monkeypatch, {})
+    fired = _before_candidate_lock(monkeypatch, event)
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            preserve_then_reap=True,
+            safe_only=True,
+            merged_pr_only=True,
+            include_terminal_dispatches=True,
+            live_cwds=set(),
+        ),
+        worktree,
+    )
+
+    assert fired == ["candidate-mutation"]
+    assert result.action == "skipped", result.reason
+    assert worktree.is_dir()
+    assert git(worktree, "rev-parse", "HEAD") == old
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    assert _rescue_refs(repo) == []
+
+
+@pytest.mark.parametrize(
+    ("change", "expected"),
+    [
+        ("monitor_active", "active dispatch task-id=merged-10637-r3"),
+        ("new_open_pr", "open PR #151"),
+        ("new_claim", "attached-10637"),
+        ("new_commit", "worktree identity changed since classification"),
+        ("dirty", "worktree changed during cleanup"),
+        ("rollover_lease", "active rollover lease"),
+    ],
+)
+def test_10637_change_before_the_candidate_lock_is_retained(tmp_path, monkeypatch, change, expected):
+    """#10637: every fact a MERGED removal rests on is read again inside the candidate's locked section."""
+    repo = init_repo(tmp_path)
+    task_id = "merged-10637-r3"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    states: dict[str, list[dict[str, Any]]] = {branch: [{"number": 150, "state": "MERGED"}]}
+    patch_gh(monkeypatch, states)
+    head = git(worktree, "rev-parse", "HEAD")
+
+    def event() -> None:
+        if change == "monitor_active":
+            monkeypatch.setattr(rw, "_active_task_ids", lambda: {task_id})
+        elif change == "new_open_pr":
+            # The branch name is reused for a new pull request.
+            states[branch].append({"number": 151, "state": "OPEN", "headRefOid": head})
+        elif change == "new_claim":
+            tasks_dir = repo / "batch_state" / "tasks"
+            tasks_dir.mkdir(parents=True, exist_ok=True)
+            (tasks_dir / "attached-10637.json").write_text(
+                json.dumps({"task_id": "attached-10637", "status": "running", "worktree_path": str(worktree)}),
+                encoding="utf-8",
+            )
+        elif change == "new_commit":
+            git(worktree, "commit", "--allow-empty", "-m", "late work")
+        elif change == "dirty":
+            (worktree / "late.txt").write_text("late work\n", encoding="utf-8")
+        else:
+            _write_rollover_lease(repo, {"status": "resumed", "source_checkout": {"path": str(worktree)}})
+
+    fired = _before_candidate_lock(monkeypatch, event)
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert fired == ["candidate-mutation"]
+    assert result.action == "skipped", result.reason
+    assert expected in result.reason, result.reason
+    assert worktree.is_dir()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    assert _rescue_refs(repo) == []
+
+
+def test_10637_ownership_storage_and_lock_waits_under_the_lock_are_bounded(tmp_path, monkeypatch):
+    """#10637: ownership storage is read under the lock only inside the candidate's section, bounded.
+
+    Classification reads it without the lock; nothing under the lock waits on
+    another lock without a bound.
+    """
+    repo = init_repo(tmp_path)
+    task_id = "owned-10637"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    patch_gh(monkeypatch, {branch: [{"number": 160, "state": "MERGED"}]})
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(tmp_path / "write-ownership.sqlite3"))
+    connections: list[dict[str, Any]] = []
+
+    def connect(store: Any, **kwargs: Any) -> sqlite3.Connection:
+        # A stand-in for any authority, including PostgreSQL: it records the
+        # bound it was given and answers that no write claim exists.
+        connections.append(kwargs)
+        conn = sqlite3.connect(":memory:")
+        conn.execute("CREATE TABLE write_claims (task_id TEXT, pid INTEGER)")
+        return conn
+
+    monkeypatch.setattr(rw, "cp_connect", connect)
+    probe = probe_reaper_lock(monkeypatch)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "removed", result.reason
+    locked = probe.under_lock("ownership_storage")
+    assert locked, "ownership storage was not read again inside the candidate's locked section"
+    assert all(call.phase == "candidate-mutation" and call.bounded for call in locked), locked
+    classification = [call for call in probe.calls if call.name == "ownership_storage" and not call.held]
+    assert classification, "classification did not read ownership storage"
+    assert probe.blocking_waits == []
+    assert probe.violations() == []
+
+
+def test_10637_recreation_with_reused_inodes_and_restored_mtime_is_retained(tmp_path, monkeypatch):
+    """#10637: up to 64 remove/add cycles at one path never pass for the classified registration.
+
+    Each cycle re-registers the same path, branch and HEAD and restores the
+    pointer's timestamps. A cycle that reproduces the original inode numbers,
+    pointer bytes and timestamp ends the loop early; the replacement must stay.
+    """
+    repo = init_repo(tmp_path)
+    branch = "codex/recycled-10637"
+    worktree = add_worktree(repo, branch)
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {branch: [{"number": 170, "state": "MERGED"}]})
+    pointer = worktree / ".git"
+    times = (pointer.stat().st_atime_ns, pointer.stat().st_mtime_ns)
+
+    def fingerprint() -> tuple[Any, ...]:
+        admin = Path(pointer.read_text(encoding="utf-8").split(":", 1)[1].strip())
+        status = pointer.stat()
+        return (worktree.stat().st_ino, status.st_ino, admin.stat().st_ino, status.st_mtime_ns, pointer.read_bytes())
+
+    original = fingerprint()
+    real_reap = rw._reap_qualified_worktree
+    cycles: list[bool] = []
+
+    def recycle_then_reap(**kwargs: Any) -> rw.ReapResult:
+        for _ in range(64):
+            git(repo, "worktree", "remove", str(worktree))
+            git(repo, "worktree", "add", str(worktree), branch)
+            os.utime(pointer, ns=times)
+            cycles.append(fingerprint() == original)
+            if cycles[-1]:
+                break
+        return real_reap(**kwargs)
+
+    monkeypatch.setattr(rw, "_reap_qualified_worktree", recycle_then_reap)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "skipped", (result.reason, len(cycles), cycles[-1])
+    assert result.reason.startswith("worktree registration changed since classification"), result.reason
+    assert worktree.is_dir()
+    assert git(worktree, "rev-parse", "HEAD") == head
+    assert git(worktree, "branch", "--show-current") == branch
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+def test_10637_pass_over_only_retained_candidates_never_takes_the_lock(tmp_path, monkeypatch):
+    """#10637: a pass that finds nothing removable takes the cleanup-wide lock zero times."""
+    repo = init_repo(tmp_path)
+    head = git(repo, "rev-parse", "main")
+    trees = [add_worktree(repo, f"codex/open-10637-{index}") for index in range(30)]
+    patch_gh(
+        monkeypatch,
+        {f"codex/open-10637-{index}": [{"number": 300 + index, "state": "OPEN", "headRefOid": head}] for index in range(30)},
+    )
+    probe = probe_reaper_lock(monkeypatch)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    assert [result_for(results, tree).action for tree in trees] == ["skipped"] * 30
+    assert probe.acquisitions == []
+    assert all(tree.is_dir() for tree in trees)
+
+
+def test_10637_concurrent_applies_remove_a_candidate_once(tmp_path, monkeypatch):
+    """#10637: two applies that both classified one candidate remove it once, with one rescue ref."""
+    repo = init_repo(tmp_path)
+    branch = "codex/once-10637"
+    worktree = add_worktree(repo, branch)
+    patch_gh(monkeypatch, {branch: [{"number": 180, "state": "MERGED"}]})
+    barrier = threading.Barrier(2, timeout=30)
+    real_reap = rw._reap_qualified_worktree
+    outcomes: dict[str, Any] = {}
+
+    def both_classified_then_reap(**kwargs: Any) -> rw.ReapResult:
+        barrier.wait()
+        return real_reap(**kwargs)
+
+    monkeypatch.setattr(rw, "_reap_qualified_worktree", both_classified_then_reap)
+
+    def run(name: str) -> None:
+        try:
+            outcomes[name] = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+        except Exception:  # reported below; a thread must not swallow it
+            outcomes[name] = traceback.format_exc()
+
+    threads = [threading.Thread(target=run, args=(name,), name=f"reaper-{name}") for name in ("a", "b")]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(90)
+
+    assert not any(thread.is_alive() for thread in threads)
+    assert all(isinstance(outcome, rw.ReapResult) for outcome in outcomes.values()), outcomes
+    assert sorted(outcome.action for outcome in outcomes.values()) == ["removed", "skipped"]
+    assert len(_rescue_refs(repo)) == 1
+    assert not worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+def test_10637_registration_pin_never_admits_a_recreated_checkout(tmp_path, monkeypatch):
+    """#10637: while pinned, no recreation at the path can carry the classified inodes.
+
+    Without a pin the filesystem may hand the freed inode numbers straight back
+    to the next ``git worktree add``; with it, 64 recycles never do, the pin
+    refuses each replacement, and removal with that pin retains it.
+    """
+    repo = init_repo(tmp_path)
+    branch = "codex/pinned-10637"
+    worktree = add_worktree(repo, branch)
+    head = git(worktree, "rev-parse", "HEAD")
+    pointer = worktree / ".git"
+    admin = Path(pointer.read_text(encoding="utf-8").split(":", 1)[1].strip())
+    times = (pointer.stat().st_atime_ns, pointer.stat().st_mtime_ns)
+    info = next(entry for entry in rw.list_git_worktrees(repo) if entry.path.resolve() == worktree.resolve())
+    pin = rw._RegistrationPin.open(worktree)
+    try:
+        assert pin.refusal(worktree) is None
+        pinned = (os.fstat(pin.checkout_fd).st_ino, os.fstat(pin.admin_fd).st_ino)
+        for _ in range(64):
+            git(repo, "worktree", "remove", str(worktree))
+            git(repo, "worktree", "add", str(worktree), branch)
+            os.utime(pointer, ns=times)
+            assert (worktree.stat().st_ino, admin.stat().st_ino) != pinned
+            assert pin.pointer == pointer.read_bytes()
+            assert pin.refusal(worktree) == "worktree registration changed since classification"
+        patch_gh(monkeypatch, {branch: [{"number": 171, "state": "MERGED"}]})
+        result = rw._reap_qualified_worktree(
+            repo_root=repo,
+            info=info,
+            reason="PR #171 MERGED",
+            dirty=False,
+            pr_state=rw.PullRequestState(171, "MERGED", head),
+            apply=True,
+            preserve_then_reap=False,
+            prune_merged_branches=False,
+            require_terminal_dispatch_guards=False,
+            pin=pin,
+        )
+    finally:
+        pin.close()
+        pin.close()
+
+    assert pin.checkout_fd is None and pin.admin_fd is None
+    assert result.action == "skipped", result.reason
+    assert result.reason.startswith("worktree registration changed since classification")
+    assert worktree.is_dir()
+    assert git(worktree, "rev-parse", "HEAD") == head
+    assert _rescue_refs(repo) == []
+
+
+@pytest.mark.parametrize("replacement", ["unpinnable", "symlink"])
+def test_10637_registration_pin_refuses_what_it_cannot_prove(tmp_path, replacement):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/unpinned-10637")
+    if replacement == "unpinnable":
+        pin = rw._RegistrationPin.open(tmp_path / "missing")
+        assert pin.refusal(worktree) == (
+            "worktree registration changed since classification (it was not pinned at classification)"
+        )
+        return
+    pin = rw._RegistrationPin.open(worktree)
+    try:
+        moved = tmp_path / "moved"
+        worktree.rename(moved)
+        worktree.symlink_to(moved, target_is_directory=True)
+        # The same directory, reached through a symlink, is not the registered path.
+        assert pin.refusal(worktree) == "worktree registration changed since classification"
+    finally:
+        pin.close()
+
+
+def test_10637_monitor_read_is_clipped_to_the_locked_region(monkeypatch):
+    seen: list[float] = []
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_exc):
+            return False
+
+        def read(self) -> bytes:
+            return b'{"tasks": []}'
+
+    def urlopen(_url: str, *, timeout: float) -> Response:
+        seen.append(timeout)
+        return Response()
+
+    import urllib.request
+
+    monkeypatch.setattr(urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(rw, "_active_task_ids", _REAL_ACTIVE_TASK_IDS)
+    assert rw._read_active_task_probe() == set()
+    token = rw._LOCKED_REGION_DEADLINE.set(time.monotonic() + 1.0)
+    try:
+        assert rw._read_active_task_probe() == set()
+        rw._LOCKED_REGION_DEADLINE.set(time.monotonic() - 1)
+        expired = rw._read_active_task_probe()
+    finally:
+        rw._LOCKED_REGION_DEADLINE.reset(token)
+    assert seen[0] == rw._ACTIVE_TASK_PROBE_TIMEOUT_S
+    assert 0 < seen[1] <= 1.0
+    assert len(seen) == 2, "an expired region must not reach the Monitor"
+    assert isinstance(expired, rw._ActiveTaskProbeFailure) and "active_task_probe_timeout" in expired.reason
+
+
+def test_10637_ownership_read_is_bounded_and_skipped_past_the_region(tmp_path, monkeypatch):
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(tmp_path / "write-ownership.sqlite3"))
+    bounds: list[Any] = []
+
+    def connect(_store: Any, **kwargs: Any) -> sqlite3.Connection:
+        bounds.append(kwargs.get("timeout_s"))
+        conn = sqlite3.connect(":memory:")
+        conn.execute("CREATE TABLE write_claims (task_id TEXT, pid INTEGER)")
+        return conn
+
+    monkeypatch.setattr(rw, "cp_connect", connect)
+    assert rw._has_active_ownership_claim(tmp_path, "task-a") is None
+    token = rw._LOCKED_REGION_DEADLINE.set(time.monotonic() - 1)
+    try:
+        refusal = rw._has_active_ownership_claim(tmp_path, "task-a")
+    finally:
+        rw._LOCKED_REGION_DEADLINE.reset(token)
+    assert bounds == [rw._OWNERSHIP_READ_TIMEOUT_S]
+    assert refusal == "active write claim check failed task-id=task-a: locked-region deadline passed"
+
+
+def test_10637_cleanup_lock_bounds_every_other_lock_wait_while_held(tmp_path):
+    from scripts.orchestration import lock_wait_bound
+
+    repo = init_repo(tmp_path)
+    assert lock_wait_bound.active_wait_bound() is None
+    with rw._reaper_locked(repo, phase="candidate-mutation"):
+        assert lock_wait_bound.active_wait_bound() == rw._LOCKED_LOCK_WAIT_S
+    assert lock_wait_bound.active_wait_bound() is None
 
 
 def test_namespace_unknown_worker_is_not_gone():

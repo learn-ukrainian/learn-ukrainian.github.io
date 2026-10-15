@@ -45,8 +45,9 @@ ALLOWLIST: dict[tuple[str, str | None], str] = {
     ("scripts/orchestration/worktree_claims.py", "remove_unclaimed_worktree"): (
         "the chokepoint: calls the raw remover only under the lock, ownership proof, and claim scan"
     ),
-    ("scripts/orchestration/reap_worktrees.py", "_reap_qualified_worktree"): (
-        "the reaper pipeline: calls the raw remover only under _enter_dispatch_worktree_guard (same lock and scan)"
+    ("scripts/orchestration/reap_worktrees.py", "_reap_candidate_locked"): (
+        "the reaper pipeline (the body of _reap_qualified_worktree since #10637): calls the raw remover only "
+        "under _enter_dispatch_worktree_guard (same lock and scan)"
     ),
 }
 

@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import math
 import sqlite3
+import sys
 import time
+import types
 from pathlib import Path
 
 import pytest
@@ -214,3 +217,52 @@ def test_control_plane_lint_detects_new_direct_open(
     violations = lint_control_plane_sqlite.find_unallowlisted_connects(repo_root=tmp_path)
     assert len(violations) == 1
     assert Path(db_rel_path).name in violations[0][1]
+
+
+def test_timeout_bounds_the_sqlite_busy_wait(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """#10637: ``timeout_s`` reaches sqlite as its busy wait, so a locked store fails within it."""
+    monkeypatch.delenv("LEARN_UKRAINIAN_CP_AUTHORITY", raising=False)
+    monkeypatch.delenv("LEARN_UKRAINIAN_CP_AUTHORITY_WRITE_OWNERSHIP", raising=False)
+    db_path = tmp_path / "write-ownership.sqlite3"
+    writer = connect(StoreId.WRITE_OWNERSHIP, path=db_path)
+    writer.execute("CREATE TABLE write_claims (task_id TEXT, pid INTEGER)")
+    writer.commit()
+    writer.execute("BEGIN EXCLUSIVE")
+    reader = connect(StoreId.WRITE_OWNERSHIP, path=db_path, read_only=True, timeout_s=0.2)
+    try:
+        started = time.monotonic()
+        with pytest.raises(sqlite3.OperationalError, match="locked"):
+            reader.execute("SELECT task_id FROM write_claims").fetchall()
+        assert 0.15 <= time.monotonic() - started < 3
+    finally:
+        reader.close()
+        writer.rollback()
+        writer.close()
+
+
+def test_timeout_bounds_postgres_connect_and_statements(monkeypatch: pytest.MonkeyPatch) -> None:
+    """#10637: under ``pg`` the bound caps the connect wait (libpq floor 2s) and every statement."""
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_WRITE_OWNERSHIP", "pg")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
+    calls: list[dict[str, object]] = []
+    monkeypatch.setitem(
+        sys.modules, "psycopg", types.SimpleNamespace(connect=lambda _dsn, **kwargs: calls.append(kwargs))
+    )
+
+    connect(StoreId.WRITE_OWNERSHIP, read_only=True, timeout_s=0.5)
+    connect(StoreId.WRITE_OWNERSHIP, read_only=True)
+    connect(StoreId.WRITE_OWNERSHIP, timeout_s=7.2)
+
+    assert calls == [
+        {"connect_timeout": 2, "options": "-c default_transaction_read_only=on -c statement_timeout=500"},
+        {"connect_timeout": 3, "options": "-c default_transaction_read_only=on"},
+        {"connect_timeout": 3, "options": "-c statement_timeout=7200"},
+    ]
+
+
+@pytest.mark.parametrize("timeout_s", [0, -1.0, math.inf, math.nan])
+def test_timeout_must_be_finite_and_positive(tmp_path: Path, timeout_s: float) -> None:
+    target = tmp_path / "never-created.sqlite3"
+    with pytest.raises(ValueError, match="timeout_s"):
+        connect(StoreId.WRITE_OWNERSHIP, path=target, timeout_s=timeout_s)
+    assert not target.exists()
