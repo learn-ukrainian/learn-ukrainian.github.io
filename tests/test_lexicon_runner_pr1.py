@@ -872,6 +872,75 @@ def test_coordinator_warms_grac_before_cefr_seal(
     assert sum(1 for row in sealed.values() if int(row["rank"]) >= 1) > 0
 
 
+@pytest.mark.parametrize("stored_stress", [True, False])
+def test_offline_slice_paradigm_stress_gate(
+    tmp_path: Path, fixture_paths: dict[str, Path], monkeypatch: pytest.MonkeyPatch, stored_stress: bool
+) -> None:
+    """#9331: the runner audits exactly the entries it would write; a disagreement fails the run."""
+    from scripts.lexicon import validate_paradigm_stress
+    from scripts.lexicon.runner.memory import EnforcementProof
+    from scripts.lexicon.runner.offline_engine import enrich_offline_slice
+
+    monkeypatch.setattr(em, "_ensure_grac_frequency_cache", lambda words: None)
+    monkeypatch.setattr(em, "_vesum_valid_synonym", lambda term: bool(term))
+    monkeypatch.setattr(
+        "scripts.lexicon.runner.offline_engine.run_startup_self_test",
+        lambda **_kwargs: EnforcementProof(kind="rlimit_as", enforced=True, detail="test stub", max_bytes=64 << 20),
+    )
+    row = {"form": "показникові", "label": "однина, чол., давальний", "tags": "noun:inanim:m:v_dav"}
+    if stored_stress:
+        row["stress"] = "показнико́ві"
+
+    def fake_enrich(payload: dict) -> dict[str, str]:
+        artifact_dir = Path(payload["artifact_dir"])
+        artifact_dir.mkdir(parents=True, exist_ok=True)
+        artifacts = {}
+        for entry in json.loads(Path(payload["entries_path"]).read_text(encoding="utf-8")):
+            entry["enrichment"] = {"morphology": {"forms": [dict(row)]}}
+            lemma_id = str(entry.get("url_slug") or entry["lemma"])
+            (artifact_dir / f"{lemma_id}.json").write_text(json.dumps(entry, ensure_ascii=False), encoding="utf-8")
+            artifacts[lemma_id] = lemma_id
+        return artifacts
+
+    monkeypatch.setattr("scripts.lexicon.runner.worker_enrich.enrich_chunk_payload", fake_enrich)
+    # No VESUM witness: a stored accent is unbound, an absent one is merely unresolved.
+    monkeypatch.setattr(validate_paradigm_stress, "verify_lemma", lambda lemma: [])
+
+    entry_count = len(json.loads(fixture_paths["input"].read_text(encoding="utf-8"))["entries"])
+    work = tmp_path / "runner_work"
+    out = tmp_path / "candidate.json"
+    result = enrich_offline_slice(
+        manifest_path=fixture_paths["input"],
+        sources_db=fixture_paths["sources"],
+        kaikki_json=fixture_paths["kaikki"],
+        work_dir=work,
+        output_path=out,
+        grac_cache={},
+        require_memory_self_test=False,
+        skip_workers=True,
+        chunk_size=50,
+    )
+    assert result["paradigm_stress"]["rows"] == entry_count
+    ledger_conn = sqlite3.connect(work / "ledger.sqlite")
+    try:
+        (status,) = ledger_conn.execute("SELECT status FROM runs WHERE run_id = ?", (result["run_id"],)).fetchone()
+    finally:
+        ledger_conn.close()
+    if stored_stress:
+        assert result["error"] == "paradigm_stress_disagreement"
+        assert result["detail"].startswith(f"{entry_count} disagreements / {entry_count} rows")
+        assert result["paradigm_stress"]["disagreement_count"] == entry_count
+        assert status != "completed"
+        assert not out.exists()
+    else:
+        assert "error" not in result
+        assert result["paradigm_stress"]["disagreement_count"] == 0
+        assert status == "completed"
+        written = list(stream_manifest_entries_json(out))
+        assert len(written) == entry_count
+        assert all(e["enrichment"]["morphology"]["forms"] == [row] for e in written)
+
+
 def test_runner_spawns_use_primary_project_interpreter(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

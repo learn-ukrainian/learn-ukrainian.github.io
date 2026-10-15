@@ -129,6 +129,14 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
         yield log_dir
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None:
+    """Let the dispatch fixture clone be built once per worker (#9065)."""
+    from tests.helpers.dispatch_checkout import register_template_factory
+
+    register_template_factory(tmp_path_factory)
+
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 

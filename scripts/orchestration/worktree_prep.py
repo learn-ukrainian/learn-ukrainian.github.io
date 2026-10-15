@@ -20,6 +20,11 @@ and :func:`verify_first_command` for a human or driver to act on.
 
 Stdlib-only apart from sibling helpers, so dispatch, the reapers, the
 reconcile sweep and admission can all import it cheaply.
+
+New dispatcher records include ``owner_identity`` with PID namespace and
+start time. Foreign or unreadable identities never prove death. Legacy holds
+without it retain the existing host PID/start check; exposure is limited to
+records in flight at deployment. The infra driver owns that migration residual.
 """
 
 from __future__ import annotations
@@ -49,7 +54,7 @@ def process_identity(pid: int) -> dict[str, int | None]:
     return {"pid": pid, "start": process_start_time(pid)}
 
 
-def process_gone(pid: object, start: object) -> bool:
+def process_gone(pid: object, start: object, identity: object = None) -> bool:
     """True only on proof the process ``(pid, start)`` no longer runs.
 
     Proof is a missing ``/proc/<pid>``, or the pid now reporting a different
@@ -61,6 +66,10 @@ def process_gone(pid: object, start: object) -> bool:
         return False
     if not isinstance(start, int) or isinstance(start, bool):
         return False
+    if identity is not None:
+        from scripts.orchestration.dead_worker_state import worker_liveness
+
+        return worker_liveness({"pid": pid, "worker_identity": identity}) is False
     return owner_alive(pid, start) is False
 
 
@@ -87,7 +96,9 @@ def git_gone(prep: dict[str, Any]) -> bool:
 
 def owner_gone(prep: dict[str, Any]) -> bool:
     """True only on proof the dispatcher that wrote ``prep`` is gone."""
-    return process_gone(prep.get("owner_pid"), prep.get("owner_start"))
+    if "owner_identity" in prep and not isinstance(prep["owner_identity"], dict):
+        return False
+    return process_gone(prep.get("owner_pid"), prep.get("owner_start"), prep.get("owner_identity"))
 
 
 def directory_identity(path: Path) -> tuple[int, int] | None:

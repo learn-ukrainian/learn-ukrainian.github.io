@@ -3085,12 +3085,21 @@ def _run_all_refreshes() -> None:
         refresh_provider_usage_data(SUBSCRIPTION_LANES_WITHOUT_CURSOR)
         _refresh_cursor_usage_live()
         _refresh_api_accounts_live()
+        _refresh_claude_accounts_live()
     finally:
         _last_refresh_finished_at = time.monotonic()
         _refresh_in_flight.release()
 
 
 SUBSCRIPTION_LANES_WITHOUT_CURSOR: tuple[str, ...] = tuple(p for p in SUBSCRIPTION_PROVIDERS if p != "cursor")
+
+
+def _refresh_claude_accounts_live() -> None:
+    """Per-account Claude rows (#10630). The ``claude`` lane above stays the default account."""
+    # The per-account module reads this module's CodexBar helpers, so a top-level import is a cycle.
+    from scripts.api.claude_account_usage import refresh_claude_account_usage  # noqa: PLC0415, I001  # lazy-ok: import cycle
+
+    refresh_claude_account_usage()
 
 
 def _scheduler_is_running() -> bool:

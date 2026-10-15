@@ -34,6 +34,9 @@ ROUTING_BUDGET_KEYS = frozenset(
         "recommendation",
         "reset_reserve",
         "transport",
+        # Per-account Claude view (#10630); additive, display only.
+        "claude_accounts",
+        "preferred_claude_account",
     }
 )
 RECOMMENDATION_KEYS = frozenset({"primary_agent_for_code", "rationale", "warnings"})

@@ -331,6 +331,7 @@ def test_a_raw_reason_assigned_in_memory_during_status_is_persisted_as_a_typed_c
 
     monkeypatch.setattr(delegate.worktree_prep, "is_orphaned_prep_record", orphaned_with_raw_reason)
 
+    delegate._heal_dead_task(path, delegate._read_state(path), source="wait")
     shown = _status(task_id, capsys)
 
     on_disk = json.loads(path.read_text(encoding="utf-8"))
@@ -341,7 +342,7 @@ def test_a_raw_reason_assigned_in_memory_during_status_is_persisted_as_a_typed_c
     assert _assert_kept_locally(task_id, field="last_error")["source"] == "record"
 
 
-def test_a_raw_reason_already_on_disk_is_replaced_when_status_persists_the_record(monkeypatch, capsys):
+def test_a_raw_reason_already_on_disk_is_replaced_when_wait_heals_the_record(monkeypatch, capsys):
     """A dead worker's record, raw ``last_error`` from an earlier writer: the heal write holds a typed cause."""
     task_id = "sink-status-disk"
     path = delegate._state_path(task_id)
@@ -350,6 +351,7 @@ def test_a_raw_reason_already_on_disk_is_replaced_when_status_persists_the_recor
     )
     monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
 
+    delegate._heal_dead_task(path, delegate._read_state(path), source="wait")
     shown = _status(task_id, capsys)
 
     on_disk = json.loads(path.read_text(encoding="utf-8"))

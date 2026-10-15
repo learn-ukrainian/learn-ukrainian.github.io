@@ -107,6 +107,31 @@ def _old_runtime_tmp_state_for_lease(lease_name: str) -> dict | None:
     return None
 
 
+@pytest.mark.parametrize("identity_case,kept", [("foreign", True), ("reused", False), ("alive", True)])
+def test_runtime_tmp_sweep_preserves_unknown_identity(tmp_path, tmp_tasks_dir, monkeypatch, identity_case, kept):
+    from scripts.orchestration import dead_worker_state as dead
+
+    namespace = _seed_sweep_fixture(
+        tmp_path, tmp_tasks_dir, marked_lease_count=1, legacy_lease_count=0, decoy_record_count=0,
+    )
+    task_id = "marked-task-0000"
+    identity = {"pid": 123, "start_time": 100, "pid_namespace": dead.INITIAL_PID_NAMESPACE}
+    monkeypatch.setattr(dead, "_pid_namespace", lambda process="self": dead.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead, "_proc_pid_namespace", lambda: dead.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead, "_process_stat", lambda process: (123, 100))
+    if identity_case == "foreign":
+        identity["pid_namespace"] = "pid:[999999]"
+    elif identity_case == "reused":
+        identity["start_time"] -= 1
+    delegate._write_state_atomic(delegate._state_path(task_id), {
+        "task_id": task_id, "status": "done", "pid": identity["pid"], "worker_identity": identity,
+    })
+    monkeypatch.setattr(delegate, "_preserve_runtime_tmp_held_work", lambda *_: {})
+    result = delegate._sweep_runtime_tmp_orphans()
+    assert result["leases_reaped"] == (0 if kept else 1)
+    assert (namespace / delegate._runtime_tmp_lease_name(task_id)).exists() is kept
+
+
 def test_runtime_tmp_orphan_sweep_avoids_record_scan_for_marked_leases(
     tmp_tasks_dir,
     tmp_path,

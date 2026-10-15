@@ -21,7 +21,7 @@ import pytest
 import yaml
 
 from tests.helpers.python import project_python
-from tests.wait_helpers import wait_for_line
+from tests.wait_helpers import wait_for_line, wait_for_pid_line, wait_until
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO_ROOT / ".githooks"
@@ -737,11 +737,14 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
                         text=True,
                     )
                 )
-            deadline = time.monotonic() + 10.0
-            while len(list((state / "queue").glob("*.ticket"))) != 4:
-                assert time.monotonic() < deadline, "four pushers failed to register"
+
+            def four_registered() -> bool:
+                if len(list((state / "queue").glob("*.ticket"))) == 4:
+                    return True
                 assert all(process.poll() is None for process in processes), "a pusher exited before admission"
-                time.sleep(0.02)
+                return False
+
+            wait_until(four_registered, timeout=10.0, interval=0.02, message="four pushers registering")
         for process in processes:
             stdout, stderr = process.communicate(timeout=30)
             assert process.returncode == 0, stdout + stderr
@@ -1526,15 +1529,18 @@ def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(r
 
 
 def _gone(pid: int) -> bool:
-    for _ in range(100):
+    def exited() -> bool:
         try:
             state = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8").rsplit(")", 1)[1].split()[0]
         except OSError:
             return True
-        if state == "Z":
-            return True
-        time.sleep(0.05)
-    return False
+        return state == "Z"
+
+    try:
+        wait_until(exited, timeout=5.0, interval=0.05, message=f"process {pid} exiting")
+    except AssertionError:
+        return False
+    return True
 
 
 _DETACHED_CHILD = (
@@ -1843,7 +1849,7 @@ def test_an_absent_registered_file_with_an_approved_deferral_is_not_incomplete(
 _SHADOW_DETACHED = (
     "import json, subprocess, sys\n"
     "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(300)'], start_new_session=True)\n"
-    "open({pid_file!r}, 'w').write(str(child.pid))\n"
+    "open({pid_file!r}, 'w').write(str(child.pid) + '\\n')\n"
     "{tail}"
 )
 _SHADOW_ANSWER = "print(json.dumps({'components': [], 'fallback_reasons': [], 'selected_tests': []}))\n"
@@ -1859,10 +1865,7 @@ def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
     monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 3.0 if ending == "timeout" else 60.0)
     plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
     shadow = gate.Shadow(plan, repo, str(repo / "scripts/pre_commit/project_python.sh"))
-    for _ in range(200):  # the selector must have spawned its child before the ending is exercised
-        if pid_file.exists() and pid_file.read_text(encoding="utf-8"):
-            break
-        time.sleep(0.05)
+    wait_for_pid_line(pid_file, timeout=10.0)  # the selector must have spawned its child before the ending
     started = time.monotonic()
 
     if ending == "abandon":
@@ -2500,31 +2503,44 @@ def _start_controlled_gate(
 
 def _wait_tickets(state: Path, count: int, processes: list[subprocess.Popen]) -> list[dict]:
     """Wait for complete atomic publications, not for an assumed scheduler delay."""
-    deadline = time.monotonic() + 30
-    while time.monotonic() < deadline:
+    paths: list[Path] = []
+
+    def published() -> bool:
+        nonlocal paths
         paths = list((state / "queue").glob("*.ticket"))
         if len(paths) == count:
-            return [json.loads(path.read_text()) for path in paths]
+            return True
         exited = [process for process in processes if process.poll() is not None]
         assert not exited, "gate exited before publishing its ticket: " + "\n".join(
             process.stderr.read() for process in exited
         )
-        time.sleep(0.01)
-    pytest.fail(f"expected {count} tickets, observed {len(paths)}")
+        return False
+
+    try:
+        wait_until(published, timeout=30.0, interval=0.01, message=f"{count} tickets")
+    except AssertionError as error:
+        if str(error).startswith(f"{count} tickets"):
+            pytest.fail(f"expected {count} tickets, observed {len(paths)}")
+        raise
+    return [json.loads(path.read_text()) for path in paths]
 
 
 def _finish_controlled(process: subprocess.Popen, control: Path, result: str = "green") -> tuple[str, str]:
     assert wait_for_line(control / "entered", stop_if=lambda: process.poll() is not None) == "entered"
     # Nonblocking open proves the validator is already waiting on the FIFO. Retry only the
     # synchronization probe; never restart a validation attempt.
-    deadline = time.monotonic() + 30
-    while True:
+    fds: list[int] = []
+
+    def reader_waiting() -> bool:
         try:
-            fd = os.open(control / "release", os.O_WRONLY | os.O_NONBLOCK)
-            break
+            fds.append(os.open(control / "release", os.O_WRONLY | os.O_NONBLOCK))
         except OSError as error:
-            assert error.errno == errno.ENXIO and time.monotonic() < deadline
-            time.sleep(0.01)
+            assert error.errno == errno.ENXIO, error
+            return False
+        return True
+
+    wait_until(reader_waiting, timeout=30.0, interval=0.01, message="validator waiting on the release FIFO")
+    fd = fds[0]
     with os.fdopen(fd, "w") as release:
         release.write(result)
     return process.communicate(timeout=60)
@@ -2594,7 +2610,7 @@ def test_production_head_follower_reuses_green_under_global_queue_load(repo: Pat
         _wait_tickets(state / "heads" / head, 2, processes)
         # Keep the synchronized load beyond one shortened allowance. The leader has
         # two real predecessors, so its valid global allowance is eight seconds.
-        time.sleep(4.5)
+        time.sleep(4.5)  # wall-clock hold: the allowance under test is measured in elapsed seconds
         _finish_controlled(processes[0], controls[0])
         stdout, stderr = _finish_controlled(processes[1], controls[1])
         assert processes[1].returncode == 0, stdout + stderr
@@ -2629,10 +2645,10 @@ def test_production_non_green_head_holder_keeps_later_global_allowance(repo: Pat
         processes.append(_start_global_load(state, controls[1], ticket_count=0))
         processes.append(_start_controlled_gate(repo, controls[2], LU_PRE_PUSH_GATE_ADMISSION_WAIT_S="6"))
         _wait_tickets(state / "heads" / head, 3, processes)
-        time.sleep(8)
+        time.sleep(8)  # wall-clock hold: the coalescing wait under test is measured in elapsed seconds
         _finish_controlled(processes[0], controls[0])
         _wait_tickets(state, 1, processes[1:])
-        time.sleep(5)
+        time.sleep(5)  # wall-clock hold: no receipt may appear while the global allowance is still running
         assert _receipts(repo) == [], "head holders without green proof must not authorize reuse"
         _finish_controlled(processes[1], controls[1])
         stdout, stderr = _finish_controlled(processes[2], controls[2])
@@ -3844,14 +3860,15 @@ os._exit(0)
         with pytest.raises(BlockingIOError):
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         release.touch()
-        deadline = time.monotonic() + 10
-        while True:
+
+        def lock_free() -> bool:
             try:
                 fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                break
             except BlockingIOError:
-                assert time.monotonic() < deadline
-                time.sleep(0.05)
+                return False
+            return True
+
+        wait_until(lock_free, timeout=10.0, interval=0.05, message="scoped reservation releasing the lock")
     finally:
         release.touch()
         os.close(fd)
@@ -3905,10 +3922,12 @@ with pathlib.Path(sys.argv[1]).open('r+') as stream:
         )
         try:
             wait_for_line(marker, stop_if=lambda: legacy.poll() is not None)
-            deadline = time.monotonic() + 10
-            while gate.sharing_lock_inventory(holder._fd, "READ"):
-                assert time.monotonic() < deadline
-                time.sleep(0.02)
+            wait_until(
+                lambda: not gate.sharing_lock_inventory(holder._fd, "READ"),
+                timeout=10.0,
+                interval=0.02,
+                message="legacy waiter queued behind the scoped holder",
+            )
             with (
                 pytest.raises(gate.GateOutcome, match="admission_timeout"),
                 gate.Admission(tmp_path, 0, scope=InjectedScope(qualified_cgroups)),

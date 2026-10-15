@@ -840,40 +840,16 @@ def test_pid_alive_false_for_nonexistent_pid():
 # ---------------------------------------------------------------------------
 
 
-def test_status_detects_zombie_when_pid_dead(tmp_tasks_dir, capsys):
-    """Regression: if state says 'running' but PID is dead, status must
-    flip the state to 'crashed' and persist the correction."""
+def test_status_dead_worker_is_readonly(tmp_tasks_dir, capsys):
     path = delegate._state_path("zombie-task")
-    delegate._write_state_atomic(
-        path,
-        {
-            "task_id": "zombie-task",
-            "agent": "codex",
-            "status": "running",
-            "pid": 999_999_998,  # guaranteed dead
-            "started_at": "2026-04-10T12:00:00+00:00",
-        },
-    )
-
-    # Run the status command
-    import argparse
-
-    args = argparse.Namespace(task_id="zombie-task")
-    rc = delegate.cmd_status(args)
-    assert rc == 0
-
-    # State file should now be persisted as crashed
-    updated = delegate._read_state(path)
-    assert updated["status"] == "crashed"
-    assert "not alive" in (updated.get("stderr_excerpt") or "")
-    assert "'running'" in (updated.get("stderr_excerpt") or ""), (
-        "stderr_excerpt should reference the PRIOR status, not the new one"
-    )
-
-    # stdout should contain the updated state as JSON
-    captured = capsys.readouterr()
-    parsed = json.loads(captured.out)
-    assert parsed["status"] == "crashed"
+    delegate._write_state_atomic(path, {
+        "task_id": "zombie-task", "agent": "codex", "status": "running",
+        "pid": 999_999_998, "started_at": "2026-04-10T12:00:00+00:00",
+    })
+    before = path.read_bytes()
+    assert delegate.cmd_status(argparse.Namespace(task_id="zombie-task")) == 0
+    assert path.read_bytes() == before
+    assert json.loads(capsys.readouterr().out)["status"] == "running"
 
 
 def test_status_leaves_running_alone_when_pid_alive(tmp_tasks_dir, capsys):
@@ -2333,7 +2309,7 @@ def test_dispatch_popen_failure_records_worktree_head(tmp_tasks_dir, tmp_path, m
     assert state["final_branch_head_commit"] == expected_head
 
 
-@pytest.mark.parametrize("probe", ["status", "wait", "list"])
+@pytest.mark.parametrize("probe", ["wait", "admission"])
 def test_zombie_probes_record_final_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch, capsys, probe):
     _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=f"{probe}-head")
     state_path = delegate._state_path(f"{probe}-head")
@@ -2349,12 +2325,10 @@ def test_zombie_probes_record_final_worktree_head(tmp_tasks_dir, tmp_path, monke
     )
     expected_head = delegate._resolve_sha(worktree)
 
-    if probe == "status":
-        assert delegate.cmd_status(argparse.Namespace(task_id=f"{probe}-head")) == 0
-    elif probe == "wait":
+    if probe == "wait":
         assert delegate.cmd_wait(argparse.Namespace(task_id=f"{probe}-head", timeout=1, poll_interval=0.5)) == 1
     else:
-        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+        delegate._evaluate_dispatch_admission("danger", sweep=True)
 
     state = delegate._read_state(state_path)
     assert state["status"] == "crashed"
@@ -2768,6 +2742,32 @@ def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeyp
     assert (tmp_tasks_dir / "logs" / "codex" / "test-mkdir-1885.stderr.log").exists()
 
 
+@pytest.mark.parametrize("identity_case,expected", [("foreign", 1), ("reused", 0), ("alive", 0)])
+def test_cancel_uses_recorded_worker_identity(tmp_tasks_dir, monkeypatch, capsys, identity_case, expected):
+    import argparse
+
+    from scripts.orchestration import dead_worker_state as dead
+
+    identity = {"pid": 123, "start_time": 100, "pid_namespace": dead.INITIAL_PID_NAMESPACE}
+    monkeypatch.setattr(dead, "_pid_namespace", lambda process="self": dead.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead, "_proc_pid_namespace", lambda: dead.INITIAL_PID_NAMESPACE)
+    monkeypatch.setattr(dead, "_process_stat", lambda process: (123, 100))
+    if identity_case == "foreign":
+        identity["pid_namespace"] = "pid:[999999]"
+    elif identity_case == "reused":
+        identity["start_time"] -= 1
+    path = delegate._state_path("identity-cancel")
+    delegate._write_state_atomic(path, {
+        "task_id": "identity-cancel", "status": "running", "pid": identity["pid"], "worker_identity": identity,
+    })
+    signals = []
+    monkeypatch.setattr(delegate.os, "kill", lambda pid, sig: signals.append((pid, sig)))
+    assert delegate.cmd_cancel(argparse.Namespace(task_id="identity-cancel")) == expected
+    assert signals == ([(identity["pid"], signal.SIGTERM)] if identity_case == "alive" else [])
+    if identity_case == "reused":
+        assert "recorded worker for pid 123 is no longer live" in capsys.readouterr().out
+
+
 def test_cancel_refuses_terminal_status(tmp_tasks_dir, capsys):
     """Regression (Codex 2026-04-10 audit): cmd_cancel must refuse to
     signal a PID whose task is already in a terminal state. The OS may
@@ -2887,7 +2887,7 @@ def test_zombie_detection_works_on_pid_before_worker_writes(tmp_tasks_dir, capsy
 
     Simulation: write a state file with a dead PID + status=spawning
     (as if the parent wrote PID but the worker crashed before it could
-    run). status must flip it to crashed.
+    run). An explicit wait must flip it to crashed.
     """
     path = delegate._state_path("early-crash")
     delegate._write_state_atomic(
@@ -2901,8 +2901,8 @@ def test_zombie_detection_works_on_pid_before_worker_writes(tmp_tasks_dir, capsy
 
     import argparse
 
-    args = argparse.Namespace(task_id="early-crash")
-    delegate.cmd_status(args)
+    args = argparse.Namespace(task_id="early-crash", timeout=1, poll_interval=0.1)
+    assert delegate.cmd_wait(args) == 1
 
     updated = delegate._read_state(path)
     assert updated["status"] == "crashed", (
@@ -6931,16 +6931,27 @@ def test_worker_without_a_recorded_account_passes_no_label(tmp_tasks_dir, tmp_pa
     assert "claude_account" not in mock_invoke.call_args.kwargs["tool_config"]
 
 
+def test_ordinary_worker_honours_the_recorded_claude_account(tmp_tasks_dir, tmp_path):
+    """AC-01: outside a sealed attempt the recorded label reaches the Claude adapter, not a refusal."""
+    task_id = "worker-claude-account-ordinary-b"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": "b"})
+
+    rc, mock_invoke = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"]["claude_account"] == "b"
+    assert delegate._read_state(state_path)["claude_account"] == "b"
+
+
+@pytest.mark.parametrize("label", ["c", "B", 2])
 @pytest.mark.parametrize(
-    "label,review,code",
-    [
-        ("b", {"review_id": None, "attempt_id": None}, "claude_account_route_unsealed"),
-        ("c", {}, "claude_account_unknown"),
-    ],
+    "review", [{}, {"review_id": None, "attempt_id": None}], ids=["sealed_attempt", "ordinary_worker"]
 )
-def test_worker_refuses_a_recorded_account_it_cannot_honour(tmp_tasks_dir, tmp_path, label, review, code):
-    """A record naming another account outside the sealed attempt would run as the default one."""
-    task_id = f"worker-claude-account-{code}"
+def test_worker_refuses_a_recorded_account_it_cannot_honour(tmp_tasks_dir, tmp_path, label, review):
+    """A record naming an account the binding does not know is refused before the provider starts."""
+    code = "claude_account_unknown"
+    task_id = f"worker-claude-account-unknown-{label}-{len(review)}"
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(state_path, {"task_id": task_id, "claude_account": label})
 
@@ -6963,7 +6974,56 @@ def test_dispatch_records_the_default_claude_account(tmp_tasks_dir, tmp_path, mo
              "--dry-run", *extra],
         )
         assert delegate.cmd_dispatch(args) == 0
-        assert delegate._read_state(delegate._state_path(task_id))["claude_account"] == "a"
+        state = delegate._read_state(delegate._state_path(task_id))
+        assert state["claude_account"] == "a"
+        assert "claude_account_user_scope_omitted" not in state
+
+
+def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks_dir, tmp_path, monkeypatch):
+    """AC-01: a verified non-default label is recorded for an ordinary worker instead of refused as unsealed."""
+    from tests.agent_runtime.test_attempt_boundary import (
+        BOUND_ACCOUNT_UUID,
+        CLAUDE_AMBIENT_AUTH,
+        DEFAULT_ACCOUNT_UUID,
+        _credentials,
+        _login_identity,
+        _mock_selected_account_runtime,
+        _private_json,
+    )
+
+    identities, calls = _mock_selected_account_runtime(tmp_path, monkeypatch)
+    for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    home, selected = tmp_path / "home", tmp_path / "selected"
+    selected.mkdir(mode=0o700)
+    token = "fixture-bound-" + "b" * 30
+    identities[token] = BOUND_ACCOUNT_UUID
+    _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
+    _credentials(selected / ".credentials.json", token)
+    binding = tmp_path / "binding.json"
+    _private_json(
+        binding,
+        {"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": BOUND_ACCOUNT_UUID}}},
+    )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(binding))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
+    task_id = "claude-account-ordinary-b"
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
+         "--dry-run", "--claude-account", "b"],
+    )
+
+    assert delegate._dispatch_claude_account_refusal(args) is None
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["claude_account"] == "b"
+    # Its login directory's user scope (hooks, permissions, MCP servers) does not load; the record says so.
+    assert state["claude_account_user_scope_omitted"] is True
+    assert str(selected) not in json.dumps(state)
+    assert calls == [token, token]
 
 
 def _claude_account_args(*extra: str) -> argparse.Namespace:
@@ -6978,7 +7038,7 @@ def _claude_account_args(*extra: str) -> argparse.Namespace:
         (["--agent", "claude", "--claude-account", "c"], "claude_account_unknown"),
         (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
-        (["--agent", "claude", "--claude-account", "b"], "claude_account_route_unsealed"),
+        (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
         (
             ["--agent", "claude", "--claude-account", "b", "--review-attempt", "manifest.yaml",
              "--review-id", "rev", "--attempt-id", "att"],
@@ -7006,24 +7066,49 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(
 
 
 @pytest.mark.parametrize(
-    "case,code", [("missing", "claude_account_credentials_missing"), ("expired", "claude_account_credentials_expired")]
+    "case,code",
+    [
+        ("missing", "claude_account_credentials_missing"),
+        ("expired", "claude_account_credentials_expired"),
+        ("settings", "claude_account_settings_credential_source"),
+        ("team_plan", "claude_account_plan_unsupported"),
+        ("policy_cache", "claude_account_policy_cache_present"),
+        ("machine_policy", "claude_account_machine_policy_present"),
+    ],
 )
 def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path, monkeypatch, capsys, case, code):
+    """The selected login directory's state, including its user settings and plan (#10619), is refused before effects."""
     from tests.agent_runtime.test_attempt_boundary import (
         BOUND_ACCOUNT_UUID,
         CLAUDE_AMBIENT_AUTH,
         DEFAULT_ACCOUNT_UUID,
+        MACHINE_POLICY,
+        PROFILE_ORGANIZATIONS,
+        _credentials,
+        _login_identity,
         _mock_selected_account_runtime,
         _private_json,
     )
 
-    _mock_selected_account_runtime(tmp_path, monkeypatch)
+    identities, _ = _mock_selected_account_runtime(tmp_path, monkeypatch)
     for key in (*CLAUDE_AMBIENT_AUTH, "CLAUDE_CONFIG_DIR"):
         monkeypatch.delenv(key, raising=False)
     home, selected = tmp_path / "home", tmp_path / "selected"
     selected.mkdir(mode=0o700)
     _private_json(home / ".claude.json", {"oauthAccount": {"accountUuid": DEFAULT_ACCOUNT_UUID}})
-    _private_json(selected / ".claude.json", {"oauthAccount": {"accountUuid": BOUND_ACCOUNT_UUID}})
+    _private_json(selected / ".claude.json", {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID)})
+    if case in ("team_plan", "policy_cache", "machine_policy"):
+        # An ordinary worker whose login is otherwise sound.
+        identities["fixture-bound-" + "b" * 30] = BOUND_ACCOUNT_UUID
+        _credentials(selected / ".credentials.json", "fixture-bound-" + "b" * 30)
+    if case == "team_plan":
+        organization = {**PROFILE_ORGANIZATIONS[BOUND_ACCOUNT_UUID], "organization_type": "claude_team"}
+        monkeypatch.setitem(PROFILE_ORGANIZATIONS, BOUND_ACCOUNT_UUID, organization)
+    if case == "policy_cache":
+        _private_json(selected / "remote-settings.json", {})
+    if case == "machine_policy":
+        # A machine policy helper (#10619): its output cannot be bound, so presence refuses.
+        MACHINE_POLICY["policy_helper"]()
     binding = tmp_path / "binding.json"
     _private_json(
         binding,
@@ -7036,22 +7121,17 @@ def test_dispatch_selected_state_refuses_before_effects(tmp_tasks_dir, tmp_path,
             selected / ".credentials.json",
             {"claudeAiOauth": {"accessToken": "fixture-expired-" + "e" * 30, "expiresAt": 1}},
         )
+    attempt = ["--review-attempt", "manifest.yaml", "--review-id", "rev", "--attempt-id", "att"]
+    if case == "settings":
+        # An ordinary worker: the login directory's settings name a key helper.
+        _private_json(selected / "settings.json", {"apiKeyHelper": "fixture-helper"})
+    if case in ("settings", "team_plan", "policy_cache", "machine_policy"):
+        attempt = []
     for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans"):
         monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
     spawn = MagicMock(side_effect=AssertionError("spawned"))
     monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
-    args = _claude_account_args(
-        "--agent",
-        "claude",
-        "--claude-account",
-        "b",
-        "--review-attempt",
-        "manifest.yaml",
-        "--review-id",
-        "rev",
-        "--attempt-id",
-        "att",
-    )
+    args = _claude_account_args("--agent", "claude", "--claude-account", "b", *attempt)
     assert delegate._dispatch_claude_account_refusal(args) == code
     assert delegate.cmd_dispatch(args) == 2
     assert capsys.readouterr().err == f"❌ CLAUDE_ACCOUNT_REFUSED: {code}\n"
@@ -10528,7 +10608,7 @@ def test_list_filters_by_status(tmp_tasks_dir, capsys):
     assert {t["task_id"] for t in tasks} == {"t1", "t3"}
 
 
-def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
+def test_list_preserves_dead_running_record(tmp_tasks_dir, capsys):
     delegate._write_state_atomic(
         delegate._state_path("dead"),
         {
@@ -10540,12 +10620,15 @@ def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
     )
     import argparse
 
+    path = delegate._state_path("dead")
+    before = path.read_bytes()
     args = argparse.Namespace(status=None)
     delegate.cmd_list(args)
     captured = capsys.readouterr()
     tasks = json.loads(captured.out)
     assert len(tasks) == 1
-    assert tasks[0]["status"] == "crashed"
+    assert tasks[0]["status"] == "running"
+    assert path.read_bytes() == before
 
 
 def test_zombie_probe_preserves_done_written_after_initial_read(tmp_tasks_dir):
@@ -21402,3 +21485,102 @@ def test_adapter_model_rejection_warns_when_probe_directory_cleanup_fails(
     assert "delegate-model-probe-" not in err
     assert "raw-secret-text" not in err
     assert len(_model_probe_dirs(tmp_path)) == 1
+
+
+# #10621: process identities and read-only task views.
+def _namespace_worker_record(*, foreign=False, reused=False):
+    from scripts.common.acp_runtime_lock import process_start_time
+
+    pid = os.getpid() if reused else 999_999_998
+    namespace = str(Path("/proc/self/ns/pid").readlink())
+    return {
+        "task_id": "namespace-worker",
+        "agent": "codex",
+        "mode": "danger",
+        "status": "running",
+        "pid": pid,
+        "run_nonce": "namespace-run",
+        "worker_identity": {
+            "pid": pid,
+            "host_pid": pid,
+            "start_time": process_start_time(pid) + 1 if reused else 123,
+            "pid_namespace": "pid:[999999]" if foreign else namespace,
+            "recorder_pid_namespace": "pid:[999999]" if foreign else namespace,
+        },
+    }
+
+
+@pytest.mark.parametrize("probe", ["status", "list", "wait", "admission"])
+def test_namespace_foreign_worker_is_never_crashed(tmp_tasks_dir, capsys, probe):
+    state = _namespace_worker_record(foreign=True)
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    before = path.read_bytes()
+    if probe == "status":
+        assert delegate.cmd_status(argparse.Namespace(task_id=state["task_id"])) == 0
+    elif probe == "list":
+        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+    elif probe == "wait":
+        assert delegate.cmd_wait(argparse.Namespace(task_id=state["task_id"], timeout=0.01, poll_interval=0.01)) == 124
+    else:
+        decision = delegate._evaluate_dispatch_admission("danger", sweep=True)
+        assert state["task_id"] in decision.live_task_ids
+    assert path.read_bytes() == before
+    assert delegate._read_state(path)["status"] == "running"
+
+
+@pytest.mark.parametrize("probe", ["status", "list"])
+def test_namespace_readonly_dead_worker_record_is_byte_identical(tmp_tasks_dir, capsys, probe):
+    state = _namespace_worker_record()
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    before = path.read_bytes()
+    if probe == "status":
+        assert delegate.cmd_status(argparse.Namespace(task_id=state["task_id"])) == 0
+    else:
+        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("reused", [False, True])
+def test_namespace_owner_sweep_marks_proven_dead_worker(tmp_tasks_dir, reused):
+    state = _namespace_worker_record(reused=reused)
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    delegate._heal_dead_task(path, state, source="admission")
+    assert delegate._read_state(path)["status"] == "crashed"
+
+
+def test_namespace_sandbox_pid_does_not_terminalize_live_host_worker(tmp_tasks_dir):
+    state = _namespace_worker_record(foreign=True)
+    state["worker_identity"]["host_pid"] = os.getpid()
+    path = delegate._state_path(state["task_id"])
+    delegate._write_state_atomic(path, state)
+    delegate._heal_dead_task(path, state, source="wait")
+    assert delegate._read_state(path)["status"] == "running"
+
+
+@pytest.mark.parametrize("ok,terminal", [(True, "done"), (False, "failed")])
+def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp_path, ok, terminal):
+    path = delegate._state_path("final-write")
+    delegate._write_state_atomic(path, {"task_id": "final-write", "status": "spawning", "model": "unknown", "cli_version": "unknown"})
+    result = type("_Result", (), {
+        "ok": ok, "response": "finished", "stderr_excerpt": None if ok else "failed",
+        "returncode": 0 if ok else 1, "rate_limited": False,
+        "model": "unknown", "effort": "high", "cli_version": "unknown",
+    })()
+
+    def finish_after_false_mark(*args, **kwargs):
+        state = delegate._read_state(path)
+        assert state["status"] == "running"
+        assert state["worker_identity"]["pid"] == state["pid"]
+        assert state["worker_identity"]["start_time"] is not None
+        delegate._write_state_atomic(path, {**state, "status": "crashed", "last_error": "worker_process_dead"})
+        return result
+
+    with patch("agent_runtime.runner.invoke", side_effect=finish_after_false_mark):
+        assert delegate._run_worker(task_id="final-write", agent="claude", prompt="hi", mode="read-only", cwd_str=str(tmp_path), model=None, hard_timeout=60, effort=None) == (0 if ok else 1)
+    state = delegate._read_state(path)
+    assert state["status"] == terminal
+    assert state["returncode"] == (0 if ok else 1)
+    assert state["last_error"] != "worker_process_dead"
