@@ -94,6 +94,7 @@ import urllib.parse
 import uuid
 from collections.abc import Iterator, Mapping
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, NamedTuple
 
 from scripts.agent_runtime.agy_hook_config import require_hook_config
@@ -837,12 +838,19 @@ _WRITE_MODE_PROMPT_CONTRACT = (
 )
 
 
+# A caller that builds a plan only to inspect it, never to launch it, sets this
+# key. The hook gate still validates; only the worker install is skipped (#10511).
+PLAN_ONLY_TOOL_CONFIG_KEY = "plan_only"
+
+
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
     name: str = "agy"
     default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.8-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
+    # The lane probe passes this so a health check never writes the checkout.
+    plan_only_tool_config: Mapping[str, bool] = MappingProxyType({PLAN_ONLY_TOOL_CONFIG_KEY: True})
 
     @staticmethod
     def resolve_model_slug(model: str) -> str | None:
@@ -892,6 +900,12 @@ class AgyAdapter:
         Missing models use the configured default; unknown explicit models
         fail before subprocesses. Claude pins require the permission-denied
         review route. ``effort`` remains a no-op (#1396).
+
+        Only a worker plan installs the hook guard into an absent dispatch
+        worktree file. A review route never writes the reviewed checkout: its
+        guard lives in the scoped attempt home, and a missing guard refuses.
+        A plan-only build (``PLAN_ONLY_TOOL_CONFIG_KEY``) validates the same
+        way without installing (#10511).
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
@@ -936,7 +950,7 @@ class AgyAdapter:
             cwd,
             Path.home(),
             Path(str(tc["agy_home_override"])) if tc.get("agy_home_override") else None,
-            install=True,
+            install=not review_route and not tc.get(PLAN_ONLY_TOOL_CONFIG_KEY),
         )
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")

@@ -312,3 +312,36 @@ def test_held_muse_runtime_fails_closed_without_version_probe(monkeypatch, tmp_p
     else:
         assert probe["reason"] == "agent is not registered"
     assert list(tmp_path.iterdir()) == []
+
+
+@pytest.mark.parametrize("home_guard", [True, False])
+def test_agy_probe_never_installs_hooks_into_a_dispatch_worktree(monkeypatch, tmp_path, home_guard):
+    """The probe checks AGY hook wiring without writing the session checkout (#10511)."""
+    from scripts.agent_runtime.adapters import agy
+    from tests.agent_runtime.agy_hook_helpers import linked_dispatch_worktree, register_agy_hooks, tree_snapshot
+
+    home = tmp_path / "home"
+    monkeypatch.setenv("HOME", str(home))
+    if home_guard:
+        register_agy_hooks(tmp_path / "elsewhere", home=home)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    versions: list[list[str]] = []
+
+    def fake_version(command, **kwargs):
+        versions.append(command)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(lane_probe, "run_version_probe", fake_version)
+    cwd = linked_dispatch_worktree(tmp_path, task="session")
+    before = tree_snapshot(cwd)
+
+    result = lane_probe.probe_lane("agy", cwd=cwd)
+
+    assert tree_snapshot(cwd) == before
+    if home_guard:
+        assert result["status"] == "healthy"
+        assert len(versions) == 1
+    else:
+        assert result["status"] == "unhealthy"
+        assert result["reason"] == "AgyHookConfigError while building or spawning the adapter"
+        assert versions == []

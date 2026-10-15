@@ -2414,3 +2414,33 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
         assert calls == []
     agy_module._agy_version.cache_clear()
     assert [hook_file_state(path) for path in real_hook_paths] == real_hook_states
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+def test_hook_gate_worker_plan_installs_but_plan_only_never_writes(tmp_path, monkeypatch, mode):
+    """Only a worker plan provisions its dispatch worktree; a plan-only build validates without writing (#10511)."""
+    from scripts.agent_runtime import agy_hook_config as hooks
+    from tests.agent_runtime.agy_hook_helpers import linked_dispatch_worktree, register_agy_hooks, tree_snapshot
+
+    home = tmp_path / "home"
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setattr(agy_module, "_require_background_wait_support", lambda *a: None)
+    kwargs = dict(prompt="synthetic", mode=mode, model=None, task_id="hook-gate", session_id=None)
+    plan_only = dict(AgyAdapter.plan_only_tool_config)
+
+    probed = linked_dispatch_worktree(tmp_path / "probed", task="session")
+    before = tree_snapshot(probed)
+    with pytest.raises(hooks.AgyHookConfigError, match="missing_file"):
+        AgyAdapter().build_invocation(**kwargs, cwd=probed, tool_config=plan_only)
+    assert tree_snapshot(probed) == before
+    assert not home.exists()
+
+    worker = linked_dispatch_worktree(tmp_path / "worker", task="worker")
+    AgyAdapter().build_invocation(**kwargs, cwd=worker, tool_config=None)
+    assert hooks.check_hook_config((worker / ".agents/hooks.json",)).passed
+    assert not home.exists()
+
+    register_agy_hooks(tmp_path / "elsewhere", home=home)
+    plan = AgyAdapter().build_invocation(**kwargs, cwd=probed, tool_config=plan_only)
+    assert plan.cwd == probed.resolve()
+    assert tree_snapshot(probed) == before

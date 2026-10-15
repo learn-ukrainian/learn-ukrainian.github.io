@@ -240,6 +240,8 @@ def require_hook_config(cwd: Path, home: Path, agy_home: Path | None = None, *, 
 
     Every existing candidate must validate, and at least one must contain the
     guard. Never repair an existing invalid candidate or write ordinary HOME.
+    ``install`` belongs to a worker plan on its own dispatch worktree; review
+    and plan-only callers pass False so the checkout stays unchanged (#10511).
     """
     try:
         if install and not os.path.lexists(cwd / ".agents/hooks.json") and main_checkout_root(cwd) != cwd:

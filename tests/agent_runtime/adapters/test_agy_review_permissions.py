@@ -8,10 +8,11 @@ import subprocess
 import pytest
 
 from scripts.agent_runtime.adapters import agy
-from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
+from scripts.agent_runtime.agy_hook_config import GUARD_NAME, AgyHookConfigError, guard_registration, hook_locations
 from scripts.agent_runtime.review_mcp import agy_review_settings
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.review.receipts.ledger import review_tools
+from tests.agent_runtime.agy_hook_helpers import linked_dispatch_worktree, tree_snapshot
 
 
 @pytest.fixture
@@ -96,6 +97,27 @@ def test_profile_does_not_deny_workspace_evidence(tmp_path, scoped, route, profi
     rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
     assert not any(rule.startswith("read_file(") for rule in rules["deny"])
     assert evidence.read_text() == "workspace evidence"
+
+
+@pytest.mark.parametrize("route", ["full", "isolated", "permission-only", "strict-mcp"])
+def test_review_routes_never_install_hooks_into_a_dispatch_worktree(tmp_path, scoped, route):
+    """Review plans check the scoped-home guard and leave the reviewed tree byte-identical (#10511)."""
+    cwd = linked_dispatch_worktree(tmp_path / "trees", task="reviewed")
+    config = {"agy_home_override": str(scoped), "mcp_server_names": ["sources"]}
+    if route == "strict-mcp":
+        config["strict_mcp_config"] = True
+    else:
+        config["review_profile"] = "code"
+    if route in {"full", "isolated"}:
+        config["review_access"] = route
+    before = tree_snapshot(cwd)
+    plan = build(cwd, config)
+    assert "--sandbox" in plan.cmd
+    assert tree_snapshot(cwd) == before
+    (scoped / ".gemini" / "config" / "hooks.json").unlink()
+    with pytest.raises(AgyHookConfigError, match="missing_file"):
+        build(cwd, config)
+    assert tree_snapshot(cwd) == before
 
 
 def test_permission_only_provisioned_home_passes_adapter_for_review_tools(tmp_path, monkeypatch):

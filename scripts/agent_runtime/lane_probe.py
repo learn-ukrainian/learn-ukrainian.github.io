@@ -150,6 +150,9 @@ def probe_lane(agent: str, *, cwd: Path, timeout_seconds: int = _DEFAULT_TIMEOUT
     try:
         adapter = _load_adapter(agent)
         mode = _mode_for_probe(adapter)
+        # An adapter that provisions its workspace while planning a worker
+        # declares a plan-only config; the probe never launches its plan (#10511).
+        plan_only = getattr(adapter, "plan_only_tool_config", None)
         plan = adapter.build_invocation(
             prompt=_PROBE_PROMPT,
             mode=mode,
@@ -157,7 +160,7 @@ def probe_lane(agent: str, *, cwd: Path, timeout_seconds: int = _DEFAULT_TIMEOUT
             model=None,
             task_id="lane-health-probe",
             session_id=None,
-            tool_config=None,
+            tool_config=dict(plan_only) if plan_only else None,
         )
         completed = run_version_probe(
             _version_prefix(plan.cmd),

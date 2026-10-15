@@ -16,7 +16,7 @@ import yaml
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.attempt_boundary import prepare_attempt_boundary, verify_full_review_tree
 from scripts.review.isolation import ReviewIsolationError
-from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
+from tests.agent_runtime.agy_hook_helpers import linked_dispatch_worktree, register_agy_hooks, tree_snapshot
 from tests.agent_runtime.test_attempt_boundary import attempt_config as _attempt_config
 from tests.agent_runtime.test_attempt_boundary import manifest_world
 from tests.agent_runtime.test_attempt_boundary import world as boundary_world  # noqa: F401
@@ -284,15 +284,21 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
         AgyAdapter().build_invocation(**{**kw, "mode": "workspace-write"}, tool_config={"review_access": "full"})
 
 
+@pytest.mark.parametrize("tree", ["primary", "dispatch_worktree"])
 @pytest.mark.parametrize("access", ["full", "isolated"])
 @pytest.mark.parametrize("candidate", ["provisioned_home", "unguarded_workspace", "no_guard"])
 def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
-    world, tmp_path, monkeypatch, access, candidate
+    world, tmp_path, monkeypatch, tree, access, candidate
 ):
+    """A review plan never installs hooks, even into a linked dispatch worktree (#10511).
+
+    The AGY installer writes only into a worktree below ``.worktrees/dispatch``,
+    so the ``git init`` primary alone cannot prove the reviewed tree stays put.
+    """
     from scripts.agent_runtime.adapters import agy
     from scripts.agent_runtime.review_mcp import agy_review_settings
 
-    root, _ = world
+    root = world[0] if tree == "primary" else linked_dispatch_worktree(tmp_path, task="review")
     tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy", review_access=access)
     tc.update(review_access=access, review_cwd=str(root))
     boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
@@ -305,6 +311,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
             workspace_hooks.write_text("{}")
         elif candidate == "no_guard":
             (Path(boundary.tool_config["agy_home_override"]) / ".gemini/config/hooks.json").unlink()
+        reviewed_tree = tree_snapshot(root)
         if candidate != "provisioned_home":
             from scripts.agent_runtime.agy_hook_config import AgyHookConfigError
 
@@ -319,6 +326,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
                     session_id=None,
                     tool_config=boundary.tool_config,
                 )
+            assert tree_snapshot(root) == reviewed_tree
             return
         plan = AgyAdapter().build_invocation(
             prompt="probe",
@@ -335,6 +343,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(
         assert "--sandbox" in plan.cmd
         assert "--dangerously-skip-permissions" not in plan.cmd
         assert not workspace_hooks.exists()
+        assert tree_snapshot(root) == reviewed_tree
     finally:
         boundary.cleanup()
 
