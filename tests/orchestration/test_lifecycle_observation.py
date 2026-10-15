@@ -13,8 +13,9 @@ from tests.orchestration.test_task_lifecycle import NOW, _body, _ledger, _observ
 
 
 @pytest.fixture
-def observation_case(tmp_path):
+def observation_case(tmp_path, monkeypatch):
     repo = init_repo(tmp_path)
+    monkeypatch.chdir(repo)
     git(repo, "config", "core.excludesFile", str(tmp_path / "excludes"))
     (tmp_path / "excludes").write_text(".agent/\nbatch_state/\n")
     worktree = add_worktree(repo, "codex/42-closeout")
@@ -391,3 +392,111 @@ def test_capture_uses_explicit_lifecycle_locator(observation_case):
     task_file.write_text(json.dumps(task))
     assert lo.before_reap(repo, worktree)[0]["status"] == "recorded"
     assert tl._latest_premerge_local(tl.load_lifecycle(custom)) is not None
+
+
+def _assert_no_host_paths(value, repo):
+    if isinstance(value, dict):
+        for item in value.values():
+            _assert_no_host_paths(item, repo)
+    elif isinstance(value, list):
+        for item in value:
+            _assert_no_host_paths(item, repo)
+    elif isinstance(value, str):
+        assert not value.startswith("/"), value
+        assert str(repo) not in value, value
+
+
+def test_capture_receipt_has_no_host_paths(observation_case):
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, ledger, *_ = observation_case
+    lo.before_reap(repo, worktree)
+    _assert_no_host_paths(tl.load_lifecycle(ledger)["observation_receipts"], repo)
+    local = tl._latest_premerge_local(tl.load_lifecycle(ledger))
+    assert local["primary_checkout"] == "."
+    assert local["worktree"] == ".worktrees/dispatch/codex-42-closeout"
+
+
+def test_recovery_receipt_and_cli_have_no_host_paths(observation_case, capsys, monkeypatch):
+    from scripts.orchestration import task_closeout
+
+    repo, worktree, ledger, task, manifest, push, _ = observation_case
+    git(repo, "worktree", "remove", str(worktree))
+    # --repo-root must supply validation context even from another directory.
+    monkeypatch.chdir(repo.parent)
+    assert task_closeout.main([
+        "--repo-root", str(repo), "recover-local", "--state-file", str(ledger),
+        "--task-record", str(task), "--preserved-manifest", str(manifest), "--push-record", str(push),
+    ]) == 0
+    _assert_no_host_paths(json.loads(capsys.readouterr().out), repo)
+    _assert_no_host_paths(tl.load_lifecycle(ledger)["observation_receipts"], repo)
+
+
+@pytest.mark.parametrize("name", ["manifest", "task", "push"])
+@pytest.mark.parametrize("locator", ["../outside.json", "/outside.json", "link/outside.json"])
+def test_recovery_refuses_escaping_locators(observation_case, tmp_path, name, locator):
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, ledger, task, manifest, push, _ = observation_case
+    git(repo, "worktree", "remove", str(worktree))
+    lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW)
+    (repo / "link").symlink_to(tmp_path, target_is_directory=True)
+    data = tl.load_lifecycle(ledger)
+    local = data["observation_receipts"][-1]["observation"]["local"]
+    local["recovered_from_preserved"]["inputs"][name]["path"] = locator
+    assert lo.recovery_refusal(data, local) == "RECOVERY_LOCATOR_INVALID"
+
+
+def test_relocated_recovery_receipt_still_verifies(observation_case, tmp_path, monkeypatch):
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, ledger, task, manifest, push, head = observation_case
+    git(repo, "worktree", "remove", str(worktree))
+    receipt, _ = lo.recover(
+        repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW
+    )
+    relocated = tmp_path / "relocated"
+    repo.rename(relocated)
+    monkeypatch.chdir(relocated)
+    data = tl.load_lifecycle(relocated / ledger.relative_to(repo))
+    local = data["observation_receipts"][-1]["observation"]["local"]
+    assert lo.recovery_refusal(data, local, head_sha=head, branch="codex/42-closeout") is None
+    assert tl._latest_premerge_local(data) == local
+    again, replayed = lo.recover(
+        relocated, state_file=relocated / ledger.relative_to(repo), task_file=relocated / task.relative_to(repo),
+        manifest_file=relocated / manifest.relative_to(repo), push_file=relocated / push.relative_to(repo), now=NOW,
+    )
+    assert replayed is True
+    assert again == receipt
+    _assert_no_host_paths(again, repo)
+
+
+@pytest.mark.parametrize("locator", ["..", "/", "link"])
+def test_recovery_refuses_escaping_repository_locator(observation_case, locator):
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, ledger, task, manifest, push, _ = observation_case
+    git(repo, "worktree", "remove", str(worktree))
+    lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW)
+    (repo / "link").symlink_to(repo.parent, target_is_directory=True)
+    data = tl.load_lifecycle(ledger)
+    local = data["observation_receipts"][-1]["observation"]["local"]
+    local["recovered_from_preserved"]["repo_root"] = locator
+    assert lo.recovery_refusal(data, local) == "RECOVERY_LOCATOR_INVALID"
+
+
+def test_existing_absolute_observation_still_reads_without_rewrite(observation_case):
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, ledger, *_, head = observation_case
+    local = tl.observe_local_git(repo, head_sha=head, branch="codex/42-closeout", worktree=str(worktree))
+    assert local["primary_checkout"] == str(repo)
+    assert local["worktree"] == str(worktree)
+    observation = _observation(_body())
+    observation["local"] = local
+    updated, _, _ = tl.reconcile(tl.load_lifecycle(ledger), observation, now=NOW)
+    tl.write_lifecycle(ledger, updated)
+    before = ledger.read_bytes()
+    assert lo.before_reap(repo, worktree) == []
+    assert ledger.read_bytes() == before
+    assert tl._latest_premerge_local(tl.load_lifecycle(ledger)) == local

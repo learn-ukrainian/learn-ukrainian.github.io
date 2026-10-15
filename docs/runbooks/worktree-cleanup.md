@@ -757,8 +757,23 @@ with integer `exit_code: 0`. A failed push log is insufficient. The delegate
 record must bind the lifecycle, preservation receipt and merged PR reaper
 proof, including the task's branch/head member. Recovery validates every
 preserved file and appends a receipt marked `recovered_from_preserved` with
-SHA-256 references to all three source records. The source files must remain
-available at those locators for later validation.
+SHA-256 references to all three source records. These new receipts store
+repository-relative input locators, `repo_root: .`, `primary_checkout: .`, and
+a repository-relative dispatch `worktree`. Absolute locators, `..` components,
+and symlinks escaping the repository are refused. Source records retain their
+original bytes and digests, including the original worktree's SHA-256 binding.
+
+Keep the source records and complete preservation tree under the repository's
+primary root for later validation. Private rehearsal copies must keep the
+relative layout within a copied repository containing the required commits.
+The repository and evidence can move together without changing the receipt.
+Validation resolves locators against the current repository, or the CLI's
+explicit `--repo-root`, rather than a stored host path.
+
+Existing observations are not rewritten. The shared `observe_local_git` API
+still returns the older absolute `primary_checkout` and `worktree` fields to
+other callers. Removing those pre-existing fields is a separate infra-owned
+residual; the new capture and recovery writers convert their own copies.
 
 Recovery never recreates a worktree, backdates an observation, edits previous
 receipts or calls GitHub. Repeating recovery returns the existing verified

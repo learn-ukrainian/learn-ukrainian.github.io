@@ -1221,9 +1221,12 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
 
 @publication_cli(task_lifecycle.LifecycleError)
 def main(argv: list[str] | None = None) -> int:
+    from scripts.orchestration.lifecycle_observation import repository_context
+
     args = build_parser().parse_args(argv)
     try:
-        return args.func(args)
+        with repository_context(args.repo_root):
+            return args.func(args)
     except (task_lifecycle.LifecycleError, json.JSONDecodeError, OSError) as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False, indent=2), file=sys.stderr)
         return 2

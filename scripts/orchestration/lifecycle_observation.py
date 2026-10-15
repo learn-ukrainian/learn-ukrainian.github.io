@@ -9,6 +9,8 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Mapping
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -21,27 +23,61 @@ class ObservationRefusal(tl.LifecycleError):
     """A stable refusal code suitable for cleanup and recovery receipts."""
 
 
-def _source(path: Path) -> tuple[dict[str, Any], dict[str, str]]:
+_REPOSITORY_ROOT: ContextVar[Path | None] = ContextVar("lifecycle_observation_root", default=None)
+
+
+@contextmanager
+def repository_context(repo_root: Path):
+    """Supply runtime locator context without persisting a host path."""
+    token = _REPOSITORY_ROOT.set(repo_root)
     try:
+        yield
+    finally:
+        _REPOSITORY_ROOT.reset(token)
+
+
+def _resolve_locator(root: Path, locator: str) -> Path:
+    relative = Path(locator)
+    if not locator or relative.is_absolute() or ".." in relative.parts:
+        raise ObservationRefusal("RECOVERY_LOCATOR_INVALID")
+    path = root / relative
+    if not path.resolve().is_relative_to(root.resolve()):
+        raise ObservationRefusal("RECOVERY_LOCATOR_INVALID")
+    return path
+
+
+def _locator(root: Path, path: Path) -> str:
+    try:
+        relative = path.absolute().relative_to(root.resolve()).as_posix()
+    except ValueError as exc:
+        raise ObservationRefusal("RECOVERY_LOCATOR_INVALID") from exc
+    _resolve_locator(root, relative)
+    return relative
+
+
+def _source(path: Path, root: Path) -> tuple[dict[str, Any], dict[str, str]]:
+    try:
+        locator = _locator(root, path)
         if path.resolve(strict=True) != path.absolute() or not path.is_file():
             raise ObservationRefusal("RECOVERY_INPUT_NOT_REGULAR")
         raw = path.read_bytes()
         value = json.loads(raw)
         if not isinstance(value, dict):
             raise ObservationRefusal("RECOVERY_INPUT_INVALID")
-        return value, {"path": str(path.absolute()), "sha256": hashlib.sha256(raw).hexdigest()}
+        return value, {"path": locator, "sha256": hashlib.sha256(raw).hexdigest()}
     except ObservationRefusal:
         raise
     except (OSError, ValueError) as exc:
         raise ObservationRefusal("RECOVERY_INPUT_UNAVAILABLE") from exc
 
 
-def _read(path: Path) -> dict[str, Any]:
-    return _source(path)[0]
-
-
-def _input(path: Path) -> dict[str, str]:
-    return _source(path)[1]
+def _local_paths(repo_root: Path, local: Mapping[str, Any]) -> dict[str, Any]:
+    primary = tl.canonical_state_root(repo_root)
+    result = dict(local)
+    result["primary_checkout"] = "."
+    if result.get("worktree"):
+        result["worktree"] = _locator(primary, Path(result["worktree"]))
+    return result
 
 
 def _append(path: Path, ledger: Mapping[str, Any], local: Mapping[str, Any], now: str):
@@ -89,7 +125,7 @@ def before_reap(
         if not path.exists():
             # A carried lifecycle is a claim that must not silently disappear.
             raise ObservationRefusal("LIFECYCLE_LEDGER_MISSING")
-        with tl.lifecycle_lock(path):
+        with repository_context(repo_root), tl.lifecycle_lock(path):
             ledger = tl.load_lifecycle(path)
             if ledger["lifecycle_id"] != carrier["lifecycle_id"]:
                 raise ObservationRefusal("LIFECYCLE_IDENTITY_MISMATCH")
@@ -116,7 +152,7 @@ def before_reap(
             ):
                 raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE")
             now = datetime.now(UTC).isoformat()
-            receipt, _ = _append(path, ledger, local, now)
+            receipt, _ = _append(path, ledger, _local_paths(repo_root, local), now)
             receipts.append({"status": "recorded", "receipt_id": receipt["id"]})
     return receipts
 
@@ -128,8 +164,8 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
         raise ObservationRefusal("RECOVERY_INPUTS_MISSING")
     values = {}
     for name, reference in inputs.items():
-        path = Path(reference["path"])
-        value, actual = _source(path)
+        path = _resolve_locator(repo_root, reference["path"])
+        value, actual = _source(path, repo_root)
         if actual != reference:
             raise ObservationRefusal("RECOVERY_DIGEST_MISMATCH")
         values[name] = value
@@ -158,8 +194,9 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
         )
     ) or manifest.get("run_nonce") != task.get("run_nonce"):
         raise ObservationRefusal("RECOVERY_BUNDLE_MISMATCH")
-    manifest_path = Path(inputs["manifest"]["path"])
+    manifest_path = _resolve_locator(repo_root, inputs["manifest"]["path"])
     location = Path(manifest["location"])
+    _resolve_locator(repo_root, manifest["location"])
     if location.parts[:3] != ("batch_state", "preserved", task_id):
         raise ObservationRefusal("RECOVERY_BUNDLE_MISMATCH")
     # Copies may relocate the entire evidence root; its internal layout stays canonical.
@@ -213,9 +250,14 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
         raise ObservationRefusal("RECOVERY_COMMIT_ANCESTRY_MISMATCH") from exc
     if not local["commits"]:
         raise ObservationRefusal("RECOVERY_COMMITS_MISSING")
+    local = _local_paths(repo_root, local)
+    # The hashed source still binds the original host path. Persist only its
+    # dispatch suffix so moving the evidence tree does not invalidate the proof.
+    relative_worktree = ".worktrees/dispatch/" + worktree.split("/.worktrees/dispatch/", 1)[1]
+    _resolve_locator(repo_root, relative_worktree)
     local.update(
         dispatch_worktree_used=True,
-        worktree=worktree,
+        worktree=relative_worktree,
         worktree_present=True,
         actual_worktree_branch=branch,
         worktree_branch_matches=True,
@@ -234,7 +276,8 @@ def recovery_refusal(
     """Return a typed refusal for changed inputs, facts or merged-head ancestry."""
     try:
         recovery = local["recovered_from_preserved"]
-        repo_root = Path(recovery["repo_root"])
+        primary = tl.canonical_state_root(_REPOSITORY_ROOT.get() or Path.cwd())
+        repo_root = _resolve_locator(primary, recovery["repo_root"])
         rebuilt = _recovered_local(repo_root, ledger, recovery)
         for key in (
             "commits",
@@ -273,9 +316,10 @@ def recover(
     now: str,
 ) -> tuple[dict[str, Any], bool]:
     """Append one recovery receipt, returning the verified existing receipt on retry."""
-    with tl.lifecycle_lock(state_file):
+    with repository_context(repo_root), tl.lifecycle_lock(state_file):
+        repo_root = tl.canonical_state_root(repo_root)
         ledger = tl.load_lifecycle(state_file)
-        task = _read(task_file)
+        task = _source(task_file, repo_root)[0]
         task_id = task.get("task_id")
         if not isinstance(task_id, str) or not task_id:
             raise ObservationRefusal("RECOVERY_TASK_MISMATCH")
@@ -292,9 +336,10 @@ def recover(
             raise ObservationRefusal("RECOVERY_WORKTREE_STILL_PRESENT")
         recovery = {
             "task_id": task_id,
-            "repo_root": str(repo_root.resolve()),
+            "repo_root": ".",
             "inputs": {
-                k: _input(p) for k, p in (("manifest", manifest_file), ("task", task_file), ("push", push_file))
+                k: _source(p, repo_root)[1]
+                for k, p in (("manifest", manifest_file), ("task", task_file), ("push", push_file))
             },
         }
         try:
