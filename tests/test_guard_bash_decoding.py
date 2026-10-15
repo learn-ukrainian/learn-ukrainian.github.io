@@ -328,7 +328,8 @@ def _heredoc_differential() -> list[tuple[str, str, bool]]:
                 closer = "\tAUDIT" if opener == "<<-AUDIT" and index % 2 else "AUDIT"
                 cases.append((hook, f"cat {opener}\n{prefix}{form.format(op=OPERATIONS[hook])}\n{closer}", escaped))
                 index += 1
-    # Any quoting of the delimiter makes the body literal.
+    # Any quoting of the delimiter makes the body literal. The merge and admin
+    # guards still refuse `<<\AUDIT` (see _main_parity_refusal).
     for form, _escaped in forms:
         for opener in ("<<'AUDIT'", '<<"AUDIT"', "<<\\AUDIT", "<<-'AUDIT'"):
             hook = hooks[index % 3]
@@ -407,6 +408,15 @@ def test_generated_heredoc_and_ansi_c_cases_have_no_miss(differential) -> None:
     assert report["failures"] == []
 
 
+def _main_parity_refusal(hook: str, command: str) -> bool:
+    """Inert in Bash, yet origin/main's merge and admin guards refuse it (review-10521-70a19bba).
+
+    Main's merge guards read a `<<\\WORD` body as commands, so the frozen
+    main-parity rule keeps their refusal; main's branch guard reads it as Bash does.
+    """
+    return hook != "branch" and "<<\\" in command
+
+
 def test_inert_controls_stay_allowed(differential) -> None:
     heredocs, ansi_c, report = differential
     inert = [
@@ -416,7 +426,10 @@ def test_inert_controls_stay_allowed(differential) -> None:
     ]
     assert len(inert) >= 40
     assert not [case for case, observation in inert if observation["operation_executed"]]
-    assert not [case for case, observation in inert if observation["blocked"]]
+    refused = [(case, observation) for case, observation in inert if _main_parity_refusal(*case[:2])]
+    assert len(refused) == 7
+    assert all(observation["blocked"] for _case, observation in refused)
+    assert not [case for case, observation in inert if observation["blocked"] and not _main_parity_refusal(*case[:2])]
 
 
 # --------------------------------------------------------------------------- siblings of the same class
@@ -451,6 +464,108 @@ def test_heldout_attribution_names_the_decoding_ruling() -> None:
     refused = parity.attribute(row, parity.Run(2, "DYNAMIC_OPERATION", False, False, False))
     assert (exact["ruling_item"], refused["ruling_item"]) == ("1", "2")
     assert "decodes" in exact["why"] and "cannot prove" in refused["why"]
+
+
+# --------------------------------------------------------------------------- main-parity refusals
+
+# The review of 70a19bba (review-10521-70a19bba) found two inert forms that
+# origin/main's merge and admin guards refuse and this reader allowed. The frozen
+# contract keeps every main refusal, so both refuse again.
+#
+# 1. A backslash-escaped heredoc delimiter makes the body literal in Bash, and
+#    main's branch guard reads it so. Main's merge and admin guards do not: they
+#    read the body as commands and refuse an operation spelled there. The merge
+#    and admin guards therefore refuse the delimiter; the branch guard keeps
+#    Bash's reading, which main's own branch tests (#9479) require.
+# 2. A command name holding a non-printing character, such as the BEL of
+#    ``$'\cG'``, names no utility the reader can prove. The head before
+#    70a19bba refused it as DYNAMIC_COMMAND; it refuses so again.
+
+_ESCAPED_DELIMITER_FORMS = [
+    "cat <<\\BOUND\n$({op})\nBOUND",
+    "cat <<-\\BOUND\n\t$({op})\n\tBOUND",
+    "cat << \\BOUND\n$({op})\nBOUND",
+    "cat <<\\BOUND\n\t$({op})\nBOUND",
+    "cat <<\\BOUND\n{op}\nBOUND",
+    "cat <<\\BOUND\nuse `{op}` later\nBOUND",
+    "x=$(cat <<\\BOUND\n$({op})\nBOUND\n); :",
+    "cat <<A <<\\BOUND\nx\nA\n$({op})\nBOUND",
+    "echo `cat <<\\\\BOUND\n$({op})\nBOUND`",
+]
+
+
+@pytest.fixture(scope="module")
+def escaped_delimiter_report() -> dict:
+    cases = [(hook, form.format(op=OPERATIONS[hook])) for form in _ESCAPED_DELIMITER_FORMS for hook in OPERATIONS]
+    return _oracle_report(cases)
+
+
+def test_escaped_heredoc_delimiter_is_inert_and_refused_by_merge_guards(escaped_delimiter_report) -> None:
+    for hook, command, observation in escaped_delimiter_report["cases"]:
+        assert not observation["operation_executed"], (hook, command, observation)
+        if hook != "branch":
+            assert observation["blocked"], (hook, command, observation)
+
+
+def test_escaped_heredoc_delimiter_keeps_the_branch_guards_bash_reading() -> None:
+    command = "git commit -F - <<\\EOF\nuses `git checkout -b x` in text\nEOF"
+    with pytest.raises(shell_bash.ShellParseError, match="ambiguous heredoc delimiter"):
+        shell_bash.read_commands(command, operation=lambda argv: False)
+    rows = shell_bash.read_commands(command, operation=lambda argv: False, allow_escaped_heredoc_delimiters=True)
+    quoted = shell_bash.read_commands(command.replace("<<\\EOF", "<<'EOF'"), operation=lambda argv: False)
+    assert [row.argv for row in rows] == [row.argv for row in quoted]
+    _tree, heredocs = shell_bash._parse("cat <<\\EOF\n$(x)\nEOF")
+    (document,) = heredocs.values()
+    assert document.literal and document.escaped and not document.spans
+
+
+@pytest.mark.parametrize("opener", ["'BOUND'", '"BOUND"', "-'BOUND'", ' "BOUND"', "BOUND"])
+def test_whole_quoted_and_plain_delimiters_are_not_escaped(opener) -> None:
+    rows = shell_bash.read_commands(f"cat <<{opener}\nbody\n{chr(9) if opener.startswith('-') else ''}BOUND")
+    assert [row.argv for row in rows] == [["cat"]]
+
+
+_CONTROL_ESCAPES = [
+    "\\cG", "\\cA", "\\c[", "\\c?", "\\a", "\\b", "\\e", "\\E", "\\f", "\\n", "\\r", "\\t", "\\v",
+    "\\x01", "\\x1f", "\\x7f", "\\001", "\\177", "\\u0007", "\\U0000001b",
+]  # fmt: skip
+# A NUL ends the quoted text: before any other character it leaves an empty command name.
+_NUL_ESCAPES = ["\\0", "\\000", "\\x00", "\\c@", "\\u0000"]
+_CONTROL_NAME_FORMS = [
+    "$'{esc}' pr merge 5 --admin",
+    "$'{esc}gh' pr merge 5 --admin",
+    "$'gh{esc}' pr merge 5 --admin",
+    "command $'{esc}' pr merge 5 --admin",
+    "env $'{esc}' pr merge 5 --squash",
+]
+_DYNAMIC_NAMES = [form.format(esc=esc) for form in _CONTROL_NAME_FORMS for esc in _CONTROL_ESCAPES] + [
+    form.format(esc=esc) for form in _CONTROL_NAME_FORMS if "gh{esc}" not in form for esc in _NUL_ESCAPES
+]
+
+
+@pytest.mark.parametrize("command", _DYNAMIC_NAMES)
+def test_command_name_with_a_decoded_control_character_is_dynamic(command) -> None:
+    with pytest.raises(shell_bash.ShellParseError) as refused:
+        shell_bash.read_commands(command)
+    assert refused.value.reason_class == "DYNAMIC_COMMAND"
+
+
+@pytest.fixture(scope="module")
+def control_name_report() -> dict:
+    forms = [*_CONTROL_NAME_FORMS[:4], "gh $'{esc}pr' merge 5 --admin", "gh $'{esc}' pr merge 5 --admin"]
+    cases = []
+    for index, esc in enumerate(_CONTROL_ESCAPES):
+        command = forms[index % len(forms)].format(esc=esc)
+        cases += [("merge", command.replace("--admin", "--squash")), ("admin", command)]
+    for esc in _NUL_ESCAPES:
+        cases += [("merge", f"$'{esc}' pr merge 5 --squash"), ("admin", f"command $'{esc}gh' pr merge 5 --admin")]
+    return _oracle_report(cases)
+
+
+def test_control_character_command_words_are_inert_and_refused(control_name_report) -> None:
+    for hook, command, observation in control_name_report["cases"]:
+        assert not observation["operation_executed"], (hook, command, observation)
+        assert observation["blocked"], (hook, command, observation)
 
 
 # --------------------------------------------------------------------------- degraded runtime

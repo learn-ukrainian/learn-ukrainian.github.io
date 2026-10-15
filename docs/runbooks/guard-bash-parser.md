@@ -141,6 +141,11 @@ opaque body under a quoted unique delimiter:
   harness may append input.
 - Any quoting of the delimiter word (`'`, `"` or `\`) makes the body literal.
   Other delimiter spellings, such as `$'...'` or partial quoting, refuse.
+  `<<\WORD` refuses in the merge and admin guards: origin/main's merge guards
+  read that body as commands and refuse an operation spelled there, so the
+  reader refuses it unless the caller passes `allow_escaped_heredoc_delimiters`.
+  Only the branch guard does, because origin/main's branch guard reads the body
+  as literal data, as Bash does.
 - In an unquoted body a backslash quotes only `$`, a backquote and another
   backslash; quotes, `$'...'` and `$"..."` are plain text. Every `$(...)`,
   backquote, `${...}`, `$((...))` and parameter is read as the same words
@@ -155,14 +160,16 @@ escape keeps its backslash. Locale- or version-dependent forms refuse: `\u` and
 `\U` above U+007F, `\x{...}`, and `\c` before a backslash, `i`, a non-ASCII byte
 or the end. A value that is not UTF-8 refuses too. `$"..."` refuses, because the
 locale's message catalog decides it, and so does an unquoted word that may
-brace-expand (`gh pr {merge,} 5`).
+brace-expand (`gh pr {merge,} 5`). A command name that holds a non-printing
+character, such as the BEL of `$'\cG'`, names no provable utility and refuses
+as `DYNAMIC_COMMAND`, after any wrapper too (`command $'\e' pr merge 5`).
 
 The dependency-free prefilters wrap octal escapes to a byte as well. A command
 with an `$'` span holding a NUL-valued escape, `\x{`, `\c`, `\u` or `\U` always
 reaches the reader; without the reader such a command blocks.
 `tests/test_guard_bash_decoding.py` compares these rules byte for byte with the
 installed Bash and replays generated cases through `bash_oracle`. The held-out
-corpus keeps its 350 frozen rows and appends 51 heredoc and decoded-word rows,
+corpus keeps its 350 frozen rows and appends 61 heredoc and decoded-word rows,
 measured against the same frozen main SHA; class `decoded_word` carries their
 ruling attribution.
 

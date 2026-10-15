@@ -710,6 +710,8 @@ class _Heredoc:
     literal: bool
     body: str
     spans: tuple[str, ...] = ()
+    # `<<\WORD`: literal in Bash, but origin/main's merge guards read the body as commands.
+    escaped: bool = False
 
 
 # The only admitted delimiter words: a plain word, or one quoted whole.
@@ -937,7 +939,9 @@ def _neutralize_heredocs(encoded: bytes, tree, heredocs: dict[str, _Heredoc]) ->
             encoded, body_start, delimiter, operator.type == "<<-", join=not quoted
         )
         token = f"{_HEREDOC_TOKEN}{len(heredocs)}{'Q' if quoted else 'U'}"
-        heredocs[token] = _Heredoc(quoted, document, () if quoted else _expansion_spans(document))
+        heredocs[token] = _Heredoc(
+            quoted, document, () if quoted else _expansion_spans(document), escaped=opener.text.startswith(b"\\")
+        )
         edits += [
             (opener.start_byte, opener.end_byte, f"'{token}'".encode()),
             (closer_start, closer_end, token.encode()),
@@ -1883,6 +1887,11 @@ def _command_checks(
     selected = command.selected
     if any(word.text in _RESERVED_WORDS for word in words):
         raise ShellParseError("reserved word parsed as an argument")
+    # A command name holding a non-printing character, such as the BEL of
+    # `$'\cG'`, or none at all (`$'\0'`), names no utility the reader can prove.
+    # No other hook owns it.
+    if any(not name or not name.isprintable() for name in (argv[0], *selected[:1])):
+        raise ShellParseError("non-printing or empty command name", reason_class="DYNAMIC_COMMAND")
     if argv[0] == UNREADABLE or (selected and selected[0] == UNREADABLE):
         if foreign is not None and foreign(argv[command.start :] if selected else argv):
             return
@@ -2532,6 +2541,7 @@ def read_commands(
     foreign: Callable[[list[str]], bool] | None = None,
     explicit: Callable[[list[str]], bool] | None = None,
     allow_dynamic_git_arguments: bool = False,
+    allow_escaped_heredoc_delimiters: bool = False,
 ) -> list[Invocation]:
     """Read one command line under the closed grammar; refuse anything else.
 
@@ -2541,7 +2551,8 @@ def read_commands(
     or refused for all of them. ``foreign`` names dynamic-identity shapes another
     hook owns and refuses. ``explicit`` says whether a guarded operation names
     its full target; it is required when anything other than the leading
-    ``cd`` runs before it.
+    ``cd`` runs before it. ``allow_escaped_heredoc_delimiters`` admits the
+    literal ``<<\\WORD`` body; without it that delimiter refuses.
 
     Returns one row per top-level simple command; only guarded rows carry a cwd.
     """
@@ -2675,6 +2686,11 @@ def read_commands(
                 ),
             )
         )
+    # Last, so every other refusal keeps precedence. origin/main's merge guards read
+    # a `<<\WORD` body as commands and refuse what it spells; only callers whose
+    # main counterpart reads it as Bash does (the branch guard) opt in.
+    if not allow_escaped_heredoc_delimiters and any(document.escaped for document in program.heredocs.values()):
+        raise ShellParseError("ambiguous heredoc delimiter")
     return rows
 
 

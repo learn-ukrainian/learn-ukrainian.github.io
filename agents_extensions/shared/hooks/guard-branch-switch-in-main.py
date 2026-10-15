@@ -645,6 +645,8 @@ def _command_danger_reason(
             cwd=str(session_cwd or Path.cwd()),
             consumer_check=_check_consumer,
             allow_dynamic_git_arguments=True,
+            # origin/main's branch guard reads a `<<\WORD` body as literal data, as Bash does.
+            allow_escaped_heredoc_delimiters=True,
             operation=_branch_operation,
             foreign=_foreign_shape,
         )

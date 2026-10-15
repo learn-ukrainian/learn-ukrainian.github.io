@@ -404,7 +404,17 @@
     {"id": "bs-decoded-word-004", "hook": "branch_switch_in_main", "cwd": "primary", "command": "$'git\\0other' checkout feature", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": true, "lookup": false}},
     {"id": "bs-decoded-word-005", "hook": "branch_switch_in_main", "cwd": "primary", "command": "git {checkout,} feature", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": true, "lookup": false}},
     {"id": "bs-decoded-word-006", "hook": "branch_switch_in_main", "cwd": "primary", "command": "git $\"checkout\" feature", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": true, "lookup": false}},
-    {"id": "bs-data-mention-012", "hook": "branch_switch_in_main", "cwd": "primary", "command": "echo $'\\547it checkout feature'", "class": "data_mention", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": true, "lookup": false}}
+    {"id": "bs-data-mention-012", "hook": "branch_switch_in_main", "cwd": "primary", "command": "echo $'\\547it checkout feature'", "class": "data_mention", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": true, "lookup": false}},
+    {"id": "pm-substitution-012", "hook": "pr_merge", "cwd": "worktree", "command": "cat <<\\AUDIT\n$(gh pr merge --squash 5)\nAUDIT", "class": "substitution", "main": "block", "main_observed": {"exit": 2, "reason_class": null, "gh": true, "git": false, "lookup": true}},
+    {"id": "pm-substitution-013", "hook": "pr_merge", "cwd": "worktree", "command": "cat <<-\\AUDIT\n\t$(gh pr merge --squash 5)\n\tAUDIT", "class": "substitution", "main": "block", "main_observed": {"exit": 2, "reason_class": null, "gh": true, "git": false, "lookup": true}},
+    {"id": "am-substitution-012", "hook": "admin_merge", "cwd": "worktree", "command": "cat <<\\AUDIT\n$(gh pr merge --admin 5)\nAUDIT", "class": "substitution", "main": "block", "main_observed": {"exit": 2, "reason_class": null, "gh": false, "git": false, "lookup": false}},
+    {"id": "am-substitution-013", "hook": "admin_merge", "cwd": "worktree", "command": "x=$(cat <<\\AUDIT\n$(gh pr merge --admin 5)\nAUDIT\n); :", "class": "substitution", "main": "block", "main_observed": {"exit": 2, "reason_class": null, "gh": false, "git": false, "lookup": false}},
+    {"id": "bs-data-mention-013", "hook": "branch_switch_in_main", "cwd": "primary", "command": "cat <<\\AUDIT\n$(git checkout feature)\nAUDIT", "class": "data_mention", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": true, "lookup": false}},
+    {"id": "pm-decoded-word-006", "hook": "pr_merge", "cwd": "worktree", "command": "$'\\cG' pr merge --squash 5", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": false, "lookup": false}},
+    {"id": "pm-decoded-word-007", "hook": "pr_merge", "cwd": "worktree", "command": "command $'\\e' pr merge --squash 5", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": false, "lookup": false}},
+    {"id": "am-decoded-word-005", "hook": "admin_merge", "cwd": "worktree", "command": "$'\\cG' pr merge --admin 5", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": false, "lookup": false}},
+    {"id": "am-decoded-word-006", "hook": "admin_merge", "cwd": "worktree", "command": "$'\\c@' pr merge --admin 5", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": false, "lookup": false}},
+    {"id": "bs-decoded-word-007", "hook": "branch_switch_in_main", "cwd": "primary", "command": "$'\\c?' checkout feature", "class": "decoded_word", "main": "allow", "main_observed": {"exit": 0, "reason_class": null, "gh": false, "git": true, "lookup": false}}
   ],
   "over_refusals": [
     {"id": "bs-plain-013", "ruling_item": "7", "why": "symbolic-ref HEAD, bisect and rebase are blockable triggers origin/main did not guard"},
@@ -514,6 +524,11 @@
     {"id": "bs-decoded-word-003", "ruling_item": "1", "why": "Bash decodes the word to the guarded op origin/main misread ($'...' octal wraps, NUL ends it)"},
     {"id": "bs-decoded-word-004", "ruling_item": "1", "why": "Bash decodes the word to the guarded op origin/main misread ($'...' octal wraps, NUL ends it)"},
     {"id": "bs-decoded-word-005", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"},
-    {"id": "bs-decoded-word-006", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"}
+    {"id": "bs-decoded-word-006", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"},
+    {"id": "pm-decoded-word-006", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"},
+    {"id": "pm-decoded-word-007", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"},
+    {"id": "am-decoded-word-005", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"},
+    {"id": "am-decoded-word-006", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"},
+    {"id": "bs-decoded-word-007", "ruling_item": "2", "why": "a word whose Bash value the reader cannot prove ($\"...\", brace expansion, a locale- or version-dependent $'...' escape) is outside the closed grammar"}
   ]
 }
