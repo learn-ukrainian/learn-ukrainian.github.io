@@ -1,28 +1,41 @@
 """Per-caller GitHub request counters and the landing-first budget guard (#10730, #10660).
 
-The shared client (``scripts.common.github_client``) calls :func:`admit` once per
-request that is about to reach the network; ``admit`` refuses the request when
-the guard says so. The client counts a request only after it was actually sent
-(:func:`record`, never for a synthetic transport failure), in the client's own
-SQLite file; a count that cannot be written because the file stays locked goes to
-an append-only spill file in the same directory that the next writer merges
-(:func:`spill_append`, :func:`claim_spill`, :func:`apply_spill`). Nothing about
-the request is stored: only the hour bucket, the rate-limit pool (``core``,
-``graphql`` or ``search``), a bounded caller tag, a count and the last
-rate-limit headers seen.
+Store: one SQLite database, :data:`COUNTER_DB` next to the client cache, in WAL
+mode. The client (``scripts.common.github_client``) adds each sent request with
+one ``INSERT ... ON CONFLICT DO UPDATE SET count = count + n`` in one
+``BEGIN IMMEDIATE`` transaction (:func:`record`), so writers in any number of
+processes serialize inside SQLite and none can overwrite another's increment. A
+writer waits at most :data:`WRITE_BUSY_MS` for the lock; when the store stays
+locked or cannot be written, that count is dropped and the client reports
+``counter_degraded`` instead of failing or delaying the request. Counting never
+touches the cache database. A row holds only the hour bucket, the rate-limit pool
+(``core``, ``graphql`` or ``search``), a bounded caller tag, the count and the
+last rate-limit headers seen.
 
-Guard policy: while the ``core`` pool of the request's credential scope has fewer
-than :data:`LANDING_RESERVE` calls left (and its reset is still in the future),
-non-landing calls are refused with a typed, value-free reason; landing calls
-(an allowlist by operation: merge, enqueue, review, verdict comments and their
-readback, commit statuses, CI status, rerun of failed jobs, credential lifecycle
-and the free ``rate_limit`` probe) are never refused by this reserve. The
-client's own exhaustion gate still stops any call, landing included, once the
-pool is at zero with its reset in the future: such a call can only fail at
-GitHub. An unknown budget (no row, or an expired window) never refuses anything. An
-optional per-caller soft cap, read from a file that does not ship, refuses only
-the capped caller's non-landing calls. The client never sleeps: a refusal is an
-exception the caller may retry after ``reset_at``.
+Count boundary: a request is counted as soon as it is known to have left the
+process, before the client parses or stores anything else, so a crash after that
+point keeps the count and a request that never left counts nothing.
+In-process transport: when the transport call returns, or raises an error that
+only happens after sending (a timeout or a dropped connection); a refusal before
+that (DNS, connection refused, any local error) counts nothing. ``gh`` process:
+after it exits, one count per request in gh's own request log (``GH_DEBUG``; the
+client turns on its summary form when the caller has not) that got past
+connecting. gh logs a request before sending it, so ``--paginate`` logs every
+page it asked for, a request cut off by a timeout still shows, and a run gh
+rejected before any request (an unknown flag, missing credentials) logs none.
+
+Guard policy: the client classifies a call as landing first. Landing calls (an
+allowlist by operation: merge, enqueue, update-branch, review, verdict comments
+and their readback, commit statuses, CI status, rerun of failed jobs, credential
+lifecycle and the free ``rate_limit`` probe) always go to GitHub, at any
+remaining budget including zero and unknown. Only non-landing calls are gated:
+the client's own exhaustion gate first, then, while the ``core`` pool of the
+credential scope has fewer than :data:`LANDING_RESERVE` calls left and its reset
+is still ahead, a typed, value-free refusal (:func:`admit`). An unknown budget (no
+row, or an expired window) refuses nothing. An optional per-caller soft cap, read
+from a file that does not ship, refuses only the capped caller's non-landing
+calls. The client never sleeps: a refusal is an exception the caller may retry
+after ``reset_at``.
 
 Report: ``.venv/bin/python -m scripts.common.github_budget_counters report``.
 """
@@ -53,14 +66,10 @@ CALLER_MAX_LENGTH = 64
 CALLER_PATTERN = re.compile(r"[a-z0-9][a-z0-9._:-]{0,63}")
 REASON_CORE_RESERVE = "core_below_landing_reserve"
 REASON_SOFT_CAP = "caller_soft_cap"
-REASON_POOL_EXHAUSTED = "pool_exhausted"
 SOFT_CAP_FILE = "caller-soft-caps.json"
 SOFT_CAP_ENV = "LU_GITHUB_SOFT_CAP_FILE"
-COUNT_BUSY_SECONDS = 2.0  # how long one count write waits for the database lock before it spills
-SPILL_FILE = "github-counter-spill.log"
-CLAIM_SUFFIX = ".claimed"
-CLAIM_STALE_SECONDS = 300  # a claimed spill whose merger died is taken over after this
-MAX_SPILL_BYTES = 1 << 20
+COUNTER_DB = "counters.sqlite3"
+WRITE_BUSY_MS = 250  # the longest one count waits for the store's write lock before it is dropped
 
 logger = logging.getLogger(__name__)
 
@@ -123,12 +132,23 @@ def count_resource(bucket: str) -> str:
 
 _OPERATION: contextvars.ContextVar[str | None] = contextvars.ContextVar("github_operation", default=None)
 
-# Named publisher reads that exist only to land a PR (see scripts.publish.github).
-LANDING_OPERATIONS = frozenset({"queue-snapshot", "queue-status", "queue-removal", "merge-facts", "budget"})
+# Named operations that exist only to land a PR; every request inside one is landing. The
+# publisher's landing verbs (their readiness and recovery reads included) and named reads (see
+# scripts.publish.github), and the client's CI status reads (``gh pr checks``, ``gh pr view
+# --json statusCheckRollup``), whose pull-request lookup is not landing on its own.
+CI_STATUS = "ci-status"
+LANDING_VERBS = frozenset({"pr-merge", "pr-update-branch", "pr-review", "run-rerun"})
+LANDING_OPERATIONS = LANDING_VERBS | {
+    "queue-snapshot",
+    "queue-status",
+    "queue-removal",
+    "merge-facts",
+    "budget",
+    CI_STATUS,
+}
 
 _REPO = r"repos/[^/]+/[^/]+/"
 _LANDING_REST = (
-    ("GET", re.compile(_REPO + r"pulls/\d+")),
     ("GET", re.compile(_REPO + r"pulls/\d+/reviews")),
     ("POST", re.compile(_REPO + r"pulls/\d+/reviews")),
     ("POST", re.compile(_REPO + r"pulls/\d+/reviews/\d+/events")),
@@ -163,13 +183,14 @@ _LANDING_GRAPHQL = re.compile(
 )
 # ``gh`` subcommands that fall through natively and exist to land a PR. A bare
 # ``run rerun`` re-runs everything, so only its ``--failed`` form is landing.
-_LANDING_NATIVE = frozenset({("pr", "merge"), ("pr", "review"), ("pr", "checks"), ("pr", "view"), ("run", "view")})
+_LANDING_NATIVE = frozenset({("pr", "merge"), ("pr", "review"), ("pr", "checks"), ("run", "view")})
 
 
 @contextlib.contextmanager
 def operation(name):
-    """Mark the requests issued inside as one named publisher operation."""
-    token = _OPERATION.set(name)
+    """Mark the requests issued inside as one named operation; inside a landing operation they stay landing."""
+    current = _OPERATION.get()
+    token = _OPERATION.set(current if current in LANDING_OPERATIONS else name)
     try:
         yield
     finally:
@@ -188,6 +209,11 @@ def is_landing(method, resource_path, graphql_query=None) -> bool:
     return any(verb == method and shape.fullmatch(resource_path) for verb, shape in _LANDING_REST)
 
 
+def is_ci_status_view(arguments) -> bool:
+    """True for ``gh pr view`` arguments that read the PR's CI status (``statusCheckRollup``)."""
+    return any("statusCheckRollup" in str(argument) for argument in arguments)
+
+
 def native_is_landing(args, api_landing=None) -> bool:
     """Classify a native ``gh`` argv; ``api_landing`` is the verdict for ``gh api`` shapes."""
     if _OPERATION.get() in LANDING_OPERATIONS:
@@ -195,6 +221,8 @@ def native_is_landing(args, api_landing=None) -> bool:
     words = tuple(str(a) for a in args[1:3])
     if words == ("run", "rerun"):
         return "--failed" in args[3:]
+    if words == ("pr", "view"):
+        return is_ci_status_view(args[3:])
     if words[:1] == ("api",):
         return bool(api_landing)
     return words in _LANDING_NATIVE
@@ -207,100 +235,49 @@ def hour_start(now) -> int:
     return int(now // HOUR) * HOUR
 
 
-def record(db, now, resource, caller, requests=1) -> None:
-    """Add ``requests`` sent requests to this hour's bucket and drop buckets past retention."""
-    _add(db, hour_start(now), resource, caller, requests)
-    db.execute("DELETE FROM caller_counter WHERE hour<?", (hour_start(now - RETENTION_SECONDS),))
+def store_path(cache_dir) -> Path | None:
+    """The counter database of a client cache directory; ``None`` when the client has no disk cache."""
+    return Path(cache_dir) / COUNTER_DB if cache_dir is not None else None
 
 
-def _add(db, hour, resource, caller, requests) -> None:
-    db.execute(
-        """INSERT INTO caller_counter(hour,resource,caller,count) VALUES(?,?,?,?)
-        ON CONFLICT(hour,resource,caller) DO UPDATE SET count=count+excluded.count""",
-        (hour, resource, caller, requests),
-    )
+def prepare(db) -> None:
+    """Make a fresh writer connection bounded, WAL and schema-ready; nothing here waits longer than the bound."""
+    db.isolation_level = None  # explicit transactions only: one BEGIN IMMEDIATE per count
+    db.execute(f"PRAGMA busy_timeout={WRITE_BUSY_MS}")
+    db.execute("PRAGMA journal_mode=WAL")
+    db.execute("PRAGMA synchronous=NORMAL")  # a committed count survives the process being killed
+    db.execute(SCHEMA)
 
 
-# --- spill: counts that could not be written in time -----------------------------------
-
-
-def spill_append(cache_dir, now, resource, caller, requests=1) -> None:
-    """Append one count line (hour, pool, caller, requests) to the spill file; one atomic small write."""
-    line = f"{hour_start(now)}\t{resource}\t{caller}\t{int(requests)}\n".encode("ascii")
-    descriptor = os.open(Path(cache_dir) / SPILL_FILE, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+def _rate_headers(headers) -> tuple[int | None, int | None]:
+    lowered = {str(key).lower(): value for key, value in (headers or {}).items()}
     try:
-        os.write(descriptor, line)
-    finally:
-        os.close(descriptor)
-
-
-def claim_spill(cache_dir, *, now_ns=None) -> list[Path]:
-    """Take ownership of the pending spill (and of claims whose merger died) by atomic rename.
-
-    A claim is a file named ``<spill>.<claim time ns>.<pid>-<n>.claimed``; another process
-    takes it over only once it is older than :data:`CLAIM_STALE_SECONDS`.
-    """
-    directory = Path(cache_dir)
-    now_ns = time.time_ns() if now_ns is None else now_ns
-    sources = [directory / SPILL_FILE]
-    for path in directory.glob(f"{SPILL_FILE}.*{CLAIM_SUFFIX}"):
-        try:
-            claimed_ns = int(path.name.split(".")[-3])
-        except (IndexError, ValueError):
-            continue
-        if now_ns - claimed_ns > CLAIM_STALE_SECONDS * 1_000_000_000:
-            sources.append(path)
-    claimed = []
-    for index, source in enumerate(sources):
-        target = directory / f"{SPILL_FILE}.{now_ns}.{os.getpid()}-{index}{CLAIM_SUFFIX}"
-        try:
-            os.rename(source, target)
-        except OSError:
-            continue  # nothing pending, or another process won the claim
-        claimed.append(target)
-    return claimed
-
-
-def apply_spill(db, claimed, now) -> int:
-    """Add the lines of claimed spill files to the counters; malformed or expired lines are skipped."""
-    oldest = hour_start(now - RETENTION_SECONDS)
-    applied = 0
-    for path in claimed:
-        try:
-            with path.open("rb") as handle:
-                text = handle.read(MAX_SPILL_BYTES).decode("ascii", errors="replace")
-        except OSError:
-            continue
-        for line in text.splitlines():
-            fields = line.split("\t")
-            if len(fields) != 4 or not fields[0].isdigit() or not fields[3].isdigit():
-                continue
-            hour, resource, caller, requests = int(fields[0]), fields[1], fields[2], int(fields[3])
-            if resource not in RESOURCES or valid_caller(caller) != caller or hour < oldest or not requests:
-                continue
-            _add(db, hour_start(hour), resource, caller, requests)
-            applied += requests
-    return applied
-
-
-def release_spill(claimed) -> None:
-    """Delete claimed spill files after their counts were committed."""
-    for path in claimed:
-        with contextlib.suppress(OSError):
-            path.unlink()
-
-
-def observe(db, now, resource, caller, headers) -> None:
-    """Remember the last rate-limit headers seen for this caller's bucket (counts nothing)."""
-    try:
-        remaining, reset = int(headers["x-ratelimit-remaining"]), int(headers["x-ratelimit-reset"])
+        return int(lowered["x-ratelimit-remaining"]), int(lowered["x-ratelimit-reset"])
     except (KeyError, TypeError, ValueError):
-        return
-    with contextlib.suppress(sqlite3.Error):
+        return None, None
+
+
+def record(db, now, resource, caller, requests=1, headers=None) -> None:
+    """Add ``requests`` sent requests to this hour's bucket, in one transaction, and drop expired buckets.
+
+    The last rate-limit headers seen (when ``headers`` carries them) are kept on the same row.
+    """
+    remaining, reset = _rate_headers(headers)
+    db.execute("BEGIN IMMEDIATE")
+    try:
         db.execute(
-            "UPDATE caller_counter SET last_remaining=?,last_reset=? WHERE hour=? AND resource=? AND caller=?",
-            (remaining, reset, hour_start(now), count_resource(resource), caller),
+            """INSERT INTO caller_counter(hour,resource,caller,count,last_remaining,last_reset) VALUES(?,?,?,?,?,?)
+            ON CONFLICT(hour,resource,caller) DO UPDATE SET count=count+excluded.count,
+            last_remaining=coalesce(excluded.last_remaining,last_remaining),
+            last_reset=coalesce(excluded.last_reset,last_reset)""",
+            (hour_start(now), resource, caller, int(requests), remaining, reset),
         )
+        db.execute("DELETE FROM caller_counter WHERE hour<?", (hour_start(now - RETENTION_SECONDS),))
+        db.execute("COMMIT")
+    except BaseException:
+        with contextlib.suppress(sqlite3.Error):
+            db.execute("ROLLBACK")
+        raise
 
 
 def current_count(db, now, resource, caller) -> int:
@@ -309,6 +286,22 @@ def current_count(db, now, resource, caller) -> int:
         (hour_start(now), resource, caller),
     ).fetchone()
     return row[0] if row else 0
+
+
+def hourly_count(path, now, resource, caller) -> int:
+    """This hour's count for one caller and pool, read only; a missing or unreadable store reads as 0."""
+    if path is None or not Path(path).is_file():
+        return 0
+    try:
+        db = open_readonly(path)
+    except sqlite3.Error:
+        return 0
+    try:
+        return current_count(db, now, resource, caller)
+    except sqlite3.Error:
+        return 0
+    finally:
+        db.close()
 
 
 # --- soft cap --------------------------------------------------------------------------
@@ -369,28 +362,30 @@ class Refusal:
     reset_at: int | None
 
 
-def admit(db, *, scope, now, resource, caller, landing, soft_caps=None) -> Refusal | None:
+def admit(db, *, scope, now, resource, caller, soft_caps=None, used=None) -> Refusal | None:
     """Refuse a non-landing request below the reserve or over its soft cap, else return ``None``.
 
-    Nothing is counted here: the client records a request only after it was sent.
-    The core reserve only gates calls that spend the core pool (graphql and search have
-    their own pools, as the client's per-bucket gate already assumes). Every storage
-    error fails open: missing telemetry never starves a call. ``resource`` is a
-    rate-limit bucket; it is folded into the counted pools.
+    The client calls this only for calls it already classified as non-landing, so a
+    landing call never reaches it. ``db`` is the client's cache database (its ``budget``
+    table); ``used()`` returns the caller's count for this hour and pool, and is read
+    only when a soft cap applies. Nothing is counted here. The core reserve only gates
+    calls that spend the core pool (graphql and search have their own pools, as the
+    client's per-bucket gate already assumes). Every storage error fails open: missing
+    telemetry never starves a call. ``resource`` is a rate-limit bucket; it is folded
+    into the counted pools.
     """
     pool = count_resource(resource)
     try:
-        if not landing:
-            row = (
-                db.execute("SELECT remaining,reset FROM budget WHERE scope=? AND resource='core'", (scope,)).fetchone()
-                if pool == "core"
-                else None
-            )
-            if row is not None and row[1] > now and row[0] < LANDING_RESERVE:
-                return Refusal(REASON_CORE_RESERVE, row[1])
-            limit = (soft_caps or {}).get(caller, {}).get(pool)
-            if limit is not None and current_count(db, now, pool, caller) >= limit:
-                return Refusal(REASON_SOFT_CAP, hour_start(now) + HOUR)
+        row = (
+            db.execute("SELECT remaining,reset FROM budget WHERE scope=? AND resource='core'", (scope,)).fetchone()
+            if pool == "core"
+            else None
+        )
+        if row is not None and row[1] > now and row[0] < LANDING_RESERVE:
+            return Refusal(REASON_CORE_RESERVE, row[1])
+        limit = (soft_caps or {}).get(caller, {}).get(pool)
+        if limit is not None and used is not None and used() >= limit:
+            return Refusal(REASON_SOFT_CAP, hour_start(now) + HOUR)
     except sqlite3.Error:
         return None
     return None
@@ -423,48 +418,50 @@ def remaining_budget(db, now) -> dict:
     return out
 
 
-def build_report(db, now, *, limit=10) -> dict:
+def build_report(counts_db, budget_db, now, *, limit=10) -> dict:
     """Top callers for the current and previous hour, per pool, with the remaining budget.
 
-    ``db=None`` means there is no database to read: every pool is empty.
+    ``counts_db`` is the counter store and ``budget_db`` the client cache; ``None`` (or a
+    database without the table) reads as empty.
     """
     current = hour_start(now)
     windows = {}
     for label, hour in (("current", current), ("previous", current - HOUR)):
-        windows[label] = {
-            "hour_start": hour,
-            "resources": {resource: top_callers(db, hour, resource, limit) for resource in RESOURCES},
-        }
+        resources = {}
+        for resource in RESOURCES:
+            try:
+                resources[resource] = top_callers(counts_db, hour, resource, limit)
+            except sqlite3.Error:
+                resources[resource] = []
+        windows[label] = {"hour_start": hour, "resources": resources}
     try:
-        budget = remaining_budget(db, now)
+        budget = remaining_budget(budget_db, now)
     except sqlite3.Error:
         budget = {}
     return {"schema": "github-budget-callers.v1", "generated_at": int(now), "windows": windows, "budget": budget}
 
 
-def _open_cache(cache_dir):
-    """Read-only handle on the shared client database, or ``None`` when there is none."""
-    if cache_dir is None:
+def _open_existing(path):
+    """Read-only handle on an existing database, or ``None`` when there is none or it cannot be opened."""
+    if path is None or not Path(path).is_file():
         return None
-    path = Path(cache_dir) / "cache.sqlite3"
-    if not path.is_file():
+    try:
+        return open_readonly(path)
+    except sqlite3.Error:
         return None
-    return open_readonly(path)
 
 
 def report_for(cache_dir, now=None, *, limit=10) -> dict:
-    """Report from a cache directory; a missing database or table is an empty report."""
+    """Report from a client cache directory; missing databases or tables are an empty report."""
     now = time.time() if now is None else now
-    db = _open_cache(cache_dir)
-    if db is None:
-        return build_report(None, now, limit=limit)
+    counts_db = _open_existing(store_path(cache_dir))
+    budget_db = _open_existing(Path(cache_dir) / "cache.sqlite3" if cache_dir is not None else None)
     try:
-        try:
-            return build_report(db, now, limit=limit)
-        except sqlite3.OperationalError:
-            return build_report(None, now, limit=limit)
+        return build_report(counts_db, budget_db, now, limit=limit)
     finally:
-        db.close()
+        for db in (counts_db, budget_db):
+            if db is not None:
+                db.close()
 
 
 def _render(report) -> str:

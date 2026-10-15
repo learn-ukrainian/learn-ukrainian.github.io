@@ -405,7 +405,17 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
 
 
 @github_client.rate_limited_command
-def publish(
+def publish(verb: str, **kwargs):
+    """Validate closed fields, freeze source bytes, scan, then send the same bytes (see ``_publish``).
+
+    A landing verb (``github_budget_counters.LANDING_VERBS``) runs as one landing operation, so
+    its readiness and recovery reads are never refused by the GitHub budget guard either.
+    """
+    with github_budget_counters.operation(verb):
+        return _publish(verb, **kwargs)
+
+
+def _publish(
     verb: str,
     *,
     runner=None,

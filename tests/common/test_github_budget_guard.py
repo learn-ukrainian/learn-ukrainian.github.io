@@ -38,7 +38,10 @@ def seed(client, remaining, *, resource="core", reset=RESET):
 
 
 def count(tmp_path):
-    db = sqlite3.connect(tmp_path / "cache.sqlite3")
+    path = counters.store_path(tmp_path)
+    if not path.exists():
+        return 0
+    db = sqlite3.connect(path)
     try:
         return db.execute("SELECT coalesce(sum(count),0) FROM caller_counter").fetchone()[0]
     finally:
@@ -57,7 +60,7 @@ def test_boundary_at_the_500_reserve(tmp_path, remaining, non_landing_refused):
     else:
         assert client.request(*NON_LANDING).status == 200
         assert len(calls) == 1
-    # A landing call proceeds at every level above the client's own 10-call reserve.
+    # A landing call proceeds at every level.
     assert client.request(*LANDING).status == 200
 
 
@@ -121,7 +124,6 @@ def test_only_the_core_pool_is_guarded(tmp_path):
         ("PUT", "repos/o/r/pulls/7/merge", None, True),
         ("POST", "repos/o/r/pulls/7/reviews", None, True),
         ("GET", "repos/o/r/pulls/7/reviews", None, True),
-        ("GET", "repos/o/r/pulls/7", None, True),
         ("PUT", "repos/o/r/pulls/7/update-branch", None, True),
         ("GET", "repos/o/r/commits/abc123/check-runs", None, True),
         ("GET", "repos/o/r/commits/abc123/status", None, True),
@@ -152,6 +154,8 @@ def test_only_the_core_pool_is_guarded(tmp_path):
         ("POST", "repos/o/r/actions/runs/55/rerun", None, False),
         ("GET", "repos/o/r/actions/runs", None, False),
         ("GET", "repos/o/r/pulls", None, False),
+        # A plain pull-request read is not landing; CI status reads of it are (``ci-status``).
+        ("GET", "repos/o/r/pulls/7", None, False),
         ("GET", "repos/o/r/issues", None, False),
         ("PATCH", "repos/o/r/issues/comments/9", None, False),
         ("DELETE", "repos/o/r/issues/comments/9", None, False),
@@ -181,12 +185,23 @@ def test_named_publisher_operations_are_landing_only_inside_their_scope():
     assert not counters.is_landing("GET", "repos/o/r/pulls")
 
 
+def test_a_named_read_inside_a_landing_verb_stays_landing():
+    with counters.operation("pr-merge"):
+        with counters.operation("pr-bases"):
+            assert counters.is_landing("GET", "repos/o/r/pulls/7")
+        assert counters.native_is_landing(["gh", "pr", "view", "7", "--json", "headRefOid"])
+    assert not counters.is_landing("GET", "repos/o/r/pulls/7")
+
+
 @pytest.mark.parametrize(
     ("args", "landing"),
     [
         (["gh", "pr", "merge", "7"], True),
         (["gh", "pr", "review", "7", "--approve"], True),
         (["gh", "pr", "checks", "7"], True),
+        (["gh", "pr", "view", "7", "--json", "statusCheckRollup"], True),
+        (["gh", "pr", "view", "7", "--json", "headRefOid"], False),
+        (["gh", "run", "view", "55"], True),
         (["gh", "run", "rerun", "55", "--failed"], True),
         (["gh", "run", "rerun", "55"], False),
         (["gh", "issue", "comment", "7"], False),
@@ -436,7 +451,7 @@ def test_publisher_tags_its_traffic(monkeypatch):
     assert seen == ["publish", "keeper"]
 
 
-# --- landing-class verdict traffic and the exhaustion gate (review round 1: F1, F2) --------------
+# --- landing calls proceed at every remaining value, zero and unknown included (review round 2: F1) ---
 
 VERDICT_TRAFFIC = {
     "verdict-comment": ("POST", "repos/o/r/issues/7/comments", {"body": "VERDICT: APPROVE"}),
@@ -472,13 +487,20 @@ def test_verdict_traffic_is_landing_class_around_the_reserve(tmp_path, name, rem
 
 
 @pytest.mark.parametrize("name", sorted(VERDICT_TRAFFIC))
-def test_verdict_traffic_stops_only_at_a_proven_empty_pool(tmp_path, name):
+def test_verdict_traffic_proceeds_at_a_zero_budget(tmp_path, name):
     client, calls = make(tmp_path)
     seed(client, 0)
-    result = send(client, VERDICT_TRAFFIC[name])
-    assert result.error == "github_rate_limited" and result.reset_at == RESET
-    assert result.reason == counters.REASON_POOL_EXHAUSTED
-    assert calls == [] and count(tmp_path) == 0
+    assert send(client, VERDICT_TRAFFIC[name]).status == 200
+    assert len(calls) == 1 and count(tmp_path) == 1
+
+
+def test_a_verdict_after_a_reserve_refusal_still_goes_out_at_zero(tmp_path):
+    client, calls = make(tmp_path)
+    seed(client, 499)
+    with pytest.raises(gh.GitHubBudgetRefused):
+        client.request(*NON_LANDING)
+    seed(client, 0, reset=RESET + 1)
+    assert send(client, VERDICT_TRAFFIC["verdict-comment"]).status == 200 and len(calls) == 1
 
 
 @pytest.mark.parametrize("name", sorted(VERDICT_TRAFFIC))
@@ -490,21 +512,30 @@ def test_verdict_traffic_is_never_starved_by_an_unknown_or_expired_budget(tmp_pa
 
 
 @pytest.mark.parametrize("name", sorted(LANDING_WRITES))
-@pytest.mark.parametrize("remaining", [499, 1])
-def test_landing_writes_are_not_held_back_by_either_reserve(tmp_path, name, remaining):
+@pytest.mark.parametrize("remaining", [499, 10, 1, 0])
+def test_landing_writes_are_not_held_back_by_any_budget(tmp_path, name, remaining):
     client, calls = make(tmp_path)
-    seed(client, remaining)
+    seed(client, remaining, resource="graphql" if name == "enqueue" else "core")
     assert send(client, LANDING_WRITES[name]).status == 200
-    assert len(calls) == 1
+    assert len(calls) == 1 and count(tmp_path) == 1
 
 
 @pytest.mark.parametrize("name", sorted(LANDING_WRITES))
-def test_landing_writes_at_zero_are_refused_with_a_typed_value_free_reason(tmp_path, name):
+def test_landing_writes_go_out_with_no_budget_known(tmp_path, name):
     client, calls = make(tmp_path)
-    seed(client, 0, resource="graphql" if name == "enqueue" else "core")
-    result = send(client, LANDING_WRITES[name])
-    assert result.error == "github_rate_limited" and result.reason == counters.REASON_POOL_EXHAUSTED
-    assert result.reset_at == RESET and calls == []
+    assert send(client, LANDING_WRITES[name]).status == 200 and len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    "shape", [LANDING_WRITES["merge"], VERDICT_TRAFFIC["verdict-comment"]], ids=["merge", "verdict"]
+)
+def test_only_githubs_own_retry_after_holds_a_landing_call(tmp_path, shape):
+    # GitHub asks clients to wait out a secondary limit; requests during it extend it.
+    client, calls = make(tmp_path)
+    seed(client, 0, resource="secondary")
+    result = send(client, shape)
+    assert result.error == "github_rate_limited" and result.reset_at == RESET and result.reason is None
+    assert calls == [] and count(tmp_path) == 0
 
 
 def test_non_landing_below_the_client_reserve_keeps_its_untyped_deferral(tmp_path):
@@ -526,27 +557,87 @@ def test_run_rerun_failed_and_update_branch_through_the_cli_seam(tmp_path, remai
         client=client,
         capture_output=True,
     )
-    if remaining:
-        assert update.returncode == 0 and rerun.returncode == 0 and len(calls) == 2
-    else:
-        assert update.returncode == 75 and rerun.returncode == 75 and calls == []
-        assert json.loads(rerun.stderr)["reason"] == counters.REASON_POOL_EXHAUSTED
+    assert update.returncode == 0 and rerun.returncode == 0 and len(calls) == 2
 
 
 @pytest.mark.parametrize("remaining", [499, 1, 0])
-def test_native_landing_read_follows_the_same_gate(tmp_path, remaining):
-    client, _ = make(tmp_path)
+@pytest.mark.parametrize(
+    "shape",
+    [
+        ["gh", "api", "--paginate", "--jq", ".x", "repos/o/r/pulls/7/reviews"],
+        ["gh", "run", "rerun", "55", "--failed"],
+        ["gh", "pr", "checks", "7", "--json", "name,bucket,state,workflow", "--repo", "o/r"],
+        ["gh", "pr", "merge", "7", "--squash", "--auto"],
+    ],
+    ids=["review-read", "rerun-failed", "checks", "merge"],
+)
+def test_landing_commands_reach_github_at_every_budget(tmp_path, remaining, shape):
+    # Native or translated, a landing command is sent once whatever the budget says.
+    client, calls = make(tmp_path)
     seed(client, remaining)
+    seed(client, remaining, resource="graphql")
     native = []
 
     def runner(command, **kwargs):
         native.append(command)
         return gh.subprocess.CompletedProcess(command, 0, b"{}", b"")
 
-    shape = ["gh", "api", "--paginate", "--jq", ".x", "repos/o/r/pulls/7/reviews"]
     result = gh._run_command(shape, client=client, runner=runner, capture_output=True)
+    assert result.returncode != 75 and len(native) + len(calls) >= 1
+
+
+@pytest.mark.parametrize("remaining", [499, 0])
+def test_a_native_non_landing_command_keeps_both_gates(tmp_path, remaining):
+    client, _ = make(tmp_path)
+    seed(client, remaining)
+    runner = lambda command, **kwargs: pytest.fail("a gated command reached gh")  # noqa: E731
+    shape = ["gh", "api", "--paginate", "--jq", ".x", "repos/o/r/issues"]
     if remaining:
-        assert len(native) == 1
+        with pytest.raises(gh.GitHubBudgetRefused):
+            gh._run_command(shape, client=client, runner=runner, capture_output=True)
     else:
-        assert native == [] and result.returncode == 75
-        assert json.loads(result.stderr)["reason"] == counters.REASON_POOL_EXHAUSTED
+        result = gh._run_command(shape, client=client, runner=runner, capture_output=True)
+        assert result.returncode == 75 and json.loads(result.stderr)["error"] == "github_rate_limited"
+
+
+def pull_and_checks(method, endpoint):
+    if endpoint.startswith("repos/o/r/pulls/7"):
+        return gh.Response(200, {}, json.dumps({"number": 7, "state": "open", "head": {"sha": "a" * 40}}).encode())
+    if "check-runs" in endpoint:
+        return gh.Response(200, {}, b'{"total_count": 0, "check_runs": []}')
+    return gh.Response(200, {}, b'{"state": "success", "statuses": []}')
+
+
+@pytest.mark.parametrize("remaining", [499, 0])
+def test_a_ci_status_read_proceeds_but_a_plain_pull_request_read_does_not(tmp_path, monkeypatch, remaining):
+    calls = route_client_builder(tmp_path, monkeypatch, pull_and_checks)
+    client = gh.GitHubClient(env=None)
+    seed(client, remaining)
+    rollup = gh.run(
+        ["gh", "pr", "view", "7", "--repo", "o/r", "--json", "statusCheckRollup"],
+        client=client,
+        capture_output=True,
+        text=True,
+    )
+    assert rollup.returncode == 0, rollup.stderr
+    assert calls[0] == ("GET", "repos/o/r/pulls/7") and len(calls) > 1  # the lookup, then the CI status
+    sent = len(calls)
+    plain = gh.run(
+        ["gh", "pr", "view", "7", "--repo", "o/r", "--json", "headRefOid"],
+        client=client,
+        capture_output=True,
+        text=True,
+    )
+    assert plain.returncode == 75 and len(calls) == sent
+
+
+def test_the_publisher_merge_flow_reaches_github_at_a_zero_budget(tmp_path, monkeypatch):
+    # Review round 2 (F1): the merge's own readiness read was refused before anything was sent.
+    from scripts.publish import github as pub
+
+    calls = route_client_builder(tmp_path, monkeypatch, lambda method, endpoint: gh.Response(500, {}, b"{}"))
+    seed(gh.GitHubClient(env=None), 0)
+    monkeypatch.setattr(pub.gate, "real_gh", lambda env: "gh")
+    with pytest.raises(pub.gate.PublishBlocked, match="merge readiness unverifiable"):
+        pub.publish("pr-merge", repo="o/r", number=7, env={"AGENT_NO_MERGE": "0"}, capture_output=True, text=True)
+    assert calls[0] == ("GET", "repos/o/r/pulls/7")

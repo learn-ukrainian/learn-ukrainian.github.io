@@ -640,11 +640,13 @@ def test_auto_merge_timestamp_is_not_invented_from_rest(tmp_path):
 
 
 def test_publishing_preflight_returns_typed_limit_without_write(tmp_path, monkeypatch):
+    # A merge is landing and proceeds at a zero core budget (#10730; see
+    # tests/common/test_github_budget_guard.py); GitHub's own secondary-limit wait still holds it.
     from scripts.publish import github as pub
 
     store, calls = client(tmp_path, [])
     with store._db() as db:
-        gh._store_budget(db, store.scope, "core", 0, 2000)
+        gh._store_budget(db, store.scope, "secondary", 0, 2000)
     monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
     monkeypatch.setattr(pub.gate, "real_gh", lambda env: "gh")
     result = pub.publish("pr-merge", repo="o/r", number=1, env={"AGENT_NO_MERGE": "0"}, capture_output=True, text=True)
