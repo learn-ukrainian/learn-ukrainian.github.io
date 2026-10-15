@@ -31,6 +31,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
+from scripts.agent_runtime.agy_hook_config import install_worktree_guard
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 _DATABASES = ("vesum.db", "sources.db")
@@ -66,6 +67,16 @@ def _git(repo: Path, *args: str) -> str:
 
 def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _framework_provisioned(worktree: Path) -> str:
+    """Install the AGY guard as the framework does before a read-only baseline (#10727).
+
+    The worker provisions it before its pre-snapshot, so a Git status compared
+    across the run starts from here. Returns the guard's digest.
+    """
+    install_worktree_guard(worktree)
+    return _digest(worktree / ".agents" / "hooks.json")
 
 
 @pytest.fixture
@@ -210,12 +221,14 @@ def test_read_only_dispatch_detects_writes_through_provisioned_database_links(
     assert link.is_symlink()
     assert link.resolve() == (primary / "data" / name).resolve()
     before = _digest(primary / "data" / name)
+    guard = _framework_provisioned(worktree)
     git_before = _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all")
 
     rc, state, output = _run_read_only_worker(worktree, task_id, _RELATIVE_OPEN, name, action)
 
     assert output == "opened"
     assert _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all") == git_before
+    assert _digest(worktree / ".agents" / "hooks.json") == guard
     if action == "write":
         assert _digest(primary / "data" / name) != before
         assert rc == 1
@@ -284,13 +297,17 @@ def test_read_only_dispatch_detects_write_then_retarget_to_pre_write_copy(
     before = _digest(database)
     copy = tmp_tasks_dir / f"pre-write-{name}"
     copy.write_bytes(database.read_bytes())
+    guard = _framework_provisioned(worktree)
     git_before = _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all")
-    worker_script = _RELATIVE_OPEN + """
+    worker_script = (
+        _RELATIVE_OPEN
+        + """
 import os
 link = "data/" + sys.argv[1]
 os.unlink(link)
 os.symlink(sys.argv[3], link)
 """
+    )
 
     rc, state, output = _run_read_only_worker(worktree, task_id, worker_script, name, "write", str(copy))
 
@@ -299,6 +316,7 @@ os.symlink(sys.argv[3], link)
     assert (worktree / "data" / name).resolve() == copy
     assert _digest(worktree / "data" / name) == before
     assert _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all") == git_before
+    assert _digest(worktree / ".agents" / "hooks.json") == guard
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [f"data/{name}"]
@@ -363,7 +381,9 @@ def test_read_only_linked_database_snapshot_failure_cannot_settle_done(
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == []
-    assert state["read_only_checkout_snapshot_error"] == f"linked database snapshot failed: data/{name}: PermissionError"
+    assert (
+        state["read_only_checkout_snapshot_error"] == f"linked database snapshot failed: data/{name}: PermissionError"
+    )
     assert state["last_error"] == "read_only_checkout_snapshot_failed"
     assert _digest(target) == before
 
@@ -463,9 +483,7 @@ def test_read_only_database_openers_never_create_a_missing_file(tmp_path: Path, 
 def test_augment_prompt_with_worktree_teaches_primary_database_access(primary: Path, monkeypatch) -> None:
     """_augment_prompt_with_worktree teaches primary database paths and MCP preference."""
     worktree = primary / ".worktrees" / "dispatch" / "agy" / "task-1"
-    prompt = delegate._augment_prompt_with_worktree(
-        "Review sentences.", worktree, mode="read-only"
-    )
+    prompt = delegate._augment_prompt_with_worktree("Review sentences.", worktree, mode="read-only")
     assert "[database access in worktrees]" in prompt
     assert str(primary / "data" / "sources.db") in prompt
     assert str(primary / "data" / "vesum.db") in prompt
@@ -475,9 +493,7 @@ def test_augment_prompt_with_worktree_teaches_primary_database_access(primary: P
 
     # With LU_SOURCES_DB override pointing to home-relative path
     monkeypatch.setenv("LU_SOURCES_DB", "~/custom/sources.db")
-    prompt_override = delegate._augment_prompt_with_worktree(
-        "Review sentences.", worktree, mode="read-only"
-    )
+    prompt_override = delegate._augment_prompt_with_worktree("Review sentences.", worktree, mode="read-only")
     expected_override = (Path.home() / "custom" / "sources.db").resolve()
     assert str(expected_override) in prompt_override
 
@@ -491,9 +507,7 @@ def test_augment_prompt_with_worktree_teaches_primary_database_access(primary: P
         ("/tmp/absolute_sources.db", lambda _root: Path("/tmp/absolute_sources.db").resolve()),
     ],
 )
-def test_primary_database_path_resolution(
-    primary: Path, monkeypatch, override: str | None, expected_fn
-) -> None:
+def test_primary_database_path_resolution(primary: Path, monkeypatch, override: str | None, expected_fn) -> None:
     """_primary_database_path resolves default, home-relative, relative, and absolute overrides."""
     if override is None:
         monkeypatch.delenv("LU_SOURCES_DB", raising=False)
