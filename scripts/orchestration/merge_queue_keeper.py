@@ -18,6 +18,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common import github_budget_counters
 from scripts.common.github_client import GitHubRateLimited
 from scripts.gh_merge_queue_status import extract_pr_number
 from scripts.opsec.prepublish import (
@@ -757,6 +758,7 @@ def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[
     return sorted(set().union(*(others[job] for job in jobs)))
 
 
+@github_budget_counters.landing_flow("merge-queue-keeper")
 def run(
     gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
 ) -> tuple[list[str], bool]:

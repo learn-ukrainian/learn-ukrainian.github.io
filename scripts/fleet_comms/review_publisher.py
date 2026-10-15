@@ -29,7 +29,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.common import github_client
+from scripts.common import github_budget_counters, github_client
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
@@ -107,6 +107,7 @@ def split_repository(repository: str) -> tuple[str, str]:
     return owner, repo
 
 
+@github_budget_counters.landing_flow("verdict-publication")
 def fetch_pr_head_sha(
     *,
     repository: str,
@@ -313,6 +314,7 @@ def _summary_for(
     return " ".join(parts)
 
 
+@github_budget_counters.landing_flow("verdict-publication")
 def execute_publication(
     plan: PublicationPlan,
     *,
@@ -455,6 +457,7 @@ def ensure_job_row_for_receipt(
     )
 
 
+@github_budget_counters.landing_flow("verdict-publication")
 def publish_sealed_verdict(
     sealed: SealedVerdict | Mapping[str, Any] | str | bytes | Path,
     *,

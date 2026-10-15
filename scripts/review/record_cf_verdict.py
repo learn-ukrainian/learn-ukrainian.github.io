@@ -29,6 +29,7 @@ from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
 from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
+from scripts.common import github_budget_counters
 from scripts.common.jsonl import jsonl_lines
 from scripts.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
@@ -1590,6 +1591,7 @@ def _require_formal_reviewer(
 
 
 @publication_boundary(RecordError)
+@github_budget_counters.landing_flow("verdict-publication")
 def record(
     task_id: str,
     *,

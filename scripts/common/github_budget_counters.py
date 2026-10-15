@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import contextvars
+import functools
 import json
 import logging
 import os
@@ -134,18 +135,25 @@ _OPERATION: contextvars.ContextVar[str | None] = contextvars.ContextVar("github_
 
 # Named operations that exist only to land a PR; every request inside one is landing. The
 # publisher's landing verbs (their readiness and recovery reads included) and named reads (see
-# scripts.publish.github), and the client's CI status reads (``gh pr checks``, ``gh pr view
-# --json statusCheckRollup``), whose pull-request lookup is not landing on its own.
+# scripts.publish.github), the client's CI status reads (``gh pr checks``, ``gh pr view
+# --json statusCheckRollup``), whose pull-request lookup is not landing on its own, and the
+# landing flows that declare themselves with :func:`landing_flow`: the merge-queue keeper's
+# cycle and verdict publication (their identity, pull-request and commit reads included).
 CI_STATUS = "ci-status"
 LANDING_VERBS = frozenset({"pr-merge", "pr-update-branch", "pr-review", "run-rerun"})
-LANDING_OPERATIONS = LANDING_VERBS | {
-    "queue-snapshot",
-    "queue-status",
-    "queue-removal",
-    "merge-facts",
-    "budget",
-    CI_STATUS,
-}
+LANDING_FLOWS = frozenset({"merge-queue-keeper", "verdict-publication"})
+LANDING_OPERATIONS = (
+    LANDING_VERBS
+    | LANDING_FLOWS
+    | {
+        "queue-snapshot",
+        "queue-status",
+        "queue-removal",
+        "merge-facts",
+        "budget",
+        CI_STATUS,
+    }
+)
 
 _REPO = r"repos/[^/]+/[^/]+/"
 _LANDING_REST = (
@@ -207,6 +215,26 @@ def is_landing(method, resource_path, graphql_query=None) -> bool:
         return False
     method = str(method).upper()
     return any(verb == method and shape.fullmatch(resource_path) for verb, shape in _LANDING_REST)
+
+
+def landing_flow(name):
+    """Decorator: every GitHub request the decorated function makes is landing traffic.
+
+    ``name`` must be one of :data:`LANDING_FLOWS`; the wrapper records it as ``landing_flow``.
+    """
+    if name not in LANDING_FLOWS:
+        raise ValueError(f"unknown landing flow: {name}")
+
+    def decorate(function):
+        @functools.wraps(function)
+        def wrapped(*args, **kwargs):
+            with operation(name):
+                return function(*args, **kwargs)
+
+        wrapped.landing_flow = name
+        return wrapped
+
+    return decorate
 
 
 def is_ci_status_view(arguments) -> bool:

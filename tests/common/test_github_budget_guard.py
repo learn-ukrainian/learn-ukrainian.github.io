@@ -635,3 +635,79 @@ def test_the_publisher_merge_flow_reaches_github_at_a_zero_budget(tmp_path, monk
     with pytest.raises(pub.gate.PublishBlocked, match="merge readiness unverifiable"):
         pub.publish("pr-merge", repo="o/r", number=7, env={"AGENT_NO_MERGE": "0"}, capture_output=True, text=True)
     assert calls[0] == ("GET", "repos/o/r/pulls/7")
+
+
+# --- landing flows: an actor that exists to land a PR declares it, pre-reads included ------------
+
+
+def head_read(method, endpoint):
+    return gh.Response(200, {}, json.dumps({"number": 7, "state": "open", "head": {"sha": "a" * 40}}).encode())
+
+
+@pytest.mark.parametrize("remaining", [499, 0])
+def test_a_landing_flow_lets_its_reads_through_at_every_budget(tmp_path, monkeypatch, remaining):
+    calls = route_client_builder(tmp_path, monkeypatch, head_read)
+    seed(gh.GitHubClient(env=None), remaining)
+    shape = ["gh", "pr", "view", "7", "--repo", "o/r", "--json", "headRefOid"]
+
+    @counters.landing_flow("verdict-publication")
+    def declared():
+        return gh.run(shape, capture_output=True, text=True)
+
+    assert declared().returncode == 0 and len(calls) == 1
+    assert gh.run(shape, capture_output=True, text=True).returncode == 75 and len(calls) == 1
+
+
+def test_an_unknown_landing_flow_is_rejected():
+    with pytest.raises(ValueError, match="unknown landing flow"):
+        counters.landing_flow("bulk-audit")
+
+
+@pytest.mark.parametrize("remaining", [499, 0])
+def test_the_verdict_publishers_head_lookup_is_never_refused(tmp_path, monkeypatch, remaining):
+    from scripts.fleet_comms import review_publisher
+
+    calls = route_client_builder(tmp_path, monkeypatch, head_read)
+    seed(gh.GitHubClient(env=None), remaining)
+    assert review_publisher.fetch_pr_head_sha(repository="o/r", pr_number=7) == "a" * 40
+    assert calls == [("GET", "repos/o/r/pulls/7")]
+
+
+def test_the_merge_queue_keepers_cycle_is_a_landing_flow(tmp_path):
+    from scripts.orchestration import merge_queue_keeper as keeper
+
+    seen = []
+
+    class FakeGitHub:
+        def branch_names(self):
+            seen.append(counters.is_landing("GET", "repos/o/r/pulls"))  # the keeper's first read
+            return set()
+
+        def snapshot(self, branches):
+            return {"remaining": 0, "cost": 0, "prs": [], "reset_at": None}
+
+    lines, failed = keeper.run(FakeGitHub(), tmp_path / "keeper.json")
+    assert seen == [True] and lines[0].startswith("GraphQL budget stop") and not failed
+    assert not counters.is_landing("GET", "repos/o/r/pulls")
+
+
+def landing_actors():
+    from scripts.fleet_comms import review_publisher
+    from scripts.orchestration import merge_queue_keeper
+    from scripts.review import record_cf_verdict
+
+    return {
+        "keeper-cycle": (merge_queue_keeper.run, "merge-queue-keeper"),
+        "head-lookup": (review_publisher.fetch_pr_head_sha, "verdict-publication"),
+        "execute-publication": (review_publisher.execute_publication, "verdict-publication"),
+        "publish-sealed-verdict": (review_publisher.publish_sealed_verdict, "verdict-publication"),
+        "record-cf-verdict": (record_cf_verdict.record, "verdict-publication"),
+    }
+
+
+@pytest.mark.parametrize(
+    "actor", ["keeper-cycle", "head-lookup", "execute-publication", "publish-sealed-verdict", "record-cf-verdict"]
+)
+def test_every_landing_actor_declares_its_flow(actor):
+    function, flow = landing_actors()[actor]
+    assert getattr(function, "landing_flow", None) == flow
