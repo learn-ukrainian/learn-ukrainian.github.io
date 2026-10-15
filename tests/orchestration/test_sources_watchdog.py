@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import signal
+import stat
 import subprocess
 import sys
 import textwrap
@@ -238,6 +239,118 @@ def test_restart_budget_survives_incident_closure(tmp_path: Path) -> None:
     # The fourth incident opened with the budget spent: it is still reported, once.
     assert len(fake.published) == 4
     assert "Action: restart budget exhausted" in fake.published[-1][0]
+
+
+def _stop_before_kill(fake: FakeHost, unit: str) -> str:
+    raise KeyboardInterrupt
+
+
+def _stop_after_kill(fake: FakeHost, unit: str) -> str:
+    fake.restart(unit)
+    fake.pid += 1
+    fake.started += 1_000
+    raise KeyboardInterrupt
+
+
+def _kill_and_start(fake: FakeHost, unit: str) -> str:
+    detail = fake.restart(unit)
+    fake.pid += 1
+    fake.started += 1_000
+    return detail
+
+
+def _stop_in_recovery_wait(url: str, timeout: float, deadline: float) -> tuple[bool, str]:
+    raise KeyboardInterrupt
+
+
+@pytest.mark.parametrize(
+    ("restart", "wait_healthy", "kills"),
+    [
+        (_stop_before_kill, None, 0),
+        (_stop_after_kill, None, 1),
+        (_kill_and_start, _stop_in_recovery_wait, 1),
+    ],
+    ids=["before-restart", "during-restart", "during-recovery-wait"],
+)
+def test_interrupted_restart_still_counts_against_the_budget(
+    tmp_path: Path,
+    restart: Callable[[FakeHost, str], str],
+    wait_healthy: Callable[[str, float, float], tuple[bool, str]] | None,
+    kills: int,
+) -> None:
+    """Sol's reproducer: a watchdog stopped mid-restart must not bypass ``--max-restarts``."""
+    fake, config = FakeHost(tmp_path), _config(tmp_path, max_restarts=1)
+    state_file = tmp_path / "dumps" / wd.STATE_FILE
+    host = fake.host()
+    on_disk_at_kill: list[object] = []
+
+    def restart_after_reading_state(unit: str) -> str:
+        on_disk_at_kill.append(json.loads(state_file.read_text(encoding="utf-8")).get("restart_history"))
+        return restart(fake, unit)
+
+    host.restart = restart_after_reading_state
+    if wait_healthy is not None:
+        host.wait_healthy = wait_healthy
+    results: list[str] = []
+    for _ in range(12):
+        fake.healthy.append(False)
+        try:
+            results.append(wd.run_once(config, host))
+        except KeyboardInterrupt:
+            results.append("interrupted")
+        fake.clock += 15
+    reserved_at = 1_000_000.0 + 30
+    # The charge was on disk before the kill, and only one restart was attempted.
+    assert on_disk_at_kill == [[reserved_at]]
+    assert len(fake.restarts) == kills
+    assert results.count("interrupted") == 1
+    assert "restart budget exhausted (1 in 3600s)" in results[-1]
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    assert state["restart_history"] == [reserved_at]
+    # The interrupted incident is still reported, once, without a claimed outcome.
+    assert len(fake.published) == 1
+    assert "stopped before it recorded" in fake.published[0][0]
+
+
+def test_state_write_is_durable_before_it_is_visible(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    events: list[str] = []
+    real_fsync, real_replace = os.fsync, os.replace
+
+    def fsync(fd: int) -> None:
+        events.append("fsync-dir" if stat.S_ISDIR(os.fstat(fd).st_mode) else "fsync-file")
+        real_fsync(fd)
+
+    def replace(source: str | Path, target: str | Path) -> None:
+        events.append("replace")
+        real_replace(source, target)
+
+    monkeypatch.setattr(wd.os, "fsync", fsync)
+    monkeypatch.setattr(wd.os, "replace", replace)
+    path = tmp_path / "dumps" / wd.STATE_FILE
+    wd.write_state(path, {"restart_history": [1.0]})
+    assert events == ["fsync-file", "replace", "fsync-dir"]
+    assert json.loads(path.read_text(encoding="utf-8")) == {"restart_history": [1.0]}
+    assert oct(path.stat().st_mode & 0o777) == "0o600"
+
+
+def test_notification_carries_no_host_path_of_an_external_dump_dir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Sol's reproducer: a dump directory outside the repo must not reach the cto report."""
+    monkeypatch.setattr(wd, "PROJECT_ROOT", tmp_path / "repo")
+    dump_dir = tmp_path / "srv-private-7f3a" / "evidence-vault-91c2"
+    fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0, dump_dir=dump_dir)
+    for _ in range(3):
+        result = _tick(fake, config, False)
+    incident = dump_dir / "incident-1"
+    [(message, _key)] = fake.published
+    assert "Dump captured: incident-1\n" in message
+    for private in (str(incident), str(dump_dir), str(tmp_path), *dump_dir.relative_to(tmp_path).parts):
+        assert private not in message
+    # The full locator stays local: the state file and the service log line.
+    state = json.loads((dump_dir / wd.STATE_FILE).read_text(encoding="utf-8"))
+    assert state["incident"]["dump"] == str(incident)
+    assert f"dump {incident};" in result
 
 
 def test_restart_history_keeps_only_the_window(tmp_path: Path) -> None:

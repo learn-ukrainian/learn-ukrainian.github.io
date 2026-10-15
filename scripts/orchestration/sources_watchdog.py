@@ -28,8 +28,11 @@ fails. This probe runs from ``learn-ukrainian-sources-watchdog.timer`` every
 No restart loop: at most ``--max-restarts`` restarts in ``--restart-window``
 seconds, counted from a rolling restart history kept apart from incidents, so
 closing an incident does not refill the budget; beyond that the probe only
-logs. A unit that is not active (stopped by an operator, crashed and left to
-systemd's ``Restart=``) is never touched. The only unit this tool probes,
+logs. Each restart is written to that history, durably, before the kill, so a
+run stopped mid-restart still counts. The report names the incident directory,
+never its path; the full path stays in the state file and the service log. A
+unit that is not active (stopped by an operator, crashed and left to systemd's
+``Restart=``) is never touched. The only unit this tool probes,
 dumps or restarts is ``learn-ukrainian-sources.service``; any other name is
 refused before any action.
 
@@ -340,10 +343,13 @@ def capture_py_spy(pid: int, *, timeout: int = PY_SPY_TIMEOUT_S) -> str | None:
     return f"exit={result.returncode}\n{result.stdout}\n{result.stderr}"
 
 
-def _write_private(path: Path, text: str) -> None:
+def _write_private(path: Path, text: str, *, sync: bool = False) -> None:
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
         handle.write(text)
+        if sync:
+            handle.flush()
+            os.fsync(handle.fileno())
 
 
 def capture_incident_dump(
@@ -444,13 +450,21 @@ def read_state(path: Path) -> dict[str, Any]:
 
 
 def write_state(path: Path, state: Mapping[str, Any]) -> None:
+    """Replace the state file atomically and durably (file, then directory, fsynced)."""
     ensure_dump_dir(path.parent)
     temporary = path.with_name(f".{path.name}.tmp")
-    _write_private(temporary, json.dumps(state, indent=2, sort_keys=True) + "\n")
-    temporary.replace(path)
+    _write_private(temporary, json.dumps(state, indent=2, sort_keys=True) + "\n", sync=True)
+    os.replace(temporary, path)
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
 
 
 def incident_message(config: Config, incident: Mapping[str, Any], dump: str, action: str) -> str:
+    """The cto report. ``dump`` is the incident directory's name only: the
+    report leaves the host, and the dump directory may be a private path."""
     return (
         f"[sre-timers] {config.unit} HUNG: /health failed {config.failures_to_act} consecutive probes "
         f"(last: {incident.get('last_failure', 'unknown')}).\n"
@@ -596,12 +610,30 @@ def run_once(config: Config, host: Host) -> str:
         return f"unhealthy ({detail}); would dump pid {unit.pid}, restart {config.unit} and notify cto"
 
     dump = host.capture(unit.pid, config.dump_dir, config.port, now, reason=detail)
+    # The full locator stays in the local state and log; the report names the
+    # incident directory only.
+    incident["dump"] = str(dump)
     state["failures"] = 0
     aborted = _recheck_before_signal(config, host, unit)
     if aborted is not None:
         action, outcome = aborted, "not restarted"
         state.pop("failing", None)
     else:
+        # Charge the budget durably before the kill. A run stopped during the
+        # restart or the recovery wait (TimeoutStartSec, an operator, a crash)
+        # still counts against --max-restarts. A charge is never refunded, not
+        # even when the run stopped before the kill went out: a later run cannot
+        # tell whether it did, so the charge ages out of --restart-window like
+        # any restart.
+        state["restart_history"] = [*history, now]
+        incident["last_restart"] = now
+        state["grace_until"] = now + config.startup_grace
+        if not incident.get("notified"):
+            incident["pending_message"] = incident_message(
+                config, incident, dump.name, "restart begun; the watchdog stopped before it recorded the outcome"
+            )
+        state["incident"] = incident
+        write_state(state_path, state)
         try:
             restart_detail = host.restart(config.unit)
             healthy, recovery = host.wait_healthy(config.health_url, config.probe_timeout, config.recovery_wait)
@@ -609,11 +641,8 @@ def run_once(config: Config, host: Host) -> str:
         except (WatchdogError, OSError, subprocess.TimeoutExpired) as error:
             healthy, action = False, f"restart failed: {error}"
         outcome = "recovered" if healthy else "NOT recovered"
-        state["restart_history"] = [*history, now]
-        incident["last_restart"] = now
-        state["grace_until"] = now + config.startup_grace
     if not incident.get("notified"):
-        incident["pending_message"] = incident_message(config, incident, _relative(dump), action)
+        incident["pending_message"] = incident_message(config, incident, dump.name, action)
     state["incident"] = incident
     write_state(state_path, state)
     note = _flush_notification(incident, host.publish)
