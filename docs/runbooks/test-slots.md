@@ -50,6 +50,29 @@ workers only for runs below a live holder, and a true `CI` variable turns the po
 | `LU_TEST_SLOTS_COUNT` | Half the CPU count, rounded down, at least 2 | Pool size. Every participant on the host must use the same value. |
 | `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. The gate never waits longer than 600 s. |
 | `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits beside the pre-push gate's `pre-push-gate-<uid>`. |
+| `LU_TEST_THREAD_CAP` | on | `off` preserves the caller's thread environment for a run that needs threads. Slot accounting stays enabled. |
+
+## Threads inside each worker
+
+Governed runs also limit native library threads (#10716). Before xdist starts workers, the plugin sets
+`OMP_NUM_THREADS`, `MKL_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `NUMEXPR_NUM_THREADS`,
+`ORT_NUM_THREADS` and `RAYON_NUM_THREADS` to `1`, and `TOKENIZERS_PARALLELISM` to `false`.
+The launcher and the pre-push gate's pytest stage apply the same policy. Children inherit the limits.
+The policy preserves only positive integers at or below `1` for numeric settings, written as ASCII
+decimal digits. It replaces every other value with `1`, including zero, negatives, fractions, padded
+or signed values, empty strings, `nan`, infinities, oversized integers and nonnumeric tokens such as
+`8,4`, `true` and `0x10`. Those values do not reliably limit native threads.
+It disables tokenizer parallelism regardless of its previous setting. The caller's shell stays unchanged.
+
+For a test that needs native parallelism, set `LU_TEST_THREAD_CAP=off` for that command and record
+the test and its owner. This preserves the environment rather than removing limits inherited from an
+ancestor. `LU_TEST_SLOTS=off` and the governor's CI exemption also disable application of thread caps.
+Operator pytest runs outside a live holder stay unchanged. Libraries can ignore these environment
+variables, so measure native thread counts before claiming a CPU bound. NumPy's
+[threading documentation](https://numpy.org/doc/stable/reference/global_state.html#number-of-threads-used-for-linear-algebra)
+describes its BLAS backend controls.
+
+## Pool directory permissions
 
 The pool directory is mode 0700 and owned by the current user. Its path follows the trust model of
 the pre-push gate's base temp (#10654; see "Bounds" in `docs/runbooks/pre-push-gate.md`): only the

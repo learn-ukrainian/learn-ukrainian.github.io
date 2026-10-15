@@ -51,7 +51,18 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 6  # 6: host test slots for the pytest stage (#10662)
+GATE_VERSION = 7  # 7: inherited thread caps for the pytest stage (#10716)
+# Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
+# tests/test_pre_push_gate.py checks table and behavior parity.
+THREAD_CAPS = {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "ORT_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "RAYON_NUM_THREADS": "1",
+}
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -152,6 +163,22 @@ class Plan:
 
     def __post_init__(self) -> None:
         self.node_ids = dedupe_node_ids((*self.registry_nodes, *self.changed_tests))
+
+
+def apply_thread_caps(env: dict[str, str]) -> dict[str, str]:
+    """Copy the shared test-thread policy without importing project code (#10716)."""
+    result = dict(env)
+    if env.get("LU_TEST_THREAD_CAP", "").strip().lower() == "off":
+        return result
+    for name, cap in THREAD_CAPS.items():
+        if cap != "false" and name in env:
+            try:
+                if env[name].isascii() and env[name].isdecimal() and 0 < int(env[name]) <= int(cap):
+                    continue
+            except ValueError:
+                pass
+        result[name] = cap
+    return result
 
 
 def clean_environment() -> dict[str, str]:
@@ -1578,6 +1605,9 @@ def run_pytest_stage(
     # Never more test processes than the host test slots held (#10662).
     cap = slots.count if slots is not None else None
     slot_environment = slots.environment() if slots is not None else None
+    if slot_environment is not None:
+        capped = apply_thread_caps(clean_environment())
+        slot_environment.update({name: capped[name] for name in THREAD_CAPS if name in capped})
     options = parallel_options(cap=cap)
     if diagnostics is not None:
         diagnostics.update(

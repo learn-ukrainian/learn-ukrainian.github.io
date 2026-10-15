@@ -23,6 +23,7 @@ Environment:
   LU_TEST_SLOTS_WAIT_S  longest wait for slots in seconds (default 3600), then a typed refusal.
   LU_TEST_SLOTS_DIR     absolute pool directory, for tests and experiments.
   LU_TEST_SLOTS_HOLDER  set by a holder for its descendants, which then run inside its slots.
+  LU_TEST_THREAD_CAP    off preserves native thread settings; otherwise governed runs apply native thread caps.
 
 Users: the dispatch pytest plugin (``scripts/ci/pytest_dispatch_cap.py``), the pre-push gate's pytest stage,
 dispatch admission's queue-depth check, ``GET /api/ops/v1/test-slots`` and the CLI below.
@@ -839,6 +840,12 @@ def _run(arguments: argparse.Namespace, parser: argparse.ArgumentParser) -> int:
     except SlotError as error:
         return _refuse(error)
     env.update(hold.environment())
+    if __package__:
+        from .test_thread_caps import apply
+    else:
+        from test_thread_caps import apply
+
+    env = apply(env)
     env[XDIST_AUTO_ENV] = str(hold.count if auto_cap is None else min(hold.count, auto_cap))
     hold.inheritable()
     return _exec(limit_processes(command, hold.count, auto_cap), env)
@@ -883,7 +890,8 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.common.test_slots run --slots 2 -- bash scripts/some_suite.sh\n"
             "  .venv/bin/python -m scripts.common.test_slots status --json\n\n"
             "Environment: LU_TEST_SLOTS (on|off; default on, off under CI=true), LU_TEST_SLOTS_COUNT (pool size;\n"
-            "default half the CPUs rounded down, at least 2), LU_TEST_SLOTS_WAIT_S (default 3600), LU_TEST_SLOTS_DIR.\n\n"
+            "default half the CPUs rounded down, at least 2), LU_TEST_SLOTS_WAIT_S (default 3600), LU_TEST_SLOTS_DIR.\n"
+            "LU_TEST_THREAD_CAP (off preserves native thread settings; otherwise applies native thread caps).\n\n"
             "Outputs: lock and ticket files in the private pool directory; progress lines on stderr while waiting.\n"
             "Exit codes: run: the command's own exit code; 75 refused (wait timeout, unusable pool, invalid\n"
             "configuration) and the command did not run; 127 command not found. status: 0, or 1 when the pool\n"

@@ -95,6 +95,92 @@ def _load_gate():
 gate = _load_gate()
 
 
+@pytest.mark.parametrize(("setting", "held"), [("on", True), ("off", True), ("on", False)])
+def test_gate_pytest_child_thread_caps_match_helper(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, setting: str, held: bool
+) -> None:
+    from tests.common.test_test_thread_caps import EXPECTED
+
+    monkeypatch.setenv("LU_TEST_THREAD_CAP", setting)
+    for key in EXPECTED:
+        monkeypatch.setenv(key, "8")
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    seen = []
+
+    def run(command, **kwargs):
+        env = {**gate.clean_environment(), **(kwargs.get("extra_env") or {})}
+        source = f"import json, os; print(json.dumps({{key: os.environ.get(key) for key in {list(EXPECTED)!r}}}))"
+        output = subprocess.check_output([sys.executable, "-c", source], env=env, text=True, timeout=30)
+        seen.append(json.loads(output))
+        return 0, "1 passed in 0.1s"
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    slots = SimpleNamespace(count=1, environment=lambda: {"LU_TEST_SLOTS_HOLDER": "1:fake"}) if held else None
+    gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30, slots=slots)
+    assert seen and all(env == (EXPECTED if setting == "on" and held else dict.fromkeys(EXPECTED, "8")) for env in seen)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        None,
+        "8",
+        "0",
+        "-1",
+        "0.5",
+        "bad",
+        "",
+        " ",
+        "\t\n",
+        "nan",
+        "NaN",
+        "inf",
+        "-inf",
+        "1e400",
+        "1.5",
+        "0.9",
+        "1.0",
+        "0_1",
+        " 1 ",
+        "+1",
+        "1\n",
+        "٣",
+        "00",
+        "2",
+        "1_000",
+        "16abc",
+        "1abc",
+        "1",
+        "01",
+        "8,4",
+        "true",
+        "0x10",
+        "not-a-number",
+        "huge",
+        "1" * 500,
+        "1" * 5000,
+    ],
+)
+@pytest.mark.parametrize("setting", ["on", "off"])
+def test_gate_thread_policy_parity(value: str | None, setting: str) -> None:
+    from scripts.common.test_thread_caps import THREAD_CAPS, apply
+    from tests.common.test_test_thread_caps import EXPECTED
+
+    env = {"LU_TEST_THREAD_CAP": setting}
+    if value is not None:
+        env.update(dict.fromkeys(THREAD_CAPS, value))
+    assert gate.THREAD_CAPS == THREAD_CAPS
+    original = dict(env)
+    expected = {"LU_TEST_THREAD_CAP": setting, **EXPECTED}
+    if setting == "off":
+        expected = original
+    elif value in {"1", "01"}:
+        expected.update(dict.fromkeys(EXPECTED, value))
+        expected["TOKENIZERS_PARALLELISM"] = "false"
+    assert gate.apply_thread_caps(env) == apply(env) == expected
+    assert env == original
+
+
 def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
@@ -5009,7 +5095,12 @@ def test_pytest_runs_never_use_more_processes_than_slots_held(
             assert "-n" not in command and "--dist" not in command
         else:
             assert command[-4:] == ["-n", str(held), "--dist", dist]
-        assert extra == {"LU_TEST_SLOTS_HOLDER": f"{held}:fake"}
+        assert extra["LU_TEST_SLOTS_HOLDER"] == f"{held}:fake"
+        capped = gate.apply_thread_caps(gate.clean_environment())
+        assert extra == {
+            "LU_TEST_SLOTS_HOLDER": f"{held}:fake",
+            **{name: capped[name] for name in gate.THREAD_CAPS if name in capped},
+        }
     assert diagnostics["requested_test_processes"] == 4 and diagnostics["effective_test_processes"] == held
 
 
@@ -5110,7 +5201,7 @@ def test_the_gate_holds_host_slots_beside_its_verified_base_temp_under_umask_002
     assert not gate.inside_git_tree(base.parent) and not gate.inside_git_tree(pool)
     # While pytest ran, the gate held its slots as kind "gate" and handed its children the holder marker.
     assert [(holder["kind"], holder["slots"]) for holder in report["holders"]] == [("gate", 2)]
-    assert set(marker) == {"LU_TEST_SLOTS_HOLDER"}
+    assert set(marker) == {"LU_TEST_SLOTS_HOLDER", *gate.THREAD_CAPS}
     for directory in (root, pool, base.parent.parent, base.parent):
         info = directory.lstat()
         assert stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid(), directory.name
