@@ -295,20 +295,21 @@ def _issue_stream_view(number: int, stream_idx: dict[str, Any]) -> dict[str, Any
     return view
 
 
-def _match_reviews(reviews: list[dict[str, Any]], *, pr_number: int | None, repository_id: str) -> dict[str, Any]:
-    if pr_number is None:
+def _match_reviews(
+    reviews: list[dict[str, Any]], *, pr_number: int | None, repository_id: str, head_sha: str | None
+) -> dict[str, Any]:
+    if pr_number is None or not isinstance(head_sha, str) or not head_sha.strip():
         return {
             "review_ids": [],
             "states": [],
             "sealed_verdict_available": False,
-            "review_decision": None,
+            "latest_attempt_states": [],
         }
-    # Exact repository match only — never suffix/owner-agnostic matching, and
-    # never treat a missing repository as public.
+    # All three source identities must agree. Missing identity is not approval.
     matched = [
         r
         for r in reviews
-        if int(r.get("pr_number") or 0) == pr_number and str(r.get("repository") or "") == repository_id
+        if r.get("pr_number") == pr_number and r.get("repository") == repository_id and r.get("head_sha") == head_sha
     ]
     return {
         "review_ids": [str(r.get("review_id")) for r in matched if r.get("review_id")],
@@ -430,15 +431,23 @@ def _build_pr_item(
     current = prs_section is not None and prs_section.status in {"ok", "truncated"}
     current = current and raw.get("detailReadComplete") is not False
     ci_state = _pr_check_state(raw) if current else "unknown"
-    review_proj = _match_reviews(reviews, pr_number=number, repository_id=repository_id)
+    head_sha = raw.get("headRefOid")
+    head_known = isinstance(head_sha, str) and bool(head_sha.strip())
+    reviews_section = section_times.get("fleet_reviews")
+    review_proj = _match_reviews(
+        reviews, pr_number=number, repository_id=repository_id, head_sha=head_sha if current else None
+    )
     review_proj["review_decision"] = raw.get("reviewDecision") if current else "UNKNOWN"
+    if not head_known and review_proj["review_decision"] == "APPROVED":
+        review_proj["review_decision"] = "UNKNOWN"
+    if reviews_section is None or reviews_section.status not in {"ok", "truncated"}:
+        review_proj["sealed_verdict_available"] = False
     # Task rows stay on the call so the builder signature is unchanged. A PR
     # number inside a task name is not an association.
     if not isinstance(tasks, list):
         tasks = []
     del tasks
     dispatch = _dispatch_from_tasks([], unresolved=False)
-    reviews_section = section_times.get("fleet_reviews")
     return {
         "work_id": pr_work_id(repository_id, number),
         "source_id": SOURCE_PUBLIC,
@@ -551,7 +560,6 @@ def _build_unlinked_reviews(
     *,
     repository_id: str,
     linked_review_ids: set[str],
-    open_pr_numbers: set[int],
     section: SectionResult | None,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
@@ -564,10 +572,8 @@ def _build_unlinked_reviews(
         if str(review.get("repository") or "") != repository_id:
             continue
         pr_number = review.get("pr_number")
-        # Still surface formal-review jobs whose PR is not in the open list
-        # (merged residual path uses R1 only for foundation).
-        if pr_number is not None and int(pr_number) in open_pr_numbers:
-            continue
+        # Unmatched jobs retain their own identity, including older or unknown
+        # heads for an open PR. Their verdict never qualifies that PR's head.
         items.append(
             {
                 "work_id": review_work_id(repository_id, review_id),
@@ -707,11 +713,9 @@ def build_projection(
                         section_times=sections,
                     )
                 )
-    open_pr_numbers: set[int] = set()
     if isinstance(prs_section.payload, list):
         for raw in prs_section.payload:
             if isinstance(raw, dict) and raw.get("number") is not None:
-                open_pr_numbers.add(int(raw["number"]))
                 items.append(
                     _build_pr_item(
                         raw,
@@ -743,7 +747,6 @@ def build_projection(
             review_rows,
             repository_id=repo,
             linked_review_ids=linked_review_ids,
-            open_pr_numbers=open_pr_numbers,
             section=reviews_section,
         )
     )
@@ -953,6 +956,7 @@ def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
                 verification.update(state="unknown", ci_state="unknown", merge_state_status=None)
                 verification["merge_evidence"] = {"state": "unknown", "reason": "gh_pr_snapshot_stale"}
                 item["projections"]["review"]["review_decision"] = "UNKNOWN"
+                item["projections"]["review"]["sealed_verdict_available"] = False
         if stale:
             pr_ids = {item["work_id"]: item for item in out.get("items") or [] if item.get("resource_kind") == "pr"}
             for row in out.get("attention") or []:
@@ -1068,6 +1072,7 @@ def downgrade_expired_projection(payload: dict[str, Any], *, age_s: float, fresh
         review = projections.get("review") if isinstance(projections.get("review"), dict) else None
         if review is not None and "review_decision" in review:
             review["review_decision"] = "UNKNOWN"
+            review["sealed_verdict_available"] = False
         dispatch = projections.get("dispatch") if isinstance(projections.get("dispatch"), dict) else None
         if dispatch is not None and isinstance(dispatch.get("alive"), list):
             dispatch["alive"] = [None for _flag in dispatch["alive"]]
