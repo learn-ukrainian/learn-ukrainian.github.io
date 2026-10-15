@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sqlite3
 
 import pytest
 
@@ -38,14 +37,9 @@ def seed(client, remaining, *, resource="core", reset=RESET):
 
 
 def count(tmp_path):
-    path = counters.store_path(tmp_path)
-    if not path.exists():
-        return 0
-    db = sqlite3.connect(path)
-    try:
-        return db.execute("SELECT coalesce(sum(count),0) FROM caller_counter").fetchone()[0]
-    finally:
-        db.close()
+    """Requests counted this hour, every pool, as the Ops API report serves them."""
+    pools = counters.report_for(tmp_path, NOW, limit=50)["windows"]["current"]["resources"]
+    return sum(row["count"] for rows in pools.values() for row in rows)
 
 
 @pytest.mark.parametrize(("remaining", "non_landing_refused"), [(499, True), (500, False), (501, False), (11, True)])
